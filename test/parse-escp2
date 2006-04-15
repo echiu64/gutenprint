@@ -4,9 +4,21 @@ require("getopts.pl");
 
 do Getopts('v');
 
+use vars qw($end
+	    $stuff
+	    $opt_v
+	    $verbose
+	    $curpos
+	    $esc
+	    %seqtable);
+
+use strict;
+
 while (<>) {
     $stuff .= $_;
 }
+
+$end = length $stuff;
 
 %seqtable = ( "@", 0,
 	      "(R", "REMOTE",
@@ -23,7 +35,6 @@ while (<>) {
 
 $esc = "\033";
 
-$skipcount = 0;
 $curpos = 0;
 $verbose = $opt_v;
 
@@ -31,18 +42,19 @@ sub do_remote_command {
     print "\n";
     printf "%08x  ", $curpos;
     print "1b  (  R ";
-    substr($stuff, 0, 3) = "";
     $curpos += 3;
-    $lchar = substr($stuff, 0, 1);
-    $nlchar = unpack("C", $lchar);
-    $hchar = substr($stuff, 1, 1);
-    $nhchar = unpack("C", $hchar);
+    my $lchar = substr($stuff, $curpos, 1);
+    my $nlchar = unpack("C", $lchar);
+    my $hchar = substr($stuff, $curpos + 1, 1);
+    my $nhchar = unpack("C", $hchar);
     printf "%02x %02x ", $nlchar, $nhchar;
-    $skipchars = ($nhchar * 256) + $nlchar;
-    substr($stuff, 0, 2) = "";
+    my $skipchars = ($nhchar * 256) + $nlchar;
     $curpos += 2;
+    my $i;
+    my $char;
+    my $nchar;
     for ($i = 0; $i < $skipchars; $i++) {
-	$char = substr($stuff, $i, 1);
+	$char = substr($stuff, $curpos + $i, 1);
 	$nchar = unpack("C", $char);
 	if ($nchar >= 32 && $nchar < 127) {
 	    print $char;
@@ -50,18 +62,16 @@ sub do_remote_command {
 	    printf "%02x ", $nchar;
 	}
     }
-    substr($stuff, 0, $skipchars) = "";
     $curpos += $skipchars;
-    while (substr($stuff, 0, 2) =~ /[A-Z0-9][A-Z0-9]/) {
+    while (substr($stuff, $curpos, 2) =~ /[A-Z0-9][A-Z0-9]/) {
 	print "\n";
 	printf "%08x    ", $curpos;
-	my ($cmd) = substr($stuff, 0, 2);
-	print substr($stuff, 0, 2);
-	substr($stuff, 0, 2) = "";
+	my ($cmd) = substr($stuff, $curpos, 2);
+	print $cmd;
 	$curpos += 2;
-	$lchar = substr($stuff, 0, 1);
+	$lchar = substr($stuff, $curpos, 1);
 	$nlchar = unpack("C", $lchar);
-	$hchar = substr($stuff, 1, 1);
+	$hchar = substr($stuff, $curpos + 1, 1);
 	$nhchar = unpack("C", $hchar);
 	if ($cmd eq "DF") {
 	    $skipchars = 0;
@@ -69,153 +79,70 @@ sub do_remote_command {
 	    $skipchars = ($nhchar * 256) + $nlchar;
 	}
 	printf "%02x %02x ", $nlchar, $nhchar;
-	substr($stuff, 0, 2) = "";
 	$curpos += 2;
 	for ($i = 0; $i < $skipchars; $i++) {
-	    printf "%02x ", unpack("C", substr($stuff, $i, 1));
+	    printf "%02x ", unpack("C", substr($stuff, $curpos + $i, 1));
 	}
-	substr($stuff, 0, $skipchars) = "";
 	$curpos += $skipchars;
     }
 }
 
-sub do_special_command {
+sub print_prefix_bytes {
+    my ($bytes_to_print) = @_;
     print "\n";
     printf "%08x  ", $curpos;
     print "1b ";
-    for ($i = 1; $i < 8; $i++) {
-	$char = substr($stuff, $i, 1);
+    my $i;
+    my $char;
+    my $nchar;
+    for ($i = 1; $i < $bytes_to_print; $i++) {
+	$char = substr($stuff, $curpos + $i, 1);
 	$nchar = unpack("C", $char);
 	if ($i < 2 && $nchar >= 32 && $nchar < 127) {
 	    print " $char ";
 	} else {
 	    printf "%02x ", unpack("C", $char);
 	}
-    }
-    $comptype = unpack("C", substr($stuff, 2, 1));
-    $dots = unpack("v", substr($stuff, 6, 2));
-    $something = unpack("C", substr($stuff, 5, 1));
-    print " ($dots, $something) ";
-    $savedots = $dots;
-    $dots *= $something;
-    $curpos += 8;
-    substr($stuff, 0, 8) = "";
-    if ($comptype == 0) {
-	$bytes = ($dots + 7) / 8;
-	if ($verbose) {
-	    for ($k = 0; $k < $bytes; $k++) {
-		$char = substr($stuff, $k, 1);
-		printf "%02x", unpack("C", $char);
-	    }
-	}
-	$curpos += $bytes;
-	substr($stuff, 0, $bytes) = "";
-    } elsif ($comptype == 1) {
-	while ($something > 0) {
-	    $dots = $savedots;
-	    while ($dots > 0) {
-		$counter = unpack("C", substr($stuff, 0, 1));
-		$curpos++;
-		substr($stuff, 0, 1) = "";
-		if ($counter <= 127) {
-		    $counter++;
-		    if ($verbose) {
-			for ($k = 0; $k < $counter; $k++) {
-			    $char = substr($stuff, $k, 1);
-			    printf "%02x ", unpack("C", $char);
-			}
-		    }
-		    $curpos += $counter;
-		    substr($stuff, 0, $counter) = "";
-		    $dots -= 8 * $counter;
-		} else {
-		    $counter = 257 - $counter;
-		    if ($verbose) {
-			for ($k = 0; $k < $counter; $k++) {
-			    $char = substr($stuff, 0, 1);
-			    printf "%02x ", unpack("C", $char);
-			}
-		    }
-		    $curpos++;
-		    substr($stuff, 0, 1) = "";
-		    $dots -= 8 * $counter;
-		}
-	    }
-	    $something--;
-	}
-    } else {
-	print "\nUnknown compression type $comptype!\n";
     }
 }
 
-sub do_special1_command {
-    print "\n";
-    printf "%08x  ", $curpos;
-    print "1b ";
-    for ($i = 1; $i < 9; $i++) {
-	$char = substr($stuff, $i, 1);
-	$nchar = unpack("C", $char);
-	if ($i < 2 && $nchar >= 32 && $nchar < 127) {
-	    print " $char ";
-	} else {
-	    printf "%02x ", unpack("C", $char);
-	}
-    }
-    $comptype = unpack("C", substr($stuff, 3, 1));
-    $bitsperpixel = unpack("C", substr($stuff, 4, 1));
-    $dots = unpack("v", substr($stuff, 5, 2));
-    $something = unpack("v", substr($stuff, 7, 2));
-    print " ($dots, $something, $bitsperpixel) ";
+sub print_output_data {
+    my ($comptype, $bitsperpixel, $dots, $rows) = @_;
+    my $counter;
+    my $fchar;
+    print " ($dots, $rows, $bitsperpixel) ";
     $dots *= 8;
-    $savedots = $dots;
-    $dots *= $something;
-    $curpos += 9;
-    substr($stuff, 0, 9) = "";
+    my $savedots = $dots;
+    $dots *= $rows;
     if ($comptype == 0) {
-	$bytes = ($dots + 7) / 8;
+	my $bytes = ($dots + 7) / 8;
 	if ($verbose) {
-	    for ($k = 0; $k < $bytes; $k++) {
-		$char = substr($stuff, $k, 1);
-		printf "%02x", unpack("C", $char);
-	    }
+	    printf "%*v02x ", " ", substr($stuff, $curpos, $bytes);
 	}
 	$curpos += $bytes;
-	substr($stuff, 0, $bytes) = "";
     } elsif ($comptype == 1) {
-	while ($something > 0) {
+	while ($rows-- > 0) {
 	    $dots = $savedots;
 	    while ($dots > 0) {
-		$counter = unpack("C", substr($stuff, 0, 1));
+		$counter = ord(substr($stuff, $curpos, 1));
 		$curpos++;
-		substr($stuff, 0, 1) = "";
 		if ($counter <= 127) {
 		    $counter++;
-#		    printf(" (%d) ", $counter);
 		    if ($verbose) {
-			for ($k = 0; $k < $counter; $k++) {
-			    $char = substr($stuff, $k, 1);
-			    printf "%02x ", unpack("C", $char);
-			}
+			printf "%*v02x ", " ", substr($stuff, $curpos, $counter);
 		    }
 		    $curpos += $counter;
-		    substr($stuff, 0, $counter) = "";
-		    $dots -= 8 * $counter;
 		} else {
 		    $counter = 257 - $counter;
-#		    printf(" (%d %d) ", $counter, unpack("C", substr($stuff, 0, 1)));
 		    if ($verbose) {
-			$char = substr($stuff, 0, 1);
-			for ($k = 0; $k < $counter; $k++) {
-			    printf "%02x ", unpack("C", $char);
-			}
+			$fchar = sprintf "%v02x ", substr($stuff, $curpos, 1);
+			map { print $fchar } (0..$counter - 1);
 		    }
 		    $curpos++;
-		    substr($stuff, 0, 1) = "";
-		    $dots -= 8 * $counter;
 		}
+		$dots -= 8 * $counter;
 	    }
-	    $something--;
-	    if ($something > 0 && $verbose) {
+	    if ($rows > 0 && $verbose) {
 		print "\n        ";
 	    }
 	}
@@ -224,11 +151,44 @@ sub do_special1_command {
     }
 }
 
-while ($stuff ne "") {
-    if (substr($stuff, 0, 1) eq "$esc") {
+sub do_special_command {
+    my $comptype = unpack("C", substr($stuff, $curpos + 2, 1));
+    my $dots = unpack("v", substr($stuff, $curpos + 6, 2));
+    my $rows = unpack("C", substr($stuff, $curpos + 5, 1));
+    print_prefix_bytes(8);
+    $curpos += 8;
+    print_output_data($comptype, 1, $dots, $rows);
+}
+
+sub do_special1_command {
+    my $comptype = unpack("C", substr($stuff, $curpos + 3, 1));
+    my $bitsperpixel = unpack("C", substr($stuff, $curpos + 4, 1));
+    my $dots = unpack("v", substr($stuff, $curpos + 5, 2));
+    my $rows = unpack("v", substr($stuff, $curpos + 7, 2));
+    print_prefix_bytes(9);
+    $curpos += 9;
+    print_output_data($comptype, $bitsperpixel, $dots, $rows);
+}
+
+while ($curpos < $end) {
+    my $found;
+    my $key;
+    my $skipchars;
+    my $startoff;
+    my $kchar;
+    my $nkchar;
+    my $lchar;
+    my $nlchar;
+    my $hchar;
+    my $nhchar;
+    my $i;
+    my $char;
+    my $nchar;
+    my $bytes;
+    if (substr($stuff, $curpos, 1) eq "$esc") {
 	$found = 0;
 	foreach $key (sort { length $b <=> length $a } keys %seqtable) {
-	    if (substr($stuff, 1, length $key) eq $key) {
+	    if (substr($stuff, $curpos + 1, length $key) eq $key) {
 		$skipchars = $seqtable{$key};
 		if ($skipchars eq "SPECIAL") {
 		    do_special_command;
@@ -245,11 +205,11 @@ while ($stuff ne "") {
 		    print "1b ";
 		    $startoff = 0;
 		    if ($skipchars eq "VARIABLE") {
-			$kchar = substr($stuff, (length $key) + 1, 1);
+			$kchar = substr($stuff, $curpos + (length $key) + 1, 1);
 			$nkchar = unpack("C", $kchar);
-			$lchar = substr($stuff, (length $key) + 2, 1);
+			$lchar = substr($stuff, $curpos + (length $key) + 2, 1);
 			$nlchar = unpack("C", $lchar);
-			$hchar = substr($stuff, (length $key) + 3, 1);
+			$hchar = substr($stuff, $curpos + (length $key) + 3, 1);
 			$nhchar = unpack("C", $hchar);
 			$skipchars = ($nhchar * 256) + $nlchar;
 			$startoff = 3;
@@ -257,7 +217,7 @@ while ($stuff ne "") {
 		    for ($i = 0;
 			 $i < $skipchars + (length $key) + $startoff;
 			 $i++) {
-			$char = substr($stuff, $i + 1, 1);
+			$char = substr($stuff, $curpos + $i + 1, 1);
 			$nchar = unpack("C", $char);
 			if ($i < 3 && $nchar >= 32 && $nchar < 127) {
 			    print " $char ";
@@ -275,15 +235,13 @@ while ($stuff ne "") {
 	    print "\n";
 	    printf "%08x  ", $curpos;
 	    print "1b ";
-	    substr($stuff, 0, 1) = "";
 	    $curpos += 1;
 	} elsif ($found == 1) {
-	    substr($stuff, 0, $bytes) = "";
 	    $curpos += $bytes;
 	} else {
 	}
     } else {
-	$char = substr($stuff, 0, 1);
+	$char = substr($stuff, $curpos + 0, 1);
 	$nchar = unpack("C", $char);
 	if ($nchar >= 32 && $nchar < 127) {
 	    print " *$char ";
@@ -291,6 +249,5 @@ while ($stuff ne "") {
 	    printf "*%02x ", unpack("C", $char);
 	}
 	$curpos++;
-	substr($stuff, 0, 1) = "";
     }
 }
