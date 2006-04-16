@@ -1,18 +1,16 @@
 #!/usr/bin/perl
 
-require("getopts.pl");
+use Getopt::Std;
+use strict;
 
-do Getopts('v');
+getopts('v');
 
 use vars qw($end
 	    $stuff
 	    $opt_v
-	    $verbose
 	    $curpos
 	    $esc
 	    %seqtable);
-
-use strict;
 
 while (<>) {
     $stuff .= $_;
@@ -36,7 +34,6 @@ $end = length $stuff;
 $esc = "\033";
 
 $curpos = 0;
-$verbose = $opt_v;
 
 sub do_remote_command {
     print "\n";
@@ -107,19 +104,18 @@ sub print_prefix_bytes {
 }
 
 sub print_output_data {
-    my ($comptype, $bitsperpixel, $dots, $rows) = @_;
+    my ($comptype, $bitsperpixel, $dots, $rows, $dot_scale) = @_;
     my $counter;
     my $fchar;
     print " ($dots, $rows, $bitsperpixel) ";
     $dots *= 8;
+    $dots /= $dot_scale;
     my $savedots = $dots;
-    $dots *= $rows;
     if ($comptype == 0) {
-	my $bytes = ($dots + 7) / 8;
-	if ($verbose) {
-	    printf "%*v02x ", " ", substr($stuff, $curpos, $bytes);
+	if ($opt_v) {
+	    printf "%*v02x ", " ", substr($stuff, $curpos, $dots);
 	}
-	$curpos += $bytes;
+	$curpos += $dots;
     } elsif ($comptype == 1) {
 	while ($rows-- > 0) {
 	    $dots = $savedots;
@@ -128,21 +124,21 @@ sub print_output_data {
 		$curpos++;
 		if ($counter <= 127) {
 		    $counter++;
-		    if ($verbose) {
+		    if ($opt_v) {
 			printf "%*v02x ", " ", substr($stuff, $curpos, $counter);
 		    }
 		    $curpos += $counter;
 		} else {
 		    $counter = 257 - $counter;
-		    if ($verbose) {
+		    if ($opt_v) {
 			$fchar = sprintf "%v02x ", substr($stuff, $curpos, 1);
 			map { print $fchar } (0..$counter - 1);
 		    }
 		    $curpos++;
 		}
-		$dots -= 8 * $counter;
+		$dots -= $counter * 8;
 	    }
-	    if ($rows > 0 && $verbose) {
+	    if ($rows > 0 && $opt_v) {
 		print "\n        ";
 	    }
 	}
@@ -157,7 +153,7 @@ sub do_special_command {
     my $rows = unpack("C", substr($stuff, $curpos + 5, 1));
     print_prefix_bytes(8);
     $curpos += 8;
-    print_output_data($comptype, 1, $dots, $rows);
+    print_output_data($comptype, 1, $dots, $rows, 8);
 }
 
 sub do_special1_command {
@@ -167,7 +163,7 @@ sub do_special1_command {
     my $rows = unpack("v", substr($stuff, $curpos + 7, 2));
     print_prefix_bytes(9);
     $curpos += 9;
-    print_output_data($comptype, $bitsperpixel, $dots, $rows);
+    print_output_data($comptype, $bitsperpixel, $dots, $rows, 1);
 }
 
 while ($curpos < $end) {
