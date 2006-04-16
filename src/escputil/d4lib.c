@@ -177,21 +177,6 @@ static errorMessage_t errorMessage[] =
                                 sig = signal(SIGALRM, sigAlarm); \
                               }
 
-int SafeWrite(int fd, const void *data, int len)
-{
-  int status;
-  int retries=30;
-  do
-    {
-      status = write(fd, data, len);
-      if(status < len)
-	usleep(d4WrTimeout);
-      retries--;
-    }
-  while ((status < len) && (retries > 0));
-  return(status);
-}
-
 /*******************************************************************/
 /* Function printHexValues                                         */
 /*                                                                 */
@@ -199,7 +184,7 @@ int SafeWrite(int fd, const void *data, int len)
 /*                                                                 */
 /*******************************************************************/
 
-static void printHexValues(const char *dir, unsigned char *buf, int len)
+static void printHexValues(const char *dir, const unsigned char *buf, int len)
 {
    int i, j;
    int printable_count = 0;
@@ -268,6 +253,23 @@ static void printHexValues(const char *dir, unsigned char *buf, int len)
      }
 }
 
+int SafeWrite(int fd, const void *data, int len)
+{
+  int status;
+  int retries=30;
+  if (debugD4)
+    printHexValues("SafeWrite: ", data, len);
+  do
+    {
+      status = write(fd, data, len);
+      if(status < len)
+	usleep(d4WrTimeout);
+      retries--;
+    }
+  while ((status < len) && (retries > 0));
+  return(status);
+}
+
 /*******************************************************************/
 /* Function sigAlarm(int code)                                     */
 /*                                                                 */
@@ -286,7 +288,7 @@ static void sigAlarm(int code)
 /* Function printError()                                           */
 /*    print an error message on stderr                             */
 /*                                                                 */
-/* Input:  unsigned char errorNb the error number                             */
+/* Input:  unsigned char errorNb the error number                  */
 /*                                                                 */
 /* Return: fatal = 1 or recoverable = 0                            */
 /*                                                                 */
@@ -377,11 +379,11 @@ static int writeCmd(int fd, unsigned char *cmd, int len)
 # endif
       if ( cmd[0] == 0 && cmd[1] == 0 )
       {
-         printHexValues("Send: ", (unsigned char*)cmd, len);
+         printHexValues("Send: ", cmd, len);
       }
       else
       {
-         printHexValues("Send: ", (unsigned char*)cmd, 6);
+         printHexValues("Send: ", cmd, 6);
       }
    }
 

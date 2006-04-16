@@ -424,6 +424,24 @@ main(int argc, char **argv)
   exit(0);
 }
 
+void
+print_debug_data(const char *buf, size_t count)
+{
+  int i;
+  for (i = 0; i < count; i++)
+    {
+      if (i % 16 == 0)
+	fprintf(stderr, "\n%4d: ", i);
+      else if (i % 4 == 0)
+	fprintf(stderr, " ");
+      if (isgraph(buf[i]))
+	fprintf(stderr, "  %c", (unsigned) ((unsigned char) buf[i]));
+      else
+	fprintf(stderr, " %02x", (unsigned) ((unsigned char) buf[i]));
+    }
+  fprintf(stderr, "\n");
+}
+
 int
 do_print_cmd(void)
 {
@@ -466,24 +484,9 @@ do_print_cmd(void)
 	  return 1;
 	}
     }
-  if (stp_debug)
-    {
-      int i;
-      fprintf(stderr, "Sending print command to %s:",
-	      raw_device ? raw_device : command);
-      for (i = 0; i < bufpos; i++)
-	{
-	  if (i % 16 == 0)
-	    fprintf(stderr, "\n%4d: ", i);
-	  else if (i % 4 == 0)
-	    fprintf(stderr, " ");
-	  if (isgraph(printer_cmd[i]))
-	    fprintf(stderr, "  %c", (unsigned) printer_cmd[i]);
-	  else
-	    fprintf(stderr, " %02x", (unsigned) printer_cmd[i]);
-	}
-      fprintf(stderr, "\n");
-    }
+  STP_DEBUG(fprintf(stderr, "Sending print command to %s:",
+		    raw_device ? raw_device : command));
+  STP_DEBUG(print_debug_data(printer_cmd, bufpos));
   while (bytes < bufpos)
     {
       int status = fwrite(printer_cmd + bytes, 1, bufpos - bytes, pfile);
@@ -554,7 +557,12 @@ read_from_printer(int fd, char *buf, int bufsize, int quiet)
     }
   while ((status == 0) && (--retry != 0));
 
-  if (status == 0 && retry == 0)
+  if (status > 0)
+    {
+      STP_DEBUG(fprintf(stderr, "read_from_printer returns %d\n", status));
+      STP_DEBUG(print_debug_data(buf, status));
+    }
+  else if (status == 0 && retry == 0)
     {
       if (!quiet)
 	fprintf(stderr, _("Read from printer timed out\n"));
@@ -782,7 +790,8 @@ initialize_printer(int quiet, int fail_if_not_found)
 	      forced_packet_mode = !init_packet(fd, 1);
 	      status = 1;
 	    }
-	  if (status > 0 && !strstr((char *) buf, "@EJL ID") && tries < 1)
+	  if (!forced_packet_mode &&
+	      status > 0 && !strstr((char *) buf, "@EJL ID") && tries < 3)
 	    {
 	      STP_DEBUG(fprintf(stderr, "Found bad data: %s\n", buf));
 	      /*
@@ -905,8 +914,8 @@ initialize_printer(int quiet, int fail_if_not_found)
 	      !strcasecmp(printer_model, long_name) ||
 	      (!strncmp(short_name, "escp2-", strlen("escp2-")) &&
 	       !strcasecmp(printer_model, short_name + strlen("escp2-"))) ||
-	      (!strncmp(long_name, "EPSON ", strlen("EPSON ")) &&
-	       !strcasecmp(printer_model, long_name + strlen("EPSON "))))
+	      (!strncasecmp(long_name, "Epson ", strlen("Epson ")) &&
+	       !strcasecmp(printer_model, long_name + strlen("Epson "))))
 	    {
 	      const stp_vars_t *printvars;
 	      stp_parameter_t desc;
@@ -1910,8 +1919,6 @@ do_align(void)
   int curpass;
   const stp_printer_t *printer = get_printer(0, 0);
   stp_parameter_t desc;
-  int passes = 0;
-  int choices = 0;
   const char *printer_name;
   stp_vars_t *v = stp_vars_create();
 
