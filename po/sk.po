@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GIMP Print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-01-14 15:38-0500\n"
+"POT-Creation-Date: 2006-04-17 19:38-0400\n"
 "PO-Revision-Date: 2002-05-20 18:08+0100\n"
 "Last-Translator: Zdenko Podobný <zdpo@mailbox.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
@@ -80,9 +80,9 @@ msgstr ""
 msgid "Density"
 msgstr "Hustota:"
 
-#: src/main/dither-main.c:89 src/main/print-canon.c:1519
-#: src/main/print-canon.c:1527 src/main/print-canon.c:1535
-#: src/main/print-canon.c:1543 src/main/print-escp2.c:412
+#: src/main/dither-main.c:89 src/main/print-canon.c:1534
+#: src/main/print-canon.c:1542 src/main/print-canon.c:1550
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:412
 #: src/main/print-escp2.c:420 src/main/print-escp2.c:428
 #: src/main/print-escp2.c:436 src/main/print-escp2.c:444
 #: src/main/print-escp2.c:452 src/main/print-escp2.c:460
@@ -150,207 +150,207 @@ msgstr ""
 msgid "Dither algorithm"
 msgstr "Algoritmus rozptylu"
 
-#: src/main/print-canon.c:1367
+#: src/main/print-canon.c:1382
 #, fuzzy
 msgid "90x90 DPI"
 msgstr "600 DPI"
 
-#: src/main/print-canon.c:1367
+#: src/main/print-canon.c:1382
 #, fuzzy
 msgid "90x90 DPI DMT"
 msgstr "600 DPI"
 
-#: src/main/print-canon.c:1368
+#: src/main/print-canon.c:1383
 #, fuzzy
 msgid "180x180 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1368
+#: src/main/print-canon.c:1383
 #, fuzzy
 msgid "180x180 DPI DMT"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1369
+#: src/main/print-canon.c:1384
 #, fuzzy
 msgid "360x360 DPI"
 msgstr "300x300 DPI"
 
-#: src/main/print-canon.c:1369
+#: src/main/print-canon.c:1384
 #, fuzzy
 msgid "360x360 DPI DMT"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1370
+#: src/main/print-canon.c:1385
 #, fuzzy
 msgid "720x360 DPI"
 msgstr "720 x 360 DPI"
 
-#: src/main/print-canon.c:1370
+#: src/main/print-canon.c:1385
 #, fuzzy
 msgid "720x360 DPI DMT"
 msgstr "720 x 360 DPI MW2"
 
-#: src/main/print-canon.c:1371
+#: src/main/print-canon.c:1386
 #, fuzzy
 msgid "720x720 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1371
+#: src/main/print-canon.c:1386
 #, fuzzy
 msgid "720x720 DPI DMT"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1372
+#: src/main/print-canon.c:1387
 #, fuzzy
 msgid "1440x720 DPI"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-canon.c:1372
+#: src/main/print-canon.c:1387
 #, fuzzy
 msgid "1440x720 DPI DMT"
 msgstr "1440 x 720 DPI"
 
-#: src/main/print-canon.c:1373
+#: src/main/print-canon.c:1388
 #, fuzzy
 msgid "1440x1440 DPI"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-canon.c:1373
+#: src/main/print-canon.c:1388
 #, fuzzy
 msgid "1440x1440 DPI DMT"
 msgstr "1440 x 1440 DPI"
 
-#: src/main/print-canon.c:1374
+#: src/main/print-canon.c:1389
 #, fuzzy
 msgid "2880x2880 DPI"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1374
+#: src/main/print-canon.c:1389
 #, fuzzy
 msgid "2880x2880 DPI DMT"
 msgstr "2880 x 720 DPI"
 
-#: src/main/print-canon.c:1375 src/main/print-pcl.c:253
+#: src/main/print-canon.c:1390 src/main/print-pcl.c:253
 msgid "150x150 DPI"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1375
+#: src/main/print-canon.c:1390
 #, fuzzy
 msgid "150x150 DPI DMT"
 msgstr "150x150 DPI"
 
-#: src/main/print-canon.c:1376 src/main/print-pcl.c:254
+#: src/main/print-canon.c:1391 src/main/print-pcl.c:254
 msgid "300x300 DPI"
 msgstr "300x300 DPI"
 
-#: src/main/print-canon.c:1376
+#: src/main/print-canon.c:1391
 #, fuzzy
 msgid "300x300 DPI DMT"
 msgstr "300x300 DPI"
 
-#: src/main/print-canon.c:1377 src/main/print-pcl.c:255
+#: src/main/print-canon.c:1392 src/main/print-pcl.c:255
 msgid "600x300 DPI"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1377
+#: src/main/print-canon.c:1392
 #, fuzzy
 msgid "600x300 DPI DMT"
 msgstr "600x300 DPI"
 
-#: src/main/print-canon.c:1378 src/main/print-pcl.c:257
+#: src/main/print-canon.c:1393 src/main/print-pcl.c:257
 msgid "600x600 DPI"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1378
+#: src/main/print-canon.c:1393
 #, fuzzy
 msgid "600x600 DPI DMT"
 msgstr "600x600 DPI"
 
-#: src/main/print-canon.c:1379 src/main/print-pcl.c:258
+#: src/main/print-canon.c:1394 src/main/print-pcl.c:258
 msgid "1200x600 DPI"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1379
+#: src/main/print-canon.c:1394
 #, fuzzy
 msgid "1200x600 DPI DMT"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1380
+#: src/main/print-canon.c:1395
 #, fuzzy
 msgid "1200x1200 DPI"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1380
+#: src/main/print-canon.c:1395
 #, fuzzy
 msgid "1200x1200 DPI DMT"
 msgstr "1200x600 DPI"
 
-#: src/main/print-canon.c:1381
+#: src/main/print-canon.c:1396
 #, fuzzy
 msgid "2400x2400 DPI"
 msgstr "2400x600 DPI"
 
-#: src/main/print-canon.c:1381
+#: src/main/print-canon.c:1396
 #, fuzzy
 msgid "2400x2400 DPI DMT"
 msgstr "2400x600 DPI"
 
-#: src/main/print-canon.c:1432 src/main/print-lexmark.c:857
+#: src/main/print-canon.c:1447 src/main/print-lexmark.c:856
 #: src/main/escp2-papers.c:1160 src/main/escp2-papers.c:1204
 #: src/main/escp2-papers.c:1248 src/main/escp2-papers.c:1296
 #: src/main/escp2-papers.c:1344 src/main/escp2-papers.c:1388
 msgid "Plain Paper"
 msgstr "Obyèajný papier"
 
-#: src/main/print-canon.c:1433
+#: src/main/print-canon.c:1448
 #, fuzzy
 msgid "Plain Paper PIXMA"
 msgstr "Obyèajný papier"
 
-#: src/main/print-canon.c:1434 src/main/print-lexmark.c:865
+#: src/main/print-canon.c:1449 src/main/print-lexmark.c:864
 #: src/main/escp2-papers.c:1168 src/main/escp2-papers.c:1212
 #: src/main/escp2-papers.c:1256 src/main/escp2-papers.c:1304
 #: src/main/escp2-papers.c:1352 src/main/escp2-papers.c:1396
 msgid "Transparencies"
 msgstr "Priesvitná fólia"
 
-#: src/main/print-canon.c:1435
+#: src/main/print-canon.c:1450
 msgid "Back Print Film"
 msgstr ""
 
-#: src/main/print-canon.c:1436
+#: src/main/print-canon.c:1451
 msgid "Fabric Sheets"
 msgstr "Normálny papier"
 
-#: src/main/print-canon.c:1437
+#: src/main/print-canon.c:1452
 msgid "Envelope"
 msgstr "Obálka"
 
-#: src/main/print-canon.c:1438
+#: src/main/print-canon.c:1453
 msgid "High Resolution Paper"
 msgstr "Papier s vysokým rozlí¹ením"
 
-#: src/main/print-canon.c:1439
+#: src/main/print-canon.c:1454
 msgid "T-Shirt Transfers"
 msgstr "Na¾ehµovacia fólia"
 
-#: src/main/print-canon.c:1440
+#: src/main/print-canon.c:1455
 msgid "High Gloss Film"
 msgstr "Vysokolesklý film"
 
-#: src/main/print-canon.c:1441
+#: src/main/print-canon.c:1456
 msgid "Glossy Photo Paper"
 msgstr "Lesklý foto papier"
 
-#: src/main/print-canon.c:1442
+#: src/main/print-canon.c:1457
 msgid "Glossy Photo Cards"
 msgstr "Lesklé foto karty"
 
-#: src/main/print-canon.c:1443
+#: src/main/print-canon.c:1458
 msgid "Photo Paper Pro"
 msgstr "Foto papier pro"
 
-#: src/main/print-canon.c:1444 src/main/print-lexmark.c:905
+#: src/main/print-canon.c:1459 src/main/print-lexmark.c:904
 #: src/main/escp2-papers.c:1196 src/main/escp2-papers.c:1240
 #: src/main/escp2-papers.c:1288 src/main/escp2-papers.c:1336
 #: src/main/escp2-papers.c:1380 src/main/escp2-papers.c:1428
@@ -358,16 +358,16 @@ msgstr "Foto papier pro"
 msgid "Other"
 msgstr "Iné"
 
-#: src/main/print-canon.c:1454 src/main/print-escp2.c:177
+#: src/main/print-canon.c:1469 src/main/print-escp2.c:177
 #: src/main/print-lexmark.c:266 src/main/print-olympus.c:1265
 #: src/main/print-pcl.c:1153 src/main/print-ps.c:66
 #, fuzzy
 msgid "Page Size"
 msgstr "Veµkos»"
 
-#: src/main/print-canon.c:1454 src/main/print-canon.c:1460
-#: src/main/print-canon.c:1466 src/main/print-canon.c:1472
-#: src/main/print-canon.c:1496 src/main/print-escp2.c:177
+#: src/main/print-canon.c:1469 src/main/print-canon.c:1475
+#: src/main/print-canon.c:1481 src/main/print-canon.c:1487
+#: src/main/print-canon.c:1511 src/main/print-escp2.c:177
 #: src/main/print-escp2.c:183 src/main/print-escp2.c:189
 #: src/main/print-escp2.c:195 src/main/print-escp2.c:213
 #: src/main/print-escp2.c:230 src/main/print-escp2.c:236
@@ -384,57 +384,57 @@ msgstr "Veµkos»"
 msgid "Basic Printer Setup"
 msgstr "Nastavenie tlaèiarne"
 
-#: src/main/print-canon.c:1455 src/main/print-escp2.c:178
+#: src/main/print-canon.c:1470 src/main/print-escp2.c:178
 #: src/main/print-lexmark.c:267 src/main/print-olympus.c:1266
 #: src/main/print-pcl.c:1154 src/main/print-ps.c:67
 #, fuzzy
 msgid "Size of the paper being printed to"
 msgstr "Veµkos» papiera, na ktorý chcete tlaèi»"
 
-#: src/main/print-canon.c:1460 src/main/print-escp2.c:183
+#: src/main/print-canon.c:1475 src/main/print-escp2.c:183
 #: src/main/print-lexmark.c:272 src/main/print-olympus.c:1271
-#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1179
+#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1232
 msgid "Media Type"
 msgstr "Typ média"
 
-#: src/main/print-canon.c:1461 src/main/print-escp2.c:184
+#: src/main/print-canon.c:1476 src/main/print-escp2.c:184
 #: src/main/print-lexmark.c:273 src/main/print-olympus.c:1272
 #: src/main/print-pcl.c:1160 src/main/print-ps.c:73
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
-#: src/main/print-canon.c:1466 src/main/print-escp2.c:189
+#: src/main/print-canon.c:1481 src/main/print-escp2.c:189
 #: src/main/print-lexmark.c:278 src/main/print-olympus.c:1277
-#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1203
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1256
 msgid "Media Source"
 msgstr "Zdroj média"
 
-#: src/main/print-canon.c:1467 src/main/print-escp2.c:190
+#: src/main/print-canon.c:1482 src/main/print-escp2.c:190
 #: src/main/print-lexmark.c:279 src/main/print-olympus.c:1278
 #: src/main/print-pcl.c:1166 src/main/print-ps.c:79
 #, fuzzy
 msgid "Source (input slot) of the media"
 msgstr "Zdroj (vstupné miesto) média, na ktoré tlaèíte"
 
-#: src/main/print-canon.c:1472 src/main/print-escp2.c:213
+#: src/main/print-canon.c:1487 src/main/print-escp2.c:213
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1283
-#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1282
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1316
 msgid "Resolution"
 msgstr "Rozlí¹enie"
 
-#: src/main/print-canon.c:1473 src/main/print-lexmark.c:285
+#: src/main/print-canon.c:1488 src/main/print-lexmark.c:285
 #: src/main/print-olympus.c:1284 src/main/print-pcl.c:1172
 #: src/main/print-ps.c:85
 msgid "Resolution and quality of the print"
 msgstr "Rozlí¹enie a kvalita tlaèe"
 
-#: src/main/print-canon.c:1478 src/main/print-escp2.c:224
+#: src/main/print-canon.c:1493 src/main/print-escp2.c:224
 #: src/main/print-lexmark.c:290 src/main/print-olympus.c:1289
 #: src/main/print-pcl.c:1177 src/main/print-ps.c:90 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Typ atramentu"
 
-#: src/main/print-canon.c:1478 src/main/print-escp2.c:201
+#: src/main/print-canon.c:1493 src/main/print-escp2.c:201
 #: src/main/print-escp2.c:207 src/main/print-escp2.c:224
 #: src/main/print-escp2.c:260 src/main/print-lexmark.c:290
 #: src/main/print-olympus.c:1289 src/main/print-olympus.c:1295
@@ -443,21 +443,21 @@ msgstr "Typ atramentu"
 msgid "Advanced Printer Setup"
 msgstr ""
 
-#: src/main/print-canon.c:1479 src/main/print-escp2.c:225
+#: src/main/print-canon.c:1494 src/main/print-escp2.c:225
 #: src/main/print-escp2.c:237 src/main/print-lexmark.c:291
 #: src/main/print-olympus.c:1290 src/main/print-pcl.c:1178
 #: src/main/print-ps.c:91 src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "Typ atramentu tlaèiarne"
 
-#: src/main/print-canon.c:1484 src/main/print-canon.c:1485
+#: src/main/print-canon.c:1499 src/main/print-canon.c:1500
 #: src/main/print-escp2.c:308 src/main/print-escp2.c:309
 #: src/main/print-lexmark.c:296 src/main/print-lexmark.c:297
 #: src/main/print-pcl.c:1183 src/main/print-pcl.c:1184
 msgid "Ink Channels"
 msgstr ""
 
-#: src/main/print-canon.c:1484 src/main/print-escp2.c:127
+#: src/main/print-canon.c:1499 src/main/print-escp2.c:127
 #: src/main/print-escp2.c:134 src/main/print-escp2.c:141
 #: src/main/print-escp2.c:272 src/main/print-escp2.c:278
 #: src/main/print-escp2.c:284 src/main/print-escp2.c:290
@@ -467,14 +467,14 @@ msgstr ""
 msgid "Advanced Printer Functionality"
 msgstr ""
 
-#: src/main/print-canon.c:1490 src/main/print-escp2.c:320
+#: src/main/print-canon.c:1505 src/main/print-escp2.c:320
 #: src/main/print-lexmark.c:302 src/main/print-olympus.c:1307
 #: src/main/print-pcl.c:1189 src/main/print-ps.c:102 src/main/print-raw.c:86
 #, fuzzy
 msgid "Printing Mode"
 msgstr "Model tlaèiarne:"
 
-#: src/main/print-canon.c:1490 src/main/print-color.c:184
+#: src/main/print-canon.c:1505 src/main/print-color.c:184
 #: src/main/print-color.c:192 src/main/print-color.c:200
 #: src/main/print-color.c:208 src/main/print-escp2.c:320
 #: src/main/print-escp2.c:326 src/main/print-lexmark.c:302
@@ -484,69 +484,69 @@ msgstr "Model tlaèiarne:"
 msgid "Core Parameter"
 msgstr "Obyèajný papier"
 
-#: src/main/print-canon.c:1491 src/main/print-escp2.c:321
+#: src/main/print-canon.c:1506 src/main/print-escp2.c:321
 #: src/main/print-lexmark.c:303 src/main/print-olympus.c:1308
 #: src/main/print-pcl.c:1190 src/main/print-ps.c:103 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr ""
 
-#: src/main/print-canon.c:1496 src/main/print-pcl.c:1195
+#: src/main/print-canon.c:1511 src/main/print-pcl.c:1195
 msgid "Double-Sided Printing"
 msgstr ""
 
-#: src/main/print-canon.c:1497 src/main/print-pcl.c:1196
+#: src/main/print-canon.c:1512 src/main/print-pcl.c:1196
 msgid "Duplex/Tumble Setting"
 msgstr ""
 
-#: src/main/print-canon.c:1519 src/main/print-escp2.c:412
+#: src/main/print-canon.c:1534 src/main/print-escp2.c:412
 #: src/main/print-lexmark.c:325 src/main/print-pcl.c:1218
 #, fuzzy
 msgid "Cyan Density"
 msgstr "Hustota:"
 
-#: src/main/print-canon.c:1520 src/main/print-escp2.c:413
+#: src/main/print-canon.c:1535 src/main/print-escp2.c:413
 #: src/main/print-lexmark.c:326 src/main/print-pcl.c:1219
 #, fuzzy
 msgid "Adjust the cyan density"
 msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 
-#: src/main/print-canon.c:1527 src/main/print-escp2.c:420
+#: src/main/print-canon.c:1542 src/main/print-escp2.c:420
 #: src/main/print-lexmark.c:333 src/main/print-pcl.c:1226
 #, fuzzy
 msgid "Magenta Density"
 msgstr "Purpurová"
 
-#: src/main/print-canon.c:1528 src/main/print-escp2.c:421
+#: src/main/print-canon.c:1543 src/main/print-escp2.c:421
 #: src/main/print-lexmark.c:334 src/main/print-pcl.c:1227
 #, fuzzy
 msgid "Adjust the magenta density"
 msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 
-#: src/main/print-canon.c:1535 src/main/print-escp2.c:428
+#: src/main/print-canon.c:1550 src/main/print-escp2.c:428
 #: src/main/print-lexmark.c:341 src/main/print-pcl.c:1234
 #, fuzzy
 msgid "Yellow Density"
 msgstr "Hustota:"
 
-#: src/main/print-canon.c:1536 src/main/print-escp2.c:429
+#: src/main/print-canon.c:1551 src/main/print-escp2.c:429
 #: src/main/print-lexmark.c:342 src/main/print-pcl.c:1235
 #, fuzzy
 msgid "Adjust the yellow density"
 msgstr "Prispôsobenie vyvá¾enie ¾ltej farby pre tlaè"
 
-#: src/main/print-canon.c:1543 src/main/print-escp2.c:436
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:436
 #: src/main/print-lexmark.c:349 src/main/print-pcl.c:1242
 #, fuzzy
 msgid "Black Density"
 msgstr "Hustota:"
 
-#: src/main/print-canon.c:1544 src/main/print-escp2.c:437
+#: src/main/print-canon.c:1559 src/main/print-escp2.c:437
 #: src/main/print-lexmark.c:350 src/main/print-pcl.c:1243
 #, fuzzy
 msgid "Adjust the black density"
 msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 
-#: src/main/print-canon.c:1551 src/main/print-canon.c:1552
+#: src/main/print-canon.c:1566 src/main/print-canon.c:1567
 #: src/main/print-escp2.c:468 src/main/print-escp2.c:469
 #: src/main/print-lexmark.c:357 src/main/print-lexmark.c:358
 #: src/main/print-pcl.c:1250 src/main/print-pcl.c:1251
@@ -554,8 +554,8 @@ msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 msgid "Light Cyan Transition"
 msgstr "Jasná azúrová"
 
-#: src/main/print-canon.c:1551 src/main/print-canon.c:1559
-#: src/main/print-canon.c:1567 src/main/print-escp2.c:468
+#: src/main/print-canon.c:1566 src/main/print-canon.c:1574
+#: src/main/print-canon.c:1582 src/main/print-escp2.c:468
 #: src/main/print-escp2.c:476 src/main/print-escp2.c:484
 #: src/main/print-escp2.c:492 src/main/print-escp2.c:500
 #: src/main/print-escp2.c:508 src/main/print-escp2.c:516
@@ -565,7 +565,7 @@ msgstr "Jasná azúrová"
 msgid "Advanced Ink Adjustment"
 msgstr ""
 
-#: src/main/print-canon.c:1559 src/main/print-canon.c:1560
+#: src/main/print-canon.c:1574 src/main/print-canon.c:1575
 #: src/main/print-escp2.c:476 src/main/print-escp2.c:477
 #: src/main/print-lexmark.c:365 src/main/print-lexmark.c:366
 #: src/main/print-pcl.c:1258 src/main/print-pcl.c:1259
@@ -573,43 +573,59 @@ msgstr ""
 msgid "Light Magenta Transition"
 msgstr "Jasná purpurová"
 
-#: src/main/print-canon.c:1567 src/main/print-canon.c:1568
+#: src/main/print-canon.c:1582 src/main/print-canon.c:1583
 #, fuzzy
 msgid "Light Yellow Transition"
 msgstr "Jasná azúrová"
 
-#: src/main/print-canon.c:1589 src/main/print-pcl.c:1439
+#: src/main/print-canon.c:1604 src/main/print-pcl.c:1439
 #: src/main/escp2-resolutions.c:479 src/main/escp2-resolutions.c:487
 #: src/main/escp2-resolutions.c:498 src/main/escp2-resolutions.c:510
 msgid "Off"
 msgstr ""
 
-#: src/main/print-canon.c:1591 src/main/print-pcl.c:1441
+#: src/main/print-canon.c:1606 src/main/print-pcl.c:1441
 msgid "Short Edge (Flip)"
 msgstr ""
 
-#: src/main/print-canon.c:1901 src/main/print-lexmark.c:1118
+#: src/main/print-canon.c:1920 src/main/print-lexmark.c:1113
 msgid "Auto Sheet Feeder"
 msgstr "Automatický podávaè papiera"
 
-#: src/main/print-canon.c:1902 src/main/print-lexmark.c:1119
+#: src/main/print-canon.c:1921 src/main/print-lexmark.c:1114
 msgid "Manual with Pause"
 msgstr "Manuálne s preru¹ením"
 
-#: src/main/print-canon.c:1903 src/main/print-lexmark.c:1120
+#: src/main/print-canon.c:1922 src/main/print-lexmark.c:1115
 msgid "Manual without Pause"
 msgstr "Manuálne bez preru¹enia"
 
-#: src/main/print-canon.c:1904
+#: src/main/print-canon.c:1923
 #, fuzzy
 msgid "Cassette"
 msgstr "Matný papier"
 
-#: src/main/print-canon.c:1905
+#: src/main/print-canon.c:1924
 msgid "CD tray"
 msgstr ""
 
-#: src/main/print-canon.c:2017 src/main/print-color.c:314
+#: src/main/print-canon.c:2049
+msgid "Photo CcMmYK Color"
+msgstr "Fotografická CcMmYK farba"
+
+#: src/main/print-canon.c:2052
+msgid "Photo CcMmY Color"
+msgstr "Fotografická CcMmY farba"
+
+#: src/main/print-canon.c:2055
+msgid "CMYK Color"
+msgstr "CMYK farba"
+
+#: src/main/print-canon.c:2058
+msgid "CMY Color"
+msgstr "CMY farba"
+
+#: src/main/print-canon.c:2061 src/main/print-color.c:314
 #: src/main/print-escp2-data.c:617 src/main/print-escp2-data.c:630
 #: src/main/print-escp2-data.c:640 src/main/print-escp2-data.c:647
 #: src/main/print-escp2-data.c:659 src/main/print-escp2-data.c:671
@@ -617,35 +633,20 @@ msgstr ""
 #: src/main/print-escp2-data.c:703 src/main/print-escp2-data.c:727
 #: src/main/print-escp2-data.c:740 src/main/print-lexmark.c:613
 #: src/gutenprintui/panel.c:2145 src/gutenprintui2/panel.c:2144
-#: src/escputil/escputil.c:863 src/escputil/escputil.c:884
+#: src/escputil/escputil.c:965 src/escputil/escputil.c:986
+#: src/escputil/escputil.c:1190
 msgid "Black"
 msgstr "Èierna"
 
-#: src/main/print-canon.c:2020
-msgid "CMY Color"
-msgstr "CMY farba"
-
-#: src/main/print-canon.c:2023
-msgid "CMYK Color"
-msgstr "CMYK farba"
-
-#: src/main/print-canon.c:2026
-msgid "Photo CcMmY Color"
-msgstr "Fotografická CcMmY farba"
-
-#: src/main/print-canon.c:2029
-msgid "Photo CcMmYK Color"
-msgstr "Fotografická CcMmYK farba"
-
-#: src/main/print-canon.c:2073 src/main/print-escp2.c:1785
-#: src/main/print-lexmark.c:1283 src/main/print-olympus.c:1562
+#: src/main/print-canon.c:2111 src/main/print-escp2.c:1785
+#: src/main/print-lexmark.c:1284 src/main/print-olympus.c:1562
 #: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
 #: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color"
 msgstr "Farebne"
 
-#: src/main/print-canon.c:2075 src/main/print-escp2.c:1787
-#: src/main/print-lexmark.c:1285 src/main/print-pcl.c:1735
+#: src/main/print-canon.c:2113 src/main/print-escp2.c:1787
+#: src/main/print-lexmark.c:1286 src/main/print-pcl.c:1735
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 #, fuzzy
 msgid "Black and White"
@@ -854,7 +855,8 @@ msgstr ""
 #: src/main/print-escp2-data.c:698 src/main/print-escp2-data.c:712
 #: src/main/print-escp2-data.c:726 src/main/print-escp2-data.c:741
 #: src/gutenprintui/panel.c:2124 src/gutenprintui2/panel.c:2123
-#: src/escputil/escputil.c:866 src/escputil/escputil.c:885
+#: src/escputil/escputil.c:968 src/escputil/escputil.c:987
+#: src/escputil/escputil.c:1191
 msgid "Cyan"
 msgstr "Azúrová"
 
@@ -870,7 +872,8 @@ msgstr "Prispôsobenie vyvá¾enie azúrovej farby pre tlaè"
 #: src/main/print-escp2-data.c:699 src/main/print-escp2-data.c:711
 #: src/main/print-escp2-data.c:725 src/main/print-escp2-data.c:742
 #: src/gutenprintui/panel.c:2131 src/gutenprintui2/panel.c:2130
-#: src/escputil/escputil.c:867 src/escputil/escputil.c:886
+#: src/escputil/escputil.c:969 src/escputil/escputil.c:988
+#: src/escputil/escputil.c:1192
 msgid "Magenta"
 msgstr "Purpurová"
 
@@ -886,7 +889,8 @@ msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 #: src/main/print-escp2-data.c:700 src/main/print-escp2-data.c:710
 #: src/main/print-escp2-data.c:724 src/main/print-escp2-data.c:743
 #: src/gutenprintui/panel.c:2138 src/gutenprintui2/panel.c:2137
-#: src/escputil/escputil.c:868 src/escputil/escputil.c:887
+#: src/escputil/escputil.c:970 src/escputil/escputil.c:989
+#: src/escputil/escputil.c:1193
 msgid "Yellow"
 msgstr "®ltá"
 
@@ -897,8 +901,8 @@ msgstr "Prispôsobenie vyvá¾enie ¾ltej farby pre tlaè"
 
 #: src/main/print-color.c:290 src/main/print-escp2-data.c:715
 #: src/main/print-escp2-data.c:728 src/gutenprintui/panel.c:2152
-#: src/gutenprintui2/panel.c:2151 src/escputil/escputil.c:875
-#: src/escputil/escputil.c:893
+#: src/gutenprintui2/panel.c:2151 src/escputil/escputil.c:977
+#: src/escputil/escputil.c:995
 msgid "Red"
 msgstr ""
 
@@ -919,8 +923,8 @@ msgstr "Prispôsobenie vyvá¾enie purpurovej farby pre tlaè"
 
 #: src/main/print-color.c:306 src/main/print-escp2-data.c:716
 #: src/main/print-escp2-data.c:729 src/gutenprintui/panel.c:2166
-#: src/gutenprintui2/panel.c:2165 src/escputil/escputil.c:876
-#: src/escputil/escputil.c:894
+#: src/gutenprintui2/panel.c:2165 src/escputil/escputil.c:978
+#: src/escputil/escputil.c:996
 msgid "Blue"
 msgstr ""
 
@@ -1164,87 +1168,87 @@ msgstr ""
 msgid "Traditional Gutenprint color conversion"
 msgstr ""
 
-#: src/main/printers.c:459
+#: src/main/printers.c:503
 #, c-format
 msgid "Value must be set for %s\n"
 msgstr ""
 
-#: src/main/printers.c:472 src/main/printers.c:477
+#: src/main/printers.c:516 src/main/printers.c:521
 #, fuzzy, c-format
 msgid "`%s' is not a valid %s\n"
 msgstr "%s nie je platný parameter pre typ %s\n"
 
-#: src/main/printers.c:496
+#: src/main/printers.c:540
 #, c-format
 msgid "%s must be between %f and %f (is %f)\n"
 msgstr ""
 
-#: src/main/printers.c:518 src/main/printers.c:542
+#: src/main/printers.c:562 src/main/printers.c:586
 #, c-format
 msgid "%s must be between %d and %d (is %d)\n"
 msgstr ""
 
-#: src/main/printers.c:573
+#: src/main/printers.c:617
 #, c-format
 msgid "%s bounds must be between %f and %f\n"
 msgstr ""
 
-#: src/main/printers.c:581
+#: src/main/printers.c:625
 #, c-format
 msgid "%s wrap mode must be %s\n"
 msgstr ""
 
-#: src/main/printers.c:585
+#: src/main/printers.c:629
 msgid "no wrap"
 msgstr ""
 
-#: src/main/printers.c:585
+#: src/main/printers.c:629
 msgid "wrap around"
 msgstr ""
 
-#: src/main/printers.c:629
+#: src/main/printers.c:673
 #, fuzzy, c-format
 msgid "Unknown type parameter %s (%d)\n"
 msgstr "Neznáma tlaèiareò %s\n"
 
-#: src/main/printers.c:642 src/main/printers.c:653
+#: src/main/printers.c:686 src/main/printers.c:697
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s mimo rozsahu (hodnota %d, min %d, max %d)\n"
 
-#: src/main/printers.c:711
+#: src/main/printers.c:755
 #, fuzzy
 msgid "Page size is not valid\n"
 msgstr "Veµkos» obrázka nie je platná\n"
 
-#: src/main/printers.c:732
+#: src/main/printers.c:776
 #, fuzzy, c-format
 msgid "Top margin must not be less than %d\n"
 msgstr "Horný okraj nemô¾e by» men¹í ako nula\n"
 
-#: src/main/printers.c:738
+#: src/main/printers.c:782
 #, fuzzy, c-format
 msgid "Left margin must not be less than %d\n"
 msgstr "¥avý okraj nemô¾e by» men¹í ako nula\n"
 
-#: src/main/printers.c:744
+#: src/main/printers.c:788
 #, fuzzy
 msgid "Height must be greater than zero\n"
 msgstr "¥avý okraj nemô¾e by» men¹í ako nula\n"
 
-#: src/main/printers.c:750
+#: src/main/printers.c:794
 #, fuzzy
 msgid "Width must be greater than zero\n"
 msgstr "Horný okraj nemô¾e by» men¹í ako nula\n"
 
-#: src/main/printers.c:756
+#: src/main/printers.c:800
 #, c-format
 msgid ""
 "Image is too wide for the page: left margin is %d, width %d, right edge is %"
 "d\n"
 msgstr ""
 
-#: src/main/printers.c:763
+#: src/main/printers.c:807
 #, c-format
 msgid ""
 "Image is too long for the page: top margin is %d, height %d, bottom edge is %"
@@ -1349,7 +1353,7 @@ msgstr ""
 #: src/main/print-escp2-data.c:651 src/main/print-escp2-data.c:661
 #: src/main/print-escp2-data.c:675 src/main/print-escp2-data.c:688
 #: src/main/print-escp2-data.c:701 src/main/print-escp2-data.c:738
-#: src/escputil/escputil.c:869
+#: src/escputil/escputil.c:971 src/escputil/escputil.c:1194
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Jasná azúrová"
@@ -1357,13 +1361,13 @@ msgstr "Jasná azúrová"
 #: src/main/print-escp2-data.c:652 src/main/print-escp2-data.c:663
 #: src/main/print-escp2-data.c:676 src/main/print-escp2-data.c:689
 #: src/main/print-escp2-data.c:702 src/main/print-escp2-data.c:737
-#: src/escputil/escputil.c:870
+#: src/escputil/escputil.c:972 src/escputil/escputil.c:1195
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Jasná purpurová"
 
 #: src/main/print-escp2-data.c:677 src/main/print-escp2-data.c:739
-#: src/escputil/escputil.c:873
+#: src/escputil/escputil.c:975
 #, fuzzy
 msgid "Light Black"
 msgstr "Èierna"
@@ -1374,23 +1378,23 @@ msgid "Dark Yellow"
 msgstr "®ltá"
 
 #: src/main/print-escp2-data.c:713 src/main/escp2-channels.c:2439
-#: src/main/escp2-channels.c:2455 src/escputil/escputil.c:874
+#: src/main/escp2-channels.c:2455 src/escputil/escputil.c:976
 #, fuzzy
 msgid "Matte Black"
 msgstr "Matný papier"
 
 #: src/main/print-escp2-data.c:714 src/main/escp2-channels.c:2435
-#: src/main/escp2-channels.c:2473 src/escputil/escputil.c:864
+#: src/main/escp2-channels.c:2473 src/escputil/escputil.c:966
 #, fuzzy
 msgid "Photo Black"
 msgstr "Fotografický papier"
 
-#: src/main/print-escp2-data.c:717 src/escputil/escputil.c:877
+#: src/main/print-escp2-data.c:717 src/escputil/escputil.c:979
 #, fuzzy
 msgid "Gloss Optimizer"
 msgstr "Lesklý film"
 
-#: src/main/print-escp2-data.c:736 src/escputil/escputil.c:878
+#: src/main/print-escp2-data.c:736 src/escputil/escputil.c:980
 #, fuzzy
 msgid "Light Light Black"
 msgstr "Èierna"
@@ -1669,7 +1673,7 @@ msgstr "Tlaèi» do súboru?"
 msgid "Manual Control"
 msgstr "Typ výstupu:"
 
-#: src/main/print-escp2.c:1617 src/cups/genppd.c:1291
+#: src/main/print-escp2.c:1617 src/cups/genppd.c:1325
 #, fuzzy
 msgid "Automatic"
 msgstr "Veµkos»"
@@ -1704,12 +1708,12 @@ msgstr ""
 msgid "Nearest Neighbor Avoidance"
 msgstr ""
 
-#: src/main/print-escp2.c:2057
+#: src/main/print-escp2.c:2085
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Tlaèiareò nepodporuje farebný výstup\n"
 
-#: src/main/print-escp2.c:2996 src/main/print-olympus.c:1752
+#: src/main/print-escp2.c:3040 src/main/print-olympus.c:1774
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
@@ -1795,70 +1799,70 @@ msgstr "Fotografický ¹es»farebný"
 msgid "Five Color Photo Composite"
 msgstr "Kompozitný fotografický pä»farebný"
 
-#: src/main/print-lexmark.c:861 src/main/escp2-papers.c:1166
+#: src/main/print-lexmark.c:860 src/main/escp2-papers.c:1166
 #: src/main/escp2-papers.c:1210 src/main/escp2-papers.c:1254
 #: src/main/escp2-papers.c:1302 src/main/escp2-papers.c:1350
 #: src/main/escp2-papers.c:1394
 msgid "Glossy Film"
 msgstr "Lesklý film"
 
-#: src/main/print-lexmark.c:869 src/main/escp2-papers.c:1170
+#: src/main/print-lexmark.c:868 src/main/escp2-papers.c:1170
 #: src/main/escp2-papers.c:1214 src/main/escp2-papers.c:1258
 #: src/main/escp2-papers.c:1306 src/main/escp2-papers.c:1354
 #: src/main/escp2-papers.c:1398
 msgid "Envelopes"
 msgstr "Obálky"
 
-#: src/main/print-lexmark.c:873 src/main/escp2-papers.c:1174
+#: src/main/print-lexmark.c:872 src/main/escp2-papers.c:1174
 #: src/main/escp2-papers.c:1218 src/main/escp2-papers.c:1262
 #: src/main/escp2-papers.c:1310 src/main/escp2-papers.c:1358
 #: src/main/escp2-papers.c:1402
 msgid "Matte Paper"
 msgstr "Matný papier"
 
-#: src/main/print-lexmark.c:877 src/main/escp2-papers.c:1178
+#: src/main/print-lexmark.c:876 src/main/escp2-papers.c:1178
 #: src/main/escp2-papers.c:1222 src/main/escp2-papers.c:1266
 #: src/main/escp2-papers.c:1314 src/main/escp2-papers.c:1362
 #: src/main/escp2-papers.c:1406
 msgid "Inkjet Paper"
 msgstr "Papier pre atramentovú tlaèiareò"
 
-#: src/main/print-lexmark.c:881 src/main/escp2-papers.c:1180
+#: src/main/print-lexmark.c:880 src/main/escp2-papers.c:1180
 #: src/main/escp2-papers.c:1224 src/main/escp2-papers.c:1268
 #: src/main/escp2-papers.c:1316 src/main/escp2-papers.c:1364
 #: src/main/escp2-papers.c:1408
 msgid "Photo Quality Inkjet Paper"
 msgstr "Papier s fotografickou kvalitou"
 
-#: src/main/print-lexmark.c:885 src/main/escp2-papers.c:1182
+#: src/main/print-lexmark.c:884 src/main/escp2-papers.c:1182
 #: src/main/escp2-papers.c:1226 src/main/escp2-papers.c:1270
 #: src/main/escp2-papers.c:1318 src/main/escp2-papers.c:1366
 #: src/main/escp2-papers.c:1410
 msgid "Photo Paper"
 msgstr "Fotografický papier"
 
-#: src/main/print-lexmark.c:889 src/main/escp2-papers.c:1184
+#: src/main/print-lexmark.c:888 src/main/escp2-papers.c:1184
 #: src/main/escp2-papers.c:1228 src/main/escp2-papers.c:1272
 #: src/main/escp2-papers.c:1320 src/main/escp2-papers.c:1368
 #: src/main/escp2-papers.c:1412 src/main/escp2-papers.c:1436
 msgid "Premium Glossy Photo Paper"
 msgstr "Lesklý foto papier Premium"
 
-#: src/main/print-lexmark.c:893 src/main/escp2-papers.c:1188
+#: src/main/print-lexmark.c:892 src/main/escp2-papers.c:1188
 #: src/main/escp2-papers.c:1232 src/main/escp2-papers.c:1276
 #: src/main/escp2-papers.c:1324 src/main/escp2-papers.c:1372
 #: src/main/escp2-papers.c:1416
 msgid "Premium Luster Photo Paper"
 msgstr "Ligotavý foto papier Premium"
 
-#: src/main/print-lexmark.c:897 src/main/escp2-papers.c:1190
+#: src/main/print-lexmark.c:896 src/main/escp2-papers.c:1190
 #: src/main/escp2-papers.c:1234 src/main/escp2-papers.c:1282
 #: src/main/escp2-papers.c:1330 src/main/escp2-papers.c:1374
 #: src/main/escp2-papers.c:1422
 msgid "Photo Quality Glossy Paper"
 msgstr "Lesklý fotografický papier"
 
-#: src/main/print-lexmark.c:901 src/main/escp2-papers.c:1192
+#: src/main/print-lexmark.c:900 src/main/escp2-papers.c:1192
 #: src/main/escp2-papers.c:1236 src/main/escp2-papers.c:1284
 #: src/main/escp2-papers.c:1332 src/main/escp2-papers.c:1376
 #: src/main/escp2-papers.c:1424
@@ -1869,8 +1873,8 @@ msgstr "Ilford »a¾ký papier"
 msgid "Coated"
 msgstr ""
 
-#: src/main/print-olympus.c:266 src/cups/genppd.c:1407 src/cups/genppd.c:1422
-#: src/cups/genppd.c:1470
+#: src/main/print-olympus.c:266 src/cups/genppd.c:1442 src/cups/genppd.c:1457
+#: src/cups/genppd.c:1508
 msgid "None"
 msgstr ""
 
@@ -2434,7 +2438,8 @@ msgid "4x6"
 msgstr "4x6"
 
 #: src/main/xmli18n-tmp.h:10
-msgid "Epson 4x6 Photo Paper"
+#, fuzzy
+msgid "Epson 4x6 Photo Paper (tear-off borders)"
 msgstr "Epson 4x6 Foto papier"
 
 #: src/main/xmli18n-tmp.h:11
@@ -2969,1478 +2974,3180 @@ msgid "PostScript Level 2"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:143
-msgid "Canon BJC 30"
+msgid "Canon BJ-30"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:144
-msgid "Canon BJC 50"
+msgid "Canon BJC-50"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:145
-msgid "Canon BJC 55"
+msgid "Canon BJC-55"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:146
-msgid "Canon BJC 80"
+msgid "Canon BJC-80"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:147
-msgid "Canon BJC 85"
+msgid "Canon BJC-85"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:148
-msgid "Canon BJC 210"
+msgid "Canon BJC-210"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:149
-msgid "Canon BJC 240"
+msgid "Canon BJC-240"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:150
-msgid "Canon BJC 250"
+msgid "Canon BJC-250"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:151
-msgid "Canon BJC 1000"
+msgid "Canon BJC-1000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:152
-msgid "Canon BJC 2000"
+msgid "Canon BJC-2000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:153
-msgid "Canon BJC 3000"
+msgid "Canon BJC-2010"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:154
-msgid "Canon BJC 4300"
+msgid "Canon BJC-2100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:155
-msgid "Canon BJC 4400 photo"
+msgid "Canon BJC-2110"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:156
-msgid "Canon BJC 6000"
+msgid "Canon BJC-3000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:157
-msgid "Canon BJC 6100"
+msgid "Canon BJC-4000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:158
-msgid "Canon BJC 6200"
+msgid "Canon BJC-4300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:159
-msgid "Canon BJC 6500"
+msgid "Canon BJC-4400"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:160
-msgid "Canon BJC 7000"
+msgid "Canon BJC-6000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:161
-msgid "Canon BJC 7100"
+msgid "Canon BJC-6100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:162
-msgid "Canon BJC 8200"
+msgid "Canon BJC-6200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:163
-msgid "Canon S200"
+msgid "Canon BJC-6500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:164
-msgid "Canon S400"
+msgid "Canon BJC-7000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:165
-msgid "Canon S450"
+msgid "Canon BJC-7100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:166
-msgid "Canon S800"
+msgid "Canon BJC-8200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:167
-msgid "Canon S4500"
+msgid "Canon S100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:168
-msgid "Canon PIXMA iP4000"
+msgid "Canon S200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:169
-#, fuzzy
-msgid "EPSON Stylus C20"
-msgstr "Stylus C20ux"
+msgid "Canon S300"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:170
-#, fuzzy
-msgid "EPSON Stylus C20SX"
-msgstr "Stylus C20ux"
+msgid "Canon S400"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:171
-#, fuzzy
-msgid "EPSON Stylus C20UX"
-msgstr "Stylus C20ux"
+msgid "Canon S450"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:172
-#, fuzzy
-msgid "EPSON Stylus C40"
-msgstr "Stylus C40ux"
+msgid "Canon S500"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:173
-#, fuzzy
-msgid "EPSON Stylus C40SX"
-msgstr "Stylus C40ux"
+msgid "Canon S600"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:174
-#, fuzzy
-msgid "EPSON Stylus C40UX"
-msgstr "Stylus C40ux"
+msgid "Canon S630"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:175
-#, fuzzy
-msgid "EPSON Stylus C41"
-msgstr "Stylus C40ux"
+msgid "Canon S800"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:176
-#, fuzzy
-msgid "EPSON Stylus C41SX"
-msgstr "Stylus C40ux"
+msgid "Canon S4500"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:177
-#, fuzzy
-msgid "EPSON Stylus C41UX"
-msgstr "Stylus C40ux"
+msgid "Canon iP4000"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:178
 #, fuzzy
-msgid "EPSON Stylus C42"
-msgstr "Stylus C40ux"
+msgid "Epson Stylus C20"
+msgstr "Stylus C20ux"
 
 #: src/main/xmli18n-tmp.h:179
 #, fuzzy
-msgid "EPSON Stylus C42SX"
-msgstr "Stylus C40ux"
+msgid "Epson Stylus C20SX"
+msgstr "Stylus C20ux"
 
 #: src/main/xmli18n-tmp.h:180
 #, fuzzy
-msgid "EPSON Stylus C42UX"
-msgstr "Stylus C40ux"
+msgid "Epson Stylus C20UX"
+msgstr "Stylus C20ux"
 
 #: src/main/xmli18n-tmp.h:181
 #, fuzzy
-msgid "EPSON Stylus C43"
+msgid "Epson Stylus C40"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:182
 #, fuzzy
-msgid "EPSON Stylus C43SX"
+msgid "Epson Stylus C40SX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:183
 #, fuzzy
-msgid "EPSON Stylus C43UX"
+msgid "Epson Stylus C40UX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:184
 #, fuzzy
-msgid "EPSON Stylus C44"
+msgid "Epson Stylus C41"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:185
 #, fuzzy
-msgid "EPSON Stylus C44SX"
+msgid "Epson Stylus C41SX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:186
 #, fuzzy
-msgid "EPSON Stylus C44UX"
+msgid "Epson Stylus C41UX"
 msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:187
 #, fuzzy
-msgid "EPSON Stylus C45"
-msgstr "Stylus C60"
+msgid "Epson Stylus C42"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:188
 #, fuzzy
-msgid "EPSON Stylus C46"
-msgstr "Stylus C60"
+msgid "Epson Stylus C42SX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:189
 #, fuzzy
-msgid "EPSON Stylus C48"
-msgstr "Stylus C60"
+msgid "Epson Stylus C42UX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:190
 #, fuzzy
-msgid "EPSON Stylus C50"
-msgstr "Stylus C60"
+msgid "Epson Stylus C43"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:191
 #, fuzzy
-msgid "EPSON Stylus C60"
-msgstr "Stylus C60"
+msgid "Epson Stylus C43SX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:192
 #, fuzzy
-msgid "EPSON Stylus C61"
-msgstr "Stylus C60"
+msgid "Epson Stylus C43UX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:193
 #, fuzzy
-msgid "EPSON Stylus C62"
-msgstr "Stylus C60"
+msgid "Epson Stylus C44"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:194
 #, fuzzy
-msgid "EPSON Stylus C63"
-msgstr "Stylus C60"
+msgid "Epson Stylus C44SX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:195
 #, fuzzy
-msgid "EPSON Stylus C64"
-msgstr "Stylus C60"
+msgid "Epson Stylus C44UX"
+msgstr "Stylus C40ux"
 
 #: src/main/xmli18n-tmp.h:196
 #, fuzzy
-msgid "EPSON Stylus C65"
+msgid "Epson Stylus C45"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:197
 #, fuzzy
-msgid "EPSON Stylus C66"
+msgid "Epson Stylus C46"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:198
 #, fuzzy
-msgid "EPSON Stylus C68"
+msgid "Epson Stylus C48"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:199
 #, fuzzy
-msgid "EPSON Stylus C70"
-msgstr "Stylus C70"
+msgid "Epson Stylus C50"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:200
 #, fuzzy
-msgid "EPSON Stylus C80"
-msgstr "Stylus C80"
+msgid "Epson Stylus C60"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:201
 #, fuzzy
-msgid "EPSON Stylus C82"
-msgstr "Stylus C80"
+msgid "Epson Stylus C61"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:202
 #, fuzzy
-msgid "EPSON Stylus C83"
-msgstr "Stylus C80"
+msgid "Epson Stylus C62"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:203
 #, fuzzy
-msgid "EPSON Stylus C84"
-msgstr "Stylus C80"
+msgid "Epson Stylus C63"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:204
 #, fuzzy
-msgid "EPSON Stylus C85"
+msgid "Epson Stylus C64"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:205
 #, fuzzy
-msgid "EPSON Stylus C86"
+msgid "Epson Stylus C65"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:206
 #, fuzzy
-msgid "EPSON Stylus C88"
-msgstr "Stylus C80"
+msgid "Epson Stylus C66"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:207
 #, fuzzy
-msgid "EPSON Stylus Color"
-msgstr "Stylus Color"
+msgid "Epson Stylus C68"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:208
 #, fuzzy
-msgid "EPSON Stylus Color Pro"
-msgstr "Stylus Color Pro"
+msgid "Epson Stylus C70"
+msgstr "Stylus C70"
 
 #: src/main/xmli18n-tmp.h:209
 #, fuzzy
-msgid "EPSON Stylus Color Pro XL"
-msgstr "Stylus Color Pro XL"
+msgid "Epson Stylus C80"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:210
 #, fuzzy
-msgid "EPSON Stylus Color 400"
-msgstr "Stylus Color 400"
+msgid "Epson Stylus C82"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:211
 #, fuzzy
-msgid "EPSON Stylus Color 440"
-msgstr "Stylus Color 440"
+msgid "Epson Stylus C83"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:212
 #, fuzzy
-msgid "EPSON Stylus Color 460"
-msgstr "Stylus Color 460"
+msgid "Epson Stylus C84"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:213
 #, fuzzy
-msgid "EPSON Stylus Color 480"
-msgstr "Stylus Color 480"
+msgid "Epson Stylus C85"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:214
 #, fuzzy
-msgid "EPSON Stylus Color 500"
-msgstr "Stylus Color 500"
+msgid "Epson Stylus C86"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:215
 #, fuzzy
-msgid "EPSON Stylus Color 580"
-msgstr "Stylus Color 580"
+msgid "Epson Stylus C88"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:216
 #, fuzzy
-msgid "EPSON Stylus Color 600"
-msgstr "Stylus Color 600"
+msgid "Epson Stylus Color"
+msgstr "Stylus Color"
 
 #: src/main/xmli18n-tmp.h:217
 #, fuzzy
-msgid "EPSON Stylus Color 640"
-msgstr "Stylus Color 640"
+msgid "Epson Stylus Color I"
+msgstr "Stylus Color"
 
 #: src/main/xmli18n-tmp.h:218
 #, fuzzy
-msgid "EPSON Stylus Color 660"
-msgstr "Stylus Color 660"
+msgid "Epson Stylus Color II"
+msgstr "Stylus Color"
 
 #: src/main/xmli18n-tmp.h:219
 #, fuzzy
-msgid "EPSON Stylus Color 670"
-msgstr "Stylus Color 670"
+msgid "Epson Stylus Color IIs"
+msgstr "Stylus Color"
 
 #: src/main/xmli18n-tmp.h:220
 #, fuzzy
-msgid "EPSON Stylus Color 680"
-msgstr "Stylus Color 680"
+msgid "Epson Stylus Color PRO"
+msgstr "Stylus Color Pro"
 
 #: src/main/xmli18n-tmp.h:221
 #, fuzzy
-msgid "EPSON Stylus Color 740"
-msgstr "Stylus Color 740"
+msgid "Epson Stylus Pro XL"
+msgstr "Stylus Color Pro XL"
 
 #: src/main/xmli18n-tmp.h:222
 #, fuzzy
-msgid "EPSON Stylus Color 760"
-msgstr "Stylus Color 760"
+msgid "Epson Stylus Color 400"
+msgstr "Stylus Color 400"
 
 #: src/main/xmli18n-tmp.h:223
 #, fuzzy
-msgid "EPSON Stylus Color 777"
-msgstr "Stylus Color 777"
+msgid "Epson Stylus Color 440"
+msgstr "Stylus Color 440"
 
 #: src/main/xmli18n-tmp.h:224
 #, fuzzy
-msgid "EPSON Stylus Color 800"
-msgstr "Stylus Color 800"
+msgid "Epson Stylus Color 460"
+msgstr "Stylus Color 460"
 
 #: src/main/xmli18n-tmp.h:225
 #, fuzzy
-msgid "EPSON Stylus Color 850"
-msgstr "Stylus Color 850"
+msgid "Epson Stylus Color 480"
+msgstr "Stylus Color 480"
 
 #: src/main/xmli18n-tmp.h:226
 #, fuzzy
-msgid "EPSON Stylus Color 860"
-msgstr "Stylus Color 860"
+msgid "Epson Stylus Color 500"
+msgstr "Stylus Color 500"
 
 #: src/main/xmli18n-tmp.h:227
 #, fuzzy
-msgid "EPSON Stylus Color 880"
-msgstr "Stylus Color 880"
+msgid "Epson Stylus Color 580"
+msgstr "Stylus Color 580"
 
 #: src/main/xmli18n-tmp.h:228
 #, fuzzy
-msgid "EPSON Stylus Color 83"
-msgstr "Stylus Color 83"
+msgid "Epson Stylus Color 600"
+msgstr "Stylus Color 600"
 
 #: src/main/xmli18n-tmp.h:229
 #, fuzzy
-msgid "EPSON Stylus Color 900"
-msgstr "Stylus Color 900"
+msgid "Epson Stylus Color 640"
+msgstr "Stylus Color 640"
 
 #: src/main/xmli18n-tmp.h:230
 #, fuzzy
-msgid "EPSON Stylus Color 980"
-msgstr "Stylus Color 980"
+msgid "Epson Stylus Color 660"
+msgstr "Stylus Color 660"
 
 #: src/main/xmli18n-tmp.h:231
 #, fuzzy
-msgid "EPSON Stylus Color 1160"
-msgstr "Stylus Color 1160"
+msgid "Epson Stylus Color 670"
+msgstr "Stylus Color 670"
 
 #: src/main/xmli18n-tmp.h:232
 #, fuzzy
-msgid "EPSON Stylus Color 1500"
-msgstr "Stylus Color 1500"
+msgid "Epson Stylus Color 680"
+msgstr "Stylus Color 680"
 
 #: src/main/xmli18n-tmp.h:233
 #, fuzzy
-msgid "EPSON Stylus Color 1520"
-msgstr "Stylus Color 1520"
+msgid "Epson Stylus Color 740"
+msgstr "Stylus Color 740"
 
 #: src/main/xmli18n-tmp.h:234
 #, fuzzy
-msgid "EPSON Stylus Color 3000"
-msgstr "Stylus Color 3000"
+msgid "Epson Stylus Color 760"
+msgstr "Stylus Color 760"
 
 #: src/main/xmli18n-tmp.h:235
 #, fuzzy
-msgid "EPSON Stylus Photo"
-msgstr "Stylus Photo"
+msgid "Epson Stylus Color 777"
+msgstr "Stylus Color 777"
 
 #: src/main/xmli18n-tmp.h:236
 #, fuzzy
-msgid "EPSON Stylus Photo 700"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Color 800"
+msgstr "Stylus Color 800"
 
 #: src/main/xmli18n-tmp.h:237
 #, fuzzy
-msgid "EPSON Stylus Photo EX"
-msgstr "Stylus Photo EX"
+msgid "Epson Stylus Color 850"
+msgstr "Stylus Color 850"
 
 #: src/main/xmli18n-tmp.h:238
 #, fuzzy
-msgid "EPSON Stylus Photo EX3"
-msgstr "Stylus Photo EX"
+msgid "Epson Stylus Color 860"
+msgstr "Stylus Color 860"
 
 #: src/main/xmli18n-tmp.h:239
 #, fuzzy
-msgid "EPSON Stylus Photo 720"
-msgstr "Stylus Photo 720"
+msgid "Epson Stylus Color 880"
+msgstr "Stylus Color 880"
 
 #: src/main/xmli18n-tmp.h:240
 #, fuzzy
-msgid "EPSON Stylus Photo 750"
-msgstr "Stylus Photo 750"
+msgid "Epson Stylus Color 8 3"
+msgstr "Stylus Color 83"
 
 #: src/main/xmli18n-tmp.h:241
 #, fuzzy
-msgid "EPSON Stylus Photo 780"
-msgstr "Stylus Photo 780"
+msgid "Epson Stylus Color 900"
+msgstr "Stylus Color 900"
 
 #: src/main/xmli18n-tmp.h:242
 #, fuzzy
-msgid "EPSON Stylus Photo 785EPX"
-msgstr "Stylus Photo 785"
+msgid "Epson Stylus Color 980"
+msgstr "Stylus Color 980"
 
 #: src/main/xmli18n-tmp.h:243
 #, fuzzy
-msgid "EPSON Stylus Photo 790"
-msgstr "Stylus Photo 790"
+msgid "Epson Stylus Color 1160"
+msgstr "Stylus Color 1160"
 
 #: src/main/xmli18n-tmp.h:244
 #, fuzzy
-msgid "EPSON Stylus Photo 810"
-msgstr "Stylus Photo 810"
+msgid "Epson Stylus Color 1500"
+msgstr "Stylus Color 1500"
 
 #: src/main/xmli18n-tmp.h:245
 #, fuzzy
-msgid "EPSON Stylus Photo 820"
-msgstr "Stylus Photo 820"
+msgid "Epson Stylus Color 1520"
+msgstr "Stylus Color 1520"
 
 #: src/main/xmli18n-tmp.h:246
 #, fuzzy
-msgid "EPSON Stylus Photo 825"
-msgstr "Stylus Photo 785"
+msgid "Epson Stylus Color 3000"
+msgstr "Stylus Color 3000"
 
 #: src/main/xmli18n-tmp.h:247
 #, fuzzy
-msgid "EPSON Stylus Photo 830"
-msgstr "Stylus Photo 780"
+msgid "Epson Stylus Photo"
+msgstr "Stylus Photo"
 
 #: src/main/xmli18n-tmp.h:248
 #, fuzzy
-msgid "EPSON Stylus Photo 870"
-msgstr "Stylus Photo 870"
+msgid "Epson Stylus Photo 700"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:249
 #, fuzzy
-msgid "EPSON Stylus Photo 875"
-msgstr "Stylus Photo 875"
+msgid "Epson Stylus Photo EX"
+msgstr "Stylus Photo EX"
 
 #: src/main/xmli18n-tmp.h:250
 #, fuzzy
-msgid "EPSON Stylus Photo 890"
-msgstr "Stylus Photo 890"
+msgid "Epson Stylus Photo EX3"
+msgstr "Stylus Photo EX"
 
 #: src/main/xmli18n-tmp.h:251
 #, fuzzy
-msgid "EPSON Stylus Photo 895"
-msgstr "Stylus Photo 895"
+msgid "Epson Stylus Photo 720"
+msgstr "Stylus Photo 720"
 
 #: src/main/xmli18n-tmp.h:252
 #, fuzzy
-msgid "EPSON Stylus Photo 900"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 750"
+msgstr "Stylus Photo 750"
 
 #: src/main/xmli18n-tmp.h:253
 #, fuzzy
-msgid "EPSON Stylus Photo 915"
-msgstr "Stylus Photo 895"
+msgid "Epson Stylus Photo 780"
+msgstr "Stylus Photo 780"
 
 #: src/main/xmli18n-tmp.h:254
 #, fuzzy
-msgid "EPSON Stylus Photo 925"
-msgstr "Stylus Photo 895"
+msgid "Epson Stylus Photo 785"
+msgstr "Stylus Photo 785"
 
 #: src/main/xmli18n-tmp.h:255
 #, fuzzy
-msgid "EPSON Stylus Photo 935"
-msgstr "Stylus Photo 895"
+msgid "Epson Stylus Photo 790"
+msgstr "Stylus Photo 790"
 
 #: src/main/xmli18n-tmp.h:256
 #, fuzzy
-msgid "EPSON Stylus Photo 950"
-msgstr "Stylus Photo 750"
+msgid "Epson Stylus Photo 810"
+msgstr "Stylus Photo 810"
 
 #: src/main/xmli18n-tmp.h:257
 #, fuzzy
-msgid "EPSON Stylus Photo 960"
-msgstr "Stylus Photo 790"
+msgid "Epson Stylus Photo 820"
+msgstr "Stylus Photo 820"
 
 #: src/main/xmli18n-tmp.h:258
 #, fuzzy
-msgid "EPSON Stylus Photo 1200"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 825"
+msgstr "Stylus Photo 785"
 
 #: src/main/xmli18n-tmp.h:259
 #, fuzzy
-msgid "EPSON Stylus Photo 1270"
-msgstr "Stylus Photo 1270"
+msgid "Epson Stylus Photo 830"
+msgstr "Stylus Photo 780"
 
 #: src/main/xmli18n-tmp.h:260
 #, fuzzy
-msgid "EPSON Stylus Photo 1280"
-msgstr "Stylus Photo 1280"
+msgid "Epson Stylus Photo 830U"
+msgstr "Stylus Photo 780"
 
 #: src/main/xmli18n-tmp.h:261
 #, fuzzy
-msgid "EPSON Stylus Photo 1290"
-msgstr "Stylus Photo 1290"
+msgid "Epson Stylus Photo 870"
+msgstr "Stylus Photo 870"
 
 #: src/main/xmli18n-tmp.h:262
 #, fuzzy
-msgid "EPSON Stylus Photo 2000P"
-msgstr "Stylus Photo 2000P"
+msgid "Epson Stylus Photo 875"
+msgstr "Stylus Photo 875"
 
 #: src/main/xmli18n-tmp.h:263
 #, fuzzy
-msgid "EPSON Stylus Photo 2100"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 890"
+msgstr "Stylus Photo 890"
 
 #: src/main/xmli18n-tmp.h:264
 #, fuzzy
-msgid "EPSON Stylus Photo 2200"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 895"
+msgstr "Stylus Photo 895"
 
 #: src/main/xmli18n-tmp.h:265
 #, fuzzy
-msgid "EPSON Stylus Photo R200"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 900"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:266
 #, fuzzy
-msgid "EPSON Stylus Photo R210"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 915"
+msgstr "Stylus Photo 895"
 
 #: src/main/xmli18n-tmp.h:267
 #, fuzzy
-msgid "EPSON Stylus Photo R220"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 925"
+msgstr "Stylus Photo 895"
 
 #: src/main/xmli18n-tmp.h:268
 #, fuzzy
-msgid "EPSON Stylus Photo R300"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 935"
+msgstr "Stylus Photo 895"
 
 #: src/main/xmli18n-tmp.h:269
 #, fuzzy
-msgid "EPSON Stylus Photo R310"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 950"
+msgstr "Stylus Photo 750"
 
 #: src/main/xmli18n-tmp.h:270
 #, fuzzy
-msgid "EPSON Stylus Photo R320"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 960"
+msgstr "Stylus Photo 790"
 
 #: src/main/xmli18n-tmp.h:271
 #, fuzzy
-msgid "EPSON Stylus Photo R340"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 1200"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:272
 #, fuzzy
-msgid "EPSON Stylus Photo RX400"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 1270"
+msgstr "Stylus Photo 1270"
 
 #: src/main/xmli18n-tmp.h:273
 #, fuzzy
-msgid "EPSON Stylus Photo RX420"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 1280"
+msgstr "Stylus Photo 1280"
 
 #: src/main/xmli18n-tmp.h:274
 #, fuzzy
-msgid "EPSON Stylus Photo RX425"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo 1290"
+msgstr "Stylus Photo 1290"
 
 #: src/main/xmli18n-tmp.h:275
 #, fuzzy
-msgid "EPSON Stylus Photo RX430"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 2000P"
+msgstr "Stylus Photo 2000P"
 
 #: src/main/xmli18n-tmp.h:276
 #, fuzzy
-msgid "EPSON Stylus Photo RX500"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 2100"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:277
 #, fuzzy
-msgid "EPSON Stylus Photo RX510"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo 2200"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:278
 #, fuzzy
-msgid "EPSON Stylus Photo RX600"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo R200"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:279
 #, fuzzy
-msgid "EPSON Stylus Photo RX620"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo R210"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:280
 #, fuzzy
-msgid "EPSON Stylus Photo RX630"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo R220"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:281
 #, fuzzy
-msgid "EPSON Stylus Photo RX700"
+msgid "Epson Stylus Photo R300"
 msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:282
 #, fuzzy
-msgid "EPSON Stylus Photo R800"
+msgid "Epson Stylus Photo R310"
 msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:283
 #, fuzzy
-msgid "EPSON Stylus Photo R1800"
-msgstr "Stylus Photo 700"
+msgid "Epson Stylus Photo R320"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:284
 #, fuzzy
-msgid "EPSON Stylus Photo R2400"
-msgstr "Stylus Photo 1200"
+msgid "Epson Stylus Photo R340"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:285
 #, fuzzy
-msgid "EPSON Stylus Pro 5000"
-msgstr "Stylus Pro 5000"
+msgid "Epson Stylus Photo RX400"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:286
 #, fuzzy
-msgid "EPSON Stylus Pro 5500"
-msgstr "Stylus Pro 5500"
+msgid "Epson Stylus Photo RX420"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:287
 #, fuzzy
-msgid "EPSON Stylus Pro 7000"
-msgstr "Stylus Pro 7000"
+msgid "Epson Stylus Photo RX425"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:288
 #, fuzzy
-msgid "EPSON Stylus Pro 7500"
-msgstr "Stylus Pro 7500"
+msgid "Epson Stylus Photo RX430"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:289
 #, fuzzy
-msgid "EPSON Stylus Pro 7600"
-msgstr "Stylus Pro 7000"
+msgid "Epson Stylus Photo RX500"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:290
 #, fuzzy
-msgid "EPSON Stylus Pro 9000"
-msgstr "Stylus Pro 9000"
+msgid "Epson Stylus Photo RX510"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:291
 #, fuzzy
-msgid "EPSON Stylus Pro 9500"
-msgstr "Stylus Pro 9500"
+msgid "Epson Stylus Photo RX600"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:292
 #, fuzzy
-msgid "EPSON Stylus Pro 9600"
-msgstr "Stylus Pro 9000"
+msgid "Epson Stylus Photo RX620"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:293
 #, fuzzy
-msgid "EPSON Stylus Pro 10000"
-msgstr "Stylus Pro 10000"
+msgid "Epson Stylus Photo RX630"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:294
 #, fuzzy
-msgid "EPSON Stylus Scan 2000"
-msgstr "Stylus Scan 2000"
+msgid "Epson Stylus Photo RX700"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:295
 #, fuzzy
-msgid "EPSON Stylus Scan 2500"
-msgstr "Stylus Scan 2500"
+msgid "Epson Stylus Photo R800"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:296
 #, fuzzy
-msgid "EPSON Stylus CX1500"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Photo R1800"
+msgstr "Stylus Photo 700"
 
 #: src/main/xmli18n-tmp.h:297
 #, fuzzy
-msgid "EPSON Stylus CX3100"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Photo R2400"
+msgstr "Stylus Photo 1200"
 
 #: src/main/xmli18n-tmp.h:298
 #, fuzzy
-msgid "EPSON Stylus CX3200"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 5000"
+msgstr "Stylus Pro 5000"
 
 #: src/main/xmli18n-tmp.h:299
 #, fuzzy
-msgid "EPSON Stylus CX3500"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 5500"
+msgstr "Stylus Pro 5500"
 
 #: src/main/xmli18n-tmp.h:300
 #, fuzzy
-msgid "EPSON Stylus CX3600"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 7000"
+msgstr "Stylus Pro 7000"
 
 #: src/main/xmli18n-tmp.h:301
 #, fuzzy
-msgid "EPSON Stylus CX3650"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 7500"
+msgstr "Stylus Pro 7500"
 
 #: src/main/xmli18n-tmp.h:302
 #, fuzzy
-msgid "EPSON Stylus CX3700"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 7600"
+msgstr "Stylus Pro 7000"
 
 #: src/main/xmli18n-tmp.h:303
 #, fuzzy
-msgid "EPSON Stylus CX3800"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 9000"
+msgstr "Stylus Pro 9000"
 
 #: src/main/xmli18n-tmp.h:304
 #, fuzzy
-msgid "EPSON Stylus CX3805"
-msgstr "Stylus C60"
+msgid "Epson Stylus Pro 9500"
+msgstr "Stylus Pro 9500"
 
 #: src/main/xmli18n-tmp.h:305
 #, fuzzy
-msgid "EPSON Stylus CX3810"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 9600"
+msgstr "Stylus Pro 9000"
 
 #: src/main/xmli18n-tmp.h:306
 #, fuzzy
-msgid "EPSON Stylus CX4100"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Pro 10000"
+msgstr "Stylus Pro 10000"
 
 #: src/main/xmli18n-tmp.h:307
 #, fuzzy
-msgid "EPSON Stylus CX4200"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Scan 2000"
+msgstr "Stylus Scan 2000"
 
 #: src/main/xmli18n-tmp.h:308
 #, fuzzy
-msgid "EPSON Stylus CX4500"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus Scan 2500"
+msgstr "Stylus Scan 2500"
 
 #: src/main/xmli18n-tmp.h:309
 #, fuzzy
-msgid "EPSON Stylus CX4600"
+msgid "Epson Stylus CX1500"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:310
 #, fuzzy
-msgid "EPSON Stylus CX4700"
+msgid "Epson Stylus CX3100"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:311
 #, fuzzy
-msgid "EPSON Stylus CX4800"
+msgid "Epson Stylus CX3200"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:312
 #, fuzzy
-msgid "EPSON Stylus CX5100"
-msgstr "Stylus C60"
+msgid "Epson Stylus CX3500"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:313
 #, fuzzy
-msgid "EPSON Stylus CX5200"
-msgstr "Stylus C60"
+msgid "Epson Stylus CX3600"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:314
 #, fuzzy
-msgid "EPSON Stylus CX5300"
+msgid "Epson Stylus CX3650"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:315
 #, fuzzy
-msgid "EPSON Stylus CX5400"
+msgid "Epson Stylus CX3700"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:316
 #, fuzzy
-msgid "EPSON Stylus CX5700"
+msgid "Epson Stylus CX3800"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:317
 #, fuzzy
-msgid "EPSON Stylus CX5800"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus CX3805"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:318
 #, fuzzy
-msgid "EPSON Stylus CX6300"
+msgid "Epson Stylus CX3810"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:319
 #, fuzzy
-msgid "EPSON Stylus CX6400"
+msgid "Epson Stylus CX4100"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:320
 #, fuzzy
-msgid "EPSON Stylus CX6500"
+msgid "Epson Stylus CX4200"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:321
 #, fuzzy
-msgid "EPSON Stylus CX6600"
+msgid "Epson Stylus CX4500"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:322
 #, fuzzy
-msgid "EPSON Stylus CX7700"
-msgstr "Stylus C70"
+msgid "Epson Stylus CX4600"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:323
 #, fuzzy
-msgid "EPSON Stylus CX7800"
+msgid "Epson Stylus CX4700"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:324
 #, fuzzy
-msgid "EPSON Stylus CX8300"
+msgid "Epson Stylus CX4800"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:325
 #, fuzzy
-msgid "EPSON Stylus CX8400"
-msgstr "Stylus C20sx"
+msgid "Epson Stylus CX5100"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:326
 #, fuzzy
-msgid "EPSON Stylus D68"
+msgid "Epson Stylus CX5200"
 msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:327
 #, fuzzy
-msgid "EPSON Stylus D88"
-msgstr "Stylus C80"
+msgid "Epson Stylus CX5300"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:328
 #, fuzzy
-msgid "EPSON Stylus DX3800"
+msgid "Epson Stylus CX5400"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:329
 #, fuzzy
-msgid "EPSON Stylus DX3850"
+msgid "Epson Stylus CX5700"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:330
 #, fuzzy
-msgid "EPSON Stylus DX4200"
+msgid "Epson Stylus CX5800"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:331
 #, fuzzy
-msgid "EPSON Stylus DX4250"
-msgstr "Stylus C60"
+msgid "Epson Stylus CX6300"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:332
 #, fuzzy
-msgid "EPSON Stylus DX4800"
+msgid "Epson Stylus CX6400"
 msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:333
-msgid "EPSON PictureMate"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus CX6500"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:334
-msgid "EPSON PictureMate Deluxe"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus CX6600"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:335
-msgid "EPSON CL-700"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus CX7700"
+msgstr "Stylus C70"
 
 #: src/main/xmli18n-tmp.h:336
-msgid "EPSON CL-750"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus CX7800"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:337
-msgid "EPSON CL-760"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus CX8300"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:338
 #, fuzzy
-msgid "EPSON E-100"
-msgstr "Stylus C60"
+msgid "Epson Stylus CX8400"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:339
-msgid "EPSON EM-900C"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus D68"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:340
-msgid "EPSON EM-930C"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus D88"
+msgstr "Stylus C80"
 
 #: src/main/xmli18n-tmp.h:341
-msgid "EPSON MC-2000"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus DX3800"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:342
-msgid "EPSON MC-5000"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus DX3850"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:343
-msgid "EPSON MC-7000"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus DX4200"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:344
-msgid "EPSON MC-9000"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus DX4250"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:345
-msgid "EPSON MC-10000"
-msgstr ""
+#, fuzzy
+msgid "Epson Stylus DX4800"
+msgstr "Stylus C20sx"
 
 #: src/main/xmli18n-tmp.h:346
-msgid "EPSON MJ-930C"
+msgid "Epson PictureMate"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:347
-msgid "EPSON MJ-5100C"
+msgid "Epson PictureMate Deluxe"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:348
-msgid "EPSON MJ-6000C"
+msgid "Epson CL 700"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:349
-msgid "EPSON MJ-8000C"
+msgid "Epson CL 750"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:350
-msgid "EPSON PM-700C"
+msgid "Epson CL 760"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:351
-msgid "EPSON PM-730C"
+msgid "Epson E 100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:352
-msgid "EPSON PM-740C"
+msgid "Epson E 150"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:353
-msgid "EPSON PM-750C"
+msgid "Epson E 200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:354
-msgid "EPSON PM-760C"
+msgid "Epson EM 900C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:355
-msgid "EPSON PM-770C"
+msgid "Epson EM 930C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:356
-msgid "EPSON PM-780C"
+msgid "Epson MC 2000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:357
-msgid "EPSON PM-790PT"
+msgid "Epson MC 5000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:358
-msgid "EPSON PM-800C"
+msgid "Epson MC 7000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:359
-msgid "EPSON PM-850PT"
+msgid "Epson MC 9000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:360
-msgid "EPSON PM-870C"
+msgid "Epson MC 10000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:361
-msgid "EPSON PM-880C"
+msgid "Epson MJ 930C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:362
-msgid "EPSON PM-930C"
+msgid "Epson MJ 5100C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:363
-msgid "EPSON PM-940C"
+msgid "Epson MJ 6000C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:364
-msgid "EPSON PM-950C"
+msgid "Epson MJ 8000C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:365
-msgid "EPSON PM-970C"
+msgid "Epson PM 700C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:366
-msgid "EPSON PM-980C"
+msgid "Epson PM 730C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:367
-msgid "EPSON PM-2000C"
+msgid "Epson PM 740C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:368
-msgid "EPSON PM-2200C"
+msgid "Epson PM 750C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:369
-msgid "EPSON PM-3000C"
+msgid "Epson PM 760C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:370
-msgid "EPSON PM-3300C"
+msgid "Epson PM 770C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:371
-msgid "EPSON PM-3500C"
+msgid "Epson PM 780C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:372
-msgid "EPSON PM-3700C"
+msgid "Epson PM 790PT"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:373
-msgid "EPSON PM-4000PX"
+msgid "Epson PM 800C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:374
-msgid "EPSON PM-5000C"
+msgid "Epson PM 850PT"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:375
-msgid "EPSON PM-7000C"
+msgid "Epson PM 870C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:376
-msgid "EPSON PM-9000C"
+msgid "Epson PM 880C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:377
-msgid "EPSON PM-10000"
+msgid "Epson PM 930C"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:378
-#, fuzzy
-msgid "EPSON PM-A900"
-msgstr "Stylus C60"
+msgid "Epson PM 940C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:379
-#, fuzzy
-msgid "EPSON PM-D750"
-msgstr "Stylus C60"
+msgid "Epson PM 950C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:380
-#, fuzzy
-msgid "EPSON PM-D770"
-msgstr "Stylus C60"
+msgid "Epson PM 970C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:381
-#, fuzzy
-msgid "EPSON PM-D1000"
-msgstr "Stylus C60"
+msgid "Epson PM 980C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:382
-#, fuzzy
-msgid "EPSON PM-G700"
-msgstr "Stylus C60"
+msgid "Epson PM 2000C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:383
-#, fuzzy
-msgid "EPSON PM-G720"
-msgstr "Stylus C60"
+msgid "Epson PM 2200C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:384
-#, fuzzy
-msgid "EPSON PM-G800"
-msgstr "Stylus C60"
+msgid "Epson PM 3000C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:385
-#, fuzzy
-msgid "EPSON PM-G820"
-msgstr "Stylus C60"
+msgid "Epson PM 3300C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:386
-#, fuzzy
-msgid "EPSON PX-A650"
-msgstr "Stylus C60"
+msgid "Epson PM 3500C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:387
-#, fuzzy
-msgid "EPSON PX-G900"
-msgstr "Stylus C60"
+msgid "Epson PM 3700C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:388
-#, fuzzy
-msgid "EPSON PX-G920"
-msgstr "Stylus C60"
+msgid "Epson PM 4000PX"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:389
-#, fuzzy
-msgid "EPSON PX-G5000"
-msgstr "Stylus C60"
+msgid "Epson PM 5000C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:390
-#, fuzzy
-msgid "EPSON PX-V500"
-msgstr "Stylus C60"
+msgid "Epson PM 7000C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:391
-#, fuzzy
-msgid "EPSON PX-V600"
-msgstr "Stylus C60"
+msgid "Epson PM 9000C"
+msgstr ""
 
 #: src/main/xmli18n-tmp.h:392
 #, fuzzy
-msgid "EPSON PX-5500"
-msgstr "Stylus C60"
+msgid "Epson PM 10000"
+msgstr "Stylus Pro 10000"
 
 #: src/main/xmli18n-tmp.h:393
-msgid "EPSON PX-7000"
+msgid "Epson PM A650"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:394
-msgid "EPSON PX-9000"
+msgid "Epson PM A750"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:395
-msgid "Apple Color StyleWriter 4100"
+msgid "Epson PM A890"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:396
-msgid "Apple Color StyleWriter 4500"
-msgstr ""
+#, fuzzy
+msgid "Epson PM A900"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:397
-msgid "Apple Color StyleWriter 6500"
+msgid "Epson PM A950"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:398
-msgid "HP DeskJet 340"
+msgid "Epson PM D600"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:399
-msgid "HP DeskJet 400"
-msgstr ""
+#, fuzzy
+msgid "Epson PM D750"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:400
-msgid "HP DeskJet 500"
-msgstr ""
+#, fuzzy
+msgid "Epson PM D770"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:401
-msgid "HP DesignJet 230"
+msgid "Epson PM D800"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:402
-msgid "HP DesignJet 250C"
-msgstr ""
+#, fuzzy
+msgid "Epson PM D1000"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:403
-msgid "HP DesignJet 700"
-msgstr ""
+#, fuzzy
+msgid "Epson PM G700"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:404
-msgid "HP DesignJet 750C"
-msgstr ""
+#, fuzzy
+msgid "Epson PM G720"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:405
-msgid "HP DesignJet 2500C"
+msgid "Epson PM G730"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:406
-msgid "HP DesignJet 3500C"
-msgstr ""
+#, fuzzy
+msgid "Epson PM G800"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:407
-msgid "HP DesignJet 430"
-msgstr ""
+#, fuzzy
+msgid "Epson PM G820"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:408
-msgid "HP DesignJet 450C"
-msgstr ""
+#, fuzzy
+msgid "Epson PX A650"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:409
-msgid "HP DesignJet 455CA"
-msgstr ""
+#, fuzzy
+msgid "Epson PX G900"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:410
-msgid "HP DesignJet 488CA"
-msgstr ""
+#, fuzzy
+msgid "Epson PX G920"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:411
-msgid "HP DeskJet 500C"
-msgstr ""
+#, fuzzy
+msgid "Epson PX G5000"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:412
-msgid "HP DeskJet 520"
-msgstr ""
+#, fuzzy
+msgid "Epson PX V500"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:413
-msgid "HP DeskJet 540C"
-msgstr ""
+#, fuzzy
+msgid "Epson PX V600"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:414
-msgid "HP DeskJet 550C"
+msgid "Epson PX V630"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:415
-msgid "HP DeskJet 560C"
-msgstr ""
+#, fuzzy
+msgid "Epson PX 5500"
+msgstr "Stylus C60"
 
 #: src/main/xmli18n-tmp.h:416
-msgid "HP DeskJet 600/600C"
+msgid "Epson PX 7000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:417
-msgid "HP DeskJet 600 series"
+msgid "Epson PX 9000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:418
-msgid "HP DeskJet 690 series"
+msgid "Apollo P-2100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:419
-msgid "HP DeskJet 810C"
+msgid "Apollo P-2150"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:420
-msgid "HP DeskJet 812C"
+msgid "Apollo P-2200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:421
-msgid "HP DeskJet 840C"
+msgid "Apollo P-2250"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:422
-msgid "HP DeskJet 842C"
+msgid "Apollo P-2500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:423
-msgid "HP DeskJet 845C"
+msgid "Apollo P-2550"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:424
-msgid "HP DeskJet 850C"
+msgid "Apollo P-2600"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:425
-msgid "HP DeskJet 855C"
+msgid "Apollo P-2650"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:426
-msgid "HP DeskJet 870C"
+msgid "Apple Color StyleWriter 4100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:427
-msgid "HP DeskJet 890C"
+msgid "Apple Color StyleWriter 4500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:428
-msgid "HP DeskJet 895C"
+msgid "Apple Color StyleWriter 6500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:429
-msgid "HP DeskJet 900 series"
+msgid "Apple LaserWriter Select 360"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:430
-msgid "HP DeskJet 1100C"
+msgid "Brother DCP-1200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:431
-msgid "HP DeskJet 1120C"
+msgid "Brother HL-4Ve"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:432
-msgid "HP DeskJet 1200C"
+msgid "Brother HL-10V"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:433
-msgid "HP DeskJet 1220C"
+msgid "Brother HL-10h"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:434
-msgid "HP DeskJet 1600C"
+msgid "Brother HL-630"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:435
-msgid "HP DeskJet 2000 series"
+msgid "Brother HL-660"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:436
-msgid "HP DeskJet 2500 series"
+msgid "Brother HL-760"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:437
-msgid "HP PhotoSmart P1000"
+msgid "Brother HL-960"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:438
-msgid "HP PhotoSmart P1100"
+msgid "Brother HL-1040"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:439
-msgid "HP LaserJet II series"
+msgid "Brother HL-1050"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:440
-msgid "HP LaserJet IIP series"
+msgid "Brother HL-1060"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:441
-msgid "HP LaserJet III series"
+msgid "Brother HL-1070"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:442
-msgid "HP LaserJet 4 series"
+msgid "Brother HL-1240"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:443
-msgid "HP LaserJet 4L"
+msgid "Brother HL-1250"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:444
-msgid "HP LaserJet 4V"
+msgid "Brother HL-1260"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:445
-msgid "HP LaserJet 4Si"
+msgid "Brother HL-1270N"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:446
-msgid "HP LaserJet 5 series"
+msgid "Brother HL-1440"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:447
-msgid "HP LaserJet 5Si"
+msgid "Brother HL-1660e"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:448
-msgid "HP LaserJet 6 series"
+msgid "Brother HL-2060"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:449
-msgid "Lexmark 4076"
+msgid "Brother MFC-6550MC"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:450
-msgid "Lexmark Z42"
+msgid "Brother MFC-8300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:451
-msgid "Lexmark Z43"
+msgid "Brother MFC-9500"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:452
-msgid "Lexmark Z52"
+msgid "Brother MFC-9600"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:453
-msgid "Lexmark Z53"
+msgid "Canon GP 335"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:454
-msgid "Olympus P10"
+msgid "Canon LBP-4sx"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:455
-msgid "Olympus P200"
+msgid "Canon LBP-430"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:456
-msgid "Olympus P300"
+msgid "Canon LBP-1000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:457
-msgid "Olympus P400"
+msgid "Canon LBP-1260"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:458
-msgid "Olympus P440"
+msgid "Canon LBP-1760"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:459
-msgid "Canon CP100"
+msgid "Canon imageRunner 330s"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:460
-msgid "Canon CP220"
+msgid "Citizen ProJet II"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:461
-msgid "Sony UP-DP10"
+msgid "DEC 1800"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:462
-msgid "Sony UP-DR150"
+msgid "DEC LN17"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:463
-msgid "Fujifilm Printpix CX-400"
+msgid "Epson ActionLaser 1100"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:464
-msgid "Fujifilm Printpix CX-550"
+msgid "Epson ActionLaser II"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:465
-msgid "RAW DATA 16 bit"
+msgid "Epson AcuLaser C2000"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:466
+msgid "Epson AcuLaser C2000PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:467
+msgid "Epson AcuLaser C8500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:468
+msgid "Epson AcuLaser C8500PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:469
+msgid "Epson AcuLaser C8600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:470
+msgid "Epson AcuLaser C8600PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:471
+msgid "Epson EPL-5200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:472
+msgid "Epson EPL-5200+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:473
+msgid "Epson EPL-5700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:474
+msgid "Epson EPL-5700PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:475
+msgid "Epson EPL-5800"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:476
+msgid "Epson EPL-5800PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:477
+msgid "Epson EPL-5900"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:478
+msgid "Epson EPL-5900PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:479
+msgid "Epson EPL-6100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:480
+msgid "Epson EPL-6100PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:481
+msgid "Epson EPL-7100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:482
+msgid "Fujitsu PrintPartner 10V"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:483
+msgid "Fujitsu PrintPartner 16DV"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:484
+msgid "Fujitsu PrintPartner 20W"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:485
+msgid "Fujitsu PrintPartner 8000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:486
+#, fuzzy
+msgid "Generic PCL 4 Printer"
+msgstr "Definovanie novej tlaèiarne"
+
+#: src/main/xmli18n-tmp.h:487
+#, fuzzy
+msgid "Generic PCL 5 Printer"
+msgstr "Definovanie novej tlaèiarne"
+
+#: src/main/xmli18n-tmp.h:488
+#, fuzzy
+msgid "Generic PCL 5c Printer"
+msgstr "Definovanie novej tlaèiarne"
+
+#: src/main/xmli18n-tmp.h:489
+#, fuzzy
+msgid "Generic PCL 5e Printer"
+msgstr "Definovanie novej tlaèiarne"
+
+#: src/main/xmli18n-tmp.h:490
+msgid "Generic PCL 6/PCL XL Printer"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:491
+msgid "HP Business Inkjet 2200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:492
+msgid "HP Business Inkjet 2230"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:493
+msgid "HP Business Inkjet 2250"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:494
+msgid "HP Business Inkjet 2250TN"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:495
+msgid "HP Business Inkjet 2280"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:496
+msgid "HP Color Inkjet Printer CP1160"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:497
+msgid "HP Color Inkjet Printer CP1700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:498
+msgid "HP Color LaserJet 2500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:499
+msgid "HP Color LaserJet 4500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:500
+msgid "HP Color LaserJet 4550"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:501
+msgid "HP Color LaserJet 4600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:502
+msgid "HP Color LaserJet 5"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:503
+msgid "HP Color LaserJet 5000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:504
+msgid "HP Color LaserJet 5500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:505
+msgid "HP Color LaserJet 8550GN"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:506
+msgid "HP DesignJet 230"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:507
+msgid "HP DesignJet 250C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:508
+msgid "HP DesignJet 430"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:509
+msgid "HP DesignJet 450C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:510
+msgid "HP DesignJet 455CA"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:511
+msgid "HP DesignJet 488CA"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:512
+msgid "HP DesignJet 700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:513
+msgid "HP DesignJet 750C Plus"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:514
+msgid "HP DesignJet 750C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:515
+msgid "HP DesignJet 2500CP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:516
+msgid "HP DesignJet 3500CP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:517
+msgid "HP DesignJet ColorPro CAD"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:518
+msgid "HP DeskJet 400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:519
+msgid "HP DeskJet 420C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:520
+msgid "HP DeskJet 450"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:521
+msgid "HP DeskJet 500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:522
+msgid "HP DeskJet 500C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:523
+msgid "HP DeskJet 505J Plus"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:524
+msgid "HP DeskJet 510"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:525
+msgid "HP DeskJet 520"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:526
+msgid "HP DeskJet 540C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:527
+msgid "HP DeskJet 550C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:528
+msgid "HP DeskJet 5550"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:529
+msgid "HP DeskJet 5551"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:530
+msgid "HP DeskJet 560C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:531
+msgid "HP DeskJet 600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:532
+msgid "HP DeskJet 600C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:533
+msgid "HP DeskJet 610C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:534
+msgid "HP DeskJet 610CL"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:535
+msgid "HP DeskJet 6122"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:536
+msgid "HP DeskJet 6127"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:537
+msgid "HP DeskJet 612C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:538
+msgid "HP DeskJet 640C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:539
+msgid "HP DeskJet 648C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:540
+msgid "HP DeskJet 660C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:541
+msgid "HP DeskJet 670C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:542
+msgid "HP DeskJet 670TV"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:543
+msgid "HP DeskJet 672C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:544
+msgid "HP DeskJet 680C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:545
+msgid "HP DeskJet 682C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:546
+msgid "HP DeskJet 690C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:547
+msgid "HP DeskJet 692C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:548
+msgid "HP DeskJet 693C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:549
+msgid "HP DeskJet 694C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:550
+msgid "HP DeskJet 695C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:551
+msgid "HP DeskJet 697C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:552
+msgid "HP DeskJet 810C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:553
+msgid "HP DeskJet 812C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:554
+msgid "HP DeskJet 815C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:555
+msgid "HP DeskJet 816C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:556
+msgid "HP DeskJet 825C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:557
+msgid "HP DeskJet 830C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:558
+msgid "HP DeskJet 832C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:559
+msgid "HP DeskJet 840C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:560
+msgid "HP DeskJet 841C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:561
+msgid "HP DeskJet 842C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:562
+msgid "HP DeskJet 843C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:563
+msgid "HP DeskJet 845C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:564
+msgid "HP DeskJet 850C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:565
+msgid "HP DeskJet 855C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:566
+msgid "HP DeskJet 870C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:567
+msgid "HP DeskJet 880C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:568
+msgid "HP DeskJet 882C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:569
+msgid "HP DeskJet 890C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:570
+msgid "HP DeskJet 895C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:571
+msgid "HP DeskJet 916C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:572
+msgid "HP DeskJet 920C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:573
+msgid "HP DeskJet 9300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:574
+msgid "HP DeskJet 930C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:575
+msgid "HP DeskJet 932C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:576
+msgid "HP DeskJet 933C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:577
+msgid "HP DeskJet 934C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:578
+msgid "HP DeskJet 935C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:579
+msgid "HP DeskJet 940C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:580
+msgid "HP DeskJet 948C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:581
+msgid "HP DeskJet 950C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:582
+msgid "HP DeskJet 952C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:583
+msgid "HP DeskJet 955C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:584
+msgid "HP DeskJet 957C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:585
+msgid "HP DeskJet 959C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:586
+msgid "HP DeskJet 960C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:587
+msgid "HP DeskJet 970C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:588
+msgid "HP DeskJet 975C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:589
+msgid "HP DeskJet 980C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:590
+msgid "HP DeskJet 990C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:591
+msgid "HP DeskJet 995C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:592
+msgid "HP DeskJet 1100C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:593
+msgid "HP DeskJet 1120C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:594
+msgid "HP DeskJet 1125C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:595
+msgid "HP DeskJet 1200C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:596
+msgid "HP DeskJet 1220C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:597
+msgid "HP DeskJet 1600C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:598
+msgid "HP DeskJet 1600CM"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:599
+msgid "HP DeskJet 2000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:600
+msgid "HP DeskJet 2500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:601
+msgid "HP DeskJet 2500CM"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:602
+msgid "HP DeskJet 340C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:603
+msgid "HP DeskJet 3810"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:604
+msgid "HP DeskJet 3816"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:605
+msgid "HP DeskJet 3820"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:606
+msgid "HP DeskJet 3822"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:607
+msgid "HP LaserJet 2"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:608
+msgid "HP LaserJet 2D"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:609
+msgid "HP LaserJet 2P Plus"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:610
+msgid "HP LaserJet 2P"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:611
+msgid "HP LaserJet 3"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:612
+msgid "HP LaserJet 3D"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:613
+msgid "HP LaserJet 3P w/ PCL5"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:614
+msgid "HP LaserJet 3P w/PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:615
+msgid "HP LaserJet 4 Plus"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:616
+msgid "HP LaserJet 4"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:617
+msgid "HP LaserJet 4L"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:618
+msgid "HP LaserJet 4M"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:619
+msgid "HP LaserJet 4ML"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:620
+msgid "HP LaserJet 4P"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:621
+msgid "HP LaserJet 4Si"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:622
+msgid "HP LaserJet 4V"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:623
+msgid "HP LaserJet 5"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:624
+msgid "HP LaserJet 5L"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:625
+msgid "HP LaserJet 5M"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:626
+msgid "HP LaserJet 5MP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:627
+msgid "HP LaserJet 5P"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:628
+msgid "HP LaserJet 5Si"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:629
+msgid "HP LaserJet 6"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:630
+msgid "HP LaserJet 6L"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:631
+msgid "HP LaserJet 6MP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:632
+msgid "HP LaserJet 6P"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:633
+msgid "HP LaserJet 1010"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:634
+msgid "HP LaserJet 1012"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:635
+msgid "HP LaserJet 1015"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:636
+msgid "HP LaserJet 1100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:637
+msgid "HP LaserJet 1100A"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:638
+msgid "HP LaserJet 1150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:639
+msgid "HP LaserJet 1200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:640
+msgid "HP LaserJet 1220"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:641
+msgid "HP LaserJet 1300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:642
+msgid "HP LaserJet 2100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:643
+msgid "HP LaserJet 2100M"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:644
+msgid "HP LaserJet 2200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:645
+msgid "HP LaserJet 2300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:646
+msgid "HP LaserJet 3200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:647
+msgid "HP LaserJet 3200m"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:648
+msgid "HP LaserJet 3200se"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:649
+msgid "HP LaserJet 3300 MFP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:650
+msgid "HP LaserJet 3310 MFP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:651
+msgid "HP LaserJet 3320 MFP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:652
+msgid "HP LaserJet 3320N MFP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:653
+msgid "HP LaserJet 3330 MFP"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:654
+msgid "HP LaserJet 4000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:655
+msgid "HP LaserJet 4050"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:656
+msgid "HP LaserJet 4100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:657
+msgid "HP LaserJet 4200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:658
+msgid "HP LaserJet 4300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:659
+msgid "HP LaserJet 5000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:660
+msgid "HP LaserJet 5100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:661
+msgid "HP LaserJet 8000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:662
+msgid "HP LaserJet 8100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:663
+msgid "HP LaserJet 8150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:664
+msgid "HP LaserJet 9000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:665
+msgid "HP Mopier 240"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:666
+msgid "HP Mopier 320"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:667
+msgid "HP OfficeJet 300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:668
+msgid "HP OfficeJet 330"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:669
+msgid "HP OfficeJet 350"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:670
+msgid "HP OfficeJet 500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:671
+msgid "HP OfficeJet 520"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:672
+msgid "HP OfficeJet 570"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:673
+msgid "HP OfficeJet 580"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:674
+msgid "HP OfficeJet 590"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:675
+msgid "HP OfficeJet 600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:676
+msgid "HP OfficeJet 610"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:677
+msgid "HP OfficeJet 625"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:678
+msgid "HP OfficeJet 630"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:679
+msgid "HP OfficeJet 635"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:680
+msgid "HP OfficeJet 700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:681
+msgid "HP OfficeJet 710"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:682
+msgid "HP OfficeJet 720"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:683
+msgid "HP OfficeJet 725"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:684
+msgid "HP OfficeJet 5105"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:685
+msgid "HP OfficeJet 5110"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:686
+msgid "HP OfficeJet 5110xi"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:687
+msgid "HP OfficeJet 6105"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:688
+msgid "HP OfficeJet 6110"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:689
+msgid "HP OfficeJet 7110"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:690
+msgid "HP OfficeJet 7130"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:691
+msgid "HP OfficeJet 7140"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:692
+msgid "HP OfficeJet D125"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:693
+msgid "HP OfficeJet D135"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:694
+msgid "HP OfficeJet D145"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:695
+msgid "HP OfficeJet D155"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:696
+msgid "HP OfficeJet G55"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:697
+msgid "HP OfficeJet G85"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:698
+msgid "HP OfficeJet G95"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:699
+msgid "HP OfficeJet K60"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:700
+msgid "HP OfficeJet K60xi"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:701
+msgid "HP OfficeJet K80"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:702
+msgid "HP OfficeJet K80xi"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:703
+msgid "HP OfficeJet LX"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:704
+msgid "HP OfficeJet Pro 1150C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:705
+msgid "HP OfficeJet Pro 1170C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:706
+msgid "HP OfficeJet Pro 1175C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:707
+msgid "HP OfficeJet R40"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:708
+msgid "HP OfficeJet R45"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:709
+msgid "HP OfficeJet R60"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:710
+msgid "HP OfficeJet R65"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:711
+msgid "HP OfficeJet R80"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:712
+msgid "HP OfficeJet T45"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:713
+msgid "HP OfficeJet T65"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:714
+msgid "HP OfficeJet V40"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:715
+msgid "HP OfficeJet V40xi"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:716
+msgid "HP OfficeJet"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:717
+msgid "HP PSC 370"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:718
+msgid "HP PSC 380"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:719
+msgid "HP PSC 500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:720
+msgid "HP PSC 750"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:721
+msgid "HP PSC 950"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:722
+msgid "HP PSC 950xi"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:723
+msgid "HP PSC 2110"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:724
+msgid "HP PSC 2150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:725
+msgid "HP PSC 2210"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:726
+msgid "HP PhotoSmart 7150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:727
+msgid "HP PhotoSmart 7345"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:728
+msgid "HP PhotoSmart 7350"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:729
+msgid "HP PhotoSmart 7550"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:730
+msgid "HP PhotoSmart P100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:731
+msgid "HP PhotoSmart P130"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:732
+msgid "HP PhotoSmart P230"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:733
+msgid "HP PhotoSmart P1000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:734
+msgid "HP PhotoSmart P1100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:735
+msgid "HP PhotoSmart P1115"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:736
+msgid "HP PhotoSmart P1215"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:737
+msgid "HP PhotoSmart P1218"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:738
+msgid "HP PhotoSmart P1315"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:739
+#, fuzzy
+msgid "HP e-printer e20"
+msgstr "Názov tlaèiarne:"
+
+#: src/main/xmli18n-tmp.h:740
+msgid "IBM 4019"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:741
+msgid "IBM 4029 030 LaserPrinter 10"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:742
+msgid "IBM 4312"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:743
+msgid "IBM Infoprint 12"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:744
+msgid "IBM Page Printer 3112"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:745
+msgid "Infotec 4651 MF"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:746
+msgid "Kyocera F-1010"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:747
+msgid "Kyocera FS-600 - KPDL-2"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:748
+msgid "Kyocera FS-600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:749
+msgid "Kyocera FS-680"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:750
+msgid "Kyocera FS-800"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:751
+msgid "Kyocera FS-1000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:752
+msgid "Kyocera FS-1000+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:753
+msgid "Kyocera FS-1010"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:754
+msgid "Kyocera FS-1050"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:755
+msgid "Kyocera FS-1200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:756
+msgid "Kyocera FS-1600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:757
+msgid "Kyocera FS-1600+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:758
+msgid "Kyocera FS-1700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:759
+msgid "Kyocera FS-1700+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:760
+msgid "Kyocera FS-1750"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:761
+msgid "Kyocera FS-1800"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:762
+msgid "Kyocera FS-1800+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:763
+msgid "Kyocera FS-1900"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:764
+msgid "Kyocera FS-3500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:765
+msgid "Kyocera FS-3600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:766
+msgid "Kyocera FS-3600+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:767
+msgid "Kyocera FS-3700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:768
+msgid "Kyocera FS-3700+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:769
+msgid "Kyocera FS-3750"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:770
+msgid "Kyocera FS-3800"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:771
+msgid "Kyocera FS-5800C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:772
+msgid "Kyocera FS-5900C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:773
+msgid "Kyocera FS-6500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:774
+msgid "Kyocera FS-6500+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:775
+msgid "Kyocera FS-6700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:776
+msgid "Kyocera FS-7000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:777
+msgid "Kyocera FS-7000+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:778
+msgid "Kyocera FS-8000C"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:779
+msgid "Kyocera FS-9000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:780
+msgid "Kyocera FS-9100DN"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:781
+msgid "Kyocera FS-9500DN"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:782
+msgid "Kyocera KM-1530"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:783
+msgid "Kyocera KM-1810"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:784
+msgid "Kyocera KM-2030"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:785
+msgid "Kyocera KM-2530"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:786
+msgid "Kyocera KM-3530"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:787
+msgid "Kyocera KM-4230"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:788
+msgid "Kyocera KM-4530"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:789
+msgid "Kyocera KM-5230"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:790
+msgid "Kyocera KM-5530"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:791
+msgid "Kyocera KM-6230"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:792
+msgid "Lexmark 4076"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:793
+msgid "Lexmark Optra E"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:794
+msgid "Lexmark Optra E+"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:795
+msgid "Lexmark Valuewriter 300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:796
+msgid "Minolta PagePro 1100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:797
+msgid "Minolta PagePro 6"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:798
+msgid "Minolta PagePro 6e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:799
+msgid "Minolta PagePro 6ex"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:800
+msgid "Minolta PagePro 8"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:801
+msgid "Minolta PagePro 8L"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:802
+msgid "NEC SuperScript 1260"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:803
+msgid "NEC SuperScript 1400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:804
+msgid "NEC SuperScript 1800"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:805
+msgid "NEC SuperScript 660i"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:806
+msgid "NEC SuperScript 860"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:807
+msgid "NEC SuperScript 870"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:808
+msgid "Okidata OL400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:809
+msgid "Okidata OL400e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:810
+msgid "Okidata OL400ex"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:811
+msgid "Okidata OL410e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:812
+msgid "Okidata OL600e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:813
+msgid "Okidata OL610e/S"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:814
+msgid "Okidata OL800"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:815
+msgid "Okidata OL810ex"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:816
+msgid "Okidata Okipage 6e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:817
+msgid "Okidata Okipage 6ex"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:818
+msgid "Okidata Okipage 8p"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:819
+msgid "Okidata Okipage 10e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:820
+msgid "Okidata Okipage 10ex"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:821
+msgid "Okidata Okipage 14ex"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:822
+msgid "Okidata Super 6e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:823
+msgid "Olivetti JP350S"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:824
+msgid "Olivetti PG 306"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:825
+msgid "PCPI 1030"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:826
+msgid "Panasonic KX-P4410"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:827
+msgid "Panasonic KX-P4450"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:828
+msgid "Panasonic KX-P6150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:829
+msgid "Panasonic KX-P6500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:830
+msgid "Raven LP-410"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:831
+msgid "Ricoh Aficio 220"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:832
+msgid "Ricoh Aficio 401"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:833
+msgid "Ricoh Aficio 700"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:834
+msgid "Samsung ML-85"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:835
+msgid "Samsung ML-4600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:836
+msgid "Samsung ML-5000a"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:837
+msgid "Samsung ML-6000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:838
+msgid "Samsung ML-6100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:839
+msgid "Samsung ML-7000"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:840
+msgid "Samsung ML-7000N"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:841
+msgid "Samsung ML-7000P"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:842
+msgid "Samsung ML-7050"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:843
+msgid "Samsung QL-5100A"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:844
+msgid "Samsung QL-6050"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:845
+msgid "Seiko SpeedJET 200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:846
+msgid "Sharp AR-161"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:847
+msgid "Sony IJP-V100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:848
+msgid "Star LS-04"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:849
+#, fuzzy
+msgid "Star LaserPrinter 8"
+msgstr "Nastavi» tlaèiareò"
+
+#: src/main/xmli18n-tmp.h:850
+msgid "Tally MT908"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:851
+msgid "Xerox Able 1406"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:852
+msgid "Xerox DocuPrint 4508"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:853
+msgid "Xerox DocuPrint C20"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:854
+msgid "Xerox DocuPrint N4512"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:855
+msgid "Xerox DocuPrint N4512PS"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:856
+msgid "Xerox DocuPrint P12"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:857
+msgid "Xerox DocuPrint P1202"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:858
+msgid "Xerox DocuPrint P8e"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:859
+msgid "Xerox Document Centre 400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:860
+msgid "Lexmark Z42"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:861
+msgid "Lexmark Z43"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:862
+msgid "Lexmark Z52"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:863
+msgid "Lexmark Z53"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:864
+msgid "Olympus P-10"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:865
+msgid "Olympus P-11"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:866
+msgid "Olympus P-200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:867
+msgid "Olympus P-300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:868
+msgid "Olympus P-300E"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:869
+msgid "Olympus P-300U"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:870
+msgid "Olympus P-330E"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:871
+msgid "Olympus P-330NE"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:872
+msgid "Olympus P-400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:873
+msgid "Olympus P-440"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:874
+msgid "Canon CP-100"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:875
+msgid "Canon CP-200"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:876
+msgid "Canon CP-220"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:877
+msgid "Canon CP-300"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:878
+msgid "Canon CP-330"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:879
+msgid "Canon SELPHY-CP-400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:880
+msgid "Canon SELPHY-CP-500"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:881
+msgid "Canon SELPHY-CP-510"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:882
+msgid "Canon SELPHY-CP-600"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:883
+msgid "Canon SELPHY-CP-710"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:884
+msgid "Sony UP-DP10"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:885
+msgid "Sony UP-DR150"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:886
+msgid "Fujifilm Printpix-CX-400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:887
+msgid "Fujifilm Printpix-CX-550"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:888
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:889
 msgid "RAW DATA 8 bit"
 msgstr ""
 
@@ -5146,79 +6853,79 @@ msgstr ""
 msgid "_Gamma value"
 msgstr ""
 
-#: src/cups/genppd.c:134
+#: src/cups/genppd.c:133
 #, fuzzy
 msgid "Printer Features"
 msgstr "Nastavenie tlaèiarne"
 
-#: src/cups/genppd.c:135
+#: src/cups/genppd.c:134
 #, fuzzy
 msgid "Output Control"
 msgstr "Typ výstupu:"
 
-#: src/cups/genppd.c:140
+#: src/cups/genppd.c:139
 #, fuzzy
 msgid "Common"
 msgstr "Príkaz:"
 
-#: src/cups/genppd.c:141
+#: src/cups/genppd.c:140
 #, fuzzy
 msgid "Extra 1"
 msgstr "Zásobník 1"
 
-#: src/cups/genppd.c:142
+#: src/cups/genppd.c:141
 #, fuzzy
 msgid "Extra 2"
 msgstr "Zásobník 2"
 
-#: src/cups/genppd.c:143
+#: src/cups/genppd.c:142
 #, fuzzy
 msgid "Extra 3"
 msgstr "Zásobník 3"
 
-#: src/cups/genppd.c:144
+#: src/cups/genppd.c:143
 #, fuzzy
 msgid "Extra 4"
 msgstr "Zásobník 4"
 
-#: src/cups/genppd.c:145
+#: src/cups/genppd.c:144
 msgid "Extra 5"
 msgstr ""
 
 #. TRANSLATORS: "Gutenprint" is a proper name, not a description
-#: src/cups/genppd.c:190 src/cups/genppd.c:199
+#: src/cups/genppd.c:189 src/cups/genppd.c:198
 #, fuzzy
 msgid "Gutenprint"
 msgstr "Test tlaèe"
 
-#: src/cups/genppd.c:868
+#: src/cups/genppd.c:890
 msgid "English"
 msgstr "Slovak"
 
-#: src/cups/genppd.c:870
+#: src/cups/genppd.c:892
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:1424
+#: src/cups/genppd.c:1459
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1426
+#: src/cups/genppd.c:1461
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1454
+#: src/cups/genppd.c:1491
 msgid "Fine Adjustment"
 msgstr ""
 
-#: src/escputil/escputil.c:69
+#: src/escputil/escputil.c:70
 msgid "Escputil version "
 msgstr "Verzia Escputil "
 
-#: src/escputil/escputil.c:70
+#: src/escputil/escputil.c:71
 #, fuzzy
 msgid ""
-", Copyright (C) 2000-2003 Robert Krawitz\n"
+", Copyright (C) 2000-2006 Robert Krawitz\n"
 "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -l'\n"
 "This is free software, and you are welcome to redistribute it\n"
 "under certain conditions; type 'escputil -l' for details.\n"
@@ -5229,9 +6936,10 @@ msgstr ""
 "Toto je slobodný softvér a jeho redistribúcia je za istých podmienok\n"
 "vítaná; viac informácií získate po napísaní 'escputil -l'.\n"
 
-#: src/escputil/escputil.c:75
+#: src/escputil/escputil.c:76
+#, fuzzy
 msgid ""
-"Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
+"Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it\n"
 "under the terms of the GNU General Public License as published by the Free\n"
@@ -5267,11 +6975,12 @@ msgstr ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston,\n"
 "MA 02111-1307, USA.\n"
 
-#: src/escputil/escputil.c:116
+#: src/escputil/escputil.c:119
 #, fuzzy
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
+"                [-C choices] [-p patterns]\n"
 "Perform maintenance on EPSON Stylus (R) printers.\n"
 "Examples: escputil --ink-level --raw-device /dev/usb/lp0\n"
 "          escputil --clean-head --new --printer-name MyQueue\n"
@@ -5309,6 +7018,8 @@ msgid ""
 "    -S|--short-name    Print the short name of the printer with --identify.\n"
 "    -m|--model         Specify the precise printer model for head "
 "alignment.\n"
+"    -C|--choices       Specify the number of pattern choices for alignment\n"
+"    -p|--patterns      Specify the number of sets of patterns for alignment\n"
 msgstr ""
 "Pou¾itie: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
 "                [-P tlaèiareò | -r zariadenie] [-u] [-q] [-m model]\n"
@@ -5357,12 +7068,13 @@ msgstr ""
 "    -m|--model         Urèenie presného modelu tlaèiarne pre zarovnanie "
 "hlavy.\n"
 
-#: src/escputil/escputil.c:155
+#: src/escputil/escputil.c:161
 #, fuzzy
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
+"                [-C choices] [-p patterns]\n"
 "Perform maintenance on EPSON Stylus (R) printers.\n"
 "Examples: escputil -i -r /dev/usb/lp0\n"
 "          escputil -c -u -P MyQueue\n"
@@ -5397,6 +7109,8 @@ msgid ""
 "    -q Suppress the banner.\n"
 "    -S Print the short name of the printer with -d.\n"
 "    -m Specify the precise printer model for head alignment.\n"
+"    -C Specify the number of pattern choices for alignment\n"
+"    -p Specify the number of sets of patterns for alignment\n"
 msgstr ""
 "Pou¾itie: escputil [VO¥BA] [PRÍKAZ]\n"
 "Pou¾itie: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
@@ -5435,74 +7149,84 @@ msgstr ""
 "    -q zakázanie nápisu.\n"
 "    -m Urèenie presného modelu tlaèiarne pre zarovnanie hlavy.\n"
 
-#: src/escputil/escputil.c:316 src/escputil/escputil.c:324
+#: src/escputil/escputil.c:329 src/escputil/escputil.c:337
 #, c-format
 msgid "You may only specify one printer or raw device."
 msgstr "Mô¾ete ¹pecifikova» len jednu tlaèiareò alebo prvotné zariadenie."
 
-#: src/escputil/escputil.c:332
+#: src/escputil/escputil.c:345
 #, c-format
 msgid "You may only specify one printer model."
 msgstr "Je mo¾né zvoli» len jeden model tlaèiarne."
 
-#: src/escputil/escputil.c:354
+#: src/escputil/escputil.c:369
+#, c-format
+msgid "Alignment choices must be at least 1."
+msgstr ""
+
+#: src/escputil/escputil.c:376
+#, c-format
+msgid "Alignment passes must be at least 1."
+msgstr ""
+
+#: src/escputil/escputil.c:381
 #, c-format
 msgid "Unknown option %c\n"
 msgstr "Neznáme nastavenie %c\n"
 
-#: src/escputil/escputil.c:362
+#: src/escputil/escputil.c:389
 #, c-format
 msgid "Usage: %s [OPTIONS] command\n"
 msgstr ""
 
-#: src/escputil/escputil.c:364
+#: src/escputil/escputil.c:391
 #, c-format
 msgid "Type `%s --help' for more information.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:366
+#: src/escputil/escputil.c:393
 #, c-format
 msgid "Type `%s -h' for more information.\n"
 msgstr ""
 
-#: src/escputil/escputil.c:414
+#: src/escputil/escputil.c:459
 #, c-format
 msgid "Cannot open device %s: %s\n"
 msgstr "Nie je mo¾né otvori» zariadenie %s: %s\n"
 
-#: src/escputil/escputil.c:437
+#: src/escputil/escputil.c:482
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/escputil/escputil.c:450 src/escputil/escputil.c:460
+#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 #, c-format
 msgid "Unable to send command to printer\n"
 msgstr "Nie je mo¾né posla» príkaz na tlaèiareò\n"
 
-#: src/escputil/escputil.c:515
+#: src/escputil/escputil.c:568
 #, c-format
 msgid "Read from printer timed out\n"
 msgstr ""
 
-#: src/escputil/escputil.c:520
+#: src/escputil/escputil.c:573
 #, c-format
 msgid "Cannot read from %s: %s\n"
 msgstr "Nie je mo¾né èíta» z %s: %s\n"
 
-#: src/escputil/escputil.c:659 src/escputil/escputil.c:943
-#: src/escputil/escputil.c:1161
+#: src/escputil/escputil.c:763 src/escputil/escputil.c:1355
+#: src/escputil/escputil.c:1469
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Nie je mo¾né otvori» %s pre èítanie/zápis: %s\n"
 
-#: src/escputil/escputil.c:677 src/escputil/escputil.c:1040
+#: src/escputil/escputil.c:781 src/escputil/escputil.c:1408
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Nie je mo¾né zapisova» do %s: %s\n"
 
-#: src/escputil/escputil.c:733 src/escputil/escputil.c:1020
-#: src/escputil/escputil.c:1230
+#: src/escputil/escputil.c:827 src/escputil/escputil.c:1373
+#: src/escputil/escputil.c:1507
 #, c-format
 msgid ""
 "\n"
@@ -5511,15 +7235,7 @@ msgstr ""
 "\n"
 "Nie je mo¾né zapisova» do %s: %s\n"
 
-#: src/escputil/escputil.c:739 src/escputil/escputil.c:1026
-#: src/escputil/escputil.c:1237
-#, c-format
-msgid ""
-"\n"
-"Cannot get credit (packet mode)!\n"
-msgstr ""
-
-#: src/escputil/escputil.c:766
+#: src/escputil/escputil.c:869
 #, c-format
 msgid ""
 "\n"
@@ -5530,82 +7246,224 @@ msgstr ""
 "Nie je mo¾né zisti» typ tlaèiarne.\n"
 "Pou¾ite prosím -m na urèenie modelu va¹ej tlaèiarne.\n"
 
-#: src/escputil/escputil.c:865 src/escputil/escputil.c:871
-#: src/escputil/escputil.c:872 src/escputil/escputil.c:888
-#: src/escputil/escputil.c:889 src/escputil/escputil.c:890
-#: src/escputil/escputil.c:891 src/escputil/escputil.c:892
-#: src/escputil/escputil.c:895 src/escputil/escputil.c:896
-#: src/escputil/escputil.c:897 src/escputil/escputil.c:898
-#: src/escputil/escputil.c:899 src/escputil/escputil.c:990
+#: src/escputil/escputil.c:967 src/escputil/escputil.c:973
+#: src/escputil/escputil.c:974 src/escputil/escputil.c:990
+#: src/escputil/escputil.c:991 src/escputil/escputil.c:992
+#: src/escputil/escputil.c:993 src/escputil/escputil.c:994
+#: src/escputil/escputil.c:997 src/escputil/escputil.c:998
+#: src/escputil/escputil.c:999 src/escputil/escputil.c:1000
+#: src/escputil/escputil.c:1001 src/escputil/escputil.c:1241
 msgid "Unknown"
 msgstr ""
 
-#: src/escputil/escputil.c:919
+#: src/escputil/escputil.c:1011
+#, c-format
+msgid "Status: Error\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1014
+#, c-format
+msgid "Status: Self-Printing\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1017
+#, c-format
+msgid "Status: Busy\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1020
+#, fuzzy, c-format
+msgid "Status: Waiting\n"
+msgstr "Sýtos»:"
+
+#: src/escputil/escputil.c:1023
+#, c-format
+msgid "Status: Idle\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1026
+#, c-format
+msgid "Status: Paused\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1029
+#, c-format
+msgid "Status: Cleaning\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1032
+#, c-format
+msgid "Status: Factory shipment\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1035
+#, c-format
+msgid "Status: Shutting down\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1038
+#, c-format
+msgid "Status: Unknown (%d)\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1049
+#, c-format
+msgid "Error: Fatal Error\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1052
+#, c-format
+msgid "Error: Other interface is selected\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1055
+#, c-format
+msgid "Error: Cover Open\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1058
+#, c-format
+msgid "Error: Paper jam\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1061
+#, fuzzy, c-format
+msgid "Error: Ink out\n"
+msgstr "Chyba na vstupe\n"
+
+#: src/escputil/escputil.c:1064
+#, fuzzy, c-format
+msgid "Error: Paper out\n"
+msgstr "Chyba na vstupe\n"
+
+#: src/escputil/escputil.c:1067
+#, c-format
+msgid "Error: Wait return from the tear-off position\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1070
+#, c-format
+msgid "Error: Double feed error\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1073
+#, c-format
+msgid "Error: Unrecoverable cutter error\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1076
+#, c-format
+msgid "Error: Recoverable cutter jam\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1079
+#, c-format
+msgid "Error: CD Tray Out\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1082
+#, c-format
+msgid "Error: Card loading error\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1085
+#, c-format
+msgid "Error: Tray cover open\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1088
+#, c-format
+msgid "Error: Unknown (%d)\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1099
+#, c-format
+msgid "Printing nozzle self-test\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1199 src/escputil/escputil.c:1229
+#, c-format
+msgid "Ink Levels:\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1200 src/escputil/escputil.c:1230
+#: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
+#: src/escputil/escputil.c:1642
+msgid "Ink color"
+msgstr "Farebný atrament"
+
+#: src/escputil/escputil.c:1200 src/escputil/escputil.c:1230
+#: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
+#: src/escputil/escputil.c:1642
+msgid "Percent remaining"
+msgstr "Zostávajúce percentá"
+
+#: src/escputil/escputil.c:1275 src/escputil/escputil.c:1278
+#: src/escputil/escputil.c:1281 src/escputil/escputil.c:1284
+#: src/escputil/escputil.c:1287 src/escputil/escputil.c:1290
+#, c-format
+msgid "Warning: Black Ink Low\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1293
+#, c-format
+msgid "Warning: Unknown (%d)\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1302
+#, c-format
+msgid "Job Name: "
+msgstr ""
+
+#: src/escputil/escputil.c:1331
 msgid "ink levels"
 msgstr ""
 
-#: src/escputil/escputil.c:922
+#: src/escputil/escputil.c:1334
 msgid "status"
 msgstr ""
 
-#: src/escputil/escputil.c:927
+#: src/escputil/escputil.c:1339
 #, fuzzy, c-format
 msgid "Obtaining %s requires using a raw device.\n"
 msgstr "Získanie úrovne atramentu vy¾aduje pou¾itie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:982 src/escputil/escputil.c:1084
-#: src/escputil/escputil.c:1288 src/escputil/escputil.c:1312
-#: src/escputil/escputil.c:1332
-msgid "Ink color"
-msgstr "Farebný atrament"
-
-#: src/escputil/escputil.c:982 src/escputil/escputil.c:1084
-#: src/escputil/escputil.c:1288 src/escputil/escputil.c:1312
-#: src/escputil/escputil.c:1332
-msgid "Percent remaining"
-msgstr "Zostávajúce percentá"
-
-#: src/escputil/escputil.c:1079
-#, fuzzy, c-format
-msgid "Printer does not support listing ink types!\n"
-msgstr "Tlaèiareò nepodporuje farebný výstup\n"
-
-#: src/escputil/escputil.c:1144
+#: src/escputil/escputil.c:1451
 #, fuzzy, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
 msgstr "Získanie úrovne atramentu vy¾aduje pou¾itie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:1288 src/escputil/escputil.c:1312
-#: src/escputil/escputil.c:1332
+#: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
+#: src/escputil/escputil.c:1642
 msgid "Part number"
 msgstr ""
 
-#: src/escputil/escputil.c:1289 src/escputil/escputil.c:1313
-#: src/escputil/escputil.c:1333
+#: src/escputil/escputil.c:1599 src/escputil/escputil.c:1623
+#: src/escputil/escputil.c:1643
 msgid "Date"
 msgstr ""
 
-#: src/escputil/escputil.c:1371
+#: src/escputil/escputil.c:1671
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
 msgstr "Identifikácia tlaèiarne vy¾aduje pou¾ívanie základného zariadenia.\n"
 
-#: src/escputil/escputil.c:1389
+#: src/escputil/escputil.c:1689
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
 msgstr "Je mo¾né zvoli» len jeden model tlaèiarne."
 
-#: src/escputil/escputil.c:1408
+#: src/escputil/escputil.c:1709
 #, c-format
 msgid "Cleaning heads...\n"
 msgstr "Èistenie hláv...\n"
 
-#: src/escputil/escputil.c:1419
+#: src/escputil/escputil.c:1724
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr "Spú¹»am kontrolu trysiek, uistite sa, ¾e v tlaèiarni je papier.\n"
 
-#: src/escputil/escputil.c:1423
+#: src/escputil/escputil.c:1728
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5680,7 +7538,7 @@ msgstr ""
 "toho procesu nevypli tlaèiareò\n"
 "\n"
 
-#: src/escputil/escputil.c:1458
+#: src/escputil/escputil.c:1763
 #, c-format
 msgid ""
 "Please read these instructions very carefully before proceeding.\n"
@@ -5750,12 +7608,17 @@ msgstr ""
 "nevypli tlaèiareò\n"
 "\n"
 
-#: src/escputil/escputil.c:1502
+#: src/escputil/escputil.c:1807
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Nie je mo¾né odosla» príkaz pre tlaèiareò, koniec.\n"
 
-#: src/escputil/escputil.c:1512
+#: src/escputil/escputil.c:1821 src/escputil/escputil.c:1986
+#, c-format
+msgid "Exiting\n"
+msgstr ""
+
+#: src/escputil/escputil.c:1824
 #, c-format
 msgid ""
 "Please inspect the final output very carefully to ensure that your\n"
@@ -5774,20 +7637,20 @@ msgstr ""
 "Potom bude po¾iadaný potvrdi» va¹u voµbu.\n"
 "Èo chcete spravi»? (s,q,r)?\n"
 
-#: src/escputil/escputil.c:1520 src/escputil/escputil.c:1527
-#: src/escputil/escputil.c:1540 src/escputil/escputil.c:1556
-#: src/escputil/escputil.c:1658
+#: src/escputil/escputil.c:1832 src/escputil/escputil.c:1841
+#: src/escputil/escputil.c:1856 src/escputil/escputil.c:1874
+#: src/escputil/escputil.c:1990
 msgid "> "
 msgstr "> "
 
-#: src/escputil/escputil.c:1525
+#: src/escputil/escputil.c:1839
 #, c-format
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
 "Potvrïte prosím opätovným stlaèením 'q', ¾e si ¾eláte ukonèi» bez ulo¾enia:\n"
 
-#: src/escputil/escputil.c:1530
+#: src/escputil/escputil.c:1846
 #, c-format
 msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
@@ -5796,7 +7659,7 @@ msgstr ""
 "V poriadku, va¹a tlaèiareò je  zarovnaná, ale zarovnanie nebolo ulo¾ené.\n"
 "Ak si ¾eláte ulo¾i» zarovnanie, musíte tento proces zopakova».\n"
 
-#: src/escputil/escputil.c:1537
+#: src/escputil/escputil.c:1853
 #, c-format
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
@@ -5805,12 +7668,12 @@ msgstr ""
 "Opätovným stlaèení 'r' potvrïte, ¾e si prajete zopakova» proces "
 "zarovnávania:\n"
 
-#: src/escputil/escputil.c:1543
+#: src/escputil/escputil.c:1861
 #, c-format
 msgid "Repeating the alignment process.\n"
 msgstr "Opakujem proces zarovnávania.\n"
 
-#: src/escputil/escputil.c:1549
+#: src/escputil/escputil.c:1867
 #, c-format
 msgid ""
 "This will permanently alter the configuration of your printer.\n"
@@ -5825,17 +7688,17 @@ msgstr ""
 "Potvrïte opätovným stlaèením 's', ¾e si prajete ulo¾i» nastavenie\n"
 "va¹ej tlaèiarne:\n"
 
-#: src/escputil/escputil.c:1559
+#: src/escputil/escputil.c:1879
 #, c-format
 msgid "About to save settings..."
 msgstr "O nastaveniach ukladania..."
 
-#: src/escputil/escputil.c:1565
+#: src/escputil/escputil.c:1885
 #, c-format
 msgid "failed!\n"
 msgstr "zlyhalo!\n"
 
-#: src/escputil/escputil.c:1566
+#: src/escputil/escputil.c:1886
 #, c-format
 msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
@@ -5844,27 +7707,27 @@ msgstr ""
 "Va¹e nastavenie sa nepodarilo úspe¹ne ulo¾i». Musíte zopakova»\n"
 "procedúru zarovnávania.\n"
 
-#: src/escputil/escputil.c:1570
+#: src/escputil/escputil.c:1890
 #, c-format
 msgid "succeeded!\n"
 msgstr "úspe¹ne!\n"
 
-#: src/escputil/escputil.c:1571
+#: src/escputil/escputil.c:1891
 #, c-format
 msgid "Your alignment settings have been saved to the printer.\n"
 msgstr "Va¹e nastavenia zarovnávania boli ulo¾ené do tlaèiarne.\n"
 
-#: src/escputil/escputil.c:1576
+#: src/escputil/escputil.c:1896
 #, c-format
 msgid "Unrecognized command.\n"
 msgstr "Neznámy príkaz.\n"
 
-#: src/escputil/escputil.c:1579
+#: src/escputil/escputil.c:1899
 #, c-format
 msgid "Final command was not confirmed.\n"
 msgstr "Závereèný príkaz nebol potvrdený.\n"
 
-#: src/escputil/escputil.c:1584
+#: src/escputil/escputil.c:1904
 #, c-format
 msgid ""
 "This procedure assumes that your printer is an Epson %s.\n"
@@ -5881,12 +7744,12 @@ msgstr ""
 "Vlo¾te prosím hárok papiera do va¹ej tlaèiarne, aby sa mohla zaèa»\n"
 "procedúra zarovnávania hlavy.\n"
 
-#: src/escputil/escputil.c:1644 src/escputil/escputil.c:1666
-#: src/escputil/escputil.c:1709
+#: src/escputil/escputil.c:1969 src/escputil/escputil.c:2000
+#: src/escputil/escputil.c:2043
 msgid "Press enter to continue > "
 msgstr "Pre pokraèovanie stlaète enter > "
 
-#: src/escputil/escputil.c:1651
+#: src/escputil/escputil.c:1976
 #, c-format
 msgid ""
 "Please inspect the print, and choose the best pair of lines in each "
@@ -5896,42 +7759,42 @@ msgstr ""
 "Preskúmajte pozorne výtlaèok a zvoµte najlep¹í pár èiar v ka¾dej vzorke.\n"
 "Stlaète èíslo páru, '?' pre pomoc alebo 'r' pre zopakovanie procedúry.\n"
 
-#: src/escputil/escputil.c:1657
+#: src/escputil/escputil.c:1989
 #, c-format
 msgid "Pass #%d"
 msgstr "Prechod #%d"
 
-#: src/escputil/escputil.c:1663 src/escputil/escputil.c:1708
+#: src/escputil/escputil.c:1997 src/escputil/escputil.c:2042
 #, c-format
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Vlo¾te prosím nový hárok papiera.\n"
 
-#: src/escputil/escputil.c:1682
+#: src/escputil/escputil.c:2016
 #, c-format
 msgid "Number out of range!\n"
 msgstr "Èíslo je mimo rozsahu!\n"
 
-#: src/escputil/escputil.c:1687
+#: src/escputil/escputil.c:2021
 #, c-format
 msgid "I cannot understand what you typed!\n"
 msgstr "Nedoká¾em pochopi», èo ste napísali!\n"
 
-#: src/escputil/escputil.c:1693
+#: src/escputil/escputil.c:2027
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
 msgstr "Najlep¹í pár èiar by mal ma» èíslo z rozpätia 1 a %d.\n"
 
-#: src/escputil/escputil.c:1700
+#: src/escputil/escputil.c:2034
 #, c-format
 msgid "Attempting to set alignment..."
 msgstr "Pokú¹am sa nastavi» zarovnávanie..."
 
-#: src/escputil/escputil.c:1703
+#: src/escputil/escputil.c:2037
 #, c-format
 msgid "succeeded.\n"
 msgstr "úspe¹né.\n"
 
-#: src/escputil/escputil.c:1704
+#: src/escputil/escputil.c:2038
 #, c-format
 msgid ""
 "Please verify that the alignment is correct.  After the alignment pattern\n"
@@ -5944,7 +7807,7 @@ msgstr ""
 "d. Ak nie je, mali by ste zopakova» tento proces, aby ste dostali najlep¹ie "
 "výsledky pri tlaèi.\n"
 
-#: src/escputil/escputil.c:1750
+#: src/escputil/escputil.c:2084
 #, c-format
 msgid "Error in input\n"
 msgstr "Chyba na vstupe\n"
@@ -5957,7 +7820,7 @@ msgstr "Tlaèím..."
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Súbor/Tlaè..."
 
-#: src/ghost/ijsgutenprint.c:93
+#: src/ghost/ijsgutenprint.c:97
 #, c-format
 msgid ""
 "ijsgutenprint: the version of Gutenprint software installed (%s)\n"
@@ -5969,116 +7832,416 @@ msgid ""
 "not match the PPD file (%s).\n"
 msgstr ""
 
-#: src/ghost/ijsgutenprint.c:182
+#: src/ghost/ijsgutenprint.c:189
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
 msgstr "Zlý farebný priestor: bps %d kanály %d priestor %s\n"
 
-#: src/ghost/ijsgutenprint.c:190
+#: src/ghost/ijsgutenprint.c:197
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: No row buffer\n"
 msgstr "Neexistuje riadkový bufer\n"
 
-#: src/ghost/ijsgutenprint.c:217 src/ghost/ijsgutenprint.c:237
+#: src/ghost/ijsgutenprint.c:224 src/ghost/ijsgutenprint.c:244
 #, fuzzy, c-format
 msgid ""
 "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
 msgstr "Nie je mo¾né analyzova» parameter %s=%s (oèakáva sa èíslo)\n"
 
-#: src/ghost/ijsgutenprint.c:489
+#: src/ghost/ijsgutenprint.c:496
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"
 msgstr "Tlaèiareò musí by» urèené pomocou -sModel\n"
 
-#: src/ghost/ijsgutenprint.c:491
+#: src/ghost/ijsgutenprint.c:498
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Printer %s is not a known model\n"
 msgstr "Tlaèiareò %s nie je známy model\n"
 
-#: src/ghost/ijsgutenprint.c:618
+#: src/ghost/ijsgutenprint.c:654
 #, c-format
 msgid "ijsgutenprint: unknown DeviceModel %s\n"
 msgstr ""
 
-#: src/ghost/ijsgutenprint.c:645
+#: src/ghost/ijsgutenprint.c:698
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse TopLeft %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:668
+#: src/ghost/ijsgutenprint.c:721
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse PaperSize %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:739
+#: src/ghost/ijsgutenprint.c:793
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse curve %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:746
+#: src/ghost/ijsgutenprint.c:800
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s float %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:753
+#: src/ghost/ijsgutenprint.c:807
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s int %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:760
+#: src/ghost/ijsgutenprint.c:814
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:774
+#: src/ghost/ijsgutenprint.c:828
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
 msgstr "Na tlaèiarni %s s %s nie je mo¾né tlaèi» \n"
 
-#: src/ghost/ijsgutenprint.c:785
+#: src/ghost/ijsgutenprint.c:839
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameter %s %d\n"
 msgstr "Neznáma tlaèiareò %s\n"
 
-#: src/ghost/ijsgutenprint.c:811
+#: src/ghost/ijsgutenprint.c:865
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: bad key code %d\n"
 msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
 
-#: src/ghost/ijsgutenprint.c:1221
+#: src/ghost/ijsgutenprint.c:1297
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"
 msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
 
-#: src/ghost/ijsgutenprint.c:1232
+#: src/ghost/ijsgutenprint.c:1308
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: image_init failed %d\n"
 msgstr "image_init zlyhalo %d\n"
 
-#: src/ghost/ijsgutenprint.c:1243
+#: src/ghost/ijsgutenprint.c:1319
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
 msgstr "Nepodarilo sa otvori» popis súboru: %s\n"
 
-#: src/ghost/ijsgutenprint.c:1255
+#: src/ghost/ijsgutenprint.c:1331
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
 msgstr "Nie je mo¾né otvori» %s: %s\n"
 
-#: src/ghost/ijsgutenprint.c:1267
+#: src/ghost/ijsgutenprint.c:1343
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unknown printer %s\n"
 msgstr "Neznáma tlaèiareò %s\n"
 
-#: src/ghost/ijsgutenprint.c:1346
+#: src/ghost/ijsgutenprint.c:1508
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"
 msgstr "Zlé parametre; nie je mo¾né pokraèova»!\n"
 
-#: src/ghost/ijsgutenprint.c:1356
+#: src/ghost/ijsgutenprint.c:1518
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C50"
+#~ msgstr "Stylus C60"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C60"
+#~ msgstr "Stylus C60"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C61"
+#~ msgstr "Stylus C60"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C62"
+#~ msgstr "Stylus C60"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C70"
+#~ msgstr "Stylus C70"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C80"
+#~ msgstr "Stylus C80"
+
+#, fuzzy
+#~ msgid "EPSON Stylus C82"
+#~ msgstr "Stylus C80"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color"
+#~ msgstr "Stylus Color"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color Pro"
+#~ msgstr "Stylus Color Pro"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color Pro XL"
+#~ msgstr "Stylus Color Pro XL"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 400"
+#~ msgstr "Stylus Color 400"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 440"
+#~ msgstr "Stylus Color 440"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 460"
+#~ msgstr "Stylus Color 460"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 480"
+#~ msgstr "Stylus Color 480"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 500"
+#~ msgstr "Stylus Color 500"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 580"
+#~ msgstr "Stylus Color 580"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 600"
+#~ msgstr "Stylus Color 600"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 640"
+#~ msgstr "Stylus Color 640"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 660"
+#~ msgstr "Stylus Color 660"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 670"
+#~ msgstr "Stylus Color 670"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 680"
+#~ msgstr "Stylus Color 680"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 740"
+#~ msgstr "Stylus Color 740"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 760"
+#~ msgstr "Stylus Color 760"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 777"
+#~ msgstr "Stylus Color 777"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 800"
+#~ msgstr "Stylus Color 800"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 850"
+#~ msgstr "Stylus Color 850"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 860"
+#~ msgstr "Stylus Color 860"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 880"
+#~ msgstr "Stylus Color 880"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 83"
+#~ msgstr "Stylus Color 83"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 900"
+#~ msgstr "Stylus Color 900"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 980"
+#~ msgstr "Stylus Color 980"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 1160"
+#~ msgstr "Stylus Color 1160"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 1500"
+#~ msgstr "Stylus Color 1500"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 1520"
+#~ msgstr "Stylus Color 1520"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Color 3000"
+#~ msgstr "Stylus Color 3000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo"
+#~ msgstr "Stylus Photo"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 700"
+#~ msgstr "Stylus Photo 700"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo EX"
+#~ msgstr "Stylus Photo EX"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 720"
+#~ msgstr "Stylus Photo 720"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 750"
+#~ msgstr "Stylus Photo 750"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 780"
+#~ msgstr "Stylus Photo 780"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 785EPX"
+#~ msgstr "Stylus Photo 785"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 790"
+#~ msgstr "Stylus Photo 790"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 810"
+#~ msgstr "Stylus Photo 810"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 820"
+#~ msgstr "Stylus Photo 820"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 830"
+#~ msgstr "Stylus Photo 780"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 870"
+#~ msgstr "Stylus Photo 870"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 875"
+#~ msgstr "Stylus Photo 875"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 890"
+#~ msgstr "Stylus Photo 890"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 895"
+#~ msgstr "Stylus Photo 895"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 900"
+#~ msgstr "Stylus Photo 700"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 915"
+#~ msgstr "Stylus Photo 895"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 925"
+#~ msgstr "Stylus Photo 895"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 950"
+#~ msgstr "Stylus Photo 750"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 960"
+#~ msgstr "Stylus Photo 790"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 1200"
+#~ msgstr "Stylus Photo 1200"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 1270"
+#~ msgstr "Stylus Photo 1270"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 1280"
+#~ msgstr "Stylus Photo 1280"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 1290"
+#~ msgstr "Stylus Photo 1290"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 2000P"
+#~ msgstr "Stylus Photo 2000P"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 2100"
+#~ msgstr "Stylus Photo 1200"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Photo 2200"
+#~ msgstr "Stylus Photo 1200"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 5000"
+#~ msgstr "Stylus Pro 5000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 5500"
+#~ msgstr "Stylus Pro 5500"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 7000"
+#~ msgstr "Stylus Pro 7000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 7500"
+#~ msgstr "Stylus Pro 7500"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 7600"
+#~ msgstr "Stylus Pro 7000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 9000"
+#~ msgstr "Stylus Pro 9000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 9500"
+#~ msgstr "Stylus Pro 9500"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 9600"
+#~ msgstr "Stylus Pro 9000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Pro 10000"
+#~ msgstr "Stylus Pro 10000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Scan 2000"
+#~ msgstr "Stylus Scan 2000"
+
+#, fuzzy
+#~ msgid "EPSON Stylus Scan 2500"
+#~ msgstr "Stylus Scan 2500"
+
+#, fuzzy
+#~ msgid "EPSON E-100"
+#~ msgstr "Stylus C60"
+
+#, fuzzy
+#~ msgid "Printer does not support listing ink types!\n"
+#~ msgstr "Tlaèiareò nepodporuje farebný výstup\n"
 
 #, fuzzy
 #~ msgid "Cannot identify printer!\n"
@@ -6229,239 +8392,6 @@ msgstr "Získanie nasledujúceho riadku zlyhalo na %d\n"
 #, fuzzy
 #~ msgid "Stylus C42ux"
 #~ msgstr "Stylus C40ux"
-
-#, fuzzy
-#~ msgid "Stylus C50"
-#~ msgstr "Stylus C60"
-
-#~ msgid "Stylus C60"
-#~ msgstr "Stylus C60"
-
-#, fuzzy
-#~ msgid "Stylus C61"
-#~ msgstr "Stylus C60"
-
-#, fuzzy
-#~ msgid "Stylus C62"
-#~ msgstr "Stylus C60"
-
-#~ msgid "Stylus C70"
-#~ msgstr "Stylus C70"
-
-#~ msgid "Stylus C80"
-#~ msgstr "Stylus C80"
-
-#, fuzzy
-#~ msgid "Stylus C82"
-#~ msgstr "Stylus C80"
-
-#~ msgid "Stylus Color"
-#~ msgstr "Stylus Color"
-
-#~ msgid "Stylus Color Pro"
-#~ msgstr "Stylus Color Pro"
-
-#~ msgid "Stylus Color Pro XL"
-#~ msgstr "Stylus Color Pro XL"
-
-#~ msgid "Stylus Color 400"
-#~ msgstr "Stylus Color 400"
-
-#~ msgid "Stylus Color 440"
-#~ msgstr "Stylus Color 440"
-
-#~ msgid "Stylus Color 460"
-#~ msgstr "Stylus Color 460"
-
-#~ msgid "Stylus Color 480"
-#~ msgstr "Stylus Color 480"
-
-#~ msgid "Stylus Color 500"
-#~ msgstr "Stylus Color 500"
-
-#~ msgid "Stylus Color 580"
-#~ msgstr "Stylus Color 580"
-
-#~ msgid "Stylus Color 600"
-#~ msgstr "Stylus Color 600"
-
-#~ msgid "Stylus Color 640"
-#~ msgstr "Stylus Color 640"
-
-#~ msgid "Stylus Color 660"
-#~ msgstr "Stylus Color 660"
-
-#~ msgid "Stylus Color 670"
-#~ msgstr "Stylus Color 670"
-
-#~ msgid "Stylus Color 680"
-#~ msgstr "Stylus Color 680"
-
-#~ msgid "Stylus Color 740"
-#~ msgstr "Stylus Color 740"
-
-#~ msgid "Stylus Color 760"
-#~ msgstr "Stylus Color 760"
-
-#~ msgid "Stylus Color 777"
-#~ msgstr "Stylus Color 777"
-
-#~ msgid "Stylus Color 800"
-#~ msgstr "Stylus Color 800"
-
-#~ msgid "Stylus Color 850"
-#~ msgstr "Stylus Color 850"
-
-#~ msgid "Stylus Color 860"
-#~ msgstr "Stylus Color 860"
-
-#~ msgid "Stylus Color 880"
-#~ msgstr "Stylus Color 880"
-
-#~ msgid "Stylus Color 83"
-#~ msgstr "Stylus Color 83"
-
-#~ msgid "Stylus Color 900"
-#~ msgstr "Stylus Color 900"
-
-#~ msgid "Stylus Color 980"
-#~ msgstr "Stylus Color 980"
-
-#~ msgid "Stylus Color 1160"
-#~ msgstr "Stylus Color 1160"
-
-#~ msgid "Stylus Color 1500"
-#~ msgstr "Stylus Color 1500"
-
-#~ msgid "Stylus Color 1520"
-#~ msgstr "Stylus Color 1520"
-
-#~ msgid "Stylus Color 3000"
-#~ msgstr "Stylus Color 3000"
-
-#~ msgid "Stylus Photo"
-#~ msgstr "Stylus Photo"
-
-#~ msgid "Stylus Photo 700"
-#~ msgstr "Stylus Photo 700"
-
-#~ msgid "Stylus Photo EX"
-#~ msgstr "Stylus Photo EX"
-
-#~ msgid "Stylus Photo 720"
-#~ msgstr "Stylus Photo 720"
-
-#~ msgid "Stylus Photo 750"
-#~ msgstr "Stylus Photo 750"
-
-#~ msgid "Stylus Photo 780"
-#~ msgstr "Stylus Photo 780"
-
-#~ msgid "Stylus Photo 785"
-#~ msgstr "Stylus Photo 785"
-
-#~ msgid "Stylus Photo 790"
-#~ msgstr "Stylus Photo 790"
-
-#~ msgid "Stylus Photo 810"
-#~ msgstr "Stylus Photo 810"
-
-#~ msgid "Stylus Photo 820"
-#~ msgstr "Stylus Photo 820"
-
-#, fuzzy
-#~ msgid "Stylus Photo 830"
-#~ msgstr "Stylus Photo 780"
-
-#~ msgid "Stylus Photo 870"
-#~ msgstr "Stylus Photo 870"
-
-#~ msgid "Stylus Photo 875"
-#~ msgstr "Stylus Photo 875"
-
-#~ msgid "Stylus Photo 890"
-#~ msgstr "Stylus Photo 890"
-
-#~ msgid "Stylus Photo 895"
-#~ msgstr "Stylus Photo 895"
-
-#, fuzzy
-#~ msgid "Stylus Photo 900"
-#~ msgstr "Stylus Photo 700"
-
-#, fuzzy
-#~ msgid "Stylus Photo 915"
-#~ msgstr "Stylus Photo 895"
-
-#, fuzzy
-#~ msgid "Stylus Photo 925"
-#~ msgstr "Stylus Photo 895"
-
-#, fuzzy
-#~ msgid "Stylus Photo 950"
-#~ msgstr "Stylus Photo 750"
-
-#, fuzzy
-#~ msgid "Stylus Photo 960"
-#~ msgstr "Stylus Photo 790"
-
-#~ msgid "Stylus Photo 1200"
-#~ msgstr "Stylus Photo 1200"
-
-#~ msgid "Stylus Photo 1270"
-#~ msgstr "Stylus Photo 1270"
-
-#~ msgid "Stylus Photo 1280"
-#~ msgstr "Stylus Photo 1280"
-
-#~ msgid "Stylus Photo 1290"
-#~ msgstr "Stylus Photo 1290"
-
-#~ msgid "Stylus Photo 2000P"
-#~ msgstr "Stylus Photo 2000P"
-
-#, fuzzy
-#~ msgid "Stylus Photo 2100"
-#~ msgstr "Stylus Photo 1200"
-
-#, fuzzy
-#~ msgid "Stylus Photo 2200"
-#~ msgstr "Stylus Photo 1200"
-
-#~ msgid "Stylus Pro 5000"
-#~ msgstr "Stylus Pro 5000"
-
-#~ msgid "Stylus Pro 5500"
-#~ msgstr "Stylus Pro 5500"
-
-#~ msgid "Stylus Pro 7000"
-#~ msgstr "Stylus Pro 7000"
-
-#~ msgid "Stylus Pro 7500"
-#~ msgstr "Stylus Pro 7500"
-
-#, fuzzy
-#~ msgid "Stylus Pro 7600"
-#~ msgstr "Stylus Pro 7000"
-
-#~ msgid "Stylus Pro 9000"
-#~ msgstr "Stylus Pro 9000"
-
-#~ msgid "Stylus Pro 9500"
-#~ msgstr "Stylus Pro 9500"
-
-#, fuzzy
-#~ msgid "Stylus Pro 9600"
-#~ msgstr "Stylus Pro 9000"
-
-#~ msgid "Stylus Pro 10000"
-#~ msgstr "Stylus Pro 10000"
-
-#~ msgid "Stylus Scan 2000"
-#~ msgstr "Stylus Scan 2000"
-
-#~ msgid "Stylus Scan 2500"
-#~ msgstr "Stylus Scan 2500"
 
 #~ msgid ""
 #~ "Please read these instructions very carefully before proceeding.\n"
