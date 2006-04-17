@@ -846,10 +846,14 @@ stp_find_params(const char *name, const char *family)
       strcat(stmp, name);
       item = stp_list_get_item_by_name(printvars_list, stmp);
       if (item)
-	return ((const stp_printvars_t *)
-		stp_list_item_get_data(item))->printvars;
-      strcpy(stmp, stmp);
+	{
+	  stp_free(stmp);
+	  return ((const stp_printvars_t *)
+		  stp_list_item_get_data(item))->printvars;
+	}
+      strcpy(stmp, name);
       item = stp_list_get_item_by_name(printvars_list, stmp);
+      stp_free(stmp);
       if (item)
 	return ((const stp_printvars_t *)
 		stp_list_item_get_data(item))->printvars;
