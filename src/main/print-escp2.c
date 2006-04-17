@@ -1872,6 +1872,7 @@ imax(int a, int b)
 
 static void
 internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
+			int use_maximum_area,
 			int *left, int *right, int *bottom, int *top)
 {
   int	width, height;			/* Size of page */
@@ -1885,7 +1886,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
   const stp_papersize_t *pt = NULL;
   const input_slot_t *input_slot = NULL;
 
-  if (media_size && use_paper_margins)
+  if (media_size)
     pt = stp_get_papersize_by_name(media_size);
 
   input_slot = get_input_slot(v);
@@ -1898,14 +1899,24 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
   stp_default_media_size(v, &width, &height);
   if (cd)
     {
-      left_margin = 0;
-      right_margin = 0;
-      bottom_margin = 0;
-      top_margin = 0;
+      if (pt)
+	{
+	  left_margin = pt->left;
+	  right_margin = pt->right;
+	  bottom_margin = pt->bottom;
+	  top_margin = pt->top;
+	}
+      else
+	{
+	  left_margin = 0;
+	  right_margin = 0;
+	  bottom_margin = 0;
+	  top_margin = 0;
+	}
     }
   else
     {
-      if (pt)
+      if (pt && use_paper_margins)
 	{
 	  left_margin = pt->left;
 	  right_margin = pt->right;
@@ -1922,14 +1933,21 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
   *right =	width - right_margin;
   *top =	top_margin;
   *bottom =	height - bottom_margin;
-  if (!cd &&
-      escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
-      stp_get_boolean_parameter(v, "FullBleed"))
+  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+      (use_maximum_area ||
+       (!cd && stp_get_boolean_parameter(v, "FullBleed"))))
     {
-      *left -= 80 / (360 / 72);	/* 80 per the Epson manual */
-      *right += 80 / (360 / 72);	/* 80 per the Epson manual */
-      *bottom += escp2_nozzles(v) * escp2_nozzle_separation(v) * 72 /
-	escp2_base_separation(v);
+      if (pt)
+	{
+	  if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
+	      pt->bottom <= 0)
+	    {
+	      *left -= 80 / (360 / 72);		/* 80 per the Epson manual */
+	      *right += 80 / (360 / 72);	/* 80 per the Epson manual */
+	      *bottom += escp2_nozzles(v) * escp2_nozzle_separation(v) * 72 /
+		escp2_base_separation(v);
+	    }
+	}
     }
 }
 
@@ -1944,7 +1962,17 @@ escp2_imageable_area(const stp_vars_t *v,   /* I */
 		     int  *bottom,	/* O - Bottom position in points */
 		     int  *top)		/* O - Top position in points */
 {
-  internal_imageable_area(v, 1, left, right, bottom, top);
+  internal_imageable_area(v, 1, 0, left, right, bottom, top);
+}
+
+static void
+escp2_maximum_imageable_area(const stp_vars_t *v,   /* I */
+			     int  *left,   /* O - Left position in points */
+			     int  *right,  /* O - Right position in points */
+			     int  *bottom, /* O - Bottom position in points */
+			     int  *top)    /* O - Top position in points */
+{
+  internal_imageable_area(v, 1, 1, left, right, bottom, top);
 }
 
 static void
@@ -2745,8 +2773,11 @@ setup_page(stp_vars_t *v)
 				   safe and print 16 mm */
 
   stp_default_media_size(v, &n, &(pd->page_true_height));
-  internal_imageable_area(v, 0, &pd->page_left, &pd->page_right,
+  internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
 			  &pd->page_bottom, &pd->page_top);
+  /* Don't use full bleed mode if the paper itself has a margin */
+  if (pd->page_left > 0 || pd->page_top > 0)
+    stp_set_boolean_parameter(v, "FullBleed", 0);
 
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
@@ -2754,6 +2785,13 @@ setup_page(stp_vars_t *v)
 	stp_get_dimension_parameter(v, "CDXAdjustment");
       int top_center = escp2_cd_y_offset(v) +
 	stp_get_dimension_parameter(v, "CDYAdjustment");
+      pd->page_true_height = pd->page_bottom - pd->page_top;
+      stp_set_left(v, stp_get_left(v) - pd->page_left);
+      stp_set_top(v, stp_get_top(v) - pd->page_top);
+      pd->page_right -= pd->page_left;
+      pd->page_bottom -= pd->page_top;
+      pd->page_top = 0;
+      pd->page_left = 0;
       extra_top = top_center - (pd->page_bottom / 2);
       extra_left = left_center - (pd->page_right / 2);
       pd->cd_inner_radius = hub_size * pd->micro_units * 10 / 254 / 2;
@@ -3088,6 +3126,7 @@ static const stp_printfuncs_t print_escp2_printfuncs =
   escp2_parameters,
   stp_default_media_size,
   escp2_imageable_area,
+  escp2_maximum_imageable_area,
   escp2_limit,
   escp2_print,
   escp2_describe_resolution,

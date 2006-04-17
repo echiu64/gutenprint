@@ -82,6 +82,10 @@ typedef struct
   int			top;
   int			width;
   int			height;
+  int			left_trim;
+  int			right_trim;
+  int			top_trim;
+  int			bottom_trim;
   int			adjusted_width;
   int			adjusted_height;
   int			last_percent;
@@ -325,6 +329,7 @@ static stp_vars_t *
 initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 {
   const stp_papersize_t	*size;		/* Paper size */
+  int tmp_left, tmp_right, tmp_top, tmp_bottom, tmp_width, tmp_height;
   stp_vars_t *v = stp_vars_create_copy(default_settings);
 
   stp_set_page_width(v, cups->header.PageSize[0]);
@@ -414,15 +419,78 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 			 &(cups->bottom), &(cups->top));
   fprintf(stderr, "DEBUG: Gutenprint limits w %d l %d r %d  h %d t %d b %d\n",
 	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
+
+  tmp_left = cups->header.ImagingBoundingBox[0];
+  tmp_top = cups->header.ImagingBoundingBox[1];
+  tmp_right = cups->header.ImagingBoundingBox[2];
+  tmp_bottom = cups->header.ImagingBoundingBox[3];
+  tmp_width = cups->right - cups->left;
+  tmp_height = cups->bottom - cups->top;
+  if (tmp_left < cups->left)
+    {
+      cups->left_trim = cups->left - tmp_left;
+      fprintf(stderr, "DEBUG: Gutenprint left margin %d\n", cups->left_trim);
+      tmp_left = cups->left;
+    }
+  else
+    {
+      cups->left_trim = 0;
+      fprintf(stderr, "DEBUG: Gutenprint adjusting left margin from %d to %d\n",
+	      cups->left, tmp_left);
+      cups->left = tmp_left;
+    }
+  if (tmp_right > cups->right)
+    {
+      cups->right_trim = tmp_right - cups->right;
+      fprintf(stderr, "DEBUG: Gutenprint right margin %d\n", cups->right_trim);
+      tmp_right = cups->right;
+    }
+  else
+    {
+      cups->right_trim = 0;
+      fprintf(stderr, "DEBUG: Gutenprint adjusting right margin from %d to %d\n",
+	      cups->right, tmp_right);
+      cups->right = tmp_right;
+    }
+  if (tmp_top < cups->top)
+    {
+      cups->top_trim = cups->top - tmp_top;
+      fprintf(stderr, "DEBUG: Gutenprint top margin %d\n", cups->top_trim);
+      tmp_top = cups->top;
+    }
+  else
+    {
+      cups->top_trim = 0;
+      fprintf(stderr, "DEBUG: Gutenprint adjusting top margin from %d to %d\n",
+	      cups->top, tmp_top);
+      cups->top = tmp_top;
+    }
+  if (tmp_bottom > cups->bottom)
+    {
+      cups->bottom_trim = tmp_bottom - cups->bottom;
+      fprintf(stderr, "DEBUG: Gutenprint bottom margin %d\n", cups->bottom_trim);
+      tmp_bottom = cups->bottom;
+    }
+  else
+    {
+      cups->bottom_trim = 0;
+      fprintf(stderr, "DEBUG: Gutenprint adjusting bottom margin from %d to %d\n",
+	      cups->bottom, tmp_bottom);
+      cups->bottom = tmp_bottom;
+    }
+
   stp_set_width(v, cups->right - cups->left);
   stp_set_height(v, cups->bottom - cups->top);
   stp_set_left(v, cups->left);
   stp_set_top(v, cups->top);
+
   cups->right = cups->width - cups->right;
   cups->width = cups->width - cups->left - cups->right;
   cups->width = cups->header.HWResolution[0] * cups->width / 72;
   cups->left = cups->header.HWResolution[0] * cups->left / 72;
   cups->right = cups->header.HWResolution[0] * cups->right / 72;
+  cups->left_trim = cups->header.HWResolution[0] * cups->left_trim / 72;
+  cups->right_trim = cups->header.HWResolution[0] * cups->right_trim / 72;
   cups->adjusted_width = cups->width;
   if (cups->adjusted_width > cups->header.cupsWidth)
     cups->adjusted_width = cups->header.cupsWidth;
@@ -432,6 +500,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   cups->height = cups->header.HWResolution[1] * cups->height / 72;
   cups->top = cups->header.HWResolution[1] * cups->top / 72;
   cups->bottom = cups->header.HWResolution[1] * cups->bottom / 72;
+  cups->top_trim = cups->header.HWResolution[1] * cups->top_trim / 72;
+  cups->bottom_trim = cups->header.HWResolution[1] * cups->bottom_trim / 72;
   cups->adjusted_height = cups->height;
   if (cups->adjusted_height > cups->header.cupsHeight)
     cups->adjusted_height = cups->header.cupsHeight;
@@ -950,6 +1020,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   unsigned char *orig = data;           /* Temporary pointer */
   static int warned = 0;                /* Error warning printed? */
   int new_percent;
+  int left_margin, right_margin;
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     {
@@ -959,7 +1030,13 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   bytes_per_line =
     ((cups->adjusted_width * cups->header.cupsBitsPerPixel) + CHAR_BIT - 1) /
     CHAR_BIT;
-  margin = cups->header.cupsBytesPerLine - bytes_per_line;
+
+  left_margin = ((cups->left_trim * cups->header.cupsBitsPerPixel) + CHAR_BIT - 1) /
+    CHAR_BIT; 
+  right_margin = ((cups->right_trim * cups->header.cupsBitsPerPixel) + CHAR_BIT - 1) /
+    CHAR_BIT; 
+  margin = cups->header.cupsBytesPerLine - left_margin - bytes_per_line -
+    right_margin;
 
   if (cups->row < cups->header.cupsHeight)
   {
@@ -967,12 +1044,19 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	    bytes_per_line, cups->row);
     while (cups->row <= row && cups->row < cups->header.cupsHeight)
       {
+	if (left_margin > 0)
+	  {
+	    fprintf(stderr, "DEBUG2: Gutenprint tossing left %d (%d)\n",
+		    left_margin, cups->left_trim);
+	    throwaway_data(left_margin, cups);
+	  }
 	cupsRasterReadPixels(cups->ras, data, bytes_per_line);
 	cups->row ++;
-	if (margin > 0)
+	if (margin + right_margin > 0)
 	  {
-	    fprintf(stderr, "DEBUG2: Gutenprint tossing right %d\n", margin);
-	    throwaway_data(margin, cups);
+	    fprintf(stderr, "DEBUG2: Gutenprint tossing right %d (%d) + %d\n",
+		    right_margin, cups->right_trim, margin);
+	    throwaway_data(margin + right_margin, cups);
 	  }
       }
   }
@@ -1008,7 +1092,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
       if (warned == 0)
 	{
 	  fprintf(stderr,
-		  "WARNING: Gutenprint detected broken job options.  "
+		  "WARNING: Gutenprint detected bad CUPS bit depth (1).  "
 		  "Output quality is degraded.  Are you using psnup or non-ADSC PostScript?\n");
 	  warned = 1;
 	}

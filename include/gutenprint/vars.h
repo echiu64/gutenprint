@@ -1268,6 +1268,33 @@ extern void stp_get_imageable_area(const stp_vars_t *v, int *left, int *right,
 				   int *bottom, int *top);
 
 /**
+ * Get the maximum imagable area of the page.
+ * Retrieve the maximum (regardless of settings other than page sise)
+ * boundaries of the printable area of the page.  In combination
+ * with the media size, this can be used to determine the actual printable
+ * region, which callers can use to place the image precisely.  The
+ * dimensions are relative to the top left of the physical page.
+ *
+ * If a customizable page size is used (see stp_printer_get_media_size),
+ * the actual desired width and/or height must be filled in using
+ * stp_set_page_width and/or stp_set_page_height.  If these are not filled
+ * in, the margins will be returned.
+ *
+ * Returned values may be negative if a printer is capable of full bleed
+ * by printing beyond the physical boundaries of the page.
+ *
+ * If the media size stored in V is invalid, the return values
+ * will be indeterminate.  It is up to the user to specify legal values.
+ * @param v the vars to use.
+ * @param left a pointer to a int to store the left edge in.
+ * @param right a pointer to a int to store the right edge in.
+ * @param bottom a pointer to a int to store the bottom edge in.
+ * @param top a pointer to a int to store the top edge in.
+ */
+extern void stp_get_maximum_imageable_area(const stp_vars_t *v, int *left,
+					   int *right, int *bottom, int *top);
+
+/**
  * Get the media size limits.
  * Retrieve the minimum and maximum size limits for custom media sizes
  * with the current printer settings.

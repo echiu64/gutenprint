@@ -392,6 +392,15 @@ stp_get_imageable_area(const stp_vars_t *v,
 }
 
 void
+stp_get_maximum_imageable_area(const stp_vars_t *v,
+			       int *left, int *right, int *bottom, int *top)
+{
+  const stp_printfuncs_t *printfuncs =
+    stpi_get_printfuncs(stp_get_printer(v));
+  (printfuncs->maximum_imageable_area)(v, left, right, bottom, top);
+}
+
+void
 stp_get_size_limit(const stp_vars_t *v, int *max_width, int *max_height,
 		   int *min_width, int *min_height)
 {

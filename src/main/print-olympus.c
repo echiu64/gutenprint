@@ -1569,11 +1569,12 @@ olympus_parameters(const stp_vars_t *v, const char *name,
 
 
 static void
-olympus_imageable_area(const stp_vars_t *v,
-		   int  *left,
-		   int  *right,
-		   int  *bottom,
-		   int  *top)
+olympus_imageable_area_internal(const stp_vars_t *v,
+				int  use_maximum_area,
+				int  *left,
+				int  *right,
+				int  *bottom,
+				int  *top)
 {
   int width, height;
   int i;
@@ -1597,8 +1598,9 @@ olympus_imageable_area(const stp_vars_t *v,
           stp_default_media_size(v, &width, &height);
     
           
-	  if (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS)
-	    && stp_get_boolean_parameter(v, "Borderless"))
+	  if (use_maximum_area ||
+	      (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS) &&
+	       stp_get_boolean_parameter(v, "Borderless")))
             {
               *left = 0;
               *top  = 0;
@@ -1615,6 +1617,26 @@ olympus_imageable_area(const stp_vars_t *v,
           break;
         }
     }
+}
+
+static void
+olympus_imageable_area(const stp_vars_t *v,
+		       int  *left,
+		       int  *right,
+		       int  *bottom,
+		       int  *top)
+{
+  olympus_imageable_area_internal(v, 0, left, right, bottom, top);
+}
+
+static void
+olympus_maximum_imageable_area(const stp_vars_t *v,
+			       int  *left,
+			       int  *right,
+			       int  *bottom,
+			       int  *top)
+{
+  olympus_imageable_area_internal(v, 1, left, right, bottom, top);
 }
 
 static void
@@ -2156,6 +2178,7 @@ static const stp_printfuncs_t print_olympus_printfuncs =
   olympus_parameters,
   stp_default_media_size,
   olympus_imageable_area,
+  olympus_maximum_imageable_area,
   olympus_limit,
   olympus_print,
   olympus_describe_resolution,

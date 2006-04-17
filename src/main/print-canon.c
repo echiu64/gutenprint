@@ -3441,6 +3441,7 @@ static const stp_printfuncs_t print_canon_printfuncs =
   canon_parameters,
   stp_default_media_size,
   canon_imageable_area,
+  canon_imageable_area,
   canon_limit,
   canon_print,
   canon_describe_resolution,

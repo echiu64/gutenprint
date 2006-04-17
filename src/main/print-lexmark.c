@@ -2165,6 +2165,7 @@ static const stp_printfuncs_t print_lexmark_printfuncs =
   lexmark_parameters,
   stp_default_media_size,
   lexmark_imageable_area,
+  lexmark_imageable_area,
   lexmark_limit,
   lexmark_print,
   lexmark_describe_resolution,

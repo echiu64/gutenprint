@@ -75,6 +75,10 @@ typedef struct _IMAGE
   int xres;		/* dpi */
   int yres;
   int output_type;
+  int left_margin;
+  int right_margin;
+  int top_margin;
+  int bottom_margin;
   int monochrome_flag;	/* for monochrome output */
   int row;		/* row number in buffer */
   int row_width;	/* length of a row */
@@ -99,9 +103,12 @@ ijsgutenprint: the version of Gutenprint software installed (%s)\n\
 ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not match the PPD file (%s).\n");
 
 const char *gutenprint_ppd_version = NULL;
+static int ppd_mode = 0;	/* Use PPD-style margins */
 
 static stp_string_list_t *option_remap_list = NULL;
 static int print_messages_as_errors = 0;
+
+static double total_bytes_printed = 0;
 
 static char *
 c_strdup(const char *s)
@@ -505,7 +512,23 @@ gutenprint_get_cb (void *get_cb_data,
     {
       int l, r, b, t;
       int h, w;
-      stp_get_imageable_area(v, &l, &r, &b, &t);
+      if (ppd_mode)
+	{
+	  stp_get_media_size(v, &w, &h);
+	  stp_get_maximum_imageable_area(v, &l, &r, &b, &t);
+	  if (l < 0)
+	    l = 0;
+	  if (r > w)
+	    r = w;
+	  if (t < 0)
+	    t = 0;
+	  if (b > h)
+	    b = h;
+	}
+      else
+	stp_get_imageable_area(v, &l, &r, &b, &t);
+      
+
       h = b - t;
       w = r - l;
       /* Force locale to "C", because decimal numbers sent to the IJS
@@ -533,7 +556,20 @@ gutenprint_get_cb (void *get_cb_data,
       int l, r, b, t;
       int h, w;
       stp_get_media_size(v, &w, &h);
-      stp_get_imageable_area(v, &l, &r, &b, &t);
+      if (ppd_mode)
+	{
+	  stp_get_maximum_imageable_area(v, &l, &r, &b, &t);
+	  if (l < 0)
+	    l = 0;
+	  if (r > w)
+	    r = w;
+	  if (t < 0)
+	    t = 0;
+	  if (b > h)
+	    b = h;
+	}
+      else
+	stp_get_imageable_area(v, &l, &r, &b, &t);
       /* Force locale to "C", because decimal numbers sent to the IJS
 	 client must have a decimal point, nver a decimal comma */
       setlocale(LC_ALL, "C");
@@ -623,8 +659,25 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     {
       int l, r, b, t, pw, ph;
       double w, h;
-      stp_get_imageable_area(img->v, &l, &r, &b, &t);
       stp_get_media_size(img->v, &pw, &ph);
+      if (ppd_mode)
+	{
+	  stp_get_maximum_imageable_area(img->v, &l, &r, &b, &t);
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: l %d r %d t %d b %d pw %d ph %d\n",
+			    l, r, t, b, pw, ph));
+	  if (l < 0)
+	    l = 0;
+	  if (r > pw)
+	    r = pw;
+	  if (t < 0)
+	    t = 0;
+	  if (b > ph)
+	    b = ph;
+	}
+      else
+	stp_get_imageable_area(img->v, &l, &r, &b, &t);
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint ppd_mode %d top left: %s\n",
+			ppd_mode, vbuf));
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: l %d r %d t %d b %d pw %d ph %d\n",
 			l, r, t, b, pw, ph));
       code = gutenprint_parse_wxh(vbuf, strlen(vbuf), &w, &h);
@@ -686,6 +739,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
     }
   else if (strcmp(key, "STP_VERSION") == 0)
     {
+      ppd_mode = 1;
       if (strcmp(vbuf, version_id) != 0)
 	{
 	  fprintf(stderr, _(version_mismatch),
@@ -840,6 +894,7 @@ gutenprint_errfunc(void *file, const char *buf, size_t bytes)
 static void
 gutenprint_outfunc(void *data, const char *buffer, size_t bytes)
 {
+  total_bytes_printed += bytes;
   if ((data != NULL) && (buffer != NULL) && (bytes != 0))
     fwrite(buffer, 1, bytes, (FILE *)data);
 }
@@ -851,6 +906,7 @@ static int
 gutenprint_image_width(stp_image_t *image)
 {
   IMAGE *img = (IMAGE *)(image->rep);
+  STP_DEBUG(fprintf(stderr, "ijsgutenprint: image width %d\n", img->width));
   return img->width;
 }
 
@@ -858,7 +914,24 @@ static int
 gutenprint_image_height(stp_image_t *image)
 {
   IMAGE *img = (IMAGE *)(image->rep);
+  STP_DEBUG(fprintf(stderr, "ijsgutenprint: image height %d (%d)\n",
+		    img->height, img->height * img->xres / img->yres));
   return img->height * img->xres / img->yres;
+}
+
+static void
+throwaway_data(int amount, IMAGE *img)
+{
+  char trash[4096];	/* Throwaway */
+  int block_count = amount / 4096;
+  int leftover = amount % 4096;
+  while (block_count > 0)
+    {
+      ijs_server_get_data(img->ctx, trash, 4096);
+      block_count--;
+    }
+  if (leftover)
+    ijs_server_get_data(img->ctx, trash, leftover);
 }
 
 static int
@@ -875,16 +948,20 @@ image_next_row(IMAGE *img)
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: %.0f bytes left, reading %.d, on row %d\n",
 			img->bytes_left, (int) n_bytes, img->row));
 #endif
+      throwaway_data(img->left_margin, img);
       status = ijs_server_get_data(img->ctx, img->row_buf, (int) n_bytes);
       if (status)
 	{
-	  STP_DEBUG(fprintf(stderr, "ERROR: ijsgutenprint: page aborted!\n"));
+	  STP_DEBUG(fprintf(stderr, "ERROR: ijsgutenprint: page aborted (%d) at line %d!\n",
+			    status, img->row));
+	  return status;
 	}
       else
 	{
 	  img->row++;
-	  img->bytes_left -= n_bytes;
+	  img->bytes_left -= (n_bytes + img->right_margin + img->left_margin);
 	}
+      throwaway_data(img->right_margin, img);
     }
   else
     return 1;	/* Done */
@@ -1027,7 +1104,7 @@ purge_unused_float_parameters(stp_vars_t *v)
   int i;
   stp_parameter_list_t params = stp_get_parameter_list(v);
   size_t count = stp_parameter_list_count(params);
-  STP_DEBUG(fprintf(stderr, "ijsgutenprint: Purging unused floating point parameters"));
+  STP_DEBUG(fprintf(stderr, "ijsgutenprint: Purging unused floating point parameters\n"));
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
@@ -1211,7 +1288,6 @@ main (int argc, char **argv)
 
   do
     {
-
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: About to get page header\n"));
       status = ijs_server_get_page_header(img.ctx, &ph);
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: Got page header %d\n", status));
@@ -1281,6 +1357,81 @@ main (int argc, char **argv)
       stp_set_float_parameter(img.v, "AppGamma", 1.0);
       stp_get_media_size(img.v, &w, &h);
       stp_get_imageable_area(img.v, &l, &r, &b, &t);
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: chan %d bps %d image w %d %d h %d %d\n",
+			ph.n_chan, ph.bps, stp_get_width(img.v), img.width,
+			stp_get_height(img.v), img.height));
+      if (ppd_mode)
+	{
+	  int lt, rt, bt, tt;
+
+	  stp_get_maximum_imageable_area(img.v, &lt, &rt, &bt, &tt);
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: w %d h %d l %d %d t %d %d r %d %d b %d %d\n",
+			    w, h, l, lt, t, tt, r, rt, b, bt));
+	  if (lt < 0)
+	    lt = 0;
+	  if (tt < 0)
+	    tt = 0;
+	  if (rt > w)
+	    rt = w;
+	  if (bt > h)
+	    bt = h;
+	  if (l < 0)
+	    l = 0;
+	  if (t < 0)
+	    t = 0;
+	  if (r > w + l)
+	    r = w + l;
+	  if (b > h + t)
+	    b = h + t;
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: w %d h %d l %d %d t %d %d r %d %d b %d %d\n",
+			    w, h, l, lt, t, tt, r, rt, b, bt));
+	  if (lt < l)
+	    {
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: l %d, lt %d\n", l, lt));
+	      img.left_margin = (l - lt) * ph.xres * ph.n_chan * ph.bps / 8 / 72;
+	      img.width -= (l - lt) * ph.xres / 72;
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: chan %d bps %d image w %d %d h %d %d\n",
+				ph.n_chan, ph.bps, stp_get_width(img.v), img.width,
+				stp_get_height(img.v), img.height));
+	    }
+	  else
+	    img.left_margin = 0;
+	  stp_set_left(img.v, l);
+	  if (tt < t)
+	    {
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: t %d, tt %d\n", t, tt));
+	      img.top_margin = (t - tt) * ph.yres * ph.n_chan * ph.bps / 8 / 72;
+	      img.height -= (t - tt) * ph.yres / 72;
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: chan %d bps %d image w %d %d h %d %d\n",
+				ph.n_chan, ph.bps, stp_get_width(img.v), img.width,
+				stp_get_height(img.v), img.height));
+	    }
+	  else
+	    img.top_margin = 0;
+	  stp_set_top(img.v, t);
+	  if (rt > r)
+	    {
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: r %d, rt %d\n", r, rt));
+	      img.right_margin = (rt - r) * ph.xres * ph.n_chan * ph.bps / 8 / 72;
+	      img.width -= (rt - r) * ph.xres / 72;
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: chan %d bps %d image w %d %d h %d %d\n",
+				ph.n_chan, ph.bps, stp_get_width(img.v), img.width,
+				stp_get_height(img.v), img.height));
+	    }
+	  else
+	    img.right_margin = 0;
+	  if (bt > b)
+	    {
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: b %d, bt %d\n", b, bt));
+	      img.bottom_margin = (bt - b) * ph.yres * ph.n_chan * ph.bps / 8 / 72;
+	      img.height -= (bt - b) * ph.yres / 72;
+	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: chan %d bps %d image w %d %d h %d %d\n",
+				ph.n_chan, ph.bps, stp_get_width(img.v), img.width,
+				stp_get_height(img.v), img.height));
+	    }
+	  else
+	    img.bottom_margin = 0;
+	}
       if (l < 0)
 	width = r;
       else
@@ -1290,8 +1441,19 @@ main (int argc, char **argv)
 	height = b;
       else
 	height = b - t;
+      img.row_width -= img.left_margin;
+      img.row_width -= img.right_margin;
       stp_set_height(img.v, height);
       stp_set_int_parameter(img.v, "PageNumber", page);
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: w %d h %d l %d r %d t %d b %d\n",
+			width, height, l, r, t, b));
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: chan %d bps %d image w %d %d h %d %d\n",
+			ph.n_chan, ph.bps, stp_get_width(img.v), img.width,
+			stp_get_height(img.v), img.height));
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: margins l %d r %d t %d b %d row width %d\n",
+			img.left_margin, img.right_margin,
+			img.top_margin, img.bottom_margin,
+			img.row_width));
 
 /* 
  * Fix up the duplex/tumble settings stored in the "x_" parameters
@@ -1376,6 +1538,8 @@ main (int argc, char **argv)
 
   ijs_server_done(img.ctx);
 
+  STP_DEBUG(fprintf (stderr, "ijsgutenprint: printed total %.0f bytes\n",
+		     total_bytes_printed));
   STP_DEBUG(fprintf (stderr, "ijsgutenprint: server exiting with status %d\n", status));
   return status;
 }

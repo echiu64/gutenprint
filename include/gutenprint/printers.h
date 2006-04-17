@@ -192,6 +192,8 @@ typedef struct
   void  (*media_size)(const stp_vars_t *v, int *width, int *height);
   void  (*imageable_area)(const stp_vars_t *v,
 			  int *left, int *right, int *bottom, int *top);
+  void  (*maximum_imageable_area)(const stp_vars_t *v, int *left, int *right,
+				  int *bottom, int *top);
   void  (*limit)(const stp_vars_t *v, int *max_width, int *max_height,
                  int *min_width, int *min_height);
   int   (*print)(const stp_vars_t *v, stp_image_t *image);

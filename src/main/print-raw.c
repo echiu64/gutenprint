@@ -325,6 +325,7 @@ static const stp_printfuncs_t print_raw_printfuncs =
   raw_parameters,
   stp_default_media_size,
   raw_imageable_area,
+  raw_imageable_area,
   raw_limit,
   raw_print,
   raw_describe_resolution,

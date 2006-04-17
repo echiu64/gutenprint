@@ -1045,7 +1045,16 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
     stp_set_string_parameter(v, "PageSize", opt->name);
 
     stp_get_media_size(v, &width, &height);
-    stp_get_imageable_area(v, &left, &right, &bottom, &top);
+    stp_get_maximum_imageable_area(v, &left, &right, &bottom, &top);
+
+    if (left < 0)
+      left = 0;
+    if (right > width)
+      right = width;
+    if (bottom > height)
+      bottom = height;
+    if (top < 0)
+      top = 0;
 
     the_papers[cur_opt].name   = opt->name;
     the_papers[cur_opt].text   = opt->text;

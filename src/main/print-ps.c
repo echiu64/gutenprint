@@ -283,6 +283,7 @@ ps_media_size(const stp_vars_t *v, int *width, int *height)
 
 static void
 ps_imageable_area_internal(const stp_vars_t *v,      /* I */
+			   int  use_max_area, /* I - Use maximum area */
 			   int  *left,	/* O - Left position in points */
 			   int  *right,	/* O - Right position in points */
 			   int  *bottom, /* O - Bottom position in points */
@@ -310,6 +311,17 @@ ps_imageable_area_internal(const stp_vars_t *v,      /* I */
 	  *right  = (int)fright;
 	  *bottom = height - (int)fbottom;
 	  *top    = height - (int)ftop;
+	  if (use_max_area)
+	    {
+	      if (*left > 0)
+		*left = 0;
+	      if (*right < width)
+		*right = width;
+	      if (*top > 0)
+		*top = 0;
+	      if (*bottom < height)
+		*bottom = height;
+	    }
 	}
       else
 	*left = *right = *bottom = *top = 0;
@@ -318,10 +330,10 @@ ps_imageable_area_internal(const stp_vars_t *v,      /* I */
     }
   else
     {
-      *left   = 18;
-      *right  = width - 18;
-      *top    = 36;
-      *bottom = height - 36;
+      *left   = 0;
+      *right  = width;
+      *top    = 0;
+      *bottom = height;
     }
 }
 
@@ -333,7 +345,19 @@ ps_imageable_area(const stp_vars_t *v,      /* I */
                   int  *top)		/* O - Top position in points */
 {
   setlocale(LC_ALL, "C");
-  ps_imageable_area_internal(v, left, right, bottom, top);
+  ps_imageable_area_internal(v, 0, left, right, bottom, top);
+  setlocale(LC_ALL, "");
+}
+
+static void
+ps_maximum_imageable_area(const stp_vars_t *v,      /* I */
+			  int  *left,	/* O - Left position in points */
+			  int  *right,	/* O - Right position in points */
+			  int  *bottom,	/* O - Bottom position in points */
+			  int  *top)	/* O - Top position in points */
+{
+  setlocale(LC_ALL, "C");
+  ps_imageable_area_internal(v, 1, left, right, bottom, top);
   setlocale(LC_ALL, "");
 }
 
@@ -964,6 +988,7 @@ static const stp_printfuncs_t print_ps_printfuncs =
   ps_parameters,
   ps_media_size,
   ps_imageable_area,
+  ps_maximum_imageable_area,
   ps_limit,
   ps_print,
   ps_describe_resolution,

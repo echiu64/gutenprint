@@ -34,7 +34,7 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
-	A) Changes from 5.0.0-rc2 to 5.0.0-xxx
+	A) Changes from 5.0.0-rc2 to 5.0.0-rc3
 	B) Changes from 5.0.0-rc1 to 5.0.0-rc2
 III)  Overall changes from 4.2 to 5.0.
 	A) General user-visible changes
@@ -139,42 +139,68 @@ for building and installing Gutenprint.
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
-   GUTENPRINT 5.0.0 XXX:
+   GUTENPRINT 5.0.0 RELEASE CANDIDATE 3:
 
   1) The package now offers explicit support for many more printers.
      All printers supported by Gutenprint are now listed explicitly
      rather than via the compatibility list.  As a result, CUPS PPD
-     files are now generated for each supported printer.
+     files and Foomatic are now generated for each supported printer.
 
-  2) The cleaning and nozzle check functions of escputil now work
+  2) Full bleed (borderless) printing and printing to CD's now produce
+     output with correct dimensions using the CUPS and Foomatic/IJS
+     drivers.  This affects all printing, not just printing in
+     borderless mode.
+
+     In previous pre-release versions of Gutenprint 5.0, printing
+     directly to CD's produced slightly squashed output (the width was
+     incorrect).  In addition, selecting Borderless mode stretched the
+     output horizontally and/or vertically, resulting in output having
+     incorrect dimensions.
+
+     In Gutenprint 5.0.0-rc3, the output always prints with correct
+     dimensions.  However, if you use a printer capable of producing
+     borderless output without selecting the borderless output
+     option, the left and right (and in some cases the top and bottom)
+     will be clipped.  The software does not produce true full bleed
+     -- the margins are set to zero, and as a result the output will
+     not actually overprint the page edges.
+
+     Printing to CD's works correctly whether or not full bleed mode
+     is selected.
+
+     This change has no effect in the GIMP plugin and in other
+     applications which directly use Gutenprint, as there was never
+     any problem in those contexts.
+
+  3) The cleaning and nozzle check functions of escputil now work
      properly on most printers, and escputil no longer crashes if you
      type ctrl-D to a command prompt.  In addition, the status printed
      via the status command is now much more readable.
 
-  3) The color quality for the Epson R300, R800, R2400, and related
+  4) The color quality for the Epson R300, R800, R2400, and related
      printers has been improved.
 
-  4) Raw output now works correctly on the Epson R800 and R1800.
+  5) Raw output now works correctly on the Epson R800 and R1800.
 
-  5) The Canon inkjet PPD files now correctly handle both color and
+  6) The Canon inkjet PPD files now correctly handle both color and
      grayscale.  However, many of these printers still do not print
      correctly with a photo cartridge installed (the width of the
      printout is incorrect).
 
-  6) The GIMP plugin now displays the thumbnail image correctly in CMY
+  7) The GIMP plugin now displays the thumbnail image correctly in CMY
      mode (previously it displayed a solarized thumbnail).
 
-  7) Experimental support for the Japan-market Epson printers PM-A900,
+  8) Experimental support for the Japan-market Epson printers PM-A900,
      PM-D800, PM-G730, and PX-V630, and preliminary support for the
      PM-A650, PM-A750, and PM-A890.
 
-  8) The definition of the Epson Stylus CX3500, CX3600, CX3650,
+  9) The definition of the Epson Stylus CX3500, CX3600, CX3650,
      CX4100, CX4200, CX4500, CX4600, CX4700, CX4800, CX5700, CX5800,
      CX7700, CX7800, DX4200, DX4250, DX4800, and PX-A650 have been
      corrected.  The DX4800 now works correctly; the color output for
      all of these printers has been corrected.
 
-  9) A new option for generating simplified PPD files for CUPS has
+  10) A new option for generating simplified PPD files for CUPS has
      been added.  The --enable-simplified-cups-ppds=yes option to
      configure allows generating PPD files with only basic options
      (including only common paper sizes) in addition to the normal,
@@ -183,7 +209,7 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      to cups-genppd.5.0 may be used manually to do the same thing.
      This is discussed in the README file.
 
-  10) cups-genppdupdate.5.0 has significant enhancements:
+  11) cups-genppdupdate.5.0 has significant enhancements:
 
      * A new option, -N, causes cups-genppdupdate.5.0 to not merge
        options from the old PPD file into the new file.  This can be
@@ -199,34 +225,36 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      * The program no longer tries and fails to update Foomatic-based
        PPD files.
 
-  11) The Foomatic data generator now generates simplified data (using
+  12) The Foomatic data generator now generates simplified data (using
      a driver name of "gutenprint-ijs-simplified.5.0") in addition to
      the standard, full-featured data (gutenprint-ijs.5.0).
 
-  12) New options to escputil allow specifying the number of line pairs
+  13) New options to escputil allow specifying the number of line pairs
      and number of patterns for head alignment explicitly, if needed.
      In addition, the number of line pairs for the Epson Stylus Photo
      700 has been changed from 7 to 15.
 
-  13) A few build problems have been fixed.
+  14) A few build problems have been fixed.
 
-  14) A Hungarian translation has been added.
+  15) A Hungarian translation has been added.
 
-  15) The configure script now prints out a summary of configuration
+  16) The configure script now prints out a summary of configuration
      options selected at the end of the script run.  For developers,
      "autogen.sh --help" now prints out the configure help if the
      configure script exists.
 
-  16) The Lexmark driver should now print correctly (this is only
+  17) The Lexmark driver should now print correctly (this is only
      partially tested).
 
 The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 
+1318890 Borderless print scaled wrongly
 1379402 BJC-4400: SEGFAULT (photo-ink/color mode)
 1417600 escputil clean and nozzle check don't work on new printers
 1417603 escputil seg faults if you type ctrl-D to prompt
 1422101 Raw output does not work on R800 and related printers
 1425951 Bug#351731: Fails in alignment with stylos photo 700
+1467956 Print to CD prints incorrectly with CUPS driver
 1447115 Epson driver broken in RC2 (DX4850)
 1458059 Lexmark Z52 not working
 
@@ -682,7 +710,26 @@ D) CHANGES TO THE CUPS INTERFACE:
      files based on Gimp-Print 4.2, or Gimp-Print 4.3 releases prior
      to 4.3.21.
 
-  5) The CUPS driver now offers 16-bit printing as an option with ESP
+  5) On printers capable of borderless output, the CUPS driver now
+     advertises (via the *ImageableArea in PPD files) the full page
+     dimension, and crops the output if the borderless mode is not
+     selected.  If borderless mode is selected, the full image (up to
+     the limits of the printer) will be printed.
+
+     This compromise is necessitated by the fact that PPD files can
+     only supply a single imageable area for a particular page size,
+     so it was necessary to select which imageable area to provide.
+     In early prereleases of Gutenprint 5.0, we supplied the normal
+     page area, and stretched the output if the user selected full
+     bleed.  This caused problems for many users, in that it was not
+     possible to print the full surface of the paper while preserving
+     dimensions.
+
+     Based on user feedback, we determined that the best solution is
+     to provide the full page size as the imageable area and crop the
+     result if full bleed mode is not selected.
+
+  6) The CUPS driver now offers 16-bit printing as an option with ESP
      Ghostscript 8.15, and Apple Macintosh OS X 10.4 ("Tiger"), using
      the new Color Precision control.  Setting Color Precision to
      "Best" enables 16-bit printing if the system supports it; setting
@@ -696,7 +743,7 @@ D) CHANGES TO THE CUPS INTERFACE:
      highlights where it might be visible with 8-bit color
      computation.  It may be somewhat slower than 8-bit printing.
 
-  6) Due to the implementation of CUPS, it is necessary on some
+  7) Due to the implementation of CUPS, it is necessary on some
      systems to link the programs associated with the CUPS driver (in
      particular, cups-genppd and rastertogutenprint) statically
      against the Gutenprint library.  Please see bugs 865253 and
@@ -757,6 +804,25 @@ F) CHANGES TO FOOMATIC DATA GENERATION:
      driver carry different names from their 4.2 counterparts,
      permitting a parallel installation or gradual switchover between
      4.2 and 5.0-based releases.
+
+  3) On printers capable of borderless output, the Foomatic driver now
+     advertises (via the *ImageableArea in PPD files) the full page
+     dimension, and crops the output if the borderless mode is not
+     selected.  If borderless mode is selected, the full image (up to
+     the limits of the printer) will be printed.
+
+     This compromise is necessitated by the fact that PPD files can
+     only supply a single imageable area for a particular page size,
+     so it was necessary to select which imageable area to provide.
+     In early prereleases of Gutenprint 5.0, we supplied the normal
+     page area, and stretched the output if the user selected full
+     bleed.  This caused problems for many users, in that it was not
+     possible to print the full surface of the paper while preserving
+     dimensions.
+
+     Based on user feedback, we determined that the best solution is
+     to provide the full page size as the imageable area and crop the
+     result if full bleed mode is not selected.
 
 
 ----------------
