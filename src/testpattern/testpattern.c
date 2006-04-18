@@ -39,6 +39,7 @@
 #include <math.h>
 #include <string.h>
 #include "testpattern.h"
+#include <gutenprint/gutenprint-intl.h>
 
 extern int yyparse(void);
 
@@ -239,7 +240,9 @@ do_print(void)
   stp_set_outdata(global_vars, stdout);
   stp_set_errdata(global_vars, stderr);
 
+  setlocale(LC_ALL, "C");
   retval = yyparse();
+  setlocale(LC_ALL, "");
   if (retval)
     return retval + 1;
 
