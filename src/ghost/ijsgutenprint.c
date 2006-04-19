@@ -43,6 +43,7 @@
 
 static int stp_debug = 1;
 volatile int SDEBUG = 1;
+static int job_aborted = 0;
 
 #define STP_DEBUG(x)				\
 do						\
@@ -954,6 +955,7 @@ image_next_row(IMAGE *img)
 	{
 	  STP_DEBUG(fprintf(stderr, "ERROR: ijsgutenprint: page aborted (%d) at line %d!\n",
 			    status, img->row));
+	  job_aborted = 1;
 	  return status;
 	}
       else
@@ -1507,21 +1509,29 @@ main (int argc, char **argv)
 	  status = IJS_ERANGE;
 	  break;
 	}
-      STP_DEBUG(fprintf(stderr, "ijsgutenprint: done printing page %d\n", page));
-
-      while (img.bytes_left)
+      if (job_aborted)
 	{
-	  status = image_next_row(&img);
-	  if (status)
-	    {
-	      fprintf(stderr, _("ERROR: ijsgutenprint: Get next row failed at %.0f\n"),
-		      img.bytes_left);
-	      break;
-	    }
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: aborting job\n"));
+	  status = 1;
 	}
+      else
+	{
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: done printing page %d\n", page));
 
-      image_finish(&img);
-      status = ijs_server_get_page_header(img.ctx, &ph);
+	  while (img.bytes_left)
+	    {
+	      status = image_next_row(&img);
+	      if (status)
+		{
+		  fprintf(stderr, _("ERROR: ijsgutenprint: Get next row failed at %.0f\n"),
+			  img.bytes_left);
+		  break;
+		}
+	    }
+
+	  image_finish(&img);
+	  status = ijs_server_get_page_header(img.ctx, &ph);
+	}
       if (status > 0)
 	{
 	  fprintf(stderr, "Ending job after page %d\n", page);
