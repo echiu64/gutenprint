@@ -1286,18 +1286,11 @@ main (int argc, char **argv)
 
   STP_DEBUG(stp_dbg("ijsgutenprint: about to start\n", img.v));
 
-  do
+  STP_DEBUG(fprintf(stderr, "ijsgutenprint: About to get page header\n"));
+  status = ijs_server_get_page_header(img.ctx, &ph);
+  while (status == 0)
     {
-      STP_DEBUG(fprintf(stderr, "ijsgutenprint: About to get page header\n"));
-      status = ijs_server_get_page_header(img.ctx, &ph);
-      STP_DEBUG(fprintf(stderr, "ijsgutenprint: Got page header %d\n", status));
-      if (status)
-	{
-	  if (status < 0)
-	    fprintf(stderr, _("ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"),
-		    status);
-	  break;
-	}
+      stp_vars_t *old_v = NULL;
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: got page header, %d x %d\n",
 			ph.width, ph.height));
       STP_DEBUG(stp_dbg("ijsgutenprint: have page header\n", img.v));
@@ -1489,6 +1482,10 @@ main (int argc, char **argv)
 
       validate_options(&si);
       STP_DEBUG(stp_dbg("ijsgutenprint: about to print", img.v));
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: w %d h %d l %d t %d\n",
+			stp_get_width(img.v), stp_get_height(img.v),
+			stp_get_left(img.v), stp_get_top(img.v)));
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: start printing page %d\n", page));
       print_messages_as_errors = 1;
       if (!version_is_ok)
 	{
@@ -1502,6 +1499,7 @@ main (int argc, char **argv)
 	  if (page == 0)
 	    stp_start_job(img.v, &si);
 	  stp_print(img.v, &si);
+	  old_v = stp_vars_create_copy(img.v);
 	}
       else
 	{
@@ -1509,6 +1507,7 @@ main (int argc, char **argv)
 	  status = IJS_ERANGE;
 	  break;
 	}
+      STP_DEBUG(fprintf(stderr, "ijsgutenprint: done printing page %d\n", page));
 
       while (img.bytes_left)
 	{
@@ -1522,12 +1521,18 @@ main (int argc, char **argv)
 	}
 
       image_finish(&img);
-      page++;
+      status = ijs_server_get_page_header(img.ctx, &ph);
+      if (status > 0)
+	{
+	  fprintf(stderr, "Ending job after page %d\n", page);
+	  stp_end_job(old_v, &si);
+	}
+      else
+	{
+	  stp_vars_destroy(old_v);
+	  page++;
+	}
     }
-  while (status == 0);
-  if (status > 0)
-    stp_end_job(img.v, &si);
-
   if (f)
     {
       fclose(f);
