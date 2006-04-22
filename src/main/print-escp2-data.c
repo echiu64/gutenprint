@@ -295,6 +295,14 @@ static const escp2_densities_t picturemate_densities =
 {   0,   0,     0,     0, 1.596, 0.798, 0.650, 0.530, 0.0   };
 
 
+#define DECLARE_INPUT_SLOT(name)				\
+static const input_slot_list_t name##_input_slot_list =		\
+{								\
+  #name,							\
+  name##_input_slots,						\
+  sizeof(name##_input_slots) / sizeof(const input_slot_t),	\
+}
+
 static const input_slot_t standard_roll_feed_input_slots[] =
 {
   {
@@ -317,11 +325,7 @@ static const input_slot_t standard_roll_feed_input_slots[] =
   }
 };
 
-static const input_slot_list_t standard_roll_feed_input_slot_list =
-{
-  standard_roll_feed_input_slots,
-  sizeof(standard_roll_feed_input_slots) / sizeof(const input_slot_t)
-};
+DECLARE_INPUT_SLOT(standard_roll_feed);
 
 static const input_slot_t cutter_roll_feed_input_slots[] =
 {
@@ -354,11 +358,7 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
   }
 };
 
-static const input_slot_list_t cutter_roll_feed_input_slot_list =
-{
-  cutter_roll_feed_input_slots,
-  sizeof(cutter_roll_feed_input_slots) / sizeof(const input_slot_t)
-};
+DECLARE_INPUT_SLOT(cutter_roll_feed);
 
 static const input_slot_t cd_cutter_roll_feed_input_slots[] =
 {
@@ -409,11 +409,7 @@ static const input_slot_t cd_cutter_roll_feed_input_slots[] =
   }
 };
 
-static const input_slot_list_t cd_cutter_roll_feed_input_slot_list =
-{
-  cd_cutter_roll_feed_input_slots,
-  sizeof(cd_cutter_roll_feed_input_slots) / sizeof(const input_slot_t)
-};
+DECLARE_INPUT_SLOT(cd_cutter_roll_feed);
 
 static const input_slot_t cd_roll_feed_input_slots[] =
 {
@@ -455,11 +451,142 @@ static const input_slot_t cd_roll_feed_input_slots[] =
   }
 };
 
-static const input_slot_list_t cd_roll_feed_input_slot_list =
+DECLARE_INPUT_SLOT(cd_roll_feed);
+
+static const input_slot_t r2400_input_slots[] =
 {
-  cd_roll_feed_input_slots,
-  sizeof(cd_roll_feed_input_slots) / sizeof(const input_slot_t)
+  {
+    "Standard",
+    N_("Standard"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Velvet",
+    N_("Manual Sheet Guide"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\003\000" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Matte",
+    N_("Manual Feed (Front)"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Roll",
+    N_("Roll Feed"),
+    0,
+    1,
+    ROLL_FEED_DONT_EJECT,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\003\001" },
+    { 6, "IR\002\000\000\002" }
+  }
 };
+
+DECLARE_INPUT_SLOT(r2400);
+
+static const input_slot_t r1800_input_slots[] =
+{
+  {
+    "Standard",
+    N_("Standard"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Velvet",
+    N_("Manual Sheet Guide"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\003\000" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Matte",
+    N_("Manual Feed (Front)"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Roll",
+    N_("Roll Feed"),
+    0,
+    1,
+    ROLL_FEED_DONT_EJECT,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\003\001" },
+    { 6, "IR\002\000\000\002" }
+  },
+  {
+    "CD",
+    N_("Print to CD"),
+    1,
+    0,
+    0,
+    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
+    { 6, "IR\002\000\000\000"}
+  },
+};
+
+DECLARE_INPUT_SLOT(r1800);
+
+static const input_slot_t rx700_input_slots[] =
+{
+  {
+    "Rear",
+    N_("Rear Tray"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\000" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "Front",
+    N_("Front Tray"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\001" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "CD",
+    N_("Print to CD"),
+    1,
+    0,
+    0,
+    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
+    { 6, "IR\002\000\000\000"}
+  },
+  {
+    "PhotoBoard",
+    N_("Photo Board"),
+    0,
+    0,
+    0,
+    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
+    { 6, "IR\002\000\000\000"}
+  },
+};
+
+DECLARE_INPUT_SLOT(rx700);
 
 static const input_slot_t pro_roll_feed_input_slots[] =
 {
@@ -483,11 +610,7 @@ static const input_slot_t pro_roll_feed_input_slots[] =
   }
 };
 
-static const input_slot_list_t pro_roll_feed_input_slot_list =
-{
-  pro_roll_feed_input_slots,
-  sizeof(pro_roll_feed_input_slots) / sizeof(const input_slot_t)
-};
+DECLARE_INPUT_SLOT(pro_roll_feed);
 
 static const input_slot_t spro5000_input_slots[] =
 {
@@ -529,14 +652,11 @@ static const input_slot_t spro5000_input_slots[] =
   }
 };
 
-static const input_slot_list_t spro5000_input_slot_list =
-{
-  spro5000_input_slots,
-  sizeof(spro5000_input_slots) / sizeof(const input_slot_t)
-};
+DECLARE_INPUT_SLOT(spro5000);
 
 static const input_slot_list_t default_input_slot_list =
 {
+  "Standard",
   NULL,
   0,
 };
@@ -1904,7 +2024,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_cmykrb_inkgroup,
-    variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
+    variable_bits, c1_5_base_res, &r1800_input_slot_list,
     &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r800_channel_name_list
   },
@@ -1955,7 +2075,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen3_inkgroup,
-    variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
+    variable_bits, c1_5_base_res, &rx700_input_slot_list,
     &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &rx700_channel_name_list
   },
@@ -1972,7 +2092,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p3_5pl_dotsizes, p3_5pl_densities, &stpi_escp2_variable_r2400_drops,
     stpi_escp2_superfine_reslist, &stpi_escp2_f360_ultrachrome_k3_inkgroup,
-    variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
+    variable_bits, c1_5_base_res, &r2400_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r2400_channel_name_list
   },

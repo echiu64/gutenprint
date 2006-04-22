@@ -317,6 +317,7 @@ typedef struct
 
 typedef struct
 {
+  const char *name;
   const input_slot_t *slots;
   size_t n_input_slots;
 } input_slot_list_t;

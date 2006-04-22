@@ -146,24 +146,36 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      rather than via the compatibility list.  As a result, CUPS PPD
      files and Foomatic are now generated for each supported printer.
 
-  2) Full bleed (borderless) printing and printing to CD's now produce
-     output with correct dimensions using the CUPS and Foomatic/IJS
-     drivers.  This affects all printing, not just printing in
-     borderless mode.
+  2) CUPS and Foomatic/IJS now produce correctly dimensioned and
+     positioned output.  Previous pre-releases of Gutenprint 5.0
+     produced incorrectly dimensioned and/or positioned (offset from
+     the correct position) output in certain cases.  This happened in
+     the following circumstances:
 
-     In previous pre-release versions of Gutenprint 5.0, printing
-     directly to CD's produced slightly squashed output (the width was
-     incorrect).  In addition, selecting Borderless mode stretched the
-     output horizontally and/or vertically, resulting in output having
-     incorrect dimensions.
+     a) When a printer capable of optional full-bleed or borderless
+	operation was used in full-bleed/borderless mode, the output
+	was stretched to fit the expanded dimensions.  The result was
+	that lines of specified lengths were printed slightly longer
+	than desired, and since the vertical and horizontal stretching
+	was normally not identical, the output was distorted slightly.
 
-     In Gutenprint 5.0.0-rc3, the output always prints with correct
-     dimensions.  However, if you use a printer capable of producing
-     borderless output without selecting the borderless output
-     option, the left and right (and in some cases the top and bottom)
-     will be clipped.  The software does not produce true full bleed
-     -- the margins are set to zero, and as a result the output will
-     not actually overprint the page edges.
+     b) When printing directly to a CD, the output was shrunk
+	horizontally and/or positioned incorrectly by a small amount
+	(typically a few mm).
+
+     c) Depending upon the application doing the printing and the
+	printer selected, the output was shifted down and to the right
+	by several mm.
+
+     The PPD files and driver have been modified to specify zero
+     borders in all cases when a printer with borderless capability is
+     used.  If normal (non-borderless) mode is selected, the border is
+     simply not printed, leaving correct dimensions for everything
+     within the imageable area.  However, as a result of this, the
+     driver no longer prints true full bleed (overprinting the edge of
+     the page).  The margins are set to zero, and typically there will
+     be very narrow unprinted margins (less than 1 mm) on one or more
+     sides.
 
      Printing to CD's works correctly whether or not full bleed mode
      is selected.
@@ -186,10 +198,11 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
 
   6) Raw output now works correctly on the Epson R800 and R1800.
 
-  7) The Canon inkjet PPD files now correctly handle both color and
-     grayscale.  However, many of these printers still do not print
-     correctly with a photo cartridge installed (the width of the
-     printout is incorrect).
+  7) The Canon driver now handles color and grayscale, and also photo
+     ink cartridges (previously it sometimes handled these incorrectly
+     or even crashed).  However, many of these printers still do not
+     print correctly with a photo cartridge installed (the width of
+     the printout is incorrect).
 
   8) The GIMP plugin now displays the thumbnail image correctly in CMY
      mode (previously it displayed a solarized thumbnail).
@@ -233,24 +246,27 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      a driver name of "gutenprint-ijs-simplified.5.0") in addition to
      the standard, full-featured data (gutenprint-ijs.5.0).
 
-  14) New options to escputil allow specifying the number of line pairs
+  14) The input slots (media sources) have been corrected for the
+     Epson Stylus Photo R1800, R2400, and RX700.
+
+  15) New options to escputil allow specifying the number of line pairs
      and number of patterns for head alignment explicitly, if needed.
      In addition, the number of line pairs for the Epson Stylus Photo
      700 has been changed from 7 to 15.
 
-  15) A few build problems have been fixed.
+  16) A few build problems have been fixed.
 
-  16) A Hungarian translation has been added.
+  17) A Hungarian translation has been added.
 
-  17) The configure script now prints out a summary of configuration
+  18) The configure script now prints out a summary of configuration
      options selected at the end of the script run.  For developers,
      "autogen.sh --help" now prints out the configure help if the
      configure script exists.
 
-  18) The Lexmark driver should now print correctly (this is only
+  19) The Lexmark driver should now print correctly (this is only
      partially tested).
 
-  19) Chilean Office, Chilean Double Letter, and Chilean Double Office
+  20) Chilean Office, Chilean Double Letter, and Chilean Double Office
      paper sizes have been added.
 
 The following bugs have been fixed since Gutenprint 5.0.0-rc3:
