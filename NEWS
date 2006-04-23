@@ -1119,8 +1119,8 @@ B) BUILD/INSTALLATION ISSUES
   1) With certain versions of CUPS and in certain non-default
      configurations, if a new version of Gutenprint is installed over
      an existing version genppd will create PPD files based on the
-     older version of Gutenprint or Gimp-Print rather than the newer
-     version.  This will happen if all of the following are true:
+     older version of Gutenprint rather than the newer version.  This
+     will happen if all of the following are true:
 
      i) The cups-config provided by the CUPS driver adds
         -Wl,rpath=/usr/lib. This is done by some versions of CUPS
@@ -1155,7 +1155,7 @@ B) BUILD/INSTALLATION ISSUES
      In this case, the run path embedded in the genppd executable
      points to the version of Gutenprint installed in /usr/lib. This
      run path overrides any attempt by libtool to look in the build
-     directory. The result is that cups-genppd and rastertogimpprint
+     directory. The result is that cups-genppd and rastertogutenprint
      are run against the older version of Gutenprint. If the new
      version contains additional features (more printers, etc.) they
      will not be available.
@@ -1176,12 +1176,12 @@ B) BUILD/INSTALLATION ISSUES
 
      i) Build and install Gutenprint into /usr (rather than
         /usr/local) and then rebuild Gutenprint from scratch.  This
-        will install the correct libgimpprint.so in /usr/lib, and in
+        will install the correct libgutenprint.so in /usr/lib, and in
         the rebuild genppd will be run against the correct library.
 
-     ii) Remove the old version of Gimp-Print or Gutenprint prior to
-        building the new version of Gutenprint.  The important files
-        to remove are anything named /usr/lib/libgimpprint*.
+     ii) Remove the old version of Gutenprint prior to building the
+        new version of Gutenprint.  The important files to remove are
+        anything named /usr/lib/libgutenprint*.
 
      iii) Edit cups-config to remove the reference to the run path.
 
