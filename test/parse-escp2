@@ -35,7 +35,7 @@ sub get_stuff($) {
     my ($where) = @_;
     my ($end) = length $stuff;
     if ($curpos == 0 && $end == 0) {
-	$stuff = <>;
+	$stuff = <>;		# Need to do this once to "activate" ARGV
 	$end = length $stuff;
     }
     my ($old_end) = length $stuff;
