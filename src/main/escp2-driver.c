@@ -244,9 +244,16 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	      /* These commands do not appear to do anything on the */
 	      /* 2200.  Need to test on R800. */
 	      /* From the R1800 manual -- bottom margin borderless */
-	      stp_send_command(v, "US", "bcc", 0, 2);
+	      stp_send_command(v, "PM", "bcc", 0, 0);
+	      stp_send_command(v, "DP", "bcc", 0, 0);
+	      stp_send_command(v, "SN", "bc", 0);
+	      stp_send_command(v, "MI", "bccc", 1, 0xb, 1);
+	      stp_send_command(v, "US", "bccc", 0, 0, 2);
+	      stp_send_command(v, "US", "bccc", 0, 1, 0);
 	      /* This command means "check paper size - no" */
-	      stp_send_command(v, "US", "bcc", 2, 0);
+	      stp_send_command(v, "US", "bccc", 0, 2, 0);
+	      stp_send_command(v, "DR", "bcccc", 0, 0, 0, 0);
+	      stp_send_command(v, "PP", "bccc", 0, 1, 0xff);
 #endif
 	    }
 	}
@@ -471,7 +478,6 @@ set_horizontal_position(stp_vars_t *v, stp_pass_t *pass, int vertical_subpass)
 
   if (pos != 0)
     {
-      /* Note hard-coded 1440 -- from Epson manuals */
       if (pd->command_set == MODEL_COMMAND_PRO || pd->variable_dots)
 	stp_send_command(v, "\033($", "bl", pos);
       else if (pd->advanced_command_set || pd->res->hres > 720)

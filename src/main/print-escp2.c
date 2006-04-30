@@ -385,6 +385,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(max_black_resolution),
   PARAMETER_INT(zero_margin_offset),
   PARAMETER_INT(extra_720dpi_separation),
+  PARAMETER_INT(horizontal_position_alignment),
   PARAMETER_INT(physical_channels),
   PARAMETER_INT(left_margin),
   PARAMETER_INT(right_margin),
@@ -665,6 +666,7 @@ DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
+DEF_SIMPLE_ACCESSOR(horizontal_position_alignment, unsigned)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
 DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
@@ -2615,7 +2617,7 @@ setup_resolution(stp_vars_t *v)
 
   if (escp2_use_extended_commands(v, pd->res->softweave))
     {
-      pd->unit_scale = escp2_max_hres(v);
+      pd->unit_scale = MAX(escp2_max_hres(v), escp2_max_vres(v));
       pd->horizontal_units = horizontal;
       pd->micro_units = horizontal;
     }
@@ -2628,6 +2630,7 @@ setup_resolution(stp_vars_t *v)
 	pd->micro_units = horizontal;
       pd->horizontal_units = vertical;
     }
+  /* Note hard-coded 1440 -- from Epson manuals */
   if (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) &&
       escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NO))
     pd->micro_units = 1440;
@@ -2815,6 +2818,14 @@ setup_page(stp_vars_t *v)
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
   pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
+  /*
+   * Many printers print extremely slowly if the starting position
+   * is not a multiple of 8
+   */
+  if (escp2_horizontal_position_alignment(v) > 1)
+    pd->image_left_position =
+      (pd->image_left_position / escp2_horizontal_position_alignment(v)) *
+      escp2_horizontal_position_alignment(v);
 
 
   pd->page_bottom += extra_top + 1;
