@@ -188,11 +188,18 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      Previously it did not always eject the last page with certain
      Epson printers.
 
-  4) The Epson Stylus Photo R800, R1800, and R2400 should now print at
-     full speed in all cases.  Previously these printers were
-     extremely slow in certain cases.  Related to this, the list of
-     resolutions offered for the R2400 is slightly different from
-     before.
+  4) The Epson Stylus Photo R800, R1800, R2400, and related printers
+     should now print at full speed in all cases.  Previously these
+     printers were extremely slow (about 10 times slower than normal)
+     in many cases.
+
+     Related to this, the list of resolutions offered for these
+     printers are slightly different from before.  Resolutions above
+     2880x1440 DPI are no longer offered; instead, resolutions of
+     2880x1440 high quality and 2880x1440 highest quality are offered.
+     These resolutions use extra passes of the print head to reduce
+     banding.  In addition, these resolutions are actually 1440 DPI
+     horizontally and 2880 DPI vertically.
 
   5) The cleaning and nozzle check functions of escputil now work
      properly on most printers, and escputil no longer crashes if you

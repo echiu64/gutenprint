@@ -703,9 +703,9 @@ static const quality_t p1_5_qualities[] =
   { "Draft",       N_("Draft"),        360, 360, 360, 360, 360, 360 },
   { "Standard",    N_("Standard"),     0, 0, 0, 0, 720, 360 },
   { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
-  { "Photo",       N_("Photo"),        1440, 1440, 1440, 1440, 1440, 1440 },
-  { "HighPhoto",   N_("Super Photo"),  2880, 1440, 2880, 1440, 2880, 1440 },
-  { "UltraPhoto",  N_("Ultra Photo"),  2880, 2880, 2880, 2880, 2880, 2880 },
+  { "Photo",       N_("Photo"),        1440, 720, 1440, 720, 1440, 720 },
+  { "HighPhoto",   N_("Super Photo"),  1440, 1440, 1440, 1440, 1440, 1440 },
+  { "UltraPhoto",  N_("Ultra Photo"),  1440, 2880, 1440, 2880, 1440, 2880 },
   { "Best",        N_("Best"),         720, 360, 0, 0, -1, -1 },
 };
 
@@ -1967,12 +1967,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 28800, -1, 5760, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8,
+    360, 28800, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
-    stpi_escp2_superfine_reslist, &stpi_escp2_cmykrb_inkgroup,
+    stpi_escp2_r2400_reslist, &stpi_escp2_cmykrb_inkgroup,
     variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
     &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r800_channel_name_list
@@ -2018,12 +2018,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 28800, -1, 5760, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8,
+    360, 28800, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
-    stpi_escp2_superfine_reslist, &stpi_escp2_cmykrb_inkgroup,
+    stpi_escp2_r2400_reslist, &stpi_escp2_cmykrb_inkgroup,
     variable_bits, c1_5_base_res, &r1800_input_slot_list,
     &p1_5_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r800_channel_name_list
@@ -2035,12 +2035,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 14400, -1, 2880, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8,
+    360, 14400, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, &stpi_escp2_variable_1_5pl_drops,
-    stpi_escp2_superfine_reslist, &stpi_escp2_photo_gen3_inkgroup,
+    stpi_escp2_r2400_reslist, &stpi_escp2_photo_gen3_inkgroup,
     variable_bits, c1_5_base_res, &cd_roll_feed_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &r800_channel_name_list
