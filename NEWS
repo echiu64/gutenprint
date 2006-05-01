@@ -293,9 +293,9 @@ The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 1425951 Bug#351731: Fails in alignment with stylos photo 700
 1447115 Epson driver broken in RC2 (DX4850)
 1458059 Lexmark Z52 not working
+1458911 Very poor performance with Epson R2400, R800, and R1800
 1466678 Epson Stylus Photo R300 fails to eject last page
 1467956 Print to CD prints incorrectly with CUPS driver
-1479124 Very poor performance with Epson R2400, R800, and R1800
 
 ----------------
 
