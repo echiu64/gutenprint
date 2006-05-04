@@ -133,6 +133,7 @@ query (void)
 			  (BAD_CONST_CHAR) auth,
 			  (BAD_CONST_CHAR) copy,
 			  (BAD_CONST_CHAR) VERSION " - " RELEASE_DATE,
+			  /* Do not translate the prefix "<Image>" */
 			  (BAD_CONST_CHAR) N_("<Image>/File/Print..."),
 			  (BAD_CONST_CHAR) types,
 			  GIMP_PLUGIN,
