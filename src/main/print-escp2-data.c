@@ -1984,7 +1984,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 1,
+    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 8,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
