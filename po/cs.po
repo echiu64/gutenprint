@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gimp-print 4.2.6-pre1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-04-25 19:45-0400\n"
-"PO-Revision-Date: 2003-05-03 19:43+0200\n"
+"PO-Revision-Date: 2006-05-04 07:18-0400\n"
 "Last-Translator: Miloslav Trmac <mitr@volny.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -7817,7 +7817,7 @@ msgstr "Tisknu..."
 
 #: src/gimp/print.c:132 src/gimp2/print.c:136
 msgid "<Image>/File/Print..."
-msgstr "<Obrázek>/Soubor/Tisk..."
+msgstr "<Image>/Soubor/Tisk..."
 
 #: src/ghost/ijsgutenprint.c:98
 #, c-format

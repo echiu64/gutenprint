@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: gutenprint 5.0.0-b6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-04-17 19:38-0400\n"
-"PO-Revision-Date: 2006-04-29 09:13+0200\n"
+"PO-Revision-Date: 2006-05-04 07:21-0400\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -7294,7 +7294,7 @@ msgstr "Udskriver..."
 
 #: src/gimp/print.c:132 src/gimp2/print.c:136
 msgid "<Image>/File/Print..."
-msgstr "<Billede>/Fil/Udskriv..."
+msgstr "<Image>/Fil/Udskriv..."
 
 #: src/ghost/ijsgutenprint.c:97
 #, c-format

@@ -282,6 +282,10 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
   21) Chilean Office, Chilean Double Letter, and Chilean Double Office
      paper sizes have been added.
 
+  22) An error in the Czech, Danish, and Portuguese translations that
+     caused the GIMP plugin to emit a warning at startup has been
+     fixed.
+
 The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 
 1318890 Borderless print scaled wrongly
@@ -296,6 +300,7 @@ The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 1458911 Very poor performance with Epson R2400, R800, and R1800
 1466678 Epson Stylus Photo R300 fails to eject last page
 1467956 Print to CD prints incorrectly with CUPS driver
+1478819 bad translation format
 
 ----------------
 
