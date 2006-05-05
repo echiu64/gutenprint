@@ -379,6 +379,9 @@ run_weavetest_from_stdin(void)
   int total_cases = 0;
   int failures = 0;
   char linebuf[4096];
+  const char *spinner = "/-\\|";
+  int rotor = 0;
+  int do_spinner = isatty(fileno(stdout));
   while (fgets(linebuf, 4096, stdin))
     {
       int retval;
@@ -409,6 +412,12 @@ run_weavetest_from_stdin(void)
 	    }
 	  if (previous_separation != physsep)
 	    printf(".");
+	  if (do_spinner)
+	    {
+	      putchar((int) (spinner[rotor++]));
+	      putchar((int) '\b');
+	      rotor &= 3;
+	    }
 	  previous_strategy = strategy;
 	  previous_jets = physjets;
 	  previous_separation = physsep;
