@@ -1,6 +1,14 @@
 #!/bin/sh
 
-echo "$0 may take a very long time to complete.  Please wait..."
+if [ -z "$STP_DATA_PATH" ] ; then
+    STP_DATA_PATH=`pwd`/../main
+    export STP_DATA_PATH
+fi
+
+if [ -z "$STP_MODULE_PATH" ] ; then
+    STP_MODULE_PATH=`pwd`/../main:`pwd`/../main/.libs
+    export STP_MODULE_PATH
+fi
 
 passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 4,1,1 4,2,1 2,2,1 1,4,2 2,2,2 2,4,2 8,1,1 4,4,2 8,2,1 16,1,1'
 
@@ -8,7 +16,7 @@ passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 4,1,1 4,2,1 2,2,1 1,4,2 2,2,2 2,4,2 8,1,1 
 jets='1 2 4 8 15 16 20 21 24 29 32 47 48 59 60 64 90 96 128 144 180 192 208 360'
 
 # All nozzle separations used by any printer at any resolution.
-separations='1 2 3 4 6 8 12 16'
+separations='1 2 3 4 6 8 12 16 24'
 
 # Weave strategies
 strategies='0 1 2 3 4'
