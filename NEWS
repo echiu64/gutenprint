@@ -188,10 +188,10 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      Previously it did not always eject the last page with certain
      Epson printers.
 
-  4) The Epson Stylus Photo R800, R1800, R2400, and related printers
-     should now print at full speed in all cases.  Previously these
-     printers were extremely slow (about 10 times slower than normal)
-     in many cases.
+  4) The Epson Stylus CX3500, CX4600, and Epson Stylus Photo R800,
+     R1800, R2400, and related printers should now print at full speed
+     in all cases.  Previously these printers were extremely slow
+     (about 10 times slower than normal) in many cases.
 
      Related to this, the list of resolutions offered for these
      printers are slightly different from before.  Resolutions above
