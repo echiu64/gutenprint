@@ -28,6 +28,9 @@ LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 
 TESTS = curve run-testdither run-weavetest
 
+export STP_MODULE_PATH = $(top_builddir)/src/main/.libs:$(top_builddir)/src/main
+export STP_DATA_PATH = $(top_srcdir)/src/main
+
 
 ## Programs
 
