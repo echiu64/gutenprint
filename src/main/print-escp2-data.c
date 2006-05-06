@@ -1984,12 +1984,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 8,
+    360, 14400, -1, 1440, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 8,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, &stpi_escp2_variable_3pl_pmg_drops,
-    stpi_escp2_superfine_reslist, &stpi_escp2_cx3650_inkgroup,
+    stpi_escp2_cx3650_reslist, &stpi_escp2_cx3650_inkgroup,
     variable_bits, variable_base_res, &default_input_slot_list,
     &standard_quality_list, &new_init_sequence, &je_deinit_sequence,
     NULL, &mfp2005_channel_name_list

@@ -188,10 +188,10 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      Previously it did not always eject the last page with certain
      Epson printers.
 
-  4) The Epson Stylus CX3500, CX4600, and Epson Stylus Photo R800,
-     R1800, R2400, and related printers should now print at full speed
-     in all cases.  Previously these printers were extremely slow
-     (about 10 times slower than normal) in many cases.
+  4) The Epson Stylus Photo R800, R1800, R2400, and related printers
+     should now print at full speed in all cases.  Previously these
+     printers were extremely slow (about 10 times slower than normal)
+     in many cases.
 
      Related to this, the list of resolutions offered for these
      printers are slightly different from before.  Resolutions above
@@ -218,7 +218,7 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      the printout is incorrect).
 
   9) The GIMP plugin now displays the thumbnail image correctly in CMY
-     mode (previously it displayed a solarized thumbnail).
+     mode (previously it displayed incorrect colors).
 
   10) Experimental support for the Japan-market Epson printers PM-A900,
      PM-D800, PM-G730, and PX-V630, and preliminary support for the
@@ -228,7 +228,15 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      CX4100, CX4200, CX4500, CX4600, CX4700, CX4800, CX5700, CX5800,
      CX7700, CX7800, DX4200, DX4250, DX4800, and PX-A650 have been
      corrected.  The DX4800 now works correctly; the color output for
-     all of these printers has been corrected.
+     all of these printers has been corrected.  All of these printers
+     also now print at full speed; they previously printed extremely
+     slowly in many cases.
+
+     The list of resolutions is also slightly different from before;
+     the 2880x1440 DPI resolution is no longer offered; instead,
+     resolutions of 1440x1440 high quality and 1440x1440 highest
+     quality are offered.  These resolutions use extra passes of the
+     print head to reduce banding.
 
   12) A new option for generating simplified PPD files for CUPS has
      been added.  The --enable-simplified-cups-ppds=yes option to
@@ -2341,11 +2349,7 @@ B) PRINTER-SPECIFIC NOTES:
 	offer these options if testing determines that these
 	resolutions can be used safely and we determine that these
 	resolutions offer a potential benefit in quality in some
-	cases.  For example, we offer resolutions of 2880x2880 and
-	5760x2880 DPI on the Epson Stylus Photo R800 despite the
-	advertised maximum resolution of 5760x1440 DPI.  Testing has
-	verified that these resolutions do in fact operate correctly
-	and offer benefit over lower resolutions.
+	cases.
 
 	It is almost always better to have a printing resolution with
 	a smaller aspect ratio (i. e. the horizontal and vertical
@@ -2354,9 +2358,9 @@ B) PRINTER-SPECIFIC NOTES:
 	resolution of 5760x720 DPI.  Therefore, in some cases we do
 	not offer certain resolutions offered by the printer vendor
 	(in the case of the Epson Stylus Photo R800, 5760x1440 DPI)
-	because they are not likely to yield any benefit (either
-	speed or quality) over another resolution that we offer (in
-	this case, 2880x2880 DPI).
+	because they are not likely to yield any benefit (either speed
+	or quality) over another resolution that we offer (in this
+	case, 2880x1440 DPI Highest Quality).
 
 	Indeed, we have received reports that in some cases a lower
 	resolution may actually offer improved quality over a higher
