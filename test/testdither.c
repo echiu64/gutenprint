@@ -61,10 +61,29 @@ int		image_type = IMAGE_MIXED;
 int		stpi_dither_type = DITHER_COLOR;
 const char     *dither_name = NULL;
 int		dither_bits = 1;
+int		write_image = 1;
+int		quiet;
 unsigned short	white_line[IMAGE_WIDTH * 6],
 		black_line[IMAGE_WIDTH * 6],
 		color_line[IMAGE_WIDTH * 6],
 		random_line[IMAGE_WIDTH * 6];
+
+static const char	*stpi_dither_types[] =	/* Different dithering modes */
+	      {
+		"gray",
+		"color",
+		"photo",
+		"cmyk",
+		"photocmyk"
+	      };
+static const char	*image_types[] =	/* Different image types */
+	      {
+		"mixed",
+		"white",
+		"black",
+		"colorimage",
+		"random"
+	      };
 
 
 #define SHADE(density, name)					\
@@ -150,12 +169,11 @@ static stp_image_t theImage =
  * 'main()' - Test dithering code for performance measurement.
  */
 
-int					/* O - Exit status */
-main(int  argc,				/* I - Number of command-line arguments */
-     char *argv[])			/* I - Command-line arguments */
+static int
+run_one_testdither(void)
 {
   int print_progress = 0;
-  int		i, j;			/* Looping vars */
+  int		i;			/* Looping vars */
   unsigned char	black[BUFFER_SIZE],	/* Black bitmap data */
 		cyan[BUFFER_SIZE],	/* Cyan bitmap data */
 		magenta[BUFFER_SIZE],	/* Magenta bitmap data */
@@ -164,29 +182,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 		yellow[BUFFER_SIZE];	/* Yellow bitmap data */
   unsigned short rgb[IMAGE_WIDTH * 6],	/* RGB buffer */
 		gray[IMAGE_WIDTH];	/* Grayscale buffer */
-  int		write_image;		/* Write the image to disk? */
   FILE		*fp = NULL;		/* PPM/PGM output file */
   char		filename[1024];		/* Name of file */
   stp_vars_t	*v; 		        /* Dither variables */
   stp_parameter_t desc;
-  static const char	*stpi_dither_types[] =	/* Different dithering modes */
-		{
-		  "gray",
-		  "color",
-		  "photo",
-		  "cmyk",
-		  "photocmyk"
-		};
-  static const char	*image_types[] =	/* Different image types */
-		{
-		  "mixed",
-		  "white",
-		  "black",
-		  "colorimage",
-		  "random"
-		};
   struct timeval tv1, tv2;
-  int quiet = 0;
 
  /*
   * Initialise libgutenprint
@@ -196,66 +196,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   v = stp_vars_create();
   stp_set_driver(v, "escp2-ex");
   stp_describe_parameter(v, "DitherAlgorithm", &desc);
-
- /*
-  * Get command-line args...
-  */
-
-  write_image = 1;
-
-  for (i = 1; i < argc; i ++)
-  {
-    if (strcmp(argv[i], "no-image") == 0)
-    {
-      write_image = 0;
-      continue;
-    }
-
-    if (strcmp(argv[i], "quiet") == 0)
-    {
-      quiet = 1;
-      continue;
-    }
-
-    if (strcmp(argv[i], "1-bit") == 0)
-    {
-      dither_bits = 1;
-      continue;
-    }
-
-    if (strcmp(argv[i], "2-bit") == 0)
-    {
-      dither_bits = 2;
-      continue;
-    }
-
-    for (j = 0; j < 5; j ++)
-      if (strcmp(argv[i], stpi_dither_types[j]) == 0)
-        break;
-
-    if (j < 5)
-    {
-      stpi_dither_type = j;
-      continue;
-    }
-
-    for (j = 0; j < 5; j ++)
-      if (strcmp(argv[i], image_types[j]) == 0)
-        break;
-
-    if (j < 5)
-    {
-      image_type = j;
-      continue;
-    }
-
-    for (j = 0; j < stp_string_list_count(desc.bounds.str); j ++)
-      if (strcmp(argv[i], stp_string_list_param(desc.bounds.str,j)->name) == 0)
-	dither_name = stp_string_list_param(desc.bounds.str, j)->name;
-
-    if (!dither_name)
-      printf("Unknown option \"%s\" ignored!\n", argv[i]);
-  }
 
  /*
   * Setup the image and color functions...
@@ -426,6 +366,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  dither_name ? dither_name : desc.deflt.str, dither_bits,
 	  (stpi_dither_type == DITHER_GRAY) ? "pgm" : "ppm");
 
+  stp_parameter_description_destroy(&desc);
+
   if (isatty(1))
     print_progress = 1;
 
@@ -489,9 +431,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (fp != NULL)
     fclose(fp);
 
-  if (quiet)
-    fputc('.', stdout);
-  else
+  if (!quiet)
     {
       if (print_progress)
 	fputc('\r', stdout);
@@ -501,6 +441,126 @@ main(int  argc,				/* I - Number of command-line arguments */
       fflush(stdout);
     }
   return 0;
+}
+
+static int
+run_testdither_from_cmdline(int argc, char **argv)
+{
+  int i, j;
+  int status;
+  for (i = 1; i < argc; i ++)
+    {
+      if (strcmp(argv[i], "no-image") == 0)
+	{
+	  write_image = 0;
+	  continue;
+	}
+
+      if (strcmp(argv[i], "quiet") == 0)
+	{
+	  quiet = 1;
+	  continue;
+	}
+
+      if (strcmp(argv[i], "1-bit") == 0)
+	{
+	  dither_bits = 1;
+	  continue;
+	}
+
+      if (strcmp(argv[i], "2-bit") == 0)
+	{
+	  dither_bits = 2;
+	  continue;
+	}
+
+      for (j = 0; j < 5; j ++)
+	if (strcmp(argv[i], stpi_dither_types[j]) == 0)
+	  break;
+
+      if (j < 5)
+	{
+	  stpi_dither_type = j;
+	  continue;
+	}
+
+      for (j = 0; j < 5; j ++)
+	if (strcmp(argv[i], image_types[j]) == 0)
+	  break;
+
+      if (j < 5)
+	{
+	  image_type = j;
+	  continue;
+	}
+
+      dither_name = argv[i];
+    }
+  status = run_one_testdither();
+  if (status)
+    return 1;
+  else
+    return 0;
+}
+
+static int
+run_standard_testdithers(void)
+{
+  stp_vars_t *v = stp_vars_create();
+  stp_parameter_t desc;
+  int j;
+  int failures = 0;
+  int status;
+
+  stp_set_driver(v, "escp2-ex");
+  stp_describe_parameter(v, "DitherAlgorithm", &desc);
+
+  write_image = 0;
+  quiet = 1;
+  for (j = 0; j < stp_string_list_count(desc.bounds.str); j ++)
+    {
+      dither_name = stp_string_list_param(desc.bounds.str, j)->name;
+      if (strcmp(dither_name, "None") == 0)
+	continue;
+      printf("%s", dither_name);
+      fflush(stdout);
+      for (dither_bits = 1; dither_bits <= 2; dither_bits++)
+	for (stpi_dither_type = 0;
+	     stpi_dither_type < sizeof(stpi_dither_types) / sizeof(const char *);
+	     stpi_dither_type++)
+	  for (image_type = 0;
+	       image_type < sizeof(image_types) / sizeof(const char *);
+	       image_type++)
+	    {
+	      status = run_one_testdither();
+	      if (status)
+		{
+		  printf("%s %d %s %s\n", dither_name, dither_bits,
+			 stpi_dither_types[stpi_dither_type],
+			 image_types[image_type]);
+		  failures++;
+		}
+	      else
+		printf(".");
+	      fflush(stdout);
+	    }
+      printf("\n");
+      fflush(stdout);
+    }
+  stp_parameter_description_destroy(&desc);
+  stp_vars_destroy(v);
+  return (failures ? 1 : 0);
+}
+
+int
+main(int argc, char **argv)
+{
+  stp_init();
+
+  if (argc == 1)
+    return run_standard_testdithers();
+  else
+    return run_testdither_from_cmdline(argc, argv);
 }
 
 

@@ -2,30 +2,6 @@
 
 out_status=0
 
-if [ $# -eq 0 ] ; then
-   quiet=quiet
-fi
-
-if [ -z "$bits" ] ; then
-    bits='1-bit 2-bit'
-fi
-
-if [ -z "$dither_types" ] ; then
-    dither_types='gray color photo cmyk photocmyk'
-fi
-
-if [ -z "$image_types" ] ; then
-    image_types='mixed white black colorimage random'
-fi
-
-if [ -z "$algos" ] ; then
-    algos='Adaptive Ordered Fast VeryFast Floyd EvenTone'
-fi
-
-if [ -z "$print_image" ] ; then
-    image='no-image'
-fi
-
 if [ -z "$STP_DATA_PATH" ] ; then
     STP_DATA_PATH=`pwd`/../src/main
     export STP_DATA_PATH
@@ -36,21 +12,37 @@ if [ -z "$STP_MODULE_PATH" ] ; then
     export STP_MODULE_PATH
 fi
 
-for algo in $algos ; do
-    echo -n "Testing $algo:"
-    for bit in $bits ; do
-        for dither_type in $dither_types  ; do
-	    for image_type in $image_types ; do
-		./testdither $quiet $image $bit $dither_type $image_type $algo
-		status=$?
-		if [ "$status" -ne 0 ] ; then
-		    echo ./testdither $image $bit $dither_type $image_type $algo failed
-		    out_status=`expr $out_status + 1`
-		fi
-	    done
-	done
-    done
-    echo
-done
+valcount=0
+valgrind=
+valopts=''
 
-exit $out_status
+set_args() {
+    while true ; do
+	case "$1" in
+	    -h*|--h*) usage ;;
+	    -v|--valgrind) valopts='--tool=memcheck' ; valcount=`expr $valgrind + 1` ;;
+	    -c|--cachegrind) valopts='--tool=cachegrind'; valcount=4 ;;
+	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
+	    -V|--verbose) quiet= ;;
+	    -q|--quiet) quiet=quiet ;;
+	    --) shift; args="$@"; return ;;
+	    *) return ;;
+	esac
+    shift
+    done
+}
+
+set_args `getopt hgvqncV "$@"`
+
+case "$valcount" in
+    1) valopts="$valopts -q --num-callers=100 --leak-check=yes";;
+    2) valopts="$valopts --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes" ;;
+    3) valopts="$valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes" ;;
+    *) ;;
+esac
+
+if [ -n "$valopts" ] ; then
+    valgrind="valgrind $valopts"
+fi
+
+$valgrind ./testdither
