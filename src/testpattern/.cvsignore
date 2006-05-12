@@ -5,6 +5,8 @@ testpattern
 testpattern.test
 testp.out
 printers
+printer_options
+run-testpattern-2
 Makefile.in
 Makefile
 .deps
