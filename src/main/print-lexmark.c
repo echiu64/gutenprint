@@ -1273,13 +1273,8 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "PrintingMode") == 0)
     {
-      const char *ink_type = stp_get_string_parameter(v, "InkType");
-      const lexmark_inkparam_t *ink_parameter =
-	lexmark_get_ink_parameter(ink_type, 1, caps, v);
-
       description->bounds.str = stp_string_list_create();
-      if (!(ink_parameter && ink_parameter->used_colors == COLOR_MODE_K) ||
-	  caps->inks == LEXMARK_INK_K)
+      if (caps->inks != LEXMARK_INK_K)
 	stp_string_list_add_string
 	  (description->bounds.str, "Color", _("Color"));
       stp_string_list_add_string
@@ -2708,13 +2703,6 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
   stp_dprintf(STP_DBG_LEXMARK, v, "Lexmark: last_pass_offset %d, logicalpassstart %d\n", pd->last_pass_offset, pass->logicalpassstart);
   stp_dprintf(STP_DBG_LEXMARK, v, "Lexmark: vertical adapt: caps->y_raster_res %d, ydpi %d,  \n", caps->y_raster_res, ydpi);
 
-  if (1) { /* wisi */
-
-  stp_dprintf(STP_DBG_LEXMARK, v, "1\n");
-  stp_dprintf(STP_DBG_LEXMARK, v, "\n");
-  stp_dprintf(STP_DBG_LEXMARK, v, "lineoffs[0].v[j]  %ld\n", lineoffs[0].v[0]);
-  stp_dprintf(STP_DBG_LEXMARK, v, "lineoffs[0].v[j]  %ld\n", lineoffs[0].v[1]);
-
   switch (physical_xdpi) {
   case 300:
     prn_mode = PRINT_MODE_300;
@@ -2733,9 +2721,9 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
   /* calculate paper shift and adapt actual resoution to physical positioning resolution */
   paperShift = (pass->logicalpassstart - pd->last_pass_offset) * (caps->y_raster_res/ydpi);
   for (j = 0; j < pd->ncolors; j++)
-    stp_dprintf(STP_DBG_LEXMARK, v, "Color %d: active %d line %p jets %d\n",
-		j, lineactive[0].v[j], bufs[0].v[j], linecount[0].v[j]);
-
+    stp_dprintf(STP_DBG_LEXMARK, v, "Color %d: active %d line %p jets %d offset %ld\n",
+		j, lineactive[0].v[j], bufs[0].v[j], linecount[0].v[j],
+		lineoffs[0].v[j]);
 
       /*** do we have to print something with the color cartridge ? ***/
       if ((STP_ECOLOR_C < pd->ncolors) && (lineactive[0].v[STP_ECOLOR_C] > 0))
@@ -2896,7 +2884,6 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
     }
   /* store paper position in respect if there was a paper shift */
   pd->last_pass_offset = pass->logicalpassstart - (paperShift / (caps->y_raster_res/ydpi));
-  }
 
   for (j = 0; j < pd->ncolors; j++)
     {
