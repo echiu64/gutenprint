@@ -2107,7 +2107,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   stp_deprintf(STP_DBG_PCL, "privdata.do_cret = %d\n", privdata.do_cret);
   stp_deprintf(STP_DBG_PCL, "privdata.do_cretb = %d\n", privdata.do_cretb);
 
-  if (ink_type)
+  if (ink_type && printing_color)
     privdata.do_6color = (strcmp(ink_type, "Photo") == 0);
   else
     privdata.do_6color = 0;
@@ -2534,8 +2534,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   if (privdata.do_cret)			/* 4-level printing for 800/1120 */
     {
-      stp_dither_set_inks_simple(v, STP_ECOLOR_Y, 3, dot_sizes_use, 1.0, 0.08);
-      if (!privdata.do_cretb)
+      if (yellow)
+	stp_dither_set_inks_simple(v, STP_ECOLOR_Y, 3, dot_sizes_use, 1.0, 0.08);
+      if (black && !privdata.do_cretb)
         stp_dither_set_inks_simple(v, STP_ECOLOR_K, 3, dot_sizes_use, 1.0, 1.0);
 
       /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
@@ -2550,10 +2551,12 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 	}
       else
 	{
-	  stp_dither_set_inks_simple(v, STP_ECOLOR_C, 3, dot_sizes_use, 1.0,
-				      0.31 / .5);
-	  stp_dither_set_inks_simple(v, STP_ECOLOR_M, 3, dot_sizes_use, 1.0,
-				      0.61 / .7);
+	  if (cyan)
+	    stp_dither_set_inks_simple(v, STP_ECOLOR_C, 3, dot_sizes_use, 1.0,
+				       0.31 / .5);
+	  if (magenta)
+	    stp_dither_set_inks_simple(v, STP_ECOLOR_M, 3, dot_sizes_use, 1.0,
+				       0.61 / .7);
 	}
     }
   else if (privdata.do_6color)
