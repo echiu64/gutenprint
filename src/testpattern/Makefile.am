@@ -26,14 +26,14 @@ include $(top_srcdir)/scripts/global.mk
 
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
-TESTS = run-testpattern run-testpattern-1
+TESTS = run-testpattern run-testpattern-1 run-testpattern-2
 
 
 ## Programs
 
 if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
-noinst_PROGRAMS = printers
+noinst_PROGRAMS = printers printer_options
 endif
 
 AM_LFLAGS = -i
@@ -46,6 +46,7 @@ testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o
 
 printers_LDADD = $(GUTENPRINT_LIBS)
+printer_options_LDADD = $(GUTENPRINT_LIBS)
 
 
 ## Data
