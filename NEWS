@@ -201,30 +201,44 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      banding.  In addition, these resolutions are actually 1440 DPI
      horizontally and 2880 DPI vertically.
 
-  5) The cleaning and nozzle check functions of escputil now work
+  5) The HP DeskJet 690 and other supported PCL printers capable of
+     6-color photo printing (such as the Apollo P-2100 and Apple Color
+     StyleWriter 4500) no longer result in the driver crashing if
+     black and white output mode was selected.  Also, Canon printers
+     capable of 6 or 7 color photo printing no longer result in a
+     crash if black and white output mode is selected.
+
+  6) Canon and Lexmark inkjet printers now print if color output mode
+     is selected with a black and white cartridge installed.
+     Previously this was not possible in the GIMP plugin; the CUPS and
+     Foomatic drivers permitted this to be set, but gave a runtime
+     error when a job with these settings was printed.  These printers
+     now accept the job and simply print it in black and white.
+
+  7) The cleaning and nozzle check functions of escputil now work
      properly on most printers, and escputil no longer crashes if you
      type ctrl-D to a command prompt.  In addition, the status printed
      via the status command is now much more readable.
 
-  6) The color quality for the Epson R300, R800, R2400, and related
+  8) The color quality for the Epson R300, R800, R2400, and related
      printers has been improved.
 
-  7) Raw output now works correctly on the Epson R800 and R1800.
+  9) Raw output now works correctly on the Epson R800 and R1800.
 
-  8) The Canon driver now handles color and grayscale, and also photo
+  10) The Canon driver now handles color and grayscale, and also photo
      ink cartridges (previously it sometimes handled these incorrectly
      or even crashed).  However, many of these printers still do not
      print correctly with a photo cartridge installed (the width of
      the printout is incorrect).
 
-  9) The GIMP plugin now displays the thumbnail image correctly in CMY
+  11) The GIMP plugin now displays the thumbnail image correctly in CMY
      mode (previously it displayed incorrect colors).
 
-  10) Experimental support for the Japan-market Epson printers PM-A900,
+  12) Experimental support for the Japan-market Epson printers PM-A900,
      PM-D800, PM-G730, and PX-V630, and preliminary support for the
      PM-A650, PM-A750, and PM-A890.
 
-  11) The definition of the Epson Stylus CX3500, CX3600, CX3650,
+  13) The definition of the Epson Stylus CX3500, CX3600, CX3650,
      CX4100, CX4200, CX4500, CX4600, CX4700, CX4800, CX5700, CX5800,
      CX7700, CX7800, DX4200, DX4250, DX4800, and PX-A650 have been
      corrected.  The DX4800 now works correctly; the color output for
@@ -238,7 +252,7 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      quality are offered.  These resolutions use extra passes of the
      print head to reduce banding.
 
-  12) A new option for generating simplified PPD files for CUPS has
+  14) A new option for generating simplified PPD files for CUPS has
      been added.  The --enable-simplified-cups-ppds=yes option to
      configure allows generating PPD files with only basic options
      (including only common paper sizes) in addition to the normal,
@@ -247,7 +261,7 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      to cups-genppd.5.0 may be used manually to do the same thing.
      This is discussed in the README file.
 
-  13) cups-genppdupdate.5.0 has significant enhancements:
+  15) cups-genppdupdate.5.0 has significant enhancements:
 
      * A new option, -N, causes cups-genppdupdate.5.0 to not merge
        options from the old PPD file into the new file.  This can be
@@ -263,34 +277,34 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      * The program no longer tries and fails to update Foomatic-based
        PPD files.
 
-  14) The Foomatic data generator now generates simplified data (using
+  16) The Foomatic data generator now generates simplified data (using
      a driver name of "gutenprint-ijs-simplified.5.0") in addition to
      the standard, full-featured data (gutenprint-ijs.5.0).
 
-  15) The input slots (media sources) have been corrected for the
+  17) The input slots (media sources) have been corrected for the
      Epson Stylus Photo R1800, R2400, and RX700.
 
-  16) New options to escputil allow specifying the number of line pairs
+  18) New options to escputil allow specifying the number of line pairs
      and number of patterns for head alignment explicitly, if needed.
      In addition, the number of line pairs for the Epson Stylus Photo
      700 has been changed from 7 to 15.
 
-  17) A few build problems have been fixed.
+  19) A few build problems have been fixed.
 
-  18) A Hungarian translation has been added.
+  20) A Hungarian translation has been added.
 
-  19) The configure script now prints out a summary of configuration
+  21) The configure script now prints out a summary of configuration
      options selected at the end of the script run.  For developers,
      "autogen.sh --help" now prints out the configure help if the
      configure script exists.
 
-  20) The Lexmark driver should now print correctly (this is only
+  22) The Lexmark driver should now print correctly (this is only
      partially tested).
 
-  21) Chilean Office, Chilean Double Letter, and Chilean Double Office
+  23) Chilean Office, Chilean Double Letter, and Chilean Double Office
      paper sizes have been added.
 
-  22) An error in the Czech, Danish, and Portuguese translations that
+  24) An error in the Czech, Danish, and Portuguese translations that
      caused the GIMP plugin to emit a warning at startup has been
      fixed.
 
@@ -309,6 +323,9 @@ The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 1466678 Epson Stylus Photo R300 fails to eject last page
 1467956 Print to CD prints incorrectly with CUPS driver
 1478819 bad translation format
+1487715 HP DeskJet 690 and related crash in grayscale w/photo ink
+1487717 Canon/Lexmark printers fail in color mode w/BW inks
+1487720 Canon printers crash in grayscale with photo ink 
 
 ----------------
 
