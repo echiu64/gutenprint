@@ -144,11 +144,11 @@ CUPS
     a version of Gutenprint with PPD files not built for that precise
     version, the driver will fail with a diagnostic error message.
     For example, PPD files built for Gutenprint 5.0.0-beta4 will not
-    work with driver version 5.0.0-rc2.  You can identify printers
+    work with driver version 5.0.0-rc3.  You can identify printers
     using Gutenprint PPD files by the name of the PPD file, which will
     be something like:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
 
     NOTE for Linux (at least) users: If you are using CUPS 1.1.11 or
     higher, and you have a USB-connected printer, you must have a
@@ -204,15 +204,15 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     which will be apparent when you use a CUPS front end to select a
     PPD file and you see something like this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
 
     rather than this:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(sv)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc2(fr)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(sv)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(fr)
 
     you may wish to turn off the translation of PPD files:
 
