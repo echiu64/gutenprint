@@ -47,6 +47,8 @@ LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS) $(CUPS_CFLAGS)
 
 STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/main
 
+TESTS= test-ppds
+
 ## Programs
 
 if BUILD_CUPS

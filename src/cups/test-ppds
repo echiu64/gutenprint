@@ -1,0 +1,18 @@
+#!/bin/sh
+
+status=0
+
+if [ -d ppd ] ; then
+    for f in ppd/* ; do
+	echo -n "$f..."
+	cupstestppd -q $f/*
+	if [ $? -ne 0 ] ; then
+	    echo -n "FAILED"
+	    cupstestppd $f/* 2>&1 | grep FAIL
+	    status=1
+	fi
+	echo
+    done
+fi
+
+exit $status
