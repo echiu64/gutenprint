@@ -216,5 +216,7 @@ EXTRA_DIST = \
 	README \
 	calibrate.ppm \
 	command.txt \
-	command.types
+	command.types \
+	test-ppds
+
 
