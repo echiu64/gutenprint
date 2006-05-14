@@ -171,11 +171,8 @@ The module you wish to check out must be specified as the modulename.
 When prompted for a password for anonymous, simply press the Enter
 key.
 
-        $ cvs -d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-
-        print login
-        $ cvs -z3
-        -d:pserver:anonymous@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print
-        co modulename
+        $ cvs -d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print login 
+        $ cvs -z3 -d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print co -P print
 
 Developer CVS access via SSH:
 Only project developers can access the CVS tree via this method.  SSH1
@@ -184,10 +181,8 @@ developername with the proper values.  Enter your site password when
 prompted.  See the sourceforge documentation for more details,
 including how to use RSA keys for authentication.
 
-        $ export CVS_RSH=ssh
-        $ cvs -z3
-        -ddevelopername@cvs.gimp-print.sourceforge.net:/cvsroot/gimp-print
-        co modulename
+        $ export CVS_RSH=ssh 
+        $ cvs -z3 -d:ext:developername@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print co -P print
 
 The CVS info documentation has very detailed explanations of
 everything that can be done with CVS.
