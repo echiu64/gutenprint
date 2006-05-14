@@ -308,6 +308,8 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      caused the GIMP plugin to emit a warning at startup has been
      fixed.
 
+  25) The package is now built with libtool 1.5.22.
+
 The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 
 1318890 Borderless print scaled wrongly
@@ -315,6 +317,7 @@ The following bugs have been fixed since Gutenprint 5.0.0-rc3:
 1393755 [Feature Request] Chilean paper sizes.
 1417600 escputil clean and nozzle check don't work on new printers
 1417603 escputil seg faults if you type ctrl-D to prompt
+1421674 Gutenprint 5.0.0rc2 crashes in Mac OS X 10.2.8
 1422101 Raw output does not work on R800 and related printers
 1425951 Bug#351731: Fails in alignment with stylos photo 700
 1447115 Epson driver broken in RC2 (DX4850)
