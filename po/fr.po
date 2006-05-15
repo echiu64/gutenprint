@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gimp-print 4.2.1-pre4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-05-05 21:15-0400\n"
-"PO-Revision-Date: 2006-03-02 13:24+0100\n"
+"PO-Revision-Date: 2006-05-13 21:08-0400\n"
 "Last-Translator: Olivier Poulet <opoulet@hispeed-sr.ch>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -738,7 +738,7 @@ msgstr "Canaux bruts"
 #: src/main/print-color.c:216
 #, fuzzy
 msgid "SimpleGamma"
-msgstr "Gamma :"
+msgstr "Gamma"
 
 #: src/main/print-color.c:217
 msgid "Do not correct for screen gamma"
@@ -746,7 +746,7 @@ msgstr ""
 
 #: src/main/print-color.c:224
 msgid "Brightness"
-msgstr "Luminosité :"
+msgstr "Luminosité"
 
 #: src/main/print-color.c:225
 msgid "Brightness of the print"
@@ -754,7 +754,7 @@ msgstr "Définit la luminosité de l'impression"
 
 #: src/main/print-color.c:232
 msgid "Contrast"
-msgstr "Contraste :"
+msgstr "Contraste"
 
 #: src/main/print-color.c:233
 msgid "Contrast of the print (0 is solid gray)"
@@ -766,7 +766,7 @@ msgstr "Ajustement du Contraste Linéaire"
 
 #: src/main/print-color.c:240
 msgid "Advanced Image Control"
-msgstr "Contrôle d'image avancé:"
+msgstr "Contrôle d'image avancé"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
@@ -789,7 +789,7 @@ msgstr ""
 #: src/main/print-color.c:258
 #, fuzzy
 msgid "AppGamma"
-msgstr "Gamma :"
+msgstr "Gamma"
 
 #: src/main/print-color.c:259
 msgid "Gamma value assumed by application"
@@ -936,7 +936,7 @@ msgstr "Type d'encre"
 #: src/main/print-escp2.c:350 src/main/print-escp2.c:356
 #, fuzzy
 msgid "Advanced Output Control"
-msgstr "Type de sortie :"
+msgstr "Type de sortie"
 
 #: src/main/print-color.c:358
 msgid "Limit the total ink printed to the page"
@@ -1062,7 +1062,7 @@ msgstr ""
 #: src/main/print-color.c:529
 #, fuzzy
 msgid "Saturation Map"
-msgstr "Saturation :"
+msgstr "Saturation"
 
 #: src/main/print-color.c:530
 msgid "Saturation adjustment curve"
@@ -1431,7 +1431,7 @@ msgstr ""
 
 #: src/main/print-escp2.c:266 src/main/print-escp2.c:267
 msgid "Output Order"
-msgstr "Ordre sortie :"
+msgstr "Ordre sortie"
 
 #: src/main/print-escp2.c:272 src/main/print-escp2.c:273
 msgid "Alignment Passes"
@@ -2284,7 +2284,7 @@ msgstr ""
 
 #: src/main/generic-options.c:68
 msgid "Image Type"
-msgstr "Type d'image :"
+msgstr "Type d'image"
 
 #: src/main/generic-options.c:69
 msgid "Type of image being printed"
@@ -8079,37 +8079,37 @@ msgstr ""
 #: src/ghost/ijsgutenprint.c:699
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse TopLeft %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:722
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse PaperSize %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:794
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse curve %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:801
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s float %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:808
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s int %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:815
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:829
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
-msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
+msgstr "Impossible d'imprimer sur l'imprimante %s\n"
 
 #: src/ghost/ijsgutenprint.c:840
 #, c-format
