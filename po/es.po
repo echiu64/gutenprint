@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-05 21:15-0400\n"
+"POT-Creation-Date: 2006-05-12 20:55-0400\n"
 "PO-Revision-Date: 2002-04-29 00:38GMT\n"
 "Last-Translator: Gustavo D. Vranjes <gvranjes@abaconet.com.ar>\n"
 "Language-Team: Castellano <es@li.org>\n"
@@ -578,8 +578,8 @@ msgid "Light Yellow Transition"
 msgstr "Cian Claro"
 
 #: src/main/print-canon.c:1604 src/main/print-pcl.c:1439
-#: src/main/escp2-resolutions.c:517 src/main/escp2-resolutions.c:525
-#: src/main/escp2-resolutions.c:536 src/main/escp2-resolutions.c:548
+#: src/main/escp2-resolutions.c:547 src/main/escp2-resolutions.c:555
+#: src/main/escp2-resolutions.c:566 src/main/escp2-resolutions.c:578
 msgid "Off"
 msgstr ""
 
@@ -637,15 +637,15 @@ msgstr "Color CMY (Cian/Mag/Amar)"
 msgid "Black"
 msgstr "Negro"
 
-#: src/main/print-canon.c:2111 src/main/print-escp2.c:1787
-#: src/main/print-lexmark.c:1284 src/main/print-olympus.c:1562
+#: src/main/print-canon.c:2106 src/main/print-escp2.c:1787
+#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1562
 #: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
 #: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color"
 msgstr "Color"
 
-#: src/main/print-canon.c:2113 src/main/print-escp2.c:1789
-#: src/main/print-lexmark.c:1286 src/main/print-pcl.c:1735
+#: src/main/print-canon.c:2108 src/main/print-escp2.c:1789
+#: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1735
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 #, fuzzy
 msgid "Black and White"
@@ -2319,78 +2319,93 @@ msgid "2880 x 720 DPI Highest Quality"
 msgstr "1440 x 360 PPP Altísima Calidad "
 
 #: src/main/escp2-resolutions.c:133 src/main/escp2-resolutions.c:136
-#: src/main/escp2-resolutions.c:139 src/main/escp2-resolutions.c:142
+#: src/main/escp2-resolutions.c:139
 #, fuzzy
 msgid "1440 x 1440 DPI"
 msgstr "1440 x 1440 PPP"
 
-#: src/main/escp2-resolutions.c:146 src/main/escp2-resolutions.c:149
-#: src/main/escp2-resolutions.c:155
+#: src/main/escp2-resolutions.c:142
+#, fuzzy
+msgid "1440 x 1440"
+msgstr "1440 x 1440 PPP"
+
+#: src/main/escp2-resolutions.c:145
+#, fuzzy
+msgid "1440 x 1440 DPI High Quality"
+msgstr "1440 x 360 PPP Altísima Calidad "
+
+#: src/main/escp2-resolutions.c:148
+#, fuzzy
+msgid "1440 x 1440 DPI Highest Quality"
+msgstr "1440 x 360 PPP Altísima Calidad "
+
+#: src/main/escp2-resolutions.c:152 src/main/escp2-resolutions.c:155
+#: src/main/escp2-resolutions.c:161
 #, fuzzy
 msgid "2880 x 1440 DPI"
 msgstr "1440 x 1440 PPP"
 
-#: src/main/escp2-resolutions.c:152
+#: src/main/escp2-resolutions.c:158
 #, fuzzy
 msgid "2880 x 1440 DPI Transposed"
 msgstr "1440 x 1440 PPP"
 
-#: src/main/escp2-resolutions.c:158
+#: src/main/escp2-resolutions.c:164
 #, fuzzy
 msgid "2880 x 1440 DPI High Quality"
 msgstr "1440 x 360 PPP Altísima Calidad "
 
-#: src/main/escp2-resolutions.c:161
+#: src/main/escp2-resolutions.c:167
 #, fuzzy
 msgid "2880 x 1440 DPI Highest Quality"
 msgstr "1440 x 360 PPP Altísima Calidad "
 
-#: src/main/escp2-resolutions.c:165
+#: src/main/escp2-resolutions.c:171
 #, fuzzy
 msgid "5760 x 1440 DPI"
 msgstr "1440 x 1440 PPP"
 
-#: src/main/escp2-resolutions.c:169 src/main/escp2-resolutions.c:172
+#: src/main/escp2-resolutions.c:175 src/main/escp2-resolutions.c:178
 #, fuzzy
 msgid "2880 x 2880 DPI"
 msgstr "2880 x 720 PPP"
 
-#: src/main/escp2-resolutions.c:176 src/main/escp2-resolutions.c:179
+#: src/main/escp2-resolutions.c:182 src/main/escp2-resolutions.c:185
 #, fuzzy
 msgid "5760 x 2880 DPI"
 msgstr "2880 x 720 PPP"
 
-#: src/main/escp2-resolutions.c:518
+#: src/main/escp2-resolutions.c:548
 msgid "On"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:526 src/main/escp2-resolutions.c:537
-#: src/main/escp2-resolutions.c:549
+#: src/main/escp2-resolutions.c:556 src/main/escp2-resolutions.c:567
+#: src/main/escp2-resolutions.c:579
 #, fuzzy
 msgid "Interleave"
 msgstr "Nombre de la Impresora:"
 
-#: src/main/escp2-resolutions.c:527 src/main/escp2-resolutions.c:538
-#: src/main/escp2-resolutions.c:550
+#: src/main/escp2-resolutions.c:557 src/main/escp2-resolutions.c:568
+#: src/main/escp2-resolutions.c:580
 msgid "Full Overlap"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:528 src/main/escp2-resolutions.c:539
-#: src/main/escp2-resolutions.c:551
+#: src/main/escp2-resolutions.c:558 src/main/escp2-resolutions.c:569
+#: src/main/escp2-resolutions.c:581
 msgid "Four Pass"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:529 src/main/escp2-resolutions.c:540
-#: src/main/escp2-resolutions.c:552
+#: src/main/escp2-resolutions.c:559 src/main/escp2-resolutions.c:570
+#: src/main/escp2-resolutions.c:582
 msgid "Full Overlap 2"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:541 src/main/escp2-resolutions.c:553
+#: src/main/escp2-resolutions.c:571 src/main/escp2-resolutions.c:583
 #, fuzzy
 msgid "Interleave 2"
 msgstr "Nombre de la Impresora:"
 
-#: src/main/escp2-resolutions.c:554
+#: src/main/escp2-resolutions.c:584
 #, fuzzy
 msgid "Eight Pass"
 msgstr "Brillo:"
