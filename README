@@ -1,28 +1,28 @@
-Welcome to Gutenprint 5.0.0-rc3!  Please read these release notes
-carefully.
+Welcome to Gutenprint 5.0.0!  Please read these notes carefully.
 
-INTRODUCTION
+================================================================
 
-    This is Gutenprint version 5.0.0 release candidate 3, a release
-    candidate of Gutenprint 5.0.  Gutenprint, formerly named
-    Gimp-Print, is a suite of printer drivers that may be used with
-    most common UNIX print spooling systems, including CUPS, lpr,
-    LPRng, or others.  These drivers provide high quality printing for
-    UNIX (including Macintosh OS X 10.2 and newer) and Linux systems
-    in many cases equal to or better than proprietary vendor-supplied
-    drivers, and can be used for many of the most demanding printing
-    tasks.  A complete list of supported printers may be found in the
-    NEWS file.  Gutenprint also includes a plug-in for the GIMP image
-    editor.
+I) INTRODUCTION
 
-    Gutenprint, formerly named Gimp-Print, has been renamed in order
-    to clearly distinguish it from the GIMP.  While this package
-    started out as the Print plugin for the GIMP, it has expanded into
-    a collection of general purpose printer drivers, and the Print
-    plugin for the GIMP is now only a small (but important) piece of
-    the package.  Furthermore, the name Gutenprint recognizes Johannes
-    Gutenberg, the inventor of the movable type printing press.
-    Finally, the word "guten" means "good" in German.
+    This is Gutenprint version 5.0.0, the first stable release of
+    Gutenprint 5.0.  Gutenprint, formerly named Gimp-Print, is a suite
+    of printer drivers that may be used with most common UNIX print
+    spooling systems, including CUPS, lpr, LPRng, or others.  These
+    drivers provide high quality printing for UNIX (including
+    Macintosh OS X 10.2 and newer) and Linux systems in many cases
+    equal to or better than proprietary vendor-supplied drivers, and
+    can be used for many of the most demanding printing tasks.  A
+    complete list of supported printers may be found in the NEWS file.
+    Gutenprint also includes a plug-in for the GIMP image editor.
+
+    Gutenprint has been renamed in order to clearly distinguish it
+    from the GIMP.  While this package started out as the Print plugin
+    for the GIMP, it has expanded into a collection of general purpose
+    printer drivers, and the Print plugin for the GIMP is now only a
+    small (but important) piece of the package.  Furthermore, the name
+    Gutenprint recognizes Johannes Gutenberg, the inventor of the
+    movable type printing press.  Finally, the word "guten" means
+    "good" in German.
 
     Please read this README, and the NEWS file carefully!  Many things
     have changed from previous releases.  The package is quite
@@ -30,96 +30,160 @@ INTRODUCTION
     these instructions carefully.  In addition, the NEWS file contains
     specific software requirements.
 
-    A user's manual exists in doc/users_guide; it is normally
-    installed in PDF and HTML form in /usr/local/share/gutenprint/doc.
-    This manual covers setup and use of the GIMP Print plug-in and the
-    CUPS driver.
+    Gutenprint supports only the printer part of multi-function
+    devices (devices that typically include scanning, copying, and fax
+    capabilities).
 
-    We urge all distributors of this package to read the PACKAGING
-    section below and KNOWN BUILD ISSUES section in the release notes.
+================================================================
 
+II) INSTALLATION
 
-BASIC INSTALLATION
+    This section assumes that you are installing the package from
+    source.  If you are installing from a pre-compiled package (such as
+    the Macintosh OS X package, or a package provided by your
+    distribution vendor), you may skip this section.
+
+----------------
+
+A) OVERVIEW
 
     Gutenprint includes the following primary components:
 
-      - The core driver package
+      - The core driver library (required for everything else)
       - A CUPS (Common UNIX Printing System) driver
       - A Print plug-in for the GIMP
       - Support for the Foomatic spooler configuration system
       - A Ghostscript driver using the IJS plugin facility
-      - A utility to administer and maintain Epson printers
+      - A command-line utility to administer and maintain Epson
+        printers
 
-    The core driver package is always built.  Directions for building
-    the other components are listed below.
+    The "configure" script, which must be run before doing anything
+    else, controls which of these components are built along with any
+    options desired.
 
-    Please check our web site at http://gimp-print.sourceforge.net for
-    details about what is and is not supported.
-
-    Please report any problems to gimp-print-devel@sourceforge.net.
-
-    In general, to build Gutenprint, you run the following commands:
+    The general procedure to build Gutenprint is as follows:
 
     ./configure [options]
     make
     make install
 
-    If you do not have the GIMP installed (or if you have only the
-    user package installed, and not the development package that most
-    distributions include separately), the attempt to run configure
-    will fail.  To build other components (such as the Ghostscript or
-    CUPS drivers) without the GIMP being present, you must use the
-    --without-gimp option to configure.
+    This package requires the use of GNU Make to compile.  On systems
+    with both GNU make and another make installed, GNU make may be
+    named `gmake' or `gnumake'.  BSD users in particular must take
+    care to use 'gmake'.
 
-    By default dynamically loadable modules (plug-ins) will be built,
-    and loaded at run-time if your operating system supports it.  If
-    you experience problems, --with-modules=dlopen or
-    --with-modules=ltdl may be used to select the module loading
-    method (dlopen is the default, but GNU libltdl is more portable),
-    or --with-modules=static or --without-modules disables them.
+    The CUPS, GIMP, Foomatic, and IJS drivers require that the
+    appropriate packages be installed on your system.  Many
+    distribution vendors separate packages into runtime and
+    development packages.  These development packages are required in
+    order to successfully compile Gutenprint.  In many cases the
+    configure script cannot detect whether these packages are
+    installed, in which case you will get an error during
+    compilation.
 
-    Note: This package requires the use of GNU Make to compile.  On
-    systems with both GNU make and another make installed, GNU make
-    may be named `gmake' or `gnumake'.  BSD users in particular will
-    need to use 'gmake'.
+----------------
+
+B) CORE DRIVER LIBRARY
+
+    The core driver library, which is always built, contains all of
+    the printer drivers comprising the Gutenprint package.  When the
+    package is built, it consists of a core library (libgutenprint), a
+    set of XML files, and depending upon the options selected,
+    additional libraries containing the drivers for each family of
+    printers.
+
+    By default dynamically loadable modules (plug-ins) will be built
+    for the family drivers, and loaded at run-time if your operating
+    system supports it.  If you experience problems,
+    --with-modules=dlopen or --with-modules=ltdl may be used to select
+    the module loading method (dlopen is the default, but GNU libltdl
+    is more portable), or --with-modules=static or --without-modules
+    disables them.  If you wish to compile Gutenprint entirely
+    statically (with no use of shared libraries), you may use the
+    option --disable-shared.
+
+    NOTE TO DISTRIBUTORS: You may wish to create a development package
+    containing header files and linkable libraries separate from the
+    runtime package.  There are a few third party applications that
+    link against Gutenprint.
 
 
-CUPS
+----------------
+
+B) CUPS
 
     Gutenprint may be used as a driver under CUPS (Common UNIX
     Printing System), if your system uses that spooler.  Full
     description of CUPS is beyond the scope of this README file; full
     information may be found at http://www.cups.org.  Gutenprint 5.0
     requires CUPS 1.1.9 or higher.  We recommend use of 1.1.15 or
-    above; that release of CUPS fixes some important bugs.
+    above; that release of CUPS fixes some important bugs.  Gutenprint
+    supports CUPS 1.2, but at this time does not take advantage of the
+    new features of that release.
 
-    This package includes a CUPS driver that may be built, allowing
-    use of this software for general printing purposes.  Gutenprint
-    will normally detect the presence of CUPS; if it doesn't on your
-    system, you must run:
+    Gutenprint will normally detect the presence of CUPS on your
+    system and will attempt to build the CUPS driver if it finds CUPS
+    installed.  If your distribution separates the CUPS installation
+    into development and runtime packages, you must install the CUPS
+    development package.  You may need to install other development
+    packages depending upon how your distribution has built CUPS.
 
-    ./configure --with-cups
-    make
-    make install
-    cups-genppdupdate.5.0 (OPTIONAL)
-    /etc/init.d/cups restart
+    Installing the CUPS driver for Gutenprint 5.0 will not interfere
+    with your ability to continue using the Gimp-Print 4.2 CUPS
+    driver.
 
-    If you have installed CUPS as a precompiled package (e. g. it's
-    the standard printing system that your distribution uses), you may
-    need to install a separate development package (typically called
-    "cups-devel" or "cups-developer").  You will need to do this if
-    configure completes correctly, but "make" fails when building in
-    src/cups.  The CUPS package typically installed by most
-    distributions only contains the components needed to run CUPS, not
-    those required to build additional CUPS drivers.
+    The Gutenprint CUPS driver consists of the following components:
 
-    The last command (/etc/init.d/cups restart) varies with your
-    operating system; the purpose is to restart the CUPS server
-    (daemon) so that it sees the newly installed driver.  It is
-    typically /etc/init.d/cups, /etc/software/init.d/cups,
-    /etc/rc.d/cups, or even /etc/rc.d/init.d/cups.  Your system may
-    have a different way to restart the CUPS server.  OS X uses the
-    following command:
+    * The core Gutenprint CUPS driver, rastertogutenprint.5.0.  This
+      is a CUPS filter that converts CUPS raster data into
+      printer-specific data.  This is most commonly installed in
+      /usr/lib/cups/filter.
+
+    * Back ends for driving Canon and Epson printers, named "canon"
+      and "epson".  These provide the ability to get information from
+      the printer for CUPS to use, and are normally installed in
+      /usr/lib/cups/backend.  Additional utilities to send certain
+      commands to these printers are installed as commandtocanon and
+      commandtoepson; they are installed in /usr/lib/cups/filter.
+
+    * One or more sets of PPD files describing all of the printers
+      supported by Gutenprint.  These are normally installed in
+      /usr/share/cups/model/gutenprint.  These PPD files can only be
+      used by the precise version of Gutenprint that they were built
+      with; for example, it is not possible to use PPD files from
+      Gutenprint 5.0.0 with Gutenprint 5.0.1.
+
+    * A utility to update PPD files from an earlier release of
+      Gutenprint, cups-genppdupdate.5.0.  This utility may be used to
+      update PPD files generated by earlier versions of Gutenprint
+      starting from 4.3.21.  This is normally installed in /usr/sbin.
+      This utility cannot update PPD files from Gimp-Print 4.2.
+
+    * A utility to generate PPD files, cups-genppd.5.0.  Normally this
+      is only required when the package is built.
+
+    * A utility to permit additional color calibration for
+      Gutenprint-supported printers, cups-calibrate.  This is normally
+      installed in /usr/bin.
+
+    CAUTION: On some systems it is necessary to link cups-genppd.5.0
+    and rastertogutenprint.5.0 statically rather than dynamically
+    against the Gutenprint library.  This is normally the case if your
+    distribution vendor provides a version of Gutenprint installed in
+    /usr and you wish to build and install a newer version into
+    /usr/local.  This is described in more detail in the release
+    notes.  Gutenprint attempts to detect this and compile these
+    executables appropriately.  If you are doing this, it is important
+    not to use the global option "--disable-static"; the executables
+    will not function correctly.
+
+    Following installation of the package with "make install", you
+    must restart CUPS to permit CUPS to see the new PPD files.  The
+    exact command to restart CUPS varies; it is typically something
+    like /etc/init.d/cups, /etc/software/init.d/cups, /etc/rc.d/cups,
+    /usr/sbin/rccups, or even /etc/rc.d/init.d/cups.  Your system may
+    have a different way to restart the CUPS server.  OS X, for
+    example, uses the following command:
 
     sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
   
@@ -127,14 +191,63 @@ CUPS
     the command cups-genppdupdate.5.0, after which you should restart
     CUPS as described above.  We strongly recommend use of this update
     procedure.  This script will automatically update Gutenprint PPD
-    files from earlier versions.  This script will only work with
-    Gimp-Print 4.3.21 or above, or any earlier version of Gutenprint;
-    it will not update Gimp-Print 4.2 PPD files.  However, you may
-    install Gutenprint 5.0 alongside Gimp-Print 4.2, and use both
-    Gimp-Print 4.2 and Gutenprint 5.0 drivers concurrently.
+    files from earlier versions.  This script will only update PPD
+    files from earlier versions of Gutenprint; it will not update
+    Gimp-Print 4.2 PPD files.  However, you may install Gutenprint 5.0
+    alongside Gimp-Print 4.2, and use both Gimp-Print 4.2 and
+    Gutenprint 5.0 drivers concurrently in separate printer queues.
     Therefore, you need not convert a workflow based on Gimp-Print 4.2
-    right away, but can gradually convert or even use both drivers for
-    different printer queues.
+    right away, but can gradually convert or even permanently use both
+    drivers for different printer queues.
+
+    NOTE TO DISTRIBUTORS: We recommend that your installation package
+    run cups-genppdupdate.5.0 and restart CUPS as part of the
+    installation process.
+
+    The following options to configure are available for compiling the
+    Gutenprint driver for CUPS:
+
+    --disable-translated-cups-ppds
+
+	By default, PPD files for all languages available in
+	Gutenprint are created.  If this option is used, only the
+	default (US-English) PPD files are created.  Distributors may
+	wish to package up the PPD files separately for each language.
+
+	Some systems may not build the translated PPD files correctly,
+	in which case all of the PPD files will be in English.  If
+	this is the case on your system, you should use
+	--disable-translated-cups-ppds to avoid having many duplicate
+	PPD files.
+
+    --enable-simplified-cups-ppds
+
+	Gutenprint 5.0 offers an option of creating simplified PPD
+	files (containing only basic options and standard paper sizes)
+	in addition to PPD files offering all available options
+	(including all color correction options).  If this option is
+	used, both the simplified and standard PPD files are created.
+	If --enable-simplified-cups-ppds=only is specified, only the
+	simplified PPD files are built.
+
+    --disable-cups-level3-ppds
+
+	By default, the Gutenprint PPD files are configured for
+	PostScript Level 3.  If this option is used, Level 2 PPD files
+	are created.  This may be useful if you are using a version of
+	CUPS older than 1.1.15.  It is normally not necessary to use
+	this explicitly, as the configure script detects the version
+	of CUPS in use and selects the appropriate PostScript level
+	automatically.
+
+    --disable-cups-ppds-at-top-level
+
+	Normally, the PPD files are placed in
+	/usr/share/cups/model/gutenprint/5.0.  If this option is used,
+	the PPD files are placed in /usr/share/cups/model.  There is
+	normally no good reason to use this option.
+
+    
 
     If you do not choose to automatically update existing PPD files,
     you should reinstall any printers that you are using Gutenprint
@@ -144,11 +257,11 @@ CUPS
     a version of Gutenprint with PPD files not built for that precise
     version, the driver will fail with a diagnostic error message.
     For example, PPD files built for Gutenprint 5.0.0-beta4 will not
-    work with driver version 5.0.0-rc3.  You can identify printers
-    using Gutenprint PPD files by the name of the PPD file, which will
-    be something like:
+    work with driver version 5.0.0.  You can identify printers using
+    Gutenprint PPD files by the name of the PPD file, which will be
+    something like:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0(en)
 
     NOTE for Linux (at least) users: If you are using CUPS 1.1.11 or
     higher, and you have a USB-connected printer, you must have a
@@ -175,63 +288,6 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     existing .lpoptions file in your home directory and try printing
     again.
 
-    This package normally builds PPD files containing all available
-    options for the printer chosen.  Many of these options
-    (particularly the color adjustments) are not needed in most cases
-    and may confuse people.  It is possible to generate PPD files
-    containing only a minimal set of options and basic paper sizes for
-    each printer.  Distributors may wish to package the two sets of
-    PPD files separately allowing end users to select one or both
-    sets (the two sets of PPD files have different names and can
-    coexist).
-
-    To generate both the simplified and the standard full-featured PPD
-    files, you should run configure as follows:
-
-    ./configure --with-cups --enable-simplified-cups-ppds=yes
-
-    If you wish to generate only the simplified PPD files, you may run
-
-    ./configure --with-cups --enable-simplified-cups-ppds=only
-
-    This package normally builds translated versions of the PPD files.
-    This provides PPD files translated into the languages that this
-    package supports.  However, the translation process does not work
-    correctly on all systems; in particular, many BSD systems are
-    known to simply build multiple copies of the English PPD files.
-    In addition, you may not need all of these PPD files installed on
-    your system.  If your system does not build these files correctly,
-    which will be apparent when you use a CUPS front end to select a
-    PPD file and you see something like this:
-
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
-
-    rather than this:
-
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(en)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(sv)
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0-rc3(fr)
-
-    you may wish to turn off the translation of PPD files:
-
-    ./configure --with-cups --disable-translated-cups-ppds
-
-    You may also wish to do this to greatly reduce the number of PPD
-    files installed on your system, as the number of translations is
-    large and growing.
-
-    The PPD files associated with this driver are normally for Level 3
-    PostScript.  CUPS versions starting with 1.1.15 fully implement
-    Level 3 Postscript, but earlier versions do not implement a few
-    Level 3 constructs.  The configuration script will attempt to
-    detect the version of CUPS and generate appropriate PPD files.  If
-    you wish to build PPD files for Level 2 Postscript even with a
-    newer version of CUPS, you can run
-
-    ./configure --with-cups --disable-cups-level3-ppds
-
     We recommend that all users who wish to use this package for
     general purpose printing install either CUPS or use Foomatic with
     the Ghostscript driver (both described below) and use that as
@@ -242,7 +298,82 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     and installing CUPS.
 
 
-THE GIMP
+----------------
+
+C) FOOMATIC
+
+    Foomatic is a printer meta-driver that can be used with any
+    spooler (CUPS, lpd, LPRng, etc.) or even no spooler at all.  It
+    uses XML data describing printer and driver capabilities in
+    conjunction with Ghostscript to allow printing in any environment.
+    Please visit http://www.linuxprinting.org/foomatic.html for more
+    information.
+
+    We normally recommend using the native CUPS driver described above
+    if your system uses CUPS as its spooler.  However, some systems
+    (many releases of Fedora Core, for example) use Foomatic as the
+    repository for all printer information; the tools provided on
+    those systems will not recognize the CUPS PPD files.  If your
+    system uses Foomatic in this way, or does not use CUPS, you should
+    use Foomatic to manage your printers.
+
+    The Gutenprint driver for Foomatic requires Foomatic 2.0 or
+    higher; Foomatic 3.0 or above is highly recommended.  It also
+    requires GNU Ghostscript 6.53 or newer, AFPL Ghostscript 7.04 or
+    newer, or ESP Ghostscript 7.05 or newer for IJS support.
+
+    The Foomatic support in Gutenprint consists of a data generator
+    and an IJS-based Ghostscript driver.  It is possible to use the
+    Ghostscript driver without Foomatic, but the Gutenprint options
+    are complex and subject to change without notice.  Older printer
+    configuration tools such as apsfilter and magicfilter do not
+    provide a convenient interface to the driver's capabilities.
+    Therefore, we no longer provide documentation on direct use of the
+    Ghostscript driver without the Foomatic front end.
+
+    The Ghostscript driver in Gutenprint 5.0 is based on the IJS
+    protocol.  IJS is a protocol originally developed by
+    Hewlett-Packard to allow new drivers to be used with Ghostscript
+    without having to be compiled into Ghostscript.  As this driver
+    runs in a separate process, and IJS is licensed in a way
+    compatible with the GPL, this driver may be used with AFPL
+    Ghostscript if desired.  We no longer offer the legacy "stp"
+    driver provided in Gimp-Print 4.2.  This driver was difficult to
+    maintain and required a complex procedure to integrate with
+    Ghostscript.
+
+    Gutenprint 5.0 offers two Foomatic drivers, one supporting the
+    full range of options and the other supporting simplified options,
+    as describe above under CUPS.  The full-featured driver is named
+    "gutenprint-ijs.5.0"; the simplified driver is named
+    "gutenprint-ijs-simplified.5.0".  This allows Gutenprint 5.0 to
+    coexist with Gimp-Print 4.2; both drivers may be installed and
+    used (on separate printer queues, of course) on the same system.
+
+    Normally, the Gutenprint configure script will automatically
+    detect the presence of Foomatic and Ghostscript on your system.
+    In some cases, you may have to install a Ghostscript development
+    package that may be named gs-devel, ghostscript-library, or the
+    like for the IJS capability.
+
+    The Foomatic driver will not allow use of PPD files created from
+    Foomatic data from a different version of Gutenprint.  This
+    ensures that the PPD files accurately match the driver in use.
+    However, there is no automatic upgrade tool provided for the
+    Foomatic driver, unlike the CUPS driver.  Therefore, all queues
+    using a Gutenprint driver must be updated manually, using either
+    tools provided by your distribution or the Foomatic tool
+    "foomatic-ppdfile".
+
+    NOTE TO DISTRIBUTORS: We recommend packaging the IJS driver
+    (/usr/bin/ijsgutenprint.5.0) and its man page
+    (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
+    data.
+
+
+----------------
+
+D) THE GIMP
 
     Gutenprint may be used as a plug-in for the GIMP, providing the
     ability to print images.  If you wish to do so, you must use the
@@ -251,329 +382,469 @@ THE GIMP
     README, as there have been some changes in procedure since
     Gimp-Print 4.2 if you are using certain versions of the GIMP.
 
-    To build and install the GIMP Print plug-in for the GIMP 1.2:
+    If your system separates development packages from runtime
+    packages, you will typically have to install development packages
+    for the GIMP itself, in addition to GTK and glib.  With the GIMP
+    2.x and GTK 2.x, additional packages may be required.
 
-    ./configure [--with-gimp]
-    make
-    make install
+    Normally, the Gutenprint configure script detects which version,
+    if any, of the GIMP is installed and builds an appropriate plugin.
+    If the configure script does not detect it properly, you may need
+    to specify --with-gimp or --with-gimp2.  However, it's more likely
+    that you need to install appropriate development packages.
 
-    For the GIMP 2.0 or above, the option "--with-gimp2" rather than
-    "--with-gimp" should be used.
-
-    You may optionally specify --with-gimp or --with-gimp2 if you wish
-    to be explicit about building the GIMP Print plugin; --with-gimp
-    is implied if `configure' detects that the GIMP is installed, so
-    you do not actually need to specify it.
-
-    This installs the GIMP Print plugin in your system plug-in
-    directory.  If you wish to install it in your personal plugin
-    directory, you may use
+    Normally Gutenprint installs the GIMP Print plugin in your system
+    plug-in directory.  If you wish to install it in your personal
+    plugin directory, you may use
 
     ./configure --enable-user-install
 
-    If you have installed the GIMP as a precompiled package
-    (e. g. from an RPM), you will need to install the gimp-devel
-    (sometimes called gimp-developer, or something similar) package as
-    well as the gimp package.  The GIMP package as supplied in most
-    distributions only contains what's needed to run the GIMP, not the
-    additional files needed to build GIMP-based applications and
-    plugins such as the Print plugin.  On some systems, you will also
-    need to install gtk-devel and glib-devel packages as well.
-
-    If you have installed the GIMP from source on Linux: after running
-    make install, you must run ldconfig as root before attempting to
-    build this plugin.
+    It is not possible for Gimp-Print 4.2 and Gutenprint 5.0 (or any
+    future release) to coexist in the same installation of the GIMP.
+    The Gutenprint 5.0-based plugin can read settings from previous
+    versions of Gimp-Print, but the configuration file format in
+    Gutenprint 5.0 cannot be read by older versions of Gimp-Print.
 
     The GIMP 1.2 will not be supported in Gutenprint 5.1 and beyond.
-    However, all Gutenprint 5.0 releases will support The GIMP 1.2.
+    However, all Gutenprint 5.0 releases will support the GIMP 1.2.
 
-    The GIMP 2.x plugin may eventually be migrated to The GIMP project
-    for a future GIMP release.  It may be removed from the Gutenprint
-    distribution in Gutenprint 5.1.
-
-
-FOOMATIC
-
-    Gutenprint includes support for the Foomatic meta-driver package.
-    This requires the foomatic-xml distribution.  Foomatic is
-    available from http://www.linuxprinting.org/foomatic.html.  The
-    first version of Foomatic (the one used with Gimp-Print 4.0) is
-    not compatible with Gutenprint 5.0.  Note that the Foomatic driver
-    was named `stp' in Gimp-Print 4.0; in Gimp-Print 4.2 (and early
-    4.3) it was named `gimp-print' for the Ghostscript ("stp") driver
-    and "gimp-print-ijs" for the IJS driver.  In 5.0 only the
-    "gutenprint-ijs" data is present.  The data for the Gimp-Print 4.2
-    driver is not compatible with the 5.0 driver.
-
-    Furthermore, as of Gutenprint 5.0 the Foomatic driver will include
-    the release version of Gutenprint in its name.  Therefore, the
-    Foomatic name for this driver is "gutenprint-ijs.5.0".
-
-    Foomatic data generation works correctly as of Gutenprint
-    5.0.0-beta4 and later releases, and is now an appropriate solution
-    for queue configuration.
-
-    To verify that you have an appropriate version of Foomatic, please
-    run
-
-    foomatic-kitload
-
-    or
-
-    /usr/local/sbin/foomatic-kitload (if /usr/local/sbin is not on your PATH).
-
-    Both Foomatic 2.0.x (old stable branch) and 3.0 (current stable
-    branch) are supported.  With Foomatic 3.0 there are the extra
-    features of heaving an additional "PrintoutMode" option with
-    pre-configurations for common printing tasks and the options being
-    put into different groups ("General", "PrintoutMode",
-    "Adjustment").
-
-    If you don't have Foomatic installed, or the version that is
-    installed is too old, please download the current Foomatic 3.0x
-    package from
-
-    http://www.linuxprinting.org/download/foomatic/foomatic-current.tar.gz
-
-    and follow the instructions in that package. See
-
-    After Foomatic is installed, build the Foomatic data as follows:
-
-    ./configure --with-foomatic
-    make
-    make install
-
-    The "make install" step will add the necessary data to your
-    Foomatic installation.  It must be run as root.  It will fail if
-    Foomatic is not installed or your Foomatic is too old.  Now you
-    can either set up a queue for your printer with
-    "foomatic-configure" (see USAGE file in the Foomatic package) or
-    generate the printer description file for your spooler (with
-    "foomatic-datafile") and configure your printer as described on
-    the spooler-specific web pages of linuxprinting.org.
-
-    IMPORTANT: Whenever you install a new version of Gutenprint you
-    must re-create the printer queues using Gutenprint with Foomatic
-    (these queues have a driver name of "gutenprint-ijs.5.0").
-
-    Note that it almost never makes sense to build the Foomatic driver
-    without also building the Ghostscript driver, even if Foomatic is
-    to be used with CUPS (CUPS-O-Matic).  Please read the instructions
-    below in the GHOSTSCRIPT section.
-
-    If you do not wish to build the Print plugin for the GIMP plugin,
-    you must run
-
-    ./configure --with-foomatic --without-gimp
-
-    or
-
-    ./configure --with-ghostscript --with-foomatic --without-gimp
-
-    Please visit http://www.linuxprinting.org/foomatic.html for more
-    information on Foomatic.
-
-    Foomatic provides an alternate interface to CUPS, in addition to
-    an interface to LPD, LPRng, GNUlpr, PDQ, PPR, CPS, and spooler-less
-    printing.
+    The GIMP 2.x plugin may eventually be migrated to the GIMP project
+    for a future GIMP release and be removed from the Gutenprint
+    distribution.
 
 
-GHOSTSCRIPT
+----------------
 
-    Gutenprint includes an IJS-based Ghostscript driver.  As
-    paraphrased from the Ghostscript documentation, IJS is a
-    relatively new initiative to improve the quality and ease of use
-    of inkjet printing with Ghostscript.  Using IJS, one can add new
-    drivers, or upgrade existing ones, without recompiling
-    Ghostscript.  IJS drivers run as separate processes that
-    communicate with Ghostscript via an IPC channel.  As the basic IJS
-    implementation is licensed compatibly with the GPL, and as the
-    driver runs in a separate process from Ghostscript itself, the IJS
-    driver may be used with AFPL Ghostscript (7.04 and above).
+E) ESCPUTIL
 
-    The basic way to build the Ghostscript driver is
+    "escputil" is a command line utility for administering Epson
+    inkjet printers.  It performs head alignment, retrieval of ink
+    levels and status information, printing of test patterns, etc.  It
+    is built and installed by default; if you don't want it, you may
+    use --without-escputil when configuring.
 
-    ./configure --with-ghostscript [--without-gimp]
-    make
-    make install
+    escputil uses the readline package for interactive commands
+    (currently only head alignment falls into this category).  Linking
+    against libreadline sometimes requires linking against other
+    packages.  Gutenprint attempts to determine the correct packages
+    to link against; the exact sequence is described in the release
+    notes.  If you do not wish to use readline, you may use
+    --without-readline.
 
-    You must have the IJS libraries installed for this to work.
-    Instructions for that are included with GNU Ghostscript 6.53 and
-    beyond, AFPL Ghostscript 7.04 and beyond, and ESP Ghostscript 7.05
-    and beyond.
-
-    We strongly recommend that end users use CUPS, or use Foomatic to
-    configure printer queues for Gutenprint.  The available options
-    are very complex and are subject to change, and the older printer
-    configuration tools (such as apsfilter and magicfilter) do not
-    provide a convenient interface to the driver's capabilities.  We
-    no longer provide documentation on direct use of this driver
-    without the Foomatic front end.
-
-    Gutenprint 5.0 no longer provides the monolithic (legacy
-    Ghostscript) "stp" driver present in Gimp-Print 4.2.  This driver,
-    which was compiled and linked directly into Ghostscript, was very
-    difficult to maintain and required a complex integration
-    procedure.
+    Unlike the case in Gimp-Print 4.2, this utility is not standalone;
+    it requires the installation of the core Gutenprint package to
+    function.  This allows it to support new printers without
+    modification.
 
 
-RECOMMENDED SETTINGS
+----------------
 
-    We recommend starting with all default settings for the color
-    settings.  The settings can be adjusted as necessary for
-    particular combinations of ink, paper, and subject material.
+F) OTHER PACKAGES
 
-    On most inkjet printers, using plain or coated inkjet paper, 600
-    or 720 dpi will produce high quality; 1200x1200 or 1440x720 dpi
-    will produce extremely high quality.  On newer printers with very
-    small drops, or when printing photographs to special photo paper,
-    higher resolutions such as 2880x1440 DPI may be required to
-    achieve the highest quality.
+    Gutenprint includes a few other packages: a test pattern generator
+    and a test suite.  If you wish to compile these, you may use
+    --enable-test and/or --enable-testpattern.
+
+    The test pattern generator permits generating various test
+    patterns; it can also be used to print images in 16-bit depth and
+    specifying all ink channels separately.  The image format is not
+    documented outside of the code itself; this is not a general
+    purpose image printing tool.  It is used as part of the regression
+    test suite.
+
+    To run the test suite, you must configure in both the tests and
+    the test pattern generator and run "make check".  The test suite
+    takes about 12 hours to run, depending upon the speed of the
+    processor.
+
+    The tests currently cover the following areas:
+
+    1) Regression test each printer with default settings, using each
+       dither algorithm.
+
+    2) Regression test each input and output type in 8 and 16 bit, in
+       grayscale and color, on the Epson Stylus Photo R800 (which has
+       additional red and blue inks that use additional code paths).
+
+    3) Regression test each resolution and ink type in color and black
+       and white on each printer.
+
+    4) Regression test CUPS PPD files for correctness, using the
+       "cupstestppd" command provided with CUPS.  This test fails if
+       there are any errors in relaxed mode; it allows failures in
+       strict mode but gives a warning.
+
+    5) Test functionality of the new curve data type.
+
+    6) Regression test each dither algorithm with different types of
+       inputs and drop sizes.
+
+    7) Regression and functional test of the weave (interleave) code.
+       This test is the most time-consuming of the entire suite, as it
+       tests every weave pattern used by every printer in every mode
+       (currently about 700,000 cases).
+
+    Four of the tests in the suite can be run individually under
+    valgrind to check correctness of memory use.  These are:
+
+    src/testpattern/run-testpattern
+    src/testpattern/run-testpattern-1
+    src/testpattern/run-testpattern-2
+    test/run-testdither
+
+    The following options can be passed to each of these tests:
+
+    -v		  Run valgrind normally, displaying errors and memory
+		  leaks.
+    -v -v	  Run valgrind with enhanced leak resolution, and show
+		  reachable memory in addition to memory leaks.
+    -v -v -v	  Run valgrind with enhanced leak resolution, show
+		  reachable memory in addition to memory leaks, and
+		  display all errors (no limit on errors displayed).
+    -c		  Use cachegrind for performance profiling (cannot be
+		  used in combination with other -v options).
+
+    If you run valgrind with run-testpattern-2, we recommend use of
+    the "-s" option to skip testing printers that share identical
+    characteristics with other printers, in order to save time.
+    Programs run under valgrind take many times longer to run than
+    normal.
+
+    In addition, in order to successfully use valgrind, you must
+    compile with static libraries only (--disable-shared).  If you do
+    not do so, you will run valgrind on a small wrapper script rather
+    than on the test itself.
+
+    It is a release requirement that all tests pass, with valgrind
+    where applicable.  At the present time there is one known
+    non-fatal valgrind error (on the Canon iPixma 4000 in grayscale
+    mode) and one memory leak associated with that error.  This is
+    under investigation and will either be fixed or the requirement be
+    waived for this particular issue.
+
+    NOTE TO DISTRIBUTORS: You may wish to distribute the test pattern
+    generator in a development package, as it's useful as sample code
+    if nothing else.  In addition, there are some tools in the test
+    directory that aren't installed that may be of use.  These tools
+    are:
+
+    * "parse-escp2" is a Perl script that parses Epson inkjet output
+      files.  This is useful as a data gathering tool for reporting
+      bugs; the output of this tool is much more compact than the
+      actual print file.  "parse-bjc" is a similar script for parsing
+      Canon inkjet output files; it is not as well maintained.
+
+    * "unprint" is a tool for reconstituting an image from an Epson
+      inkjet output file.  The image is not a true continuous-tone
+      image; each pixel is synthesized based on which drops are
+      printed.  "pcl-unprint" and "bjc-unprint" are similar tools for
+      PCL and Canon output files, respectively.
 
 
-SUPPORT
+================================================================
 
-    1) Read the FAQ, in doc/FAQ.html.  Your question may be answered
+III) GETTING STARTED
+
+    This section describes how to get started using Gutenprint.
+    Certain details (particularly for installation and configuration
+    of printers) may vary depending upon your operating system.
+
+    Using Gutenprint consists the following steps:
+
+    1) Installing your printer
+
+    2) Configuring desired options
+
+----------------
+
+A) PRINTER INSTALLATION
+
+    The actual procedure to install a printer depends upon your
+    operating system and the spooler (printing system) in use on your
+    system.
+
+    Gutenprint does not normally require the use of non-standard
+    procedures (such as starting special programs) to install
+    printers.  Assuming that you are using either CUPS or Foomatic, it
+    integrates with your printing system, so the tools provided by
+    your distribution vendor should work correctly with Gutenprint.
+
+    Most printing systems currently use PPD files to describe printer
+    capabilities.  Some printers are supported by more than one
+    driver, so you may find more than one PPD file for your printer.
+    Gutenprint PPD files are described as
+
+    Epson Stylus Photo R300 Foomatic/gutenprint-ijs.5.0
+    Epson Stylus Photo R300 Foomatic/gutenprint-ijs-simplified.5.0
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.0.0
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.0.0 Simplified
+
+    The "simplified" PPD files offer a basic set of options only, for
+    selecting printer options, standard paper sizes, and basic quality
+    settings.  The PPD files that are not "simplified" offer a much
+    broader set of controls, giving the user extensive control over
+    quality and color adjustment.
+
+    If you are using CUPS, you may be offered a choice between
+    CUPS+Gutenprint and Foomatic/gutenprint-ijs PPD files.  While
+    either kind of PPD file will work, we recommend using the
+    CUPS+Gutenprint PPD files.  These PPD files can be automatically
+    updated with cups-genppdupdate.5.0.
+
+    Other PPD files are described differently, such as
+
+    Epson MJ 520C Foomatic/stcolor (recommended)
+
+    These PPD files, whether recommended or not, are not Gutenprint
+    PPD files.
+
+----------------
+
+B) CONFIGURING PRINTER OPTIONS
+
+    Gutenprint offers a variety of printing options, controlling
+    printer options, color correction, and quality.  Depending upon
+    the application you're printing from and the tools provided by the
+    system, they may be organized in various ways.
+
+    The release notes (NEWS) file included with this package describes
+    all of the options available, which vary from printer to printer.
+    The most important settings are the Basic Printer Options and the
+    Basic Output Controls.  The most important options are:
+
+        Page Size
+
+                Select the paper (media) size to print to.
+
+        Double-Sided Printing
+
+                Otherwise known as "duplex" printing, this is offered
+                for printers capable of printing on both sides of the
+                page (generally laser printers).
+
+        Media Type
+
+                Select the kind of paper or other media being printed
+                to.  This enables the printer and driver to be set up
+                appropriately for the kind of paper in use.  It is
+                important to set this to the kind of paper you are
+                printing to; failure to do so will typically yield
+                poor results.
+
+        Media Source
+
+                Select the source of the paper or other media.  This
+                option is offered with printers that have multiple
+                feeds, for example multiple paper bins, manual feed,
+                printing directly to a CD, etc.
+
+        Output Type
+
+                This option specifies whether to print in color or
+                black and white/grayscale (using only black inks).
+                Black and white printing is generally faster than
+                color printing, even if the item being printed is
+                entirely black and white.  However, printing with only
+                black ink may yield a "grainy" appearance.
+
+        Color Correction
+
+                This selects the choice of color correction method
+                within Gutenprint.  Normally it is not necessary to
+                change this setting from the default, which selects a
+                color correction mode appropriate for the document
+                being printed.  Other common settings:
+
+                * HIGH ACCURACY: Apply optimum color correction to the
+                  output to produce the best color quality.  This
+                  corrects the hue, brightness, and saturation
+                  (brilliance of color).  This is the normal setting
+                  to use for printing photographs or graphics if you
+                  are not using any external color management.
+
+                * BRIGHT COLORS: Apply color correction to the output,
+                  but generate more brilliant colors in some cases.
+
+                * UNCORRECTED: Do not apply any color correction to
+                  the output beyond generating linear output.  This is
+                  the best setting to use when utilizing external
+                  color management; the high accuracy modes employ
+                  correction algorithms that may not work well with
+                  color management.
+
+                  NOTE: if you use color management with ColorSync or
+                  ICC profiles you should use profiles created with
+                  Gutenprint and with the exact settings that you plan
+                  to print with.  Profiles provided by the printer
+                  vendor are calibrated for the vendor's driver, which
+                  may not be identical to Gutenprint's calibration.
+                  In addition, profiles created using Gimp-Print 4.2
+                  or earlier will generally not perform well with
+                  Gutenprint 5.0.
+
+        Image Type
+
+                Specify the option that best describes what you are
+                printing.  Your choice here will affect the processing
+                of the print job.  Currently available settings
+                include:
+
+                * TEXT: Optimize the output for printing black text
+                  with no graphics.  This option results in crisp
+                  output and is very fast, but will yield very poor
+                  results with any color or grayscale graphics.
+
+                * GRAPHICS: Optimize the output for printing color
+                  graphics.  This option will generate smooth, bright
+                  output.
+
+                * MIXED TEXT AND GRAPHICS: Optimize the output for
+                  printing a mixture of text and graphics.
+
+                * PHOTOGRAPH: Optimize the output for printing
+                  photographs.  This option will generate smooth
+                  tones and high quality colors, but will be slower
+                  than the other options.
+
+                * LINE ART: Optimize the output for printing black and
+                  white line art with intricate detail.
+
+        Resolution (on printers other than Epson inkjets)
+
+                Select the resolution to print at (dots per inch).  In
+                general, higher resolutions produce better quality, at
+                the expense of additional time.
+
+                As a general rule of thumb, on laser printers and
+                older inkjet printers (made before 1999 or
+                thereabouts) resolutions of 300 DPI or thereabouts
+                provide draft quality; lower resolutions provide
+                economy draft quality and cannot produce solid black.
+                Resolutions of 600 or 720 DPI produce good quality
+                output; higher resolutions are useful for very high
+                quality image or graphic output.  Newer inkjet
+                printers, with smaller ink drop sizes, typically
+                require higher resolutions to produce acceptable
+                output; in some cases even 1440x720 DPI does not
+                produce very high quality.
+
+        Print Quality (Epson inkjet printers only)
+
+                Specify the desired output quality using convenient
+                presets.  Where this option is available, Gutenprint
+                will automatically adjust the printing resolution and
+                other options to generate the desired quality.
+                Not all printers offer all of these options.
+		The most commonly used settings include:
+
+                * ECONOMY: Print very rapidly with a reduced amount of
+                  ink.  This option will produce washed out colors and
+                  grays and will typically be quite grainy and
+                  streaky.
+
+                * DRAFT: Print low quality draft output quickly.  This
+                  option will typically produce acceptable output on
+                  plain paper, but will typically produce faded and
+                  grainy output on high quality papers.
+
+                * STANDARD: Print at a normal quality level for text
+                  or text/graphics on plain paper.  This option may
+                  also be useful for printing draft copies of
+                  photographs on coated inkjet paper, but will not
+                  normally yield good results for printing photographs
+                  on glossy paper.  This is the default setting, and
+                  is a good starting point for text or text/graphics
+                  printing.
+
+                * HIGH: Print high quality text or text/graphics on
+                  plain paper or inkjet paper.  This option will
+                  typically produce good color quality.  This option
+                  may also be useful for printing draft copies of
+                  photographs on glossy paper.
+
+                * PHOTO: Print photographs on glossy paper.  This may
+                  also be used to print very high quality text or
+                  graphics on high quality inkjet paper, rivaling
+                  laser printer quality.  This is a good starting
+                  point for printing photographs on glossy or premium
+                  matte papers.
+
+                * SUPER PHOTO: Print photographs on glossy paper with
+                  very high quality.  This may also be appropriate for
+                  line art with extremely fine detail, for which the
+                  required resolution may exceed the capabilities of
+                  laser printers.
+
+                * BEST: Print with the best quality available on the
+                  printer for the application chosen.  This may be
+                  equivalent to one of the other settings; on a very
+                  few printers the resolution may exceed that of Ultra
+                  Photo mode.
+
+================================================================
+
+IV) SOLVING PROBLEMS
+
+    While we have attempted to make use of Gutenprint as
+    straightforward and trouble-free as possible, we certainly
+    recognize that there may be problems with installing and using
+    Gutenprint.  In the event of any difficulty, we ask that you take
+    the following actions:
+
+    1) Read the release notes (NEWS).
+
+    2) Read the FAQ, in doc/FAQ.html.  Your question may be answered
        there.
 
-    2) Read the user's manual, in doc/users_guide.
+    3) Make sure that the paper type and size, and media source, that
+       you have selected matches the paper loaded into the printer.
+       This is only necessary if the printer attempts to print, but
+       does not succeed.  It is a good starting point if quality is
+       poor (too dark or too light, wet ink on the paper, etc.).
 
-    3) There are public forums on Sourceforge dedicated to this
+    4) Reset all settings (particularly the color and quality
+       settings) to their defaults.
+
+    5) If you are using CUPS, search /var/log/cups/error_log (which
+       may be located elsewhere on some systems) for lines starting
+       with 'E' (these lines indicate errors).  Also search for log
+       information produced by Gutenprint; all such output lines will
+       have "Gutenprint".  These lines may help you solve the problem.
+
+    6) If you are using CUPS, enable debugging output.  This can be
+       done by editing /etc/cups/cupsd.conf (which must be done as
+       root).  There will be a line in that file:
+
+       LogLevel Info
+
+       which should be changed to
+
+       LogLevel Debug
+
+       This will allow CUPS to produce extensive debugging output.
+       You will need to restart CUPS (the exact procedure is
+       system-dependent) after doing this.  If you report a problem to
+       the Gutenprint team, you will be asked for this information.
+
+    7) There are public forums on Sourceforge dedicated to this
        package.  Please see
        http://sourceforge.net/forum/?group_id=1537 for more
        information.  The Help forum is a good source of information.
 
-    4) If you have a technical support issue that does not appear to
+    8) If you have a technical support issue that does not appear to
        be a bug in the software, you can use the Tech Support Manager.
        Please see http://sourceforge.net/support/?group_id=1537.
 
-    5) If you have found a clear bug in the package, you may file a
+    9) If you have found a clear bug in the package, you may file a
        bug report at http://sourceforge.net/bugs/?group_id=1537.
 
-    6) You may send mail to the gimp-print-devel@sourceforge.net
+    10) You may send mail to the gimp-print-devel@sourceforge.net
        mailing list.  This is recommended as a last resort only.
 
+================================================================
 
-KNOWN BUILD/INSTALLATION ISSUES
-
-    As of Gutenprint 5.0.0-rc1, the description of known issues has
-    been moved to the NEWS file (release notes).
-
-
-PACKAGING
-
-    We recommend that packagers and distributors of Gutenprint use the
-    following settings to build the package:
-
-    --with-foomatic
-    --with-ghostscript
-    --with-user-guide
-    --with-samples
-    --with-escputil
-
-    We suggest the following packaging:
-
-    * A Gutenprint core package should contain the following.  You may
-      wish to install the user's guide only in certain formats.
-
-      /usr/lib/libgutenprint.so.2.x.y (the core shared library)
-      /usr/bin/escputil (Epson Stylus utility)
-      /usr/bin/ijsgutenprint.5.0 (Gutenprint Ghostscript IJS plug-in driver)
-      /usr/share/gutenprint/doc/html (HTML documentation)
-      /usr/share/gutenprint/doc/users-guide.pdf
-      /usr/share/gutenprint/doc/users-guide.ps
-      /usr/share/locale/*/LC_MESSAGES/gutenprint.mo
-
-    * A gutenprint-devel package (for developers) should contain the
-      following.  Again, you may wish to install the programmer's
-      manual only in certain formats.
-
-      /usr/include/gutenprint
-      /usr/bin/gutenprint-config
-      /usr/share/gutenprint/doc/manual-html
-      /usr/share/gutenprint/doc/gutenprint.ps
-      /usr/share/aclocal/gutenprint.m4
-      /usr/lib/libgutenprint.a
-      /usr/lib/libgutenprint.so
-
-      You may wish to include the test pattern generator source and
-      the sample test pattern in this package, and you may wish to
-      include test patterns of your own.  You may also wish to include
-      the various unprint programs and the parse-* scripts from the
-      test directory, although these are typically of more use to
-      developers of the Gutenprint package per se than developers of
-      applications layered on Gutenprint.  However, the test programs
-      have received less testing than the others, and are known to
-      have some limitations that are not documented.
-
-    * A gutenprint-extras package should contain
-
-      /usr/share/gutenprint/samples
-
-      You may wish to include the test pattern generator and the
-      sample test pattern from src/testpattern if you don't include it
-      in the developer package; test/unprint; test/pcl-unprint;
-      test/bjc-unprint; test/parse-escp2; and test/parse-bjc in this
-      package.
-
-    * Ghostscript requires GNU Ghostscript 6.53 or above, or ESP
-      Ghostscript 7.05 or above.
-
-    * CUPS packages should include the gutenprint PPD's in
-      /usr/share/cups/model, and the following utilities:
-
-      + "epson" and "canon" belong in /usr/lib/cups/backend.
-
-      + "rastertogutenprint-5.0", "commandtoepson", and
-	"commandtocanon" belong in /usr/lib/cups/filter.
-
-      + "cups-calibrate" belongs in /usr/bin.
-
-      + "command.types" belongs in /etc/cups.
-
-      + "calibrate.ppm" belongs in /usr/share/cups.
-
-      The PPD's packaged with gutenprint consume a lot of space.  At
-      present, a full set of full-featured PPD files consumes about
-      7.5 MB per language (about 750 files); a full set of simplified
-      PPD files consumes about 3 MB additional per language.  At
-      present, sixteen language translations are installed, in
-      addition to the US English defaults: Danish, German, Czech,
-      Greek, Spanish, Hungarian, Japanese, Norwegian, Dutch, Polish,
-      Portuguese, Slovak, GB English, and Chinese (Taiwan).  This
-      totals about 25,000 files, so you may wish to install the
-      translated PPD files separately.  You may additionally wish to
-      separate the simplified and standard PPD files.
-
-      Please see KNOWN BUILD ISSUES above for more discussion about
-      build issues related to the PPD files.
-
-    * A gutenprint-foomatic package, containing the
-      src/foomatic/foomatic-db/gutenprint*/ directories, should be 
-      provided to allow people who wish to use foomatic to install the
-      corresponding data files. The packaging should arrange to call
-      "foomatic-kitload" (or the equivalent) on this tree when it is
-      installed.
-
-      An alternative option is to install pregenerated PPD files,
-      which may be created with foomatic-compiledb.
-
-    * Please read the release notes carefully!
-
-    * Distributors (UNIX vendors and Linux distributors) should
-      subscribe to the gimp-print-devel@sourceforge.net mailing list
-      to monitor development activities.  When reporting a problem
-      related to building the package for distribution, please
-      identify yourself as such.  The Gutenprint package is primarily
-      an infrastructure package, rather than an end-user application,
-      and as such we particularly want to fix any problems that
-      interfere with building and distribution of this package on any
-      POSIX-compliant operating system.
-
-
-USE OF THE CVS REPOSITORY
+V) USE OF THE CVS REPOSITORY
 
     Please read doc/README.maintaining for instructions on how to
     build from the CVS repository.  You will need additional packages
     and tools for this purpose.
-
