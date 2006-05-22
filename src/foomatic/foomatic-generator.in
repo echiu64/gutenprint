@@ -1,4 +1,5 @@
 #!@PERL@
+# -*- perl -*-
 
 # Get command line options
 use Getopt::Long;
@@ -424,13 +425,15 @@ for $drivertype (@drivertypes) {
 	    unless -d 'foomatic-db/$drvname/driver';
 
     my $order = 1000;
+    my %numoptionorders;
 
 #    opendir TDIR, "$templatedir-$drivertype" or
 #	die "Cannot open templates directory: $!\n";
 
-    for $fooopt (sort (keys(%ev_choices), @floatnumopts_list,
-		 @dimensionnumopts_list,
-		 @intnumopts_list), "PrintoutMode", "Model",
+    for $fooopt (sort(keys(%ev_choices)),
+		 sort(@floatnumopts_list, @dimensionnumopts_list,
+		      @intnumopts_list), 
+                 "PrintoutMode", "Model",
 		 "RenderResolution", "gutenprint") {
 
 	# The "PrintoutMode" option is only supported by Foomatic 2.9.x or
@@ -564,8 +567,21 @@ for $drivertype (@drivertypes) {
 	    $template =~ s!\@\@LOWERCASESHORTNAME\@\@!$lowercaseshortname!g;
 	    $template =~ s!\@\@LONGNAME\@\@!$longnames{$shortname}!g;
 	    $template =~ s!\@\@SHORTNAME\@\@!$shortopt!g;
-	    $template =~ s!\@\@ORDER\@\@!$order!g;
-	    #$order += 10;
+	    if ($shortname =~ /^STP_Enable(.*)$/) {
+		$numoptionorders{$1} = $order;
+		$template =~ s!\@\@ORDER\@\@!$order!g;
+		$order += 10;
+	    } else {
+		$shortname =~ /^STP_(.*)$/;
+		my $basename = $1;
+		if (my $enableorder = $numoptionorders{$basename}) {
+		    $enableorder ++;
+		    $template =~ s!\@\@ORDER\@\@!$enableorder!g;
+		} else {
+		    $template =~ s!\@\@ORDER\@\@!$order!g;
+		    $order += 10;
+		}
+	    }
 	    $template =~ s!\@\@SPOT\@\@!B!g;
 	    $template =~ s!\@\@PROTO\@\@!$subopt=\%s,!g;
 	}
