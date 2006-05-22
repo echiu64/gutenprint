@@ -131,13 +131,15 @@ if (@ppdglob) {
 	chomp;
 	push @ppd_files,  $_;
     }
-    open PPDFILES, '-|', 'egrep', '-i', '-L', 'Foomatic', @ppd_files or die "can't grep $ppdlist: $!";
-    @ppd_files = ();
-    while (<PPDFILES>) {
-	chomp;
-	push @ppd_files,  $_;
+    if (@ppd_files) {
+	open PPDFILES, '-|', 'egrep', '-i', '-L', 'Foomatic', @ppd_files or die "can't grep $ppdlist: $!";
+	@ppd_files = ();
+	while (<PPDFILES>) {
+	    chomp;
+	    push @ppd_files,  $_;
+	}
+	close PPDFILES or ($! == 0) or die "can't close grep pipe: $!";
     }
-    close PPDFILES or ($! == 0) or die "can't close grep pipe: $!";
 }
 
 
