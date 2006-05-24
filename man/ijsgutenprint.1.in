@@ -35,16 +35,25 @@ ijsgutenprint \- Ghostscript driver for Gutenprint
 provides Ghostscript with a Gutenprint driver, supporting all printers
 supported by libgutenprint.
 .PP
+.B NOTE:
+ijsgutenprint should never be called directly.  Ghostscript will run it if the
+IjsServer parameter is set to IjsServer=ijsgutenprint when invoking the IJS
+driver.
+.PP
+.B NOTE:
+The only \fIsupported\fP method of running ijsgutenprint is via Foomatic.
+Users running ghostscript directly will not be supported.  The driver name used
+by Foomatic is \fIgutenprint\-ijs\fP.
+.PP
+The options for this driver are very complex.  We strongly recommend use of a
+printer management system such as Foomatic rather than configuring a spooler
+manually with this driver.
+.PP
 IJS is an initiative to improve the quality and ease of use of printing with
 Ghostscript.  It permits adding or upgrading drivers without recompiling
 Ghostscript.  An IJS driver runs in a separate process that communicates with
 Ghostscript via an IPC channel.  The Gutenprint IJS driver may be used with
 AFPL Ghostscript, as it runs in a separate process.
-.PP
-The options for this driver are very complex.  We strongly recommend
-use of a printer management system such as Foomatic rather than
-configuring a spooler manually with this driver.  The driver name used
-by Foomatic is \fIgutenprint\-ijs\fP.
 .SH OPTIONS
 \fIijsgutenprint\fP accepts the following options:
 .SS Ghostscript IJS options
@@ -72,7 +81,8 @@ been better tuned for Epson Stylus printers than for others.
 .SS Gutenprint IJS options
 These options are all used in the \-sIjsParams options, except where mentioned
 otherwise.  Due to their complicated nature, the options are explained in
-detail in their own sections.
+detail in their own sections.  Note that the options listed here are not
+exhaustive; the full list is automatically generated for Foomatic.
 .SH PRINT RESOLUTION
 .TP
 \fBQuality\fP=\fIquality\fP
