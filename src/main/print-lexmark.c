@@ -1208,7 +1208,7 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
 	  if (stp_string_list_count(description->bounds.str) == 0)
 	    description->deflt.str = pt->name;
 	  stp_string_list_add_string(description->bounds.str,
-				     pt->name, pt->text);
+				     pt->name, gettext(pt->text));
 	}
     }
   }
@@ -1225,7 +1225,7 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
 	if (stp_string_list_count(description->bounds.str) == 0)
 	  description->deflt.str = res->name;
 	stp_string_list_add_string(description->bounds.str,
-				  res->name, _(res->text));
+				  res->name, gettext(res->text));
 	res++;
       }
   }
@@ -1236,7 +1236,7 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
     for (i = 0; caps->ink_types[i].name != NULL; i++)
       stp_string_list_add_string(description->bounds.str,
 			       caps->ink_types[i].name,
-			       _(caps->ink_types[i].text));
+			       gettext(caps->ink_types[i].text));
   }
   else if (strcmp(name, "MediaType") == 0)
   {
@@ -1245,7 +1245,7 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
     for (i = 0; i < paper_type_count; i++)
       stp_string_list_add_string(description->bounds.str,
 			       lexmark_paper_list[i].name,
-			       _(lexmark_paper_list[i].text));
+			       gettext(lexmark_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
@@ -1254,7 +1254,7 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
     for (i = 0; i < sizeof(media_sources) / sizeof(stp_param_string_t); i++)
       stp_string_list_add_string(description->bounds.str,
 			       media_sources[i].name,
-			       _(media_sources[i].name));
+			       gettext(media_sources[i].name));
   }
   else if (strcmp(name, "InkChannels") == 0)
     {

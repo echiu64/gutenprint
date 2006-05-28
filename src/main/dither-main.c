@@ -41,14 +41,13 @@
 
 static const stpi_dither_algorithm_t dither_algos[] =
 {
-  /* Note to translators: "EvenTone" is the proper name, rather than a */
+  /* TRANSLATORS: "EvenTone" is the proper name, rather than a */
   /* descriptive name, of this algorithm. */
   { "None",           N_ ("Default"),                -1 },
   { "EvenTone",       N_ ("EvenTone"),               D_EVENTONE },
   { "HybridEvenTone", N_ ("Hybrid EvenTone"),        D_HYBRID_EVENTONE },
-  /*
-   * Placeholders for future implementation of EvenBetter Screening
-   * Translators: EvenTone, EvenBetter, and UniTone are proper
+  /* Placeholders for future implementation of EvenBetter Screening */
+  /* TRANSLATORS: EvenTone, EvenBetter, and UniTone are proper
    * names, not descriptive.
    */
   { "EBS",            N_ ("EvenBetter"),             D_INVALID },
@@ -145,7 +144,7 @@ stp_dither_describe_parameter(const stp_vars_t *v, const char *name,
 	  const stpi_dither_algorithm_t *dt = &dither_algos[i];
 	  if (dt->id != D_INVALID)
 	    stp_string_list_add_string(description->bounds.str,
-				       dt->name, dt->text);
+				       dt->name, gettext(dt->text));
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -180,7 +179,7 @@ stpi_set_dither_function(stp_vars_t *v)
     {
       for (i = 0; i < num_dither_algos; i++)
 	{
-	  if (!strcmp(algorithm, _(dither_algos[i].name)))
+	  if (!strcmp(algorithm, gettext(dither_algos[i].name)))
 	    {
 	      d->stpi_dither_type = dither_algos[i].id;
 	      break;

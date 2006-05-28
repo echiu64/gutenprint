@@ -2001,7 +2001,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	  if (stp_string_list_count(description->bounds.str) == 0)
 	    description->deflt.str = pt->name;
 	  stp_string_list_add_string(description->bounds.str,
-				     pt->name, pt->text);
+				     pt->name, gettext(pt->text));
 	}
     }
   }
@@ -2021,14 +2021,14 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	  while (res->x > 0) {
 	    if (xx == res->x && yy == res->y) {
 	      stp_string_list_add_string(description->bounds.str,
-					res->name, _(res->text));
+					res->name, gettext(res->text));
 	      stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
 			   res->name);
 	      if (xx >= 300 && yy >= 300 && description->deflt.str == NULL)
 		description->deflt.str = res->name;
 	      if (t == 1) {
 		stp_string_list_add_string(description->bounds.str,
-					  res->name_dmt, _(res->text_dmt));
+					  res->name_dmt, gettext(res->text_dmt));
 		stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
 			     res->name_dmt);
 	      }
@@ -2086,7 +2086,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     for (i = 0; i < count; i ++)
       stp_string_list_add_string(description->bounds.str,
 				canon_paper_list[i].name,
-				_(canon_paper_list[i].text));
+				gettext(canon_paper_list[i].text));
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
@@ -2096,7 +2096,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     for (i = 0; i < count; i ++)
       stp_string_list_add_string(description->bounds.str,
 				media_sources[i].name,
-				_(media_sources[i].text));
+				gettext(media_sources[i].text));
   }
   else if (strcmp(name, "PrintingMode") == 0)
   {
@@ -2133,7 +2133,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for (i=0; i < NUM_DUPLEX; i++)
         {
           stp_string_list_add_string(description->bounds.str,
-				     duplex_types[i].name,_(duplex_types[i].text));
+				     duplex_types[i].name,gettext(duplex_types[i].text));
         }
     }
     else

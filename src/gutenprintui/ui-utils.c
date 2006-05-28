@@ -761,11 +761,11 @@ stpui_create_radio_button(radio_group_t *radio, GSList *group,
 			  GtkWidget *table, int hpos, int vpos,
 			  GtkSignalFunc callback)
 {
-  radio->button = gtk_radio_button_new_with_label(group, _(radio->name));
+  radio->button = gtk_radio_button_new_with_label(group, gettext(radio->name));
   group = gtk_radio_button_group(GTK_RADIO_BUTTON(radio->button));
   stpui_table_attach_aligned(GTK_TABLE(table), hpos, vpos, NULL, 0.5, 0.5,
 			     radio->button, 1, FALSE);
-  stpui_set_help_data(radio->button, _(radio->help));
+  stpui_set_help_data(radio->button, gettext(radio->help));
   gtk_signal_connect(GTK_OBJECT(radio->button), "toggled",
 		     GTK_SIGNAL_FUNC(callback), (gpointer) radio->value);
   return group;
@@ -808,9 +808,9 @@ stpui_create_new_combo(option_t *option, GtkWidget *table,
   gtk_container_add(GTK_CONTAINER(event_box), combo);
   gtk_widget_show(combo);
   gtk_widget_show(event_box);
-  stpui_set_help_data(event_box, _(option->fast_desc->help));
+  stpui_set_help_data(event_box, gettext(option->fast_desc->help));
   stpui_table_attach_aligned
-    (GTK_TABLE(table), hpos + 1, vpos, _(option->fast_desc->text),
+    (GTK_TABLE(table), hpos + 1, vpos, gettext(option->fast_desc->text),
      0.0, 0.5, event_box, 2, TRUE);
   option->info.list.label = table_label(GTK_TABLE(table), hpos, vpos);
 }

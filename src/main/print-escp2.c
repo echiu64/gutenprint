@@ -1466,7 +1466,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
 	      if (verify_papersize(v, pt))
 		stp_string_list_add_string(description->bounds.str,
-					   pt->name, pt->text);
+					   pt->name, gettext(pt->text));
 	    }
 	}
       description->deflt.str =
@@ -1512,7 +1512,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  const quality_t *q = &(quals->qualities[i]);
 	  if (verify_quality(v, q))
 	    stp_string_list_add_string(description->bounds.str, q->name,
-				       _(q->text));
+				       gettext(q->text));
 	  if (strcmp(q->name, "Standard") == 0)
 	    has_standard_quality = 1;
 	}
@@ -1533,7 +1533,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	{
 	  if (verify_resolution(v, res[i]))
 	    stp_string_list_add_string(description->bounds.str,
-				       res[i]->name, _(res[i]->text));
+				       res[i]->name, gettext(res[i]->text));
 	  i++;
 	}
     }
@@ -1550,7 +1550,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	    if (verify_inktype(v, inks->inknames[i]))
 	      stp_string_list_add_string(description->bounds.str,
 					 inks->inknames[i]->name,
-					 _(inks->inknames[i]->text));
+					 gettext(inks->inknames[i]->text));
 	  description->deflt.str = "None";
 	}
       else
@@ -1568,7 +1568,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	    {
 	      stp_string_list_add_string(description->bounds.str,
 					 inks->inklists[i]->name,
-					 _(inks->inklists[i]->text));
+					 gettext(inks->inklists[i]->text));
 	      if (strcmp(inks->inklists[i]->name, "None") == 0)
 		has_default_choice = 1;
 	    }
@@ -1588,7 +1588,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  for (i = 0; i < nmediatypes; i++)
 	    stp_string_list_add_string(description->bounds.str,
 				       p->papers[i].name,
-				       _(p->papers[i].text));
+				       gettext(p->papers[i].text));
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
@@ -1605,7 +1605,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  for (i = 0; i < ninputslots; i++)
 	    stp_string_list_add_string(description->bounds.str,
 				       slots->slots[i].name,
-				       _(slots->slots[i].text));
+				       gettext(slots->slots[i].text));
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
@@ -1641,7 +1641,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	      for (i = 0; i < nprinter_weaves; i++)
 		stp_string_list_add_string(description->bounds.str,
 					   printer_weaves->printer_weaves[i].name,
-					   _(printer_weaves->printer_weaves[i].text));
+					   gettext(printer_weaves->printer_weaves[i].text));
 	    }
 	  else
 	    description->is_active = 0;
@@ -1769,7 +1769,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       for (i = 0; i < channel_names->count; i++)
 	stp_string_list_add_string
 	  (description->bounds.str,
-	   channel_names->names[i], channel_names->names[i]);
+	   channel_names->names[i], gettext(channel_names->names[i]));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }

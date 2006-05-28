@@ -523,7 +523,7 @@ stpui_create_curve(option_t *opt,
   gtk_widget_show(opt->info.curve.button);
 
   opt->info.curve.dialog =
-    stpui_dialog_new(_(opt->fast_desc->text), _(opt->fast_desc->text),
+    stpui_dialog_new(gettext(opt->fast_desc->text), gettext(opt->fast_desc->text),
 		     GTK_WIN_POS_MOUSE, FALSE, TRUE, FALSE,
 		     _("Set Default"), set_default_curve_callback,
 		     opt, NULL, NULL, FALSE, FALSE,
@@ -626,7 +626,7 @@ stpui_create_boolean(option_t *opt,
     gtk_widget_hide(opt->checkbox);
 
   opt->info.bool.checkbox =
-    gtk_toggle_button_new_with_label(_(opt->fast_desc->text));
+    gtk_toggle_button_new_with_label(gettext(opt->fast_desc->text));
   gtk_table_attach(GTK_TABLE(table), opt->info.bool.checkbox,
 		   column + 1, column + 3, row, row + 1,
 		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
@@ -984,14 +984,14 @@ populate_option_table(GtkWidget *table, int p_class)
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
 				       vpos[desc->p_level][desc->p_type]++,
-				       _(desc->text), 200, 0,
+				       gettext(desc->text), 200, 0,
 				       opt->info.flt.deflt,
 				       opt->info.flt.lower,
 				       opt->info.flt.upper,
 				       .001, .01, 3, TRUE, 0, 0, NULL,
 				       !(desc->is_mandatory));
 	      stpui_set_adjustment_tooltip(opt->info.flt.adjustment,
-					   _(desc->help));
+					   gettext(desc->help));
 	      gtk_signal_connect(GTK_OBJECT(opt->info.flt.adjustment),
 				 "value_changed",
 				 GTK_SIGNAL_FUNC(color_update), opt);
@@ -1023,7 +1023,7 @@ populate_option_table(GtkWidget *table, int p_class)
 		}
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
 				       vpos[desc->p_level][desc->p_type]++,
-				       _(desc->text), 200, 0,
+				       gettext(desc->text), 200, 0,
 				       opt->info.flt.deflt / unit_scaler,
 				       opt->info.flt.lower / unit_scaler,
 				       opt->info.flt.upper / unit_scaler,
@@ -1031,7 +1031,7 @@ populate_option_table(GtkWidget *table, int p_class)
 				       digits, TRUE, 0, 0, NULL,
 				       !(desc->is_mandatory));
 	      stpui_set_adjustment_tooltip(opt->info.flt.adjustment,
-					   _(desc->help));
+					   gettext(desc->help));
 	      gtk_signal_connect(GTK_OBJECT(opt->info.flt.adjustment),
 				 "value_changed",
 				 GTK_SIGNAL_FUNC(dimension_update), opt);
@@ -1047,7 +1047,7 @@ populate_option_table(GtkWidget *table, int p_class)
 		opt->info.curve.current = NULL;
 	      stpui_create_curve(opt, GTK_TABLE(table), 0,
 				 vpos[desc->p_level][desc->p_type]++,
-				 _(desc->text), opt->info.curve.deflt,
+				 gettext(desc->text), opt->info.curve.deflt,
 				 !(desc->is_mandatory));
 	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
 		stp_set_curve_parameter_active(pv->v, desc->name,
@@ -1058,7 +1058,7 @@ populate_option_table(GtkWidget *table, int p_class)
 		stp_get_boolean_parameter(pv->v, opt->fast_desc->name);
 	      stpui_create_boolean(opt, GTK_TABLE(table), 0,
 				   vpos[desc->p_level][desc->p_type]++,
-				   _(desc->text), opt->info.bool.deflt,
+				   gettext(desc->text), opt->info.bool.deflt,
 				   !(desc->is_mandatory));
 	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
 		stp_set_boolean_parameter_active(pv->v, desc->name,
@@ -1293,7 +1293,7 @@ static GtkWidget *
 create_positioning_button(GtkWidget *box, int invalid,
 			  const char *text, const char *help)
 {
-  GtkWidget *button = gtk_button_new_with_label(_(text));
+  GtkWidget *button = gtk_button_new_with_label(gettext(text));
   gtk_box_pack_start(GTK_BOX(box), button, FALSE, TRUE, 0);
   gtk_widget_show(button);
   stpui_set_help_data(button, help);
@@ -2320,11 +2320,11 @@ create_units_frame (void)
   for (i = 0; i < unit_count; i++)
     {
       unit_t *unit = &(units[i]);
-      unit->checkbox = gtk_radio_button_new_with_label(group, _(unit->name));
+      unit->checkbox = gtk_radio_button_new_with_label(group, gettext(unit->name));
       group = gtk_radio_button_group(GTK_RADIO_BUTTON(unit->checkbox));
       stpui_table_attach_aligned(GTK_TABLE(table), i / 2, i % 2, NULL, 0.5,
 				 0.5, unit->checkbox, 1, TRUE);
-      stpui_set_help_data(unit->checkbox, _(unit->help));
+      stpui_set_help_data(unit->checkbox, gettext(unit->help));
       gtk_signal_connect(GTK_OBJECT(unit->checkbox), "toggled",
 			 GTK_SIGNAL_FUNC(unit_callback), (gpointer) i);
     }

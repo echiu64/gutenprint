@@ -743,7 +743,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       ppd_mode = 1;
       if (strcmp(vbuf, version_id) != 0)
 	{
-	  fprintf(stderr, _(version_mismatch),
+	  fprintf(stderr, gettext(version_mismatch),
 		  version_id, vbuf, version_id, vbuf);
 	  version_is_ok = 0;
 	  gutenprint_ppd_version = c_strdup(vbuf);
@@ -1491,7 +1491,7 @@ main (int argc, char **argv)
       print_messages_as_errors = 1;
       if (!version_is_ok)
 	{
-	  fprintf(stderr, _(version_mismatch), version_id,
+	  fprintf(stderr, gettext(version_mismatch), version_id,
 		  gutenprint_ppd_version, version_id, gutenprint_ppd_version);
 	  status = IJS_ERANGE;
 	  break;

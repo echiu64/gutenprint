@@ -1336,7 +1336,7 @@ static const char * pcl_val_to_text(int code,			/* I: Code */
 
   for (i=0; i<num_options; i++) {
     if (code == options[i].pcl_code) {
-       string=options[i].pcl_text;
+       string=gettext(options[i].pcl_text);
        break;
        }
   }
@@ -1578,7 +1578,7 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
 	  if (strlen(pt->name) > 0 && pcl_papersize_valid(pt, model))
 	    stp_string_list_add_string(description->bounds.str,
-				       pt->name, pt->text);
+				       pt->name, gettext(pt->text));
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
@@ -1650,9 +1650,9 @@ pcl_parameters(const stp_vars_t *v, const char *name,
     {
       description->deflt.str = ink_types[0].name;
       stp_string_list_add_string(description->bounds.str,
-			       ink_types[0].name,_(ink_types[0].text));
+			       ink_types[0].name,gettext(ink_types[0].text));
       stp_string_list_add_string(description->bounds.str,
-			       ink_types[1].name,_(ink_types[1].text));
+			       ink_types[1].name,gettext(ink_types[1].text));
     }
     else
       description->is_active = 0;
@@ -1683,7 +1683,7 @@ pcl_parameters(const stp_vars_t *v, const char *name,
         for (i=0; i < NUM_DUPLEX; i++)
         {
           stp_string_list_add_string(description->bounds.str,
-			       duplex_types[i].name,_(duplex_types[i].text));
+			       duplex_types[i].name,gettext(duplex_types[i].text));
         }
       }
       else

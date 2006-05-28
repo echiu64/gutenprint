@@ -1483,7 +1483,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
 
 	  text = (p->item[i].text ? p->item[i].text : pt->text);
 	  stp_string_list_add_string(description->bounds.str,
-			  p->item[i].name, text);
+			  p->item[i].name, gettext(text));
 	  if (! default_specified && pt && pt->width > 0 && pt->height > 0)
 	    {
 	      description->deflt.str = p->item[i].name;
@@ -1514,7 +1514,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
         {
 	  sprintf(res_text, "%s DPI", r->item[i].name);
 	  stp_string_list_add_string(description->bounds.str,
-		r->item[i].name, _(res_text));
+		r->item[i].name, gettext(res_text));
 	}
       if (r->n_items < 1)
         description->is_active = 0;
@@ -1526,7 +1526,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < caps->inks->n_items; i++)
 	stp_string_list_add_string(description->bounds.str,
-			  caps->inks->item[i].name, caps->inks->item[i].name);
+			  caps->inks->item[i].name, gettext(caps->inks->item[i].name));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
       if (caps->inks->n_items < 2)
@@ -1543,7 +1543,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
             {
               const laminate_t *l = &(llist->item[i]);
 	      stp_string_list_add_string(description->bounds.str,
-			  	l->name, l->text);
+			  	l->name, gettext(l->text));
 	    }
           description->deflt.str =
 	  stp_string_list_param(description->bounds.str, 0)->name;

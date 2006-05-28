@@ -215,7 +215,7 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
 	{
 	  const stpi_quality_t *qual = stpi_get_quality_by_index(i);
 	  stp_string_list_add_string(description->bounds.str, qual->name,
-				     qual->text);
+				     gettext(qual->text));
 	}
       description->deflt.str = "Standard";
 #else
@@ -232,7 +232,7 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
 	{
 	  const stpi_image_type_t *itype = stpi_get_image_type_by_index(i);
 	  stp_string_list_add_string(description->bounds.str, itype->name,
-				     itype->text);
+				     gettext(itype->text));
 	}
       description->deflt.str = "TextGraphics";
     }
@@ -243,7 +243,7 @@ stpi_describe_generic_parameter(const stp_vars_t *v, const char *name,
 	{
 	  const stpi_job_mode_t *itype = stpi_get_job_mode_by_index(i);
 	  stp_string_list_add_string(description->bounds.str, itype->name,
-				     itype->text);
+				     gettext(itype->text));
 	}
       description->deflt.str = "Page";
     }

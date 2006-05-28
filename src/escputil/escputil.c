@@ -245,7 +245,7 @@ print_models(void)
       if (strcmp(stp_printer_get_family(printer), "escp2") == 0)
 	{
 	  printf("%-15s %s\n", stp_printer_get_driver(printer),
-		 _(stp_printer_get_long_name(printer)));
+		 gettext(stp_printer_get_long_name(printer)));
 	}
     }
 }
@@ -253,7 +253,7 @@ print_models(void)
 void
 do_help(int code)
 {
-  printf("%s", _(help_msg));
+  printf("%s", gettext(help_msg));
   exit(code);
 }
 
@@ -354,7 +354,7 @@ main(int argc, char **argv)
 	  do_help(0);
 	  break;
 	case 'l':
-	  printf("%s\n", _(license));
+	  printf("%s\n", gettext(license));
 	  exit(0);
 	case 'M':
 	  print_models();
@@ -377,7 +377,7 @@ main(int argc, char **argv)
 	      do_help(1);
 	    }
 	default:
-	  printf("%s\n", _(banner));
+	  printf("%s\n", gettext(banner));
 	  fprintf(stderr, _("Unknown option %c\n"), c);
 	  do_help(1);
 	}
@@ -1151,7 +1151,7 @@ print_old_ink_levels(const char *ind, stp_string_list_t *color_list)
 	return;
       val = (get_digit(ind[0]) << 4) + get_digit(ind[1]);
       printf("%18s    %20d\n",
-	     _(stp_string_list_param(color_list, i)->text), val);
+	     gettext(stp_string_list_param(color_list, i)->text), val);
       ind += 2;
     }
 }
@@ -1232,10 +1232,10 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	    {
 	      if (ind[0] < color_count)
 		printf("%18s    %20d\n",
-		       _(colors_new[(int) ind[0]]), ind[2]);
+		       gettext(colors_new[(int) ind[0]]), ind[2]);
 	      else if (ind[j] == 0x40 && ind[1] < aux_color_count)
 		printf("%18s    %20d\n",
-		       _(aux_colors[(int) ind[1]]), ind[2]);
+		       gettext(aux_colors[(int) ind[1]]), ind[2]);
 	      else
 		printf("%8s 0x%2x 0x%2x    %20d\n",
 		       _("Unknown"), (unsigned char) ind[0],
@@ -1337,14 +1337,14 @@ do_status_command_internal(status_cmd_t cmd)
   if (!raw_device)
     {
       fprintf(stderr,_("Obtaining %s requires using a raw device.\n"),
-	      _(cmd_name));
+	      gettext(cmd_name));
       exit(1);
     }
 
   STP_DEBUG(fprintf(stderr, "%s...\n", cmd_name));
   printer = get_printer(1, 0);
   if (!found_unknown_old_printer)
-    STP_DEBUG(fprintf(stderr, "%s found %s%s\n", _(cmd_name),
+    STP_DEBUG(fprintf(stderr, "%s found %s%s\n", gettext(cmd_name),
 		      printer ? stp_printer_get_long_name(printer) :
 		      printer_model,
 		      printer ? "" : "(Unknown model)"));
@@ -1598,11 +1598,11 @@ do_extended_ink_info(int extended_output)
 		     _("Ink color"), _("Percent remaining"), _("Part number"),
 		     _("Date"));
 	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-		     _(stp_string_list_param(color_list, 0)->text),
+		     gettext(stp_string_list_param(color_list, 0)->text),
 		     iv[0], id, (year > 80 ? 19 : 20), year, month);
 	      for (j = 1; j < 6; j++)
 		printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-		       _(stp_string_list_param(color_list, j)->text),
+		       gettext(stp_string_list_param(color_list, j)->text),
 		       iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
 	      break;
 	    }
@@ -1622,11 +1622,11 @@ do_extended_ink_info(int extended_output)
 		     _("Ink color"), _("Percent remaining"), _("Part number"),
 		     _("Date"));
 	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-		     _(stp_string_list_param(color_list, 0)->text),
+		     gettext(stp_string_list_param(color_list, 0)->text),
 		     iv[0], id, (year > 80 ? 19 : 20), year, month);
 	      for (j = 1; j < 4; j++)
 		printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-		       _(stp_string_list_param(color_list, j)->text),
+		       gettext(stp_string_list_param(color_list, j)->text),
 		       iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
 	      break;
 	    }
@@ -1642,7 +1642,7 @@ do_extended_ink_info(int extended_output)
 		       _("Ink color"), _("Percent remaining"), _("Part number"),
 		       _("Date"));
 	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
-		     _(stp_string_list_param(color_list, i)->text),
+		     gettext(stp_string_list_param(color_list, i)->text),
 		     val, id, (year > 80 ? 19 : 20), year, month);
 	    }
 	  else
@@ -1679,7 +1679,7 @@ do_identify(void)
       if (print_short_name)
 	printf("%s\n", stp_printer_get_driver(printer));
       else
-	printf("%s\n", _(stp_printer_get_long_name(printer)));
+	printf("%s\n", gettext(stp_printer_get_long_name(printer)));
       exit(0);
     }
   else if (printer_model)
@@ -1795,9 +1795,9 @@ static void
 do_align_help(int passes, int choices)
 {
   if (passes > 1)
-    printf(_(new_align_help), passes, 1, choices, (choices + 1) / 2, choices);
+    printf(gettext(new_align_help), passes, 1, choices, (choices + 1) / 2, choices);
   else
-    printf(_(old_align_help), 1, choices, (choices + 1) / 2, choices);
+    printf(gettext(old_align_help), 1, choices, (choices + 1) / 2, choices);
   fflush(stdout);
 }
 
@@ -1965,7 +1965,7 @@ do_align(void)
   do
     {
       do_align_help(alignment_passes, alignment_choices);
-      printf(_(printer_msg), _(printer_name));
+      printf(gettext(printer_msg), gettext(printer_name));
       inbuf = do_get_input(_("Press enter to continue > "));
     top:
       initialize_print_cmd(1);

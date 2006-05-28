@@ -165,11 +165,11 @@ main(int argc, char **argv)
 		      printf("$stp_float_values{'%s'}{'DEFVAL'}{'%s'} = %.3f;\n",
 			     driver, desc.name, desc.deflt.dbl);
 		      /* printf("$stp_float_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.text)); */
+			 driver, desc.name, gettext(desc.text)); */
 		      printf("$stp_float_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			     driver, desc.name, _(desc.category));
+			     driver, desc.name, gettext(desc.category));
 		      printf("$stp_float_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+			     driver, desc.name, (desc.help ? gettext(desc.help) : "''"));
 		      printf("$stp_float_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
 			     driver, desc.name, desc.is_mandatory);
 		    }
@@ -186,11 +186,11 @@ main(int argc, char **argv)
 		      printf("$stp_int_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
 			     driver, desc.name, desc.deflt.integer);
 		      /* printf("$stp_int_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.text)); */
+			 driver, desc.name, gettext(desc.text)); */
 		      printf("$stp_int_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			     driver, desc.name, _(desc.category));
+			     driver, desc.name, gettext(desc.category));
 		      printf("$stp_int_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+			     driver, desc.name, (desc.help ? gettext(desc.help) : "''"));
 		      printf("$stp_int_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
 			     driver, desc.name, desc.is_mandatory);
 		    }
@@ -207,11 +207,11 @@ main(int argc, char **argv)
 		      printf("$stp_dimension_values{'%s'}{'DEFVAL'}{'%s'} = %d;\n",
 			     driver, desc.name, desc.deflt.dimension);
 		      /* printf("$stp_dimension_values{'%s'}{'LONG_NAME'}{'%s'} = '%s';\n",
-			 driver, desc.name, _(desc.text)); */
+			 driver, desc.name, gettext(desc.text)); */
 		      printf("$stp_dimension_values{'%s'}{'CATEGORY'}{'%s'} = '%s';\n",
-			     driver, desc.name, _(desc.category));
+			     driver, desc.name, gettext(desc.category));
 		      printf("$stp_dimension_values{'%s'}{'HELP'}{'%s'} = q(%s);\n",
-			     driver, desc.name, (desc.help ? _(desc.help) : "''"));
+			     driver, desc.name, (desc.help ? gettext(desc.help) : "''"));
 		      printf("$stp_dimension_values{'%s'}{'MANDATORY'}{'%s'} = q(%d);\n",
 			     driver, desc.name, desc.is_mandatory);
 		    }

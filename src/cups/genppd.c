@@ -185,19 +185,18 @@ static void
 print_group_open(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  /* TRANSLATORS: "Gutenprint" is a proper name, not a description */
-  gzprintf(fp, "*OpenGroup: %s %s %s\n\n", _("Gutenprint"),
-	   _(parameter_class_names[p_class]),
-	   _(parameter_level_names[p_level]));
+  gzprintf(fp, "*OpenGroup: %s %s\n\n",
+	   gettext(parameter_class_names[p_class]),
+	   gettext(parameter_level_names[p_level]));
 }
 
 static void
 print_group_close(FILE *fp, stp_parameter_class_t p_class,
 		 stp_parameter_level_t p_level)
 {
-  gzprintf(fp, "*CloseGroup: %s %s %s\n\n", _("Gutenprint"),
-	   _(parameter_class_names[p_class]),
-	   _(parameter_level_names[p_level]));
+  gzprintf(fp, "*CloseGroup: %s %s\n\n",
+	   gettext(parameter_class_names[p_class]),
+	   gettext(parameter_level_names[p_level]));
 }
 
 /*
@@ -883,12 +882,11 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
   /* Specify language of PPD translation */
-  /* Translators: Specify the language of the PPD translation.
+  /* TRANSLATORS: Specify the language of the PPD translation.
    * Use the English name of your language here, e.g. "Swedish" instead of
-   * "Svenska".
-   */
+   * "Svenska". */
   gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
-  /* Specify PPD translation encoding e.g. ISOLatin1 */
+  /* TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1 */
   gzprintf(fp, "*LanguageEncoding: %s\n", _("ISOLatin1"));
 
  /*
@@ -1285,7 +1283,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
     {
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
-      gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", _(desc.text));
+      gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", gettext(desc.text));
       gzputs(fp, "*OrderDependency: 5 AnySetup *StpQuality\n");
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
       num_opts = stp_string_list_count(desc.bounds.str);
@@ -1430,7 +1428,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 		      printed_open_group = 1;
 		    }
 		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
-			   desc.name, _(desc.text));
+			   desc.name, gettext(desc.text));
 #if 0
 		  gzprintf(fp, "*OrderDependency: %d AnySetup *Stp%s\n",
 			   (100 + l + (j * param_count) +
@@ -1453,7 +1451,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 			{
 			  opt = stp_string_list_param(desc.bounds.str, i);
 			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
-				   desc.name, opt->name, _(opt->text));
+				   desc.name, opt->name, opt->text);
 			}
 		      break;
 		    case STP_PARAMETER_TYPE_BOOLEAN:
@@ -1496,7 +1494,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
 		      if (!simplified)
 			{
 			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
-				   desc.name, _(desc.text), _("Fine Adjustment"));
+				   desc.name, gettext(desc.text), _("Fine Adjustment"));
 			  gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
 			  gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
 			  for (i = 0; i < 100; i += 5)
