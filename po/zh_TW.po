@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: gutenprint 5.0.0-b5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-05-12 20:55-0400\n"
-"PO-Revision-Date: 2006-05-28 10:03-0400\n"
+"PO-Revision-Date: 2006-05-28 10:06-0400\n"
 "Last-Translator: Abel Cheung <abelcheung@gmail.com>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
@@ -6998,7 +6998,7 @@ msgstr "Gutenprint"
 
 #: src/cups/genppd.c:890
 msgid "English"
-msgstr "Chinese"
+msgstr "Chinese-TW"
 
 #: src/cups/genppd.c:892
 msgid "ISOLatin1"
