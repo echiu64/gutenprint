@@ -65,6 +65,11 @@ html:
 	cd developer; $(MAKE) html
 	cd users_guide; $(MAKE) html
 
+install-data-local:
+	if test -f FAQ.html ; then \
+	  $(mkdir_p) $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	  $(INSTALL_DATA) FAQ.html $(DESTDIR)$(datadir)/$(PACKAGE)/doc ; \
+	fi
 
 ## Clean
 
