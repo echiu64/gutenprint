@@ -457,6 +457,9 @@ typedef struct escp2_printer
   short		extra_720dpi_separation;
   short		horizontal_position_alignment; /* Horizontal alignment */
 					       /* for good performance */
+  int		bidirectional_upper_limit;     /* Highest total resolution */
+					       /* for bidirectional printing */
+					       /* in auto mode */
 /*****************************************************************************/
   /* Paper size limits */
   int		max_paper_width; /* Maximum paper width, in points */
@@ -658,6 +661,7 @@ typedef struct
   int separation_rows;		/* Row separation scaling */
   int pseudo_separation_rows;	/* Special row separation for some printers */
   int extra_720dpi_separation;	/* Special separation needed at 720 DPI */
+  int bidirectional_upper_limit; /* Max total resolution for auto-bidi */
 
   /* weave parameters */
   int horizontal_passes;	/* Number of horizontal passes required

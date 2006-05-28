@@ -340,10 +340,29 @@ escp2_set_printhead_speed(stp_vars_t *v)
     unidirectional = 1;
   else if (direction && strcmp(direction, "Bidirectional") == 0)
     unidirectional = 0;
-  else if (pd->res->hres >= 720 && pd->res->vres >= 720)
-    unidirectional = 1;
+  else if (pd->res->printed_hres * pd->res->printed_vres *
+	   pd->res->vertical_passes >= pd->bidirectional_upper_limit)
+    {
+      stp_dprintf(STP_DBG_ESCP2, v,
+		  "Setting unidirectional: hres %d vres %d passes %d total %d limit %d\n",
+		  pd->res->printed_hres, pd->res->printed_vres,
+		  pd->res->vertical_passes,
+		  (pd->res->printed_hres * pd->res->printed_vres *
+		   pd->res->vertical_passes),
+		  pd->bidirectional_upper_limit);
+      unidirectional = 1;
+    }
   else
-    unidirectional = 0;
+    {
+      stp_dprintf(STP_DBG_ESCP2, v,
+		  "Setting bidirectional: hres %d vres %d passes %d total %d limit %d\n",
+		  pd->res->printed_hres, pd->res->printed_vres,
+		  pd->res->vertical_passes,
+		  (pd->res->printed_hres * pd->res->printed_vres *
+		   pd->res->vertical_passes),
+		  pd->bidirectional_upper_limit);
+      unidirectional = 0;
+    }
   if (unidirectional)
     {
       stp_send_command(v, "\033U", "c", 1);

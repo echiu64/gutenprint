@@ -386,6 +386,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(zero_margin_offset),
   PARAMETER_INT(extra_720dpi_separation),
   PARAMETER_INT(horizontal_position_alignment),
+  PARAMETER_INT(bidirectional_upper_limit),
   PARAMETER_INT(physical_channels),
   PARAMETER_INT(left_margin),
   PARAMETER_INT(right_margin),
@@ -667,6 +668,7 @@ DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
 DEF_SIMPLE_ACCESSOR(horizontal_position_alignment, unsigned)
+DEF_SIMPLE_ACCESSOR(bidirectional_upper_limit, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
 DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
@@ -970,44 +972,40 @@ get_resolution_bounds_by_paper_type(const stp_vars_t *v,
 	  *max_y = 720;
 	  break;
 	}
+      stp_dprintf(STP_DBG_ESCP2, v,
+		  "Paper %s class %d: min_x %d min_y %d max_x %d max_y %d\n",
+		  paper->text, paper->paper_class, *min_x, *min_y,
+		  *max_x, *max_y);
     }
 }
 
 static int
 verify_resolution_by_paper_type(const stp_vars_t *v, const res_t *res)
 {
-  const paper_t *paper = get_media_type(v);
-  if (paper)
+  unsigned min_x = 0;
+  unsigned min_y = 0;
+  unsigned max_x = 0;
+  unsigned max_y = 0;
+  get_resolution_bounds_by_paper_type(v, &max_x, &max_y, &min_x, &min_y);
+  if ((max_x == 0 || res->printed_hres <= max_x) &&
+      (max_y == 0 || res->printed_vres <= max_y) &&
+      (min_x == 0 || res->printed_hres >= min_x) &&
+      (min_y == 0 || res->printed_vres >= min_y))
     {
-      switch (paper->paper_class)
-	{
-	case PAPER_PLAIN:
-	  if (res->printed_vres > 720 || res->hres > 720)
-	    return 0;
-	  break;
-	case PAPER_GOOD:
-	  if (res->printed_vres < 180 || res->hres < 360 ||
-	      res->printed_vres > 720 || res->hres > 1440)
-	    return 0;
-	  break;
-	case PAPER_PHOTO:
-	  if (res->printed_vres < 360 ||
-	      (res->hres < 720 && res->hres < escp2_max_hres(v)))
-	    return 0;
-	  break;
-	case PAPER_PREMIUM_PHOTO:
-	  if (res->printed_vres < 720 ||
-	      (res->hres < 720 && res->hres < escp2_max_hres(v)))
-	    return 0;
-	  break;
-	case PAPER_TRANSPARENCY:
-	  if (res->printed_vres < 360 || res->hres < 360 ||
-	      res->printed_vres > 720 || res->hres > 720)
-	    return 0;
-	  break;
-	}
+      stp_dprintf(STP_DBG_ESCP2, v,
+		  "Resolution %s (%d, %d) GOOD (%d, %d, %d, %d)\n",
+		  res->name, res->printed_hres, res->printed_vres,
+		  min_x, min_y, max_x, max_y);
+      return 1;
     }
-  return 1;
+  else
+    {
+      stp_dprintf(STP_DBG_ESCP2, v,
+		  "Resolution %s (%d, %d) BAD (%d, %d, %d, %d)\n",
+		  res->name, res->printed_hres, res->printed_vres,
+		  min_x, min_y, max_x, max_y);
+      return 0;
+    }
 }
 
 static int
@@ -1040,6 +1038,37 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
 	return 1;
     }
   return 0;
+}
+
+static void
+get_printer_resolution_bounds(const stp_vars_t *v,
+			      unsigned *max_x, unsigned *max_y,
+			      unsigned *min_x, unsigned *min_y)
+{
+  int i = 0;
+  const res_t *const *res = escp2_reslist(v);
+  *max_x = 0;
+  *max_y = 0;
+  *min_x = 0;
+  *min_y = 0;
+  while (res[i])
+    {
+      if (verify_resolution(v, res[i]))
+	{
+	  if (res[i]->printed_hres * res[i]->vertical_passes > *max_x)
+	    *max_x = res[i]->printed_hres * res[i]->vertical_passes;
+	  if (res[i]->printed_vres > *max_y)
+	    *max_y = res[i]->printed_vres;
+	  if (*min_x == 0 ||
+	      res[i]->printed_hres * res[i]->vertical_passes < *min_x)
+	    *min_x = res[i]->printed_hres * res[i]->vertical_passes;
+	  if (*min_y == 0 || res[i]->printed_vres < *min_y)
+	    *min_y = res[i]->printed_vres;
+	}
+      i++;
+    }
+  stp_dprintf(STP_DBG_ESCP2, v,
+	      "Printer bounds: %d %d %d %d\n", *min_x, *min_y, *max_x, *max_y);
 }
 
 static int
@@ -1300,6 +1329,8 @@ find_default_resolution(const stp_vars_t *v, const quality_t *q,
       i--;
       while (i >= 0)
 	{
+	  stp_dprintf(STP_DBG_ESCP2, v, "Checking resolution %s %d...",
+		      res[i]->name, i);
 	  if (verify_resolution(v, res[i]) &&
 	      verify_resolution_by_paper_type(v, res[i]))
 	    return res[i];
@@ -1346,7 +1377,28 @@ find_default_resolution(const stp_vars_t *v, const quality_t *q,
 	  if (verify_resolution(v, res[i]) &&
 	      res[i]->printed_vres == desired_vres &&
 	      res[i]->printed_hres == desired_hres)
-	    return res[i];
+	    {
+	      stp_dprintf(STP_DBG_ESCP2, v,
+			  "Found desired resolution w/o oversample: %s %d: %d * %d, %d\n",
+			  res[i]->name, i, res[i]->printed_hres,
+			  res[i]->vertical_passes, res[i]->printed_vres);
+	      return res[i];
+	    }
+	  i++;
+	}
+      i = 0;
+      while (res[i])
+	{
+	  if (verify_resolution(v, res[i]) &&
+	      res[i]->printed_vres == desired_vres &&
+	      res[i]->printed_hres * res[i]->vertical_passes == desired_hres)
+	    {
+	      stp_dprintf(STP_DBG_ESCP2, v,
+			  "Found desired resolution: %s %d: %d * %d, %d\n",
+			  res[i]->name, i, res[i]->printed_hres,
+			  res[i]->vertical_passes, res[i]->printed_vres);
+	      return res[i];
+	    }
 	  i++;
 	}
       i = 0;
@@ -1355,9 +1407,17 @@ find_default_resolution(const stp_vars_t *v, const quality_t *q,
 	  if (verify_resolution(v, res[i]) &&
 	      (q->min_vres == 0 || res[i]->printed_vres >= q->min_vres) &&
 	      (q->max_vres == 0 || res[i]->printed_vres <= q->max_vres) &&
-	      (q->min_hres == 0 || res[i]->printed_hres >= q->min_hres) &&
-	      (q->max_hres == 0 || res[i]->printed_hres <= q->max_hres))
-	    return res[i];
+	      (q->min_hres == 0 ||
+	       res[i]->printed_hres * res[i]->vertical_passes >=q->min_hres) &&
+	      (q->max_hres == 0 ||
+	       res[i]->printed_hres * res[i]->vertical_passes <= q->max_hres))
+	    {
+	      stp_dprintf(STP_DBG_ESCP2, v,
+			  "Found acceptable resolution: %s %d: %d * %d, %d\n",
+			  res[i]->name, i, res[i]->printed_hres,
+			  res[i]->vertical_passes, res[i]->printed_vres);
+	      return res[i];
+	    }
 	  i++;
 	}
     }
@@ -1368,10 +1428,10 @@ find_default_resolution(const stp_vars_t *v, const quality_t *q,
       while (res[i])
 	{
 	  if (verify_resolution(v, res[i]) &&
-	      res[i]->vres >= desired_vres &&
-	      res[i]->hres >= desired_hres &&
-	      res[i]->vres <= 2 * desired_vres &&
-	      res[i]->hres <= 2 * desired_hres)
+	      res[i]->printed_vres >= desired_vres &&
+	      res[i]->printed_hres * res[i]->vertical_passes >= desired_hres &&
+	      res[i]->printed_vres <= 2 * desired_vres &&
+	      res[i]->printed_hres * res[i]->vertical_passes <= 2 * desired_hres)
 	    return res[i];
 	  i++;
 	}
@@ -1383,13 +1443,23 @@ find_default_resolution(const stp_vars_t *v, const quality_t *q,
 static int
 verify_quality(const stp_vars_t *v, const quality_t *q)
 {
-  if ((q->max_vres == 0 || escp2_min_vres(v) <= q->max_vres) &&
-      (q->max_hres == 0 || escp2_min_hres(v) <= q->max_hres) &&
-      (q->min_vres == 0 || escp2_max_vres(v) >= q->min_vres) &&
-      (q->min_hres == 0 || escp2_max_hres(v) >= q->min_hres))
-    return 1;
+  unsigned max_x, max_y, min_x, min_y;
+  get_printer_resolution_bounds(v, &max_x, &max_y, &min_x, &min_y);
+  if ((q->max_vres == 0 || min_y <= q->max_vres) &&
+      (q->min_vres == 0 || max_y >= q->min_vres) &&
+      (q->max_hres == 0 || min_x <= q->max_hres) &&
+      (q->min_hres == 0 || max_x >= q->min_hres))
+    {
+      stp_dprintf(STP_DBG_ESCP2, v, "Quality %s OK: %d %d %d %d\n",
+		  q->text, q->min_hres, q->min_vres, q->max_hres, q->max_vres);
+      return 1;
+    }
   else
-    return 0;
+    {
+      stp_dprintf(STP_DBG_ESCP2, v, "Quality %s not OK: %d %d %d %d\n",
+		  q->text, q->min_hres, q->min_vres, q->max_hres, q->max_vres);
+      return 0;
+    }
 }
 
 static const res_t *
@@ -2733,6 +2803,7 @@ setup_head_parameters(stp_vars_t *v)
   pd->separation_rows = escp2_separation_rows(v);
   pd->pseudo_separation_rows = escp2_pseudo_separation_rows(v);
   pd->extra_720dpi_separation = escp2_extra_720dpi_separation(v);
+  pd->bidirectional_upper_limit = escp2_bidirectional_upper_limit(v);
 
   if (pd->horizontal_passes == 0)
     pd->horizontal_passes = 1;
