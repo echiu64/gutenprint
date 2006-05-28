@@ -34,6 +34,7 @@ TESTS = run-testpattern run-testpattern-1 run-testpattern-2
 if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
+noinst_SCRIPTS = run-testpattern-2
 endif
 
 AM_LFLAGS = -i
