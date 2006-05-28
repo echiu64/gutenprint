@@ -34,14 +34,38 @@ I) INTRODUCTION
     devices (devices that typically include scanning, copying, and fax
     capabilities).
 
+    We recommend that all users who wish to use this package for
+    general purpose printing use either CUPS or, if they use another
+    printing system or no spooler at all, use Foomatic with the
+    Ghostscript driver (both described below), rather than integrating
+    the Ghostscript driver with self-made scripts or even manually
+    typing in Ghostscript command lines.  It is much simpler to manage
+    with CUPS or Foomatic and its PPDs.  CUPS provides an excellent
+    web-based interface for easy printer administration, and all
+    CUPS-enabled applications (OpenOffice.org, all KDE apps, etc.) and
+    printing dialogs (kprinter, xpp, etc.) show all the options in
+    easy to use GUIs.  Please visit http://www.cups.org/ for
+    information on downloading and installing CUPS.
+
+
 ================================================================
 
 II) INSTALLATION
 
-    This section assumes that you are installing the package from
-    source.  If you are installing from a pre-compiled package (such as
-    the Macintosh OS X package, or a package provided by your
+    This section is provided for people installing the package from
+    source.  If you are installing from a pre-compiled package (such
+    as the Macintosh OS X package, or a package provided by your
     distribution vendor), you may skip this section.
+
+    Installing packages from source requires some level of system
+    administration skills along with superuser privileges.  Superuser
+    privilege allows you to perform actions that may be damaging to
+    your system.  If you are not comfortable with the material
+    discussed here and in the release notes, we recommend that you not
+    attempt to install this package from source.
+
+    Before beginning, please read the release notes carefully for any
+    updates.
 
 ----------------
 
@@ -57,15 +81,69 @@ A) OVERVIEW
       - A command-line utility to administer and maintain Epson
         printers
 
-    The "configure" script, which must be run before doing anything
-    else, controls which of these components are built along with any
-    options desired.
-
     The general procedure to build Gutenprint is as follows:
 
     ./configure [options]
     make
     make install
+
+    The "configure" script, which must be run before doing anything
+    else, controls which of these components are built along with any
+    options desired.  This script determines what software is
+    installed on your system and what components will be compatible
+    with it, and prepares the package to be built and installed.  If
+    the script emits any warnings or errors, please be certain that
+    you understand them before proceeding.
+
+    After the configure script has completed its work, it will print
+    a summary of its choices.  Please ensure that it is correct before
+    proceeding.  The summary looks like this:
+
+    Build Summary:
+    ----- --------
+
+    If you have any problems, please report the information below to
+    gimp-print-devel@lists.sourceforge.net
+
+      Release: gutenprint 5.0.0 generated on 22 May 2006
+
+      Features:
+	Build CUPS:                                 yes, installing in /usr
+	    Build CUPS PPD files:                   yes
+		Build translated CUPS PPD files:    no
+		Build simplified CUPS PPD files:    no
+		Generate PS level 3 CUPS PPD files: yes
+	    Install CUPS PPD files at top level:    no
+	    Build genppd statically:                yes
+	Build Ghostscript IJS driver:               yes
+	Build Foomatic data:                        yes
+	    Build Foomatic 3.x data:                yes
+	Build GIMP 1.2 plugin:                      yes
+	Build GIMP 2.0 plugin:                      yes
+	    Install plugin in home directory:       no
+	Build EPSON Stylus utility:                 yes
+	Build test programs:                        yes
+	Build testpattern generator:                yes
+
+    Installation summary:
+	Installation prefix:                        /usr/local
+	Data directory:                             /usr/local/share/gutenprint
+	Library directory:                          /usr/local/lib/gutenprint
+	XML data directory:                         /usr/local/share/gutenprint/5.0.0/xml
+	Module directory:                           /usr/local/lib/gutenprint/5.0.0/modules
+	Install user guide:                         yes
+	Install sample images:                      yes
+
+    Configuration:
+	Compiler options:                           -g -O2  -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -finline-limit=1048576 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
+	Build static libraries:                     yes
+	Build shared libraries:                     no
+	Maintainer mode:                            yes
+	Generate profiling information:             no
+	Generate debugging symbols:                 no
+	Use modules:                                static
+	Use readline libraries:                     yes, extra arguments: -lncurses
+
 
     This package requires the use of GNU Make to compile.  On systems
     with both GNU make and another make installed, GNU make may be
@@ -75,10 +153,10 @@ A) OVERVIEW
     The CUPS, GIMP, Foomatic, and IJS drivers require that the
     appropriate packages be installed on your system.  Many
     distribution vendors separate packages into runtime and
-    development packages.  These development packages are required in
+    development packages.  The development packages are required in
     order to successfully compile Gutenprint.  In many cases the
-    configure script cannot detect whether these packages are
-    installed, in which case you will get an error during
+    configure script cannot detect whether these development packages
+    are installed, in which case you will get an error during
     compilation.
 
 ----------------
@@ -102,10 +180,21 @@ B) CORE DRIVER LIBRARY
     statically (with no use of shared libraries), you may use the
     option --disable-shared.
 
-    NOTE TO DISTRIBUTORS: You may wish to create a development package
-    containing header files and linkable libraries separate from the
-    runtime package.  There are a few third party applications that
-    link against Gutenprint.
+    NOTES TO PACKAGERS: 
+
+    * You may wish to create a development package containing header
+      files and linkable libraries separate from the runtime package.
+      There are a few third party applications that link against
+      Gutenprint.
+
+    * Gutenprint permits installation of Gimp-Print 4.2 alongside
+      Gutenprint 5.0, and in the future will permit concurrent
+      installation of different stable versions of Gutenprint with
+      different minor version numbers.  Gutenprint uses the old-style
+      kernel numbering system, whereby even numbered minor versions
+      are stable (4.2, 5.0, 5.2) and odd numbered minor versions are
+      development (4.3, 5.1).  Therefore, you should consider allowing
+      Gutenprint 5.0 and Gimp-Print 4.2 to be installed concurrently.
 
 
 ----------------
@@ -166,16 +255,80 @@ B) CUPS
       Gutenprint-supported printers, cups-calibrate.  This is normally
       installed in /usr/bin.
 
-    CAUTION: On some systems it is necessary to link cups-genppd.5.0
-    and rastertogutenprint.5.0 statically rather than dynamically
-    against the Gutenprint library.  This is normally the case if your
-    distribution vendor provides a version of Gutenprint installed in
-    /usr and you wish to build and install a newer version into
-    /usr/local.  This is described in more detail in the release
-    notes.  Gutenprint attempts to detect this and compile these
-    executables appropriately.  If you are doing this, it is important
-    not to use the global option "--disable-static"; the executables
-    will not function correctly.
+    WARNING: With certain versions of CUPS and in certain non-default
+	configurations, if a new version of Gutenprint is installed
+	over an existing version genppd will create PPD files based on
+	the older version of Gutenprint rather than the newer version.
+	This will happen if all of the following are true:
+
+	i) The cups-config provided by the CUPS driver adds
+	   -Wl,rpath=/usr/lib. This is done by some versions of CUPS
+	   reportedly because in some cases the runtime linker does
+	   not pick up libraries out of /usr/lib.  This can be checked
+	   by running
+
+	   cups-config --libs --ldflags
+
+	   and inspecting the output for any mention of "rpath",
+	   "RPATH", "RUN_PATH", or the like.  This is controlled by
+	   the CUPS installation on your system.
+
+	ii) There is presently a version of Gutenprint installed in
+	   /usr (--prefix=/usr) rather than /usr/local or the like.
+	   The default location of Gutenprint installation is in
+	   /usr/local, but system vendors typically install Gutenprint
+	   in /usr.
+
+	iii) Gutenprint is built dynamically only (--disable-static or
+	   --disable-static-genppd).  This is not a default, and
+	   requires the explicit --disable-static or
+	   --disable-static-genppd on the Gutenprint "configure"
+	   command line.  Therefore, if you build Gutenprint normally
+	   you should not be vulnerable to this problem.
+
+	Note that in general if you install CUPS into a non-standard
+	location, and install Gutenprint into the same location, this
+	problem can surface.  For example, if you choose to install
+	CUPS in /usr/local and Gutenprint in /usr/local you are
+	vulnerable to this.  However, it is not standard practice to
+	install CUPS anywhere but /usr.
+
+	In this case, the run path embedded in the genppd executable
+	points to the version of Gutenprint installed in /usr/lib.
+	This run path overrides any attempt by libtool to look in the
+	build directory.  The result is that cups-genppd and
+	rastertogutenprint are run against the older version of
+	Gutenprint.  If the new version contains additional features
+	(more printers, changes to printer options, etc.) they will
+	not be available.
+
+	This bug is difficult to detect in a normal build.  It
+	normally does not cause an error to happen during build unless
+	there is an API change from the version installed and the
+	version being built; the only failure is frequently that some
+	PPD files may not be built or may be built with missing
+	options.  Due to the PPD version checking introduced in this
+	release, the behavior might manifest itself as a runtime
+	error.  It is also possible that there will be no error at all
+	other than the older version of Gutenprint being used, with
+	the result that new features and bug fixes are not available.
+
+	If you wish to use only shared libraries, do not wish to build
+	static libraries at all, and are vulnerable to this issue
+	(because cups-config --ldflags sets the run path), there are
+	three workarounds available:
+
+	i) Build and install Gutenprint into /usr (rather than
+	   /usr/local) and then rebuild Gutenprint from scratch.  This
+	   will install the correct libgutenprint.so in /usr/lib, and
+	   in the rebuild genppd will be run against the correct
+	   library.
+
+	ii) Remove the old version of Gutenprint prior to building the
+	   new version of Gutenprint.  The important files to remove
+	   are anything named /usr/lib/libgutenprint*.
+
+	iii) Edit cups-config to remove the reference to the run path.
 
     Following installation of the package with "make install", you
     must restart CUPS to permit CUPS to see the new PPD files.  The
@@ -199,10 +352,6 @@ B) CUPS
     Therefore, you need not convert a workflow based on Gimp-Print 4.2
     right away, but can gradually convert or even permanently use both
     drivers for different printer queues.
-
-    NOTE TO DISTRIBUTORS: We recommend that your installation package
-    run cups-genppdupdate.5.0 and restart CUPS as part of the
-    installation process.
 
     The following options to configure are available for compiling the
     Gutenprint driver for CUPS:
@@ -247,55 +396,28 @@ B) CUPS
 	the PPD files are placed in /usr/share/cups/model.  There is
 	normally no good reason to use this option.
 
-    
+    --disable-static-genppd
 
-    If you do not choose to automatically update existing PPD files,
-    you should reinstall any printers that you are using Gutenprint
-    PPD files with.  The Gutenprint driver and the PPD files must be
-    kept in sync, since the PPD files reflect the particular version
-    of the driver that they were built against.  If you attempt to use
-    a version of Gutenprint with PPD files not built for that precise
-    version, the driver will fail with a diagnostic error message.
-    For example, PPD files built for Gutenprint 5.0.0-beta4 will not
-    work with driver version 5.0.0.  You can identify printers using
-    Gutenprint PPD files by the name of the PPD file, which will be
-    something like:
+	Build genppd and rastertogutenprint dynamically linked rather
+	than statically linked.  WARNING: Use of this option may lead
+	to failure during build or installation, or incorrect
+	installation.  It is *STRONGLY* recommended that you not use
+	this option unless you are certain that you understand the
+	problem and how to work around it.
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0(en)
+    NOTES TO PACKAGERS: 
 
-    NOTE for Linux (at least) users: If you are using CUPS 1.1.11 or
-    higher, and you have a USB-connected printer, you must have a
-    printer connected to each USB port that you plan to use and
-    powered on when you restart CUPS.  If you do not do so, you will
-    not be able to reinstall the printer.  It is only necessary to do
-    this if you wish to update PPD files manually; if you use
-    cups-genppdupdate.5.0, you do not need to do this.
+    * We recommend that your installation package run
+      cups-genppdupdate.5.0 and restart CUPS as part of the
+      installation process.
 
-    Starting with CUPS 1.1.11, you cannot choose an AppSocket
-    connection and enter "usb:/dev/usblp0" or the like as the URI; you
-    will get a "client-error-not-possible" error at the end of the
-    installation process, and you will have a message like the
-    following in your CUPS error log (typically
-    /var/log/cups/error_log):
-
-E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/usb/lp0'!
-
-    If the printer was turned on correctly, you will be given a choice
-    of a USB connection in the Device dialog.
-
-    You may also have problems if you have a .lpoptions file that has
-    old options set.  If you have problems printing, please remove any
-    existing .lpoptions file in your home directory and try printing
-    again.
-
-    We recommend that all users who wish to use this package for
-    general purpose printing install either CUPS or use Foomatic with
-    the Ghostscript driver (both described below) and use that as
-    their printing system, rather than the traditional lpd or lp
-    systems.  It is much simpler to manage than lpd, and provides an
-    excellent web-based interface for both administration and use.
-    Please visit http://www.cups.org for information on downloading
-    and installing CUPS.
+    * All files and directories with versioned names
+      (e. g. cups-genppdupdate, rastertogutenprint, the PPD files) may
+      be installed concurrently with other versions of Gimp-Print and
+      Gutenprint as described above.  Other executables (such as the
+      Canon and Epson back ends, and cups-calibrate) are not
+      versioned, but are not linked against libgutenprint and do not
+      have any other dependencies on Gutenprint.
 
 
 ----------------
@@ -365,10 +487,17 @@ C) FOOMATIC
     tools provided by your distribution or the Foomatic tool
     "foomatic-ppdfile".
 
-    NOTE TO DISTRIBUTORS: We recommend packaging the IJS driver
-    (/usr/bin/ijsgutenprint.5.0) and its man page
-    (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
-    data.
+    NOTES TO PACKAGERS: 
+
+    * We recommend packaging the IJS driver
+      (/usr/bin/ijsgutenprint.5.0) and its man page
+      (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
+      data.
+
+    * The IJS driver and the Foomatic data kit and PPD files are
+      versioned, and hence you should consider permitting multiple
+      versions to be installed concurrently.  The man page
+      (/usr/man/man1/ijsgutenprint.1.gz) is not versioned.
 
 
 ----------------
@@ -411,6 +540,14 @@ D) THE GIMP
     The GIMP 2.x plugin may eventually be migrated to the GIMP project
     for a future GIMP release and be removed from the Gutenprint
     distribution.
+
+    NOTE TO PACKAGERS:
+
+    * The GIMP plugin, unlike the core library and the Foomatic and
+      CUPS drivers, may not be installed concurrently with other
+      versions.  For example, you may not install both the Gimp-Print
+      4.2 and the Gutenprint 5.0 version of the Print plugin, as they
+      use different configuration file formats.
 
 
 ----------------
@@ -522,7 +659,7 @@ F) OTHER PACKAGES
     under investigation and will either be fixed or the requirement be
     waived for this particular issue.
 
-    NOTE TO DISTRIBUTORS: You may wish to distribute the test pattern
+    NOTE TO PACKAGERS: You may wish to distribute the test pattern
     generator in a development package, as it's useful as sample code
     if nothing else.  In addition, there are some tools in the test
     directory that aren't installed that may be of use.  These tools
@@ -539,6 +676,8 @@ F) OTHER PACKAGES
       image; each pixel is synthesized based on which drops are
       printed.  "pcl-unprint" and "bjc-unprint" are similar tools for
       PCL and Canon output files, respectively.
+
+    None of these tools are versioned.
 
 
 ================================================================
@@ -595,8 +734,50 @@ A) PRINTER INSTALLATION
 
     Epson MJ 520C Foomatic/stcolor (recommended)
 
-    These PPD files, whether recommended or not, are not Gutenprint
+    These PPD files, whether "recommended" or not, are not Gutenprint
     PPD files.
+
+    NOTES FOR CUPS USERS:
+
+    If you do not choose to automatically update existing PPD files,
+    you should reinstall any printers that you are using Gutenprint
+    PPD files with.  The Gutenprint driver and the PPD files must be
+    kept in sync, since the PPD files reflect the particular version
+    of the driver that they were built against.  If you attempt to use
+    a version of Gutenprint with PPD files not built for that precise
+    version, the driver will fail with a diagnostic error message.
+    For example, PPD files built for Gutenprint 5.0.0-beta4 will not
+    work with driver version 5.0.0.  You can identify printers using
+    Gutenprint PPD files by the name of the PPD file, which will be
+    something like:
+
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0(en)
+
+    Linux users please note: If you are using CUPS 1.1.11 or higher,
+    and you have a USB-connected printer, you must have a printer
+    connected to each USB port that you plan to use and powered on
+    when you restart CUPS.  If you do not do so, you will not be able
+    to reinstall the printer.  It is only necessary to do this if you
+    wish to update PPD files manually; if you use
+    cups-genppdupdate.5.0, you do not need to do this.
+
+    Starting with CUPS 1.1.11, you cannot choose an AppSocket
+    connection and enter "usb:/dev/usblp0" or the like as the URI; you
+    will get a "client-error-not-possible" error at the end of the
+    installation process, and you will have a message like the
+    following in your CUPS error log (typically
+    /var/log/cups/error_log):
+
+E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/usb/lp0'!
+
+    If the printer was turned on correctly, you will be given a choice
+    of a USB connection in the Device dialog.
+
+    You may also have problems if you have a .lpoptions file that has
+    old options set.  If you have problems printing, please remove any
+    existing .lpoptions file in your home directory and try printing
+    again.
+
 
 ----------------
 
@@ -778,7 +959,7 @@ B) CONFIGURING PRINTER OPTIONS
                 * BEST: Print with the best quality available on the
                   printer for the application chosen.  This may be
                   equivalent to one of the other settings; on a very
-                  few printers the resolution may exceed that of Ultra
+                  few printers the resolution may exceed that of Super
                   Photo mode.
 
 ================================================================

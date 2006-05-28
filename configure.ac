@@ -38,7 +38,7 @@ pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [0])
 pushdef([GUTENPRINT_MICRO_VERSION],     [0])
-pushdef([GUTENPRINT_EXTRA_VERSION],     [-rc3])
+pushdef([GUTENPRINT_EXTRA_VERSION],     [])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINT_BINARY_AGE],        [0])
@@ -265,7 +265,7 @@ STP_ARG_ENABLE([cups-level3-ppds],
 
 STATIC_GENPPD="$enable_static"
 STP_ARG_ENABLE([static-genppd],
-               [build a statically-linked cups-genppd and rastertogutenprint],
+               [build a statically-linked cups-genppd and rastertogutenprint.  WARNING: Please read the README and NEWS (release notes) CAREFULLY before using this!],
 	       [STATIC_GENPPD],
 	       [(automatic)])
 
@@ -861,12 +861,6 @@ AM_CONDITIONAL(BUILD_MODULES, test x$MODULE = xtrue)
 
 AM_CONDITIONAL(BUILD_GENPPD_STATIC, test x"$STATIC_GENPPD" = xyes)
 
-if test "$enable_static" = no -a "$BUILD_CUPS" = yes ; then
-  AC_MSG_WARN([--enable-static is disabled, but CUPS is being built.])
-  AC_MSG_WARN([This may result in a *SILENTLY* incorrect build.])
-  AC_MSG_WARN([Please read the release notes carefully!])
-fi
-
 dnl Define LTLIBOBJS
 AC_CONFIG_COMMANDS_PRE(
 [LTLIBOBJS=`echo "$LIB@&t@OBJS" | sed 's/\.o/.lo/g'`
@@ -1006,6 +1000,7 @@ echo
 
 AC_OUTPUT
 
+warnings_emitted=0
 echo
 echo "Build Summary:"
 echo "----- --------"
@@ -1023,10 +1018,15 @@ if test "$BUILD_CUPS" != "no" ; then
     echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
     echo "            Generate PS level 3 CUPS PPD files: $USE_LEVEL3_PS"
     echo "        Install CUPS PPD files at top level:    $CUPS_PPDS_AT_TOP_LEVEL"
-    if test "$STATIC_GENPPD" = "no" -a "$enable_shared" = "yes" ; then
-        echo "        Build genppd statically:                $STATIC_GENPPD (please read the release notes!)"
-    else
-        echo "        Build genppd statically:                $STATIC_GENPPD"
+    echo "        Build genppd statically:                $STATIC_GENPPD"
+
+    if test "$STATIC_GENPPD" = "no" ; then
+        echo "            ***WARNING: Use of --disable-static-genppd or --disable-static"
+	echo "                        when building CUPS is very dangerous.  The build may"
+	echo "                        fail when building the PPD files, or may *SILENTLY*"
+	echo "                        build incorrect PPD files or cause other problems."
+	echo "                        Please review the README and release notes carefully!"
+	warnings_emitted=1
     fi
 fi
 echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
@@ -1068,6 +1068,10 @@ if test -n "$EXTRA_LIBREADLINE_DEPS" ; then
     echo "    Use readline libraries:                     $USE_READLINE, extra arguments: $EXTRA_LIBREADLINE_DEPS"
 else
     echo "    Use readline libraries:                     $USE_READLINE"
+fi
+if test $warnings_emitted -ne 0 ; then
+    echo
+    echo '*** NOTE: Please review the warnings shown above carefully!'
 fi
 echo
 echo "Finished configuring."
