@@ -36,11 +36,11 @@ UNIX Printing System) for the easiest setup.</p>
 Users!</font></em></strong></h2>
 
 <p>There is now a <a
-href="http://gimp-print.sourceforge.net/MacOSX.php3">Gimp-Print web
-page for OS X</a> that answers most questions on how to use Gimp-Print
-with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4 "Tiger" and provides
-direct download links. The final release of Gimp-Print 4.2.7 for Mac
-OS X Jaguar is available now!</p>
+href="http://gimp-print.sourceforge.net/MacOSX.php3">Gutenprint web
+page for OS X</a> that answers most questions on how to use Gutenprint
+and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4
+"Tiger" and provides direct download links. The final release of
+Gimp-Print 4.2.7 for Mac OS X Jaguar is available now!</p>
 
 
 <H2><font color="#ff0000">Gutenprint 5.0.0-rc3 is released!</font></h2>
@@ -61,62 +61,9 @@ offers a number of bug fixes over 4.2.6. <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=253459">You
 can read the release notes and download it here</a>.  </p>
 
-
-
-<H2><font color="#ff0000">Gimp-Print 4.2 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of November 24,
-2001!</strong></em></font> Gimp-Print 4.2.0, the first stable release
-in the 4.2 line, is out!  Please read the release notes <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
-</p>
-
-<p>The Gimp-Print Project is pleased to announce the release of
-Gimp-Print 4.2.0, the newest stable release of Gimp-Print.  Gimp-Print
-is a suite of printer drivers for all UNIX operating systems,
-supporting printers from Canon, Epson, Hewlett-Packard, Lexmark, and
-compatible printers from other vendors, featuring extremely high
-quality, flexibility, and integration with most common printing
-systems.</p>
-
-<p>Gimp-Print 4.2 includes a core module (libgimpprint) that forms a
-common print engine supporting CUPS, Ghostscript, and Foomatic.  It
-also includes the Print plug-in for the Gimp (version 1.2).  The
-libgimpprint core, which is portable to all POSIX-compliant operating
-systems, can also be used by custom printing solutions.</p>
-
-<p>Gimp-Print 4.2 is a successor to the Gimp-Print 4.0 release line.
-Compared to that series, Gimp-Print 4.2 offers:</p>
-
-<ul>
-
-<li>Support for many new printers, including Lexmark printers for the
-first time</li>
-
-<li>User's and developer's manuals</li>
-
-<li>Greatly improved print quality, particularly in color fidelity</li>
-
-<li>Internationalization, with translations into Danish, French,
-Norwegian, Polish, Swedish, and British English</li>
-
-<li>Greatly improved packaging</li>
-</ul>
-
-<p>A full list of new features, in addition to the current list of
-supported printers, may be found in the NEWS file at the top level of
-the distribution.</p>
-
 <p>Gutenprint is supplied in source code form under the GPL (GNU
 General Public License).  Please be sure to read the README and NEWS
 files in the distribution.</p>
-
-<p>We anticipate further releases in the 4.2 line, primarily to support
-new printers and improved functionality in existing printers.
-Alongside that, we will be working on the 4.3 development line, which
-will eventually become the successor to 4.2.</p>
-
-<p>Enjoy!</p>
 
 <p><i>- The Gutenprint Project Team</i></p>
 
