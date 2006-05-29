@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-12 20:55-0400\n"
+"POT-Creation-Date: 2006-05-28 19:56-0400\n"
 "PO-Revision-Date: 2004-09-23 00:10+0100\n"
 "Last-Translator: Roger Leigh <rleigh@debian.org>\n"
 "Language-Team: British English\n"
@@ -14,8 +14,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#. TRANSLATORS: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
 #: src/main/dither-main.c:46 src/main/print-color.c:49
-#: src/main/print-escp2.c:1529
+#: src/main/print-escp2.c:1599
 msgid "Default"
 msgstr "Default"
 
@@ -27,58 +29,61 @@ msgstr "EvenTone"
 msgid "Hybrid EvenTone"
 msgstr "Hybrid EvenTone"
 
-#: src/main/dither-main.c:54
+#. TRANSLATORS: EvenTone, EvenBetter, and UniTone are proper
+#. * names, not descriptive.
+#.
+#: src/main/dither-main.c:53
 #, fuzzy
 msgid "EvenBetter"
 msgstr "Letter"
 
-#: src/main/dither-main.c:55
+#: src/main/dither-main.c:54
 #, fuzzy
 msgid "Hybrid EvenBetter"
 msgstr "Hybrid EvenTone"
 
-#: src/main/dither-main.c:61
+#: src/main/dither-main.c:60
 msgid "UniTone"
 msgstr "UniTone"
 
-#: src/main/dither-main.c:62
+#: src/main/dither-main.c:61
 msgid "Hybrid UniTone"
 msgstr "Hybrid UniTone"
 
-#: src/main/dither-main.c:64
+#: src/main/dither-main.c:63
 msgid "Adaptive Hybrid"
 msgstr "Adaptive Hybrid"
 
-#: src/main/dither-main.c:65
+#: src/main/dither-main.c:64
 msgid "Ordered"
 msgstr "Ordered"
 
-#: src/main/dither-main.c:66
+#: src/main/dither-main.c:65
 msgid "Fast"
 msgstr "Fast"
 
-#: src/main/dither-main.c:67
+#: src/main/dither-main.c:66
 msgid "Very Fast"
 msgstr "Very Fast"
 
-#: src/main/dither-main.c:68
+#: src/main/dither-main.c:67
 msgid "Hybrid Floyd-Steinberg"
 msgstr "Hybrid Floyd-Steinberg"
 
-#: src/main/dither-main.c:69
+#: src/main/dither-main.c:68
 msgid "Predithered Input"
 msgstr "Predithered Input"
 
-#: src/main/dither-main.c:89 src/main/print-color.c:56
+#: src/main/dither-main.c:88 src/main/print-color.c:56
 msgid "Density"
 msgstr "Density"
 
-#: src/main/dither-main.c:89 src/main/print-canon.c:1534
+#: src/main/dither-main.c:88 src/main/print-canon.c:1534
 #: src/main/print-canon.c:1542 src/main/print-canon.c:1550
-#: src/main/print-canon.c:1558 src/main/print-escp2.c:413
-#: src/main/print-escp2.c:421 src/main/print-escp2.c:429
-#: src/main/print-escp2.c:437 src/main/print-escp2.c:445
-#: src/main/print-escp2.c:453 src/main/print-escp2.c:461
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:414
+#: src/main/print-escp2.c:422 src/main/print-escp2.c:430
+#: src/main/print-escp2.c:438 src/main/print-escp2.c:446
+#: src/main/print-escp2.c:454 src/main/print-escp2.c:462
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
 #: src/main/print-olympus.c:1330 src/main/print-olympus.c:1338
@@ -88,7 +93,7 @@ msgstr "Density"
 msgid "Output Level Adjustment"
 msgstr "Output Level Adjustment"
 
-#: src/main/dither-main.c:90
+#: src/main/dither-main.c:89
 msgid ""
 "Adjust the density (amount of ink) of the print. Reduce the density if the "
 "ink bleeds through the paper or smears; increase the density if black "
@@ -98,15 +103,15 @@ msgstr ""
 "ink bleeds through the paper or smears; increase the density if black "
 "regions are not solid."
 
-#: src/main/dither-main.c:98
+#: src/main/dither-main.c:97
 msgid "Dither Algorithm"
 msgstr "Dither Algorithm"
 
-#: src/main/dither-main.c:98
+#: src/main/dither-main.c:97
 msgid "Screening Adjustment"
 msgstr "Screening Adjustment"
 
-#: src/main/dither-main.c:99
+#: src/main/dither-main.c:98
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
@@ -357,7 +362,7 @@ msgstr "Size of the paper being printed to"
 
 #: src/main/print-canon.c:1475 src/main/print-escp2.c:183
 #: src/main/print-lexmark.c:272 src/main/print-olympus.c:1271
-#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1240
+#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1238
 msgid "Media Type"
 msgstr "Media Type"
 
@@ -369,7 +374,7 @@ msgstr "Type of media (plain paper, photo paper, etc.)"
 
 #: src/main/print-canon.c:1481 src/main/print-escp2.c:189
 #: src/main/print-lexmark.c:278 src/main/print-olympus.c:1277
-#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1264
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1262
 msgid "Media Source"
 msgstr "Media Source"
 
@@ -381,7 +386,7 @@ msgstr "Source (input slot) of the media"
 
 #: src/main/print-canon.c:1487 src/main/print-escp2.c:213
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1283
-#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1324
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1322
 msgid "Resolution"
 msgstr "Resolution"
 
@@ -459,74 +464,74 @@ msgstr "Double-Sided Printing"
 msgid "Duplex/Tumble Setting"
 msgstr "Duplex/Tumble Setting"
 
-#: src/main/print-canon.c:1534 src/main/print-escp2.c:413
+#: src/main/print-canon.c:1534 src/main/print-escp2.c:414
 #: src/main/print-lexmark.c:325 src/main/print-pcl.c:1218
 #, fuzzy
 msgid "Cyan Density"
 msgstr "Density"
 
-#: src/main/print-canon.c:1535 src/main/print-escp2.c:414
+#: src/main/print-canon.c:1535 src/main/print-escp2.c:415
 #: src/main/print-lexmark.c:326 src/main/print-pcl.c:1219
 #, fuzzy
 msgid "Adjust the cyan density"
 msgstr "Adjust the cyan balance"
 
-#: src/main/print-canon.c:1542 src/main/print-escp2.c:421
+#: src/main/print-canon.c:1542 src/main/print-escp2.c:422
 #: src/main/print-lexmark.c:333 src/main/print-pcl.c:1226
 #, fuzzy
 msgid "Magenta Density"
 msgstr "Magenta Curve"
 
-#: src/main/print-canon.c:1543 src/main/print-escp2.c:422
+#: src/main/print-canon.c:1543 src/main/print-escp2.c:423
 #: src/main/print-lexmark.c:334 src/main/print-pcl.c:1227
 #, fuzzy
 msgid "Adjust the magenta density"
 msgstr "Adjust the magenta balance"
 
-#: src/main/print-canon.c:1550 src/main/print-escp2.c:429
+#: src/main/print-canon.c:1550 src/main/print-escp2.c:430
 #: src/main/print-lexmark.c:341 src/main/print-pcl.c:1234
 #, fuzzy
 msgid "Yellow Density"
 msgstr "Density"
 
-#: src/main/print-canon.c:1551 src/main/print-escp2.c:430
+#: src/main/print-canon.c:1551 src/main/print-escp2.c:431
 #: src/main/print-lexmark.c:342 src/main/print-pcl.c:1235
 #, fuzzy
 msgid "Adjust the yellow density"
 msgstr "Adjust the yellow balance"
 
-#: src/main/print-canon.c:1558 src/main/print-escp2.c:437
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:438
 #: src/main/print-lexmark.c:349 src/main/print-pcl.c:1242
 #, fuzzy
 msgid "Black Density"
 msgstr "Density"
 
-#: src/main/print-canon.c:1559 src/main/print-escp2.c:438
+#: src/main/print-canon.c:1559 src/main/print-escp2.c:439
 #: src/main/print-lexmark.c:350 src/main/print-pcl.c:1243
 #, fuzzy
 msgid "Adjust the black density"
 msgstr "Adjust the black balance"
 
 #: src/main/print-canon.c:1566 src/main/print-canon.c:1567
-#: src/main/print-escp2.c:469 src/main/print-escp2.c:470
+#: src/main/print-escp2.c:470 src/main/print-escp2.c:471
 #: src/main/print-lexmark.c:357 src/main/print-lexmark.c:358
 #: src/main/print-pcl.c:1250 src/main/print-pcl.c:1251
 msgid "Light Cyan Transition"
 msgstr "Light Cyan Transition"
 
 #: src/main/print-canon.c:1566 src/main/print-canon.c:1574
-#: src/main/print-canon.c:1582 src/main/print-escp2.c:469
-#: src/main/print-escp2.c:477 src/main/print-escp2.c:485
-#: src/main/print-escp2.c:493 src/main/print-escp2.c:501
-#: src/main/print-escp2.c:509 src/main/print-escp2.c:517
-#: src/main/print-escp2.c:525 src/main/print-lexmark.c:357
+#: src/main/print-canon.c:1582 src/main/print-escp2.c:470
+#: src/main/print-escp2.c:478 src/main/print-escp2.c:486
+#: src/main/print-escp2.c:494 src/main/print-escp2.c:502
+#: src/main/print-escp2.c:510 src/main/print-escp2.c:518
+#: src/main/print-escp2.c:526 src/main/print-lexmark.c:357
 #: src/main/print-lexmark.c:365 src/main/print-pcl.c:1250
 #: src/main/print-pcl.c:1258
 msgid "Advanced Ink Adjustment"
 msgstr "Advanced Ink Adjustment"
 
 #: src/main/print-canon.c:1574 src/main/print-canon.c:1575
-#: src/main/print-escp2.c:477 src/main/print-escp2.c:478
+#: src/main/print-escp2.c:478 src/main/print-escp2.c:479
 #: src/main/print-lexmark.c:365 src/main/print-lexmark.c:366
 #: src/main/print-pcl.c:1258 src/main/print-pcl.c:1259
 msgid "Light Magenta Transition"
@@ -584,26 +589,26 @@ msgid "CMY Color"
 msgstr "CMY Colour"
 
 #: src/main/print-canon.c:2061 src/main/print-color.c:314
-#: src/main/print-escp2-data.c:737 src/main/print-escp2-data.c:750
-#: src/main/print-escp2-data.c:760 src/main/print-escp2-data.c:767
-#: src/main/print-escp2-data.c:779 src/main/print-escp2-data.c:791
-#: src/main/print-escp2-data.c:804 src/main/print-escp2-data.c:817
-#: src/main/print-escp2-data.c:823 src/main/print-escp2-data.c:847
-#: src/main/print-escp2-data.c:860 src/main/print-lexmark.c:613
+#: src/main/print-escp2-data.c:738 src/main/print-escp2-data.c:751
+#: src/main/print-escp2-data.c:761 src/main/print-escp2-data.c:768
+#: src/main/print-escp2-data.c:780 src/main/print-escp2-data.c:792
+#: src/main/print-escp2-data.c:805 src/main/print-escp2-data.c:818
+#: src/main/print-escp2-data.c:824 src/main/print-escp2-data.c:848
+#: src/main/print-escp2-data.c:861 src/main/print-lexmark.c:613
 #: src/gutenprintui/panel.c:2145 src/gutenprintui2/panel.c:2144
 #: src/escputil/escputil.c:965 src/escputil/escputil.c:986
 #: src/escputil/escputil.c:1190
 msgid "Black"
 msgstr "Black"
 
-#: src/main/print-canon.c:2106 src/main/print-escp2.c:1787
+#: src/main/print-canon.c:2106 src/main/print-escp2.c:1857
 #: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1562
 #: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
 #: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color"
 msgstr "Colour"
 
-#: src/main/print-canon.c:2108 src/main/print-escp2.c:1789
+#: src/main/print-canon.c:2108 src/main/print-escp2.c:1859
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1735
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 msgid "Black and White"
@@ -789,12 +794,12 @@ msgstr "AppGamma"
 msgid "Gamma value assumed by application"
 msgstr "Gamma value assumed by application"
 
-#: src/main/print-color.c:266 src/main/print-escp2-data.c:738
-#: src/main/print-escp2-data.c:747 src/main/print-escp2-data.c:757
-#: src/main/print-escp2-data.c:768 src/main/print-escp2-data.c:780
-#: src/main/print-escp2-data.c:792 src/main/print-escp2-data.c:805
-#: src/main/print-escp2-data.c:818 src/main/print-escp2-data.c:832
-#: src/main/print-escp2-data.c:846 src/main/print-escp2-data.c:861
+#: src/main/print-color.c:266 src/main/print-escp2-data.c:739
+#: src/main/print-escp2-data.c:748 src/main/print-escp2-data.c:758
+#: src/main/print-escp2-data.c:769 src/main/print-escp2-data.c:781
+#: src/main/print-escp2-data.c:793 src/main/print-escp2-data.c:806
+#: src/main/print-escp2-data.c:819 src/main/print-escp2-data.c:833
+#: src/main/print-escp2-data.c:847 src/main/print-escp2-data.c:862
 #: src/gutenprintui/panel.c:2124 src/gutenprintui2/panel.c:2123
 #: src/escputil/escputil.c:968 src/escputil/escputil.c:987
 #: src/escputil/escputil.c:1191
@@ -805,12 +810,12 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr "Adjust the cyan gamma"
 
-#: src/main/print-color.c:274 src/main/print-escp2-data.c:739
-#: src/main/print-escp2-data.c:749 src/main/print-escp2-data.c:758
-#: src/main/print-escp2-data.c:769 src/main/print-escp2-data.c:782
-#: src/main/print-escp2-data.c:793 src/main/print-escp2-data.c:806
-#: src/main/print-escp2-data.c:819 src/main/print-escp2-data.c:831
-#: src/main/print-escp2-data.c:845 src/main/print-escp2-data.c:862
+#: src/main/print-color.c:274 src/main/print-escp2-data.c:740
+#: src/main/print-escp2-data.c:750 src/main/print-escp2-data.c:759
+#: src/main/print-escp2-data.c:770 src/main/print-escp2-data.c:783
+#: src/main/print-escp2-data.c:794 src/main/print-escp2-data.c:807
+#: src/main/print-escp2-data.c:820 src/main/print-escp2-data.c:832
+#: src/main/print-escp2-data.c:846 src/main/print-escp2-data.c:863
 #: src/gutenprintui/panel.c:2131 src/gutenprintui2/panel.c:2130
 #: src/escputil/escputil.c:969 src/escputil/escputil.c:988
 #: src/escputil/escputil.c:1192
@@ -821,12 +826,12 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Adjust the magenta gamma"
 
-#: src/main/print-color.c:282 src/main/print-escp2-data.c:740
-#: src/main/print-escp2-data.c:748 src/main/print-escp2-data.c:759
-#: src/main/print-escp2-data.c:770 src/main/print-escp2-data.c:784
-#: src/main/print-escp2-data.c:794 src/main/print-escp2-data.c:807
-#: src/main/print-escp2-data.c:820 src/main/print-escp2-data.c:830
-#: src/main/print-escp2-data.c:844 src/main/print-escp2-data.c:863
+#: src/main/print-color.c:282 src/main/print-escp2-data.c:741
+#: src/main/print-escp2-data.c:749 src/main/print-escp2-data.c:760
+#: src/main/print-escp2-data.c:771 src/main/print-escp2-data.c:785
+#: src/main/print-escp2-data.c:795 src/main/print-escp2-data.c:808
+#: src/main/print-escp2-data.c:821 src/main/print-escp2-data.c:831
+#: src/main/print-escp2-data.c:845 src/main/print-escp2-data.c:864
 #: src/gutenprintui/panel.c:2138 src/gutenprintui2/panel.c:2137
 #: src/escputil/escputil.c:970 src/escputil/escputil.c:989
 #: src/escputil/escputil.c:1193
@@ -837,8 +842,8 @@ msgstr "Yellow"
 msgid "Adjust the yellow gamma"
 msgstr "Adjust the yellow gamma"
 
-#: src/main/print-color.c:290 src/main/print-escp2-data.c:835
-#: src/main/print-escp2-data.c:848 src/gutenprintui/panel.c:2152
+#: src/main/print-color.c:290 src/main/print-escp2-data.c:836
+#: src/main/print-escp2-data.c:849 src/gutenprintui/panel.c:2152
 #: src/gutenprintui2/panel.c:2151 src/escputil/escputil.c:977
 #: src/escputil/escputil.c:995
 msgid "Red"
@@ -857,8 +862,8 @@ msgstr "Green"
 msgid "Adjust the green gamma"
 msgstr "Adjust the green gamma"
 
-#: src/main/print-color.c:306 src/main/print-escp2-data.c:836
-#: src/main/print-escp2-data.c:849 src/gutenprintui/panel.c:2166
+#: src/main/print-color.c:306 src/main/print-escp2-data.c:837
+#: src/main/print-escp2-data.c:850 src/gutenprintui/panel.c:2166
 #: src/gutenprintui2/panel.c:2165 src/escputil/escputil.c:978
 #: src/escputil/escputil.c:996
 msgid "Blue"
@@ -1166,165 +1171,165 @@ msgstr ""
 "Image is too long for the page: top margin is %d, height %d, bottom edge is %"
 "d\n"
 
-#: src/main/print-escp2-data.c:310 src/main/print-escp2-data.c:334
-#: src/main/print-escp2-data.c:367 src/main/print-escp2-data.c:418
-#: src/main/print-escp2-data.c:460 src/main/print-escp2-data.c:502
-#: src/main/print-escp2-data.c:595 src/main/print-escp2-data.c:689
-#: src/main/print-escp2-data.c:704 src/main/print-escp2-data.c:717
-#: src/main/print-escp2.c:1548 src/main/print-escp2.c:1640
-#: src/main/print-escp2.c:1652 src/main/print-pcl.c:227
+#: src/main/print-escp2-data.c:311 src/main/print-escp2-data.c:335
+#: src/main/print-escp2-data.c:368 src/main/print-escp2-data.c:419
+#: src/main/print-escp2-data.c:461 src/main/print-escp2-data.c:503
+#: src/main/print-escp2-data.c:596 src/main/print-escp2-data.c:690
+#: src/main/print-escp2-data.c:705 src/main/print-escp2-data.c:718
+#: src/main/print-escp2.c:1618 src/main/print-escp2.c:1710
+#: src/main/print-escp2.c:1722 src/main/print-pcl.c:227
 #: src/main/escp2-channels.c:2482 src/main/generic-options.c:36
 #: src/gutenprintui/panel.c:2584 src/gutenprintui2/panel.c:2609
 msgid "Standard"
 msgstr "Standard"
 
-#: src/main/print-escp2-data.c:319 src/main/print-escp2-data.c:445
-#: src/main/print-escp2-data.c:487 src/main/print-escp2-data.c:529
-#: src/main/print-escp2-data.c:604
+#: src/main/print-escp2-data.c:320 src/main/print-escp2-data.c:446
+#: src/main/print-escp2-data.c:488 src/main/print-escp2-data.c:530
+#: src/main/print-escp2-data.c:605
 msgid "Roll Feed"
 msgstr "Roll Feed"
 
-#: src/main/print-escp2-data.c:343 src/main/print-escp2-data.c:394
+#: src/main/print-escp2-data.c:344 src/main/print-escp2-data.c:395
 msgid "Roll Feed (cut each page)"
 msgstr "Roll Feed (cut each page)"
 
-#: src/main/print-escp2-data.c:352 src/main/print-escp2-data.c:403
+#: src/main/print-escp2-data.c:353 src/main/print-escp2-data.c:404
 msgid "Roll Feed (do not cut)"
 msgstr "Roll Feed (do not cut)"
 
-#: src/main/print-escp2-data.c:376 src/main/print-escp2-data.c:427
+#: src/main/print-escp2-data.c:377 src/main/print-escp2-data.c:428
 msgid "Manual Feed"
 msgstr "Manual Feed"
 
-#: src/main/print-escp2-data.c:385 src/main/print-escp2-data.c:436
-#: src/main/print-escp2-data.c:538 src/main/print-escp2-data.c:571
+#: src/main/print-escp2-data.c:386 src/main/print-escp2-data.c:437
+#: src/main/print-escp2-data.c:539 src/main/print-escp2-data.c:572
 msgid "Print to CD"
 msgstr "Print to CD"
 
-#: src/main/print-escp2-data.c:469 src/main/print-escp2-data.c:511
+#: src/main/print-escp2-data.c:470 src/main/print-escp2-data.c:512
 #, fuzzy
 msgid "Manual Sheet Guide"
 msgstr "Manual Selection"
 
-#: src/main/print-escp2-data.c:478 src/main/print-escp2-data.c:520
+#: src/main/print-escp2-data.c:479 src/main/print-escp2-data.c:521
 #, fuzzy
 msgid "Manual Feed (Front)"
 msgstr "Manual Feed"
 
-#: src/main/print-escp2-data.c:553
+#: src/main/print-escp2-data.c:554
 #, fuzzy
 msgid "Rear Tray"
 msgstr "Tray"
 
-#: src/main/print-escp2-data.c:562
+#: src/main/print-escp2-data.c:563
 msgid "Front Tray"
 msgstr ""
 
-#: src/main/print-escp2-data.c:580
+#: src/main/print-escp2-data.c:581
 #, fuzzy
 msgid "Photo Board"
 msgstr "Photo Paper"
 
-#: src/main/print-escp2-data.c:619
+#: src/main/print-escp2-data.c:620
 msgid "Cut Sheet Bin 1"
 msgstr "Cut Sheet Bin 1"
 
-#: src/main/print-escp2-data.c:628
+#: src/main/print-escp2-data.c:629
 msgid "Cut Sheet Bin 2"
 msgstr "Cut Sheet Bin 2"
 
-#: src/main/print-escp2-data.c:637
+#: src/main/print-escp2-data.c:638
 msgid "Cut Sheet Autoselect"
 msgstr "Cut Sheet Autoselect"
 
-#: src/main/print-escp2-data.c:646
+#: src/main/print-escp2-data.c:647
 msgid "Manual Selection"
 msgstr "Manual Selection"
 
-#: src/main/print-escp2-data.c:686 src/main/print-escp2-data.c:701
+#: src/main/print-escp2-data.c:687 src/main/print-escp2-data.c:702
 #: src/main/generic-options.c:33
 msgid "Fast Economy"
 msgstr "Fast Economy"
 
-#: src/main/print-escp2-data.c:687 src/main/print-escp2-data.c:702
+#: src/main/print-escp2-data.c:688 src/main/print-escp2-data.c:703
 #: src/main/generic-options.c:34
 msgid "Economy"
 msgstr "Economy"
 
-#: src/main/print-escp2-data.c:688 src/main/print-escp2-data.c:703
-#: src/main/print-escp2-data.c:716 src/main/generic-options.c:35
+#: src/main/print-escp2-data.c:689 src/main/print-escp2-data.c:704
+#: src/main/print-escp2-data.c:717 src/main/generic-options.c:35
 msgid "Draft"
 msgstr "Draft"
 
-#: src/main/print-escp2-data.c:690 src/main/print-escp2-data.c:705
-#: src/main/print-escp2-data.c:719 src/main/generic-options.c:37
+#: src/main/print-escp2-data.c:691 src/main/print-escp2-data.c:706
+#: src/main/print-escp2-data.c:720 src/main/generic-options.c:37
 msgid "High"
 msgstr "High"
 
-#: src/main/print-escp2-data.c:691 src/main/print-escp2-data.c:706
-#: src/main/print-escp2-data.c:718 src/main/generic-options.c:38
+#: src/main/print-escp2-data.c:692 src/main/print-escp2-data.c:707
+#: src/main/print-escp2-data.c:719 src/main/generic-options.c:38
 msgid "Photo"
 msgstr "Photo"
 
-#: src/main/print-escp2-data.c:692 src/main/print-escp2-data.c:707
-#: src/main/print-escp2-data.c:720 src/main/generic-options.c:39
+#: src/main/print-escp2-data.c:693 src/main/print-escp2-data.c:708
+#: src/main/print-escp2-data.c:721 src/main/generic-options.c:39
 msgid "Super Photo"
 msgstr "Super Photo"
 
-#: src/main/print-escp2-data.c:693 src/main/print-escp2-data.c:708
-#: src/main/print-escp2-data.c:721 src/main/generic-options.c:40
+#: src/main/print-escp2-data.c:694 src/main/print-escp2-data.c:709
+#: src/main/print-escp2-data.c:722 src/main/generic-options.c:40
 msgid "Ultra Photo"
 msgstr "Ultra Photo"
 
-#: src/main/print-escp2-data.c:694 src/main/print-escp2-data.c:709
-#: src/main/print-escp2-data.c:722 src/main/generic-options.c:41
+#: src/main/print-escp2-data.c:695 src/main/print-escp2-data.c:710
+#: src/main/print-escp2-data.c:723 src/main/generic-options.c:41
 msgid "Best"
 msgstr "Best"
 
-#: src/main/print-escp2-data.c:771 src/main/print-escp2-data.c:781
-#: src/main/print-escp2-data.c:795 src/main/print-escp2-data.c:808
-#: src/main/print-escp2-data.c:821 src/main/print-escp2-data.c:858
+#: src/main/print-escp2-data.c:772 src/main/print-escp2-data.c:782
+#: src/main/print-escp2-data.c:796 src/main/print-escp2-data.c:809
+#: src/main/print-escp2-data.c:822 src/main/print-escp2-data.c:859
 #: src/escputil/escputil.c:971 src/escputil/escputil.c:1194
 #, fuzzy
 msgid "Light Cyan"
 msgstr "Light Cyan/Red"
 
-#: src/main/print-escp2-data.c:772 src/main/print-escp2-data.c:783
-#: src/main/print-escp2-data.c:796 src/main/print-escp2-data.c:809
-#: src/main/print-escp2-data.c:822 src/main/print-escp2-data.c:857
+#: src/main/print-escp2-data.c:773 src/main/print-escp2-data.c:784
+#: src/main/print-escp2-data.c:797 src/main/print-escp2-data.c:810
+#: src/main/print-escp2-data.c:823 src/main/print-escp2-data.c:858
 #: src/escputil/escputil.c:972 src/escputil/escputil.c:1195
 #, fuzzy
 msgid "Light Magenta"
 msgstr "Light Magenta/Blue"
 
-#: src/main/print-escp2-data.c:797 src/main/print-escp2-data.c:859
+#: src/main/print-escp2-data.c:798 src/main/print-escp2-data.c:860
 #: src/escputil/escputil.c:975
 #, fuzzy
 msgid "Light Black"
 msgstr "Black"
 
-#: src/main/print-escp2-data.c:810
+#: src/main/print-escp2-data.c:811
 #, fuzzy
 msgid "Dark Yellow"
 msgstr "Black/Dark Yellow"
 
-#: src/main/print-escp2-data.c:833 src/main/escp2-channels.c:2439
+#: src/main/print-escp2-data.c:834 src/main/escp2-channels.c:2439
 #: src/main/escp2-channels.c:2455 src/escputil/escputil.c:976
 #, fuzzy
 msgid "Matte Black"
 msgstr "Matte Paper"
 
-#: src/main/print-escp2-data.c:834 src/main/escp2-channels.c:2435
+#: src/main/print-escp2-data.c:835 src/main/escp2-channels.c:2435
 #: src/main/escp2-channels.c:2473 src/escputil/escputil.c:966
 #, fuzzy
 msgid "Photo Black"
 msgstr "Photo Paper"
 
-#: src/main/print-escp2-data.c:837 src/escputil/escputil.c:979
+#: src/main/print-escp2-data.c:838 src/escputil/escputil.c:979
 msgid "Gloss Optimizer"
 msgstr "Gloss Optimiser"
 
-#: src/main/print-escp2-data.c:856 src/escputil/escputil.c:980
+#: src/main/print-escp2-data.c:857 src/escputil/escputil.c:980
 #, fuzzy
 msgid "Light Light Black"
 msgstr "Black"
@@ -1507,128 +1512,128 @@ msgstr "Hue Map"
 msgid "Adjust the red map"
 msgstr "Adjust the red gamma"
 
-#: src/main/print-escp2.c:445
+#: src/main/print-escp2.c:446
 #, fuzzy
 msgid "Red Density"
 msgstr "Density"
 
-#: src/main/print-escp2.c:446
+#: src/main/print-escp2.c:447
 #, fuzzy
 msgid "Adjust the red density"
 msgstr "Adjust the red balance"
 
-#: src/main/print-escp2.c:453
+#: src/main/print-escp2.c:454
 #, fuzzy
 msgid "Blue Density"
 msgstr "Density"
 
-#: src/main/print-escp2.c:454
+#: src/main/print-escp2.c:455
 #, fuzzy
 msgid "Adjust the blue density"
 msgstr "Adjust the blue balance"
 
-#: src/main/print-escp2.c:461
+#: src/main/print-escp2.c:462
 #, fuzzy
 msgid "Gloss Level"
 msgstr "Glossy Film"
 
-#: src/main/print-escp2.c:462
+#: src/main/print-escp2.c:463
 #, fuzzy
 msgid "Adjust the gloss level"
 msgstr "Adjust the gloss balance"
 
-#: src/main/print-escp2.c:485 src/main/print-escp2.c:486
+#: src/main/print-escp2.c:486 src/main/print-escp2.c:487
 msgid "Dark Yellow Transition"
 msgstr "Dark Yellow Transition"
 
-#: src/main/print-escp2.c:493 src/main/print-escp2.c:494
+#: src/main/print-escp2.c:494 src/main/print-escp2.c:495
 msgid "Gray Transition"
 msgstr "Gray Transition"
 
-#: src/main/print-escp2.c:501 src/main/print-escp2.c:502
-#: src/main/print-escp2.c:525 src/main/print-escp2.c:526
+#: src/main/print-escp2.c:502 src/main/print-escp2.c:503
+#: src/main/print-escp2.c:526 src/main/print-escp2.c:527
 msgid "Light Gray Transition"
 msgstr "Light Gray Transition"
 
-#: src/main/print-escp2.c:509 src/main/print-escp2.c:510
+#: src/main/print-escp2.c:510 src/main/print-escp2.c:511
 msgid "Dark Gray Transition"
 msgstr "Dark Gray Transition"
 
-#: src/main/print-escp2.c:517
+#: src/main/print-escp2.c:518
 msgid "Mid Gray Transition"
 msgstr "Mid Gray Transition"
 
-#: src/main/print-escp2.c:518
+#: src/main/print-escp2.c:519
 msgid "Medium Gray Transition"
 msgstr "Medium Gray Transition"
 
-#: src/main/print-escp2.c:1445
+#: src/main/print-escp2.c:1515
 msgid "Full Manual Control"
 msgstr "Full Manual Control"
 
-#: src/main/print-escp2.c:1447
+#: src/main/print-escp2.c:1517
 msgid "Automatic Setting Control"
 msgstr "Automatic Setting Control"
 
-#: src/main/print-escp2.c:1458 src/main/xmli18n-tmp.h:6
+#: src/main/print-escp2.c:1528 src/main/xmli18n-tmp.h:6
 msgid "CD - 5 inch"
 msgstr "CD - 5 inch"
 
-#: src/main/print-escp2.c:1460 src/main/xmli18n-tmp.h:7
+#: src/main/print-escp2.c:1530 src/main/xmli18n-tmp.h:7
 msgid "CD - 3 inch"
 msgstr "CD - 3 inch"
 
-#: src/main/print-escp2.c:1482
+#: src/main/print-escp2.c:1552
 msgid "Normal"
 msgstr "Normal"
 
-#: src/main/print-escp2.c:1484
+#: src/main/print-escp2.c:1554
 msgid "Print To Hub"
 msgstr "Print To Hub"
 
-#: src/main/print-escp2.c:1509 src/main/generic-options.c:213
+#: src/main/print-escp2.c:1579 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 msgid "Manual Control"
 msgstr "Manual Control"
 
-#: src/main/print-escp2.c:1619 src/cups/genppd.c:1333
+#: src/main/print-escp2.c:1689 src/cups/genppd.c:1331
 msgid "Automatic"
 msgstr "Automatic"
 
-#: src/main/print-escp2.c:1621
+#: src/main/print-escp2.c:1691
 msgid "Bidirectional"
 msgstr "Bidirectional"
 
-#: src/main/print-escp2.c:1623
+#: src/main/print-escp2.c:1693
 msgid "Unidirectional"
 msgstr "Unidirectional"
 
-#: src/main/print-escp2.c:1654
+#: src/main/print-escp2.c:1724
 msgid "Alternate Fill"
 msgstr "Alternate Fill"
 
-#: src/main/print-escp2.c:1656
+#: src/main/print-escp2.c:1726
 msgid "Ascending Fill"
 msgstr "Ascending Fill"
 
-#: src/main/print-escp2.c:1658
+#: src/main/print-escp2.c:1728
 msgid "Descending Fill"
 msgstr "Descending Fill"
 
-#: src/main/print-escp2.c:1660
+#: src/main/print-escp2.c:1730
 msgid "Ascending Double"
 msgstr "Ascending Double"
 
-#: src/main/print-escp2.c:1662
+#: src/main/print-escp2.c:1732
 msgid "Nearest Neighbor Avoidance"
 msgstr "Nearest Neighbour Avoidance"
 
-#: src/main/print-escp2.c:2087
+#: src/main/print-escp2.c:2157
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "This printer does not support raw printer output at depth %d\n"
 
-#: src/main/print-escp2.c:3051 src/main/print-olympus.c:1774
+#: src/main/print-escp2.c:3122 src/main/print-olympus.c:1774
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "Print options not verified; cannot print.\n"
@@ -1789,8 +1794,8 @@ msgstr "Ilford Heavy Paper"
 msgid "Coated"
 msgstr "Card"
 
-#: src/main/print-olympus.c:266 src/cups/genppd.c:1450 src/cups/genppd.c:1465
-#: src/cups/genppd.c:1516
+#: src/main/print-olympus.c:266 src/cups/genppd.c:1448 src/cups/genppd.c:1463
+#: src/cups/genppd.c:1514
 msgid "None"
 msgstr "None"
 
@@ -5988,51 +5993,51 @@ msgid "Lexmark Valuewriter 300"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:799
-msgid "Minolta PagePro 1100"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:800
 msgid "Minolta PagePro 6"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:801
+#: src/main/xmli18n-tmp.h:800
 msgid "Minolta PagePro 6e"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:802
+#: src/main/xmli18n-tmp.h:801
 msgid "Minolta PagePro 6ex"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:803
+#: src/main/xmli18n-tmp.h:802
 msgid "Minolta PagePro 8"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:804
+#: src/main/xmli18n-tmp.h:803
 msgid "Minolta PagePro 8L"
 msgstr ""
 
+#: src/main/xmli18n-tmp.h:804
+msgid "Minolta PagePro 1100"
+msgstr ""
+
 #: src/main/xmli18n-tmp.h:805
-msgid "NEC SuperScript 1260"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:806
-msgid "NEC SuperScript 1400"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:807
-msgid "NEC SuperScript 1800"
-msgstr ""
-
-#: src/main/xmli18n-tmp.h:808
 msgid "NEC SuperScript 660i"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:809
+#: src/main/xmli18n-tmp.h:806
 msgid "NEC SuperScript 860"
 msgstr ""
 
-#: src/main/xmli18n-tmp.h:810
+#: src/main/xmli18n-tmp.h:807
 msgid "NEC SuperScript 870"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:808
+msgid "NEC SuperScript 1260"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:809
+msgid "NEC SuperScript 1400"
+msgstr ""
+
+#: src/main/xmli18n-tmp.h:810
+msgid "NEC SuperScript 1800"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:811
@@ -7092,28 +7097,27 @@ msgstr "Extra 4"
 msgid "Extra 5"
 msgstr "Extra 5"
 
-#. TRANSLATORS: "Gutenprint" is a proper name, not a description
-#: src/cups/genppd.c:189 src/cups/genppd.c:198
-msgid "Gutenprint"
-msgstr "Gutenprint"
-
-#: src/cups/genppd.c:890
+#. TRANSLATORS: Specify the language of the PPD translation.
+#. * Use the English name of your language here, e.g. "Swedish" instead of
+#. * "Svenska".
+#: src/cups/genppd.c:888
 msgid "English"
 msgstr "English-GB"
 
-#: src/cups/genppd.c:892
+#. TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1
+#: src/cups/genppd.c:890
 msgid "ISOLatin1"
 msgstr "UTF-8"
 
-#: src/cups/genppd.c:1467
+#: src/cups/genppd.c:1465
 msgid "No"
 msgstr "No"
 
-#: src/cups/genppd.c:1469
+#: src/cups/genppd.c:1467
 msgid "Yes"
 msgstr "Yes"
 
-#: src/cups/genppd.c:1499
+#: src/cups/genppd.c:1497
 msgid "Fine Adjustment"
 msgstr "Fine Adjustment"
 
@@ -8115,6 +8119,9 @@ msgstr "Bad parameters; cannot continue!\n"
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "Get next row failed at %.0f\n"
+
+#~ msgid "Gutenprint"
+#~ msgstr "Gutenprint"
 
 #, fuzzy
 #~ msgid "ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"

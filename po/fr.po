@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 5.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-12 20:55-0400\n"
+"POT-Creation-Date: 2006-05-28 19:56-0400\n"
 "PO-Revision-Date: 2006-05-28 10:05-0400\n"
 "Last-Translator: regis rampnoux <regisr@pobox.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -19,9 +19,10 @@ msgstr ""
 "X-Poedit-Language: French\n"
 "X-Poedit-Country: FRANCE\n"
 
-#: src/main/dither-main.c:46
-#: src/main/print-color.c:49
-#: src/main/print-escp2.c:1529
+#. TRANSLATORS: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
+#: src/main/dither-main.c:46 src/main/print-color.c:49
+#: src/main/print-escp2.c:1599
 msgid "Default"
 msgstr "Défaut"
 
@@ -33,103 +34,103 @@ msgstr "EvenTone"
 msgid "Hybrid EvenTone"
 msgstr "Hybride EvenTone"
 
-#: src/main/dither-main.c:54
+#. TRANSLATORS: EvenTone, EvenBetter, and UniTone are proper
+#. * names, not descriptive.
+#.
+#: src/main/dither-main.c:53
 msgid "EvenBetter"
 msgstr "EvenBetter"
 
-#: src/main/dither-main.c:55
+#: src/main/dither-main.c:54
 msgid "Hybrid EvenBetter"
 msgstr "Hybride EvenBetter"
 
-#: src/main/dither-main.c:61
+#: src/main/dither-main.c:60
 msgid "UniTone"
 msgstr "UniTone"
 
-#: src/main/dither-main.c:62
+#: src/main/dither-main.c:61
 msgid "Hybrid UniTone"
 msgstr "Hybride Unitone"
 
-#: src/main/dither-main.c:64
+#: src/main/dither-main.c:63
 msgid "Adaptive Hybrid"
 msgstr "Adaptatif hybride"
 
-#: src/main/dither-main.c:65
+#: src/main/dither-main.c:64
 msgid "Ordered"
 msgstr "Ordonné"
 
-#: src/main/dither-main.c:66
+#: src/main/dither-main.c:65
 msgid "Fast"
 msgstr "Rapide"
 
-#: src/main/dither-main.c:67
+#: src/main/dither-main.c:66
 msgid "Very Fast"
 msgstr "Très rapide"
 
-#: src/main/dither-main.c:68
+#: src/main/dither-main.c:67
 msgid "Hybrid Floyd-Steinberg"
 msgstr "Floyd-Steinberg hybride"
 
-#: src/main/dither-main.c:69
+#: src/main/dither-main.c:68
 msgid "Predithered Input"
 msgstr "Pré tramé"
 
-#: src/main/dither-main.c:89
-#: src/main/print-color.c:56
+#: src/main/dither-main.c:88 src/main/print-color.c:56
 msgid "Density"
 msgstr "Densité"
 
-#: src/main/dither-main.c:89
-#: src/main/print-canon.c:1534
-#: src/main/print-canon.c:1542
-#: src/main/print-canon.c:1550
-#: src/main/print-canon.c:1558
-#: src/main/print-escp2.c:413
-#: src/main/print-escp2.c:421
-#: src/main/print-escp2.c:429
-#: src/main/print-escp2.c:437
-#: src/main/print-escp2.c:445
-#: src/main/print-escp2.c:453
-#: src/main/print-escp2.c:461
-#: src/main/print-lexmark.c:325
-#: src/main/print-lexmark.c:333
-#: src/main/print-lexmark.c:341
-#: src/main/print-lexmark.c:349
-#: src/main/print-olympus.c:1330
-#: src/main/print-olympus.c:1338
-#: src/main/print-olympus.c:1346
-#: src/main/print-olympus.c:1354
-#: src/main/print-pcl.c:1218
-#: src/main/print-pcl.c:1226
-#: src/main/print-pcl.c:1234
-#: src/main/print-pcl.c:1242
+#: src/main/dither-main.c:88 src/main/print-canon.c:1534
+#: src/main/print-canon.c:1542 src/main/print-canon.c:1550
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:414
+#: src/main/print-escp2.c:422 src/main/print-escp2.c:430
+#: src/main/print-escp2.c:438 src/main/print-escp2.c:446
+#: src/main/print-escp2.c:454 src/main/print-escp2.c:462
+#: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
+#: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
+#: src/main/print-olympus.c:1330 src/main/print-olympus.c:1338
+#: src/main/print-olympus.c:1346 src/main/print-olympus.c:1354
+#: src/main/print-pcl.c:1218 src/main/print-pcl.c:1226
+#: src/main/print-pcl.c:1234 src/main/print-pcl.c:1242
 msgid "Output Level Adjustment"
 msgstr "Réglage du niveau de sortie"
 
-#: src/main/dither-main.c:90
-msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
-msgstr "Ajustement de la densité (quantité d'encre) de l'impression. Réduisez la densité si l'encre bave sur le papier ou fait des taches; augmentez la densité si les régions noires ne sont pas pleines."
+#: src/main/dither-main.c:89
+msgid ""
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
+msgstr ""
+"Ajustement de la densité (quantité d'encre) de l'impression. Réduisez la "
+"densité si l'encre bave sur le papier ou fait des taches; augmentez la "
+"densité si les régions noires ne sont pas pleines."
 
-#: src/main/dither-main.c:98
+#: src/main/dither-main.c:97
 msgid "Dither Algorithm"
 msgstr "Algorithme de tramage"
 
-#: src/main/dither-main.c:98
+#: src/main/dither-main.c:97
 msgid "Screening Adjustment"
 msgstr ""
 
-#: src/main/dither-main.c:99
+#: src/main/dither-main.c:98
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent "
+"results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line "
+"art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Choisissez l'algorithme de tramage à utiliser.\n"
 "Adaptative Hybride produit habituellement la meilleure qualité de tous.\n"
-"Ordonné est plus rapide et produit une qualité presque aussi bonne que les photographes.\n"
-"Rapide et Très Rapide sont considérablement rapudes et fonctionne bien pour du text ou des tracés.\n"
+"Ordonné est plus rapide et produit une qualité presque aussi bonne que les "
+"photographes.\n"
+"Rapide et Très Rapide sont considérablement rapudes et fonctionne bien pour "
+"du text ou des tracés.\n"
 "Floyd-Steinberg Hybride produit généralement des sorties inférieures."
 
 #: src/main/module.c:52
@@ -212,8 +213,7 @@ msgstr "2880x2880 PPP"
 msgid "2880x2880 DPI DMT"
 msgstr "2880x2880 PPP DMT"
 
-#: src/main/print-canon.c:1390
-#: src/main/print-pcl.c:253
+#: src/main/print-canon.c:1390 src/main/print-pcl.c:253
 msgid "150x150 DPI"
 msgstr "150x150 PPP"
 
@@ -221,8 +221,7 @@ msgstr "150x150 PPP"
 msgid "150x150 DPI DMT"
 msgstr "150x150 PPP DMT"
 
-#: src/main/print-canon.c:1391
-#: src/main/print-pcl.c:254
+#: src/main/print-canon.c:1391 src/main/print-pcl.c:254
 msgid "300x300 DPI"
 msgstr "300x300 PPP"
 
@@ -230,8 +229,7 @@ msgstr "300x300 PPP"
 msgid "300x300 DPI DMT"
 msgstr "300x300 PPP DMT"
 
-#: src/main/print-canon.c:1392
-#: src/main/print-pcl.c:255
+#: src/main/print-canon.c:1392 src/main/print-pcl.c:255
 msgid "600x300 DPI"
 msgstr "600x300 PPP"
 
@@ -239,8 +237,7 @@ msgstr "600x300 PPP"
 msgid "600x300 DPI DMT"
 msgstr "600x300 PPP DMT"
 
-#: src/main/print-canon.c:1393
-#: src/main/print-pcl.c:257
+#: src/main/print-canon.c:1393 src/main/print-pcl.c:257
 msgid "600x600 DPI"
 msgstr "600x600 PPP"
 
@@ -248,8 +245,7 @@ msgstr "600x600 PPP"
 msgid "600x600 DPI DMT"
 msgstr "600x600 PPP DMT"
 
-#: src/main/print-canon.c:1394
-#: src/main/print-pcl.c:258
+#: src/main/print-canon.c:1394 src/main/print-pcl.c:258
 msgid "1200x600 DPI"
 msgstr "1200x600 PPP"
 
@@ -273,14 +269,10 @@ msgstr "2400x2400 PPP"
 msgid "2400x2400 DPI DMT"
 msgstr "2400x2400 PPP DMT"
 
-#: src/main/print-canon.c:1447
-#: src/main/print-lexmark.c:856
-#: src/main/escp2-papers.c:1160
-#: src/main/escp2-papers.c:1204
-#: src/main/escp2-papers.c:1248
-#: src/main/escp2-papers.c:1296
-#: src/main/escp2-papers.c:1344
-#: src/main/escp2-papers.c:1388
+#: src/main/print-canon.c:1447 src/main/print-lexmark.c:856
+#: src/main/escp2-papers.c:1160 src/main/escp2-papers.c:1204
+#: src/main/escp2-papers.c:1248 src/main/escp2-papers.c:1296
+#: src/main/escp2-papers.c:1344 src/main/escp2-papers.c:1388
 msgid "Plain Paper"
 msgstr "Papier ordinaire"
 
@@ -288,14 +280,10 @@ msgstr "Papier ordinaire"
 msgid "Plain Paper PIXMA"
 msgstr "Papier PIXMA"
 
-#: src/main/print-canon.c:1449
-#: src/main/print-lexmark.c:864
-#: src/main/escp2-papers.c:1168
-#: src/main/escp2-papers.c:1212
-#: src/main/escp2-papers.c:1256
-#: src/main/escp2-papers.c:1304
-#: src/main/escp2-papers.c:1352
-#: src/main/escp2-papers.c:1396
+#: src/main/print-canon.c:1449 src/main/print-lexmark.c:864
+#: src/main/escp2-papers.c:1168 src/main/escp2-papers.c:1212
+#: src/main/escp2-papers.c:1256 src/main/escp2-papers.c:1304
+#: src/main/escp2-papers.c:1352 src/main/escp2-papers.c:1396
 msgid "Transparencies"
 msgstr "Transparents"
 
@@ -335,363 +323,236 @@ msgstr "Cartes brillantes qualité photo"
 msgid "Photo Paper Pro"
 msgstr "Papier Photo Pro"
 
-#: src/main/print-canon.c:1459
-#: src/main/print-lexmark.c:904
-#: src/main/escp2-papers.c:1196
-#: src/main/escp2-papers.c:1240
-#: src/main/escp2-papers.c:1288
-#: src/main/escp2-papers.c:1336
-#: src/main/escp2-papers.c:1380
-#: src/main/escp2-papers.c:1428
+#: src/main/print-canon.c:1459 src/main/print-lexmark.c:904
+#: src/main/escp2-papers.c:1196 src/main/escp2-papers.c:1240
+#: src/main/escp2-papers.c:1288 src/main/escp2-papers.c:1336
+#: src/main/escp2-papers.c:1380 src/main/escp2-papers.c:1428
 #: src/main/escp2-papers.c:1438
 msgid "Other"
 msgstr "Autre"
 
-#: src/main/print-canon.c:1469
-#: src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:266
-#: src/main/print-olympus.c:1265
-#: src/main/print-pcl.c:1153
-#: src/main/print-ps.c:66
+#: src/main/print-canon.c:1469 src/main/print-escp2.c:177
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1265
+#: src/main/print-pcl.c:1153 src/main/print-ps.c:66
 msgid "Page Size"
 msgstr "Format papier "
 
-#: src/main/print-canon.c:1469
-#: src/main/print-canon.c:1475
-#: src/main/print-canon.c:1481
-#: src/main/print-canon.c:1487
-#: src/main/print-canon.c:1511
-#: src/main/print-escp2.c:177
-#: src/main/print-escp2.c:183
-#: src/main/print-escp2.c:189
-#: src/main/print-escp2.c:195
-#: src/main/print-escp2.c:213
-#: src/main/print-escp2.c:230
-#: src/main/print-escp2.c:236
-#: src/main/print-escp2.c:248
-#: src/main/print-escp2.c:266
-#: src/main/print-lexmark.c:266
-#: src/main/print-lexmark.c:272
-#: src/main/print-lexmark.c:278
-#: src/main/print-lexmark.c:284
-#: src/main/print-olympus.c:1265
-#: src/main/print-olympus.c:1271
-#: src/main/print-olympus.c:1277
-#: src/main/print-olympus.c:1283
-#: src/main/print-pcl.c:1153
-#: src/main/print-pcl.c:1159
-#: src/main/print-pcl.c:1165
-#: src/main/print-pcl.c:1171
-#: src/main/print-pcl.c:1195
-#: src/main/print-ps.c:66
-#: src/main/print-ps.c:72
-#: src/main/print-ps.c:78
-#: src/main/print-ps.c:84
-#: src/main/print-ps.c:96
+#: src/main/print-canon.c:1469 src/main/print-canon.c:1475
+#: src/main/print-canon.c:1481 src/main/print-canon.c:1487
+#: src/main/print-canon.c:1511 src/main/print-escp2.c:177
+#: src/main/print-escp2.c:183 src/main/print-escp2.c:189
+#: src/main/print-escp2.c:195 src/main/print-escp2.c:213
+#: src/main/print-escp2.c:230 src/main/print-escp2.c:236
+#: src/main/print-escp2.c:248 src/main/print-escp2.c:266
+#: src/main/print-lexmark.c:266 src/main/print-lexmark.c:272
+#: src/main/print-lexmark.c:278 src/main/print-lexmark.c:284
+#: src/main/print-olympus.c:1265 src/main/print-olympus.c:1271
+#: src/main/print-olympus.c:1277 src/main/print-olympus.c:1283
+#: src/main/print-pcl.c:1153 src/main/print-pcl.c:1159
+#: src/main/print-pcl.c:1165 src/main/print-pcl.c:1171
+#: src/main/print-pcl.c:1195 src/main/print-ps.c:66 src/main/print-ps.c:72
+#: src/main/print-ps.c:78 src/main/print-ps.c:84 src/main/print-ps.c:96
 msgid "Basic Printer Setup"
 msgstr "Configuration de base de l'imprimante"
 
-#: src/main/print-canon.c:1470
-#: src/main/print-escp2.c:178
-#: src/main/print-lexmark.c:267
-#: src/main/print-olympus.c:1266
-#: src/main/print-pcl.c:1154
-#: src/main/print-ps.c:67
+#: src/main/print-canon.c:1470 src/main/print-escp2.c:178
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1266
+#: src/main/print-pcl.c:1154 src/main/print-ps.c:67
 msgid "Size of the paper being printed to"
 msgstr "Taille du papier sur lequel vous imprimez"
 
-#: src/main/print-canon.c:1475
-#: src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:272
-#: src/main/print-olympus.c:1271
-#: src/main/print-pcl.c:1159
-#: src/main/print-ps.c:72
-#: src/cups/genppd.c:1240
+#: src/main/print-canon.c:1475 src/main/print-escp2.c:183
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1271
+#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1238
 msgid "Media Type"
 msgstr "Type de support"
 
-#: src/main/print-canon.c:1476
-#: src/main/print-escp2.c:184
-#: src/main/print-lexmark.c:273
-#: src/main/print-olympus.c:1272
-#: src/main/print-pcl.c:1160
-#: src/main/print-ps.c:73
+#: src/main/print-canon.c:1476 src/main/print-escp2.c:184
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1272
+#: src/main/print-pcl.c:1160 src/main/print-ps.c:73
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Type de support (papier ordinaire, papier photo etc.)"
 
-#: src/main/print-canon.c:1481
-#: src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:278
-#: src/main/print-olympus.c:1277
-#: src/main/print-pcl.c:1165
-#: src/main/print-ps.c:78
-#: src/cups/genppd.c:1264
+#: src/main/print-canon.c:1481 src/main/print-escp2.c:189
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1277
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1262
 msgid "Media Source"
 msgstr "Source du support"
 
-#: src/main/print-canon.c:1482
-#: src/main/print-escp2.c:190
-#: src/main/print-lexmark.c:279
-#: src/main/print-olympus.c:1278
-#: src/main/print-pcl.c:1166
-#: src/main/print-ps.c:79
+#: src/main/print-canon.c:1482 src/main/print-escp2.c:190
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1278
+#: src/main/print-pcl.c:1166 src/main/print-ps.c:79
 msgid "Source (input slot) of the media"
 msgstr "Source (bac) du support vers lequel vous imprimez"
 
-#: src/main/print-canon.c:1487
-#: src/main/print-escp2.c:213
-#: src/main/print-lexmark.c:284
-#: src/main/print-olympus.c:1283
-#: src/main/print-pcl.c:1171
-#: src/main/print-ps.c:84
-#: src/cups/genppd.c:1324
+#: src/main/print-canon.c:1487 src/main/print-escp2.c:213
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1283
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1322
 msgid "Resolution"
 msgstr "Résolution"
 
-#: src/main/print-canon.c:1488
-#: src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:1284
-#: src/main/print-pcl.c:1172
+#: src/main/print-canon.c:1488 src/main/print-lexmark.c:285
+#: src/main/print-olympus.c:1284 src/main/print-pcl.c:1172
 #: src/main/print-ps.c:85
 msgid "Resolution and quality of the print"
 msgstr "Résolution et qualité de l'impression"
 
-#: src/main/print-canon.c:1493
-#: src/main/print-escp2.c:224
-#: src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1289
-#: src/main/print-pcl.c:1177
-#: src/main/print-ps.c:90
-#: src/main/print-raw.c:80
+#: src/main/print-canon.c:1493 src/main/print-escp2.c:224
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1289
+#: src/main/print-pcl.c:1177 src/main/print-ps.c:90 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Type d'encre"
 
-#: src/main/print-canon.c:1493
-#: src/main/print-escp2.c:201
-#: src/main/print-escp2.c:207
-#: src/main/print-escp2.c:224
-#: src/main/print-escp2.c:260
-#: src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1289
-#: src/main/print-olympus.c:1295
-#: src/main/print-olympus.c:1301
-#: src/main/print-pcl.c:1177
-#: src/main/print-ps.c:90
-#: src/main/print-raw.c:80
+#: src/main/print-canon.c:1493 src/main/print-escp2.c:201
+#: src/main/print-escp2.c:207 src/main/print-escp2.c:224
+#: src/main/print-escp2.c:260 src/main/print-lexmark.c:290
+#: src/main/print-olympus.c:1289 src/main/print-olympus.c:1295
+#: src/main/print-olympus.c:1301 src/main/print-pcl.c:1177
+#: src/main/print-ps.c:90 src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr "Réglages imprimante avancés"
 
-#: src/main/print-canon.c:1494
-#: src/main/print-escp2.c:225
-#: src/main/print-escp2.c:237
-#: src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:1290
-#: src/main/print-pcl.c:1178
-#: src/main/print-ps.c:91
-#: src/main/print-raw.c:81
+#: src/main/print-canon.c:1494 src/main/print-escp2.c:225
+#: src/main/print-escp2.c:237 src/main/print-lexmark.c:291
+#: src/main/print-olympus.c:1290 src/main/print-pcl.c:1178
+#: src/main/print-ps.c:91 src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "Encres installées"
 
-#: src/main/print-canon.c:1499
-#: src/main/print-canon.c:1500
-#: src/main/print-escp2.c:308
-#: src/main/print-escp2.c:309
-#: src/main/print-lexmark.c:296
-#: src/main/print-lexmark.c:297
-#: src/main/print-pcl.c:1183
-#: src/main/print-pcl.c:1184
+#: src/main/print-canon.c:1499 src/main/print-canon.c:1500
+#: src/main/print-escp2.c:308 src/main/print-escp2.c:309
+#: src/main/print-lexmark.c:296 src/main/print-lexmark.c:297
+#: src/main/print-pcl.c:1183 src/main/print-pcl.c:1184
 msgid "Ink Channels"
 msgstr "Encres (canaux)"
 
-#: src/main/print-canon.c:1499
-#: src/main/print-escp2.c:127
-#: src/main/print-escp2.c:134
-#: src/main/print-escp2.c:141
-#: src/main/print-escp2.c:272
-#: src/main/print-escp2.c:278
-#: src/main/print-escp2.c:284
-#: src/main/print-escp2.c:290
-#: src/main/print-escp2.c:296
-#: src/main/print-escp2.c:302
-#: src/main/print-escp2.c:308
-#: src/main/print-escp2.c:314
-#: src/main/print-lexmark.c:296
-#: src/main/print-pcl.c:1183
+#: src/main/print-canon.c:1499 src/main/print-escp2.c:127
+#: src/main/print-escp2.c:134 src/main/print-escp2.c:141
+#: src/main/print-escp2.c:272 src/main/print-escp2.c:278
+#: src/main/print-escp2.c:284 src/main/print-escp2.c:290
+#: src/main/print-escp2.c:296 src/main/print-escp2.c:302
+#: src/main/print-escp2.c:308 src/main/print-escp2.c:314
+#: src/main/print-lexmark.c:296 src/main/print-pcl.c:1183
 msgid "Advanced Printer Functionality"
 msgstr "Fonctionalités avancées"
 
-#: src/main/print-canon.c:1505
-#: src/main/print-escp2.c:320
-#: src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1307
-#: src/main/print-pcl.c:1189
-#: src/main/print-ps.c:102
-#: src/main/print-raw.c:86
+#: src/main/print-canon.c:1505 src/main/print-escp2.c:320
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1307
+#: src/main/print-pcl.c:1189 src/main/print-ps.c:102 src/main/print-raw.c:86
 msgid "Printing Mode"
 msgstr "Mode d'impression"
 
-#: src/main/print-canon.c:1505
-#: src/main/print-color.c:184
-#: src/main/print-color.c:192
-#: src/main/print-color.c:200
-#: src/main/print-color.c:208
-#: src/main/print-escp2.c:320
-#: src/main/print-escp2.c:326
-#: src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1307
-#: src/main/print-pcl.c:1189
-#: src/main/print-ps.c:102
-#: src/main/print-raw.c:86
+#: src/main/print-canon.c:1505 src/main/print-color.c:184
+#: src/main/print-color.c:192 src/main/print-color.c:200
+#: src/main/print-color.c:208 src/main/print-escp2.c:320
+#: src/main/print-escp2.c:326 src/main/print-lexmark.c:302
+#: src/main/print-olympus.c:1307 src/main/print-pcl.c:1189
+#: src/main/print-ps.c:102 src/main/print-raw.c:86
 msgid "Core Parameter"
 msgstr "Paramètres principaux"
 
-#: src/main/print-canon.c:1506
-#: src/main/print-escp2.c:321
-#: src/main/print-lexmark.c:303
-#: src/main/print-olympus.c:1308
-#: src/main/print-pcl.c:1190
-#: src/main/print-ps.c:103
-#: src/main/print-raw.c:87
+#: src/main/print-canon.c:1506 src/main/print-escp2.c:321
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1308
+#: src/main/print-pcl.c:1190 src/main/print-ps.c:103 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr "Mode de sortie"
 
-#: src/main/print-canon.c:1511
-#: src/main/print-pcl.c:1195
+#: src/main/print-canon.c:1511 src/main/print-pcl.c:1195
 msgid "Double-Sided Printing"
 msgstr "Impression double face"
 
-#: src/main/print-canon.c:1512
-#: src/main/print-pcl.c:1196
+#: src/main/print-canon.c:1512 src/main/print-pcl.c:1196
 msgid "Duplex/Tumble Setting"
 msgstr "Paramètres Duplex"
 
-#: src/main/print-canon.c:1534
-#: src/main/print-escp2.c:413
-#: src/main/print-lexmark.c:325
-#: src/main/print-pcl.c:1218
+#: src/main/print-canon.c:1534 src/main/print-escp2.c:414
+#: src/main/print-lexmark.c:325 src/main/print-pcl.c:1218
 msgid "Cyan Density"
 msgstr "Densité cyan"
 
-#: src/main/print-canon.c:1535
-#: src/main/print-escp2.c:414
-#: src/main/print-lexmark.c:326
-#: src/main/print-pcl.c:1219
+#: src/main/print-canon.c:1535 src/main/print-escp2.c:415
+#: src/main/print-lexmark.c:326 src/main/print-pcl.c:1219
 msgid "Adjust the cyan density"
 msgstr "Ajustement de la densité de cyan"
 
-#: src/main/print-canon.c:1542
-#: src/main/print-escp2.c:421
-#: src/main/print-lexmark.c:333
-#: src/main/print-pcl.c:1226
+#: src/main/print-canon.c:1542 src/main/print-escp2.c:422
+#: src/main/print-lexmark.c:333 src/main/print-pcl.c:1226
 msgid "Magenta Density"
 msgstr "Densité magenta"
 
-#: src/main/print-canon.c:1543
-#: src/main/print-escp2.c:422
-#: src/main/print-lexmark.c:334
-#: src/main/print-pcl.c:1227
+#: src/main/print-canon.c:1543 src/main/print-escp2.c:423
+#: src/main/print-lexmark.c:334 src/main/print-pcl.c:1227
 msgid "Adjust the magenta density"
 msgstr "Ajustement de la densité de magenta"
 
-#: src/main/print-canon.c:1550
-#: src/main/print-escp2.c:429
-#: src/main/print-lexmark.c:341
-#: src/main/print-pcl.c:1234
+#: src/main/print-canon.c:1550 src/main/print-escp2.c:430
+#: src/main/print-lexmark.c:341 src/main/print-pcl.c:1234
 msgid "Yellow Density"
 msgstr "Densité jaune"
 
-#: src/main/print-canon.c:1551
-#: src/main/print-escp2.c:430
-#: src/main/print-lexmark.c:342
-#: src/main/print-pcl.c:1235
+#: src/main/print-canon.c:1551 src/main/print-escp2.c:431
+#: src/main/print-lexmark.c:342 src/main/print-pcl.c:1235
 msgid "Adjust the yellow density"
 msgstr "Ajustement de la densité de jaune"
 
-#: src/main/print-canon.c:1558
-#: src/main/print-escp2.c:437
-#: src/main/print-lexmark.c:349
-#: src/main/print-pcl.c:1242
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:438
+#: src/main/print-lexmark.c:349 src/main/print-pcl.c:1242
 msgid "Black Density"
 msgstr "Densité du noir"
 
-#: src/main/print-canon.c:1559
-#: src/main/print-escp2.c:438
-#: src/main/print-lexmark.c:350
-#: src/main/print-pcl.c:1243
+#: src/main/print-canon.c:1559 src/main/print-escp2.c:439
+#: src/main/print-lexmark.c:350 src/main/print-pcl.c:1243
 msgid "Adjust the black density"
 msgstr "Ajustement du niveau de densité"
 
-#: src/main/print-canon.c:1566
-#: src/main/print-canon.c:1567
-#: src/main/print-escp2.c:469
-#: src/main/print-escp2.c:470
-#: src/main/print-lexmark.c:357
-#: src/main/print-lexmark.c:358
-#: src/main/print-pcl.c:1250
-#: src/main/print-pcl.c:1251
+#: src/main/print-canon.c:1566 src/main/print-canon.c:1567
+#: src/main/print-escp2.c:470 src/main/print-escp2.c:471
+#: src/main/print-lexmark.c:357 src/main/print-lexmark.c:358
+#: src/main/print-pcl.c:1250 src/main/print-pcl.c:1251
 msgid "Light Cyan Transition"
 msgstr "Passage cyan clair"
 
-#: src/main/print-canon.c:1566
-#: src/main/print-canon.c:1574
-#: src/main/print-canon.c:1582
-#: src/main/print-escp2.c:469
-#: src/main/print-escp2.c:477
-#: src/main/print-escp2.c:485
-#: src/main/print-escp2.c:493
-#: src/main/print-escp2.c:501
-#: src/main/print-escp2.c:509
-#: src/main/print-escp2.c:517
-#: src/main/print-escp2.c:525
-#: src/main/print-lexmark.c:357
-#: src/main/print-lexmark.c:365
-#: src/main/print-pcl.c:1250
+#: src/main/print-canon.c:1566 src/main/print-canon.c:1574
+#: src/main/print-canon.c:1582 src/main/print-escp2.c:470
+#: src/main/print-escp2.c:478 src/main/print-escp2.c:486
+#: src/main/print-escp2.c:494 src/main/print-escp2.c:502
+#: src/main/print-escp2.c:510 src/main/print-escp2.c:518
+#: src/main/print-escp2.c:526 src/main/print-lexmark.c:357
+#: src/main/print-lexmark.c:365 src/main/print-pcl.c:1250
 #: src/main/print-pcl.c:1258
 msgid "Advanced Ink Adjustment"
 msgstr "Réglage avancé des encres"
 
-#: src/main/print-canon.c:1574
-#: src/main/print-canon.c:1575
-#: src/main/print-escp2.c:477
-#: src/main/print-escp2.c:478
-#: src/main/print-lexmark.c:365
-#: src/main/print-lexmark.c:366
-#: src/main/print-pcl.c:1258
-#: src/main/print-pcl.c:1259
+#: src/main/print-canon.c:1574 src/main/print-canon.c:1575
+#: src/main/print-escp2.c:478 src/main/print-escp2.c:479
+#: src/main/print-lexmark.c:365 src/main/print-lexmark.c:366
+#: src/main/print-pcl.c:1258 src/main/print-pcl.c:1259
 msgid "Light Magenta Transition"
 msgstr "Transition magenta clair"
 
-#: src/main/print-canon.c:1582
-#: src/main/print-canon.c:1583
+#: src/main/print-canon.c:1582 src/main/print-canon.c:1583
 msgid "Light Yellow Transition"
 msgstr "Transition jaune clair"
 
-#: src/main/print-canon.c:1604
-#: src/main/print-pcl.c:1439
-#: src/main/escp2-resolutions.c:547
-#: src/main/escp2-resolutions.c:555
-#: src/main/escp2-resolutions.c:566
-#: src/main/escp2-resolutions.c:578
+#: src/main/print-canon.c:1604 src/main/print-pcl.c:1439
+#: src/main/escp2-resolutions.c:547 src/main/escp2-resolutions.c:555
+#: src/main/escp2-resolutions.c:566 src/main/escp2-resolutions.c:578
 msgid "Off"
 msgstr "Désactivé"
 
-#: src/main/print-canon.c:1606
-#: src/main/print-pcl.c:1441
+#: src/main/print-canon.c:1606 src/main/print-pcl.c:1441
 msgid "Short Edge (Flip)"
 msgstr "Côté court (retourné)"
 
-#: src/main/print-canon.c:1920
-#: src/main/print-lexmark.c:1113
+#: src/main/print-canon.c:1920 src/main/print-lexmark.c:1113
 msgid "Auto Sheet Feeder"
 msgstr "Bac automatique"
 
-#: src/main/print-canon.c:1921
-#: src/main/print-lexmark.c:1114
+#: src/main/print-canon.c:1921 src/main/print-lexmark.c:1114
 msgid "Manual with Pause"
 msgstr "Manuel avec pause"
 
-#: src/main/print-canon.c:1922
-#: src/main/print-lexmark.c:1115
+#: src/main/print-canon.c:1922 src/main/print-lexmark.c:1115
 msgid "Manual without Pause"
 msgstr "Manuel sans pause"
 
@@ -719,46 +580,29 @@ msgstr "Couleur CMJN"
 msgid "CMY Color"
 msgstr "Couleur CMJ"
 
-#: src/main/print-canon.c:2061
-#: src/main/print-color.c:314
-#: src/main/print-escp2-data.c:737
-#: src/main/print-escp2-data.c:750
-#: src/main/print-escp2-data.c:760
-#: src/main/print-escp2-data.c:767
-#: src/main/print-escp2-data.c:779
-#: src/main/print-escp2-data.c:791
-#: src/main/print-escp2-data.c:804
-#: src/main/print-escp2-data.c:817
-#: src/main/print-escp2-data.c:823
-#: src/main/print-escp2-data.c:847
-#: src/main/print-escp2-data.c:860
-#: src/main/print-lexmark.c:613
-#: src/gutenprintui/panel.c:2145
-#: src/gutenprintui2/panel.c:2144
-#: src/escputil/escputil.c:965
-#: src/escputil/escputil.c:986
+#: src/main/print-canon.c:2061 src/main/print-color.c:314
+#: src/main/print-escp2-data.c:738 src/main/print-escp2-data.c:751
+#: src/main/print-escp2-data.c:761 src/main/print-escp2-data.c:768
+#: src/main/print-escp2-data.c:780 src/main/print-escp2-data.c:792
+#: src/main/print-escp2-data.c:805 src/main/print-escp2-data.c:818
+#: src/main/print-escp2-data.c:824 src/main/print-escp2-data.c:848
+#: src/main/print-escp2-data.c:861 src/main/print-lexmark.c:613
+#: src/gutenprintui/panel.c:2145 src/gutenprintui2/panel.c:2144
+#: src/escputil/escputil.c:965 src/escputil/escputil.c:986
 #: src/escputil/escputil.c:1190
 msgid "Black"
 msgstr "Noir"
 
-#: src/main/print-canon.c:2106
-#: src/main/print-escp2.c:1787
-#: src/main/print-lexmark.c:1279
-#: src/main/print-olympus.c:1562
-#: src/main/print-pcl.c:1733
-#: src/main/print-ps.c:167
-#: src/main/print-raw.c:135
-#: src/gutenprintui/panel.c:285
-#: src/gutenprintui2/panel.c:285
+#: src/main/print-canon.c:2106 src/main/print-escp2.c:1857
+#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1562
+#: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
+#: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color"
 msgstr "Couleur"
 
-#: src/main/print-canon.c:2108
-#: src/main/print-escp2.c:1789
-#: src/main/print-lexmark.c:1281
-#: src/main/print-pcl.c:1735
-#: src/main/print-ps.c:169
-#: src/main/print-raw.c:137
+#: src/main/print-canon.c:2108 src/main/print-escp2.c:1859
+#: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1735
+#: src/main/print-ps.c:169 src/main/print-raw.c:137
 msgid "Black and White"
 msgstr "Noir et blanc"
 
@@ -786,8 +630,7 @@ msgstr "Désaturé"
 msgid "Threshold"
 msgstr "Seuil"
 
-#: src/main/print-color.c:57
-#: src/main/print-color.c:133
+#: src/main/print-color.c:57 src/main/print-color.c:133
 msgid "Raw"
 msgstr "Raw"
 
@@ -795,12 +638,9 @@ msgstr "Raw"
 msgid "Pre-Dithered"
 msgstr "Pré-tramé"
 
-#: src/main/print-color.c:121
-#: src/main/escp2-channels.c:820
-#: src/main/escp2-channels.c:833
-#: src/main/escp2-channels.c:847
-#: src/gutenprintui/panel.c:286
-#: src/gutenprintui2/panel.c:286
+#: src/main/print-color.c:121 src/main/escp2-channels.c:820
+#: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
+#: src/gutenprintui/panel.c:286 src/gutenprintui2/panel.c:286
 msgid "Grayscale"
 msgstr "Niveaux de gris"
 
@@ -824,8 +664,7 @@ msgstr "CMJN"
 msgid "KCMY"
 msgstr "NCMJ"
 
-#: src/main/print-color.c:165
-#: src/main/print-color.c:446
+#: src/main/print-color.c:165 src/main/print-color.c:446
 msgid "Channel "
 msgstr "Canal"
 
@@ -833,18 +672,12 @@ msgstr "Canal"
 msgid " Gamma"
 msgstr "Gamma"
 
-#: src/main/print-color.c:165
-#: src/main/print-color.c:216
-#: src/main/print-color.c:248
-#: src/main/print-color.c:258
-#: src/main/print-color.c:266
-#: src/main/print-color.c:274
-#: src/main/print-color.c:282
-#: src/main/print-color.c:290
-#: src/main/print-color.c:298
-#: src/main/print-color.c:306
-#: src/main/print-color.c:314
-#: src/gutenprintui2/gammacurve.c:408
+#: src/main/print-color.c:165 src/main/print-color.c:216
+#: src/main/print-color.c:248 src/main/print-color.c:258
+#: src/main/print-color.c:266 src/main/print-color.c:274
+#: src/main/print-color.c:282 src/main/print-color.c:290
+#: src/main/print-color.c:298 src/main/print-color.c:306
+#: src/main/print-color.c:314 src/gutenprintui2/gammacurve.c:408
 msgid "Gamma"
 msgstr "Gamma"
 
@@ -856,10 +689,8 @@ msgstr "Gamma pour canal raw"
 msgid "Color Correction"
 msgstr "Correction des couleurs"
 
-#: src/main/print-color.c:176
-#: src/main/print-color.c:224
-#: src/main/print-color.c:232
-#: src/main/print-color.c:346
+#: src/main/print-color.c:176 src/main/print-color.c:224
+#: src/main/print-color.c:232 src/main/print-color.c:346
 #: src/main/generic-options.c:68
 msgid "Basic Image Adjustment"
 msgstr "Réglage fin de base de l'image"
@@ -892,8 +723,7 @@ msgstr "Type de sortie :"
 msgid "Output image type"
 msgstr "Type de sortie :"
 
-#: src/main/print-color.c:208
-#: src/main/print-color.c:209
+#: src/main/print-color.c:208 src/main/print-color.c:209
 #: src/main/print-escp2.c:326
 msgid "Raw Channels"
 msgstr "Canaux raw"
@@ -932,15 +762,22 @@ msgstr "Contrôle avancé de l'image"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
-msgstr "Utilise un réglage de contraste de type linéaire plutot qu'à point fixe"
+msgstr ""
+"Utilise un réglage de contraste de type linéaire plutot qu'à point fixe"
 
 #: src/main/print-color.c:248
 msgid "Composite Gamma"
 msgstr "Gamma général"
 
 #: src/main/print-color.c:249
-msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
-msgstr "Ajustement de la Gamma de l'impression. De grandes valeurs vont généralement produire une impression plus brillante,tandis que des petites valeurs vont généralement produire une impression plus sombre. Noir et Blanc vont rester identiques en fonction de l'ajustement du brillant."
+msgid ""
+"Adjust the gamma of the print. Larger values will produce a generally "
+"brighter print, while smaller values will produce a generally darker print. "
+msgstr ""
+"Ajustement de la Gamma de l'impression. De grandes valeurs vont généralement "
+"produire une impression plus brillante,tandis que des petites valeurs vont "
+"généralement produire une impression plus sombre. Noir et Blanc vont rester "
+"identiques en fonction de l'ajustement du brillant."
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -950,22 +787,14 @@ msgstr ""
 msgid "Gamma value assumed by application"
 msgstr "Valeur gamma prévue par l'application"
 
-#: src/main/print-color.c:266
-#: src/main/print-escp2-data.c:738
-#: src/main/print-escp2-data.c:747
-#: src/main/print-escp2-data.c:757
-#: src/main/print-escp2-data.c:768
-#: src/main/print-escp2-data.c:780
-#: src/main/print-escp2-data.c:792
-#: src/main/print-escp2-data.c:805
-#: src/main/print-escp2-data.c:818
-#: src/main/print-escp2-data.c:832
-#: src/main/print-escp2-data.c:846
-#: src/main/print-escp2-data.c:861
-#: src/gutenprintui/panel.c:2124
-#: src/gutenprintui2/panel.c:2123
-#: src/escputil/escputil.c:968
-#: src/escputil/escputil.c:987
+#: src/main/print-color.c:266 src/main/print-escp2-data.c:739
+#: src/main/print-escp2-data.c:748 src/main/print-escp2-data.c:758
+#: src/main/print-escp2-data.c:769 src/main/print-escp2-data.c:781
+#: src/main/print-escp2-data.c:793 src/main/print-escp2-data.c:806
+#: src/main/print-escp2-data.c:819 src/main/print-escp2-data.c:833
+#: src/main/print-escp2-data.c:847 src/main/print-escp2-data.c:862
+#: src/gutenprintui/panel.c:2124 src/gutenprintui2/panel.c:2123
+#: src/escputil/escputil.c:968 src/escputil/escputil.c:987
 #: src/escputil/escputil.c:1191
 msgid "Cyan"
 msgstr "Cyan"
@@ -974,22 +803,14 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr "Réglage du gamma pour le cyan"
 
-#: src/main/print-color.c:274
-#: src/main/print-escp2-data.c:739
-#: src/main/print-escp2-data.c:749
-#: src/main/print-escp2-data.c:758
-#: src/main/print-escp2-data.c:769
-#: src/main/print-escp2-data.c:782
-#: src/main/print-escp2-data.c:793
-#: src/main/print-escp2-data.c:806
-#: src/main/print-escp2-data.c:819
-#: src/main/print-escp2-data.c:831
-#: src/main/print-escp2-data.c:845
-#: src/main/print-escp2-data.c:862
-#: src/gutenprintui/panel.c:2131
-#: src/gutenprintui2/panel.c:2130
-#: src/escputil/escputil.c:969
-#: src/escputil/escputil.c:988
+#: src/main/print-color.c:274 src/main/print-escp2-data.c:740
+#: src/main/print-escp2-data.c:750 src/main/print-escp2-data.c:759
+#: src/main/print-escp2-data.c:770 src/main/print-escp2-data.c:783
+#: src/main/print-escp2-data.c:794 src/main/print-escp2-data.c:807
+#: src/main/print-escp2-data.c:820 src/main/print-escp2-data.c:832
+#: src/main/print-escp2-data.c:846 src/main/print-escp2-data.c:863
+#: src/gutenprintui/panel.c:2131 src/gutenprintui2/panel.c:2130
+#: src/escputil/escputil.c:969 src/escputil/escputil.c:988
 #: src/escputil/escputil.c:1192
 msgid "Magenta"
 msgstr "Magenta"
@@ -998,22 +819,14 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Réglage du gamma pour le magenta"
 
-#: src/main/print-color.c:282
-#: src/main/print-escp2-data.c:740
-#: src/main/print-escp2-data.c:748
-#: src/main/print-escp2-data.c:759
-#: src/main/print-escp2-data.c:770
-#: src/main/print-escp2-data.c:784
-#: src/main/print-escp2-data.c:794
-#: src/main/print-escp2-data.c:807
-#: src/main/print-escp2-data.c:820
-#: src/main/print-escp2-data.c:830
-#: src/main/print-escp2-data.c:844
-#: src/main/print-escp2-data.c:863
-#: src/gutenprintui/panel.c:2138
-#: src/gutenprintui2/panel.c:2137
-#: src/escputil/escputil.c:970
-#: src/escputil/escputil.c:989
+#: src/main/print-color.c:282 src/main/print-escp2-data.c:741
+#: src/main/print-escp2-data.c:749 src/main/print-escp2-data.c:760
+#: src/main/print-escp2-data.c:771 src/main/print-escp2-data.c:785
+#: src/main/print-escp2-data.c:795 src/main/print-escp2-data.c:808
+#: src/main/print-escp2-data.c:821 src/main/print-escp2-data.c:831
+#: src/main/print-escp2-data.c:845 src/main/print-escp2-data.c:864
+#: src/gutenprintui/panel.c:2138 src/gutenprintui2/panel.c:2137
+#: src/escputil/escputil.c:970 src/escputil/escputil.c:989
 #: src/escputil/escputil.c:1193
 msgid "Yellow"
 msgstr "Jaune"
@@ -1022,12 +835,9 @@ msgstr "Jaune"
 msgid "Adjust the yellow gamma"
 msgstr "Réglage du gamma pour le jaune"
 
-#: src/main/print-color.c:290
-#: src/main/print-escp2-data.c:835
-#: src/main/print-escp2-data.c:848
-#: src/gutenprintui/panel.c:2152
-#: src/gutenprintui2/panel.c:2151
-#: src/escputil/escputil.c:977
+#: src/main/print-color.c:290 src/main/print-escp2-data.c:836
+#: src/main/print-escp2-data.c:849 src/gutenprintui/panel.c:2152
+#: src/gutenprintui2/panel.c:2151 src/escputil/escputil.c:977
 #: src/escputil/escputil.c:995
 msgid "Red"
 msgstr "Rouge"
@@ -1036,8 +846,7 @@ msgstr "Rouge"
 msgid "Adjust the red gamma"
 msgstr "Réglage du gamma pour le rouge"
 
-#: src/main/print-color.c:298
-#: src/gutenprintui/panel.c:2159
+#: src/main/print-color.c:298 src/gutenprintui/panel.c:2159
 #: src/gutenprintui2/panel.c:2158
 msgid "Green"
 msgstr "Vert"
@@ -1046,12 +855,9 @@ msgstr "Vert"
 msgid "Adjust the green gamma"
 msgstr "Réglage du gamma pour le vert"
 
-#: src/main/print-color.c:306
-#: src/main/print-escp2-data.c:836
-#: src/main/print-escp2-data.c:849
-#: src/gutenprintui/panel.c:2166
-#: src/gutenprintui2/panel.c:2165
-#: src/escputil/escputil.c:978
+#: src/main/print-color.c:306 src/main/print-escp2-data.c:837
+#: src/main/print-escp2-data.c:850 src/gutenprintui/panel.c:2166
+#: src/gutenprintui2/panel.c:2165 src/escputil/escputil.c:978
 #: src/escputil/escputil.c:996
 msgid "Blue"
 msgstr "Bleu"
@@ -1064,13 +870,11 @@ msgstr "Réglage du gamma pour le bleu"
 msgid "Adjust the black gamma"
 msgstr "Réglage du gamma pour le noir"
 
-#: src/main/print-color.c:322
-#: src/main/print-olympus.c:1330
+#: src/main/print-color.c:322 src/main/print-olympus.c:1330
 msgid "Cyan Balance"
 msgstr "Niveau de cyan"
 
-#: src/main/print-color.c:322
-#: src/main/print-color.c:330
+#: src/main/print-color.c:322 src/main/print-color.c:330
 #: src/main/print-color.c:338
 msgid "GrayBalance"
 msgstr "Balance des gris"
@@ -1079,8 +883,7 @@ msgstr "Balance des gris"
 msgid "Adjust the cyan gray balance"
 msgstr "Réglage du cyan pour la balance des gris"
 
-#: src/main/print-color.c:330
-#: src/main/print-olympus.c:1338
+#: src/main/print-color.c:330 src/main/print-olympus.c:1338
 msgid "Magenta Balance"
 msgstr "Niveau de magenta"
 
@@ -1088,8 +891,7 @@ msgstr "Niveau de magenta"
 msgid "Adjust the magenta gray balance"
 msgstr "Réglage du magenta pour la balance des gris"
 
-#: src/main/print-color.c:338
-#: src/main/print-olympus.c:1346
+#: src/main/print-color.c:338 src/main/print-olympus.c:1346
 msgid "Yellow Balance"
 msgstr "Niveau de jaune"
 
@@ -1107,22 +909,18 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "Ajustement de la saturation (balance des couleurs) de l'impression\n"
-"Utilisez la saturation zéro pour produire une sortie en tons de gris avec les encres noir et couleurs."
+"Utilisez la saturation zéro pour produire une sortie en tons de gris avec "
+"les encres noir et couleurs."
 
 #: src/main/print-color.c:357
 msgid "Ink Limit"
 msgstr "Limite d'encrage"
 
-#: src/main/print-color.c:357
-#: src/main/print-color.c:365
-#: src/main/print-color.c:373
-#: src/main/print-color.c:381
-#: src/main/print-color.c:545
-#: src/main/print-escp2.c:332
-#: src/main/print-escp2.c:338
-#: src/main/print-escp2.c:344
-#: src/main/print-escp2.c:350
-#: src/main/print-escp2.c:356
+#: src/main/print-color.c:357 src/main/print-color.c:365
+#: src/main/print-color.c:373 src/main/print-color.c:381
+#: src/main/print-color.c:545 src/main/print-escp2.c:332
+#: src/main/print-escp2.c:338 src/main/print-escp2.c:344
+#: src/main/print-escp2.c:350 src/main/print-escp2.c:356
 msgid "Advanced Output Control"
 msgstr "Controle avancé de la sortie"
 
@@ -1160,14 +958,10 @@ msgstr "Limite haute de la composante gris"
 msgid " Curve"
 msgstr "Courbe"
 
-#: src/main/print-color.c:447
-#: src/main/print-color.c:457
-#: src/main/print-color.c:465
-#: src/main/print-color.c:473
-#: src/main/print-color.c:481
-#: src/main/print-color.c:489
-#: src/main/print-color.c:497
-#: src/main/print-color.c:505
+#: src/main/print-color.c:447 src/main/print-color.c:457
+#: src/main/print-color.c:465 src/main/print-color.c:473
+#: src/main/print-color.c:481 src/main/print-color.c:489
+#: src/main/print-color.c:497 src/main/print-color.c:505
 #: src/main/print-color.c:513
 msgid "Output Curves"
 msgstr "Courbes de sortie"
@@ -1244,8 +1038,7 @@ msgstr "Courbe blanc"
 msgid "Hue Map"
 msgstr "Carte Hue"
 
-#: src/main/print-color.c:521
-#: src/main/print-color.c:529
+#: src/main/print-color.c:521 src/main/print-color.c:529
 #: src/main/print-color.c:537
 msgid "Advanced HSL Curves"
 msgstr "Courbes HSL avancées"
@@ -1287,8 +1080,7 @@ msgstr "Conversion de couleur traditionelle Gutenprint"
 msgid "Value must be set for %s\n"
 msgstr "Valeur à définir pour: %s\n"
 
-#: src/main/printers.c:516
-#: src/main/printers.c:521
+#: src/main/printers.c:516 src/main/printers.c:521
 #, c-format
 msgid "`%s' is not a valid %s\n"
 msgstr "%s n'est pas une valeur valide pour %s\n"
@@ -1298,8 +1090,7 @@ msgstr "%s n'est pas une valeur valide pour %s\n"
 msgid "%s must be between %f and %f (is %f)\n"
 msgstr "%s doit être entre %f et %f (actuellement %f)\n"
 
-#: src/main/printers.c:562
-#: src/main/printers.c:586
+#: src/main/printers.c:562 src/main/printers.c:586
 #, c-format
 msgid "%s must be between %d and %d (is %d)\n"
 msgstr "%s doit être entre %d et %d (actuellement %d)\n"
@@ -1327,8 +1118,7 @@ msgstr ""
 msgid "Unknown type parameter %s (%d)\n"
 msgstr "paramètre de type inconnu %s (%d)\n"
 
-#: src/main/printers.c:686
-#: src/main/printers.c:697
+#: src/main/printers.c:686 src/main/printers.c:697
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
 msgstr "%s hors-intervalle (valeur %d, mini %d, maxi %d)\n"
@@ -1357,210 +1147,171 @@ msgstr "La largeur doit être plus grande que zéro\n"
 
 #: src/main/printers.c:800
 #, c-format
-msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
-msgstr "L'image est trop large pour la page: marge gauche %d, largeur %d, bord droit %d\n"
+msgid ""
+"Image is too wide for the page: left margin is %d, width %d, right edge is %"
+"d\n"
+msgstr ""
+"L'image est trop large pour la page: marge gauche %d, largeur %d, bord droit "
+"%d\n"
 
 #: src/main/printers.c:807
 #, c-format
-msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
-msgstr "L'image est trop haute pour la page: marge en haut %d, hauteur %d, bord du bas %d\n"
+msgid ""
+"Image is too long for the page: top margin is %d, height %d, bottom edge is %"
+"d\n"
+msgstr ""
+"L'image est trop haute pour la page: marge en haut %d, hauteur %d, bord du "
+"bas %d\n"
 
-#: src/main/print-escp2-data.c:310
-#: src/main/print-escp2-data.c:334
-#: src/main/print-escp2-data.c:367
-#: src/main/print-escp2-data.c:418
-#: src/main/print-escp2-data.c:460
-#: src/main/print-escp2-data.c:502
-#: src/main/print-escp2-data.c:595
-#: src/main/print-escp2-data.c:689
-#: src/main/print-escp2-data.c:704
-#: src/main/print-escp2-data.c:717
-#: src/main/print-escp2.c:1548
-#: src/main/print-escp2.c:1640
-#: src/main/print-escp2.c:1652
-#: src/main/print-pcl.c:227
-#: src/main/escp2-channels.c:2482
-#: src/main/generic-options.c:36
-#: src/gutenprintui/panel.c:2584
-#: src/gutenprintui2/panel.c:2609
+#: src/main/print-escp2-data.c:311 src/main/print-escp2-data.c:335
+#: src/main/print-escp2-data.c:368 src/main/print-escp2-data.c:419
+#: src/main/print-escp2-data.c:461 src/main/print-escp2-data.c:503
+#: src/main/print-escp2-data.c:596 src/main/print-escp2-data.c:690
+#: src/main/print-escp2-data.c:705 src/main/print-escp2-data.c:718
+#: src/main/print-escp2.c:1618 src/main/print-escp2.c:1710
+#: src/main/print-escp2.c:1722 src/main/print-pcl.c:227
+#: src/main/escp2-channels.c:2482 src/main/generic-options.c:36
+#: src/gutenprintui/panel.c:2584 src/gutenprintui2/panel.c:2609
 msgid "Standard"
 msgstr "Standard"
 
-#: src/main/print-escp2-data.c:319
-#: src/main/print-escp2-data.c:445
-#: src/main/print-escp2-data.c:487
-#: src/main/print-escp2-data.c:529
-#: src/main/print-escp2-data.c:604
+#: src/main/print-escp2-data.c:320 src/main/print-escp2-data.c:446
+#: src/main/print-escp2-data.c:488 src/main/print-escp2-data.c:530
+#: src/main/print-escp2-data.c:605
 msgid "Roll Feed"
 msgstr "Alimentation rouleau"
 
-#: src/main/print-escp2-data.c:343
-#: src/main/print-escp2-data.c:394
+#: src/main/print-escp2-data.c:344 src/main/print-escp2-data.c:395
 msgid "Roll Feed (cut each page)"
 msgstr "Alimentation rouleau (couper chaque page)"
 
-#: src/main/print-escp2-data.c:352
-#: src/main/print-escp2-data.c:403
+#: src/main/print-escp2-data.c:353 src/main/print-escp2-data.c:404
 msgid "Roll Feed (do not cut)"
 msgstr "Alimentation rouleau (sans découpe des pages)"
 
-#: src/main/print-escp2-data.c:376
-#: src/main/print-escp2-data.c:427
+#: src/main/print-escp2-data.c:377 src/main/print-escp2-data.c:428
 msgid "Manual Feed"
 msgstr "Alimentation manuelle"
 
-#: src/main/print-escp2-data.c:385
-#: src/main/print-escp2-data.c:436
-#: src/main/print-escp2-data.c:538
-#: src/main/print-escp2-data.c:571
+#: src/main/print-escp2-data.c:386 src/main/print-escp2-data.c:437
+#: src/main/print-escp2-data.c:539 src/main/print-escp2-data.c:572
 msgid "Print to CD"
 msgstr "Imprimer un CD"
 
-#: src/main/print-escp2-data.c:469
-#: src/main/print-escp2-data.c:511
+#: src/main/print-escp2-data.c:470 src/main/print-escp2-data.c:512
 msgid "Manual Sheet Guide"
 msgstr "Alimentation guide par feuille (arrière)"
 
-#: src/main/print-escp2-data.c:478
-#: src/main/print-escp2-data.c:520
+#: src/main/print-escp2-data.c:479 src/main/print-escp2-data.c:521
 msgid "Manual Feed (Front)"
 msgstr "Alimentation manuelle (avant)"
 
-#: src/main/print-escp2-data.c:553
+#: src/main/print-escp2-data.c:554
 msgid "Rear Tray"
 msgstr "Bac arrière"
 
-#: src/main/print-escp2-data.c:562
+#: src/main/print-escp2-data.c:563
 msgid "Front Tray"
 msgstr "Bac avant"
 
-#: src/main/print-escp2-data.c:580
+#: src/main/print-escp2-data.c:581
 msgid "Photo Board"
 msgstr "Carte photo"
 
-#: src/main/print-escp2-data.c:619
+#: src/main/print-escp2-data.c:620
 msgid "Cut Sheet Bin 1"
 msgstr "Coupe papier Bin 1"
 
-#: src/main/print-escp2-data.c:628
+#: src/main/print-escp2-data.c:629
 msgid "Cut Sheet Bin 2"
 msgstr "Coupe papier Bin 2"
 
-#: src/main/print-escp2-data.c:637
+#: src/main/print-escp2-data.c:638
 msgid "Cut Sheet Autoselect"
 msgstr "Sélection de coupe automatique"
 
-#: src/main/print-escp2-data.c:646
+#: src/main/print-escp2-data.c:647
 msgid "Manual Selection"
 msgstr "Sélection manuelle"
 
-#: src/main/print-escp2-data.c:686
-#: src/main/print-escp2-data.c:701
+#: src/main/print-escp2-data.c:687 src/main/print-escp2-data.c:702
 #: src/main/generic-options.c:33
 msgid "Fast Economy"
 msgstr "Rapide (économique)"
 
-#: src/main/print-escp2-data.c:687
-#: src/main/print-escp2-data.c:702
+#: src/main/print-escp2-data.c:688 src/main/print-escp2-data.c:703
 #: src/main/generic-options.c:34
 msgid "Economy"
 msgstr "Economique"
 
-#: src/main/print-escp2-data.c:688
-#: src/main/print-escp2-data.c:703
-#: src/main/print-escp2-data.c:716
-#: src/main/generic-options.c:35
+#: src/main/print-escp2-data.c:689 src/main/print-escp2-data.c:704
+#: src/main/print-escp2-data.c:717 src/main/generic-options.c:35
 msgid "Draft"
 msgstr "Brouillon"
 
-#: src/main/print-escp2-data.c:690
-#: src/main/print-escp2-data.c:705
-#: src/main/print-escp2-data.c:719
-#: src/main/generic-options.c:37
+#: src/main/print-escp2-data.c:691 src/main/print-escp2-data.c:706
+#: src/main/print-escp2-data.c:720 src/main/generic-options.c:37
 msgid "High"
 msgstr "Hauteur"
 
-#: src/main/print-escp2-data.c:691
-#: src/main/print-escp2-data.c:706
-#: src/main/print-escp2-data.c:718
-#: src/main/generic-options.c:38
+#: src/main/print-escp2-data.c:692 src/main/print-escp2-data.c:707
+#: src/main/print-escp2-data.c:719 src/main/generic-options.c:38
 msgid "Photo"
 msgstr "Photo"
 
-#: src/main/print-escp2-data.c:692
-#: src/main/print-escp2-data.c:707
-#: src/main/print-escp2-data.c:720
-#: src/main/generic-options.c:39
+#: src/main/print-escp2-data.c:693 src/main/print-escp2-data.c:708
+#: src/main/print-escp2-data.c:721 src/main/generic-options.c:39
 msgid "Super Photo"
 msgstr "Super Photo"
 
-#: src/main/print-escp2-data.c:693
-#: src/main/print-escp2-data.c:708
-#: src/main/print-escp2-data.c:721
-#: src/main/generic-options.c:40
+#: src/main/print-escp2-data.c:694 src/main/print-escp2-data.c:709
+#: src/main/print-escp2-data.c:722 src/main/generic-options.c:40
 msgid "Ultra Photo"
 msgstr "Ultra photo"
 
-#: src/main/print-escp2-data.c:694
-#: src/main/print-escp2-data.c:709
-#: src/main/print-escp2-data.c:722
-#: src/main/generic-options.c:41
+#: src/main/print-escp2-data.c:695 src/main/print-escp2-data.c:710
+#: src/main/print-escp2-data.c:723 src/main/generic-options.c:41
 msgid "Best"
 msgstr "Meilleur"
 
-#: src/main/print-escp2-data.c:771
-#: src/main/print-escp2-data.c:781
-#: src/main/print-escp2-data.c:795
-#: src/main/print-escp2-data.c:808
-#: src/main/print-escp2-data.c:821
-#: src/main/print-escp2-data.c:858
-#: src/escputil/escputil.c:971
-#: src/escputil/escputil.c:1194
+#: src/main/print-escp2-data.c:772 src/main/print-escp2-data.c:782
+#: src/main/print-escp2-data.c:796 src/main/print-escp2-data.c:809
+#: src/main/print-escp2-data.c:822 src/main/print-escp2-data.c:859
+#: src/escputil/escputil.c:971 src/escputil/escputil.c:1194
 msgid "Light Cyan"
 msgstr "Cyan clair"
 
-#: src/main/print-escp2-data.c:772
-#: src/main/print-escp2-data.c:783
-#: src/main/print-escp2-data.c:796
-#: src/main/print-escp2-data.c:809
-#: src/main/print-escp2-data.c:822
-#: src/main/print-escp2-data.c:857
-#: src/escputil/escputil.c:972
-#: src/escputil/escputil.c:1195
+#: src/main/print-escp2-data.c:773 src/main/print-escp2-data.c:784
+#: src/main/print-escp2-data.c:797 src/main/print-escp2-data.c:810
+#: src/main/print-escp2-data.c:823 src/main/print-escp2-data.c:858
+#: src/escputil/escputil.c:972 src/escputil/escputil.c:1195
 msgid "Light Magenta"
 msgstr "Magenta clair"
 
-#: src/main/print-escp2-data.c:797
-#: src/main/print-escp2-data.c:859
+#: src/main/print-escp2-data.c:798 src/main/print-escp2-data.c:860
 #: src/escputil/escputil.c:975
 msgid "Light Black"
 msgstr "Noir clair"
 
-#: src/main/print-escp2-data.c:810
+#: src/main/print-escp2-data.c:811
 msgid "Dark Yellow"
 msgstr "Jaune foncé"
 
-#: src/main/print-escp2-data.c:833
-#: src/main/escp2-channels.c:2439
-#: src/main/escp2-channels.c:2455
-#: src/escputil/escputil.c:976
+#: src/main/print-escp2-data.c:834 src/main/escp2-channels.c:2439
+#: src/main/escp2-channels.c:2455 src/escputil/escputil.c:976
 msgid "Matte Black"
 msgstr "Noir Mat"
 
-#: src/main/print-escp2-data.c:834
-#: src/main/escp2-channels.c:2435
-#: src/main/escp2-channels.c:2473
-#: src/escputil/escputil.c:966
+#: src/main/print-escp2-data.c:835 src/main/escp2-channels.c:2435
+#: src/main/escp2-channels.c:2473 src/escputil/escputil.c:966
 msgid "Photo Black"
 msgstr "Noir photo"
 
-#: src/main/print-escp2-data.c:837
-#: src/escputil/escputil.c:979
+#: src/main/print-escp2-data.c:838 src/escputil/escputil.c:979
 msgid "Gloss Optimizer"
 msgstr "Optimiseur de brillance"
 
-#: src/main/print-escp2-data.c:856
-#: src/escputil/escputil.c:980
+#: src/main/print-escp2-data.c:857 src/escputil/escputil.c:980
 msgid "Light Light Black"
 msgstr "Noir très clair"
 
@@ -1568,8 +1319,7 @@ msgstr "Noir très clair"
 msgid "Automatic Printing Mode"
 msgstr "Mode d'impression automatique"
 
-#: src/main/print-escp2.c:159
-#: src/main/print-escp2.c:171
+#: src/main/print-escp2.c:159 src/main/print-escp2.c:171
 #: src/main/generic-options.c:62
 msgid "Basic Output Adjustment"
 msgstr "Réglage de base"
@@ -1578,10 +1328,8 @@ msgstr "Réglage de base"
 msgid "Automatic printing mode"
 msgstr "Mode d'impression automatique"
 
-#: src/main/print-escp2.c:171
-#: src/main/print-escp2.c:172
-#: src/main/generic-options.c:62
-#: src/main/generic-options.c:63
+#: src/main/print-escp2.c:171 src/main/print-escp2.c:172
+#: src/main/generic-options.c:62 src/main/generic-options.c:63
 msgid "Print Quality"
 msgstr "Qualité d'impression"
 
@@ -1591,14 +1339,15 @@ msgstr "Taille du moyeu du CD"
 
 #: src/main/print-escp2.c:196
 msgid "Print only outside of the hub of the CD, or all the way to the hole"
-msgstr "Imprime seulement sur le CD en dehors du moyeu ou y compris le moyeu jusqu'au trou"
+msgstr ""
+"Imprime seulement sur le CD en dehors du moyeu ou y compris le moyeu "
+"jusqu'au trou"
 
 #: src/main/print-escp2.c:201
 msgid "CD Horizontal Fine Adjustment"
 msgstr "Réglage horizontal précis du CD"
 
-#: src/main/print-escp2.c:202
-#: src/main/print-escp2.c:208
+#: src/main/print-escp2.c:202 src/main/print-escp2.c:208
 msgid "Fine adjustment to horizontal position for CD printing"
 msgstr "Réglage précis de la position horizontale pour l'impression sur CD"
 
@@ -1626,22 +1375,20 @@ msgstr "Jeu d'encres"
 msgid "Printing Direction"
 msgstr "Sens d'impression"
 
-#: src/main/print-escp2.c:242
-#: src/main/print-escp2.c:254
+#: src/main/print-escp2.c:242 src/main/print-escp2.c:254
 msgid "Advanced Output Adjustment"
 msgstr "Réglage avancé de sorties"
 
 #: src/main/print-escp2.c:243
 msgid "Printing direction (unidirectional is higher quality, but slower)"
-msgstr "Sens d'impression (unidirectionnel est de meilleure qualité mais plus lent)"
+msgstr ""
+"Sens d'impression (unidirectionnel est de meilleure qualité mais plus lent)"
 
-#: src/main/print-escp2.c:248
-#: src/main/print-olympus.c:1301
+#: src/main/print-escp2.c:248 src/main/print-olympus.c:1301
 msgid "Borderless"
 msgstr "sans marges"
 
-#: src/main/print-escp2.c:249
-#: src/main/print-olympus.c:1302
+#: src/main/print-escp2.c:249 src/main/print-olympus.c:1302
 msgid "Print without borders"
 msgstr "Impression sans marges"
 
@@ -1659,35 +1406,30 @@ msgstr "Ajuster la taille des gouttes si nécessaire"
 
 #: src/main/print-escp2.c:261
 msgid "Adjust dot size as necessary to achieve desired density"
-msgstr "Ajuster la taille des gouttes si nécessaire pour obtenir la densité souhaitée"
+msgstr ""
+"Ajuster la taille des gouttes si nécessaire pour obtenir la densité souhaitée"
 
-#: src/main/print-escp2.c:266
-#: src/main/print-escp2.c:267
+#: src/main/print-escp2.c:266 src/main/print-escp2.c:267
 msgid "Output Order"
 msgstr "Ordre de sortie"
 
-#: src/main/print-escp2.c:272
-#: src/main/print-escp2.c:273
+#: src/main/print-escp2.c:272 src/main/print-escp2.c:273
 msgid "Alignment Passes"
 msgstr ""
 
-#: src/main/print-escp2.c:278
-#: src/main/print-escp2.c:279
+#: src/main/print-escp2.c:278 src/main/print-escp2.c:279
 msgid "Alignment Choices"
 msgstr ""
 
-#: src/main/print-escp2.c:284
-#: src/main/print-escp2.c:285
+#: src/main/print-escp2.c:284 src/main/print-escp2.c:285
 msgid "Ink change command"
 msgstr "Commande de changement d'encre"
 
-#: src/main/print-escp2.c:290
-#: src/main/print-escp2.c:291
+#: src/main/print-escp2.c:290 src/main/print-escp2.c:291
 msgid "Alternate Alignment Passes"
 msgstr ""
 
-#: src/main/print-escp2.c:296
-#: src/main/print-escp2.c:297
+#: src/main/print-escp2.c:296 src/main/print-escp2.c:297
 #: src/main/print-escp2.c:303
 msgid "Alternate Alignment Choices"
 msgstr "Choix d'alignement alternatif"
@@ -1696,8 +1438,7 @@ msgstr "Choix d'alignement alternatif"
 msgid "Supports Packet Mode"
 msgstr "Supporte le mode paquet"
 
-#: src/main/print-escp2.c:314
-#: src/main/print-escp2.c:315
+#: src/main/print-escp2.c:314 src/main/print-escp2.c:315
 msgid "Channel Names"
 msgstr "Nom des canaux"
 
@@ -1745,173 +1486,155 @@ msgstr "Carte du rouge"
 msgid "Adjust the red map"
 msgstr "Modification de la carte du rouge"
 
-#: src/main/print-escp2.c:445
+#: src/main/print-escp2.c:446
 msgid "Red Density"
 msgstr "Densité du rouge"
 
-#: src/main/print-escp2.c:446
+#: src/main/print-escp2.c:447
 msgid "Adjust the red density"
 msgstr "Ajuste la densité du rouge"
 
-#: src/main/print-escp2.c:453
+#: src/main/print-escp2.c:454
 msgid "Blue Density"
 msgstr "Densité du bleu"
 
-#: src/main/print-escp2.c:454
+#: src/main/print-escp2.c:455
 msgid "Adjust the blue density"
 msgstr "Ajuste la densité du bleu"
 
-#: src/main/print-escp2.c:461
+#: src/main/print-escp2.c:462
 msgid "Gloss Level"
 msgstr "Niveau de brillance"
 
-#: src/main/print-escp2.c:462
+#: src/main/print-escp2.c:463
 msgid "Adjust the gloss level"
 msgstr "Ajuste le niveau de brillance"
 
-#: src/main/print-escp2.c:485
-#: src/main/print-escp2.c:486
+#: src/main/print-escp2.c:486 src/main/print-escp2.c:487
 msgid "Dark Yellow Transition"
 msgstr "transition jaune foncé"
 
-#: src/main/print-escp2.c:493
-#: src/main/print-escp2.c:494
+#: src/main/print-escp2.c:494 src/main/print-escp2.c:495
 msgid "Gray Transition"
 msgstr "Transition gris"
 
-#: src/main/print-escp2.c:501
-#: src/main/print-escp2.c:502
-#: src/main/print-escp2.c:525
-#: src/main/print-escp2.c:526
+#: src/main/print-escp2.c:502 src/main/print-escp2.c:503
+#: src/main/print-escp2.c:526 src/main/print-escp2.c:527
 msgid "Light Gray Transition"
 msgstr "Transition cyan clair"
 
-#: src/main/print-escp2.c:509
-#: src/main/print-escp2.c:510
+#: src/main/print-escp2.c:510 src/main/print-escp2.c:511
 msgid "Dark Gray Transition"
 msgstr "Transition gris foncé"
 
-#: src/main/print-escp2.c:517
+#: src/main/print-escp2.c:518
 msgid "Mid Gray Transition"
 msgstr "Transition gris médian"
 
-#: src/main/print-escp2.c:518
+#: src/main/print-escp2.c:519
 msgid "Medium Gray Transition"
 msgstr "Transition gris moyen"
 
-#: src/main/print-escp2.c:1445
+#: src/main/print-escp2.c:1515
 msgid "Full Manual Control"
 msgstr "Contrôle manuel complet"
 
-#: src/main/print-escp2.c:1447
+#: src/main/print-escp2.c:1517
 msgid "Automatic Setting Control"
 msgstr "Controle réglage automatique"
 
-#: src/main/print-escp2.c:1458
-#: src/main/xmli18n-tmp.h:6
+#: src/main/print-escp2.c:1528 src/main/xmli18n-tmp.h:6
 msgid "CD - 5 inch"
 msgstr "CD - 5 pouces"
 
-#: src/main/print-escp2.c:1460
-#: src/main/xmli18n-tmp.h:7
+#: src/main/print-escp2.c:1530 src/main/xmli18n-tmp.h:7
 msgid "CD - 3 inch"
 msgstr "CD - 3 pouces"
 
-#: src/main/print-escp2.c:1482
+#: src/main/print-escp2.c:1552
 msgid "Normal"
 msgstr "Normal"
 
-#: src/main/print-escp2.c:1484
+#: src/main/print-escp2.c:1554
 msgid "Print To Hub"
 msgstr "Imprimer sue le moyeu"
 
-#: src/main/print-escp2.c:1509
-#: src/main/generic-options.c:213
+#: src/main/print-escp2.c:1579 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 msgid "Manual Control"
 msgstr "Controle manuel"
 
-#: src/main/print-escp2.c:1619
-#: src/cups/genppd.c:1333
+#: src/main/print-escp2.c:1689 src/cups/genppd.c:1331
 msgid "Automatic"
 msgstr "Automatique"
 
-#: src/main/print-escp2.c:1621
+#: src/main/print-escp2.c:1691
 msgid "Bidirectional"
 msgstr "Bidirectionnel"
 
-#: src/main/print-escp2.c:1623
+#: src/main/print-escp2.c:1693
 msgid "Unidirectional"
 msgstr "Unirectionnel"
 
-#: src/main/print-escp2.c:1654
+#: src/main/print-escp2.c:1724
 msgid "Alternate Fill"
 msgstr "en alternance"
 
-#: src/main/print-escp2.c:1656
+#: src/main/print-escp2.c:1726
 msgid "Ascending Fill"
 msgstr "en montant"
 
-#: src/main/print-escp2.c:1658
+#: src/main/print-escp2.c:1728
 msgid "Descending Fill"
 msgstr "en descendant"
 
-#: src/main/print-escp2.c:1660
+#: src/main/print-escp2.c:1730
 msgid "Ascending Double"
 msgstr "en montant - double"
 
-#: src/main/print-escp2.c:1662
+#: src/main/print-escp2.c:1732
 msgid "Nearest Neighbor Avoidance"
 msgstr "en évitant les voisins"
 
-#: src/main/print-escp2.c:2087
+#: src/main/print-escp2.c:2157
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "L'imprimante ne supporte pas les sorties directes en %d bits\n"
 
-#: src/main/print-escp2.c:3051
-#: src/main/print-olympus.c:1774
+#: src/main/print-escp2.c:3122 src/main/print-olympus.c:1774
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "Options d'impression non vérifiées: ne peut pas imprimer.\n"
 
-#: src/main/print-lexmark.c:577
-#: src/main/print-lexmark.c:653
+#: src/main/print-lexmark.c:577 src/main/print-lexmark.c:653
 msgid "300 DPI x 600 DPI"
 msgstr "300 x 600 PPP"
 
-#: src/main/print-lexmark.c:578
-#: src/main/print-lexmark.c:654
+#: src/main/print-lexmark.c:578 src/main/print-lexmark.c:654
 msgid "600 DPI"
 msgstr "600 PPP"
 
-#: src/main/print-lexmark.c:579
-#: src/main/print-lexmark.c:655
+#: src/main/print-lexmark.c:579 src/main/print-lexmark.c:655
 msgid "600 DPI high quality"
 msgstr "600 PPP Haute qualité"
 
-#: src/main/print-lexmark.c:580
-#: src/main/print-lexmark.c:656
+#: src/main/print-lexmark.c:580 src/main/print-lexmark.c:656
 msgid "600 DPI Unidirectional"
 msgstr "600 PPP Unirectionnel"
 
-#: src/main/print-lexmark.c:581
-#: src/main/print-lexmark.c:657
+#: src/main/print-lexmark.c:581 src/main/print-lexmark.c:657
 msgid "1200 DPI"
 msgstr "1200 PPP"
 
-#: src/main/print-lexmark.c:582
-#: src/main/print-lexmark.c:658
+#: src/main/print-lexmark.c:582 src/main/print-lexmark.c:658
 msgid "1200 DPI high quality"
 msgstr "1200 PPP Haute qualité"
 
-#: src/main/print-lexmark.c:583
-#: src/main/print-lexmark.c:659
+#: src/main/print-lexmark.c:583 src/main/print-lexmark.c:659
 msgid "1200 DPI highest quality"
 msgstr "1200 PPP Très haute qualité"
 
-#: src/main/print-lexmark.c:584
-#: src/main/print-lexmark.c:660
+#: src/main/print-lexmark.c:584 src/main/print-lexmark.c:660
 msgid "1200 DPI  Unidirectional"
 msgstr "1200 PPP Unidirectionnel"
 
@@ -1931,155 +1654,105 @@ msgstr "2400 x 1200 PPP Très haute qualité"
 msgid "test print"
 msgstr "test d'impression"
 
-#: src/main/print-lexmark.c:601
-#: src/main/print-lexmark.c:671
-#: src/main/escp2-channels.c:1151
-#: src/main/escp2-channels.c:1165
-#: src/main/escp2-channels.c:1179
-#: src/main/escp2-channels.c:1193
-#: src/main/escp2-channels.c:1217
-#: src/main/escp2-channels.c:1231
-#: src/main/escp2-channels.c:1245
-#: src/main/escp2-channels.c:1259
-#: src/main/escp2-channels.c:1273
-#: src/main/escp2-channels.c:1287
+#: src/main/print-lexmark.c:601 src/main/print-lexmark.c:671
+#: src/main/escp2-channels.c:1151 src/main/escp2-channels.c:1165
+#: src/main/escp2-channels.c:1179 src/main/escp2-channels.c:1193
+#: src/main/escp2-channels.c:1217 src/main/escp2-channels.c:1231
+#: src/main/escp2-channels.c:1245 src/main/escp2-channels.c:1259
+#: src/main/escp2-channels.c:1273 src/main/escp2-channels.c:1287
 msgid "Four Color Standard"
 msgstr "Quatre couleurs standard"
 
-#: src/main/print-lexmark.c:604
-#: src/main/print-lexmark.c:674
-#: src/main/escp2-channels.c:1015
-#: src/main/escp2-channels.c:1029
-#: src/main/escp2-channels.c:1043
-#: src/main/escp2-channels.c:1057
-#: src/main/escp2-channels.c:1071
-#: src/main/escp2-channels.c:1085
-#: src/main/escp2-channels.c:1109
-#: src/main/escp2-channels.c:1115
+#: src/main/print-lexmark.c:604 src/main/print-lexmark.c:674
+#: src/main/escp2-channels.c:1015 src/main/escp2-channels.c:1029
+#: src/main/escp2-channels.c:1043 src/main/escp2-channels.c:1057
+#: src/main/escp2-channels.c:1071 src/main/escp2-channels.c:1085
+#: src/main/escp2-channels.c:1109 src/main/escp2-channels.c:1115
 #: src/main/escp2-channels.c:1129
 msgid "Three Color Composite"
 msgstr "Trois couleurs composite"
 
-#: src/main/print-lexmark.c:607
-#: src/main/print-lexmark.c:677
-#: src/main/escp2-channels.c:1361
-#: src/main/escp2-channels.c:1375
-#: src/main/escp2-channels.c:1389
-#: src/main/escp2-channels.c:1615
-#: src/main/escp2-channels.c:1630
-#: src/main/escp2-channels.c:1645
+#: src/main/print-lexmark.c:607 src/main/print-lexmark.c:677
+#: src/main/escp2-channels.c:1361 src/main/escp2-channels.c:1375
+#: src/main/escp2-channels.c:1389 src/main/escp2-channels.c:1615
+#: src/main/escp2-channels.c:1630 src/main/escp2-channels.c:1645
 #: src/main/escp2-channels.c:1662
 msgid "Six Color Photo"
 msgstr "Six couleurs photo"
 
-#: src/main/print-lexmark.c:610
-#: src/main/print-lexmark.c:680
-#: src/main/escp2-channels.c:1310
-#: src/main/escp2-channels.c:1324
-#: src/main/escp2-channels.c:1338
-#: src/main/escp2-channels.c:1559
-#: src/main/escp2-channels.c:1574
-#: src/main/escp2-channels.c:1591
+#: src/main/print-lexmark.c:610 src/main/print-lexmark.c:680
+#: src/main/escp2-channels.c:1310 src/main/escp2-channels.c:1324
+#: src/main/escp2-channels.c:1338 src/main/escp2-channels.c:1559
+#: src/main/escp2-channels.c:1574 src/main/escp2-channels.c:1591
 msgid "Five Color Photo Composite"
 msgstr "Cinq couleurs photo composite"
 
-#: src/main/print-lexmark.c:860
-#: src/main/escp2-papers.c:1166
-#: src/main/escp2-papers.c:1210
-#: src/main/escp2-papers.c:1254
-#: src/main/escp2-papers.c:1302
-#: src/main/escp2-papers.c:1350
+#: src/main/print-lexmark.c:860 src/main/escp2-papers.c:1166
+#: src/main/escp2-papers.c:1210 src/main/escp2-papers.c:1254
+#: src/main/escp2-papers.c:1302 src/main/escp2-papers.c:1350
 #: src/main/escp2-papers.c:1394
 msgid "Glossy Film"
 msgstr "Film brillant"
 
-#: src/main/print-lexmark.c:868
-#: src/main/escp2-papers.c:1170
-#: src/main/escp2-papers.c:1214
-#: src/main/escp2-papers.c:1258
-#: src/main/escp2-papers.c:1306
-#: src/main/escp2-papers.c:1354
+#: src/main/print-lexmark.c:868 src/main/escp2-papers.c:1170
+#: src/main/escp2-papers.c:1214 src/main/escp2-papers.c:1258
+#: src/main/escp2-papers.c:1306 src/main/escp2-papers.c:1354
 #: src/main/escp2-papers.c:1398
 msgid "Envelopes"
 msgstr "Enveloppes"
 
-#: src/main/print-lexmark.c:872
-#: src/main/escp2-papers.c:1174
-#: src/main/escp2-papers.c:1218
-#: src/main/escp2-papers.c:1262
-#: src/main/escp2-papers.c:1310
-#: src/main/escp2-papers.c:1358
+#: src/main/print-lexmark.c:872 src/main/escp2-papers.c:1174
+#: src/main/escp2-papers.c:1218 src/main/escp2-papers.c:1262
+#: src/main/escp2-papers.c:1310 src/main/escp2-papers.c:1358
 #: src/main/escp2-papers.c:1402
 msgid "Matte Paper"
 msgstr "Papier Mat"
 
-#: src/main/print-lexmark.c:876
-#: src/main/escp2-papers.c:1178
-#: src/main/escp2-papers.c:1222
-#: src/main/escp2-papers.c:1266
-#: src/main/escp2-papers.c:1314
-#: src/main/escp2-papers.c:1362
+#: src/main/print-lexmark.c:876 src/main/escp2-papers.c:1178
+#: src/main/escp2-papers.c:1222 src/main/escp2-papers.c:1266
+#: src/main/escp2-papers.c:1314 src/main/escp2-papers.c:1362
 #: src/main/escp2-papers.c:1406
 msgid "Inkjet Paper"
 msgstr "Papier jet d'encre"
 
-#: src/main/print-lexmark.c:880
-#: src/main/escp2-papers.c:1180
-#: src/main/escp2-papers.c:1224
-#: src/main/escp2-papers.c:1268
-#: src/main/escp2-papers.c:1316
-#: src/main/escp2-papers.c:1364
+#: src/main/print-lexmark.c:880 src/main/escp2-papers.c:1180
+#: src/main/escp2-papers.c:1224 src/main/escp2-papers.c:1268
+#: src/main/escp2-papers.c:1316 src/main/escp2-papers.c:1364
 #: src/main/escp2-papers.c:1408
 msgid "Photo Quality Inkjet Paper"
 msgstr "Papier jet d'encre qualité photo"
 
-#: src/main/print-lexmark.c:884
-#: src/main/escp2-papers.c:1182
-#: src/main/escp2-papers.c:1226
-#: src/main/escp2-papers.c:1270
-#: src/main/escp2-papers.c:1318
-#: src/main/escp2-papers.c:1366
+#: src/main/print-lexmark.c:884 src/main/escp2-papers.c:1182
+#: src/main/escp2-papers.c:1226 src/main/escp2-papers.c:1270
+#: src/main/escp2-papers.c:1318 src/main/escp2-papers.c:1366
 #: src/main/escp2-papers.c:1410
 msgid "Photo Paper"
 msgstr "Papier photo"
 
-#: src/main/print-lexmark.c:888
-#: src/main/escp2-papers.c:1184
-#: src/main/escp2-papers.c:1228
-#: src/main/escp2-papers.c:1272
-#: src/main/escp2-papers.c:1320
-#: src/main/escp2-papers.c:1368
-#: src/main/escp2-papers.c:1412
-#: src/main/escp2-papers.c:1436
+#: src/main/print-lexmark.c:888 src/main/escp2-papers.c:1184
+#: src/main/escp2-papers.c:1228 src/main/escp2-papers.c:1272
+#: src/main/escp2-papers.c:1320 src/main/escp2-papers.c:1368
+#: src/main/escp2-papers.c:1412 src/main/escp2-papers.c:1436
 msgid "Premium Glossy Photo Paper"
 msgstr "Papier glacé photo Premium"
 
-#: src/main/print-lexmark.c:892
-#: src/main/escp2-papers.c:1188
-#: src/main/escp2-papers.c:1232
-#: src/main/escp2-papers.c:1276
-#: src/main/escp2-papers.c:1324
-#: src/main/escp2-papers.c:1372
+#: src/main/print-lexmark.c:892 src/main/escp2-papers.c:1188
+#: src/main/escp2-papers.c:1232 src/main/escp2-papers.c:1276
+#: src/main/escp2-papers.c:1324 src/main/escp2-papers.c:1372
 #: src/main/escp2-papers.c:1416
 msgid "Premium Luster Photo Paper"
 msgstr "Papier photo Premium Luster"
 
-#: src/main/print-lexmark.c:896
-#: src/main/escp2-papers.c:1190
-#: src/main/escp2-papers.c:1234
-#: src/main/escp2-papers.c:1282
-#: src/main/escp2-papers.c:1330
-#: src/main/escp2-papers.c:1374
+#: src/main/print-lexmark.c:896 src/main/escp2-papers.c:1190
+#: src/main/escp2-papers.c:1234 src/main/escp2-papers.c:1282
+#: src/main/escp2-papers.c:1330 src/main/escp2-papers.c:1374
 #: src/main/escp2-papers.c:1422
 msgid "Photo Quality Glossy Paper"
 msgstr "Papier glacé qualité photo"
 
-#: src/main/print-lexmark.c:900
-#: src/main/escp2-papers.c:1192
-#: src/main/escp2-papers.c:1236
-#: src/main/escp2-papers.c:1284
-#: src/main/escp2-papers.c:1332
-#: src/main/escp2-papers.c:1376
+#: src/main/print-lexmark.c:900 src/main/escp2-papers.c:1192
+#: src/main/escp2-papers.c:1236 src/main/escp2-papers.c:1284
+#: src/main/escp2-papers.c:1332 src/main/escp2-papers.c:1376
 #: src/main/escp2-papers.c:1424
 msgid "Ilford Heavy Paper"
 msgstr "Papier épais Ilford"
@@ -2088,10 +1761,8 @@ msgstr "Papier épais Ilford"
 msgid "Coated"
 msgstr "Couché"
 
-#: src/main/print-olympus.c:266
-#: src/cups/genppd.c:1450
-#: src/cups/genppd.c:1465
-#: src/cups/genppd.c:1516
+#: src/main/print-olympus.c:266 src/cups/genppd.c:1448 src/cups/genppd.c:1463
+#: src/cups/genppd.c:1514
 msgid "None"
 msgstr "Aucun"
 
@@ -2107,8 +1778,7 @@ msgstr "Texture"
 msgid "Matte"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1295
-#: src/main/print-olympus.c:1296
+#: src/main/print-olympus.c:1295 src/main/print-olympus.c:1296
 msgid "Laminate Pattern"
 msgstr "Motif du vernis protecteur"
 
@@ -2160,8 +1830,7 @@ msgstr "Photo séchage rapide"
 msgid "Quick-dry Transparency"
 msgstr "Transparent séchage rapide"
 
-#: src/main/print-pcl.c:228
-#: src/main/xmli18n-tmp.h:15
+#: src/main/print-pcl.c:228 src/main/xmli18n-tmp.h:15
 msgid "Manual"
 msgstr "Manuel"
 
@@ -2169,8 +1838,7 @@ msgstr "Manuel"
 msgid "Tray 1"
 msgstr "Bac 1"
 
-#: src/main/print-pcl.c:231
-#: src/main/print-pcl.c:237
+#: src/main/print-pcl.c:231 src/main/print-pcl.c:237
 msgid "Tray 2"
 msgstr "Bac 2"
 
@@ -2226,8 +1894,7 @@ msgstr "Côté long (standard)"
 msgid "PPDFile"
 msgstr "Fichier PPD"
 
-#: src/main/print-ps.c:97
-#: src/gutenprintui/panel.c:1749
+#: src/main/print-ps.c:97 src/gutenprintui/panel.c:1749
 #: src/gutenprintui2/panel.c:1749
 msgid "PPD File"
 msgstr "Fichier PPD"
@@ -2236,38 +1903,28 @@ msgstr "Fichier PPD"
 msgid "Image dimensions must match paper dimensions"
 msgstr "Les dimensions de l'image doivent correspondre à celles du papier"
 
-#: src/main/escp2-channels.c:869
-#: src/main/escp2-channels.c:882
+#: src/main/escp2-channels.c:869 src/main/escp2-channels.c:882
 msgid "Two Level Grayscale"
 msgstr "EChelle de gris à deux niveaux"
 
-#: src/main/escp2-channels.c:904
-#: src/main/escp2-channels.c:917
+#: src/main/escp2-channels.c:904 src/main/escp2-channels.c:917
 msgid "Three Level Grayscale"
 msgstr "Trois niveaux de gris"
 
-#: src/main/escp2-channels.c:939
-#: src/main/escp2-channels.c:952
-#: src/main/escp2-channels.c:965
-#: src/main/escp2-channels.c:978
-#: src/main/escp2-channels.c:991
-#: src/main/escp2-channels.c:2218
-#: src/main/escp2-channels.c:2241
-#: src/main/escp2-channels.c:2261
-#: src/main/escp2-channels.c:2281
-#: src/main/escp2-channels.c:2301
+#: src/main/escp2-channels.c:939 src/main/escp2-channels.c:952
+#: src/main/escp2-channels.c:965 src/main/escp2-channels.c:978
+#: src/main/escp2-channels.c:991 src/main/escp2-channels.c:2218
+#: src/main/escp2-channels.c:2241 src/main/escp2-channels.c:2261
+#: src/main/escp2-channels.c:2281 src/main/escp2-channels.c:2301
 msgid "Quadtone"
 msgstr "Quadtone"
 
-#: src/main/escp2-channels.c:1411
-#: src/main/escp2-channels.c:1425
+#: src/main/escp2-channels.c:1411 src/main/escp2-channels.c:1425
 msgid "Six Color Enhanced Composite"
 msgstr "Six couleurs amélioré composite"
 
-#: src/main/escp2-channels.c:1448
-#: src/main/escp2-channels.c:1462
-#: src/main/escp2-channels.c:1476
-#: src/main/escp2-channels.c:1512
+#: src/main/escp2-channels.c:1448 src/main/escp2-channels.c:1462
+#: src/main/escp2-channels.c:1476 src/main/escp2-channels.c:1512
 msgid "Seven Color Photo"
 msgstr "Photo sept couleurs"
 
@@ -2279,8 +1936,7 @@ msgstr "Sept couleurs amélioré"
 msgid "Eight Color Photo"
 msgstr "Huit couleurs photo"
 
-#: src/main/escp2-channels.c:1683
-#: src/main/escp2-channels.c:1689
+#: src/main/escp2-channels.c:1683 src/main/escp2-channels.c:1689
 msgid "One Color Raw"
 msgstr "Une couleur de base"
 
@@ -2288,17 +1944,13 @@ msgstr "Une couleur de base"
 msgid "One Color Raw Enhanced Gloss"
 msgstr "Une couleur de base optimiseur de brillance"
 
-#: src/main/escp2-channels.c:1708
-#: src/main/escp2-channels.c:1720
+#: src/main/escp2-channels.c:1708 src/main/escp2-channels.c:1720
 msgid "Two Color Raw"
 msgstr "Deux couleurs de base"
 
-#: src/main/escp2-channels.c:1734
-#: src/main/escp2-channels.c:1748
-#: src/main/escp2-channels.c:1775
-#: src/main/escp2-channels.c:1788
-#: src/main/escp2-channels.c:1801
-#: src/main/escp2-channels.c:1815
+#: src/main/escp2-channels.c:1734 src/main/escp2-channels.c:1748
+#: src/main/escp2-channels.c:1775 src/main/escp2-channels.c:1788
+#: src/main/escp2-channels.c:1801 src/main/escp2-channels.c:1815
 #: src/main/escp2-channels.c:1829
 msgid "Three Color Raw"
 msgstr "Trois couleurs de base"
@@ -2307,14 +1959,10 @@ msgstr "Trois couleurs de base"
 msgid "Three Color Raw Gloss"
 msgstr "Trois couleurs de base brillant"
 
-#: src/main/escp2-channels.c:1836
-#: src/main/escp2-channels.c:1842
-#: src/main/escp2-channels.c:1848
-#: src/main/escp2-channels.c:1854
-#: src/main/escp2-channels.c:1860
-#: src/main/escp2-channels.c:1866
-#: src/main/escp2-channels.c:1872
-#: src/main/escp2-channels.c:1878
+#: src/main/escp2-channels.c:1836 src/main/escp2-channels.c:1842
+#: src/main/escp2-channels.c:1848 src/main/escp2-channels.c:1854
+#: src/main/escp2-channels.c:1860 src/main/escp2-channels.c:1866
+#: src/main/escp2-channels.c:1872 src/main/escp2-channels.c:1878
 msgid "Four Color Raw"
 msgstr "Quatre couleurs de base"
 
@@ -2322,15 +1970,12 @@ msgstr "Quatre couleurs de base"
 msgid "Four Color Raw Gloss"
 msgstr "Quatre couleurs de base brillant"
 
-#: src/main/escp2-channels.c:1899
-#: src/main/escp2-channels.c:1913
+#: src/main/escp2-channels.c:1899 src/main/escp2-channels.c:1913
 msgid "Five Color Raw"
 msgstr "Cinq couleurs de base"
 
-#: src/main/escp2-channels.c:1929
-#: src/main/escp2-channels.c:1935
-#: src/main/escp2-channels.c:1941
-#: src/main/escp2-channels.c:1956
+#: src/main/escp2-channels.c:1929 src/main/escp2-channels.c:1935
+#: src/main/escp2-channels.c:1941 src/main/escp2-channels.c:1956
 msgid "Six Color Raw"
 msgstr "Six couleurs de base"
 
@@ -2338,8 +1983,7 @@ msgstr "Six couleurs de base"
 msgid "Six Color Enhanced Gloss Raw"
 msgstr "Six couleurs de base Optimiseur de brillance"
 
-#: src/main/escp2-channels.c:1977
-#: src/main/escp2-channels.c:1992
+#: src/main/escp2-channels.c:1977 src/main/escp2-channels.c:1992
 #: src/main/escp2-channels.c:2007
 msgid "Seven Color Raw"
 msgstr "Sept couleurs de base"
@@ -2352,122 +1996,88 @@ msgstr "Sept couleurs de base Optimiseur de brillance"
 msgid "Eight Color Raw"
 msgstr "Huit couleurs de base"
 
-#: src/main/escp2-channels.c:2197
-#: src/main/escp2-channels.c:2210
-#: src/main/escp2-channels.c:2230
-#: src/main/escp2-channels.c:2233
-#: src/main/escp2-channels.c:2253
-#: src/main/escp2-channels.c:2273
-#: src/main/escp2-channels.c:2293
-#: src/main/escp2-channels.c:2313
-#: src/main/escp2-channels.c:2329
-#: src/main/escp2-channels.c:2331
-#: src/main/escp2-channels.c:2333
-#: src/main/escp2-channels.c:2335
-#: src/main/escp2-channels.c:2351
-#: src/main/escp2-channels.c:2371
+#: src/main/escp2-channels.c:2197 src/main/escp2-channels.c:2210
+#: src/main/escp2-channels.c:2230 src/main/escp2-channels.c:2233
+#: src/main/escp2-channels.c:2253 src/main/escp2-channels.c:2273
+#: src/main/escp2-channels.c:2293 src/main/escp2-channels.c:2313
+#: src/main/escp2-channels.c:2329 src/main/escp2-channels.c:2331
+#: src/main/escp2-channels.c:2333 src/main/escp2-channels.c:2335
+#: src/main/escp2-channels.c:2351 src/main/escp2-channels.c:2371
 msgid "EPSON Standard Inks"
 msgstr "Encres standard EPSON"
 
-#: src/main/escp2-channels.c:2391
-#: src/main/escp2-channels.c:2416
+#: src/main/escp2-channels.c:2391 src/main/escp2-channels.c:2416
 msgid "UltraChrome Photo Black"
 msgstr "Ultrachrome noir photo"
 
-#: src/main/escp2-channels.c:2395
-#: src/main/escp2-channels.c:2420
+#: src/main/escp2-channels.c:2395 src/main/escp2-channels.c:2420
 msgid "UltraChrome Matte Black"
 msgstr "Ultrachrome noir mat"
 
-#: src/main/escp2-papers.c:1162
-#: src/main/escp2-papers.c:1206
-#: src/main/escp2-papers.c:1250
-#: src/main/escp2-papers.c:1298
-#: src/main/escp2-papers.c:1346
-#: src/main/escp2-papers.c:1390
+#: src/main/escp2-papers.c:1162 src/main/escp2-papers.c:1206
+#: src/main/escp2-papers.c:1250 src/main/escp2-papers.c:1298
+#: src/main/escp2-papers.c:1346 src/main/escp2-papers.c:1390
 msgid "Plain Paper Fast Load"
 msgstr "Papier normal chargement rapide"
 
-#: src/main/escp2-papers.c:1164
-#: src/main/escp2-papers.c:1208
-#: src/main/escp2-papers.c:1252
-#: src/main/escp2-papers.c:1300
-#: src/main/escp2-papers.c:1348
-#: src/main/escp2-papers.c:1392
+#: src/main/escp2-papers.c:1164 src/main/escp2-papers.c:1208
+#: src/main/escp2-papers.c:1252 src/main/escp2-papers.c:1300
+#: src/main/escp2-papers.c:1348 src/main/escp2-papers.c:1392
 #: src/main/xmli18n-tmp.h:5
 msgid "Postcard"
 msgstr "Carte postale"
 
-#: src/main/escp2-papers.c:1172
-#: src/main/escp2-papers.c:1216
-#: src/main/escp2-papers.c:1260
-#: src/main/escp2-papers.c:1308
-#: src/main/escp2-papers.c:1356
-#: src/main/escp2-papers.c:1400
+#: src/main/escp2-papers.c:1172 src/main/escp2-papers.c:1216
+#: src/main/escp2-papers.c:1260 src/main/escp2-papers.c:1308
+#: src/main/escp2-papers.c:1356 src/main/escp2-papers.c:1400
 msgid "Back Light Film"
 msgstr "Film back light"
 
-#: src/main/escp2-papers.c:1176
-#: src/main/escp2-papers.c:1220
-#: src/main/escp2-papers.c:1264
-#: src/main/escp2-papers.c:1312
-#: src/main/escp2-papers.c:1360
-#: src/main/escp2-papers.c:1404
+#: src/main/escp2-papers.c:1176 src/main/escp2-papers.c:1220
+#: src/main/escp2-papers.c:1264 src/main/escp2-papers.c:1312
+#: src/main/escp2-papers.c:1360 src/main/escp2-papers.c:1404
 msgid "Matte Paper Heavyweight"
 msgstr "Papier Mat Heavyweight"
 
-#: src/main/escp2-papers.c:1186
-#: src/main/escp2-papers.c:1230
-#: src/main/escp2-papers.c:1274
-#: src/main/escp2-papers.c:1322
-#: src/main/escp2-papers.c:1370
-#: src/main/escp2-papers.c:1414
+#: src/main/escp2-papers.c:1186 src/main/escp2-papers.c:1230
+#: src/main/escp2-papers.c:1274 src/main/escp2-papers.c:1322
+#: src/main/escp2-papers.c:1370 src/main/escp2-papers.c:1414
 msgid "Premium Semigloss Photo Paper"
 msgstr "Papier semi-brillant photo Premium"
 
-#: src/main/escp2-papers.c:1194
-#: src/main/escp2-papers.c:1238
-#: src/main/escp2-papers.c:1286
-#: src/main/escp2-papers.c:1334
-#: src/main/escp2-papers.c:1378
-#: src/main/escp2-papers.c:1426
+#: src/main/escp2-papers.c:1194 src/main/escp2-papers.c:1238
+#: src/main/escp2-papers.c:1286 src/main/escp2-papers.c:1334
+#: src/main/escp2-papers.c:1378 src/main/escp2-papers.c:1426
 msgid "ColorLife Paper"
 msgstr "Papier Colorlife"
 
-#: src/main/escp2-papers.c:1278
-#: src/main/escp2-papers.c:1326
+#: src/main/escp2-papers.c:1278 src/main/escp2-papers.c:1326
 #: src/main/escp2-papers.c:1418
 msgid "Archival Matte Paper"
 msgstr "Papier Mat Archival"
 
-#: src/main/escp2-papers.c:1280
-#: src/main/escp2-papers.c:1328
+#: src/main/escp2-papers.c:1280 src/main/escp2-papers.c:1328
 #: src/main/escp2-papers.c:1420
 msgid "Watercolor Paper - Radiant White"
 msgstr "Papier aquarelle - radiant white"
 
-#: src/main/escp2-resolutions.c:33
-#: src/main/escp2-resolutions.c:36
+#: src/main/escp2-resolutions.c:33 src/main/escp2-resolutions.c:36
 msgid "360 x 90 DPI Fast Economy"
 msgstr "360x90 ppp rapide économique"
 
-#: src/main/escp2-resolutions.c:40
-#: src/main/escp2-resolutions.c:43
+#: src/main/escp2-resolutions.c:40 src/main/escp2-resolutions.c:43
 msgid "360 x 120 DPI Economy"
 msgstr "360 x 120 ppp Economique"
 
-#: src/main/escp2-resolutions.c:47
-#: src/main/escp2-resolutions.c:50
+#: src/main/escp2-resolutions.c:47 src/main/escp2-resolutions.c:50
 msgid "180 DPI Economy"
 msgstr "180 ppp Economique"
 
-#: src/main/escp2-resolutions.c:54
-#: src/main/escp2-resolutions.c:57
+#: src/main/escp2-resolutions.c:54 src/main/escp2-resolutions.c:57
 msgid "360 x 180 DPI Draft"
 msgstr "360 x 180 ppp brouillon"
 
-#: src/main/escp2-resolutions.c:61
-#: src/main/escp2-resolutions.c:64
+#: src/main/escp2-resolutions.c:61 src/main/escp2-resolutions.c:64
 msgid "360 x 240 DPI Draft"
 msgstr "360 x 240 ppp brouillon"
 
@@ -2475,19 +2085,16 @@ msgstr "360 x 240 ppp brouillon"
 msgid "360 DPI High Quality"
 msgstr "360 ppp Haute qualité"
 
-#: src/main/escp2-resolutions.c:71
-#: src/main/escp2-resolutions.c:74
+#: src/main/escp2-resolutions.c:71 src/main/escp2-resolutions.c:74
 #: src/main/escp2-resolutions.c:77
 msgid "360 DPI"
 msgstr "360 ppp"
 
-#: src/main/escp2-resolutions.c:81
-#: src/main/escp2-resolutions.c:84
+#: src/main/escp2-resolutions.c:81 src/main/escp2-resolutions.c:84
 msgid "720 x 360 DPI"
 msgstr "720 x 360 ppp"
 
-#: src/main/escp2-resolutions.c:88
-#: src/main/escp2-resolutions.c:91
+#: src/main/escp2-resolutions.c:88 src/main/escp2-resolutions.c:91
 msgid "720 DPI"
 msgstr "720 ppp"
 
@@ -2503,8 +2110,7 @@ msgstr "720 ppp Qualité maximale"
 msgid "720 x 720 DPI"
 msgstr "720 x 720 ppp"
 
-#: src/main/escp2-resolutions.c:104
-#: src/main/escp2-resolutions.c:107
+#: src/main/escp2-resolutions.c:104 src/main/escp2-resolutions.c:107
 #: src/main/escp2-resolutions.c:119
 msgid "1440 x 720 DPI"
 msgstr "1440 x 720 ppp"
@@ -2513,13 +2119,11 @@ msgstr "1440 x 720 ppp"
 msgid "1440 x 720 DPI Highest Quality"
 msgstr "1440 x 720 ppp Trés haute qualité"
 
-#: src/main/escp2-resolutions.c:113
-#: src/main/escp2-resolutions.c:116
+#: src/main/escp2-resolutions.c:113 src/main/escp2-resolutions.c:116
 msgid "1440 x 720 DPI Transposed"
 msgstr "1440 x 720 ppp Transposé"
 
-#: src/main/escp2-resolutions.c:123
-#: src/main/escp2-resolutions.c:126
+#: src/main/escp2-resolutions.c:123 src/main/escp2-resolutions.c:126
 msgid "2880 x 720 DPI"
 msgstr "2880 x 720 ppp"
 
@@ -2527,8 +2131,7 @@ msgstr "2880 x 720 ppp"
 msgid "2880 x 720 DPI Highest Quality"
 msgstr "2880 x 720 ppp Trés haute qualité"
 
-#: src/main/escp2-resolutions.c:133
-#: src/main/escp2-resolutions.c:136
+#: src/main/escp2-resolutions.c:133 src/main/escp2-resolutions.c:136
 #: src/main/escp2-resolutions.c:139
 msgid "1440 x 1440 DPI"
 msgstr "1440 x 1440 ppp"
@@ -2545,8 +2148,7 @@ msgstr "1440 x 1440 ppp Haute qualité"
 msgid "1440 x 1440 DPI Highest Quality"
 msgstr "1440 x 1440 ppp Qualité maximale"
 
-#: src/main/escp2-resolutions.c:152
-#: src/main/escp2-resolutions.c:155
+#: src/main/escp2-resolutions.c:152 src/main/escp2-resolutions.c:155
 #: src/main/escp2-resolutions.c:161
 msgid "2880 x 1440 DPI"
 msgstr "2880 x 1440 ppp"
@@ -2567,13 +2169,11 @@ msgstr "2880 x 1440 ppp Qualité maximale"
 msgid "5760 x 1440 DPI"
 msgstr "5760 x 1440 ppp"
 
-#: src/main/escp2-resolutions.c:175
-#: src/main/escp2-resolutions.c:178
+#: src/main/escp2-resolutions.c:175 src/main/escp2-resolutions.c:178
 msgid "2880 x 2880 DPI"
 msgstr "2880 x 2880 ppp"
 
-#: src/main/escp2-resolutions.c:182
-#: src/main/escp2-resolutions.c:185
+#: src/main/escp2-resolutions.c:182 src/main/escp2-resolutions.c:185
 msgid "5760 x 2880 DPI"
 msgstr "5760 x 2880 ppp"
 
@@ -2581,32 +2181,27 @@ msgstr "5760 x 2880 ppp"
 msgid "On"
 msgstr "Actif"
 
-#: src/main/escp2-resolutions.c:556
-#: src/main/escp2-resolutions.c:567
+#: src/main/escp2-resolutions.c:556 src/main/escp2-resolutions.c:567
 #: src/main/escp2-resolutions.c:579
 msgid "Interleave"
 msgstr "Entrelacement"
 
-#: src/main/escp2-resolutions.c:557
-#: src/main/escp2-resolutions.c:568
+#: src/main/escp2-resolutions.c:557 src/main/escp2-resolutions.c:568
 #: src/main/escp2-resolutions.c:580
 msgid "Full Overlap"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:558
-#: src/main/escp2-resolutions.c:569
+#: src/main/escp2-resolutions.c:558 src/main/escp2-resolutions.c:569
 #: src/main/escp2-resolutions.c:581
 msgid "Four Pass"
 msgstr "quatre passes"
 
-#: src/main/escp2-resolutions.c:559
-#: src/main/escp2-resolutions.c:570
+#: src/main/escp2-resolutions.c:559 src/main/escp2-resolutions.c:570
 #: src/main/escp2-resolutions.c:582
 msgid "Full Overlap 2"
 msgstr ""
 
-#: src/main/escp2-resolutions.c:571
-#: src/main/escp2-resolutions.c:583
+#: src/main/escp2-resolutions.c:571 src/main/escp2-resolutions.c:583
 msgid "Interleave 2"
 msgstr "Entrelancement 2"
 
@@ -2650,8 +2245,7 @@ msgstr "Type d'image"
 msgid "Type of image being printed"
 msgstr "Type d'image à imprimer"
 
-#: src/main/generic-options.c:74
-#: src/main/generic-options.c:80
+#: src/main/generic-options.c:74 src/main/generic-options.c:80
 msgid "Job Mode"
 msgstr "Mode de travail"
 
@@ -5844,52 +5438,52 @@ msgid "Lexmark Valuewriter 300"
 msgstr "Lexmark Valuewriter 300"
 
 #: src/main/xmli18n-tmp.h:799
-msgid "Minolta PagePro 1100"
-msgstr "Minolta PagePro 1100"
-
-#: src/main/xmli18n-tmp.h:800
 msgid "Minolta PagePro 6"
 msgstr "Minolta PagePro 6"
 
-#: src/main/xmli18n-tmp.h:801
+#: src/main/xmli18n-tmp.h:800
 msgid "Minolta PagePro 6e"
 msgstr "Minolta PagePro 6e"
 
-#: src/main/xmli18n-tmp.h:802
+#: src/main/xmli18n-tmp.h:801
 msgid "Minolta PagePro 6ex"
 msgstr "Minolta PagePro 6ex"
 
-#: src/main/xmli18n-tmp.h:803
+#: src/main/xmli18n-tmp.h:802
 msgid "Minolta PagePro 8"
 msgstr "Minolta PagePro 8"
 
-#: src/main/xmli18n-tmp.h:804
+#: src/main/xmli18n-tmp.h:803
 msgid "Minolta PagePro 8L"
 msgstr "Minolta PagePro 8L"
 
+#: src/main/xmli18n-tmp.h:804
+msgid "Minolta PagePro 1100"
+msgstr "Minolta PagePro 1100"
+
 #: src/main/xmli18n-tmp.h:805
-msgid "NEC SuperScript 1260"
-msgstr "NEC SuperScript 1260"
-
-#: src/main/xmli18n-tmp.h:806
-msgid "NEC SuperScript 1400"
-msgstr "NEC SuperScript 1400"
-
-#: src/main/xmli18n-tmp.h:807
-msgid "NEC SuperScript 1800"
-msgstr "NEC SuperScript 1800"
-
-#: src/main/xmli18n-tmp.h:808
 msgid "NEC SuperScript 660i"
 msgstr "NEC SuperScript 660i"
 
-#: src/main/xmli18n-tmp.h:809
+#: src/main/xmli18n-tmp.h:806
 msgid "NEC SuperScript 860"
 msgstr "NEC SuperScript 860"
 
-#: src/main/xmli18n-tmp.h:810
+#: src/main/xmli18n-tmp.h:807
 msgid "NEC SuperScript 870"
 msgstr "NEC SuperScript 870"
+
+#: src/main/xmli18n-tmp.h:808
+msgid "NEC SuperScript 1260"
+msgstr "NEC SuperScript 1260"
+
+#: src/main/xmli18n-tmp.h:809
+msgid "NEC SuperScript 1400"
+msgstr "NEC SuperScript 1400"
+
+#: src/main/xmli18n-tmp.h:810
+msgid "NEC SuperScript 1800"
+msgstr "NEC SuperScript 1800"
 
 #: src/main/xmli18n-tmp.h:811
 msgid "Okidata OL400"
@@ -6219,150 +5813,116 @@ msgstr "Données brutes (raw) 16 bits"
 msgid "RAW DATA 8 bit"
 msgstr "Données brutes (raw) 8 bits"
 
-#: src/gutenprintui/panel.c:270
-#: src/gutenprintui2/panel.c:270
+#: src/gutenprintui/panel.c:270 src/gutenprintui2/panel.c:270
 msgid "Inch"
 msgstr "Pouce"
 
-#: src/gutenprintui/panel.c:270
-#: src/gutenprintui2/panel.c:270
+#: src/gutenprintui/panel.c:270 src/gutenprintui2/panel.c:270
 msgid "Set the base unit of measurement to inches"
 msgstr "Défini l'unité de base de mesure en pouce"
 
-#: src/gutenprintui/panel.c:272
-#: src/gutenprintui2/panel.c:272
+#: src/gutenprintui/panel.c:272 src/gutenprintui2/panel.c:272
 msgid "cm"
 msgstr "cm"
 
-#: src/gutenprintui/panel.c:272
-#: src/gutenprintui2/panel.c:272
+#: src/gutenprintui/panel.c:272 src/gutenprintui2/panel.c:272
 msgid "Set the base unit of measurement to centimetres"
 msgstr "Défini l'unité de base de mesure en centimètres"
 
-#: src/gutenprintui/panel.c:274
-#: src/gutenprintui2/panel.c:274
+#: src/gutenprintui/panel.c:274 src/gutenprintui2/panel.c:274
 msgid "Points"
 msgstr "Points"
 
-#: src/gutenprintui/panel.c:274
-#: src/gutenprintui2/panel.c:274
+#: src/gutenprintui/panel.c:274 src/gutenprintui2/panel.c:274
 msgid "Set the base unit of measurement to points (1/72\")"
 msgstr "Défini l'unité de base de mesure en points (1/72\")"
 
-#: src/gutenprintui/panel.c:276
-#: src/gutenprintui2/panel.c:276
+#: src/gutenprintui/panel.c:276 src/gutenprintui2/panel.c:276
 msgid "mm"
 msgstr "mm"
 
-#: src/gutenprintui/panel.c:276
-#: src/gutenprintui2/panel.c:276
+#: src/gutenprintui/panel.c:276 src/gutenprintui2/panel.c:276
 msgid "Set the base unit of measurement to millimetres"
 msgstr "Défini l'unité de base de mesure en millimètres"
 
-#: src/gutenprintui/panel.c:278
-#: src/gutenprintui2/panel.c:278
+#: src/gutenprintui/panel.c:278 src/gutenprintui2/panel.c:278
 msgid "Pica"
 msgstr "Pica"
 
-#: src/gutenprintui/panel.c:278
-#: src/gutenprintui2/panel.c:278
+#: src/gutenprintui/panel.c:278 src/gutenprintui2/panel.c:278
 msgid "Set the base unit of measurement to picas (1/12\")"
 msgstr "Défini l'unité de base de mesure en pica (1/72\")"
 
-#: src/gutenprintui/panel.c:285
-#: src/gutenprintui2/panel.c:285
+#: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color output"
 msgstr "Sortie couleur"
 
-#: src/gutenprintui/panel.c:287
-#: src/gutenprintui2/panel.c:287
+#: src/gutenprintui/panel.c:287 src/gutenprintui2/panel.c:287
 msgid "Print in shades of gray using black ink"
 msgstr "Imprimer en niveaux de gris en utilisant l'encre noire"
 
-#: src/gutenprintui/panel.c:299
-#: src/gutenprintui2/panel.c:299
+#: src/gutenprintui/panel.c:299 src/gutenprintui2/panel.c:299
 msgid "Standard Command"
 msgstr "Commande standard"
 
-#: src/gutenprintui/panel.c:299
-#: src/gutenprintui2/panel.c:299
+#: src/gutenprintui/panel.c:299 src/gutenprintui2/panel.c:299
 msgid "Use standard print command"
 msgstr "Utiliser la commande d'impression standard"
 
-#: src/gutenprintui/panel.c:300
-#: src/gutenprintui2/panel.c:300
+#: src/gutenprintui/panel.c:300 src/gutenprintui2/panel.c:300
 msgid "Custom Command"
 msgstr "Commande personnalisée"
 
-#: src/gutenprintui/panel.c:300
-#: src/gutenprintui2/panel.c:300
+#: src/gutenprintui/panel.c:300 src/gutenprintui2/panel.c:300
 msgid "Use custom print command"
 msgstr "Utiliser une commande personnalisée"
 
-#: src/gutenprintui/panel.c:301
-#: src/gutenprintui/plist.c:660
-#: src/gutenprintui/plist.c:743
-#: src/gutenprintui2/panel.c:301
-#: src/gutenprintui2/plist.c:671
-#: src/gutenprintui2/plist.c:754
+#: src/gutenprintui/panel.c:301 src/gutenprintui/plist.c:660
+#: src/gutenprintui/plist.c:743 src/gutenprintui2/panel.c:301
+#: src/gutenprintui2/plist.c:671 src/gutenprintui2/plist.c:754
 msgid "File"
 msgstr "Fichier"
 
-#: src/gutenprintui/panel.c:301
-#: src/gutenprintui2/panel.c:301
+#: src/gutenprintui/panel.c:301 src/gutenprintui2/panel.c:301
 msgid "Print to a file"
 msgstr "Imprimer dans un fichier"
 
-#: src/gutenprintui/panel.c:517
-#: src/gutenprintui2/panel.c:517
+#: src/gutenprintui/panel.c:517 src/gutenprintui2/panel.c:517
 msgid "Edit Curve..."
 msgstr "Editer la courbe..."
 
-#: src/gutenprintui/panel.c:528
-#: src/gutenprintui2/panel.c:528
+#: src/gutenprintui/panel.c:528 src/gutenprintui2/panel.c:528
 msgid "Set Default"
 msgstr "Valeurs par défaut"
 
-#: src/gutenprintui/panel.c:530
-#: src/gutenprintui2/panel.c:530
+#: src/gutenprintui/panel.c:530 src/gutenprintui2/panel.c:530
 msgid "Restore Previous"
 msgstr "Valeurs précédentes"
 
-#: src/gutenprintui/panel.c:532
-#: src/gutenprintui/panel.c:1528
-#: src/gutenprintui/panel.c:1768
-#: src/gutenprintui/panel.c:1800
-#: src/gutenprintui2/panel.c:532
-#: src/gutenprintui2/panel.c:1529
-#: src/gutenprintui2/panel.c:1768
-#: src/gutenprintui2/panel.c:1800
+#: src/gutenprintui/panel.c:532 src/gutenprintui/panel.c:1528
+#: src/gutenprintui/panel.c:1768 src/gutenprintui/panel.c:1800
+#: src/gutenprintui2/panel.c:532 src/gutenprintui2/panel.c:1529
+#: src/gutenprintui2/panel.c:1768 src/gutenprintui2/panel.c:1800
 msgid "OK"
 msgstr "Valider"
 
-#: src/gutenprintui/panel.c:534
-#: src/gutenprintui/panel.c:1193
-#: src/gutenprintui/panel.c:1530
-#: src/gutenprintui/panel.c:1770
-#: src/gutenprintui2/panel.c:534
-#: src/gutenprintui2/panel.c:1194
-#: src/gutenprintui2/panel.c:1531
-#: src/gutenprintui2/panel.c:1770
+#: src/gutenprintui/panel.c:534 src/gutenprintui/panel.c:1193
+#: src/gutenprintui/panel.c:1530 src/gutenprintui/panel.c:1770
+#: src/gutenprintui2/panel.c:534 src/gutenprintui2/panel.c:1194
+#: src/gutenprintui2/panel.c:1531 src/gutenprintui2/panel.c:1770
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/gutenprintui/panel.c:1176
-#: src/gutenprintui2/panel.c:1177
+#: src/gutenprintui/panel.c:1176 src/gutenprintui2/panel.c:1177
 #, c-format
 msgid "%s -- Print v%s"
 msgstr "%s -- Print v%s"
 
-#: src/gutenprintui/panel.c:1185
-#: src/gutenprintui2/panel.c:1186
+#: src/gutenprintui/panel.c:1185 src/gutenprintui2/panel.c:1186
 msgid "About"
 msgstr "À propos"
 
-#: src/gutenprintui/panel.c:1187
-#: src/gutenprintui2/panel.c:1188
+#: src/gutenprintui/panel.c:1187 src/gutenprintui2/panel.c:1188
 msgid ""
 "Print and\n"
 "Save Settings"
@@ -6370,8 +5930,7 @@ msgstr ""
 "Imprimer et enregistrer\n"
 "les réglages"
 
-#: src/gutenprintui/panel.c:1189
-#: src/gutenprintui2/panel.c:1190
+#: src/gutenprintui/panel.c:1189 src/gutenprintui2/panel.c:1190
 msgid ""
 "Save\n"
 "Settings"
@@ -6379,324 +5938,276 @@ msgstr ""
 "Enregistrer\n"
 "les réglages"
 
-#: src/gutenprintui/panel.c:1191
-#: src/gutenprintui2/panel.c:1192
+#: src/gutenprintui/panel.c:1191 src/gutenprintui2/panel.c:1192
 msgid "Print"
 msgstr "Imprimer"
 
-#: src/gutenprintui/panel.c:1243
-#: src/gutenprintui2/panel.c:1244
+#: src/gutenprintui/panel.c:1243 src/gutenprintui2/panel.c:1244
 msgid "Preview"
 msgstr "Aperçu"
 
-#: src/gutenprintui/panel.c:1268
-#: src/gutenprintui2/panel.c:1269
+#: src/gutenprintui/panel.c:1268 src/gutenprintui2/panel.c:1269
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return to its original position."
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
 msgstr ""
 "Positionnement de l'image sur la page.\n"
-"Cliquez et Glissez avec le premier bouton pour positionner l'image sur la page.\n"
-"Cliquez et Glissez avec le second bouton pour déplacer l'image avec précision, chaque unité de mouvement déplace l'image d'un point (1/72\")\n"
-"Cliquez et Glissez avec le troisième (milieu) bouton pour déplacer l'image en unités de taille d'image.\n"
-"Maintenir la touche Maj enfoncée en Cliquant et Glissant contraint l'image à se déplacer horizontalement ou verticalement.\n"
-"Si vous cliquez un autre bouton tandis que vous bougez la souris, l'image retournera à sa position de départ."
+"Cliquez et Glissez avec le premier bouton pour positionner l'image sur la "
+"page.\n"
+"Cliquez et Glissez avec le second bouton pour déplacer l'image avec "
+"précision, chaque unité de mouvement déplace l'image d'un point (1/72\")\n"
+"Cliquez et Glissez avec le troisième (milieu) bouton pour déplacer l'image "
+"en unités de taille d'image.\n"
+"Maintenir la touche Maj enfoncée en Cliquant et Glissant contraint l'image à "
+"se déplacer horizontalement ou verticalement.\n"
+"Si vous cliquez un autre bouton tandis que vous bougez la souris, l'image "
+"retournera à sa position de départ."
 
-#: src/gutenprintui/panel.c:1315
-#: src/gutenprintui2/panel.c:1316
+#: src/gutenprintui/panel.c:1315 src/gutenprintui2/panel.c:1316
 msgid "Paper Size"
 msgstr "Taille du papier"
 
-#: src/gutenprintui/panel.c:1338
-#: src/gutenprintui2/panel.c:1339
+#: src/gutenprintui/panel.c:1338 src/gutenprintui2/panel.c:1339
 msgid "Show All Paper Sizes"
 msgstr "Afficher tout les formats"
 
-#: src/gutenprintui/panel.c:1354
-#: src/gutenprintui2/panel.c:1355
+#: src/gutenprintui/panel.c:1354 src/gutenprintui2/panel.c:1355
 msgid "Dimensions:"
 msgstr "Dimensions :"
 
-#: src/gutenprintui/panel.c:1359
-#: src/gutenprintui/panel.c:2034
-#: src/gutenprintui2/panel.c:1360
-#: src/gutenprintui2/panel.c:2033
+#: src/gutenprintui/panel.c:1359 src/gutenprintui/panel.c:2034
+#: src/gutenprintui2/panel.c:1360 src/gutenprintui2/panel.c:2033
 msgid "Width:"
 msgstr "Largeur :"
 
-#: src/gutenprintui/panel.c:1360
-#: src/gutenprintui2/panel.c:1361
+#: src/gutenprintui/panel.c:1360 src/gutenprintui2/panel.c:1361
 msgid "Width of the paper that you wish to print to"
 msgstr "Largeur du papier sur lequel vous souhaitez imprimer"
 
-#: src/gutenprintui/panel.c:1364
-#: src/gutenprintui/panel.c:2036
-#: src/gutenprintui2/panel.c:1365
-#: src/gutenprintui2/panel.c:2035
+#: src/gutenprintui/panel.c:1364 src/gutenprintui/panel.c:2036
+#: src/gutenprintui2/panel.c:1365 src/gutenprintui2/panel.c:2035
 msgid "Height:"
 msgstr "Hauteur :"
 
-#: src/gutenprintui/panel.c:1365
-#: src/gutenprintui2/panel.c:1366
+#: src/gutenprintui/panel.c:1365 src/gutenprintui2/panel.c:1366
 msgid "Height of the paper that you wish to print to"
 msgstr "Hauteur du papier sur lequel vous souhaitez imprimer"
 
-#: src/gutenprintui/panel.c:1370
-#: src/gutenprintui2/panel.c:1371
+#: src/gutenprintui/panel.c:1370 src/gutenprintui2/panel.c:1371
 msgid "Automatic Paper Size"
 msgstr "Taille papier automatique"
 
-#: src/gutenprintui/panel.c:1387
-#: src/gutenprintui2/panel.c:1388
+#: src/gutenprintui/panel.c:1387 src/gutenprintui2/panel.c:1388
 msgid "Number of Copies"
 msgstr "Nombre d'exemplaires"
 
-#: src/gutenprintui/panel.c:1399
-#: src/gutenprintui2/panel.c:1400
+#: src/gutenprintui/panel.c:1399 src/gutenprintui2/panel.c:1400
 msgid "Select the number of copies to print; a value between 1 and 100"
 msgstr "Choisir le nombre d'exemplaires à imprimer, entre 1 et 100"
 
-#: src/gutenprintui/panel.c:1431
-#: src/gutenprintui2/panel.c:1432
+#: src/gutenprintui/panel.c:1431 src/gutenprintui2/panel.c:1432
 msgid "Image Position"
 msgstr "Position de l'image"
 
-#: src/gutenprintui/panel.c:1448
-#: src/gutenprintui2/panel.c:1449
+#: src/gutenprintui/panel.c:1448 src/gutenprintui2/panel.c:1449
 msgid "Auto"
 msgstr "Auto"
 
-#: src/gutenprintui/panel.c:1450
-#: src/gutenprintui2/panel.c:1451
+#: src/gutenprintui/panel.c:1450 src/gutenprintui2/panel.c:1451
 msgid "Portrait"
 msgstr "Portrait"
 
-#: src/gutenprintui/panel.c:1452
-#: src/gutenprintui2/panel.c:1453
+#: src/gutenprintui/panel.c:1452 src/gutenprintui2/panel.c:1453
 msgid "Landscape"
 msgstr "Paysage"
 
-#: src/gutenprintui/panel.c:1454
-#: src/gutenprintui2/panel.c:1455
+#: src/gutenprintui/panel.c:1454 src/gutenprintui2/panel.c:1455
 msgid "Upside down"
 msgstr "Retourné (haut/bas)"
 
-#: src/gutenprintui/panel.c:1456
-#: src/gutenprintui2/panel.c:1457
+#: src/gutenprintui/panel.c:1456 src/gutenprintui2/panel.c:1457
 msgid "Seascape"
 msgstr "Paysage retourné (haut/bas)"
 
-#: src/gutenprintui/panel.c:1460
-#: src/gutenprintui2/panel.c:1461
-msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
-msgstr "Sélectionnez l'orientation : portrait, paysage, retourné ou paysage retourné (retourné haut/bas)"
+#: src/gutenprintui/panel.c:1460 src/gutenprintui2/panel.c:1461
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Sélectionnez l'orientation : portrait, paysage, retourné ou paysage retourné "
+"(retourné haut/bas)"
 
-#: src/gutenprintui/panel.c:1462
-#: src/gutenprintui2/panel.c:1463
+#: src/gutenprintui/panel.c:1462 src/gutenprintui2/panel.c:1463
 msgid "Orientation:"
 msgstr "Orientation :"
 
-#: src/gutenprintui/panel.c:1473
-#: src/gutenprintui2/panel.c:1474
+#: src/gutenprintui/panel.c:1473 src/gutenprintui2/panel.c:1474
 msgid "Left:"
 msgstr "Gauche:"
 
-#: src/gutenprintui/panel.c:1474
-#: src/gutenprintui2/panel.c:1475
+#: src/gutenprintui/panel.c:1474 src/gutenprintui2/panel.c:1475
 msgid "Distance from the left of the paper to the image"
 msgstr "Distance entre le bord gauche du papier et l'image"
 
-#: src/gutenprintui/panel.c:1477
-#: src/gutenprintui/panel.c:1481
-#: src/gutenprintui2/panel.c:1478
-#: src/gutenprintui2/panel.c:1482
+#: src/gutenprintui/panel.c:1477 src/gutenprintui/panel.c:1481
+#: src/gutenprintui2/panel.c:1478 src/gutenprintui2/panel.c:1482
 msgid "Right:"
 msgstr "Droite:"
 
-#: src/gutenprintui/panel.c:1478
-#: src/gutenprintui2/panel.c:1479
+#: src/gutenprintui/panel.c:1478 src/gutenprintui2/panel.c:1479
 msgid "Distance from the left of the paper to the right of the image"
 msgstr "Distance entre le bord gauche du papier et le bord droit de l'image"
 
-#: src/gutenprintui/panel.c:1482
-#: src/gutenprintui2/panel.c:1483
+#: src/gutenprintui/panel.c:1482 src/gutenprintui2/panel.c:1483
 msgid "Distance from the right of the paper to the image"
 msgstr "Distance entre le bord droit du papier et l'image"
 
-#: src/gutenprintui/panel.c:1484
-#: src/gutenprintui2/panel.c:1485
+#: src/gutenprintui/panel.c:1484 src/gutenprintui2/panel.c:1485
 msgid "Top:"
 msgstr "Haut:"
 
-#: src/gutenprintui/panel.c:1485
-#: src/gutenprintui2/panel.c:1486
+#: src/gutenprintui/panel.c:1485 src/gutenprintui2/panel.c:1486
 msgid "Distance from the top of the paper to the image"
 msgstr "Distance entre le bord supérieur du papier et l'image"
 
-#: src/gutenprintui/panel.c:1488
-#: src/gutenprintui/panel.c:1492
-#: src/gutenprintui2/panel.c:1489
-#: src/gutenprintui2/panel.c:1493
+#: src/gutenprintui/panel.c:1488 src/gutenprintui/panel.c:1492
+#: src/gutenprintui2/panel.c:1489 src/gutenprintui2/panel.c:1493
 msgid "Bottom:"
 msgstr "Bas :"
 
-#: src/gutenprintui/panel.c:1489
-#: src/gutenprintui2/panel.c:1490
+#: src/gutenprintui/panel.c:1489 src/gutenprintui2/panel.c:1490
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Distance entre le bord supérieur du papier et le bord inférieur de l'image"
+msgstr ""
+"Distance entre le bord supérieur du papier et le bord inférieur de l'image"
 
-#: src/gutenprintui/panel.c:1493
-#: src/gutenprintui2/panel.c:1494
+#: src/gutenprintui/panel.c:1493 src/gutenprintui2/panel.c:1494
 msgid "Distance from the bottom of the paper to the image"
 msgstr "Distance entre le bord inférieur du papier et l'image"
 
-#: src/gutenprintui/panel.c:1503
-#: src/gutenprintui2/panel.c:1504
+#: src/gutenprintui/panel.c:1503 src/gutenprintui2/panel.c:1504
 msgid "Center:"
 msgstr "Centrer:"
 
-#: src/gutenprintui/panel.c:1506
-#: src/gutenprintui2/panel.c:1507
+#: src/gutenprintui/panel.c:1506 src/gutenprintui2/panel.c:1507
 msgid "Horizontal"
 msgstr "Horizontalement"
 
-#: src/gutenprintui/panel.c:1507
-#: src/gutenprintui2/panel.c:1508
+#: src/gutenprintui/panel.c:1507 src/gutenprintui2/panel.c:1508
 msgid "Center the image horizontally on the paper"
 msgstr "Centrer l'image horizontalement sur le papier"
 
-#: src/gutenprintui/panel.c:1509
-#: src/gutenprintui2/panel.c:1510
+#: src/gutenprintui/panel.c:1509 src/gutenprintui2/panel.c:1510
 msgid "Both"
 msgstr "Les deux"
 
-#: src/gutenprintui/panel.c:1510
-#: src/gutenprintui2/panel.c:1511
+#: src/gutenprintui/panel.c:1510 src/gutenprintui2/panel.c:1511
 msgid "Center the image on the paper"
 msgstr "Centrer l'image sur le papier"
 
-#: src/gutenprintui/panel.c:1512
-#: src/gutenprintui2/panel.c:1513
+#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1513
 msgid "Vertical"
 msgstr "Verticalement"
 
-#: src/gutenprintui/panel.c:1513
-#: src/gutenprintui2/panel.c:1514
+#: src/gutenprintui/panel.c:1513 src/gutenprintui2/panel.c:1514
 msgid "Center the image vertically on the paper"
 msgstr "Centrer l'image verticalement sur le papier"
 
-#: src/gutenprintui/panel.c:1526
-#: src/gutenprintui2/panel.c:1527
+#: src/gutenprintui/panel.c:1526 src/gutenprintui2/panel.c:1527
 msgid "Setup Printer"
 msgstr "Configuration de l'imprimante"
 
-#: src/gutenprintui/panel.c:1551
-#: src/gutenprintui2/panel.c:1551
+#: src/gutenprintui/panel.c:1551 src/gutenprintui2/panel.c:1551
 msgid "Printer Make:"
 msgstr "Marque de l'imprimante :"
 
-#: src/gutenprintui/panel.c:1562
-#: src/gutenprintui2/panel.c:1562
+#: src/gutenprintui/panel.c:1562 src/gutenprintui2/panel.c:1562
 msgid "Select the make of your printer"
 msgstr "Sélectionnez la marque de votre imprimante"
 
-#: src/gutenprintui/panel.c:1580
-#: src/gutenprintui/panel.c:1871
-#: src/gutenprintui2/panel.c:1580
-#: src/gutenprintui2/panel.c:1871
+#: src/gutenprintui/panel.c:1580 src/gutenprintui/panel.c:1871
+#: src/gutenprintui2/panel.c:1580 src/gutenprintui2/panel.c:1871
 msgid "Printer Model:"
 msgstr "Modèle d'imprimante :"
 
-#: src/gutenprintui/panel.c:1591
-#: src/gutenprintui2/panel.c:1591
+#: src/gutenprintui/panel.c:1591 src/gutenprintui2/panel.c:1591
 msgid "Select your printer model"
 msgstr "Sélectionnez le modèle de votre imprimante"
 
-#: src/gutenprintui/panel.c:1639
-#: src/gutenprintui2/panel.c:1639
+#: src/gutenprintui/panel.c:1639 src/gutenprintui2/panel.c:1639
 msgid "PPD File:"
 msgstr "Fichier PPD:"
 
-#: src/gutenprintui/panel.c:1653
-#: src/gutenprintui2/panel.c:1653
+#: src/gutenprintui/panel.c:1653 src/gutenprintui2/panel.c:1653
 msgid "Enter the correct PPD filename for your printer"
 msgstr "Entrez le nom de fichier PPD pour votre imprimante"
 
-#: src/gutenprintui/panel.c:1655
-#: src/gutenprintui/panel.c:1722
-#: src/gutenprintui2/panel.c:1655
-#: src/gutenprintui2/panel.c:1722
+#: src/gutenprintui/panel.c:1655 src/gutenprintui/panel.c:1722
+#: src/gutenprintui2/panel.c:1655 src/gutenprintui2/panel.c:1722
 msgid "Browse"
 msgstr "Parcourir"
 
-#: src/gutenprintui/panel.c:1662
-#: src/gutenprintui2/panel.c:1662
+#: src/gutenprintui/panel.c:1662 src/gutenprintui2/panel.c:1662
 msgid "Choose the correct PPD filename for your printer"
 msgstr "Choisissez le fichier PPD correct pour votre imprimante"
 
-#: src/gutenprintui/panel.c:1691
-#: src/gutenprintui2/panel.c:1691
-msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
-msgstr "Sélectionnez le nom de la file d'attente (pas le type ni le modèle d'imprimante) que vous voulez utiliser pour l'impression"
+#: src/gutenprintui/panel.c:1691 src/gutenprintui2/panel.c:1691
+msgid ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr ""
+"Sélectionnez le nom de la file d'attente (pas le type ni le modèle "
+"d'imprimante) que vous voulez utiliser pour l'impression"
 
-#: src/gutenprintui/panel.c:1693
-#: src/gutenprintui2/panel.c:1693
+#: src/gutenprintui/panel.c:1693 src/gutenprintui2/panel.c:1693
 msgid "Printer Queue:"
 msgstr "File d'attente:"
 
-#: src/gutenprintui/panel.c:1709
-#: src/gutenprintui2/panel.c:1709
+#: src/gutenprintui/panel.c:1709 src/gutenprintui2/panel.c:1709
 msgid "Enter the correct command to print to your printer. "
 msgstr "Entrez la commande pour imprimer sur votre imprimante"
 
-#: src/gutenprintui/panel.c:1720
-#: src/gutenprintui2/panel.c:1720
+#: src/gutenprintui/panel.c:1720 src/gutenprintui2/panel.c:1720
 msgid "Enter the file to print to. "
 msgstr "Entrez le nom du fichier."
 
-#: src/gutenprintui/panel.c:1728
-#: src/gutenprintui2/panel.c:1728
+#: src/gutenprintui/panel.c:1728 src/gutenprintui2/panel.c:1728
 msgid "File to print to"
 msgstr "fichier d'impression"
 
-#: src/gutenprintui/panel.c:1736
-#: src/gutenprintui2/panel.c:1736
+#: src/gutenprintui/panel.c:1736 src/gutenprintui2/panel.c:1736
 msgid "Print To File"
 msgstr "Imprimer dans un fichier ?"
 
-#: src/gutenprintui/panel.c:1766
-#: src/gutenprintui2/panel.c:1766
+#: src/gutenprintui/panel.c:1766 src/gutenprintui2/panel.c:1766
 msgid "Define New Printer"
 msgstr "Définir une nouvelle imprimante"
 
-#: src/gutenprintui/panel.c:1784
-#: src/gutenprintui/panel.c:1868
-#: src/gutenprintui2/panel.c:1784
-#: src/gutenprintui2/panel.c:1868
+#: src/gutenprintui/panel.c:1784 src/gutenprintui/panel.c:1868
+#: src/gutenprintui2/panel.c:1784 src/gutenprintui2/panel.c:1868
 msgid "Printer Name:"
 msgstr "Nom de l'imprimante :"
 
-#: src/gutenprintui/panel.c:1788
-#: src/gutenprintui2/panel.c:1788
+#: src/gutenprintui/panel.c:1788 src/gutenprintui2/panel.c:1788
 msgid "Enter the name you wish to give this logical printer"
 msgstr "Saisissez le nom que vous voulez donner à cette imprimante logique"
 
-#: src/gutenprintui/panel.c:1798
-#: src/gutenprintui2/panel.c:1798
+#: src/gutenprintui/panel.c:1798 src/gutenprintui2/panel.c:1798
 msgid "About Gutenprint "
 msgstr "À propos de Gutenprint"
 
-#: src/gutenprintui/panel.c:1805
-#: src/gutenprintui2/panel.c:1805
+#: src/gutenprintui/panel.c:1805 src/gutenprintui2/panel.c:1805
 msgid "Gutenprint Version "
 msgstr "Version de Gutenprint"
 
-#: src/gutenprintui/panel.c:1805
-#: src/gutenprintui2/panel.c:1805
+#: src/gutenprintui/panel.c:1805 src/gutenprintui2/panel.c:1805
 msgid ""
 "\n"
 "\n"
@@ -6726,107 +6237,109 @@ msgstr ""
 "\n"
 "Vistitez notre site web à http://gimp-print.sourceforge.net.\n"
 "\n"
-"Ce programme est un logiciel libre, vous pouvez le redistribuer et/ou le modifier\n"
-"sous les termes de la licence GNU GPL General Public License telle que publiée\n"
-"par la Free Software Foundation, soit la version 2 de la licence, ou (à votre choix)\n"
+"Ce programme est un logiciel libre, vous pouvez le redistribuer et/ou le "
+"modifier\n"
+"sous les termes de la licence GNU GPL General Public License telle que "
+"publiée\n"
+"par la Free Software Foundation, soit la version 2 de la licence, ou (à "
+"votre choix)\n"
 "toute version ultérieure.\n"
 "\n"
 "Ce programme est distribuée dans l'espoir qu'il sera utile, mais SANS\n"
 "GARANTIE; sans même la garantie impliquée par la COMMERCIALISATION \n"
-"ou l'ACCORD POUR UN USAGE PARTICULIER. Voyez la licence GNU General Public License\n"
+"ou l'ACCORD POUR UN USAGE PARTICULIER. Voyez la licence GNU General Public "
+"License\n"
 "pour plus de détails.\n"
 "\n"
 "Vous devriez avoir reçu une copie de la GNU General Public License fournie\n"
 "avec le programme; si ce n'est pas le cas, écrivez à la Free Software\n"
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
-#: src/gutenprintui/panel.c:1853
-#: src/gutenprintui2/panel.c:1853
+#: src/gutenprintui/panel.c:1853 src/gutenprintui2/panel.c:1853
 msgid "Printer Settings"
 msgstr "Paramètres de l'imprimante"
 
-#: src/gutenprintui/panel.c:1866
-#: src/gutenprintui2/panel.c:1866
-msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
-msgstr "Sélectionnez le nom de l'imprimante (pas le type ni le modèle) que vous voulez utiliser pour l'impression"
+#: src/gutenprintui/panel.c:1866 src/gutenprintui2/panel.c:1866
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Sélectionnez le nom de l'imprimante (pas le type ni le modèle) que vous "
+"voulez utiliser pour l'impression"
 
-#: src/gutenprintui/panel.c:1884
-#: src/gutenprintui2/panel.c:1883
+#: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1883
 msgid "Setup Printer..."
 msgstr "Configurer l'imprimante..."
 
-#: src/gutenprintui/panel.c:1886
-#: src/gutenprintui2/panel.c:1885
-msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
-msgstr "Indiquez le modèle d'imprimante, le fichier PPD et la commande nécessaire pour l'impression sur cette imprimante"
+#: src/gutenprintui/panel.c:1886 src/gutenprintui2/panel.c:1885
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+"Indiquez le modèle d'imprimante, le fichier PPD et la commande nécessaire "
+"pour l'impression sur cette imprimante"
 
-#: src/gutenprintui/panel.c:1899
-#: src/gutenprintui2/panel.c:1898
+#: src/gutenprintui/panel.c:1899 src/gutenprintui2/panel.c:1898
 msgid "New Printer..."
 msgstr "Nouvelle imprimante..."
 
-#: src/gutenprintui/panel.c:1900
-#: src/gutenprintui2/panel.c:1899
-msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
-msgstr "Crée une nouvelle imprimante logique. Cela peut être utilisé pour nommer un ensemble de réglage que vous souhaitez réutiliser plus tard."
+#: src/gutenprintui/panel.c:1900 src/gutenprintui2/panel.c:1899
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Crée une nouvelle imprimante logique. Cela peut être utilisé pour nommer un "
+"ensemble de réglage que vous souhaitez réutiliser plus tard."
 
-#: src/gutenprintui/panel.c:1943
-#: src/gutenprintui2/panel.c:1942
+#: src/gutenprintui/panel.c:1943 src/gutenprintui2/panel.c:1942
 msgid "Image Size"
 msgstr "Taille de l'image"
 
-#: src/gutenprintui/panel.c:1968
-#: src/gutenprintui2/panel.c:1967
+#: src/gutenprintui/panel.c:1968 src/gutenprintui2/panel.c:1967
 msgid "Scaling:"
 msgstr "Échelle:"
 
-#: src/gutenprintui/panel.c:1972
-#: src/gutenprintui2/panel.c:1971
+#: src/gutenprintui/panel.c:1972 src/gutenprintui2/panel.c:1971
 msgid "Set the scale (size) of the image"
 msgstr "Régler l'échelle (taille) de l'image"
 
-#: src/gutenprintui/panel.c:1994
-#: src/gutenprintui2/panel.c:1993
+#: src/gutenprintui/panel.c:1994 src/gutenprintui2/panel.c:1993
 msgid "Scale by:"
 msgstr "Mise à l'échelle en "
 
-#: src/gutenprintui/panel.c:1999
-#: src/gutenprintui2/panel.c:1998
-msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
-msgstr "Sélectionnez si l'échelle est mesurée en pourcentage de la taille de la page ou en nombre de points par pouces"
+#: src/gutenprintui/panel.c:1999 src/gutenprintui2/panel.c:1998
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Sélectionnez si l'échelle est mesurée en pourcentage de la taille de la page "
+"ou en nombre de points par pouces"
 
-#: src/gutenprintui/panel.c:2002
-#: src/gutenprintui2/panel.c:2001
+#: src/gutenprintui/panel.c:2002 src/gutenprintui2/panel.c:2001
 msgid "Percent"
 msgstr "Pourcentage"
 
-#: src/gutenprintui/panel.c:2007
-#: src/gutenprintui2/panel.c:2006
+#: src/gutenprintui/panel.c:2007 src/gutenprintui2/panel.c:2006
 msgid "Scale the print to the size of the page"
 msgstr "Dimensionne l'impression par rapport à la taille de la page"
 
-#: src/gutenprintui/panel.c:2011
-#: src/gutenprintui2/panel.c:2010
+#: src/gutenprintui/panel.c:2011 src/gutenprintui2/panel.c:2010
 msgid "PPI"
 msgstr "points par pouce"
 
-#: src/gutenprintui/panel.c:2016
-#: src/gutenprintui2/panel.c:2015
+#: src/gutenprintui/panel.c:2016 src/gutenprintui2/panel.c:2015
 msgid "Scale the print to the number of dots per inch"
 msgstr "Dimensionne l'impression en nombre de points par pouce"
 
-#: src/gutenprintui/panel.c:2034
-#: src/gutenprintui2/panel.c:2033
+#: src/gutenprintui/panel.c:2034 src/gutenprintui2/panel.c:2033
 msgid "Set the width of the print"
 msgstr "Défini la largeur de l'impression"
 
-#: src/gutenprintui/panel.c:2036
-#: src/gutenprintui2/panel.c:2035
+#: src/gutenprintui/panel.c:2036 src/gutenprintui2/panel.c:2035
 msgid "Set the height of the print"
 msgstr "Défini la hauteur de l'impression"
 
-#: src/gutenprintui/panel.c:2042
-#: src/gutenprintui2/panel.c:2041
+#: src/gutenprintui/panel.c:2042 src/gutenprintui2/panel.c:2041
 msgid ""
 "Use Original\n"
 "Image Size"
@@ -6834,125 +6347,103 @@ msgstr ""
 "Utiliser la taille \n"
 "de l'image originale"
 
-#: src/gutenprintui/panel.c:2048
-#: src/gutenprintui2/panel.c:2047
+#: src/gutenprintui/panel.c:2048 src/gutenprintui2/panel.c:2047
 msgid "Set the print size to the size of the image"
 msgstr "Utiliser la taille de l'image comme taille d'impression"
 
-#: src/gutenprintui/panel.c:2071
-#: src/gutenprintui2/panel.c:2071
+#: src/gutenprintui/panel.c:2071 src/gutenprintui2/panel.c:2071
 msgid "Print Color Adjust"
 msgstr "Ajustement des couleurs d'impression"
 
-#: src/gutenprintui/panel.c:2074
-#: src/gutenprintui2/panel.c:2074
+#: src/gutenprintui/panel.c:2074 src/gutenprintui2/panel.c:2074
 msgid "Set Defaults"
 msgstr "Valeurs par défaut"
 
-#: src/gutenprintui/panel.c:2076
-#: src/gutenprintui2/panel.c:2076
+#: src/gutenprintui/panel.c:2076 src/gutenprintui2/panel.c:2076
 msgid "Close"
 msgstr "Fermer"
 
-#: src/gutenprintui/panel.c:2106
-#: src/gutenprintui2/panel.c:2105
+#: src/gutenprintui/panel.c:2106 src/gutenprintui2/panel.c:2105
 msgid "Image preview"
 msgstr "Aperçu de l'image"
 
-#: src/gutenprintui/panel.c:2120
-#: src/gutenprintui2/panel.c:2119
+#: src/gutenprintui/panel.c:2120 src/gutenprintui2/panel.c:2119
 msgid "View Output Channels:"
 msgstr "Visualisation canaux de sortie"
 
-#: src/gutenprintui/panel.c:2205
-#: src/gutenprintui2/panel.c:2210
+#: src/gutenprintui/panel.c:2205 src/gutenprintui2/panel.c:2210
 msgid "Output"
 msgstr "Sortie"
 
-#: src/gutenprintui/panel.c:2233
-#: src/gutenprintui2/panel.c:2238
+#: src/gutenprintui/panel.c:2233 src/gutenprintui2/panel.c:2238
 msgid "Output Type:"
 msgstr "Type de sortie:"
 
-#: src/gutenprintui/panel.c:2237
-#: src/gutenprintui2/panel.c:2242
+#: src/gutenprintui/panel.c:2237 src/gutenprintui2/panel.c:2242
 msgid "Select the desired output type"
 msgstr "Sélectionnez le type de sortie désiré"
 
-#: src/gutenprintui/panel.c:2258
-#: src/gutenprintui2/panel.c:2263
+#: src/gutenprintui/panel.c:2258 src/gutenprintui2/panel.c:2263
 msgid "Adjust Output..."
 msgstr "Réglages fins..."
 
-#: src/gutenprintui/panel.c:2267
-#: src/gutenprintui2/panel.c:2272
-msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr "Ajustement de la balance des couleurs, luminosité, contraste, saturation et algorithme de tramage"
+#: src/gutenprintui/panel.c:2267 src/gutenprintui2/panel.c:2272
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"Ajustement de la balance des couleurs, luminosité, contraste, saturation et "
+"algorithme de tramage"
 
-#: src/gutenprintui/panel.c:2285
-#: src/gutenprintui2/panel.c:2291
+#: src/gutenprintui/panel.c:2285 src/gutenprintui2/panel.c:2291
 msgid "Size Units:"
 msgstr "Unités de taille:"
 
-#: src/gutenprintui/panel.c:2288
-#: src/gutenprintui2/panel.c:2294
+#: src/gutenprintui/panel.c:2288 src/gutenprintui2/panel.c:2294
 msgid " "
 msgstr " "
 
-#: src/gutenprintui/panel.c:2312
-#: src/gutenprintui2/panel.c:2318
+#: src/gutenprintui/panel.c:2312 src/gutenprintui2/panel.c:2318
 msgid "Units:"
 msgstr "Unités:"
 
-#: src/gutenprintui/panel.c:2317
-#: src/gutenprintui2/panel.c:2323
+#: src/gutenprintui/panel.c:2317 src/gutenprintui2/panel.c:2323
 msgid "Select the base unit of measurement for printing"
 msgstr "Sélectionne l'unité de base de mesure pour l'impression"
 
-#: src/gutenprintui/plist.c:90
-#: src/gutenprintui/plist.c:99
-#: src/gutenprintui2/plist.c:90
-#: src/gutenprintui2/plist.c:99
+#: src/gutenprintui/plist.c:90 src/gutenprintui/plist.c:99
+#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
 msgid "System V lp"
 msgstr "System V lp"
 
-#: src/gutenprintui/plist.c:96
-#: src/gutenprintui2/plist.c:96
+#: src/gutenprintui/plist.c:96 src/gutenprintui2/plist.c:96
 msgid "CUPS"
 msgstr "CUPS"
 
-#: src/gutenprintui/plist.c:102
-#: src/gutenprintui2/plist.c:102
+#: src/gutenprintui/plist.c:102 src/gutenprintui2/plist.c:102
 msgid "Berkeley lpd (/etc/lpc)"
 msgstr "Berkeley lpd (/etc/lpc)"
 
-#: src/gutenprintui/plist.c:105
-#: src/gutenprintui2/plist.c:105
+#: src/gutenprintui/plist.c:105 src/gutenprintui2/plist.c:105
 msgid "Berkeley lpd (/usr/bsd/lpc)"
 msgstr "Berkeley lpd (/usr/bsd/lpc)"
 
-#: src/gutenprintui/plist.c:108
-#: src/gutenprintui2/plist.c:108
+#: src/gutenprintui/plist.c:108 src/gutenprintui2/plist.c:108
 msgid "Berkeley lpd (/usr/etc/lpc"
 msgstr "Berkeley lpd (/usr/etc/lpc"
 
-#: src/gutenprintui/plist.c:111
-#: src/gutenprintui2/plist.c:111
+#: src/gutenprintui/plist.c:111 src/gutenprintui2/plist.c:111
 msgid "Berkeley lpd (/usr/libexec/lpc)"
 msgstr "Berkeley lpd (/usr/libexec/lpc)"
 
-#: src/gutenprintui/plist.c:114
-#: src/gutenprintui2/plist.c:114
+#: src/gutenprintui/plist.c:114 src/gutenprintui2/plist.c:114
 msgid "Berkeley lpd (/usr/sbin/lpc)"
 msgstr "Berkeley lpd (/usr/sbin/lpc)"
 
-#: src/gutenprintui/plist.c:996
-#: src/gutenprintui2/plist.c:1009
+#: src/gutenprintui/plist.c:996 src/gutenprintui2/plist.c:1009
 msgid "Printer"
 msgstr "Imprimante"
 
-#: src/gutenprintui/plist.c:1183
-#: src/gutenprintui2/plist.c:1196
+#: src/gutenprintui/plist.c:1183 src/gutenprintui2/plist.c:1196
 msgid "(Default Printer)"
 msgstr "(imprimante par défaut)"
 
@@ -7032,29 +6523,27 @@ msgstr "Extra 4"
 msgid "Extra 5"
 msgstr "Extra 5"
 
-#. TRANSLATORS: "Gutenprint" is a proper name, not a description
-#: src/cups/genppd.c:189
-#: src/cups/genppd.c:198
-msgid "Gutenprint"
-msgstr "Gutenprint"
-
-#: src/cups/genppd.c:890
+#. TRANSLATORS: Specify the language of the PPD translation.
+#. * Use the English name of your language here, e.g. "Swedish" instead of
+#. * "Svenska".
+#: src/cups/genppd.c:888
 msgid "English"
 msgstr "French"
 
-#: src/cups/genppd.c:892
+#. TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1
+#: src/cups/genppd.c:890
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:1467
+#: src/cups/genppd.c:1465
 msgid "No"
 msgstr "Non"
 
-#: src/cups/genppd.c:1469
+#: src/cups/genppd.c:1467
 msgid "Yes"
 msgstr "Oui"
 
-#: src/cups/genppd.c:1499
+#: src/cups/genppd.c:1497
 msgid "Fine Adjustment"
 msgstr "Réglage fin"
 
@@ -7094,14 +6583,18 @@ msgid ""
 msgstr ""
 "Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"Ce programme est un logiciel libre, vous pouvez le redistribuer et/ou le modifier\n"
-"sous les termes de la licence GNU GPL General Public License telle que publiée\n"
-"par la Free Software Foundation, soit la version 2 de la licence, ou (à votre choix)\n"
+"Ce programme est un logiciel libre, vous pouvez le redistribuer et/ou le "
+"modifier\n"
+"sous les termes de la licence GNU GPL General Public License telle que "
+"publiée\n"
+"par la Free Software Foundation, soit la version 2 de la licence, ou (à "
+"votre choix)\n"
 "toute version ultérieure.\n"
 "\n"
 "Ce programme est distribuée dans l'espoir qu'il sera utile, mais SANS\n"
 "GARANTIE; sans même la garantie impliquée par la COMMERCIALISATION \n"
-"ou l'ACCORD POUR UN USAGE PARTICULIER. Voyez la licence GNU General Public License\n"
+"ou l'ACCORD POUR UN USAGE PARTICULIER. Voyez la licence GNU General Public "
+"License\n"
 "pour plus de détails.\n"
 "\n"
 "Vous devriez avoir reçu une copie de la GNU General Public License fournie\n"
@@ -7127,7 +6620,8 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This "
+"requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -7147,13 +6641,16 @@ msgid ""
 "                       newer).  Only needed when not using a raw device.\n"
 "    -q|--quiet         Suppress the banner.\n"
 "    -S|--short-name    Print the short name of the printer with --identify.\n"
-"    -m|--model         Specify the precise printer model for head alignment.\n"
+"    -m|--model         Specify the precise printer model for head "
+"alignment.\n"
 "    -C|--choices       Specify the number of pattern choices for alignment\n"
 "    -p|--patterns      Specify the number of sets of patterns for alignment\n"
 msgstr ""
 "Utilisation : escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                       [-P imprimante | -r périphérique] [-u] [-q] [-m modèle] [ -S ]\n"
-"Effectue des opérations de maintenance sur les imprimantes EPSON Stylus (R).\n"
+"                       [-P imprimante | -r périphérique] [-u] [-q] [-m "
+"modèle] [ -S ]\n"
+"Effectue des opérations de maintenance sur les imprimantes EPSON Stylus "
+"(R).\n"
 "Exemples : escputil --ink-level --raw-device /dev/usb/lp0\n"
 "          escputil --clean-head --new --printer-name MyQueue\n"
 "\n"
@@ -7161,21 +6658,26 @@ msgstr ""
 "   -c|--clean-head    Nettoie la tête d'impression\n"
 "   -n|--nozzle-check  Imprime un motif de test des buses.\n"
 "                      Les buses sales ou bouchées apparaîtront comme des\n"
-"                      trous dans le motif. Si vous en voyez vous devrier nettoyer \n"
+"                      trous dans le motif. Si vous en voyez vous devrier "
+"nettoyer \n"
 "                      tête d'impression.\n"
 "   -a|--align-head    Aligne la tête d'impression. ATTENTION : une mauvaise\n"
-"                      utilisation de cette fonction peut provoquer une mauvaise\n"
+"                      utilisation de cette fonction peut provoquer une "
+"mauvaise\n"
 "                      qualité d'impression et/ou endommager l'imprimante.\n"
 "   -s|--status        Indique le statut de l'imprimante.\n"
-"   -i|--ink-level     Récupère le niveau d'encre de l'imprimante. Cela nécessite\n"
+"   -i|--ink-level     Récupère le niveau d'encre de l'imprimante. Cela "
+"nécessite\n"
 "                      un accés en lecture/écriture sur le périphérique \n"
 "                      en mode caractère (raw).\n"
 "  -e|--extended-ink-info    Récupère les informations complémentaires \n"
 "                      sur les encres. Cette commande nécessite\n"
 "                      un accés en lecture/écriture sur le périphérique \n"
 "                      en mode caractère (raw).\n"
-"   -d|--identify      Demande à l'imprimante des renseignements sur la marque\n"
-"                      et le modèle. Cela nécessite un accés en lecture/écriture\n"
+"   -d|--identify      Demande à l'imprimante des renseignements sur la "
+"marque\n"
+"                      et le modèle. Cela nécessite un accés en lecture/"
+"écriture\n"
 "                      sur le périphérique en mode caractère (raw) .\n"
 "   -l|--license       Affiche la licence de ce programme.\n"
 "   -M|--list-models   Affiche les modèles d'imprimante supportés.\n"
@@ -7188,9 +6690,11 @@ msgstr ""
 "   -r|--raw-device    Indique le nom d'un périphérique sur lequel écrire \n"
 "                      directement au lieu d'utiliser une file d'attente \n"
 "                      pour l'impression.\n"
-"   -u|--new           L'imprimante est une imprimante récente (Stylus Color 740\n"
+"   -u|--new           L'imprimante est une imprimante récente (Stylus Color "
+"740\n"
 "                      ou plus récent). Utile uniquement si le périphérique \n"
-"                      n'est pas en mode caractère (raw).   -q|--quiet         N'affiche pas la bannière.\n"
+"                      n'est pas en mode caractère (raw).   -q|--"
+"quiet         N'affiche pas la bannière.\n"
 "   -S|--short-name    Affiche le nom court de l'imprimante avec --identify.\n"
 "   -m|--model         Indique le modèle précis pour l'alignement des têtes.\n"
 "   -C|--choices       Nombre de choix de motifs pour l'alignement\n"
@@ -7252,16 +6756,20 @@ msgstr ""
 "          Des buses sales ou bouchées se verront comme des espaces dans la\n"
 "          trame. Si vous voyez un quelconque espace, vous devriez nettoyer\n"
 "          la tête d'impression.\n"
-"    -a Alignement de la tête d'impression.  ATTENTION: une mauvaise utilisation de cet\n"
+"    -a Alignement de la tête d'impression.  ATTENTION: une mauvaise "
+"utilisation de cet\n"
 "          utilitaire peut conduire à une piètre qualité d'impression et/ou\n"
 "          endommager l'imprimante.\n"
 "    -o Alignement des têtes d'impression couleur (Stylus Color 480 and 580\n"
-"          seulement).  ATTENTION: une mauvaise utilisation de cet utilitaire peut\n"
-"          conduire à une piètre qualité d'impression et/ou endommager l'imprimante.\n"
+"          seulement).  ATTENTION: une mauvaise utilisation de cet utilitaire "
+"peut\n"
+"          conduire à une piètre qualité d'impression et/ou endommager "
+"l'imprimante.\n"
 "    -s Retrouver le status de l'imprimante.\n"
 "    -i Obtenir le niveau d'encre de l'imprimante.  Ceci nécessite\n"
 "          un accès en lecture/écriture au périphérique d'entrée.\n"
-"    -d Interroge l'imprimante sur la marque et le modèle de l'imprimante.Ceci nécessite\n"
+"    -d Interroge l'imprimante sur la marque et le modèle de l'imprimante."
+"Ceci nécessite\n"
 "          un accès en lecture/écriture au périphérique d'entrée.  \n"
 "    -l Affiche les termes de licence/garantie de ce programme.\n"
 "    -M Liste les modèles d'imprimantes disponibles.\n"
@@ -7271,12 +6779,12 @@ msgstr ""
 "          Par déaut l'imprimante système.\n"
 "    -r Spécifie le nom du périphérique sur lequel écrire directement\n"
 "          plutôt que de passer via une queue d'impression.\n"
-"    -u L'imprimante est une nouvelle imprimante (Stylus Color 740 ou plus récente).\n"
+"    -u L'imprimante est une nouvelle imprimante (Stylus Color 740 ou plus "
+"récente).\n"
 "    -q Supprime la bannière.\n"
 "    -m Spécifie le modèle précis pour l'alignement des têtes.\n"
 
-#: src/escputil/escputil.c:329
-#: src/escputil/escputil.c:337
+#: src/escputil/escputil.c:329 src/escputil/escputil.c:337
 #, c-format
 msgid "You may only specify one printer or raw device."
 msgstr "Vous ne pouvez spécifier qu'une imprimante ou périphérique"
@@ -7326,8 +6834,7 @@ msgstr "Impossible d'ouvrir le périphérique %s : %s\n"
 msgid "Cannot print to printer %s with %s\n"
 msgstr "Impossible d'imprimer sur l'imprimante %s avec %s\n"
 
-#: src/escputil/escputil.c:498
-#: src/escputil/escputil.c:508
+#: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 #, c-format
 msgid "Unable to send command to printer\n"
 msgstr "Impossible d'envoyer la commande à l'imprimante\n"
@@ -7342,21 +6849,18 @@ msgstr "Lecture données de l'imprimante: temps excédé\n"
 msgid "Cannot read from %s: %s\n"
 msgstr "Impossible de lire à partir de %s : %s\n"
 
-#: src/escputil/escputil.c:763
-#: src/escputil/escputil.c:1355
+#: src/escputil/escputil.c:763 src/escputil/escputil.c:1355
 #: src/escputil/escputil.c:1469
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
 msgstr "Impossible d'ouvrir %s en lecture/écriture : %s\n"
 
-#: src/escputil/escputil.c:781
-#: src/escputil/escputil.c:1408
+#: src/escputil/escputil.c:781 src/escputil/escputil.c:1408
 #, c-format
 msgid "Cannot write to %s: %s\n"
 msgstr "Impossible d'écrire sur %s : %s\n"
 
-#: src/escputil/escputil.c:827
-#: src/escputil/escputil.c:1373
+#: src/escputil/escputil.c:827 src/escputil/escputil.c:1373
 #: src/escputil/escputil.c:1507
 #, c-format
 msgid ""
@@ -7377,20 +6881,13 @@ msgstr ""
 "Impossible de détecter le type de l'imprimante.\n"
 "Veuillez utiliser -m pour spécifier le modèle de votre imprimante.\n"
 
-#: src/escputil/escputil.c:967
-#: src/escputil/escputil.c:973
-#: src/escputil/escputil.c:974
-#: src/escputil/escputil.c:990
-#: src/escputil/escputil.c:991
-#: src/escputil/escputil.c:992
-#: src/escputil/escputil.c:993
-#: src/escputil/escputil.c:994
-#: src/escputil/escputil.c:997
-#: src/escputil/escputil.c:998
-#: src/escputil/escputil.c:999
-#: src/escputil/escputil.c:1000
-#: src/escputil/escputil.c:1001
-#: src/escputil/escputil.c:1241
+#: src/escputil/escputil.c:967 src/escputil/escputil.c:973
+#: src/escputil/escputil.c:974 src/escputil/escputil.c:990
+#: src/escputil/escputil.c:991 src/escputil/escputil.c:992
+#: src/escputil/escputil.c:993 src/escputil/escputil.c:994
+#: src/escputil/escputil.c:997 src/escputil/escputil.c:998
+#: src/escputil/escputil.c:999 src/escputil/escputil.c:1000
+#: src/escputil/escputil.c:1001 src/escputil/escputil.c:1241
 msgid "Unknown"
 msgstr "Inconnu"
 
@@ -7519,34 +7016,26 @@ msgstr "Error: Inconnue (%d)\n"
 msgid "Printing nozzle self-test\n"
 msgstr "Impression autotest des buses\n"
 
-#: src/escputil/escputil.c:1199
-#: src/escputil/escputil.c:1229
+#: src/escputil/escputil.c:1199 src/escputil/escputil.c:1229
 #, c-format
 msgid "Ink Levels:\n"
 msgstr "Niveau d'encres:\n"
 
-#: src/escputil/escputil.c:1200
-#: src/escputil/escputil.c:1230
-#: src/escputil/escputil.c:1598
-#: src/escputil/escputil.c:1622
+#: src/escputil/escputil.c:1200 src/escputil/escputil.c:1230
+#: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
 #: src/escputil/escputil.c:1642
 msgid "Ink color"
 msgstr "Encre couleur"
 
-#: src/escputil/escputil.c:1200
-#: src/escputil/escputil.c:1230
-#: src/escputil/escputil.c:1598
-#: src/escputil/escputil.c:1622
+#: src/escputil/escputil.c:1200 src/escputil/escputil.c:1230
+#: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
 #: src/escputil/escputil.c:1642
 msgid "Percent remaining"
 msgstr "Pourcentage restant"
 
-#: src/escputil/escputil.c:1275
-#: src/escputil/escputil.c:1278
-#: src/escputil/escputil.c:1281
-#: src/escputil/escputil.c:1284
-#: src/escputil/escputil.c:1287
-#: src/escputil/escputil.c:1290
+#: src/escputil/escputil.c:1275 src/escputil/escputil.c:1278
+#: src/escputil/escputil.c:1281 src/escputil/escputil.c:1284
+#: src/escputil/escputil.c:1287 src/escputil/escputil.c:1290
 #, c-format
 msgid "Warning: Black Ink Low\n"
 msgstr "Attention: Encre noire niveau bas\n"
@@ -7572,21 +7061,23 @@ msgstr "état"
 #: src/escputil/escputil.c:1339
 #, c-format
 msgid "Obtaining %s requires using a raw device.\n"
-msgstr "Obtenir %s demande d'utiliser un périphérique en mode caractère (raw device).\n"
+msgstr ""
+"Obtenir %s demande d'utiliser un périphérique en mode caractère (raw "
+"device).\n"
 
 #: src/escputil/escputil.c:1451
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr "Obtenir les niveaux d'encre demande d'utiliser un périphérique en mode caractère (raw device)\n"
+msgstr ""
+"Obtenir les niveaux d'encre demande d'utiliser un périphérique en mode "
+"caractère (raw device)\n"
 
-#: src/escputil/escputil.c:1598
-#: src/escputil/escputil.c:1622
+#: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
 #: src/escputil/escputil.c:1642
 msgid "Part number"
 msgstr "Numéro de pièce"
 
-#: src/escputil/escputil.c:1599
-#: src/escputil/escputil.c:1623
+#: src/escputil/escputil.c:1599 src/escputil/escputil.c:1623
 #: src/escputil/escputil.c:1643
 msgid "Date"
 msgstr "Date"
@@ -7594,7 +7085,9 @@ msgstr "Date"
 #: src/escputil/escputil.c:1671
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
-msgstr "L'identification de l'imprimante demande d'utiliser un périphérique caractère (raw devive)\n"
+msgstr ""
+"L'identification de l'imprimante demande d'utiliser un périphérique "
+"caractère (raw devive)\n"
 
 #: src/escputil/escputil.c:1689
 #, c-format
@@ -7609,7 +7102,9 @@ msgstr "Nettoyage des têtes...\n"
 #: src/escputil/escputil.c:1724
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr "Vérification des buses, s'il vous plait assurez-vous qu'il y ait du papier dans l'imprimante\n"
+msgstr ""
+"Vérification des buses, s'il vous plait assurez-vous qu'il y ait du papier "
+"dans l'imprimante\n"
 
 #: src/escputil/escputil.c:1728
 #, c-format
@@ -7652,23 +7147,32 @@ msgstr ""
 "S'il vous plait lisez ces instructions avec attention avant de procéder.\n"
 "\n"
 "Cet utilitaire vous permet d'aligner les têtes d'impression de votre \n"
-"imprimante jet d'encre Eson Stylus. Une mauvaise utilisation de cet utilitaire\n"
-"peut dégrader la qualité d'impression de votre imprimante et endommager votre\n"
-"imprimante. Cet utilitaire n'a pas été contrôlé par Epson Seiko et il n'offre\n"
+"imprimante jet d'encre Eson Stylus. Une mauvaise utilisation de cet "
+"utilitaire\n"
+"peut dégrader la qualité d'impression de votre imprimante et endommager "
+"votre\n"
+"imprimante. Cet utilitaire n'a pas été contrôlé par Epson Seiko et il "
+"n'offre\n"
 "aucune garantie. L'entière responsabilité de son utilisation vous incombe. \n"
 "\n"
-"Cet utilitaire imprime %d trames de test. Chaque trame apparait très similaire.\n"
-"Les trames sont constituées d'une série de paire de lignes verticales qui se\n"
-"superposent. Sous chaque paire de lignes il y a un nombre compris entre %d et %d.\n"
+"Cet utilitaire imprime %d trames de test. Chaque trame apparait très "
+"similaire.\n"
+"Les trames sont constituées d'une série de paire de lignes verticales qui "
+"se\n"
+"superposent. Sous chaque paire de lignes il y a un nombre compris entre %d "
+"et %d.\n"
 "\n"
-"Quand vous inspectez les paires de lignes, vous devriez trouver la paire de \n"
+"Quand vous inspectez les paires de lignes, vous devriez trouver la paire "
+"de \n"
 "lignes qui est la mieux alignée, c'est à dire celle qui forme le mieux une\n"
 "simple ligne verticale. Inspectez les paires avec tout votre attention pour\n"
-"trouver la meilleure. Utilisez une loupe ou un verre grossisseur et recommandé\n"
+"trouver la meilleure. Utilisez une loupe ou un verre grossisseur et "
+"recommandé\n"
 "pour cet inspection critique. Il est aussi suggéré que vous utilisiez un \n"
 "papier de bonne qualité pour le test, de façon à ce que les lignes soient\n"
 "bien formées et ne se diffusent pas au travers du papier. Après le choix\n"
-"du nombre correspondant à la meilleure paire, placez le papier à nouveau dans\n"
+"du nombre correspondant à la meilleure paire, placez le papier à nouveau "
+"dans\n"
 "le chargeur avant de le taper.\n"
 "\n"
 "Chaque trame est similaire, mais les dernières trames utilisent des points \n"
@@ -7715,7 +7219,8 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on will.\n"
+"restore the previous settings, but powering the printer off and back on "
+"will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -7724,26 +7229,34 @@ msgstr ""
 "S'il vous plait lisez ces instructions avec attention avant de procéder.\n"
 "\n"
 "Cet utilitaire vous permet d'aligner les têtes d'impression de votre \n"
-"imprimante jet d'encre Eson Stylus. Une mauvaise utilisation de cet utilitaire\n"
-"peut dégrader la qualité d'impression de votre imprimante et endommager votre\n"
-"imprimante. Cet utilitaire n'a pas été contrôlé par Epson Seiko et il n'offre\n"
+"imprimante jet d'encre Eson Stylus. Une mauvaise utilisation de cet "
+"utilitaire\n"
+"peut dégrader la qualité d'impression de votre imprimante et endommager "
+"votre\n"
+"imprimante. Cet utilitaire n'a pas été contrôlé par Epson Seiko et il "
+"n'offre\n"
 "aucune garantie. L'entière responsabilité de son utilisation vous incombe. \n"
 "\n"
-"Cet utilitaire imprime une trame de test.constituée d'une série de paire de \n"
+"Cet utilitaire imprime une trame de test.constituée d'une série de paire "
+"de \n"
 "lignes verticales qui se superposent. Sous chaque paire de lignes il y a \n"
 "un nombre compris entre %d et %d.\n"
 "\n"
-"Quand vous inspectez les paires de lignes, vous devriez trouver la paire de \n"
+"Quand vous inspectez les paires de lignes, vous devriez trouver la paire "
+"de \n"
 "lignes qui est la mieux alignée, c'est à dire celle qui forme le mieux une\n"
 "simple ligne verticale. Inspectez les paires avec tout votre attention pour\n"
-"trouver la meilleure. Utilisez une loupe ou un verre grossisseur et recommandé\n"
+"trouver la meilleure. Utilisez une loupe ou un verre grossisseur et "
+"recommandé\n"
 "pour cet inspection critique. Il est aussi suggéré que vous utilisiez un \n"
 "papier de bonne qualité pour le test, de façon à ce que les lignes soient\n"
 "bien formées et ne se diffusent pas au travers du papier. Après le choix\n"
-"du nombre correspondant à la meilleure paire, placez le papier à nouveau dans\n"
+"du nombre correspondant à la meilleure paire, placez le papier à nouveau "
+"dans\n"
 "le chargeur avant de le taper.\n"
 "\n"
-"Après avoir lancé la trame d'alignement, elle va être imprimée encore une fois.\n"
+"Après avoir lancé la trame d'alignement, elle va être imprimée encore une "
+"fois.\n"
 "Vous devriez trouver que la paire la plus au milieu (#%d en dehors de %d)\n"
 "est la meilleure pour toute les trames. Ensuite vous devrez choisir\n"
 "entre (s)auvegarder le résultat dans l'imprimante, (r)épéter l'opération,\n"
@@ -7759,8 +7272,7 @@ msgstr ""
 msgid "Unable to send command to the printer, exiting.\n"
 msgstr "Impossible d'envoyer la commande à l'imprimante, abandon.\n"
 
-#: src/escputil/escputil.c:1821
-#: src/escputil/escputil.c:1986
+#: src/escputil/escputil.c:1821 src/escputil/escputil.c:1986
 #, c-format
 msgid "Exiting\n"
 msgstr "uitte.\n"
@@ -7785,18 +7297,19 @@ msgstr ""
 "Il vous sera ensuite demandé de confirmer votre choix\n"
 "Que voulez-vous faire (s, q, r) ?\n"
 
-#: src/escputil/escputil.c:1832
-#: src/escputil/escputil.c:1841
-#: src/escputil/escputil.c:1856
-#: src/escputil/escputil.c:1874
+#: src/escputil/escputil.c:1832 src/escputil/escputil.c:1841
+#: src/escputil/escputil.c:1856 src/escputil/escputil.c:1874
 #: src/escputil/escputil.c:1990
 msgid "> "
 msgstr "> "
 
 #: src/escputil/escputil.c:1839
 #, c-format
-msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr "Veuillez presser la touche « q » si vous souhaitez vraiment quitter sans enregistrer :\n"
+msgid ""
+"Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr ""
+"Veuillez presser la touche « q » si vous souhaitez vraiment quitter sans "
+"enregistrer :\n"
 
 #: src/escputil/escputil.c:1846
 #, c-format
@@ -7805,7 +7318,8 @@ msgid ""
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
 "OK, votre imprimante est alignée, mais l'alignement n'a pas été enregistré.\n"
-"Si vous souhaitez enregistrer l'alignement, vous devez répéter cette opération.\n"
+"Si vous souhaitez enregistrer l'alignement, vous devez répéter cette "
+"opération.\n"
 
 #: src/escputil/escputil.c:1853
 #, c-format
@@ -7892,8 +7406,7 @@ msgstr ""
 "S'il vous plait placez une feuillle de papier dans votre imprimante\n"
 "pour commencer l'opération d'ailgnement des têtes.\n"
 
-#: src/escputil/escputil.c:1969
-#: src/escputil/escputil.c:2000
+#: src/escputil/escputil.c:1969 src/escputil/escputil.c:2000
 #: src/escputil/escputil.c:2043
 msgid "Press enter to continue > "
 msgstr "Pressez Entrée pour continuer > "
@@ -7901,10 +7414,12 @@ msgstr "Pressez Entrée pour continuer > "
 #: src/escputil/escputil.c:1976
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each "
+"pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"S'il vous plait inspectez l'impression et choisissez la meilleure paire de lignes dans chaque trame.\n"
+"S'il vous plait inspectez l'impression et choisissez la meilleure paire de "
+"lignes dans chaque trame.\n"
 "Tapez un nombre de paire, '?' pourl'aide ou 'r' pour répéter l'opération.\n"
 
 #: src/escputil/escputil.c:1989
@@ -7912,8 +7427,7 @@ msgstr ""
 msgid "Pass #%d"
 msgstr "Passe #%d"
 
-#: src/escputil/escputil.c:1997
-#: src/escputil/escputil.c:2042
+#: src/escputil/escputil.c:1997 src/escputil/escputil.c:2042
 #, c-format
 msgid "Please insert a fresh sheet of paper.\n"
 msgstr "Veuillez insérer une feuille de papier vierge.\n"
@@ -7961,13 +7475,11 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "Erreur en entrée\n"
 
-#: src/gimp/print-image-gimp.c:225
-#: src/gimp2/print-image-gimp.c:225
+#: src/gimp/print-image-gimp.c:225 src/gimp2/print-image-gimp.c:225
 msgid "Printing..."
 msgstr "Impression en cours..."
 
-#: src/gimp/print.c:133
-#: src/gimp2/print.c:137
+#: src/gimp/print.c:133 src/gimp2/print.c:137
 msgid "<Image>/File/Print..."
 msgstr "<Image>/Fichier/Imprimer..."
 
@@ -7979,29 +7491,35 @@ msgid ""
 "  of Gutenprint recently, you must reinstall all printer queues.\n"
 "  Please refer to your vendor's documentation or the ``foomatic-ppdfile''\n"
 "  command for instructions.\n"
-"ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not match the PPD file (%s).\n"
+"ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does "
+"not match the PPD file (%s).\n"
 msgstr ""
 
 #: src/ghost/ijsgutenprint.c:190
 #, c-format
 msgid "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
-msgstr "Erreur: ijsgutenprint: Mauvais espace de couleur : bps %d canaux %d espace %s\n"
+msgstr ""
+"Erreur: ijsgutenprint: Mauvais espace de couleur : bps %d canaux %d espace %"
+"s\n"
 
 #: src/ghost/ijsgutenprint.c:198
 #, c-format
 msgid "ERROR: ijsgutenprint: No row buffer\n"
 msgstr "Erreur: ijsgutenprint: Pas de buffer de ligne\n"
 
-#: src/ghost/ijsgutenprint.c:225
-#: src/ghost/ijsgutenprint.c:245
+#: src/ghost/ijsgutenprint.c:225 src/ghost/ijsgutenprint.c:245
 #, c-format
-msgid "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
-msgstr "Erreur: ijsgutenprint: Impossible d'interpréter le paramètre %s=%s (un nombre est attendu)\n"
+msgid ""
+"ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
+msgstr ""
+"Erreur: ijsgutenprint: Impossible d'interpréter le paramètre %s=%s (un "
+"nombre est attendu)\n"
 
 #: src/ghost/ijsgutenprint.c:497
 #, c-format
 msgid "ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"
-msgstr "Erreur: ijsgutenprint:L'imprimante doit être spécifiée avec -sDeviceModel\n"
+msgstr ""
+"Erreur: ijsgutenprint:L'imprimante doit être spécifiée avec -sDeviceModel\n"
 
 #: src/ghost/ijsgutenprint.c:499
 #, c-format
@@ -8066,7 +7584,8 @@ msgstr "Erreur: ijsgutenprint: image_init échec %d\n"
 #: src/ghost/ijsgutenprint.c:1314
 #, c-format
 msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
-msgstr "Erreur: ijsgutenprint: Impossible d'ouvrir le descripteur de fichier : %s\n"
+msgstr ""
+"Erreur: ijsgutenprint: Impossible d'ouvrir le descripteur de fichier : %s\n"
 
 #: src/ghost/ijsgutenprint.c:1326
 #, c-format
@@ -8088,3 +7607,5 @@ msgstr "Erreur: ijsgutenprint: Mauvais paramètres, ne peut pas continuer !\n"
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "Erreur: ijsgutenprint: Obtenir la ligne suivante à échoué à %.0f\n"
 
+#~ msgid "Gutenprint"
+#~ msgstr "Gutenprint"

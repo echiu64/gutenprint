@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint-5.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-05-12 20:55-0400\n"
+"POT-Creation-Date: 2006-05-28 19:56-0400\n"
 "PO-Revision-Date: 2006-05-27 21:42+0200\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -19,8 +19,10 @@ msgstr ""
 "X-Poedit-Country: DENMARK\n"
 "X-Generator: KBabel 1.11.2\n"
 
+#. TRANSLATORS: "EvenTone" is the proper name, rather than a
+#. descriptive name, of this algorithm.
 #: src/main/dither-main.c:46 src/main/print-color.c:49
-#: src/main/print-escp2.c:1529
+#: src/main/print-escp2.c:1599
 msgid "Default"
 msgstr "Standard"
 
@@ -32,56 +34,59 @@ msgstr "JævnTone"
 msgid "Hybrid EvenTone"
 msgstr "Blandet JævnTone"
 
-#: src/main/dither-main.c:54
+#. TRANSLATORS: EvenTone, EvenBetter, and UniTone are proper
+#. * names, not descriptive.
+#.
+#: src/main/dither-main.c:53
 msgid "EvenBetter"
 msgstr "JævnBedre"
 
-#: src/main/dither-main.c:55
+#: src/main/dither-main.c:54
 msgid "Hybrid EvenBetter"
 msgstr "Blandet JævnBedre"
 
-#: src/main/dither-main.c:61
+#: src/main/dither-main.c:60
 msgid "UniTone"
 msgstr "EnkeltTone"
 
-#: src/main/dither-main.c:62
+#: src/main/dither-main.c:61
 msgid "Hybrid UniTone"
 msgstr "Blandet EnkeltTone"
 
-#: src/main/dither-main.c:64
+#: src/main/dither-main.c:63
 msgid "Adaptive Hybrid"
 msgstr "Tilpasset Blandet"
 
-#: src/main/dither-main.c:65
+#: src/main/dither-main.c:64
 msgid "Ordered"
 msgstr "Ordnet"
 
-#: src/main/dither-main.c:66
+#: src/main/dither-main.c:65
 msgid "Fast"
 msgstr "Hurtig"
 
-#: src/main/dither-main.c:67
+#: src/main/dither-main.c:66
 msgid "Very Fast"
 msgstr "Meget Hurtig"
 
-#: src/main/dither-main.c:68
+#: src/main/dither-main.c:67
 msgid "Hybrid Floyd-Steinberg"
 msgstr "Blandet Floyd-Steinberg"
 
-#: src/main/dither-main.c:69
+#: src/main/dither-main.c:68
 msgid "Predithered Input"
 msgstr "Forud dithered inddata"
 
-#: src/main/dither-main.c:89 src/main/print-color.c:56
+#: src/main/dither-main.c:88 src/main/print-color.c:56
 msgid "Density"
 msgstr "Tæthed"
 
-#: src/main/dither-main.c:89 src/main/print-canon.c:1534
+#: src/main/dither-main.c:88 src/main/print-canon.c:1534
 #: src/main/print-canon.c:1542 src/main/print-canon.c:1550
-#: src/main/print-canon.c:1558 src/main/print-escp2.c:413
-#: src/main/print-escp2.c:421 src/main/print-escp2.c:429
-#: src/main/print-escp2.c:437 src/main/print-escp2.c:445
-#: src/main/print-escp2.c:453 src/main/print-escp2.c:461
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:414
+#: src/main/print-escp2.c:422 src/main/print-escp2.c:430
+#: src/main/print-escp2.c:438 src/main/print-escp2.c:446
+#: src/main/print-escp2.c:454 src/main/print-escp2.c:462
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
 #: src/main/print-olympus.c:1330 src/main/print-olympus.c:1338
@@ -91,32 +96,42 @@ msgstr "Tæthed"
 msgid "Output Level Adjustment"
 msgstr "Udskrifts niveaujustering"
 
-#: src/main/dither-main.c:90
-msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
-msgstr "Justér udskriftens tæthed (blækmængde). Reducér tætheden hvis blækket trækker igennem papiret, eller hvis det flyder ud. Øg tætheden hvis de sorte områder ikke er gennemfarvet."
+#: src/main/dither-main.c:89
+msgid ""
+"Adjust the density (amount of ink) of the print. Reduce the density if the "
+"ink bleeds through the paper or smears; increase the density if black "
+"regions are not solid."
+msgstr ""
+"Justér udskriftens tæthed (blækmængde). Reducér tætheden hvis blækket "
+"trækker igennem papiret, eller hvis det flyder ud. Øg tætheden hvis de sorte "
+"områder ikke er gennemfarvet."
 
-#: src/main/dither-main.c:98
+#: src/main/dither-main.c:97
 msgid "Dither Algorithm"
 msgstr "Dither-algoritme"
 
-#: src/main/dither-main.c:98
+#: src/main/dither-main.c:97
 msgid "Screening Adjustment"
 msgstr "Visningsjustering"
 
-#: src/main/dither-main.c:99
+#: src/main/dither-main.c:98
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent "
+"results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line "
+"art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Vælg den ditherings-algoritme der skal bruges.\n"
 "Tilpasset Blandet giver sædvanligvis den bedste all-round kvalitet.\n"
-"JævnTone er en ny eksperimentel algoritme, der ofte giver excellente resultater.\n"
+"JævnTone er en ny eksperimentel algoritme, der ofte giver excellente "
+"resultater.\n"
 "Ordnet er hurtig og giver en næsten lige så god fotokvalitet.\n"
-"Hurtig og Meget Hurtig er betragteligt hurtigere, og fungerer godt med tekst og streg kunst.\n"
+"Hurtig og Meget Hurtig er betragteligt hurtigere, og fungerer godt med tekst "
+"og streg kunst.\n"
 "Blandet Floyd-Steinberg giver generelt ringere kvalitet."
 
 #: src/main/module.c:52
@@ -349,7 +364,7 @@ msgstr "Størrelse på det papir der skal udskrives på"
 
 #: src/main/print-canon.c:1475 src/main/print-escp2.c:183
 #: src/main/print-lexmark.c:272 src/main/print-olympus.c:1271
-#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1240
+#: src/main/print-pcl.c:1159 src/main/print-ps.c:72 src/cups/genppd.c:1238
 msgid "Media Type"
 msgstr "Medietype"
 
@@ -361,7 +376,7 @@ msgstr "Medietype (almindeligt papir, fotopapir, o.s.v.)"
 
 #: src/main/print-canon.c:1481 src/main/print-escp2.c:189
 #: src/main/print-lexmark.c:278 src/main/print-olympus.c:1277
-#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1264
+#: src/main/print-pcl.c:1165 src/main/print-ps.c:78 src/cups/genppd.c:1262
 msgid "Media Source"
 msgstr "Mediekilde"
 
@@ -373,7 +388,7 @@ msgstr "I hvilken bakke er mediet"
 
 #: src/main/print-canon.c:1487 src/main/print-escp2.c:213
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1283
-#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1324
+#: src/main/print-pcl.c:1171 src/main/print-ps.c:84 src/cups/genppd.c:1322
 msgid "Resolution"
 msgstr "Opløsning"
 
@@ -451,66 +466,66 @@ msgstr "Tosidet printning"
 msgid "Duplex/Tumble Setting"
 msgstr "Duplex/Tumble indstilling"
 
-#: src/main/print-canon.c:1534 src/main/print-escp2.c:413
+#: src/main/print-canon.c:1534 src/main/print-escp2.c:414
 #: src/main/print-lexmark.c:325 src/main/print-pcl.c:1218
 msgid "Cyan Density"
 msgstr "Tæthed for cyan"
 
-#: src/main/print-canon.c:1535 src/main/print-escp2.c:414
+#: src/main/print-canon.c:1535 src/main/print-escp2.c:415
 #: src/main/print-lexmark.c:326 src/main/print-pcl.c:1219
 msgid "Adjust the cyan density"
 msgstr "Justér tæthed for cyan"
 
-#: src/main/print-canon.c:1542 src/main/print-escp2.c:421
+#: src/main/print-canon.c:1542 src/main/print-escp2.c:422
 #: src/main/print-lexmark.c:333 src/main/print-pcl.c:1226
 msgid "Magenta Density"
 msgstr "Tæthed for magenta"
 
-#: src/main/print-canon.c:1543 src/main/print-escp2.c:422
+#: src/main/print-canon.c:1543 src/main/print-escp2.c:423
 #: src/main/print-lexmark.c:334 src/main/print-pcl.c:1227
 msgid "Adjust the magenta density"
 msgstr "Justér tæthed for magenta"
 
-#: src/main/print-canon.c:1550 src/main/print-escp2.c:429
+#: src/main/print-canon.c:1550 src/main/print-escp2.c:430
 #: src/main/print-lexmark.c:341 src/main/print-pcl.c:1234
 msgid "Yellow Density"
 msgstr "Tæthed for gul"
 
-#: src/main/print-canon.c:1551 src/main/print-escp2.c:430
+#: src/main/print-canon.c:1551 src/main/print-escp2.c:431
 #: src/main/print-lexmark.c:342 src/main/print-pcl.c:1235
 msgid "Adjust the yellow density"
 msgstr "Justér tæthed for gul"
 
-#: src/main/print-canon.c:1558 src/main/print-escp2.c:437
+#: src/main/print-canon.c:1558 src/main/print-escp2.c:438
 #: src/main/print-lexmark.c:349 src/main/print-pcl.c:1242
 msgid "Black Density"
 msgstr "Tæthed for sort"
 
-#: src/main/print-canon.c:1559 src/main/print-escp2.c:438
+#: src/main/print-canon.c:1559 src/main/print-escp2.c:439
 #: src/main/print-lexmark.c:350 src/main/print-pcl.c:1243
 msgid "Adjust the black density"
 msgstr "Justér tæthed for sort"
 
 #: src/main/print-canon.c:1566 src/main/print-canon.c:1567
-#: src/main/print-escp2.c:469 src/main/print-escp2.c:470
+#: src/main/print-escp2.c:470 src/main/print-escp2.c:471
 #: src/main/print-lexmark.c:357 src/main/print-lexmark.c:358
 #: src/main/print-pcl.c:1250 src/main/print-pcl.c:1251
 msgid "Light Cyan Transition"
 msgstr "Lys cyan overgang"
 
 #: src/main/print-canon.c:1566 src/main/print-canon.c:1574
-#: src/main/print-canon.c:1582 src/main/print-escp2.c:469
-#: src/main/print-escp2.c:477 src/main/print-escp2.c:485
-#: src/main/print-escp2.c:493 src/main/print-escp2.c:501
-#: src/main/print-escp2.c:509 src/main/print-escp2.c:517
-#: src/main/print-escp2.c:525 src/main/print-lexmark.c:357
+#: src/main/print-canon.c:1582 src/main/print-escp2.c:470
+#: src/main/print-escp2.c:478 src/main/print-escp2.c:486
+#: src/main/print-escp2.c:494 src/main/print-escp2.c:502
+#: src/main/print-escp2.c:510 src/main/print-escp2.c:518
+#: src/main/print-escp2.c:526 src/main/print-lexmark.c:357
 #: src/main/print-lexmark.c:365 src/main/print-pcl.c:1250
 #: src/main/print-pcl.c:1258
 msgid "Advanced Ink Adjustment"
 msgstr "Avanceret blækjustering"
 
 #: src/main/print-canon.c:1574 src/main/print-canon.c:1575
-#: src/main/print-escp2.c:477 src/main/print-escp2.c:478
+#: src/main/print-escp2.c:478 src/main/print-escp2.c:479
 #: src/main/print-lexmark.c:365 src/main/print-lexmark.c:366
 #: src/main/print-pcl.c:1258 src/main/print-pcl.c:1259
 msgid "Light Magenta Transition"
@@ -567,26 +582,26 @@ msgid "CMY Color"
 msgstr "CMY farver"
 
 #: src/main/print-canon.c:2061 src/main/print-color.c:314
-#: src/main/print-escp2-data.c:737 src/main/print-escp2-data.c:750
-#: src/main/print-escp2-data.c:760 src/main/print-escp2-data.c:767
-#: src/main/print-escp2-data.c:779 src/main/print-escp2-data.c:791
-#: src/main/print-escp2-data.c:804 src/main/print-escp2-data.c:817
-#: src/main/print-escp2-data.c:823 src/main/print-escp2-data.c:847
-#: src/main/print-escp2-data.c:860 src/main/print-lexmark.c:613
+#: src/main/print-escp2-data.c:738 src/main/print-escp2-data.c:751
+#: src/main/print-escp2-data.c:761 src/main/print-escp2-data.c:768
+#: src/main/print-escp2-data.c:780 src/main/print-escp2-data.c:792
+#: src/main/print-escp2-data.c:805 src/main/print-escp2-data.c:818
+#: src/main/print-escp2-data.c:824 src/main/print-escp2-data.c:848
+#: src/main/print-escp2-data.c:861 src/main/print-lexmark.c:613
 #: src/gutenprintui/panel.c:2145 src/gutenprintui2/panel.c:2144
 #: src/escputil/escputil.c:965 src/escputil/escputil.c:986
 #: src/escputil/escputil.c:1190
 msgid "Black"
 msgstr "Sort"
 
-#: src/main/print-canon.c:2106 src/main/print-escp2.c:1787
+#: src/main/print-canon.c:2106 src/main/print-escp2.c:1857
 #: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1562
 #: src/main/print-pcl.c:1733 src/main/print-ps.c:167 src/main/print-raw.c:135
 #: src/gutenprintui/panel.c:285 src/gutenprintui2/panel.c:285
 msgid "Color"
 msgstr "Farver"
 
-#: src/main/print-canon.c:2108 src/main/print-escp2.c:1789
+#: src/main/print-canon.c:2108 src/main/print-escp2.c:1859
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1735
 #: src/main/print-ps.c:169 src/main/print-raw.c:137
 msgid "Black and White"
@@ -755,8 +770,12 @@ msgid "Composite Gamma"
 msgstr "Sammensat gamma"
 
 #: src/main/print-color.c:249
-msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
-msgstr "Justér udskriftens gamma. Større værdier giver et generelt lysere resultat, mens mindre værdier giver et generelt mørkere resultat. "
+msgid ""
+"Adjust the gamma of the print. Larger values will produce a generally "
+"brighter print, while smaller values will produce a generally darker print. "
+msgstr ""
+"Justér udskriftens gamma. Større værdier giver et generelt lysere resultat, "
+"mens mindre værdier giver et generelt mørkere resultat. "
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -766,12 +785,12 @@ msgstr "Program gamma"
 msgid "Gamma value assumed by application"
 msgstr "Gammaværdi som formodet af program"
 
-#: src/main/print-color.c:266 src/main/print-escp2-data.c:738
-#: src/main/print-escp2-data.c:747 src/main/print-escp2-data.c:757
-#: src/main/print-escp2-data.c:768 src/main/print-escp2-data.c:780
-#: src/main/print-escp2-data.c:792 src/main/print-escp2-data.c:805
-#: src/main/print-escp2-data.c:818 src/main/print-escp2-data.c:832
-#: src/main/print-escp2-data.c:846 src/main/print-escp2-data.c:861
+#: src/main/print-color.c:266 src/main/print-escp2-data.c:739
+#: src/main/print-escp2-data.c:748 src/main/print-escp2-data.c:758
+#: src/main/print-escp2-data.c:769 src/main/print-escp2-data.c:781
+#: src/main/print-escp2-data.c:793 src/main/print-escp2-data.c:806
+#: src/main/print-escp2-data.c:819 src/main/print-escp2-data.c:833
+#: src/main/print-escp2-data.c:847 src/main/print-escp2-data.c:862
 #: src/gutenprintui/panel.c:2124 src/gutenprintui2/panel.c:2123
 #: src/escputil/escputil.c:968 src/escputil/escputil.c:987
 #: src/escputil/escputil.c:1191
@@ -782,12 +801,12 @@ msgstr "Cyan"
 msgid "Adjust the cyan gamma"
 msgstr "Justér gamma for cyan"
 
-#: src/main/print-color.c:274 src/main/print-escp2-data.c:739
-#: src/main/print-escp2-data.c:749 src/main/print-escp2-data.c:758
-#: src/main/print-escp2-data.c:769 src/main/print-escp2-data.c:782
-#: src/main/print-escp2-data.c:793 src/main/print-escp2-data.c:806
-#: src/main/print-escp2-data.c:819 src/main/print-escp2-data.c:831
-#: src/main/print-escp2-data.c:845 src/main/print-escp2-data.c:862
+#: src/main/print-color.c:274 src/main/print-escp2-data.c:740
+#: src/main/print-escp2-data.c:750 src/main/print-escp2-data.c:759
+#: src/main/print-escp2-data.c:770 src/main/print-escp2-data.c:783
+#: src/main/print-escp2-data.c:794 src/main/print-escp2-data.c:807
+#: src/main/print-escp2-data.c:820 src/main/print-escp2-data.c:832
+#: src/main/print-escp2-data.c:846 src/main/print-escp2-data.c:863
 #: src/gutenprintui/panel.c:2131 src/gutenprintui2/panel.c:2130
 #: src/escputil/escputil.c:969 src/escputil/escputil.c:988
 #: src/escputil/escputil.c:1192
@@ -798,12 +817,12 @@ msgstr "Magenta"
 msgid "Adjust the magenta gamma"
 msgstr "Justér gamma for magenta"
 
-#: src/main/print-color.c:282 src/main/print-escp2-data.c:740
-#: src/main/print-escp2-data.c:748 src/main/print-escp2-data.c:759
-#: src/main/print-escp2-data.c:770 src/main/print-escp2-data.c:784
-#: src/main/print-escp2-data.c:794 src/main/print-escp2-data.c:807
-#: src/main/print-escp2-data.c:820 src/main/print-escp2-data.c:830
-#: src/main/print-escp2-data.c:844 src/main/print-escp2-data.c:863
+#: src/main/print-color.c:282 src/main/print-escp2-data.c:741
+#: src/main/print-escp2-data.c:749 src/main/print-escp2-data.c:760
+#: src/main/print-escp2-data.c:771 src/main/print-escp2-data.c:785
+#: src/main/print-escp2-data.c:795 src/main/print-escp2-data.c:808
+#: src/main/print-escp2-data.c:821 src/main/print-escp2-data.c:831
+#: src/main/print-escp2-data.c:845 src/main/print-escp2-data.c:864
 #: src/gutenprintui/panel.c:2138 src/gutenprintui2/panel.c:2137
 #: src/escputil/escputil.c:970 src/escputil/escputil.c:989
 #: src/escputil/escputil.c:1193
@@ -814,8 +833,8 @@ msgstr "Gul"
 msgid "Adjust the yellow gamma"
 msgstr "Justér gamma for gul"
 
-#: src/main/print-color.c:290 src/main/print-escp2-data.c:835
-#: src/main/print-escp2-data.c:848 src/gutenprintui/panel.c:2152
+#: src/main/print-color.c:290 src/main/print-escp2-data.c:836
+#: src/main/print-escp2-data.c:849 src/gutenprintui/panel.c:2152
 #: src/gutenprintui2/panel.c:2151 src/escputil/escputil.c:977
 #: src/escputil/escputil.c:995
 msgid "Red"
@@ -834,8 +853,8 @@ msgstr "Grøn"
 msgid "Adjust the green gamma"
 msgstr "Justér gamma for grøn"
 
-#: src/main/print-color.c:306 src/main/print-escp2-data.c:836
-#: src/main/print-escp2-data.c:849 src/gutenprintui/panel.c:2166
+#: src/main/print-color.c:306 src/main/print-escp2-data.c:837
+#: src/main/print-escp2-data.c:850 src/gutenprintui/panel.c:2166
 #: src/gutenprintui2/panel.c:2165 src/escputil/escputil.c:978
 #: src/escputil/escputil.c:996
 msgid "Blue"
@@ -1123,163 +1142,171 @@ msgstr "Bredde skal være større end nul\n"
 
 #: src/main/printers.c:800
 #, c-format
-msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
-msgstr "Billedet er for bredt til siden: venstre margin er %d, bredde %d, højre kant er %d\n"
+msgid ""
+"Image is too wide for the page: left margin is %d, width %d, right edge is %"
+"d\n"
+msgstr ""
+"Billedet er for bredt til siden: venstre margin er %d, bredde %d, højre kant "
+"er %d\n"
 
 #: src/main/printers.c:807
 #, c-format
-msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
-msgstr "Billedet er for langt til siden: top margin er %d, højde %d, bund kant er %d\n"
+msgid ""
+"Image is too long for the page: top margin is %d, height %d, bottom edge is %"
+"d\n"
+msgstr ""
+"Billedet er for langt til siden: top margin er %d, højde %d, bund kant er %"
+"d\n"
 
-#: src/main/print-escp2-data.c:310 src/main/print-escp2-data.c:334
-#: src/main/print-escp2-data.c:367 src/main/print-escp2-data.c:418
-#: src/main/print-escp2-data.c:460 src/main/print-escp2-data.c:502
-#: src/main/print-escp2-data.c:595 src/main/print-escp2-data.c:689
-#: src/main/print-escp2-data.c:704 src/main/print-escp2-data.c:717
-#: src/main/print-escp2.c:1548 src/main/print-escp2.c:1640
-#: src/main/print-escp2.c:1652 src/main/print-pcl.c:227
+#: src/main/print-escp2-data.c:311 src/main/print-escp2-data.c:335
+#: src/main/print-escp2-data.c:368 src/main/print-escp2-data.c:419
+#: src/main/print-escp2-data.c:461 src/main/print-escp2-data.c:503
+#: src/main/print-escp2-data.c:596 src/main/print-escp2-data.c:690
+#: src/main/print-escp2-data.c:705 src/main/print-escp2-data.c:718
+#: src/main/print-escp2.c:1618 src/main/print-escp2.c:1710
+#: src/main/print-escp2.c:1722 src/main/print-pcl.c:227
 #: src/main/escp2-channels.c:2482 src/main/generic-options.c:36
 #: src/gutenprintui/panel.c:2584 src/gutenprintui2/panel.c:2609
 msgid "Standard"
 msgstr "Standard"
 
-#: src/main/print-escp2-data.c:319 src/main/print-escp2-data.c:445
-#: src/main/print-escp2-data.c:487 src/main/print-escp2-data.c:529
-#: src/main/print-escp2-data.c:604
+#: src/main/print-escp2-data.c:320 src/main/print-escp2-data.c:446
+#: src/main/print-escp2-data.c:488 src/main/print-escp2-data.c:530
+#: src/main/print-escp2-data.c:605
 msgid "Roll Feed"
 msgstr "Rulle fødning"
 
-#: src/main/print-escp2-data.c:343 src/main/print-escp2-data.c:394
+#: src/main/print-escp2-data.c:344 src/main/print-escp2-data.c:395
 msgid "Roll Feed (cut each page)"
 msgstr "Rulle fødning (skær efter hver side)"
 
-#: src/main/print-escp2-data.c:352 src/main/print-escp2-data.c:403
+#: src/main/print-escp2-data.c:353 src/main/print-escp2-data.c:404
 msgid "Roll Feed (do not cut)"
 msgstr "Rulle fødning (ingen afskæring)"
 
-#: src/main/print-escp2-data.c:376 src/main/print-escp2-data.c:427
+#: src/main/print-escp2-data.c:377 src/main/print-escp2-data.c:428
 msgid "Manual Feed"
 msgstr "Manuel fødning"
 
-#: src/main/print-escp2-data.c:385 src/main/print-escp2-data.c:436
-#: src/main/print-escp2-data.c:538 src/main/print-escp2-data.c:571
+#: src/main/print-escp2-data.c:386 src/main/print-escp2-data.c:437
+#: src/main/print-escp2-data.c:539 src/main/print-escp2-data.c:572
 msgid "Print to CD"
 msgstr "Udskriv på Cd"
 
-#: src/main/print-escp2-data.c:469 src/main/print-escp2-data.c:511
+#: src/main/print-escp2-data.c:470 src/main/print-escp2-data.c:512
 msgid "Manual Sheet Guide"
 msgstr "Manuel ark guide"
 
-#: src/main/print-escp2-data.c:478 src/main/print-escp2-data.c:520
+#: src/main/print-escp2-data.c:479 src/main/print-escp2-data.c:521
 msgid "Manual Feed (Front)"
 msgstr "Manuel fødning (front)"
 
-#: src/main/print-escp2-data.c:553
+#: src/main/print-escp2-data.c:554
 msgid "Rear Tray"
 msgstr "Bagerste bakke"
 
-#: src/main/print-escp2-data.c:562
+#: src/main/print-escp2-data.c:563
 msgid "Front Tray"
 msgstr "Front bakke"
 
-#: src/main/print-escp2-data.c:580
+#: src/main/print-escp2-data.c:581
 msgid "Photo Board"
 msgstr "Foto plade"
 
-#: src/main/print-escp2-data.c:619
+#: src/main/print-escp2-data.c:620
 msgid "Cut Sheet Bin 1"
 msgstr "Tilskårne ark, bakke 1"
 
-#: src/main/print-escp2-data.c:628
+#: src/main/print-escp2-data.c:629
 msgid "Cut Sheet Bin 2"
 msgstr "Tilskårne ark, bakke 2"
 
-#: src/main/print-escp2-data.c:637
+#: src/main/print-escp2-data.c:638
 msgid "Cut Sheet Autoselect"
 msgstr "Automatisk valg af bakke"
 
-#: src/main/print-escp2-data.c:646
+#: src/main/print-escp2-data.c:647
 msgid "Manual Selection"
 msgstr "Manuel udvælgelse"
 
-#: src/main/print-escp2-data.c:686 src/main/print-escp2-data.c:701
+#: src/main/print-escp2-data.c:687 src/main/print-escp2-data.c:702
 #: src/main/generic-options.c:33
 msgid "Fast Economy"
 msgstr "Hurtig økonomisk"
 
-#: src/main/print-escp2-data.c:687 src/main/print-escp2-data.c:702
+#: src/main/print-escp2-data.c:688 src/main/print-escp2-data.c:703
 #: src/main/generic-options.c:34
 msgid "Economy"
 msgstr "Økonomisk"
 
-#: src/main/print-escp2-data.c:688 src/main/print-escp2-data.c:703
-#: src/main/print-escp2-data.c:716 src/main/generic-options.c:35
+#: src/main/print-escp2-data.c:689 src/main/print-escp2-data.c:704
+#: src/main/print-escp2-data.c:717 src/main/generic-options.c:35
 msgid "Draft"
 msgstr "Kladde"
 
-#: src/main/print-escp2-data.c:690 src/main/print-escp2-data.c:705
-#: src/main/print-escp2-data.c:719 src/main/generic-options.c:37
+#: src/main/print-escp2-data.c:691 src/main/print-escp2-data.c:706
+#: src/main/print-escp2-data.c:720 src/main/generic-options.c:37
 msgid "High"
 msgstr "Høj"
 
-#: src/main/print-escp2-data.c:691 src/main/print-escp2-data.c:706
-#: src/main/print-escp2-data.c:718 src/main/generic-options.c:38
+#: src/main/print-escp2-data.c:692 src/main/print-escp2-data.c:707
+#: src/main/print-escp2-data.c:719 src/main/generic-options.c:38
 msgid "Photo"
 msgstr "Foto"
 
-#: src/main/print-escp2-data.c:692 src/main/print-escp2-data.c:707
-#: src/main/print-escp2-data.c:720 src/main/generic-options.c:39
+#: src/main/print-escp2-data.c:693 src/main/print-escp2-data.c:708
+#: src/main/print-escp2-data.c:721 src/main/generic-options.c:39
 msgid "Super Photo"
 msgstr "Super foto"
 
-#: src/main/print-escp2-data.c:693 src/main/print-escp2-data.c:708
-#: src/main/print-escp2-data.c:721 src/main/generic-options.c:40
+#: src/main/print-escp2-data.c:694 src/main/print-escp2-data.c:709
+#: src/main/print-escp2-data.c:722 src/main/generic-options.c:40
 msgid "Ultra Photo"
 msgstr "Ultra foto"
 
-#: src/main/print-escp2-data.c:694 src/main/print-escp2-data.c:709
-#: src/main/print-escp2-data.c:722 src/main/generic-options.c:41
+#: src/main/print-escp2-data.c:695 src/main/print-escp2-data.c:710
+#: src/main/print-escp2-data.c:723 src/main/generic-options.c:41
 msgid "Best"
 msgstr "Bedst"
 
-#: src/main/print-escp2-data.c:771 src/main/print-escp2-data.c:781
-#: src/main/print-escp2-data.c:795 src/main/print-escp2-data.c:808
-#: src/main/print-escp2-data.c:821 src/main/print-escp2-data.c:858
+#: src/main/print-escp2-data.c:772 src/main/print-escp2-data.c:782
+#: src/main/print-escp2-data.c:796 src/main/print-escp2-data.c:809
+#: src/main/print-escp2-data.c:822 src/main/print-escp2-data.c:859
 #: src/escputil/escputil.c:971 src/escputil/escputil.c:1194
 msgid "Light Cyan"
 msgstr "Lys cyan"
 
-#: src/main/print-escp2-data.c:772 src/main/print-escp2-data.c:783
-#: src/main/print-escp2-data.c:796 src/main/print-escp2-data.c:809
-#: src/main/print-escp2-data.c:822 src/main/print-escp2-data.c:857
+#: src/main/print-escp2-data.c:773 src/main/print-escp2-data.c:784
+#: src/main/print-escp2-data.c:797 src/main/print-escp2-data.c:810
+#: src/main/print-escp2-data.c:823 src/main/print-escp2-data.c:858
 #: src/escputil/escputil.c:972 src/escputil/escputil.c:1195
 msgid "Light Magenta"
 msgstr "Lys magenta"
 
-#: src/main/print-escp2-data.c:797 src/main/print-escp2-data.c:859
+#: src/main/print-escp2-data.c:798 src/main/print-escp2-data.c:860
 #: src/escputil/escputil.c:975
 msgid "Light Black"
 msgstr "Lys sort"
 
-#: src/main/print-escp2-data.c:810
+#: src/main/print-escp2-data.c:811
 msgid "Dark Yellow"
 msgstr "Mørk gul"
 
-#: src/main/print-escp2-data.c:833 src/main/escp2-channels.c:2439
+#: src/main/print-escp2-data.c:834 src/main/escp2-channels.c:2439
 #: src/main/escp2-channels.c:2455 src/escputil/escputil.c:976
 msgid "Matte Black"
 msgstr "Mat sort"
 
-#: src/main/print-escp2-data.c:834 src/main/escp2-channels.c:2435
+#: src/main/print-escp2-data.c:835 src/main/escp2-channels.c:2435
 #: src/main/escp2-channels.c:2473 src/escputil/escputil.c:966
 msgid "Photo Black"
 msgstr "Foto sort"
 
-#: src/main/print-escp2-data.c:837 src/escputil/escputil.c:979
+#: src/main/print-escp2-data.c:838 src/escputil/escputil.c:979
 msgid "Gloss Optimizer"
 msgstr "Glans forbedrer"
 
-#: src/main/print-escp2-data.c:856 src/escputil/escputil.c:980
+#: src/main/print-escp2-data.c:857 src/escputil/escputil.c:980
 msgid "Light Light Black"
 msgstr "Lys lys-sort"
 
@@ -1450,122 +1477,122 @@ msgstr "Diagram for rød"
 msgid "Adjust the red map"
 msgstr "Justér diagram for rød"
 
-#: src/main/print-escp2.c:445
+#: src/main/print-escp2.c:446
 msgid "Red Density"
 msgstr "Tæthed for rød"
 
-#: src/main/print-escp2.c:446
+#: src/main/print-escp2.c:447
 msgid "Adjust the red density"
 msgstr "Justér tæthed for rød"
 
-#: src/main/print-escp2.c:453
+#: src/main/print-escp2.c:454
 msgid "Blue Density"
 msgstr "Tæthed for blå"
 
-#: src/main/print-escp2.c:454
+#: src/main/print-escp2.c:455
 msgid "Adjust the blue density"
 msgstr "Justér tæthed for blå"
 
-#: src/main/print-escp2.c:461
+#: src/main/print-escp2.c:462
 msgid "Gloss Level"
 msgstr "Glansniveau"
 
-#: src/main/print-escp2.c:462
+#: src/main/print-escp2.c:463
 msgid "Adjust the gloss level"
 msgstr "Justér glansniveau"
 
-#: src/main/print-escp2.c:485 src/main/print-escp2.c:486
+#: src/main/print-escp2.c:486 src/main/print-escp2.c:487
 msgid "Dark Yellow Transition"
 msgstr "Mørkgul overgang"
 
-#: src/main/print-escp2.c:493 src/main/print-escp2.c:494
+#: src/main/print-escp2.c:494 src/main/print-escp2.c:495
 msgid "Gray Transition"
 msgstr "Grå overgang"
 
-#: src/main/print-escp2.c:501 src/main/print-escp2.c:502
-#: src/main/print-escp2.c:525 src/main/print-escp2.c:526
+#: src/main/print-escp2.c:502 src/main/print-escp2.c:503
+#: src/main/print-escp2.c:526 src/main/print-escp2.c:527
 msgid "Light Gray Transition"
 msgstr "Lysgrå overgang"
 
-#: src/main/print-escp2.c:509 src/main/print-escp2.c:510
+#: src/main/print-escp2.c:510 src/main/print-escp2.c:511
 msgid "Dark Gray Transition"
 msgstr "Mørkgrå overgang"
 
-#: src/main/print-escp2.c:517
+#: src/main/print-escp2.c:518
 msgid "Mid Gray Transition"
 msgstr "Mellemgrå overgang"
 
-#: src/main/print-escp2.c:518
+#: src/main/print-escp2.c:519
 msgid "Medium Gray Transition"
 msgstr "Middelgrå overgang"
 
-#: src/main/print-escp2.c:1445
+#: src/main/print-escp2.c:1515
 msgid "Full Manual Control"
 msgstr "Fuld manuel kontrol"
 
-#: src/main/print-escp2.c:1447
+#: src/main/print-escp2.c:1517
 msgid "Automatic Setting Control"
 msgstr "Automatisk indstillingskontrol"
 
-#: src/main/print-escp2.c:1458 src/main/xmli18n-tmp.h:6
+#: src/main/print-escp2.c:1528 src/main/xmli18n-tmp.h:6
 msgid "CD - 5 inch"
 msgstr "Cd - 12 cm"
 
-#: src/main/print-escp2.c:1460 src/main/xmli18n-tmp.h:7
+#: src/main/print-escp2.c:1530 src/main/xmli18n-tmp.h:7
 msgid "CD - 3 inch"
 msgstr "Cd - 8 cm"
 
-#: src/main/print-escp2.c:1482
+#: src/main/print-escp2.c:1552
 msgid "Normal"
 msgstr "Normal"
 
-#: src/main/print-escp2.c:1484
+#: src/main/print-escp2.c:1554
 msgid "Print To Hub"
 msgstr "Print til center"
 
-#: src/main/print-escp2.c:1509 src/main/generic-options.c:213
+#: src/main/print-escp2.c:1579 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 msgid "Manual Control"
 msgstr "Manuel kontrol"
 
-#: src/main/print-escp2.c:1619 src/cups/genppd.c:1333
+#: src/main/print-escp2.c:1689 src/cups/genppd.c:1331
 msgid "Automatic"
 msgstr "Automatisk"
 
-#: src/main/print-escp2.c:1621
+#: src/main/print-escp2.c:1691
 msgid "Bidirectional"
 msgstr "Tovejs"
 
-#: src/main/print-escp2.c:1623
+#: src/main/print-escp2.c:1693
 msgid "Unidirectional"
 msgstr "Envejs"
 
-#: src/main/print-escp2.c:1654
+#: src/main/print-escp2.c:1724
 msgid "Alternate Fill"
 msgstr "Alternativ udfyldning"
 
-#: src/main/print-escp2.c:1656
+#: src/main/print-escp2.c:1726
 msgid "Ascending Fill"
 msgstr "Stigende udfyldning"
 
-#: src/main/print-escp2.c:1658
+#: src/main/print-escp2.c:1728
 msgid "Descending Fill"
 msgstr "Aftagende udfyldning"
 
-#: src/main/print-escp2.c:1660
+#: src/main/print-escp2.c:1730
 msgid "Ascending Double"
 msgstr "Stigende dobbelt"
 
-#: src/main/print-escp2.c:1662
+#: src/main/print-escp2.c:1732
 msgid "Nearest Neighbor Avoidance"
 msgstr "Vige udenom nærmeste nabo"
 
-#: src/main/print-escp2.c:2087
+#: src/main/print-escp2.c:2157
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Printeren understøtter ikke en ufiltreret enheds uddata ved dybde %d\n"
 
-#: src/main/print-escp2.c:3051 src/main/print-olympus.c:1774
+#: src/main/print-escp2.c:3122 src/main/print-olympus.c:1774
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "Print indstillinger ikke kontrolleret, kan ikke printe.\n"
@@ -1725,8 +1752,8 @@ msgstr "Ilford Heavy Papir"
 msgid "Coated"
 msgstr "Coated"
 
-#: src/main/print-olympus.c:266 src/cups/genppd.c:1450 src/cups/genppd.c:1465
-#: src/cups/genppd.c:1516
+#: src/main/print-olympus.c:266 src/cups/genppd.c:1448 src/cups/genppd.c:1463
+#: src/cups/genppd.c:1514
 msgid "None"
 msgstr "Ingen"
 
@@ -5402,52 +5429,52 @@ msgid "Lexmark Valuewriter 300"
 msgstr "Lexmark Valuewriter 300"
 
 #: src/main/xmli18n-tmp.h:799
-msgid "Minolta PagePro 1100"
-msgstr "Minolta PagePro 1100"
-
-#: src/main/xmli18n-tmp.h:800
 msgid "Minolta PagePro 6"
 msgstr "Minolta PagePro 6"
 
-#: src/main/xmli18n-tmp.h:801
+#: src/main/xmli18n-tmp.h:800
 msgid "Minolta PagePro 6e"
 msgstr "Minolta PagePro 6e"
 
-#: src/main/xmli18n-tmp.h:802
+#: src/main/xmli18n-tmp.h:801
 msgid "Minolta PagePro 6ex"
 msgstr "Minolta PagePro 6ex"
 
-#: src/main/xmli18n-tmp.h:803
+#: src/main/xmli18n-tmp.h:802
 msgid "Minolta PagePro 8"
 msgstr "Minolta PagePro 8"
 
-#: src/main/xmli18n-tmp.h:804
+#: src/main/xmli18n-tmp.h:803
 msgid "Minolta PagePro 8L"
 msgstr "Minolta PagePro 8L"
 
+#: src/main/xmli18n-tmp.h:804
+msgid "Minolta PagePro 1100"
+msgstr "Minolta PagePro 1100"
+
 #: src/main/xmli18n-tmp.h:805
-msgid "NEC SuperScript 1260"
-msgstr "NEC SuperScript 1260"
-
-#: src/main/xmli18n-tmp.h:806
-msgid "NEC SuperScript 1400"
-msgstr "NEC SuperScript 1400"
-
-#: src/main/xmli18n-tmp.h:807
-msgid "NEC SuperScript 1800"
-msgstr "NEC SuperScript 1800"
-
-#: src/main/xmli18n-tmp.h:808
 msgid "NEC SuperScript 660i"
 msgstr "NEC SuperScript 660i"
 
-#: src/main/xmli18n-tmp.h:809
+#: src/main/xmli18n-tmp.h:806
 msgid "NEC SuperScript 860"
 msgstr "NEC SuperScript 860"
 
-#: src/main/xmli18n-tmp.h:810
+#: src/main/xmli18n-tmp.h:807
 msgid "NEC SuperScript 870"
 msgstr "NEC SuperScript 870"
+
+#: src/main/xmli18n-tmp.h:808
+msgid "NEC SuperScript 1260"
+msgstr "NEC SuperScript 1260"
+
+#: src/main/xmli18n-tmp.h:809
+msgid "NEC SuperScript 1400"
+msgstr "NEC SuperScript 1400"
+
+#: src/main/xmli18n-tmp.h:810
+msgid "NEC SuperScript 1800"
+msgstr "NEC SuperScript 1800"
 
 #: src/main/xmli18n-tmp.h:811
 msgid "Okidata OL400"
@@ -5914,17 +5941,25 @@ msgstr "Smugkig"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return to its original position."
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
 msgstr ""
 "Placer billedet på siden.\n"
 "Klik og træk med venstre musetaste for at placere billedet.\n"
-"Klik og træk med højre musetaste for at flytte billedet med større præcision. Hver enhed af bevægelse flytter billedet et punkt (1/72\").\n"
-"Klik og træk med midterste musetaste for at flytte billedet i enheder af billedets størrelse.\n"
-"Tryk på skift tasten når du klikker og trækker bevirker, at billedet kun flyttes i enten lodret eller vandret retning.\n"
-"Hvis du trykker på en anden musetaste mens du trækker med musen, vil billedet returnere til dets oprindelig position."
+"Klik og træk med højre musetaste for at flytte billedet med større "
+"præcision. Hver enhed af bevægelse flytter billedet et punkt (1/72\").\n"
+"Klik og træk med midterste musetaste for at flytte billedet i enheder af "
+"billedets størrelse.\n"
+"Tryk på skift tasten når du klikker og trækker bevirker, at billedet kun "
+"flyttes i enten lodret eller vandret retning.\n"
+"Hvis du trykker på en anden musetaste mens du trækker med musen, vil "
+"billedet returnere til dets oprindelig position."
 
 #: src/gutenprintui/panel.c:1315 src/gutenprintui2/panel.c:1316
 msgid "Paper Size"
@@ -5993,8 +6028,12 @@ msgid "Seascape"
 msgstr "Tværformat vendt op/ned"
 
 #: src/gutenprintui/panel.c:1460 src/gutenprintui2/panel.c:1461
-msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
-msgstr "Vælg papirretning: portræt, tværformat eller portræt og tværformat vendt op/ned"
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Vælg papirretning: portræt, tværformat eller portræt og tværformat vendt op/"
+"ned"
 
 #: src/gutenprintui/panel.c:1462 src/gutenprintui2/panel.c:1463
 msgid "Orientation:"
@@ -6109,8 +6148,12 @@ msgid "Choose the correct PPD filename for your printer"
 msgstr "Vælg korrekt PPD filnavn for printeren"
 
 #: src/gutenprintui/panel.c:1691 src/gutenprintui2/panel.c:1691
-msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
-msgstr "Vælg navnet på uddatakøen (hverken type eller model af printer) som du ønsker at printe til"
+msgid ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr ""
+"Vælg navnet på uddatakøen (hverken type eller model af printer) som du "
+"ønsker at printe til"
 
 #: src/gutenprintui/panel.c:1693 src/gutenprintui2/panel.c:1693
 msgid "Printer Queue:"
@@ -6202,24 +6245,36 @@ msgid "Printer Settings"
 msgstr "Printer indstillinger"
 
 #: src/gutenprintui/panel.c:1866 src/gutenprintui2/panel.c:1866
-msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
-msgstr "Vælg navnet på printeren (hverken type eller model af printer) som du ønsker at udskrive til"
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Vælg navnet på printeren (hverken type eller model af printer) som du ønsker "
+"at udskrive til"
 
 #: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1883
 msgid "Setup Printer..."
 msgstr "Opsætning printer..."
 
 #: src/gutenprintui/panel.c:1886 src/gutenprintui2/panel.c:1885
-msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
-msgstr "Vælg printermodel, PPD fil og kommando, der skal bruges for at printe til denne printer"
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+"Vælg printermodel, PPD fil og kommando, der skal bruges for at printe til "
+"denne printer"
 
 #: src/gutenprintui/panel.c:1899 src/gutenprintui2/panel.c:1898
 msgid "New Printer..."
 msgstr "Ny printer..."
 
 #: src/gutenprintui/panel.c:1900 src/gutenprintui2/panel.c:1899
-msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
-msgstr "Definer en ny logisk printer. Dette kan bruges til at navngive en samling af indstillinger, som du ønsker at huske til senere brug."
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Definer en ny logisk printer. Dette kan bruges til at navngive en samling af "
+"indstillinger, som du ønsker at huske til senere brug."
 
 #: src/gutenprintui/panel.c:1943 src/gutenprintui2/panel.c:1942
 msgid "Image Size"
@@ -6238,8 +6293,12 @@ msgid "Scale by:"
 msgstr "Skalér med:"
 
 #: src/gutenprintui/panel.c:1999 src/gutenprintui2/panel.c:1998
-msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
-msgstr "Vælg om skalering måles i procent af valgt sidestørrelse, eller antal af udskriftspunkter pr. tomme"
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Vælg om skalering måles i procent af valgt sidestørrelse, eller antal af "
+"udskriftspunkter pr. tomme"
 
 #: src/gutenprintui/panel.c:2002 src/gutenprintui2/panel.c:2001
 msgid "Percent"
@@ -6314,7 +6373,8 @@ msgid "Adjust Output..."
 msgstr "Justér udskrift..."
 
 #: src/gutenprintui/panel.c:2267 src/gutenprintui2/panel.c:2272
-msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr "Justér farvebalance, lyshed, kontrast, mætning og ditherings algoritme"
 
 #: src/gutenprintui/panel.c:2285 src/gutenprintui2/panel.c:2291
@@ -6446,28 +6506,27 @@ msgstr "Ekstra 4"
 msgid "Extra 5"
 msgstr "Ekstra 5"
 
-#. TRANSLATORS: "Gutenprint" is a proper name, not a description
-#: src/cups/genppd.c:189 src/cups/genppd.c:198
-msgid "Gutenprint"
-msgstr "Gutenprint"
-
-#: src/cups/genppd.c:890
+#. TRANSLATORS: Specify the language of the PPD translation.
+#. * Use the English name of your language here, e.g. "Swedish" instead of
+#. * "Svenska".
+#: src/cups/genppd.c:888
 msgid "English"
 msgstr "Danish"
 
-#: src/cups/genppd.c:892
+#. TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1
+#: src/cups/genppd.c:890
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:1467
+#: src/cups/genppd.c:1465
 msgid "No"
 msgstr "Nej"
 
-#: src/cups/genppd.c:1469
+#: src/cups/genppd.c:1467
 msgid "Yes"
 msgstr "Ja"
 
-#: src/cups/genppd.c:1499
+#: src/cups/genppd.c:1497
 msgid "Fine Adjustment"
 msgstr "Finjustering"
 
@@ -6483,7 +6542,8 @@ msgid ""
 "under certain conditions; type 'escputil -l' for details.\n"
 msgstr ""
 ", Copyright (C) 2000-2006 Robert Krawitz\n"
-"Escputil kommer UDEN NOGEN FORM FOR GARANTI; for detaljer skriv 'escputil -l'\n"
+"Escputil kommer UDEN NOGEN FORM FOR GARANTI; for detaljer skriv 'escputil -"
+"l'\n"
 "Dette er fri software, og du er velkommen til at redistribuere det\n"
 "under bestemte forudsætninger; skriv 'escputil -l' for detaljer.\n"
 
@@ -6507,9 +6567,11 @@ msgid ""
 msgstr ""
 "Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"Dette program er fri software; du kan redistribuere det og/eller modificere det\n"
+"Dette program er fri software; du kan redistribuere det og/eller modificere "
+"det\n"
 "under bestemmelserne i the GNU General Public License som offentliggjort af\n"
-"the Free Software Foundation; enten version 2 af licensen, eller (efter dit valg)\n"
+"the Free Software Foundation; enten version 2 af licensen, eller (efter dit "
+"valg)\n"
 "enhver senere version.\n"
 "\n"
 "Dette program er distribueret i det håb, at det vil være nyttigt, men\n"
@@ -6540,7 +6602,8 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This "
+"requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -6560,7 +6623,8 @@ msgid ""
 "                       newer).  Only needed when not using a raw device.\n"
 "    -q|--quiet         Suppress the banner.\n"
 "    -S|--short-name    Print the short name of the printer with --identify.\n"
-"    -m|--model         Specify the precise printer model for head alignment.\n"
+"    -m|--model         Specify the precise printer model for head "
+"alignment.\n"
 "    -C|--choices       Specify the number of pattern choices for alignment\n"
 "    -p|--patterns      Specify the number of sets of patterns for alignment\n"
 msgstr ""
@@ -6577,14 +6641,18 @@ msgstr ""
 "                       Beskidte eller stoppede dyser viser sig som huller i\n"
 "                       mønsteret. Hvis der er huller, bør du rense\n"
 "                       print hovedet.\n"
-"    -a|--align-head    Retter printhovedet ind.    FORSIGTIG     forkert brug\n"
-"                       af denne funktion kan resultere i dårlig printkvalitet, og/eller\n"
+"    -a|--align-head    Retter printhovedet ind.    FORSIGTIG     forkert "
+"brug\n"
+"                       af denne funktion kan resultere i dårlig "
+"printkvalitet, og/eller\n"
 "                       forårsage direkte skade på printeren.\n"
 "    -s|--status        Viser printer status.\n"
 "    -i|--ink-level     Henter blæk niveau fra printeren. Dette kræver\n"
 "                       direkte læse/skrive adgang til printeren.\n"
-"    -e|--extended-ink-info     Henter udvidet information om blæk niveau fra\n"
-"                        printeren. Dette kræver direkte læse/skrive adgang til printeren.\n"
+"    -e|--extended-ink-info     Henter udvidet information om blæk niveau "
+"fra\n"
+"                        printeren. Dette kræver direkte læse/skrive adgang "
+"til printeren.\n"
 "    -d|--identify      Forespørger printer om fremstiller og model.Dette\n"
 "                       kræver direkte læse/skrive adgang til printeren.\n"
 "    -l|--license       Viser licens/garanti bestemmelser for dette program.\n"
@@ -6593,7 +6661,8 @@ msgstr ""
 "  Indstillinger:\n"
 "    -P|--printer-name  Specificer den valgte printerkø.\n"
 "                       Uden angivelse = system printeren lp.\n"
-"    -r|--raw-device    Specificer navnet på den enhed der skrives til direkte\n"
+"    -r|--raw-device    Specificer navnet på den enhed der skrives til "
+"direkte\n"
 "                       i stedet for at gå gennem en printerkø.\n"
 "    -u|--new           Printeren er ny (Stylus Color 740 eller nyere).\n"
 "                       Bruges kun når der ikke anvendes direkte adgang.\n"
@@ -6601,8 +6670,10 @@ msgstr ""
 "    -S|--short-name    Printer kort-navn for printer med --identify.\n"
 "    -m|--model         Specificer den præcise printermodel til brug for\n"
 "                       indretning af printhoved (alignment).\n"
-"    -C|--choices       Angiv antallet af mønstre, ved printerhoved retten ind.\n"
-"    -p|--patterns      Angiv antallet af sæt af mønstre, ved printerhoved retten ind.\n"
+"    -C|--choices       Angiv antallet af mønstre, ved printerhoved retten "
+"ind.\n"
+"    -p|--patterns      Angiv antallet af sæt af mønstre, ved printerhoved "
+"retten ind.\n"
 
 #: src/escputil/escputil.c:161
 msgid ""
@@ -6972,7 +7043,8 @@ msgstr "Hentning af %s kræver brug af en ufiltreret enhed.\n"
 #: src/escputil/escputil.c:1451
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr "Hentning af udvidede blækinformationer kræver brug af en ufiltreret enhed.\n"
+msgstr ""
+"Hentning af udvidede blækinformationer kræver brug af en ufiltreret enhed.\n"
 
 #: src/escputil/escputil.c:1598 src/escputil/escputil.c:1622
 #: src/escputil/escputil.c:1642
@@ -7046,7 +7118,8 @@ msgstr ""
 "\n"
 "Denne funktion lader dig rette print hovedet ind, på din Epson Stylus\n"
 "inkjet printer. Forkert anvendelse af funktionen kan forårsage reduktion\n"
-"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er ikke\n"
+"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er "
+"ikke\n"
 "blevet testet af Seiko Epson for korrekt funktion, og tilbydes uden nogen\n"
 "former for garanti i det hele taget. Brug af funktionen er derfor på egen\n"
 "regning og risiko.\n"
@@ -7058,7 +7131,8 @@ msgstr ""
 "Når du undersøger linieparrene, skal du finde det liniepar, der er bedst\n"
 "rettet-ind, d.v.s. det par der bedst danner en ret linie.\n"
 "Undersøg parrene meget omhyggeligt for at finde det bedste match. Det\n"
-"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste par.\n"
+"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste "
+"par.\n"
 "Det kan også anbefales at bruge et kvalitetspapir til testen, så linierne\n"
 "er præcist formede og ikke 'løber ud' i papiret.\n"
 "Når du har valgt det flotteste par, og har noteret tallet under, lægges\n"
@@ -7066,14 +7140,17 @@ msgstr ""
 "\n"
 "Hvert mønster er identisk, men senere mønstre anvender en finere dot\n"
 "for en mere kritisk retten-ind. Du skal køre alle gennemløbene for at opnå\n"
-"en perfekt retten-ind af din printer. Når du har kørt alle gennemløbene, bliver\n"
+"en perfekt retten-ind af din printer. Når du har kørt alle gennemløbene, "
+"bliver\n"
 "mønsteret printet igen. Nu skal det midterste af parrene (#%d ud af de %d)\n"
 "være det bedste.\n"
 "\n"
 "Når dette er sket, har du mulighed for at gemme(s) resultatet i printeren,\n"
 "gentage(r) processen, eller afbryde(q) uden at gemme. Når du afbryder,\n"
-"bliver den hidtidige indstilling ikke genskabt, før der har været slukket for\n"
-"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren mens\n"
+"bliver den hidtidige indstilling ikke genskabt, før der har været slukket "
+"for\n"
+"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren "
+"mens\n"
 "processen løber.\n"
 "\n"
 
@@ -7105,7 +7182,8 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on will.\n"
+"restore the previous settings, but powering the printer off and back on "
+"will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -7115,7 +7193,8 @@ msgstr ""
 "\n"
 "Denne funktion lader dig rette print hovedet ind, på din Epson Stylus\n"
 "inkjet printer. Forkert anvendelse af funktionen kan forårsage reduktion\n"
-"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er ikke\n"
+"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er "
+"ikke\n"
 "blevet testet af Seiko Epson for korrekt funktion, og tilbydes uden nogen\n"
 "former for garanti i det hele taget. Brug af funktionen er derfor på egen\n"
 "regning og risiko.\n"
@@ -7127,10 +7206,13 @@ msgstr ""
 "Når du undersøger linieparrene, skal du finde det liniepar, der er bedst\n"
 "rettet-ind, d.v.s. det par der bedst danner en ret linie.\n"
 "Undersøg parrene meget omhyggeligt for at finde det bedste match. Det\n"
-"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste par.\n"
-"Det kan også anbefales at bruge et kvalitetspapir til testen, så linierne er\n"
+"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste "
+"par.\n"
+"Det kan også anbefales at bruge et kvalitetspapir til testen, så linierne "
+"er\n"
 "præcist formede og ikke 'løber ud' i papiret.\n"
-"Når du har valgt det flotteste par, og har noteret tallet under, lægges papiret\n"
+"Når du har valgt det flotteste par, og har noteret tallet under, lægges "
+"papiret\n"
 "i printeren igen, inden tallet indtastes.\n"
 "\n"
 "Når du har kørt retten-ind mønsteret, bliver det printet igen. Nu skal det\n"
@@ -7138,8 +7220,10 @@ msgstr ""
 "\n"
 "Når dette er sket, har du mulighed for at gemme(s) resultatet i printeren,\n"
 "gentage(r) processen, eller afbryde(q) uden at gemme. Når du afbryder,\n"
-"bliver den hidtidige indstilling ikke genskabt, før der har været slukket for\n"
-"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren mens\n"
+"bliver den hidtidige indstilling ikke genskabt, før der har været slukket "
+"for\n"
+"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren "
+"mens\n"
 "processen løber.\n"
 "\n"
 
@@ -7180,7 +7264,8 @@ msgstr "> "
 
 #: src/escputil/escputil.c:1839
 #, c-format
-msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgid ""
+"Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr "Bekræft ved at taste 'q' igen, at du vil afbryde uden at gemme:\n"
 
 #: src/escputil/escputil.c:1846
@@ -7216,7 +7301,8 @@ msgstr ""
 "Dette vil blivende ændre konfigurationen af din printer.\n"
 "ADVARSEL: denne procedure er ikke blevet godkendt af Seiko Epson,\n"
 "og det kan skade din printer. Fortsæt?\n"
-"Bekræft ved at taste 's' igen, at du vil gemme indstillingerne i din printer:\n"
+"Bekræft ved at taste 's' igen, at du vil gemme indstillingerne i din "
+"printer:\n"
 
 #: src/escputil/escputil.c:1879
 #, c-format
@@ -7282,7 +7368,8 @@ msgstr "Tryk på enter-tasten for at fortsætte > "
 #: src/escputil/escputil.c:1976
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each "
+"pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Undersøg printet, og vælg det bedste liniepar i hvert mønster.\n"
@@ -7331,7 +7418,8 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Kontroller at retten-ind er korrekt. Efter retten-ind mønsteret er printet igen,\n"
+"Kontroller at retten-ind er korrekt. Efter retten-ind mønsteret er printet "
+"igen,\n"
 "skal du sikre dig, at det bedste mønster for hver linie er mønster %d.\n"
 "Hvis dette ikke er tilfældet, bør du gentage processen, for at opnå den\n"
 "bedste kvalitet i printning.\n"
@@ -7357,7 +7445,8 @@ msgid ""
 "  of Gutenprint recently, you must reinstall all printer queues.\n"
 "  Please refer to your vendor's documentation or the ``foomatic-ppdfile''\n"
 "  command for instructions.\n"
-"ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not match the PPD file (%s).\n"
+"ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does "
+"not match the PPD file (%s).\n"
 msgstr ""
 "ijsgutenprint: den installerede version af Gutenprint softwaren (%s)\n"
 "  matcher ikke PPD filen (%s). Hvis du har opgraderet din version af\n"
@@ -7370,7 +7459,8 @@ msgstr ""
 #: src/ghost/ijsgutenprint.c:190
 #, c-format
 msgid "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
-msgstr "ERROR: ijsgutenprint: Fejlagtigt farveområde: bps %d kanaler %d område %s\n"
+msgstr ""
+"ERROR: ijsgutenprint: Fejlagtigt farveområde: bps %d kanaler %d område %s\n"
 
 #: src/ghost/ijsgutenprint.c:198
 #, c-format
@@ -7379,8 +7469,11 @@ msgstr "ERROR: ijsgutenprint: Ingen række buffer\n"
 
 #: src/ghost/ijsgutenprint.c:225 src/ghost/ijsgutenprint.c:245
 #, c-format
-msgid "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
-msgstr "ERROR: ijsgutenprint: Kan ikke fortolke parameter %s=%s (forventer et nummer)\n"
+msgid ""
+"ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
+msgstr ""
+"ERROR: ijsgutenprint: Kan ikke fortolke parameter %s=%s (forventer et "
+"nummer)\n"
 
 #: src/ghost/ijsgutenprint.c:497
 #, c-format
@@ -7471,3 +7564,6 @@ msgstr "ERROR: ijsgutenprint: Forkerte parametre; kan ikke fortsætte!\n"
 #, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "ERROR: ijsgutenprint: Hentning af næste række fejlede ved %.0f\n"
+
+#~ msgid "Gutenprint"
+#~ msgstr "Gutenprint"
