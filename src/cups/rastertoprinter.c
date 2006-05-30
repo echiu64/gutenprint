@@ -420,10 +420,10 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   fprintf(stderr, "DEBUG: Gutenprint limits w %d l %d r %d  h %d t %d b %d\n",
 	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
 
-  tmp_left = cups->header.ImagingBoundingBox[0];
-  tmp_top = cups->header.ImagingBoundingBox[1];
-  tmp_right = cups->header.ImagingBoundingBox[2];
-  tmp_bottom = cups->header.ImagingBoundingBox[3];
+  tmp_left = 0;
+  tmp_top = 0;
+  tmp_right = cups->width;
+  tmp_bottom = cups->height;
   tmp_width = cups->right - cups->left;
   tmp_height = cups->bottom - cups->top;
   if (tmp_left < cups->left)
