@@ -159,6 +159,8 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
+  if (strcmp(name, "PPDFile") == 0)
+    return;
 
   if (strcmp(name, "PrintingMode") == 0)
     {
