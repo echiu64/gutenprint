@@ -36,12 +36,8 @@ sub create_ppds;
 sub create_dir($);
 sub dialog_read($$);
 sub dialog_read_list (\%\@$$);
-sub perl_menu ($$$$@);
-sub perl_menu_read_list (\%\@$$);
-sub perl_menu_mult ($$@);
 
 my $DIALOG = "@DIALOG@";                        # version of dialog to call
-my $use_dialog = 0;                             # whether to use dialog
 my $BACKTITLE = "Gutenprint CUPS PPD creation"; # dialog screen title
 my %printers;                                   # master list of printers
 my %languages;                                  # master list of languages
@@ -75,14 +71,8 @@ if ( $opt_u ) {
 }
 
 # Can we use dialog?
-if (-x $DIALOG) {
-    $use_dialog = 1;
-} else {
-    BEGIN { $Curses::OldCurses = 1; }
-    use Curses;
-    use perlmenu;
-    perl_menu_defaults();
-}
+die "dialog(1) is not available, but is required for interactive use."
+    if ! -x $DIALOG;
 
 while (my $option = main_menu()) { # Display main menu and run selection
     if ($option eq "Help") {
@@ -218,21 +208,14 @@ END
 	[ "Create", "Create PPDs" ],
 	[ "Exit", "Exit the program" ]
     );
-    if ($use_dialog) {
-	my $dialog_options;
-	for my $i ( 0 .. $#menu_options) {
-	    for my $j ( 0 .. $#{$menu_options[$i]}) {
-		$dialog_options .= "\"$menu_options[$i][$j]\" ";
-	    }
+    my $dialog_options;
+    for my $i ( 0 .. $#menu_options) {
+	for my $j ( 0 .. $#{$menu_options[$i]}) {
+	    $dialog_options .= "\"$menu_options[$i][$j]\" ";
 	}
-	while (defined($option = dialog_read("cups-genppdconfig", "--no-cancel --default-item Printers --menu \"$menu_desc\" 20 70 6 $dialog_options"))) {
-	    chomp ($option);
-	    return $option;
-	}
-    } else {
-	$option = perl_menu(1, "Main menu", "Choose an option.",
-			    "Current PPD directory: $chosen_location",
-			    @menu_options);
+    }
+    while (defined($option = dialog_read("cups-genppdconfig", "--no-cancel --default-item Printers --menu \"$menu_desc\" 20 70 6 $dialog_options"))) {
+	chomp ($option);
 	return $option;
     }
 }
@@ -310,19 +293,7 @@ END
     or die "can't open temporary help file";
     print $HELPFILE "$help_text";
     $HELPFILE->flush();
-    if ($use_dialog) {
-        dialog_read("Help", "--textbox $helpfilename 18 76");
-    } else {
-        &menu_init(0, "Help", 0);
-        open(TEMP,$helpfilename);
-        while (<TEMP>) {
-            s/^(\t+)/'        ' x length($1)/e;
-            &expand($_) if /\t/;
-            &menu_item($_,"", -1);
-        }
-       close(TEMP);
-       &menu_display("Help viewer: (RET/u/t) exit  (n/p) next/previous page (b) beginning (e) end");
-    }
+    dialog_read("Help", "--textbox $helpfilename 18 76");
     unlink0($HELPFILE, $helpfilename) or die "Error unlinking help file $helpfilename safely: $!";
     close($HELPFILE) or die "can't close help file $helpfilename: $!";
     return;
@@ -336,12 +307,7 @@ END
 sub choose_printers {
     my $title = "Printer selection";
     my $options = "--checklist \"Choose the printer models you wish to use with CUPS.\" 18 54 11";
-    if ($use_dialog) {
-	dialog_read_list(%printers, @chosen_printers, $title, $options);
-    } else {
-	perl_menu_read_list(%printers, @chosen_printers, $title,
-			    "Choose the printer models you wish to use with CUPS.");
-    }
+    dialog_read_list(%printers, @chosen_printers, $title, $options);
 }
 
 
@@ -352,12 +318,7 @@ sub choose_printers {
 sub choose_languages {
     my $title = "Language selection";
     my $options = "--checklist \"Choose the languages you wish to use with CUPS.\" 18 54 11";
-    if ($use_dialog) {
-	dialog_read_list(%languages, @chosen_languages, $title, $options);
-    } else {
-	perl_menu_read_list(%languages, @chosen_languages, $title,
-			    "Choose the languages you wish to use with CUPS.");
-    }
+    dialog_read_list(%languages, @chosen_languages, $title, $options);
 }
 
 
@@ -367,12 +328,8 @@ sub choose_languages {
 #
 sub choose_location {
     my $location;
-    if ($use_dialog) {
-	$location = dialog_read("Location selection",
-				"--inputbox \"Choose a directory to create the PPD files in.\" 8 61 $chosen_location");
-    } else {
-	$location = &menu_getstr(5,12,"Directory:", 1, $chosen_location);
-    }
+    $location = dialog_read("Location selection",
+			    "--inputbox \"Choose a directory to create the PPD files in.\" 8 61 $chosen_location");
     if (!defined($location)) {
 	$location = "";
     }
@@ -432,7 +389,7 @@ sub create_ppds {
     } else {
 	$printers = "";
     }
-    if (! $silent && $use_dialog) {
+    if (! $silent) {
 	open DIALOG, "| $DIALOG --sleep 2 --backtitle \"$BACKTITLE\" --title \"Creating PPD files\" --guage \"Language: \nPPD files: \" 10 72 0"
 	    or die "can't fork dialog: $!";
     }
@@ -449,7 +406,7 @@ sub create_ppds {
 	    if ($percent > 100) {
 		$percent = 100;
 	    }
-	    if (! $silent && $use_dialog) {
+	    if (! $silent) {
 		print DIALOG "$percent\n";
 		print DIALOG "XXX\nLanguage: $language\nPPD files: $count/$total\n\n$file\nXXX\n";
 		DIALOG->flush();
@@ -460,7 +417,7 @@ sub create_ppds {
 	}
 	close GENPPD or die "can't close cups-genppd pipe: $!";
     }
-    if (! $silent && $use_dialog) {
+    if (! $silent) {
 	print DIALOG "100\nXXX\nLanguage: \nPPD files: $total/$total\n\nCompleted\nXXX\n";
 	close DIALOG or die "can't close dialog pipe";
     }
@@ -521,95 +478,3 @@ sub dialog_read_list (\%\@$$) {
 	@$list=split(/ /, $tmplist);
     }
 }
-
-
-# scalar
-# perl_menu($title)
-#
-sub perl_menu ($$$$@) {
-    my ($top, $title, $question, $subtitle, @items) = @_;
-    my $selection;
-    &menu_init(1, "cups-genppdconfig", $top, $title, "$BACKTITLE\n-<$subtitle");
-
-    for my $i ( 0 .. $#items) {
-	&menu_item($items[$i][1], $items[$i][0]);
-    }
-
-    $selection = &menu_display($question);
-    return $selection;
-}
-
-# scalar
-# perl_menu_mult($title, $question, @items)
-#
-sub perl_menu_mult ($$@) {
-    my ($title, $question, @items) = @_;
-    my $selection;
-    &menu_init(1, "cups-genppdconfig", 0, $title, $BACKTITLE);
-
-    for my $i ( 0 .. $#items) {
-	&menu_item($items[$i][1], $items[$i][0], $items[$i][2]);
-    }
-
-    perl_menu_sel_defaults();
-    $selection = &menu_display_mult($question);
-    perl_menu_defaults();
-    if ($selection eq "%UP%" or $selection eq "%NONE%") {
-	return undef;
-    }
-    return $selection;
-}
-
-
-#
-# perl_menu_read_list(%masterlist
-#                     @chosenlist
-#                     $title
-#                     $question
-#                     - Construct list dialog, entries from %masterlist,
-#                             defaults from @chosenlist.
-#
-sub perl_menu_read_list (\%\@$$) {
-    my $masterlist = $_[0];
-    my $list = $_[1];
-    my $title = $_[2];
-    my $question = $_[3];
-    my $tmplist;
-    my @menulist = ();
-    my $item;
-    my $selected;
-# Make a list for use with perlmenu.
-    foreach $item (sort keys %$masterlist) {
-	$selected = 0;
-	foreach (@$list) {
-	    if ($item eq $_) {
-		$selected = 1;
-		last;
-	    }
-	}
-	my $formatstring = sprintf "%-14s - %s", $item, $masterlist->{$item};
-	push @menulist, [ $item, $formatstring, $selected ] ;
-    }
-    $tmplist = perl_menu_mult("$title", "RET=toggle selection (u/t) exit  (n/p) next/previous page (b) beginning (e) end", @menulist);
-    if (defined($tmplist)) {
-	$tmplist =~ s/\"//g;
-	@$list=split(/,/, $tmplist);
-    }
-}
-
-
-#
-# perl_menu_defaults - set menu defaults
-#
-sub perl_menu_defaults {
-    &menu_prefs(1, 0, 1, 0, "y", 0, 0);
-}
-
-
-#
-# perl_menu_sel_defaults - set menu defaults for multiple selections
-#
-sub perl_menu_sel_defaults {
-    &menu_prefs(1, 0, 1, 0, "y", 1, 0);
-}
-
