@@ -424,7 +424,7 @@ main(int argc, char **argv)
   exit(0);
 }
 
-void
+static void
 print_debug_data(const char *buf, size_t count)
 {
   int i;
@@ -737,6 +737,28 @@ alarm_handler(int sig)
   alarm_interrupt = 1;
 }
 
+static int
+open_raw_device(void)
+{
+  int fd;
+
+  if (!raw_device)
+   {
+      fprintf(stderr, _("Please specify a raw device\n"));
+      exit(1);
+    }
+
+  fd = open(raw_device, O_RDWR, 0666);
+  if (fd == -1)
+    {
+      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
+              strerror(errno));
+      exit(1);
+    }
+
+  return fd;
+}
+
 static const stp_printer_t *
 initialize_printer(int quiet, int fail_if_not_found)
 {
@@ -757,13 +779,7 @@ initialize_printer(int quiet, int fail_if_not_found)
 
   quiet = 0;
 
-  fd = open(raw_device, O_RDWR, 0666);
-  if (fd == -1)
-    {
-      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-              strerror(errno));
-      exit(1);
-    }
+  fd = open_raw_device();
 
   if (!printer_model)
     {
@@ -1349,13 +1365,7 @@ do_status_command_internal(status_cmd_t cmd)
 		      printer_model,
 		      printer ? "" : "(Unknown model)"));
 
-  fd = open(raw_device, O_RDWR, 0666);
-  if (fd == -1)
-    {
-      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-              strerror(errno));
-      exit(1);
-    }
+  fd = open_raw_device();
 
   if (isnew)
     {
@@ -1463,13 +1473,7 @@ do_extended_ink_info(int extended_output)
 	    "Warning! Printer %s is not known; information may be incomplete or incorrect\n",
 	    printer_model);
 
-  fd = open(raw_device, O_RDWR, 0666);
-  if (fd == -1)
-    {
-      fprintf(stderr, _("Cannot open %s read/write: %s\n"), raw_device,
-              strerror(errno));
-      exit(1);
-    }
+  fd = open_raw_device();
 
   if (isnew)
     {
