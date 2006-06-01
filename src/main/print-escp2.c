@@ -499,6 +499,14 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "DarkGrayTransition", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
+      N_("Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "LightGrayTransition", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
@@ -1794,8 +1802,9 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "GrayTransition") == 0)
     set_gray_transition_parameter(v, description, 2);
-  else if (strcmp(name, "LightGrayTransition") == 0)
-    set_gray_transition_parameter(v, description, 2);
+  else if (strcmp(name, "DarkGrayTransition") == 0 ||
+	   strcmp(name, "LightGrayTransition") == 0)
+    set_gray_transition_parameter(v, description, 3);
   else if (strcmp(name, "Gray1Transition") == 0 ||
 	   strcmp(name, "Gray2Transition") == 0 ||
 	   strcmp(name, "Gray3Transition") == 0)

@@ -671,7 +671,7 @@ DECLARE_INK_CHANNEL(f360_photo2_black);
 static const physical_subchannel_t photo3_black_subchannels[] =
 {
   { 0, 0, 0, "BlackDensity", NULL },
-  { 0, 1, 0, "BlackDensity", "GrayTransition" },
+  { 0, 1, 0, "BlackDensity", "DarkGrayTransition" },
   { 0, 3, 0, "BlackDensity", "LightGrayTransition" }
 };
 
@@ -680,7 +680,7 @@ DECLARE_INK_CHANNEL(photo3_black);
 static const physical_subchannel_t f360_photo3_black_subchannels[] =
 {
   { 0, 0, 1, "BlackDensity", NULL },
-  { 0, 1, 0, "BlackDensity", "GrayTransition" },
+  { 0, 1, 0, "BlackDensity", "DarkGrayTransition" },
   { 0, 3, 1, "BlackDensity", "LightGrayTransition" }
 };
 
