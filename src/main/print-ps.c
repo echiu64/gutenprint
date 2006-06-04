@@ -34,6 +34,7 @@
 #include "gutenprint-internal.h"
 #include <time.h>
 #include <string.h>
+#include <math.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
@@ -232,9 +233,9 @@ static void
 ps_parameters(const stp_vars_t *v, const char *name,
 	      stp_parameter_t *description)
 {
-  setlocale(LC_ALL, "C");
+  char *locale = setlocale(LC_ALL, "C");
   ps_parameters_internal(v, name, description);
-  setlocale(LC_ALL, "");
+  setlocale(LC_ALL, locale);
 }
 
 /*
@@ -262,8 +263,8 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
       != NULL)
     {
       sscanf(dimensions, "%f%f", &fwidth, &fheight);
-      *width = fwidth;
-      *height = fheight;
+      *width = (int) fwidth;
+      *height = (int) fheight;
       stp_dprintf(STP_DBG_PS, v, "dimensions '%s' %f %f %d %d\n",
 		  dimensions, fwidth, fheight, *width, *height);
     }
@@ -274,9 +275,9 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
 static void
 ps_media_size(const stp_vars_t *v, int *width, int *height)
 {
-  setlocale(LC_ALL, "C");
+  char *locale = setlocale(LC_ALL, "C");
   ps_media_size_internal(v, width, height);
-  setlocale(LC_ALL, "");
+  setlocale(LC_ALL, locale);
 }
 
 /*
@@ -306,13 +307,16 @@ ps_imageable_area_internal(const stp_vars_t *v,      /* I */
 		       "ImageableArea", pagesize, NULL))
       != NULL)
     {
-      stp_dprintf(STP_DBG_PS, v, "area = \'%s\'\n", area);
-      if (sscanf(area, "%f%f%f%f", &fleft, &fbottom, &fright, &ftop) == 4)
+      int status = sscanf(area, "%f%f%f%f", &fleft, &fbottom, &fright, &ftop);
+      stp_dprintf(STP_DBG_PS, v,
+		  "area = \'%s\' status = %d l %f r %f b %f t %f h %d w %d\n",
+		  area, status, fleft, fright, fbottom, ftop, width, height);
+      if (status)
 	{
-	  *left   = (int)fleft;
-	  *right  = (int)fright;
-	  *bottom = height - (int)fbottom;
-	  *top    = height - (int)ftop;
+	  *left   = (int) ceil((double) fleft);
+	  *right  = (int) floor((double) fright);
+	  *bottom = (int) floor((double) height - fbottom);
+	  *top    = (int) ceil((double) height - ftop);
 	  if (use_max_area)
 	    {
 	      if (*left > 0)
@@ -346,9 +350,9 @@ ps_imageable_area(const stp_vars_t *v,      /* I */
                   int  *bottom,		/* O - Bottom position in points */
                   int  *top)		/* O - Top position in points */
 {
-  setlocale(LC_ALL, "C");
+  char *locale = setlocale(LC_ALL, "C");
   ps_imageable_area_internal(v, 0, left, right, bottom, top);
-  setlocale(LC_ALL, "");
+  setlocale(LC_ALL, locale);
 }
 
 static void
@@ -358,9 +362,9 @@ ps_maximum_imageable_area(const stp_vars_t *v,      /* I */
 			  int  *bottom,	/* O - Bottom position in points */
 			  int  *top)	/* O - Top position in points */
 {
-  setlocale(LC_ALL, "C");
+  char *locale = setlocale(LC_ALL, "C");
   ps_imageable_area_internal(v, 1, left, right, bottom, top);
-  setlocale(LC_ALL, "");
+  setlocale(LC_ALL, locale);
 }
 
 static void
@@ -393,9 +397,9 @@ ps_describe_resolution_internal(const stp_vars_t *v, int *x, int *y)
 static void
 ps_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
-  setlocale(LC_ALL, "C");
+  char *locale = setlocale(LC_ALL, "C");
   ps_describe_resolution_internal(v, x, y);
-  setlocale(LC_ALL, "");
+  setlocale(LC_ALL, locale);
 }
 
 static const char *
@@ -456,6 +460,7 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   int           image_height,
 		image_width;
   stp_vars_t	*nv = stp_vars_create_copy(v);
+  char		*locale;
   if (!resolution)
     resolution = "";
   if (!media_size)
@@ -640,11 +645,11 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
      always be printed with a decimal point rather than the
      locale-specific setting. */
 
-  setlocale(LC_ALL, "C");
+  locale = setlocale(LC_ALL, "C");
   stp_zprintf(v, "%.3f %.3f scale\n",
 	      (double)out_width / ((double)image_width),
 	      (double)out_height / ((double)image_height));
-  setlocale(LC_ALL, "");
+  setlocale(LC_ALL, locale);
 
   stp_channel_reset(nv);
   stp_channel_add(nv, 0, 0, 1.0);
@@ -768,10 +773,9 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 static int
 ps_print(const stp_vars_t *v, stp_image_t *image)
 {
-  int status;
-  setlocale(LC_ALL, "C");
-  status = ps_print_internal(v, image);
-  setlocale(LC_ALL, "");
+  char *locale = setlocale(LC_ALL, "C");
+  int status = ps_print_internal(v, image);
+  setlocale(LC_ALL, locale);
   return status;
 }
 
