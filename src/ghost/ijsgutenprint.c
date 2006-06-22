@@ -109,6 +109,7 @@ static int ppd_mode = 0;	/* Use PPD-style margins */
 static stp_string_list_t *option_remap_list = NULL;
 static int print_messages_as_errors = 0;
 
+static double page_bytes_printed = 0;
 static double total_bytes_printed = 0;
 
 static char *
@@ -134,7 +135,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
   if (img->row_buf)
     stp_free(img->row_buf);
   img->row_buf = (char *)stp_malloc(img->row_width);
-  STP_DEBUG(fprintf(stderr, "stp_image_init\n"));
+  STP_DEBUG(fprintf(stderr, "ijsgutenprint: image_init\n"));
   STP_DEBUG(fprintf(stderr,
 		    "ijsgutenprint: ph width %d height %d bps %d n_chan %d xres %f yres %f\n",
 		    ph->width, ph->height, ph->bps, ph->n_chan, ph->xres,
@@ -895,6 +896,7 @@ gutenprint_errfunc(void *file, const char *buf, size_t bytes)
 static void
 gutenprint_outfunc(void *data, const char *buffer, size_t bytes)
 {
+  page_bytes_printed += bytes;
   total_bytes_printed += bytes;
   if ((data != NULL) && (buffer != NULL) && (bytes != 0))
     fwrite(buffer, 1, bytes, (FILE *)data);
@@ -1051,6 +1053,8 @@ stp_dbg(const char *msg, const stp_vars_t *v)
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int count = stp_parameter_list_count(params);
   int i;
+  if (!stp_debug && !getenv("STP_DEBUG"))
+    return;
   fprintf(stderr, "DEBUG: %s\n", msg);
   fprintf(stderr, "DEBUG: ijsgutenprint: Settings: Model %s\n", stp_get_driver(v));
   for (i = 0; i < count; i++)
@@ -1075,8 +1079,9 @@ stp_dbg(const char *msg, const stp_vars_t *v)
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  if (stp_check_boolean_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
-	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %d\n",
-		    p->name, stp_get_boolean_parameter(v, p->name));
+	    fprintf(stderr, "DEBUG: ijsgutenprint: Settings: %s %s\n",
+		    p->name,
+		    stp_get_boolean_parameter(v, p->name) ? "true" : "false");
 	  break;
 	case STP_PARAMETER_TYPE_STRING_LIST:
 	  if (stp_check_string_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
@@ -1286,7 +1291,7 @@ main (int argc, char **argv)
   ijs_server_install_get_cb (img.ctx, gutenprint_get_cb, &img);
   ijs_server_install_set_cb(img.ctx, gutenprint_set_cb, &img);
 
-  STP_DEBUG(stp_dbg("ijsgutenprint: about to start\n", img.v));
+  stp_dbg("ijsgutenprint: about to start\n", img.v);
 
   STP_DEBUG(fprintf(stderr, "ijsgutenprint: About to get page header\n"));
   status = ijs_server_get_page_header(img.ctx, &ph);
@@ -1295,7 +1300,7 @@ main (int argc, char **argv)
       stp_vars_t *old_v = NULL;
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: got page header, %d x %d\n",
 			ph.width, ph.height));
-      STP_DEBUG(stp_dbg("ijsgutenprint: have page header\n", img.v));
+      stp_dbg("ijsgutenprint: have page header\n", img.v);
 
       status = image_init(&img, &ph);
       if (status)
@@ -1331,18 +1336,18 @@ main (int argc, char **argv)
 
 	  /* Printer data to file */
 	  stp_set_outdata(img.v, f);
-
-	  printer = stp_get_printer(img.v);
-	  if (printer == NULL)
-	    {
-	      fprintf(stderr, _("ERROR: ijsgutenprint: Unknown printer %s\n"),
-		      stp_get_driver(img.v));
-	      status = -1;
-	      break;
-	    }
-	  purge_unused_float_parameters(img.v);
-	  stp_merge_printvars(img.v, stp_printer_get_defaults(printer));
 	}
+
+      printer = stp_get_printer(img.v);
+      if (printer == NULL)
+	{
+	  fprintf(stderr, _("ERROR: ijsgutenprint: Unknown printer %s\n"),
+		  stp_get_driver(img.v));
+	  status = -1;
+	  break;
+	}
+      purge_unused_float_parameters(img.v);
+      stp_merge_printvars(img.v, stp_printer_get_defaults(printer));
 
 
       img.total_bytes = (double) ((ph.n_chan * ph.bps * ph.width + 7) >> 3)
@@ -1483,7 +1488,7 @@ main (int argc, char **argv)
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: Duplex=%s\n", safe_get_string_parameter(img.v, "Duplex")));
 
       validate_options(&si);
-      STP_DEBUG(stp_dbg("ijsgutenprint: about to print", img.v));
+      stp_dbg("ijsgutenprint: about to print", img.v);
       STP_DEBUG(fprintf(stderr, "ijsgutenprint: w %d h %d l %d t %d\n",
 			stp_get_width(img.v), stp_get_height(img.v),
 			stp_get_left(img.v), stp_get_top(img.v)));
@@ -1498,9 +1503,12 @@ main (int argc, char **argv)
 	}
       else if (stp_verify(img.v))
 	{
+	  page_bytes_printed = 0;
 	  if (page == 0)
 	    stp_start_job(img.v, &si);
 	  stp_print(img.v, &si);
+	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: printed page %d, %.0f bytes\n",
+			    page, page_bytes_printed));
 	  old_v = stp_vars_create_copy(img.v);
 	}
       else

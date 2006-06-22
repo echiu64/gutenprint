@@ -148,26 +148,31 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
      the print is positioned incorrectly on the page (too far to the
      right and too far down the page).  This problem has been fixed.
 
-  2) The Postscript driver now handles PPD files with non-integer
+  2) The Ghostscript driver used with Foomatic now prints all pages of
+     a document correctly.  Previously it did not print any page
+     except the first page of a document, or printed all other pages
+     with possibly incorrect settings (bug 1501816).
+
+  3) The Postscript driver now handles PPD files with non-integer
      imageable areas correctly in all locales (the PPD files certain
      HP inkjet printers using the HPIJS driver have non-integer
      imageable areas for some paper sizes).  In 5.0.0-rc3, this was
      handled incorrectly in locales that do not use the decimal point
      (".") for separating fractions from integers.
 
-  3) The PPD file parameter is now always accessible when using the
+  4) The PPD file parameter is now always accessible when using the
      Postscript driver in third party Gutenprint-enabled
      applications.  This was not an issue with the Print plugin for
      the GIMP.
 
-  4) The Epson driver now chooses unidirectional vs. bidirectional
+  5) The Epson driver now chooses unidirectional vs. bidirectional
      mode more intelligently on new printers that are capable of
      producing excellent quality in bidirectional mode at high
      resolutions.  This improves printing speed with the default
      settings in certain cases and in some cases improves print
      quality.
 
-  5) The Epson driver offers the same quality choices as 5.0.0-rc2 for
+  6) The Epson driver offers the same quality choices as 5.0.0-rc2 for
      certain new printers such as the R800, R1800, and R2400.  Certain
      quality choices (in particular Super Photo and Ultra Photo) were
      not available in 5.0.0-rc3.
@@ -177,7 +182,7 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
      been shortened so that they are shorter than 40 characters in all
      cases except for one case in French.
 
-  7) The French, Danish, and Swedish translations have been updated.
+  8) The French, Danish, and Swedish translations have been updated.
 
 
 ----------------
