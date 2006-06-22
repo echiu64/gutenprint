@@ -177,12 +177,13 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
      quality choices (in particular Super Photo and Ultra Photo) were
      not available in 5.0.0-rc3.
 
-  6) Various minor problems in the PPD files have been fixed.  The
+  7) Various minor problems in the PPD files have been fixed.  The
      most notable change is that the names of the option groups have
      been shortened so that they are shorter than 40 characters in all
      cases except for one case in French.
 
-  8) The French, Danish, and Swedish translations have been updated.
+  8) The French, Danish, Hungarian, and Swedish translations have been
+     updated.
 
 
 ----------------
