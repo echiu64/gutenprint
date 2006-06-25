@@ -633,9 +633,12 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		  break;
 		}
 	    }
-	  else
-	    fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to %s\n",
+	  else if (val)
+	    fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to '%s'\n",
 		    desc.name, val);
+	  else
+	    fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to (null)\n",
+		    desc.name);
 	}
       stp_parameter_description_destroy(&desc);
       stp_free(ppd_option_name);
