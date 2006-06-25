@@ -290,8 +290,9 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 	  if (!stp_string_list_is_present
 	      (desc.bounds.str, stp_get_string_parameter(v, desc.name)))
 	    {
+	      const char *val = stp_get_string_parameter(v, desc.name);
 	      fprintf(stderr, "DEBUG: Gutenprint clearing string %s (%s)\n",
-		      desc.name, stp_get_string_parameter(v, desc.name));
+		      desc.name, val ? val : "(null)");
 	      stp_clear_string_parameter(v, desc.name);
 	      if (desc.is_mandatory)
 		{
