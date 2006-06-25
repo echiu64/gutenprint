@@ -265,7 +265,7 @@ STP_ARG_ENABLE([cups-level3-ppds],
 
 STATIC_GENPPD="$enable_static"
 STP_ARG_ENABLE([static-genppd],
-               [build a statically-linked cups-genppd and rastertogutenprint.  WARNING: Please read the README and NEWS (release notes) CAREFULLY before using this!],
+               [build a statically-linked cups-genppd and rastertogutenprint.  WARNING: Please read the README and NEWS (release notes) CAREFULLY before disabling this!],
 	       [STATIC_GENPPD],
 	       [(automatic)])
 
