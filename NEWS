@@ -2375,15 +2375,9 @@ Xerox Document Centre 400      xerox-dc_400
 
 B) PRINTER-SPECIFIC NOTES:
 
-  1) It is strongly recommended that four color mode not be used on
-     the Epson Stylus C63, C64, C65, C66, C70, C80, and CX-5200, and
-     the PX-V500 and PX-V600 when printing to glossy papers, as the
-     black ink is formulated differently from the color ink and does
-     not adhere properly to these papers.  Epson Photo Paper, Premium
-     Glossy Photo Paper, Premium Luster Photo Paper, and Premium
-     Semigloss Photo Paper are known to be affected.  If you use the
-     default settings (specifically, the Standard ink type), this will
-     be handled automatically.
+  1) Support for color laser printers (e. g. Color LaserJet printers)
+     is currently black and white only.  We do not have a schedule for
+     implementing color support for these printers.
 
   2) The Gutenprint driver does not in all cases offer the same set of
      resolutions offered by the printer manufacturer's drivers.  There
@@ -2464,6 +2458,16 @@ B) PRINTER-SPECIFIC NOTES:
      (or whatever device your printer is connected to in place of
      /dev/lp0).  If this returns status, it demonstrates that the link
      between your computer and printer is working.
+
+  4) It is strongly recommended that four color mode not be used on
+     the Epson Stylus C63, C64, C65, C66, C70, C80, and CX-5200, and
+     the PX-V500 and PX-V600 when printing to glossy papers, as the
+     black ink is formulated differently from the color ink and does
+     not adhere properly to these papers.  Epson Photo Paper, Premium
+     Glossy Photo Paper, Premium Luster Photo Paper, and Premium
+     Semigloss Photo Paper are known to be affected.  If you use the
+     default settings (specifically, the Standard ink type), this will
+     be handled automatically.
 
 
 ================================================================
