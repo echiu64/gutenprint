@@ -1178,7 +1178,7 @@ validate_options(stp_image_t *image)
 	      (desc.bounds.str, stp_get_string_parameter(v, desc.name)))
 	    {
 	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: clearing string %s (%s)\n",
-				desc.name, stp_get_string_parameter(v, desc.name)));
+				desc.name, safe_get_string_parameter(v, desc.name)));
 	      stp_clear_string_parameter(v, desc.name);
 	      if (desc.is_mandatory)
 		{
