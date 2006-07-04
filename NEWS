@@ -197,6 +197,9 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
      plugin in this package simply replaces the Print plugin in those
      versions of the GIMP.
 
+  10) Crashes in the Ghostscript and IJS drivers on certain non-Linux
+     platforms have been fixed.
+
 
 ----------------
 
