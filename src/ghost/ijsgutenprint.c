@@ -1180,10 +1180,10 @@ validate_options(stp_image_t *image)
 	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: clearing string %s (%s)\n",
 				desc.name, safe_get_string_parameter(v, desc.name)));
 	      stp_clear_string_parameter(v, desc.name);
-	      if (desc.is_mandatory)
+	      if (!desc.read_only && desc.is_mandatory && desc.is_active)
 		{
 		  STP_DEBUG(fprintf(stderr, "ijsgutenprint: setting default string %s to %s\n",
-				    desc.name, desc.deflt.str));
+				    desc.name, desc.deflt.str ? desc.deflt.str : "(null)"));
 		  stp_set_string_parameter(v, desc.name, desc.deflt.str);
 		  if (strcmp(desc.name, "PageSize") == 0)
 		    {

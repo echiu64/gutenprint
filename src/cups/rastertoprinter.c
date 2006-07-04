@@ -294,10 +294,10 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 	      fprintf(stderr, "DEBUG: Gutenprint clearing string %s (%s)\n",
 		      desc.name, val ? val : "(null)");
 	      stp_clear_string_parameter(v, desc.name);
-	      if (desc.is_mandatory)
+	      if (!desc.read_only && desc.is_mandatory && desc.is_active)
 		{
 		  fprintf(stderr, "DEBUG: Gutenprint setting default string %s to %s\n",
-			  desc.name, desc.deflt.str);
+			  desc.name, desc.deflt.str ? desc.deflt.str : "(null)");
 		  stp_set_string_parameter(v, desc.name, desc.deflt.str);
 		  if (strcmp(desc.name, "PageSize") == 0)
 		    {
