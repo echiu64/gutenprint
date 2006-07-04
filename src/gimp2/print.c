@@ -53,14 +53,6 @@ static int     do_print_dialog (const gchar *proc_name,
                                 gint32       image_ID);
 
 /*
- * Work around GIMP library not being const-safe.  This is a very ugly
- * hack, but the excessive warnings generated can mask more serious
- * problems.
- */
-
-#define BAD_CONST_CHAR char *
-
-/*
  * Globals...
  */
 
@@ -119,26 +111,16 @@ query (void)
     { GIMP_PDB_INT32,	(BAD_CONST_CHAR) "unit",	(BAD_CONST_CHAR) "Unit 0=Inches 1=Metric" },
   };
 
-  static const gchar *blurb = "This plug-in prints images from The GIMP.";
-  static const gchar *help  = "Prints images to PostScript, PCL, or ESC/P2 printers.";
+  static const gchar *blurb = "This plug-in prints images from The GIMP using Gutenprint directly.";
+  static const gchar *help  = "Prints images to many printers.";
   static const gchar *auth  = "Michael Sweet <mike@easysw.com> and Robert Krawitz <rlk@alum.mit.edu>";
-  static const gchar *copy  = "Copyright 1997-2000 by Michael Sweet and Robert Krawitz";
+  static const gchar *copy  = "Copyright 1997-2006 by Michael Sweet and Robert Krawitz";
   static const gchar *types = "RGB*,GRAY*,INDEXED*";
 
   gimp_plugin_domain_register ((BAD_CONST_CHAR) PACKAGE, (BAD_CONST_CHAR) PACKAGE_LOCALE_DIR);
 
-  gimp_install_procedure ((BAD_CONST_CHAR) "file_print_gimp",
-			  (BAD_CONST_CHAR) blurb,
-			  (BAD_CONST_CHAR) help,
-			  (BAD_CONST_CHAR) auth,
-			  (BAD_CONST_CHAR) copy,
-			  (BAD_CONST_CHAR) VERSION " - " RELEASE_DATE,
-			  /* Do not translate the prefix "<Image>" */
-			  (BAD_CONST_CHAR) N_("<Image>/File/Print..."),
-			  (BAD_CONST_CHAR) types,
-			  GIMP_PLUGIN,
-			  G_N_ELEMENTS (args), 0,
-			  args, NULL);
+  do_gimp_install_procedure(blurb, help, auth, copy, types, G_N_ELEMENTS(args),
+			    args);
 }
 
 static guchar *gimp_thumbnail_data = NULL;

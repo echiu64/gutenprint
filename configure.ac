@@ -405,8 +405,14 @@ dnl Quote to protect sed regexes
   [gimptool_check_minor=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
   if test "$gimptool_check_major" -eq 2; then
     BUILD_GIMP2="yes"
+    if test "$gimptool_check_minor" -ge 4 ; then
+      BUILD_GIMP2_AS_GUTENPRINT="yes"
+    else
+      BUILD_GIMP2_AS_GUTENPRINT="no"
+    fi
   else
     BUILD_GIMP2="no"
+    BUILD_GIMP2_AS_GUTENPRINT="no"
   fi
 fi
 
@@ -424,6 +430,11 @@ fi
 STP_ARG_WITH([gimp2],
              [build GIMP 2.0 Print plugin],
              [BUILD_GIMP2],
+             [(automatic)])
+
+STP_ARG_WITH([gimp2-as-gutenprint],
+             [name GIMP 2.x Print plugin gutenprint (requires GIMP 2.2; normally used with GIMP 2.4 or above)],
+             [BUILD_GIMP2_AS_GUTENPRINT],
              [(automatic)])
 
 STP_ARG_ENABLE([libgutenprintui2],
@@ -800,6 +811,8 @@ AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP2, test x${BUILD_GIMP2} = xyes)
 
+AM_CONDITIONAL(BUILD_GIMP2_AS_GUTENPRINT, test x${BUILD_GIMP2_AS_GUTENPRINT} = xyes)
+
 AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
@@ -1002,12 +1015,13 @@ AC_OUTPUT
 
 warnings_emitted=0
 echo
-echo "Build Summary:"
-echo "----- --------"
+echo "Configuration Summary:"
+echo "------------- --------"
 echo
 echo "If you have any problems, please report the information below to"
 echo "$PACKAGE_BUGREPORT"
 echo
+echo "================================================================"
 echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE"
 echo
 echo "  Features:"
@@ -1034,10 +1048,20 @@ echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
 if test "$BUILD_FOOMATIC" != "no" ; then
     echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
 fi
-echo "    Build GIMP 1.2 plugin:                      $BUILD_GIMP"
-echo "    Build GIMP 2.0 plugin:                      $BUILD_GIMP2"
-if test "$BUILD_GIMP" != "no" -o "$BUILD_GIMP2" != no ; then
-    echo "        Install plugin in home directory:       $USER_INSTALL"
+if test "$BUILD_GIMP" != "no" -o "$BUILD_GIMP2" != "no" ; then
+    echo "    Build enhanced Print plugin for the GIMP:   yes"
+    echo "        Build GIMP 1.2 plugin:                  $BUILD_GIMP"
+    echo "        Build GIMP 2.x plugin:                  $BUILD_GIMP2"
+    if test "$BUILD_GIMP2" != "no" ; then
+	if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
+	    echo "            GIMP 2.x plugin will be named:      gutenprint"
+	else
+	    echo "            GIMP 2.x plugin will be named:      print"
+	fi
+    fi
+    echo "        Install plugin(s) in home directory:    $USER_INSTALL"
+else
+    echo "    Build enhanced Print plugin for the GIMP:   no"
 fi
 echo "    Build EPSON Stylus utility:                 $BUILD_ESCPUTIL"
 echo "    Build test programs:                        $BUILD_TEST"
@@ -1052,7 +1076,7 @@ echo "    Module directory:                           $PKGMODULEDIR"
 echo "    Install user guide:                         $INSTALL_USER_GUIDE"
 echo "    Install sample images:                      $INSTALL_SAMPLES"
 echo
-echo "Configuration:"
+echo "General configuration:"
 if test x$ac_compiler_gnu = "xyes"; then
     echo "    Compiler options:                           $CFLAGS $GNUCFLAGS"
 else
@@ -1069,11 +1093,12 @@ if test -n "$EXTRA_LIBREADLINE_DEPS" ; then
 else
     echo "    Use readline libraries:                     $USE_READLINE"
 fi
+echo "================================================================"
 if test $warnings_emitted -ne 0 ; then
     echo
     echo '*** NOTE: Please review the warnings shown above carefully!'
 fi
 echo
-echo "Finished configuring."
-echo "Type 'make' to build the package"
+echo "Finished configuring.  Please review the configuration summary above."
+echo "Type 'make clean' followed by 'make' to build the package"
 echo "then 'make install' to install it."

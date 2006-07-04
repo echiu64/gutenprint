@@ -8,16 +8,19 @@ quality printing for UNIX (including Macintosh OS X 10.2, 10.3, and
 10.4) and Linux systems that in many cases equal or exceed proprietary
 vendor-supplied drivers in quality and functionality, and can be used
 for demanding printing tasks requiring flexibility and high quality.
-This software package includes the Print plug-in for the GIMP and
-Ghostscript and CUPS drivers, as well as Foomatic data.
+This software package includes an enhanced Print plug-in for the GIMP
+that replaces the plug-in packaged with the GIMP, and Ghostscript and
+CUPS drivers, as well as Foomatic data supporting the Ghostscript
+driver.
 
-The package has been renamed in order to clearly distinguish it from
-the GIMP.  While this package started out as the Print plugin for the
-GIMP, it has expanded into a collection of general purpose printer
-drivers, and the Print plugin for the GIMP is now only a small (but
-important) piece of the package.  Furthermore, the name Gutenprint
-recognizes Johannes Gutenberg, the inventor of the movable type
-printing press.  Finally, the word "guten" means "good" in German.
+Gutenprint has been renamed in order to clearly distinguish it from
+the GIMP.  While this package started out as the original Print plugin
+for the GIMP, it has expanded into a collection of general purpose
+printer drivers, and the new, enhanced Print plugin for the GIMP is
+now only a small part of the package.  Furthermore, the name
+Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
+type printing press.  Finally, the word "guten" means "good" in
+German.
 
 Gutenprint 5.0.0 is the first stable release of Gutenprint 5.0, and
 incorporates extensive feedback from the first release candidate.  It
@@ -103,13 +106,14 @@ output with any of the printers supported by this package.  We
 strongly recommend using CUPS with Gutenprint as a general-purpose
 printing solution.
 
-The Print plug-in for the GIMP requires either the GIMP 2.0 or above,
-or 1.2.3 or above on the 1.2 line (1.2.5 is recommended).  This
-plug-in will work with any printing system, and offers a comprehensive
-user interface to control all aspects of the printing process.  If you
-are printing photographs in large format from the GIMP at very high
-resolution, disk space requirements may be substantial, and we
-recommend at least 2 GB of free disk space for that purpose.
+The enhanced Print plug-in for the GIMP requires either the GIMP 2.0
+or above, or 1.2.3 or above on the 1.2 line (1.2.5 is recommended).
+This plug-in will work with any printing system, and offers a
+comprehensive user interface to control all aspects of the printing
+process.  If you are printing photographs in large format from the
+GIMP at very high resolution, disk space requirements may be
+substantial, and we recommend at least 2 GB of free disk space for
+that purpose.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -161,9 +165,9 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
      (".") for separating fractions from integers.
 
   4) The PPD file parameter is now always accessible when using the
-     Postscript driver in third party Gutenprint-enabled
-     applications.  This was not an issue with the Print plugin for
-     the GIMP.
+     Postscript driver in third party Gutenprint-enabled applications.
+     This was not an issue with the enhanced Print plugin for the
+     GIMP.
 
   5) The Epson driver now chooses unidirectional vs. bidirectional
      mode more intelligently on new printers that are capable of
@@ -184,6 +188,14 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
 
   8) The French, Danish, Hungarian, and Swedish translations have been
      updated.
+
+  9) In the GIMP 2.4 and above (forthcoming as of Gutenprint 5.0
+     release), the enhanced Print plugin will be named "Print with
+     Gutenprint" so as not to collide with the GtkPrint-based plugin
+     bundled with that version of the GIMP.  The Print plugin bundled
+     with GIMP 2.0 and 2.2 is based on Gimp-Print 4.2; the Print
+     plugin in this package simply replaces the Print plugin in those
+     versions of the GIMP.
 
 
 ----------------
@@ -230,9 +242,9 @@ B) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
      Printing to CD's works correctly whether or not full bleed mode
      is selected.
 
-     This change has no effect in the GIMP plugin and in other
-     applications which directly use Gutenprint, as there was never
-     any problem in those contexts.
+     This change has no effect in the enhanced GIMP plugin and in
+     other applications which directly use Gutenprint, as there was
+     never any problem in those contexts.
 
   3) The IJS driver now correctly ejects the last page of a job.
      Previously it did not always eject the last page with certain
@@ -757,15 +769,17 @@ B) NEW FUNCTIONALITY:
 
 ----------------
 
-C) CHANGES TO THE PRINT PLUGIN FOR THE GIMP:
+C) CHANGES TO THE ENHANCED PRINT PLUGIN FOR THE GIMP:
 
-  1) A new plugin for the GIMP 2.x is now provided.
+  1) A new plugin for the GIMP 2.x, enhanced with all new Gutenprint
+     5.0 functionality, is now provided.
 
   2) The Print plugin for the GIMP 1.2 is now deprecated and will be
      withdrawn in 5.1 (the development release following 5.0).  The
-     Print plugin for the GIMP 1.2 will continue to be supported in
-     all 5.0 releases, but no new functionality will be added
-     following the release of 5.0.0.
+     Print plugin for the GIMP 1.2 will continue to be supported with
+     critical bug fixes in all 5.0 releases, but no new functionality
+     will be added, or non-critical bugs fixed, following the release
+     of 5.0.0.
 
   3) The plugin now always displays the page preview with the top of
      the page at the top of the preview pane, rotating the image

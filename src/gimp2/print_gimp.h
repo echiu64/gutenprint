@@ -43,4 +43,17 @@
 /* How to create an Image wrapping a Gimp drawable */
 extern stpui_image_t *Image_GimpDrawable_new(GimpDrawable *drawable, gint32);
 
+extern void do_gimp_install_procedure(const char *blurb, const char *help,
+				      const char *auth, const char *copy,
+				      const char *types, int n_args,
+				      GimpParamDef *args);
+
+/*
+ * Work around GIMP library not being const-safe.  This is a very ugly
+ * hack, but the excessive warnings generated can mask more serious
+ * problems.
+ */
+
+#define BAD_CONST_CHAR char *
+
 #endif  /* __PRINT_GIMP_H__ */
