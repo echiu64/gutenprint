@@ -750,7 +750,7 @@ X     + Header file reorganization, to expose internal API's intended for
 
 	Moderate-high effort, moderate risk, likely moderate return.
 
-      + Exposure of more internal printer parameters (such as ink
+X     + Exposure of more internal printer parameters (such as ink
 	description, which way pages are printed, etc.) to the application
 	level.
 
@@ -760,6 +760,10 @@ X     + Header file reorganization, to expose internal API's intended for
 	Low-moderate effort (mostly in design), low-moderate risk,
 	high return.  The primary risk factor is ensuring that this
 	information is correct and is used correctly.
+
+	UPDATE 20060704: A number of these parameters are exposed and
+	used by escputil.  This is otherwise an open-ended item and
+	should be handled on a case-by-case basis.
 
     * Color:
 
@@ -789,7 +793,7 @@ X     + Header file reorganization, to expose internal API's intended for
 	testing and quality control, although third-party exposure is
 	in there, too.
 
-      + Support for arbitrary (or at least 1, 8, and 16 bit) color inputs,
+X     + Support for arbitrary (or at least 1, 8, and 16 bit) color inputs,
 	both linearized and non-linearized, in at least grayscale, RGB, CMY,
 	CMYK, and printer-specific.
 
@@ -799,8 +803,12 @@ X     + Header file reorganization, to expose internal API's intended for
 
 	Currently 8 and 16 bit inputs in all of these modes exist.
 
-	Moderate-high effort, moderate risk, likely moderate return..
+	Moderate-high effort, moderate risk, likely moderate return.
 	Large testing effort.
+
+	UPDATE 20060704: This was done in the color code quite a while
+	back, at least for 8 and 16 bits.  There has been no real push
+	for 1 or 4 bits.
 
       + Support for other input color spaces (e. g. CMYKOG, spot color
 	channels).  An option would be to implement this kind of
@@ -896,11 +904,13 @@ X     + Header file reorganization, to expose internal API's intended for
 
 	Moderate effort, moderate risk, low return.
 
-      + Completion of the Olympus driver (to handle image sizes that don't
+X     + Completion of the Olympus driver (to handle image sizes that don't
 	match the page size)
 
 	This is really a bug fix.  Unknown effort and risk, high
 	return (in terms of quality).
+
+	UPDATE 20060704: This was actually done in August 2003.
 
       + Enhancements to the raw driver
 
@@ -918,7 +928,7 @@ X     + Header file reorganization, to expose internal API's intended for
 
     * Support infrastructure:
 
-      + Support for non-rectangular paper sizes (e. g. for CD's)
+X     + Support for non-rectangular paper sizes (e. g. for CD's)
 
 	We need to understand what this means.  Is this something we
 	could simply trust the application to do?
@@ -926,12 +936,17 @@ X     + Header file reorganization, to expose internal API's intended for
 	Project needs to be defined better, but potentially high
 	benefit.
 
-      + Piecewise linear curves
+	UPDATE 20060704: this is exposed to family drivers to allow
+	e. g. printing to CD's, and is used by the Epson driver.
+
+X     + Piecewise linear curves
 
 	This would be highly desirable to simplify things.  It would
 	be a much better format for PPD files.
 
 	Effort moderate, risk moderate-high, benefit moderate-high.
+
+	UPDATE 20060704: this was done a while back.
 
       + Constant or logarithmic list search time
 
@@ -962,12 +977,14 @@ X     + Header file reorganization, to expose internal API's intended for
 	Effort and risk likely high-very high; benefit potentially
 	very high.  Need more info on CUPS/OS X futures.
 
-      + GTK2+ GUI for newer versions of the GIMP
+X     + GTK2+ GUI for newer versions of the GIMP
 
 	Does not need to be synchronized with 5.0 release.
 
 	Effort and risk likely moderate-high; benefit low in the short
 	term but very high in the long term.
+
+	UPDATE 20060704: this was done a very long time ago.
 
       + Change stp_parameter_class_t to a string instead of an enum
       + Add subclasses to stp_parameters to hint user interfaces
@@ -978,11 +995,16 @@ X     + Header file reorganization, to expose internal API's intended for
 	Effort moderate, risk moderate (architectural), benefit likely
 	high.
 
-      + Support a new "quality" parameter that provides a bundle of
+	UPDATE 20060704: there is an additional string-valued UI hint,
+	although nothing's using it.
+
+X     + Support a new "quality" parameter that provides a bundle of
         settings appropriate for whatever else is being printed.
 
 	Effort low-moderate, risk moderate (mostly quality-related),
 	benefit very high (ease of use).
+
+	UPDATE 20060704: Epson driver does this.
 
     * Performance:
 
@@ -1004,6 +1026,9 @@ X     + Header file reorganization, to expose internal API's intended for
 	Need to understand better.
 
 	Effort, risk, and benefit unknown.
+
+	UPDATE 20060704: CUPS 1.2 beat us to the punch.  This needs to
+	be done soon!
 
     * Tools:
 
@@ -1033,6 +1058,10 @@ X     + Header file reorganization, to expose internal API's intended for
       + Update the developer and user documentation.
 
 	Mandatory.
+
+	UPDATE 20060704: This is only partially done.  The developer
+	doc is basically the raw doxygen output; the user doc is
+	encapsulated in the NEWS and README.
 
       + Rehosting the project.  Sourceforge doesn't provide very good
 	tools for bug tracking, in particular (it's really lacking
