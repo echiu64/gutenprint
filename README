@@ -165,7 +165,9 @@ A) OVERVIEW
     order to successfully compile Gutenprint.  In many cases the
     configure script cannot detect whether these development packages
     are installed, in which case you will get an error during
-    compilation.
+    compilation.  Also note that it is necessary for the versions of
+    the development packages to match exactly the versions of the
+    runtime packages they are related to.
 
 ----------------
 
@@ -222,8 +224,13 @@ B) CUPS
     system and will attempt to build the CUPS driver if it finds CUPS
     installed.  If your distribution separates the CUPS installation
     into development and runtime packages, you must install the CUPS
-    development package.  You may need to install other development
-    packages depending upon how your distribution has built CUPS.
+    development package (cups-devel or similar).  You may need to
+    install other development packages depending upon how your
+    distribution has built CUPS.  The list of packages varies, but
+    commonly development packages for TIFF (libtiff-devel), JPEG
+    (jpeg-devel or libjpeg-devel), PNG (libpng-devel) and OpenSSL
+    (openssl-devel) will be required.  Failure to install these
+    packages will lead to errors when the package is compiled.
 
     Installing the CUPS driver for Gutenprint 5.0 will not interfere
     with your ability to continue using the Gimp-Print 4.2 CUPS
