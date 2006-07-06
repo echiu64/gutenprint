@@ -26,10 +26,7 @@ Gutenprint 5.0.0 is the first stable release of Gutenprint 5.0, and
 incorporates extensive feedback from the first release candidate.  It
 is based on the Gimp-Print 4.3 series that has been in development for
 over three years, and includes many improvements over the very popular
-4.2 series.  This release is believed to be quite stable, but further
-testing is required before final release.  We believe this release to
-be stable enough for day to day use, and encourage people to test it
-and report their results.
+4.2 series.
 
 Gutenprint currently supports over 700 printer models.
 
