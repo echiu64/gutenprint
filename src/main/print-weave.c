@@ -1164,7 +1164,7 @@ stp_initialize_weave(stp_vars_t *v,
 }
 
 static void
-weave_parameters_by_row(const stp_vars_t *v, const stpi_softweave_t *sw,
+weave_parameters_by_row(const stp_vars_t *v, stpi_softweave_t *sw,
 			int row, int vertical_subpass, stp_weave_t *w)
 {
   int jetsused;
@@ -1173,7 +1173,6 @@ weave_parameters_by_row(const stp_vars_t *v, const stpi_softweave_t *sw,
    * Conceptually, this does not modify the softweave state.  We cache
    * the results, but this cache is considered hidden.
    */
-  stpi_softweave_t *wsw = (stpi_softweave_t *) sw;
   vertical_subpass /= sw->repeat_count;
 
   if (sw->rcache == row && sw->vcache == vertical_subpass)
@@ -1182,8 +1181,8 @@ weave_parameters_by_row(const stp_vars_t *v, const stpi_softweave_t *sw,
       w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
       return;
     }
-  wsw->rcache = row;
-  wsw->vcache = vertical_subpass;
+  sw->rcache = row;
+  sw->vcache = vertical_subpass;
 
   w->row = row;
   stpi_calculate_row_parameters(sw->weaveparm, row, vertical_subpass,
@@ -1193,7 +1192,7 @@ weave_parameters_by_row(const stp_vars_t *v, const stpi_softweave_t *sw,
   w->physpassstart = w->logicalpassstart + sw->separation * w->missingstartrows;
   w->physpassend = w->physpassstart + sw->separation * (jetsused - 1);
 
-  memcpy(&(wsw->wcache), w, sizeof(stp_weave_t));
+  memcpy(&(sw->wcache), w, sizeof(stp_weave_t));
   w->pass = (w->pass * sw->repeat_count) + sub_repeat_count;
   stp_dprintf(STP_DBG_ROWS, v, "row %d, jet %d of pass %d "
 	      "(pos %d, start %d, end %d, missing rows %d)\n",
@@ -1205,14 +1204,14 @@ void
 stp_weave_parameters_by_row(const stp_vars_t *v, int row,
 			    int vertical_subpass, stp_weave_t *w)
 {
-  const stpi_softweave_t *sw =
+  stpi_softweave_t *sw =
     (stpi_softweave_t *) stp_get_component_data(v, "Weave");
   weave_parameters_by_row(v, sw, row, vertical_subpass, w);
 }
 
 
 static stp_lineoff_t *
-stpi_get_lineoffsets(const stp_vars_t *v, const stpi_softweave_t *sw,
+stpi_get_lineoffsets(const stp_vars_t *v, stpi_softweave_t *sw,
 		     int row, int subpass, int offset)
 {
   stp_weave_t w;
@@ -1221,7 +1220,7 @@ stpi_get_lineoffsets(const stp_vars_t *v, const stpi_softweave_t *sw,
 }
 
 static stp_lineactive_t *
-stpi_get_lineactive(const stp_vars_t *v, const stpi_softweave_t *sw,
+stpi_get_lineactive(const stp_vars_t *v, stpi_softweave_t *sw,
 		    int row, int subpass, int offset)
 {
   stp_weave_t w;
@@ -1230,7 +1229,7 @@ stpi_get_lineactive(const stp_vars_t *v, const stpi_softweave_t *sw,
 }
 
 static stp_linecount_t *
-stpi_get_linecount(const stp_vars_t *v, const stpi_softweave_t *sw,
+stpi_get_linecount(const stp_vars_t *v, stpi_softweave_t *sw,
 		   int row, int subpass, int offset)
 {
   stp_weave_t w;
@@ -1239,7 +1238,7 @@ stpi_get_linecount(const stp_vars_t *v, const stpi_softweave_t *sw,
 }
 
 static stp_linebufs_t *
-stpi_get_linebases(const stp_vars_t *v, const stpi_softweave_t *sw,
+stpi_get_linebases(const stp_vars_t *v, stpi_softweave_t *sw,
 		   int row, int subpass, int offset)
 {
   stp_weave_t w;
@@ -1248,7 +1247,7 @@ stpi_get_linebases(const stp_vars_t *v, const stpi_softweave_t *sw,
 }
 
 static stp_linebounds_t *
-stpi_get_linebounds(const stp_vars_t *v, const stpi_softweave_t *sw,
+stpi_get_linebounds(const stp_vars_t *v, stpi_softweave_t *sw,
 		    int row, int subpass, int offset)
 {
   stp_weave_t w;
@@ -1257,7 +1256,7 @@ stpi_get_linebounds(const stp_vars_t *v, const stpi_softweave_t *sw,
 }
 
 static stp_pass_t *
-stpi_get_pass_by_row(stp_vars_t *v, const stpi_softweave_t *sw,
+stpi_get_pass_by_row(stp_vars_t *v, stpi_softweave_t *sw,
 		     int row, int subpass,int offset)
 {
   stp_weave_t w;
@@ -1306,7 +1305,7 @@ stp_get_pass_by_pass(const stp_vars_t *v, int pass)
 }
 
 static void
-check_linebases(stp_vars_t *v, const stpi_softweave_t *sw,
+check_linebases(stp_vars_t *v, stpi_softweave_t *sw,
 		int row, int cpass, int head_offset, int color)
 {
   stp_linebufs_t *bufs =
