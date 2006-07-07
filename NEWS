@@ -197,6 +197,9 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
   10) Crashes in the Ghostscript and IJS drivers on certain non-Linux
      platforms have been fixed.
 
+  11) A problem with margins with A4 paper on Kyocera printers has
+     been fixed.
+
 
 ----------------
 
