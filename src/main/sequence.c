@@ -70,7 +70,7 @@ check_sequence(const stp_sequence_t *v)
     }
 }
 
-static stp_sequence_t *
+static inline stp_sequence_t *
 deconst_sequence(const stp_sequence_t *sequence)
 {
   return (stp_sequence_t *) sequence;

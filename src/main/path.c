@@ -49,8 +49,8 @@ static int
 dirent_sort(const void *a,
 	    const void *b)
 {
-  return strcoll ((*(const struct dirent **) a)->d_name,
-		  (*(const struct dirent **) b)->d_name);
+  return strcoll ((*(const struct dirent * const *) a)->d_name,
+		  (*(const struct dirent * const *) b)->d_name);
 }
 
 

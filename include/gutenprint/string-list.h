@@ -45,8 +45,8 @@ typedef struct stp_string_list stp_string_list_t;
  */
 typedef struct
 {
-  const char	*name,	/*!< Option name (key, untranslated). */
-		*text;	/*!< Human-readable (translated) text. */
+  char	*name,	/*!< Option name (key, untranslated). */
+	*text;	/*!< Human-readable (translated) text. */
 } stp_param_string_t;
 
 /****************************************************************

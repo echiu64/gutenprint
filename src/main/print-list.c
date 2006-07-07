@@ -234,7 +234,7 @@ stp_list_get_end(const stp_list_t *list)
   return list->end;
 }
 
-static stp_list_t *
+static inline stp_list_t *
 deconst_list(const stp_list_t *list)
 {
   return (stp_list_t *) list;
