@@ -33,6 +33,10 @@ endif
 
 STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/main
 
+LC_C_ENV= LC_ALL=C LANG=C LANGUAGE=C
+
+FOOMATIC_GENERATOR= $(STP_ENV) $(LC_C_ENV) ./foomatic-generator
+
 ## Programs
 
 if BUILD_FOOMATIC
@@ -93,8 +97,8 @@ foomatic-data: foomatic-stamp
 
 foomatic-stamp: foomatic-generator foomatic-printermap $(noinst_PROGRAMS) mk_printerlist $(top_srcdir)/src/main/printers.xml $(top_srcdir)/src/main/papers.xml
 	-$(RM) -r foomatic-db
-	$(STP_ENV) ./foomatic-generator -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
-	$(STP_ENV) ./foomatic-generator -s -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
+	$(FOOMATIC_GENERATOR) -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
+	$(FOOMATIC_GENERATOR) -s -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
 	touch foomatic-stamp
 
 dist-hook:
