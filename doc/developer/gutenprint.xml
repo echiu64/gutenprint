@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
-"/usr/share/sgml/docbook/dtd/xml/4.2/docbookx.dtd" [
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
   <!ENTITY copying SYSTEM "copying.xml">
   <!ENTITY dither SYSTEM "dither.xml">
   <!ENTITY escp2 SYSTEM "escp2.xml">
