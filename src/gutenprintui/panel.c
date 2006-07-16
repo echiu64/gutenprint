@@ -501,7 +501,7 @@ stpui_create_curve(option_t *opt,
   opt->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), opt->checkbox,
 		   column, column + 1, row, row + 1,
-		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+		   GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
   if (is_optional)
     gtk_widget_show(opt->checkbox);
   else
@@ -619,7 +619,7 @@ stpui_create_boolean(option_t *opt,
   opt->checkbox = gtk_check_button_new();
   gtk_table_attach(GTK_TABLE(table), opt->checkbox,
 		   column, column + 1, row, row + 1,
-		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+		   GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
   if (is_optional)
     gtk_widget_show(opt->checkbox);
   else
@@ -629,7 +629,7 @@ stpui_create_boolean(option_t *opt,
     gtk_toggle_button_new_with_label(gettext(opt->fast_desc->text));
   gtk_table_attach(GTK_TABLE(table), opt->info.bool.checkbox,
 		   column + 1, column + 3, row, row + 1,
-		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+		   GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show(opt->info.bool.checkbox);
   gtk_toggle_button_set_active
     (GTK_TOGGLE_BUTTON(opt->info.bool.checkbox),
@@ -943,9 +943,9 @@ populate_option_table(GtkWidget *table, int p_class)
       if (level_count > 0 && current_pos > 0)
 	{
 	  GtkWidget *sep = gtk_hseparator_new();
-	  gtk_table_attach(GTK_TABLE(table), sep, 0, 4,
-			   current_pos, current_pos + 1,
-			   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	  gtk_table_attach (GTK_TABLE(table), sep, 0, 4,
+			    current_pos, current_pos + 1,
+			    GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
 	  if (previous_sep)
 	    gtk_widget_show(previous_sep);
 	  previous_sep = sep;
@@ -1871,9 +1871,8 @@ create_printer_settings_frame (void)
   stpui_table_attach_aligned(GTK_TABLE (table), 0, vpos++, _("Printer Model:"),
 			     0.0, 0.0, printer_model_label, 1, TRUE);
   printer_hbox = gtk_hbox_new (TRUE, 4);
-  gtk_table_attach(GTK_TABLE (table), printer_hbox,
-		   1, 4, vpos, vpos + 1,
-		   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (table), printer_hbox,
+		    1, 4, vpos, vpos + 1, GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
   vpos += 2;
   gtk_widget_show (printer_hbox);
 
@@ -1908,7 +1907,7 @@ create_printer_settings_frame (void)
 
   sep = gtk_hseparator_new ();
   gtk_table_attach (GTK_TABLE (table), sep, 0, 5, vpos, vpos + 1,
-		    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+		    GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (sep);
   vpos++;
 
@@ -1988,7 +1987,7 @@ create_scaling_frame (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_FILL, GTK_FILL, 0, 0);
+		    GTK_FILL, GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
 
   label = gtk_label_new (_("Scale by:"));
@@ -2075,7 +2074,6 @@ create_color_adjust_window (void)
 		     NULL, NULL, NULL, FALSE, FALSE,
 		     _("Close"), gtk_widget_hide,
 		     NULL, 1, NULL, TRUE, TRUE,
-
 		     NULL);
 
   table = gtk_table_new (1, 1, FALSE);
@@ -2175,6 +2173,7 @@ create_color_adjust_window (void)
   gtk_table_set_row_spacings (GTK_TABLE (color_adjustment_table), 0);
   gtk_container_set_border_width (GTK_CONTAINER (color_adjustment_table), 4);
   gtk_widget_show (color_adjustment_table);
+
   scrolled_window = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
 				 GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -2306,7 +2305,7 @@ create_units_frame (void)
 
   event_box = gtk_event_box_new ();
   gtk_table_attach (GTK_TABLE (table), event_box, 0, 1, 0, 1,
-                    GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_SHRINK | GTK_FILL, GTK_SHRINK | GTK_FILL, 0, 0);
   gtk_widget_show (event_box);
 
   label = gtk_label_new (_("Units:"));
@@ -2855,7 +2854,8 @@ do_color_updates (void)
 				  opt->info.list.params, opt->is_active,
 				  (stp_get_string_parameter
 				   (pv->v, opt->fast_desc->name)),
-				  opt->info.list.default_val, combo_callback,
+				  opt->info.list.default_val,
+				  combo_callback,
 				  &(opt->info.list.callback_id),
 				  NULL, opt);
 	      if (stp_check_string_parameter(pv->v, opt->fast_desc->name,
@@ -2912,6 +2912,40 @@ update_standard_print_command(void)
 }
 
 static void
+set_color_options(void)
+{
+  stp_parameter_t desc;
+  stp_describe_parameter(pv->v, "PrintingMode", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      if (!stp_string_list_is_present(desc.bounds.str, "Color"))
+	{
+	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
+	  if (gtk_toggle_button_get_active
+	      (GTK_TOGGLE_BUTTON (output_types[0].button)) == TRUE)
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (output_types[1].button), TRUE);
+	  gtk_widget_set_sensitive (output_types[0].button, FALSE);
+	}
+      else if (!stp_string_list_is_present(desc.bounds.str, "BW"))
+	{
+	  gtk_widget_set_sensitive (output_types[0].button, TRUE);
+	  if (gtk_toggle_button_get_active
+	      (GTK_TOGGLE_BUTTON (output_types[1].button)) == TRUE)
+	    gtk_toggle_button_set_active
+	      (GTK_TOGGLE_BUTTON (output_types[0].button), TRUE);
+	  gtk_widget_set_sensitive (output_types[1].button, FALSE);
+	}
+      else
+	{
+	  gtk_widget_set_sensitive (output_types[0].button, TRUE);
+	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
+	}
+    }
+  stp_parameter_description_destroy(&desc);
+}
+
+static void
 do_all_updates(void)
 {
   gint i;
@@ -2948,6 +2982,7 @@ do_all_updates(void)
       gtk_signal_emit_by_name (scaling_adjustment, "value_changed");
     }
 
+  set_color_options();
   for (i = 0; i < output_type_count; i++)
     {
       if (stp_get_string_parameter(pv->v, "PrintingMode") &&
@@ -3038,7 +3073,7 @@ queue_callback (GtkWidget *widget,
 static void
 setup_callback (GtkWidget *widget)
 {
-  gchar *new_value = gtk_entry_get_text (GTK_ENTRY (widget));
+  const gchar *new_value = gtk_entry_get_text (GTK_ENTRY (widget));
 
   if (widget == custom_command_entry)
     stpui_plist_set_custom_command(pv, new_value);
@@ -3060,7 +3095,6 @@ plist_callback (GtkWidget *widget,
 {
   gint         i;
   char *tmp;
-  stp_parameter_t desc;
 
   suppress_preview_update++;
   invalidate_frame ();
@@ -3094,34 +3128,6 @@ plist_callback (GtkWidget *widget,
   if (strcmp(stp_get_driver(pv->v), "") != 0)
     tmp_printer = stp_get_printer(pv->v);
 
-  stp_describe_parameter(pv->v, "PrintingMode", &desc);
-  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
-    {
-      if (!stp_string_list_is_present(desc.bounds.str, "Color"))
-	{
-	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
-	  if (gtk_toggle_button_get_active
-	      (GTK_TOGGLE_BUTTON (output_types[0].button)) == TRUE)
-	    gtk_toggle_button_set_active
-	      (GTK_TOGGLE_BUTTON (output_types[1].button), TRUE);
-	  gtk_widget_set_sensitive (output_types[0].button, FALSE);
-	}
-      else if (!stp_string_list_is_present(desc.bounds.str, "BW"))
-	{
-	  gtk_widget_set_sensitive (output_types[0].button, TRUE);
-	  if (gtk_toggle_button_get_active
-	      (GTK_TOGGLE_BUTTON (output_types[1].button)) == TRUE)
-	    gtk_toggle_button_set_active
-	      (GTK_TOGGLE_BUTTON (output_types[0].button), TRUE);
-	  gtk_widget_set_sensitive (output_types[1].button, FALSE);
-	}
-      else
-	{
-	  gtk_widget_set_sensitive (output_types[0].button, TRUE);
-	  gtk_widget_set_sensitive (output_types[1].button, TRUE);
-	}
-    }
-  stp_parameter_description_destroy(&desc);
   gtk_entry_set_text(GTK_ENTRY(file_entry),
 		     stpui_plist_get_output_filename(pv));
   tmp = stpui_build_standard_print_command(pv, stp_get_printer(pv->v));
@@ -3324,18 +3330,21 @@ combo_callback(GtkWidget *widget, gpointer data)
     stpui_combo_get_name(option->info.list.combo, option->info.list.params);
   const gchar *value =
     stp_get_string_parameter(pv->v, option->fast_desc->name);
-  reset_preview();
-  if (!value || strcmp(value, new_value) != 0)
+  if (value && new_value)
     {
-      invalidate_frame();
-      invalidate_preview_thumbnail();
-      stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
-      if (strcmp(option->fast_desc->name, "PageSize") == 0)
-	set_media_size(new_value);
-      g_idle_add(refresh_all_options, NULL);
-      if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
-	update_adjusted_thumbnail(TRUE);
-      preview_update();
+      reset_preview();
+      if (!value || strcmp(value, new_value) != 0)
+	{
+	  invalidate_frame();
+	  invalidate_preview_thumbnail();
+	  stp_set_string_parameter(pv->v, option->fast_desc->name, new_value);
+	  if (strcmp(option->fast_desc->name, "PageSize") == 0)
+	    set_media_size(new_value);
+	  g_idle_add(refresh_all_options, NULL);
+	  if (option->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT)
+	    update_adjusted_thumbnail(TRUE);
+	  preview_update();
+	}
     }
 }
 
@@ -3352,6 +3361,7 @@ orientation_callback (GtkWidget *widget,
     {
       invalidate_preview_thumbnail ();
       set_orientation((gint) data);
+      update_adjusted_thumbnail(TRUE);
       preview_update ();
     }
 }
@@ -3943,11 +3953,11 @@ fill_buffer_writefunc(void *priv, const char *buffer, size_t bytes)
       for (i = 0; i < pixels; i++)
 	{
 	  if (mask & 1)
-	    where[0] = -xbuffer[0];
+	    where[0] = ~xbuffer[0];
 	  if (mask & 2)
-	    where[1] = -xbuffer[1];
+	    where[1] = ~xbuffer[1];
 	  if (mask & 4)
-	    where[2] = -xbuffer[2];
+	    where[2] = ~xbuffer[2];
 	  where += 3;
 	  xbuffer += 3;
 	}

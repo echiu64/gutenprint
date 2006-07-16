@@ -192,13 +192,28 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
      bundled with that version of the GIMP.  The Print plugin bundled
      with GIMP 2.0 and 2.2 is based on Gimp-Print 4.2; the Print
      plugin in this package simply replaces the Print plugin in those
-     versions of the GIMP.
+     versions of the GIMP (related to bug 1444700).
 
   10) Crashes in the Ghostscript and IJS drivers on certain non-Linux
-     platforms have been fixed.
+     platforms have been fixed (bug 1518126).
 
   11) A problem with margins with A4 paper on Kyocera printers has
-     been fixed.
+     been fixed (bug 1518131).
+
+  12) A problem with the preview in the GIMP 1.2 plugin (which also
+     affects Cinepaint) not being updated properly if orientation
+     changes has been fixed.
+
+  13) A problem with Foomatic data generation in certain locales has
+     been fixed (bug 1033007).
+
+The following bugs have been fixed in Gutenprint 5.0.0-rc3:
+
+1033007 Foomatic XML data generation is locale-dependent
+1444700 print menu item on wrong position
+1501816 ijsgutenprint/foomatic only prints first page
+1518126 rastertogutenprint core dumps on Solaris 10
+1518131 Kyocera KM-2530 CUPS+Gutenprint PPD - A4 paper
 
 
 ----------------
@@ -375,7 +390,7 @@ B) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 2 AND
 
   25) The package is now built with libtool 1.5.22.
 
-The following bugs have been fixed since Gutenprint 5.0.0-rc3:
+The following bugs have been fixed in Gutenprint 5.0.0-rc3:
 
 1318890 Borderless print scaled wrongly
 1379402 BJC-4400: SEGFAULT (photo-ink/color mode)
