@@ -1067,7 +1067,6 @@ echo "    Data directory:                             $PACKAGE_DATA_DIR"
 echo "    Library directory:                          $PACKAGE_LIB_DIR"
 echo "    XML data directory:                         $PKGXMLDATADIR"
 echo "    Module directory:                           $PKGMODULEDIR"
-echo "    Install user guide:                         $INSTALL_USER_GUIDE"
 echo "    Install sample images:                      $INSTALL_SAMPLES"
 echo
 echo "General configuration:"
