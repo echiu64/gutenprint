@@ -61,7 +61,7 @@ pdf: $(MANUAL).pdf
 html: 
 	cd developer; $(MAKE) html
 
-install-data-local:
+install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual.pdf
 	$(mkdir_p) $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) FAQ.html $(DESTDIR)$(docdir)
 	$(INSTALL_DATA) gutenprint-users-manual.odt $(DESTDIR)$(docdir)
