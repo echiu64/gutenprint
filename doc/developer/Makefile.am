@@ -38,9 +38,7 @@ MANUAL_SRC_FILES = \
 
 HTMLDIR = reference-html
 
-if INSTALL_USER_GUIDE
 STANDARD_TARGETS = html
-endif
 
 DISTHOOKDIRS = $(HTMLDIR)
 
