@@ -207,7 +207,8 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
   13) A problem with Foomatic data generation in certain locales has
      been fixed (bug 1033007).
 
-The following bugs have been fixed in Gutenprint 5.0.0-rc3:
+The following bugs open in prereleases have been fixed in Gutenprint
+5.0.0:
 
 1033007 Foomatic XML data generation is locale-dependent
 1444700 print menu item on wrong position
