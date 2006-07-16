@@ -10,9 +10,7 @@ I) INTRODUCTION
     spooling systems, including CUPS, lpr, LPRng, or others.  These
     drivers provide high quality printing for UNIX (including
     Macintosh OS X 10.2 and newer) and Linux systems in many cases
-    equal to or better than proprietary vendor-supplied drivers, and
-    can be used for many of the most demanding printing tasks.  A
-    complete list of supported printers may be found in the NEWS file.
+    equal to or better than proprietary vendor-supplied drivers.
     Gutenprint also includes an enhanced print plug-in for the GIMP
     image editor, replacing the Gimp-Print 4.2-based plugin supplied
     with GIMP 1.2, 2.0, and 2.2, and offering an alternative with
@@ -28,11 +26,13 @@ I) INTRODUCTION
     movable type printing press.  Finally, the word "guten" means
     "good" in German.
 
-    Please read this README, and the NEWS file carefully!  Many things
-    have changed from previous releases.  The package is quite
-    different in many ways from Gimp-Print 4.2, and you should read
-    these instructions carefully.  In addition, the NEWS file contains
-    specific software requirements.
+    Please read the user's manual (in ODF format as
+    doc/gutenprint-users-manual.odt or PDF format as
+    doc/gutenprint-users-manual.pdf) carefully, as it covers much more
+    information than this README file.  The user's manual contains a
+    complete list of supported printers.  In addition, please read the
+    release notes (NEWS), as it has information on the latest changes.
+    This package has changed extensively since Gimp-Print 4.2.
 
     Gutenprint supports only the printer part of multi-function
     devices (devices that typically include scanning, copying, and fax
@@ -599,125 +599,15 @@ E) ESCPUTIL
     modification.
 
 
-----------------
-
-F) OTHER PACKAGES
-
-    Gutenprint includes a few other packages: a test pattern generator
-    and a test suite.  If you wish to compile these, you may use
-    --enable-test and/or --enable-testpattern.
-
-    The test pattern generator permits generating various test
-    patterns; it can also be used to print images in 16-bit depth and
-    specifying all ink channels separately.  The image format is not
-    documented outside of the code itself; this is not a general
-    purpose image printing tool.  It is used as part of the regression
-    test suite.
-
-    To run the test suite, you must configure in both the tests and
-    the test pattern generator and run "make check".  The test suite
-    takes about 12 hours to run, depending upon the speed of the
-    processor.
-
-    The tests currently cover the following areas:
-
-    1) Regression test each printer with default settings, using each
-       dither algorithm.
-
-    2) Regression test each input and output type in 8 and 16 bit, in
-       grayscale and color, on the Epson Stylus Photo R800 (which has
-       additional red and blue inks that use additional code paths).
-
-    3) Regression test each resolution and ink type in color and black
-       and white on each printer.
-
-    4) Regression test CUPS PPD files for correctness, using the
-       "cupstestppd" command provided with CUPS.  This test fails if
-       there are any errors in relaxed mode; it allows failures in
-       strict mode but gives a warning.
-
-    5) Test functionality of the new curve data type.
-
-    6) Regression test each dither algorithm with different types of
-       inputs and drop sizes.
-
-    7) Regression and functional test of the weave (interleave) code.
-       This test is the most time-consuming of the entire suite, as it
-       tests every weave pattern used by every printer in every mode
-       (currently about 700,000 cases).
-
-    Four of the tests in the suite can be run individually under
-    valgrind to check correctness of memory use.  These are:
-
-    src/testpattern/run-testpattern
-    src/testpattern/run-testpattern-1
-    src/testpattern/run-testpattern-2
-    test/run-testdither
-
-    The following options can be passed to each of these tests:
-
-    -v		  Run valgrind normally, displaying errors and memory
-		  leaks.
-    -v -v	  Run valgrind with enhanced leak resolution, and show
-		  reachable memory in addition to memory leaks.
-    -v -v -v	  Run valgrind with enhanced leak resolution, show
-		  reachable memory in addition to memory leaks, and
-		  display all errors (no limit on errors displayed).
-    -c		  Use cachegrind for performance profiling (cannot be
-		  used in combination with other -v options).
-
-    If you run valgrind with run-testpattern-2, we recommend use of
-    the "-s" option to skip testing printers that share identical
-    characteristics with other printers, in order to save time.
-    Programs run under valgrind take many times longer to run than
-    normal.
-
-    In addition, in order to successfully use valgrind, you must
-    compile with static libraries only (--disable-shared).  If you do
-    not do so, you will run valgrind on a small wrapper script rather
-    than on the test itself.
-
-    It is a release requirement that all tests pass, with valgrind
-    where applicable.  At the present time there is one known
-    non-fatal valgrind error (on the Canon iPixma 4000 in grayscale
-    mode) and one memory leak associated with that error.  This is
-    under investigation and will either be fixed or the requirement be
-    waived for this particular issue.
-
-    NOTE TO PACKAGERS: You may wish to distribute the test pattern
-    generator in a development package, as it's useful as sample code
-    if nothing else.  In addition, there are some tools in the test
-    directory that aren't installed that may be of use.  These tools
-    are:
-
-    * "parse-escp2" is a Perl script that parses Epson inkjet output
-      files.  This is useful as a data gathering tool for reporting
-      bugs; the output of this tool is much more compact than the
-      actual print file.  "parse-bjc" is a similar script for parsing
-      Canon inkjet output files; it is not as well maintained.
-
-    * "unprint" is a tool for reconstituting an image from an Epson
-      inkjet output file.  The image is not a true continuous-tone
-      image; each pixel is synthesized based on which drops are
-      printed.  "pcl-unprint" and "bjc-unprint" are similar tools for
-      PCL and Canon output files, respectively.
-
-    None of these tools are versioned.
-
 
 ================================================================
 
 III) GETTING STARTED
 
-    This section describes how to get started using Gutenprint.
-    Certain details (particularly for installation and configuration
-    of printers) may vary depending upon your operating system.
-
-    Using Gutenprint consists the following steps:
-
-    1) Installing your printer
-
-    2) Configuring desired options
+    This section describes how to get started by installing printers
+    under Gutenprint.  Please see the user's manual (in
+    doc/gutenprint-users-manual.odt or
+    doc/gutenprint-users-manual.pdf) for more information.
 
 ----------------
 
@@ -802,190 +692,6 @@ E [21/Nov/2001:17:59:07 +0500] add_printer: bad device-uri attribute 'usb:/dev/u
     old options set.  If you have problems printing, please remove any
     existing .lpoptions file in your home directory and try printing
     again.
-
-
-----------------
-
-B) CONFIGURING PRINTER OPTIONS
-
-    Gutenprint offers a variety of printing options, controlling
-    printer options, color correction, and quality.  Depending upon
-    the application you're printing from and the tools provided by the
-    system, they may be organized in various ways.
-
-    The release notes (NEWS) file included with this package describes
-    all of the options available, which vary from printer to printer.
-    The most important settings are the Basic Printer Options and the
-    Basic Output Controls.  The most important options are:
-
-        Page Size
-
-                Select the paper (media) size to print to.
-
-        Double-Sided Printing
-
-                Otherwise known as "duplex" printing, this is offered
-                for printers capable of printing on both sides of the
-                page (generally laser printers).
-
-        Media Type
-
-                Select the kind of paper or other media being printed
-                to.  This enables the printer and driver to be set up
-                appropriately for the kind of paper in use.  It is
-                important to set this to the kind of paper you are
-                printing to; failure to do so will typically yield
-                poor results.
-
-        Media Source
-
-                Select the source of the paper or other media.  This
-                option is offered with printers that have multiple
-                feeds, for example multiple paper bins, manual feed,
-                printing directly to a CD, etc.
-
-        Output Type
-
-                This option specifies whether to print in color or
-                black and white/grayscale (using only black inks).
-                Black and white printing is generally faster than
-                color printing, even if the item being printed is
-                entirely black and white.  However, printing with only
-                black ink may yield a "grainy" appearance.
-
-        Color Correction
-
-                This selects the choice of color correction method
-                within Gutenprint.  Normally it is not necessary to
-                change this setting from the default, which selects a
-                color correction mode appropriate for the document
-                being printed.  Other common settings:
-
-                * HIGH ACCURACY: Apply optimum color correction to the
-                  output to produce the best color quality.  This
-                  corrects the hue, brightness, and saturation
-                  (brilliance of color).  This is the normal setting
-                  to use for printing photographs or graphics if you
-                  are not using any external color management.
-
-                * BRIGHT COLORS: Apply color correction to the output,
-                  but generate more brilliant colors in some cases.
-
-                * UNCORRECTED: Do not apply any color correction to
-                  the output beyond generating linear output.  This is
-                  the best setting to use when utilizing external
-                  color management; the high accuracy modes employ
-                  correction algorithms that may not work well with
-                  color management.
-
-                  NOTE: if you use color management with ColorSync or
-                  ICC profiles you should use profiles created with
-                  Gutenprint and with the exact settings that you plan
-                  to print with.  Profiles provided by the printer
-                  vendor are calibrated for the vendor's driver, which
-                  may not be identical to Gutenprint's calibration.
-                  In addition, profiles created using Gimp-Print 4.2
-                  or earlier will generally not perform well with
-                  Gutenprint 5.0.
-
-        Image Type
-
-                Specify the option that best describes what you are
-                printing.  Your choice here will affect the processing
-                of the print job.  Currently available settings
-                include:
-
-                * TEXT: Optimize the output for printing black text
-                  with no graphics.  This option results in crisp
-                  output and is very fast, but will yield very poor
-                  results with any color or grayscale graphics.
-
-                * GRAPHICS: Optimize the output for printing color
-                  graphics.  This option will generate smooth, bright
-                  output.
-
-                * MIXED TEXT AND GRAPHICS: Optimize the output for
-                  printing a mixture of text and graphics.
-
-                * PHOTOGRAPH: Optimize the output for printing
-                  photographs.  This option will generate smooth
-                  tones and high quality colors, but will be slower
-                  than the other options.
-
-                * LINE ART: Optimize the output for printing black and
-                  white line art with intricate detail.
-
-        Resolution (on printers other than Epson inkjets)
-
-                Select the resolution to print at (dots per inch).  In
-                general, higher resolutions produce better quality, at
-                the expense of additional time.
-
-                As a general rule of thumb, on laser printers and
-                older inkjet printers (made before 1999 or
-                thereabouts) resolutions of 300 DPI or thereabouts
-                provide draft quality; lower resolutions provide
-                economy draft quality and cannot produce solid black.
-                Resolutions of 600 or 720 DPI produce good quality
-                output; higher resolutions are useful for very high
-                quality image or graphic output.  Newer inkjet
-                printers, with smaller ink drop sizes, typically
-                require higher resolutions to produce acceptable
-                output; in some cases even 1440x720 DPI does not
-                produce very high quality.
-
-        Print Quality (Epson inkjet printers only)
-
-                Specify the desired output quality using convenient
-                presets.  Where this option is available, Gutenprint
-                will automatically adjust the printing resolution and
-                other options to generate the desired quality.
-                Not all printers offer all of these options.
-		The most commonly used settings include:
-
-                * ECONOMY: Print very rapidly with a reduced amount of
-                  ink.  This option will produce washed out colors and
-                  grays and will typically be quite grainy and
-                  streaky.
-
-                * DRAFT: Print low quality draft output quickly.  This
-                  option will typically produce acceptable output on
-                  plain paper, but will typically produce faded and
-                  grainy output on high quality papers.
-
-                * STANDARD: Print at a normal quality level for text
-                  or text/graphics on plain paper.  This option may
-                  also be useful for printing draft copies of
-                  photographs on coated inkjet paper, but will not
-                  normally yield good results for printing photographs
-                  on glossy paper.  This is the default setting, and
-                  is a good starting point for text or text/graphics
-                  printing.
-
-                * HIGH: Print high quality text or text/graphics on
-                  plain paper or inkjet paper.  This option will
-                  typically produce good color quality.  This option
-                  may also be useful for printing draft copies of
-                  photographs on glossy paper.
-
-                * PHOTO: Print photographs on glossy paper.  This may
-                  also be used to print very high quality text or
-                  graphics on high quality inkjet paper, rivaling
-                  laser printer quality.  This is a good starting
-                  point for printing photographs on glossy or premium
-                  matte papers.
-
-                * SUPER PHOTO: Print photographs on glossy paper with
-                  very high quality.  This may also be appropriate for
-                  line art with extremely fine detail, for which the
-                  required resolution may exceed the capabilities of
-                  laser printers.
-
-                * BEST: Print with the best quality available on the
-                  printer for the application chosen.  This may be
-                  equivalent to one of the other settings; on a very
-                  few printers the resolution may exceed that of Super
-                  Photo mode.
 
 ================================================================
 
