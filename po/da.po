@@ -1,7 +1,7 @@
 # Danish translation of gutenprint-5.0.0.po
 # Copyright (C) 2001, 2006 Free Software Foundation, Inc.
 #
-# Mogens Jaeger <mogensjaeger@get2net.dk>, 2005, 2006.
+# Mogens Jaeger <mogens@jaeger.tf>, 2005, 2006.
 # Keld Simonsen <keld@dkuug.dk>, 2001.
 # Kjartan Maraas <kmaraas@gnome.org>, 2001.
 msgid ""
@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gutenprint 5.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-05-12 20:55-0400\n"
-"PO-Revision-Date: 2006-05-27 21:42+0200\n"
-"Last-Translator: Mogens Jaeger <mogensjaeger@get2net.dk>\n"
+"PO-Revision-Date: 2006-07-27 21:42+0200\n"
+"Last-Translator: Mogens Jaeger <mogens@jaeger.tf>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,27 +26,27 @@ msgstr "Standard"
 
 #: src/main/dither-main.c:47
 msgid "EvenTone"
-msgstr "JævnTone"
+msgstr "EvenTone"
 
 #: src/main/dither-main.c:48
 msgid "Hybrid EvenTone"
-msgstr "Blandet JævnTone"
+msgstr "Blandet EvenTone"
 
 #: src/main/dither-main.c:54
 msgid "EvenBetter"
-msgstr "JævnBedre"
+msgstr "EvenBetter"
 
 #: src/main/dither-main.c:55
 msgid "Hybrid EvenBetter"
-msgstr "Blandet JævnBedre"
+msgstr "Blandet EvenBetter"
 
 #: src/main/dither-main.c:61
 msgid "UniTone"
-msgstr "EnkeltTone"
+msgstr "UniTone"
 
 #: src/main/dither-main.c:62
 msgid "Hybrid UniTone"
-msgstr "Blandet EnkeltTone"
+msgstr "Blandet UniTone"
 
 #: src/main/dither-main.c:64
 msgid "Adaptive Hybrid"
@@ -114,7 +114,7 @@ msgid ""
 msgstr ""
 "Vælg den ditherings-algoritme der skal bruges.\n"
 "Tilpasset Blandet giver sædvanligvis den bedste all-round kvalitet.\n"
-"JævnTone er en ny eksperimentel algoritme, der ofte giver excellente resultater.\n"
+"EvenTone er en ny eksperimentel algoritme, der ofte giver excellente resultater.\n"
 "Ordnet er hurtig og giver en næsten lige så god fotokvalitet.\n"
 "Hurtig og Meget Hurtig er betragteligt hurtigere, og fungerer godt med tekst og streg kunst.\n"
 "Blandet Floyd-Steinberg giver generelt ringere kvalitet."
@@ -6376,7 +6376,7 @@ msgstr "Kurvetype"
 
 #: src/gutenprintui2/curve.c:131
 msgid "Is this curve linear, spline interpolated, or free-form"
-msgstr "Er denne kurve lineær, tilpasset med interpolation eller fri-form"
+msgstr "Er denne kurve lineær, tilpasset med interpolering eller fri-form"
 
 #: src/gutenprintui2/curve.c:139
 msgid "Minimum X"
@@ -6448,8 +6448,9 @@ msgstr "Ekstra 5"
 
 #. TRANSLATORS: "Gutenprint" is a proper name, not a description
 #: src/cups/genppd.c:189 src/cups/genppd.c:198
+#, fuzzy
 msgid "Gutenprint"
-msgstr "Gutenprint"
+msgstr "Om Gutenprint"
 
 #: src/cups/genppd.c:890
 msgid "English"
@@ -7471,3 +7472,6 @@ msgstr "ERROR: ijsgutenprint: Forkerte parametre; kan ikke fortsætte!\n"
 #, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "ERROR: ijsgutenprint: Hentning af næste række fejlede ved %.0f\n"
+
+#~ msgid "Please specify a raw device\n"
+#~ msgstr "Angiv en ufiltreret enhed\n"
