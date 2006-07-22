@@ -115,7 +115,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.0.0 generated on 01 Jul 2006
+	  Release: gutenprint 5.0.0 generated on 22 Jul 2006
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -143,7 +143,6 @@ A) OVERVIEW
 	    Library directory:                          /usr/local/lib/gutenprint
 	    XML data directory:                         /usr/local/share/gutenprint/5.0.0/xml
 	    Module directory:                           /usr/local/lib/gutenprint/5.0.0/modules
-	    Install user guide:                         yes
 	    Install sample images:                      yes
 
 	General configuration:
