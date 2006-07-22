@@ -113,6 +113,7 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Page_width", pd->page_width);
   print_remote_int_param(v, "Page_height", pd->page_height);
   print_remote_int_param(v, "Page_true_height", pd->page_true_height);
+  print_remote_int_param(v, "Page_extra_height", pd->page_extra_height);
   print_remote_int_param(v, "Image_left", pd->image_left);
   print_remote_int_param(v, "Image_top", pd->image_top);
   print_remote_int_param(v, "Image_width", pd->image_width);
@@ -416,7 +417,8 @@ escp2_set_form_factor(stp_vars_t *v)
   if (pd->advanced_command_set)
     {
       int w = pd->page_width * pd->page_management_units / 72;
-      int h = pd->page_true_height * pd->page_management_units / 72;
+      int h = (pd->page_true_height + pd->page_extra_height) *
+	pd->page_management_units / 72;
 
       if (stp_get_boolean_parameter(v, "FullBleed"))
 	/* Make the page 160/360" wider for full bleed printing. */

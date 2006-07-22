@@ -193,6 +193,9 @@ A) MAJOR CHANGES BETWEEN GUTENPRINT 5.0.0 RELEASE CANDIDATE 3 AND
   14) A problem with Foomatic data generation in certain locales has
      been fixed (bug 1033007).
 
+  15) The Epson Stylus Photo R800 and R1800 now print closer to the
+     bottom edge of the page.
+
 The following bugs open in prereleases have been fixed in Gutenprint
 5.0.0:
 
