@@ -62,6 +62,9 @@
 #define CHAR_BIT 8
 #endif
 
+#include "print-canon.h"
+#include "canon-media.h"
+
 #if (0)
 #define EXPERIMENTAL_STUFF 0
 #endif
@@ -79,79 +82,6 @@
 
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
-
-/* the PIXMA iP4000 and maybe other printers use following table to store
-   5 pixels with 3 levels in 1 byte, All possible pixel combinations are given
-   numbers from 0 (=00,00,00,00,00) to 242 (=10,10,10,10,10)
-   combinations where the value of one of the pixels would be 3 are skipped
-*/
-static const unsigned char tentoeight[] =
-{
-    0,  1,  2,  0,  3,  4,  5,  0,  6,  7,  8,  0,  0,  0,  0,  0,
-    9, 10, 11,  0, 12, 13, 14,  0, 15, 16, 17,  0,  0,  0,  0,  0,
-   18, 19, 20,  0, 21, 22, 23,  0, 24, 25, 26,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-   27, 28, 29,  0, 30, 31, 32,  0, 33, 34, 35,  0,  0,  0,  0,  0,
-   36, 37, 38,  0, 39, 40, 41,  0, 42, 43, 44,  0,  0,  0,  0,  0,
-   45, 46, 47,  0, 48, 49, 50,  0, 51, 52, 53,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-   54, 55, 56,  0, 57, 58, 59,  0, 60, 61, 62,  0,  0,  0,  0,  0,
-   63, 64, 65,  0, 66, 67, 68,  0, 69, 70, 71,  0,  0,  0,  0,  0,
-   72, 73, 74,  0, 75, 76, 77,  0, 78, 79, 80,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-   81, 82, 83,  0, 84, 85, 86,  0, 87, 88, 89,  0,  0,  0,  0,  0,
-   90, 91, 92,  0, 93, 94, 95,  0, 96, 97, 98,  0,  0,  0,  0,  0,
-   99,100,101,  0,102,103,104,  0,105,106,107,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  108,109,110,  0,111,112,113,  0,114,115,116,  0,  0,  0,  0,  0,
-  117,118,119,  0,120,121,122,  0,123,124,125,  0,  0,  0,  0,  0,
-  126,127,128,  0,129,130,131,  0,132,133,134,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  135,136,137,  0,138,139,140,  0,141,142,143,  0,  0,  0,  0,  0,
-  144,145,146,  0,147,148,149,  0,150,151,152,  0,  0,  0,  0,  0,
-  153,154,155,  0,156,157,158,  0,159,160,161,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  162,163,164,  0,165,166,167,  0,168,169,170,  0,  0,  0,  0,  0,
-  171,172,173,  0,174,175,176,  0,177,178,179,  0,  0,  0,  0,  0,
-  180,181,182,  0,183,184,185,  0,186,187,188,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  189,190,191,  0,192,193,194,  0,195,196,197,  0,  0,  0,  0,  0,
-  198,199,200,  0,201,202,203,  0,204,205,206,  0,  0,  0,  0,  0,
-  207,208,209,  0,210,211,212,  0,213,214,215,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-  216,217,218,  0,219,220,221,  0,222,223,224,  0,  0,  0,  0,  0,
-  225,226,227,  0,228,229,230,  0,231,232,233,  0,  0,  0,  0,  0,
-  234,235,236,  0,237,238,239,  0,240,241,242,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0
-};
 
 static int
 pack_pixels(unsigned char* buf,int len)
@@ -753,6 +683,7 @@ typedef struct canon_caps {
   const canon_variable_inklist_t *inxs; /* Choices of inks for this printer */
   int inxs_cnt;                         /* number of ink definitions in inxs */
 #endif
+  const canon_paperlist_t* paperlist;
   const char *lum_adjustment;
   const char *hue_adjustment;
   const char *sat_adjustment;
@@ -942,6 +873,7 @@ static const canon_cap_t canon_model_capabilities[] =
     { 1,     2,       1,     0.5,     0.3,        0.2},
     CANON_INK(canon_ink_standard),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -961,6 +893,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 180x180 360x360 720x360 ------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -980,6 +913,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -999,6 +933,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1018,6 +953,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- ------- 360x360 720x360 ------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1037,6 +973,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1.8,1,0.5,1,1},/*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1056,6 +993,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1075,6 +1013,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {0,1.8,1,.5,0,0}, /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1094,6 +1033,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_superphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1121,6 +1061,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1139,6 +1080,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_oldphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1157,6 +1099,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_oldphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1175,6 +1118,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_oldphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1193,6 +1137,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standard),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1211,6 +1156,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1229,6 +1175,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1247,6 +1194,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,3.5,1.8,1,1,1},/*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1265,6 +1213,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1291,6 +1240,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1309,6 +1259,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*180x180 360x360 ------- -------- --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1327,6 +1278,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 360x360 720x720 1440x720 --------- ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1345,6 +1297,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 300x300 600x600 -------- 1200x1200 ---------*/
     CANON_INK(canon_ink_standardphoto),
 #endif
+    &canon_default_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1363,6 +1316,7 @@ static const canon_cap_t canon_model_capabilities[] =
     {1,1,1,1,1,1},    /*------- 300x300 600x600 1200x600 --------- ---------*/
     CANON_INK(canon_ink_standard_pixma),
 #endif
+    &canon_PIXMA_iP4000_paperlist,
     standard_lum_adjustment,
     standard_hue_adjustment,
     standard_sat_adjustment
@@ -1413,22 +1367,10 @@ static const char plain_paper_lum_adjustment[] =
 "</gutenprint>\n";
 
 typedef struct {
-  const char *name;
-  const char *text;
-  int media_code;
-  double base_density;
-  double k_lower_scale;
-  double k_upper;
-  const char *hue_adjustment;
-  const char *lum_adjustment;
-  const char *sat_adjustment;
-} paper_t;
-
-typedef struct {
   const canon_cap_t *caps;
   int printing_color;
   int is_first_page;
-  const paper_t *pt;
+  const canon_paper_t *pt;
   int print_head;
   int colormode;
   const char *source_str;
@@ -1443,23 +1385,7 @@ typedef struct {
   color_info_t color_info[9]; /* C,M,Y,K,c,m,y,k,? */
 } canon_init_t;
 
-static const paper_t canon_paper_list[] = {
-  { "Plain",		N_ ("Plain Paper"),                0x00, 0.50, 0.25, 0.500, 0, 0, 0 },
-  { "PlainPIXMA",	N_ ("Plain Paper PIXMA"),          0x00, 0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Transparency",	N_ ("Transparencies"),             0x02, 1.00, 1.00, 0.900, 0, 0, 0 },
-  { "BackPrint",	N_ ("Back Print Film"),            0x03, 1.00, 1.00, 0.900, 0, 0, 0 },
-  { "Fabric",		N_ ("Fabric Sheets"),              0x04, 0.50, 0.25, 0.500, 0, 0, 0 },
-  { "Envelope",		N_ ("Envelope"),                   0x08, 0.50, 0.25, 0.500, 0, 0, 0 },
-  { "Coated",		N_ ("High Resolution Paper"),      0x07, 0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),          0x03, 0.50, 0.25, 0.500, 0, 0, 0 },
-  { "GlossyFilm",	N_ ("High Gloss Film"),            0x06, 1.00, 1.00, 0.999, 0, 0, 0 },
-  { "GlossyPaper",	N_ ("Glossy Photo Paper"),         0x05, 1.00, 1.00, 0.999, 0, 0, 0 },
-  { "GlossyCard",	N_ ("Glossy Photo Cards"),         0x0a, 1.00, 1.00, 0.999, 0, 0, 0 },
-  { "GlossyPro",	N_ ("Photo Paper Pro"),            0x09, 1.00, 1.00, 0.999, 0, 0, 0 },
-  { "Other",		N_ ("Other"),                      0x00, 0.50, 0.25, .5, 0, 0, 0 },
-};
 
-static const int paper_type_count = sizeof(canon_paper_list) / sizeof(paper_t);
 static void canon_advance_paper(stp_vars_t *, int);
 static void canon_flush_pass(stp_vars_t *, int, int);
 
@@ -1609,16 +1535,16 @@ static const stp_param_string_t duplex_types[] =
 
 
 
-static const paper_t *
-get_media_type(const char *name)
+static const canon_paper_t *
+get_media_type(const canon_cap_t* caps,const char *name)
 {
   int i;
-  if (name)
-    for (i = 0; i < paper_type_count; i++)
+  if (name && caps->paperlist)
+    for (i = 0; i < caps->paperlist->paper_count; i++)
       {
 	/* translate paper_t.name */
-	if (!strcmp(name, canon_paper_list[i].name))
-	  return &(canon_paper_list[i]);
+	if (!strcmp(name, caps->paperlist->papers[i].name))
+	  return &(caps->paperlist->papers[i]);
       }
   return NULL;
 }
@@ -2079,7 +2005,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "MediaType") == 0)
   {
-    int count = sizeof(canon_paper_list) / sizeof(canon_paper_list[0]);
+    const canon_paper_t * canon_paper_list = caps->paperlist->papers;
+    int count = caps->paperlist->paper_count;
     description->bounds.str= stp_string_list_create();
     description->deflt.str= canon_paper_list[0].name;
 
@@ -2328,7 +2255,7 @@ canon_init_setColor(const stp_vars_t *v, canon_init_t *init)
 		if (!init->printing_color)
                             arg_63[0]|= 0x01;                                        /* PRINT_COLOUR */
 
-                  arg_63[1] = ((init->pt ? init->pt->media_code : 0) << 4)                /* PRINT_MEDIA */
+                  arg_63[1] = ((init->pt ? init->pt->media_code_c : 0) << 4)                /* PRINT_MEDIA */
 			+ 1;	/* hardcode to High quality for now */		/* PRINT_QUALITY */
 
                   canon_cmd(v,ESC28,0x63, 2, arg_63[0], arg_63[1]);
@@ -2341,7 +2268,7 @@ canon_init_setColor(const stp_vars_t *v, canon_init_t *init)
 		if (!init->printing_color)
                             arg_63[0]|= 0x01;                                        /* colour mode */
 
-                  arg_63[1] = (init->pt) ? init->pt->media_code : 0;                /* print media type */
+                  arg_63[1] = (init->pt) ? init->pt->media_code_c : 0;                /* print media type */
 
                  if (init->caps->model == 4202) /* S200 */
                    {
@@ -2440,13 +2367,8 @@ canon_init_setTray(const stp_vars_t *v, canon_init_t *init)
 
   arg_6c_1|= (source & 0x0f);
 
-  if (init->pt) arg_6c_2= init->pt->media_code;
-  if (!strcmp("CD",init->source_str)) {
-    stp_deprintf(STP_DBG_CANON,"canon: sending special cd setTray command\n");
-    canon_cmd(v,ESC28,0x6c, 3, 0x3a,0x12,0);
-  } else {
-    canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
-  }
+  if (init->pt) arg_6c_2= init->pt->media_code_l;
+  canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 }
 
 /* ESC (m -- 0x6d --  -- :
@@ -2875,7 +2797,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const canon_cap_t * caps= canon_get_model_capabilities(model);
   int printhead= canon_printhead_type(ink_type,caps);
   colormode_t colormode = canon_printhead_colors(ink_type,caps);
-  const paper_t *pt;
+  const canon_paper_t *pt;
   const canon_variable_inkset_t *inks;
   const canon_res_t *res = canon_resolutions;
 
@@ -2973,7 +2895,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   PUT("top     ",top,72);
   PUT("left    ",left,72);
 
-  pt = get_media_type(stp_get_string_parameter(v, "MediaType"));
+  pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
 
   init.caps = caps;
   init.printing_color = printing_color;
