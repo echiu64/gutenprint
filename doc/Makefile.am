@@ -63,9 +63,9 @@ html:
 
 install-data-local: FAQ.html gutenprint-users-manual.odt gutenprint-users-manual.pdf
 	$(mkdir_p) $(DESTDIR)$(docdir)
-	$(INSTALL_DATA) FAQ.html $(DESTDIR)$(docdir)
-	$(INSTALL_DATA) gutenprint-users-manual.odt $(DESTDIR)$(docdir)
-	$(INSTALL_DATA) gutenprint-users-manual.pdf $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/FAQ.html $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/gutenprint-users-manual.odt $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/gutenprint-users-manual.pdf $(DESTDIR)$(docdir)
 
 
 ## Clean
