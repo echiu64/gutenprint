@@ -21,13 +21,9 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 
 <P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.</p>
 
-<P>For a quick download, please visit <a
+<P>For downloads, please visit <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
 </p>
-
-<p>Red Hat users may want to check out <a
-href="http://space.virgilio.it/wvtberti/linux/stp_driver/gs_stp.htm">this
-site</a> for quick and easy setup.</p>
 
 <p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
 UNIX Printing System) for the easiest setup.</p>
@@ -42,6 +38,19 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4
 "Tiger" and provides direct download links. The final release of
 Gimp-Print 4.2.7 for Mac OS X Jaguar is available now!</p>
 
+
+<H2><font color="#ff0000">Gutenprint 5.0.0 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of July 30,
+2006!</strong></em></font> The Gutenprint project is pleased to
+announce the first public release of Gutenprint 5.0. This release,
+which has been under development for over four years, offers improved
+quality, greatly enhanced functionality, and support for many more
+printers than our previous version, Gimp-Print 4.2.
+<p>Currently only the source package is available. We expect to release a
+binary installer for Macintosh OS X in the very near future.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
 
 <H2><font color="#ff0000">Gutenprint 5.0.0-rc3 is released!</font></h2>
 
