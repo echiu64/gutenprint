@@ -19,14 +19,10 @@ HREF="http://www.cups.org">CUPS</A>, <a
 href="http://www.linuxprinting.org/foomatic.html">Foomatic</a>, and <a
 href="http://www.gimp.org">the Gimp</a>.</H4>
 
-<P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.</p>
-
-<P>For downloads, please visit <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">here</a>.
-</p>
-
-<p>We recommend <a href="http://www.cups.org">CUPS</a> (the Common
-UNIX Printing System) for the easiest setup.</p>
+<P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.
+Gimp-Print 4.2.7 (the last Gimp-Print 4.2 release) is still available
+for distribution.  You may install both Gimp-Print 4.2.7 and
+Gutenprint 5.0 concurrently and choose which to use.</p>
 
 <h2><strong><em><font color=#ff0000>Macintosh OS X
 Users!</font></em></strong></h2>
@@ -35,8 +31,7 @@ Users!</font></em></strong></h2>
 href="http://gimp-print.sourceforge.net/MacOSX.php3">Gutenprint web
 page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4
-"Tiger" and provides direct download links. The final release of
-Gimp-Print 4.2.7 for Mac OS X Jaguar is available now!</p>
+"Tiger" and provides direct download links.</p>
 
 
 <H2><font color="#ff0000">Gutenprint 5.0.0 is released!</font></h2>
