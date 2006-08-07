@@ -70,6 +70,10 @@ extern stp_array_t *stp_array_create_from_xmltree(stp_mxml_node_t *array);
 extern stp_mxml_node_t *stp_xmltree_create_from_array(const stp_array_t *array);
 extern void stp_xml_parse_file_named(const char *name);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* GUTENPRINT_XML_H */
 /*
  * End of "$Id$".
