@@ -587,6 +587,16 @@ if test "x${datadir}" = 'x${prefix}/share'; then
   else
     PACKAGE_DATA_DIR="${prefix}/share/${PACKAGE}"
   fi
+elif test "x${datadir}" = 'x${datarootdir}'; then
+  if test "x${datarootdir}" = 'x${prefix}/share'; then
+    if test "x${prefix}" = "xNONE"; then
+      PACKAGE_DATA_DIR="${ac_default_prefix}/share/${PACKAGE}"
+    else
+      PACKAGE_DATA_DIR="${prefix}/share/${PACKAGE}"
+    fi
+  else
+    PACKAGE_DATA_DIR="${datarootdir}/${PACKAGE}"
+  fi
 else
   PACKAGE_DATA_DIR="${datadir}/${PACKAGE}"
 fi
