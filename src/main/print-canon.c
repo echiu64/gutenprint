@@ -837,10 +837,6 @@ static const canon_variable_printmode_t canon_modes_6x00[] = {
 
 static const canon_cap_t canon_model_capabilities[] =
 {
-  /* default settings for unknown models */
-
-  {   -1, 17*72/2,842,180,180,20,20,20,20, CANON_INK_K, CANON_SLOT_ASF1, 0 },
-
   /* ******************************** */
   /*                                  */
   /* tested and color-adjusted models */
