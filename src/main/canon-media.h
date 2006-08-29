@@ -4,6 +4,7 @@
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu) and
  *      Andy Thaller (thaller@ph.tum.de)
+ *   Copyright (c) 2006 Sascha Sommer (saschasommer@freenet.de)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -27,14 +28,41 @@
 #ifndef GUTENPRINT_INTERNAL_CANON_MEDIA_H
 #define GUTENPRINT_INTERNAL_CANON_MEDIA_H
 
+/* media related structs */
+typedef struct {
+  const char *name;                        /* Internal Name may not contain spaces */
+  const char *text;                        /* Translateable name */
+  unsigned char media_code_c;              /* Media Code used for the ESC (c (SetColor) command */
+  unsigned char media_code_l;              /* Media Code used for the ESC (l (SetTray) command */
+  unsigned int qualities;
+#define Q0        0                        /* lowest quality */
+#define Q1        1
+#define Q2        2
+#define Q3        4
+#define Q4        8                        /* highest quality */
+  double base_density;
+  double k_lower_scale;
+  double k_upper;
+  const char *hue_adjustment;
+  const char *lum_adjustment;
+  const char *sat_adjustment;
+} canon_paper_t;
+
+typedef struct {
+  const char *name;
+  short count;
+  const canon_paper_t *papers;
+} canon_paperlist_t;
 
 #define DECLARE_PAPERS(name)                            \
-static const canon_paperlist_t name##_paperlist =      \
-{                                                       \
+static const canon_paperlist_t name##_paperlist = {     \
   #name,                                                \
-  sizeof(name##_papers) / sizeof(canon_paper_t),              \
+  sizeof(name##_papers) / sizeof(canon_paper_t),        \
   name##_papers                                         \
 }
+
+
+
 
 static const canon_paper_t canon_default_papers[] = {
   { "Plain",		N_ ("Plain Paper"),		0x00, 0x00,Q2,0.50, 0.25, 0.500, 0, 0, 0 },

@@ -4,6 +4,7 @@
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
  *      Robert Krawitz (rlk@alum.mit.edu) and
  *      Andy Thaller (thaller@ph.tum.de)
+ *   Copyright (c) 2006 Sascha Sommer
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -24,34 +25,42 @@
 #define GUTENPRINT_INTERNAL_CANON_H
 
 
-/* media related structs */
-typedef struct {
-  const char *name;                        /* Internal Name may not contain spaces */
-  const char *text;                        /* Translateable name */
-  unsigned char media_code_c;              /* Media Code used for the ESC (c (SetColor) command */
-  unsigned char media_code_l;              /* Media Code used for the ESC (l (SetTray) command */
-  unsigned int supported_qualities;
-#define Q0        0                        /* lowest quality */
-#define Q1        1
-#define Q2        2
-#define Q3        4
-#define Q4        8                        /* highest quality */
-  double base_density;
-  double k_lower_scale;
-  double k_upper;
-  const char *hue_adjustment;
-  const char *lum_adjustment;
-  const char *sat_adjustment;
-} canon_paper_t;
-
-typedef struct
-{
-  const char *listname;
-  short paper_count;
-  const canon_paper_t *papers;
-} canon_paperlist_t;
+/* Codes for possible ink-tank combinations.
+ * Each combo is represented by the colors that can be used with
+ * the installed ink-tank(s)
+ * Combinations of the codes represent the combinations allowed for a model
+ * Note that only preferrable combinations should be used
+ */
+#define CANON_INK_K           1
+#define CANON_INK_CMY         2
+#define CANON_INK_CMYK        4
+#define CANON_INK_CcMmYK      8
+#define CANON_INK_CcMmYyK    16
 
 
+#define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYyK)     /* Ink is CcMmYyKk */
+#define CANON_INK_CMYK_MASK     (CANON_INK_CMYK|CANON_INK_CcMmYyKk_MASK) /* Ink is CMYK */
+#define CANON_INK_CMY_MASK      (CANON_INK_CMY|CANON_INK_CMYK_MASK)      /* Ink is CMY */
+#define CANON_INK_K_MASK        (CANON_INK_K|CANON_INK_CMYK_MASK)        /* Ink is K */
+
+
+
+/* FIXME someday we will have to fix the internal names (will break the ppds ;(
+* List of possible ink settings ordered by descending ink count
+*the driver will check if the current print mode supports the ink combination before offering it
+*/
+static struct canon_inktype_s {
+    const unsigned int ink_type;
+    const unsigned int num_channels;
+    const char* name;
+    const char* text;
+} canon_inktypes[] = {
+    {CANON_INK_CcMmYyK,7,"PhotoCMYK","Photo CcMmYyK Color"},
+    {CANON_INK_CcMmYK,6,"PhotoCMY", "Photo CcMmYK Color"},
+    {CANON_INK_CMYK,4,"CMYK","CMYK Color"},
+    {CANON_INK_CMY,3,"RGB","CMY Color"},
+    {CANON_INK_K,1,"Gray","Black"}
+};
 
 /* the PIXMA iP4000 and maybe other printers use following table to store
    5 pixels with 3 levels in 1 byte, All possible pixel combinations are given
