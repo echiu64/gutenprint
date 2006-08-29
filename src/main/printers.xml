@@ -75,6 +75,7 @@
       <printer name="Canon PIXMA iP4000" driver="bjc-iP4000" manufacturer="Canon" model="4000" />
       <printer name="Canon PIXMA iP4200" driver="bjc-PIXMA-iP4200" manufacturer="Canon" model="4200" />
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="4200" />
+      <printer name="Canon MULTIPASS MP150" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="4201" />
     </family>
     <family name="escp2">
       <parameters name="standard_params">

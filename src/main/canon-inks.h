@@ -71,6 +71,9 @@ static const canon_ink_t canon_2bit_3level_ink = {
   2,INK_FLAG_5pixel_in_1byte,2,two_bit_3level_dotsizes
 };
 
+static const canon_ink_t canon_2bit_3level_mp150_ink = {
+  2,0,2,two_bit_3level_dotsizes
+};
 
 static const stp_dotsize_t two_bit_dotsizes[] = {
   { 0x1, 0.45 },
@@ -223,6 +226,24 @@ static const canon_inkset_t canon_PIXMA_iP4200_default_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+
+/* Default Inkset for the MULTIPASS MP150 */
+static const canon_inkset_t canon_MULTIPASS_MP150_default_inkset[] = {
+        {'C',1.0,&canon_2bit_3level_mp150_ink},
+        {'M',1.0,&canon_2bit_3level_mp150_ink},
+        {'Y',1.0,&canon_1bit_ink},
+        {'K',1.0,&canon_1bit_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
