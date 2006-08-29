@@ -8,8 +8,10 @@ use strict;
 my $valgrind = 0;
 my $cachegrind = 0;
 my $gdb_attach = 0;
+my $calc_md5 = 0;
 my $dontrun = 0;
 my $retval = 0;
+my $testpattern_command;
 my @printer_list = ();
 
 my @extras = ();
@@ -24,7 +26,8 @@ GetOptions("v+"  => \$valgrind,
 	   "c"   => \$cachegrind,
 	   "g"   => \$gdb_attach,
 	   "n"   => \$dontrun,
-	   "s!"  => \$skip_duplicate_printers);
+	   "s!"  => \$skip_duplicate_printers,
+	   "m"   => \$calc_md5);
 
 my $pwd = `pwd`;
 chomp $pwd;
@@ -129,8 +132,21 @@ if ($#ARGV >= 0) {
     close PIPE;
 }
 
-sub do_printer($$) {
-    my ($printer, $fh) = @_;
+sub do_print{
+    my $output = @_[0];
+    if($dontrun){
+	print $output;
+    }else{
+	open TESTPATTERN, "|$testpattern_command" or
+		die "Can't run $testpattern_command: $!\n";
+	print TESTPATTERN $output;
+	close TESTPATTERN;
+    }
+}
+
+
+sub do_printer {
+    my $printer = @_[0];
     my $tmp = $stpdata{$printer}{'Resolution'};
     my $min_res_name;
     my $min_res_value = 0;
@@ -173,7 +189,7 @@ sub do_printer($$) {
 	    set_opt("ColorCorrection", "Raw");
 	    set_message("    ${pmode}+${resolution}");
 	    my $output = print_one_testpattern($printer);
-	    print $fh $output;
+	    do_print( $output );
 	}
 	if ($#ink_types >= 1) {
 	    foreach $ink_type (@ink_types) {
@@ -190,7 +206,7 @@ sub do_printer($$) {
 		set_opt("ColorCorrection", "Raw");
 		set_message("    ${ink_type}+${pmode}+${min_res_name}");
 		my $output = print_one_testpattern($printer);
-		print $fh $output;
+		do_print( $output );
 	    }
 	}
     }
@@ -200,7 +216,6 @@ if ($dontrun) {
     map { do_printer($_, \*STDOUT) } @printer_list;
     exit 0;
 } else {
-    my $testpattern_command;
     my $valgrind_command;
     my $valopts;
     if ($cachegrind) {
@@ -222,15 +237,13 @@ if ($dontrun) {
 	$valgrind_command = "valgrind $valopts";
     }
 
-    $testpattern_command = "$valgrind_command ./testpattern -n";
-	
-    open TESTPATTERN, "|$testpattern_command" or
-	die "Can't run $testpattern_command: $!\n";
-    map { do_printer($_, \*TESTPATTERN) } @printer_list;
-    my $status = close TESTPATTERN;
-    if ($status) {
-	exit 0;
-    } else {
-	exit 1;
+    if ($calc_md5) {
+	$testpattern_command = "./testpattern > out.prn ; md5sum out.prn";
+    }else {
+	$testpattern_command = "$valgrind_command ./testpattern -n";
     }
+
+    map { do_printer($_) } @printer_list;
+
+    exit 0;
 }
