@@ -668,7 +668,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "Resolution") == 0)
   {
-    int i;
     description->bounds.str= stp_string_list_create();
     description->deflt.str = NULL;
     for(i=0;i<caps->modelist->count;i++){
@@ -685,7 +684,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InkType") == 0)
   {
     const canon_mode_t* mode = canon_get_current_mode(v);
-    int i;
     description->bounds.str= stp_string_list_create();
     for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
       if(mode->ink_types & canon_inktypes[i].ink_type){
@@ -697,7 +695,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InkChannels") == 0)
     {
       unsigned int ink_type = canon_printhead_colors(v);
-      int i;
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
           if(ink_type == canon_inktypes[i].ink_type)
               description->deflt.integer = canon_inktypes[i].num_channels;
@@ -1220,7 +1217,7 @@ canon_init_setImage(const stp_vars_t *v, canon_init_t *init)
     return;
   }
 
-  //other models mostly hardcoded stuff not really understood ;(
+  /* other models mostly hardcoded stuff not really understood ;( */
   if (init->caps->model==4202) /* 1 bit per pixel (arg 4,7,10,13); */
                                /* 2 level per pixel (arg 6,9,12,15) for each color */
                                /* though we print only 1bit/pixel - but this is how */
@@ -1354,11 +1351,12 @@ set_ink_ranges(stp_vars_t *v, const stp_shade_t* shades, int num_shades, int col
     return;
 
 #if 1 
-{ //WORKAROUND FOR OLD MODESETTING CODE (WILL BE REMOVED SOON)
-  //the old set_ink_ranges returned when it did not find a matching ink
-  //this was the case when printing Monochrome with DMT
-  //the old code would then configure the printer to do DMT without feeding the correct dot_sizes to the dither engine
-  //even though I can't test the results are probably wrong - Sascha
+{ /*WORKAROUND FOR OLD MODESETTING CODE (WILL BE REMOVED SOON)
+   *the old set_ink_ranges returned when it did not find a matching ink
+   *this was the case when printing Monochrome with DMT
+   *the old code would then configure the printer to do DMT without feeding the correct dot_sizes to the dither engine
+   *even though I can't test the results are probably wrong - Sascha
+   */
   unsigned int model = stp_get_model_id(v);
       if(num_shades <= 1 && used_inks == CANON_INK_K){
          switch(model){
@@ -1529,7 +1527,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   stp_image_init(image);
 
 
-   //find the wanted print mode
+  /* find the wanted print mode */
   mode = canon_get_current_mode(v);
 
 
@@ -2293,8 +2291,8 @@ canon_write_line(stp_vars_t *v)
 {
   canon_privdata_t *pd =
     (canon_privdata_t *) stp_get_component_data(v, "Driver");
-  static const int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4 }; // KYMCymc
-  static const int write_number[] = { 3, 2, 1, 0, 6, 5, 4 };   // KYMCymc
+  static const int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4 }; /* KYMCymc */
+  static const int write_number[] = { 3, 2, 1, 0, 6, 5, 4 };   /* KYMCymc */
   int i;
   int written= 0;
   for (i = 0; i < 7; i++)
