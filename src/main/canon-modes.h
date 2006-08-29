@@ -213,9 +213,11 @@ DECLARE_MODES(canon_PIXMA_iP3000,0);
 
 
 static const canon_mode_t canon_PIXMA_iP4000_modes[] = {
+  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(canon_CMYK_1bit_inkset),0,1.0,1.0,NULL,NULL,NULL},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(canon_CMYK_1bit_inkset),0,1.0,1.0,NULL,NULL,NULL},
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(canon_PIXMA_iP4000_default_inkset),MODE_FLAG_EXTENDED_T,1.0,1.0,NULL,NULL,NULL},
 };
-DECLARE_MODES(canon_PIXMA_iP4000,0);
+DECLARE_MODES(canon_PIXMA_iP4000,2);
 
 
 static const canon_mode_t canon_PIXMA_iP4200_modes[] = {
