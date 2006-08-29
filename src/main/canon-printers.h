@@ -362,6 +362,18 @@ static const canon_cap_t canon_model_capabilities[] =
     standard_hue_adjustment,
     standard_sat_adjustment
   },
+  { /* Canon PIXMA iP4200 */
+    4200, 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    CANON_SLOT_ASF1,  /*paper slot */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX,  /*features */
+    &canon_PIXMA_iP4200_modelist,
+    &canon_PIXMA_iP4000_paperlist,
+    standard_lum_adjustment,
+    standard_hue_adjustment,
+    standard_sat_adjustment
+  },
 };
 
 #endif

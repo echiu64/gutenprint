@@ -208,5 +208,31 @@ static const canon_inkset_t canon_PIXMA_iP4000_default_inkset[] = {
         {0,0.0,NULL}
 };
 
+/* Default Inkset for the PIXMA iP4200 */
+static const canon_inkset_t canon_PIXMA_iP4200_default_inkset[] = {
+        {'C',1.0,&canon_2bit_3level_ink},
+        {'M',1.0,&canon_2bit_3level_ink},
+        {'Y',1.0,&canon_1bit_ink},
+        {'K',1.0,&canon_1bit_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_2bit_3level_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 #endif
 
