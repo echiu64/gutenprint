@@ -46,6 +46,96 @@ typedef struct canon_caps {
   const char *sat_adjustment;
 } canon_cap_t;
 
+static const char standard_sat_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 0.95 0.90 0.90 0.90 0.90 0.90 0.90 "  /* R */
+/* R */  "0.90 0.95 0.95 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
+/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char standard_lum_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.65 0.67 0.70 0.72 0.77 0.80 0.82 0.85 "  /* B */
+/* B */  "0.87 0.86 0.82 0.79 0.79 0.82 0.85 0.88 "  /* M */
+/* M */  "0.92 0.95 0.96 0.97 0.97 0.97 0.96 0.96 "  /* R */
+/* R */  "0.96 0.97 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 0.97 0.95 0.94 0.93 0.92 0.90 0.86 "  /* G */
+/* G */  "0.79 0.76 0.71 0.68 0.68 0.68 0.68 0.66 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char standard_hue_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
+/* B */  "-.25 -.33 -.38 -.38 -.36 -.34 -.34 -.34 "  /* M */
+/* M */  "-.34 -.34 -.36 -.40 -.50 -.40 -.30 -.20 "  /* R */
+/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
+/* Y */  "0.00 0.00 0.00 -.05 -.10 -.15 -.22 -.24 "  /* G */
+/* G */  "-.26 -.30 -.33 -.28 -.25 -.20 -.13 -.06 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char PIXMA_iP4000_sat_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
+/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char PIXMA_iP4000_lum_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.40 0.49 0.58 0.66 0.74 0.80 0.83 0.85 "  /* B */
+/* B */  "0.87 0.82 0.70 0.63 0.67 0.69 0.69 0.68 "  /* M */
+/* M */  "0.65 0.68 0.72 0.76 0.78 0.78 0.77 0.97 "  /* R */
+/* R */  "1.00 1.00 1.00 0.99 0.96 0.93 0.90 0.87 "  /* Y */
+/* Y */  "0.83 0.84 0.84 0.85 0.85 0.86 0.86 0.86 "  /* G */
+/* G */  "0.83 0.81 0.72 0.57 0.45 0.42 0.42 0.41 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char PIXMA_iP4000_hue_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 -.11 -.23 -.37 -.45 -.45 -.38 -.33 " /* B */
+/* B */  "-.35 -.43 -.37 -.23 -.09 0.00 0.08 0.09 " /* M */
+/* M */  "0.00 -.11 -.24 -.36 -.31 -.08 0.20 0.31 " /* R */
+/* R */  "0.19 0.13 0.13 0.15 0.16 0.15 0.13 0.10 " /* Y */
+/* Y */  "0.00 -.11 -.17 -.22 -.30 -.37 -.45 -.55 " /* G */
+/* G */  "-.64 -.74 -.80 -.81 -.74 -.55 -.33 -.14 " /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
 
 static const canon_cap_t canon_model_capabilities[] =
 {
@@ -72,9 +162,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_rr,
     &canon_S200_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   { /* Canon  BJ 30   *//* heads: BC-10 */
@@ -85,9 +175,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     &canon_BJC_30_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon  BJC 85  *//* heads: BC-20 BC-21 BC-22 */
     85, 1,
@@ -97,9 +187,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     &canon_BJC_85_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   { /* Canon BJC 4300 *//* heads: BC-20 BC-21 BC-22 BC-29 */
@@ -110,9 +200,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_4300_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   { /* Canon BJC 4400 *//* heads: BC-20 BC-21 BC-22 BC-29 */
@@ -123,9 +213,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     &canon_BJC_4400_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   { /* Canon BJC 6000 *//* heads: BC-30/BC-31 BC-32/BC-31 */
@@ -136,9 +226,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_ACKSHORT,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   { /* Canon BJC 6200 *//* heads: BC-30/BC-31 BC-32/BC-31 */
@@ -149,9 +239,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_ACKSHORT,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
@@ -162,9 +252,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 8200 *//* heads: BC-50 */
     8200, 3,
@@ -174,9 +264,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_r | CANON_CAP_ACKSHORT,
     &canon_BJC_8200_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
 
@@ -194,9 +284,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_210_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
     240, 1,
@@ -206,9 +296,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
     250, 1,
@@ -218,9 +308,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
     1000, 1,
@@ -230,9 +320,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 2000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
     2000, 1,
@@ -242,9 +332,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     &canon_BJC_2000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
     3000, 3,
@@ -254,9 +344,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a, /*FIX? should have _r? */
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 6100 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6100, 3,
@@ -266,9 +356,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7000, 3,
@@ -278,9 +368,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,
     &canon_BJC_7000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7100, 3,
@@ -290,9 +380,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_7100_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 
   /*****************************/
@@ -310,9 +400,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 5500 *//* heads: BC-20 BC-21 BC-29 */
     5500, 1,
@@ -322,9 +412,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,
     &canon_BJC_5500_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     6500, 3,
@@ -334,9 +424,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_a,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon BJC 8500 *//* heads: BC-80/BC-81 BC-82/BC-81 */
     8500, 3,
@@ -346,9 +436,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,
     &canon_BJC_8500_modelist,
     &canon_default_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP3000 */
     3999, 3,          /*model, model_id*/
@@ -358,9 +448,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX,  /*features */
     &canon_PIXMA_iP3000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    PIXMA_iP4000_lum_adjustment,
+    PIXMA_iP4000_hue_adjustment,
+    PIXMA_iP4000_sat_adjustment
   },
   { /* Canon PIXMA iP4000 */
     4000, 3,          /*model, model_id*/
@@ -370,9 +460,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX,  /*features */
     &canon_PIXMA_iP4000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    PIXMA_iP4000_lum_adjustment,
+    PIXMA_iP4000_hue_adjustment,
+    PIXMA_iP4000_sat_adjustment
   },
   { /* Canon PIXMA iP4200 */
     4200, 3,          /*model, model_id*/
@@ -382,9 +472,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX,  /*features */
     &canon_PIXMA_iP4200_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    PIXMA_iP4000_lum_adjustment,
+    PIXMA_iP4000_hue_adjustment,
+    PIXMA_iP4000_sat_adjustment
   },
   { /* Canon MULTIPASS MP150 */
     4201, 3,          /*model, model_id*/
@@ -394,9 +484,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    standard_lum_adjustment,
-    standard_hue_adjustment,
-    standard_sat_adjustment
+    PIXMA_iP4000_lum_adjustment,
+    PIXMA_iP4000_hue_adjustment,
+    PIXMA_iP4000_sat_adjustment
   },
 };
 

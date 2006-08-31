@@ -128,51 +128,6 @@ static const double ink_darknesses[] =
 
 #define USE_3BIT_FOLD_TYPE 323
 
-static const char standard_sat_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
-/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
-/* M */  "1.00 0.95 0.90 0.90 0.90 0.90 0.90 0.90 "  /* R */
-/* R */  "0.90 0.95 0.95 1.00 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
-/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-static const char standard_lum_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.65 0.67 0.70 0.72 0.77 0.80 0.82 0.85 "  /* B */
-/* B */  "0.87 0.86 0.82 0.79 0.79 0.82 0.85 0.88 "  /* M */
-/* M */  "0.92 0.95 0.96 0.97 0.97 0.97 0.96 0.96 "  /* R */
-/* R */  "0.96 0.97 0.97 0.98 0.99 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 0.97 0.95 0.94 0.93 0.92 0.90 0.86 "  /* G */
-/* G */  "0.79 0.76 0.71 0.68 0.68 0.68 0.68 0.66 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-static const char standard_hue_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 0.06 0.10 0.10 0.06 -.01 -.09 -.17 "  /* B */
-/* B */  "-.25 -.33 -.38 -.38 -.36 -.34 -.34 -.34 "  /* M */
-/* M */  "-.34 -.34 -.36 -.40 -.50 -.40 -.30 -.20 "  /* R */
-/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
-/* Y */  "0.00 0.00 0.00 -.05 -.10 -.15 -.22 -.24 "  /* G */
-/* G */  "-.26 -.30 -.33 -.28 -.25 -.20 -.13 -.06 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
 /* document feeding */
 #define CANON_SLOT_ASF1    1
 #define CANON_SLOT_ASF2    2
@@ -539,27 +494,6 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 	      "using custom\n",stp_get_page_height(v), stp_get_page_width(v));
     }
   return 0;
-}
-
-static const char *
-canon_lum_adjustment(int model)
-{
-  const canon_cap_t * caps= canon_get_model_capabilities(model);
-  return (caps->lum_adjustment);
-}
-
-static const char *
-canon_hue_adjustment(int model)
-{
-  const canon_cap_t * caps= canon_get_model_capabilities(model);
-  return (caps->hue_adjustment);
-}
-
-static const char *
-canon_sat_adjustment(int model)
-{
-  const canon_cap_t * caps= canon_get_model_capabilities(model);
-  return (caps->sat_adjustment);
 }
 
 static void
@@ -1511,10 +1445,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   double outer_r_sq = 0;
   double inner_r_sq = 0;
 
-  stp_curve_t *lum_adjustment = NULL;
-  stp_curve_t *hue_adjustment = NULL;
-  stp_curve_t *sat_adjustment = NULL;
-
   if (!stp_verify(v))
     {
       stp_eprintf(v, "Print options not verified; cannot print.\n");
@@ -1753,7 +1683,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
      get_double_param(v, "BlackDensity") * get_double_param(v, "Density"));
 
   /* initialize weaving for S200 for resolutions > 360dpi */
-  if (mode->flags & MODE_FLAG_WEAVE /*init.caps->features & CANON_CAP_WEAVE) && (mode->xdpi > 360) */)
+  if (mode->flags & MODE_FLAG_WEAVE)
      {
        privdata.stepper_ydpi = 720;
        privdata.nozzle_ydpi = 360;
@@ -1842,33 +1772,36 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   errval  = 0;
   errlast = -1;
   errline  = 0;
-
-  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
-      pt->hue_adjustment)
+ 
+  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE)) 
     {
-      hue_adjustment = stp_read_and_compose_curves
-	(canon_hue_adjustment(model),
-	 pt ? pt->hue_adjustment : NULL, STP_CURVE_COMPOSE_ADD, 384);
-      stp_set_curve_parameter(v, "HueMap", hue_adjustment);
-      stp_curve_destroy(hue_adjustment);
+      stp_curve_t* hue_adjustment = stp_read_and_compose_curves
+	(caps->hue_adjustment,pt->hue_adjustment,
+	 STP_CURVE_COMPOSE_ADD, 384);
+      if(hue_adjustment){
+        stp_set_curve_parameter(v, "HueMap", hue_adjustment);
+        stp_curve_destroy(hue_adjustment);
+      }
     }
-  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
-      pt->lum_adjustment)
+  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE)) 
     {
-      lum_adjustment = stp_read_and_compose_curves
-	(canon_lum_adjustment(model),
-	 pt ? pt->lum_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY, 384);
-      stp_set_curve_parameter(v, "LumMap", lum_adjustment);
-      stp_curve_destroy(lum_adjustment);
+      stp_curve_t* lum_adjustment = stp_read_and_compose_curves
+	(caps->lum_adjustment,pt->lum_adjustment,
+	 STP_CURVE_COMPOSE_MULTIPLY, 384);
+      if(lum_adjustment){
+        stp_set_curve_parameter(v, "LumMap", lum_adjustment);
+        stp_curve_destroy(lum_adjustment);
+      }
     }
-  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
-      pt->sat_adjustment)
+  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE)) 
     {
-      sat_adjustment = stp_read_and_compose_curves
-	(canon_sat_adjustment(model),
-	 pt ? pt->sat_adjustment : NULL, STP_CURVE_COMPOSE_MULTIPLY, 384);
-      stp_set_curve_parameter(v, "SatMap", sat_adjustment);
-      stp_curve_destroy(sat_adjustment);
+      stp_curve_t* sat_adjustment = stp_read_and_compose_curves
+	(caps->sat_adjustment,pt->sat_adjustment,
+	 STP_CURVE_COMPOSE_MULTIPLY, 384);
+      if(sat_adjustment){
+        stp_set_curve_parameter(v, "SatMap", sat_adjustment);
+        stp_curve_destroy(sat_adjustment);
+      }
     }
 
   out_channels = stp_color_init(v, image, 65536);

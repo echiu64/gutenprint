@@ -81,7 +81,7 @@ static const canon_paper_t canon_default_papers[] = {
 DECLARE_PAPERS(canon_default);
 
 static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,Q0|Q1|Q2|Q3,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,Q0|Q1|Q2|Q3,1.00, 0.25, 0.500, 0, 0, 0 },
   { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,Q2|Q3,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,Q2,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,Q2|Q3,0.78, 0.25, 0.500, 0, 0, 0 },
