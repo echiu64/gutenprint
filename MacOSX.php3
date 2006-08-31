@@ -12,7 +12,7 @@ require('standard_html_header.php3');
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
  <h1>
- Gimp-Print for Mac OS X (10.2 and later)
+ Gutenprint and Gimp-Print for Mac OS X (10.2 and later)
  </h1>
  <h4>
  High quality printer drivers for Canon, Epson, Lexmark, and PCL printers.
@@ -60,18 +60,18 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
  <font color="#ff0000">Read the FAQ!</font>
  </h2>
  <p>
- The <a href= "http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3" >Gimp-Print
- FAQ for OS X</a> answers most questions about Gimp-Print and how to print in
+ The <a href= "http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3" >Gutenprint
+ FAQ for OS X</a> answers most questions about Gutenprint and how to print in
  Mac OS X 10.2 Jaguar.
  </p>
  <h2>
  <font color="#ff0000">Check the Forums</font>
  </h2>
  <p>
- If your question about Gimp-Print is not answered in the <a href=
+ If your question about Gutenprint is not answered in the <a href=
  "http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3" >FAQ</a> or in the
  documentation included with the installer your next stop should be the
- Gimp-Print project <a href= "http://sourceforge.net/forum/?group_id=1537"
+ Gutenprint project <a href= "http://sourceforge.net/forum/?group_id=1537"
  >forums</a>.
  </p>
  <p>
@@ -84,7 +84,7 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
  "http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537" >bug tracker</a>
  then you should file a <a href=
  "http://sourceforge.net/tracker/?group_id=1537&amp;atid=201537" >support
- request</a> against it. If there is a feature missing from Gimp-Print that you 
+ request</a> against it. If there is a feature missing from Gutenprint that you 
  would like to see added please file a <a href=
  "https://sourceforge.net/tracker/?atid=351537&group_id=1537&func=browse"
  >feature request</a>.
@@ -176,6 +176,7 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
  </p>
 --!>
+<!--
  <b>Gimp-Print 5.0.0-beta2</b>
  </td>
  </tr>
@@ -197,6 +198,7 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  Gimp-Print 5.0.0-beta2 is the latest beta release in the new 5.0 series. 
  This release represents the state-of-the-art in current Gimp-Print development, but it is currently only beta quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
  </p>
+--!>
  <b>Gimp-Print Uninstaller</b>
  </td>
  </tr>
@@ -240,7 +242,7 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  </tr>
  </table>
  <p>
- <em>Gimp-Print for Mac requires Mac OS X Jaguar (version 10.2) or later!</em>
+ <em>Gutenprint for Mac requires Mac OS X Jaguar (version 10.2) or later!</em>
  </p>
  </td>
  </tr>
@@ -253,22 +255,14 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  Project Notes
  </h3>
  <p>
- Gimp-Print is available in source code form under the GPL (GNU General Public
+ Gutenprint (and its predecessor, Gimp-Print) is available in source code form under the GPL (GNU General Public
  License). You are entitled to download the source code.
- Gimp-print on Mac OS X would not be possible without <a href=
+ gutenprint on Mac OS X would not be possible without <a href=
  "http://www.cups.org/" >CUPS</a>, the open-source print spooler built-in to
  Mac OS X starting with version 10.2 (Jaguar).
  </p>
  <p>
- Gimp-Print should not be confused with GIMP, the open-source GNU Image
- Manipulation Program. Gimp-Print originated as the print facility for GIMP,
- hence the name, but has since matured into an independent printing package.
- Installing GIMP is NOT required.
- </p>
- <p>
- Gimp-Print 4.2.7 is expected to be the ultimate release in the Gimp-Print
- 4.2 series unless any critical bugs are found in 4.2.7 or Gimp-Print 5.0 is further
-delayed. All new development is focused on the 5.0 series.
+ Gimp-Print 4.2.7 is the final release in the Gimp-Print 4.2 series.
  </p>
  <P>
  Please visit <a href= "http://sourceforge.net/project/?group_id=1537" >our
@@ -278,7 +272,7 @@ delayed. All new development is focused on the 5.0 series.
  Enjoy!
  </p>
  <p>
- <i>- The Gimp-Print Project Team</i>
+ <i>- The Gutenprint Project Team</i>
  </p>
  </td>
  </tr>
@@ -287,6 +281,22 @@ delayed. All new development is focused on the 5.0 series.
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+  <a name ="5.0.0"></a>
+ <B>Gutenprint 5.0.0</B>
+ </TD>
+ <TD align="right" >
+ <B>2006-07-30</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gutenprint 5.0.0 is the first stable release in the 5.x series. The changes between Gutenprint 5.0.0 and Gimp-Print 4.2 are described in the <a href="http://sourceforge.net/project/shownotes.php?release_id=435706&group_id=1537">release notes</a>.
+</p> &nbsp;
+ </td>
+ </tr>
  <TR bgcolor="#D0D0D0" >
  <TD>
   <a name ="5.0.0-beta2"></a>
