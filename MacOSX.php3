@@ -32,8 +32,8 @@ require('standard_html_header.php3');
  <tr>
  <td>
  <p>
- <a href="MacOSX.php3#5.0.0-beta2"><b>Aug 26, 2004 -</b></a> Gimp-Print 
- 5.0.0-beta2 is now available for download.
+ <a href="MacOSX.php3#5.0.0-beta2"><b>July 30, 2006 -</b></a> Gutenprint
+ 5.0.0 is now available for download.
  </p>
  <p>
  <a href="MacOSX.php3#downloadESPGS"><b>Aug 17, 2004 -</b></a> ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section.  This release fixes security problems related to libPNG.
@@ -105,6 +105,28 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
  <tr>
  <td>
  <br>
+ <b>Gutenprint 5.0.0</b>
+ </td>
+ </tr>
+ <tr>
+ <td bgcolor="#d0ffff" >
+ <a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.0.U.dmg?download"
+ >gutenprint-5.0.0.U.dmg</a>&nbsp;(9.4 MB)
+ </td>
+ <td align="right" >
+ (<a href=
+ "http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.0.tar.bz2?download"
+ >source</a>)
+ </td>
+ </tr>
+ <tr>
+ <td colspan="2" >
+ <p>
+ Gutenprint 5.0.0 is the first stable release of 5.0.  Gutenprint is
+ the new name for Gimp-Print as of the 5.0 release.
+ This release represents the state-of-the-art in current Gimp-Print development.  It contains many new and exciting features over the 4.2.x series, including support for many more printers, improved quality, and enhanced functionality.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
+ </p>
  <b>Gimp-Print 4.2.7</b>
  </td>
  </tr>
