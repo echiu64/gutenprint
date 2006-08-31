@@ -1284,33 +1284,6 @@ set_ink_ranges(stp_vars_t *v, const stp_shade_t* shades, int num_shades, int col
   if (!shades)
     return;
 
-#if 1 
-{ /*WORKAROUND FOR OLD MODESETTING CODE (WILL BE REMOVED SOON)
-   *the old set_ink_ranges returned when it did not find a matching ink
-   *this was the case when printing Monochrome with DMT
-   *the old code would then configure the printer to do DMT without feeding the correct dot_sizes to the dither engine
-   *even though I can't test the results are probably wrong - Sascha
-   */
-  unsigned int model = stp_get_model_id(v);
-      if(num_shades <= 1 && used_inks == CANON_INK_K){
-         switch(model){
-              case 85:
-              case 240:
-              case 250:
-              case 1000:
-              case 2000:
-              case 3000:
-              case 4300:
-              case 6000:
-              case 6100:
-              case 6200:
-              case 6500:
-                return;
-         }
-     }
-}
-#endif
-
   stp_dither_set_inks_full(v, color, num_shades, shades, 1.0,
 			   ink_darknesses[color]);
 
