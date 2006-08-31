@@ -156,7 +156,6 @@ static const double ink_darknesses[] =
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
 
-
 #include "canon-inks.h"
 #include "canon-modes.h"
 #include "canon-media.h"
@@ -1101,7 +1100,7 @@ canon_init_setX72(const stp_vars_t *v, canon_init_t *init)
 
   if ( (init->caps->features & CANON_CAP_r)
        || (init->caps->features & CANON_CAP_rr) )
-      canon_cmd(v,ESC28,0x72, 1, 0x61); /* whatever for - 8200/S200 need it */
+      canon_cmd(v,ESC28,0x72, 1, init->caps->ESC_r_arg); /* whatever for - 8200/S200 need it */
   if (init->caps->features & CANON_CAP_rr)
       canon_cmd(v,ESC28,0x72, 3, 0x63, 1, 0); /* whatever for - S200 needs it */
       /* probably to set the print direction of the head */
