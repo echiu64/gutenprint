@@ -549,7 +549,8 @@ stp_read_and_compose_curves(const char *s1, const char *s2,
     }
   else if (t1)
     {
-      stp_curve_destroy(t2);
+      if(t2)
+        stp_curve_destroy(t2);
       return t1;
     }
   else
