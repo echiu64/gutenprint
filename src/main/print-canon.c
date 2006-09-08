@@ -193,22 +193,6 @@ typedef struct
 
 static void canon_write_line(stp_vars_t *v);
 
-
-static const char plain_paper_lum_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-"1.20 1.22 1.28 1.34 1.39 1.42 1.45 1.48 "  /* C */
-"1.50 1.40 1.30 1.25 1.20 1.10 1.05 1.05 "  /* B */
-"1.05 1.05 1.05 1.05 1.05 1.05 1.05 1.05 "  /* M */
-"1.05 1.05 1.05 1.10 1.10 1.10 1.10 1.10 "  /* R */
-"1.10 1.15 1.30 1.45 1.60 1.75 1.90 2.00 "  /* Y */
-"2.10 2.00 1.80 1.70 1.60 1.50 1.40 1.30 "  /* G */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
 typedef struct {
   const canon_cap_t *caps;
   int is_first_page;
