@@ -197,6 +197,18 @@ static const canon_inkset_t canon_CMYKcm_3bit_inkset[] = {
         {'m',0.33,&canon_3bit_ink}
 };
 
+/* Default Inkset for the PIXMA iP2000 */
+static const canon_inkset_t canon_PIXMA_iP2000_default_inkset[] = {
+        {'C',1.0,&canon_2bit_3level_mp150_ink},
+        {'M',1.0,&canon_2bit_3level_mp150_ink},
+        {'Y',1.0,&canon_1bit_ink},
+        {'K',1.0,&canon_1bit_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
 
 /* Default Inkset for the PIXMA iP3000 */
 static const canon_inkset_t canon_PIXMA_iP3000_default_inkset[] = {
