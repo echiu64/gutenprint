@@ -62,7 +62,7 @@ static const canon_paperlist_t name##_paperlist = {     \
 }
 
 
-
+/* paperlists for the various printers. The first entry will be the default */
 
 static const canon_paper_t canon_default_papers[] = {
   { "Plain",		N_ ("Plain Paper"),		0x00, 0x00,Q2,0.50, 0.25, 0.500, 0, 0, 0 },

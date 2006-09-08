@@ -368,7 +368,7 @@ get_media_type(const canon_cap_t* caps,const char *name)
 	if (!strcmp(name, caps->paperlist->papers[i].name))
 	  return &(caps->paperlist->papers[i]);
       }
-  return NULL;
+  return &(caps->paperlist->papers[0]);
 }
 
 
@@ -1570,11 +1570,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       stp_set_float_parameter_active(v, "Density", STP_PARAMETER_ACTIVE);
       stp_set_float_parameter(v, "Density", 1.0);
     }
-  if (pt)
-    stp_scale_float_parameter(v, "Density", pt->base_density);
-  else			/* Can't find paper type? Assume plain */
-    stp_scale_float_parameter(v, "Density", .5);
+  
+  stp_scale_float_parameter(v, "Density", pt->base_density);
   stp_scale_float_parameter(v, "Density",mode->density);
+
   if (stp_get_float_parameter(v, "Density") > 1.0)
     stp_set_float_parameter(v, "Density", 1.0);
 
@@ -1592,16 +1591,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     k_lower = .4 / privdata.bits[5] + .1; /* c bits */
   else
     k_lower = .25 / privdata.bits[0] ; /* K bits */
-  if (pt)
-    {
-      k_lower *= pt->k_lower_scale;
-      k_upper = pt->k_upper;
-    }
-  else
-    {
-      k_lower *= .5;
-      k_upper = .5;
-    }
+      
+  k_lower *= pt->k_lower_scale;
+  k_upper = pt->k_upper;
+
   if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRLower", k_lower);
   if (!stp_check_float_parameter(v, "GCRUpper", STP_PARAMETER_ACTIVE))
