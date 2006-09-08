@@ -510,6 +510,18 @@ static const canon_cap_t canon_model_capabilities[] =
     PIXMA_iP4000_hue_adjustment,
     PIXMA_iP4000_sat_adjustment
   },
+  { /* Canon MULTIPASS MP830 */
+    9000, 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    CANON_SLOT_ASF1,  /*paper slot */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX,0,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MP830_modelist,
+    &canon_PIXMA_iP4000_paperlist,
+    PIXMA_iP4000_lum_adjustment,
+    PIXMA_iP4000_hue_adjustment,
+    PIXMA_iP4000_sat_adjustment
+  },
 };
 
 #endif
