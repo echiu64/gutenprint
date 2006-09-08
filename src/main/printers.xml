@@ -76,19 +76,25 @@
       <printer name="Canon S800" driver="bjc-s800" manufacturer="Canon" model="8200" parameters="density_800_params" />
       <printer name="Canon S4500" driver="bjc-s4500" manufacturer="Canon" model="6500" parameters="gamma_750_params" />
       <printer name="Canon PIXMA iP3000" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXMA iP3100" driver="bjc-PIXMA-iP3100" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4000" driver="bjc-iP4000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4100" driver="bjc-PIXMA-iP4100" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4200" driver="bjc-PIXMA-iP4200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5000" driver="bjc-PIXMA-iP5000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP150" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="4201" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon MULTIPASS MP700" driver="bjc-MULTIPASS-MP700" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon MULTIPASS MP730" driver="bjc-MULTIPASS-MP730" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP750" driver="bjc-MULTIPASS-MP750" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP760" driver="bjc-MULTIPASS-MP760" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP770" driver="bjc-MULTIPASS-MP770" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP780" driver="bjc-MULTIPASS-MP780" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP790" driver="bjc-MULTIPASS-MP790" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP830" driver="bjc-MULTIPASS-MP830" manufacturer="Canon" model="9000" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon i560" driver="bjc-i560" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon i850" driver="bjc-i850" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
       <printer name="Canon i860" driver="bjc-i860" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon i865" driver="bjc-i865" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
     </family>
