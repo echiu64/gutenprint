@@ -150,6 +150,7 @@ typedef struct
   const canon_cap_t *caps;
   unsigned char *cols[7];
   unsigned char *comp_buf;
+  unsigned char *comp_buf_offset[7];
   unsigned char *fold_buf;
   stp_shade_t* shades[STP_NCOLORS];
   int num_shades[STP_NCOLORS];
@@ -159,6 +160,7 @@ typedef struct
   int buf_length_max;
   int length;
   int out_width;
+  int out_height;
   int left;
   int emptylines;
   int bits[7];
@@ -197,6 +199,7 @@ typedef struct {
 
 static void canon_advance_paper(stp_vars_t *, int);
 static void canon_flush_pass(stp_vars_t *, int, int);
+static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y);
 
 static const stp_parameter_t the_parameters[] =
 {
@@ -1544,13 +1547,17 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
 
   /* Allocate compression buffer */
-  privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
+  if(caps->features & CANON_CAP_I)
+      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * 8 * 4); /* for multiraster we need to buffer 8 lines for every color */
+  else
+      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
   /* Allocate fold buffer */
   privdata.fold_buf = stp_zalloc(privdata.buf_length_max);
 
   privdata.length = length;
   privdata.left = left;
   privdata.out_width = out_width;
+  privdata.out_height = out_height;
   privdata.caps = caps;
   privdata.ydpi = mode->ydpi;
 
@@ -1821,6 +1828,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     stp_dither(v, y, duplicate_line, zero_mask, cd_mask);
     if ( mode->flags & MODE_FLAG_WEAVE )
         stp_write_weave(v, privdata.cols);
+    else if ( caps->features & CANON_CAP_I)
+        canon_write_multiraster(v,&privdata,y);
     else
         canon_printfunc(v);
     errval += errmod;
@@ -2070,30 +2079,14 @@ canon_shift_buffer(unsigned char *line,int length,int bits)
   }
 }
 
-/*
- * 'canon_write()' - Send graphics using TIFF packbits compression.
- */
 
-static int
-canon_write(stp_vars_t *v,		/* I - Print file or command */
-            canon_privdata_t *pd,       /* privdata */
-	    const canon_cap_t *   caps,	        /* I - Printer model */
-	    unsigned char *line,	/* I - Output bitmap data */
-	    int           length,	/* I - Length of bitmap data */
-	    int           coloridx,	/* I - Which color */
-	    int           ydpi,		/* I - Vertical resolution */
-	    int           *empty,       /* IO- Preceeding empty lines */
-	    int           width,	/* I - Printed width */
-	    int           offset, 	/* I - Offset from left side */
-	    int           bits,
-            int           ink_flags)
+/* fold, apply 5 pixel in 1 byte compression, pack tiff and return the compressed length */
+static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* line,int length,int offset,unsigned char* comp_buf,int bits, int ink_flags)
 {
   unsigned char
     *in_ptr= line,
     *comp_ptr, *comp_data;
-  int newlength;
   int offset2,bitoffset;
-  unsigned char color;
 
   /* Don't send blank lines... */
 
@@ -2136,7 +2129,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
   }
   /* pack left border rounded to multiples of 8 dots */
 
-  comp_data= pd->comp_buf;
+  comp_data= comp_buf;
   while (offset2>0) {
     unsigned char toffset = offset2 > 128 ? 128 : offset2;
     comp_data[0] = 1 - toffset;
@@ -2164,7 +2157,31 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
        length = pack_pixels(in_ptr,length);
 
   stp_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
-  newlength= comp_ptr - pd->comp_buf;
+
+  return comp_ptr - comp_buf;
+}
+
+/*
+ * 'canon_write()' - Send graphics using TIFF packbits compression.
+ */
+
+static int
+canon_write(stp_vars_t *v,		/* I - Print file or command */
+            canon_privdata_t *pd,       /* privdata */
+	    const canon_cap_t *   caps,	        /* I - Printer model */
+	    unsigned char *line,	/* I - Output bitmap data */
+	    int           length,	/* I - Length of bitmap data */
+	    int           coloridx,	/* I - Which color */
+	    int           ydpi,		/* I - Vertical resolution */
+	    int           *empty,       /* IO- Preceeding empty lines */
+	    int           width,	/* I - Printed width */
+	    int           offset, 	/* I - Offset from left side */
+	    int           bits,
+            int           ink_flags)
+{
+
+  unsigned char color;
+  int newlength = canon_compress(v,pd,line,length,offset,pd->comp_buf,bits,ink_flags);
 
   /* send packed empty lines if any */
 
@@ -2213,6 +2230,60 @@ canon_write_line(stp_vars_t *v)
   else
     pd->emptylines += 1;
 }
+
+
+/* write one multiraster block */
+static void canon_write_block(stp_vars_t* v,canon_privdata_t* pd,unsigned char* start, unsigned char* end){
+    unsigned int length = end - start;
+    if(!length)
+        return;
+    stp_zfwrite("\033(F", 3, 1, v);
+    stp_put16_le(length, v);
+    stp_zfwrite((const char *)start, length, 1, v);
+}
+
+
+static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y){
+    int i;
+    unsigned int max_length = 2*pd->buf_length_max*8;
+    /* a new raster block begins */
+    if(!(y%8)){
+        if(y != 0){
+            /* write finished blocks */
+            for(i=0;i<7;i++)
+                canon_write_block(v,pd,pd->comp_buf + i * max_length,pd->comp_buf_offset[i]);
+        }
+        /* reset start offsets */
+        for(i=0;i<7;i++)
+            pd->comp_buf_offset[i] = pd->comp_buf + i * max_length;
+    }
+    /* compress lines and add them to the buffer */
+    for(i=0;i<7;i++){
+        if(pd->cols[i]){
+            pd->comp_buf_offset[i] += canon_compress(v,pd, pd->cols[i],pd->length,pd->left,pd->comp_buf_offset[i],pd->bits[i], pd->ink_flags[i]);
+            *(pd->comp_buf_offset[i]) = 0x80; /* terminate the line */
+            ++pd->comp_buf_offset[i];
+        }
+    }
+    if(y == pd->out_height - 1){
+        /* we just compressed our last line */
+        if(pd->out_height % 8){
+            /* but our raster block is not finished yet */
+            int missing = 8 - (pd->out_height % 8); /* calculate missing lines */
+            for(i=0;i<7;i++){
+              if(pd->cols[i]){ /* add missing empty lines and write blocks */
+                int x;
+                for(x=0;x < missing ; x++){
+                  *(pd->comp_buf_offset[i]) = 0x80; /* terminate the line */
+                  ++pd->comp_buf_offset[i];
+                }
+                canon_write_block(v,pd,pd->comp_buf + i * max_length,pd->comp_buf_offset[i]);
+              }
+            }
+        }
+    }
+}
+
 
 static void
 canon_advance_paper(stp_vars_t *v, int advance)
