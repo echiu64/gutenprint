@@ -56,25 +56,8 @@
 #include <limits.h>
 #endif
 #include <math.h>
-#include <assert.h>
-/* Solaris with gcc has problems because gcc's limits.h doesn't #define */
-/* this */
-#ifndef CHAR_BIT
-#define CHAR_BIT 8
-#endif
 
 #include "print-canon.h"
-
-#define MAX_CARRIAGE_WIDTH	13 /* This really needs to go away */
-
-/*
- * We really need to get away from this silly static nonsense...
- */
-#define MAX_PHYSICAL_BPI 1440
-#define MAX_OVERSAMPLED 8
-#define MAX_BPP 4
-#define COMPBUFWIDTH (MAX_PHYSICAL_BPI * MAX_OVERSAMPLED * MAX_BPP * \
-	MAX_CARRIAGE_WIDTH / CHAR_BIT)
 
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -148,6 +131,7 @@ static const double ink_darknesses[] =
 #define CANON_CAP_r         0x800ul
 #define CANON_CAP_g         0x1000ul
 #define CANON_CAP_rr        0x4000ul
+#define CANON_CAP_I         0x8000ul
 #define CANON_CAP_DUPLEX    0x40000ul
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
@@ -165,11 +149,14 @@ typedef struct
 {
   const canon_cap_t *caps;
   unsigned char *cols[7];
+  unsigned char *comp_buf;
+  unsigned char *fold_buf;
   stp_shade_t* shades[STP_NCOLORS];
   int num_shades[STP_NCOLORS];
   int delay[7];
   int delay_max;
   int buf_length[7];
+  int buf_length_max;
   int length;
   int out_width;
   int left;
@@ -1175,6 +1162,22 @@ canon_init_setImage(const stp_vars_t *v, canon_init_t *init)
   canon_cmd(v,ESC28,0x74, 3, arg_74_1, arg_74_2, arg_74_3);
 }
 
+/* ESC (I (J (L  FIXME make make this configurable 
+ */
+static void
+canon_init_setMultiRaster(const stp_vars_t *v, canon_init_t *init){
+  
+  if(!(init->caps->features & CANON_CAP_I))
+	return;
+
+  canon_cmd(v,ESC28,0x49, 1, 0x1);  /* enable MultiLine Raster? */
+  canon_cmd(v,ESC28,0x4a, 1, 8);    /* set number of lines per raster block */
+  canon_cmd(v,ESC28,0x4c, 4,'K','C','M','Y');  /* set the color sequence */
+}
+
+
+
+
 static void
 canon_init_printer(const stp_vars_t *v, canon_init_t *init)
 {
@@ -1195,6 +1198,9 @@ canon_init_printer(const stp_vars_t *v, canon_init_t *init)
   canon_init_setPageMargins2(v,init);    /* ESC (p */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
+  canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
+
+
   /* some linefeeds */
 
   mytop= (init->top*init->mode->ydpi)/72;
@@ -1337,6 +1343,9 @@ static void canon_add_ink(canon_privdata_t* privdata,const canon_inkset_t* ink,u
         int subchannel = privdata->num_shades[channel];
         ++privdata->num_shades[channel];
         privdata->buf_length[i] = ((length *ink->ink->bits)+1)*(privdata->delay[i] + 1);
+        /* updata maximum buffer length */
+        if(privdata->buf_length[i] > privdata->buf_length_max)
+            privdata->buf_length_max = privdata->buf_length[i]; 
         privdata->bits[i] = ink->ink->bits;
         privdata->ink_flags[i] = ink->ink->flags;
         privdata->cols[i]=stp_zalloc(privdata->buf_length[i]+1);
@@ -1532,6 +1541,12 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   for(i=0;i<mode->num_inks;i++){
       canon_add_ink(&privdata,&mode->inks[i],init.ink_type,length);
   }
+
+
+  /* Allocate compression buffer */
+  privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
+  /* Allocate fold buffer */
+  privdata.fold_buf = stp_zalloc(privdata.buf_length_max);
 
   privdata.length = length;
   privdata.left = left;
@@ -1847,6 +1862,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   * Cleanup...
   */
 
+  stp_free(privdata.fold_buf);
+  stp_free(privdata.comp_buf);
+
   for (i = 0; i < 7; i++)
     if (privdata.cols[i])
       stp_free(privdata.cols[i]);
@@ -2058,6 +2076,7 @@ canon_shift_buffer(unsigned char *line,int length,int bits)
 
 static int
 canon_write(stp_vars_t *v,		/* I - Print file or command */
+            canon_privdata_t *pd,       /* privdata */
 	    const canon_cap_t *   caps,	        /* I - Printer model */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
@@ -2070,8 +2089,6 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
             int           ink_flags)
 {
   unsigned char
-    comp_buf[COMPBUFWIDTH + COMPBUFWIDTH / 4],	/* Compression buffer */
-    in_fold[COMPBUFWIDTH],
     *in_ptr= line,
     *comp_ptr, *comp_data;
   int newlength;
@@ -2094,8 +2111,8 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
     if(ink_flags & INK_FLAG_5pixel_in_1byte)
       pixels_per_byte = 5;
 
-    stp_fold(line,length,in_fold);
-    in_ptr= in_fold;
+    stp_fold(line,length,pd->fold_buf);
+    in_ptr= pd->fold_buf;
     length= (length*8/4); /* 4 pixels in 8bit */
     /* calculate the number of compressed bytes that can be sent directly */
     offset2 = offset / pixels_per_byte;
@@ -2103,9 +2120,9 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
     bitoffset = (offset % pixels_per_byte) * 2;
   }
   if (bits==3) {
-    memset(in_fold,0,length);
-    canon_fold_3bit(line,length,in_fold);
-    in_ptr= in_fold;
+    memset(pd->fold_buf,0,length);
+    canon_fold_3bit(line,length,pd->fold_buf);
+    in_ptr= pd->fold_buf;
     length= (length*8)/3;
     offset2 = offset/3;
 #if 0
@@ -2119,7 +2136,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
   }
   /* pack left border rounded to multiples of 8 dots */
 
-  comp_data= comp_buf;
+  comp_data= pd->comp_buf;
   while (offset2>0) {
     unsigned char toffset = offset2 > 128 ? 128 : offset2;
     comp_data[0] = 1 - toffset;
@@ -2147,7 +2164,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
        length = pack_pixels(in_ptr,length);
 
   stp_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
-  newlength= comp_ptr - comp_buf;
+  newlength= comp_ptr - pd->comp_buf;
 
   /* send packed empty lines if any */
 
@@ -2164,7 +2181,7 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
   color= "CMYKcmy"[coloridx];
   if (!color) color= 'K';
   stp_putc(color,v);
-  stp_zfwrite((const char *)comp_buf, newlength, 1, v);
+  stp_zfwrite((const char *)pd->comp_buf, newlength, 1, v);
   stp_putc('\015', v);
   return 1;
 }
@@ -2185,7 +2202,7 @@ canon_write_line(stp_vars_t *v)
       int num = write_number[i];
       int bits=pd->bits[col];
       if (pd->cols[col])
-	written += canon_write(v, pd->caps,
+	written += canon_write(v, pd, pd->caps,
 			       pd->cols[col] + pd->delay[col] * pd->length /*buf_length[i]*/,
 			       pd->length, num, pd->ydpi,
 			       &(pd->emptylines), pd->out_width,
@@ -2267,7 +2284,7 @@ canon_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
                         }
                     }
 
-                  written += canon_write(v, pd->caps,
+                  written += canon_write(v, pd, pd->caps,
                                (unsigned char *)(bufs[0].v[color] + line * linelength),
                                linelength, idx[color], pd->ydpi,
                                &(pd->emptylines), pd->out_width,
