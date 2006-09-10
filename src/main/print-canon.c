@@ -62,6 +62,13 @@
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+
+
+
+#define RASTER_LINES_PER_BLOCK 8   /* number of raster lines in every F) command */
+
+
+
 static int
 pack_pixels(unsigned char* buf,int len)
 {
@@ -1174,7 +1181,7 @@ canon_init_setMultiRaster(const stp_vars_t *v, canon_init_t *init){
 	return;
 
   canon_cmd(v,ESC28,0x49, 1, 0x1);  /* enable MultiLine Raster? */
-  canon_cmd(v,ESC28,0x4a, 1, 8);    /* set number of lines per raster block */
+  canon_cmd(v,ESC28,0x4a, 1, RASTER_LINES_PER_BLOCK);    /* set number of lines per raster block */
   canon_cmd(v,ESC28,0x4c, 4,'K','C','M','Y');  /* set the color sequence */
 }
 
@@ -1548,7 +1555,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   /* Allocate compression buffer */
   if(caps->features & CANON_CAP_I)
-      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * 8 * 4); /* for multiraster we need to buffer 8 lines for every color */
+      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * RASTER_LINES_PER_BLOCK * 4); /* for multiraster we need to buffer 8 lines for every color */
   else
       privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
   /* Allocate fold buffer */
@@ -2245,9 +2252,9 @@ static void canon_write_block(stp_vars_t* v,canon_privdata_t* pd,unsigned char* 
 
 static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y){
     int i;
-    unsigned int max_length = 2*pd->buf_length_max*8;
+    unsigned int max_length = 2*pd->buf_length_max * RASTER_LINES_PER_BLOCK;
     /* a new raster block begins */
-    if(!(y%8)){
+    if(!(y % RASTER_LINES_PER_BLOCK)){
         if(y != 0){
             /* write finished blocks */
             for(i=0;i<7;i++)
@@ -2267,9 +2274,9 @@ static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y){
     }
     if(y == pd->out_height - 1){
         /* we just compressed our last line */
-        if(pd->out_height % 8){
+        if(pd->out_height % RASTER_LINES_PER_BLOCK){
             /* but our raster block is not finished yet */
-            int missing = 8 - (pd->out_height % 8); /* calculate missing lines */
+            int missing = RASTER_LINES_PER_BLOCK - (pd->out_height % RASTER_LINES_PER_BLOCK); /* calculate missing lines */
             for(i=0;i<7;i++){
               if(pd->cols[i]){ /* add missing empty lines and write blocks */
                 int x;
