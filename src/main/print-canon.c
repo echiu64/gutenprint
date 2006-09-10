@@ -110,6 +110,8 @@ static const int subchannel_color_map[] =
   0, 0, 0, 0, 1, 1, 1
 };
 
+static const char canon_channel_map[] = "KCMYcmyk";
+
 /* K,C,M,Y */
 static const double ink_darknesses[] =
 {
@@ -201,6 +203,8 @@ typedef struct {
   int page_height;
   int top;
   int left;
+  int num_channels;
+  char channel_order[7];
 } canon_init_t;
 
 
@@ -1172,7 +1176,7 @@ canon_init_setImage(const stp_vars_t *v, canon_init_t *init)
   canon_cmd(v,ESC28,0x74, 3, arg_74_1, arg_74_2, arg_74_3);
 }
 
-/* ESC (I (J (L  FIXME make make this configurable 
+/* ESC (I (J (L 
  */
 static void
 canon_init_setMultiRaster(const stp_vars_t *v, canon_init_t *init){
@@ -1182,7 +1186,11 @@ canon_init_setMultiRaster(const stp_vars_t *v, canon_init_t *init){
 
   canon_cmd(v,ESC28,0x49, 1, 0x1);  /* enable MultiLine Raster? */
   canon_cmd(v,ESC28,0x4a, 1, RASTER_LINES_PER_BLOCK);    /* set number of lines per raster block */
-  canon_cmd(v,ESC28,0x4c, 4,'K','C','M','Y');  /* set the color sequence */
+ 
+  /* set the color sequence */ 
+  stp_zfwrite("\033(L", 3, 1, v);
+  stp_put16_le(init->num_channels, v);
+  stp_zfwrite((const char *)init->channel_order,init->num_channels, 1, v);
 }
 
 
@@ -1343,7 +1351,6 @@ set_mask(unsigned char *cd_mask, int x_center, int scaled_x_where,
 
 
 static void canon_add_ink(canon_privdata_t* privdata,const canon_inkset_t* ink,unsigned int used_inks,int length){
-  static const char canon_channel_map[] = "KCMYcmyk";
   static const unsigned int canon_ink_mask[] = {CANON_INK_K_MASK,CANON_INK_CMY_MASK,CANON_INK_CMY_MASK,CANON_INK_CMY_MASK,CANON_INK_CcMmYyKk_MASK,CANON_INK_CcMmYyKk_MASK,CANON_INK_CcMmYyKk_MASK,CANON_INK_CcMmYyKk_MASK};
   int i;
   if(ink->channel && ink->density){
@@ -1496,8 +1503,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   init.top = top;
   init.left = left;
 
-  canon_init_printer(v, &init);
-
  /*
   * Convert image size to printer resolution...
   */
@@ -1630,6 +1635,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     stp_set_default_float_parameter(v, "GCRUpper", k_upper);
   stp_dither_init(v, image, out_width, mode->xdpi, mode->ydpi);
 
+
+  init.num_channels = 0;
   for (i = 0; i < 7; i++)
     {
       if (privdata.cols[i])
@@ -1638,8 +1645,13 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 				 subchannel_color_map[i]);
 	  if (channel_color_map[i] == STP_ECOLOR_K)
 	    stp_channel_set_black_channel(v, STP_ECOLOR_K);
+          init.channel_order[init.num_channels]=canon_channel_map[i];
+          ++init.num_channels;
 	}
     }
+
+  /* init the printer */
+  canon_init_printer(v, &init);
 
   set_ink_ranges(v, privdata.shades[STP_ECOLOR_C],privdata.num_shades[STP_ECOLOR_C], STP_ECOLOR_C,init.ink_type, "CyanDensity",
 		     "LightCyanTransition");
