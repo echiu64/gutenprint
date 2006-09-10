@@ -668,6 +668,74 @@ static void p440_block_end_func(stp_vars_t *v)
 }
 
 
+/* Olympus PS-100 */
+static const olymp_pagesize_t ps100_page[] =
+{
+  { "w288h432", "4 x 6", -1, -1, 0, 0, 17, 0},	/* 4x6" */
+  { "B7", "3.5 x 5", -1, -1, 0, 0, 5, 0},	/* 3.5x5" */
+  { "Custom", NULL, -1, -1, 0, 0, 17, 0},
+};
+
+static const olymp_pagesize_list_t ps100_page_list =
+{
+  ps100_page, sizeof(ps100_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t ps100_printsize[] =
+{
+  { "314x314", "w288h432", 1254, 1808},
+  { "314x314", "B7", 1120, 1554},
+  { "314x314", "Custom", 1254, 1808},
+};
+
+static const olymp_printsize_list_t ps100_printsize_list =
+{
+  ps100_printsize, sizeof(ps100_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void ps100_printer_init_func(stp_vars_t *v)
+{
+  stp_zprintf(v, "\033U"); stp_zfwrite(zero, 1, 62, v);
+  
+  /* stp_zprintf(v, "\033ZC"); stp_zfwrite(zero, 1, 61, v); */
+  
+  stp_zprintf(v, "\033W"); stp_zfwrite(zero, 1, 62, v);
+  
+  stp_zfwrite("\x30\x2e\x00\xa2\x00\xa0\x00\xa0", 1, 8, v);
+  stp_put16_be(privdata.ysize, v);	/* paper height (px) */
+  stp_put16_be(privdata.xsize, v);	/* paper width (px) */
+  stp_zfwrite(zero, 1, 3, v);
+  stp_putc('\1', v);	/* number of copies */
+  stp_zfwrite(zero, 1, 8, v);
+  stp_putc('\1', v);
+  stp_zfwrite(zero, 1, 15, v);
+  stp_putc('\6', v);
+  stp_zfwrite(zero, 1, 23, v);
+
+  stp_zfwrite("\033ZT\0", 1, 4, v);
+  stp_put16_be(0, v);			/* image width offset (px) */
+  stp_put16_be(0, v);			/* image height offset (px) */
+  stp_put16_be(privdata.xsize, v);	/* image width (px) */
+  stp_put16_be(privdata.ysize, v);	/* image height (px) */
+  stp_zfwrite(zero, 1, 52, v);
+}
+
+static void ps100_printer_end_func(stp_vars_t *v)
+{
+  int pad = (64 - (((privdata.block_max_x - privdata.block_min_x + 1)
+	  * (privdata.block_max_y - privdata.block_min_y + 1) * 3) % 64)) % 64;
+  stp_deprintf(STP_DBG_OLYMPUS,
+		  "olympus: max_x %d min_x %d max_y %d min_y %d\n",
+  		  privdata.block_max_x, privdata.block_min_x,
+	  	  privdata.block_max_y, privdata.block_min_y);
+  stp_deprintf(STP_DBG_OLYMPUS, "olympus: olympus-ps100 padding=%d\n", pad);
+  stp_zfwrite(zero, 1, pad, v);		/* padding to 64B blocks */
+
+  stp_zprintf(v, "\033PY"); stp_zfwrite(zero, 1, 61, v);
+  stp_zprintf(v, "\033u"); stp_zfwrite(zero, 1, 62, v);
+}
+
+
 /* Canon CP-100 series */
 static const olymp_pagesize_t cpx00_page[] =
 {
@@ -1160,6 +1228,21 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p440_block_init_func, &p440_block_end_func,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     &p10_laminate_list,
+  },
+  { /* Olympus PS-100 */
+    20,
+    &bgr_ink_list,
+    &res_314dpi_list,
+    &ps100_page_list,
+    &ps100_printsize_list,
+    OLYMPUS_INTERLACE_NONE,
+    1808,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    &ps100_printer_init_func, &ps100_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
+    NULL,
   },
   { /* Canon CP-100, CP-200, CP-300 */
     1000,
