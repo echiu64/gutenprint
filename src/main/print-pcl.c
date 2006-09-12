@@ -45,7 +45,10 @@
  */
 static void	pcl_mode0(stp_vars_t *, unsigned char *, int, int);
 static void	pcl_mode2(stp_vars_t *, unsigned char *, int, int);
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+#ifndef MAX
+#  define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif /* !MAX */
 
 typedef struct
 {

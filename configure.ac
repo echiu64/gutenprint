@@ -666,7 +666,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([typedef struct __attribute__((__packed__)) {
                   [AC_MSG_RESULT([no])])
 
 AH_VERBATIM([HAVE_GCC_ATTRIBUTES_BOILERPLATE],
-[#ifndef HAVE_GCC_ATTRIBUTES
+[#if !defined(HAVE_GCC_ATTRIBUTES) && !defined(__attribute__)
 /* This should really be a C99 anonymous variadic macro. */
 #define __attribute__(attr)
 #endif])
@@ -783,6 +783,9 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS([nanosleep poll usleep])
 AC_CHECK_FUNCS([getopt_long])
 
+dnl finite() is non-standard, isfinite() is ISO-standard, figure out
+dnl which to use...
+AC_SEARCH_LIBS(finite, m, CFLAGS="-Disfinite=finite $CFLAGS")
 
 dnl Define what has to be built
 AM_CONDITIONAL(BUILD_FOOMATIC, test x${BUILD_FOOMATIC} = xyes)

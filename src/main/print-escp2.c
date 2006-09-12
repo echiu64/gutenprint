@@ -45,7 +45,9 @@
 #define OP_JOB_PRINT 2
 #define OP_JOB_END   4
 
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#ifndef MAX
+#  define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif /* !MAX */
 
 typedef struct
 {

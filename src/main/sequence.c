@@ -277,7 +277,7 @@ stp_sequence_set_point(stp_sequence_t *sequence, size_t where,
 {
   check_sequence(sequence);
 
-  if (where >= sequence->size || ! finite(data) ||
+  if (where >= sequence->size || ! isfinite(data) ||
       data < sequence->blo || data > sequence->bhi)
     return 0;
 
@@ -378,7 +378,7 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 		     child->value.text.string);
 		  goto error;
 		}
-	      if (! finite(tmpval)
+	      if (! isfinite(tmpval)
 		  || ( tmpval == 0 && errno == ERANGE )
 		  || tmpval < low
 		  || tmpval > high)
@@ -484,7 +484,7 @@ stp_sequence_set_##name##_data(stp_sequence_t *sequence,                     \
 									     \
   /* Validate the data before we commit to it. */			     \
   for (i = 0; i < count; i++)						     \
-    if (! finite(data[i]) ||                                                 \
+    if (! isfinite(data[i]) ||                                                 \
         data[i] < sequence->blo ||                                           \
         data[i] > sequence->bhi)                                             \
       return 0;								     \

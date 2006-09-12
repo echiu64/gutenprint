@@ -979,7 +979,7 @@ cups_errfunc(void *file, const char *buf, size_t bytes)
  * 'cancel_job()' - Cancel the current job...
  */
 
-void
+static void
 cancel_job(int sig)			/* I - Signal */
 {
   (void)sig;
@@ -1018,7 +1018,7 @@ throwaway_data(int amount, cups_image_t *cups)
     cupsRasterReadPixels(cups->ras, trash, leftover);
 }
 
-stp_image_status_t
+static stp_image_status_t
 Image_get_row(stp_image_t   *image,	/* I - Image */
 	      unsigned char *data,	/* O - Row */
 	      size_t	    byte_limit,	/* I - how many bytes in data */

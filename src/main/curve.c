@@ -538,7 +538,7 @@ int
 stp_curve_set_gamma(stp_curve_t *curve, double fgamma)
 {
   check_curve(curve);
-  if (curve->wrap_mode || ! finite(fgamma) || fgamma == 0.0)
+  if (curve->wrap_mode || ! isfinite(fgamma) || fgamma == 0.0)
     return 0;
   clear_curve_data(curve);
   curve->gamma = fgamma;
@@ -570,7 +570,7 @@ stp_curve_set_data(stp_curve_t *curve, size_t count, const double *data)
   /* Validate the data before we commit to it. */
   stp_sequence_get_bounds(curve->seq, &low, &high);
   for (i = 0; i < count; i++)
-    if (! finite(data[i]) || data[i] < low || data[i] > high)
+    if (! isfinite(data[i]) || data[i] < low || data[i] > high)
       {
 	stp_deprintf(STP_DBG_CURVE_ERRORS,
 		     "stp_curve_set_data: datum out of bounds: "
@@ -620,7 +620,7 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
   stp_sequence_get_bounds(curve->seq, &low, &high);
   for (i = 0; i < count; i++)
     {
-      if (! finite(data[i].y) || data[i].y < low || data[i].y > high)
+      if (! isfinite(data[i].y) || data[i].y < low || data[i].y > high)
 	{
 	  stp_deprintf(STP_DBG_CURVE_ERRORS,
 		       "stp_curve_set_data_points: datum out of bounds: "
@@ -918,7 +918,7 @@ stp_curve_rescale(stp_curve_t *curve, double scale,
 	}
     }
 
-  if (! finite(nbhi) || ! finite(nblo))
+  if (! isfinite(nbhi) || ! isfinite(nblo))
     return 0;
 
   count = get_point_count(curve);
@@ -1302,7 +1302,7 @@ interpolate_points(stp_curve_t *a, stp_curve_t *b,
 	pa += pb;
       else
 	pa *= pb;
-      if (! finite(pa))
+      if (! isfinite(pa))
 	{
 	  stp_deprintf(STP_DBG_CURVE_ERRORS,
 		       "interpolate_points: interpolated point %lu is invalid\n",
