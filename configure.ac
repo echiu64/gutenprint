@@ -635,11 +635,16 @@ if test x$ac_compiler_gnu = "xyes"; then
   if test x${USE_MAINTAINER_MODE} = xyes ; then
     STP_ADD_COMPILER_ARGS([-pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
   fi
-else
   if test x$ENABLE_DEBUG = xyes ; then
     STP_ADD_COMPILER_ARG([-g])
   else
     STP_ADD_FIRST_COMPILER_ARG([-O6 -O3 -O2 -O1 -O])
+  fi
+else
+  if test x$ENABLE_DEBUG = xyes ; then
+    STP_ADD_COMPILER_ARG([-g])
+  else
+    STP_ADD_FIRST_COMPILER_ARG([-O])
   fi
 fi
 if test x$ENABLE_PROFILE = xyes ; then

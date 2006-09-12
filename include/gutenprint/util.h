@@ -36,6 +36,10 @@
 extern "C" {
 #endif
 
+#if !defined(__GNUC__) && !defined(__attribute__)
+#  define __attribute__(x)
+#endif /* !__GNUC__ && !__attribute__ */
+
 /**
  * Utility functions.
  *
