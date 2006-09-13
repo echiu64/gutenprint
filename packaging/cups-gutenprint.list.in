@@ -1,0 +1,54 @@
+#
+# "$Id$"
+#
+# EPM list file for CUPS drivers; EPM is available at:
+#
+#     http://www.easysw.com/epm/
+#
+# YOU MUST CONFIGURE GUTENPRINT WITH --disable-shared!
+#
+# Copyright 2001, 2006 by Michael Sweet
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+
+# Basic product info...
+%product Gutenprint drivers for CUPS
+%copyright 1997-2006 by Michael Sweet and Robert Krawitz
+%vendor Michael Sweet and Robert Krawitz
+%version @GUTENPRINT_VERSION@
+%readme README
+%license COPYING
+%requires cups
+
+# Directories
+$CUPS_DATADIR=@cups_conf_datadir@
+$CUPS_SERVERBIN=@cups_conf_serverbin@
+$CUPS_SERVERROOT=@cups_conf_serverroot@
+
+# MIME type file for printer command files...
+f 0644 root sys $CUPS_SERVERROOT/gutenprint.types src/cups/command.types
+
+# Driver interface for printer drivers...
+f 0755 root sys $CUPS_SERVERBIN/driver/gutenprint src/cups/gutenprint
+
+# Filters for printer drivers...
+f 0755 root sys $CUPS_SERVERBIN/filter/commandtocanon src/cups/commandtocanon
+f 0755 root sys $CUPS_SERVERBIN/filter/commandtoepson src/cups/commandtoepson
+f 0755 root sys $CUPS_SERVERBIN/filter/rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ src/cups/rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+
+#
+# End of "$Id$"
+#
