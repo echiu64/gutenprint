@@ -116,6 +116,13 @@ AC_SUBST([GUTENPRINTUI2_CURRENT_INTERFACE])
 AC_SUBST([GUTENPRINTUI2_INTERFACE_AGE])
 AC_SUBST([GUTENPRINTUI2_BINARY_AGE])
 
+dnl Make sure we inherit common compiler options from the environment...
+CFLAGS="${CFLAGS:=}"
+CPPFLAGS="${CPPFLAGS:=}"
+CXXFLAGS="${CXXFLAGS:=}"
+LDFLAGS="${LDFLAGS:=}"
+LIBS="${LIBS:=}"
+
 dnl Initialize automake stuff.
 AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu no-dependencies)
 popdef([GUTENPRINT_NAME])
