@@ -200,28 +200,3 @@ EXTRA_DIST = autogen.sh ChangeLogStamp
 
 .PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLogPhony dist-time-check
 
-# Make software distributions using EPM (http://www.easysw.com/epm/)...
-EPMFLAGS	=	-v --output-dir dist $(EPMARCH)
-
-aix bsd deb depot inst pkg rpm setld slackware swinstall tardist:
-	epm $(EPMFLAGS) -f $@ cups-gutenprint packaging/cups-gutenprint.list
-
-epm:
-	epm $(EPMFLAGS) -s packaging/cups-gutenprint.gif cups-gutenprint packaging/cups-gutenprint.list
-
-osx:
-	epm $(EPMFLAGS) -f osx -s packaging/cups-gutenprint.gif cups-gutenprint packaging/cups-gutenprint.list
-
-.PHONEY:	dist
-dist:	all
-	$(RM) -r dist
-	$(MAKE) $(MFLAGS) epm
-	case `uname` in \
-		*BSD*) $(MAKE) $(MFLAGS) bsd;; \
-		Darwin*) $(MAKE) $(MFLAGS) osx;; \
-		IRIX*) $(MAKE) $(MFLAGS) tardist;; \
-		Linux*) $(MAKE) $(MFLAGS) rpm;; \
-		SunOS*) $(MAKE) $(MFLAGS) pkg;; \
-	esac
-
-
