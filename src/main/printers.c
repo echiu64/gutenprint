@@ -968,7 +968,10 @@ stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
 		}
 	      else if (strcmp(p_type, "curve") == 0)
 		{
-		  stp_curve_t *curve = stp_curve_create_from_xmltree(child);
+		  stp_curve_t *curve;
+		  while (child->type == STP_MXML_TEXT && child->next)
+		    child = child->next;
+		  curve = stp_curve_create_from_xmltree(child);
 		  if (curve)
 		    {
 		      stp_set_curve_parameter(v, p_name, curve);
@@ -977,7 +980,10 @@ stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
 		}
 	      else if (strcmp(p_type, "array") == 0)
 		{
-		  stp_array_t *array = stp_array_create_from_xmltree(child);
+		  stp_array_t *array;
+		  while (child->type == STP_MXML_TEXT && child->next)
+		    child = child->next;
+		  array = stp_array_create_from_xmltree(child);
 		  if (array)
 		    {
 		      stp_set_array_parameter(v, p_name, array);
@@ -987,7 +993,6 @@ stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
 	      else
 		{
 		  stp_erprintf("Bad property %s type %s\n", p_name, p_type);
-		  continue;
 		}
 	    }
 	}
