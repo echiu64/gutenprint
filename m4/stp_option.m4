@@ -141,7 +141,7 @@ AC_DEFUN([STP_ADD_COMPILER_ARG],[
   CFLAGS="${m4_ifval([$3], [$3], [CFLAGS])} $1"
   AC_TRY_COMPILE(,,
       [ AC_MSG_RESULT(yes);
-        stp_newCFLAGS="${m4_ifval([$3], [$3], [CFLAGS])} $1"],
+        stp_newCFLAGS="${m4_ifval([$3], [$3], [CFLAGS])}"],
       [ AC_MSG_RESULT(no);])
   CFLAGS="$stp_acOLDCFLAGS"
   m4_ifval([$3], [$3], [CFLAGS])="${stp_newCFLAGS}"
