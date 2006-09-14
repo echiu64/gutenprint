@@ -1021,7 +1021,6 @@ AC_CONFIG_FILES([src/gutenprintui/Makefile])
 AC_CONFIG_FILES([src/gutenprintui/gutenprintui.pc])
 AC_CONFIG_FILES([src/gutenprintui2/Makefile])
 AC_CONFIG_FILES([src/gutenprintui2/gutenprintui2.pc])
-AC_CONFIG_FILES([packaging/cups-gutenprint.list])
 AC_CONFIG_FILES([test/Makefile])
 AC_CONFIG_FILES([scripts/Makefile])
 AC_CONFIG_COMMANDS([default], [
