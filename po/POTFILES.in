@@ -57,11 +57,6 @@ src/main/color-conversion.h
 src/main/dither-impl.h
 
 # UI library sources
-src/gutenprintui/panel.c
-src/gutenprintui/plist.c
-src/gutenprintui/print-image-thumbnail.c
-src/gutenprintui/ui-utils.c
-
 src/gutenprintui2/curve.c
 src/gutenprintui2/gammacurve.c
 src/gutenprintui2/panel.c
@@ -74,10 +69,6 @@ src/cups/genppd.c
 
 # escputil sources
 src/escputil/escputil.c
-
-# GIMP sources
-src/gimp/print-image-gimp.c
-src/gimp/print.c
 
 # GIMP sources
 src/gimp2/print-image-gimp.c
