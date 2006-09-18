@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2005 by Easy Software Products and Robert Krawitz.
+ *   Copyright 1993-2006 by Easy Software Products and Robert Krawitz.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -29,14 +29,14 @@
  *
  * Contents:
  *
- *   main()                   - Process files on the command-line...
- *   usage()                  - Show program usage.
- *   help()                   - Show detailed program usage.
- *   getlangs()               - Get available translations.
- *   printlangs()             - Show available translations.
- *   printmodels()            - Show available printer models.
- *   checkcat()               - Check message catalogue exists.
- *   write_ppd()              - Write a PPD file.
+ *   main()        - Process files on the command-line...
+ *   usage()       - Show program usage.
+ *   help()        - Show detailed program usage.
+ *   getlangs()    - Get available translations.
+ *   printlangs()  - Show available translations.
+ *   printmodels() - Show available printer models.
+ *   checkcat()    - Check message catalogue exists.
+ *   write_ppd()   - Write a PPD file.
  */
 
 /*
@@ -57,6 +57,13 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+
+#ifdef CUPS_DRIVER_INTERFACE
+#  ifdef HAVE_LIBZ
+#    undef HAVE_LIBZ
+#  endif /* HAVE_LIBZ */
+#endif /* CUPS_DRIVER_INTERFACE */
+
 #ifdef HAVE_LIBZ
 #include <zlib.h>
 #endif
@@ -149,55 +156,42 @@ const char *parameter_level_names[] =
  * Local functions...
  */
 
-void	usage(void);
-void    help(void);
-char ** getlangs(void);
-static int stpi_scandir (const char *dir,
-			 struct dirent ***namelist,
-			 int (*sel) (const struct dirent *),
-			 int (*cmp) (const void *, const void *));
-int     checkcat (const struct dirent *localedir);
-void    printlangs(char** langs);
-void    printmodels(int verbose);
-int	write_ppd(const stp_printer_t *p, const char *prefix,
-		  const char *language, int verbose, int simplified);
+#ifdef CUPS_DRIVER_INTERFACE
+static int	cat_ppd(const char *uri);
+#endif /* CUPS_DRIVER_INTERFACE */
+static int	checkcat(const struct dirent *localedir);
+#ifndef CUPS_DRIVER_INTERFACE
+static int	generate_ppd(const char *prefix, int verbose,
+		             const stp_printer_t *p, const char *language,
+			     int simplified);
+#endif /* !CUPS_DRIVER_INTERFACE */
+static char	**getlangs(void);
+static void	help(void);
+static int	is_special_option(const char *name);
+#ifdef CUPS_DRIVER_INTERFACE
+static int	list_ppds(const char *argv0);
+#endif /* CUPS_DRIVER_INTERFACE */
+static void	print_group_close(gzFile fp, stp_parameter_class_t p_class,
+				  stp_parameter_level_t p_level);
+static void	print_group_open(gzFile fp, stp_parameter_class_t p_class,
+				 stp_parameter_level_t p_level);
+static void	printlangs(char** langs);
+static void	printmodels(int verbose);
+static int	stpi_scandir(const char *dir,
+			     struct dirent ***namelist,
+			     int (*sel)(const struct dirent *),
+			     int (*cmp)(const void *, const void *));
+static void	usage(void);
+static int	write_ppd(gzFile fp, const stp_printer_t *p,
+		          const char *language, int simplified);
 
 
 /*
  * Global variables...
  */
+
 const char *baselocaledir = PACKAGE_LOCALE_DIR;
 
-static int
-is_special_option(const char *name)
-{
-  int i = 0;
-  while (special_options[i])
-    {
-      if (strcmp(name, special_options[i]) == 0)
-	return 1;
-      i++;
-    }
-  return 0;
-}
-
-static void
-print_group_open(FILE *fp, stp_parameter_class_t p_class,
-		 stp_parameter_level_t p_level)
-{
-  gzprintf(fp, "*OpenGroup: %s %s\n\n",
-	   gettext(parameter_class_names[p_class]),
-	   gettext(parameter_level_names[p_level]));
-}
-
-static void
-print_group_close(FILE *fp, stp_parameter_class_t p_class,
-		 stp_parameter_level_t p_level)
-{
-  gzprintf(fp, "*CloseGroup: %s %s\n\n",
-	   gettext(parameter_class_names[p_class]),
-	   gettext(parameter_level_names[p_level]));
-}
 
 /*
  * 'main()' - Process files on the command-line...
@@ -207,6 +201,30 @@ int				    /* O - Exit status */
 main(int  argc,			    /* I - Number of command-line arguments */
      char *argv[])		    /* I - Command-line arguments */
 {
+#ifdef CUPS_DRIVER_INTERFACE
+ /*
+  * Initialise libgutenprint
+  */
+
+  stp_init();
+
+ /*
+  * Process command-line...
+  */
+
+  if (argc == 2 && !strcmp(argv[1], "list"))
+    return (list_ppds(argv[0]));
+  else if (argc == 3 && !strcmp(argv[1], "cat"))
+    return (cat_ppd(argv[2]));
+  else
+  {
+    fprintf(stderr, "Usage: %s list\n", argv[0]);
+    fprintf(stderr, "       %s cat URI\n", argv[0]);
+    return (1);
+  }
+
+
+#else /* !CUPS_DRIVER_INTERFACE */
   int		i;		    /* Looping var */
   const char	*prefix;	    /* Directory prefix for output */
   const char	*language = NULL;   /* Language */
@@ -248,15 +266,15 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'c':
       baselocaledir = optarg;
-#ifdef DEBUG
-      fprintf (stderr, "DEBUG: baselocaledir: %s\n", baselocaledir);
-#endif
+#  ifdef DEBUG
+      fprintf(stderr, "DEBUG: baselocaledir: %s\n", baselocaledir);
+#  endif
       break;
     case 'p':
       prefix = optarg;
-#ifdef DEBUG
-      fprintf (stderr, "DEBUG: prefix: %s\n", prefix);
-#endif
+#  ifdef DEBUG
+      fprintf(stderr, "DEBUG: prefix: %s\n", prefix);
+#  endif
       break;
     case 'l':
       language = optarg;
@@ -278,7 +296,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'V':
       printf("cups-genppd version %s, "
-	     "Copyright (c) 1993-2005 by Easy Software Products and Robert Krawitz.\n\n",
+	     "Copyright 1993-2006 by Easy Software Products and Robert Krawitz.\n\n",
 	     VERSION);
       printf("Default CUPS PPD PostScript Level: %d\n", cups_ppd_ps_level);
       printf("Default PPD location (prefix):     %s\n", CUPS_MODELDIR);
@@ -304,11 +322,11 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	   "    Voice: (301) 373-9603\n"
 	   "    EMail: cups-info@cups.org\n"
 	   "      WWW: http://www.cups.org\n");
-      exit (EXIT_SUCCESS);
+      exit(EXIT_SUCCESS);
       break;
     default:
       usage();
-      exit (EXIT_FAILURE);
+      exit(EXIT_FAILURE);
       break;
     }
   }
@@ -320,14 +338,14 @@ main(int  argc,			    /* I - Number of command-line arguments */
       {
 	models[n] = argv[optind+n];
       }
-    models[numargs] = (char*) NULL;
+    models[numargs] = (char*)NULL;
 
     n=0;
   }
 
-#ifdef ENABLE_NLS
+#  ifdef ENABLE_NLS
   langs = getlangs();
-#endif
+#  endif
 
 /*
  * Initialise libgutenprint
@@ -340,18 +358,18 @@ main(int  argc,			    /* I - Number of command-line arguments */
   */
 
   setlocale(LC_ALL, language ? language : "");
-#ifdef LC_CTYPE
+#  ifdef LC_CTYPE
   setlocale(LC_CTYPE, language ? language : "");
-#endif /* LC_CTYPE */
-#ifdef LC_NUMERIC
+#  endif /* LC_CTYPE */
+#  ifdef LC_NUMERIC
   setlocale(LC_NUMERIC, "C");
-#endif /* LC_NUMERIC */
+#  endif /* LC_NUMERIC */
 
  /*
   * Set up the catalog
   */
 
-#ifdef ENABLE_NLS
+#  ifdef ENABLE_NLS
   if (baselocaledir)
   {
     if ((bindtextdomain(PACKAGE, baselocaledir)) == NULL)
@@ -360,21 +378,21 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	      PACKAGE, baselocaledir, strerror(errno));
       exit(EXIT_FAILURE);
     }
-#ifdef DEBUG
-    fprintf (stderr, "DEBUG: bound textdomain: %s under %s\n",
+#    ifdef DEBUG
+    fprintf(stderr, "DEBUG: bound textdomain: %s under %s\n",
 	     PACKAGE, baselocaledir);
-#endif
+#    endif
     if ((textdomain(PACKAGE)) == NULL)
     {
       fprintf(stderr, "cups-genppd: cannot select message catalog %s under %s: %s\n",
               PACKAGE, baselocaledir, strerror(errno));
       exit(EXIT_FAILURE);
     }
-#ifdef DEBUG
-    fprintf (stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
-#endif
+#    ifdef DEBUG
+    fprintf(stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
+#    endif
   }
-#endif
+#  endif
 
   /*
    * Print lists
@@ -383,13 +401,13 @@ main(int  argc,			    /* I - Number of command-line arguments */
   if (opt_printlangs)
     {
       printlangs(langs);
-      exit (EXIT_SUCCESS);
+      exit(EXIT_SUCCESS);
     }
 
   if (opt_printmodels)
     {
       printmodels(verbose);
-      exit (EXIT_SUCCESS);
+      exit(EXIT_SUCCESS);
     }
 
  /*
@@ -408,11 +426,11 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	  if (printer)
 	    {
 	      if ((which_ppds & 1) &&
-		  write_ppd(printer, prefix, language, verbose, 1))
-		return 1;
+		  generate_ppd(prefix, verbose, printer, language, 1))
+		return (1);
 	      if ((which_ppds & 2) &&
-		  write_ppd(printer, prefix, language, verbose, 0))
-		return 1;
+		  generate_ppd(prefix, verbose, printer, language, 0))
+		return (1);
 	    }
 	  else
 	    {
@@ -431,10 +449,10 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	  if (printer)
 	    {
 	      if ((which_ppds & 1) &&
-		  write_ppd(printer, prefix, language, verbose, 1))
+		  generate_ppd(prefix, verbose, printer, language, 1))
 		return (1);
 	      if ((which_ppds & 2) &&
-		  write_ppd(printer, prefix, language, verbose, 0))
+		  generate_ppd(prefix, verbose, printer, language, 0))
 		return (1);
 	    }
 	}
@@ -453,22 +471,224 @@ main(int  argc,			    /* I - Number of command-line arguments */
     }
 
   return (0);
+#endif /* CUPS_DRIVER_INTERFACE */
 }
+
 
 /*
- * 'usage()' - Show program usage...
+ * 'cat_ppd()' - Copy the named PPD to stdout.
  */
 
-void
-usage(void)
+#ifdef CUPS_DRIVER_INTERFACE
+static int				/* O - Exit status */
+cat_ppd(const char *uri)		/* I - Driver URI */
 {
-  puts("Usage: cups-genppd [-c localedir] "
-        "[-l locale] [-p prefix] [-s | -a] [-q] [-v] models...\n"
-        "       cups-genppd -L [-c localedir]\n"
-	"       cups-genppd -M [-v]\n"
-	"       cups-genppd -h\n"
-	"       cups-genppd -V\n");
+  char			scheme[64],	/* URI scheme */
+			userpass[32],	/* URI user/pass (unused) */
+			hostname[32],	/* URI hostname */
+			resource[1024];	/* URI resource */
+  int			port;		/* URI port (unused) */
+  http_uri_status_t	status;		/* URI decode status */
+  const stp_printer_t	*p;		/* Printer driver */
+
+
+  if ((status = httpSeparateURI(HTTP_URI_CODING_ALL, uri,
+                                scheme, sizeof(scheme),
+                                userpass, sizeof(userpass),
+				hostname, sizeof(hostname),
+		                &port, resource, sizeof(resource)))
+				    < HTTP_URI_OK)
+  {
+    fprintf(stderr, "ERROR: Bad ppd-name \"%s\" (%d)!\n", uri, status);
+    return (1);
+  }
+
+  if ((p = stp_get_printer_by_driver(resource + 1)) == NULL)
+  {
+    fprintf(stderr, "ERROR: Unable to find driver \"%s\"!\n", resource + 1);
+    return (1);
+  }
+
+  return (write_ppd(stdout, p, "en", !strcmp(hostname, "simple")));
 }
+#endif /* CUPS_DRIVER_INTERFACE */
+
+
+/*
+ * 'checkcat()' - A callback for stpi_scandir() to check
+ *                if a message catalogue exists
+ */
+
+int
+checkcat(const struct dirent *localedir)
+{
+  char* catpath;
+  int catlen, status = 0, savederr;
+  struct stat catstat;
+
+  savederr = errno; /* since we are a callback, preserve stpi_scandir() state */
+
+  /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
+  /* Add 3, for two '/' separators and '\0'   */
+  catlen = strlen(baselocaledir) + strlen(localedir->d_name) + strlen(CATALOG) + 3;
+  catpath = (char*)stp_malloc(catlen * sizeof(char));
+
+  strncpy(catpath, baselocaledir, strlen(baselocaledir));
+  catlen = strlen(baselocaledir);
+  *(catpath+catlen) = '/';
+  catlen++;
+  strncpy(catpath+catlen, localedir->d_name, strlen(localedir->d_name));
+  catlen += strlen(localedir->d_name);
+  *(catpath+catlen) = '/';
+  catlen++;
+  strncpy(catpath+catlen, CATALOG, strlen(CATALOG));
+  catlen += strlen(CATALOG);
+  *(catpath+catlen) = '\0';
+
+  if (!stat(catpath, &catstat))
+    {
+      if (S_ISREG(catstat.st_mode))
+	{
+	  status = 1;
+	}
+     }
+
+  stp_free(catpath);
+
+  errno = savederr;
+  return status;
+}
+
+
+/*
+ * 'dirent_sort()' - Sort directory entries.
+ */
+
+static int				/* O - Result of comparison */
+dirent_sort(const void *a,		/* I - First entry */
+	    const void *b)		/* I - Second entry */
+{
+  return strcoll((*(const struct dirent *const *)a)->d_name,
+		 (*(const struct dirent *const *)b)->d_name);
+}
+
+
+/*
+ * 'generate_ppd()' - Generate a PPD file.
+ */
+
+#ifndef CUPS_DRIVER_INTERFACE
+static int				/* O - Exit status */
+generate_ppd(
+    const char          *prefix,	/* I - PPD directory prefix */
+    int                 verbose,	/* I - Verbosity level */
+    const stp_printer_t *p,		/* I - Driver */
+    const char          *language,	/* I - Primary language */
+    int                 simplified)	/* I - 1 = simplified options */
+{
+  int		status;			/* Exit status */
+  gzFile	fp;			/* File to write to */
+  char		filename[1024];		/* Filename */
+  struct stat   dir;                    /* Prefix dir status */
+
+
+ /*
+  * Skip the PostScript drivers...
+  */
+
+  if (!strcmp(stp_printer_get_family(p), "ps") ||
+      !strcmp(stp_printer_get_family(p), "raw"))
+    return (0);
+
+ /*
+  * Make sure the destination directory exists...
+  */
+
+  if (stat(prefix, &dir) && !S_ISDIR(dir.st_mode))
+  {
+    if (mkdir(prefix, 0777))
+    {
+      printf("cups-genppd: Cannot create directory %s: %s\n",
+	     prefix, strerror(errno));
+      exit(EXIT_FAILURE);
+    }
+  }
+
+ /*
+  * The files will be named stp-<driver>.<major>.<minor>.ppd, for
+  * example:
+  * 
+  * stp-escp2-ex.5.0.ppd
+  * 
+  * or
+  * 
+  * stp-escp2-ex.5.0.ppd.gz
+  */
+
+  snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s%s",
+	   prefix, stp_printer_get_driver(p), GUTENPRINT_RELEASE_VERSION,
+	   simplified ? ".sim" : "", ppdext, gzext);
+
+ /*
+  * Open the PPD file...
+  */
+
+  if ((fp = gzopen(filename, "wb")) == NULL)
+  {
+    fprintf(stderr, "cups-genppd: Unable to create file \"%s\" - %s.\n",
+            filename, strerror(errno));
+    return (2);
+  }
+
+  if (verbose)
+    fprintf(stderr, "Writing %s...\n", filename);
+  else
+    fprintf(stderr, ".");
+
+  status = write_ppd(fp, p, language, simplified);
+
+  gzclose(fp);
+
+  return (status);
+}
+#endif /* !CUPS_DRIVER_INTERFACE */
+
+
+/*
+ * 'getlangs()' - Get a list of available translations
+ */
+
+char **
+getlangs(void)
+{
+  struct dirent** langdirs = NULL;
+  int n;
+  char **langs;
+
+  n = stpi_scandir(baselocaledir, &langdirs, checkcat, dirent_sort);
+  if (n >= 0)
+    {
+      int idx;
+      langs = stp_malloc((n+1) * sizeof(char*));
+      for (idx = 0; idx < n; ++idx)
+	{
+	  langs[idx] = (char*)stp_malloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
+	  strcpy(langs[idx], langdirs[idx]->d_name);
+	  free(langdirs[idx]); /* Must use plain free() */
+	}
+      langs[n] = NULL;
+      free(langdirs); /* Must use plain free() */
+    }
+  else
+    return NULL;
+
+  return langs;
+}
+
+
+/*
+ * 'help()' - Show detailed help.
+ */
 
 void
 help(void)
@@ -497,54 +717,112 @@ help(void)
        "  A list of printer models, either the driver or quoted full name.\n");
 }
 
-/*
- * 'dirent_sort()' - sort directory entries
- */
-static int
-dirent_sort(const void *a,
-	    const void *b)
-{
-  return strcoll ((*(const struct dirent *const *) a)->d_name,
-		  (*(const struct dirent *const *) b)->d_name);
-}
 
 /*
- * 'getlangs()' - Get a list of available translations
+ * 'is_special_option()' - Determine if an option should be grouped.
  */
 
-char **
-getlangs(void)
+static int				/* O - 1 if non-grouped, 0 otherwise */
+is_special_option(const char *name)	/* I - Option name */
 {
-  struct dirent** langdirs = NULL;
-  int n;
-  char **langs;
-
-  n = stpi_scandir (baselocaledir, &langdirs, checkcat, dirent_sort);
-  if (n >= 0)
+  int i = 0;
+  while (special_options[i])
     {
-      int idx;
-      langs = stp_malloc((n+1) * sizeof(char*));
-      for (idx = 0; idx < n; ++idx)
-	{
-	  langs[idx] = (char*) stp_malloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
-	  strcpy(langs[idx], langdirs[idx]->d_name);
-	  free (langdirs[idx]); /* Must use plain free() */
-	}
-      langs[n] = NULL;
-      free (langdirs); /* Must use plain free() */
+      if (strcmp(name, special_options[i]) == 0)
+	return 1;
+      i++;
     }
-  else
-    return NULL;
-
-  return langs;
+  return 0;
 }
 
 
 /*
- * 'printlangs()' - Print list of available translations
+ * 'list_ppds()' - List the available drivers.
  */
 
-void printlangs(char **langs)
+#ifdef CUPS_DRIVER_INTERFACE
+static int				/* O - Exit status */
+list_ppds(const char *argv0)		/* I - Name of program */
+{
+  const char		*scheme;	/* URI scheme */
+  int			i;		/* Looping var */
+  const stp_printer_t	*printer;	/* Pointer to printer driver */
+
+
+  if ((scheme = strrchr(argv0, '/')) != NULL)
+    scheme ++;
+  else
+    scheme = argv0;
+
+  for (i = 0; i < stp_printer_model_count(); i++)
+    if ((printer = stp_get_printer_by_index(i)) != NULL)
+    {
+      if (!strcmp(stp_printer_get_family(printer), "ps") ||
+	  !strcmp(stp_printer_get_family(printer), "raw"))
+        continue;
+
+      printf("\"%s://expert/%s\" "
+             "en "
+	     "\"%s\" "
+             "\"%s, Gutenprint" GUTENPRINT_RELEASE_VERSION " Expert\" "
+	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
+             scheme, stp_printer_get_driver(printer),
+	     stp_printer_get_manufacturer(printer),
+	     stp_printer_get_long_name(printer));
+
+      printf("\"%s://simple/%s\" "
+             "en "
+	     "\"%s\" "
+             "\"%s, Gutenprint" GUTENPRINT_RELEASE_VERSION " Simplified\" "
+	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
+             scheme, stp_printer_get_driver(printer),
+	     stp_printer_get_manufacturer(printer),
+	     stp_printer_get_long_name(printer));
+    }
+
+  return (0);
+}
+#endif /* CUPS_DRIVER_INTERFACE */
+
+
+/*
+ * 'print_group_close()' - Close a UI group.
+ */
+
+static void
+print_group_close(
+    gzFile                fp,		/* I - File to write to */
+    stp_parameter_class_t p_class,	/* I - Option class */
+    stp_parameter_level_t p_level)	/* I - Option level */
+{
+  gzprintf(fp, "*CloseGroup: %s %s\n\n",
+	   gettext(parameter_class_names[p_class]),
+	   gettext(parameter_level_names[p_level]));
+}
+
+
+/*
+ * 'print_group_open()' - Open a new UI group.
+ */
+
+static void
+print_group_open(
+    gzFile                fp,		/* I - File to write to */
+    stp_parameter_class_t p_class,	/* I - Option class */
+    stp_parameter_level_t p_level)	/* I - Option level */
+{
+  gzprintf(fp, "*OpenGroup: %s %s\n\n",
+	   gettext(parameter_class_names[p_class]),
+	   gettext(parameter_level_names[p_level]));
+}
+
+
+/*
+ * 'printlangs()' - Print list of available translations.
+ */
+
+void
+printlangs(char **langs)		/* I - Languages */
 {
   if (langs)
     {
@@ -555,15 +833,16 @@ void printlangs(char **langs)
 	  n++;
 	}
     }
-  exit (EXIT_SUCCESS);
+  exit(EXIT_SUCCESS);
 }
 
 
 /*
- * 'printmodels' - Print a list of available models
+ * 'printmodels()' - Print a list of available models.
  */
 
-void printmodels(int verbose)
+void
+printmodels(int verbose)		/* I - Verbosity level */
 {
   const stp_printer_t *p;
   int i;
@@ -582,8 +861,9 @@ void printmodels(int verbose)
 	    printf("%s\n", stp_printer_get_driver(p));
 	}
     }
-  exit (EXIT_SUCCESS);
+  exit(EXIT_SUCCESS);
 }
+
 
 /* Adapted from GNU libc <dirent.h>
    These macros extract size information from a `struct dirent *'.
@@ -591,10 +871,10 @@ void printmodels(int verbose)
    have side effects.  Each of these may involve a relatively costly
    call to `strlen' on some systems, so these values should be cached.
 
-   _D_EXACT_NAMLEN (DP) returns the length of DP->d_name, not including
+   _D_EXACT_NAMLEN(DP) returns the length of DP->d_name, not including
    its terminating null character.
 
-   _D_ALLOC_NAMLEN (DP) returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
+   _D_ALLOC_NAMLEN(DP) returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
    that is, the allocation size needed to hold the DP->d_name string.
    Use this macro when you don't need the exact length, just an upper bound.
    This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
@@ -605,18 +885,18 @@ void printmodels(int verbose)
 #  define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
 # endif
 # ifndef _D_ALLOC_NAMLEN
-#  define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
+#  define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN(d) + 1)
 # endif
 #else
 # ifndef _D_EXACT_NAMLEN
-#  define _D_EXACT_NAMLEN(d) (strlen ((d)->d_name))
+#  define _D_EXACT_NAMLEN(d) (strlen((d)->d_name))
 # endif
 # ifndef _D_ALLOC_NAMLEN
 #  ifdef _DIRENT_HAVE_D_RECLEN
-#   define _D_ALLOC_NAMLEN(d) (((char *) (d) + (d)->d_reclen) - &(d)->d_name[0])
+#   define _D_ALLOC_NAMLEN(d) (((char *)(d) + (d)->d_reclen) - &(d)->d_name[0])
 #  else
-#   define _D_ALLOC_NAMLEN(d) (sizeof (d)->d_name > 1 ? sizeof (d)->d_name : \
-                               _D_EXACT_NAMLEN (d) + 1)
+#   define _D_ALLOC_NAMLEN(d) (sizeof(d)->d_name > 1 ? sizeof(d)->d_name : \
+                               _D_EXACT_NAMLEN(d) + 1)
 #  endif
 # endif
 #endif
@@ -625,13 +905,16 @@ void printmodels(int verbose)
  * 'stpi_scandir()' - BSD scandir() replacement.
  */
 
-static int
-stpi_scandir (const char *dir,
-	      struct dirent ***namelist,
-	      int (*sel) (const struct dirent *),
-	      int (*cmp) (const void *, const void *))
+static int				/* O - Number of entries or -1 */
+stpi_scandir(
+    const char    *dir,			/* I - Directory to scan */
+    struct dirent ***namelist,		/* O - Entries found */
+    int           (*sel)(const struct dirent *),
+					/* I - Selection function */
+    int           (*cmp)(const void *, const void *))
+					/* I - Sorting function */
 {
-  DIR *dp = opendir (dir);
+  DIR *dp = opendir(dir);
   struct dirent **v = NULL;
   size_t vsize = 0, i;
   struct dirent *d;
@@ -644,8 +927,8 @@ stpi_scandir (const char *dir,
   errno = 0;
 
   i = 0;
-  while ((d = readdir (dp)) != NULL)
-    if (sel == NULL || (*sel) (d))
+  while ((d = readdir(dp)) != NULL)
+    if (sel == NULL || (*sel)(d))
       {
 	struct dirent *vnew;
 	size_t dsize;
@@ -660,18 +943,18 @@ stpi_scandir (const char *dir,
 	      vsize = 10;
 	    else
 	      vsize *= 2;
-	    new = (struct dirent **) realloc (v, vsize * sizeof (*v));
+	    new = (struct dirent **)realloc(v, vsize * sizeof(*v));
 	    if (new == NULL)
 	      break;
 	    v = new;
 	  }
 
-	dsize = &d->d_name[_D_ALLOC_NAMLEN (d)] - (char *) d;
-	vnew = (struct dirent *) malloc (dsize);
+	dsize = &d->d_name[_D_ALLOC_NAMLEN(d)] - (char *)d;
+	vnew = (struct dirent *)malloc(dsize);
 	if (vnew == NULL)
 	  break;
 
-	v[i++] = (struct dirent *) memcpy (vnew, d, dsize);
+	v[i++] = (struct dirent *)memcpy(vnew, d, dsize);
       }
 
   if (errno != 0)
@@ -679,8 +962,8 @@ stpi_scandir (const char *dir,
       save = errno;
 
       while (i > 0)
-	free (v[--i]);
-      free (v);
+	free(v[--i]);
+      free(v);
 
       i = -1;
     }
@@ -688,76 +971,46 @@ stpi_scandir (const char *dir,
     {
       /* Sort the list if we have a comparison function to sort with.  */
       if (cmp != NULL)
-	qsort (v, i, sizeof (*v), cmp);
+	qsort(v, i, sizeof(*v), cmp);
 
       *namelist = v;
     }
 
-  (void) closedir (dp);
+  (void)closedir(dp);
   errno = save;
 
   return i;
 }
 
+
 /*
- * 'checkcat()' - A callback for stpi_scandir() to check
- *                if a message catalogue exists
+ * 'usage()' - Show program usage.
  */
 
-int
-checkcat (const struct dirent *localedir)
+void
+usage(void)
 {
-  char* catpath;
-  int catlen, status = 0, savederr;
-  struct stat catstat;
-
-  savederr = errno; /* since we are a callback, preserve stpi_scandir() state */
-
-  /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
-  /* Add 3, for two '/' separators and '\0'   */
-  catlen = strlen(baselocaledir) + strlen(localedir->d_name) + strlen(CATALOG) + 3;
-  catpath = (char*) stp_malloc(catlen * sizeof(char));
-
-  strncpy (catpath, baselocaledir, strlen(baselocaledir));
-  catlen = strlen(baselocaledir);
-  *(catpath+catlen) = '/';
-  catlen++;
-  strncpy (catpath+catlen, localedir->d_name, strlen(localedir->d_name));
-  catlen += strlen(localedir->d_name);
-  *(catpath+catlen) = '/';
-  catlen++;
-  strncpy (catpath+catlen, CATALOG, strlen(CATALOG));
-  catlen += strlen(CATALOG);
-  *(catpath+catlen) = '\0';
-
-  if (!stat (catpath, &catstat))
-    {
-      if (S_ISREG(catstat.st_mode))
-	{
-	  status = 1;
-	}
-     }
-
-  stp_free (catpath);
-
-  errno = savederr;
-  return status;
+  puts("Usage: cups-genppd [-c localedir] "
+        "[-l locale] [-p prefix] [-s | -a] [-q] [-v] models...\n"
+        "       cups-genppd -L [-c localedir]\n"
+	"       cups-genppd -M [-v]\n"
+	"       cups-genppd -h\n"
+	"       cups-genppd -V\n");
 }
+
 
 /*
  * 'write_ppd()' - Write a PPD file.
  */
 
 int					/* O - Exit status */
-write_ppd(const stp_printer_t *p,	/* I - Printer driver */
-	  const char          *prefix,	/* I - Prefix (directory) for PPD files */
-	  const char	      *language,
-	  int                 verbose,
-	  int                 simplified)
+write_ppd(
+    gzFile              fp,		/* I - File to write to */
+    const stp_printer_t *p,		/* I - Printer driver */
+    const char          *language,	/* I - Primary language */
+    int                 simplified)	/* I - 1 = simplified options */
 {
   int		i, j, k, l;		/* Looping vars */
-  gzFile	fp;			/* File to write to */
-  char		filename[1024];		/* Filename */
   int		num_opts;		/* Number of printer options */
   int		xdpi, ydpi;		/* Resolution info */
   stp_vars_t	*v;			/* Variable info */
@@ -767,10 +1020,9 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   const char	*driver;		/* Driver name */
   const char	*long_name;		/* Driver long name */
   const char	*manufacturer;		/* Manufacturer of printer */
-  const stp_vars_t	*printvars;		/* Printer option names */
+  const stp_vars_t *printvars;		/* Printer option names */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
-  struct stat   dir;                    /* prefix dir status */
   int		variable_sizes;		/* Does the driver support variable sizes? */
   int		min_width,		/* Min/max custom size */
 		min_height,
@@ -784,6 +1036,7 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
 
+
  /*
   * Initialize driver-specific variables...
   */
@@ -796,65 +1049,12 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
   cur_opt    = 0;
 
  /*
-  * Skip the PostScript drivers...
-  */
-
-  if (strcmp(stp_printer_get_family(p), "ps") == 0 ||
-      strcmp(stp_printer_get_family(p), "raw") == 0)
-    return (0);
-
- /*
-  * Make sure the destination directory exists...
-  */
-
-
-  if (stat(prefix, &dir) && !S_ISDIR(dir.st_mode))
-    {
-      if (mkdir(prefix, 0777))
-	{
-	  printf("cups-genppd: Cannot create directory %s: %s\n",
-		 prefix, strerror(errno));
-	  exit (EXIT_FAILURE);
-	}
-    }
-
-  /*
-   * The files will be named stp-<driver>.<major>.<minor>.ppd, for
-   * example:
-   * 
-   * stp-escp2-ex.5.0.ppd
-   * 
-   * or
-   * 
-   * stp-escp2-ex.5.0.ppd.gz
-   */
-  snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s%s",
-	   prefix, driver, GUTENPRINT_RELEASE_VERSION,
-	   simplified ? ".sim" : "", ppdext, gzext);
-
- /*
-  * Open the PPD file...
-  */
-
-  if ((fp = gzopen(filename, "wb")) == NULL)
-  {
-    fprintf(stderr, "cups-genppd: Unable to create file \"%s\" - %s.\n",
-            filename, strerror(errno));
-    return (2);
-  }
-
- /*
   * Write a standard header...
   */
 
-  if (verbose)
-    fprintf(stderr, "Writing %s...\n", filename);
-  else
-    fprintf(stderr, ".");
-
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*%PPD file for CUPS/Gutenprint.\n");
-  gzputs(fp, "*%Copyright 1993-2005 by Easy Software Products and Robert Krawitz.\n");
+  gzputs(fp, "*%Copyright 1993-2006 by Easy Software Products and Robert Krawitz.\n");
   gzputs(fp, "*%This program is free software; you can redistribute it and/or\n");
   gzputs(fp, "*%modify it under the terms of the GNU General Public License,\n");
   gzputs(fp, "*%version 2, as published by the Free Software Foundation.\n");
@@ -1572,8 +1772,6 @@ write_ppd(const stp_printer_t *p,	/* I - Printer driver */
            driver,
            GUTENPRINT_RELEASE_VERSION,
            ppdext);
-
-  gzclose(fp);
 
   stp_vars_destroy(v);
   return (0);

@@ -206,8 +206,16 @@ STP_ARG_WITH_DETAILED(
      cups_prefix="${prefix}"
   ])
 
-BUILD_CUPS_PPDS="${BUILD_CUPS}"
-BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
+case `$CUPS_CONFIG --version` in
+    1.1*)
+	BUILD_CUPS_PPDS="${BUILD_CUPS}"
+	BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
+	;;
+    *)
+	BUILD_CUPS_PPDS="no"
+	BUILD_TRANSLATED_CUPS_PPDS="no"
+	;;
+esac
 
 STP_ARG_ENABLE([cups-ppds],
                [build CUPS PPD files],

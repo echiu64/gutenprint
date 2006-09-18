@@ -34,7 +34,7 @@ pkgdatadir = $(cups_conf_datadir)
 pkglibdir = $(cups_conf_serverbin)
 pkgsysconfdir = $(cups_conf_serverroot)
 
-cupsexec_backenddir = $(pkglibdir)/backend
+cupsexec_driverdir = $(pkglibdir)/driver
 cupsexec_filterdir = $(pkglibdir)/filter
 if CUPS_PPDS_AT_TOP_LEVEL
 cups_modeldir = $(pkgdatadir)/model/
@@ -55,7 +55,7 @@ if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate
 sbin_PROGRAMS = cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 sbin_SCRIPTS = cups-genppdconfig.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ cups-genppdupdate.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
-cupsexec_backend_PROGRAMS = epson canon
+cupsexec_driver_PROGRAMS = gutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 endif
 
@@ -66,18 +66,20 @@ endif
 cups_calibrate_SOURCES = cups-calibrate.c
 cups_calibrate_LDADD = -lm
 
+commandtocanon_SOURCES = commandtocanon.c
+commandtocanon_LDADD = $(CUPS_LIBS)
+
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
-
-canon_SOURCES = canon.c
-canon_LDADD = $(CUPS_LIBS)
-
-epson_SOURCES = epson.c
-epson_LDADD = $(CUPS_LIBS)
 
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GENPPD_LIBS) $(GUTENPRINT_LIBS)
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
+
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DCUPS_DRIVER_INTERFACE
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS)
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS)
@@ -145,7 +147,7 @@ install-data-hook:
 	-@echo 'These messages are harmless and should be ignored.'
 	-rmdir $(DESTDIR)$(cups_modeldir)
 	-rmdir $(DESTDIR)$(pkgdatadir)
-	-rmdir $(DESTDIR)$(cupsexec_backenddir)
+	-rmdir $(DESTDIR)$(cupsexec_driverdir)
 	-rmdir $(DESTDIR)$(cupsexec_filterdir)
 	-rmdir $(DESTDIR)$(bindir)
 	-rmdir $(DESTDIR)$(pkglibdir)
