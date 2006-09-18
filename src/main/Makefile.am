@@ -70,7 +70,7 @@ print_lexmark_la_LDFLAGS = -module -avoid-version
 print_pcl_la_SOURCES = print-pcl.c
 print_pcl_la_LDFLAGS = -module -avoid-version
 
-print_ps_la_SOURCES = print-ps.c
+print_ps_la_SOURCES = print-ps.c ppd.c page.c mark.c ppd.h
 print_ps_la_LDFLAGS = -module -avoid-version
 
 print_olympus_la_SOURCES = print-olympus.c
