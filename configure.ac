@@ -42,9 +42,6 @@ pushdef([GUTENPRINT_EXTRA_VERSION],     [])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINT_BINARY_AGE],        [0])
-pushdef([GUTENPRINTUI_CURRENT_INTERFACE], [1])
-pushdef([GUTENPRINTUI_INTERFACE_AGE],     [0])
-pushdef([GUTENPRINTUI_BINARY_AGE],        [0])
 pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [1])
 pushdef([GUTENPRINTUI2_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINTUI2_BINARY_AGE],        [0])
@@ -82,9 +79,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 [GUTENPRINT_INTERFACE_AGE]=GUTENPRINT_INTERFACE_AGE
 [GUTENPRINT_BINARY_AGE]=GUTENPRINT_BINARY_AGE
 [GUTENPRINT_VERSION]=GUTENPRINT_VERSION
-[GUTENPRINTUI_CURRENT_INTERFACE]=GUTENPRINTUI_CURRENT_INTERFACE
-[GUTENPRINTUI_INTERFACE_AGE]=GUTENPRINTUI_INTERFACE_AGE
-[GUTENPRINTUI_BINARY_AGE]=GUTENPRINTUI_BINARY_AGE
 [GUTENPRINTUI2_CURRENT_INTERFACE]=GUTENPRINTUI2_CURRENT_INTERFACE
 [GUTENPRINTUI2_INTERFACE_AGE]=GUTENPRINTUI2_INTERFACE_AGE
 [GUTENPRINTUI2_BINARY_AGE]=GUTENPRINTUI2_BINARY_AGE
@@ -95,9 +89,6 @@ popdef([GUTENPRINT_EXTRA_VERSION])
 popdef([GUTENPRINT_CURRENT_INTERFACE])
 popdef([GUTENPRINT_INTERFACE_AGE])
 popdef([GUTENPRINT_BINARY_AGE])
-popdef([GUTENPRINTUI_CURRENT_INTERFACE])
-popdef([GUTENPRINTUI_INTERFACE_AGE])
-popdef([GUTENPRINTUI_BINARY_AGE])
 popdef([GUTENPRINTUI2_CURRENT_INTERFACE])
 popdef([GUTENPRINTUI2_INTERFACE_AGE])
 popdef([GUTENPRINTUI2_BINARY_AGE])
@@ -109,9 +100,6 @@ AC_SUBST([GUTENPRINT_CURRENT_INTERFACE])
 AC_SUBST([GUTENPRINT_INTERFACE_AGE])
 AC_SUBST([GUTENPRINT_BINARY_AGE])
 AC_SUBST([GUTENPRINT_VERSION])
-AC_SUBST([GUTENPRINTUI_CURRENT_INTERFACE])
-AC_SUBST([GUTENPRINTUI_INTERFACE_AGE])
-AC_SUBST([GUTENPRINTUI_BINARY_AGE])
 AC_SUBST([GUTENPRINTUI2_CURRENT_INTERFACE])
 AC_SUBST([GUTENPRINTUI2_INTERFACE_AGE])
 AC_SUBST([GUTENPRINTUI2_BINARY_AGE])
@@ -141,13 +129,10 @@ dnl *_cflags:   cflags for pkg-config
 dnl *_libs:     libs for pkg-config
 
 GUTENPRINT_LIBS="-lgutenprint"
-GUTENPRINTUI_LIBS="-lgutenprintui"
 GUTENPRINTUI2_LIBS="-lgutenprintui2"
 gutenprint_version=${GUTENPRINT_VERSION}
-gutenprintui_version=${GUTENPRINT_VERSION}
 gutenprintui2_version=${GUTENPRINT_VERSION}
 
-GUTENPRINTUI_LIBDEPS="${GUTENPRINTUI_LIBDEPS} \$(GUTENPRINT_LIBS)"
 GUTENPRINTUI2_LIBDEPS="${GUTENPRINTUI2_LIBDEPS} \$(GUTENPRINT_LIBS)"
 
 dnl Specify a configuration file.
@@ -370,37 +355,6 @@ dnl if test -z "${[EXTRA_LIBREADLINE_DEPS]}" ; then
 dnl   [EXTRA_LIBREADLINE_DEPS]=""
 dnl fi
 
-AC_PATH_PROGS([GIMPTOOL_CHECK], [gimptool-1.2 gimptool])
-if test -z "${GIMPTOOL_CHECK}" ; then
-  BUILD_GIMP="no"
-else
-  # Check we have version 1.2
-  gimptool_check_version=`${GIMPTOOL_CHECK} --version`
-dnl Quote to protect sed regexes
-  [gimptool_check_major=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
-  [gimptool_check_minor=`echo "$gimptool_check_version" | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
-  if test "$gimptool_check_major" -eq 1 -a "$gimptool_check_minor" -eq 2; then
-    BUILD_GIMP="yes"
-  else
-    BUILD_GIMP="no"
-  fi
-fi
-
-AM_PATH_GTK(1.2.0,
-  BUILD_LIBGUTENPRINTUI="yes"
-  GUTENPRINTUI_LIBDEPS="${GUTENPRINTUI_LIBDEPS} ${GTK_LIBS}",
-  BUILD_LIBGUTENPRINTUI="no")
-
-STP_ARG_WITH([gimp],
-             [build GIMP 1.2 Print plugin],
-             [BUILD_GIMP],
-             [(automatic)])
-
-STP_ARG_ENABLE([libgutenprintui],
-               [build Gutenprint GTK+-1.2 user interface library],
-               [BUILD_LIBGUTENPRINTUI],
-               [(automatic)])
-
 AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
   BUILD_GIMP2="no"
@@ -435,7 +389,7 @@ if test x$BUILD_GIMP2 = xyes; then
 fi
 
 STP_ARG_WITH([gimp2],
-             [build GIMP 2.0 Print plugin],
+             [build GIMP 2.x Print plugin],
              [BUILD_GIMP2],
              [(automatic)])
 
@@ -747,13 +701,6 @@ AC_CHECK_LIB(m,pow,
 
 STP_CUPS_LIBS
 
-if test x$BUILD_LEXMARKUTIL = xyes -o x$BUILD_GUTENPRINTUI = xyes ; then
-AM_PATH_GTK(1.2.0, ,
-            AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
-fi
-
-STP_GIMP_LIBS
-STP_GIMP_PLUG_IN_DIR
 STP_GIMP2_LIBS
 dnl STP_GIMP2_PLUG_IN_DIR is obsolete
 
@@ -823,11 +770,7 @@ AM_CONDITIONAL(BUILD_TEST, test x${BUILD_TEST} = xyes)
 
 AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 
-AM_CONDITIONAL(BUILD_LIBGUTENPRINTUI, test x${BUILD_LIBGUTENPRINTUI} = xyes)
-
 AM_CONDITIONAL(BUILD_LIBGUTENPRINTUI2, test x${BUILD_LIBGUTENPRINTUI2} = xyes)
-
-AM_CONDITIONAL(BUILD_GIMP, test x${BUILD_GIMP} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP2, test x${BUILD_GIMP2} = xyes)
 
@@ -937,20 +880,13 @@ AC_SUBST(GENPPD_LIBS)
 AC_SUBST(IJS_CFLAGS)
 AC_SUBST(IJS_LIBS)
 AC_SUBST(RM)
-AC_SUBST(GIMP_CFLAGS)
-AC_SUBST(GIMP_LIBS)
 AC_SUBST(GIMP2_CFLAGS)
 AC_SUBST(GIMP2_LIBS)
-AC_SUBST(gimp_plug_indir)
 AC_SUBST(gimp2_plug_indir)
 AC_SUBST(GUTENPRINT_CFLAGS)
 AC_SUBST(GUTENPRINT_LIBS)
 AC_SUBST(GUTENPRINT_LIBDEPS)
 AC_SUBST(GUTENPRINT_VERSION)
-AC_SUBST(GUTENPRINTUI_CFLAGS)
-AC_SUBST(GUTENPRINTUI_LIBS)
-AC_SUBST(GUTENPRINTUI_LIBDEPS)
-AC_SUBST(GUTENPRINTUI_VERSION)
 AC_SUBST(GUTENPRINTUI2_CFLAGS)
 AC_SUBST(GUTENPRINTUI2_LIBS)
 AC_SUBST(GUTENPRINTUI2_LIBDEPS)
@@ -959,10 +895,6 @@ AC_SUBST(gutenprint_cflags)
 gutenprint_libs="${GUTENPRINT_LIBS} ${gutenprint_libdeps}"
 AC_SUBST(gutenprint_libs)
 AC_SUBST(gutenprint_libdeps)
-AC_SUBST(gutenprintui_cflags)
-gutenprintui_libs="${GUTENPRINTUI_LIBS} ${gutenprintui_libdeps}"
-AC_SUBST(gutenprintui_libs)
-AC_SUBST(gutenprintui_libdeps)
 AC_SUBST(gutenprintui2_cflags)
 gutenprintui2_libs="${GUTENPRINTUI2_LIBS} ${gutenprintui2_libdeps}"
 AC_SUBST(gutenprintui2_libs)
@@ -981,7 +913,6 @@ AC_CONFIG_FILES([doc/gutenprintui2.dox])
 AC_CONFIG_FILES([doc/developer/Makefile])
 AC_CONFIG_FILES([include/Makefile])
 AC_CONFIG_FILES([include/gutenprint/Makefile])
-AC_CONFIG_FILES([include/gutenprintui/Makefile])
 AC_CONFIG_FILES([include/gutenprintui2/Makefile])
 AC_CONFIG_FILES([include/gutenprint/gutenprint-version.h])
 AC_CONFIG_FILES([man/Makefile])
@@ -1013,12 +944,9 @@ AC_CONFIG_FILES([src/testpattern/run-testpattern-2],
                 [chmod +x src/testpattern/run-testpattern-2])
 AC_CONFIG_FILES([src/ghost/Makefile])
 AC_CONFIG_FILES([src/testpattern/Makefile])
-AC_CONFIG_FILES([src/gimp/Makefile])
 AC_CONFIG_FILES([src/gimp2/Makefile])
 AC_CONFIG_FILES([src/main/Makefile])
 AC_CONFIG_FILES([src/main/gutenprint.pc])
-AC_CONFIG_FILES([src/gutenprintui/Makefile])
-AC_CONFIG_FILES([src/gutenprintui/gutenprintui.pc])
 AC_CONFIG_FILES([src/gutenprintui2/Makefile])
 AC_CONFIG_FILES([src/gutenprintui2/gutenprintui2.pc])
 AC_CONFIG_FILES([test/Makefile])
@@ -1066,16 +994,12 @@ echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
 if test "$BUILD_FOOMATIC" != "no" ; then
     echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
 fi
-if test "$BUILD_GIMP" != "no" -o "$BUILD_GIMP2" != "no" ; then
+if test "$BUILD_GIMP2" != "no" ; then
     echo "    Build enhanced Print plugin for the GIMP:   yes"
-    echo "        Build GIMP 1.2 plugin:                  $BUILD_GIMP"
-    echo "        Build GIMP 2.x plugin:                  $BUILD_GIMP2"
-    if test "$BUILD_GIMP2" != "no" ; then
-	if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
-	    echo "            GIMP 2.x plugin will be named:      gutenprint"
-	else
-	    echo "            GIMP 2.x plugin will be named:      print"
-	fi
+    if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
+	echo "        GIMP plugin will be named:              gutenprint"
+    else
+	echo "        GIMP plugin will be named:              print"
     fi
     echo "        Install plugin(s) in home directory:    $USER_INSTALL"
 else
