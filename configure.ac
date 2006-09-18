@@ -36,7 +36,7 @@ dnl For more detailed information, see the libtool info documentation.
 dnl
 pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
-pushdef([GUTENPRINT_MINOR_VERSION],     [0])
+pushdef([GUTENPRINT_MINOR_VERSION],     [1])
 pushdef([GUTENPRINT_MICRO_VERSION],     [0])
 pushdef([GUTENPRINT_EXTRA_VERSION],     [])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
