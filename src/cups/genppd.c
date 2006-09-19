@@ -190,7 +190,8 @@ static void	set_language(const char *lang);
 #endif /* ENABLE_NLS */
 static void	usage(void);
 static int	write_ppd(gzFile fp, const stp_printer_t *p,
-		          const char *language, int simplified);
+		          const char *language, const char *ppd_location,
+			  int simplified);
 
 
 /*
@@ -472,7 +473,7 @@ cat_ppd(const char *uri)		/* I - Driver URI */
     return (1);
   }
 
-  return (write_ppd(stdout, p, "en", !strcmp(hostname, "simple")));
+  return (write_ppd(stdout, p, NULL, uri, !strcmp(hostname, "simple")));
 }
 #endif /* CUPS_DRIVER_INTERFACE */
 
@@ -538,7 +539,8 @@ generate_ppd(
 {
   int		status;			/* Exit status */
   gzFile	fp;			/* File to write to */
-  char		filename[1024];		/* Filename */
+  char		filename[1024],		/* Filename */
+		ppd_location[1024];	/* Installed location */
   struct stat   dir;                    /* Prefix dir status */
 
 
@@ -595,7 +597,13 @@ generate_ppd(
   else
     fprintf(stderr, ".");
 
-  status = write_ppd(fp, p, language, simplified);
+  snprintf(ppd_location, sizeof(ppd_location), "%s%s%s/%s",
+	   cups_modeldir,
+	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
+	   language ? language : "C",
+	   filename);
+
+  status = write_ppd(fp, p, language, ppd_location, simplified);
 
   gzclose(fp);
 
@@ -722,7 +730,7 @@ list_ppds(const char *argv0)		/* I - Name of program */
       printf("\"%s://expert/%s\" "
              "en "
 	     "\"%s\" "
-             "\"%s, Gutenprint" GUTENPRINT_RELEASE_VERSION " Expert\" "
+             "\"%s" CUPS_PPD_NICKNAME_STRING VERSION "\" "
 	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
              scheme, stp_printer_get_driver(printer),
 	     stp_printer_get_manufacturer(printer),
@@ -731,7 +739,7 @@ list_ppds(const char *argv0)		/* I - Name of program */
       printf("\"%s://simple/%s\" "
              "en "
 	     "\"%s\" "
-             "\"%s, Gutenprint" GUTENPRINT_RELEASE_VERSION " Simplified\" "
+             "\"%s" CUPS_PPD_NICKNAME_STRING VERSION " Simplified\" "
 	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
              scheme, stp_printer_get_driver(printer),
 	     stp_printer_get_manufacturer(printer),
@@ -897,6 +905,7 @@ write_ppd(
     gzFile              fp,		/* I - File to write to */
     const stp_printer_t *p,		/* I - Printer driver */
     const char          *language,	/* I - Primary language */
+    const char		*ppd_location,	/* I - Location of PPD file */
     int                 simplified)	/* I - 1 = simplified options */
 {
   int		i, j, k, l;		/* Looping vars */
@@ -942,20 +951,20 @@ write_ppd(
   */
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
-  gzputs(fp, "*%PPD file for CUPS/Gutenprint.\n");
-  gzputs(fp, "*%Copyright 1993-2006 by Easy Software Products and Robert Krawitz.\n");
-  gzputs(fp, "*%This program is free software; you can redistribute it and/or\n");
-  gzputs(fp, "*%modify it under the terms of the GNU General Public License,\n");
-  gzputs(fp, "*%version 2, as published by the Free Software Foundation.\n");
+  gzputs(fp, "*% PPD file for CUPS/Gutenprint.\n");
+  gzputs(fp, "*% Copyright 1993-2006 by Easy Software Products and Robert Krawitz.\n");
+  gzputs(fp, "*% This program is free software; you can redistribute it and/or\n");
+  gzputs(fp, "*% modify it under the terms of the GNU General Public License,\n");
+  gzputs(fp, "*% version 2, as published by the Free Software Foundation.\n");
   gzputs(fp, "*%\n");
-  gzputs(fp, "*%This program is distributed in the hope that it will be useful, but\n");
-  gzputs(fp, "*%WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n");
-  gzputs(fp, "*%or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
-  gzputs(fp, "*%for more details.\n");
+  gzputs(fp, "*% This program is distributed in the hope that it will be useful, but\n");
+  gzputs(fp, "*% WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n");
+  gzputs(fp, "*% or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n");
+  gzputs(fp, "*% for more details.\n");
   gzputs(fp, "*%\n");
-  gzputs(fp, "*%You should have received a copy of the GNU General Public License\n");
-  gzputs(fp, "*%along with this program; if not, write to the Free Software\n");
-  gzputs(fp, "*%Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
+  gzputs(fp, "*% You should have received a copy of the GNU General Public License\n");
+  gzputs(fp, "*% along with this program; if not, write to the Free Software\n");
+  gzputs(fp, "*% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
   gzputs(fp, "*%\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
   gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
@@ -1003,11 +1012,11 @@ write_ppd(
   * with commas.  Now use a dash instead...
   */
 
-  /*
-   * NOTE - code in rastertoprinter looks for this version string.
-   * If this is changed, the corresponding change must be made in
-   * rastertoprinter.c.  Look for "ppd->nickname"
-   */
+ /*
+  * NOTE - code in rastertoprinter looks for this version string.
+  * If this is changed, the corresponding change must be made in
+  * rastertoprinter.c.  Look for "ppd->nickname"
+  */
   gzprintf(fp, "*NickName:      \"%s%s%s%s\"\n",
 	   long_name, CUPS_PPD_NICKNAME_STRING, VERSION,
 	   simplified ? " Simplified" : "");
@@ -1015,7 +1024,6 @@ write_ppd(
     gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
   else
     {
-      gzputs(fp, "*PSVersion:	\"(3010.000) 550\"\n");
       gzputs(fp, "*PSVersion:	\"(3010.000) 651\"\n");
       gzputs(fp, "*PSVersion:	\"(3010.000) 652\"\n");
       gzputs(fp, "*PSVersion:	\"(3010.000) 653\"\n");
@@ -1065,15 +1073,7 @@ write_ppd(
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   gzputs(fp, "\n");
   gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
-  gzprintf(fp, "*StpPPDLocation:	\"%s%s%s/stp-%s.%s%s%s%s\"\n",
-	   cups_modeldir,
-	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
-	   language ? language : "C",
-	   driver,
-	   GUTENPRINT_RELEASE_VERSION,
-	   simplified ? ".sim" : "",
-	   ppdext,
-	   gzext);
+  gzprintf(fp, "*StpPPDLocation: \"%s\"\n", ppd_location);
   gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");	
 
  /*
@@ -1362,7 +1362,7 @@ write_ppd(
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
       gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", gettext(desc.text));
-      gzputs(fp, "*OrderDependency: 5 AnySetup *StpQuality\n");
+      gzputs(fp, "*OrderDependency: 10 AnySetup *StpQuality\n");
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
       num_opts = stp_string_list_count(desc.bounds.str);
       for (i = 0; i < num_opts; i++)
@@ -1397,14 +1397,23 @@ write_ppd(
 
   if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
     {
+      int lastxdpi = 0, lastydpi = 0;
+
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
-      gzputs(fp, "*OrderDependency: 20 AnySetup *Resolution\n");
+      gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
       if (has_quality_parameter)
 	gzprintf(fp, "*DefaultResolution: None\n");
       else
-	gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
+      {
+	stp_set_string_parameter(v, "Resolution", desc.deflt.str);
+	stp_describe_resolution(v, &xdpi, &ydpi);
 
-      stp_clear_string_parameter(v, "Quality");
+	if (xdpi == ydpi)
+	  gzprintf(fp, "*DefaultResolution: %ddpi\n", xdpi);
+        else
+	  gzprintf(fp, "*DefaultResolution: %dx%ddpi\n", xdpi, ydpi);
+      }
+
       if (has_quality_parameter)
 	gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
       for (i = 0; i < num_opts; i ++)
@@ -1420,12 +1429,31 @@ write_ppd(
 	  if (xdpi == -1 || ydpi == -1)
 	    continue;
 
+          /*
+	   * See if we've written this resolution already, and if so
+	   * provide a slightly higher resolution to avoid name clashes...
+	   */
+
+           if ((lastxdpi == xdpi && lastydpi == ydpi) ||
+	       (lastxdpi == (xdpi + 1) && lastydpi == (ydpi + 1)))
+	   {
+	     xdpi = lastxdpi + 1;
+	     ydpi = lastydpi + 1;
+	   }
+
+           lastxdpi = xdpi;
+	   lastydpi = ydpi;
+
 	  /*
 	   * Write the resolution option...
 	   */
 
-	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		   opt->name, opt->text, xdpi, ydpi, i + 1);
+          if (xdpi == ydpi)
+	    gzprintf(fp, "*Resolution %ddpi/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+		     xdpi, opt->text, xdpi, ydpi, i + 1);
+          else
+	    gzprintf(fp, "*Resolution %dx%ddpi/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+		     xdpi, ydpi, opt->text, xdpi, ydpi, i + 1);
 	}
 
       gzputs(fp, "*CloseUI: *Resolution\n\n");
@@ -1457,8 +1485,8 @@ write_ppd(
       num_opts = stp_string_list_count(desc.bounds.str);
       if (num_opts > 0)
       {
-        gzputs(fp, "*OpenUI *Duplex/Double-Sided Printing: PickOne\n");
-        gzputs(fp, "*OrderDependency: 20 AnySetup *Duplex\n");
+        gzprintf(fp, "*OpenUI *Duplex/%s: PickOne\n", _("2-Sided Printing"));
+        gzputs(fp, "*OrderDependency: 10 AnySetup *Duplex\n");
         gzprintf(fp, "*DefaultDuplex: %s\n", desc.deflt.str);
 
         for (i = 0; i < num_opts; i++)
@@ -1507,12 +1535,8 @@ write_ppd(
 		    }
 		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
 			   desc.name, gettext(desc.text));
-#if 0
-		  gzprintf(fp, "*OrderDependency: %d AnySetup *Stp%s\n",
-			   (100 + l + (j * param_count) +
-			    (k * STP_PARAMETER_LEVEL_INTERNAL * param_count)),
+		  gzprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n",
 			   desc.name);
-#endif
 		  if (!desc.is_mandatory)
 		    gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
 		  switch (desc.p_type)
@@ -1657,10 +1681,9 @@ write_ppd(
   gzputs(fp, "*Font ZapfChancery-MediumItalic: Standard \"(001.007S)\" Standard ROM\n");
   gzputs(fp, "*Font ZapfDingbats: Special \"(001.004S)\" Standard ROM\n");
 
-  gzprintf(fp, "\n*%%End of stp-%s.%s%s\n",
-           driver,
-           GUTENPRINT_RELEASE_VERSION,
-           ppdext);
+  gzprintf(fp, "\n*%% End of stp-%s.%s%s%s\n", 
+           driver, GUTENPRINT_RELEASE_VERSION, simplified ? ".sim" : "",
+	   ppdext);
 
   stp_vars_destroy(v);
   return (0);

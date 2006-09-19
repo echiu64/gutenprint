@@ -71,7 +71,7 @@ static const res_t r_360pro =
 { "360pro",        N_("360 DPI"),
   360,  360,  360,  360,  0, 1, 1 };
 static const res_t r_360 =
-{ "360dpi",           N_("360 DPI"),
+{ "360",           N_("360 DPI"),
   360,  360,  360,  360,  0, 0, 1 };
 static const res_t r_360sw =
 { "360sw",         N_("360 DPI"),
@@ -97,7 +97,7 @@ static const res_t r_720hq2 =
 { "720hq2",        N_("720 DPI Highest Quality"),
   720,  720,  720,  720,  1, 0, 4 };
 static const res_t r_720x720oov =
-{ "720oov",    N_("720 x 720 DPI"),
+{ "720x720oov",    N_("720 x 720 DPI"),
   2880, 720,  720, 720,  1, 0, 1 };
 
 static const res_t r_1440x720mw =
@@ -130,16 +130,16 @@ static const res_t r_2880x720hq2 =
   2880, 720,  2880, 720,  1, 0, 2 };
 
 static const res_t r_1440x1440mw =
-{ "1440mw",   N_("1440 x 1440 DPI"),
+{ "1440x1440mw",   N_("1440 x 1440 DPI"),
   1440, 1440,  1440, 1440, 0, 1, 1};
 static const res_t r_1440x1440sw =
-{ "1440sw",   N_("1440 x 1440 DPI"),
+{ "1440x1440sw",   N_("1440 x 1440 DPI"),
   1440, 1440,  1440, 1440, 1, 0, 1};
 static const res_t r_1440x1440ov =
-{ "1440ov",   N_("1440 x 1440 DPI"),
+{ "1440x1440ov",   N_("1440 x 1440 DPI"),
   2880, 1440,  1440, 1440, 1, 0, 1};
 static const res_t r_1440x1440sw3650 =
-{ "1440ov",   N_("1440 x 1440"),
+{ "1440x1440ov",   N_("1440 x 1440"),
   1440, 1440,  1440, 1440, 1, 0, 1};
 static const res_t r_1440x1440sw3650hq =
 { "2880x1440sw",   N_("1440 x 1440 DPI High Quality"),
@@ -161,7 +161,7 @@ static const res_t r_2880x1440sw2400 =
 { "2880x1440sw",   N_("2880 x 1440 DPI"),
   1440, 2880,  1440, 2880, 1, 0, 1};
 static const res_t r_2880x1440sw2400hq =
-{ "2880sw",   N_("2880 x 1440 DPI High Quality"),
+{ "2880x2880sw",   N_("2880 x 1440 DPI High Quality"),
   1440, 2880,  1440, 2880, 1, 0, 2};
 static const res_t r_2880x1440sw2400hq2 =
 { "5760x2880sw",   N_("2880 x 1440 DPI Highest Quality"),
@@ -172,10 +172,10 @@ static const res_t r_5760x1440sw =
   5760, 1440,  5760, 1440, 1, 0, 1};
 
 static const res_t r_2880x2880mw =
-{ "2880mw",   N_("2880 x 2880 DPI"),
+{ "2880x2880mw",   N_("2880 x 2880 DPI"),
   2880, 2880,  2880, 2880, 0, 1, 1};
 static const res_t r_2880x2880sw =
-{ "2880sw",   N_("2880 x 2880 DPI"),
+{ "2880x2880sw",   N_("2880 x 2880 DPI"),
   2880, 2880,  2880, 2880, 1, 0, 1};
 
 static const res_t r_5760x2880mw =

@@ -210,7 +210,7 @@ static const ink_list_t bgr_ink_list =
 /* Olympus P-10 */
 static const olymp_resolution_t res_320dpi[] =
 {
-  { "320dpi", 320, 320},
+  { "320x320", 320, 320},
 };
 
 static const olymp_resolution_list_t res_320dpi_list =
@@ -232,9 +232,9 @@ static const olymp_pagesize_list_t p10_page_list =
 
 static const olymp_printsize_t p10_printsize[] =
 {
-  { "320dpi", "w288h432", 1280, 1848},
-  { "320dpi", "B7",  1144,  1591},
-  { "320dpi", "Custom", 1280, 1848},
+  { "320x320", "w288h432", 1280, 1848},
+  { "320x320", "B7",  1144,  1591},
+  { "320x320", "Custom", 1280, 1848},
 };
 
 static const olymp_printsize_list_t p10_printsize_list =
@@ -290,8 +290,8 @@ static const olymp_pagesize_list_t p200_page_list =
 
 static const olymp_printsize_t p200_printsize[] =
 {
-  { "320dpi", "ISOB7", 960, 1280},
-  { "320dpi", "Custom", 960, 1280},
+  { "320x320", "ISOB7", 960, 1280},
+  { "320x320", "Custom", 960, 1280},
 };
 
 static const olymp_printsize_list_t p200_printsize_list =
@@ -333,8 +333,8 @@ static const char p200_adj_any[] =
 /* Olympus P-300 series */
 static const olymp_resolution_t p300_res[] =
 {
-  { "306dpi", 306, 306},
-  { "153dpi", 153, 153},
+  { "306x306", 306, 306},
+  { "153x153", 153, 153},
 };
 
 static const olymp_resolution_list_t p300_res_list =
@@ -355,10 +355,10 @@ static const olymp_pagesize_list_t p300_page_list =
 
 static const olymp_printsize_t p300_printsize[] =
 {
-  { "306dpi", "A6", 1024, 1376},
-  { "153dpi", "A6",  512,  688},
-  { "306dpi", "Custom", 1024, 1376},
-  { "153dpi", "Custom", 1024, 1376},
+  { "306x306", "A6", 1024, 1376},
+  { "153x153", "A6",  512,  688},
+  { "306x306", "Custom", 1024, 1376},
+  { "153x153", "Custom", 1024, 1376},
 };
 
 static const olymp_printsize_list_t p300_printsize_list =
@@ -439,7 +439,7 @@ static const char p300_adj_yellow[] =
 /* Olympus P-400 series */
 static const olymp_resolution_t res_314dpi[] =
 {
-  { "314dpi", 314, 314},
+  { "314x314", 314, 314},
 };
 
 static const olymp_resolution_list_t res_314dpi_list =
@@ -462,10 +462,10 @@ static const olymp_pagesize_list_t p400_page_list =
 
 static const olymp_printsize_t p400_printsize[] =
 {
-  { "314dpi", "A4", 2400, 3200},
-  { "314dpi", "c8x10", 2000, 2400},
-  { "314dpi", "C6", 1328, 1920},
-  { "314dpi", "Custom", 2400, 3200},
+  { "314x314", "A4", 2400, 3200},
+  { "314x314", "c8x10", 2000, 2400},
+  { "314x314", "C6", 1328, 1920},
+  { "314x314", "Custom", 2400, 3200},
 };
 
 static const olymp_printsize_list_t p400_printsize_list =
@@ -587,11 +587,11 @@ static const olymp_pagesize_list_t p440_page_list =
 
 static const olymp_printsize_t p440_printsize[] =
 {
-  { "314dpi", "A4", 2508, 3200},
-  { "314dpi", "c8x10", 2000, 2508},
-  { "314dpi", "C6", 1328, 1920},
-  { "314dpi", "w255h581", 892, 2320},
-  { "314dpi", "Custom", 2508, 3200},
+  { "314x314", "A4", 2508, 3200},
+  { "314x314", "c8x10", 2000, 2508},
+  { "314x314", "C6", 1328, 1920},
+  { "314x314", "w255h581", 892, 2320},
+  { "314x314", "Custom", 2508, 3200},
 };
 
 static const olymp_printsize_list_t p440_printsize_list =
@@ -756,10 +756,10 @@ static const olymp_pagesize_list_t cpx00_page_list =
 
 static const olymp_printsize_t cpx00_printsize[] =
 {
-  { "314dpi", "Postcard", 1232, 1808},
-  { "314dpi", "w253h337", 1100, 1456},
-  { "314dpi", "w244h155", 1040, 672},
-  { "314dpi", "Custom", 1232, 1808},
+  { "314x314", "Postcard", 1232, 1808},
+  { "314x314", "w253h337", 1100, 1456},
+  { "314x314", "w244h155", 1040, 672},
+  { "314x314", "Custom", 1232, 1808},
 };
 
 static const olymp_printsize_list_t cpx00_printsize_list =
@@ -846,11 +846,11 @@ static const olymp_pagesize_list_t cp220_page_list =
 
 static const olymp_printsize_t cp220_printsize[] =
 {
-  { "314dpi", "Postcard", 1232, 1808},
-  { "314dpi", "w253h337", 1100, 1456},
-  { "314dpi", "w244h155", 1040, 672},
-  { "314dpi", "w283h566", 1232, 2416},
-  { "314dpi", "Custom", 1232, 1808},
+  { "314x314", "Postcard", 1232, 1808},
+  { "314x314", "w253h337", 1100, 1456},
+  { "314x314", "w244h155", 1040, 672},
+  { "314x314", "w283h566", 1232, 2416},
+  { "314x314", "Custom", 1232, 1808},
 };
 
 static const olymp_printsize_list_t cp220_printsize_list =
@@ -1075,7 +1075,7 @@ static void updr150_printer_end_func(stp_vars_t *v)
 /* Fujifilm CX-400 */
 static const olymp_resolution_t cx400_res[] =
 {
-  { "317x316dpi", 317, 316},
+  { "317x316", 317, 316},
 };
 
 static const olymp_resolution_list_t cx400_res_list =
@@ -1098,10 +1098,10 @@ static const olymp_pagesize_list_t cx400_page_list =
 
 static const olymp_printsize_t cx400_printsize[] =
 {
-  { "317x316dpi", "w288h387", 1268, 1658},
-  { "317x316dpi", "w288h432", 1268, 1842},
-  { "317x316dpi", "w288h504", 1268, 2208},
-  { "317x316dpi", "Custom", 1268, 1842},
+  { "317x316", "w288h387", 1268, 1658},
+  { "317x316", "w288h432", 1268, 1842},
+  { "317x316", "w288h504", 1268, 2208},
+  { "317x316", "Custom", 1268, 1842},
 };
 
 static const olymp_printsize_list_t cx400_printsize_list =
@@ -1142,13 +1142,13 @@ static void cx400_printer_init_func(stp_vars_t *v)
   
 static const olymp_resolution_t all_resolutions[] =
 {
-  { "306x306dpi", 306, 306},
-  { "153x153dpi", 153, 153},
-  { "314x314dpi", 314, 314},
-  { "300x300dpi", 300, 300},
-  { "317x316dpi", 317, 316},
-  { "320x320dpi", 320, 320},
-  { "346x346dpi", 346, 346},
+  { "306x306", 306, 306},
+  { "153x153", 153, 153},
+  { "314x314", 314, 314},
+  { "300x300", 300, 300},
+  { "317x316", 317, 316},
+  { "320x320", 320, 320},
+  { "346x346", 346, 346},
 };
 
 static const olymp_resolution_list_t all_res_list =
