@@ -21,7 +21,7 @@
  *       Attn: CUPS Licensing Information
  *       Easy Software Products
  *       44141 Airport View Drive, Suite 204
- *       Hollywood, Maryland 20636-3111 USA
+ *       Hollywood, Maryland 20636 USA
  *
  *       Voice: (301) 373-9603
  *       EMail: cups-info@cups.org
@@ -29,14 +29,21 @@
  *
  * Contents:
  *
- *   main()        - Process files on the command-line...
- *   usage()       - Show program usage.
- *   help()        - Show detailed program usage.
- *   getlangs()    - Get available translations.
- *   printlangs()  - Show available translations.
- *   printmodels() - Show available printer models.
- *   checkcat()    - Check message catalogue exists.
- *   write_ppd()   - Write a PPD file.
+ *   main()              - Process files on the command-line...
+ *   cat_ppd()           - Copy the named PPD to stdout.
+ *   checkcat()          - A callback for stpi_scandir() to check
+ *   generate_ppd()      - Generate a PPD file.
+ *   getlangs()          - Get a list of available translations.
+ *   help()              - Show detailed help.
+ *   is_special_option() - Determine if an option should be grouped.
+ *   list_ppds()         - List the available drivers.
+ *   print_group_close() - Close a UI group.
+ *   print_group_open()  - Open a new UI group.
+ *   printlangs()        - Print list of available translations.
+ *   printmodels()       - Print a list of available models.
+ *   set_language()      - Set the current translation language.
+ *   usage()             - Show program usage.
+ *   write_ppd()         - Write a PPD file.
  */
 
 /*
@@ -159,13 +166,14 @@ const char *parameter_level_names[] =
 #ifdef CUPS_DRIVER_INTERFACE
 static int	cat_ppd(const char *uri);
 #endif /* CUPS_DRIVER_INTERFACE */
-static int	checkcat(const struct dirent *localedir);
 #ifndef CUPS_DRIVER_INTERFACE
 static int	generate_ppd(const char *prefix, int verbose,
 		             const stp_printer_t *p, const char *language,
 			     int simplified);
 #endif /* !CUPS_DRIVER_INTERFACE */
+#ifdef ENABLE_NLS
 static char	**getlangs(void);
+#endif /* ENABLE_NLS */
 static void	help(void);
 static int	is_special_option(const char *name);
 #ifdef CUPS_DRIVER_INTERFACE
@@ -177,10 +185,9 @@ static void	print_group_open(gzFile fp, stp_parameter_class_t p_class,
 				 stp_parameter_level_t p_level);
 static void	printlangs(char** langs);
 static void	printmodels(int verbose);
-static int	stpi_scandir(const char *dir,
-			     struct dirent ***namelist,
-			     int (*sel)(const struct dirent *),
-			     int (*cmp)(const void *, const void *));
+#ifdef ENABLE_NLS
+static void	set_language(const char *lang);
+#endif /* ENABLE_NLS */
 static void	usage(void);
 static int	write_ppd(gzFile fp, const stp_printer_t *p,
 		          const char *language, int simplified);
@@ -343,10 +350,6 @@ main(int  argc,			    /* I - Number of command-line arguments */
     n=0;
   }
 
-#  ifdef ENABLE_NLS
-  langs = getlangs();
-#  endif
-
 /*
  * Initialise libgutenprint
  */
@@ -357,46 +360,16 @@ main(int  argc,			    /* I - Number of command-line arguments */
   * Set the language...
   */
 
-  setlocale(LC_ALL, language ? language : "");
-#  ifdef LC_CTYPE
-  setlocale(LC_CTYPE, language ? language : "");
-#  endif /* LC_CTYPE */
-#  ifdef LC_NUMERIC
-  setlocale(LC_NUMERIC, "C");
-#  endif /* LC_NUMERIC */
+#  ifdef ENABLE_NLS
+  langs = getlangs();
+
+  if (language)
+    set_language(language);
+#  endif /* ENABLE_NLS */
 
  /*
-  * Set up the catalog
+  * Print lists
   */
-
-#  ifdef ENABLE_NLS
-  if (baselocaledir)
-  {
-    if ((bindtextdomain(PACKAGE, baselocaledir)) == NULL)
-    {
-      fprintf(stderr, "cups-genppd: cannot load message catalog %s under %s: %s\n",
-	      PACKAGE, baselocaledir, strerror(errno));
-      exit(EXIT_FAILURE);
-    }
-#    ifdef DEBUG
-    fprintf(stderr, "DEBUG: bound textdomain: %s under %s\n",
-	     PACKAGE, baselocaledir);
-#    endif
-    if ((textdomain(PACKAGE)) == NULL)
-    {
-      fprintf(stderr, "cups-genppd: cannot select message catalog %s under %s: %s\n",
-              PACKAGE, baselocaledir, strerror(errno));
-      exit(EXIT_FAILURE);
-    }
-#    ifdef DEBUG
-    fprintf(stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
-#    endif
-  }
-#  endif
-
-  /*
-   * Print lists
-   */
 
   if (opt_printlangs)
     {
@@ -459,16 +432,6 @@ main(int  argc,			    /* I - Number of command-line arguments */
     }
   if (!verbose)
     fprintf(stderr, " done.\n");
-  if (langs)
-    {
-      char **langs_tmp = langs;
-      while (*langs_tmp)
-	{
-	  stp_free(*langs_tmp);
-	  langs_tmp++;
-	}
-      stp_free(langs);
-    }
 
   return (0);
 #endif /* CUPS_DRIVER_INTERFACE */
@@ -561,19 +524,6 @@ checkcat(const struct dirent *localedir)
 
 
 /*
- * 'dirent_sort()' - Sort directory entries.
- */
-
-static int				/* O - Result of comparison */
-dirent_sort(const void *a,		/* I - First entry */
-	    const void *b)		/* I - Second entry */
-{
-  return strcoll((*(const struct dirent *const *)a)->d_name,
-		 (*(const struct dirent *const *)b)->d_name);
-}
-
-
-/*
  * 'generate_ppd()' - Generate a PPD file.
  */
 
@@ -655,35 +605,43 @@ generate_ppd(
 
 
 /*
- * 'getlangs()' - Get a list of available translations
+ * 'getlangs()' - Get a list of available translations.
  */
 
-char **
+#ifdef ENABLE_NLS
+char **					/* O - Array of languages */
 getlangs(void)
 {
-  struct dirent** langdirs = NULL;
-  int n;
-  char **langs;
+  int		i;			/* Looping var */
+  char		*ptr;			/* Pointer into string */
+  static char	all_linguas[] = ALL_LINGUAS;
+					/* List of languages from configure.ac */
+  static char **langs = NULL;		/* Array of languages */
 
-  n = stpi_scandir(baselocaledir, &langdirs, checkcat, dirent_sort);
-  if (n >= 0)
+
+  if (!langs)
+  {
+   /*
+    * Create the langs array...
+    */
+
+    for (i = 1, ptr = strchr(all_linguas, ' '); ptr; ptr = strchr(ptr + 1, ' '))
+      i ++;
+
+    langs = calloc(i + 1, sizeof(char *));
+
+    langs[0] = all_linguas;
+    for (i = 1, ptr = strchr(all_linguas, ' '); ptr; ptr = strchr(ptr + 1, ' '))
     {
-      int idx;
-      langs = stp_malloc((n+1) * sizeof(char*));
-      for (idx = 0; idx < n; ++idx)
-	{
-	  langs[idx] = (char*)stp_malloc((strlen(langdirs[idx]->d_name)+1) * sizeof(char));
-	  strcpy(langs[idx], langdirs[idx]->d_name);
-	  free(langdirs[idx]); /* Must use plain free() */
-	}
-      langs[n] = NULL;
-      free(langdirs); /* Must use plain free() */
+      *ptr     = '\0';
+      langs[i] = ptr + 1;
+      i ++;
     }
-  else
-    return NULL;
+  }
 
-  return langs;
+  return (langs);
 }
+#endif /* ENABLE_NLS */
 
 
 /*
@@ -829,7 +787,7 @@ printlangs(char **langs)		/* I - Languages */
       int n = 0;
       while (langs && langs[n])
 	{
-	  printf("%s\n", langs[n]);
+	  puts(langs[n]);
 	  n++;
 	}
     }
@@ -865,122 +823,53 @@ printmodels(int verbose)		/* I - Verbosity level */
 }
 
 
-/* Adapted from GNU libc <dirent.h>
-   These macros extract size information from a `struct dirent *'.
-   They may evaluate their argument multiple times, so it must not
-   have side effects.  Each of these may involve a relatively costly
-   call to `strlen' on some systems, so these values should be cached.
-
-   _D_EXACT_NAMLEN(DP) returns the length of DP->d_name, not including
-   its terminating null character.
-
-   _D_ALLOC_NAMLEN(DP) returns a size at least (_D_EXACT_NAMLEN (DP) + 1);
-   that is, the allocation size needed to hold the DP->d_name string.
-   Use this macro when you don't need the exact length, just an upper bound.
-   This macro is less likely to require calling `strlen' than _D_EXACT_NAMLEN.
-   */
-
-#ifdef _DIRENT_HAVE_D_NAMLEN
-# ifndef _D_EXACT_NAMLEN
-#  define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
-# endif
-# ifndef _D_ALLOC_NAMLEN
-#  define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN(d) + 1)
-# endif
-#else
-# ifndef _D_EXACT_NAMLEN
-#  define _D_EXACT_NAMLEN(d) (strlen((d)->d_name))
-# endif
-# ifndef _D_ALLOC_NAMLEN
-#  ifdef _DIRENT_HAVE_D_RECLEN
-#   define _D_ALLOC_NAMLEN(d) (((char *)(d) + (d)->d_reclen) - &(d)->d_name[0])
-#  else
-#   define _D_ALLOC_NAMLEN(d) (sizeof(d)->d_name > 1 ? sizeof(d)->d_name : \
-                               _D_EXACT_NAMLEN(d) + 1)
-#  endif
-# endif
-#endif
-
 /*
- * 'stpi_scandir()' - BSD scandir() replacement.
+ * 'set_language()' - Set the current translation language.
  */
 
-static int				/* O - Number of entries or -1 */
-stpi_scandir(
-    const char    *dir,			/* I - Directory to scan */
-    struct dirent ***namelist,		/* O - Entries found */
-    int           (*sel)(const struct dirent *),
-					/* I - Selection function */
-    int           (*cmp)(const void *, const void *))
-					/* I - Sorting function */
+#ifdef ENABLE_NLS
+static void
+set_language(const char *lang)		/* I - Locale name */
 {
-  DIR *dp = opendir(dir);
-  struct dirent **v = NULL;
-  size_t vsize = 0, i;
-  struct dirent *d;
-  int save;
+  setlocale(LC_ALL, lang ? lang : "");
+#  ifdef LC_CTYPE
+  setlocale(LC_CTYPE, lang ? lang : "");
+#  endif /* LC_CTYPE */
+#  ifdef LC_NUMERIC
+  setlocale(LC_NUMERIC, "C");
+#  endif /* LC_NUMERIC */
 
-  if (dp == NULL)
-    return -1;
+ /*
+  * Set up the catalog
+  */
 
-  save = errno;
-  errno = 0;
-
-  i = 0;
-  while ((d = readdir(dp)) != NULL)
-    if (sel == NULL || (*sel)(d))
-      {
-	struct dirent *vnew;
-	size_t dsize;
-
-	/* Ignore errors from sel or readdir */
-        errno = 0;
-
-	if (i == vsize)
-	  {
-	    struct dirent **new;
-	    if (vsize == 0)
-	      vsize = 10;
-	    else
-	      vsize *= 2;
-	    new = (struct dirent **)realloc(v, vsize * sizeof(*v));
-	    if (new == NULL)
-	      break;
-	    v = new;
-	  }
-
-	dsize = &d->d_name[_D_ALLOC_NAMLEN(d)] - (char *)d;
-	vnew = (struct dirent *)malloc(dsize);
-	if (vnew == NULL)
-	  break;
-
-	v[i++] = (struct dirent *)memcpy(vnew, d, dsize);
-      }
-
-  if (errno != 0)
+  if (baselocaledir)
+  {
+    if ((bindtextdomain(PACKAGE, baselocaledir)) == NULL)
     {
-      save = errno;
-
-      while (i > 0)
-	free(v[--i]);
-      free(v);
-
-      i = -1;
-    }
-  else
-    {
-      /* Sort the list if we have a comparison function to sort with.  */
-      if (cmp != NULL)
-	qsort(v, i, sizeof(*v), cmp);
-
-      *namelist = v;
+      fprintf(stderr, "cups-genppd: cannot load message catalog %s under %s: %s\n",
+	      PACKAGE, baselocaledir, strerror(errno));
+      exit(EXIT_FAILURE);
     }
 
-  (void)closedir(dp);
-  errno = save;
+#  ifdef DEBUG
+    fprintf(stderr, "DEBUG: bound textdomain: %s under %s\n",
+	    PACKAGE, baselocaledir);
+#  endif /* DEBUG */
 
-  return i;
+    if ((textdomain(PACKAGE)) == NULL)
+    {
+      fprintf(stderr,
+              "cups-genppd: cannot select message catalog %s under %s: %s\n",
+              PACKAGE, baselocaledir, strerror(errno));
+      exit(EXIT_FAILURE);
+    }
+#  ifdef DEBUG
+    fprintf(stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
+#  endif /* DEBUG */
+  }
 }
+#endif /* ENABLE_NLS */
 
 
 /*
