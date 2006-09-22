@@ -206,20 +206,35 @@ STP_ARG_WITH_DETAILED(
      cups_prefix="${prefix}"
   ])
 
-case `$CUPS_CONFIG --version` in
-    1.1*)
-	BUILD_CUPS_PPDS="${BUILD_CUPS}"
-	BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
-	;;
-    *)
-	BUILD_CUPS_PPDS="no"
-	BUILD_TRANSLATED_CUPS_PPDS="no"
-	;;
-esac
+USE_LEVEL3_PS=no
+BUILD_CUPS_PPDS="${BUILD_CUPS}"
+BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
+BUILD_CUPS_1_2="no"
+if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
+  cups_version=`${CUPS_CONFIG} --version`
+dnl Quote to protect sed regexes
+  [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
+  [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
+  [cups_point=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\3/'`]
+dnl There was no CUPS 1.0.15 or the like
+  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
+    USE_LEVEL3_PS=yes
+  fi
+  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 ; then
+    BUILD_CUPS_PPDS="no"
+    BUILD_TRANSLATED_CUPS_PPDS="no"
+    BUILD_CUPS_1_2="yes"
+  fi
+fi
 
 STP_ARG_ENABLE([cups-ppds],
                [build CUPS PPD files],
                [BUILD_CUPS_PPDS],
+               [(automatic)])
+
+STP_ARG_ENABLE([cups-1.2-enhancements],
+               [build CUPS 1.2 enhancements],
+               [BUILD_CUPS_1_2],
                [(automatic)])
 
 STP_ARG_ENABLE([translated-cups-ppds],
@@ -239,19 +254,6 @@ STP_ARG_ENABLE_DETAILED([simplified-cups-ppds],
     only) [WHICH_PPDS]="-s"; BUILD_SIMPLIFIED_CUPS_PPDS=only; AC_MSG_RESULT([only]) ;;
     *) AC_MSG_ERROR([${enableval}: not a valid option ('yes', 'no', or 'only')]) ;;
 				   ])
-
-USE_LEVEL3_PS=no
-if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
-  cups_version=`${CUPS_CONFIG} --version`
-dnl Quote to protect sed regexes
-  [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
-  [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
-  [cups_point=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\3/'`]
-dnl There was no CUPS 1.0.15 or the like
-  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
-    USE_LEVEL3_PS=yes
-  fi
-fi
 
 STP_ARG_ENABLE([cups-ppds-at-top-level],
 	       [place CUPS PPD files at top level],
@@ -758,6 +760,8 @@ AM_CONDITIONAL(BUILD_GHOSTSCRIPT, test x${BUILD_GHOSTSCRIPT} = xyes)
 
 AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
+AM_CONDITIONAL(BUILD_CUPS_1_2, test x${BUILD_CUPS_1_2} = xyes)
+
 AM_CONDITIONAL(BUILD_CUPS_PPDS, test x${BUILD_CUPS_PPDS} = xyes)
 
 AM_CONDITIONAL(CUPS_PPDS_AT_TOP_LEVEL, test x${CUPS_PPDS_AT_TOP_LEVEL} = xyes)
@@ -981,11 +985,16 @@ echo
 echo "  Features:"
 echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
 if test "$BUILD_CUPS" != "no" ; then
+    echo "        Build CUPS 1.2 enhancements:            $BUILD_CUPS_1_2"
     echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS"
-    echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
-    echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
-    echo "            Generate PS level 3 CUPS PPD files: $USE_LEVEL3_PS"
-    echo "        Install CUPS PPD files at top level:    $CUPS_PPDS_AT_TOP_LEVEL"
+    if test "$BUILD_CUPS_PPDS" != "no" ; then
+	echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
+	echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
+	echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL"
+    fi
+    if test "$BUILD_CUPS_PPDS" != "no" -o "$BUILD_CUPS_1_2" != "no" ; then
+        echo "        Generate PS level 3 CUPS PPD files:     $USE_LEVEL3_PS"
+    fi
     echo "        Build genppd statically:                $STATIC_GENPPD"
 
     if test "$STATIC_GENPPD" = "no" ; then

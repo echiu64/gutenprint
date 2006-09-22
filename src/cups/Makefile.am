@@ -51,11 +51,14 @@ TESTS= test-ppds
 
 ## Programs
 
+if BUILD_CUPS_1_2
+cupsexec_driver_PROGRAMS = gutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+endif
+
 if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate
 sbin_PROGRAMS = cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 sbin_SCRIPTS = cups-genppdconfig.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ cups-genppdupdate.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
-cupsexec_driver_PROGRAMS = gutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 endif
 
