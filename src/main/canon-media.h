@@ -29,6 +29,53 @@
 #define GUTENPRINT_INTERNAL_CANON_MEDIA_H
 
 /* media related structs */
+
+
+/* media slots */
+
+typedef struct {
+  const char* name;
+  const char* text;
+  unsigned char code;
+} canon_slot_t;
+
+typedef struct {
+  const char *name;
+  short count;
+  const canon_slot_t *slots;
+} canon_slotlist_t;
+
+#define DECLARE_SLOTS(name)                           \
+static const canon_slotlist_t name##_slotlist = {     \
+  #name,                                              \
+  sizeof(name##_slots) / sizeof(canon_slot_t),        \
+  name##_slots                                        \
+}
+
+
+static const canon_slot_t canon_default_slots[] = {
+  { "Auto",       N_ ("Auto Sheet Feeder"), 4 },
+  { "Manual",     N_ ("Manual with Pause"), 0 },
+  { "ManualNP",   N_ ("Manual without Pause"), 1 },
+  { "Cassette",   N_ ("Cassette"), 8 },
+  { "CD",         N_ ("CD tray"), 10 },
+};
+DECLARE_SLOTS(canon_default);
+
+
+static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 3 },
+  { "Auto",       N_ ("Auto Sheet Feeder"), 4 },
+  { "Cassette",   N_ ("Cassette"), 8 },
+  { "CD",         N_ ("CD tray"), 10 },
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },
+};
+DECLARE_SLOTS(canon_PIXMA_iP4000);
+
+
+
+/* media types */
+
 typedef struct {
   const char *name;                        /* Internal Name may not contain spaces */
   const char *text;                        /* Translateable name */

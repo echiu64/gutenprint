@@ -124,12 +124,6 @@ static const double ink_darknesses[] =
 
 #define USE_3BIT_FOLD_TYPE 323
 
-/* document feeding */
-#define CANON_SLOT_ASF1    1
-#define CANON_SLOT_ASF2    2
-#define CANON_SLOT_MAN1    4
-#define CANON_SLOT_MAN2    8
-
 /* model peculiarities */
 #define CANON_CAP_MSB_FIRST 0x02ul    /* how to send data           */
 #define CANON_CAP_a         0x04ul
@@ -201,7 +195,7 @@ typedef struct {
   const canon_paper_t *pt;
   unsigned int ink_type;
   const canon_mode_t* mode;
-  const char *source_str;
+  const canon_slot_t* slot;
   const char *duplex_str;
   int page_width;
   int page_height;
@@ -390,21 +384,17 @@ static const canon_cap_t * canon_get_model_capabilities(int model)
   return &(canon_model_capabilities[0]);
 }
 
-static int
+static const canon_slot_t *
 canon_source_type(const char *name, const canon_cap_t * caps)
 {
-  /* used internally: do not translate */
-  if (name)
-    {
-      if (!strcmp(name,"Auto"))    return 4;
-      if (!strcmp(name,"Manual"))    return 0;
-      if (!strcmp(name,"ManualNP")) return 1;
-      if (!strcmp(name,"Cassette")) return 8;
-      if (!strcmp(name,"CD")) return 10;
+    if(name){
+        int i;
+        for(i=0; i<caps->slotlist->count; i++){
+            if( !strcmp(name,caps->slotlist->slots[i].name))
+                 return &(caps->slotlist->slots[i]);
+        }
     }
-
-  stp_deprintf(STP_DBG_CANON,"canon: Unknown source type '%s' - reverting to auto\n",name);
-  return 4;
+    return &(caps->slotlist->slots[0]);
 }
 
 
@@ -502,17 +492,6 @@ canon_describe_output(const stp_vars_t *v)
     return "CMY";
   return "Grayscale";
 }
-
-static const stp_param_string_t media_sources[] =
-              {
-                { "Auto",	N_ ("Auto Sheet Feeder") },
-                { "Manual",	N_ ("Manual with Pause") },
-                { "ManualNP",	N_ ("Manual without Pause") },
-		{ "Cassette",   N_ ("Cassette") },
-		{ "CD", N_ ("CD tray") }
-              };
-
-
 
 /*
  * 'canon_parameters()' - Return the parameter values for the given parameter.
@@ -637,13 +616,15 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
-    int count = sizeof(media_sources)/sizeof(media_sources[0]);
+    const canon_slot_t * canon_slot_list = caps->slotlist->slots;
+    int count = caps->slotlist->count;
     description->bounds.str= stp_string_list_create();
-    description->deflt.str= media_sources[0].name;
+    description->deflt.str= canon_slot_list[0].name;
+
     for (i = 0; i < count; i ++)
       stp_string_list_add_string(description->bounds.str,
-				media_sources[i].name,
-				gettext(media_sources[i].text));
+				canon_slot_list[i].name,
+				gettext(canon_slot_list[i].text));
   }
   else if (strcmp(name, "PrintingMode") == 0)
   {
@@ -981,15 +962,12 @@ canon_init_setTray(const stp_vars_t *v, canon_init_t *init)
     arg_6c_1 = 0x00,
     arg_6c_2 = 0x00; /* plain paper */
 
-  /* int media= canon_media_type(media_str,caps); */
-  int source= canon_source_type(init->source_str,init->caps);
-
   if (!(init->caps->features & CANON_CAP_l))
     return;
 
   arg_6c_1 = init->caps->model_id << 4;
 
-  arg_6c_1|= (source & 0x0f);
+  arg_6c_1|= (init->slot->code & 0x0f);
 
   if (init->pt) arg_6c_2= init->pt->media_code_l;
   canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
@@ -1056,7 +1034,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_init_t *init)
 
   if (!(init->caps->features & CANON_CAP_p))
     return;
-  if (!strcmp(init->source_str,"CD")) {
+  if (!strcmp(init->slot->name,"CD")) {
     canon_cmd(v,ESC28,0x70, 8, 0x00, 0x2a, 0xb0, 0x00,
 		               0x00, 0x01, 0xe0, 0x00);
     stp_deprintf(STP_DBG_CANON,"sending cd margins\n");
@@ -1499,7 +1477,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   init.caps = caps;
   init.pt = pt;
   init.mode = mode;
-  init.source_str = media_source;
+  init.slot = canon_source_type(media_source,caps);
   init.duplex_str = duplex_mode;
   init.is_first_page = (page_number == 0);
   init.page_width = page_width;
