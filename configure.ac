@@ -712,7 +712,6 @@ AC_CHECK_LIB(m,pow,
 STP_CUPS_LIBS
 
 STP_GIMP2_LIBS
-dnl STP_GIMP2_PLUG_IN_DIR is obsolete
 
 dnl Checks for header files.
 AC_HEADER_STDC
