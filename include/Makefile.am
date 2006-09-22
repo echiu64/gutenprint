@@ -19,7 +19,7 @@
 
 @SET_MAKE@
 
-SUBDIRS = gutenprint gutenprintui gutenprintui2
+SUBDIRS = gutenprint gutenprintui2
 
 include $(top_srcdir)/scripts/global.mk
 
