@@ -27,7 +27,7 @@ include $(top_srcdir)/scripts/global.mk
 
 ## Variables
 
-SUBDIRS = include src samples test po man scripts
+SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
 
 
