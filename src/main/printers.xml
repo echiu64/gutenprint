@@ -839,6 +839,7 @@
       <printer name="Olympus P-400" driver="olympus-p400" manufacturer="Olympus" model="1" />
       <printer name="Olympus P-440" driver="olympus-p440" manufacturer="Olympus" model="3" />
       <printer name="Olympus P-S100" driver="olympus-ps100" manufacturer="Olympus" model="20" />
+      <printer name="Canon CP-10" driver="canon-cp10" manufacturer="Canon" model="1002" />
       <printer name="Canon CP-100" driver="canon-cp100" manufacturer="Canon" model="1000" />
       <printer name="Canon CP-200" driver="canon-cp200" manufacturer="Canon" model="1000" />
       <printer name="Canon CP-220" driver="canon-cp220" manufacturer="Canon" model="1001" />

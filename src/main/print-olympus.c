@@ -147,6 +147,7 @@ static olympus_privdata_t privdata;
 typedef struct {
   int out_channels;
   int ink_channels;
+  const char *ink_order;
   int bytes_per_out_channel;
   int bytes_per_ink_channel;
   int plane_interlacing;
@@ -759,13 +760,36 @@ static void ps100_printer_end_func(stp_vars_t *v)
 }
 
 
+/* Canon CP-10 */
+static const olymp_pagesize_t cp10_page[] =
+{
+  { "w155h244", "Card 54x86mm", -1, -1, 10, 10, 20, 20, OLYMPUS_PORTRAIT},
+  { "Custom", NULL, -1, -1, 10, 10, 20, 20, OLYMPUS_PORTRAIT},
+};
+
+static const olymp_pagesize_list_t cp10_page_list =
+{
+  cp10_page, sizeof(cp10_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t cp10_printsize[] =
+{
+  { "314x314", "w155h244", 662, 1040},
+  { "314x314", "Custom", 662, 1040},
+};
+
+static const olymp_printsize_list_t cp10_printsize_list =
+{
+  cp10_printsize, sizeof(cp10_printsize) / sizeof(olymp_printsize_t)
+};
+
+
 /* Canon CP-100 series */
 static const olymp_pagesize_t cpx00_page[] =
 {
   { "Postcard", "Postcard 100x148mm", -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
   { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15, OLYMPUS_PORTRAIT},
-  { "w244h155", "Card 54x86mm", -1, -1, 15, 15, 13, 13, OLYMPUS_PORTRAIT},
-  	/* FIXME: Card size should be  w155h244 and LANDSCAPE */
+  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15, OLYMPUS_LANDSCAPE},
   { "Custom", NULL, -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
 };
 
@@ -778,7 +802,7 @@ static const olymp_printsize_t cpx00_printsize[] =
 {
   { "314x314", "Postcard", 1232, 1808},
   { "314x314", "w253h337", 1100, 1456},
-  { "314x314", "w244h155", 1040, 672},	/* FIXME: LANDSCAPE, see above */
+  { "314x314", "w155h244", 672, 1040},
   { "314x314", "Custom", 1232, 1808},
 };
 
@@ -791,7 +815,9 @@ static void cpx00_printer_init_func(stp_vars_t *v)
 {
   char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\1' :
 		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
-		(strcmp(privdata.pagesize, "w244h155") == 0 ? '\3' :
+		(strcmp(privdata.pagesize, "w155h244") == 0 ? 
+			(strcmp(stp_get_driver(v),"canon-cp10") == 0 ?
+				'\0' : '\3' ) :
 		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\4' : 
 		 '\1' ))));
 
@@ -854,8 +880,7 @@ static const olymp_pagesize_t cp220_page[] =
 {
   { "Postcard", "Postcard 100x148mm", -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
   { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15, OLYMPUS_PORTRAIT},
-  { "w244h155", "Card 54x86mm", -1, -1, 15, 15, 13, 13, OLYMPUS_PORTRAIT},
-  	/* FIXME: Card size should be  w155h244 and LANDSCAPE */
+  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15, OLYMPUS_LANDSCAPE},
   { "w283h566", "Wide 100x200mm", -1, -1, 13, 13, 20, 20, OLYMPUS_PORTRAIT},
   { "Custom", NULL, -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
 };
@@ -869,7 +894,7 @@ static const olymp_printsize_t cp220_printsize[] =
 {
   { "314x314", "Postcard", 1232, 1808},
   { "314x314", "w253h337", 1100, 1456},
-  { "314x314", "w244h155", 1040, 672},	/* FIXME: LANDSCAPE, see above */
+  { "314x314", "w155h244", 672, 1040},
   { "314x314", "w283h566", 1232, 2416},
   { "314x314", "Custom", 1232, 1808},
 };
@@ -1159,21 +1184,7 @@ static void cx400_printer_init_func(stp_vars_t *v)
   stp_putc('\1', v);
 }
   
-static const olymp_resolution_t all_resolutions[] =
-{
-  { "306x306", 306, 306},
-  { "153x153", 153, 153},
-  { "314x314", 314, 314},
-  { "300x300", 300, 300},
-  { "317x316", 317, 316},
-  { "320x320", 320, 320},
-  { "346x346", 346, 346},
-};
-
-static const olymp_resolution_list_t all_res_list =
-{
-  all_resolutions, sizeof(all_resolutions) / sizeof(olymp_resolution_t)
-};
+/* Model capabilities */
 
 static const olympus_cap_t olympus_model_capabilities[] =
 {
@@ -1263,6 +1274,22 @@ static const olympus_cap_t olympus_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
+    NULL,
+  },
+  { /* Canon CP-10 */
+    1002,
+    &ymc_ink_list,
+    &res_314dpi_list,
+    &cp10_page_list,
+    &cp10_printsize_list,
+    1040,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
+      | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER
+      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    &cpx00_printer_init_func, NULL,
+    &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
   { /* Canon CP-100, CP-200, CP-300 */
@@ -1689,16 +1716,7 @@ olympus_imageable_area_internal(const stp_vars_t *v,
     {
       if (strcmp(p->item[i].name,pt->name) == 0)
         {
-/*
-    	  if (p->item[i].width_pt >= 0)
-    		  stp_set_page_width(v, p->item[i].width_pt);
-    	  if (p->item[i].height_pt >= 0)
-    		  stp_set_page_height(v, p->item[i].height_pt);
-*/
-
           stp_default_media_size(v, &width, &height);
-    
-          
 	  if (use_maximum_area ||
 	      (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS) &&
 	       stp_get_boolean_parameter(v, "Borderless")))
@@ -1758,18 +1776,22 @@ static void
 olympus_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  							stp_get_model_id(v));
+  const olymp_resolution_list_t *r = caps->resolution;
   int i;
 
   *x = -1;
   *y = -1;
   if (resolution)
     {
-      for (i = 0; i < all_res_list.n_items; i++)
+      for (i = 0; i < r->n_items; i++)
 	{
-	  if (strcmp(resolution, all_res_list.item[i].name) == 0)
+	  if (strcmp(resolution, r->item[i].name) == 0)
 	    {
-	      *x = all_res_list.item[i].xdpi;
-	      *y = all_res_list.item[i].ydpi;
+	      *x = r->item[i].xdpi;
+	      *y = r->item[i].ydpi;
+	      break;
 	    }
 	}
     }  
@@ -1777,9 +1799,37 @@ olympus_describe_resolution(const stp_vars_t *v, int *x, int *y)
 }
 
 static const char *
+olympus_describe_output_internal(stp_vars_t *v, olympus_print_vars_t *pv)
+{
+  const char *ink_type      = stp_get_string_parameter(v, "InkType");
+  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  							stp_get_model_id(v));
+  const char *output_type;
+  int i;
+
+  pv->ink_channels = 1;
+  output_type = "CMY";
+
+  if (ink_type)
+    {
+      for (i = 0; i < caps->inks->n_items; i++)
+	if (strcmp(ink_type, caps->inks->item[i].name) == 0)
+	  {
+	    output_type = caps->inks->item[i].output_type;
+	    pv->ink_channels = caps->inks->item[i].output_channels;
+	    pv->ink_order = caps->inks->item[i].channel_order;
+	    break;
+	  }
+    }
+  
+  return output_type;
+}
+
+static const char *
 olympus_describe_output(const stp_vars_t *v)
 {
-  return "CMY";
+  olympus_print_vars_t ipv;
+  return olympus_describe_output_internal((stp_vars_t *) v, &ipv);
 }
 
 static void
@@ -1967,7 +2017,7 @@ olympus_print_row(stp_vars_t *v,
 static int
 olympus_print_plane(stp_vars_t *v,
 		olympus_print_vars_t *pv,
-		olympus_cap_t *caps,
+		const olympus_cap_t *caps,
 		int plane)
 {
   int ret = 0;
@@ -2020,6 +2070,7 @@ olympus_print_plane(stp_vars_t *v,
 	  olympus_exec(v, caps->block_end_func, "caps->block_end");
 	}
     }
+  return ret;
 }
 
 /*
@@ -2031,11 +2082,10 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   int i;
   olympus_print_vars_t pv;
   int status = 1;
-  const char *ink_order = NULL;
 
   const int model           = stp_get_model_id(v); 
-  const char *ink_type      = stp_get_string_parameter(v, "InkType");
-  olympus_cap_t *caps = olympus_get_model_capabilities(model);
+  const char *ink_type;
+  const olympus_cap_t *caps = olympus_get_model_capabilities(model);
   int max_print_px_width = 0;
   int max_print_px_height = 0;
   int xdpi, ydpi;	/* Resolution */
@@ -2076,11 +2126,10 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   if (caps->laminate)
 	  privdata.laminate = olympus_get_laminate_pattern(v);
 
-  if (olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER))
-    stp_default_media_size(v, &page_pt_right, &page_pt_bottom);
-  else
-    olympus_imageable_area_internal(v, 0, &page_pt_left, &page_pt_right,
-	&page_pt_bottom, &page_pt_top, &page_mode);
+  olympus_imageable_area_internal(v, 
+  	(olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER) ? 1 : 0),
+	&page_pt_left, &page_pt_right, &page_pt_bottom, &page_pt_top,
+	&page_mode);
   
   pv.prnw_px = MIN(max_print_px_width,
 		  	PX(page_pt_right - page_pt_left, xdpi));
@@ -2135,27 +2184,10 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.xsize = pv.prnw_px;
   privdata.ysize = pv.prnh_px;
 
-  stp_set_string_parameter(v, "STPIOutputType", "CMY");
-  
-  olympus_adjust_curve(v, caps->adj_cyan, "CyanCurve");
-  olympus_adjust_curve(v, caps->adj_magenta, "MagentaCurve");
-  olympus_adjust_curve(v, caps->adj_yellow, "YellowCurve");
-
 
   /* FIXME: move this into print_init_drv */
-  pv.ink_channels = 1;
-  if (ink_type)
-    {
-      for (i = 0; i < caps->inks->n_items; i++)
-	if (strcmp(ink_type, caps->inks->item[i].name) == 0)
-	  {
-	    stp_set_string_parameter(v, "STPIOutputType",
-				     caps->inks->item[i].output_type);
-	    pv.ink_channels = caps->inks->item[i].output_channels;
-	    ink_order = caps->inks->item[i].channel_order;
-	    break;
-	  }
-    }
+  ink_type = olympus_describe_output_internal(v, &pv);
+  stp_set_string_parameter(v, "STPIOutputType", ink_type);
   stp_channel_reset(v);
   for (i = 0; i < pv.ink_channels; i++)
     stp_channel_add(v, i, 0, 1.0);
@@ -2173,6 +2205,9 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   /* /FIXME */
 
 
+  olympus_adjust_curve(v, caps->adj_cyan, "CyanCurve");
+  olympus_adjust_curve(v, caps->adj_magenta, "MagentaCurve");
+  olympus_adjust_curve(v, caps->adj_yellow, "YellowCurve");
   stp_set_float_parameter(v, "Density", 1.0);
 
 
@@ -2224,13 +2259,13 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
 
   for (pl = 0; pl < (pv.plane_interlacing ? pv.ink_channels : 1); pl++)
     {
-      privdata.plane = ink_order[pl];
+      privdata.plane = pv.ink_order[pl];
       stp_deprintf(STP_DBG_OLYMPUS, "olympus: plane %d\n", privdata.plane);
 
       /* plane init */
       olympus_exec(v, caps->plane_init_func, "caps->plane_init");
   
-      olympus_print_plane(v, &pv, caps, (int) ink_order[pl] - 1);
+      olympus_print_plane(v, &pv, caps, (int) pv.ink_order[pl] - 1);
 
       /* plane end */
       olympus_exec(v, caps->plane_end_func, "caps->plane_end");

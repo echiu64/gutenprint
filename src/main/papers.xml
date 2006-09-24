@@ -940,11 +940,11 @@
       <height value="337"/>
       <unit value="metric-extended"/>
     </paper>
-    <paper name="w244h155">
+    <paper name="w155h244">
       <description value="Card"/>
-      <comment value="86mm x 54mm"/>
-      <width value="244"/>
-      <height value="155"/>
+      <comment value="54mm x 86mm"/>
+      <width value="155"/>
+      <height value="244"/>
       <unit value="metric-extended"/>
     </paper>
     <paper name="w283h566">
