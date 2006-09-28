@@ -1184,6 +1184,53 @@ static void cx400_printer_init_func(stp_vars_t *v)
   stp_putc('\1', v);
 }
   
+/* Fujifilm NX-500 */
+static const olymp_resolution_t res_306dpi[] =
+{
+  { "306x306", 306, 306},
+};
+
+static const olymp_resolution_list_t res_306dpi_list =
+{
+  res_306dpi, sizeof(res_306dpi) / sizeof(olymp_resolution_t)
+};
+
+static const olymp_pagesize_t nx500_page[] =
+{
+  { "Postcard", NULL, -1, -1, 21, 21, 29, 29, OLYMPUS_PORTRAIT},
+  { "Custom", NULL, -1, -1, 21, 21, 29, 29, OLYMPUS_PORTRAIT},
+};
+
+static const olymp_pagesize_list_t nx500_page_list =
+{
+  nx500_page, sizeof(nx500_page) / sizeof(olymp_pagesize_t)
+};
+
+static const olymp_printsize_t nx500_printsize[] =
+{
+  { "306x306", "Postcard", 1024, 1518},
+  { "306x306", "Custom", 1024, 1518},
+};
+
+static const olymp_printsize_list_t nx500_printsize_list =
+{
+  nx500_printsize, sizeof(nx500_printsize) / sizeof(olymp_printsize_t)
+};
+
+static void nx500_printer_init_func(stp_vars_t *v)
+{
+  stp_zfwrite("INFO-QX-20--MKS\x00\x00\x00M\x00W\00A\x00R\00E", 1, 27, v);
+  olympus_print_bytes(v, '\0', 21);
+  stp_zfwrite("\x80\x00\x02", 1, 3, v);
+  olympus_print_bytes(v, '\0', 20);
+  stp_zfwrite("\x02\x01\x01", 1, 3, v);
+  olympus_print_bytes(v, '\0', 2);
+  stp_put16_le(privdata.ysize, v);
+  stp_put16_le(privdata.xsize, v);
+  stp_zfwrite("\x00\x02\x00\x70\x2f", 1, 5, v);
+  olympus_print_bytes(v, '\0', 43);
+}
+  
 /* Model capabilities */
 
 static const olympus_cap_t olympus_model_capabilities[] =
@@ -1379,6 +1426,20 @@ static const olympus_cap_t olympus_model_capabilities[] =
     OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
       | OLYMPUS_FEATURE_BORDERLESS,
     &cx400_printer_init_func, NULL,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
+    NULL,
+  },
+  { /* Fujifilm FinePix NX-500  */
+    3002,
+    &rgb_ink_list,
+    &res_306dpi_list,
+    &nx500_page_list,
+    &nx500_printsize_list,
+    2208,
+    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    &nx500_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */

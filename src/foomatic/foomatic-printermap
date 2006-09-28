@@ -373,6 +373,7 @@
 #gptofoo escp2-scan2500 printer/Epson-Stylus_Scan_2500
 #gptofoo fujifilm-cx400 printer/Fujifilm-Printpix-CX-400
 #gptofoo fujifilm-cx550 printer/Fujifilm-Printpix-CX-550
+#gptofoo fujifilm-nx500 printer/Fujifilm-FinePix-NX-500
 #gptofoo fujitsu-pp_10v printer/Fujitsu-PrintPartner_10V
 #gptofoo fujitsu-pp_16dv printer/Fujitsu-PrintPartner_16DV
 #gptofoo fujitsu-pp_20w printer/Fujitsu-PrintPartner_20W
