@@ -347,13 +347,13 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   switch (cups->header.cupsColorSpace)
     {
     case CUPS_CSPACE_W :
-      /* Olympus photo printers don't support black & white ink! */
+      /* DyeSub photo printers don't support black & white ink! */
       if (printer_supports_bw(v))
 	set_string_parameter(v, "PrintingMode", "BW");
       set_string_parameter(v, "InputImageType", "Whitescale");
       break;
     case CUPS_CSPACE_K :
-      /* Olympus photo printers don't support black & white ink! */
+      /* DyeSub photo printers don't support black & white ink! */
       if (printer_supports_bw(v))
 	set_string_parameter(v, "PrintingMode", "BW");
       set_string_parameter(v, "InputImageType", "Grayscale");

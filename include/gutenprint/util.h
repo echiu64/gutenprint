@@ -124,7 +124,7 @@ extern void stp_catprintf(char **strp, const char *format, ...)
 #define STP_DBG_PRINTERS	0x8000
 #define STP_DBG_XML		0x10000
 #define STP_DBG_VARS		0x20000
-#define STP_DBG_OLYMPUS		0x40000
+#define STP_DBG_DYESUB		0x40000
 #define STP_DBG_CURVE		0x80000
 #define STP_DBG_CURVE_ERRORS	0x100000
 

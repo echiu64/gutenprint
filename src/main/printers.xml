@@ -827,7 +827,7 @@
       <printer name="Lexmark Z52" driver="lexmark-z52" manufacturer="Lexmark" model="10052" parameters="standard_params" />
       <printer name="Lexmark Z53" driver="lexmark-z53" manufacturer="Lexmark" model="10052" parameters="standard_params" />
     </family>
-    <family name="olympus">
+    <family name="dyesub">
       <printer name="Olympus P-10" driver="olympus-p10" manufacturer="Olympus" model="2" />
       <printer name="Olympus P-11" driver="olympus-p11" manufacturer="Olympus" model="2" />
       <printer name="Olympus P-200" driver="olympus-p200" manufacturer="Olympus" model="4" />

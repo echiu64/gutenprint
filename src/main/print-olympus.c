@@ -1,9 +1,9 @@
 /*
  * "$Id$"
  *
- *   Print plug-in Olympus driver for the GIMP.
+ *   Print plug-in DyeSub driver (formerly Olympus driver) for the GIMP.
  *
- *   Copyright 2003 - 2005
+ *   Copyright 2003 - 2006
  *   Michael Mraka (Michael.Mraka@linux.cz)
  *
  *   The plug-in is based on the code of the RAW plugin for the GIMP of
@@ -42,16 +42,16 @@
 #define inline __inline__
 #endif
 
-#define OLYMPUS_FEATURE_NONE		0x00000000
-#define OLYMPUS_FEATURE_FULL_WIDTH	0x00000001
-#define OLYMPUS_FEATURE_FULL_HEIGHT	0x00000002
-#define OLYMPUS_FEATURE_BLOCK_ALIGN	0x00000004
-#define OLYMPUS_FEATURE_BORDERLESS	0x00000008
-#define OLYMPUS_FEATURE_WHITE_BORDER	0x00000010
-#define OLYMPUS_FEATURE_PLANE_INTERLACE	0x00000020
+#define DYESUB_FEATURE_NONE		0x00000000
+#define DYESUB_FEATURE_FULL_WIDTH	0x00000001
+#define DYESUB_FEATURE_FULL_HEIGHT	0x00000002
+#define DYESUB_FEATURE_BLOCK_ALIGN	0x00000004
+#define DYESUB_FEATURE_BORDERLESS	0x00000008
+#define DYESUB_FEATURE_WHITE_BORDER	0x00000010
+#define DYESUB_FEATURE_PLANE_INTERLACE	0x00000020
 
-#define OLYMPUS_PORTRAIT	0
-#define OLYMPUS_LANDSCAPE	1
+#define DYESUB_PORTRAIT	0
+#define DYESUB_LANDSCAPE	1
 
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
@@ -83,12 +83,12 @@ typedef struct {
   const char* name;
   int xdpi;
   int ydpi;
-} olymp_resolution_t;
+} dyesub_resolution_t;
 
 typedef struct {
-  const olymp_resolution_t *item;
+  const dyesub_resolution_t *item;
   size_t n_items;
-} olymp_resolution_list_t;
+} dyesub_resolution_list_t;
 
 typedef struct {
   const char* name;
@@ -100,24 +100,24 @@ typedef struct {
   int border_pt_top;
   int border_pt_bottom;
   int print_mode;
-} olymp_pagesize_t;
+} dyesub_pagesize_t;
 
 typedef struct {
-  const olymp_pagesize_t *item;
+  const dyesub_pagesize_t *item;
   size_t n_items;
-} olymp_pagesize_list_t;
+} dyesub_pagesize_list_t;
 
 typedef struct {
   const char* res_name;
   const char* pagesize_name;
   int width_px;
   int height_px;
-} olymp_printsize_t;
+} dyesub_printsize_t;
 
 typedef struct {
-  const olymp_printsize_t *item;
+  const dyesub_printsize_t *item;
   size_t n_items;
-} olymp_printsize_list_t;
+} dyesub_printsize_list_t;
 
 
 typedef struct {
@@ -140,9 +140,9 @@ typedef struct
   int block_max_x, block_max_y;
   const char* pagesize;
   const laminate_t* laminate;
-} olympus_privdata_t;
+} dyesub_privdata_t;
 
-static olympus_privdata_t privdata;
+static dyesub_privdata_t privdata;
 
 typedef struct {
   int out_channels;
@@ -157,15 +157,15 @@ typedef struct {
   int imgh_px, imgw_px;
   int prnh_px, prnw_px, prnt_px, prnb_px, prnl_px, prnr_px;
   int print_mode;	/* portrait or landscape */
-} olympus_print_vars_t;
+} dyesub_print_vars_t;
 
 typedef struct /* printer specific parameters */
 {
   int model;		/* printer model number from printers.xml*/
   const ink_list_t *inks;
-  const olymp_resolution_list_t *resolution;
-  const olymp_pagesize_list_t *pages;
-  const olymp_printsize_list_t *printsize;
+  const dyesub_resolution_list_t *resolution;
+  const dyesub_pagesize_list_t *pages;
+  const dyesub_printsize_list_t *printsize;
   int block_size;
   int features;		
   void (*printer_init_func)(stp_vars_t *);
@@ -178,12 +178,12 @@ typedef struct /* printer specific parameters */
   const char *adj_magenta;
   const char *adj_yellow;
   const laminate_list_t *laminate;
-} olympus_cap_t;
+} dyesub_cap_t;
 
 
-static const olympus_cap_t* olympus_get_model_capabilities(int model);
-static const laminate_t* olympus_get_laminate_pattern(stp_vars_t *v);
-static void  olympus_print_bytes(stp_vars_t *v, char byte, int count);
+static const dyesub_cap_t* dyesub_get_model_capabilities(int model);
+static const laminate_t* dyesub_get_laminate_pattern(stp_vars_t *v);
+static void  dyesub_print_bytes(stp_vars_t *v, char byte, int count);
 
 
 static const ink_t cmy_inks[] =
@@ -228,38 +228,38 @@ static const ink_list_t bgr_ink_list =
 
 
 /* Olympus P-10 */
-static const olymp_resolution_t res_320dpi[] =
+static const dyesub_resolution_t res_320dpi[] =
 {
   { "320x320", 320, 320},
 };
 
-static const olymp_resolution_list_t res_320dpi_list =
+static const dyesub_resolution_list_t res_320dpi_list =
 {
-  res_320dpi, sizeof(res_320dpi) / sizeof(olymp_resolution_t)
+  res_320dpi, sizeof(res_320dpi) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t p10_page[] =
+static const dyesub_pagesize_t p10_page[] =
 {
-  { "w288h432", "4 x 6", -1, -1, 0, 0, 16, 0, OLYMPUS_PORTRAIT}, /* 4x6" */
-  { "B7", "3.5 x 5", -1, -1, 0, 0, 4, 0, OLYMPUS_PORTRAIT},	 /* 3.5x5" */
-  { "Custom", NULL, -1, -1, 28, 28, 48, 48, OLYMPUS_PORTRAIT},
+  { "w288h432", "4 x 6", -1, -1, 0, 0, 16, 0, DYESUB_PORTRAIT}, /* 4x6" */
+  { "B7", "3.5 x 5", -1, -1, 0, 0, 4, 0, DYESUB_PORTRAIT},	 /* 3.5x5" */
+  { "Custom", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t p10_page_list =
+static const dyesub_pagesize_list_t p10_page_list =
 {
-  p10_page, sizeof(p10_page) / sizeof(olymp_pagesize_t)
+  p10_page, sizeof(p10_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t p10_printsize[] =
+static const dyesub_printsize_t p10_printsize[] =
 {
   { "320x320", "w288h432", 1280, 1848},
   { "320x320", "B7",  1144,  1591},
   { "320x320", "Custom", 1280, 1848},
 };
 
-static const olymp_printsize_list_t p10_printsize_list =
+static const dyesub_printsize_list_t p10_printsize_list =
 {
-  p10_printsize, sizeof(p10_printsize) / sizeof(olymp_printsize_t)
+  p10_printsize, sizeof(p10_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void p10_printer_init_func(stp_vars_t *v)
@@ -297,26 +297,26 @@ static const laminate_list_t p10_laminate_list =
 
 
 /* Olympus P-200 series */
-static const olymp_pagesize_t p200_page[] =
+static const dyesub_pagesize_t p200_page[] =
 {
-  { "ISOB7", "80x125mm", -1, -1, 16, 17, 33, 33, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 16, 17, 33, 33, OLYMPUS_PORTRAIT},
+  { "ISOB7", "80x125mm", -1, -1, 16, 17, 33, 33, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 16, 17, 33, 33, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t p200_page_list =
+static const dyesub_pagesize_list_t p200_page_list =
 {
-  p200_page, sizeof(p200_page) / sizeof(olymp_pagesize_t)
+  p200_page, sizeof(p200_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t p200_printsize[] =
+static const dyesub_printsize_t p200_printsize[] =
 {
   { "320x320", "ISOB7", 960, 1280},
   { "320x320", "Custom", 960, 1280},
 };
 
-static const olymp_printsize_list_t p200_printsize_list =
+static const dyesub_printsize_list_t p200_printsize_list =
 {
-  p200_printsize, sizeof(p200_printsize) / sizeof(olymp_printsize_t)
+  p200_printsize, sizeof(p200_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void p200_printer_init_func(stp_vars_t *v)
@@ -351,29 +351,29 @@ static const char p200_adj_any[] =
 
 
 /* Olympus P-300 series */
-static const olymp_resolution_t p300_res[] =
+static const dyesub_resolution_t p300_res[] =
 {
   { "306x306", 306, 306},
   { "153x153", 153, 153},
 };
 
-static const olymp_resolution_list_t p300_res_list =
+static const dyesub_resolution_list_t p300_res_list =
 {
-  p300_res, sizeof(p300_res) / sizeof(olymp_resolution_t)
+  p300_res, sizeof(p300_res) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t p300_page[] =
+static const dyesub_pagesize_t p300_page[] =
 {
-  { "A6", NULL, -1, -1, 28, 28, 48, 48, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 28, 28, 48, 48, OLYMPUS_PORTRAIT},
+  { "A6", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t p300_page_list =
+static const dyesub_pagesize_list_t p300_page_list =
 {
-  p300_page, sizeof(p300_page) / sizeof(olymp_pagesize_t)
+  p300_page, sizeof(p300_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t p300_printsize[] =
+static const dyesub_printsize_t p300_printsize[] =
 {
   { "306x306", "A6", 1024, 1376},
   { "153x153", "A6",  512,  688},
@@ -381,9 +381,9 @@ static const olymp_printsize_t p300_printsize[] =
   { "153x153", "Custom", 512, 688},
 };
 
-static const olymp_printsize_list_t p300_printsize_list =
+static const dyesub_printsize_list_t p300_printsize_list =
 {
-  p300_printsize, sizeof(p300_printsize) / sizeof(olymp_printsize_t)
+  p300_printsize, sizeof(p300_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void p300_printer_init_func(stp_vars_t *v)
@@ -398,7 +398,7 @@ static void p300_plane_end_func(stp_vars_t *v)
 {
   const char *c = "CMY";
   stp_zprintf(v, "\033\033\033P%cS", c[privdata.plane-1]);
-  stp_deprintf(STP_DBG_OLYMPUS, "olympus: p300_plane_end_func: %c\n",
+  stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_plane_end_func: %c\n",
 	c[privdata.plane-1]);
 }
 
@@ -411,7 +411,7 @@ static void p300_block_init_func(stp_vars_t *v)
   stp_put16_be(privdata.block_max_y, v);
   stp_put16_be(privdata.block_max_x, v);
 
-  stp_deprintf(STP_DBG_OLYMPUS, "olympus: p300_block_init_func: %d-%dx%d-%d\n",
+  stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_block_init_func: %d-%dx%d-%d\n",
 	privdata.block_min_x, privdata.block_max_x,
 	privdata.block_min_y, privdata.block_max_y);
 }
@@ -457,30 +457,30 @@ static const char p300_adj_yellow[] =
 
 
 /* Olympus P-400 series */
-static const olymp_resolution_t res_314dpi[] =
+static const dyesub_resolution_t res_314dpi[] =
 {
   { "314x314", 314, 314},
 };
 
-static const olymp_resolution_list_t res_314dpi_list =
+static const dyesub_resolution_list_t res_314dpi_list =
 {
-  res_314dpi, sizeof(res_314dpi) / sizeof(olymp_resolution_t)
+  res_314dpi, sizeof(res_314dpi) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t p400_page[] =
+static const dyesub_pagesize_t p400_page[] =
 {
-  { "A4", NULL, -1, -1, 22, 22, 54, 54, OLYMPUS_PORTRAIT},
-  { "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85, OLYMPUS_PORTRAIT},
-  { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 22, 22, 54, 54, OLYMPUS_PORTRAIT},
+  { "A4", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
+  { "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85, DYESUB_PORTRAIT},
+  { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t p400_page_list =
+static const dyesub_pagesize_list_t p400_page_list =
 {
-  p400_page, sizeof(p400_page) / sizeof(olymp_pagesize_t)
+  p400_page, sizeof(p400_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t p400_printsize[] =
+static const dyesub_printsize_t p400_printsize[] =
 {
   { "314x314", "A4", 2400, 3200},
   { "314x314", "c8x10", 2000, 2400},
@@ -488,9 +488,9 @@ static const olymp_printsize_t p400_printsize[] =
   { "314x314", "Custom", 2400, 3200},
 };
 
-static const olymp_printsize_list_t p400_printsize_list =
+static const dyesub_printsize_list_t p400_printsize_list =
 {
-  p400_printsize, sizeof(p400_printsize) / sizeof(olymp_printsize_t)
+  p400_printsize, sizeof(p400_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void p400_printer_init_func(stp_vars_t *v)
@@ -498,10 +498,10 @@ static void p400_printer_init_func(stp_vars_t *v)
   int wide = (strcmp(privdata.pagesize, "c8x10") == 0
 		  || strcmp(privdata.pagesize, "C6") == 0);
 
-  stp_zprintf(v, "\033ZQ"); olympus_print_bytes(v, '\0', 61);
-  stp_zprintf(v, "\033FP"); olympus_print_bytes(v, '\0', 61);
+  stp_zprintf(v, "\033ZQ"); dyesub_print_bytes(v, '\0', 61);
+  stp_zprintf(v, "\033FP"); dyesub_print_bytes(v, '\0', 61);
   stp_zprintf(v, "\033ZF");
-  stp_putc((wide ? '\x40' : '\x00'), v); olympus_print_bytes(v, '\0', 60);
+  stp_putc((wide ? '\x40' : '\x00'), v); dyesub_print_bytes(v, '\0', 60);
   stp_zprintf(v, "\033ZS");
   if (wide)
     {
@@ -513,18 +513,18 @@ static void p400_printer_init_func(stp_vars_t *v)
       stp_put16_be(privdata.xsize, v);
       stp_put16_be(privdata.ysize, v);
     }
-  olympus_print_bytes(v, '\0', 57);
-  stp_zprintf(v, "\033ZP"); olympus_print_bytes(v, '\0', 61);
+  dyesub_print_bytes(v, '\0', 57);
+  stp_zprintf(v, "\033ZP"); dyesub_print_bytes(v, '\0', 61);
 }
 
 static void p400_plane_init_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033ZC"); olympus_print_bytes(v, '\0', 61);
+  stp_zprintf(v, "\033ZC"); dyesub_print_bytes(v, '\0', 61);
 }
 
 static void p400_plane_end_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033P"); olympus_print_bytes(v, '\0', 62);
+  stp_zprintf(v, "\033P"); dyesub_print_bytes(v, '\0', 62);
 }
 
 static void p400_block_init_func(stp_vars_t *v)
@@ -547,7 +547,7 @@ static void p400_block_init_func(stp_vars_t *v)
       stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
       stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
     }
-  olympus_print_bytes(v, '\0', 53);
+  dyesub_print_bytes(v, '\0', 53);
 }
 
 static const char p400_adj_cyan[] =
@@ -591,21 +591,21 @@ static const char p400_adj_yellow[] =
 
 
 /* Olympus P-440 series */
-static const olymp_pagesize_t p440_page[] =
+static const dyesub_pagesize_t p440_page[] =
 {
-  { "A4", NULL, -1, -1, 10, 9, 54, 54, OLYMPUS_PORTRAIT},
-  { "c8x10", "A5 wide", -1, -1, 58, 59, 72, 72, OLYMPUS_PORTRAIT},
-  { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, OLYMPUS_PORTRAIT},
-  { "w255h581", "A6 wide", -1, -1, 25, 25, 25, 24, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 22, 22, 54, 54, OLYMPUS_PORTRAIT},
+  { "A4", NULL, -1, -1, 10, 9, 54, 54, DYESUB_PORTRAIT},
+  { "c8x10", "A5 wide", -1, -1, 58, 59, 72, 72, DYESUB_PORTRAIT},
+  { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT},
+  { "w255h581", "A6 wide", -1, -1, 25, 25, 25, 24, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t p440_page_list =
+static const dyesub_pagesize_list_t p440_page_list =
 {
-  p440_page, sizeof(p440_page) / sizeof(olymp_pagesize_t)
+  p440_page, sizeof(p440_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t p440_printsize[] =
+static const dyesub_printsize_t p440_printsize[] =
 {
   { "314x314", "A4", 2508, 3200},
   { "314x314", "c8x10", 2000, 2508},
@@ -614,9 +614,9 @@ static const olymp_printsize_t p440_printsize[] =
   { "314x314", "Custom", 2508, 3200},
 };
 
-static const olymp_printsize_list_t p440_printsize_list =
+static const dyesub_printsize_list_t p440_printsize_list =
 {
-  p440_printsize, sizeof(p440_printsize) / sizeof(olymp_printsize_t)
+  p440_printsize, sizeof(p440_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void p440_printer_init_func(stp_vars_t *v)
@@ -624,15 +624,15 @@ static void p440_printer_init_func(stp_vars_t *v)
   int wide = ! (strcmp(privdata.pagesize, "A4") == 0
 		  || strcmp(privdata.pagesize, "Custom") == 0);
 
-  stp_zprintf(v, "\033FP"); olympus_print_bytes(v, '\0', 61);
+  stp_zprintf(v, "\033FP"); dyesub_print_bytes(v, '\0', 61);
   stp_zprintf(v, "\033Y");
   stp_zfwrite((privdata.laminate->seq).data, 1,
 		  (privdata.laminate->seq).bytes, v); /* laminate */ 
-  olympus_print_bytes(v, '\0', 61);
-  stp_zprintf(v, "\033FC"); olympus_print_bytes(v, '\0', 61);
+  dyesub_print_bytes(v, '\0', 61);
+  stp_zprintf(v, "\033FC"); dyesub_print_bytes(v, '\0', 61);
   stp_zprintf(v, "\033ZF");
-  stp_putc((wide ? '\x40' : '\x00'), v); olympus_print_bytes(v, '\0', 60);
-  stp_zprintf(v, "\033N\1"); olympus_print_bytes(v, '\0', 61);
+  stp_putc((wide ? '\x40' : '\x00'), v); dyesub_print_bytes(v, '\0', 60);
+  stp_zprintf(v, "\033N\1"); dyesub_print_bytes(v, '\0', 61);
   stp_zprintf(v, "\033ZS");
   if (wide)
     {
@@ -644,16 +644,16 @@ static void p440_printer_init_func(stp_vars_t *v)
       stp_put16_be(privdata.xsize, v);
       stp_put16_be(privdata.ysize, v);
     }
-  olympus_print_bytes(v, '\0', 57);
+  dyesub_print_bytes(v, '\0', 57);
   if (strcmp(privdata.pagesize, "C6") == 0)
     {
-      stp_zprintf(v, "\033ZC"); olympus_print_bytes(v, '\0', 61);
+      stp_zprintf(v, "\033ZC"); dyesub_print_bytes(v, '\0', 61);
     }
 }
 
 static void p440_printer_end_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033P"); olympus_print_bytes(v, '\0', 62);
+  stp_zprintf(v, "\033P"); dyesub_print_bytes(v, '\0', 62);
 }
 
 static void p440_block_init_func(stp_vars_t *v)
@@ -676,129 +676,129 @@ static void p440_block_init_func(stp_vars_t *v)
       stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
       stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
     }
-  olympus_print_bytes(v, '\0', 53);
+  dyesub_print_bytes(v, '\0', 53);
 }
 
 static void p440_block_end_func(stp_vars_t *v)
 {
   int pad = (64 - (((privdata.block_max_x - privdata.block_min_x + 1)
 	  * (privdata.block_max_y - privdata.block_min_y + 1) * 3) % 64)) % 64;
-  stp_deprintf(STP_DBG_OLYMPUS,
-		  "olympus: max_x %d min_x %d max_y %d min_y %d\n",
+  stp_deprintf(STP_DBG_DYESUB,
+		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
   		  privdata.block_max_x, privdata.block_min_x,
 	  	  privdata.block_max_y, privdata.block_min_y);
-  stp_deprintf(STP_DBG_OLYMPUS, "olympus: olympus-p440 padding=%d\n", pad);
-  olympus_print_bytes(v, '\0', pad);
+  stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-p440 padding=%d\n", pad);
+  dyesub_print_bytes(v, '\0', pad);
 }
 
 
 /* Olympus P-S100 */
-static const olymp_pagesize_t ps100_page[] =
+static const dyesub_pagesize_t ps100_page[] =
 {
-  { "w288h432", "4 x 6", -1, -1, 0, 0, 17, 0, OLYMPUS_PORTRAIT},	/* 4x6" */
-  { "B7", "3.5 x 5", -1, -1, 0, 0, 5, 0, OLYMPUS_PORTRAIT},	/* 3.5x5" */
-  { "Custom", NULL, -1, -1, 0, 0, 17, 0, OLYMPUS_PORTRAIT},
+  { "w288h432", "4 x 6", -1, -1, 0, 0, 17, 0, DYESUB_PORTRAIT},	/* 4x6" */
+  { "B7", "3.5 x 5", -1, -1, 0, 0, 5, 0, DYESUB_PORTRAIT},	/* 3.5x5" */
+  { "Custom", NULL, -1, -1, 0, 0, 17, 0, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t ps100_page_list =
+static const dyesub_pagesize_list_t ps100_page_list =
 {
-  ps100_page, sizeof(ps100_page) / sizeof(olymp_pagesize_t)
+  ps100_page, sizeof(ps100_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t ps100_printsize[] =
+static const dyesub_printsize_t ps100_printsize[] =
 {
   { "314x314", "w288h432", 1254, 1808},
   { "314x314", "B7", 1120, 1554},
   { "314x314", "Custom", 1254, 1808},
 };
 
-static const olymp_printsize_list_t ps100_printsize_list =
+static const dyesub_printsize_list_t ps100_printsize_list =
 {
-  ps100_printsize, sizeof(ps100_printsize) / sizeof(olymp_printsize_t)
+  ps100_printsize, sizeof(ps100_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void ps100_printer_init_func(stp_vars_t *v)
 {
-  stp_zprintf(v, "\033U"); olympus_print_bytes(v, '\0', 62);
+  stp_zprintf(v, "\033U"); dyesub_print_bytes(v, '\0', 62);
   
-  /* stp_zprintf(v, "\033ZC"); olympus_print_bytes(v, '\0', 61); */
+  /* stp_zprintf(v, "\033ZC"); dyesub_print_bytes(v, '\0', 61); */
   
-  stp_zprintf(v, "\033W"); olympus_print_bytes(v, '\0', 62);
+  stp_zprintf(v, "\033W"); dyesub_print_bytes(v, '\0', 62);
   
   stp_zfwrite("\x30\x2e\x00\xa2\x00\xa0\x00\xa0", 1, 8, v);
   stp_put16_be(privdata.ysize, v);	/* paper height (px) */
   stp_put16_be(privdata.xsize, v);	/* paper width (px) */
-  olympus_print_bytes(v, '\0', 3);
+  dyesub_print_bytes(v, '\0', 3);
   stp_putc('\1', v);	/* number of copies */
-  olympus_print_bytes(v, '\0', 8);
+  dyesub_print_bytes(v, '\0', 8);
   stp_putc('\1', v);
-  olympus_print_bytes(v, '\0', 15);
+  dyesub_print_bytes(v, '\0', 15);
   stp_putc('\6', v);
-  olympus_print_bytes(v, '\0', 23);
+  dyesub_print_bytes(v, '\0', 23);
 
   stp_zfwrite("\033ZT\0", 1, 4, v);
   stp_put16_be(0, v);			/* image width offset (px) */
   stp_put16_be(0, v);			/* image height offset (px) */
   stp_put16_be(privdata.xsize, v);	/* image width (px) */
   stp_put16_be(privdata.ysize, v);	/* image height (px) */
-  olympus_print_bytes(v, '\0', 52);
+  dyesub_print_bytes(v, '\0', 52);
 }
 
 static void ps100_printer_end_func(stp_vars_t *v)
 {
   int pad = (64 - (((privdata.block_max_x - privdata.block_min_x + 1)
 	  * (privdata.block_max_y - privdata.block_min_y + 1) * 3) % 64)) % 64;
-  stp_deprintf(STP_DBG_OLYMPUS,
-		  "olympus: max_x %d min_x %d max_y %d min_y %d\n",
+  stp_deprintf(STP_DBG_DYESUB,
+		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
   		  privdata.block_max_x, privdata.block_min_x,
 	  	  privdata.block_max_y, privdata.block_min_y);
-  stp_deprintf(STP_DBG_OLYMPUS, "olympus: olympus-ps100 padding=%d\n", pad);
-  olympus_print_bytes(v, '\0', pad);		/* padding to 64B blocks */
+  stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-ps100 padding=%d\n", pad);
+  dyesub_print_bytes(v, '\0', pad);		/* padding to 64B blocks */
 
-  stp_zprintf(v, "\033PY"); olympus_print_bytes(v, '\0', 61);
-  stp_zprintf(v, "\033u"); olympus_print_bytes(v, '\0', 62);
+  stp_zprintf(v, "\033PY"); dyesub_print_bytes(v, '\0', 61);
+  stp_zprintf(v, "\033u"); dyesub_print_bytes(v, '\0', 62);
 }
 
 
 /* Canon CP-10 */
-static const olymp_pagesize_t cp10_page[] =
+static const dyesub_pagesize_t cp10_page[] =
 {
-  { "w155h244", "Card 54x86mm", -1, -1, 10, 10, 20, 20, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 10, 10, 20, 20, OLYMPUS_PORTRAIT},
+  { "w155h244", "Card 54x86mm", -1, -1, 10, 10, 20, 20, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 10, 10, 20, 20, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t cp10_page_list =
+static const dyesub_pagesize_list_t cp10_page_list =
 {
-  cp10_page, sizeof(cp10_page) / sizeof(olymp_pagesize_t)
+  cp10_page, sizeof(cp10_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t cp10_printsize[] =
+static const dyesub_printsize_t cp10_printsize[] =
 {
   { "314x314", "w155h244", 662, 1040},
   { "314x314", "Custom", 662, 1040},
 };
 
-static const olymp_printsize_list_t cp10_printsize_list =
+static const dyesub_printsize_list_t cp10_printsize_list =
 {
-  cp10_printsize, sizeof(cp10_printsize) / sizeof(olymp_printsize_t)
+  cp10_printsize, sizeof(cp10_printsize) / sizeof(dyesub_printsize_t)
 };
 
 
 /* Canon CP-100 series */
-static const olymp_pagesize_t cpx00_page[] =
+static const dyesub_pagesize_t cpx00_page[] =
 {
-  { "Postcard", "Postcard 100x148mm", -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
-  { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15, OLYMPUS_PORTRAIT},
-  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15, OLYMPUS_LANDSCAPE},
-  { "Custom", NULL, -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
+  { "Postcard", "Postcard 100x148mm", -1, -1, 13, 13, 16, 18, DYESUB_PORTRAIT},
+  { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15, DYESUB_PORTRAIT},
+  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15, DYESUB_LANDSCAPE},
+  { "Custom", NULL, -1, -1, 13, 13, 16, 18, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t cpx00_page_list =
+static const dyesub_pagesize_list_t cpx00_page_list =
 {
-  cpx00_page, sizeof(cpx00_page) / sizeof(olymp_pagesize_t)
+  cpx00_page, sizeof(cpx00_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t cpx00_printsize[] =
+static const dyesub_printsize_t cpx00_printsize[] =
 {
   { "314x314", "Postcard", 1232, 1808},
   { "314x314", "w253h337", 1100, 1456},
@@ -806,9 +806,9 @@ static const olymp_printsize_t cpx00_printsize[] =
   { "314x314", "Custom", 1232, 1808},
 };
 
-static const olymp_printsize_list_t cpx00_printsize_list =
+static const dyesub_printsize_list_t cpx00_printsize_list =
 {
-  cpx00_printsize, sizeof(cpx00_printsize) / sizeof(olymp_printsize_t)
+  cpx00_printsize, sizeof(cpx00_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void cpx00_printer_init_func(stp_vars_t *v)
@@ -824,7 +824,7 @@ static void cpx00_printer_init_func(stp_vars_t *v)
   stp_put16_be(0x4000, v);
   stp_putc('\0', v);
   stp_putc(pg, v);
-  olympus_print_bytes(v, '\0', 8);
+  dyesub_print_bytes(v, '\0', 8);
 }
 
 static void cpx00_plane_init_func(stp_vars_t *v)
@@ -832,7 +832,7 @@ static void cpx00_plane_init_func(stp_vars_t *v)
   stp_put16_be(0x4001, v);
   stp_put16_le(3 - privdata.plane, v);
   stp_put32_le(privdata.xsize * privdata.ysize, v);
-  olympus_print_bytes(v, '\0', 4);
+  dyesub_print_bytes(v, '\0', 4);
 }
 
 static const char cpx00_adj_cyan[] =
@@ -876,21 +876,21 @@ static const char cpx00_adj_yellow[] =
 
 
 /* Canon CP-220 series */
-static const olymp_pagesize_t cp220_page[] =
+static const dyesub_pagesize_t cp220_page[] =
 {
-  { "Postcard", "Postcard 100x148mm", -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
-  { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15, OLYMPUS_PORTRAIT},
-  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15, OLYMPUS_LANDSCAPE},
-  { "w283h566", "Wide 100x200mm", -1, -1, 13, 13, 20, 20, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 13, 13, 16, 18, OLYMPUS_PORTRAIT},
+  { "Postcard", "Postcard 100x148mm", -1, -1, 13, 13, 16, 18, DYESUB_PORTRAIT},
+  { "w253h337", "CP_L 89x119mm", -1, -1, 13, 13, 15, 15, DYESUB_PORTRAIT},
+  { "w155h244", "Card 54x86mm", -1, -1, 13, 13, 15, 15, DYESUB_LANDSCAPE},
+  { "w283h566", "Wide 100x200mm", -1, -1, 13, 13, 20, 20, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 13, 13, 16, 18, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t cp220_page_list =
+static const dyesub_pagesize_list_t cp220_page_list =
 {
-  cp220_page, sizeof(cp220_page) / sizeof(olymp_pagesize_t)
+  cp220_page, sizeof(cp220_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t cp220_printsize[] =
+static const dyesub_printsize_t cp220_printsize[] =
 {
   { "314x314", "Postcard", 1232, 1808},
   { "314x314", "w253h337", 1100, 1456},
@@ -899,46 +899,46 @@ static const olymp_printsize_t cp220_printsize[] =
   { "314x314", "Custom", 1232, 1808},
 };
 
-static const olymp_printsize_list_t cp220_printsize_list =
+static const dyesub_printsize_list_t cp220_printsize_list =
 {
-  cp220_printsize, sizeof(cp220_printsize) / sizeof(olymp_printsize_t)
+  cp220_printsize, sizeof(cp220_printsize) / sizeof(dyesub_printsize_t)
 };
 
 
 /* Sony UP-DP10 */
-static const olymp_resolution_t updp10_res[] =
+static const dyesub_resolution_t updp10_res[] =
 {
   { "300x300", 300, 300},
 };
 
-static const olymp_resolution_list_t updp10_res_list =
+static const dyesub_resolution_list_t updp10_res_list =
 {
-  updp10_res, sizeof(updp10_res) / sizeof(olymp_resolution_t)
+  updp10_res, sizeof(updp10_res) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t updp10_page[] =
+static const dyesub_pagesize_t updp10_page[] =
 {
-  { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18, OLYMPUS_LANDSCAPE},
-  { "w288h387", "UPC-10P34 (3:4)", -1, -1, 12, 12, 16, 16, OLYMPUS_LANDSCAPE},
-  { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18, OLYMPUS_LANDSCAPE},
-  { "Custom", NULL, -1, -1, 12, 12, 0, 0, OLYMPUS_LANDSCAPE},
+  { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
+  { "w288h387", "UPC-10P34 (3:4)", -1, -1, 12, 12, 16, 16, DYESUB_LANDSCAPE},
+  { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
+  { "Custom", NULL, -1, -1, 12, 12, 0, 0, DYESUB_LANDSCAPE},
 };
 
-static const olymp_pagesize_list_t updp10_page_list =
+static const dyesub_pagesize_list_t updp10_page_list =
 {
-  updp10_page, sizeof(updp10_page) / sizeof(olymp_pagesize_t)
+  updp10_page, sizeof(updp10_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t updp10_printsize[] =
+static const dyesub_printsize_t updp10_printsize[] =
 {
   { "300x300", "w288h432", 1200, 1800},
   { "300x300", "w288h387", 1200, 1600},
   { "300x300", "Custom", 1200, 1800},
 };
 
-static const olymp_printsize_list_t updp10_printsize_list =
+static const dyesub_printsize_list_t updp10_printsize_list =
 {
-  updp10_printsize, sizeof(updp10_printsize) / sizeof(olymp_printsize_t)
+  updp10_printsize, sizeof(updp10_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void updp10_printer_init_func(stp_vars_t *v)
@@ -1026,31 +1026,31 @@ static const char updp10_adj_yellow[] =
 
 
 /* Sony UP-DR150 */
-static const olymp_resolution_t updr150_res[] =
+static const dyesub_resolution_t updr150_res[] =
 {
   { "346x346", 346, 346},
 };
 
-static const olymp_resolution_list_t updr150_res_list =
+static const dyesub_resolution_list_t updr150_res_list =
 {
-  updr150_res, sizeof(updr150_res) / sizeof(olymp_resolution_t)
+  updr150_res, sizeof(updr150_res) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t updr150_page[] =
+static const dyesub_pagesize_t updr150_page[] =
 {
-  { "w288h432",	"2UPC-153 (4x6)", -1, -1, 0, 0, 3, 2, OLYMPUS_LANDSCAPE},
-  { "B7",	"2UPC-154 (3.5x5)", -1, -1, 3, 2, 0, 0, OLYMPUS_LANDSCAPE},
-  { "w360h504",	"2UPC-155 (5x7)", -1, -1, 0, 0, 4, 4, OLYMPUS_PORTRAIT},
-  { "w432h576",	"2UPC-156 (6x8)", -1, -1, 3, 2, 5, 4, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 0, 0, 3, 2, OLYMPUS_LANDSCAPE},
+  { "w288h432",	"2UPC-153 (4x6)", -1, -1, 0, 0, 3, 2, DYESUB_LANDSCAPE},
+  { "B7",	"2UPC-154 (3.5x5)", -1, -1, 3, 2, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504",	"2UPC-155 (5x7)", -1, -1, 0, 0, 4, 4, DYESUB_PORTRAIT},
+  { "w432h576",	"2UPC-156 (6x8)", -1, -1, 3, 2, 5, 4, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 0, 0, 3, 2, DYESUB_LANDSCAPE},
 };
 
-static const olymp_pagesize_list_t updr150_page_list =
+static const dyesub_pagesize_list_t updr150_page_list =
 {
-  updr150_page, sizeof(updr150_page) / sizeof(olymp_pagesize_t)
+  updr150_page, sizeof(updr150_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t updr150_printsize[] =
+static const dyesub_printsize_t updr150_printsize[] =
 {
   { "346x346", "w288h432", 1382, 2048},
   { "346x346", "B7", 1210, 1728},
@@ -1059,9 +1059,9 @@ static const olymp_printsize_t updr150_printsize[] =
   { "346x346", "Custom", 1382, 2048},
 };
 
-static const olymp_printsize_list_t updr150_printsize_list =
+static const dyesub_printsize_list_t updr150_printsize_list =
 {
-  updr150_printsize, sizeof(updr150_printsize) / sizeof(olymp_printsize_t)
+  updr150_printsize, sizeof(updr150_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void updr150_printer_init_func(stp_vars_t *v)
@@ -1117,30 +1117,30 @@ static void updr150_printer_end_func(stp_vars_t *v)
 }
 
 /* Fujifilm CX-400 */
-static const olymp_resolution_t cx400_res[] =
+static const dyesub_resolution_t cx400_res[] =
 {
   { "317x316", 317, 316},
 };
 
-static const olymp_resolution_list_t cx400_res_list =
+static const dyesub_resolution_list_t cx400_res_list =
 {
-  cx400_res, sizeof(cx400_res) / sizeof(olymp_resolution_t)
+  cx400_res, sizeof(cx400_res) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t cx400_page[] =
+static const dyesub_pagesize_t cx400_page[] =
 {
-  { "w288h432", NULL, -1, -1, 23, 23, 28, 28, OLYMPUS_PORTRAIT},
-  { "w288h387", "4x5 3/8 (Digital Camera 3:4)", -1, -1, 23, 23, 27, 26, OLYMPUS_PORTRAIT},
-  { "w288h504", NULL, -1, -1, 23, 23, 23, 22, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 0, 0, 0, 0, OLYMPUS_PORTRAIT},
+  { "w288h432", NULL, -1, -1, 23, 23, 28, 28, DYESUB_PORTRAIT},
+  { "w288h387", "4x5 3/8 (Digital Camera 3:4)", -1, -1, 23, 23, 27, 26, DYESUB_PORTRAIT},
+  { "w288h504", NULL, -1, -1, 23, 23, 23, 22, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t cx400_page_list =
+static const dyesub_pagesize_list_t cx400_page_list =
 {
-  cx400_page, sizeof(cx400_page) / sizeof(olymp_pagesize_t)
+  cx400_page, sizeof(cx400_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t cx400_printsize[] =
+static const dyesub_printsize_t cx400_printsize[] =
 {
   { "317x316", "w288h387", 1268, 1658},
   { "317x316", "w288h432", 1268, 1842},
@@ -1148,9 +1148,9 @@ static const olymp_printsize_t cx400_printsize[] =
   { "317x316", "Custom", 1268, 1842},
 };
 
-static const olymp_printsize_list_t cx400_printsize_list =
+static const dyesub_printsize_list_t cx400_printsize_list =
 {
-  cx400_printsize, sizeof(cx400_printsize) / sizeof(olymp_printsize_t)
+  cx400_printsize, sizeof(cx400_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void cx400_printer_init_func(stp_vars_t *v)
@@ -1158,8 +1158,8 @@ static void cx400_printer_init_func(stp_vars_t *v)
   char pg = '\0';
   const char *pname = "XXXXXX";		  				
 
-  stp_deprintf(STP_DBG_OLYMPUS,
-	"olympus: fuji driver %s\n", stp_get_driver(v));
+  stp_deprintf(STP_DBG_DYESUB,
+	"dyesub: fuji driver %s\n", stp_get_driver(v));
   if (strcmp(stp_get_driver(v),"fujifilm-cx400") == 0)
     pname = "NX1000";
   else if (strcmp(stp_get_driver(v),"fujifilm-cx550") == 0)
@@ -1185,55 +1185,55 @@ static void cx400_printer_init_func(stp_vars_t *v)
 }
   
 /* Fujifilm NX-500 */
-static const olymp_resolution_t res_306dpi[] =
+static const dyesub_resolution_t res_306dpi[] =
 {
   { "306x306", 306, 306},
 };
 
-static const olymp_resolution_list_t res_306dpi_list =
+static const dyesub_resolution_list_t res_306dpi_list =
 {
-  res_306dpi, sizeof(res_306dpi) / sizeof(olymp_resolution_t)
+  res_306dpi, sizeof(res_306dpi) / sizeof(dyesub_resolution_t)
 };
 
-static const olymp_pagesize_t nx500_page[] =
+static const dyesub_pagesize_t nx500_page[] =
 {
-  { "Postcard", NULL, -1, -1, 21, 21, 29, 29, OLYMPUS_PORTRAIT},
-  { "Custom", NULL, -1, -1, 21, 21, 29, 29, OLYMPUS_PORTRAIT},
+  { "Postcard", NULL, -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
+  { "Custom", NULL, -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
 };
 
-static const olymp_pagesize_list_t nx500_page_list =
+static const dyesub_pagesize_list_t nx500_page_list =
 {
-  nx500_page, sizeof(nx500_page) / sizeof(olymp_pagesize_t)
+  nx500_page, sizeof(nx500_page) / sizeof(dyesub_pagesize_t)
 };
 
-static const olymp_printsize_t nx500_printsize[] =
+static const dyesub_printsize_t nx500_printsize[] =
 {
   { "306x306", "Postcard", 1024, 1518},
   { "306x306", "Custom", 1024, 1518},
 };
 
-static const olymp_printsize_list_t nx500_printsize_list =
+static const dyesub_printsize_list_t nx500_printsize_list =
 {
-  nx500_printsize, sizeof(nx500_printsize) / sizeof(olymp_printsize_t)
+  nx500_printsize, sizeof(nx500_printsize) / sizeof(dyesub_printsize_t)
 };
 
 static void nx500_printer_init_func(stp_vars_t *v)
 {
   stp_zfwrite("INFO-QX-20--MKS\x00\x00\x00M\x00W\00A\x00R\00E", 1, 27, v);
-  olympus_print_bytes(v, '\0', 21);
+  dyesub_print_bytes(v, '\0', 21);
   stp_zfwrite("\x80\x00\x02", 1, 3, v);
-  olympus_print_bytes(v, '\0', 20);
+  dyesub_print_bytes(v, '\0', 20);
   stp_zfwrite("\x02\x01\x01", 1, 3, v);
-  olympus_print_bytes(v, '\0', 2);
+  dyesub_print_bytes(v, '\0', 2);
   stp_put16_le(privdata.ysize, v);
   stp_put16_le(privdata.xsize, v);
   stp_zfwrite("\x00\x02\x00\x70\x2f", 1, 5, v);
-  olympus_print_bytes(v, '\0', 43);
+  dyesub_print_bytes(v, '\0', 43);
 }
   
 /* Model capabilities */
 
-static const olympus_cap_t olympus_model_capabilities[] =
+static const dyesub_cap_t dyesub_model_capabilities[] =
 {
   { /* Olympus P-10, P-11 */
     2, 		
@@ -1242,8 +1242,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p10_page_list,
     &p10_printsize_list,
     1848,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &p10_printer_init_func, &p10_printer_end_func,
     NULL, NULL, 
     &p10_block_init_func, NULL,
@@ -1257,8 +1257,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p200_page_list,
     &p200_printsize_list,
     1280,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_BLOCK_ALIGN
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_BLOCK_ALIGN
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &p200_printer_init_func, &p200_printer_end_func,
     &p200_plane_init_func, NULL,
     NULL, NULL,
@@ -1272,8 +1272,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p300_page_list,
     &p300_printsize_list,
     16,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_BLOCK_ALIGN
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_BLOCK_ALIGN
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &p300_printer_init_func, NULL,
     NULL, &p300_plane_end_func,
     &p300_block_init_func, NULL,
@@ -1287,8 +1287,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p400_page_list,
     &p400_printsize_list,
     180,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &p400_printer_init_func, NULL,
     &p400_plane_init_func, &p400_plane_end_func,
     &p400_block_init_func, NULL,
@@ -1302,7 +1302,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &p440_page_list,
     &p440_printsize_list,
     128,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &p440_printer_init_func, &p440_printer_end_func,
     NULL, NULL,
     &p440_block_init_func, &p440_block_end_func,
@@ -1316,7 +1316,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &ps100_page_list,
     &ps100_printsize_list,
     1808,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &ps100_printer_init_func, &ps100_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -1330,9 +1330,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cp10_page_list,
     &cp10_printsize_list,
     1040,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -1346,9 +1346,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cpx00_page_list,
     &cpx00_printsize_list,
     1808,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -1363,9 +1363,9 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cp220_page_list,
     &cp220_printsize_list,
     1808,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_BORDERLESS | OLYMPUS_FEATURE_WHITE_BORDER
-      | OLYMPUS_FEATURE_PLANE_INTERLACE,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
@@ -1379,8 +1379,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &updp10_page_list,
     &updp10_printsize_list,
     1800,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_BORDERLESS,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS,
     &updp10_printer_init_func, &updp10_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -1394,7 +1394,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &updr150_page_list,
     &updr150_printsize_list,
     1800,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &updr150_printer_init_func, &updr150_printer_end_func,
     NULL, NULL,
     NULL, NULL,
@@ -1408,8 +1408,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_page_list,
     &cx400_printsize_list,
     2208,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_BORDERLESS,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS,
     &cx400_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -1423,8 +1423,8 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &cx400_page_list,
     &cx400_printsize_list,
     2208,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT
-      | OLYMPUS_FEATURE_BORDERLESS,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS,
     &cx400_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -1438,7 +1438,7 @@ static const olympus_cap_t olympus_model_capabilities[] =
     &nx500_page_list,
     &nx500_printsize_list,
     2208,
-    OLYMPUS_FEATURE_FULL_WIDTH | OLYMPUS_FEATURE_FULL_HEIGHT,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &nx500_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
@@ -1550,25 +1550,25 @@ static const float_param_t float_parameters[] =
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
 
-static const olympus_cap_t* olympus_get_model_capabilities(int model)
+static const dyesub_cap_t* dyesub_get_model_capabilities(int model)
 {
   int i;
-  int models = sizeof(olympus_model_capabilities) / sizeof(olympus_cap_t);
+  int models = sizeof(dyesub_model_capabilities) / sizeof(dyesub_cap_t);
 
   for (i=0; i<models; i++)
     {
-      if (olympus_model_capabilities[i].model == model)
-        return &(olympus_model_capabilities[i]);
+      if (dyesub_model_capabilities[i].model == model)
+        return &(dyesub_model_capabilities[i]);
     }
-  stp_deprintf(STP_DBG_OLYMPUS,
-  	"olympus: model %d not found in capabilities list.\n", model);
-  return &(olympus_model_capabilities[0]);
+  stp_deprintf(STP_DBG_DYESUB,
+  	"dyesub: model %d not found in capabilities list.\n", model);
+  return &(dyesub_model_capabilities[0]);
 }
 
-static const laminate_t* olympus_get_laminate_pattern(stp_vars_t *v)
+static const laminate_t* dyesub_get_laminate_pattern(stp_vars_t *v)
 {
   const char *lpar = stp_get_string_parameter(v, "Laminate");
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
   const laminate_list_t *llist = caps->laminate;
   const laminate_t *l = NULL;
@@ -1584,16 +1584,16 @@ static const laminate_t* olympus_get_laminate_pattern(stp_vars_t *v)
 }
   
 static void
-olympus_printsize(const stp_vars_t *v,
+dyesub_printsize(const stp_vars_t *v,
 		   int  *width,
 		   int  *height)
 {
   int i;
   const char *page = stp_get_string_parameter(v, "PageSize");
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
-  const olymp_printsize_list_t *p = caps->printsize;
+  const dyesub_printsize_list_t *p = caps->printsize;
 
   for (i = 0; i < p->n_items; i++)
     {
@@ -1605,18 +1605,18 @@ olympus_printsize(const stp_vars_t *v,
           return;
         }
     }
-  stp_erprintf("olympus_printsize: printsize not found (%s, %s)\n",
+  stp_erprintf("dyesub_printsize: printsize not found (%s, %s)\n",
 	       page, resolution);
 }
 
 static int
-olympus_feature(const olympus_cap_t *caps, int feature)
+dyesub_feature(const dyesub_cap_t *caps, int feature)
 {
   return ((caps->features & feature) == feature);
 }
 
 static stp_parameter_list_t
-olympus_list_parameters(const stp_vars_t *v)
+dyesub_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
   int i;
@@ -1629,11 +1629,11 @@ olympus_list_parameters(const stp_vars_t *v)
 }
 
 static void
-olympus_parameters(const stp_vars_t *v, const char *name,
+dyesub_parameters(const stp_vars_t *v, const char *name,
 	       stp_parameter_t *description)
 {
   int	i;
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
 
   description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -1660,7 +1660,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
   if (strcmp(name, "PageSize") == 0)
     {
       int default_specified = 0;
-      const olymp_pagesize_list_t *p = caps->pages;
+      const dyesub_pagesize_list_t *p = caps->pages;
       const char* text;
 
       description->bounds.str = stp_string_list_create();
@@ -1695,7 +1695,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "Resolution") == 0)
     {
       char res_text[24];
-      const olymp_resolution_list_t *r = caps->resolution;
+      const dyesub_resolution_list_t *r = caps->resolution;
 
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < r->n_items; i++)
@@ -1740,7 +1740,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Borderless") == 0)
     {
-      if (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS)) 
+      if (dyesub_feature(caps, DYESUB_FEATURE_BORDERLESS)) 
         description->is_active = 1;
     }
   else if (strcmp(name, "PrintingMode") == 0)
@@ -1757,7 +1757,7 @@ olympus_parameters(const stp_vars_t *v, const char *name,
 
 
 static void
-olympus_imageable_area_internal(const stp_vars_t *v,
+dyesub_imageable_area_internal(const stp_vars_t *v,
 				int  use_maximum_area,
 				int  *left,
 				int  *right,
@@ -1769,9 +1769,9 @@ olympus_imageable_area_internal(const stp_vars_t *v,
   int i;
   const char *page = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pt = stp_get_papersize_by_name(page);
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
 		  				stp_get_model_id(v));
-  const olymp_pagesize_list_t *p = caps->pages;
+  const dyesub_pagesize_list_t *p = caps->pages;
 
   for (i = 0; i < p->n_items; i++)
     {
@@ -1779,7 +1779,7 @@ olympus_imageable_area_internal(const stp_vars_t *v,
         {
           stp_default_media_size(v, &width, &height);
 	  if (use_maximum_area ||
-	      (olympus_feature(caps, OLYMPUS_FEATURE_BORDERLESS) &&
+	      (dyesub_feature(caps, DYESUB_FEATURE_BORDERLESS) &&
 	       stp_get_boolean_parameter(v, "Borderless")))
             {
               *left = 0;
@@ -1801,29 +1801,29 @@ olympus_imageable_area_internal(const stp_vars_t *v,
 }
 
 static void
-olympus_imageable_area(const stp_vars_t *v,
+dyesub_imageable_area(const stp_vars_t *v,
 		       int  *left,
 		       int  *right,
 		       int  *bottom,
 		       int  *top)
 {
   int not_used;
-  olympus_imageable_area_internal(v, 0, left, right, bottom, top, &not_used);
+  dyesub_imageable_area_internal(v, 0, left, right, bottom, top, &not_used);
 }
 
 static void
-olympus_maximum_imageable_area(const stp_vars_t *v,
+dyesub_maximum_imageable_area(const stp_vars_t *v,
 			       int  *left,
 			       int  *right,
 			       int  *bottom,
 			       int  *top)
 {
   int not_used;
-  olympus_imageable_area_internal(v, 1, left, right, bottom, top, &not_used);
+  dyesub_imageable_area_internal(v, 1, left, right, bottom, top, &not_used);
 }
 
 static void
-olympus_limit(const stp_vars_t *v,			/* I */
+dyesub_limit(const stp_vars_t *v,			/* I */
 	    int *width, int *height,
 	    int *min_width, int *min_height)
 {
@@ -1834,12 +1834,12 @@ olympus_limit(const stp_vars_t *v,			/* I */
 }
 
 static void
-olympus_describe_resolution(const stp_vars_t *v, int *x, int *y)
+dyesub_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
   const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
   							stp_get_model_id(v));
-  const olymp_resolution_list_t *r = caps->resolution;
+  const dyesub_resolution_list_t *r = caps->resolution;
   int i;
 
   *x = -1;
@@ -1860,10 +1860,10 @@ olympus_describe_resolution(const stp_vars_t *v, int *x, int *y)
 }
 
 static const char *
-olympus_describe_output_internal(stp_vars_t *v, olympus_print_vars_t *pv)
+dyesub_describe_output_internal(stp_vars_t *v, dyesub_print_vars_t *pv)
 {
   const char *ink_type      = stp_get_string_parameter(v, "InkType");
-  const olympus_cap_t *caps = olympus_get_model_capabilities(
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(
   							stp_get_model_id(v));
   const char *output_type;
   int i;
@@ -1887,14 +1887,14 @@ olympus_describe_output_internal(stp_vars_t *v, olympus_print_vars_t *pv)
 }
 
 static const char *
-olympus_describe_output(const stp_vars_t *v)
+dyesub_describe_output(const stp_vars_t *v)
 {
-  olympus_print_vars_t ipv;
-  return olympus_describe_output_internal((stp_vars_t *) v, &ipv);
+  dyesub_print_vars_t ipv;
+  return dyesub_describe_output_internal((stp_vars_t *) v, &ipv);
 }
 
 static void
-olympus_print_bytes(stp_vars_t *v, char byte, int count)
+dyesub_print_bytes(stp_vars_t *v, char byte, int count)
 {
   int i;
   for (i = 0; i < count; i++)
@@ -1902,7 +1902,7 @@ olympus_print_bytes(stp_vars_t *v, char byte, int count)
 }
 
 static void
-olympus_swap_ints(int *a, int *b)
+dyesub_swap_ints(int *a, int *b)
 {
   int t = *a;
   *a = *b; 
@@ -1910,7 +1910,7 @@ olympus_swap_ints(int *a, int *b)
 }
 
 static void
-olympus_adjust_curve(stp_vars_t *v,
+dyesub_adjust_curve(stp_vars_t *v,
 		const char *color_adj,
 		const char *color_curve)
 {
@@ -1927,19 +1927,19 @@ olympus_adjust_curve(stp_vars_t *v,
 }
 
 static void
-olympus_exec(stp_vars_t *v,
+dyesub_exec(stp_vars_t *v,
 		void (*func)(stp_vars_t *),
 		const char *debug_string)
 {
   if (func)
     {
-      stp_deprintf(STP_DBG_OLYMPUS, "olympus: %s\n", debug_string);
+      stp_deprintf(STP_DBG_DYESUB, "dyesub: %s\n", debug_string);
       (*func)(v);
     }
 }
 
 static int
-olympus_interpolate(int oldval, int oldsize, int newsize)
+dyesub_interpolate(int oldval, int oldsize, int newsize)
 {
   /* 
    * This is simple linear interpolation algorithm.
@@ -1949,7 +1949,7 @@ olympus_interpolate(int oldval, int oldsize, int newsize)
 }
 
 static void
-olympus_free_image(unsigned short** image_data, stp_image_t *image)
+dyesub_free_image(unsigned short** image_data, stp_image_t *image)
 {
   int image_px_height = stp_image_height(image);
   int i;
@@ -1962,8 +1962,8 @@ olympus_free_image(unsigned short** image_data, stp_image_t *image)
 }
 
 static unsigned short **
-olympus_read_image(stp_vars_t *v,
-		olympus_print_vars_t *pv,
+dyesub_read_image(stp_vars_t *v,
+		dyesub_print_vars_t *pv,
 		stp_image_t *image)
 {
   int image_px_width  = stp_image_width(image);
@@ -1981,19 +1981,19 @@ olympus_read_image(stp_vars_t *v,
     {
       if (stp_color_get_row(v, image, i, &zero_mask))
         {
-	  stp_deprintf(STP_DBG_OLYMPUS,
-	  	"olympus_read_image: "
+	  stp_deprintf(STP_DBG_DYESUB,
+	  	"dyesub_read_image: "
 		"stp_color_get_row(..., %d, ...) == 0\n", i);
-	  olympus_free_image(image_data, image);
+	  dyesub_free_image(image_data, image);
 	  return NULL;
 	}	
       image_data[i] = stp_malloc(row_size);
       if (!image_data[i])
         {
-	  stp_deprintf(STP_DBG_OLYMPUS,
-	  	"olympus_read_image: "
+	  stp_deprintf(STP_DBG_DYESUB,
+	  	"dyesub_read_image: "
 		"(image_data[%d] = stp_malloc()) == NULL\n", i);
-	  olympus_free_image(image_data, image);
+	  dyesub_free_image(image_data, image);
 	  return NULL;
 	}	
       memcpy(image_data[i], stp_channel_get_output(v), row_size);
@@ -2004,8 +2004,8 @@ olympus_read_image(stp_vars_t *v,
 }
 
 static int
-olympus_print_pixel(stp_vars_t *v,
-		olympus_print_vars_t *pv,
+dyesub_print_pixel(stp_vars_t *v,
+		dyesub_print_vars_t *pv,
 		int row,
 		int col,
 		int plane)
@@ -2014,9 +2014,9 @@ olympus_print_pixel(stp_vars_t *v,
   unsigned char *ink_u8;
   int i, j;
   
-  if (pv->print_mode == OLYMPUS_LANDSCAPE)
+  if (pv->print_mode == DYESUB_LANDSCAPE)
     { /* "rotate" image */
-      olympus_swap_ints(&col, &row);
+      dyesub_swap_ints(&col, &row);
       row = (pv->imgw_px - 1) - row;
     }
 
@@ -2057,8 +2057,8 @@ olympus_print_pixel(stp_vars_t *v,
 }
 
 static int
-olympus_print_row(stp_vars_t *v,
-		olympus_print_vars_t *pv,
+dyesub_print_row(stp_vars_t *v,
+		dyesub_print_vars_t *pv,
 		int row,
 		int plane)
 {
@@ -2067,8 +2067,8 @@ olympus_print_row(stp_vars_t *v,
   
   for (w = 0; w < pv->outw_px; w++)
     {
-      col = olympus_interpolate(w, pv->outw_px, pv->imgw_px);
-      ret = olympus_print_pixel(v, pv, row, col, plane);
+      col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
+      ret = dyesub_print_pixel(v, pv, row, col, plane);
       if (ret > 1)
       	break;
     }
@@ -2076,9 +2076,9 @@ olympus_print_row(stp_vars_t *v,
 }
 
 static int
-olympus_print_plane(stp_vars_t *v,
-		olympus_print_vars_t *pv,
-		const olympus_cap_t *caps,
+dyesub_print_plane(stp_vars_t *v,
+		dyesub_print_vars_t *pv,
+		const dyesub_cap_t *caps,
 		int plane)
 {
   int ret = 0;
@@ -2097,56 +2097,56 @@ olympus_print_plane(stp_vars_t *v,
 	  					pv->prnb_px);
 	  privdata.block_max_x = pv->prnr_px;
 
-	  olympus_exec(v, caps->block_init_func, "caps->block_init");
+	  dyesub_exec(v, caps->block_init_func, "caps->block_init");
 	}
 
       if (h + pv->prnt_px < pv->outt_px || h + pv->prnt_px >= pv->outb_px)
         { /* empty part above or below image area */
-          olympus_print_bytes(v, pv->empty_byte, out_bytes * pv->prnw_px);
+          dyesub_print_bytes(v, pv->empty_byte, out_bytes * pv->prnw_px);
 	}
       else
         {
-	  if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_WIDTH)
+	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
 	  	&& pv->outl_px > 0)
 	    { /* empty part left of image area */
-              olympus_print_bytes(v, pv->empty_byte, out_bytes * pv->outl_px);
+              dyesub_print_bytes(v, pv->empty_byte, out_bytes * pv->outl_px);
 	    }
 
-	  row = olympus_interpolate(h + pv->prnt_px - pv->outt_px,
+	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
 	  					pv->outh_px, pv->imgh_px);
-	  stp_deprintf(STP_DBG_OLYMPUS,
-	  	"olympus_print_plane: h = %d, row = %d\n", h, row);
-	  ret = olympus_print_row(v, pv, row, plane);
+	  stp_deprintf(STP_DBG_DYESUB,
+	  	"dyesub_print_plane: h = %d, row = %d\n", h, row);
+	  ret = dyesub_print_row(v, pv, row, plane);
 
-	  if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_WIDTH)
+	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
 	  	&& pv->outr_px < pv->prnw_px)
 	    { /* empty part right of image area */
-              olympus_print_bytes(v, pv->empty_byte, out_bytes
+              dyesub_print_bytes(v, pv->empty_byte, out_bytes
 	      				* (pv->prnw_px - pv->outr_px));
 	    }
 	}
 
       if (h + pv->prnt_px == privdata.block_max_y)
         { /* block end */
-	  olympus_exec(v, caps->block_end_func, "caps->block_end");
+	  dyesub_exec(v, caps->block_end_func, "caps->block_end");
 	}
     }
   return ret;
 }
 
 /*
- * olympus_print()
+ * dyesub_print()
  */
 static int
-olympus_do_print(stp_vars_t *v, stp_image_t *image)
+dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 {
   int i;
-  olympus_print_vars_t pv;
+  dyesub_print_vars_t pv;
   int status = 1;
 
   const int model           = stp_get_model_id(v); 
   const char *ink_type;
-  const olympus_cap_t *caps = olympus_get_model_capabilities(model);
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
   int max_print_px_width = 0;
   int max_print_px_height = 0;
   int xdpi, ydpi;	/* Resolution */
@@ -2181,14 +2181,14 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   pv.imgh_px = stp_image_height(image);
 
   stp_describe_resolution(v, &xdpi, &ydpi);
-  olympus_printsize(v, &max_print_px_width, &max_print_px_height);
+  dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   privdata.pagesize = stp_get_string_parameter(v, "PageSize");
   if (caps->laminate)
-	  privdata.laminate = olympus_get_laminate_pattern(v);
+	  privdata.laminate = dyesub_get_laminate_pattern(v);
 
-  olympus_imageable_area_internal(v, 
-  	(olympus_feature(caps, OLYMPUS_FEATURE_WHITE_BORDER) ? 1 : 0),
+  dyesub_imageable_area_internal(v, 
+  	(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) ? 1 : 0),
 	&page_pt_left, &page_pt_right, &page_pt_bottom, &page_pt_top,
 	&page_mode);
   
@@ -2216,7 +2216,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   pv.outb_px = pv.outt_px  + pv.outh_px;
   
 
-  stp_deprintf(STP_DBG_OLYMPUS,
+  stp_deprintf(STP_DBG_DYESUB,
 	      "paper (pt)   %d x %d\n"
 	      "image (px)   %d x %d\n"
 	      "image (pt)   %d x %d\n"
@@ -2247,7 +2247,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
 
 
   /* FIXME: move this into print_init_drv */
-  ink_type = olympus_describe_output_internal(v, &pv);
+  ink_type = dyesub_describe_output_internal(v, &pv);
   stp_set_string_parameter(v, "STPIOutputType", ink_type);
   stp_channel_reset(v);
   for (i = 0; i < pv.ink_channels; i++)
@@ -2255,29 +2255,29 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
   pv.out_channels = stp_color_init(v, image, 65536);
   pv.bytes_per_ink_channel = 1;		/* FIXME: this is printer dependent */
   pv.bytes_per_out_channel = 2;		/* FIXME: this is ??? */
-  pv.image_data = olympus_read_image(v, &pv, image);
+  pv.image_data = dyesub_read_image(v, &pv, image);
   pv.empty_byte = (ink_type &&
  		(strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0)
 		? '\xff' : '\0');
-  pv.plane_interlacing = olympus_feature(caps, OLYMPUS_FEATURE_PLANE_INTERLACE);
+  pv.plane_interlacing = dyesub_feature(caps, DYESUB_FEATURE_PLANE_INTERLACE);
   pv.print_mode = page_mode;
   if (!pv.image_data)
       return 2;	
   /* /FIXME */
 
 
-  olympus_adjust_curve(v, caps->adj_cyan, "CyanCurve");
-  olympus_adjust_curve(v, caps->adj_magenta, "MagentaCurve");
-  olympus_adjust_curve(v, caps->adj_yellow, "YellowCurve");
+  dyesub_adjust_curve(v, caps->adj_cyan, "CyanCurve");
+  dyesub_adjust_curve(v, caps->adj_magenta, "MagentaCurve");
+  dyesub_adjust_curve(v, caps->adj_yellow, "YellowCurve");
   stp_set_float_parameter(v, "Density", 1.0);
 
 
-  if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_HEIGHT))
+  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_HEIGHT))
     {
       pv.prnt_px = 0;
       pv.prnb_px = pv.prnh_px - 1;
     }
-  else if (olympus_feature(caps, OLYMPUS_FEATURE_BLOCK_ALIGN))
+  else if (dyesub_feature(caps, DYESUB_FEATURE_BLOCK_ALIGN))
     {
       pv.prnt_px = pv.outt_px - (pv.outt_px % caps->block_size);
       				/* floor to multiple of block_size */
@@ -2291,7 +2291,7 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
       pv.prnb_px = pv.outb_px - 1;
     }
   
-  if (olympus_feature(caps, OLYMPUS_FEATURE_FULL_WIDTH))
+  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH))
     {
       pv.prnl_px = 0;
       pv.prnr_px = pv.prnw_px - 1;
@@ -2302,65 +2302,65 @@ olympus_do_print(stp_vars_t *v, stp_image_t *image)
       pv.prnr_px = pv.outr_px;
     }
       
-  if (pv.print_mode == OLYMPUS_LANDSCAPE)
+  if (pv.print_mode == DYESUB_LANDSCAPE)
     {
-      olympus_swap_ints(&pv.outh_px, &pv.outw_px);
-      olympus_swap_ints(&pv.outt_px, &pv.outl_px);
-      olympus_swap_ints(&pv.outb_px, &pv.outr_px);
+      dyesub_swap_ints(&pv.outh_px, &pv.outw_px);
+      dyesub_swap_ints(&pv.outt_px, &pv.outl_px);
+      dyesub_swap_ints(&pv.outb_px, &pv.outr_px);
       
-      olympus_swap_ints(&pv.prnh_px, &pv.prnw_px);
-      olympus_swap_ints(&pv.prnt_px, &pv.prnl_px);
-      olympus_swap_ints(&pv.prnb_px, &pv.prnr_px);
+      dyesub_swap_ints(&pv.prnh_px, &pv.prnw_px);
+      dyesub_swap_ints(&pv.prnt_px, &pv.prnl_px);
+      dyesub_swap_ints(&pv.prnb_px, &pv.prnr_px);
       
-      olympus_swap_ints(&pv.imgh_px, &pv.imgw_px);
+      dyesub_swap_ints(&pv.imgh_px, &pv.imgw_px);
     }
 
   /* printer init */
-  olympus_exec(v, caps->printer_init_func, "caps->printer_init");
+  dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
 
   for (pl = 0; pl < (pv.plane_interlacing ? pv.ink_channels : 1); pl++)
     {
       privdata.plane = pv.ink_order[pl];
-      stp_deprintf(STP_DBG_OLYMPUS, "olympus: plane %d\n", privdata.plane);
+      stp_deprintf(STP_DBG_DYESUB, "dyesub: plane %d\n", privdata.plane);
 
       /* plane init */
-      olympus_exec(v, caps->plane_init_func, "caps->plane_init");
+      dyesub_exec(v, caps->plane_init_func, "caps->plane_init");
   
-      olympus_print_plane(v, &pv, caps, (int) pv.ink_order[pl] - 1);
+      dyesub_print_plane(v, &pv, caps, (int) pv.ink_order[pl] - 1);
 
       /* plane end */
-      olympus_exec(v, caps->plane_end_func, "caps->plane_end");
+      dyesub_exec(v, caps->plane_end_func, "caps->plane_end");
     }
 
   /* printer end */
-  olympus_exec(v, caps->printer_end_func, "caps->printer_end");
+  dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
-  olympus_free_image(pv.image_data, image);
+  dyesub_free_image(pv.image_data, image);
   return status;
 }
 
 static int
-olympus_print(const stp_vars_t *v, stp_image_t *image)
+dyesub_print(const stp_vars_t *v, stp_image_t *image)
 {
   int status;
   stp_vars_t *nv = stp_vars_create_copy(v);
   stp_prune_inactive_options(nv);
-  status = olympus_do_print(nv, image);
+  status = dyesub_do_print(nv, image);
   stp_vars_destroy(nv);
   return status;
 }
 
-static const stp_printfuncs_t print_olympus_printfuncs =
+static const stp_printfuncs_t print_dyesub_printfuncs =
 {
-  olympus_list_parameters,
-  olympus_parameters,
+  dyesub_list_parameters,
+  dyesub_parameters,
   stp_default_media_size,
-  olympus_imageable_area,
-  olympus_maximum_imageable_area,
-  olympus_limit,
-  olympus_print,
-  olympus_describe_resolution,
-  olympus_describe_output,
+  dyesub_imageable_area,
+  dyesub_maximum_imageable_area,
+  dyesub_limit,
+  dyesub_print,
+  dyesub_describe_resolution,
+  dyesub_describe_output,
   stp_verify_printer_params,
   NULL,
   NULL
@@ -2369,42 +2369,42 @@ static const stp_printfuncs_t print_olympus_printfuncs =
 
 
 
-static stp_family_t print_olympus_module_data =
+static stp_family_t print_dyesub_module_data =
   {
-    &print_olympus_printfuncs,
+    &print_dyesub_printfuncs,
     NULL
   };
 
 
 static int
-print_olympus_module_init(void)
+print_dyesub_module_init(void)
 {
-  return stp_family_register(print_olympus_module_data.printer_list);
+  return stp_family_register(print_dyesub_module_data.printer_list);
 }
 
 
 static int
-print_olympus_module_exit(void)
+print_dyesub_module_exit(void)
 {
-  return stp_family_unregister(print_olympus_module_data.printer_list);
+  return stp_family_unregister(print_dyesub_module_data.printer_list);
 }
 
 
 /* Module header */
-#define stp_module_version print_olympus_LTX_stp_module_version
-#define stp_module_data print_olympus_LTX_stp_module_data
+#define stp_module_version print_dyesub_LTX_stp_module_version
+#define stp_module_data print_dyesub_LTX_stp_module_data
 
 stp_module_version_t stp_module_version = {0, 0};
 
 stp_module_t stp_module_data =
   {
-    "olympus",
+    "dyesub",
     VERSION,
-    "Olympus family driver",
+    "DyeSub family driver",
     STP_MODULE_CLASS_FAMILY,
     NULL,
-    print_olympus_module_init,
-    print_olympus_module_exit,
-    (void *) &print_olympus_module_data
+    print_dyesub_module_init,
+    print_dyesub_module_exit,
+    (void *) &print_dyesub_module_data
   };
 
