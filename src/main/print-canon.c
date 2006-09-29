@@ -259,6 +259,12 @@ static const stp_parameter_t the_parameters[] =
     N_("Duplex/Tumble Setting"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
+    "RequiresFlipDuplex", N_("Set the cupsFlipDuplex Parameter in the PPD"), N_("Basic Printer Setup"),
+    N_("Duplex/RequiresFlipDuplex"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 1
   }
 };
 
@@ -349,7 +355,7 @@ sizeof(float_parameters) / sizeof(const float_param_t);
 static const stp_param_string_t duplex_types[] =
 {
   { "None",             N_ ("Off") },
-/*  { "DuplexNoTumble", N_ ("Long Edge (Standard)") } , */
+/*  { "DuplexNoTumble",   N_ ("Long Edge (Standard)") } ,*/
   { "DuplexTumble",     N_ ("Short Edge (Flip)") }
 };
 #define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
@@ -667,6 +673,13 @@ canon_parameters(const stp_vars_t *v, const char *name,
     }
     else
       description->is_active = 0;
+  }
+  else if (strcmp(name, "RequiresFlipDuplex") == 0)
+  {
+	if(caps->features & CANON_CAP_DUPLEX)
+          description->deflt.boolean = 1;
+	else
+          description->is_active = 0;
   }
 }
 
