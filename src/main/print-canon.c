@@ -1224,7 +1224,8 @@ canon_init_printer(const stp_vars_t *v, canon_init_t *init)
   /* some linefeeds */
 
   mytop= (init->top*init->mode->ydpi)/72;
-  canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
+  if(mytop)
+    canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
 }
 
 static void
