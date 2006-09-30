@@ -1201,7 +1201,7 @@ canon_init_setMultiRaster(const stp_vars_t *v, canon_init_t *init){
 static void
 canon_init_printer(const stp_vars_t *v, canon_init_t *init)
 {
-  int mytop;
+  unsigned int mytop;
   /* init printer */
   if (init->is_first_page) {
     canon_init_resetPrinter(v,init);       /* ESC [K */
@@ -1224,6 +1224,10 @@ canon_init_printer(const stp_vars_t *v, canon_init_t *init)
   /* some linefeeds */
 
   mytop= (init->top*init->mode->ydpi)/72;
+
+  if(init->caps->features & CANON_CAP_I)
+    mytop /= RASTER_LINES_PER_BLOCK;
+
   if(mytop)
     canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
 }
@@ -2153,7 +2157,7 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
 
   comp_data= comp_buf;
   while (offset2>0) {
-    unsigned char toffset = offset2 > 128 ? 128 : offset2;
+    unsigned char toffset = offset2 > 127 ? 127 : offset2;
     comp_data[0] = 1 - toffset;
     comp_data[1] = 0;
     comp_data += 2;
