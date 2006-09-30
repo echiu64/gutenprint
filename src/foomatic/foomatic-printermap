@@ -638,6 +638,7 @@
 #gptofoo ibm-infoprint_12 printer/IBM-Infoprint_12
 #gptofoo ibm-pp_3112 printer/IBM-Page_Printer_3112
 #gptofoo infotec-4651_mf printer/Infotec-4651_MF
+#gptofoo kodak-dock printer/Kodak-Easyshare-Printer-Dock
 #gptofoo kyocera-f-1010 printer/Kyocera-F-1010
 #gptofoo kyocera-fs-1000 printer/Kyocera-FS-1000
 #gptofoo kyocera-fs-1000plus printer/Kyocera-FS-1000plus
