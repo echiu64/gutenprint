@@ -928,17 +928,94 @@ static const dyesub_printsize_list_t cp220_printsize_list =
 };
 
 
+/* Sony DPP-EX5, DPP-EX7 */
+static const dyesub_resolution_t res_403dpi[] =
+{
+  { "403x403", 403, 403},
+};
+
+static const dyesub_resolution_list_t res_403dpi_list =
+{
+  res_403dpi, sizeof(res_403dpi) / sizeof(dyesub_resolution_t)
+};
+
+/* only Postcard pagesize is supported */
+static const dyesub_pagesize_t dppex5_page[] =
+{
+  { "w288h432", "Postcard", PT(1664,403)+1, PT(2466,403)+1, 13, 14, 18, 17,
+  							DYESUB_PORTRAIT},
+  { "Custom", NULL, PT(1664,403)+1, PT(2466,403)+1, 13, 14, 18, 17,
+  							DYESUB_PORTRAIT},
+};
+
+static const dyesub_pagesize_list_t dppex5_page_list =
+{
+  dppex5_page, sizeof(dppex5_page) / sizeof(dyesub_pagesize_t)
+};
+
+static const dyesub_printsize_t dppex5_printsize[] =
+{
+  { "403x403", "w288h432", 1664, 2466},
+  { "403x403", "Custom", 1664, 2466},
+};
+
+static const dyesub_printsize_list_t dppex5_printsize_list =
+{
+  dppex5_printsize, sizeof(dppex5_printsize) / sizeof(dyesub_printsize_t)
+};
+
+static void dppex5_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("DPEX\0\0\0\x80", 1, 8, v);
+  stp_zfwrite("DPEX\0\0\0\x82", 1, 8, v);
+  stp_zfwrite("DPEX\0\0\0\x84", 1, 8, v);
+  stp_put32_be(privdata.xsize, v);
+  stp_put32_be(privdata.ysize, v);
+  stp_zfwrite("S\0o\0n\0y\0 \0D\0P\0P\0-\0E\0X\0\x35\0", 1, 24, v);
+  dyesub_nputc(v, '\0', 40);
+  stp_zfwrite("\1\4\0\4\xdc\0\x24\0\3\3\1\0\1\0\x82\0", 1, 16, v);
+  stp_zfwrite("\xf4\5\xf8\3\x64\0\1\0\x0e\0\x93\1\2\0\1\0", 1, 16, v);
+  stp_zfwrite("\x93\1\1\0\0\0", 1, 6, v);
+  stp_zfwrite("P\0o\0s\0t\0 \0c\0a\0r\0d\0", 1, 18, v);
+  dyesub_nputc(v, '\0', 46);
+  stp_zfwrite("\x93\1\x18", 1, 3, v);
+  dyesub_nputc(v, '\0', 19);
+  stp_zfwrite("\2\0\0\0\3\0\0\0\1\0\0\0\1", 1, 13, v);
+  dyesub_nputc(v, '\0', 19);
+  stp_zprintf(v, "5EPD");
+  dyesub_nputc(v, '\0', 4);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
+  stp_zfwrite("\0d\0d\0d", 1, 6, v);
+  dyesub_nputc(v, '\0', 21);
+}
+
+static void dppex5_block_init(stp_vars_t *v)
+{
+  stp_zfwrite("DPEX\0\0\0\x85", 1, 8, v);
+  stp_put32_be((privdata.block_max_x - privdata.block_min_x + 1)
+  		* (privdata.block_max_y - privdata.block_min_y + 1) * 3, v);
+}
+
+static void dppex5_printer_end(stp_vars_t *v)
+{
+  stp_zfwrite("DPEX\0\0\0\x83", 1, 8, v);
+  stp_zfwrite("DPEX\0\0\0\x81", 1, 8, v);
+}
+
+static const laminate_t dppex5_laminate[] =
+{
+  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
+  {"Texture", N_("Texture"), {1, "\x01"}},
+};
+
+static const laminate_list_t dppex5_laminate_list =
+{
+  dppex5_laminate, sizeof(dppex5_laminate) / sizeof(laminate_t)
+};
+
+
 /* Sony UP-DP10 */
-static const dyesub_resolution_t updp10_res[] =
-{
-  { "300x300", 300, 300},
-};
-
-static const dyesub_resolution_list_t updp10_res_list =
-{
-  updp10_res, sizeof(updp10_res) / sizeof(dyesub_resolution_t)
-};
-
 static const dyesub_pagesize_t updp10_page[] =
 {
   { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
@@ -1428,10 +1505,25 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
+  { /* Sony DPP-EX5, DPP-EX7 */
+    2002,
+    &rgb_ink_list,
+    &res_403dpi_list,
+    &dppex5_page_list,
+    &dppex5_printsize_list,
+    100,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS,
+    &dppex5_printer_init, &dppex5_printer_end,
+    NULL, NULL,
+    &dppex5_block_init, NULL,
+    NULL, NULL, NULL,
+    &dppex5_laminate_list,
+  },
   { /* Sony UP-DP10  */
     2000,
     &cmy_ink_list,
-    &updp10_res_list,
+    &res_300dpi_list,
     &updp10_page_list,
     &updp10_printsize_list,
     1800,
@@ -1827,7 +1919,7 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 }
 
 
-const dyesub_pagesize_t*
+static const dyesub_pagesize_t*
 dyesub_current_pagesize(const stp_vars_t *v)
 {
   const char *page = stp_get_string_parameter(v, "PageSize");
