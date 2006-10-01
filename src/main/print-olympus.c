@@ -1928,6 +1928,8 @@ dyesub_imageable_area_internal(const stp_vars_t *v,
     }
   if (p)
     *print_mode = p->print_mode;
+  else
+    *print_mode = DYESUB_PORTRAIT;
 }
 
 static void
@@ -1990,7 +1992,7 @@ dyesub_describe_resolution(const stp_vars_t *v, int *x, int *y)
 }
 
 static const char *
-dyesub_describe_output_internal(stp_vars_t *v, dyesub_print_vars_t *pv)
+dyesub_describe_output_internal(const stp_vars_t *v, dyesub_print_vars_t *pv)
 {
   const char *ink_type      = stp_get_string_parameter(v, "InkType");
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(
@@ -1999,6 +2001,7 @@ dyesub_describe_output_internal(stp_vars_t *v, dyesub_print_vars_t *pv)
   int i;
 
   pv->ink_channels = 1;
+  pv->ink_order = NULL;
   output_type = "CMY";
 
   if (ink_type)
@@ -2020,7 +2023,7 @@ static const char *
 dyesub_describe_output(const stp_vars_t *v)
 {
   dyesub_print_vars_t ipv;
-  return dyesub_describe_output_internal((stp_vars_t *) v, &ipv);
+  return dyesub_describe_output_internal(v, &ipv);
 }
 
 static void
