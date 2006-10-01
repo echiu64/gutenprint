@@ -31,7 +31,6 @@
  *
  *   main()              - Process files on the command-line...
  *   cat_ppd()           - Copy the named PPD to stdout.
- *   checkcat()          - A callback for stpi_scandir() to check
  *   generate_ppd()      - Generate a PPD file.
  *   getlangs()          - Get a list of available translations.
  *   help()              - Show detailed help.
@@ -80,6 +79,17 @@
 
 #include <gutenprint/gutenprint.h>
 #include <gutenprint/gutenprint-intl.h>
+
+/*
+ * Some of the Gutenprint resolution names are not PPD-compliant.
+ * In Gutenprint 5.0, use the legacy names with the CUPS 1.1 interface
+ * for back compatibility.  With CUPS 1.2, or Gutenprint 5.1 or above,
+ * generate compliant names.
+ */
+
+#if defined(CUPS_DRIVER_INTERFACE) || (STP_MAJOR_VERSION > 5) || (STP_MAJOR_VERSION == 5 && STP_MINOR_VERSION > 0)
+#define USE_COMPLIANT_RESOLUTIONS 1
+#endif
 
 /*
  * Note:
@@ -476,53 +486,6 @@ cat_ppd(const char *uri)		/* I - Driver URI */
   return (write_ppd(stdout, p, NULL, uri, !strcmp(hostname, "simple")));
 }
 #endif /* CUPS_DRIVER_INTERFACE */
-
-
-/*
- * 'checkcat()' - A callback for stpi_scandir() to check
- *                if a message catalogue exists
- */
-
-int
-checkcat(const struct dirent *localedir)
-{
-  char* catpath;
-  int catlen, status = 0, savederr;
-  struct stat catstat;
-
-  savederr = errno; /* since we are a callback, preserve stpi_scandir() state */
-
-  /* LOCALEDIR / LANG / LC_MESSAGES/CATALOG */
-  /* Add 3, for two '/' separators and '\0'   */
-  catlen = strlen(baselocaledir) + strlen(localedir->d_name) + strlen(CATALOG) + 3;
-  catpath = (char*)stp_malloc(catlen * sizeof(char));
-
-  strncpy(catpath, baselocaledir, strlen(baselocaledir));
-  catlen = strlen(baselocaledir);
-  *(catpath+catlen) = '/';
-  catlen++;
-  strncpy(catpath+catlen, localedir->d_name, strlen(localedir->d_name));
-  catlen += strlen(localedir->d_name);
-  *(catpath+catlen) = '/';
-  catlen++;
-  strncpy(catpath+catlen, CATALOG, strlen(CATALOG));
-  catlen += strlen(CATALOG);
-  *(catpath+catlen) = '\0';
-
-  if (!stat(catpath, &catstat))
-    {
-      if (S_ISREG(catstat.st_mode))
-	{
-	  status = 1;
-	}
-     }
-
-  stp_free(catpath);
-
-  errno = savederr;
-  return status;
-}
-
 
 /*
  * 'generate_ppd()' - Generate a PPD file.
@@ -1397,7 +1360,12 @@ write_ppd(
 
   if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
     {
-      int lastxdpi = 0, lastydpi = 0;
+#ifdef USE_COMPLIANT_RESOLUTIONS
+      stp_string_list_t *res_list = stp_string_list_create();
+      char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
+      int resolution_ok;
+      int tmp_xdpi, tmp_ydpi;
+#endif
 
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
       gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
@@ -1405,15 +1373,27 @@ write_ppd(
 	gzprintf(fp, "*DefaultResolution: None\n");
       else
       {
+#ifdef USE_COMPLIANT_RESOLUTIONS
 	stp_set_string_parameter(v, "Resolution", desc.deflt.str);
 	stp_describe_resolution(v, &xdpi, &ydpi);
 
 	if (xdpi == ydpi)
-	  gzprintf(fp, "*DefaultResolution: %ddpi\n", xdpi);
-        else
-	  gzprintf(fp, "*DefaultResolution: %dx%ddpi\n", xdpi, ydpi);
+	  (void) snprintf(res_name, 63, "%ddpi", xdpi);
+	else
+	  (void) snprintf(res_name, 63, "%dx%ddpi", xdpi, ydpi);
+	gzprintf(fp, "*DefaultResolution: %s\n", res_name);
+	/*
+	 * We need to add this to the resolution list here so that
+	 * some non-default resolution won't wind up with the
+	 * default resolution name
+	 */
+	stp_string_list_add_string(res_list, res_name, res_name);
+#else  /* !USE_COMPLIANT_RESOLUTIONS */
+	gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
+#endif /* USE_COMPLIANT_RESOLUTIONS */
       }
 
+      stp_clear_string_parameter(v, "Quality");
       if (has_quality_parameter)
 	gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
       for (i = 0; i < num_opts; i ++)
@@ -1429,33 +1409,38 @@ write_ppd(
 	  if (xdpi == -1 || ydpi == -1)
 	    continue;
 
-          /*
-	   * See if we've written this resolution already, and if so
-	   * provide a slightly higher resolution to avoid name clashes...
-	   */
-
-           if ((lastxdpi == xdpi && lastydpi == ydpi) ||
-	       (lastxdpi == (xdpi + 1) && lastydpi == (ydpi + 1)))
-	   {
-	     xdpi = lastxdpi + 1;
-	     ydpi = lastydpi + 1;
-	   }
-
-           lastxdpi = xdpi;
-	   lastydpi = ydpi;
-
-	  /*
-	   * Write the resolution option...
-	   */
-
-          if (xdpi == ydpi)
-	    gzprintf(fp, "*Resolution %ddpi/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		     xdpi, opt->text, xdpi, ydpi, i + 1);
-          else
-	    gzprintf(fp, "*Resolution %dx%ddpi/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		     xdpi, ydpi, opt->text, xdpi, ydpi, i + 1);
+#ifdef USE_COMPLIANT_RESOLUTIONS
+	  resolution_ok = 0;
+	  tmp_xdpi = xdpi;
+	  tmp_ydpi = ydpi;
+	  do
+	    {
+	      if (tmp_xdpi == tmp_ydpi)
+		(void) snprintf(res_name, 63, "%ddpi", tmp_xdpi);
+	      else
+		(void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
+	      if (strcmp(opt->name, desc.deflt.str) == 0 ||
+		  !stp_string_list_is_present(res_list, res_name))
+		{
+		  resolution_ok = 1;
+		  stp_string_list_add_string(res_list, res_name, res_name);
+		}
+	      else if (tmp_ydpi > tmp_xdpi)
+		tmp_ydpi++;
+	      else
+		tmp_xdpi++;
+	    } while (!resolution_ok);
+	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+		   res_name, opt->text, xdpi, ydpi, i + 1);
+#else  /* !USE_COMPLIANT_RESOLUTIONS */
+	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+		   opt->name, opt->text, xdpi, ydpi, i + 1);
+#endif /* USE_COMPLIANT_RESOLUTIONS */
 	}
 
+#ifdef USE_COMPLIANT_RESOLUTIONS
+      stp_string_list_destroy(res_list);
+#endif
       gzputs(fp, "*CloseUI: *Resolution\n\n");
     }
 
