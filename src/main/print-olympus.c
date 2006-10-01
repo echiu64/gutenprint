@@ -62,6 +62,11 @@
 #endif /* !MAX */
 #define PX(pt,dpi)	((pt) * (dpi) / 72)
 #define PT(px,dpi)	((px) * 72 / (dpi))
+#define LIST(list_t, list_name, items_t, items_name) \
+	static const list_t list_name = \
+	{ \
+	  items_name, sizeof(items_name) / sizeof(items_t) \
+	}
 
 #define MAX_INK_CHANNELS	3
 #define MAX_BYTES_PER_CHANNEL	2
@@ -192,40 +197,28 @@ static const ink_t cmy_inks[] =
   { "CMY", 3, "CMY", "\1\2\3" },
 };
 
-static const ink_list_t cmy_ink_list =
-{
-  cmy_inks, sizeof(cmy_inks) / sizeof(ink_t)
-};
+LIST(ink_list_t, cmy_ink_list, ink_t, cmy_inks);
 
 static const ink_t ymc_inks[] =
 {
   { "CMY", 3, "CMY", "\3\2\1" },
 };
 
-static const ink_list_t ymc_ink_list =
-{
-  ymc_inks, sizeof(ymc_inks) / sizeof(ink_t)
-};
+LIST(ink_list_t, ymc_ink_list, ink_t, ymc_inks);
 
 static const ink_t rgb_inks[] =
 {
   { "RGB", 3, "RGB", "\1\2\3" },
 };
 
-static const ink_list_t rgb_ink_list =
-{
-  rgb_inks, sizeof(rgb_inks) / sizeof(ink_t)
-};
+LIST(ink_list_t, rgb_ink_list, ink_t, rgb_inks);
 
 static const ink_t bgr_inks[] =
 {
   { "RGB", 3, "RGB", "\3\2\1" },
 };
 
-static const ink_list_t bgr_ink_list =
-{
-  bgr_inks, sizeof(bgr_inks) / sizeof(ink_t)
-};
+LIST(ink_list_t, bgr_ink_list, ink_t, bgr_inks);
 
 
 /* Olympus P-10 */
@@ -234,10 +227,7 @@ static const dyesub_resolution_t res_310dpi[] =
   { "310x310", 310, 310},
 };
 
-static const dyesub_resolution_list_t res_310dpi_list =
-{
-  res_310dpi, sizeof(res_310dpi) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_310dpi_list, dyesub_resolution_t, res_310dpi);
 
 static const dyesub_pagesize_t p10_page[] =
 {
@@ -246,10 +236,7 @@ static const dyesub_pagesize_t p10_page[] =
   { "Custom", NULL, 298, 430, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t p10_page_list =
-{
-  p10_page, sizeof(p10_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, p10_page_list, dyesub_pagesize_t, p10_page);
 
 static const dyesub_printsize_t p10_printsize[] =
 {
@@ -258,10 +245,7 @@ static const dyesub_printsize_t p10_printsize[] =
   { "310x310", "Custom", 1280, 1848},
 };
 
-static const dyesub_printsize_list_t p10_printsize_list =
-{
-  p10_printsize, sizeof(p10_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, p10_printsize_list, dyesub_printsize_t, p10_printsize);
 
 static void p10_printer_init_func(stp_vars_t *v)
 {
@@ -291,10 +275,7 @@ static const laminate_t p10_laminate[] =
   {"None",    N_("None"),    {1, "\x02"}},
 };
 
-static const laminate_list_t p10_laminate_list =
-{
-  p10_laminate, sizeof(p10_laminate) / sizeof(laminate_t)
-};
+LIST(laminate_list_t, p10_laminate_list, laminate_t, p10_laminate);
 
 
 /* Olympus P-200 series */
@@ -303,10 +284,7 @@ static const dyesub_resolution_t res_320dpi[] =
   { "320x320", 320, 320},
 };
 
-static const dyesub_resolution_list_t res_320dpi_list =
-{
-  res_320dpi, sizeof(res_320dpi) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_320dpi_list, dyesub_resolution_t, res_320dpi);
 
 static const dyesub_pagesize_t p200_page[] =
 {
@@ -314,10 +292,7 @@ static const dyesub_pagesize_t p200_page[] =
   { "Custom", NULL, -1, -1, 16, 17, 33, 33, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t p200_page_list =
-{
-  p200_page, sizeof(p200_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, p200_page_list, dyesub_pagesize_t, p200_page);
 
 static const dyesub_printsize_t p200_printsize[] =
 {
@@ -325,10 +300,7 @@ static const dyesub_printsize_t p200_printsize[] =
   { "320x320", "Custom", 960, 1280},
 };
 
-static const dyesub_printsize_list_t p200_printsize_list =
-{
-  p200_printsize, sizeof(p200_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, p200_printsize_list, dyesub_printsize_t, p200_printsize);
 
 static void p200_printer_init_func(stp_vars_t *v)
 {
@@ -368,10 +340,7 @@ static const dyesub_resolution_t p300_res[] =
   { "153x153", 153, 153},
 };
 
-static const dyesub_resolution_list_t p300_res_list =
-{
-  p300_res, sizeof(p300_res) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, p300_res_list, dyesub_resolution_t, p300_res);
 
 static const dyesub_pagesize_t p300_page[] =
 {
@@ -379,10 +348,7 @@ static const dyesub_pagesize_t p300_page[] =
   { "Custom", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t p300_page_list =
-{
-  p300_page, sizeof(p300_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, p300_page_list, dyesub_pagesize_t, p300_page);
 
 static const dyesub_printsize_t p300_printsize[] =
 {
@@ -392,10 +358,7 @@ static const dyesub_printsize_t p300_printsize[] =
   { "153x153", "Custom", 512, 688},
 };
 
-static const dyesub_printsize_list_t p300_printsize_list =
-{
-  p300_printsize, sizeof(p300_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, p300_printsize_list, dyesub_printsize_t, p300_printsize);
 
 static void p300_printer_init_func(stp_vars_t *v)
 {
@@ -473,10 +436,7 @@ static const dyesub_resolution_t res_314dpi[] =
   { "314x314", 314, 314},
 };
 
-static const dyesub_resolution_list_t res_314dpi_list =
-{
-  res_314dpi, sizeof(res_314dpi) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_314dpi_list, dyesub_resolution_t, res_314dpi);
 
 static const dyesub_pagesize_t p400_page[] =
 {
@@ -486,10 +446,7 @@ static const dyesub_pagesize_t p400_page[] =
   { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t p400_page_list =
-{
-  p400_page, sizeof(p400_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, p400_page_list, dyesub_pagesize_t, p400_page);
 
 static const dyesub_printsize_t p400_printsize[] =
 {
@@ -499,10 +456,7 @@ static const dyesub_printsize_t p400_printsize[] =
   { "314x314", "Custom", 2400, 3200},
 };
 
-static const dyesub_printsize_list_t p400_printsize_list =
-{
-  p400_printsize, sizeof(p400_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, p400_printsize_list, dyesub_printsize_t, p400_printsize);
 
 static void p400_printer_init_func(stp_vars_t *v)
 {
@@ -612,10 +566,7 @@ static const dyesub_pagesize_t p440_page[] =
   { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t p440_page_list =
-{
-  p440_page, sizeof(p440_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, p440_page_list, dyesub_pagesize_t, p440_page);
 
 static const dyesub_printsize_t p440_printsize[] =
 {
@@ -626,10 +577,7 @@ static const dyesub_printsize_t p440_printsize[] =
   { "314x314", "Custom", 2508, 3200},
 };
 
-static const dyesub_printsize_list_t p440_printsize_list =
-{
-  p440_printsize, sizeof(p440_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, p440_printsize_list, dyesub_printsize_t, p440_printsize);
 
 static void p440_printer_init_func(stp_vars_t *v)
 {
@@ -713,10 +661,7 @@ static const dyesub_pagesize_t ps100_page[] =
   { "Custom", NULL, 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t ps100_page_list =
-{
-  ps100_page, sizeof(ps100_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, ps100_page_list, dyesub_pagesize_t, ps100_page);
 
 static const dyesub_printsize_t ps100_printsize[] =
 {
@@ -725,10 +670,7 @@ static const dyesub_printsize_t ps100_printsize[] =
   { "306x306", "Custom", 1254, 1808},
 };
 
-static const dyesub_printsize_list_t ps100_printsize_list =
-{
-  ps100_printsize, sizeof(ps100_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, ps100_printsize_list, dyesub_printsize_t, ps100_printsize);
 
 static void ps100_printer_init_func(stp_vars_t *v)
 {
@@ -779,10 +721,7 @@ static const dyesub_resolution_t res_300dpi[] =
   { "300x300", 300, 300},
 };
 
-static const dyesub_resolution_list_t res_300dpi_list =
-{
-  res_300dpi, sizeof(res_300dpi) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_300dpi_list, dyesub_resolution_t, res_300dpi);
 
 static const dyesub_pagesize_t cp10_page[] =
 {
@@ -790,10 +729,7 @@ static const dyesub_pagesize_t cp10_page[] =
   { "Custom", NULL, -1, -1, 6, 6, 29, 29, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t cp10_page_list =
-{
-  cp10_page, sizeof(cp10_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, cp10_page_list, dyesub_pagesize_t, cp10_page);
 
 static const dyesub_printsize_t cp10_printsize[] =
 {
@@ -801,10 +737,7 @@ static const dyesub_printsize_t cp10_printsize[] =
   { "300x300", "Custom", 662, 1040},
 };
 
-static const dyesub_printsize_list_t cp10_printsize_list =
-{
-  cp10_printsize, sizeof(cp10_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, cp10_printsize_list, dyesub_printsize_t, cp10_printsize);
 
 
 /* Canon CP-100 series */
@@ -816,10 +749,7 @@ static const dyesub_pagesize_t cpx00_page[] =
   { "Custom", NULL, 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t cpx00_page_list =
-{
-  cpx00_page, sizeof(cpx00_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, cpx00_page_list, dyesub_pagesize_t, cpx00_page);
 
 static const dyesub_printsize_t cpx00_printsize[] =
 {
@@ -829,10 +759,7 @@ static const dyesub_printsize_t cpx00_printsize[] =
   { "300x300", "Custom", 1232, 1808},
 };
 
-static const dyesub_printsize_list_t cpx00_printsize_list =
-{
-  cpx00_printsize, sizeof(cpx00_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, cpx00_printsize_list, dyesub_printsize_t, cpx00_printsize);
 
 static void cpx00_printer_init_func(stp_vars_t *v)
 {
@@ -908,10 +835,7 @@ static const dyesub_pagesize_t cp220_page[] =
   { "Custom", NULL, 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t cp220_page_list =
-{
-  cp220_page, sizeof(cp220_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, cp220_page_list, dyesub_pagesize_t, cp220_page);
 
 static const dyesub_printsize_t cp220_printsize[] =
 {
@@ -922,10 +846,7 @@ static const dyesub_printsize_t cp220_printsize[] =
   { "300x300", "Custom", 1232, 1808},
 };
 
-static const dyesub_printsize_list_t cp220_printsize_list =
-{
-  cp220_printsize, sizeof(cp220_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
 
 /* Sony DPP-EX5, DPP-EX7 */
@@ -934,10 +855,7 @@ static const dyesub_resolution_t res_403dpi[] =
   { "403x403", 403, 403},
 };
 
-static const dyesub_resolution_list_t res_403dpi_list =
-{
-  res_403dpi, sizeof(res_403dpi) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_403dpi_list, dyesub_resolution_t, res_403dpi);
 
 /* only Postcard pagesize is supported */
 static const dyesub_pagesize_t dppex5_page[] =
@@ -948,10 +866,7 @@ static const dyesub_pagesize_t dppex5_page[] =
   							DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t dppex5_page_list =
-{
-  dppex5_page, sizeof(dppex5_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, dppex5_page_list, dyesub_pagesize_t, dppex5_page);
 
 static const dyesub_printsize_t dppex5_printsize[] =
 {
@@ -959,10 +874,7 @@ static const dyesub_printsize_t dppex5_printsize[] =
   { "403x403", "Custom", 1664, 2466},
 };
 
-static const dyesub_printsize_list_t dppex5_printsize_list =
-{
-  dppex5_printsize, sizeof(dppex5_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, dppex5_printsize_list, dyesub_printsize_t, dppex5_printsize);
 
 static void dppex5_printer_init(stp_vars_t *v)
 {
@@ -1009,10 +921,7 @@ static const laminate_t dppex5_laminate[] =
   {"Texture", N_("Texture"), {1, "\x01"}},
 };
 
-static const laminate_list_t dppex5_laminate_list =
-{
-  dppex5_laminate, sizeof(dppex5_laminate) / sizeof(laminate_t)
-};
+LIST(laminate_list_t, dppex5_laminate_list, laminate_t, dppex5_laminate);
 
 
 /* Sony UP-DP10 */
@@ -1024,10 +933,7 @@ static const dyesub_pagesize_t updp10_page[] =
   { "Custom", NULL, -1, -1, 12, 12, 0, 0, DYESUB_LANDSCAPE},
 };
 
-static const dyesub_pagesize_list_t updp10_page_list =
-{
-  updp10_page, sizeof(updp10_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, updp10_page_list, dyesub_pagesize_t, updp10_page);
 
 static const dyesub_printsize_t updp10_printsize[] =
 {
@@ -1036,10 +942,7 @@ static const dyesub_printsize_t updp10_printsize[] =
   { "300x300", "Custom", 1200, 1800},
 };
 
-static const dyesub_printsize_list_t updp10_printsize_list =
-{
-  updp10_printsize, sizeof(updp10_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, updp10_printsize_list, dyesub_printsize_t, updp10_printsize);
 
 static void updp10_printer_init_func(stp_vars_t *v)
 {
@@ -1077,10 +980,7 @@ static const laminate_t updp10_laminate[] =
   {"Matte",   N_("Matte"),   {1, "\x0c"}},
 };
 
-static const laminate_list_t updp10_laminate_list =
-{
-  updp10_laminate, sizeof(updp10_laminate) / sizeof(laminate_t)
-};
+LIST(laminate_list_t, updp10_laminate_list, laminate_t, updp10_laminate);
 
 static const char updp10_adj_cyan[] =
   "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -1125,16 +1025,71 @@ static const char updp10_adj_yellow[] =
   "</gutenprint>\n";
 
 
+/* Sony UP-DR100 */
+static const dyesub_pagesize_t updr100_page[] =
+{
+  { "w288h432",	"4x6", 298, 442, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7",	"3.5x5", 261, 369, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504",	"5x7", 369, 514, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576",	"6x8", 442, 588, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "Custom", NULL, 298, 442, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+};
+
+LIST(dyesub_pagesize_list_t, updr100_page_list, dyesub_pagesize_t, updr100_page);
+
+static const dyesub_printsize_t updr100_printsize[] =
+{
+  { "334x334", "w288h432", 1382, 2048},
+  { "334x334", "B7", 1210, 1710},
+  { "334x334", "w360h504", 1710, 2380},
+  { "334x334", "w432h576", 2048, 2724},
+  { "334x334", "Custom", 1382, 2048},
+};
+
+LIST(dyesub_printsize_list_t, updr100_printsize_list, dyesub_printsize_t, updr100_printsize);
+
+static void updr100_printer_init_func(stp_vars_t *v)
+{
+
+  stp_zfwrite("UPD8D\x00\x00\x00\x10\x03\x00\x00", 1, 12, v);
+  stp_put32_le(privdata.xsize, v);
+  stp_put32_le(privdata.ysize, v);
+  stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+		(privdata.laminate->seq).bytes, v); /* laminate pattern */
+  dyesub_nputc(v, '\0', 13);
+  stp_zfwrite("\x01\x00\x01\x00\x03", 1, 5, v);
+  dyesub_nputc(v, '\0', 19);
+}
+
+static void updr100_printer_end_func(stp_vars_t *v)
+{
+  stp_zfwrite("UPD8D\x00\x00\x00\x02", 1, 9, v);
+  dyesub_nputc(v, '\0', 25);
+  stp_zfwrite("\x9d\x02\x00\x04\x00\x00\xc0\xe7"
+  	      "\x9d\x02\x54\xe9\x9d\x02\x9d\x71"
+	      "\x00\x73\xfa\x71\x00\x73\xf4\xea"
+	      "\x9d\x02\xa8\x3e\x00\x73\x9c\xeb\x9d\x02"
+	      , 1, 34, v);
+}
+
+static const laminate_t updr100_laminate[] =
+{
+  {"Glossy",  N_("Glossy"),  {1, "\x01"}},
+  {"Texture", N_("Texture"), {1, "\x03"}},
+  {"Matte",   N_("Matte"),   {1, "\x04"}},
+};
+
+LIST(laminate_list_t, updr100_laminate_list, laminate_t, updr100_laminate);
+
+
 /* Sony UP-DR150 */
-static const dyesub_resolution_t updr150_res[] =
+static const dyesub_resolution_t res_334dpi[] =
 {
   { "334x334", 334, 334},
 };
 
-static const dyesub_resolution_list_t updr150_res_list =
-{
-  updr150_res, sizeof(updr150_res) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_334dpi_list, dyesub_resolution_t, res_334dpi);
 
 static const dyesub_pagesize_t updr150_page[] =
 {
@@ -1145,10 +1100,7 @@ static const dyesub_pagesize_t updr150_page[] =
   { "Custom", NULL, 298, 442, 0, 0, 0, 0, DYESUB_LANDSCAPE},
 };
 
-static const dyesub_pagesize_list_t updr150_page_list =
-{
-  updr150_page, sizeof(updr150_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, updr150_page_list, dyesub_pagesize_t, updr150_page);
 
 static const dyesub_printsize_t updr150_printsize[] =
 {
@@ -1159,10 +1111,7 @@ static const dyesub_printsize_t updr150_printsize[] =
   { "334x334", "Custom", 1382, 2048},
 };
 
-static const dyesub_printsize_list_t updr150_printsize_list =
-{
-  updr150_printsize, sizeof(updr150_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr150_printsize);
 
 static void updr150_printer_init_func(stp_vars_t *v)
 {
@@ -1216,6 +1165,7 @@ static void updr150_printer_end_func(stp_vars_t *v)
 		    , 1, 34, v);
 }
 
+
 /* Fujifilm CX-400 */
 static const dyesub_pagesize_t cx400_page[] =
 {
@@ -1225,10 +1175,7 @@ static const dyesub_pagesize_t cx400_page[] =
   { "Custom", NULL, 295, 428, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t cx400_page_list =
-{
-  cx400_page, sizeof(cx400_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, cx400_page_list, dyesub_pagesize_t, cx400_page);
 
 static const dyesub_printsize_t cx400_printsize[] =
 {
@@ -1238,10 +1185,7 @@ static const dyesub_printsize_t cx400_printsize[] =
   { "310x310", "Custom", 1268, 1842},
 };
 
-static const dyesub_printsize_list_t cx400_printsize_list =
-{
-  cx400_printsize, sizeof(cx400_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, cx400_printsize_list, dyesub_printsize_t, cx400_printsize);
 
 static void cx400_printer_init_func(stp_vars_t *v)
 {
@@ -1281,10 +1225,7 @@ static const dyesub_resolution_t res_306dpi[] =
   { "306x306", 306, 306},
 };
 
-static const dyesub_resolution_list_t res_306dpi_list =
-{
-  res_306dpi, sizeof(res_306dpi) / sizeof(dyesub_resolution_t)
-};
+LIST(dyesub_resolution_list_t, res_306dpi_list, dyesub_resolution_t, res_306dpi);
 
 static const dyesub_pagesize_t nx500_page[] =
 {
@@ -1292,10 +1233,7 @@ static const dyesub_pagesize_t nx500_page[] =
   { "Custom", NULL, -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
 };
 
-static const dyesub_pagesize_list_t nx500_page_list =
-{
-  nx500_page, sizeof(nx500_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, nx500_page_list, dyesub_pagesize_t, nx500_page);
 
 static const dyesub_printsize_t nx500_printsize[] =
 {
@@ -1303,10 +1241,7 @@ static const dyesub_printsize_t nx500_printsize[] =
   { "306x306", "Custom", 1024, 1518},
 };
 
-static const dyesub_printsize_list_t nx500_printsize_list =
-{
-  nx500_printsize, sizeof(nx500_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, nx500_printsize_list, dyesub_printsize_t, nx500_printsize);
 
 static void nx500_printer_init_func(stp_vars_t *v)
 {
@@ -1332,10 +1267,7 @@ static const dyesub_pagesize_t kodak_dock_page[] =
   						DYESUB_PORTRAIT}, /* 4x6 */
 };
 
-static const dyesub_pagesize_list_t kodak_dock_page_list =
-{
-  kodak_dock_page, sizeof(kodak_dock_page) / sizeof(dyesub_pagesize_t)
-};
+LIST(dyesub_pagesize_list_t, kodak_dock_page_list, dyesub_pagesize_t, kodak_dock_page);
 
 static const dyesub_printsize_t kodak_dock_printsize[] =
 {
@@ -1343,10 +1275,7 @@ static const dyesub_printsize_t kodak_dock_printsize[] =
   { "300x300", "Custom", 1248, 1856},
 };
 
-static const dyesub_printsize_list_t kodak_dock_printsize_list =
-{
-  kodak_dock_printsize, sizeof(kodak_dock_printsize) / sizeof(dyesub_printsize_t)
-};
+LIST(dyesub_printsize_list_t, kodak_dock_printsize_list, dyesub_printsize_t, kodak_dock_printsize);
 
 static void kodak_dock_printer_init(stp_vars_t *v)
 {
@@ -1374,7 +1303,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_310dpi_list,
     &p10_page_list,
     &p10_printsize_list,
-    1848,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &p10_printer_init_func, &p10_printer_end_func,
@@ -1389,7 +1318,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_320dpi_list,
     &p200_page_list,
     &p200_printsize_list,
-    1280,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_BLOCK_ALIGN
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &p200_printer_init_func, &p200_printer_end_func,
@@ -1462,7 +1391,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_300dpi_list,
     &cp10_page_list,
     &cp10_printsize_list,
-    1040,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
@@ -1478,7 +1407,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_300dpi_list,
     &cpx00_page_list,
     &cpx00_printsize_list,
-    1808,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
@@ -1495,7 +1424,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_300dpi_list,
     &cp220_page_list,
     &cp220_printsize_list,
-    1808,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
@@ -1526,7 +1455,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_300dpi_list,
     &updp10_page_list,
     &updp10_printsize_list,
-    1800,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS,
     &updp10_printer_init_func, &updp10_printer_end_func,
@@ -1535,13 +1464,27 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
     &updp10_laminate_list,
   },
+  { /* Sony UP-DR100 */
+    2003,
+    &rgb_ink_list,
+    &res_334dpi_list,
+    &updr100_page_list,
+    &updr100_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &updr100_printer_init_func, &updr100_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL, 
+    &updr100_laminate_list,
+  },
   { /* Sony UP-DR150 */
     2001,
     &rgb_ink_list,
-    &updr150_res_list,
+    &res_334dpi_list,
     &updr150_page_list,
     &updr150_printsize_list,
-    1800,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &updr150_printer_init_func, &updr150_printer_end_func,
     NULL, NULL,
@@ -1555,7 +1498,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_310dpi_list,
     &cx400_page_list,
     &cx400_printsize_list,
-    2208,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS,
     &cx400_printer_init_func, NULL,
@@ -1570,7 +1513,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_310dpi_list,
     &cx400_page_list,
     &cx400_printsize_list,
-    2208,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS,
     &cx400_printer_init_func, NULL,
@@ -1585,7 +1528,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_306dpi_list,
     &nx500_page_list,
     &nx500_printsize_list,
-    2208,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &nx500_printer_init_func, NULL,
     NULL, NULL,
@@ -1599,7 +1542,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &res_300dpi_list,
     &kodak_dock_page_list,
     &kodak_dock_printsize_list,
-    1856,
+    SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &kodak_dock_printer_init, NULL,
