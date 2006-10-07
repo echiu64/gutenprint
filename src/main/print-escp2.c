@@ -612,14 +612,6 @@ escp2_##f(const stp_vars_t *v)						\
     }									\
 }
 
-#define DEF_COMPOSITE_ACCESSOR(f, t)			\
-static inline t						\
-escp2_##f(const stp_vars_t *v)				\
-{							\
-  int model = stp_get_model_id(v);			\
-  return (stpi_escp2_model_capabilities[model].f);	\
-}
-
 #define DEF_ROLL_ACCESSOR(f, t)						\
 static inline t								\
 escp2_##f(const stp_vars_t *v, int rollfeed)				\
@@ -686,7 +678,6 @@ DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
-DEF_COMPOSITE_ACCESSOR(printer_weaves, const printer_weave_list_t *)
 
 DEF_ROLL_ACCESSOR(left_margin, unsigned)
 DEF_ROLL_ACCESSOR(right_margin, unsigned)
@@ -696,11 +687,53 @@ DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
-DEF_COMPOSITE_ACCESSOR(reslist, const res_t *const *)
-DEF_COMPOSITE_ACCESSOR(inkgroup, const inkgroup_t *)
-DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
-DEF_COMPOSITE_ACCESSOR(quality_list, const quality_list_t *)
-DEF_COMPOSITE_ACCESSOR(channel_names, const channel_name_t *)
+static inline const res_t *const *
+escp2_reslist(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_reslist_named
+	  (stpi_escp2_model_capabilities[model].reslist));
+}
+
+static inline const printer_weave_list_t *
+escp2_printer_weaves(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_printer_weaves_named
+	  (stpi_escp2_model_capabilities[model].printer_weaves));
+}
+
+static inline const channel_name_t *
+escp2_channel_names(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_channel_names_named
+	  (stpi_escp2_model_capabilities[model].channel_names));
+}
+
+static inline const inkgroup_t *
+escp2_inkgroup(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_inkgroup_named
+	  (stpi_escp2_model_capabilities[model].inkgroup));
+}
+
+static inline const quality_list_t *
+escp2_quality_list(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_quality_list_named
+	  (stpi_escp2_model_capabilities[model].quality_list));
+}
+
+static inline const input_slot_list_t *
+escp2_input_slots(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_input_slot_list_named
+	  (stpi_escp2_model_capabilities[model].input_slots));
+}
 
 static const channel_count_t *
 get_channel_count_by_name(const char *name)
@@ -774,17 +807,17 @@ static const escp2_dropsize_t *
 escp2_dropsizes(const stp_vars_t *v, int resid)
 {
   int model = stp_get_model_id(v);
-  const escp2_drop_list_t *drops = stpi_escp2_model_capabilities[model].drops;
+  const escp2_drop_list_t *drops =
+    stpi_escp2_get_drop_list_named(stpi_escp2_model_capabilities[model].drops);
   return (*drops)[resid];
 }
 
 static const inklist_t *
 escp2_inklist(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
   int i;
   const char *ink_list_name = NULL;
-  const inkgroup_t *inkgroup = stpi_escp2_model_capabilities[model].inkgroup;
+  const inkgroup_t *inkgroup = escp2_inkgroup(v);
 
   if (stp_check_string_parameter(v, "InkSet", STP_PARAMETER_ACTIVE))
     ink_list_name = stp_get_string_parameter(v, "InkSet");
@@ -811,7 +844,7 @@ escp2_paperlist(const stp_vars_t *v)
 {
   const inklist_t *inklist = escp2_inklist(v);
   if (inklist)
-    return inklist->papers;
+    return stpi_escp2_get_paperlist_named(inklist->papers);
   else
     return NULL;
 }
@@ -1211,13 +1244,17 @@ get_media_adjustment(const stp_vars_t *v)
   const inklist_t *ink_list = escp2_inklist(v);
   if (pt && ink_list && ink_list->paper_adjustments)
     {
-      const paper_adjustment_list_t *adjlist = ink_list->paper_adjustments;
-      const char *paper_name = pt->name;
-      int i;
-      for (i = 0; i < adjlist->paper_count; i++)
+      const paper_adjustment_list_t *adjlist =
+	stpi_escp2_get_paper_adjustment_list_named(ink_list->paper_adjustments);
+      if (adjlist)
 	{
-	  if (strcmp(paper_name, adjlist->papers[i].name) == 0)
-	    return &(adjlist->papers[i]);
+	  const char *paper_name = pt->name;
+	  int i;
+	  for (i = 0; i < adjlist->paper_count; i++)
+	    {
+	      if (strcmp(paper_name, adjlist->papers[i].name) == 0)
+		return &(adjlist->papers[i]);
+	    }
 	}
     }
   return NULL;
@@ -2784,7 +2821,7 @@ setup_head_parameters(stp_vars_t *v)
 			  pd->use_aux_channels);
   if (pd->physical_channels == 0)
     {
-      pd->inkname = &stpi_escp2_default_black_inkset;
+      pd->inkname = stpi_escp2_get_default_black_inkset();
       pd->physical_channels =
 	compute_channel_count(pd->inkname, pd->logical_channels,
 			      pd->use_aux_channels);

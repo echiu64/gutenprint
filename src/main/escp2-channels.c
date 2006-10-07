@@ -815,7 +815,7 @@ static const ink_channel_t *const standard_black_channels[] =
 
 DECLARE_CHANNEL_SET(standard_black);
 
-const escp2_inkname_t stpi_escp2_default_black_inkset =
+static const escp2_inkname_t stpi_escp2_default_black_inkset =
 {
   "Gray", N_("Grayscale"), INKSET_CMYK,
   &standard_black_channel_set
@@ -828,7 +828,7 @@ static const ink_channel_t *const standard_photo_black_channels[] =
 
 DECLARE_CHANNEL_SET(standard_photo_black);
 
-const escp2_inkname_t stpi_escp2_default_photo_black_inkset =
+static const escp2_inkname_t stpi_escp2_default_photo_black_inkset =
 {
   "Gray", N_("Grayscale"), INKSET_CMYK,
   &standard_photo_black_channel_set
@@ -842,7 +842,7 @@ static const ink_channel_t *const standard_photo_gloss_black_channels[] =
 DECLARE_CHANNEL_SET(standard_photo_gloss_black);
 DECLARE_AUX_CHANNEL_SET(standard_photo_black, standard_gloss);
 
-const escp2_inkname_t stpi_escp2_default_photo_gloss_black_inkset =
+static const escp2_inkname_t stpi_escp2_default_photo_gloss_black_inkset =
 {
   "GrayG", N_("Grayscale"), INKSET_CMYK,
   &standard_photo_black_standard_gloss_channel_set
@@ -2182,8 +2182,8 @@ static const inklist_t name##_inklist =					      \
   tname,								      \
   text,									      \
   inks##_ink_types,							      \
-  &stpi_escp2_##papers##_paper_list,					      \
-  &stpi_escp2_##adjustments##_paper_adjustment_list,			      \
+  #papers,								      \
+  #adjustments,								      \
   &shades##_shades,							      \
   sizeof(inks##_ink_types) / sizeof(escp2_inkname_t *),			      \
 }
@@ -2483,7 +2483,7 @@ DECLARE_INKLIST("picturemate", picturemate, picturemate_photo,
 
 
 #define DECLARE_INKGROUP(name)			\
-const inkgroup_t stpi_escp2_##name##_inkgroup =	\
+static const inkgroup_t name##_inkgroup =	\
 {						\
   #name,					\
   name##_group,					\
@@ -2635,3 +2635,227 @@ static const inklist_t *const picturemate_group[] =
 };
 
 DECLARE_INKGROUP(picturemate);
+
+typedef struct
+{
+  const char *name;
+  const inkgroup_t *inkgroup;
+} ink_t;
+
+static const ink_t the_inks[] =
+{
+  { "cmy", &cmy_inkgroup },
+  { "standard", &standard_inkgroup },
+  { "c80", &c80_inkgroup },
+  { "c82", &c82_inkgroup },
+  { "c64", &c64_inkgroup },
+  { "f360", &f360_inkgroup },
+  { "cx3650", &cx3650_inkgroup },
+  { "x80", &x80_inkgroup },
+  { "photo_gen1", &photo_gen1_inkgroup },
+  { "photo_gen2", &photo_gen2_inkgroup },
+  { "photo_gen3", &photo_gen3_inkgroup },
+  { "photo_pigment", &photo_pigment_inkgroup },
+  { "ultrachrome", &ultrachrome_inkgroup },
+  { "f360_photo", &f360_photo_inkgroup },
+  { "f360_photo7_japan", &f360_photo7_japan_inkgroup },
+  { "f360_ultrachrome", &f360_ultrachrome_inkgroup },
+  { "f360_ultrachrome_k3", &f360_ultrachrome_k3_inkgroup },
+  { "cmykrb", &cmykrb_inkgroup },
+  { "picturemate", &picturemate_inkgroup },
+};
+
+const inkgroup_t *
+stpi_escp2_get_inkgroup_named(const char *n)
+{
+  int i;
+  if (n)
+    for (i = 0; i < sizeof(the_inks) / sizeof(ink_t); i++)
+      {
+	if (strcmp(n, the_inks[i].name) == 0)
+	  return the_inks[i].inkgroup;
+      }
+  return NULL;
+}
+
+const escp2_inkname_t *
+stpi_escp2_get_default_black_inkset(void)
+{
+  return &stpi_escp2_default_black_inkset;
+}
+
+
+#define DECLARE_CHANNEL_LIST(name)			\
+static const channel_name_t name##_channel_name_list =	\
+{							\
+  #name,						\
+  sizeof(name##_channel_names) / sizeof(const char *),	\
+  name##_channel_names					\
+}
+
+static const char *standard_channel_names[] =
+{
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow")
+};
+
+DECLARE_CHANNEL_LIST(standard);
+
+static const char *cx3800_channel_names[] =
+{
+  N_("Cyan"),
+  N_("Yellow"),
+  N_("Magenta"),
+  N_("Black")
+};
+
+DECLARE_CHANNEL_LIST(cx3800);
+
+static const char *mfp2005_channel_names[] =
+{
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+  N_("Black")
+};
+
+DECLARE_CHANNEL_LIST(mfp2005);
+
+static const char *photo_channel_names[] =
+{
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+  N_("Light Cyan"),
+  N_("Light Magenta"),
+};
+
+DECLARE_CHANNEL_LIST(photo);
+
+static const char *rx700_channel_names[] =
+{
+  N_("Black"),
+  N_("Cyan"),
+  N_("Light Cyan"),
+  N_("Magenta"),
+  N_("Light Magenta"),
+  N_("Yellow"),
+};
+
+DECLARE_CHANNEL_LIST(rx700);
+
+static const char *sp2200_channel_names[] =
+{
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+  N_("Light Cyan"),
+  N_("Light Magenta"),
+  N_("Light Black"),
+};
+
+DECLARE_CHANNEL_LIST(sp2200);
+
+static const char *pm_950c_channel_names[] =
+{
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+  N_("Light Cyan"),
+  N_("Light Magenta"),
+  N_("Dark Yellow"),
+};
+
+DECLARE_CHANNEL_LIST(pm_950c);
+
+static const char *sp960_channel_names[] =
+{
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+  N_("Light Cyan"),
+  N_("Light Magenta"),
+  N_("Black"),
+};
+
+DECLARE_CHANNEL_LIST(sp960);
+
+static const char *r800_channel_names[] =
+{
+  N_("Yellow"),
+  N_("Magenta"),
+  N_("Cyan"),
+  N_("Matte Black"),
+  N_("Photo Black"),
+  N_("Red"),
+  N_("Blue"),
+  N_("Gloss Optimizer"),
+};
+
+DECLARE_CHANNEL_LIST(r800);
+
+static const char *picturemate_channel_names[] =
+{
+  N_("Yellow"),
+  N_("Magenta"),
+  N_("Cyan"),
+  N_("Black"),
+  N_("Red"),
+  N_("Blue"),
+};
+
+DECLARE_CHANNEL_LIST(picturemate);
+
+static const char *r2400_channel_names[] =
+{
+  N_("Light Light Black"),
+  N_("Light Magenta"),
+  N_("Light Cyan"),
+  N_("Light Black"),
+  N_("Black"),
+  N_("Cyan"),
+  N_("Magenta"),
+  N_("Yellow"),
+};
+
+DECLARE_CHANNEL_LIST(r2400);
+
+typedef struct
+{
+  const char *name;
+  const channel_name_t *channel_name;
+} channel_t;
+
+static const channel_t the_channels[] =
+{
+  { "cx3800", &cx3800_channel_name_list },
+  { "mfp2005", &mfp2005_channel_name_list },
+  { "photo", &photo_channel_name_list },
+  { "picturemate", &picturemate_channel_name_list },
+  { "pm_950c", &pm_950c_channel_name_list },
+  { "r2400", &r2400_channel_name_list },
+  { "r800", &r800_channel_name_list },
+  { "rx700", &rx700_channel_name_list },
+  { "sp2200", &sp2200_channel_name_list },
+  { "sp960", &sp960_channel_name_list },
+  { "standard", &standard_channel_name_list },
+};
+
+const channel_name_t *
+stpi_escp2_get_channel_names_named(const char *n)
+{
+  int i;
+  if (n)
+    for (i = 0; i < sizeof(the_channels) / sizeof(channel_t); i++)
+      {
+	if (strcmp(n, the_channels[i].name) == 0)
+	  return the_channels[i].channel_name;
+      }
+  return NULL;
+}

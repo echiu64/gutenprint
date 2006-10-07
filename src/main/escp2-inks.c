@@ -193,7 +193,7 @@ static const escp2_dropsize_t escp2_ultrachrome_2880_dropsizes =
 static const escp2_dropsize_t escp2_spro10000_dropsizes =
   { "spro10000", 2, { 0.661, 1.0 } };
 
-const escp2_drop_list_t stpi_escp2_simple_drops =
+static const escp2_drop_list_t simple_drops =
 {
   &escp2_single_dropsizes,
   &escp2_single_dropsizes,
@@ -206,7 +206,7 @@ const escp2_drop_list_t stpi_escp2_simple_drops =
   &escp2_single_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_6pl_drops =
+static const escp2_drop_list_t variable_6pl_drops =
 {
   &escp2_6pl_dropsizes,
   &escp2_6pl_dropsizes,
@@ -219,7 +219,7 @@ const escp2_drop_list_t stpi_escp2_variable_6pl_drops =
   &escp2_6pl_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops =
+static const escp2_drop_list_t variable_x80_6pl_drops =
 {
   &escp2_x80_low_dropsizes,
   &escp2_x80_low_dropsizes,
@@ -232,7 +232,7 @@ const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops =
   &escp2_x80_2880_6pl_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops =
+static const escp2_drop_list_t variable_1440_4pl_drops =
 {
   &escp2_low_dropsizes,
   &escp2_low_dropsizes,
@@ -245,7 +245,7 @@ const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops =
   &escp2_4pl_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops =
+static const escp2_drop_list_t variable_2880_4pl_drops =
 {
   &escp2_new_low_dropsizes,
   &escp2_new_low_dropsizes,
@@ -258,7 +258,7 @@ const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops =
   &escp2_4pl_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_3pl_drops =
+static const escp2_drop_list_t variable_3pl_drops =
 {
   &escp2_low_dropsizes,
   &escp2_low_dropsizes,
@@ -271,7 +271,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_drops =
   &escp2_3pl_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_2pl_drops =
+static const escp2_drop_list_t variable_2pl_drops =
 {
   &escp2_2pl_360_dropsizes,
   &escp2_2pl_360_dropsizes,
@@ -284,7 +284,7 @@ const escp2_drop_list_t stpi_escp2_variable_2pl_drops =
   &escp2_2pl_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops =
+static const escp2_drop_list_t variable_3pl_pmg_drops =
 {
   &escp2_r300_360_dropsizes,
   &escp2_r300_360_dropsizes,
@@ -297,7 +297,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops =
   &escp2_r300_2880_1440_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_r2400_drops =
+static const escp2_drop_list_t variable_r2400_drops =
 {
   &escp2_r2400_360_dropsizes,
   &escp2_r2400_360_dropsizes,
@@ -310,7 +310,7 @@ const escp2_drop_list_t stpi_escp2_variable_r2400_drops =
   &escp2_r2400_2880_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_picturemate_drops =
+static const escp2_drop_list_t variable_picturemate_drops =
 {
   &escp2_picturemate_1440_dropsizes,
   &escp2_picturemate_1440_dropsizes,
@@ -323,7 +323,7 @@ const escp2_drop_list_t stpi_escp2_variable_picturemate_drops =
   &escp2_picturemate_5760_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
+static const escp2_drop_list_t variable_1_5pl_drops =
 {
   &escp2_1_5pl_360_dropsizes,
   &escp2_1_5pl_360_dropsizes,
@@ -336,7 +336,7 @@ const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops =
   &escp2_1_5pl_5760_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_2000p_drops =
+static const escp2_drop_list_t variable_2000p_drops =
 {
   &escp2_2000p_dropsizes,
   &escp2_2000p_dropsizes,
@@ -349,7 +349,7 @@ const escp2_drop_list_t stpi_escp2_variable_2000p_drops =
   &escp2_2000p_dropsizes
 };
 
-const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops =
+static const escp2_drop_list_t variable_ultrachrome_drops =
 {
   &escp2_ultrachrome_low_dropsizes,
   &escp2_ultrachrome_low_dropsizes,
@@ -362,7 +362,7 @@ const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops =
   &escp2_ultrachrome_2880_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops =
+static const escp2_drop_list_t variable_3pl_pigment_drops =
 {
   &escp2_economy_pigment_dropsizes,
   &escp2_low_pigment_dropsizes,
@@ -375,7 +375,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops =
   &escp2_3pl_pigment_5760_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_c66_drops =
+static const escp2_drop_list_t variable_3pl_pigment_c66_drops =
 {
   &escp2_economy_pigment_c66_dropsizes,
   &escp2_low_pigment_c66_dropsizes,
@@ -388,7 +388,7 @@ const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_c66_drops =
   &escp2_3pl_pigment_c66_5760_dropsizes,
 };
 
-const escp2_drop_list_t stpi_escp2_spro10000_drops =
+static const escp2_drop_list_t spro10000_drops =
 {
   &escp2_spro10000_dropsizes,
   &escp2_spro10000_dropsizes,
@@ -400,3 +400,43 @@ const escp2_drop_list_t stpi_escp2_spro10000_drops =
   &escp2_spro10000_dropsizes,
   &escp2_spro10000_dropsizes
 };
+
+
+typedef struct
+{
+  const char *name;
+  const escp2_drop_list_t *const drop_list;
+} drop_list_t;
+
+static const drop_list_t the_drop_lists[] =
+{
+  { "simple", &simple_drops },
+  { "spro10000", &spro10000_drops },
+  { "variable_1_5pl", &variable_1_5pl_drops },
+  { "variable_2pl", &variable_2pl_drops },
+  { "variable_3pl", &variable_3pl_drops },
+  { "variable_3pl_pigment", &variable_3pl_pigment_drops },
+  { "variable_3pl_pigment_c66", &variable_3pl_pigment_c66_drops },
+  { "variable_3pl_pmg", &variable_3pl_pmg_drops },
+  { "variable_r2400", &variable_r2400_drops },
+  { "variable_picturemate", &variable_picturemate_drops },
+  { "variable_1440_4pl", &variable_1440_4pl_drops },
+  { "variable_ultrachrome", &variable_ultrachrome_drops },
+  { "variable_2880_4pl", &variable_2880_4pl_drops },
+  { "variable_6pl", &variable_6pl_drops },
+  { "variable_2000p", &variable_2000p_drops },
+  { "variable_x80_6pl", &variable_x80_6pl_drops },
+};
+
+const escp2_drop_list_t *
+stpi_escp2_get_drop_list_named(const char *n)
+{
+  int i;
+  if (n)
+    for (i = 0; i < sizeof(the_drop_lists) / sizeof(drop_list_t); i++)
+      {
+	if (strcmp(n, the_drop_lists[i].name) == 0)
+	  return the_drop_lists[i].drop_list;
+      }
+  return NULL;
+}
