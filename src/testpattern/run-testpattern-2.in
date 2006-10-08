@@ -120,15 +120,10 @@ EOF
     return $stuff;
 }
 
-open PIPE, "./printer_options|" or die "Cannot run printer_options: $!\n";
-while(<PIPE>) {
-    next if m!^#!;
-    eval $_;
-}
-close PIPE or die "Cannot run printer_options: $!\n";
-
+my $extra_arg = "";
 if ($#ARGV >= 0) {
     @printer_list = @ARGV;
+    $extra_arg = join " ", @printer_list;
 } else {
     open PIPE, "./printers|" or die "Cannot run printers: $!\n";
     while(<PIPE>) {
@@ -139,21 +134,30 @@ if ($#ARGV >= 0) {
     close PIPE;
 }
 
-sub do_print{
-    my $output = @_[0];
-    if($dontrun){
+open PIPE, "./printer_options $extra_arg|" or die "Cannot run printer_options: $!\n";
+while(<PIPE>) {
+    next if m!^#!;
+    eval $_;
+}
+close PIPE or die "Cannot run printer_options: $!\n";
+
+sub do_print {
+    my ($output, $fh) = @_;
+    if ($dontrun) {
 	print $output;
-    }else{
+    } elsif ($calc_md5) {
 	open TESTPATTERN, "|$testpattern_command" or
 		die "Can't run $testpattern_command: $!\n";
 	print TESTPATTERN $output;
 	close TESTPATTERN;
+    } else {
+	print $fh $output;
     }
 }
 
 
 sub do_printer {
-    my $printer = @_[0];
+    my ($printer, $fh) = @_;
     my $tmp;
     my $min_res_name;
     my $min_res_value = 0;
@@ -202,7 +206,7 @@ sub do_printer {
 	    set_opt("ColorCorrection", "Raw");
 	    set_message("    ${pmode}+${resolution}");
 	    my $output = print_one_testpattern($printer);
-	    do_print( $output );
+	    do_print( $output, $fh );
 	}
 	foreach $key (@special_options) {
 	    $tmp = $opt_vals{$key};
@@ -223,7 +227,7 @@ sub do_printer {
 		    set_opt("ColorCorrection", "Raw");
 		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
 		    my $output = print_one_testpattern($printer);
-		    do_print( $output );
+		    do_print( $output, $fh );
 		}
 	    }
 	}
@@ -255,13 +259,17 @@ if ($dontrun) {
 	$valgrind_command = "valgrind $valopts";
     }
 
+    my $status = 0;
     if ($calc_md5) {
 	$testpattern_command = "./testpattern > out.prn ; md5sum out.prn";
-    }else {
+	map { do_printer($_) } @printer_list;
+    } else {
 	$testpattern_command = "$valgrind_command ./testpattern -n";
+	open TESTPATTERN, "|$testpattern_command" or
+	    die "Can't run $testpattern_command: $!\n";
+	$testpattern_command = "$valgrind_command ./testpattern -n";
+	map { do_printer($_, \*TESTPATTERN) } @printer_list;
+	$status = close TESTPATTERN;
     }
-
-    map { do_printer($_) } @printer_list;
-
-    exit 0;
+    exit $status;
 }
