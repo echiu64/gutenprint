@@ -13,6 +13,8 @@ my $dontrun = 0;
 my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
+my @special_options = ();
+my @standard_options = qw(InkType);
 
 my @extras = ();
 my @messages = ();
@@ -27,7 +29,12 @@ GetOptions("v+"  => \$valgrind,
 	   "g"   => \$gdb_attach,
 	   "n"   => \$dontrun,
 	   "s!"  => \$skip_duplicate_printers,
+	   "o=s" => \@special_options,
 	   "m"   => \$calc_md5);
+
+if (! @special_options) {
+    @special_options = @standard_options;
+}
 
 my $pwd = `pwd`;
 chomp $pwd;
@@ -147,22 +154,28 @@ sub do_print{
 
 sub do_printer {
     my $printer = @_[0];
-    my $tmp = $stpdata{$printer}{'Resolution'};
+    my $tmp;
     my $min_res_name;
     my $min_res_value = 0;
     my $first_time = 1;
     my $model_id = $models{$printer};
     my $family_id = $families{$printer};
+    my $key;
+    my %opt_vals = {};
     if ($skip_duplicate_printers && $models_found{$family_id}{$model_id}) {
 	return;
     } else {
 	$models_found{$family_id}{$model_id} = 1;
     }
+    $tmp = $stpdata{$printer}{'Resolution'};
     my (@resolutions) = grep {$_ ne 'None' } keys %$tmp;
     $tmp = $stpdata{$printer}{'PrintingMode'};
     my (@printing_modes) = grep {$_ ne 'None' } keys %$tmp;
-    $tmp = $stpdata{$printer}{'InkType'};
-    my (@ink_types) = grep {$_ ne 'None' } keys %$tmp;
+    foreach $key (@special_options) {
+	$tmp = $stpdata{$printer}{$key};
+	my (@tmp) = grep {$_ ne 'None' } keys %$tmp;
+	$opt_vals{$key} = \@tmp;
+    }
     foreach $tmp (sort @resolutions) {
 	my $res_value = ($stpdata{$printer}{'x_resolution'}{$tmp} *
 			 $stpdata{$printer}{'y_resolution'}{$tmp});
@@ -175,7 +188,7 @@ sub do_printer {
     # We don't need to do both resolutions and ink types.
     my $pmode;
     foreach $pmode (@printing_modes) {
-	my ($resolution, $ink_type);
+	my ($resolution);
 	foreach $resolution (@resolutions) {
 	    @extras = ();
 	    @messages = ();
@@ -191,22 +204,27 @@ sub do_printer {
 	    my $output = print_one_testpattern($printer);
 	    do_print( $output );
 	}
-	if ($#ink_types >= 1) {
-	    foreach $ink_type (@ink_types) {
-		@extras = ();
-		@messages = ();
-		if ($first_time) {
-		    set_message("$printer\n");
-		    $first_time = 0;
+	foreach $key (@special_options) {
+	    $tmp = $opt_vals{$key};
+	    my (@opts) = @$tmp;
+	    if ($#opts >= 1) {
+		my $opt;
+		foreach $opt (@opts) {
+		    @extras = ();
+		    @messages = ();
+		    if ($first_time) {
+			set_message("$printer\n");
+			$first_time = 0;
+		    }
+		    set_opt("PrintingMode", $pmode);
+		    set_opt("Resolution", $min_res_name);
+		    set_opt($key, $opt);
+		    set_opt("DitherAlgorithm", "Fast");
+		    set_opt("ColorCorrection", "Raw");
+		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
+		    my $output = print_one_testpattern($printer);
+		    do_print( $output );
 		}
-		set_opt("PrintingMode", $pmode);
-		set_opt("Resolution", $min_res_name);
-		set_opt("InkType", $ink_type);
-		set_opt("DitherAlgorithm", "Fast");
-		set_opt("ColorCorrection", "Raw");
-		set_message("    ${ink_type}+${pmode}+${min_res_name}");
-		my $output = print_one_testpattern($printer);
-		do_print( $output );
 	    }
 	}
     }
