@@ -15,6 +15,7 @@ my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
 my @standard_options = qw(InkType);
+my $global_status = 1;
 
 my @extras = ();
 my @messages = ();
@@ -149,7 +150,10 @@ sub do_print {
 	open TESTPATTERN, "|$testpattern_command" or
 		die "Can't run $testpattern_command: $!\n";
 	print TESTPATTERN $output;
-	close TESTPATTERN;
+	my $status = close TESTPATTERN;
+	if (! $status) {
+	    $global_status = 0;
+	}
     } else {
 	print $fh $output;
     }
@@ -259,10 +263,11 @@ if ($dontrun) {
 	$valgrind_command = "valgrind $valopts";
     }
 
-    my $status = 0;
+    my $status = 1;
     if ($calc_md5) {
-	$testpattern_command = "./testpattern > out.prn ; md5sum out.prn";
+	$testpattern_command = "./testpattern > out.prn; a=\$? ; md5sum out.prn; exit \$a";
 	map { do_printer($_) } @printer_list;
+	$status = $global_status;
     } else {
 	$testpattern_command = "$valgrind_command ./testpattern -n";
 	open TESTPATTERN, "|$testpattern_command" or
@@ -271,5 +276,9 @@ if ($dontrun) {
 	map { do_printer($_, \*TESTPATTERN) } @printer_list;
 	$status = close TESTPATTERN;
     }
-    exit $status;
+    if ($status) {
+	exit 0;
+    } else {
+	exit 1;
+    }
 }
