@@ -227,7 +227,7 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 		}
 	}
 	for(x=0;x<img->width;x++){
-		int lK,lM,lY,lC;
+		int lK=0,lM=0,lY=0,lC=0;
 		/* get pixel values */
 		for(i=0;i<MAX_COLORS;i++){
 			if(inside_range(&img->color[i],x,pos_y))
@@ -238,10 +238,19 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 			(img->color[i].dots)[img->color[i].value] += 1;
 		}
 		/* calculate CMYK values */
-		lK=255*K->value/(K->level-1) + 128*k->value/(k->level-1);
-		lM=255*M->value/(M->level-1) + 128*m->value/(m->level-1);
-		lY=255*Y->value/(Y->level-1) + 128*y->value/(y->level-1);
-		lC=255*C->value/(C->level-1) + 128*c->value/(c->level-1);
+		lK=K->density * K->value/(K->level-1) + k->density * k->value/(k->level-1);
+		lM=M->density * M->value/(M->level-1) + m->density * m->value/(m->level-1);
+		lY=Y->density * Y->value/(Y->level-1) + y->density * y->value/(y->level-1);
+		lC=C->density * C->value/(C->level-1) + c->density * c->value/(c->level-1);
+                /* clip values */
+                if(lK > 255)
+                   lK = 255;
+                if(lM > 255)
+                   lM = 255;
+                if(lC > 255)
+                   lC = 255;
+                if(lY > 255)
+                   lY = 255;
 		/* convert to RGB */
 		/* 0 == black, 255 == white */
 		line[x*3]=255 - lC - lK;        
@@ -300,7 +309,6 @@ static int process(FILE* in, FILE* out,int verbose){
 	while(!returnv && !feof(in)){
 		unsigned char cmd;
 		unsigned int cnt = 0;
-		int i;
 		if((returnv = nextcmd(in,&cmd,buf,&cnt)))
 			break;
 		switch(cmd){
@@ -347,6 +355,8 @@ static int process(FILE* in, FILE* out,int verbose){
 			case 't':
 				printf("ESC (t set image cnt %i\n",cnt);
 				if(buf[0]>>7){
+				        char order[]="CMYKcmyk";
+					int black_found = 0;
 					int num_colors = (cnt - 3)/3;
 					printf(" bit_info: using detailed color settings for max %i colors\n",num_colors);
 					if(buf[1]==0x80)
@@ -362,18 +372,34 @@ static int process(FILE* in, FILE* out,int verbose){
 
 					for(i=0;i<num_colors;i++){
 					        if(i<MAX_COLORS){	
-						    const char order[]="CMYKcmyk";
 						    img->color[i].name=order[i];
 						    img->color[i].compression=buf[3+i*3] >> 5;
 						    img->color[i].bpp=buf[3+i*3] & 31;
 						    img->color[i].level=(buf[3+i*3+1] << 8) + buf[3+i*3+2];
-						     printf(" Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
+                                                    /* this is not supposed to give accurate images */
+                                                    if(i<4)
+                                                         img->color[i].density = 255;
+                                                    else
+                                                         img->color[i].density = 128;
+						    if((order[i] == 'K' || order[i] =='k') && img->color[i].bpp)
+						         black_found = 1;
+                                                    if(order[i] == 'y' && !black_found){
+                                                        printf("iP6700 hack: treating colordefinition at the y position as k\n");
+                                                        img->color[i].name = 'k';
+                                                        order[i] = 'k';
+                                                        order[i+1] = 'y';
+							black_found = 1;
+                                                        img->color[i].density = 255;
+                                                    }
+						    printf(" Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
 							img->color[i].compression,img->color[i].bpp,img->color[i].level);
                                                 }else{
 						    printf(" Color ignoring setting %x %x %x\n",buf[3+i*3],buf[3+i*3+1],buf[3+i*3+2]);
 						}
 
 					}
+
+
 				}else if(buf[0]==0x1 && buf[1]==0x0 && buf[2]==0x1){
 					printf(" 1bit-per pixel\n");
 					for(i=0;i<MAX_COLORS;i++){

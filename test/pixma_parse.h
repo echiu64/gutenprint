@@ -60,13 +60,13 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
     unsigned int bit_buf;
     int bit_left;
 
-    //    printf("put_bits=%d %x\n", n, value);
+    /*    printf("put_bits=%d %x\n", n, value); */
 
     
     bit_buf = s->bit_buf;
     bit_left = s->bit_left;
 
-    //    printf("n=%d value=%x cnt=%d buf=%x\n", n, value, bit_cnt, bit_buf);
+    /*    printf("n=%d value=%x cnt=%d buf=%x\n", n, value, bit_cnt, bit_buf); */
     /* XXX: optimize */
     if (n < bit_left) {
         bit_buf = (bit_buf<<n) | value;
@@ -75,7 +75,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 	bit_buf<<=bit_left;
         bit_buf |= value >> (n - bit_left);
         *(uint32_t *)s->buf_ptr = be2me_32(bit_buf);
-        //printf("bitbuf = %08x\n", bit_buf);
+        /* printf("bitbuf = %08x\n", bit_buf); */
         s->buf_ptr+=4;
 	bit_left+=32 - n;
         bit_buf = value;
@@ -172,7 +172,7 @@ static inline unsigned int get_bits(GetBitContext *s, int n){
  * @param bit_size the size of the buffer in bits
  */
 static inline void init_get_bits(GetBitContext *s,
-                   const uint8_t *buffer, int bit_size)
+                   uint8_t *buffer, int bit_size)
 {
     const int buffer_size= (bit_size+7)>>3;
 
@@ -228,6 +228,7 @@ typedef struct color_s {
 	char name;          /* name (one of CMYKcmyk) */
 	int bpp;            /* number of bits */
 	int level;          /* number of levels */
+        int density;     /* relative density to the other colors*/
 	unsigned int  value;/* last used dot value */
 	unsigned int* dots;  /* number of dots for every level */
 	int compression;    /* bits are compressed */
