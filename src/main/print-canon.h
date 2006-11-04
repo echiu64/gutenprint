@@ -25,6 +25,7 @@
 #define GUTENPRINT_INTERNAL_CANON_H
 
 
+
 /* Codes for possible ink-tank combinations.
  * Each combo is represented by the colors that can be used with
  * the installed ink-tank(s)
@@ -36,7 +37,6 @@
 #define CANON_INK_CMYK        4
 #define CANON_INK_CcMmYK      8
 #define CANON_INK_CcMmYyK    16
-
 
 #define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYyK)     /* Ink is CcMmYyKk */
 #define CANON_INK_CMYK_MASK     (CANON_INK_CMYK|CANON_INK_CcMmYyKk_MASK) /* Ink is CMYK */
