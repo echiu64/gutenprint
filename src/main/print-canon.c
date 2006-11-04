@@ -154,25 +154,15 @@ typedef struct
   canon_channel_t* channels;
   char* channel_order;
   const canon_cap_t *caps;
-//  unsigned char *cols[CANON_MAX_COLORS];
   unsigned char *comp_buf;
-//  unsigned char *comp_buf_offset[CANON_MAX_COLORS];
   unsigned char *fold_buf;
-//  stp_shade_t* shades[STP_NCOLORS];
-//  int num_shades[STP_NCOLORS];
-//  unsigned int subchannel[CANON_MAX_COLORS];
-//  int delay[CANON_MAX_COLORS];
   int delay_max;
-//  int buf_length[CANON_MAX_COLORS];
   int buf_length_max;
   int length;
   int out_width;
   int out_height;
   int left;
   int emptylines;
-//  int bits[CANON_MAX_COLORS];
-//  int ink_flags[CANON_MAX_COLORS];
-//  int ydpi;
   int ncolors; /* number of colors to print with */
   int physical_xdpi, nozzle_ydpi, stepper_ydpi;
   int nozzles;   /* count of inkjets for one pass */
@@ -203,7 +193,6 @@ typedef struct {
   int left;
   int num_channels;
   char* channel_order;
-//  char channel_order[CANON_MAX_COLORS];
 } canon_init_t;
 
 
@@ -1482,7 +1471,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int		left = stp_get_left(v);
   canon_init_t  init;
   const canon_cap_t * caps= canon_get_model_capabilities(model);
-//  const canon_mode_t* mode=NULL;
   const canon_paper_t *pt;
   int		n;		/* Output number */
   int		y;		/* Looping vars */
@@ -1494,7 +1482,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		page_right,
 		page_bottom,
 		page_true_height,	/* True length of page */
-//		length,		/* Length of raster data */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
@@ -1665,8 +1652,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   canon_setup_channels(v,&privdata);
 
 
-//  stp_deprintf(STP_DBG_CANON,
-  fprintf(stderr,
+  stp_deprintf(STP_DBG_CANON,
 	       "canon: driver will use colors %s\n",privdata.channel_order);
 
   /* Allocate compression buffer */
@@ -1682,13 +1668,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
  /*
   * Output the page...
   */
-#if 0
-  if (privdata.cols[5]) /* use_6colors */
-    k_lower = .4 / privdata.bits[5] + .1; /* c bits */
-  else
-    k_lower = .25 / privdata.bits[0] ; /* K bits */
-
-#else
 
    /* FIXME this is probably broken, kept for backward compatibility */
    if(privdata.num_channels > 4){
@@ -1696,10 +1675,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
    }else 
        k_lower = 0.25;
 
-
-
-#endif
-      
   k_lower *= pt->k_lower_scale;
   k_upper = pt->k_upper;
 
@@ -2286,18 +2261,6 @@ canon_write_line(stp_vars_t *v)
   canon_privdata_t *pd =
     (canon_privdata_t *) stp_get_component_data(v, "Driver");
   char write_sequence[] = "KYMCymck";
-
-
-
-
-
-
-
-
-
-
-
-//  static const int write_sequence[] = { 0, 3, 2, 1, 6, 5, 4, 7 }; /* KYMCymc */
   static const int write_number[] = { 3, 2, 1, 0, 6, 5, 4, 7 };   /* KYMCymc */
   int i;
   int written= 0;
@@ -2320,22 +2283,7 @@ canon_write_line(stp_vars_t *v)
                                pd->length, num, pd->mode->ydpi,
                                &(pd->emptylines), pd->out_width,
                                pd->left, channel->props->bits, channel->props->flags);
-
-
-
-
       } 
-#if 0
-      int col = write_sequence[i];
-      int num = write_number[i];
-      int bits=pd->bits[col];
-      if (pd->cols[col])
-	written += canon_write(v, pd, pd->caps,
-			       pd->cols[col] + pd->delay[col] * pd->length /*buf_length[i]*/,
-			       pd->length, num, pd->ydpi,
-			       &(pd->emptylines), pd->out_width,
-			       pd->left, bits, pd->ink_flags[col]);
-#endif
     }
   if (written)
     stp_zfwrite("\033\050\145\002\000\000\001", 7, 1, v);
