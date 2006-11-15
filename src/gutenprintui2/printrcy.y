@@ -117,7 +117,7 @@ Destination: DESTINATION tSTRING
 
 Queue_Name: QUEUE_NAME tSTRING
 	{
-	  if ($2)
+	  if (current_printer && $2)
 	    {
 	      stpui_plist_set_queue_name(current_printer, $2);
 	      g_free($2);
@@ -127,7 +127,7 @@ Queue_Name: QUEUE_NAME tSTRING
 
 Output_Filename: OUTPUT_FILENAME tSTRING
 	{
-	  if ($2)
+	  if (current_printer && $2)
 	    {
 	      stpui_plist_set_output_filename(current_printer, $2);
 	      g_free($2);
@@ -137,7 +137,7 @@ Output_Filename: OUTPUT_FILENAME tSTRING
 
 Extra_Printer_Options: EXTRA_PRINTER_OPTIONS tSTRING
 	{
-	  if ($2)
+	  if (current_printer && $2)
 	    {
 	      stpui_plist_set_extra_printer_options(current_printer, $2);
 	      g_free($2);
@@ -147,7 +147,7 @@ Extra_Printer_Options: EXTRA_PRINTER_OPTIONS tSTRING
 
 Custom_Command: CUSTOM_COMMAND tSTRING
 	{
-	  if ($2)
+	  if (current_printer && $2)
 	    {
 	      stpui_plist_set_custom_command(current_printer, $2);
 	      g_free($2);
@@ -157,58 +157,86 @@ Custom_Command: CUSTOM_COMMAND tSTRING
 
 Command_Type: COMMAND_TYPE tINT
 	{
-	  stpui_plist_set_command_type(current_printer, $2);
+	  if (current_printer)
+	    stpui_plist_set_command_type(current_printer, $2);
 	}
 ;
 
 Scaling: SCALING tDOUBLE
-	{ current_printer->scaling = $2; }
+	{
+	  if (current_printer)
+	    current_printer->scaling = $2; 
+	}
 ;
 
 Orientation: ORIENTATION tINT
-	{ current_printer->orientation = $2; }
+	{
+	  if (current_printer)
+	    current_printer->orientation = $2;
+	}
 ;
 
 Autosize_Roll_Paper: AUTOSIZE_ROLL_PAPER tINT
-	{ current_printer->auto_size_roll_feed_paper = $2; }
+	{
+	  if (current_printer)
+	    current_printer->auto_size_roll_feed_paper = $2;
+	}
 ;
 
 Unit: UNIT tINT
-	{ current_printer->unit = $2; }
+	{
+	  if (current_printer)
+	    current_printer->unit = $2; 
+	}
 ;
 
 Left: LEFT tINT
-	{ stp_set_left(current_printer->v, $2); }
+	{
+	  if (current_printer)
+	    stp_set_left(current_printer->v, $2);
+	}
 ;
 
 Top: TOP tINT
-	{ stp_set_top(current_printer->v, $2); }
+	{
+	  if (current_printer)
+	    stp_set_top(current_printer->v, $2);
+	}
 ;
 
 Output_Type: OUTPUT_TYPE tINT
 	{
-	  switch ($2)
+	  if (current_printer)
 	    {
-	    case 0:
-	      stp_set_string_parameter
-		(current_printer->v, "PrintingMode", "BW");
-	      break;
-	    case 1:
-	    case 2:
-	    default:
-	      stp_set_string_parameter
-		(current_printer->v, "PrintingMode", "Color");
-	      break;
+	      switch ($2)
+		{
+		case 0:
+		  stp_set_string_parameter
+		    (current_printer->v, "PrintingMode", "BW");
+		  break;
+		case 1:
+		case 2:
+		default:
+		  stp_set_string_parameter
+		    (current_printer->v, "PrintingMode", "Color");
+		  break;
+		}
 	    }
 	}
 ;
 
 Custom_Page_Width: CUSTOM_PAGE_WIDTH tINT
-	{ stp_set_page_width(current_printer->v, $2); }
+	{
+	  if (current_printer)
+	    stp_set_page_width(current_printer->v, $2);
+	}
 ;
 
 Custom_Page_Height: CUSTOM_PAGE_HEIGHT tINT
-	{ stp_set_page_height(current_printer->v, $2); }
+	{
+	  if (current_printer)
+	    stp_set_page_height(current_printer->v, $2);
+	}
 ;
 
 Empty:
@@ -216,13 +244,16 @@ Empty:
 
 Int_Param: tWORD pINT tBOOLEAN tINT
 	{
-	  stp_set_int_parameter(current_printer->v, $1, $4);
-	  if (strcmp($3, "False") == 0)
-	    stp_set_int_parameter_active(current_printer->v, $1,
-					 STP_PARAMETER_INACTIVE);
-	  else
-	    stp_set_int_parameter_active(current_printer->v, $1,
-					 STP_PARAMETER_ACTIVE);
+	  if (current_printer)
+	    {
+	      stp_set_int_parameter(current_printer->v, $1, $4);
+	      if (strcmp($3, "False") == 0)
+		stp_set_int_parameter_active(current_printer->v, $1,
+					     STP_PARAMETER_INACTIVE);
+	      else
+		stp_set_int_parameter_active(current_printer->v, $1,
+					     STP_PARAMETER_ACTIVE);
+	    }
 	  g_free($1);
 	  g_free($3);
 	}
@@ -230,13 +261,16 @@ Int_Param: tWORD pINT tBOOLEAN tINT
 
 String_List_Param: tWORD pSTRING_LIST tBOOLEAN tSTRING
 	{
-	  stp_set_string_parameter(current_printer->v, $1, $4);
-	  if (strcmp($3, "False") == 0)
-	    stp_set_string_parameter_active(current_printer->v, $1,
-					    STP_PARAMETER_INACTIVE);
-	  else
-	    stp_set_string_parameter_active(current_printer->v, $1,
-					    STP_PARAMETER_ACTIVE);
+	  if (current_printer)
+	    {
+	      stp_set_string_parameter(current_printer->v, $1, $4);
+	      if (strcmp($3, "False") == 0)
+		stp_set_string_parameter_active(current_printer->v, $1,
+						STP_PARAMETER_INACTIVE);
+	      else
+		stp_set_string_parameter_active(current_printer->v, $1,
+						STP_PARAMETER_ACTIVE);
+	    }
 	  g_free($1);
 	  g_free($3);
 	  g_free($4);
@@ -245,13 +279,16 @@ String_List_Param: tWORD pSTRING_LIST tBOOLEAN tSTRING
 
 File_Param: tWORD pFILE tBOOLEAN tSTRING
 	{
-	  stp_set_file_parameter(current_printer->v, $1, $4);
-	  if (strcmp($3, "False") == 0)
-	    stp_set_file_parameter_active(current_printer->v, $1,
-					  STP_PARAMETER_INACTIVE);
-	  else
-	    stp_set_file_parameter_active(current_printer->v, $1,
-					  STP_PARAMETER_ACTIVE);
+	  if (current_printer)
+	    {
+	      stp_set_file_parameter(current_printer->v, $1, $4);
+	      if (strcmp($3, "False") == 0)
+		stp_set_file_parameter_active(current_printer->v, $1,
+					      STP_PARAMETER_INACTIVE);
+	      else
+		stp_set_file_parameter_active(current_printer->v, $1,
+					      STP_PARAMETER_ACTIVE);
+	    }
 	  g_free($1);
 	  g_free($3);
 	  g_free($4);
@@ -260,13 +297,16 @@ File_Param: tWORD pFILE tBOOLEAN tSTRING
 
 Double_Param: tWORD pDOUBLE tBOOLEAN tDOUBLE
 	{
-	  stp_set_float_parameter(current_printer->v, $1, $4);
-	  if (strcmp($3, "False") == 0)
-	    stp_set_float_parameter_active(current_printer->v, $1,
-					   STP_PARAMETER_INACTIVE);
-	  else
-	    stp_set_float_parameter_active(current_printer->v, $1,
-					   STP_PARAMETER_ACTIVE);
+	  if (current_printer)
+	    {
+	      stp_set_float_parameter(current_printer->v, $1, $4);
+	      if (strcmp($3, "False") == 0)
+		stp_set_float_parameter_active(current_printer->v, $1,
+					       STP_PARAMETER_INACTIVE);
+	      else
+		stp_set_float_parameter_active(current_printer->v, $1,
+					       STP_PARAMETER_ACTIVE);
+	    }
 	  g_free($1);
 	  g_free($3);
 	}
@@ -274,13 +314,16 @@ Double_Param: tWORD pDOUBLE tBOOLEAN tDOUBLE
 
 Dimension_Param: tWORD pDIMENSION tBOOLEAN tINT
 	{
-	  stp_set_dimension_parameter(current_printer->v, $1, $4);
-	  if (strcmp($3, "False") == 0)
-	    stp_set_dimension_parameter_active(current_printer->v, $1,
-					       STP_PARAMETER_INACTIVE);
-	  else
-	    stp_set_dimension_parameter_active(current_printer->v, $1,
-					       STP_PARAMETER_ACTIVE);
+	  if (current_printer)
+	    {
+	      stp_set_dimension_parameter(current_printer->v, $1, $4);
+	      if (strcmp($3, "False") == 0)
+		stp_set_dimension_parameter_active(current_printer->v, $1,
+						   STP_PARAMETER_INACTIVE);
+	      else
+		stp_set_dimension_parameter_active(current_printer->v, $1,
+						   STP_PARAMETER_ACTIVE);
+	    }
 	  g_free($1);
 	  g_free($3);
 	}
@@ -288,16 +331,19 @@ Dimension_Param: tWORD pDIMENSION tBOOLEAN tINT
 
 Boolean_Param: tWORD pBOOLEAN tBOOLEAN tBOOLEAN
 	{
-	  if (strcmp($4, "False") == 0)
-	    stp_set_boolean_parameter(current_printer->v, $1, 0);
-	  else
-	    stp_set_boolean_parameter(current_printer->v, $1, 1);
-	  if (strcmp($3, "False") == 0)
-	    stp_set_boolean_parameter_active(current_printer->v, $1,
-					     STP_PARAMETER_INACTIVE);
-	  else
-	    stp_set_boolean_parameter_active(current_printer->v, $1,
-					     STP_PARAMETER_ACTIVE);
+	  if (current_printer)
+	    {
+	      if (strcmp($4, "False") == 0)
+		stp_set_boolean_parameter(current_printer->v, $1, 0);
+	      else
+		stp_set_boolean_parameter(current_printer->v, $1, 1);
+	      if (strcmp($3, "False") == 0)
+		stp_set_boolean_parameter_active(current_printer->v, $1,
+						 STP_PARAMETER_INACTIVE);
+	      else
+		stp_set_boolean_parameter_active(current_printer->v, $1,
+						 STP_PARAMETER_ACTIVE);
+	    }
 	  g_free($1);
 	  g_free($3);
 	  g_free($4);
@@ -306,17 +352,20 @@ Boolean_Param: tWORD pBOOLEAN tBOOLEAN tBOOLEAN
 
 Curve_Param: tWORD pCURVE tBOOLEAN tSTRING
 	{
-	  stp_curve_t *curve = stp_curve_create_from_string($4);
-	  if (curve)
+	  if (current_printer)
 	    {
-	      stp_set_curve_parameter(current_printer->v, $1, curve);
-	      if (strcmp($3, "False") == 0)
-		stp_set_curve_parameter_active(current_printer->v, $1,
-					       STP_PARAMETER_INACTIVE);
-	      else
-		stp_set_curve_parameter_active(current_printer->v, $1,
-					       STP_PARAMETER_ACTIVE);
-	      stp_curve_destroy(curve);
+	      stp_curve_t *curve = stp_curve_create_from_string($4);
+	      if (curve)
+		{
+		  stp_set_curve_parameter(current_printer->v, $1, curve);
+		  if (strcmp($3, "False") == 0)
+		    stp_set_curve_parameter_active(current_printer->v, $1,
+						   STP_PARAMETER_INACTIVE);
+		  else
+		    stp_set_curve_parameter_active(current_printer->v, $1,
+						   STP_PARAMETER_ACTIVE);
+		  stp_curve_destroy(curve);
+		}
 	    }
 	  g_free($1);
 	  g_free($3);
