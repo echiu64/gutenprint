@@ -824,10 +824,10 @@
         <parameter type="float" name="Gamma">0.5</parameter>
         <parameter type="float" name="Density">2.0</parameter>
       </parameters>
+      <printer name="Compaq IJ1200" driver="compaq-ij1200" manufacturer="Compaq" model="10042" parameters="standard_params" />
+      <printer name="Lexmark X73" driver="lexmark-x73" manufacturer="Lexmark" model="10042" parameters="standard_params" />
       <printer name="Lexmark Z42" driver="lexmark-z42" manufacturer="Lexmark" model="10042" parameters="standard_params" />
       <printer name="Lexmark Z43" driver="lexmark-z43" manufacturer="Lexmark" model="10042" parameters="standard_params" />
-      <printer name="Lexmark X73" driver="lexmark-x73" manufacturer="Lexmark" model="10042" parameters="standard_params" />
-      <printer name="Compaq IJ1200" driver="compaq-ij1200" manufacturer="Compaq" model="10042" parameters="standard_params" />
       <printer name="Lexmark Z52" driver="lexmark-z52" manufacturer="Lexmark" model="10052" parameters="standard_params" />
       <printer name="Lexmark Z53" driver="lexmark-z53" manufacturer="Lexmark" model="10052" parameters="standard_params" />
     </family>
