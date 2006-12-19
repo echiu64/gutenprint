@@ -112,6 +112,7 @@
 #gptofoo bjc-i865 printer/Canon-i865
 #gptofoo canon-ir_330s printer/Canon-imageRunner_330s
 #gptofoo citizen-projet_ii printer/Citizen-ProJet_II
+#gptofoo compaq-ij1200 printer/Compaq-IJ1200
 #gptofoo dec-1800 printer/DEC-1800
 #gptofoo dec-ln17 printer/DEC-LN17
 #gptofoo epson-actl_1100 printer/Epson-ActionLaser_1100
@@ -691,6 +692,7 @@
 #gptofoo lexmark-optra_e printer/Lexmark-Optra_E
 #gptofoo lexmark-optra_eplus printer/Lexmark-Optra_Eplus
 #gptofoo lexmark-vw_300 printer/Lexmark-Valuewriter_300
+#gptofoo lexmark-x73 printer/Lexmark-X73
 #gptofoo lexmark-z42 printer/Lexmark-Z42
 #gptofoo lexmark-z43 printer/Lexmark-Z43
 #gptofoo lexmark-z52 printer/Lexmark-Z52
