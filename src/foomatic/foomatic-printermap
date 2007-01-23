@@ -691,6 +691,7 @@
 #gptofoo lexmark-4076 printer/Lexmark-4076
 #gptofoo lexmark-optra_e printer/Lexmark-Optra_E
 #gptofoo lexmark-optra_eplus printer/Lexmark-Optra_Eplus
+#gptofoo lexmark-optra_e220 printer/Lexmark-Optra_E220
 #gptofoo lexmark-vw_300 printer/Lexmark-Valuewriter_300
 #gptofoo lexmark-x73 printer/Lexmark-X73
 #gptofoo lexmark-z42 printer/Lexmark-Z42
