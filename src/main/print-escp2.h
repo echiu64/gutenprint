@@ -519,6 +519,7 @@ typedef struct escp2_printer
   const stp_raw_t *preinit_sequence;
   const stp_raw_t *postinit_remote_sequence;
 /*****************************************************************************/
+  const stp_raw_t *vertical_borderless_sequence;
   const char *const printer_weaves;
   const char *channel_names;
 } stpi_escp2_printer_t;
@@ -578,6 +579,7 @@ typedef struct
   const inkgroup_t *ink_group;	/* Which set of inks */
   const stp_raw_t *init_sequence; /* Initialization sequence */
   const stp_raw_t *deinit_sequence; /* De-initialization sequence */
+  const stp_raw_t *borderless_sequence; /* Vertical borderless sequence */
   model_featureset_t command_set; /* Which command set this printer supports */
   int variable_dots;		/* Print supports variable dot sizes */
   int has_vacuum;		/* Printer supports vacuum command */
@@ -607,6 +609,7 @@ typedef struct
   int page_height;		/* Page height (points) */
   int page_true_height;		/* Physical page height (points) */
   int page_extra_height;	/* Extra height for set_form_factor */
+  int page_true_width;		/* Physical page height (points) */
   int cd_x_offset;		/* CD X offset (micro units) */
   int cd_y_offset;		/* CD Y offset (micro units) */
   int cd_outer_radius;		/* CD radius (micro units) */

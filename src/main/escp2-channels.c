@@ -327,14 +327,16 @@ DECLARE_INK_CHANNEL(standard_cyan);
 
 static const physical_subchannel_t f360_standard_cyan_subchannels[] =
 {
-  { 2, -1, 1, "CyanDensity", NULL }
+//  { 2, -1, 1, "CyanDensity", NULL }
+  { 2, -1, 0, "CyanDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_cyan);
 
 static const physical_subchannel_t r800_cyan_subchannels[] =
 {
-  { 2, -1, 1, "CyanDensity", NULL }
+//  { 2, -1, 1, "CyanDensity", NULL }
+  { 2, -1, 0, "CyanDensity", NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_cyan);
@@ -397,7 +399,8 @@ DECLARE_EXTENDED_INK_CHANNEL(picturemate_magenta);
 
 static const physical_subchannel_t f360_standard_magenta_subchannels[] =
 {
-  { 1, -1, 1, "MagentaDensity", NULL }
+//  { 1, -1, 1, "MagentaDensity", NULL }
+  { 1, -1, 0, "MagentaDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_magenta);
@@ -453,14 +456,16 @@ DECLARE_INK_CHANNEL(c64_yellow);
 
 static const physical_subchannel_t f360_standard_yellow_subchannels[] =
 {
-  { 4, -1, 1, "YellowDensity", NULL }
+//  { 4, -1, 1, "YellowDensity", NULL }
+  { 4, -1, 0, "YellowDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_yellow);
 
 static const physical_subchannel_t r800_yellow_subchannels[] =
 {
-  { 4, -1, 1, "YellowDensity", NULL }
+//  { 4, -1, 1, "YellowDensity", NULL }
+  { 4, -1, 0, "YellowDensity", NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_yellow);
@@ -488,14 +493,16 @@ DECLARE_EXTENDED_INK_CHANNEL(picturemate_red);
 
 static const physical_subchannel_t r800_blue_subchannels[] =
 {
-  { 8, -1, 1, "BlueDensity", NULL }
+//  { 8, -1, 1, "BlueDensity", NULL }
+  { 8, -1, 0, "BlueDensity", NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_blue);
 
 static const physical_subchannel_t picturemate_blue_subchannels[] =
 {
-  { 8, -1, 1, "BlueDensity", NULL }
+//  { 8, -1, 1, "BlueDensity", NULL }
+  { 8, -1, 0, "BlueDensity", NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_blue);
@@ -523,7 +530,8 @@ DECLARE_INK_CHANNEL(standard_photo_black);
 
 static const physical_subchannel_t f360_photo_black_subchannels[] =
 {
-  { 0, 4, 1, "BlackDensity", NULL }
+//  { 0, 4, 1, "BlackDensity", NULL }
+  { 0, 4, 0, "BlackDensity", NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_black);

@@ -404,7 +404,8 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(cd_page_height),
   PARAMETER_INT(page_extra_height),
   PARAMETER_RAW(preinit_sequence),
-  PARAMETER_RAW(postinit_remote_sequence)
+  PARAMETER_RAW(postinit_remote_sequence),
+  PARAMETER_RAW(vertical_borderless_sequence)
 };
 
 static const int the_parameter_count =
@@ -686,6 +687,7 @@ DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
 
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
+DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
 
 static inline const res_t *const *
 escp2_reslist(const stp_vars_t *v)
@@ -2051,10 +2053,6 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
       bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
       top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
     }
-  *left =	left_margin;
-  *right =	width - right_margin;
-  *top =	top_margin;
-  *bottom =	height - bottom_margin;
   if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
       (use_maximum_area ||
        (!cd && stp_get_boolean_parameter(v, "FullBleed"))))
@@ -2064,13 +2062,17 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 	      pt->bottom <= 0)
 	    {
-	      *left -= 80 / (360 / 72);		/* 80 per the Epson manual */
-	      *right += 80 / (360 / 72);	/* 80 per the Epson manual */
-	      *bottom += escp2_nozzles(v) * escp2_nozzle_separation(v) * 72 /
-		escp2_base_separation(v);
+	      left_margin = -5;	/* Allow some overlap if paper isn't */
+	      right_margin = -5; /* positioned correctly */
+	      top_margin = 0;
+	      bottom_margin = 0;
 	    }
 	}
     }
+  *left =	left_margin;
+  *right =	width - right_margin;
+  *top =	top_margin;
+  *bottom =	height - bottom_margin;
 }
 
 /*
@@ -2612,6 +2614,7 @@ setup_misc(stp_vars_t *v)
   pd->ink_group = escp2_inkgroup(v);
   pd->init_sequence = escp2_preinit_sequence(v);
   pd->deinit_sequence = escp2_postinit_remote_sequence(v);
+  pd->borderless_sequence = escp2_vertical_borderless_sequence(v);
   pd->advanced_command_set = escp2_has_advanced_command_set(v);
   pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
   pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
@@ -2884,7 +2887,6 @@ setup_head_parameters(stp_vars_t *v)
 static void
 setup_page(stp_vars_t *v)
 {
-  int n;
   escp2_privdata_t *pd = get_privdata(v);
   const input_slot_t *input_slot = get_input_slot(v);
   int extra_left = 0;
@@ -2896,7 +2898,7 @@ setup_page(stp_vars_t *v)
     hub_size = 16;		/* 15 mm prints to the hole - play it
 				   safe and print 16 mm */
 
-  stp_default_media_size(v, &n, &(pd->page_true_height));
+  stp_default_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
   pd->page_extra_height = escp2_page_extra_height(v);
   if (pd->page_extra_height > 0 &&
       escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
@@ -2917,6 +2919,7 @@ setup_page(stp_vars_t *v)
       int top_center = escp2_cd_y_offset(v) +
 	stp_get_dimension_parameter(v, "CDYAdjustment");
       pd->page_true_height = pd->page_bottom - pd->page_top;
+      pd->page_true_width = pd->page_right - pd->page_left;
       pd->page_extra_height = 0;
       stp_set_left(v, stp_get_left(v) - pd->page_left);
       stp_set_top(v, stp_get_top(v) - pd->page_top);
@@ -2937,6 +2940,7 @@ setup_page(stp_vars_t *v)
 	  pd->page_right = escp2_cd_page_width(v);
 	  pd->page_bottom = escp2_cd_page_height(v);
 	  pd->page_true_height = escp2_cd_page_height(v);
+	  pd->page_true_width = escp2_cd_page_width(v);
 	}
     }
 
@@ -2958,7 +2962,6 @@ setup_page(stp_vars_t *v)
 
 
   pd->page_bottom += extra_top + 1;
-  pd->page_true_height += extra_top + 1;
   pd->page_height = pd->page_bottom - pd->page_top;
   pd->image_top = stp_get_top(v) - pd->page_top + extra_top;
   pd->image_height = stp_get_height(v);

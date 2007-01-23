@@ -241,6 +241,10 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	  if (stp_get_boolean_parameter(v, "FullBleed"))
 	    {
 	      stp_send_command(v, "FP", "bch", 0, 0xffb0);
+	      if (pd->borderless_sequence)
+		stp_zfwrite(pd->borderless_sequence->data,
+			    pd->borderless_sequence->bytes,
+			    1, v);
 #if 0
 	      /* These commands do not appear to do anything on the */
 	      /* 2200.  Need to test on R800. */
@@ -411,21 +415,13 @@ escp2_set_margins(stp_vars_t *v)
 }
 
 static void
-escp2_set_form_factor(stp_vars_t *v)
+escp2_set_paper_dimensions(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->advanced_command_set)
     {
-      int w = pd->page_width * pd->page_management_units / 72;
-      int h = (pd->page_true_height + pd->page_extra_height) *
-	pd->page_management_units / 72;
-
-      if (stp_get_boolean_parameter(v, "FullBleed"))
-	/* Make the page 160/360" wider for full bleed printing. */
-	/* Per the Epson manual, the margin should be expanded by 80/360" */
-	/* so we need to do this on the left and the right */
-	w += 320 * pd->page_management_units / 720;
-
+      int w = pd->page_true_width * pd->page_management_units / 72;
+      int h = pd->page_true_height * pd->page_management_units / 72;
       stp_send_command(v, "\033(S", "bll", w, h);
     }
 }
@@ -599,7 +595,7 @@ stpi_escp2_init_printer(stp_vars_t *v)
   escp2_set_printhead_resolution(v);
   escp2_set_page_height(v);
   escp2_set_margins(v);
-  escp2_set_form_factor(v);
+  escp2_set_paper_dimensions(v);
 }
 
 void

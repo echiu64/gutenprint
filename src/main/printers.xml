@@ -203,8 +203,8 @@
     -->
       <printer name="Epson Stylus Photo 785" driver="escp2-785" manufacturer="Epson" model="36" parameters="standard_params" />
       <printer name="Epson Stylus Photo 790" driver="escp2-790" manufacturer="Epson" model="35" parameters="standard_params" />
-      <printer name="Epson Stylus Photo 810" driver="escp2-810" manufacturer="Epson" model="35" parameters="standard_params" />
-      <printer name="Epson Stylus Photo 820" driver="escp2-820" manufacturer="Epson" model="35" parameters="standard_params" />
+      <printer name="Epson Stylus Photo 810" driver="escp2-810" manufacturer="Epson" model="78" parameters="standard_params" />
+      <printer name="Epson Stylus Photo 820" driver="escp2-820" manufacturer="Epson" model="78" parameters="standard_params" />
       <printer name="Epson Stylus Photo 825" driver="escp2-825" manufacturer="Epson" model="50" parameters="standard_params" />
       <printer name="Epson Stylus Photo 830" driver="escp2-830" manufacturer="Epson" model="50" parameters="standard_params" />
       <printer name="Epson Stylus Photo 830U" driver="escp2-830u" manufacturer="Epson" model="50" parameters="standard_params" />
@@ -279,13 +279,13 @@
       <printer name="Epson Stylus CX5700" driver="escp2-cx5700" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer name="Epson Stylus CX5800" driver="escp2-cx5800" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer name="Epson Stylus CX6300" driver="escp2-cx6300" manufacturer="Epson" model="60" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX6400" driver="escp2-cx6400" manufacturer="Epson" model="60" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="69" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="69" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX6400" driver="escp2-cx6400" manufacturer="Epson" model="79" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer name="Epson Stylus CX7800" driver="escp2-cx7800" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="60" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="60" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="79" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer name="Epson Stylus D68" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer name="Epson Stylus D88" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer name="Epson Stylus DX3800" driver="escp2-dx3800" manufacturer="Epson" model="72" parameters="standard_params" />
@@ -752,6 +752,7 @@
       <printer name="Lexmark 4076" driver="lexmark-4076" manufacturer="Lexmark" model="500" parameters="pcl_inkjet_params" />
       <printer name="Lexmark Optra E" driver="lexmark-optra_e" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Optra E+" driver="lexmark-optra_eplus" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
+      <printer name="Lexmark Optra E220" driver="lexmark-optra_e220" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Valuewriter 300" driver="lexmark-vw_300" manufacturer="Lexmark" model="2" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
