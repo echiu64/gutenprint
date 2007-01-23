@@ -145,7 +145,7 @@ sub print_output_data($$$$$) {
     my ($comptype, $bitsperpixel, $dots, $rows, $dot_scale) = @_;
     my $counter;
     my $fchar;
-    print " ($dots, $rows, $bitsperpixel) ";
+    print " ($dots dots, $rows rows, $bitsperpixel bits) ";
     $dots *= 8;
     $dots /= $dot_scale;
     my $savedots = $dots;
@@ -197,6 +197,10 @@ sub do_special_command() {
     print_prefix_bytes(8);
     increment_curpos(8);
     print_output_data($comptype, 1, $dots, $rows, 8);
+    get_stuff(1);
+    while (substr($stuff, 0, 1) eq "\r") {
+	increment_curpos(1);
+    }
 }
 
 sub do_special1_command() {
@@ -208,7 +212,26 @@ sub do_special1_command() {
     print_prefix_bytes(9);
     increment_curpos(9);
     print_output_data($comptype, $bitsperpixel, $dots, $rows, 1);
+    get_stuff(1);
+    while (substr($stuff, 0, 1) eq "\r") {
+	increment_curpos(1);
+    }
 }
+
+sub get_long($) {
+    my ($string) = @_;
+    return unpack("V", $string);
+}	
+
+sub get_short($) {
+    my ($string) = @_;
+    return unpack("v", $string);
+}	
+
+sub get_byte($) {
+    my ($string) = @_;
+    return unpack("C", $string);
+}	
 
 while (! $atend) {
     my $found;
@@ -246,6 +269,7 @@ while (! $atend) {
 		    printf "%08x  ", $curpos;
 		    print "1b ";
 		    $startoff = 0;
+		    my $print_stuff = 0;
 		    if ($skipchars eq "VARIABLE") {
 			get_stuff((length $key) + 3);
 			$kchar = substr($stuff, (length $key) + 1, 1);
@@ -256,6 +280,7 @@ while (! $atend) {
 			$nhchar = unpack("C", $hchar);
 			$skipchars = ($nhchar * 256) + $nlchar;
 			$startoff = 3;
+			$print_stuff = 1;
 		    }
 		    get_stuff($skipchars + (length $key) + $startoff + 1);
 		    for ($i = 0;
@@ -267,6 +292,72 @@ while (! $atend) {
 			    print " $char ";
 			} else {
 			    printf "%02x ", unpack("C", $char);
+			}
+		    }
+		    if ($print_stuff) {
+			my $xchar = substr($stuff, 2, 1);
+			if ($xchar eq "c") {
+			    my ($top, $bottom);
+			    if ($skipchars == 8) {
+				$top = get_long(substr($stuff, 5, 4));
+				$bottom = get_long(substr($stuff, 9, 4));
+			    } else {
+				$top = get_short(substr($stuff, 5, 2));
+				$bottom = get_short(substr($stuff, 7, 2));
+			    }
+			    print " (page format $top $bottom)";
+			} elsif ($xchar eq "S") {
+			    my ($width, $height);
+			    if ($skipchars == 8) {
+				$width = get_long(substr($stuff, 5, 4));
+				$height = get_long(substr($stuff, 9, 4));
+			    } else {
+				$width = get_short(substr($stuff, 5, 2));
+				$height = get_short(substr($stuff, 7, 2));
+			    }
+			    print " (paper size $width $height)";
+			} elsif ($xchar eq "C") {
+			    my ($length);
+			    if ($skipchars == 4) {
+				$length = get_long(substr($stuff, 5, 4));
+			    } else {
+				$length = get_short(substr($stuff, 5, 2));
+			    }
+			    print " (page length $length)";
+			} elsif ($xchar eq "D") {
+			    my $base = get_short(substr($stuff, 5, 2));
+			    my $x = get_byte(substr($stuff, 7, 1));
+			    my $y = get_byte(substr($stuff, 8, 1));
+			    printf " (raster base %d, %d x %d)", $base, $base / $x, $base / $y;
+			} elsif ($xchar eq "U") {
+			    if ($skipchars == 5) {
+				my $page_mgmt = get_byte(substr($stuff, 5, 1));
+				my $vertical = get_byte(substr($stuff, 6, 1));
+				my $horiz = get_byte(substr($stuff, 7, 1));
+				my $scale = get_short(substr($stuff, 8, 2));
+				printf (" (units base %d mgmt %d vert %d horiz %d)",
+					$scale, $scale / $page_mgmt,
+					$scale / $horiz, $scale / $vertical);
+			    } else {
+				my $page_mgmt = get_byte(substr($stuff, 5, 1));
+				printf " (units base = %d/720)", $page_mgmt;
+			    }
+			} elsif ($xchar eq "v") {
+			    my ($length);
+			    if ($skipchars == 4) {
+				$length = get_long(substr($stuff, 5, 4));
+			    } else {
+				$length = get_short(substr($stuff, 5, 2));
+			    }
+			    print " (skip vertical $length)";
+			} elsif ($xchar eq "\$") {
+			    my ($length);
+			    if ($skipchars == 4) {
+				$length = get_long(substr($stuff, 5, 4));
+			    } else {
+				$length = get_short(substr($stuff, 5, 2));
+			    }
+			    print " (horizontal position $length)";
 			}
 		    }
 		    $found = 1;
