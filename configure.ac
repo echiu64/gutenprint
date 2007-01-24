@@ -982,8 +982,8 @@ echo "================================================================"
 echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE"
 echo
 echo "  Features:"
-echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
 if test "$BUILD_CUPS" != "no" ; then
+    echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
     echo "        Build CUPS 1.2 enhancements:            $BUILD_CUPS_1_2"
     echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS"
     if test "$BUILD_CUPS_PPDS" != "no" ; then
@@ -1004,6 +1004,8 @@ if test "$BUILD_CUPS" != "no" ; then
 	echo "                        Please review the README and release notes carefully!"
 	warnings_emitted=1
     fi
+else
+    echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
 echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
 echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
