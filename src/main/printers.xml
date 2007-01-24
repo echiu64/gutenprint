@@ -818,6 +818,7 @@
       <printer name="Xerox DocuPrint P1202" driver="xerox-dp_p1202" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer name="Xerox DocuPrint P8e" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer name="Xerox Document Centre 400" driver="xerox-dc_400" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer name="Xerox WorkCentre M118" driver="xerox-wc_m118" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
     </family>
     <family name="lexmark">
       <parameters name="standard_params">
