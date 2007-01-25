@@ -246,21 +246,6 @@ escp2_set_remote_sequence(stp_vars_t *v)
 		stp_zfwrite(pd->borderless_sequence->data,
 			    pd->borderless_sequence->bytes,
 			    1, v);
-#if 0
-	      /* These commands do not appear to do anything on the */
-	      /* 2200.  Need to test on R800. */
-	      /* From the R1800 manual -- bottom margin borderless */
-	      stp_send_command(v, "PM", "bcc", 0, 0);
-	      stp_send_command(v, "DP", "bcc", 0, 0);
-	      stp_send_command(v, "SN", "bc", 0);
-	      stp_send_command(v, "MI", "bccc", 1, 0xb, 1);
-	      stp_send_command(v, "US", "bccc", 0, 0, 2);
-	      stp_send_command(v, "US", "bccc", 0, 1, 0);
-	      /* This command means "check paper size - no" */
-	      stp_send_command(v, "US", "bccc", 0, 2, 0);
-	      stp_send_command(v, "DR", "bcccc", 0, 0, 0, 0);
-	      stp_send_command(v, "PP", "bccc", 0, 1, 0xff);
-#endif
 	    }
 	}
       if (pd->input_slot)

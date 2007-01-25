@@ -2062,8 +2062,16 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 	      pt->bottom <= 0)
 	    {
-	      left_margin = -5;	/* Allow some overlap if paper isn't */
-	      right_margin = -5; /* positioned correctly */
+	      if (use_paper_margins)
+		{
+		  left_margin = -4; /* Allow some overlap if paper isn't */
+		  right_margin = -4; /* positioned correctly */
+		}
+	      else
+		{
+		  left_margin = 0;
+		  right_margin = 0;
+		}
 	      top_margin = 0;
 	      bottom_margin = 0;
 	    }
@@ -2605,6 +2613,22 @@ setup_head_offset(stp_vars_t *v)
 }
 
 static void
+setup_basic(stp_vars_t *v)
+{
+  escp2_privdata_t *pd = get_privdata(v);
+  pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
+  pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
+  pd->has_vacuum = escp2_has_cap(v, MODEL_VACUUM, MODEL_VACUUM_YES);
+  pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
+  pd->advanced_command_set = escp2_has_advanced_command_set(v);
+  pd->init_sequence = escp2_preinit_sequence(v);
+  pd->deinit_sequence = escp2_postinit_remote_sequence(v);
+  pd->borderless_sequence = escp2_vertical_borderless_sequence(v);
+  pd->base_separation = escp2_base_separation(v);
+  pd->resolution_scale = escp2_resolution_scale(v);
+}
+
+static void
 setup_misc(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
@@ -2612,18 +2636,6 @@ setup_misc(stp_vars_t *v)
   pd->paper_type = get_media_type(v);
   pd->paper_adjustment = get_media_adjustment(v);
   pd->ink_group = escp2_inkgroup(v);
-  pd->init_sequence = escp2_preinit_sequence(v);
-  pd->deinit_sequence = escp2_postinit_remote_sequence(v);
-  pd->borderless_sequence = escp2_vertical_borderless_sequence(v);
-  pd->advanced_command_set = escp2_has_advanced_command_set(v);
-  pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
-  pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
-  pd->has_vacuum = escp2_has_cap(v, MODEL_VACUUM, MODEL_VACUUM_YES);
-  pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
-  pd->base_separation = escp2_base_separation(v);
-  pd->resolution_scale = escp2_resolution_scale(v);
-  pd->use_extended_commands =
-    escp2_use_extended_commands(v, pd->res->softweave);
 }
 
 static void
@@ -2734,6 +2746,8 @@ setup_resolution(stp_vars_t *v)
   int horizontal = adjusted_horizontal_resolution(res);
 
   pd->res = res;
+  pd->use_extended_commands =
+    escp2_use_extended_commands(v, pd->res->softweave);
   pd->physical_xdpi = escp2_base_res(v, resid);
   if (pd->physical_xdpi > pd->res->hres)
     pd->physical_xdpi = pd->res->hres;
@@ -2958,6 +2972,11 @@ setup_page(stp_vars_t *v)
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
   pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
+  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+      pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO &&
+      (!(input_slot->is_cd) && stp_get_boolean_parameter(v, "FullBleed")))
+    pd->image_left_position +=
+      (80 / 2) * pd->micro_units / 360;	/* Half of the full bleed expansion */
   /*
    * Many printers print extremely slowly if the starting position
    * is not a multiple of 8
@@ -3215,6 +3234,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
     pd->use_aux_channels = 0;
   pd->channels_in_use = count_channels(pd->inkname, pd->use_aux_channels);
 
+  setup_basic(v);
   setup_resolution(v);
   setup_head_parameters(v);
   setup_page(v);
