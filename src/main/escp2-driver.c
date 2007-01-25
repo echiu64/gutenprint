@@ -114,6 +114,7 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Page_height", pd->page_height);
   print_remote_int_param(v, "Page_true_height", pd->page_true_height);
   print_remote_int_param(v, "Page_extra_height", pd->page_extra_height);
+  print_remote_int_param(v, "Paper_extra_bottom", pd->paper_extra_bottom);
   print_remote_int_param(v, "Image_left", pd->image_left);
   print_remote_int_param(v, "Image_top", pd->image_top);
   print_remote_int_param(v, "Image_width", pd->image_width);
@@ -391,7 +392,8 @@ static void
 escp2_set_page_height(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int l = pd->page_management_units * pd->page_true_height / 72;
+  int l = (pd->page_true_height + pd->paper_extra_bottom) *
+    pd->page_management_units / 72;
   if (pd->use_extended_commands)
     stp_send_command(v, "\033(C", "bl", l);
   else
@@ -406,6 +408,8 @@ escp2_set_margins(stp_vars_t *v)
   int top = pd->page_management_units * pd->page_top / 72;
 
   top += pd->initial_vertical_offset;
+  top -= pd->page_extra_height;
+  bot += pd->page_extra_height;
   if (pd->use_extended_commands &&
       (pd->command_set == MODEL_COMMAND_2000 ||
        pd->command_set == MODEL_COMMAND_PRO))
@@ -421,7 +425,8 @@ escp2_set_paper_dimensions(stp_vars_t *v)
   if (pd->advanced_command_set)
     {
       int w = pd->page_true_width * pd->page_management_units / 72;
-      int h = pd->page_true_height * pd->page_management_units / 72;
+      int h = (pd->page_true_height + pd->paper_extra_bottom) *
+	pd->page_management_units / 72;
       stp_send_command(v, "\033(S", "bll", w, h);
     }
 }

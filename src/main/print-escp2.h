@@ -496,7 +496,7 @@ typedef struct escp2_printer
   short		cd_page_width;	/* Width of "page" when printing to CD */
   short		cd_page_height;	/* Height of "page" when printing to CD */
 				/* Extra height for form factor command */
-  short		page_extra_height; /* Extra height (lie to set form factor) */
+  short		paper_extra_bottom; /* Extra space on the bottom of the page */
 /*****************************************************************************/
   /* Parameters for escputil */
   short		alignment_passes;
@@ -608,7 +608,8 @@ typedef struct
   int page_width;		/* Page width (points) */
   int page_height;		/* Page height (points) */
   int page_true_height;		/* Physical page height (points) */
-  int page_extra_height;	/* Extra height for set_form_factor */
+  int page_extra_height;	/* Extra height for set_form_factor (rows) */
+  int paper_extra_bottom;	/* Extra bottom for set_page_size (rows) */
   int page_true_width;		/* Physical page height (points) */
   int cd_x_offset;		/* CD X offset (micro units) */
   int cd_y_offset;		/* CD Y offset (micro units) */

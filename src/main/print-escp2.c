@@ -402,7 +402,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(cd_y_offset),
   PARAMETER_INT(cd_page_width),
   PARAMETER_INT(cd_page_height),
-  PARAMETER_INT(page_extra_height),
+  PARAMETER_INT(paper_extra_bottom),
   PARAMETER_RAW(preinit_sequence),
   PARAMETER_RAW(postinit_remote_sequence),
   PARAMETER_RAW(vertical_borderless_sequence)
@@ -662,7 +662,7 @@ DEF_SIMPLE_ACCESSOR(cd_x_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_y_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_page_width, int)
 DEF_SIMPLE_ACCESSOR(cd_page_height, int)
-DEF_SIMPLE_ACCESSOR(page_extra_height, int)
+DEF_SIMPLE_ACCESSOR(paper_extra_bottom, int)
 DEF_SIMPLE_ACCESSOR(extra_feed, unsigned)
 DEF_SIMPLE_ACCESSOR(pseudo_separation_rows, int)
 DEF_SIMPLE_ACCESSOR(base_separation, int)
@@ -2597,10 +2597,10 @@ setup_head_offset(stp_vars_t *v)
   if (pd->physical_channels > 1)
     for (i = 0; i < pd->channels_in_use; i++)
       {
-	pd->head_offset[i] = pd->head_offset[i] * pd->res->vres /
-	  escp2_base_separation(v);
 	if (pd->head_offset[i] > pd->max_head_offset)
 	  pd->max_head_offset = pd->head_offset[i];
+	pd->head_offset[i] = pd->head_offset[i] * pd->res->vres /
+	  escp2_base_separation(v);
       }
 }
 
@@ -2899,18 +2899,24 @@ setup_page(stp_vars_t *v)
 				   safe and print 16 mm */
 
   stp_default_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
-  pd->page_extra_height = escp2_page_extra_height(v);
-  if (pd->page_extra_height > 0 &&
-      escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
-      (!(input_slot->is_cd) && stp_get_boolean_parameter(v, "FullBleed")))
-    pd->page_extra_height +=
-      escp2_nozzles(v) * escp2_nozzle_separation(v) * 72 /
-      escp2_base_separation(v);
-  internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
-			  &pd->page_bottom, &pd->page_top);
   /* Don't use full bleed mode if the paper itself has a margin */
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
+  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+      (!(input_slot->is_cd) && stp_get_boolean_parameter(v, "FullBleed")))
+    {
+      pd->page_extra_height =
+	escp2_nozzles(v) * escp2_nozzle_separation(v) *
+	pd->page_management_units / escp2_base_separation(v);
+      pd->paper_extra_bottom = 0;
+    }
+  else
+    {
+      pd->page_extra_height = 0;
+      pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
+    }
+  internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
+			  &pd->page_bottom, &pd->page_top);
 
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
@@ -2921,6 +2927,7 @@ setup_page(stp_vars_t *v)
       pd->page_true_height = pd->page_bottom - pd->page_top;
       pd->page_true_width = pd->page_right - pd->page_left;
       pd->page_extra_height = 0;
+      pd->paper_extra_bottom = 0;
       stp_set_left(v, stp_get_left(v) - pd->page_left);
       stp_set_top(v, stp_get_top(v) - pd->page_top);
       pd->page_right -= pd->page_left;
@@ -3133,8 +3140,9 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      pd->bitwidth,
      pd->image_printed_width,
      pd->image_printed_height,
-     pd->image_top * pd->res->vres / 72,
-     (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72,
+     pd->page_extra_height + (pd->image_top * pd->res->vres / 72),
+     ((pd->page_extra_height * 2) +
+      (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72),
      pd->head_offset,
      weave_pattern,
      stpi_escp2_flush_pass,
