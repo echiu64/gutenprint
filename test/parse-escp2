@@ -220,18 +220,28 @@ sub do_special1_command() {
 
 sub get_long($) {
     my ($string) = @_;
-    return unpack("V", $string);
-}	
+    my ($tmp) = unpack("V", $string);
+    if ($tmp >= (1 << 31)) {
+	return -(0xffffffff ^ $tmp) - 1;
+    } else {
+	return $tmp;
+    }
+}
 
 sub get_short($) {
     my ($string) = @_;
-    return unpack("v", $string);
-}	
+    my ($tmp) = unpack("v", $string);
+    if ($tmp >= (1 << 15)) {
+	return -(0xffff ^ $tmp) - 1;
+    } else {
+	return $tmp;
+    }
+}
 
 sub get_byte($) {
     my ($string) = @_;
     return unpack("C", $string);
-}	
+}
 
 while (! $atend) {
     my $found;
