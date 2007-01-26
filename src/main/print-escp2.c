@@ -888,6 +888,21 @@ compute_printed_resid(const res_t *res)
   return compute_internal_resid(res->printed_hres, res->printed_vres);
 }
 
+static int
+max_nozzle_span(const stp_vars_t *v)
+{
+  int nozzle_count = escp2_nozzles(v);
+  int nozzle_separation = escp2_nozzle_separation(v);
+  int black_nozzle_count = escp2_black_nozzles(v);
+  int black_nozzle_separation = escp2_black_nozzle_separation(v);
+  int nozzle_span = nozzle_count * nozzle_separation;
+  int black_nozzle_span = black_nozzle_count * black_nozzle_separation;
+  if (black_nozzle_span > nozzle_span)
+    return black_nozzle_span;
+  else
+    return nozzle_span;
+}
+
 
 static const input_slot_t *
 get_input_slot(const stp_vars_t *v)
@@ -2917,11 +2932,12 @@ setup_page(stp_vars_t *v)
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
   if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
-      (!(input_slot->is_cd) && stp_get_boolean_parameter(v, "FullBleed")))
+      ((!input_slot || !(input_slot->is_cd)) &&
+       stp_get_boolean_parameter(v, "FullBleed")))
     {
       pd->page_extra_height =
-	escp2_nozzles(v) * escp2_nozzle_separation(v) *
-	pd->page_management_units / escp2_base_separation(v);
+	max_nozzle_span(v) * pd->page_management_units /
+	escp2_base_separation(v);
       pd->paper_extra_bottom = 0;
     }
   else
@@ -2974,7 +2990,8 @@ setup_page(stp_vars_t *v)
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
   if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
       pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO &&
-      (!(input_slot->is_cd) && stp_get_boolean_parameter(v, "FullBleed")))
+      ((!input_slot || !(input_slot->is_cd)) &&
+       stp_get_boolean_parameter(v, "FullBleed")))
     pd->image_left_position +=
       (80 / 2) * pd->micro_units / 360;	/* Half of the full bleed expansion */
   /*
