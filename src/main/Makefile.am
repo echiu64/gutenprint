@@ -50,7 +50,14 @@ color_traditional_la_SOURCES = \
 
 color_traditional_la_LDFLAGS = -module -avoid-version
 
-print_canon_la_SOURCES = print-canon.c print-canon.h
+print_canon_la_SOURCES = \
+	print-canon.c \
+	print-canon.h \
+	canon-inks.h \
+	canon-media.h \
+	canon-modes.h \
+	canon-printers.h
+
 print_canon_la_LDFLAGS = -module -avoid-version
 
 print_escp2_la_SOURCES = \

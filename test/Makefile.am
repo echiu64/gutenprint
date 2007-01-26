@@ -55,7 +55,7 @@ testdither_LDADD = $(GUTENPRINT_LIBS)
 xml_curve_SOURCES = xml-curve.c
 xml_curve_LDADD = $(GUTENPRINT_LIBS)
 
-pixma_parse_SOURCES = pixma_parse.c
+pixma_parse_SOURCES = pixma_parse.c pixma_parse.h
 
 ## Rules
 
