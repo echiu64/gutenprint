@@ -387,7 +387,8 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(max_black_resolution),
   PARAMETER_INT(zero_margin_offset),
   PARAMETER_INT(extra_720dpi_separation),
-  PARAMETER_INT(horizontal_position_alignment),
+  PARAMETER_INT(min_horizontal_position_alignment),
+  PARAMETER_INT(base_horizontal_position_alignment),
   PARAMETER_INT(bidirectional_upper_limit),
   PARAMETER_INT(physical_channels),
   PARAMETER_INT(left_margin),
@@ -672,7 +673,8 @@ DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
-DEF_SIMPLE_ACCESSOR(horizontal_position_alignment, unsigned)
+DEF_SIMPLE_ACCESSOR(min_horizontal_position_alignment, unsigned)
+DEF_SIMPLE_ACCESSOR(base_horizontal_position_alignment, unsigned)
 DEF_SIMPLE_ACCESSOR(bidirectional_upper_limit, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
 DEF_SIMPLE_ACCESSOR(alignment_passes, int)
@@ -2922,6 +2924,11 @@ setup_page(stp_vars_t *v)
   int extra_top = 0;
   const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
   int hub_size = 43;		/* 43 mm standard CD hub */
+  int min_horizontal_alignment = escp2_min_horizontal_position_alignment(v);
+  int base_horizontal_alignment =
+    pd->res->hres / escp2_base_horizontal_position_alignment(v);
+  int required_horizontal_alignment =
+    MAX(min_horizontal_alignment, base_horizontal_alignment);
 
   if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
     hub_size = 16;		/* 15 mm prints to the hole - play it
@@ -2932,13 +2939,15 @@ setup_page(stp_vars_t *v)
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
   if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
-      ((!input_slot || !(input_slot->is_cd)) &&
-       stp_get_boolean_parameter(v, "FullBleed")))
+      ((!input_slot || !(input_slot->is_cd))))
     {
       pd->page_extra_height =
 	max_nozzle_span(v) * pd->page_management_units /
 	escp2_base_separation(v);
-      pd->paper_extra_bottom = 0;
+      if (stp_get_boolean_parameter(v, "FullBleed"))
+	pd->paper_extra_bottom = 0;
+      else
+	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
     }
   else
     {
@@ -2998,10 +3007,10 @@ setup_page(stp_vars_t *v)
    * Many printers print extremely slowly if the starting position
    * is not a multiple of 8
    */
-  if (escp2_horizontal_position_alignment(v) > 1)
+  if (required_horizontal_alignment > 1)
     pd->image_left_position =
-      (pd->image_left_position / escp2_horizontal_position_alignment(v)) *
-      escp2_horizontal_position_alignment(v);
+      (pd->image_left_position / required_horizontal_alignment) *
+      required_horizontal_alignment;
 
 
   pd->page_bottom += extra_top + 1;

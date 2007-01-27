@@ -342,6 +342,8 @@ static const res_t *const stpi_escp2_superfine_reslist[] =
   &r_2880x1440sw,
   &r_1440x2880sw,
 
+  &r_5760x1440sw,
+
   &r_2880x2880sw,
 
   &r_5760x2880sw,
@@ -371,6 +373,8 @@ static const res_t *const stpi_escp2_r2400_reslist[] =
   &r_2880x1440sw2400,
   &r_2880x1440sw2400hq,
   &r_2880x1440sw2400hq2,
+
+  &r_5760x1440sw,
 
   NULL
 };

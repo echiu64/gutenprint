@@ -369,7 +369,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     15, 1, 4, 15, 1, 4, 15, 1, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -386,7 +387,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -403,7 +405,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17), INCH(44), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -420,7 +423,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -437,7 +441,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180, 0, 1, 4, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 180, 180,
+    0, 1, 4, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -454,7 +459,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180, 0, 1, 4, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 180, 180,
+    0, 1, 4, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -471,7 +477,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180, 0, 1, 4, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 180, 180,
+    0, 1, 4, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17), INCH(44), INCH(2), INCH(2),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -490,7 +497,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,		/* Is it really 15 pairs??? */
@@ -507,7 +515,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_NO | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(118 / 10), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -524,7 +533,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -543,7 +553,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     21, 1, 4, 21, 1, 4, 21, 1, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,
@@ -560,7 +571,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,
@@ -577,7 +589,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -594,7 +607,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     96, 1, 2, 192, 1, 1, 192, 1, 1, 4,
-    360, 14400, -1, 1440, 720, 180, 180, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 180, 180,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -611,7 +625,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -628,7 +643,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -645,7 +661,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -662,7 +679,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -679,7 +697,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 8, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,
@@ -696,7 +715,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -713,7 +733,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -730,7 +751,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
      MODEL_PACKET_MODE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
-    360, 14400, 360, 720, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0, 1, 720 * 720,
+    360, 14400, 360, 720, 720, 90, 90,
+    0, 1, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -747,7 +769,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 97, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 97, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -764,7 +787,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 97, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 97, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -781,7 +805,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180, 0, 1, 4, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 180, 180,
+    0, 1, 4, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17), INCH(44), INCH(2), INCH(2),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -798,7 +823,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     32, 1, 4, 64, 1, 2, 64, 1, 2, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -815,7 +841,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     2, 15, 0, 0,
@@ -832,7 +859,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 6,
-    360, 14400, -1, 1440, 720, 180, 180, 0, 1, 0, 0, 0, 0, 4, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 180, 180,
+    0, 1, 0, 0, 0, 0, 4, 1, 28800, 720 * 720,
     INCH(13), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -849,7 +877,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -866,7 +895,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -883,7 +913,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -900,7 +931,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -917,7 +949,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -934,7 +967,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -951,7 +985,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     96, 1, 2, 192, 1, 1, 192, 1, 1, 4,
-    360, 14400, -1, 2880, 720, 180, 180, 38, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 180, 180,
+    38, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -968,7 +1003,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
@@ -985,7 +1021,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
@@ -1002,7 +1039,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
@@ -1019,7 +1057,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
      MODEL_PACKET_MODE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
-    360, 14400, 360, 1440, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0, 1, 720 * 720,
+    360, 14400, 360, 1440, 720, 90, 90,
+    0, 1, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1036,7 +1075,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     16, 1, 4, 16, 1, 4, 16, 1, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -1053,7 +1093,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -1070,7 +1111,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -1087,7 +1129,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
      MODEL_PACKET_MODE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1104,7 +1147,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
      MODEL_PACKET_MODE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1121,7 +1165,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     60, 60, 2, 180, 180, 2, 180, 180, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
@@ -1138,7 +1183,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_NO),
     16, 1, 4, 16, 1, 4, 16, 1, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 720, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(44), INCH(2), INCH(2),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
@@ -1155,7 +1201,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     96, 96, 2, 96, 96, 2, 24, 24, 1, 6,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 24,
     4, 15, 0, 0,
@@ -1172,7 +1219,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     96, 96, 2, 96, 96, 2, 192, 192, 1, 7,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
@@ -1189,7 +1237,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 7,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(24), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1206,7 +1255,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 7,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(44), INCH(1200), INCH(7), INCH(7),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1223,7 +1273,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 1440, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
@@ -1240,7 +1291,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 1440, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
@@ -1257,7 +1309,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
-    360, 14400, -1, 2880, 1440, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1274,7 +1327,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     96, 96, 2, 96, 96, 2, 24, 24, 1, 6,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 24,
     4, 15, 0, 0,
@@ -1291,7 +1345,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(13), INCH(44), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1308,7 +1363,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
@@ -1325,7 +1381,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
-    360, 14400, -1, 1440, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 1440, 720, 90, 90,
+    0, 1, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1342,7 +1399,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 180, 2, 360, 360, 1, 360, 360, 1, 7,
-    360, 14400, -1, 2880, 2880, 720, 360, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 2880, 720, 360,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1359,7 +1417,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 90, 2, 90, 90, 2, 90, 90, 2, 6,
-    360, 14400, -1, 2880, 2880, 720, 360, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 2880, 720, 360,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1376,7 +1435,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
      MODEL_PACKET_MODE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 0, -99, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
@@ -1393,7 +1453,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1410,7 +1471,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 0, -180, 0, 0, 1, 1440 * 720,
+    360, 14400, -1, 2880, 1440, 360, 120,
+    0, 1, 0, 0, -180, 0, 0, 1, 28800, 1440 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1427,7 +1489,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 399, 394, 595, 842, 24,
     3, 15, 0, 0,
@@ -1444,7 +1507,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 120,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
@@ -1461,12 +1525,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 28800, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8, 2880 * 1440,
+    360, 28800, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 180, 5760 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
-    "r2400", "cmykrb",
+    "superfine", "cmykrb",
     variable_bits, c1_5_base_res, "cd_roll_feed",
     "p1_5", &new_init_sequence, &je_deinit_sequence,
     &spr800_borderless_sequence, NULL, "r800"
@@ -1478,7 +1543,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
-    360, 14400, -1, 1440, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 8, 1440 * 1440,
+    360, 14400, -1, 1440, 1440, 360, 120,
+    0, 1, 0, 190, 0, 0, 0, 1, 180, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
@@ -1495,7 +1561,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 0, -180, 0, 0, 1, 1440 * 720,
+    360, 14400, -1, 2880, 1440, 360, 120,
+    0, 1, 0, 0, -180, 0, 0, 1, 28800, 1440 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1512,12 +1579,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 28800, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8, 2880 * 1440,
+    360, 28800, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 180, 5760 * 2880,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 24, 9, 9, 0, 24, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
-    "r2400", "cmykrb",
+    "superfine", "cmykrb",
     variable_bits, c1_5_base_res, "r1800",
     "p1_5", &new_init_sequence, &je_deinit_sequence,
     &spr800_borderless_sequence, NULL, "r800"
@@ -1529,12 +1597,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 14400, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8, 2880 * 1440,
+    360, 14400, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 180, 5760 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
-    "r2400", "photo_gen3",
+    "superfine", "photo_gen3",
     variable_bits, c1_5_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
     &spr800_borderless_sequence, NULL, "r800"
@@ -1546,7 +1615,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
-    360, 14400, -1, 2880, 2880, 360, 180, 0, 1, 0, 0, -240, 0, 0, 1, 1440 * 720,
+    360, 14400, -1, 2880, 2880, 360, 180,
+    0, 1, 0, 0, -240, 0, 0, 1, 28800, 1440 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1563,7 +1633,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 6,
-    360, 28800, -1, 5760, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 28800, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 0,
     4, 15, 0, 0,
@@ -1580,12 +1651,13 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
-    360, 14400, -1, 1440, 2880, 360, 180, 0, 1, 0, 190, 0, 0, 0, 8, 1440 * 1440,
+    360, 14400, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 190, 0, 0, 0, 1, 180, 1440 * 1440,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     p3_5pl_dotsizes, p3_5pl_densities, "variable_r2400",
-    "r2400", "f360_ultrachrome_k3",
+    "superfine", "f360_ultrachrome_k3",
     variable_bits, c1_5_base_res, "r2400",
     "standard", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "r2400"
@@ -1597,7 +1669,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 0, -180, 0, 0, 1, 1440 * 720,
+    360, 14400, -1, 2880, 1440, 360, 120,
+    0, 1, 0, 0, -180, 0, 0, 1, 28800, 1440 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
@@ -1614,7 +1687,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
-    360, 28800, -1, 5760, 1440, 1440, 720, 0, 1, 0, 0, 0, 0, 0, 1, 1440 * 1440,
+    360, 28800, -1, 5760, 1440, 1440, 720,
+    0, 1, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(4), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
@@ -1631,7 +1705,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 90, 3, 90, 90, 3, 90, 90, 3, 4,
-    360, 14400, -1, 5760, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 5760, 1440, 360, 120,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
@@ -1648,7 +1723,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 90, 3, 90, 90, 3, 90, 90, 3, 4,
-    360, 14400, -1, 5760, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 5760, 1440, 360, 120,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
@@ -1665,7 +1741,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 90, 3, 90, 90, 3, 90, 90, 3, 6,
-    360, 14400, -1, 5760, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 5760, 1440, 360, 120,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
@@ -1682,7 +1759,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120, 0, 1, 0, 190, 0, 0, 0, 1, 1440 * 1440,
+    360, 14400, -1, 2880, 1440, 360, 120,
+    0, 1, 0, 190, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
@@ -1699,7 +1777,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90, 0, 1, 0, 55, 0, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 720, 90, 90,
+    0, 1, 0, 55, 0, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
@@ -1716,7 +1795,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180, 0, 1, 0, 0, -240, 0, 0, 1, 720 * 720,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1733,7 +1813,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
-    360, 14400, -1, 2880, 2880, 360, 180, 0, 1, 0, 0, -240, 0, 0, 1, 1440 * 720,
+    360, 14400, -1, 2880, 2880, 360, 180,
+    0, 1, 0, 0, -240, 0, 0, 1, 28800, 1440 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
