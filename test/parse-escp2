@@ -10,6 +10,10 @@ use vars qw($atend
 	    $opt_v
 	    $curpos
 	    $esc
+	    $page_mgmt_unit
+	    $horizontal_unit
+	    $vertical_unit
+	    $vertical_position
 	    %seqtable);
 
 $atend = 0;
@@ -21,6 +25,7 @@ $atend = 0;
 	      "\\", 2,
 	      "\$", 2,
 	      "r", 1,
+	      "\031", 1,
 	      ".", "SPECIAL",
 	      "i", "SPECIAL1",
 	      "\000", 2,
@@ -30,6 +35,12 @@ $atend = 0;
 $esc = "\033";
 
 $curpos = 0;
+
+$page_mgmt_unit = 360;
+$horizontal_unit = 180;
+$vertical_unit = 360;
+
+$vertical_position = 0;
 
 sub get_stuff($) {
     my ($where) = @_;
@@ -315,7 +326,11 @@ while (! $atend) {
 				$top = get_short(substr($stuff, 5, 2));
 				$bottom = get_short(substr($stuff, 7, 2));
 			    }
-			    print " (page format $top $bottom)";
+			    printf (" (page format %d %d %.2f %.2f)",
+				    $top, $bottom, $top / $page_mgmt_unit,
+				    $bottom / $page_mgmt_unit);
+			    $vertical_position =
+				$top * $vertical_unit / $page_mgmt_unit;
 			} elsif ($xchar eq "S") {
 			    my ($width, $height);
 			    if ($skipchars == 8) {
@@ -325,7 +340,9 @@ while (! $atend) {
 				$width = get_short(substr($stuff, 5, 2));
 				$height = get_short(substr($stuff, 7, 2));
 			    }
-			    print " (paper size $width $height)";
+			    printf (" (paper size %d %d %.2f %.2f)",
+				    $width, $height, $width / $page_mgmt_unit,
+				    $height / $page_mgmt_unit);
 			} elsif ($xchar eq "C") {
 			    my ($length);
 			    if ($skipchars == 4) {
@@ -333,7 +350,8 @@ while (! $atend) {
 			    } else {
 				$length = get_short(substr($stuff, 5, 2));
 			    }
-			    print " (page length $length)";
+			    printf (" (page length %d %.2f)",
+				    $length, $length / $page_mgmt_unit);
 			} elsif ($xchar eq "D") {
 			    my $base = get_short(substr($stuff, 5, 2));
 			    my $x = get_byte(substr($stuff, 7, 1));
@@ -345,12 +363,18 @@ while (! $atend) {
 				my $vertical = get_byte(substr($stuff, 6, 1));
 				my $horiz = get_byte(substr($stuff, 7, 1));
 				my $scale = get_short(substr($stuff, 8, 2));
-				printf (" (units base %d mgmt %d vert %d horiz %d)",
-					$scale, $scale / $page_mgmt,
-					$scale / $horiz, $scale / $vertical);
+				$page_mgmt_unit = $scale / $page_mgmt;
+				$horizontal_unit = $scale / $horiz;
+				$vertical_unit = $scale / $vertical;
+				printf (" (units base %d  mgmt %d  vert %d  horiz %d)",
+					$scale, $page_mgmt_unit,
+					$vertical_unit, $horizontal_unit);
 			    } else {
 				my $page_mgmt = get_byte(substr($stuff, 5, 1));
 				printf " (units base = %d/720)", $page_mgmt;
+				$page_mgmt_unit = $page_mgmt;
+				$horizontal_unit = $page_mgmt;
+				$vertical_unit = $page_mgmt;
 			    }
 			} elsif ($xchar eq "v") {
 			    my ($length);
@@ -359,7 +383,10 @@ while (! $atend) {
 			    } else {
 				$length = get_short(substr($stuff, 5, 2));
 			    }
-			    print " (skip vertical $length)";
+			    $vertical_position += $length;
+			    printf (" (skip vertical %d at %d %.4f)",
+				    $length, $vertical_position,
+				    $vertical_position / $vertical_unit);
 			} elsif ($xchar eq "\$") {
 			    my ($length);
 			    if ($skipchars == 4) {
@@ -367,7 +394,8 @@ while (! $atend) {
 			    } else {
 				$length = get_short(substr($stuff, 5, 2));
 			    }
-			    print " (horizontal position $length)";
+			    printf (" (horizontal position %d %.4f)",
+				    $length, $length / $horizontal_unit);
 			}
 		    }
 		    $found = 1;
