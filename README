@@ -520,7 +520,8 @@ D) THE GIMP
     (2.0 and above), providing the ability to print images.  Please
     read the release notes in addition to this README, as there have
     been some changes in procedure since Gimp-Print 4.2 if you are
-    using certain versions of the GIMP.
+    using certain versions of the GIMP.  Gutenprint 5.1 no longer
+    supports the GIMP 1.2.
 
     The enhanced Print plugin for the GIMP replaces the Gimp-Print
     4.2-based plugin provided with the GIMP 2.0 and 2.2.  As of the
@@ -553,10 +554,6 @@ D) THE GIMP
     The Gutenprint 5.0-based plugin can read settings from previous
     versions of Gimp-Print, but the configuration file format in
     Gutenprint 5.0 cannot be read by older versions of Gimp-Print.
-
-    The GIMP 2.x plugin may eventually be migrated to the GIMP project
-    for a future GIMP release and be removed from the Gutenprint
-    distribution.
 
     NOTE TO PACKAGERS:
 
