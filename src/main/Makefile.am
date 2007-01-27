@@ -39,7 +39,7 @@ pkgmodule_LTLIBRARIES = \
 	print-lexmark.la \
 	print-pcl.la \
 	print-ps.la \
-	print-olympus.la \
+	print-dyesub.la \
 	print-raw.la
 endif
 
@@ -80,8 +80,8 @@ print_pcl_la_LDFLAGS = -module -avoid-version
 print_ps_la_SOURCES = print-ps.c ppd.c page.c mark.c ppd.h
 print_ps_la_LDFLAGS = -module -avoid-version
 
-print_olympus_la_SOURCES = print-olympus.c
-print_olympus_la_LDFLAGS = -module -avoid-version
+print_dyesub_la_SOURCES = print-olympus.c
+print_dyesub_la_LDFLAGS = -module -avoid-version
 
 print_raw_la_SOURCES = print-raw.c
 print_raw_la_LDFLAGS = -module -avoid-version
@@ -95,7 +95,7 @@ module_SOURCES =				\
 	$(print_lexmark_la_SOURCES)		\
 	$(print_pcl_la_SOURCES)			\
 	$(print_ps_la_SOURCES)			\
-	$(print_olympus_la_SOURCES)		\
+	$(print_dyesub_la_SOURCES)		\
 	$(print_raw_la_SOURCES)
 
 if !BUILD_MODULES
