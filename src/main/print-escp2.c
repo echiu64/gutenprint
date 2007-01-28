@@ -2081,16 +2081,21 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	    {
 	      if (use_paper_margins)
 		{
-		  left_margin = -4; /* Allow some overlap if paper isn't */
-		  right_margin = -4; /* positioned correctly */
+		  unsigned width_limit = escp2_max_paper_width(v);
+		  left_margin = -7; /* Allow some overlap if paper isn't */
+		  right_margin = -7; /* positioned correctly */
+		  top_margin = -7;
+		  bottom_margin = -7;
+		  if (width - right_margin - 3 > width_limit)
+		    right_margin = width - width_limit - 3;
 		}
 	      else
 		{
 		  left_margin = 0;
 		  right_margin = 0;
+		  top_margin = 0;
+		  bottom_margin = 0;
 		}
-	      top_margin = 0;
-	      bottom_margin = 0;
 	    }
 	}
     }
@@ -3005,7 +3010,7 @@ setup_page(stp_vars_t *v)
       (80 / 2) * pd->micro_units / 360;	/* Half of the full bleed expansion */
   /*
    * Many printers print extremely slowly if the starting position
-   * is not a multiple of 8
+   * is not aligned to 1/180"
    */
   if (required_horizontal_alignment > 1)
     pd->image_left_position =
