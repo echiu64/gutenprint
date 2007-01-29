@@ -453,6 +453,7 @@ typedef struct escp2_printer
 
   short         zero_margin_offset;   /* Offset to use to achieve */
 				      /* zero-margin printing */
+  short		micro_left_margin; /* Precise left margin (base separation) */
   short		initial_vertical_offset;
   short		black_initial_vertical_offset;
   short		extra_720dpi_separation;
@@ -555,6 +556,7 @@ typedef struct
   int micro_units;		/* Micro-units for horizontal positioning */
   int unit_scale;		/* Scale factor for units */
   int send_zero_pass_advance;	/* Send explicit command for zero advance */
+  int zero_margin_offset;	/* Zero margin offset */
 
   /* Ink parameters */
   int bitwidth;			/* Number of bits per ink drop */

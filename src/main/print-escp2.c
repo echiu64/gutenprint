@@ -386,6 +386,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(black_initial_vertical_offset),
   PARAMETER_INT(max_black_resolution),
   PARAMETER_INT(zero_margin_offset),
+  PARAMETER_INT(micro_left_margin),
   PARAMETER_INT(extra_720dpi_separation),
   PARAMETER_INT(min_horizontal_position_alignment),
   PARAMETER_INT(base_horizontal_position_alignment),
@@ -672,6 +673,7 @@ DEF_SIMPLE_ACCESSOR(initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
+DEF_SIMPLE_ACCESSOR(micro_left_margin, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
 DEF_SIMPLE_ACCESSOR(min_horizontal_position_alignment, unsigned)
 DEF_SIMPLE_ACCESSOR(base_horizontal_position_alignment, unsigned)
@@ -2082,8 +2084,12 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	      if (use_paper_margins)
 		{
 		  unsigned width_limit = escp2_max_paper_width(v);
-		  left_margin = -7; /* Allow some overlap if paper isn't */
-		  right_margin = -7; /* positioned correctly */
+		  int offset = escp2_zero_margin_offset(v);
+		  int margin = escp2_micro_left_margin(v);
+		  int sep = escp2_base_separation(v);
+		  int delta = -((offset - margin) * 72 / sep);
+		  left_margin = delta; /* Allow some overlap if paper isn't */
+		  right_margin = delta; /* positioned correctly */
 		  top_margin = -7;
 		  bottom_margin = -7;
 		  if (width - right_margin - 3 > width_limit)
@@ -3002,12 +3008,17 @@ setup_page(stp_vars_t *v)
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
   pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
+  pd->zero_margin_offset = escp2_zero_margin_offset(v);
   if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
       pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO &&
       ((!input_slot || !(input_slot->is_cd)) &&
        stp_get_boolean_parameter(v, "FullBleed")))
-    pd->image_left_position +=
-      (80 / 2) * pd->micro_units / 360;	/* Half of the full bleed expansion */
+    {
+      int margin = escp2_micro_left_margin(v);
+      int sep = escp2_base_separation(v);
+      pd->image_left_position +=
+	(pd->zero_margin_offset - margin) * pd->micro_units / sep;
+    }
   /*
    * Many printers print extremely slowly if the starting position
    * is not aligned to 1/180"
