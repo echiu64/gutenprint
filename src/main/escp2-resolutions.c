@@ -280,14 +280,12 @@ static const res_t *const stpi_escp2_2880_1440dpi_reslist[] =
   &r_720sw,
 
   &r_1440x720sw,
-  &r_720x1440sw,
 
   &r_2880x720sw,
 
   &r_1440x1440sw,
 
   &r_2880x1440sw,
-  &r_1440x2880sw,
 
   &r_2880x2880sw,
 
@@ -335,12 +333,10 @@ static const res_t *const stpi_escp2_superfine_reslist[] =
   &r_720sw,
 
   &r_1440x720sw,
-  &r_720x1440sw,
 
   &r_1440x1440ov,
 
   &r_2880x1440sw,
-  &r_1440x2880sw,
 
   &r_5760x1440sw,
 
@@ -394,7 +390,6 @@ static const res_t *const stpi_escp2_cx3650_reslist[] =
   &r_720sw,
 
   &r_1440x720sw,
-  &r_720x1440sw,
 
   &r_1440x1440sw3650,
   &r_1440x1440sw3650hq,
