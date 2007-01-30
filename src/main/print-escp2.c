@@ -59,14 +59,14 @@ typedef struct
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "command_mode",		0, 4 },
-  { "horizontal_zero_margin",	4, 1 },
-  { "variable_mode",		5, 1 },
-  { "graymode",		 	6, 1 },
-  { "vacuum",			7, 1 },
-  { "fast_360",			8, 1 },
-  { "send_zero_advance",        9, 1 },
-  { "supports_ink_change",     10, 1 },
-  { "packet_mode",             11, 1 },
+  { "zero_margin",		4, 2 },
+  { "variable_mode",		6, 1 },
+  { "graymode",		 	7, 1 },
+  { "vacuum",			8, 1 },
+  { "fast_360",			9, 1 },
+  { "send_zero_advance",       10, 1 },
+  { "supports_ink_change",     11, 1 },
+  { "packet_mode",             12, 1 },
 };
 
 typedef struct
@@ -853,6 +853,13 @@ escp2_paperlist(const stp_vars_t *v)
     return stpi_escp2_get_paperlist_named(inklist->papers);
   else
     return NULL;
+}
+
+static int
+supports_borderless(const stp_vars_t *v)
+{
+  return (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) ||
+	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL));
 }
 
 static int
@@ -1815,7 +1822,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       const input_slot_t *slot = get_input_slot(v);
       if (slot && slot->is_cd)
 	description->is_active = 0;
-      else if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES))
+      else if (supports_borderless(v))
 	description->deflt.boolean = 0;
       else
 	description->is_active = 0;
@@ -2072,7 +2079,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
       bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
       top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
     }
-  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+  if (supports_borderless(v) &&
       (use_maximum_area ||
        (!cd && stp_get_boolean_parameter(v, "FullBleed"))))
     {
@@ -2081,7 +2088,8 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 	      pt->bottom <= 0)
 	    {
-	      if (use_paper_margins)
+	      if (use_paper_margins &&
+		  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL))
 		{
 		  unsigned width_limit = escp2_max_paper_width(v);
 		  int offset = escp2_zero_margin_offset(v);
@@ -2949,7 +2957,7 @@ setup_page(stp_vars_t *v)
   /* Don't use full bleed mode if the paper itself has a margin */
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
-  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+  if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) &&
       ((!input_slot || !(input_slot->is_cd))))
     {
       pd->page_extra_height =
@@ -2959,6 +2967,12 @@ setup_page(stp_vars_t *v)
 	pd->paper_extra_bottom = 0;
       else
 	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
+    }
+  else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) &&
+	   ((!input_slot || !(input_slot->is_cd))))
+    {
+      pd->page_extra_height = 0;
+      pd->paper_extra_bottom = 0;
     }
   else
     {
@@ -3009,7 +3023,7 @@ setup_page(stp_vars_t *v)
   pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
   pd->zero_margin_offset = escp2_zero_margin_offset(v);
-  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+  if (supports_borderless(v) &&
       pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO &&
       ((!input_slot || !(input_slot->is_cd)) &&
        stp_get_boolean_parameter(v, "FullBleed")))

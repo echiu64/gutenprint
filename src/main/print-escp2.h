@@ -367,42 +367,43 @@ typedef struct
 #define MODEL_COMMAND_2000	0x2ul /* The 2000 series printers */
 #define MODEL_COMMAND_PRO	0x3ul /* Stylus Pro printers */
 
-#define MODEL_XZEROMARGIN_MASK	0x10ul /* Does this printer support */
-#define MODEL_XZEROMARGIN_NO	0x00ul /* zero margin mode? */
-#define MODEL_XZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
+#define MODEL_ZEROMARGIN_MASK	0x30ul /* Does this printer support */
+#define MODEL_ZEROMARGIN_NO	0x00ul /* zero margin mode? */
+#define MODEL_ZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
+#define MODEL_ZEROMARGIN_FULL	0x20ul /* (print to edge of the paper) */
 
-#define MODEL_VARIABLE_DOT_MASK	0x20ul /* Does this printer support var */
+#define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
 #define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
-#define MODEL_VARIABLE_YES	0x20ul /* printers support multiple modes */
+#define MODEL_VARIABLE_YES	0x40ul /* printers support multiple modes */
 
-#define MODEL_GRAYMODE_MASK	0x40ul /* Does this printer support special */
+#define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
 #define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
-#define MODEL_GRAYMODE_YES	0x40ul
+#define MODEL_GRAYMODE_YES	0x80ul
 
-#define MODEL_VACUUM_MASK	0x80ul
-#define MODEL_VACUUM_NO		0x00ul
-#define MODEL_VACUUM_YES	0x80ul
+#define MODEL_VACUUM_MASK	0x100ul
+#define MODEL_VACUUM_NO		0x000ul
+#define MODEL_VACUUM_YES	0x100ul
 
-#define MODEL_FAST_360_MASK	0x100ul
+#define MODEL_FAST_360_MASK	0x200ul
 #define MODEL_FAST_360_NO	0x000ul
-#define MODEL_FAST_360_YES	0x100ul
+#define MODEL_FAST_360_YES	0x200ul
 
-#define MODEL_SEND_ZERO_ADVANCE_MASK	0x200ul
+#define MODEL_SEND_ZERO_ADVANCE_MASK	0x400ul
 #define MODEL_SEND_ZERO_ADVANCE_NO	0x000ul
-#define MODEL_SEND_ZERO_ADVANCE_YES	0x200ul
+#define MODEL_SEND_ZERO_ADVANCE_YES	0x400ul
 
-#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x400ul
+#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x800ul
 #define MODEL_SUPPORTS_INK_CHANGE_NO	0x000ul
-#define MODEL_SUPPORTS_INK_CHANGE_YES	0x400ul
+#define MODEL_SUPPORTS_INK_CHANGE_YES	0x800ul
 
-#define MODEL_PACKET_MODE_MASK	0x800ul
-#define MODEL_PACKET_MODE_NO	0x000ul
-#define MODEL_PACKET_MODE_YES	0x800ul
+#define MODEL_PACKET_MODE_MASK	0x1000ul
+#define MODEL_PACKET_MODE_NO	0x0000ul
+#define MODEL_PACKET_MODE_YES	0x1000ul
 
 typedef enum
 {
   MODEL_COMMAND,
-  MODEL_XZEROMARGIN,
+  MODEL_ZEROMARGIN,
   MODEL_VARIABLE_DOT,
   MODEL_GRAYMODE,
   MODEL_VACUUM,
