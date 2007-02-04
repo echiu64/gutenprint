@@ -386,8 +386,8 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(black_initial_vertical_offset),
   PARAMETER_INT(max_black_resolution),
   PARAMETER_INT(zero_margin_offset),
-  PARAMETER_INT(micro_left_margin),
   PARAMETER_INT(extra_720dpi_separation),
+  PARAMETER_INT(micro_left_margin),
   PARAMETER_INT(min_horizontal_position_alignment),
   PARAMETER_INT(base_horizontal_position_alignment),
   PARAMETER_INT(bidirectional_upper_limit),
@@ -673,8 +673,8 @@ DEF_SIMPLE_ACCESSOR(initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
-DEF_SIMPLE_ACCESSOR(micro_left_margin, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
+DEF_SIMPLE_ACCESSOR(micro_left_margin, int)
 DEF_SIMPLE_ACCESSOR(min_horizontal_position_alignment, unsigned)
 DEF_SIMPLE_ACCESSOR(base_horizontal_position_alignment, unsigned)
 DEF_SIMPLE_ACCESSOR(bidirectional_upper_limit, int)
@@ -691,6 +691,7 @@ DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
 
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
+
 DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
 
 static inline const res_t *const *
@@ -913,7 +914,6 @@ max_nozzle_span(const stp_vars_t *v)
   else
     return nozzle_span;
 }
-
 
 static const input_slot_t *
 get_input_slot(const stp_vars_t *v)
@@ -2088,8 +2088,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 	      pt->bottom <= 0)
 	    {
-	      if (use_paper_margins &&
-		  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL))
+	      if (use_paper_margins)
 		{
 		  unsigned width_limit = escp2_max_paper_width(v);
 		  int offset = escp2_zero_margin_offset(v);
@@ -2098,10 +2097,10 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 		  int delta = -((offset - margin) * 72 / sep);
 		  left_margin = delta; /* Allow some overlap if paper isn't */
 		  right_margin = delta; /* positioned correctly */
-		  top_margin = -7;
-		  bottom_margin = -7;
 		  if (width - right_margin - 3 > width_limit)
 		    right_margin = width - width_limit - 3;
+		  top_margin = -7;
+		  bottom_margin = -7;
 		}
 	      else
 		{
@@ -2641,10 +2640,10 @@ setup_head_offset(stp_vars_t *v)
   if (pd->physical_channels > 1)
     for (i = 0; i < pd->channels_in_use; i++)
       {
-	if (pd->head_offset[i] > pd->max_head_offset)
-	  pd->max_head_offset = pd->head_offset[i];
 	pd->head_offset[i] = pd->head_offset[i] * pd->res->vres /
 	  escp2_base_separation(v);
+	if (pd->head_offset[i] > pd->max_head_offset)
+	  pd->max_head_offset = pd->head_offset[i];
       }
 }
 
@@ -2652,11 +2651,11 @@ static void
 setup_basic(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
+  pd->advanced_command_set = escp2_has_advanced_command_set(v);
   pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
   pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
   pd->has_vacuum = escp2_has_cap(v, MODEL_VACUUM, MODEL_VACUUM_YES);
   pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
-  pd->advanced_command_set = escp2_has_advanced_command_set(v);
   pd->init_sequence = escp2_preinit_sequence(v);
   pd->deinit_sequence = escp2_postinit_remote_sequence(v);
   pd->borderless_sequence = escp2_vertical_borderless_sequence(v);
@@ -2971,8 +2970,13 @@ setup_page(stp_vars_t *v)
   else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) &&
 	   ((!input_slot || !(input_slot->is_cd))))
     {
-      pd->page_extra_height = 0;
-      pd->paper_extra_bottom = 0;
+      pd->page_extra_height =
+	escp2_zero_margin_offset(v) * pd->page_management_units /
+	escp2_base_separation(v);
+      if (stp_get_boolean_parameter(v, "FullBleed"))
+	pd->paper_extra_bottom = 0;
+      else
+	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
     }
   else
     {
@@ -2990,8 +2994,8 @@ setup_page(stp_vars_t *v)
 	stp_get_dimension_parameter(v, "CDYAdjustment");
       pd->page_true_height = pd->page_bottom - pd->page_top;
       pd->page_true_width = pd->page_right - pd->page_left;
-      pd->page_extra_height = 0;
       pd->paper_extra_bottom = 0;
+      pd->page_extra_height = 0;
       stp_set_left(v, stp_get_left(v) - pd->page_left);
       stp_set_top(v, stp_get_top(v) - pd->page_top);
       pd->page_right -= pd->page_left;
@@ -3216,7 +3220,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      pd->image_printed_width,
      pd->image_printed_height,
      pd->page_extra_height + (pd->image_top * pd->res->vres / 72),
-     ((pd->page_extra_height /* * 2 */) +
+     (pd->page_extra_height +
       (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72),
      pd->head_offset,
      weave_pattern,

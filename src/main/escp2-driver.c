@@ -395,7 +395,7 @@ escp2_set_margins(stp_vars_t *v)
 
   top += pd->initial_vertical_offset;
   top -= pd->page_extra_height;
-/*  bot += pd->page_extra_height; */
+  bot += pd->page_extra_height;
   if (pd->use_extended_commands &&
       (pd->command_set == MODEL_COMMAND_2000 ||
        pd->command_set == MODEL_COMMAND_PRO))
