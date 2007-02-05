@@ -200,6 +200,18 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
   },
   {
+    "CDOuterDiameter", N_("CD Size (Custom)"), N_("Basic Printer Setup"),
+    N_("Variable adjustment for the outer diameter of CD"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
+    "CDInnerDiameter", N_("CD Hub Size (Custom)"), N_("Basic Printer Setup"),
+    N_("Variable adjustment to the inner hub of the CD"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
     "CDXAdjustment", N_("CD Horizontal Fine Adjustment"), N_("Advanced Printer Setup"),
     N_("Fine adjustment to horizontal position for CD printing"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
@@ -1605,6 +1617,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	    (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
 	  stp_string_list_add_string
 	    (description->bounds.str, "CD3Inch", _("CD - 3 inch"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "CDCustom", _("CD - Custom"));
 	}
       else
 	{
@@ -1619,11 +1633,14 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
-  else if (strcmp(name, "CDInnerRadius") == 0)
+  else if (strcmp(name, "CDInnerRadius") == 0 )
     {
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.str = stp_string_list_create();
-      if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
+      if (printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd) &&
+	  stp_get_string_parameter(v, "PageSize") &&
+	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0)
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -1635,6 +1652,34 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "CDInnerDiameter") == 0 )
+    {
+      const input_slot_t *slot = get_input_slot(v);
+      description->bounds.dimension.lower = 16 * 10 * 72 / 254;
+      description->bounds.dimension.upper = 43 * 10 * 72 / 254;
+      description->deflt.dimension = 22 * 10 * 72 / 254;
+      if (printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd) &&
+	  stp_get_string_parameter(v, "PageSize") &&
+	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "CDOuterDiameter") == 0 )
+    {
+      const input_slot_t *slot = get_input_slot(v);
+      description->bounds.dimension.lower = 80 * 10 * 72 / 254;
+      description->bounds.dimension.upper = 120 * 10 * 72 / 254;
+      description->deflt.dimension = 119 * 10 * 72 / 254;
+      if (printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd) &&
+	  stp_get_string_parameter(v, "PageSize") &&
+	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
   else if (strcmp(name, "CDXAdjustment") == 0 ||
 	   strcmp(name, "CDYAdjustment") == 0)
     {
@@ -1642,7 +1687,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = -15;
       description->bounds.dimension.upper = 15;
       description->deflt.dimension = 0;
-      if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
+      if (printer_supports_print_to_cd(v) && (!slot || slot->is_cd))
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -2940,17 +2985,32 @@ setup_page(stp_vars_t *v)
   const input_slot_t *input_slot = get_input_slot(v);
   int extra_left = 0;
   int extra_top = 0;
-  const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  int hub_size = 43;		/* 43 mm standard CD hub */
+  int hub_size = 0;
   int min_horizontal_alignment = escp2_min_horizontal_position_alignment(v);
   int base_horizontal_alignment =
     pd->res->hres / escp2_base_horizontal_position_alignment(v);
   int required_horizontal_alignment =
     MAX(min_horizontal_alignment, base_horizontal_alignment);
 
-  if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-    hub_size = 16;		/* 15 mm prints to the hole - play it
+  const char *cd_type = stp_get_string_parameter(v, "PageSize");
+  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
+     {
+	int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
+	stp_set_page_width(v, outer_diameter);
+	stp_set_page_height(v, outer_diameter);
+	stp_set_width(v, outer_diameter);
+	stp_set_height(v, outer_diameter);
+	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter") * 254 / 10 / 72;
+     }
+ else
+    {
+	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
+  	hub_size = 43;		/* 43 mm standard CD hub */
+
+  	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
+   	  hub_size = 16;		/* 15 mm prints to the hole - play it
 				   safe and print 16 mm */
+    }
 
   stp_default_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
   /* Don't use full bleed mode if the paper itself has a margin */
