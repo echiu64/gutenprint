@@ -412,12 +412,10 @@ default_loop:
 			next default_loop;
 		    }
 		}
-		printf STDERR
-		    "$ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Skipped.\n";
+		warn "Warning: $ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Using default setting.\n";
 		next;
 	    }
-	    print STDERR
-		"$ppd_source_filename: PPD OpenUI method $new_default_types{$_} not understood.  Skipped\n";
+	    warn "Warning: $ppd_source_filename: PPD OpenUI method $new_default_types{$_} not understood.\n";
 	}
     }
 
