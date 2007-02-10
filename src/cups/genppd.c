@@ -1116,6 +1116,9 @@ write_ppd(
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
+  gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+	   desc.name, desc.p_type, desc.is_mandatory,
+	   desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
   gzprintf(fp, "*DefaultPageSize: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
@@ -1278,6 +1281,9 @@ write_ppd(
   {
     gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
+    gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+	     desc.name, desc.p_type, desc.is_mandatory,
+	     desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
     gzprintf(fp, "*DefaultMediaType: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
@@ -1302,6 +1308,9 @@ write_ppd(
   {
     gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
+    gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+	     desc.name, desc.p_type, desc.is_mandatory,
+	     desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
     gzprintf(fp, "*DefaultInputSlot: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
@@ -1326,6 +1335,9 @@ write_ppd(
       has_quality_parameter = 1;
       gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", gettext(desc.text));
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpQuality\n");
+      gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+	       desc.name, desc.p_type, desc.is_mandatory,
+	       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
       num_opts = stp_string_list_count(desc.bounds.str);
       for (i = 0; i < num_opts; i++)
@@ -1369,6 +1381,9 @@ write_ppd(
 
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
       gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
+      gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+	       desc.name, desc.p_type, desc.is_mandatory,
+	       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
       if (has_quality_parameter)
 	gzprintf(fp, "*DefaultResolution: None\n");
       else
@@ -1472,6 +1487,9 @@ write_ppd(
       {
         gzprintf(fp, "*OpenUI *Duplex/%s: PickOne\n", _("2-Sided Printing"));
         gzputs(fp, "*OrderDependency: 10 AnySetup *Duplex\n");
+	gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+		 desc.name, desc.p_type, desc.is_mandatory,
+		 desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
         gzprintf(fp, "*DefaultDuplex: %s\n", desc.deflt.str);
 
         for (i = 0; i < num_opts; i++)
@@ -1522,17 +1540,21 @@ write_ppd(
 			   desc.name, gettext(desc.text));
 		  gzprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n",
 			   desc.name);
-		  if (!desc.is_mandatory)
-		    gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
 		  switch (desc.p_type)
 		    {
 		    case STP_PARAMETER_TYPE_STRING_LIST:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
 		      if (desc.is_mandatory)
 			gzprintf(fp, "*DefaultStp%s: %s\n",
 				 desc.name, desc.deflt.str);
 		      else
-			gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
-				 "None", _("None"));
+			{
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				   "None", _("None"));
+			}
 		      num_opts = stp_string_list_count(desc.bounds.str);
 		      for (i = 0; i < num_opts; i++)
 			{
@@ -1542,22 +1564,30 @@ write_ppd(
 			}
 		      break;
 		    case STP_PARAMETER_TYPE_BOOLEAN:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
 		      if (desc.is_mandatory)
 			gzprintf(fp, "*DefaultStp%s: %s\n", desc.name,
 				 desc.deflt.boolean ? "True" : "False");
 		      else
-			gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
-				 "None", _("None"));
+			{
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				   "None", _("None"));
+			}
 		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
 			       desc.name, "False", _("No"));
 		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
 			       desc.name, "True", _("Yes"));
 		      break;
 		    case STP_PARAMETER_TYPE_DOUBLE:
-		      if (desc.is_mandatory)
-			{
-			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
-			}
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_type, desc.p_level,
+			       desc.bounds.dbl.lower, desc.bounds.dbl.upper,
+			       desc.deflt.dbl);
+		      gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
 		      for (i = desc.bounds.dbl.lower * 1000;
 			   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			{
@@ -1582,6 +1612,9 @@ write_ppd(
 			{
 			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 				   desc.name, gettext(desc.text), _("Fine Adjustment"));
+			  gzprintf(fp, "*StpStpFine%s: %d %d %d %d %.3f %.3f %.3f\n",
+				   desc.name, STP_PARAMETER_TYPE_INVALID, 0,
+				   0, 0, 0.0, 0.0, 0.0);
 			  gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
 			  gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
 			  for (i = 0; i < 100; i += 5)
@@ -1593,12 +1626,21 @@ write_ppd(
 		      
 		      break;
 		    case STP_PARAMETER_TYPE_DIMENSION:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_type, desc.p_level,
+			       (double) desc.bounds.dimension.lower,
+			       (double) desc.bounds.dimension.upper,
+			       (double) desc.deflt.dimension);
 		      if (desc.is_mandatory)
 			gzprintf(fp, "*DefaultStp%s: %d\n",
 				 desc.name, desc.deflt.dimension);
 		      else
-			gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
-				 "None", _("None"));
+			{
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				   "None", _("None"));
+			}
 		      for (i = desc.bounds.dimension.lower;
 			   i <= desc.bounds.dimension.upper; i++)
 			{
