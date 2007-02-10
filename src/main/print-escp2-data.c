@@ -1532,7 +1532,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
     "superfine", "cmykrb",
-    variable_bits, c1_5_base_res, "cd_roll_feed",
+    variable_bits, c1_5_base_res, "r1800",
     "p1_5", &new_init_sequence, &je_deinit_sequence,
     &spr800_borderless_sequence, NULL, "r800"
   },
