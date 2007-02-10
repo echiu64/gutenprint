@@ -123,7 +123,7 @@ endif
 ## Rules
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
-	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+	if test -n "$(CUPS_PKG)" -a -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkdir_p) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
 	  for language in * ; do \
