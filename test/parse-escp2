@@ -3,18 +3,22 @@
 use Getopt::Std;
 use strict;
 
-getopts('v');
+getopts('vO:');
 
 use vars qw($atend
 	    $stuff
 	    $opt_v
+	    $opt_O
 	    $curpos
 	    $esc
 	    $page_mgmt_unit
 	    $horizontal_unit
 	    $vertical_unit
 	    $vertical_position
-	    %seqtable);
+	    $raster_x
+	    $raster_y
+	    %seqtable
+	    @offsets);
 
 $atend = 0;
 
@@ -152,11 +156,15 @@ sub print_prefix_bytes($) {
     }
 }
 
-sub print_output_data($$$$$) {
-    my ($comptype, $bitsperpixel, $dots, $rows, $dot_scale) = @_;
+sub print_output_data($$$$$$) {
+    my ($comptype, $bitsperpixel, $dots, $rows, $dot_scale, $color) = @_;
     my $counter;
     my $fchar;
-    print " ($dots dots, $rows rows, $bitsperpixel bits) ";
+    my $last_row = 0;
+    my $first_row = -1;
+    my $i;
+    my $vstuff;
+    print " ($dots dots, $rows rows, $bitsperpixel bits";
     $dots *= 8;
     $dots /= $dot_scale;
     my $savedots = $dots;
@@ -167,8 +175,11 @@ sub print_output_data($$$$$) {
 	}
 	increment_curpos($dots);
     } elsif ($comptype == 1) {
-	while ($rows-- > 0) {
+	foreach $i (0..$rows-1) {
 	    $dots = $savedots;
+	    if ($opt_v) {
+		$vstuff .= "\n        ";
+	    }
 	    while ($dots > 0) {
 		get_stuff(1);
 		$counter = ord(substr($stuff, 0, 1));
@@ -176,24 +187,46 @@ sub print_output_data($$$$$) {
 		if ($counter <= 127) {
 		    $counter++;
 		    get_stuff($counter);
+		    my $tmp = sprintf "%*v02x ", " ", substr($stuff, 0, $counter);
+		    if (!($tmp =~ /^[0 ]+$/)) {
+			$last_row = $i;
+			if ($first_row == -1) {
+			    $first_row = $i;
+			}
+		    }
 		    if ($opt_v) {
-			printf "%*v02x ", " ", substr($stuff, 0, $counter);
+			$vstuff .= $tmp;
 		    }
 		    increment_curpos($counter);
 		} else {
 		    $counter = 257 - $counter;
 		    get_stuff(1);
+		    $fchar = sprintf "%v02x ", substr($stuff, 0, 1);
+		    if ($fchar ne "00 ") {
+			$last_row = $i;
+			if ($first_row == -1) {
+			    $first_row = $i;
+			}
+		    }
 		    if ($opt_v) {
-			$fchar = sprintf "%v02x ", substr($stuff, 0, 1);
-			map { print $fchar } (0..$counter - 1);
+			map { $vstuff .= $fchar } (0..$counter - 1);
 		    }
 		    increment_curpos(1);
 		}
 		$dots -= $counter * 8;
 	    }
-	    if ($rows > 0 && $opt_v) {
-		print "\n        ";
-	    }
+	}
+	my ($offset) = $offsets[$color];
+	my ($first_position) = ($vertical_position / $vertical_unit)
+	    + ($first_row + $offset) * $raster_y;
+	my ($last_position) = ($vertical_position / $vertical_unit)
+	    + ($last_row + $offset) * $raster_y;
+	my ($final_position) = ($vertical_position / $vertical_unit)
+	    + ($rows + $offset) * $raster_y;
+	printf (" %d+%d %.4f  %d+%d %.4f  %.4f) ", $first_row, $offset, $first_position,
+		$last_row, $offset, $last_position, $final_position);
+	if ($opt_v) {
+	    print " $vstuff";
 	}
     } else {
 	print "\nUnknown compression type $comptype!\n";
@@ -203,11 +236,12 @@ sub print_output_data($$$$$) {
 sub do_special_command() {
     get_stuff(8);
     my $comptype = unpack("C", substr($stuff, 2, 1));
+    my $color = 0;
     my $dots = unpack("v", substr($stuff, 6, 2));
     my $rows = unpack("C", substr($stuff, 5, 1));
     print_prefix_bytes(8);
     increment_curpos(8);
-    print_output_data($comptype, 1, $dots, $rows, 8);
+    print_output_data($comptype, 1, $dots, $rows, 8, $color);
     get_stuff(1);
     while (substr($stuff, 0, 1) eq "\r") {
 	increment_curpos(1);
@@ -216,13 +250,14 @@ sub do_special_command() {
 
 sub do_special1_command() {
     get_stuff(9);
+    my $color = unpack("C", substr($stuff, 2, 1));
     my $comptype = unpack("C", substr($stuff, 3, 1));
     my $bitsperpixel = unpack("C", substr($stuff, 4, 1));
     my $dots = unpack("v", substr($stuff, 5, 2));
     my $rows = unpack("v", substr($stuff, 7, 2));
     print_prefix_bytes(9);
     increment_curpos(9);
-    print_output_data($comptype, $bitsperpixel, $dots, $rows, 1);
+    print_output_data($comptype, $bitsperpixel, $dots, $rows, 1, $color);
     get_stuff(1);
     while (substr($stuff, 0, 1) eq "\r") {
 	increment_curpos(1);
@@ -252,6 +287,14 @@ sub get_short($) {
 sub get_byte($) {
     my ($string) = @_;
     return unpack("C", $string);
+}
+
+if ($opt_O) {
+    my (@stuff) = split /,/, $opt_O;
+    map {
+	my ($key, $val) = split /=/;
+	@offsets[$key] = $val;
+    } @stuff;
 }
 
 while (! $atend) {
@@ -354,8 +397,10 @@ while (! $atend) {
 				    $length, $length / $page_mgmt_unit);
 			} elsif ($xchar eq "D") {
 			    my $base = get_short(substr($stuff, 5, 2));
-			    my $x = get_byte(substr($stuff, 7, 1));
-			    my $y = get_byte(substr($stuff, 8, 1));
+			    my $y = get_byte(substr($stuff, 7, 1));
+			    my $x = get_byte(substr($stuff, 8, 1));
+			    $raster_x = $x / $base;
+			    $raster_y = $y / $base;
 			    printf " (raster base %d, %d x %d)", $base, $base / $x, $base / $y;
 			} elsif ($xchar eq "U") {
 			    if ($skipchars == 5) {
@@ -425,3 +470,6 @@ while (! $atend) {
 	increment_curpos(1);
     }
 }
+
+print "\n";
+
