@@ -459,7 +459,7 @@ clean-local:
 	  $(RM) -rf figures ; \
 	fi
 	-$(RM) -rf *.tex *.log *.aux *.dvi *.gz *.out *.junk *.out *.fot
-	-$(RM) -rf db2html* DB2HTML*
+	-$(RM) -rf db2html* DB2HTML* CATALOG.local
 
 veryclean:
 	$(MAKE) MAINT_MODE=true clean
