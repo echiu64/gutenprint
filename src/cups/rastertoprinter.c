@@ -3,7 +3,7 @@
  *
  *   Gutenprint based raster filter for the Common UNIX Printing System.
  *
- *   Copyright 1993-2003 by Easy Software Products.
+ *   Copyright 1993-2007 by Easy Software Products.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -565,7 +565,17 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	      if (ppd_option)
 		val = ppd_option->defchoice;
 	    }
-	  if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
+	  if (val && !strncasecmp(val, "Custom.", 7))
+	    {
+	      double dval = atof(val + 7);
+
+	      fprintf(stderr, "DEBUG: Gutenprint set float %s to %f\n",
+		      desc.name, dval);
+	      if (dval > desc.bounds.dbl.upper)
+		dval = desc.bounds.dbl.upper;
+	      stp_set_float_parameter(v, desc.name, dval);
+            }
+	  else if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 	    {
 	      double coarse_val = atof(val) * 0.001;
 	      double fine_val = 0;
@@ -608,13 +618,20 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		  set_string_parameter(v, desc.name, val);
 		  break;
 		case STP_PARAMETER_TYPE_INT:
+                  if (!strncasecmp(val, "Custom.", 7))
+		    val += 7;
+
 		  fprintf(stderr, "DEBUG: Gutenprint set int %s to %s\n",
 			  desc.name, val);
 		  stp_set_int_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_DIMENSION:
+                  if (!strncasecmp(val, "Custom.", 7))
+		    val += 7;
+
 		  fprintf(stderr, "DEBUG: Gutenprint set dimension %s to %s\n",
 			  desc.name, val);
+
 		  stp_set_dimension_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_BOOLEAN:

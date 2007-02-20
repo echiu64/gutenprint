@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2006 by Easy Software Products and Robert Krawitz.
+ *   Copyright 1993-2007 by Easy Software Products and Robert Krawitz.
  *
  *   This program is free software; you can redistribute it and/or
  *   modify it under the terms of the GNU General Public License,
@@ -1608,6 +1608,17 @@ write_ppd(
 			gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
 				 desc.name, desc.deflt.dbl);
 		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
+
+                     /*
+		      * Add custom option code and value parameter...
+		      */
+
+		      gzprintf(fp, "*CustomStp%s True: \"pop\"\n", desc.name);
+		      gzprintf(fp, "*ParamCustomStp%s Value/%s: 1 real %.3f %.3f\n",
+		               desc.name, _("Value"),  desc.bounds.dbl.lower,
+			       desc.bounds.dbl.upper);
+
+#if 0 /* M. Sweet: with custom options, we don't need the "fine" adjustments */
 		      if (!simplified)
 			{
 			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
@@ -1622,6 +1633,7 @@ write_ppd(
 				     desc.name, i, ((double) i) * .001);
 			  gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
 			}
+#endif /* 0 */
 		      print_close_ui = 0;
 		      
 		      break;
@@ -1652,6 +1664,16 @@ write_ppd(
 			  gzprintf(fp, "*Stp%s %d/%.1f mm: \"\"\n",
 				   desc.name, i, ((double) i) * 25.4 / 72);
 			}
+
+                     /*
+		      * Add custom option code and value parameter...
+		      */
+
+		      gzprintf(fp, "*CustomStp%s True: \"pop\"\n", desc.name);
+		      gzprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %.3f %.3f\n",
+		               desc.name, _("Value"),  desc.bounds.dbl.lower,
+			       desc.bounds.dbl.upper);
+
 		      break;
 		    default:
 		      break;
