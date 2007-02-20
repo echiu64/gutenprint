@@ -408,6 +408,7 @@ static int process(FILE* in, FILE* out,int verbose){
 						img->color[i].compression=0;
 						img->color[i].bpp=1;
 						img->color[i].level=2;
+						img->color[i].density = 255;
 					}
 				}else{
 					printf(" bit_info: unknown settings 0x%x 0x%x 0x%x\n",buf[0],buf[1],buf[2]);
