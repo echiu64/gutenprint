@@ -39,7 +39,7 @@
         <parameter type="float" name="Gamma">0.75</parameter>
       </parameters>
       <parameters name="PIXMA_iP4000_params">
-        <parameter type="float" name="YellowGamma">0.800</parameter>
+        <parameter type="float" name="Gamma">0.4</parameter>
       </parameters>
       <printer name="Canon BJ-30" driver="bjc-30" manufacturer="Canon" model="30" parameters="gamma_2_density_800_params" />
       <printer name="Canon BJC-50" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
