@@ -198,8 +198,11 @@ static inline int inside_range(color_t* c,int x,int y){
 static void advance(image_t* img,unsigned int to){
 	int i;
 	for(i=0;i<MAX_COLORS;i++){
-		while(img->color[i].pos && img->color[i].pos->line < to && img->color[i].pos->next && img->color[i].pos->next->line <= to)
+		while(img->color[i].pos && img->color[i].pos->line < to && img->color[i].pos->next && img->color[i].pos->next->line <= to){
 			img->color[i].pos = img->color[i].pos->next;
+			if(!img->color[i].pos->next)
+				break;
+		}
 	}
 }
 
