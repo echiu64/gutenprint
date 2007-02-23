@@ -301,7 +301,7 @@ static void write_ppm(image_t* img,FILE* fp){
 
 
 /* process a printjob command by command */
-static int process(FILE* in, FILE* out,int verbose){
+static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 	image_t* img=calloc(1,sizeof(image_t));
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
@@ -487,6 +487,10 @@ static int process(FILE* in, FILE* out,int verbose){
 	} else {
 	
 		printf("created bit image with width %i height %i\n",img->width,img->height);
+		if(maxh > 0){
+			printf("limiting height to %u\n",maxh);
+			img->height=maxh;
+		}
 
 		/* now that we have a complete nice raster image
 	 	* lets build a bitmap from it
@@ -521,6 +525,7 @@ static void display_usage(void){
 	printf("outfile: if specified a ppm file will be generated from the raster data\n");
 	printf("options:\n");
 	printf(" -v: verbose print ESC e),F) and A) commands\n");
+	printf(" -y height: cut the output ppm to the given height\n");
 	printf(" -h: display this help\n");
 }
 
@@ -528,10 +533,11 @@ static void display_usage(void){
 
 int main(int argc,char* argv[]){
 	int verbose = 0;
+	unsigned int maxh=0;
 	char* filename_in=NULL,*filename_out=NULL;
 	FILE *in,*out=NULL;
 	int i;
-	printf("pixma_parse - parser for Canon BJL printjobs (c) 2005-2006 Sascha Sommer <saschasommer@freenet.de>\n");
+	printf("pixma_parse - parser for Canon BJL printjobs (c) 2005-2007 Sascha Sommer <saschasommer@freenet.de>\n");
 
 	/* parse args */
 	for(i=1;i<argc;i++){
@@ -541,6 +547,14 @@ int main(int argc,char* argv[]){
 			}else if(argv[i][1] == 'h'){
 				display_usage();
 				return 0;	
+			}else if(argv[i][1] == 'y'){
+				if(argc > i+1){
+					++i;
+					maxh = atoi(argv[i]);
+				}else{
+					display_usage();
+					return 1;
+				}
 			}else {
 				printf("unknown parameter %s\n",argv[i]);
 				return 1;
@@ -573,7 +587,7 @@ int main(int argc,char* argv[]){
 	}
 	
 	/* process the printjob */
-	process(in,out,verbose);
+	process(in,out,verbose,maxh);
 
 	/* cleanup */
 	fclose(in);
