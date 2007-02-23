@@ -1,6 +1,6 @@
 /******************************************************************************
  * pixma_parse.h parser for Canon BJL printjobs
- * Copyright (c) 2005 - 2006 Sascha Sommer <saschasommer@freenet.de>.
+ * Copyright (c) 2005 - 2007 Sascha Sommer <saschasommer@freenet.de>.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -241,6 +241,7 @@ typedef struct color_s {
 typedef struct image_s {
         unsigned int width;
         unsigned int height;
+        unsigned int dots;
         int y;
         color_t color[MAX_COLORS];
         char* color_order;

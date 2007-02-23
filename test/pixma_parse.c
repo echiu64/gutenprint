@@ -1,6 +1,6 @@
 /******************************************************************************
  * pixma_parse.c parser for Canon BJL printjobs 
- * Copyright (c) 2005 - 2006 Sascha Sommer <saschasommer@freenet.de>.
+ * Copyright (c) 2005 - 2007 Sascha Sommer <saschasommer@freenet.de>.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -256,6 +256,7 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 		line[x*3]=255 - lC - lK;        
 		line[x*3+1]=255 - lM -lK;      
 		line[x*3+2]=255 - lY -lK;     
+		++img->dots;
 	}
 
 	/* output line */
@@ -492,6 +493,7 @@ static int process(FILE* in, FILE* out,int verbose){
          	*/
 		if(out)
 			write_ppm(img,out);
+		printf("dots: %u\n",img->dots);
 
 	}
 	/* deallocate resources */
