@@ -93,52 +93,6 @@ static const char standard_hue_adjustment[] =
 "</curve>\n"
 "</gutenprint>\n";
 
-static const char PIXMA_iP4000_sat_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
-/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
-/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
-/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
-/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-static const char PIXMA_iP4000_lum_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.40 0.49 0.58 0.66 0.74 0.80 0.83 0.85 "  /* B */
-/* B */  "0.87 0.82 0.70 0.63 0.67 0.69 0.69 0.68 "  /* M */
-/* M */  "0.65 0.68 0.72 0.76 0.78 0.78 0.77 0.97 "  /* R */
-/* R */  "1.00 1.00 1.00 0.99 0.96 0.93 0.90 0.87 "  /* Y */
-/* Y */  "0.83 0.84 0.84 0.85 0.85 0.86 0.86 0.86 "  /* G */
-/* G */  "0.83 0.81 0.72 0.57 0.45 0.42 0.42 0.41 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-static const char PIXMA_iP4000_hue_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 -.11 -.23 -.37 -.45 -.45 -.38 -.33 " /* B */
-/* B */  "-.35 -.43 -.37 -.23 -.09 0.00 0.08 0.09 " /* M */
-/* M */  "0.00 -.11 -.24 -.36 -.31 -.08 0.20 0.31 " /* R */
-/* R */  "0.19 0.13 0.13 0.15 0.16 0.15 0.13 0.10 " /* Y */
-/* Y */  "0.00 -.11 -.17 -.22 -.30 -.37 -.45 -.55 " /* G */
-/* G */  "-.64 -.74 -.80 -.81 -.74 -.55 -.33 -.14 " /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-
 static const char* control_cmd_ackshort[] = {
   "AckTime=Short",
   NULL
@@ -470,9 +424,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP2000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP3000 */
     3999, 3,          /*model, model_id*/
@@ -482,9 +436,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP3000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP4000 */
     4000, 3,          /*model, model_id*/
@@ -494,9 +448,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_p /*|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP4200 */
     4200, 3,          /*model, model_id*/
@@ -506,9 +460,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4200_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP6700 */
     4203, 3,          /*model, model_id*/
@@ -518,9 +472,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP6700_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon MULTIPASS MP150 */
     4201, 3,          /*model, model_id*/
@@ -530,9 +484,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_p|CANON_CAP_I,0x61,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon MULTIPASS MP830 */
     9000, 3,          /*model, model_id*/
@@ -542,9 +496,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX,0,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP830_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 };
 
