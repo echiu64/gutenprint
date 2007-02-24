@@ -131,6 +131,7 @@ libgutenprint_la_SOURCES =			\
 	dither-predithered.c			\
 	generic-options.c			\
 	image.c					\
+	buffer-image.c				\
 	module.c				\
 	path.c					\
 	print-dither-matrices.c			\

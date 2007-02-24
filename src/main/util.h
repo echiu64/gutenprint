@@ -58,6 +58,9 @@ extern "C" {
 extern void stpi_init_paper(void);
 extern void stpi_init_dither(void);
 extern void stpi_init_printer(void);
+#define BUFFER_FLAG_FLIP_X	0x1
+#define BUFFER_FLAG_FLIP_Y	0x2
+extern stp_image_t* stpi_buffer_image(stp_image_t* image, unsigned int flags);
 
 /** @} */
 
