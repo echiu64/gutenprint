@@ -1498,7 +1498,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
 
   /* rotate even pages for DuplexNoTumble */
-  if((page_number & 1) && !strcmp(duplex_mode,"DuplexNoTumble"))
+  if((page_number & 1) && duplex_mode && !strcmp(duplex_mode,"DuplexNoTumble"))
   	image = stpi_buffer_image(image,BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
 
   memset(&privdata,0,sizeof(canon_privdata_t));
