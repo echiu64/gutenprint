@@ -183,6 +183,10 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
      (as appropriate) have been added, replacing various 1440x2880
      enhanced resolutions.
 
+ 10) The output for the Canon PIXMA printers has been improved.
+
+ 11) The Canon driver now supports DuplexNoTumble for the PIXMA iP4000.
+
 
 ================================================================
 
