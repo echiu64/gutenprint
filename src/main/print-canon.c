@@ -250,12 +250,6 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
   },
-  {
-    "RequiresFlipDuplex", N_("Set the cupsFlipDuplex Parameter in the PPD"), N_("Basic Printer Setup"),
-    N_("Duplex/RequiresFlipDuplex"),
-    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_INTERNAL, 1, 1, -1, 1, 1
-  }
 };
 
 static const int the_parameter_count =
@@ -338,14 +332,12 @@ sizeof(float_parameters) / sizeof(const float_param_t);
  * Duplex support - modes available
  * Note that the internal names MUST match those in cups/genppd.c else the
  * PPD files will not be generated correctly
- *
- * TODO: Support for DuplexNoTumble, the image has to be rotated 
  */
 
 static const stp_param_string_t duplex_types[] =
 {
   { "None",             N_ ("Off") },
-/*  { "DuplexNoTumble",   N_ ("Long Edge (Standard)") } ,*/
+  { "DuplexNoTumble",   N_ ("Long Edge (Standard)") },
   { "DuplexTumble",     N_ ("Short Edge (Flip)") }
 };
 #define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
@@ -663,13 +655,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
     }
     else
       description->is_active = 0;
-  }
-  else if (strcmp(name, "RequiresFlipDuplex") == 0)
-  {
-	if(caps->features & CANON_CAP_DUPLEX)
-          description->deflt.boolean = 1;
-	else
-          description->is_active = 0;
   }
 }
 
@@ -1511,6 +1496,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_image_init(image);
 
+
+  /* rotate even pages for DuplexNoTumble */
+  if((page_number & 1) && !strcmp(duplex_mode,"DuplexNoTumble"))
+  	image = stpi_buffer_image(image,BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
 
   memset(&privdata,0,sizeof(canon_privdata_t));
   /* find the wanted print mode */
