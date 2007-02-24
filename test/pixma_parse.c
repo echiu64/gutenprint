@@ -432,6 +432,9 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
                                 printf(" paper_length %i left_margin %i\n",(buf[0]<<8 )+buf[1],(buf[2]<<8) + buf[3]);
                                 printf(" right_margin %i left %i\n",(buf[4]<<8 )+buf[5],(buf[6]<<8) + buf[7]);
 				break;
+			case '$':
+				printf("ESC ($ set duplex (len=%i)\n",cnt);
+				break;
 			case 'J':
 				printf("ESC (J select number of raster lines per block (len=%i): %i\n",cnt,buf[0]);
 				img->lines_per_block=buf[0];
