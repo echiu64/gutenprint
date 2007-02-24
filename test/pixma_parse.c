@@ -481,6 +481,10 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 				break;
 			default: /* Last but not least completely unknown commands */
 				printf("ESC (%c UNKNOWN (len=%i)\n",cmd,cnt);
+				for(i=0;i<cnt;i++)
+					printf(" 0x%x",buf[i]);
+				printf("\n");
+
 		}
 	}
 
