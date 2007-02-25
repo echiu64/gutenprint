@@ -70,9 +70,15 @@
 #  endif /* HAVE_LIBZ */
 #endif /* CUPS_DRIVER_INTERFACE */
 
+static const char *cups_modeldir = CUPS_MODELDIR;
+
 #ifdef HAVE_LIBZ
 #include <zlib.h>
+static const char *gzext = ".gz";
 #else
+static const char *gzext = "";
+#  define gzopen fopen
+#  define gzclose fclose
 #  define gzFile FILE *
 #  define gzprintf fprintf
 #  define gzputs(f,s) fputs((s),(f))
@@ -156,7 +162,7 @@ const char *parameter_level_names[] =
  */
 
 #ifdef CUPS_DRIVER_INTERFACE
-static int	cat_ppd(const char *uri);
+static int	cat_ppd(int argc, char **argv);
 static int	list_ppds(const char *argv0);
 #else  /* !CUPS_DRIVER_INTERFACE */
 static int	generate_ppd(const char *prefix, int verbose,
@@ -166,11 +172,11 @@ static void	help(void);
 static void	printlangs(char** langs);
 static void	printmodels(int verbose);
 static void	usage(void);
+#endif /* !CUPS_DRIVER_INTERFACE */
 #ifdef ENABLE_NLS
 static char	**getlangs(void);
 static void	set_language(const char *lang);
 #endif /* ENABLE_NLS */
-#endif /* !CUPS_DRIVER_INTERFACE */
 static int	is_special_option(const char *name);
 static void	print_group_close(gzFile fp, stp_parameter_class_t p_class,
 				  stp_parameter_level_t p_level);
@@ -179,6 +185,35 @@ static void	print_group_open(gzFile fp, stp_parameter_class_t p_class,
 static int	write_ppd(gzFile fp, const stp_printer_t *p,
 		          const char *language, const char *ppd_location,
 			  int simplified);
+
+#ifdef ENABLE_NLS
+
+typedef struct {
+  const char *lang;
+  const char *mapping;
+} locale_map;
+
+static const locale_map lang_mappings[] =
+  {
+    { "cs", "CS_CZ" },
+    { "da", "da_DK" },
+    { "de", "de_DE" },
+    { "el", "el_GR" },
+    { "es", "es_ES" },
+    { "fr", "fr_FR" },
+    { "hu", "hu_HU" },
+    { "ja", "ja_JP" },
+    { "nb", "nb_NO" },
+    { "nl", "nl_NL" },
+    { "pl", "pl_PL" },
+    { "pt", "pt_PT" },
+    { "sk", "sk_SK" },
+    { "sv", "sv_SE" },
+  };
+static int lang_map_count = sizeof(lang_mappings) / sizeof(locale_map);
+
+static const char *baselocaledir = PACKAGE_LOCALE_DIR;
+#endif
 
 /*
  * Global variables...
@@ -195,6 +230,7 @@ int				    /* O - Exit status */
 main(int  argc,			    /* I - Number of command-line arguments */
      char *argv[])		    /* I - Command-line arguments */
 {
+
  /*
   * Initialise libgutenprint
   */
@@ -208,7 +244,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   if (argc == 2 && !strcmp(argv[1], "list"))
     return (list_ppds(argv[0]));
   else if (argc == 3 && !strcmp(argv[1], "cat"))
-    return (cat_ppd(argv[2]));
+    return (cat_ppd(argc, argv));
   else if (argc == 2 && !strcmp(argv[1], "VERSION"))
     {
       printf("%s\n", VERSION);
@@ -228,8 +264,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
  */
 
 static int				/* O - Exit status */
-cat_ppd(const char *uri)		/* I - Driver URI */
+cat_ppd(int argc, char **argv)	/* I - Driver URI */
 {
+  const char		*uri = argv[2];
   char			scheme[64],	/* URI scheme */
 			userpass[32],	/* URI user/pass (unused) */
 			hostname[32],	/* URI hostname */
@@ -237,7 +274,11 @@ cat_ppd(const char *uri)		/* I - Driver URI */
   int			port;		/* URI port (unused) */
   http_uri_status_t	status;		/* URI decode status */
   const stp_printer_t	*p;		/* Printer driver */
-
+  const char		*lang = "C";
+  char			*s;
+  char			**all_langs = getlangs();
+  char			filename[1024],		/* Filename */
+			ppd_location[1024];	/* Installed location */
 
   if ((status = httpSeparateURI(HTTP_URI_CODING_ALL, uri,
                                 scheme, sizeof(scheme),
@@ -250,13 +291,54 @@ cat_ppd(const char *uri)		/* I - Driver URI */
     return (1);
   }
 
-  if ((p = stp_get_printer_by_driver(resource + 1)) == NULL)
+  s = strchr(resource + 1, '/');
+  if (s)
+    {
+      lang = s + 1;
+      *s = '\0';
+    }
+
+#ifdef ENABLE_NLS
+  if (!lang || strcmp(lang, "C") != 0)
+    {
+      while (*all_langs)
+	{
+	  if (!strcmp(lang, *all_langs))
+	    break;
+	  all_langs++;
+	}
+      if (! *all_langs)
+	{
+	  fprintf(stderr, "ERROR: Unable to find language \"%s\"!\n", lang);
+	  return (1);
+	}
+    }
+  set_language(lang);
+#endif
+
+  if ((p = stp_get_printer_by_driver(hostname)) == NULL)
   {
-    fprintf(stderr, "ERROR: Unable to find driver \"%s\"!\n", resource + 1);
+    fprintf(stderr, "ERROR: Unable to find driver \"%s\"!\n", hostname);
     return (1);
   }
 
-  return (write_ppd(stdout, p, NULL, uri, !strcmp(hostname, "simple")));
+  /*
+   * This isn't really the right thing to do.  We really shouldn't
+   * be embedding filenames in automatically generated PPD files, but
+   * if the user ever decides to go back from generated PPD files to
+   * static PPD files we'll need to have this for genppdupdate to work.
+   */
+  snprintf(filename, sizeof(filename) - 1, "%s/stp-%s.%s%s%s%s",
+	   "ppd", hostname, GUTENPRINT_RELEASE_VERSION,
+	   strcmp(resource + 1, "simple") ? "" : ".sim", ppdext, gzext);
+  snprintf(ppd_location, sizeof(ppd_location) - 1, "%s%s%s/%s",
+	   cups_modeldir,
+	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
+	   lang ? lang : "C",
+	   filename);
+
+  return (write_ppd(stdout, p, lang, ppd_location,
+		    !strcmp(resource + 1, "simple")));
 }
 
 /*
@@ -269,7 +351,10 @@ list_ppds(const char *argv0)		/* I - Name of program */
   const char		*scheme;	/* URI scheme */
   int			i;		/* Looping var */
   const stp_printer_t	*printer;	/* Pointer to printer driver */
-
+#ifdef ENABLE_NLS
+  char **langs = getlangs();
+  char **langptr;
+#endif
 
   if ((scheme = strrchr(argv0, '/')) != NULL)
     scheme ++;
@@ -283,23 +368,51 @@ list_ppds(const char *argv0)		/* I - Name of program */
 	  !strcmp(stp_printer_get_family(printer), "raw"))
         continue;
 
-      printf("\"%s://expert/%s\" "
-             "en "
+      printf("\"%s://%s/expert/%s\" "
+             "%s "
 	     "\"%s\" "
              "\"%s" CUPS_PPD_NICKNAME_STRING VERSION "\" "
 	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
-             scheme, stp_printer_get_driver(printer),
+             scheme, stp_printer_get_driver(printer), "C",
+	     "en",
 	     stp_printer_get_manufacturer(printer),
 	     stp_printer_get_long_name(printer));
 
-      printf("\"%s://simple/%s\" "
-             "en "
+      printf("\"%s://%s/simple/%s\" "
+             "%s "
 	     "\"%s\" "
              "\"%s" CUPS_PPD_NICKNAME_STRING VERSION " Simplified\" "
 	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
-             scheme, stp_printer_get_driver(printer),
+             scheme, stp_printer_get_driver(printer), "C",
+	     "en",
 	     stp_printer_get_manufacturer(printer),
 	     stp_printer_get_long_name(printer));
+#ifdef ENABLE_NLS
+      langptr = langs;
+      while (*langptr)
+	{
+	  printf("\"%s://%s/expert/%s\" "
+		 "%s "
+		 "\"%s\" "
+		 "\"%s" CUPS_PPD_NICKNAME_STRING VERSION "\" "
+		 "\"\"\n",		/* No IEEE-1284 Device ID yet */
+		 scheme, stp_printer_get_driver(printer), *langptr,
+		 *langptr,
+		 stp_printer_get_manufacturer(printer),
+		 stp_printer_get_long_name(printer));
+
+	  printf("\"%s://%s/simple/%s\" "
+		 "%s "
+		 "\"%s\" "
+		 "\"%s" CUPS_PPD_NICKNAME_STRING VERSION " Simplified\" "
+		 "\"\"\n",		/* No IEEE-1284 Device ID yet */
+		 scheme, stp_printer_get_driver(printer), *langptr,
+		 *langptr,
+		 stp_printer_get_manufacturer(printer),
+		 stp_printer_get_long_name(printer));
+	  langptr++;
+	}
+#endif
     }
 
   return (0);
@@ -307,16 +420,6 @@ list_ppds(const char *argv0)		/* I - Name of program */
 #endif /* CUPS_DRIVER_INTERFACE */
 
 #ifndef CUPS_DRIVER_INTERFACE
-
-static const char *baselocaledir = PACKAGE_LOCALE_DIR;
-static const char *cups_modeldir = CUPS_MODELDIR;
-#ifdef HAVE_LIBZ
-static const char *gzext = ".gz";
-#else
-static const char *gzext = "";
-#  define gzopen fopen
-#  define gzclose fclose
-#endif
 
 /*
  * 'main()' - Process files on the command-line...
@@ -449,7 +552,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
  * Initialise libgutenprint
  */
 
+  fprintf(stderr, "About to call stp_init\n");
   stp_init();
+  fprintf(stderr, "Called stp_init\n");
 
  /*
   * Set the language...
@@ -709,6 +814,8 @@ printmodels(int verbose)		/* I - Verbosity level */
   exit(EXIT_SUCCESS);
 }
 
+#endif /* !CUPS_DRIVER_INTERFACE */
+
 
 /*
  * 'getlangs()' - Get a list of available translations.
@@ -755,9 +862,26 @@ getlangs(void)
 static void
 set_language(const char *lang)		/* I - Locale name */
 {
-  setlocale(LC_ALL, lang ? lang : "");
+  char *l = setlocale(LC_ALL, lang ? lang : "");
+
+  /* Make sure the locale we tried to set was accepted! */
+  if (lang && !l)
+    {
+      int i;
+      for (i = 0; i < lang_map_count; i++)
+	{
+	  const locale_map *lm = &(lang_mappings[i]);
+	  if (!strcmp(lang, lm->lang))
+	    {
+	      l = setlocale(LC_ALL, lm->mapping);
+	      if (l)
+		break;
+	    }
+	}
+    }
+
 #  ifdef LC_CTYPE
-  setlocale(LC_CTYPE, lang ? lang : "");
+  setlocale(LC_CTYPE, l ? l : "");
 #  endif /* LC_CTYPE */
 #  ifdef LC_NUMERIC
   setlocale(LC_NUMERIC, "C");
@@ -794,7 +918,6 @@ set_language(const char *lang)		/* I - Locale name */
   }
 }
 #endif /* ENABLE_NLS */
-#endif /* !CUPS_DRIVER_INTERFACE */
 
 /*
  * 'is_special_option()' - Determine if an option should be grouped.
@@ -1107,6 +1230,7 @@ write_ppd(
 	   desc.name, desc.p_type, desc.is_mandatory,
 	   desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
   gzprintf(fp, "*DefaultPageSize: %s\n", desc.deflt.str);
+  gzprintf(fp, "*StpDefaultPageSize: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageSize %s", the_papers[i].name);
@@ -1118,6 +1242,7 @@ write_ppd(
   gzputs(fp, "*OpenUI *PageRegion: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageRegion\n");
   gzprintf(fp, "*DefaultPageRegion: %s\n", desc.deflt.str);
+  gzprintf(fp, "*StpDefaultPageRegion: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*PageRegion %s", the_papers[i].name);
@@ -1127,6 +1252,7 @@ write_ppd(
   gzputs(fp, "*CloseUI: *PageRegion\n\n");
 
   gzprintf(fp, "*DefaultImageableArea: %s\n", desc.deflt.str);
+  gzprintf(fp, "*StpDefaultImageableArea: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
   {
     gzprintf(fp,  "*ImageableArea %s", the_papers[i].name);
@@ -1137,6 +1263,7 @@ write_ppd(
   gzputs(fp, "\n");
 
   gzprintf(fp, "*DefaultPaperDimension: %s\n", desc.deflt.str);
+  gzprintf(fp, "*StpDefaultPaperDimension: %s\n", desc.deflt.str);
 
   for (i = 0; i < cur_opt; i ++)
   {
@@ -1188,9 +1315,15 @@ write_ppd(
   gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
 
   if (printer_is_color)
-    gzputs(fp, "*DefaultColorModel: RGB\n");
+    {
+      gzputs(fp, "*DefaultColorModel: RGB\n");
+      gzputs(fp, "*StpDefaultColorModel: RGB\n");
+    }
   else
-    gzputs(fp, "*DefaultColorModel: Gray\n");
+    {
+      gzputs(fp, "*DefaultColorModel: Gray\n");
+      gzputs(fp, "*StpDefaultColorModel: Gray\n");
+    }
 
   gzprintf(fp, "*ColorModel Gray/Grayscale:\t\"<<"
                "/cupsColorSpace %d"
@@ -1249,6 +1382,7 @@ write_ppd(
       gzputs(fp, "*OpenUI *StpColorPrecision/Color Precision: PickOne\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
       gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
+      gzputs(fp, "*StpDefaultStpColorPrecision: Normal\n");
       gzputs(fp, "*StpColorPrecision Normal/Normal:\t\"<<"
 	     "/cupsBitsPerColor 8>>setpagedevice\"\n");
       gzputs(fp, "*StpColorPrecision Best/Best:\t\"<<"
@@ -1272,6 +1406,7 @@ write_ppd(
 	     desc.name, desc.p_type, desc.is_mandatory,
 	     desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
     gzprintf(fp, "*DefaultMediaType: %s\n", desc.deflt.str);
+    gzprintf(fp, "*StpDefaultMediaType: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
     {
@@ -1299,6 +1434,7 @@ write_ppd(
 	     desc.name, desc.p_type, desc.is_mandatory,
 	     desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
     gzprintf(fp, "*DefaultInputSlot: %s\n", desc.deflt.str);
+    gzprintf(fp, "*StpDefaultInputSlot: %s\n", desc.deflt.str);
 
     for (i = 0; i < num_opts; i ++)
     {
@@ -1326,6 +1462,7 @@ write_ppd(
 	       desc.name, desc.p_type, desc.is_mandatory,
 	       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
+      gzprintf(fp, "*StpDefaultStpQuality: %s\n", desc.deflt.str);
       num_opts = stp_string_list_count(desc.bounds.str);
       for (i = 0; i < num_opts; i++)
 	{
@@ -1372,7 +1509,10 @@ write_ppd(
 	       desc.name, desc.p_type, desc.is_mandatory,
 	       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
       if (has_quality_parameter)
-	gzprintf(fp, "*DefaultResolution: None\n");
+	{
+	  gzprintf(fp, "*DefaultResolution: None\n");
+	  gzprintf(fp, "*StpDefaultResolution: None\n");
+	}
       else
       {
 #ifdef USE_COMPLIANT_RESOLUTIONS
@@ -1384,6 +1524,7 @@ write_ppd(
 	else
 	  (void) snprintf(res_name, 63, "%dx%ddpi", xdpi, ydpi);
 	gzprintf(fp, "*DefaultResolution: %s\n", res_name);
+	gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
 	/*
 	 * We need to add this to the resolution list here so that
 	 * some non-default resolution won't wind up with the
@@ -1392,6 +1533,7 @@ write_ppd(
 	stp_string_list_add_string(res_list, res_name, res_name);
 #else  /* !USE_COMPLIANT_RESOLUTIONS */
 	gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
+	gzprintf(fp, "*StpDefaultResolution: %s\n", desc.deflt.str);
 #endif /* USE_COMPLIANT_RESOLUTIONS */
       }
 
@@ -1454,6 +1596,7 @@ write_ppd(
       gzputs(fp, "*OpenUI *OutputOrder: PickOne\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
       gzprintf(fp, "*DefaultOutputOrder: %s\n", desc.deflt.str);
+      gzprintf(fp, "*StpDefaultOutputOrder: %s\n", desc.deflt.str);
       gzputs(fp, "*OutputOrder Normal/Normal: \"\"\n");
       gzputs(fp, "*OutputOrder Reverse/Reverse: \"\"\n");
       gzputs(fp, "*CloseUI: *OutputOrder\n\n");
@@ -1478,6 +1621,7 @@ write_ppd(
 		 desc.name, desc.p_type, desc.is_mandatory,
 		 desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
         gzprintf(fp, "*DefaultDuplex: %s\n", desc.deflt.str);
+        gzprintf(fp, "*StpDefaultDuplex: %s\n", desc.deflt.str);
 
         for (i = 0; i < num_opts; i++)
           {
@@ -1534,11 +1678,16 @@ write_ppd(
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
 		      if (desc.is_mandatory)
-			gzprintf(fp, "*DefaultStp%s: %s\n",
-				 desc.name, desc.deflt.str);
+			{
+			  gzprintf(fp, "*DefaultStp%s: %s\n",
+				   desc.name, desc.deflt.str);
+			  gzprintf(fp, "*StpDefaultStp%s: %s\n",
+				   desc.name, desc.deflt.str);
+			}
 		      else
 			{
 			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
 			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
@@ -1555,11 +1704,16 @@ write_ppd(
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_type, desc.p_level, 0.0, 0.0, 0.0);
 		      if (desc.is_mandatory)
-			gzprintf(fp, "*DefaultStp%s: %s\n", desc.name,
-				 desc.deflt.boolean ? "True" : "False");
+			{
+			  gzprintf(fp, "*DefaultStp%s: %s\n", desc.name,
+				   desc.deflt.boolean ? "True" : "False");
+			  gzprintf(fp, "*StpDefaultStp%s: %s\n", desc.name,
+				   desc.deflt.boolean ? "True" : "False");
+			}
 		      else
 			{
 			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
 			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
@@ -1575,6 +1729,7 @@ write_ppd(
 			       desc.bounds.dbl.lower, desc.bounds.dbl.upper,
 			       desc.deflt.dbl);
 		      gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+		      gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
 		      for (i = desc.bounds.dbl.lower * 1000;
 			   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			{
@@ -1612,6 +1767,7 @@ write_ppd(
 				   desc.name, STP_PARAMETER_TYPE_INVALID, 0,
 				   0, 0, 0.0, 0.0, 0.0);
 			  gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStpFine%s:None\n", desc.name);
 			  gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
 			  for (i = 0; i < 100; i += 5)
 			    gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
@@ -1629,11 +1785,16 @@ write_ppd(
 			       (double) desc.bounds.dimension.upper,
 			       (double) desc.deflt.dimension);
 		      if (desc.is_mandatory)
-			gzprintf(fp, "*DefaultStp%s: %d\n",
-				 desc.name, desc.deflt.dimension);
+			{
+			  gzprintf(fp, "*DefaultStp%s: %d\n",
+				   desc.name, desc.deflt.dimension);
+			  gzprintf(fp, "*StpDefaultStp%s: %d\n",
+				   desc.name, desc.deflt.dimension);
+			}
 		      else
 			{
 			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
 			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}

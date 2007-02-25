@@ -246,15 +246,19 @@ sub get_ppd_contents($$$$$) {
 	    } else {
 		$simplified = "expert";
 	    }
-	    my ($url) = "gutenprint.$version://$simplified/$driver";
-	    $new_ppd_filename = $url;
-	    if (open PPD, "$driver_bin cat $url|") {
-		while (<PPD>) {
-		    $source_data .= $_;
-		}
-		close PPD;
-		if ($source_data) {
-		    return $source_data;
+	    my ($url);
+	    foreach $url ("gutenprint.$version://$driver/$simplified/${locale}_${region}",
+			  "gutenprint.$version://$driver/$simplified/${locale}",
+			  "gutenprint.$version://$driver/$simplified") {
+		$new_ppd_filename = $url;
+		if (open PPD, "$driver_bin cat $url 2>/dev/null |") {
+		    while (<PPD>) {
+			$source_data .= $_;
+		    }
+		    close PPD;
+		    if ($source_data) {
+			return $source_data;
+		    }
 		}
 	    }
 	}
