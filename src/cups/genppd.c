@@ -209,6 +209,11 @@ main(int  argc,			    /* I - Number of command-line arguments */
     return (list_ppds(argv[0]));
   else if (argc == 3 && !strcmp(argv[1], "cat"))
     return (cat_ppd(argv[2]));
+  else if (argc == 2 && !strcmp(argv[1], "VERSION"))
+    {
+      printf("%s\n", VERSION);
+      return (0);
+    }
   else
   {
     fprintf(stderr, "Usage: %s list\n", argv[0]);
