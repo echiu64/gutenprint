@@ -1457,7 +1457,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   canon_init_t  init;
   const canon_cap_t * caps= canon_get_model_capabilities(model);
   const canon_paper_t *pt;
-  int		n;		/* Output number */
   int		y;		/* Looping vars */
   canon_privdata_t privdata;
   int		page_width,	/* Width of page */
@@ -1466,7 +1465,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		page_top,
 		page_right,
 		page_bottom,
-		page_true_height,	/* True length of page */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
@@ -1540,11 +1538,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   image_height = stp_image_height(image);
   image_width = stp_image_width(image);
 
-  stp_default_media_size(v, &n, &page_true_height);
-  
   PUT("top        ",top,72);
   PUT("left       ",left,72);
-  PUT("page_true_height",page_true_height,72);
   PUT("out_width ", out_width,privdata.mode->xdpi);
   PUT("out_height", out_height,privdata.mode->ydpi);
 
