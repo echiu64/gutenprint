@@ -89,6 +89,7 @@ typedef struct
   int			adjusted_width;
   int			adjusted_height;
   int			last_percent;
+  int			shrink_to_fit;
   cups_page_header_t	header;		/* Page header from file */
 } cups_image_t;
 
@@ -215,10 +216,11 @@ print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gutenprint cupsRowFeed = %d\n", cups->header.cupsRowFeed);
   fprintf(stderr, "DEBUG: Gutenprint cupsRowStep = %d\n", cups->header.cupsRowStep);
   fprintf(stderr, "DEBUG: Gutenprint stp_get_driver(v) |%s|\n", stp_get_driver(v));
-  fprintf(stderr, "DEBUG: Gutenprint stp_get_left(v) |%d|\n", stp_get_left(v));
-  fprintf(stderr, "DEBUG: Gutenprint stp_get_top(v) |%d|\n", stp_get_top(v));
-  fprintf(stderr, "DEBUG: Gutenprint stp_get_page_width(v) |%d|\n", stp_get_page_width(v));
-  fprintf(stderr, "DEBUG: Gutenprint stp_get_page_height(v) |%d|\n", stp_get_page_height(v));
+  fprintf(stderr, "DEBUG: Gutenprint stp_get_left(v) %d\n", stp_get_left(v));
+  fprintf(stderr, "DEBUG: Gutenprint stp_get_top(v) %d\n", stp_get_top(v));
+  fprintf(stderr, "DEBUG: Gutenprint stp_get_page_width(v) %d\n", stp_get_page_width(v));
+  fprintf(stderr, "DEBUG: Gutenprint stp_get_page_height(v) %d\n", stp_get_page_height(v));
+  fprintf(stderr, "DEBUG: Gutenprint shrink page to fit %d\n", cups->shrink_to_fit);
   params = stp_get_parameter_list(v);
   nparams = stp_parameter_list_count(params);
   for (i = 0; i < nparams; i++)
@@ -413,6 +415,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
         set_string_parameter(v, "Duplex", "DuplexNoTumble");
     }
 
+  cups->shrink_to_fit = stp_get_int_parameter(v, "CUPSShrinkPage");
+
   set_string_parameter(v, "JobMode", "Job");
   validate_options(v, cups);
   stp_get_media_size(v, &(cups->width), &(cups->height));
@@ -437,9 +441,14 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   tmp_height = cups->bottom - cups->top;
   if (tmp_left < cups->left)
     {
-      cups->left_trim = cups->left - tmp_left;
+      if (cups->shrink_to_fit != 1)
+	{
+	  cups->left_trim = cups->left - tmp_left;
+	  tmp_left = cups->left;
+	}
+      else
+	cups->left_trim = 0;
       fprintf(stderr, "DEBUG: Gutenprint left margin %d\n", cups->left_trim);
-      tmp_left = cups->left;
     }
   else
     {
@@ -450,9 +459,14 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     }
   if (tmp_right > cups->right)
     {
-      cups->right_trim = tmp_right - cups->right;
+      if (cups->shrink_to_fit != 1)
+	{
+	  cups->right_trim = tmp_right - cups->right;
+	  tmp_right = cups->right;
+	}
+      else
+	cups->right_trim = 0;
       fprintf(stderr, "DEBUG: Gutenprint right margin %d\n", cups->right_trim);
-      tmp_right = cups->right;
     }
   else
     {
@@ -463,9 +477,14 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     }
   if (tmp_top < cups->top)
     {
-      cups->top_trim = cups->top - tmp_top;
+      if (cups->shrink_to_fit != 1)
+	{
+	  cups->top_trim = cups->top - tmp_top;
+	  tmp_top = cups->top;
+	}
+      else
+	cups->top_trim = 0;
       fprintf(stderr, "DEBUG: Gutenprint top margin %d\n", cups->top_trim);
-      tmp_top = cups->top;
     }
   else
     {
@@ -476,9 +495,14 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     }
   if (tmp_bottom > cups->bottom)
     {
-      cups->bottom_trim = tmp_bottom - cups->bottom;
+      if (cups->shrink_to_fit != 1)
+	{
+	  cups->bottom_trim = tmp_bottom - cups->bottom;
+	  tmp_bottom = cups->bottom;
+	}
+      else
+	cups->bottom_trim = 0;
       fprintf(stderr, "DEBUG: Gutenprint bottom margin %d\n", cups->bottom_trim);
-      tmp_bottom = cups->bottom;
     }
   else
     {
@@ -488,13 +512,28 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
       cups->bottom = tmp_bottom;
     }
 
-  stp_set_width(v, cups->right - cups->left);
-  stp_set_height(v, cups->bottom - cups->top);
-  stp_set_left(v, cups->left);
-  stp_set_top(v, cups->top);
+  if (cups->shrink_to_fit == 2)
+    {
+      int t_left, t_right, t_bottom, t_top;
+      stp_get_imageable_area(v, &(t_left), &(t_right), &(t_bottom), &(t_top));
+      stp_set_width(v, t_right - t_left);
+      stp_set_height(v, t_bottom - t_top);
+      stp_set_left(v, t_left);
+      stp_set_top(v, t_top);
+    }
+  else
+    {
+      stp_set_width(v, cups->right - cups->left);
+      stp_set_height(v, cups->bottom - cups->top);
+      stp_set_left(v, cups->left);
+      stp_set_top(v, cups->top);
+    }
 
   cups->right = cups->width - cups->right;
-  cups->width = cups->width - cups->left - cups->right;
+  if (cups->shrink_to_fit == 1)
+    cups->width = tmp_right - tmp_left;
+  else
+    cups->width = cups->width - cups->left - cups->right;
   cups->width = cups->header.HWResolution[0] * cups->width / 72;
   cups->left = cups->header.HWResolution[0] * cups->left / 72;
   cups->right = cups->header.HWResolution[0] * cups->right / 72;
@@ -505,7 +544,10 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     cups->adjusted_width = cups->header.cupsWidth;
 
   cups->bottom = cups->height - cups->bottom;
-  cups->height = cups->height - cups->top - cups->bottom;
+  if (cups->shrink_to_fit == 1)
+    cups->height = tmp_bottom - tmp_top;
+  else
+    cups->height = cups->height - cups->top - cups->bottom;
   cups->height = cups->header.HWResolution[1] * cups->height / 72;
   cups->top = cups->header.HWResolution[1] * cups->top / 72;
   cups->bottom = cups->header.HWResolution[1] * cups->bottom / 72;
@@ -546,14 +588,32 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int nparams = stp_parameter_list_count(params);
   int i;
+  const char *val;		/* CUPS option value */
+  ppd_option_t *ppd_option;
+  val = cupsGetOption("StpiShrinkOutput", num_options, options);
+  if (!val)
+    {
+      ppd_option = ppdFindOption(ppd, "StpiShrinkOutput");
+      if (ppd_option)
+	val = ppd_option->defchoice;
+    }
+  if (val)
+    {
+      if (!strcasecmp(val, "crop"))
+	stp_set_int_parameter(v, "CUPSShrinkPage", 0);
+      else if (!strcasecmp(val, "expand"))
+	stp_set_int_parameter(v, "CUPSShrinkPage", 2);
+      else
+	stp_set_int_parameter(v, "CUPSShrinkPage", 1);
+    }
+  else
+    stp_set_int_parameter(v, "CUPSShrinkPage", 1);
   for (i = 0; i < nparams; i++)
     {
       const stp_parameter_t *param = stp_parameter_list_param(params, i);
       stp_parameter_t desc;
       char *ppd_option_name = stp_malloc(strlen(param->name) + 8);	/* StpFineFOO\0 */
 
-      const char *val;		/* CUPS option value */
-      ppd_option_t *ppd_option;
       stp_describe_parameter(v, param->name, &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	{

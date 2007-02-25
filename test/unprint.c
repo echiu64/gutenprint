@@ -432,8 +432,10 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
   right = pstate.right_edge;
   height = oversample * (last - first + 1);
 
-  fprintf(stderr, "Image from (%d,%d) to (%d,%d) (%dx%d).\n",
-	  left, first, right, last, right - left, last - first);
+  fprintf(stderr, "Image from (%d,%d) to (%d,%d) (%dx%d) (%.3fx%.3f)\n",
+	  left, first, right, last, right - left + 1, last - first + 1,
+	  (right - left + 1) / (double) pstate.page_management_units,
+	  (last - first + 1) / (double) pstate.page_management_units);
 
   width = right - left + 1;
   if (width < 0)

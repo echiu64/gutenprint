@@ -108,76 +108,109 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
 
-  1) Added support for the following dye sublimation printers:
+  1) New printers supported in this release:
 
-     Canon CP-10
-     Fujifilm FinePix NX-500
-     Kodak Easyshare Printer
-     Olympus P-S100
-     Sony DPP-EX5
-     Sony UP-DR100
+     * Dye sublimation printers:
 
-     The driver for these printers has been renamed "dyesub", as many
-     of the printers are manufactured by companies other than Olympus.
+       The driver for these printers has been renamed "dyesub", as
+       many of the printers are manufactured by companies other than
+       Olympus.
 
-  2) Added support for the following Canon inkjet printers:
+       Canon CP-10
+       Fujifilm FinePix NX-500
+       Kodak Easyshare Printer
+       Olympus P-S100
+       Sony DPP-EX5
+       Sony UP-DR100
 
-     Canon PIXMA iP2000
-     Canon PIXMA iP3000
-     Canon PIXMA iP3100
-     Canon PIXMA iP4100
-     Canon PIXMA iP4200
-     Canon PIXMA iP4300
-     Canon PIXMA iP5000
-     Canon PIXMA iP5200
-     Canon PIXMA iP6700
-     Canon MULTIPASS MP150
-     Canon MULTIPASS MP500
-     Canon MULTIPASS MP700
-     Canon MULTIPASS MP730
-     Canon MULTIPASS MP750
-     Canon MULTIPASS MP760
-     Canon MULTIPASS MP770
-     Canon MULTIPASS MP780
-     Canon MULTIPASS MP790
-     Canon MULTIPASS MP830
-     Canon PIXUS iP3100
-     Canon PIXUS iP4100
-     Canon i560
-     Canon i850
-     Canon i860
-     Canon i865
+     * Canon inkjet printers:
 
-     The support for these printers is under development, and there
-     are known issues with these printers.  Please check with the
-     mailing list (gimp-print-devel@lists.sourceforge.net) if you have
-     any questions.
+       The support for these printers is under development, and there
+       are known issues with these printers.  Please check with the
+       mailing list (gimp-print-devel@lists.sourceforge.net) if you
+       have any questions.
 
-  3) Added support for the following Lexmark (and compatible) inkjet
-     printers:
+       Canon PIXMA iP2000
+       Canon PIXMA iP3000
+       Canon PIXMA iP3100
+       Canon PIXMA iP4100
+       Canon PIXMA iP4200
+       Canon PIXMA iP4300
+       Canon PIXMA iP5000
+       Canon PIXMA iP5200
+       Canon PIXMA iP6700
+       Canon MULTIPASS MP150
+       Canon MULTIPASS MP500
+       Canon MULTIPASS MP700
+       Canon MULTIPASS MP730
+       Canon MULTIPASS MP750
+       Canon MULTIPASS MP760
+       Canon MULTIPASS MP770
+       Canon MULTIPASS MP780
+       Canon MULTIPASS MP790
+       Canon MULTIPASS MP830
+       Canon PIXUS iP3100
+       Canon PIXUS iP4100
+       Canon i560
+       Canon i850
+       Canon i860
+       Canon i865
 
-     Compaq IJ1200
-     Lexmark X73
+     * Lexmark inkjet and compatible printers:
 
-  4) Added support for the following laser printers:
+       Compaq IJ1200
+       Lexmark X73
 
-     Lexmark Optra E220
-     Xerox WorkCentre M118
+     * PCL laser printers (monochrome only):
 
-  5) CUPS 1.2 is now supported using on-the-fly PPD file generation.
+       Lexmark Optra E220
+       Xerox WorkCentre M118
+
+  2) CUPS 1.2 is now supported using on-the-fly PPD file generation.
      In addition, the resolution names are all compliant with the PPD
      specification.  cups-genppdupdate correctly updates on-the-fly
      PPD files.
 
-  6) CUPS 1.2 custom parameter values are now supported.
+  3) The native CUPS driver offers a new Shrink Page If Necessary to
+     Fit Borders option, enabling the user to choose how to fit the
+     output to the imageable area of the page.  This is useful when a
+     printer offers a choice of imageable areas, typically normal
+     (which has margins) and full bleed (which allows printing to the
+     edge of the paper, or even beyond).  The following options are
+     available:
 
-  7) Support for the GIMP 1.2 has been removed.
+     * Shrink (default): the output is shrunk if necessary to fit the
+       imageable area of the page.  If a printer is capable of
+       borderless operation but normal margins are selected, the
+       output will be shrunk.  This will print the entire page
+       (nothing will be lost), but will not preserve the dimensions of
+       the printout.  For example, a line intended to be 10 cm long
+       may print smaller than that.
 
-  8) An experimental PostScript driver has been added, enabling use of
+     * Crop: the output is cropped if necessary to fit the imageable
+       area of the page.  The dimensions of the page will be preserved
+       (a line intended to be 10 cm long will print out exactly 10
+       cm), but the edges of the output may be truncated (cropped).
+
+     * Expand: the output is expanded to fit the maximum possible
+       imageable area of the page.  When selected on printers capable
+       of full bleed output, in conjunction with any other necessary
+       options, the output will be expanded to match the maximum page
+       dimension.  The dimensions of the page will be expanded if
+       necessary beyond the page size; a line intended to be 10 cm
+       long may print longer than that.
+
+     This option has no effect on printers not capable of full bleed
+     or other expanded margins.  It also has no effect when printing
+     to CD's or the like.
+
+  4) Support for the GIMP 1.2 has been removed.
+
+  5) An experimental PostScript driver has been added, enabling use of
      all PPD file options in the enhanced GIMP plugin.  This is a work
      in progress.
 
-  9) Epson inkjet printers now correctly support borderless printing.
+  6) Epson inkjet printers now correctly support borderless printing.
      In addition, printing at the top and bottom of the page has been
      improved on printers that support borderless printing, although
      this is still not perfect in all cases.
@@ -187,14 +220,14 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
      problem is understood, but we do not know when a fix will be
      available.
 
- 10) The list of resolutions supported on newer Epson printers has
+  7) The list of resolutions supported on newer Epson printers has
      been changed; resolutions of 5760x1440, 2880x2880, and 5760x2880
      (as appropriate) have been added, replacing various 1440x2880
      enhanced resolutions.
 
- 11) The output for the Canon PIXMA printers has been improved.
+  8) The output for the Canon PIXMA printers has been improved.
 
- 12) The Canon driver now supports DuplexNoTumble for the PIXMA iP4000.
+  9) The Canon driver now supports DuplexNoTumble for the PIXMA iP4000.
 
 
 ================================================================
