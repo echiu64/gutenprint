@@ -166,26 +166,35 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
 
   5) CUPS 1.2 is now supported using on-the-fly PPD file generation.
      In addition, the resolution names are all compliant with the PPD
-     specification.
+     specification.  cups-genppdupdate correctly updates on-the-fly
+     PPD files.
 
-  6) Support for the GIMP 1.2 has been removed.
+  6) CUPS 1.2 custom parameter values are now supported.
 
-  7) An experimental PostScript driver has been added, enabling use of
+  7) Support for the GIMP 1.2 has been removed.
+
+  8) An experimental PostScript driver has been added, enabling use of
      all PPD file options in the enhanced GIMP plugin.  This is a work
      in progress.
 
-  8) Epson inkjet printers now correctly support borderless printing.
+  9) Epson inkjet printers now correctly support borderless printing.
      In addition, printing at the top and bottom of the page has been
-     improved on printers that support borderless printing.
+     improved on printers that support borderless printing, although
+     this is still not perfect in all cases.
 
-  9) The list of resolutions supported on newer Epson printers has
+     Certain printers (in particular the C/D8x and C6x series) do not
+     print correctly to the bottom of the page with all colors.  This
+     problem is understood, but we do not know when a fix will be
+     available.
+
+ 10) The list of resolutions supported on newer Epson printers has
      been changed; resolutions of 5760x1440, 2880x2880, and 5760x2880
      (as appropriate) have been added, replacing various 1440x2880
      enhanced resolutions.
 
- 10) The output for the Canon PIXMA printers has been improved.
+ 11) The output for the Canon PIXMA printers has been improved.
 
- 11) The Canon driver now supports DuplexNoTumble for the PIXMA iP4000.
+ 12) The Canon driver now supports DuplexNoTumble for the PIXMA iP4000.
 
 
 ================================================================
