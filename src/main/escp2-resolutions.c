@@ -138,15 +138,6 @@ static const res_t r_1440x1440sw =
 static const res_t r_1440x1440ov =
 { "1440x1440ov",   N_("1440 x 1440 DPI"),
   2880, 1440,  1440, 1440, 1, 0, 1};
-static const res_t r_1440x1440sw3650 =
-{ "1440x1440ov",   N_("1440 x 1440"),
-  1440, 1440,  1440, 1440, 1, 0, 1};
-static const res_t r_1440x1440sw3650hq =
-{ "2880x1440sw",   N_("1440 x 1440 DPI High Quality"),
-  1440, 1440,  1440, 1440, 1, 0, 2};
-static const res_t r_1440x1440sw3650hq2 =
-{ "5760x1440sw",   N_("1440 x 1440 DPI Highest Quality"),
-  1440, 1440,  1440, 1440, 1, 0, 4};
 
 static const res_t r_2880x1440mw =
 { "2880x1440mw",   N_("2880 x 1440 DPI"),
@@ -160,12 +151,6 @@ static const res_t r_1440x2880sw =
 static const res_t r_2880x1440sw2400 =
 { "2880x1440sw",   N_("2880 x 1440 DPI"),
   1440, 2880,  1440, 2880, 1, 0, 1};
-static const res_t r_2880x1440sw2400hq =
-{ "2880x2880sw",   N_("2880 x 1440 DPI High Quality"),
-  1440, 2880,  1440, 2880, 1, 0, 2};
-static const res_t r_2880x1440sw2400hq2 =
-{ "5760x2880sw",   N_("2880 x 1440 DPI Highest Quality"),
-  1440, 2880,  1440, 2880, 1, 0, 4};
 
 static const res_t r_5760x1440sw =
 { "5760x1440sw",   N_("5760 x 1440 DPI"),
@@ -347,57 +332,6 @@ static const res_t *const stpi_escp2_superfine_reslist[] =
   NULL
 };
 
-static const res_t *const stpi_escp2_r2400_reslist[] =
-{
-  &r_360x120sw,
-
-  &r_360x180sw,
-
-  &r_360x240sw,
-
-  &r_360sw,
-
-  &r_720x360sw,
-
-  &r_720sw,
-
-  &r_1440x720sw,
-  &r_720x1440sw,
-
-  &r_1440x1440sw,
-
-  &r_2880x1440sw2400,
-  &r_2880x1440sw2400hq,
-  &r_2880x1440sw2400hq2,
-
-  &r_5760x1440sw,
-
-  NULL
-};
-
-static const res_t *const stpi_escp2_cx3650_reslist[] =
-{
-  &r_360x120sw,
-
-  &r_360x180sw,
-
-  &r_360x240sw,
-
-  &r_360sw,
-
-  &r_720x360sw,
-
-  &r_720sw,
-
-  &r_1440x720sw,
-
-  &r_1440x1440sw3650,
-  &r_1440x1440sw3650hq,
-  &r_1440x1440sw3650hq2,
-
-  NULL
-};
-
 static const res_t *const stpi_escp2_picturemate_reslist[] =
 {
 
@@ -542,8 +476,6 @@ typedef struct
 static const resolution_t the_resolutions[] =
 {
   { "superfine", stpi_escp2_superfine_reslist },
-  { "r2400", stpi_escp2_r2400_reslist },
-  { "cx3650", stpi_escp2_cx3650_reslist },
   { "pro", stpi_escp2_pro_reslist },
   { "720dpi", stpi_escp2_720dpi_reslist },
   { "720dpi_soft", stpi_escp2_720dpi_soft_reslist },

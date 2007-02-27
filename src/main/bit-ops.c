@@ -916,6 +916,8 @@ stpi_unpack_16_2(int length,
   unsigned char	tempin, shift;
   unsigned char temp[16];
 
+  length /= 2;
+
   if (length <= 0)
     return;
 
