@@ -256,7 +256,7 @@ if ($dontrun) {
     if ($valgrind == 1) {
 	$valgrind_command = "valgrind $valopts -q --num-callers=100 --error-limit=no --leak-check=yes";
     } elsif ($valgrind == 2) {
-	$valgrind_command = "valgrind $valopts --num-callers=100 --error-limit=no --show-reachable=yes --leak-resolution=high --leak-check=yes";
+	$valgrind_command = "valgrind $valopts --num-callers=100 --error-limit=no --leak-resolution=high --leak-check=yes";
     } elsif ($valgrind == 3) {
 	$valgrind_command = "valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes";
     } elsif ($valgrind == 4) {
