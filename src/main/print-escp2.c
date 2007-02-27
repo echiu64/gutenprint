@@ -3028,15 +3028,13 @@ setup_page(stp_vars_t *v)
 	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
     }
   else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) &&
+	   (stp_get_boolean_parameter(v, "FullBleed")) &&
 	   ((!input_slot || !(input_slot->is_cd))))
     {
+      pd->paper_extra_bottom = 0;
       pd->page_extra_height =
 	escp2_zero_margin_offset(v) * pd->page_management_units /
 	escp2_base_separation(v);
-      if (stp_get_boolean_parameter(v, "FullBleed"))
-	pd->paper_extra_bottom = 0;
-      else
-	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
     }
   else
     {
