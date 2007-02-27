@@ -436,8 +436,10 @@ while (! $atend) {
 			    } else {
 				$length = get_short(substr($stuff, 5, 2));
 			    }
-			    printf (" (page length %d %.2f)",
-				    $length, $length / $page_mgmt_unit);
+			    if ($opt_v) {
+				printf (" (page length %d %.2f)",
+					$length, $length / $page_mgmt_unit);
+			    }
 			} elsif ($xchar eq "D") {
 			    my $base = get_short(substr($stuff, 5, 2));
 			    my $y = get_byte(substr($stuff, 7, 1));
