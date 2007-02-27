@@ -1900,6 +1900,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       stp_free(privdata.channels);
 
   stp_free(privdata.channel_order);
+  if (privdata.head_offset)
+    stp_free(privdata.head_offset);
 
 
   return status;
