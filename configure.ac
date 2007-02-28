@@ -232,7 +232,7 @@ STP_ARG_ENABLE([cups-ppds],
                [BUILD_CUPS_PPDS],
                [(automatic)])
 
-STP_ARG_ENABLE([cups-1.2-enhancements],
+STP_ARG_ENABLE([cups-1_2-enhancements],
                [build CUPS 1.2 enhancements],
                [BUILD_CUPS_1_2],
                [(automatic)])
