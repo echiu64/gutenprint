@@ -351,7 +351,7 @@ list_ppds(const char *argv0)		/* I - Name of program */
   const char		*scheme;	/* URI scheme */
   int			i;		/* Looping var */
   const stp_printer_t	*printer;	/* Pointer to printer driver */
-#ifdef ENABLE_NLS
+#if defined(ENABLE_NLS) && defined(CUPS_TRANSLATED_PPDS)
   char **langs = getlangs();
   char **langptr;
 #endif
@@ -378,6 +378,7 @@ list_ppds(const char *argv0)		/* I - Name of program */
 	     stp_printer_get_manufacturer(printer),
 	     stp_printer_get_long_name(printer));
 
+#ifdef GENERATE_SIMPLIFIED_PPDS
       printf("\"%s://%s/simple/%s\" "
              "%s "
 	     "\"%s\" "
@@ -387,9 +388,10 @@ list_ppds(const char *argv0)		/* I - Name of program */
 	     "en",
 	     stp_printer_get_manufacturer(printer),
 	     stp_printer_get_long_name(printer));
-#ifdef ENABLE_NLS
+#endif
+#if defined(ENABLE_NLS) && defined(CUPS_TRANSLATED_PPDS)
       langptr = langs;
-      while (*langptr)
+      while (*langptr != 0 && strcmp(*langptr, "") != 0)
 	{
 	  printf("\"%s://%s/expert/%s\" "
 		 "%s "
@@ -401,6 +403,7 @@ list_ppds(const char *argv0)		/* I - Name of program */
 		 stp_printer_get_manufacturer(printer),
 		 stp_printer_get_long_name(printer));
 
+#ifdef GENERATE_SIMPLIFIED_PPDS
 	  printf("\"%s://%s/simple/%s\" "
 		 "%s "
 		 "\"%s\" "
@@ -410,6 +413,7 @@ list_ppds(const char *argv0)		/* I - Name of program */
 		 *langptr,
 		 stp_printer_get_manufacturer(printer),
 		 stp_printer_get_long_name(printer));
+#endif
 	  langptr++;
 	}
 #endif

@@ -222,7 +222,6 @@ dnl There was no CUPS 1.0.15 or the like
   fi
   if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 ; then
     BUILD_CUPS_PPDS="no"
-    BUILD_TRANSLATED_CUPS_PPDS="no"
     BUILD_CUPS_1_2="yes"
   fi
 fi
@@ -766,6 +765,8 @@ AM_CONDITIONAL(BUILD_CUPS_PPDS, test x${BUILD_CUPS_PPDS} = xyes)
 AM_CONDITIONAL(CUPS_PPDS_AT_TOP_LEVEL, test x${CUPS_PPDS_AT_TOP_LEVEL} = xyes)
 
 AM_CONDITIONAL(BUILD_TRANSLATED_CUPS_PPDS, test x${BUILD_TRANSLATED_CUPS_PPDS} = xyes)
+
+AM_CONDITIONAL(BUILD_SIMPLIFIED_CUPS_PPDS, test x${BUILD_SIMPLIFIED_CUPS_PPDS} = xyes)
 
 if test x${USE_LEVEL3_PS} = xno ; then
   CUPS_PPD_PS_LEVEL=2
