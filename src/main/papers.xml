@@ -68,6 +68,13 @@
       <height value="184"/>
       <unit value="english"/>
     </paper>
+    <paper name="CDCustom">
+      <description value="CD - Custom"/>
+      <comment value="CD, custom diameter"/>
+      <width value="337"/>
+      <height value="337"/>
+      <unit value="english"/>
+    </paper>
     <paper name="w216h360">
       <description value="3x5"/>
       <width value="216"/>
@@ -940,11 +947,11 @@
       <height value="337"/>
       <unit value="metric-extended"/>
     </paper>
-    <paper name="w244h155">
+    <paper name="w155h244">
       <description value="Card"/>
       <comment value="86mm x 54mm"/>
-      <width value="244"/>
-      <height value="155"/>
+      <width value="155"/>
+      <height value="244"/>
       <unit value="metric-extended"/>
     </paper>
     <paper name="w283h566">

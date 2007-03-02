@@ -57,6 +57,7 @@
 #gptofoo bjc-80 printer/Canon-BJC-80
 #gptofoo bjc-8200 printer/Canon-BJC-8200
 #gptofoo bjc-85 printer/Canon-BJC-85
+#gptofoo canon-cp10 printer/Canon-CP-10
 #gptofoo canon-cp100 printer/Canon-CP-100
 #gptofoo canon-cp200 printer/Canon-CP-200
 #gptofoo canon-cp220 printer/Canon-CP-220
@@ -89,8 +90,10 @@
 #gptofoo bjc-iP4000 printer/Canon-iP4000
 #gptofoo bjc-PIXMA-iP4100 printer/Canon-PIXMA-iP4100
 #gptofoo bjc-PIXMA-iP4200 printer/Canon-PIXMA-iP4200
+#gptofoo bjc-PIXMA-iP4300 printer/Canon-PIXMA-iP4300
 #gptofoo bjc-PIXMA-iP5000 printer/Canon-PIXMA-iP5000
 #gptofoo bjc-PIXMA-iP5200 printer/Canon-PIXMA-iP5200
+#gptofoo bjc-PIXMA-iP6700 printer/Canon-PIXMA-iP6700
 #gptofoo bjc-MULTIPASS-MP150 printer/Canon-MULTIPASS-MP150
 #gptofoo bjc-MULTIPASS-MP500 printer/Canon-MULTIPASS-MP500
 #gptofoo bjc-MULTIPASS-MP700 printer/Canon-MULTIPASS-MP700
@@ -109,6 +112,7 @@
 #gptofoo bjc-i865 printer/Canon-i865
 #gptofoo canon-ir_330s printer/Canon-imageRunner_330s
 #gptofoo citizen-projet_ii printer/Citizen-ProJet_II
+#gptofoo compaq-ij1200 printer/Compaq-IJ1200
 #gptofoo dec-1800 printer/DEC-1800
 #gptofoo dec-ln17 printer/DEC-LN17
 #gptofoo epson-actl_1100 printer/Epson-ActionLaser_1100
@@ -372,6 +376,7 @@
 #gptofoo escp2-scan2500 printer/Epson-Stylus_Scan_2500
 #gptofoo fujifilm-cx400 printer/Fujifilm-Printpix-CX-400
 #gptofoo fujifilm-cx550 printer/Fujifilm-Printpix-CX-550
+#gptofoo fujifilm-nx500 printer/Fujifilm-FinePix-NX-500
 #gptofoo fujitsu-pp_10v printer/Fujitsu-PrintPartner_10V
 #gptofoo fujitsu-pp_16dv printer/Fujitsu-PrintPartner_16DV
 #gptofoo fujitsu-pp_20w printer/Fujitsu-PrintPartner_20W
@@ -636,6 +641,7 @@
 #gptofoo ibm-infoprint_12 printer/IBM-Infoprint_12
 #gptofoo ibm-pp_3112 printer/IBM-Page_Printer_3112
 #gptofoo infotec-4651_mf printer/Infotec-4651_MF
+#gptofoo kodak-dock printer/Kodak-Easyshare-Printer-Dock
 #gptofoo kyocera-f-1010 printer/Kyocera-F-1010
 #gptofoo kyocera-fs-1000 printer/Kyocera-FS-1000
 #gptofoo kyocera-fs-1000plus printer/Kyocera-FS-1000plus
@@ -685,7 +691,9 @@
 #gptofoo lexmark-4076 printer/Lexmark-4076
 #gptofoo lexmark-optra_e printer/Lexmark-Optra_E
 #gptofoo lexmark-optra_eplus printer/Lexmark-Optra_Eplus
+#gptofoo lexmark-optra_e220 printer/Lexmark-Optra_E220
 #gptofoo lexmark-vw_300 printer/Lexmark-Valuewriter_300
+#gptofoo lexmark-x73 printer/Lexmark-X73
 #gptofoo lexmark-z42 printer/Lexmark-Z42
 #gptofoo lexmark-z43 printer/Lexmark-Z43
 #gptofoo lexmark-z52 printer/Lexmark-Z52
@@ -729,7 +737,7 @@
 #gptofoo olympus-p330ne printer/Olympus-P-330NE
 #gptofoo olympus-p400 printer/Olympus-P-400
 #gptofoo olympus-p440 printer/Olympus-P-440
-#gptofoo olympus-ps100 printer/Olympus-PS-100
+#gptofoo olympus-ps100 printer/Olympus-P-S100
 #gptofoo pcpi-1030 printer/PCPI-1030
 #gptofoo panasonic-kx-p4410 printer/Panasonic-KX-P4410
 #gptofoo panasonic-kx-p4450 printer/Panasonic-KX-P4450
@@ -753,7 +761,9 @@
 #gptofoo seiko-sj_200 printer/Seiko-SpeedJET_200
 #gptofoo sharp-ar-161 printer/Sharp-AR-161
 #gptofoo sony-ijp-v100 printer/Sony-IJP-V100
+#gptofoo sony-dppex5 printer/Sony-DPP-EX5
 #gptofoo sony-updp10 printer/Sony-UP-DP10
+#gptofoo sony-updr100 printer/Sony-UP-DR100
 #gptofoo sony-updr150 printer/Sony-UP-DR150
 #gptofoo star-ls-04 printer/Star-LS-04
 #gptofoo star-lp_8 printer/Star-LaserPrinter_8
@@ -767,3 +777,4 @@
 #gptofoo xerox-dp_p1202 printer/Xerox-DocuPrint_P1202
 #gptofoo xerox-dp_p8e printer/Xerox-DocuPrint_P8e
 #gptofoo xerox-dc_400 printer/Xerox-Document_Centre_400
+#gptofoo xerox-wc_m118 printer/Xerox-Work_Centre_M118

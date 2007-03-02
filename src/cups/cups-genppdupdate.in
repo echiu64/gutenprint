@@ -25,6 +25,7 @@ use File::Copy qw(mv);
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
+sub get_ppd_contents ($$$$$); # Return contents of desired PPD
 sub find_ppd ($$$$); # Gutenprint Filename, driver, language (e.g. en, sv),
 		     # region (e.g. GB, DE)
 sub get_default_types (*); # Source PPD FH
@@ -49,6 +50,7 @@ my $quiet = 0;     # No output
 my $no_action = 0; # Don't output files
 my $reset_defaults = 0;		# Reset options to default settings
 my $version = "@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
+my $use_static_ppd = "@BUILD_CUPS_PPDS@";
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
 my $ppd_root_dir = "@cups_conf_datadir@/model";
@@ -56,6 +58,9 @@ my $ppd_base_dir = "$ppd_root_dir/gutenprint/$version"; # Available PPDs
 my $ppd_out_dir = "";		# By default output into source directory
 my $gzext = ".gz";
 my $updated_ppd_count = 0;
+my $new_ppd_filename;
+
+my $serverdir = "@cups_conf_serverbin@";
 
 my @ppd_files; # A list of in-use Gutenprint PPD files
 
@@ -224,6 +229,74 @@ sub parse_options () {
     }
 }
 
+sub get_ppd_contents($$$$$) {
+    my ($ppd_source_filename, $filename, $driver, $locale, $region) = @_;
+
+    my $source_data;
+
+
+    if ($use_static_ppd eq "no") {
+	my ($driver_bin) = "$serverdir/driver/gutenprint.$version";
+	my ($driver_version) = `$driver_bin VERSION`;
+	chomp $driver_version;
+	if ($driver_version eq "@VERSION@") {
+	    my ($simplified);
+	    if ($filename =~ m,.*/([^/]*)(.sim)(.ppd)?(.gz)?$,) {
+		$simplified = "simple";
+	    } else {
+		$simplified = "expert";
+	    }
+	    my ($url);
+	    foreach $url ("gutenprint.$version://$driver/$simplified/${locale}_${region}",
+			  "gutenprint.$version://$driver/$simplified/${locale}",
+			  "gutenprint.$version://$driver/$simplified") {
+		$new_ppd_filename = $url;
+		if (open PPD, "$driver_bin cat $url 2>/dev/null |") {
+		    while (<PPD>) {
+			$source_data .= $_;
+		    }
+		    close PPD;
+		    if ($source_data) {
+			return $source_data;
+		    }
+		}
+	    }
+	}
+	# Otherwise fall through and try to find a static PPD
+    }
+
+    # Search for a PPD matching our criteria...
+
+    $new_ppd_filename = find_ppd($filename, $driver, $locale, $region);
+    if (!defined($new_ppd_filename)) {
+        # There wasn't a valid source PPD file, so give up.
+        print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
+        print STDERR "$ppd_source_filename: please upgrade this PPD manually\n";
+	return 0;
+    }
+    if ($debug) {
+	print "Candidate PPD: $new_ppd_filename\n";
+    }
+
+    my $suffix = "\\" . $gzext; # Add '\', so m// matches the '.'.
+    if ($new_ppd_filename =~ m/.gz$/) { # Decompress input buffer
+	open GZIN, "gunzip -c $new_ppd_filename |"
+	    or die "$_: can't open for decompression: $!";
+	while (<GZIN>) {
+	    $source_data .= $_;
+	}
+	close GZIN;
+    } else {
+	open SOURCE, $new_ppd_filename
+	    or die "$new_ppd_filename: can't open source file: $!";
+	binmode SOURCE;
+	my $source_size = (stat(SOURCE))[7];
+	read (SOURCE, $source_data, $source_size)
+	    or die "$new_ppd_filename: error reading source: $!";
+	close SOURCE or die "$new_ppd_filename: can't close file: $!";
+    }
+    return $source_data;
+}
 
 # Update the named PPD file.
 sub update_ppd ($) {
@@ -300,41 +373,13 @@ sub update_ppd ($) {
 	print "Region: $region\n";
     }
 
-    # Search for a PPD matching our criteria...
-
-    my $source = find_ppd($filename, $driver, $locale, $region);
-    if (!defined($source)) {
-        # There wasn't a valid source PPD file, so give up.
-        print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
-        print STDERR "$ppd_source_filename: please upgrade this PPD manually\n";
-	return 0;
-    }
-    if ($debug) {
-	print "Candidate PPD: $source\n";
-    }
-
-
     # Read in the new PPD, decompressing it if needed...
 
-    my $source_data;
+    my $source_data = get_ppd_contents($ppd_source_filename, $filename,
+				       $driver, $locale, $region);
 
-    my $suffix = "\\" . $gzext; # Add '\', so m// matches the '.'.
-    if ($source =~ m/.gz$/) { # Decompress input buffer
-	open GZIN, "gunzip -c $source |"
-	    or die "$_: can't open for decompression: $!";
-	while (<GZIN>) {
-	    $source_data .= $_;
-	}
-	close GZIN;
-    }
-    else {
-	open SOURCE, $source
-	    or die "$source: can't open source file: $!";
-	binmode SOURCE;
-	my $source_size = (stat(SOURCE))[7];
-	read (SOURCE, $source_data, $source_size)
-	    or die "$source: error reading source: $!";
-	close SOURCE or die "$source: can't close file: $!";
+    if (! $source_data) {
+	die "Unable to retrieve PPD file!\n";
     }
 
     # Save new PPD in a temporary file, for processing...
@@ -412,12 +457,10 @@ default_loop:
 			next default_loop;
 		    }
 		}
-		printf STDERR
-		    "$ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Skipped.\n";
+		warn "Warning: $ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Using default setting.\n";
 		next;
 	    }
-	    print STDERR
-		"$ppd_source_filename: PPD OpenUI method $new_default_types{$_} not understood.  Skipped\n";
+	    warn "Warning: $ppd_source_filename: PPD OpenUI method $new_default_types{$_} not understood.\n";
 	}
     }
 
@@ -445,9 +488,9 @@ default_loop:
 
     if (!$quiet || $verbose) {
 	if ($ppd_dest_filename eq $ppd_source_filename) {
-	    print STDOUT "Updated $ppd_source_filename using $source\n";
+	    print STDOUT "Updated $ppd_source_filename using $new_ppd_filename\n";
 	} else {
-	    print STDOUT "Updated $ppd_source_filename to $ppd_dest_filename using $source\n";
+	    print STDOUT "Updated $ppd_source_filename to $ppd_dest_filename using $new_ppd_filename\n";
 	}
     }
     return 1;

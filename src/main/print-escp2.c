@@ -59,14 +59,14 @@ typedef struct
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "command_mode",		0, 4 },
-  { "horizontal_zero_margin",	4, 1 },
-  { "variable_mode",		5, 1 },
-  { "graymode",		 	6, 1 },
-  { "vacuum",			7, 1 },
-  { "fast_360",			8, 1 },
-  { "send_zero_advance",        9, 1 },
-  { "supports_ink_change",     10, 1 },
-  { "packet_mode",             11, 1 },
+  { "zero_margin",		4, 2 },
+  { "variable_mode",		6, 1 },
+  { "graymode",		 	7, 1 },
+  { "vacuum",			8, 1 },
+  { "fast_360",			9, 1 },
+  { "send_zero_advance",       10, 1 },
+  { "supports_ink_change",     11, 1 },
+  { "packet_mode",             12, 1 },
 };
 
 typedef struct
@@ -198,6 +198,18 @@ static const stp_parameter_t the_parameters[] =
     N_("Print only outside of the hub of the CD, or all the way to the hole"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
+    "CDOuterDiameter", N_("CD Size (Custom)"), N_("Basic Printer Setup"),
+    N_("Variable adjustment for the outer diameter of CD"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
+    "CDInnerDiameter", N_("CD Hub Size (Custom)"), N_("Basic Printer Setup"),
+    N_("Variable adjustment to the inner hub of the CD"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
   },
   {
     "CDXAdjustment", N_("CD Horizontal Fine Adjustment"), N_("Advanced Printer Setup"),
@@ -387,7 +399,9 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(max_black_resolution),
   PARAMETER_INT(zero_margin_offset),
   PARAMETER_INT(extra_720dpi_separation),
-  PARAMETER_INT(horizontal_position_alignment),
+  PARAMETER_INT(micro_left_margin),
+  PARAMETER_INT(min_horizontal_position_alignment),
+  PARAMETER_INT(base_horizontal_position_alignment),
   PARAMETER_INT(bidirectional_upper_limit),
   PARAMETER_INT(physical_channels),
   PARAMETER_INT(left_margin),
@@ -402,9 +416,10 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(cd_y_offset),
   PARAMETER_INT(cd_page_width),
   PARAMETER_INT(cd_page_height),
-  PARAMETER_INT(page_extra_height),
+  PARAMETER_INT(paper_extra_bottom),
   PARAMETER_RAW(preinit_sequence),
-  PARAMETER_RAW(postinit_remote_sequence)
+  PARAMETER_RAW(postinit_remote_sequence),
+  PARAMETER_RAW(vertical_borderless_sequence)
 };
 
 static const int the_parameter_count =
@@ -612,14 +627,6 @@ escp2_##f(const stp_vars_t *v)						\
     }									\
 }
 
-#define DEF_COMPOSITE_ACCESSOR(f, t)			\
-static inline t						\
-escp2_##f(const stp_vars_t *v)				\
-{							\
-  int model = stp_get_model_id(v);			\
-  return (stpi_escp2_model_capabilities[model].f);	\
-}
-
 #define DEF_ROLL_ACCESSOR(f, t)						\
 static inline t								\
 escp2_##f(const stp_vars_t *v, int rollfeed)				\
@@ -669,7 +676,7 @@ DEF_SIMPLE_ACCESSOR(cd_x_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_y_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_page_width, int)
 DEF_SIMPLE_ACCESSOR(cd_page_height, int)
-DEF_SIMPLE_ACCESSOR(page_extra_height, int)
+DEF_SIMPLE_ACCESSOR(paper_extra_bottom, int)
 DEF_SIMPLE_ACCESSOR(extra_feed, unsigned)
 DEF_SIMPLE_ACCESSOR(pseudo_separation_rows, int)
 DEF_SIMPLE_ACCESSOR(base_separation, int)
@@ -679,14 +686,15 @@ DEF_SIMPLE_ACCESSOR(black_initial_vertical_offset, int)
 DEF_SIMPLE_ACCESSOR(max_black_resolution, int)
 DEF_SIMPLE_ACCESSOR(zero_margin_offset, int)
 DEF_SIMPLE_ACCESSOR(extra_720dpi_separation, int)
-DEF_SIMPLE_ACCESSOR(horizontal_position_alignment, unsigned)
+DEF_SIMPLE_ACCESSOR(micro_left_margin, int)
+DEF_SIMPLE_ACCESSOR(min_horizontal_position_alignment, unsigned)
+DEF_SIMPLE_ACCESSOR(base_horizontal_position_alignment, unsigned)
 DEF_SIMPLE_ACCESSOR(bidirectional_upper_limit, int)
 DEF_SIMPLE_ACCESSOR(physical_channels, int)
 DEF_SIMPLE_ACCESSOR(alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alignment_choices, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_passes, int)
 DEF_SIMPLE_ACCESSOR(alternate_alignment_choices, int)
-DEF_COMPOSITE_ACCESSOR(printer_weaves, const printer_weave_list_t *)
 
 DEF_ROLL_ACCESSOR(left_margin, unsigned)
 DEF_ROLL_ACCESSOR(right_margin, unsigned)
@@ -696,11 +704,55 @@ DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
-DEF_COMPOSITE_ACCESSOR(reslist, const res_t *const *)
-DEF_COMPOSITE_ACCESSOR(inkgroup, const inkgroup_t *)
-DEF_COMPOSITE_ACCESSOR(input_slots, const input_slot_list_t *)
-DEF_COMPOSITE_ACCESSOR(quality_list, const quality_list_t *)
-DEF_COMPOSITE_ACCESSOR(channel_names, const channel_name_t *)
+DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
+
+static inline const res_t *const *
+escp2_reslist(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_reslist_named
+	  (stpi_escp2_model_capabilities[model].reslist));
+}
+
+static inline const printer_weave_list_t *
+escp2_printer_weaves(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_printer_weaves_named
+	  (stpi_escp2_model_capabilities[model].printer_weaves));
+}
+
+static inline const channel_name_t *
+escp2_channel_names(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_channel_names_named
+	  (stpi_escp2_model_capabilities[model].channel_names));
+}
+
+static inline const inkgroup_t *
+escp2_inkgroup(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_inkgroup_named
+	  (stpi_escp2_model_capabilities[model].inkgroup));
+}
+
+static inline const quality_list_t *
+escp2_quality_list(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_quality_list_named
+	  (stpi_escp2_model_capabilities[model].quality_list));
+}
+
+static inline const input_slot_list_t *
+escp2_input_slots(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return (stpi_escp2_get_input_slot_list_named
+	  (stpi_escp2_model_capabilities[model].input_slots));
+}
 
 static const channel_count_t *
 get_channel_count_by_name(const char *name)
@@ -774,17 +826,17 @@ static const escp2_dropsize_t *
 escp2_dropsizes(const stp_vars_t *v, int resid)
 {
   int model = stp_get_model_id(v);
-  const escp2_drop_list_t *drops = stpi_escp2_model_capabilities[model].drops;
+  const escp2_drop_list_t *drops =
+    stpi_escp2_get_drop_list_named(stpi_escp2_model_capabilities[model].drops);
   return (*drops)[resid];
 }
 
 static const inklist_t *
 escp2_inklist(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
   int i;
   const char *ink_list_name = NULL;
-  const inkgroup_t *inkgroup = stpi_escp2_model_capabilities[model].inkgroup;
+  const inkgroup_t *inkgroup = escp2_inkgroup(v);
 
   if (stp_check_string_parameter(v, "InkSet", STP_PARAMETER_ACTIVE))
     ink_list_name = stp_get_string_parameter(v, "InkSet");
@@ -811,9 +863,16 @@ escp2_paperlist(const stp_vars_t *v)
 {
   const inklist_t *inklist = escp2_inklist(v);
   if (inklist)
-    return inklist->papers;
+    return stpi_escp2_get_paperlist_named(inklist->papers);
   else
     return NULL;
+}
+
+static int
+supports_borderless(const stp_vars_t *v)
+{
+  return (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) ||
+	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL));
 }
 
 static int
@@ -853,6 +912,20 @@ compute_printed_resid(const res_t *res)
   return compute_internal_resid(res->printed_hres, res->printed_vres);
 }
 
+static int
+max_nozzle_span(const stp_vars_t *v)
+{
+  int nozzle_count = escp2_nozzles(v);
+  int nozzle_separation = escp2_nozzle_separation(v);
+  int black_nozzle_count = escp2_black_nozzles(v);
+  int black_nozzle_separation = escp2_black_nozzle_separation(v);
+  int nozzle_span = nozzle_count * nozzle_separation;
+  int black_nozzle_span = black_nozzle_count * black_nozzle_separation;
+  if (black_nozzle_span > nozzle_span)
+    return black_nozzle_span;
+  else
+    return nozzle_span;
+}
 
 static const input_slot_t *
 get_input_slot(const stp_vars_t *v)
@@ -1211,13 +1284,17 @@ get_media_adjustment(const stp_vars_t *v)
   const inklist_t *ink_list = escp2_inklist(v);
   if (pt && ink_list && ink_list->paper_adjustments)
     {
-      const paper_adjustment_list_t *adjlist = ink_list->paper_adjustments;
-      const char *paper_name = pt->name;
-      int i;
-      for (i = 0; i < adjlist->paper_count; i++)
+      const paper_adjustment_list_t *adjlist =
+	stpi_escp2_get_paper_adjustment_list_named(ink_list->paper_adjustments);
+      if (adjlist)
 	{
-	  if (strcmp(paper_name, adjlist->papers[i].name) == 0)
-	    return &(adjlist->papers[i]);
+	  const char *paper_name = pt->name;
+	  int i;
+	  for (i = 0; i < adjlist->paper_count; i++)
+	    {
+	      if (strcmp(paper_name, adjlist->papers[i].name) == 0)
+		return &(adjlist->papers[i]);
+	    }
 	}
     }
   return NULL;
@@ -1540,6 +1617,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	    (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
 	  stp_string_list_add_string
 	    (description->bounds.str, "CD3Inch", _("CD - 3 inch"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "CDCustom", _("CD - Custom"));
 	}
       else
 	{
@@ -1554,11 +1633,14 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
-  else if (strcmp(name, "CDInnerRadius") == 0)
+  else if (strcmp(name, "CDInnerRadius") == 0 )
     {
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.str = stp_string_list_create();
-      if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
+      if (printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd) &&
+	  stp_get_string_parameter(v, "PageSize") &&
+	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0)
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -1570,6 +1652,34 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "CDInnerDiameter") == 0 )
+    {
+      const input_slot_t *slot = get_input_slot(v);
+      description->bounds.dimension.lower = 16 * 10 * 72 / 254;
+      description->bounds.dimension.upper = 43 * 10 * 72 / 254;
+      description->deflt.dimension = 22 * 10 * 72 / 254;
+      if (printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd) &&
+	  stp_get_string_parameter(v, "PageSize") &&
+	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "CDOuterDiameter") == 0 )
+    {
+      const input_slot_t *slot = get_input_slot(v);
+      description->bounds.dimension.lower = 80 * 10 * 72 / 254;
+      description->bounds.dimension.upper = 120 * 10 * 72 / 254;
+      description->deflt.dimension = 119 * 10 * 72 / 254;
+      if (printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd) &&
+	  stp_get_string_parameter(v, "PageSize") &&
+	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
   else if (strcmp(name, "CDXAdjustment") == 0 ||
 	   strcmp(name, "CDYAdjustment") == 0)
     {
@@ -1577,7 +1687,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = -15;
       description->bounds.dimension.upper = 15;
       description->deflt.dimension = 0;
-      if (printer_supports_print_to_cd(v) && (!slot || (slot && slot->is_cd)))
+      if (printer_supports_print_to_cd(v) && (!slot || slot->is_cd))
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -1757,7 +1867,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       const input_slot_t *slot = get_input_slot(v);
       if (slot && slot->is_cd)
 	description->is_active = 0;
-      else if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES))
+      else if (supports_borderless(v))
 	description->deflt.boolean = 0;
       else
 	description->is_active = 0;
@@ -2014,11 +2124,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
       bottom_margin = imax(bottom_margin, escp2_bottom_margin(v, rollfeed));
       top_margin = imax(top_margin, escp2_top_margin(v, rollfeed));
     }
-  *left =	left_margin;
-  *right =	width - right_margin;
-  *top =	top_margin;
-  *bottom =	height - bottom_margin;
-  if (escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
+  if (supports_borderless(v) &&
       (use_maximum_area ||
        (!cd && stp_get_boolean_parameter(v, "FullBleed"))))
     {
@@ -2027,13 +2133,34 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	  if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 	      pt->bottom <= 0)
 	    {
-	      *left -= 80 / (360 / 72);		/* 80 per the Epson manual */
-	      *right += 80 / (360 / 72);	/* 80 per the Epson manual */
-	      *bottom += escp2_nozzles(v) * escp2_nozzle_separation(v) * 72 /
-		escp2_base_separation(v);
+	      if (use_paper_margins)
+		{
+		  unsigned width_limit = escp2_max_paper_width(v);
+		  int offset = escp2_zero_margin_offset(v);
+		  int margin = escp2_micro_left_margin(v);
+		  int sep = escp2_base_separation(v);
+		  int delta = -((offset - margin) * 72 / sep);
+		  left_margin = delta; /* Allow some overlap if paper isn't */
+		  right_margin = delta; /* positioned correctly */
+		  if (width - right_margin - 3 > width_limit)
+		    right_margin = width - width_limit - 3;
+		  top_margin = -7;
+		  bottom_margin = -7;
+		}
+	      else
+		{
+		  left_margin = 0;
+		  right_margin = 0;
+		  top_margin = 0;
+		  bottom_margin = 0;
+		}
 	    }
 	}
     }
+  *left =	left_margin;
+  *right =	width - right_margin;
+  *top =	top_margin;
+  *bottom =	height - bottom_margin;
 }
 
 /*
@@ -2566,6 +2693,22 @@ setup_head_offset(stp_vars_t *v)
 }
 
 static void
+setup_basic(stp_vars_t *v)
+{
+  escp2_privdata_t *pd = get_privdata(v);
+  pd->advanced_command_set = escp2_has_advanced_command_set(v);
+  pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
+  pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
+  pd->has_vacuum = escp2_has_cap(v, MODEL_VACUUM, MODEL_VACUUM_YES);
+  pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
+  pd->init_sequence = escp2_preinit_sequence(v);
+  pd->deinit_sequence = escp2_postinit_remote_sequence(v);
+  pd->borderless_sequence = escp2_vertical_borderless_sequence(v);
+  pd->base_separation = escp2_base_separation(v);
+  pd->resolution_scale = escp2_resolution_scale(v);
+}
+
+static void
 setup_misc(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
@@ -2573,17 +2716,6 @@ setup_misc(stp_vars_t *v)
   pd->paper_type = get_media_type(v);
   pd->paper_adjustment = get_media_adjustment(v);
   pd->ink_group = escp2_inkgroup(v);
-  pd->init_sequence = escp2_preinit_sequence(v);
-  pd->deinit_sequence = escp2_postinit_remote_sequence(v);
-  pd->advanced_command_set = escp2_has_advanced_command_set(v);
-  pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
-  pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
-  pd->has_vacuum = escp2_has_cap(v, MODEL_VACUUM, MODEL_VACUUM_YES);
-  pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
-  pd->base_separation = escp2_base_separation(v);
-  pd->resolution_scale = escp2_resolution_scale(v);
-  pd->use_extended_commands =
-    escp2_use_extended_commands(v, pd->res->softweave);
 }
 
 static void
@@ -2694,6 +2826,8 @@ setup_resolution(stp_vars_t *v)
   int horizontal = adjusted_horizontal_resolution(res);
 
   pd->res = res;
+  pd->use_extended_commands =
+    escp2_use_extended_commands(v, pd->res->softweave);
   pd->physical_xdpi = escp2_base_res(v, resid);
   if (pd->physical_xdpi > pd->res->hres)
     pd->physical_xdpi = pd->res->hres;
@@ -2784,7 +2918,7 @@ setup_head_parameters(stp_vars_t *v)
 			  pd->use_aux_channels);
   if (pd->physical_channels == 0)
     {
-      pd->inkname = &stpi_escp2_default_black_inkset;
+      pd->inkname = stpi_escp2_get_default_black_inkset();
       pd->physical_channels =
 	compute_channel_count(pd->inkname, pd->logical_channels,
 			      pd->use_aux_channels);
@@ -2847,31 +2981,68 @@ setup_head_parameters(stp_vars_t *v)
 static void
 setup_page(stp_vars_t *v)
 {
-  int n;
   escp2_privdata_t *pd = get_privdata(v);
   const input_slot_t *input_slot = get_input_slot(v);
   int extra_left = 0;
   int extra_top = 0;
-  const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  int hub_size = 43;		/* 43 mm standard CD hub */
+  int hub_size = 0;
+  int min_horizontal_alignment = escp2_min_horizontal_position_alignment(v);
+  int base_horizontal_alignment =
+    pd->res->hres / escp2_base_horizontal_position_alignment(v);
+  int required_horizontal_alignment =
+    MAX(min_horizontal_alignment, base_horizontal_alignment);
 
-  if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-    hub_size = 16;		/* 15 mm prints to the hole - play it
+  const char *cd_type = stp_get_string_parameter(v, "PageSize");
+  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
+     {
+	int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
+	stp_set_page_width(v, outer_diameter);
+	stp_set_page_height(v, outer_diameter);
+	stp_set_width(v, outer_diameter);
+	stp_set_height(v, outer_diameter);
+	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter") * 254 / 10 / 72;
+     }
+ else
+    {
+	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
+  	hub_size = 43;		/* 43 mm standard CD hub */
+
+  	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
+   	  hub_size = 16;		/* 15 mm prints to the hole - play it
 				   safe and print 16 mm */
+    }
 
-  stp_default_media_size(v, &n, &(pd->page_true_height));
-  pd->page_extra_height = escp2_page_extra_height(v);
-  if (pd->page_extra_height > 0 &&
-      escp2_has_cap(v, MODEL_XZEROMARGIN, MODEL_XZEROMARGIN_YES) &&
-      (!(input_slot->is_cd) && stp_get_boolean_parameter(v, "FullBleed")))
-    pd->page_extra_height +=
-      escp2_nozzles(v) * escp2_nozzle_separation(v) * 72 /
-      escp2_base_separation(v);
-  internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
-			  &pd->page_bottom, &pd->page_top);
+  stp_default_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
   /* Don't use full bleed mode if the paper itself has a margin */
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
+  if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) &&
+      ((!input_slot || !(input_slot->is_cd))))
+    {
+      pd->page_extra_height =
+	max_nozzle_span(v) * pd->page_management_units /
+	escp2_base_separation(v);
+      if (stp_get_boolean_parameter(v, "FullBleed"))
+	pd->paper_extra_bottom = 0;
+      else
+	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
+    }
+  else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) &&
+	   (stp_get_boolean_parameter(v, "FullBleed")) &&
+	   ((!input_slot || !(input_slot->is_cd))))
+    {
+      pd->paper_extra_bottom = 0;
+      pd->page_extra_height =
+	escp2_zero_margin_offset(v) * pd->page_management_units /
+	escp2_base_separation(v);
+    }
+  else
+    {
+      pd->page_extra_height = 0;
+      pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
+    }
+  internal_imageable_area(v, 0, 0, &pd->page_left, &pd->page_right,
+			  &pd->page_bottom, &pd->page_top);
 
   if (input_slot && input_slot->is_cd && escp2_cd_x_offset(v) > 0)
     {
@@ -2880,6 +3051,8 @@ setup_page(stp_vars_t *v)
       int top_center = escp2_cd_y_offset(v) +
 	stp_get_dimension_parameter(v, "CDYAdjustment");
       pd->page_true_height = pd->page_bottom - pd->page_top;
+      pd->page_true_width = pd->page_right - pd->page_left;
+      pd->paper_extra_bottom = 0;
       pd->page_extra_height = 0;
       stp_set_left(v, stp_get_left(v) - pd->page_left);
       stp_set_top(v, stp_get_top(v) - pd->page_top);
@@ -2900,6 +3073,7 @@ setup_page(stp_vars_t *v)
 	  pd->page_right = escp2_cd_page_width(v);
 	  pd->page_bottom = escp2_cd_page_height(v);
 	  pd->page_true_height = escp2_cd_page_height(v);
+	  pd->page_true_width = escp2_cd_page_width(v);
 	}
     }
 
@@ -2910,18 +3084,28 @@ setup_page(stp_vars_t *v)
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
   pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
+  pd->zero_margin_offset = escp2_zero_margin_offset(v);
+  if (supports_borderless(v) &&
+      pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO &&
+      ((!input_slot || !(input_slot->is_cd)) &&
+       stp_get_boolean_parameter(v, "FullBleed")))
+    {
+      int margin = escp2_micro_left_margin(v);
+      int sep = escp2_base_separation(v);
+      pd->image_left_position +=
+	(pd->zero_margin_offset - margin) * pd->micro_units / sep;
+    }
   /*
    * Many printers print extremely slowly if the starting position
-   * is not a multiple of 8
+   * is not aligned to 1/180"
    */
-  if (escp2_horizontal_position_alignment(v) > 1)
+  if (required_horizontal_alignment > 1)
     pd->image_left_position =
-      (pd->image_left_position / escp2_horizontal_position_alignment(v)) *
-      escp2_horizontal_position_alignment(v);
+      (pd->image_left_position / required_horizontal_alignment) *
+      required_horizontal_alignment;
 
 
   pd->page_bottom += extra_top + 1;
-  pd->page_true_height += extra_top + 1;
   pd->page_height = pd->page_bottom - pd->page_top;
   pd->image_top = stp_get_top(v) - pd->page_top + extra_top;
   pd->image_height = stp_get_height(v);
@@ -3093,8 +3277,10 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      pd->bitwidth,
      pd->image_printed_width,
      pd->image_printed_height,
-     pd->image_top * pd->res->vres / 72,
-     (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72,
+     ((pd->page_extra_height * pd->res->vres / pd->vertical_units) +
+      (pd->image_top * pd->res->vres / 72)),
+     (pd->page_extra_height +
+      (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72),
      pd->head_offset,
      weave_pattern,
      stpi_escp2_flush_pass,
@@ -3167,6 +3353,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
     pd->use_aux_channels = 0;
   pd->channels_in_use = count_channels(pd->inkname, pd->use_aux_channels);
 
+  setup_basic(v);
   setup_resolution(v);
   setup_head_parameters(v);
   setup_page(v);

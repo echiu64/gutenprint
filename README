@@ -1,21 +1,21 @@
-Welcome to Gutenprint 5.0.0!  Please read these notes carefully.
+Welcome to Gutenprint 5.0.1!  Please read these notes carefully.
 
 ================================================================
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.0.0, the first stable release of
-    Gutenprint 5.0.  Gutenprint, formerly named Gimp-Print, is a suite
-    of printer drivers that may be used with most common UNIX print
-    spooling systems, including CUPS, lpr, LPRng, or others.  These
-    drivers provide high quality printing for UNIX (including
-    Macintosh OS X 10.2 and newer) and Linux systems in many cases
-    equal to or better than proprietary vendor-supplied drivers.
-    Gutenprint also includes an enhanced print plug-in for the GIMP
-    image editor, replacing the Gimp-Print 4.2-based plugin supplied
-    with GIMP 1.2, 2.0, and 2.2, and offering an alternative with
-    additional capabilities to the GtkPrint-based plugin supplied with
-    GIMP 2.4 and beyond.
+    This is Gutenprint version 5.0.1, a stable release of Gutenprint
+    5.0.  Gutenprint, formerly named Gimp-Print, is a suite of printer
+    drivers that may be used with most common UNIX print spooling
+    systems, including CUPS, lpr, LPRng, or others.  These drivers
+    provide high quality printing for UNIX (including Macintosh OS X
+    10.2 and newer) and Linux systems in many cases equal to or better
+    than proprietary vendor-supplied drivers.  Gutenprint also
+    includes an enhanced print plug-in for the GIMP image editor,
+    replacing the Gimp-Print 4.2-based plugin supplied with GIMP 1.2,
+    2.0, and 2.2, and offering an alternative with additional
+    capabilities to the GtkPrint-based plugin supplied with GIMP 2.4
+    and beyond.
 
     Gutenprint has been renamed in order to clearly distinguish it
     from the GIMP.  While this package started out as the Print plugin
@@ -115,7 +115,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.0.0 generated on 22 Jul 2006
+	  Release: gutenprint 5.0.1 generated on 22 Jul 2006
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -141,8 +141,8 @@ A) OVERVIEW
 	    Installation prefix:                        /usr/local
 	    Data directory:                             /usr/local/share/gutenprint
 	    Library directory:                          /usr/local/lib/gutenprint
-	    XML data directory:                         /usr/local/share/gutenprint/5.0.0/xml
-	    Module directory:                           /usr/local/lib/gutenprint/5.0.0/modules
+	    XML data directory:                         /usr/local/share/gutenprint/5.0.1/xml
+	    Module directory:                           /usr/local/lib/gutenprint/5.0.1/modules
 	    Install sample images:                      yes
 
 	General configuration:
@@ -254,7 +254,7 @@ B) CUPS
       /usr/share/cups/model/gutenprint.  These PPD files can only be
       used by the precise version of Gutenprint that they were built
       with; for example, it is not possible to use PPD files from
-      Gutenprint 5.0.0 with Gutenprint 5.0.1.
+      Gutenprint 5.0.1 with Gutenprint 5.0.1.
 
     * A utility to update PPD files from an earlier release of
       Gutenprint, cups-genppdupdate.5.0.  This utility may be used to
@@ -629,8 +629,8 @@ A) PRINTER INSTALLATION
 
     Epson Stylus Photo R300 Foomatic/gutenprint-ijs.5.0
     Epson Stylus Photo R300 Foomatic/gutenprint-ijs-simplified.5.0
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.0.0
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.0.0 Simplified
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.0.1
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.0.1 Simplified
 
     The "simplified" PPD files offer a basic set of options only, for
     selecting printer options, standard paper sizes, and basic quality
@@ -660,12 +660,12 @@ A) PRINTER INSTALLATION
     of the driver that they were built against.  If you attempt to use
     a version of Gutenprint with PPD files not built for that precise
     version, the driver will fail with a diagnostic error message.
-    For example, PPD files built for Gutenprint 5.0.0-beta4 will not
-    work with driver version 5.0.0.  You can identify printers using
+    For example, PPD files built for Gutenprint 5.0.1-beta4 will not
+    work with driver version 5.0.1.  You can identify printers using
     Gutenprint PPD files by the name of the PPD file, which will be
     something like:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.0(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.0.1(en)
 
     Linux users please note: If you are using CUPS 1.1.11 or higher,
     and you have a USB-connected printer, you must have a printer

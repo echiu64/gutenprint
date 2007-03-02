@@ -280,7 +280,7 @@ test -z "$convertloc" && {
 # Check for docbook version 4
 
 {
-  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0"
+  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0" || test -d "/usr/share/sgml/docbook_4.1"
 } || {
   echo " "
   echo "***Warning***: You must have "Docbook v4" installed to"

@@ -112,8 +112,8 @@ if ($foomatic3) {
     print STDERR "Loading margins from ./printer_margins $simplified_subopt...";
     $code = join('', <PIPE>);
     #print $code;
-    close PIPE or die "Cannot run printer_margins: $!\n";
-    eval $code or die "Cannot run printer_margins: $!\n";
+    close PIPE or die "Cannot complete printer_margins: $!\n";
+    eval $code or die "Cannot evaluate printer_margins: $!\n";
     print STDERR "done.\n";
 }
 

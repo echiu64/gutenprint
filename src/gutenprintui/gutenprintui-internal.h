@@ -139,7 +139,7 @@ typedef struct
 extern gint stpui_plist_count;	   /* Number of system printers */
 extern gint stpui_plist_current;     /* Current system printer */
 extern stpui_plist_t *stpui_plist;		  /* System printers */
-extern const char *stpui_printrc_current_printer;
+extern char *stpui_printrc_current_printer;
 extern int stpui_show_all_paper_sizes;
 extern stp_string_list_t *stpui_system_print_queues;
 

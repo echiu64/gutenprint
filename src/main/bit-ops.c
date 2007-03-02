@@ -950,27 +950,30 @@ stpi_unpack_16_2(int length,
       if (tempin & 3)
         temp[7] |= ((tempin & 3) << 6) >> shift;
 
-      tempin = *in++;
+      if (length-- > 0)
+	{
+	  tempin = *in++;
 
-      if (tempin & 192)
-        temp[8] |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp[9] |= ((tempin & 48) << 2) >> shift;
-      if (tempin & 12)
-        temp[10] |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp[11] |= ((tempin & 3) << 6) >> shift;
+	  if (tempin & 192)
+	    temp[8] |= (tempin & 192) >> shift;
+	  if (tempin & 48)
+	    temp[9] |= ((tempin & 48) << 2) >> shift;
+	  if (tempin & 12)
+	    temp[10] |= ((tempin & 12) << 4) >> shift;
+	  if (tempin & 3)
+	    temp[11] |= ((tempin & 3) << 6) >> shift;
 
-      tempin = *in++;
+	  tempin = *in++;
 
-      if (tempin & 192)
-        temp[12] |= (tempin & 192) >> shift;
-      if (tempin & 48)
-        temp[13] |= ((tempin & 48) << 2) >> shift;
-      if (tempin & 12)
-        temp[14] |= ((tempin & 12) << 4) >> shift;
-      if (tempin & 3)
-        temp[15] |= ((tempin & 3) << 6) >> shift;
+	  if (tempin & 192)
+	    temp[12] |= (tempin & 192) >> shift;
+	  if (tempin & 48)
+	    temp[13] |= ((tempin & 48) << 2) >> shift;
+	  if (tempin & 12)
+	    temp[14] |= ((tempin & 12) << 4) >> shift;
+	  if (tempin & 3)
+	    temp[15] |= ((tempin & 3) << 6) >> shift;
+	}
 
       if (shift < 6)
         shift += 2;

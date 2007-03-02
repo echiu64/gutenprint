@@ -172,12 +172,19 @@ stp_puts(const char *s, const stp_vars_t *v)
 }
 
 void
+stp_putraw(const stp_raw_t *r, const stp_vars_t *v)
+{
+  (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), r->data, r->bytes);
+}
+
+void
 stp_send_command(const stp_vars_t *v, const char *command,
 		 const char *format, ...)
 {
   int i = 0;
   char fchar;
   const char *out_str;
+  const stp_raw_t *out_raw;
   unsigned short byte_count = 0;
   va_list args;
 
@@ -207,6 +214,10 @@ stp_send_command(const stp_vars_t *v, const char *command,
 	    case 'L':
 	      (void) va_arg(args, unsigned int);
 	      byte_count += 4;
+	      break;
+	    case 'r':
+	      out_raw = va_arg(args, const stp_raw_t *);
+	      byte_count += out_raw->bytes;
 	      break;
 	    case 's':
 	      out_str = va_arg(args, const char *);
@@ -256,6 +267,9 @@ stp_send_command(const stp_vars_t *v, const char *command,
 	  break;
 	case 's':
 	  stp_puts(va_arg(args, const char *), v);
+	  break;
+	case 'r':
+	  stp_putraw(va_arg(args, const stp_raw_t *), v);
 	  break;
 	}
       format++;

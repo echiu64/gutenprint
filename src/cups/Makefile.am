@@ -35,6 +35,7 @@ pkglibdir = $(cups_conf_serverbin)
 pkgsysconfdir = $(cups_conf_serverroot)
 
 cupsexec_backenddir = $(pkglibdir)/backend
+cupsexec_driverdir = $(pkglibdir)/driver
 cupsexec_filterdir = $(pkglibdir)/filter
 if CUPS_PPDS_AT_TOP_LEVEL
 cups_modeldir = $(pkgdatadir)/model/
@@ -51,6 +52,20 @@ TESTS= test-ppds
 
 ## Programs
 
+if BUILD_TRANSLATED_CUPS_PPDS
+PPD_NLS = $(PPD_NLS_1)
+LINGUAS = $(ALL_LINGUAS)
+TRANSLATE_PPDS = -DCUPS_TRANSLATED_PPDS
+endif
+
+if BUILD_SIMPLIFIED_CUPS_PPDS
+BUILD_SIMPLE_PPDS=-DGENERATE_SIMPLIFIED_PPDS
+endif
+
+if BUILD_CUPS_1_2
+cupsexec_driver_PROGRAMS = gutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+endif
+
 if BUILD_CUPS
 bin_PROGRAMS = cups-calibrate
 sbin_PROGRAMS = cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
@@ -66,6 +81,9 @@ endif
 cups_calibrate_SOURCES = cups-calibrate.c
 cups_calibrate_LDADD = -lm
 
+commandtocanon_SOURCES = commandtocanon.c
+commandtocanon_LDADD = $(CUPS_LIBS)
+
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
@@ -76,8 +94,14 @@ epson_SOURCES = epson.c
 epson_LDADD = $(CUPS_LIBS)
 
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c
+cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DALL_LINGUAS='"@ALL_LINGUAS@"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GENPPD_LIBS) $(GUTENPRINT_LIBS)
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
+
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DCUPS_DRIVER_INTERFACE -DALL_LINGUAS='"@ALL_LINGUAS@"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS)
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS)
@@ -104,11 +128,6 @@ if BUILD_CUPS_PPDS
 INSTALL_DATA_LOCAL_DEPS = ppd-stamp
 endif
 
-if BUILD_TRANSLATED_CUPS_PPDS
-PPD_NLS = $(PPD_NLS_1)
-LINGUAS = $(ALL_LINGUAS)
-endif
-
 if USE_NLS
 PPD_NLS_1 = ppd-nls
 endif
@@ -117,7 +136,7 @@ endif
 ## Rules
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
-	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+	if test -n "$(CUPS_PKG)" -a -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkdir_p) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
 	  for language in * ; do \
@@ -146,6 +165,7 @@ install-data-hook:
 	-rmdir $(DESTDIR)$(cups_modeldir)
 	-rmdir $(DESTDIR)$(pkgdatadir)
 	-rmdir $(DESTDIR)$(cupsexec_backenddir)
+	-rmdir $(DESTDIR)$(cupsexec_driverdir)
 	-rmdir $(DESTDIR)$(cupsexec_filterdir)
 	-rmdir $(DESTDIR)$(bindir)
 	-rmdir $(DESTDIR)$(pkglibdir)

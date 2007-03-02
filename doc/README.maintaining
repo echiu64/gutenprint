@@ -226,12 +226,12 @@ is enabled, and should be present in the release tarball.
 Other packages (including the extra development packages on some
 systems) must be installed on your system to build correctly.  These
 include: autoconf, automake, libtool, gtk, gdk, gimp 1.2, gimp 2.0,
-cups, foomatic, makeinfo, jade/jadetex, readline, SGML tools,
-texi2html.  Not all these need to be installed, depending on the
-configure options used.  It might be necessary to get the latest
-releases of some of these packages, as critical bugs present in
-earlier releases have been fixed.  The latest gettext and texi2html
-are strongly suggested.
+cups, foomatic, readline, and a DocBook processor (db2html, db2pdf,
+db2html).  Not all these need to be installed, depending on the
+configure options used (GIMP, CUPS, Foomatic and readline are
+optional).  It might be necessary to get the latest releases of some
+of these packages, as critical bugs present in earlier releases have
+been fixed.  The latest gettext is strongly suggested.
 
 3.4 Extra make targets
 ----------------------

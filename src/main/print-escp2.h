@@ -233,8 +233,8 @@ typedef struct
   const char *name;
   const char *text;
   const escp2_inkname_t *const *inknames;
-  const paperlist_t *papers;
-  const paper_adjustment_list_t *paper_adjustments;
+  const char *papers;
+  const char *paper_adjustments;
   const shade_set_t *shades;
   short n_inks;
 } inklist_t;
@@ -367,42 +367,43 @@ typedef struct
 #define MODEL_COMMAND_2000	0x2ul /* The 2000 series printers */
 #define MODEL_COMMAND_PRO	0x3ul /* Stylus Pro printers */
 
-#define MODEL_XZEROMARGIN_MASK	0x10ul /* Does this printer support */
-#define MODEL_XZEROMARGIN_NO	0x00ul /* zero margin mode? */
-#define MODEL_XZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
+#define MODEL_ZEROMARGIN_MASK	0x30ul /* Does this printer support */
+#define MODEL_ZEROMARGIN_NO	0x00ul /* zero margin mode? */
+#define MODEL_ZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
+#define MODEL_ZEROMARGIN_FULL	0x20ul /* (print to edge of the paper) */
 
-#define MODEL_VARIABLE_DOT_MASK	0x20ul /* Does this printer support var */
+#define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
 #define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
-#define MODEL_VARIABLE_YES	0x20ul /* printers support multiple modes */
+#define MODEL_VARIABLE_YES	0x40ul /* printers support multiple modes */
 
-#define MODEL_GRAYMODE_MASK	0x40ul /* Does this printer support special */
+#define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
 #define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
-#define MODEL_GRAYMODE_YES	0x40ul
+#define MODEL_GRAYMODE_YES	0x80ul
 
-#define MODEL_VACUUM_MASK	0x80ul
-#define MODEL_VACUUM_NO		0x00ul
-#define MODEL_VACUUM_YES	0x80ul
+#define MODEL_VACUUM_MASK	0x100ul
+#define MODEL_VACUUM_NO		0x000ul
+#define MODEL_VACUUM_YES	0x100ul
 
-#define MODEL_FAST_360_MASK	0x100ul
+#define MODEL_FAST_360_MASK	0x200ul
 #define MODEL_FAST_360_NO	0x000ul
-#define MODEL_FAST_360_YES	0x100ul
+#define MODEL_FAST_360_YES	0x200ul
 
-#define MODEL_SEND_ZERO_ADVANCE_MASK	0x200ul
+#define MODEL_SEND_ZERO_ADVANCE_MASK	0x400ul
 #define MODEL_SEND_ZERO_ADVANCE_NO	0x000ul
-#define MODEL_SEND_ZERO_ADVANCE_YES	0x200ul
+#define MODEL_SEND_ZERO_ADVANCE_YES	0x400ul
 
-#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x400ul
+#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x800ul
 #define MODEL_SUPPORTS_INK_CHANGE_NO	0x000ul
-#define MODEL_SUPPORTS_INK_CHANGE_YES	0x400ul
+#define MODEL_SUPPORTS_INK_CHANGE_YES	0x800ul
 
-#define MODEL_PACKET_MODE_MASK	0x800ul
-#define MODEL_PACKET_MODE_NO	0x000ul
-#define MODEL_PACKET_MODE_YES	0x800ul
+#define MODEL_PACKET_MODE_MASK	0x1000ul
+#define MODEL_PACKET_MODE_NO	0x0000ul
+#define MODEL_PACKET_MODE_YES	0x1000ul
 
 typedef enum
 {
   MODEL_COMMAND,
-  MODEL_XZEROMARGIN,
+  MODEL_ZEROMARGIN,
   MODEL_VARIABLE_DOT,
   MODEL_GRAYMODE,
   MODEL_VACUUM,
@@ -440,6 +441,7 @@ typedef struct escp2_printer
   short		max_vres;
   short		min_hres;
   short		min_vres;
+/*****************************************************************************/
   /* Miscellaneous printer-specific data */
   short		extra_feed;	/* Extra distance the paper can be spaced */
 				/* beyond the bottom margin, in 1/360". */
@@ -452,10 +454,13 @@ typedef struct escp2_printer
 
   short         zero_margin_offset;   /* Offset to use to achieve */
 				      /* zero-margin printing */
+  short		micro_left_margin; /* Precise left margin (base separation) */
   short		initial_vertical_offset;
   short		black_initial_vertical_offset;
   short		extra_720dpi_separation;
-  short		horizontal_position_alignment; /* Horizontal alignment */
+  short		min_horizontal_position_alignment; /* Horizontal alignment */
+					       /* for good performance */
+  short		base_horizontal_position_alignment; /* Horizontal alignment */
 					       /* for good performance */
   int		bidirectional_upper_limit;     /* Highest total resolution */
 					       /* for bidirectional printing */
@@ -496,7 +501,7 @@ typedef struct escp2_printer
   short		cd_page_width;	/* Width of "page" when printing to CD */
   short		cd_page_height;	/* Height of "page" when printing to CD */
 				/* Extra height for form factor command */
-  short		page_extra_height; /* Extra height (lie to set form factor) */
+  short		paper_extra_bottom; /* Extra space on the bottom of the page */
 /*****************************************************************************/
   /* Parameters for escputil */
   short		alignment_passes;
@@ -506,111 +511,37 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const short *dot_sizes;	/* Vector of dot sizes for resolutions */
   const float *densities;	/* List of densities for each printer */
-  const escp2_drop_list_t *drops; /* Drop sizes */
+  const char *drops; /* Drop sizes */
 /*****************************************************************************/
-  const res_t *const *reslist;
-  const inkgroup_t *inkgroup;
+  const char *reslist;
+  const char *inkgroup;
 /*****************************************************************************/
   const short *bits;
   const short *base_resolutions;
-  const input_slot_list_t *input_slots;
+  const char *input_slots;
 /*****************************************************************************/
-  const quality_list_t *quality_list;
+  const char *quality_list;
   const stp_raw_t *preinit_sequence;
   const stp_raw_t *postinit_remote_sequence;
 /*****************************************************************************/
-  const printer_weave_list_t *const printer_weaves;
-  const channel_name_t *channel_names;
+  const stp_raw_t *vertical_borderless_sequence;
+  const char *const printer_weaves;
+  const char *channel_names;
 } stpi_escp2_printer_t;
 
 extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
-extern const escp2_drop_list_t stpi_escp2_simple_drops;
-extern const escp2_drop_list_t stpi_escp2_spro10000_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_1_5pl_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_2pl_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_3pl_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_3pl_pigment_c66_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_3pl_pmg_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_r2400_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_picturemate_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_1440_4pl_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_ultrachrome_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_2880_4pl_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_6pl_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_2000p_drops;
-extern const escp2_drop_list_t stpi_escp2_variable_x80_6pl_drops;
-
-extern const paperlist_t stpi_escp2_standard_paper_list;
-extern const paperlist_t stpi_escp2_durabrite_paper_list;
-extern const paperlist_t stpi_escp2_durabrite2_paper_list;
-extern const paperlist_t stpi_escp2_ultrachrome_paper_list;
-extern const paperlist_t stpi_escp2_ultrachrome_k3_paper_list;
-extern const paperlist_t stpi_escp2_r800_paper_list;
-extern const paperlist_t stpi_escp2_picturemate_paper_list;
-
-extern const paper_adjustment_list_t stpi_escp2_standard_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_durabrite_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_durabrite2_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_photo_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_photo2_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_photo3_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_sp960_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_ultrachrome_photo_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_ultrachrome_matte_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_ultrachrome_k3_photo_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_ultrachrome_k3_matte_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_r800_photo_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_r800_matte_paper_adjustment_list;
-extern const paper_adjustment_list_t stpi_escp2_picturemate_paper_adjustment_list;
-
-extern const res_t *const stpi_escp2_superfine_reslist[];
-extern const res_t *const stpi_escp2_r2400_reslist[];
-extern const res_t *const stpi_escp2_cx3650_reslist[];
-extern const res_t *const stpi_escp2_no_printer_weave_reslist[];
-extern const res_t *const stpi_escp2_pro_reslist[];
-extern const res_t *const stpi_escp2_sp5000_reslist[];
-extern const res_t *const stpi_escp2_720dpi_reslist[];
-extern const res_t *const stpi_escp2_720dpi_soft_reslist[];
-extern const res_t *const stpi_escp2_g3_720dpi_reslist[];
-extern const res_t *const stpi_escp2_1440dpi_reslist[];
-extern const res_t *const stpi_escp2_2880dpi_reslist[];
-extern const res_t *const stpi_escp2_2880_1440dpi_reslist[];
-extern const res_t *const stpi_escp2_g3_reslist[];
-extern const res_t *const stpi_escp2_sc500_reslist[];
-extern const res_t *const stpi_escp2_sc640_reslist[];
-extern const res_t *const stpi_escp2_picturemate_reslist[];
-
-extern const inkgroup_t stpi_escp2_cmy_inkgroup;
-extern const inkgroup_t stpi_escp2_standard_inkgroup;
-extern const inkgroup_t stpi_escp2_c80_inkgroup;
-extern const inkgroup_t stpi_escp2_c82_inkgroup;
-extern const inkgroup_t stpi_escp2_c64_inkgroup;
-extern const inkgroup_t stpi_escp2_f360_inkgroup;
-extern const inkgroup_t stpi_escp2_cx3650_inkgroup;
-extern const inkgroup_t stpi_escp2_x80_inkgroup;
-extern const inkgroup_t stpi_escp2_photo_gen1_inkgroup;
-extern const inkgroup_t stpi_escp2_photo_gen2_inkgroup;
-extern const inkgroup_t stpi_escp2_photo_gen3_inkgroup;
-extern const inkgroup_t stpi_escp2_photo_pigment_inkgroup;
-extern const inkgroup_t stpi_escp2_photo7_japan_inkgroup;
-extern const inkgroup_t stpi_escp2_ultrachrome_inkgroup;
-extern const inkgroup_t stpi_escp2_f360_photo_inkgroup;
-extern const inkgroup_t stpi_escp2_f360_photo7_japan_inkgroup;
-extern const inkgroup_t stpi_escp2_f360_ultrachrome_inkgroup;
-extern const inkgroup_t stpi_escp2_f360_ultrachrome_k3_inkgroup;
-extern const inkgroup_t stpi_escp2_cmykrb_inkgroup;
-extern const inkgroup_t stpi_escp2_picturemate_inkgroup;
-
-extern const escp2_inkname_t stpi_escp2_default_black_inkset;
-
-extern const printer_weave_list_t stpi_escp2_standard_printer_weave_list;
-extern const printer_weave_list_t stpi_escp2_sp2200_printer_weave_list;
-extern const printer_weave_list_t stpi_escp2_pro7000_printer_weave_list;
-extern const printer_weave_list_t stpi_escp2_pro7500_printer_weave_list;
-extern const printer_weave_list_t stpi_escp2_pro7600_printer_weave_list;
+extern const paper_adjustment_list_t *stpi_escp2_get_paper_adjustment_list_named(const char *);
+extern const paperlist_t *stpi_escp2_get_paperlist_named(const char *);
+extern const quality_list_t *stpi_escp2_get_quality_list_named(const char *);
+extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
+extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
+extern const input_slot_list_t *stpi_escp2_get_input_slot_list_named(const char *);
+extern const res_t *const *stpi_escp2_get_reslist_named(const char *);
+extern const escp2_drop_list_t *stpi_escp2_get_drop_list_named(const char *);
+extern const printer_weave_list_t *stpi_escp2_get_printer_weaves_named(const char *);
+extern const channel_name_t *stpi_escp2_get_channel_names_named(const char *);
 
 typedef struct
 {
@@ -626,6 +557,7 @@ typedef struct
   int micro_units;		/* Micro-units for horizontal positioning */
   int unit_scale;		/* Scale factor for units */
   int send_zero_pass_advance;	/* Send explicit command for zero advance */
+  int zero_margin_offset;	/* Zero margin offset */
 
   /* Ink parameters */
   int bitwidth;			/* Number of bits per ink drop */
@@ -653,6 +585,7 @@ typedef struct
   const inkgroup_t *ink_group;	/* Which set of inks */
   const stp_raw_t *init_sequence; /* Initialization sequence */
   const stp_raw_t *deinit_sequence; /* De-initialization sequence */
+  const stp_raw_t *borderless_sequence; /* Vertical borderless sequence */
   model_featureset_t command_set; /* Which command set this printer supports */
   int variable_dots;		/* Print supports variable dot sizes */
   int has_vacuum;		/* Printer supports vacuum command */
@@ -681,7 +614,9 @@ typedef struct
   int page_width;		/* Page width (points) */
   int page_height;		/* Page height (points) */
   int page_true_height;		/* Physical page height (points) */
-  int page_extra_height;	/* Extra height for set_form_factor */
+  int page_extra_height;	/* Extra height for set_form_factor (rows) */
+  int paper_extra_bottom;	/* Extra bottom for set_page_size (rows) */
+  int page_true_width;		/* Physical page height (points) */
   int cd_x_offset;		/* CD X offset (micro units) */
   int cd_y_offset;		/* CD Y offset (micro units) */
   int cd_outer_radius;		/* CD radius (micro units) */

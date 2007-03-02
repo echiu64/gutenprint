@@ -37,7 +37,7 @@ typedef struct canon_caps {
   int border_right;   /* right margin, points */
   int border_top;     /* absolute top margin, points */
   int border_bottom;  /* absolute bottom margin, points */
-  int slots;          /* available paperslots */
+  const canon_slotlist_t* slotlist; /*available paperslots */
   unsigned long features;  /* special bjl settings */
   unsigned char ESC_r_arg; /* argument used for the ESC (r command during init */
   const char** control_cmdlist;
@@ -93,52 +93,6 @@ static const char standard_hue_adjustment[] =
 "</curve>\n"
 "</gutenprint>\n";
 
-static const char PIXMA_iP4000_sat_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
-/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
-/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
-/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
-/* Y */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* G */
-/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-static const char PIXMA_iP4000_lum_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
-/* C */  "0.40 0.49 0.58 0.66 0.74 0.80 0.83 0.85 "  /* B */
-/* B */  "0.87 0.82 0.70 0.63 0.67 0.69 0.69 0.68 "  /* M */
-/* M */  "0.65 0.68 0.72 0.76 0.78 0.78 0.77 0.97 "  /* R */
-/* R */  "1.00 1.00 1.00 0.99 0.96 0.93 0.90 0.87 "  /* Y */
-/* Y */  "0.83 0.84 0.84 0.85 0.85 0.86 0.86 0.86 "  /* G */
-/* G */  "0.83 0.81 0.72 0.57 0.45 0.42 0.42 0.41 "  /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-static const char PIXMA_iP4000_hue_adjustment[] =
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-"<gutenprint>\n"
-"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
-"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
-/* C */  "0.00 -.11 -.23 -.37 -.45 -.45 -.38 -.33 " /* B */
-/* B */  "-.35 -.43 -.37 -.23 -.09 0.00 0.08 0.09 " /* M */
-/* M */  "0.00 -.11 -.24 -.36 -.31 -.08 0.20 0.31 " /* R */
-/* R */  "0.19 0.13 0.13 0.15 0.16 0.15 0.13 0.10 " /* Y */
-/* Y */  "0.00 -.11 -.17 -.22 -.30 -.37 -.45 -.55 " /* G */
-/* G */  "-.64 -.74 -.80 -.81 -.74 -.55 -.33 -.14 " /* C */
-"</sequence>\n"
-"</curve>\n"
-"</gutenprint>\n";
-
-
 static const char* control_cmd_ackshort[] = {
   "AckTime=Short",
   NULL
@@ -180,7 +134,7 @@ static const canon_cap_t canon_model_capabilities[] =
     4202, 3,
     618, 936,       /* 8.58" x 13 " */
     10, 10, 9, 20,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD1 | CANON_CAP_rr,0x61,NULL,
     &canon_S200_modelist,
     &canon_default_paperlist,
@@ -193,7 +147,7 @@ static const canon_cap_t canon_model_capabilities[] =
     30, 1,
     9.5*72, 14*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_30_modelist,
     &canon_default_paperlist,
@@ -205,7 +159,7 @@ static const canon_cap_t canon_model_capabilities[] =
     85, 1,
     9.5*72, 14*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_85_modelist,
     &canon_default_paperlist,
@@ -218,7 +172,7 @@ static const canon_cap_t canon_model_capabilities[] =
     4300, 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_4300_modelist,
     &canon_default_paperlist,
@@ -231,7 +185,7 @@ static const canon_cap_t canon_model_capabilities[] =
     4400, 1,
     9.5*72, 14*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_4400_modelist,
     &canon_default_paperlist,
@@ -244,7 +198,7 @@ static const canon_cap_t canon_model_capabilities[] =
     6000, 3,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD1,0,control_cmd_ackshort,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
@@ -257,7 +211,7 @@ static const canon_cap_t canon_model_capabilities[] =
     6200, 3,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD1,0,control_cmd_ackshort,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
@@ -270,7 +224,7 @@ static const canon_cap_t canon_model_capabilities[] =
     6500, 3,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD1,0,NULL,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
@@ -282,7 +236,7 @@ static const canon_cap_t canon_model_capabilities[] =
     8200, 3,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD1 | CANON_CAP_r,0x61,control_cmd_ackshort,
     &canon_BJC_8200_modelist,
     &canon_default_paperlist,
@@ -302,7 +256,7 @@ static const canon_cap_t canon_model_capabilities[] =
     210, 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_210_modelist,
     &canon_default_paperlist,
@@ -314,7 +268,7 @@ static const canon_cap_t canon_model_capabilities[] =
     240, 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
@@ -326,7 +280,7 @@ static const canon_cap_t canon_model_capabilities[] =
     250, 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
-    CANON_SLOT_ASF1 | CANON_SLOT_MAN1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
@@ -338,7 +292,7 @@ static const canon_cap_t canon_model_capabilities[] =
     1000, 1,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
@@ -350,7 +304,7 @@ static const canon_cap_t canon_model_capabilities[] =
     2000, 1,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_2000_modelist,
     &canon_default_paperlist,
@@ -362,7 +316,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3000, 3,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL, /*FIX? should have _r? */
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
@@ -374,7 +328,7 @@ static const canon_cap_t canon_model_capabilities[] =
     6100, 3,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD1 | CANON_CAP_a | CANON_CAP_r,0x61,NULL,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
@@ -386,7 +340,7 @@ static const canon_cap_t canon_model_capabilities[] =
     7000, 3,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD1,0,NULL,
     &canon_BJC_7000_modelist,
     &canon_default_paperlist,
@@ -398,7 +352,7 @@ static const canon_cap_t canon_model_capabilities[] =
     7100, 3,
     842, 17*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_7100_modelist,
     &canon_default_paperlist,
@@ -418,7 +372,7 @@ static const canon_cap_t canon_model_capabilities[] =
     5100, 1,
     17*72, 22*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
@@ -430,7 +384,7 @@ static const canon_cap_t canon_model_capabilities[] =
     5500, 1,
     22*72, 34*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_5500_modelist,
     &canon_default_paperlist,
@@ -442,7 +396,7 @@ static const canon_cap_t canon_model_capabilities[] =
     6500, 3,
     17*72, 22*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD1 | CANON_CAP_a,0,NULL,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
@@ -454,7 +408,7 @@ static const canon_cap_t canon_model_capabilities[] =
     8500, 3,
     17*72, 22*72,
     11, 9, 10, 18,
-    CANON_SLOT_ASF1,
+    &canon_default_slotlist,
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_8500_modelist,
     &canon_default_paperlist,
@@ -466,73 +420,85 @@ static const canon_cap_t canon_model_capabilities[] =
     9001, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
-    CANON_SLOT_ASF1,  /*paper slot */
+    &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP2000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP3000 */
     3999, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
-    CANON_SLOT_ASF1,  /*paper slot */
+    &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP3000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP4000 */
     4000, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
-    CANON_SLOT_ASF1,  /*paper slot */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r /*|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    10, 9, 10, 12,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_p /*|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4000_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon PIXMA iP4200 */
     4200, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
-    CANON_SLOT_ASF1,  /*paper slot */
+    &canon_PIXMA_iP4200_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4200_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon PIXMA iP6700 */
+    4203, 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP6700_modelist,
+    &canon_PIXMA_iP4000_paperlist,
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon MULTIPASS MP150 */
     4201, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
-    CANON_SLOT_ASF1,  /*paper slot */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_I,0x61,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_p|CANON_CAP_I,0x61,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
   { /* Canon MULTIPASS MP830 */
     9000, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
-    CANON_SLOT_ASF1,  /*paper slot */
+    &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX,0,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP830_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    PIXMA_iP4000_lum_adjustment,
-    PIXMA_iP4000_hue_adjustment,
-    PIXMA_iP4000_sat_adjustment
+    NULL,
+    NULL,
+    NULL
   },
 };
 

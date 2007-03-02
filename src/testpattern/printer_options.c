@@ -32,11 +32,23 @@ int
 main(int argc, char **argv)
 {
   int i, j, k;
+  int first_arg = 1;
+  stp_string_list_t *printer_list = NULL;
   stp_parameter_level_t max_level = STP_PARAMETER_LEVEL_ADVANCED4;
   if (argc > 1 && !strcmp(argv[1], "-s"))
-    max_level = STP_PARAMETER_LEVEL_BASIC;
+    {
+      max_level = STP_PARAMETER_LEVEL_BASIC;
+      first_arg++;
+    }
 
   stp_init();
+  
+  if (argc > first_arg)
+    {
+      printer_list = stp_string_list_create();
+      for (i = 1; i < argc; i++)
+	stp_string_list_add_string(printer_list, argv[i], argv[i]);
+    }
   for (i = 0; i < stp_printer_model_count(); i++)
     {
       stp_parameter_list_t params;
@@ -50,6 +62,8 @@ main(int argc, char **argv)
       size_t count;
       int printer_is_color = 0;
       if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
+	continue;
+      if (printer_list && !stp_string_list_is_present(printer_list, driver))
 	continue;
 
       /* Set Job Mode to "Job" as this enables the Duplex option */

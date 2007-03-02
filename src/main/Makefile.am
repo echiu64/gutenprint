@@ -50,7 +50,14 @@ color_traditional_la_SOURCES = \
 
 color_traditional_la_LDFLAGS = -module -avoid-version
 
-print_canon_la_SOURCES = print-canon.c
+print_canon_la_SOURCES = \
+	print-canon.c \
+	print-canon.h \
+	canon-inks.h \
+	canon-media.h \
+	canon-modes.h \
+	canon-printers.h
+
 print_canon_la_LDFLAGS = -module -avoid-version
 
 print_escp2_la_SOURCES = \
@@ -124,6 +131,7 @@ libgutenprint_la_SOURCES =			\
 	dither-predithered.c			\
 	generic-options.c			\
 	image.c					\
+	buffer-image.c				\
 	module.c				\
 	path.c					\
 	print-dither-matrices.c			\

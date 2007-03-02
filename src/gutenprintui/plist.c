@@ -315,6 +315,19 @@ stpui_set_image_channel_depth(gint depth)
   image_channel_depth = depth;
 }
 
+static void
+writefunc(void *file, const char *buf, size_t bytes)
+{
+  FILE *prn = (FILE *)file;
+  fwrite(buf, 1, bytes, prn);
+}
+
+static void
+stpui_errfunc(void *file, const char *buf, size_t bytes)
+{
+  g_message(buf);
+}
+
 void
 stpui_printer_initialize(stpui_plist_t *printer)
 {
@@ -331,6 +344,8 @@ stpui_printer_initialize(stpui_plist_t *printer)
   printer->auto_size_roll_feed_paper = 0;
   printer->unit = 0;
   printer->v = stp_vars_create();
+  stp_set_errfunc(printer->v, writefunc);
+  stp_set_errdata(printer->v, stderr);
   stpui_plist_set_copy_count(printer, 1);
   stp_set_string_parameter(printer->v, "InputImageType", image_type);
   if (image_raw_channels)
@@ -566,11 +581,11 @@ do {									\
 } while (0)
 
 static void *
-psearch(const void *key, const void *base, size_t nmemb, size_t size,
+psearch(const void *key, void *base, size_t nmemb, size_t size,
 	int (*compar)(const void *, const void *))
 {
   int i;
-  const char *cbase = (const char *) base;
+  char *cbase = (char *) base;
   for (i = 0; i < nmemb; i++)
     {
       if ((*compar)(key, (const void *) cbase) == 0)
@@ -613,6 +628,8 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
    * always first in the list, else call psearch.
    */
   stpui_plist_t *p;
+  if (!stp_get_printer(key->v))
+    stp_set_driver(key->v, "ps2");
   if (stp_get_printer(key->v))
     {
       p = psearch(key, stpui_plist, stpui_plist_count,
@@ -642,8 +659,13 @@ stpui_plist_add(const stpui_plist_t *key, int add_only)
 #endif
 	  stpui_plist_copy(p, key);
 	}
+      return 1;
     }
-  return 1;
+  else
+    {
+      fprintf(stderr, "No printer found!\n");
+      return 0;
+    }
 }
 
 static void
@@ -910,7 +932,7 @@ stpui_printrc_load_v1(FILE *fp)
     }
 }  
 
-const char *stpui_printrc_current_printer = NULL;
+char *stpui_printrc_current_printer = NULL;
 extern FILE *yyin;
 extern int yyparse(void);
 
@@ -921,7 +943,9 @@ stpui_printrc_load_v2(FILE *fp)
   yyin = fp;
 
   stpui_printrc_current_printer = NULL;
+  setlocale(LC_ALL, "C");
   retval = yyparse();
+  setlocale(LC_ALL, "");
   if (stpui_printrc_current_printer)
     {
       int i;
@@ -1230,19 +1254,6 @@ static void
 usr1_handler (int sig)
 {
   usr1_interrupt = 1;
-}
-
-static void
-writefunc(void *file, const char *buf, size_t bytes)
-{
-  FILE *prn = (FILE *)file;
-  fwrite(buf, 1, bytes, prn);
-}
-
-static void
-stpui_errfunc(void *file, const char *buf, size_t bytes)
-{
-  g_message(buf);
 }
 
 /*

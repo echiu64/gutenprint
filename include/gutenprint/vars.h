@@ -129,6 +129,9 @@ typedef struct
   const void *data; /*!< Raw data. */
 } stp_raw_t;
 
+#define STP_RAW(x) { sizeof((x)), (x) }
+#define STP_RAW_STRING(x) { sizeof((x)) - 1, (x) }
+
 /** double_bound (range) parameter. */
 typedef struct
 {

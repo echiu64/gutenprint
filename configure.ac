@@ -38,7 +38,7 @@ pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [0])
 pushdef([GUTENPRINT_MICRO_VERSION],     [0])
-pushdef([GUTENPRINT_EXTRA_VERSION],     [])
+pushdef([GUTENPRINT_EXTRA_VERSION],     [.99.1])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINT_BINARY_AGE],        [0])
@@ -221,12 +221,34 @@ STP_ARG_WITH_DETAILED(
      cups_prefix="${prefix}"
   ])
 
+USE_LEVEL3_PS=no
 BUILD_CUPS_PPDS="${BUILD_CUPS}"
 BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
+BUILD_CUPS_1_2="no"
+if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
+  cups_version=`${CUPS_CONFIG} --version`
+dnl Quote to protect sed regexes
+  [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
+  [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
+  [cups_point=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\3/'`]
+dnl There was no CUPS 1.0.15 or the like
+  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
+    USE_LEVEL3_PS=yes
+  fi
+  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 ; then
+    BUILD_CUPS_PPDS="no"
+    BUILD_CUPS_1_2="yes"
+  fi
+fi
 
 STP_ARG_ENABLE([cups-ppds],
                [build CUPS PPD files],
                [BUILD_CUPS_PPDS],
+               [(automatic)])
+
+STP_ARG_ENABLE([cups-1_2-enhancements],
+               [build CUPS 1.2 enhancements],
+               [BUILD_CUPS_1_2],
                [(automatic)])
 
 STP_ARG_ENABLE([translated-cups-ppds],
@@ -246,19 +268,6 @@ STP_ARG_ENABLE_DETAILED([simplified-cups-ppds],
     only) [WHICH_PPDS]="-s"; BUILD_SIMPLIFIED_CUPS_PPDS=only; AC_MSG_RESULT([only]) ;;
     *) AC_MSG_ERROR([${enableval}: not a valid option ('yes', 'no', or 'only')]) ;;
 				   ])
-
-USE_LEVEL3_PS=no
-if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
-  cups_version=`${CUPS_CONFIG} --version`
-dnl Quote to protect sed regexes
-  [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
-  [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
-  [cups_point=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\3/'`]
-dnl There was no CUPS 1.0.15 or the like
-  if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
-    USE_LEVEL3_PS=yes
-  fi
-fi
 
 STP_ARG_ENABLE([cups-ppds-at-top-level],
 	       [place CUPS PPD files at top level],
@@ -435,7 +444,7 @@ if test x$BUILD_GIMP2 = xyes; then
 fi
 
 STP_ARG_WITH([gimp2],
-             [build GIMP 2.0 Print plugin],
+             [build GIMP 2.x Print plugin],
              [BUILD_GIMP2],
              [(automatic)])
 
@@ -638,7 +647,7 @@ AC_DEFINE_UNQUOTED(PKGMODULEDIR, ["$PKGMODULEDIR"])
 
 dnl Compiler flags
 if test x$ac_compiler_gnu = "xyes"; then
-  STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -finline-limit=1048576],, [GNUCFLAGS])
+  STP_ADD_COMPILER_ARGS([-Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=1048576],, [GNUCFLAGS])
   if test x${USE_MAINTAINER_MODE} = xyes ; then
     STP_ADD_COMPILER_ARGS([-pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls],, [GNUCFLAGS])
   fi
@@ -803,11 +812,15 @@ AM_CONDITIONAL(BUILD_GHOSTSCRIPT, test x${BUILD_GHOSTSCRIPT} = xyes)
 
 AM_CONDITIONAL(BUILD_CUPS, test x${BUILD_CUPS} = xyes)
 
+AM_CONDITIONAL(BUILD_CUPS_1_2, test x${BUILD_CUPS_1_2} = xyes)
+
 AM_CONDITIONAL(BUILD_CUPS_PPDS, test x${BUILD_CUPS_PPDS} = xyes)
 
 AM_CONDITIONAL(CUPS_PPDS_AT_TOP_LEVEL, test x${CUPS_PPDS_AT_TOP_LEVEL} = xyes)
 
 AM_CONDITIONAL(BUILD_TRANSLATED_CUPS_PPDS, test x${BUILD_TRANSLATED_CUPS_PPDS} = xyes)
+
+AM_CONDITIONAL(BUILD_SIMPLIFIED_CUPS_PPDS, test x${BUILD_SIMPLIFIED_CUPS_PPDS} = xyes)
 
 if test x${USE_LEVEL3_PS} = xno ; then
   CUPS_PPD_PS_LEVEL=2
@@ -971,6 +984,7 @@ AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(WHICH_PPDS)
+AC_SUBST(BUILD_CUPS_PPDS)
 
 dnl Output files
 
@@ -1043,13 +1057,18 @@ echo "================================================================"
 echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE"
 echo
 echo "  Features:"
-echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
 if test "$BUILD_CUPS" != "no" ; then
+    echo "    Build CUPS:                                 $BUILD_CUPS, installing in $cups_prefix"
+    echo "        Build CUPS 1.2 enhancements:            $BUILD_CUPS_1_2"
     echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS"
-    echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
-    echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
-    echo "            Generate PS level 3 CUPS PPD files: $USE_LEVEL3_PS"
-    echo "        Install CUPS PPD files at top level:    $CUPS_PPDS_AT_TOP_LEVEL"
+    if test "$BUILD_CUPS_PPDS" != "no" ; then
+	echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
+	echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
+	echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL"
+    fi
+    if test "$BUILD_CUPS_PPDS" != "no" -o "$BUILD_CUPS_1_2" != "no" ; then
+        echo "        Generate PS level 3 CUPS PPD files:     $USE_LEVEL3_PS"
+    fi
     echo "        Build genppd statically:                $STATIC_GENPPD"
 
     if test "$STATIC_GENPPD" = "no" ; then
@@ -1060,6 +1079,8 @@ if test "$BUILD_CUPS" != "no" ; then
 	echo "                        Please review the README and release notes carefully!"
 	warnings_emitted=1
     fi
+else
+    echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
 echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
 echo "    Build Foomatic data:                        $BUILD_FOOMATIC"

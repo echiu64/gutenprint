@@ -39,7 +39,7 @@
         <parameter type="float" name="Gamma">0.75</parameter>
       </parameters>
       <parameters name="PIXMA_iP4000_params">
-        <parameter type="float" name="YellowGamma">0.800</parameter>
+        <parameter type="float" name="Gamma">0.4</parameter>
       </parameters>
       <printer name="Canon BJ-30" driver="bjc-30" manufacturer="Canon" model="30" parameters="gamma_2_density_800_params" />
       <printer name="Canon BJC-50" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
@@ -81,8 +81,10 @@
       <printer name="Canon PIXMA iP4000" driver="bjc-iP4000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4100" driver="bjc-PIXMA-iP4100" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4200" driver="bjc-PIXMA-iP4200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXMA iP4300" driver="bjc-PIXMA-iP4300" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5000" driver="bjc-PIXMA-iP5000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXMA iP6700" driver="bjc-PIXMA-iP6700" manufacturer="Canon" model="4203" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP150" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="4201" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP500" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon MULTIPASS MP700" driver="bjc-MULTIPASS-MP700" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
@@ -201,8 +203,8 @@
     -->
       <printer name="Epson Stylus Photo 785" driver="escp2-785" manufacturer="Epson" model="36" parameters="standard_params" />
       <printer name="Epson Stylus Photo 790" driver="escp2-790" manufacturer="Epson" model="35" parameters="standard_params" />
-      <printer name="Epson Stylus Photo 810" driver="escp2-810" manufacturer="Epson" model="35" parameters="standard_params" />
-      <printer name="Epson Stylus Photo 820" driver="escp2-820" manufacturer="Epson" model="35" parameters="standard_params" />
+      <printer name="Epson Stylus Photo 810" driver="escp2-810" manufacturer="Epson" model="78" parameters="standard_params" />
+      <printer name="Epson Stylus Photo 820" driver="escp2-820" manufacturer="Epson" model="78" parameters="standard_params" />
       <printer name="Epson Stylus Photo 825" driver="escp2-825" manufacturer="Epson" model="50" parameters="standard_params" />
       <printer name="Epson Stylus Photo 830" driver="escp2-830" manufacturer="Epson" model="50" parameters="standard_params" />
       <printer name="Epson Stylus Photo 830U" driver="escp2-830u" manufacturer="Epson" model="50" parameters="standard_params" />
@@ -277,13 +279,13 @@
       <printer name="Epson Stylus CX5700" driver="escp2-cx5700" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer name="Epson Stylus CX5800" driver="escp2-cx5800" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer name="Epson Stylus CX6300" driver="escp2-cx6300" manufacturer="Epson" model="60" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX6400" driver="escp2-cx6400" manufacturer="Epson" model="60" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="69" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="69" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX6400" driver="escp2-cx6400" manufacturer="Epson" model="79" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer name="Epson Stylus CX7800" driver="escp2-cx7800" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="60" parameters="cx3500_params" />
-      <printer name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="60" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="79" parameters="cx3500_params" />
+      <printer name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer name="Epson Stylus D68" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer name="Epson Stylus D88" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer name="Epson Stylus DX3800" driver="escp2-dx3800" manufacturer="Epson" model="72" parameters="standard_params" />
@@ -750,6 +752,7 @@
       <printer name="Lexmark 4076" driver="lexmark-4076" manufacturer="Lexmark" model="500" parameters="pcl_inkjet_params" />
       <printer name="Lexmark Optra E" driver="lexmark-optra_e" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Optra E+" driver="lexmark-optra_eplus" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
+      <printer name="Lexmark Optra E220" driver="lexmark-optra_e220" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Valuewriter 300" driver="lexmark-vw_300" manufacturer="Lexmark" model="2" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
@@ -815,6 +818,7 @@
       <printer name="Xerox DocuPrint P1202" driver="xerox-dp_p1202" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer name="Xerox DocuPrint P8e" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer name="Xerox Document Centre 400" driver="xerox-dc_400" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer name="Xerox WorkCentre M118" driver="xerox-wc_m118" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
     </family>
     <family name="lexmark">
       <parameters name="standard_params">
@@ -822,6 +826,8 @@
         <parameter type="float" name="Gamma">0.5</parameter>
         <parameter type="float" name="Density">2.0</parameter>
       </parameters>
+      <printer name="Compaq IJ1200" driver="compaq-ij1200" manufacturer="Compaq" model="10042" parameters="standard_params" />
+      <printer name="Lexmark X73" driver="lexmark-x73" manufacturer="Lexmark" model="10042" parameters="standard_params" />
       <printer name="Lexmark Z42" driver="lexmark-z42" manufacturer="Lexmark" model="10042" parameters="standard_params" />
       <printer name="Lexmark Z43" driver="lexmark-z43" manufacturer="Lexmark" model="10042" parameters="standard_params" />
       <printer name="Lexmark Z52" driver="lexmark-z52" manufacturer="Lexmark" model="10052" parameters="standard_params" />
@@ -838,7 +844,8 @@
       <printer name="Olympus P-330NE" driver="olympus-p330ne" manufacturer="Olympus" model="0" />
       <printer name="Olympus P-400" driver="olympus-p400" manufacturer="Olympus" model="1" />
       <printer name="Olympus P-440" driver="olympus-p440" manufacturer="Olympus" model="3" />
-      <printer name="Olympus PS-100" driver="olympus-ps100" manufacturer="Olympus" model="20" />
+      <printer name="Olympus P-S100" driver="olympus-ps100" manufacturer="Olympus" model="20" />
+      <printer name="Canon CP-10" driver="canon-cp10" manufacturer="Canon" model="1002" />
       <printer name="Canon CP-100" driver="canon-cp100" manufacturer="Canon" model="1000" />
       <printer name="Canon CP-200" driver="canon-cp200" manufacturer="Canon" model="1000" />
       <printer name="Canon CP-220" driver="canon-cp220" manufacturer="Canon" model="1001" />
@@ -849,10 +856,15 @@
       <printer name="Canon SELPHY-CP-510" driver="canon-cp510" manufacturer="Canon" model="1001" />
       <printer name="Canon SELPHY-CP-600" driver="canon-cp600" manufacturer="Canon" model="1001" />
       <printer name="Canon SELPHY-CP-710" driver="canon-cp710" manufacturer="Canon" model="1001" />
+      <printer name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" />
+      <printer name="Sony DPP-EX7" driver="sony-dppex5" manufacturer="Sony" model="2002" />
       <printer name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" />
+      <printer name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" />
       <printer name="Sony UP-DR150" driver="sony-updr150" manufacturer="Sony" model="2001" />
       <printer name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" />
       <printer name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" />
+      <printer name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" />
+      <printer name="Kodak Easyshare-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000"/>
     </family>
     <family name="raw">
       <printer name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />
