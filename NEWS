@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.0.0.99.1!  Please read these release notes
-carefully.
+Welcome to Gutenprint 5.0.1-rc1 (5.0.0.99.1)!  Please read these
+release notes carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
 that may be used with most common UNIX print spooling systems,
@@ -22,7 +22,7 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
 German.
 
-Gutenprint 5.0.0.99.1 is a prerelease of Gutenprint 5.0.1, with bug
+Gutenprint 5.0.1-rc1 is a prerelease of Gutenprint 5.0.1, with bug
 fixes and new features.
 
 Gutenprint currently supports over 700 printer models.
@@ -120,11 +120,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
 
   1) New printers supported in this release:
 
-     * Dye sublimation printers:
-
-       The driver for these printers has been renamed "dyesub", as
-       many of the printers are manufactured by companies other than
-       Olympus.
+     * Dye sublimation printers using the Olympus driver:
 
        Canon CP-10
        Fujifilm FinePix NX-500
@@ -202,25 +198,28 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
        (a line intended to be 10 cm long will print out exactly 10
        cm), but the edges of the output may be truncated (cropped).
 
-     * Expand: the output is expanded to fit the maximum possible
-       imageable area of the page.  When selected on printers capable
-       of full bleed output, in conjunction with any other necessary
-       options, the output will be expanded to match the maximum page
-       dimension.  The dimensions of the page will be expanded if
-       necessary beyond the page size; a line intended to be 10 cm
-       long may print longer than that.
+     * Expand: the output is expanded from the normal imageable area
+       to fit the maximum possible imageable area of the page.  When
+       selected on printers capable of full bleed output, in
+       conjunction with any other necessary options, the output will
+       be expanded to match the maximum page dimension.  The
+       dimensions of the page will be expanded if necessary beyond the
+       page size; a line intended to be 10 cm long may print longer
+       than that.
 
      This option has no effect on printers not capable of full bleed
      or other expanded margins.  It also has no effect when printing
-     to CD's or the like.
+     to CD's or when printing to papers where the paper margin is
+     wider than the margin offered by the printer.
 
-  4) Support for the GIMP 1.2 has been removed.
+     This behavior is different from Gutenprint 5.0.0; the behavior in
+     Gutenprint 5.0.0 was equivalent to the Crop option in Gutenprint
+     5.0.1.  The change has been made due to extensive user feedback
+     that cropping the output leads to unexpected results in normal
+     printing operation.  Users who need exact dimensional accuracy
+     should use the Crop option with borderless printing enabled.
 
-  5) An experimental PostScript driver has been added, enabling use of
-     all PPD file options in the enhanced GIMP plugin.  This is a work
-     in progress.
-
-  6) Epson inkjet printers now correctly support borderless printing.
+  4) Epson inkjet printers now correctly support borderless printing.
      In addition, printing at the top and bottom of the page has been
      improved on printers that support borderless printing, although
      this is still not perfect in all cases.
@@ -230,17 +229,17 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
      problem is understood, but we do not know when a fix will be
      available.
 
-  7) The list of resolutions supported on newer Epson printers has
-     been changed; resolutions of 5760x1440, 2880x2880, and 5760x2880
-     (as appropriate) have been added, replacing various 1440x2880
-     enhanced resolutions.
+  5) The list of resolutions supported on newer Epson printers has
+     been changed; resolutions of 2880x1440, 5760x1440, 2880x2880, and
+     5760x2880 (as appropriate) have been added, replacing various
+     1440x1440 and 1440x2880 enhanced resolutions.
 
-  8) The output for the Canon PIXMA printers has been improved.
+  6) The output for the Canon PIXMA printers has been improved.
 
-  9) The Canon driver now supports DuplexNoTumble for the PIXMA
+  7) The Canon driver now supports DuplexNoTumble for the PIXMA
      iP4000.
 
- 10) Roll printing now works correctly on the Epson Stylus Photo
+  8) Roll printing now works correctly on the Epson Stylus Photo
      R800.
 
 
