@@ -34,6 +34,37 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4
 "Tiger" and provides direct download links.</p>
 
 
+<H2><font color="#ff0000">Gutenprint 5.0.0.99.1 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of March 3,
+2007!</strong></em></font> The Gutenprint project is pleased to
+announce the first release candidate for 5.0.1, a stable release in
+the Gutenprint 5.0 series.  This release features full support for
+CUPS 1.2 and full support for borderless printing on Epson inkjet
+printers.</p>
+
+<p>Currently only
+the source package is available. We expect to release a binary
+installer for Macintosh OS X in the very near future.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
+
+<H2><font color="#ff0000">Gutenprint 5.1.0 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of March 3,
+2007!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.1.0, a development release.  This release
+features full support for CUPS 1.2, support for borderless printing on
+Epson inkjet printers, and an experimental new Postscript driver.</p>
+
+<p>Currently only
+the source package is available. We expect to release a binary
+installer for Macintosh OS X in the very near future.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gutenprint 5.0.0 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of July 30,
@@ -47,15 +78,6 @@ binary installer for Macintosh OS X in the very near future.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
-<H2><font color="#ff0000">Gutenprint 5.0.0-rc3 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of May 18,
-2006!</strong></em></font> Gutenprint 5.0.0-rc3 is released.  This
-is a release candidate for Gutenprint 5.0.  This release, which is
-expected to be the final release candidate before release of 5.0,
-features many bug fixes and other improvements.. <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
 
 <H2><font color="#ff0000">Gimp-Print 4.2.7 is released!</font></h2>
 
