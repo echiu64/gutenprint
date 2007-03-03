@@ -76,6 +76,9 @@ static const escp2_dot_size_t p3pl_dotsizes =
 static const escp2_dot_size_t p1_5pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13 };
 
+static const escp2_dot_size_t claria_dotsizes =
+{ 0x10, 0x10, 0x21, 0x24, 0x26, 0x26, 0x26, 0x25, 0x25 };
+
 static const escp2_dot_size_t c2pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10, 0x10 };
 
@@ -251,6 +254,9 @@ static const escp2_densities_t p3pl_densities =
 { 4.0, 2.0,  1.00, 0.679, 0.657, 0.684, 0.566, 0.283, 0.0   };
 
 static const escp2_densities_t p1_5pl_densities =
+{ 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
+
+static const escp2_densities_t claria_densities =
 { 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
 
 static const escp2_densities_t p3_5pl_densities =
@@ -1823,6 +1829,42 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
     &cx6600_borderless_sequence, NULL, "standard"
+  },
+  /* 81: Stylus Photo R260 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
+    360, 14400, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
+    4, 15, 0, 0,
+    claria_dotsizes, claria_densities, "variable_claria",
+    "superfine", "c82",
+    variable_bits, c1_5_base_res, "cd_roll_feed",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    NULL, NULL, "photo"
+  },
+  /* 82: Stylus Photo 1400 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
+    360, 14400, -1, 5760, 2880, 360, 180,
+    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
+    INCH(13), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
+    4, 15, 0, 0,
+    claria_dotsizes, claria_densities, "variable_claria",
+    "superfine", "c82",
+    variable_bits, c1_5_base_res, "cd_roll_feed",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    NULL, NULL, "photo"
   },
 };
 

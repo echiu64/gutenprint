@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.1.0!  Please read these release notes
+Welcome to Gutenprint 5.1.1!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -22,16 +22,17 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
 German.
 
-Gutenprint 5.1.0 is a development release of Gutenprint 5.1.  It is
+Gutenprint 5.1.1 is a development release of Gutenprint 5.1.  It is
 based on Gutenprint 5.0.0.
 
-Gutenprint currently supports over 700 printer models.
+Gutenprint currently supports over 800 printer models.
 
 These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
-	A) New features in 5.1.0
+	A) New features in 5.1.1
+	B) New features in 5.1.0
 III)   Exceptions and Workarounds
 	A) General Issues
 	B) Build/Installation Issues
@@ -107,6 +108,47 @@ for building and installing Gutenprint.
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
+
+  1) New printers supported in this release:
+
+     * Epson inkjet printers:
+
+       Epson Picturemate Flash
+       Epson Picturemate Pal
+       Epson Picturemate Snap
+       Epson Picturemate PM-200
+       Epson Picturemate PM-210
+       Epson Picturemate PM-240
+       Epson Picturemate PM-250
+       Epson Picturemate PM-280
+       Epson Stylus C79+
+       Epson Stylus C87+
+       Epson Stylus Photo R230
+       Epson Stylus Photo R350
+
+  2) Preliminary support for the following printers:
+
+     * Epson inkjet printers:
+
+       Epson Stylus Photo 1400
+       Epson Stylus Photo 1410
+       Epson Stylus Photo R260
+       Epson Stylus Photo R265
+       Epson Stylus Photo R270
+       Epson Stylus Photo R360
+       Epson Stylus Photo R380
+       Epson Stylus Photo R390
+       Epson Stylus Photo RX560
+       Epson Stylus Photo RX580
+       Epson Stylus Photo RX640
+       Epson PM A820
+       Epson PM D870
+       Epson PM G850
+
+
+----------------
+
+B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
 
   1) New printers supported in this release:
 
