@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.0.1!  Please read these release notes
+Welcome to Gutenprint 5.0.0.99.1!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -22,8 +22,8 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
 German.
 
-Gutenprint 5.0.1 is a stable release of Gutenprint 5.0, with bug fixes
-and new features.
+Gutenprint 5.0.0.99.1 is a prerelease of Gutenprint 5.0.1, with bug
+fixes and new features.
 
 Gutenprint currently supports over 700 printer models.
 
