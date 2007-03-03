@@ -162,6 +162,13 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
        Canon i860
        Canon i865
 
+     * Epson inkjet printers:
+
+       Epson Stylus CX5000
+       Epson Stylus CX5000F
+       Epson Stylus CX6000
+       Epson Stylus CX7000F
+
      * Lexmark inkjet and compatible printers:
 
        Compaq IJ1200
