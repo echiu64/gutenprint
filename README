@@ -453,7 +453,7 @@ C) FOOMATIC
     spooler (CUPS, lpd, LPRng, etc.) or even no spooler at all.  It
     uses XML data describing printer and driver capabilities in
     conjunction with Ghostscript to allow printing in any environment.
-    Please visit http://www.linuxprinting.org/foomatic.html for more
+    Please visit http://www.openprinting.org/foomatic.html for more
     information.
 
     We normally recommend using the native CUPS driver described above
