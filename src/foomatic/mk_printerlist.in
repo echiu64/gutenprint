@@ -5,7 +5,7 @@
 
 eval `./printers`;
 
-open PRINTERS, "(wget -q -O - http://www.linuxprinting.org/printer_list.cgi; cat foomatic-printermap) |" or die "Can't get print list: $!";
+open PRINTERS, "(wget -q -O - http://www.openprinting.org/printer_list.cgi; cat foomatic-printermap) |" or die "Can't get print list: $!";
 
 while (<PRINTERS>) {
     if (/make ==/) {

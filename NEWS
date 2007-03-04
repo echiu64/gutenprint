@@ -1214,8 +1214,8 @@ B) BUILD/INSTALLATION ISSUES
 	you install a new version of Gutenprint.
 
 	Please check the Foomatic site
-	(http://www.linuxprinting.org/foomatic.html) and the Gutenprint
-	site (http://gimp-print.sourceforge.net) for updated
+	(http://www.openprinting.org/foomatic.html) and the Gutenprint
+	site (http://gutenprint.sourceforge.net) for updated
 	instructions about this.
 
      ii) Unlike with the CUPS native driver, there is no simple way to
