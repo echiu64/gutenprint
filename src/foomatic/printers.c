@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Dump the per-printer options for Grant Taylor's *-omatic database
+ *   Dump the per-printer options for the OpenPrinting database
  *
  *   Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)
  *
