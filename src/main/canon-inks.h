@@ -117,6 +117,38 @@ static const stp_dotsize_t dotsizes_7l[] = {
 
 DECLARE_INK(3,7);
 
+static const stp_dotsize_t dotsizes_8l[] = {
+  { 0x1, 0.14 },
+  { 0x2, 0.29 },
+  { 0x3, 0.43 },
+  { 0x4, 0.58 },
+  { 0x5, 0.71 },
+  { 0x6, 0.86 },
+  { 0x7, 1.00 }
+};
+
+DECLARE_INK(4,8);
+
+static const stp_dotsize_t dotsizes_16l[] = {
+  { 0x1, 0.07 },
+  { 0x2, 0.13 },
+  { 0x3, 0.20 },
+  { 0x4, 0.27 },
+  { 0x5, 0.33 },
+  { 0x6, 0.40 },
+  { 0x7, 0.47 },
+  { 0x8, 0.53 },
+  { 0x9, 0.60 },
+  { 0xA, 0.67 },
+  { 0xB, 0.73 },
+  { 0xC, 0.80 },
+  { 0xD, 0.87 },
+  { 0xE, 0.93 },
+  { 0xF, 1.00 }
+};
+
+DECLARE_INK(4,16);
+
 
 /* A inkset is a list of inks and their (relative) densities 
  * For printers that use the extended SetImage command t)
