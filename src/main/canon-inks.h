@@ -27,20 +27,47 @@
 #ifndef GUTENPRINT_INTERNAL_CANON_INKS_H
 #define GUTENPRINT_INTERNAL_CANON_INKS_H
 
-/* ink definition */
+/* ink definition: 
+ *  ink dots can be printed in various sizes 
+ *  one size is called level
+ *  every level is represented by a bitcombination and a density
+ *  the density ranges from 0 (no dot is printed) to 1.0 (maximum dot size)
+ *
+ *  an ink is therefore defined by the number of bits used for the bitpattern (bitdepth) and the number of possible levels:
+ *    a 1 bit ink can have 2 possible levels 0 and 1
+ *    a 2 bit ink can have 2*2=4 possible levels with the bitpatterns 0,1,2 and 3 
+ *    a 3 bit ink can have 2*2*2=8 possible levels with the bitpatterns 0 to 7
+ *    ...
+ *  some inks use less levels than possible with the given bitdepth
+ *  some inks use special compressions to store for example 5 3 level pixels in 1 byte  
+ * naming:
+ *  dotsizes are named dotsizes_xl where x is the number of levels (number of dotsizes + 1)
+ *  inks are named canon_xb_yl_ink where x is the number of bits representing the y possible ink levels
+ *  inks that contain special (compression) flags are named canon_xb_yl_c_ink 
+ *
+*/
+
+
 typedef struct {
-  const int bits;                     /* number of bits */
-  const int flags;
-#define INK_FLAG_5pixel_in_1byte 0x1  /* use special compression where 5 3level pixels get stored in 1 byte */
-  int numsizes;                       /* number of possible dot_sizes */
-  const stp_dotsize_t *dot_sizes;
+  const int bits;                     /* bitdepth */
+  const int flags;                    /* flags:   */
+#define INK_FLAG_5pixel_in_1byte 0x1  /*  use special compression where 5 3level pixels get stored in 1 byte */
+  int numsizes;                       /* number of possible {bit,density} tuples */
+  const stp_dotsize_t *dot_sizes;     /* pointer to an array of {bit,density} tuples */ 
 } canon_ink_t;
 
-
-#define DECLARE_INK(bits,dotsizes)      \
-static const canon_ink_t canon_##bits##bit_ink = {              \
+/* declare a standard ink */
+#define DECLARE_INK(bits,levels)      \
+static const canon_ink_t canon_##bits##b_##levels##l_ink = {              \
   bits,0,                                  \
-  sizeof(dotsizes)/sizeof(stp_dotsize_t), dotsizes   \
+  sizeof(dotsizes_##levels##l)/sizeof(stp_dotsize_t), dotsizes_##levels##l   \
+}
+
+/* declare a ink with flags */
+#define DECLARE_INK_EXTENDED(bits,levels,flags)      \
+static const canon_ink_t canon_##bits##b_##levels##l_c_ink = {              \
+  bits,flags,                                  \
+  sizeof(dotsizes_##levels##l)/sizeof(stp_dotsize_t), dotsizes_##levels##l   \
 }
 
 
@@ -54,37 +81,31 @@ static const canon_ink_t canon_##bits##bit_ink = {              \
  */
 
 
-static const stp_dotsize_t single_dotsize[] = {
+static const stp_dotsize_t dotsizes_2l[] = {
   { 0x1, 1.0 }
 };
 
-DECLARE_INK(1,single_dotsize);
+DECLARE_INK(1,2);
 
 
-static const stp_dotsize_t two_bit_3level_dotsizes[] = {
+static const stp_dotsize_t dotsizes_3l[] = {
   { 0x1, 0.5  },
   { 0x2, 1.0  }
 };
 
+DECLARE_INK(2,3);
 
-static const canon_ink_t canon_2bit_3level_ink = {
-  2,INK_FLAG_5pixel_in_1byte,2,two_bit_3level_dotsizes
-};
+DECLARE_INK_EXTENDED(2,3,INK_FLAG_5pixel_in_1byte);
 
-static const canon_ink_t canon_2bit_3level_mp150_ink = {
-  2,0,2,two_bit_3level_dotsizes
-};
-
-static const stp_dotsize_t two_bit_dotsizes[] = {
+static const stp_dotsize_t dotsizes_4l[] = {
   { 0x1, 0.45 },
   { 0x2, 0.68 },
   { 0x3, 1.0 }
 };
 
-DECLARE_INK(2,two_bit_dotsizes);
+DECLARE_INK(2,4);
 
-
-static const stp_dotsize_t three_bit_dotsizes[] = {
+static const stp_dotsize_t dotsizes_7l[] = {
   { 0x1, 0.45 },
   { 0x2, 0.55 },
   { 0x3, 0.66 },
@@ -93,7 +114,7 @@ static const stp_dotsize_t three_bit_dotsizes[] = {
   { 0x6, 1.0 }
 };
 
-DECLARE_INK(3,three_bit_dotsizes);
+DECLARE_INK(3,7);
 
 
 /* A inkset is a list of inks and their (relative) densities 
@@ -101,6 +122,9 @@ DECLARE_INK(3,three_bit_dotsizes);
  * the inkset will be used to build the parameter list
  * therefore invalid inksets will let the printer fallback
  * to a default mode which will then lead to wrong output
+ * use {0,0.0,NULL} to specify empty inks
+ * set density to 0.0 to disable certain inks
+ * the paramters will then still occure in the t) command 
  */
 
 
@@ -113,38 +137,38 @@ typedef struct {
 
 /* Inkset for printing in K and 1bit/pixel */
 static const canon_inkset_t canon_K_1bit_inkset[] = {
-        {'K',1.0,&canon_1bit_ink}
+        {'K',1.0,&canon_1b_2l_ink}
 };
 
 /* Inkset for printing in CMY and 1bit/pixel */
 static const canon_inkset_t canon_CMY_1bit_inkset[] = {
-        {'C',1.0,&canon_1bit_ink},
-        {'M',1.0,&canon_1bit_ink},
-        {'Y',1.0,&canon_1bit_ink}
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink}
 };
 
 
 /* Inkset for printing in CMY and 2bit/pixel */
 static const canon_inkset_t canon_CMY_2bit_inkset[] = {
-        {'C',1.0,&canon_2bit_ink},
-        {'M',1.0,&canon_2bit_ink},
-        {'Y',1.0,&canon_2bit_ink}
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink}
 };
 
 /* Inkset for printing in CMYK and 1bit/pixel */
 static const canon_inkset_t canon_CMYK_1bit_inkset[] = {
-        {'C',1.0,&canon_1bit_ink},
-        {'M',1.0,&canon_1bit_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink}
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink}
 };
 
 /* Inkset for printing in CMYK and 2bit/pixel */
 static const canon_inkset_t canon_CMYK_2bit_inkset[] = {
-        {'C',1.0,&canon_2bit_ink},
-        {'M',1.0,&canon_2bit_ink},
-        {'Y',1.0,&canon_2bit_ink},
-        {'K',1.0,&canon_2bit_ink}
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_2b_4l_ink}
 };
 
 /*
@@ -161,48 +185,48 @@ static const canon_inkset_t canon_CMYK_2bit_inkset[] = {
 
 /* Inkset for printing in CMYK and 3bit/pixel */
 static const canon_inkset_t canon_CMYK_3bit_inkset[] = {
-        {'C',1.0,&canon_3bit_ink},
-        {'M',1.0,&canon_3bit_ink},
-        {'Y',1.0,&canon_3bit_ink},
-        {'K',1.0,&canon_3bit_ink}
+        {'C',1.0,&canon_3b_7l_ink},
+        {'M',1.0,&canon_3b_7l_ink},
+        {'Y',1.0,&canon_3b_7l_ink},
+        {'K',1.0,&canon_3b_7l_ink}
 };
 
 /* Inkset for printing in CMYKcm and 1bit/pixel */
 static const canon_inkset_t canon_CMYKcm_1bit_inkset[] = {
-        {'C',1.0,&canon_1bit_ink},
-        {'M',1.0,&canon_1bit_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink},
-        {'c',0.25,&canon_1bit_ink},
-        {'m',0.26,&canon_1bit_ink}
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',0.25,&canon_1b_2l_ink},
+        {'m',0.26,&canon_1b_2l_ink}
 };
 
 /* Inkset for printing in CMYKcm and 2bit/pixel */
 static const canon_inkset_t canon_CMYKcm_2bit_inkset[] = {
-        {'C',1.0,&canon_2bit_ink},
-        {'M',1.0,&canon_2bit_ink},
-        {'Y',1.0,&canon_2bit_ink},
-        {'K',1.0,&canon_2bit_ink},
-        {'c',0.33,&canon_2bit_ink},
-        {'m',0.33,&canon_2bit_ink}
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_2b_4l_ink},
+        {'c',0.33,&canon_2b_4l_ink},
+        {'m',0.33,&canon_2b_4l_ink}
 };
 
 /* Inkset for printing in CMYKcm and 3bit/pixel */
 static const canon_inkset_t canon_CMYKcm_3bit_inkset[] = {
-        {'C',1.0,&canon_3bit_ink},
-        {'M',1.0,&canon_3bit_ink},
-        {'Y',1.0,&canon_3bit_ink},
-        {'K',1.0,&canon_3bit_ink},
-        {'c',0.33,&canon_3bit_ink},
-        {'m',0.33,&canon_3bit_ink}
+        {'C',1.0,&canon_3b_7l_ink},
+        {'M',1.0,&canon_3b_7l_ink},
+        {'Y',1.0,&canon_3b_7l_ink},
+        {'K',1.0,&canon_3b_7l_ink},
+        {'c',0.33,&canon_3b_7l_ink},
+        {'m',0.33,&canon_3b_7l_ink}
 };
 
 /* Default Inkset for the PIXMA iP2000 */
 static const canon_inkset_t canon_PIXMA_iP2000_default_inkset[] = {
-        {'C',1.0,&canon_2bit_3level_mp150_ink},
-        {'M',1.0,&canon_2bit_3level_mp150_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink},
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -212,10 +236,10 @@ static const canon_inkset_t canon_PIXMA_iP2000_default_inkset[] = {
 
 /* Default Inkset for the PIXMA iP3000 */
 static const canon_inkset_t canon_PIXMA_iP3000_default_inkset[] = {
-        {'C',1.0,&canon_2bit_3level_ink},
-        {'M',1.0,&canon_2bit_3level_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink},
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -225,27 +249,27 @@ static const canon_inkset_t canon_PIXMA_iP3000_default_inkset[] = {
 
 /* Default Inkset for the PIXMA iP4000 */
 static const canon_inkset_t canon_PIXMA_iP4000_default_inkset[] = {
-        {'C',1.0,&canon_2bit_3level_ink},
-        {'M',1.0,&canon_2bit_3level_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink},
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2bit_3level_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
         {0,0.0,NULL}
 };
 
 /* Default Inkset for the PIXMA iP4200 */
 static const canon_inkset_t canon_PIXMA_iP4200_default_inkset[] = {
-        {'C',1.0,&canon_2bit_3level_ink},
-        {'M',1.0,&canon_2bit_3level_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink},
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2bit_3level_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -264,13 +288,13 @@ static const canon_inkset_t canon_PIXMA_iP4200_default_inkset[] = {
 
 /* Default Inkset for the PIXMA iP6700 */
 static const canon_inkset_t canon_PIXMA_iP6700_default_inkset[] = {
-        {'C',1.0,&canon_2bit_3level_mp150_ink},
-        {'M',1.0,&canon_2bit_3level_mp150_ink},
-        {'Y',1.0,&canon_2bit_3level_mp150_ink},
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',1.0,&canon_2bit_3level_mp150_ink},
+        {'k',1.0,&canon_2b_3l_ink},
         {0,0.0,NULL}, 
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -288,10 +312,10 @@ static const canon_inkset_t canon_PIXMA_iP6700_default_inkset[] = {
 
 /* Default Inkset for the MULTIPASS MP150 */
 static const canon_inkset_t canon_MULTIPASS_MP150_default_inkset[] = {
-        {'C',1.0,&canon_2bit_3level_mp150_ink},
-        {'M',1.0,&canon_2bit_3level_mp150_ink},
-        {'Y',1.0,&canon_1bit_ink},
-        {'K',1.0,&canon_1bit_ink},
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
