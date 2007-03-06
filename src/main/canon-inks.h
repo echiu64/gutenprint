@@ -43,7 +43,9 @@
  * naming:
  *  dotsizes are named dotsizes_xl where x is the number of levels (number of dotsizes + 1)
  *  inks are named canon_xb_yl_ink where x is the number of bits representing the y possible ink levels
- *  inks that contain special (compression) flags are named canon_xb_yl_c_ink 
+ *  inks that contain special (compression) flags are named canon_xb_yl_c_ink
+ * order:
+ *  dotsizes are ordered ascending by the number of dots
  *
 */
 
@@ -132,6 +134,8 @@ DECLARE_INK(3,7);
  * if an inkset contains one or more compressed inks a _c is appended
  * the inkset name ends with _inkset
  * see the examples below
+ * order:
+ *  inksets are ordered by ascending number of possible inks, used inks, compression
  *
  */
 
@@ -265,20 +269,11 @@ static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
-        {'C',1.0,&canon_2b_3l_c_ink},
-        {'M',1.0,&canon_2b_3l_c_ink},
+static const canon_inkset_t canon_13_C3M3Y2K2_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
         {'Y',1.0,&canon_1b_2l_ink},
         {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -312,12 +307,20 @@ static const canon_inkset_t canon_19_C3M3Y3k3_inkset[] = {
         {0,0.0,NULL},
 };
 
-
-static const canon_inkset_t canon_13_C3M3Y2K2_inkset[] = {
-        {'C',1.0,&canon_2b_3l_ink},
-        {'M',1.0,&canon_2b_3l_ink},
+static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
         {'Y',1.0,&canon_1b_2l_ink},
         {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
