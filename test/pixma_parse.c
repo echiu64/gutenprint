@@ -97,6 +97,14 @@ static color_t* get_color(image_t* img,char name){
 	return NULL;
 }
 
+static int valid_color(char color){
+	int i;
+	for(i=0;i<MAX_COLORS;i++)
+		if(valid_colors[i] == color)
+			return 1;
+	return 0;
+}
+
 
 /* eight2ten() 
  * decompression routine for canons 10to8 compression that stores 5 3-valued pixels in 8-bit
@@ -124,8 +132,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 	unsigned char* dst=malloc(len*256); /* the destination buffer */
 	unsigned char* dstr=dst;
 	if(!color){
-		printf("no matching color for %c in the database\n",color_name);
-		return 1;
+		printf("no matching color for %c in the databasei => ignoring\n",color_name);
 	}
 
 	/* decode pack bits */
@@ -137,7 +144,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 			c -=256;
 		if(c== -128){ /* end of line => decode and copy things here */
 			/* create new list entry */
-			if(size){
+			if(color && size){
 				if(!color->tail)
 					color->head = color->tail = color->pos = calloc(1,sizeof(rasterline_t));
 				else {
@@ -155,7 +162,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				}
 			}
 			/* adjust the maximum image width */
-			if(img->width < size*8/color->bpp)
+			if(color && img->width < size*8/color->bpp)
 				img->width = size *8/color->bpp;
 			/* reset output buffer */
 			size=0;
@@ -422,6 +429,12 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 			case 'L':
 				printf("ESC (L set component order for F raster command (len=%i): ",cnt);
 				img->color_order=calloc(1,cnt+1);
+				/* check if the colors are sane => the iP4000 driver appends invalid bytes in the highest resolution mode */
+				for(i=0;i<cnt;i++){
+					if(!valid_color(buf[i]))
+						break;
+				}
+				cnt = i;
 				memcpy(img->color_order,buf,cnt);
 				printf("%s\n",img->color_order);
 				img->num_colors = cnt;
