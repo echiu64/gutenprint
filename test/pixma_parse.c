@@ -387,7 +387,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
                                                          img->color[i].density = 128;
 						    if((order[i] == 'K' || order[i] =='k') && img->color[i].bpp)
 						         black_found = 1;
-                                                    if(order[i] == 'y' && !black_found){
+                                                    if(order[i] == 'y' && !black_found && img->color[i].level){
                                                         printf("iP6700 hack: treating colordefinition at the y position as k\n");
                                                         img->color[i].name = 'k';
                                                         order[i] = 'k';
