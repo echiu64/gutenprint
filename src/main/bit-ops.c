@@ -73,6 +73,201 @@ stp_fold(const unsigned char *line,
     }
 }
 
+void
+stp_fold_3bit(const unsigned char *line,
+                int single_length,
+                unsigned char *outbuf)
+{
+  int i;
+  memset(outbuf, 0, single_length * 3);
+  for (i = 0; i < single_length; i++) {
+    outbuf[0] =
+      ((line[0] & (1 << 7)) >> 2) |
+      ((line[0] & (1 << 6)) >> 4) |
+      ((line[single_length] & (1 << 7)) >> 1) |
+      ((line[single_length] & (1 << 6)) >> 3) |
+      ((line[single_length] & (1 << 5)) >> 5) |
+      ((line[2*single_length] & (1 << 7)) << 0) |
+      ((line[2*single_length] & (1 << 6)) >> 2) |
+      ((line[2*single_length] & (1 << 5)) >> 4);
+    outbuf[1] =
+      ((line[0] & (1 << 5)) << 2) |
+      ((line[0] & (1 << 4)) << 0) |
+      ((line[0] & (1 << 3)) >> 2) |
+      ((line[single_length] & (1 << 4)) << 1) |
+      ((line[single_length] & (1 << 3)) >> 1) |
+      ((line[2*single_length] & (1 << 4)) << 2) |
+      ((line[2*single_length] & (1 << 3)) << 0) |
+      ((line[2*single_length] & (1 << 2)) >> 2);
+    outbuf[2] =
+      ((line[0] & (1 << 2)) << 4) |
+      ((line[0] & (1 << 1)) << 2) |
+      ((line[0] & (1 << 0)) << 0) |
+      ((line[single_length] & (1 << 2)) << 5) |
+      ((line[single_length] & (1 << 1)) << 3) |
+      ((line[single_length] & (1 << 0)) << 1) |
+      ((line[2*single_length] & (1 << 1)) << 4) |
+      ((line[2*single_length] & (1 << 0)) << 2);
+    line++;
+    outbuf += 3;
+  }
+}
+
+void
+stp_fold_3bit_323(const unsigned char *line,
+		int single_length,
+		unsigned char *outbuf)
+{
+  unsigned char A0,A1,A2,B0,B1,B2,C0,C1,C2;
+  const unsigned char *last= line+single_length;
+  memset(outbuf, 0, single_length * 3);
+  for (; line < last; line+=3, outbuf+=8) {
+
+    A0= line[0]; B0= line[single_length]; C0= line[2*single_length];
+
+    if (line<last-2) {
+      A1= line[1]; B1= line[single_length+1]; C1= line[2*single_length+1];
+    } else {
+      A1= 0; B1= 0; C1= 0;
+    }
+    if (line<last-1) {
+      A2= line[2]; B2= line[single_length+2]; C2= line[2*single_length+2];
+    } else {
+      A2= 0; B2= 0; C2= 0;
+    }
+
+    outbuf[0] =
+      ((C0 & 0x80) >> 0) |
+      ((B0 & 0x80) >> 1) |
+      ((A0 & 0x80) >> 2) |
+      ((B0 & 0x40) >> 2) |
+      ((A0 & 0x40) >> 3) |
+      ((C0 & 0x20) >> 3) |
+      ((B0 & 0x20) >> 4) |
+      ((A0 & 0x20) >> 5);
+    outbuf[1] =
+      ((C0 & 0x10) << 3) |
+      ((B0 & 0x10) << 2) |
+      ((A0 & 0x10) << 1) |
+      ((B0 & 0x08) << 1) |
+      ((A0 & 0x08) << 0) |
+      ((C0 & 0x04) >> 0) |
+      ((B0 & 0x04) >> 1) |
+      ((A0 & 0x04) >> 2);
+    outbuf[2] =
+      ((C0 & 0x02) << 6) |
+      ((B0 & 0x02) << 5) |
+      ((A0 & 0x02) << 4) |
+      ((B0 & 0x01) << 4) |
+      ((A0 & 0x01) << 3) |
+      ((C1 & 0x80) >> 5) |
+      ((B1 & 0x80) >> 6) |
+      ((A1 & 0x80) >> 7);
+    outbuf[3] =
+      ((C1 & 0x40) << 1) |
+      ((B1 & 0x40) << 0) |
+      ((A1 & 0x40) >> 1) |
+      ((B1 & 0x20) >> 1) |
+      ((A1 & 0x20) >> 2) |
+      ((C1 & 0x10) >> 2) |
+      ((B1 & 0x10) >> 3) |
+      ((A1 & 0x10) >> 4);
+    outbuf[4] =
+      ((C1 & 0x08) << 4) |
+      ((B1 & 0x08) << 3) |
+      ((A1 & 0x08) << 2) |
+      ((B1 & 0x04) << 2) |
+      ((A1 & 0x04) << 1) |
+      ((C1 & 0x02) << 1) |
+      ((B1 & 0x02) >> 0) |
+      ((A1 & 0x02) >> 1);
+    outbuf[5] =
+      ((C1 & 0x01) << 7) |
+      ((B1 & 0x01) << 6) |
+      ((A1 & 0x01) << 5) |
+      ((B2 & 0x80) >> 3) |
+      ((A2 & 0x80) >> 4) |
+      ((C2 & 0x40) >> 4) |
+      ((B2 & 0x40) >> 5) |
+      ((A2 & 0x40) >> 6);
+    outbuf[6] =
+      ((C2 & 0x20) << 2) |
+      ((B2 & 0x20) << 1) |
+      ((A2 & 0x20) << 0) |
+      ((B2 & 0x10) >> 0) |
+      ((A2 & 0x10) >> 1) |
+      ((C2 & 0x08) >> 1) |
+      ((B2 & 0x08) >> 2) |
+      ((A2 & 0x08) >> 3);
+    outbuf[7] =
+      ((C2 & 0x04) << 5) |
+      ((B2 & 0x04) << 4) |
+      ((A2 & 0x04) << 3) |
+      ((B2 & 0x02) << 3) |
+      ((A2 & 0x02) << 2) |
+      ((C2 & 0x01) << 2) |
+      ((B2 & 0x01) << 1) |
+      ((A2 & 0x01) << 0);
+  }
+}
+
+void
+stp_fold_4bit(const unsigned char *line,
+                int single_length,
+                unsigned char *outbuf)
+{
+  int i;
+  memset(outbuf, 0, single_length * 4);
+  for (i = 0; i < single_length; i++){
+    unsigned char l0 = line[0];
+    unsigned char l1 = line[single_length];
+    unsigned char l2 = line[single_length*2];
+    unsigned char l3 = line[single_length*3];
+    if(l0 || l1 || l2 || l3){
+      outbuf[0] =
+            ((l3 & (1<<7)) >> 0)|
+            ((l2 & (1<<7)) >> 1)|
+            ((l1 & (1<<7)) >> 2)|
+            ((l0 & (1<<7)) >> 3)|
+            ((l3 & (1<<6)) >> 3)|
+            ((l2 & (1<<6)) >> 4)|
+            ((l1 & (1<<6)) >> 5)|
+            ((l0 & (1<<6)) >> 6);
+
+      outbuf[1] =
+            ((l3 & (1<<5)) << 2)|
+            ((l2 & (1<<5)) << 1)|
+            ((l1 & (1<<5)) << 0)|
+            ((l0 & (1<<5)) >> 1)|
+            ((l3 & (1<<4)) >> 1)|
+            ((l2 & (1<<4)) >> 2)|
+            ((l1 & (1<<4)) >> 3)|
+            ((l0 & (1<<4)) >> 4);
+
+       outbuf[2] =
+            ((l3 & (1<<3)) << 4)|
+            ((l2 & (1<<3)) << 3)|
+            ((l1 & (1<<3)) << 2)|
+            ((l0 & (1<<3)) << 1)|
+            ((l3 & (1<<2)) << 1)|
+            ((l2 & (1<<2)) << 0)|
+            ((l1 & (1<<2)) >> 1)|
+            ((l0 & (1<<2)) >> 2);
+       outbuf[3] =
+            ((l3 & (1<<1)) << 6)|
+            ((l2 & (1<<1)) << 5)|
+            ((l1 & (1<<1)) << 4)|
+            ((l0 & (1<<1)) << 3)|
+            ((l3 & (1<<0)) << 3)|
+            ((l2 & (1<<0)) << 2)|
+            ((l1 & (1<<0)) << 1)|
+            ((l0 & (1<<0)) << 0);
+    }
+    line++;
+    outbuf += 4;
+  }
+}
+
 static void
 stpi_split_2_1(int length,
 	       const unsigned char *in,

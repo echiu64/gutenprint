@@ -32,7 +32,16 @@
 extern "C" {
 #endif
 
-extern void	stp_fold(const unsigned char *line, int single_height,
+extern void	stp_fold(const unsigned char *line, int single_length,
+			 unsigned char *outbuf);
+
+extern void	stp_fold_3bit(const unsigned char *line, int single_length,
+			 unsigned char *outbuf);
+
+extern void	stp_fold_3bit_323(const unsigned char *line, int single_length,
+			 unsigned char *outbuf);
+
+extern void	stp_fold_4bit(const unsigned char *line, int single_length,
 			 unsigned char *outbuf);
 
 extern void	stp_split_2(int height, int bits, const unsigned char *in,
