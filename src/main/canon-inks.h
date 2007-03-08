@@ -236,33 +236,36 @@ static const canon_inkset_t canon_4_C7M7Y7K7_inkset[] = {
 };
 
 /* Inkset for printing in CMYKcm and 1bit/pixel */
+/* FIXME is it really correct that the density of the CM inks is lowered? */
 static const canon_inkset_t canon_6_C2M2Y2K2c2m2_inkset[] = {
-        {'C',1.0,&canon_1b_2l_ink},
-        {'M',1.0,&canon_1b_2l_ink},
+        {'C',0.25,&canon_1b_2l_ink},
+        {'M',0.26,&canon_1b_2l_ink},
         {'Y',1.0,&canon_1b_2l_ink},
         {'K',1.0,&canon_1b_2l_ink},
-        {'c',0.25,&canon_1b_2l_ink},
-        {'m',0.26,&canon_1b_2l_ink}
+        {'c',1.0,&canon_1b_2l_ink},
+        {'m',1.0,&canon_1b_2l_ink}
 };
 
 /* Inkset for printing in CMYKcm and 2bit/pixel */
+/* FIXME is it really correct that the density of the CM inks is lowered? */
 static const canon_inkset_t canon_6_C4M4Y4K4c4m4_inkset[] = {
-        {'C',1.0,&canon_2b_4l_ink},
-        {'M',1.0,&canon_2b_4l_ink},
+        {'C',0.33,&canon_2b_4l_ink},
+        {'M',0.33,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
         {'K',1.0,&canon_2b_4l_ink},
-        {'c',0.33,&canon_2b_4l_ink},
-        {'m',0.33,&canon_2b_4l_ink}
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink}
 };
 
 /* Inkset for printing in CMYKcm and 3bit/pixel */
+/* FIXME is it really correct that the density of the CM inks is lowered? */
 static const canon_inkset_t canon_6_C7M7Y7K7c7m7_inkset[] = {
-        {'C',1.0,&canon_3b_7l_ink},
-        {'M',1.0,&canon_3b_7l_ink},
+        {'C',0.33,&canon_3b_7l_ink},
+        {'M',0.33,&canon_3b_7l_ink},
         {'Y',1.0,&canon_3b_7l_ink},
         {'K',1.0,&canon_3b_7l_ink},
-        {'c',0.33,&canon_3b_7l_ink},
-        {'m',0.33,&canon_3b_7l_ink}
+        {'c',1.0,&canon_3b_7l_ink},
+        {'m',1.0,&canon_3b_7l_ink}
 };
 
 static const canon_inkset_t canon_9_C3M3Y2K2_inkset[] = {
@@ -298,6 +301,18 @@ static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
+        {'C',1.0,&canon_4b_8l_ink},
+        {'M',1.0,&canon_4b_8l_ink},
+        {'Y',1.0,&canon_4b_8l_ink},
+        {0,0.0,NULL},
+        {'c',0.5,&canon_4b_16l_ink},
+        {'m',0.5,&canon_4b_16l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_4b_8l_ink}, 
         {0,0.0,NULL}
 };
 

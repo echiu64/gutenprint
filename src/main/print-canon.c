@@ -6,7 +6,7 @@
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu) and
  *      Andy Thaller (thaller@ph.tum.de)
- *   Copyright (c) 2006 Sascha Sommer (saschasommer@freenet.de)
+ *   Copyright (c) 2006 - 2007 Sascha Sommer (saschasommer@freenet.de)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -1353,9 +1353,12 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
 
         /* add shades to the shades array */
         *shades = stp_realloc(*shades,(subchannel + 1) * sizeof(stp_shade_t));
-        (*shades)[subchannel].value = ink->density;
-        (*shades)[subchannel].numsizes = ink->ink->numsizes;
-        (*shades)[subchannel].dot_sizes = ink->ink->dot_sizes;
+	/* move previous shades up one position as set_inks_full expects the subchannels first */
+	if(subchannel)
+		memcpy(*shades + 1,*shades,sizeof(stp_shade_t) * subchannel);
+        (*shades)[0].value = ink->density;
+        (*shades)[0].numsizes = ink->ink->numsizes;
+        (*shades)[0].dot_sizes = ink->ink->dot_sizes;
         return 1;
     } 
     return 0;
@@ -2083,6 +2086,64 @@ canon_fold_3bit(const unsigned char *line,
 #error 3BIT FOLD TYPE NOT IMPLEMENTED
 #endif
 
+
+static void
+canon_fold_4bit(const unsigned char *line,
+		int single_length,
+		unsigned char *outbuf)
+{
+  int i;
+  memset(outbuf, 0, single_length * 4);
+  for (i = 0; i < single_length; i++){
+    unsigned char l0 = line[0];
+    unsigned char l1 = line[single_length];
+    unsigned char l2 = line[single_length*2];
+    unsigned char l3 = line[single_length*3];
+    if(l0 || l1 || l2 || l3){
+      outbuf[0] = 
+	    ((l3 & (1<<7)) >> 0)|
+	    ((l2 & (1<<7)) >> 1)|
+	    ((l1 & (1<<7)) >> 2)|
+	    ((l0 & (1<<7)) >> 3)|
+	    ((l3 & (1<<6)) >> 3)|
+	    ((l2 & (1<<6)) >> 4)|
+	    ((l1 & (1<<6)) >> 5)|
+	    ((l0 & (1<<6)) >> 6);
+
+      outbuf[1] = 
+	    ((l3 & (1<<5)) << 2)|
+	    ((l2 & (1<<5)) << 1)|
+	    ((l1 & (1<<5)) << 0)|
+	    ((l0 & (1<<5)) >> 1)|
+	    ((l3 & (1<<4)) >> 1)|
+	    ((l2 & (1<<4)) >> 2)|
+	    ((l1 & (1<<4)) >> 3)|
+	    ((l0 & (1<<4)) >> 4);
+
+       outbuf[2] =
+	    ((l3 & (1<<3)) << 4)|
+	    ((l2 & (1<<3)) << 3)|
+	    ((l1 & (1<<3)) << 2)|
+	    ((l0 & (1<<3)) << 1)|
+	    ((l3 & (1<<2)) << 1)|
+	    ((l2 & (1<<2)) << 0)|
+	    ((l1 & (1<<2)) >> 1)|
+	    ((l0 & (1<<2)) >> 2);
+       outbuf[3] = 
+	    ((l3 & (1<<1)) << 6)|
+	    ((l2 & (1<<1)) << 5)|
+	    ((l1 & (1<<1)) << 4)|
+	    ((l0 & (1<<1)) << 3)|
+	    ((l3 & (1<<0)) << 3)|
+	    ((l2 & (1<<0)) << 2)|
+	    ((l1 & (1<<0)) << 1)|
+	    ((l0 & (1<<0)) << 0);
+    }
+    line++;
+    outbuf += 4;
+  }
+}
+
 static void
 canon_shift_buffer(unsigned char *line,int length,int bits)
 {
@@ -2128,7 +2189,7 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
     /* calculate the number of (uncompressed) bits that have to be added to the raster data */
     bitoffset = (offset % pixels_per_byte) * 2;
   }
-  if (bits==3) {
+  else if (bits==3) {
     memset(pd->fold_buf,0,length);
     canon_fold_3bit(line,length,pd->fold_buf);
     in_ptr= pd->fold_buf;
@@ -2143,6 +2204,14 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
 #endif
     bitoffset= 0;
   }
+  else if (bits==4) {
+    canon_fold_4bit(line,length,pd->fold_buf);
+    in_ptr= pd->fold_buf;
+    length= (length*8)/2;
+    offset2 = offset / 2; 
+    bitoffset= offset % 2;
+  }
+    
   /* pack left border rounded to multiples of 8 dots */
 
   comp_data= comp_buf;
