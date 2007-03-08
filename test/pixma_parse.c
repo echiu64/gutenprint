@@ -252,6 +252,18 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 		lM=M->density * M->value/(M->level-1) + m->density * m->value/(m->level-1);
 		lY=Y->density * Y->value/(Y->level-1) + y->density * y->value/(y->level-1);
 		lC=C->density * C->value/(C->level-1) + c->density * c->value/(c->level-1);
+
+		/* detect image edges */
+		if(lK || lM || lY || lC){
+			if(!img->image_top)
+				img->image_top = pos_y;
+			img->image_bottom = pos_y;
+			if(x < img->image_left)
+				img->image_left = x;
+			if(x > img->image_right)
+				img->image_right = x;
+		}
+			
                 /* clip values */
                 if(lK > 255)
                    lK = 255;
@@ -288,6 +300,9 @@ static void write_ppm(image_t* img,FILE* fp){
 	fputs("P6\n", fp);
 	fprintf(fp, "%d\n%d\n255\n", img->width, img->height);
 
+	/* set top most left value */
+	img->image_left = img->width;
+
 	/* write data line by line */
 	for(i=0;i<img->height;i++){
 		write_line(img,fp,i);
@@ -300,6 +315,13 @@ static void write_ppm(image_t* img,FILE* fp){
 		for(level=0;level < img->color[i].level;level++)
 			printf("color %c level %i dots %i\n",img->color[i].name,level,img->color[i].dots[level]);
 	}
+	/* translate area coordinates to 1/72 in (the gutenprint unit)*/
+	img->image_top = img->image_top * 72.0 / img->yres + img->top * 72.0;
+	img->image_bottom = img->image_bottom * 72.0 / img->yres + img->top * 72.0;
+	img->image_left = img->image_left * 72.0 / img->xres + img->left * 72.0;
+	img->image_right = img->image_right * 72.0 / img->xres + img->left * 72.0;
+	printf("top %u bottom %u left %u right %u\n",img->image_top,img->image_bottom,img->image_left,img->image_right);
+	printf("width %u height %u\n",img->image_right - img->image_left,img->image_bottom - img->image_top);	
 
 	/* clean up */
         for(i=0;i<MAX_COLORS;i++){
@@ -307,6 +329,11 @@ static void write_ppm(image_t* img,FILE* fp){
 			free(img->color[i].dots);
 	}	
 
+}
+
+static unsigned int read_uint32(unsigned char* a){
+        unsigned int value = ( a[0] << 24) | (a[1] << 16) | (a[2] << 8) | a[3];
+        return value;
 }
 
 
@@ -361,7 +388,9 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 				printf(" paper gap: %x\n",buf[2]);
 				break;
 			case 'd':
-				printf("ESC (d set raster resolution (len=%i): %i x %i\n",cnt,(buf[0]<<8)|buf[1],(buf[0]<<8)|buf[1]);
+				img->xres = (buf[0]<<8)|buf[1];
+				img->yres = (buf[2]<<8)|buf[3];
+				printf("ESC (d set raster resolution (len=%i): %i x %i\n",cnt,img->xres,img->yres);
 				break;
 			case 't':
 				printf("ESC (t set image cnt %i\n",cnt);
@@ -442,8 +471,32 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 				break;
 			case 'p':
 				printf("ESC (p set extended margin (len=%i):\n",cnt);
-                                printf(" paper_length %i left_margin %i\n",(buf[0]<<8 )+buf[1],(buf[2]<<8) + buf[3]);
-                                printf(" right_margin %i left %i\n",(buf[4]<<8 )+buf[5],(buf[6]<<8) + buf[7]);
+                                printf(" printed length %i left %i\n",(buf[0]<<8 )+buf[1],(buf[2]<<8) + buf[3]);
+                                printf(" printed width %i top %i\n",(buf[4]<<8 )+buf[5],(buf[6]<<8) + buf[7]);
+
+                                if(cnt > 8){
+					int unit = (buf[12] << 8)| buf[13];
+					int area_right = read_uint32(buf+14);
+					int area_top = read_uint32(buf+18);
+					unsigned int area_width = read_uint32(buf+22);
+					unsigned int area_length = read_uint32(buf+26);
+					int paper_right = read_uint32(buf+30);
+					int paper_top = read_uint32(buf+34);
+					unsigned int paper_width = read_uint32(buf+38);
+					unsigned int paper_length = read_uint32(buf+42);
+                                        printf(" unknown %i\n",read_uint32(buf+8));
+                                        printf(" unit %i [1/in]\n",unit);
+                                        printf(" area_right %i %.1f mm\n",area_right,area_right * 25.4 / unit);
+                                        printf(" area_top %i %.1f mm\n",area_top,area_top * 25.4 / unit);
+                                        printf(" area_width %u %.1f mm\n",area_width, area_width * 25.4 / unit);
+                                        printf(" area_length %u %.1f mm\n",area_length,area_length * 25.4 / unit);
+                                        printf(" paper_right %i %.1f mm\n",paper_right,paper_right * 25.4 / unit);
+                                        printf(" paper_top %i %.1f mm\n",paper_top,paper_top * 25.4 / unit);
+                                        printf(" paper_width %u %.1f mm\n",paper_width,paper_width * 25.4 / unit);
+                                        printf(" paper_length %u %.1f mm\n",paper_length,paper_length * 25.4 / unit);
+					img->top = (float)area_top / unit;
+					img->left = (float)area_top / unit;
+                                }
 				break;
 			case '$':
 				printf("ESC ($ set duplex (len=%i)\n",cnt);

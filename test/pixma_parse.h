@@ -242,6 +242,13 @@ typedef struct image_s {
         unsigned int width;
         unsigned int height;
         unsigned int dots;
+	unsigned int image_top;
+	unsigned int image_bottom;
+	unsigned int image_left;
+	unsigned int image_right;
+	float top;
+	float left;
+	int xres,yres;
         int y;
         color_t color[MAX_COLORS];
         char* color_order;
