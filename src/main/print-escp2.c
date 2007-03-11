@@ -1639,8 +1639,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->bounds.str = stp_string_list_create();
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
-	  stp_get_string_parameter(v, "PageSize") &&
-	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0)
+	  (!stp_get_string_parameter(v, "PageSize") ||
+	   strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0))
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -1660,8 +1660,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->deflt.dimension = 22 * 10 * 72 / 254;
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
-	  stp_get_string_parameter(v, "PageSize") &&
-	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	  (!stp_get_string_parameter(v, "PageSize") ||
+	   strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -1674,8 +1674,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->deflt.dimension = 119 * 10 * 72 / 254;
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
-	  stp_get_string_parameter(v, "PageSize") &&
-	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	  (!stp_get_string_parameter(v, "PageSize") ||
+	   strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
 	description->is_active = 1;
       else
 	description->is_active = 0;
