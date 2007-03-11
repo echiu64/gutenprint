@@ -1657,7 +1657,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.dimension.lower = 16 * 10 * 72 / 254;
       description->bounds.dimension.upper = 43 * 10 * 72 / 254;
-      description->deflt.dimension = 22 * 10 * 72 / 254;
+      description->deflt.dimension = 43 * 10 * 72 / 254;
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
 	  (!stp_get_string_parameter(v, "PageSize") ||
@@ -1671,7 +1671,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.dimension.lower = 80 * 10 * 72 / 254;
       description->bounds.dimension.upper = 120 * 10 * 72 / 254;
-      description->deflt.dimension = 119 * 10 * 72 / 254;
+      description->deflt.dimension = 329;
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
 	  (!stp_get_string_parameter(v, "PageSize") ||
@@ -3000,15 +3000,15 @@ setup_page(stp_vars_t *v)
 	stp_set_page_height(v, outer_diameter);
 	stp_set_width(v, outer_diameter);
 	stp_set_height(v, outer_diameter);
-	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter") * 254 / 10 / 72;
+	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
      }
  else
     {
 	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  	hub_size = 43;		/* 43 mm standard CD hub */
+  	hub_size = 43 * 10 * 72 / 254;	/* 43 mm standard CD hub */
 
   	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-   	  hub_size = 16;		/* 15 mm prints to the hole - play it
+   	  hub_size = 16 * 10 * 72 / 254;	/* 15 mm prints to the hole - play it
 				   safe and print 16 mm */
     }
 
@@ -3062,7 +3062,7 @@ setup_page(stp_vars_t *v)
       pd->page_left = 0;
       extra_top = top_center - (pd->page_bottom / 2);
       extra_left = left_center - (pd->page_right / 2);
-      pd->cd_inner_radius = hub_size * pd->micro_units * 10 / 254 / 2;
+      pd->cd_inner_radius = hub_size * pd->micro_units / 72 / 2;
       pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
       pd->cd_x_offset =
 	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
