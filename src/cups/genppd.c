@@ -1219,6 +1219,7 @@ write_ppd(
     the_papers[cur_opt].top    = height - top;
 
     cur_opt++;
+    stp_clear_string_parameter(v, "PageSize");
   }
 
  /*
@@ -1305,6 +1306,7 @@ write_ppd(
     gzputs(fp, "*ParamCustomPageSize WidthOffset:  3 points 0 0\n");
     gzputs(fp, "*ParamCustomPageSize HeightOffset: 4 points 0 0\n");
     gzputs(fp, "*ParamCustomPageSize Orientation:  5 int 0 0\n\n");
+    stp_clear_string_parameter(v, "PageSize");
   }
 
   stp_parameter_description_destroy(&desc);
