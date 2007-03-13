@@ -443,7 +443,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon PIXMA iP4000 */
     4000, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    10, 9, 10, 12,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 14, 14,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_p /*|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4000_modelist,

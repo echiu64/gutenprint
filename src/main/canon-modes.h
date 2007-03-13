@@ -73,6 +73,7 @@ typedef struct {
   const unsigned int flags;
 #define MODE_FLAG_WEAVE 0x1            /* this mode requires weaving */
 #define MODE_FLAG_EXTENDED_T 0x2       /* this mode requires extended color settings in the esc t) command */
+#define MODE_FLAG_CD 0x4               /* this mode can be used to print to cds */
   const canon_delay_t* delay;          /* delay settings for this printmode */
   const double density;                /* density multiplier    */
   const double gamma;                  /* gamma multiplier      */
@@ -250,6 +251,7 @@ static const canon_mode_t canon_PIXMA_iP4000_modes[] = {
   {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(4_C2M2Y2K2),0,NULL,1.0,1.0,NULL,NULL,NULL},
   {  600, 600,CANON_INK_CMYK,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(4_C2M2Y2K2),0,NULL,1.0,1.0,NULL,NULL,NULL},
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(9_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL},
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL},
 /*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_superphoto",N_("600x600 DPI Superphoto"),INKSET(9_C8M8Y8c16m16k8),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL}, */
 };
 DECLARE_MODES(canon_PIXMA_iP4000,2);

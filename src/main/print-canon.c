@@ -6,6 +6,7 @@
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu) and
  *      Andy Thaller (thaller@ph.tum.de)
+ *
  *   Copyright (c) 2006 - 2007 Sascha Sommer (saschasommer@freenet.de)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -180,6 +181,8 @@ typedef struct
   int weave_bits[4];
   const char *duplex_str;
   int is_first_page;
+  double cd_inner_radius;
+  double cd_outer_radius;
 } canon_privdata_t;
 
 static void canon_write_line(stp_vars_t *v);
@@ -207,6 +210,36 @@ static const stp_parameter_t the_parameters[] =
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
+    "CDInnerRadius", N_("CD Hub Size"), N_("Basic Printer Setup"),
+    N_("Print only outside of the hub of the CD, or all the way to the hole"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
+    "CDOuterDiameter", N_("CD Size (Custom)"), N_("Basic Printer Setup"),
+    N_("Variable adjustment for the outer diameter of CD"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
+    "CDInnerDiameter", N_("CD Hub Size (Custom)"), N_("Basic Printer Setup"),
+    N_("Variable adjustment to the inner hub of the CD"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
+    "CDXAdjustment", N_("CD Horizontal Fine Adjustment"), N_("Advanced Printer Setup"),
+    N_("Fine adjustment to horizontal position for CD printing"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+  },
+  {
+    "CDYAdjustment", N_("CD Vertical Fine Adjustment"), N_("Advanced Printer Setup"),
+    N_("Fine adjustment to horizontal position for CD printing"),
+    STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
   },
   {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
@@ -377,6 +410,7 @@ canon_source_type(const char *name, const canon_cap_t * caps)
 /* function returns the current set printmode (specified by resolution) */
 /* if no mode is set the default mode will be returned */
 static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
+    const char* input_slot = stp_get_string_parameter(v, "InputSlot");
     const char *resolution = stp_get_string_parameter(v, "Resolution");
     const canon_cap_t * caps = canon_get_model_capabilities(stp_get_model_id(v));
     const canon_mode_t* mode = NULL;
@@ -391,6 +425,25 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     }
     if(!mode)
         mode = &caps->modelist->modes[caps->modelist->default_mode];
+
+
+    /* only some modes can print to cd */
+    if(input_slot && !strcmp(input_slot,"CD") && !(mode->flags & MODE_FLAG_CD)){
+        for(i=0;i<caps->modelist->count;i++){
+            if(caps->modelist->modes[i].flags & MODE_FLAG_CD){
+                mode = &caps->modelist->modes[i];
+                break;
+            }
+        }
+
+
+
+    }
+
+
+
+
+
     return mode;
 }
 
@@ -522,32 +575,99 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	break;
       }
   if (strcmp(name, "PageSize") == 0)
-  {
-    int height_limit, width_limit;
-    int papersizes = stp_known_papersizes();
-    description->bounds.str = stp_string_list_create();
+    {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+      int height_limit, width_limit;
+      int papersizes = stp_known_papersizes();
+      description->bounds.str = stp_string_list_create();
 
-    width_limit = caps->max_width;
-    height_limit = caps->max_height;
+      width_limit = caps->max_width;
+      height_limit = caps->max_height;
 
-    for (i = 0; i < papersizes; i++) {
-      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-      if (strlen(pt->name) > 0 &&
-	  pt->width <= width_limit && pt->height <= height_limit)
-	{
-	  if (stp_string_list_count(description->bounds.str) == 0)
-	    description->deflt.str = pt->name;
-	  stp_string_list_add_string(description->bounds.str,
+      if(input_slot && !strcmp(input_slot,"CD")){
+        stp_string_list_add_string
+          (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
+        stp_string_list_add_string
+          (description->bounds.str, "CD3Inch", _("CD - 3 inch"));
+        stp_string_list_add_string
+          (description->bounds.str, "CDCustom", _("CD - Custom"));
+      }else{
+        for (i = 0; i < papersizes; i++) {
+          const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+          if (strlen(pt->name) > 0 &&
+	      pt->width <= width_limit && pt->height <= height_limit){
+	    stp_string_list_add_string(description->bounds.str,
 				     pt->name, gettext(pt->text));
-	}
-    }
+           }
+        }
+      }
+      description->deflt.str =
+        stp_string_list_param(description->bounds.str, 0)->name;
   }
+  else if (strcmp(name, "CDInnerRadius") == 0 )
+    {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+      description->bounds.str = stp_string_list_create();
+      if (input_slot && !strcmp(input_slot,"CD") &&
+         (!stp_get_string_parameter(v, "PageSize") ||
+          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0))
+	{
+	  stp_string_list_add_string
+	    (description->bounds.str, "None", _("Normal"));
+	  stp_string_list_add_string
+	    (description->bounds.str, "Small", _("Print To Hub"));
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "CDInnerDiameter") == 0 )
+    {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+      description->bounds.dimension.lower = 16 * 10 * 72 / 254;
+      description->bounds.dimension.upper = 43 * 10 * 72 / 254;
+      description->deflt.dimension = 43 * 10 * 72 / 254;
+      if (input_slot && !strcmp(input_slot,"CD") &&
+         (!stp_get_string_parameter(v, "PageSize") ||
+         strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "CDOuterDiameter") == 0 )
+    {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+      description->bounds.dimension.lower = 80 * 10 * 72 / 254;
+      description->bounds.dimension.upper = 120 * 10 * 72 / 254;
+      description->deflt.dimension = 329;
+      if (input_slot && !strcmp(input_slot,"CD") &&
+         (!stp_get_string_parameter(v, "PageSize") ||
+          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "CDXAdjustment") == 0 ||
+	   strcmp(name, "CDYAdjustment") == 0)
+    {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+      description->bounds.dimension.lower = -15;
+      description->bounds.dimension.upper = 15;
+      description->deflt.dimension = 0;
+      if (input_slot && !strcmp(input_slot,"CD"))
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+    }
   else if (strcmp(name, "Resolution") == 0)
   {
+    const char* input_slot = stp_get_string_parameter(v, "InputSlot");
     description->bounds.str= stp_string_list_create();
     description->deflt.str = NULL;
     for(i=0;i<caps->modelist->count;i++){
-        stp_string_list_add_string(description->bounds.str,
+	if(!(input_slot && !strcmp(input_slot,"CD") && !(caps->modelist->modes[i].flags & MODE_FLAG_CD)))
+          stp_string_list_add_string(description->bounds.str,
                                         caps->modelist->modes[i].name, gettext(caps->modelist->modes[i].text));
         stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
                       caps->modelist->modes[i].name);
@@ -664,10 +784,15 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
   int right_margin = 0;
   int bottom_margin = 0;
   int top_margin = 0;
+  int cd = 0;
 
   const canon_cap_t * caps= canon_get_model_capabilities(stp_get_model_id(v));
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pt = NULL;
+  const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+
+  if(input_slot && !strcmp(input_slot,"CD"))
+    cd = 1;
 
   if (media_size && use_paper_margins)
     pt = stp_get_papersize_by_name(media_size);
@@ -680,10 +805,13 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
       bottom_margin = pt->bottom;
       top_margin = pt->top;
     }
-  left_margin = MAX(left_margin, caps->border_left);
-  right_margin = MAX(right_margin, caps->border_right);
-  top_margin = MAX(top_margin, caps->border_top);
-  bottom_margin = MAX(bottom_margin, caps->border_bottom);
+  /* ignore printer margins for the cd print, margins get adjusted in do_print */
+  if(!cd){
+    left_margin = MAX(left_margin, caps->border_left);
+    right_margin = MAX(right_margin, caps->border_right);
+    top_margin = MAX(top_margin, caps->border_top);
+    bottom_margin = MAX(bottom_margin, caps->border_bottom);
+  }
 
   *left =	left_margin;
   *right =	width - right_margin;
@@ -953,7 +1081,10 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
   arg_6c_1|= (init->slot->code & 0x0f);
 
   if (init->pt) arg_6c_2= init->pt->media_code_l;
-  canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
+  if(init->caps->model_id >= 3)
+    canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, 0);
+  else
+    canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 }
 
 /* ESC (m -- 0x6d --  -- :
@@ -1017,15 +1148,9 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 
   if (!(init->caps->features & CANON_CAP_p))
     return;
-  if (!strcmp(init->slot->name,"CD")) {
-    canon_cmd(v,ESC28,0x70, 8, 0x00, 0x2a, 0xb0, 0x00,
-		               0x00, 0x01, 0xe0, 0x00);
-    stp_deprintf(STP_DBG_CANON,"sending cd margins\n");
-  } else {
-    canon_cmd(v,ESC28,0x70, 8,
+  canon_cmd(v,ESC28,0x70, 8,
    	      arg_70_1, arg_70_2, 0x00, 0x00,
 	      arg_70_3, arg_70_4, 0x00, 0x00);
-  }
 }
 
 /* ESC (q -- 0x71 -- setPageID -- :
@@ -1423,11 +1548,71 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 
 
 
+/* FIXME move this to printercaps */
+#define CANON_CD_X 176
+#define CANON_CD_Y 405
 
-#define CD_X_OFFSET 0
-#define CD_Y_OFFSET 230
-#define CD_OUTER_RADIUS (329/2)
-#define CD_INNER_RADIUS 56
+static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
+  const char    *media_source = stp_get_string_parameter(v, "InputSlot");
+  const char *cd_type = stp_get_string_parameter(v, "PageSize");
+  int print_cd= (media_source && (!strcmp(media_source, "CD")));
+  int           page_left,
+                page_top,
+                page_right,
+                page_bottom;
+  int hub_size = 0;
+
+ 
+  if (cd_type && (strcmp(cd_type, "CDCustom") == 0 ))
+     {
+	int outer_diameter = stp_get_dimension_parameter(v, "CDOuterDiameter");
+	stp_set_page_width(v, outer_diameter);
+	stp_set_page_height(v, outer_diameter);
+	stp_set_width(v, outer_diameter);
+	stp_set_height(v, outer_diameter);
+	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
+     }
+ else
+    {
+	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
+  	hub_size = 43 * 10 * 72 / 254;		/* 43 mm standard CD hub */
+
+  	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
+   	  hub_size = 16 * 10 * 72 / 254;		/* 15 mm prints to the hole - play it
+				   safe and print 16 mm */
+    }
+
+  privdata->top = stp_get_top(v);
+  privdata->left = stp_get_left(v);
+  privdata->out_width = stp_get_width(v);
+  privdata->out_height = stp_get_height(v);
+
+  internal_imageable_area(v, 0, &page_left, &page_right,
+                          &page_bottom, &page_top);
+  if (print_cd) {
+    privdata->cd_inner_radius = hub_size / 2;
+    privdata->cd_outer_radius = stp_get_width(v) / 2;
+    privdata->left = CANON_CD_X - privdata->cd_outer_radius + stp_get_dimension_parameter(v, "CDXAdjustment");;
+    privdata->top = CANON_CD_Y - privdata->cd_outer_radius + stp_get_dimension_parameter(v, "CDYAdjustment");
+    privdata->page_width = privdata->left + privdata->out_width;
+    privdata->page_height = privdata->top + privdata->out_height;
+  } else {
+    privdata->left -= page_left;
+    privdata->top -= page_top;
+    privdata->page_width = page_right - page_left;
+    privdata->page_height = page_bottom - page_top;
+  }
+
+}
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -1442,25 +1627,14 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
-  int		top = stp_get_top(v);
-  int		left = stp_get_left(v);
   const canon_cap_t * caps= canon_get_model_capabilities(model);
-  const canon_paper_t *pt;
   int		y;		/* Looping vars */
   canon_privdata_t privdata;
-  int		page_width,	/* Width of page */
-		page_height,	/* Length of page */
-		page_left,
-		page_top,
-		page_right,
-		page_bottom,
-		errdiv,		/* Error dividend */
+  int		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast,	/* Last raster line loaded */
-		out_width,	/* Width of image on page */
-		out_height,	/* Length of image on page */
 		out_channels;	/* Output bytes per pixel */
   unsigned	zero_mask;
   int           print_cd= (media_source && (!strcmp(media_source, "CD")));
@@ -1489,6 +1663,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   	image = stpi_buffer_image(image,BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
 
   memset(&privdata,0,sizeof(canon_privdata_t));
+  privdata.caps = caps;
+
   /* find the wanted print mode */
   privdata.mode = canon_get_current_mode(v);
 
@@ -1501,64 +1677,24 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   if (privdata.used_inks == CANON_INK_K)
       stp_set_string_parameter(v, "PrintingMode", "BW");
 
- /*
-  * Compute the output size...
-  */
+  setup_page(v,&privdata);
 
-  out_width = stp_get_width(v);
-  out_height = stp_get_height(v);
-
-  internal_imageable_area(v, 0, &page_left, &page_right,
-			  &page_bottom, &page_top);
-  if (print_cd) {
-    left += CD_X_OFFSET; 
-    top += CD_Y_OFFSET;
-    /*page_width = CD_OUTER_RADIUS*2;
-      page_height = CD_OUTER_RADIUS*2; */
-    stp_default_media_size(v, &page_width, &page_height); 
-    out_width = page_width;
-    out_height = page_height;
-  } else {
-    left -= page_left;
-    top -= page_top;
-    page_width = page_right - page_left;
-    page_height = page_bottom - page_top;
-  }
   image_height = stp_image_height(image);
   image_width = stp_image_width(image);
 
-  PUT("top        ",top,72);
-  PUT("left       ",left,72);
-  PUT("out_width ", out_width,privdata.mode->xdpi);
-  PUT("out_height", out_height,privdata.mode->ydpi);
-
-  PUT("top     ",top,72);
-  PUT("left    ",left,72);
-
-  pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
-
-  privdata.pt = pt;
+  privdata.pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   privdata.slot = canon_source_type(media_source,caps);
   privdata.duplex_str = duplex_mode;
   privdata.is_first_page = (page_number == 0);
-  privdata.page_width = page_width;
-  privdata.page_height = page_height;
-  privdata.top = top;
 
  /*
   * Convert image size to printer resolution...
   */
 
-  out_width  = privdata.mode->xdpi * out_width / 72;
-  out_height = privdata.mode->ydpi * out_height / 72;
+  privdata.out_width  = privdata.mode->xdpi * privdata.out_width / 72;
+  privdata.out_height = privdata.mode->ydpi * privdata.out_height / 72;
 
-  PUT("out_width ", out_width,privdata.mode->xdpi);
-  PUT("out_height", out_height,privdata.mode->ydpi);
-
-  left = privdata.mode->xdpi * left / 72;
-
-  PUT("leftskip",left,privdata.mode->xdpi);
-
+  privdata.left = privdata.mode->xdpi * privdata.left / 72;
 
   stp_deprintf(STP_DBG_CANON,"density is %f\n",
                stp_get_float_parameter(v, "Density"));
@@ -1574,7 +1710,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       stp_set_float_parameter(v, "Density", 1.0);
     }
 
-  stp_scale_float_parameter(v, "Density", pt->base_density);
+  stp_scale_float_parameter(v, "Density", privdata.pt->base_density);
   stp_scale_float_parameter(v, "Density",privdata.mode->density);
 
   if (stp_get_float_parameter(v, "Density") > 1.0)
@@ -1586,13 +1722,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   stp_deprintf(STP_DBG_CANON,"density is %f\n",
                stp_get_float_parameter(v, "Density"));
 
-
-
-  privdata.left = left;
-  privdata.out_width = out_width;
-  privdata.out_height = out_height;
-  privdata.caps = caps;
-
   if(privdata.used_inks & CANON_INK_CMYK_MASK)
     stp_set_string_parameter(v, "STPIOutputType", "KCMY");
   else if(privdata.used_inks & CANON_INK_CMY_MASK)
@@ -1600,24 +1729,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   else
     stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
 
+  privdata.length = (privdata.out_width + 7) / 8;
 
-
-
-
-
-  privdata.length = (out_width + 7) / 8;
-
-
-
-  stp_dither_init(v, image, out_width, privdata.mode->xdpi, privdata.mode->ydpi);
-
-
-
-
-
-
-
-
+  stp_dither_init(v, image, privdata.out_width, privdata.mode->xdpi, privdata.mode->ydpi);
 
   canon_setup_channels(v,&privdata);
 
@@ -1645,8 +1759,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
    }else 
        k_lower = 0.25;
 
-  k_lower *= pt->k_lower_scale;
-  k_upper = pt->k_upper;
+  k_lower *= privdata.pt->k_lower_scale;
+  k_upper = privdata.pt->k_upper;
 
   if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
     stp_set_default_float_parameter(v, "GCRLower", k_lower);
@@ -1688,7 +1802,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
            privdata.head_offset[1] = 0 ;/* how far C starts after K */
            privdata.head_offset[2] = 0;/* how far M starts after K */
            privdata.head_offset[3] = 0;/* how far Y starts after K */
-           top += 11;
+           privdata.top += 11;
          }
        else if ( privdata.used_inks == CANON_INK_CMYK )
          {
@@ -1696,7 +1810,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
            privdata.head_offset[1] = 144 ;/* how far C starts after K */
            privdata.head_offset[2] = 144 + 64;/* how far M starts after K */
            privdata.head_offset[3] = 144 + 64 + 64;/* how far Y starts after K */
-           top += 5;
+           privdata.top += 5;
          }
        else  /* colormode == CMY */
          {
@@ -1704,7 +1818,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
            privdata.head_offset[1] = 0 ;/* how far C starts after K */
            privdata.head_offset[2] = 64;/* how far M starts after K */
            privdata.head_offset[3] = 128;/* how far Y starts after K */
-           top += 18;
+           privdata.top += 18;
          }
 
        privdata.nozzle_separation = privdata.stepper_ydpi / privdata.nozzle_ydpi;
@@ -1722,8 +1836,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
                                     privdata.nozzles, privdata.nozzle_separation,
                                     privdata.horizontal_passes, privdata.vertical_passes,
                                     privdata.vertical_oversample, privdata.ncolors,
-                                    out_width, out_height,
-                                    top * privdata.stepper_ydpi / 72, page_height * privdata.stepper_ydpi / 72,
+                                    privdata.out_width, privdata.out_height,
+                                    privdata.top * privdata.stepper_ydpi / 72, privdata.page_height * privdata.stepper_ydpi / 72,
                                     privdata.head_offset[0],privdata.head_offset[1],
                                     privdata.head_offset[2],privdata.head_offset[3]);
 
@@ -1731,9 +1845,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
                                 privdata.horizontal_passes, privdata.vertical_passes,
                                 privdata.vertical_oversample, privdata.ncolors,
                                 1,
-                                out_width, out_height,
-                                top * privdata.stepper_ydpi / 72,
-                                page_height * privdata.stepper_ydpi / 72,
+                                privdata.out_width, privdata.out_height,
+                                privdata.top * privdata.stepper_ydpi / 72,
+                                privdata.page_height * privdata.stepper_ydpi / 72,
                                 privdata.head_offset,
                                 STP_WEAVE_ZIGZAG,
                                 canon_flush_pass,
@@ -1754,8 +1868,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   }
 
 
-  errdiv  = image_height / out_height;
-  errmod  = image_height % out_height;
+  errdiv  = image_height / privdata.out_height;
+  errmod  = image_height % privdata.out_height;
   errval  = 0;
   errlast = -1;
   errline  = 0;
@@ -1763,7 +1877,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE)) 
     {
       stp_curve_t* hue_adjustment = stp_read_and_compose_curves
-	(caps->hue_adjustment,pt->hue_adjustment,
+	(caps->hue_adjustment,privdata.pt->hue_adjustment,
 	 STP_CURVE_COMPOSE_ADD, 384);
       if(hue_adjustment){
         stp_set_curve_parameter(v, "HueMap", hue_adjustment);
@@ -1773,7 +1887,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE)) 
     {
       stp_curve_t* lum_adjustment = stp_read_and_compose_curves
-	(caps->lum_adjustment,pt->lum_adjustment,
+	(caps->lum_adjustment,privdata.pt->lum_adjustment,
 	 STP_CURVE_COMPOSE_MULTIPLY, 384);
       if(lum_adjustment){
         stp_set_curve_parameter(v, "LumMap", lum_adjustment);
@@ -1783,7 +1897,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE)) 
     {
       stp_curve_t* sat_adjustment = stp_read_and_compose_curves
-	(caps->sat_adjustment,pt->sat_adjustment,
+	(caps->sat_adjustment,privdata.pt->sat_adjustment,
 	 STP_CURVE_COMPOSE_MULTIPLY, 384);
       if(sat_adjustment){
         stp_set_curve_parameter(v, "SatMap", sat_adjustment);
@@ -1796,11 +1910,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   privdata.emptylines = 0;
   if (print_cd) {
-    cd_mask = stp_malloc(1 + (out_width + 7) / 8);
-    outer_r_sq = (double)CD_OUTER_RADIUS * (double)CD_OUTER_RADIUS;
-    inner_r_sq = (double)CD_INNER_RADIUS * (double)CD_INNER_RADIUS;
+    cd_mask = stp_malloc(1 + (privdata.out_width + 7) / 8);
+    outer_r_sq = (double)privdata.cd_outer_radius * (double)privdata.cd_outer_radius;
+    inner_r_sq = (double)privdata.cd_inner_radius * (double)privdata.cd_inner_radius;
   }
-  for (y = 0; y < out_height; y ++)
+  for (y = 0; y < privdata.out_height; y ++)
   {
     int duplicate_line = 1;
 
@@ -1816,26 +1930,26 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     }
     if (print_cd) 
       {
-	int x_center = CD_OUTER_RADIUS * privdata.mode->xdpi / 72;
+	int x_center = privdata.cd_outer_radius * privdata.mode->xdpi / 72;
 	int y_distance_from_center =
-	  CD_OUTER_RADIUS - (y * 72 / privdata.mode->ydpi);
+	  privdata.cd_outer_radius - (y * 72 / privdata.mode->ydpi);
 	if (y_distance_from_center < 0)
 	  y_distance_from_center = -y_distance_from_center;
-	memset(cd_mask, 0, (out_width + 7) / 8);
-	if (y_distance_from_center < CD_OUTER_RADIUS)
+	memset(cd_mask, 0, (privdata.out_width + 7) / 8);
+	if (y_distance_from_center < privdata.cd_outer_radius)
 	  {
 	    double y_sq = (double) y_distance_from_center *
 	      (double) y_distance_from_center;
 	    int x_where = sqrt(outer_r_sq - y_sq) + .5;
 	    int scaled_x_where = x_where * privdata.mode->xdpi / 72;
 	    set_mask(cd_mask, x_center, scaled_x_where,
-		     out_width, 1, 0);
-	    if (y_distance_from_center < CD_INNER_RADIUS)
+		     privdata.out_width, 1, 0);
+	    if (y_distance_from_center < privdata.cd_inner_radius)
 	      {
 		x_where = sqrt(inner_r_sq - y_sq) + .5;
 		scaled_x_where = x_where * privdata.mode->ydpi / 72;
 		set_mask(cd_mask, x_center, scaled_x_where,
-			 out_width, 1, 1);
+			 privdata.out_width, 1, 1);
 	      }
 	  }
       }
@@ -1848,9 +1962,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
         canon_printfunc(v);
     errval += errmod;
     errline += errdiv;
-    if (errval >= out_height)
+    if (errval >= privdata.out_height)
     {
-      errval -= out_height;
+      errval -= privdata.out_height;
       errline ++;
     }
   }
