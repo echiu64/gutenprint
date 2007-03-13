@@ -97,11 +97,12 @@ static color_t* get_color(image_t* img,char name){
 	return NULL;
 }
 
-static int valid_color(char color){
+static int valid_color(unsigned char color){
 	int i;
-	for(i=0;i<MAX_COLORS;i++)
+	for(i=0;i<sizeof(valid_colors) / sizeof(valid_colors[0]);i++)
 		if(valid_colors[i] == color)
 			return 1;
+	printf("unknown color %c 0x%x\n",color,color);
 	return 0;
 }
 
@@ -132,7 +133,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 	unsigned char* dst=malloc(len*256); /* the destination buffer */
 	unsigned char* dstr=dst;
 	if(!color){
-		printf("no matching color for %c in the databasei => ignoring\n",color_name);
+		printf("no matching color for %c (0x%x) in the database => ignoring %i bytes\n",color_name,color_name,len);
 	}
 
 	/* decode pack bits */
