@@ -316,10 +316,10 @@ static void write_ppm(image_t* img,FILE* fp){
 			printf("color %c level %i dots %i\n",img->color[i].name,level,img->color[i].dots[level]);
 	}
 	/* translate area coordinates to 1/72 in (the gutenprint unit)*/
-	img->image_top = img->image_top * 72.0 / img->yres + img->top * 72.0;
-	img->image_bottom = img->image_bottom * 72.0 / img->yres + img->top * 72.0;
-	img->image_left = img->image_left * 72.0 / img->xres + img->left * 72.0;
-	img->image_right = img->image_right * 72.0 / img->xres + img->left * 72.0;
+	img->image_top = img->image_top * 72.0 / img->yres ;
+	img->image_bottom = img->image_bottom * 72.0 / img->yres ;
+	img->image_left = img->image_left * 72.0 / img->xres ;
+	img->image_right = img->image_right * 72.0 / img->xres ;
 	printf("top %u bottom %u left %u right %u\n",img->image_top,img->image_bottom,img->image_left,img->image_right);
 	printf("width %u height %u\n",img->image_right - img->image_left,img->image_bottom - img->image_top);	
 
@@ -471,8 +471,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 				break;
 			case 'p':
 				printf("ESC (p set extended margin (len=%i):\n",cnt);
-                                printf(" printed length %i left %i\n",(buf[0]<<8 )+buf[1],(buf[2]<<8) + buf[3]);
-                                printf(" printed width %i top %i\n",(buf[4]<<8 )+buf[5],(buf[6]<<8) + buf[7]);
+                                printf(" printed length %i left %i\n",((buf[0]<<8 )+buf[1]) *6 / 5,(buf[2]<<8) + buf[3]);
+                                printf(" printed width %i top %i\n",((buf[4]<<8 )+buf[5]) * 6 / 5,(buf[6]<<8) + buf[7]);
 
                                 if(cnt > 8){
 					int unit = (buf[12] << 8)| buf[13];
