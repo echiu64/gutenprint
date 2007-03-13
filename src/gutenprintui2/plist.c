@@ -1209,6 +1209,8 @@ stpui_get_system_printers(void)
   identify_print_system();
   if (global_printing_system)
   {
+    const char *old_locale = getenv("LC_ALL");
+    (void) setenv("LC_ALL", "C", 1);
     if ((pfile = popen(global_printing_system->scan_command, "r")) != NULL)
     {
      /*
@@ -1230,6 +1232,10 @@ stpui_get_system_printers(void)
 	    }
 	}
       pclose(pfile);
+      if (old_locale)
+	setenv("LC_ALL", old_locale, 1);
+      else
+	unsetenv("LC_ALL");
     }
   }
 }
