@@ -1314,6 +1314,8 @@ sub qualityorder {
 		    "oov",
 		    # Canon
 		    "dmt",
+		    "dpi_high",
+		    "dpi_draft"
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case
