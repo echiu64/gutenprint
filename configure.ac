@@ -112,7 +112,7 @@ LDFLAGS="${LDFLAGS:=}"
 LIBS="${LIBS:=}"
 
 dnl Initialize automake stuff.
-AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu no-dependencies)
+AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
 popdef([GUTENPRINT_NAME])
 popdef([GUTENPRINT_VERSION])
 
