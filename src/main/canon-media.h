@@ -66,7 +66,7 @@ DECLARE_SLOTS(canon_default);
 static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 3 },
   { "Auto",       N_ ("Auto Sheet Feeder"), 4 },
-  { "Cassette",   N_ ("Cassette"), 8 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
   { "CD",         N_ ("CD tray"), 10 },
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },
 };
