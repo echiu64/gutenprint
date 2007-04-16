@@ -426,7 +426,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     if(!mode)
         mode = &caps->modelist->modes[caps->modelist->default_mode];
 
-
+#if 0
     /* only some modes can print to cd */
     if(input_slot && !strcmp(input_slot,"CD") && !(mode->flags & MODE_FLAG_CD)){
         for(i=0;i<caps->modelist->count;i++){
@@ -435,10 +435,8 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
                 break;
             }
         }
-
-
-
     }
+#endif
 
 
 
@@ -666,7 +664,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
     description->bounds.str= stp_string_list_create();
     description->deflt.str = NULL;
     for(i=0;i<caps->modelist->count;i++){
+#if 0
 	if(!(input_slot && !strcmp(input_slot,"CD") && !(caps->modelist->modes[i].flags & MODE_FLAG_CD)))
+#endif
           stp_string_list_add_string(description->bounds.str,
                                         caps->modelist->modes[i].name, gettext(caps->modelist->modes[i].text));
         stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",

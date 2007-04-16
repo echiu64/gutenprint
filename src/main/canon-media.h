@@ -145,7 +145,8 @@ static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
   { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,Q2|Q3|Q4,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,Q2|Q3,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,Q1|Q2|Q3,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "CD",		N_ ("CD"),				0x0c,0x12,Q2|Q3|Q4,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "CD",		N_ ("CD"),				0x00,0x12,Q2|Q3|Q4,0.78, 0.25, 0.500, 0, 0, 0 }, 
+  /* FIXME media code for c) should be 0x0c for CD but this will restrict CD printing to a single, not well supported, resolution */
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,Q2,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble", N_ ("Photoper Plus Double-Sided"),	0x10,0x15,Q2|Q3,0.78, 0.25, 0.500, 0, 0, 0 },
 };
