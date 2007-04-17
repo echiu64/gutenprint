@@ -63,6 +63,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <libgen.h>
 
 #ifdef CUPS_DRIVER_INTERFACE
 #  ifdef HAVE_LIBZ
@@ -720,7 +721,7 @@ generate_ppd(
 	   cups_modeldir,
 	   cups_modeldir[strlen(cups_modeldir) - 1] == '/' ? "" : "/",
 	   language ? language : "C",
-	   filename);
+	   basename(filename));
 
   status = write_ppd(fp, p, language, ppd_location, simplified);
 

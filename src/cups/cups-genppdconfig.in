@@ -396,7 +396,7 @@ sub create_ppds {
     $count = 0;
     foreach $language (@chosen_languages) { # loop through languages
 	open GENPPD,
-	"LANGUAGE=$language cups-genppd.$version -v -p $chosen_location/$language $printers 2>&1 |"
+	"LC_ALL=$language LANG=$language LANGUAGE=$language cups-genppd.$version -v -p $chosen_location/$language $printers 2>&1 |"
 	    or die "can't fork cups-genppd: $!";
 	$file = "";
 	while ( defined($file = <GENPPD>)) { # dump genppd stats into guage
