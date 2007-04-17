@@ -1,9 +1,9 @@
 # Copyright (C) 2001 Free Software Foundation, Inc.
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Aktualn± wersjê tego pliku mo¿esz odnale¼æ w repozytorium cvs.gnome.pl
-# (:pserver:anonymous@cvs.gnome.pl:/home/cvs, puste has³o)
-# Je¶li masz jakiekolwiek uwagi odnosz±ce siê do t³umaczenia lub chcesz
-# pomóc w jego rozwijaniu i pielêgnowaniu, napisz do nas na adres:
+# AktualnÄ… wersjÄ™ tego pliku moÅ¼esz odnaleÅºÄ‡ w repozytorium cvs.gnome.pl
+# (:pserver:anonymous@cvs.gnome.pl:/home/cvs, puste hasÅ‚o)
+# JeÅ›li masz jakiekolwiek uwagi odnoszÄ…ce siÄ™ do tÅ‚umaczenia lub chcesz
+# pomÃ³c w jego rozwijaniu i pielÄ™gnowaniu, napisz do nas na adres:
 # translators@gnome.pl
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Last-Translator: GNOME PL Team <translators@gnome.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: "EvenTone" is the proper name, rather than a
@@ -24,7 +24,7 @@ msgstr ""
 #: src/main/print-escp2.c:1721
 #, fuzzy
 msgid "Default"
-msgstr "Ustaw domy¶lne"
+msgstr "Ustaw domyÅ›lne"
 
 #: src/main/dither-main.c:47
 #, fuzzy
@@ -84,7 +84,7 @@ msgstr ""
 #: src/main/dither-main.c:88 src/main/print-color.c:56
 #, fuzzy
 msgid "Density"
-msgstr "Gêsto¶æ:"
+msgstr "GÄ™stoÅ›Ä‡:"
 
 #: src/main/dither-main.c:88 src/main/print-canon.c:261
 #: src/main/print-canon.c:269 src/main/print-canon.c:277
@@ -205,7 +205,7 @@ msgstr ""
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
-msgstr "Rozdzielczo¶æ"
+msgstr "RozdzielczoÅ›Ä‡"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
 #: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
@@ -266,7 +266,7 @@ msgstr "Model drukarki:"
 #: src/main/print-raw.c:86
 #, fuzzy
 msgid "Core Parameter"
-msgstr "Zwyk³y papier"
+msgstr "ZwykÅ‚y papier"
 
 #: src/main/print-canon.c:233 src/main/print-escp2.c:335
 #: src/main/print-lexmark.c:303 src/main/print-olympus.c:1602
@@ -286,7 +286,7 @@ msgstr ""
 #: src/main/print-lexmark.c:325 src/main/print-pcl.c:1261
 #, fuzzy
 msgid "Cyan Density"
-msgstr "Gêsto¶æ:"
+msgstr "GÄ™stoÅ›Ä‡:"
 
 #: src/main/print-canon.c:262 src/main/print-escp2.c:433
 #: src/main/print-lexmark.c:326 src/main/print-pcl.c:1262
@@ -308,7 +308,7 @@ msgstr ""
 #: src/main/print-lexmark.c:341 src/main/print-pcl.c:1277
 #, fuzzy
 msgid "Yellow Density"
-msgstr "Gêsto¶æ:"
+msgstr "GÄ™stoÅ›Ä‡:"
 
 #: src/main/print-canon.c:278 src/main/print-escp2.c:449
 #: src/main/print-lexmark.c:342 src/main/print-pcl.c:1278
@@ -319,7 +319,7 @@ msgstr ""
 #: src/main/print-lexmark.c:349 src/main/print-pcl.c:1285
 #, fuzzy
 msgid "Black Density"
-msgstr "Gêsto¶æ:"
+msgstr "GÄ™stoÅ›Ä‡:"
 
 #: src/main/print-canon.c:286 src/main/print-escp2.c:457
 #: src/main/print-lexmark.c:350 src/main/print-pcl.c:1286
@@ -420,12 +420,12 @@ msgstr "Wydrukuj"
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
 #: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
-msgstr "Odcienie szaro¶ci"
+msgstr "Odcienie szaroÅ›ci"
 
 #: src/main/print-color.c:123
 #, fuzzy
 msgid "Whitescale"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:125
 msgid "RGB"
@@ -497,12 +497,12 @@ msgstr "Typ obrazu"
 #: src/main/print-color.c:200
 #, fuzzy
 msgid "Output Image Type"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-color.c:201
 #, fuzzy
 msgid "Output image type"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-color.c:208 src/main/print-color.c:209
 #: src/main/print-escp2.c:340
@@ -521,12 +521,12 @@ msgstr ""
 #: src/main/print-color.c:224
 #, fuzzy
 msgid "Brightness"
-msgstr "Jasno¶æ:"
+msgstr "JasnoÅ›Ä‡:"
 
 #: src/main/print-color.c:225
 #, fuzzy
 msgid "Brightness of the print"
-msgstr "Rozdzielczo¶æ"
+msgstr "RozdzielczoÅ›Ä‡"
 
 #: src/main/print-color.c:232
 #, fuzzy
@@ -544,7 +544,7 @@ msgstr ""
 #: src/main/print-color.c:240
 #, fuzzy
 msgid "Advanced Image Control"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
@@ -608,7 +608,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:2155 src/escputil/escputil.c:986
 #: src/escputil/escputil.c:1005 src/escputil/escputil.c:1209
 msgid "Yellow"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:283
 msgid "Adjust the yellow gamma"
@@ -666,7 +666,7 @@ msgstr ""
 #: src/main/print-color.c:338
 #, fuzzy
 msgid "GrayBalance"
-msgstr "Odcienie szaro¶ci"
+msgstr "Odcienie szaroÅ›ci"
 
 #: src/main/print-color.c:323
 msgid "Adjust the cyan gray balance"
@@ -684,7 +684,7 @@ msgstr ""
 #: src/main/print-color.c:338 src/main/print-olympus.c:1640
 #, fuzzy
 msgid "Yellow Balance"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:339
 msgid "Adjust the yellow gray balance"
@@ -713,7 +713,7 @@ msgstr "Typ tuszu:"
 #: src/main/print-escp2.c:364 src/main/print-escp2.c:370
 #, fuzzy
 msgid "Advanced Output Control"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-color.c:358
 msgid "Limit the total ink printed to the page"
@@ -750,7 +750,7 @@ msgstr ""
 #: src/main/print-color.c:513
 #, fuzzy
 msgid "Output Curves"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-color.c:447
 msgid "Curve for raw channel "
@@ -778,12 +778,12 @@ msgstr "Purpurowy"
 #: src/main/print-color.c:473
 #, fuzzy
 msgid "Yellow Curve"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:474
 #, fuzzy
 msgid "Yellow curve"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:481
 #, fuzzy
@@ -798,12 +798,12 @@ msgstr "Czarny"
 #: src/main/print-color.c:489
 #, fuzzy
 msgid "Red Curve"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:490
 #, fuzzy
 msgid "Red curve"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:497
 #, fuzzy
@@ -828,12 +828,12 @@ msgstr "Czarny"
 #: src/main/print-color.c:513
 #, fuzzy
 msgid "White Curve"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:514
 #, fuzzy
 msgid "White curve"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-color.c:521
 msgid "Hue Map"
@@ -1018,7 +1018,7 @@ msgstr ""
 #: src/main/print-escp2.c:228
 #, fuzzy
 msgid "Resolution of the print"
-msgstr "Rozdzielczo¶æ"
+msgstr "RozdzielczoÅ›Ä‡"
 
 #: src/main/print-escp2.c:244
 msgid "Enhanced Gloss"
@@ -1072,7 +1072,7 @@ msgstr ""
 #: src/main/print-escp2.c:280 src/main/print-escp2.c:281
 #, fuzzy
 msgid "Output Order"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-escp2.c:286 src/main/print-escp2.c:287
 msgid "Alignment Passes"
@@ -1129,7 +1129,7 @@ msgstr ""
 #: src/main/print-escp2.c:358
 #, fuzzy
 msgid "Yellow Map"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-escp2.c:359
 msgid "Adjust the yellow map"
@@ -1138,7 +1138,7 @@ msgstr ""
 #: src/main/print-escp2.c:364
 #, fuzzy
 msgid "Blue Map"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/print-escp2.c:365
 msgid "Adjust the blue map"
@@ -1155,7 +1155,7 @@ msgstr ""
 #: src/main/print-escp2.c:464
 #, fuzzy
 msgid "Red Density"
-msgstr "Gêsto¶æ:"
+msgstr "GÄ™stoÅ›Ä‡:"
 
 #: src/main/print-escp2.c:465
 msgid "Adjust the red density"
@@ -1164,7 +1164,7 @@ msgstr ""
 #: src/main/print-escp2.c:472
 #, fuzzy
 msgid "Blue Density"
-msgstr "Gêsto¶æ:"
+msgstr "GÄ™stoÅ›Ä‡:"
 
 #: src/main/print-escp2.c:473
 msgid "Adjust the blue density"
@@ -1207,7 +1207,7 @@ msgstr ""
 #: src/main/print-escp2.c:1604
 #, fuzzy
 msgid "Full Manual Control"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-escp2.c:1606
 msgid "Automatic Setting Control"
@@ -1233,13 +1233,13 @@ msgstr ""
 #: src/main/print-escp2.c:1648
 #, fuzzy
 msgid "Print To Hub"
-msgstr "Wydrukowaæ do pliku?"
+msgstr "WydrukowaÄ‡ do pliku?"
 
 #: src/main/print-escp2.c:1701 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 #, fuzzy
 msgid "Manual Control"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/print-escp2.c:1740 src/main/print-escp2.c:1832
 #: src/main/print-escp2.c:1844 src/main/print-pcl.c:230
@@ -1383,7 +1383,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1296 src/main/escp2-papers.c:1344
 #: src/main/escp2-papers.c:1388
 msgid "Plain Paper"
-msgstr "Zwyk³y papier"
+msgstr "ZwykÅ‚y papier"
 
 #: src/main/print-lexmark.c:860 src/main/escp2-papers.c:1166
 #: src/main/escp2-papers.c:1210 src/main/escp2-papers.c:1254
@@ -1546,7 +1546,7 @@ msgstr ""
 
 #: src/main/print-pcl.c:189
 msgid "Transparency"
-msgstr "Przezroczysto¶æ"
+msgstr "PrzezroczystoÅ›Ä‡"
 
 #: src/main/print-pcl.c:190
 msgid "Quick-dry Photo"
@@ -1658,12 +1658,12 @@ msgstr ""
 #: src/main/escp2-channels.c:869 src/main/escp2-channels.c:882
 #, fuzzy
 msgid "Two Level Grayscale"
-msgstr "Odcienie szaro¶ci"
+msgstr "Odcienie szaroÅ›ci"
 
 #: src/main/escp2-channels.c:904 src/main/escp2-channels.c:917
 #, fuzzy
 msgid "Three Level Grayscale"
-msgstr "Odcienie szaro¶ci"
+msgstr "Odcienie szaroÅ›ci"
 
 #: src/main/escp2-channels.c:939 src/main/escp2-channels.c:952
 #: src/main/escp2-channels.c:965 src/main/escp2-channels.c:978
@@ -1705,7 +1705,7 @@ msgstr ""
 #: src/main/escp2-channels.c:1708 src/main/escp2-channels.c:1720
 #, fuzzy
 msgid "Two Color Raw"
-msgstr "Jednolite p³aszczyzny"
+msgstr "Jednolite pÅ‚aszczyzny"
 
 #: src/main/escp2-channels.c:1734 src/main/escp2-channels.c:1748
 #: src/main/escp2-channels.c:1775 src/main/escp2-channels.c:1788
@@ -1726,12 +1726,12 @@ msgstr "Stylus Color Pro"
 #: src/main/escp2-channels.c:1872 src/main/escp2-channels.c:1878
 #, fuzzy
 msgid "Four Color Raw"
-msgstr "Jednolite p³aszczyzny"
+msgstr "Jednolite pÅ‚aszczyzny"
 
 #: src/main/escp2-channels.c:1884
 #, fuzzy
 msgid "Four Color Raw Gloss"
-msgstr "Jednolite p³aszczyzny"
+msgstr "Jednolite pÅ‚aszczyzny"
 
 #: src/main/escp2-channels.c:1899 src/main/escp2-channels.c:1913
 #, fuzzy
@@ -1742,12 +1742,12 @@ msgstr "Stylus Color Pro"
 #: src/main/escp2-channels.c:1941 src/main/escp2-channels.c:1956
 #, fuzzy
 msgid "Six Color Raw"
-msgstr "Jednolite p³aszczyzny"
+msgstr "Jednolite pÅ‚aszczyzny"
 
 #: src/main/escp2-channels.c:1962
 #, fuzzy
 msgid "Six Color Enhanced Gloss Raw"
-msgstr "Jednolite p³aszczyzny"
+msgstr "Jednolite pÅ‚aszczyzny"
 
 #: src/main/escp2-channels.c:1977 src/main/escp2-channels.c:1992
 #: src/main/escp2-channels.c:2007
@@ -1763,7 +1763,7 @@ msgstr "Stylus Color Pro"
 #: src/main/escp2-channels.c:2042
 #, fuzzy
 msgid "Eight Color Raw"
-msgstr "Jednolite p³aszczyzny"
+msgstr "Jednolite pÅ‚aszczyzny"
 
 #: src/main/escp2-channels.c:2197 src/main/escp2-channels.c:2210
 #: src/main/escp2-channels.c:2230 src/main/escp2-channels.c:2233
@@ -1820,7 +1820,7 @@ msgstr "Czarny"
 #: src/main/escp2-channels.c:2771
 #, fuzzy
 msgid "Dark Yellow"
-msgstr "¯ó³æ"
+msgstr "Å»Ã³Å‚Ä‡"
 
 #: src/main/escp2-channels.c:2798 src/escputil/escputil.c:995
 msgid "Gloss Optimizer"
@@ -1836,7 +1836,7 @@ msgstr "Czarny"
 #: src/main/escp2-papers.c:1346 src/main/escp2-papers.c:1390
 #, fuzzy
 msgid "Plain Paper Fast Load"
-msgstr "Zwyk³y papier"
+msgstr "ZwykÅ‚y papier"
 
 #: src/main/escp2-papers.c:1164 src/main/escp2-papers.c:1208
 #: src/main/escp2-papers.c:1252 src/main/escp2-papers.c:1300
@@ -1868,7 +1868,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1378 src/main/escp2-papers.c:1426
 #, fuzzy
 msgid "ColorLife Paper"
-msgstr "Zwyk³y papier"
+msgstr "ZwykÅ‚y papier"
 
 #: src/main/escp2-papers.c:1278 src/main/escp2-papers.c:1326
 #: src/main/escp2-papers.c:1418
@@ -1902,7 +1902,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1752 src/main/escp2-papers.c:1785
 #, fuzzy
 msgid "Print to CD"
-msgstr "Wydrukowaæ do pliku?"
+msgstr "WydrukowaÄ‡ do pliku?"
 
 #: src/main/escp2-papers.c:1683 src/main/escp2-papers.c:1725
 msgid "Manual Sheet Guide"
@@ -1911,7 +1911,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1692 src/main/escp2-papers.c:1734
 #, fuzzy
 msgid "Manual Feed (Front)"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/main/escp2-papers.c:1767
 msgid "Rear Tray"
@@ -2086,7 +2086,7 @@ msgstr "Ustawienia drukarki"
 #: src/main/escp2-resolutions.c:552
 #, fuzzy
 msgid "Eight Pass"
-msgstr "Jasno¶æ:"
+msgstr "JasnoÅ›Ä‡:"
 
 #: src/main/escp2-resolutions.c:595 src/main/escp2-resolutions.c:610
 #: src/main/generic-options.c:33
@@ -2107,7 +2107,7 @@ msgstr ""
 #: src/main/escp2-resolutions.c:628 src/main/generic-options.c:37
 #, fuzzy
 msgid "High"
-msgstr "Wysoko¶æ:"
+msgstr "WysokoÅ›Ä‡:"
 
 #: src/main/escp2-resolutions.c:600 src/main/escp2-resolutions.c:615
 #: src/main/escp2-resolutions.c:627 src/main/generic-options.c:38
@@ -2151,7 +2151,7 @@ msgstr "Fotografia"
 
 #: src/main/generic-options.c:50
 msgid "Line Art"
-msgstr "Rysunek kresk±"
+msgstr "Rysunek kreskÄ…"
 
 #: src/main/generic-options.c:55
 #, fuzzy
@@ -6220,7 +6220,7 @@ msgstr "Plik"
 #: src/gutenprintui2/panel.c:304
 #, fuzzy
 msgid "Print to a file"
-msgstr "Wydrukowaæ do pliku?"
+msgstr "WydrukowaÄ‡ do pliku?"
 
 #: src/gutenprintui2/panel.c:520
 msgid "Edit Curve..."
@@ -6229,7 +6229,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:531
 #, fuzzy
 msgid "Set Default"
-msgstr "Ustaw domy¶lne"
+msgstr "Ustaw domyÅ›lne"
 
 #: src/gutenprintui2/panel.c:533
 msgid "Restore Previous"
@@ -6276,7 +6276,7 @@ msgstr "Wydrukuj"
 
 #: src/gutenprintui2/panel.c:1247
 msgid "Preview"
-msgstr "Podgl±d"
+msgstr "PodglÄ…d"
 
 #: src/gutenprintui2/panel.c:1272
 msgid ""
@@ -6307,7 +6307,7 @@ msgstr "Wymiary:"
 
 #: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
 msgid "Width:"
-msgstr "Szeroko¶æ:"
+msgstr "SzerokoÅ›Ä‡:"
 
 #: src/gutenprintui2/panel.c:1364
 msgid "Width of the paper that you wish to print to"
@@ -6315,7 +6315,7 @@ msgstr ""
 
 #: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
 msgid "Height:"
-msgstr "Wysoko¶æ:"
+msgstr "WysokoÅ›Ä‡:"
 
 #: src/gutenprintui2/panel.c:1369
 msgid "Height of the paper that you wish to print to"
@@ -6337,7 +6337,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:1435
 #, fuzzy
 msgid "Image Position"
-msgstr "Po³o¿enie"
+msgstr "PoÅ‚oÅ¼enie"
 
 #: src/gutenprintui2/panel.c:1452
 msgid "Auto"
@@ -6349,15 +6349,15 @@ msgstr "Portret"
 
 #: src/gutenprintui2/panel.c:1456
 msgid "Landscape"
-msgstr "Pejza¿"
+msgstr "PejzaÅ¼"
 
 #: src/gutenprintui2/panel.c:1458
 msgid "Upside down"
-msgstr "Z góry na dó³"
+msgstr "Z gÃ³ry na dÃ³Å‚"
 
 #: src/gutenprintui2/panel.c:1460
 msgid "Seascape"
-msgstr "Pejza¿"
+msgstr "PejzaÅ¼"
 
 #: src/gutenprintui2/panel.c:1464
 msgid ""
@@ -6367,7 +6367,7 @@ msgstr ""
 
 #: src/gutenprintui2/panel.c:1466
 msgid "Orientation:"
-msgstr "U³o¿enie:"
+msgstr "UÅ‚oÅ¼enie:"
 
 #: src/gutenprintui2/panel.c:1477
 msgid "Left:"
@@ -6375,7 +6375,7 @@ msgstr "Lewa:"
 
 #: src/gutenprintui2/panel.c:1478
 msgid "Distance from the left of the paper to the image"
-msgstr "Odleg³o¶æ od lewej krawêdzi papieru do obrazu"
+msgstr "OdlegÅ‚oÅ›Ä‡ od lewej krawÄ™dzi papieru do obrazu"
 
 #: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
 msgid "Right:"
@@ -6383,32 +6383,32 @@ msgstr "Prawa:"
 
 #: src/gutenprintui2/panel.c:1482
 msgid "Distance from the left of the paper to the right of the image"
-msgstr "Odleg³o¶æ od lewej krawêdzi papieru do prawej krawêdzi obrazu"
+msgstr "OdlegÅ‚oÅ›Ä‡ od lewej krawÄ™dzi papieru do prawej krawÄ™dzi obrazu"
 
 #: src/gutenprintui2/panel.c:1486
 msgid "Distance from the right of the paper to the image"
-msgstr "Odleg³o¶æ od prawej krawêdzi papieru do obrazu"
+msgstr "OdlegÅ‚oÅ›Ä‡ od prawej krawÄ™dzi papieru do obrazu"
 
 #: src/gutenprintui2/panel.c:1488
 msgid "Top:"
-msgstr "Góra:"
+msgstr "GÃ³ra:"
 
 #: src/gutenprintui2/panel.c:1489
 msgid "Distance from the top of the paper to the image"
-msgstr "Odleg³o¶æ od górnej krawêdzi papieru do obrazu"
+msgstr "OdlegÅ‚oÅ›Ä‡ od gÃ³rnej krawÄ™dzi papieru do obrazu"
 
 #: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
 msgid "Bottom:"
-msgstr "Dó³:"
+msgstr "DÃ³Å‚:"
 
 #: src/gutenprintui2/panel.c:1493
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Odleg³o¶æ od górnej krawêdzi papieru do dolnej krawêdzi obrazu"
+msgstr "OdlegÅ‚oÅ›Ä‡ od gÃ³rnej krawÄ™dzi papieru do dolnej krawÄ™dzi obrazu"
 
 #: src/gutenprintui2/panel.c:1497
 msgid "Distance from the bottom of the paper to the image"
-msgstr "Odleg³o¶æ od dolnej krawêdzi papieru do obrazu"
+msgstr "OdlegÅ‚oÅ›Ä‡ od dolnej krawÄ™dzi papieru do obrazu"
 
 #: src/gutenprintui2/panel.c:1507
 msgid "Center:"
@@ -6472,7 +6472,7 @@ msgstr ""
 
 #: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
 msgid "Browse"
-msgstr "Przegl±daj"
+msgstr "PrzeglÄ…daj"
 
 #: src/gutenprintui2/panel.c:1667
 msgid "Choose the correct PPD filename for your printer"
@@ -6504,7 +6504,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:1754
 #, fuzzy
 msgid "Print To File"
-msgstr "Wydrukowaæ do pliku?"
+msgstr "WydrukowaÄ‡ do pliku?"
 
 #: src/gutenprintui2/panel.c:1784
 msgid "Define New Printer"
@@ -6621,7 +6621,7 @@ msgstr "Regulacja koloru wydruku"
 
 #: src/gutenprintui2/panel.c:2092
 msgid "Set Defaults"
-msgstr "Ustaw domy¶lne"
+msgstr "Ustaw domyÅ›lne"
 
 #: src/gutenprintui2/panel.c:2094
 msgid "Close"
@@ -6629,7 +6629,7 @@ msgstr "Zamknij"
 
 #: src/gutenprintui2/panel.c:2123
 msgid "Image preview"
-msgstr "Podgl±d obrazu"
+msgstr "PodglÄ…d obrazu"
 
 #: src/gutenprintui2/panel.c:2137
 msgid "View Output Channels:"
@@ -6638,11 +6638,11 @@ msgstr ""
 #: src/gutenprintui2/panel.c:2228
 #, fuzzy
 msgid "Output"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/gutenprintui2/panel.c:2256
 msgid "Output Type:"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/gutenprintui2/panel.c:2260
 msgid "Select the desired output type"
@@ -6720,7 +6720,7 @@ msgstr "Ustawienia drukarki"
 #: src/cups/genppd.c:146
 #, fuzzy
 msgid "Output Control"
-msgstr "Typ wyj¶ciowy:"
+msgstr "Typ wyjÅ›ciowy:"
 
 #: src/cups/genppd.c:151
 #, fuzzy
@@ -6911,12 +6911,12 @@ msgstr ""
 #: src/escputil/escputil.c:329 src/escputil/escputil.c:337
 #, c-format
 msgid "You may only specify one printer or raw device."
-msgstr "Mo¿na podaæ tylko jedn± drukarkê lub surowe urz±dzenie."
+msgstr "MoÅ¼na podaÄ‡ tylko jednÄ… drukarkÄ™ lub surowe urzÄ…dzenie."
 
 #: src/escputil/escputil.c:345
 #, c-format
 msgid "You may only specify one printer model."
-msgstr "Mo¿na podaæ tylko jeden model drukarki."
+msgstr "MoÅ¼na podaÄ‡ tylko jeden model drukarki."
 
 #: src/escputil/escputil.c:369
 #, c-format
@@ -6951,17 +6951,17 @@ msgstr ""
 #: src/escputil/escputil.c:459
 #, c-format
 msgid "Cannot open device %s: %s\n"
-msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
+msgstr "Nie moÅ¼na otworzyÄ‡ urzÄ…dzenia %s: %s\n"
 
 #: src/escputil/escputil.c:482
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 #, c-format
 msgid "Unable to send command to printer\n"
-msgstr "Nie mo¿na wys³aæ polecenia do drukarki\n"
+msgstr "Nie moÅ¼na wysÅ‚aÄ‡ polecenia do drukarki\n"
 
 #: src/escputil/escputil.c:568
 #, c-format
@@ -6971,7 +6971,7 @@ msgstr ""
 #: src/escputil/escputil.c:573
 #, c-format
 msgid "Cannot read from %s: %s\n"
-msgstr "Nie mo¿na odczytaæ z %s: %s\n"
+msgstr "Nie moÅ¼na odczytaÄ‡ z %s: %s\n"
 
 #: src/escputil/escputil.c:747
 #, c-format
@@ -6986,7 +6986,7 @@ msgstr ""
 #: src/escputil/escputil.c:797 src/escputil/escputil.c:1418
 #, c-format
 msgid "Cannot write to %s: %s\n"
-msgstr "Nie mo¿na zapisaæ do %s: %s\n"
+msgstr "Nie moÅ¼na zapisaÄ‡ do %s: %s\n"
 
 #: src/escputil/escputil.c:843 src/escputil/escputil.c:1383
 #: src/escputil/escputil.c:1511
@@ -6996,7 +6996,7 @@ msgid ""
 "Cannot write to %s: %s\n"
 msgstr ""
 "\n"
-"Nie mo¿na zapisaæ do %s: %s\n"
+"Nie moÅ¼na zapisaÄ‡ do %s: %s\n"
 
 #: src/escputil/escputil.c:885
 #, c-format
@@ -7186,12 +7186,12 @@ msgstr ""
 #: src/escputil/escputil.c:1355
 #, fuzzy, c-format
 msgid "Obtaining %s requires using a raw device.\n"
-msgstr "Do uzyskania stanu drukarki nale¿y u¿yæ surowego urz±dzenia.\n"
+msgstr "Do uzyskania stanu drukarki naleÅ¼y uÅ¼yÄ‡ surowego urzÄ…dzenia.\n"
 
 #: src/escputil/escputil.c:1461
 #, fuzzy, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr "Do zidentyfikowania drukarki nale¿y u¿yæ surowego urz±dzenia.\n"
+msgstr "Do zidentyfikowania drukarki naleÅ¼y uÅ¼yÄ‡ surowego urzÄ…dzenia.\n"
 
 #: src/escputil/escputil.c:1602 src/escputil/escputil.c:1626
 #: src/escputil/escputil.c:1646
@@ -7206,17 +7206,17 @@ msgstr ""
 #: src/escputil/escputil.c:1675
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
-msgstr "Do zidentyfikowania drukarki nale¿y u¿yæ surowego urz±dzenia.\n"
+msgstr "Do zidentyfikowania drukarki naleÅ¼y uÅ¼yÄ‡ surowego urzÄ…dzenia.\n"
 
 #: src/escputil/escputil.c:1693
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
-msgstr "Mo¿na podaæ tylko jeden model drukarki."
+msgstr "MoÅ¼na podaÄ‡ tylko jeden model drukarki."
 
 #: src/escputil/escputil.c:1713
 #, c-format
 msgid "Cleaning heads...\n"
-msgstr "Czyszczenie g³owic...\n"
+msgstr "Czyszczenie gÅ‚owic...\n"
 
 #: src/escputil/escputil.c:1728
 #, c-format
@@ -7501,7 +7501,7 @@ msgstr "Nieznana opcja %c\n"
 #, fuzzy, c-format
 msgid ""
 "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
-msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
+msgstr "Nie moÅ¼na otworzyÄ‡ urzÄ…dzenia %s: %s\n"
 
 #: src/ghost/ijsgutenprint.c:498
 #, c-format
@@ -7521,37 +7521,37 @@ msgstr ""
 #: src/ghost/ijsgutenprint.c:700
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse TopLeft %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:723
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse PaperSize %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:795
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse curve %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:802
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s float %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:809
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s int %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:816
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:830
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
-msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #: src/ghost/ijsgutenprint.c:841
 #, fuzzy, c-format
@@ -7571,12 +7571,12 @@ msgstr ""
 #: src/ghost/ijsgutenprint.c:1319
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
-msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
+msgstr "Nie moÅ¼na otworzyÄ‡ urzÄ…dzenia %s: %s\n"
 
 #: src/ghost/ijsgutenprint.c:1331
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
-msgstr "Nie mo¿na otworzyæ urz±dzenia %s: %s\n"
+msgstr "Nie moÅ¼na otworzyÄ‡ urzÄ…dzenia %s: %s\n"
 
 #: src/ghost/ijsgutenprint.c:1344
 #, fuzzy, c-format
@@ -7723,7 +7723,7 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Plain Paper PIXMA"
-#~ msgstr "Zwyk³y papier"
+#~ msgstr "ZwykÅ‚y papier"
 
 #~ msgid "Envelope"
 #~ msgstr "Koperta"
@@ -8033,15 +8033,15 @@ msgstr ""
 
 #, fuzzy
 #~ msgid "Cannot identify printer!\n"
-#~ msgstr "Nie mo¿na wydrukowaæ na drukarce %s przy u¿yciu %s\n"
+#~ msgstr "Nie moÅ¼na wydrukowaÄ‡ na drukarce %s przy uÅ¼yciu %s\n"
 
 #, fuzzy
 #~ msgid "Red Balance"
-#~ msgstr "¯ó³æ"
+#~ msgstr "Å»Ã³Å‚Ä‡"
 
 #, fuzzy
 #~ msgid "Gloss Balance"
-#~ msgstr "¯ó³æ"
+#~ msgstr "Å»Ã³Å‚Ä‡"
 
 #, fuzzy
 #~ msgid "Gimp-Print"
@@ -8054,10 +8054,10 @@ msgstr ""
 #~ msgstr "%s: opcja \"%s\" jest niejednoznaczna\n"
 
 #~ msgid "%s: option `--%s' doesn't allow an argument\n"
-#~ msgstr "%s: opcja \"--%s\" nie pozwala na u¿ycie argumentu\n"
+#~ msgstr "%s: opcja \"--%s\" nie pozwala na uÅ¼ycie argumentu\n"
 
 #~ msgid "%s: option `%c%s' doesn't allow an argument\n"
-#~ msgstr "%s: opcja \"%c%s\" nie pozwala na u¿ycie argumentu\n"
+#~ msgstr "%s: opcja \"%c%s\" nie pozwala na uÅ¼ycie argumentu\n"
 
 #~ msgid "%s: option `%s' requires an argument\n"
 #~ msgstr "%s: opcja \"%s\" wymaga argumentu\n"
@@ -8081,11 +8081,11 @@ msgstr ""
 #~ msgstr "%s: opcja \"-W %s\" jest niejednoznaczna\n"
 
 #~ msgid "%s: option `-W %s' doesn't allow an argument\n"
-#~ msgstr "%s: opcja \"-W %s\" nie pozwala na u¿ycie argumentu\n"
+#~ msgstr "%s: opcja \"-W %s\" nie pozwala na uÅ¼ycie argumentu\n"
 
 #, fuzzy
 #~ msgid "Bright"
-#~ msgstr "Jasno¶æ:"
+#~ msgstr "JasnoÅ›Ä‡:"
 
 #, fuzzy
 #~ msgid "traditional"
@@ -8095,7 +8095,7 @@ msgstr ""
 #~ msgstr "24x36"
 
 #~ msgid "Solid Colors"
-#~ msgstr "Jednolite p³aszczyzny"
+#~ msgstr "Jednolite pÅ‚aszczyzny"
 
 #~ msgid "Stylus C20sx"
 #~ msgstr "Stylus C20sx"
@@ -8126,17 +8126,17 @@ msgstr ""
 #~ msgstr "Stylus C40ux"
 
 #~ msgid "Right Border:"
-#~ msgstr "Prawa krawêd¼:"
+#~ msgstr "Prawa krawÄ™dÅº:"
 
 #~ msgid "Bottom Border:"
-#~ msgstr "Dolna krawêd¼"
+#~ msgstr "Dolna krawÄ™dÅº"
 
 #~ msgid "Size"
 #~ msgstr "Rozmiar"
 
 #, fuzzy
 #~ msgid "Resolutions"
-#~ msgstr "Rozdzielczo¶æ"
+#~ msgstr "RozdzielczoÅ›Ä‡"
 
 #~ msgid "Media Type:"
 #~ msgstr "Typ papieru:"
@@ -8145,10 +8145,10 @@ msgstr ""
 #~ msgstr "Rozmiar papieru:"
 
 #~ msgid "Media Source:"
-#~ msgstr "¬ród³o papieru:"
+#~ msgstr "Å¹rÃ³dÅ‚o papieru:"
 
 #~ msgid "Resolution:"
-#~ msgstr "Rozdzielczo¶æ:"
+#~ msgstr "RozdzielczoÅ›Ä‡:"
 
 #~ msgid "Dither Algorithm:"
 #~ msgstr "Algorytm ditherowania:"
@@ -8158,7 +8158,7 @@ msgstr ""
 #~ "Cannot read from %s: %s\n"
 #~ msgstr ""
 #~ "\n"
-#~ "Nie mo¿na odczytaæ z %s: %s\n"
+#~ "Nie moÅ¼na odczytaÄ‡ z %s: %s\n"
 
 #~ msgid "Cyan:"
 #~ msgstr "Niebieskozielony:"
@@ -8167,7 +8167,7 @@ msgstr ""
 #~ msgstr "Purpurowy:"
 
 #~ msgid "Yellow:"
-#~ msgstr "¯ó³ty:"
+#~ msgstr "Å»Ã³Å‚ty:"
 
 #, fuzzy
 #~ msgid "Unknown option %s\n"

@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian/Bokmaal <no@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: "EvenTone" is the proper name, rather than a
@@ -143,7 +143,7 @@ msgstr "Dither-algoritme"
 #: src/main/print-pcl.c:1196
 #, fuzzy
 msgid "Page Size"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/main/print-canon.c:196 src/main/print-canon.c:202
 #: src/main/print-canon.c:208 src/main/print-canon.c:214
@@ -169,7 +169,7 @@ msgstr "Innstillinger for parametere"
 #: src/main/print-pcl.c:1197
 #, fuzzy
 msgid "Size of the paper being printed to"
-msgstr "Bredde på papiret du skal skrive ut på"
+msgstr "Bredde pÃ¥ papiret du skal skrive ut pÃ¥"
 
 #: src/main/print-canon.c:202 src/main/print-escp2.c:185
 #: src/main/print-lexmark.c:272 src/main/print-olympus.c:1565
@@ -199,12 +199,12 @@ msgstr ""
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
-msgstr "Oppløsning"
+msgstr "OpplÃ¸sning"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
 #: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
 msgid "Resolution and quality of the print"
-msgstr "Oppløsning og kvalitet på utskriften"
+msgstr "OpplÃ¸sning og kvalitet pÃ¥ utskriften"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:238
 #: src/main/print-lexmark.c:290 src/main/print-olympus.c:1583
@@ -418,7 +418,7 @@ msgstr "Skriv ut"
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
 #: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
-msgstr "Gråtoner"
+msgstr "GrÃ¥toner"
 
 #: src/main/print-color.c:123
 #, fuzzy
@@ -524,7 +524,7 @@ msgstr "Lysstyrke:"
 #: src/main/print-color.c:225
 #, fuzzy
 msgid "Brightness of the print"
-msgstr "Sett høyde for utskriften"
+msgstr "Sett hÃ¸yde for utskriften"
 
 #: src/main/print-color.c:232
 #, fuzzy
@@ -664,7 +664,7 @@ msgstr ""
 #: src/main/print-color.c:338
 #, fuzzy
 msgid "GrayBalance"
-msgstr "Gråtoner"
+msgstr "GrÃ¥toner"
 
 #: src/main/print-color.c:323
 msgid "Adjust the cyan gray balance"
@@ -921,32 +921,32 @@ msgstr "Ukjent skriver %s\n"
 #: src/main/printers.c:686 src/main/printers.c:697
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
-msgstr "%s utenfor området (verdi %d, min %d, maks %d)\n"
+msgstr "%s utenfor omrÃ¥det (verdi %d, min %d, maks %d)\n"
 
 #: src/main/printers.c:755
 #, fuzzy
 msgid "Page size is not valid\n"
-msgstr "Bildestørrelsen er ikke gyldig\n"
+msgstr "BildestÃ¸rrelsen er ikke gyldig\n"
 
 #: src/main/printers.c:776
 #, fuzzy, c-format
 msgid "Top margin must not be less than %d\n"
-msgstr "Toppmargen må ikke være mindre enn null\n"
+msgstr "Toppmargen mÃ¥ ikke vÃ¦re mindre enn null\n"
 
 #: src/main/printers.c:782
 #, fuzzy, c-format
 msgid "Left margin must not be less than %d\n"
-msgstr "Venstre marg må ikke være mindre enn null\n"
+msgstr "Venstre marg mÃ¥ ikke vÃ¦re mindre enn null\n"
 
 #: src/main/printers.c:788
 #, fuzzy
 msgid "Height must be greater than zero\n"
-msgstr "Venstre marg må ikke være mindre enn null\n"
+msgstr "Venstre marg mÃ¥ ikke vÃ¦re mindre enn null\n"
 
 #: src/main/printers.c:794
 #, fuzzy
 msgid "Width must be greater than zero\n"
-msgstr "Toppmargen må ikke være mindre enn null\n"
+msgstr "Toppmargen mÃ¥ ikke vÃ¦re mindre enn null\n"
 
 #: src/main/printers.c:800
 #, c-format
@@ -1003,7 +1003,7 @@ msgstr ""
 #: src/main/print-escp2.c:210
 #, fuzzy
 msgid "Variable adjustment to the inner hub of the CD"
-msgstr "Skaler utskriften til størrelsen på papiret"
+msgstr "Skaler utskriften til stÃ¸rrelsen pÃ¥ papiret"
 
 #: src/main/print-escp2.c:215
 msgid "CD Horizontal Fine Adjustment"
@@ -1020,7 +1020,7 @@ msgstr ""
 #: src/main/print-escp2.c:228
 #, fuzzy
 msgid "Resolution of the print"
-msgstr "Oppløsning og kvalitet på utskriften"
+msgstr "OpplÃ¸sning og kvalitet pÃ¥ utskriften"
 
 #: src/main/print-escp2.c:244
 msgid "Enhanced Gloss"
@@ -1265,7 +1265,7 @@ msgstr "Standard"
 #: src/main/print-escp2.c:1811 src/cups/genppd.c:1546
 #, fuzzy
 msgid "Automatic"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/main/print-escp2.c:1813
 msgid "Bidirectional"
@@ -1298,7 +1298,7 @@ msgstr ""
 #: src/main/print-escp2.c:2297
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
-msgstr "Skriver støtter ikke fargeutskrift\n"
+msgstr "Skriver stÃ¸tter ikke fargeutskrift\n"
 
 #: src/main/print-escp2.c:3329 src/main/print-olympus.c:2308
 #: src/main/print-raw.c:217
@@ -1669,12 +1669,12 @@ msgstr ""
 #: src/main/escp2-channels.c:869 src/main/escp2-channels.c:882
 #, fuzzy
 msgid "Two Level Grayscale"
-msgstr "Gråtoner"
+msgstr "GrÃ¥toner"
 
 #: src/main/escp2-channels.c:904 src/main/escp2-channels.c:917
 #, fuzzy
 msgid "Three Level Grayscale"
-msgstr "Gråtoner"
+msgstr "GrÃ¥toner"
 
 #: src/main/escp2-channels.c:939 src/main/escp2-channels.c:952
 #: src/main/escp2-channels.c:965 src/main/escp2-channels.c:978
@@ -2128,7 +2128,7 @@ msgstr ""
 #: src/main/escp2-resolutions.c:628 src/main/generic-options.c:37
 #, fuzzy
 msgid "High"
-msgstr "Høyde:"
+msgstr "HÃ¸yde:"
 
 #: src/main/escp2-resolutions.c:600 src/main/escp2-resolutions.c:615
 #: src/main/escp2-resolutions.c:627 src/main/generic-options.c:38
@@ -2172,12 +2172,12 @@ msgstr "Fotografi"
 
 #: src/main/generic-options.c:50
 msgid "Line Art"
-msgstr "Lineær"
+msgstr "LineÃ¦r"
 
 #: src/main/generic-options.c:55
 #, fuzzy
 msgid "Page"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/main/generic-options.c:56
 msgid "Job"
@@ -2204,12 +2204,12 @@ msgstr ""
 #: src/main/generic-options.c:80
 #, fuzzy
 msgid "Page Number"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/main/generic-options.c:81
 #, fuzzy
 msgid "Page number"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/main/xmli18n-tmp.h:1
 msgid "Letter"
@@ -6179,7 +6179,7 @@ msgstr "Tomme"
 
 #: src/gutenprintui2/panel.c:273
 msgid "Set the base unit of measurement to inches"
-msgstr "Sett basis måleenhet til tommer"
+msgstr "Sett basis mÃ¥leenhet til tommer"
 
 #: src/gutenprintui2/panel.c:275
 msgid "cm"
@@ -6187,7 +6187,7 @@ msgstr "cm"
 
 #: src/gutenprintui2/panel.c:275
 msgid "Set the base unit of measurement to centimetres"
-msgstr "Sett basis måleenhet til centimeter"
+msgstr "Sett basis mÃ¥leenhet til centimeter"
 
 #: src/gutenprintui2/panel.c:277
 #, fuzzy
@@ -6197,7 +6197,7 @@ msgstr "Skriv ut"
 #: src/gutenprintui2/panel.c:277
 #, fuzzy
 msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Sett basis måleenhet til tommer"
+msgstr "Sett basis mÃ¥leenhet til tommer"
 
 #: src/gutenprintui2/panel.c:279
 msgid "mm"
@@ -6206,7 +6206,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:279
 #, fuzzy
 msgid "Set the base unit of measurement to millimetres"
-msgstr "Sett basis måleenhet til centimeter"
+msgstr "Sett basis mÃ¥leenhet til centimeter"
 
 #: src/gutenprintui2/panel.c:281
 msgid "Pica"
@@ -6215,7 +6215,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:281
 #, fuzzy
 msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Sett basis måleenhet til tommer"
+msgstr "Sett basis mÃ¥leenhet til tommer"
 
 #: src/gutenprintui2/panel.c:288
 msgid "Color output"
@@ -6307,7 +6307,7 @@ msgstr "Skriv ut"
 
 #: src/gutenprintui2/panel.c:1247
 msgid "Preview"
-msgstr "Forhåndsvisning"
+msgstr "ForhÃ¥ndsvisning"
 
 #: src/gutenprintui2/panel.c:1272
 msgid ""
@@ -6326,7 +6326,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:1319
 #, fuzzy
 msgid "Paper Size"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/gutenprintui2/panel.c:1342
 msgid "Show All Paper Sizes"
@@ -6334,7 +6334,7 @@ msgstr ""
 
 #: src/gutenprintui2/panel.c:1358
 msgid "Dimensions:"
-msgstr "Størrelse:"
+msgstr "StÃ¸rrelse:"
 
 #: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
 msgid "Width:"
@@ -6342,20 +6342,20 @@ msgstr "Bredde:"
 
 #: src/gutenprintui2/panel.c:1364
 msgid "Width of the paper that you wish to print to"
-msgstr "Bredde på papiret du skal skrive ut på"
+msgstr "Bredde pÃ¥ papiret du skal skrive ut pÃ¥"
 
 #: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
 msgid "Height:"
-msgstr "Høyde:"
+msgstr "HÃ¸yde:"
 
 #: src/gutenprintui2/panel.c:1369
 msgid "Height of the paper that you wish to print to"
-msgstr "Høyde på papiret du skal skrive ut på"
+msgstr "HÃ¸yde pÃ¥ papiret du skal skrive ut pÃ¥"
 
 #: src/gutenprintui2/panel.c:1374
 #, fuzzy
 msgid "Automatic Paper Size"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/gutenprintui2/panel.c:1391
 msgid "Number of Copies"
@@ -6410,19 +6410,19 @@ msgstr "Avstand fra venstre kant av arket til bildet"
 
 #: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
 msgid "Right:"
-msgstr "Høyre:"
+msgstr "HÃ¸yre:"
 
 #: src/gutenprintui2/panel.c:1482
 msgid "Distance from the left of the paper to the right of the image"
-msgstr "Avstand fra venstre kant av arket til høyre kant av bildet"
+msgstr "Avstand fra venstre kant av arket til hÃ¸yre kant av bildet"
 
 #: src/gutenprintui2/panel.c:1486
 msgid "Distance from the right of the paper to the image"
-msgstr "Avstand fra høyre kant av arket til bildet"
+msgstr "Avstand fra hÃ¸yre kant av arket til bildet"
 
 #: src/gutenprintui2/panel.c:1488
 msgid "Top:"
-msgstr "Øverst:"
+msgstr "Ã˜verst:"
 
 #: src/gutenprintui2/panel.c:1489
 msgid "Distance from the top of the paper to the image"
@@ -6452,7 +6452,7 @@ msgstr "Horisontalt"
 
 #: src/gutenprintui2/panel.c:1511
 msgid "Center the image horizontally on the paper"
-msgstr "Sentrer bildet horisontalt på arket"
+msgstr "Sentrer bildet horisontalt pÃ¥ arket"
 
 #: src/gutenprintui2/panel.c:1513
 msgid "Both"
@@ -6460,7 +6460,7 @@ msgstr "Begge"
 
 #: src/gutenprintui2/panel.c:1514
 msgid "Center the image on the paper"
-msgstr "Sentrer bildet på arket"
+msgstr "Sentrer bildet pÃ¥ arket"
 
 #: src/gutenprintui2/panel.c:1516
 #, fuzzy
@@ -6469,7 +6469,7 @@ msgstr "Vertikalt"
 
 #: src/gutenprintui2/panel.c:1517
 msgid "Center the image vertically on the paper"
-msgstr "Sentrer bildet vertikalt på arket"
+msgstr "Sentrer bildet vertikalt pÃ¥ arket"
 
 #: src/gutenprintui2/panel.c:1530
 msgid "Setup Printer"
@@ -6550,7 +6550,7 @@ msgstr "Skrivernavn:"
 
 #: src/gutenprintui2/panel.c:1806
 msgid "Enter the name you wish to give this logical printer"
-msgstr "Skriv inn navnet du ønsker å gi til denne logiske skriveren"
+msgstr "Skriv inn navnet du Ã¸nsker Ã¥ gi til denne logiske skriveren"
 
 #: src/gutenprintui2/panel.c:1816
 #, fuzzy
@@ -6595,7 +6595,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:1960
 #, fuzzy
 msgid "Image Size"
-msgstr "Størrelse"
+msgstr "StÃ¸rrelse"
 
 #: src/gutenprintui2/panel.c:1985
 msgid "Scaling:"
@@ -6603,7 +6603,7 @@ msgstr "Skalering"
 
 #: src/gutenprintui2/panel.c:1989
 msgid "Set the scale (size) of the image"
-msgstr "Sett skalering (størrelse) på bildet"
+msgstr "Sett skalering (stÃ¸rrelse) pÃ¥ bildet"
 
 #: src/gutenprintui2/panel.c:2011
 msgid "Scale by:"
@@ -6621,7 +6621,7 @@ msgstr "Prosent"
 
 #: src/gutenprintui2/panel.c:2024
 msgid "Scale the print to the size of the page"
-msgstr "Skaler utskriften til størrelsen på papiret"
+msgstr "Skaler utskriften til stÃ¸rrelsen pÃ¥ papiret"
 
 #: src/gutenprintui2/panel.c:2028
 msgid "PPI"
@@ -6633,11 +6633,11 @@ msgstr "Skaler utskriften til antall punkter per tomme"
 
 #: src/gutenprintui2/panel.c:2051
 msgid "Set the width of the print"
-msgstr "Sett bredde på utskriften"
+msgstr "Sett bredde pÃ¥ utskriften"
 
 #: src/gutenprintui2/panel.c:2053
 msgid "Set the height of the print"
-msgstr "Sett høyde for utskriften"
+msgstr "Sett hÃ¸yde for utskriften"
 
 #: src/gutenprintui2/panel.c:2059
 msgid ""
@@ -6645,11 +6645,11 @@ msgid ""
 "Image Size"
 msgstr ""
 "Bruk opprinnelig\n"
-"bildestørrelse"
+"bildestÃ¸rrelse"
 
 #: src/gutenprintui2/panel.c:2065
 msgid "Set the print size to the size of the image"
-msgstr "Sett størrelsen på utskriften til størrelsen på bildet"
+msgstr "Sett stÃ¸rrelsen pÃ¥ utskriften til stÃ¸rrelsen pÃ¥ bildet"
 
 #: src/gutenprintui2/panel.c:2089
 msgid "Print Color Adjust"
@@ -6665,7 +6665,7 @@ msgstr "Lukk"
 
 #: src/gutenprintui2/panel.c:2123
 msgid "Image preview"
-msgstr "Forhåndsvisning av bilde"
+msgstr "ForhÃ¥ndsvisning av bilde"
 
 #: src/gutenprintui2/panel.c:2137
 msgid "View Output Channels:"
@@ -6682,7 +6682,7 @@ msgstr "Utskriftstype:"
 
 #: src/gutenprintui2/panel.c:2260
 msgid "Select the desired output type"
-msgstr "Velg ønsket type for utdata"
+msgstr "Velg Ã¸nsket type for utdata"
 
 #: src/gutenprintui2/panel.c:2281
 msgid "Adjust Output..."
@@ -6709,7 +6709,7 @@ msgstr "Enheter:"
 
 #: src/gutenprintui2/panel.c:2341
 msgid "Select the base unit of measurement for printing"
-msgstr "Velg basis måleenhet for utskrift"
+msgstr "Velg basis mÃ¥leenhet for utskrift"
 
 #: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
 msgid "System V lp"
@@ -6952,12 +6952,12 @@ msgstr ""
 #: src/escputil/escputil.c:329 src/escputil/escputil.c:337
 #, c-format
 msgid "You may only specify one printer or raw device."
-msgstr "Du kan kun spesifisere én skriver eller rå enhet."
+msgstr "Du kan kun spesifisere Ã©n skriver eller rÃ¥ enhet."
 
 #: src/escputil/escputil.c:345
 #, c-format
 msgid "You may only specify one printer model."
-msgstr "Du kan kun oppgi én skrivermodell."
+msgstr "Du kan kun oppgi Ã©n skrivermodell."
 
 #: src/escputil/escputil.c:369
 #, c-format
@@ -6992,7 +6992,7 @@ msgstr ""
 #: src/escputil/escputil.c:459
 #, c-format
 msgid "Cannot open device %s: %s\n"
-msgstr "Kan ikke åpne enhet %s: %s\n"
+msgstr "Kan ikke Ã¥pne enhet %s: %s\n"
 
 #: src/escputil/escputil.c:482
 #, c-format
@@ -7017,12 +7017,12 @@ msgstr "Kan ikke lese fra %s: %s\n"
 #: src/escputil/escputil.c:747
 #, fuzzy, c-format
 msgid "Please specify a raw device\n"
-msgstr "Skriverstatus krever bruk av en rå enhet.\n"
+msgstr "Skriverstatus krever bruk av en rÃ¥ enhet.\n"
 
 #: src/escputil/escputil.c:754
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
-msgstr "Kan ikke åpne %s med lese-/skriverettigheter: %s\n"
+msgstr "Kan ikke Ã¥pne %s med lese-/skriverettigheter: %s\n"
 
 #: src/escputil/escputil.c:797 src/escputil/escputil.c:1418
 #, c-format
@@ -7048,7 +7048,7 @@ msgid ""
 msgstr ""
 "\n"
 "Kan ikke finne skrivertype.\n"
-"Vennligst bruk -m for å spesifisere din skrivermodell.\n"
+"Vennligst bruk -m for Ã¥ spesifisere din skrivermodell.\n"
 
 #: src/escputil/escputil.c:983 src/escputil/escputil.c:989
 #: src/escputil/escputil.c:990 src/escputil/escputil.c:1006
@@ -7200,7 +7200,7 @@ msgstr "Blekkfarge"
 #: src/escputil/escputil.c:1602 src/escputil/escputil.c:1626
 #: src/escputil/escputil.c:1646
 msgid "Percent remaining"
-msgstr "Prosent gjenstående"
+msgstr "Prosent gjenstÃ¥ende"
 
 #: src/escputil/escputil.c:1291 src/escputil/escputil.c:1294
 #: src/escputil/escputil.c:1297 src/escputil/escputil.c:1300
@@ -7230,12 +7230,12 @@ msgstr ""
 #: src/escputil/escputil.c:1355
 #, fuzzy, c-format
 msgid "Obtaining %s requires using a raw device.\n"
-msgstr "Du må bruke en rå enhet for å hente blekknivå.\n"
+msgstr "Du mÃ¥ bruke en rÃ¥ enhet for Ã¥ hente blekknivÃ¥.\n"
 
 #: src/escputil/escputil.c:1461
 #, fuzzy, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr "Du må bruke en rå enhet for å hente blekknivå.\n"
+msgstr "Du mÃ¥ bruke en rÃ¥ enhet for Ã¥ hente blekknivÃ¥.\n"
 
 #: src/escputil/escputil.c:1602 src/escputil/escputil.c:1626
 #: src/escputil/escputil.c:1646
@@ -7250,12 +7250,12 @@ msgstr ""
 #: src/escputil/escputil.c:1675
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
-msgstr "Du må bruke en rå enhet for å identifisere skriveren.\n"
+msgstr "Du mÃ¥ bruke en rÃ¥ enhet for Ã¥ identifisere skriveren.\n"
 
 #: src/escputil/escputil.c:1693
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
-msgstr "Du kan kun oppgi én skrivermodell."
+msgstr "Du kan kun oppgi Ã©n skrivermodell."
 
 #: src/escputil/escputil.c:1713
 #, c-format
@@ -7265,7 +7265,7 @@ msgstr "Renser hoder...\n"
 #: src/escputil/escputil.c:1728
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr "Kjører «nozzle»-sjekk, sjekk at det er papir i skriveren.\n"
+msgstr "KjÃ¸rer Â«nozzleÂ»-sjekk, sjekk at det er papir i skriveren.\n"
 
 #: src/escputil/escputil.c:1732
 #, c-format
@@ -7375,7 +7375,7 @@ msgstr ">"
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr ""
-"Vennligst bekreft at du vil avslutte uten å lagre ved å skrive «q» igjen:\n"
+"Vennligst bekreft at du vil avslutte uten Ã¥ lagre ved Ã¥ skrive Â«qÂ» igjen:\n"
 
 #: src/escputil/escputil.c:1850
 #, c-format
@@ -7384,7 +7384,7 @@ msgid ""
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
 "OK, skriveren er justert, men justeringen er ikke lagret.\n"
-"Hvis du ønsker å lagre justeringen må d\n"
+"Hvis du Ã¸nsker Ã¥ lagre justeringen mÃ¥ d\n"
 
 #: src/escputil/escputil.c:1857
 #, c-format
@@ -7392,8 +7392,8 @@ msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr ""
-"Vennligst bekreft at du vil gjenta justeringsprosessen ved å\n"
-"skrive «r»:\n"
+"Vennligst bekreft at du vil gjenta justeringsprosessen ved Ã¥\n"
+"skrive Â«rÂ»:\n"
 
 #: src/escputil/escputil.c:1865
 #, c-format
@@ -7413,7 +7413,7 @@ msgstr ""
 #: src/escputil/escputil.c:1883
 #, c-format
 msgid "About to save settings..."
-msgstr "I ferd med å lagre innstillinger..."
+msgstr "I ferd med Ã¥ lagre innstillinger..."
 
 #: src/escputil/escputil.c:1889
 #, c-format
@@ -7430,7 +7430,7 @@ msgstr ""
 #: src/escputil/escputil.c:1894
 #, c-format
 msgid "succeeded!\n"
-msgstr "fullført!\n"
+msgstr "fullfÃ¸rt!\n"
 
 #: src/escputil/escputil.c:1895
 #, c-format
@@ -7461,7 +7461,7 @@ msgstr ""
 #: src/escputil/escputil.c:1973 src/escputil/escputil.c:2004
 #: src/escputil/escputil.c:2047
 msgid "Press enter to continue > "
-msgstr "Trykk linjeskift for å fortsette > "
+msgstr "Trykk linjeskift for Ã¥ fortsette > "
 
 #: src/escputil/escputil.c:1980
 #, c-format
@@ -7484,12 +7484,12 @@ msgstr "Vennligst sett inn et nytt ark.\n"
 #: src/escputil/escputil.c:2020
 #, c-format
 msgid "Number out of range!\n"
-msgstr "Tallet er utenfor gyldig område!\n"
+msgstr "Tallet er utenfor gyldig omrÃ¥de!\n"
 
 #: src/escputil/escputil.c:2025
 #, c-format
 msgid "I cannot understand what you typed!\n"
-msgstr "Kan ikke forstå det du skrev inn!\n"
+msgstr "Kan ikke forstÃ¥ det du skrev inn!\n"
 
 #: src/escputil/escputil.c:2031
 #, c-format
@@ -7499,12 +7499,12 @@ msgstr ""
 #: src/escputil/escputil.c:2038
 #, c-format
 msgid "Attempting to set alignment..."
-msgstr "Prøver å sette justering..."
+msgstr "PrÃ¸ver Ã¥ sette justering..."
 
 #: src/escputil/escputil.c:2041
 #, c-format
 msgid "succeeded.\n"
-msgstr "fullført.\n"
+msgstr "fullfÃ¸rt.\n"
 
 #: src/escputil/escputil.c:2042
 #, c-format
@@ -7620,12 +7620,12 @@ msgstr "image_init feilet %d\n"
 #: src/ghost/ijsgutenprint.c:1319
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
-msgstr "Kan ikke åpne fildeskriptor: %s\n"
+msgstr "Kan ikke Ã¥pne fildeskriptor: %s\n"
 
 #: src/ghost/ijsgutenprint.c:1331
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
-msgstr "Kan ikke åpne %s: %s\n"
+msgstr "Kan ikke Ã¥pne %s: %s\n"
 
 #: src/ghost/ijsgutenprint.c:1344
 #, fuzzy, c-format
@@ -7782,10 +7782,10 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 #~ msgstr "Konvolutt"
 
 #~ msgid "High Resolution Paper"
-#~ msgstr "Høyoppløsningspapir"
+#~ msgstr "HÃ¸yopplÃ¸sningspapir"
 
 #~ msgid "T-Shirt Transfers"
-#~ msgstr "Overføring til T-skjorte"
+#~ msgstr "OverfÃ¸ring til T-skjorte"
 
 #~ msgid "Glossy Photo Paper"
 #~ msgstr "Glanset fotopapir"
@@ -8117,7 +8117,7 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 
 #, fuzzy
 #~ msgid "Printer does not support listing ink types!\n"
-#~ msgstr "Skriver støtter ikke fargeutskrift\n"
+#~ msgstr "Skriver stÃ¸tter ikke fargeutskrift\n"
 
 #, fuzzy
 #~ msgid "Cannot identify printer!\n"
@@ -8132,14 +8132,14 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 #~ msgstr "Gul"
 
 #~ msgid "Attempting to detect printer model..."
-#~ msgstr "Prøver å finne identifisere skrivermodell..."
+#~ msgstr "PrÃ¸ver Ã¥ finne identifisere skrivermodell..."
 
 #~ msgid ""
 #~ "\n"
 #~ "Cannot open %s read/write: %s\n"
 #~ msgstr ""
 #~ "\n"
-#~ "Kan ikke åpne %s med lese-/skriverettigheter: %s\n"
+#~ "Kan ikke Ã¥pne %s med lese-/skriverettigheter: %s\n"
 
 #~ msgid "Printer model %s is not known.\n"
 #~ msgstr "Skrivermodell %s er ukjent.\n"
@@ -8190,7 +8190,7 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 
 #, fuzzy
 #~ msgid "Image is too wide for the page\n"
-#~ msgstr "Skaler utskriften til størrelsen på papiret"
+#~ msgstr "Skaler utskriften til stÃ¸rrelsen pÃ¥ papiret"
 
 #, fuzzy
 #~ msgid "traditional"
@@ -8238,7 +8238,7 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 
 #, fuzzy
 #~ msgid "Model %d out of range.\n"
-#~ msgstr "Tallet er utenfor gyldig område!\n"
+#~ msgstr "Tallet er utenfor gyldig omrÃ¥de!\n"
 
 #~ msgid "Right Border:"
 #~ msgstr "Kant:"
@@ -8247,7 +8247,7 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 #~ msgstr "Nedre kant"
 
 #~ msgid "Size"
-#~ msgstr "Størrelse"
+#~ msgstr "StÃ¸rrelse"
 
 #~ msgid "Image / Output Settings"
 #~ msgstr "Innstillinger for bilde / utskrift"
@@ -8278,16 +8278,16 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 
 #, fuzzy
 #~ msgid "Resolutions"
-#~ msgstr "Oppløsning"
+#~ msgstr "OpplÃ¸sning"
 
 #~ msgid "Media Type:"
 #~ msgstr "Medietype:"
 
 #~ msgid "Type of media you're printing to"
-#~ msgstr "Type media du skal skrive ut på"
+#~ msgstr "Type media du skal skrive ut pÃ¥"
 
 #~ msgid "Media Size:"
-#~ msgstr "Mediestørrelse:"
+#~ msgstr "MediestÃ¸rrelse:"
 
 #~ msgid "Media Source:"
 #~ msgstr "Mediekilde:"
@@ -8296,10 +8296,10 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 #~ msgstr "Type:"
 
 #~ msgid "Resolution:"
-#~ msgstr "Oppløsning:"
+#~ msgstr "OpplÃ¸sning:"
 
 #~ msgid "Dither Algorithm:"
-#~ msgstr "Dither-størrelse:"
+#~ msgstr "Dither-stÃ¸rrelse:"
 
 #~ msgid ""
 #~ "\n"
@@ -8309,7 +8309,7 @@ msgstr "Henting av neste rad feilet ved %.0f\n"
 #~ "Kan ikke lese fra %s: %s\n"
 
 #~ msgid "%s out of range (value %f, min %f, max %f)\n"
-#~ msgstr "%s utenfor området (verdi %f, min %f, maks %f)\n"
+#~ msgstr "%s utenfor omrÃ¥det (verdi %f, min %f, maks %f)\n"
 
 #~ msgid "Set the contrast of the print"
 #~ msgstr "Sett kontrast for utskriften"

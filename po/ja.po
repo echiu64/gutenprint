@@ -11,7 +11,7 @@ msgstr ""
 "Last-Translator: Takeshi AIHANA <aihana@gnome.gr.jp>\n"
 "Language-Team: Japanese <translation@gnome.gr.jp>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=euc-jp\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: "EvenTone" is the proper name, rather than a
@@ -20,16 +20,16 @@ msgstr ""
 #: src/main/print-escp2.c:1721
 #, fuzzy
 msgid "Default"
-msgstr "½é´üÃÍ¤ËÌá¤¹"
+msgstr "åˆæœŸå€¤ã«æˆ»ã™"
 
 #: src/main/dither-main.c:47
 msgid "EvenTone"
-msgstr "¥¤¥Ù¥ó¥È¥È¡¼¥óÊı¼°"
+msgstr "ã‚¤ãƒ™ãƒ³ãƒˆãƒˆãƒ¼ãƒ³æ–¹å¼"
 
 #: src/main/dither-main.c:48
 #, fuzzy
 msgid "Hybrid EvenTone"
-msgstr "¥¤¥Ù¥ó¥È¥È¡¼¥óÊı¼°"
+msgstr "ã‚¤ãƒ™ãƒ³ãƒˆãƒˆãƒ¼ãƒ³æ–¹å¼"
 
 #. TRANSLATORS: EvenTone, EvenBetter, and UniTone are proper
 #. * names, not descriptive.
@@ -37,17 +37,17 @@ msgstr "¥¤¥Ù¥ó¥È¥È¡¼¥óÊı¼°"
 #: src/main/dither-main.c:53
 #, fuzzy
 msgid "EvenBetter"
-msgstr "¥ì¥¿¡¼"
+msgstr "ãƒ¬ã‚¿ãƒ¼"
 
 #: src/main/dither-main.c:54
 #, fuzzy
 msgid "Hybrid EvenBetter"
-msgstr "¥¤¥Ù¥ó¥È¥È¡¼¥óÊı¼°"
+msgstr "ã‚¤ãƒ™ãƒ³ãƒˆãƒˆãƒ¼ãƒ³æ–¹å¼"
 
 #: src/main/dither-main.c:60
 #, fuzzy
 msgid "UniTone"
-msgstr "¥¤¥Ù¥ó¥È¥È¡¼¥óÊı¼°"
+msgstr "ã‚¤ãƒ™ãƒ³ãƒˆãƒˆãƒ¼ãƒ³æ–¹å¼"
 
 #: src/main/dither-main.c:61
 msgid "Hybrid UniTone"
@@ -55,23 +55,23 @@ msgstr ""
 
 #: src/main/dither-main.c:63
 msgid "Adaptive Hybrid"
-msgstr "¥¢¥À¥×¥Æ¥£¥Ö¡¦¥Ï¥¤¥Ö¥ê¥Ã¥ÉÊı¼°"
+msgstr "ã‚¢ãƒ€ãƒ—ãƒ†ã‚£ãƒ–ãƒ»ãƒã‚¤ãƒ–ãƒªãƒƒãƒ‰æ–¹å¼"
 
 #: src/main/dither-main.c:64
 msgid "Ordered"
-msgstr "Å¬±ş½ç½øÊı¼°"
+msgstr "é©å¿œé †åºæ–¹å¼"
 
 #: src/main/dither-main.c:65
 msgid "Fast"
-msgstr "¹âÂ®Êı¼°"
+msgstr "é«˜é€Ÿæ–¹å¼"
 
 #: src/main/dither-main.c:66
 msgid "Very Fast"
-msgstr "Ä¶¹âÂ®Êı¼°"
+msgstr "è¶…é«˜é€Ÿæ–¹å¼"
 
 #: src/main/dither-main.c:67
 msgid "Hybrid Floyd-Steinberg"
-msgstr "¥Ï¥¤¥Ö¥ê¥Ã¥É¡¦¥Õ¥í¥¤¥É-¥¹¥¿¥¤¥ó¥Ğ¡¼¥°Êı¼°"
+msgstr "ãƒã‚¤ãƒ–ãƒªãƒƒãƒ‰ãƒ»ãƒ•ãƒ­ã‚¤ãƒ‰-ã‚¹ã‚¿ã‚¤ãƒ³ãƒãƒ¼ã‚°æ–¹å¼"
 
 #: src/main/dither-main.c:68
 msgid "Predithered Input"
@@ -80,7 +80,7 @@ msgstr ""
 #: src/main/dither-main.c:88 src/main/print-color.c:56
 #, fuzzy
 msgid "Density"
-msgstr "Ç»ÅÙ:"
+msgstr "æ¿ƒåº¦:"
 
 #: src/main/dither-main.c:88 src/main/print-canon.c:261
 #: src/main/print-canon.c:269 src/main/print-canon.c:277
@@ -103,13 +103,13 @@ msgid ""
 "ink bleeds through the paper or smears; increase the density if black "
 "regions are not solid."
 msgstr ""
-"°õºş»ş¤ÎÇ»ÅÙ (¥¤¥ó¥¯¤ÎÎÌ) ¤òÄ´À°¤·¤Ş¤¹¡£\n"
-"ÍÑ»æ¤ËÂçÎÌ¤Î¥¤¥ó¥¯¤¬ÉÕ¤¤¤¿¤ê±ø¤ì¤¿¤ê¤¹¤ë¾ì¹ç¤ÏÇ»ÅÙ¤òÄã¤¯¤·¤Æ²¼¤µ¤¤;\n"
-"¹õ¤ÎÉôÊ¬¤¬¤Ş¤Ğ¤é¤Ë¤Ê¤ë¾ì¹ç¤ÏÇ»ÅÙ¤ò¹â¤¯¤·¤Æ²¼¤µ¤¤¡£"
+"å°åˆ·æ™‚ã®æ¿ƒåº¦ (ã‚¤ãƒ³ã‚¯ã®é‡) ã‚’èª¿æ•´ã—ã¾ã™ã€‚\n"
+"ç”¨ç´™ã«å¤§é‡ã®ã‚¤ãƒ³ã‚¯ãŒä»˜ã„ãŸã‚Šæ±šã‚ŒãŸã‚Šã™ã‚‹å ´åˆã¯æ¿ƒåº¦ã‚’ä½ãã—ã¦ä¸‹ã•ã„;\n"
+"é»’ã®éƒ¨åˆ†ãŒã¾ã°ã‚‰ã«ãªã‚‹å ´åˆã¯æ¿ƒåº¦ã‚’é«˜ãã—ã¦ä¸‹ã•ã„ã€‚"
 
 #: src/main/dither-main.c:97
 msgid "Dither Algorithm"
-msgstr "¥Ç¥£¥¶Êı¼°"
+msgstr "ãƒ‡ã‚£ã‚¶æ–¹å¼"
 
 #: src/main/dither-main.c:97
 msgid "Screening Adjustment"
@@ -127,13 +127,13 @@ msgid ""
 "art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
-"»ÈÍÑ¤¹¤ë¥Ç¥£¥¶¥ê¥ó¥°Êı¼°¤òÁªÂò¤·¤Ş¤¹¡£\n"
-"\"¥¢¥À¥×¥Æ¥£¥Ö¡¦¥Ï¥¤¥Ö¥ê¥Ã¥ÉÊı¼°\": °ìÈÌÅª¤ËºÇÅ¬¤ÊÉÊ¼Á¤òÄó¶¡¤·¤Ş¤¹¡£\n"
-"\"Å¬±ş½ç½øÊı¼°\": ¹âÂ®¤Ç¼Ì¿¿¤Ê¤É¤Î¹âÉÊ¼Á¤Ê½ĞÎÏ¤òÄó¶¡¤·¤Ş¤¹¡£\n"
-"\"¹âÂ®Êı¼°\",\"Ä¶¹âÂ®Êı¼°\": ¤«¤Ê¤ê¹âÂ®¤Ë°õºş¤·¡¢¥Æ¥­¥¹¥È¤ä¥é¥¤¥ó¥¢¡¼¥È¤ËÅ¬¤·"
-"¤Æ¤¤¤Ş¤¹¡£\n"
-"\"¥Ï¥¤¥Ö¥ê¥Ã¥É¡¦¥Õ¥í¥¤¥É-¥¹¥¿¥¤¥ó¥Ğ¡¼¥°Êı¼°\": °ìÈÌÅª¤ËÄãÉÊ¼Á¤Ê½ĞÎÏ¤òÄó¶¡¤·¤Ş"
-"¤¹¡£"
+"ä½¿ç”¨ã™ã‚‹ãƒ‡ã‚£ã‚¶ãƒªãƒ³ã‚°æ–¹å¼ã‚’é¸æŠã—ã¾ã™ã€‚\n"
+"\"ã‚¢ãƒ€ãƒ—ãƒ†ã‚£ãƒ–ãƒ»ãƒã‚¤ãƒ–ãƒªãƒƒãƒ‰æ–¹å¼\": ä¸€èˆ¬çš„ã«æœ€é©ãªå“è³ªã‚’æä¾›ã—ã¾ã™ã€‚\n"
+"\"é©å¿œé †åºæ–¹å¼\": é«˜é€Ÿã§å†™çœŸãªã©ã®é«˜å“è³ªãªå‡ºåŠ›ã‚’æä¾›ã—ã¾ã™ã€‚\n"
+"\"é«˜é€Ÿæ–¹å¼\",\"è¶…é«˜é€Ÿæ–¹å¼\": ã‹ãªã‚Šé«˜é€Ÿã«å°åˆ·ã—ã€ãƒ†ã‚­ã‚¹ãƒˆã‚„ãƒ©ã‚¤ãƒ³ã‚¢ãƒ¼ãƒˆã«é©ã—"
+"ã¦ã„ã¾ã™ã€‚\n"
+"\"ãƒã‚¤ãƒ–ãƒªãƒƒãƒ‰ãƒ»ãƒ•ãƒ­ã‚¤ãƒ‰-ã‚¹ã‚¿ã‚¤ãƒ³ãƒãƒ¼ã‚°æ–¹å¼\": ä¸€èˆ¬çš„ã«ä½å“è³ªãªå‡ºåŠ›ã‚’æä¾›ã—ã¾"
+"ã™ã€‚"
 
 #: src/main/module.c:52
 msgid "Miscellaneous (unclassified)"
@@ -150,14 +150,14 @@ msgstr ""
 #: src/main/module.c:55
 #, fuzzy
 msgid "Dither algorithm"
-msgstr "¥Ç¥£¥¶Êı¼°"
+msgstr "ãƒ‡ã‚£ã‚¶æ–¹å¼"
 
 #: src/main/print-canon.c:196 src/main/print-escp2.c:179
 #: src/main/print-lexmark.c:266 src/main/print-olympus.c:1559
 #: src/main/print-pcl.c:1196
 #, fuzzy
 msgid "Page Size"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/main/print-canon.c:196 src/main/print-canon.c:202
 #: src/main/print-canon.c:208 src/main/print-canon.c:214
@@ -176,20 +176,20 @@ msgstr "²èÁü¤Î¥µ¥¤¥º"
 #: src/main/print-pcl.c:1238 src/main/print-ps.c:68 src/main/print-ps.c:74
 #, fuzzy
 msgid "Basic Printer Setup"
-msgstr "¥×¥ê¥ó¥¿¤ÎÀßÄê"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®è¨­å®š"
 
 #: src/main/print-canon.c:197 src/main/print-escp2.c:180
 #: src/main/print-lexmark.c:267 src/main/print-olympus.c:1560
 #: src/main/print-pcl.c:1197
 #, fuzzy
 msgid "Size of the paper being printed to"
-msgstr "°õºş¤¹¤ëÍÑ»æ¤Î¥µ¥¤¥º¤Ç¤¹¡£"
+msgstr "å°åˆ·ã™ã‚‹ç”¨ç´™ã®ã‚µã‚¤ã‚ºã§ã™ã€‚"
 
 #: src/main/print-canon.c:202 src/main/print-escp2.c:185
 #: src/main/print-lexmark.c:272 src/main/print-olympus.c:1565
 #: src/main/print-pcl.c:1202 src/cups/genppd.c:1407
 msgid "Media Type"
-msgstr "ÍÑ»æ¤Î¼ïÎà"
+msgstr "ç”¨ç´™ã®ç¨®é¡"
 
 #: src/main/print-canon.c:203 src/main/print-escp2.c:186
 #: src/main/print-lexmark.c:273 src/main/print-olympus.c:1566
@@ -201,31 +201,31 @@ msgstr ""
 #: src/main/print-lexmark.c:278 src/main/print-olympus.c:1571
 #: src/main/print-pcl.c:1208 src/cups/genppd.c:1435
 msgid "Media Source"
-msgstr "µë»æÊıË¡"
+msgstr "çµ¦ç´™æ–¹æ³•"
 
 #: src/main/print-canon.c:209 src/main/print-escp2.c:192
 #: src/main/print-lexmark.c:279 src/main/print-olympus.c:1572
 #: src/main/print-pcl.c:1209
 #, fuzzy
 msgid "Source (input slot) of the media"
-msgstr "°õºş»ş¤Îµë»æÊı¼°¤Ç¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®çµ¦ç´™æ–¹å¼ã§ã™ã€‚"
 
 #: src/main/print-canon.c:214 src/main/print-escp2.c:227
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
-msgstr "²òÁüÅÙ"
+msgstr "è§£åƒåº¦"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
 #: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
 msgid "Resolution and quality of the print"
-msgstr "°õºş»ş¤Î²òÁüÅÙ¤ÈÉÊ¼Á¤Ç¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®è§£åƒåº¦ã¨å“è³ªã§ã™ã€‚"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:238
 #: src/main/print-lexmark.c:290 src/main/print-olympus.c:1583
 #: src/main/print-pcl.c:1220 src/main/print-raw.c:80
 msgid "Ink Type"
-msgstr "¥¤¥ó¥¯¤Î¼ïÎà"
+msgstr "ã‚¤ãƒ³ã‚¯ã®ç¨®é¡"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:215
 #: src/main/print-escp2.c:221 src/main/print-escp2.c:238
@@ -241,7 +241,7 @@ msgstr ""
 #: src/main/print-olympus.c:1584 src/main/print-pcl.c:1221
 #: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
-msgstr "°õºş»ş¤Î¥¤¥ó¥¯¤Î¼ïÎà¤Ç¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚¤ãƒ³ã‚¯ã®ç¨®é¡ã§ã™ã€‚"
 
 #: src/main/print-canon.c:226 src/main/print-canon.c:227
 #: src/main/print-escp2.c:322 src/main/print-escp2.c:323
@@ -265,7 +265,7 @@ msgstr ""
 #: src/main/print-pcl.c:1232 src/main/print-raw.c:86
 #, fuzzy
 msgid "Printing Mode"
-msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼:"
 
 #: src/main/print-canon.c:232 src/main/print-color.c:184
 #: src/main/print-color.c:192 src/main/print-color.c:200
@@ -295,49 +295,49 @@ msgstr ""
 #: src/main/print-lexmark.c:325 src/main/print-pcl.c:1261
 #, fuzzy
 msgid "Cyan Density"
-msgstr "Ç»ÅÙ:"
+msgstr "æ¿ƒåº¦:"
 
 #: src/main/print-canon.c:262 src/main/print-escp2.c:433
 #: src/main/print-lexmark.c:326 src/main/print-pcl.c:1262
 #, fuzzy
 msgid "Adjust the cyan density"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-canon.c:269 src/main/print-escp2.c:440
 #: src/main/print-lexmark.c:333 src/main/print-pcl.c:1269
 #, fuzzy
 msgid "Magenta Density"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-canon.c:270 src/main/print-escp2.c:441
 #: src/main/print-lexmark.c:334 src/main/print-pcl.c:1270
 #, fuzzy
 msgid "Adjust the magenta density"
-msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ãƒã‚¼ãƒ³ã‚¿è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-canon.c:277 src/main/print-escp2.c:448
 #: src/main/print-lexmark.c:341 src/main/print-pcl.c:1277
 #, fuzzy
 msgid "Yellow Density"
-msgstr "Ç»ÅÙ:"
+msgstr "æ¿ƒåº¦:"
 
 #: src/main/print-canon.c:278 src/main/print-escp2.c:449
 #: src/main/print-lexmark.c:342 src/main/print-pcl.c:1278
 #, fuzzy
 msgid "Adjust the yellow density"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-canon.c:285 src/main/print-escp2.c:456
 #: src/main/print-lexmark.c:349 src/main/print-pcl.c:1285
 #, fuzzy
 msgid "Black Density"
-msgstr "Ç»ÅÙ:"
+msgstr "æ¿ƒåº¦:"
 
 #: src/main/print-canon.c:286 src/main/print-escp2.c:457
 #: src/main/print-lexmark.c:350 src/main/print-pcl.c:1286
 #, fuzzy
 msgid "Adjust the black density"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-canon.c:293 src/main/print-canon.c:294
 #: src/main/print-escp2.c:488 src/main/print-escp2.c:489
@@ -345,7 +345,7 @@ msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
 #: src/main/print-pcl.c:1293 src/main/print-pcl.c:1294
 #, fuzzy
 msgid "Light Cyan Transition"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/print-canon.c:293 src/main/print-canon.c:301
 #: src/main/print-canon.c:309 src/main/print-escp2.c:488
@@ -364,12 +364,12 @@ msgstr ""
 #: src/main/print-pcl.c:1301 src/main/print-pcl.c:1302
 #, fuzzy
 msgid "Light Magenta Transition"
-msgstr "ÌÀ¤ë¤¤¥Ş¥¼¥ó¥¿"
+msgstr "æ˜ã‚‹ã„ãƒã‚¼ãƒ³ã‚¿"
 
 #: src/main/print-canon.c:309 src/main/print-canon.c:310
 #, fuzzy
 msgid "Light Yellow Transition"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/print-canon.c:329 src/main/print-pcl.c:1482
 #: src/main/escp2-resolutions.c:515 src/main/escp2-resolutions.c:523
@@ -390,14 +390,14 @@ msgstr ""
 #: src/main/print-pcl.c:1776 src/main/print-raw.c:135
 #: src/gutenprintui2/panel.c:288
 msgid "Color"
-msgstr "¥«¥é¡¼"
+msgstr "ã‚«ãƒ©ãƒ¼"
 
 #: src/main/print-canon.c:615 src/main/print-escp2.c:1982
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1778
 #: src/main/print-raw.c:137
 #, fuzzy
 msgid "Black and White"
-msgstr "¹õ¤ÈÇò"
+msgstr "é»’ã¨ç™½"
 
 #: src/main/print-color.c:50
 msgid "High Accuracy"
@@ -406,7 +406,7 @@ msgstr ""
 #: src/main/print-color.c:51
 #, fuzzy
 msgid "Bright Colors"
-msgstr "°õºş¥«¥é¡¼Ä´À°"
+msgstr "å°åˆ·ã‚«ãƒ©ãƒ¼èª¿æ•´"
 
 #: src/main/print-color.c:52
 msgid "Correct Hue Only"
@@ -431,18 +431,18 @@ msgstr ""
 #: src/main/print-color.c:58
 #, fuzzy
 msgid "Pre-Dithered"
-msgstr "°õºş"
+msgstr "å°åˆ·"
 
 #: src/main/print-color.c:121 src/main/escp2-channels.c:820
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
 #: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
-msgstr "¥°¥ì¡¼¥¹¥±¡¼¥ë"
+msgstr "ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«"
 
 #: src/main/print-color.c:123
 #, fuzzy
 msgid "Whitescale"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:125
 msgid "RGB"
@@ -463,7 +463,7 @@ msgstr ""
 #: src/main/print-color.c:165 src/main/print-color.c:446
 #, fuzzy
 msgid "Channel "
-msgstr "¼è¤ê¾Ã¤·"
+msgstr "å–ã‚Šæ¶ˆã—"
 
 #: src/main/print-color.c:165 src/main/print-color.c:216
 #: src/main/print-color.c:248 src/main/print-color.c:258
@@ -473,7 +473,7 @@ msgstr "¼è¤ê¾Ã¤·"
 #: src/main/print-color.c:314 src/gutenprintui2/gammacurve.c:408
 #, fuzzy
 msgid "Gamma"
-msgstr "¥¬¥ó¥Ş:"
+msgstr "ã‚¬ãƒ³ãƒ:"
 
 #: src/main/print-color.c:166
 msgid "Gamma for raw channel "
@@ -504,22 +504,22 @@ msgstr ""
 #: src/main/print-color.c:192
 #, fuzzy
 msgid "Input Image Type"
-msgstr "²èÁü¤Î¼ïÎà"
+msgstr "ç”»åƒã®ç¨®é¡"
 
 #: src/main/print-color.c:193
 #, fuzzy
 msgid "Input image type"
-msgstr "²èÁü¤Î¼ïÎà"
+msgstr "ç”»åƒã®ç¨®é¡"
 
 #: src/main/print-color.c:200
 #, fuzzy
 msgid "Output Image Type"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-color.c:201
 #, fuzzy
 msgid "Output image type"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-color.c:208 src/main/print-color.c:209
 #: src/main/print-escp2.c:340
@@ -529,7 +529,7 @@ msgstr ""
 #: src/main/print-color.c:216
 #, fuzzy
 msgid "SimpleGamma"
-msgstr "¥¬¥ó¥Ş:"
+msgstr "ã‚¬ãƒ³ãƒ:"
 
 #: src/main/print-color.c:217
 msgid "Do not correct for screen gamma"
@@ -538,17 +538,17 @@ msgstr ""
 #: src/main/print-color.c:224
 #, fuzzy
 msgid "Brightness"
-msgstr "ÌÀ¤ë¤µ:"
+msgstr "æ˜ã‚‹ã•:"
 
 #: src/main/print-color.c:225
 #, fuzzy
 msgid "Brightness of the print"
-msgstr "°õºş»ş¤Î¹â¤µ¤ò¥»¥Ã¥È¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é«˜ã•ã‚’ã‚»ãƒƒãƒˆã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:232
 #, fuzzy
 msgid "Contrast"
-msgstr "¥³¥ó¥È¥é¥¹¥È:"
+msgstr "ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆ:"
 
 #: src/main/print-color.c:233
 msgid "Contrast of the print (0 is solid gray)"
@@ -561,7 +561,7 @@ msgstr ""
 #: src/main/print-color.c:240
 #, fuzzy
 msgid "Advanced Image Control"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
@@ -577,14 +577,14 @@ msgid ""
 "Adjust the gamma of the print. Larger values will produce a generally "
 "brighter print, while smaller values will produce a generally darker print. "
 msgstr ""
-"°õºş»ş¤Î¥¬¥ó¥ŞÃÍ¤òÄ´À°¤·¤Ş¤¹¡£\n"
-"ÃÍ¤òÂç¤­¤¯¤¹¤ë¤È°ìÈÌÅª¤ËÌÀ¤ë¤¤°õºş¤Ë¤Ê¤ê¡¢¾®¤µ¤¯¤¹¤ë¤È°Å¤¤°õºş¤Ë¤Ê¤ê¤Ş¤¹¡£\n"
-"ÌÀ¤ë¤µ¤ÎÄ´À°¤È¤Ï°Û¤Ê¤ê¡¢¹õ¿§¤ÈÇò¿§¤ÏÆ±¤¸¤Ş¤Ş¤Ç¤¹¡£"
+"å°åˆ·æ™‚ã®ã‚¬ãƒ³ãƒå€¤ã‚’èª¿æ•´ã—ã¾ã™ã€‚\n"
+"å€¤ã‚’å¤§ããã™ã‚‹ã¨ä¸€èˆ¬çš„ã«æ˜ã‚‹ã„å°åˆ·ã«ãªã‚Šã€å°ã•ãã™ã‚‹ã¨æš—ã„å°åˆ·ã«ãªã‚Šã¾ã™ã€‚\n"
+"æ˜ã‚‹ã•ã®èª¿æ•´ã¨ã¯ç•°ãªã‚Šã€é»’è‰²ã¨ç™½è‰²ã¯åŒã˜ã¾ã¾ã§ã™ã€‚"
 
 #: src/main/print-color.c:258
 #, fuzzy
 msgid "AppGamma"
-msgstr "¥¬¥ó¥Ş:"
+msgstr "ã‚¬ãƒ³ãƒ:"
 
 #: src/main/print-color.c:259
 msgid "Gamma value assumed by application"
@@ -599,12 +599,12 @@ msgstr ""
 #: src/gutenprintui2/panel.c:2141 src/escputil/escputil.c:984
 #: src/escputil/escputil.c:1003 src/escputil/escputil.c:1207
 msgid "Cyan"
-msgstr "¥·¥¢¥ó (C)"
+msgstr "ã‚·ã‚¢ãƒ³ (C)"
 
 #: src/main/print-color.c:267
 #, fuzzy
 msgid "Adjust the cyan gamma"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:274 src/main/escp2-channels.c:2700
 #: src/main/escp2-channels.c:2710 src/main/escp2-channels.c:2719
@@ -615,12 +615,12 @@ msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
 #: src/gutenprintui2/panel.c:2148 src/escputil/escputil.c:985
 #: src/escputil/escputil.c:1004 src/escputil/escputil.c:1208
 msgid "Magenta"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-color.c:275
 #, fuzzy
 msgid "Adjust the magenta gamma"
-msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ãƒã‚¼ãƒ³ã‚¿è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:282 src/main/escp2-channels.c:2701
 #: src/main/escp2-channels.c:2709 src/main/escp2-channels.c:2720
@@ -631,12 +631,12 @@ msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
 #: src/gutenprintui2/panel.c:2155 src/escputil/escputil.c:986
 #: src/escputil/escputil.c:1005 src/escputil/escputil.c:1209
 msgid "Yellow"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:283
 #, fuzzy
 msgid "Adjust the yellow gamma"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:290 src/main/escp2-channels.c:2796
 #: src/main/escp2-channels.c:2809 src/gutenprintui2/panel.c:2169
@@ -647,7 +647,7 @@ msgstr ""
 #: src/main/print-color.c:291
 #, fuzzy
 msgid "Adjust the red gamma"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:298 src/gutenprintui2/panel.c:2176
 msgid "Green"
@@ -656,7 +656,7 @@ msgstr ""
 #: src/main/print-color.c:299
 #, fuzzy
 msgid "Adjust the green gamma"
-msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ãƒã‚¼ãƒ³ã‚¿è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:306 src/main/escp2-channels.c:2797
 #: src/main/escp2-channels.c:2810 src/gutenprintui2/panel.c:2183
@@ -667,7 +667,7 @@ msgstr ""
 #: src/main/print-color.c:307
 #, fuzzy
 msgid "Adjust the blue gamma"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:314 src/main/print-lexmark.c:613
 #: src/main/escp2-channels.c:2698 src/main/escp2-channels.c:2711
@@ -679,12 +679,12 @@ msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
 #: src/escputil/escputil.c:981 src/escputil/escputil.c:1002
 #: src/escputil/escputil.c:1206
 msgid "Black"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/print-color.c:315
 #, fuzzy
 msgid "Adjust the black gamma"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:322 src/main/print-olympus.c:1624
 msgid "Cyan Balance"
@@ -694,50 +694,50 @@ msgstr ""
 #: src/main/print-color.c:338
 #, fuzzy
 msgid "GrayBalance"
-msgstr "¥°¥ì¡¼¥¹¥±¡¼¥ë"
+msgstr "ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«"
 
 #: src/main/print-color.c:323
 #, fuzzy
 msgid "Adjust the cyan gray balance"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:330 src/main/print-olympus.c:1632
 #, fuzzy
 msgid "Magenta Balance"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-color.c:331
 #, fuzzy
 msgid "Adjust the magenta gray balance"
-msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ãƒã‚¼ãƒ³ã‚¿è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:338 src/main/print-olympus.c:1640
 #, fuzzy
 msgid "Yellow Balance"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:339
 #, fuzzy
 msgid "Adjust the yellow gray balance"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-color.c:346
 #, fuzzy
 msgid "Saturation"
-msgstr "ºÌÅÙ:"
+msgstr "å½©åº¦:"
 
 #: src/main/print-color.c:347
 msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
-"°õºş»ş¤ÎºÌÅÙ (¥«¥é¡¼¡¦¥Ğ¥é¥ó¥¹) ¤òÄ´À°¤·¤Ş¤¹¡£\n"
-"¥«¥é¡¼¤È¹õ¤ÎÎ¾Êı¤Î¥¤¥ó¥¯¤ò»È¤Ã¤Æ¥°¥ì¡¼¥¹¥±¡¼¥ë½ĞÎÏ¤¹¤ë¾ì¹ç¤Ï 0 ¤Ë¤·¤Æ²¼¤µ¤¤¡£"
+"å°åˆ·æ™‚ã®å½©åº¦ (ã‚«ãƒ©ãƒ¼ãƒ»ãƒãƒ©ãƒ³ã‚¹) ã‚’èª¿æ•´ã—ã¾ã™ã€‚\n"
+"ã‚«ãƒ©ãƒ¼ã¨é»’ã®ä¸¡æ–¹ã®ã‚¤ãƒ³ã‚¯ã‚’ä½¿ã£ã¦ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«å‡ºåŠ›ã™ã‚‹å ´åˆã¯ 0 ã«ã—ã¦ä¸‹ã•ã„ã€‚"
 
 #: src/main/print-color.c:357
 #, fuzzy
 msgid "Ink Limit"
-msgstr "¥¤¥ó¥¯¤Î¼ïÎà"
+msgstr "ã‚¤ãƒ³ã‚¯ã®ç¨®é¡"
 
 #: src/main/print-color.c:357 src/main/print-color.c:365
 #: src/main/print-color.c:373 src/main/print-color.c:381
@@ -746,7 +746,7 @@ msgstr "¥¤¥ó¥¯¤Î¼ïÎà"
 #: src/main/print-escp2.c:364 src/main/print-escp2.c:370
 #, fuzzy
 msgid "Advanced Output Control"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-color.c:358
 msgid "Limit the total ink printed to the page"
@@ -783,7 +783,7 @@ msgstr ""
 #: src/main/print-color.c:513
 #, fuzzy
 msgid "Output Curves"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-color.c:447
 msgid "Curve for raw channel "
@@ -796,77 +796,77 @@ msgstr ""
 #: src/main/print-color.c:458
 #, fuzzy
 msgid "Cyan curve"
-msgstr "¼è¤ê¾Ã¤·"
+msgstr "å–ã‚Šæ¶ˆã—"
 
 #: src/main/print-color.c:465
 #, fuzzy
 msgid "Magenta Curve"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-color.c:466
 #, fuzzy
 msgid "Magenta curve"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-color.c:473
 #, fuzzy
 msgid "Yellow Curve"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:474
 #, fuzzy
 msgid "Yellow curve"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:481
 #, fuzzy
 msgid "Black Curve"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/print-color.c:482
 #, fuzzy
 msgid "Black curve"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/print-color.c:489
 #, fuzzy
 msgid "Red Curve"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:490
 #, fuzzy
 msgid "Red curve"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:497
 #, fuzzy
 msgid "Green Curve"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-color.c:498
 #, fuzzy
 msgid "Green curve"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-color.c:505
 #, fuzzy
 msgid "Blue Curve"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/print-color.c:506
 #, fuzzy
 msgid "Blue curve"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/print-color.c:513
 #, fuzzy
 msgid "White Curve"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:514
 #, fuzzy
 msgid "White curve"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-color.c:521
 msgid "Hue Map"
@@ -884,7 +884,7 @@ msgstr ""
 #: src/main/print-color.c:529
 #, fuzzy
 msgid "Saturation Map"
-msgstr "ºÌÅÙ:"
+msgstr "å½©åº¦:"
 
 #: src/main/print-color.c:530
 msgid "Saturation adjustment curve"
@@ -918,7 +918,7 @@ msgstr ""
 #: src/main/printers.c:516 src/main/printers.c:521
 #, fuzzy, c-format
 msgid "`%s' is not a valid %s\n"
-msgstr "%s ¤Ï¼ïÎà %s ¤ËÂĞ¤¹¤ëÅ¬ÀÚ¤Ê¥Ñ¥é¥á¡¼¥¿¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó\n"
+msgstr "%s ã¯ç¨®é¡ %s ã«å¯¾ã™ã‚‹é©åˆ‡ãªãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã§ã¯ã‚ã‚Šã¾ã›ã‚“\n"
 
 #: src/main/printers.c:540
 #, c-format
@@ -951,37 +951,37 @@ msgstr ""
 #: src/main/printers.c:673
 #, fuzzy, c-format
 msgid "Unknown type parameter %s (%d)\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤¬ÉÔÌÀ¤Ç¤¹\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ãŒä¸æ˜ã§ã™\n"
 
 #: src/main/printers.c:686 src/main/printers.c:697
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
-msgstr "%s ¤ÎÈÏ°Ï¤ò±Û¤¨¤Ş¤·¤¿ (¸½ºß¤ÎÃÍ %d, ºÇ¾® %d, ºÇÂç %d)\n"
+msgstr "%s ã®ç¯„å›²ã‚’è¶Šãˆã¾ã—ãŸ (ç¾åœ¨ã®å€¤ %d, æœ€å° %d, æœ€å¤§ %d)\n"
 
 #: src/main/printers.c:755
 #, fuzzy
 msgid "Page size is not valid\n"
-msgstr "²èÁü¥µ¥¤¥º¤¬Àµ¤·¤¯¤¢¤ê¤Ş¤»¤ó\n"
+msgstr "ç”»åƒã‚µã‚¤ã‚ºãŒæ­£ã—ãã‚ã‚Šã¾ã›ã‚“\n"
 
 #: src/main/printers.c:776
 #, fuzzy, c-format
 msgid "Top margin must not be less than %d\n"
-msgstr "¾å¥Ş¡¼¥¸¥ó¤Ï 0 ¤è¤ê¾®¤µ¤¯¤·¤Ê¤¤¤Ç²¼¤µ¤¤\n"
+msgstr "ä¸Šãƒãƒ¼ã‚¸ãƒ³ã¯ 0 ã‚ˆã‚Šå°ã•ãã—ãªã„ã§ä¸‹ã•ã„\n"
 
 #: src/main/printers.c:782
 #, fuzzy, c-format
 msgid "Left margin must not be less than %d\n"
-msgstr "º¸¥Ş¡¼¥¸¥ó¤Ï 0 ¤è¤ê¾®¤µ¤¯¤·¤Ê¤¤¤Ç²¼¤µ¤¤\n"
+msgstr "å·¦ãƒãƒ¼ã‚¸ãƒ³ã¯ 0 ã‚ˆã‚Šå°ã•ãã—ãªã„ã§ä¸‹ã•ã„\n"
 
 #: src/main/printers.c:788
 #, fuzzy
 msgid "Height must be greater than zero\n"
-msgstr "º¸¥Ş¡¼¥¸¥ó¤Ï 0 ¤è¤ê¾®¤µ¤¯¤·¤Ê¤¤¤Ç²¼¤µ¤¤\n"
+msgstr "å·¦ãƒãƒ¼ã‚¸ãƒ³ã¯ 0 ã‚ˆã‚Šå°ã•ãã—ãªã„ã§ä¸‹ã•ã„\n"
 
 #: src/main/printers.c:794
 #, fuzzy
 msgid "Width must be greater than zero\n"
-msgstr "¾å¥Ş¡¼¥¸¥ó¤Ï 0 ¤è¤ê¾®¤µ¤¯¤·¤Ê¤¤¤Ç²¼¤µ¤¤\n"
+msgstr "ä¸Šãƒãƒ¼ã‚¸ãƒ³ã¯ 0 ã‚ˆã‚Šå°ã•ãã—ãªã„ã§ä¸‹ã•ã„\n"
 
 #: src/main/printers.c:800
 #, c-format
@@ -1039,7 +1039,7 @@ msgstr ""
 #: src/main/print-escp2.c:210
 #, fuzzy
 msgid "Variable adjustment to the inner hub of the CD"
-msgstr "ÍÑ»æ¥µ¥¤¥º¤ò 100 ¤È¤·¤¿¾ì¹ç¤ÎÈæÎ¨¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã‚µã‚¤ã‚ºã‚’ 100 ã¨ã—ãŸå ´åˆã®æ¯”ç‡ã§ã™ã€‚"
 
 #: src/main/print-escp2.c:215
 msgid "CD Horizontal Fine Adjustment"
@@ -1056,7 +1056,7 @@ msgstr ""
 #: src/main/print-escp2.c:228
 #, fuzzy
 msgid "Resolution of the print"
-msgstr "°õºş»ş¤Î²òÁüÅÙ¤ÈÉÊ¼Á¤Ç¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®è§£åƒåº¦ã¨å“è³ªã§ã™ã€‚"
 
 #: src/main/print-escp2.c:244
 msgid "Enhanced Gloss"
@@ -1069,7 +1069,7 @@ msgstr ""
 #: src/main/print-escp2.c:250
 #, fuzzy
 msgid "Ink Set"
-msgstr "¥¤¥ó¥¯¤Î¼ïÎà"
+msgstr "ã‚¤ãƒ³ã‚¯ã®ç¨®é¡"
 
 #: src/main/print-escp2.c:256
 msgid "Printing Direction"
@@ -1110,7 +1110,7 @@ msgstr ""
 #: src/main/print-escp2.c:280 src/main/print-escp2.c:281
 #, fuzzy
 msgid "Output Order"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-escp2.c:286 src/main/print-escp2.c:287
 msgid "Alignment Passes"
@@ -1123,7 +1123,7 @@ msgstr ""
 #: src/main/print-escp2.c:298 src/main/print-escp2.c:299
 #, fuzzy
 msgid "Ink change command"
-msgstr "Ç§¼±¤Ç¤­¤Ê¤¤¥³¥Ş¥ó¥É¤Ç¤¹¡£\n"
+msgstr "èªè­˜ã§ããªã„ã‚³ãƒãƒ³ãƒ‰ã§ã™ã€‚\n"
 
 #: src/main/print-escp2.c:304 src/main/print-escp2.c:305
 msgid "Alternate Alignment Passes"
@@ -1133,7 +1133,7 @@ msgstr ""
 #: src/main/print-escp2.c:317
 #, fuzzy
 msgid "Alternate Alignment Choices"
-msgstr "´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò·«¤êÊÖ¤·¤Ş¤¹¡£\n"
+msgstr "é–“éš”è£œæ­£ã®è¨­å®šã‚’ç¹°ã‚Šè¿”ã—ã¾ã™ã€‚\n"
 
 #: src/main/print-escp2.c:316
 msgid "Supports Packet Mode"
@@ -1142,7 +1142,7 @@ msgstr ""
 #: src/main/print-escp2.c:328 src/main/print-escp2.c:329
 #, fuzzy
 msgid "Channel Names"
-msgstr "¼è¤ê¾Ã¤·"
+msgstr "å–ã‚Šæ¶ˆã—"
 
 #: src/main/print-escp2.c:341
 msgid "Raw Channel Count"
@@ -1151,42 +1151,42 @@ msgstr ""
 #: src/main/print-escp2.c:346
 #, fuzzy
 msgid "Cyan Map"
-msgstr "¥·¥¢¥ó (C)"
+msgstr "ã‚·ã‚¢ãƒ³ (C)"
 
 #: src/main/print-escp2.c:347
 #, fuzzy
 msgid "Adjust the cyan map"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:352
 #, fuzzy
 msgid "Magenta Map"
-msgstr "¥Ş¥¼¥ó¥¿ (M)"
+msgstr "ãƒã‚¼ãƒ³ã‚¿ (M)"
 
 #: src/main/print-escp2.c:353
 #, fuzzy
 msgid "Adjust the magenta map"
-msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ãƒã‚¼ãƒ³ã‚¿è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:358
 #, fuzzy
 msgid "Yellow Map"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/print-escp2.c:359
 #, fuzzy
 msgid "Adjust the yellow map"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:364
 #, fuzzy
 msgid "Blue Map"
-msgstr "¹õ¤ÈÇò"
+msgstr "é»’ã¨ç™½"
 
 #: src/main/print-escp2.c:365
 #, fuzzy
 msgid "Adjust the blue map"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:370
 msgid "Red Map"
@@ -1195,37 +1195,37 @@ msgstr ""
 #: src/main/print-escp2.c:371
 #, fuzzy
 msgid "Adjust the red map"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:464
 #, fuzzy
 msgid "Red Density"
-msgstr "Ç»ÅÙ:"
+msgstr "æ¿ƒåº¦:"
 
 #: src/main/print-escp2.c:465
 #, fuzzy
 msgid "Adjust the red density"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:472
 #, fuzzy
 msgid "Blue Density"
-msgstr "Ç»ÅÙ:"
+msgstr "æ¿ƒåº¦:"
 
 #: src/main/print-escp2.c:473
 #, fuzzy
 msgid "Adjust the blue density"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:480
 #, fuzzy
 msgid "Gloss Level"
-msgstr "¸÷ÂôÉÕ¤­¥Õ¥¤¥ë¥à"
+msgstr "å…‰æ²¢ä»˜ããƒ•ã‚¤ãƒ«ãƒ "
 
 #: src/main/print-escp2.c:481
 #, fuzzy
 msgid "Adjust the gloss level"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-escp2.c:504 src/main/print-escp2.c:505
 msgid "Dark Yellow Transition"
@@ -1240,27 +1240,27 @@ msgstr ""
 #: src/main/print-escp2.c:552 src/main/print-escp2.c:553
 #, fuzzy
 msgid "Light Gray Transition"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/print-escp2.c:536 src/main/print-escp2.c:537
 #, fuzzy
 msgid "Dark Gray Transition"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/print-escp2.c:544
 #, fuzzy
 msgid "Mid Gray Transition"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/print-escp2.c:545
 #, fuzzy
 msgid "Medium Gray Transition"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/print-escp2.c:1604
 #, fuzzy
 msgid "Full Manual Control"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-escp2.c:1606
 msgid "Automatic Setting Control"
@@ -1277,7 +1277,7 @@ msgstr ""
 #: src/main/print-escp2.c:1621 src/main/xmli18n-tmp.h:8
 #, fuzzy
 msgid "CD - Custom"
-msgstr "¥«¥¹¥¿¥à"
+msgstr "ã‚«ã‚¹ã‚¿ãƒ "
 
 #: src/main/print-escp2.c:1646
 msgid "Normal"
@@ -1286,13 +1286,13 @@ msgstr ""
 #: src/main/print-escp2.c:1648
 #, fuzzy
 msgid "Print To Hub"
-msgstr "¥Õ¥¡¥¤¥ë¤Ë°õºş¤·¤Ş¤¹¤«¡©"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã«å°åˆ·ã—ã¾ã™ã‹ï¼Ÿ"
 
 #: src/main/print-escp2.c:1701 src/main/generic-options.c:213
 #: src/main/generic-options.c:230
 #, fuzzy
 msgid "Manual Control"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/main/print-escp2.c:1740 src/main/print-escp2.c:1832
 #: src/main/print-escp2.c:1844 src/main/print-pcl.c:230
@@ -1304,12 +1304,12 @@ msgstr "½ĞÎÏ¤Î¼ïÎà:"
 #: src/main/escp2-resolutions.c:626 src/main/generic-options.c:36
 #: src/gutenprintui2/panel.c:2627
 msgid "Standard"
-msgstr "É¸½à"
+msgstr "æ¨™æº–"
 
 #: src/main/print-escp2.c:1811 src/cups/genppd.c:1546
 #, fuzzy
 msgid "Automatic"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/main/print-escp2.c:1813
 #, fuzzy
@@ -1344,7 +1344,7 @@ msgstr ""
 #: src/main/print-escp2.c:2297
 #, fuzzy, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
-msgstr "¥×¥ê¥ó¥¿¤Ï¥«¥é¡¼°õºş¤ò¥µ¥İ¡¼¥È¤·¤Æ¤¤¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã¯ã‚«ãƒ©ãƒ¼å°åˆ·ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n"
 
 #: src/main/print-escp2.c:3329 src/main/print-olympus.c:2308
 #: src/main/print-raw.c:217
@@ -1361,7 +1361,7 @@ msgstr "600 DPI"
 
 #: src/main/print-lexmark.c:579 src/main/print-lexmark.c:655
 msgid "600 DPI high quality"
-msgstr "600 DPI ¹âÉÊ¼Á"
+msgstr "600 DPI é«˜å“è³ª"
 
 #: src/main/print-lexmark.c:580 src/main/print-lexmark.c:656
 msgid "600 DPI Unidirectional"
@@ -1373,11 +1373,11 @@ msgstr "1200 DPI"
 
 #: src/main/print-lexmark.c:582 src/main/print-lexmark.c:658
 msgid "1200 DPI high quality"
-msgstr "1200 DPI ¹âÉÊ¼Á"
+msgstr "1200 DPI é«˜å“è³ª"
 
 #: src/main/print-lexmark.c:583 src/main/print-lexmark.c:659
 msgid "1200 DPI highest quality"
-msgstr "1200 DPI ¹âÉÊ¼Á"
+msgstr "1200 DPI é«˜å“è³ª"
 
 #: src/main/print-lexmark.c:584 src/main/print-lexmark.c:660
 msgid "1200 DPI  Unidirectional"
@@ -1389,15 +1389,15 @@ msgstr "2400 DPI x 1200 DPI"
 
 #: src/main/print-lexmark.c:586
 msgid "2400 DPI x 1200 DPI high quality"
-msgstr "2400 DPI x 1200 DPI ¹âÉÊ¼Á"
+msgstr "2400 DPI x 1200 DPI é«˜å“è³ª"
 
 #: src/main/print-lexmark.c:587
 msgid "2400 DPI x 1200 DPI highest quality"
-msgstr "2400 DPI x 1200 DPI ¹âÉÊ¼Á"
+msgstr "2400 DPI x 1200 DPI é«˜å“è³ª"
 
 #: src/main/print-lexmark.c:589
 msgid "test print"
-msgstr "¥Æ¥¹¥È°õºş"
+msgstr "ãƒ†ã‚¹ãƒˆå°åˆ·"
 
 #: src/main/print-lexmark.c:601 src/main/print-lexmark.c:671
 #: src/main/escp2-channels.c:1151 src/main/escp2-channels.c:1165
@@ -1437,77 +1437,77 @@ msgstr "Five Color Photo Composite"
 #: src/main/escp2-papers.c:1296 src/main/escp2-papers.c:1344
 #: src/main/escp2-papers.c:1388
 msgid "Plain Paper"
-msgstr "ÄÌ¾ï¤ÎÍÑ»æ"
+msgstr "é€šå¸¸ã®ç”¨ç´™"
 
 #: src/main/print-lexmark.c:860 src/main/escp2-papers.c:1166
 #: src/main/escp2-papers.c:1210 src/main/escp2-papers.c:1254
 #: src/main/escp2-papers.c:1302 src/main/escp2-papers.c:1350
 #: src/main/escp2-papers.c:1394
 msgid "Glossy Film"
-msgstr "¸÷ÂôÉÕ¤­¥Õ¥¤¥ë¥à"
+msgstr "å…‰æ²¢ä»˜ããƒ•ã‚¤ãƒ«ãƒ "
 
 #: src/main/print-lexmark.c:864 src/main/escp2-papers.c:1168
 #: src/main/escp2-papers.c:1212 src/main/escp2-papers.c:1256
 #: src/main/escp2-papers.c:1304 src/main/escp2-papers.c:1352
 #: src/main/escp2-papers.c:1396
 msgid "Transparencies"
-msgstr "¥¹¥é¥¤¥ÉÍÑ»æ"
+msgstr "ã‚¹ãƒ©ã‚¤ãƒ‰ç”¨ç´™"
 
 #: src/main/print-lexmark.c:868 src/main/escp2-papers.c:1170
 #: src/main/escp2-papers.c:1214 src/main/escp2-papers.c:1258
 #: src/main/escp2-papers.c:1306 src/main/escp2-papers.c:1354
 #: src/main/escp2-papers.c:1398
 msgid "Envelopes"
-msgstr "ÉõÅû"
+msgstr "å°ç­’"
 
 #: src/main/print-lexmark.c:872 src/main/escp2-papers.c:1174
 #: src/main/escp2-papers.c:1218 src/main/escp2-papers.c:1262
 #: src/main/escp2-papers.c:1310 src/main/escp2-papers.c:1358
 #: src/main/escp2-papers.c:1402
 msgid "Matte Paper"
-msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
+msgstr "ãƒãƒƒãƒˆç”¨ç´™"
 
 #: src/main/print-lexmark.c:876 src/main/escp2-papers.c:1178
 #: src/main/escp2-papers.c:1222 src/main/escp2-papers.c:1266
 #: src/main/escp2-papers.c:1314 src/main/escp2-papers.c:1362
 #: src/main/escp2-papers.c:1406
 msgid "Inkjet Paper"
-msgstr "¥¤¥ó¥¯¥¸¥§¥Ã¥ÈÍÑ»æ"
+msgstr "ã‚¤ãƒ³ã‚¯ã‚¸ã‚§ãƒƒãƒˆç”¨ç´™"
 
 #: src/main/print-lexmark.c:880 src/main/escp2-papers.c:1180
 #: src/main/escp2-papers.c:1224 src/main/escp2-papers.c:1268
 #: src/main/escp2-papers.c:1316 src/main/escp2-papers.c:1364
 #: src/main/escp2-papers.c:1408
 msgid "Photo Quality Inkjet Paper"
-msgstr "¥¤¥ó¥¯¥¸¥§¥Ã¥ÈÍÑ»æ (¥Õ¥©¥ÈÍÑ¹âÉÊ¼Á)"
+msgstr "ã‚¤ãƒ³ã‚¯ã‚¸ã‚§ãƒƒãƒˆç”¨ç´™ (ãƒ•ã‚©ãƒˆç”¨é«˜å“è³ª)"
 
 #: src/main/print-lexmark.c:884 src/main/escp2-papers.c:1182
 #: src/main/escp2-papers.c:1226 src/main/escp2-papers.c:1270
 #: src/main/escp2-papers.c:1318 src/main/escp2-papers.c:1366
 #: src/main/escp2-papers.c:1410
 msgid "Photo Paper"
-msgstr "¥Õ¥©¥ÈÍÑ»æ"
+msgstr "ãƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/print-lexmark.c:888 src/main/escp2-papers.c:1184
 #: src/main/escp2-papers.c:1228 src/main/escp2-papers.c:1272
 #: src/main/escp2-papers.c:1320 src/main/escp2-papers.c:1368
 #: src/main/escp2-papers.c:1412 src/main/escp2-papers.c:1436
 msgid "Premium Glossy Photo Paper"
-msgstr "¹âµé¸÷ÂôÉÕ¤­¥Õ¥©¥ÈÍÑ»æ"
+msgstr "é«˜ç´šå…‰æ²¢ä»˜ããƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/print-lexmark.c:892 src/main/escp2-papers.c:1188
 #: src/main/escp2-papers.c:1232 src/main/escp2-papers.c:1276
 #: src/main/escp2-papers.c:1324 src/main/escp2-papers.c:1372
 #: src/main/escp2-papers.c:1416
 msgid "Premium Luster Photo Paper"
-msgstr "¹âµé¤Ä¤ä½Ğ¤·¥Õ¥©¥ÈÍÑ»æ"
+msgstr "é«˜ç´šã¤ã‚„å‡ºã—ãƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/print-lexmark.c:896 src/main/escp2-papers.c:1190
 #: src/main/escp2-papers.c:1234 src/main/escp2-papers.c:1282
 #: src/main/escp2-papers.c:1330 src/main/escp2-papers.c:1374
 #: src/main/escp2-papers.c:1422
 msgid "Photo Quality Glossy Paper"
-msgstr "¸÷ÂôÉÕ¤­ÍÑ»æ (¥Õ¥©¥ÈÍÑ¹âÉÊ¼Á)"
+msgstr "å…‰æ²¢ä»˜ãç”¨ç´™ (ãƒ•ã‚©ãƒˆç”¨é«˜å“è³ª)"
 
 #: src/main/print-lexmark.c:900 src/main/escp2-papers.c:1192
 #: src/main/escp2-papers.c:1236 src/main/escp2-papers.c:1284
@@ -1521,19 +1521,19 @@ msgstr "Ilford Heavy Paper"
 #: src/main/escp2-papers.c:1336 src/main/escp2-papers.c:1380
 #: src/main/escp2-papers.c:1428 src/main/escp2-papers.c:1438
 msgid "Other"
-msgstr "¤½¤ÎÂ¾"
+msgstr "ãã®ä»–"
 
 #: src/main/print-lexmark.c:1113
 msgid "Auto Sheet Feeder"
-msgstr "¼«Æ°µë»æ"
+msgstr "è‡ªå‹•çµ¦ç´™"
 
 #: src/main/print-lexmark.c:1114
 msgid "Manual with Pause"
-msgstr "¥İ¡¼¥ºÉÕ¤­¼êÆ°µë»æ"
+msgstr "ãƒãƒ¼ã‚ºä»˜ãæ‰‹å‹•çµ¦ç´™"
 
 #: src/main/print-lexmark.c:1115
 msgid "Manual without Pause"
-msgstr "¥İ¡¼¥º¤Ê¤·¼êÆ°µë»æ"
+msgstr "ãƒãƒ¼ã‚ºãªã—æ‰‹å‹•çµ¦ç´™"
 
 #: src/main/print-olympus.c:274
 msgid "Coated"
@@ -1548,7 +1548,7 @@ msgstr ""
 #: src/main/print-olympus.c:1078
 #, fuzzy
 msgid "Glossy"
-msgstr "¸÷ÂôÉÕ¤­¥Õ¥¤¥ë¥à"
+msgstr "å…‰æ²¢ä»˜ããƒ•ã‚¤ãƒ«ãƒ "
 
 #: src/main/print-olympus.c:921 src/main/print-olympus.c:979
 #: src/main/print-olympus.c:1079
@@ -1558,7 +1558,7 @@ msgstr ""
 #: src/main/print-olympus.c:980 src/main/print-olympus.c:1080
 #, fuzzy
 msgid "Matte"
-msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
+msgstr "ãƒãƒƒãƒˆç”¨ç´™"
 
 #: src/main/print-olympus.c:1589 src/main/print-olympus.c:1590
 msgid "Laminate Pattern"
@@ -1567,31 +1567,31 @@ msgstr ""
 #: src/main/print-olympus.c:1625
 #, fuzzy
 msgid "Adjust the cyan balance"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-olympus.c:1633
 #, fuzzy
 msgid "Adjust the magenta balance"
-msgstr "°õºş»ş¤Î¥Ş¥¼¥ó¥¿¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ãƒã‚¼ãƒ³ã‚¿è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-olympus.c:1641
 #, fuzzy
 msgid "Adjust the yellow balance"
-msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-olympus.c:1648
 #, fuzzy
 msgid "Black Balance"
-msgstr "¹õ¤ÈÇò"
+msgstr "é»’ã¨ç™½"
 
 #: src/main/print-olympus.c:1649
 #, fuzzy
 msgid "Adjust the black balance"
-msgstr "°õºş»ş¤Î¥·¥¢¥ó¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚·ã‚¢ãƒ³è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/main/print-pcl.c:185
 msgid "Plain"
-msgstr "ÄÌ¾ï"
+msgstr "é€šå¸¸"
 
 #: src/main/print-pcl.c:186
 msgid "Bond"
@@ -1599,63 +1599,63 @@ msgstr "Bond"
 
 #: src/main/print-pcl.c:187
 msgid "Premium"
-msgstr "¹âµé"
+msgstr "é«˜ç´š"
 
 #: src/main/print-pcl.c:188
 msgid "Glossy Photo"
-msgstr "¸÷ÂôÉÕ¤­¥Õ¥©¥È"
+msgstr "å…‰æ²¢ä»˜ããƒ•ã‚©ãƒˆ"
 
 #: src/main/print-pcl.c:189
 msgid "Transparency"
-msgstr "¥¹¥é¥¤¥É"
+msgstr "ã‚¹ãƒ©ã‚¤ãƒ‰"
 
 #: src/main/print-pcl.c:190
 msgid "Quick-dry Photo"
-msgstr "Â¨´¥¥Õ¥©¥È"
+msgstr "å³ä¹¾ãƒ•ã‚©ãƒˆ"
 
 #: src/main/print-pcl.c:191
 msgid "Quick-dry Transparency"
-msgstr "Â¨´¥¥¹¥é¥¤¥É"
+msgstr "å³ä¹¾ã‚¹ãƒ©ã‚¤ãƒ‰"
 
 #: src/main/print-pcl.c:231 src/main/xmli18n-tmp.h:16
 msgid "Manual"
-msgstr "¼êÆ°"
+msgstr "æ‰‹å‹•"
 
 #: src/main/print-pcl.c:233
 msgid "Tray 1"
-msgstr "¥È¥ì¥¤£±"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼‘"
 
 #: src/main/print-pcl.c:234 src/main/print-pcl.c:240
 msgid "Tray 2"
-msgstr "¥È¥ì¥¤£²"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼’"
 
 #: src/main/print-pcl.c:235
 msgid "Tray 3"
-msgstr "¥È¥ì¥¤£³"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼“"
 
 #: src/main/print-pcl.c:236
 msgid "Tray 4"
-msgstr "¥È¥ì¥¤£´"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼”"
 
 #: src/main/print-pcl.c:237
 msgid "Portable Sheet Feeder"
-msgstr "·ÈÂÓ¼°µë»æ"
+msgstr "æºå¸¯å¼çµ¦ç´™"
 
 #: src/main/print-pcl.c:238
 msgid "Desktop Sheet Feeder"
-msgstr "¥Ç¥¹¥¯¥È¥Ã¥×µë»æ"
+msgstr "ãƒ‡ã‚¹ã‚¯ãƒˆãƒƒãƒ—çµ¦ç´™"
 
 #: src/main/print-pcl.c:239
 msgid "Tray"
-msgstr "¥È¥ì¥¤"
+msgstr "ãƒˆãƒ¬ã‚¤"
 
 #: src/main/print-pcl.c:241
 msgid "Optional Source"
-msgstr "¥ª¥×¥·¥ç¥ó"
+msgstr "ã‚ªãƒ—ã‚·ãƒ§ãƒ³"
 
 #: src/main/print-pcl.c:242
 msgid "Autoselect"
-msgstr "¼«Æ°ÁªÂò"
+msgstr "è‡ªå‹•é¸æŠ"
 
 #: src/main/print-pcl.c:256
 msgid "150x150 DPI"
@@ -1671,7 +1671,7 @@ msgstr "600x300 DPI"
 
 #: src/main/print-pcl.c:259
 msgid "600x600 DPI monochrome"
-msgstr "600x600 DPI ¥â¥Î¥¯¥í"
+msgstr "600x600 DPI ãƒ¢ãƒã‚¯ãƒ­"
 
 #: src/main/print-pcl.c:260
 msgid "600x600 DPI"
@@ -1687,26 +1687,26 @@ msgstr "2400x600 DPI"
 
 #: src/main/print-pcl.c:1470
 msgid "Color + Black Cartridges"
-msgstr "¥«¥é¡¼ + ¹õ¥«¡¼¥È¥ê¥Ã¥¸"
+msgstr "ã‚«ãƒ©ãƒ¼ + é»’ã‚«ãƒ¼ãƒˆãƒªãƒƒã‚¸"
 
 #: src/main/print-pcl.c:1471
 msgid "Color + Photo Cartridges"
-msgstr "¥«¥é¡¼ + ¥Õ¥©¥È¡¦¥«¡¼¥È¥ê¥Ã¥¸"
+msgstr "ã‚«ãƒ©ãƒ¼ + ãƒ•ã‚©ãƒˆãƒ»ã‚«ãƒ¼ãƒˆãƒªãƒƒã‚¸"
 
 #: src/main/print-ps.c:68
 #, fuzzy
 msgid "PPDFile"
-msgstr "PPD ¥Õ¥¡¥¤¥ë:"
+msgstr "PPD ãƒ•ã‚¡ã‚¤ãƒ«:"
 
 #: src/main/print-ps.c:69 src/gutenprintui2/panel.c:1767
 #, fuzzy
 msgid "PPD File"
-msgstr "PPD ¥Õ¥¡¥¤¥ë¤Ç¤¹¤«¡©"
+msgstr "PPD ãƒ•ã‚¡ã‚¤ãƒ«ã§ã™ã‹ï¼Ÿ"
 
 #: src/main/print-ps.c:74
 #, fuzzy
 msgid "Model Name"
-msgstr "¼è¤ê¾Ã¤·"
+msgstr "å–ã‚Šæ¶ˆã—"
 
 #: src/main/print-ps.c:75
 msgid "PPD File Model Name"
@@ -1847,13 +1847,13 @@ msgstr ""
 #: src/main/escp2-channels.c:2795 src/escputil/escputil.c:982
 #, fuzzy
 msgid "Photo Black"
-msgstr "¥Õ¥©¥ÈÍÑ»æ"
+msgstr "ãƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/escp2-channels.c:2439 src/main/escp2-channels.c:2455
 #: src/main/escp2-channels.c:2794 src/escputil/escputil.c:992
 #, fuzzy
 msgid "Matte Black"
-msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
+msgstr "ãƒãƒƒãƒˆç”¨ç´™"
 
 #: src/main/escp2-channels.c:2732 src/main/escp2-channels.c:2742
 #: src/main/escp2-channels.c:2756 src/main/escp2-channels.c:2769
@@ -1861,7 +1861,7 @@ msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
 #: src/escputil/escputil.c:987 src/escputil/escputil.c:1210
 #, fuzzy
 msgid "Light Cyan"
-msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
+msgstr "æ˜ã‚‹ã„ã‚·ã‚¢ãƒ³"
 
 #: src/main/escp2-channels.c:2733 src/main/escp2-channels.c:2744
 #: src/main/escp2-channels.c:2757 src/main/escp2-channels.c:2770
@@ -1869,61 +1869,61 @@ msgstr "ÌÀ¤ë¤¤¥·¥¢¥ó"
 #: src/escputil/escputil.c:988 src/escputil/escputil.c:1211
 #, fuzzy
 msgid "Light Magenta"
-msgstr "ÌÀ¤ë¤¤¥Ş¥¼¥ó¥¿"
+msgstr "æ˜ã‚‹ã„ãƒã‚¼ãƒ³ã‚¿"
 
 #: src/main/escp2-channels.c:2758 src/main/escp2-channels.c:2820
 #: src/escputil/escputil.c:991
 #, fuzzy
 msgid "Light Black"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/escp2-channels.c:2771
 #, fuzzy
 msgid "Dark Yellow"
-msgstr "²«¿§ (Y)"
+msgstr "é»„è‰² (Y)"
 
 #: src/main/escp2-channels.c:2798 src/escputil/escputil.c:995
 #, fuzzy
 msgid "Gloss Optimizer"
-msgstr "¸÷ÂôÉÕ¤­¥Õ¥¤¥ë¥à"
+msgstr "å…‰æ²¢ä»˜ããƒ•ã‚¤ãƒ«ãƒ "
 
 #: src/main/escp2-channels.c:2817 src/escputil/escputil.c:996
 #, fuzzy
 msgid "Light Light Black"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/main/escp2-papers.c:1162 src/main/escp2-papers.c:1206
 #: src/main/escp2-papers.c:1250 src/main/escp2-papers.c:1298
 #: src/main/escp2-papers.c:1346 src/main/escp2-papers.c:1390
 msgid "Plain Paper Fast Load"
-msgstr "ÄÌ¾ïÍÑ»æ¤Î¹âÂ®ÆÉ¹ş¤ß"
+msgstr "é€šå¸¸ç”¨ç´™ã®é«˜é€Ÿèª­è¾¼ã¿"
 
 #: src/main/escp2-papers.c:1164 src/main/escp2-papers.c:1208
 #: src/main/escp2-papers.c:1252 src/main/escp2-papers.c:1300
 #: src/main/escp2-papers.c:1348 src/main/escp2-papers.c:1392
 #: src/main/xmli18n-tmp.h:5
 msgid "Postcard"
-msgstr "¤Ï¤¬¤­"
+msgstr "ã¯ãŒã"
 
 #: src/main/escp2-papers.c:1172 src/main/escp2-papers.c:1216
 #: src/main/escp2-papers.c:1260 src/main/escp2-papers.c:1308
 #: src/main/escp2-papers.c:1356 src/main/escp2-papers.c:1400
 msgid "Back Light Film"
-msgstr "¥Ğ¥Ã¥¯¥é¥¤¥È¡¦¥Õ¥£¥ë¥à"
+msgstr "ãƒãƒƒã‚¯ãƒ©ã‚¤ãƒˆãƒ»ãƒ•ã‚£ãƒ«ãƒ "
 
 #: src/main/escp2-papers.c:1176 src/main/escp2-papers.c:1220
 #: src/main/escp2-papers.c:1264 src/main/escp2-papers.c:1312
 #: src/main/escp2-papers.c:1360 src/main/escp2-papers.c:1404
 #, fuzzy
 msgid "Matte Paper Heavyweight"
-msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
+msgstr "ãƒãƒƒãƒˆç”¨ç´™"
 
 #: src/main/escp2-papers.c:1186 src/main/escp2-papers.c:1230
 #: src/main/escp2-papers.c:1274 src/main/escp2-papers.c:1322
 #: src/main/escp2-papers.c:1370 src/main/escp2-papers.c:1414
 #, fuzzy
 msgid "Premium Semigloss Photo Paper"
-msgstr "¹âµé¸÷ÂôÉÕ¤­¥Õ¥©¥ÈÍÑ»æ"
+msgstr "é«˜ç´šå…‰æ²¢ä»˜ããƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/escp2-papers.c:1194 src/main/escp2-papers.c:1238
 #: src/main/escp2-papers.c:1286 src/main/escp2-papers.c:1334
@@ -1936,7 +1936,7 @@ msgstr "ColorLife Paper"
 #: src/main/escp2-papers.c:1418
 #, fuzzy
 msgid "Archival Matte Paper"
-msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
+msgstr "ãƒãƒƒãƒˆç”¨ç´™"
 
 #: src/main/escp2-papers.c:1280 src/main/escp2-papers.c:1328
 #: src/main/escp2-papers.c:1420
@@ -1947,7 +1947,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1701 src/main/escp2-papers.c:1743
 #: src/main/escp2-papers.c:1818
 msgid "Roll Feed"
-msgstr "¥í¡¼¥ë¼°µë»æ"
+msgstr "ãƒ­ãƒ¼ãƒ«å¼çµ¦ç´™"
 
 #: src/main/escp2-papers.c:1557 src/main/escp2-papers.c:1608
 msgid "Roll Feed (cut each page)"
@@ -1960,28 +1960,28 @@ msgstr ""
 #: src/main/escp2-papers.c:1590 src/main/escp2-papers.c:1641
 #, fuzzy
 msgid "Manual Feed"
-msgstr "¼êÆ°"
+msgstr "æ‰‹å‹•"
 
 #: src/main/escp2-papers.c:1599 src/main/escp2-papers.c:1650
 #: src/main/escp2-papers.c:1752 src/main/escp2-papers.c:1785
 #, fuzzy
 msgid "Print to CD"
-msgstr "¥Õ¥¡¥¤¥ë¤Ë°õºş¤·¤Ş¤¹¤«¡©"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã«å°åˆ·ã—ã¾ã™ã‹ï¼Ÿ"
 
 #: src/main/escp2-papers.c:1683 src/main/escp2-papers.c:1725
 #, fuzzy
 msgid "Manual Sheet Guide"
-msgstr "¼êÆ°"
+msgstr "æ‰‹å‹•"
 
 #: src/main/escp2-papers.c:1692 src/main/escp2-papers.c:1734
 #, fuzzy
 msgid "Manual Feed (Front)"
-msgstr "¼êÆ°"
+msgstr "æ‰‹å‹•"
 
 #: src/main/escp2-papers.c:1767
 #, fuzzy
 msgid "Rear Tray"
-msgstr "¥È¥ì¥¤"
+msgstr "ãƒˆãƒ¬ã‚¤"
 
 #: src/main/escp2-papers.c:1776
 msgid "Front Tray"
@@ -1990,7 +1990,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1794
 #, fuzzy
 msgid "Photo Board"
-msgstr "¥Õ¥©¥ÈÍÑ»æ"
+msgstr "ãƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/escp2-papers.c:1833
 msgid "Cut Sheet Bin 1"
@@ -2003,7 +2003,7 @@ msgstr ""
 #: src/main/escp2-papers.c:1851
 #, fuzzy
 msgid "Cut Sheet Autoselect"
-msgstr "¼«Æ°ÁªÂò"
+msgstr "è‡ªå‹•é¸æŠ"
 
 #: src/main/escp2-papers.c:1860
 msgid "Manual Selection"
@@ -2016,7 +2016,7 @@ msgstr ""
 #: src/main/escp2-resolutions.c:40 src/main/escp2-resolutions.c:43
 #, fuzzy
 msgid "360 x 120 DPI Economy"
-msgstr "600x600 DPI ¥â¥Î¥¯¥í"
+msgstr "600x600 DPI ãƒ¢ãƒã‚¯ãƒ­"
 
 #: src/main/escp2-resolutions.c:47 src/main/escp2-resolutions.c:50
 msgid "180 DPI Economy"
@@ -2035,7 +2035,7 @@ msgstr "600x600 DPI"
 #: src/main/escp2-resolutions.c:68
 #, fuzzy
 msgid "360 DPI High Quality"
-msgstr "600 DPI ¹âÉÊ¼Á"
+msgstr "600 DPI é«˜å“è³ª"
 
 #: src/main/escp2-resolutions.c:71 src/main/escp2-resolutions.c:74
 #: src/main/escp2-resolutions.c:77
@@ -2056,12 +2056,12 @@ msgstr "1200 DPI"
 #: src/main/escp2-resolutions.c:94
 #, fuzzy
 msgid "720 DPI High Quality"
-msgstr "1200 DPI ¹âÉÊ¼Á"
+msgstr "1200 DPI é«˜å“è³ª"
 
 #: src/main/escp2-resolutions.c:97
 #, fuzzy
 msgid "720 DPI Highest Quality"
-msgstr "1200 DPI ¹âÉÊ¼Á"
+msgstr "1200 DPI é«˜å“è³ª"
 
 #: src/main/escp2-resolutions.c:100
 #, fuzzy
@@ -2077,7 +2077,7 @@ msgstr "1440 x 720 DPI"
 #: src/main/escp2-resolutions.c:110
 #, fuzzy
 msgid "1440 x 720 DPI Highest Quality"
-msgstr "1200 DPI ¹âÉÊ¼Á"
+msgstr "1200 DPI é«˜å“è³ª"
 
 #: src/main/escp2-resolutions.c:113 src/main/escp2-resolutions.c:116
 #, fuzzy
@@ -2092,7 +2092,7 @@ msgstr "2880 x 720 DPI"
 #: src/main/escp2-resolutions.c:129
 #, fuzzy
 msgid "2880 x 720 DPI Highest Quality"
-msgstr "1200 DPI ¹âÉÊ¼Á"
+msgstr "1200 DPI é«˜å“è³ª"
 
 #: src/main/escp2-resolutions.c:133 src/main/escp2-resolutions.c:136
 #: src/main/escp2-resolutions.c:139
@@ -2134,7 +2134,7 @@ msgstr ""
 #: src/main/escp2-resolutions.c:547
 #, fuzzy
 msgid "Interleave"
-msgstr "¥×¥ê¥ó¥¿Ì¾:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿å:"
 
 #: src/main/escp2-resolutions.c:525 src/main/escp2-resolutions.c:536
 #: src/main/escp2-resolutions.c:548
@@ -2154,12 +2154,12 @@ msgstr ""
 #: src/main/escp2-resolutions.c:539 src/main/escp2-resolutions.c:551
 #, fuzzy
 msgid "Interleave 2"
-msgstr "¥×¥ê¥ó¥¿Ì¾:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿å:"
 
 #: src/main/escp2-resolutions.c:552
 #, fuzzy
 msgid "Eight Pass"
-msgstr "ÌÀ¤ë¤µ:"
+msgstr "æ˜ã‚‹ã•:"
 
 #: src/main/escp2-resolutions.c:595 src/main/escp2-resolutions.c:610
 #: src/main/generic-options.c:33
@@ -2180,13 +2180,13 @@ msgstr ""
 #: src/main/escp2-resolutions.c:628 src/main/generic-options.c:37
 #, fuzzy
 msgid "High"
-msgstr "¹â¤µ:"
+msgstr "é«˜ã•:"
 
 #: src/main/escp2-resolutions.c:600 src/main/escp2-resolutions.c:615
 #: src/main/escp2-resolutions.c:627 src/main/generic-options.c:38
 #, fuzzy
 msgid "Photo"
-msgstr "¼Ì¿¿"
+msgstr "å†™çœŸ"
 
 #: src/main/escp2-resolutions.c:601 src/main/escp2-resolutions.c:616
 #: src/main/escp2-resolutions.c:629 src/main/generic-options.c:39
@@ -2220,16 +2220,16 @@ msgstr ""
 #: src/main/generic-options.c:49
 #, fuzzy
 msgid "Photograph"
-msgstr "¼Ì¿¿"
+msgstr "å†™çœŸ"
 
 #: src/main/generic-options.c:50
 msgid "Line Art"
-msgstr "¥é¥¤¥ó¡¦¥¢¡¼¥È"
+msgstr "ãƒ©ã‚¤ãƒ³ãƒ»ã‚¢ãƒ¼ãƒˆ"
 
 #: src/main/generic-options.c:55
 #, fuzzy
 msgid "Page"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/main/generic-options.c:56
 msgid "Job"
@@ -2238,12 +2238,12 @@ msgstr ""
 #: src/main/generic-options.c:68
 #, fuzzy
 msgid "Image Type"
-msgstr "²èÁü¤Î¼ïÎà:"
+msgstr "ç”»åƒã®ç¨®é¡:"
 
 #: src/main/generic-options.c:69
 #, fuzzy
 msgid "Type of image being printed"
-msgstr "°õºş»ş¤Î¥¤¥ó¥¯¤Î¼ïÎà¤Ç¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®ã‚¤ãƒ³ã‚¯ã®ç¨®é¡ã§ã™ã€‚"
 
 #: src/main/generic-options.c:74 src/main/generic-options.c:80
 msgid "Job Mode"
@@ -2256,28 +2256,28 @@ msgstr ""
 #: src/main/generic-options.c:80
 #, fuzzy
 msgid "Page Number"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/main/generic-options.c:81
 #, fuzzy
 msgid "Page number"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/main/xmli18n-tmp.h:1
 msgid "Letter"
-msgstr "¥ì¥¿¡¼"
+msgstr "ãƒ¬ã‚¿ãƒ¼"
 
 #: src/main/xmli18n-tmp.h:2
 msgid "Legal"
-msgstr "¥ê¡¼¥¬¥ë"
+msgstr "ãƒªãƒ¼ã‚¬ãƒ«"
 
 #: src/main/xmli18n-tmp.h:3
 msgid "Tabloid"
-msgstr "¥¿¥Ö¥í¥¤¥É"
+msgstr "ã‚¿ãƒ–ãƒ­ã‚¤ãƒ‰"
 
 #: src/main/xmli18n-tmp.h:4
 msgid "Executive"
-msgstr "¥¨¥¯¥¼¥¯¥Æ¥£¥Ö"
+msgstr "ã‚¨ã‚¯ã‚¼ã‚¯ãƒ†ã‚£ãƒ–"
 
 #: src/main/xmli18n-tmp.h:9
 msgid "3x5"
@@ -2290,7 +2290,7 @@ msgstr "4x6"
 #: src/main/xmli18n-tmp.h:11
 #, fuzzy
 msgid "Epson 4x6 Photo Paper (tear-off borders)"
-msgstr "EPSON 4x6 ¥Õ¥©¥ÈÍÑ»æ"
+msgstr "EPSON 4x6 ãƒ•ã‚©ãƒˆç”¨ç´™"
 
 #: src/main/xmli18n-tmp.h:12
 msgid "5x7"
@@ -2314,7 +2314,7 @@ msgstr "12x18"
 
 #: src/main/xmli18n-tmp.h:18
 msgid "Super B 13x19"
-msgstr "¥¹¡¼¥Ñ¡¼ B 13x19"
+msgstr "ã‚¹ãƒ¼ãƒ‘ãƒ¼ B 13x19"
 
 #: src/main/xmli18n-tmp.h:19
 msgid "Engineering C 17x22"
@@ -2363,11 +2363,11 @@ msgstr "30x40"
 
 #: src/main/xmli18n-tmp.h:30
 msgid "4A"
-msgstr "4AÈÇ"
+msgstr "4Aç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:31
 msgid "2A"
-msgstr "2AÈÇ"
+msgstr "2Aç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:32
 #, fuzzy
@@ -2376,47 +2376,47 @@ msgstr "Stylus Photo"
 
 #: src/main/xmli18n-tmp.h:33
 msgid "A0"
-msgstr "A0ÈÇ"
+msgstr "A0ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:34
 msgid "A1"
-msgstr "A1ÈÇ"
+msgstr "A1ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:35
 msgid "A2"
-msgstr "A2ÈÇ"
+msgstr "A2ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:36
 msgid "A3"
-msgstr "A3ÈÇ"
+msgstr "A3ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:37
 msgid "A4"
-msgstr "A4ÈÇ"
+msgstr "A4ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:38
 msgid "A5"
-msgstr "A5ÈÇ"
+msgstr "A5ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:39
 msgid "A6"
-msgstr "A6ÈÇ"
+msgstr "A6ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:40
 msgid "A7"
-msgstr "A7ÈÇ"
+msgstr "A7ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:41
 msgid "A8"
-msgstr "A8ÈÇ"
+msgstr "A8ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:42
 msgid "A9"
-msgstr "A9ÈÇ"
+msgstr "A9ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:43
 msgid "A10"
-msgstr "A10ÈÇ"
+msgstr "A10ç‰ˆ"
 
 #: src/main/xmli18n-tmp.h:44
 msgid "RA0"
@@ -2730,15 +2730,15 @@ msgstr "Oufuku Card"
 
 #: src/main/xmli18n-tmp.h:121
 msgid "Japanese long envelope #3"
-msgstr "ÆüËÜ¤ÎÄ¹¤¤ÉõÅû #3"
+msgstr "æ—¥æœ¬ã®é•·ã„å°ç­’ #3"
 
 #: src/main/xmli18n-tmp.h:122
 msgid "Japanese long envelope #4"
-msgstr "ÆüËÜ¤ÎÄ¹¤¤ÉõÅû #4"
+msgstr "æ—¥æœ¬ã®é•·ã„å°ç­’ #4"
 
 #: src/main/xmli18n-tmp.h:123
 msgid "Japanese Kaku envelope #4"
-msgstr "ÆüËÜ¤Î»Í³Ñ¤¤ÉõÅû #4"
+msgstr "æ—¥æœ¬ã®å››è§’ã„å°ç­’ #4"
 
 #: src/main/xmli18n-tmp.h:124
 msgid "Commercial 10"
@@ -2772,7 +2772,7 @@ msgstr ""
 #: src/main/xmli18n-tmp.h:131
 #, fuzzy
 msgid "Wide Postcard"
-msgstr "¤Ï¤¬¤­"
+msgstr "ã¯ãŒã"
 
 #: src/main/xmli18n-tmp.h:132
 msgid "Chilean Office"
@@ -2788,43 +2788,43 @@ msgstr ""
 
 #: src/main/xmli18n-tmp.h:135
 msgid "Custom"
-msgstr "¥«¥¹¥¿¥à"
+msgstr "ã‚«ã‚¹ã‚¿ãƒ "
 
 #: src/main/xmli18n-tmp.h:136
 msgid "89 mm Roll Paper"
-msgstr "89mm ¥í¡¼¥ë»æ"
+msgstr "89mm ãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:137
 msgid "4 Inch Roll Paper"
-msgstr "4 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "4 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:138
 msgid "5 Inch Roll Paper"
-msgstr "5 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "5 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:139
 msgid "210 mm Roll Paper"
-msgstr "210mm ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "210mm ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:140
 msgid "13 Inch Roll Paper"
-msgstr "13 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "13 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:141
 msgid "22 Inch Roll Paper"
-msgstr "22 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "22 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:142
 msgid "24 Inch Roll Paper"
-msgstr "24 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "24 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:143
 msgid "36 Inch Roll Paper"
-msgstr "36 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "36 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:144
 msgid "44 Inch Roll Paper"
-msgstr "44 ¥¤¥ó¥Á¥í¡¼¥ë»æ"
+msgstr "44 ã‚¤ãƒ³ãƒãƒ­ãƒ¼ãƒ«ç´™"
 
 #: src/main/xmli18n-tmp.h:145
 msgid "PostScript Level 1"
@@ -4516,22 +4516,22 @@ msgstr ""
 #: src/main/xmli18n-tmp.h:519
 #, fuzzy
 msgid "Generic PCL 4 Printer"
-msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿¤ÎÄêµÁ"
+msgstr "æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å®šç¾©"
 
 #: src/main/xmli18n-tmp.h:520
 #, fuzzy
 msgid "Generic PCL 5 Printer"
-msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿¤ÎÄêµÁ"
+msgstr "æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å®šç¾©"
 
 #: src/main/xmli18n-tmp.h:521
 #, fuzzy
 msgid "Generic PCL 5c Printer"
-msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿¤ÎÄêµÁ"
+msgstr "æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å®šç¾©"
 
 #: src/main/xmli18n-tmp.h:522
 #, fuzzy
 msgid "Generic PCL 5e Printer"
-msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿¤ÎÄêµÁ"
+msgstr "æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å®šç¾©"
 
 #: src/main/xmli18n-tmp.h:523
 msgid "Generic PCL 6/PCL XL Printer"
@@ -5532,7 +5532,7 @@ msgstr ""
 #: src/main/xmli18n-tmp.h:772
 #, fuzzy
 msgid "HP e-printer e20"
-msgstr "¥×¥ê¥ó¥¿Ì¾:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿å:"
 
 #: src/main/xmli18n-tmp.h:773
 msgid "IBM 4019"
@@ -5977,7 +5977,7 @@ msgstr ""
 #: src/main/xmli18n-tmp.h:883
 #, fuzzy
 msgid "Star LaserPrinter 8"
-msgstr "¥×¥ê¥ó¥¿¤ÎÁªÂò"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®é¸æŠ"
 
 #: src/main/xmli18n-tmp.h:884
 msgid "Tally MT908"
@@ -6182,7 +6182,7 @@ msgstr ""
 #: src/gutenprintui2/curve.c:130
 #, fuzzy
 msgid "Curve type"
-msgstr "¹õ¿§"
+msgstr "é»’è‰²"
 
 #: src/gutenprintui2/curve.c:131
 msgid "Is this curve linear, spline interpolated, or free-form"
@@ -6226,29 +6226,29 @@ msgstr ""
 
 #: src/gutenprintui2/panel.c:273
 msgid "Inch"
-msgstr "¥¤¥ó¥Á"
+msgstr "ã‚¤ãƒ³ãƒ"
 
 #: src/gutenprintui2/panel.c:273
 msgid "Set the base unit of measurement to inches"
-msgstr "´ğËÜÃ±°Ì¤ò¥¤¥ó¥Á¤Ë¤·¤Ş¤¹¡£"
+msgstr "åŸºæœ¬å˜ä½ã‚’ã‚¤ãƒ³ãƒã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:275
 msgid "cm"
-msgstr "¥»¥ó¥Á¥á¡¼¥È¥ë"
+msgstr "ã‚»ãƒ³ãƒãƒ¡ãƒ¼ãƒˆãƒ«"
 
 #: src/gutenprintui2/panel.c:275
 msgid "Set the base unit of measurement to centimetres"
-msgstr "´ğËÜÃ±°Ì¤ò¥»¥ó¥Á¥á¡¼¥È¥ë¤Ë¤·¤Ş¤¹¡£"
+msgstr "åŸºæœ¬å˜ä½ã‚’ã‚»ãƒ³ãƒãƒ¡ãƒ¼ãƒˆãƒ«ã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:277
 #, fuzzy
 msgid "Points"
-msgstr "°õºş"
+msgstr "å°åˆ·"
 
 #: src/gutenprintui2/panel.c:277
 #, fuzzy
 msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "´ğËÜÃ±°Ì¤ò¥¤¥ó¥Á¤Ë¤·¤Ş¤¹¡£"
+msgstr "åŸºæœ¬å˜ä½ã‚’ã‚¤ãƒ³ãƒã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:279
 msgid "mm"
@@ -6257,7 +6257,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:279
 #, fuzzy
 msgid "Set the base unit of measurement to millimetres"
-msgstr "´ğËÜÃ±°Ì¤ò¥»¥ó¥Á¥á¡¼¥È¥ë¤Ë¤·¤Ş¤¹¡£"
+msgstr "åŸºæœ¬å˜ä½ã‚’ã‚»ãƒ³ãƒãƒ¡ãƒ¼ãƒˆãƒ«ã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:281
 msgid "Pica"
@@ -6266,20 +6266,20 @@ msgstr ""
 #: src/gutenprintui2/panel.c:281
 #, fuzzy
 msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "´ğËÜÃ±°Ì¤ò¥¤¥ó¥Á¤Ë¤·¤Ş¤¹¡£"
+msgstr "åŸºæœ¬å˜ä½ã‚’ã‚¤ãƒ³ãƒã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:288
 msgid "Color output"
-msgstr "¥«¥é¡¼¤Ç°õºş¤·¤Ş¤¹¡£"
+msgstr "ã‚«ãƒ©ãƒ¼ã§å°åˆ·ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:290
 msgid "Print in shades of gray using black ink"
-msgstr "¹õ¥¤¥ó¥¯¤ò»È¤Ã¤Æ¥°¥ì¡¼¤Î±Æ¤òÉÕ¤±¤Æ°õºş¤·¤Ş¤¹¡£"
+msgstr "é»’ã‚¤ãƒ³ã‚¯ã‚’ä½¿ã£ã¦ã‚°ãƒ¬ãƒ¼ã®å½±ã‚’ä»˜ã‘ã¦å°åˆ·ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:302
 #, fuzzy
 msgid "Standard Command"
-msgstr "É¸½à"
+msgstr "æ¨™æº–"
 
 #: src/gutenprintui2/panel.c:302
 msgid "Use standard print command"
@@ -6288,7 +6288,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:303
 #, fuzzy
 msgid "Custom Command"
-msgstr "¥³¥Ş¥ó¥É:"
+msgstr "ã‚³ãƒãƒ³ãƒ‰:"
 
 #: src/gutenprintui2/panel.c:303
 msgid "Use custom print command"
@@ -6297,12 +6297,12 @@ msgstr ""
 #: src/gutenprintui2/panel.c:304 src/gutenprintui2/plist.c:678
 #: src/gutenprintui2/plist.c:761
 msgid "File"
-msgstr "¥Õ¥¡¥¤¥ë"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«"
 
 #: src/gutenprintui2/panel.c:304
 #, fuzzy
 msgid "Print to a file"
-msgstr "¥Õ¥¡¥¤¥ë¤Ë°õºş¤·¤Ş¤¹¤«¡©"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã«å°åˆ·ã—ã¾ã™ã‹ï¼Ÿ"
 
 #: src/gutenprintui2/panel.c:520
 msgid "Edit Curve..."
@@ -6311,7 +6311,7 @@ msgstr ""
 #: src/gutenprintui2/panel.c:531
 #, fuzzy
 msgid "Set Default"
-msgstr "½é´üÃÍ¤ËÌá¤¹"
+msgstr "åˆæœŸå€¤ã«æˆ»ã™"
 
 #: src/gutenprintui2/panel.c:533
 msgid "Restore Previous"
@@ -6325,40 +6325,40 @@ msgstr "OK"
 #: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
 #: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
 msgid "Cancel"
-msgstr "¼è¤ê¾Ã¤·"
+msgstr "å–ã‚Šæ¶ˆã—"
 
 #: src/gutenprintui2/panel.c:1180
 #, c-format
 msgid "%s -- Print v%s"
-msgstr "%s -- °õºş v%s"
+msgstr "%s -- å°åˆ· v%s"
 
 #: src/gutenprintui2/panel.c:1189
 msgid "About"
-msgstr "¾ğÊó"
+msgstr "æƒ…å ±"
 
 #: src/gutenprintui2/panel.c:1191
 msgid ""
 "Print and\n"
 "Save Settings"
 msgstr ""
-"°õºş¤È\n"
-"ÀßÄê¤ÎÊİÂ¸"
+"å°åˆ·ã¨\n"
+"è¨­å®šã®ä¿å­˜"
 
 #: src/gutenprintui2/panel.c:1193
 msgid ""
 "Save\n"
 "Settings"
 msgstr ""
-"ÀßÄê¤Î\n"
-"ÊİÂ¸"
+"è¨­å®šã®\n"
+"ä¿å­˜"
 
 #: src/gutenprintui2/panel.c:1195
 msgid "Print"
-msgstr "°õºş"
+msgstr "å°åˆ·"
 
 #: src/gutenprintui2/panel.c:1247
 msgid "Preview"
-msgstr "¥×¥ì¥Ó¥å¡¼"
+msgstr "ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼"
 
 #: src/gutenprintui2/panel.c:1272
 msgid ""
@@ -6373,20 +6373,20 @@ msgid ""
 "If you click another button while dragging the mouse, the image will return "
 "to its original position."
 msgstr ""
-"°õºş»ş¤Î²èÁü¤Î°ÌÃÖ¤òÀßÄê¤·¤Ş¤¹¡£\n"
-"¥Ş¥¦¥¹¤Îº¸¥Ü¥¿¥ó¤Ç¥É¥é¥Ã¥°¤·¤¿¾ì½ê¤Ë²èÁü¤¬ÇÛÃÖ¤µ¤ì¤Ş¤¹¡£\n"
-"¥Ş¥¦¥¹¤Î±¦¥Ü¥¿¥ó¤Ç¥É¥é¥Ã¥°¤¹¤ë¤È¡¢ºÙ¤«¤¤¥ì¥Ù¥ë¤Ç²èÁü¤ò°ÜÆ°¤·¤Ş¤¹; Ìó 1/72 ¥¤"
-"¥ó¥ÁÃ±°Ì¤Ç°ÜÆ°¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£\n"
-"¥Ş¥¦¥¹¤ÎÃæ¥Ü¥¿¥ó¤Ç¥É¥é¥Ã¥°¤¹¤ë¤È¡¢²èÁü¤ÎÂç¤­¤µ¤ÎÃ±°Ì¤Ç°ÜÆ°¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç"
-"¤¹¡£\n"
-"[SHIFT] ¥­¡¼¤ò²¡¤·¤Ê¤¬¤é¥Ş¥¦¥¹¤ò¥É¥é¥Ã¥°¤¹¤ë¤È¡¢¿åÊ¿¤Ş¤¿¤Ï¿âÄ¾Êı¸ş¤Ë¤Î¤ß²èÁü"
-"¤ò°ÜÆ°¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£\n"
-"¥É¥é¥Ã¥°Ãæ¤ËÊÌ¤Î¥Ü¥¿¥ó¤ò¥¯¥ê¥Ã¥¯¤¹¤ë¤È¡¢²èÁü¤Ï¸µ¤Î¾ì½ê¤ËÌá¤ê¤Ş¤¹¡£"
+"å°åˆ·æ™‚ã®ç”»åƒã®ä½ç½®ã‚’è¨­å®šã—ã¾ã™ã€‚\n"
+"ãƒã‚¦ã‚¹ã®å·¦ãƒœã‚¿ãƒ³ã§ãƒ‰ãƒ©ãƒƒã‚°ã—ãŸå ´æ‰€ã«ç”»åƒãŒé…ç½®ã•ã‚Œã¾ã™ã€‚\n"
+"ãƒã‚¦ã‚¹ã®å³ãƒœã‚¿ãƒ³ã§ãƒ‰ãƒ©ãƒƒã‚°ã™ã‚‹ã¨ã€ç´°ã‹ã„ãƒ¬ãƒ™ãƒ«ã§ç”»åƒã‚’ç§»å‹•ã—ã¾ã™; ç´„ 1/72 ã‚¤"
+"ãƒ³ãƒå˜ä½ã§ç§»å‹•ã™ã‚‹ã“ã¨ãŒå¯èƒ½ã§ã™ã€‚\n"
+"ãƒã‚¦ã‚¹ã®ä¸­ãƒœã‚¿ãƒ³ã§ãƒ‰ãƒ©ãƒƒã‚°ã™ã‚‹ã¨ã€ç”»åƒã®å¤§ãã•ã®å˜ä½ã§ç§»å‹•ã™ã‚‹ã“ã¨ãŒå¯èƒ½ã§"
+"ã™ã€‚\n"
+"[SHIFT] ã‚­ãƒ¼ã‚’æŠ¼ã—ãªãŒã‚‰ãƒã‚¦ã‚¹ã‚’ãƒ‰ãƒ©ãƒƒã‚°ã™ã‚‹ã¨ã€æ°´å¹³ã¾ãŸã¯å‚ç›´æ–¹å‘ã«ã®ã¿ç”»åƒ"
+"ã‚’ç§»å‹•ã™ã‚‹ã“ã¨ãŒå¯èƒ½ã§ã™ã€‚\n"
+"ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã«åˆ¥ã®ãƒœã‚¿ãƒ³ã‚’ã‚¯ãƒªãƒƒã‚¯ã™ã‚‹ã¨ã€ç”»åƒã¯å…ƒã®å ´æ‰€ã«æˆ»ã‚Šã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1319
 #, fuzzy
 msgid "Paper Size"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/gutenprintui2/panel.c:1342
 msgid "Show All Paper Sizes"
@@ -6394,28 +6394,28 @@ msgstr ""
 
 #: src/gutenprintui2/panel.c:1358
 msgid "Dimensions:"
-msgstr "À£Ë¡:"
+msgstr "å¯¸æ³•:"
 
 #: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
 msgid "Width:"
-msgstr "Éı:"
+msgstr "å¹…:"
 
 #: src/gutenprintui2/panel.c:1364
 msgid "Width of the paper that you wish to print to"
-msgstr "°õºş¤¹¤ëÍÑ»æ¤ÎÉı¤Ç¤¹¡£"
+msgstr "å°åˆ·ã™ã‚‹ç”¨ç´™ã®å¹…ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
 msgid "Height:"
-msgstr "¹â¤µ:"
+msgstr "é«˜ã•:"
 
 #: src/gutenprintui2/panel.c:1369
 msgid "Height of the paper that you wish to print to"
-msgstr "°õºş¤¹¤ëÍÑ»æ¤Î¹â¤µ¤Ç¤¹¡£"
+msgstr "å°åˆ·ã™ã‚‹ç”¨ç´™ã®é«˜ã•ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1374
 #, fuzzy
 msgid "Automatic Paper Size"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/gutenprintui2/panel.c:1391
 msgid "Number of Copies"
@@ -6428,165 +6428,165 @@ msgstr ""
 #: src/gutenprintui2/panel.c:1435
 #, fuzzy
 msgid "Image Position"
-msgstr "°ÌÃÖ"
+msgstr "ä½ç½®"
 
 #: src/gutenprintui2/panel.c:1452
 msgid "Auto"
-msgstr "¼«Æ°"
+msgstr "è‡ªå‹•"
 
 #: src/gutenprintui2/panel.c:1454
 msgid "Portrait"
-msgstr "½ÄÃÖ¤­"
+msgstr "ç¸¦ç½®ã"
 
 #: src/gutenprintui2/panel.c:1456
 msgid "Landscape"
-msgstr "²£ÃÖ¤­"
+msgstr "æ¨ªç½®ã"
 
 #: src/gutenprintui2/panel.c:1458
 msgid "Upside down"
-msgstr "¾å²¼"
+msgstr "ä¸Šä¸‹"
 
 #: src/gutenprintui2/panel.c:1460
 msgid "Seascape"
-msgstr "²£Ä¹"
+msgstr "æ¨ªé•·"
 
 #: src/gutenprintui2/panel.c:1464
 msgid ""
 "Select the orientation: portrait, landscape, upside down, or seascape "
 "(upside down landscape)"
 msgstr ""
-"ÍÑ»æ¤ÎÊı¸ş¤òÁªÂò¤·¤Ş¤¹: ½ÄÃÖ¤­¡¢²£ÃÖ¤­¡¢¾å²¼¡¢¤Ş¤¿¤Ï²£Ä¹ (¾å²¼¤Ä¤­¤Î²£ÃÖ¤­)"
+"ç”¨ç´™ã®æ–¹å‘ã‚’é¸æŠã—ã¾ã™: ç¸¦ç½®ãã€æ¨ªç½®ãã€ä¸Šä¸‹ã€ã¾ãŸã¯æ¨ªé•· (ä¸Šä¸‹ã¤ãã®æ¨ªç½®ã)"
 
 #: src/gutenprintui2/panel.c:1466
 msgid "Orientation:"
-msgstr "ÍÑ»æ¤Î¸ş¤­:"
+msgstr "ç”¨ç´™ã®å‘ã:"
 
 #: src/gutenprintui2/panel.c:1477
 msgid "Left:"
-msgstr "º¸Â¦:"
+msgstr "å·¦å´:"
 
 #: src/gutenprintui2/panel.c:1478
 msgid "Distance from the left of the paper to the image"
-msgstr "ÍÑ»æ¤Îº¸Ã¼¤«¤é²èÁü¤Ş¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã®å·¦ç«¯ã‹ã‚‰ç”»åƒã¾ã§ã®è·é›¢ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
 msgid "Right:"
-msgstr "±¦Â¦:"
+msgstr "å³å´:"
 
 #: src/gutenprintui2/panel.c:1482
 msgid "Distance from the left of the paper to the right of the image"
-msgstr "ÍÑ»æ¤Îº¸Ã¼¤«¤é²èÁü¤Î±¦Ã¼¤Ş¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã®å·¦ç«¯ã‹ã‚‰ç”»åƒã®å³ç«¯ã¾ã§ã®è·é›¢ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1486
 msgid "Distance from the right of the paper to the image"
-msgstr "ÍÑ»æ¤Î±¦Ã¼¤«¤é²èÁü¤Ş¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã®å³ç«¯ã‹ã‚‰ç”»åƒã¾ã§ã®è·é›¢ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1488
 msgid "Top:"
-msgstr "¾åÂ¦:"
+msgstr "ä¸Šå´:"
 
 #: src/gutenprintui2/panel.c:1489
 msgid "Distance from the top of the paper to the image"
-msgstr "ÍÑ»æ¤Î¾åÃ¼¤«¤é²èÁü¤Ş¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã®ä¸Šç«¯ã‹ã‚‰ç”»åƒã¾ã§ã®è·é›¢ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
 msgid "Bottom:"
-msgstr "²¼Â¦:"
+msgstr "ä¸‹å´:"
 
 #: src/gutenprintui2/panel.c:1493
 #, fuzzy
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr "ÍÑ»æ¤Î¾åÃ¼¤«¤é²èÁü¤Î²¼Ã¼¤Ş¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã®ä¸Šç«¯ã‹ã‚‰ç”»åƒã®ä¸‹ç«¯ã¾ã§ã®è·é›¢ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1497
 msgid "Distance from the bottom of the paper to the image"
-msgstr "ÍÑ»æ¤Î²¼Ã¼¤«¤é²èÁü¤Ş¤Ç¤Îµ÷Î¥¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã®ä¸‹ç«¯ã‹ã‚‰ç”»åƒã¾ã§ã®è·é›¢ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1507
 msgid "Center:"
-msgstr "Ãæ¿´:"
+msgstr "ä¸­å¿ƒ:"
 
 #: src/gutenprintui2/panel.c:1510
 #, fuzzy
 msgid "Horizontal"
-msgstr "¿åÊ¿"
+msgstr "æ°´å¹³"
 
 #: src/gutenprintui2/panel.c:1511
 msgid "Center the image horizontally on the paper"
-msgstr "ÍÑ»æ¤Î¿åÊ¿Êı¸ş¤ÎÃæ¿´¤Ë¤·¤Ş¤¹¡£"
+msgstr "ç”¨ç´™ã®æ°´å¹³æ–¹å‘ã®ä¸­å¿ƒã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1513
 msgid "Both"
-msgstr "Î¾Ã¼"
+msgstr "ä¸¡ç«¯"
 
 #: src/gutenprintui2/panel.c:1514
 msgid "Center the image on the paper"
-msgstr "ÍÑ»æ¤ÎÃæ¿´¤Ë¤·¤Ş¤¹¡£"
+msgstr "ç”¨ç´™ã®ä¸­å¿ƒã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1516
 #, fuzzy
 msgid "Vertical"
-msgstr "¿âÄ¾"
+msgstr "å‚ç›´"
 
 #: src/gutenprintui2/panel.c:1517
 msgid "Center the image vertically on the paper"
-msgstr "ÍÑ»æ¤Î¿âÄ¾Êı¸ş¤ÎÃæ¿´¤Ë¤·¤Ş¤¹¡£"
+msgstr "ç”¨ç´™ã®å‚ç›´æ–¹å‘ã®ä¸­å¿ƒã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1530
 msgid "Setup Printer"
-msgstr "¥×¥ê¥ó¥¿¤ÎÁªÂò"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®é¸æŠ"
 
 #: src/gutenprintui2/panel.c:1554
 #, fuzzy
 msgid "Printer Make:"
-msgstr "¥×¥ê¥ó¥¿Ì¾:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿å:"
 
 #: src/gutenprintui2/panel.c:1565
 #, fuzzy
 msgid "Select the make of your printer"
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1583 src/gutenprintui2/panel.c:1671
 #: src/gutenprintui2/panel.c:1889
 msgid "Printer Model:"
-msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼:"
 
 #: src/gutenprintui2/panel.c:1594
 msgid "Select your printer model"
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1642
 msgid "PPD File:"
-msgstr "PPD ¥Õ¥¡¥¤¥ë:"
+msgstr "PPD ãƒ•ã‚¡ã‚¤ãƒ«:"
 
 #: src/gutenprintui2/panel.c:1658
 msgid "Enter the correct PPD filename for your printer"
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ÍÑ¤Î PPD ¥Õ¥¡¥¤¥ëÌ¾¤òÆşÎÏ¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ç”¨ã® PPD ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
 msgid "Browse"
-msgstr "»²¾È"
+msgstr "å‚ç…§"
 
 #: src/gutenprintui2/panel.c:1667
 msgid "Choose the correct PPD filename for your printer"
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ÍÑ¤Î PPD ¥Õ¥¡¥¤¥ë¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ç”¨ã® PPD ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1709
 #, fuzzy
 msgid ""
 "Select the name of the output queue (not the type, or model, of printer) "
 "that you wish to print to"
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ (¥×¥ê¥ó¥¿¤Î·¿¼°¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó) Ì¾¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ (ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã§ã¯ã‚ã‚Šã¾ã›ã‚“) åã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1711
 #, fuzzy
 msgid "Printer Queue:"
-msgstr "¥×¥ê¥ó¥¿Ì¾:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿å:"
 
 #: src/gutenprintui2/panel.c:1727
 #, fuzzy
 msgid "Enter the correct command to print to your printer. "
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ÍÑ¤Î PPD ¥Õ¥¡¥¤¥ëÌ¾¤òÆşÎÏ¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ç”¨ã® PPD ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…¥åŠ›ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1738
 msgid "Enter the file to print to. "
@@ -6595,24 +6595,24 @@ msgstr ""
 #: src/gutenprintui2/panel.c:1746
 #, fuzzy
 msgid "File to print to"
-msgstr "¥Æ¥¹¥È°õºş"
+msgstr "ãƒ†ã‚¹ãƒˆå°åˆ·"
 
 #: src/gutenprintui2/panel.c:1754
 #, fuzzy
 msgid "Print To File"
-msgstr "¥Õ¥¡¥¤¥ë¤Ë°õºş¤·¤Ş¤¹¤«¡©"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ã«å°åˆ·ã—ã¾ã™ã‹ï¼Ÿ"
 
 #: src/gutenprintui2/panel.c:1784
 msgid "Define New Printer"
-msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿¤ÎÄêµÁ"
+msgstr "æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å®šç¾©"
 
 #: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
 msgid "Printer Name:"
-msgstr "¥×¥ê¥ó¥¿Ì¾:"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿å:"
 
 #: src/gutenprintui2/panel.c:1806
 msgid "Enter the name you wish to give this logical printer"
-msgstr "ÍøÍÑ¤¹¤ëÏÀÍı¥×¥ê¥ó¥¿Ì¾¤ò»ØÄê¤·¤Ş¤¹¡£"
+msgstr "åˆ©ç”¨ã™ã‚‹è«–ç†ãƒ—ãƒªãƒ³ã‚¿åã‚’æŒ‡å®šã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1816
 #, fuzzy
@@ -6622,52 +6622,52 @@ msgstr "Gimp-Print"
 #: src/gutenprintui2/panel.c:1823
 #, fuzzy
 msgid "Gutenprint Version "
-msgstr "Gimp-Print ¥Ğ¡¼¥¸¥ç¥ó "
+msgstr "Gimp-Print ãƒãƒ¼ã‚¸ãƒ§ãƒ³ "
 
 #: src/gutenprintui2/panel.c:1871
 msgid "Printer Settings"
-msgstr "¥×¥ê¥ó¥¿¤ÎÀßÄê"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®è¨­å®š"
 
 #: src/gutenprintui2/panel.c:1884
 msgid ""
 "Select the name of the printer (not the type, or model, of printer) that you "
 "wish to print to"
-msgstr "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿ (¥×¥ê¥ó¥¿¤Î·¿¼°¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó) Ì¾¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ (ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã§ã¯ã‚ã‚Šã¾ã›ã‚“) åã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1901
 msgid "Setup Printer..."
-msgstr "¥×¥ê¥ó¥¿¤ÎÁªÂò..."
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®é¸æŠ..."
 
 #: src/gutenprintui2/panel.c:1903
 msgid ""
 "Choose the printer model, PPD file, and command that is used to print to "
 "this printer"
-msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤È PPD ¥Õ¥¡¥¤¥ë¡¢°õºş¥³¥Ş¥ó¥É¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã¨ PPD ãƒ•ã‚¡ã‚¤ãƒ«ã€å°åˆ·ã‚³ãƒãƒ³ãƒ‰ã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1916
 msgid "New Printer..."
-msgstr "¿·¤·¤¤¥×¥ê¥ó¥¿..."
+msgstr "æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿..."
 
 #: src/gutenprintui2/panel.c:1917
 msgid ""
 "Define a new logical printer. This can be used to name a collection of "
 "settings that you wish to remember for future use."
 msgstr ""
-"¿·µ¬¤ËÏÀÍı¥×¥ê¥ó¥¿¤òÄêµÁ¤·¤Ş¤¹¡£¤³¤ì¤Ï¼¡²ó»ÈÍÑ¤¹¤ë¤¿¤á¤Ë³Ğ¤¨¤Æ¤ª¤­¤¿¤¤ÀßÄêÌ¾"
-"¤Ë»ÈÍÑ¤µ¤ì¤Ş¤¹¡£"
+"æ–°è¦ã«è«–ç†ãƒ—ãƒªãƒ³ã‚¿ã‚’å®šç¾©ã—ã¾ã™ã€‚ã“ã‚Œã¯æ¬¡å›ä½¿ç”¨ã™ã‚‹ãŸã‚ã«è¦šãˆã¦ãŠããŸã„è¨­å®šå"
+"ã«ä½¿ç”¨ã•ã‚Œã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:1960
 #, fuzzy
 msgid "Image Size"
-msgstr "²èÁü¤Î¥µ¥¤¥º"
+msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #: src/gutenprintui2/panel.c:1985
 msgid "Scaling:"
-msgstr "³ÈÂç½Ì¾®:"
+msgstr "æ‹¡å¤§ç¸®å°:"
 
 #: src/gutenprintui2/panel.c:1989
 msgid "Set the scale (size) of the image"
-msgstr "²èÁü¥µ¥¤¥º¤Î³ÈÂç½Ì¾®¤ò¹Ô¤¤¤Ş¤¹¡£"
+msgstr "ç”»åƒã‚µã‚¤ã‚ºã®æ‹¡å¤§ç¸®å°ã‚’è¡Œã„ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2011
 msgid "Scale by:"
@@ -6678,16 +6678,16 @@ msgid ""
 "Select whether scaling is measured as percent of available page size or "
 "number of output dots per inch"
 msgstr ""
-"³ÈÂç½Ì¾®¤ÎÃ±°Ì¤È¤·¤Æ¡¢ÍÑ»æ¥µ¥¤¥º¤ËÂĞ¤¹¤ëÉ´Ê¬Î¨ (ÈæÎ¨) ¤«¡¢¥É¥Ã¥È¿ô/¥¤¥ó¥Á¤òÁª"
-"Âò¤·¤Ş¤¹¡£"
+"æ‹¡å¤§ç¸®å°ã®å˜ä½ã¨ã—ã¦ã€ç”¨ç´™ã‚µã‚¤ã‚ºã«å¯¾ã™ã‚‹ç™¾åˆ†ç‡ (æ¯”ç‡) ã‹ã€ãƒ‰ãƒƒãƒˆæ•°/ã‚¤ãƒ³ãƒã‚’é¸"
+"æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2019
 msgid "Percent"
-msgstr "ÈæÎ¨"
+msgstr "æ¯”ç‡"
 
 #: src/gutenprintui2/panel.c:2024
 msgid "Scale the print to the size of the page"
-msgstr "ÍÑ»æ¥µ¥¤¥º¤ò 100 ¤È¤·¤¿¾ì¹ç¤ÎÈæÎ¨¤Ç¤¹¡£"
+msgstr "ç”¨ç´™ã‚µã‚¤ã‚ºã‚’ 100 ã¨ã—ãŸå ´åˆã®æ¯”ç‡ã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2028
 msgid "PPI"
@@ -6695,43 +6695,43 @@ msgstr "PPI"
 
 #: src/gutenprintui2/panel.c:2033
 msgid "Scale the print to the number of dots per inch"
-msgstr "²èÁü¤Î¥É¥Ã¥È¿ô/¥¤¥ó¥Á¤Ç¤¹¡£"
+msgstr "ç”»åƒã®ãƒ‰ãƒƒãƒˆæ•°/ã‚¤ãƒ³ãƒã§ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2051
 msgid "Set the width of the print"
-msgstr "°õºş»ş¤ÎÉı¤ò¥»¥Ã¥È¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®å¹…ã‚’ã‚»ãƒƒãƒˆã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2053
 msgid "Set the height of the print"
-msgstr "°õºş»ş¤Î¹â¤µ¤ò¥»¥Ã¥È¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®é«˜ã•ã‚’ã‚»ãƒƒãƒˆã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2059
 msgid ""
 "Use Original\n"
 "Image Size"
 msgstr ""
-"¥ª¥ê¥¸¥Ê¥ë¤Î\n"
-"¥µ¥¤¥º¤ÎÍøÍÑ"
+"ã‚ªãƒªã‚¸ãƒŠãƒ«ã®\n"
+"ã‚µã‚¤ã‚ºã®åˆ©ç”¨"
 
 #: src/gutenprintui2/panel.c:2065
 msgid "Set the print size to the size of the image"
-msgstr "²èÁü¤Î¥ª¥ê¥¸¥Ê¥ë¡¦¥µ¥¤¥º¤ò°õºş¥µ¥¤¥º¤Ë¤·¤Ş¤¹¡£"
+msgstr "ç”»åƒã®ã‚ªãƒªã‚¸ãƒŠãƒ«ãƒ»ã‚µã‚¤ã‚ºã‚’å°åˆ·ã‚µã‚¤ã‚ºã«ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2089
 msgid "Print Color Adjust"
-msgstr "°õºş¥«¥é¡¼Ä´À°"
+msgstr "å°åˆ·ã‚«ãƒ©ãƒ¼èª¿æ•´"
 
 #: src/gutenprintui2/panel.c:2092
 msgid "Set Defaults"
-msgstr "½é´üÃÍ¤ËÌá¤¹"
+msgstr "åˆæœŸå€¤ã«æˆ»ã™"
 
 #: src/gutenprintui2/panel.c:2094
 msgid "Close"
-msgstr "ÊÄ¤¸¤ë"
+msgstr "é–‰ã˜ã‚‹"
 
 #: src/gutenprintui2/panel.c:2123
 msgid "Image preview"
-msgstr "²èÁü¤Î¥×¥ì¥Ó¥å¡¼"
+msgstr "ç”»åƒã®ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼"
 
 #: src/gutenprintui2/panel.c:2137
 msgid "View Output Channels:"
@@ -6740,30 +6740,30 @@ msgstr ""
 #: src/gutenprintui2/panel.c:2228
 #, fuzzy
 msgid "Output"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/gutenprintui2/panel.c:2256
 msgid "Output Type:"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/gutenprintui2/panel.c:2260
 msgid "Select the desired output type"
-msgstr "½ĞÎÏ¤¹¤ë·ÁÂÖ¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "å‡ºåŠ›ã™ã‚‹å½¢æ…‹ã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2281
 msgid "Adjust Output..."
-msgstr "½ĞÎÏ¤ÎÄ´À°..."
+msgstr "å‡ºåŠ›ã®èª¿æ•´..."
 
 #: src/gutenprintui2/panel.c:2290
 msgid ""
 "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr ""
-"¥«¥é¡¼¥Ğ¥é¥ó¥¹¡¢ÌÀ¤ë¤µ¡¢¥³¥ó¥È¥é¥¹¥È¡¢ºÌÅÙ¤È¥Ç¥£¥¶¥ê¥ó¥°Êı¼°¤òÄ´À°¤·¤Ş¤¹¡£"
+"ã‚«ãƒ©ãƒ¼ãƒãƒ©ãƒ³ã‚¹ã€æ˜ã‚‹ã•ã€ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆã€å½©åº¦ã¨ãƒ‡ã‚£ã‚¶ãƒªãƒ³ã‚°æ–¹å¼ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/panel.c:2309
 #, fuzzy
 msgid "Size Units:"
-msgstr "Ã±°Ì:"
+msgstr "å˜ä½:"
 
 #: src/gutenprintui2/panel.c:2312
 #, fuzzy
@@ -6772,11 +6772,11 @@ msgstr "> "
 
 #: src/gutenprintui2/panel.c:2336
 msgid "Units:"
-msgstr "Ã±°Ì:"
+msgstr "å˜ä½:"
 
 #: src/gutenprintui2/panel.c:2341
 msgid "Select the base unit of measurement for printing"
-msgstr "°õºş»ş¤Î´ğËÜÃ±°Ì¤òÁªÂò¤·¤Ş¤¹¡£"
+msgstr "å°åˆ·æ™‚ã®åŸºæœ¬å˜ä½ã‚’é¸æŠã—ã¾ã™ã€‚"
 
 #: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
 msgid "System V lp"
@@ -6809,47 +6809,47 @@ msgstr ""
 #: src/gutenprintui2/plist.c:1016
 #, fuzzy
 msgid "Printer"
-msgstr "°õºş"
+msgstr "å°åˆ·"
 
 #: src/gutenprintui2/plist.c:1203
 #, fuzzy
 msgid "(Default Printer)"
-msgstr "¥×¥ê¥ó¥¿¤ÎÁªÂò"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®é¸æŠ"
 
 #: src/cups/genppd.c:145
 #, fuzzy
 msgid "Printer Features"
-msgstr "¥×¥ê¥ó¥¿¤ÎÀßÄê"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®è¨­å®š"
 
 #: src/cups/genppd.c:146
 #, fuzzy
 msgid "Output Control"
-msgstr "½ĞÎÏ¤Î¼ïÎà:"
+msgstr "å‡ºåŠ›ã®ç¨®é¡:"
 
 #: src/cups/genppd.c:151
 #, fuzzy
 msgid "Common"
-msgstr "¥³¥Ş¥ó¥É:"
+msgstr "ã‚³ãƒãƒ³ãƒ‰:"
 
 #: src/cups/genppd.c:152
 #, fuzzy
 msgid "Extra 1"
-msgstr "¥È¥ì¥¤£±"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼‘"
 
 #: src/cups/genppd.c:153
 #, fuzzy
 msgid "Extra 2"
-msgstr "¥È¥ì¥¤£²"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼’"
 
 #: src/cups/genppd.c:154
 #, fuzzy
 msgid "Extra 3"
-msgstr "¥È¥ì¥¤£³"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼“"
 
 #: src/cups/genppd.c:155
 #, fuzzy
 msgid "Extra 4"
-msgstr "¥È¥ì¥¤£´"
+msgstr "ãƒˆãƒ¬ã‚¤ï¼”"
 
 #: src/cups/genppd.c:156
 msgid "Extra 5"
@@ -6865,7 +6865,7 @@ msgstr "Japanese"
 #. TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:1054
 msgid "ISOLatin1"
-msgstr "ISO ¥é¥Æ¥ó£±"
+msgstr "ISO ãƒ©ãƒ†ãƒ³ï¼‘"
 
 #: src/cups/genppd.c:1622
 msgid "2-Sided Printing"
@@ -6905,7 +6905,7 @@ msgstr ""
 
 #: src/escputil/escputil.c:70
 msgid "Escputil version "
-msgstr "Escputil ¥Ğ¡¼¥¸¥ç¥ó "
+msgstr "Escputil ãƒãƒ¼ã‚¸ãƒ§ãƒ³ "
 
 #: src/escputil/escputil.c:76
 #, fuzzy
@@ -6928,18 +6928,18 @@ msgid ""
 msgstr ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"¤³¤Î¥×¥í¥°¥é¥à¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¹; ¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢ºâÃÄ¤¬È¯¹Ô¤¹¤ë\n"
-"GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ÎÂèÆóÈÇ¤Ş¤¿¤Ï¤½¤ì°Ê¹ß¤ÎÈÇ¤Î²¼¤Ç²şÊÑ¡¦½¤Àµ¡¦ºÆÇÛÉÛ¤¬\n"
-"Ç§¤á¤é¤ì¤Æ¤¤¤Ş¤¹¡£\n"
+"ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã§ã™; ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢è²¡å›£ãŒç™ºè¡Œã™ã‚‹\n"
+"GNU å…¬æœ‰ä½¿ç”¨è¨±è«¾å¥‘ç´„æ›¸ã®ç¬¬äºŒç‰ˆã¾ãŸã¯ãã‚Œä»¥é™ã®ç‰ˆã®ä¸‹ã§æ”¹å¤‰ãƒ»ä¿®æ­£ãƒ»å†é…å¸ƒãŒ\n"
+"èªã‚ã‚‰ã‚Œã¦ã„ã¾ã™ã€‚\n"
 "\n"
-"¤³¤Î¥×¥í¥°¥é¥à¤ÏÊØÍø¤Ë»È¤Ã¤Æ¤â¤é¤¨¤ë¤è¤¦¤ËÇÛÉÛ¤µ¤ì¤Æ¤¤¤Ş¤¹¤¬¡¢\n"
-"´°Á´¤ËÌµÊİ¾Ú¤Ç¤¹; ¾¦ÍÑÍøÍÑ¤Ş¤¿¤Ï¤¢¤ëÆÃÄê¤ÎÌÜÅª¤Ë¤ª¤±¤ëÅ¬¹çÀ­¤ÎÊİ¾Ú¤â\n"
-"¤¢¤ê¤Ş¤»¤ó¡£¾ÜºÙ¤Ï GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ò¤´Í÷²¼¤µ¤¤¡£\n"
+"ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ä¾¿åˆ©ã«ä½¿ã£ã¦ã‚‚ã‚‰ãˆã‚‹ã‚ˆã†ã«é…å¸ƒã•ã‚Œã¦ã„ã¾ã™ãŒã€\n"
+"å®Œå…¨ã«ç„¡ä¿è¨¼ã§ã™; å•†ç”¨åˆ©ç”¨ã¾ãŸã¯ã‚ã‚‹ç‰¹å®šã®ç›®çš„ã«ãŠã‘ã‚‹é©åˆæ€§ã®ä¿è¨¼ã‚‚\n"
+"ã‚ã‚Šã¾ã›ã‚“ã€‚è©³ç´°ã¯ GNU å…¬æœ‰ä½¿ç”¨è¨±è«¾å¥‘ç´„æ›¸ã‚’ã”è¦§ä¸‹ã•ã„ã€‚\n"
 "\n"
-"µ®Êı¤Ï¡¢¤³¤Î¥×¥í¥°¥é¥à¤ËÅ¬±ş¤·¤¿ GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤Î¥³¥Ô¡¼¤ò\n"
-"¼õ¤±¼è¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹; ¤â¤·¼õ¤±¼è¤Ã¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢\n"
+"è²´æ–¹ã¯ã€ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã«é©å¿œã—ãŸ GNU å…¬æœ‰ä½¿ç”¨è¨±è«¾å¥‘ç´„æ›¸ã®ã‚³ãƒ”ãƒ¼ã‚’\n"
+"å—ã‘å–ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™; ã‚‚ã—å—ã‘å–ã£ã¦ã„ãªã„å ´åˆã¯ã€\n"
 "Free Software Foundation, Inc., 56 Temple Place - \n"
-"Suite 330, Boston, MA 02111-1307, USA ¤Ş¤ÇÏ¢Íí¤·¤Æ²¼¤µ¤¤¡£\n"
+"Suite 330, Boston, MA 02111-1307, USA ã¾ã§é€£çµ¡ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:119
 #, fuzzy
@@ -6987,48 +6987,48 @@ msgid ""
 "    -C|--choices       Specify the number of pattern choices for alignment\n"
 "    -p|--patterns      Specify the number of sets of patterns for alignment\n"
 msgstr ""
-"ÍÑË¡: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                [-P ¥×¥ê¥ó¥¿ | -r ¥Ç¥Ğ¥¤¥¹Ì¾] [-u] [-q] [-m ·¿¼°]\n"
-"EPSON Stylus (R) ¥×¥ê¥ó¥¿¤Î´ÉÍı¤ò¹Ô¤¦¥Ä¡¼¥ë¤Ç¤¹¡£\n"
-"ÍÑÎã: escputil --clean-head --printer stpex-on-third-floor\n"
+"ç”¨æ³•: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                [-P ãƒ—ãƒªãƒ³ã‚¿ | -r ãƒ‡ãƒã‚¤ã‚¹å] [-u] [-q] [-m å‹å¼]\n"
+"EPSON Stylus (R) ãƒ—ãƒªãƒ³ã‚¿ã®ç®¡ç†ã‚’è¡Œã†ãƒ„ãƒ¼ãƒ«ã§ã™ã€‚\n"
+"ç”¨ä¾‹: escputil --clean-head --printer stpex-on-third-floor\n"
 "          escputil --ink-level --new --raw-device /dev/lp0\n"
 "\n"
-"  ¥³¥Ş¥ó¥É:\n"
-"    -c|--clean-head    ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶Áİ¤¹¤ë¡£\n"
-"    -n|--nozzle-check  ¥Î¥º¥ë¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºş¤¹¤ë¡£\n"
-"                       ¥Î¥º¥ë¤¬±ø¤«¤Ã¤¿¤ê¡¢µÍ¤Ş¤Ã¤Æ¤¤¤ë¤È¥Ñ¥¿¡¼¥ó¤Ë¹Â¤¬É½¼¨¤µ"
-"¤ì¤Ş¤¹¡£\n"
-"                       ¹Â¤¬°õºş¤µ¤ì¤¿¤é¡¢¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶Áİ¤·¤Æ²¼¤µ¤¤¡£\n"
-"    -a|--align-head    ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¡£\n"
-"                      ¡Ú·Ù¹ğ¡Û: ¤³¤Î¥³¥Ş¥ó¥É¤òÍğÍÑ¤¹¤ë¤È¡¢\n"
-"                       °õºş¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê"
-"¤ê¤Ş¤¹¡£\n"
-"    -o|--align-color   ¥«¥é¡¼°õºş¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë (Stylus Color 480 ¤È "
-"580 ¤Î¤ß)¡£\n"
-"                      ¡Ú·Ù¹ğ¡Û: ¤³¤Î¥³¥Ş¥ó¥É¤òÍğÍÑ¤¹¤ë¤È¡¢\n"
-"                       °õºş¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê"
-"¤ê¤Ş¤¹¡£\n"
-"    -s|--status        ¥×¥ê¥ó¥¿¤Î¾õÂÖ¤ò¼èÆÀ¤¹¤ë¡£\n"
-"    -i|--ink-level     ¥¤¥ó¥¯¤Î¥ì¥Ù¥ë¤ò¥×¥ê¥ó¥¿¤«¤é¼èÆÀ¤¹¤ë¡£\n"
-"                       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤Ø¤Î\n"
-"                       ¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç¤¹¡£\n"
-"    -d|--identify      ¥×¥ê¥ó¥¿¾ğÊó (·¿¼°¤Ê¤É) ¤òÌä¤¤¹ç¤ï¤»¤ë¡£\n"
-"                       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤Ø¤Î\n"
-"                       ¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç¤¹¡£\n"
-"    -l|--license       ¤³¤Î¥×¥í¥°¥é¥à¤Î¥é¥¤¥»¥ó¥¹/Ãí°Õ½ñ¤­¤òÉ½¼¨¤¹¤ë¡£\n"
-"    -M|--list-models   ÍøÍÑ²ÄÇ½¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ìÍ÷É½¼¨¤¹¤ë¡£\n"
-"    -h|--help          ¤³¤Î¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤¹¤ë¡£\n"
-"  ¥ª¥×¥·¥ç¥ó:\n"
-"    -P|--printer-name  ¥×¥ê¥ó¥¿¤òÁàºî¤¹¤ë¤¿¤á¤Ë¡¢¥×¥ê¥ó¥¿¡¦¥­¥å¡¼¤ÎÌ¾Á°¤ò»ØÄê"
-"¤¹¤ë¡£\n"
-"                       ½é´üÃÍ¤Ï¡¢¥Ç¥Õ¥©¥ë¥È¤Î¥·¥¹¥Æ¥à¡¦¥×¥ê¥ó¥¿Ì¾¤Ç¤¹¡£\n"
-"    -r|--raw-device    ¥×¥ê¥ó¥¿¡¦¥­¥å¡¼·ĞÍ³¤Ç¤Ï¤Ê¤¯¡¢Ä¾ÀÜ½ñ¤­¹ş¤à¥Ç¥Ğ¥¤¥¹Ì¾¤ò"
-"»ØÄê¤¹¤ë¡£\n"
-"    -u|--new           ¿·¤·¤¤¥×¥ê¥ó¥¿¤Î¾ì¹ç¤Ë»ØÄê¤¹¤ë (Stylus Color 740 ¤Ş¤¿"
-"¤Ï¤½¤ì°Ê¹ß)¡£\n"
-"    -q|--quiet         ¥Ğ¥Ê¡¼¤òÉ½¼¨¤·¤Ê¤¤¡£\n"
-"    -m|--model         ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¤¿¤á¤Ë¡¢Àµ³Î¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò»ØÄê"
-"¤¹¤ë¡£\n"
+"  ã‚³ãƒãƒ³ãƒ‰:\n"
+"    -c|--clean-head    ãƒ—ãƒªãƒ³ã‚¿ã®ãƒ˜ãƒƒãƒ‰ã‚’æ¸…æƒã™ã‚‹ã€‚\n"
+"    -n|--nozzle-check  ãƒã‚ºãƒ«ã®ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å°åˆ·ã™ã‚‹ã€‚\n"
+"                       ãƒã‚ºãƒ«ãŒæ±šã‹ã£ãŸã‚Šã€è©°ã¾ã£ã¦ã„ã‚‹ã¨ãƒ‘ã‚¿ãƒ¼ãƒ³ã«æºãŒè¡¨ç¤ºã•"
+"ã‚Œã¾ã™ã€‚\n"
+"                       æºãŒå°åˆ·ã•ã‚ŒãŸã‚‰ã€ãƒ—ãƒªãƒ³ã‚¿ã®ãƒ˜ãƒƒãƒ‰ã‚’æ¸…æƒã—ã¦ä¸‹ã•ã„ã€‚\n"
+"    -a|--align-head    ãƒ—ãƒªãƒ³ã‚¿ã®ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã‚‹ã€‚\n"
+"                      ã€è­¦å‘Šã€‘: ã“ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ä¹±ç”¨ã™ã‚‹ã¨ã€\n"
+"                       å°åˆ·ã®å“è³ªãŒä½ä¸‹ã™ã‚‹ã‹ã€ã‚ã‚‹ã„ã¯ãƒ—ãƒªãƒ³ã‚¿æ•…éšœã®åŸå› ã«ãª"
+"ã‚Šã¾ã™ã€‚\n"
+"    -o|--align-color   ã‚«ãƒ©ãƒ¼å°åˆ·ã®ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã‚‹ (Stylus Color 480 ã¨ "
+"580 ã®ã¿)ã€‚\n"
+"                      ã€è­¦å‘Šã€‘: ã“ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ä¹±ç”¨ã™ã‚‹ã¨ã€\n"
+"                       å°åˆ·ã®å“è³ªãŒä½ä¸‹ã™ã‚‹ã‹ã€ã‚ã‚‹ã„ã¯ãƒ—ãƒªãƒ³ã‚¿æ•…éšœã®åŸå› ã«ãª"
+"ã‚Šã¾ã™ã€‚\n"
+"    -s|--status        ãƒ—ãƒªãƒ³ã‚¿ã®çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹ã€‚\n"
+"    -i|--ink-level     ã‚¤ãƒ³ã‚¯ã®ãƒ¬ãƒ™ãƒ«ã‚’ãƒ—ãƒªãƒ³ã‚¿ã‹ã‚‰å–å¾—ã™ã‚‹ã€‚\n"
+"                       ã“ã‚Œã¯ãƒ—ãƒªãƒ³ã‚¿ã®ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã¸ã®\n"
+"                       ã‚¢ã‚¯ã‚»ã‚¹æ¨© (èª­ã¿æ›¸ã) ãŒå¿…è¦ã§ã™ã€‚\n"
+"    -d|--identify      ãƒ—ãƒªãƒ³ã‚¿æƒ…å ± (å‹å¼ãªã©) ã‚’å•ã„åˆã‚ã›ã‚‹ã€‚\n"
+"                       ã“ã‚Œã¯ãƒ—ãƒªãƒ³ã‚¿ã®ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã¸ã®\n"
+"                       ã‚¢ã‚¯ã‚»ã‚¹æ¨© (èª­ã¿æ›¸ã) ãŒå¿…è¦ã§ã™ã€‚\n"
+"    -l|--license       ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ãƒ©ã‚¤ã‚»ãƒ³ã‚¹/æ³¨æ„æ›¸ãã‚’è¡¨ç¤ºã™ã‚‹ã€‚\n"
+"    -M|--list-models   åˆ©ç”¨å¯èƒ½ãªãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’ä¸€è¦§è¡¨ç¤ºã™ã‚‹ã€‚\n"
+"    -h|--help          ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹ã€‚\n"
+"  ã‚ªãƒ—ã‚·ãƒ§ãƒ³:\n"
+"    -P|--printer-name  ãƒ—ãƒªãƒ³ã‚¿ã‚’æ“ä½œã™ã‚‹ãŸã‚ã«ã€ãƒ—ãƒªãƒ³ã‚¿ãƒ»ã‚­ãƒ¥ãƒ¼ã®åå‰ã‚’æŒ‡å®š"
+"ã™ã‚‹ã€‚\n"
+"                       åˆæœŸå€¤ã¯ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚·ã‚¹ãƒ†ãƒ ãƒ»ãƒ—ãƒªãƒ³ã‚¿åã§ã™ã€‚\n"
+"    -r|--raw-device    ãƒ—ãƒªãƒ³ã‚¿ãƒ»ã‚­ãƒ¥ãƒ¼çµŒç”±ã§ã¯ãªãã€ç›´æ¥æ›¸ãè¾¼ã‚€ãƒ‡ãƒã‚¤ã‚¹åã‚’"
+"æŒ‡å®šã™ã‚‹ã€‚\n"
+"    -u|--new           æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å ´åˆã«æŒ‡å®šã™ã‚‹ (Stylus Color 740 ã¾ãŸ"
+"ã¯ãã‚Œä»¥é™)ã€‚\n"
+"    -q|--quiet         ãƒãƒŠãƒ¼ã‚’è¡¨ç¤ºã—ãªã„ã€‚\n"
+"    -m|--model         ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã‚‹ãŸã‚ã«ã€æ­£ç¢ºãªãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’æŒ‡å®š"
+"ã™ã‚‹ã€‚\n"
 
 #: src/escputil/escputil.c:161
 #, fuzzy
@@ -7074,51 +7074,51 @@ msgid ""
 "    -C Specify the number of pattern choices for alignment\n"
 "    -p Specify the number of sets of patterns for alignment\n"
 msgstr ""
-"ÍÑË¡: escputil [¥ª¥×¥·¥ç¥ó] [¥³¥Ş¥ó¥É]\n"
-"ÍÑË¡: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
-"                [-P ¥×¥ê¥ó¥¿ | -r ¥Ç¥Ğ¥¤¥¹Ì¾] [-u] [-q] [-m ·¿¼°]\n"
-"EPSON Stylus (R) ¥×¥ê¥ó¥¿¤Î´ÉÍı¤ò¹Ô¤¦¥Ä¡¼¥ë¤Ç¤¹¡£\n"
-"ÍÑÎã: escputil -c -P stpex-on-third-floor\n"
+"ç”¨æ³•: escputil [ã‚ªãƒ—ã‚·ãƒ§ãƒ³] [ã‚³ãƒãƒ³ãƒ‰]\n"
+"ç”¨æ³•: escputil [-c | -n | -a | -i | -o | -s | -d | -l | -M]\n"
+"                [-P ãƒ—ãƒªãƒ³ã‚¿ | -r ãƒ‡ãƒã‚¤ã‚¹å] [-u] [-q] [-m å‹å¼]\n"
+"EPSON Stylus (R) ãƒ—ãƒªãƒ³ã‚¿ã®ç®¡ç†ã‚’è¡Œã†ãƒ„ãƒ¼ãƒ«ã§ã™ã€‚\n"
+"ç”¨ä¾‹: escputil -c -P stpex-on-third-floor\n"
 "          escputil -i -u -r /dev/lp0\n"
 "\n"
-"  ¥³¥Ş¥ó¥É:\n"
-"    -c ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶Áİ¤¹¤ë¡£\n"
-"    -n ¥Î¥º¥ë¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºş¤¹¤ë¡£\n"
-"       ¥Î¥º¥ë¤¬±ø¤«¤Ã¤¿¤ê¡¢µÍ¤Ş¤Ã¤Æ¤¤¤ë¤È¥Ñ¥¿¡¼¥ó¤Ë¹Â¤¬É½¼¨¤µ¤ì¤Ş¤¹¡£\n"
-"       ¹Â¤¬°õºş¤µ¤ì¤¿¤é¡¢¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤òÀ¶Áİ¤·¤Æ²¼¤µ¤¤¡£\n"
-"    -a ¥×¥ê¥ó¥¿¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¡£\n"
-"       ¡Ú·Ù¹ğ¡Û: ¤³¤Î¥³¥Ş¥ó¥É¤òÍğÍÑ¤¹¤ë¤È¡¢\n"
-"       °õºş¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê¤ê¤Ş¤¹\n"
-"    -o ¥«¥é¡¼°õºş¤Î¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë (Stylus Color 480 ¤È 580 ¤Î¤ß)¡£\n"
-"       ¡Ú·Ù¹ğ¡Û: ¤³¤Î¥³¥Ş¥ó¥É¤òÍğÍÑ¤¹¤ë¤È¡¢\n"
-"        °õºş¤ÎÉÊ¼Á¤¬Äã²¼¤¹¤ë¤«¡¢¤¢¤ë¤¤¤Ï¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê¤ê¤Ş¤¹¡£\n"
-"    -s ¥×¥ê¥ó¥¿¤Î¾õÂÖ¤ò¼èÆÀ¤¹¤ë¡£\n"
-"    -i ¥¤¥ó¥¯¤Î¥ì¥Ù¥ë¤ò¥×¥ê¥ó¥¿¤«¤é¼èÆÀ¤¹¤ë¡£\n"
-"       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤Ø¤Î¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç"
-"¤¹¡£\n"
-"    -d ¥×¥ê¥ó¥¿¾ğÊó (·¿¼°¤Ê¤É) ¤òÌä¤¤¹ç¤ï¤»¤ë¡£\n"
-"       ¤³¤ì¤Ï¥×¥ê¥ó¥¿¤ÎÄã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤Ø¤Î\n"
-"       ¥¢¥¯¥»¥¹¸¢ (ÆÉ¤ß½ñ¤­) ¤¬É¬Í×¤Ç¤¹¡£\n"
-"    -l ¤³¤Î¥×¥í¥°¥é¥à¤Î¥é¥¤¥»¥ó¥¹/Ãí°Õ½ñ¤­¤òÉ½¼¨¤¹¤ë¡£\n"
-"    -M ÍøÍÑ²ÄÇ½¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ìÍ÷É½¼¨¤¹¤ë¡£\n"
-"    -h ¤³¤Î¥á¥Ã¥»¡¼¥¸¤òÉ½¼¨¤¹¤ë¡£\n"
-"  ¥ª¥×¥·¥ç¥ó:\n"
-"    -P ¥×¥ê¥ó¥¿¤òÁàºî¤¹¤ë¤¿¤á¤Ë¡¢¥×¥ê¥ó¥¿¡¦¥­¥å¡¼¤ÎÌ¾Á°¤ò»ØÄê¤¹¤ë¡£\n"
-"       ½é´üÃÍ¤Ï¡¢¥Ç¥Õ¥©¥ë¥È¤Î¥·¥¹¥Æ¥à¡¦¥×¥ê¥ó¥¿Ì¾¤Ç¤¹¡£\n"
-"    -r ¥×¥ê¥ó¥¿¡¦¥­¥å¡¼·ĞÍ³¤Ç¤Ï¤Ê¤¯¡¢Ä¾ÀÜ½ñ¤­¹ş¤à¥Ç¥Ğ¥¤¥¹Ì¾¤ò»ØÄê¤¹¤ë¡£\n"
-"    -u ¿·¤·¤¤¥×¥ê¥ó¥¿¤Î¾ì¹ç¤Ë»ØÄê¤¹¤ë (Stylus Color 740 ¤Ş¤¿¤Ï¤½¤ì°Ê¹ß)¡£\n"
-"    -q ¥Ğ¥Ê¡¼¤òÉ½¼¨¤·¤Ê¤¤¡£\n"
-"    -m ¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤ë¤¿¤á¤Ë¡¢Àµ³Î¤Ê¥×¥ê¥ó¥¿¤Î·¿¼°¤ò»ØÄê¤¹¤ë¡£\n"
+"  ã‚³ãƒãƒ³ãƒ‰:\n"
+"    -c ãƒ—ãƒªãƒ³ã‚¿ã®ãƒ˜ãƒƒãƒ‰ã‚’æ¸…æƒã™ã‚‹ã€‚\n"
+"    -n ãƒã‚ºãƒ«ã®ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å°åˆ·ã™ã‚‹ã€‚\n"
+"       ãƒã‚ºãƒ«ãŒæ±šã‹ã£ãŸã‚Šã€è©°ã¾ã£ã¦ã„ã‚‹ã¨ãƒ‘ã‚¿ãƒ¼ãƒ³ã«æºãŒè¡¨ç¤ºã•ã‚Œã¾ã™ã€‚\n"
+"       æºãŒå°åˆ·ã•ã‚ŒãŸã‚‰ã€ãƒ—ãƒªãƒ³ã‚¿ã®ãƒ˜ãƒƒãƒ‰ã‚’æ¸…æƒã—ã¦ä¸‹ã•ã„ã€‚\n"
+"    -a ãƒ—ãƒªãƒ³ã‚¿ã®ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã‚‹ã€‚\n"
+"       ã€è­¦å‘Šã€‘: ã“ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ä¹±ç”¨ã™ã‚‹ã¨ã€\n"
+"       å°åˆ·ã®å“è³ªãŒä½ä¸‹ã™ã‚‹ã‹ã€ã‚ã‚‹ã„ã¯ãƒ—ãƒªãƒ³ã‚¿æ•…éšœã®åŸå› ã«ãªã‚Šã¾ã™\n"
+"    -o ã‚«ãƒ©ãƒ¼å°åˆ·ã®ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã‚‹ (Stylus Color 480 ã¨ 580 ã®ã¿)ã€‚\n"
+"       ã€è­¦å‘Šã€‘: ã“ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ä¹±ç”¨ã™ã‚‹ã¨ã€\n"
+"        å°åˆ·ã®å“è³ªãŒä½ä¸‹ã™ã‚‹ã‹ã€ã‚ã‚‹ã„ã¯ãƒ—ãƒªãƒ³ã‚¿æ•…éšœã®åŸå› ã«ãªã‚Šã¾ã™ã€‚\n"
+"    -s ãƒ—ãƒªãƒ³ã‚¿ã®çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹ã€‚\n"
+"    -i ã‚¤ãƒ³ã‚¯ã®ãƒ¬ãƒ™ãƒ«ã‚’ãƒ—ãƒªãƒ³ã‚¿ã‹ã‚‰å–å¾—ã™ã‚‹ã€‚\n"
+"       ã“ã‚Œã¯ãƒ—ãƒªãƒ³ã‚¿ã®ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹æ¨© (èª­ã¿æ›¸ã) ãŒå¿…è¦ã§"
+"ã™ã€‚\n"
+"    -d ãƒ—ãƒªãƒ³ã‚¿æƒ…å ± (å‹å¼ãªã©) ã‚’å•ã„åˆã‚ã›ã‚‹ã€‚\n"
+"       ã“ã‚Œã¯ãƒ—ãƒªãƒ³ã‚¿ã®ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã¸ã®\n"
+"       ã‚¢ã‚¯ã‚»ã‚¹æ¨© (èª­ã¿æ›¸ã) ãŒå¿…è¦ã§ã™ã€‚\n"
+"    -l ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ãƒ©ã‚¤ã‚»ãƒ³ã‚¹/æ³¨æ„æ›¸ãã‚’è¡¨ç¤ºã™ã‚‹ã€‚\n"
+"    -M åˆ©ç”¨å¯èƒ½ãªãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’ä¸€è¦§è¡¨ç¤ºã™ã‚‹ã€‚\n"
+"    -h ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºã™ã‚‹ã€‚\n"
+"  ã‚ªãƒ—ã‚·ãƒ§ãƒ³:\n"
+"    -P ãƒ—ãƒªãƒ³ã‚¿ã‚’æ“ä½œã™ã‚‹ãŸã‚ã«ã€ãƒ—ãƒªãƒ³ã‚¿ãƒ»ã‚­ãƒ¥ãƒ¼ã®åå‰ã‚’æŒ‡å®šã™ã‚‹ã€‚\n"
+"       åˆæœŸå€¤ã¯ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ã‚·ã‚¹ãƒ†ãƒ ãƒ»ãƒ—ãƒªãƒ³ã‚¿åã§ã™ã€‚\n"
+"    -r ãƒ—ãƒªãƒ³ã‚¿ãƒ»ã‚­ãƒ¥ãƒ¼çµŒç”±ã§ã¯ãªãã€ç›´æ¥æ›¸ãè¾¼ã‚€ãƒ‡ãƒã‚¤ã‚¹åã‚’æŒ‡å®šã™ã‚‹ã€‚\n"
+"    -u æ–°ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å ´åˆã«æŒ‡å®šã™ã‚‹ (Stylus Color 740 ã¾ãŸã¯ãã‚Œä»¥é™)ã€‚\n"
+"    -q ãƒãƒŠãƒ¼ã‚’è¡¨ç¤ºã—ãªã„ã€‚\n"
+"    -m ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã‚‹ãŸã‚ã«ã€æ­£ç¢ºãªãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’æŒ‡å®šã™ã‚‹ã€‚\n"
 
 #: src/escputil/escputil.c:329 src/escputil/escputil.c:337
 #, c-format
 msgid "You may only specify one printer or raw device."
-msgstr "¥×¥ê¥ó¥¿¤Ş¤¿¤ÏÄã¥ì¥Ù¥ë¤Î¥Ç¥Ğ¥¤¥¹¤ò°ì¤Ä»ØÄê¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã¾ãŸã¯ä½ãƒ¬ãƒ™ãƒ«ã®ãƒ‡ãƒã‚¤ã‚¹ã‚’ä¸€ã¤æŒ‡å®šã™ã‚‹ã“ã¨ãŒå¯èƒ½ã§ã™ã€‚"
 
 #: src/escputil/escputil.c:345
 #, c-format
 msgid "You may only specify one printer model."
-msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ì¤Ä»ØÄê¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’ä¸€ã¤æŒ‡å®šã™ã‚‹ã“ã¨ãŒå¯èƒ½ã§ã™ã€‚"
 
 #: src/escputil/escputil.c:369
 #, c-format
@@ -7133,7 +7133,7 @@ msgstr ""
 #: src/escputil/escputil.c:381
 #, c-format
 msgid "Unknown option %c\n"
-msgstr "ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó %c\n"
+msgstr "ä¸æ˜ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ %c\n"
 
 #: src/escputil/escputil.c:389
 #, c-format
@@ -7153,17 +7153,17 @@ msgstr ""
 #: src/escputil/escputil.c:459
 #, c-format
 msgid "Cannot open device %s: %s\n"
-msgstr "¥Ç¥Ğ¥¤¥¹ %s ¤ò³«¤±¤Ş¤»¤ó: %s\n"
+msgstr "ãƒ‡ãƒã‚¤ã‚¹ %s ã‚’é–‹ã‘ã¾ã›ã‚“: %s\n"
 
 #: src/escputil/escputil.c:482
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/escputil/escputil.c:498 src/escputil/escputil.c:508
 #, c-format
 msgid "Unable to send command to printer\n"
-msgstr "¥×¥ê¥ó¥¿¤Ë¥³¥Ş¥ó¥É¤òÁ÷¿®¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã«ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡ã§ãã¾ã›ã‚“\n"
 
 #: src/escputil/escputil.c:568
 #, c-format
@@ -7173,22 +7173,22 @@ msgstr ""
 #: src/escputil/escputil.c:573
 #, c-format
 msgid "Cannot read from %s: %s\n"
-msgstr "%s ¤«¤éÆÉ¤ß¹ş¤á¤Ş¤»¤ó: %s\n"
+msgstr "%s ã‹ã‚‰èª­ã¿è¾¼ã‚ã¾ã›ã‚“: %s\n"
 
 #: src/escputil/escputil.c:747
 #, fuzzy, c-format
 msgid "Please specify a raw device\n"
-msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤Ë¥×¥ê¥ó¥¿¤Î¾õÂÖ¤¬É¬Í×¤Ç¤¹¡£\n"
+msgstr "ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã‚’åˆ©ç”¨ã™ã‚‹ãŸã‚ã«ãƒ—ãƒªãƒ³ã‚¿ã®çŠ¶æ…‹ãŒå¿…è¦ã§ã™ã€‚\n"
 
 #: src/escputil/escputil.c:754
 #, c-format
 msgid "Cannot open %s read/write: %s\n"
-msgstr "%s ¤òÆÉ¤ß½ñ¤­¥â¡¼¥É¤Ç³«¤±¤Ş¤»¤ó: %s\n"
+msgstr "%s ã‚’èª­ã¿æ›¸ããƒ¢ãƒ¼ãƒ‰ã§é–‹ã‘ã¾ã›ã‚“: %s\n"
 
 #: src/escputil/escputil.c:797 src/escputil/escputil.c:1418
 #, c-format
 msgid "Cannot write to %s: %s\n"
-msgstr "%s ¤Ë½ñ¤­¹ş¤á¤Ş¤»¤ó; %s\n"
+msgstr "%s ã«æ›¸ãè¾¼ã‚ã¾ã›ã‚“; %s\n"
 
 #: src/escputil/escputil.c:843 src/escputil/escputil.c:1383
 #: src/escputil/escputil.c:1511
@@ -7198,7 +7198,7 @@ msgid ""
 "Cannot write to %s: %s\n"
 msgstr ""
 "\n"
-"%s ¤Ë½ñ¤­¹ş¤á¤Ş¤»¤ó: %s\n"
+"%s ã«æ›¸ãè¾¼ã‚ã¾ã›ã‚“: %s\n"
 
 #: src/escputil/escputil.c:885
 #, c-format
@@ -7208,8 +7208,8 @@ msgid ""
 "Please use -m to specify your printer model.\n"
 msgstr ""
 "\n"
-"¥×¥ê¥ó¥¿¤Î·¿¼°¤ò¸¡½Ğ¤Ç¤­¤Ş¤»¤ó¤Ç¤·¤¿¡£\n"
-"¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤òÆÃÄê¤¹¤ë¤¿¤á¤Ë '-m' ¥ª¥×¥·¥ç¥ó¤ò»ÈÍÑ¤·¤Æ²¼¤µ¤¤¡£\n"
+"ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’æ¤œå‡ºã§ãã¾ã›ã‚“ã§ã—ãŸã€‚\n"
+"ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ã‚’ç‰¹å®šã™ã‚‹ãŸã‚ã« '-m' ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’ä½¿ç”¨ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:983 src/escputil/escputil.c:989
 #: src/escputil/escputil.c:990 src/escputil/escputil.c:1006
@@ -7239,7 +7239,7 @@ msgstr ""
 #: src/escputil/escputil.c:1036
 #, fuzzy, c-format
 msgid "Status: Waiting\n"
-msgstr "ºÌÅÙ:"
+msgstr "å½©åº¦:"
 
 #: src/escputil/escputil.c:1039
 #, c-format
@@ -7294,12 +7294,12 @@ msgstr ""
 #: src/escputil/escputil.c:1077
 #, fuzzy, c-format
 msgid "Error: Ink out\n"
-msgstr "ÆşÎÏ¥¨¥é¡¼\n"
+msgstr "å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n"
 
 #: src/escputil/escputil.c:1080
 #, fuzzy, c-format
 msgid "Error: Paper out\n"
-msgstr "ÆşÎÏ¥¨¥é¡¼\n"
+msgstr "å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n"
 
 #: src/escputil/escputil.c:1083
 #, c-format
@@ -7355,13 +7355,13 @@ msgstr ""
 #: src/escputil/escputil.c:1602 src/escputil/escputil.c:1626
 #: src/escputil/escputil.c:1646
 msgid "Ink color"
-msgstr "¥¤¥ó¥¯¤Î¿§"
+msgstr "ã‚¤ãƒ³ã‚¯ã®è‰²"
 
 #: src/escputil/escputil.c:1216 src/escputil/escputil.c:1246
 #: src/escputil/escputil.c:1602 src/escputil/escputil.c:1626
 #: src/escputil/escputil.c:1646
 msgid "Percent remaining"
-msgstr "»Ä¤ê¤Î³ä¹ç"
+msgstr "æ®‹ã‚Šã®å‰²åˆ"
 
 #: src/escputil/escputil.c:1291 src/escputil/escputil.c:1294
 #: src/escputil/escputil.c:1297 src/escputil/escputil.c:1300
@@ -7391,12 +7391,12 @@ msgstr ""
 #: src/escputil/escputil.c:1355
 #, fuzzy, c-format
 msgid "Obtaining %s requires using a raw device.\n"
-msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤ËÉ¬Í×¤Ê¥¤¥ó¥¯¡¦¥ì¥Ù¥ë¤ò¼èÆÀ¤·¤Ş¤¹¡£\n"
+msgstr "ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã‚’åˆ©ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦ãªã‚¤ãƒ³ã‚¯ãƒ»ãƒ¬ãƒ™ãƒ«ã‚’å–å¾—ã—ã¾ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1461
 #, fuzzy, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤ËÉ¬Í×¤Ê¥¤¥ó¥¯¡¦¥ì¥Ù¥ë¤ò¼èÆÀ¤·¤Ş¤¹¡£\n"
+msgstr "ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã‚’åˆ©ç”¨ã™ã‚‹ãŸã‚ã«å¿…è¦ãªã‚¤ãƒ³ã‚¯ãƒ»ãƒ¬ãƒ™ãƒ«ã‚’å–å¾—ã—ã¾ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1602 src/escputil/escputil.c:1626
 #: src/escputil/escputil.c:1646
@@ -7411,24 +7411,24 @@ msgstr ""
 #: src/escputil/escputil.c:1675
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
-msgstr "Äã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤òÍøÍÑ¤¹¤ë¤¿¤á¤Ë¥×¥ê¥ó¥¿¼±ÊÌ»Ò¤¬É¬Í×¤Ç¤¹¡£\n"
+msgstr "ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã‚’åˆ©ç”¨ã™ã‚‹ãŸã‚ã«ãƒ—ãƒªãƒ³ã‚¿è­˜åˆ¥å­ãŒå¿…è¦ã§ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1693
 #, fuzzy, c-format
 msgid "Cannot identify printer model.\n"
-msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤ò°ì¤Ä»ØÄê¤¹¤ë¤³¤È¤¬²ÄÇ½¤Ç¤¹¡£"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’ä¸€ã¤æŒ‡å®šã™ã‚‹ã“ã¨ãŒå¯èƒ½ã§ã™ã€‚"
 
 #: src/escputil/escputil.c:1713
 #, c-format
 msgid "Cleaning heads...\n"
-msgstr "¥Ø¥Ã¥É¤ÎÀ¶ÁİÃæ...\n"
+msgstr "ãƒ˜ãƒƒãƒ‰ã®æ¸…æƒä¸­...\n"
 
 #: src/escputil/escputil.c:1728
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
 msgstr ""
-"¥Î¥º¥ë¤ò¥Á¥§¥Ã¥¯¤·¤Ş¤¹¡£¥×¥ê¥ó¥¿¤ÎÃæ¤ËÍÑ»æ¤¬³Î¼Â¤ËÂ¸ºß¤·¤Æ¤¤¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ"
-"²¼¤µ¤¤¡£\n"
+"ãƒã‚ºãƒ«ã‚’ãƒã‚§ãƒƒã‚¯ã—ã¾ã™ã€‚ãƒ—ãƒªãƒ³ã‚¿ã®ä¸­ã«ç”¨ç´™ãŒç¢ºå®Ÿã«å­˜åœ¨ã—ã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèªã—ã¦"
+"ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:1732
 #, c-format
@@ -7468,43 +7468,43 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"¤´ÍøÍÑÁ°¤Ë¼¡¤ÎÀâÌÀ¤òÃí°Õ¿¼¤¯¤ªÆÉ¤ß²¼¤µ¤¤¡£\n"
+"ã”åˆ©ç”¨å‰ã«æ¬¡ã®èª¬æ˜ã‚’æ³¨æ„æ·±ããŠèª­ã¿ä¸‹ã•ã„ã€‚\n"
 "\n"
-"¤³¤Î¥Ä¡¼¥ë¤Ï EPSON À½¤Î Stylus ¥¤¥ó¥¯¥¸¥§¥Ã¥È¼°¥×¥ê¥ó¥¿¤Î\n"
-"°õºş¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤Æ¤¯¤ì¤Ş¤¹¡£¤³¤Î¥Ä¡¼¥ë¤ò»È¤¤¤¹¤®¤ë¤È¡¢\n"
-"°õºş¤ÎÉÊ¼Á¤òÄã²¼¤µ¤»¥×¥ê¥ó¥¿¤Î¸Î¾ã¤Î¸¶°ø¤ò°ú¤­µ¯¤³¤¹²ÄÇ½À­¤¬¤¢¤ê¤Ş¤¹¡£\n"
-"¤³¤Î¥Ä¡¼¥ë¤Ï SEIKO EPSON ¼Ò¤Ç¥Æ¥¹¥È¤·¤¿¤ï¤±¤Ç¤Ï¤Ê¤¤¤Î¤Ç¡¢Á´¤¯ÌµÊİ¾Ú¤Ç¤¹¡£\n"
-"¤³¤Î¥Ä¡¼¥ë¤Î¤´»ÈÍÑ¤Ë¤Ï¤´¼«¿È¤ÎÀÕÇ¤²¼¤Ç¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ EPSON è£½ã® Stylus ã‚¤ãƒ³ã‚¯ã‚¸ã‚§ãƒƒãƒˆå¼ãƒ—ãƒªãƒ³ã‚¿ã®\n"
+"å°åˆ·ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã¦ãã‚Œã¾ã™ã€‚ã“ã®ãƒ„ãƒ¼ãƒ«ã‚’ä½¿ã„ã™ãã‚‹ã¨ã€\n"
+"å°åˆ·ã®å“è³ªã‚’ä½ä¸‹ã•ã›ãƒ—ãƒªãƒ³ã‚¿ã®æ•…éšœã®åŸå› ã‚’å¼•ãèµ·ã“ã™å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ SEIKO EPSON ç¤¾ã§ãƒ†ã‚¹ãƒˆã—ãŸã‚ã‘ã§ã¯ãªã„ã®ã§ã€å…¨ãç„¡ä¿è¨¼ã§ã™ã€‚\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã®ã”ä½¿ç”¨ã«ã¯ã”è‡ªèº«ã®è²¬ä»»ä¸‹ã§è¡Œã£ã¦ä¸‹ã•ã„ã€‚\n"
 "\n"
-"¤³¤Î¥Ä¡¼¥ë¤Ï %d ¸Ä¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºş¤·¤Ş¤¹¡£³Æ¥Ñ¥¿¡¼¥ó¤Ï¤È¤Æ¤â\n"
-"¥·¥ó¥×¥ë¤Ç¤¹¡£¤³¤Î¥Ä¡¼¥ë¤Ï¿âÄ¾¥é¥¤¥ó¤ò½Å¤Í¤Ê¤¬¤é°õºş¤·¤¿\n"
-"¥Ú¥¢¤«¤é¹½À®¤µ¤ì¤ë¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò°õºş¤·¤Ş¤¹¡£\n"
-"³Æ¥Ú¥¢¡¦¥é¥¤¥ó¤Î²¼¤Ë¤Ï %d ¤È %d ¤Î´Ö¤ò¼¨¤¹ \"¥Ú¥¢ÈÖ¹æ\" ¤¬¤¢¤ê¤Ş¤¹¡£\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ %d å€‹ã®ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å°åˆ·ã—ã¾ã™ã€‚å„ãƒ‘ã‚¿ãƒ¼ãƒ³ã¯ã¨ã¦ã‚‚\n"
+"ã‚·ãƒ³ãƒ—ãƒ«ã§ã™ã€‚ã“ã®ãƒ„ãƒ¼ãƒ«ã¯å‚ç›´ãƒ©ã‚¤ãƒ³ã‚’é‡ã­ãªãŒã‚‰å°åˆ·ã—ãŸ\n"
+"ãƒšã‚¢ã‹ã‚‰æ§‹æˆã•ã‚Œã‚‹ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å°åˆ·ã—ã¾ã™ã€‚\n"
+"å„ãƒšã‚¢ãƒ»ãƒ©ã‚¤ãƒ³ã®ä¸‹ã«ã¯ %d ã¨ %d ã®é–“ã‚’ç¤ºã™ \"ãƒšã‚¢ç•ªå·\" ãŒã‚ã‚Šã¾ã™ã€‚\n"
 "\n"
-"ÆóËÜ¤Î¥é¥¤¥ó¤ò´Ñ»¡¤¹¤ë¾ì¹ç¤Ï¡¢¤½¤Î¥é¥¤¥ó¤Î¥Ú¥¢¤¬Åù¤·¤¤´Ö³Ö¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤ò\n"
-"³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£¤Ä¤Ş¤ê¡¢°ìËÜ¤Î¥é¥¤¥ó¤¬ºÇÅ¬¤Ê·Á¾õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ²¼¤µ"
-"¤¤¡£\n"
-"¤½¤·¤Æ¡¢¤½¤ì¤È¥Ú¥¢¤Ë¤Ê¤ë¥é¥¤¥ó¤¬Ê¿¹Õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤òÃí°Õ¿¼¤¯³ÎÇ§¤·¤Æ²¼¤µ"
-"¤¤¡£\n"
-"Ãî¥á¥¬¥Í¤ä³ÈÂç¶À¤ò»È¤Ã¤ÆºÙ¤«¤¤ÉôÊ¬¤Î³ÎÇ§¤ò¤ª¾©¤á¤·¤Ş¤¹¡£\n"
+"äºŒæœ¬ã®ãƒ©ã‚¤ãƒ³ã‚’è¦³å¯Ÿã™ã‚‹å ´åˆã¯ã€ãã®ãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ãŒç­‰ã—ã„é–“éš”ã«ãªã£ã¦ã„ã‚‹ã‹ã‚’\n"
+"ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚ã¤ã¾ã‚Šã€ä¸€æœ¬ã®ãƒ©ã‚¤ãƒ³ãŒæœ€é©ãªå½¢çŠ¶ã«ãªã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã¦ä¸‹ã•"
+"ã„ã€‚\n"
+"ãã—ã¦ã€ãã‚Œã¨ãƒšã‚¢ã«ãªã‚‹ãƒ©ã‚¤ãƒ³ãŒå¹³è¡¡ã«ãªã£ã¦ã„ã‚‹ã‹ã‚’æ³¨æ„æ·±ãç¢ºèªã—ã¦ä¸‹ã•"
+"ã„ã€‚\n"
+"è™«ãƒ¡ã‚¬ãƒã‚„æ‹¡å¤§é¡ã‚’ä½¿ã£ã¦ç´°ã‹ã„éƒ¨åˆ†ã®ç¢ºèªã‚’ãŠå¥¨ã‚ã—ã¾ã™ã€‚\n"
 "\n"
-"¤Ş¤¿¥Æ¥¹¥ÈÍÑ¤Ë¹âÉÊ¼Á¤ÊÍÑ»æ¤ò¤ª»È¤¤¤¹¤ë¤³¤È¤â¤ª¾©¤á¤·¤Ş¤¹¡£¹âÉÊ¼Á¤ÊÍÑ»æ¤ò\n"
-"ÍøÍÑ¤¹¤ë¤È¡¢Ê£¿ô¤Î¥é¥¤¥ó¤¬¤­¤Ã¤Á¤ê¤È°õºş¤µ¤ì¤Æ¤Ë¤¸¤ß¤¬¤Ê¤¯¤Ê¤ê¤Ş¤¹¡£\n"
-"ºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤ÎÈÖ¹æ¤ò¹µ¤¨¤¿¸å¤Ç¡¢¤½¤ÎÍÑ»æ¤òµë»æ¥È¥ì¥¤¤ËÌá¤·¤Æ²¼¤µ¤¤¡£\n"
+"ã¾ãŸãƒ†ã‚¹ãƒˆç”¨ã«é«˜å“è³ªãªç”¨ç´™ã‚’ãŠä½¿ã„ã™ã‚‹ã“ã¨ã‚‚ãŠå¥¨ã‚ã—ã¾ã™ã€‚é«˜å“è³ªãªç”¨ç´™ã‚’\n"
+"åˆ©ç”¨ã™ã‚‹ã¨ã€è¤‡æ•°ã®ãƒ©ã‚¤ãƒ³ãŒãã£ã¡ã‚Šã¨å°åˆ·ã•ã‚Œã¦ã«ã˜ã¿ãŒãªããªã‚Šã¾ã™ã€‚\n"
+"æœ€é©ãªãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ã®ç•ªå·ã‚’æ§ãˆãŸå¾Œã§ã€ãã®ç”¨ç´™ã‚’çµ¦ç´™ãƒˆãƒ¬ã‚¤ã«æˆ»ã—ã¦ä¸‹ã•ã„ã€‚\n"
 "\n"
-"³Æ¥Ñ¥¿¡¼¥ó¤Ï»÷ÄÌ¤Ã¤Æ¤¤¤Ş¤¹¤¬¡¢¼ê»æ¤Î¥Ñ¥¿¡¼¥ó¤Ï¤è¤êÈùºÙ¤ÊÇÛÃÖ¤ò¹Ô¤¦¤¿¤á¤Ë\n"
-"ºÙ¤«¤¤¥É¥Ã¥È¤òÍøÍÑ¤·¤Æ¤¤¤Ş¤¹¡£\n"
-"Àµ¤·¤¤ÊÂ¤Ó¤¬°õºş¤µ¤ì¤ë¤è¤¦¡¢Á´¤Æ¤Î¥é¥¤¥ó¤ò¥Æ¥¹¥È¤·¤Æ²¼¤µ¤¤¡£\n"
-"Á´¤Æ¤Î¥é¥¤¥ó¤ò°õºş¤¹¤ë¤È¡¢¥é¥¤¥ó¡¦¥Ñ¥¿¡¼¥ó¤ò¤â¤¦°ìÅÙ°õºş¤·¤Ş¤¹¡£\n"
-"Ãæ´Ö¤Ë¤¢¤ë¥é¥¤¥ó¤Î¥Ú¥¢ (#%d / %d ÈÖÌÜ) ¤¬Á´¤Æ¤Î´Ö³Ö¤ËÂĞ¤·¤Æ\n"
-"ºÇÅ¬¤Ç¤¢¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
+"å„ãƒ‘ã‚¿ãƒ¼ãƒ³ã¯ä¼¼é€šã£ã¦ã„ã¾ã™ãŒã€æ‰‹ç´™ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã¯ã‚ˆã‚Šå¾®ç´°ãªé…ç½®ã‚’è¡Œã†ãŸã‚ã«\n"
+"ç´°ã‹ã„ãƒ‰ãƒƒãƒˆã‚’åˆ©ç”¨ã—ã¦ã„ã¾ã™ã€‚\n"
+"æ­£ã—ã„ä¸¦ã³ãŒå°åˆ·ã•ã‚Œã‚‹ã‚ˆã†ã€å…¨ã¦ã®ãƒ©ã‚¤ãƒ³ã‚’ãƒ†ã‚¹ãƒˆã—ã¦ä¸‹ã•ã„ã€‚\n"
+"å…¨ã¦ã®ãƒ©ã‚¤ãƒ³ã‚’å°åˆ·ã™ã‚‹ã¨ã€ãƒ©ã‚¤ãƒ³ãƒ»ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ã‚‚ã†ä¸€åº¦å°åˆ·ã—ã¾ã™ã€‚\n"
+"ä¸­é–“ã«ã‚ã‚‹ãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ (#%d / %d ç•ªç›®) ãŒå…¨ã¦ã®é–“éš”ã«å¯¾ã—ã¦\n"
+"æœ€é©ã§ã‚ã‚‹ã“ã¨ã‚’ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚\n"
 "\n"
-"¥Ñ¥¿¡¼¥ó¤Î°õºş¤¬´°Î»¤·¤¿¤é¡¢¤½¤Î¥×¥ê¥ó¥¿ÍÑ¤Ë¤½¤ÎÀßÄê¤òÊİÂ¸ (s) ¤¹¤ë¤«¡¢\n"
-"¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤òºÆ¤Ó¼Â¹Ô¤¹¤ë (r) ¤«¡¢ÊİÂ¸¤·¤Ê¤¤¤Ç½ªÎ» (q) ¤¹¤ë¤«\n"
-"ÁªÂò¤·¤Æ²¼¤µ¤¤¡£½ªÎ»¤·¤Æ¤â°ÊÁ°¤ÎÀßÄê¤ËÌá¤ê¤Ş¤»¤ó¤¬¡¢\n"
-"¥×¥ê¥ó¥¿¤ÎÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¸Â¤êÌá¤¹¤³¤È¤Ï²ÄÇ½¤Ç¤¹¡£½ªÎ»¤·¤¿¾ì¹ç¤Ë¡¢\n"
-"¤¢¤È¤Ç¤½¤ÎÀßÄê¤òÊİÂ¸¤·¤¿¤¤¾ì¹ç¤Ï¡¢¤â¤¦°ìÅÙÆ±¤¸¼ê½ç¤ò¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
-"¤³¤Îºî¶È¤ò¹Ô¤Ã¤Æ¤¤¤ëºÇÃæ¤ËÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£\n"
+"ãƒ‘ã‚¿ãƒ¼ãƒ³ã®å°åˆ·ãŒå®Œäº†ã—ãŸã‚‰ã€ãã®ãƒ—ãƒªãƒ³ã‚¿ç”¨ã«ãã®è¨­å®šã‚’ä¿å­˜ (s) ã™ã‚‹ã‹ã€\n"
+"ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å†ã³å®Ÿè¡Œã™ã‚‹ (r) ã‹ã€ä¿å­˜ã—ãªã„ã§çµ‚äº† (q) ã™ã‚‹ã‹\n"
+"é¸æŠã—ã¦ä¸‹ã•ã„ã€‚çµ‚äº†ã—ã¦ã‚‚ä»¥å‰ã®è¨­å®šã«æˆ»ã‚Šã¾ã›ã‚“ãŒã€\n"
+"ãƒ—ãƒªãƒ³ã‚¿ã®é›»æºã‚’ OFF ã«ã—ãªã„é™ã‚Šæˆ»ã™ã“ã¨ã¯å¯èƒ½ã§ã™ã€‚çµ‚äº†ã—ãŸå ´åˆã«ã€\n"
+"ã‚ã¨ã§ãã®è¨­å®šã‚’ä¿å­˜ã—ãŸã„å ´åˆã¯ã€ã‚‚ã†ä¸€åº¦åŒã˜æ‰‹é †ã‚’è¡Œã£ã¦ä¸‹ã•ã„ã€‚\n"
+"ã“ã®ä½œæ¥­ã‚’è¡Œã£ã¦ã„ã‚‹æœ€ä¸­ã«é›»æºã‚’ OFF ã«ã—ãªã„ã§ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:1767
 #, c-format
@@ -7541,41 +7541,41 @@ msgid ""
 "this procedure.\n"
 "\n"
 msgstr ""
-"¤´ÍøÍÑÁ°¤Ë¼¡¤ÎÀâÌÀ¤òÃí°Õ¿¼¤¯¤ªÆÉ¤ß²¼¤µ¤¤¡£\n"
+"ã”åˆ©ç”¨å‰ã«æ¬¡ã®èª¬æ˜ã‚’æ³¨æ„æ·±ããŠèª­ã¿ä¸‹ã•ã„ã€‚\n"
 "\n"
-"¤³¤Î¥Ä¡¼¥ë¤Ï EPSON À½¤Î Stylus ¥¤¥ó¥¯¥¸¥§¥Ã¥È¼°¥×¥ê¥ó¥¿¤Î\n"
-"°õºş¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤Æ¤¯¤ì¤Ş¤¹¡£¤³¤Î¥Ä¡¼¥ë¤ò»È¤¤¤¹¤®¤ë¤È¡¢\n"
-"°õºş¤ÎÉÊ¼Á¤òÄã²¼¤µ¤»¥×¥ê¥ó¥¿¤Î¸Î¾ã¤Î¸¶°ø¤ò°ú¤­µ¯¤³¤¹²ÄÇ½À­¤¬¤¢¤ê¤Ş¤¹¡£\n"
-"¤³¤Î¥Ä¡¼¥ë¤Ï SEIKO EPSON ¼Ò¤Ç¥Æ¥¹¥È¤·¤¿¤ï¤±¤Ç¤Ï¤Ê¤¤¤Î¤Ç¡¢Á´¤¯ÌµÊİ¾Ú¤Ç¤¹¡£\n"
-"¤³¤Î¥Ä¡¼¥ë¤Î¤´»ÈÍÑ¤Ë¤Ï¤´¼«¿È¤ÎÀÕÇ¤²¼¤Ç¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ EPSON è£½ã® Stylus ã‚¤ãƒ³ã‚¯ã‚¸ã‚§ãƒƒãƒˆå¼ãƒ—ãƒªãƒ³ã‚¿ã®\n"
+"å°åˆ·ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã¦ãã‚Œã¾ã™ã€‚ã“ã®ãƒ„ãƒ¼ãƒ«ã‚’ä½¿ã„ã™ãã‚‹ã¨ã€\n"
+"å°åˆ·ã®å“è³ªã‚’ä½ä¸‹ã•ã›ãƒ—ãƒªãƒ³ã‚¿ã®æ•…éšœã®åŸå› ã‚’å¼•ãèµ·ã“ã™å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ SEIKO EPSON ç¤¾ã§ãƒ†ã‚¹ãƒˆã—ãŸã‚ã‘ã§ã¯ãªã„ã®ã§ã€å…¨ãç„¡ä¿è¨¼ã§ã™ã€‚\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã®ã”ä½¿ç”¨ã«ã¯ã”è‡ªèº«ã®è²¬ä»»ä¸‹ã§è¡Œã£ã¦ä¸‹ã•ã„ã€‚\n"
 "\n"
-"¤³¤Î¥Ä¡¼¥ë¤Ï¿âÄ¾¥é¥¤¥ó¤ò½Å¤Í¤Ê¤¬¤é°õºş¤·¤¿¥Ú¥¢¤«¤é¹½À®¤µ¤ì¤ë¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó"
-"¤ò\n"
-"°õºş¤·¤Ş¤¹¡£³Æ¥Ú¥¢¡¦¥é¥¤¥ó¤Î²¼¤Ë¤Ï %d ¤È %d ¤Î´Ö¤ò¼¨¤¹ \"¥Ú¥¢ÈÖ¹æ\" ¤¬¤¢¤ê¤Ş"
-"¤¹¡£\n"
+"ã“ã®ãƒ„ãƒ¼ãƒ«ã¯å‚ç›´ãƒ©ã‚¤ãƒ³ã‚’é‡ã­ãªãŒã‚‰å°åˆ·ã—ãŸãƒšã‚¢ã‹ã‚‰æ§‹æˆã•ã‚Œã‚‹ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³"
+"ã‚’\n"
+"å°åˆ·ã—ã¾ã™ã€‚å„ãƒšã‚¢ãƒ»ãƒ©ã‚¤ãƒ³ã®ä¸‹ã«ã¯ %d ã¨ %d ã®é–“ã‚’ç¤ºã™ \"ãƒšã‚¢ç•ªå·\" ãŒã‚ã‚Šã¾"
+"ã™ã€‚\n"
 "\n"
-"ÆóËÜ¤Î¥é¥¤¥ó¤ò´Ñ»¡¤¹¤ë¾ì¹ç¤Ï¡¢¤½¤Î¥é¥¤¥ó¤Î¥Ú¥¢¤¬Åù¤·¤¤´Ö³Ö¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤ò\n"
-"³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£¤Ä¤Ş¤ê¡¢°ìËÜ¤Î¥é¥¤¥ó¤¬ºÇÅ¬¤Ê·Á¾õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ²¼¤µ"
-"¤¤¡£\n"
-"¤½¤·¤Æ¡¢¤½¤ì¤È¥Ú¥¢¤Ë¤Ê¤ë¥é¥¤¥ó¤¬Ê¿¹Õ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«¤òÃí°Õ¿¼¤¯³ÎÇ§¤·¤Æ²¼¤µ"
-"¤¤¡£\n"
-"Ãî¥á¥¬¥Í¤ä³ÈÂç¶À¤ò»È¤Ã¤ÆºÙ¤«¤¤ÉôÊ¬¤Î³ÎÇ§¤ò¤ª¾©¤á¤·¤Ş¤¹¡£\n"
+"äºŒæœ¬ã®ãƒ©ã‚¤ãƒ³ã‚’è¦³å¯Ÿã™ã‚‹å ´åˆã¯ã€ãã®ãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ãŒç­‰ã—ã„é–“éš”ã«ãªã£ã¦ã„ã‚‹ã‹ã‚’\n"
+"ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚ã¤ã¾ã‚Šã€ä¸€æœ¬ã®ãƒ©ã‚¤ãƒ³ãŒæœ€é©ãªå½¢çŠ¶ã«ãªã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã¦ä¸‹ã•"
+"ã„ã€‚\n"
+"ãã—ã¦ã€ãã‚Œã¨ãƒšã‚¢ã«ãªã‚‹ãƒ©ã‚¤ãƒ³ãŒå¹³è¡¡ã«ãªã£ã¦ã„ã‚‹ã‹ã‚’æ³¨æ„æ·±ãç¢ºèªã—ã¦ä¸‹ã•"
+"ã„ã€‚\n"
+"è™«ãƒ¡ã‚¬ãƒã‚„æ‹¡å¤§é¡ã‚’ä½¿ã£ã¦ç´°ã‹ã„éƒ¨åˆ†ã®ç¢ºèªã‚’ãŠå¥¨ã‚ã—ã¾ã™ã€‚\n"
 "\n"
-"Á´¤Æ¤Î¥é¥¤¥ó¤ò°õºş¤·¤¿¤é¡¢¥é¥¤¥ó¡¦¥Ñ¥¿¡¼¥ó¤ò¤â¤¦°ìÅÙ°õºş¤·¤Ş¤¹¡£\n"
-"Ãæ´Ö¤Ë¤¢¤ë¥é¥¤¥ó¤Î¥Ú¥¢ (#%d / %d ÈÖÌÜ) ¤¬Á´¤Æ¤Î´Ö³Ö¤ËÂĞ¤·¤Æ\n"
-"ºÇÅ¬¤Ç¤¢¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
-"¤½¤ì¤«¤é¡¢¤½¤Î¥×¥ê¥ó¥¿ÍÑ¤Ë¤½¤ÎÀßÄê¤òÊİÂ¸ (s) ¤¹¤ë¤«¡¢\n"
-"¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤òºÆ¤Ó¼Â¹Ô¤¹¤ë (r) ¤«¡¢ÊİÂ¸¤·¤Ê¤¤¤Ç½ªÎ» (q) ¤¹¤ë¤«\n"
-"ÁªÂò¤·¤Æ²¼¤µ¤¤¡£½ªÎ»¤·¤Æ¤â°ÊÁ°¤ÎÀßÄê¤ËÌá¤ê¤Ş¤»¤ó¤¬¡¢\n"
-"¥×¥ê¥ó¥¿¤ÎÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¸Â¤êÌá¤¹¤³¤È¤Ï²ÄÇ½¤Ç¤¹¡£\n"
-"½ªÎ»¤·¤¿¾ì¹ç¤Ë¡¢¤¢¤È¤Ç¤½¤ÎÀßÄê¤òÊİÂ¸¤·¤¿¤¤¾ì¹ç¤Ï¡¢¤â¤¦°ìÅÙÆ±¤¸¼ê½ç¤ò¹Ô¤Ã¤Æ²¼"
-"¤µ¤¤¡£\n"
-"¤³¤Îºî¶È¤ò¹Ô¤Ã¤Æ¤¤¤ëºÇÃæ¤ËÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£\n"
+"å…¨ã¦ã®ãƒ©ã‚¤ãƒ³ã‚’å°åˆ·ã—ãŸã‚‰ã€ãƒ©ã‚¤ãƒ³ãƒ»ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ã‚‚ã†ä¸€åº¦å°åˆ·ã—ã¾ã™ã€‚\n"
+"ä¸­é–“ã«ã‚ã‚‹ãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ (#%d / %d ç•ªç›®) ãŒå…¨ã¦ã®é–“éš”ã«å¯¾ã—ã¦\n"
+"æœ€é©ã§ã‚ã‚‹ã“ã¨ã‚’ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚\n"
+"ãã‚Œã‹ã‚‰ã€ãã®ãƒ—ãƒªãƒ³ã‚¿ç”¨ã«ãã®è¨­å®šã‚’ä¿å­˜ (s) ã™ã‚‹ã‹ã€\n"
+"ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å†ã³å®Ÿè¡Œã™ã‚‹ (r) ã‹ã€ä¿å­˜ã—ãªã„ã§çµ‚äº† (q) ã™ã‚‹ã‹\n"
+"é¸æŠã—ã¦ä¸‹ã•ã„ã€‚çµ‚äº†ã—ã¦ã‚‚ä»¥å‰ã®è¨­å®šã«æˆ»ã‚Šã¾ã›ã‚“ãŒã€\n"
+"ãƒ—ãƒªãƒ³ã‚¿ã®é›»æºã‚’ OFF ã«ã—ãªã„é™ã‚Šæˆ»ã™ã“ã¨ã¯å¯èƒ½ã§ã™ã€‚\n"
+"çµ‚äº†ã—ãŸå ´åˆã«ã€ã‚ã¨ã§ãã®è¨­å®šã‚’ä¿å­˜ã—ãŸã„å ´åˆã¯ã€ã‚‚ã†ä¸€åº¦åŒã˜æ‰‹é †ã‚’è¡Œã£ã¦ä¸‹"
+"ã•ã„ã€‚\n"
+"ã“ã®ä½œæ¥­ã‚’è¡Œã£ã¦ã„ã‚‹æœ€ä¸­ã«é›»æºã‚’ OFF ã«ã—ãªã„ã§ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:1811
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr "¥×¥ê¥ó¥¿¤Ë¥³¥Ş¥ó¥É¤òÁ÷¿®¤Ç¤­¤Ş¤»¤ó¡£½ªÎ»¤·¤Ş¤¹¡£\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã«ã‚³ãƒãƒ³ãƒ‰ã‚’é€ä¿¡ã§ãã¾ã›ã‚“ã€‚çµ‚äº†ã—ã¾ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1825 src/escputil/escputil.c:1990
 #, c-format
@@ -7593,13 +7593,13 @@ msgid ""
 "You will then be asked to confirm your choice.\n"
 "What do you want to do (s, q, r)?\n"
 msgstr ""
-"ºÇ½ª½ĞÎÏ¤Ç¥×¥ê¥ó¥¿¤¬Àµ¤·¤¤´Ö³Ö¤Ç°õºş¤·¤Æ¤¤¤ë¤«¤òÃí°Õ¿¼¤¯³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
-"³ÎÇ§¸å¡¢¼¡¤ÎÃæ¤«¤éÁªÂò¤·¤Æ²¼¤µ¤¤:\n"
-"  (s) ¥×¥ê¥ó¥¿¤ÎÃæ¤Ë¤³¤ÎÀßÄê¤òÊİÂ¸¤¹¤ë\n"
-"  (q) ¤³¤ÎÀßÄê¤òÊİÂ¸¤·¤Ê¤¤¤Ç½ªÎ»¤¹¤ë\n"
-"  (r) ºÇ½é¤ËÌá¤Ã¤ÆºÆ¤ÓÀßÄê¤¹¤ë\n"
-"ÁªÂò¸å¤ËºÇ¸å¤Î³ÎÇ§¤¬¤¢¤ê¤Ş¤¹¡£\n"
-"ÁªÂò¤·¤Æ²¼¤µ¤¤ (s, q, r)¡£\n"
+"æœ€çµ‚å‡ºåŠ›ã§ãƒ—ãƒªãƒ³ã‚¿ãŒæ­£ã—ã„é–“éš”ã§å°åˆ·ã—ã¦ã„ã‚‹ã‹ã‚’æ³¨æ„æ·±ãç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚\n"
+"ç¢ºèªå¾Œã€æ¬¡ã®ä¸­ã‹ã‚‰é¸æŠã—ã¦ä¸‹ã•ã„:\n"
+"  (s) ãƒ—ãƒªãƒ³ã‚¿ã®ä¸­ã«ã“ã®è¨­å®šã‚’ä¿å­˜ã™ã‚‹\n"
+"  (q) ã“ã®è¨­å®šã‚’ä¿å­˜ã—ãªã„ã§çµ‚äº†ã™ã‚‹\n"
+"  (r) æœ€åˆã«æˆ»ã£ã¦å†ã³è¨­å®šã™ã‚‹\n"
+"é¸æŠå¾Œã«æœ€å¾Œã®ç¢ºèªãŒã‚ã‚Šã¾ã™ã€‚\n"
+"é¸æŠã—ã¦ä¸‹ã•ã„ (s, q, r)ã€‚\n"
 
 #: src/escputil/escputil.c:1836 src/escputil/escputil.c:1845
 #: src/escputil/escputil.c:1860 src/escputil/escputil.c:1878
@@ -7611,7 +7611,7 @@ msgstr "> "
 #, c-format
 msgid ""
 "Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr "ËÜÅö¤ËÀßÄê¤òÇË´ş¤·¤Æ½ªÎ»¤¹¤ë¾ì¹ç¤Ï¡¢ºÆÅÙ 'q' ¤òÆşÎÏ¤·¤Æ²¼¤µ¤¤:\n"
+msgstr "æœ¬å½“ã«è¨­å®šã‚’ç ´æ£„ã—ã¦çµ‚äº†ã™ã‚‹å ´åˆã¯ã€å†åº¦ 'q' ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„:\n"
 
 #: src/escputil/escputil.c:1850
 #, c-format
@@ -7619,20 +7619,20 @@ msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
-"¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤¬ÊäÀµ¤µ¤ì¤Ş¤·¤¿¡£Ã¢¤·¤½¤Î´Ö³Ö¤Ï¤Ş¤ÀÊİÂ¸¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£\n"
-"¤½¤Î´Ö³Ö¤òÊİÂ¸¤¹¤ë¾ì¹ç¤Ï¡¢¤³¤Î¼ê½ç¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
+"ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ãŒè£œæ­£ã•ã‚Œã¾ã—ãŸã€‚ä½†ã—ãã®é–“éš”ã¯ã¾ã ä¿å­˜ã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚\n"
+"ãã®é–“éš”ã‚’ä¿å­˜ã™ã‚‹å ´åˆã¯ã€ã“ã®æ‰‹é †ã‚’ç¹°ã‚Šè¿”ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:1857
 #, c-format
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
-msgstr "ËÜÅö¤Ë´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò¤ä¤êÄ¾¤¹¾ì¹ç¤Ï¡¢ºÆÅÙ 'r' ¤òÆşÎÏ¤·¤Æ²¼¤µ¤¤:\n"
+msgstr "æœ¬å½“ã«é–“éš”è£œæ­£ã®è¨­å®šã‚’ã‚„ã‚Šç›´ã™å ´åˆã¯ã€å†åº¦ 'r' ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„:\n"
 
 #: src/escputil/escputil.c:1865
 #, c-format
 msgid "Repeating the alignment process.\n"
-msgstr "´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò·«¤êÊÖ¤·¤Ş¤¹¡£\n"
+msgstr "é–“éš”è£œæ­£ã®è¨­å®šã‚’ç¹°ã‚Šè¿”ã—ã¾ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1871
 #, c-format
@@ -7643,22 +7643,22 @@ msgid ""
 "Please confirm by typing 's' again that you wish to save the settings\n"
 "to your printer:\n"
 msgstr ""
-"¤³¤ÎÁàºî¤Ï¡¢¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤ÎÀßÄê¤òÊÑ¹¹¤¹¤ë¤³¤È¤Ë¤Ê¤ê¤Ş¤¹¡£\n"
-"¡Ú·Ù¹ğ¡Û: ¤³¤ÎÁàºî¤Ï SEIKO EPSON ¤Î¾µÇ§¤òÆÀ¤¿¤â¤Î¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó¡£\n"
-"          ¤Ş¤¿¡¢¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤ËÂ»³²¤òÍ¿¤¨¤ë¤«¤â¤·¤ì¤Ş¤»¤ó¡£\n"
-"ËÜÅö¤Ëµ¹¤·¤¤¤Ç¤¹¤«¡©\n"
-"¤³¤ÎÀßÄê¤ò¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤ËÊİÂ¸¤¹¤ë¾ì¹ç¤Ï¡¢ºÆÅÙ 's' ¤òÆşÎÏ¤·¤Æ²¼¤µ¤¤:\n"
+"ã“ã®æ“ä½œã¯ã€ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ã®è¨­å®šã‚’å¤‰æ›´ã™ã‚‹ã“ã¨ã«ãªã‚Šã¾ã™ã€‚\n"
+"ã€è­¦å‘Šã€‘: ã“ã®æ“ä½œã¯ SEIKO EPSON ã®æ‰¿èªã‚’å¾—ãŸã‚‚ã®ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚\n"
+"          ã¾ãŸã€ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ã«æå®³ã‚’ä¸ãˆã‚‹ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“ã€‚\n"
+"æœ¬å½“ã«å®œã—ã„ã§ã™ã‹ï¼Ÿ\n"
+"ã“ã®è¨­å®šã‚’ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ã«ä¿å­˜ã™ã‚‹å ´åˆã¯ã€å†åº¦ 's' ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„:\n"
 "\n"
 
 #: src/escputil/escputil.c:1883
 #, c-format
 msgid "About to save settings..."
-msgstr "ÀßÄê¤ÎÊİÂ¸¤¹¤ë¤³¤È¤Ë¤Ä¤¤¤Æ..."
+msgstr "è¨­å®šã®ä¿å­˜ã™ã‚‹ã“ã¨ã«ã¤ã„ã¦..."
 
 #: src/escputil/escputil.c:1889
 #, c-format
 msgid "failed!\n"
-msgstr "¼ºÇÔ¤Ç¤¹¡ª\n"
+msgstr "å¤±æ•—ã§ã™ï¼\n"
 
 #: src/escputil/escputil.c:1890
 #, c-format
@@ -7666,28 +7666,28 @@ msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
-"¤¢¤Ê¤¿¤ÎÀßÄê¤ÎÊİÂ¸¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£\n"
-"ºÆÅÙ¡¢´Ö³ÖÊäÀµ¤ÎÀßÄê¤ò¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
+"ã‚ãªãŸã®è¨­å®šã®ä¿å­˜ã«å¤±æ•—ã—ã¾ã—ãŸã€‚\n"
+"å†åº¦ã€é–“éš”è£œæ­£ã®è¨­å®šã‚’è¡Œã£ã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:1894
 #, c-format
 msgid "succeeded!\n"
-msgstr "´°Î»¤·¤Ş¤·¤¿¡ª\n"
+msgstr "å®Œäº†ã—ã¾ã—ãŸï¼\n"
 
 #: src/escputil/escputil.c:1895
 #, c-format
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr "´Ö³ÖÊäÀµ¤ÎÀßÄê¤¬¥×¥ê¥ó¥¿¤ËÊİÂ¸¤µ¤ì¤Ş¤·¤¿¡£\n"
+msgstr "é–“éš”è£œæ­£ã®è¨­å®šãŒãƒ—ãƒªãƒ³ã‚¿ã«ä¿å­˜ã•ã‚Œã¾ã—ãŸã€‚\n"
 
 #: src/escputil/escputil.c:1900
 #, c-format
 msgid "Unrecognized command.\n"
-msgstr "Ç§¼±¤Ç¤­¤Ê¤¤¥³¥Ş¥ó¥É¤Ç¤¹¡£\n"
+msgstr "èªè­˜ã§ããªã„ã‚³ãƒãƒ³ãƒ‰ã§ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1903
 #, c-format
 msgid "Final command was not confirmed.\n"
-msgstr "ºÇ¸å¤Î¥³¥Ş¥ó¥É¤¬³ÎÇ§¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£\n"
+msgstr "æœ€å¾Œã®ã‚³ãƒãƒ³ãƒ‰ãŒç¢ºèªã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚\n"
 
 #: src/escputil/escputil.c:1908
 #, c-format
@@ -7699,17 +7699,17 @@ msgid ""
 "Please place a sheet of paper in your printer to begin the head\n"
 "alignment procedure.\n"
 msgstr ""
-"¤³¤ÎÁàºî¤Ï¡¢¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¤¬ EPSON %s ¤Ç¤¢¤ë¤ÈÁÛÄê¤·¤¿¤â¤Î¤Ç¤¹¡£\n"
-"¤â¤·¥×¥ê¥ó¥¿¤Î·¿¼°¤¬°Û¤Ê¤ë¾ì¹ç¤Ï¡¢[CTRL]+C ¤òÆşÎÏ¤·¤ÆÃæÃÇ¤·¡¢\n"
-"Àµ¤·¤¤¥×¥ê¥ó¥¿¤Î·¿¼°¤òÁªÂò¤·¤Æ²¼¤µ¤¤¡£\n"
+"ã“ã®æ“ä½œã¯ã€ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿ãŒ EPSON %s ã§ã‚ã‚‹ã¨æƒ³å®šã—ãŸã‚‚ã®ã§ã™ã€‚\n"
+"ã‚‚ã—ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ãŒç•°ãªã‚‹å ´åˆã¯ã€[CTRL]+C ã‚’å…¥åŠ›ã—ã¦ä¸­æ–­ã—ã€\n"
+"æ­£ã—ã„ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚\n"
 "\n"
-"°õºş¥Ø¥Ã¥É´Ö³ÖÊäÀµ¤ò³«»Ï¤¹¤ë¾ì¹ç¤Ï¡¢¥×¥ê¥ó¥¿¤Î¥È¥ì¥¤¤Ë\n"
-"ÍÑ»æ¤òÆş¤ì¤Æ²¼¤µ¤¤¡£\n"
+"å°åˆ·ãƒ˜ãƒƒãƒ‰é–“éš”è£œæ­£ã‚’é–‹å§‹ã™ã‚‹å ´åˆã¯ã€ãƒ—ãƒªãƒ³ã‚¿ã®ãƒˆãƒ¬ã‚¤ã«\n"
+"ç”¨ç´™ã‚’å…¥ã‚Œã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:1973 src/escputil/escputil.c:2004
 #: src/escputil/escputil.c:2047
 msgid "Press enter to continue > "
-msgstr "²¿¤«¥­¡¼¤òÆşÎÏ¤¹¤ë¤ÈÂ³¹Ô¤·¤Ş¤¹ > "
+msgstr "ä½•ã‹ã‚­ãƒ¼ã‚’å…¥åŠ›ã™ã‚‹ã¨ç¶šè¡Œã—ã¾ã™ > "
 
 #: src/escputil/escputil.c:1980
 #, c-format
@@ -7718,44 +7718,44 @@ msgid ""
 "pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
-"°õºş·ë²Ì¤ò³ÎÇ§¤·¤Æ¡¢³Æ¥Ñ¥¿¡¼¥ó¤ÇºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤òÁªÂò¤·¤Æ²¼¤µ¤¤¡£\n"
-"¤½¤Î¥Ú¥¢¤ÎÈÖ¹æ¤òÆşÎÏ¤«¡¢'r' ¤Ç¤³¤ÎÀßÄê¤ò¤¯¤ê¤«¤¨¤¹¤«¡¢'?' ¤Ç¥Ø¥ë¥×¤òÉ½¼¨¤·¤Ş"
-"¤¹¡£\n"
+"å°åˆ·çµæœã‚’ç¢ºèªã—ã¦ã€å„ãƒ‘ã‚¿ãƒ¼ãƒ³ã§æœ€é©ãªãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚\n"
+"ãã®ãƒšã‚¢ã®ç•ªå·ã‚’å…¥åŠ›ã‹ã€'r' ã§ã“ã®è¨­å®šã‚’ãã‚Šã‹ãˆã™ã‹ã€'?' ã§ãƒ˜ãƒ«ãƒ—ã‚’è¡¨ç¤ºã—ã¾"
+"ã™ã€‚\n"
 
 #: src/escputil/escputil.c:1993
 #, c-format
 msgid "Pass #%d"
-msgstr "¥Ñ¥¹ #%d"
+msgstr "ãƒ‘ã‚¹ #%d"
 
 #: src/escputil/escputil.c:2001 src/escputil/escputil.c:2046
 #, c-format
 msgid "Please insert a fresh sheet of paper.\n"
-msgstr "¿·¤·¤¤ÍÑ»æ¤ò¥È¥ì¥¤¤ËÆş¤ì¤Æ²¼¤µ¤¤¡£\n"
+msgstr "æ–°ã—ã„ç”¨ç´™ã‚’ãƒˆãƒ¬ã‚¤ã«å…¥ã‚Œã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:2020
 #, c-format
 msgid "Number out of range!\n"
-msgstr "ÈÏ°Ï³°¤Î¥Ú¥¢ÈÖ¹æ¤Ç¤¹¡ª\n"
+msgstr "ç¯„å›²å¤–ã®ãƒšã‚¢ç•ªå·ã§ã™ï¼\n"
 
 #: src/escputil/escputil.c:2025
 #, c-format
 msgid "I cannot understand what you typed!\n"
-msgstr "ÆşÎÏ¤·¤¿¤â¤Î¤ÏÌµ¸ú¤Ç¤¹¡ª\n"
+msgstr "å…¥åŠ›ã—ãŸã‚‚ã®ã¯ç„¡åŠ¹ã§ã™ï¼\n"
 
 #: src/escputil/escputil.c:2031
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
-msgstr "ºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤Ï 1 ¤È %d ¤Î´Ö¤ÎÈÖ¹æ¤Ë¤·¤Æ²¼¤µ¤¤¡£\n"
+msgstr "æœ€é©ãªãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ã¯ 1 ã¨ %d ã®é–“ã®ç•ªå·ã«ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:2038
 #, c-format
 msgid "Attempting to set alignment..."
-msgstr "´Ö³ÖÊäÀµÃæ..."
+msgstr "é–“éš”è£œæ­£ä¸­..."
 
 #: src/escputil/escputil.c:2041
 #, c-format
 msgid "succeeded.\n"
-msgstr "´°Î»¤·¤Ş¤·¤¿¡£\n"
+msgstr "å®Œäº†ã—ã¾ã—ãŸã€‚\n"
 
 #: src/escputil/escputil.c:2042
 #, c-format
@@ -7765,19 +7765,19 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"´Ö³ÖÊäÀµ¤¬Àµ¤·¤¤¤«³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£ºÆÅÙ¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤Î°õºş¤¬´°Î»¤·¤¿¸å¤Ë\n"
-"³Æ¥é¥¤¥ó¤ÎºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤¬¥Ñ¥¿¡¼¥ó %d ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤«³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£\n"
-"¤â¤·ºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤Ç¤Ê¤¤¾ì¹ç¤Ï¡¢ºÇÅ¬¤Ê°õºşÉÊ¼Á¤òÆÀ¤ë¤¿¤á¤Ë\n"
-"Æ±ÍÍ¤ÎÁàºî¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
+"é–“éš”è£œæ­£ãŒæ­£ã—ã„ã‹ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚å†åº¦ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã®å°åˆ·ãŒå®Œäº†ã—ãŸå¾Œã«\n"
+"å„ãƒ©ã‚¤ãƒ³ã®æœ€é©ãªãƒ‘ã‚¿ãƒ¼ãƒ³ãŒãƒ‘ã‚¿ãƒ¼ãƒ³ %d ã«ãªã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚\n"
+"ã‚‚ã—æœ€é©ãªãƒ‘ã‚¿ãƒ¼ãƒ³ã§ãªã„å ´åˆã¯ã€æœ€é©ãªå°åˆ·å“è³ªã‚’å¾—ã‚‹ãŸã‚ã«\n"
+"åŒæ§˜ã®æ“ä½œã‚’ç¹°ã‚Šè¿”ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #: src/escputil/escputil.c:2088
 #, c-format
 msgid "Error in input\n"
-msgstr "ÆşÎÏ¥¨¥é¡¼\n"
+msgstr "å…¥åŠ›ã‚¨ãƒ©ãƒ¼\n"
 
 #: src/gimp2/print-image-gimp.c:225
 msgid "Printing..."
-msgstr "°õºşÃæ..."
+msgstr "å°åˆ·ä¸­..."
 
 #: src/ghost/ijsgutenprint.c:98
 #, c-format
@@ -7794,28 +7794,28 @@ msgstr ""
 #: src/ghost/ijsgutenprint.c:191
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
-msgstr "¤ª¤«¤·¤Ê¥«¥é¡¼¶õ´Ö: bps %d ¥Á¥ã¥ó¥Í¥ë %d ¶õ´Ö %s\n"
+msgstr "ãŠã‹ã—ãªã‚«ãƒ©ãƒ¼ç©ºé–“: bps %d ãƒãƒ£ãƒ³ãƒãƒ« %d ç©ºé–“ %s\n"
 
 #: src/ghost/ijsgutenprint.c:199
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: No row buffer\n"
-msgstr "Äã¥ì¥Ù¥ë¥Ğ¥Ã¥Õ¥¡¤¬¤¢¤ê¤Ş¤»¤ó\n"
+msgstr "ä½ãƒ¬ãƒ™ãƒ«ãƒãƒƒãƒ•ã‚¡ãŒã‚ã‚Šã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:226 src/ghost/ijsgutenprint.c:246
 #, fuzzy, c-format
 msgid ""
 "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
-msgstr "¥Ñ¥é¥á¡¼¥¿ %s=%s (¤ª¤½¤é¤¯¿ôÃÍ) ¤ò²òÀÏ¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ %s=%s (ãŠãã‚‰ãæ•°å€¤) ã‚’è§£æã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:498
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"
-msgstr "¥×¥ê¥ó¥¿¤ò -s·¿¼° ¤ò»È¤Ã¤Æ»ØÄê¤·¤Æ²¼¤µ¤¤\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ã‚’ -så‹å¼ ã‚’ä½¿ã£ã¦æŒ‡å®šã—ã¦ä¸‹ã•ã„\n"
 
 #: src/ghost/ijsgutenprint.c:500
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Printer %s is not a known model\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤ÏÉÔÌÀ¤Ê·¿¼°¤Ç¤¹\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã¯ä¸æ˜ãªå‹å¼ã§ã™\n"
 
 #: src/ghost/ijsgutenprint.c:656
 #, c-format
@@ -7825,89 +7825,89 @@ msgstr ""
 #: src/ghost/ijsgutenprint.c:700
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse TopLeft %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:723
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse PaperSize %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:795
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse curve %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:802
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s float %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:809
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s int %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:816
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:830
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤Ë %s ¤ò»È¤Ã¤Æ°õºş¤¹¤ë¤³¤È¤¬¤Ç¤­¤Ş¤»¤ó\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã« %s ã‚’ä½¿ã£ã¦å°åˆ·ã™ã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“\n"
 
 #: src/ghost/ijsgutenprint.c:841
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameter %s %d\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤¬ÉÔÌÀ¤Ç¤¹\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ãŒä¸æ˜ã§ã™\n"
 
 #: src/ghost/ijsgutenprint.c:867
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: bad key code %d\n"
-msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
+msgstr "%.0f ã§æ¬¡ã®ä½ãƒ¬ãƒ™ãƒ«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å–å¾—ã—ã¾ã™\n"
 
 #: src/ghost/ijsgutenprint.c:1308
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: image_init failed %d\n"
-msgstr "image_init ¤Ë¼ºÇÔ %d\n"
+msgstr "image_init ã«å¤±æ•— %d\n"
 
 #: src/ghost/ijsgutenprint.c:1319
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
-msgstr "¥Õ¥¡¥¤¥ë¡¦¥Ç¥£¥¹¥¯¥ê¥×¥¿¤ò³«¤±¤Ş¤»¤ó: %s\n"
+msgstr "ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’é–‹ã‘ã¾ã›ã‚“: %s\n"
 
 #: src/ghost/ijsgutenprint.c:1331
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
-msgstr "%s ¤ò³«¤±¤Ş¤»¤ó: %s\n"
+msgstr "%s ã‚’é–‹ã‘ã¾ã›ã‚“: %s\n"
 
 #: src/ghost/ijsgutenprint.c:1344
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Unknown printer %s\n"
-msgstr "¥×¥ê¥ó¥¿ %s ¤¬ÉÔÌÀ¤Ç¤¹\n"
+msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ãŒä¸æ˜ã§ã™\n"
 
 #: src/ghost/ijsgutenprint.c:1516
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"
-msgstr "¤ª¤«¤·¤Ê¥Ñ¥é¥á¡¼¥¿; Â³¹Ô¤Ç¤­¤Ş¤»¤ó¡ª\n"
+msgstr "ãŠã‹ã—ãªãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿; ç¶šè¡Œã§ãã¾ã›ã‚“ï¼\n"
 
 #: src/ghost/ijsgutenprint.c:1534
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
-msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
+msgstr "%.0f ã§æ¬¡ã®ä½ãƒ¬ãƒ™ãƒ«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å–å¾—ã—ã¾ã™\n"
 
 #, fuzzy
 #~ msgid "Cassette"
-#~ msgstr "¥Ş¥Ã¥ÈÍÑ»æ"
+#~ msgstr "ãƒãƒƒãƒˆç”¨ç´™"
 
 #, fuzzy
 #~ msgid " Gamma"
-#~ msgstr "¥¬¥ó¥Ş:"
+#~ msgstr "ã‚¬ãƒ³ãƒ:"
 
 #, fuzzy
 #~ msgid " Curve"
-#~ msgstr "¹õ¿§"
+#~ msgstr "é»’è‰²"
 
 #, fuzzy
 #~ msgid "1440 x 1440"
@@ -7915,19 +7915,19 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 
 #, fuzzy
 #~ msgid "1440 x 1440 DPI High Quality"
-#~ msgstr "1200 DPI ¹âÉÊ¼Á"
+#~ msgstr "1200 DPI é«˜å“è³ª"
 
 #, fuzzy
 #~ msgid "1440 x 1440 DPI Highest Quality"
-#~ msgstr "1200 DPI ¹âÉÊ¼Á"
+#~ msgstr "1200 DPI é«˜å“è³ª"
 
 #, fuzzy
 #~ msgid "2880 x 1440 DPI High Quality"
-#~ msgstr "1200 DPI ¹âÉÊ¼Á"
+#~ msgstr "1200 DPI é«˜å“è³ª"
 
 #, fuzzy
 #~ msgid "2880 x 1440 DPI Highest Quality"
-#~ msgstr "1200 DPI ¹âÉÊ¼Á"
+#~ msgstr "1200 DPI é«˜å“è³ª"
 
 #, fuzzy
 #~ msgid ""
@@ -7956,23 +7956,23 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 #~ "\n"
 #~ "\n"
 #~ "Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz,\n"
-#~ "¤½¤·¤Æ Gimp-Print ³«È¯¥Á¡¼¥à¡£\n"
+#~ "ãã—ã¦ Gimp-Print é–‹ç™ºãƒãƒ¼ãƒ ã€‚\n"
 #~ "\n"
-#~ "¥Û¡¼¥à¥Ú¡¼¥¸ <http://gimp-print.sourceforge.net> ¤Ë¤ª±Û¤·²¼¤µ¤¤¡£\n"
+#~ "ãƒ›ãƒ¼ãƒ ãƒšãƒ¼ã‚¸ <http://gimp-print.sourceforge.net> ã«ãŠè¶Šã—ä¸‹ã•ã„ã€‚\n"
 #~ "\n"
-#~ "¤³¤Î¥×¥í¥°¥é¥à¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¹; ¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢ºâÃÄ¤¬È¯¹Ô¤¹¤ë\n"
-#~ "GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ÎÂèÆóÈÇ¤Ş¤¿¤Ï¤½¤ì°Ê¹ß¤ÎÈÇ¤Î²¼¤Ç²şÊÑ¡¦½¤Àµ¡¦ºÆÇÛÉÛ"
-#~ "¤¬\n"
-#~ "Ç§¤á¤é¤ì¤Æ¤¤¤Ş¤¹¡£\n"
+#~ "ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã§ã™; ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢è²¡å›£ãŒç™ºè¡Œã™ã‚‹\n"
+#~ "GNU å…¬æœ‰ä½¿ç”¨è¨±è«¾å¥‘ç´„æ›¸ã®ç¬¬äºŒç‰ˆã¾ãŸã¯ãã‚Œä»¥é™ã®ç‰ˆã®ä¸‹ã§æ”¹å¤‰ãƒ»ä¿®æ­£ãƒ»å†é…å¸ƒ"
+#~ "ãŒ\n"
+#~ "èªã‚ã‚‰ã‚Œã¦ã„ã¾ã™ã€‚\n"
 #~ "\n"
-#~ "¤³¤Î¥×¥í¥°¥é¥à¤ÏÊØÍø¤Ë»È¤Ã¤Æ¤â¤é¤¨¤ë¤è¤¦¤ËÇÛÉÛ¤µ¤ì¤Æ¤¤¤Ş¤¹¤¬¡¢\n"
-#~ "´°Á´¤ËÌµÊİ¾Ú¤Ç¤¹; ¾¦ÍÑÍøÍÑ¤Ş¤¿¤Ï¤¢¤ëÆÃÄê¤ÎÌÜÅª¤Ë¤ª¤±¤ëÅ¬¹çÀ­¤ÎÊİ¾Ú¤â\n"
-#~ "¤¢¤ê¤Ş¤»¤ó¡£¾ÜºÙ¤Ï GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤ò¤´Í÷²¼¤µ¤¤¡£\n"
+#~ "ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯ä¾¿åˆ©ã«ä½¿ã£ã¦ã‚‚ã‚‰ãˆã‚‹ã‚ˆã†ã«é…å¸ƒã•ã‚Œã¦ã„ã¾ã™ãŒã€\n"
+#~ "å®Œå…¨ã«ç„¡ä¿è¨¼ã§ã™; å•†ç”¨åˆ©ç”¨ã¾ãŸã¯ã‚ã‚‹ç‰¹å®šã®ç›®çš„ã«ãŠã‘ã‚‹é©åˆæ€§ã®ä¿è¨¼ã‚‚\n"
+#~ "ã‚ã‚Šã¾ã›ã‚“ã€‚è©³ç´°ã¯ GNU å…¬æœ‰ä½¿ç”¨è¨±è«¾å¥‘ç´„æ›¸ã‚’ã”è¦§ä¸‹ã•ã„ã€‚\n"
 #~ "\n"
-#~ "µ®Êı¤Ï¡¢¤³¤Î¥×¥í¥°¥é¥à¤ËÅ¬±ş¤·¤¿ GNU ¸øÍ­»ÈÍÑµöÂú·ÀÌó½ñ¤Î¥³¥Ô¡¼¤ò\n"
-#~ "¼õ¤±¼è¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹; ¤â¤·¼õ¤±¼è¤Ã¤Æ¤¤¤Ê¤¤¾ì¹ç¤Ï¡¢\n"
+#~ "è²´æ–¹ã¯ã€ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã«é©å¿œã—ãŸ GNU å…¬æœ‰ä½¿ç”¨è¨±è«¾å¥‘ç´„æ›¸ã®ã‚³ãƒ”ãƒ¼ã‚’\n"
+#~ "å—ã‘å–ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™; ã‚‚ã—å—ã‘å–ã£ã¦ã„ãªã„å ´åˆã¯ã€\n"
 #~ "Free Software Foundation, Inc., 56 Temple Place - \n"
-#~ "Suite 330, Boston, MA 02111-1307, USA ¤Ş¤ÇÏ¢Íí¤·¤Æ²¼¤µ¤¤¡£\n"
+#~ "Suite 330, Boston, MA 02111-1307, USA ã¾ã§é€£çµ¡ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #, fuzzy
 #~ msgid ""
@@ -7983,9 +7983,9 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 #~ "under certain conditions; type 'escputil -l' for details.\n"
 #~ msgstr ""
 #~ ", Copyright (C) 2000-2001 Robert Krawitz\n"
-#~ "Escputil ¤Ï´°Á´ÌµÊİ¾Ú¤Ç¤¹; ¾ÜºÙ¤Ï `escputil -l` ¤Ç¤´Í÷²¼¤µ¤¤¡£\n"
-#~ "¤³¤ì¤Ï¥Õ¥ê¡¼¥½¥Õ¥È¥¦¥§¥¢¤Ç¤¤¤¯¤Ä¤«¤Î¾ò·ï¤Î²¼¤ÇºÆÇÛÉÛ¤ò\n"
-#~ "´¿·Ş¤·¤Ş¤¹; ¾ÜºÙ¤Ï `escputil -l` ¤Ç¤´Í÷²¼¤µ¤¤¡£\n"
+#~ "Escputil ã¯å®Œå…¨ç„¡ä¿è¨¼ã§ã™; è©³ç´°ã¯ `escputil -l` ã§ã”è¦§ä¸‹ã•ã„ã€‚\n"
+#~ "ã“ã‚Œã¯ãƒ•ãƒªãƒ¼ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢ã§ã„ãã¤ã‹ã®æ¡ä»¶ã®ä¸‹ã§å†é…å¸ƒã‚’\n"
+#~ "æ­“è¿ã—ã¾ã™; è©³ç´°ã¯ `escputil -l` ã§ã”è¦§ä¸‹ã•ã„ã€‚\n"
 
 #, fuzzy
 #~ msgid "90x90 DPI"
@@ -8089,57 +8089,57 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 
 #, fuzzy
 #~ msgid "Plain Paper PIXMA"
-#~ msgstr "ÄÌ¾ï¤ÎÍÑ»æ"
+#~ msgstr "é€šå¸¸ã®ç”¨ç´™"
 
 #~ msgid "Back Print Film"
-#~ msgstr "ÇØ·Ê°õºşÍÑ¥Õ¥£¥ë¥à"
+#~ msgstr "èƒŒæ™¯å°åˆ·ç”¨ãƒ•ã‚£ãƒ«ãƒ "
 
 #~ msgid "Fabric Sheets"
-#~ msgstr "Á¡°İ¼Á¤ÎÍÑ»æ"
+#~ msgstr "ç¹Šç¶­è³ªã®ç”¨ç´™"
 
 #~ msgid "Envelope"
-#~ msgstr "ÉõÅû"
+#~ msgstr "å°ç­’"
 
 #~ msgid "High Resolution Paper"
-#~ msgstr "¹â²òÁüÅÙ¤ÎÍÑ»æ"
+#~ msgstr "é«˜è§£åƒåº¦ã®ç”¨ç´™"
 
 #~ msgid "T-Shirt Transfers"
-#~ msgstr "T-¥·¥ã¥Ä¤ÎÌÏÍÍ"
+#~ msgstr "T-ã‚·ãƒ£ãƒ„ã®æ¨¡æ§˜"
 
 #~ msgid "High Gloss Film"
-#~ msgstr "¹â±ğ¥Õ¥£¥ë¥à"
+#~ msgstr "é«˜è‰¶ãƒ•ã‚£ãƒ«ãƒ "
 
 #~ msgid "Glossy Photo Paper"
-#~ msgstr "¸÷ÂôÉÕ¤­¥Õ¥©¥ÈÍÑ»æ"
+#~ msgstr "å…‰æ²¢ä»˜ããƒ•ã‚©ãƒˆç”¨ç´™"
 
 #~ msgid "Glossy Photo Cards"
-#~ msgstr "¸÷ÂôÉÕ¤­¥Õ¥©¥È¡¦¥«¡¼¥É"
+#~ msgstr "å…‰æ²¢ä»˜ããƒ•ã‚©ãƒˆãƒ»ã‚«ãƒ¼ãƒ‰"
 
 #~ msgid "Photo Paper Pro"
-#~ msgstr "¥Õ¥©¥ÈÍÑ»æ Pro"
+#~ msgstr "ãƒ•ã‚©ãƒˆç”¨ç´™ Pro"
 
 #~ msgid "Photo CcMmYK Color"
-#~ msgstr "¥Õ¥©¥È CcMmYK ¿§"
+#~ msgstr "ãƒ•ã‚©ãƒˆ CcMmYK è‰²"
 
 #~ msgid "Photo CcMmY Color"
-#~ msgstr "¥Õ¥©¥È CcMmY ¿§"
+#~ msgstr "ãƒ•ã‚©ãƒˆ CcMmY è‰²"
 
 #~ msgid "CMYK Color"
-#~ msgstr "CMYK ¿§"
+#~ msgstr "CMYK è‰²"
 
 #~ msgid "CMY Color"
-#~ msgstr "CMY ¿§"
+#~ msgstr "CMY è‰²"
 
 #~ msgid "<Image>/File/Print..."
-#~ msgstr "<Image>/File/°õºş..."
+#~ msgstr "<Image>/File/å°åˆ·..."
 
 #, fuzzy
 #~ msgid "Gutenprint"
-#~ msgstr "¥Æ¥¹¥È°õºş"
+#~ msgstr "ãƒ†ã‚¹ãƒˆå°åˆ·"
 
 #, fuzzy
 #~ msgid "ERROR: ijsgutenprint: ijs_server_get_page_header failed %d\n"
-#~ msgstr "ijs_server_get_page_header ¤Ë¼ºÇÔ %d\n"
+#~ msgstr "ijs_server_get_page_header ã«å¤±æ•— %d\n"
 
 #, fuzzy
 #~ msgid "EPSON Stylus C50"
@@ -8439,39 +8439,39 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 
 #, fuzzy
 #~ msgid "Printer does not support listing ink types!\n"
-#~ msgstr "¥×¥ê¥ó¥¿¤Ï¥«¥é¡¼°õºş¤ò¥µ¥İ¡¼¥È¤·¤Æ¤¤¤Ş¤»¤ó\n"
+#~ msgstr "ãƒ—ãƒªãƒ³ã‚¿ã¯ã‚«ãƒ©ãƒ¼å°åˆ·ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã¾ã›ã‚“\n"
 
 #, fuzzy
 #~ msgid "Cannot identify printer!\n"
-#~ msgstr "¥×¥ê¥ó¥¿¤«¤é¤Î½ĞÎÏ¤ò²òÀÏ¤Ç¤­¤Ş¤»¤ó\n"
+#~ msgstr "ãƒ—ãƒªãƒ³ã‚¿ã‹ã‚‰ã®å‡ºåŠ›ã‚’è§£æã§ãã¾ã›ã‚“\n"
 
 #, fuzzy
 #~ msgid "Red Balance"
-#~ msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+#~ msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #, fuzzy
 #~ msgid "Gloss Balance"
-#~ msgstr "°õºş»ş¤Î²«¿§¤Î¥Ğ¥é¥ó¥¹¤òÄ´À°¤·¤Ş¤¹¡£"
+#~ msgstr "å°åˆ·æ™‚ã®é»„è‰²ã®ãƒãƒ©ãƒ³ã‚¹ã‚’èª¿æ•´ã—ã¾ã™ã€‚"
 
 #~ msgid ""
 #~ "Printer alignment must be done with a raw device or else\n"
 #~ "the -m option must be used to specify a printer.\n"
 #~ msgstr ""
-#~ "Åù´Ö³Ö¤Î°õºş¤ÏÄã¥ì¥Ù¥ë¡¦¥Ç¥Ğ¥¤¥¹¤ò»È¤¦¤«¡¢¤¢¤ë¤¤¤Ï\n"
-#~ "'-m' ¥ª¥×¥·¥ç¥ó¤Ç¥×¥ê¥ó¥¿¤òÆÃÄê¤·¤Æ»ÈÍÑ¤¹¤ë¤è¤¦¤Ë¤·¤Æ²¼¤µ¤¤¡£\n"
+#~ "ç­‰é–“éš”ã®å°åˆ·ã¯ä½ãƒ¬ãƒ™ãƒ«ãƒ»ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½¿ã†ã‹ã€ã‚ã‚‹ã„ã¯\n"
+#~ "'-m' ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§ãƒ—ãƒªãƒ³ã‚¿ã‚’ç‰¹å®šã—ã¦ä½¿ç”¨ã™ã‚‹ã‚ˆã†ã«ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #~ msgid "Attempting to detect printer model..."
-#~ msgstr "¥×¥ê¥ó¥¿¤Î·¿¼°¤ò¸¡½ĞÃæ¤Ç¤¹..."
+#~ msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ã‚’æ¤œå‡ºä¸­ã§ã™..."
 
 #~ msgid ""
 #~ "\n"
 #~ "Cannot open %s read/write: %s\n"
 #~ msgstr ""
 #~ "\n"
-#~ "%s ¤òÆÉ¤ß½ñ¤­¥â¡¼¥É¤Ç³«¤±¤Ş¤»¤ó: %s\n"
+#~ "%s ã‚’èª­ã¿æ›¸ããƒ¢ãƒ¼ãƒ‰ã§é–‹ã‘ã¾ã›ã‚“: %s\n"
 
 #~ msgid "Printer model %s is not known.\n"
-#~ msgstr "¥×¥ê¥ó¥¿¤Î·¿¼° %s ¤ÏÉÔÌÀ¤Ç¤¹¡£\n"
+#~ msgstr "ãƒ—ãƒªãƒ³ã‚¿ã®å‹å¼ %s ã¯ä¸æ˜ã§ã™ã€‚\n"
 
 #, fuzzy
 #~ msgid "Gimp-Print"
@@ -8480,64 +8480,64 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 #, fuzzy
 #~ msgid "Brightness of the print (0 is solid black, 2 is solid white)"
 #~ msgstr ""
-#~ "°õºş¤¹¤ëÌÀ¤ë¤µ¤ò¥»¥Ã¥È¤·¤Ş¤¹¡£\n"
-#~ "(0.0Êı¸ş: °Å¤¯ 2.0Êı¸ş: ÌÀ¤ë¤¯)"
+#~ "å°åˆ·ã™ã‚‹æ˜ã‚‹ã•ã‚’ã‚»ãƒƒãƒˆã—ã¾ã™ã€‚\n"
+#~ "(0.0æ–¹å‘: æš—ã 2.0æ–¹å‘: æ˜ã‚‹ã)"
 
 #~ msgid ""
 #~ "Enter the correct command to print to your printer. Note: Please do not "
 #~ "remove the `-l' or `-oraw' from the command string, or printing will "
 #~ "probably fail!"
 #~ msgstr ""
-#~ "¤ª»È¤¤¤Î¥×¥ê¥ó¥¿¸ş¤±¤Î°õºş¥³¥Ş¥ó¥É¤òÆşÎÏ¤·¤Ş¤¹¡£¡ÚÃíµ­¡Û: '-l' ¤Ş¤¿¤Ï '-"
-#~ "oraw' ¥ª¥×¥·¥ç¥ó¤òºï½ü¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£°õºş¤Ë¼ºÇÔ¤·¤Ş¤¹¡ª"
+#~ "ãŠä½¿ã„ã®ãƒ—ãƒªãƒ³ã‚¿å‘ã‘ã®å°åˆ·ã‚³ãƒãƒ³ãƒ‰ã‚’å…¥åŠ›ã—ã¾ã™ã€‚ã€æ³¨è¨˜ã€‘: '-l' ã¾ãŸã¯ '-"
+#~ "oraw' ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’å‰Šé™¤ã—ãªã„ã§ä¸‹ã•ã„ã€‚å°åˆ·ã«å¤±æ•—ã—ã¾ã™ï¼"
 
 #~ msgid "PPD File?"
-#~ msgstr "PPD ¥Õ¥¡¥¤¥ë¤Ç¤¹¤«¡©"
+#~ msgstr "PPD ãƒ•ã‚¡ã‚¤ãƒ«ã§ã™ã‹ï¼Ÿ"
 
 #~ msgid "%s: option `%s' is ambiguous\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó '%s' Ã±ÂÎ¤Ç¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ '%s' å˜ä½“ã§ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“\n"
 
 #~ msgid "%s: option `--%s' doesn't allow an argument\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó '--%s' ¤Ë¤Ï°ú¿ô¤ÏÉÔÍ×¤Ç¤¹\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ '--%s' ã«ã¯å¼•æ•°ã¯ä¸è¦ã§ã™\n"
 
 #~ msgid "%s: option `%c%s' doesn't allow an argument\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó '%c%s' ¤Ë¤Ï°ú¿ô¤ÏÉÔÍ×¤Ç¤¹\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ '%c%s' ã«ã¯å¼•æ•°ã¯ä¸è¦ã§ã™\n"
 
 #~ msgid "%s: option `%s' requires an argument\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó '%s' ¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ '%s' ã«ã¯å¼•æ•°ãŒå¿…è¦ã§ã™\n"
 
 #~ msgid "%s: unrecognized option `--%s'\n"
-#~ msgstr "%s: ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó '--%s'\n"
+#~ msgstr "%s: ä¸æ˜ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ '--%s'\n"
 
 #~ msgid "%s: unrecognized option `%c%s'\n"
-#~ msgstr "%s: ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó '`%c%s'\n"
+#~ msgstr "%s: ä¸æ˜ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ '`%c%s'\n"
 
 #~ msgid "%s: illegal option -- %c\n"
-#~ msgstr "%s: ÉÔÀµ¤Ê¥ª¥×¥·¥ç¥ó -- %c\n"
+#~ msgstr "%s: ä¸æ­£ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ -- %c\n"
 
 #~ msgid "%s: invalid option -- %c\n"
-#~ msgstr "%s: ¤ª¤«¤·¤Ê¥ª¥×¥·¥ç¥ó -- %c\n"
+#~ msgstr "%s: ãŠã‹ã—ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ -- %c\n"
 
 #~ msgid "%s: option requires an argument -- %c\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó¤Ë¤Ï°ú¿ô¤¬É¬Í×¤Ç¤¹ -- %c\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã«ã¯å¼•æ•°ãŒå¿…è¦ã§ã™ -- %c\n"
 
 #~ msgid "%s: option `-W %s' is ambiguous\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó '-W %s' Ã±ÂÎ¤Ç¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ '-W %s' å˜ä½“ã§ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“\n"
 
 #~ msgid "%s: option `-W %s' doesn't allow an argument\n"
-#~ msgstr "%s: ¥ª¥×¥·¥ç¥ó '-W %s' ¤Ë¤Ï°ú¿ô¤¬ÉÔÍ×¤Ç¤¹\n"
+#~ msgstr "%s: ã‚ªãƒ—ã‚·ãƒ§ãƒ³ '-W %s' ã«ã¯å¼•æ•°ãŒä¸è¦ã§ã™\n"
 
 #, fuzzy
 #~ msgid "Bright"
-#~ msgstr "ÌÀ¤ë¤µ:"
+#~ msgstr "æ˜ã‚‹ã•:"
 
 #, fuzzy
 #~ msgid "Image is too wide for the page\n"
-#~ msgstr "ÍÑ»æ¥µ¥¤¥º¤ò 100 ¤È¤·¤¿¾ì¹ç¤ÎÈæÎ¨¤Ç¤¹¡£"
+#~ msgstr "ç”¨ç´™ã‚µã‚¤ã‚ºã‚’ 100 ã¨ã—ãŸå ´åˆã®æ¯”ç‡ã§ã™ã€‚"
 
 #, fuzzy
 #~ msgid "Full Bleed"
-#~ msgstr "¥í¡¼¥ë¼°µë»æ"
+#~ msgstr "ãƒ­ãƒ¼ãƒ«å¼çµ¦ç´™"
 
 #, fuzzy
 #~ msgid "traditional"
@@ -8554,10 +8554,10 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 
 #, fuzzy
 #~ msgid "Optimize the settings for the type of image to be printed"
-#~ msgstr "°õºş¤¹¤ë²èÁü¤Î¼ïÎà¤«¤é½ĞÎÏ·ë²Ì¤òºÇÅ¬²½¤·¤Ş¤¹¡£"
+#~ msgstr "å°åˆ·ã™ã‚‹ç”»åƒã®ç¨®é¡ã‹ã‚‰å‡ºåŠ›çµæœã‚’æœ€é©åŒ–ã—ã¾ã™ã€‚"
 
 #~ msgid "Solid Colors"
-#~ msgstr "ÌµÃÏ¤Î¿§"
+#~ msgstr "ç„¡åœ°ã®è‰²"
 
 #~ msgid "Stylus C20sx"
 #~ msgstr "Stylus C20sx"
@@ -8621,138 +8621,138 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 #~ "WARNING: THIS FUNCTION IS NOT YET TESTED!  It may not work, and it may\n"
 #~ "damage your printer!\n"
 #~ msgstr ""
-#~ "¤´ÍøÍÑÁ°¤Ë¼¡¤ÎÀâÌÀ¤òÃí°Õ¿¼¤¯¤ªÆÉ¤ß²¼¤µ¤¤¡£\n"
+#~ "ã”åˆ©ç”¨å‰ã«æ¬¡ã®èª¬æ˜ã‚’æ³¨æ„æ·±ããŠèª­ã¿ä¸‹ã•ã„ã€‚\n"
 #~ "\n"
-#~ "¤³¤Î¥Ä¡¼¥ë¤Ï EPSON À½¤Î Stylus ¥¤¥ó¥¯¥¸¥§¥Ã¥È¼°¥×¥ê¥ó¥¿¤Î\n"
-#~ "¥«¥é¡¼°õºş¥Ø¥Ã¥É¤ò°ìÎó¤ËÊÂ¤Ù¤Æ¤¯¤ì¤Ş¤¹¡£\n"
-#~ "¤³¤Î¥Ä¡¼¥ë¤ò»È¤¤¤¹¤®¤ë¤È¡¢°õºş¤ÎÉÊ¼Á¤òÄã²¼¤µ¤»¥×¥ê¥ó¥¿¤Î¸Î¾ã¤Î¸¶°ø¤ò\n"
-#~ "°ú¤­µ¯¤³¤¹²ÄÇ½À­¤¬¤¢¤ê¤Ş¤¹¡£¤³¤Î¥Ä¡¼¥ë¤Ï SEIKO EPSON ¼Ò¤Ç¥Æ¥¹¥È¤·¤¿¤ï¤±¤Ç"
-#~ "¤Ï¤Ê¤¤¤Î¤Ç\n"
-#~ "¡¢Á´¤¯ÌµÊİ¾Ú¤Ç¤¹¡£¤³¤Î¥Ä¡¼¥ë¤Î¤´»ÈÍÑ¤Ë¤Ï¤´¼«¿È¤ÎÀÕÇ¤²¼¤Ç¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
+#~ "ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ EPSON è£½ã® Stylus ã‚¤ãƒ³ã‚¯ã‚¸ã‚§ãƒƒãƒˆå¼ãƒ—ãƒªãƒ³ã‚¿ã®\n"
+#~ "ã‚«ãƒ©ãƒ¼å°åˆ·ãƒ˜ãƒƒãƒ‰ã‚’ä¸€åˆ—ã«ä¸¦ã¹ã¦ãã‚Œã¾ã™ã€‚\n"
+#~ "ã“ã®ãƒ„ãƒ¼ãƒ«ã‚’ä½¿ã„ã™ãã‚‹ã¨ã€å°åˆ·ã®å“è³ªã‚’ä½ä¸‹ã•ã›ãƒ—ãƒªãƒ³ã‚¿ã®æ•…éšœã®åŸå› ã‚’\n"
+#~ "å¼•ãèµ·ã“ã™å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ã€‚ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ SEIKO EPSON ç¤¾ã§ãƒ†ã‚¹ãƒˆã—ãŸã‚ã‘ã§"
+#~ "ã¯ãªã„ã®ã§\n"
+#~ "ã€å…¨ãç„¡ä¿è¨¼ã§ã™ã€‚ã“ã®ãƒ„ãƒ¼ãƒ«ã®ã”ä½¿ç”¨ã«ã¯ã”è‡ªèº«ã®è²¬ä»»ä¸‹ã§è¡Œã£ã¦ä¸‹ã•ã„ã€‚\n"
 #~ "\n"
-#~ "¤³¤Î¥Ä¡¼¥ë¤Ï°ìËç¤ÎÍÑ»æ¤Ë %d ¸Ä¤Î¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤ò½Å¤Í°õºş¤·¤Ş¤¹¡£\n"
-#~ "¤Ä¤Ş¤ê¡¢°ì¥Ñ¥¿¡¼¥ó°õºş¤¹¤ë¤ÈÇÓ»æ¤¹¤ë¤Î¤Ç¡¢Æ±¤¸ÍÑ»æ¤òµë»æ¤·¤ÆºÆÅÙ°õºş¤·¤Ş"
-#~ "¤¹¡£\n"
-#~ "³Æ¥Ú¥¢¡¦¥é¥¤¥ó¤Î²¼¤Ë¤Ï %d ¤È %d ¤Î´Ö¤ò¼¨¤¹ \"¥Ú¥¢ÈÖ¹æ\" ¤¬¤¢¤ê¤Ş¤¹¡£\n"
+#~ "ã“ã®ãƒ„ãƒ¼ãƒ«ã¯ä¸€æšã®ç”¨ç´™ã« %d å€‹ã®ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’é‡ã­å°åˆ·ã—ã¾ã™ã€‚\n"
+#~ "ã¤ã¾ã‚Šã€ä¸€ãƒ‘ã‚¿ãƒ¼ãƒ³å°åˆ·ã™ã‚‹ã¨æ’ç´™ã™ã‚‹ã®ã§ã€åŒã˜ç”¨ç´™ã‚’çµ¦ç´™ã—ã¦å†åº¦å°åˆ·ã—ã¾"
+#~ "ã™ã€‚\n"
+#~ "å„ãƒšã‚¢ãƒ»ãƒ©ã‚¤ãƒ³ã®ä¸‹ã«ã¯ %d ã¨ %d ã®é–“ã‚’ç¤ºã™ \"ãƒšã‚¢ç•ªå·\" ãŒã‚ã‚Šã¾ã™ã€‚\n"
 #~ "\n"
-#~ "¥Ñ¥¿¡¼¥ó¤ò´Ñ»¡¤¹¤ë¾ì¹ç¤Ï¡¢°ì¤Ä¤Î¥Ñ¥Ã¥Á¤¬³ê¤é¤«¤Ê (\"Î³»Ò\" ¤Ë¶á¤¤) ¥Æ¥¯¥¹"
-#~ "¥Á¥ã\n"
-#~ "¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤³¤È¤ò³ÎÇ§¤·¤Æ²¼¤µ¤¤¡£¤½¤ÎÃæ¤«¤éºÇÅ¬¤Ê¥Ñ¥Ã¥Á¤òÁªÂò¤¹¤ë¤¿¤á¤Ë\n"
-#~ "Ãí°Õ¿¼¤¯´Ñ»¡¤·¤Æ²¼¤µ¤¤¡£¥Õ¥©¥ÈÍÑ¤Î¹âÉÊ¼Á¥¤¥ó¥¯¥¸¥§¥Ã¥ÈÍÑ»æ¡¢¤¢¤ë¤¤¤Ï\n"
-#~ "¤½¤ì¤Ë»÷¤¿¹âÉÊ¼Á¤ÎÍÑ»æ¤ò»È¤Ã¤Æ¥Æ¥¹¥È¤¹¤ë¤³¤È¤ò¤ª¾©¤á¤·¤Ş¤¹¡£\n"
-#~ "¤â¤·³ê¤é¤«¤Ê¥Ñ¥¿¡¼¥ó¤¬¤Ê¤¤¾ì¹ç¤Ï¡¢¤³¤Î¥Æ¥¹¥È¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
+#~ "ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’è¦³å¯Ÿã™ã‚‹å ´åˆã¯ã€ä¸€ã¤ã®ãƒ‘ãƒƒãƒãŒæ»‘ã‚‰ã‹ãª (\"ç²’å­\" ã«è¿‘ã„) ãƒ†ã‚¯ã‚¹"
+#~ "ãƒãƒ£\n"
+#~ "ã«ãªã£ã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèªã—ã¦ä¸‹ã•ã„ã€‚ãã®ä¸­ã‹ã‚‰æœ€é©ãªãƒ‘ãƒƒãƒã‚’é¸æŠã™ã‚‹ãŸã‚ã«\n"
+#~ "æ³¨æ„æ·±ãè¦³å¯Ÿã—ã¦ä¸‹ã•ã„ã€‚ãƒ•ã‚©ãƒˆç”¨ã®é«˜å“è³ªã‚¤ãƒ³ã‚¯ã‚¸ã‚§ãƒƒãƒˆç”¨ç´™ã€ã‚ã‚‹ã„ã¯\n"
+#~ "ãã‚Œã«ä¼¼ãŸé«˜å“è³ªã®ç”¨ç´™ã‚’ä½¿ã£ã¦ãƒ†ã‚¹ãƒˆã™ã‚‹ã“ã¨ã‚’ãŠå¥¨ã‚ã—ã¾ã™ã€‚\n"
+#~ "ã‚‚ã—æ»‘ã‚‰ã‹ãªãƒ‘ã‚¿ãƒ¼ãƒ³ãŒãªã„å ´åˆã¯ã€ã“ã®ãƒ†ã‚¹ãƒˆã‚’ç¹°ã‚Šè¿”ã—ã¦ä¸‹ã•ã„ã€‚\n"
 #~ "\n"
-#~ "¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤Î´Ñ»¡¤¬´°Î»¤·¤¿¤é¥Ñ¥Ã¥Á¤òÀöÂõ¤·¡¢\n"
-#~ "¤½¤Î¥×¥ê¥ó¥¿ÍÑ¤Ë¤½¤ÎÀßÄê¤òÊİÂ¸ (s) ¤¹¤ë¤«¡¢¥Æ¥¹¥È¥Ñ¥¿¡¼¥ó¤òºÆ¤Ó¼Â¹Ô¤¹¤ë "
-#~ "(r) ¤«¡¢\n"
-#~ "ÊİÂ¸¤·¤Ê¤¤¤Ç½ªÎ» (q) ¤¹¤ë¤«ÁªÂò¤·¤Æ²¼¤µ¤¤¡£½ªÎ»¤·¤Æ¤â°ÊÁ°¤ÎÀßÄê¤ËÌá¤ê¤Ş¤»"
-#~ "¤ó¤¬¡¢\n"
-#~ "¥×¥ê¥ó¥¿¤ÎÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¸Â¤êÌá¤¹¤³¤È¤Ï²ÄÇ½¤Ç¤¹¡£½ªÎ»¤·¤¿¾ì¹ç¤Ë¡¢\n"
-#~ "¤¢¤È¤Ç¤½¤ÎÀßÄê¤òÊİÂ¸¤·¤¿¤¤¾ì¹ç¤Ï¡¢¤â¤¦°ìÅÙÆ±¤¸¼ê½ç¤ò¹Ô¤Ã¤Æ²¼¤µ¤¤¡£\n"
-#~ "¤³¤Îºî¶È¤ò¹Ô¤Ã¤Æ¤¤¤ëºÇÃæ¤ËÅÅ¸»¤ò OFF ¤Ë¤·¤Ê¤¤¤Ç²¼¤µ¤¤¡£\n"
+#~ "ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã®è¦³å¯ŸãŒå®Œäº†ã—ãŸã‚‰ãƒ‘ãƒƒãƒã‚’æ´—æ¿¯ã—ã€\n"
+#~ "ãã®ãƒ—ãƒªãƒ³ã‚¿ç”¨ã«ãã®è¨­å®šã‚’ä¿å­˜ (s) ã™ã‚‹ã‹ã€ãƒ†ã‚¹ãƒˆãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’å†ã³å®Ÿè¡Œã™ã‚‹ "
+#~ "(r) ã‹ã€\n"
+#~ "ä¿å­˜ã—ãªã„ã§çµ‚äº† (q) ã™ã‚‹ã‹é¸æŠã—ã¦ä¸‹ã•ã„ã€‚çµ‚äº†ã—ã¦ã‚‚ä»¥å‰ã®è¨­å®šã«æˆ»ã‚Šã¾ã›"
+#~ "ã‚“ãŒã€\n"
+#~ "ãƒ—ãƒªãƒ³ã‚¿ã®é›»æºã‚’ OFF ã«ã—ãªã„é™ã‚Šæˆ»ã™ã“ã¨ã¯å¯èƒ½ã§ã™ã€‚çµ‚äº†ã—ãŸå ´åˆã«ã€\n"
+#~ "ã‚ã¨ã§ãã®è¨­å®šã‚’ä¿å­˜ã—ãŸã„å ´åˆã¯ã€ã‚‚ã†ä¸€åº¦åŒã˜æ‰‹é †ã‚’è¡Œã£ã¦ä¸‹ã•ã„ã€‚\n"
+#~ "ã“ã®ä½œæ¥­ã‚’è¡Œã£ã¦ã„ã‚‹æœ€ä¸­ã«é›»æºã‚’ OFF ã«ã—ãªã„ã§ä¸‹ã•ã„ã€‚\n"
 #~ "\n"
-#~ "¡Ú·Ù¹ğ¡Û: ¤³¤Îµ¡Ç½¤Ï¤Ş¤À¥Æ¥¹¥È¤·¤Æ¤¤¤Ê¤¤¤Î¤Ç¡¢ Æ°ºî¤·¤Ê¤¤¤«¤â¤·¤ì¤Ş¤»"
-#~ "¤ó¡ª\n"
-#~ "          ¤Ş¤¿¡¢¥×¥ê¥ó¥¿¸Î¾ã¤Î¸¶°ø¤Ë¤Ê¤ë¤«¤â¤·¤ì¤Ş¤»¤ó¡ª\n"
+#~ "ã€è­¦å‘Šã€‘: ã“ã®æ©Ÿèƒ½ã¯ã¾ã ãƒ†ã‚¹ãƒˆã—ã¦ã„ãªã„ã®ã§ã€ å‹•ä½œã—ãªã„ã‹ã‚‚ã—ã‚Œã¾ã›"
+#~ "ã‚“ï¼\n"
+#~ "          ã¾ãŸã€ãƒ—ãƒªãƒ³ã‚¿æ•…éšœã®åŸå› ã«ãªã‚‹ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“ï¼\n"
 
 #~ msgid "Printer %s does not require color head alignment.\n"
-#~ msgstr "¥×¥ê¥ó¥¿ %s ¤Ï¥«¥é¡¼¡¦¥Ø¥Ã¥É´Ö³Ö¤ÏÉ¬Í×¤¢¤ê¤Ş¤»¤ó¡£\n"
+#~ msgstr "ãƒ—ãƒªãƒ³ã‚¿ %s ã¯ã‚«ãƒ©ãƒ¼ãƒ»ãƒ˜ãƒƒãƒ‰é–“éš”ã¯å¿…è¦ã‚ã‚Šã¾ã›ã‚“ã€‚\n"
 
 #, fuzzy
 #~ msgid ""
 #~ "Please inspect the print, and choose the pattern in each set.\n"
 #~ "Type a pattern number, '?' for help, or 'r' to repeat the procedure.\n"
 #~ msgstr ""
-#~ "°õºş·ë²Ì¤ò³ÎÇ§¤·¤Æ¡¢³Æ¥Ñ¥¿¡¼¥ó¤ÇºÇÅ¬¤Ê¥é¥¤¥ó¤Î¥Ú¥¢¤òÁªÂò¤·¤Æ²¼¤µ¤¤¡£\n"
-#~ "¤½¤Î¥Ú¥¢¤ÎÈÖ¹æ¤òÆşÎÏ¤«¡¢'r' ¤Ç¤³¤ÎÀßÄê¤ò¤¯¤ê¤«¤¨¤¹¤«¡¢'?' ¤Ç¥Ø¥ë¥×¤òÉ½¼¨¤·"
-#~ "¤Ş¤¹¡£\n"
+#~ "å°åˆ·çµæœã‚’ç¢ºèªã—ã¦ã€å„ãƒ‘ã‚¿ãƒ¼ãƒ³ã§æœ€é©ãªãƒ©ã‚¤ãƒ³ã®ãƒšã‚¢ã‚’é¸æŠã—ã¦ä¸‹ã•ã„ã€‚\n"
+#~ "ãã®ãƒšã‚¢ã®ç•ªå·ã‚’å…¥åŠ›ã‹ã€'r' ã§ã“ã®è¨­å®šã‚’ãã‚Šã‹ãˆã™ã‹ã€'?' ã§ãƒ˜ãƒ«ãƒ—ã‚’è¡¨ç¤ºã—"
+#~ "ã¾ã™ã€‚\n"
 
 #, fuzzy
 #~ msgid "Model %d out of range.\n"
-#~ msgstr "ÈÏ°Ï³°¤Î¥Ú¥¢ÈÖ¹æ¤Ç¤¹¡ª\n"
+#~ msgstr "ç¯„å›²å¤–ã®ãƒšã‚¢ç•ªå·ã§ã™ï¼\n"
 
 #~ msgid "Right Border:"
-#~ msgstr "±¦Â¦¤Î±ï:"
+#~ msgstr "å³å´ã®ç¸:"
 
 #~ msgid "Bottom Border:"
-#~ msgstr "²¼Â¦¤Î±ï:"
+#~ msgstr "ä¸‹å´ã®ç¸:"
 
 #~ msgid "Size"
-#~ msgstr "²èÁü¤Î¥µ¥¤¥º"
+#~ msgstr "ç”»åƒã®ã‚µã‚¤ã‚º"
 
 #~ msgid "Image / Output Settings"
-#~ msgstr "²èÁü / ½ĞÎÏÀßÄê"
+#~ msgstr "ç”»åƒ / å‡ºåŠ›è¨­å®š"
 
 #, fuzzy
 #~ msgid "GIMP-print"
-#~ msgstr "°õºş"
+#~ msgstr "å°åˆ·"
 
 #, fuzzy
 #~ msgid "Resolutions"
-#~ msgstr "²òÁüÅÙ"
+#~ msgstr "è§£åƒåº¦"
 
 #~ msgid "Media Type:"
-#~ msgstr "ÍÑ»æ¤Î¼ïÎà:"
+#~ msgstr "ç”¨ç´™ã®ç¨®é¡:"
 
 #~ msgid "Type of media you're printing to"
-#~ msgstr "°õºş¤¹¤ëÍÑ»æ¤Î¼ïÎà¤Ç¤¹¡£"
+#~ msgstr "å°åˆ·ã™ã‚‹ç”¨ç´™ã®ç¨®é¡ã§ã™ã€‚"
 
 #~ msgid "Media Size:"
-#~ msgstr "ÍÑ»æ¥µ¥¤¥º:"
+#~ msgstr "ç”¨ç´™ã‚µã‚¤ã‚º:"
 
 #~ msgid "Size of paper that you wish to print to"
-#~ msgstr "°õºş¤¹¤ëÍÑ»æ¤Î¥µ¥¤¥º¤Ç¤¹¡£"
+#~ msgstr "å°åˆ·ã™ã‚‹ç”¨ç´™ã®ã‚µã‚¤ã‚ºã§ã™ã€‚"
 
 #~ msgid "Media Source:"
-#~ msgstr "µë»æÊıË¡:"
+#~ msgstr "çµ¦ç´™æ–¹æ³•:"
 
 #~ msgid "Source (input slot) of media you're printing to"
-#~ msgstr "°õºş»ş¤Îµë»æÊı¼°¤Ç¤¹¡£"
+#~ msgstr "å°åˆ·æ™‚ã®çµ¦ç´™æ–¹å¼ã§ã™ã€‚"
 
 #~ msgid "Ink Type:"
-#~ msgstr "¥¤¥ó¥¯¤Î¼ïÎà:"
+#~ msgstr "ã‚¤ãƒ³ã‚¯ã®ç¨®é¡:"
 
 #~ msgid "Resolution:"
-#~ msgstr "²òÁüÅÙ:"
+#~ msgstr "è§£åƒåº¦:"
 
 #~ msgid "Print in black and white (no color, and no shades of gray)"
 #~ msgstr ""
-#~ "¹õ¿§¤ÈÇò¿§¤ò»È¤Ã¤Æ°õºş¤·¤Ş¤¹ (¥«¥é¡¼¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó¡£±Æ¤âÉÕ¤­¤Ş¤»¤ó)¡£"
+#~ "é»’è‰²ã¨ç™½è‰²ã‚’ä½¿ã£ã¦å°åˆ·ã—ã¾ã™ (ã‚«ãƒ©ãƒ¼ã§ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚å½±ã‚‚ä»˜ãã¾ã›ã‚“)ã€‚"
 
 #~ msgid "Fastest and brightest color for text and line art"
-#~ msgstr "¥Æ¥­¥¹¥È¤ä¥é¥¤¥ó¥¢¡¼¥È¸ş¤±¤Ë°ìÈÖÌÀ¤ë¤¯¹âÂ®°õºş¤·¤Ş¤¹¡£"
+#~ msgstr "ãƒ†ã‚­ã‚¹ãƒˆã‚„ãƒ©ã‚¤ãƒ³ã‚¢ãƒ¼ãƒˆå‘ã‘ã«ä¸€ç•ªæ˜ã‚‹ãé«˜é€Ÿå°åˆ·ã—ã¾ã™ã€‚"
 
 #~ msgid "Best for images dominated by regions of solid color"
-#~ msgstr "³Ê»Ò¾å¤Î¿§¤Ç¹½À®¤µ¤ì¤¿²èÁü¤òºÇÅ¬²½¤·¤Ş¤¹¡£"
+#~ msgstr "æ ¼å­ä¸Šã®è‰²ã§æ§‹æˆã•ã‚ŒãŸç”»åƒã‚’æœ€é©åŒ–ã—ã¾ã™ã€‚"
 
 #~ msgid ""
 #~ "Slowest, but most accurate and smoothest color for continuous tone images "
 #~ "and photographs"
 #~ msgstr ""
-#~ "ÄãÂ®¤Ç¤¹¤¬¡¢Ï¢Â³¤·¤¿¥È¡¼¥ó²èÁü¤ä¼Ì¿¿¸ş¤±¤Ë¤â¤Ã¤È¤âÀºÌ©¤Ç³ê¤é¤«¤Ë¤·¤Ş¤¹¡£"
+#~ "ä½é€Ÿã§ã™ãŒã€é€£ç¶šã—ãŸãƒˆãƒ¼ãƒ³ç”»åƒã‚„å†™çœŸå‘ã‘ã«ã‚‚ã£ã¨ã‚‚ç²¾å¯†ã§æ»‘ã‚‰ã‹ã«ã—ã¾ã™ã€‚"
 
 #~ msgid "Dither Algorithm:"
-#~ msgstr "¥Ç¥£¥¶¥ê¥ó¥°Êı¼°:"
+#~ msgstr "ãƒ‡ã‚£ã‚¶ãƒªãƒ³ã‚°æ–¹å¼:"
 
 #~ msgid ""
 #~ "\n"
 #~ "Cannot read from %s: %s\n"
 #~ msgstr ""
 #~ "\n"
-#~ "%s ¤«¤éÆÉ¤ß¹ş¤á¤Ş¤»¤ó: %s\n"
+#~ "%s ã‹ã‚‰èª­ã¿è¾¼ã‚ã¾ã›ã‚“: %s\n"
 
 #~ msgid "%s out of range (value %f, min %f, max %f)\n"
-#~ msgstr "%s ¤ÎÈÏ°Ï¤ò±Û¤¨¤Ş¤·¤¿ (¸½ºß¤ÎÃÍ %f, ºÇ¾® %f, ºÇÂç %f)\n"
+#~ msgstr "%s ã®ç¯„å›²ã‚’è¶Šãˆã¾ã—ãŸ (ç¾åœ¨ã®å€¤ %f, æœ€å° %f, æœ€å¤§ %f)\n"
 
 #~ msgid "%s is not a valid dither algorithm\n"
-#~ msgstr "%s ¤ÏÅ¬ÀÚ¤Ê¥Ç¥£¥¶Êı¼°¤Ç¤Ï¤¢¤ê¤Ş¤»¤ó\n"
+#~ msgstr "%s ã¯é©åˆ‡ãªãƒ‡ã‚£ã‚¶æ–¹å¼ã§ã¯ã‚ã‚Šã¾ã›ã‚“\n"
 
 #~ msgid ""
 #~ "Please re-insert the same alignment sheet in the printer when it is\n"
 #~ "finished printing.\n"
 #~ msgstr ""
-#~ "°õºş¤¬´°Î»¤·¤¿¤é¡¢\n"
-#~ "ºÆÅÙ¡¢¥×¥ê¥ó¥¿¤ËÁ°¤Ë»ÈÍÑ¤·¤¿´Ö³ÖÊäÀµÍÑ»æ¤òÁŞÆş¤·¤Æ²¼¤µ¤¤¡£\n"
+#~ "å°åˆ·ãŒå®Œäº†ã—ãŸã‚‰ã€\n"
+#~ "å†åº¦ã€ãƒ—ãƒªãƒ³ã‚¿ã«å‰ã«ä½¿ç”¨ã—ãŸé–“éš”è£œæ­£ç”¨ç´™ã‚’æŒ¿å…¥ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #~ msgid ""
 #~ "Inspect the alignment sheet, and determine which pattern is the "
@@ -8762,34 +8762,34 @@ msgstr "%.0f ¤Ç¼¡¤ÎÄã¥ì¥Ù¥ë¥Õ¥£¡¼¥ë¥É¤ò¼èÆÀ¤·¤Ş¤¹\n"
 #~ "best pattern, and repeat the procedure.\n"
 #~ "Type a pattern number, or '?' for help.\n"
 #~ msgstr ""
-#~ "´Ö³ÖÊäÀµÍÑ»æ¤ò³ÎÇ§¤·¡¢¤É¤Î¥Ñ¥¿¡¼¥ó¤¬°ìÈÖ¤Ê¤á¤é¤«¤Ç¤¢¤ë¤«¤ò¥Á¥§¥Ã¥¯¤·¤Æ²¼¤µ"
-#~ "¤¤¡£\n"
-#~ "¤½¤Î¤è¤¦¤Ê¥Ñ¥¿¡¼¥ó¤Ë¤Ï°ìÈÖ¾®¤µ¤¤ \"grain\" ¤¬É½¼¨¤µ¤ì¤Ş¤¹¡£\n"
-#~ "¤½¤Î¤è¤¦¤Ê¥Ñ¥¿¡¼¥ó¤ò³ÎÇ§¤Ç¤­¤Ê¤¤¾ì¹ç¤Ï¡¢¤â¤Ã¤È¤âºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤ÎÈÖ¹æ¤òÁªÂò"
-#~ "¤·¡¢\n"
-#~ "¤³¤Î¼ê½ç¤ò·«¤êÊÖ¤·¤Æ²¼¤µ¤¤¡£\n"
-#~ "¥Ñ¥¿¡¼¥ó¤ÎÈÖ¹æ¤òÆşÎÏ¤·¤Æ²¼¤µ¤¤ ('?' ¤Ç¥Ø¥ë¥×¤òÉ½¼¨¤·¤Ş¤¹)¡£\n"
+#~ "é–“éš”è£œæ­£ç”¨ç´™ã‚’ç¢ºèªã—ã€ã©ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ãŒä¸€ç•ªãªã‚ã‚‰ã‹ã§ã‚ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯ã—ã¦ä¸‹ã•"
+#~ "ã„ã€‚\n"
+#~ "ãã®ã‚ˆã†ãªãƒ‘ã‚¿ãƒ¼ãƒ³ã«ã¯ä¸€ç•ªå°ã•ã„ \"grain\" ãŒè¡¨ç¤ºã•ã‚Œã¾ã™ã€‚\n"
+#~ "ãã®ã‚ˆã†ãªãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ç¢ºèªã§ããªã„å ´åˆã¯ã€ã‚‚ã£ã¨ã‚‚æœ€é©ãªãƒ‘ã‚¿ãƒ¼ãƒ³ã®ç•ªå·ã‚’é¸æŠ"
+#~ "ã—ã€\n"
+#~ "ã“ã®æ‰‹é †ã‚’ç¹°ã‚Šè¿”ã—ã¦ä¸‹ã•ã„ã€‚\n"
+#~ "ãƒ‘ã‚¿ãƒ¼ãƒ³ã®ç•ªå·ã‚’å…¥åŠ›ã—ã¦ä¸‹ã•ã„ ('?' ã§ãƒ˜ãƒ«ãƒ—ã‚’è¡¨ç¤ºã—ã¾ã™)ã€‚\n"
 
 #~ msgid "The best pattern should be numbered between 1 and %d.\n"
-#~ msgstr "ºÇÅ¬¤Ê¥Ñ¥¿¡¼¥ó¤Ï 1 ¤È %d ¤Î´Ö¤ÎÈÖ¹æ¤Ë¤·¤Æ²¼¤µ¤¤¡£\n"
+#~ msgstr "æœ€é©ãªãƒ‘ã‚¿ãƒ¼ãƒ³ã¯ 1 ã¨ %d ã®é–“ã®ç•ªå·ã«ã—ã¦ä¸‹ã•ã„ã€‚\n"
 
 #~ msgid "Set the contrast of the print"
-#~ msgstr "°õºş»ş¤Î¥³¥ó¥È¥é¥¹¥È¤ò¥»¥Ã¥È¤·¤Ş¤¹¡£"
+#~ msgstr "å°åˆ·æ™‚ã®ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆã‚’ã‚»ãƒƒãƒˆã—ã¾ã™ã€‚"
 
 #~ msgid "Cyan:"
-#~ msgstr "¥·¥¢¥ó:"
+#~ msgstr "ã‚·ã‚¢ãƒ³:"
 
 #~ msgid "Magenta:"
-#~ msgstr "¥Ş¥¼¥ó¥¿:"
+#~ msgstr "ãƒã‚¼ãƒ³ã‚¿:"
 
 #~ msgid "Yellow:"
-#~ msgstr "²«¿§:"
+#~ msgstr "é»„è‰²:"
 
 #~ msgid "Parameter %s out of range (value %f, min %f, max %f)\n"
-#~ msgstr "¥Ñ¥é¥á¡¼¥¿ %s ¤ÏÈÏ°Ï³°¤Ç¤¹ (ÃÍ %f, ºÇ¾®ÃÍ %f, ºÇÂçÃÍ %f)\n"
+#~ msgstr "ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ %s ã¯ç¯„å›²å¤–ã§ã™ (å€¤ %f, æœ€å°å€¤ %f, æœ€å¤§å€¤ %f)\n"
 
 #~ msgid "Parameter %s out of range (value %d, min %d, max %d)\n"
-#~ msgstr "¥Ñ¥é¥á¡¼¥¿ %s ¤ÏÈÏ°Ï³°¤Ç¤¹ (ÃÍ %d, ºÇ¾®ÃÍ %d, ºÇÂçÃÍ %d)\n"
+#~ msgstr "ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ %s ã¯ç¯„å›²å¤–ã§ã™ (å€¤ %d, æœ€å°å€¤ %d, æœ€å¤§å€¤ %d)\n"
 
 #~ msgid "Unknown option %s\n"
-#~ msgstr "ÉÔÌÀ¤Ê¥ª¥×¥·¥ç¥ó %s ¤Ç¤¹\n"
+#~ msgstr "ä¸æ˜ãªã‚ªãƒ—ã‚·ãƒ§ãƒ³ %s ã§ã™\n"

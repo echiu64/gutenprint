@@ -6485,7 +6485,7 @@ msgstr "Extra 5"
 #. * "Svenska".
 #: src/cups/genppd.c:1052
 msgid "English"
-msgstr "Norwegian"
+msgstr "Dutch"
 
 #. TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:1054
