@@ -785,10 +785,17 @@ DECLARE_INK_CHANNEL(claria_yellow);
 static const physical_subchannel_t claria_cyan_subchannels[] =
 {
   { 2, 0, 0, "CyanDensity", NULL },
-  { 2, 1, 2, "CyanDensity", "LightCyanTransition" },
 };
 
 DECLARE_INK_CHANNEL(claria_cyan);
+
+static const physical_subchannel_t claria_photo_cyan_subchannels[] =
+{
+  { 2, 0, 0, "CyanDensity", NULL },
+  { 2, 1, 2, "CyanDensity", "LightCyanTransition" },
+};
+
+DECLARE_INK_CHANNEL(claria_photo_cyan);
 
 static const physical_subchannel_t extended_claria_cyan_subchannels[] =
 {
@@ -799,15 +806,22 @@ DECLARE_INK_CHANNEL(extended_claria_cyan);
 
 static const physical_subchannel_t claria_magenta_subchannels[] =
 {
-  { 1, 0, 0, "MagentaDensity", NULL },
-  { 1, 1, 2, "MagentaDensity", "LightMagentaTransition" },
+  { 1, 0, 2, "MagentaDensity", NULL },
 };
 
 DECLARE_INK_CHANNEL(claria_magenta);
 
+static const physical_subchannel_t claria_photo_magenta_subchannels[] =
+{
+  { 1, 0, 2, "MagentaDensity", NULL },
+  { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" },
+};
+
+DECLARE_INK_CHANNEL(claria_photo_magenta);
+
 static const physical_subchannel_t extended_claria_magenta_subchannels[] =
 {
-  { 1, 1, 2, "MagentaDensity", "LightMagentaTransition" },
+  { 1, 1, 0, "MagentaDensity", "LightMagentaTransition" },
 };
 
 DECLARE_INK_CHANNEL(extended_claria_magenta);
@@ -1176,8 +1190,8 @@ static const escp2_inkname_t three_color_r2400_composite_inkset =
 
 static const ink_channel_t *const claria_cmy_channels[] =
 {
-  NULL, &standard_cyan_channel,
-  &standard_magenta_channel, &claria_yellow_channel
+  NULL, &claria_cyan_channel,
+  &claria_magenta_channel, &claria_yellow_channel
 };
 
 DECLARE_CHANNEL_SET(claria_cmy);
@@ -1348,16 +1362,16 @@ static const escp2_inkname_t cx3650_four_color_standard_inkset =
 
 static const ink_channel_t *const claria_cmyk_channels[] =
 {
-  &standard_black_channel, &standard_cyan_channel,
-  &standard_magenta_channel, &claria_yellow_channel
+  &claria_black_channel, &claria_cyan_channel,
+  &claria_magenta_channel, &claria_yellow_channel
 };
 
 DECLARE_CHANNEL_SET(claria_cmyk);
 
 static const escp2_inkname_t claria_four_color_standard_inkset =
 {
-  "RGB", N_("Four Color Standard"), INKSET_CMYK,
-  &claria_cmy_channel_set
+  "CMYK", N_("Four Color Standard"), INKSET_CMYK,
+  &claria_cmyk_channel_set
 };
 
 
@@ -1413,15 +1427,15 @@ static const escp2_inkname_t five_color_photo3_inkset =
 
 static const ink_channel_t *const claria_ccmmy_channels[] =
 {
-  NULL, &claria_cyan_channel,
-  &claria_magenta_channel, &claria_yellow_channel
+  NULL, &claria_photo_cyan_channel,
+  &claria_photo_magenta_channel, &claria_yellow_channel
 };
 
 DECLARE_CHANNEL_SET(claria_ccmmy);
 
 static const escp2_inkname_t claria_five_color_photo_composite_inkset =
 {
-  "RGB", N_("Five Color Photo Composite"), INKSET_CcMmYK,
+  "PhotoCMY", N_("Five Color Photo Composite"), INKSET_CcMmYK,
   &claria_ccmmy_channel_set
 };
 
@@ -1478,15 +1492,15 @@ static const escp2_inkname_t six_color_photo3_inkset =
 
 static const ink_channel_t *const claria_ccmmyk_channels[] =
 {
-  &claria_black_channel, &claria_cyan_channel,
-  &claria_magenta_channel, &claria_yellow_channel
+  &claria_black_channel, &claria_photo_cyan_channel,
+  &claria_photo_magenta_channel, &claria_yellow_channel
 };
 
 DECLARE_CHANNEL_SET(claria_ccmmyk);
 
 static const escp2_inkname_t claria_six_color_photo_inkset =
 {
-  "RGB", N_("Six Color Photo"), INKSET_CcMmYK,
+  "PhotoCMYK", N_("Six Color Photo"), INKSET_CcMmYK,
   &claria_ccmmyk_channel_set
 };
 
@@ -1932,7 +1946,7 @@ static const escp2_inkname_t cx3650_three_color_extended_inkset =
 
 static const ink_channel_t *const claria_three_color_extended_channels[] =
 {
-  &standard_cyan_channel, &standard_magenta_channel, &claria_yellow_channel
+  &claria_cyan_channel, &claria_magenta_channel, &claria_yellow_channel
 };
 
 DECLARE_CHANNEL_SET(claria_three_color_extended);
@@ -2035,8 +2049,8 @@ static const escp2_inkname_t f360_five_color_extended_inkset =
 
 static const ink_channel_t *const claria_five_color_extended_channels[] =
 {
-  &standard_cyan_channel, &extended_claria_cyan_channel,
-  &standard_magenta_channel, &extended_claria_magenta_channel,
+  &claria_cyan_channel, &extended_claria_cyan_channel,
+  &claria_magenta_channel, &extended_claria_magenta_channel,
   &claria_yellow_channel
 };
 DECLARE_CHANNEL_SET(claria_five_color_extended);
@@ -2098,9 +2112,9 @@ static const escp2_inkname_t six_color_r800_photo_gloss_extended_inkset =
 
 static const ink_channel_t *const claria_six_color_extended_channels[] =
 {
-  &standard_black_channel,
-  &standard_cyan_channel, &extended_claria_cyan_channel,
-  &standard_magenta_channel, &extended_claria_magenta_channel,
+  &claria_black_channel,
+  &claria_cyan_channel, &extended_claria_cyan_channel,
+  &claria_magenta_channel, &extended_claria_magenta_channel,
   &claria_yellow_channel
 };
 DECLARE_CHANNEL_SET(claria_six_color_extended);
@@ -2329,7 +2343,7 @@ static const shade_set_t claria_shades =	/* Stylus R260 and newer */
 {
   { 1, { 1.0 }},
   { 2, { 1.0, 0.35 }},
-  { 2, { 1.0, 0.35 }},
+  { 2, { 1.0, 0.33 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},
   { 1, { 1.0 }},

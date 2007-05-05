@@ -139,9 +139,26 @@ static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
 static const escp2_dropsize_t escp2_claria_360_dropsizes =
   { "claria_360", 3, { 0, 0, 1.0 } };
 static const escp2_dropsize_t escp2_claria_720_360_dropsizes =
-  { "claria_720", 3, { 0.4, 0.0, 1.0 } };
+  { "claria_720_360", 3, { 0.4, 0.0, 1.0 } };
 static const escp2_dropsize_t escp2_claria_720_dropsizes =
-  { "claria_720", 3, { 0.12, 0.4, 1.0 } };
+/*
+ * The smallest drop seems to be around 0.12 or thereabouts.
+ * However, it doesn't blend in very well with the other drops,
+ * and the result is that gradients look banded.  Even the
+ * medium size drop is small enough to yield very good quality.
+ * Even in 4-color mode it actually looks quite good.
+ * The other alternatives are:
+ * 1) Use drop size 0x23 rather than 0x24.  This has larger small
+ *    drops, but the large drops aren't big enough to give good
+ *    coverage on good paper.
+ * 2) Use drop size 0x21.  These drops are really too big for
+ *    720 DPI.
+ * 3) Use drop size 0x33.  This produces good quality, but
+ *    it requires using a base resolution of 360 DPI rather than
+ *    720 DPI, so printing takes as long as it would at 1440x720
+ *    DPI.  That rather defeats the purpose of using 720 DPI.
+ */
+  { "claria_720", 3, { 0.0, 0.4, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1440_dropsizes =
   { "claria_1440", 3, { 0.18, 0.45, 1.0 } };
 static const escp2_dropsize_t escp2_claria_2880_dropsizes =
