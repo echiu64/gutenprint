@@ -257,7 +257,7 @@ static const escp2_densities_t p1_5pl_densities =
 { 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
 
 static const escp2_densities_t claria_densities =
-{ 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
+{ 2.8, 1.4,  1.25, 1.000, 0.608, 0.676, 0.338, 0.500, 0.250 };
 
 static const escp2_densities_t p3_5pl_densities =
 { 2.8, 1.4,  1.77, 0.886, 0.443, 0.221, 0.240, 0.293, 0.146 };
@@ -1838,12 +1838,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_PACKET_MODE_YES),
     90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
     360, 14400, -1, 5760, 2880, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 720,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     claria_dotsizes, claria_densities, "variable_claria",
-    "superfine", "c82",
+    "superfine", "claria",
     variable_bits, c1_5_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "photo"
@@ -1856,12 +1856,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_PACKET_MODE_YES),
     90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
     360, 14400, -1, 5760, 2880, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 720,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     claria_dotsizes, claria_densities, "variable_claria",
-    "superfine", "c82",
+    "superfine", "claria",
     variable_bits, c1_5_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "photo"
