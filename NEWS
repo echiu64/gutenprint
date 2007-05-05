@@ -107,7 +107,7 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
+A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
   1) New printers supported in this release:
 
@@ -132,6 +132,8 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
 
        Epson Stylus Photo 1400
        Epson Stylus Photo 1410
+       Epson Stylus Photo R240
+       Epson Stylus Photo R245
        Epson Stylus Photo R260
        Epson Stylus Photo R265
        Epson Stylus Photo R270

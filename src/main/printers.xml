@@ -233,6 +233,8 @@
       <printer name="Epson Stylus Photo R210" driver="escp2-r210" manufacturer="Epson" model="63" parameters="standard_params" />
       <printer name="Epson Stylus Photo R220" driver="escp2-r220" manufacturer="Epson" model="63" parameters="standard_params" />
       <printer name="Epson Stylus Photo R230" driver="escp2-r230" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer name="Epson Stylus Photo R240" driver="escp2-r240" manufacturer="Epson" model="83" parameters="standard_params" />
+      <printer name="Epson Stylus Photo R245" driver="escp2-r245" manufacturer="Epson" model="83" parameters="standard_params" />
       <printer name="Epson Stylus Photo R260" driver="escp2-r260" manufacturer="Epson" model="81" parameters="standard_params" />
       <printer name="Epson Stylus Photo R265" driver="escp2-r265" manufacturer="Epson" model="81" parameters="standard_params" />
       <printer name="Epson Stylus Photo R270" driver="escp2-r270" manufacturer="Epson" model="81" parameters="standard_params" />

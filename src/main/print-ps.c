@@ -288,9 +288,13 @@ static void
 ps_parameters(const stp_vars_t *v, const char *name,
 	      stp_parameter_t *description)
 {
+#ifdef ENABLE_NLS
   char *locale = setlocale(LC_ALL, "C");
+#endif
   ps_parameters_internal(v, name, description);
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
 }
 
 /*
@@ -327,9 +331,13 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
 static void
 ps_media_size(const stp_vars_t *v, int *width, int *height)
 {
+#ifdef ENABLE_NLS
   char *locale = setlocale(LC_ALL, "C");
+#endif
   ps_media_size_internal(v, width, height);
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
 }
 
 /*
@@ -397,9 +405,13 @@ ps_imageable_area(const stp_vars_t *v,      /* I */
                   int  *bottom,		/* O - Bottom position in points */
                   int  *top)		/* O - Top position in points */
 {
+#ifdef ENABLE_NLS
   char *locale = setlocale(LC_ALL, "C");
+#endif
   ps_imageable_area_internal(v, 0, left, right, bottom, top);
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
 }
 
 static void
@@ -409,9 +421,13 @@ ps_maximum_imageable_area(const stp_vars_t *v,      /* I */
 			  int  *bottom,	/* O - Bottom position in points */
 			  int  *top)	/* O - Top position in points */
 {
+#ifdef ENABLE_NLS
   char *locale = setlocale(LC_ALL, "C");
+#endif
   ps_imageable_area_internal(v, 1, left, right, bottom, top);
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
 }
 
 static void
@@ -444,9 +460,13 @@ ps_describe_resolution_internal(const stp_vars_t *v, int *x, int *y)
 static void
 ps_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
+#ifdef ENABLE_NLS
   char *locale = setlocale(LC_ALL, "C");
+#endif
   ps_describe_resolution_internal(v, x, y);
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
 }
 
 static const char *
@@ -674,11 +694,15 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
      always be printed with a decimal point rather than the
      locale-specific setting. */
 
+#ifdef ENABLE_NLS
   locale = setlocale(LC_ALL, "C");
+#endif
   stp_zprintf(v, "%.3f %.3f scale\n",
 	      (double)out_width / ((double)image_width),
 	      (double)out_height / ((double)image_height));
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
 
   stp_channel_reset(nv);
   stp_channel_add(nv, 0, 0, 1.0);
@@ -802,9 +826,13 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 static int
 ps_print(const stp_vars_t *v, stp_image_t *image)
 {
+#ifdef ENABLE_NLS
   char *locale = setlocale(LC_ALL, "C");
+#endif
   int status = ps_print_internal(v, image);
+#ifdef ENABLE_NLS
   setlocale(LC_ALL, locale);
+#endif
   return status;
 }
 
