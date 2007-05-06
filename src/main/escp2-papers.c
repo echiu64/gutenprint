@@ -204,8 +204,8 @@ static const char claria_hue_adj[] =
 "<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
 "<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
 /* C */  "0.00 -.01 -.03 -.06 -.10 -.15 -.20 -.25 "  /* B */
-/* B */  "-.28 -.30 -.34 -.35 -.35 -.34 -.33 -.33 "  /* M */
-/* M */  "-.36 -.40 -.44 -.48 -.50 -.45 -.40 -.30 "  /* R */
+/* B */  "-.30 -.35 -.38 -.40 -.42 -.46 -.49 -.52 "  /* M */
+/* M */  "-.55 -.57 -.57 -.55 -.52 -.48 -.40 -.30 "  /* R */
 /* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
 /* Y */  "0.00 -.00 -.00 -.00 -.02 -.04 -.08 -.13 "  /* G */
 /* G */  "-.18 -.18 -.19 -.16 -.13 -.10 -.07 -.03 "  /* C */
@@ -774,7 +774,7 @@ static const paper_adjustment_t claria_adjustments[] =
 {
   { "Plain",        0.540, .25, 0.75, .1, .5, 1, .7, .7, 1, 1, 1.0,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
-  { "PlainFast",    0.540, .25, 0.75, .1, .9, 1, .7, .7, 1, 1, 1.0,
+  { "PlainFast",    0.540, .25, 0.75, .1, .5, 1, .7, .7, 1, 1, 1.0,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
   { "Postcard",     0.692, .25, 0.5, .1, .5, 1, .7, .7, 1, 1, 1.0,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
@@ -786,13 +786,13 @@ static const paper_adjustment_t claria_adjustments[] =
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
   { "BackFilm",     0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
-  { "Matte",        0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
+  { "Matte",        1.000, .25, 0.6, .15, .999, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
-  { "MatteHeavy",   0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
+  { "MatteHeavy",   1.000, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
   { "Inkjet",       0.709, .25, 0.75, .15, .75, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
-  { "Coated",       0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
+  { "Coated",       1.000, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
   { "Photo",        0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
@@ -806,7 +806,7 @@ static const paper_adjustment_t claria_adjustments[] =
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
   { "Ilford",       0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj  },
-  { "ColorLife",    0.833, .25, 0.75, .2, .9, 1, .7, .7, 1, 1, 1,
+  { "ColorLife",    1.000, .25, 0.75, .2, .9, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
   { "Other",        0.540, .25, 0.5, .1, .5, 1, .7, .7, 1, 1, 1,
     claria_hue_adj, claria_lum_adj, claria_sat_adj },
