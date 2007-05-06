@@ -1046,6 +1046,7 @@ fi
 echo "    Build static libraries:                     $enable_static"
 echo "    Build shared libraries:                     $enable_shared"
 echo "    Maintainer mode:                            $USE_MAINTAINER_MODE"
+echo "    Use i18n:                                   $USE_NLS"
 echo "    Generate profiling information:             $ENABLE_PROFILE"
 echo "    Generate debugging symbols:                 $ENABLE_DEBUG"
 echo "    Use modules:                                $WITH_MODULES"
