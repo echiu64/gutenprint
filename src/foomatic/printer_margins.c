@@ -107,7 +107,7 @@ main(int argc, char **argv) {
 	height = 0;
       }
 
-      printf("$stpdata{'%s'}{'PageSize'}{'%s'} = '%s';\n",
+      printf("$stpdata{'%s'}{'PageSize'}{'%s'} = '%s';",
 	     driver, opt->name, opt->text);
       printf("$imageableareas{'%s'}{'%s'} = {",
 	     driver, opt->name);
