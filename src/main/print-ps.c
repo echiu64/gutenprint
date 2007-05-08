@@ -473,8 +473,15 @@ static const char *
 ps_describe_output(const stp_vars_t *v)
 {
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *input_image_type = stp_get_string_parameter(v, "InputImageType");
   if (print_mode && strcmp(print_mode, "Color") == 0)
-    return "RGB";
+    {
+      if (input_image_type && (strcmp(input_image_type, "CMYK") == 0 ||
+			       strcmp(input_image_type, "KCMY") == 0))
+	return "CMYK";
+      else
+	return "RGB";
+    }
   else
     return "Whitescale";
 }
@@ -489,6 +496,7 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   int		status = 1;
   int		model = stp_get_model_id(v);
   const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *input_image_type = stp_get_string_parameter(v, "InputImageType");
   unsigned short *out = NULL;
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
@@ -512,6 +520,8 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 		image_width;
   stp_vars_t	*nv = stp_vars_create_copy(v);
   char		*locale;
+  int		color_out = 0;
+  int		cmyk_out = 0;
 
   stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
@@ -519,6 +529,12 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
       return 0;
     }
+  if (print_mode && strcmp(print_mode, "Color") == 0)
+    color_out = 1;
+  if (color_out &&
+      input_image_type && (strcmp(input_image_type, "CMYK") == 0 ||
+			   strcmp(input_image_type, "KCMY") == 0))
+    cmyk_out = 1;
 
   stp_image_init(image);
 
@@ -706,11 +722,17 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 
   stp_channel_reset(nv);
   stp_channel_add(nv, 0, 0, 1.0);
-  if (strcmp(print_mode, "Color") == 0)
+  if (color_out)
     {
       stp_channel_add(nv, 1, 0, 1.0);
       stp_channel_add(nv, 2, 0, 1.0);
-      stp_set_string_parameter(nv, "STPIOutputType", "RGB");
+      if (cmyk_out)
+	{
+	  stp_channel_add(nv, 3, 0, 1.0);
+	  stp_set_string_parameter(nv, "STPIOutputType", "CMYK");
+	}
+      else
+	stp_set_string_parameter(nv, "STPIOutputType", "RGB");
     }
   else
     stp_set_string_parameter(nv, "STPIOutputType", "Whitescale");
@@ -727,7 +749,9 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 
     stp_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
-    if (strcmp(print_mode, "Color") == 0)
+    if (cmyk_out)
+      stp_puts("{currentfile picture readhexstring pop} false 4 colorimage\n", v);
+    else if (color_out)
       stp_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
     else
       stp_puts("{currentfile picture readhexstring pop} image\n", v);
@@ -741,14 +765,31 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 	}
 
       out = stp_channel_get_input(nv);
+
+      /* Convert from KCMY to CMYK */
+      if (cmyk_out)
+	{
+	  int x;
+	  unsigned short *pos = out;
+	  for (x = 0; x < image_width; x++, pos += 4)
+	    {
+	      unsigned short p0 = pos[0];
+	      pos[0] = pos[1];
+	      pos[1] = pos[2];
+	      pos[2] = pos[3];
+	      pos[3] = p0;
+	    }
+	}
       ps_hex(v, out, image_width * out_channels);
     }
   }
   else
   {
     unsigned short *tmp_buf =
-      stp_malloc(sizeof(unsigned short) * (image_width * out_channels + 3));
-    if (strcmp(print_mode, "Color") == 0)
+      stp_malloc(sizeof(unsigned short) * (image_width * out_channels + 4));
+    if (cmyk_out)
+      stp_puts("/DeviceCMYK setcolorspace\n", v);
+    else if (color_out)
       stp_puts("/DeviceRGB setcolorspace\n", v);
     else
       stp_puts("/DeviceGray setcolorspace\n", v);
@@ -760,7 +801,9 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
     stp_zprintf(v, "\t/Height %d\n", image_height);
     stp_puts("\t/BitsPerComponent 8\n", v);
 
-    if (strcmp(print_mode, "Color") == 0)
+    if (cmyk_out)
+      stp_puts("\t/Decode [ 0 1 0 1 0 1 0 1 ]\n", v);
+    else if (color_out)
       stp_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
     else
       stp_puts("\t/Decode [ 0 1 ]\n", v);
@@ -793,6 +836,21 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 	}
       else
 	where = out;
+
+      /* Convert from KCMY to CMYK */
+      if (cmyk_out)
+	{
+	  int x;
+	  unsigned short *pos = where;
+	  for (x = 0; x < image_width; x++, pos += 4)
+	    {
+	      unsigned short p0 = pos[0];
+	      pos[0] = pos[1];
+	      pos[1] = pos[2];
+	      pos[2] = pos[3];
+	      pos[3] = p0;
+	    }
+	}
 
       out_ps_height = out_offset + image_width * out_channels;
 
