@@ -77,7 +77,7 @@ static const escp2_dot_size_t p1_5pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13 };
 
 static const escp2_dot_size_t claria_dotsizes =
-{ 0x10, 0x10, 0x21, 0x21, 0x26, 0x26, 0x26, 0x25, 0x25 };
+{ 0x10, 0x10, 0x21, 0x24, 0x26, 0x26, 0x26, 0x25, 0x25 };
 
 static const escp2_dot_size_t c2pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10, 0x10 };
@@ -257,7 +257,7 @@ static const escp2_densities_t p1_5pl_densities =
 { 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
 
 static const escp2_densities_t claria_densities =
-{ 2.8, 1.4,  1.25, 0.625, 0.730, 0.811, 0.406, 0.720, 0.360 };
+{ 2.8, 1.4,  2.00, 1.000, 0.730, 0.811, 0.406, 0.720, 0.360 };
 
 static const escp2_densities_t p3_5pl_densities =
 { 2.8, 1.4,  1.77, 0.886, 0.443, 0.221, 0.240, 0.293, 0.146 };

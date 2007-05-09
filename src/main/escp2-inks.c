@@ -139,7 +139,7 @@ static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
 static const escp2_dropsize_t escp2_claria_360_dropsizes =
   { "claria_360", 3, { 0, 0, 1.0 } };
 static const escp2_dropsize_t escp2_claria_720_360_dropsizes =
-  { "claria_720_360", 3, { 0.4, 0.0, 1.0 } };
+  { "claria_720_360", 3, { 0.4, .7, 1.0 } };
 static const escp2_dropsize_t escp2_claria_720_dropsizes =
 /*
  * The smallest drop seems to be around 0.12 or thereabouts.
