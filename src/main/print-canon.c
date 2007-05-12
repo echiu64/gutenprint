@@ -118,6 +118,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_l         0x400ul
 #define CANON_CAP_r         0x800ul
 #define CANON_CAP_g         0x1000ul
+#define CANON_CAP_px        0x2000ul
 #define CANON_CAP_rr        0x4000ul
 #define CANON_CAP_I         0x8000ul
 #define CANON_CAP_DUPLEX    0x40000ul
@@ -1137,7 +1138,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
    * Is it the printable length or the bottom border?
    * Is is the printable width or the right border?
    */
-
   int printable_width=  init->page_width*5/6;
   int printable_length= init->page_height*5/6;
 
@@ -1145,9 +1145,35 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   unsigned char arg_70_2= (printable_length) & 0xff;
   unsigned char arg_70_3= (printable_width >> 8) & 0xff;
   unsigned char arg_70_4= (printable_width) & 0xff;
+  const char* input_slot = stp_get_string_parameter(v, "InputSlot");
 
-  if (!(init->caps->features & CANON_CAP_p))
+  if (!(init->caps->features & CANON_CAP_px) && !(init->caps->features & CANON_CAP_p))
+	return;
+
+  if ((init->caps->features & CANON_CAP_px) && !(input_slot && !strcmp(input_slot,"CD")))
+  {
+    unsigned int unit = init->mode->xdpi;
+    stp_zfwrite(ESC28,2,1,v); /* ESC( */
+    stp_putc(0x70,v);         /* p    */
+    stp_put16_le(46, v);      /* len  */
+    stp_put16_be(printable_length,v);
+    stp_put16_be(0,v);
+    stp_put16_be(printable_width,v);
+    stp_put16_be(0,v);
+    stp_put32_be(0,v);
+    stp_put16_be(unit,v);
+    
+    stp_put32_be(init->caps->border_left * unit / 72,v); /* area_right */
+    stp_put32_be(init->caps->border_top * unit / 72,v);  /* area_top */
+    stp_put32_be(init->page_width  * unit / 72,v); /* area_width */
+    stp_put32_be(init->page_height * unit / 72,v); /* area_length */
+    stp_put32_be(0,v); /* paper_right */
+    stp_put32_be(0,v); /* paper_top */
+    stp_put32_be((init->page_width + init->caps->border_left + init->caps->border_right) * unit / 72,v); /* paper_width */
+    stp_put32_be((init->page_height + init->caps->border_top + init->caps->border_bottom) * unit / 72,v); /* paper_height */
     return;
+  }
+
   canon_cmd(v,ESC28,0x70, 8,
    	      arg_70_1, arg_70_2, 0x00, 0x00,
 	      arg_70_3, arg_70_4, 0x00, 0x00);
