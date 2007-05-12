@@ -321,7 +321,7 @@ writefunc(void *file, const char *buf, size_t bytes)
 static void
 stpui_errfunc(void *file, const char *buf, size_t bytes)
 {
-  g_message(buf);
+  g_message("%s",buf);
 }
 
 void
