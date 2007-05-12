@@ -163,6 +163,14 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
   7) Printing to CD's has been re-enabled for the Canon PIXMA iP4200.
 
+  8) CD printing for the Canon PIXMA iP4000 has been fixed 
+
+  9) The Canon driver now also supports the CD fine adjustment controls
+
+ 10) The resolutions for the Canon S300 have been fixed
+ 
+ 11) Printing to Canon PIXMA printers that are connected to windows hosts has been fixed (#1625202)
+
 
 ----------------
 
