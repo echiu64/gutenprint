@@ -67,7 +67,7 @@
       <printer name="Canon BJC-8200" driver="bjc-8200" manufacturer="Canon" model="8200" parameters="density_800_params" />
       <printer name="Canon S100" driver="bjc-s100" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
       <printer name="Canon S200" driver="bjc-s200" manufacturer="Canon" model="4202" parameters="gamma_8_density_900_params" />
-      <printer name="Canon S300" driver="bjc-s300" manufacturer="Canon" model="4202" parameters="gamma_8_density_900_params" />
+      <printer name="Canon S300" driver="bjc-s300" manufacturer="Canon" model="8201" parameters="density_800_params" />
       <printer name="Canon S400" driver="bjc-s400" manufacturer="Canon" model="3000" parameters="density_800_params" />
       <printer name="Canon S450" driver="bjc-s450" manufacturer="Canon" model="6200" parameters="gamma_750_params" />
       <printer name="Canon S500" driver="bjc-s500" manufacturer="Canon" model="8200" parameters="density_800_params" />

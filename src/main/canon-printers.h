@@ -143,6 +143,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
 
+  { /* Canon BJC S300 */
+    8201, 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_default_slotlist,
+    CANON_CAP_STD1 | CANON_CAP_r,0x61,control_cmd_ackshort,
+    &canon_BJC_8500_modelist,
+    &canon_default_paperlist,
+    NULL,
+    NULL,
+    NULL
+  },
+
   { /* Canon  BJ 30   *//* heads: BC-10 */
     30, 1,
     9.5*72, 14*72,
