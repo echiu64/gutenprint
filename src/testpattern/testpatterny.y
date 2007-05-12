@@ -361,7 +361,7 @@ parameter_curve: PARAMETER_CURVE tSTRING tSTRING
 	}
 ;
 
-parameter: parameter_string | parameter_int | parameter_float
+parameter: parameter_string | parameter_int | parameter_float | parameter_curve
 ;
 density: DENSITY tDOUBLE
 	{
