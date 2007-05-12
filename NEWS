@@ -249,6 +249,17 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
   8) Roll printing now works correctly on the Epson Stylus Photo
      R800.
 
+  9) Printing with PIXMA printers connected to windows hosts (#1625202)
+     has been fixed.
+
+ 10) CD printing has been fixed for the Canon PIXMA iP4000 and iP4200.
+
+ 11) The Canon driver now also supports the CD fine adjustment controls.
+
+ 12) The Resolutions for the Canon S300 have been fixed.
+ 
+ 13) Some Canon MULTIPASS printers have been renamed to PIXMA.
+
 
 ================================================================
 
