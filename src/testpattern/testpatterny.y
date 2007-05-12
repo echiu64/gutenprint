@@ -532,20 +532,20 @@ image: IMAGE tINT tINT
 
 Message0: MESSAGE tSTRING
 	{
-	  fprintf(stderr, $2);
+	  fprintf(stderr,"%s",$2);
 	  free($2);
 	}
 ;
 Message1: MESSAGE tSTRING tSTRING
 	{
-	  fprintf(stderr, $2, $3);
+	  fprintf(stderr,"%s%s", $2, $3);
 	  free($2);
 	  free($3);
 	}
 ;
 Message2: MESSAGE tSTRING tSTRING tSTRING
 	{
-	  fprintf(stderr, $2, $3, $4);
+	  fprintf(stderr,"%s%s%s", $2, $3, $4);
 	  free($2);
 	  free($3);
 	  free($4);
@@ -553,7 +553,7 @@ Message2: MESSAGE tSTRING tSTRING tSTRING
 ;
 Message3: MESSAGE tSTRING tSTRING tSTRING tSTRING
 	{
-	  fprintf(stderr, $2, $3, $4, $5);
+	  fprintf(stderr, "%s%s%s%s", $2, $3, $4, $5);
 	  free($2);
 	  free($3);
 	  free($4);
@@ -562,7 +562,7 @@ Message3: MESSAGE tSTRING tSTRING tSTRING tSTRING
 ;
 Message4: MESSAGE tSTRING tSTRING tSTRING tSTRING tSTRING
 	{
-	  fprintf(stderr, $2, $3, $4, $5, $6);
+	  fprintf(stderr, "%s%s%s%s%s", $2, $3, $4, $5, $6);
 	  free($2);
 	  free($3);
 	  free($4);
