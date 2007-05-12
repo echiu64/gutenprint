@@ -66,6 +66,14 @@
 #  include <netdb.h>
 #endif /* WIN32 || __EMX__ */
 
+#ifdef __linux
+#  include <sys/param.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <dirent.h>
+#  include <unistd.h>
+#endif /* __linux */
+
 #ifdef __sgi
 #  include <invent.h>
 #  ifndef INV_EPP_ECP_PLP
@@ -515,6 +523,7 @@ list_devices(void)
   int	fd;			/* File descriptor */
   char	device[255];		/* Device filename */
   FILE	*probe;			/* /proc/parport/n/autoprobe file */
+  DIR	*dirprobe;		/* scan /sys/bus/usb/drivers/usblp */
   char	line[1024],		/* Line from file */
 	*delim,			/* Delimiter in file */
 	make[IPP_MAX_NAME],	/* Make from file */
@@ -527,12 +536,17 @@ list_devices(void)
 
   for (i = 0; i < 4; i ++)
   {
-    sprintf(device, "/proc/parport/%d/autoprobe", i);
-    if ((probe = fopen(device, "r")) != NULL)
+    sprintf(device, "/proc/sys/dev/parport/parport%d/autoprobe", i);
+    probe = fopen(device, "r");
+    if ( probe == NULL )  /* older kernel versions */
+    {
+      sprintf(device, "/proc/parport/%d/autoprobe", i);
+      probe = fopen(device, "r");
+    } 
+    if ( probe != NULL )
     {
       memset(make, 0, sizeof(make));
       memset(model, 0, sizeof(model));
-      strcpy(model, "EPSON");
 
       while (fgets(line, sizeof(line), probe) != NULL)
       {
@@ -550,17 +564,17 @@ list_devices(void)
 	*/
 
         if (strncmp(line, "MODEL:", 6) == 0 &&
-	    strncmp(line, "MODEL:EPSON", 13) != 0)
+	    strncmp(line, "MODEL:Unknown", 13) != 0)
 	  strncpy(model, line + 6, sizeof(model) - 1);
 	else if (strncmp(line, "MANUFACTURER:", 13) == 0 &&
-	         strncmp(line, "MANUFACTURER:EPSON", 20) != 0)
+	         strncmp(line, "MANUFACTURER:Unknown", 20) != 0)
 	  strncpy(make, line + 13, sizeof(make) - 1);
       }
 
       fclose(probe);
 
-      if (strcmp(make, "EPSON") == 0)
-	printf("direct epson:/dev/lp%d \"%s %s\" \"Parallel Port #%d\"\n",
+      if (strcasecmp(make, "EPSON") == 0)
+	printf("direct epson:/dev/lp%d \"%s %s\" \"Gutenprint Parallel Port #%d\"\n",
 	       i, make, model, i + 1);
     }
     else
@@ -569,7 +583,7 @@ list_devices(void)
       if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct epson:%s \"EPSON\" \"Parallel Port #%d\"\n", device, i + 1);
+	printf("direct epson:%s \"EPSON\" \"Gutenprint Parallel Port #%d\"\n", device, i + 1);
       }
     }
   }
@@ -578,7 +592,110 @@ list_devices(void)
   * Probe for USB devices...
   */
 
-  if ((probe = fopen("/proc/bus/usb/devices", "r")) != NULL)
+  if ((dirprobe = opendir("/sys/class/usb")) != NULL) /* SYSFS in kernel 2.6 */
+  {
+    struct dirent	*dirent;	/* directory entries */
+    struct stat		statbuf;	/* file stat */
+    char 		entry[MAXPATHLEN]; /* pathname to usb entries */
+    char 		link[MAXPATHLEN]; /* linkname of usb entries */
+    char		*cptr;		/* multi used character pointer */
+    FILE		*file;		/* read printer specific info from */
+
+    i = 0;
+    /* scan the directory entries */
+    while((dirent = readdir(dirprobe)) != 0)
+    {
+      /* skip "." and ".." */
+      if (dirent->d_name[0] != 'l' || dirent->d_name[1] != 'p')
+        continue;
+
+      /* generate path to work with */
+      snprintf(entry, MAXPATHLEN, "/sys/class/usb/%s/device", dirent->d_name);
+
+      /* look, if we have a pointer */
+      if(lstat(entry, &statbuf) < 0)
+      {
+      	perror(entry);
+	continue;
+      }
+
+      if (S_ISLNK(statbuf.st_mode))
+      {
+	/* get the path to the link */
+        if (readlink(entry, link, MAXPATHLEN) < 0)
+	  continue;
+
+	/* find right occurance of '/' */
+        if ((cptr = strrchr(link, '/')) == NULL)
+	{
+	  continue;
+	}
+	
+	/*
+	 * and truncate path: cut away everything after the '/',
+	 * because parallel directory contains the information we need
+	 */
+	*cptr = '\0';
+
+	memset(make, 0, sizeof(make));
+	memset(model, 0, sizeof(model));
+	/* read manufacturer */
+        snprintf(entry, MAXPATHLEN, "/sys/class/usb/%s/%s/manufacturer",
+	         dirent->d_name, link);
+
+	if ((file = fopen(entry, "r")) == NULL)
+	{
+	  /* skip this entry, there is no file "manufacturer" */
+	  continue;
+	}
+	/* read data in */
+	fread(make, sizeof(make)-1, sizeof(char), file);
+	fclose(file);
+
+	/* beautify "make" - strip newline away */
+        if ((cptr = strrchr(make, '\n')) != NULL)
+	{
+	  *cptr = '\0';
+	}
+
+	/* next entry, if manufacturer is not EPSON */
+        if (strcasecmp(make, "EPSON") != 0)
+	  continue;
+
+	/* read product name */
+        snprintf(entry, MAXPATHLEN, "/sys/class/usb/%s/%s/product",
+	         dirent->d_name, link);
+
+	if ((file = fopen(entry, "r")) == NULL)
+	{
+	  /* skip this entry, there is no file "product" */
+	  continue;
+	}
+	/* read data in */
+	fread(model, sizeof(model)-1, sizeof(char), file);
+	fclose(file);
+
+	/* beautify "model" - strip away newline */
+        if ((cptr = strrchr(model, '\n')) != NULL)
+	{
+	  *cptr = '\0';
+	}
+	sprintf(device, "/dev/usb/%s", dirent->d_name);
+	if (access(device, 0))
+	{
+	  sprintf(device, "/dev/usb/usb%s", dirent->d_name);
+
+	  if (access(device, 0))
+	    sprintf(device, "/dev/usb%s", dirent->d_name);
+	}
+
+	printf("direct epson:%s \"%s %s\" \"Gutenprint USB Printer #%d\"\n",
+	       device, make, model, ++i);
+      }
+    }
+    closedir(dirprobe);
+  }
+  else if ((probe = fopen("/proc/bus/usb/devices", "r")) != NULL)
   {
     i = 0;
 
@@ -632,7 +749,7 @@ list_devices(void)
 	      sprintf(device, "/dev/usblp%d", i);
 	  }
 
-	  printf("direct epson:%s \"%s %s\" \"USB Printer #%d\"\n",
+	  printf("direct epson:%s \"%s %s\" \"Gutenprint USB Printer #%d\"\n",
 		 device, make, model, i + 1);
         }
 
@@ -653,21 +770,21 @@ list_devices(void)
       if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct epson:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
+	printf("direct epson:%s \"EPSON\" \"Gutenprint USB Printer #%d\"\n", device, i + 1);
       }
 
       sprintf(device, "/dev/usb/usblp%d", i);
       if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct epson:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
+	printf("direct epson:%s \"EPSON\" \"Gutenprint USB Printer #%d\"\n", device, i + 1);
       }
 
       sprintf(device, "/dev/usblp%d", i);
       if ((fd = open(device, O_RDWR)) >= 0)
       {
 	close(fd);
-	printf("direct epson:%s \"EPSON\" \"USB Printer #%d\"\n", device, i + 1);
+	printf("direct epson:%s \"EPSON\" \"Gutenprint USB Printer #%d\"\n", device, i + 1);
       }
     }
   }
@@ -691,7 +808,7 @@ list_devices(void)
       * Standard parallel port...
       */
 
-      puts("direct epson:/dev/plpbi \"EPSON\" \"Onboard Parallel Port\"");
+      puts("direct epson:/dev/plpbi \"EPSON\" \"Gutenprint Onboard Parallel Port\"");
     }
   }
 
@@ -709,7 +826,7 @@ list_devices(void)
   {
     sprintf(device, "/dev/ecpp%d", i);
     if (access(device, 0) == 0)
-      printf("direct epson:%s \"EPSON\" \"Sun IEEE-1284 Parallel Port #%d\"\n",
+      printf("direct epson:%s \"EPSON\" \"Gutenprint Sun IEEE-1284 Parallel Port #%d\"\n",
              device, i + 1);
   }
 
@@ -718,7 +835,7 @@ list_devices(void)
     sprintf(device, "/dev/lp%d", i);
 
     if (access(device, 0) == 0)
-      printf("direct epson:%s \"EPSON\" \"PC Parallel Port #%d\"\n",
+      printf("direct epson:%s \"EPSON\" \"Gutenprint PC Parallel Port #%d\"\n",
              device, i + 1);
   }
 #elif defined(FreeBSD) || defined(OpenBSD) || defined(NetBSD)
@@ -737,14 +854,14 @@ list_devices(void)
     if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct epson:%s \"EPSON\" \"Parallel Port #%d (interrupt-driven)\"\n", device, i + 1);
+      printf("direct epson:%s \"EPSON\" \"Gutenprint Parallel Port #%d (interrupt-driven)\"\n", device, i + 1);
     }
 
     sprintf(device, "/dev/lpa%d", i);
     if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct epson:%s \"EPSON\" \"Parallel Port #%d (polled)\"\n", device, i + 1);
+      printf("direct epson:%s \"EPSON\" \"Gutenprint Parallel Port #%d (polled)\"\n", device, i + 1);
     }
   }
 
@@ -758,7 +875,7 @@ list_devices(void)
     if ((fd = open(device, O_RDWR)) >= 0)
     {
       close(fd);
-      printf("direct epson:%s \"EPSON\" \"USB Port #%d\"\n", device, i + 1);
+      printf("direct epson:%s \"EPSON\" \"Gutenprint USB Port #%d\"\n", device, i + 1);
     }
   }
 #endif
