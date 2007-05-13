@@ -228,8 +228,8 @@
       <printer name="Epson Stylus Photo 1270" driver="escp2-1270" manufacturer="Epson" model="23" parameters="standard_params" />
       <printer name="Epson Stylus Photo 1280" driver="escp2-1280" manufacturer="Epson" model="37" parameters="standard_params" />
       <printer name="Epson Stylus Photo 1290" driver="escp2-1290" manufacturer="Epson" model="37" parameters="standard_params" />
-      <printer name="Epson Stylus Photo 1400" driver="escp2-1400" manufacturer="Epson" model="82" parameters="standard_params" />
-      <printer name="Epson Stylus Photo 1410" driver="escp2-1410" manufacturer="Epson" model="82" parameters="standard_params" />
+      <printer name="Epson Stylus Photo 1400" driver="escp2-1400" manufacturer="Epson" model="82" parameters="claria_params" />
+      <printer name="Epson Stylus Photo 1410" driver="escp2-1410" manufacturer="Epson" model="82" parameters="claria_params" />
       <printer name="Epson Stylus Photo 2000P" driver="escp2-2000" manufacturer="Epson" model="26" parameters="standard_params" />
       <printer name="Epson Stylus Photo 2100" driver="escp2-2100" manufacturer="Epson" model="47" parameters="standard_params" />
       <printer name="Epson Stylus Photo 2200" driver="escp2-2200" manufacturer="Epson" model="47" parameters="standard_params" />
