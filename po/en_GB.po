@@ -84,8 +84,8 @@ msgstr "Density"
 #: src/main/print-escp2.c:472 src/main/print-escp2.c:480
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
-#: src/main/print-olympus.c:1626 src/main/print-olympus.c:1634
-#: src/main/print-olympus.c:1642 src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1624 src/main/print-olympus.c:1632
+#: src/main/print-olympus.c:1640 src/main/print-olympus.c:1648
 #: src/main/print-pcl.c:1261 src/main/print-pcl.c:1269
 #: src/main/print-pcl.c:1277 src/main/print-pcl.c:1285
 msgid "Output Level Adjustment"
@@ -146,8 +146,8 @@ msgid "Dither algorithm"
 msgstr "Dither algorithm"
 
 #: src/main/print-canon.c:196 src/main/print-escp2.c:179
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1561
-#: src/main/print-pcl.c:1196 src/main/print-ps.c:67
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1559
+#: src/main/print-pcl.c:1196
 msgid "Page Size"
 msgstr "Page Size"
 
@@ -161,76 +161,74 @@ msgstr "Page Size"
 #: src/main/print-escp2.c:262 src/main/print-escp2.c:280
 #: src/main/print-lexmark.c:266 src/main/print-lexmark.c:272
 #: src/main/print-lexmark.c:278 src/main/print-lexmark.c:284
-#: src/main/print-olympus.c:1561 src/main/print-olympus.c:1567
-#: src/main/print-olympus.c:1573 src/main/print-olympus.c:1579
+#: src/main/print-olympus.c:1559 src/main/print-olympus.c:1565
+#: src/main/print-olympus.c:1571 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1196 src/main/print-pcl.c:1202
 #: src/main/print-pcl.c:1208 src/main/print-pcl.c:1214
-#: src/main/print-pcl.c:1238 src/main/print-ps.c:67 src/main/print-ps.c:73
-#: src/main/print-ps.c:79 src/main/print-ps.c:85 src/main/print-ps.c:97
+#: src/main/print-pcl.c:1238 src/main/print-ps.c:68 src/main/print-ps.c:74
 msgid "Basic Printer Setup"
 msgstr "Basic Printer Setup"
 
 #: src/main/print-canon.c:197 src/main/print-escp2.c:180
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1562
-#: src/main/print-pcl.c:1197 src/main/print-ps.c:68
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1560
+#: src/main/print-pcl.c:1197
 msgid "Size of the paper being printed to"
 msgstr "Size of the paper being printed to"
 
 #: src/main/print-canon.c:202 src/main/print-escp2.c:185
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1567
-#: src/main/print-pcl.c:1202 src/main/print-ps.c:73 src/cups/genppd.c:1405
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1565
+#: src/main/print-pcl.c:1202 src/cups/genppd.c:1407
 msgid "Media Type"
 msgstr "Media Type"
 
 #: src/main/print-canon.c:203 src/main/print-escp2.c:186
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1568
-#: src/main/print-pcl.c:1203 src/main/print-ps.c:74
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1566
+#: src/main/print-pcl.c:1203
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Type of media (plain paper, photo paper, etc.)"
 
 #: src/main/print-canon.c:208 src/main/print-escp2.c:191
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1573
-#: src/main/print-pcl.c:1208 src/main/print-ps.c:79 src/cups/genppd.c:1430
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1571
+#: src/main/print-pcl.c:1208 src/cups/genppd.c:1435
 msgid "Media Source"
 msgstr "Media Source"
 
 #: src/main/print-canon.c:209 src/main/print-escp2.c:192
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1574
-#: src/main/print-pcl.c:1209 src/main/print-ps.c:80
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1572
+#: src/main/print-pcl.c:1209
 msgid "Source (input slot) of the media"
 msgstr "Source (input slot) of the media"
 
 #: src/main/print-canon.c:214 src/main/print-escp2.c:227
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1579
-#: src/main/print-pcl.c:1214 src/main/print-ps.c:85 src/cups/genppd.c:1499
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
+#: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
 msgstr "Resolution"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:1580 src/main/print-pcl.c:1215
-#: src/main/print-ps.c:86
+#: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
 msgid "Resolution and quality of the print"
 msgstr "Resolution and quality of the print"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:238
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1585
-#: src/main/print-pcl.c:1220 src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1583
+#: src/main/print-pcl.c:1220 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Ink Type"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:215
 #: src/main/print-escp2.c:221 src/main/print-escp2.c:238
 #: src/main/print-escp2.c:274 src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1585 src/main/print-olympus.c:1591
-#: src/main/print-olympus.c:1597 src/main/print-pcl.c:1220
-#: src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-olympus.c:1583 src/main/print-olympus.c:1589
+#: src/main/print-olympus.c:1595 src/main/print-pcl.c:1220
+#: src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr "Advanced Printer Setup"
 
 #: src/main/print-canon.c:221 src/main/print-escp2.c:239
 #: src/main/print-escp2.c:251 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:1586 src/main/print-pcl.c:1221
-#: src/main/print-ps.c:92 src/main/print-raw.c:81
+#: src/main/print-olympus.c:1584 src/main/print-pcl.c:1221
+#: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "Type of ink in the printer"
 
@@ -252,8 +250,8 @@ msgid "Advanced Printer Functionality"
 msgstr "Advanced Printer Functionality"
 
 #: src/main/print-canon.c:232 src/main/print-escp2.c:334
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1603
-#: src/main/print-pcl.c:1232 src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1601
+#: src/main/print-pcl.c:1232 src/main/print-raw.c:86
 msgid "Printing Mode"
 msgstr "Printing Mode"
 
@@ -261,14 +259,14 @@ msgstr "Printing Mode"
 #: src/main/print-color.c:192 src/main/print-color.c:200
 #: src/main/print-color.c:208 src/main/print-escp2.c:334
 #: src/main/print-escp2.c:340 src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1603 src/main/print-pcl.c:1232
-#: src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-olympus.c:1601 src/main/print-pcl.c:1232
+#: src/main/print-raw.c:86
 msgid "Core Parameter"
 msgstr "Core Parameter"
 
 #: src/main/print-canon.c:233 src/main/print-escp2.c:335
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1604
-#: src/main/print-pcl.c:1233 src/main/print-ps.c:104 src/main/print-raw.c:87
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1602
+#: src/main/print-pcl.c:1233 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr "Printing Output Mode"
 
@@ -364,15 +362,15 @@ msgid "Short Edge (Flip)"
 msgstr "Short Edge (Flip)"
 
 #: src/main/print-canon.c:613 src/main/print-escp2.c:1980
-#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1858
-#: src/main/print-pcl.c:1776 src/main/print-ps.c:170 src/main/print-raw.c:135
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
+#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1856
+#: src/main/print-pcl.c:1776 src/main/print-raw.c:135
+#: src/gutenprintui2/panel.c:288
 msgid "Color"
 msgstr "Colour"
 
 #: src/main/print-canon.c:615 src/main/print-escp2.c:1982
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1778
-#: src/main/print-ps.c:172 src/main/print-raw.c:137
+#: src/main/print-raw.c:137
 msgid "Black and White"
 msgstr "Black and White"
 
@@ -410,7 +408,7 @@ msgstr "Pre-Dithered"
 
 #: src/main/print-color.c:121 src/main/escp2-channels.c:820
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
-#: src/gutenprintui/panel.c:289 src/gutenprintui2/panel.c:289
+#: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
 msgstr "Grayscale"
 
@@ -556,9 +554,8 @@ msgstr "Gamma value assumed by application"
 #: src/main/escp2-channels.c:2753 src/main/escp2-channels.c:2766
 #: src/main/escp2-channels.c:2779 src/main/escp2-channels.c:2793
 #: src/main/escp2-channels.c:2807 src/main/escp2-channels.c:2822
-#: src/gutenprintui/panel.c:2140 src/gutenprintui2/panel.c:2141
-#: src/escputil/escputil.c:984 src/escputil/escputil.c:1003
-#: src/escputil/escputil.c:1207
+#: src/gutenprintui2/panel.c:2141 src/escputil/escputil.c:984
+#: src/escputil/escputil.c:1003 src/escputil/escputil.c:1207
 msgid "Cyan"
 msgstr "Cyan"
 
@@ -572,9 +569,8 @@ msgstr "Adjust the cyan gamma"
 #: src/main/escp2-channels.c:2754 src/main/escp2-channels.c:2767
 #: src/main/escp2-channels.c:2780 src/main/escp2-channels.c:2792
 #: src/main/escp2-channels.c:2806 src/main/escp2-channels.c:2823
-#: src/gutenprintui/panel.c:2147 src/gutenprintui2/panel.c:2148
-#: src/escputil/escputil.c:985 src/escputil/escputil.c:1004
-#: src/escputil/escputil.c:1208
+#: src/gutenprintui2/panel.c:2148 src/escputil/escputil.c:985
+#: src/escputil/escputil.c:1004 src/escputil/escputil.c:1208
 msgid "Magenta"
 msgstr "Magenta"
 
@@ -588,9 +584,8 @@ msgstr "Adjust the magenta gamma"
 #: src/main/escp2-channels.c:2755 src/main/escp2-channels.c:2768
 #: src/main/escp2-channels.c:2781 src/main/escp2-channels.c:2791
 #: src/main/escp2-channels.c:2805 src/main/escp2-channels.c:2824
-#: src/gutenprintui/panel.c:2154 src/gutenprintui2/panel.c:2155
-#: src/escputil/escputil.c:986 src/escputil/escputil.c:1005
-#: src/escputil/escputil.c:1209
+#: src/gutenprintui2/panel.c:2155 src/escputil/escputil.c:986
+#: src/escputil/escputil.c:1005 src/escputil/escputil.c:1209
 msgid "Yellow"
 msgstr "Yellow"
 
@@ -599,9 +594,8 @@ msgid "Adjust the yellow gamma"
 msgstr "Adjust the yellow gamma"
 
 #: src/main/print-color.c:290 src/main/escp2-channels.c:2796
-#: src/main/escp2-channels.c:2809 src/gutenprintui/panel.c:2168
-#: src/gutenprintui2/panel.c:2169 src/escputil/escputil.c:993
-#: src/escputil/escputil.c:1011
+#: src/main/escp2-channels.c:2809 src/gutenprintui2/panel.c:2169
+#: src/escputil/escputil.c:993 src/escputil/escputil.c:1011
 msgid "Red"
 msgstr "Red"
 
@@ -609,8 +603,7 @@ msgstr "Red"
 msgid "Adjust the red gamma"
 msgstr "Adjust the red gamma"
 
-#: src/main/print-color.c:298 src/gutenprintui/panel.c:2175
-#: src/gutenprintui2/panel.c:2176
+#: src/main/print-color.c:298 src/gutenprintui2/panel.c:2176
 msgid "Green"
 msgstr "Green"
 
@@ -619,9 +612,8 @@ msgid "Adjust the green gamma"
 msgstr "Adjust the green gamma"
 
 #: src/main/print-color.c:306 src/main/escp2-channels.c:2797
-#: src/main/escp2-channels.c:2810 src/gutenprintui/panel.c:2182
-#: src/gutenprintui2/panel.c:2183 src/escputil/escputil.c:994
-#: src/escputil/escputil.c:1012
+#: src/main/escp2-channels.c:2810 src/gutenprintui2/panel.c:2183
+#: src/escputil/escputil.c:994 src/escputil/escputil.c:1012
 msgid "Blue"
 msgstr "Blue"
 
@@ -635,9 +627,9 @@ msgstr "Adjust the blue gamma"
 #: src/main/escp2-channels.c:2740 src/main/escp2-channels.c:2752
 #: src/main/escp2-channels.c:2765 src/main/escp2-channels.c:2778
 #: src/main/escp2-channels.c:2784 src/main/escp2-channels.c:2808
-#: src/main/escp2-channels.c:2821 src/gutenprintui/panel.c:2161
-#: src/gutenprintui2/panel.c:2162 src/escputil/escputil.c:981
-#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1206
+#: src/main/escp2-channels.c:2821 src/gutenprintui2/panel.c:2162
+#: src/escputil/escputil.c:981 src/escputil/escputil.c:1002
+#: src/escputil/escputil.c:1206
 msgid "Black"
 msgstr "Black"
 
@@ -645,7 +637,7 @@ msgstr "Black"
 msgid "Adjust the black gamma"
 msgstr "Adjust the black gamma"
 
-#: src/main/print-color.c:322 src/main/print-olympus.c:1626
+#: src/main/print-color.c:322 src/main/print-olympus.c:1624
 msgid "Cyan Balance"
 msgstr "Cyan Balance"
 
@@ -658,7 +650,7 @@ msgstr "GrayBalance"
 msgid "Adjust the cyan gray balance"
 msgstr "Adjust the cyan gray balance"
 
-#: src/main/print-color.c:330 src/main/print-olympus.c:1634
+#: src/main/print-color.c:330 src/main/print-olympus.c:1632
 msgid "Magenta Balance"
 msgstr "Magenta Balance"
 
@@ -666,7 +658,7 @@ msgstr "Magenta Balance"
 msgid "Adjust the magenta gray balance"
 msgstr "Adjust the magenta gray balance"
 
-#: src/main/print-color.c:338 src/main/print-olympus.c:1642
+#: src/main/print-color.c:338 src/main/print-olympus.c:1640
 msgid "Yellow Balance"
 msgstr "Yellow Balance"
 
@@ -1015,11 +1007,11 @@ msgstr "Advanced Output Adjustment"
 msgid "Printing direction (unidirectional is higher quality, but slower)"
 msgstr "Printing direction (unidirectional is higher quality, but slower)"
 
-#: src/main/print-escp2.c:262 src/main/print-olympus.c:1597
+#: src/main/print-escp2.c:262 src/main/print-olympus.c:1595
 msgid "Borderless"
 msgstr "Borderless"
 
-#: src/main/print-escp2.c:263 src/main/print-olympus.c:1598
+#: src/main/print-escp2.c:263 src/main/print-olympus.c:1596
 msgid "Print without borders"
 msgstr "Print without borders"
 
@@ -1208,11 +1200,11 @@ msgstr "Manual Control"
 #: src/main/escp2-papers.c:1716 src/main/escp2-papers.c:1809
 #: src/main/escp2-resolutions.c:598 src/main/escp2-resolutions.c:613
 #: src/main/escp2-resolutions.c:626 src/main/generic-options.c:36
-#: src/gutenprintui/panel.c:2601 src/gutenprintui2/panel.c:2627
+#: src/gutenprintui2/panel.c:2627
 msgid "Standard"
 msgstr "Standard"
 
-#: src/main/print-escp2.c:1811 src/cups/genppd.c:1532
+#: src/main/print-escp2.c:1811 src/cups/genppd.c:1546
 msgid "Automatic"
 msgstr "Automatic"
 
@@ -1249,7 +1241,7 @@ msgstr "Nearest Neighbour Avoidance"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "This printer does not support raw printer output at depth %d\n"
 
-#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2310
+#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2308
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "Print options not verified; cannot print.\n"
@@ -1438,50 +1430,50 @@ msgstr "Manual with Pause"
 msgid "Manual without Pause"
 msgstr "Manual without Pause"
 
-#: src/main/print-olympus.c:276
+#: src/main/print-olympus.c:274
 msgid "Coated"
 msgstr "Coated"
 
-#: src/main/print-olympus.c:277 src/cups/genppd.c:1686 src/cups/genppd.c:1709
-#: src/cups/genppd.c:1776
+#: src/main/print-olympus.c:275 src/cups/genppd.c:1706 src/cups/genppd.c:1732
+#: src/cups/genppd.c:1813
 msgid "None"
 msgstr "None"
 
-#: src/main/print-olympus.c:922 src/main/print-olympus.c:980
-#: src/main/print-olympus.c:1080
+#: src/main/print-olympus.c:920 src/main/print-olympus.c:978
+#: src/main/print-olympus.c:1078
 msgid "Glossy"
 msgstr "Glossy"
 
-#: src/main/print-olympus.c:923 src/main/print-olympus.c:981
-#: src/main/print-olympus.c:1081
+#: src/main/print-olympus.c:921 src/main/print-olympus.c:979
+#: src/main/print-olympus.c:1079
 msgid "Texture"
 msgstr "Texture"
 
-#: src/main/print-olympus.c:982 src/main/print-olympus.c:1082
+#: src/main/print-olympus.c:980 src/main/print-olympus.c:1080
 msgid "Matte"
 msgstr "Matte"
 
-#: src/main/print-olympus.c:1591 src/main/print-olympus.c:1592
+#: src/main/print-olympus.c:1589 src/main/print-olympus.c:1590
 msgid "Laminate Pattern"
 msgstr "Laminate Pattern"
 
-#: src/main/print-olympus.c:1627
+#: src/main/print-olympus.c:1625
 msgid "Adjust the cyan balance"
 msgstr "Adjust the cyan balance"
 
-#: src/main/print-olympus.c:1635
+#: src/main/print-olympus.c:1633
 msgid "Adjust the magenta balance"
 msgstr "Adjust the magenta balance"
 
-#: src/main/print-olympus.c:1643
+#: src/main/print-olympus.c:1641
 msgid "Adjust the yellow balance"
 msgstr "Adjust the yellow balance"
 
-#: src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1648
 msgid "Black Balance"
 msgstr "Black Balance"
 
-#: src/main/print-olympus.c:1651
+#: src/main/print-olympus.c:1649
 msgid "Adjust the black balance"
 msgstr "Adjust the black balance"
 
@@ -1589,14 +1581,22 @@ msgstr "Colour + Black Cartridges"
 msgid "Color + Photo Cartridges"
 msgstr "Colour + Photo Cartridges"
 
-#: src/main/print-ps.c:97
+#: src/main/print-ps.c:68
 msgid "PPDFile"
 msgstr "PPDFile"
 
-#: src/main/print-ps.c:98 src/gutenprintui/panel.c:1767
-#: src/gutenprintui2/panel.c:1767
+#: src/main/print-ps.c:69 src/gutenprintui2/panel.c:1767
 msgid "PPD File"
 msgstr "PPD File"
+
+#: src/main/print-ps.c:74
+#, fuzzy
+msgid "Model Name"
+msgstr "Channel Names"
+
+#: src/main/print-ps.c:75
+msgid "PPD File Model Name"
+msgstr ""
 
 #: src/main/print-raw.c:223
 msgid "Image dimensions must match paper dimensions"
@@ -2793,7 +2793,7 @@ msgstr "Canon iP4000"
 #: src/main/xmli18n-tmp.h:183
 #, fuzzy
 msgid "Canon PIXMA iP3100"
-msgstr "Canon iP4000"
+msgstr "Canon CP-300"
 
 #: src/main/xmli18n-tmp.h:184
 #, fuzzy
@@ -2823,7 +2823,7 @@ msgstr "Canon iP4000"
 #: src/main/xmli18n-tmp.h:189
 #, fuzzy
 msgid "Canon PIXMA iP5200"
-msgstr "Canon iP4000"
+msgstr "Canon CP-200"
 
 #: src/main/xmli18n-tmp.h:190
 #, fuzzy
@@ -5822,590 +5822,6 @@ msgstr "RAW DATA 16 bit"
 msgid "RAW DATA 8 bit"
 msgstr "RAW DATA 8 bit"
 
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Inch"
-msgstr "Inch"
-
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Set the base unit of measurement to inches"
-msgstr "Set the base unit of measurement to inches"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "cm"
-msgstr "cm"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "Set the base unit of measurement to centimetres"
-msgstr "Set the base unit of measurement to centimetres"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-msgid "Points"
-msgstr "Points"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Set the base unit of measurement to points (1/72\")"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "mm"
-msgstr "mm"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "Set the base unit of measurement to millimetres"
-msgstr "Set the base unit of measurement to millimetres"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Pica"
-msgstr "Pica"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Set the base unit of measurement to picas (1/12\")"
-
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
-msgid "Color output"
-msgstr "Colour output"
-
-#: src/gutenprintui/panel.c:290 src/gutenprintui2/panel.c:290
-msgid "Print in shades of gray using black ink"
-msgstr "Print in shades of gray using black ink"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Standard Command"
-msgstr "Standard Command"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Use standard print command"
-msgstr "Use standard print command"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Custom Command"
-msgstr "Custom Command"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Use custom print command"
-msgstr "Use custom print command"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui/plist.c:682
-#: src/gutenprintui/plist.c:765 src/gutenprintui2/panel.c:304
-#: src/gutenprintui2/plist.c:678 src/gutenprintui2/plist.c:761
-msgid "File"
-msgstr "File"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui2/panel.c:304
-msgid "Print to a file"
-msgstr "Print to a file"
-
-#: src/gutenprintui/panel.c:520 src/gutenprintui2/panel.c:520
-msgid "Edit Curve..."
-msgstr "Edit Curve..."
-
-#: src/gutenprintui/panel.c:531 src/gutenprintui2/panel.c:531
-msgid "Set Default"
-msgstr "Set Default"
-
-#: src/gutenprintui/panel.c:533 src/gutenprintui2/panel.c:533
-msgid "Restore Previous"
-msgstr "Restore Previous"
-
-#: src/gutenprintui/panel.c:535 src/gutenprintui/panel.c:1531
-#: src/gutenprintui/panel.c:1786 src/gutenprintui/panel.c:1818
-#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
-#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
-msgid "OK"
-msgstr "OK"
-
-#: src/gutenprintui/panel.c:537 src/gutenprintui/panel.c:1196
-#: src/gutenprintui/panel.c:1533 src/gutenprintui/panel.c:1788
-#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
-#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
-msgid "Cancel"
-msgstr "Cancel"
-
-#: src/gutenprintui/panel.c:1179 src/gutenprintui2/panel.c:1180
-#, c-format
-msgid "%s -- Print v%s"
-msgstr "%s -- Print v%s"
-
-#: src/gutenprintui/panel.c:1188 src/gutenprintui2/panel.c:1189
-msgid "About"
-msgstr "About"
-
-#: src/gutenprintui/panel.c:1190 src/gutenprintui2/panel.c:1191
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr ""
-"Print and\n"
-"Save Settings"
-
-#: src/gutenprintui/panel.c:1192 src/gutenprintui2/panel.c:1193
-msgid ""
-"Save\n"
-"Settings"
-msgstr ""
-"Save\n"
-"Settings"
-
-#: src/gutenprintui/panel.c:1194 src/gutenprintui2/panel.c:1195
-msgid "Print"
-msgstr "Print"
-
-#: src/gutenprintui/panel.c:1246 src/gutenprintui2/panel.c:1247
-msgid "Preview"
-msgstr "Preview"
-
-#: src/gutenprintui/panel.c:1271 src/gutenprintui2/panel.c:1272
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-
-#: src/gutenprintui/panel.c:1318 src/gutenprintui2/panel.c:1319
-msgid "Paper Size"
-msgstr "Paper Size"
-
-#: src/gutenprintui/panel.c:1341 src/gutenprintui2/panel.c:1342
-msgid "Show All Paper Sizes"
-msgstr "Show All Paper Sizes"
-
-#: src/gutenprintui/panel.c:1357 src/gutenprintui2/panel.c:1358
-msgid "Dimensions:"
-msgstr "Dimensions:"
-
-#: src/gutenprintui/panel.c:1362 src/gutenprintui/panel.c:2051
-#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
-msgid "Width:"
-msgstr "Width:"
-
-#: src/gutenprintui/panel.c:1363 src/gutenprintui2/panel.c:1364
-msgid "Width of the paper that you wish to print to"
-msgstr "Width of the paper that you wish to print to"
-
-#: src/gutenprintui/panel.c:1367 src/gutenprintui/panel.c:2053
-#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
-msgid "Height:"
-msgstr "Height:"
-
-#: src/gutenprintui/panel.c:1368 src/gutenprintui2/panel.c:1369
-msgid "Height of the paper that you wish to print to"
-msgstr "Height of the paper that you wish to print to"
-
-#: src/gutenprintui/panel.c:1373 src/gutenprintui2/panel.c:1374
-msgid "Automatic Paper Size"
-msgstr "Automatic Paper Size"
-
-#: src/gutenprintui/panel.c:1390 src/gutenprintui2/panel.c:1391
-msgid "Number of Copies"
-msgstr "Number of Copies"
-
-#: src/gutenprintui/panel.c:1402 src/gutenprintui2/panel.c:1403
-msgid "Select the number of copies to print; a value between 1 and 100"
-msgstr "Select the number of copies to print; a value between 1 and 100"
-
-#: src/gutenprintui/panel.c:1434 src/gutenprintui2/panel.c:1435
-msgid "Image Position"
-msgstr "Image Position"
-
-#: src/gutenprintui/panel.c:1451 src/gutenprintui2/panel.c:1452
-msgid "Auto"
-msgstr "Auto"
-
-#: src/gutenprintui/panel.c:1453 src/gutenprintui2/panel.c:1454
-msgid "Portrait"
-msgstr "Portrait"
-
-#: src/gutenprintui/panel.c:1455 src/gutenprintui2/panel.c:1456
-msgid "Landscape"
-msgstr "Landscape"
-
-#: src/gutenprintui/panel.c:1457 src/gutenprintui2/panel.c:1458
-msgid "Upside down"
-msgstr "Upside down"
-
-#: src/gutenprintui/panel.c:1459 src/gutenprintui2/panel.c:1460
-msgid "Seascape"
-msgstr "Seascape"
-
-#: src/gutenprintui/panel.c:1463 src/gutenprintui2/panel.c:1464
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-
-#: src/gutenprintui/panel.c:1465 src/gutenprintui2/panel.c:1466
-msgid "Orientation:"
-msgstr "Orientation:"
-
-#: src/gutenprintui/panel.c:1476 src/gutenprintui2/panel.c:1477
-msgid "Left:"
-msgstr "Left:"
-
-#: src/gutenprintui/panel.c:1477 src/gutenprintui2/panel.c:1478
-msgid "Distance from the left of the paper to the image"
-msgstr "Distance from the left of the paper to the image"
-
-#: src/gutenprintui/panel.c:1480 src/gutenprintui/panel.c:1484
-#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
-msgid "Right:"
-msgstr "Right:"
-
-#: src/gutenprintui/panel.c:1481 src/gutenprintui2/panel.c:1482
-msgid "Distance from the left of the paper to the right of the image"
-msgstr "Distance from the left of the paper to the right of the image"
-
-#: src/gutenprintui/panel.c:1485 src/gutenprintui2/panel.c:1486
-msgid "Distance from the right of the paper to the image"
-msgstr "Distance from the right of the paper to the image"
-
-#: src/gutenprintui/panel.c:1487 src/gutenprintui2/panel.c:1488
-msgid "Top:"
-msgstr "Top:"
-
-#: src/gutenprintui/panel.c:1488 src/gutenprintui2/panel.c:1489
-msgid "Distance from the top of the paper to the image"
-msgstr "Distance from the top of the paper to the image"
-
-#: src/gutenprintui/panel.c:1491 src/gutenprintui/panel.c:1495
-#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
-msgid "Bottom:"
-msgstr "Bottom:"
-
-#: src/gutenprintui/panel.c:1492 src/gutenprintui2/panel.c:1493
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Distance from the top of the paper to bottom of the image"
-
-#: src/gutenprintui/panel.c:1496 src/gutenprintui2/panel.c:1497
-msgid "Distance from the bottom of the paper to the image"
-msgstr "Distance from the bottom of the paper to the image"
-
-#: src/gutenprintui/panel.c:1506 src/gutenprintui2/panel.c:1507
-msgid "Center:"
-msgstr "Centre:"
-
-#: src/gutenprintui/panel.c:1509 src/gutenprintui2/panel.c:1510
-msgid "Horizontal"
-msgstr "Horizontal"
-
-#: src/gutenprintui/panel.c:1510 src/gutenprintui2/panel.c:1511
-msgid "Center the image horizontally on the paper"
-msgstr "Centre the image horizontally on the paper"
-
-#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1513
-msgid "Both"
-msgstr "Both"
-
-#: src/gutenprintui/panel.c:1513 src/gutenprintui2/panel.c:1514
-msgid "Center the image on the paper"
-msgstr "Centre the image on the paper"
-
-#: src/gutenprintui/panel.c:1515 src/gutenprintui2/panel.c:1516
-msgid "Vertical"
-msgstr "Vertical"
-
-#: src/gutenprintui/panel.c:1516 src/gutenprintui2/panel.c:1517
-msgid "Center the image vertically on the paper"
-msgstr "Centre the image vertically on the paper"
-
-#: src/gutenprintui/panel.c:1529 src/gutenprintui2/panel.c:1530
-msgid "Setup Printer"
-msgstr "Setup Printer"
-
-#: src/gutenprintui/panel.c:1554 src/gutenprintui2/panel.c:1554
-msgid "Printer Make:"
-msgstr "Printer Make:"
-
-#: src/gutenprintui/panel.c:1565 src/gutenprintui2/panel.c:1565
-msgid "Select the make of your printer"
-msgstr "Select the make of your printer"
-
-#: src/gutenprintui/panel.c:1583 src/gutenprintui/panel.c:1671
-#: src/gutenprintui/panel.c:1889 src/gutenprintui2/panel.c:1583
-#: src/gutenprintui2/panel.c:1671 src/gutenprintui2/panel.c:1889
-msgid "Printer Model:"
-msgstr "Printer Model:"
-
-#: src/gutenprintui/panel.c:1594 src/gutenprintui2/panel.c:1594
-msgid "Select your printer model"
-msgstr "Select your printer model"
-
-#: src/gutenprintui/panel.c:1642 src/gutenprintui2/panel.c:1642
-msgid "PPD File:"
-msgstr "PPD File:"
-
-#: src/gutenprintui/panel.c:1658 src/gutenprintui2/panel.c:1658
-msgid "Enter the correct PPD filename for your printer"
-msgstr "Enter the correct PPD filename for your printer"
-
-#: src/gutenprintui/panel.c:1660 src/gutenprintui/panel.c:1740
-#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
-msgid "Browse"
-msgstr "Browse"
-
-#: src/gutenprintui/panel.c:1667 src/gutenprintui2/panel.c:1667
-msgid "Choose the correct PPD filename for your printer"
-msgstr "Choose the correct PPD filename for your printer"
-
-#: src/gutenprintui/panel.c:1709 src/gutenprintui2/panel.c:1709
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-
-#: src/gutenprintui/panel.c:1711 src/gutenprintui2/panel.c:1711
-msgid "Printer Queue:"
-msgstr "Printer Queue:"
-
-#: src/gutenprintui/panel.c:1727 src/gutenprintui2/panel.c:1727
-msgid "Enter the correct command to print to your printer. "
-msgstr "Enter the correct command to print to your printer. "
-
-#: src/gutenprintui/panel.c:1738 src/gutenprintui2/panel.c:1738
-msgid "Enter the file to print to. "
-msgstr "Enter the file to print to. "
-
-#: src/gutenprintui/panel.c:1746 src/gutenprintui2/panel.c:1746
-msgid "File to print to"
-msgstr "File to print to"
-
-#: src/gutenprintui/panel.c:1754 src/gutenprintui2/panel.c:1754
-msgid "Print To File"
-msgstr "Print To File"
-
-#: src/gutenprintui/panel.c:1784 src/gutenprintui2/panel.c:1784
-msgid "Define New Printer"
-msgstr "Define New Printer"
-
-#: src/gutenprintui/panel.c:1802 src/gutenprintui/panel.c:1886
-#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
-msgid "Printer Name:"
-msgstr "Printer Name:"
-
-#: src/gutenprintui/panel.c:1806 src/gutenprintui2/panel.c:1806
-msgid "Enter the name you wish to give this logical printer"
-msgstr "Enter the name you wish to give this logical printer"
-
-#: src/gutenprintui/panel.c:1816 src/gutenprintui2/panel.c:1816
-msgid "About Gutenprint "
-msgstr "About Gutenprint "
-
-#: src/gutenprintui/panel.c:1823 src/gutenprintui2/panel.c:1823
-msgid "Gutenprint Version "
-msgstr "Gutenprint Version "
-
-#: src/gutenprintui/panel.c:1871 src/gutenprintui2/panel.c:1871
-msgid "Printer Settings"
-msgstr "Printer Settings"
-
-#: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1884
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-
-#: src/gutenprintui/panel.c:1901 src/gutenprintui2/panel.c:1901
-msgid "Setup Printer..."
-msgstr "Setup Printer..."
-
-#: src/gutenprintui/panel.c:1903 src/gutenprintui2/panel.c:1903
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-
-#: src/gutenprintui/panel.c:1916 src/gutenprintui2/panel.c:1916
-msgid "New Printer..."
-msgstr "New Printer..."
-
-#: src/gutenprintui/panel.c:1917 src/gutenprintui2/panel.c:1917
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-
-#: src/gutenprintui/panel.c:1960 src/gutenprintui2/panel.c:1960
-msgid "Image Size"
-msgstr "Image Size"
-
-#: src/gutenprintui/panel.c:1985 src/gutenprintui2/panel.c:1985
-msgid "Scaling:"
-msgstr "Scaling:"
-
-#: src/gutenprintui/panel.c:1989 src/gutenprintui2/panel.c:1989
-msgid "Set the scale (size) of the image"
-msgstr "Set the scale (size) of the image"
-
-#: src/gutenprintui/panel.c:2011 src/gutenprintui2/panel.c:2011
-msgid "Scale by:"
-msgstr "Scale by:"
-
-#: src/gutenprintui/panel.c:2016 src/gutenprintui2/panel.c:2016
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-
-#: src/gutenprintui/panel.c:2019 src/gutenprintui2/panel.c:2019
-msgid "Percent"
-msgstr "Percent"
-
-#: src/gutenprintui/panel.c:2024 src/gutenprintui2/panel.c:2024
-msgid "Scale the print to the size of the page"
-msgstr "Scale the print to the size of the page"
-
-#: src/gutenprintui/panel.c:2028 src/gutenprintui2/panel.c:2028
-msgid "PPI"
-msgstr "PPI"
-
-#: src/gutenprintui/panel.c:2033 src/gutenprintui2/panel.c:2033
-msgid "Scale the print to the number of dots per inch"
-msgstr "Scale the print to the number of dots per inch"
-
-#: src/gutenprintui/panel.c:2051 src/gutenprintui2/panel.c:2051
-msgid "Set the width of the print"
-msgstr "Set the width of the print"
-
-#: src/gutenprintui/panel.c:2053 src/gutenprintui2/panel.c:2053
-msgid "Set the height of the print"
-msgstr "Set the height of the print"
-
-#: src/gutenprintui/panel.c:2059 src/gutenprintui2/panel.c:2059
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr ""
-"Use Original\n"
-"Image Size"
-
-#: src/gutenprintui/panel.c:2065 src/gutenprintui2/panel.c:2065
-msgid "Set the print size to the size of the image"
-msgstr "Set the print size to the size of the image"
-
-#: src/gutenprintui/panel.c:2088 src/gutenprintui2/panel.c:2089
-msgid "Print Color Adjust"
-msgstr "Print Colour Adjust"
-
-#: src/gutenprintui/panel.c:2091 src/gutenprintui2/panel.c:2092
-msgid "Set Defaults"
-msgstr "Set Defaults"
-
-#: src/gutenprintui/panel.c:2093 src/gutenprintui2/panel.c:2094
-msgid "Close"
-msgstr "Close"
-
-#: src/gutenprintui/panel.c:2122 src/gutenprintui2/panel.c:2123
-msgid "Image preview"
-msgstr "Image preview"
-
-#: src/gutenprintui/panel.c:2136 src/gutenprintui2/panel.c:2137
-msgid "View Output Channels:"
-msgstr "View Output Channels:"
-
-#: src/gutenprintui/panel.c:2222 src/gutenprintui2/panel.c:2228
-msgid "Output"
-msgstr "Output"
-
-#: src/gutenprintui/panel.c:2250 src/gutenprintui2/panel.c:2256
-msgid "Output Type:"
-msgstr "Output Type:"
-
-#: src/gutenprintui/panel.c:2254 src/gutenprintui2/panel.c:2260
-msgid "Select the desired output type"
-msgstr "Select the desired output type"
-
-#: src/gutenprintui/panel.c:2275 src/gutenprintui2/panel.c:2281
-msgid "Adjust Output..."
-msgstr "Adjust Output..."
-
-#: src/gutenprintui/panel.c:2284 src/gutenprintui2/panel.c:2290
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Adjust colour balance, brightness, contrast, saturation, and dither algorithm"
-
-#: src/gutenprintui/panel.c:2302 src/gutenprintui2/panel.c:2309
-msgid "Size Units:"
-msgstr "Size Units:"
-
-#: src/gutenprintui/panel.c:2305 src/gutenprintui2/panel.c:2312
-msgid " "
-msgstr " "
-
-#: src/gutenprintui/panel.c:2329 src/gutenprintui2/panel.c:2336
-msgid "Units:"
-msgstr "Units:"
-
-#: src/gutenprintui/panel.c:2334 src/gutenprintui2/panel.c:2341
-msgid "Select the base unit of measurement for printing"
-msgstr "Select the base unit of measurement for printing"
-
-#: src/gutenprintui/plist.c:90 src/gutenprintui/plist.c:99
-#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
-msgid "System V lp"
-msgstr "System V lp"
-
-#: src/gutenprintui/plist.c:96 src/gutenprintui2/plist.c:96
-msgid "CUPS"
-msgstr "CUPS"
-
-#: src/gutenprintui/plist.c:102 src/gutenprintui2/plist.c:102
-msgid "Berkeley lpd (/etc/lpc)"
-msgstr "Berkeley lpd (/etc/lpc)"
-
-#: src/gutenprintui/plist.c:105 src/gutenprintui2/plist.c:105
-msgid "Berkeley lpd (/usr/bsd/lpc)"
-msgstr "Berkeley lpd (/usr/bsd/lpc)"
-
-#: src/gutenprintui/plist.c:108 src/gutenprintui2/plist.c:108
-msgid "Berkeley lpd (/usr/etc/lpc"
-msgstr "Berkeley lpd (/usr/etc/lpc"
-
-#: src/gutenprintui/plist.c:111 src/gutenprintui2/plist.c:111
-msgid "Berkeley lpd (/usr/libexec/lpc)"
-msgstr "Berkeley lpd (/usr/libexec/lpc)"
-
-#: src/gutenprintui/plist.c:114 src/gutenprintui2/plist.c:114
-msgid "Berkeley lpd (/usr/sbin/lpc)"
-msgstr "Berkeley lpd (/usr/sbin/lpc)"
-
-#: src/gutenprintui/plist.c:1020 src/gutenprintui2/plist.c:1016
-msgid "Printer"
-msgstr "Printer"
-
-#: src/gutenprintui/plist.c:1207 src/gutenprintui2/plist.c:1203
-msgid "(Default Printer)"
-msgstr "(Default Printer)"
-
 #: src/gutenprintui2/curve.c:130
 msgid "Curve type"
 msgstr "Curve type"
@@ -6449,6 +5865,577 @@ msgstr "Maximum possible value for Y"
 #: src/gutenprintui2/gammacurve.c:418
 msgid "_Gamma value"
 msgstr "_Gamma value"
+
+#: src/gutenprintui2/panel.c:273
+msgid "Inch"
+msgstr "Inch"
+
+#: src/gutenprintui2/panel.c:273
+msgid "Set the base unit of measurement to inches"
+msgstr "Set the base unit of measurement to inches"
+
+#: src/gutenprintui2/panel.c:275
+msgid "cm"
+msgstr "cm"
+
+#: src/gutenprintui2/panel.c:275
+msgid "Set the base unit of measurement to centimetres"
+msgstr "Set the base unit of measurement to centimetres"
+
+#: src/gutenprintui2/panel.c:277
+msgid "Points"
+msgstr "Points"
+
+#: src/gutenprintui2/panel.c:277
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr "Set the base unit of measurement to points (1/72\")"
+
+#: src/gutenprintui2/panel.c:279
+msgid "mm"
+msgstr "mm"
+
+#: src/gutenprintui2/panel.c:279
+msgid "Set the base unit of measurement to millimetres"
+msgstr "Set the base unit of measurement to millimetres"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Pica"
+msgstr "Pica"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr "Set the base unit of measurement to picas (1/12\")"
+
+#: src/gutenprintui2/panel.c:288
+msgid "Color output"
+msgstr "Colour output"
+
+#: src/gutenprintui2/panel.c:290
+msgid "Print in shades of gray using black ink"
+msgstr "Print in shades of gray using black ink"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Standard Command"
+msgstr "Standard Command"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Use standard print command"
+msgstr "Use standard print command"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Custom Command"
+msgstr "Custom Command"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Use custom print command"
+msgstr "Use custom print command"
+
+#: src/gutenprintui2/panel.c:304 src/gutenprintui2/plist.c:678
+#: src/gutenprintui2/plist.c:761
+msgid "File"
+msgstr "File"
+
+#: src/gutenprintui2/panel.c:304
+msgid "Print to a file"
+msgstr "Print to a file"
+
+#: src/gutenprintui2/panel.c:520
+msgid "Edit Curve..."
+msgstr "Edit Curve..."
+
+#: src/gutenprintui2/panel.c:531
+msgid "Set Default"
+msgstr "Set Default"
+
+#: src/gutenprintui2/panel.c:533
+msgid "Restore Previous"
+msgstr "Restore Previous"
+
+#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
+#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
+msgid "OK"
+msgstr "OK"
+
+#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
+#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/gutenprintui2/panel.c:1180
+#, c-format
+msgid "%s -- Print v%s"
+msgstr "%s -- Print v%s"
+
+#: src/gutenprintui2/panel.c:1189
+msgid "About"
+msgstr "About"
+
+#: src/gutenprintui2/panel.c:1191
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr ""
+"Print and\n"
+"Save Settings"
+
+#: src/gutenprintui2/panel.c:1193
+msgid ""
+"Save\n"
+"Settings"
+msgstr ""
+"Save\n"
+"Settings"
+
+#: src/gutenprintui2/panel.c:1195
+msgid "Print"
+msgstr "Print"
+
+#: src/gutenprintui2/panel.c:1247
+msgid "Preview"
+msgstr "Preview"
+
+#: src/gutenprintui2/panel.c:1272
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+
+#: src/gutenprintui2/panel.c:1319
+msgid "Paper Size"
+msgstr "Paper Size"
+
+#: src/gutenprintui2/panel.c:1342
+msgid "Show All Paper Sizes"
+msgstr "Show All Paper Sizes"
+
+#: src/gutenprintui2/panel.c:1358
+msgid "Dimensions:"
+msgstr "Dimensions:"
+
+#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
+msgid "Width:"
+msgstr "Width:"
+
+#: src/gutenprintui2/panel.c:1364
+msgid "Width of the paper that you wish to print to"
+msgstr "Width of the paper that you wish to print to"
+
+#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
+msgid "Height:"
+msgstr "Height:"
+
+#: src/gutenprintui2/panel.c:1369
+msgid "Height of the paper that you wish to print to"
+msgstr "Height of the paper that you wish to print to"
+
+#: src/gutenprintui2/panel.c:1374
+msgid "Automatic Paper Size"
+msgstr "Automatic Paper Size"
+
+#: src/gutenprintui2/panel.c:1391
+msgid "Number of Copies"
+msgstr "Number of Copies"
+
+#: src/gutenprintui2/panel.c:1403
+msgid "Select the number of copies to print; a value between 1 and 100"
+msgstr "Select the number of copies to print; a value between 1 and 100"
+
+#: src/gutenprintui2/panel.c:1435
+msgid "Image Position"
+msgstr "Image Position"
+
+#: src/gutenprintui2/panel.c:1452
+msgid "Auto"
+msgstr "Auto"
+
+#: src/gutenprintui2/panel.c:1454
+msgid "Portrait"
+msgstr "Portrait"
+
+#: src/gutenprintui2/panel.c:1456
+msgid "Landscape"
+msgstr "Landscape"
+
+#: src/gutenprintui2/panel.c:1458
+msgid "Upside down"
+msgstr "Upside down"
+
+#: src/gutenprintui2/panel.c:1460
+msgid "Seascape"
+msgstr "Seascape"
+
+#: src/gutenprintui2/panel.c:1464
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+
+#: src/gutenprintui2/panel.c:1466
+msgid "Orientation:"
+msgstr "Orientation:"
+
+#: src/gutenprintui2/panel.c:1477
+msgid "Left:"
+msgstr "Left:"
+
+#: src/gutenprintui2/panel.c:1478
+msgid "Distance from the left of the paper to the image"
+msgstr "Distance from the left of the paper to the image"
+
+#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
+msgid "Right:"
+msgstr "Right:"
+
+#: src/gutenprintui2/panel.c:1482
+msgid "Distance from the left of the paper to the right of the image"
+msgstr "Distance from the left of the paper to the right of the image"
+
+#: src/gutenprintui2/panel.c:1486
+msgid "Distance from the right of the paper to the image"
+msgstr "Distance from the right of the paper to the image"
+
+#: src/gutenprintui2/panel.c:1488
+msgid "Top:"
+msgstr "Top:"
+
+#: src/gutenprintui2/panel.c:1489
+msgid "Distance from the top of the paper to the image"
+msgstr "Distance from the top of the paper to the image"
+
+#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
+msgid "Bottom:"
+msgstr "Bottom:"
+
+#: src/gutenprintui2/panel.c:1493
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr "Distance from the top of the paper to bottom of the image"
+
+#: src/gutenprintui2/panel.c:1497
+msgid "Distance from the bottom of the paper to the image"
+msgstr "Distance from the bottom of the paper to the image"
+
+#: src/gutenprintui2/panel.c:1507
+msgid "Center:"
+msgstr "Centre:"
+
+#: src/gutenprintui2/panel.c:1510
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#: src/gutenprintui2/panel.c:1511
+msgid "Center the image horizontally on the paper"
+msgstr "Centre the image horizontally on the paper"
+
+#: src/gutenprintui2/panel.c:1513
+msgid "Both"
+msgstr "Both"
+
+#: src/gutenprintui2/panel.c:1514
+msgid "Center the image on the paper"
+msgstr "Centre the image on the paper"
+
+#: src/gutenprintui2/panel.c:1516
+msgid "Vertical"
+msgstr "Vertical"
+
+#: src/gutenprintui2/panel.c:1517
+msgid "Center the image vertically on the paper"
+msgstr "Centre the image vertically on the paper"
+
+#: src/gutenprintui2/panel.c:1530
+msgid "Setup Printer"
+msgstr "Setup Printer"
+
+#: src/gutenprintui2/panel.c:1554
+msgid "Printer Make:"
+msgstr "Printer Make:"
+
+#: src/gutenprintui2/panel.c:1565
+msgid "Select the make of your printer"
+msgstr "Select the make of your printer"
+
+#: src/gutenprintui2/panel.c:1583 src/gutenprintui2/panel.c:1671
+#: src/gutenprintui2/panel.c:1889
+msgid "Printer Model:"
+msgstr "Printer Model:"
+
+#: src/gutenprintui2/panel.c:1594
+msgid "Select your printer model"
+msgstr "Select your printer model"
+
+#: src/gutenprintui2/panel.c:1642
+msgid "PPD File:"
+msgstr "PPD File:"
+
+#: src/gutenprintui2/panel.c:1658
+msgid "Enter the correct PPD filename for your printer"
+msgstr "Enter the correct PPD filename for your printer"
+
+#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
+msgid "Browse"
+msgstr "Browse"
+
+#: src/gutenprintui2/panel.c:1667
+msgid "Choose the correct PPD filename for your printer"
+msgstr "Choose the correct PPD filename for your printer"
+
+#: src/gutenprintui2/panel.c:1709
+msgid ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+
+#: src/gutenprintui2/panel.c:1711
+msgid "Printer Queue:"
+msgstr "Printer Queue:"
+
+#: src/gutenprintui2/panel.c:1727
+msgid "Enter the correct command to print to your printer. "
+msgstr "Enter the correct command to print to your printer. "
+
+#: src/gutenprintui2/panel.c:1738
+msgid "Enter the file to print to. "
+msgstr "Enter the file to print to. "
+
+#: src/gutenprintui2/panel.c:1746
+msgid "File to print to"
+msgstr "File to print to"
+
+#: src/gutenprintui2/panel.c:1754
+msgid "Print To File"
+msgstr "Print To File"
+
+#: src/gutenprintui2/panel.c:1784
+msgid "Define New Printer"
+msgstr "Define New Printer"
+
+#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
+msgid "Printer Name:"
+msgstr "Printer Name:"
+
+#: src/gutenprintui2/panel.c:1806
+msgid "Enter the name you wish to give this logical printer"
+msgstr "Enter the name you wish to give this logical printer"
+
+#: src/gutenprintui2/panel.c:1816
+msgid "About Gutenprint "
+msgstr "About Gutenprint "
+
+#: src/gutenprintui2/panel.c:1823
+msgid "Gutenprint Version "
+msgstr "Gutenprint Version "
+
+#: src/gutenprintui2/panel.c:1871
+msgid "Printer Settings"
+msgstr "Printer Settings"
+
+#: src/gutenprintui2/panel.c:1884
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+
+#: src/gutenprintui2/panel.c:1901
+msgid "Setup Printer..."
+msgstr "Setup Printer..."
+
+#: src/gutenprintui2/panel.c:1903
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+
+#: src/gutenprintui2/panel.c:1916
+msgid "New Printer..."
+msgstr "New Printer..."
+
+#: src/gutenprintui2/panel.c:1917
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+
+#: src/gutenprintui2/panel.c:1960
+msgid "Image Size"
+msgstr "Image Size"
+
+#: src/gutenprintui2/panel.c:1985
+msgid "Scaling:"
+msgstr "Scaling:"
+
+#: src/gutenprintui2/panel.c:1989
+msgid "Set the scale (size) of the image"
+msgstr "Set the scale (size) of the image"
+
+#: src/gutenprintui2/panel.c:2011
+msgid "Scale by:"
+msgstr "Scale by:"
+
+#: src/gutenprintui2/panel.c:2016
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+
+#: src/gutenprintui2/panel.c:2019
+msgid "Percent"
+msgstr "Percent"
+
+#: src/gutenprintui2/panel.c:2024
+msgid "Scale the print to the size of the page"
+msgstr "Scale the print to the size of the page"
+
+#: src/gutenprintui2/panel.c:2028
+msgid "PPI"
+msgstr "PPI"
+
+#: src/gutenprintui2/panel.c:2033
+msgid "Scale the print to the number of dots per inch"
+msgstr "Scale the print to the number of dots per inch"
+
+#: src/gutenprintui2/panel.c:2051
+msgid "Set the width of the print"
+msgstr "Set the width of the print"
+
+#: src/gutenprintui2/panel.c:2053
+msgid "Set the height of the print"
+msgstr "Set the height of the print"
+
+#: src/gutenprintui2/panel.c:2059
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr ""
+"Use Original\n"
+"Image Size"
+
+#: src/gutenprintui2/panel.c:2065
+msgid "Set the print size to the size of the image"
+msgstr "Set the print size to the size of the image"
+
+#: src/gutenprintui2/panel.c:2089
+msgid "Print Color Adjust"
+msgstr "Print Colour Adjust"
+
+#: src/gutenprintui2/panel.c:2092
+msgid "Set Defaults"
+msgstr "Set Defaults"
+
+#: src/gutenprintui2/panel.c:2094
+msgid "Close"
+msgstr "Close"
+
+#: src/gutenprintui2/panel.c:2123
+msgid "Image preview"
+msgstr "Image preview"
+
+#: src/gutenprintui2/panel.c:2137
+msgid "View Output Channels:"
+msgstr "View Output Channels:"
+
+#: src/gutenprintui2/panel.c:2228
+msgid "Output"
+msgstr "Output"
+
+#: src/gutenprintui2/panel.c:2256
+msgid "Output Type:"
+msgstr "Output Type:"
+
+#: src/gutenprintui2/panel.c:2260
+msgid "Select the desired output type"
+msgstr "Select the desired output type"
+
+#: src/gutenprintui2/panel.c:2281
+msgid "Adjust Output..."
+msgstr "Adjust Output..."
+
+#: src/gutenprintui2/panel.c:2290
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"Adjust colour balance, brightness, contrast, saturation, and dither algorithm"
+
+#: src/gutenprintui2/panel.c:2309
+msgid "Size Units:"
+msgstr "Size Units:"
+
+#: src/gutenprintui2/panel.c:2312
+msgid " "
+msgstr " "
+
+#: src/gutenprintui2/panel.c:2336
+msgid "Units:"
+msgstr "Units:"
+
+#: src/gutenprintui2/panel.c:2341
+msgid "Select the base unit of measurement for printing"
+msgstr "Select the base unit of measurement for printing"
+
+#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
+msgid "System V lp"
+msgstr "System V lp"
+
+#: src/gutenprintui2/plist.c:96
+msgid "CUPS"
+msgstr "CUPS"
+
+#: src/gutenprintui2/plist.c:102
+msgid "Berkeley lpd (/etc/lpc)"
+msgstr "Berkeley lpd (/etc/lpc)"
+
+#: src/gutenprintui2/plist.c:105
+msgid "Berkeley lpd (/usr/bsd/lpc)"
+msgstr "Berkeley lpd (/usr/bsd/lpc)"
+
+#: src/gutenprintui2/plist.c:108
+msgid "Berkeley lpd (/usr/etc/lpc"
+msgstr "Berkeley lpd (/usr/etc/lpc"
+
+#: src/gutenprintui2/plist.c:111
+msgid "Berkeley lpd (/usr/libexec/lpc)"
+msgstr "Berkeley lpd (/usr/libexec/lpc)"
+
+#: src/gutenprintui2/plist.c:114
+msgid "Berkeley lpd (/usr/sbin/lpc)"
+msgstr "Berkeley lpd (/usr/sbin/lpc)"
+
+#: src/gutenprintui2/plist.c:1016
+msgid "Printer"
+msgstr "Printer"
+
+#: src/gutenprintui2/plist.c:1203
+msgid "(Default Printer)"
+msgstr "(Default Printer)"
 
 #: src/cups/genppd.c:145
 msgid "Printer Features"
@@ -6494,41 +6481,41 @@ msgstr "English-GB"
 msgid "ISOLatin1"
 msgstr "UTF-8"
 
-#: src/cups/genppd.c:1608
+#: src/cups/genppd.c:1622
 #, fuzzy
 msgid "2-Sided Printing"
 msgstr "Double-Sided Printing"
 
-#: src/cups/genppd.c:1629
+#: src/cups/genppd.c:1646
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr ""
 
-#: src/cups/genppd.c:1633
+#: src/cups/genppd.c:1650
 msgid "Shrink (print the whole page)"
 msgstr ""
 
-#: src/cups/genppd.c:1634
+#: src/cups/genppd.c:1651
 msgid "Crop (preserve dimensions)"
 msgstr ""
 
-#: src/cups/genppd.c:1635
+#: src/cups/genppd.c:1652
 msgid "Expand (use maximum page area)"
 msgstr ""
 
-#: src/cups/genppd.c:1712
+#: src/cups/genppd.c:1735
 msgid "No"
 msgstr "No"
 
-#: src/cups/genppd.c:1714
+#: src/cups/genppd.c:1737
 msgid "Yes"
 msgstr "Yes"
 
-#: src/cups/genppd.c:1746 src/cups/genppd.c:1799
+#: src/cups/genppd.c:1774 src/cups/genppd.c:1836
 #, fuzzy
 msgid "Value"
 msgstr "Blue"
 
-#: src/cups/genppd.c:1751
+#: src/cups/genppd.c:1779
 msgid "Fine Adjustment"
 msgstr "Fine Adjustment"
 
@@ -7405,13 +7392,9 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "Error in input\n"
 
-#: src/gimp/print-image-gimp.c:225 src/gimp2/print-image-gimp.c:225
+#: src/gimp2/print-image-gimp.c:225
 msgid "Printing..."
 msgstr "Printing..."
-
-#: src/gimp/print.c:133
-msgid "<Image>/File/Print..."
-msgstr "<Image>/File/Print..."
 
 #: src/ghost/ijsgutenprint.c:98
 #, c-format
@@ -7539,6 +7522,91 @@ msgstr "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 
+#~ msgid "Cassette"
+#~ msgstr "Cassette"
+
+#~ msgid "CD tray"
+#~ msgstr "CD tray"
+
+#~ msgid " Gamma"
+#~ msgstr " Gamma"
+
+#~ msgid " Curve"
+#~ msgstr " Curve"
+
+#~ msgid "1440 x 1440"
+#~ msgstr "1440 × 1440"
+
+#~ msgid "1440 x 1440 DPI High Quality"
+#~ msgstr "1440 × 1440 DPI High Quality"
+
+#~ msgid "1440 x 1440 DPI Highest Quality"
+#~ msgstr "1440 × 1440 DPI Highest Quality"
+
+#~ msgid "2880 x 1440 DPI High Quality"
+#~ msgstr "2880 × 1440 DPI High Quality"
+
+#~ msgid "2880 x 1440 DPI Highest Quality"
+#~ msgstr "2880 × 1440 DPI Highest Quality"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
+#~ "and the rest of the Gutenprint Development Team.\n"
+#~ "\n"
+#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
+#~ "\n"
+#~ "This program is free software; you can redistribute it and/or modify\n"
+#~ "it under the terms of the GNU General Public License as published by\n"
+#~ "the Free Software Foundation; either version 2 of the License, or\n"
+#~ "(at your option) any later version.\n"
+#~ "\n"
+#~ "This program is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details.\n"
+#~ "\n"
+#~ "You should have received a copy of the GNU General Public License\n"
+#~ "along with this program; if not, write to the Free Software\n"
+#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+#~ "USA\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
+#~ "and the rest of the Gutenprint Development Team.\n"
+#~ "\n"
+#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
+#~ "\n"
+#~ "This program is free software; you can redistribute it and/or modify\n"
+#~ "it under the terms of the GNU General Public License as published by\n"
+#~ "the Free Software Foundation; either version 2 of the License, or\n"
+#~ "(at your option) any later version.\n"
+#~ "\n"
+#~ "This program is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details.\n"
+#~ "\n"
+#~ "You should have received a copy of the GNU General Public License\n"
+#~ "along with this program; if not, write to the Free Software\n"
+#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+#~ "USA\n"
+
+#~ msgid ""
+#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
+#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
+#~ "l'\n"
+#~ "This is free software, and you are welcome to redistribute it\n"
+#~ "under certain conditions; type 'escputil -l' for details.\n"
+#~ msgstr ""
+#~ ", Copyright © 2000-2006 Robert Krawitz\n"
+#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
+#~ "l'\n"
+#~ "This is free software, and you are welcome to redistribute it\n"
+#~ "under certain conditions; type 'escputil -l' for details.\n"
+
 #~ msgid "90x90 DPI"
 #~ msgstr "90×90 DPI"
 
@@ -7644,12 +7712,6 @@ msgstr "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 #~ msgid "Photo Paper Pro"
 #~ msgstr "Photo Paper Pro"
 
-#~ msgid "Cassette"
-#~ msgstr "Cassette"
-
-#~ msgid "CD tray"
-#~ msgstr "CD tray"
-
 #~ msgid "Photo CcMmYK Color"
 #~ msgstr "Photo CcMmYK Colour"
 
@@ -7662,81 +7724,5 @@ msgstr "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 #~ msgid "CMY Color"
 #~ msgstr "CMY Colour"
 
-#~ msgid " Gamma"
-#~ msgstr " Gamma"
-
-#~ msgid " Curve"
-#~ msgstr " Curve"
-
-#~ msgid "1440 x 1440"
-#~ msgstr "1440 × 1440"
-
-#~ msgid "1440 x 1440 DPI High Quality"
-#~ msgstr "1440 × 1440 DPI High Quality"
-
-#~ msgid "1440 x 1440 DPI Highest Quality"
-#~ msgstr "1440 × 1440 DPI Highest Quality"
-
-#~ msgid "2880 x 1440 DPI High Quality"
-#~ msgstr "2880 × 1440 DPI High Quality"
-
-#~ msgid "2880 x 1440 DPI Highest Quality"
-#~ msgstr "2880 × 1440 DPI Highest Quality"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
-#~ "and the rest of the Gutenprint Development Team.\n"
-#~ "\n"
-#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
-#~ "\n"
-#~ "This program is free software; you can redistribute it and/or modify\n"
-#~ "it under the terms of the GNU General Public License as published by\n"
-#~ "the Free Software Foundation; either version 2 of the License, or\n"
-#~ "(at your option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful,\n"
-#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-#~ "GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public License\n"
-#~ "along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-#~ "USA\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
-#~ "and the rest of the Gutenprint Development Team.\n"
-#~ "\n"
-#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
-#~ "\n"
-#~ "This program is free software; you can redistribute it and/or modify\n"
-#~ "it under the terms of the GNU General Public License as published by\n"
-#~ "the Free Software Foundation; either version 2 of the License, or\n"
-#~ "(at your option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful,\n"
-#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-#~ "GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public License\n"
-#~ "along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-#~ "USA\n"
-
-#~ msgid ""
-#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
-#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
-#~ "l'\n"
-#~ "This is free software, and you are welcome to redistribute it\n"
-#~ "under certain conditions; type 'escputil -l' for details.\n"
-#~ msgstr ""
-#~ ", Copyright © 2000-2006 Robert Krawitz\n"
-#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
-#~ "l'\n"
-#~ "This is free software, and you are welcome to redistribute it\n"
-#~ "under certain conditions; type 'escputil -l' for details.\n"
+#~ msgid "<Image>/File/Print..."
+#~ msgstr "<Image>/File/Print..."

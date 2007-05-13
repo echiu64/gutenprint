@@ -88,8 +88,8 @@ msgstr "Sűrűség"
 #: src/main/print-escp2.c:472 src/main/print-escp2.c:480
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
-#: src/main/print-olympus.c:1626 src/main/print-olympus.c:1634
-#: src/main/print-olympus.c:1642 src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1624 src/main/print-olympus.c:1632
+#: src/main/print-olympus.c:1640 src/main/print-olympus.c:1648
 #: src/main/print-pcl.c:1261 src/main/print-pcl.c:1269
 #: src/main/print-pcl.c:1277 src/main/print-pcl.c:1285
 msgid "Output Level Adjustment"
@@ -153,8 +153,8 @@ msgid "Dither algorithm"
 msgstr "Szórási algoritmus"
 
 #: src/main/print-canon.c:196 src/main/print-escp2.c:179
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1561
-#: src/main/print-pcl.c:1196 src/main/print-ps.c:67
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1559
+#: src/main/print-pcl.c:1196
 msgid "Page Size"
 msgstr "Oldalméret"
 
@@ -168,76 +168,74 @@ msgstr "Oldalméret"
 #: src/main/print-escp2.c:262 src/main/print-escp2.c:280
 #: src/main/print-lexmark.c:266 src/main/print-lexmark.c:272
 #: src/main/print-lexmark.c:278 src/main/print-lexmark.c:284
-#: src/main/print-olympus.c:1561 src/main/print-olympus.c:1567
-#: src/main/print-olympus.c:1573 src/main/print-olympus.c:1579
+#: src/main/print-olympus.c:1559 src/main/print-olympus.c:1565
+#: src/main/print-olympus.c:1571 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1196 src/main/print-pcl.c:1202
 #: src/main/print-pcl.c:1208 src/main/print-pcl.c:1214
-#: src/main/print-pcl.c:1238 src/main/print-ps.c:67 src/main/print-ps.c:73
-#: src/main/print-ps.c:79 src/main/print-ps.c:85 src/main/print-ps.c:97
+#: src/main/print-pcl.c:1238 src/main/print-ps.c:68 src/main/print-ps.c:74
 msgid "Basic Printer Setup"
 msgstr "Nyomtató alapbeállításai"
 
 #: src/main/print-canon.c:197 src/main/print-escp2.c:180
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1562
-#: src/main/print-pcl.c:1197 src/main/print-ps.c:68
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1560
+#: src/main/print-pcl.c:1197
 msgid "Size of the paper being printed to"
 msgstr "A nyomtatáshoz használt papír mérete"
 
 #: src/main/print-canon.c:202 src/main/print-escp2.c:185
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1567
-#: src/main/print-pcl.c:1202 src/main/print-ps.c:73 src/cups/genppd.c:1405
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1565
+#: src/main/print-pcl.c:1202 src/cups/genppd.c:1407
 msgid "Media Type"
 msgstr "Papír típusa"
 
 #: src/main/print-canon.c:203 src/main/print-escp2.c:186
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1568
-#: src/main/print-pcl.c:1203 src/main/print-ps.c:74
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1566
+#: src/main/print-pcl.c:1203
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "A hordozó típusa (egyszerű lap, fotópapír, stb.)"
 
 #: src/main/print-canon.c:208 src/main/print-escp2.c:191
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1573
-#: src/main/print-pcl.c:1208 src/main/print-ps.c:79 src/cups/genppd.c:1430
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1571
+#: src/main/print-pcl.c:1208 src/cups/genppd.c:1435
 msgid "Media Source"
 msgstr "Papír forrása"
 
 #: src/main/print-canon.c:209 src/main/print-escp2.c:192
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1574
-#: src/main/print-pcl.c:1209 src/main/print-ps.c:80
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1572
+#: src/main/print-pcl.c:1209
 msgid "Source (input slot) of the media"
 msgstr "A nyomtatáshoz használt hordozó forrása"
 
 #: src/main/print-canon.c:214 src/main/print-escp2.c:227
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1579
-#: src/main/print-pcl.c:1214 src/main/print-ps.c:85 src/cups/genppd.c:1499
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
+#: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
 msgstr "Felbontás"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:1580 src/main/print-pcl.c:1215
-#: src/main/print-ps.c:86
+#: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
 msgid "Resolution and quality of the print"
 msgstr "A nyomtatás felbontása és minősége"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:238
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1585
-#: src/main/print-pcl.c:1220 src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1583
+#: src/main/print-pcl.c:1220 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Tinta típusa"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:215
 #: src/main/print-escp2.c:221 src/main/print-escp2.c:238
 #: src/main/print-escp2.c:274 src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1585 src/main/print-olympus.c:1591
-#: src/main/print-olympus.c:1597 src/main/print-pcl.c:1220
-#: src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-olympus.c:1583 src/main/print-olympus.c:1589
+#: src/main/print-olympus.c:1595 src/main/print-pcl.c:1220
+#: src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr "Haladó nyomtatóbeállítások"
 
 #: src/main/print-canon.c:221 src/main/print-escp2.c:239
 #: src/main/print-escp2.c:251 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:1586 src/main/print-pcl.c:1221
-#: src/main/print-ps.c:92 src/main/print-raw.c:81
+#: src/main/print-olympus.c:1584 src/main/print-pcl.c:1221
+#: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "A nyomtatóban levő tinta típusa"
 
@@ -259,8 +257,8 @@ msgid "Advanced Printer Functionality"
 msgstr "Haladó nyomtatófunkciók"
 
 #: src/main/print-canon.c:232 src/main/print-escp2.c:334
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1603
-#: src/main/print-pcl.c:1232 src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1601
+#: src/main/print-pcl.c:1232 src/main/print-raw.c:86
 msgid "Printing Mode"
 msgstr "Nyomtatási mód"
 
@@ -268,14 +266,14 @@ msgstr "Nyomtatási mód"
 #: src/main/print-color.c:192 src/main/print-color.c:200
 #: src/main/print-color.c:208 src/main/print-escp2.c:334
 #: src/main/print-escp2.c:340 src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1603 src/main/print-pcl.c:1232
-#: src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-olympus.c:1601 src/main/print-pcl.c:1232
+#: src/main/print-raw.c:86
 msgid "Core Parameter"
 msgstr "Alap paraméter"
 
 #: src/main/print-canon.c:233 src/main/print-escp2.c:335
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1604
-#: src/main/print-pcl.c:1233 src/main/print-ps.c:104 src/main/print-raw.c:87
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1602
+#: src/main/print-pcl.c:1233 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr "Nyomtatás kimeneti módja"
 
@@ -371,15 +369,15 @@ msgid "Short Edge (Flip)"
 msgstr "Rövidebbik él (tükrözve)"
 
 #: src/main/print-canon.c:613 src/main/print-escp2.c:1980
-#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1858
-#: src/main/print-pcl.c:1776 src/main/print-ps.c:170 src/main/print-raw.c:135
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
+#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1856
+#: src/main/print-pcl.c:1776 src/main/print-raw.c:135
+#: src/gutenprintui2/panel.c:288
 msgid "Color"
 msgstr "Színes"
 
 #: src/main/print-canon.c:615 src/main/print-escp2.c:1982
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1778
-#: src/main/print-ps.c:172 src/main/print-raw.c:137
+#: src/main/print-raw.c:137
 msgid "Black and White"
 msgstr "Fekete-fehér"
 
@@ -417,7 +415,7 @@ msgstr "Előszórt"
 
 #: src/main/print-color.c:121 src/main/escp2-channels.c:820
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
-#: src/gutenprintui/panel.c:289 src/gutenprintui2/panel.c:289
+#: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
 msgstr "Szürkeárnyalatos"
 
@@ -563,9 +561,8 @@ msgstr "Az alkalmazás által feltételezett gamma érték"
 #: src/main/escp2-channels.c:2753 src/main/escp2-channels.c:2766
 #: src/main/escp2-channels.c:2779 src/main/escp2-channels.c:2793
 #: src/main/escp2-channels.c:2807 src/main/escp2-channels.c:2822
-#: src/gutenprintui/panel.c:2140 src/gutenprintui2/panel.c:2141
-#: src/escputil/escputil.c:984 src/escputil/escputil.c:1003
-#: src/escputil/escputil.c:1207
+#: src/gutenprintui2/panel.c:2141 src/escputil/escputil.c:984
+#: src/escputil/escputil.c:1003 src/escputil/escputil.c:1207
 msgid "Cyan"
 msgstr "Ciánkék"
 
@@ -579,9 +576,8 @@ msgstr "A ciánkék gamma értékének beállítása"
 #: src/main/escp2-channels.c:2754 src/main/escp2-channels.c:2767
 #: src/main/escp2-channels.c:2780 src/main/escp2-channels.c:2792
 #: src/main/escp2-channels.c:2806 src/main/escp2-channels.c:2823
-#: src/gutenprintui/panel.c:2147 src/gutenprintui2/panel.c:2148
-#: src/escputil/escputil.c:985 src/escputil/escputil.c:1004
-#: src/escputil/escputil.c:1208
+#: src/gutenprintui2/panel.c:2148 src/escputil/escputil.c:985
+#: src/escputil/escputil.c:1004 src/escputil/escputil.c:1208
 msgid "Magenta"
 msgstr "Bíborvörös"
 
@@ -595,9 +591,8 @@ msgstr "A bíborvörös gamma értékének beállítása"
 #: src/main/escp2-channels.c:2755 src/main/escp2-channels.c:2768
 #: src/main/escp2-channels.c:2781 src/main/escp2-channels.c:2791
 #: src/main/escp2-channels.c:2805 src/main/escp2-channels.c:2824
-#: src/gutenprintui/panel.c:2154 src/gutenprintui2/panel.c:2155
-#: src/escputil/escputil.c:986 src/escputil/escputil.c:1005
-#: src/escputil/escputil.c:1209
+#: src/gutenprintui2/panel.c:2155 src/escputil/escputil.c:986
+#: src/escputil/escputil.c:1005 src/escputil/escputil.c:1209
 msgid "Yellow"
 msgstr "Sárga"
 
@@ -606,9 +601,8 @@ msgid "Adjust the yellow gamma"
 msgstr "A sárga gamma értékének beállítása"
 
 #: src/main/print-color.c:290 src/main/escp2-channels.c:2796
-#: src/main/escp2-channels.c:2809 src/gutenprintui/panel.c:2168
-#: src/gutenprintui2/panel.c:2169 src/escputil/escputil.c:993
-#: src/escputil/escputil.c:1011
+#: src/main/escp2-channels.c:2809 src/gutenprintui2/panel.c:2169
+#: src/escputil/escputil.c:993 src/escputil/escputil.c:1011
 msgid "Red"
 msgstr "Vörös"
 
@@ -616,8 +610,7 @@ msgstr "Vörös"
 msgid "Adjust the red gamma"
 msgstr "A vörös gamma értékének beállítása"
 
-#: src/main/print-color.c:298 src/gutenprintui/panel.c:2175
-#: src/gutenprintui2/panel.c:2176
+#: src/main/print-color.c:298 src/gutenprintui2/panel.c:2176
 msgid "Green"
 msgstr "Zöld"
 
@@ -626,9 +619,8 @@ msgid "Adjust the green gamma"
 msgstr "A zöld gamma értékének beállítása"
 
 #: src/main/print-color.c:306 src/main/escp2-channels.c:2797
-#: src/main/escp2-channels.c:2810 src/gutenprintui/panel.c:2182
-#: src/gutenprintui2/panel.c:2183 src/escputil/escputil.c:994
-#: src/escputil/escputil.c:1012
+#: src/main/escp2-channels.c:2810 src/gutenprintui2/panel.c:2183
+#: src/escputil/escputil.c:994 src/escputil/escputil.c:1012
 msgid "Blue"
 msgstr "Kék"
 
@@ -642,9 +634,9 @@ msgstr "A kék gamma értékének beállítása"
 #: src/main/escp2-channels.c:2740 src/main/escp2-channels.c:2752
 #: src/main/escp2-channels.c:2765 src/main/escp2-channels.c:2778
 #: src/main/escp2-channels.c:2784 src/main/escp2-channels.c:2808
-#: src/main/escp2-channels.c:2821 src/gutenprintui/panel.c:2161
-#: src/gutenprintui2/panel.c:2162 src/escputil/escputil.c:981
-#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1206
+#: src/main/escp2-channels.c:2821 src/gutenprintui2/panel.c:2162
+#: src/escputil/escputil.c:981 src/escputil/escputil.c:1002
+#: src/escputil/escputil.c:1206
 msgid "Black"
 msgstr "Fekete"
 
@@ -652,7 +644,7 @@ msgstr "Fekete"
 msgid "Adjust the black gamma"
 msgstr "A fekete gamma értékének beállítása"
 
-#: src/main/print-color.c:322 src/main/print-olympus.c:1626
+#: src/main/print-color.c:322 src/main/print-olympus.c:1624
 msgid "Cyan Balance"
 msgstr "Ciánkékegyensúly"
 
@@ -665,7 +657,7 @@ msgstr "Szürkeegyensúly"
 msgid "Adjust the cyan gray balance"
 msgstr "A ciánkék szürkeegyensúlyának beállítása"
 
-#: src/main/print-color.c:330 src/main/print-olympus.c:1634
+#: src/main/print-color.c:330 src/main/print-olympus.c:1632
 msgid "Magenta Balance"
 msgstr "Bíborvörös-egyensúly"
 
@@ -673,7 +665,7 @@ msgstr "Bíborvörös-egyensúly"
 msgid "Adjust the magenta gray balance"
 msgstr "A bíborvörös szürkeegyensúlyának beállítása"
 
-#: src/main/print-color.c:338 src/main/print-olympus.c:1642
+#: src/main/print-color.c:338 src/main/print-olympus.c:1640
 msgid "Yellow Balance"
 msgstr "Sárgaegyensúly"
 
@@ -1023,11 +1015,11 @@ msgstr "Haladó kimenetvezérlés"
 msgid "Printing direction (unidirectional is higher quality, but slower)"
 msgstr "Nyomtatás iránya (az egyirányú jobb minőségű, de lassabb)"
 
-#: src/main/print-escp2.c:262 src/main/print-olympus.c:1597
+#: src/main/print-escp2.c:262 src/main/print-olympus.c:1595
 msgid "Borderless"
 msgstr "Szegély nélküli"
 
-#: src/main/print-escp2.c:263 src/main/print-olympus.c:1598
+#: src/main/print-escp2.c:263 src/main/print-olympus.c:1596
 msgid "Print without borders"
 msgstr "Nyomtatás szegélyek nélkül"
 
@@ -1216,11 +1208,11 @@ msgstr "Kézi vezérlés"
 #: src/main/escp2-papers.c:1716 src/main/escp2-papers.c:1809
 #: src/main/escp2-resolutions.c:598 src/main/escp2-resolutions.c:613
 #: src/main/escp2-resolutions.c:626 src/main/generic-options.c:36
-#: src/gutenprintui/panel.c:2601 src/gutenprintui2/panel.c:2627
+#: src/gutenprintui2/panel.c:2627
 msgid "Standard"
 msgstr "Szabványos"
 
-#: src/main/print-escp2.c:1811 src/cups/genppd.c:1532
+#: src/main/print-escp2.c:1811 src/cups/genppd.c:1546
 msgid "Automatic"
 msgstr "Automatikus"
 
@@ -1257,7 +1249,7 @@ msgstr "Legközelebbi szomszéd elkerülése"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Ez a nyomtató nem támogatja a nyers kimenetet a(z) %d mélységben\n"
 
-#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2310
+#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2308
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "A nyomtatási beállítások nincsenek ellenőrizve, nem lehet nyomtatni.\n"
@@ -1446,50 +1438,50 @@ msgstr "Kézzel szünetekkel"
 msgid "Manual without Pause"
 msgstr "Kézzel szünetek nélkül"
 
-#: src/main/print-olympus.c:276
+#: src/main/print-olympus.c:274
 msgid "Coated"
 msgstr "Bevont"
 
-#: src/main/print-olympus.c:277 src/cups/genppd.c:1686 src/cups/genppd.c:1709
-#: src/cups/genppd.c:1776
+#: src/main/print-olympus.c:275 src/cups/genppd.c:1706 src/cups/genppd.c:1732
+#: src/cups/genppd.c:1813
 msgid "None"
 msgstr "Nincs"
 
-#: src/main/print-olympus.c:922 src/main/print-olympus.c:980
-#: src/main/print-olympus.c:1080
+#: src/main/print-olympus.c:920 src/main/print-olympus.c:978
+#: src/main/print-olympus.c:1078
 msgid "Glossy"
 msgstr "Fényes"
 
-#: src/main/print-olympus.c:923 src/main/print-olympus.c:981
-#: src/main/print-olympus.c:1081
+#: src/main/print-olympus.c:921 src/main/print-olympus.c:979
+#: src/main/print-olympus.c:1079
 msgid "Texture"
 msgstr "Textúra"
 
-#: src/main/print-olympus.c:982 src/main/print-olympus.c:1082
+#: src/main/print-olympus.c:980 src/main/print-olympus.c:1080
 msgid "Matte"
 msgstr "Matt"
 
-#: src/main/print-olympus.c:1591 src/main/print-olympus.c:1592
+#: src/main/print-olympus.c:1589 src/main/print-olympus.c:1590
 msgid "Laminate Pattern"
 msgstr "Laminált minta"
 
-#: src/main/print-olympus.c:1627
+#: src/main/print-olympus.c:1625
 msgid "Adjust the cyan balance"
 msgstr "A ciánkék-egyensúly beállítása"
 
-#: src/main/print-olympus.c:1635
+#: src/main/print-olympus.c:1633
 msgid "Adjust the magenta balance"
 msgstr "A bíborvörös-egyensúly beállítása"
 
-#: src/main/print-olympus.c:1643
+#: src/main/print-olympus.c:1641
 msgid "Adjust the yellow balance"
 msgstr "A sárgaegyensúly beállítása"
 
-#: src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1648
 msgid "Black Balance"
 msgstr "Feketeegyensúly"
 
-#: src/main/print-olympus.c:1651
+#: src/main/print-olympus.c:1649
 msgid "Adjust the black balance"
 msgstr "A feketeegyensúly beállítása"
 
@@ -1597,14 +1589,22 @@ msgstr "Színes + fekete patron"
 msgid "Color + Photo Cartridges"
 msgstr "Színes + fotó patronok"
 
-#: src/main/print-ps.c:97
+#: src/main/print-ps.c:68
 msgid "PPDFile"
 msgstr "PPD fájl"
 
-#: src/main/print-ps.c:98 src/gutenprintui/panel.c:1767
-#: src/gutenprintui2/panel.c:1767
+#: src/main/print-ps.c:69 src/gutenprintui2/panel.c:1767
 msgid "PPD File"
 msgstr "PPD fájl"
+
+#: src/main/print-ps.c:74
+#, fuzzy
+msgid "Model Name"
+msgstr "Csatornanevek"
+
+#: src/main/print-ps.c:75
+msgid "PPD File Model Name"
+msgstr ""
 
 #: src/main/print-raw.c:223
 msgid "Image dimensions must match paper dimensions"
@@ -2801,7 +2801,7 @@ msgstr "Canon iP4000"
 #: src/main/xmli18n-tmp.h:183
 #, fuzzy
 msgid "Canon PIXMA iP3100"
-msgstr "Canon iP4000"
+msgstr "Canon CP-300"
 
 #: src/main/xmli18n-tmp.h:184
 #, fuzzy
@@ -2831,7 +2831,7 @@ msgstr "Canon iP4000"
 #: src/main/xmli18n-tmp.h:189
 #, fuzzy
 msgid "Canon PIXMA iP5200"
-msgstr "Canon iP4000"
+msgstr "Canon CP-200"
 
 #: src/main/xmli18n-tmp.h:190
 #, fuzzy
@@ -5830,590 +5830,6 @@ msgstr "NYERS ADAT 16 bit"
 msgid "RAW DATA 8 bit"
 msgstr "NYERS ADAT 8 bit"
 
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Inch"
-msgstr "Hüvelyk"
-
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Set the base unit of measurement to inches"
-msgstr "Az alapmértékegység hüvelykre állítása"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "cm"
-msgstr "cm"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "Set the base unit of measurement to centimetres"
-msgstr "Az alapmértékegység centiméterre állítása"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-msgid "Points"
-msgstr "Pont"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Az alapmértékegység pontra (1/72 hüvelyk) állítása"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "mm"
-msgstr "mm"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "Set the base unit of measurement to millimetres"
-msgstr "Az alapmértékegység milliméterre állítása"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Pica"
-msgstr "Pica"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Az alapmértékegység pica-ra (1/12 hüvelyk) állítása"
-
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
-msgid "Color output"
-msgstr "Színes kimenet"
-
-#: src/gutenprintui/panel.c:290 src/gutenprintui2/panel.c:290
-msgid "Print in shades of gray using black ink"
-msgstr "A szürke szín árnyalataival való nyomtatás fekete tintával"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Standard Command"
-msgstr "Szabványos parancs"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Use standard print command"
-msgstr "Szabványos nyomtatóparancs használata"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Custom Command"
-msgstr "Egyéni parancs"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Use custom print command"
-msgstr "Egyéni nyomtatóparancs használata"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui/plist.c:682
-#: src/gutenprintui/plist.c:765 src/gutenprintui2/panel.c:304
-#: src/gutenprintui2/plist.c:678 src/gutenprintui2/plist.c:761
-msgid "File"
-msgstr "Fájl"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui2/panel.c:304
-msgid "Print to a file"
-msgstr "Nyomtatás fájlba"
-
-#: src/gutenprintui/panel.c:520 src/gutenprintui2/panel.c:520
-msgid "Edit Curve..."
-msgstr "Görbe szerkesztése..."
-
-#: src/gutenprintui/panel.c:531 src/gutenprintui2/panel.c:531
-msgid "Set Default"
-msgstr "Alapértelmezés beállítása"
-
-#: src/gutenprintui/panel.c:533 src/gutenprintui2/panel.c:533
-msgid "Restore Previous"
-msgstr "Előző helyreállítása"
-
-#: src/gutenprintui/panel.c:535 src/gutenprintui/panel.c:1531
-#: src/gutenprintui/panel.c:1786 src/gutenprintui/panel.c:1818
-#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
-#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
-msgid "OK"
-msgstr "OK"
-
-#: src/gutenprintui/panel.c:537 src/gutenprintui/panel.c:1196
-#: src/gutenprintui/panel.c:1533 src/gutenprintui/panel.c:1788
-#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
-#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
-msgid "Cancel"
-msgstr "Mégsem"
-
-#: src/gutenprintui/panel.c:1179 src/gutenprintui2/panel.c:1180
-#, c-format
-msgid "%s -- Print v%s"
-msgstr "%s -- nyomtatás v%s"
-
-#: src/gutenprintui/panel.c:1188 src/gutenprintui2/panel.c:1189
-msgid "About"
-msgstr "Névjegy"
-
-#: src/gutenprintui/panel.c:1190 src/gutenprintui2/panel.c:1191
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr ""
-"Nyomtatás és a\n"
-"beállítások mentése"
-
-#: src/gutenprintui/panel.c:1192 src/gutenprintui2/panel.c:1193
-msgid ""
-"Save\n"
-"Settings"
-msgstr ""
-"Beállítások\n"
-"mentése"
-
-#: src/gutenprintui/panel.c:1194 src/gutenprintui2/panel.c:1195
-msgid "Print"
-msgstr "Nyomtatás"
-
-#: src/gutenprintui/panel.c:1246 src/gutenprintui2/panel.c:1247
-msgid "Preview"
-msgstr "Előnézet"
-
-#: src/gutenprintui/panel.c:1271 src/gutenprintui2/panel.c:1272
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-"A kép elhelyezése a lapon.\n"
-"Az elsődleges (általában a bal oldali) egérgomb lenyomása utáni húzással "
-"áthelyezheti a képet.\n"
-"A második egérgomb lenyomása utáni húzással finomabb áthelyezés végezhető; "
-"az elmozdítás pontonként történik (1/72\").\n"
-"A harmadik (középső) egérgomb lenyomása utáni húzással képméretnyi "
-"elmozdítás végezhető.\n"
-"Ha kattintás és húzás közben le van nyomva a Shift billentyű, akkor az "
-"elmozdítás csak vízszintes illetve függőleges irányban lesz lehetséges.\n"
-"Ha húzás közben lenyom egy másik egérgombot, akkor a kép visszakerül az "
-"eredeti helyére."
-
-#: src/gutenprintui/panel.c:1318 src/gutenprintui2/panel.c:1319
-msgid "Paper Size"
-msgstr "Papírméret"
-
-#: src/gutenprintui/panel.c:1341 src/gutenprintui2/panel.c:1342
-msgid "Show All Paper Sizes"
-msgstr "Minden papírméret mutatása"
-
-#: src/gutenprintui/panel.c:1357 src/gutenprintui2/panel.c:1358
-msgid "Dimensions:"
-msgstr "Méretek:"
-
-#: src/gutenprintui/panel.c:1362 src/gutenprintui/panel.c:2051
-#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
-msgid "Width:"
-msgstr "Szélesség:"
-
-#: src/gutenprintui/panel.c:1363 src/gutenprintui2/panel.c:1364
-msgid "Width of the paper that you wish to print to"
-msgstr "A nyomtatáshoz használt papír szélessége"
-
-#: src/gutenprintui/panel.c:1367 src/gutenprintui/panel.c:2053
-#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
-msgid "Height:"
-msgstr "Magasság:"
-
-#: src/gutenprintui/panel.c:1368 src/gutenprintui2/panel.c:1369
-msgid "Height of the paper that you wish to print to"
-msgstr "A nyomtatáshoz használt papír magassága"
-
-#: src/gutenprintui/panel.c:1373 src/gutenprintui2/panel.c:1374
-msgid "Automatic Paper Size"
-msgstr "Automatikus papírméret"
-
-#: src/gutenprintui/panel.c:1390 src/gutenprintui2/panel.c:1391
-msgid "Number of Copies"
-msgstr "Példányszám"
-
-#: src/gutenprintui/panel.c:1402 src/gutenprintui2/panel.c:1403
-msgid "Select the number of copies to print; a value between 1 and 100"
-msgstr "Válassza ki a nyomtatandó példányok számát, 1 és 100 között"
-
-#: src/gutenprintui/panel.c:1434 src/gutenprintui2/panel.c:1435
-msgid "Image Position"
-msgstr "Képpozíció"
-
-#: src/gutenprintui/panel.c:1451 src/gutenprintui2/panel.c:1452
-msgid "Auto"
-msgstr "Automatikus"
-
-#: src/gutenprintui/panel.c:1453 src/gutenprintui2/panel.c:1454
-msgid "Portrait"
-msgstr "Álló"
-
-#: src/gutenprintui/panel.c:1455 src/gutenprintui2/panel.c:1456
-msgid "Landscape"
-msgstr "Fekvő"
-
-#: src/gutenprintui/panel.c:1457 src/gutenprintui2/panel.c:1458
-msgid "Upside down"
-msgstr "Fejjel lefelé"
-
-#: src/gutenprintui/panel.c:1459 src/gutenprintui2/panel.c:1460
-msgid "Seascape"
-msgstr "Ellenkező fekvő"
-
-#: src/gutenprintui/panel.c:1463 src/gutenprintui2/panel.c:1464
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Válasszon irányt: álló, fekvő, fejjel lefelé levő vagy fordított fekvő "
-"(fejjel lefelé levő fekvő)"
-
-#: src/gutenprintui/panel.c:1465 src/gutenprintui2/panel.c:1466
-msgid "Orientation:"
-msgstr "Elhelyezkedés:"
-
-#: src/gutenprintui/panel.c:1476 src/gutenprintui2/panel.c:1477
-msgid "Left:"
-msgstr "Bal:"
-
-#: src/gutenprintui/panel.c:1477 src/gutenprintui2/panel.c:1478
-msgid "Distance from the left of the paper to the image"
-msgstr "A képnek a papír bal oldalától mért távolsága"
-
-#: src/gutenprintui/panel.c:1480 src/gutenprintui/panel.c:1484
-#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
-msgid "Right:"
-msgstr "Jobb:"
-
-#: src/gutenprintui/panel.c:1481 src/gutenprintui2/panel.c:1482
-msgid "Distance from the left of the paper to the right of the image"
-msgstr "A kép jobb oldalának a papír bal oldalától mért távolsága"
-
-#: src/gutenprintui/panel.c:1485 src/gutenprintui2/panel.c:1486
-msgid "Distance from the right of the paper to the image"
-msgstr "A képnek a papír jobb oldalától mért távolsága"
-
-#: src/gutenprintui/panel.c:1487 src/gutenprintui2/panel.c:1488
-msgid "Top:"
-msgstr "Fent:"
-
-#: src/gutenprintui/panel.c:1488 src/gutenprintui2/panel.c:1489
-msgid "Distance from the top of the paper to the image"
-msgstr "A képnek a papír tetejétől mért távolsága"
-
-#: src/gutenprintui/panel.c:1491 src/gutenprintui/panel.c:1495
-#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
-msgid "Bottom:"
-msgstr "Lent:"
-
-#: src/gutenprintui/panel.c:1492 src/gutenprintui2/panel.c:1493
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr "A kép aljának a papír tetejétől mért távolsága"
-
-#: src/gutenprintui/panel.c:1496 src/gutenprintui2/panel.c:1497
-msgid "Distance from the bottom of the paper to the image"
-msgstr "A képnek a papír aljától mért távolsága"
-
-#: src/gutenprintui/panel.c:1506 src/gutenprintui2/panel.c:1507
-msgid "Center:"
-msgstr "Középre:"
-
-#: src/gutenprintui/panel.c:1509 src/gutenprintui2/panel.c:1510
-msgid "Horizontal"
-msgstr "Vízszintes"
-
-#: src/gutenprintui/panel.c:1510 src/gutenprintui2/panel.c:1511
-msgid "Center the image horizontally on the paper"
-msgstr "A kép középre igazítása vízszintes irányban a papíron"
-
-#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1513
-msgid "Both"
-msgstr "Mindkettő"
-
-#: src/gutenprintui/panel.c:1513 src/gutenprintui2/panel.c:1514
-msgid "Center the image on the paper"
-msgstr "A kép középre igazítása a papíron"
-
-#: src/gutenprintui/panel.c:1515 src/gutenprintui2/panel.c:1516
-msgid "Vertical"
-msgstr "Függőleges"
-
-#: src/gutenprintui/panel.c:1516 src/gutenprintui2/panel.c:1517
-msgid "Center the image vertically on the paper"
-msgstr "A kép középre igazítása függőleges irányban a papíron"
-
-#: src/gutenprintui/panel.c:1529 src/gutenprintui2/panel.c:1530
-msgid "Setup Printer"
-msgstr "Nyomtató beállítása"
-
-#: src/gutenprintui/panel.c:1554 src/gutenprintui2/panel.c:1554
-msgid "Printer Make:"
-msgstr "Nyomtató gyártója:"
-
-#: src/gutenprintui/panel.c:1565 src/gutenprintui2/panel.c:1565
-msgid "Select the make of your printer"
-msgstr "Válassza ki a nyomtató gyártóját"
-
-#: src/gutenprintui/panel.c:1583 src/gutenprintui/panel.c:1671
-#: src/gutenprintui/panel.c:1889 src/gutenprintui2/panel.c:1583
-#: src/gutenprintui2/panel.c:1671 src/gutenprintui2/panel.c:1889
-msgid "Printer Model:"
-msgstr "Nyomtató típusa:"
-
-#: src/gutenprintui/panel.c:1594 src/gutenprintui2/panel.c:1594
-msgid "Select your printer model"
-msgstr "Válassza ki a nyomtató típusát"
-
-#: src/gutenprintui/panel.c:1642 src/gutenprintui2/panel.c:1642
-msgid "PPD File:"
-msgstr "PPD fájl:"
-
-#: src/gutenprintui/panel.c:1658 src/gutenprintui2/panel.c:1658
-msgid "Enter the correct PPD filename for your printer"
-msgstr "Adja meg a nyomtatóhoz tartozó PPD fájl nevét"
-
-#: src/gutenprintui/panel.c:1660 src/gutenprintui/panel.c:1740
-#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
-msgid "Browse"
-msgstr "Tallózás"
-
-#: src/gutenprintui/panel.c:1667 src/gutenprintui2/panel.c:1667
-msgid "Choose the correct PPD filename for your printer"
-msgstr "Válassza ki a nyomtatóhoz tartozó PPD fájl nevét"
-
-#: src/gutenprintui/panel.c:1709 src/gutenprintui2/panel.c:1709
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Adja meg azon kimeneti sor nevét (ne a nyomtató típusát vagy a modelljét), "
-"amelyikbe nyomtatni kíván"
-
-#: src/gutenprintui/panel.c:1711 src/gutenprintui2/panel.c:1711
-msgid "Printer Queue:"
-msgstr "Nyomtatási sor:"
-
-#: src/gutenprintui/panel.c:1727 src/gutenprintui2/panel.c:1727
-msgid "Enter the correct command to print to your printer. "
-msgstr "Adja meg a nyomtatójára való nyomtatáshoz használandó parancsot. "
-
-#: src/gutenprintui/panel.c:1738 src/gutenprintui2/panel.c:1738
-msgid "Enter the file to print to. "
-msgstr "Adja meg a fájlt, amelybe nyomtatni kíván. "
-
-#: src/gutenprintui/panel.c:1746 src/gutenprintui2/panel.c:1746
-msgid "File to print to"
-msgstr "Nyomtatás ebbe a fájlba"
-
-#: src/gutenprintui/panel.c:1754 src/gutenprintui2/panel.c:1754
-msgid "Print To File"
-msgstr "Nyomtatás fájlba"
-
-#: src/gutenprintui/panel.c:1784 src/gutenprintui2/panel.c:1784
-msgid "Define New Printer"
-msgstr "Új nyomtató meghatározása"
-
-#: src/gutenprintui/panel.c:1802 src/gutenprintui/panel.c:1886
-#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
-msgid "Printer Name:"
-msgstr "Nyomtató neve:"
-
-#: src/gutenprintui/panel.c:1806 src/gutenprintui2/panel.c:1806
-msgid "Enter the name you wish to give this logical printer"
-msgstr "Adja meg a logikai nyomtatóhoz használandó nevet"
-
-#: src/gutenprintui/panel.c:1816 src/gutenprintui2/panel.c:1816
-msgid "About Gutenprint "
-msgstr "A Gutenprint névjegye "
-
-#: src/gutenprintui/panel.c:1823 src/gutenprintui2/panel.c:1823
-msgid "Gutenprint Version "
-msgstr "Gutenprint verzió: "
-
-#: src/gutenprintui/panel.c:1871 src/gutenprintui2/panel.c:1871
-msgid "Printer Settings"
-msgstr "Nyomtató beállításai"
-
-#: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1884
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Adja meg annak a nyomtatónak a nevét (ne a gyártmányt vagy a modellt), "
-"amelyikre nyomtatni kíván"
-
-#: src/gutenprintui/panel.c:1901 src/gutenprintui2/panel.c:1901
-msgid "Setup Printer..."
-msgstr "Nyomtató beállítása..."
-
-#: src/gutenprintui/panel.c:1903 src/gutenprintui2/panel.c:1903
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr "A nyomtatómodell, a PPD-fájl és a nyomtatást végző parancs megadása"
-
-#: src/gutenprintui/panel.c:1916 src/gutenprintui2/panel.c:1916
-msgid "New Printer..."
-msgstr "Új nyomtató..."
-
-#: src/gutenprintui/panel.c:1917 src/gutenprintui2/panel.c:1917
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Új logikai nyomtató felvétele. Egy olyan beállítási állapot elnevezésére "
-"használható, amelyet a jövőben is kíván használni."
-
-#: src/gutenprintui/panel.c:1960 src/gutenprintui2/panel.c:1960
-msgid "Image Size"
-msgstr "Képméret"
-
-#: src/gutenprintui/panel.c:1985 src/gutenprintui2/panel.c:1985
-msgid "Scaling:"
-msgstr "Méretezés:"
-
-#: src/gutenprintui/panel.c:1989 src/gutenprintui2/panel.c:1989
-msgid "Set the scale (size) of the image"
-msgstr "Megadja a kép méretezését (méretét)"
-
-#: src/gutenprintui/panel.c:2011 src/gutenprintui2/panel.c:2011
-msgid "Scale by:"
-msgstr "Méretezés:"
-
-#: src/gutenprintui/panel.c:2016 src/gutenprintui2/panel.c:2016
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Megadja, hogy a méretezés a lapméret százalékában legyen-e mérve vagy a "
-"kimeneti pont/hüvelyk értékben"
-
-#: src/gutenprintui/panel.c:2019 src/gutenprintui2/panel.c:2019
-msgid "Percent"
-msgstr "Százalék"
-
-#: src/gutenprintui/panel.c:2024 src/gutenprintui2/panel.c:2024
-msgid "Scale the print to the size of the page"
-msgstr "Nyomat méretezése a lap mérete szerint"
-
-#: src/gutenprintui/panel.c:2028 src/gutenprintui2/panel.c:2028
-msgid "PPI"
-msgstr "PPI"
-
-#: src/gutenprintui/panel.c:2033 src/gutenprintui2/panel.c:2033
-msgid "Scale the print to the number of dots per inch"
-msgstr "Nyomat méretezése pont/hüvelyk érték szerint"
-
-#: src/gutenprintui/panel.c:2051 src/gutenprintui2/panel.c:2051
-msgid "Set the width of the print"
-msgstr "A nyomat szélessége"
-
-#: src/gutenprintui/panel.c:2053 src/gutenprintui2/panel.c:2053
-msgid "Set the height of the print"
-msgstr "A nyomat magassága"
-
-#: src/gutenprintui/panel.c:2059 src/gutenprintui2/panel.c:2059
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr ""
-"Eredeti képméret\n"
-"használata"
-
-#: src/gutenprintui/panel.c:2065 src/gutenprintui2/panel.c:2065
-msgid "Set the print size to the size of the image"
-msgstr "A nyomat méretének beállítása a kép méretére"
-
-#: src/gutenprintui/panel.c:2088 src/gutenprintui2/panel.c:2089
-msgid "Print Color Adjust"
-msgstr "Nyomat színeinek beállítása"
-
-#: src/gutenprintui/panel.c:2091 src/gutenprintui2/panel.c:2092
-msgid "Set Defaults"
-msgstr "Alapértelmezések beállítása"
-
-#: src/gutenprintui/panel.c:2093 src/gutenprintui2/panel.c:2094
-msgid "Close"
-msgstr "Bezárás"
-
-#: src/gutenprintui/panel.c:2122 src/gutenprintui2/panel.c:2123
-msgid "Image preview"
-msgstr "Előnézeti kép"
-
-#: src/gutenprintui/panel.c:2136 src/gutenprintui2/panel.c:2137
-msgid "View Output Channels:"
-msgstr "Kimeneti csatornák megjelenítése:"
-
-#: src/gutenprintui/panel.c:2222 src/gutenprintui2/panel.c:2228
-msgid "Output"
-msgstr "Kimenet"
-
-#: src/gutenprintui/panel.c:2250 src/gutenprintui2/panel.c:2256
-msgid "Output Type:"
-msgstr "Kimenet típusa:"
-
-#: src/gutenprintui/panel.c:2254 src/gutenprintui2/panel.c:2260
-msgid "Select the desired output type"
-msgstr "Válassza ki a kívánt kimeneti típust"
-
-#: src/gutenprintui/panel.c:2275 src/gutenprintui2/panel.c:2281
-msgid "Adjust Output..."
-msgstr "Kimenet beállítása..."
-
-#: src/gutenprintui/panel.c:2284 src/gutenprintui2/panel.c:2290
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Színegyensúly, fényesség, kontraszt, telítettség és a színszórási módszer "
-"beállítása"
-
-#: src/gutenprintui/panel.c:2302 src/gutenprintui2/panel.c:2309
-msgid "Size Units:"
-msgstr "Mértékegységek:"
-
-#: src/gutenprintui/panel.c:2305 src/gutenprintui2/panel.c:2312
-msgid " "
-msgstr " "
-
-#: src/gutenprintui/panel.c:2329 src/gutenprintui2/panel.c:2336
-msgid "Units:"
-msgstr "Mértékegységek:"
-
-#: src/gutenprintui/panel.c:2334 src/gutenprintui2/panel.c:2341
-msgid "Select the base unit of measurement for printing"
-msgstr "Válassza ki a nyomtatáshoz használt alapmértékegységet"
-
-#: src/gutenprintui/plist.c:90 src/gutenprintui/plist.c:99
-#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
-msgid "System V lp"
-msgstr "System V lp"
-
-#: src/gutenprintui/plist.c:96 src/gutenprintui2/plist.c:96
-msgid "CUPS"
-msgstr "CUPS"
-
-#: src/gutenprintui/plist.c:102 src/gutenprintui2/plist.c:102
-msgid "Berkeley lpd (/etc/lpc)"
-msgstr "Berkeley lpd (/etc/lpc)"
-
-#: src/gutenprintui/plist.c:105 src/gutenprintui2/plist.c:105
-msgid "Berkeley lpd (/usr/bsd/lpc)"
-msgstr "Berkeley lpd (/usr/bsd/lpc)"
-
-#: src/gutenprintui/plist.c:108 src/gutenprintui2/plist.c:108
-msgid "Berkeley lpd (/usr/etc/lpc"
-msgstr "Berkeley lpd (/usr/etc/lpc"
-
-#: src/gutenprintui/plist.c:111 src/gutenprintui2/plist.c:111
-msgid "Berkeley lpd (/usr/libexec/lpc)"
-msgstr "Berkeley lpd (/usr/libexec/lpc)"
-
-#: src/gutenprintui/plist.c:114 src/gutenprintui2/plist.c:114
-msgid "Berkeley lpd (/usr/sbin/lpc)"
-msgstr "Berkeley lpd (/usr/sbin/lpc)"
-
-#: src/gutenprintui/plist.c:1020 src/gutenprintui2/plist.c:1016
-msgid "Printer"
-msgstr "Nyomtató"
-
-#: src/gutenprintui/plist.c:1207 src/gutenprintui2/plist.c:1203
-msgid "(Default Printer)"
-msgstr "(Alapértelmezett nyomtató)"
-
 #: src/gutenprintui2/curve.c:130
 msgid "Curve type"
 msgstr "Görbetípus"
@@ -6457,6 +5873,577 @@ msgstr "Y maximális lehetséges értéke"
 #: src/gutenprintui2/gammacurve.c:418
 msgid "_Gamma value"
 msgstr "_Gamma érték"
+
+#: src/gutenprintui2/panel.c:273
+msgid "Inch"
+msgstr "Hüvelyk"
+
+#: src/gutenprintui2/panel.c:273
+msgid "Set the base unit of measurement to inches"
+msgstr "Az alapmértékegység hüvelykre állítása"
+
+#: src/gutenprintui2/panel.c:275
+msgid "cm"
+msgstr "cm"
+
+#: src/gutenprintui2/panel.c:275
+msgid "Set the base unit of measurement to centimetres"
+msgstr "Az alapmértékegység centiméterre állítása"
+
+#: src/gutenprintui2/panel.c:277
+msgid "Points"
+msgstr "Pont"
+
+#: src/gutenprintui2/panel.c:277
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr "Az alapmértékegység pontra (1/72 hüvelyk) állítása"
+
+#: src/gutenprintui2/panel.c:279
+msgid "mm"
+msgstr "mm"
+
+#: src/gutenprintui2/panel.c:279
+msgid "Set the base unit of measurement to millimetres"
+msgstr "Az alapmértékegység milliméterre állítása"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Pica"
+msgstr "Pica"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr "Az alapmértékegység pica-ra (1/12 hüvelyk) állítása"
+
+#: src/gutenprintui2/panel.c:288
+msgid "Color output"
+msgstr "Színes kimenet"
+
+#: src/gutenprintui2/panel.c:290
+msgid "Print in shades of gray using black ink"
+msgstr "A szürke szín árnyalataival való nyomtatás fekete tintával"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Standard Command"
+msgstr "Szabványos parancs"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Use standard print command"
+msgstr "Szabványos nyomtatóparancs használata"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Custom Command"
+msgstr "Egyéni parancs"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Use custom print command"
+msgstr "Egyéni nyomtatóparancs használata"
+
+#: src/gutenprintui2/panel.c:304 src/gutenprintui2/plist.c:678
+#: src/gutenprintui2/plist.c:761
+msgid "File"
+msgstr "Fájl"
+
+#: src/gutenprintui2/panel.c:304
+msgid "Print to a file"
+msgstr "Nyomtatás fájlba"
+
+#: src/gutenprintui2/panel.c:520
+msgid "Edit Curve..."
+msgstr "Görbe szerkesztése..."
+
+#: src/gutenprintui2/panel.c:531
+msgid "Set Default"
+msgstr "Alapértelmezés beállítása"
+
+#: src/gutenprintui2/panel.c:533
+msgid "Restore Previous"
+msgstr "Előző helyreállítása"
+
+#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
+#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
+msgid "OK"
+msgstr "OK"
+
+#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
+#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
+msgid "Cancel"
+msgstr "Mégsem"
+
+#: src/gutenprintui2/panel.c:1180
+#, c-format
+msgid "%s -- Print v%s"
+msgstr "%s -- nyomtatás v%s"
+
+#: src/gutenprintui2/panel.c:1189
+msgid "About"
+msgstr "Névjegy"
+
+#: src/gutenprintui2/panel.c:1191
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr ""
+"Nyomtatás és a\n"
+"beállítások mentése"
+
+#: src/gutenprintui2/panel.c:1193
+msgid ""
+"Save\n"
+"Settings"
+msgstr ""
+"Beállítások\n"
+"mentése"
+
+#: src/gutenprintui2/panel.c:1195
+msgid "Print"
+msgstr "Nyomtatás"
+
+#: src/gutenprintui2/panel.c:1247
+msgid "Preview"
+msgstr "Előnézet"
+
+#: src/gutenprintui2/panel.c:1272
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+"A kép elhelyezése a lapon.\n"
+"Az elsődleges (általában a bal oldali) egérgomb lenyomása utáni húzással "
+"áthelyezheti a képet.\n"
+"A második egérgomb lenyomása utáni húzással finomabb áthelyezés végezhető; "
+"az elmozdítás pontonként történik (1/72\").\n"
+"A harmadik (középső) egérgomb lenyomása utáni húzással képméretnyi "
+"elmozdítás végezhető.\n"
+"Ha kattintás és húzás közben le van nyomva a Shift billentyű, akkor az "
+"elmozdítás csak vízszintes illetve függőleges irányban lesz lehetséges.\n"
+"Ha húzás közben lenyom egy másik egérgombot, akkor a kép visszakerül az "
+"eredeti helyére."
+
+#: src/gutenprintui2/panel.c:1319
+msgid "Paper Size"
+msgstr "Papírméret"
+
+#: src/gutenprintui2/panel.c:1342
+msgid "Show All Paper Sizes"
+msgstr "Minden papírméret mutatása"
+
+#: src/gutenprintui2/panel.c:1358
+msgid "Dimensions:"
+msgstr "Méretek:"
+
+#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
+msgid "Width:"
+msgstr "Szélesség:"
+
+#: src/gutenprintui2/panel.c:1364
+msgid "Width of the paper that you wish to print to"
+msgstr "A nyomtatáshoz használt papír szélessége"
+
+#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
+msgid "Height:"
+msgstr "Magasság:"
+
+#: src/gutenprintui2/panel.c:1369
+msgid "Height of the paper that you wish to print to"
+msgstr "A nyomtatáshoz használt papír magassága"
+
+#: src/gutenprintui2/panel.c:1374
+msgid "Automatic Paper Size"
+msgstr "Automatikus papírméret"
+
+#: src/gutenprintui2/panel.c:1391
+msgid "Number of Copies"
+msgstr "Példányszám"
+
+#: src/gutenprintui2/panel.c:1403
+msgid "Select the number of copies to print; a value between 1 and 100"
+msgstr "Válassza ki a nyomtatandó példányok számát, 1 és 100 között"
+
+#: src/gutenprintui2/panel.c:1435
+msgid "Image Position"
+msgstr "Képpozíció"
+
+#: src/gutenprintui2/panel.c:1452
+msgid "Auto"
+msgstr "Automatikus"
+
+#: src/gutenprintui2/panel.c:1454
+msgid "Portrait"
+msgstr "Álló"
+
+#: src/gutenprintui2/panel.c:1456
+msgid "Landscape"
+msgstr "Fekvő"
+
+#: src/gutenprintui2/panel.c:1458
+msgid "Upside down"
+msgstr "Fejjel lefelé"
+
+#: src/gutenprintui2/panel.c:1460
+msgid "Seascape"
+msgstr "Ellenkező fekvő"
+
+#: src/gutenprintui2/panel.c:1464
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Válasszon irányt: álló, fekvő, fejjel lefelé levő vagy fordított fekvő "
+"(fejjel lefelé levő fekvő)"
+
+#: src/gutenprintui2/panel.c:1466
+msgid "Orientation:"
+msgstr "Elhelyezkedés:"
+
+#: src/gutenprintui2/panel.c:1477
+msgid "Left:"
+msgstr "Bal:"
+
+#: src/gutenprintui2/panel.c:1478
+msgid "Distance from the left of the paper to the image"
+msgstr "A képnek a papír bal oldalától mért távolsága"
+
+#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
+msgid "Right:"
+msgstr "Jobb:"
+
+#: src/gutenprintui2/panel.c:1482
+msgid "Distance from the left of the paper to the right of the image"
+msgstr "A kép jobb oldalának a papír bal oldalától mért távolsága"
+
+#: src/gutenprintui2/panel.c:1486
+msgid "Distance from the right of the paper to the image"
+msgstr "A képnek a papír jobb oldalától mért távolsága"
+
+#: src/gutenprintui2/panel.c:1488
+msgid "Top:"
+msgstr "Fent:"
+
+#: src/gutenprintui2/panel.c:1489
+msgid "Distance from the top of the paper to the image"
+msgstr "A képnek a papír tetejétől mért távolsága"
+
+#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
+msgid "Bottom:"
+msgstr "Lent:"
+
+#: src/gutenprintui2/panel.c:1493
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr "A kép aljának a papír tetejétől mért távolsága"
+
+#: src/gutenprintui2/panel.c:1497
+msgid "Distance from the bottom of the paper to the image"
+msgstr "A képnek a papír aljától mért távolsága"
+
+#: src/gutenprintui2/panel.c:1507
+msgid "Center:"
+msgstr "Középre:"
+
+#: src/gutenprintui2/panel.c:1510
+msgid "Horizontal"
+msgstr "Vízszintes"
+
+#: src/gutenprintui2/panel.c:1511
+msgid "Center the image horizontally on the paper"
+msgstr "A kép középre igazítása vízszintes irányban a papíron"
+
+#: src/gutenprintui2/panel.c:1513
+msgid "Both"
+msgstr "Mindkettő"
+
+#: src/gutenprintui2/panel.c:1514
+msgid "Center the image on the paper"
+msgstr "A kép középre igazítása a papíron"
+
+#: src/gutenprintui2/panel.c:1516
+msgid "Vertical"
+msgstr "Függőleges"
+
+#: src/gutenprintui2/panel.c:1517
+msgid "Center the image vertically on the paper"
+msgstr "A kép középre igazítása függőleges irányban a papíron"
+
+#: src/gutenprintui2/panel.c:1530
+msgid "Setup Printer"
+msgstr "Nyomtató beállítása"
+
+#: src/gutenprintui2/panel.c:1554
+msgid "Printer Make:"
+msgstr "Nyomtató gyártója:"
+
+#: src/gutenprintui2/panel.c:1565
+msgid "Select the make of your printer"
+msgstr "Válassza ki a nyomtató gyártóját"
+
+#: src/gutenprintui2/panel.c:1583 src/gutenprintui2/panel.c:1671
+#: src/gutenprintui2/panel.c:1889
+msgid "Printer Model:"
+msgstr "Nyomtató típusa:"
+
+#: src/gutenprintui2/panel.c:1594
+msgid "Select your printer model"
+msgstr "Válassza ki a nyomtató típusát"
+
+#: src/gutenprintui2/panel.c:1642
+msgid "PPD File:"
+msgstr "PPD fájl:"
+
+#: src/gutenprintui2/panel.c:1658
+msgid "Enter the correct PPD filename for your printer"
+msgstr "Adja meg a nyomtatóhoz tartozó PPD fájl nevét"
+
+#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
+msgid "Browse"
+msgstr "Tallózás"
+
+#: src/gutenprintui2/panel.c:1667
+msgid "Choose the correct PPD filename for your printer"
+msgstr "Válassza ki a nyomtatóhoz tartozó PPD fájl nevét"
+
+#: src/gutenprintui2/panel.c:1709
+msgid ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr ""
+"Adja meg azon kimeneti sor nevét (ne a nyomtató típusát vagy a modelljét), "
+"amelyikbe nyomtatni kíván"
+
+#: src/gutenprintui2/panel.c:1711
+msgid "Printer Queue:"
+msgstr "Nyomtatási sor:"
+
+#: src/gutenprintui2/panel.c:1727
+msgid "Enter the correct command to print to your printer. "
+msgstr "Adja meg a nyomtatójára való nyomtatáshoz használandó parancsot. "
+
+#: src/gutenprintui2/panel.c:1738
+msgid "Enter the file to print to. "
+msgstr "Adja meg a fájlt, amelybe nyomtatni kíván. "
+
+#: src/gutenprintui2/panel.c:1746
+msgid "File to print to"
+msgstr "Nyomtatás ebbe a fájlba"
+
+#: src/gutenprintui2/panel.c:1754
+msgid "Print To File"
+msgstr "Nyomtatás fájlba"
+
+#: src/gutenprintui2/panel.c:1784
+msgid "Define New Printer"
+msgstr "Új nyomtató meghatározása"
+
+#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
+msgid "Printer Name:"
+msgstr "Nyomtató neve:"
+
+#: src/gutenprintui2/panel.c:1806
+msgid "Enter the name you wish to give this logical printer"
+msgstr "Adja meg a logikai nyomtatóhoz használandó nevet"
+
+#: src/gutenprintui2/panel.c:1816
+msgid "About Gutenprint "
+msgstr "A Gutenprint névjegye "
+
+#: src/gutenprintui2/panel.c:1823
+msgid "Gutenprint Version "
+msgstr "Gutenprint verzió: "
+
+#: src/gutenprintui2/panel.c:1871
+msgid "Printer Settings"
+msgstr "Nyomtató beállításai"
+
+#: src/gutenprintui2/panel.c:1884
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Adja meg annak a nyomtatónak a nevét (ne a gyártmányt vagy a modellt), "
+"amelyikre nyomtatni kíván"
+
+#: src/gutenprintui2/panel.c:1901
+msgid "Setup Printer..."
+msgstr "Nyomtató beállítása..."
+
+#: src/gutenprintui2/panel.c:1903
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr "A nyomtatómodell, a PPD-fájl és a nyomtatást végző parancs megadása"
+
+#: src/gutenprintui2/panel.c:1916
+msgid "New Printer..."
+msgstr "Új nyomtató..."
+
+#: src/gutenprintui2/panel.c:1917
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Új logikai nyomtató felvétele. Egy olyan beállítási állapot elnevezésére "
+"használható, amelyet a jövőben is kíván használni."
+
+#: src/gutenprintui2/panel.c:1960
+msgid "Image Size"
+msgstr "Képméret"
+
+#: src/gutenprintui2/panel.c:1985
+msgid "Scaling:"
+msgstr "Méretezés:"
+
+#: src/gutenprintui2/panel.c:1989
+msgid "Set the scale (size) of the image"
+msgstr "Megadja a kép méretezését (méretét)"
+
+#: src/gutenprintui2/panel.c:2011
+msgid "Scale by:"
+msgstr "Méretezés:"
+
+#: src/gutenprintui2/panel.c:2016
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Megadja, hogy a méretezés a lapméret százalékában legyen-e mérve vagy a "
+"kimeneti pont/hüvelyk értékben"
+
+#: src/gutenprintui2/panel.c:2019
+msgid "Percent"
+msgstr "Százalék"
+
+#: src/gutenprintui2/panel.c:2024
+msgid "Scale the print to the size of the page"
+msgstr "Nyomat méretezése a lap mérete szerint"
+
+#: src/gutenprintui2/panel.c:2028
+msgid "PPI"
+msgstr "PPI"
+
+#: src/gutenprintui2/panel.c:2033
+msgid "Scale the print to the number of dots per inch"
+msgstr "Nyomat méretezése pont/hüvelyk érték szerint"
+
+#: src/gutenprintui2/panel.c:2051
+msgid "Set the width of the print"
+msgstr "A nyomat szélessége"
+
+#: src/gutenprintui2/panel.c:2053
+msgid "Set the height of the print"
+msgstr "A nyomat magassága"
+
+#: src/gutenprintui2/panel.c:2059
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr ""
+"Eredeti képméret\n"
+"használata"
+
+#: src/gutenprintui2/panel.c:2065
+msgid "Set the print size to the size of the image"
+msgstr "A nyomat méretének beállítása a kép méretére"
+
+#: src/gutenprintui2/panel.c:2089
+msgid "Print Color Adjust"
+msgstr "Nyomat színeinek beállítása"
+
+#: src/gutenprintui2/panel.c:2092
+msgid "Set Defaults"
+msgstr "Alapértelmezések beállítása"
+
+#: src/gutenprintui2/panel.c:2094
+msgid "Close"
+msgstr "Bezárás"
+
+#: src/gutenprintui2/panel.c:2123
+msgid "Image preview"
+msgstr "Előnézeti kép"
+
+#: src/gutenprintui2/panel.c:2137
+msgid "View Output Channels:"
+msgstr "Kimeneti csatornák megjelenítése:"
+
+#: src/gutenprintui2/panel.c:2228
+msgid "Output"
+msgstr "Kimenet"
+
+#: src/gutenprintui2/panel.c:2256
+msgid "Output Type:"
+msgstr "Kimenet típusa:"
+
+#: src/gutenprintui2/panel.c:2260
+msgid "Select the desired output type"
+msgstr "Válassza ki a kívánt kimeneti típust"
+
+#: src/gutenprintui2/panel.c:2281
+msgid "Adjust Output..."
+msgstr "Kimenet beállítása..."
+
+#: src/gutenprintui2/panel.c:2290
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"Színegyensúly, fényesség, kontraszt, telítettség és a színszórási módszer "
+"beállítása"
+
+#: src/gutenprintui2/panel.c:2309
+msgid "Size Units:"
+msgstr "Mértékegységek:"
+
+#: src/gutenprintui2/panel.c:2312
+msgid " "
+msgstr " "
+
+#: src/gutenprintui2/panel.c:2336
+msgid "Units:"
+msgstr "Mértékegységek:"
+
+#: src/gutenprintui2/panel.c:2341
+msgid "Select the base unit of measurement for printing"
+msgstr "Válassza ki a nyomtatáshoz használt alapmértékegységet"
+
+#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
+msgid "System V lp"
+msgstr "System V lp"
+
+#: src/gutenprintui2/plist.c:96
+msgid "CUPS"
+msgstr "CUPS"
+
+#: src/gutenprintui2/plist.c:102
+msgid "Berkeley lpd (/etc/lpc)"
+msgstr "Berkeley lpd (/etc/lpc)"
+
+#: src/gutenprintui2/plist.c:105
+msgid "Berkeley lpd (/usr/bsd/lpc)"
+msgstr "Berkeley lpd (/usr/bsd/lpc)"
+
+#: src/gutenprintui2/plist.c:108
+msgid "Berkeley lpd (/usr/etc/lpc"
+msgstr "Berkeley lpd (/usr/etc/lpc"
+
+#: src/gutenprintui2/plist.c:111
+msgid "Berkeley lpd (/usr/libexec/lpc)"
+msgstr "Berkeley lpd (/usr/libexec/lpc)"
+
+#: src/gutenprintui2/plist.c:114
+msgid "Berkeley lpd (/usr/sbin/lpc)"
+msgstr "Berkeley lpd (/usr/sbin/lpc)"
+
+#: src/gutenprintui2/plist.c:1016
+msgid "Printer"
+msgstr "Nyomtató"
+
+#: src/gutenprintui2/plist.c:1203
+msgid "(Default Printer)"
+msgstr "(Alapértelmezett nyomtató)"
 
 #: src/cups/genppd.c:145
 msgid "Printer Features"
@@ -6502,41 +6489,41 @@ msgstr "Hungarian"
 msgid "ISOLatin1"
 msgstr "ISOLatin2"
 
-#: src/cups/genppd.c:1608
+#: src/cups/genppd.c:1622
 #, fuzzy
 msgid "2-Sided Printing"
 msgstr "Kétoldalas nyomtatás"
 
-#: src/cups/genppd.c:1629
+#: src/cups/genppd.c:1646
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr ""
 
-#: src/cups/genppd.c:1633
+#: src/cups/genppd.c:1650
 msgid "Shrink (print the whole page)"
 msgstr ""
 
-#: src/cups/genppd.c:1634
+#: src/cups/genppd.c:1651
 msgid "Crop (preserve dimensions)"
 msgstr ""
 
-#: src/cups/genppd.c:1635
+#: src/cups/genppd.c:1652
 msgid "Expand (use maximum page area)"
 msgstr ""
 
-#: src/cups/genppd.c:1712
+#: src/cups/genppd.c:1735
 msgid "No"
 msgstr "Nem"
 
-#: src/cups/genppd.c:1714
+#: src/cups/genppd.c:1737
 msgid "Yes"
 msgstr "Igen"
 
-#: src/cups/genppd.c:1746 src/cups/genppd.c:1799
+#: src/cups/genppd.c:1774 src/cups/genppd.c:1836
 #, fuzzy
 msgid "Value"
 msgstr "Kék"
 
-#: src/cups/genppd.c:1751
+#: src/cups/genppd.c:1779
 msgid "Fine Adjustment"
 msgstr "Finomhangolás"
 
@@ -7253,13 +7240,9 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "Hiba a bemenetben\n"
 
-#: src/gimp/print-image-gimp.c:225 src/gimp2/print-image-gimp.c:225
+#: src/gimp2/print-image-gimp.c:225
 msgid "Printing..."
 msgstr "Nyomtatás..."
-
-#: src/gimp/print.c:133
-msgid "<Image>/File/Print..."
-msgstr "<Image>/Fájl/Nyomtatás..."
 
 #: src/ghost/ijsgutenprint.c:98
 #, c-format
@@ -7382,6 +7365,92 @@ msgstr "HIBA: ijsgutenprint: Hibás paraméterek, nem lehet folytatni!\n"
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "HIBA: ijsgutenprint: A következő sor lekérése meghiúsult itt: %.0f\n"
 
+#~ msgid "Cassette"
+#~ msgstr "Kazetta"
+
+#~ msgid "CD tray"
+#~ msgstr "CD tálca"
+
+#~ msgid " Gamma"
+#~ msgstr " Gamma"
+
+#~ msgid " Curve"
+#~ msgstr " Görbe"
+
+#~ msgid "1440 x 1440"
+#~ msgstr "1440 x 1440"
+
+#~ msgid "1440 x 1440 DPI High Quality"
+#~ msgstr "1440 x 1440 DPI Jó minőségű"
+
+#~ msgid "1440 x 1440 DPI Highest Quality"
+#~ msgstr "1440 x 1440 DPI Legjobb minőségű"
+
+#~ msgid "2880 x 1440 DPI High Quality"
+#~ msgstr "2880 x 720 DPI Jó minőségű"
+
+#~ msgid "2880 x 1440 DPI Highest Quality"
+#~ msgstr "2880 x 720 DPI Legjobb minőségű"
+
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
+#~ "and the rest of the Gutenprint Development Team.\n"
+#~ "\n"
+#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
+#~ "\n"
+#~ "This program is free software; you can redistribute it and/or modify\n"
+#~ "it under the terms of the GNU General Public License as published by\n"
+#~ "the Free Software Foundation; either version 2 of the License, or\n"
+#~ "(at your option) any later version.\n"
+#~ "\n"
+#~ "This program is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details.\n"
+#~ "\n"
+#~ "You should have received a copy of the GNU General Public License\n"
+#~ "along with this program; if not, write to the Free Software\n"
+#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+#~ "USA\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Copyright (C) 1997-2001, Michael Sweet, Robert Krawitz\n"
+#~ "és a Gutenprint fejlesztőcsapat többi tagja.\n"
+#~ "\n"
+#~ "A szerzők weblapja: http://gimp-print.sourceforge.net\n"
+#~ "\n"
+#~ "Ez a program szabad szoftver; terjeszthető és/vagy módosítható\n"
+#~ "a Free Software Foundation által publikált GNU General Public\n"
+#~ "License 2. vagy annál újabb verziója alapján.\n"
+#~ "\n"
+#~ "A program annak reményében kerül terjesztésre, hogy hasznosnak\n"
+#~ "bizonyul, de GARANCIA NÉLKÜL; még a PIACKÉPESSÉG illetve\n"
+#~ "egy BIZONYOS CÉLRA VALÓ ALKALMASSÁG sincs garantálva. További\n"
+#~ "részletek a GNU General Public License-ben.\n"
+#~ "\n"
+#~ "A programmal együtt Önnek kapnia kellett egy példányt a GNU General\n"
+#~ "Public License-ből; ha nem így történt, írjon a következő címre:\n"
+#~ "Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,\n"
+#~ "MA 02111-1307, USA.\n"
+
+#~ msgid ""
+#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
+#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
+#~ "l'\n"
+#~ "This is free software, and you are welcome to redistribute it\n"
+#~ "under certain conditions; type 'escputil -l' for details.\n"
+#~ msgstr ""
+#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
+#~ "Az Escputil-ra NINCS GARANCIA, a részletekért adja ki a következő "
+#~ "parancsot:\n"
+#~ " 'escputil -l'\n"
+#~ "Ez egy szabad szoftver és örülünk, ha bizonyos feltételek mellett "
+#~ "terjeszti,\n"
+#~ "a részletekért adja ki a következő parancsot: 'escputil -l'.\n"
+
 #~ msgid "90x90 DPI"
 #~ msgstr "90x90 DPI"
 
@@ -7487,12 +7556,6 @@ msgstr "HIBA: ijsgutenprint: A következő sor lekérése meghiúsult itt: %.0f\
 #~ msgid "Photo Paper Pro"
 #~ msgstr "Fotópapír pro"
 
-#~ msgid "Cassette"
-#~ msgstr "Kazetta"
-
-#~ msgid "CD tray"
-#~ msgstr "CD tálca"
-
 #~ msgid "Photo CcMmYK Color"
 #~ msgstr "Fotó CcMmYK szín"
 
@@ -7505,85 +7568,8 @@ msgstr "HIBA: ijsgutenprint: A következő sor lekérése meghiúsult itt: %.0f\
 #~ msgid "CMY Color"
 #~ msgstr "CMY szín"
 
-#~ msgid " Gamma"
-#~ msgstr " Gamma"
-
-#~ msgid " Curve"
-#~ msgstr " Görbe"
-
-#~ msgid "1440 x 1440"
-#~ msgstr "1440 x 1440"
-
-#~ msgid "1440 x 1440 DPI High Quality"
-#~ msgstr "1440 x 1440 DPI Jó minőségű"
-
-#~ msgid "1440 x 1440 DPI Highest Quality"
-#~ msgstr "1440 x 1440 DPI Legjobb minőségű"
-
-#~ msgid "2880 x 1440 DPI High Quality"
-#~ msgstr "2880 x 720 DPI Jó minőségű"
-
-#~ msgid "2880 x 1440 DPI Highest Quality"
-#~ msgstr "2880 x 720 DPI Legjobb minőségű"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
-#~ "and the rest of the Gutenprint Development Team.\n"
-#~ "\n"
-#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
-#~ "\n"
-#~ "This program is free software; you can redistribute it and/or modify\n"
-#~ "it under the terms of the GNU General Public License as published by\n"
-#~ "the Free Software Foundation; either version 2 of the License, or\n"
-#~ "(at your option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful,\n"
-#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-#~ "GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public License\n"
-#~ "along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-#~ "USA\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Copyright (C) 1997-2001, Michael Sweet, Robert Krawitz\n"
-#~ "és a Gutenprint fejlesztőcsapat többi tagja.\n"
-#~ "\n"
-#~ "A szerzők weblapja: http://gimp-print.sourceforge.net\n"
-#~ "\n"
-#~ "Ez a program szabad szoftver; terjeszthető és/vagy módosítható\n"
-#~ "a Free Software Foundation által publikált GNU General Public\n"
-#~ "License 2. vagy annál újabb verziója alapján.\n"
-#~ "\n"
-#~ "A program annak reményében kerül terjesztésre, hogy hasznosnak\n"
-#~ "bizonyul, de GARANCIA NÉLKÜL; még a PIACKÉPESSÉG illetve\n"
-#~ "egy BIZONYOS CÉLRA VALÓ ALKALMASSÁG sincs garantálva. További\n"
-#~ "részletek a GNU General Public License-ben.\n"
-#~ "\n"
-#~ "A programmal együtt Önnek kapnia kellett egy példányt a GNU General\n"
-#~ "Public License-ből; ha nem így történt, írjon a következő címre:\n"
-#~ "Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,\n"
-#~ "MA 02111-1307, USA.\n"
-
-#~ msgid ""
-#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
-#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
-#~ "l'\n"
-#~ "This is free software, and you are welcome to redistribute it\n"
-#~ "under certain conditions; type 'escputil -l' for details.\n"
-#~ msgstr ""
-#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
-#~ "Az Escputil-ra NINCS GARANCIA, a részletekért adja ki a következő "
-#~ "parancsot:\n"
-#~ " 'escputil -l'\n"
-#~ "Ez egy szabad szoftver és örülünk, ha bizonyos feltételek mellett "
-#~ "terjeszti,\n"
-#~ "a részletekért adja ki a következő parancsot: 'escputil -l'.\n"
+#~ msgid "<Image>/File/Print..."
+#~ msgstr "<Image>/Fájl/Nyomtatás..."
 
 #~ msgid "Gutenprint"
 #~ msgstr "Gutenprint"

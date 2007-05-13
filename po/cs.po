@@ -91,8 +91,8 @@ msgstr "Hustota:"
 #: src/main/print-escp2.c:472 src/main/print-escp2.c:480
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
-#: src/main/print-olympus.c:1626 src/main/print-olympus.c:1634
-#: src/main/print-olympus.c:1642 src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1624 src/main/print-olympus.c:1632
+#: src/main/print-olympus.c:1640 src/main/print-olympus.c:1648
 #: src/main/print-pcl.c:1261 src/main/print-pcl.c:1269
 #: src/main/print-pcl.c:1277 src/main/print-pcl.c:1285
 msgid "Output Level Adjustment"
@@ -146,8 +146,8 @@ msgid "Dither algorithm"
 msgstr "Algoritmus rozkladu barev"
 
 #: src/main/print-canon.c:196 src/main/print-escp2.c:179
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1561
-#: src/main/print-pcl.c:1196 src/main/print-ps.c:67
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1559
+#: src/main/print-pcl.c:1196
 #, fuzzy
 msgid "Page Size"
 msgstr "Velikost"
@@ -162,79 +162,77 @@ msgstr "Velikost"
 #: src/main/print-escp2.c:262 src/main/print-escp2.c:280
 #: src/main/print-lexmark.c:266 src/main/print-lexmark.c:272
 #: src/main/print-lexmark.c:278 src/main/print-lexmark.c:284
-#: src/main/print-olympus.c:1561 src/main/print-olympus.c:1567
-#: src/main/print-olympus.c:1573 src/main/print-olympus.c:1579
+#: src/main/print-olympus.c:1559 src/main/print-olympus.c:1565
+#: src/main/print-olympus.c:1571 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1196 src/main/print-pcl.c:1202
 #: src/main/print-pcl.c:1208 src/main/print-pcl.c:1214
-#: src/main/print-pcl.c:1238 src/main/print-ps.c:67 src/main/print-ps.c:73
-#: src/main/print-ps.c:79 src/main/print-ps.c:85 src/main/print-ps.c:97
+#: src/main/print-pcl.c:1238 src/main/print-ps.c:68 src/main/print-ps.c:74
 #, fuzzy
 msgid "Basic Printer Setup"
 msgstr "Název tiskárny:"
 
 #: src/main/print-canon.c:197 src/main/print-escp2.c:180
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1562
-#: src/main/print-pcl.c:1197 src/main/print-ps.c:68
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1560
+#: src/main/print-pcl.c:1197
 #, fuzzy
 msgid "Size of the paper being printed to"
 msgstr "Velikost papíru, na který chcete tisknout"
 
 #: src/main/print-canon.c:202 src/main/print-escp2.c:185
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1567
-#: src/main/print-pcl.c:1202 src/main/print-ps.c:73 src/cups/genppd.c:1405
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1565
+#: src/main/print-pcl.c:1202 src/cups/genppd.c:1407
 msgid "Media Type"
 msgstr "Typ média"
 
 #: src/main/print-canon.c:203 src/main/print-escp2.c:186
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1568
-#: src/main/print-pcl.c:1203 src/main/print-ps.c:74
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1566
+#: src/main/print-pcl.c:1203
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr ""
 
 #: src/main/print-canon.c:208 src/main/print-escp2.c:191
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1573
-#: src/main/print-pcl.c:1208 src/main/print-ps.c:79 src/cups/genppd.c:1430
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1571
+#: src/main/print-pcl.c:1208 src/cups/genppd.c:1435
 msgid "Media Source"
 msgstr "Zdroj média"
 
 #: src/main/print-canon.c:209 src/main/print-escp2.c:192
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1574
-#: src/main/print-pcl.c:1209 src/main/print-ps.c:80
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1572
+#: src/main/print-pcl.c:1209
 #, fuzzy
 msgid "Source (input slot) of the media"
 msgstr "Zdroj (vstupní otvor) média, na které tisknete"
 
 #: src/main/print-canon.c:214 src/main/print-escp2.c:227
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1579
-#: src/main/print-pcl.c:1214 src/main/print-ps.c:85 src/cups/genppd.c:1499
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
+#: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
 msgstr "Rozlišení"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:1580 src/main/print-pcl.c:1215
-#: src/main/print-ps.c:86
+#: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
 msgid "Resolution and quality of the print"
 msgstr "Rozlišení a kvalita tisku"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:238
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1585
-#: src/main/print-pcl.c:1220 src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1583
+#: src/main/print-pcl.c:1220 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Typ inkoustu"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:215
 #: src/main/print-escp2.c:221 src/main/print-escp2.c:238
 #: src/main/print-escp2.c:274 src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1585 src/main/print-olympus.c:1591
-#: src/main/print-olympus.c:1597 src/main/print-pcl.c:1220
-#: src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-olympus.c:1583 src/main/print-olympus.c:1589
+#: src/main/print-olympus.c:1595 src/main/print-pcl.c:1220
+#: src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr ""
 
 #: src/main/print-canon.c:221 src/main/print-escp2.c:239
 #: src/main/print-escp2.c:251 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:1586 src/main/print-pcl.c:1221
-#: src/main/print-ps.c:92 src/main/print-raw.c:81
+#: src/main/print-olympus.c:1584 src/main/print-pcl.c:1221
+#: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "Typ inkoustu v tiskárně"
 
@@ -256,8 +254,8 @@ msgid "Advanced Printer Functionality"
 msgstr ""
 
 #: src/main/print-canon.c:232 src/main/print-escp2.c:334
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1603
-#: src/main/print-pcl.c:1232 src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1601
+#: src/main/print-pcl.c:1232 src/main/print-raw.c:86
 #, fuzzy
 msgid "Printing Mode"
 msgstr "Model tiskárny:"
@@ -266,15 +264,15 @@ msgstr "Model tiskárny:"
 #: src/main/print-color.c:192 src/main/print-color.c:200
 #: src/main/print-color.c:208 src/main/print-escp2.c:334
 #: src/main/print-escp2.c:340 src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1603 src/main/print-pcl.c:1232
-#: src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-olympus.c:1601 src/main/print-pcl.c:1232
+#: src/main/print-raw.c:86
 #, fuzzy
 msgid "Core Parameter"
 msgstr "Papír ColorLife"
 
 #: src/main/print-canon.c:233 src/main/print-escp2.c:335
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1604
-#: src/main/print-pcl.c:1233 src/main/print-ps.c:104 src/main/print-raw.c:87
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1602
+#: src/main/print-pcl.c:1233 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr ""
 
@@ -381,15 +379,15 @@ msgid "Short Edge (Flip)"
 msgstr ""
 
 #: src/main/print-canon.c:613 src/main/print-escp2.c:1980
-#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1858
-#: src/main/print-pcl.c:1776 src/main/print-ps.c:170 src/main/print-raw.c:135
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
+#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1856
+#: src/main/print-pcl.c:1776 src/main/print-raw.c:135
+#: src/gutenprintui2/panel.c:288
 msgid "Color"
 msgstr "Barva"
 
 #: src/main/print-canon.c:615 src/main/print-escp2.c:1982
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1778
-#: src/main/print-ps.c:172 src/main/print-raw.c:137
+#: src/main/print-raw.c:137
 #, fuzzy
 msgid "Black and White"
 msgstr "Černobíle"
@@ -430,7 +428,7 @@ msgstr "Vytisknout"
 
 #: src/main/print-color.c:121 src/main/escp2-channels.c:820
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
-#: src/gutenprintui/panel.c:289 src/gutenprintui2/panel.c:289
+#: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
 msgstr "Odstíny šedi"
 
@@ -591,9 +589,8 @@ msgstr ""
 #: src/main/escp2-channels.c:2753 src/main/escp2-channels.c:2766
 #: src/main/escp2-channels.c:2779 src/main/escp2-channels.c:2793
 #: src/main/escp2-channels.c:2807 src/main/escp2-channels.c:2822
-#: src/gutenprintui/panel.c:2140 src/gutenprintui2/panel.c:2141
-#: src/escputil/escputil.c:984 src/escputil/escputil.c:1003
-#: src/escputil/escputil.c:1207
+#: src/gutenprintui2/panel.c:2141 src/escputil/escputil.c:984
+#: src/escputil/escputil.c:1003 src/escputil/escputil.c:1207
 msgid "Cyan"
 msgstr "Modrozelená"
 
@@ -608,9 +605,8 @@ msgstr "Upravit vyrovnání modrozelené tisku"
 #: src/main/escp2-channels.c:2754 src/main/escp2-channels.c:2767
 #: src/main/escp2-channels.c:2780 src/main/escp2-channels.c:2792
 #: src/main/escp2-channels.c:2806 src/main/escp2-channels.c:2823
-#: src/gutenprintui/panel.c:2147 src/gutenprintui2/panel.c:2148
-#: src/escputil/escputil.c:985 src/escputil/escputil.c:1004
-#: src/escputil/escputil.c:1208
+#: src/gutenprintui2/panel.c:2148 src/escputil/escputil.c:985
+#: src/escputil/escputil.c:1004 src/escputil/escputil.c:1208
 msgid "Magenta"
 msgstr "Fialová"
 
@@ -625,9 +621,8 @@ msgstr "Upravit vyrovnání fialové tisku"
 #: src/main/escp2-channels.c:2755 src/main/escp2-channels.c:2768
 #: src/main/escp2-channels.c:2781 src/main/escp2-channels.c:2791
 #: src/main/escp2-channels.c:2805 src/main/escp2-channels.c:2824
-#: src/gutenprintui/panel.c:2154 src/gutenprintui2/panel.c:2155
-#: src/escputil/escputil.c:986 src/escputil/escputil.c:1005
-#: src/escputil/escputil.c:1209
+#: src/gutenprintui2/panel.c:2155 src/escputil/escputil.c:986
+#: src/escputil/escputil.c:1005 src/escputil/escputil.c:1209
 msgid "Yellow"
 msgstr "Žlutá"
 
@@ -637,9 +632,8 @@ msgid "Adjust the yellow gamma"
 msgstr "Upravit vyrovnání žluté tisku"
 
 #: src/main/print-color.c:290 src/main/escp2-channels.c:2796
-#: src/main/escp2-channels.c:2809 src/gutenprintui/panel.c:2168
-#: src/gutenprintui2/panel.c:2169 src/escputil/escputil.c:993
-#: src/escputil/escputil.c:1011
+#: src/main/escp2-channels.c:2809 src/gutenprintui2/panel.c:2169
+#: src/escputil/escputil.c:993 src/escputil/escputil.c:1011
 msgid "Red"
 msgstr ""
 
@@ -648,8 +642,7 @@ msgstr ""
 msgid "Adjust the red gamma"
 msgstr "Upravit vyrovnání žluté tisku"
 
-#: src/main/print-color.c:298 src/gutenprintui/panel.c:2175
-#: src/gutenprintui2/panel.c:2176
+#: src/main/print-color.c:298 src/gutenprintui2/panel.c:2176
 msgid "Green"
 msgstr ""
 
@@ -659,9 +652,8 @@ msgid "Adjust the green gamma"
 msgstr "Upravit vyrovnání fialové tisku"
 
 #: src/main/print-color.c:306 src/main/escp2-channels.c:2797
-#: src/main/escp2-channels.c:2810 src/gutenprintui/panel.c:2182
-#: src/gutenprintui2/panel.c:2183 src/escputil/escputil.c:994
-#: src/escputil/escputil.c:1012
+#: src/main/escp2-channels.c:2810 src/gutenprintui2/panel.c:2183
+#: src/escputil/escputil.c:994 src/escputil/escputil.c:1012
 msgid "Blue"
 msgstr ""
 
@@ -676,9 +668,9 @@ msgstr "Upravit vyrovnání žluté tisku"
 #: src/main/escp2-channels.c:2740 src/main/escp2-channels.c:2752
 #: src/main/escp2-channels.c:2765 src/main/escp2-channels.c:2778
 #: src/main/escp2-channels.c:2784 src/main/escp2-channels.c:2808
-#: src/main/escp2-channels.c:2821 src/gutenprintui/panel.c:2161
-#: src/gutenprintui2/panel.c:2162 src/escputil/escputil.c:981
-#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1206
+#: src/main/escp2-channels.c:2821 src/gutenprintui2/panel.c:2162
+#: src/escputil/escputil.c:981 src/escputil/escputil.c:1002
+#: src/escputil/escputil.c:1206
 msgid "Black"
 msgstr "Černá"
 
@@ -687,7 +679,7 @@ msgstr "Černá"
 msgid "Adjust the black gamma"
 msgstr "Upravit vyrovnání žluté tisku"
 
-#: src/main/print-color.c:322 src/main/print-olympus.c:1626
+#: src/main/print-color.c:322 src/main/print-olympus.c:1624
 msgid "Cyan Balance"
 msgstr ""
 
@@ -702,7 +694,7 @@ msgstr "Odstíny šedi"
 msgid "Adjust the cyan gray balance"
 msgstr "Upravit vyrovnání modrozelené tisku"
 
-#: src/main/print-color.c:330 src/main/print-olympus.c:1634
+#: src/main/print-color.c:330 src/main/print-olympus.c:1632
 #, fuzzy
 msgid "Magenta Balance"
 msgstr "Fialová"
@@ -712,7 +704,7 @@ msgstr "Fialová"
 msgid "Adjust the magenta gray balance"
 msgstr "Upravit vyrovnání fialové tisku"
 
-#: src/main/print-color.c:338 src/main/print-olympus.c:1642
+#: src/main/print-color.c:338 src/main/print-olympus.c:1640
 #, fuzzy
 msgid "Yellow Balance"
 msgstr "Žlutá"
@@ -1084,11 +1076,11 @@ msgstr ""
 msgid "Printing direction (unidirectional is higher quality, but slower)"
 msgstr ""
 
-#: src/main/print-escp2.c:262 src/main/print-olympus.c:1597
+#: src/main/print-escp2.c:262 src/main/print-olympus.c:1595
 msgid "Borderless"
 msgstr ""
 
-#: src/main/print-escp2.c:263 src/main/print-olympus.c:1598
+#: src/main/print-escp2.c:263 src/main/print-olympus.c:1596
 msgid "Print without borders"
 msgstr ""
 
@@ -1302,11 +1294,11 @@ msgstr "Ruční"
 #: src/main/escp2-papers.c:1716 src/main/escp2-papers.c:1809
 #: src/main/escp2-resolutions.c:598 src/main/escp2-resolutions.c:613
 #: src/main/escp2-resolutions.c:626 src/main/generic-options.c:36
-#: src/gutenprintui/panel.c:2601 src/gutenprintui2/panel.c:2627
+#: src/gutenprintui2/panel.c:2627
 msgid "Standard"
 msgstr "Standardní"
 
-#: src/main/print-escp2.c:1811 src/cups/genppd.c:1532
+#: src/main/print-escp2.c:1811 src/cups/genppd.c:1546
 #, fuzzy
 msgid "Automatic"
 msgstr "Automaticky"
@@ -1346,7 +1338,7 @@ msgstr ""
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Tiskárna nepodporuje barevný výstup\n"
 
-#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2310
+#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2308
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
@@ -1535,56 +1527,56 @@ msgstr "Ruční s přestávkou"
 msgid "Manual without Pause"
 msgstr "Ruční bez přestávky"
 
-#: src/main/print-olympus.c:276
+#: src/main/print-olympus.c:274
 msgid "Coated"
 msgstr ""
 
-#: src/main/print-olympus.c:277 src/cups/genppd.c:1686 src/cups/genppd.c:1709
-#: src/cups/genppd.c:1776
+#: src/main/print-olympus.c:275 src/cups/genppd.c:1706 src/cups/genppd.c:1732
+#: src/cups/genppd.c:1813
 msgid "None"
 msgstr ""
 
-#: src/main/print-olympus.c:922 src/main/print-olympus.c:980
-#: src/main/print-olympus.c:1080
+#: src/main/print-olympus.c:920 src/main/print-olympus.c:978
+#: src/main/print-olympus.c:1078
 #, fuzzy
 msgid "Glossy"
 msgstr "Lesklý potah"
 
-#: src/main/print-olympus.c:923 src/main/print-olympus.c:981
-#: src/main/print-olympus.c:1081
+#: src/main/print-olympus.c:921 src/main/print-olympus.c:979
+#: src/main/print-olympus.c:1079
 msgid "Texture"
 msgstr ""
 
-#: src/main/print-olympus.c:982 src/main/print-olympus.c:1082
+#: src/main/print-olympus.c:980 src/main/print-olympus.c:1080
 #, fuzzy
 msgid "Matte"
 msgstr "Matný papír"
 
-#: src/main/print-olympus.c:1591 src/main/print-olympus.c:1592
+#: src/main/print-olympus.c:1589 src/main/print-olympus.c:1590
 msgid "Laminate Pattern"
 msgstr ""
 
-#: src/main/print-olympus.c:1627
+#: src/main/print-olympus.c:1625
 #, fuzzy
 msgid "Adjust the cyan balance"
 msgstr "Upravit vyrovnání modrozelené tisku"
 
-#: src/main/print-olympus.c:1635
+#: src/main/print-olympus.c:1633
 #, fuzzy
 msgid "Adjust the magenta balance"
 msgstr "Upravit vyrovnání fialové tisku"
 
-#: src/main/print-olympus.c:1643
+#: src/main/print-olympus.c:1641
 #, fuzzy
 msgid "Adjust the yellow balance"
 msgstr "Upravit vyrovnání žluté tisku"
 
-#: src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1648
 #, fuzzy
 msgid "Black Balance"
 msgstr "Černobíle"
 
-#: src/main/print-olympus.c:1651
+#: src/main/print-olympus.c:1649
 #, fuzzy
 msgid "Adjust the black balance"
 msgstr "Upravit vyrovnání modrozelené tisku"
@@ -1693,16 +1685,24 @@ msgstr "Barevná a černá cartridge"
 msgid "Color + Photo Cartridges"
 msgstr "Barevná a foto cartridge"
 
-#: src/main/print-ps.c:97
+#: src/main/print-ps.c:68
 #, fuzzy
 msgid "PPDFile"
 msgstr "Soubor PPD:"
 
-#: src/main/print-ps.c:98 src/gutenprintui/panel.c:1767
-#: src/gutenprintui2/panel.c:1767
+#: src/main/print-ps.c:69 src/gutenprintui2/panel.c:1767
 #, fuzzy
 msgid "PPD File"
 msgstr "Soubor PPD?"
+
+#: src/main/print-ps.c:74
+#, fuzzy
+msgid "Model Name"
+msgstr "Zrušit"
+
+#: src/main/print-ps.c:75
+msgid "PPD File Model Name"
+msgstr ""
 
 #: src/main/print-raw.c:223
 msgid "Image dimensions must match paper dimensions"
@@ -2987,8 +2987,9 @@ msgid "Canon PIXMA iP4200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:187
+#, fuzzy
 msgid "Canon PIXMA iP4300"
-msgstr ""
+msgstr "Stylus C50"
 
 #: src/main/xmli18n-tmp.h:188
 #, fuzzy
@@ -3000,8 +3001,9 @@ msgid "Canon PIXMA iP5200"
 msgstr ""
 
 #: src/main/xmli18n-tmp.h:190
+#, fuzzy
 msgid "Canon PIXMA iP6700"
-msgstr ""
+msgstr "Stylus C50"
 
 #: src/main/xmli18n-tmp.h:191
 msgid "Canon MULTIPASS MP150"
@@ -6169,616 +6171,6 @@ msgstr ""
 msgid "RAW DATA 8 bit"
 msgstr ""
 
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Inch"
-msgstr "Palec"
-
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Set the base unit of measurement to inches"
-msgstr "Nastavit základní jednotku měření na palce"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "cm"
-msgstr "cm"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "Set the base unit of measurement to centimetres"
-msgstr "Nastavit základní jednotku měření na centimetry"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-#, fuzzy
-msgid "Points"
-msgstr "Vytisknout"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-#, fuzzy
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Nastavit základní jednotku měření na palce"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "mm"
-msgstr ""
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-#, fuzzy
-msgid "Set the base unit of measurement to millimetres"
-msgstr "Nastavit základní jednotku měření na centimetry"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Pica"
-msgstr ""
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-#, fuzzy
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Nastavit základní jednotku měření na palce"
-
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
-msgid "Color output"
-msgstr "Barevný výstup"
-
-#: src/gutenprintui/panel.c:290 src/gutenprintui2/panel.c:290
-msgid "Print in shades of gray using black ink"
-msgstr "Tisknout v odstínech šedi pomocí černého inkoustu"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-#, fuzzy
-msgid "Standard Command"
-msgstr "Standardní"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Use standard print command"
-msgstr ""
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-#, fuzzy
-msgid "Custom Command"
-msgstr "Příkaz:"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Use custom print command"
-msgstr ""
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui/plist.c:682
-#: src/gutenprintui/plist.c:765 src/gutenprintui2/panel.c:304
-#: src/gutenprintui2/plist.c:678 src/gutenprintui2/plist.c:761
-msgid "File"
-msgstr "Soubor"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui2/panel.c:304
-#, fuzzy
-msgid "Print to a file"
-msgstr "Tisknout do souboru?"
-
-#: src/gutenprintui/panel.c:520 src/gutenprintui2/panel.c:520
-msgid "Edit Curve..."
-msgstr ""
-
-#: src/gutenprintui/panel.c:531 src/gutenprintui2/panel.c:531
-#, fuzzy
-msgid "Set Default"
-msgstr "Nastavit implicitní"
-
-#: src/gutenprintui/panel.c:533 src/gutenprintui2/panel.c:533
-msgid "Restore Previous"
-msgstr ""
-
-#: src/gutenprintui/panel.c:535 src/gutenprintui/panel.c:1531
-#: src/gutenprintui/panel.c:1786 src/gutenprintui/panel.c:1818
-#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
-#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
-msgid "OK"
-msgstr "Budiž"
-
-#: src/gutenprintui/panel.c:537 src/gutenprintui/panel.c:1196
-#: src/gutenprintui/panel.c:1533 src/gutenprintui/panel.c:1788
-#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
-#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
-msgid "Cancel"
-msgstr "Zrušit"
-
-#: src/gutenprintui/panel.c:1179 src/gutenprintui2/panel.c:1180
-#, c-format
-msgid "%s -- Print v%s"
-msgstr "%s -- Tisk v%s"
-
-#: src/gutenprintui/panel.c:1188 src/gutenprintui2/panel.c:1189
-msgid "About"
-msgstr "O programu"
-
-#: src/gutenprintui/panel.c:1190 src/gutenprintui2/panel.c:1191
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr ""
-"Vytisknout a\n"
-"uložit nastavení"
-
-#: src/gutenprintui/panel.c:1192 src/gutenprintui2/panel.c:1193
-msgid ""
-"Save\n"
-"Settings"
-msgstr ""
-"Uložit\n"
-"nastavení"
-
-#: src/gutenprintui/panel.c:1194 src/gutenprintui2/panel.c:1195
-msgid "Print"
-msgstr "Vytisknout"
-
-#: src/gutenprintui/panel.c:1246 src/gutenprintui2/panel.c:1247
-msgid "Preview"
-msgstr "Náhled"
-
-#: src/gutenprintui/panel.c:1271 src/gutenprintui2/panel.c:1272
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-"Umístěte obrázek na obrazovce.\n"
-"Klikněte a táhněte primárním tlačítkem pro umístění obrázku.\n"
-"Klikněte a táhněte druhým tlačítkem pro posun obrázku s větší přesností; "
-"každá jednotka pohybu posune obrázek o jeden bod (1/72\")\n"
-"Klikněte a táhněte třetím (prostředním) tlačítkem pro posun obrázku v "
-"jednotkách velikosti obrázku.\n"
-"Stisknutí klávesy shift při tažení omezuje obrázek na jen horizontální nebo "
-"vertikální pohyb.\n"
-"Pokud při tažení myší klikněte jiným tlačítkem, obrázek se vrátí na svou "
-"původní pozici."
-
-#: src/gutenprintui/panel.c:1318 src/gutenprintui2/panel.c:1319
-msgid "Paper Size"
-msgstr ""
-
-#: src/gutenprintui/panel.c:1341 src/gutenprintui2/panel.c:1342
-msgid "Show All Paper Sizes"
-msgstr ""
-
-#: src/gutenprintui/panel.c:1357 src/gutenprintui2/panel.c:1358
-msgid "Dimensions:"
-msgstr "Rozměry:"
-
-#: src/gutenprintui/panel.c:1362 src/gutenprintui/panel.c:2051
-#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
-msgid "Width:"
-msgstr "Šířka:"
-
-#: src/gutenprintui/panel.c:1363 src/gutenprintui2/panel.c:1364
-msgid "Width of the paper that you wish to print to"
-msgstr "Šířka papíru, na který chcete tisknout"
-
-#: src/gutenprintui/panel.c:1367 src/gutenprintui/panel.c:2053
-#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
-msgid "Height:"
-msgstr "Výška:"
-
-#: src/gutenprintui/panel.c:1368 src/gutenprintui2/panel.c:1369
-msgid "Height of the paper that you wish to print to"
-msgstr "Výška papíru, na který chcete tisknout"
-
-#: src/gutenprintui/panel.c:1373 src/gutenprintui2/panel.c:1374
-msgid "Automatic Paper Size"
-msgstr ""
-
-#: src/gutenprintui/panel.c:1390 src/gutenprintui2/panel.c:1391
-msgid "Number of Copies"
-msgstr ""
-
-#: src/gutenprintui/panel.c:1402 src/gutenprintui2/panel.c:1403
-msgid "Select the number of copies to print; a value between 1 and 100"
-msgstr ""
-
-#: src/gutenprintui/panel.c:1434 src/gutenprintui2/panel.c:1435
-#, fuzzy
-msgid "Image Position"
-msgstr "Pozice"
-
-#: src/gutenprintui/panel.c:1451 src/gutenprintui2/panel.c:1452
-msgid "Auto"
-msgstr "Automaticky"
-
-#: src/gutenprintui/panel.c:1453 src/gutenprintui2/panel.c:1454
-msgid "Portrait"
-msgstr "Na výšku"
-
-#: src/gutenprintui/panel.c:1455 src/gutenprintui2/panel.c:1456
-msgid "Landscape"
-msgstr "Na šířku"
-
-#: src/gutenprintui/panel.c:1457 src/gutenprintui2/panel.c:1458
-msgid "Upside down"
-msgstr "Vzhůru nohama"
-
-#: src/gutenprintui/panel.c:1459 src/gutenprintui2/panel.c:1460
-msgid "Seascape"
-msgstr "Na stranu"
-
-#: src/gutenprintui/panel.c:1463 src/gutenprintui2/panel.c:1464
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Vyberte orientaci: na výšku, na šířku, vzhůru nohama nebo na stranu (na "
-"šířku vzhůru nohama)"
-
-#: src/gutenprintui/panel.c:1465 src/gutenprintui2/panel.c:1466
-msgid "Orientation:"
-msgstr "Orientace:"
-
-#: src/gutenprintui/panel.c:1476 src/gutenprintui2/panel.c:1477
-msgid "Left:"
-msgstr "Levý:"
-
-#: src/gutenprintui/panel.c:1477 src/gutenprintui2/panel.c:1478
-msgid "Distance from the left of the paper to the image"
-msgstr "Vzdálenost od levého okraje papíru k obrázku"
-
-#: src/gutenprintui/panel.c:1480 src/gutenprintui/panel.c:1484
-#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
-msgid "Right:"
-msgstr "Pravý:"
-
-#: src/gutenprintui/panel.c:1481 src/gutenprintui2/panel.c:1482
-msgid "Distance from the left of the paper to the right of the image"
-msgstr "Vzdálenost od levého okraje papíru k pravému okraji obrázku"
-
-#: src/gutenprintui/panel.c:1485 src/gutenprintui2/panel.c:1486
-msgid "Distance from the right of the paper to the image"
-msgstr "Vzdálenost od pravého okraje papíru k obrázku"
-
-#: src/gutenprintui/panel.c:1487 src/gutenprintui2/panel.c:1488
-msgid "Top:"
-msgstr "Horní:"
-
-#: src/gutenprintui/panel.c:1488 src/gutenprintui2/panel.c:1489
-msgid "Distance from the top of the paper to the image"
-msgstr "Vzdálenost od horního okraje papíru k obrázku"
-
-#: src/gutenprintui/panel.c:1491 src/gutenprintui/panel.c:1495
-#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
-msgid "Bottom:"
-msgstr "Spodní:"
-
-#: src/gutenprintui/panel.c:1492 src/gutenprintui2/panel.c:1493
-#, fuzzy
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr "Vzdálenost od horního okraje papíru k spodnímu okraji obrázku"
-
-#: src/gutenprintui/panel.c:1496 src/gutenprintui2/panel.c:1497
-msgid "Distance from the bottom of the paper to the image"
-msgstr "Vzdálenost od spodního okraje papíru k obrázku"
-
-#: src/gutenprintui/panel.c:1506 src/gutenprintui2/panel.c:1507
-msgid "Center:"
-msgstr "Vycentrovat:"
-
-#: src/gutenprintui/panel.c:1509 src/gutenprintui2/panel.c:1510
-#, fuzzy
-msgid "Horizontal"
-msgstr "Horizontálně"
-
-#: src/gutenprintui/panel.c:1510 src/gutenprintui2/panel.c:1511
-msgid "Center the image horizontally on the paper"
-msgstr "Vycentrovat obrázek na papíře horizontálně"
-
-#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1513
-msgid "Both"
-msgstr "Obojí"
-
-#: src/gutenprintui/panel.c:1513 src/gutenprintui2/panel.c:1514
-msgid "Center the image on the paper"
-msgstr "Vycentrovat obrázek na papíře"
-
-#: src/gutenprintui/panel.c:1515 src/gutenprintui2/panel.c:1516
-#, fuzzy
-msgid "Vertical"
-msgstr "Vertikálně"
-
-#: src/gutenprintui/panel.c:1516 src/gutenprintui2/panel.c:1517
-msgid "Center the image vertically on the paper"
-msgstr "Vycentrovat obrázek na papíře vertikálně"
-
-#: src/gutenprintui/panel.c:1529 src/gutenprintui2/panel.c:1530
-msgid "Setup Printer"
-msgstr "Nastavit tiskárnu"
-
-#: src/gutenprintui/panel.c:1554 src/gutenprintui2/panel.c:1554
-#, fuzzy
-msgid "Printer Make:"
-msgstr "Název tiskárny:"
-
-#: src/gutenprintui/panel.c:1565 src/gutenprintui2/panel.c:1565
-#, fuzzy
-msgid "Select the make of your printer"
-msgstr "Vyberte model své tiskárny"
-
-#: src/gutenprintui/panel.c:1583 src/gutenprintui/panel.c:1671
-#: src/gutenprintui/panel.c:1889 src/gutenprintui2/panel.c:1583
-#: src/gutenprintui2/panel.c:1671 src/gutenprintui2/panel.c:1889
-msgid "Printer Model:"
-msgstr "Model tiskárny:"
-
-#: src/gutenprintui/panel.c:1594 src/gutenprintui2/panel.c:1594
-msgid "Select your printer model"
-msgstr "Vyberte model své tiskárny"
-
-#: src/gutenprintui/panel.c:1642 src/gutenprintui2/panel.c:1642
-msgid "PPD File:"
-msgstr "Soubor PPD:"
-
-#: src/gutenprintui/panel.c:1658 src/gutenprintui2/panel.c:1658
-msgid "Enter the correct PPD filename for your printer"
-msgstr "Zadejte správný název souboru PPD pro svou tiskárnu"
-
-#: src/gutenprintui/panel.c:1660 src/gutenprintui/panel.c:1740
-#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
-msgid "Browse"
-msgstr "Procházet"
-
-#: src/gutenprintui/panel.c:1667 src/gutenprintui2/panel.c:1667
-msgid "Choose the correct PPD filename for your printer"
-msgstr "Zvolte správný název souboru PPD pro svou tiskárnu"
-
-#: src/gutenprintui/panel.c:1709 src/gutenprintui2/panel.c:1709
-#, fuzzy
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Vyberte název tiskárny (ne typ nebo model tiskárny), na kterou chcete "
-"tisknout"
-
-#: src/gutenprintui/panel.c:1711 src/gutenprintui2/panel.c:1711
-#, fuzzy
-msgid "Printer Queue:"
-msgstr "Název tiskárny:"
-
-#: src/gutenprintui/panel.c:1727 src/gutenprintui2/panel.c:1727
-#, fuzzy
-msgid "Enter the correct command to print to your printer. "
-msgstr "Zadejte správný název souboru PPD pro svou tiskárnu"
-
-#: src/gutenprintui/panel.c:1738 src/gutenprintui2/panel.c:1738
-msgid "Enter the file to print to. "
-msgstr ""
-
-#: src/gutenprintui/panel.c:1746 src/gutenprintui2/panel.c:1746
-#, fuzzy
-msgid "File to print to"
-msgstr "testovací tisk"
-
-#: src/gutenprintui/panel.c:1754 src/gutenprintui2/panel.c:1754
-#, fuzzy
-msgid "Print To File"
-msgstr "Tisknout do souboru?"
-
-#: src/gutenprintui/panel.c:1784 src/gutenprintui2/panel.c:1784
-msgid "Define New Printer"
-msgstr "Definovat novou tiskárnu"
-
-#: src/gutenprintui/panel.c:1802 src/gutenprintui/panel.c:1886
-#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
-msgid "Printer Name:"
-msgstr "Název tiskárny:"
-
-#: src/gutenprintui/panel.c:1806 src/gutenprintui2/panel.c:1806
-msgid "Enter the name you wish to give this logical printer"
-msgstr "Zadejte název, který chcete dát této logické tiskárně"
-
-#: src/gutenprintui/panel.c:1816 src/gutenprintui2/panel.c:1816
-#, fuzzy
-msgid "About Gutenprint "
-msgstr "O Gimp-Print "
-
-#: src/gutenprintui/panel.c:1823 src/gutenprintui2/panel.c:1823
-#, fuzzy
-msgid "Gutenprint Version "
-msgstr "Verze Gimp-Print "
-
-#: src/gutenprintui/panel.c:1871 src/gutenprintui2/panel.c:1871
-msgid "Printer Settings"
-msgstr "Nastavení tiskárny"
-
-#: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1884
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Vyberte název tiskárny (ne typ nebo model tiskárny), na kterou chcete "
-"tisknout"
-
-#: src/gutenprintui/panel.c:1901 src/gutenprintui2/panel.c:1901
-msgid "Setup Printer..."
-msgstr "Nastavit tiskárnu..."
-
-#: src/gutenprintui/panel.c:1903 src/gutenprintui2/panel.c:1903
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Zvolte model tiskárny, soubor PPD a příkaz, který se používá pro tisk na "
-"tuto tiskárnu"
-
-#: src/gutenprintui/panel.c:1916 src/gutenprintui2/panel.c:1916
-msgid "New Printer..."
-msgstr "Nová tiskárna..."
-
-#: src/gutenprintui/panel.c:1917 src/gutenprintui2/panel.c:1917
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definovat novou logickou tiskárnu. Toto může být použito pro pojmenování "
-"sady nastavení, které si chcete zapamatovat pro budoucí použití."
-
-#: src/gutenprintui/panel.c:1960 src/gutenprintui2/panel.c:1960
-#, fuzzy
-msgid "Image Size"
-msgstr "Typ obrázku"
-
-#: src/gutenprintui/panel.c:1985 src/gutenprintui2/panel.c:1985
-msgid "Scaling:"
-msgstr "Měřítko:"
-
-#: src/gutenprintui/panel.c:1989 src/gutenprintui2/panel.c:1989
-msgid "Set the scale (size) of the image"
-msgstr "Nastavte měřítko (velikost) obrázku"
-
-#: src/gutenprintui/panel.c:2011 src/gutenprintui2/panel.c:2011
-msgid "Scale by:"
-msgstr ""
-
-#: src/gutenprintui/panel.c:2016 src/gutenprintui2/panel.c:2016
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Vyberte, jestli je měřítko měřeno jako procenta dostupné velikosti stránky "
-"nebo počet výstupních bodů na palec"
-
-#: src/gutenprintui/panel.c:2019 src/gutenprintui2/panel.c:2019
-msgid "Percent"
-msgstr "Procenta"
-
-#: src/gutenprintui/panel.c:2024 src/gutenprintui2/panel.c:2024
-msgid "Scale the print to the size of the page"
-msgstr "Upravit tisk na velikost stránky"
-
-#: src/gutenprintui/panel.c:2028 src/gutenprintui2/panel.c:2028
-msgid "PPI"
-msgstr "PPI"
-
-#: src/gutenprintui/panel.c:2033 src/gutenprintui2/panel.c:2033
-msgid "Scale the print to the number of dots per inch"
-msgstr "Upravit tisk na počet bodů na palec"
-
-#: src/gutenprintui/panel.c:2051 src/gutenprintui2/panel.c:2051
-msgid "Set the width of the print"
-msgstr "Nastavit šířku tisku"
-
-#: src/gutenprintui/panel.c:2053 src/gutenprintui2/panel.c:2053
-msgid "Set the height of the print"
-msgstr "Nastavit výšku tisku"
-
-#: src/gutenprintui/panel.c:2059 src/gutenprintui2/panel.c:2059
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr ""
-"Použít původní\n"
-"velikost obrázku"
-
-#: src/gutenprintui/panel.c:2065 src/gutenprintui2/panel.c:2065
-msgid "Set the print size to the size of the image"
-msgstr "Nastavit velikost tisku na velikost obrázku"
-
-#: src/gutenprintui/panel.c:2088 src/gutenprintui2/panel.c:2089
-msgid "Print Color Adjust"
-msgstr "Úprava barvy tisku"
-
-#: src/gutenprintui/panel.c:2091 src/gutenprintui2/panel.c:2092
-msgid "Set Defaults"
-msgstr "Nastavit implicitní"
-
-#: src/gutenprintui/panel.c:2093 src/gutenprintui2/panel.c:2094
-msgid "Close"
-msgstr "Zavřít"
-
-#: src/gutenprintui/panel.c:2122 src/gutenprintui2/panel.c:2123
-msgid "Image preview"
-msgstr "Náhled obrázku"
-
-#: src/gutenprintui/panel.c:2136 src/gutenprintui2/panel.c:2137
-msgid "View Output Channels:"
-msgstr ""
-
-#: src/gutenprintui/panel.c:2222 src/gutenprintui2/panel.c:2228
-#, fuzzy
-msgid "Output"
-msgstr "Typ výstupu:"
-
-#: src/gutenprintui/panel.c:2250 src/gutenprintui2/panel.c:2256
-msgid "Output Type:"
-msgstr "Typ výstupu:"
-
-#: src/gutenprintui/panel.c:2254 src/gutenprintui2/panel.c:2260
-msgid "Select the desired output type"
-msgstr "Zvolte požadovaný typ výstupu"
-
-#: src/gutenprintui/panel.c:2275 src/gutenprintui2/panel.c:2281
-msgid "Adjust Output..."
-msgstr "Upravit výstup..."
-
-#: src/gutenprintui/panel.c:2284 src/gutenprintui2/panel.c:2290
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr "Upravit vyrovnání barev, jask, kontrast, sytost a algoritmus rozkladu"
-
-#: src/gutenprintui/panel.c:2302 src/gutenprintui2/panel.c:2309
-#, fuzzy
-msgid "Size Units:"
-msgstr "Jednotky:"
-
-#: src/gutenprintui/panel.c:2305 src/gutenprintui2/panel.c:2312
-#, fuzzy
-msgid " "
-msgstr "> "
-
-#: src/gutenprintui/panel.c:2329 src/gutenprintui2/panel.c:2336
-msgid "Units:"
-msgstr "Jednotky:"
-
-#: src/gutenprintui/panel.c:2334 src/gutenprintui2/panel.c:2341
-msgid "Select the base unit of measurement for printing"
-msgstr "Vyberte základní jednotku měření pro tisk"
-
-#: src/gutenprintui/plist.c:90 src/gutenprintui/plist.c:99
-#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
-msgid "System V lp"
-msgstr ""
-
-#: src/gutenprintui/plist.c:96 src/gutenprintui2/plist.c:96
-msgid "CUPS"
-msgstr ""
-
-#: src/gutenprintui/plist.c:102 src/gutenprintui2/plist.c:102
-msgid "Berkeley lpd (/etc/lpc)"
-msgstr ""
-
-#: src/gutenprintui/plist.c:105 src/gutenprintui2/plist.c:105
-msgid "Berkeley lpd (/usr/bsd/lpc)"
-msgstr ""
-
-#: src/gutenprintui/plist.c:108 src/gutenprintui2/plist.c:108
-msgid "Berkeley lpd (/usr/etc/lpc"
-msgstr ""
-
-#: src/gutenprintui/plist.c:111 src/gutenprintui2/plist.c:111
-msgid "Berkeley lpd (/usr/libexec/lpc)"
-msgstr ""
-
-#: src/gutenprintui/plist.c:114 src/gutenprintui2/plist.c:114
-msgid "Berkeley lpd (/usr/sbin/lpc)"
-msgstr ""
-
-#: src/gutenprintui/plist.c:1020 src/gutenprintui2/plist.c:1016
-#, fuzzy
-msgid "Printer"
-msgstr "Vytisknout"
-
-#: src/gutenprintui/plist.c:1207 src/gutenprintui2/plist.c:1203
-#, fuzzy
-msgid "(Default Printer)"
-msgstr "Nastavit tiskárnu"
-
 #: src/gutenprintui2/curve.c:130
 #, fuzzy
 msgid "Curve type"
@@ -6823,6 +6215,603 @@ msgstr ""
 #: src/gutenprintui2/gammacurve.c:418
 msgid "_Gamma value"
 msgstr ""
+
+#: src/gutenprintui2/panel.c:273
+msgid "Inch"
+msgstr "Palec"
+
+#: src/gutenprintui2/panel.c:273
+msgid "Set the base unit of measurement to inches"
+msgstr "Nastavit základní jednotku měření na palce"
+
+#: src/gutenprintui2/panel.c:275
+msgid "cm"
+msgstr "cm"
+
+#: src/gutenprintui2/panel.c:275
+msgid "Set the base unit of measurement to centimetres"
+msgstr "Nastavit základní jednotku měření na centimetry"
+
+#: src/gutenprintui2/panel.c:277
+#, fuzzy
+msgid "Points"
+msgstr "Vytisknout"
+
+#: src/gutenprintui2/panel.c:277
+#, fuzzy
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr "Nastavit základní jednotku měření na palce"
+
+#: src/gutenprintui2/panel.c:279
+msgid "mm"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:279
+#, fuzzy
+msgid "Set the base unit of measurement to millimetres"
+msgstr "Nastavit základní jednotku měření na centimetry"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Pica"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:281
+#, fuzzy
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr "Nastavit základní jednotku měření na palce"
+
+#: src/gutenprintui2/panel.c:288
+msgid "Color output"
+msgstr "Barevný výstup"
+
+#: src/gutenprintui2/panel.c:290
+msgid "Print in shades of gray using black ink"
+msgstr "Tisknout v odstínech šedi pomocí černého inkoustu"
+
+#: src/gutenprintui2/panel.c:302
+#, fuzzy
+msgid "Standard Command"
+msgstr "Standardní"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Use standard print command"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:303
+#, fuzzy
+msgid "Custom Command"
+msgstr "Příkaz:"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Use custom print command"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:304 src/gutenprintui2/plist.c:678
+#: src/gutenprintui2/plist.c:761
+msgid "File"
+msgstr "Soubor"
+
+#: src/gutenprintui2/panel.c:304
+#, fuzzy
+msgid "Print to a file"
+msgstr "Tisknout do souboru?"
+
+#: src/gutenprintui2/panel.c:520
+msgid "Edit Curve..."
+msgstr ""
+
+#: src/gutenprintui2/panel.c:531
+#, fuzzy
+msgid "Set Default"
+msgstr "Nastavit implicitní"
+
+#: src/gutenprintui2/panel.c:533
+msgid "Restore Previous"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
+#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
+msgid "OK"
+msgstr "Budiž"
+
+#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
+#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/gutenprintui2/panel.c:1180
+#, c-format
+msgid "%s -- Print v%s"
+msgstr "%s -- Tisk v%s"
+
+#: src/gutenprintui2/panel.c:1189
+msgid "About"
+msgstr "O programu"
+
+#: src/gutenprintui2/panel.c:1191
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr ""
+"Vytisknout a\n"
+"uložit nastavení"
+
+#: src/gutenprintui2/panel.c:1193
+msgid ""
+"Save\n"
+"Settings"
+msgstr ""
+"Uložit\n"
+"nastavení"
+
+#: src/gutenprintui2/panel.c:1195
+msgid "Print"
+msgstr "Vytisknout"
+
+#: src/gutenprintui2/panel.c:1247
+msgid "Preview"
+msgstr "Náhled"
+
+#: src/gutenprintui2/panel.c:1272
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+"Umístěte obrázek na obrazovce.\n"
+"Klikněte a táhněte primárním tlačítkem pro umístění obrázku.\n"
+"Klikněte a táhněte druhým tlačítkem pro posun obrázku s větší přesností; "
+"každá jednotka pohybu posune obrázek o jeden bod (1/72\")\n"
+"Klikněte a táhněte třetím (prostředním) tlačítkem pro posun obrázku v "
+"jednotkách velikosti obrázku.\n"
+"Stisknutí klávesy shift při tažení omezuje obrázek na jen horizontální nebo "
+"vertikální pohyb.\n"
+"Pokud při tažení myší klikněte jiným tlačítkem, obrázek se vrátí na svou "
+"původní pozici."
+
+#: src/gutenprintui2/panel.c:1319
+msgid "Paper Size"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:1342
+msgid "Show All Paper Sizes"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:1358
+msgid "Dimensions:"
+msgstr "Rozměry:"
+
+#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
+msgid "Width:"
+msgstr "Šířka:"
+
+#: src/gutenprintui2/panel.c:1364
+msgid "Width of the paper that you wish to print to"
+msgstr "Šířka papíru, na který chcete tisknout"
+
+#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
+msgid "Height:"
+msgstr "Výška:"
+
+#: src/gutenprintui2/panel.c:1369
+msgid "Height of the paper that you wish to print to"
+msgstr "Výška papíru, na který chcete tisknout"
+
+#: src/gutenprintui2/panel.c:1374
+msgid "Automatic Paper Size"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:1391
+msgid "Number of Copies"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:1403
+msgid "Select the number of copies to print; a value between 1 and 100"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:1435
+#, fuzzy
+msgid "Image Position"
+msgstr "Pozice"
+
+#: src/gutenprintui2/panel.c:1452
+msgid "Auto"
+msgstr "Automaticky"
+
+#: src/gutenprintui2/panel.c:1454
+msgid "Portrait"
+msgstr "Na výšku"
+
+#: src/gutenprintui2/panel.c:1456
+msgid "Landscape"
+msgstr "Na šířku"
+
+#: src/gutenprintui2/panel.c:1458
+msgid "Upside down"
+msgstr "Vzhůru nohama"
+
+#: src/gutenprintui2/panel.c:1460
+msgid "Seascape"
+msgstr "Na stranu"
+
+#: src/gutenprintui2/panel.c:1464
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Vyberte orientaci: na výšku, na šířku, vzhůru nohama nebo na stranu (na "
+"šířku vzhůru nohama)"
+
+#: src/gutenprintui2/panel.c:1466
+msgid "Orientation:"
+msgstr "Orientace:"
+
+#: src/gutenprintui2/panel.c:1477
+msgid "Left:"
+msgstr "Levý:"
+
+#: src/gutenprintui2/panel.c:1478
+msgid "Distance from the left of the paper to the image"
+msgstr "Vzdálenost od levého okraje papíru k obrázku"
+
+#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
+msgid "Right:"
+msgstr "Pravý:"
+
+#: src/gutenprintui2/panel.c:1482
+msgid "Distance from the left of the paper to the right of the image"
+msgstr "Vzdálenost od levého okraje papíru k pravému okraji obrázku"
+
+#: src/gutenprintui2/panel.c:1486
+msgid "Distance from the right of the paper to the image"
+msgstr "Vzdálenost od pravého okraje papíru k obrázku"
+
+#: src/gutenprintui2/panel.c:1488
+msgid "Top:"
+msgstr "Horní:"
+
+#: src/gutenprintui2/panel.c:1489
+msgid "Distance from the top of the paper to the image"
+msgstr "Vzdálenost od horního okraje papíru k obrázku"
+
+#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
+msgid "Bottom:"
+msgstr "Spodní:"
+
+#: src/gutenprintui2/panel.c:1493
+#, fuzzy
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr "Vzdálenost od horního okraje papíru k spodnímu okraji obrázku"
+
+#: src/gutenprintui2/panel.c:1497
+msgid "Distance from the bottom of the paper to the image"
+msgstr "Vzdálenost od spodního okraje papíru k obrázku"
+
+#: src/gutenprintui2/panel.c:1507
+msgid "Center:"
+msgstr "Vycentrovat:"
+
+#: src/gutenprintui2/panel.c:1510
+#, fuzzy
+msgid "Horizontal"
+msgstr "Horizontálně"
+
+#: src/gutenprintui2/panel.c:1511
+msgid "Center the image horizontally on the paper"
+msgstr "Vycentrovat obrázek na papíře horizontálně"
+
+#: src/gutenprintui2/panel.c:1513
+msgid "Both"
+msgstr "Obojí"
+
+#: src/gutenprintui2/panel.c:1514
+msgid "Center the image on the paper"
+msgstr "Vycentrovat obrázek na papíře"
+
+#: src/gutenprintui2/panel.c:1516
+#, fuzzy
+msgid "Vertical"
+msgstr "Vertikálně"
+
+#: src/gutenprintui2/panel.c:1517
+msgid "Center the image vertically on the paper"
+msgstr "Vycentrovat obrázek na papíře vertikálně"
+
+#: src/gutenprintui2/panel.c:1530
+msgid "Setup Printer"
+msgstr "Nastavit tiskárnu"
+
+#: src/gutenprintui2/panel.c:1554
+#, fuzzy
+msgid "Printer Make:"
+msgstr "Název tiskárny:"
+
+#: src/gutenprintui2/panel.c:1565
+#, fuzzy
+msgid "Select the make of your printer"
+msgstr "Vyberte model své tiskárny"
+
+#: src/gutenprintui2/panel.c:1583 src/gutenprintui2/panel.c:1671
+#: src/gutenprintui2/panel.c:1889
+msgid "Printer Model:"
+msgstr "Model tiskárny:"
+
+#: src/gutenprintui2/panel.c:1594
+msgid "Select your printer model"
+msgstr "Vyberte model své tiskárny"
+
+#: src/gutenprintui2/panel.c:1642
+msgid "PPD File:"
+msgstr "Soubor PPD:"
+
+#: src/gutenprintui2/panel.c:1658
+msgid "Enter the correct PPD filename for your printer"
+msgstr "Zadejte správný název souboru PPD pro svou tiskárnu"
+
+#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
+msgid "Browse"
+msgstr "Procházet"
+
+#: src/gutenprintui2/panel.c:1667
+msgid "Choose the correct PPD filename for your printer"
+msgstr "Zvolte správný název souboru PPD pro svou tiskárnu"
+
+#: src/gutenprintui2/panel.c:1709
+#, fuzzy
+msgid ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr ""
+"Vyberte název tiskárny (ne typ nebo model tiskárny), na kterou chcete "
+"tisknout"
+
+#: src/gutenprintui2/panel.c:1711
+#, fuzzy
+msgid "Printer Queue:"
+msgstr "Název tiskárny:"
+
+#: src/gutenprintui2/panel.c:1727
+#, fuzzy
+msgid "Enter the correct command to print to your printer. "
+msgstr "Zadejte správný název souboru PPD pro svou tiskárnu"
+
+#: src/gutenprintui2/panel.c:1738
+msgid "Enter the file to print to. "
+msgstr ""
+
+#: src/gutenprintui2/panel.c:1746
+#, fuzzy
+msgid "File to print to"
+msgstr "testovací tisk"
+
+#: src/gutenprintui2/panel.c:1754
+#, fuzzy
+msgid "Print To File"
+msgstr "Tisknout do souboru?"
+
+#: src/gutenprintui2/panel.c:1784
+msgid "Define New Printer"
+msgstr "Definovat novou tiskárnu"
+
+#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
+msgid "Printer Name:"
+msgstr "Název tiskárny:"
+
+#: src/gutenprintui2/panel.c:1806
+msgid "Enter the name you wish to give this logical printer"
+msgstr "Zadejte název, který chcete dát této logické tiskárně"
+
+#: src/gutenprintui2/panel.c:1816
+#, fuzzy
+msgid "About Gutenprint "
+msgstr "O Gimp-Print "
+
+#: src/gutenprintui2/panel.c:1823
+#, fuzzy
+msgid "Gutenprint Version "
+msgstr "Verze Gimp-Print "
+
+#: src/gutenprintui2/panel.c:1871
+msgid "Printer Settings"
+msgstr "Nastavení tiskárny"
+
+#: src/gutenprintui2/panel.c:1884
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Vyberte název tiskárny (ne typ nebo model tiskárny), na kterou chcete "
+"tisknout"
+
+#: src/gutenprintui2/panel.c:1901
+msgid "Setup Printer..."
+msgstr "Nastavit tiskárnu..."
+
+#: src/gutenprintui2/panel.c:1903
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+"Zvolte model tiskárny, soubor PPD a příkaz, který se používá pro tisk na "
+"tuto tiskárnu"
+
+#: src/gutenprintui2/panel.c:1916
+msgid "New Printer..."
+msgstr "Nová tiskárna..."
+
+#: src/gutenprintui2/panel.c:1917
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Definovat novou logickou tiskárnu. Toto může být použito pro pojmenování "
+"sady nastavení, které si chcete zapamatovat pro budoucí použití."
+
+#: src/gutenprintui2/panel.c:1960
+#, fuzzy
+msgid "Image Size"
+msgstr "Typ obrázku"
+
+#: src/gutenprintui2/panel.c:1985
+msgid "Scaling:"
+msgstr "Měřítko:"
+
+#: src/gutenprintui2/panel.c:1989
+msgid "Set the scale (size) of the image"
+msgstr "Nastavte měřítko (velikost) obrázku"
+
+#: src/gutenprintui2/panel.c:2011
+msgid "Scale by:"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:2016
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Vyberte, jestli je měřítko měřeno jako procenta dostupné velikosti stránky "
+"nebo počet výstupních bodů na palec"
+
+#: src/gutenprintui2/panel.c:2019
+msgid "Percent"
+msgstr "Procenta"
+
+#: src/gutenprintui2/panel.c:2024
+msgid "Scale the print to the size of the page"
+msgstr "Upravit tisk na velikost stránky"
+
+#: src/gutenprintui2/panel.c:2028
+msgid "PPI"
+msgstr "PPI"
+
+#: src/gutenprintui2/panel.c:2033
+msgid "Scale the print to the number of dots per inch"
+msgstr "Upravit tisk na počet bodů na palec"
+
+#: src/gutenprintui2/panel.c:2051
+msgid "Set the width of the print"
+msgstr "Nastavit šířku tisku"
+
+#: src/gutenprintui2/panel.c:2053
+msgid "Set the height of the print"
+msgstr "Nastavit výšku tisku"
+
+#: src/gutenprintui2/panel.c:2059
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr ""
+"Použít původní\n"
+"velikost obrázku"
+
+#: src/gutenprintui2/panel.c:2065
+msgid "Set the print size to the size of the image"
+msgstr "Nastavit velikost tisku na velikost obrázku"
+
+#: src/gutenprintui2/panel.c:2089
+msgid "Print Color Adjust"
+msgstr "Úprava barvy tisku"
+
+#: src/gutenprintui2/panel.c:2092
+msgid "Set Defaults"
+msgstr "Nastavit implicitní"
+
+#: src/gutenprintui2/panel.c:2094
+msgid "Close"
+msgstr "Zavřít"
+
+#: src/gutenprintui2/panel.c:2123
+msgid "Image preview"
+msgstr "Náhled obrázku"
+
+#: src/gutenprintui2/panel.c:2137
+msgid "View Output Channels:"
+msgstr ""
+
+#: src/gutenprintui2/panel.c:2228
+#, fuzzy
+msgid "Output"
+msgstr "Typ výstupu:"
+
+#: src/gutenprintui2/panel.c:2256
+msgid "Output Type:"
+msgstr "Typ výstupu:"
+
+#: src/gutenprintui2/panel.c:2260
+msgid "Select the desired output type"
+msgstr "Zvolte požadovaný typ výstupu"
+
+#: src/gutenprintui2/panel.c:2281
+msgid "Adjust Output..."
+msgstr "Upravit výstup..."
+
+#: src/gutenprintui2/panel.c:2290
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Upravit vyrovnání barev, jask, kontrast, sytost a algoritmus rozkladu"
+
+#: src/gutenprintui2/panel.c:2309
+#, fuzzy
+msgid "Size Units:"
+msgstr "Jednotky:"
+
+#: src/gutenprintui2/panel.c:2312
+#, fuzzy
+msgid " "
+msgstr "> "
+
+#: src/gutenprintui2/panel.c:2336
+msgid "Units:"
+msgstr "Jednotky:"
+
+#: src/gutenprintui2/panel.c:2341
+msgid "Select the base unit of measurement for printing"
+msgstr "Vyberte základní jednotku měření pro tisk"
+
+#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
+msgid "System V lp"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:96
+msgid "CUPS"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:102
+msgid "Berkeley lpd (/etc/lpc)"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:105
+msgid "Berkeley lpd (/usr/bsd/lpc)"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:108
+msgid "Berkeley lpd (/usr/etc/lpc"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:111
+msgid "Berkeley lpd (/usr/libexec/lpc)"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:114
+msgid "Berkeley lpd (/usr/sbin/lpc)"
+msgstr ""
+
+#: src/gutenprintui2/plist.c:1016
+#, fuzzy
+msgid "Printer"
+msgstr "Vytisknout"
+
+#: src/gutenprintui2/plist.c:1203
+#, fuzzy
+msgid "(Default Printer)"
+msgstr "Nastavit tiskárnu"
 
 #: src/cups/genppd.c:145
 #, fuzzy
@@ -6874,39 +6863,39 @@ msgstr "Czech"
 msgid "ISOLatin1"
 msgstr "UTF-8"
 
-#: src/cups/genppd.c:1608
+#: src/cups/genppd.c:1622
 msgid "2-Sided Printing"
 msgstr ""
 
-#: src/cups/genppd.c:1629
+#: src/cups/genppd.c:1646
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr ""
 
-#: src/cups/genppd.c:1633
+#: src/cups/genppd.c:1650
 msgid "Shrink (print the whole page)"
 msgstr ""
 
-#: src/cups/genppd.c:1634
+#: src/cups/genppd.c:1651
 msgid "Crop (preserve dimensions)"
 msgstr ""
 
-#: src/cups/genppd.c:1635
+#: src/cups/genppd.c:1652
 msgid "Expand (use maximum page area)"
 msgstr ""
 
-#: src/cups/genppd.c:1712
+#: src/cups/genppd.c:1735
 msgid "No"
 msgstr ""
 
-#: src/cups/genppd.c:1714
+#: src/cups/genppd.c:1737
 msgid "Yes"
 msgstr ""
 
-#: src/cups/genppd.c:1746 src/cups/genppd.c:1799
+#: src/cups/genppd.c:1774 src/cups/genppd.c:1836
 msgid "Value"
 msgstr ""
 
-#: src/cups/genppd.c:1751
+#: src/cups/genppd.c:1779
 msgid "Fine Adjustment"
 msgstr ""
 
@@ -7774,13 +7763,9 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "Chyba ve vstupu\n"
 
-#: src/gimp/print-image-gimp.c:225 src/gimp2/print-image-gimp.c:225
+#: src/gimp2/print-image-gimp.c:225
 msgid "Printing..."
 msgstr "Tisknu..."
-
-#: src/gimp/print.c:133
-msgid "<Image>/File/Print..."
-msgstr "<Image>/Soubor/Tisk..."
 
 #: src/ghost/ijsgutenprint.c:98
 #, c-format
@@ -7899,6 +7884,99 @@ msgstr "Špatné parametry; nemohu pokračovat!\n"
 #, fuzzy, c-format
 msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
 msgstr "Získání dalšího řádku selhalo na %.0f\n"
+
+#, fuzzy
+#~ msgid "Cassette"
+#~ msgstr "Matný papír"
+
+#, fuzzy
+#~ msgid " Gamma"
+#~ msgstr "Gama:"
+
+#, fuzzy
+#~ msgid " Curve"
+#~ msgstr "Černá"
+
+#, fuzzy
+#~ msgid "1440 x 1440"
+#~ msgstr "1440 x 1440 DPI"
+
+#, fuzzy
+#~ msgid "1440 x 1440 DPI High Quality"
+#~ msgstr "1200 DPI nejvyšší kvalita"
+
+#, fuzzy
+#~ msgid "1440 x 1440 DPI Highest Quality"
+#~ msgstr "1200 DPI nejvyšší kvalita"
+
+#, fuzzy
+#~ msgid "2880 x 1440 DPI High Quality"
+#~ msgstr "1200 DPI nejvyšší kvalita"
+
+#, fuzzy
+#~ msgid "2880 x 1440 DPI Highest Quality"
+#~ msgstr "1200 DPI nejvyšší kvalita"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
+#~ "and the rest of the Gutenprint Development Team.\n"
+#~ "\n"
+#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
+#~ "\n"
+#~ "This program is free software; you can redistribute it and/or modify\n"
+#~ "it under the terms of the GNU General Public License as published by\n"
+#~ "the Free Software Foundation; either version 2 of the License, or\n"
+#~ "(at your option) any later version.\n"
+#~ "\n"
+#~ "This program is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details.\n"
+#~ "\n"
+#~ "You should have received a copy of the GNU General Public License\n"
+#~ "along with this program; if not, write to the Free Software\n"
+#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
+#~ "USA\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz\n"
+#~ "a zbytek vývojového týmu Gimp-Print.\n"
+#~ "\n"
+#~ "Navštivte prosím naši WWW stránku na http://gimp-print.sourceforge.net.\n"
+#~ "\n"
+#~ "Tento program je free software; můžete jej dále šířit a/nebo modifikovat\n"
+#~ "za podmínek GNU General Public License publikované Free Software\n"
+#~ "Foundation; a to buď verze 2 licence, nebo (podle vašeho uvážení)\n"
+#~ "libovolné pozdější verze.\n"
+#~ "\n"
+#~ "Tento program je rozšiřován v naději, že bude, užitečný, ale BEZ "
+#~ "JAKÉKOLI\n"
+#~ "ZÁRUKY; ani bez předpokládané záruky PRODEJNOSTI nebo VHODNOSTI PRO "
+#~ "NĚJAKÝ\n"
+#~ "KONKRÉTNÍ ÚČEL. Pro další podrobnosti si přečtěte GNU General Public\n"
+#~ "License.\n"
+#~ "\n"
+#~ "Kopii GNU General Public License jste měli dostat s tímto programem;\n"
+#~ "pokud se tak nestalo, napište Free Software Foundation, Inc., 59 Temple\n"
+#~ "Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+
+#, fuzzy
+#~ msgid ""
+#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
+#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
+#~ "l'\n"
+#~ "This is free software, and you are welcome to redistribute it\n"
+#~ "under certain conditions; type 'escputil -l' for details.\n"
+#~ msgstr ""
+#~ ", Copyright (C) 2000-2001 Robert Krawitz\n"
+#~ "Escputil je dodáván ABSOLUTNĚ BEZ ZÁRUKY; pro detaily napište 'escputil -"
+#~ "l'\n"
+#~ "Toto je svobodný software, a můžete jej dále šířit za určitých podmínek;\n"
+#~ "pro detaily napište 'escputil -l'.\n"
 
 #, fuzzy
 #~ msgid "90x90 DPI"
@@ -8028,10 +8106,6 @@ msgstr "Získání dalšího řádku selhalo na %.0f\n"
 #~ msgid "Photo Paper Pro"
 #~ msgstr "Profesionální fotopapír"
 
-#, fuzzy
-#~ msgid "Cassette"
-#~ msgstr "Matný papír"
-
 #~ msgid "Photo CcMmYK Color"
 #~ msgstr "Fotografické barvy CcMmYK"
 
@@ -8044,94 +8118,8 @@ msgstr "Získání dalšího řádku selhalo na %.0f\n"
 #~ msgid "CMY Color"
 #~ msgstr "Barvy CMY"
 
-#, fuzzy
-#~ msgid " Gamma"
-#~ msgstr "Gama:"
-
-#, fuzzy
-#~ msgid " Curve"
-#~ msgstr "Černá"
-
-#, fuzzy
-#~ msgid "1440 x 1440"
-#~ msgstr "1440 x 1440 DPI"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI High Quality"
-#~ msgstr "1200 DPI nejvyšší kvalita"
-
-#, fuzzy
-#~ msgid "1440 x 1440 DPI Highest Quality"
-#~ msgstr "1200 DPI nejvyšší kvalita"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI High Quality"
-#~ msgstr "1200 DPI nejvyšší kvalita"
-
-#, fuzzy
-#~ msgid "2880 x 1440 DPI Highest Quality"
-#~ msgstr "1200 DPI nejvyšší kvalita"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Copyright (C) 1997-2003 Michael Sweet, Robert Krawitz,\n"
-#~ "and the rest of the Gutenprint Development Team.\n"
-#~ "\n"
-#~ "Please visit our web site at http://gimp-print.sourceforge.net.\n"
-#~ "\n"
-#~ "This program is free software; you can redistribute it and/or modify\n"
-#~ "it under the terms of the GNU General Public License as published by\n"
-#~ "the Free Software Foundation; either version 2 of the License, or\n"
-#~ "(at your option) any later version.\n"
-#~ "\n"
-#~ "This program is distributed in the hope that it will be useful,\n"
-#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-#~ "GNU General Public License for more details.\n"
-#~ "\n"
-#~ "You should have received a copy of the GNU General Public License\n"
-#~ "along with this program; if not, write to the Free Software\n"
-#~ "Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  "
-#~ "USA\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Copyright (C) 1997-2001 Michael Sweet, Robert Krawitz\n"
-#~ "a zbytek vývojového týmu Gimp-Print.\n"
-#~ "\n"
-#~ "Navštivte prosím naši WWW stránku na http://gimp-print.sourceforge.net.\n"
-#~ "\n"
-#~ "Tento program je free software; můžete jej dále šířit a/nebo modifikovat\n"
-#~ "za podmínek GNU General Public License publikované Free Software\n"
-#~ "Foundation; a to buď verze 2 licence, nebo (podle vašeho uvážení)\n"
-#~ "libovolné pozdější verze.\n"
-#~ "\n"
-#~ "Tento program je rozšiřován v naději, že bude, užitečný, ale BEZ "
-#~ "JAKÉKOLI\n"
-#~ "ZÁRUKY; ani bez předpokládané záruky PRODEJNOSTI nebo VHODNOSTI PRO "
-#~ "NĚJAKÝ\n"
-#~ "KONKRÉTNÍ ÚČEL. Pro další podrobnosti si přečtěte GNU General Public\n"
-#~ "License.\n"
-#~ "\n"
-#~ "Kopii GNU General Public License jste měli dostat s tímto programem;\n"
-#~ "pokud se tak nestalo, napište Free Software Foundation, Inc., 59 Temple\n"
-#~ "Place - Suite 330, Boston, MA 02111-1307, USA.\n"
-
-#, fuzzy
-#~ msgid ""
-#~ ", Copyright (C) 2000-2006 Robert Krawitz\n"
-#~ "Escputil comes with ABSOLUTELY NO WARRANTY; for details type 'escputil -"
-#~ "l'\n"
-#~ "This is free software, and you are welcome to redistribute it\n"
-#~ "under certain conditions; type 'escputil -l' for details.\n"
-#~ msgstr ""
-#~ ", Copyright (C) 2000-2001 Robert Krawitz\n"
-#~ "Escputil je dodáván ABSOLUTNĚ BEZ ZÁRUKY; pro detaily napište 'escputil -"
-#~ "l'\n"
-#~ "Toto je svobodný software, a můžete jej dále šířit za určitých podmínek;\n"
-#~ "pro detaily napište 'escputil -l'.\n"
+#~ msgid "<Image>/File/Print..."
+#~ msgstr "<Image>/Soubor/Tisk..."
 
 #, fuzzy
 #~ msgid "Gutenprint"

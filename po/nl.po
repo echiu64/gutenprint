@@ -88,8 +88,8 @@ msgstr "Hoeveelheid:"
 #: src/main/print-escp2.c:472 src/main/print-escp2.c:480
 #: src/main/print-lexmark.c:325 src/main/print-lexmark.c:333
 #: src/main/print-lexmark.c:341 src/main/print-lexmark.c:349
-#: src/main/print-olympus.c:1626 src/main/print-olympus.c:1634
-#: src/main/print-olympus.c:1642 src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1624 src/main/print-olympus.c:1632
+#: src/main/print-olympus.c:1640 src/main/print-olympus.c:1648
 #: src/main/print-pcl.c:1261 src/main/print-pcl.c:1269
 #: src/main/print-pcl.c:1277 src/main/print-pcl.c:1285
 msgid "Output Level Adjustment"
@@ -150,8 +150,8 @@ msgid "Dither algorithm"
 msgstr "Ruis-algoritme"
 
 #: src/main/print-canon.c:196 src/main/print-escp2.c:179
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1561
-#: src/main/print-pcl.c:1196 src/main/print-ps.c:67
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:1559
+#: src/main/print-pcl.c:1196
 msgid "Page Size"
 msgstr "Paginagrootte"
 
@@ -165,76 +165,74 @@ msgstr "Paginagrootte"
 #: src/main/print-escp2.c:262 src/main/print-escp2.c:280
 #: src/main/print-lexmark.c:266 src/main/print-lexmark.c:272
 #: src/main/print-lexmark.c:278 src/main/print-lexmark.c:284
-#: src/main/print-olympus.c:1561 src/main/print-olympus.c:1567
-#: src/main/print-olympus.c:1573 src/main/print-olympus.c:1579
+#: src/main/print-olympus.c:1559 src/main/print-olympus.c:1565
+#: src/main/print-olympus.c:1571 src/main/print-olympus.c:1577
 #: src/main/print-pcl.c:1196 src/main/print-pcl.c:1202
 #: src/main/print-pcl.c:1208 src/main/print-pcl.c:1214
-#: src/main/print-pcl.c:1238 src/main/print-ps.c:67 src/main/print-ps.c:73
-#: src/main/print-ps.c:79 src/main/print-ps.c:85 src/main/print-ps.c:97
+#: src/main/print-pcl.c:1238 src/main/print-ps.c:68 src/main/print-ps.c:74
 msgid "Basic Printer Setup"
 msgstr "Printerinstellingen"
 
 #: src/main/print-canon.c:197 src/main/print-escp2.c:180
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1562
-#: src/main/print-pcl.c:1197 src/main/print-ps.c:68
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:1560
+#: src/main/print-pcl.c:1197
 msgid "Size of the paper being printed to"
 msgstr "Grootte van het papier waarop geprint wordt"
 
 #: src/main/print-canon.c:202 src/main/print-escp2.c:185
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1567
-#: src/main/print-pcl.c:1202 src/main/print-ps.c:73 src/cups/genppd.c:1405
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:1565
+#: src/main/print-pcl.c:1202 src/cups/genppd.c:1407
 msgid "Media Type"
 msgstr "Type medium"
 
 #: src/main/print-canon.c:203 src/main/print-escp2.c:186
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1568
-#: src/main/print-pcl.c:1203 src/main/print-ps.c:74
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:1566
+#: src/main/print-pcl.c:1203
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Type medium (blanco papier, fotopapier, etc.)"
 
 #: src/main/print-canon.c:208 src/main/print-escp2.c:191
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1573
-#: src/main/print-pcl.c:1208 src/main/print-ps.c:79 src/cups/genppd.c:1430
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:1571
+#: src/main/print-pcl.c:1208 src/cups/genppd.c:1435
 msgid "Media Source"
 msgstr "Bronmedium"
 
 #: src/main/print-canon.c:209 src/main/print-escp2.c:192
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1574
-#: src/main/print-pcl.c:1209 src/main/print-ps.c:80
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:1572
+#: src/main/print-pcl.c:1209
 msgid "Source (input slot) of the media"
 msgstr "Bronmedium (invoer poort)"
 
 #: src/main/print-canon.c:214 src/main/print-escp2.c:227
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1579
-#: src/main/print-pcl.c:1214 src/main/print-ps.c:85 src/cups/genppd.c:1499
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:1577
+#: src/main/print-pcl.c:1214 src/cups/genppd.c:1510
 msgid "Resolution"
 msgstr "Resolutie"
 
 #: src/main/print-canon.c:215 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:1580 src/main/print-pcl.c:1215
-#: src/main/print-ps.c:86
+#: src/main/print-olympus.c:1578 src/main/print-pcl.c:1215
 msgid "Resolution and quality of the print"
 msgstr "Resolutie en kwaliteit van de afdruk"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:238
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1585
-#: src/main/print-pcl.c:1220 src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:1583
+#: src/main/print-pcl.c:1220 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Type inkt"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:215
 #: src/main/print-escp2.c:221 src/main/print-escp2.c:238
 #: src/main/print-escp2.c:274 src/main/print-lexmark.c:290
-#: src/main/print-olympus.c:1585 src/main/print-olympus.c:1591
-#: src/main/print-olympus.c:1597 src/main/print-pcl.c:1220
-#: src/main/print-ps.c:91 src/main/print-raw.c:80
+#: src/main/print-olympus.c:1583 src/main/print-olympus.c:1589
+#: src/main/print-olympus.c:1595 src/main/print-pcl.c:1220
+#: src/main/print-raw.c:80
 msgid "Advanced Printer Setup"
 msgstr "Geavanceerde instelling van de printer"
 
 #: src/main/print-canon.c:221 src/main/print-escp2.c:239
 #: src/main/print-escp2.c:251 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:1586 src/main/print-pcl.c:1221
-#: src/main/print-ps.c:92 src/main/print-raw.c:81
+#: src/main/print-olympus.c:1584 src/main/print-pcl.c:1221
+#: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "Type inkt van de printer"
 
@@ -256,8 +254,8 @@ msgid "Advanced Printer Functionality"
 msgstr "Geavanceerde functionaliteit van de printer"
 
 #: src/main/print-canon.c:232 src/main/print-escp2.c:334
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1603
-#: src/main/print-pcl.c:1232 src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:1601
+#: src/main/print-pcl.c:1232 src/main/print-raw.c:86
 msgid "Printing Mode"
 msgstr "Wijze van printen"
 
@@ -265,14 +263,14 @@ msgstr "Wijze van printen"
 #: src/main/print-color.c:192 src/main/print-color.c:200
 #: src/main/print-color.c:208 src/main/print-escp2.c:334
 #: src/main/print-escp2.c:340 src/main/print-lexmark.c:302
-#: src/main/print-olympus.c:1603 src/main/print-pcl.c:1232
-#: src/main/print-ps.c:103 src/main/print-raw.c:86
+#: src/main/print-olympus.c:1601 src/main/print-pcl.c:1232
+#: src/main/print-raw.c:86
 msgid "Core Parameter"
 msgstr "Hoofdparameters"
 
 #: src/main/print-canon.c:233 src/main/print-escp2.c:335
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1604
-#: src/main/print-pcl.c:1233 src/main/print-ps.c:104 src/main/print-raw.c:87
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:1602
+#: src/main/print-pcl.c:1233 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr "Manier van printen"
 
@@ -368,15 +366,15 @@ msgid "Short Edge (Flip)"
 msgstr "Korte zijde (omslaan)"
 
 #: src/main/print-canon.c:613 src/main/print-escp2.c:1980
-#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1858
-#: src/main/print-pcl.c:1776 src/main/print-ps.c:170 src/main/print-raw.c:135
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
+#: src/main/print-lexmark.c:1279 src/main/print-olympus.c:1856
+#: src/main/print-pcl.c:1776 src/main/print-raw.c:135
+#: src/gutenprintui2/panel.c:288
 msgid "Color"
 msgstr "Kleur"
 
 #: src/main/print-canon.c:615 src/main/print-escp2.c:1982
 #: src/main/print-lexmark.c:1281 src/main/print-pcl.c:1778
-#: src/main/print-ps.c:172 src/main/print-raw.c:137
+#: src/main/print-raw.c:137
 msgid "Black and White"
 msgstr "Zwart en wit"
 
@@ -414,7 +412,7 @@ msgstr "Voorbehandeld met ruis-algoritme"
 
 #: src/main/print-color.c:121 src/main/escp2-channels.c:820
 #: src/main/escp2-channels.c:833 src/main/escp2-channels.c:847
-#: src/gutenprintui/panel.c:289 src/gutenprintui2/panel.c:289
+#: src/gutenprintui2/panel.c:289
 msgid "Grayscale"
 msgstr "Grijsschaal"
 
@@ -560,9 +558,8 @@ msgstr "Gamma-waarde verondersteld door de applicatie"
 #: src/main/escp2-channels.c:2753 src/main/escp2-channels.c:2766
 #: src/main/escp2-channels.c:2779 src/main/escp2-channels.c:2793
 #: src/main/escp2-channels.c:2807 src/main/escp2-channels.c:2822
-#: src/gutenprintui/panel.c:2140 src/gutenprintui2/panel.c:2141
-#: src/escputil/escputil.c:984 src/escputil/escputil.c:1003
-#: src/escputil/escputil.c:1207
+#: src/gutenprintui2/panel.c:2141 src/escputil/escputil.c:984
+#: src/escputil/escputil.c:1003 src/escputil/escputil.c:1207
 msgid "Cyan"
 msgstr "Cyaan"
 
@@ -576,9 +573,8 @@ msgstr "Pas de hoeveelheid cyaan aan"
 #: src/main/escp2-channels.c:2754 src/main/escp2-channels.c:2767
 #: src/main/escp2-channels.c:2780 src/main/escp2-channels.c:2792
 #: src/main/escp2-channels.c:2806 src/main/escp2-channels.c:2823
-#: src/gutenprintui/panel.c:2147 src/gutenprintui2/panel.c:2148
-#: src/escputil/escputil.c:985 src/escputil/escputil.c:1004
-#: src/escputil/escputil.c:1208
+#: src/gutenprintui2/panel.c:2148 src/escputil/escputil.c:985
+#: src/escputil/escputil.c:1004 src/escputil/escputil.c:1208
 msgid "Magenta"
 msgstr "Magenta"
 
@@ -592,9 +588,8 @@ msgstr "Pas de hoeveelheid magenta aan"
 #: src/main/escp2-channels.c:2755 src/main/escp2-channels.c:2768
 #: src/main/escp2-channels.c:2781 src/main/escp2-channels.c:2791
 #: src/main/escp2-channels.c:2805 src/main/escp2-channels.c:2824
-#: src/gutenprintui/panel.c:2154 src/gutenprintui2/panel.c:2155
-#: src/escputil/escputil.c:986 src/escputil/escputil.c:1005
-#: src/escputil/escputil.c:1209
+#: src/gutenprintui2/panel.c:2155 src/escputil/escputil.c:986
+#: src/escputil/escputil.c:1005 src/escputil/escputil.c:1209
 msgid "Yellow"
 msgstr "Geel"
 
@@ -603,9 +598,8 @@ msgid "Adjust the yellow gamma"
 msgstr "Pas de hoeveelheid geel aan"
 
 #: src/main/print-color.c:290 src/main/escp2-channels.c:2796
-#: src/main/escp2-channels.c:2809 src/gutenprintui/panel.c:2168
-#: src/gutenprintui2/panel.c:2169 src/escputil/escputil.c:993
-#: src/escputil/escputil.c:1011
+#: src/main/escp2-channels.c:2809 src/gutenprintui2/panel.c:2169
+#: src/escputil/escputil.c:993 src/escputil/escputil.c:1011
 msgid "Red"
 msgstr "Rood"
 
@@ -613,8 +607,7 @@ msgstr "Rood"
 msgid "Adjust the red gamma"
 msgstr "Pas de hoeveelheid rood aan"
 
-#: src/main/print-color.c:298 src/gutenprintui/panel.c:2175
-#: src/gutenprintui2/panel.c:2176
+#: src/main/print-color.c:298 src/gutenprintui2/panel.c:2176
 msgid "Green"
 msgstr "Groen"
 
@@ -623,9 +616,8 @@ msgid "Adjust the green gamma"
 msgstr "Pas de hoeveelheid groen aan"
 
 #: src/main/print-color.c:306 src/main/escp2-channels.c:2797
-#: src/main/escp2-channels.c:2810 src/gutenprintui/panel.c:2182
-#: src/gutenprintui2/panel.c:2183 src/escputil/escputil.c:994
-#: src/escputil/escputil.c:1012
+#: src/main/escp2-channels.c:2810 src/gutenprintui2/panel.c:2183
+#: src/escputil/escputil.c:994 src/escputil/escputil.c:1012
 msgid "Blue"
 msgstr "Blauw"
 
@@ -639,9 +631,9 @@ msgstr "Pas de hoeveelheid blauw aan"
 #: src/main/escp2-channels.c:2740 src/main/escp2-channels.c:2752
 #: src/main/escp2-channels.c:2765 src/main/escp2-channels.c:2778
 #: src/main/escp2-channels.c:2784 src/main/escp2-channels.c:2808
-#: src/main/escp2-channels.c:2821 src/gutenprintui/panel.c:2161
-#: src/gutenprintui2/panel.c:2162 src/escputil/escputil.c:981
-#: src/escputil/escputil.c:1002 src/escputil/escputil.c:1206
+#: src/main/escp2-channels.c:2821 src/gutenprintui2/panel.c:2162
+#: src/escputil/escputil.c:981 src/escputil/escputil.c:1002
+#: src/escputil/escputil.c:1206
 msgid "Black"
 msgstr "Zwart"
 
@@ -649,7 +641,7 @@ msgstr "Zwart"
 msgid "Adjust the black gamma"
 msgstr "Pas de hoeveelheid zwart aan"
 
-#: src/main/print-color.c:322 src/main/print-olympus.c:1626
+#: src/main/print-color.c:322 src/main/print-olympus.c:1624
 msgid "Cyan Balance"
 msgstr "Cyaanwaarde"
 
@@ -662,7 +654,7 @@ msgstr "Grijswaarde"
 msgid "Adjust the cyan gray balance"
 msgstr "Pas de cyaan-grijs balans aan"
 
-#: src/main/print-color.c:330 src/main/print-olympus.c:1634
+#: src/main/print-color.c:330 src/main/print-olympus.c:1632
 msgid "Magenta Balance"
 msgstr "Magentawaarde"
 
@@ -670,7 +662,7 @@ msgstr "Magentawaarde"
 msgid "Adjust the magenta gray balance"
 msgstr "Pas de hoeveelheid magenta-grijs aan"
 
-#: src/main/print-color.c:338 src/main/print-olympus.c:1642
+#: src/main/print-color.c:338 src/main/print-olympus.c:1640
 msgid "Yellow Balance"
 msgstr "Geelwaarde"
 
@@ -1022,11 +1014,11 @@ msgstr ""
 "Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter "
 "langzamer)"
 
-#: src/main/print-escp2.c:262 src/main/print-olympus.c:1597
+#: src/main/print-escp2.c:262 src/main/print-olympus.c:1595
 msgid "Borderless"
 msgstr "Zonder randen"
 
-#: src/main/print-escp2.c:263 src/main/print-olympus.c:1598
+#: src/main/print-escp2.c:263 src/main/print-olympus.c:1596
 msgid "Print without borders"
 msgstr "Afdrukken zonder randen"
 
@@ -1215,11 +1207,11 @@ msgstr "Handmatige controle"
 #: src/main/escp2-papers.c:1716 src/main/escp2-papers.c:1809
 #: src/main/escp2-resolutions.c:598 src/main/escp2-resolutions.c:613
 #: src/main/escp2-resolutions.c:626 src/main/generic-options.c:36
-#: src/gutenprintui/panel.c:2601 src/gutenprintui2/panel.c:2627
+#: src/gutenprintui2/panel.c:2627
 msgid "Standard"
 msgstr "Standaard"
 
-#: src/main/print-escp2.c:1811 src/cups/genppd.c:1532
+#: src/main/print-escp2.c:1811 src/cups/genppd.c:1546
 msgid "Automatic"
 msgstr "Automatisch"
 
@@ -1256,7 +1248,7 @@ msgstr "Vermijden van naaste buur"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "Deze printer ondersteunt geen 'raw' printuitvoer op de diepte %d\n"
 
-#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2310
+#: src/main/print-escp2.c:3329 src/main/print-olympus.c:2308
 #: src/main/print-raw.c:217
 msgid "Print options not verified; cannot print.\n"
 msgstr "Print opties niet geverifiëerd; kan niet printen.\n"
@@ -1445,50 +1437,50 @@ msgstr "Handmatig met pauze"
 msgid "Manual without Pause"
 msgstr "Handmatig zonder pauze"
 
-#: src/main/print-olympus.c:276
+#: src/main/print-olympus.c:274
 msgid "Coated"
 msgstr "Gecoat"
 
-#: src/main/print-olympus.c:277 src/cups/genppd.c:1686 src/cups/genppd.c:1709
-#: src/cups/genppd.c:1776
+#: src/main/print-olympus.c:275 src/cups/genppd.c:1706 src/cups/genppd.c:1732
+#: src/cups/genppd.c:1813
 msgid "None"
 msgstr "Geen"
 
-#: src/main/print-olympus.c:922 src/main/print-olympus.c:980
-#: src/main/print-olympus.c:1080
+#: src/main/print-olympus.c:920 src/main/print-olympus.c:978
+#: src/main/print-olympus.c:1078
 msgid "Glossy"
 msgstr "Glanzend"
 
-#: src/main/print-olympus.c:923 src/main/print-olympus.c:981
-#: src/main/print-olympus.c:1081
+#: src/main/print-olympus.c:921 src/main/print-olympus.c:979
+#: src/main/print-olympus.c:1079
 msgid "Texture"
 msgstr "Oppervlaktestructuur"
 
-#: src/main/print-olympus.c:982 src/main/print-olympus.c:1082
+#: src/main/print-olympus.c:980 src/main/print-olympus.c:1080
 msgid "Matte"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1591 src/main/print-olympus.c:1592
+#: src/main/print-olympus.c:1589 src/main/print-olympus.c:1590
 msgid "Laminate Pattern"
 msgstr "Laagjespatroon"
 
-#: src/main/print-olympus.c:1627
+#: src/main/print-olympus.c:1625
 msgid "Adjust the cyan balance"
 msgstr "Pas de cyaanbalans aan"
 
-#: src/main/print-olympus.c:1635
+#: src/main/print-olympus.c:1633
 msgid "Adjust the magenta balance"
 msgstr "Pas de magentabalans aan"
 
-#: src/main/print-olympus.c:1643
+#: src/main/print-olympus.c:1641
 msgid "Adjust the yellow balance"
 msgstr "Pas de geelbalans aan"
 
-#: src/main/print-olympus.c:1650
+#: src/main/print-olympus.c:1648
 msgid "Black Balance"
 msgstr "Zwartbalans"
 
-#: src/main/print-olympus.c:1651
+#: src/main/print-olympus.c:1649
 msgid "Adjust the black balance"
 msgstr "Pas de zwartbalans aan"
 
@@ -1596,14 +1588,22 @@ msgstr "Kleur + Zwarte patronen"
 msgid "Color + Photo Cartridges"
 msgstr "Kleur + Foto patronen"
 
-#: src/main/print-ps.c:97
+#: src/main/print-ps.c:68
 msgid "PPDFile"
 msgstr "PPD-bestand"
 
-#: src/main/print-ps.c:98 src/gutenprintui/panel.c:1767
-#: src/gutenprintui2/panel.c:1767
+#: src/main/print-ps.c:69 src/gutenprintui2/panel.c:1767
 msgid "PPD File"
 msgstr "PPD-bestand"
+
+#: src/main/print-ps.c:74
+#, fuzzy
+msgid "Model Name"
+msgstr "Kanaalnamen"
+
+#: src/main/print-ps.c:75
+msgid "PPD File Model Name"
+msgstr ""
 
 #: src/main/print-raw.c:223
 msgid "Image dimensions must match paper dimensions"
@@ -5830,593 +5830,6 @@ msgstr "RAW DATA 16 bit"
 msgid "RAW DATA 8 bit"
 msgstr "RAW DATA 8 bit"
 
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Inch"
-msgstr "Inch"
-
-#: src/gutenprintui/panel.c:273 src/gutenprintui2/panel.c:273
-msgid "Set the base unit of measurement to inches"
-msgstr "Stel de basis-meeteenheid in op inches"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "cm"
-msgstr "cm"
-
-#: src/gutenprintui/panel.c:275 src/gutenprintui2/panel.c:275
-msgid "Set the base unit of measurement to centimetres"
-msgstr "Stel de basis-meeteenheid in op centimeter"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-msgid "Points"
-msgstr "Punten"
-
-#: src/gutenprintui/panel.c:277 src/gutenprintui2/panel.c:277
-msgid "Set the base unit of measurement to points (1/72\")"
-msgstr "Stel de basis-meeteenheid in op punten (1/72\")"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "mm"
-msgstr "mm"
-
-#: src/gutenprintui/panel.c:279 src/gutenprintui2/panel.c:279
-msgid "Set the base unit of measurement to millimetres"
-msgstr "Stel de basis-meeteenheid in op millimeter"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Pica"
-msgstr "Pica"
-
-#: src/gutenprintui/panel.c:281 src/gutenprintui2/panel.c:281
-msgid "Set the base unit of measurement to picas (1/12\")"
-msgstr "Stel de basis-meeteenheid in op pica (1/12\")"
-
-#: src/gutenprintui/panel.c:288 src/gutenprintui2/panel.c:288
-msgid "Color output"
-msgstr "Kleuruitvoer"
-
-#: src/gutenprintui/panel.c:290 src/gutenprintui2/panel.c:290
-msgid "Print in shades of gray using black ink"
-msgstr "Print in grijstinten met zwarte inkt"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Standard Command"
-msgstr "Standaard commando"
-
-#: src/gutenprintui/panel.c:302 src/gutenprintui2/panel.c:302
-msgid "Use standard print command"
-msgstr "Gebruik het standaard printcommando"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Custom Command"
-msgstr "Fabrikaat specifiek commando"
-
-#: src/gutenprintui/panel.c:303 src/gutenprintui2/panel.c:303
-msgid "Use custom print command"
-msgstr "Gebruik het fabrikaat specifieke commando"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui/plist.c:682
-#: src/gutenprintui/plist.c:765 src/gutenprintui2/panel.c:304
-#: src/gutenprintui2/plist.c:678 src/gutenprintui2/plist.c:761
-msgid "File"
-msgstr "Bestand"
-
-#: src/gutenprintui/panel.c:304 src/gutenprintui2/panel.c:304
-msgid "Print to a file"
-msgstr "Afdrukken naar een bestand"
-
-#: src/gutenprintui/panel.c:520 src/gutenprintui2/panel.c:520
-msgid "Edit Curve..."
-msgstr "Kromme aanpassen..."
-
-#: src/gutenprintui/panel.c:531 src/gutenprintui2/panel.c:531
-msgid "Set Default"
-msgstr "Stel standaard in"
-
-#: src/gutenprintui/panel.c:533 src/gutenprintui2/panel.c:533
-msgid "Restore Previous"
-msgstr "Herstel het vorige"
-
-#: src/gutenprintui/panel.c:535 src/gutenprintui/panel.c:1531
-#: src/gutenprintui/panel.c:1786 src/gutenprintui/panel.c:1818
-#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
-#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
-msgid "OK"
-msgstr "OK"
-
-#: src/gutenprintui/panel.c:537 src/gutenprintui/panel.c:1196
-#: src/gutenprintui/panel.c:1533 src/gutenprintui/panel.c:1788
-#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
-#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: src/gutenprintui/panel.c:1179 src/gutenprintui2/panel.c:1180
-#, c-format
-msgid "%s -- Print v%s"
-msgstr "%s -- Print v%s"
-
-#: src/gutenprintui/panel.c:1188 src/gutenprintui2/panel.c:1189
-msgid "About"
-msgstr "Info"
-
-#: src/gutenprintui/panel.c:1190 src/gutenprintui2/panel.c:1191
-msgid ""
-"Print and\n"
-"Save Settings"
-msgstr ""
-"Afdrukken en\n"
-"instellingen opslaan"
-
-#: src/gutenprintui/panel.c:1192 src/gutenprintui2/panel.c:1193
-msgid ""
-"Save\n"
-"Settings"
-msgstr ""
-"Instellingen\n"
-"opslaan"
-
-#: src/gutenprintui/panel.c:1194 src/gutenprintui2/panel.c:1195
-msgid "Print"
-msgstr "Afdrukken"
-
-#: src/gutenprintui/panel.c:1246 src/gutenprintui2/panel.c:1247
-msgid "Preview"
-msgstr "Voorbeeld"
-
-#: src/gutenprintui/panel.c:1271 src/gutenprintui2/panel.c:1272
-msgid ""
-"Position the image on the page.\n"
-"Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
-msgstr ""
-"Plaats de afbeelding op de pagina.\n"
-"Klik en sleep met de eerste knop om de afbeelding te plaatsen.\n"
-"Klik en sleep met de tweede knop om de afbeelding met een fijnere "
-"nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt "
-"(1/72\")\n"
-"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van "
-"zijn grootte te verplaatsen.\n"
-"Bij het ingedrukt houden van de shift-toets tijdens klikken en slepen "
-"beperkt de beweging tot horizontaal of vertikaal.\n"
-"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug "
-"naar zijn oorspronkelijke plaats."
-
-#: src/gutenprintui/panel.c:1318 src/gutenprintui2/panel.c:1319
-msgid "Paper Size"
-msgstr "Papierafmetingen"
-
-#: src/gutenprintui/panel.c:1341 src/gutenprintui2/panel.c:1342
-msgid "Show All Paper Sizes"
-msgstr "Toon alle papierafmetingen"
-
-#: src/gutenprintui/panel.c:1357 src/gutenprintui2/panel.c:1358
-msgid "Dimensions:"
-msgstr "Afmetingen"
-
-#: src/gutenprintui/panel.c:1362 src/gutenprintui/panel.c:2051
-#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
-msgid "Width:"
-msgstr "Breedte: "
-
-#: src/gutenprintui/panel.c:1363 src/gutenprintui2/panel.c:1364
-msgid "Width of the paper that you wish to print to"
-msgstr "Breedte van het papier waarop je wenst te printen"
-
-#: src/gutenprintui/panel.c:1367 src/gutenprintui/panel.c:2053
-#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
-msgid "Height:"
-msgstr "Hoogte: "
-
-#: src/gutenprintui/panel.c:1368 src/gutenprintui2/panel.c:1369
-msgid "Height of the paper that you wish to print to"
-msgstr "Hoogte van het papier waarop je wenst te printen"
-
-#: src/gutenprintui/panel.c:1373 src/gutenprintui2/panel.c:1374
-msgid "Automatic Paper Size"
-msgstr "Automatische papierafmetingen"
-
-#: src/gutenprintui/panel.c:1390 src/gutenprintui2/panel.c:1391
-msgid "Number of Copies"
-msgstr "Aantal kopieën"
-
-#: src/gutenprintui/panel.c:1402 src/gutenprintui2/panel.c:1403
-msgid "Select the number of copies to print; a value between 1 and 100"
-msgstr "Kies het aantal af te drukken kopieën; een waarde tussen 1 en 100"
-
-#: src/gutenprintui/panel.c:1434 src/gutenprintui2/panel.c:1435
-msgid "Image Position"
-msgstr "Positie van afbeelding"
-
-#: src/gutenprintui/panel.c:1451 src/gutenprintui2/panel.c:1452
-msgid "Auto"
-msgstr "Automatisch"
-
-#: src/gutenprintui/panel.c:1453 src/gutenprintui2/panel.c:1454
-msgid "Portrait"
-msgstr "Portret"
-
-#: src/gutenprintui/panel.c:1455 src/gutenprintui2/panel.c:1456
-msgid "Landscape"
-msgstr "Landschap"
-
-#: src/gutenprintui/panel.c:1457 src/gutenprintui2/panel.c:1458
-msgid "Upside down"
-msgstr "Ondersteboven"
-
-#: src/gutenprintui/panel.c:1459 src/gutenprintui2/panel.c:1460
-msgid "Seascape"
-msgstr "Seascape"
-
-#: src/gutenprintui/panel.c:1463 src/gutenprintui2/panel.c:1464
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Kies de orientatie: portret, landschap, ondersteboven of seascape "
-"(ondersteboven landschap)"
-
-#: src/gutenprintui/panel.c:1465 src/gutenprintui2/panel.c:1466
-msgid "Orientation:"
-msgstr "Oriëntatie:"
-
-#: src/gutenprintui/panel.c:1476 src/gutenprintui2/panel.c:1477
-msgid "Left:"
-msgstr "Links:"
-
-#: src/gutenprintui/panel.c:1477 src/gutenprintui2/panel.c:1478
-msgid "Distance from the left of the paper to the image"
-msgstr "Afstand vanaf de linkerkant van het papier tot de afdruk"
-
-#: src/gutenprintui/panel.c:1480 src/gutenprintui/panel.c:1484
-#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
-msgid "Right:"
-msgstr "Rechts:"
-
-#: src/gutenprintui/panel.c:1481 src/gutenprintui2/panel.c:1482
-msgid "Distance from the left of the paper to the right of the image"
-msgstr ""
-"Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
-
-#: src/gutenprintui/panel.c:1485 src/gutenprintui2/panel.c:1486
-msgid "Distance from the right of the paper to the image"
-msgstr "Afstand vanaf de rechterkant van het papier tot de afdruk"
-
-#: src/gutenprintui/panel.c:1487 src/gutenprintui2/panel.c:1488
-msgid "Top:"
-msgstr "Boven:"
-
-#: src/gutenprintui/panel.c:1488 src/gutenprintui2/panel.c:1489
-msgid "Distance from the top of the paper to the image"
-msgstr "Afstand vanaf de bovenkant van het papier tot de afdruk"
-
-#: src/gutenprintui/panel.c:1491 src/gutenprintui/panel.c:1495
-#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
-msgid "Bottom:"
-msgstr "Onder:"
-
-#: src/gutenprintui/panel.c:1492 src/gutenprintui2/panel.c:1493
-msgid "Distance from the top of the paper to bottom of the image"
-msgstr ""
-"Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
-
-#: src/gutenprintui/panel.c:1496 src/gutenprintui2/panel.c:1497
-msgid "Distance from the bottom of the paper to the image"
-msgstr "Afstand vanaf de onderkant van het papier tot de afdruk"
-
-#: src/gutenprintui/panel.c:1506 src/gutenprintui2/panel.c:1507
-msgid "Center:"
-msgstr "Midden X:"
-
-#: src/gutenprintui/panel.c:1509 src/gutenprintui2/panel.c:1510
-msgid "Horizontal"
-msgstr "Horzontaal"
-
-#: src/gutenprintui/panel.c:1510 src/gutenprintui2/panel.c:1511
-msgid "Center the image horizontally on the paper"
-msgstr "Centreer het plaatje horizontaal op het papier"
-
-#: src/gutenprintui/panel.c:1512 src/gutenprintui2/panel.c:1513
-msgid "Both"
-msgstr "Beide"
-
-#: src/gutenprintui/panel.c:1513 src/gutenprintui2/panel.c:1514
-msgid "Center the image on the paper"
-msgstr "Centreer het plaatje op het papier"
-
-#: src/gutenprintui/panel.c:1515 src/gutenprintui2/panel.c:1516
-msgid "Vertical"
-msgstr "Verticaal"
-
-#: src/gutenprintui/panel.c:1516 src/gutenprintui2/panel.c:1517
-msgid "Center the image vertically on the paper"
-msgstr "Centreer het plaatje verticaal op het papier"
-
-#: src/gutenprintui/panel.c:1529 src/gutenprintui2/panel.c:1530
-msgid "Setup Printer"
-msgstr "Stel Printer in"
-
-#: src/gutenprintui/panel.c:1554 src/gutenprintui2/panel.c:1554
-msgid "Printer Make:"
-msgstr "Printermerk:"
-
-#: src/gutenprintui/panel.c:1565 src/gutenprintui2/panel.c:1565
-msgid "Select the make of your printer"
-msgstr "Selecteer het merk van uw printer"
-
-#: src/gutenprintui/panel.c:1583 src/gutenprintui/panel.c:1671
-#: src/gutenprintui/panel.c:1889 src/gutenprintui2/panel.c:1583
-#: src/gutenprintui2/panel.c:1671 src/gutenprintui2/panel.c:1889
-msgid "Printer Model:"
-msgstr "Printer model:"
-
-#: src/gutenprintui/panel.c:1594 src/gutenprintui2/panel.c:1594
-msgid "Select your printer model"
-msgstr "Selecteer jouw printer model"
-
-#: src/gutenprintui/panel.c:1642 src/gutenprintui2/panel.c:1642
-msgid "PPD File:"
-msgstr "PPD Bestand:"
-
-#: src/gutenprintui/panel.c:1658 src/gutenprintui2/panel.c:1658
-msgid "Enter the correct PPD filename for your printer"
-msgstr "Geef de juiste PPD bestandsnaam voor jouw printer"
-
-#: src/gutenprintui/panel.c:1660 src/gutenprintui/panel.c:1740
-#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
-msgid "Browse"
-msgstr "Bladeren"
-
-#: src/gutenprintui/panel.c:1667 src/gutenprintui2/panel.c:1667
-msgid "Choose the correct PPD filename for your printer"
-msgstr "Kies de juiste PPD bestandsnaam voor jouw printer"
-
-#: src/gutenprintui/panel.c:1709 src/gutenprintui2/panel.c:1709
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) "
-"die u wilt uitprinten"
-
-#: src/gutenprintui/panel.c:1711 src/gutenprintui2/panel.c:1711
-msgid "Printer Queue:"
-msgstr "Printerrij:"
-
-#: src/gutenprintui/panel.c:1727 src/gutenprintui2/panel.c:1727
-msgid "Enter the correct command to print to your printer. "
-msgstr "Geef het juiste commando om naar uw printer te printen. "
-
-#: src/gutenprintui/panel.c:1738 src/gutenprintui2/panel.c:1738
-msgid "Enter the file to print to. "
-msgstr "Voer de bestandsnaam in waarnaar geprint moet worden. "
-
-#: src/gutenprintui/panel.c:1746 src/gutenprintui2/panel.c:1746
-msgid "File to print to"
-msgstr "Bestand waar print naar toe moet"
-
-#: src/gutenprintui/panel.c:1754 src/gutenprintui2/panel.c:1754
-msgid "Print To File"
-msgstr "Afdrukken naar bestand"
-
-#: src/gutenprintui/panel.c:1784 src/gutenprintui2/panel.c:1784
-msgid "Define New Printer"
-msgstr "Stel nieuwe printer in"
-
-#: src/gutenprintui/panel.c:1802 src/gutenprintui/panel.c:1886
-#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
-msgid "Printer Name:"
-msgstr "Printernaam:"
-
-#: src/gutenprintui/panel.c:1806 src/gutenprintui2/panel.c:1806
-msgid "Enter the name you wish to give this logical printer"
-msgstr "Voer de naam in van de logische printer"
-
-#: src/gutenprintui/panel.c:1816 src/gutenprintui2/panel.c:1816
-msgid "About Gutenprint "
-msgstr "Info over Gutenprint "
-
-#: src/gutenprintui/panel.c:1823 src/gutenprintui2/panel.c:1823
-msgid "Gutenprint Version "
-msgstr "Gutenprint versie"
-
-#: src/gutenprintui/panel.c:1871 src/gutenprintui2/panel.c:1871
-msgid "Printer Settings"
-msgstr "Printerinstellingen"
-
-#: src/gutenprintui/panel.c:1884 src/gutenprintui2/panel.c:1884
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Selecteer de naam van de printer (Niet het type, of model, of printer) "
-"waarna je wenst te printen"
-
-#: src/gutenprintui/panel.c:1901 src/gutenprintui2/panel.c:1901
-msgid "Setup Printer..."
-msgstr "Instellen Printer..."
-
-#: src/gutenprintui/panel.c:1903 src/gutenprintui2/panel.c:1903
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar "
-"deze printer af te drukken."
-
-#: src/gutenprintui/panel.c:1916 src/gutenprintui2/panel.c:1916
-msgid "New Printer..."
-msgstr "Nieuwe Printer..."
-
-#: src/gutenprintui/panel.c:1917 src/gutenprintui2/panel.c:1917
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definieer een logische printer. Deze kan gebruikt worden om een verzameling "
-"van instellingen die u bewaren wilt voor toekomstig gebruik."
-
-#: src/gutenprintui/panel.c:1960 src/gutenprintui2/panel.c:1960
-msgid "Image Size"
-msgstr "Afbeeldingsgrootte"
-
-#: src/gutenprintui/panel.c:1985 src/gutenprintui2/panel.c:1985
-msgid "Scaling:"
-msgstr "Schaal:"
-
-#: src/gutenprintui/panel.c:1989 src/gutenprintui2/panel.c:1989
-msgid "Set the scale (size) of the image"
-msgstr "Stel de schaal (afmeting) in van het plaatje"
-
-#: src/gutenprintui/panel.c:2011 src/gutenprintui2/panel.c:2011
-msgid "Scale by:"
-msgstr "Schalen met:"
-
-#: src/gutenprintui/panel.c:2016 src/gutenprintui2/panel.c:2016
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Moet schaling gemeten worden in het percentage van de beschikbare "
-"paginagrootte of het aantal punten per inch"
-
-#: src/gutenprintui/panel.c:2019 src/gutenprintui2/panel.c:2019
-msgid "Percent"
-msgstr "Procent"
-
-#: src/gutenprintui/panel.c:2024 src/gutenprintui2/panel.c:2024
-msgid "Scale the print to the size of the page"
-msgstr "Schaal de afdruk tot de afmeting van de pagina"
-
-#: src/gutenprintui/panel.c:2028 src/gutenprintui2/panel.c:2028
-msgid "PPI"
-msgstr "PPI"
-
-#: src/gutenprintui/panel.c:2033 src/gutenprintui2/panel.c:2033
-msgid "Scale the print to the number of dots per inch"
-msgstr "Schaal de afdruk tot het aantal punten per inch"
-
-#: src/gutenprintui/panel.c:2051 src/gutenprintui2/panel.c:2051
-msgid "Set the width of the print"
-msgstr "Geef de breedte van de afdruk"
-
-#: src/gutenprintui/panel.c:2053 src/gutenprintui2/panel.c:2053
-msgid "Set the height of the print"
-msgstr "Geef de hoogte van de afdruk"
-
-#: src/gutenprintui/panel.c:2059 src/gutenprintui2/panel.c:2059
-msgid ""
-"Use Original\n"
-"Image Size"
-msgstr ""
-"Gebruik de originele\n"
-"grootte van de afbeelding"
-
-#: src/gutenprintui/panel.c:2065 src/gutenprintui2/panel.c:2065
-msgid "Set the print size to the size of the image"
-msgstr "Stel de afdrukgrootte gelijk aan de grootte van de afbeelding"
-
-#: src/gutenprintui/panel.c:2088 src/gutenprintui2/panel.c:2089
-msgid "Print Color Adjust"
-msgstr "Aanpassing van afdrukkleur"
-
-#: src/gutenprintui/panel.c:2091 src/gutenprintui2/panel.c:2092
-msgid "Set Defaults"
-msgstr "Stel standaardwaarden in"
-
-#: src/gutenprintui/panel.c:2093 src/gutenprintui2/panel.c:2094
-msgid "Close"
-msgstr "Sluiten"
-
-#: src/gutenprintui/panel.c:2122 src/gutenprintui2/panel.c:2123
-msgid "Image preview"
-msgstr "Afdruk voorvertoning"
-
-#: src/gutenprintui/panel.c:2136 src/gutenprintui2/panel.c:2137
-msgid "View Output Channels:"
-msgstr "Toon uitvoerkanalen:"
-
-#: src/gutenprintui/panel.c:2222 src/gutenprintui2/panel.c:2228
-msgid "Output"
-msgstr "Uitvoer"
-
-#: src/gutenprintui/panel.c:2250 src/gutenprintui2/panel.c:2256
-msgid "Output Type:"
-msgstr "Type uitvoer:"
-
-#: src/gutenprintui/panel.c:2254 src/gutenprintui2/panel.c:2260
-msgid "Select the desired output type"
-msgstr "Kies het gewenste type uitvoer"
-
-#: src/gutenprintui/panel.c:2275 src/gutenprintui2/panel.c:2281
-msgid "Adjust Output..."
-msgstr "Past uitvoer aan..."
-
-#: src/gutenprintui/panel.c:2284 src/gutenprintui2/panel.c:2290
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
-
-#: src/gutenprintui/panel.c:2302 src/gutenprintui2/panel.c:2309
-msgid "Size Units:"
-msgstr "Afmeting eenheden:"
-
-#: src/gutenprintui/panel.c:2305 src/gutenprintui2/panel.c:2312
-msgid " "
-msgstr " "
-
-#: src/gutenprintui/panel.c:2329 src/gutenprintui2/panel.c:2336
-msgid "Units:"
-msgstr "Eenheden:"
-
-#: src/gutenprintui/panel.c:2334 src/gutenprintui2/panel.c:2341
-msgid "Select the base unit of measurement for printing"
-msgstr "Kies de basiseenheid van afmeting voor het afdrukken"
-
-#: src/gutenprintui/plist.c:90 src/gutenprintui/plist.c:99
-#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
-msgid "System V lp"
-msgstr "System V lp"
-
-#: src/gutenprintui/plist.c:96 src/gutenprintui2/plist.c:96
-msgid "CUPS"
-msgstr "CUPS"
-
-#: src/gutenprintui/plist.c:102 src/gutenprintui2/plist.c:102
-msgid "Berkeley lpd (/etc/lpc)"
-msgstr "Berkeley lpd (/etc/lpc)"
-
-#: src/gutenprintui/plist.c:105 src/gutenprintui2/plist.c:105
-msgid "Berkeley lpd (/usr/bsd/lpc)"
-msgstr "Berkeley lpd (/usr/bsd/lpc)"
-
-#: src/gutenprintui/plist.c:108 src/gutenprintui2/plist.c:108
-msgid "Berkeley lpd (/usr/etc/lpc"
-msgstr "Berkeley lpd (/usr/etc/lpc"
-
-#: src/gutenprintui/plist.c:111 src/gutenprintui2/plist.c:111
-msgid "Berkeley lpd (/usr/libexec/lpc)"
-msgstr "Berkeley lpd (/usr/libexec/lpc)"
-
-#: src/gutenprintui/plist.c:114 src/gutenprintui2/plist.c:114
-msgid "Berkeley lpd (/usr/sbin/lpc)"
-msgstr "Berkeley lpd (/usr/sbin/lpc)"
-
-#: src/gutenprintui/plist.c:1020 src/gutenprintui2/plist.c:1016
-msgid "Printer"
-msgstr "Printer"
-
-#: src/gutenprintui/plist.c:1207 src/gutenprintui2/plist.c:1203
-msgid "(Default Printer)"
-msgstr "(Standaard printer)"
-
 #: src/gutenprintui2/curve.c:130
 msgid "Curve type"
 msgstr "Type kromme"
@@ -6461,6 +5874,580 @@ msgstr "Grootst mogelijke waarde van Y"
 msgid "_Gamma value"
 msgstr "_Gamma-waarde"
 
+#: src/gutenprintui2/panel.c:273
+msgid "Inch"
+msgstr "Inch"
+
+#: src/gutenprintui2/panel.c:273
+msgid "Set the base unit of measurement to inches"
+msgstr "Stel de basis-meeteenheid in op inches"
+
+#: src/gutenprintui2/panel.c:275
+msgid "cm"
+msgstr "cm"
+
+#: src/gutenprintui2/panel.c:275
+msgid "Set the base unit of measurement to centimetres"
+msgstr "Stel de basis-meeteenheid in op centimeter"
+
+#: src/gutenprintui2/panel.c:277
+msgid "Points"
+msgstr "Punten"
+
+#: src/gutenprintui2/panel.c:277
+msgid "Set the base unit of measurement to points (1/72\")"
+msgstr "Stel de basis-meeteenheid in op punten (1/72\")"
+
+#: src/gutenprintui2/panel.c:279
+msgid "mm"
+msgstr "mm"
+
+#: src/gutenprintui2/panel.c:279
+msgid "Set the base unit of measurement to millimetres"
+msgstr "Stel de basis-meeteenheid in op millimeter"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Pica"
+msgstr "Pica"
+
+#: src/gutenprintui2/panel.c:281
+msgid "Set the base unit of measurement to picas (1/12\")"
+msgstr "Stel de basis-meeteenheid in op pica (1/12\")"
+
+#: src/gutenprintui2/panel.c:288
+msgid "Color output"
+msgstr "Kleuruitvoer"
+
+#: src/gutenprintui2/panel.c:290
+msgid "Print in shades of gray using black ink"
+msgstr "Print in grijstinten met zwarte inkt"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Standard Command"
+msgstr "Standaard commando"
+
+#: src/gutenprintui2/panel.c:302
+msgid "Use standard print command"
+msgstr "Gebruik het standaard printcommando"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Custom Command"
+msgstr "Fabrikaat specifiek commando"
+
+#: src/gutenprintui2/panel.c:303
+msgid "Use custom print command"
+msgstr "Gebruik het fabrikaat specifieke commando"
+
+#: src/gutenprintui2/panel.c:304 src/gutenprintui2/plist.c:678
+#: src/gutenprintui2/plist.c:761
+msgid "File"
+msgstr "Bestand"
+
+#: src/gutenprintui2/panel.c:304
+msgid "Print to a file"
+msgstr "Afdrukken naar een bestand"
+
+#: src/gutenprintui2/panel.c:520
+msgid "Edit Curve..."
+msgstr "Kromme aanpassen..."
+
+#: src/gutenprintui2/panel.c:531
+msgid "Set Default"
+msgstr "Stel standaard in"
+
+#: src/gutenprintui2/panel.c:533
+msgid "Restore Previous"
+msgstr "Herstel het vorige"
+
+#: src/gutenprintui2/panel.c:535 src/gutenprintui2/panel.c:1532
+#: src/gutenprintui2/panel.c:1786 src/gutenprintui2/panel.c:1818
+msgid "OK"
+msgstr "OK"
+
+#: src/gutenprintui2/panel.c:537 src/gutenprintui2/panel.c:1197
+#: src/gutenprintui2/panel.c:1534 src/gutenprintui2/panel.c:1788
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: src/gutenprintui2/panel.c:1180
+#, c-format
+msgid "%s -- Print v%s"
+msgstr "%s -- Print v%s"
+
+#: src/gutenprintui2/panel.c:1189
+msgid "About"
+msgstr "Info"
+
+#: src/gutenprintui2/panel.c:1191
+msgid ""
+"Print and\n"
+"Save Settings"
+msgstr ""
+"Afdrukken en\n"
+"instellingen opslaan"
+
+#: src/gutenprintui2/panel.c:1193
+msgid ""
+"Save\n"
+"Settings"
+msgstr ""
+"Instellingen\n"
+"opslaan"
+
+#: src/gutenprintui2/panel.c:1195
+msgid "Print"
+msgstr "Afdrukken"
+
+#: src/gutenprintui2/panel.c:1247
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#: src/gutenprintui2/panel.c:1272
+msgid ""
+"Position the image on the page.\n"
+"Click and drag with the primary button to position the image.\n"
+"Click and drag with the second button to move the image with finer "
+"precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of "
+"the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image "
+"to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return "
+"to its original position."
+msgstr ""
+"Plaats de afbeelding op de pagina.\n"
+"Klik en sleep met de eerste knop om de afbeelding te plaatsen.\n"
+"Klik en sleep met de tweede knop om de afbeelding met een fijnere "
+"nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt "
+"(1/72\")\n"
+"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van "
+"zijn grootte te verplaatsen.\n"
+"Bij het ingedrukt houden van de shift-toets tijdens klikken en slepen "
+"beperkt de beweging tot horizontaal of vertikaal.\n"
+"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug "
+"naar zijn oorspronkelijke plaats."
+
+#: src/gutenprintui2/panel.c:1319
+msgid "Paper Size"
+msgstr "Papierafmetingen"
+
+#: src/gutenprintui2/panel.c:1342
+msgid "Show All Paper Sizes"
+msgstr "Toon alle papierafmetingen"
+
+#: src/gutenprintui2/panel.c:1358
+msgid "Dimensions:"
+msgstr "Afmetingen"
+
+#: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
+msgid "Width:"
+msgstr "Breedte: "
+
+#: src/gutenprintui2/panel.c:1364
+msgid "Width of the paper that you wish to print to"
+msgstr "Breedte van het papier waarop je wenst te printen"
+
+#: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
+msgid "Height:"
+msgstr "Hoogte: "
+
+#: src/gutenprintui2/panel.c:1369
+msgid "Height of the paper that you wish to print to"
+msgstr "Hoogte van het papier waarop je wenst te printen"
+
+#: src/gutenprintui2/panel.c:1374
+msgid "Automatic Paper Size"
+msgstr "Automatische papierafmetingen"
+
+#: src/gutenprintui2/panel.c:1391
+msgid "Number of Copies"
+msgstr "Aantal kopieën"
+
+#: src/gutenprintui2/panel.c:1403
+msgid "Select the number of copies to print; a value between 1 and 100"
+msgstr "Kies het aantal af te drukken kopieën; een waarde tussen 1 en 100"
+
+#: src/gutenprintui2/panel.c:1435
+msgid "Image Position"
+msgstr "Positie van afbeelding"
+
+#: src/gutenprintui2/panel.c:1452
+msgid "Auto"
+msgstr "Automatisch"
+
+#: src/gutenprintui2/panel.c:1454
+msgid "Portrait"
+msgstr "Portret"
+
+#: src/gutenprintui2/panel.c:1456
+msgid "Landscape"
+msgstr "Landschap"
+
+#: src/gutenprintui2/panel.c:1458
+msgid "Upside down"
+msgstr "Ondersteboven"
+
+#: src/gutenprintui2/panel.c:1460
+msgid "Seascape"
+msgstr "Seascape"
+
+#: src/gutenprintui2/panel.c:1464
+msgid ""
+"Select the orientation: portrait, landscape, upside down, or seascape "
+"(upside down landscape)"
+msgstr ""
+"Kies de orientatie: portret, landschap, ondersteboven of seascape "
+"(ondersteboven landschap)"
+
+#: src/gutenprintui2/panel.c:1466
+msgid "Orientation:"
+msgstr "Oriëntatie:"
+
+#: src/gutenprintui2/panel.c:1477
+msgid "Left:"
+msgstr "Links:"
+
+#: src/gutenprintui2/panel.c:1478
+msgid "Distance from the left of the paper to the image"
+msgstr "Afstand vanaf de linkerkant van het papier tot de afdruk"
+
+#: src/gutenprintui2/panel.c:1481 src/gutenprintui2/panel.c:1485
+msgid "Right:"
+msgstr "Rechts:"
+
+#: src/gutenprintui2/panel.c:1482
+msgid "Distance from the left of the paper to the right of the image"
+msgstr ""
+"Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
+
+#: src/gutenprintui2/panel.c:1486
+msgid "Distance from the right of the paper to the image"
+msgstr "Afstand vanaf de rechterkant van het papier tot de afdruk"
+
+#: src/gutenprintui2/panel.c:1488
+msgid "Top:"
+msgstr "Boven:"
+
+#: src/gutenprintui2/panel.c:1489
+msgid "Distance from the top of the paper to the image"
+msgstr "Afstand vanaf de bovenkant van het papier tot de afdruk"
+
+#: src/gutenprintui2/panel.c:1492 src/gutenprintui2/panel.c:1496
+msgid "Bottom:"
+msgstr "Onder:"
+
+#: src/gutenprintui2/panel.c:1493
+msgid "Distance from the top of the paper to bottom of the image"
+msgstr ""
+"Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
+
+#: src/gutenprintui2/panel.c:1497
+msgid "Distance from the bottom of the paper to the image"
+msgstr "Afstand vanaf de onderkant van het papier tot de afdruk"
+
+#: src/gutenprintui2/panel.c:1507
+msgid "Center:"
+msgstr "Midden X:"
+
+#: src/gutenprintui2/panel.c:1510
+msgid "Horizontal"
+msgstr "Horzontaal"
+
+#: src/gutenprintui2/panel.c:1511
+msgid "Center the image horizontally on the paper"
+msgstr "Centreer het plaatje horizontaal op het papier"
+
+#: src/gutenprintui2/panel.c:1513
+msgid "Both"
+msgstr "Beide"
+
+#: src/gutenprintui2/panel.c:1514
+msgid "Center the image on the paper"
+msgstr "Centreer het plaatje op het papier"
+
+#: src/gutenprintui2/panel.c:1516
+msgid "Vertical"
+msgstr "Verticaal"
+
+#: src/gutenprintui2/panel.c:1517
+msgid "Center the image vertically on the paper"
+msgstr "Centreer het plaatje verticaal op het papier"
+
+#: src/gutenprintui2/panel.c:1530
+msgid "Setup Printer"
+msgstr "Stel Printer in"
+
+#: src/gutenprintui2/panel.c:1554
+msgid "Printer Make:"
+msgstr "Printermerk:"
+
+#: src/gutenprintui2/panel.c:1565
+msgid "Select the make of your printer"
+msgstr "Selecteer het merk van uw printer"
+
+#: src/gutenprintui2/panel.c:1583 src/gutenprintui2/panel.c:1671
+#: src/gutenprintui2/panel.c:1889
+msgid "Printer Model:"
+msgstr "Printer model:"
+
+#: src/gutenprintui2/panel.c:1594
+msgid "Select your printer model"
+msgstr "Selecteer jouw printer model"
+
+#: src/gutenprintui2/panel.c:1642
+msgid "PPD File:"
+msgstr "PPD Bestand:"
+
+#: src/gutenprintui2/panel.c:1658
+msgid "Enter the correct PPD filename for your printer"
+msgstr "Geef de juiste PPD bestandsnaam voor jouw printer"
+
+#: src/gutenprintui2/panel.c:1660 src/gutenprintui2/panel.c:1740
+msgid "Browse"
+msgstr "Bladeren"
+
+#: src/gutenprintui2/panel.c:1667
+msgid "Choose the correct PPD filename for your printer"
+msgstr "Kies de juiste PPD bestandsnaam voor jouw printer"
+
+#: src/gutenprintui2/panel.c:1709
+msgid ""
+"Select the name of the output queue (not the type, or model, of printer) "
+"that you wish to print to"
+msgstr ""
+"Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) "
+"die u wilt uitprinten"
+
+#: src/gutenprintui2/panel.c:1711
+msgid "Printer Queue:"
+msgstr "Printerrij:"
+
+#: src/gutenprintui2/panel.c:1727
+msgid "Enter the correct command to print to your printer. "
+msgstr "Geef het juiste commando om naar uw printer te printen. "
+
+#: src/gutenprintui2/panel.c:1738
+msgid "Enter the file to print to. "
+msgstr "Voer de bestandsnaam in waarnaar geprint moet worden. "
+
+#: src/gutenprintui2/panel.c:1746
+msgid "File to print to"
+msgstr "Bestand waar print naar toe moet"
+
+#: src/gutenprintui2/panel.c:1754
+msgid "Print To File"
+msgstr "Afdrukken naar bestand"
+
+#: src/gutenprintui2/panel.c:1784
+msgid "Define New Printer"
+msgstr "Stel nieuwe printer in"
+
+#: src/gutenprintui2/panel.c:1802 src/gutenprintui2/panel.c:1886
+msgid "Printer Name:"
+msgstr "Printernaam:"
+
+#: src/gutenprintui2/panel.c:1806
+msgid "Enter the name you wish to give this logical printer"
+msgstr "Voer de naam in van de logische printer"
+
+#: src/gutenprintui2/panel.c:1816
+msgid "About Gutenprint "
+msgstr "Info over Gutenprint "
+
+#: src/gutenprintui2/panel.c:1823
+msgid "Gutenprint Version "
+msgstr "Gutenprint versie"
+
+#: src/gutenprintui2/panel.c:1871
+msgid "Printer Settings"
+msgstr "Printerinstellingen"
+
+#: src/gutenprintui2/panel.c:1884
+msgid ""
+"Select the name of the printer (not the type, or model, of printer) that you "
+"wish to print to"
+msgstr ""
+"Selecteer de naam van de printer (Niet het type, of model, of printer) "
+"waarna je wenst te printen"
+
+#: src/gutenprintui2/panel.c:1901
+msgid "Setup Printer..."
+msgstr "Instellen Printer..."
+
+#: src/gutenprintui2/panel.c:1903
+msgid ""
+"Choose the printer model, PPD file, and command that is used to print to "
+"this printer"
+msgstr ""
+"Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar "
+"deze printer af te drukken."
+
+#: src/gutenprintui2/panel.c:1916
+msgid "New Printer..."
+msgstr "Nieuwe Printer..."
+
+#: src/gutenprintui2/panel.c:1917
+msgid ""
+"Define a new logical printer. This can be used to name a collection of "
+"settings that you wish to remember for future use."
+msgstr ""
+"Definieer een logische printer. Deze kan gebruikt worden om een verzameling "
+"van instellingen die u bewaren wilt voor toekomstig gebruik."
+
+#: src/gutenprintui2/panel.c:1960
+msgid "Image Size"
+msgstr "Afbeeldingsgrootte"
+
+#: src/gutenprintui2/panel.c:1985
+msgid "Scaling:"
+msgstr "Schaal:"
+
+#: src/gutenprintui2/panel.c:1989
+msgid "Set the scale (size) of the image"
+msgstr "Stel de schaal (afmeting) in van het plaatje"
+
+#: src/gutenprintui2/panel.c:2011
+msgid "Scale by:"
+msgstr "Schalen met:"
+
+#: src/gutenprintui2/panel.c:2016
+msgid ""
+"Select whether scaling is measured as percent of available page size or "
+"number of output dots per inch"
+msgstr ""
+"Moet schaling gemeten worden in het percentage van de beschikbare "
+"paginagrootte of het aantal punten per inch"
+
+#: src/gutenprintui2/panel.c:2019
+msgid "Percent"
+msgstr "Procent"
+
+#: src/gutenprintui2/panel.c:2024
+msgid "Scale the print to the size of the page"
+msgstr "Schaal de afdruk tot de afmeting van de pagina"
+
+#: src/gutenprintui2/panel.c:2028
+msgid "PPI"
+msgstr "PPI"
+
+#: src/gutenprintui2/panel.c:2033
+msgid "Scale the print to the number of dots per inch"
+msgstr "Schaal de afdruk tot het aantal punten per inch"
+
+#: src/gutenprintui2/panel.c:2051
+msgid "Set the width of the print"
+msgstr "Geef de breedte van de afdruk"
+
+#: src/gutenprintui2/panel.c:2053
+msgid "Set the height of the print"
+msgstr "Geef de hoogte van de afdruk"
+
+#: src/gutenprintui2/panel.c:2059
+msgid ""
+"Use Original\n"
+"Image Size"
+msgstr ""
+"Gebruik de originele\n"
+"grootte van de afbeelding"
+
+#: src/gutenprintui2/panel.c:2065
+msgid "Set the print size to the size of the image"
+msgstr "Stel de afdrukgrootte gelijk aan de grootte van de afbeelding"
+
+#: src/gutenprintui2/panel.c:2089
+msgid "Print Color Adjust"
+msgstr "Aanpassing van afdrukkleur"
+
+#: src/gutenprintui2/panel.c:2092
+msgid "Set Defaults"
+msgstr "Stel standaardwaarden in"
+
+#: src/gutenprintui2/panel.c:2094
+msgid "Close"
+msgstr "Sluiten"
+
+#: src/gutenprintui2/panel.c:2123
+msgid "Image preview"
+msgstr "Afdruk voorvertoning"
+
+#: src/gutenprintui2/panel.c:2137
+msgid "View Output Channels:"
+msgstr "Toon uitvoerkanalen:"
+
+#: src/gutenprintui2/panel.c:2228
+msgid "Output"
+msgstr "Uitvoer"
+
+#: src/gutenprintui2/panel.c:2256
+msgid "Output Type:"
+msgstr "Type uitvoer:"
+
+#: src/gutenprintui2/panel.c:2260
+msgid "Select the desired output type"
+msgstr "Kies het gewenste type uitvoer"
+
+#: src/gutenprintui2/panel.c:2281
+msgid "Adjust Output..."
+msgstr "Past uitvoer aan..."
+
+#: src/gutenprintui2/panel.c:2290
+msgid ""
+"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr ""
+"Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
+
+#: src/gutenprintui2/panel.c:2309
+msgid "Size Units:"
+msgstr "Afmeting eenheden:"
+
+#: src/gutenprintui2/panel.c:2312
+msgid " "
+msgstr " "
+
+#: src/gutenprintui2/panel.c:2336
+msgid "Units:"
+msgstr "Eenheden:"
+
+#: src/gutenprintui2/panel.c:2341
+msgid "Select the base unit of measurement for printing"
+msgstr "Kies de basiseenheid van afmeting voor het afdrukken"
+
+#: src/gutenprintui2/plist.c:90 src/gutenprintui2/plist.c:99
+msgid "System V lp"
+msgstr "System V lp"
+
+#: src/gutenprintui2/plist.c:96
+msgid "CUPS"
+msgstr "CUPS"
+
+#: src/gutenprintui2/plist.c:102
+msgid "Berkeley lpd (/etc/lpc)"
+msgstr "Berkeley lpd (/etc/lpc)"
+
+#: src/gutenprintui2/plist.c:105
+msgid "Berkeley lpd (/usr/bsd/lpc)"
+msgstr "Berkeley lpd (/usr/bsd/lpc)"
+
+#: src/gutenprintui2/plist.c:108
+msgid "Berkeley lpd (/usr/etc/lpc"
+msgstr "Berkeley lpd (/usr/etc/lpc"
+
+#: src/gutenprintui2/plist.c:111
+msgid "Berkeley lpd (/usr/libexec/lpc)"
+msgstr "Berkeley lpd (/usr/libexec/lpc)"
+
+#: src/gutenprintui2/plist.c:114
+msgid "Berkeley lpd (/usr/sbin/lpc)"
+msgstr "Berkeley lpd (/usr/sbin/lpc)"
+
+#: src/gutenprintui2/plist.c:1016
+msgid "Printer"
+msgstr "Printer"
+
+#: src/gutenprintui2/plist.c:1203
+msgid "(Default Printer)"
+msgstr "(Standaard printer)"
+
 #: src/cups/genppd.c:145
 msgid "Printer Features"
 msgstr "Printermogelijkheden"
@@ -6498,48 +6485,48 @@ msgstr "Extra 5"
 #. * "Svenska".
 #: src/cups/genppd.c:1052
 msgid "English"
-msgstr "Engels"
+msgstr "Dutch"
 
 #. TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1
 #: src/cups/genppd.c:1054
 msgid "ISOLatin1"
 msgstr "ISOLatin1"
 
-#: src/cups/genppd.c:1608
+#: src/cups/genppd.c:1622
 #, fuzzy
 msgid "2-Sided Printing"
 msgstr "Dubbelzijdig printen"
 
-#: src/cups/genppd.c:1629
+#: src/cups/genppd.c:1646
 msgid "Shrink Page If Necessary to Fit Borders"
 msgstr ""
 
-#: src/cups/genppd.c:1633
+#: src/cups/genppd.c:1650
 msgid "Shrink (print the whole page)"
 msgstr ""
 
-#: src/cups/genppd.c:1634
+#: src/cups/genppd.c:1651
 msgid "Crop (preserve dimensions)"
 msgstr ""
 
-#: src/cups/genppd.c:1635
+#: src/cups/genppd.c:1652
 msgid "Expand (use maximum page area)"
 msgstr ""
 
-#: src/cups/genppd.c:1712
+#: src/cups/genppd.c:1735
 msgid "No"
 msgstr "Nee"
 
-#: src/cups/genppd.c:1714
+#: src/cups/genppd.c:1737
 msgid "Yes"
 msgstr "Ja"
 
-#: src/cups/genppd.c:1746 src/cups/genppd.c:1799
+#: src/cups/genppd.c:1774 src/cups/genppd.c:1836
 #, fuzzy
 msgid "Value"
 msgstr "Blauw"
 
-#: src/cups/genppd.c:1751
+#: src/cups/genppd.c:1779
 msgid "Fine Adjustment"
 msgstr "Fijnafstelling"
 
@@ -7442,13 +7429,9 @@ msgstr ""
 msgid "Error in input\n"
 msgstr "Fout in de invoer\n"
 
-#: src/gimp/print-image-gimp.c:225 src/gimp2/print-image-gimp.c:225
+#: src/gimp2/print-image-gimp.c:225
 msgid "Printing..."
 msgstr "Bezig met afdrukken..."
-
-#: src/gimp/print.c:133
-msgid "<Image>/File/Print..."
-msgstr "<Image>/File/Print..."
 
 #: src/ghost/ijsgutenprint.c:98
 #, c-format
@@ -7784,3 +7767,6 @@ msgstr "FOUT: ijsgutenprint: Verkrijg volgende rij faalde op %.0f\n"
 #~ "'escputil -l'\n"
 #~ "This is free software, and you are welcome to redistribute it\n"
 #~ "under certain conditions; type 'escputil -l' in voor details.\n"
+
+#~ msgid "<Image>/File/Print..."
+#~ msgstr "<Image>/File/Print..."
