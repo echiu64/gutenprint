@@ -561,9 +561,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
  * Initialise libgutenprint
  */
 
-  fprintf(stderr, "About to call stp_init\n");
   stp_init();
-  fprintf(stderr, "Called stp_init\n");
 
  /*
   * Set the language...
