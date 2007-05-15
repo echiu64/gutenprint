@@ -80,7 +80,7 @@ static const escp2_dot_size_t claria_dotsizes =
 { 0x10, 0x10, 0x21, 0x24, 0x26, 0x26, 0x26, 0x25, 0x25 };
 
 static const escp2_dot_size_t claria_1400_dotsizes =
-{ 0x10, 0x10, 0x21, 0x24, 0x24, 0x25, 0x25, 0x25, 0x25 };
+{ 0x10, 0x10, 0x21, 0x24, 0x34, 0x25, 0x25, 0x25, 0x25 };
 
 static const escp2_dot_size_t c2pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10, 0x10 };
@@ -204,6 +204,9 @@ static const escp2_base_resolutions_t c1_8_base_res =
 static const escp2_base_resolutions_t c1_5_base_res =
 {  360,  360,  720,  720,  720,  720,  720,  720,  720 };
 
+static const escp2_base_resolutions_t claria_1400_base_res =
+{  360,  360,  720,  720,  360,  720,  720,  720,  720 };
+
 static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  180,  180,  360,  360,  360 };
 
@@ -263,7 +266,7 @@ static const escp2_densities_t claria_densities =
 { 2.8, 1.4,  2.00, 1.000, 0.730, 0.811, 0.406, 0.720, 0.360 };
 
 static const escp2_densities_t claria_1400_densities =
-{ 2.8, 1.4,  2.00, 1.000, 0.625, 0.811, 0.406, 0.720, 0.360 };
+{ 2.8, 1.4,  2.00, 1.000, 0.500, 0.811, 0.406, 0.720, 0.360 };
 
 static const escp2_densities_t p3_5pl_densities =
 { 2.8, 1.4,  1.77, 0.886, 0.443, 0.221, 0.240, 0.293, 0.146 };
@@ -1867,8 +1870,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     claria_1400_dotsizes, claria_1400_densities, "variable_claria_1400",
-    "superfine", "claria",
-    variable_bits, c1_5_base_res, "cd_roll_feed",
+    "claria_1400", "claria",
+    variable_bits, claria_1400_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "photo"
   },

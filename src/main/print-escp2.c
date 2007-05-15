@@ -913,6 +913,17 @@ compute_printed_resid(const res_t *res)
 }
 
 static int
+compute_virtual_resid(const res_t *res)
+{
+  int virtual = compute_internal_resid(res->virtual_hres, res->virtual_vres);
+  int normal = compute_internal_resid(res->hres, res->vres);
+  if (normal == virtual)
+    return compute_internal_resid(res->printed_hres, res->printed_vres);
+  else
+    return virtual;
+}
+
+static int
 max_nozzle_span(const stp_vars_t *v)
 {
   int nozzle_count = escp2_nozzles(v);
@@ -1108,7 +1119,7 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
       int xdpi = res->hres;
-      int physical_xdpi = escp2_base_res(v, compute_resid(res));
+      int physical_xdpi = escp2_base_res(v, compute_virtual_resid(res));
       int horizontal_passes, oversample;
       if (physical_xdpi > xdpi)
 	physical_xdpi = xdpi;
@@ -2305,7 +2316,9 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   const paper_adjustment_t *pt = pd->paper_adjustment;
   double paper_density = .8;
-  int o_resid = compute_printed_resid(pd->res);
+  int o_resid = compute_virtual_resid(pd->res);
+  int n_resid = compute_printed_resid(pd->res);
+  double virtual_scale = 1;
 
   if (pt)
     paper_density = pt->base_density;
@@ -2316,8 +2329,19 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       stp_set_float_parameter(v, "Density", 1.0);
     }
 
+  while (n_resid > o_resid)
+    {
+      virtual_scale /= 2.0;
+      n_resid--;
+    }
+  while (n_resid < o_resid)
+    {
+      virtual_scale *= 2.0;
+      n_resid++;
+    }
+  stp_eprintf(v, "o_resid %d, n_resid %d, Virtual scale %f\n", o_resid, n_resid, virtual_scale);
   stp_scale_float_parameter
-    (v, "Density", paper_density * escp2_density(v, o_resid));
+    (v, "Density", virtual_scale * paper_density * escp2_density(v, o_resid));
   pd->drop_size = escp2_ink_type(v, o_resid);
   pd->ink_resid = o_resid;
 
@@ -2331,6 +2355,7 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE) ||
 	  stp_check_int_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE) ||
 	  stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE) ||
+	  virtual_scale != 1.0 ||
 	  (stp_check_boolean_parameter(v, "AdjustDotsize",
 				       STP_PARAMETER_ACTIVE) &&
 	   ! stp_get_boolean_parameter(v, "AdjustDotsize")))
@@ -2828,7 +2853,7 @@ setup_resolution(stp_vars_t *v)
   pd->res = res;
   pd->use_extended_commands =
     escp2_use_extended_commands(v, pd->res->softweave);
-  pd->physical_xdpi = escp2_base_res(v, resid);
+  pd->physical_xdpi = escp2_base_res(v, compute_virtual_resid(res));
   if (pd->physical_xdpi > pd->res->hres)
     pd->physical_xdpi = pd->res->hres;
 
