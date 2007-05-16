@@ -172,10 +172,9 @@ static const escp2_dropsize_t escp2_claria_1400_360_dropsizes =
 static const escp2_dropsize_t escp2_claria_1400_720_360_dropsizes =
   { "claria_1400_720_360", 3, { 0.4, .7, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_720_dropsizes =
-  { "claria_1400_720", 3, { 0.35, 0.7, 1.0 } }; 
-/*  { "claria_1400_720", 3, { 0.15, 0.4, 1.0 } }; */
+  { "claria_1400_720", 3, { 0.21, 0.57, 1.0 } }; 
 static const escp2_dropsize_t escp2_claria_1400_1440_720_dropsizes =
-  { "claria_720", 3, { 0.10, 0.26, 1.0 } };
+  { "claria_1400_1440_720", 3, { 0.10, 0.26, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_1440_dropsizes =
   { "claria_1400_1440", 3, { 0.272, 0.45, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_2880_dropsizes =
