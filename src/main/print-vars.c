@@ -1322,9 +1322,9 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->verify_this_parameter = param->verify_this_parameter;
       desc->read_only = param->read_only;
       desc->name = param->name;
-      desc->text = param->text;
-      desc->category = param->category;
-      desc->help = param->help;
+      desc->text = _(param->text);
+      desc->category = _(param->category);
+      desc->help = _(param->help);
       return;
     }
 }
