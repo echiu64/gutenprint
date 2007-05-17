@@ -2339,7 +2339,6 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       virtual_scale *= 2.0;
       n_resid++;
     }
-  stp_eprintf(v, "o_resid %d, n_resid %d, Virtual scale %f\n", o_resid, n_resid, virtual_scale);
   stp_scale_float_parameter
     (v, "Density", virtual_scale * paper_density * escp2_density(v, o_resid));
   pd->drop_size = escp2_ink_type(v, o_resid);
