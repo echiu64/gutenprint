@@ -3712,7 +3712,7 @@ ppd_file_callback(GtkWidget *widget, gpointer data)
       stp_vars_t *v = stp_vars_create_copy(pv->v);
       stp_set_file_parameter(v, "PPDFile", name);
       stp_describe_parameter(v, "ModelName", &desc);
-      if (desc.is_active)
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
 	gtk_label_set_text(GTK_LABEL(ppd_model), desc.deflt.str);
       else
 	gtk_label_set_text(GTK_LABEL(ppd_model), "");

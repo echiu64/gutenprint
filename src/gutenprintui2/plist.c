@@ -180,6 +180,7 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
   int raw = 0;
   char *print_cmd;
   char *count_string = NULL;
+  char *quoted_queue_name = NULL;
   if (!queue_name)
     queue_name = "";
   identify_print_system();
@@ -192,15 +193,19 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
     stp_asprintf(&count_string, "%s %d ",
 		 global_printing_system->copy_count_command, copy_count);
 
+  if (queue_name[0])
+    quoted_queue_name = g_shell_quote(queue_name);
+
   stp_asprintf(&print_cmd, "%s %s %s %s %s%s%s",
 	       global_printing_system->print_command,
 	       queue_name[0] ? global_printing_system->queue_select : "",
-	       queue_name[0] ? g_shell_quote(queue_name) : "",
+	       queue_name[0] ? quoted_queue_name : "",
 	       count_string ? count_string : "",
 	       raw ? global_printing_system->raw_flag : "",
 	       extra_options ? " " : "",
 	       extra_options ? extra_options : "");
   SAFE_FREE(count_string);
+  SAFE_FREE(quoted_queue_name);
   return print_cmd;
 }
 
