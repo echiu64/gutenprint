@@ -162,9 +162,12 @@ stp_xml_init(void)
 
   /* Set some locale facets to "C" */
 #ifdef ENABLE_NLS
-  saved_lc_collate = setlocale(LC_COLLATE, "C");
-  saved_lc_ctype = setlocale(LC_CTYPE, "C");
-  saved_lc_numeric = setlocale(LC_NUMERIC, "C");
+  saved_lc_collate = setlocale(LC_COLLATE, NULL);
+  saved_lc_ctype = setlocale(LC_CTYPE, NULL);
+  saved_lc_numeric = setlocale(LC_NUMERIC, NULL);
+  setlocale(LC_COLLATE, "C");
+  setlocale(LC_CTYPE, "C");
+  setlocale(LC_NUMERIC, "C");
 #endif
 
   xml_is_initialised = 1;
