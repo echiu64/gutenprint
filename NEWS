@@ -175,6 +175,9 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
   12) The Postscript driver now handles CMYK input correctly, fixing a
      problem with Cinepaint (bug 1701954).
 
+  13) The Postscript driver and UI library now handle setting the
+     locale correctly.
+
 
 ----------------
 

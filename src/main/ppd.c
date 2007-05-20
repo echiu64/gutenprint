@@ -706,17 +706,17 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
       ppd->ttrasterizer = string;
     else if (strcmp(keyword, "JCLBegin") == 0)
     {
-      ppd->jcl_begin = strdup(string);
+      ppd->jcl_begin = stp_strdup(string);
       ppd_decode(ppd->jcl_begin);	/* Decode quoted string */
     }
     else if (strcmp(keyword, "JCLEnd") == 0)
     {
-      ppd->jcl_end = strdup(string);
+      ppd->jcl_end = stp_strdup(string);
       ppd_decode(ppd->jcl_end);		/* Decode quoted string */
     }
     else if (strcmp(keyword, "JCLToPSInterpreter") == 0)
     {
-      ppd->jcl_ps = strdup(string);
+      ppd->jcl_ps = stp_strdup(string);
       ppd_decode(ppd->jcl_ps);		/* Decode quoted string */
     }
     else if (strcmp(keyword, "AccurateScreensSupport") == 0)
@@ -803,7 +803,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
       }
       
       ppd->fonts                 = tempfonts;
-      ppd->fonts[ppd->num_fonts] = strdup(name);
+      ppd->fonts[ppd->num_fonts] = stp_strdup(name);
       ppd->num_fonts ++;
     }
     else if (strcmp(keyword, "ParamCustomPageSize") == 0)
@@ -956,7 +956,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
     else if (strcmp(keyword, "JobPatchFile") == 0)
     {
       if (ppd->patches == NULL)
-        ppd->patches = strdup(string);
+        ppd->patches = stp_strdup(string);
       else
       {
         temp = realloc(ppd->patches, strlen(ppd->patches) +
@@ -2626,7 +2626,7 @@ ppd_read(FILE *fp,			/* I - File to read from */
 	*strptr = '\0';
       }
       else
-        *string = strdup(lineptr);
+        *string = stp_strdup(lineptr);
 
 /*      stp_deprintf(STP_DBG_PS, "string = \"%s\", lineptr = \"%s\"\n", *string, lineptr);*/
 
