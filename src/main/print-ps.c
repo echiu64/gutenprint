@@ -289,12 +289,12 @@ static void
 ps_parameters(const stp_vars_t *v, const char *name,
 	      stp_parameter_t *description)
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
   ps_parameters_internal(v, name, description);
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
 #endif
@@ -334,12 +334,12 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
 static void
 ps_media_size(const stp_vars_t *v, int *width, int *height)
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
   ps_media_size_internal(v, width, height);
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
 #endif
@@ -410,12 +410,12 @@ ps_imageable_area(const stp_vars_t *v,      /* I */
                   int  *bottom,		/* O - Bottom position in points */
                   int  *top)		/* O - Top position in points */
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
   ps_imageable_area_internal(v, 0, left, right, bottom, top);
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
 #endif
@@ -428,12 +428,12 @@ ps_maximum_imageable_area(const stp_vars_t *v,      /* I */
 			  int  *bottom,	/* O - Bottom position in points */
 			  int  *top)	/* O - Top position in points */
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
   ps_imageable_area_internal(v, 1, left, right, bottom, top);
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
 #endif
@@ -469,12 +469,12 @@ ps_describe_resolution_internal(const stp_vars_t *v, int *x, int *y)
 static void
 ps_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
   ps_describe_resolution_internal(v, x, y);
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
 #endif
@@ -879,7 +879,7 @@ ps_print_internal(stp_vars_t *v, stp_image_t *image)
 static int
 ps_print(const stp_vars_t *v, stp_image_t *image)
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   char *locale;
 #endif
   stp_vars_t *nv = stp_vars_create_copy(v);
@@ -889,12 +889,12 @@ ps_print(const stp_vars_t *v, stp_image_t *image)
       stp_eprintf(nv, "Print options not verified; cannot print.\n");
       return 0;
     }
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
   int status = ps_print_internal(nv, image);
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
 #endif

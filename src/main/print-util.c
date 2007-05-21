@@ -459,7 +459,7 @@ stp_init(void)
     {
       /* Things that are only initialised once */
       /* Set up gettext */
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
       setlocale (LC_ALL, "");
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
@@ -527,7 +527,7 @@ stp_strdup(const char *s)
 const char *
 stp_set_output_codeset(const char *codeset)
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   return (const char *)(bind_textdomain_codeset(PACKAGE, codeset));
 #else
   return "US-ASCII";

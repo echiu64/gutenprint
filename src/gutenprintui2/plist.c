@@ -807,8 +807,7 @@ stpui_printrc_load_v1(FILE *fp)
 #endif
       if (strcasecmp("current-printer", keyword) == 0)
 	{
-	  if (current_printer)
-	    g_free (current_printer);
+	  SAFE_FREE(current_printer);
 	  current_printer = g_strdup(value);
 	}
       else if (strcasecmp("printer", keyword) == 0)
@@ -944,14 +943,14 @@ stpui_printrc_load_v2(FILE *fp)
   char *locale;
 
   stpui_printrc_current_printer = NULL;
-#ifdef ENABLE_NLS
-  locale = stp_strdup(setlocale(LC_NUMERIC, NULL));
+#ifdef HAVE_LOCALE_H
+  locale = g_strdup(setlocale(LC_NUMERIC, NULL));
   setlocale(LC_NUMERIC, "C");
 #endif
   retval = yyparse();
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale(LC_NUMERIC, locale);
-  free(locale);
+  SAFE_FREE(locale);
 #endif
   if (stpui_printrc_current_printer)
     {
@@ -994,8 +993,8 @@ stpui_printrc_load(void)
       (void) memset(line, 0, 1024);
       if (fgets(line, sizeof(line), fp) != NULL)
 	{
-#ifdef ENABLE_NLS
-	  char *locale = stp_strdup(setlocale(LC_NUMERIC, NULL));
+#ifdef HAVE_LOCALE_H
+	  char *locale = g_strdup(setlocale(LC_NUMERIC, NULL));
 	  setlocale(LC_NUMERIC, "C");
 #endif
 	  if (strncmp("#PRINTRCv", line, 9) == 0)
@@ -1007,9 +1006,9 @@ stpui_printrc_load(void)
 #endif
 	      (void) sscanf(&(line[9]), "%d", &format);
 	    }
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
 	  setlocale(LC_NUMERIC, locale);
-	  free(locale);
+	  SAFE_FREE(locale);
 #endif
 	}
       rewind(fp);
@@ -1053,8 +1052,8 @@ stpui_printrc_save(void)
        */
 
       /* Force locale to "C", so that numbers print correctly */
-#ifdef ENABLE_NLS
-      char *locale = stp_strdup(setlocale(LC_NUMERIC, NULL));
+#ifdef HAVE_LOCALE_H
+      char *locale = g_strdup(setlocale(LC_NUMERIC, NULL));
       setlocale(LC_NUMERIC, "C");
 #endif
 #ifdef DEBUG
@@ -1191,9 +1190,9 @@ stpui_printrc_save(void)
 	  fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
 #endif
 	}
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
       setlocale(LC_NUMERIC, locale);
-      free(locale);
+      SAFE_FREE(locale);
 #endif
       fclose(fp);
     }
