@@ -50,6 +50,7 @@ my $quiet = 0;     # No output
 my $no_action = 0; # Don't output files
 my $reset_defaults = 0;		# Reset options to default settings
 my $version = "@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
+my $micro_version = "@GUTENPRINT_VERSION@";
 my $use_static_ppd = "@BUILD_CUPS_PPDS@";
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
@@ -58,9 +59,11 @@ my $ppd_base_dir = "$ppd_root_dir/gutenprint/$version"; # Available PPDs
 my $ppd_out_dir = "";		# By default output into source directory
 my $gzext = ".gz";
 my $updated_ppd_count = 0;
-my $new_ppd_filename;
+my $exit_after_parse_args = 0;
 
 my $serverdir = "@cups_conf_serverbin@";
+
+$Getopt::Std::STANDARD_HELP_VERSION = 1;
 
 my @ppd_files; # A list of in-use Gutenprint PPD files
 
@@ -171,21 +174,53 @@ if (!$quiet || $verbose) {
 	print STDOUT "Updated $updated_ppd_count PPD file${plural}.  Restart cupsd for the changes to take effect.\n";
 	exit (0);
     } else {
-	print STDOUT "Failed to update any PPD files\n";
+	if ($no_action) {
+	    print STDOUT "Did not update any PPD files\n";
+	} else {
+	    print STDOUT "Failed to update any PPD files\n";
+	}
 	exit (0);
     }
 }
 
+sub HELP_MESSAGE($;$$$) {
+    my ($fh) = @_;
+    print $fh "Usage: $0 [OPTION]... [PPD_FILE]...\n";
+    print $fh "Update CUPS+Gutenprint PPD files.\n\n";
+    print $fh "  -d flags    Enable debugging\n";
+    print $fh "  -h          Display this help text\n";
+    print $fh "  -n          No-action.  Don't overwrite any PPD files.\n";
+    print $fh "  -q          Quiet mode.  No messages except errors.\n";
+    print $fh "  -s ppd_dir  Use ppd_dir as the source PPD directory.\n";
+    print $fh "  -v          Verbose messages.\n";
+    print $fh "  -N          Reset options to defaults.\n";
+    print $fh "  -o out_dir  Output PPD files to out_dir.\n";
+    exit(0);
+}
 
+# Getopt::Std calls VERSION_MESSAGE followed by HELP_MESSAGE if --help
+# is passed.  If --version is passed, it calls only VERSION_MESSAGE.
+# So we have to make sure to exit, but we want to allow --help to
+# print out the help message.
+sub VERSION_MESSAGE($;$$$) {
+    my ($fh) = @_;
+    print "cups-genppdupdate from Gutenprint $micro_version\n";
+    $exit_after_parse_args = 1;
+}
+
+sub help() {
+    HELP_MESSAGE(\*STDOUT);
+}
 
 sub parse_options () {
-    getopts("dhnqs:vNo:");
-
+    if (!getopts('d:hnqs:vNo:')) {
+	help();
+    }
     if ($opt_n) {
 	$no_action = 1;
     }
     if ($opt_d) {
-	$debug = 1;
+	$debug = $opt_d;
     }
     if ($opt_s) {
 	if (-d $opt_s) {
@@ -215,17 +250,10 @@ sub parse_options () {
 	}
     }
     if ($opt_h) {
-	print "Usage: $0 [OPTION]... [PPD_FILE]...\n";
-	print "Update CUPS+Gutenprint PPD files.\n\n";
-        print "  -d          Enable debugging\n";
-        print "  -h          Display this help text\n";
-	print "  -n          No-action.  Don't overwrite any PPD files.\n";
-	print "  -q          Quiet mode.  No messages except errors.\n";
-	print "  -s ppd_dir  Use ppd_dir as the source PPD directory.\n";
-	print "  -v          Verbose messages.\n";
-	print "  -N          Reset options to defaults.\n";
-	print "  -o out_dir  Output PPD files to out_dir.\n";
-	exit (0);
+	help();
+    }
+    if ($exit_after_parse_args) {
+	exit(0);
     }
 }
 
@@ -233,7 +261,7 @@ sub get_ppd_contents($$$$$) {
     my ($ppd_source_filename, $filename, $driver, $locale, $region) = @_;
 
     my $source_data;
-
+    my ($new_ppd_filename);
 
     if ($use_static_ppd eq "no") {
 	my ($driver_bin) = "$serverdir/driver/gutenprint.$version";
@@ -257,7 +285,7 @@ sub get_ppd_contents($$$$$) {
 		    }
 		    close PPD;
 		    if ($source_data) {
-			return $source_data;
+			return ( $new_ppd_filename, $source_data );
 		    }
 		}
 	    }
@@ -272,9 +300,9 @@ sub get_ppd_contents($$$$$) {
         # There wasn't a valid source PPD file, so give up.
         print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
         print STDERR "$ppd_source_filename: please upgrade this PPD manually\n";
-	return 0;
+	return ("", 0);
     }
-    if ($debug) {
+    if ($debug & 1) {
 	print "Candidate PPD: $new_ppd_filename\n";
     }
 
@@ -295,7 +323,7 @@ sub get_ppd_contents($$$$$) {
 	    or die "$new_ppd_filename: error reading source: $!";
 	close SOURCE or die "$new_ppd_filename: can't close file: $!";
     }
-    return $source_data;
+    return ( $new_ppd_filename, $source_data );
 }
 
 # Update the named PPD file.
@@ -310,7 +338,7 @@ sub update_ppd ($) {
     open ORIG, $_ or die "$_: can't open PPD file: $!";
     seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
     my @orig_metadata = stat(ORIG);
-    if ($debug) {
+    if ($debug & 1) {
 	print "Source Filename: $ppd_source_filename\n";
     }
     my ($filename) = "";
@@ -347,7 +375,7 @@ sub update_ppd ($) {
 	print STDERR "$ppd_source_filename: this PPD file cannot be upgraded automatically (only files based on Gutenprint 4.3.21 and newer can be)\n";
 	return 0;
     }
-    if ($debug) {
+    if ($debug & 2) {
 	print "Gutenprint Filename: $filename\n";
 	print "Locale: $locale\n";
 	print "Language: $lingo\n";
@@ -368,15 +396,16 @@ sub update_ppd ($) {
     if (! defined($region)) {
 	$region = "";
     }
-    if ($debug) {
-	print "Locale: $locale\n";
+    if ($debug & 2) {
+	print "Base Locale: $locale\n";
 	print "Region: $region\n";
     }
 
     # Read in the new PPD, decompressing it if needed...
 
-    my $source_data = get_ppd_contents($ppd_source_filename, $filename,
-				       $driver, $locale, $region);
+    my ($new_ppd_filename, $source_data) =
+	get_ppd_contents($ppd_source_filename, $filename,
+			 $driver, $locale, $region);
 
     if (! $source_data) {
 	die "Unable to retrieve PPD file!\n";
@@ -405,29 +434,54 @@ sub update_ppd ($) {
     close $tmpfile or die "can't close temporary file $tmpfile: $!";
 
 
-    if ($debug) {
-	print "Original Default Types:\n";
-	foreach (sort keys %orig_default_types) {
-	    print "  $_: $orig_default_types{$_}\n";
-	}
-	print "New Default Types:\n";
-	foreach (sort keys %new_default_types) {
-	    print "  $_: $new_default_types{$_}\n";
-	}
-	print "Defaults:\n";
-	foreach (sort keys %defaults) {
-	    print "  $_: $defaults{$_}\n";
-	}
-	print "Options:\n";
+    if ($debug & 4) {
+	print "Options (Old->New Default Type):\n";
 	foreach (sort keys %options) {
-	    print "  $_:  ";
+	    my ($old_type) = $orig_default_types{$_};
+	    my ($new_type) = $new_default_types{$_};
+	    if (! defined($old_type)) {
+		$old_type = '(New)';
+	    }
+	    if ($old_type ne $new_type) {
+		print "  $_ ($old_type -> $new_type) :  ";
+	    } else {
+		print "  $_ ($new_type) :  ";
+	    }
+	    my ($def) = $defaults{"Default$_"};
 	    foreach my $opt (@{$options{$_}}) {
+		if (defined $def && $def eq $opt) {
+		    print "*";
+		}
 		print "$opt ";
 	    }
 	    print "\n";
 	}
-
+	print "Non-UI Defaults:\n";
+	foreach (sort keys %defaults) {
+	    my ($xkey) = $_;
+	    $xkey =~ s/^Default//;
+	    if (! defined ($options{$xkey})) {
+		print "  $_: $defaults{$_}\n";
+	    }
+	}
+	print "Default Types of dropped options:\n";
+	foreach (sort keys %orig_default_types) {
+	    if (! defined($options{$_})) {
+		print "  $_: $orig_default_types{$_}\n";
+	    }
+	}
     }
+
+    if ($no_action) {
+	if (!$quiet || $verbose) {
+	    if ($ppd_dest_filename eq $ppd_source_filename) {
+		print STDOUT "Would update $ppd_source_filename using $new_ppd_filename\n";
+	    } else {
+		print STDOUT "Would update $ppd_source_filename to $ppd_dest_filename using $new_ppd_filename\n";
+	    }
+	}
+	return 0;
+    }	
 
     if  (! $reset_defaults) {
 	# Update source buffer with old defaults...
@@ -535,7 +589,7 @@ sub find_ppd ($$$$) {
 				  $ppd_root_dir) {
                     if (! $basedir || ! $base) { next; }
 		    my ($fn) = "$basedir/$lingo$base$suffix";
-		    if ($debug) {
+		    if ($debug & 8) {
                         print "Trying $fn for $gutenprintfilename, $lang, $region\n";
                     }
 # Check that it is a regular file, owned by root.root, not writable
@@ -551,17 +605,17 @@ sub find_ppd ($$$$) {
 			    $file_version = `cat $fn | grep '$key'`;
 			}
 			if ($file_version ne "") {
-                            if ($debug) {
+                            if ($debug & 8) {
 			        print "   Format valid: time $sb[9] best $current_best_time prev $current_best_file cur $fn!\n";
 			    }
 			    if ($sb[9] > $current_best_time) {
 				$current_best_time = $sb[9];
 				$current_best_file = $fn;
-		                if ($debug) {
+		                if ($debug & 8) {
                                     print STDERR "***current_best_file is $fn\n";
                                 }
 			    }
-			} elsif ($debug) {
+			} elsif ($debug & 8) {
 			    print "   Format invalid\n";
 			}
 		    }
