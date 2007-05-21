@@ -178,6 +178,10 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
   13) The Postscript driver and UI library now handle setting the
      locale correctly.
 
+  14) The PPD file updater, cups-genppdupdate.5.1, now handles the -n
+     (don't do anything) correctly.  In addition, it handles --help
+     and --version.
+
 
 ----------------
 
