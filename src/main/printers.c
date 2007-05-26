@@ -368,6 +368,9 @@ stp_initialize_printer_defaults(void)
   printer_item = stp_list_get_start(printer_list);
   while (printer_item)
     {
+      stp_deprintf
+	(STP_DBG_PRINTERS, "  ==>init %s\n",
+	 ((stp_printer_t *)(stp_list_item_get_data(printer_item)))->driver);
       set_printer_defaults
 	(((stp_printer_t *)(stp_list_item_get_data(printer_item)))->printvars, 1);
       printer_item = stp_list_item_next(printer_item);
@@ -725,6 +728,9 @@ stp_verify_printer_params(stp_vars_t *v)
   stp_outfunc_t ofunc = stp_get_errfunc(v);
   void *odata = stp_get_errdata(v);
 
+  stp_dprintf(STP_DBG_VARS, v, "** Entering stp_verify_printer_params(0x%p)\n",
+	      v);
+
   stp_parameter_list_t params;
   int nparams;
   int i;
@@ -830,6 +836,8 @@ stp_verify_printer_params(stp_vars_t *v)
       stp_eprintf(v, "%s", errbuf.data);
       stp_free(errbuf.data);
     }
+  stp_dprintf(STP_DBG_VARS, v, "** Exiting stp_verify_printer_params(0x%p) => %d\n",
+	      v, answer);
   return answer;
 }
 
@@ -945,26 +953,46 @@ stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
 	      else if (strcmp(p_type, "float") == 0)
 		{
 		  if (child->type == STP_MXML_TEXT)
-		    stp_set_float_parameter
-		      (v, p_name, stp_xmlstrtod(child->value.text.string));
+		    {
+		      stp_set_float_parameter
+			(v, p_name, stp_xmlstrtod(child->value.text.string));
+		      stp_deprintf(STP_DBG_XML, "  Set float '%s' to '%s' (%f)\n",
+				   p_name, child->value.text.string,
+				   stp_get_float_parameter(v, p_name));
+		    }
 		}
 	      else if (strcmp(p_type, "integer") == 0)
 		{
 		  if (child->type == STP_MXML_TEXT)
-		    stp_set_int_parameter
-		      (v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		    {
+		      stp_set_int_parameter
+			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		      stp_deprintf(STP_DBG_XML, "  Set int '%s' to '%s' (%d)\n",
+				   p_name, child->value.text.string,
+				   stp_get_int_parameter(v, p_name));
+		    }
 		}
 	      else if (strcmp(p_type, "boolean") == 0)
 		{
 		  if (child->type == STP_MXML_TEXT)
-		    stp_set_boolean_parameter
-		      (v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		    {
+		      stp_set_boolean_parameter
+			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		      stp_deprintf(STP_DBG_XML, "  Set bool '%s' to '%s' (%d)\n",
+				   p_name, child->value.text.string,
+				   stp_get_boolean_parameter(v, p_name));
+		    }
 		}
 	      else if (strcmp(p_type, "string") == 0)
 		{
 		  if (child->type == STP_MXML_TEXT)
-		    stp_set_string_parameter
-		      (v, p_name, child->value.text.string);
+		    {
+		      stp_set_string_parameter
+			(v, p_name, child->value.text.string);
+		      stp_deprintf(STP_DBG_XML, "  Set string '%s' to '%s' (%s)\n",
+				   p_name, child->value.text.string,
+				   stp_get_string_parameter(v, p_name));
+		    }
 		}
 	      else if (strcmp(p_type, "curve") == 0)
 		{
@@ -975,6 +1003,9 @@ stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
 		  if (curve)
 		    {
 		      stp_set_curve_parameter(v, p_name, curve);
+		      stp_deprintf(STP_DBG_XML, "  Set curve '%s' to '%s' (%s)\n",
+				   p_name, child->value.text.string,
+				   stp_curve_write_string(curve));
 		      stp_curve_destroy(curve);
 		    }
 		}
@@ -987,6 +1018,8 @@ stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
 		  if (array)
 		    {
 		      stp_set_array_parameter(v, p_name, array);
+		      stp_deprintf(STP_DBG_XML, "  Set array '%s' to '%s'\n",
+				   p_name, child->value.text.string);
 		      stp_array_destroy(array);
 		    }
 		}
@@ -1030,10 +1063,11 @@ stp_printvars_create_from_xmltree(stp_mxml_node_t *printer,
   strcat(sbuf, stmp);
   outprintvars->name = sbuf;
   prop = printer->child;
+  stp_deprintf(STP_DBG_XML, ">>stp_printvars_create_from_xmltree: %p, %s\n",
+	       outprintvars->printvars, outprintvars->name);
   stp_fill_printvars_from_xmltree(prop, outprintvars->printvars);
-  if (stp_get_debug_level() & STP_DBG_XML)
-    stp_deprintf(STP_DBG_XML, "stp_printvars_create_from_xmltree: %s\n",
-		 outprintvars->name);
+  stp_deprintf(STP_DBG_XML, "<<stp_printvars_create_from_xmltree: %p, %s\n",
+	       outprintvars->printvars, outprintvars->name);
   return outprintvars;
 }
 
