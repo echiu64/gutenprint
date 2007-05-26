@@ -77,7 +77,7 @@ static const escp2_dot_size_t p1_5pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13 };
 
 static const escp2_dot_size_t claria_dotsizes =
-{ 0x10, 0x10, 0x21, 0x24, 0x24, 0x25, 0x25, 0x25, 0x25 };
+{ 0x24, 0x24, 0x24, 0x24, 0x24, 0x25, 0x25, 0x25, 0x25 };
 
 static const escp2_dot_size_t claria_1400_dotsizes =
 { 0x10, 0x10, 0x21, 0x24, 0x34, 0x25, 0x25, 0x25, 0x25 };
@@ -263,7 +263,7 @@ static const escp2_densities_t p1_5pl_densities =
 { 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
 
 static const escp2_densities_t claria_densities =
-{ 2.8, 1.4,  2.00, 1.000, 0.500, 0.812, 0.406, 0.720, 0.360 };
+{ 2.8, 1.4,  2.00, 1.000, 0.500, 0.812, 0.406, 0.546, 0.440 };
 
 static const escp2_densities_t claria_1400_densities =
 { 2.8, 1.4,  2.00, 1.000, 0.500, 0.811, 0.406, 0.720, 0.360 };
@@ -1846,7 +1846,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
-    360, 14400, -1, 5760, 2880, 360, 180,
+    360, 14400, -1, 5760, 2880, 360, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 189, 595, 842, 24,
@@ -1864,7 +1864,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
-    360, 14400, -1, 5760, 2880, 360, 180,
+    360, 14400, -1, 5760, 2880, 360, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
     INCH(13), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 24,

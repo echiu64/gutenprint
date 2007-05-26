@@ -136,33 +136,37 @@ static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
   { "r300_2880_1440", 1, { 1.0 } };
 
 /* Claria inks */
-static const escp2_dropsize_t escp2_claria_360_dropsizes =
-  { "claria_360", 3, { 0, 0, 1.0 } };
-static const escp2_dropsize_t escp2_claria_720_360_dropsizes =
-  { "claria_720_360", 3, { 0.4, .7, 1.0 } };
-static const escp2_dropsize_t escp2_claria_720_dropsizes =
+
 /*
- * The smallest drop seems to be around 0.12 or thereabouts.
- * However, it doesn't blend in very well with the other drops,
- * and the result is that gradients look banded.  Even the
- * medium size drop is small enough to yield very good quality.
- * Even in 4-color mode it actually looks quite good.
- * The other alternatives are:
- * 1) Use drop size 0x23 rather than 0x24.  This has larger small
- *    drops, but the large drops aren't big enough to give good
- *    coverage on good paper.
- * 2) Use drop size 0x21.  These drops are really too big for
- *    720 DPI.
- * 3) Use drop size 0x33.  This produces good quality, but
- *    it requires using a base resolution of 360 DPI rather than
- *    720 DPI, so printing takes as long as it would at 1440x720
- *    DPI.  That rather defeats the purpose of using 720 DPI.
+ * Tested relative drop sizes:
+ *      S       M       L
+ *
+ * 0x21 3       4       5
+ * 0x23 2       3       4
+ * 0x24 1       3       5
+ * 0x25 1       2       3
+ * 0x26 2       3       5
+ * 0x33 1       3       5
+ *
+ * Therefore, there's no real point to use drop sizes other than 0x24
+ * and 0x25.  The economy settings (0x10 and 0x0) don't provide any
+ * bigger drops.  We get quite smooth output at 720x360 and 360 DPI, and
+ * even 360x180 is surprisingly smooth.
+ * Roy Harrington estimates the drop sizes are:
+ *
+ * 1  1.5 pl
+ * 2  2.4 pl
+ * 3  6.3 pl
+ * 4  TBD
+ * 5 21   pl
  */
+
+static const escp2_dropsize_t escp2_claria_720_dropsizes =
   { "claria_720", 3, { 0.071, 0.3, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1440_dropsizes =
   { "claria_1440", 3, { 0.23, 0.37, 1.0 } };
 static const escp2_dropsize_t escp2_claria_2880_dropsizes =
-  { "claria_2880", 3, { 0.625, 1.0 } };
+  { "claria_2880", 2, { 0.62, 1.0 } };
 static const escp2_dropsize_t escp2_claria_5760_dropsizes =
   { "claria_5760", 1, { 1.0 } };
 
@@ -346,14 +350,14 @@ static const escp2_drop_list_t variable_3pl_pmg_drops =
 
 static const escp2_drop_list_t claria_drops =
 {
-  &escp2_claria_360_dropsizes,
-  &escp2_claria_360_dropsizes,
-  &escp2_claria_720_360_dropsizes,
+  &escp2_claria_720_dropsizes,
+  &escp2_claria_720_dropsizes,
+  &escp2_claria_720_dropsizes,
   &escp2_claria_720_dropsizes,
   &escp2_claria_720_dropsizes,
   &escp2_claria_1440_dropsizes,
   &escp2_claria_1440_dropsizes,
-  &escp2_claria_5760_dropsizes,
+  &escp2_claria_2880_dropsizes,
   &escp2_claria_5760_dropsizes,
 };
 

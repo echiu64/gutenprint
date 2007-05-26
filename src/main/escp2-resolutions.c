@@ -308,6 +308,8 @@ static const res_t *const stpi_escp2_g3_reslist[] =
 
 static const res_t *const stpi_escp2_superfine_reslist[] =
 {
+  &r_360x90sw,
+
   &r_360x120sw,
 
   &r_360x180sw,
@@ -337,7 +339,7 @@ static const res_t *const stpi_escp2_superfine_reslist[] =
 
 static const res_t *const stpi_escp2_claria_1400_reslist[] =
 {
-  &r_360x120sw,
+  &r_360x90sw,
 
   &r_360x180sw,
 
