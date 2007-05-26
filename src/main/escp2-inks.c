@@ -158,11 +158,11 @@ static const escp2_dropsize_t escp2_claria_720_dropsizes =
  *    720 DPI, so printing takes as long as it would at 1440x720
  *    DPI.  That rather defeats the purpose of using 720 DPI.
  */
-  { "claria_720", 3, { 0.08, 0.3, 1.0 } };
+  { "claria_720", 3, { 0.071, 0.3, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1440_dropsizes =
-  { "claria_1440", 3, { 0.18, 0.45, 1.0 } };
+  { "claria_1440", 3, { 0.23, 0.37, 1.0 } };
 static const escp2_dropsize_t escp2_claria_2880_dropsizes =
-  { "claria_2880", 2, { 0.4, 1.0 } };
+  { "claria_2880", 3, { 0.625, 1.0 } };
 static const escp2_dropsize_t escp2_claria_5760_dropsizes =
   { "claria_5760", 1, { 1.0 } };
 
@@ -350,9 +350,9 @@ static const escp2_drop_list_t claria_drops =
   &escp2_claria_360_dropsizes,
   &escp2_claria_720_360_dropsizes,
   &escp2_claria_720_dropsizes,
+  &escp2_claria_720_dropsizes,
   &escp2_claria_1440_dropsizes,
-  &escp2_claria_2880_dropsizes,
-  &escp2_claria_2880_dropsizes,
+  &escp2_claria_1440_dropsizes,
   &escp2_claria_5760_dropsizes,
   &escp2_claria_5760_dropsizes,
 };
