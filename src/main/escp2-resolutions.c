@@ -83,6 +83,9 @@ static const res_t r_720x360mw =
 static const res_t r_720x360sw =
 { "720x360sw",     N_("720 x 360 DPI"),
   720,  360,  720,  360,  720,  360,  1, 0, 1 };
+static const res_t r_720x360un =
+{ "720x360un",     N_("720 x 360 DPI Enhanced"),
+  720,  360, 1440,  720,  720,  360,  1, 0, 1 };
 
 static const res_t r_720mw =
 { "720mw",         N_("720 DPI"),
@@ -348,6 +351,8 @@ static const res_t *const stpi_escp2_claria_1400_reslist[] =
   &r_360sw,
 
   &r_720x360sw,
+
+  &r_720x360un,
 
   &r_720sw,
 

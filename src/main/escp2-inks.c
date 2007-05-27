@@ -157,7 +157,7 @@ static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
  * 1  1.5 pl
  * 2  2.4 pl
  * 3  6.3 pl
- * 4  TBD
+ * 4 12   pl (rlk estimate)
  * 5 21   pl
  */
 
@@ -171,18 +171,25 @@ static const escp2_dropsize_t escp2_claria_5760_dropsizes =
   { "claria_5760", 1, { 1.0 } };
 
 /* Stylus Photo 1400 */
-static const escp2_dropsize_t escp2_claria_1400_360_dropsizes =
-  { "claria_1400_360", 3, { 0, 0, 1.0 } };
-static const escp2_dropsize_t escp2_claria_1400_720_360_dropsizes =
-  { "claria_1400_720_360", 3, { 0.4, .7, 1.0 } };
+
+/*
+ * Tested relative drop sizes:
+* 	S	M	L
+*
+* 0x21	3	4	5
+* 0x25	1	2	3
+* 0x33	1	3	5
+* 0x34	2	3	5
+*/
+
 static const escp2_dropsize_t escp2_claria_1400_720_dropsizes =
-  { "claria_1400_720", 3, { 0.21, 0.57, 1.0 } }; 
+  { "claria_1400_720", 3, { 0.3, 0.57, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_1440_720_dropsizes =
-  { "claria_1400_1440_720", 3, { 0.10, 0.26, 1.0 } };
+  { "claria_1400_1440_720", 3, { 0.071, 0.3, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_1440_dropsizes =
-  { "claria_1400_1440", 3, { 0.272, 0.45, 1.0 } };
+  { "claria_1400_1440", 3, { 0.23, 0.37, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_2880_dropsizes =
-  { "claria_1400_2880", 3, { 0.272, 0.45, 1.0 } };
+  { "claria_1400_2880", 2, { 0.62, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_5760_dropsizes =
   { "claria_1400_5760", 1, { 1.0 } };
 
@@ -363,14 +370,14 @@ static const escp2_drop_list_t claria_drops =
 
 static const escp2_drop_list_t claria_1400_drops =
 {
-  &escp2_claria_1400_360_dropsizes,
-  &escp2_claria_1400_360_dropsizes,
-  &escp2_claria_1400_720_360_dropsizes,
+  &escp2_claria_1400_1440_720_dropsizes,
+  &escp2_claria_1400_1440_720_dropsizes,
+  &escp2_claria_1400_720_dropsizes,
   &escp2_claria_1400_720_dropsizes,
   &escp2_claria_1400_1440_720_dropsizes,
   &escp2_claria_1400_1440_dropsizes,
+  &escp2_claria_1400_1440_dropsizes,
   &escp2_claria_1400_2880_dropsizes,
-  &escp2_claria_1400_5760_dropsizes,
   &escp2_claria_1400_5760_dropsizes,
 };
 
