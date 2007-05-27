@@ -86,18 +86,14 @@ static int standard_vars_initialized = 0;
 
 static stp_vars_t default_vars;
 
-static void
-null_vars(void)
-{
-  stp_erprintf("Null stp_vars_t! Please report this bug.\n");
-  stp_abort();
-}
-
 static inline void
 check_vars(const stp_vars_t *v)
 {
   if (v == NULL)
-    null_vars();
+    {
+      stp_erprintf("Null stp_vars_t! Please report this bug.\n");
+      stp_abort();
+    }
 }
 
 static const char *
@@ -1514,7 +1510,7 @@ stp_describe_parameter(const stp_vars_t *v, const char *name,
   if (description->p_type != STP_PARAMETER_TYPE_INVALID)
     debug_print_parameter_description(description, "generic", v);
   else
-    stp_deprintf("Describing invalid parameter %s\n", name);
+    stp_deprintf(STP_DBG_VARS, "Describing invalid parameter %s\n", name);
 }
 
 void
