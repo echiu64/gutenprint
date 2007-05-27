@@ -62,7 +62,6 @@ static const stpi_dither_algorithm_t dither_algos[] =
 #endif
   { "Adaptive",	      N_ ("Adaptive Hybrid"),        D_ADAPTIVE_HYBRID },
   { "Ordered",	      N_ ("Ordered"),                D_ORDERED },
-  { "OrderedNew",     N_ ("Ordered New"),            D_ORDERED_NEW },
   { "Fast",	      N_ ("Fast"),                   D_FAST },
   { "VeryFast",	      N_ ("Very Fast"),              D_VERY_FAST },
   { "Floyd",	      N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
@@ -256,7 +255,6 @@ stpi_set_dither_function(stp_vars_t *v)
     case D_VERY_FAST:
       RETURN_DITHERFUNC(stpi_dither_very_fast, v);
     case D_ORDERED:
-    case D_ORDERED_NEW:
     case D_FAST:
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
     case D_HYBRID_EVENTONE:
