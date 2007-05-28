@@ -76,6 +76,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
   },
+  {
+    "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
+    N_("Printing Output Mode"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
 };
 
 static const int the_parameter_count =
@@ -204,9 +210,12 @@ ps_list_parameters(const stp_vars_t *v)
 	    stp_parameter_t *param = stp_malloc(sizeof(stp_parameter_t));
 	    option = group->options + j;
 	    ps_option_to_param(param, group, option);
-	    stp_dprintf(STP_DBG_PS, v, "Adding parameter %s %s\n",
-			param->name, param->text);
-	    stp_parameter_list_add_param(ret, param);
+	    if (strcmp(param->name, "PageRegion") != 0)
+	      {
+		stp_dprintf(STP_DBG_PS, v, "Adding parameter %s %s\n",
+			    param->name, param->text);
+		stp_parameter_list_add_param(ret, param);
+	      }
 	  }
       }
   return ret;
@@ -246,6 +255,23 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 					   m_ppd->nickname, m_ppd->nickname);
 		description->deflt.str = m_ppd->nickname;
 		description->is_active = status;
+	      }
+	    else
+	      description->is_active = 0;
+	    return;
+	  }
+	else if (strcmp(name, "PrintingMode") == 0)
+	  {
+	    if (! m_ppd || m_ppd->color_device)
+	      {
+		description->bounds.str = stp_string_list_create();
+		stp_string_list_add_string
+		  (description->bounds.str, "Color", _("Color"));
+		stp_string_list_add_string
+		  (description->bounds.str, "BW", _("Black and White"));
+		description->deflt.str =
+		  stp_string_list_param(description->bounds.str, 0)->name;
+		description->is_active = 1;
 	      }
 	    else
 	      description->is_active = 0;
@@ -497,6 +523,68 @@ ps_describe_output(const stp_vars_t *v)
     return "Whitescale";
 }
 
+static void
+ps_print_device_settings(stp_vars_t *v)
+{
+  int i;
+  stp_parameter_list_t param_list = ps_list_parameters(v);
+  if (! param_list)
+    return;
+  stp_puts("%%BeginSetup\n", v);
+  for (i = 0; i < stp_parameter_list_count(param_list); i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(param_list, i);
+      stp_parameter_t desc;
+      stp_describe_parameter(v, param->name, &desc);
+      if (desc.is_active)
+	{
+	  switch (desc.p_type)
+	    {
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      stp_puts("[{\n", v);
+	      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", desc.name,
+			  stp_get_string_parameter(v, desc.name));
+	      stp_puts("%%EndFeature\n", v);
+	      stp_puts("} stopped cleartomark\n", v);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      stp_puts("[{\n", v);
+	      stp_zprintf(v, "%%%%BeginFeature: *%s %d\n", desc.name,
+			  stp_get_int_parameter(v, desc.name));
+	      stp_puts("%%EndFeature\n", v);
+	      stp_puts("} stopped cleartomark\n", v);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_puts("[{\n", v);
+	      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", desc.name,
+			  stp_get_boolean_parameter(v, desc.name) ? "True" : "False");
+	      stp_puts("%%EndFeature\n", v);
+	      stp_puts("} stopped cleartomark\n", v);
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      stp_puts("[{\n", v);
+	      stp_zprintf(v, "%%%%BeginFeature: *%s %f\n", desc.name,
+			  stp_get_float_parameter(v, desc.name));
+	      stp_puts("%%EndFeature\n", v);
+	      stp_puts("} stopped cleartomark\n", v);
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      stp_puts("[{\n", v);
+	      stp_zprintf(v, "%%%%BeginFeature: *%s %d\n", desc.name,
+			  stp_get_dimension_parameter(v, desc.name));
+	      stp_puts("%%EndFeature\n", v);
+	      stp_puts("} stopped cleartomark\n", v);
+	      break;
+	    default:
+	      break;
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
+    }
+  stp_puts("%%EndSetup\n", v);
+  stp_parameter_list_destroy(param_list);
+}
+
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
  */
@@ -594,110 +682,7 @@ ps_print_internal(stp_vars_t *v, stp_image_t *image)
   stp_puts("%%Orientation: Portrait\n", v);
   stp_puts("%%EndComments\n", v);
 
-#if 0
-  /*
-   * Removed following device specific commands because device specific commands should be sent separately (ie: via IPP for CUPS). des 7/20/2006
-   */
-
- /*
-  * Find any printer-specific commands...
-  */
-
-  num_commands = 0;
-
-  if ((command = ppd_find(m_ppd_file, "PageSize", media_size, &order)) != NULL)
-  {
-    commands[num_commands].keyword = "PageSize";
-    commands[num_commands].choice  = media_size;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
-    strcpy(commands[num_commands].command, command);
-    commands[num_commands].order   = order;
-    num_commands ++;
-  }
-
-  if ((command = ppd_find(m_ppd_file, "InputSlot", media_source, &order)) != NULL)
-  {
-    commands[num_commands].keyword = "InputSlot";
-    commands[num_commands].choice  = media_source;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
-    strcpy(commands[num_commands].command, command);
-    commands[num_commands].order   = order;
-    num_commands ++;
-  }
-
-  if ((command = ppd_find(m_ppd_file, "MediaType", media_type, &order)) != NULL)
-  {
-    commands[num_commands].keyword = "MediaType";
-    commands[num_commands].choice  = media_type;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
-    strcpy(commands[num_commands].command, command);
-    commands[num_commands].order   = order;
-    num_commands ++;
-  }
-
-  if ((command = ppd_find(m_ppd_file, "Resolution", resolution, &order)) != NULL)
-  {
-    commands[num_commands].keyword = "Resolution";
-    commands[num_commands].choice  = resolution;
-    commands[num_commands].command = stp_malloc(strlen(command) + 1);
-    strcpy(commands[num_commands].command, command);
-    commands[num_commands].order   = order;
-    num_commands ++;
-  }
-
- /*
-  * Sort the commands using the OrderDependency value...
-  */
-
-  for (i = 0; i < (num_commands - 1); i ++)
-    for (j = i + 1; j < num_commands; j ++)
-      if (commands[j].order < commands[i].order)
-      {
-        temp                = commands[i].keyword;
-        commands[i].keyword = commands[j].keyword;
-        commands[j].keyword = temp;
-
-        temp                = commands[i].choice;
-        commands[i].choice  = commands[j].choice;
-        commands[j].choice  = temp;
-
-        order               = commands[i].order;
-        commands[i].order   = commands[j].order;
-        commands[j].order   = order;
-
-        command             = commands[i].command;
-        commands[i].command = commands[j].command;
-        commands[j].command = command;
-      }
-
- /*
-  * Send the commands...
-  */
-
-  if (num_commands > 0)
-  {
-    stp_puts("%%BeginSetup\n", v);
-
-    for (i = 0; i < num_commands; i ++)
-    {
-      stp_puts("[{\n", v);
-      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", commands[i].keyword,
-                  commands[i].choice);
-      if (commands[i].command[0])
-      {
-	stp_puts(commands[i].command, v);
-	if (commands[i].command[strlen(commands[i].command) - 1] != '\n')
-          stp_puts("\n", v);
-      }
-
-      stp_puts("%%EndFeature\n", v);
-      stp_puts("} stopped cleartomark\n", v);
-      stp_free(commands[i].command);
-    }
-
-    stp_puts("%%EndSetup\n", v);
-  }
-#endif
+  ps_print_device_settings(v);
 
  /*
   * Output the page...
@@ -879,6 +864,7 @@ ps_print_internal(stp_vars_t *v, stp_image_t *image)
 static int
 ps_print(const stp_vars_t *v, stp_image_t *image)
 {
+  int status;
 #ifdef HAVE_LOCALE_H
   char *locale;
 #endif
@@ -893,7 +879,7 @@ ps_print(const stp_vars_t *v, stp_image_t *image)
   locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
-  int status = ps_print_internal(nv, image);
+  status = ps_print_internal(nv, image);
 #ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);
