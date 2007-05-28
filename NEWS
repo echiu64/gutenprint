@@ -112,8 +112,28 @@ C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
 
   1) Improved tunings for Epson printers using Claria inks.
 
+     The driver for the Stylus Photo 1400 has two separate quality
+     settings for 720x360 and 720 DPI.  The 720x360 DPI Enhanced and
+     720 DPI High Quality options offer improved quality at some cost
+     in printing speed.  The small format Claria-based printers (R260,
+     R390, RX580, and related printers) offer 720x360 and 720 DPI
+     modes approximately equal in quality to the Enhanced and High
+     Quality modes on the 1400 without a speed penalty.
+
   2) A problem whereby in some situations printers using Claria inks
      did not print black ink has been fixed.
+
+  3) A problem with the Postscript driver always printing in grayscale
+     has been fixed.  This problem was apparently introduced in 5.1.1.
+
+  4) The Postscript driver now includes all device settings in the
+     output.
+
+  5) The range of sizes for printing custom CD's has been extended
+     down to 65 mm in both the Epson and Canon drivers.
+
+
+----------------
 
 B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
