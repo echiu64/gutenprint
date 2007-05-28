@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.1.1!  Please read these release notes
+Welcome to Gutenprint 5.1.2!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -22,7 +22,7 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
 German.
 
-Gutenprint 5.1.1 is a development release of Gutenprint 5.1.  It is
+Gutenprint 5.1.2 is a development release of Gutenprint 5.1.  It is
 based on Gutenprint 5.0.0.
 
 Gutenprint currently supports over 800 printer models.
@@ -31,8 +31,9 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
-	A) New features in 5.1.1
-	B) New features in 5.1.0
+	A) New features in 5.1.2
+	B) New features in 5.1.1
+	C) New features in 5.1.0
 III)   Exceptions and Workarounds
 	A) General Issues
 	B) Build/Installation Issues
@@ -107,7 +108,14 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
+C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
+
+  1) Improved tunings for Epson printers using Claria inks.
+
+  2) A problem whereby in some situations printers using Claria inks
+     did not print black ink has been fixed.
+
+B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
   1) New printers supported in this release:
 
@@ -185,7 +193,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
 ----------------
 
-B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
+C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
 
   1) New printers supported in this release:
 
