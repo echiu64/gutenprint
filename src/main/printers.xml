@@ -250,17 +250,18 @@
       <printer name="Epson Stylus Photo R360" driver="escp2-r360" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer name="Epson Stylus Photo R380" driver="escp2-r380" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer name="Epson Stylus Photo R390" driver="escp2-r390" manufacturer="Epson" model="81" parameters="claria_params" />
-      <printer name="Epson Stylus Photo RX400" driver="escp2-rx400" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX420" driver="escp2-rx420" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX425" driver="escp2-rx425" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX430" driver="escp2-rx430" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX500" driver="escp2-rx500" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX510" driver="escp2-rx510" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX400" driver="escp2-rx400" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX420" driver="escp2-rx420" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX425" driver="escp2-rx425" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX430" driver="escp2-rx430" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX500" driver="escp2-rx500" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX510" driver="escp2-rx510" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer name="Epson Stylus Photo RX560" driver="escp2-rx560" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer name="Epson Stylus Photo RX580" driver="escp2-rx580" manufacturer="Epson" model="81" parameters="claria_params" />
-      <printer name="Epson Stylus Photo RX600" driver="escp2-rx600" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX620" driver="escp2-rx620" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer name="Epson Stylus Photo RX630" driver="escp2-rx630" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX590" driver="escp2-rx590" manufacturer="Epson" model="81" parameters="claria_params" />
+      <printer name="Epson Stylus Photo RX600" driver="escp2-rx600" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX620" driver="escp2-rx620" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer name="Epson Stylus Photo RX630" driver="escp2-rx630" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer name="Epson Stylus Photo RX640" driver="escp2-rx640" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer name="Epson Stylus Photo RX700" driver="escp2-rx700" manufacturer="Epson" model="70" parameters="standard_params" />
       <printer name="Epson Stylus Photo R800" driver="escp2-r800" manufacturer="Epson" model="64" parameters="standard_params" />

@@ -132,6 +132,12 @@ C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
   5) The range of sizes for printing custom CD's has been extended
      down to 65 mm in both the Epson and Canon drivers.
 
+  6) The Epson Stylus Photo RX590 is now supported.
+
+  7) Borderless printing on the Epson Stylus Photo RX400, RX420,
+     RX425, RX430, RX500, RX510, RX600, RX630, and RX640 now works
+     correctly.
+
 
 ----------------
 
