@@ -1459,6 +1459,9 @@ debug_print_parameter_description(const stp_parameter_t *desc, const char *who,
     case STP_PARAMETER_TYPE_FILE:
       stp_deprintf(STP_DBG_VARS, "   File (no default)\n");
       break;
+    case STP_PARAMETER_TYPE_RAW:
+      stp_deprintf(STP_DBG_VARS, "   Raw (no default)\n");
+      break;
     case STP_PARAMETER_TYPE_CURVE:
       curve = stp_curve_write_string(desc->deflt.curve);
       stp_deprintf(STP_DBG_VARS,
