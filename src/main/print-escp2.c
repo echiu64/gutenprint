@@ -1350,7 +1350,12 @@ set_density_parameter(const stp_vars_t *v,
       if (ink_name &&
 	  ink_name->channel_set->channel_count > color &&
 	  ink_name->channel_set->channels[color])
-	description->is_active = 1;
+	{
+	  description->is_active = 1;
+	  description->bounds.dbl.lower = 0;
+	  description->bounds.dbl.upper = 2.0;
+	  description->deflt.dbl = 1.0;
+	}
     }
 }
 
