@@ -138,6 +138,9 @@ C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
      RX425, RX430, RX500, RX510, RX600, RX630, and RX640 now works
      correctly.
 
+  8) Printing to CD's on Epson printers now works correctly if the
+     image is not placed at the top of the page.
+
 
 ----------------
 
