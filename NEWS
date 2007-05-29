@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.0.1-rc1 (5.0.0.99.1)!  Please read these
-release notes carefully.
+Welcome to Gutenprint 5.0.1!  Please read these release notes
+carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
 that may be used with most common UNIX print spooling systems,
@@ -22,10 +22,10 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
 German.
 
-Gutenprint 5.0.1-rc1 is a prerelease of Gutenprint 5.0.1, with bug
-fixes and new features.
+Gutenprint 5.0.1 is a stable release of Gutenprint 5.0, with bug fixes
+and new features.
 
-Gutenprint currently supports over 700 printer models.
+Gutenprint currently supports over 800 printer models.
 
 These release notes contain the following sections:
 
@@ -145,16 +145,16 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
        Canon PIXMA iP5000
        Canon PIXMA iP5200
        Canon PIXMA iP6700
-       Canon MULTIPASS MP150
-       Canon MULTIPASS MP500
-       Canon MULTIPASS MP700
-       Canon MULTIPASS MP730
-       Canon MULTIPASS MP750
-       Canon MULTIPASS MP760
-       Canon MULTIPASS MP770
-       Canon MULTIPASS MP780
-       Canon MULTIPASS MP790
-       Canon MULTIPASS MP830
+       Canon PIXMA MP150
+       Canon PIXMA MP500
+       Canon PIXMA MP700
+       Canon PIXMA MP730
+       Canon PIXMA MP750
+       Canon PIXMA MP760
+       Canon PIXMA MP770
+       Canon PIXMA MP780
+       Canon PIXMA MP790
+       Canon PIXMA MP830
        Canon PIXUS iP3100
        Canon PIXUS iP4100
        Canon i560
@@ -164,10 +164,48 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
 
      * Epson inkjet printers:
 
+       Epson Picturemate Flash
+       Epson Picturemate Pal
+       Epson Picturemate Snap
+       Epson Picturemate PM-200
+       Epson Picturemate PM-210
+       Epson Picturemate PM-240
+       Epson Picturemate PM-250
+       Epson Picturemate PM-280
+       Epson Stylus C79+
+       Epson Stylus C87+
+       Epson Stylus Photo 1400
+       Epson Stylus Photo 1410
+       Epson Stylus Photo R230
+       Epson Stylus Photo R240 (preliminary)
+       Epson Stylus Photo R245 (preliminary)
+       Epson Stylus Photo R260
+       Epson Stylus Photo R265
+       Epson Stylus Photo R270
+       Epson Stylus Photo R350
+       Epson Stylus Photo R360
+       Epson Stylus Photo R380
+       Epson Stylus Photo R390
+       Epson Stylus Photo RX560
+       Epson Stylus Photo RX580
+       Epson Stylus Photo RX590
+       Epson Stylus Photo RX640
+       Epson PM A820
+       Epson PM D870
+       Epson PM G850
+       Epson PM G4500
        Epson Stylus CX5000
        Epson Stylus CX5000F
        Epson Stylus CX6000
        Epson Stylus CX7000F
+
+     The driver for the Stylus Photo 1400 has two separate quality
+     settings for 720x360 and 720 DPI.  The 720x360 DPI Enhanced and
+     720 DPI High Quality options offer improved quality at some cost
+     in printing speed.  The small format Claria-based printers (R260,
+     R390, RX580, and related printers) offer 720x360 and 720 DPI
+     modes approximately equal in quality to the Enhanced and High
+     Quality modes on the 1400 without a speed penalty.
 
      * Lexmark inkjet and compatible printers:
 
@@ -182,7 +220,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
   2) CUPS 1.2 is now supported using on-the-fly PPD file generation.
      In addition, the resolution names are all compliant with the PPD
      specification.  cups-genppdupdate correctly updates on-the-fly
-     PPD files.
+     PPD files.  The PPD files now use the correct UTF-8 encoding.
 
   3) The native CUPS driver offers a new Shrink Page If Necessary to
      Fit Borders option, enabling the user to choose how to fit the
@@ -249,16 +287,40 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
   8) Roll printing now works correctly on the Epson Stylus Photo
      R800.
 
-  9) Printing with PIXMA printers connected to windows hosts (#1625202)
-     has been fixed.
+  9) Printing with Canon PIXMA printers connected to windows hosts
+     (bug 1625202) has been fixed.
 
- 10) CD printing has been fixed for the Canon PIXMA iP4000 and iP4200.
+  10) CD printing has been fixed for the Canon PIXMA iP4000 and iP4200.
 
- 11) The Canon driver now also supports the CD fine adjustment controls.
+  11) The Canon driver now also supports the CD fine adjustment controls.
 
- 12) The Resolutions for the Canon S300 have been fixed.
+  12) The Resolutions for the Canon S300 have been fixed.
  
- 13) Some Canon MULTIPASS printers have been renamed to PIXMA.
+  13) Some Canon MULTIPASS printers have been renamed to PIXMA.
+
+  14) A minor border problem with the R800 and related printers has
+     been fixed.  The standard bottom border is now slightly wider to
+     eliminate the very bottom of the print from being chopped off.
+
+  15) A build problem with the CUPS driver on some systems (in
+     particular, OS X and any system where --disable-nls is used) has
+     been fixed.
+
+  16) The Postscript driver now handles CMYK input correctly, fixing a
+     problem with Cinepaint (bug 1701954).
+
+  17) The Postscript driver and UI library now handle setting the
+     locale correctly.
+
+  18) The PPD file updater, cups-genppdupdate.5.1, now handles the -n
+     (don't do anything) correctly.  In addition, it handles --help
+     and --version.
+
+  19) The range of sizes for printing custom CD's has been extended
+     down to 65 mm in both the Epson and Canon drivers.
+
+  20) Printing to CD's on Epson printers now works correctly if the
+     image is not placed at the top of the page.
 
 
 ================================================================

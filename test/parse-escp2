@@ -29,6 +29,7 @@ use vars qw($atend
 	    $curpos
 	    $esc
 	    $page_mgmt_unit
+	    $horizontal_position
 	    $horizontal_unit
 	    $vertical_unit
 	    $vertical_position
@@ -63,6 +64,7 @@ $horizontal_unit = 180;
 $vertical_unit = 360;
 
 $vertical_position = 0;
+$horizontal_position = 0;
 $print_offsets = 0;
 
 sub get_stuff($) {
@@ -183,11 +185,12 @@ sub print_output_data($$$$$$) {
     my $first_row = -1;
     my $i;
     my $vstuff;
-    if ($opt_v) {
-	print " ($dots dots, $rows rows, $bitsperpixel bits";
-    }
     $dots *= 8;
     $dots /= $dot_scale;
+    my $real_dots = $dots / $bitsperpixel;
+    if ($opt_v) {
+	print " ($real_dots dots, $rows rows, $bitsperpixel bits";
+    }
     my $savedots = $dots;
     if ($comptype == 0) {
 	if ($opt_V) {
@@ -253,12 +256,18 @@ sub print_output_data($$$$$$) {
 		+ ($last_row + $offset) * $raster_y;
 	    my ($final_position) = ($vertical_position / $vertical_unit)
 		+ ($rows + $offset) * $raster_y;
+	    my ($final_horizontal) = $horizontal_position +
+		($real_dots * $page_mgmt_unit * $raster_x);
 	    if ($print_offsets) {
-		printf (" %d+%d %.4f  %d+%d %.4f  %.4f) ", $first_row, $offset, $first_position,
-			$last_row, $offset, $last_position, $final_position);
+		printf (" %d,%d+%d %.4f  %d,%d+%d %.4f  %.4f) ",
+			$horizontal_position, $first_row, $offset, $first_position,
+			$final_horizontal, $last_row, $offset, $last_position,
+			$final_position);
 	    } else {
-		printf (" %d %.4f  %d %.4f  %.4f) ", $first_row, $first_position,
-			$last_row, $last_position, $final_position);
+		printf (" %d,%d %.4f  %d,%d %.4f  %.4f) ",
+			$horizontal_position, $first_row, $first_position,
+			$final_horizontal, $last_row, $last_position,
+			$final_position);
 	    }
 	}
 	if ($opt_V) {
@@ -489,13 +498,16 @@ while (! $atend) {
 			} elsif ($xchar eq "\$") {
 			    my ($length);
 			    if ($skipchars == 4) {
-				$length = get_long(substr($stuff, 5, 4));
+				$horizontal_position =
+				    get_long(substr($stuff, 5, 4));
 			    } else {
-				$length = get_short(substr($stuff, 5, 2));
+				$horizontal_position =
+				    get_short(substr($stuff, 5, 2));
 			    }
 			    if ($opt_v) {
 				printf (" (horizontal position %d %.4f)",
-					$length, $length / $horizontal_unit);
+					$horizontal_position,
+					$horizontal_position / $horizontal_unit);
 			    }
 			}
 		    }

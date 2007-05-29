@@ -3712,7 +3712,7 @@ ppd_file_callback(GtkWidget *widget, gpointer data)
       stp_vars_t *v = stp_vars_create_copy(pv->v);
       stp_set_file_parameter(v, "PPDFile", name);
       stp_describe_parameter(v, "ModelName", &desc);
-      if (desc.is_active)
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
 	gtk_label_set_text(GTK_LABEL(ppd_model), desc.deflt.str);
       else
 	gtk_label_set_text(GTK_LABEL(ppd_model), "");
@@ -4976,12 +4976,13 @@ dimension_update (GtkAdjustment *adjustment)
 	  opt->info.flt.adjustment &&
 	  adjustment == GTK_ADJUSTMENT(opt->info.flt.adjustment))
 	{
+	  int new_value = (adjustment->value + (.5 / unit_scaler)) * unit_scaler;
 	  invalidate_preview_thumbnail ();
 	  if (stp_get_dimension_parameter(pv->v, opt->fast_desc->name) !=
-	      adjustment->value * unit_scaler)
+	      new_value)
 	    {
 	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
-					  adjustment->value * unit_scaler);
+					  new_value);
 	      update_adjusted_thumbnail(FALSE);
 	    }
 	}

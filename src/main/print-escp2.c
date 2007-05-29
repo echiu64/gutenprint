@@ -913,6 +913,17 @@ compute_printed_resid(const res_t *res)
 }
 
 static int
+compute_virtual_resid(const res_t *res)
+{
+  int virtual = compute_internal_resid(res->virtual_hres, res->virtual_vres);
+  int normal = compute_internal_resid(res->hres, res->vres);
+  if (normal == virtual)
+    return compute_internal_resid(res->printed_hres, res->printed_vres);
+  else
+    return virtual;
+}
+
+static int
 max_nozzle_span(const stp_vars_t *v)
 {
   int nozzle_count = escp2_nozzles(v);
@@ -1108,7 +1119,7 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
       int xdpi = res->hres;
-      int physical_xdpi = escp2_base_res(v, compute_resid(res));
+      int physical_xdpi = escp2_base_res(v, compute_virtual_resid(res));
       int horizontal_passes, oversample;
       if (physical_xdpi > xdpi)
 	physical_xdpi = xdpi;
@@ -1339,7 +1350,12 @@ set_density_parameter(const stp_vars_t *v,
       if (ink_name &&
 	  ink_name->channel_set->channel_count > color &&
 	  ink_name->channel_set->channels[color])
-	description->is_active = 1;
+	{
+	  description->is_active = 1;
+	  description->bounds.dbl.lower = 0;
+	  description->bounds.dbl.upper = 2.0;
+	  description->deflt.dbl = 1.0;
+	}
     }
 }
 
@@ -1639,8 +1655,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->bounds.str = stp_string_list_create();
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
-	  stp_get_string_parameter(v, "PageSize") &&
-	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0)
+	  (!stp_get_string_parameter(v, "PageSize") ||
+	   strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0))
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -1657,11 +1673,11 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       const input_slot_t *slot = get_input_slot(v);
       description->bounds.dimension.lower = 16 * 10 * 72 / 254;
       description->bounds.dimension.upper = 43 * 10 * 72 / 254;
-      description->deflt.dimension = 22 * 10 * 72 / 254;
+      description->deflt.dimension = 43 * 10 * 72 / 254;
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
-	  stp_get_string_parameter(v, "PageSize") &&
-	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	  (!stp_get_string_parameter(v, "PageSize") ||
+	   strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -1669,13 +1685,13 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "CDOuterDiameter") == 0 )
     {
       const input_slot_t *slot = get_input_slot(v);
-      description->bounds.dimension.lower = 80 * 10 * 72 / 254;
+      description->bounds.dimension.lower = 65 * 10 * 72 / 254;
       description->bounds.dimension.upper = 120 * 10 * 72 / 254;
-      description->deflt.dimension = 119 * 10 * 72 / 254;
+      description->deflt.dimension = 329;
       if (printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd) &&
-	  stp_get_string_parameter(v, "PageSize") &&
-	  strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0)
+	  (!stp_get_string_parameter(v, "PageSize") ||
+	   strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -2305,7 +2321,9 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   const paper_adjustment_t *pt = pd->paper_adjustment;
   double paper_density = .8;
-  int o_resid = compute_printed_resid(pd->res);
+  int o_resid = compute_virtual_resid(pd->res);
+  int n_resid = compute_printed_resid(pd->res);
+  double virtual_scale = 1;
 
   if (pt)
     paper_density = pt->base_density;
@@ -2316,8 +2334,18 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       stp_set_float_parameter(v, "Density", 1.0);
     }
 
+  while (n_resid > o_resid)
+    {
+      virtual_scale /= 2.0;
+      n_resid--;
+    }
+  while (n_resid < o_resid)
+    {
+      virtual_scale *= 2.0;
+      n_resid++;
+    }
   stp_scale_float_parameter
-    (v, "Density", paper_density * escp2_density(v, o_resid));
+    (v, "Density", virtual_scale * paper_density * escp2_density(v, o_resid));
   pd->drop_size = escp2_ink_type(v, o_resid);
   pd->ink_resid = o_resid;
 
@@ -2331,6 +2359,7 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE) ||
 	  stp_check_int_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE) ||
 	  stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE) ||
+	  virtual_scale != 1.0 ||
 	  (stp_check_boolean_parameter(v, "AdjustDotsize",
 				       STP_PARAMETER_ACTIVE) &&
 	   ! stp_get_boolean_parameter(v, "AdjustDotsize")))
@@ -2346,8 +2375,10 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
 	  while (density > 1.0 && resid >= RES_360)
 	    {
 	      int tresid = xresid - 1;
+	      int base_res_now = escp2_base_res(v, resid);
 	      int bits_now = escp2_bits(v, resid);
 	      double density_now = escp2_density(v, resid);
+	      int base_res_then = escp2_base_res(v, tresid);
 	      int bits_then = escp2_bits(v, tresid);
 	      double density_then = escp2_density(v, tresid);
 	      int drop_size_then = escp2_ink_type(v, tresid);
@@ -2359,7 +2390,7 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
 	       */
 
 	      if (bits_now != bits_then || density_then <= 0.0 ||
-		  drop_size_then == -1)
+		  base_res_now != base_res_then || drop_size_then == -1)
 		break;
 	      xdensity = density * density_then / density_now / 2;
 	      xresid = tresid;
@@ -2828,7 +2859,7 @@ setup_resolution(stp_vars_t *v)
   pd->res = res;
   pd->use_extended_commands =
     escp2_use_extended_commands(v, pd->res->softweave);
-  pd->physical_xdpi = escp2_base_res(v, resid);
+  pd->physical_xdpi = escp2_base_res(v, compute_virtual_resid(res));
   if (pd->physical_xdpi > pd->res->hres)
     pd->physical_xdpi = pd->res->hres;
 
@@ -3000,15 +3031,15 @@ setup_page(stp_vars_t *v)
 	stp_set_page_height(v, outer_diameter);
 	stp_set_width(v, outer_diameter);
 	stp_set_height(v, outer_diameter);
-	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter") * 254 / 10 / 72;
+	hub_size = stp_get_dimension_parameter(v, "CDInnerDiameter");
      }
  else
     {
 	const char *inner_radius_name = stp_get_string_parameter(v, "CDInnerRadius");
-  	hub_size = 43;		/* 43 mm standard CD hub */
+  	hub_size = 43 * 10 * 72 / 254;	/* 43 mm standard CD hub */
 
   	if (inner_radius_name && strcmp(inner_radius_name, "Small") == 0)
-   	  hub_size = 16;		/* 15 mm prints to the hole - play it
+   	  hub_size = 16 * 10 * 72 / 254;	/* 15 mm prints to the hole - play it
 				   safe and print 16 mm */
     }
 
@@ -3062,12 +3093,11 @@ setup_page(stp_vars_t *v)
       pd->page_left = 0;
       extra_top = top_center - (pd->page_bottom / 2);
       extra_left = left_center - (pd->page_right / 2);
-      pd->cd_inner_radius = hub_size * pd->micro_units * 10 / 254 / 2;
+      pd->cd_inner_radius = hub_size * pd->micro_units / 72 / 2;
       pd->cd_outer_radius = pd->page_right * pd->micro_units / 72 / 2;
       pd->cd_x_offset =
 	((pd->page_right / 2) - stp_get_left(v)) * pd->micro_units / 72;
-      pd->cd_y_offset =
-	((pd->page_bottom / 2) - stp_get_top(v)) * pd->micro_units / 72;
+      pd->cd_y_offset = stp_get_top(v) * pd->res->printed_vres / 72;
       if (escp2_cd_page_height(v))
 	{
 	  pd->page_right = escp2_cd_page_width(v);
@@ -3204,7 +3234,8 @@ escp2_print_data(stp_vars_t *v, stp_image_t *image)
       if (cd_mask)
 	{
 	  int y_distance_from_center =
-	    pd->cd_outer_radius - (y * pd->micro_units / pd->res->printed_vres);
+	    pd->cd_outer_radius -
+	    ((y + pd->cd_y_offset) * pd->micro_units / pd->res->printed_vres);
 	  if (y_distance_from_center < 0)
 	    y_distance_from_center = -y_distance_from_center;
 	  memset(cd_mask, 0, (pd->image_printed_width + 7) / 8);

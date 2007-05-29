@@ -110,10 +110,12 @@ print STDERR "done.\n";
 if ($foomatic3) {
     open PIPE, "./printer_margins $simplified_subopt|" or die "Cannot run printer_margins: $!\n";
     print STDERR "Loading margins from ./printer_margins $simplified_subopt...";
-    $code = join('', <PIPE>);
-    #print $code;
-    close PIPE or die "Cannot complete printer_margins: $!\n";
-    eval $code or die "Cannot evaluate printer_margins: $!\n";
+    while(<PIPE>) {
+	#print $_;
+	next if m!^#!;
+	eval $_;
+    }
+    close PIPE or die "Cannot run printer_margins: $!\n";
     print STDERR "done.\n";
 }
 
@@ -223,11 +225,11 @@ if ($foomatic3) {
 # for each value range. Therefore the filenames of numerical options
 # are numbered (eg. Contrast-1.xml).
 for $a (keys(%stp_float_values)) {
-    for $vtmp (keys %{$stp_float_values{$a}}) {
-	for $otmp (keys %{$stp_float_values{$a}{$vtmp}}) {
-	    my $min = $stp_float_values{$a}{'MINVAL'}{$otmp};
-	    my $max = $stp_float_values{$a}{'MAXVAL'}{$otmp};
-	    my $def = $stp_float_values{$a}{'DEFVAL'}{$otmp};
+    for $otmp (keys %{$stp_float_values{$a}}) {
+	for $vtmp (keys %{$stp_float_values{$a}{$otmp}}) {
+	    my $min = $stp_float_values{$a}{$otmp}{'MINVAL'};
+	    my $max = $stp_float_values{$a}{$otmp}{'MAXVAL'};
+	    my $def = $stp_float_values{$a}{$otmp}{'DEFVAL'};
 	    # Skip options with invalid values, the library contains such
 	    # options in the case when only one constant value is allowed
 	    next if (($min >= $max) || ($def < $min) || ($def > $max));
@@ -245,11 +247,11 @@ for $a (keys(%stp_float_values)) {
     }
 }
 for $a (keys(%stp_int_values)) {
-    for $vtmp (keys %{$stp_int_values{$a}}) {
-	for $otmp (keys %{$stp_int_values{$a}{$vtmp}}) {
-	    my $min = $stp_int_values{$a}{'MINVAL'}{$otmp};
-	    my $max = $stp_int_values{$a}{'MAXVAL'}{$otmp};
-	    my $def = $stp_int_values{$a}{'DEFVAL'}{$otmp};
+    for $otmp (keys %{$stp_int_values{$a}}) {
+	for $vtmp (keys %{$stp_int_values{$a}{$otmp}}) {
+	    my $min = $stp_int_values{$a}{$otmp}{'MINVAL'};
+	    my $max = $stp_int_values{$a}{$otmp}{'MAXVAL'};
+	    my $def = $stp_int_values{$a}{$otmp}{'DEFVAL'};
 	    # Skip options with invalid values, the library contains such
 	    # options in the case when only one constant value is allowed
 	    next if (($min >= $max) || ($def < $min) || ($def > $max));
@@ -268,11 +270,11 @@ for $a (keys(%stp_int_values)) {
 }
 
 for $a (keys(%stp_dimension_values)) {
-    for $vtmp (keys %{$stp_dimension_values{$a}}) {
-	for $otmp (keys %{$stp_dimension_values{$a}{$vtmp}}) {
-	    my $min = $stp_dimension_values{$a}{'MINVAL'}{$otmp};
-	    my $max = $stp_dimension_values{$a}{'MAXVAL'}{$otmp};
-	    my $def = $stp_dimension_values{$a}{'DEFVAL'}{$otmp};
+    for $otmp (keys %{$stp_dimension_values{$a}}) {
+	for $vtmp (keys %{$stp_dimension_values{$a}{$otmp}}) {
+	    my $min = $stp_dimension_values{$a}{$otmp}{'MINVAL'};
+	    my $max = $stp_dimension_values{$a}{$otmp}{'MAXVAL'};
+	    my $def = $stp_dimension_values{$a}{$otmp}{'DEFVAL'};
 	    # Skip options with invalid values, the library contains such
 	    # options in the case when only one constant value is allowed
 	    next if (($min >= $max) || ($def < $min) || ($def > $max));
@@ -844,22 +846,22 @@ sub build_num_cons {
 	# this option and a default value for it.
 	my $stpdef;
 	if ((defined($stpdef =
-		     $stp_float_values{$stpname}{"DEFVAL"}{$stpopt})) ||
+		     $stp_float_values{$stpname}{$stpopt}{"DEFVAL"})) ||
 	    (defined($stpdef =
-		     $stp_int_values{$stpname}{"DEFVAL"}{$stpopt})) ||
+		     $stp_int_values{$stpname}{$stpopt}{"DEFVAL"})) ||
 	    (defined($stpdef =
-		     $stp_dimension_values{$stpname}{"DEFVAL"}{$stpopt}))) {
+		     $stp_dimension_values{$stpname}{$stpopt}{"DEFVAL"}))) {
 	    # Find minimum and maximum
 	    my ($min, $max);
 	    if ($type eq "float") {
-		$min = $stp_float_values{$stpname}{"MINVAL"}{$stpopt};
-		$max = $stp_float_values{$stpname}{"MAXVAL"}{$stpopt};
+		$min = $stp_float_values{$stpname}{$stpopt}{"MINVAL"};
+		$max = $stp_float_values{$stpname}{$stpopt}{"MAXVAL"};
 	    } elsif ($type eq "dimension") {
-		$min = $stp_dimension_values{$stpname}{"MINVAL"}{$stpopt};
-		$max = $stp_dimension_values{$stpname}{"MAXVAL"}{$stpopt};
+		$min = $stp_dimension_values{$stpname}{$stpopt}{"MINVAL"};
+		$max = $stp_dimension_values{$stpname}{$stpopt}{"MAXVAL"};
 	    } else {
-		$min = $stp_int_values{$stpname}{"MINVAL"}{$stpopt};
-		$max = $stp_int_values{$stpname}{"MAXVAL"}{$stpopt};
+		$min = $stp_int_values{$stpname}{$stpopt}{"MINVAL"};
+		$max = $stp_int_values{$stpname}{$stpopt}{"MAXVAL"};
 	    }
 	    # Does the range of this option with this printer match
 	    # the Foomatic option entry we are building currently?
@@ -1314,6 +1316,8 @@ sub qualityorder {
 		    "oov",
 		    # Canon
 		    "dmt",
+		    "dpi_high",
+		    "dpi_draft"
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case

@@ -126,9 +126,7 @@ stp_unregister_xml_preload(const char *name)
 
 static void stpi_xml_process_gutenprint(stp_mxml_node_t *gutenprint, const char *file);
 
-static char *saved_lc_collate;                 /* Saved LC_COLLATE */
-static char *saved_lc_ctype;                   /* Saved LC_CTYPE */
-static char *saved_lc_numeric;                 /* Saved LC_NUMERIC */
+static char *saved_locale;                 /* Saved LC_ALL */
 static int xml_is_initialised;                 /* Flag for init */
 
 void
@@ -154,6 +152,8 @@ stp_xml_preinit(void)
 void
 stp_xml_init(void)
 {
+  stp_deprintf(STP_DBG_XML, "stp_xml_init: entering at level %d\n",
+	       xml_is_initialised);
   if (xml_is_initialised >= 1)
     {
       xml_is_initialised++;
@@ -161,9 +161,11 @@ stp_xml_init(void)
     }
 
   /* Set some locale facets to "C" */
-  saved_lc_collate = setlocale(LC_COLLATE, "C");
-  saved_lc_ctype = setlocale(LC_CTYPE, "C");
-  saved_lc_numeric = setlocale(LC_NUMERIC, "C");
+#ifdef HAVE_LOCALE_H
+  saved_locale = stp_strdup(setlocale(LC_ALL, NULL));
+  stp_deprintf(STP_DBG_XML, "stp_xml_init: saving locale %s\n", saved_locale);
+  setlocale(LC_ALL, "C");
+#endif
 
   xml_is_initialised = 1;
 }
@@ -175,6 +177,8 @@ stp_xml_init(void)
 void
 stp_xml_exit(void)
 {
+  stp_deprintf(STP_DBG_XML, "stp_xml_exit: entering at level %d\n",
+	       xml_is_initialised);
   if (xml_is_initialised > 1) /* don't restore original state */
     {
       xml_is_initialised--;
@@ -184,9 +188,12 @@ stp_xml_exit(void)
     return;
 
   /* Restore locale */
-  setlocale(LC_COLLATE, saved_lc_collate);
-  setlocale(LC_CTYPE, saved_lc_ctype);
-  setlocale(LC_NUMERIC, saved_lc_numeric);
+#ifdef HAVE_LOCALE_H
+  stp_deprintf(STP_DBG_XML, "stp_xml_init: restoring locale %s\n", saved_locale);
+  setlocale(LC_ALL, saved_locale);
+  stp_free(saved_locale);
+  saved_locale = NULL;
+#endif
   xml_is_initialised = 0;
 }
 

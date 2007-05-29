@@ -285,7 +285,7 @@ main(int argc, char **argv)
   int c;
 
   /* Set up gettext */
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif

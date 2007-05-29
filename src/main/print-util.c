@@ -459,9 +459,15 @@ stp_init(void)
     {
       /* Things that are only initialised once */
       /* Set up gettext */
+#ifdef HAVE_LOCALE_H
+      char *locale = stp_strdup(setlocale (LC_ALL, ""));
+#endif
 #ifdef ENABLE_NLS
-      setlocale (LC_ALL, "");
       bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+#endif
+#ifdef HAVE_LOCALE_H
+      setlocale(LC_ALL, locale);
+      stp_free(locale);
 #endif
       stpi_init_debug();
       stp_xml_preinit();
@@ -527,7 +533,7 @@ stp_strdup(const char *s)
 const char *
 stp_set_output_codeset(const char *codeset)
 {
-#ifdef ENABLE_NLS
+#ifdef HAVE_LOCALE_H
   return (const char *)(bind_textdomain_codeset(PACKAGE, codeset));
 #else
   return "US-ASCII";
@@ -577,6 +583,8 @@ stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print)
   int i;
   stp_parameter_list_t params = stp_get_parameter_list(print);
   int count = stp_parameter_list_count(params);
+  stp_deprintf(STP_DBG_VARS, "Merging printvars from %s\n",
+	       stp_get_driver(print));
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
@@ -610,6 +618,7 @@ stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print)
 	  stp_parameter_description_destroy(&desc);
 	}
     }
+  stp_deprintf(STP_DBG_VARS, "Exiting merge printvars\n");
   stp_parameter_list_destroy(params);
 }
 

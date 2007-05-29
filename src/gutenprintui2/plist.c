@@ -41,7 +41,6 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-
 typedef enum
 {
   PRINTERS_NONE,
@@ -180,6 +179,7 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
   int raw = 0;
   char *print_cmd;
   char *count_string = NULL;
+  char *quoted_queue_name = NULL;
   if (!queue_name)
     queue_name = "";
   identify_print_system();
@@ -192,15 +192,19 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
     stp_asprintf(&count_string, "%s %d ",
 		 global_printing_system->copy_count_command, copy_count);
 
+  if (queue_name[0])
+    quoted_queue_name = g_shell_quote(queue_name);
+
   stp_asprintf(&print_cmd, "%s %s %s %s %s%s%s",
 	       global_printing_system->print_command,
 	       queue_name[0] ? global_printing_system->queue_select : "",
-	       queue_name[0] ? g_shell_quote(queue_name) : "",
+	       queue_name[0] ? quoted_queue_name : "",
 	       count_string ? count_string : "",
 	       raw ? global_printing_system->raw_flag : "",
 	       extra_options ? " " : "",
 	       extra_options ? extra_options : "");
   SAFE_FREE(count_string);
+  SAFE_FREE(quoted_queue_name);
   return print_cmd;
 }
 
@@ -803,8 +807,7 @@ stpui_printrc_load_v1(FILE *fp)
 #endif
       if (strcasecmp("current-printer", keyword) == 0)
 	{
-	  if (current_printer)
-	    g_free (current_printer);
+	  SAFE_FREE(current_printer);
 	  current_printer = g_strdup(value);
 	}
       else if (strcasecmp("printer", keyword) == 0)
@@ -937,11 +940,18 @@ stpui_printrc_load_v2(FILE *fp)
 {
   int retval;
   yyin = fp;
+  char *locale;
 
   stpui_printrc_current_printer = NULL;
-  setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+  locale = g_strdup(setlocale(LC_NUMERIC, NULL));
+  setlocale(LC_NUMERIC, "C");
+#endif
   retval = yyparse();
-  setlocale(LC_ALL, "");
+#ifdef HAVE_LOCALE_H
+  setlocale(LC_NUMERIC, locale);
+  SAFE_FREE(locale);
+#endif
   if (stpui_printrc_current_printer)
     {
       int i;
@@ -983,17 +993,23 @@ stpui_printrc_load(void)
       (void) memset(line, 0, 1024);
       if (fgets(line, sizeof(line), fp) != NULL)
 	{
-	  /* Force locale to "C", so that numbers scan correctly */
-	  setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+	  char *locale = g_strdup(setlocale(LC_NUMERIC, NULL));
+	  setlocale(LC_NUMERIC, "C");
+#endif
 	  if (strncmp("#PRINTRCv", line, 9) == 0)
 	    {
+	      /* Force locale to "C", so that numbers scan correctly */
 #ifdef DEBUG
 	      fprintf(stderr, "Found printrc version tag: `%s'\n", line);
 	      fprintf(stderr, "Version number: `%s'\n", &(line[9]));
 #endif
 	      (void) sscanf(&(line[9]), "%d", &format);
 	    }
-	  setlocale(LC_ALL, "");
+#ifdef HAVE_LOCALE_H
+	  setlocale(LC_NUMERIC, locale);
+	  SAFE_FREE(locale);
+#endif
 	}
       rewind(fp);
       switch (format)
@@ -1036,7 +1052,10 @@ stpui_printrc_save(void)
        */
 
       /* Force locale to "C", so that numbers print correctly */
-      setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+      char *locale = g_strdup(setlocale(LC_NUMERIC, NULL));
+      setlocale(LC_NUMERIC, "C");
+#endif
 #ifdef DEBUG
       fprintf(stderr, "Number of printers: %d\n", stpui_plist_count);
 #endif
@@ -1171,7 +1190,10 @@ stpui_printrc_save(void)
 	  fprintf(stderr, "Wrote printer %d: %s\n", i, p->name);
 #endif
 	}
-      setlocale(LC_ALL, "");
+#ifdef HAVE_LOCALE_H
+      setlocale(LC_NUMERIC, locale);
+      SAFE_FREE(locale);
+#endif
       fclose(fp);
     }
   else
@@ -1209,6 +1231,8 @@ stpui_get_system_printers(void)
   identify_print_system();
   if (global_printing_system)
   {
+    const char *old_locale = getenv("LC_ALL");
+    (void) setenv("LC_ALL", "C", 1);
     if ((pfile = popen(global_printing_system->scan_command, "r")) != NULL)
     {
      /*
@@ -1230,6 +1254,10 @@ stpui_get_system_printers(void)
 	    }
 	}
       pclose(pfile);
+      if (old_locale)
+	setenv("LC_ALL", old_locale, 1);
+      else
+	unsetenv("LC_ALL");
     }
   }
 }

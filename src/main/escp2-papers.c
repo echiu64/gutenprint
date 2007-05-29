@@ -167,6 +167,53 @@ static const char photo3_hue_adj[] =
 "</gutenprint>\n";
 
 
+
+static const char claria_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.05 1.15 1.25 1.35 1.45 1.50 1.50 "  /* B */
+/* B */  "1.50 1.50 1.50 1.50 1.50 1.50 1.50 1.50 "  /* M */
+/* M */  "1.50 1.40 1.30 1.20 1.10 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.10 1.30 1.55 1.80 1.95 2.00 2.00 "  /* G */
+/* G */  "2.00 2.00 2.00 1.95 1.80 1.55 1.30 1.10 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char claria_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.66 0.67 0.69 0.73 0.77 0.83 0.87 0.89 "  /* B */
+/* B */  "0.91 0.88 0.84 0.78 0.78 0.80 0.82 0.85 "  /* M */
+/* M */  "0.87 0.90 0.94 0.97 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 0.99 0.98 0.96 0.94 0.92 0.88 "  /* G */
+/* G */  "0.84 0.72 0.69 0.67 0.66 0.66 0.66 0.66 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char claria_hue_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 -.01 -.03 -.06 -.10 -.15 -.20 -.25 "  /* B */
+/* B */  "-.30 -.35 -.38 -.40 -.42 -.46 -.49 -.52 "  /* M */
+/* M */  "-.55 -.57 -.57 -.55 -.52 -.48 -.40 -.30 "  /* R */
+/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
+/* Y */  "0.00 -.00 -.00 -.00 -.02 -.04 -.08 -.13 "  /* G */
+/* G */  "-.18 -.18 -.19 -.16 -.13 -.10 -.07 -.03 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+
 static const char sp960_sat_adj[] =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<gutenprint>\n"
@@ -722,6 +769,50 @@ static const paper_adjustment_t photo3_adjustments[] =
 };
 
 DECLARE_PAPER_ADJUSTMENTS(photo3);
+
+static const paper_adjustment_t claria_adjustments[] =
+{
+  { "Plain",        0.540, .25, 0.75, .1, .5, 1, .7, .7, 1, 1, 1.0,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "PlainFast",    0.540, .25, 0.75, .1, .5, 1, .7, .7, 1, 1, 1.0,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Postcard",     0.692, .25, 0.5, .1, .5, 1, .7, .7, 1, 1, 1.0,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "GlossyFilm",   0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Transparency", 0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Envelope",     0.540, .25, 0.75, .1, .5, 1, .7, .7, 1, 1, 1.0,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "BackFilm",     0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Matte",        0.833, .25, 0.6, .15, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "MatteHeavy",   0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Inkjet",       0.709, .25, 0.75, .15, .75, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Coated",       0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Photo",        0.833, .25, 0.5, .25, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "GlossyPhoto",  0.75, .25, 0.3, .25, .999, 1, .7, .7, 1, 1, 0.92,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Semigloss",    0.75, .25, 0.3, .25, .999, 1, .7, .7, 1, 1, 0.92,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Luster",       0.75, .25, 0.3, .25, .999, 1, .7, .7, 1, 1, 0.92,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "GlossyPaper",  0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Ilford",       0.833, .25, 0.75, .2, .999, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj  },
+  { "ColorLife",    0.833, .25, 0.75, .2, .9, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+  { "Other",        0.540, .25, 0.5, .1, .5, 1, .7, .7, 1, 1, 1,
+    claria_hue_adj, claria_lum_adj, claria_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(claria);
 
 static const paper_adjustment_t sp960_adjustments[] =
 {
@@ -1493,6 +1584,7 @@ static const paperadj_t the_adjustments[] =
   { "r800_photo", &r800_photo_paper_adjustment_list },
   { "r800_matte", &r800_matte_paper_adjustment_list },
   { "picturemate", &picturemate_paper_adjustment_list },
+  { "claria", &claria_paper_adjustment_list },
 };
 
 const paper_adjustment_list_t *

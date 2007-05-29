@@ -242,6 +242,13 @@ typedef struct image_s {
         unsigned int width;
         unsigned int height;
         unsigned int dots;
+	unsigned int image_top;
+	unsigned int image_bottom;
+	unsigned int image_left;
+	unsigned int image_right;
+	float top;
+	float left;
+	int xres,yres;
         int y;
         color_t color[MAX_COLORS];
         char* color_order;
@@ -250,7 +257,8 @@ typedef struct image_s {
         int lines_per_block;
 } image_t;
 
-
+/* FIXME what are the 0xa3 and 0xad for? they are used in the PIXMA iP4200 CD mode */
+static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k',0xa3,0xad}; 
 #endif
 
 

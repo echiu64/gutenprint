@@ -152,6 +152,8 @@ typedef struct
   const char *text;
   short hres;
   short vres;
+  short virtual_hres;
+  short virtual_vres;
   short printed_hres;
   short printed_vres;
   short softweave;

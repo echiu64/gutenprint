@@ -76,6 +76,12 @@ static const escp2_dot_size_t p3pl_dotsizes =
 static const escp2_dot_size_t p1_5pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13 };
 
+static const escp2_dot_size_t claria_dotsizes =
+{ 0x33, 0x33, 0x24, 0x24, 0x24, 0x25, 0x25, 0x25, 0x25 };
+
+static const escp2_dot_size_t claria_1400_dotsizes =
+{ 0x33, 0x33, 0x21, 0x21, 0x33, 0x25, 0x25, 0x25, 0x25 };
+
 static const escp2_dot_size_t c2pl_dotsizes =
 { 0x12, 0x12, 0x12, 0x11, 0x13,   -1, 0x10, 0x10, 0x10 };
 
@@ -198,6 +204,9 @@ static const escp2_base_resolutions_t c1_8_base_res =
 static const escp2_base_resolutions_t c1_5_base_res =
 {  360,  360,  720,  720,  720,  720,  720,  720,  720 };
 
+static const escp2_base_resolutions_t claria_1400_base_res =
+{  360,  360,  720,  720,  360,  720,  720,  720,  720 };
+
 static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  180,  180,  360,  360,  360 };
 
@@ -252,6 +261,12 @@ static const escp2_densities_t p3pl_densities =
 
 static const escp2_densities_t p1_5pl_densities =
 { 2.8, 1.4,  1.00, 1.000, 0.869, 0.942, 0.471, 0.500, 0.530 };
+
+static const escp2_densities_t claria_densities =
+{ 2.8, 1.4,  2.00, 1.000, 0.500, 0.812, 0.406, 0.546, 0.440 };
+
+static const escp2_densities_t claria_1400_densities =
+{ 2.8, 1.4,  2.00, 1.000, 0.500, 0.812, 0.406, 0.546, 0.440 };
 
 static const escp2_densities_t p3_5pl_densities =
 { 2.8, 1.4,  1.77, 0.886, 0.443, 0.221, 0.240, 0.293, 0.146 };
@@ -1528,7 +1543,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     360, 28800, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 5760 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
+    9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
     "superfine", "cmykrb",
@@ -1582,7 +1597,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     360, 28800, -1, 5760, 2880, 360, 180,
     0, 1, 0, 96, 42, 0, 0, 0, 1, 180, 5760 * 2880,
     INCH(13), INCH(1200), INCH(2), INCH(2),
-    9, 9, 0, 24, 9, 9, 0, 24, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
+    9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
     "superfine", "cmykrb",
@@ -1600,7 +1615,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     360, 14400, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 5760 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
+    9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
     "superfine", "photo_gen3",
@@ -1823,6 +1838,78 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
     &cx6600_borderless_sequence, NULL, "standard"
+  },
+  /* 81: Stylus Photo R260 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
+    360, 14400, -1, 5760, 2880, 360, 90,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 189, 595, 842, 24,
+    4, 15, 0, 0,
+    claria_dotsizes, claria_densities, "variable_claria",
+    "superfine", "claria",
+    variable_bits, c1_5_base_res, "cd_roll_feed",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    NULL, NULL, "photo"
+  },
+  /* 82: Stylus Photo 1400 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
+    360, 14400, -1, 5760, 2880, 360, 90,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
+    INCH(13), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 24,
+    4, 15, 0, 0,
+    claria_1400_dotsizes, claria_1400_densities, "variable_claria_1400",
+    "claria_1400", "claria",
+    variable_bits, claria_1400_base_res, "cd_roll_feed",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    NULL, NULL, "photo"
+  },
+  /* 83: Stylus Photo R240 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
+    360, 14400, -1, 5760, 1440, 360, 120,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
+    4, 15, 0, 0,
+    p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
+    "superfine", "photo_gen3_4",
+    variable_bits, variable_base_res, "cd_roll_feed",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    &spr300_borderless_sequence, NULL, "standard"
+  },
+  /* 84: Stylus Photo RX500 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
+    360, 14400, -1, 2880, 1440, 360, 120,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
+    4, 15, 0, 0,
+    p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
+    "superfine", "photo_gen3",
+    variable_bits, variable_base_res, "cd_roll_feed",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    &sprx500_borderless_sequence, NULL, "photo"
   },
 };
 

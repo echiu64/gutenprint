@@ -233,9 +233,15 @@ static void
 ps_parameters(const stp_vars_t *v, const char *name,
 	      stp_parameter_t *description)
 {
-  char *locale = setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+  char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
   ps_parameters_internal(v, name, description);
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
 }
 
 /*
@@ -275,9 +281,15 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
 static void
 ps_media_size(const stp_vars_t *v, int *width, int *height)
 {
-  char *locale = setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+  char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
   ps_media_size_internal(v, width, height);
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
 }
 
 /*
@@ -350,9 +362,15 @@ ps_imageable_area(const stp_vars_t *v,      /* I */
                   int  *bottom,		/* O - Bottom position in points */
                   int  *top)		/* O - Top position in points */
 {
-  char *locale = setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+  char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
   ps_imageable_area_internal(v, 0, left, right, bottom, top);
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
 }
 
 static void
@@ -362,9 +380,15 @@ ps_maximum_imageable_area(const stp_vars_t *v,      /* I */
 			  int  *bottom,	/* O - Bottom position in points */
 			  int  *top)	/* O - Top position in points */
 {
-  char *locale = setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+  char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
   ps_imageable_area_internal(v, 1, left, right, bottom, top);
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
 }
 
 static void
@@ -397,17 +421,30 @@ ps_describe_resolution_internal(const stp_vars_t *v, int *x, int *y)
 static void
 ps_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
-  char *locale = setlocale(LC_ALL, "C");
+#ifdef HAVE_LOCALE_H
+  char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
   ps_describe_resolution_internal(v, x, y);
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
 }
 
 static const char *
 ps_describe_output(const stp_vars_t *v)
 {
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *input_image_type = stp_get_string_parameter(v, "InputImageType");
   if (print_mode && strcmp(print_mode, "Color") == 0)
-    return "RGB";
+    {
+      if (input_image_type && (strcmp(input_image_type, "CMYK") == 0 ||
+			       strcmp(input_image_type, "KCMY") == 0))
+	return "CMYK";
+      else
+	return "RGB";
+    }
   else
     return "Whitescale";
 }
@@ -417,7 +454,7 @@ ps_describe_output(const stp_vars_t *v)
  */
 
 static int
-ps_print_internal(const stp_vars_t *v, stp_image_t *image)
+ps_print_internal(stp_vars_t *v, stp_image_t *image)
 {
   int		status = 1;
   int		model = stp_get_model_id(v);
@@ -427,6 +464,7 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   const char	*media_type = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *print_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *input_image_type = stp_get_string_parameter(v, "InputImageType");
   unsigned short *out = NULL;
   int		top = stp_get_top(v);
   int		left = stp_get_left(v);
@@ -459,8 +497,9 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   }		commands[4];
   int           image_height,
 		image_width;
-  stp_vars_t	*nv = stp_vars_create_copy(v);
-  char		*locale;
+  int		color_out = 0;
+  int		cmyk_out = 0;
+
   if (!resolution)
     resolution = "";
   if (!media_size)
@@ -470,12 +509,12 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   if (!media_source)
     media_source = "";
 
-  stp_prune_inactive_options(nv);
-  if (!stp_verify(nv))
-    {
-      stp_eprintf(nv, "Print options not verified; cannot print.\n");
-      return 0;
-    }
+  if (print_mode && strcmp(print_mode, "Color") == 0)
+    color_out = 1;
+  if (color_out &&
+      input_image_type && (strcmp(input_image_type, "CMYK") == 0 ||
+			   strcmp(input_image_type, "KCMY") == 0))
+    cmyk_out = 1;
 
   stp_image_init(image);
 
@@ -486,8 +525,8 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   out_width = stp_get_width(v);
   out_height = stp_get_height(v);
 
-  ps_imageable_area(nv, &page_left, &page_right, &page_bottom, &page_top);
-  ps_media_size(v, &paper_width, &paper_height);
+  ps_imageable_area_internal(v, 0, &page_left, &page_right, &page_bottom, &page_top);
+  ps_media_size_internal(v, &paper_width, &paper_height);
   page_width = page_right - page_left;
   page_height = page_bottom - page_top;
 
@@ -523,7 +562,6 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   stp_zprintf(v, "%%%%Creator: %s/Gutenprint\n", stp_image_get_appname(image));
 #endif
   stp_zprintf(v, "%%%%CreationDate: %s", ctime(&curtime));
-  stp_puts("%Copyright: 1997-2002 by Michael Sweet (mike@easysw.com) and Robert Krawitz (rlk@alum.mit.edu)\n", v);
   stp_zprintf(v, "%%%%BoundingBox: %d %d %d %d\n",
 	      page_left, paper_height - page_bottom,
 	      page_right, paper_height - page_top);
@@ -645,26 +683,30 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
      always be printed with a decimal point rather than the
      locale-specific setting. */
 
-  locale = setlocale(LC_ALL, "C");
   stp_zprintf(v, "%.3f %.3f scale\n",
 	      (double)out_width / ((double)image_width),
 	      (double)out_height / ((double)image_height));
-  setlocale(LC_ALL, locale);
 
-  stp_channel_reset(nv);
-  stp_channel_add(nv, 0, 0, 1.0);
-  if (strcmp(print_mode, "Color") == 0)
+  stp_channel_reset(v);
+  stp_channel_add(v, 0, 0, 1.0);
+  if (color_out)
     {
-      stp_channel_add(nv, 1, 0, 1.0);
-      stp_channel_add(nv, 2, 0, 1.0);
-      stp_set_string_parameter(nv, "STPIOutputType", "RGB");
+      stp_channel_add(v, 1, 0, 1.0);
+      stp_channel_add(v, 2, 0, 1.0);
+      if (cmyk_out)
+	{
+	  stp_channel_add(v, 3, 0, 1.0);
+	  stp_set_string_parameter(v, "STPIOutputType", "CMYK");
+	}
+      else
+	stp_set_string_parameter(v, "STPIOutputType", "RGB");
     }
   else
-    stp_set_string_parameter(nv, "STPIOutputType", "Whitescale");
+    stp_set_string_parameter(v, "STPIOutputType", "Whitescale");
 
-  stp_set_boolean_parameter(nv, "SimpleGamma", 1);
+  stp_set_boolean_parameter(v, "SimpleGamma", 1);
 
-  out_channels = stp_color_init(nv, image, 256);
+  out_channels = stp_color_init(v, image, 256);
 
   if (model == 0)
   {
@@ -674,28 +716,47 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 
     stp_puts("[ 1 0 0 -1 0 1 ]\n", v);
 
-    if (strcmp(print_mode, "Color") == 0)
+    if (cmyk_out)
+      stp_puts("{currentfile picture readhexstring pop} false 4 colorimage\n", v);
+    else if (color_out)
       stp_puts("{currentfile picture readhexstring pop} false 3 colorimage\n", v);
     else
       stp_puts("{currentfile picture readhexstring pop} image\n", v);
 
     for (y = 0; y < image_height; y ++)
     {
-      if (stp_color_get_row(nv, image, y, &zero_mask))
+      if (stp_color_get_row(v, image, y, &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
 
-      out = stp_channel_get_input(nv);
+      out = stp_channel_get_input(v);
+
+      /* Convert from KCMY to CMYK */
+      if (cmyk_out)
+	{
+	  int x;
+	  unsigned short *pos = out;
+	  for (x = 0; x < image_width; x++, pos += 4)
+	    {
+	      unsigned short p0 = pos[0];
+	      pos[0] = pos[1];
+	      pos[1] = pos[2];
+	      pos[2] = pos[3];
+	      pos[3] = p0;
+	    }
+	}
       ps_hex(v, out, image_width * out_channels);
     }
   }
   else
   {
     unsigned short *tmp_buf =
-      stp_malloc(sizeof(unsigned short) * (image_width * out_channels + 3));
-    if (strcmp(print_mode, "Color") == 0)
+      stp_malloc(sizeof(unsigned short) * (image_width * out_channels + 4));
+    if (cmyk_out)
+      stp_puts("/DeviceCMYK setcolorspace\n", v);
+    else if (color_out)
       stp_puts("/DeviceRGB setcolorspace\n", v);
     else
       stp_puts("/DeviceGray setcolorspace\n", v);
@@ -707,7 +768,9 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
     stp_zprintf(v, "\t/Height %d\n", image_height);
     stp_puts("\t/BitsPerComponent 8\n", v);
 
-    if (strcmp(print_mode, "Color") == 0)
+    if (cmyk_out)
+      stp_puts("\t/Decode [ 0 1 0 1 0 1 0 1 ]\n", v);
+    else if (color_out)
       stp_puts("\t/Decode [ 0 1 0 1 0 1 ]\n", v);
     else
       stp_puts("\t/Decode [ 0 1 ]\n", v);
@@ -726,12 +789,12 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
     {
       unsigned short *where;
       /* FIXME!!! */
-      if (stp_color_get_row(nv, image, y /*, out + out_offset */ , &zero_mask))
+      if (stp_color_get_row(v, image, y /*, out + out_offset */ , &zero_mask))
 	{
 	  status = 2;
 	  break;
 	}
-      out = stp_channel_get_input(nv);
+      out = stp_channel_get_input(v);
       if (out_offset > 0)
 	{
 	  memcpy(tmp_buf + out_offset, out,
@@ -740,6 +803,21 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
 	}
       else
 	where = out;
+
+      /* Convert from KCMY to CMYK */
+      if (cmyk_out)
+	{
+	  int x;
+	  unsigned short *pos = where;
+	  for (x = 0; x < image_width; x++, pos += 4)
+	    {
+	      unsigned short p0 = pos[0];
+	      pos[0] = pos[1];
+	      pos[1] = pos[2];
+	      pos[2] = pos[3];
+	      pos[3] = p0;
+	    }
+	}
 
       out_ps_height = out_offset + image_width * out_channels;
 
@@ -766,16 +844,33 @@ ps_print_internal(const stp_vars_t *v, stp_image_t *image)
   stp_puts("showpage\n", v);
   stp_puts("%%Trailer\n", v);
   stp_puts("%%EOF\n", v);
-  stp_vars_destroy(nv);
   return status;
 }
 
 static int
 ps_print(const stp_vars_t *v, stp_image_t *image)
 {
-  char *locale = setlocale(LC_ALL, "C");
-  int status = ps_print_internal(v, image);
+  int status;
+#ifdef HAVE_LOCALE_H
+  char *locale;
+#endif
+  stp_vars_t *nv = stp_vars_create_copy(v);
+  stp_prune_inactive_options(nv);
+  if (!stp_verify(nv))
+    {
+      stp_eprintf(nv, "Print options not verified; cannot print.\n");
+      return 0;
+    }
+#ifdef HAVE_LOCALE_H
+  locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
+  status = ps_print_internal(nv, image);
+#ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
+  stp_vars_destroy(nv);
   return status;
 }
 
