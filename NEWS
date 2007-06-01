@@ -126,20 +126,22 @@ C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
   3) A problem with the Postscript driver always printing in grayscale
      has been fixed.  This problem was apparently introduced in 5.1.1.
 
-  4) The Postscript driver now includes all device settings in the
-     output.
-
-  5) The range of sizes for printing custom CD's has been extended
+  4) The range of sizes for printing custom CD's has been extended
      down to 65 mm in both the Epson and Canon drivers.
 
-  6) The Epson Stylus Photo RX590 is now supported.
+  5) The Epson Stylus Photo RX590 is now supported.
 
-  7) Borderless printing on the Epson Stylus Photo RX400, RX420,
+  6) Borderless printing on the Epson Stylus Photo RX400, RX420,
      RX425, RX430, RX500, RX510, RX600, RX630, and RX640 now works
      correctly.
 
-  8) Printing to CD's on Epson printers now works correctly if the
+  7) Printing to CD's on Epson printers now works correctly if the
      image is not placed at the top of the page.
+
+KNOWN LIMITATIONS IN GUTENPRINT 5.1.2:
+
+  1) The Postscript driver does not send device-specific settings
+     (e. g. media type).  We are investigating solutions for this.
 
 
 ----------------

@@ -523,6 +523,7 @@ ps_describe_output(const stp_vars_t *v)
     return "Whitescale";
 }
 
+#if 0
 static void
 ps_print_device_settings(stp_vars_t *v)
 {
@@ -584,6 +585,7 @@ ps_print_device_settings(stp_vars_t *v)
   stp_puts("%%EndSetup\n", v);
   stp_parameter_list_destroy(param_list);
 }
+#endif
 
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
@@ -682,7 +684,10 @@ ps_print_internal(stp_vars_t *v, stp_image_t *image)
   stp_puts("%%Orientation: Portrait\n", v);
   stp_puts("%%EndComments\n", v);
 
+#if 0
+  /* This is still not correct -- rlk 20070601 */
   ps_print_device_settings(v);
+#endif
 
  /*
   * Output the page...
