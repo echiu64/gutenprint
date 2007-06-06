@@ -40,10 +40,8 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4
 2007!</strong></em></font> The Gutenprint project is pleased to
 announce Gutenprint 5.1.2, a development release.  This release offers
 a number of bug fixes and improved quality on newer Epson printers.
-
-<p>Currently only
-the source package is available. We expect to release a binary
-installer for Macintosh OS X in the very near future.  <a
+This package is available in source form, and a Macintosh OS X (10.2
+and above) binary installer is also available.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
