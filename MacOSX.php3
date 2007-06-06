@@ -1,16 +1,54 @@
-<?
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<BASE HREF="http://gutenprint.sourceforge.net/">
+<TITLE>Gutenprint for Mac OS X</TITLE>
+</HEAD>
+<META NAME="CLASSIFICATION" CONTENT="General HTML">
+<META NAME="Author" CONTENT="The Gutenprint Project">
+<META NAME="KEYWORDS" CONTENT="The Gimp, Gimp, Print, Gimp-Print, Gutenprint, Printers, Linux,
+Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
+<META NAME="ABSTRACT" CONTENT="The Gutenprint Project"> 
+<BODY BGCOLOR="#FFFFFF">
+<STYLE TYPE="text/css">
+<!-- /* Hide content from old browsers */
 
-require('functions.php3');
-###############################################
-##    Set title of this page here    ##########
-$title = 'Gutenprint for Mac OS X';
-###############################################
-###############################################
-require('standard_html_header.php3');
+p,ul,ol,dl
+ {
+	font-size: 11pt;
+	font-family: Arial, sans-serif;
+	color: #000000;
+}
 
 
-### Content Below  ###
-# Please remember to use <P> </P> tags !  ?>
+H1 {
+	font-family: Geneva, sans-serif;
+	color: #999999;
+}
+
+
+/* end hiding content from old browsers */ -->
+</STYLE>
+<table border="0" width="100%" cellspacing="0">
+<tr>
+<td bgcolor="#eeeeee">
+&#160;
+</td></tr></table>
+
+<TABLE BORDER="0">
+<TR><TD>
+<IMG SRC="images/top_image.png" width="544" height="111" ALT="Welcome to the Gutenprint Website [46.51 KB]" BORDER="0" ></TD><TD>
+<P>
+<a
+href="http://sourceforge.net/project/memberlist.php?group_id=1537">Meet
+the Developers!</a>
+<br>
+<A href="http://sourceforge.net/project/?group_id=1537">SourceForge Interface</a>
+</P>
+</TD></TR>
+</TABLE>
+<table border="0" width="100%" cellspacing="0"><tr><td bgcolor="#eeeeee"><table border="0"><TR><TD BGCOLOR="#dedede"><P><A href="index.php3">Home</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Documentation.php3">Documentation</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Download.php3">Download</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_FAQ_OS_X.php3">FAQ_OS_X</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Features.php3">Features</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Mailing_Lists.php3">Mailing_Lists</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Screenshot.php3">Screenshot</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Supported_Printers.php3">Supported_Printers</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_ToDo.php3">ToDo</A></P></TD></TR></TABLE></td><td bgcolor="#eeeeee"><p><font color="#d0d0d0">Welcome to Gutenprint!</font></p></td></tr></table><table border="0" width="100%" cellspacing=10><tr><td>
+
  <h1>
  Gutenprint and Gimp-Print for Mac OS X (10.2 and later)
  </h1>
@@ -31,8 +69,12 @@ require('standard_html_header.php3');
  </tr>
  <tr>
  <td>
+  <p>
+ <a href="MacOSX.php3#5.1.2"><b>June 5, 2007 -</b></a> Gutenprint
+ 5.1.2 is now available for download. A new Uninstaller is also available.  See the <b>Downloads</b> section.
+ </p>
  <p>
- <a href="MacOSX.php3#5.0.0-beta2"><b>July 30, 2006 -</b></a> Gutenprint
+ <a href="MacOSX.php3#5.0.0"><b>July 30, 2006 -</b></a> Gutenprint
  5.0.0 is now available for download.
  </p>
  <p>
@@ -105,6 +147,27 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
  <tr>
  <td>
  <br>
+ <b>Gutenprint 5.1.2</b>
+ </td>
+ </tr>
+ <tr>
+ <td bgcolor="#d0ffff" >
+ <a href=
+ "http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.2.U.dmg?download"
+ >gutenprint-5.1.2.U.dmg</a>&nbsp;(14.8 MB)
+ </td>
+ <td align="right" >
+ (<a href=
+ "http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.2.tar.bz2?download"
+ >source</a>)
+ </td>
+ </tr>
+ <tr>
+ <td colspan="2" >
+ <p>
+ Gutenprint 5.1.2 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This is the first Mac OS X release to contain several new features: <b>Shrink</b> the output necessary to fit the imageable area of the page. <b>Crop</b>  the output if necessary to fit the imageable area of the page. <b>Expand</b> the output  to fit the maximum possible imageable area of the page.  It also contains support for many more printers, improved quality, and enhanced functionality.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
+ </p>
+ <!-- deleted older release info as iCab was still displaying it -->
  <b>Gutenprint 5.0.0</b>
  </td>
  </tr>
@@ -205,8 +268,8 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-uninstaller-1.1.dmg?download"
- >gimp-print-uninstaller-1.1.dmg</a>&nbsp;(120 KB)
+ "http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.1.3.dmg?download"
+ >gimp-print-uninstaller-1.1.3.dmg</a>&nbsp;(116 KB)
  </td>
  <td align="right" >
  </td>
@@ -214,7 +277,7 @@ it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this
  <tr>
  <td colspan="2" >
  <p>
-The Gimp-Print uninstaller will completely remove any version of Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0). This uninstaller is included with all current Gimp-Print installer packages and does not need to be downloaded separately. It it being made available here as a convenience.
+The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0) and Mac OS X "Tiger (Mac OS X version 10.4.x). This uninstaller is included with all current Gimp-Print installer packages and does not need to be downloaded separately. It it being made available here as a convenience.
  </p>
  <a name="downloadESPGS"></a>
  <b>ESP Ghostscript 7.07.1</b>
@@ -281,6 +344,23 @@ The Gimp-Print uninstaller will completely remove any version of Gimp-Print that
  News Items
  </h3>
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+  <a name ="5.1.2"></a>
+ <B>Gutenprint 5.1.2</B>
+ </TD>
+ <TD align="right" >
+ <B>2007-06-05</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gutenprint 5.1.2 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This is the first Mac OS X release to contain several new features described in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=513033">release notes</a>.
+</p> &nbsp;
+ </td>
+ </tr>
+ 
  <TR bgcolor="#D0D0D0" >
  <TD>
   <a name ="5.0.0"></a>
@@ -1730,4 +1810,25 @@ Gimp-Print 4.3.18 is the latest Mac OS X release in the developmental line (4.3.
  </tr>
  </table>
 
-<?require('standard_html_footer.php3');?>
+</td></tr></table>
+<P>
+<BR>
+</P>
+<table border="0" width="100%" cellspacing="0"><tr><td bgcolor="#eeeeee"><table border="0"><TR><TD BGCOLOR="#dedede"><P><A href="index.php3">Home</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Documentation.php3">Documentation</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Download.php3">Download</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_FAQ_OS_X.php3">FAQ_OS_X</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Features.php3">Features</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Mailing_Lists.php3">Mailing_Lists</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Screenshot.php3">Screenshot</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_Supported_Printers.php3">Supported_Printers</A></P></TD><TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD><TD BGCOLOR="#dedede"><P><A href="p_ToDo.php3">ToDo</A></P></TD></TR></TABLE></td><td bgcolor="#eeeeee"><p><font color="#d0d0d0"></font></p></td></tr></table><hr noshade>
+<table border=0 align="right">
+<tr><td>
+<A href="http://sourceforge.net"><IMG
+src="http://sourceforge.net/sflogo.php?group_id=1537&amp;type=5"
+width="210" height="63" border="0" alt="SourceForge Logo"></A> 
+</td>
+<td>
+<P>Resources very kindly<br>provided by <A href="http://sourceforge.net">SourceForge.</A></P>
+</td>
+</tr>
+</table>
+<P>Canon is a trademark of Canon USA. Epson and (probably) ESCP are
+trademarks of Epson Seiko Ltd. HP and (probably) PCL are trademarks of
+Hewlett-Packard, Inc. Linux is a trademark of Linus Torvalds. Other
+trademarks are the property of their respective owners.</P>
+</BODY>
+</HTML>
