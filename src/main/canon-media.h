@@ -72,16 +72,6 @@ static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP4000);
 
-
-static const canon_slot_t canon_PIXMA_iP4200_slots[] = {
-  { "SelectKey",  N_ ("Selected by Paper Select Key"), 3 },
-  { "Auto",       N_ ("Auto Sheet Feeder"), 4 },
-  { "Cassette",   N_ ("Cassette"), 8 },
-  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },
-};
-DECLARE_SLOTS(canon_PIXMA_iP4200);
-
-
 /* media types */
 
 typedef struct {
