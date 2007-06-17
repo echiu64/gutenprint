@@ -132,7 +132,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
      * Canon inkjet printers:
 
        The support for these printers is under development, and there
-       are known issues with these printers.  Please check with the
+       may be issues with these printers.  Please check with the
        mailing list (gimp-print-devel@lists.sourceforge.net) if you
        have any questions.
 
