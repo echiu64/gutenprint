@@ -432,7 +432,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon PIXMA iP2000 */
     9001, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP2000_modelist,
@@ -444,7 +444,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon PIXMA iP3000 */
     3999, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP3000_modelist,
@@ -468,7 +468,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon PIXMA iP4200 */
     4200, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4200_modelist,
@@ -480,7 +480,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon PIXMA iP6700 */
     4203, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP6700_modelist,
@@ -492,7 +492,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon MULTIPASS MP150 */
     4201, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x61,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP150_modelist,
@@ -504,7 +504,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon MULTIPASS MP830 */
     9000, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
-    11, 9, 10, 18,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px,0,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP830_modelist,

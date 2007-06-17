@@ -41,6 +41,13 @@
       <parameters name="PIXMA_iP4000_params">
         <parameter type="float" name="Gamma">0.4</parameter>
       </parameters>
+      <parameters name="PIXMA_iP4300_params">
+        <parameter type="float" name="Brightness">0.7</parameter>
+        <parameter type="float" name="Density">0.6</parameter>
+        <parameter type="float" name="Contrast">1.7</parameter>
+        <parameter type="float" name="Gamma">0.9</parameter>
+        <parameter type="float" name="BlackGamma">0.6</parameter>
+      </parameters>
       <printer name="Canon BJ-30" driver="bjc-30" manufacturer="Canon" model="30" parameters="gamma_2_density_800_params" />
       <printer name="Canon BJC-50" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
       <printer name="Canon BJC-55" driver="bjc-55" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
@@ -81,7 +88,7 @@
       <printer name="Canon PIXMA iP4000" driver="bjc-iP4000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4100" driver="bjc-PIXMA-iP4100" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4200" driver="bjc-PIXMA-iP4200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
-      <printer name="Canon PIXMA iP4300" driver="bjc-PIXMA-iP4300" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXMA iP4300" driver="bjc-PIXMA-iP4300" manufacturer="Canon" model="4200" parameters="PIXMA_iP4300_params" />
       <printer name="Canon PIXMA iP5000" driver="bjc-PIXMA-iP5000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP6700" driver="bjc-PIXMA-iP6700" manufacturer="Canon" model="4203" parameters="PIXMA_iP4000_params" />
