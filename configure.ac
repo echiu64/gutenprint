@@ -37,7 +37,7 @@ dnl
 pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [1])
-pushdef([GUTENPRINT_MICRO_VERSION],     [2])
+pushdef([GUTENPRINT_MICRO_VERSION],     [3])
 pushdef([GUTENPRINT_EXTRA_VERSION],     [])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
