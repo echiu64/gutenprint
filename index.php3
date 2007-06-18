@@ -34,6 +34,30 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", and 10.4
 "Tiger" and provides direct download links.</p>
 
 
+<H2><font color="#ff0000">Gutenprint 5.0.1 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of March 17,
+2007!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.0.1, a stable release in the Gutenprint 5.0
+series.  This release features full support for CUPS 1.2, full support
+for borderless printing on Epson inkjet printers, support for many
+more Epson, Canon, and dye sublimation printers, and more.  This
+package is availablein source form, and a Macintosh OS X (10.2 and
+above) binary installer will be available shortly.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
+<H2><font color="#ff0000">Gutenprint 5.1.3 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of June 17,
+2007!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.1.3, a development release.  This release offers
+a few bug fixes over 5.1.2.  This package is available in source form,
+and a Macintosh OS X (10.2 and above) binary installer will be
+available shortly.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
 <H2><font color="#ff0000">Gutenprint 5.1.2 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of June 2,
@@ -45,7 +69,6 @@ and above) binary installer is also available.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
-
 <H2><font color="#ff0000">Gutenprint 5.1.1 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 20,
@@ -53,22 +76,6 @@ can read the release notes and download it here</a>.  </p>
 announce Gutenprint 5.1.1, a development release.  This release
 features support for additional Epson inkjet printers, improvements to
 some Canon printers, and a variety of bug fixes.
-
-
-<H2><font color="#ff0000">Gutenprint 5.0.0.99.1 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of March 3,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce the first release candidate for 5.0.1, a stable release in
-the Gutenprint 5.0 series.  This release features full support for
-CUPS 1.2 and full support for borderless printing on Epson inkjet
-printers.</p>
-
-<p>Currently only
-the source package is available.  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
 
 <H2><font color="#ff0000">Gutenprint 5.1.0 is released!</font></h2>
 
@@ -83,7 +90,6 @@ the source package is available.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
-
 <H2><font color="#ff0000">Gutenprint 5.0.0 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of July 30,
@@ -97,12 +103,11 @@ binary installer for Macintosh OS X in the very near future.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
-
 <H2><font color="#ff0000">Gimp-Print 4.2.7 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of July 15,
-2004!</strong></em></font> Gimp-Print 4.2.7 is released.  This
-offers a number of bug fixes over 4.2.6. <a
+2004!</strong></em></font> Gimp-Print 4.2.7 is released.  This offers
+a number of bug fixes over 4.2.6. <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537&release_id=253459">You
 can read the release notes and download it here</a>.  </p>
 
