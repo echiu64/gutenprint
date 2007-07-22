@@ -69,6 +69,14 @@ the Developers!</a>
  </tr>
  <tr>
  <td>
+ <p>
+ <a href="MacOSX.php3#5.1.3"><b>June 19, 2007 -</b></a> Gutenprint
+ 5.1.3 has been released.  This is an incremental development release.   See the <b>Downloads</b> section.
+ </p>
+ <p>
+  <a href="MacOSX.php3#5.0.1"><b>June 18, 2007 -</b></a> Gutenprint
+ 5.0.1 has been released.  This is a stable release.  It contains several new features.   See the <b>Downloads</b> section.
+ </p>
   <p>
  <a href="MacOSX.php3#5.1.2"><b>June 5, 2007 -</b></a> Gutenprint
  5.1.2 is now available for download. A new Uninstaller is also available.  See the <b>Downloads</b> section.
@@ -147,48 +155,47 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
  <tr>
  <td>
  <br>
- <b>Gutenprint 5.1.2</b>
+ <b>Gutenprint 5.1.3</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.2.U.dmg?download"
- >gutenprint-5.1.2.U.dmg</a>&nbsp;(14.8 MB)
+ "http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.3.U.dmg?download"
+ >gutenprint-5.1.3.U.dmg</a>&nbsp;(15.9 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.2.tar.bz2?download"
+ "http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.3.tar.bz2?download"
  >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gutenprint 5.1.2 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This is the first Mac OS X release to contain several new features: <b>Shrink</b> the output necessary to fit the imageable area of the page. <b>Crop</b>  the output if necessary to fit the imageable area of the page. <b>Expand</b> the output  to fit the maximum possible imageable area of the page.  It also contains support for many more printers, improved quality, and enhanced functionality.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
+ Gutenprint 5.1.3 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. It contains the features: <b>Shrink</b> the output necessary to fit the imageable area of the page. <b>Crop</b>  the output if necessary to fit the imageable area of the page. <b>Expand</b> the output  to fit the maximum possible imageable area of the page.  It also contains support for many more printers, improved quality, and enhanced functionality.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
  </p>
  <!-- deleted older release info as iCab was still displaying it -->
- <b>Gutenprint 5.0.0</b>
+ <b>Gutenprint 5.0.1</b>
  </td>
  </tr>
  <tr>
  <td bgcolor="#d0ffff" >
  <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.0.U.dmg?download"
- >gutenprint-5.0.0.U.dmg</a>&nbsp;(9.4 MB)
+ "http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.1.U.dmg?download"
+ >gutenprint-5.0.1.U.dmg</a>&nbsp;(15.5 MB)
  </td>
  <td align="right" >
  (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.0.tar.bz2?download"
- >source</a>)
+ "http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.1.tar.bz2?download" >source</a>)
  </td>
  </tr>
  <tr>
  <td colspan="2" >
  <p>
- Gutenprint 5.0.0 is the first stable release of 5.0.  Gutenprint is
+ Gutenprint 5.0.1 is the second stable release of 5.0.  Gutenprint is
  the new name for Gimp-Print as of the 5.0 release.
- This release represents the state-of-the-art in current Gimp-Print development.  It contains many new and exciting features over the 4.2.x series, including support for many more printers, improved quality, and enhanced functionality.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
+ This release represents the state-of-the-art in current Gimp-Print development.  It contains many new and exciting features over the 4.2.x series, including support for many more printers, improved quality, and enhanced functionality.  This is the first stable release that contains the features: <b>Shrink</b> the output necessary to fit the imageable area of the page. <b>Crop</b>  the output if necessary to fit the imageable area of the page. <b>Expand</b> the output  to fit the maximum possible imageable area of the page.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
  </p>
  <b>Gimp-Print 4.2.7</b>
  </td>
@@ -214,54 +221,7 @@ Anyone who has ever installed an earlier release of ESP Ghostscript should eithe
 </p><p>
  <em>Please note</em>: Mac OS X Jaguar (10.2.x) users need ESP Ghostscript (see below); later versions of Mac OS X do not require this companion software! 
  </p>
-<!--
- <b>Gimp-Print 4.2.6-rc2</b>
- </td>
- </tr>
- <tr>
- <td bgcolor="#d0ffff" >
- <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-rc2.ppc.dmg?download"
- >gimp-print-4.2.6-rc2.ppc.dmg</a>&nbsp;(5.8 MB)
- </td>
- <td align="right" >
- (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.6-rc2.tar.gz?download"
- >source</a>)
- </td>
- </tr>
- <tr>
- <td colspan="2" >
- <p>
- Gimp-Print 4.2.6-rc2 is the second release candidate for version 4.2.6 ; 
-it includes bug fixes and new features over 4.2.5. On Mac OS X "Jaguar" this 
- package requires (but does not include) ESP Ghostscript (<b>download below and 
- install, if necessary</b>).  ESP Ghostscript is not required for Mac OS X "Panther". 
- </p>
---!>
-<!--
- <b>Gimp-Print 5.0.0-beta2</b>
- </td>
- </tr>
- <tr>
- <td bgcolor="#d0ffff" >
- <a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta2.ppc.dmg?download"
- >gimp-print-5.0.0-beta2.ppc.dmg</a>&nbsp;(6.9 MB)
- </td>
- <td align="right" >
- (<a href=
- "http://prdownloads.sourceforge.net/gimp-print/gimp-print-5.0.0-beta2.tar.bz2?download"
- >source</a>)
- </td>
- </tr>
- <tr>
- <td colspan="2" >
- <p>
- Gimp-Print 5.0.0-beta2 is the latest beta release in the new 5.0 series. 
- This release represents the state-of-the-art in current Gimp-Print development, but it is currently only beta quality software. As such, while it contains many new and exciting features over the 4.2.x series, it may also provide unexpected behavior.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later. 
- </p>
---!>
+
  <b>Gimp-Print Uninstaller</b>
  </td>
  </tr>
@@ -346,6 +306,24 @@ The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp
  <table width="700" border="0" cellpadding="0" cellspacing="0" >
  <TR bgcolor="#D0D0D0" >
  <TD>
+  <a name ="5.1.3"></a>
+ <B>Gutenprint 5.1.3</B>
+ </TD>
+ <TD align="right" >
+ <B>2007-06-19</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gutenprint 5.1.3 is an incremental development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release to contain several bug fixes as described in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=516796">release notes</a>.  This release also fixes a problem with the  Mac OS X 5.1.2 package.  That package had an incorrect PPC portion of the libgutenprint.a file.
+</p> &nbsp;
+ </td>
+ </tr>
+ 
+ 
+ <TR bgcolor="#D0D0D0" >
+ <TD>
   <a name ="5.1.2"></a>
  <B>Gutenprint 5.1.2</B>
  </TD>
@@ -357,6 +335,26 @@ The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp
  <TD colspan="2" >
  <p>
  Gutenprint 5.1.2 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This is the first Mac OS X release to contain several new features described in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=513033">release notes</a>.
+</p> &nbsp;
+ </td>
+ </tr>
+ 
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+ 
+ <TR bgcolor="#D0D0D0" >
+ <TD>
+  <a name ="5.0.1"></a>
+ <B>Gutenprint 5.0.1</B>
+ </TD>
+ <TD align="right" >
+ <B>2007-06-18</B>
+ </TD>
+ </TR>
+ <TR>
+ <TD colspan="2" >
+ <p>
+ Gutenprint 5.0.1 is a stable release of Gutenprint 5.0.  This is the first Mac OS X release to contain several new features described in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=516794">release notes</a>.
 </p> &nbsp;
  </td>
  </tr>
