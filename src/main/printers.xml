@@ -641,6 +641,7 @@
       <printer name="HP LaserJet 1010" driver="hp-lj_1010" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1012" driver="hp-lj_1012" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1015" driver="hp-lj_1015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 1022" driver="hp-lj_1022" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1100" driver="hp-lj_1100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1100A" driver="hp-lj_1100a" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1150" driver="hp-lj_1150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
