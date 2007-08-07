@@ -71,8 +71,8 @@
     <paper name="CDCustom">
       <description value="CD - Custom"/>
       <comment value="CD, custom diameter"/>
-      <width value="337"/>
-      <height value="337"/>
+      <width value="340"/>
+      <height value="340"/>
       <unit value="english"/>
     </paper>
     <paper name="w216h360">
