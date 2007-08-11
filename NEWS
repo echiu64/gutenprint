@@ -112,6 +112,18 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 
+   1) Support added for Epson CX4400 and PM-670C.
+
+   2) Support added for Canon MP710 and MP740.
+
+   3) Support added for the HP LaserJet 1022.
+
+   4) Various fixes for the Canon iP4000.
+
+   5) The paper size for the CD - Custom paper size has been changed
+      to 120 mm from 118.8 mm to allow correct printing from CUPS.
+
+   6) A compile problem on Solaris has been fixed.
 
 
 KNOWN LIMITATIONS IN GUTENPRINT 5.1.4:
