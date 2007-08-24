@@ -287,7 +287,9 @@ main(int argc, char **argv)
 
   /* Set up gettext */
 #ifdef HAVE_LOCALE_H
-  setlocale (LC_ALL, "");
+  char *locale = stp_strdup(setlocale (LC_ALL, ""));
+#endif
+#ifdef ENABLE_NLS
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
 
@@ -650,28 +652,6 @@ do_remote_cmd_only(const char *cmd, int nargs, ...)
 }
 
 static void
-add_string(const char *str, int size)
-{
-  if (size > 0)
-    {
-      memcpy(printer_cmd + bufpos, str, size);
-      bufpos += size;
-    }
-}
-
-static void
-add_newlines(int count)
-{
-  int i;
-  STP_DEBUG(fprintf(stderr, "Add %d newlines\n", count));
-  for (i = 0; i < count; i++)
-    {
-      printer_cmd[bufpos++] = '\r';
-      printer_cmd[bufpos++] = '\n';
-    }
-}
-
-static void
 add_resets(int count)
 {
   int i;
@@ -794,17 +774,15 @@ set_printer_model(void)
 	    }
 	}
     }
+  fprintf(stderr, _("Unknown printer %s!\n"), printer_model);
   the_printer_t = NULL;
 }
 
 static const stp_printer_t *
 initialize_printer(int quiet, int fail_if_not_found)
 {
-  int printer_count = stp_printer_model_count();
-  int found = 0;
   int packet_initialized = 0;
   int fd;
-  int i;
   int credit;
   int retry = 4;
   int tries = 0;
@@ -1919,7 +1897,7 @@ do_final_alignment(void)
 }
 
 const char *printer_msg =
-N_("This procedure assumes that your printer is an Epson %s.\n"
+N_("This procedure assumes that your printer is an %s.\n"
    "If this is not your printer model, please type control-C now and\n"
    "choose your actual printer model.\n\n"
    "Please place a sheet of paper in your printer to begin the head\n"
@@ -1935,16 +1913,20 @@ do_align(void)
   long answer;
   char *endptr;
   int curpass;
-  const stp_printer_t *printer = get_printer(0, 0);
   stp_parameter_t desc;
   const char *printer_name;
   stp_vars_t *v = stp_vars_create();
 
-  if (!printer || found_unknown_old_printer)
+  if (printer_model)
+    set_printer_model();
+  else if (raw_device)
+    (void) get_printer(0, 0);
+
+  if (!the_printer_t || found_unknown_old_printer)
     return;
 
-  printer_name = stp_printer_get_long_name(printer);
-  stp_set_driver(v, stp_printer_get_driver(printer));
+  printer_name = stp_printer_get_long_name(the_printer_t);
+  stp_set_driver(v, stp_printer_get_driver(the_printer_t));
 
   if (alignment_passes == 0)
     {
