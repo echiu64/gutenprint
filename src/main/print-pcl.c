@@ -2219,8 +2219,6 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
           if ((strcmp(duplex_mode, "DuplexTumble") == 0))
             privdata.tumble=1;
         }
-      else
-        stp_erprintf("pcl: cannot duplex on this hardware.\n");
     }
 
  /*
