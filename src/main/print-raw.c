@@ -332,6 +332,7 @@ static const stp_printfuncs_t print_raw_printfuncs =
   raw_describe_output,
   stp_verify_printer_params,
   NULL,
+  NULL,
   NULL
 };
 

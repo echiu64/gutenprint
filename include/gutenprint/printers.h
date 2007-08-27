@@ -33,6 +33,7 @@
 extern "C" {
 #endif
 
+#include <gutenprint/string-list.h>
 #include <gutenprint/list.h>
 #include <gutenprint/vars.h>
 
@@ -184,6 +185,17 @@ extern int stp_start_job(const stp_vars_t *v, stp_image_t *image);
  */
 extern int stp_end_job(const stp_vars_t *v, stp_image_t *image);
 
+/**
+ * Retrieve options that need to be passed to the underlying print
+ * system.
+ * @param v the vars to use.
+ * @returns list of options in a string list ('name' is the name
+ * of the option; 'text' is the value it takes on).  NULL return means
+ * no external options are required.  User must stp_string_list_destroy
+ * the list after use.
+ */
+extern stp_string_list_t *stp_get_external_options(const stp_vars_t *v);
+
 typedef struct
 {
   stp_parameter_list_t (*list_parameters)(const stp_vars_t *v);
@@ -202,6 +214,7 @@ typedef struct
   int   (*verify)(stp_vars_t *v);
   int   (*start_job)(const stp_vars_t *v, stp_image_t *image);
   int   (*end_job)(const stp_vars_t *v, stp_image_t *image);
+  stp_string_list_t *(*get_external_options)(const stp_vars_t *v);
 } stp_printfuncs_t;
 
 typedef struct stp_family

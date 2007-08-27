@@ -87,7 +87,8 @@ static const stp_parameter_t the_parameters[] =
 static const int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
-static int ps_option_to_param(stp_parameter_t *param, ppd_group_t *group, ppd_option_t *option)
+static int
+ps_option_to_param(stp_parameter_t *param, ppd_group_t *group, ppd_option_t *option)
 {
   ppd_group_t *g, *grp = group;
   ppd_option_t *o;
@@ -291,21 +292,34 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
   ps_option_to_param(description, NULL, option);
   description->bounds.str = stp_string_list_create();
 
-  stp_dprintf(STP_DBG_PS, v, "describe parameter %s, output name=[%s] text=[%s] category=[%s] choices=[%d]",
+  stp_dprintf(STP_DBG_PS, v, "describe parameter %s, output name=[%s] text=[%s] category=[%s] choices=[%d] default=[%s]\n",
 	      name, description->name, description->text,
-	      description->category, option->num_choices);
+	      description->category, option->num_choices, option->defchoice);
 
   /* Describe all choices for specified option. */
   for (i=0; i < option->num_choices; i++)
   {
     choice = option->choices + i;
     stp_string_list_add_string(description->bounds.str, choice->choice, choice->text);
-    if (choice->marked)
-      description->deflt.str = choice->choice;
+    stp_dprintf(STP_DBG_PS, v,
+		"    parameter %s, choice %d [%s] [%s] marked %d\n",
+		name, i, choice->choice, choice->text, choice->marked);
+    if (strcmp(choice->choice, option->defchoice) == 0)
+      {
+	stp_dprintf(STP_DBG_PS, v,
+		    "        parameter %s, choice %d [%s] DEFAULT\n",
+		    name, i, choice->choice);
+	description->deflt.str = choice->choice;
+      }
   }
 
   if (!description->deflt.str)
-    description->deflt.str = option->choices[0].choice;
+    {
+	stp_dprintf(STP_DBG_PS, v,
+		    "        parameter %s, defaulting to [%s]",
+		    name, option->choices[0].choice);
+	description->deflt.str = option->choices[0].choice;
+    }
   if (stp_string_list_count(description->bounds.str) > 0)
     description->is_active = 1;
   return;
@@ -521,6 +535,89 @@ ps_describe_output(const stp_vars_t *v)
     }
   else
     return "Whitescale";
+}
+
+static stp_string_list_t *
+ps_external_options(const stp_vars_t *v)
+{
+  stp_parameter_list_t param_list = ps_list_parameters(v);
+  stp_string_list_t *answer;
+  char *tmp;
+  int i;
+#ifdef HAVE_LOCALE_H
+  char *locale;
+#endif
+  if (! param_list)
+    return NULL;
+  answer = stp_string_list_create();
+#ifdef HAVE_LOCALE_H
+  locale = stp_strdup(setlocale(LC_ALL, NULL));
+  setlocale(LC_ALL, "C");
+#endif
+  for (i = 0; i < stp_parameter_list_count(param_list); i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(param_list, i);
+      stp_parameter_t desc;
+      stp_describe_parameter(v, param->name, &desc);
+      if (desc.is_active)
+	{
+	  switch (desc.p_type)
+	    {
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      if (stp_get_string_parameter(v, desc.name) &&
+		  strcmp(stp_get_string_parameter(v, desc.name),
+			 desc.deflt.str))
+		stp_string_list_add_string(answer, desc.name,
+					   stp_get_string_parameter(v, desc.name));
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      if (stp_get_int_parameter(v, desc.name) != desc.deflt.integer)
+		{
+		  stp_asprintf(&tmp, "%d", stp_get_int_parameter(v, desc.name));
+		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_free(tmp);
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      if (stp_get_boolean_parameter(v, desc.name) != desc.deflt.boolean)
+		{
+		  stp_asprintf(&tmp, "%s",
+			       stp_get_boolean_parameter(v, desc.name) ?
+			       "True" : "False");
+		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_free(tmp);
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      if (stp_get_float_parameter(v, desc.name) != desc.deflt.dbl)
+		{
+		  stp_asprintf(&tmp, "%.3f",
+			       stp_get_float_parameter(v, desc.name));
+		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_free(tmp);
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      if (stp_get_dimension_parameter(v, desc.name) !=
+		  desc.deflt.dimension)
+		{
+		  stp_asprintf(&tmp, "%d",
+			       stp_get_dimension_parameter(v, desc.name));
+		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_free(tmp);
+		}
+	      break;
+	    default:
+	      break;
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
+    }
+#ifdef HAVE_LOCALE_H
+  setlocale(LC_ALL, locale);
+  stp_free(locale);
+#endif
+  return answer;
 }
 
 #if 0
@@ -1028,7 +1125,8 @@ static const stp_printfuncs_t print_ps_printfuncs =
   ps_describe_output,
   stp_verify_printer_params,
   NULL,
-  NULL
+  NULL,
+  ps_external_options
 };
 
 

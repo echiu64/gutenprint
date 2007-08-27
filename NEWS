@@ -125,11 +125,12 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 
    6) A compile problem on Solaris has been fixed.
 
+   7) It is now possible to specify the printer model to all escputil
+      commands, via the -m option.  It is no longer necessary to use
+      the -u option to specify a new printer vs. an old printer.
 
-KNOWN LIMITATIONS IN GUTENPRINT 5.1.4:
-
-  1) The Postscript driver does not send device-specific settings
-     (e. g. media type).  We are investigating solutions for this.
+   8) The Postscript driver now sends device-specific settings, such
+      as media type, to the print command.
 
 
 ----------------

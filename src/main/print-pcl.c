@@ -2767,6 +2767,7 @@ static const stp_printfuncs_t print_pcl_printfuncs =
   pcl_describe_output,
   stp_verify_printer_params,
   NULL,
+  NULL,
   NULL
 };
 

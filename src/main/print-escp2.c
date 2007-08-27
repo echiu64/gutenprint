@@ -1984,7 +1984,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "SupportsPacketMode") == 0)
     {
-      description->deflt.integer =
+      description->deflt.boolean =
 	escp2_has_cap(v, MODEL_PACKET_MODE, MODEL_PACKET_MODE_YES);
     }
   else if (strcmp(name, "PrintingMode") == 0)
@@ -3454,7 +3454,8 @@ static const stp_printfuncs_t print_escp2_printfuncs =
   escp2_describe_output,
   stp_verify_printer_params,
   escp2_job_start,
-  escp2_job_end
+  escp2_job_end,
+  NULL
 };
 
 static stp_family_t print_escp2_module_data =

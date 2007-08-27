@@ -2072,7 +2072,8 @@ static const stp_printfuncs_t print_canon_printfuncs =
   canon_describe_output,
   stp_verify_printer_params,
   canon_start_job,
-  canon_end_job
+  canon_end_job,
+  NULL
 };
 
 static void
