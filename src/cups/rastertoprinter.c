@@ -698,7 +698,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		  fprintf(stderr, "DEBUG: Gutenprint set bool %s to %s\n",
 			  desc.name, val);
 		  stp_set_boolean_parameter
-		    (v, desc.name, strcmp(val, "True") == 0 ? 1 : 0);
+		    (v, desc.name, strcasecmp(val, "true") == 0 ? 1 : 0);
 		  break;
 		case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
 		case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole */
