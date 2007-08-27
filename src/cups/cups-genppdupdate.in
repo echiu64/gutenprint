@@ -372,7 +372,7 @@ sub update_ppd ($) {
 	}
     }
     if (! $valid) {
-	print STDERR "$ppd_source_filename: this PPD file cannot be upgraded automatically (only files based on Gutenprint 4.3.21 and newer can be)\n";
+	print STDERR "$ppd_source_filename: this PPD file cannot be upgraded automatically (only files based on Gutenprint 5.0.0 and newer can be)\n";
 	return 0;
     }
     if ($debug & 2) {
