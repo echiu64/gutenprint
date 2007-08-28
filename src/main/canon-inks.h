@@ -391,6 +391,31 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_22_C3M3Y2K2_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
