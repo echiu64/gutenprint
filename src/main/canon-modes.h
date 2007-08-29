@@ -264,10 +264,15 @@ DECLARE_MODES(canon_PIXMA_iP4000,2);
 
 
 static const canon_mode_t canon_PIXMA_iP4200_modes[] = {
+  /* Q0 - fastest mode (in windows driver it's Q5, printer uses 50% of ink ( I think )) */
+  {  300, 300,CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL},
+  /* Q1 - normal 300x300 mode (in windows driver it's Q4 - normal darkness of printout ) */
+  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL},
+  /* Q2 - standard mode for this driver (in windows driver it's Q3) */
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL},
  /* {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL}, */
 };
-DECLARE_MODES(canon_PIXMA_iP4200,0);
+DECLARE_MODES(canon_PIXMA_iP4200,2);
 
 
 static const canon_mode_t canon_PIXMA_iP6700_modes[] = {
