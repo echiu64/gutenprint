@@ -121,6 +121,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_px        0x2000ul
 #define CANON_CAP_rr        0x4000ul
 #define CANON_CAP_I         0x8000ul
+#define CANON_CAP_P         0x20000ul
 #define CANON_CAP_DUPLEX    0x40000ul
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
@@ -1179,6 +1180,16 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	      arg_70_3, arg_70_4, 0x00, 0x00);
 }
 
+/* ESC (P -- 0x50 -- unknown -- :
+ */
+static void
+canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
+{
+	if(!(init->caps->features & CANON_CAP_P))
+		return;
+	canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,0x00 );
+}
+
 /* ESC (q -- 0x71 -- setPageID -- :
  */
 static void
@@ -1330,6 +1341,7 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   canon_init_setColor(v,init);           /* ESC (c */
   canon_init_setPageMargins(v,init);     /* ESC (g */
   canon_init_setPageMargins2(v,init);    /* ESC (p */
+  canon_init_setESC_P(v,init);           /* ESD (P */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
