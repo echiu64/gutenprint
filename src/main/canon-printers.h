@@ -106,7 +106,13 @@ static const char* control_cmd_PIXMA_iP4000[] = {
   NULL
 };
 
-
+static const char* control_cmd_PIXMA_iP4200[] = {
+/*"SetTime=20060722092503", */         /*original driver sends current time, is it needed?*/
+  "SetSilent=OFF",
+  "PEdgeDetection=ON",
+  NULL
+};
+ 
 static const char* control_cmd_MULTIPASS_MP150[] = {
   "AckTime=Short",
   "MediaDetection=ON",
@@ -470,7 +476,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px /*,|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px /*|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4000_modelist,
     &canon_PIXMA_iP4000_paperlist,
     NULL,
@@ -494,7 +500,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP4200_modelist,
     &canon_PIXMA_iP4000_paperlist,
     NULL,
