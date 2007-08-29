@@ -361,6 +361,18 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC i560 */
+    7001, 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_default_slotlist,
+    CANON_CAP_STD1,0,NULL,
+    &canon_BJC_i560_modelist,
+    &canon_default_paperlist,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     7100, 3,
     842, 17*72,

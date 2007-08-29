@@ -107,7 +107,7 @@
       <printer name="Canon PIXMA MP830" driver="bjc-MULTIPASS-MP830" manufacturer="Canon" model="9000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
-      <printer name="Canon i560" driver="bjc-i560" manufacturer="Canon" model="7000" parameters="gamma_6_density_800_params" />
+      <printer name="Canon i560" driver="bjc-i560" manufacturer="Canon" model="7001" parameters="gamma_6_density_800_params" />
       <printer name="Canon i850" driver="bjc-i850" manufacturer="Canon" model="3999" parameters="PIXMA_iP4000_params" />
       <printer name="Canon i860" driver="bjc-i860" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon i865" driver="bjc-i865" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
