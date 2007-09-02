@@ -342,12 +342,20 @@ stp_dprintf(unsigned long level, const stp_vars_t *v, const char *format, ...)
 {
   int bytes;
   stpi_init_debug();
-  if ((level & stpi_debug_level) && stp_get_errfunc(v))
+  if (level & stpi_debug_level)
     {
-      char *result;
-      STPI_VASPRINTF(result, bytes, format);
-      (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
-      stp_free(result);
+      if (stp_get_errfunc(v))
+	{
+	  char *result;
+	  STPI_VASPRINTF(result, bytes, format);
+	  (stp_get_errfunc(v))((void *)(stp_get_errdata(v)), result, bytes);
+	  stp_free(result);
+	} else {
+	  va_list args;
+	  va_start(args, format);
+	  vfprintf(stderr, format, args);
+	  va_end(args);
+	}
     }
 }
 
