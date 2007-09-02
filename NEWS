@@ -132,6 +132,15 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
    8) The Postscript driver now sends device-specific settings, such
       as media type, to the print command.
 
+   9) The Epson driver will not select resolutions higher than
+      5760x1440 for the automatic quality settings, as we have
+      determined that many current printers offer poor quality at the
+      bottom of the page with resolutions of 2880x2880 and 5760x2880.
+      We have not removed these resolutions altogether, as they may
+      work well for certain applications, but they will not be
+      automatically selected by the Best or Ultra Photo quality
+      settings.
+
 
 ----------------
 
