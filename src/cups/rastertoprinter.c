@@ -977,6 +977,7 @@ main(int  argc,				/* I - Number of command-line arguments */
     {
       fprintf(stderr, "DEBUG: Gutenprint ending job\n");
       stp_end_job(v, &theImage);
+      fflush(stdout);
       stp_vars_destroy(v);
     }
   cupsRasterClose(cups.ras);
@@ -996,6 +997,13 @@ main(int  argc,				/* I - Number of command-line arguments */
   return 0;
 
 cups_abort:
+  if (v)
+    {
+      stp_end_job(v, &theImage);
+      fflush(stdout);
+      stp_vars_destroy(v);
+    }
+  cupsRasterClose(cups.ras);
   clk = times(&tms);
   (void) gettimeofday(&t2, &tz);
   clocks_per_sec = sysconf(_SC_CLK_TCK);
@@ -1008,9 +1016,6 @@ cups_abort:
 	  ((double) (t2.tv_usec - t1.tv_usec)) / 1000000.0);
   fputs("ERROR: Gutenprint No pages found!\n", stderr);
   fputs("ERROR: Gutenprint Invalid printer settings!\n", stderr);
-  stp_end_job(v, &theImage);
-  stp_vars_destroy(v);
-  cupsRasterClose(cups.ras);
   if (fd != 0)
     close(fd);
   return 1;
