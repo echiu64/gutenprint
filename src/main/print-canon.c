@@ -154,6 +154,7 @@ typedef struct
   const canon_paper_t *pt;
   unsigned int used_inks;
   int num_channels;
+  int quality;
   canon_channel_t* channels;
   char* channel_order;
   const canon_cap_t *caps;
@@ -1005,7 +1006,7 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
                        }
                    }
                  else
-                   arg_63[2] = 2;        /* hardcode to whatever this means for now; quality, apparently */
+                   arg_63[2] = init->quality;        /* hardcode to whatever this means for now; quality, apparently */
 
                  stp_zprintf(v, "\033\050\143");
                  stp_put16_le(numargs, v);
@@ -1706,7 +1707,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* find the wanted print mode */
   privdata.mode = canon_get_current_mode(v);
 
-
+  /* set quality */
+  privdata.quality = privdata.mode->quality;
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
