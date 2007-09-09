@@ -112,27 +112,48 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 
-   1) Support added for Epson CX4400 and PM-670C.
+   1) New printers supported in this release:
 
-   2) Support added for Canon MP710 and MP740.
+      * Epson inkjet printers:
 
-   3) Support added for the HP LaserJet 1022.
+	Epson Stylus CX4400
+	Epson Stylus CX4900
+	Epson Stylus CX5600
+	Epson Stylus CX7400
+	Epson Stylus CX9400
+	Epson Stylus Photo RX595
+	Epson PM 670C
 
-   4) Various fixes for the Canon iP4000.
+      * Canon inkjet printers:
 
-   5) The paper size for the CD - Custom paper size has been changed
+	Canon MP710
+	Canon MP740
+
+      * Other printers:
+
+	HP LserJet 1022
+
+   2) Preliminary support for the following printers:
+
+      * Canon inkjet printers:
+
+	Canon Pixma iX5000
+
+   3) Various fixes for the Canon iP4000, iP4200, and i560.
+
+   4) The paper size for the CD - Custom paper size has been changed
       to 120 mm from 118.8 mm to allow correct printing from CUPS.
 
-   6) A compile problem on Solaris has been fixed.
+   5) A compile problem on Solaris has been fixed.
 
-   7) It is now possible to specify the printer model to all escputil
+   6) It is now possible to specify the printer model to all escputil
       commands, via the -m option.  It is no longer necessary to use
       the -u option to specify a new printer vs. an old printer.
 
-   8) The Postscript driver now sends device-specific settings, such
+   7) The Postscript driver now sends device-specific settings, such
       as media type, to the print command.
 
-   9) The Epson driver will not select resolutions higher than
+   8) The Epson driver will not select resolutions higher than
       5760x1440 for the automatic quality settings, as we have
       determined that many current printers offer poor quality at the
       bottom of the page with resolutions of 2880x2880 and 5760x2880.
@@ -140,6 +161,9 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
       work well for certain applications, but they will not be
       automatically selected by the Best or Ultra Photo quality
       settings.
+
+   9) A problem where in some cases certain options were not handled
+      correctly by the CUPS driver has been fixed.
 
 
 ----------------
