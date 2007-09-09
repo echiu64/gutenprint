@@ -116,29 +116,82 @@ ps_option_to_param(stp_parameter_t *param, ppd_group_t *group, ppd_option_t *opt
   else
     param->category = NULL;
 
-  param->name = option->keyword;
   param->text = option->text;
   param->help = option->text;
-  switch (option->ui)
-  {
-    case PPD_UI_BOOLEAN:
-      param->p_type = STP_PARAMETER_TYPE_BOOLEAN;
-      break;
-    case PPD_UI_PICKONE:
-      default:
-      param->p_type = STP_PARAMETER_TYPE_STRING_LIST;
-      break;
-  } 
-  if (strcmp(param->name, "PageSize") == 0)
-    param->p_class = STP_PARAMETER_CLASS_CORE;
+  if (option->has_gutenprint_data)
+    {
+      param->p_type = option->p_type;
+      param->is_mandatory = option->is_mandatory;
+      param->p_class = option->p_class;
+      param->p_level = option->p_level;
+      param->channel = (unsigned char) option->channel;
+      param->read_only = 0;
+      param->is_active = 1;
+      param->verify_this_parameter = 1;
+      param->name = option->gutenprint_name;
+      stp_deprintf(STP_DBG_PS,
+		   "Gutenprint parameter %s type %d mandatory %d class %d level %d channel %d",
+		   param->name, param->p_type, param->is_mandatory,
+		   param->p_class, param->p_level, param->channel);
+      switch (option->p_type)
+	{
+	case STP_PARAMETER_TYPE_DOUBLE:
+	  param->deflt.dbl = option->default_value;
+	  param->bounds.dbl.upper = option->upper_bound;
+	  param->bounds.dbl.lower = option->lower_bound;
+	  stp_deprintf(STP_DBG_PS, " %.3f %.3f %.3f\n",
+		       param->deflt.dbl, param->bounds.dbl.upper,
+		       param->bounds.dbl.lower);
+	  break;
+	case STP_PARAMETER_TYPE_DIMENSION:
+	  param->deflt.dimension = (int) option->default_value;
+	  param->bounds.dimension.upper = (int) option->upper_bound;
+	  param->bounds.dimension.lower = (int) option->lower_bound;
+	  stp_deprintf(STP_DBG_PS, " %d %d %d\n",
+		       param->deflt.dimension, param->bounds.dimension.upper,
+		       param->bounds.dimension.lower);
+	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  param->deflt.integer = (int) option->default_value;
+	  param->bounds.integer.upper = (int) option->upper_bound;
+	  param->bounds.integer.lower = (int) option->lower_bound;
+	  stp_deprintf(STP_DBG_PS, " %d %d %d\n",
+		       param->deflt.integer, param->bounds.integer.upper,
+		       param->bounds.integer.lower);
+	  break;
+	case STP_PARAMETER_TYPE_BOOLEAN:
+	  param->deflt.boolean = (int) option->default_value;
+	  stp_deprintf(STP_DBG_PS, " %d\n", param->deflt.boolean);
+	  break;
+	default:
+	  stp_deprintf(STP_DBG_PS, "\n");
+	  break;
+	}
+    }
   else
-    param->p_class = STP_PARAMETER_CLASS_FEATURE;
-  param->p_level = STP_PARAMETER_LEVEL_BASIC;
-  param->is_mandatory = 1;
-  param->is_active = 1;
-  param->channel = -1;
-  param->verify_this_parameter = 1;
-  param->read_only = 0;
+    {
+      param->name = option->keyword;
+      switch (option->ui)
+	{
+	case PPD_UI_BOOLEAN:
+	  param->p_type = STP_PARAMETER_TYPE_BOOLEAN;
+	  break;
+	case PPD_UI_PICKONE:
+	default:
+	  param->p_type = STP_PARAMETER_TYPE_STRING_LIST;
+	  break;
+	} 
+      if (strcmp(param->name, "PageSize") == 0)
+	param->p_class = STP_PARAMETER_CLASS_CORE;
+      else
+	param->p_class = STP_PARAMETER_CLASS_FEATURE;
+      param->p_level = STP_PARAMETER_LEVEL_BASIC;
+      param->is_mandatory = 1;
+      param->is_active = 1;
+      param->channel = -1;
+      param->verify_this_parameter = 1;
+      param->read_only = 0;
+    }
 
   return 0;
 }
@@ -211,12 +264,15 @@ ps_list_parameters(const stp_vars_t *v)
 	    stp_parameter_t *param = stp_malloc(sizeof(stp_parameter_t));
 	    option = group->options + j;
 	    ps_option_to_param(param, group, option);
-	    if (strcmp(param->name, "PageRegion") != 0)
+	    if (param->p_type != STP_PARAMETER_TYPE_INVALID &&
+		strcmp(param->name, "PageRegion") != 0)
 	      {
 		stp_dprintf(STP_DBG_PS, v, "Adding parameter %s %s\n",
 			    param->name, param->text);
 		stp_parameter_list_add_param(ret, param);
 	      }
+	    else
+	      stp_free(param);
 	  }
       }
   return ret;
@@ -285,11 +341,21 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
     return;
   if ((option = stpi_ppdFindOption(m_ppd, name)) == NULL)
   {
-    stp_dprintf(STP_DBG_PS, v, "no parameter %s", name);
-    return;
+    char *tmp = stp_malloc(strlen(name) + 4);
+    strcpy(tmp, "Stp");
+    strncat(tmp, name, strlen(name) + 3);
+    if ((option = stpi_ppdFindOption(m_ppd, tmp)) == NULL)
+      {
+	stp_dprintf(STP_DBG_PS, v, "no parameter %s", name);
+	stp_free(tmp);
+	return;
+      }
+    stp_free(tmp);
   }
 
   ps_option_to_param(description, NULL, option);
+  if (description->p_type != STP_PARAMETER_TYPE_STRING_LIST)
+    return;
   description->bounds.str = stp_string_list_create();
 
   stp_dprintf(STP_DBG_PS, v, "describe parameter %s, output name=[%s] text=[%s] category=[%s] choices=[%d] default=[%s]\n",
@@ -543,6 +609,7 @@ ps_external_options(const stp_vars_t *v)
   stp_parameter_list_t param_list = ps_list_parameters(v);
   stp_string_list_t *answer;
   char *tmp;
+  char *ppd_name = NULL;
   int i;
 #ifdef HAVE_LOCALE_H
   char *locale;
@@ -561,39 +628,77 @@ ps_external_options(const stp_vars_t *v)
       stp_describe_parameter(v, param->name, &desc);
       if (desc.is_active)
 	{
+	  ppd_option_t *option;
+	  if (m_ppd &&
+	      (option = stpi_ppdFindOption(m_ppd, desc.name)) == NULL)
+	    {
+	      ppd_name = stp_malloc(strlen(desc.name) + 4);
+	      strcpy(ppd_name, "Stp");
+	      strncat(ppd_name, desc.name, strlen(desc.name) + 3);
+	      if ((option = stpi_ppdFindOption(m_ppd, ppd_name)) == NULL)
+		{
+		  stp_dprintf(STP_DBG_PS, v, "no parameter %s", desc.name);
+		  STP_SAFE_FREE(ppd_name);
+		}
+	    }
 	  switch (desc.p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	      if (stp_get_string_parameter(v, desc.name) &&
 		  strcmp(stp_get_string_parameter(v, desc.name),
 			 desc.deflt.str))
-		stp_string_list_add_string(answer, desc.name,
-					   stp_get_string_parameter(v, desc.name));
+		{
+		  stp_dprintf(STP_DBG_PS, v, "Adding string parameter %s (%s): %s %s\n",
+			      desc.name, ppd_name ? ppd_name : "(null)",
+			      stp_get_string_parameter(v, desc.name),
+			      desc.deflt.str);
+		  stp_string_list_add_string(answer,
+					     ppd_name ? ppd_name : desc.name,
+					     stp_get_string_parameter(v, desc.name));
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_INT:
 	      if (stp_get_int_parameter(v, desc.name) != desc.deflt.integer)
 		{
+		  stp_dprintf(STP_DBG_PS, v, "Adding integer parameter %s (%s): %d %d\n",
+			      desc.name, ppd_name ? ppd_name : "(null)",
+			      stp_get_int_parameter(v, desc.name),
+			      desc.deflt.integer);
 		  stp_asprintf(&tmp, "%d", stp_get_int_parameter(v, desc.name));
-		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_string_list_add_string(answer,
+					     ppd_name ? ppd_name : desc.name,
+					     tmp);
 		  stp_free(tmp);
 		}
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      if (stp_get_boolean_parameter(v, desc.name) != desc.deflt.boolean)
 		{
+		  stp_dprintf(STP_DBG_PS, v, "Adding boolean parameter %s (%s): %d %d\n",
+			      desc.name, ppd_name ? ppd_name : "(null)",
+			      stp_get_boolean_parameter(v, desc.name),
+			      desc.deflt.boolean);
 		  stp_asprintf(&tmp, "%s",
 			       stp_get_boolean_parameter(v, desc.name) ?
 			       "True" : "False");
-		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_string_list_add_string(answer,
+					     ppd_name ? ppd_name : desc.name,
+					     tmp);
 		  stp_free(tmp);
 		}
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      if (stp_get_float_parameter(v, desc.name) != desc.deflt.dbl)
+	      if (abs(stp_get_float_parameter(v, desc.name) - desc.deflt.dbl) > .00001)
 		{
+		  stp_dprintf(STP_DBG_PS, v, "Adding float parameter %s (%s): %.3f %.3f\n",
+			      desc.name, ppd_name ? ppd_name : "(null)",
+			      stp_get_float_parameter(v, desc.name),
+			      desc.deflt.dbl);
 		  stp_asprintf(&tmp, "%.3f",
 			       stp_get_float_parameter(v, desc.name));
-		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_string_list_add_string(answer,
+					     ppd_name ? ppd_name : desc.name,
+					     tmp);
 		  stp_free(tmp);
 		}
 	      break;
@@ -601,15 +706,22 @@ ps_external_options(const stp_vars_t *v)
 	      if (stp_get_dimension_parameter(v, desc.name) !=
 		  desc.deflt.dimension)
 		{
+		  stp_dprintf(STP_DBG_PS, v, "Adding dimension parameter %s (%s): %d %d\n",
+			      desc.name, ppd_name ? ppd_name : "(null)",
+			      stp_get_dimension_parameter(v, desc.name),
+			      desc.deflt.dimension);
 		  stp_asprintf(&tmp, "%d",
 			       stp_get_dimension_parameter(v, desc.name));
-		  stp_string_list_add_string(answer, desc.name, tmp);
+		  stp_string_list_add_string(answer,
+					     ppd_name ? ppd_name : desc.name,
+					     tmp);
 		  stp_free(tmp);
 		}
 	      break;
 	    default:
 	      break;
 	    }
+	  STP_SAFE_FREE(ppd_name);
 	}
       stp_parameter_description_destroy(&desc);
     }

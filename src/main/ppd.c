@@ -490,7 +490,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
   mask = ppd_read(fp, keyword, name, text, &string, 0);
 
-  stp_deprintf(STP_DBG_PS, "mask=%x, keyword=\"%s\"...\n", mask, keyword);
+  stp_deprintf(STP_DBG_PPD, "mask=%x, keyword=\"%s\"...\n", mask, keyword);
 
   if (mask == 0 ||
       strcmp(keyword, "PPD-Adobe") != 0 ||
@@ -508,7 +508,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
     return (NULL);
   }
 
-  stp_deprintf(STP_DBG_PS, "stpi_ppdOpen: keyword = %s, string = %p\n", keyword, string);
+  stp_deprintf(STP_DBG_PPD, "stpi_ppdOpen: keyword = %s, string = %p\n", keyword, string);
 
   ppd_free(string);
 
@@ -548,25 +548,21 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
   while ((mask = ppd_read(fp, keyword, name, text, &string, 1)) != 0)
   {
-#ifdef DEBUG
-    printf("mask = %x, keyword = \"%s\"", mask, keyword);
-
+    stp_deprintf(STP_DBG_PPD, "mask = %x, keyword = \"%s\"", mask, keyword);
     if (name[0] != '\0')
-      printf(", name = \"%s\"", name);
+      stp_deprintf(STP_DBG_PPD, ", name = \"%s\"", name);
 
     if (text[0] != '\0')
-      printf(", text = \"%s\"", text);
+      stp_deprintf(STP_DBG_PPD, ", text = \"%s\"", text);
 
     if (string != NULL)
-    {
-      if (strlen(string) > 40)
-        printf(", string = %p", string);
-      else
-        printf(", string = \"%s\"", string);
-    }
-
-    puts("");
-#endif /* DEBUG */
+      {
+	if (strlen(string) > 40)
+	  stp_deprintf(STP_DBG_PPD, ", string = %p", string);
+	else
+	  stp_deprintf(STP_DBG_PPD, ", string = \"%s\"", string);
+      }
+    stp_deprintf(STP_DBG_PPD, "\n");
 
     if (strcmp(keyword, "CloseUI") && strcmp(keyword, "CloseGroup") &&
 	strcmp(keyword, "CloseSubGroup") && strncmp(keyword, "Default", 7) &&
@@ -618,7 +614,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
         ui_keyword = 1;
 
-        stp_deprintf(STP_DBG_PS, "**** FOUND ADOBE UI KEYWORD %s WITHOUT OPENUI!\n",
+        stp_deprintf(STP_DBG_PPD, "**** FOUND ADOBE UI KEYWORD %s WITHOUT OPENUI!\n",
 	              keyword);
 
         if (!group)
@@ -636,7 +632,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
           if (group == NULL)
 	    goto error;
 
-          stp_deprintf(STP_DBG_PS, "Adding to group %s...\n", group->text);
+          stp_deprintf(STP_DBG_PPD, "Adding to group %s...\n", group->text);
           option = ppd_get_option(group, keyword);
 	  group  = NULL;
 	}
@@ -671,7 +667,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 	      !strcmp(ppd->attrs[j]->name + 7, keyword) &&
 	      ppd->attrs[j]->value)
 	  {
-	    stp_deprintf(STP_DBG_PS, "Setting Default%s to %s via attribute...\n",
+	    stp_deprintf(STP_DBG_PPD, "Setting Default%s to %s via attribute...\n",
 	                  option->keyword, ppd->attrs[j]->value);
 	    ppd_strlcpy(option->defchoice, ppd->attrs[j]->value,
 	            sizeof(option->defchoice));
@@ -822,7 +818,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
     else if (strcmp(keyword, "CustomPageSize") == 0 &&
              strcmp(name, "True") == 0)
     {
-      DEBUG_puts("Processing CustomPageSize...");
+      stp_deprintf(STP_DBG_PPD, "Processing CustomPageSize...");
 
       if (!ppd->variable_sizes)
       {
@@ -843,18 +839,18 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 	  ppd_group_t	*ppd_temp;
 
 
-          DEBUG_puts("PageSize option not found for CustomPageSize...");
+          stp_deprintf(STP_DBG_PPD, "PageSize option not found for CustomPageSize...");
 
 	  if ((ppd_temp = ppd_get_group(ppd, "General", "General")) == NULL)
 	  {
-	    DEBUG_puts("Unable to get general group!");
+	    stp_deprintf(STP_DBG_PPD, "Unable to get general group!");
 
 	    goto error;
 	  }
 
 	  if ((option = ppd_get_option(ppd_temp, "PageSize")) == NULL)
 	  {
-	    DEBUG_puts("Unable to get PageSize option!");
+	    stp_deprintf(STP_DBG_PPD, "Unable to get PageSize option!");
 
             ppd_status = PPD_ALLOC_ERROR;
 
@@ -864,7 +860,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
 	if ((choice = ppd_add_choice(option, "Custom")) == NULL)
 	{
-	  DEBUG_puts("Unable to add Custom choice!");
+	  stp_deprintf(STP_DBG_PPD, "Unable to add Custom choice!");
 
           ppd_status = PPD_ALLOC_ERROR;
 
@@ -877,7 +873,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
       if ((option = stpi_ppdFindOption(ppd, "PageSize")) == NULL)
       {
-	DEBUG_puts("Unable to find PageSize option!");
+	stp_deprintf(STP_DBG_PPD, "Unable to find PageSize option!");
 
         ppd_status = PPD_INTERNAL_ERROR;
 
@@ -886,7 +882,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
       if ((choice = stpi_ppdFindChoice(option, "Custom")) == NULL)
       {
-	DEBUG_puts("Unable to find Custom choice!");
+	stp_deprintf(STP_DBG_PPD, "Unable to find Custom choice!");
 
         ppd_status = PPD_INTERNAL_ERROR;
 
@@ -996,7 +992,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
       for (i = strlen(name) - 1; i > 0 && isspace(name[i] & 255); i --)
         name[i] = '\0'; /* Eliminate trailing spaces */
 
-      stp_deprintf(STP_DBG_PS, "OpenUI of %s in group %s...\n", name,
+      stp_deprintf(STP_DBG_PPD, "OpenUI of %s in group %s...\n", name,
                     group ? group->text : "(null)");
 
       if (subgroup != NULL)
@@ -1016,7 +1012,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
         if (group == NULL)
 	  goto error;
 
-        stp_deprintf(STP_DBG_PS, "Adding to group %s...\n", group->text);
+        stp_deprintf(STP_DBG_PPD, "Adding to group %s...\n", group->text);
         option = ppd_get_option(group, name);
 	group  = NULL;
       }
@@ -1054,7 +1050,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 	    !strcmp(ppd->attrs[j]->name + 7, name) &&
 	    ppd->attrs[j]->value)
 	{
-	  stp_deprintf(STP_DBG_PS, "Setting Default%s to %s via attribute...\n",
+	  stp_deprintf(STP_DBG_PPD, "Setting Default%s to %s via attribute...\n",
 	                option->keyword, ppd->attrs[j]->value);
 	  ppd_strlcpy(option->defchoice, ppd->attrs[j]->value,
 	          sizeof(option->defchoice));
@@ -1136,7 +1132,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 	    !strcmp(ppd->attrs[j]->name + 7, name) &&
 	    ppd->attrs[j]->value)
 	{
-	  stp_deprintf(STP_DBG_PS, "Setting Default%s to %s via attribute...\n",
+	  stp_deprintf(STP_DBG_PPD, "Setting Default%s to %s via attribute...\n",
 	                option->keyword, ppd->attrs[j]->value);
 	  ppd_strlcpy(option->defchoice, ppd->attrs[j]->value,
 	          sizeof(option->defchoice));
@@ -1312,11 +1308,11 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
         * Set the default as part of the current option...
 	*/
 
-        stp_deprintf(STP_DBG_PS, "Setting %s to %s...\n", keyword, string);
+        stp_deprintf(STP_DBG_PPD, "Setting %s to %s...\n", keyword, string);
 
         ppd_strlcpy(option->defchoice, string, sizeof(option->defchoice));
 
-        stp_deprintf(STP_DBG_PS, "%s is now %s...\n", keyword, option->defchoice);
+        stp_deprintf(STP_DBG_PPD, "%s is now %s...\n", keyword, option->defchoice);
       }
       else
       {
@@ -1329,11 +1325,50 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 
         if ((toption = stpi_ppdFindOption(ppd, keyword + 7)) != NULL)
 	{
-	  stp_deprintf(STP_DBG_PS, "Setting %s to %s...\n", keyword, string);
+	  stp_deprintf(STP_DBG_PPD, "Setting %s to %s...\n", keyword, string);
 	  ppd_strlcpy(toption->defchoice, string, sizeof(toption->defchoice));
 	}
       }
     }
+    else if (strncmp(keyword, "StpStp", 6) == 0)
+      {
+	if (option && strcmp(keyword + 3, option->keyword) == 0)
+	  {
+	    stp_deprintf(STP_DBG_PPD, "Found Gutenprint data: '%s' '%s'\n",
+			 keyword, string);
+	    if (sscanf(string, "%d%d%d%d%d%f%f%f",
+		       &(option->p_type),
+		       &(option->is_mandatory),
+		       &(option->p_class),
+		       &(option->p_level),
+		       &(option->channel),
+		       &(option->lower_bound),
+		       &(option->upper_bound),
+		       &(option->default_value)) == 8)
+	      {
+		option->has_gutenprint_data = 1;
+		stp_deprintf(STP_DBG_PPD, "Gutenprint data for %s: type %d mandatory %d class %d level %d lower %f upper %f default %f\n",
+			     option->keyword,
+			     option->p_type,
+			     option->is_mandatory,
+			     option->p_class,
+			     option->p_level,
+			     option->lower_bound,
+			     option->upper_bound,
+			     option->default_value);
+		ppd_strlcpy(option->gutenprint_name, keyword + 6,
+			    sizeof(option->gutenprint_name));
+	      }
+	    else
+	      stp_deprintf(STP_DBG_PPD, "Malformed string for Gutenprint data: '%s'\n",
+			   string);
+	  }
+	else
+	  {
+	    stp_deprintf(STP_DBG_PPD, "Found unexpected Gutenprint data (current option '%s', name '%s', data '%s'\n",
+			 option ? option->keyword : "(null)", keyword, string);
+	  }
+      }
     else if (strcmp(keyword, "UIConstraints") == 0 ||
              strcmp(keyword, "NonUIConstraints") == 0)
     {
@@ -1465,7 +1500,7 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
 	         (PPD_KEYWORD | PPD_OPTION | PPD_STRING) &&
 	     strcmp(keyword, option->keyword) == 0)
     {
-      stp_deprintf(STP_DBG_PS, "group = %p, subgroup = %p\n",
+      stp_deprintf(STP_DBG_PPD, "group = %p, subgroup = %p\n",
 		   (void *) group, (void *) subgroup);
 
       if (strcmp(keyword, "PageSize") == 0)
@@ -1520,10 +1555,8 @@ stpi_ppdOpen(FILE *fp)			/* I - File to read from */
   * Reset language preferences...
   */
 
-#ifdef DEBUG
   if (!feof(fp))
-    printf("Premature EOF at %lu...\n", (unsigned long)ftell(fp));
-#endif /* DEBUG */
+    stp_deprintf(STP_DBG_PPD, "Premature EOF at %lu...\n", (unsigned long)ftell(fp));
 
   if (ppd_status != PPD_OK)
   {
@@ -2080,7 +2113,7 @@ ppd_get_group(ppd_file_t *ppd,		/* I - PPD file */
   int		i;			/* Looping var */
   ppd_group_t	*group;			/* Group */
 
-  stp_deprintf(STP_DBG_PS, "ppd_get_group(%p, \"%s\")\n", (void *) ppd, name);
+  stp_deprintf(STP_DBG_PPD, "ppd_get_group(%p, \"%s\")\n", (void *) ppd, name);
 
   for (i = ppd->num_groups, group = ppd->groups; i > 0; i --, group ++)
     if (strcmp(group->name, name) == 0)
@@ -2088,7 +2121,7 @@ ppd_get_group(ppd_file_t *ppd,		/* I - PPD file */
 
   if (i == 0)
   {
-    stp_deprintf(STP_DBG_PS, "Adding group %s...\n", name);
+    stp_deprintf(STP_DBG_PPD, "Adding group %s...\n", name);
 
     if (ppd_conform == PPD_CONFORM_STRICT && strlen(text) >= sizeof(group->text))
     {
@@ -2135,7 +2168,7 @@ ppd_get_option(ppd_group_t *group,	/* I - Group */
   ppd_option_t	*option;		/* Option */
 
 
-  stp_deprintf(STP_DBG_PS, "ppd_get_option(group=%p(\"%s\"), name=\"%s\")\n",
+  stp_deprintf(STP_DBG_PPD, "ppd_get_option(group=%p(\"%s\"), name=\"%s\")\n",
                 (void *) group, group->name, name);
 
   for (i = group->num_options, option = group->options; i > 0; i --, option ++)
@@ -2414,7 +2447,7 @@ ppd_read(FILE *fp,			/* I - File to read from */
 
     *lineptr = '\0';
 
-    stp_deprintf(STP_DBG_PS, "LINE = \"%s\"\n", line);
+    stp_deprintf(STP_DBG_PPD, "LINE = \"%s\"\n", line);
 
     if (ch == EOF && lineptr == line)
       return (0);
@@ -2508,7 +2541,7 @@ ppd_read(FILE *fp,			/* I - File to read from */
 
     mask |= PPD_KEYWORD;
 
-/*    stp_deprintf(STP_DBG_PS, "keyword = \"%s\", lineptr = \"%s\"\n", keyword, lineptr);*/
+/*    stp_deprintf(STP_DBG_PPD, "keyword = \"%s\", lineptr = \"%s\"\n", keyword, lineptr);*/
 
     if (isspace(*lineptr & 255))
     {
@@ -2547,7 +2580,7 @@ ppd_read(FILE *fp,			/* I - File to read from */
 
       mask |= PPD_OPTION;
 
-/*      stp_deprintf(STP_DBG_PS, "option = \"%s\", lineptr = \"%s\"\n", option, lineptr);*/
+/*      stp_deprintf(STP_DBG_PPD, "option = \"%s\", lineptr = \"%s\"\n", option, lineptr);*/
 
       if (*lineptr == '/')
       {
@@ -2583,7 +2616,7 @@ ppd_read(FILE *fp,			/* I - File to read from */
 	mask |= PPD_TEXT;
       }
 
-/*      stp_deprintf(STP_DBG_PS, "text = \"%s\", lineptr = \"%s\"\n", text, lineptr);*/
+/*      stp_deprintf(STP_DBG_PPD, "text = \"%s\", lineptr = \"%s\"\n", text, lineptr);*/
     }
 
     if (isspace(*lineptr & 255) && ppd_conform == PPD_CONFORM_STRICT)
@@ -2628,7 +2661,7 @@ ppd_read(FILE *fp,			/* I - File to read from */
       else
         *string = stp_strdup(lineptr);
 
-/*      stp_deprintf(STP_DBG_PS, "string = \"%s\", lineptr = \"%s\"\n", *string, lineptr);*/
+/*      stp_deprintf(STP_DBG_PPD, "string = \"%s\", lineptr = \"%s\"\n", *string, lineptr);*/
 
       mask |= PPD_STRING;
     }

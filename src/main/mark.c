@@ -166,7 +166,7 @@ stpi_ppdConflicts(ppd_file_t *ppd)	/* I - PPD to check */
     if (c1 != NULL && c1->marked &&
         c2 != NULL && c2->marked)
     {
-      stp_deprintf(STP_DBG_PS, "%s->%s conflicts with %s->%s (%s %s %s %s)\n",
+      stp_deprintf(STP_DBG_PPD, "%s->%s conflicts with %s->%s (%s %s %s %s)\n",
                     o1->keyword, c1->choice, o2->keyword, c2->choice,
 		    c->option1, c->choice1, c->option2, c->choice2);
       conflicts ++;

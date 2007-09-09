@@ -637,23 +637,34 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
             }
 	  else if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 	    {
-	      double coarse_val = atof(val) * 0.001;
 	      double fine_val = 0;
-	      sprintf(ppd_option_name, "StpFine%s", desc.name);
-	      val = cupsGetOption(ppd_option_name, num_options, options);
-	      if (!val)
+	      if (index(val, (int) '.'))
 		{
-		  ppd_option = ppdFindOption(ppd, ppd_option_name);
-		  if (ppd_option)
-		    val = ppd_option->defchoice;
+		  fine_val = atof(val);
+		  fprintf(stderr, "DEBUG: Gutenprint set float %s to %f (%s)\n",
+			  desc.name, fine_val, val);
 		}
-	      if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
-		fine_val = atof(val) * 0.001;
-	      fprintf(stderr, "DEBUG: Gutenprint set float %s to %f + %f\n",
-		      desc.name, coarse_val, fine_val);
-	      fine_val += coarse_val;
+	      else
+		{
+		  double coarse_val = atof(val) * 0.001;
+		  sprintf(ppd_option_name, "StpFine%s", desc.name);
+		  val = cupsGetOption(ppd_option_name, num_options, options);
+		  if (!val)
+		    {
+		      ppd_option = ppdFindOption(ppd, ppd_option_name);
+		      if (ppd_option)
+			val = ppd_option->defchoice;
+		    }
+		  if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
+		    fine_val = atof(val) * 0.001;
+		  fprintf(stderr, "DEBUG: Gutenprint set float %s to %f + %f\n",
+			  desc.name, coarse_val, fine_val);
+		  fine_val += coarse_val;
+		}
 	      if (fine_val > desc.bounds.dbl.upper)
 		fine_val = desc.bounds.dbl.upper;
+	      if (fine_val < desc.bounds.dbl.lower)
+		fine_val = desc.bounds.dbl.lower;
 	      stp_set_float_parameter(v, desc.name, fine_val);
 	    }
 	}
