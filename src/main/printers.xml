@@ -333,6 +333,7 @@
       <printer name="Epson Stylus D88" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer name="Epson Stylus DX3800" driver="escp2-dx3800" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer name="Epson Stylus DX3850" driver="escp2-dx3850" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer name="Epson Stylus DX4050" driver="escp2-dx4050" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer name="Epson Stylus DX4200" driver="escp2-dx4200" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer name="Epson Stylus DX4250" driver="escp2-dx4250" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer name="Epson Stylus DX4800" driver="escp2-dx4800" manufacturer="Epson" model="65" parameters="standard_params" />
