@@ -2202,7 +2202,6 @@ canon_write(stp_vars_t *v,		/* I - Print file or command */
 	    unsigned char *line,	/* I - Output bitmap data */
 	    int           length,	/* I - Length of bitmap data */
 	    int           coloridx,	/* I - Which color */
-	    int           ydpi,		/* I - Vertical resolution */
 	    int           *empty,       /* IO- Preceeding empty lines */
 	    int           width,	/* I - Printed width */
 	    int           offset, 	/* I - Offset from left side */
@@ -2260,7 +2259,7 @@ canon_write_line(stp_vars_t *v)
       if(channel){
         written += canon_write(v, pd, pd->caps,
                                channel->buf + channel->delay * pd->length /*buf_length[i]*/,
-                               pd->length, num, pd->mode->ydpi,
+                               pd->length, num,
                                &(pd->emptylines), pd->out_width,
                                pd->left, channel->props->bits, channel->props->flags);
       } 
@@ -2394,7 +2393,7 @@ canon_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 
                   written += canon_write(v, pd, pd->caps,
                                (unsigned char *)(bufs[0].v[color] + line * linelength),
-                               linelength, idx[color], pd->mode->ydpi,
+                               linelength, idx[color],
                                &(pd->emptylines), pd->out_width,
                                pd->left, pd->weave_bits[color],0);
                   if (written) stp_deprintf(STP_DBG_CANON,"                        --written color %d,\n", color);
