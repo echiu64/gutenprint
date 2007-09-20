@@ -39,7 +39,7 @@
         <parameter type="float" name="Gamma">0.75</parameter>
       </parameters>
       <parameters name="PIXMA_iP4000_params">
-        <parameter type="float" name="Gamma">0.4</parameter>
+        <parameter type="float" name="Gamma">0.60</parameter>
       </parameters>
       <parameters name="PIXMA_iP4300_params">
         <parameter type="float" name="Brightness">0.7</parameter>
