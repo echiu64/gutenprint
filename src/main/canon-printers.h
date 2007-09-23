@@ -334,9 +334,9 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
     3000, 3,
     842, 17*72,
-    11, 9, 10, 18,
+    10, 10, 9, 15,
     &canon_default_slotlist,
-    CANON_CAP_STD0 | CANON_CAP_a,0,NULL, /*FIX? should have _r? */
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_p,0,NULL, /*FIX? should have _r? */
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
     NULL,
