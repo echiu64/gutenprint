@@ -48,6 +48,12 @@
         <parameter type="float" name="Gamma">0.9</parameter>
         <parameter type="float" name="BlackGamma">0.6</parameter>
       </parameters>
+      <parameters name="PIXMA_iX5000_params"> 
+        <parameter type="float" name="BlackGamma">2.0</parameter> 
+        <parameter type="float" name="YellowGamma">1.4</parameter> 
+        <parameter type="float" name="MagentaGamma">1.3</parameter> 
+        <parameter type="float" name="CyanGamma">1.3</parameter> 
+      </parameters>
       <printer name="Canon BJ-30" driver="bjc-30" manufacturer="Canon" model="30" parameters="gamma_2_density_800_params" />
       <printer name="Canon BJC-50" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
       <printer name="Canon BJC-55" driver="bjc-55" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
@@ -92,7 +98,7 @@
       <printer name="Canon PIXMA iP5000" driver="bjc-PIXMA-iP5000" manufacturer="Canon" model="4000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="4200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP6700" driver="bjc-PIXMA-iP6700" manufacturer="Canon" model="4203" parameters="PIXMA_iP4000_params" />
-      <printer name="Canon PIXMA iX5000" driver="bjc-PIXMA-iX5000" manufacturer="Canon" model="5000" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXMA iX5000" driver="bjc-PIXMA-iX5000" manufacturer="Canon" model="5000" parameters="PIXMA_iX5000_params" />
       <printer name="Canon PIXMA MP150" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="4201" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA MP170" driver="bjc-MULTIPASS-MP170" manufacturer="Canon" model="4201" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA MP180" driver="bjc-MULTIPASS-MP180" manufacturer="Canon" model="4201" parameters="PIXMA_iP4000_params" />
