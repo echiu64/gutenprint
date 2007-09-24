@@ -25,7 +25,7 @@ German.
 Gutenprint 5.1.4 is a development release of Gutenprint 5.1.  It is
 based on Gutenprint 5.0.0.
 
-Gutenprint currently supports over 800 printer models.
+Gutenprint currently supports over 600 printer models.
 
 These release notes contain the following sections:
 
@@ -142,21 +142,225 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 	Canon Pixma MP170
 	Canon Pixma MP180
 
-   3) Various fixes for the Canon iP4000, iP4200, and i560.
+   3) The following printers are no longer supported going forward in
+      Gutenprint 5.1 and beyond.  We recommend that users switch to
+      the HPIJS driver package (the printer part of HPLIP), available
+      from http://hplip.sourceforge.net.  This package is licensed
+      under the GPL and BSD licenses.
 
-   4) The paper size for the CD - Custom paper size has been changed
+      These printers will continue to be supported in Gutenprint 5.0.
+
+	HP Business Inkjet 2200
+	HP Business Inkjet 2230
+	HP Business Inkjet 2250
+	HP Business Inkjet 2250TN
+	HP Business Inkjet 2280
+	HP Color Inkjet Printer CP1160
+	HP Color Inkjet Printer CP1700
+	HP Color LaserJet 2500
+	HP Color LaserJet 4500
+	HP Color LaserJet 4550
+	HP Color LaserJet 4600
+	HP Color LaserJet 5
+	HP Color LaserJet 5000
+	HP Color LaserJet 5500
+	HP Color LaserJet 8550GN
+	HP DeskJet 400
+	HP DeskJet 420C
+	HP DeskJet 450
+	HP DeskJet 500
+	HP DeskJet 500C
+	HP DeskJet 505J Plus
+	HP DeskJet 510
+	HP DeskJet 520
+	HP DeskJet 540C
+	HP DeskJet 550C
+	HP DeskJet 5550
+	HP DeskJet 5551
+	HP DeskJet 560C
+	HP DeskJet 600
+	HP DeskJet 600C
+	HP DeskJet 610C
+	HP DeskJet 610CL
+	HP DeskJet 6122
+	HP DeskJet 6127
+	HP DeskJet 612C
+	HP DeskJet 640C
+	HP DeskJet 648C
+	HP DeskJet 660C
+	HP DeskJet 670C
+	HP DeskJet 670TV
+	HP DeskJet 672C
+	HP DeskJet 680C
+	HP DeskJet 682C
+	HP DeskJet 690C
+	HP DeskJet 692C
+	HP DeskJet 693C
+	HP DeskJet 694C
+	HP DeskJet 695C
+	HP DeskJet 697C
+	HP DeskJet 810C
+	HP DeskJet 812C
+	HP DeskJet 815C
+	HP DeskJet 816C
+	HP DeskJet 825C
+	HP DeskJet 830C
+	HP DeskJet 832C
+	HP DeskJet 840C
+	HP DeskJet 841C
+	HP DeskJet 842C
+	HP DeskJet 843C
+	HP DeskJet 845C
+	HP DeskJet 850C
+	HP DeskJet 855C
+	HP DeskJet 870C
+	HP DeskJet 880C
+	HP DeskJet 882C
+	HP DeskJet 890C
+	HP DeskJet 895C
+	HP DeskJet 916C
+	HP DeskJet 920C
+	HP DeskJet 9300
+	HP DeskJet 930C
+	HP DeskJet 932C
+	HP DeskJet 933C
+	HP DeskJet 934C
+	HP DeskJet 935C
+	HP DeskJet 940C
+	HP DeskJet 948C
+	HP DeskJet 950C
+	HP DeskJet 952C
+	HP DeskJet 955C
+	HP DeskJet 957C
+	HP DeskJet 959C
+	HP DeskJet 960C
+	HP DeskJet 970C
+	HP DeskJet 975C
+	HP DeskJet 980C
+	HP DeskJet 990C
+	HP DeskJet 995C
+	HP DeskJet 1100C
+	HP DeskJet 1120C
+	HP DeskJet 1125C
+	HP DeskJet 1200C
+	HP DeskJet 1220C
+	HP DeskJet 1600C
+	HP DeskJet 1600CM
+	HP DeskJet 2000
+	HP DeskJet 2500
+	HP DeskJet 2500CM
+	HP DeskJet 340C
+	HP DeskJet 3810
+	HP DeskJet 3816
+	HP DeskJet 3820
+	HP DeskJet 3822
+	HP OfficeJet 300
+	HP OfficeJet 330
+	HP OfficeJet 350
+	HP OfficeJet 500
+	HP OfficeJet 520
+	HP OfficeJet 570
+	HP OfficeJet 580
+	HP OfficeJet 590
+	HP OfficeJet 600
+	HP OfficeJet 610
+	HP OfficeJet 625
+	HP OfficeJet 630
+	HP OfficeJet 635
+	HP OfficeJet 700
+	HP OfficeJet 710
+	HP OfficeJet 720
+	HP OfficeJet 725
+	HP OfficeJet 5105
+	HP OfficeJet 5110
+	HP OfficeJet 5110xi
+	HP OfficeJet 6105
+	HP OfficeJet 6110
+	HP OfficeJet 7110
+	HP OfficeJet 7130
+	HP OfficeJet 7140
+	HP OfficeJet D125
+	HP OfficeJet D135
+	HP OfficeJet D145
+	HP OfficeJet D155
+	HP OfficeJet G55
+	HP OfficeJet G85
+	HP OfficeJet G95
+	HP OfficeJet K60
+	HP OfficeJet K60xi
+	HP OfficeJet K80
+	HP OfficeJet K80xi
+	HP OfficeJet LX
+	HP OfficeJet Pro 1150C
+	HP OfficeJet Pro 1170C
+	HP OfficeJet Pro 1175C
+	HP OfficeJet R40
+	HP OfficeJet R45
+	HP OfficeJet R60
+	HP OfficeJet R65
+	HP OfficeJet R80
+	HP OfficeJet T45
+	HP OfficeJet T65
+	HP OfficeJet V40
+	HP OfficeJet V40xi
+	HP OfficeJet
+	HP PSC 370
+	HP PSC 380
+	HP PSC 500
+	HP PSC 750
+	HP PSC 950
+	HP PSC 950xi
+	HP PSC 2110
+	HP PSC 2150
+	HP PSC 2210
+	HP PhotoSmart 7150
+	HP PhotoSmart 7345
+	HP PhotoSmart 7350
+	HP PhotoSmart 7550
+	HP PhotoSmart P100
+	HP PhotoSmart P130
+	HP PhotoSmart P230
+	HP PhotoSmart P1000
+	HP PhotoSmart P1100
+	HP PhotoSmart P1115
+	HP PhotoSmart P1215
+	HP PhotoSmart P1218
+	HP PhotoSmart P1315
+	HP e-printer e20
+
+      All monochrome laser printers previously supported continue to
+      be supported.  In addition, the following wide format printers
+      that are not supported by HPLIP continue to be supported by
+      Gutenprint:
+
+	HP DesignJet 230
+	HP DesignJet 250C
+	HP DesignJet 430
+	HP DesignJet 450C
+	HP DesignJet 455CA
+	HP DesignJet 488CA
+	HP DesignJet 700
+	HP DesignJet 750C Plus
+	HP DesignJet 750C
+	HP DesignJet 2500CP
+	HP DesignJet 3500CP
+	HP DesignJet ColorPro CAD
+
+   4) Various fixes for the Canon iP4000, iP4200, and i560.
+
+   5) The paper size for the CD - Custom paper size has been changed
       to 120 mm from 118.8 mm to allow correct printing from CUPS.
 
-   5) A compile problem on Solaris has been fixed.
+   6) A compile problem on Solaris has been fixed.
 
-   6) It is now possible to specify the printer model to all escputil
+   7) It is now possible to specify the printer model to all escputil
       commands, via the -m option.  It is no longer necessary to use
       the -u option to specify a new printer vs. an old printer.
 
-   7) The Postscript driver now sends device-specific settings, such
+   8) The Postscript driver now sends device-specific settings, such
       as media type, to the print command.
 
-   8) The Epson driver will not select resolutions higher than
+   9) The Epson driver will not select resolutions higher than
       5760x1440 for the automatic quality settings, as we have
       determined that many current printers offer poor quality at the
       bottom of the page with resolutions of 2880x2880 and 5760x2880.
@@ -165,7 +369,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
       automatically selected by the Best or Ultra Photo quality
       settings.
 
-   9) A problem where in some cases certain options were not handled
+   10) A problem where in some cases certain options were not handled
       correctly by the CUPS driver has been fixed.
 
 
