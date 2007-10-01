@@ -1418,7 +1418,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
   },
   { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-510,
-       SELPHY CP-600, SELPHY CP-710 */
+       SELPHY CP-600, SELPHY CP-710, SELPHY CP-720, SELPHY CP-730,
+       SELPHY CP-740, SELPHY CP-750 */
     1001,
     &ymc_ink_list,
     &res_300dpi_list,
