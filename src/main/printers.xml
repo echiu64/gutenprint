@@ -757,7 +757,7 @@
       <printer name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" />
       <printer name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" />
       <printer name="Kodak Easyshare-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000"/>
-      <printer name="Shinko CHC-S9045" driver="shinco-chcs9045" manufacturer="Shinko" model="5000"/>
+      <printer name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000"/>
     </family>
     <family name="raw">
       <printer name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />
