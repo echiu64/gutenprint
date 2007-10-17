@@ -146,6 +146,7 @@ typedef struct
   int block_max_w, block_max_h;
   const char* pagesize;
   const laminate_t* laminate;
+  int print_mode;
 } dyesub_privdata_t;
 
 static dyesub_privdata_t privdata;
@@ -952,13 +953,13 @@ static void updp10_printer_init_func(stp_vars_t *v)
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
-  stp_put16_be(privdata.h_size, v);
   stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   stp_zfwrite("\x14\x00\x00\x00\x1b\x15\x00\x00"
 	      "\x00\x0d\x00\x00\x00\x00\x00\x07"
 	      "\x00\x00\x00\x00", 1, 20, v);
-  stp_put16_be(privdata.h_size, v);
   stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   stp_put32_le(privdata.w_size*privdata.h_size*3+11, v);
   stp_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
   stp_put32_be(privdata.w_size*privdata.h_size*3, v);
@@ -1050,10 +1051,14 @@ LIST(dyesub_printsize_list_t, updr100_printsize_list, dyesub_printsize_t, updr10
 
 static void updr100_printer_init_func(stp_vars_t *v)
 {
+  int dim1 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.h_size : privdata.w_size);
+  int dim2 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.w_size : privdata.h_size);
 
   stp_zfwrite("UPD8D\x00\x00\x00\x10\x03\x00\x00", 1, 12, v);
-  stp_put32_le(privdata.w_size, v);
-  stp_put32_le(privdata.h_size, v);
+  stp_put32_le(dim1, v);
+  stp_put32_le(dim2, v);
   stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
   stp_zfwrite((privdata.laminate->seq).data, 1,
 		(privdata.laminate->seq).bytes, v); /* laminate pattern */
@@ -1116,6 +1121,10 @@ LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr15
 static void updr150_printer_init_func(stp_vars_t *v)
 {
   char pg = '\0';
+  int dim1 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.w_size : privdata.h_size);
+  int dim2 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.h_size : privdata.w_size);
 
   stp_zfwrite("\x6a\xff\xff\xff\xef\xff\xff\xff", 1, 8, v);
   if (strcmp(privdata.pagesize,"B7") == 0)
@@ -1140,14 +1149,14 @@ static void updr150_printer_init_func(stp_vars_t *v)
 	      "\x1b\x15\x00\x00\x00\x0d\x00\x0d"
 	      "\x00\x00\x00\x00\x00\x00\x00\x07"
 	      "\x00\x00\x00\x00", 1, 91, v);
-  stp_put16_be(privdata.h_size, v);
-  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(dim1, v);
+  stp_put16_be(dim2, v);
   stp_zfwrite("\xf9\xff\xff\xff\x07\x00\x00\x00"
 	      "\x1b\xe1\x00\x00\x00\x0b\x00\x0b"
 	      "\x00\x00\x00\x00\x80\x00\x00\x00"
 	      "\x00\x00", 1, 26, v);
-  stp_put16_be(privdata.h_size, v);
-  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(dim1, v);
+  stp_put16_be(dim2, v);
   stp_zfwrite("\xf8\xff\xff\xff\x0b\x00\x00\x00\x1b\xea"
 	      "\x00\x00\x00\x00", 1, 14, v);
   stp_put32_be(privdata.w_size*privdata.h_size*3, v);
@@ -2374,11 +2383,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	      w_dpi, h_dpi
 	      );	
 
-  privdata.w_dpi = w_dpi;
-  privdata.h_dpi = h_dpi;
-  privdata.w_size = pv.prnw_px;
-  privdata.h_size = pv.prnh_px;
-
 
   /* FIXME: move this into print_init_drv */
   ink_type = dyesub_describe_output_internal(v, &pv);
@@ -2448,6 +2452,13 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       
       dyesub_swap_ints(&pv.imgh_px, &pv.imgw_px);
     }
+
+	/* assign private data *after* swaping image dimensions */
+  privdata.w_dpi = w_dpi;
+  privdata.h_dpi = h_dpi;
+  privdata.w_size = pv.prnw_px;
+  privdata.h_size = pv.prnh_px;
+  privdata.print_mode = pv.print_mode;
 
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
