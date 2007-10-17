@@ -1301,6 +1301,62 @@ static void kodak_dock_plane_init(stp_vars_t *v)
 }
 
 
+/* Shinko CHC-S9045 (experimental) */
+static const dyesub_pagesize_t shinko_chcs9045_page[] =
+{
+  { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+  { "B7",	"3.5x5", PT(1088,300)+1, PT(1548,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+  { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  							DYESUB_PORTRAIT},
+  { "w432h576",	"6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
+  							DYESUB_PORTRAIT},
+  { "w283h425",	"Sticker paper", PT(1092,300)+1, PT(1726,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+  { "Custom",   NULL, PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+};
+
+LIST(dyesub_pagesize_list_t, shinko_chcs9045_page_list, dyesub_pagesize_t, shinko_chcs9045_page);
+
+static const dyesub_printsize_t shinko_chcs9045_printsize[] =
+{
+  { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "B7", 1088, 1548},
+  { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w432h576", 1844, 2740},
+  { "300x300", "w283h425", 1092, 1726},
+  { "300x300", "Custom", 1240, 1844},
+};
+
+LIST(dyesub_printsize_list_t, shinko_chcs9045_printsize_list, dyesub_printsize_t, shinko_chcs9045_printsize);
+
+static void shinko_chcs9045_printer_init(stp_vars_t *v)
+{
+  char pg = '\0';
+  char sticker = '\0';
+
+  stp_zprintf(v, "\033CHC\n");
+  stp_put16_be(1, v);
+  stp_put16_be(1, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  if (strcmp(privdata.pagesize,"B7") == 0)
+    pg = '\1';
+  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+    pg = '\3';
+  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+    pg = '\5';
+  else if (strcmp(privdata.pagesize,"w283h425") == 0)
+    sticker = '\3';
+  stp_putc(pg, v);
+  stp_putc('\0', v);
+  stp_putc(sticker, v);
+  dyesub_nputc(v, '\0', 4338);
+}
+
+
 
 /* Model capabilities */
 
@@ -1557,6 +1613,20 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &kodak_dock_printer_init, NULL,
     &kodak_dock_plane_init, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    NULL,
+  },
+  { /* Shinko CHC-S9045 (experimental) */
+    5000, 		
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &shinko_chcs9045_page_list,
+    &shinko_chcs9045_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &shinko_chcs9045_printer_init, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
     NULL,
