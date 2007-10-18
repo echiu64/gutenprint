@@ -557,7 +557,6 @@ static const char p400_adj_yellow[] =
 
 
 /* Olympus P-440 series */
-/* FIXME: colors - BGR instead of RGB ?!? */
 static const dyesub_pagesize_t p440_page[] =
 {
   { "A4", NULL, -1, -1, 10, 9, 54, 54, DYESUB_PORTRAIT},
@@ -654,7 +653,6 @@ static void p440_block_end_func(stp_vars_t *v)
 
 
 /* Olympus P-S100 */
-/* FIXME: colors - BGR instead of RGB ?!? */
 static const dyesub_pagesize_t ps100_page[] =
 {
   { "w288h432", "4 x 6", 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},/* 4x6" */
@@ -1440,7 +1438,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Olympus P-S100 */
     20,
-    &rgb_ink_list,
+    &bgr_ink_list,
     &res_306dpi_list,
     &ps100_page_list,
     &ps100_printsize_list,
@@ -2227,7 +2225,7 @@ dyesub_print_pixel(stp_vars_t *v,
 {
   unsigned short ink[MAX_INK_CHANNELS * MAX_BYTES_PER_CHANNEL], *out;
   unsigned char *ink_u8;
-  int i, j;
+  int i, j, b;
   
   if (pv->print_mode == DYESUB_LANDSCAPE)
     { /* "rotate" image */
@@ -2266,7 +2264,10 @@ dyesub_print_pixel(stp_vars_t *v,
   if (pv->plane_interlacing)
     stp_zfwrite((char *) ink + plane, pv->bytes_per_ink_channel, 1, v);
   else
-    stp_zfwrite((char *) ink, pv->bytes_per_ink_channel, pv->ink_channels, v);
+/*  stp_zfwrite((char *) ink, pv->bytes_per_ink_channel, pv->ink_channels, v);*/
+      /* print inks in right order, eg. RGB  BGR */
+      for (b = 0; b < pv->ink_channels; b++)
+	stp_zfwrite((char *) ink + (pv->ink_order[b]-1), pv->bytes_per_ink_channel, 1, v);
 
   return 1;
 }
