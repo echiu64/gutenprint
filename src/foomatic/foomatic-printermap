@@ -46,6 +46,8 @@
 #gptofoo bjc-4000 printer/Canon-BJC-4000
 #gptofoo bjc-4300 printer/Canon-BJC-4300
 #gptofoo bjc-4400 printer/Canon-BJC-4400
+#gptofoo bjc-5100 printer/Canon-BJC-5100
+#gptofoo bjc-5500 printer/Canon-BJC-5500
 #gptofoo bjc-50 printer/Canon-BJC-50
 #gptofoo bjc-55 printer/Canon-BJC-55
 #gptofoo bjc-6000 printer/Canon-BJC-6000
@@ -56,6 +58,7 @@
 #gptofoo bjc-7100 printer/Canon-BJC-7100
 #gptofoo bjc-80 printer/Canon-BJC-80
 #gptofoo bjc-8200 printer/Canon-BJC-8200
+#gptofoo bjc-8500 printer/Canon-BJC-8500
 #gptofoo bjc-85 printer/Canon-BJC-85
 #gptofoo canon-cp10 printer/Canon-CP-10
 #gptofoo canon-cp100 printer/Canon-CP-100
