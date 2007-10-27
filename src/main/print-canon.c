@@ -989,7 +989,7 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
 
                   arg_63[1] = (init->pt) ? init->pt->media_code_c : 0;                /* print media type */
 
-                 if (init->caps->model == 4202) /* S200 */
+                 if (!strcmp(init->caps->name,"S200")) /* S200 */
                    {
                      if ((init->mode->xdpi == 720) && (init->mode->ydpi == 720 ))
                        arg_63[2] = 1;
@@ -1025,7 +1025,7 @@ canon_init_setResolution(const stp_vars_t *v, const canon_privdata_t *init)
   if (!(init->caps->features & CANON_CAP_d))
     return;
 
-   if (init->caps->model != 4202 || (init->mode->xdpi <= 360))
+   if (strcmp(init->caps->name,"S200") || (init->mode->xdpi <= 360))
   canon_cmd(v,ESC28,0x64, 4,
 	    (init->mode->ydpi >> 8 ), (init->mode->ydpi & 255),
 	    (init->mode->xdpi >> 8 ), (init->mode->xdpi & 255));
@@ -1111,19 +1111,19 @@ canon_init_setPrintMode(const stp_vars_t *v, const canon_privdata_t *init)
     arg_6d_b= 1;
 
     arg_6d_1= 0x04;
-  if ((init->caps->model==7000) && (init->used_inks == CANON_INK_K || init->used_inks == CANON_INK_CcMmYK || init->used_inks == CANON_INK_CcMmYyK))
+  if ((!strcmp(init->caps->name,"7000")) && (init->used_inks == CANON_INK_K || init->used_inks == CANON_INK_CcMmYK || init->used_inks == CANON_INK_CcMmYyK))
     arg_6d_1= 0x03;
 
-  if (((init->caps->model==8200 || init->caps->model==4202) && init->used_inks == CANON_INK_K) || init->used_inks == CANON_INK_CMYK)
+  if (((!strcmp(init->caps->name,"8200") || !strcmp(init->caps->name,"S200")) && init->used_inks == CANON_INK_K) || init->used_inks == CANON_INK_CMYK)
       arg_6d_1= 0x02;
 
-  if(init->caps->model == 4202 && init->used_inks == CANON_INK_CMY)
+  if(!strcmp(init->caps->name,"S200") && init->used_inks == CANON_INK_CMY)
       arg_6d_1= 0x02;
 
   if (init->used_inks == CANON_INK_K)
     arg_6d_2= 0x02;
 
-  if (init->caps->model==8200 || init->caps->model==4202)
+  if (!strcmp(init->caps->name,"8200") || !strcmp(init->caps->name,"S200"))
     arg_6d_3= 0x01;
 
   canon_cmd(v,ESC28,0x6d,12, arg_6d_1,
@@ -1266,7 +1266,7 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
   }
 
   /* other models mostly hardcoded stuff not really understood ;( */
-  if (init->caps->model==4202) /* 1 bit per pixel (arg 4,7,10,13); */
+  if (!strcmp(init->caps->name,"S200")) /* 1 bit per pixel (arg 4,7,10,13); */
                                /* 2 level per pixel (arg 6,9,12,15) for each color */
                                /* though we print only 1bit/pixel - but this is how */
                                /* the windows driver works */
@@ -1287,7 +1287,7 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
   }
 
   /* workaround for the bjc8200 in 6color mode - not really understood */
-  if (init->caps->model==8200) {
+  if (!strcmp(init->caps->name,"8200")) {
     if (init->used_inks == CANON_INK_CcMmYK) {
       arg_74_1= 0xff;
       arg_74_2= 0x90;
