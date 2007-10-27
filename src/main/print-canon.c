@@ -383,16 +383,54 @@ get_media_type(const canon_cap_t* caps,const char *name)
 }
 
 
-static const canon_cap_t * canon_get_model_capabilities(int model)
+static const char* canon_families[] = {
+ "", /* the old BJC printers */
+ "S",
+ "i",
+ "PIXMA iP",
+ "PIXMA iX",
+ "PIXMA MP",
+ "PIXUS"
+};
+
+/* canon model ids look like the following
+   FFMMMMMM
+   FF: family is the offset in the canon_families struct
+   MMMMMM: model nr
+*/
+static char* canon_get_printername(const stp_vars_t* v)
+{
+  unsigned int model = stp_get_model_id(v);
+  unsigned int family = model / 1000000; 
+  unsigned int nr = model - family * 1000000;
+  char* name;
+  size_t len;
+  if(family >= sizeof(canon_families) / sizeof(canon_families[0])){
+    stp_erprintf("canon_get_printername: no family %i using default BJC\n", family);
+    family = 0;
+  }
+  len = strlen(canon_families[family]) + 7; /* max model nr. + terminating 0 */
+  name = stp_zalloc(len);
+  snprintf(name,len,"%s%u",canon_families[family],nr);
+  return name;
+}
+
+
+
+
+static const canon_cap_t * canon_get_model_capabilities(const stp_vars_t*v)
 {
   int i;
+  char* name = canon_get_printername(v);
   int models= sizeof(canon_model_capabilities) / sizeof(canon_cap_t);
   for (i=0; i<models; i++) {
-    if (canon_model_capabilities[i].model == model) {
+    if (!strcmp(canon_model_capabilities[i].name,name)) {
+      stp_free(name);
       return &(canon_model_capabilities[i]);
     }
   }
-  stp_deprintf(STP_DBG_CANON,"canon: model %d not found in capabilities list.\n",model);
+  stp_erprintf("canon: model %s not found in capabilities list=> using default\n",name);
+  stp_free(name);
   return &(canon_model_capabilities[0]);
 }
 
@@ -415,7 +453,7 @@ canon_source_type(const char *name, const canon_cap_t * caps)
 static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char* input_slot = stp_get_string_parameter(v, "InputSlot");
     const char *resolution = stp_get_string_parameter(v, "Resolution");
-    const canon_cap_t * caps = canon_get_model_capabilities(stp_get_model_id(v));
+    const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
     int i;
     if(resolution){
@@ -546,7 +584,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
   int		i;
 
   const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_get_model_id(v));
+    canon_get_model_capabilities(v);
   description->p_type = STP_PARAMETER_TYPE_INVALID;
 
   if (name == NULL)
@@ -789,7 +827,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
   int top_margin = 0;
   int cd = 0;
 
-  const canon_cap_t * caps= canon_get_model_capabilities(stp_get_model_id(v));
+  const canon_cap_t * caps= canon_get_model_capabilities(v);
   const char *media_size = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pt = NULL;
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
@@ -840,7 +878,7 @@ canon_limit(const stp_vars_t *v,  		/* I */
 	    int *min_height)
 {
   const canon_cap_t * caps=
-    canon_get_model_capabilities(stp_get_model_id(v));
+    canon_get_model_capabilities(v);
   *width =	caps->max_width;
   *height =	caps->max_height;
   *min_width = 1;
@@ -1662,11 +1700,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 {
   int i;
   int		status = 1;
-  int		model = stp_get_model_id(v);
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
-  const canon_cap_t * caps= canon_get_model_capabilities(model);
+  const canon_cap_t * caps= canon_get_model_capabilities(v);
   int		y;		/* Looping vars */
   canon_privdata_t privdata;
   int		errdiv,		/* Error dividend */

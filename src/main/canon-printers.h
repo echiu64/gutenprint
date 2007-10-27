@@ -496,8 +496,8 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-  { /* PIXMA MP710 (== iP4000 without duplex) */
-    "PIXMA MP710",4001, 3,          /*model, model_id*/
+  { /* PIXMA MP740 (== iP4000 without duplex) */
+    "PIXMA MP740",4001, 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
