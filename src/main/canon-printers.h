@@ -30,7 +30,6 @@
 
 typedef struct canon_caps {
   const char* name;   /* model name */
-  int model;          /* model number as used in printers.xml */
   int model_id;       /* model ID code for use in commands */
   int max_width;      /* maximum printable paper size */
   int max_height;
@@ -138,7 +137,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /* ************************************ */
 
   { /* Canon S200x *//* heads: BC-24 */
-    "S200",4202, 3,
+    "S200", 3,
     618, 936,       /* 8.58" x 13 " */
     10, 10, 9, 20,
     &canon_default_slotlist,
@@ -151,7 +150,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC S300 */
-    "S300",8201, 3,
+    "S300", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -164,7 +163,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon  BJ 30   *//* heads: BC-10 */
-    "30",30, 1,
+    "30", 1,
     9.5*72, 14*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -176,7 +175,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon  BJC 85  *//* heads: BC-20 BC-21 BC-22 */
-    "85",85, 1,
+    "85", 1,
     9.5*72, 14*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -189,7 +188,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 4300 *//* heads: BC-20 BC-21 BC-22 BC-29 */
-    "4300",4300, 1,
+    "4300", 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -202,7 +201,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 4400 *//* heads: BC-20 BC-21 BC-22 BC-29 */
-    "4400",4400, 1,
+    "4400", 1,
     9.5*72, 14*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -215,7 +214,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6000 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    "6000",6000, 3,
+    "6000", 3,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -228,7 +227,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6200 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    "6200", 6200, 3,
+    "6200", 3,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -241,7 +240,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
 
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    "6500", 6500, 3,
+    "6500", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -253,7 +252,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 8200 *//* heads: BC-50 */
-    "8200",8200, 3,
+    "8200", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -265,7 +264,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon S500 */
-    "S500",8202, 3,
+    "S500", 3,
     842, 17*72,
     10, 10, 15, 15,
     &canon_default_slotlist,
@@ -285,7 +284,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /* *************** */
 
   { /* Canon BJC 210 *//* heads: BC-02 BC-05 BC-06 */
-    "210",210, 1,
+    "210", 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -297,7 +296,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
-    "240",240, 1,
+    "240", 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -309,7 +308,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 250 *//* heads: BC-02 BC-05 BC-06 */
-    "250",250, 1,
+    "250", 1,
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -321,7 +320,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
-    "1000",1000, 1,
+    "1000", 1,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -333,7 +332,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 2000 *//* heads: BC-20 BC-21 BC-22 BC-29 */
-    "2000",2000, 1,
+    "2000", 1,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -345,7 +344,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
-    "3000",3000, 3,
+    "3000", 3,
     842, 17*72,
     10, 10, 9, 15,
     &canon_default_slotlist,
@@ -357,7 +356,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 6100 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    "6100",6100, 3,
+    "6100", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -369,7 +368,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
-    "7000",7000, 3,
+    "7000", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -381,7 +380,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC i560 */
-    "i560",7001, 3,
+    "i560", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -393,7 +392,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
-    "7100",7100, 3,
+    "7100", 3,
     842, 17*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -413,7 +412,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /*****************************/
 
   { /* Canon BJC 5100 *//* heads: BC-20 BC-21 BC-22 BC-23 BC-29 */
-    "5100",5100, 1,
+    "5100", 1,
     17*72, 22*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -425,7 +424,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 5500 *//* heads: BC-20 BC-21 BC-29 */
-    "5500",5500, 1,
+    "5500", 1,
     22*72, 34*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -437,7 +436,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
-    "6500",6500, 3,
+    "6500", 3,
     17*72, 22*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -449,7 +448,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC 8500 *//* heads: BC-80/BC-81 BC-82/BC-81 */
-    "8500",8500, 3,
+    "8500", 3,
     17*72, 22*72,
     11, 9, 10, 18,
     &canon_default_slotlist,
@@ -461,7 +460,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon PIXMA iP2000 */
-    "PIXMA iP2000",9001, 3,          /*model, model_id*/
+    "PIXMA iP2000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -473,7 +472,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon PIXMA iP3000 */
-    "PIXMA iP3000",3999, 3,          /*model, model_id*/
+    "PIXMA iP3000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -485,7 +484,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon PIXMA iP4000 */
-    "PIXMA iP4000",4000, 3,          /*model, model_id*/
+    "PIXMA iP4000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -497,7 +496,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* PIXMA MP740 (== iP4000 without duplex) */
-    "PIXMA MP740",4001, 3,          /*model, model_id*/
+    "PIXMA MP740", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -509,7 +508,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
   },
   { /* Canon PIXMA iP4200 */
-    "PIXMA iP4200",4200, 3,          /*model, model_id*/
+    "PIXMA iP4200", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -521,7 +520,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon PIXMA iP6700 */
-    "PIXMA iP6700",4203, 3,          /*model, model_id*/
+    "PIXMA iP6700", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -533,7 +532,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon PIXMA iX5000 */
-    "PIXMA iX5000",5000, 3,          /*model, model_id*/
+    "PIXMA iX5000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -545,7 +544,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon MULTIPASS MP150 */
-    "PIXMA MP150",4201, 3,          /*model, model_id*/
+    "PIXMA MP150", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
@@ -557,7 +556,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon MULTIPASS MP830 */
-    "PIXMA MP830",9000, 3,          /*model, model_id*/
+    "PIXMA MP830", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
