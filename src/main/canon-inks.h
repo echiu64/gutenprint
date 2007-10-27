@@ -280,42 +280,6 @@ static const canon_inkset_t canon_9_C3M3Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
-        {'C',1.0,&canon_2b_3l_c_ink},
-        {'M',1.0,&canon_2b_3l_c_ink},
-        {'Y',1.0,&canon_1b_2l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL}
-};
-
-static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
-        {'C',1.0,&canon_2b_3l_c_ink},
-        {'M',1.0,&canon_2b_3l_c_ink},
-        {'Y',1.0,&canon_1b_2l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
-        {0,0.0,NULL}
-};
-
-static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
-        {'C',1.0,&canon_2b_4l_ink},
-        {'M',1.0,&canon_2b_4l_ink},
-        {'Y',1.0,&canon_2b_4l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
-        {'c',0.5,&canon_2b_4l_ink},
-        {'m',0.5,&canon_2b_4l_ink},
-        {0,0.0,NULL},
-        {'k',0.5,&canon_2b_4l_ink},
-        {0,0.0,NULL}
-};
-
 static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -328,6 +292,72 @@ static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* iP4000 default print mode (quality 2) */
+static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL}
+};
+
+/* iP4000 mode used for Super Photo Paper (quality 1) */
+static const canon_inkset_t canon_9_C3M3Y3K2c3m3k3_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_2b_3l_c_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_2b_3l_c_ink},
+        {'m',0.5,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL}
+};
+
+/* iP4000 mode used for T-Shirt (quality 2) */
+static const canon_inkset_t canon_9_C4M4Y4K2k4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+};
+
+/* iP4000 mode used for CD printing (quality 3) */
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_2b_4l_ink},
+        {'m',0.5,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL}
+};
+
+
+/* iP4000 mode used for Professional Photo Paper in Quality 4 */
 static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
         {'C',1.0,&canon_4b_8l_ink},
         {'M',1.0,&canon_4b_8l_ink},
