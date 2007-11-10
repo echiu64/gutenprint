@@ -294,6 +294,10 @@ static const canon_mode_t canon_MULTIPASS_MP150_modes[] = {
 };
 DECLARE_MODES(canon_MULTIPASS_MP150,0);
 
+static const canon_mode_t canon_PIXMA_iP5300_modes[] = {
+  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(13_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_PIXMA_iP5300,0);
 
 static const canon_mode_t canon_MULTIPASS_MP830_modes[] = {
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(4_C2M2Y2K2),0,NULL,1.0,1.0,NULL,NULL,NULL,2},
