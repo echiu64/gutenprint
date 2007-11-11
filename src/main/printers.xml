@@ -752,6 +752,9 @@
       <printer name="Canon SELPHY-CP-730" driver="canon-cp730" manufacturer="Canon" model="1001" />
       <printer name="Canon SELPHY-CP-740" driver="canon-cp740" manufacturer="Canon" model="1001" />
       <printer name="Canon SELPHY-CP-750" driver="canon-cp750" manufacturer="Canon" model="1001" />
+      <printer name="Canon SELPHY ES1" driver="canon-es1" manufacturer="Canon" model="1002" />
+      <printer name="Canon SELPHY ES2" driver="canon-es2" manufacturer="Canon" model="1002" />
+      <printer name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1002" />
       <printer name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" />
       <printer name="Sony DPP-EX7" driver="sony-dppex5" manufacturer="Sony" model="2002" />
       <printer name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" />

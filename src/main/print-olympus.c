@@ -847,6 +847,48 @@ static const dyesub_printsize_t cp220_printsize[] =
 
 LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
+/* Canon SELPHY ES series */
+static void es1_printer_init_func(stp_vars_t *v)
+{
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x11 :
+	     (strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
+	      (strcmp(privdata.pagesize, "w155h244") == 0 ? '\3' : 0x11 )));
+
+  /*
+   differs from cp-220 in that after the 0x4000, the next character
+   seems to be 0x01 instead of 0x00, and the P card size code is 
+   '0x11' instead of '0x1'
+   codes for other paper types are unknown.
+  */
+
+  stp_put16_be(0x4000, v);
+  stp_putc(0x10, v);
+  stp_putc(pg, v);
+  dyesub_nputc(v, '\0', 8);
+}
+
+static void es1_plane_init_func(stp_vars_t *v)
+{
+  unsigned char plane = 0;
+
+  switch (privdata.plane) {
+  case 3: /* Y */
+    plane = 0x01;
+    break;
+  case 2: /* M */
+    plane = 0x03;
+    break;
+  case 1: /* C */
+    plane = 0x07;
+    break;
+  }
+
+  stp_put16_be(0x4001, v);
+  stp_putc(0x1, v);
+  stp_putc(plane, v);
+  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  dyesub_nputc(v, '\0', 4);
+}
 
 /* Sony DPP-EX5, DPP-EX7 */
 static const dyesub_resolution_t res_403dpi[] =
@@ -1496,6 +1538,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+  { /* Canon SELPHY ES1, ES2, ES20 (!experimental) */
+    1002,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &cpx00_page_list,
+    &cpx00_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &es1_printer_init_func, NULL,
+    &es1_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
