@@ -279,6 +279,9 @@ sub get_ppd_contents($$$$$) {
 			  "gutenprint.$version://$driver/$simplified/${locale}",
 			  "gutenprint.$version://$driver/$simplified") {
 		$new_ppd_filename = $url;
+		if ($debug & 8) {
+		    print "Trying $driver_bin cat $url for $driver, $simplified, $locale, $region\n";
+		}
 		if (open PPD, "$driver_bin cat $url 2>/dev/null |") {
 		    while (<PPD>) {
 			$source_data .= $_;
@@ -408,7 +411,8 @@ sub update_ppd ($) {
 			 $driver, $locale, $region);
 
     if (! $source_data) {
-	die "Unable to retrieve PPD file!\n";
+	print "Unable to retrieve PPD file!\n";
+	return 0;
     }
 
     # Save new PPD in a temporary file, for processing...
@@ -430,8 +434,14 @@ sub update_ppd ($) {
 
     # Close original and temporary files...
 
-    close ORIG or die "$_: can't close file: $!";
-    close $tmpfile or die "can't close temporary file $tmpfile: $!";
+    if (! close ORIG) {
+	print "$_: can't close file: $!\n";
+	return 0;
+    }
+    if (! close $tmpfile) {
+	print "can't close temporary file $tmpfile: $!\n";
+	return 0;
+    }
 
 
     if ($debug & 4) {
