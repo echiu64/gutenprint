@@ -872,7 +872,8 @@ static int
 supports_borderless(const stp_vars_t *v)
 {
   return (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) ||
-	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL));
+	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) ||
+	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY));
 }
 
 static int
@@ -3073,6 +3074,13 @@ setup_page(stp_vars_t *v)
       pd->page_extra_height =
 	escp2_zero_margin_offset(v) * pd->page_management_units /
 	escp2_base_separation(v);
+    }
+  else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY) &&
+	   (stp_get_boolean_parameter(v, "FullBleed")) &&
+	   ((!input_slot || !(input_slot->is_cd))))
+    {
+      pd->paper_extra_bottom = 0;
+      pd->page_extra_height = 0;
     }
   else
     {

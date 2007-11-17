@@ -373,6 +373,7 @@ typedef struct
 #define MODEL_ZEROMARGIN_NO	0x00ul /* zero margin mode? */
 #define MODEL_ZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
 #define MODEL_ZEROMARGIN_FULL	0x20ul /* (print to edge of the paper) */
+#define MODEL_ZEROMARGIN_H_ONLY	0x30ul /* (print to edge of the paper) */
 
 #define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
 #define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
