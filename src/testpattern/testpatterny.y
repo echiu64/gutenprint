@@ -130,6 +130,7 @@ find_color(const char *name)
 %token MODE
 %token PAGESIZE
 %token MESSAGE
+%token OUTPUT
 %token END
 
 %start Thing
@@ -577,9 +578,27 @@ A_Message: Message0 | Message1 | Message2 | Message3 | Message4
 message: A_Message
 ;
 
+Output0: OUTPUT
+	{
+	  if (global_output)
+	    free(global_output);
+	  global_output = NULL;
+	}
+
+Output1: OUTPUT tSTRING
+	{
+	  global_output = $2;
+	}
+
+A_Output: Output0 | Output1
+;
+
+output: A_Output
+;
+
 A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
-	| vsize | blackline | inputspec | page_size | message
+	| vsize | blackline | inputspec | page_size | message | output
 ;
 
 Rule: A_Rule SEMI

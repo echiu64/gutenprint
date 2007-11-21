@@ -16,6 +16,7 @@ my @printer_list = ();
 my @special_options = ();
 my @standard_options = qw(InkType);
 my $global_status = 1;
+my $output = undef;
 
 my @extras = ();
 my @messages = ();
@@ -31,6 +32,7 @@ GetOptions("v+"  => \$valgrind,
 	   "n"   => \$dontrun,
 	   "s!"  => \$skip_duplicate_printers,
 	   "o=s" => \@special_options,
+	   "O=s" => \$output,
 	   "m"   => \$calc_md5);
 
 if (! @special_options) {
@@ -208,6 +210,10 @@ sub do_printer {
 	    set_opt("Resolution", $resolution);
 	    set_opt("DitherAlgorithm", "Fast");
 	    set_opt("ColorCorrection", "Raw");
+	    if ($output) {
+		my $outfile = "$output/${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
+		push @extras, "output \"$outfile\";\n";
+	    }
 	    set_message("    ${pmode}+${resolution}");
 	    my $output = print_one_testpattern($printer);
 	    do_print( $output, $fh );
@@ -218,6 +224,7 @@ sub do_printer {
 	    if ($#opts >= 1) {
 		my $opt;
 		foreach $opt (@opts) {
+		    my ($out_file);
 		    @extras = ();
 		    @messages = ();
 		    if ($first_time) {
@@ -229,6 +236,10 @@ sub do_printer {
 		    set_opt($key, $opt);
 		    set_opt("DitherAlgorithm", "Fast");
 		    set_opt("ColorCorrection", "Raw");
+		    if ($output) {
+			my $outfile = "$output/${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}";
+			push @extras, "output \"$outfile\";\n";
+		    }
 		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
 		    my $output = print_one_testpattern($printer);
 		    do_print( $output, $fh );
@@ -263,16 +274,21 @@ if ($dontrun) {
 	$valgrind_command = "valgrind $valopts";
     }
 
+    if (defined $output && ! -d $output) {
+	mkdir $output || die "Can't create directory $output: $!\n";
+    }
+
     my $status = 1;
     if ($calc_md5) {
 	$testpattern_command = "./testpattern > out.prn; a=\$? ; md5sum out.prn; exit \$a";
 	map { do_printer($_) } @printer_list;
 	$status = $global_status;
     } else {
-	$testpattern_command = "$valgrind_command ./testpattern -n";
+	my ($suppress);
+	if (! defined $output) { $suppress = '-n'; }
+	$testpattern_command = "$valgrind_command ./testpattern $suppress";
 	open TESTPATTERN, "|$testpattern_command" or
 	    die "Can't run $testpattern_command: $!\n";
-	$testpattern_command = "$valgrind_command ./testpattern -n";
 	map { do_printer($_, \*TESTPATTERN) } @printer_list;
 	$status = close TESTPATTERN;
     }
