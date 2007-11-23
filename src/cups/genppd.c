@@ -1519,8 +1519,30 @@ write_ppd(
 	       desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
       if (has_quality_parameter)
 	{
+#ifdef USE_COMPLIANT_RESOLUTIONS
+	  stp_parameter_t desc1;
+	  stp_clear_string_parameter(v, "Resolution");
+	  stp_describe_parameter(v, "Quality", &desc1);
+	  stp_set_string_parameter(v, "Quality", desc1.deflt.str);
+	  stp_describe_resolution(v, &tmp_xdpi, &tmp_ydpi);
+	  stp_clear_string_parameter(v, "Quality");
+	  if (tmp_ydpi > tmp_xdpi)
+	    tmp_xdpi++;
+	  else
+	    tmp_ydpi++;
+	  if (tmp_xdpi == tmp_ydpi)
+	    tmp_ydpi++;
+	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
+	  stp_string_list_add_string(res_list, res_name, res_name);
+	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
+	  gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
+	  gzprintf(fp, "*Resolution %s/Automatic:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
+		   res_name, tmp_xdpi, tmp_ydpi);
+	  gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
+#else
 	  gzprintf(fp, "*DefaultResolution: None\n");
 	  gzprintf(fp, "*StpDefaultResolution: None\n");
+#endif
 	}
       else
       {
@@ -1547,8 +1569,10 @@ write_ppd(
       }
 
       stp_clear_string_parameter(v, "Quality");
+#ifndef USE_COMPLIANT_RESOLUTIONS
       if (has_quality_parameter)
 	gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
+#endif
       for (i = 0; i < num_opts; i ++)
 	{
 	  /*
@@ -1585,6 +1609,8 @@ write_ppd(
 	    } while (!resolution_ok);
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		   res_name, opt->text, xdpi, ydpi, i + 1);
+	  if (strcmp(res_name, opt->name) != 0)
+	    gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
 #else  /* !USE_COMPLIANT_RESOLUTIONS */
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		   opt->name, opt->text, xdpi, ydpi, i + 1);
