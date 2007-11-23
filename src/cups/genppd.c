@@ -96,10 +96,17 @@ static const char *gzext = "";
  * In Gutenprint 5.0, use the legacy names with the CUPS 1.1 interface
  * for back compatibility.  With CUPS 1.2, or Gutenprint 5.1 or above,
  * generate compliant names.
+ *
+ * As of Gutenprint 5.0.2 and 5.1.4, *always* use the compliant names.
+ * OS X Leopard seems to be very unhappy if there are invalid resolution
+ * names.  We've added a mapping between the invalid names and the
+ * valid names so that genppdupdate knows how to translate the names.
  */
 
+#if 0
 #if defined(CUPS_DRIVER_INTERFACE) || (STP_MAJOR_VERSION > 5) || (STP_MAJOR_VERSION == 5 && STP_MINOR_VERSION > 0)
 #define USE_COMPLIANT_RESOLUTIONS 1
+#endif
 #endif
 
 /*
@@ -1505,12 +1512,10 @@ write_ppd(
 
   if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
     {
-#ifdef USE_COMPLIANT_RESOLUTIONS
       stp_string_list_t *res_list = stp_string_list_create();
       char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
       int resolution_ok;
       int tmp_xdpi, tmp_ydpi;
-#endif
 
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
       gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
@@ -1519,7 +1524,6 @@ write_ppd(
 	       desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
       if (has_quality_parameter)
 	{
-#ifdef USE_COMPLIANT_RESOLUTIONS
 	  stp_parameter_t desc1;
 	  stp_clear_string_parameter(v, "Resolution");
 	  stp_describe_parameter(v, "Quality", &desc1);
@@ -1539,14 +1543,9 @@ write_ppd(
 	  gzprintf(fp, "*Resolution %s/Automatic:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
 		   res_name, tmp_xdpi, tmp_ydpi);
 	  gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
-#else
-	  gzprintf(fp, "*DefaultResolution: None\n");
-	  gzprintf(fp, "*StpDefaultResolution: None\n");
-#endif
 	}
       else
       {
-#ifdef USE_COMPLIANT_RESOLUTIONS
 	stp_set_string_parameter(v, "Resolution", desc.deflt.str);
 	stp_describe_resolution(v, &xdpi, &ydpi);
 
@@ -1562,17 +1561,9 @@ write_ppd(
 	 * default resolution name
 	 */
 	stp_string_list_add_string(res_list, res_name, res_name);
-#else  /* !USE_COMPLIANT_RESOLUTIONS */
-	gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
-	gzprintf(fp, "*StpDefaultResolution: %s\n", desc.deflt.str);
-#endif /* USE_COMPLIANT_RESOLUTIONS */
       }
 
       stp_clear_string_parameter(v, "Quality");
-#ifndef USE_COMPLIANT_RESOLUTIONS
-      if (has_quality_parameter)
-	gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
-#endif
       for (i = 0; i < num_opts; i ++)
 	{
 	  /*
@@ -1586,7 +1577,6 @@ write_ppd(
 	  if (xdpi == -1 || ydpi == -1)
 	    continue;
 
-#ifdef USE_COMPLIANT_RESOLUTIONS
 	  resolution_ok = 0;
 	  tmp_xdpi = xdpi;
 	  tmp_ydpi = ydpi;
@@ -1611,15 +1601,9 @@ write_ppd(
 		   res_name, opt->text, xdpi, ydpi, i + 1);
 	  if (strcmp(res_name, opt->name) != 0)
 	    gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
-#else  /* !USE_COMPLIANT_RESOLUTIONS */
-	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		   opt->name, opt->text, xdpi, ydpi, i + 1);
-#endif /* USE_COMPLIANT_RESOLUTIONS */
 	}
 
-#ifdef USE_COMPLIANT_RESOLUTIONS
       stp_string_list_destroy(res_list);
-#endif
       gzputs(fp, "*CloseUI: *Resolution\n\n");
     }
 
