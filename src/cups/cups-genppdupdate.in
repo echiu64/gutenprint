@@ -196,6 +196,7 @@ sub HELP_MESSAGE($;$$$) {
     print $fh "  -q          Quiet mode.  No messages except errors.\n";
     print $fh "  -s ppd_dir  Use ppd_dir as the source PPD directory.\n";
     print $fh "  -p ppd_dir  Update PPD files in ppd_dir.\n";
+    print $fh "  -P driver   Use the specified driver binary to generate PPD files.\n";
     print $fh "  -v          Verbose messages.\n";
     print $fh "  -N          Reset options to defaults.\n";
     print $fh "  -o out_dir  Output PPD files to out_dir.\n";
@@ -524,10 +525,9 @@ sub update_ppd ($) {
 
 	# Loop through each default in turn.
 default_loop:
-	foreach (sort keys %defaults) {
-	    my $default_option = $_;
+	foreach my $default_option (sort keys %defaults) {
 	    my $option;
-	    ($option = $_) =~ s/Default//; # Strip off `Default'
+	    ($option = $default_option) =~ s/Default//; # Strip off `Default'
 	    # Check method is valid
 	    my $orig_method = $orig_default_types{$option};
 	    my $new_method = $new_default_types{$option};
@@ -537,11 +537,12 @@ default_loop:
 	    }
 	    if ($new_method eq "PickOne") {
 		# Check the old setting is valid
-		foreach (@{$options{$option}}) {
+		foreach my $opt (@{$options{$option}}) {
 		    my $def_option = $defaults{$default_option};
-		    if (($def_option eq $_) ||
+		    if (($def_option eq $opt) ||
 			($option eq "Resolution" &&
-			 ($def_option = $resolution_map{$defaults{$default_option}}) eq $_)) { # Valid option
+			 (defined $resolution_map{$defaults{$default_option}}) &&
+			 ($def_option = $resolution_map{$defaults{$default_option}}) eq $opt)) { # Valid option
 			# Set the option in the new PPD
 			$source_data =~ s/\*($default_option).*/*$1:$def_option/m;
 			if ($verbose) {
@@ -553,7 +554,7 @@ default_loop:
 		warn "Warning: $ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Using default setting.\n";
 		next;
 	    }
-	    warn "Warning: $ppd_source_filename: PPD OpenUI method $new_default_types{$_} not understood.\n";
+	    warn "Warning: $ppd_source_filename: PPD OpenUI method $new_default_types{$default_option} not understood.\n";
 	}
     }
 
