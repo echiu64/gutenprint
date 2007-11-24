@@ -1528,20 +1528,26 @@ write_ppd(
 	  stp_clear_string_parameter(v, "Resolution");
 	  stp_describe_parameter(v, "Quality", &desc1);
 	  stp_set_string_parameter(v, "Quality", desc1.deflt.str);
-	  stp_describe_resolution(v, &tmp_xdpi, &tmp_ydpi);
+	  stp_describe_resolution(v, &xdpi, &ydpi);
 	  stp_clear_string_parameter(v, "Quality");
+	  tmp_xdpi = xdpi;
+	  tmp_ydpi = ydpi;
 	  if (tmp_ydpi > tmp_xdpi)
-	    tmp_xdpi++;
+	    tmp_ydpi = tmp_xdpi;
 	  else
-	    tmp_ydpi++;
-	  if (tmp_xdpi == tmp_ydpi)
-	    tmp_ydpi++;
-	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
+	    tmp_xdpi = tmp_ydpi;
+	  /*
+	     Make the default resolution look like an almost square resolution
+	     so that applications using it will be less likely to generate
+	     excess resolution.  However, make the hardware resolution
+	     match the printer default.
+	  */
+	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_xdpi + 1);
 	  stp_string_list_add_string(res_list, res_name, res_name);
 	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
 	  gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
 	  gzprintf(fp, "*Resolution %s/Automatic:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
-		   res_name, tmp_xdpi, tmp_ydpi);
+		   res_name, xdpi, ydpi);
 	  gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
 	}
       else
