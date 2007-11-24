@@ -14,7 +14,7 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType);
+my @standard_options = qw(InkType DitherAlgorithm);
 my $global_status = 1;
 my $output = undef;
 
@@ -33,7 +33,7 @@ GetOptions("v+"  => \$valgrind,
 	   "s!"  => \$skip_duplicate_printers,
 	   "o=s" => \@special_options,
 	   "O=s" => \$output,
-	   "m"   => \$calc_md5);
+	   "m:s" => \$calc_md5);
 
 if (! @special_options) {
     @special_options = @standard_options;
@@ -148,14 +148,6 @@ sub do_print {
     my ($output, $fh) = @_;
     if ($dontrun) {
 	print $output;
-    } elsif ($calc_md5) {
-	open TESTPATTERN, "|$testpattern_command" or
-		die "Can't run $testpattern_command: $!\n";
-	print TESTPATTERN $output;
-	my $status = close TESTPATTERN;
-	if (! $status) {
-	    $global_status = 0;
-	}
     } else {
 	print $fh $output;
     }
@@ -210,9 +202,24 @@ sub do_printer {
 	    set_opt("Resolution", $resolution);
 	    set_opt("DitherAlgorithm", "Fast");
 	    set_opt("ColorCorrection", "Raw");
-	    if ($output) {
-		my $outfile = "$output/${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
-		push @extras, "output \"$outfile\";\n";
+	    if (defined $output || defined $calc_md5) {
+		my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
+		my $md5_dir = $calc_md5;
+		if (defined $calc_md5 && $calc_md5 eq "") {
+		    $md5_dir = $output;
+		}
+		my $outfile = "$output/${outkey}.prn";
+		my $md5file = "$md5_dir/${outkey}.md5";
+		if (! $md5_dir) {
+		    $md5file = "${outkey}.md5";
+		}
+		if ($output && $calc_md5) {
+		    push @extras, "output \"|tee '$outfile' | md5sum -b > '$md5file'\";\n";
+		} elsif ($output) {
+		    push @extras, "output \"$outfile\";\n";
+		} else {
+		    push @extras, "output \"|md5sum -b > '$md5file'\";\n";
+		}
 	    }
 	    set_message("    ${pmode}+${resolution}");
 	    my $output = print_one_testpattern($printer);
@@ -234,11 +241,30 @@ sub do_printer {
 		    set_opt("PrintingMode", $pmode);
 		    set_opt("Resolution", $min_res_name);
 		    set_opt($key, $opt);
-		    set_opt("DitherAlgorithm", "Fast");
-		    set_opt("ColorCorrection", "Raw");
-		    if ($output) {
-			my $outfile = "$output/${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}";
-			push @extras, "output \"$outfile\";\n";
+		    if ($key ne "DitherAlgorithm") {
+			set_opt("DitherAlgorithm", "Fast");
+		    }
+		    if ($key ne "ColorCorrection") {
+			set_opt("ColorCorrection", "Raw");
+		    }
+		    if (defined $output || defined $calc_md5) {
+			my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}";
+			my $md5_dir = $calc_md5;
+			if (defined $calc_md5 && $calc_md5 eq "") {
+			    $md5_dir = $output;
+			}
+			my $outfile = "$output/${outkey}.prn";
+			my $md5file = "$md5_dir/${outkey}.md5";
+			if (! $md5_dir) {
+			    $md5file = "${outkey}.md5";
+			}
+			if (defined $output && defined $calc_md5) {
+			    push @extras, "output \"|tee '$outfile' | md5sum -b > '$md5file'\";\n";
+			} elsif ($output) {
+			    push @extras, "output \"$outfile\";\n";
+			} else {
+			    push @extras, "output \"|md5sum -b > '$md5file'\";\n";
+			}
 		    }
 		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
 		    my $output = print_one_testpattern($printer);
@@ -274,24 +300,22 @@ if ($dontrun) {
 	$valgrind_command = "valgrind $valopts";
     }
 
-    if (defined $output && ! -d $output) {
+    if (defined $output && $output ne "" && ! -d $output) {
 	mkdir $output || die "Can't create directory $output: $!\n";
     }
 
-    my $status = 1;
-    if ($calc_md5) {
-	$testpattern_command = "./testpattern > out.prn; a=\$? ; md5sum out.prn; exit \$a";
-	map { do_printer($_) } @printer_list;
-	$status = $global_status;
-    } else {
-	my ($suppress);
-	if (! defined $output) { $suppress = '-n'; }
-	$testpattern_command = "$valgrind_command ./testpattern $suppress";
-	open TESTPATTERN, "|$testpattern_command" or
-	    die "Can't run $testpattern_command: $!\n";
-	map { do_printer($_, \*TESTPATTERN) } @printer_list;
-	$status = close TESTPATTERN;
+    if (defined $calc_md5 && $calc_md5 ne "" && ! -d $calc_md5) {
+	mkdir $calc_md5 || die "Can't create directory $calc_md5: $!\n";
     }
+
+    my $status = 1;
+    my ($suppress);
+    if (! defined $output && ! defined $calc_md5) { $suppress = '-n'; }
+    $testpattern_command = "$valgrind_command ./testpattern $suppress";
+    open TESTPATTERN, "|$testpattern_command" or
+	die "Can't run $testpattern_command: $!\n";
+    map { do_printer($_, \*TESTPATTERN) } @printer_list;
+    $status = close TESTPATTERN;
     if ($status) {
 	exit 0;
     } else {

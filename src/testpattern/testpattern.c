@@ -173,6 +173,8 @@ static void
 writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
+  if (! file)
+    return;
   if (!global_suppress_output || (file == stderr))
     {
       fwrite(buf, 1, bytes, prn);
@@ -235,6 +237,7 @@ do_print(void)
   int i;
   char tmp[32];
   FILE *output = stdout;
+  int write_to_process = 0;
 
   initialize_global_parameters();
   global_vars = stp_vars_create();
@@ -269,15 +272,36 @@ do_print(void)
     }
   if (global_output)
     {
-      output = fopen(global_output, "wb");
-      if (! output)
+      if (strcmp(global_output, "-") == 0)
+	output = stdout;
+      else if (strcmp(global_output, "") == 0)
+	output = NULL;
+      else if (global_output[0] == '|')
 	{
-	  fprintf(stderr, "Create %s failed: %s\n", global_output, strerror(errno));
-	  output = stdout;
+	  write_to_process = 1;
+	  output = popen(global_output+1, "w");
+	  if (! output)
+	    {
+	      fprintf(stderr, "popen '%s' failed: %s\n", global_output, strerror(errno));
+	      output = NULL;
+	    }
+	  free(global_output);
+	  global_output = NULL;
 	}
-      free(global_output);
-      global_output = NULL;
+      else
+	{
+	  output = fopen(global_output, "wb");
+	  if (! output)
+	    {
+	      fprintf(stderr, "Create %s failed: %s\n", global_output, strerror(errno));
+	      output = NULL;
+	    }
+	  free(global_output);
+	  global_output = NULL;
+	}
     }
+  else
+    output = stdout;
   stp_set_printer_defaults(v, the_printer);
   stp_set_outfunc(v, writefunc);
   stp_set_errfunc(v, writefunc);
@@ -342,8 +366,13 @@ do_print(void)
   stp_vars_destroy(v);
   stp_free(static_testpatterns);
   static_testpatterns = NULL;
-  if (output != stdout)
-    (void) fclose(output);
+  if (output && output != stdout)
+    {
+      if (write_to_process)
+	(void) pclose(output);
+      else
+	(void) fclose(output);
+    }
   return 0;
 }
 

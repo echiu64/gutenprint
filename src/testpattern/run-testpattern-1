@@ -244,7 +244,7 @@ RawTypes="raw-data-8 raw-data-16"
 RawModes="rgb kcmy cmyk cmy gray white"
 RawColorCorrections="None Density Desaturated Accurate Bright Uncorrected Threshold Raw Predithered"
 RawInkTypes="CMYK RGB CMY KCMY RGBGray CMYGray"
-RawPrintingModes="Color BW"
+RawPrintingModes="BW Color"
 
 the_message=''
 
@@ -262,7 +262,7 @@ print_all_testpatterns() {
 	    for c in $RawColorCorrections ; do
 		for d in $RawModes ; do
 		    for e in $RawBitDepths ; do
-			set_message "$a $b $c $d $e"
+			set_message "Raw $a $b $c $d $e"
 			if [ -n "$output" ] ; then
 			    outstuff="`printf '\n%s\n' \"output \\\"$output/raw-data-8_${a}_${b}_${c}_${d}_${e}\\\";\"`"
 			fi
@@ -278,7 +278,7 @@ print_all_testpatterns() {
 	    for c in $StandardColorCorrections ; do
 		for d in $StandardModes ; do
 		    for e in $StandardBitDepths ; do
-			set_message "$a $b $c $d $e"
+			set_message "R800 $a $b $c $d $e"
 			if [ -n "$output" ] ; then
 			    outstuff="`printf '\n%s\n' \"output \\\"$output/escp2-r800_${a}_${b}_${c}_${d}_${e}\\\";\"`"
 			fi
@@ -291,7 +291,7 @@ print_all_testpatterns() {
     done
     for a in $StandardColorCorrections ; do
 	for b in $StandardBitDepths ; do
-	    set_message "Color extended 8 CMYKRB $a $b"
+	    set_message "R800 Extended Color 8 CMYKRB $a $b"
 	    if [ -n "$output" ] ; then
 		outstuff="`printf '\n%s\n' \"output \\\"$output/escp2-r800_${b}_CMYKRB_${a}_Color\\\";\"`"
 	    fi

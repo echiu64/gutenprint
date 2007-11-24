@@ -26,7 +26,7 @@ include $(top_srcdir)/scripts/global.mk
 
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
-TESTS = run-testpattern run-testpattern-1 run-testpattern-2
+TESTS = run-testpattern-1 run-testpattern-2
 
 
 ## Programs
