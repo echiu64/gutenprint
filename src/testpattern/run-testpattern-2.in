@@ -35,6 +35,10 @@ GetOptions("v+"  => \$valgrind,
 	   "O=s" => \$output,
 	   "m:s" => \$calc_md5);
 
+if (defined $calc_md5 && $calc_md5 eq "0") {
+    $calc_md5 = undef;
+}
+
 if (! @special_options) {
     @special_options = @standard_options;
 }
@@ -208,17 +212,18 @@ sub do_printer {
 		if (defined $calc_md5 && $calc_md5 eq "") {
 		    $md5_dir = $output;
 		}
-		my $outfile = "$output/${outkey}.prn";
+		my $outbase = "${outkey}.prn";
+		my $outfile = "$output/$outbase";
 		my $md5file = "$md5_dir/${outkey}.md5";
 		if (! $md5_dir) {
 		    $md5file = "${outkey}.md5";
 		}
 		if ($output && $calc_md5) {
-		    push @extras, "output \"|tee '$outfile' | md5sum -b > '$md5file'\";\n";
+		    push @extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 		} elsif ($output) {
 		    push @extras, "output \"$outfile\";\n";
 		} else {
-		    push @extras, "output \"|md5sum -b > '$md5file'\";\n";
+		    push @extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 		}
 	    }
 	    set_message("    ${pmode}+${resolution}");
@@ -253,17 +258,18 @@ sub do_printer {
 			if (defined $calc_md5 && $calc_md5 eq "") {
 			    $md5_dir = $output;
 			}
-			my $outfile = "$output/${outkey}.prn";
+			my $outbase = "${outkey}.prn";
+			my $outfile = "$output/$outbase";
 			my $md5file = "$md5_dir/${outkey}.md5";
 			if (! $md5_dir) {
 			    $md5file = "${outkey}.md5";
 			}
 			if (defined $output && defined $calc_md5) {
-			    push @extras, "output \"|tee '$outfile' | md5sum -b > '$md5file'\";\n";
+			    push @extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 			} elsif ($output) {
 			    push @extras, "output \"$outfile\";\n";
 			} else {
-			    push @extras, "output \"|md5sum -b > '$md5file'\";\n";
+			    push @extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 			}
 		    }
 		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
