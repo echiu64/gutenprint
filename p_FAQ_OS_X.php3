@@ -10,7 +10,17 @@ require('standard_html_header.php3');
 
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
-<H2>Gutenprint FAQ for Mac OS X Jaguar and Darwin</H2>
+<h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
+
+<ol type="1" start="1">
+	<li><a href="p_FAQ_OS_X.php3#EconomyMode">All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</a></li>
+	<li><a href="p_FAQ_OS_X.php3#BlackWhite">How do I print in black and white?</a></li>
+	<li><a href="p_FAQ_OS_X.php3#ExcelPreview">Print preview in Excel does not work.  I only get a blank page.</a></li>
+	<li><a href="p_FAQ_OS_X.php3#WindowsLandscape">Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</a></li>
+</ol>
+
+
+<h2>Gutenprint FAQ for Mac OS X and Darwin</h2>
  <ol>
  <li><a href="p_FAQ_OS_X.php3#description">
  What is Gimp-Print? Why would I want to install it?
@@ -170,10 +180,93 @@ require('standard_html_header.php3');
   I'm printing through Samba, and my printer prints garbage!
  </a>
  </ol>
+ <br>
+ <br>
+ <h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
  <ol>
- <br>
- <br>
- <a name="description"></a>
+ <a name="EconomyMode"></a>
+ <li>
+<h3>All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</h3>
+<p>
+This occurs with Epson printers.  The printing system is not obtaining the proper resolution from the <b>Print Quality</b> setting and it is defaulting to the lowest printer resolution found.  The Gutenprint developers are aware of the problem and are working on a proper fix.
+</p>
+<p>
+The work-around is to set the <b>Resultion</b> manually.  Recommended resoltution settings that will work with most Epson printers are as follows:
+</p>
+<ul type="disc">
+	<li>Draft -- 360 x360</li>
+	<li>Standard -- 720 x 360</li>
+	<li>High -- 720 (720 x 720)</li>
+	<li>Photo -- 1440 x 720</li>
+	<li>Best -- the highest resolution listed</li>
+</ul>
+<p>
+If this work-around does not resolve the issue for you, please post feedback to the <a href="http://sourceforge.net/forum/forum.php?forum_id=4359">Gutenprint Help forum</a>
+</p>
+
+</li>
+<a name="BlackWhite"></a>
+<li>
+<h3>How do I print in black and white?</h3>
+<p>
+The Quartz Filter entry under ColorSync (now Color Management) is not present in OS X 10.5.x (Leopard).  This was a feature that Apple provided in previous versions of Mac OS X.  It was not a feature of the Gutenprint drivers.
+</p>
+<p>
+For most users, the work-around is to set the <b>Color Model</b> setting to <b>Grayscale</b>.  This is not the same as printing in black and white only, but it may give you what you want.  
+</p>
+<p>
+For those users who must use black and white only, the good news is that the Quartz Filter for Black and White still exists.  It's just not tied into the print window. The easiest way to use the Black and White option is as
+follows:
+</p>
+<ol type="1" start="1">
+	<li>Go to print the document.  Use the item "Open PDF in Preview" item under the PDF Services drop down menu at the bottom left of the print window.</li>
+	<li>When the document appears in Preview, choose Save As… from the File menu.</li>
+	<li>You can either change the name or use the Replace option when prompted.  Select the output format as PDF and use the Quartz Filter to select "Black and White".  </li>
+	<li>Make sure you have the name and location to save the document as you want it.  Click the Save button.</li>
+</ol>
+<p>
+The resulting document will be in Black and White and you can print it normally.  
+</p>
+</li>
+<a name="ExcelPreview"></a>
+<li>
+<h3>Print preview in Excel does not work.  I only get a blank page.</h3>
+<p>
+This has been noted when the printer is capable of resolutions greater than 1440 dpi.  It does not appear to be a Gutenprint issue as there have been similar instances reported with some Brother printers using the Brother supplied drivers.  Those instances also indicated that a printer capable of higher resolutions will produce the same error.  The Gutenprint team will continue to monitor this situation.
+</p>
+<p>
+The work-around is to set the preview resolution before clicking on the Excel print preview icon in the toolbar. Go to File menu -> Page Setup.  Under the <b>Page</b> tab there is an option to set the <b>Print Quality</b>.  Set that to <b>Normal</b> or anything below 1440.  The Excel default is <b>High</b>.
+ Click OK.  Now Excel will provide you with a print preview. This setting is most likely stored on a per document basis.  There does not seem to be any general preference to alter the default resolution for print preview.
+</p>
+<p>
+Another work-around for new documents is to make a new Excel template.  To make the template:
+</p>
+<ol type="1" start="1">
+	<li>Create a new workbook with only one sheet</li>
+	<li>Go to the File menu -> Page Setup and change the print quality to <b>Normal</b>.  </li>
+	<li>Save the file as a template by selecting <b>Template</b> in the format box of the <b>Save As</b> dialog.  </li>
+	<li>Name the file "Workbook" without an extension - YES REMOVE the '.xlt' extension.</li>
+	<li>Save the template in the  /Applications/Microsoft Office 2004/Office/Startup/Excel folder.  This should now act as the default template.</li>
+</ol>
+</li>
+<a name="WindowsLandscape"></a>
+<li>
+<h3>Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</h3>
+<p>
+This does not appear to be a Gutenprint issue, but the Gutenprint team is monitoring the situation.  There has been at least one case reported whereby the  user tried the Gutenprint, <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/hpijs">HPIJS</a>, and <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/pxlmono">pxlmono</a> drivers.  All drivers printed in landscape mode when the printer was attached directly to the Mac computer via USB.  The same drivers would only print in portrait mode when the printer  was connected to a shared Windows printer.
+</p>
+<p>
+It has recently been suggested that it might be possible the printer driver on the Windows computer is causing this behavior.
+</p>
+<p>
+There are no recommended work-arounds for this issue.
+</p>
+</li>
+ </ol>
+ <h2>Gutenprint FAQ for Mac OS X and Darwin</h2>
+ <ol>
+ 
+  <a name="description"></a>
  <li><h3>
  What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
  </h3>
