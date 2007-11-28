@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2> 
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Mac OS X FAQs updated for Leopard</span> 
+			<br>
+			<a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">November 27, 2007</a> - Some of the most common questions about using Gutenprint with Mac OS X 10.5.x have been added to the <a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">Mac OS X FAQ</a>.  In particular, <b>all Epson owners</b> are encouraged to read these FAQs.
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.3 is released!</span> 
 			<br>
 			<a href="MacOSX.php3#5.1.3">June 19, 2007</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.3, a development release. See the <b>Downloads</b> section. 
