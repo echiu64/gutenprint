@@ -379,7 +379,10 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 	HP DesignJet ColorPro CAD
 
    4) All native CUPS PPD files are now perfectly compliant with the
-      PPD specification, as tested under CUPS 1.2.
+      PPD specification, as tested under CUPS 1.2.  Fixing this
+      requires some changes to the internal resolution names.  These
+      changes should be transparent if PPD files are updated with
+      cups-genppdupdate.5.1.
 
    5) Borderless printing on the Epson Stylus Photo 2200 now works
       correctly.
