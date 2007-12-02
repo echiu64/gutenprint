@@ -52,7 +52,9 @@ printer_options_LDADD = $(GUTENPRINT_LIBS)
 
 ## Data
 
+if INSTALL_SAMPLES
 pkgdata_DATA = testpattern.sample extended.sample
+endif
 
 
 ## Clean
