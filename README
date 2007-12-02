@@ -1,5 +1,24 @@
 Welcome to Gutenprint 5.1.4!  Please read these notes carefully.
 
+*** NOTE TO PACKAGERS: This is a DEVELOPMENT version of Gutenprint.
+    It should not be packaged as the principal release of Gutenprint
+    in any OS or distribution release.  The most recent stable release
+    (the release with the second number being even -- for example,
+    5.0.1) should be used for that.
+
+    If you need a bug fix from the development release, you should
+    backport it to the stable release if possible.  If you really
+    think you need the development release, please contact us at
+    gimp-print-devel@lists.sourceforge.net well in advance of your
+    packaging deadline to discuss your particular needs with us.  We
+    normally back port bug fixes from the development release to the
+    next stable release, and we back port new printers and new
+    capabilities if we determine it's safe to.
+
+    By all means feel free to deliver this release as a
+    "gutenprint-unstable" release if you want to make bleeding edge
+    packages available as an option.
+
 ================================================================
 
 I) INTRODUCTION
