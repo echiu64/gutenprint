@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gimp-print 5.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-17 11:45-0400\n"
-"PO-Revision-Date: 2006-05-28 10:05-0400\n"
+"PO-Revision-Date: 2007-12-01 21:56-0500\n"
 "Last-Translator: regis rampnoux <regisr@pobox.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -6656,23 +6656,23 @@ msgstr "Commun"
 
 #: src/cups/genppd.c:153
 msgid "Extra 1"
-msgstr "Extra 1"
+msgstr "Extra1"
 
 #: src/cups/genppd.c:154
 msgid "Extra 2"
-msgstr "Extra 2"
+msgstr "Extra2"
 
 #: src/cups/genppd.c:155
 msgid "Extra 3"
-msgstr "Extra 3"
+msgstr "Extra3"
 
 #: src/cups/genppd.c:156
 msgid "Extra 4"
-msgstr "Extra 4"
+msgstr "Extra4"
 
 #: src/cups/genppd.c:157
 msgid "Extra 5"
-msgstr "Extra 5"
+msgstr "Extra5"
 
 #. TRANSLATORS: Specify the language of the PPD translation.
 #. * Use the English name of your language here, e.g. "Swedish" instead of
