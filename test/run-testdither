@@ -35,8 +35,8 @@ set_args() {
 set_args `getopt hgvqncV "$@"`
 
 case "$valcount" in
-    1) valopts="$valopts -q --num-callers=100 --leak-check=yes";;
-    2) valopts="$valopts --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes" ;;
+    1) valopts="$valopts -q --num-callers=100 --error-limit=no --leak-check=yes";;
+    2) valopts="$valopts --num-callers=100 --error-limit=no --leak-resolution=high --leak-check=yes" ;;
     3) valopts="$valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes" ;;
     *) ;;
 esac

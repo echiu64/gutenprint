@@ -215,8 +215,8 @@ run_testpattern() {
 	suppress=''
     fi
     case "$valgrind" in
-	1) valgrind $valopts -q --num-callers=100 --leak-check=yes ./testpattern $suppress ;;
-	2) valgrind $valopts --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern $suppress ;;
+	1) valgrind $valopts -q --num-callers=100 --leak-check=yes --error-limit=no ./testpattern $suppress ;;
+	2) valgrind $valopts --num-callers=100 --leak-resolution=high --leak-check=yes --error-limit=no ./testpattern $suppress ;;
 	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./testpattern $suppress ;;
 	4) valgrind $valopts ./testpattern $suppress ;;
 	*) ./testpattern $suppress ;;
