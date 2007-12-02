@@ -62,7 +62,9 @@ plist.o: printrcy.o
 
 ## Data
 
+if BUILD_LIBGUTENPRINTUI
 pkgconfigdata_DATA = gutenprintui.pc
+endif
 
 
 ## Rules
