@@ -4,14 +4,14 @@ carefully.
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
 that may be used with most common UNIX print spooling systems,
 including CUPS, lpr, LPRng, or others.  These drivers provide high
-quality printing for UNIX (including Macintosh OS X 10.2, 10.3, and
-10.4) and Linux systems that in many cases equal or exceed proprietary
-vendor-supplied drivers in quality and functionality, and can be used
-for demanding printing tasks requiring flexibility and high quality.
-This software package includes an enhanced Print plug-in for GIMP
-that replaces the plug-in packaged with GIMP, and Ghostscript and
-CUPS drivers, as well as Foomatic data supporting the Ghostscript
-driver.
+quality printing for UNIX (including Macintosh OS X 10.2, 10.3, 10.4,
+and 10.5) and Linux systems that in many cases equal or exceed
+proprietary vendor-supplied drivers in quality and functionality, and
+can be used for demanding printing tasks requiring flexibility and
+high quality.  This software package includes an enhanced Print
+plug-in for GIMP that replaces the plug-in packaged with GIMP, and
+Ghostscript and CUPS drivers, as well as Foomatic data supporting the
+Ghostscript driver.
 
 Gutenprint has been renamed in order to clearly distinguish it from
 GIMP.  While this package started out as the original Print plugin
@@ -89,12 +89,12 @@ create a driver that may be built much more easily than traditional
 Ghostscript drivers.  This driver should be used in conjunction with
 Foomatic to configure printers.
 
-Users of Macintosh OS X 10.2 (Jaguar), 10.3 (Panther), and 10.4
-(Tiger) can use this package, as the printing system is based on CUPS.
-For ease of installation, a pre-built package with installer is
-normally supplied a few days after the release of the source package.
-We strongly recommend that OS X users use the pre-built package rather
-than attempt to build it themselves.
+Users of Macintosh OS X 10.2 (Jaguar), 10.3 (Panther), 10.4 (Tiger),
+and 10.5 (Leopard) can use this package, as the printing system is
+based on CUPS.  For ease of installation, a pre-built package with
+installer is normally supplied a few days after the release of the
+source package.  We strongly recommend that OS X users use the
+pre-built package rather than attempt to build it themselves.
 
 NOTE: This package will not work with any version of OS X 10.0 and
 10.1 (such as 10.1.5).  The printing system used with these versions
