@@ -1015,7 +1015,7 @@ if test "$BUILD_FOOMATIC" != "no" ; then
     echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
 fi
 if test "$BUILD_GIMP2" != "no" ; then
-    echo "    Build enhanced Print plugin for the GIMP:   yes"
+    echo "    Build enhanced Print plugin for GIMP:       yes"
     if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
 	echo "        GIMP plugin will be named:              gutenprint"
     else
@@ -1023,7 +1023,7 @@ if test "$BUILD_GIMP2" != "no" ; then
     fi
     echo "        Install plugin(s) in home directory:    $USER_INSTALL"
 else
-    echo "    Build enhanced Print plugin for the GIMP:   no"
+    echo "    Build enhanced Print plugin for GIMP:       no"
 fi
 echo "    Build EPSON Stylus utility:                 $BUILD_ESCPUTIL"
 echo "    Build test programs:                        $BUILD_TEST"

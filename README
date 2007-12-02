@@ -19,13 +19,12 @@ I) INTRODUCTION
     and beyond.
 
     Gutenprint has been renamed in order to clearly distinguish it
-    from the GIMP.  While this package started out as the Print plugin
-    for the GIMP, it has expanded into a collection of general purpose
-    printer drivers, and the enhanced Print plugin for the GIMP is now
-    only a small part of the package.  Furthermore, the name
-    Gutenprint recognizes Johannes Gutenberg, the inventor of the
-    movable type printing press.  Finally, the word "guten" means
-    "good" in German.
+    from GIMP.  While this package started out as the Print plugin for
+    GIMP, it has expanded into a collection of general purpose printer
+    drivers, and the enhanced Print plugin for GIMP is now only a
+    small part of the package.  Furthermore, the name Gutenprint
+    recognizes Johannes Gutenberg, the inventor of the movable type
+    printing press.  Finally, the word "guten" means "good" in German.
 
     Please read the user's manual (in ODF format as
     doc/gutenprint-users-manual.odt or PDF format as
@@ -80,7 +79,7 @@ A) OVERVIEW
 
       - The core driver library (required for everything else)
       - A CUPS (Common UNIX Printing System) driver
-      - An enhanced Print plug-in for the GIMP
+      - An enhanced Print plug-in for GIMP
       - Support for the Foomatic spooler configuration system
       - A Ghostscript driver using the IJS plugin facility
       - A command-line utility to administer and maintain Epson
@@ -116,21 +115,19 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.1.0 generated on 17 Sep 2006
+	  Release: gutenprint 5.1.4 generated on 01 Dec 2007
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
-		Build CUPS PPD files:                   yes
-		    Build translated CUPS PPD files:    no
-		    Build simplified CUPS PPD files:    no
-		    Generate PS level 3 CUPS PPD files: yes
-		Install CUPS PPD files at top level:    no
+		Build CUPS 1.2 enhancements:            yes
+		Build CUPS PPD files:                   no
+		Generate PS level 3 CUPS PPD files:     yes
 		Build genppd statically:                yes
 	    Build Ghostscript IJS driver:               yes
 	    Build Foomatic data:                        yes
 		Build Foomatic 3.x data:                yes
-	    Build enhanced Print plugin for the GIMP:   yes
-		GIMP plugin will be named:              print
+	    Build enhanced Print plugin for GIMP:       yes
+		GIMP plugin will be named:              gutenprint
 		Install plugin(s) in home directory:    no
 	    Build EPSON Stylus utility:                 yes
 	    Build test programs:                        yes
@@ -140,15 +137,16 @@ A) OVERVIEW
 	    Installation prefix:                        /usr/local
 	    Data directory:                             /usr/local/share/gutenprint
 	    Library directory:                          /usr/local/lib/gutenprint
-	    XML data directory:                         /usr/local/share/gutenprint/5.1.0/xml
-	    Module directory:                           /usr/local/lib/gutenprint/5.1.0/modules
+	    XML data directory:                         /usr/local/share/gutenprint/5.1.4/xml
+	    Module directory:                           /usr/local/lib/gutenprint/5.1.4/modules
 	    Install sample images:                      yes
 
 	General configuration:
-	    Compiler options:                           -Disfinite=finite  -O6  -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -finline-limit=1048576 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
+	    Compiler options:                           -Disfinite=finite  -O6  -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=1048576 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
 	    Build static libraries:                     yes
 	    Build shared libraries:                     no
 	    Maintainer mode:                            yes
+	    Use i18n:                                   yes
 	    Generate profiling information:             no
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
@@ -527,44 +525,44 @@ C) FOOMATIC
 
 ----------------
 
-D) THE GIMP
+D) GIMP
 
-    Gutenprint may be used with an enhanced Print plug-in for the GIMP
+    Gutenprint may be used with an enhanced Print plug-in for GIMP
     (2.0 and above), providing the ability to print images.  Please
     read the release notes in addition to this README, as there have
     been some changes in procedure since Gimp-Print 4.2 if you are
-    using certain versions of the GIMP.  Gutenprint 5.1 no longer
-    supports the GIMP 1.2.
+    using certain versions of GIMP.  Gutenprint 5.1 no longer supports
+    GIMP 1.2.
 
-    The enhanced Print plugin for the GIMP replaces the Gimp-Print
-    4.2-based plugin provided with the GIMP 2.0 and 2.2.  As of the
-    GIMP 2.4, the GIMP team provides a new Print plugin based on the
-    GtkPrint framework.  This plugin provides standard printing
-    capabilities, but does not provide all of the new Gutenprint 5.1
-    features.  Therefore, the enhanced Print plugin for the GIMP
-    distributed with Gutenprint does not replace that plugin, but is
-    installed alongside that plugin.
+    The enhanced Print plugin for GIMP replaces the Gimp-Print
+    4.2-based plugin provided with GIMP 2.0 and 2.2.  As of the GIMP
+    2.4, GIMP team provides a new Print plugin based on the GtkPrint
+    framework.  This plugin provides standard printing capabilities,
+    but does not provide all of the new Gutenprint 5.1 features.
+    Therefore, the enhanced Print plugin for GIMP distributed with
+    Gutenprint does not replace that plugin, but is installed
+    alongside that plugin.
 
     If your system separates development packages from runtime
     packages, you will typically have to install development packages
-    for the GIMP itself, in addition to GTK and glib.  With the GIMP
-    2.x and GTK 2.x, additional packages may be required.
+    for GIMP itself, in addition to GTK and glib.  With GIMP 2.x and
+    GTK 2.x, additional packages may be required.
 
     Normally, the Gutenprint configure script detects which version,
-    if any, of the GIMP is installed and builds an appropriate plugin.
-    If the configure script does not detect it properly, you may need
-    to specify --with-gimp or --with-gimp2.  However, it's more likely
+    if any, of GIMP is installed and builds an appropriate plugin.  If
+    the configure script does not detect it properly, you may need to
+    specify --with-gimp or --with-gimp2.  However, it's more likely
     that you need to install appropriate development packages.
 
-    Normally Gutenprint installs the GIMP Print plugin in your system
+    Normally Gutenprint installs GIMP Print plugin in your system
     plug-in directory.  If you wish to install it in your personal
     plugin directory, you may use
 
     ./configure --enable-user-install
 
     It is not possible for Gimp-Print 4.2 and Gutenprint 5.1 (or any
-    future release) to coexist in the same installation of the GIMP.
-    The Gutenprint 5.1-based plugin can read settings from previous
+    future release) to coexist in the same installation of GIMP.  The
+    Gutenprint 5.1-based plugin can read settings from previous
     versions of Gimp-Print, but the configuration file format in
     Gutenprint 5.1 cannot be read by older versions of Gimp-Print.
 

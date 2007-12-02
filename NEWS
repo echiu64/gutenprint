@@ -8,15 +8,15 @@ quality printing for UNIX (including Macintosh OS X 10.2, 10.3, and
 10.4) and Linux systems that in many cases equal or exceed proprietary
 vendor-supplied drivers in quality and functionality, and can be used
 for demanding printing tasks requiring flexibility and high quality.
-This software package includes an enhanced Print plug-in for the GIMP
-that replaces the plug-in packaged with the GIMP, and Ghostscript and
+This software package includes an enhanced Print plug-in for GIMP
+that replaces the plug-in packaged with GIMP, and Ghostscript and
 CUPS drivers, as well as Foomatic data supporting the Ghostscript
 driver.
 
 Gutenprint has been renamed in order to clearly distinguish it from
-the GIMP.  While this package started out as the original Print plugin
-for the GIMP, it has expanded into a collection of general purpose
-printer drivers, and the new, enhanced Print plugin for the GIMP is
+GIMP.  While this package started out as the original Print plugin
+for GIMP, it has expanded into a collection of general purpose
+printer drivers, and the new, enhanced Print plugin for GIMP is
 now only a small part of the package.  Furthermore, the name
 Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
@@ -74,13 +74,13 @@ output with any of the printers supported by this package.  We
 strongly recommend using CUPS with Gutenprint as a general-purpose
 printing solution.
 
-The enhanced Print plug-in for the GIMP requires the GIMP 2.0 or above
-(GIMP 2.2 recommended).  This plug-in will work with any printing
-system, and offers a comprehensive user interface to control all
-aspects of the printing process.  If you are printing photographs in
-large format from the GIMP at very high resolution, disk space
-requirements may be substantial, and we recommend at least 2 GB of
-free disk space for that purpose.
+The enhanced Print plug-in for GIMP requires GIMP 2.0 or above (GIMP
+2.2 recommended).  This plug-in will work with any printing system,
+and offers a comprehensive user interface to control all aspects of
+the printing process.  If you are printing photographs in large format
+from GIMP at very high resolution, disk space requirements may be
+substantial, and we recommend at least 2 GB of free disk space for
+that purpose.
 
 The Ghostscript driver requires GNU Ghostscript 6.53 or higher, ESP
 Ghostscript 7.05 or higher, or AFPL Ghostscript 7.04 or higher.  It
@@ -630,7 +630,7 @@ E) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
      or other expanded margins.  It also has no effect when printing
      to CD's or the like.
 
-  4) Support for the GIMP 1.2 has been removed.
+  4) Support for GIMP 1.2 has been removed.
 
   5) An experimental PostScript driver has been added, enabling use of
      all PPD file options in the enhanced GIMP plugin.  This is a work
