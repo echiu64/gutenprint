@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gutenprint 5.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-17 11:45-0400\n"
-"PO-Revision-Date: 2007-02-09 00:52+0100\n"
+"PO-Revision-Date: 2007-12-01 21:53-0500\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@hetnet.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgstr "Invoer met toegepast ruis-algoritme"
 
 #: src/main/dither-main.c:88 src/main/print-color.c:56
 msgid "Density"
-msgstr "Hoeveelheid:"
+msgstr "Hoeveelheid"
 
 #: src/main/dither-main.c:88 src/main/print-canon.c:293
 #: src/main/print-canon.c:301 src/main/print-canon.c:309
@@ -566,7 +566,7 @@ msgstr "Raw-kanalen"
 
 #: src/main/print-color.c:216
 msgid "SimpleGamma"
-msgstr "Envoudige gamma:"
+msgstr "Envoudige gamma"
 
 #: src/main/print-color.c:217
 msgid "Do not correct for screen gamma"
@@ -6173,12 +6173,12 @@ msgstr "Toon alle papierafmetingen"
 
 #: src/gutenprintui/panel.c:1357 src/gutenprintui2/panel.c:1358
 msgid "Dimensions:"
-msgstr "Afmetingen"
+msgstr "Afmetingen:"
 
 #: src/gutenprintui/panel.c:1362 src/gutenprintui/panel.c:2051
 #: src/gutenprintui2/panel.c:1363 src/gutenprintui2/panel.c:2051
 msgid "Width:"
-msgstr "Breedte: "
+msgstr "Breedte:"
 
 #: src/gutenprintui/panel.c:1363 src/gutenprintui2/panel.c:1364
 msgid "Width of the paper that you wish to print to"
@@ -6187,7 +6187,7 @@ msgstr "Breedte van het papier waarop je wenst te printen"
 #: src/gutenprintui/panel.c:1367 src/gutenprintui/panel.c:2053
 #: src/gutenprintui2/panel.c:1368 src/gutenprintui2/panel.c:2053
 msgid "Height:"
-msgstr "Hoogte: "
+msgstr "Hoogte:"
 
 #: src/gutenprintui/panel.c:1368 src/gutenprintui2/panel.c:1369
 msgid "Height of the paper that you wish to print to"
