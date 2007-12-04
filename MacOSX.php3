@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2> 
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Updated Mac Uninstaller</span> 
+			<br>
+			<a href="MacOSX.php3#Uninstall_1.2.1">December 2, 2007</a> - The Gutenprint project is pleased to announce that the Gutenprint uninstaller for Mac OS X has been  updated.  It can now remove the Gutenprint drivers Apple supplied with Mac OS X 10.5.x (Leopard). See the <b>Downloads</b> section.
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Mac OS X FAQs updated for Leopard</span> 
 			<br>
 			<a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">November 27, 2007</a> - Some of the most common questions about using Gutenprint with Mac OS X 10.5.x have been added to the <a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">Mac OS X FAQ</a>.  In particular, <b>all Epson owners</b> are encouraged to read these FAQs.
@@ -175,23 +180,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			If you are experiencing a problem that you believe may be a driver bug please check the <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537">bug tracker</a>. If the problem you are facing is not listed in the installer disk documentation, the <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">FAQ</a>, the <a href="http://sourceforge.net/forum/?group_id=1537">forums</a>, or the <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537">bug tracker</a> then you should file a <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=201537">support request</a> against it. If there is a feature missing from Gutenprint that you would like to see added please file a <a href="https://sourceforge.net/tracker/?atid=351537&amp;group_id=1537&amp;func=browse">feature request</a>. 
 		</p>
-		<hr>
-		<h2> Project Notes </h2> 
-		<p>
-			Gutenprint (and its predecessor, Gimp-Print) is available in source code form under the GPL (GNU General Public License). You are entitled to download the source code. Gutenprint on Mac OS X would not be possible without <a href="http://www.cups.org/">CUPS</a>, the open-source print spooler built-in for Mac OS X starting with version 10.2 (Jaguar). 
-		</p>
-		<p>
-			Gimp-Print 4.2.7 is the final release in the Gimp-Print 4.2 series. 
-		</p>
-		<p>
-			Please visit <a href="http://sourceforge.net/project/?group_id=1537">our project page</a>, which contains a lot more information about us! 
-		</p>
-		<p>
-			Enjoy! 
-		</p>
-		<p>
-			<i>- The Gutenprint Project Team</i> 
-		</p>
+		
 <!-- close div that indented text  -->
 	</div>
 <!-- left column end-->
@@ -232,12 +221,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		</p>
 		<hr>
 		<p>
-			<b>Gimp-Print Uninstaller</b> 
+			<b>Gutenprint Uninstaller</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.1.3.dmg?download">gimp-print-uninstaller-1.1.3.dmg</a></span>&nbsp;&nbsp;(116 KB) 
+			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.2.1.dmg?download">gutenprint-uninstaller-1.2.1.dmg</a></span>&nbsp;&nbsp;(780 KB) 
 		</p>
 		<p>
-			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X version 10.3.0) and Mac OS X "Tiger (Mac OS X version 10.4.x). This uninstaller is included with all current Gimp-Print installer packages and does not need to be downloaded separately. It it being made available here as a convenience. 
+			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), and Mac OS X "Leopard" (MacOS X 10.5.x).
 		</p>
 		<p>
 			<a name="downloadESPGS"></a> <b>ESP Ghostscript 7.07.1</b> 
@@ -259,8 +248,39 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	&nbsp; 
 </div>
 <hr>
+		<h2> Project Notes </h2> 
+		<p>
+			Gutenprint (and its predecessor, Gimp-Print) is available in source code form under the GPL (GNU General Public License). You are entitled to download the source code. Gutenprint on Mac OS X would not be possible without <a href="http://www.cups.org/">CUPS</a>, the open-source print spooler built-in for Mac OS X starting with version 10.2 (Jaguar). 
+		</p>
+		<p>
+			Gimp-Print 4.2.7 is the final release in the Gimp-Print 4.2 series. 
+		</p>
+		<p>
+			Please visit <a href="http://sourceforge.net/project/?group_id=1537">our project page</a>, which contains a lot more information about us! 
+		</p>
+		<p>
+			Enjoy! 
+		</p>
+		<p>
+			<i>- The Gutenprint Project Team</i> 
+		</p>
+<hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="Uninstall_1.2.1"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Uninstall Gutenprint 1.2.1</b> 
+		</td>
+		<td align="right">
+			<b>2007-12-02</b> 
+		</td>
+	</tr>
+</table>
+<p>
+	Uninstall Gutenprint 1.2.1 is an update to the Gutenprint uninstaller for Mac OS X.  This release can remove the Gutenprint drivers Apple supplies with the Leopard (Mac OS X 10.5.x) install disk.  Also, the uninstaller will now provide the user with confirmation that shows what has been removed.   
+</p>
 <a name="5.1.3"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
