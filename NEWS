@@ -415,7 +415,10 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
       settings.
 
    13) A problem where in some cases certain options were not handled
-      correctly by the CUPS driver has been fixed.
+      correctly by the CUPS driver has been fixed.  In particular,
+      yes/no options such as borderless printing were not handled
+      correctly in all cases when the printing system is CUPS 1.2 or
+      1.3.
 
 
 ----------------
