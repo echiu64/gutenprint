@@ -692,22 +692,22 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
                   if (!strncasecmp(val, "Custom.", 7))
 		    val += 7;
 
-		  fprintf(stderr, "DEBUG: Gutenprint set int %s to %s\n",
-			  desc.name, val);
+		  fprintf(stderr, "DEBUG: Gutenprint set int %s to %s (%d)\n",
+			  desc.name, val, atoi(val));
 		  stp_set_int_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_DIMENSION:
                   if (!strncasecmp(val, "Custom.", 7))
 		    val += 7;
 
-		  fprintf(stderr, "DEBUG: Gutenprint set dimension %s to %s\n",
-			  desc.name, val);
+		  fprintf(stderr, "DEBUG: Gutenprint set dimension %s to %s (%d)\n",
+			  desc.name, val, atoi(val));
 
 		  stp_set_dimension_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_BOOLEAN:
-		  fprintf(stderr, "DEBUG: Gutenprint set bool %s to %s\n",
-			  desc.name, val);
+		  fprintf(stderr, "DEBUG: Gutenprint set bool %s to %s (%d)\n",
+			  desc.name, val, strcasecmp(val, "true") == 0 ? 1 : 0);
 		  stp_set_boolean_parameter
 		    (v, desc.name, strcasecmp(val, "true") == 0 ? 1 : 0);
 		  break;
