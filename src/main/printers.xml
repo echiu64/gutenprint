@@ -98,6 +98,7 @@
       <printer name="Canon PIXMA iP4100" driver="bjc-PIXMA-iP4100" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4200" driver="bjc-PIXMA-iP4200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP4300" driver="bjc-PIXMA-iP4300" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4300_params" />
+      <printer name="Canon PIXMA iP4500" driver="bjc-PIXMA-iP4500" manufacturer="Canon" model="3005300" parameters="PIXMA_iP4300_params" />
       <printer name="Canon PIXMA iP5000" driver="bjc-PIXMA-iP5000" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5300" driver="bjc-PIXMA-iP5300" manufacturer="Canon" model="3005300" parameters="PIXMA_iP4000_params" />
