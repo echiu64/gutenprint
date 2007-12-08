@@ -222,6 +222,9 @@ B) CORE DRIVER LIBRARY
       you should consider allowing Gutenprint 5.0, Gutenprint 5.1, and
       Gimp-Print 4.2 to be installed concurrently.
 
+    * The core driver library component also includes locale files for
+      the libary and documentation.
+
 
 ----------------
 
