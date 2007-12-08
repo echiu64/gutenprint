@@ -99,6 +99,7 @@ A) OVERVIEW
       - The core driver library (required for everything else)
       - A CUPS (Common UNIX Printing System) driver
       - An enhanced Print plug-in for GIMP
+      - GTK-based UI libraries (used by the enhanced GIMP plug-in)
       - Support for the Foomatic spooler configuration system
       - A Ghostscript driver using the IJS plugin facility
       - A command-line utility to administer and maintain Epson
@@ -212,14 +213,14 @@ B) CORE DRIVER LIBRARY
       Gutenprint.
 
     * Gutenprint permits installation of Gimp-Print 4.2 and Gutenprint
-    5.0 alongside Gutenprint 5.1, and in the future will permit
-    concurrent installation of different stable versions of Gutenprint
-    with different minor version numbers.  Gutenprint uses the
-    old-style kernel numbering system, whereby even numbered minor
-    versions are stable (4.2, 5.0, 5.2) and odd numbered minor
-    versions are development (4.3, 5.1).  Therefore, you should
-    consider allowing Gutenprint 5.0, Gutenprint 5.1, and Gimp-Print
-    4.2 to be installed concurrently.
+      5.0 alongside Gutenprint 5.1, and in the future will permit
+      concurrent installation of different stable versions of
+      Gutenprint with different minor version numbers.  Gutenprint
+      uses the old-style kernel numbering system, whereby even
+      numbered minor versions are stable (4.2, 5.0, 5.2) and odd
+      numbered minor versions are development (4.3, 5.1).  Therefore,
+      you should consider allowing Gutenprint 5.0, Gutenprint 5.1, and
+      Gimp-Print 4.2 to be installed concurrently.
 
 
 ----------------
@@ -232,8 +233,8 @@ B) CUPS
     information may be found at http://www.cups.org.  Gutenprint 5.1
     requires CUPS 1.1.9 or higher.  We recommend use of 1.1.15 or
     above; that release of CUPS fixes some important bugs.  Gutenprint
-    supports CUPS 1.2, but at this time does not take advantage of the
-    new features of that release.
+    supports CUPS 1.2, and supports the CUPS 1.2 enhancements,
+    including dynamic PPD file generation.
 
     Gutenprint will normally detect the presence of CUPS on your
     system and will attempt to build the CUPS driver if it finds CUPS
@@ -301,10 +302,10 @@ B) CUPS
 	This will happen if all of the following are true:
 
 	i) The cups-config provided by the CUPS driver adds
-	   -Wl,rpath=/usr/lib. This is done by some versions of CUPS
-	   reportedly because in some cases the runtime linker does
-	   not pick up libraries out of /usr/lib.  This can be checked
-	   by running
+	   -Wl,rpath=/usr/lib (or wherever the CUPS system libraries
+	   live). This is done by some versions of CUPS reportedly
+	   because in some cases the runtime linker does not pick up
+	   libraries out of /usr/lib.  This can be checked by running
 
 	   cups-config --libs --ldflags
 
@@ -587,11 +588,11 @@ D) GIMP
 
     NOTE TO PACKAGERS:
 
-    * The GIMP plugin, unlike the core library and the Foomatic and
-      CUPS drivers, may not be installed concurrently with other
-      versions.  For example, you may not install both the Gimp-Print
-      4.2 and the Gutenprint 5.1 version of the Print plugin, as they
-      use different configuration file formats.
+    * The enhanced GIMP plugin, unlike the core library and the
+      Foomatic and CUPS drivers, may not be installed concurrently
+      with other versions.  For example, you may not install both the
+      Gimp-Print 4.2 and the Gutenprint 5.1 version of the Print
+      plugin, as they use different configuration file formats.
 
 
 ----------------

@@ -45,14 +45,14 @@ libtool: $(LIBTOOL_DEPS)
 ChangeLogPhony:
 	@cd $(top_srcdir) ; \
 	for f in `find . -name Entries -print | grep CVS` ; do \
-	  if /usr/bin/test ! -f ChangeLogStamp -o ChangeLogStamp -ot $$f ; then \
+	  if @TEST@ ! -f ChangeLogStamp -o ChangeLogStamp -ot $$f ; then \
 	    rm -f ChangeLogStamp ; \
 	    touch ChangeLogStamp ; \
 	  fi ; \
 	done
 
 ChangeLogStamp: ChangeLogPhony
-	@/bin/true
+	@@TRUE@
 
 ChangeLog: ChangeLogStamp
 	@cd $(top_srcdir) ; \
