@@ -317,10 +317,10 @@ B) CUPS
 	   the CUPS installation on your system.
 
 	ii) There is presently a version of Gutenprint installed in
-	    the system default, typically /usr (--prefix=/usr) rather
-	    than /usr/local or the like.  The default location of
-	    Gutenprint installation is in /usr/local, but system
-	    vendors typically install Gutenprint in /usr.
+	   the system default, typically /usr (--prefix=/usr) rather
+	   than /usr/local or the like.  The default location of
+	   Gutenprint installation is in /usr/local, but system
+	   vendors typically install Gutenprint in /usr.
 
 	iii) Gutenprint is built dynamically only (--disable-static or
 	   --disable-static-genppd).  This is not a default, and
