@@ -659,21 +659,21 @@
       <printer name="NEC SuperScript 1260" driver="nec-ssc_1260" manufacturer="NEC" model="2" parameters="pcl_laser_params" />
       <printer name="NEC SuperScript 1400" driver="nec-ssc_1400" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
       <printer name="NEC SuperScript 1800" driver="nec-ssc_1800" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata OL400" driver="okidata-ol400" manufacturer="Okidata" model="2" parameters="pcl_laser_params" />
-      <printer name="Okidata OL400e" driver="okidata-ol400e" manufacturer="Okidata" model="2" parameters="pcl_laser_params" />
-      <printer name="Okidata OL400ex" driver="okidata-ol400ex" manufacturer="Okidata" model="2" parameters="pcl_laser_params" />
-      <printer name="Okidata OL410e" driver="okidata-ol410e" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata OL600e" driver="okidata-ol600e" manufacturer="Okidata" model="2" parameters="pcl_laser_params" />
-      <printer name="Okidata OL610e/S" driver="okidata-ol610e_s" manufacturer="Okidata" model="2" parameters="pcl_laser_params" />
-      <printer name="Okidata OL800" driver="okidata-ol800" manufacturer="Okidata" model="2" parameters="pcl_laser_params" />
-      <printer name="Okidata OL810ex" driver="okidata-ol810ex" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Okipage 6e" driver="okidata-okp_6e" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Okipage 6ex" driver="okidata-okp_6ex" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Okipage 8p" driver="okidata-okp_8p" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Okipage 10e" driver="okidata-okp_10e" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Okipage 10ex" driver="okidata-okp_10ex" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Okipage 14ex" driver="okidata-okp_14ex" manufacturer="Okidata" model="6" parameters="pcl_laser_params" />
-      <printer name="Okidata Super 6e" driver="okidata-super_6e" manufacturer="Okidata" model="4" parameters="pcl_laser_params" />
+      <printer name="Okidata OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer name="Okidata OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer name="Okidata OL400ex" driver="okidata-ol400ex" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer name="Okidata OL410e" driver="okidata-ol410e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata OL600e" driver="okidata-ol600e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer name="Okidata OL610e/S" driver="okidata-ol610e_s" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer name="Okidata OL800" driver="okidata-ol800" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer name="Okidata OL810ex" driver="okidata-ol810ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Okipage 6e" driver="okidata-okp_6e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Okipage 6ex" driver="okidata-okp_6ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Okipage 8p" driver="okidata-okp_8p" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Okipage 10e" driver="okidata-okp_10e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Okipage 10ex" driver="okidata-okp_10ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Okipage 14ex" driver="okidata-okp_14ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer name="Okidata Super 6e" driver="okidata-super_6e" manufacturer="Oki" model="4" parameters="pcl_laser_params" />
       <printer name="Olivetti JP350S" driver="olivetti-jp350s" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer name="Olivetti PG 306" driver="olivetti-pg_306" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer name="PCPI 1030" driver="pcpi-1030" manufacturer="PCPI" model="2" parameters="pcl_laser_params" />
