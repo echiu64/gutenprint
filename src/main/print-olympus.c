@@ -968,8 +968,8 @@ LIST(laminate_list_t, dppex5_laminate_list, laminate_t, dppex5_laminate);
 /* Sony UP-DP10 */
 static const dyesub_pagesize_t updp10_page[] =
 {
-  { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
-  { "w288h387", "UPC-10P34 (3:4)", -1, 384, 12, 12, 16, 16, DYESUB_LANDSCAPE},
+  { "w288h432", "UPC-10P23 (4x6)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
+  { "w288h387", "UPC-10P34 (4x5)", -1, 384, 12, 12, 16, 16, DYESUB_LANDSCAPE},
   { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
   { "Custom", NULL, -1, -1, 12, 12, 0, 0, DYESUB_LANDSCAPE},
 };
