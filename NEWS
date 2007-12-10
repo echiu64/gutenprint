@@ -389,8 +389,9 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
       correctly.
 
    6) A bug in which certain data was not printed correctly by Canon
-      inkjet printers (in areas where the entire area was filled with
-      maximum color density, some lines could be silently discarded).
+      inkjet printers was fixed (in areas where the entire area was
+      filled with maximum color density, some lines could be silently
+      discarded).
 
    7) Various fixes for the Canon iP4000, iP4200, and i560.
 
