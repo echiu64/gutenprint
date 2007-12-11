@@ -957,6 +957,8 @@ AC_CONFIG_FILES([src/foomatic/mk_printerlist],
                 [chmod +x src/foomatic/mk_printerlist])
 AC_CONFIG_FILES([src/testpattern/run-testpattern-2],
                 [chmod +x src/testpattern/run-testpattern-2])
+AC_CONFIG_FILES([src/cups/test-rastertogutenprint],
+                [chmod +x src/cups/test-rastertogutenprint])
 AC_CONFIG_FILES([src/ghost/Makefile])
 AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp2/Makefile])

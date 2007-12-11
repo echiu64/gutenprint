@@ -120,11 +120,13 @@ static stp_image_t theImage =
 static volatile stp_image_status_t Image_status = STP_IMAGE_STATUS_OK;
 static double total_bytes_printed = 0;
 static int print_messages_as_errors = 0;
+static int suppress_messages = 0;
 
 static void
 set_string_parameter(stp_vars_t *v, const char *name, const char *val)
 {
-  fprintf(stderr, "DEBUG: Gutenprint set string %s to %s\n", name, val);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint set string %s to %s\n", name, val);
   stp_set_string_parameter(v, name, val);
 }
   
@@ -139,23 +141,31 @@ set_special_parameter(stp_vars_t *v, const char *name, int choice)
       if (choice < 0)
 	{
 	  stp_clear_string_parameter(v, name);
-	  fprintf(stderr, "DEBUG: Gutenprint clear special parameter %s\n",
-		  name);
+	  if (! suppress_messages)
+	    fprintf(stderr, "DEBUG: Gutenprint clear special parameter %s\n",
+		    name);
 	}
       else if (choice >= stp_string_list_count(desc.bounds.str))
-	fprintf(stderr, "ERROR: Gutenprint unable to set %s!\n", name);
+	{
+	  if (! suppress_messages)
+	    fprintf(stderr, "ERROR: Gutenprint unable to set %s!\n", name);
+	}
       else
 	{
 	  stp_set_string_parameter
 	    (v, name, stp_string_list_param(desc.bounds.str, choice)->name);
-	  fprintf(stderr, "DEBUG: Gutenprint set special parameter %s to choice %d (%s)\n",
-		  name, choice,
-		  stp_string_list_param(desc.bounds.str, choice)->name);
+	  if (! suppress_messages)
+	    fprintf(stderr, "DEBUG: Gutenprint set special parameter %s to choice %d (%s)\n",
+		    name, choice,
+		    stp_string_list_param(desc.bounds.str, choice)->name);
 	}
     }
   else
-    fprintf(stderr, "DEBUG: Gutenprint unable to set special %s: not a string\n",
-	    name);
+    {
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint unable to set special %s: not a string\n",
+		name);
+    }
   stp_parameter_description_destroy(&desc);
 }
 
@@ -293,13 +303,15 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 	      (desc.bounds.str, stp_get_string_parameter(v, desc.name)))
 	    {
 	      const char *val = stp_get_string_parameter(v, desc.name);
-	      fprintf(stderr, "DEBUG: Gutenprint clearing string %s (%s)\n",
-		      desc.name, val ? val : "(null)");
+	      if (! suppress_messages)
+		fprintf(stderr, "DEBUG: Gutenprint clearing string %s (%s)\n",
+			desc.name, val ? val : "(null)");
 	      stp_clear_string_parameter(v, desc.name);
 	      if (!desc.read_only && desc.is_mandatory && desc.is_active)
 		{
-		  fprintf(stderr, "DEBUG: Gutenprint setting default string %s to %s\n",
-			  desc.name, desc.deflt.str ? desc.deflt.str : "(null)");
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint setting default string %s to %s\n",
+			    desc.name, desc.deflt.str ? desc.deflt.str : "(null)");
 		  stp_set_string_parameter(v, desc.name, desc.deflt.str);
 		  if (strcmp(desc.name, "PageSize") == 0)
 		    {
@@ -307,15 +319,17 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
 			stp_get_papersize_by_name(desc.deflt.str);
 		      if (ps->width > 0)
 			{
-			  fprintf(stderr, "DEBUG: Gutenprint setting page width to %d\n",
-				  ps->width);
+			  if (! suppress_messages)
+			    fprintf(stderr, "DEBUG: Gutenprint setting page width to %d\n",
+				    ps->width);
 			  if (ps->width < stp_get_page_width(v))
 			    stp_set_page_width(v, ps->width);
 			}
 		      if (ps->height > 0)
 			{
-			  fprintf(stderr, "DEBUG: Gutenprint setting page height to %d\n",
-				  ps->height);
+			  if (! suppress_messages)
+			    fprintf(stderr, "DEBUG: Gutenprint setting page height to %d\n",
+				    ps->height);
 			  if (ps->height < stp_get_page_height(v))
 			    stp_set_page_height(v, ps->height);
 			}
@@ -392,15 +406,19 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   if (cups->header.MediaType && strlen(cups->header.MediaType) > 0)
     set_string_parameter(v, "MediaType", cups->header.MediaType);
 
-  fprintf(stderr, "DEBUG: Gutenprint PageSize = %dx%d\n", cups->header.PageSize[0],
-	  cups->header.PageSize[1]);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint PageSize = %dx%d\n", cups->header.PageSize[0],
+	    cups->header.PageSize[1]);
 
   if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
 					cups->header.PageSize[0])) != NULL)
     set_string_parameter(v, "PageSize", size->name);
   else
-    fprintf(stderr, "DEBUG: Gutenprint Unable to get media size for (%d, %d)\n",
-	    cups->header.PageSize[1], cups->header.PageSize[0]);
+    {
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint Unable to get media size for (%d, %d)\n",
+		cups->header.PageSize[1], cups->header.PageSize[0]);
+    }
 
  /*
   * Duplex
@@ -424,10 +442,13 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 				 &tmp_bottom, &tmp_top);
   stp_get_imageable_area(v, &(cups->left), &(cups->right),
 			 &(cups->bottom), &(cups->top));
-  fprintf(stderr, "DEBUG: Gutenprint limits w %d l %d r %d  h %d t %d b %d\n",
-	  cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
-  fprintf(stderr, "DEBUG: Gutenprint max limits l %d r %d t %d b %d\n",
-	  tmp_left, tmp_right, tmp_top, tmp_bottom);
+  if (! suppress_messages)
+    {
+      fprintf(stderr, "DEBUG: Gutenprint limits w %d l %d r %d  h %d t %d b %d\n",
+	      cups->width, cups->left, cups->right, cups->height, cups->top, cups->bottom);
+      fprintf(stderr, "DEBUG: Gutenprint max limits l %d r %d t %d b %d\n",
+	      tmp_left, tmp_right, tmp_top, tmp_bottom);
+    }
 
   if (tmp_left < 0)
     tmp_left = 0;
@@ -448,13 +469,15 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 	}
       else
 	cups->left_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint left margin %d\n", cups->left_trim);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint left margin %d\n", cups->left_trim);
     }
   else
     {
       cups->left_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint adjusting left margin from %d to %d\n",
-	      cups->left, tmp_left);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint adjusting left margin from %d to %d\n",
+		cups->left, tmp_left);
       cups->left = tmp_left;
     }
   if (tmp_right > cups->right)
@@ -466,13 +489,15 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 	}
       else
 	cups->right_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint right margin %d\n", cups->right_trim);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint right margin %d\n", cups->right_trim);
     }
   else
     {
       cups->right_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint adjusting right margin from %d to %d\n",
-	      cups->right, tmp_right);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint adjusting right margin from %d to %d\n",
+		cups->right, tmp_right);
       cups->right = tmp_right;
     }
   if (tmp_top < cups->top)
@@ -484,13 +509,15 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 	}
       else
 	cups->top_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint top margin %d\n", cups->top_trim);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint top margin %d\n", cups->top_trim);
     }
   else
     {
       cups->top_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint adjusting top margin from %d to %d\n",
-	      cups->top, tmp_top);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint adjusting top margin from %d to %d\n",
+		cups->top, tmp_top);
       cups->top = tmp_top;
     }
   if (tmp_bottom > cups->bottom)
@@ -502,13 +529,15 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
 	}
       else
 	cups->bottom_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint bottom margin %d\n", cups->bottom_trim);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint bottom margin %d\n", cups->bottom_trim);
     }
   else
     {
       cups->bottom_trim = 0;
-      fprintf(stderr, "DEBUG: Gutenprint adjusting bottom margin from %d to %d\n",
-	      cups->bottom, tmp_bottom);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint adjusting bottom margin from %d to %d\n",
+		cups->bottom, tmp_bottom);
       cups->bottom = tmp_bottom;
     }
 
@@ -556,9 +585,10 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
   cups->adjusted_height = cups->height;
   if (cups->adjusted_height > cups->header.cupsHeight)
     cups->adjusted_height = cups->header.cupsHeight;
-  fprintf(stderr, "DEBUG: Gutenprint CUPS settings w %d %d l %d r %d  h %d %d t %d b %d\n",
-	  cups->width, cups->adjusted_width, cups->left, cups->right,
-	  cups->height, cups->adjusted_height, cups->top, cups->bottom);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint CUPS settings w %d %d l %d r %d  h %d %d t %d b %d\n",
+	    cups->width, cups->adjusted_width, cups->left, cups->right,
+	    cups->height, cups->adjusted_height, cups->top, cups->bottom);
 
   return v;
 }
@@ -569,8 +599,9 @@ purge_excess_data(cups_image_t *cups)
   char *buffer = stp_malloc(cups->header.cupsBytesPerLine);
   if (buffer)
     {
-      fprintf(stderr, "DEBUG: Gutenprint purging %d rows\n",
-	      cups->header.cupsHeight - cups->row);
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint purging %d rows\n",
+		cups->header.cupsHeight - cups->row);
       while (cups->row < cups->header.cupsHeight)
 	{
 	  cupsRasterReadPixels(cups->ras, (unsigned char *)buffer,
@@ -629,8 +660,9 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	    {
 	      double dval = atof(val + 7);
 
-	      fprintf(stderr, "DEBUG: Gutenprint set float %s to %f\n",
-		      desc.name, dval);
+	      if (! suppress_messages)
+		fprintf(stderr, "DEBUG: Gutenprint set float %s to %f\n",
+			desc.name, dval);
 	      if (dval > desc.bounds.dbl.upper)
 		dval = desc.bounds.dbl.upper;
 	      stp_set_float_parameter(v, desc.name, dval);
@@ -641,8 +673,9 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	      if (index(val, (int) '.'))
 		{
 		  fine_val = atof(val);
-		  fprintf(stderr, "DEBUG: Gutenprint set float %s to %f (%s)\n",
-			  desc.name, fine_val, val);
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint set float %s to %f (%s)\n",
+			    desc.name, fine_val, val);
 		}
 	      else
 		{
@@ -657,8 +690,9 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		    }
 		  if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 		    fine_val = atof(val) * 0.001;
-		  fprintf(stderr, "DEBUG: Gutenprint set float %s to %f + %f\n",
-			  desc.name, coarse_val, fine_val);
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint set float %s to %f + %f\n",
+			    desc.name, coarse_val, fine_val);
 		  fine_val += coarse_val;
 		}
 	      if (fine_val > desc.bounds.dbl.upper)
@@ -684,49 +718,60 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	      switch (desc.p_type)
 		{
 		case STP_PARAMETER_TYPE_STRING_LIST:
-		  fprintf(stderr, "DEBUG: Gutenprint set string %s to %s\n",
-			  desc.name, val);
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint set string %s to %s\n",
+			    desc.name, val);
 		  set_string_parameter(v, desc.name, val);
 		  break;
 		case STP_PARAMETER_TYPE_INT:
                   if (!strncasecmp(val, "Custom.", 7))
 		    val += 7;
 
-		  fprintf(stderr, "DEBUG: Gutenprint set int %s to %s (%d)\n",
-			  desc.name, val, atoi(val));
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint set int %s to %s (%d)\n",
+			    desc.name, val, atoi(val));
 		  stp_set_int_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_DIMENSION:
                   if (!strncasecmp(val, "Custom.", 7))
 		    val += 7;
 
-		  fprintf(stderr, "DEBUG: Gutenprint set dimension %s to %s (%d)\n",
-			  desc.name, val, atoi(val));
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint set dimension %s to %s (%d)\n",
+			    desc.name, val, atoi(val));
 
 		  stp_set_dimension_parameter(v, desc.name, atoi(val));
 		  break;
 		case STP_PARAMETER_TYPE_BOOLEAN:
-		  fprintf(stderr, "DEBUG: Gutenprint set bool %s to %s (%d)\n",
-			  desc.name, val, strcasecmp(val, "true") == 0 ? 1 : 0);
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint set bool %s to %s (%d)\n",
+			    desc.name, val, strcasecmp(val, "true") == 0 ? 1 : 0);
 		  stp_set_boolean_parameter
 		    (v, desc.name, strcasecmp(val, "true") == 0 ? 1 : 0);
 		  break;
 		case STP_PARAMETER_TYPE_CURVE: /* figure this out later... */
 		case STP_PARAMETER_TYPE_FILE: /* Probably not, security hole */
 		case STP_PARAMETER_TYPE_RAW: /* figure this out later, too */
-		  fprintf(stderr, "DEBUG: Gutenprint ignoring option %s %s type %d\n",
-			  desc.name, val, desc.p_type);
+		  if (! suppress_messages)
+		    fprintf(stderr, "DEBUG: Gutenprint ignoring option %s %s type %d\n",
+			    desc.name, val, desc.p_type);
 		  break;
 		default:
 		  break;
 		}
 	    }
 	  else if (val)
-	    fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to '%s'\n",
-		    desc.name, val);
+	    {
+	      if (! suppress_messages)
+		fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to '%s'\n",
+			desc.name, val);
+	    }
 	  else
-	    fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to (null)\n",
-		    desc.name);
+	    {
+	      if (! suppress_messages)
+		fprintf(stderr, "DEBUG: Gutenprint NOT setting %s to (null)\n",
+			desc.name);
+	    }
 	}
       stp_parameter_description_destroy(&desc);
       stp_free(ppd_option_name);
@@ -760,6 +805,9 @@ main(int  argc,				/* I - Number of command-line arguments */
   struct timeval	t1, t2;
   struct timezone	tz;
 
+  if (getenv("STP_SUPPRESS_MESSAGES"))
+    suppress_messages = 1;
+
  /*
   * Initialise libgutenprint
   */
@@ -774,7 +822,8 @@ main(int  argc,				/* I - Number of command-line arguments */
  /*
   * Check for valid arguments...
   */
-  fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", version_id);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", version_id);
 
   if (argc < 6 || argc > 7)
   {
@@ -796,7 +845,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     fputs("ERROR: Gutenprint Fatal error: PPD environment variable not set!\n", stderr);
     return (1);
   }
-  fprintf(stderr, "DEBUG: Gutenprint using PPD file %s\n", ppdfile);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint using PPD file %s\n", ppdfile);
 
   if ((ppd = ppdOpenFile(ppdfile)) == NULL)
   {
@@ -864,15 +914,17 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   num_options = cupsParseOptions(argv[5], 0, &options);
 
-  fprintf(stderr, "DEBUG: Gutenprint CUPS option count is %d (%d bytes)\n",
-	  num_options, strlen(argv[5]));
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint CUPS option count is %d (%d bytes)\n",
+	    num_options, strlen(argv[5]));
 
   if (num_options > 0)
     {
       int i;
       for (i = 0; i < num_options; i++)
-	fprintf(stderr, "DEBUG: Gutenprint    CUPS option %d %s = %s\n",
-		i, options[i].name, options[i].value);
+	if (! suppress_messages)
+	  fprintf(stderr, "DEBUG: Gutenprint    CUPS option %d %s = %s\n",
+		  i, options[i].name, options[i].value);
     }
 
  /*
@@ -890,7 +942,8 @@ main(int  argc,				/* I - Number of command-line arguments */
       ppdClose(ppd);
       return (1);
     }
-  fprintf(stderr, "DEBUG: Gutenprint driver %s\n", ppd->modelname);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint driver %s\n", ppd->modelname);
 
  /*
   * Open the page stream...
@@ -907,7 +960,8 @@ main(int  argc,				/* I - Number of command-line arguments */
   }
   else
     fd = 0;
-  fprintf(stderr, "DEBUG: Gutenprint using fd %d\n", fd);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint using fd %d\n", fd);
 
   stp_set_printer_defaults(default_settings, printer);
   stp_set_float_parameter(default_settings, "AppGamma", 1.0);
@@ -923,7 +977,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   cups.page = 0;
 
-  fprintf(stderr, "DEBUG: Gutenprint about to start printing loop.\n");
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint about to start printing loop.\n");
 
   /*
    * Read the first page header, which we need in order to set up
@@ -949,9 +1004,12 @@ main(int  argc,				/* I - Number of command-line arguments */
       v = initialize_page(&cups, default_settings);
       stp_set_int_parameter(v, "PageNumber", cups.page);
       cups.row = 0;
-      fprintf(stderr, "DEBUG: Gutenprint printing page %d\n", cups.page + 1);
-      fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
-      print_debug_block(v, &cups);
+      if (! suppress_messages)
+	{
+	  fprintf(stderr, "DEBUG: Gutenprint printing page %d\n", cups.page + 1);
+	  fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
+	  print_debug_block(v, &cups);
+	}
       print_messages_as_errors = 1;
       if (!stp_verify(v))
 	{
@@ -986,7 +1044,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     }
   if (v)
     {
-      fprintf(stderr, "DEBUG: Gutenprint ending job\n");
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint ending job\n");
       stp_end_job(v, &theImage);
       fflush(stdout);
       stp_vars_destroy(v);
@@ -1002,7 +1061,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  (double) tms.tms_stime / clocks_per_sec,
 	  (double) (t2.tv_sec - t1.tv_sec) +
 	  ((double) (t2.tv_usec - t1.tv_usec)) / 1000000.0);
-  fputs("INFO: Gutenprint Ready to print.\n", stderr);
+  if (! suppress_messages)
+    fputs("INFO: Gutenprint Ready to print.\n", stderr);
   if (fd != 0)
     close(fd);
   stp_vars_destroy(default_settings);
@@ -1147,22 +1207,25 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 
   if (cups->row < cups->header.cupsHeight)
   {
-    fprintf(stderr, "DEBUG2: Gutenprint reading %d %d\n",
-	    bytes_per_line, cups->row);
+    if (! suppress_messages)
+      fprintf(stderr, "DEBUG2: Gutenprint reading %d %d\n",
+	      bytes_per_line, cups->row);
     while (cups->row <= row && cups->row < cups->header.cupsHeight)
       {
 	if (left_margin > 0)
 	  {
-	    fprintf(stderr, "DEBUG2: Gutenprint tossing left %d (%d)\n",
-		    left_margin, cups->left_trim);
+	    if (! suppress_messages)
+	      fprintf(stderr, "DEBUG2: Gutenprint tossing left %d (%d)\n",
+		      left_margin, cups->left_trim);
 	    throwaway_data(left_margin, cups);
 	  }
 	cupsRasterReadPixels(cups->ras, data, bytes_per_line);
 	cups->row ++;
 	if (margin + right_margin > 0)
 	  {
-	    fprintf(stderr, "DEBUG2: Gutenprint tossing right %d (%d) + %d\n",
-		    right_margin, cups->right_trim, margin);
+	    if (!suppress_messages)
+	      fprintf(stderr, "DEBUG2: Gutenprint tossing right %d (%d) + %d\n",
+		      right_margin, cups->right_trim, margin);
 	    throwaway_data(margin + right_margin, cups);
 	  }
       }
@@ -1215,13 +1278,17 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   new_percent = (int) (100.0 * cups->row / cups->header.cupsHeight);
   if (new_percent > cups->last_percent)
     {
-      fprintf(stderr, "INFO: Gutenprint Printing page %d, %d%%\n",
-	      cups->page + 1, new_percent);
+      if (! suppress_messages)
+	fprintf(stderr, "INFO: Gutenprint Printing page %d, %d%%\n",
+		cups->page + 1, new_percent);
       cups->last_percent = new_percent;
     }
 
   if (tmp_image_status != STP_IMAGE_STATUS_OK)
-    fprintf(stderr, "DEBUG: Gutenprint image status %d\n", tmp_image_status);
+    {
+      if (! suppress_messages)
+	fprintf(stderr, "DEBUG: Gutenprint image status %d\n", tmp_image_status);
+    }
   return tmp_image_status;
 }
 
@@ -1239,7 +1306,8 @@ Image_height(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
-  fprintf(stderr, "DEBUG: Gutenprint: Image_height %d\n", cups->adjusted_height);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint: Image_height %d\n", cups->adjusted_height);
   return (cups->adjusted_height);
 }
 
@@ -1257,7 +1325,8 @@ Image_init(stp_image_t *image)		/* I - Image */
     return;
   cups->last_percent = 0;
 
-  fprintf(stderr, "INFO: Starting page %d...\n", cups->page + 1);
+  if (! suppress_messages)
+    fprintf(stderr, "INFO: Starting page %d...\n", cups->page + 1);
   /* cups->page + 1 because users expect 1-based counting */
 }
 
@@ -1274,7 +1343,8 @@ Image_conclude(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return;
 
-  fprintf(stderr, "INFO: Gutenprint Finished page %d...\n", cups->page + 1);
+  if (! suppress_messages)
+    fprintf(stderr, "INFO: Gutenprint Finished page %d...\n", cups->page + 1);
 }
 
 /*
@@ -1290,7 +1360,8 @@ Image_width(stp_image_t *image)	/* I - Image */
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     return (0);
 
-  fprintf(stderr, "DEBUG: Gutenprint: Image_width %d\n", cups->adjusted_width);
+  if (! suppress_messages)
+    fprintf(stderr, "DEBUG: Gutenprint: Image_width %d\n", cups->adjusted_width);
   return (cups->adjusted_width);
 }
 

@@ -1,0 +1,102 @@
+#!/bin/sh
+
+retval=0
+
+if [ -z "$STP_DATA_PATH" ] ; then
+    STP_DATA_PATH=`pwd`/../main
+    export STP_DATA_PATH
+fi
+
+if [ -z "$STP_MODULE_PATH" ] ; then
+    STP_MODULE_PATH=`pwd`/../main:`pwd`/../main/.libs
+    export STP_MODULE_PATH
+fi
+
+single=''
+all_models=''
+
+usage() {
+    echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
+    exit 0;
+}
+
+set_args() {
+    while true ; do
+	case "$1" in
+	    -s) single=1 ;;
+	    -h*|--h*) usage ;;
+	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=`expr $valgrind + 1` ;;
+	    -c|--cachegrind) valopts='--tool=cachegrind'; valgrind=4 ;;
+	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
+	    --) shift; args="$@"; return ;;
+	    *) return ;;
+	esac
+    shift
+    done
+}
+
+
+set_args `getopt vcgs "$@"`
+
+version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
+cupsdir="@cups_conf_serverbin@/filter"
+pdftops="$cupsdir/pdftops 1 1 1 1 ''"
+pstops="$cupsdir/pstops 1 1 1 1 ''"
+pstoraster="$cupsdir/pstoraster"
+
+$cupsdir/pdftops 1 1 1 1 '' < gutenprint-sample.pdf > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+    echo 'Cannot run pdftops, skipping test'
+    exit 0
+fi
+
+STP_SUPPRESS_MESSAGES=1
+export STP_SUPPRESS_MESSAGES
+
+is_duplicate() {
+    model=`gunzip -c "$1" | grep '^.StpDriverModelFamily' | awk '{print $2}'`
+    for m in $all_models; do
+	if [ "$model" = "$m" ] ; then
+	    skip=1
+	fi
+    done
+    all_models="$model $all_models"
+}
+
+run_rastertogp() {
+    case "$valgrind" in
+	1) valgrind $valopts -q --num-callers=100 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 '' ;;
+	2) valgrind $valopts --num-callers=100 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 '' ;;
+	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 '' ;;
+	4) valgrind $valopts ./rastertogutenprint.$version 1 1 1 1 '' ;;
+	*) ./rastertogutenprint.$version 1 1 1 1 '' ;;
+    esac
+    if [ $? -ne 0 ] ; then
+	retval=1
+    fi
+    exit $retval
+}
+
+if [ -d ppd/C ] ; then
+    for f in ppd/C/*.ppd* ; do
+	skip=''
+	if [ -n "$single" ] ; then
+	    is_duplicate $f
+	fi
+	if [ -z "$skip" ] ; then
+	    echo "$f "
+	    PPD=$f
+	    export PPD
+	    output="`($pdftops < gutenprint-sample.pdf 2>/dev/null | $pstops 2>/dev/null | $pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+	    if [ $? -ne 0 ] ; then
+		retval=1
+	    fi
+	    echo "$output"
+	    echo "$output" |grep ERROR
+	    if [ $? -eq 0 ] ; then
+		retval=1
+	    fi
+	fi
+    done
+fi
+exit $retval
