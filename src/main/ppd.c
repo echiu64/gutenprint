@@ -3,34 +3,29 @@
  *
  *   PPD file routines for the Common UNIX Printing System (CUPS).
  *
- *   Copyright 1997-2005 by Easy Software Products, all rights reserved.
+ *   Copyright 1997-2007 by Easy Software Products, all rights reserved.
  *
- *   These coded instructions, statements, and computer programs are the
- *   property of Easy Software Products and are protected by Federal
- *   copyright law.  Distribution and use rights are outlined in the file
- *   "LICENSE.txt" which should have been included with this file.  If this
- *   file is missing or damaged please contact Easy Software Products
- *   at:
+ *   This program is free software; you can redistribute it and/or
+ *   modify it under the terms of the GNU General Public License,
+ *   version 2, as published by the Free Software Foundation.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, please contact Easy Software
+ *   Products at:
  *
  *       Attn: CUPS Licensing Information
  *       Easy Software Products
  *       44141 Airport View Drive, Suite 204
- *       Hollywood, Maryland 20636 USA
+ *       Hollywood, Maryland 20636-3111 USA
  *
- *       Voice: (301) 373-9600
+ *       Voice: (301) 373-9603
  *       EMail: cups-info@cups.org
  *         WWW: http://www.cups.org
- *
- *   PostScript is a trademark of Adobe Systems, Inc.
- *
- *   This code and any derivative of it may be used and distributed
- *   freely under the terms of the GNU General Public License when
- *   used with GNU Ghostscript or its derivatives.  Use of the code
- *   (or any derivative of it) with software other than GNU
- *   GhostScript (or its derivatives) is governed by the CUPS license
- *   agreement.
- *
- *   This file is subject to the Apple OS-Developed Software exception.
  *
  * Contents:
  *
