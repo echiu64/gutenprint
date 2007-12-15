@@ -2167,6 +2167,7 @@ static const stp_printfuncs_t print_lexmark_printfuncs =
   lexmark_describe_output,
   stp_verify_printer_params,
   NULL,
+  NULL,
   NULL
 };
 

@@ -478,14 +478,13 @@ stp_sequence_set_##name##_data(stp_sequence_t *sequence,                     \
                                size_t count, const t *data)                  \
 {									     \
   int i;								     \
-  check_sequence(sequence);						             \
+  check_sequence(sequence);					             \
   if (count < 2)							     \
     return 0;								     \
 									     \
   /* Validate the data before we commit to it. */			     \
   for (i = 0; i < count; i++)						     \
-    if (! isfinite(data[i]) ||                                                 \
-        data[i] < sequence->blo ||                                           \
+    if (data[i] < sequence->blo ||                                           \
         data[i] > sequence->bhi)                                             \
       return 0;								     \
   stp_sequence_set_size(sequence, count);                                    \
@@ -494,7 +493,27 @@ stp_sequence_set_##name##_data(stp_sequence_t *sequence,                     \
   return 1;								     \
 }
 
-DEFINE_DATA_SETTER(float, float)
+int
+stp_sequence_set_float_data(stp_sequence_t *sequence,
+			    size_t count, const float *data)
+{
+  int i;
+  check_sequence(sequence);
+  if (count < 2)
+    return 0;
+
+  /* Validate the data before we commit to it. */
+  for (i = 0; i < count; i++)
+    if (! isfinite(data[i]) ||
+        data[i] < sequence->blo ||
+        data[i] > sequence->bhi)
+      return 0;
+  stp_sequence_set_size(sequence, count);
+  for (i = 0; i < count; i++)
+    stp_sequence_set_point(sequence, i, (double) data[i]);
+  return 1;
+}
+
 DEFINE_DATA_SETTER(long, long)
 DEFINE_DATA_SETTER(unsigned long, ulong)
 DEFINE_DATA_SETTER(int, int)

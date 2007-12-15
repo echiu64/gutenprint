@@ -89,8 +89,8 @@ typedef struct {
 
 typedef struct {
   const char* name;
-  int xdpi;
-  int ydpi;
+  int w_dpi;
+  int h_dpi;
 } dyesub_resolution_t;
 
 typedef struct {
@@ -141,13 +141,14 @@ typedef struct {
 
 typedef struct
 {
-  int xdpi, ydpi;
-  int xsize, ysize;
+  int w_dpi, h_dpi;
+  int w_size, h_size;
   char plane;
-  int block_min_x, block_min_y;
-  int block_max_x, block_max_y;
+  int block_min_w, block_min_h;
+  int block_max_w, block_max_h;
   const char* pagesize;
   const laminate_t* laminate;
+  int print_mode;
 } dyesub_privdata_t;
 
 static dyesub_privdata_t privdata;
@@ -265,10 +266,10 @@ static void p10_printer_end_func(stp_vars_t *v)
 static void p10_block_init_func(stp_vars_t *v)
 {
   stp_zprintf(v, "\033T%c", privdata.plane);
-  stp_put16_le(privdata.block_min_x, v);
-  stp_put16_le(privdata.block_min_y, v);
-  stp_put16_le(privdata.block_max_x + 1, v);
-  stp_put16_le(privdata.block_max_y + 1, v);
+  stp_put16_le(privdata.block_min_w, v);
+  stp_put16_le(privdata.block_min_h, v);
+  stp_put16_le(privdata.block_max_w + 1, v);
+  stp_put16_le(privdata.block_max_h + 1, v);
 }
 
 static const laminate_t p10_laminate[] =
@@ -312,7 +313,7 @@ static void p200_printer_init_func(stp_vars_t *v)
 static void p200_plane_init_func(stp_vars_t *v)
 {
   stp_zprintf(v, "P0%d9999", 3 - privdata.plane+1 );
-  stp_put32_be(privdata.xsize * privdata.ysize, v);
+  stp_put32_be(privdata.w_size * privdata.h_size, v);
 }
 
 static void p200_printer_end_func(stp_vars_t *v)
@@ -366,8 +367,8 @@ static void p300_printer_init_func(stp_vars_t *v)
 {
   stp_zfwrite("\033\033\033C\033N\1\033F\0\1\033MS\xff\xff\xff"
 	      "\033Z", 1, 19, v);
-  stp_put16_be(privdata.xdpi, v);
-  stp_put16_be(privdata.ydpi, v);
+  stp_put16_be(privdata.w_dpi, v);
+  stp_put16_be(privdata.h_dpi, v);
 }
 
 static void p300_plane_end_func(stp_vars_t *v)
@@ -382,14 +383,14 @@ static void p300_block_init_func(stp_vars_t *v)
 {
   const char *c = "CMY";
   stp_zprintf(v, "\033\033\033W%c", c[privdata.plane-1]);
-  stp_put16_be(privdata.block_min_y, v);
-  stp_put16_be(privdata.block_min_x, v);
-  stp_put16_be(privdata.block_max_y, v);
-  stp_put16_be(privdata.block_max_x, v);
+  stp_put16_be(privdata.block_min_h, v);
+  stp_put16_be(privdata.block_min_w, v);
+  stp_put16_be(privdata.block_max_h, v);
+  stp_put16_be(privdata.block_max_w, v);
 
   stp_deprintf(STP_DBG_DYESUB, "dyesub: p300_block_init_func: %d-%dx%d-%d\n",
-	privdata.block_min_x, privdata.block_max_x,
-	privdata.block_min_y, privdata.block_max_y);
+	privdata.block_min_w, privdata.block_max_w,
+	privdata.block_min_h, privdata.block_max_h);
 }
 
 static const char p300_adj_cyan[] =
@@ -472,13 +473,13 @@ static void p400_printer_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033ZS");
   if (wide)
     {
-      stp_put16_be(privdata.ysize, v);
-      stp_put16_be(privdata.xsize, v);
+      stp_put16_be(privdata.h_size, v);
+      stp_put16_be(privdata.w_size, v);
     }
   else
     {
-      stp_put16_be(privdata.xsize, v);
-      stp_put16_be(privdata.ysize, v);
+      stp_put16_be(privdata.w_size, v);
+      stp_put16_be(privdata.h_size, v);
     }
   dyesub_nputc(v, '\0', 57);
   stp_zprintf(v, "\033ZP"); dyesub_nputc(v, '\0', 61);
@@ -502,17 +503,17 @@ static void p400_block_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033Z%c", '3' - privdata.plane + 1);
   if (wide)
     {
-      stp_put16_be(privdata.ysize - privdata.block_max_y - 1, v);
-      stp_put16_be(privdata.xsize - privdata.block_max_x - 1, v);
-      stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
-      stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+      stp_put16_be(privdata.h_size - privdata.block_max_h - 1, v);
+      stp_put16_be(privdata.w_size - privdata.block_max_w - 1, v);
+      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
+      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
     }
   else
     {
-      stp_put16_be(privdata.block_min_x, v);
-      stp_put16_be(privdata.block_min_y, v);
-      stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
-      stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+      stp_put16_be(privdata.block_min_w, v);
+      stp_put16_be(privdata.block_min_h, v);
+      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
+      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
     }
   dyesub_nputc(v, '\0', 53);
 }
@@ -558,7 +559,6 @@ static const char p400_adj_yellow[] =
 
 
 /* Olympus P-440 series */
-/* FIXME: colors - BGR instead of RGB ?!? */
 static const dyesub_pagesize_t p440_page[] =
 {
   { "A4", NULL, -1, -1, 10, 9, 54, 54, DYESUB_PORTRAIT},
@@ -598,13 +598,13 @@ static void p440_printer_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033ZS");
   if (wide)
     {
-      stp_put16_be(privdata.ysize, v);
-      stp_put16_be(privdata.xsize, v);
+      stp_put16_be(privdata.h_size, v);
+      stp_put16_be(privdata.w_size, v);
     }
   else
     {
-      stp_put16_be(privdata.xsize, v);
-      stp_put16_be(privdata.ysize, v);
+      stp_put16_be(privdata.w_size, v);
+      stp_put16_be(privdata.h_size, v);
     }
   dyesub_nputc(v, '\0', 57);
   if (strcmp(privdata.pagesize, "C6") == 0)
@@ -626,36 +626,35 @@ static void p440_block_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033ZT");
   if (wide)
     {
-      stp_put16_be(privdata.ysize - privdata.block_max_y - 1, v);
-      stp_put16_be(privdata.xsize - privdata.block_max_x - 1, v);
-      stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
-      stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
+      stp_put16_be(privdata.h_size - privdata.block_max_h - 1, v);
+      stp_put16_be(privdata.w_size - privdata.block_max_w - 1, v);
+      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
+      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
     }
   else
     {
-      stp_put16_be(privdata.block_min_x, v);
-      stp_put16_be(privdata.block_min_y, v);
-      stp_put16_be(privdata.block_max_x - privdata.block_min_x + 1, v);
-      stp_put16_be(privdata.block_max_y - privdata.block_min_y + 1, v);
+      stp_put16_be(privdata.block_min_w, v);
+      stp_put16_be(privdata.block_min_h, v);
+      stp_put16_be(privdata.block_max_w - privdata.block_min_w + 1, v);
+      stp_put16_be(privdata.block_max_h - privdata.block_min_h + 1, v);
     }
   dyesub_nputc(v, '\0', 53);
 }
 
 static void p440_block_end_func(stp_vars_t *v)
 {
-  int pad = (64 - (((privdata.block_max_x - privdata.block_min_x + 1)
-	  * (privdata.block_max_y - privdata.block_min_y + 1) * 3) % 64)) % 64;
+  int pad = (64 - (((privdata.block_max_w - privdata.block_min_w + 1)
+	  * (privdata.block_max_h - privdata.block_min_h + 1) * 3) % 64)) % 64;
   stp_deprintf(STP_DBG_DYESUB,
 		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
-  		  privdata.block_max_x, privdata.block_min_x,
-	  	  privdata.block_max_y, privdata.block_min_y);
+  		  privdata.block_max_w, privdata.block_min_w,
+	  	  privdata.block_max_h, privdata.block_min_h);
   stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-p440 padding=%d\n", pad);
   dyesub_nputc(v, '\0', pad);
 }
 
 
 /* Olympus P-S100 */
-/* FIXME: colors - BGR instead of RGB ?!? */
 static const dyesub_pagesize_t ps100_page[] =
 {
   { "w288h432", "4 x 6", 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},/* 4x6" */
@@ -683,8 +682,8 @@ static void ps100_printer_init_func(stp_vars_t *v)
   stp_zprintf(v, "\033W"); dyesub_nputc(v, '\0', 62);
   
   stp_zfwrite("\x30\x2e\x00\xa2\x00\xa0\x00\xa0", 1, 8, v);
-  stp_put16_be(privdata.ysize, v);	/* paper height (px) */
-  stp_put16_be(privdata.xsize, v);	/* paper width (px) */
+  stp_put16_be(privdata.h_size, v);	/* paper height (px) */
+  stp_put16_be(privdata.w_size, v);	/* paper width (px) */
   dyesub_nputc(v, '\0', 3);
   stp_putc('\1', v);	/* number of copies */
   dyesub_nputc(v, '\0', 8);
@@ -696,19 +695,19 @@ static void ps100_printer_init_func(stp_vars_t *v)
   stp_zfwrite("\033ZT\0", 1, 4, v);
   stp_put16_be(0, v);			/* image width offset (px) */
   stp_put16_be(0, v);			/* image height offset (px) */
-  stp_put16_be(privdata.xsize, v);	/* image width (px) */
-  stp_put16_be(privdata.ysize, v);	/* image height (px) */
+  stp_put16_be(privdata.w_size, v);	/* image width (px) */
+  stp_put16_be(privdata.h_size, v);	/* image height (px) */
   dyesub_nputc(v, '\0', 52);
 }
 
 static void ps100_printer_end_func(stp_vars_t *v)
 {
-  int pad = (64 - (((privdata.block_max_x - privdata.block_min_x + 1)
-	  * (privdata.block_max_y - privdata.block_min_y + 1) * 3) % 64)) % 64;
+  int pad = (64 - (((privdata.block_max_w - privdata.block_min_w + 1)
+	  * (privdata.block_max_h - privdata.block_min_h + 1) * 3) % 64)) % 64;
   stp_deprintf(STP_DBG_DYESUB,
 		  "dyesub: max_x %d min_x %d max_y %d min_y %d\n",
-  		  privdata.block_max_x, privdata.block_min_x,
-	  	  privdata.block_max_y, privdata.block_min_y);
+  		  privdata.block_max_w, privdata.block_min_w,
+	  	  privdata.block_max_h, privdata.block_min_h);
   stp_deprintf(STP_DBG_DYESUB, "dyesub: olympus-ps100 padding=%d\n", pad);
   dyesub_nputc(v, '\0', pad);		/* padding to 64B blocks */
 
@@ -783,7 +782,7 @@ static void cpx00_plane_init_func(stp_vars_t *v)
 {
   stp_put16_be(0x4001, v);
   stp_put16_le(3 - privdata.plane, v);
-  stp_put32_le(privdata.xsize * privdata.ysize, v);
+  stp_put32_le(privdata.w_size * privdata.h_size, v);
   dyesub_nputc(v, '\0', 4);
 }
 
@@ -850,6 +849,48 @@ static const dyesub_printsize_t cp220_printsize[] =
 
 LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
+/* Canon SELPHY ES series */
+static void es1_printer_init_func(stp_vars_t *v)
+{
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x11 :
+	     (strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
+	      (strcmp(privdata.pagesize, "w155h244") == 0 ? '\3' : 0x11 )));
+
+  /*
+   differs from cp-220 in that after the 0x4000, the next character
+   seems to be 0x01 instead of 0x00, and the P card size code is 
+   '0x11' instead of '0x1'
+   codes for other paper types are unknown.
+  */
+
+  stp_put16_be(0x4000, v);
+  stp_putc(0x10, v);
+  stp_putc(pg, v);
+  dyesub_nputc(v, '\0', 8);
+}
+
+static void es1_plane_init_func(stp_vars_t *v)
+{
+  unsigned char plane = 0;
+
+  switch (privdata.plane) {
+  case 3: /* Y */
+    plane = 0x01;
+    break;
+  case 2: /* M */
+    plane = 0x03;
+    break;
+  case 1: /* C */
+    plane = 0x07;
+    break;
+  }
+
+  stp_put16_be(0x4001, v);
+  stp_putc(plane, v);
+  stp_putc(0x1, v);
+  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  dyesub_nputc(v, '\0', 4);
+}
 
 /* Sony DPP-EX5, DPP-EX7 */
 static const dyesub_resolution_t res_403dpi[] =
@@ -883,8 +924,8 @@ static void dppex5_printer_init(stp_vars_t *v)
   stp_zfwrite("DPEX\0\0\0\x80", 1, 8, v);
   stp_zfwrite("DPEX\0\0\0\x82", 1, 8, v);
   stp_zfwrite("DPEX\0\0\0\x84", 1, 8, v);
-  stp_put32_be(privdata.xsize, v);
-  stp_put32_be(privdata.ysize, v);
+  stp_put32_be(privdata.w_size, v);
+  stp_put32_be(privdata.h_size, v);
   stp_zfwrite("S\0o\0n\0y\0 \0D\0P\0P\0-\0E\0X\0\x35\0", 1, 24, v);
   dyesub_nputc(v, '\0', 40);
   stp_zfwrite("\1\4\0\4\xdc\0\x24\0\3\3\1\0\1\0\x82\0", 1, 16, v);
@@ -907,8 +948,8 @@ static void dppex5_printer_init(stp_vars_t *v)
 static void dppex5_block_init(stp_vars_t *v)
 {
   stp_zfwrite("DPEX\0\0\0\x85", 1, 8, v);
-  stp_put32_be((privdata.block_max_x - privdata.block_min_x + 1)
-  		* (privdata.block_max_y - privdata.block_min_y + 1) * 3, v);
+  stp_put32_be((privdata.block_max_w - privdata.block_min_w + 1)
+  		* (privdata.block_max_h - privdata.block_min_h + 1) * 3, v);
 }
 
 static void dppex5_printer_end(stp_vars_t *v)
@@ -929,8 +970,8 @@ LIST(laminate_list_t, dppex5_laminate_list, laminate_t, dppex5_laminate);
 /* Sony UP-DP10 */
 static const dyesub_pagesize_t updp10_page[] =
 {
-  { "w288h432", "UPC-10P23 (2:3)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
-  { "w288h387", "UPC-10P34 (3:4)", -1, 384, 12, 12, 16, 16, DYESUB_LANDSCAPE},
+  { "w288h432", "UPC-10P23 (4x6)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
+  { "w288h387", "UPC-10P34 (4x5)", -1, 384, 12, 12, 16, 16, DYESUB_LANDSCAPE},
   { "w288h432", "UPC-10S01 (Sticker)", -1, -1, 12, 12, 18, 18, DYESUB_LANDSCAPE},
   { "Custom", NULL, -1, -1, 12, 12, 0, 0, DYESUB_LANDSCAPE},
 };
@@ -950,20 +991,22 @@ static void updp10_printer_init_func(stp_vars_t *v)
 {
   stp_zfwrite("\x98\xff\xff\xff\xff\xff\xff\xff"
 	      "\x09\x00\x00\x00\x1b\xee\x00\x00"
+	      "\x00\x02\x00\x00\x01\x12\x00\x00"
+	      "\x00\x1b\xe1\x00\x00\x00\x0b\x00"
 	      "\x00\x04", 1, 34, v);
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
-  stp_put16_be(privdata.ysize, v);
-  stp_put16_be(privdata.xsize, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   stp_zfwrite("\x14\x00\x00\x00\x1b\x15\x00\x00"
 	      "\x00\x0d\x00\x00\x00\x00\x00\x07"
 	      "\x00\x00\x00\x00", 1, 20, v);
-  stp_put16_be(privdata.ysize, v);
-  stp_put16_be(privdata.xsize, v);
-  stp_put32_le(privdata.xsize*privdata.ysize*3+11, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  stp_put32_le(privdata.w_size*privdata.h_size*3+11, v);
   stp_zfwrite("\x1b\xea\x00\x00\x00\x00", 1, 6, v);
-  stp_put32_be(privdata.xsize*privdata.ysize*3, v);
+  stp_put32_be(privdata.w_size*privdata.h_size*3, v);
   stp_zfwrite("\x00", 1, 1, v);
 }
 
@@ -1052,10 +1095,14 @@ LIST(dyesub_printsize_list_t, updr100_printsize_list, dyesub_printsize_t, updr10
 
 static void updr100_printer_init_func(stp_vars_t *v)
 {
+  int dim1 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.h_size : privdata.w_size);
+  int dim2 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.w_size : privdata.h_size);
 
   stp_zfwrite("UPD8D\x00\x00\x00\x10\x03\x00\x00", 1, 12, v);
-  stp_put32_le(privdata.xsize, v);
-  stp_put32_le(privdata.ysize, v);
+  stp_put32_le(dim1, v);
+  stp_put32_le(dim2, v);
   stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
   stp_zfwrite((privdata.laminate->seq).data, 1,
 		(privdata.laminate->seq).bytes, v); /* laminate pattern */
@@ -1118,6 +1165,10 @@ LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr15
 static void updr150_printer_init_func(stp_vars_t *v)
 {
   char pg = '\0';
+  int dim1 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.w_size : privdata.h_size);
+  int dim2 = (privdata.print_mode == DYESUB_LANDSCAPE ?
+  		privdata.h_size : privdata.w_size);
 
   stp_zfwrite("\x6a\xff\xff\xff\xef\xff\xff\xff", 1, 8, v);
   if (strcmp(privdata.pagesize,"B7") == 0)
@@ -1142,19 +1193,19 @@ static void updr150_printer_init_func(stp_vars_t *v)
 	      "\x1b\x15\x00\x00\x00\x0d\x00\x0d"
 	      "\x00\x00\x00\x00\x00\x00\x00\x07"
 	      "\x00\x00\x00\x00", 1, 91, v);
-  stp_put16_be(privdata.ysize, v);
-  stp_put16_be(privdata.xsize, v);
+  stp_put16_be(dim1, v);
+  stp_put16_be(dim2, v);
   stp_zfwrite("\xf9\xff\xff\xff\x07\x00\x00\x00"
 	      "\x1b\xe1\x00\x00\x00\x0b\x00\x0b"
 	      "\x00\x00\x00\x00\x80\x00\x00\x00"
 	      "\x00\x00", 1, 26, v);
-  stp_put16_be(privdata.ysize, v);
-  stp_put16_be(privdata.xsize, v);
+  stp_put16_be(dim1, v);
+  stp_put16_be(dim2, v);
   stp_zfwrite("\xf8\xff\xff\xff\x0b\x00\x00\x00\x1b\xea"
 	      "\x00\x00\x00\x00", 1, 14, v);
-  stp_put32_be(privdata.xsize*privdata.ysize*3, v);
+  stp_put32_be(privdata.w_size*privdata.h_size*3, v);
   stp_zfwrite("\x00", 1, 1, v);
-  stp_put32_le(privdata.xsize*privdata.ysize*3, v);
+  stp_put32_le(privdata.w_size*privdata.h_size*3, v);
 }
 
 static void updr150_printer_end_func(stp_vars_t *v)
@@ -1204,8 +1255,8 @@ static void cx400_printer_init_func(stp_vars_t *v)
   stp_zfwrite("FUJIFILM", 1, 8, v);
   stp_zfwrite(pname, 1, 6, v);
   stp_putc('\0', v);
-  stp_put16_le(privdata.xsize, v);
-  stp_put16_le(privdata.ysize, v);
+  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(privdata.h_size, v);
   if (strcmp(privdata.pagesize,"w288h504") == 0)
     pg = '\x0d';
   else if (strcmp(privdata.pagesize,"w288h432") == 0)
@@ -1253,8 +1304,8 @@ static void nx500_printer_init_func(stp_vars_t *v)
   dyesub_nputc(v, '\0', 20);
   stp_zfwrite("\x02\x01\x01", 1, 3, v);
   dyesub_nputc(v, '\0', 2);
-  stp_put16_le(privdata.ysize, v);
-  stp_put16_le(privdata.xsize, v);
+  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(privdata.w_size, v);
   stp_zfwrite("\x00\x02\x00\x70\x2f", 1, 5, v);
   dyesub_nputc(v, '\0', 43);
 }
@@ -1289,8 +1340,64 @@ static void kodak_dock_plane_init(stp_vars_t *v)
 {
   stp_put16_be(0x3001, v);
   stp_put16_le(3 - privdata.plane, v);
-  stp_put32_le(privdata.xsize*privdata.ysize, v);
+  stp_put32_le(privdata.w_size*privdata.h_size, v);
   dyesub_nputc(v, '\0', 4);
+}
+
+
+/* Shinko CHC-S9045 (experimental) */
+static const dyesub_pagesize_t shinko_chcs9045_page[] =
+{
+  { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+  { "B7",	"3.5x5", PT(1088,300)+1, PT(1548,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+  { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  							DYESUB_PORTRAIT},
+  { "w432h576",	"6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
+  							DYESUB_PORTRAIT},
+  { "w283h425",	"Sticker paper", PT(1092,300)+1, PT(1726,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+  { "Custom",   NULL, PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+};
+
+LIST(dyesub_pagesize_list_t, shinko_chcs9045_page_list, dyesub_pagesize_t, shinko_chcs9045_page);
+
+static const dyesub_printsize_t shinko_chcs9045_printsize[] =
+{
+  { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "B7", 1088, 1548},
+  { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w432h576", 1844, 2740},
+  { "300x300", "w283h425", 1092, 1726},
+  { "300x300", "Custom", 1240, 1844},
+};
+
+LIST(dyesub_printsize_list_t, shinko_chcs9045_printsize_list, dyesub_printsize_t, shinko_chcs9045_printsize);
+
+static void shinko_chcs9045_printer_init(stp_vars_t *v)
+{
+  char pg = '\0';
+  char sticker = '\0';
+
+  stp_zprintf(v, "\033CHC\n");
+  stp_put16_be(1, v);
+  stp_put16_be(1, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  if (strcmp(privdata.pagesize,"B7") == 0)
+    pg = '\1';
+  else if (strcmp(privdata.pagesize,"w360h504") == 0)
+    pg = '\3';
+  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+    pg = '\5';
+  else if (strcmp(privdata.pagesize,"w283h425") == 0)
+    sticker = '\3';
+  stp_putc(pg, v);
+  stp_putc('\0', v);
+  stp_putc(sticker, v);
+  dyesub_nputc(v, '\0', 4338);
 }
 
 
@@ -1375,7 +1482,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Olympus P-S100 */
     20,
-    &rgb_ink_list,
+    &bgr_ink_list,
     &res_306dpi_list,
     &ps100_page_list,
     &ps100_printsize_list,
@@ -1420,7 +1527,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
   },
   { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-510,
-       SELPHY CP-600, SELPHY CP-710 */
+       SELPHY CP-600, SELPHY CP-710, SELPHY CP-720, SELPHY CP-730,
+       SELPHY CP-740, SELPHY CP-750 */
     1001,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1432,6 +1540,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+  { /* Canon SELPHY ES1, ES2, ES20 (!experimental) */
+    1003,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &cpx00_page_list,
+    &cpx00_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &es1_printer_init_func, NULL,
+    &es1_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
@@ -1549,6 +1673,20 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &kodak_dock_printer_init, NULL,
     &kodak_dock_plane_init, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    NULL,
+  },
+  { /* Shinko CHC-S9045 (experimental) */
+    5000, 		
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &shinko_chcs9045_page_list,
+    &shinko_chcs9045_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &shinko_chcs9045_printer_init, NULL,
+    NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
     NULL,
@@ -1984,8 +2122,8 @@ dyesub_describe_resolution(const stp_vars_t *v, int *x, int *y)
 	{
 	  if (strcmp(resolution, r->item[i].name) == 0)
 	    {
-	      *x = r->item[i].xdpi;
-	      *y = r->item[i].ydpi;
+	      *x = r->item[i].w_dpi;
+	      *y = r->item[i].h_dpi;
 	      break;
 	    }
 	}
@@ -2147,7 +2285,7 @@ dyesub_print_pixel(stp_vars_t *v,
 {
   unsigned short ink[MAX_INK_CHANNELS * MAX_BYTES_PER_CHANNEL], *out;
   unsigned char *ink_u8;
-  int i, j;
+  int i, j, b;
   
   if (pv->print_mode == DYESUB_LANDSCAPE)
     { /* "rotate" image */
@@ -2186,7 +2324,10 @@ dyesub_print_pixel(stp_vars_t *v,
   if (pv->plane_interlacing)
     stp_zfwrite((char *) ink + plane, pv->bytes_per_ink_channel, 1, v);
   else
-    stp_zfwrite((char *) ink, pv->bytes_per_ink_channel, pv->ink_channels, v);
+/*  stp_zfwrite((char *) ink, pv->bytes_per_ink_channel, pv->ink_channels, v);*/
+      /* print inks in right order, eg. RGB  BGR */
+      for (b = 0; b < pv->ink_channels; b++)
+	stp_zfwrite((char *) ink + (pv->ink_order[b]-1), pv->bytes_per_ink_channel, 1, v);
 
   return 1;
 }
@@ -2226,11 +2367,11 @@ dyesub_print_plane(stp_vars_t *v,
     {
       if (h % caps->block_size == 0)
         { /* block init */
-	  privdata.block_min_y = h + pv->prnt_px;
-	  privdata.block_min_x = pv->prnl_px;
-	  privdata.block_max_y = MIN(h + pv->prnt_px + caps->block_size - 1,
+	  privdata.block_min_h = h + pv->prnt_px;
+	  privdata.block_min_w = pv->prnl_px;
+	  privdata.block_max_h = MIN(h + pv->prnt_px + caps->block_size - 1,
 	  					pv->prnb_px);
-	  privdata.block_max_x = pv->prnr_px;
+	  privdata.block_max_w = pv->prnr_px;
 
 	  dyesub_exec(v, caps->block_init_func, "caps->block_init");
 	}
@@ -2261,7 +2402,7 @@ dyesub_print_plane(stp_vars_t *v,
 	    }
 	}
 
-      if (h + pv->prnt_px == privdata.block_max_y)
+      if (h + pv->prnt_px == privdata.block_max_h)
         { /* block end */
 	  dyesub_exec(v, caps->block_end_func, "caps->block_end");
 	}
@@ -2284,7 +2425,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
   int max_print_px_width = 0;
   int max_print_px_height = 0;
-  int xdpi, ydpi;	/* Resolution */
+  int w_dpi, h_dpi;	/* Resolution */
 
   /* output in 1/72" */
   int out_pt_width  = stp_get_width(v);
@@ -2315,7 +2456,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.imgw_px = stp_image_width(image);
   pv.imgh_px = stp_image_height(image);
 
-  stp_describe_resolution(v, &xdpi, &ydpi);
+  stp_describe_resolution(v, &w_dpi, &h_dpi);
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
 
   privdata.pagesize = stp_get_string_parameter(v, "PageSize");
@@ -2328,11 +2469,11 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	&page_mode);
   
   pv.prnw_px = MIN(max_print_px_width,
-		  	PX(page_pt_right - page_pt_left, xdpi));
+		  	PX(page_pt_right - page_pt_left, w_dpi));
   pv.prnh_px = MIN(max_print_px_height,
-			PX(page_pt_bottom - page_pt_top, ydpi));
-  pv.outw_px = PX(out_pt_width, xdpi);
-  pv.outh_px = PX(out_pt_height, ydpi);
+			PX(page_pt_bottom - page_pt_top, h_dpi));
+  pv.outw_px = PX(out_pt_width, w_dpi);
+  pv.outh_px = PX(out_pt_height, h_dpi);
 
 
   /* if image size is close enough to output size send out original size */
@@ -2343,9 +2484,9 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   pv.outw_px = MIN(pv.outw_px, pv.prnw_px);
   pv.outh_px = MIN(pv.outh_px, pv.prnh_px);
-  pv.outl_px = MIN(PX(out_pt_left - page_pt_left, xdpi),
+  pv.outl_px = MIN(PX(out_pt_left - page_pt_left, w_dpi),
 			pv.prnw_px - pv.outw_px);
-  pv.outt_px = MIN(PX(out_pt_top  - page_pt_top, ydpi),
+  pv.outt_px = MIN(PX(out_pt_top  - page_pt_top, h_dpi),
 			pv.prnh_px - pv.outh_px);
   pv.outr_px = pv.outl_px + pv.outw_px;
   pv.outb_px = pv.outt_px  + pv.outh_px;
@@ -2364,7 +2505,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	      "res (dpi)               %d x %d\n",
 	      page_pt_width, page_pt_height,
 	      pv.imgw_px, pv.imgh_px,
-	      PT(pv.imgw_px, xdpi), PT(pv.imgh_px, ydpi),
+	      PT(pv.imgw_px, w_dpi), PT(pv.imgh_px, h_dpi),
 	      out_pt_width, out_pt_height,
 	      pv.outw_px, pv.outh_px,
 	      out_pt_left, out_pt_top,
@@ -2372,13 +2513,8 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	      page_pt_right, page_pt_left, page_pt_right - page_pt_left,
 	      page_pt_bottom, page_pt_top, page_pt_bottom - page_pt_top,
 	      pv.prnw_px, pv.prnh_px,
-	      xdpi, ydpi
+	      w_dpi, h_dpi
 	      );	
-
-  privdata.xdpi = xdpi;
-  privdata.ydpi = ydpi;
-  privdata.xsize = pv.prnw_px;
-  privdata.ysize = pv.prnh_px;
 
 
   /* FIXME: move this into print_init_drv */
@@ -2450,6 +2586,13 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       dyesub_swap_ints(&pv.imgh_px, &pv.imgw_px);
     }
 
+	/* assign private data *after* swaping image dimensions */
+  privdata.w_dpi = w_dpi;
+  privdata.h_dpi = h_dpi;
+  privdata.w_size = pv.prnw_px;
+  privdata.h_size = pv.prnh_px;
+  privdata.print_mode = pv.print_mode;
+
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
 
@@ -2497,6 +2640,7 @@ static const stp_printfuncs_t print_dyesub_printfuncs =
   dyesub_describe_resolution,
   dyesub_describe_output,
   stp_verify_printer_params,
+  NULL,
   NULL,
   NULL
 };

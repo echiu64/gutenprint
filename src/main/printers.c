@@ -478,6 +478,17 @@ stp_end_job(const stp_vars_t *v, stp_image_t *image)
     return 1;
 }
 
+stp_string_list_t *
+stp_get_external_options(const stp_vars_t *v)
+{
+  const stp_printfuncs_t *printfuncs =
+    stpi_get_printfuncs(stp_get_printer(v));
+  if (printfuncs->get_external_options)
+    return (printfuncs->get_external_options)(v);
+  else
+    return NULL;
+}
+
 static int
 verify_string_param(const stp_vars_t *v, const char *parameter,
 		    stp_parameter_t *desc, int quiet)

@@ -96,10 +96,17 @@ static const char *gzext = "";
  * In Gutenprint 5.0, use the legacy names with the CUPS 1.1 interface
  * for back compatibility.  With CUPS 1.2, or Gutenprint 5.1 or above,
  * generate compliant names.
+ *
+ * As of Gutenprint 5.0.2 and 5.1.4, *always* use the compliant names.
+ * OS X Leopard seems to be very unhappy if there are invalid resolution
+ * names.  We've added a mapping between the invalid names and the
+ * valid names so that genppdupdate knows how to translate the names.
  */
 
+#if 0
 #if defined(CUPS_DRIVER_INTERFACE) || (STP_MAJOR_VERSION > 5) || (STP_MAJOR_VERSION == 5 && STP_MINOR_VERSION > 0)
 #define USE_COMPLIANT_RESOLUTIONS 1
+#endif
 #endif
 
 /*
@@ -996,6 +1003,8 @@ write_ppd(
 		bottom, left,
 		top, right;
   const char	*driver;		/* Driver name */
+  const char	*family;		/* Printer family */
+  int		model;			/* Internal model ID */
   const char	*long_name;		/* Driver long name */
   const char	*manufacturer;		/* Manufacturer of printer */
   const stp_vars_t *printvars;		/* Printer option names */
@@ -1020,6 +1029,8 @@ write_ppd(
   */
 
   driver     = stp_printer_get_driver(p);
+  family     = stp_printer_get_family(p);
+  model      = stp_printer_get_model(p);
   long_name  = stp_printer_get_long_name(p);
   manufacturer = stp_printer_get_manufacturer(p);
   printvars  = stp_printer_get_defaults(p);
@@ -1154,6 +1165,7 @@ write_ppd(
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
   gzputs(fp, "\n");
   gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
+  gzprintf(fp, "*StpDriverModelFamily:	\"%d_%s\"\n", model, family);
   gzprintf(fp, "*StpPPDLocation: \"%s\"\n", ppd_location);
   gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");
 
@@ -1235,6 +1247,9 @@ write_ppd(
 
   gzputs(fp, "*OpenUI *PageSize: PickOne\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
+  gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+	   desc.name, desc.p_type, desc.is_mandatory,
+	   desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
   gzprintf(fp, "*DefaultPageSize: %s\n", desc.deflt.str);
   gzprintf(fp, "*StpDefaultPageSize: %s\n", desc.deflt.str);
   for (i = 0; i < cur_opt; i ++)
@@ -1409,6 +1424,9 @@ write_ppd(
   {
     gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
+    gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+	     desc.name, desc.p_type, desc.is_mandatory,
+	     desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
     gzprintf(fp, "*DefaultMediaType: %s\n", desc.deflt.str);
     gzprintf(fp, "*StpDefaultMediaType: %s\n", desc.deflt.str);
 
@@ -1434,6 +1452,9 @@ write_ppd(
   {
     gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
+    gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+	     desc.name, desc.p_type, desc.is_mandatory,
+	     desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
     gzprintf(fp, "*DefaultInputSlot: %s\n", desc.deflt.str);
     gzprintf(fp, "*StpDefaultInputSlot: %s\n", desc.deflt.str);
 
@@ -1459,6 +1480,9 @@ write_ppd(
       has_quality_parameter = 1;
       gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", gettext(desc.text));
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpQuality\n");
+      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+	       desc.name, desc.p_type, desc.is_mandatory,
+	       desc.p_type, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
       gzprintf(fp, "*StpDefaultStpQuality: %s\n", desc.deflt.str);
       num_opts = stp_string_list_count(desc.bounds.str);
@@ -1494,23 +1518,46 @@ write_ppd(
 
   if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
     {
-#ifdef USE_COMPLIANT_RESOLUTIONS
       stp_string_list_t *res_list = stp_string_list_create();
       char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
       int resolution_ok;
       int tmp_xdpi, tmp_ydpi;
-#endif
 
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
       gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
+      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+	       desc.name, desc.p_type, desc.is_mandatory,
+	       desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
       if (has_quality_parameter)
 	{
-	  gzprintf(fp, "*DefaultResolution: None\n");
-	  gzprintf(fp, "*StpDefaultResolution: None\n");
+	  stp_parameter_t desc1;
+	  stp_clear_string_parameter(v, "Resolution");
+	  stp_describe_parameter(v, "Quality", &desc1);
+	  stp_set_string_parameter(v, "Quality", desc1.deflt.str);
+	  stp_describe_resolution(v, &xdpi, &ydpi);
+	  stp_clear_string_parameter(v, "Quality");
+	  tmp_xdpi = xdpi;
+	  tmp_ydpi = ydpi;
+	  if (tmp_ydpi > tmp_xdpi)
+	    tmp_ydpi = tmp_xdpi;
+	  else
+	    tmp_xdpi = tmp_ydpi;
+	  /*
+	     Make the default resolution look like an almost square resolution
+	     so that applications using it will be less likely to generate
+	     excess resolution.  However, make the hardware resolution
+	     match the printer default.
+	  */
+	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_xdpi + 1);
+	  stp_string_list_add_string(res_list, res_name, res_name);
+	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
+	  gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
+	  gzprintf(fp, "*Resolution %s/Automatic:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
+		   res_name, xdpi, ydpi);
+	  gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
 	}
       else
       {
-#ifdef USE_COMPLIANT_RESOLUTIONS
 	stp_set_string_parameter(v, "Resolution", desc.deflt.str);
 	stp_describe_resolution(v, &xdpi, &ydpi);
 
@@ -1526,15 +1573,9 @@ write_ppd(
 	 * default resolution name
 	 */
 	stp_string_list_add_string(res_list, res_name, res_name);
-#else  /* !USE_COMPLIANT_RESOLUTIONS */
-	gzprintf(fp, "*DefaultResolution: %s\n", desc.deflt.str);
-	gzprintf(fp, "*StpDefaultResolution: %s\n", desc.deflt.str);
-#endif /* USE_COMPLIANT_RESOLUTIONS */
       }
 
       stp_clear_string_parameter(v, "Quality");
-      if (has_quality_parameter)
-	gzprintf(fp, "*Resolution None/%s: \"\"\n", _("Automatic"));
       for (i = 0; i < num_opts; i ++)
 	{
 	  /*
@@ -1548,7 +1589,6 @@ write_ppd(
 	  if (xdpi == -1 || ydpi == -1)
 	    continue;
 
-#ifdef USE_COMPLIANT_RESOLUTIONS
 	  resolution_ok = 0;
 	  tmp_xdpi = xdpi;
 	  tmp_ydpi = ydpi;
@@ -1571,15 +1611,11 @@ write_ppd(
 	    } while (!resolution_ok);
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		   res_name, opt->text, xdpi, ydpi, i + 1);
-#else  /* !USE_COMPLIANT_RESOLUTIONS */
-	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		   opt->name, opt->text, xdpi, ydpi, i + 1);
-#endif /* USE_COMPLIANT_RESOLUTIONS */
+	  if (strcmp(res_name, opt->name) != 0)
+	    gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
 	}
 
-#ifdef USE_COMPLIANT_RESOLUTIONS
       stp_string_list_destroy(res_list);
-#endif
       gzputs(fp, "*CloseUI: *Resolution\n\n");
     }
 
@@ -1612,6 +1648,9 @@ write_ppd(
       {
         gzprintf(fp, "*OpenUI *Duplex/%s: PickOne\n", _("2-Sided Printing"));
         gzputs(fp, "*OrderDependency: 10 AnySetup *Duplex\n");
+	gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+		 desc.name, desc.p_type, desc.is_mandatory,
+		 desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
         gzprintf(fp, "*DefaultDuplex: %s\n", desc.deflt.str);
         gzprintf(fp, "*StpDefaultDuplex: %s\n", desc.deflt.str);
 
@@ -1676,6 +1715,10 @@ write_ppd(
 		  switch (desc.p_type)
 		    {
 		    case STP_PARAMETER_TYPE_STRING_LIST:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_class, desc.p_level, desc.channel,
+			       0.0, 0.0, 0.0);
 		      if (desc.is_mandatory)
 			{
 			  gzprintf(fp, "*DefaultStp%s: %s\n",
@@ -1699,6 +1742,10 @@ write_ppd(
 			}
 		      break;
 		    case STP_PARAMETER_TYPE_BOOLEAN:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_class, desc.p_level, desc.channel,
+			       0.0, 0.0, desc.deflt.boolean ? 1.0 : 0.0);
 		      if (desc.is_mandatory)
 			{
 			  gzprintf(fp, "*DefaultStp%s: %s\n", desc.name,
@@ -1719,6 +1766,11 @@ write_ppd(
 			       desc.name, "True", _("Yes"));
 		      break;
 		    case STP_PARAMETER_TYPE_DOUBLE:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_class, desc.p_level, desc.channel,
+			       desc.bounds.dbl.lower, desc.bounds.dbl.upper,
+			       desc.deflt.dbl);
 		      gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
 		      gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
 		      for (i = desc.bounds.dbl.lower * 1000;
@@ -1754,6 +1806,9 @@ write_ppd(
 			{
 			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 				   desc.name, gettext(desc.text), _("Fine Adjustment"));
+			  gzprintf(fp, "*StpStpFine%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+				   desc.name, STP_PARAMETER_TYPE_INVALID, 0,
+				   0, 0, -1, 0.0, 0.0, 0.0);
 			  gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
 			  gzprintf(fp, "*StpDefaultStpFine%s:None\n", desc.name);
 			  gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
@@ -1766,6 +1821,12 @@ write_ppd(
 
 		      break;
 		    case STP_PARAMETER_TYPE_DIMENSION:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_class, desc.p_level, desc.channel,
+			       (double) desc.bounds.dimension.lower,
+			       (double) desc.bounds.dimension.upper,
+			       (double) desc.deflt.dimension);
 		      if (desc.is_mandatory)
 			{
 			  gzprintf(fp, "*DefaultStp%s: %d\n",

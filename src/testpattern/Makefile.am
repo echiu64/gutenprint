@@ -26,7 +26,7 @@ include $(top_srcdir)/scripts/global.mk
 
 pkgdatadir = $(datadir)/$(PACKAGE)/samples
 
-TESTS = run-testpattern run-testpattern-1 run-testpattern-2
+TESTS = run-testpattern-1 run-testpattern-2
 
 
 ## Programs
@@ -52,7 +52,9 @@ printer_options_LDADD = $(GUTENPRINT_LIBS)
 
 ## Data
 
+if INSTALL_SAMPLES
 pkgdata_DATA = testpattern.sample extended.sample
+endif
 
 
 ## Clean

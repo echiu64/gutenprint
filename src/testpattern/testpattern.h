@@ -25,6 +25,7 @@
 #endif
 
 #include <gutenprint/gutenprint.h>
+#include <stdio.h>
 
 typedef struct
 {
@@ -80,6 +81,7 @@ extern int global_bit_depth;
 extern int global_channel_depth;
 extern int global_did_something;
 extern int global_invert_data;
+extern char *global_output;
 
 
 extern char *c_strdup(const char *s);

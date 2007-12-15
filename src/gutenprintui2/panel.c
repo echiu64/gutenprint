@@ -256,6 +256,7 @@ static void plist_build_combo(GtkWidget *combo,
 			      gpointer data);
 static void initialize_thumbnail(void);
 static void set_color_defaults (void);
+static void set_printer_defaults (void);
 static void redraw_color_swatch (void);
 static void color_update (GtkAdjustment *adjustment);
 static void dimension_update (GtkAdjustment *adjustment);
@@ -1942,6 +1943,17 @@ create_printer_settings_frame (void)
   gtk_table_attach_defaults(GTK_TABLE(table), scrolled_window,
 			    0, 6, vpos, vpos + 1);
   gtk_widget_show(scrolled_window);
+  vpos++;
+
+  button = gtk_button_new_with_label (_("Set Printer Option Defaults"));
+  stpui_set_help_data (button, _("Set all printer options to their defaults"));
+  gtk_table_attach(GTK_TABLE(table), button, 0, 6, vpos, vpos + 1,
+		   GTK_EXPAND|GTK_FILL, GTK_SHRINK|GTK_FILL, 0, 0);
+  gtk_widget_show (button);
+
+  g_signal_connect (G_OBJECT (button), "clicked",
+		    G_CALLBACK (set_printer_defaults), NULL);
+
 }
 
 static void
@@ -5104,6 +5116,64 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
     }
   invalidate_preview_thumbnail();
   update_adjusted_thumbnail(TRUE);
+}
+
+static void
+set_printer_defaults (void)
+{
+  int i;
+  for (i = 0; i < current_option_count; i++)
+    {
+      option_t *opt = &(current_options[i]);
+      if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
+	  opt->fast_desc->p_class == STP_PARAMETER_CLASS_FEATURE &&
+	  opt->is_active && !opt->fast_desc->read_only)
+	{
+	  stp_parameter_activity_t active;
+	  gdouble unit_scaler;
+	  switch (opt->fast_desc->p_type)
+	    {
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      active =
+		stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
+	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
+				      opt->info.flt.deflt);
+	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+					     active);
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      unit_scaler = units[pv->unit].scale;
+	      active =
+		stp_get_dimension_parameter_active(pv->v,
+						   opt->fast_desc->name);
+	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
+					  opt->info.flt.deflt * unit_scaler);
+	      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
+						 active);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      active =
+		stp_get_boolean_parameter_active(pv->v, opt->fast_desc->name);
+	      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
+					opt->info.bool.deflt);
+	      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
+					       active);
+	      break;
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      active =
+		stp_get_string_parameter_active(pv->v, opt->fast_desc->name);
+	      stp_set_string_parameter(pv->v, opt->fast_desc->name,
+				       opt->info.list.default_val);
+	      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
+					      active);
+	      break;
+	    default:
+	      break;
+	    }
+	}
+    }
+
+  do_all_updates ();
 }
 
 static void

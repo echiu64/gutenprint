@@ -48,8 +48,6 @@ LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS) $(CUPS_CFLAGS)
 
 STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/main
 
-TESTS= test-ppds
-
 ## Programs
 
 if BUILD_TRANSLATED_CUPS_PPDS
@@ -72,6 +70,9 @@ sbin_PROGRAMS = cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION
 sbin_SCRIPTS = cups-genppdconfig.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ cups-genppdupdate.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 cupsexec_backend_PROGRAMS = epson canon
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
+
+TESTS= test-ppds test-rastertogutenprint
+noinst_SCRIPTS=test-rastertogutenprint
 endif
 
 if BUILD_GENPPD_STATIC

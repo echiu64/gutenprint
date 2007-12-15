@@ -124,7 +124,7 @@ static int eight2ten(unsigned char* inbuffer,unsigned char* outbuffer,int num_by
 
 
 /* reads a run length encoded block of raster data, decodes and uncompresses it */
-static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned char color_name){
+static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned char color_name,unsigned int maxw){
 	color_t* color=get_color(img,color_name);
         char* buf = (char*)buffer;
 	int size=0; /* size of unpacked buffer */
@@ -163,8 +163,12 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				}
 			}
 			/* adjust the maximum image width */
-			if(color && img->width < size*8/color->bpp)
-				img->width = size *8/color->bpp;
+			if(color && img->width < size*8/color->bpp){
+				unsigned int newwidth = size * 8 / color->bpp;
+				if(maxw && newwidth > maxw)
+					newwidth = maxw;
+				img->width = newwidth;
+			}
 			/* reset output buffer */
 			size=0;
 			dst=dstr;
@@ -339,7 +343,7 @@ static unsigned int read_uint32(unsigned char* a){
 
 
 /* process a printjob command by command */
-static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
+static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned int maxh){
 	image_t* img=calloc(1,sizeof(image_t));
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
@@ -509,7 +513,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 			case 'F':
 				if(verbose)
 					printf("ESC (F raster block (len=%i):\n",cnt);
-				if((returnv = Raster(img,buf,cnt,img->color_order[img->cur_color])))
+				if((returnv = Raster(img,buf,cnt,img->color_order[img->cur_color],maxw)))
 					break;
 				++img->cur_color;
 				if(img->cur_color >= img->num_colors){
@@ -534,7 +538,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxh){
 				 * the selected color is stored in the first byte
 				 */
 				buf[cnt]=0x80;
-				returnv = Raster(img,buf+1,cnt,buf[0]);
+				returnv = Raster(img,buf+1,cnt,buf[0],maxw);
 				if (fgetc(in)!=0x0d){
 					printf("Raster A not terminated by 0x0d\n");
 					returnv=-4;
@@ -602,6 +606,7 @@ static void display_usage(void){
 	printf("outfile: if specified a ppm file will be generated from the raster data\n");
 	printf("options:\n");
 	printf(" -v: verbose print ESC e),F) and A) commands\n");
+	printf(" -x width: cut the output ppm to the given width\n");
 	printf(" -y height: cut the output ppm to the given height\n");
 	printf(" -h: display this help\n");
 }
@@ -611,6 +616,7 @@ static void display_usage(void){
 int main(int argc,char* argv[]){
 	int verbose = 0;
 	unsigned int maxh=0;
+	unsigned int maxw=0;
 	char* filename_in=NULL,*filename_out=NULL;
 	FILE *in,*out=NULL;
 	int i;
@@ -628,6 +634,14 @@ int main(int argc,char* argv[]){
 				if(argc > i+1){
 					++i;
 					maxh = atoi(argv[i]);
+				}else{
+					display_usage();
+					return 1;
+				}
+			}else if(argv[i][1] == 'x'){
+				if(argc > i+1){
+					++i;
+					maxw = atoi(argv[i]);
 				}else{
 					display_usage();
 					return 1;
@@ -664,7 +678,7 @@ int main(int argc,char* argv[]){
 	}
 	
 	/* process the printjob */
-	process(in,out,verbose,maxh);
+	process(in,out,verbose,maxw,maxh);
 
 	/* cleanup */
 	fclose(in);

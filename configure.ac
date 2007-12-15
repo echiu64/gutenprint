@@ -38,7 +38,7 @@ pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [0])
 pushdef([GUTENPRINT_MICRO_VERSION],     [1])
-pushdef([GUTENPRINT_EXTRA_VERSION],     [])
+pushdef([GUTENPRINT_EXTRA_VERSION],     [.98.1])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [2])
 pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINT_BINARY_AGE],        [0])
@@ -506,6 +506,8 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_LEX
 AC_PROG_YACC
+AC_PATH_PROG([TEST], [test])
+AC_PATH_PROG([TRUE], [true])
 AC_PATH_PROG([FIND], [find])
 AC_PATH_PROG([PERL], [perl])
 AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
@@ -1025,6 +1027,8 @@ AC_CONFIG_FILES([src/foomatic/mk_printerlist],
                 [chmod +x src/foomatic/mk_printerlist])
 AC_CONFIG_FILES([src/testpattern/run-testpattern-2],
                 [chmod +x src/testpattern/run-testpattern-2])
+AC_CONFIG_FILES([src/cups/test-rastertogutenprint],
+                [chmod +x src/cups/test-rastertogutenprint])
 AC_CONFIG_FILES([src/ghost/Makefile])
 AC_CONFIG_FILES([src/testpattern/Makefile])
 AC_CONFIG_FILES([src/gimp/Makefile])
@@ -1088,7 +1092,7 @@ if test "$BUILD_FOOMATIC" != "no" ; then
     echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
 fi
 if test "$BUILD_GIMP" != "no" -o "$BUILD_GIMP2" != "no" ; then
-    echo "    Build enhanced Print plugin for the GIMP:   yes"
+    echo "    Build enhanced Print plugin for GIMP:       yes"
     echo "        Build GIMP 1.2 plugin:                  $BUILD_GIMP"
     echo "        Build GIMP 2.x plugin:                  $BUILD_GIMP2"
     if test "$BUILD_GIMP2" != "no" ; then
@@ -1100,7 +1104,7 @@ if test "$BUILD_GIMP" != "no" -o "$BUILD_GIMP2" != "no" ; then
     fi
     echo "        Install plugin(s) in home directory:    $USER_INSTALL"
 else
-    echo "    Build enhanced Print plugin for the GIMP:   no"
+    echo "    Build enhanced Print plugin for GIMP:       no"
 fi
 echo "    Build EPSON Stylus utility:                 $BUILD_ESCPUTIL"
 echo "    Build test programs:                        $BUILD_TEST"

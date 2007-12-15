@@ -150,11 +150,12 @@ Examples: escputil --ink-level --raw-device /dev/usb/lp0\n\
                        Default is the default system printer.\n\
     -r|--raw-device    Specify the name of the device to write to directly\n\
                        rather than going through a printer queue.\n\
+    -m|--model         Specify the printer model.\n\
     -u|--new           The printer is a new printer (Stylus Color 740 or\n\
-                       newer).  Only needed when not using a raw device.\n\
+                       newer).  Only needed when not using a raw device or\n\
+                       when the model is not specified.\n\
     -q|--quiet         Suppress the banner.\n\
     -S|--short-name    Print the short name of the printer with --identify.\n\
-    -m|--model         Specify the precise printer model for head alignment.\n\
     -C|--choices       Specify the number of pattern choices for alignment\n\
     -p|--patterns      Specify the number of sets of patterns for alignment\n");
 #else
@@ -286,7 +287,9 @@ main(int argc, char **argv)
 
   /* Set up gettext */
 #ifdef HAVE_LOCALE_H
-  setlocale (LC_ALL, "");
+  char *locale = stp_strdup(setlocale (LC_ALL, ""));
+#endif
+#ifdef ENABLE_NLS
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 #endif
 
@@ -300,9 +303,9 @@ main(int argc, char **argv)
     {
 #if defined(HAVE_GETOPT_H) && defined(HAVE_GETOPT_LONG)
       int option_index = 0;
-      c = getopt_long(argc, argv, "P:r:iecnasduqm:hlMS", optlist, &option_index);
+      c = getopt_long(argc, argv, "P:r:iecnasduqm:hlMSC:p:", optlist, &option_index);
 #else
-      c = getopt(argc, argv, "P:r:iecnasduqm:hlMS");
+      c = getopt(argc, argv, "P:r:iecnasduqm:hlMSC:p:");
 #endif
       if (c == -1)
 	break;
@@ -649,28 +652,6 @@ do_remote_cmd_only(const char *cmd, int nargs, ...)
 }
 
 static void
-add_string(const char *str, int size)
-{
-  if (size > 0)
-    {
-      memcpy(printer_cmd + bufpos, str, size);
-      bufpos += size;
-    }
-}
-
-static void
-add_newlines(int count)
-{
-  int i;
-  STP_DEBUG(fprintf(stderr, "Add %d newlines\n", count));
-  for (i = 0; i < count; i++)
-    {
-      printer_cmd[bufpos++] = '\r';
-      printer_cmd[bufpos++] = '\n';
-    }
-}
-
-static void
 add_resets(int count)
 {
   int i;
@@ -759,14 +740,49 @@ open_raw_device(void)
   return fd;
 }
 
+static void
+set_printer_model(void)
+{
+  int i = 0;
+  int printer_count = stp_printer_model_count();
+  for (i = 0; i < printer_count; i++)
+    {
+      the_printer_t = stp_get_printer_by_index(i);
+
+      if (strcmp(stp_printer_get_family(the_printer_t), "escp2") == 0)
+	{
+	  const char *short_name = stp_printer_get_driver(the_printer_t);
+	  const char *long_name = stp_printer_get_long_name(the_printer_t);
+	  if (!strcasecmp(printer_model, short_name) ||
+	      !strcasecmp(printer_model, long_name) ||
+	      (!strncmp(short_name, "escp2-", strlen("escp2-")) &&
+	       !strcasecmp(printer_model, short_name + strlen("escp2-"))) ||
+	      (!strncasecmp(long_name, "Epson ", strlen("Epson ")) &&
+	       !strcasecmp(printer_model, long_name + strlen("Epson "))))
+	    {
+	      const stp_vars_t *printvars;
+	      stp_parameter_t desc;
+
+	      printvars = stp_printer_get_defaults(the_printer_t);
+	      stp_describe_parameter(printvars, "SupportsPacketMode",
+				     &desc);
+	      if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
+		isnew = desc.deflt.boolean;
+	      stp_parameter_description_destroy(&desc);
+	      STP_DEBUG(fprintf(stderr, "Found it! %s\n", printer_model));
+	      return;
+	    }
+	}
+    }
+  fprintf(stderr, _("Unknown printer %s!\n"), printer_model);
+  the_printer_t = NULL;
+}
+
 static const stp_printer_t *
 initialize_printer(int quiet, int fail_if_not_found)
 {
-  int printer_count = stp_printer_model_count();
-  int found = 0;
   int packet_initialized = 0;
   int fd;
-  int i;
   int credit;
   int retry = 4;
   int tries = 0;
@@ -847,15 +863,16 @@ initialize_printer(int quiet, int fail_if_not_found)
 	  do
 	    {
 	      status = readData(fd, socket_id, (unsigned char*)buf, 1023);
-	      if (status <= -1 )
-		return NULL;
 	      STP_DEBUG(fprintf(stderr, "readData try %d status %d\n",
 				retry, status));
+	      if (status <= -1 )
+		return NULL;
 	    }
 	  while ( (retry-- != 0) && strncmp("di", (char*)buf, 2) &&
 		  strncmp("@EJL ID", (char*)buf, 7));
 	  if (!retry)
 	    {
+	      STP_DEBUG(fprintf(stderr, "No retries left!\n"));
 	      return NULL;
 	    }
 	}
@@ -905,7 +922,10 @@ initialize_printer(int quiet, int fail_if_not_found)
 		  printer_model = c_strdup("escp2-photo");
 		}
 	      else
-		return NULL;
+		{
+		  STP_DEBUG(fprintf(stderr, "Can't get response to @EJL ID\n"));
+		  return NULL;
+		}
 	    }
 	  else
 	    {
@@ -917,38 +937,7 @@ initialize_printer(int quiet, int fail_if_not_found)
 	}
     }
 
-  i = 0;
-  while ((i < printer_count) && !found)
-    {
-      the_printer_t = stp_get_printer_by_index(i);
-
-      if (strcmp(stp_printer_get_family(the_printer_t), "escp2") == 0)
-	{
-	  const char *short_name = stp_printer_get_driver(the_printer_t);
-	  const char *long_name = stp_printer_get_long_name(the_printer_t);
-	  if (!strcasecmp(printer_model, short_name) ||
-	      !strcasecmp(printer_model, long_name) ||
-	      (!strncmp(short_name, "escp2-", strlen("escp2-")) &&
-	       !strcasecmp(printer_model, short_name + strlen("escp2-"))) ||
-	      (!strncasecmp(long_name, "Epson ", strlen("Epson ")) &&
-	       !strcasecmp(printer_model, long_name + strlen("Epson "))))
-	    {
-	      const stp_vars_t *printvars;
-	      stp_parameter_t desc;
-
-	      printvars = stp_printer_get_defaults(the_printer_t);
-	      stp_describe_parameter(printvars, "SupportsPacketMode",
-				     &desc);
-	      if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
-		isnew = desc.deflt.boolean;
-	      stp_parameter_description_destroy(&desc);
-	      found = 1;
-	      STP_DEBUG(fprintf(stderr, "Found it! %s\n", printer_model));
-
-	    }
-	}
-      i++;
-    }
+  set_printer_model();
 
   if (isnew && !packet_initialized)
     {
@@ -956,9 +945,8 @@ initialize_printer(int quiet, int fail_if_not_found)
     }
 
   close(fd);
-  STP_DEBUG(fprintf(stderr, "new? %s found? %s\n", isnew?"yes":"no",
-		    found?"yes":"no"));
-  return (found)?the_printer_t:NULL;
+  STP_DEBUG(fprintf(stderr, "new? %s\n", isnew ? "yes" : "no"));
+  return the_printer_t;
 }
 
 static const stp_printer_t *
@@ -1362,7 +1350,7 @@ do_status_command_internal(status_cmd_t cmd)
   if (!found_unknown_old_printer)
     STP_DEBUG(fprintf(stderr, "%s found %s%s\n", gettext(cmd_name),
 		      printer ? stp_printer_get_long_name(printer) :
-		      printer_model,
+		      printer_model ? printer_model : "(null)",
 		      printer ? "" : "(Unknown model)"));
 
   fd = open_raw_device();
@@ -1471,7 +1459,7 @@ do_extended_ink_info(int extended_output)
   else
     fprintf(stderr,
 	    "Warning! Printer %s is not known; information may be incomplete or incorrect\n",
-	    printer_model);
+	    printer_model ? printer_model : "(unknown printer)");
 
   fd = open_raw_device();
 
@@ -1706,7 +1694,9 @@ do_status(void)
 void
 do_head_clean(void)
 {
-  if (raw_device)
+  if (printer_model)
+    set_printer_model();
+  else if (raw_device)
     (void) get_printer(1, 0);
   initialize_print_cmd(1);
   do_remote_cmd("CH", 2, 0, 0);
@@ -1717,7 +1707,9 @@ do_head_clean(void)
 void
 do_nozzle_check(void)
 {
-  if (raw_device)
+  if (printer_model)
+    set_printer_model();
+  else if (raw_device)
     (void) get_printer(1, 0);
   initialize_print_cmd(1);
   start_remote_sequence();
@@ -1905,7 +1897,7 @@ do_final_alignment(void)
 }
 
 const char *printer_msg =
-N_("This procedure assumes that your printer is an Epson %s.\n"
+N_("This procedure assumes that your printer is an %s.\n"
    "If this is not your printer model, please type control-C now and\n"
    "choose your actual printer model.\n\n"
    "Please place a sheet of paper in your printer to begin the head\n"
@@ -1921,16 +1913,20 @@ do_align(void)
   long answer;
   char *endptr;
   int curpass;
-  const stp_printer_t *printer = get_printer(0, 0);
   stp_parameter_t desc;
   const char *printer_name;
   stp_vars_t *v = stp_vars_create();
 
-  if (!printer || found_unknown_old_printer)
+  if (printer_model)
+    set_printer_model();
+  else if (raw_device)
+    (void) get_printer(0, 0);
+
+  if (!the_printer_t || found_unknown_old_printer)
     return;
 
-  printer_name = stp_printer_get_long_name(printer);
-  stp_set_driver(v, stp_printer_get_driver(printer));
+  printer_name = stp_printer_get_long_name(the_printer_t);
+  stp_set_driver(v, stp_printer_get_driver(the_printer_t));
 
   if (alignment_passes == 0)
     {

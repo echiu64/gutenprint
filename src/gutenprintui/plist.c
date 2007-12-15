@@ -204,6 +204,28 @@ stpui_build_standard_print_command(const stpui_plist_t *plist,
   return print_cmd;
 }
 
+static void
+append_external_options(char **command, const stp_vars_t *v)
+{
+  stp_string_list_t *external_options;
+  if (! command || ! *command)
+    return;
+  external_options = stp_get_external_options(v);
+  if (external_options)
+    {
+      int count = stp_string_list_count(external_options);
+      int i;
+      for (i = 0; i < count; i++)
+	{
+	  stp_param_string_t *param = stp_string_list_param(external_options, i);
+	  /* No g_shell_quote in glib 1.2...unfortunate */
+	  stp_catprintf(command, " -o'%s'='%s'", param->name, param->text);
+	}
+      stp_string_list_destroy(external_options);
+    }
+}
+
+
 void
 stpui_set_printrc_file(const char *name)
 {
@@ -940,6 +962,7 @@ static void
 stpui_printrc_load_v2(FILE *fp)
 {
   int retval;
+  char *locale;
   yyin = fp;
 
   stpui_printrc_current_printer = NULL;
@@ -1573,14 +1596,18 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 			}
 		      else	/* Child 2 (printer command) */
 			{
-			  const char *command;
+			  char *command;
 			  if (stpui_plist_get_command_type(printer) ==
 			      COMMAND_TYPE_DEFAULT)
-			    command =
-			      stpui_build_standard_print_command
-			      (printer, stp_get_printer(printer->v));
+			    {
+			      command =
+				stpui_build_standard_print_command
+				(printer, stp_get_printer(printer->v));
+			      append_external_options(&command, printer->v);
+			    }
 			  else
-			    command = stpui_plist_get_custom_command(printer);
+			    command =
+			      (char *) stpui_plist_get_custom_command(printer);
 			  (void) close(2);
 			  (void) close(1);
 			  dup2 (errfd[1], 2);
