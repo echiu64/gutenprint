@@ -115,7 +115,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.0.2 generated on 01 Dec 2007
+	  Release: gutenprint 5.0.1.98.1 generated on 15 Dec 2007
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -129,8 +129,7 @@ A) OVERVIEW
 	    Build enhanced Print plugin for GIMP:       yes
 		Build GIMP 1.2 plugin:                  yes
 		Build GIMP 2.x plugin:                  yes
-		    GIMP 2.x plugin will be named:      print
-		GIMP plugin will be named:              gutenprint
+		    GIMP 2.x plugin will be named:      gutenprint
 		Install plugin(s) in home directory:    no
 	    Build EPSON Stylus utility:                 yes
 	    Build test programs:                        yes
@@ -140,8 +139,8 @@ A) OVERVIEW
 	    Installation prefix:                        /usr/local
 	    Data directory:                             /usr/local/share/gutenprint
 	    Library directory:                          /usr/local/lib/gutenprint
-	    XML data directory:                         /usr/local/share/gutenprint/5.0.2/xml
-	    Module directory:                           /usr/local/lib/gutenprint/5.0.2/modules
+	    XML data directory:                         /usr/local/share/gutenprint/5.0.1.98.1/xml
+	    Module directory:                           /usr/local/lib/gutenprint/5.0.1.98.1/modules
 	    Install sample images:                      yes
 
 	General configuration:
