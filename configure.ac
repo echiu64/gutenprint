@@ -281,7 +281,7 @@ STP_ARG_ENABLE([cups-level3-ppds],
 
 STATIC_GENPPD="$enable_static"
 STP_ARG_ENABLE([static-genppd],
-               [build a statically-linked cups-genppd and rastertogutenprint.  WARNING: Please read the README and NEWS (release notes) CAREFULLY before disabling this!],
+               [build a statically-linked cups-genppd and rastertogutenprint.  WARNING: Please read the README and NEWS (release notes) CAREFULLY before using --disable-static-genppd!],
 	       [STATIC_GENPPD],
 	       [(automatic)])
 
@@ -502,6 +502,7 @@ AC_ISC_POSIX
 AC_PROG_AWK
 AC_PROG_CC
 AM_PROG_CC_STDC
+AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_LEX
@@ -1014,11 +1015,13 @@ AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdconfig],
                 [chmod +x src/cups/cups-genppdconfig;
 		 rm -f src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION};
-		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION}])
+		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION};
+		 echo "    *** Ignore any warning that may follow that sed can't read src/cups/cups-genppdconfig"])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate;
 		 rm -f src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION};
-		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION}])
+		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION};
+		 echo "    *** Ignore any warning that may follow that sed can't read src/cups/cups-genppdupdate"])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator],
