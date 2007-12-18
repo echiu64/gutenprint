@@ -127,7 +127,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <div style="text-align: left; width: 48%;float:left;">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
-		<h2> Headlines </h2> 
+		<h2> Headlines </h2>
+		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2-beta1 is released!</span> 
+			<br>
+			<a href="MacOSX.php3#5.0.2-beta1">December 17, 2007</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.2-beta1 (5.0.1.98.1), a beta release from the stable branch of Gutenprint. See the <b>Downloads</b> section. 
+		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.4 is released!</span> 
 			<br>
@@ -142,26 +147,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="color:red;font-size:115%;font-weight:bold;">Mac OS X FAQs updated for Leopard</span> 
 			<br>
 			<a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">November 27, 2007</a> - Some of the most common questions about using Gutenprint with Mac OS X 10.5.x have been added to the <a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">Mac OS X FAQ</a>.  In particular, <b>all Epson owners</b> are encouraged to read these FAQs.
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.3 is released!</span> 
-			<br>
-			<a href="MacOSX.php3#5.1.3">June 19, 2007</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.3, a development release. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:#ff0000; font-size:115%;font-weight:bold;">Gutenprint 5.0.1 is released!</span> 
-			<br>
-			<a href="MacOSX.php3#5.0.1">June 18, 2007</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.1, a stable release in the Gutenprint 5.0 series. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:#ff0000; font-size:110%;font-weight:bold;">Gutenprint 5.1.2 is released!</span> 
-			<br>
-			<a href="MacOSX.php3#5.1.2">June 5, 2007</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.2, a development release. A new Uninstaller is also available. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:#ff0000; font-size:110%;font-weight:bold;">Gutenprint 5.0.0 is released!</span> 
-			<br>
-			<a href="MacOSX.php3#5.0.0">July 30, 2006</a> - The Gutenprint project is pleased to announce the first public release of Gutenprint 5.0. This release, which has been under development for over four years, offers improved quality, greatly enhanced functionality, and support for many more printers than our previous version, Gimp-Print 4.2. 
 		</p>
 		<p>
 			<span style="color:#ff0000; font-size:110%;font-weight:bold;">ESP Ghostscript version 7.07.1 is released!</span> 
@@ -197,6 +182,14 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
+			<b>Gutenprint 5.0.2-beta1</b> 
+			<br>
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.2-beta1-UB.dmg?download">gutenprint-5.0.2-beta1-UB.dmg</a></span>&nbsp;&nbsp;(16.4 MB) 
+		</p>
+		<p>
+			Gutenprint 5.0.2-beta1 (5.0.1.98.1) is the latest release from the stable branch of Gutenprint 5.0. This release supports additional printers and offers some important bug fixes. It is fully compatible with Mac OS X 10.5.x (Leopard).  The updated uninstaller is also included and is Mac OS X 10.5.x compatible.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.0.1.98.1.tar.bz2?download">source code</a>) 
+		</p>
+		<p>
 			<b>Gutenprint 5.1.4</b> 
 			<br>
 			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.4-UB.dmg?download">gutenprint-5.1.4-UB.dmg</a></span>&nbsp;&nbsp;(15.5 MB) 
@@ -205,14 +198,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			Gutenprint 5.1.4 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release supports additional printers and offers some important bug fixes over 5.1.3.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.4.tar.bz2?download">source code</a>) 
 		</p>
 <!-- deleted older release info as iCab was still displaying it -->
-		<p>
-			<b>Gutenprint 5.0.1</b> 
-			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.1.U.dmg?download">gutenprint-5.0.1.U.dmg</a></span>&nbsp;&nbsp;(15.5 MB) 
-		</p>
-		<p>
-			Gutenprint 5.0.1 is the second stable release of 5.0. Gutenprint is the new name for Gimp-Print as of the 5.0 release. This release represents the state-of-the-art in current Gimp-Print development. It contains many new and exciting features over the 4.2.x series, including support for many more printers, improved quality, and enhanced functionality. This is the first stable release that contains the features: <b>Shrink</b> the output necessary to fit the imageable area of the page. <b>Crop</b> the output if necessary to fit the imageable area of the page. <b>Expand</b> the output to fit the maximum possible imageable area of the page. Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.1.tar.bz2?download">source code</a>) 
-		</p>
 		<p>
 			<b>Gimp-Print 4.2.7</b> 
 			<br>
@@ -272,6 +257,31 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.0.2-beta1"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.0.2-beta1</b> (5.0.1.98.1) 
+		</td>
+		<td align="right">
+			<b>2007-12-17</b> 
+		</td>
+	</tr>
+</table>
+<p>
+	Gutenprint 5.0.2-beta1 (5.0.1.98.1) is a beta release of the stable branch of Gutenprint 5.0.  The 5.0.2-beta1 release supports additional printers and offers some important bug fixes over 5.0.1. The most important changes are:
+</p>
+<ul>
+	<li>Fixed an issue in Mac OSX 10.5.x (Leopard) where the printing system was not obtaining the proper resolution from the <b>Print Quality</b> setting and was defaulting to the lowest printer resolution found.</li>
+	<li>All supplied CUPS PPD files are now perfectly compliant with the PPD specification, as tested under CUPS 1.2.</li>
+	<li>Added <b>Gutenprint Utility for EPSON Inkjet Printers</b>.  The text based user interface will allow for running nozzle checks, cleaning of the print heads, and alignment of print heads for EPSON inkjet printers supported by Gutenprint drivers.</li>
+	<li>The stable branch (5.0.x) retains support for HP Business Inkjet, DeskJet, Photosmart, OfficeJet, and Color LaserJet printers that has been dropped from the developmental branch.
+	</li>
+</ul>
+ <p>
+Additional information can be found in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=562136">release notes</a>.
+</p>
+
 <a name="5.1.4"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
@@ -293,7 +303,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<li>The developmental branch (5.1.x) has removed support for most HP Business Inkjet, DeskJet, Photosmart, OfficeJet, and Color LaserJet printers in the developmental branch.  Support for these printers is still available in the stable branch (v5.0.x).</li>
 </ul>
  <p>
-Additional information can be found in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=560278">release notes</a>.
+Additional information can be found in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=560278">release notes</a>.
 </p>
 
 <a name="Uninstall_1.2.1"></a> 
