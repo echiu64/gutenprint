@@ -191,17 +191,10 @@ require('standard_html_header.php3');
 This occurs with Epson printers.  The printing system is not obtaining the proper resolution from the <b>Print Quality</b> setting and it is defaulting to the lowest printer resolution found.  The Gutenprint developers are aware of the problem and are working on a proper fix.
 </p>
 <p>
-The work-around is to set the <b>Resultion</b> manually.  Recommended resoltution settings that will work with most Epson printers are as follows:
+This issue is resolved by installing a later version of the Gutenprint drivers.  It is recommended that you use the latest stable version -- at least version 5.0.2-beta1.  The developmental versions after version 5.1.3 will also resolve the issue. Stable versions are released with version numbers in the 5.0.x format.  Developmental versions are numbered in the 5.1.x format.
 </p>
-<ul type="disc">
-	<li>Draft -- 360 x360</li>
-	<li>Standard -- 720 x 360</li>
-	<li>High -- 720 (720 x 720)</li>
-	<li>Photo -- 1440 x 720</li>
-	<li>Best -- the highest resolution listed</li>
-</ul>
 <p>
-If this work-around does not resolve the issue for you, please post feedback to the <a href="http://sourceforge.net/forum/forum.php?forum_id=4359">Gutenprint Help forum</a>
+If the later versions do not resolve the issue for you, please post feedback to the <a href="http://sourceforge.net/forum/forum.php?forum_id=4359">Gutenprint Help forum</a>
 </p>
 
 </li>
