@@ -416,6 +416,18 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC i80 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
+    "i80", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_default_slotlist,
+    CANON_CAP_STD0,0,NULL,
+    &canon_BJC_i80_modelist,
+    &canon_default_paperlist,
+    NULL,
+    NULL,
+    NULL
+  },
 
   /*****************************/
   /*                           */

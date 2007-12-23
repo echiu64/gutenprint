@@ -214,6 +214,13 @@ static const canon_mode_t canon_BJC_7100_modes[] = {
 };
 DECLARE_MODES(canon_BJC_7100,0);
 
+static const canon_mode_t canon_BJC_i80_modes[] = {
+  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),0,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(6_C2M2Y2K2c2m2),0,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_BJC_i80,0);
+
+
 static const canon_mode_t canon_BJC_8200_modes[] = {
   {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(6_C2M2Y2K2c2m2),0,NULL,1.0,1.0,NULL,NULL,NULL,2},
