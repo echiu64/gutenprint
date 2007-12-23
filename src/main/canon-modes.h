@@ -74,6 +74,7 @@ typedef struct {
 #define MODE_FLAG_WEAVE 0x1            /* this mode requires weaving */
 #define MODE_FLAG_EXTENDED_T 0x2       /* this mode requires extended color settings in the esc t) command */
 #define MODE_FLAG_CD 0x4               /* this mode can be used to print to cds */
+#define MODE_FLAG_PRO 0x8              /* special ink settings for the PIXMA Pro9500 */
   const canon_delay_t* delay;          /* delay settings for this printmode */
   const double density;                /* density multiplier    */
   const double gamma;                  /* gamma multiplier      */
@@ -308,6 +309,11 @@ static const canon_mode_t canon_PIXMA_iX5000_modes[] = {
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
 DECLARE_MODES(canon_PIXMA_iX5000,0);
+
+static const canon_mode_t canon_PIXMA_Pro9500_modes[] = {
+  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(11_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_PIXMA_Pro9500,0);
 
 #endif
 

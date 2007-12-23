@@ -390,7 +390,8 @@ static const char* canon_families[] = {
  "PIXMA iP",
  "PIXMA iX",
  "PIXMA MP",
- "PIXUS"
+ "PIXUS",
+ "PIXMA Pro"
 };
 
 /* canon model ids look like the following
@@ -1284,8 +1285,13 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
     int length = init->mode->num_inks*3 + 3;
     unsigned char* buf = stp_zalloc(length);
     buf[0]=0x80;
-    buf[1]=0x80;
-    buf[2]=0x01;
+    if(init->mode->flags & MODE_FLAG_PRO){
+    	buf[1]=0x10;
+    	buf[2]=0x4;
+    }else{
+    	buf[1]=0x80;
+    	buf[2]=0x01;
+    }
     for(i=0;i<init->mode->num_inks;i++){
         if(init->mode->inks[i].ink){
           if(init->mode->inks[i].ink->flags & INK_FLAG_5pixel_in_1byte)
