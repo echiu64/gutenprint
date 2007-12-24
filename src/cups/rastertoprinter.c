@@ -662,7 +662,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	  else if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 	    {
 	      double fine_val = 0;
-	      if (index(val, (int) '.'))
+	      if (strchr(val, (int) '.'))
 		{
 		  fine_val = atof(val);
 		  if (! suppress_messages)
