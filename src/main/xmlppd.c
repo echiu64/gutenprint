@@ -407,7 +407,7 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
 	      stp_mxmlElementSetAttr(option, "stplower", data[5]);
 	      stp_mxmlElementSetAttr(option, "stpupper", data[6]);
 	      stp_mxmlElementSetAttr(option, "stpdefault", data[7]);
-	      stp_mxmlElementSetAttr(option, "stpname", stp_option_data_name + 6);
+	      stp_mxmlElementSetAttr(option, "stpname", stp_option_data_name + 7);
 	    }
 	}
       else if (!strcmp(buffer, "*OrderDependency") && option)
@@ -469,9 +469,9 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
 	      if (data[3])
 		{
 		  stp_mxmlElementSetAttr(psize, "left", data[0]);
-		  stp_mxmlElementSetAttr(psize, "top", data[1]);
+		  stp_mxmlElementSetAttr(psize, "bottom", data[1]);
 		  stp_mxmlElementSetAttr(psize, "right", data[2]);
-		  stp_mxmlElementSetAttr(psize, "bottom", data[3]);
+		  stp_mxmlElementSetAttr(psize, "top", data[3]);
 		}
 	    }
 	}

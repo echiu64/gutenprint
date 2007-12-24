@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Copyright 2003 Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 2007 by Michael R Sweet and Robert Krawitz
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free

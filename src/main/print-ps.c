@@ -40,7 +40,7 @@
 #endif
 #include <stdio.h>
 #include <unistd.h>
-#include "ppd.h"
+#include "xmlppd.h"
 
 #ifdef _MSC_VER
 #define strncasecmp(s,t,n) _strnicmp(s,t,n)
@@ -52,7 +52,7 @@
  */
 
 static char *m_ppd_file = NULL;
-static ppd_file_t *m_ppd = NULL;
+static stp_mxml_node_t *m_ppd = NULL;
 
 
 /*
@@ -88,79 +88,65 @@ static const int the_parameter_count =
 sizeof(the_parameters) / sizeof(const stp_parameter_t);
 
 static int
-ps_option_to_param(stp_parameter_t *param, ppd_group_t *group, ppd_option_t *option)
+ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
 {
-  ppd_group_t *g, *grp = group;
-  ppd_option_t *o;
-  int i,j;
+  const char *group_text = stp_mxmlElementGetAttr(option, "grouptext");
 
-  if (grp == NULL)
-  {
-    for (i=0; i < m_ppd->num_groups; i++)
-    {
-      g = m_ppd->groups + i;
-      for (j=0; j < g->num_options; j++)
-      {
-        o = g->options + j;
-        if (strcasecmp(o->keyword, option->keyword) == 0)
-        {
-          grp = g;  /* found group for specified option */
-          break;
-        }
-      }
-    }
-  }
-
-  if (grp != NULL)
-    param->category = grp->text;
+  if (group_text != NULL)
+    param->category = group_text;
   else
     param->category = NULL;
 
-  param->text = option->text;
-  param->help = option->text;
-  if (option->has_gutenprint_data)
+  param->text = stp_mxmlElementGetAttr(option, "text");
+  param->help = stp_mxmlElementGetAttr(option, "text");
+  if (stp_mxmlElementGetAttr(option, "stptype"))
     {
-      param->p_type = option->p_type;
-      param->is_mandatory = option->is_mandatory;
-      param->p_class = option->p_class;
-      param->p_level = option->p_level;
-      param->channel = (unsigned char) option->channel;
+      const char *default_value = stp_mxmlElementGetAttr(option, "default");
+      double stp_default_value = strtod(stp_mxmlElementGetAttr(option, "stpdefault"), 0);
+      double lower_bound = strtod(stp_mxmlElementGetAttr(option, "stplower"), NULL);
+      double upper_bound = strtod(stp_mxmlElementGetAttr(option, "stpupper"), NULL);
+      param->p_type = atoi(stp_mxmlElementGetAttr(option, "stptype"));
+      param->is_mandatory = atoi(stp_mxmlElementGetAttr(option, "stpmandatory"));
+      param->p_class = atoi(stp_mxmlElementGetAttr(option, "stpclass"));
+      param->p_level = atoi(stp_mxmlElementGetAttr(option, "stplevel"));
+      param->channel = (unsigned char) atoi(stp_mxmlElementGetAttr(option, "stpchannel"));
       param->read_only = 0;
       param->is_active = 1;
       param->verify_this_parameter = 1;
-      param->name = option->gutenprint_name;
+      param->name = stp_mxmlElementGetAttr(option, "stpname");
       stp_deprintf(STP_DBG_PS,
-		   "Gutenprint parameter %s type %d mandatory %d class %d level %d channel %d",
+		   "Gutenprint parameter %s type %d mandatory %d class %d level %d channel %d default %s %f",
 		   param->name, param->p_type, param->is_mandatory,
-		   param->p_class, param->p_level, param->channel);
-      switch (option->p_type)
+		   param->p_class, param->p_level, param->channel,
+		   default_value, stp_default_value);
+      switch (param->p_type)
 	{
 	case STP_PARAMETER_TYPE_DOUBLE:
-	  param->deflt.dbl = option->default_value;
-	  param->bounds.dbl.upper = option->upper_bound;
-	  param->bounds.dbl.lower = option->lower_bound;
+	  param->deflt.dbl = stp_default_value;
+	  param->bounds.dbl.upper = upper_bound;
+	  param->bounds.dbl.lower = lower_bound;
 	  stp_deprintf(STP_DBG_PS, " %.3f %.3f %.3f\n",
 		       param->deflt.dbl, param->bounds.dbl.upper,
 		       param->bounds.dbl.lower);
 	  break;
 	case STP_PARAMETER_TYPE_DIMENSION:
-	  param->deflt.dimension = (int) option->default_value;
-	  param->bounds.dimension.upper = (int) option->upper_bound;
-	  param->bounds.dimension.lower = (int) option->lower_bound;
+	  param->deflt.dimension = atoi(default_value);
+	  param->bounds.dimension.upper = (int) upper_bound;
+	  param->bounds.dimension.lower = (int) lower_bound;
 	  stp_deprintf(STP_DBG_PS, " %d %d %d\n",
 		       param->deflt.dimension, param->bounds.dimension.upper,
 		       param->bounds.dimension.lower);
 	  break;
 	case STP_PARAMETER_TYPE_INT:
-	  param->deflt.integer = (int) option->default_value;
-	  param->bounds.integer.upper = (int) option->upper_bound;
-	  param->bounds.integer.lower = (int) option->lower_bound;
+	  param->deflt.integer = atoi(default_value);
+	  param->bounds.integer.upper = (int) upper_bound;
+	  param->bounds.integer.lower = (int) lower_bound;
 	  stp_deprintf(STP_DBG_PS, " %d %d %d\n",
 		       param->deflt.integer, param->bounds.integer.upper,
 		       param->bounds.integer.lower);
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
-	  param->deflt.boolean = (int) option->default_value;
+	  param->deflt.boolean = strcasecmp(default_value, "true") == 0 ? 1 : 0;
 	  stp_deprintf(STP_DBG_PS, " %d\n", param->deflt.boolean);
 	  break;
 	default:
@@ -170,17 +156,12 @@ ps_option_to_param(stp_parameter_t *param, ppd_group_t *group, ppd_option_t *opt
     }
   else
     {
-      param->name = option->keyword;
-      switch (option->ui)
-	{
-	case PPD_UI_BOOLEAN:
-	  param->p_type = STP_PARAMETER_TYPE_BOOLEAN;
-	  break;
-	case PPD_UI_PICKONE:
-	default:
-	  param->p_type = STP_PARAMETER_TYPE_STRING_LIST;
-	  break;
-	} 
+      const char *ui = stp_mxmlElementGetAttr(option, "ui");
+      param->name = stp_mxmlElementGetAttr(option, "name");
+      if (strcasecmp(ui, "Boolean") == 0)
+	param->p_type = STP_PARAMETER_TYPE_BOOLEAN;
+      else
+	param->p_type = STP_PARAMETER_TYPE_STRING_LIST;
       if (strcmp(param->name, "PageSize") == 0)
 	param->p_class = STP_PARAMETER_CLASS_CORE;
       else
@@ -221,14 +202,14 @@ check_ppd_file(const stp_vars_t *v)
 		  m_ppd_file ? m_ppd_file : "(null)",
 		  ppd_file ? ppd_file : "(null)");
       if (m_ppd != NULL)
-	stpi_ppdClose(m_ppd);
+	stp_mxmlDelete(m_ppd);
       m_ppd = NULL;
 
       if (m_ppd_file)
 	stp_free(m_ppd_file);
       m_ppd_file = NULL;
 
-      if ((m_ppd = stpi_ppdOpenFile(ppd_file)) == NULL)
+      if ((m_ppd = stpi_xmlppd_read_ppd_file(ppd_file)) == NULL)
 	{
 	  stp_eprintf(v, "Unable to open PPD file %s\n", ppd_file);
 	  return 0;
@@ -244,9 +225,8 @@ static stp_parameter_list_t
 ps_list_parameters(const stp_vars_t *v)
 {
   stp_parameter_list_t *ret = stp_parameter_list_create();
-  ppd_group_t *group;	
-  ppd_option_t *option;
-  int i, j;
+  stp_mxml_node_t *option;
+  int i;
   int status = check_ppd_file(v);
   stp_dprintf(STP_DBG_PS, v, "Adding parameters from %s\n",
 	      m_ppd_file ? m_ppd_file : "(null)");
@@ -255,26 +235,28 @@ ps_list_parameters(const stp_vars_t *v)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
 
   if (status)
-    for (i=0; i < m_ppd->num_groups; i++)
-      {
-	group = m_ppd->groups + i;
-	for (j=0; j < group->num_options; j++)
-	  {
-	    /* MEMORY LEAK!!! */
-	    stp_parameter_t *param = stp_malloc(sizeof(stp_parameter_t));
-	    option = group->options + j;
-	    ps_option_to_param(param, group, option);
-	    if (param->p_type != STP_PARAMETER_TYPE_INVALID &&
-		strcmp(param->name, "PageRegion") != 0)
-	      {
-		stp_dprintf(STP_DBG_PS, v, "Adding parameter %s %s\n",
-			    param->name, param->text);
-		stp_parameter_list_add_param(ret, param);
-	      }
-	    else
-	      stp_free(param);
-	  }
-      }
+    {
+      int num_options = stpi_xmlppd_find_option_count(m_ppd);
+      for (i=0; i < num_options; i++)
+	{
+	  /* MEMORY LEAK!!! */
+	  stp_parameter_t *param = stp_malloc(sizeof(stp_parameter_t));
+	  option = stpi_xmlppd_find_option_index(m_ppd, i);
+	  if (option)
+	    {
+	      ps_option_to_param(param, option);
+	      if (param->p_type != STP_PARAMETER_TYPE_INVALID &&
+		  strcmp(param->name, "PageRegion") != 0)
+		{
+		  stp_dprintf(STP_DBG_PS, v, "Adding parameter %s %s\n",
+			      param->name, param->text);
+		  stp_parameter_list_add_param(ret, param);
+		}
+	      else
+		stp_free(param);
+	    }
+	}
+    }
   return ret;
 }
 
@@ -283,9 +265,10 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 		       stp_parameter_t *description)
 {
   int		i;
-  ppd_option_t *option;
-  ppd_choice_t *choice;
+  stp_mxml_node_t *option;
   int status = 0;
+  int num_choices;
+  const char *defchoice;
 
   description->p_type = STP_PARAMETER_TYPE_INVALID;
   description->deflt.str = 0;
@@ -305,12 +288,13 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 	  description->is_active = 1;
 	else if (strcmp(name, "ModelName") == 0)
 	  {
-	    if (m_ppd && m_ppd->modelname)
+	    if (m_ppd && stp_mxmlElementGetAttr(m_ppd, "nickname"))
 	      {
+		const char *nickname = stp_mxmlElementGetAttr(m_ppd, "nickname");
 		description->bounds.str = stp_string_list_create();
 		stp_string_list_add_string(description->bounds.str,
-					   m_ppd->nickname, m_ppd->nickname);
-		description->deflt.str = m_ppd->nickname;
+					   nickname, nickname);
+		description->deflt.str = nickname;
 		description->is_active = status;
 	      }
 	    else
@@ -319,7 +303,7 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 	  }
 	else if (strcmp(name, "PrintingMode") == 0)
 	  {
-	    if (! m_ppd || m_ppd->color_device)
+	    if (! m_ppd || strcmp(stp_mxmlElementGetAttr(m_ppd, "color"), "1") == 0)
 	      {
 		description->bounds.str = stp_string_list_create();
 		stp_string_list_add_string
@@ -339,12 +323,12 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 
   if (!status)
     return;
-  if ((option = stpi_ppdFindOption(m_ppd, name)) == NULL)
+  if ((option = stpi_xmlppd_find_option_named(m_ppd, name)) == NULL)
   {
     char *tmp = stp_malloc(strlen(name) + 4);
     strcpy(tmp, "Stp");
     strncat(tmp, name, strlen(name) + 3);
-    if ((option = stpi_ppdFindOption(m_ppd, tmp)) == NULL)
+    if ((option = stpi_xmlppd_find_option_named(m_ppd, tmp)) == NULL)
       {
 	stp_dprintf(STP_DBG_PS, v, "no parameter %s", name);
 	stp_free(tmp);
@@ -353,29 +337,32 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
     stp_free(tmp);
   }
 
-  ps_option_to_param(description, NULL, option);
+  ps_option_to_param(description, option);
   if (description->p_type != STP_PARAMETER_TYPE_STRING_LIST)
     return;
+  num_choices = atoi(stp_mxmlElementGetAttr(option, "num_choices"));
+  defchoice = stp_mxmlElementGetAttr(option, "default");
   description->bounds.str = stp_string_list_create();
 
   stp_dprintf(STP_DBG_PS, v, "describe parameter %s, output name=[%s] text=[%s] category=[%s] choices=[%d] default=[%s]\n",
 	      name, description->name, description->text,
-	      description->category, option->num_choices, option->defchoice);
+	      description->category, num_choices, defchoice);
 
   /* Describe all choices for specified option. */
-  for (i=0; i < option->num_choices; i++)
+  for (i=0; i < num_choices; i++)
   {
-    choice = option->choices + i;
-    stp_string_list_add_string(description->bounds.str, choice->choice, choice->text);
-    stp_dprintf(STP_DBG_PS, v,
-		"    parameter %s, choice %d [%s] [%s] marked %d\n",
-		name, i, choice->choice, choice->text, choice->marked);
-    if (strcmp(choice->choice, option->defchoice) == 0)
+    stp_mxml_node_t *choice = stpi_xmlppd_find_choice_index(option, i);
+    const char *choice_name = stp_mxmlElementGetAttr(choice, "name");
+    const char *choice_text = stp_mxmlElementGetAttr(choice, "text");
+    stp_string_list_add_string(description->bounds.str, choice_name, choice_text);
+    stp_dprintf(STP_DBG_PS, v, "    parameter %s, choice %d [%s] [%s]",
+		name, i, choice_name, choice_text);
+    if (strcmp(choice_name, defchoice) == 0)
       {
 	stp_dprintf(STP_DBG_PS, v,
 		    "        parameter %s, choice %d [%s] DEFAULT\n",
-		    name, i, choice->choice);
-	description->deflt.str = choice->choice;
+		    name, i, choice_name);
+	description->deflt.str = choice_name;
       }
   }
 
@@ -383,8 +370,8 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
     {
 	stp_dprintf(STP_DBG_PS, v,
 		    "        parameter %s, defaulting to [%s]",
-		    name, option->choices[0].choice);
-	description->deflt.str = option->choices[0].choice;
+		    name, stp_string_list_param(description->bounds.str, 0)->name);
+	description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
     }
   if (stp_string_list_count(description->bounds.str) > 0)
     description->is_active = 1;
@@ -429,8 +416,17 @@ ps_media_size_internal(const stp_vars_t *v,		/* I */
 
   if (status)
     {
-      *width = stpi_ppdPageWidth(m_ppd, pagesize);
-      *height = stpi_ppdPageLength(m_ppd, pagesize);
+      stp_mxml_node_t *paper = stpi_xmlppd_find_page_size(m_ppd, pagesize);
+      if (paper)
+	{
+	  *width = atoi(stp_mxmlElementGetAttr(paper, "width"));
+	  *height = atoi(stp_mxmlElementGetAttr(paper, "height"));
+	}
+      else
+	{
+	  *width = 0;
+	  *height = 0;
+	}
     }
 
   stp_dprintf(STP_DBG_PS, v, "dimensions %d %d\n", *width, *height);
@@ -464,7 +460,6 @@ ps_imageable_area_internal(const stp_vars_t *v,      /* I */
 			   int  *top)	/* O - Top position in points */
 {
   int width, height;
-  ppd_size_t *size;
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
   if (!pagesize)
     pagesize = "";
@@ -478,15 +473,21 @@ ps_imageable_area_internal(const stp_vars_t *v,      /* I */
 
   if (check_ppd_file(v))
     {
-      size = stpi_ppdPageSize(m_ppd, pagesize);
-      if (size)
+      stp_mxml_node_t *paper = stpi_xmlppd_find_page_size(m_ppd, pagesize);
+      if (paper)
 	{
+	  double pleft = atoi(stp_mxmlElementGetAttr(paper, "left"));
+	  double pright = atoi(stp_mxmlElementGetAttr(paper, "right"));
+	  double ptop = atoi(stp_mxmlElementGetAttr(paper, "top"));
+	  double pbottom = atoi(stp_mxmlElementGetAttr(paper, "bottom"));
 	  stp_dprintf(STP_DBG_PS, v, "size=l %f r %f b %f t %f h %d w %d\n",
-		      size->left, size->right, size->top, size->bottom, height, width);
-	  *left = (int)size->left;
-	  *right = (int)size->right;
-	  *top = height - (int)size->top;
-	  *bottom = height - (int)size->bottom;
+		      pleft, pright, pbottom, ptop, height, width);
+	  *left = (int) pleft;
+	  *right = (int) pright;
+	  *top = height - (int) ptop;
+	  *bottom = height - (int) pbottom;
+	  stp_dprintf(STP_DBG_PS, v, ">>>> l %d r %d b %d t %d h %d w %d\n",
+		      *left, *right, *bottom, *top, height, width);
 	}
     }
 
@@ -628,14 +629,14 @@ ps_external_options(const stp_vars_t *v)
       stp_describe_parameter(v, param->name, &desc);
       if (desc.is_active)
 	{
-	  ppd_option_t *option;
+	  stp_mxml_node_t *option;
 	  if (m_ppd &&
-	      (option = stpi_ppdFindOption(m_ppd, desc.name)) == NULL)
+	      (option = stpi_xmlppd_find_option_named(m_ppd, desc.name)) == NULL)
 	    {
 	      ppd_name = stp_malloc(strlen(desc.name) + 4);
 	      strcpy(ppd_name, "Stp");
 	      strncat(ppd_name, desc.name, strlen(desc.name) + 3);
-	      if ((option = stpi_ppdFindOption(m_ppd, ppd_name)) == NULL)
+	      if ((option = stpi_xmlppd_find_option_named(m_ppd, ppd_name)) == NULL)
 		{
 		  stp_dprintf(STP_DBG_PS, v, "no parameter %s", desc.name);
 		  STP_SAFE_FREE(ppd_name);
@@ -688,7 +689,7 @@ ps_external_options(const stp_vars_t *v)
 		}
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      if (abs(stp_get_float_parameter(v, desc.name) - desc.deflt.dbl) > .00001)
+	      if (fabs(stp_get_float_parameter(v, desc.name) - desc.deflt.dbl) > .00001)
 		{
 		  stp_dprintf(STP_DBG_PS, v, "Adding float parameter %s (%s): %.3f %.3f\n",
 			      desc.name, ppd_name ? ppd_name : "(null)",
@@ -731,70 +732,6 @@ ps_external_options(const stp_vars_t *v)
 #endif
   return answer;
 }
-
-#if 0
-static void
-ps_print_device_settings(stp_vars_t *v)
-{
-  int i;
-  stp_parameter_list_t param_list = ps_list_parameters(v);
-  if (! param_list)
-    return;
-  stp_puts("%%BeginSetup\n", v);
-  for (i = 0; i < stp_parameter_list_count(param_list); i++)
-    {
-      const stp_parameter_t *param = stp_parameter_list_param(param_list, i);
-      stp_parameter_t desc;
-      stp_describe_parameter(v, param->name, &desc);
-      if (desc.is_active)
-	{
-	  switch (desc.p_type)
-	    {
-	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      stp_puts("[{\n", v);
-	      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", desc.name,
-			  stp_get_string_parameter(v, desc.name));
-	      stp_puts("%%EndFeature\n", v);
-	      stp_puts("} stopped cleartomark\n", v);
-	      break;
-	    case STP_PARAMETER_TYPE_INT:
-	      stp_puts("[{\n", v);
-	      stp_zprintf(v, "%%%%BeginFeature: *%s %d\n", desc.name,
-			  stp_get_int_parameter(v, desc.name));
-	      stp_puts("%%EndFeature\n", v);
-	      stp_puts("} stopped cleartomark\n", v);
-	      break;
-	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      stp_puts("[{\n", v);
-	      stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", desc.name,
-			  stp_get_boolean_parameter(v, desc.name) ? "True" : "False");
-	      stp_puts("%%EndFeature\n", v);
-	      stp_puts("} stopped cleartomark\n", v);
-	      break;
-	    case STP_PARAMETER_TYPE_DOUBLE:
-	      stp_puts("[{\n", v);
-	      stp_zprintf(v, "%%%%BeginFeature: *%s %f\n", desc.name,
-			  stp_get_float_parameter(v, desc.name));
-	      stp_puts("%%EndFeature\n", v);
-	      stp_puts("} stopped cleartomark\n", v);
-	      break;
-	    case STP_PARAMETER_TYPE_DIMENSION:
-	      stp_puts("[{\n", v);
-	      stp_zprintf(v, "%%%%BeginFeature: *%s %d\n", desc.name,
-			  stp_get_dimension_parameter(v, desc.name));
-	      stp_puts("%%EndFeature\n", v);
-	      stp_puts("} stopped cleartomark\n", v);
-	      break;
-	    default:
-	      break;
-	    }
-	}
-      stp_parameter_description_destroy(&desc);
-    }
-  stp_puts("%%EndSetup\n", v);
-  stp_parameter_list_destroy(param_list);
-}
-#endif
 
 /*
  * 'ps_print()' - Print an image to a PostScript printer.
