@@ -70,6 +70,9 @@ static const escp2_dot_size_t c3pl_dotsizes =
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
 
+static const escp2_dot_size_t c120_pigment_dotsizes =
+{ 0x11, 0x11, 0x12, 0x12, 0x13, 0x13, 0x13, 0x13, 0x13 };
+
 static const escp2_dot_size_t p3pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
 
@@ -1910,6 +1913,24 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
     &sprx500_borderless_sequence, NULL, "photo"
+  },
+  /* 85: Stylus C120 */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES),
+    59, 60, 2, 360, 1, 1, 360, 1, 1, 4,
+    360, 14400, -1, 5760, 1440, 360, 180,
+    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
+    4, 15, 0, 0,
+    c120_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
+    "superfine", "c120",
+    variable_bits, variable_base_res, "default",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    &bsc86_borderless_sequence, NULL, "standard"
   },
 };
 

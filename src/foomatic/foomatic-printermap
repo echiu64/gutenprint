@@ -229,6 +229,7 @@
 #gptofoo escp2-pxv500 printer/Epson-PX_V500
 #gptofoo escp2-pxv600 printer/Epson-PX_V600
 #gptofoo escp2-pxv630 printer/Epson-PX_V630
+#gptofoo escp2-pxv780 printer/Epson-PX_V780
 #gptofoo escp2-picmate printer/Epson-PictureMate
 #gptofoo escp2-picmated printer/Epson-PictureMate_Deluxe
 #gptofoo escp2-picmateflash printer/Epson-PictureMate_Flash
@@ -279,6 +280,8 @@
 #gptofoo escp2-c86 printer/Epson-Stylus_C86
 #gptofoo escp2-c87 printer/Epson-Stylus_C87
 #gptofoo escp2-c88 printer/Epson-Stylus_C88
+#gptofoo escp2-c110 printer/Epson-Stylus_C110
+#gptofoo escp2-c120 printer/Epson-Stylus_C120
 #gptofoo escp2-cx1500 printer/Epson-Stylus_CX1500
 #gptofoo escp2-cx3100 printer/Epson-Stylus_CX3100
 #gptofoo escp2-cx3200 printer/Epson-Stylus_CX3200
@@ -350,6 +353,7 @@
 #gptofoo escp2-pro printer/Epson-Stylus_Color_PRO
 #gptofoo escp2-d68 printer/Epson-Stylus_D68
 #gptofoo escp2-d88 printer/Epson-Stylus_D88
+#gptofoo escp2-d120 printer/Epson-Stylus_D120
 #gptofoo escp2-dx3800 printer/Epson-Stylus_DX3800
 #gptofoo escp2-dx3850 printer/Epson-Stylus_DX3850
 #gptofoo escp2-dx4050 printer/Epson-Stylus_DX4050

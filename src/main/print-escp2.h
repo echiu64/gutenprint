@@ -175,8 +175,10 @@ typedef struct
   short color;
   short subchannel;
   short head_offset;
+  short split_channel_count;
   const char *channel_density;
   const char *subchannel_scale;
+  const short split_channels[PHYSICAL_CHANNEL_LIMIT];
 } physical_subchannel_t;
 
 typedef struct
@@ -561,6 +563,9 @@ typedef struct
   int unit_scale;		/* Scale factor for units */
   int send_zero_pass_advance;	/* Send explicit command for zero advance */
   int zero_margin_offset;	/* Zero margin offset */
+  int split_channel_count;	/* For split black channels, like C120 */
+  int split_channel_width;	/* Linewidth for split black channels */
+  short *split_channels;
 
   /* Ink parameters */
   int bitwidth;			/* Number of bits per ink drop */
@@ -643,6 +648,7 @@ typedef struct
   int last_color;		/* Last color we printed */
   int last_pass_offset;		/* Starting row of last pass we printed */
   int last_pass;		/* Last pass printed */
+  unsigned char *comp_buf;	/* Compression buffer for C120-type printers */
 
 } escp2_privdata_t;
 
@@ -659,9 +665,9 @@ extern void stpi_escp2_terminate_page(stp_vars_t *v);
 #define PACKFUNC stp_pack_uncompressed
 #else
 #define COMPRESSION (1)
-#define FILLFUNC stp_fill_tiff
-#define COMPUTEFUNC stp_compute_tiff_linewidth
-#define PACKFUNC stp_pack_tiff
+#define FILLFUNC pd->split_channel_count > 0 ? stp_fill_uncompressed : stp_fill_tiff
+#define COMPUTEFUNC pd->split_channel_count > 0 ? stp_compute_uncompressed_linewidth : stp_compute_tiff_linewidth
+#define PACKFUNC pd->split_channel_count > 0 ? stp_pack_uncompressed : stp_pack_tiff
 #endif
 
 #endif /* GUTENPRINT_INTERNAL_ESCP2_H */

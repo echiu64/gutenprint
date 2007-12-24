@@ -430,6 +430,9 @@ escp2_set_printhead_resolution(stp_vars_t *v)
 
       if (pd->command_set == MODEL_COMMAND_PRO && !pd->res->softweave)
 	yres = yres /  pd->res->vres;
+      else if (pd->split_channel_count > 1)
+	yres = yres * pd->nozzle_separation / pd->base_separation *
+	  pd->split_channel_count;
       else
 	yres = yres * pd->nozzle_separation / pd->base_separation;
 
@@ -496,18 +499,14 @@ set_horizontal_position(stp_vars_t *v, stp_pass_t *pass, int vertical_subpass)
 }
 
 static void
-send_print_command(stp_vars_t *v, stp_pass_t *pass, int color, int nlines)
+send_print_command(stp_vars_t *v, stp_pass_t *pass, int ncolor, int nlines)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
   if (pd->command_set == MODEL_COMMAND_PRO || pd->variable_dots)
     {
-      int ncolor = pd->channels[color]->color;
-      int subchannel = pd->channels[color]->subchannel;
       int nwidth = pd->bitwidth * ((lwidth + 7) / 8);
-      if (subchannel >= 0)
-	ncolor |= (subchannel << 4);
       stp_send_command(v, "\033i", "ccchh", ncolor, COMPRESSION,
 		       pd->bitwidth, nwidth, nlines);
     }
@@ -537,7 +536,7 @@ send_extra_data(stp_vars_t *v, int extralines)
   escp2_privdata_t *pd = get_privdata(v);
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
-#if TEST_UNCOMPRESSED
+#ifdef TEST_UNCOMPRESSED
   int i;
   for (i = 0; i < pd->bitwidth * (lwidth + 7) / 8; i++)
     stp_putc(0, v);
@@ -626,31 +625,78 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 
   for (j = 0; j < pd->channels_in_use; j++)
     {
-      if (lineactive[0].v[j] > 0)
+      if (lineactive->v[j] > 0)
 	{
-	  int nlines = linecount[0].v[j];
+	  int ncolor = pd->channels[j]->color;
+	  int subchannel = pd->channels[j]->subchannel;
+	  int nlines = linecount->v[j];
 	  int extralines = 0;
-	  if (nlines < minlines)
-	    {
-	      extralines = minlines - nlines;
-	      nlines = minlines;
-	    }
 	  set_vertical_position(v, pass);
 	  set_color(v, pass, j);
-	  set_horizontal_position(v, pass, vertical_subpass);
-	  send_print_command(v, pass, j, nlines);
+	  if (subchannel >= 0)
+	    ncolor |= (subchannel << 4);
 
-	  /*
-	   * Send the data
-	   */
-	  stp_zfwrite((const char *)bufs[0].v[j], lineoffs[0].v[j], 1, v);
-	  if (extralines)
-	    send_extra_data(v, extralines);
-	  stp_send_command(v, "\r", "");
+	  if (pd->split_channels)
+	    {
+	      int sc = pd->split_channel_count;
+	      int k, l;
+	      for (k = 0; k < sc; k++)
+		{
+		  int lc = ((nlines + (sc - k - 1)) / sc);
+		  if (lc < minlines)
+		    {
+		      extralines = minlines - lc;
+		    }
+		  if (lc + extralines > 0)
+		    {
+		      set_horizontal_position(v, pass, vertical_subpass);
+		      send_print_command(v, pass, pd->split_channels[k],
+					 lc + extralines);
+		      for (l = 0; l < lc; l++)
+			{
+			  int sp = (l * sc) + k;
+			  off_t offset = sp * pd->split_channel_width;
+			  if (COMPRESSION)
+			    {
+			      unsigned char *comp_ptr;
+			      stp_pack_tiff(v, bufs->v[j] + offset,
+					    pd->split_channel_width,
+					    pd->comp_buf, &comp_ptr, NULL, NULL);
+			      stp_zfwrite((const char *) pd->comp_buf,
+					  comp_ptr - pd->comp_buf, 1, v);
+			    }
+			  else
+			    stp_zfwrite((const char *) bufs->v[j] + offset,
+					pd->split_channel_width, 1, v);
+			}
+		      if (extralines)
+			send_extra_data(v, extralines);
+		      stp_send_command(v, "\r", "");
+		    }
+		}
+	    }
+	  else
+	    {
+	      set_horizontal_position(v, pass, vertical_subpass);
+	      if (nlines < minlines)
+		{
+		  extralines = minlines - nlines;
+		  nlines = minlines;
+		}
+	      send_print_command(v, pass, ncolor, nlines);
+
+	      /*
+	       * Send the data
+	       */
+	      stp_zfwrite((const char *)bufs->v[j], lineoffs->v[j], 1, v);
+	      if (extralines)
+		send_extra_data(v, extralines);
+	      stp_send_command(v, "\r", "");
+	    }
 	  pd->printed_something = 1;
 	}
-      lineoffs[0].v[j] = 0;
-      linecount[0].v[j] = 0;
+      lineoffs->v[j] = 0;
+      linecount->v[j] = 0;
     }
 }
 
