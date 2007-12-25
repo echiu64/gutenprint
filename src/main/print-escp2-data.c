@@ -375,6 +375,8 @@ static const stp_raw_t sprx600_borderless_sequence = STP_RAW_STRING("SN\114\000\
 
 static const stp_raw_t sprx620_borderless_sequence = STP_RAW_STRING("SN\114\000\000\011\026\000\000\000\000\000\000\000\003\000\000\001\260\004\336\004\064\001\000\002\000\000\000\000\064\010\150\020\030\025\310\031\340\075\314\020\214\012\024\005\214\000\012\001\054\001\000\000\017\017\017\017\017\017\017\017\004\012\004\017\017\017\017\017\006\004\000\001\001\001\000\000\367\007");
 
+static const stp_raw_t sc120_borderless_sequence = STP_RAW_STRING("SN\001\000\000US\003\000\000\000\002");
+
 #define INCH(x)		(72 * x)
 
 const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
@@ -1921,8 +1923,8 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 360, 1, 1, 360, 1, 1, 4,
-    360, 14400, -1, 5760, 1440, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
+    360, 14400, -1, 2880, 1440, 360, 180,
+    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 2880 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
@@ -1930,7 +1932,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "c120",
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
-    &bsc86_borderless_sequence, NULL, "standard"
+    &sc120_borderless_sequence, NULL, "standard"
   },
 };
 
