@@ -65,6 +65,8 @@ my $exit_after_parse_args = 0;
 
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
+my $driver_version = `$driver_bin VERSION`;
+chomp $driver_version;
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
 
@@ -284,32 +286,34 @@ sub get_ppd_contents($$$$$) {
     my $source_data;
     my ($new_ppd_filename);
 
-    if ($use_static_ppd eq "no") {
-	my ($driver_version) = `$driver_bin VERSION`;
-	chomp $driver_version;
-	if ($driver_version eq "@VERSION@") {
-	    my ($simplified);
-	    if ($filename =~ m,.*/([^/]*)(.sim)(.ppd)?(.gz)?$,) {
-		$simplified = "simple";
-	    } else {
-		$simplified = "expert";
+    if ($use_static_ppd eq "no" && $driver_version eq "@VERSION@") {
+	my ($simplified);
+	if ($filename =~ m,.*/([^/]*)(.sim)(.ppd)?(.gz)?$,) {
+	    $simplified = "simple";
+	} else {
+	    $simplified = "expert";
+	}
+	my ($url);
+	my (@url_list);
+	if ($locale) {
+	    if ($region) {
+		push @url_list, "gutenprint.$version://$driver/$simplified/${locale}_${region}";
 	    }
-	    my ($url);
-	    foreach $url ("gutenprint.$version://$driver/$simplified/${locale}_${region}",
-			  "gutenprint.$version://$driver/$simplified/${locale}",
-			  "gutenprint.$version://$driver/$simplified") {
-		$new_ppd_filename = $url;
-		if ($debug & 8) {
-		    print "Trying $driver_bin cat $url for $driver, $simplified, $locale, $region\n";
+	    push @url_list, "gutenprint.$version://$driver/$simplified/${locale}";
+	}
+	push @url_list, "gutenprint.$version://$driver/$simplified";
+	foreach $url (@url_list) {
+	    $new_ppd_filename = $url;
+	    if ($debug & 8) {
+		print "Trying $driver_bin cat $url for $driver, $simplified, $locale, $region\n";
+	    }
+	    if (open PPD, "$driver_bin cat $url 2>/dev/null |") {
+		while (<PPD>) {
+		    $source_data .= $_;
 		}
-		if (open PPD, "$driver_bin cat $url 2>/dev/null |") {
-		    while (<PPD>) {
-			$source_data .= $_;
-		    }
-		    close PPD;
-		    if ($source_data) {
-			return ( $new_ppd_filename, $source_data );
-		    }
+		close PPD;
+		if ($source_data) {
+		    return ( $new_ppd_filename, $source_data );
 		}
 	    }
 	}
