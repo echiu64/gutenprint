@@ -35,6 +35,72 @@
 #include "dither-inlined-functions.h"
 
 static inline void
+print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
+			int val, int x, int y, unsigned char bit, int length)
+{
+  int i;
+  int j;
+  unsigned bits;
+  int levels = dc->nlevels - 1;
+  unsigned dpoint = ditherpoint(d, &(dc->dithermat), x);
+  unsigned ppoint = ditherpoint(d, &(dc->pick), x);
+  unsigned xval = val * 5 / 4;
+  unsigned threshold;
+  if (xval > 65535)
+    xval = 65535;
+  threshold = (65535u * (unsigned) val / xval);
+  if (ppoint > threshold)
+    return;
+  /*
+   * Look for the appropriate range into which the input value falls.
+   * Notice that we use the input, not the error, to decide what dot type
+   * to print (if any).  We actually use the "density" input to permit
+   * the caller to use something other that simply the input value, if it's
+   * desired to use some function of overall density, rather than just
+   * this color's input, for this purpose.
+   */
+  for (i = levels; i >= 0; i--)
+    {
+      stpi_dither_segment_t *dd = &(dc->ranges[i]);
+
+      if (xval > dd->lower->value)
+	{
+	  /*
+	   * Where are we within the range.
+	   */
+
+	  unsigned rangepoint = xval - dd->lower->value;
+	  if (dd->value_span < 65535)
+	    rangepoint = rangepoint * 65535 / dd->value_span;
+ 	  rangepoint = rangepoint * threshold / 65535u;
+
+	  if (rangepoint >= dpoint)
+	    bits = dd->upper->bits;
+	  else if (threshold >= dpoint)
+	    bits = dd->lower->bits;
+	  else
+	    bits = 0;
+	  if (bits)
+	    {
+	      unsigned char *tptr = dc->ptr + d->ptr_offset;
+
+	      /*
+	       * Lay down all of the bits in the pixel.
+	       */
+	      set_row_ends(dc, x);
+	      for (j = 1; j <= bits; j += j, tptr += length)
+		{
+		  if (j & bits)
+		    tptr[0] |= bit;
+		}
+
+	    }
+	  return;
+	}
+    }
+}
+
+static inline void
 print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
 		    int x, int y, unsigned char bit, int length)
 {
@@ -105,6 +171,7 @@ stpi_dither_ordered(stp_vars_t *v,
   unsigned char	bit;
   int i;
   int one_bit_only = 1;
+  int one_level_only = 1;
 
   int xerror, xstep, xmod;
 
@@ -122,6 +189,8 @@ stpi_dither_ordered(stp_vars_t *v,
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       stpi_dither_channel_t *dc = &(CHANNEL(d, i));
+      if (dc->nlevels != 1)
+	one_level_only = 0;
       if (dc->nlevels != 1 || dc->ranges[0].upper->bits != 1)
 	one_bit_only = 0;
     }
@@ -146,7 +215,7 @@ stpi_dither_ordered(stp_vars_t *v,
 				 xerror, xstep, xmod);
 	}
     }
-  else
+  else if (one_level_only || !(d->stpi_dither_type & D_ORDERED_NEW))
     {
       for (x = 0; x != d->dst_width; x ++)
 	{
@@ -157,6 +226,23 @@ stpi_dither_ordered(stp_vars_t *v,
 		  if (CHANNEL(d, i).ptr && raw[i])
 		    print_color_ordered(d, &(CHANNEL(d, i)), raw[i], x, row,
 					bit, length);
+		}
+	    }
+	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror,
+				 xstep, xmod);
+	}
+    }
+  else
+    {
+      for (x = 0; x != d->dst_width; x ++)
+	{
+	  if (!mask || (*(mask + d->ptr_offset) & bit))
+	    {
+	      for (i = 0; i < CHANNEL_COUNT(d); i++)
+		{
+		  if (CHANNEL(d, i).ptr && raw[i])
+		    print_color_ordered_new(d, &(CHANNEL(d, i)), raw[i], x,
+					    row, bit, length);
 		}
 	    }
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d), xerror,

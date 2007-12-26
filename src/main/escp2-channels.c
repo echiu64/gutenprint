@@ -3107,6 +3107,18 @@ static const char *rx700_channel_names[] =
 
 DECLARE_CHANNEL_LIST(rx700);
 
+static const char *sp1400_channel_names[] =
+{
+  N_("Yellow"),
+  N_("Black"),
+  N_("Light Cyan"),
+  N_("Light Magenta"),
+  N_("Magenta"),
+  N_("Cyan"),
+};
+
+DECLARE_CHANNEL_LIST(sp1400);
+
 static const char *sp2200_channel_names[] =
 {
   N_("Black"),
@@ -3200,6 +3212,7 @@ static const channel_t the_channels[] =
   { "picturemate", &picturemate_channel_name_list },
   { "pm_950c", &pm_950c_channel_name_list },
   { "r2400", &r2400_channel_name_list },
+  { "sp1400", &sp1400_channel_name_list },
   { "r800", &r800_channel_name_list },
   { "rx700", &rx700_channel_name_list },
   { "sp2200", &sp2200_channel_name_list },

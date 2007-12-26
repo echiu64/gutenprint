@@ -67,6 +67,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "send_zero_advance",       10, 1 },
   { "supports_ink_change",     11, 1 },
   { "packet_mode",             12, 1 },
+  { "interchangeable_ink",     13, 1 },
 };
 
 typedef struct
@@ -314,7 +315,13 @@ static const stp_parameter_t the_parameters[] =
   },
   {
     "SupportsPacketMode", N_("Supports Packet Mode"), N_("Advanced Printer Functionality"),
-    N_("Alternate Alignment Choices"),
+    N_("Supports D4 Packet Mode"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+  },
+  {
+    "InterchangeableInk", N_("Has Interchangeable Ink Cartridges"), N_("Advanced Printer Functionality"),
+    N_("Has multiple choices of ink cartridges"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
   },

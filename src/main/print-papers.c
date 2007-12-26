@@ -300,6 +300,7 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
   outpaper->left = 0;
   outpaper->bottom = 0;
   outpaper->right = 0;
+  outpaper->flags = 0;
   if (outpaper->name)
     id = 1;
 
@@ -377,6 +378,10 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 		    outpaper->paper_unit = PAPERSIZE_METRIC_EXTENDED;
 		  unit = 1;
 		}
+	    }
+	  if (!strcmp(prop_name, "envelope"))
+	    {
+	      outpaper->flags |= STP_PAPERSIZE_ENVELOPE;
 	    }
 	}
       prop = prop->next;
