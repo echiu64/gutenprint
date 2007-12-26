@@ -578,6 +578,52 @@ static const char r800_glossy_hue_adj[] =
 "</curve>\n"
 "</gutenprint>\n";
 
+static const char durabrite3_sat_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.20 1.20 1.30 1.50 1.70 1.90 2.00 2.00 "  /* B */
+/* B */  "2.00 2.00 2.00 2.00 2.00 2.00 2.00 2.00 "  /* M */
+/* M */  "2.00 1.80 1.60 1.40 1.20 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.15 1.40 1.70 2.00 2.30 2.40 2.40 "  /* G */
+/* G */  "2.40 2.40 2.40 2.30 2.00 1.70 1.40 1.15 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char durabrite3_lum_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.63 0.64 0.66 0.69 0.73 0.78 0.82 0.85 "  /* B */
+/* B */  "0.85 0.82 0.78 0.78 0.79 0.80 0.82 0.85 "  /* M */
+/* M */  "0.87 0.90 0.94 0.97 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* Y */
+/* Y */  "1.00 1.00 1.00 0.99 0.98 0.97 0.95 0.93 "  /* G */
+/* G */  "0.90 0.76 0.68 0.65 0.64 0.63 0.63 0.63 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char durabrite3_hue_adj[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 0.00 0.00 -.02 -.04 -.08 -.12 -.16 "  /* B */
+/* B */  "-.20 -.24 -.28 -.32 -.32 -.32 -.32 -.32 "  /* M */
+/* M */  "-.36 -.40 -.44 -.48 -.50 -.45 -.40 -.30 "  /* R */
+/* R */  "-.12 -.07 -.04 -.02 0.00 0.00 0.00 0.00 "  /* Y */
+/* Y */  "0.00 -.00 -.03 -.06 -.09 -.13 -.17 -.21 "  /* G */
+/* G */  "-.25 -.22 -.19 -.16 -.13 -.10 -.07 -.03 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+
 #define DECLARE_PAPERS(name)			\
 static const paperlist_t name##_paper_list =	\
 {						\
@@ -1246,6 +1292,50 @@ static const paper_adjustment_t durabrite2_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(durabrite2);
 
+static const paper_adjustment_t durabrite3_adjustments[] =
+{
+  { "Plain", 0.72, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "PlainFast", 0.72, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Postcard", 0.72, .5, 1, .05, .9, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "GlossyFilm", 0.83, 1.0, 1, .05, .999, 1, 1, 1, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Transparency", 0.83, .75, 1, .05, .999, 1, 1, 1, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Envelope", 0.72, .5, 1, .05, .9, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "BackFilm", 0.83, .75, 1, .05, .999, 1, 1, 1, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Matte", 0.92, .5, .5, .075, .999, 1, .975, .975, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "MatteHeavy", 0.92, .5, .5, .075, .999, 1, .975, .975, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Inkjet", 0.72, .5, .5, .05, .9, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Coated", 0.83, .5, .5, .075, .999, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Photo", 1.0, .5, .5, .075, .999, 1, .8, .8, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "GlossyPhoto", 1.0, 1.0, 1, .15, .999, 1, .8, .8, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Semigloss", 1.0, 1.0, 1, .15, .999, 1, .8, .8, 1, 1, .92,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Luster", 1.0, 1.0, 1, .15, .999, 1, .8, .8, 1, 1, .92,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "GlossyPaper", .83, 1.0, 1, .15, .999, 1, 1, 1, 1, 1, 1.0,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Ilford", .83, 1.0, 1, .15, 1.35, 1, 1, 1, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj  },
+  { "ColorLife", .83, 1.0, 1, .15, .9, 1, 1, 1, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+  { "Other", 0.72, .5, 1, .05, .9, 1, 1, 1, 1, 1, 1,
+    durabrite3_hue_adj, durabrite3_lum_adj, durabrite3_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(durabrite3);
+
 static const paper_t standard_papers[] =
 {
   { "Plain", N_("Plain Paper"), PAPER_PLAIN,
@@ -1573,6 +1663,7 @@ static const paperadj_t the_adjustments[] =
   { "standard", &standard_paper_adjustment_list },
   { "durabrite", &durabrite_paper_adjustment_list },
   { "durabrite2", &durabrite2_paper_adjustment_list },
+  { "durabrite3", &durabrite3_paper_adjustment_list },
   { "photo", &photo_paper_adjustment_list },
   { "photo2", &photo2_paper_adjustment_list },
   { "photo3", &photo3_paper_adjustment_list },

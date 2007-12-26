@@ -2538,7 +2538,7 @@ static const escp2_inkname_t *const c120_ink_types[] =
 };
 
 DECLARE_INKLIST("None", c120, c120, N_("EPSON Standard Inks"),
-		durabrite2, durabrite2, standard);
+		durabrite2, durabrite3, standard);
 
 static const escp2_inkname_t *const c120_quadtone_ink_types[] =
 {

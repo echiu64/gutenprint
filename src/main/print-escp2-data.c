@@ -70,8 +70,8 @@ static const escp2_dot_size_t c3pl_dotsizes =
 static const escp2_dot_size_t c3pl_pigment_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
 
-static const escp2_dot_size_t c120_pigment_dotsizes =
-{ 0x11, 0x11, 0x12, 0x12, 0x13, 0x13, 0x13, 0x13, 0x13 };
+static const escp2_dot_size_t c3pl_pigment_c120_dotsizes =
+{ 0x11, 0x11, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13, 0x13 };
 
 static const escp2_dot_size_t p3pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
@@ -255,6 +255,9 @@ static const escp2_densities_t c3pl_pigment_densities =
 
 static const escp2_densities_t c3pl_pigment_c66_densities =
 { 2.8, 1.4,  0.70, 0.600, 0.512, 0.512, 0.512, 0.0,   0.0   };
+
+static const escp2_densities_t c3pl_pigment_c120_densities =
+{ 4.0, 2.0,  1.00, 0.780, 0.512, 0.512, 0.512, 0.256, 0.128 };
 
 static const escp2_densities_t c3pl_densities =
 { 2.6, 1.3,  0.65, 0.730, 0.7,   0.91,  0.455, 0.0,   0.0   };
@@ -1923,12 +1926,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
      MODEL_PACKET_MODE_YES),
     59, 60, 2, 360, 1, 1, 360, 1, 1, 4,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 2880 * 2880,
+    360, 14400, -1, 5760, 1440, 360, 180,
+    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 5760 * 2880,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
-    c120_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
+    c3pl_pigment_c120_dotsizes, c3pl_pigment_c120_densities, "variable_3pl_pigment_c120",
     "superfine", "c120",
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
