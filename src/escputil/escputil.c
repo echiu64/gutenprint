@@ -1227,24 +1227,25 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
       STP_DEBUG(fprintf(stderr, "Header: %x param count: %d\n", hdr, total_param_count));
       if (hdr == 0x0f)	/* Always report ink */
 	{
-	  size_t count = (total_param_count - 1) / 3;
+	  size_t count = (total_param_count - 1) / param;
 	  ind = buf + i + 3;
 	  if (cmd == CMD_STATUS)
 	    printf(_("Ink Levels:\n"));
 	  printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
 	  for (j = 0; j < count; j++)
 	    {
-	      if (ind[0] < color_count)
+	      if (ind[0] < color_count && param == 3)
 		printf("%18s    %20d\n",
 		       gettext(colors_new[(int) ind[0]]), ind[2]);
-	      else if (ind[j] == 0x40 && ind[1] < aux_color_count)
+	      else if ((param == 4 || ind[j] == 0x40) &&
+		       ind[1] < aux_color_count)
 		printf("%18s    %20d\n",
 		       gettext(aux_colors[(int) ind[1]]), ind[2]);
 	      else
 		printf("%8s 0x%2x 0x%2x    %20d\n",
 		       _("Unknown"), (unsigned char) ind[0],
 		       (unsigned char) ind[1], ind[2]);
-	      ind += 3;
+	      ind += param;
 	    }
 	  if (cmd == CMD_STATUS)
 	    printf("\n");
