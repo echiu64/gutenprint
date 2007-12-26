@@ -3052,6 +3052,17 @@ static const char *standard_channel_names[] =
 
 DECLARE_CHANNEL_LIST(standard);
 
+static const char *c120_channel_names[] =
+{
+  N_("Black"),
+  N_("Black"),
+  N_("Magenta"),
+  N_("Cyan"),
+  N_("Yellow")
+};
+
+DECLARE_CHANNEL_LIST(c120);
+
 static const char *cx3800_channel_names[] =
 {
   N_("Cyan"),
@@ -3194,6 +3205,7 @@ static const channel_t the_channels[] =
   { "sp2200", &sp2200_channel_name_list },
   { "sp960", &sp960_channel_name_list },
   { "standard", &standard_channel_name_list },
+  { "c120", &c120_channel_name_list },
 };
 
 const channel_name_t *

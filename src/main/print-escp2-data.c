@@ -1935,7 +1935,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "c120",
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
-    &sc120_borderless_sequence, NULL, "standard"
+    &sc120_borderless_sequence, NULL, "c120"
   },
 };
 
