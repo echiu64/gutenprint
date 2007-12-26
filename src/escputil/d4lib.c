@@ -52,8 +52,8 @@
 
 
 #ifndef RDTIMEOUT
-#define RDTIMEOUT 20000
-#define WRTIMEOUT 20000
+#define RDTIMEOUT 10000
+#define WRTIMEOUT 10000
 #endif
 
 int d4WrTimeout = WRTIMEOUT;
