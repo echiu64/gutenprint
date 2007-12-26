@@ -581,7 +581,6 @@
       <width value="2599"/>
       <height value="3676"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C1">
       <description value="C1"/>
@@ -589,7 +588,6 @@
       <width value="1836"/>
       <height value="2599"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C2">
       <description value="C2"/>
@@ -597,7 +595,6 @@
       <width value="1298"/>
       <height value="1836"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C3">
       <description value="C3"/>
@@ -605,7 +602,6 @@
       <width value="918"/>
       <height value="1298"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C4">
       <description value="C4"/>
@@ -613,7 +609,6 @@
       <width value="649"/>
       <height value="918"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C5">
       <description value="C5"/>
@@ -621,7 +616,6 @@
       <width value="459"/>
       <height value="649"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="w354h918">
       <description value="B6-C4"/>
@@ -636,7 +630,6 @@
       <width value="323"/>
       <height value="459"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="DL">
       <description value="DL"/>
@@ -644,7 +637,6 @@
       <width value="311"/>
       <height value="623"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="w229h459">
       <description value="C7-6"/>
@@ -652,7 +644,6 @@
       <width value="229"/>
       <height value="459"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C7">
       <description value="C7"/>
@@ -660,7 +651,6 @@
       <width value="229"/>
       <height value="323"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C8">
       <description value="C8"/>
@@ -668,7 +658,6 @@
       <width value="161"/>
       <height value="229"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C9">
       <description value="C9"/>
@@ -676,7 +665,6 @@
       <width value="113"/>
       <height value="161"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="C10">
       <description value="C10"/>
@@ -684,7 +672,6 @@
       <width value="79"/>
       <height value="113"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
 <!-- GROUP: US CAD -->
 <!--
@@ -907,21 +894,18 @@
       <width value="340"/>
       <height value="666"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="w255h581">
       <description value="Japanese long envelope #4"/>
       <width value="255"/>
       <height value="581"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="w680h941">
       <description value="Japanese Kaku envelope #4"/>
       <width value="680"/>
       <height value="941"/>
       <unit value="metric-extended"/>
-      <envelope />
     </paper>
     <paper name="COM10">
       <description value="Commercial 10"/>
@@ -929,7 +913,6 @@
       <width value="297"/>
       <height value="684"/>
       <unit value="english-extended"/>
-      <envelope />
     </paper>
     <paper name="w315h414">
       <description value="A2 Invitation"/>
@@ -944,7 +927,6 @@
       <width value="279"/>
       <height value="540"/>
       <unit value="english-extended"/>
-      <envelope />
     </paper>
     <paper name="w288h387">
       <description value="4x5 3/8"/>
