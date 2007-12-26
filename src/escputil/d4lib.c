@@ -52,8 +52,8 @@
 
 
 #ifndef RDTIMEOUT
-#define RDTIMEOUT 2000
-#define WRTIMEOUT 2000
+#define RDTIMEOUT 20000
+#define WRTIMEOUT 20000
 #endif
 
 int d4WrTimeout = WRTIMEOUT;
@@ -311,6 +311,7 @@ static int printError(unsigned char errorNb)
       msg++;
    }
    fprintf(stderr,"Unknown IEEE 1284.4 error number %d\n",errorNb);
+   return 0;
    return 1; /* non recoverable error */
 }
 
