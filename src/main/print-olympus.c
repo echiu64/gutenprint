@@ -884,8 +884,8 @@ static void es1_plane_init_func(stp_vars_t *v)
   }
 
   stp_put16_be(0x4001, v);
-  stp_putc(plane, v);
   stp_putc(0x1, v);
+  stp_putc(plane, v);
   stp_put32_le(privdata.w_size * privdata.h_size, v);
   dyesub_nputc(v, '\0', 4);
 }
