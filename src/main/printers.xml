@@ -103,6 +103,7 @@
       <printer name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP5300" driver="bjc-PIXMA-iP5300" manufacturer="Canon" model="3005300" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iP6700" driver="bjc-PIXMA-iP6700" manufacturer="Canon" model="3006700" parameters="PIXMA_iP4000_params" />
+      <printer name="Canon PIXMA iP8500" driver="bjc-PIXMA-iP8500" manufacturer="Canon" model="3008500" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA iX5000" driver="bjc-PIXMA-iX5000" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" />
       <printer name="Canon PIXMA Pro9500" driver="bjc-PIXMA-Pro9500" manufacturer="Canon" model="7009500" parameters="PIXMA_iP4000_params" />
       <printer name="Canon PIXMA MP150" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" />

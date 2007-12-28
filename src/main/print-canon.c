@@ -1288,6 +1288,9 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
     if(init->mode->flags & MODE_FLAG_PRO){
     	buf[1]=0x10;
     	buf[2]=0x4;
+    }else if(init->mode->flags & MODE_FLAG_IP8500){
+    	buf[1]=0x00;
+    	buf[2]=0x01;
     }else{
     	buf[1]=0x80;
     	buf[2]=0x01;

@@ -370,7 +370,7 @@ static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* PIXMA Pro9500 */
+/* PIXMA Pro9500, PIXMA iP8500 */
 static const canon_inkset_t canon_11_C2M2Y2K2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
