@@ -140,6 +140,10 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
       	EPSON Stylus D120
       	EPSON PX V780
 
+      * PCL laser printers:
+
+      	Sharp AR-M257
+
    2) Preliminary support for the following printers:
 
       * Canon inkjet printers:
@@ -165,7 +169,14 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
       has been renamed "Oki" to match the PPD specification for that
       manufacturer).
 
-   5) The PPD file parsing code in the Postscript driver has been
+   5) A new dither algorithm, Ordered New, has been added.  This
+      dither algorithm is most likely to improve output at low
+      resolutions, particularly when printing black and white.  It
+      will only help on printers offering multiple drop sizes.
+
+   6) The color correction for the Canon PIXMA iP4200 has been improved.
+
+   7) The PPD file parsing code in the Postscript driver has been
       rewritten.
 
       We determined that the PPD file parsing code in the Postscript
@@ -185,7 +196,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
       be used with any code licensed as GPL v2 or any later version of
       the GPL.
 
-   6) The CUPS driver in Gutenprint, and all associated utilities, are
+   8) The CUPS driver in Gutenprint, and all associated utilities, are
       now licensed as GPL v2 or higher.  That code was previously
       licensed as GPL v2 only.  While that did not cause any direct
       problems, since the CUPS driver does not form a library that
@@ -193,8 +204,6 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
       from the rest of the Gutenprint project.  That is now resolved,
       and the entire Gutenprint code base is now licensed as GPL v2 or
       higher.
-
-   7) The color correction for the Canon PIXMA iP4200 has been improved.
 
 
 B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:

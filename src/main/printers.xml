@@ -706,6 +706,7 @@
       <printer name="Samsung QL-6050" driver="samsung-ql-6050" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Seiko SpeedJET 200" driver="seiko-sj_200" manufacturer="Seiko" model="2" parameters="pcl_laser_params" />
       <printer name="Sharp AR-161" driver="sharp-ar-161" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
+      <printer name="Sharp AR-M257" driver="sharp-ar-m257" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
       <printer name="Sony IJP-V100" driver="sony-ijp-v100" manufacturer="Sony" model="601" parameters="pcl_inkjet_params" />
       <printer name="Star LS-04" driver="star-ls-04" manufacturer="Star" model="2" parameters="pcl_laser_params" />
       <printer name="Star LaserPrinter 8" driver="star-lp_8" manufacturer="Star" model="2" parameters="pcl_laser_params" />
