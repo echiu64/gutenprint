@@ -93,6 +93,51 @@ static const char standard_hue_adjustment[] =
 "</curve>\n"
 "</gutenprint>\n";
 
+static const char iP4200_sat_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* B */
+/* B */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* M */
+/* M */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* R */
+/* R */  "1.00 1.00 1.05 1.10 1.20 1.26 1.34 1.41 "  /* Y */
+/* Y */  "1.38 1.32 1.24 1.15 1.08 1.00 1.00 1.00 "  /* G */
+/* G */  "1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char iP4200_lum_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "0.52 0.56 0.61 0.67 0.79 0.86 0.91 0.98 "  /* B */
+/* B */  "0.97 0.87 0.84 0.81 0.78 0.76 0.74 0.73 "  /* M */
+/* M */  "0.74 0.76 0.78 0.83 0.86 0.90 0.98 1.04 "  /* R */
+/* R */  "1.04 1.04 1.04 1.04 1.03 1.03 1.03 1.02 "  /* Y */
+/* Y */  "1.02 0.97 0.92 0.88 0.83 0.78 0.74 0.71 "  /* G */
+/* G */  "0.70 0.62 0.59 0.53 0.48 0.52 0.53 0.51 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char iP4200_hue_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"-6\" upper-bound=\"6\">\n"
+/* C */  "0.00 -.20 -.30 -.40 -.40 -.30 -.20 0.00 "  /* B */
+/* B */  "0.00 -.04 -.01 0.08 0.14 0.16 0.09 0.00 "  /* M */
+/* M */  "0.00 0.00 -.05 -.07 -.10 -.08 -.06 0.00 "  /* R */
+/* R */  "0.00 0.04 0.08 0.10 0.13 0.10 0.07 0.00 "  /* Y */
+/* Y */  "0.00 -.11 -.18 -.23 -.30 -.37 -.46 -.54 "  /* G */
+/* G */  "-.53 -.52 -.57 -.50 -.41 -.25 -.17 0.00 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
 static const char* control_cmd_ackshort[] = {
   "AckTime=Short",
   NULL
@@ -564,9 +609,9 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP4200_modelist,
     &canon_PIXMA_iP4000_paperlist,
-    NULL,
-    NULL,
-    NULL
+    iP4200_lum_adjustment,
+    iP4200_hue_adjustment,
+    iP4200_sat_adjustment
   },
   { /* Canon PIXMA iP6700 */
     "PIXMA iP6700", 3,          /*model, model_id*/

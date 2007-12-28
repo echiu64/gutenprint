@@ -27,6 +27,36 @@
 #ifndef GUTENPRINT_INTERNAL_CANON_MODES_H
 #define GUTENPRINT_INTERNAL_CANON_MODES_H
 
+static const char iP4200_300dpi_lum_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "1.60 1.60 1.60 1.60 1.60 1.60 1.60 1.60 "  /* B */
+/* B */  "1.60 1.60 1.60 1.60 1.60 1.60 1.60 1.60 "  /* M */
+/* M */  "1.60 1.60 1.55 1.50 1.45 1.40 1.35 1.35 "  /* R */
+/* R */  "1.35 1.35 1.35 1.35 1.35 1.35 1.35 1.35 "  /* Y */
+/* Y */  "1.35 1.42 1.51 1.58 1.60 1.60 1.60 1.60 "  /* G */
+/* G */  "1.60 1.60 1.60 1.60 1.60 1.60 1.60 1.60 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
+static const char iP4200_300dpi_draft_lum_adjustment[] =
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+"<gutenprint>\n"
+"<curve wrap=\"wrap\" type=\"linear\" gamma=\"0\">\n"
+"<sequence count=\"48\" lower-bound=\"0\" upper-bound=\"4\">\n"
+/* C */  "2.13 2.15 2.20 2.25 2.30 2.35 2.40 2.40 "  /* B */
+/* B */  "2.40 2.40 2.35 2.30 2.22 2.10 2.08 1.92 "  /* M */
+/* M */  "1.90 1.85 1.80 1.70 1.60 1.55 1.42 1.35 "  /* R */
+/* R */  "1.35 1.35 1.35 1.35 1.30 1.34 1.38 1.40 "  /* Y */
+/* Y */  "1.40 1.45 1.55 1.68 1.80 1.92 2.02 2.10 "  /* G */
+/* G */  "2.10 2.05 1.95 1.90 2.00 2.10 2.11 2.13 "  /* C */
+"</sequence>\n"
+"</curve>\n"
+"</gutenprint>\n";
+
 /* delay settings 
  sometimes the raster data has to be sent 
  | K     |
@@ -281,9 +311,9 @@ DECLARE_MODES(canon_PIXMA_iP4000,2);
 
 static const canon_mode_t canon_PIXMA_iP4200_modes[] = {
   /* Q0 - fastest mode (in windows driver it's Q5, printer uses 50% of ink ( I think )) */
-  {  300, 300,CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  {  300, 300,CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,iP4200_300dpi_draft_lum_adjustment,NULL,NULL,0},
   /* Q1 - normal 300x300 mode (in windows driver it's Q4 - normal darkness of printout ) */
-  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,iP4200_300dpi_lum_adjustment,NULL,NULL,1},
   /* Q2 - standard mode for this driver (in windows driver it's Q3) */
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
  /* {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL}, */
