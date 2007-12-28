@@ -232,7 +232,12 @@ init_dither_ordered_new(stpi_dither_t *d, stp_vars_t *v)
   stp_dprintf(STP_DBG_INK, v, "init_dither_ordered_new\n");
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
-      if (i == 0 || !compare_channels(&CHANNEL(d, 0), &CHANNEL(d, i)))
+      if (CHANNEL(d, i).nlevels < 2)
+	{
+	  stp_dprintf(STP_DBG_INK, v, "    channel %d ignored\n", i);
+	  CHANNEL(d, i).aux_data = NULL;
+	}
+      else if (i == 0 || !compare_channels(&CHANNEL(d, 0), &CHANNEL(d, i)))
 	{
 	  stp_dprintf(STP_DBG_INK, v, "    channel %d\n", i);
 	  init_dither_channel_new(&CHANNEL(d, i), v);
@@ -255,7 +260,8 @@ print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
   int levels = dc->nlevels - 1;
   unsigned dpoint = ditherpoint(d, &(dc->dithermat), x);
   const stpi_new_ordered_t *ord = (const stpi_new_ordered_t *) dc->aux_data;
-  unsigned short *where = ord->lut + (val * levels);
+  unsigned short swhere = (unsigned short) val;
+  unsigned short *where = ord ? ord->lut + (val * levels) : &swhere;
   /*
    * Look for the appropriate range into which the input value falls.
    * Notice that we use the input, not the error, to decide what dot type
