@@ -144,6 +144,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
 
       * Canon inkjet printers:
 
+      	Canon PIXMA iP8500
       	Canon PIXMA Pro 9500
 	Canon PIXMA MP610
 	Canon i80
@@ -192,6 +193,8 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
       from the rest of the Gutenprint project.  That is now resolved,
       and the entire Gutenprint code base is now licensed as GPL v2 or
       higher.
+
+   7) The color correction for the Canon PIXMA iP4200 has been improved.
 
 
 B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
