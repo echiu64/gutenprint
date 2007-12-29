@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.0.2-beta1 (5.0.1.98.1)!  Please read these
-release notes carefully.
+Welcome to Gutenprint 5.0.2!  Please read these release notes
+carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
 that may be used with most common UNIX print spooling systems,
@@ -22,8 +22,8 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word "guten" means "good" in
 German.
 
-Gutenprint 5.0.2-beta1 is a beta release of Gutenprint 5.0, with bug
-fixes and new features.
+Gutenprint 5.0.2 is a stable release of Gutenprint 5.0, with bug fixes
+and new features.
 
 Gutenprint currently supports over 800 printer models.
 
