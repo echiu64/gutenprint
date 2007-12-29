@@ -208,6 +208,7 @@ char *printer_model = NULL;
 char printer_cmd[1025];
 int bufpos = 0;
 int isnew = 0;
+int interchangeable_inks = 0;
 int found_unknown_old_printer = 0;
 int print_short_name = 0;
 const stp_printer_t *the_printer_t = NULL;
@@ -769,6 +770,11 @@ set_printer_model(void)
 	      if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
 		isnew = desc.deflt.boolean;
 	      stp_parameter_description_destroy(&desc);
+	      stp_describe_parameter(printvars, "InterchangeableInk",
+				     &desc);
+	      if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
+		interchangeable_inks = desc.deflt.boolean;
+	      stp_parameter_description_destroy(&desc);
 	      STP_DEBUG(fprintf(stderr, "Found it! %s\n", printer_model));
 	      return;
 	    }
@@ -991,18 +997,18 @@ static const char *aux_colors[] =
     N_("Cyan"),			/* 1 */
     N_("Magenta"),		/* 2 */
     N_("Yellow"),		/* 3 */
-    N_("Unknown"),		/* 4 */
-    N_("Unknown"),		/* 5 */
-    N_("Unknown"),		/* 6 */
-    N_("Unknown"),		/* 7 */
-    N_("Unknown"),		/* 8 */
+    NULL,			/* 4 */
+    NULL,			/* 5 */
+    NULL,			/* 6 */
+    NULL,			/* 7 */
+    NULL,			/* 8 */
     N_("Red"),			/* 9 */
     N_("Blue"),			/* a */
-    N_("Unknown"),		/* b */
-    N_("Unknown"),		/* c */
-    N_("Unknown"),		/* d */
-    N_("Unknown"),		/* e */
-    N_("Unknown"),		/* f */
+    NULL,			/* b */
+    NULL,			/* c */
+    NULL,			/* d */
+    NULL,			/* e */
+    NULL,			/* f */
   };
 static int aux_color_count = sizeof(aux_colors) / sizeof(const char *);
 
@@ -1227,24 +1233,26 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
       STP_DEBUG(fprintf(stderr, "Header: %x param count: %d\n", hdr, total_param_count));
       if (hdr == 0x0f)	/* Always report ink */
 	{
-	  size_t count = (total_param_count - 1) / 3;
+	  size_t count = (total_param_count - 1) / param;
 	  ind = buf + i + 3;
 	  if (cmd == CMD_STATUS)
 	    printf(_("Ink Levels:\n"));
 	  printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
 	  for (j = 0; j < count; j++)
 	    {
-	      if (ind[0] < color_count)
+	      if (ind[0] < color_count && param == 3 &&
+		  (interchangeable_inks || ind[1] >= aux_color_count ||
+		   ! aux_colors[(int) ind[1]]))
 		printf("%18s    %20d\n",
 		       gettext(colors_new[(int) ind[0]]), ind[2]);
-	      else if (ind[j] == 0x40 && ind[1] < aux_color_count)
+	      else if (ind[1] < aux_color_count && aux_colors[(int) ind[1]])
 		printf("%18s    %20d\n",
 		       gettext(aux_colors[(int) ind[1]]), ind[2]);
 	      else
 		printf("%8s 0x%2x 0x%2x    %20d\n",
 		       _("Unknown"), (unsigned char) ind[0],
 		       (unsigned char) ind[1], ind[2]);
-	      ind += 3;
+	      ind += param;
 	    }
 	  if (cmd == CMD_STATUS)
 	    printf("\n");
@@ -1587,7 +1595,7 @@ do_extended_ink_info(int extended_output)
 	    {
 	      int j;
 	      printf("%18s    %20s   %12s   %7s\n",
-		     _("Ink color"), _("Percent remaining"), _("Part number"),
+		     _("Ink cartridge"), _("Percent remaining"), _("Part number"),
 		     _("Date"));
 	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
 		     gettext(stp_string_list_param(color_list, 0)->text),
@@ -1611,7 +1619,7 @@ do_extended_ink_info(int extended_output)
 	    {
 	      int j;
 	      printf("%18s    %20s   %12s   %7s\n",
-		     _("Ink color"), _("Percent remaining"), _("Part number"),
+		     _("Ink cartridge"), _("Percent remaining"), _("Part number"),
 		     _("Date"));
 	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
 		     gettext(stp_string_list_param(color_list, 0)->text),
@@ -1631,7 +1639,7 @@ do_extended_ink_info(int extended_output)
 	    {
 	      if (i == 0)
 		printf("%18s    %20s   %12s   %7s\n",
-		       _("Ink color"), _("Percent remaining"), _("Part number"),
+		       _("Ink cartridge"), _("Percent remaining"), _("Part number"),
 		       _("Date"));
 	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
 		     gettext(stp_string_list_param(color_list, i)->text),

@@ -141,41 +141,41 @@ snapshot:
 ## Clean
 
 CLEANSCRIPTS = \
-	depcomp \
-	install-sh \
-	ltconfig \
-	mdate-sh \
-	missing \
-	mkinstalldirs
+	scripts/depcomp \
+	scripts/install-sh \
+	scripts/ltconfig \
+	scripts/mdate-sh \
+	scripts/missing \
+	scripts/mkinstalldirs
 
 CLEANMFOUR = \
-	codeset.m4 \
-	gettext.m4 \
-	glibc21.m4 \
-	iconv.m4 \
-	intdiv0.m4 \
-	inttypes_h.m4 \
-	inttypes.m4 \
-	inttypes-pri.m4 \
-	isc-posix.m4 \
-	lcmessage.m4 \
-	lib-ld.m4 \
-	lib-link.m4 \
-	lib-prefix.m4 \
-	progtest.m4 \
-	stdint_h.m4 \
-	uintmax_t.m4 \
-	ulonglong.m4
+	m4/codeset.m4 \
+	m4/gettext.m4 \
+	m4/glibc21.m4 \
+	m4/iconv.m4 \
+	m4/intdiv0.m4 \
+	m4/inttypes_h.m4 \
+	m4/inttypes.m4 \
+	m4/inttypes-pri.m4 \
+	m4/isc-posix.m4 \
+	m4/lcmessage.m4 \
+	m4/lib-ld.m4 \
+	m4/lib-link.m4 \
+	m4/lib-prefix.m4 \
+	m4/progtest.m4 \
+	m4/stdint_h.m4 \
+	m4/uintmax_t.m4 \
+	m4/ulonglong.m4
 
 CLEANPO = \
-	boldquot.sed \
-	en@boldquot.header \
-	en@quot.header \
-	insert-header.sin \
-	Makevars.template \
-	quot.sed \
-	remove-potcdate.sin \
-	Rules-quot
+	po/boldquot.sed \
+	po/en@boldquot.header \
+	po/en@quot.header \
+	po/insert-header.sin \
+	po/Makevars.template \
+	po/quot.sed \
+	po/remove-potcdate.sin \
+	po/Rules-quot
 
 CLEANFILES = .noupdate
 
@@ -192,9 +192,9 @@ MAINTAINERCLEANFILES = \
 	stamp-h2.in \
 	stamp-h3.in \
 	stamp-h4.in \
-	$(addprefix scripts/, $(CLEANSCRIPTS)) \
-	$(addprefix m4/, $(CLEANMFOUR)) \
-	$(addprefix po/, $(CLEANPO))
+	$(CLEANSCRIPTS) \
+	$(CLEANMFOUR) \
+	$(CLEANPO)
 
 EXTRA_DIST = autogen.sh ChangeLogStamp
 

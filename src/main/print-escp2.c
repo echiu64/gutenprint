@@ -67,6 +67,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "send_zero_advance",       10, 1 },
   { "supports_ink_change",     11, 1 },
   { "packet_mode",             12, 1 },
+  { "interchangeable_ink",     13, 1 },
 };
 
 typedef struct
@@ -314,7 +315,13 @@ static const stp_parameter_t the_parameters[] =
   },
   {
     "SupportsPacketMode", N_("Supports Packet Mode"), N_("Advanced Printer Functionality"),
-    N_("Alternate Alignment Choices"),
+    N_("Supports D4 Packet Mode"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+  },
+  {
+    "InterchangeableInk", N_("Has Interchangeable Ink Cartridges"), N_("Advanced Printer Functionality"),
+    N_("Has multiple choices of ink cartridges"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
   },
@@ -2732,6 +2739,41 @@ setup_head_offset(stp_vars_t *v)
 }
 
 static void
+setup_split_channels(stp_vars_t *v)
+{
+  escp2_privdata_t *pd = get_privdata(v);
+  /*
+   * Set up the output channels
+   */
+  if (pd->physical_channels == 1 &&
+      
+      pd->inkname->channel_set->channels[0]->subchannels->split_channel_count > 1)
+    {
+      int i;
+      int incr = 1;
+      pd->split_channel_count =
+	pd->inkname->channel_set->channels[0]->subchannels->split_channel_count;
+      if (pd->res->vres <
+	  (escp2_base_separation(v) / escp2_black_nozzle_separation(v)))
+	{
+	  incr =
+	    (escp2_base_separation(v) / escp2_black_nozzle_separation(v)) /
+	    pd->res->vres;
+	  pd->split_channel_count /= incr;
+	  pd->nozzle_separation *= incr;
+	  pd->nozzles /= incr;
+	  pd->min_nozzles /= incr;
+	}
+      pd->split_channels = stp_malloc(pd->split_channel_count * sizeof(short));
+      for (i = 0; i < pd->split_channel_count; i++)
+	pd->split_channels[i] =
+	  pd->inkname->channel_set->channels[0]->subchannels->split_channels[i * incr];
+    }
+  else
+    pd->split_channel_count = 0;
+}
+
+static void
 setup_basic(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
@@ -2901,8 +2943,9 @@ setup_softweave_parameters(stp_vars_t *v)
   escp2_privdata_t *pd = get_privdata(v);
   pd->horizontal_passes = pd->res->printed_hres / pd->physical_xdpi;
   if (pd->physical_channels == 1 &&
-      (pd->res->vres >=
-       (escp2_base_separation(v) / escp2_black_nozzle_separation(v))) &&
+      (pd->inkname->channel_set->channels[0]->subchannels->split_channel_count > 1 ||
+       (pd->res->vres >=
+	(escp2_base_separation(v) / escp2_black_nozzle_separation(v)))) &&
       (escp2_max_black_resolution(v) < 0 ||
        pd->res->vres <= escp2_max_black_resolution(v)) &&
       escp2_black_nozzles(v))
@@ -2995,6 +3038,7 @@ setup_head_parameters(stp_vars_t *v)
     pd->horizontal_passes = 1;
 
   setup_head_offset(v);
+  setup_split_channels(v);
 
   if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
       pd->physical_channels == 1)
@@ -3128,6 +3172,19 @@ setup_page(stp_vars_t *v)
   pd->image_width = stp_get_width(v);
   pd->image_scaled_width = pd->image_width * pd->res->hres / 72;
   pd->image_printed_width = pd->image_width * pd->res->printed_hres / 72;
+  if (pd->split_channel_count >= 1)
+    {
+      pd->split_channel_width =
+	((pd->image_printed_width + pd->horizontal_passes - 1) /
+	 pd->horizontal_passes);
+      pd->split_channel_width = (pd->split_channel_width + 7) / 8;
+      pd->split_channel_width *= pd->bitwidth;
+      if (COMPRESSION)
+	{
+	  pd->comp_buf =
+	    stp_malloc(stp_compute_tiff_linewidth(v, pd->split_channel_width));
+	}
+    }
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
   pd->zero_margin_offset = escp2_zero_margin_offset(v);
   if (supports_borderless(v) &&
@@ -3357,6 +3414,10 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
       stp_free(pd->cols[i]);
   stp_free(pd->cols);
   stp_free(pd->channels);
+  if (pd->split_channels)
+    stp_free(pd->split_channels);
+  if (pd->comp_buf)
+    stp_free(pd->comp_buf);
   return status;
 }
 

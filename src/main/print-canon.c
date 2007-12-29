@@ -390,7 +390,8 @@ static const char* canon_families[] = {
  "PIXMA iP",
  "PIXMA iX",
  "PIXMA MP",
- "PIXUS"
+ "PIXUS",
+ "PIXMA Pro"
 };
 
 /* canon model ids look like the following
@@ -1284,8 +1285,16 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
     int length = init->mode->num_inks*3 + 3;
     unsigned char* buf = stp_zalloc(length);
     buf[0]=0x80;
-    buf[1]=0x80;
-    buf[2]=0x01;
+    if(init->mode->flags & MODE_FLAG_PRO){
+    	buf[1]=0x10;
+    	buf[2]=0x4;
+    }else if(init->mode->flags & MODE_FLAG_IP8500){
+    	buf[1]=0x00;
+    	buf[2]=0x01;
+    }else{
+    	buf[1]=0x80;
+    	buf[2]=0x01;
+    }
     for(i=0;i<init->mode->num_inks;i++){
         if(init->mode->inks[i].ink){
           if(init->mode->inks[i].ink->flags & INK_FLAG_5pixel_in_1byte)
@@ -1683,14 +1692,60 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
 }
 
 
+/* combine all curve parameters in s and apply them */
+static void canon_set_curve_parameter(stp_vars_t *v,const char* type,stp_curve_compose_t comp,const char* s1,const char* s2,const char* s3){
+  const char * s[3];
+  size_t count = sizeof(s) / sizeof(s[0]); 
+  stp_curve_t *ret = NULL;
+  int curve_count = 0;
+  int i;
+  const size_t piecewise_point_count = 384;
 
 
+  /* ignore settings from the printercaps if the user specified his own parameters */
+  if(stp_check_curve_parameter(v,type, STP_PARAMETER_ACTIVE))
+    return;
 
+  /* init parameter list (FIXME pass array directly???)*/
+  s[0] = s1;
+  s[1] = s2;
+  s[2] = s3;
 
+  /* skip empty curves */
+  for(i=0;i<count;i++){
+    if(s[i])
+      s[curve_count++] = s[i];
+  }
 
+  /* combine curves */
+  if(curve_count){
+    for(i=0;i<curve_count;i++){
+      stp_curve_t* t_tmp = stp_curve_create_from_string(s[i]);
+      if(t_tmp){
+        if(stp_curve_is_piecewise(t_tmp)){
+          stp_curve_resample(t_tmp, piecewise_point_count);
+        }
+        if(!ret){
+          ret = t_tmp;
+        }else{
+          stp_curve_t* t_comp = NULL;
+          stp_curve_compose(&t_comp, ret, t_tmp, comp, -1);
+          if(t_comp){
+            stp_curve_destroy(ret);
+            ret = t_comp;
+          }
+          stp_curve_destroy(t_tmp);
+        }
+      }
+    }
+  }
 
-
-
+  /* apply result */
+  if(ret){
+    stp_set_curve_parameter(v, type, ret);
+    stp_curve_destroy(ret);
+  }
+}
 
 /*
  * 'canon_print()' - Print an image to a CANON printer.
@@ -1795,6 +1850,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   if (privdata.used_inks == CANON_INK_K)
     stp_scale_float_parameter(v, "Gamma", 1.25);
+  stp_scale_float_parameter( v, "Gamma", privdata.mode->gamma );
 
   stp_deprintf(STP_DBG_CANON,"density is %f\n",
                stp_get_float_parameter(v, "Density"));
@@ -1950,37 +2006,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   errval  = 0;
   errlast = -1;
   errline  = 0;
- 
-  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE)) 
-    {
-      stp_curve_t* hue_adjustment = stp_read_and_compose_curves
-	(caps->hue_adjustment,privdata.pt->hue_adjustment,
-	 STP_CURVE_COMPOSE_ADD, 384);
-      if(hue_adjustment){
-        stp_set_curve_parameter(v, "HueMap", hue_adjustment);
-        stp_curve_destroy(hue_adjustment);
-      }
-    }
-  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE)) 
-    {
-      stp_curve_t* lum_adjustment = stp_read_and_compose_curves
-	(caps->lum_adjustment,privdata.pt->lum_adjustment,
-	 STP_CURVE_COMPOSE_MULTIPLY, 384);
-      if(lum_adjustment){
-        stp_set_curve_parameter(v, "LumMap", lum_adjustment);
-        stp_curve_destroy(lum_adjustment);
-      }
-    }
-  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE)) 
-    {
-      stp_curve_t* sat_adjustment = stp_read_and_compose_curves
-	(caps->sat_adjustment,privdata.pt->sat_adjustment,
-	 STP_CURVE_COMPOSE_MULTIPLY, 384);
-      if(sat_adjustment){
-        stp_set_curve_parameter(v, "SatMap", sat_adjustment);
-        stp_curve_destroy(sat_adjustment);
-      }
-    }
+
+  /* set Hue, Lum and Sat Maps */ 
+  canon_set_curve_parameter(v,"HueMap",STP_CURVE_COMPOSE_ADD,caps->hue_adjustment,privdata.pt->hue_adjustment,privdata.mode->hue_adjustment);
+  canon_set_curve_parameter(v,"LumMap",STP_CURVE_COMPOSE_MULTIPLY,caps->lum_adjustment,privdata.pt->lum_adjustment,privdata.mode->lum_adjustment);
+  canon_set_curve_parameter(v,"SatMap",STP_CURVE_COMPOSE_MULTIPLY,caps->sat_adjustment,privdata.pt->sat_adjustment,privdata.mode->sat_adjustment);
 
   out_channels = stp_color_init(v, image, 65536);
   stp_allocate_component_data(v, "Driver", NULL, NULL, &privdata);

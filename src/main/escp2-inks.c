@@ -235,6 +235,20 @@ static const escp2_dropsize_t escp2_3pl_pigment_c66_2880_dropsizes =
 static const escp2_dropsize_t escp2_3pl_pigment_c66_5760_dropsizes =
   { "3pl_pigment_c66_5760", 1, { 1.0 } };
 
+/* Stylus C120 */
+static const escp2_dropsize_t escp2_low_pigment_c120_dropsizes =
+  { "low_pigment_c120", 3, { 0.25, 0.5, 1.0 } };
+static const escp2_dropsize_t escp2_6pl_pigment_c120_dropsizes =
+  { "6pl_pigment_c120", 3, { 0.12, 0.3, 1.0 } };
+/*  { "6pl_pigment_c120", 3, { 0.15, 0.3, 1.0 } }; */
+/*  { "6pl_pigment_c120", 3, { 0.18, 0.333, 1.0 } }; */
+static const escp2_dropsize_t escp2_3pl_pigment_c120_dropsizes =
+  { "3pl_pigment_c120", 3, { 0.25, 0.5, 1.0 } };
+static const escp2_dropsize_t escp2_3pl_pigment_c120_2880_dropsizes =
+  { "3pl_pigment_c120_2880", 2, { 0.5, 1.0 } };
+static const escp2_dropsize_t escp2_3pl_pigment_c120_5760_dropsizes =
+  { "3pl_pigment_c120_5760", 1, { 1.0 } };
+
 /* Stylus Photo 2000P */
 static const escp2_dropsize_t escp2_2000p_dropsizes =
   { "2000p", 2, { 0.55, 1.0 } };
@@ -472,6 +486,19 @@ static const escp2_drop_list_t variable_3pl_pigment_c66_drops =
   &escp2_3pl_pigment_c66_5760_dropsizes,
 };
 
+static const escp2_drop_list_t variable_3pl_pigment_c120_drops =
+{
+  &escp2_low_pigment_c120_dropsizes,
+  &escp2_low_pigment_c120_dropsizes,
+  &escp2_6pl_pigment_c120_dropsizes,
+  &escp2_6pl_pigment_c120_dropsizes,
+  &escp2_3pl_pigment_c120_dropsizes,
+  &escp2_3pl_pigment_c120_2880_dropsizes,
+  &escp2_3pl_pigment_c120_5760_dropsizes,
+  &escp2_3pl_pigment_c120_5760_dropsizes,
+  &escp2_3pl_pigment_c120_5760_dropsizes,
+};
+
 static const escp2_drop_list_t spro10000_drops =
 {
   &escp2_spro10000_dropsizes,
@@ -501,6 +528,7 @@ static const drop_list_t the_drop_lists[] =
   { "variable_3pl", &variable_3pl_drops },
   { "variable_3pl_pigment", &variable_3pl_pigment_drops },
   { "variable_3pl_pigment_c66", &variable_3pl_pigment_c66_drops },
+  { "variable_3pl_pigment_c120", &variable_3pl_pigment_c120_drops },
   { "variable_3pl_pmg", &variable_3pl_pmg_drops },
   { "variable_claria", &claria_drops },
   { "variable_claria_1400", &claria_1400_drops },

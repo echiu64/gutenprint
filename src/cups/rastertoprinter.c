@@ -662,7 +662,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	  else if (val && strlen(val) > 0 && strcmp(val, "None") != 0)
 	    {
 	      double fine_val = 0;
-	      if (index(val, (int) '.'))
+	      if (strchr(val, (int) '.'))
 		{
 		  fine_val = atof(val);
 		  if (! suppress_messages)
@@ -814,8 +814,6 @@ main(int  argc,				/* I - Number of command-line arguments */
  /*
   * Check for valid arguments...
   */
-  if (! suppress_messages)
-    fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", version_id);
 
   if (argc < 6 || argc > 7)
   {
@@ -838,7 +836,15 @@ main(int  argc,				/* I - Number of command-line arguments */
     return (1);
   }
   if (! suppress_messages)
-    fprintf(stderr, "DEBUG: Gutenprint using PPD file %s\n", ppdfile);
+    {
+      fprintf(stderr, "DEBUG: Gutenprint command line: %s '%s' '%s' '%s' '%s' '%s'%s%s%s\n",
+	      argv[0], argv[1], argv[2], argv[3], argv[4], argv[5],
+	      argc >= 7 ? " '" : "",
+	      argc >= 7 ? argv[6] : "",
+	      argc >= 7 ? "'" : "");
+      fprintf(stderr, "DEBUG: Gutenprint using PPD file %s\n", ppdfile);
+      fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", version_id);
+    }
 
   if ((ppd = ppdOpenFile(ppdfile)) == NULL)
   {

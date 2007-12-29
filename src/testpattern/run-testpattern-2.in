@@ -26,6 +26,10 @@ my %models;
 my %families;
 my $skip_duplicate_printers = 0;
 
+my @default_options = ();
+my %base_settings = ("DitherAlgorithm" => "Fast",
+		     "ColorCorrection" => "Raw");
+
 GetOptions("v+"  => \$valgrind,
 	   "c"   => \$cachegrind,
 	   "g"   => \$gdb_attach,
@@ -33,6 +37,7 @@ GetOptions("v+"  => \$valgrind,
 	   "s!"  => \$skip_duplicate_printers,
 	   "o=s" => \@special_options,
 	   "O=s" => \$output,
+	   "d=s" => \@default_options,
 	   "m:s" => \$calc_md5);
 
 if (defined $calc_md5 && $calc_md5 eq "0") {
@@ -41,6 +46,15 @@ if (defined $calc_md5 && $calc_md5 eq "0") {
 
 if (! @special_options) {
     @special_options = @standard_options;
+}
+
+foreach my $opt (@default_options) {
+    my ($option, $value) = split(/=/, $opt);
+    if (! $value) {
+	delete $base_settings{$option};
+    } else {
+	$base_settings{$option} = $value;
+    }
 }
 
 my $pwd = `pwd`;
@@ -204,8 +218,7 @@ sub do_printer {
 	    }
 	    set_opt("PrintingMode", $pmode);
 	    set_opt("Resolution", $resolution);
-	    set_opt("DitherAlgorithm", "Fast");
-	    set_opt("ColorCorrection", "Raw");
+	    map { set_opt($_, $base_settings{$_})} keys %base_settings;
 	    if (defined $output || defined $calc_md5) {
 		my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
 		my $md5_dir = $calc_md5;
@@ -246,12 +259,11 @@ sub do_printer {
 		    set_opt("PrintingMode", $pmode);
 		    set_opt("Resolution", $min_res_name);
 		    set_opt($key, $opt);
-		    if ($key ne "DitherAlgorithm") {
-			set_opt("DitherAlgorithm", "Fast");
-		    }
-		    if ($key ne "ColorCorrection") {
-			set_opt("ColorCorrection", "Raw");
-		    }
+		    map {
+			if ($key ne $_) {
+			    set_opt($_, $base_settings{$_});
+			}
+		    } keys %base_settings;
 		    if (defined $output || defined $calc_md5) {
 			my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}";
 			my $md5_dir = $calc_md5;
