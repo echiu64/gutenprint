@@ -507,10 +507,9 @@ A) GENERAL USER-VISIBLE CHANGES:
      Any profiles generated against Gimp-Print 4.2 are unlikely to
      produce good results with Gutenprint 5.0.  The color generation
      is sufficiently different that you will need to create new
-     profiles against Gutenprint 5.0.  In general, color adjustment
-     should not change between Gutenprint 5.0 releases starting with
-     release 5.0.0.  Color adjustments may change during beta
-     (5.0.0-beta) and release candidate (5.0.0-rc) phases.
+     profiles against Gutenprint 5.0.  In general, unless otherwise
+     noted in the release notes, color adjustment should not change
+     between Gutenprint 5.0 releases starting with release 5.0.0.
 
   6) The old man pages, and src/ghost/README, have been withdrawn.
      These pages, and the Ghostscript README file, were based on the
