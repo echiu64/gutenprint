@@ -655,7 +655,7 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 		      for (l = 0; l < lc; l++)
 			{
 			  int sp = (l * sc) + k;
-			  off_t offset = sp * pd->split_channel_width;
+			  unsigned long offset = sp * pd->split_channel_width;
 			  if (COMPRESSION)
 			    {
 			      unsigned char *comp_ptr;
