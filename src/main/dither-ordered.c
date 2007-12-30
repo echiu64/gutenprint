@@ -76,6 +76,8 @@ free_dither_ordered_new(stpi_dither_t *d)
   stp_free(d->aux_data);
 }
 
+const static double dp_fraction = 0.5;
+
 static void
 init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
 {
@@ -109,9 +111,10 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
   for (j = 0; j < ord->channels; j++)
     {
       if (j == 0)
-	breakpoints[j] = 65535 * ord->drops[j] / 2;
+	breakpoints[j] = 65535 * ord->drops[j] * dp_fraction;
       else
-	breakpoints[j] = 65535 * (ord->drops[j] + ord->drops[j - 1]) / 2;
+	breakpoints[j] = 65535 * ((ord->drops[j] * dp_fraction) +
+				  (ord->drops[j - 1] * (1.0 - dp_fraction)));
       stp_dprintf(STP_DBG_INK, v, "        size %.3f bp %5.0f\n",
 		  ord->drops[j], breakpoints[j]);
     }
@@ -126,21 +129,11 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
       lower_middle = upper_top;
       lower_top = 0;
       if (i == ord->channels)
-	{
-	  upper_top = 0;
-	  upper_middle = 65535;
-	}
-      else if (i > 0)
-	{
-	  upper_top = ((bp - (65535 * ord->drops[i - 1])) /
-		       (ord->drops[i] - ord->drops[i - 1]));
-	  upper_middle = ((bp - (upper_top * ord->drops[i])) /
-			  (ord->drops[i - 1]));
-	}
+	upper_top = 0;
       else
-	{
-	  upper_top = 65535 - (bp - lbp) / (ord->drops[i] - lbp);
-	}
+	upper_top = 65535 * dp_fraction;
+      if (i > 0)
+	upper_middle = 65535 - upper_top;
       while (j <= bp)
 	{
 	  double range_point = (j - lbp) / (bp - lbp);
@@ -162,20 +155,10 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
 	    {
 	      total_ink += val[k];
 	      if (total_ink > 65535)
-		{
-		  stp_eprintf(v, "Error in dither initialization:\n");
-		  for (k = 0; k < ord->channels; k++)	      
-		    stp_eprintf(v, "   k=%d, size %.3f bp %.0f",
-				k, ord->drops[k], breakpoints[k]);
-		  stp_eprintf(v, "), vals=( ");
-		  for (k = 0; k < ord->channels; k++)	      
-		    stp_eprintf(v, "%9.3f ", val[k]);
-		  stp_eprintf(v, ")\n");
-		  assert(total_ink <= 65535);
-		}
+		total_ink = 65535;
 	      data[k] = total_ink;
 	    }
-	  if (j % 257 == 0)
+	  if ((stp_get_debug_level() & STP_DBG_INK) && (j % 257 == 0))
 	    {
 	      stp_dprintf(STP_DBG_INK, v, "    %5d:", j);
 	      for (k = 0; k < ord->channels; k++)
