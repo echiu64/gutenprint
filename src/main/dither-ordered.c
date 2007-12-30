@@ -38,7 +38,6 @@
 typedef struct {
   size_t channels;
   double *drops;
-  unsigned short *lb, *ub;
   unsigned short *lut;
 } stpi_new_ordered_t;
 
@@ -68,10 +67,6 @@ free_dither_ordered_new(stpi_dither_t *d)
 	  stpi_new_ordered_t *ord = (stpi_new_ordered_t *) dc->aux_data;
 	  if (ord->drops)
 	    stp_free(ord->drops);
-	  if (ord->lb)
-	    stp_free(ord->lb);
-	  if (ord->ub)
-	    stp_free(ord->ub);
 	  if (ord->lut)
 	    stp_free(ord->lut);
 	  stp_free(dc->aux_data);
@@ -84,18 +79,25 @@ free_dither_ordered_new(stpi_dither_t *d)
 static void
 init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
 {
-  int j;
-  double *rp;
+  int i, j, k;
+  double bp = 0;
+  double lbp = 0;
+  double lower_bottom = 0;
+  double lower_middle = 0;
+  double lower_top = 0;
+  double upper_bottom = 0;
+  double upper_middle = 0;
+  double upper_top = 0;
+  
+  double *breakpoints;
   double *val;
   unsigned short *data;
   stpi_new_ordered_t *ord = stp_malloc(sizeof(stpi_new_ordered_t));
   dc->aux_data = ord;
   ord->channels = dc->nlevels - 1;
-  ord->drops = stp_malloc(sizeof(double) * ord->channels);
-  rp = stp_malloc(sizeof(double) * ord->channels);
+  ord->drops = stp_malloc(sizeof(double) * (ord->channels + 1));
+  breakpoints = stp_malloc(sizeof(double) * (ord->channels + 1));
   val = stp_malloc(sizeof(double) * ord->channels);
-  ord->lb = stp_malloc(sizeof(unsigned short) * ord->channels);
-  ord->ub = stp_malloc(sizeof(unsigned short) * ord->channels);
   data = stp_malloc(sizeof(unsigned short) * 65536 * ord->channels);
   ord->lut = data;
   for (j = 0; j < ord->channels; j++)
@@ -103,123 +105,94 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
       stpi_dither_segment_t *dd = &(dc->ranges[j]);
       ord->drops[j] = (double) dd->upper->value / 65535.0;
     }
+  ord->drops[ord->channels] = 1;
   for (j = 0; j < ord->channels; j++)
     {
       if (j == 0)
-	ord->lb[j] = 0;
-      else if (j == 1)
-	{
-	  double divisor = ord->drops[j] / ord->drops[j - 1];
-	  if (divisor < 3)
-	    divisor = 3;
-	  ord->lb[j] = 65535 * ord->drops[j - 1] / divisor;
-	}
+	breakpoints[j] = 65535 * ord->drops[j] / 2;
       else
-	ord->lb[j] = 65535 * ord->drops[j - 2];
-      if (j == ord->channels - 1)
-	ord->ub[j] = 65535;
-      else
-	{
-	  int ub = 2 * 65535 * ord->drops[j + 1];
-	  if (ub > 65535)
-	    ub = 65535;
-	  ord->ub[j] = ub;
-	}
-      stp_dprintf(STP_DBG_INK, v, "        size %.3f lb %5d ub %5d\n",
-		  ord->drops[j], ord->lb[j], ord->ub[j]);
+	breakpoints[j] = 65535 * (ord->drops[j] + ord->drops[j - 1]) / 2;
+      stp_dprintf(STP_DBG_INK, v, "        size %.3f bp %5.0f\n",
+		  ord->drops[j], breakpoints[j]);
     }
-  for (j = 0; j < 65536; j++)
+  breakpoints[ord->channels] = 65535;
+  j = 0;
+  for (i = 0; i <= ord->channels; i++)
     {
-      int k;
-      int first = -1;
-      int last = ord->channels - 1;
-      double sum = 0.0;
-      int resid = j;
-      double total = 0;
-      double total_ink = 0;
-      /* Need to clean up some of the arithmetic... */
-      for (k = 0; k < ord->channels; k++)
+      lbp = bp;
+      bp = breakpoints[i];
+      lower_bottom = upper_middle;
+      upper_bottom = 0;
+      lower_middle = upper_top;
+      lower_top = 0;
+      if (i == ord->channels)
 	{
-	  rp[k] = 0;
-	  val[k] = 0;
-	  if (j >= ord->lb[k] && j <= ord->ub[k])
-	    {
-	      if (first < 0)
-		first = k;
-	      last = k;
-	    }
+	  upper_top = 0;
+	  upper_middle = 65535;
 	}
-      for (k = last; k >= first && sum < 1; k--)
+      else if (i > 0)
 	{
-	  rp[k] = (double) (j - ord->lb[k]) / (ord->ub[k] - ord->lb[k]);
-	  rp[k] = rp[k] / ord->drops[k];
-	  sum += rp[k];
-	  if (sum > 1)
-	    {
-	      rp[k] -= (sum - 1.0);
-	      sum = 1.0;
-	    }
+	  upper_top = ((bp - (65535 * ord->drops[i - 1])) /
+		       (ord->drops[i] - ord->drops[i - 1]));
+	  upper_middle = ((bp - (upper_top * ord->drops[i])) /
+			  (ord->drops[i - 1]));
 	}
-      for (k = last; k >= first && resid > 0; k--)
+      else
 	{
-	  val[k] = resid * rp[k];
-	  resid -= val[k];
-	  if (resid < 0)
-	    {
-	      val[k] += resid;
-	      resid = 0;
-	    }
+	  upper_top = 65535 - (bp - lbp) / (ord->drops[i] - lbp);
 	}
-      if (resid > 0)
-	for (k = last; k >= first; k--)
-	  val[k] += resid * rp[k];
-      for (k = first; k <= last; k++)
-	total += val[k] * ord->drops[k];
-      if (total != j)
+      while (j <= bp)
 	{
-	  double ratio = (double) j / (double) total;
-	  for (k = first; k <= last; k++)
-	    val[k] *= ratio;
-	}
-      for (k = first; k <= last; k++)
-	total_ink += val[k];
-      if (total_ink > 65535)
-	{
-	  stp_eprintf(v, "Error in dither initialization:\n");
-	  for (k = 0; k < ord->channels; k++)	      
-	    stp_eprintf(v, "   k=%d, size %.3f lb %d ub %d\n",
-			k, ord->drops[k], ord->lb[k], ord->lb[k]);
-	  stp_eprintf(v, "   j=%d, rp=( ", j);
-	  for (k = 0; k < ord->channels; k++)	      
-	    stp_eprintf(v, "%9.3f ", rp[k]);
-	  stp_eprintf(v, "), vals=( ");
-	  for (k = 0; k < ord->channels; k++)	      
-	    stp_eprintf(v, "%9.3f ", val[k]);
-	  stp_eprintf(v, ")\n");
-	  assert(total_ink <= 65535);
-	}
-      total_ink = 0;
-      for (k = ord->channels - 1; k >= 0; k--)
-	{
-	  total_ink += val[k];
-	  data[k] = total_ink;
-	}
-      if (j % 257 == 0)
-	{
-	  stp_dprintf(STP_DBG_INK, v, "    %5d:", j);
+	  double range_point = (j - lbp) / (bp - lbp);
+	  double uv, mv, lv;
+	  int total_ink = 0;
 	  for (k = 0; k < ord->channels; k++)
-	    stp_dprintf(STP_DBG_INK, v, " %9.3f", val[k]);
-	  stp_dprintf(STP_DBG_INK, v, "  ");
-	  for (k = 0; k < ord->channels; k++)
-	    stp_dprintf(STP_DBG_INK, v, " %9.3f", rp[k]);
-	  stp_dprintf(STP_DBG_INK, v, "  ");
-	  for (k = 0; k < ord->channels; k++)
-	    stp_dprintf(STP_DBG_INK, v, " %5d", data[k]);
-	  stp_dprintf(STP_DBG_INK, v, "\n");
+	    val[k] = 0;
+	  uv = lower_top + (upper_top - lower_top) * range_point;
+	  mv = lower_middle + (upper_middle - lower_middle) * range_point;
+	  lv = lower_bottom + (upper_bottom - lower_bottom) * range_point;
+
+	  if (i < ord->channels)
+	    val[i] = (unsigned short) uv;
+	  if (i > 0)
+	    val[i - 1] = (unsigned short) mv;
+	  if (i > 1)
+	    val[i - 2] = (unsigned short) lv;
+	  for (k = ord->channels - 1; k >= 0; k--)
+	    {
+	      total_ink += val[k];
+	      if (total_ink > 65535)
+		{
+		  stp_eprintf(v, "Error in dither initialization:\n");
+		  for (k = 0; k < ord->channels; k++)	      
+		    stp_eprintf(v, "   k=%d, size %.3f bp %.0f",
+				k, ord->drops[k], breakpoints[k]);
+		  stp_eprintf(v, "), vals=( ");
+		  for (k = 0; k < ord->channels; k++)	      
+		    stp_eprintf(v, "%9.3f ", val[k]);
+		  stp_eprintf(v, ")\n");
+		  assert(total_ink <= 65535);
+		}
+	      data[k] = total_ink;
+	    }
+	  if (j % 257 == 0)
+	    {
+	      stp_dprintf(STP_DBG_INK, v, "    %5d:", j);
+	      for (k = 0; k < ord->channels; k++)
+		stp_dprintf(STP_DBG_INK, v, " %9.3f", val[k]);
+	      stp_dprintf(STP_DBG_INK, v, "  ");
+	      for (k = 0; k < ord->channels; k++)
+		stp_dprintf(STP_DBG_INK, v, " %9.3f", breakpoints[k]);
+	      stp_dprintf(STP_DBG_INK, v, "  ");
+	      for (k = 0; k < ord->channels; k++)
+		stp_dprintf(STP_DBG_INK, v, " %5d", data[k]);
+	      stp_dprintf(STP_DBG_INK, v, "\n");
+	    }
+	  data += ord->channels;
+	  j++;
 	}
-      data += ord->channels;
     }
-  stp_free(rp);
+  stp_free(breakpoints);
   stp_free(val);
 }
 
