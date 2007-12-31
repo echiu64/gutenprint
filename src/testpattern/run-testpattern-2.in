@@ -14,17 +14,19 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType DitherAlgorithm);
+my @standard_options = qw(InkType DitherAlgorithm Duplex);
 my $global_status = 1;
 my $output = undef;
 
 my @extras = ();
 my @messages = ();
+my @global_messages = ();
 my %stpdata = ();
 my %models_found = ();
 my %models;
 my %families;
 my $skip_duplicate_printers = 0;
+my $std_pages = 1;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast",
@@ -34,11 +36,14 @@ GetOptions("v+"  => \$valgrind,
 	   "c"   => \$cachegrind,
 	   "g"   => \$gdb_attach,
 	   "n"   => \$dontrun,
+	   "p:i" => \$std_pages,
 	   "s!"  => \$skip_duplicate_printers,
 	   "o=s" => \@special_options,
 	   "O=s" => \$output,
 	   "d=s" => \@default_options,
 	   "m:s" => \$calc_md5);
+
+my $pages = $std_pages;
 
 if (defined $calc_md5 && $calc_md5 eq "0") {
     $calc_md5 = undef;
@@ -78,11 +83,22 @@ sub set_message($) {
     push @messages, "message \"$message\";\n";
 }
 
+sub set_global_message($) {
+    my ($message) = @_;
+    push @global_messages, "message \"$message\";\n";
+}
+
 sub print_one_testpattern($) {
     my ($printer) = @_;
-    my $stuff = "printer \"$printer\";\n";
-    $stuff .= join "", @extras, @messages;
-    $stuff .= << 'EOF';
+    my $stuff = join "", @global_messages;
+    foreach my $page (0..$pages - 1) {
+    	$stuff .= "printer \"$printer\";\n";
+	$stuff .= join "", @extras, @messages;
+	if ($pages > 1) {
+	    $stuff .= "message \"(page $page)\";\n";
+	}
+	$stuff .= "parameter_int \"PageNumber\" $page;\n";
+	$stuff .= << 'EOF';
 hsize 0.1;
 vsize 0.1;
 left 0.15;
@@ -138,6 +154,7 @@ pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.9 1.0  0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0;
 pattern 0.0 0.0 1.0 1.0 1.0 0.0 0.9 1.0  0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0;
 end;
 EOF
+    }
     return $stuff;
 }
 
@@ -209,11 +226,13 @@ sub do_printer {
     my $pmode;
     foreach $pmode (@printing_modes) {
 	my ($resolution);
+	$pages = $std_pages;
 	foreach $resolution (@resolutions) {
 	    @extras = ();
 	    @messages = ();
+	    @global_messages = ();
 	    if ($first_time) {
-		set_message("$printer\n");
+		set_global_message("$printer\n");
 		$first_time = 0;
 	    }
 	    set_opt("PrintingMode", $pmode);
@@ -252,8 +271,9 @@ sub do_printer {
 		    my ($out_file);
 		    @extras = ();
 		    @messages = ();
+		    @global_messages = ();
 		    if ($first_time) {
-			set_message("$printer\n");
+			set_global_message("$printer\n");
 			$first_time = 0;
 		    }
 		    set_opt("PrintingMode", $pmode);
@@ -262,6 +282,12 @@ sub do_printer {
 		    map {
 			if ($key ne $_) {
 			    set_opt($_, $base_settings{$_});
+			    if ($key eq "Duplex") {
+				set_opt("JobMode", "Job");
+				$pages = 4;
+			    } else {
+				$pages = $std_pages;
+			    }
 			}
 		    } keys %base_settings;
 		    if (defined $output || defined $calc_md5) {
