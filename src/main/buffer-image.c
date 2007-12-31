@@ -120,6 +120,8 @@ buffered_image_conclude(stp_image_t * image)
 	if(priv->image->conclude)
 		priv->image->conclude(priv->image);
 
+	stp_free(priv);
+	stp_free(image);
 }
 
 stp_image_t*
@@ -141,6 +143,7 @@ stpi_buffer_image(stp_image_t* image, unsigned int flags)
 	buffered_image->width = buffered_image_width;
 	buffered_image->height = buffered_image_height;
 	buffered_image->get_row = buffered_image_get_row;
+	buffered_image->conclude = buffered_image_conclude;
 	priv->image = image;
 	priv->flags = flags;
 	if(image->get_appname)
