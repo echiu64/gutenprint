@@ -324,12 +324,29 @@ do_print(void)
   for (i = 0; i < count; i++)
     {
       const stp_parameter_t *p = stp_parameter_list_param(params, i);
-      const char *val = stp_get_string_parameter(global_vars, p->name);
-      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST && val && strlen(val) > 0)
-	stp_set_string_parameter(v, p->name, val);
-      stp_set_page_width(v, stp_get_page_width(global_vars));
-      stp_set_page_height(v, stp_get_page_height(global_vars));
+      if (p->p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  const char *val = stp_get_string_parameter(global_vars, p->name);
+	  if (val && strlen(val) > 0)
+	    {
+	      stp_set_string_parameter(v, p->name, val);
+	    }
+	}
+      else if (p->p_type == STP_PARAMETER_TYPE_INT &&
+	       stp_check_int_parameter(global_vars, p->name, STP_PARAMETER_ACTIVE))
+	{
+	  int val = stp_get_int_parameter(global_vars, p->name);
+	  stp_set_int_parameter(v, p->name, val);
+	}
+      else if (p->p_type == STP_PARAMETER_TYPE_DOUBLE &&
+	       stp_check_float_parameter(global_vars, p->name, STP_PARAMETER_ACTIVE))
+	{
+	  double val = stp_get_float_parameter(global_vars, p->name);
+	  stp_set_float_parameter(v, p->name, val);
+	}
     }
+  stp_set_page_width(v, stp_get_page_width(global_vars));
+  stp_set_page_height(v, stp_get_page_height(global_vars));
   stp_parameter_list_destroy(params);
 
   stp_get_imageable_area(v, &left, &right, &bottom, &top);
@@ -429,6 +446,8 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
   int i;								\
   T *s_data = (T *) data;						\
   unsigned black_val = global_ink_limit * ((1 << bits) - 1);		\
+  unsigned blocks = (len / scount) * scount;				\
+  unsigned extra = len - blocks;					\
   if (strcmp(global_image_type, "Raw") == 0)				\
     {									\
       for (i = 0; i < (len / scount) * scount; i++)			\
@@ -447,6 +466,28 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
 	    }								\
 	  s_data += global_channel_depth;				\
 	}								\
+      memset(s_data, 0xff, sizeof(T) * extra *				\
+	     global_channel_depth);					\
+    }									\
+  else if (strcmp(global_image_type, "RGB") == 0)			\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  memset(s_data, 0, sizeof(T) * 3);				\
+	  s_data += 3;							\
+	}								\
+      memset(s_data, 0xff, sizeof(T) * extra * 3);			\
+    }									\
+  else if (strcmp(global_image_type, "CMY") == 0)			\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  s_data[0] = black_val;					\
+	  s_data[1] = black_val;					\
+	  s_data[2] = black_val;					\
+	  s_data += 3;							\
+	}								\
+      memset(s_data, 0, sizeof(T) * extra * 3);				\
     }									\
   else if (strcmp(global_image_type, "CMYK") == 0)			\
     {									\
@@ -456,6 +497,7 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
 	  s_data[3] = black_val;					\
 	  s_data += 4;							\
 	}								\
+      memset(s_data, 0, sizeof(T) * extra * 4);				\
     }									\
   else if (strcmp(global_image_type, "KCMY") == 0)			\
     {									\
@@ -465,6 +507,7 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
 	  s_data[0] = black_val;					\
 	  s_data += 4;							\
 	}								\
+      memset(s_data, 0, sizeof(T) * extra * 4);				\
     }									\
   else if (strcmp(global_image_type, "Grayscale") == 0)			\
     {									\
@@ -474,6 +517,16 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
 	  s_data[0] = black_val;					\
 	  s_data += 1;							\
 	}								\
+      memset(s_data, 0, sizeof(T) * extra);				\
+    }									\
+  else if (strcmp(global_image_type, "Whitescale") == 0)		\
+    {									\
+      for (i = 0; i < (len / scount) * scount; i++)			\
+	{								\
+	  memset(s_data, 0, sizeof(T) * 1);				\
+	  s_data += 1;							\
+	}								\
+      memset(s_data, 0xff, sizeof(T) * extra);				\
     }									\
 }
 
@@ -500,9 +553,64 @@ fill_black(unsigned char *data, size_t len, size_t scount, size_t bytes)
 static void								\
 fill_white_##bits(unsigned char *data, size_t len, size_t scount)	\
 {									\
+  int i;								\
   T *s_data = (T *) data;						\
-  memset(s_data, 0, sizeof(T) * global_channel_depth *			\
-	 ((len / scount) * scount));					\
+  if (strcmp(global_image_type, "Raw") == 0)				\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0, sizeof(T) * global_channel_depth);		\
+	  s_data += global_channel_depth;				\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "RGB") == 0)			\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0xff, sizeof(T) * 3);				\
+	  s_data += 3;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "CMY") == 0)			\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0, sizeof(T) * 3);				\
+	  s_data += 3;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "CMYK") == 0)			\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0, sizeof(T) * 4);				\
+	  s_data += 4;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "KCMY") == 0)			\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0, sizeof(T) * 4);				\
+	  s_data += 4;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "Grayscale") == 0)			\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0, sizeof(T) * 1);				\
+	  s_data += 1;							\
+	}								\
+    }									\
+  else if (strcmp(global_image_type, "Whitescale") == 0)		\
+    {									\
+      for (i = 0; i < len; i++)						\
+	{								\
+	  memset(s_data, 0xff, sizeof(T) * 1);				\
+	  s_data += 1;							\
+	}								\
+    }									\
 }
 
 FILL_WHITE_FUNCTION(unsigned short, 16)
@@ -889,6 +997,10 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	  previous_band = band;
 	  fprintf(stderr, ".");
 	}
+      else
+	fill_pattern(&(static_testpatterns[band]), data,
+		     global_printer_width, global_steps, depth,
+		     global_bit_depth / 8);
     }
   return STP_IMAGE_STATUS_OK;
 }

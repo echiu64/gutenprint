@@ -197,19 +197,23 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.2:
       filled with maximum color density, some lines could be silently
       discarded).
 
-   7) Various fixes for the Canon iP4000, iP4200, and i560.  Color
+   7) A bug in which Canon printers using Long Edge duplex mode
+      (duplex without tumble) could consume very large amounts of
+      memory with multi-page documents has been fixed.
+
+   8) Various fixes for the Canon iP4000, iP4200, and i560.  Color
       improvements have been made on the iP4200.
 
-   8) The paper size for the CD - Custom paper size has been changed
+   9) The paper size for the CD - Custom paper size has been changed
       to 120 mm from 118.8 mm to allow correct printing from CUPS.
 
-   9) A compile problem on Solaris has been fixed.
+   10) A compile problem on Solaris has been fixed.
 
-   10) It is now possible to specify the printer model to all escputil
+   11) It is now possible to specify the printer model to all escputil
       commands, via the -m option.  It is no longer necessary to use
       the -u option to specify a new printer vs. an old printer.
 
-   11) The Epson driver will not select resolutions higher than
+   12) The Epson driver will not select resolutions higher than
       5760x1440 for the automatic quality settings, as we have
       determined that many current printers offer poor quality at the
       bottom of the page with resolutions of 2880x2880 and 5760x2880.
@@ -218,13 +222,13 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.2:
       automatically selected by the Best or Ultra Photo quality
       settings.
 
-   12) A problem where in some cases certain options were not handled
+   13) A problem where in some cases certain options were not handled
       correctly by the CUPS driver has been fixed.  In particular,
       yes/no options such as borderless printing were not handled
       correctly in all cases when the printing system is CUPS 1.2 or
       1.3.
 
-   13) The CUPS driver in Gutenprint, and all associated utilities,
+   14) The CUPS driver in Gutenprint, and all associated utilities,
       are now licensed as GPL v2 or higher.  That code was previously
       licensed as GPL v2 only.  While that did not cause any direct
       problems, since the CUPS driver does not form a library that
