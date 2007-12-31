@@ -49,12 +49,13 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
-	A) New features in 5.1.5
-	B) New features in 5.1.4
-	C) New features in 5.1.3
-	D) New features in 5.1.2
-	E) New features in 5.1.1
-	F) New features in 5.1.0
+	* New features and fixes in 5.1.6
+	* New features and fixes in 5.1.5
+	* New features and fixes in 5.1.4
+	* New features and fixes in 5.1.3
+	* New features and fixes in 5.1.2
+	* New features and fixes in 5.1.1
+	* New features and fixes in 5.1.0
 III)   Exceptions and Workarounds
 	A) General Issues
 	B) Build/Installation Issues
@@ -129,7 +130,28 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.6:
+
+   1) A bug involving excessive memory consumption in certain cases
+      has been fixed.  Printing multiple page documents on Canon
+      inkjet printers with the Duplex option set to Long Edge resulted
+      in very large memory consumption on alternate pages, which was
+      not released until the job completed.  For example, in color at
+      600 DPI, the memory consumption would be about 120 megabytes on
+      alternate pages, so printing a 100 page document would result in
+      6 GB of memory consumption.  Depending upon the system, the
+      results might be that the job would fail to print or would only
+      partially print, the system might run very slowly while the job
+      was being processed, or other components of the system might
+      fail.
+
+   2) The Ordered New dither algorithm has been improved to produce
+      smoother output.
+
+
+----------------
+
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
 
    1) New printers supported in this release:
 
@@ -206,7 +228,9 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
       higher.
 
 
-B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
+----------------
+
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 
    1) New printers supported in this release:
 
@@ -503,7 +527,7 @@ B) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
 
 ----------------
 
-C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.3:
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.3:
 
   1) The Canon PIXMA iP4300 and related printers now print black
      properly.
@@ -518,7 +542,7 @@ C) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.3:
 
 ----------------
 
-D) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
 
   1) Improved tunings for Epson printers using Claria inks.
 
@@ -551,7 +575,7 @@ D) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
 
 ----------------
 
-E) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
   1) New printers supported in this release:
 
@@ -629,7 +653,7 @@ E) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
 
 ----------------
 
-F) NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
 
   1) New printers supported in this release:
 

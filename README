@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.1.5!  Please read these notes carefully.
+Welcome to Gutenprint 5.1.6!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: This is a DEVELOPMENT version of Gutenprint.
     It should not be packaged as the principal release of Gutenprint
@@ -23,7 +23,7 @@ Welcome to Gutenprint 5.1.5!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.1.5, a development release of
+    This is Gutenprint version 5.1.6, a development release of
     Gutenprint 5.1 that will eventually lead to Gutenprint 5.2.
     Gutenprint, formerly named Gimp-Print, is a suite of printer
     drivers that may be used with most common UNIX print spooling
@@ -135,7 +135,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.1.5 generated on 01 Dec 2007
+	  Release: gutenprint 5.1.6 generated on 31 Dec 2007
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -157,8 +157,8 @@ A) OVERVIEW
 	    Installation prefix:                        /usr/local
 	    Data directory:                             /usr/local/share/gutenprint
 	    Library directory:                          /usr/local/lib/gutenprint
-	    XML data directory:                         /usr/local/share/gutenprint/5.1.5/xml
-	    Module directory:                           /usr/local/lib/gutenprint/5.1.5/modules
+	    XML data directory:                         /usr/local/share/gutenprint/5.1.6/xml
+	    Module directory:                           /usr/local/lib/gutenprint/5.1.6/modules
 	    Install sample images:                      yes
 
 	General configuration:
