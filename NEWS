@@ -31,8 +31,8 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
-	A) Changes from 5.0.1 to 5.0.2
-	B) Changes from 5.0.0 to 5.0.1
+	* New features and fixes in 5.0.2
+	* New features and fixes in 5.0.1
 III)  Overall changes from 4.2 to 5.0.
 	A) General user-visible changes
 	B) New Functionality
@@ -116,7 +116,7 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.2:
+*) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.2:
 
    1) New printers supported in this release:
 
@@ -197,9 +197,18 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.2:
       filled with maximum color density, some lines could be silently
       discarded).
 
-   7) A bug in which Canon printers using Long Edge duplex mode
-      (duplex without tumble) could consume very large amounts of
-      memory with multi-page documents has been fixed.
+   7) A bug involving excessive memory consumption in certain cases
+      has been fixed.  Printing multiple page documents on Canon
+      inkjet printers with the Duplex option set to Long Edge resulted
+      in very large memory consumption on alternate pages, which was
+      not released until the job completed.  For example, in color at
+      600 DPI, the memory consumption would be about 120 megabytes on
+      alternate pages, so printing a 100 page document would result in
+      6 GB of memory consumption.  Depending upon the system, the
+      results might be that the job would fail to print or would only
+      partially print, the system might run very slowly while the job
+      was being processed, or other components of the system might
+      fail.
 
    8) Various fixes for the Canon iP4000, iP4200, and i560.  Color
       improvements have been made on the iP4200.
@@ -238,7 +247,7 @@ A) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.2:
       higher.
 
 
-B) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
+*) NEW FEATURES AND FIXES IN GUTENPRINT 5.0.1:
 
   1) New printers supported in this release:
 
