@@ -848,8 +848,8 @@ main(int  argc,				/* I - Number of command-line arguments */
   if (! suppress_messages)
     {
       fprintf(stderr, "DEBUG: Gutenprint %s Starting\n", version_id);
-      fprintf(stderr, "DEBUG: Gutenprint command line: %s '%s' '%s' '%s' '%s' '%s'%s%s%s\n",
-	      argv[0], argv[1], argv[2], argv[3], argv[4], argv[5],
+      fprintf(stderr, "DEBUG: Gutenprint command line: %s '%s' '%s' '%s' '%s' %s%s%s%s\n",
+	      argv[0], argv[1], argv[2], argv[3], argv[4], "<args>",
 	      argc >= 7 ? " '" : "",
 	      argc >= 7 ? argv[6] : "",
 	      argc >= 7 ? "'" : "");
