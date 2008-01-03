@@ -2114,6 +2114,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
 
   canon_deinit_printer(v, &privdata);
+  /* canon_end_job does not get called for jobmode automatically */
+  if(!stp_get_string_parameter(v, "JobMode") ||
+    strcmp(stp_get_string_parameter(v, "JobMode"), "Page") == 0){
+    canon_end_job(v,image);
+  }
 
   for(i=0;i< privdata.num_channels;i++)
       if(privdata.channels[i].buf)
