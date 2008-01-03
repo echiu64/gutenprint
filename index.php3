@@ -34,6 +34,30 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 and 10.5 "Leopard", and provides direct download links.</p>
 
 
+<H2><font color="#ff0000">Gutenprint 5.1.6 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of January 3,
+2008!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.1.6, a development release.  This release offers
+an important bug fix over 5.1.5.  This package is available in source
+form, and a binary installer for Macintosh OS X (10.2 and above) will
+be available shortly.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
+<H2><font color="#ff0000">Gutenprint 5.0.2 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of January 3,
+2008!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0
+series.  This release features full support for CUPS 1.2, full support
+for borderless printing on Epson inkjet printers, support for
+more Epson, Canon, and dye sublimation printers, and more.  This
+package is available in source form, and a binary installer for
+Macintosh OS X (10.2 and above) will be available shortly.  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
 <H2><font color="#ff0000">Gutenprint 5.1.5 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of December 29,
@@ -50,9 +74,7 @@ can read the release notes and download it here</a>.  </p>
 2007!</strong></em></font> The Gutenprint project is pleased to
 announce Gutenprint 5.1.4, a development release.  This release
 supports additional printers and offers some important bug fixes over
-5.1.3.  This package is available in source form, and as a binary
-installer for Macintosh OS X (10.2 and above) will be available
-shortly.  <a
+5.1.3.  This package is available in source form.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
