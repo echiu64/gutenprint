@@ -39,9 +39,7 @@ and 10.5 "Leopard", and provides direct download links.</p>
 <P><strong><em><font color="#ff0000">New as of January 3,
 2008!</strong></em></font> The Gutenprint project is pleased to
 announce Gutenprint 5.1.6, a development release.  This release offers
-an important bug fix over 5.1.5.  This package is available in source
-form, and a binary installer for Macintosh OS X (10.2 and above) will
-be available shortly.  <a
+an important bug fix over 5.1.5.  This package is available in source form, and as a binary installer for Macintosh OS X (10.2 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
