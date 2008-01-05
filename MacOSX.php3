@@ -129,14 +129,14 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.6 is released!</span> 
+			<br>
+			<a href="MacOSX.php3#5.1.6">January 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.6, a development release. This release incorporates the support for additional printers and other improvemnets in 5.1.5 as well as the improvements in 5.1.6. The release also offers an important bug fix over 5.1.5.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
 			<br>
 			<a href="MacOSX.php3#5.0.2">January 3, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0 series. This release features full support for borderless printing on Epson inkjet printers, support for more Epson, Canon, and dye sublimation printers, and more. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.4 is released!</span> 
-			<br>
-			<a href="MacOSX.php3#5.1.4">December 10, 2007</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.4, a development release. See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Updated Mac Uninstaller</span> 
@@ -190,12 +190,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			Gutenprint 5.0.2 is the latest release from the stable branch of Gutenprint 5.0. This release supports additional printers and offers some important bug fixes. It is fully compatible with Mac OS X 10.5.x (Leopard).  The updated uninstaller is also included and is Mac OS X 10.5.x compatible.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.0.2.tar.bz2?download">source code</a>) 
 		</p>
 		<p>
-			<b>Gutenprint 5.1.4</b> 
+			<b>Gutenprint 5.1.6</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.4-UB.dmg?download">gutenprint-5.1.4-UB.dmg</a></span>&nbsp;&nbsp;(15.5 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.6-ub.dmg?download">gutenprint-5.1.6-ub.dmg</a></span>&nbsp;&nbsp;(15.5 MB) 
 		</p>
 		<p>
-			Gutenprint 5.1.4 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release supports additional printers and offers some important bug fixes over 5.1.3.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.4.tar.bz2?download">source code</a>) 
+			Gutenprint 5.1.6 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release supports additional printers and offers some important bug fixes over 5.1.4 - the last Mac OS X developmental release.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.6.tar.bz2?download">source code</a>) 
 		</p>
 <!-- deleted older release info as iCab was still displaying it -->
 		<p>
@@ -257,6 +257,45 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.1.6"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.1.6</b> 
+		</td>
+		<td align="right">
+			<b>2008-01-05</b> 
+		</td>
+	</tr>
+</table>
+<p>
+	Gutenprint 5.1.6 is a release of the developmental branch of Gutenprint 5.1.  The 5.1.6 release supports additional printers and offers some important bug fixes over 5.1.4 - the last Mac OS X developmental release. The most important changes are:
+</p>
+<ul style="list-style: disc;">
+	<li>A bug involving excessive memory consumption in certain cases has been fixed.  Printing multiple page documents on Canon inkjet printers with the Duplex option set to Long Edge resulted in very large memory consumption on alternate pages, which was not released until the job completed.</li>
+	<li>Added support for the following printers:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus C110<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus C120<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus D120<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson PX V780<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Sharp AR-M257<br>
+	</li>
+<li>
+Added preliminary support for the following printers:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon Pixma iP8500<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon Pixma MP610<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon Pixma Pro 9500<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon i80<br>
+	</li>
+<li>A new dither algorithm, Ordered New, has been added.  This dither algorithm is most likely to improve output at low resolutions, particularly when printing black and white.  It will only help on printers offering multiple drop sizes.</li>
+<li>The color correction for the Canon PIXMA iP4200 has been improved.</li>
+<li>The PPD file parsing code in the Postscript driver has been rewritten.  Gutenprint may now be used with any code licensed as GPL v2 or any later version of the GPL.
+</li>
+<li>The CUPS driver in Gutenprint, and all associated utilities, are now licensed as GPL v2 or higher.  That code was previously licensed as GPL v2 only.  While that did not cause any direct problems, since the CUPS driver does not form a library that other code may wish to link against, it was licensed differently from the rest of the Gutenprint project.  That is now resolved, and the entire Gutenprint code base is now licensed as GPL v2 or higher.</li>
+</ul>
+<p>
+Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=565661">release notes</a>.
+</p>
 <a name="5.0.2"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
