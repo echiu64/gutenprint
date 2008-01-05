@@ -50,9 +50,7 @@ can read the release notes and download it here</a>.  </p>
 announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0
 series.  This release features full support for CUPS 1.2, full support
 for borderless printing on Epson inkjet printers, support for
-more Epson, Canon, and dye sublimation printers, and more.  This
-package is available in source form, and a binary installer for
-Macintosh OS X (10.2 and above) will be available shortly.  <a
+more Epson, Canon, and dye sublimation printers, and more.  This package is available in source form, and as a binary installer for Macintosh OS X (10.2 and above). <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
