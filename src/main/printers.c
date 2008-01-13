@@ -738,16 +738,15 @@ stp_verify_printer_params(stp_vars_t *v)
   errbuf_t errbuf;
   stp_outfunc_t ofunc = stp_get_errfunc(v);
   void *odata = stp_get_errdata(v);
-
-  stp_dprintf(STP_DBG_VARS, v, "** Entering stp_verify_printer_params(0x%p)\n",
-	      v);
-
   stp_parameter_list_t params;
   int nparams;
   int i;
   int answer = 1;
   int left, top, bottom, right;
   const char *pagesize = stp_get_string_parameter(v, "PageSize");
+
+  stp_dprintf(STP_DBG_VARS, v, "** Entering stp_verify_printer_params(0x%p)\n",
+	      (void *) v);
 
   stp_set_errfunc((stp_vars_t *) v, fill_buffer_writefunc);
   stp_set_errdata((stp_vars_t *) v, &errbuf);
@@ -848,7 +847,7 @@ stp_verify_printer_params(stp_vars_t *v)
       stp_free(errbuf.data);
     }
   stp_dprintf(STP_DBG_VARS, v, "** Exiting stp_verify_printer_params(0x%p) => %d\n",
-	      v, answer);
+	      (void *) v, answer);
   return answer;
 }
 
@@ -1075,10 +1074,10 @@ stp_printvars_create_from_xmltree(stp_mxml_node_t *printer,
   outprintvars->name = sbuf;
   prop = printer->child;
   stp_deprintf(STP_DBG_XML, ">>stp_printvars_create_from_xmltree: %p, %s\n",
-	       outprintvars->printvars, outprintvars->name);
+	       (void *) (outprintvars->printvars), outprintvars->name);
   stp_fill_printvars_from_xmltree(prop, outprintvars->printvars);
   stp_deprintf(STP_DBG_XML, "<<stp_printvars_create_from_xmltree: %p, %s\n",
-	       outprintvars->printvars, outprintvars->name);
+	       (void *) (outprintvars->printvars), outprintvars->name);
   return outprintvars;
 }
 
