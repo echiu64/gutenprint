@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.1.6!  Please read these release notes
+Welcome to Gutenprint 5.1.7!  Please read these release notes
 carefully.
 
 Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
@@ -24,7 +24,7 @@ German.
 
 Gutenprint currently supports over 600 printer models.
 
-Gutenprint 5.1.6 is a development release of Gutenprint 5.1.
+Gutenprint 5.1.7 is a development release of Gutenprint 5.1.
 
 *** NOTE TO PACKAGERS: This is a DEVELOPMENT version of Gutenprint.
     It should not be packaged as the principal release of Gutenprint
@@ -49,6 +49,7 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
+	* New features and fixes in 5.1.7
 	* New features and fixes in 5.1.6
 	* New features and fixes in 5.1.5
 	* New features and fixes in 5.1.4
@@ -129,6 +130,33 @@ for building and installing Gutenprint.
 ================================================================
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.7:
+
+   1) New printers supported in this release:
+
+      * Epson inkjet printers:
+
+	EPSON PictureMate 100
+	EPSON PictureMate 260
+	EPSON PictureMate 290
+	EPSON PictureMate 500
+	EPSON PictureMate Dash
+	EPSON Stylus D92
+	EPSON Stylus DX4400
+	EPSON Stylus DX4450
+	EPSON Stylus DX7000F
+	EPSON Stylus DX7400
+	EPSON Stylus DX7450
+	EPSON Stylus DX8400
+	EPSON Stylus DX8450
+	EPSON Stylus Photo R280
+	EPSON Stylus Photo R285
+	EPSON Stylus Photo RX585
+	EPSON Stylus Photo RX680
+	EPSON Stylus Photo RX685
+
+----------------
 
 * NEW FEATURES AND FIXES IN GUTENPRINT 5.1.6:
 
