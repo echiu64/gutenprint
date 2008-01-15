@@ -270,6 +270,7 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
       "bottom",
       "top",
       "unit",
+      "type",
       NULL
       };*/
   stp_papersize_t *outpaper;   /* Generated paper */
@@ -300,6 +301,7 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
   outpaper->left = 0;
   outpaper->bottom = 0;
   outpaper->right = 0;
+  outpaper->paper_size_type = PAPERSIZE_TYPE_STANDARD;
   if (outpaper->name)
     id = 1;
 
@@ -378,10 +380,21 @@ stp_xml_process_paper(stp_mxml_node_t *paper) /* The paper node */
 		  unit = 1;
 		}
 	    }
+	  if (!strcmp(prop_name, "type"))
+	    {
+	      stmp = stp_mxmlElementGetAttr(prop, "value");
+	      if (stmp)
+		{
+		  if (!strcmp(stmp, "envelope"))
+		    outpaper->paper_size_type = PAPERSIZE_TYPE_ENVELOPE;
+		  else
+		    outpaper->paper_size_type = PAPERSIZE_TYPE_STANDARD;
+		}
+	    }
 	}
       prop = prop->next;
     }
-  if (id && name && width && height && unit) /* Margins are optional */
+  if (id && name && width && height && unit) /* Margins and type are optional */
     return outpaper;
   stp_free(outpaper);
   outpaper = NULL;

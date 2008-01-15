@@ -68,6 +68,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "supports_ink_change",     11, 1 },
   { "packet_mode",             12, 1 },
   { "interchangeable_ink",     13, 1 },
+  { "envelope_landscape",      14, 1 },
 };
 
 typedef struct
@@ -397,6 +398,8 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(max_paper_height),
   PARAMETER_INT(min_paper_width),
   PARAMETER_INT(min_paper_height),
+  PARAMETER_INT(max_imageable_width),
+  PARAMETER_INT(max_imageable_height),
   PARAMETER_INT(extra_feed),
   PARAMETER_INT(pseudo_separation_rows),
   PARAMETER_INT(base_separation),
@@ -679,6 +682,8 @@ DEF_SIMPLE_ACCESSOR(max_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(max_paper_height, unsigned)
 DEF_SIMPLE_ACCESSOR(min_paper_width, unsigned)
 DEF_SIMPLE_ACCESSOR(min_paper_height, unsigned)
+DEF_SIMPLE_ACCESSOR(max_imageable_width, unsigned)
+DEF_SIMPLE_ACCESSOR(max_imageable_height, unsigned)
 DEF_SIMPLE_ACCESSOR(cd_x_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_y_offset, int)
 DEF_SIMPLE_ACCESSOR(cd_page_width, int)
@@ -1206,11 +1211,15 @@ verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
 {
   unsigned int height_limit, width_limit;
   unsigned int min_height_limit, min_width_limit;
+  unsigned int envelope_landscape =
+    escp2_has_cap(v, MODEL_ENVELOPE_LANDSCAPE, MODEL_ENVELOPE_LANDSCAPE_YES);
   width_limit = escp2_max_paper_width(v);
   height_limit = escp2_max_paper_height(v);
   min_width_limit = escp2_min_paper_width(v);
   min_height_limit = escp2_min_paper_height(v);
   if (strlen(pt->name) > 0 &&
+      (pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE ||
+       envelope_landscape || pt->height > pt->width) &&
       pt->width <= width_limit && pt->height <= height_limit &&
       (pt->height >= min_height_limit || pt->height == 0) &&
       (pt->width >= min_width_limit || pt->width == 0) &&
@@ -2188,6 +2197,10 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	    }
 	}
     }
+  if (width > escp2_max_imageable_width(v))
+    width = escp2_max_imageable_width(v);
+  if (height > escp2_max_imageable_height(v))
+    height = escp2_max_imageable_height(v);
   *left =	left_margin;
   *right =	width - right_margin;
   *top =	top_margin;

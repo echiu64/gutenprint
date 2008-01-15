@@ -390,11 +390,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 1, 4, 15, 1, 4, 15, 1, 4, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g1_dotsizes, g1_densities, "simple",
@@ -408,11 +409,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g2_dotsizes, g1_densities, "simple",
@@ -426,11 +428,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17), INCH(44), INCH(2), INCH(2),
+    INCH(17), INCH(44), INCH(2), INCH(2), INCH(17), INCH(44),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g1_dotsizes, sc1500_densities, "simple",
@@ -444,11 +447,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     sc600_dotsizes, g3_densities, "simple",
@@ -462,11 +466,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 180, 180,
     0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g3_dotsizes, g3_densities, "simple",
@@ -480,11 +485,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 180, 180,
     0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g3_dotsizes, g3_densities, "simple",
@@ -498,11 +504,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 180, 180,
     0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17), INCH(44), INCH(2), INCH(2),
+    INCH(17), INCH(44), INCH(2), INCH(2), INCH(136 / 10), INCH(44),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g3_dotsizes, g3_densities, "simple",
@@ -518,11 +525,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,		/* Is it really 15 pairs??? */
     sp700_dotsizes, sp700_densities, "simple",
@@ -536,11 +544,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_NO | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(118 / 10), INCH(44), INCH(2), INCH(2),
+    INCH(118 / 10), INCH(44), INCH(2), INCH(2), INCH(118 / 10), INCH(44),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     sp700_dotsizes, sp700_densities, "simple",
@@ -554,11 +563,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     sp700_dotsizes, sp700_densities, "simple",
@@ -574,11 +584,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     21, 1, 4, 21, 1, 4, 21, 1, 4, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,
     sc440_dotsizes, sc440_densities, "simple",
@@ -592,11 +603,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,
     sc640_dotsizes, sc440_densities, "simple",
@@ -610,11 +622,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, "variable_6pl",
@@ -628,11 +641,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     96, 1, 2, 192, 1, 1, 192, 1, 1, 4,
     360, 14400, -1, 1440, 720, 180, 180,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c3pl_dotsizes, c3pl_densities, "variable_3pl",
@@ -646,11 +660,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, "variable_6pl",
@@ -664,11 +679,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2),
+    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, "variable_6pl",
@@ -682,11 +698,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_1440_4pl",
@@ -700,11 +717,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2),
+    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_1440_4pl",
@@ -718,11 +736,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0, -1, -1, 0, 0, 0,
     1, 15, 0, 0,
     sc660_dotsizes, sc660_densities, "simple",
@@ -736,11 +755,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_1440_4pl",
@@ -754,11 +774,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sp720_dotsizes, c6pl_densities, "variable_6pl",
@@ -772,11 +793,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, 360, 720, 720, 90, 90,
     0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, "variable_x80_6pl",
@@ -790,11 +812,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_1440_4pl",
@@ -808,11 +831,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_1440_4pl",
@@ -826,11 +850,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 180, 180,
     0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17), INCH(44), INCH(2), INCH(2),
+    INCH(17), INCH(44), INCH(2), INCH(2), INCH(17), INCH(44),
     8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g3_dotsizes, g3_densities, "simple",
@@ -844,11 +869,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 64, 1, 2, 64, 1, 2, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sc670_dotsizes, c6pl_densities, "variable_6pl",
@@ -862,11 +888,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     2, 15, 0, 0,
     sp2000_dotsizes, sp2000_densities, "variable_2000p",
@@ -880,11 +907,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     64, 1, 2, 64, 1, 2, 64, 1, 2, 6,
     360, 14400, -1, 1440, 720, 180, 180,
     0, 1, 0, 0, 0, 0, 0, 4, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2),
+    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
     9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro5000_dotsizes, sp700_densities, "simple",
@@ -898,11 +926,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(24), INCH(1200), INCH(7), INCH(7),
+    INCH(24), INCH(1200), INCH(7), INCH(7), INCH(24), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, "simple",
@@ -916,11 +945,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_YES | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(24), INCH(1200), INCH(7), INCH(7),
+    INCH(24), INCH(1200), INCH(7), INCH(7), INCH(24), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, "simple",
@@ -934,11 +964,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(44), INCH(1200), INCH(7), INCH(7),
+    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, "simple",
@@ -952,11 +983,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_YES | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(44), INCH(1200), INCH(7), INCH(7),
+    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, "simple",
@@ -970,11 +1002,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -988,11 +1021,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1006,11 +1040,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     96, 1, 2, 192, 1, 1, 192, 1, 1, 4,
     360, 14400, -1, 2880, 720, 180, 180,
     38, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c3pl_dotsizes, sc980_densities, "variable_3pl",
@@ -1024,11 +1059,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1042,11 +1078,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1060,11 +1097,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1078,11 +1116,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, 360, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, "variable_x80_6pl",
@@ -1096,11 +1135,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     16, 1, 4, 16, 1, 4, 16, 1, 4, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g1_dotsizes, g1_densities, "simple",
@@ -1114,11 +1154,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_YES | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, "simple",
@@ -1132,11 +1173,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_YES | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(44), INCH(1200), INCH(7), INCH(7),
+    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     spro10000_dotsizes, spro10000_densities, "spro10000",
@@ -1150,11 +1192,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, "variable_x80_6pl",
@@ -1168,11 +1211,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, "variable_x80_6pl",
@@ -1186,11 +1230,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     60, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1204,11 +1249,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     16, 1, 4, 16, 1, 4, 16, 1, 4, 4,
     360, 14400, -1, 720, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(44), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
     9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     1, 7, 0, 0,
     g1_dotsizes, g1_densities, "simple",
@@ -1222,11 +1268,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     96, 96, 2, 96, 96, 2, 24, 24, 1, 6,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 24,
     4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, "variable_2pl",
@@ -1240,11 +1287,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_H_ONLY | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_YES),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_YES |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     96, 96, 2, 96, 96, 2, 192, 192, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, "variable_ultrachrome",
@@ -1258,11 +1306,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_YES | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(24), INCH(1200), INCH(7), INCH(7),
+    INCH(24), INCH(1200), INCH(7), INCH(7), INCH(24), INCH(1200),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, "variable_ultrachrome",
@@ -1276,11 +1325,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_YES | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     1, 1, 1, 1, 1, 1, 1, 1, 1, 7,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(44), INCH(1200), INCH(7), INCH(7),
+    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, "variable_ultrachrome",
@@ -1294,11 +1344,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 1440, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1312,11 +1363,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 1440, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1330,11 +1382,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     48, 1, 3, 144, 1, 1, 144, 1, 1, 4,
     360, 14400, -1, 2880, 1440, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1348,11 +1401,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     96, 96, 2, 96, 96, 2, 24, 24, 1, 6,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 24,
     4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, "variable_2pl",
@@ -1366,11 +1420,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     32, 1, 4, 32, 1, 4, 32, 1, 4, 6,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2),
+    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     sp720_dotsizes, c6pl_densities, "variable_6pl",
@@ -1384,11 +1439,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1402,11 +1458,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 1440, 720, 90, 90,
     0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_x80_6pl",
@@ -1420,11 +1477,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 180, 2, 360, 360, 1, 360, 360, 1, 7,
     360, 14400, -1, 2880, 2880, 720, 360,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities, "variable_2pl",
@@ -1438,11 +1496,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 90, 2, 90, 90, 2, 90, 90, 2, 6,
     360, 14400, -1, 2880, 2880, 720, 360,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities, "variable_2pl",
@@ -1456,11 +1515,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     15, 15, 3, 48, 48, 3, 48, 48, 3, 4,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, "variable_x80_6pl",
@@ -1474,11 +1534,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1492,11 +1553,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
     360, 14400, -1, 2880, 1440, 360, 120,
     0, 1, 0, 80, 42, -180, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1510,11 +1572,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 399, 394, 595, 842, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1528,11 +1591,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
     360, 14400, -1, 2880, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
@@ -1546,11 +1610,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
     360, 28800, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
@@ -1564,11 +1629,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
     360, 14400, -1, 5760, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
@@ -1582,11 +1648,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
     360, 14400, -1, 2880, 1440, 360, 120,
     0, 1, 0, 80, 42, -180, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, "variable_3pl_pigment_c66",
@@ -1600,11 +1667,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
     360, 28800, -1, 5760, 2880, 360, 180,
     0, 1, 0, 96, 42, 0, 0, 0, 1, 180, 5760 * 2880,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
@@ -1618,11 +1686,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
     360, 14400, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
@@ -1636,11 +1705,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 2880, 360, 180,
     0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1654,11 +1724,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 6,
     360, 28800, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 0,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
@@ -1672,11 +1743,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_YES),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_YES |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
     360, 14400, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 1440 * 1440,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     p3_5pl_dotsizes, p3_5pl_densities, "variable_r2400",
@@ -1690,11 +1762,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     29, 30, 3, 90, 90, 3, 90, 90, 3, 4,
     360, 14400, -1, 2880, 1440, 360, 120,
     0, 1, 0, 80, 42, -180, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, "variable_3pl_pigment_c66",
@@ -1708,11 +1781,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
     360, 28800, -1, 5760, 1440, 1440, 720,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(4), INCH(1200), INCH(2), INCH(2),
+    INCH(4), INCH(1200), INCH(2), INCH(2), INCH(4), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     picturemate_dotsizes, picturemate_densities, "variable_picturemate",
@@ -1726,11 +1800,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 90, 3, 90, 90, 3, 90, 90, 3, 4,
     360, 14400, -1, 5760, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, "variable_3pl_pigment_c66",
@@ -1744,11 +1819,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 90, 3, 90, 90, 3, 90, 90, 3, 4,
     360, 14400, -1, 5760, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, "variable_2pl",
@@ -1762,11 +1838,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_YES |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 90, 3, 90, 90, 3, 90, 90, 3, 6,
     360, 14400, -1, 5760, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, "variable_2pl",
@@ -1780,11 +1857,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
     360, 14400, -1, 2880, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
@@ -1798,11 +1876,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_YES),
     48, 1, 3, 48, 1, 3, 48, 1, 3, 6,
     360, 14400, -1, 2880, 720, 90, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, "variable_2880_4pl",
@@ -1816,11 +1895,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 1440, 360, 180,
     0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1834,11 +1914,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     59, 60, 2, 180, 180, 2, 180, 180, 2, 4,
     360, 14400, -1, 2880, 2880, 360, 180,
     0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, "variable_3pl_pigment",
@@ -1852,11 +1933,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
     360, 14400, -1, 5760, 2880, 360, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 189, 595, 842, 24,
     4, 15, 0, 0,
     claria_dotsizes, claria_densities, "variable_claria",
@@ -1870,11 +1952,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 4, 90, 1, 4, 90, 1, 4, 6,
     360, 14400, -1, 5760, 2880, 360, 90,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
-    INCH(13), INCH(1200), INCH(2), INCH(2),
+    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 24,
     4, 15, 0, 0,
     claria_1400_dotsizes, claria_1400_densities, "variable_claria_1400",
@@ -1888,11 +1971,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
     360, 14400, -1, 5760, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
@@ -1906,11 +1990,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     90, 1, 3, 90, 1, 3, 90, 1, 3, 6,
     360, 14400, -1, 2880, 1440, 360, 120,
     0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, "variable_3pl_pmg",
@@ -1924,11 +2009,12 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
      MODEL_ZEROMARGIN_YES | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
      MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO),
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
     59, 60, 2, 360, 1, 1, 360, 1, 1, 4,
     360, 14400, -1, 5760, 2880, 360, 180,
     0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2),
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
     4, 15, 0, 0,
     c3pl_pigment_c120_dotsizes, c3pl_pigment_c120_densities, "variable_3pl_pigment_c120",

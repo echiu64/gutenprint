@@ -407,7 +407,11 @@ typedef struct
 
 #define MODEL_INTERCHANGEABLE_INK_MASK	0x2000ul
 #define MODEL_INTERCHANGEABLE_INK_NO	0x0000ul
-#define MODEL_INTERCHANGEABLE_INK_YES	0x1000ul
+#define MODEL_INTERCHANGEABLE_INK_YES	0x2000ul
+
+#define MODEL_ENVELOPE_LANDSCAPE_MASK	0x4000ul
+#define MODEL_ENVELOPE_LANDSCAPE_NO	0x0000ul
+#define MODEL_ENVELOPE_LANDSCAPE_YES	0x4000ul
 
 typedef enum
 {
@@ -421,6 +425,7 @@ typedef enum
   MODEL_SUPPORTS_INK_CHANGE,
   MODEL_PACKET_MODE,
   MODEL_INTERCHANGEABLE_INK,
+  MODEL_ENVELOPE_LANDSCAPE,
   MODEL_LIMIT
 } escp2_model_option_t;
 
@@ -481,6 +486,8 @@ typedef struct escp2_printer
   int		max_paper_height; /* Maximum paper height, in points */
   int		min_paper_width; /* Maximum paper width, in points */
   int		min_paper_height; /* Maximum paper height, in points */
+  int		max_imageable_width; /* Maximum imageable area, in points */
+  int		max_imageable_height; /* Maximum imageable area, in points */
 /*****************************************************************************/
   /* Borders */
 				/* SHEET FED: */

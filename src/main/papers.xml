@@ -581,6 +581,15 @@
       <width value="2599"/>
       <height value="3676"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C0_l">
+      <description value="C0 landscape"/>
+      <comment value="917mm x 1297mm landscape"/>
+      <width value="3676"/>
+      <height value="2599"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C1">
       <description value="C1"/>
@@ -588,6 +597,15 @@
       <width value="1836"/>
       <height value="2599"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C1_l">
+      <description value="C1 landscape"/>
+      <comment value="648mm x 917mm landscape"/>
+      <width value="2599"/>
+      <height value="1836"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C2">
       <description value="C2"/>
@@ -595,6 +613,15 @@
       <width value="1298"/>
       <height value="1836"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C2_l">
+      <description value="C2 landscape"/>
+      <comment value="458mm x 648mm landscape"/>
+      <width value="1836"/>
+      <height value="1298"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C3">
       <description value="C3"/>
@@ -602,6 +629,15 @@
       <width value="918"/>
       <height value="1298"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C3_l">
+      <description value="C3 landscape"/>
+      <comment value="324mm x 458mm landscape"/>
+      <width value="1298"/>
+      <height value="918"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C4">
       <description value="C4"/>
@@ -609,6 +645,15 @@
       <width value="649"/>
       <height value="918"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C4_l">
+      <description value="C4 landscape"/>
+      <comment value="229mm x 324mm landscape"/>
+      <width value="918"/>
+      <height value="649"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C5">
       <description value="C5"/>
@@ -616,6 +661,15 @@
       <width value="459"/>
       <height value="649"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C5_l">
+      <description value="C5 landscape"/>
+      <comment value="162mm x 229mm landscape"/>
+      <width value="649"/>
+      <height value="459"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="w354h918">
       <description value="B6-C4"/>
@@ -623,6 +677,15 @@
       <width value="354"/>
       <height value="918"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w354h918_l">
+      <description value="B6-C4 landscape"/>
+      <comment value="125mm x 324mm landscape"/>
+      <width value="918"/>
+      <height value="354"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C6">
       <description value="C6"/>
@@ -630,6 +693,15 @@
       <width value="323"/>
       <height value="459"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C6_l">
+      <description value="C6 landscape"/>
+      <comment value="114mm x 162mm landscape"/>
+      <width value="459"/>
+      <height value="323"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="DL">
       <description value="DL"/>
@@ -637,6 +709,15 @@
       <width value="311"/>
       <height value="623"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="DL_l">
+      <description value="DL landscape"/>
+      <comment value="110mm x 220mm landscape"/>
+      <width value="623"/>
+      <height value="311"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="w229h459">
       <description value="C7-6"/>
@@ -644,6 +725,15 @@
       <width value="229"/>
       <height value="459"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w229h459_l">
+      <description value="C7-6 landscape"/>
+      <comment value="81mm x 162mm landscape"/>
+      <width value="459"/>
+      <height value="229"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C7">
       <description value="C7"/>
@@ -651,6 +741,15 @@
       <width value="229"/>
       <height value="323"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C7_l">
+      <description value="C7 landscape"/>
+      <comment value="81mm x 114mm landscape"/>
+      <width value="323"/>
+      <height value="229"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C8">
       <description value="C8"/>
@@ -658,6 +757,15 @@
       <width value="161"/>
       <height value="229"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C8_l">
+      <description value="C8 landscape"/>
+      <comment value="57mm x 81mm landscape"/>
+      <width value="229"/>
+      <height value="161"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C9">
       <description value="C9"/>
@@ -665,6 +773,15 @@
       <width value="113"/>
       <height value="161"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C9_l">
+      <description value="C9 landscape"/>
+      <comment value="40mm x 57mm landscape"/>
+      <width value="161"/>
+      <height value="113"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="C10">
       <description value="C10"/>
@@ -672,6 +789,15 @@
       <width value="79"/>
       <height value="113"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="C10_l">
+      <description value="C10 landscape"/>
+      <comment value="28mm x 40mm landscape"/>
+      <width value="113"/>
+      <height value="79"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
 <!-- GROUP: US CAD -->
 <!--
@@ -894,18 +1020,42 @@
       <width value="340"/>
       <height value="666"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w340h666_l">
+      <description value="Japanese long envelope #3 landscape"/>
+      <width value="666"/>
+      <height value="340"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="w255h581">
       <description value="Japanese long envelope #4"/>
       <width value="255"/>
       <height value="581"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w255h581_l">
+      <description value="Japanese long envelope #4 landscape"/>
+      <width value="581"/>
+      <height value="255"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="w680h941">
       <description value="Japanese Kaku envelope #4"/>
       <width value="680"/>
       <height value="941"/>
       <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w680h941_l">
+      <description value="Japanese Kaku envelope #4 landscape"/>
+      <width value="941"/>
+      <height value="680"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="COM10">
       <description value="Commercial 10"/>
@@ -913,6 +1063,15 @@
       <width value="297"/>
       <height value="684"/>
       <unit value="english-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="COM10_l">
+      <description value="Commercial 10 landscape"/>
+      <comment value="US Commercial 10 env landscape"/>
+      <width value="684"/>
+      <height value="297"/>
+      <unit value="english-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="w315h414">
       <description value="A2 Invitation"/>
@@ -927,6 +1086,15 @@
       <width value="279"/>
       <height value="540"/>
       <unit value="english-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="Monarch_l">
+      <description value="Monarch Envelope landscape"/>
+      <comment value="3.875in x 7.5in landscape"/>
+      <width value="540"/>
+      <height value="279"/>
+      <unit value="english-extended"/>
+      <type value="envelope"/>
     </paper>
     <paper name="w288h387">
       <description value="4x5 3/8"/>

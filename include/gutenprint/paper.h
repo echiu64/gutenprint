@@ -59,6 +59,14 @@ typedef enum
   PAPERSIZE_METRIC_EXTENDED
 } stp_papersize_unit_t;
 
+typedef enum
+{
+  /** Standard paper size */
+  PAPERSIZE_TYPE_STANDARD = 0,
+  /** Envelope */
+  PAPERSIZE_TYPE_ENVELOPE
+} stp_papersize_type_t;
+
 /** The papersize data type. */
 typedef struct
 {
@@ -82,6 +90,8 @@ typedef struct
   unsigned right;
   /** Units of measurement. */
   stp_papersize_unit_t paper_unit;
+  /** Paper size type. */
+  stp_papersize_type_t paper_size_type;
 } stp_papersize_t;
 
 /**
