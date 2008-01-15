@@ -1525,6 +1525,7 @@ write_ppd(
 	  stp_clear_string_parameter(v, "Resolution");
 	  stp_describe_parameter(v, "Quality", &desc1);
 	  stp_set_string_parameter(v, "Quality", desc1.deflt.str);
+	  stp_parameter_description_destroy(&desc1);
 	  stp_describe_resolution(v, &xdpi, &ydpi);
 	  stp_clear_string_parameter(v, "Quality");
 	  tmp_xdpi = xdpi;
