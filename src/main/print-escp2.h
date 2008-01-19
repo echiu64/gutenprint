@@ -68,7 +68,7 @@ typedef struct
 {
   const char *listname;
   short numdropsizes;
-  const double dropsizes[MAX_DROP_SIZES];
+  double dropsizes[MAX_DROP_SIZES];
 } escp2_dropsize_t;
 
 typedef const escp2_dropsize_t *escp2_drop_list_t[RES_N];
@@ -177,6 +177,8 @@ typedef struct
   short head_offset;
   short split_channel_count;
   const char *channel_density;
+  const char *subchannel_transition;
+  const char *subchannel_value;
   const char *subchannel_scale;
   const short split_channels[PHYSICAL_CHANNEL_LIMIT];
 } physical_subchannel_t;
@@ -227,7 +229,7 @@ typedef struct
 typedef struct
 {
   int n_shades;
-  const double shades[PHYSICAL_CHANNEL_LIMIT];
+  double shades[PHYSICAL_CHANNEL_LIMIT];
 } shade_t;
 
 typedef shade_t shade_set_t[PHYSICAL_CHANNEL_LIMIT];

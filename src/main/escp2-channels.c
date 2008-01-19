@@ -285,380 +285,380 @@ static hue_curve_t picturemate_blue_curve =
 
 static const physical_subchannel_t standard_black_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL }
+  { 0, -1, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_black);
 
 static const physical_subchannel_t f360_black_subchannels[] =
 {
-  { 0, 0, 1, 0, "BlackDensity", NULL }
+  { 0, 0, 1, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_black);
 
 static const physical_subchannel_t x80_black_subchannels[] =
 {
-  { 0, -1, 48, 0, "BlackDensity", NULL }
+  { 0, -1, 48, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_black);
 
 static const physical_subchannel_t c80_black_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL }
+  { 0, -1, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_black);
 
 static const physical_subchannel_t c120_black_subchannels[] =
 {
-  { 0, 4, 0, 2, "BlackDensity", NULL, { 0, 0x40 } }
+  { 0, 4, 0, 2, "BlackDensity", NULL, NULL, NULL, { 0, 0x40 } }
 };
 
 DECLARE_INK_CHANNEL(c120_black);
 
 static const physical_subchannel_t c64_black_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL }
+  { 0, -1, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c64_black);
 
 static const physical_subchannel_t standard_cyan_subchannels[] =
 {
-  { 2, -1, 0, 0, "CyanDensity", NULL }
+  { 2, -1, 0, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_cyan);
 
 static const physical_subchannel_t f360_standard_cyan_subchannels[] =
 {
-  { 2, -1, 1, 0, "CyanDensity", NULL }
+  { 2, -1, 1, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_cyan);
 
 static const physical_subchannel_t r800_cyan_subchannels[] =
 {
-  { 2, -1, 1, 0, "CyanDensity", NULL }
+  { 2, -1, 1, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_cyan);
 
 static const physical_subchannel_t picturemate_cyan_subchannels[] =
 {
-  { 2, -1, 0, 0, "CyanDensity", NULL }
+  { 2, -1, 0, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_cyan);
 
 static const physical_subchannel_t cx3650_standard_cyan_subchannels[] =
 {
-  { 2, -1, 2, 0, "CyanDensity", NULL }
+  { 2, -1, 2, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(cx3650_standard_cyan);
 
 static const physical_subchannel_t x80_cyan_subchannels[] =
 {
-  { 2, -1, 96, 0, "CyanDensity", NULL }
+  { 2, -1, 96, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_cyan);
 
 static const physical_subchannel_t c80_cyan_subchannels[] =
 {
-  { 2, -1, 0, 0, "CyanDensity", NULL }
+  { 2, -1, 0, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_cyan);
 
 static const physical_subchannel_t c120_cyan_subchannels[] =
 {
-  { 2, -1, 0, 0, "CyanDensity", NULL }
+  { 2, -1, 0, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c120_cyan);
 
 static const physical_subchannel_t c64_cyan_subchannels[] =
 {
-  { 2, -1, 0, 0, "CyanDensity", NULL }
+  { 2, -1, 0, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c64_cyan);
 
 static const physical_subchannel_t standard_magenta_subchannels[] =
 {
-  { 1, -1, 0, 0, "MagentaDensity", NULL }
+  { 1, -1, 0, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_magenta);
 
 static const physical_subchannel_t r800_magenta_subchannels[] =
 {
-  { 1, -1, 0, 0, "MagentaDensity", NULL }
+  { 1, -1, 0, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_magenta);
 
 static const physical_subchannel_t picturemate_magenta_subchannels[] =
 {
-  { 1, -1, 0, 0, "MagentaDensity", NULL }
+  { 1, -1, 0, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_magenta);
 
 static const physical_subchannel_t f360_standard_magenta_subchannels[] =
 {
-  { 1, -1, 1, 0, "MagentaDensity", NULL }
+  { 1, -1, 1, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_magenta);
 
 static const physical_subchannel_t x80_magenta_subchannels[] =
 {
-  { 1, -1, 48, 0, "MagentaDensity", NULL }
+  { 1, -1, 48, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_magenta);
 
 static const physical_subchannel_t c80_magenta_subchannels[] =
 {
-  { 1, -1, 120, 0, "MagentaDensity", NULL }
+  { 1, -1, 120, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_magenta);
 
 static const physical_subchannel_t c120_magenta_subchannels[] =
 {
-  { 1, -1, 120, 0, "MagentaDensity", NULL }
+  { 1, -1, 120, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c120_magenta);
 
 static const physical_subchannel_t c64_magenta_subchannels[] =
 {
-  { 1, -1, 90, 0, "MagentaDensity", NULL }
+  { 1, -1, 90, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c64_magenta);
 
 static const physical_subchannel_t standard_yellow_subchannels[] =
 {
-  { 4, -1, 0, 0, "YellowDensity", NULL }
+  { 4, -1, 0, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_yellow);
 
 static const physical_subchannel_t x80_yellow_subchannels[] =
 {
-  { 4, -1, 0, 0, "YellowDensity", NULL }
+  { 4, -1, 0, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(x80_yellow);
 
 static const physical_subchannel_t c80_yellow_subchannels[] =
 {
-  { 4, -1, 240, 0, "YellowDensity", NULL }
+  { 4, -1, 240, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c80_yellow);
 
 static const physical_subchannel_t c120_yellow_subchannels[] =
 {
-  { 4, -1, 240, 0, "YellowDensity", NULL }
+  { 4, -1, 240, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c120_yellow);
 
 static const physical_subchannel_t c64_yellow_subchannels[] =
 {
-  { 4, -1, 180, 0, "YellowDensity", NULL }
+  { 4, -1, 180, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(c64_yellow);
 
 static const physical_subchannel_t f360_standard_yellow_subchannels[] =
 {
-  { 4, -1, 1, 0, "YellowDensity", NULL }
+  { 4, -1, 1, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_standard_yellow);
 
 static const physical_subchannel_t r800_yellow_subchannels[] =
 {
-  { 4, -1, 1, 0, "YellowDensity", NULL }
+  { 4, -1, 1, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_yellow);
 
 static const physical_subchannel_t picturemate_yellow_subchannels[] =
 {
-  { 4, -1, 0, 0, "YellowDensity", NULL }
+  { 4, -1, 0, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_yellow);
 
 static const physical_subchannel_t r800_red_subchannels[] =
 {
-  { 7, -1, 0, 0, "RedDensity", NULL }
+  { 7, -1, 0, 0, "RedDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_red);
 
 static const physical_subchannel_t picturemate_red_subchannels[] =
 {
-  { 7, -1, 0, 0, "RedDensity", NULL }
+  { 7, -1, 0, 0, "RedDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_red);
 
 static const physical_subchannel_t r800_blue_subchannels[] =
 {
-  { 8, -1, 1, 0, "BlueDensity", NULL }
+  { 8, -1, 1, 0, "BlueDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(r800_blue);
 
 static const physical_subchannel_t picturemate_blue_subchannels[] =
 {
-  { 8, -1, 1, 0, "BlueDensity", NULL }
+  { 8, -1, 1, 0, "BlueDensity", NULL, NULL, NULL }
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_blue);
 
 static const physical_subchannel_t standard_gloss_subchannels[] =
 {
-  { 9, -1, 0, 0, "GlossDensity", NULL }
+  { 9, -1, 0, 0, "GlossDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_gloss);
 
 static const physical_subchannel_t f360_gloss_subchannels[] =
 {
-  { 9, -1, 1, 0, "GlossDensity", NULL }
+  { 9, -1, 1, 0, "GlossDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_gloss);
 
 static const physical_subchannel_t standard_photo_black_subchannels[] =
 {
-  { 0, 4, 0, 0, "BlackDensity", NULL }
+  { 0, 4, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(standard_photo_black);
 
 static const physical_subchannel_t f360_photo_black_subchannels[] =
 {
-  { 0, 4, 1, 0, "BlackDensity", NULL }
+  { 0, 4, 1, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_black);
 
 static const physical_subchannel_t r800_matte_black_subchannels[] =
 {
-  { 0, 0, 0, 0, "BlackDensity", NULL }
+  { 0, 0, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(r800_matte_black);
 
 static const physical_subchannel_t photo_black_subchannels[] =
 {
-  { 0, 0, 0, 0, "BlackDensity", NULL }
+  { 0, 0, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(photo_black);
 
 static const physical_subchannel_t extended_black_subchannels[] =
 {
-  { 0, 1, 0, 0, "BlackDensity", NULL }
+  { 0, 1, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_black);
 
 static const physical_subchannel_t f360_extended_black_subchannels[] =
 {
-  { 0, 1, 1, 0, "BlackDensity", NULL }
+  { 0, 1, 1, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_extended_black);
 
 static const physical_subchannel_t photo_cyan_subchannels[] =
 {
-  { 2, 0, 0, 0, "CyanDensity", NULL },
-  { 2, 1, 0, 0, "CyanDensity", "LightCyanTransition" }
+  { 2, 0, 0, 0, "CyanDensity", "LightCyanTransition", NULL, NULL },
+  { 2, 1, 0, 0, "CyanDensity", "LightCyanTransition", "LightCyanValue", "LightCyanScale" }
 };
 
 DECLARE_INK_CHANNEL(photo_cyan);
 
 static const physical_subchannel_t extended_cyan_subchannels[] =
 {
-  { 2, 1, 0, 0, "CyanDensity", NULL }
+  { 2, 1, 0, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_cyan);
 
 static const physical_subchannel_t f360_extended_cyan_subchannels[] =
 {
-  { 2, 1, 1, 0, "CyanDensity", NULL }
+  { 2, 1, 1, 0, "CyanDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_extended_cyan);
 
 static const physical_subchannel_t photo_magenta_subchannels[] =
 {
-  { 1, 0, 0, 0, "MagentaDensity", NULL },
-  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition" }
+  { 1, 0, 0, 0, "MagentaDensity", "LightMagentaTransition", NULL, NULL },
+  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition", "LightMagentaValue", "LightMagentaScale" }
 };
 
 DECLARE_INK_CHANNEL(photo_magenta);
 
 static const physical_subchannel_t extended_magenta_subchannels[] =
 {
-  { 1, 1, 0, 0, "MagentaDensity", NULL }
+  { 1, 1, 0, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_magenta);
 
 static const physical_subchannel_t f360_extended_magenta_subchannels[] =
 {
-  { 1, 1, 1, 0, "MagentaDensity", NULL }
+  { 1, 1, 1, 0, "MagentaDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_extended_magenta);
 
 static const physical_subchannel_t photo_yellow_subchannels[] =
 {
-  { 4, 0, 0, 0, "YellowDensity", NULL }
+  { 4, 0, 0, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(photo_yellow);
 
 static const physical_subchannel_t f360_photo_yellow_subchannels[] =
 {
-  { 4, 0, 1, 0, "YellowDensity", NULL }
+  { 4, 0, 1, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_yellow);
 
 static const physical_subchannel_t j_extended_yellow_subchannels[] =
 {
-  { 4, 2, 0, 0, "YellowDensity", NULL }
+  { 4, 2, 0, 0, "YellowDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(j_extended_yellow);
 
 static const physical_subchannel_t extended_photo3_black_subchannels[] =
 {
-  { 0, 3, 0, 0, "BlackDensity", NULL }
+  { 0, 3, 0, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(extended_photo3_black);
 
 static const physical_subchannel_t f360_extended_photo3_black_subchannels[] =
 {
-  { 0, 3, 1, 0, "BlackDensity", NULL }
+  { 0, 3, 1, 0, "BlackDensity", NULL, NULL, NULL }
 };
 
 DECLARE_INK_CHANNEL(f360_extended_photo3_black);
@@ -666,200 +666,200 @@ DECLARE_INK_CHANNEL(f360_extended_photo3_black);
 /* For Japanese 7-color printers, with dark yellow */
 static const physical_subchannel_t photo2_yellow_subchannels[] =
 {
-  { 4, 2, 0, 0, "YellowDensity", NULL },
-  { 4, 0, 0, 0, "YellowDensity", "DarkYellowTransition" }
+  { 4, 2, 0, 0, "YellowDensity", "DarkYellowTransition", NULL, NULL },
+  { 4, 0, 0, 0, "YellowDensity", "DarkYellowTransition", "DarkYellowValue", "DarkYellowScale" }
 };
 
 DECLARE_INK_CHANNEL(photo2_yellow);
 
 static const physical_subchannel_t f360_photo2_yellow_subchannels[] =
 {
-  { 4, 2, 0, 0, "YellowDensity", NULL },
-  { 4, 0, 1, 0, "YellowDensity", "DarkYellowTransition" }
+  { 4, 2, 0, 0, "YellowDensity", "DarkYellowTransition", NULL, NULL },
+  { 4, 0, 1, 0, "YellowDensity", "DarkYellowTransition", "DarkYellowValue", "DarkYellowScale" }
 };
 
 DECLARE_INK_CHANNEL(f360_photo2_yellow);
 
 static const physical_subchannel_t photo2_black_subchannels[] =
 {
-  { 0, 0, 0, 0, "BlackDensity", NULL },
-  { 0, 1, 0, 0, "BlackDensity", "GrayTransition" }
+  { 0, 0, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 0, 1, 0, 0, "BlackDensity", "GrayTransition", "GrayValue", "GrayScale" }
 };
 
 DECLARE_INK_CHANNEL(photo2_black);
 
 static const physical_subchannel_t f360_photo2_black_subchannels[] =
 {
-  { 0, 0, 1, 0, "BlackDensity", NULL },
-  { 0, 1, 0, 0, "BlackDensity", "GrayTransition" }
+  { 0, 0, 1, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 0, 1, 0, 0, "BlackDensity", "GrayTransition", "GrayValue", "GrayScale" }
 };
 
 DECLARE_INK_CHANNEL(f360_photo2_black);
 
 static const physical_subchannel_t photo3_black_subchannels[] =
 {
-  { 0, 0, 0, 0, "BlackDensity", NULL },
-  { 0, 1, 0, 0, "BlackDensity", "DarkGrayTransition" },
-  { 0, 3, 0, 0, "BlackDensity", "LightGrayTransition" }
+  { 0, 0, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 0, 1, 0, 0, "BlackDensity", "GrayTransition", "DarkGrayValue", "DarkGrayScale" },
+  { 0, 3, 0, 0, "BlackDensity", "GrayTransition", "LightGrayValue", "LightGrayScale" }
 };
 
 DECLARE_INK_CHANNEL(photo3_black);
 
 static const physical_subchannel_t f360_photo3_black_subchannels[] =
 {
-  { 0, 0, 1, 0, "BlackDensity", NULL },
-  { 0, 1, 0, 0, "BlackDensity", "DarkGrayTransition" },
-  { 0, 3, 1, 0, "BlackDensity", "LightGrayTransition" }
+  { 0, 0, 1, 0, "BlackDensity", NULL, NULL, NULL },
+  { 0, 1, 0, 0, "BlackDensity", "DarkGrayTransition", "DarkGrayValue", "DarkGrayScale" },
+  { 0, 3, 1, 0, "BlackDensity", "LightGrayTransition", "LightGrayValue", "LightGrayScale" }
 };
 
 DECLARE_INK_CHANNEL(f360_photo3_black);
 
 static const physical_subchannel_t quadtone_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL },
-  { 2, -1, 0, 0, "BlackDensity", "Gray3Transition" },
-  { 1, -1, 0, 0, "BlackDensity", "Gray2Transition" },
-  { 4, -1, 0, 0, "BlackDensity", "Gray1Transition" },
+  { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 2, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale" },
+  { 1, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale" },
+  { 4, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale" },
 };
 
 DECLARE_INK_CHANNEL(quadtone);
 
 static const physical_subchannel_t c80_quadtone_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL },
-  { 2, -1, 0, 0, "BlackDensity", "Gray3Transition" },
-  { 1, -1, 120, 0, "BlackDensity", "Gray2Transition" },
-  { 4, -1, 240, 0, "BlackDensity", "Gray1Transition" },
+  { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 2, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale" },
+  { 1, -1, 120, 0, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale" },
+  { 4, -1, 240, 0, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale" },
 };
 
 DECLARE_INK_CHANNEL(c80_quadtone);
 
 static const physical_subchannel_t c120_quadtone_subchannels[] =
 {
-  { 0, 4, 0, 0, "BlackDensity", NULL },
-  { 2, -1, 0, 0, "BlackDensity", "Gray3Transition" },
-  { 1, -1, 120, 0, "BlackDensity", "Gray2Transition" },
-  { 4, -1, 240, 0, "BlackDensity", "Gray1Transition" },
+  { 0, 4, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 2, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale" },
+  { 1, -1, 120, 0, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale" },
+  { 4, -1, 240, 0, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale" },
 };
 
 DECLARE_INK_CHANNEL(c120_quadtone);
 
 static const physical_subchannel_t c64_quadtone_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL },
-  { 2, -1, 0, 0, "BlackDensity", "Gray3Transition" },
-  { 1, -1, 90, 0, "BlackDensity", "Gray2Transition" },
-  { 4, -1, 180, 0, "BlackDensity", "Gray1Transition" },
+  { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 2, -1, 0, 0, "BlackDensity", "Gray3Transition", "Gray3Value", "Gray3Scale" },
+  { 1, -1, 90, 0, "BlackDensity", "Gray2Transition", "Gray2Value", "Gray2Scale" },
+  { 4, -1, 180, 0, "BlackDensity", "Gray1Transition", "Gray1Value", "Gray1Scale" },
 };
 
 DECLARE_INK_CHANNEL(c64_quadtone);
 
 static const physical_subchannel_t f360_quadtone_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL },
-  { 2, -1, 1, 0, "BlackDensity", "Gray3Transition" },
-  { 1, -1, 1, 0, "BlackDensity", "Gray2Transition" },
-  { 4, -1, 0, 0, "BlackDensity", "Gray1Transition" },
+  { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 2, -1, 1, 0, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale" },
+  { 1, -1, 1, 0, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale" },
+  { 4, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale" },
 };
 
 DECLARE_INK_CHANNEL(f360_quadtone);
 
 static const physical_subchannel_t cx3650_quadtone_subchannels[] =
 {
-  { 0, -1, 0, 0, "BlackDensity", NULL },
-  { 2, -1, 2, 0, "BlackDensity", "Gray3Transition" },
-  { 1, -1, 1, 0, "BlackDensity", "Gray2Transition" },
-  { 4, -1, 0, 0, "BlackDensity", "Gray1Transition" },
+  { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
+  { 2, -1, 2, 0, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale" },
+  { 1, -1, 1, 0, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale" },
+  { 4, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale" },
 };
 
 DECLARE_INK_CHANNEL(cx3650_quadtone);
 
 static const physical_subchannel_t f360_photo_cyan_subchannels[] =
 {
-  { 2, 0, 1, 0, "CyanDensity", NULL },
-  { 2, 1, 0, 0, "CyanDensity", "LightCyanTransition" }
+  { 2, 0, 1, 0, "CyanDensity", "LightCyanTransition", NULL, NULL },
+  { 2, 1, 0, 0, "CyanDensity", "LightCyanTransition", "LightCyanValue", "LightCyanScale" }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_cyan);
 
 static const physical_subchannel_t f360x_photo_cyan_subchannels[] =
 {
-  { 2, 0, 0, 0, "CyanDensity", NULL },
-  { 2, 1, 1, 0, "CyanDensity", "LightCyanTransition" }
+  { 2, 0, 0, 0, "CyanDensity", "LightCyanTransition", NULL, NULL },
+  { 2, 1, 1, 0, "CyanDensity", "LightCyanTransition", "LightCyanValue", "LightCyanScale" }
 };
 
 DECLARE_INK_CHANNEL(f360x_photo_cyan);
 
 static const physical_subchannel_t f360_photo_magenta_subchannels[] =
 {
-  { 1, 0, 1, 0, "MagentaDensity", NULL },
-  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition" }
+  { 1, 0, 1, 0, "MagentaDensity", "LightMagentaTransition", NULL, NULL },
+  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition", "LightMagentaValue", "LightMagentaScale" }
 };
 
 DECLARE_INK_CHANNEL(f360_photo_magenta);
 
 static const physical_subchannel_t f360x_photo_magenta_subchannels[] =
 {
-  { 1, 0, 0, 0, "MagentaDensity", NULL },
-  { 1, 1, 1, 0, "MagentaDensity", "LightMagentaTransition" }
+  { 1, 0, 0, 0, "MagentaDensity", "LightMagentaTransition", NULL, NULL },
+  { 1, 1, 1, 0, "MagentaDensity", "LightMagentaTransition", "LightMagentaValue", "LightMagentaScale" }
 };
 
 DECLARE_INK_CHANNEL(f360x_photo_magenta);
 
 static const physical_subchannel_t claria_black_subchannels[] =
 {
-  { 0, 0, 0, 0, "BlackDensity", NULL },
+  { 0, 0, 0, 0, "BlackDensity", NULL, NULL, NULL },
 };
 
 DECLARE_INK_CHANNEL(claria_black);
 
 static const physical_subchannel_t claria_yellow_subchannels[] =
 {
-  { 4, 0, 2, 0, "YellowDensity", NULL },
+  { 4, 0, 2, 0, "YellowDensity", NULL, NULL, NULL },
 };
 
 DECLARE_INK_CHANNEL(claria_yellow);
 
 static const physical_subchannel_t claria_cyan_subchannels[] =
 {
-  { 2, 0, 0, 0, "CyanDensity", NULL },
+  { 2, 0, 0, 0, "CyanDensity", NULL, NULL, NULL },
 };
 
 DECLARE_INK_CHANNEL(claria_cyan);
 
 static const physical_subchannel_t claria_photo_cyan_subchannels[] =
 {
-  { 2, 0, 0, 0, "CyanDensity", NULL },
-  { 2, 1, 2, 0, "CyanDensity", "LightCyanTransition" },
+  { 2, 0, 0, 0, "CyanDensity", "LightCyanTransition", NULL, NULL },
+  { 2, 1, 2, 0, "CyanDensity", "LightCyanTransition", "LightCyanValue", "LightCyanScale" },
 };
 
 DECLARE_INK_CHANNEL(claria_photo_cyan);
 
 static const physical_subchannel_t extended_claria_cyan_subchannels[] =
 {
-  { 2, 1, 2, 0, "CyanDensity", "LightCyanTransition" },
+  { 2, 1, 2, 0, "CyanDensity", NULL, NULL, NULL },
 };
 
 DECLARE_INK_CHANNEL(extended_claria_cyan);
 
 static const physical_subchannel_t claria_magenta_subchannels[] =
 {
-  { 1, 0, 2, 0, "MagentaDensity", NULL },
+  { 1, 0, 2, 0, "MagentaDensity", NULL, NULL, NULL },
 };
 
 DECLARE_INK_CHANNEL(claria_magenta);
 
 static const physical_subchannel_t claria_photo_magenta_subchannels[] =
 {
-  { 1, 0, 2, 0, "MagentaDensity", NULL },
-  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition" },
+  { 1, 0, 2, 0, "MagentaDensity", "LightMagentaTransition", NULL, NULL },
+  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition", "LightMagentaValue", "LightMagentaScale" },
 };
 
 DECLARE_INK_CHANNEL(claria_photo_magenta);
 
 static const physical_subchannel_t extended_claria_magenta_subchannels[] =
 {
-  { 1, 1, 0, 0, "MagentaDensity", "LightMagentaTransition" },
+  { 1, 1, 0, 0, "MagentaDensity", NULL, NULL, NULL },
 };
 
 DECLARE_INK_CHANNEL(extended_claria_magenta);

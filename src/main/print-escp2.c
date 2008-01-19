@@ -495,8 +495,64 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "DropSize1", N_("Drop Size Small"), N_("Advanced Ink Adjustment"),
+      N_("Drop Size 1 (small)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 1.0, 0.0, 1
+  },
+  {
+    {
+      "DropSize2", N_("Drop Size Medium"), N_("Advanced Ink Adjustment"),
+      N_("Drop Size 2 (medium)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 1.0, 0.0, 1
+  },
+  {
+    {
+      "DropSize3", N_("Drop Size Large"), N_("Advanced Ink Adjustment"),
+      N_("Drop Size 3 (large)"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 1.0, 0.0, 1
+  },
+  {
+    {
+      "LightCyanValue", N_("Light Cyan Value"), N_("Advanced Ink Adjustment"),
+      N_("Light Cyan Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "LightCyanTransition", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightCyanScale", N_("Light Cyan Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Light Cyan Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightMagentaValue", N_("Light Magenta Value"), N_("Advanced Ink Adjustment"),
+      N_("Light Magenta Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightMagentaScale", N_("Light Magenta Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Light Magenta Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
@@ -511,8 +567,32 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "DarkYellowValue", N_("Dark Yellow Value"), N_("Advanced Ink Adjustment"),
+      N_("Dark Yellow Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "DarkYellowTransition", N_("Dark Yellow Transition"), N_("Advanced Ink Adjustment"),
       N_("Dark Yellow Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "DarkYellowScale", N_("Dark Yellow Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Dark Yellow Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "GrayValue", N_("Gray Value"), N_("Advanced Ink Adjustment"),
+      N_("Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
@@ -527,8 +607,40 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "GrayScale", N_("Gray Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Gray Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "DarkGrayValue", N_("Gray Value"), N_("Advanced Ink Adjustment"),
+      N_("Gray Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "DarkGrayTransition", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "DarkGrayScale", N_("Gray Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Gray Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "LightGrayValue", N_("Light Gray Value"), N_("Advanced Ink Adjustment"),
+      N_("Light Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
@@ -543,8 +655,40 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "LightGrayScale", N_("Light Gray Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Light Gray Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray3Value", N_("Dark Gray Value"), N_("Advanced Ink Adjustment"),
+      N_("Dark Gray Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "Gray3Transition", N_("Dark Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Dark Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray3Scale", N_("Dark Gray Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Dark Gray Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray2Value", N_("Mid Gray Value"), N_("Advanced Ink Adjustment"),
+      N_("Medium Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
@@ -559,8 +703,32 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "Gray2Scale", N_("Mid Gray Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Medium Gray Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray1Value", N_("Light Gray Value"), N_("Advanced Ink Adjustment"),
+      N_("Light Gray Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "Gray1Transition", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "Gray1Scale", N_("Light Gray Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Light Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
@@ -843,6 +1011,28 @@ escp2_dropsizes(const stp_vars_t *v, int resid)
   return (*drops)[resid];
 }
 
+static escp2_dropsize_t *
+escp2_copy_dropsizes(const stp_vars_t *v, int resid)
+{
+  const escp2_dropsize_t *drops = escp2_dropsizes(v, resid);
+  int i;
+  escp2_dropsize_t *ndrops = stp_zalloc(sizeof(escp2_dropsize_t));
+  if (! drops)
+    return NULL;
+  ndrops->listname = drops->listname;
+  ndrops->numdropsizes = drops->numdropsizes;
+  for (i = 0; i < drops->numdropsizes; i++)
+    ndrops->dropsizes[i] = drops->dropsizes[i];
+  return ndrops;
+}
+
+static void
+escp2_free_dropsizes(escp2_dropsize_t *drops)
+{
+  if (drops)
+    stp_free(drops);
+}
+
 static const inklist_t *
 escp2_inklist(const stp_vars_t *v)
 {
@@ -868,6 +1058,28 @@ escp2_shades(const stp_vars_t *v, int channel)
 {
   const inklist_t *inklist = escp2_inklist(v);
   return &((*inklist->shades)[channel]);
+}
+
+static shade_t *
+escp2_copy_shades(const stp_vars_t *v, int channel)
+{
+  const shade_t *shades = escp2_shades(v, channel);
+  int i;
+  shade_t *nshades;
+  if (! shades)
+    return NULL;
+  nshades = stp_zalloc(sizeof(shade_t));
+  nshades->n_shades = shades->n_shades;
+  for (i = 0; i < shades->n_shades; i++)
+    nshades->shades[i] = shades->shades[i];
+  return nshades;
+}
+
+static void
+escp2_free_shades(shade_t *shades)
+{
+  if (shades)
+    stp_free(shades);
 }
 
 static const paperlist_t *
@@ -1346,15 +1558,6 @@ escp2_list_parameters(const stp_vars_t *v)
 }
 
 static void
-fill_transition_parameters(stp_parameter_t *description)
-{
-  description->is_active = 1;
-  description->bounds.dbl.lower = 0;
-  description->bounds.dbl.upper = 5.0;
-  description->deflt.dbl = 1.0;
-}
-
-static void
 set_density_parameter(const stp_vars_t *v,
 		      stp_parameter_t *description,
 		      int color)
@@ -1406,6 +1609,82 @@ set_hue_map_parameter(const stp_vars_t *v,
 }
 
 static void
+fill_value_parameters(const stp_vars_t *v,
+		      stp_parameter_t *description,
+		      int color)
+{
+  const shade_t *shades = escp2_shades(v, color);
+  const escp2_inkname_t *ink_name = get_inktype(v);
+  description->is_active = 1;
+  description->bounds.dbl.lower = 0;
+  description->bounds.dbl.upper = 1.0;
+  description->deflt.dbl = 1.0;
+  if (shades && ink_name)
+    {
+      const ink_channel_t *channel = ink_name->channel_set->channels[color];
+      int i;
+      for (i = 0; i < channel->n_subchannels; i++)
+	{
+	  if (channel->subchannels[i].subchannel_value &&
+	      strcmp(description->name,
+		     channel->subchannels[i].subchannel_value) == 0)
+	    {
+	      description->deflt.dbl = shades->shades[i];
+	      return;
+	    }
+	}
+    }
+}
+
+static void
+set_color_value_parameter(const stp_vars_t *v,
+			  stp_parameter_t *description,
+			  int color)
+{
+  description->is_active = 0;
+  if (stp_get_string_parameter(v, "PrintingMode") &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
+    {
+      const escp2_inkname_t *ink_name = get_inktype(v);
+      if (ink_name &&
+	  ink_name->channel_set->channel_count == 4 &&
+	  ink_name->channel_set->channels[color] &&
+	  ink_name->channel_set->channels[color]->n_subchannels == 2)
+	fill_value_parameters(v, description, color);
+    }
+}
+
+static void
+set_gray_value_parameter(const stp_vars_t *v,
+			 stp_parameter_t *description,
+			 int expected_channels)
+{
+  const escp2_inkname_t *ink_name = get_inktype(v);
+  description->is_active = 0;
+  if (ink_name && ink_name->channel_set->channels[STP_ECOLOR_K] &&
+      (ink_name->channel_set->channels[STP_ECOLOR_K]->n_subchannels ==
+       expected_channels))
+    fill_value_parameters(v, description, STP_ECOLOR_K);
+  else
+    set_color_value_parameter(v, description, STP_ECOLOR_K);
+}
+
+static void
+fill_transition_parameters(const stp_vars_t *v,
+			       stp_parameter_t *description,
+			       int color)
+{
+  const paper_adjustment_t *paper_adj = get_media_adjustment(v);
+  description->is_active = 1;
+  description->bounds.dbl.lower = 0;
+  description->bounds.dbl.upper = 1.0;
+  if (paper_adj)
+    description->deflt.dbl = paper_adj->subchannel_cutoff;
+  else
+    description->deflt.dbl = 1.0;
+}
+
+static void
 set_color_transition_parameter(const stp_vars_t *v,
 			       stp_parameter_t *description,
 			       int color)
@@ -1419,7 +1698,7 @@ set_color_transition_parameter(const stp_vars_t *v,
 	  ink_name->channel_set->channel_count == 4 &&
 	  ink_name->channel_set->channels[color] &&
 	  ink_name->channel_set->channels[color]->n_subchannels == 2)
-	fill_transition_parameters(description);
+	fill_transition_parameters(v, description, color);
     }
 }
 
@@ -1433,9 +1712,51 @@ set_gray_transition_parameter(const stp_vars_t *v,
   if (ink_name && ink_name->channel_set->channels[STP_ECOLOR_K] &&
       (ink_name->channel_set->channels[STP_ECOLOR_K]->n_subchannels ==
        expected_channels))
-    fill_transition_parameters(description);
+    fill_transition_parameters(v, description, STP_ECOLOR_K);
   else
     set_color_transition_parameter(v, description, STP_ECOLOR_K);
+}
+
+static void
+fill_scale_parameters(stp_parameter_t *description)
+{
+  description->is_active = 1;
+  description->bounds.dbl.lower = 0;
+  description->bounds.dbl.upper = 5.0;
+  description->deflt.dbl = 1.0;
+}
+
+static void
+set_color_scale_parameter(const stp_vars_t *v,
+			       stp_parameter_t *description,
+			       int color)
+{
+  description->is_active = 0;
+  if (stp_get_string_parameter(v, "PrintingMode") &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
+    {
+      const escp2_inkname_t *ink_name = get_inktype(v);
+      if (ink_name &&
+	  ink_name->channel_set->channel_count == 4 &&
+	  ink_name->channel_set->channels[color] &&
+	  ink_name->channel_set->channels[color]->n_subchannels == 2)
+	fill_scale_parameters(description);
+    }
+}
+
+static void
+set_gray_scale_parameter(const stp_vars_t *v,
+			      stp_parameter_t *description,
+			      int expected_channels)
+{
+  const escp2_inkname_t *ink_name = get_inktype(v);
+  description->is_active = 0;
+  if (ink_name && ink_name->channel_set->channels[STP_ECOLOR_K] &&
+      (ink_name->channel_set->channels[STP_ECOLOR_K]->n_subchannels ==
+       expected_channels))
+    fill_scale_parameters(description);
+  else
+    set_color_scale_parameter(v, description, STP_ECOLOR_K);
 }
 
 static const res_t *
@@ -1954,6 +2275,40 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "DropSize1") == 0 ||
+	   strcmp(name, "DropSize2") == 0 ||
+	   strcmp(name, "DropSize3") == 0)
+    {
+      if (escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES))
+	{
+	  int resid = compute_resid(escp2_find_resolution(v));
+	  const escp2_dropsize_t *drops = escp2_dropsizes(v, resid);
+	  if (strcmp(name, "DropSize1") == 0 && drops->numdropsizes >= 1)
+	    description->deflt.dbl = drops->dropsizes[0];
+	  else if (strcmp(name, "DropSize2") == 0 && drops->numdropsizes >= 2)
+	    description->deflt.dbl = drops->dropsizes[1];
+	  else if (strcmp(name, "DropSize3") == 0 && drops->numdropsizes >= 3)
+	    description->deflt.dbl = drops->dropsizes[2];
+	  description->is_active = 1;
+	}
+      else
+	description->is_active = 0;
+    }
+  else if (strcmp(name, "GrayValue") == 0)
+    set_gray_value_parameter(v, description, 2);
+  else if (strcmp(name, "DarkGrayValue") == 0 ||
+	   strcmp(name, "LightGrayValue") == 0)
+    set_gray_value_parameter(v, description, 3);
+  else if (strcmp(name, "Gray1Value") == 0 ||
+	   strcmp(name, "Gray2Value") == 0 ||
+	   strcmp(name, "Gray3Value") == 0)
+    set_gray_value_parameter(v, description, 4);
+  else if (strcmp(name, "LightCyanValue") == 0)
+    set_color_value_parameter(v, description, STP_ECOLOR_C);
+  else if (strcmp(name, "LightMagentaValue") == 0)
+    set_color_value_parameter(v, description, STP_ECOLOR_M);
+  else if (strcmp(name, "DarkYellowValue") == 0)
+    set_color_value_parameter(v, description, STP_ECOLOR_Y);
   else if (strcmp(name, "GrayTransition") == 0)
     set_gray_transition_parameter(v, description, 2);
   else if (strcmp(name, "DarkGrayTransition") == 0 ||
@@ -1969,6 +2324,21 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     set_color_transition_parameter(v, description, STP_ECOLOR_M);
   else if (strcmp(name, "DarkYellowTransition") == 0)
     set_color_transition_parameter(v, description, STP_ECOLOR_Y);
+  else if (strcmp(name, "GrayScale") == 0)
+    set_gray_scale_parameter(v, description, 2);
+  else if (strcmp(name, "DarkGrayScale") == 0 ||
+	   strcmp(name, "LightGrayScale") == 0)
+    set_gray_scale_parameter(v, description, 3);
+  else if (strcmp(name, "Gray1Scale") == 0 ||
+	   strcmp(name, "Gray2Scale") == 0 ||
+	   strcmp(name, "Gray3Scale") == 0)
+    set_gray_scale_parameter(v, description, 4);
+  else if (strcmp(name, "LightCyanScale") == 0)
+    set_color_scale_parameter(v, description, STP_ECOLOR_C);
+  else if (strcmp(name, "LightMagentaScale") == 0)
+    set_color_scale_parameter(v, description, STP_ECOLOR_M);
+  else if (strcmp(name, "DarkYellowScale") == 0)
+    set_color_scale_parameter(v, description, STP_ECOLOR_Y);
   else if (strcmp(name, "AlignmentPasses") == 0)
     {
       description->deflt.integer = escp2_alignment_passes(v);
@@ -2559,14 +2929,38 @@ setup_inks(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   int i, j;
-  const escp2_dropsize_t *drops;
+  escp2_dropsize_t *drops;
   const escp2_inkname_t *ink_type = pd->inkname;
   const paper_adjustment_t *paper = pd->paper_adjustment;
   int gloss_channel = -1;
   double gloss_scale = get_double_param(v, "Density");
 
-  drops = escp2_dropsizes(v, pd->ink_resid);
+  drops = escp2_copy_dropsizes(v, pd->ink_resid);
   stp_init_debug_messages(v);
+  if (stp_check_float_parameter(v, "DropSize1", STP_PARAMETER_ACTIVE))
+    {
+      drops->dropsizes[0] = stp_get_float_parameter(v, "DropSize1");
+      if (drops->dropsizes[0] > 0 && drops->numdropsizes < 1)
+	drops->numdropsizes = 1;
+    }
+  if (stp_check_float_parameter(v, "DropSize2", STP_PARAMETER_ACTIVE))
+    {
+      drops->dropsizes[1] = stp_get_float_parameter(v, "DropSize2");
+      if (drops->dropsizes[1] > 0 && drops->numdropsizes < 2)
+	drops->numdropsizes = 2;
+    }
+  if (stp_check_float_parameter(v, "DropSize3", STP_PARAMETER_ACTIVE))
+    {
+      drops->dropsizes[2] = stp_get_float_parameter(v, "DropSize3");
+      if (drops->dropsizes[2] > 0 && drops->numdropsizes < 3)
+	drops->numdropsizes = 3;
+    }
+  for (i = drops->numdropsizes - 1; i >= 0; i--)
+    {
+      if (drops->dropsizes[i] > 0)
+	break;
+      drops->numdropsizes--;
+    }
   for (i = 0; i < pd->logical_channels; i++)
     {
       const ink_channel_t *channel = ink_type->channel_set->channels[i];
@@ -2574,7 +2968,7 @@ setup_inks(stp_vars_t *v)
 	{
 	  int hue_curve_found = 0;
 	  const char *param = channel->subchannels[0].channel_density;
-	  const shade_t *shades = escp2_shades(v, i);
+	  shade_t *shades = escp2_copy_shades(v, i);
 	  double userval = get_double_param(v, param);
 	  if (shades->n_shades < channel->n_subchannels)
 	    {
@@ -2590,6 +2984,14 @@ setup_inks(stp_vars_t *v)
 		  gloss_channel = i;
 		}
 	    }
+	  for (j = 0; j < channel->n_subchannels; j++)
+	    {
+	      const char *subparam =
+		channel->subchannels[j].subchannel_value;
+	      if (subparam &&
+		  stp_check_float_parameter(v, subparam, STP_PARAMETER_ACTIVE))
+		shades->shades[j] = stp_get_float_parameter(v, subparam);
+	    }
 	  stp_dither_set_inks(v, i, 1.0, ink_darknesses[i % 8],
 			      channel->n_subchannels, shades->shades,
 			      drops->numdropsizes, drops->dropsizes);
@@ -2600,7 +3002,13 @@ setup_inks(stp_vars_t *v)
 	      double scale = userval * get_double_param(v, subparam);
 	      scale *= get_double_param(v, "Density");
 	      stp_channel_set_density_adjustment(v, i, j, scale);
-	      if (paper)
+	      subparam =
+		channel->subchannels[j].subchannel_transition;
+	      if (subparam &&
+		  stp_check_float_parameter(v, subparam, STP_PARAMETER_ACTIVE))
+		stp_channel_set_cutoff_adjustment
+		  (v, i, j, stp_get_float_parameter(v, subparam));
+	      else if (paper)
 		stp_channel_set_cutoff_adjustment(v, i, j,
 						  paper->subchannel_cutoff);
 	    }
@@ -2640,6 +3048,7 @@ setup_inks(stp_vars_t *v)
 		    }
 		}
 	    }
+	  escp2_free_shades(shades);
 	}
     }
   if (pd->use_aux_channels)
@@ -2653,7 +3062,7 @@ setup_inks(stp_vars_t *v)
 	    {
 	      int ch = i + base_count;
 	      const char *param = channel->subchannels[0].channel_density;
-	      const shade_t *shades = escp2_shades(v, ch);
+	      shade_t *shades = escp2_copy_shades(v, ch);
 	      double userval = get_double_param(v, param);
 	      if (shades->n_shades < channel->n_subchannels)
 		{
@@ -2665,6 +3074,14 @@ setup_inks(stp_vars_t *v)
 		  stp_channel_set_gloss_channel(v, ch);
 		  stp_channel_set_gloss_limit(v, gloss_scale);
 		}
+	      for (j = 0; j < channel->n_subchannels; j++)
+		{
+		  const char *subparam =
+		    channel->subchannels[j].subchannel_value;
+		  if (subparam &&
+		      stp_check_float_parameter(v, subparam, STP_PARAMETER_ACTIVE))
+		    shades->shades[j] = stp_get_float_parameter(v, subparam);
+		}
 	      stp_dither_set_inks(v, ch, 1.0, ink_darknesses[ch % 8],
 				  channel->n_subchannels, shades->shades,
 				  drops->numdropsizes, drops->dropsizes);
@@ -2675,7 +3092,13 @@ setup_inks(stp_vars_t *v)
 		  double scale = userval * get_double_param(v, subparam);
 		  scale *= get_double_param(v, "Density");
 		  stp_channel_set_density_adjustment(v, ch, j, scale);
-		  if (paper)
+		  subparam =
+		    channel->subchannels[j].subchannel_transition;
+		  if (subparam &&
+		      stp_check_float_parameter(v, subparam, STP_PARAMETER_ACTIVE))
+		    stp_channel_set_cutoff_adjustment
+		      (v, ch, j, stp_get_float_parameter(v, subparam));
+		  else if (paper)
 		    stp_channel_set_cutoff_adjustment(v, ch, j,
 						      paper->subchannel_cutoff);
 		}
@@ -2690,9 +3113,11 @@ setup_inks(stp_vars_t *v)
 		  stp_channel_set_curve(v, ch, curve_tmp);
 		  stp_curve_destroy(curve_tmp);
 		}
+	      escp2_free_shades(shades);
 	    }
 	}
     }
+  escp2_free_dropsizes(drops);
   stp_flush_debug_messages(v);
 }
 
