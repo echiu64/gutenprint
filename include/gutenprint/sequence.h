@@ -63,7 +63,7 @@ extern stp_sequence_t *stp_sequence_create(void);
 extern void stp_sequence_destroy(stp_sequence_t *sequence);
 
   /**
-   * Copy an sequence.
+   * Copy a sequence.
    * Both dest and source must be valid sequences previously created
    * with stp_sequence_create().
    * @param dest the destination sequence.
@@ -73,7 +73,7 @@ extern void stp_sequence_copy(stp_sequence_t *dest,
 			      const stp_sequence_t *source);
 
   /**
-   * Copy and allocate an sequence.
+   * Copy and allocate a sequence.
    * A new sequence will be created, and then the contents of source will
    * be copied into it.  The destination must not have been previously
    * allocated with stp_sequence_create().
@@ -81,6 +81,26 @@ extern void stp_sequence_copy(stp_sequence_t *dest,
    * @returns the new copy of the sequence.
    */
 extern stp_sequence_t *stp_sequence_create_copy(const stp_sequence_t *sequence);
+
+  /**
+   * Reverse a sequence.
+   * Both dest and source must be valid sequences previously created
+   * with stp_sequence_create().
+   * @param dest the destination sequence.
+   * @param source the source sequence.
+   */
+extern void stp_sequence_reverse(stp_sequence_t *dest,
+				 const stp_sequence_t *source);
+
+  /**
+   * Reverse and allocate a sequence.
+   * A new sequence will be created, and then the contents of source will
+   * be copied into it.  The destination must not have been previously
+   * allocated with stp_sequence_create().
+   * @param sequence the source sequence.
+   * @returns the new copy of the sequence.
+   */
+extern stp_sequence_t *stp_sequence_create_reverse(const stp_sequence_t *sequence);
 
   /**
    * Set the lower and upper bounds.

@@ -565,6 +565,106 @@ stpui_create_curve(option_t *opt,
 }
 
 static int
+open_file_browser(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  GtkWidget *browser = opt->info.file.f_browser;
+  GtkWidget *entry = opt->info.file.f_entry;
+  gtk_file_selection_set_filename (GTK_FILE_SELECTION (browser),
+				   gtk_entry_get_text (GTK_ENTRY (entry)));
+  gtk_widget_show(opt->info.file.f_browser);
+  return 1;
+}
+
+static void
+file_entry_callback(GtkWidget *widget, gpointer xopt)
+{
+  const gchar *name = gtk_entry_get_text(GTK_ENTRY(widget));
+  if (name && pv && pv->v)
+    {
+      option_t *opt = (option_t *)xopt;
+      stp_set_file_parameter(pv->v, opt->fast_desc->name, name);
+    }
+}
+
+static int
+file_browser_ok_callback(GtkObject *browser_ok, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  GtkWidget *entry = opt->info.file.f_entry;
+  GtkWidget *browser = opt->info.file.f_browser;
+  gtk_widget_hide(opt->info.file.f_browser);
+  gtk_entry_set_text
+    (GTK_ENTRY (entry),
+     gtk_file_selection_get_filename (GTK_FILE_SELECTION (browser)));
+  file_entry_callback(entry, xopt);
+  return 1;
+}
+
+static void
+stpui_create_file_browser(option_t *opt,
+			  GtkTable *table,
+			  gint column,
+			  gint row,
+			  const gchar *text,
+			  gboolean is_optional)
+{
+  opt->checkbox = gtk_check_button_new();
+  gtk_table_attach(GTK_TABLE(table), opt->checkbox,
+		   column, column + 1, row, row + 1,
+		   GTK_EXPAND|GTK_FILL, GTK_FILL, 0, 0);
+  if (is_optional)
+    gtk_widget_show(opt->checkbox);
+  else
+    gtk_widget_hide(opt->checkbox);
+
+  opt->info.file.f_label = gtk_label_new(text);
+  gtk_misc_set_alignment (GTK_MISC (opt->info.file.f_label), 0.0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), opt->info.file.f_label,
+                    column + 1, column + 2, row, row + 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show (opt->info.file.f_label);
+
+  opt->info.file.f_entry = gtk_entry_new();
+  gtk_table_attach (GTK_TABLE (table), opt->info.file.f_entry,
+                    column + 2, column + 3, row, row + 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
+  g_signal_connect(G_OBJECT(opt->info.file.f_entry), "activate",
+		   G_CALLBACK(file_entry_callback), opt);
+  if (stp_get_file_parameter(pv->v, opt->fast_desc->name))
+    gtk_entry_set_text
+      (GTK_ENTRY (opt->info.file.f_entry),
+       stp_get_file_parameter(pv->v, opt->fast_desc->name));
+  gtk_widget_show (opt->info.file.f_entry);
+
+  opt->info.file.f_button = gtk_button_new_with_label(_("Select File..."));
+  g_signal_connect(G_OBJECT(opt->info.file.f_button), "clicked",
+		   G_CALLBACK(open_file_browser), opt);
+  gtk_table_attach (GTK_TABLE (table), opt->info.file.f_button,
+                    column + 3, column + 4, row, row + 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
+  gtk_widget_show(opt->info.file.f_button);
+
+  opt->info.file.f_browser =
+    gtk_file_selection_new(gettext(opt->fast_desc->text));
+
+  g_signal_connect
+    (G_OBJECT (GTK_FILE_SELECTION (opt->info.file.f_browser)->ok_button), "clicked",
+     G_CALLBACK (file_browser_ok_callback), opt);
+  g_signal_connect_object
+    (G_OBJECT (GTK_FILE_SELECTION (opt->info.file.f_browser)->cancel_button), "clicked",
+     G_CALLBACK (gtk_widget_hide), G_OBJECT (opt->info.file.f_browser), G_CONNECT_SWAPPED);
+
+  if (opt->fast_desc->help)
+    {
+      stpui_set_help_data (opt->info.file.f_label, opt->fast_desc->help);
+      stpui_set_help_data (opt->info.file.f_button, opt->fast_desc->help);
+      stpui_set_help_data (opt->info.file.f_entry, opt->fast_desc->help);
+      stpui_set_help_data (opt->info.file.f_browser, opt->fast_desc->help);
+    }
+}
+
+static int
 checkbox_callback(GtkObject *button, gpointer xopt)
 {
   option_t *opt = (option_t *)xopt;
@@ -804,6 +904,12 @@ populate_options(const stp_vars_t *v)
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      gtk_widget_destroy(GTK_WIDGET(opt->info.bool.checkbox));
 	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.file.f_label));
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.file.f_button));
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.file.f_entry));
+	      gtk_widget_destroy(GTK_WIDGET(opt->info.file.f_browser));
+	      break;
 	    default:
 	      break;
 	    }
@@ -876,6 +982,15 @@ populate_options(const stp_vars_t *v)
 	      opt->info.bool.current = 0;
 	      opt->info.bool.deflt = desc.deflt.boolean;
 	      opt->is_active = desc.is_active;
+	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      opt->info.file.f_label = NULL;
+	      opt->info.file.f_button = NULL;
+	      opt->info.file.f_entry = NULL;
+	      opt->info.file.f_browser = NULL;
+	      opt->info.file.f_is_visible = FALSE;
+	      opt->is_active = desc.is_active;
+	      break;
 	    default:
 	      break;
 	    }
@@ -930,6 +1045,7 @@ populate_option_table(GtkWidget *table, int p_class)
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	    case STP_PARAMETER_TYPE_CURVE:
 	    case STP_PARAMETER_TYPE_BOOLEAN:
+	    case STP_PARAMETER_TYPE_FILE:
 	      counts[desc->p_level][desc->p_type]++;
 	      break;
 	    default:
@@ -1079,7 +1195,12 @@ populate_option_table(GtkWidget *table, int p_class)
 	      break;
 	    case STP_PARAMETER_TYPE_FILE:
 	      if (strcmp(opt->fast_desc->name, "PPDFile") != 0)
-		stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+		stpui_create_file_browser(opt, GTK_TABLE(table), 0,
+					  vpos[desc->p_level][desc->p_type]++,
+					  gettext(desc->text),
+					  !(desc->is_mandatory));
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_file_parameter_active(pv->v, desc->name,
 					      STP_PARAMETER_INACTIVE);
 	      break;
 	    default:
@@ -1148,6 +1269,21 @@ set_options_active(const char *omit)
 	  else
 	    {
 	      gtk_widget_hide(GTK_WIDGET(opt->info.bool.checkbox));
+	    }
+	  break;
+	case STP_PARAMETER_TYPE_FILE:
+	  if (opt->is_active && desc->p_level <= MAXIMUM_PARAMETER_LEVEL)
+	    {
+	      gtk_widget_show(GTK_WIDGET(opt->info.file.f_label));
+	      gtk_widget_show(GTK_WIDGET(opt->info.file.f_button));
+	      gtk_widget_show(GTK_WIDGET(opt->info.file.f_entry));
+	    }
+	  else
+	    {
+	      gtk_widget_hide(GTK_WIDGET(opt->info.file.f_label));
+	      gtk_widget_hide(GTK_WIDGET(opt->info.file.f_button));
+	      gtk_widget_hide(GTK_WIDGET(opt->info.file.f_entry));
+	      gtk_widget_hide(GTK_WIDGET(opt->info.file.f_browser));
 	    }
 	  break;
 	default:
@@ -2854,6 +2990,23 @@ set_bool_active(option_t *opt, gboolean active, gboolean do_toggle)
 }
 
 static void
+set_file_active(option_t *opt, gboolean active, gboolean do_toggle)
+{
+  if (do_toggle)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.file.f_label), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.file.f_button), active);
+  gtk_widget_set_sensitive(GTK_WIDGET(opt->info.file.f_entry), active);
+  if (active)
+    {
+      if (opt->info.file.f_is_visible)
+	gtk_widget_show(GTK_WIDGET(opt->info.file.f_browser));
+    }
+  else
+    gtk_widget_hide(GTK_WIDGET(opt->info.file.f_browser));
+}
+
+static void
 do_color_updates (void)
 {
   int i;
@@ -2934,6 +3087,14 @@ do_color_updates (void)
 		set_bool_active(opt, TRUE, TRUE);
 	      else
 		set_bool_active(opt, FALSE, TRUE);
+	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      if (stp_check_file_parameter(pv->v, opt->fast_desc->name,
+					   STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
+		set_file_active(opt, TRUE, TRUE);
+	      else
+		set_file_active(opt, FALSE, TRUE);
 	      break;
 	    default:
 	      break;
@@ -4335,6 +4496,7 @@ compute_thumbnail(const stp_vars_t *v)
   stp_set_float_parameter(nv, "Density", 1.0);
   stp_set_float_parameter(nv, "InkLimit", 0);
   stp_set_string_parameter(nv, "InputImageType", "RGB");
+  stp_clear_file_parameter(nv, "LUTDumpFile");
 
   priv.base_addr = adjusted_thumbnail_data;
   priv.offset = 0;
@@ -5077,6 +5239,11 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	  stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
 					   STP_PARAMETER_ACTIVE);
 	  break;
+	case STP_PARAMETER_TYPE_FILE:
+	  set_file_active(opt, TRUE, FALSE);
+	  stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+					STP_PARAMETER_ACTIVE);
+	  break;
 	default:
 	  break;
 	}
@@ -5109,6 +5276,11 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	  set_bool_active(opt, FALSE, FALSE);
 	  stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
 					   STP_PARAMETER_INACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_FILE: /* ??? */
+	  set_file_active(opt, FALSE, FALSE);
+	  stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+					STP_PARAMETER_INACTIVE);
 	  break;
 	default:
 	  break;
@@ -5167,6 +5339,13 @@ set_printer_defaults (void)
 	      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
 					      active);
 	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      active =
+		stp_get_file_parameter_active(pv->v, opt->fast_desc->name);
+	      stp_set_file_parameter(pv->v, opt->fast_desc->name, "");
+	      stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+					    active);
+	      break;
 	    default:
 	      break;
 	    }
@@ -5224,6 +5403,13 @@ set_color_defaults (void)
 				       opt->info.list.default_val);
 	      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
 					      active);
+	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      active =
+		stp_get_file_parameter_active(pv->v, opt->fast_desc->name);
+	      stp_set_file_parameter(pv->v, opt->fast_desc->name, "");
+	      stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+					    active);
 	      break;
 	    default:
 	      break;

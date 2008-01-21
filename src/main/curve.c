@@ -469,6 +469,49 @@ stp_curve_create_copy(const stp_curve_t *curve)
   return ret;
 }
 
+void
+stp_curve_reverse(stp_curve_t *dest, const stp_curve_t *source)
+{
+  check_curve(dest);
+  check_curve(source);
+  curve_dtor(dest);
+  dest->curve_type = source->curve_type;
+  dest->wrap_mode = source->wrap_mode;
+  dest->gamma = source->gamma;
+  if (source->piecewise)
+    {
+      const double *source_data;
+      size_t size;
+      double *new_data;
+      int i;
+      stp_sequence_get_data(source->seq, &size, &source_data);
+      new_data = stp_malloc(sizeof(double) * size);
+      for (i = 0; i < size; i += 2)
+	{
+	  int j = size - i - 2;
+	  new_data[i] = 1.0 - source_data[j];
+	  new_data[i + 1] = source_data[j + 1];
+	}
+      dest->seq = stp_sequence_create();
+      stp_sequence_set_data(dest->seq, size, new_data);
+      stp_free(new_data);
+    }
+  else
+      dest->seq = stp_sequence_create_reverse(source->seq);
+  dest->piecewise = source->piecewise;
+  dest->recompute_interval = 1;
+}
+
+stp_curve_t *
+stp_curve_create_reverse(const stp_curve_t *curve)
+{
+  stp_curve_t *ret;
+  check_curve(curve);
+  ret = stp_curve_create(curve->wrap_mode);
+  stp_curve_reverse(ret, curve);
+  return ret;
+}
+
 int
 stp_curve_set_bounds(stp_curve_t *curve, double low, double high)
 {

@@ -416,6 +416,14 @@ static const float_param_t float_parameters[] =
   RAW_GAMMA_CHANNEL(29),
   RAW_GAMMA_CHANNEL(30),
   RAW_GAMMA_CHANNEL(31),
+  {
+    {
+      "LUTDumpFile", N_("LUT dump file"), N_("Advanced Output Control"),
+      N_("Dump file for LUT for external color adjustment"),
+      STP_PARAMETER_TYPE_FILE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+    }, 0.0, 0.0, 0.0, CMASK_EVERY, 0, -1
+  },
 };
 
 static const int float_parameter_count =
@@ -1223,6 +1231,69 @@ setup_channel(stp_vars_t *v, int i, const channel_param_t *p)
   compute_one_lut(lut, i);
 }
 
+static void
+stpi_print_lut_curve(FILE *fp, const char *text, stp_cached_curve_t *c,
+		     int reverse)
+{
+  if (stp_curve_cache_get_curve(c))
+    {
+      fprintf(fp, "%s: '", text);
+      if (reverse)
+	{
+	  stp_curve_t *rev = stp_curve_create_reverse(stp_curve_cache_get_curve(c));
+	  stp_curve_write(fp, rev);
+	  stp_curve_destroy(rev);
+	}
+      else
+	stp_curve_write(fp, stp_curve_cache_get_curve(c));
+      fprintf(fp, "'\n");
+    }
+}
+
+static void
+stpi_do_dump_lut_to_file(stp_vars_t *v, FILE *fp)
+{
+  int i;
+  lut_t *lut = (lut_t *)(stp_get_component_data(v, "Color"));
+  const stp_curve_t *curve;
+  fprintf(fp, "Gutenprint LUT dump version 0\n\n");
+  fprintf(fp, "Input color description: '%s'\n", lut->input_color_description->name);
+  fprintf(fp, "Output color description: '%s'\n", lut->output_color_description->name);
+  fprintf(fp, "Color correction type: '%s'\n", lut->color_correction->name);
+  fprintf(fp, "Ink limit: %f\n", stp_get_float_parameter(v, "InkLimit"));
+  stpi_print_lut_curve(fp, "Brightness correction", &(lut->brightness_correction), 0);
+  stpi_print_lut_curve(fp, "Contrast correction", &(lut->contrast_correction), 0);
+  stpi_print_lut_curve(fp, "User color correction", &(lut->user_color_correction), 0);
+  for (i = 0; i < STP_CHANNEL_LIMIT; i++)
+    {
+      char buf[64];
+      sprintf(buf, "Channel %d curve", i);
+      stpi_print_lut_curve(fp, buf, &(lut->channel_curves[i]),
+			   lut->invert_output && ! channel_is_synthesized(lut, i));
+    }
+  curve = stp_channel_get_gcr_curve(v);
+  if (v)
+    {
+      fprintf(fp, "GCR curve: '");
+      stp_curve_write(fp, curve);
+      fprintf(fp, "'\n");
+    }
+}
+
+static void
+stpi_dump_lut_to_file(stp_vars_t *v, const char *dump_file)
+{
+  FILE *fp;
+  if (!dump_file)
+    return;
+  fp = fopen(dump_file, "w");
+  if (fp)
+    {    
+      stp_dprintf(STP_DBG_LUT, v, "Dumping LUT to %s\n", dump_file);
+      stpi_do_dump_lut_to_file(v, fp);
+      (void) fclose(fp);
+    }
+}
 
 static void
 stpi_compute_lut(stp_vars_t *v)
@@ -1326,6 +1397,8 @@ stpi_compute_lut(stp_vars_t *v)
        lut->input_color_description->color_id == COLOR_ID_RGB ||
        lut->input_color_description->color_id == COLOR_ID_CMY))
     initialize_gcr_curve(v);
+  if (stp_check_file_parameter(v, "LUTDumpFile", STP_PARAMETER_ACTIVE))
+    stpi_dump_lut_to_file(v, stp_get_file_parameter(v, "LUTDumpFile"));
 }
 
 static int

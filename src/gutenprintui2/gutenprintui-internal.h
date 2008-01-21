@@ -77,6 +77,15 @@ typedef struct
 
 typedef struct
 {
+  GtkWidget *f_label;
+  GtkWidget *f_entry;
+  GtkWidget *f_button;
+  GtkWidget *f_browser;
+  gboolean f_is_visible;
+} file_option_t;
+
+typedef struct
+{
   const stp_parameter_t *fast_desc;
   int is_active;
   int is_enabled;
@@ -86,6 +95,7 @@ typedef struct
     float_option_t flt;
     curve_option_t curve;
     boolean_option_t bool;
+    file_option_t file;
   } info;
 } option_t;
 

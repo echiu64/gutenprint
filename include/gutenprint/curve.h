@@ -126,7 +126,7 @@ typedef struct
 extern stp_curve_t *stp_curve_create(stp_curve_wrap_mode_t wrap);
 
   /**
-   * Copy and allocate an curve.
+   * Copy and allocate a curve.
    * dest will be created, and then the contents of source will be
    * copied into it.  dest must not have been previously allocated
    * with stp_curve_create().
@@ -136,13 +136,32 @@ extern stp_curve_t *stp_curve_create(stp_curve_wrap_mode_t wrap);
 extern stp_curve_t *stp_curve_create_copy(const stp_curve_t *curve);
 
   /**
-   * Copy an curve.
+   * Copy a curve.
    * Both dest and source must be valid curves previously created with
    * stp_curve_create().
    * @param dest the destination curve.
    * @param source the source curve.
    */
 extern void stp_curve_copy(stp_curve_t *dest, const stp_curve_t *source);
+
+  /**
+   * Reverse and allocate a curve.
+   * dest will be created, and then the contents of source will be
+   * copied into it.  dest must not have been previously allocated
+   * with stp_curve_create().
+   * @param curve the source curve.
+   * @returns the new copy of the curve.
+   */
+extern stp_curve_t *stp_curve_create_reverse(const stp_curve_t *curve);
+
+  /**
+   * Reverse a curve.
+   * Both dest and source must be valid curves previously created with
+   * stp_curve_create().
+   * @param dest the destination curve.
+   * @param source the source curve.
+   */
+extern void stp_curve_reverse(stp_curve_t *dest, const stp_curve_t *source);
 
   /**
    * Destroy an curve.

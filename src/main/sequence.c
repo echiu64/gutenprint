@@ -140,6 +140,24 @@ stp_sequence_copy(stp_sequence_t *dest, const stp_sequence_t *source)
   memcpy(dest->data, source->data, (sizeof(double) * source->size));
 }
 
+void
+stp_sequence_reverse(stp_sequence_t *dest, const stp_sequence_t *source)
+{
+  int i;
+  check_sequence(dest);
+  check_sequence(source);
+
+  dest->recompute_range = source->recompute_range;
+  dest->blo = source->blo;
+  dest->bhi = source->bhi;
+  dest->rlo = source->rlo;
+  dest->rhi = source->rhi;
+  dest->size = source->size;
+  dest->data = stp_zalloc(sizeof(double) * source->size);
+  for (i = 0; i < source->size; i++)
+    dest->data[i] = source->data[source->size - i - 1];
+}
+
 stp_sequence_t *
 stp_sequence_create_copy(const stp_sequence_t *sequence)
 {
@@ -147,6 +165,16 @@ stp_sequence_create_copy(const stp_sequence_t *sequence)
   check_sequence(sequence);
   ret = stp_sequence_create();
   stp_sequence_copy(ret, sequence);
+  return ret;
+}
+
+stp_sequence_t *
+stp_sequence_create_reverse(const stp_sequence_t *sequence)
+{
+  stp_sequence_t *ret;
+  check_sequence(sequence);
+  ret = stp_sequence_create();
+  stp_sequence_reverse(ret, sequence);
   return ret;
 }
 

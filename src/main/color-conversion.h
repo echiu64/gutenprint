@@ -150,9 +150,7 @@ typedef struct
   stp_cached_curve_t contrast_correction;
   stp_cached_curve_t user_color_correction;
   stp_cached_curve_t channel_curves[STP_CHANNEL_LIMIT];
-  stp_cached_curve_t hue_angle;
   double gamma_values[STP_CHANNEL_LIMIT];
-  double hue_angles[STP_CHANNEL_LIMIT];
   double print_gamma;
   double app_gamma;
   double screen_gamma;
