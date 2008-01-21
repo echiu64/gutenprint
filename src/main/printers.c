@@ -66,6 +66,7 @@ struct stp_printer
   char       *family;           /* Printer family */
   char	     *manufacturer;	/* Printer manufacturer */
   int        model;             /* Model number */
+  int	     vars_initialized;
   const stp_printfuncs_t *printfuncs;
   stp_vars_t *printvars;
 };
@@ -207,12 +208,6 @@ static inline const stp_printfuncs_t *
 stpi_get_printfuncs(const stp_printer_t *printer)
 {
   return printer->printfuncs;
-}
-
-const stp_vars_t *
-stp_printer_get_defaults(const stp_printer_t *printer)
-{
-  return printer->printvars;
 }
 
 
@@ -357,7 +352,6 @@ stp_set_printer_defaults(stp_vars_t *v, const stp_printer_t *printer)
 void
 stp_initialize_printer_defaults(void)
 {
-  stp_list_item_t *printer_item;
   if (printer_list == NULL)
     {
       stpi_init_printer_list();
@@ -365,16 +359,19 @@ stp_initialize_printer_defaults(void)
 	(STP_DBG_PRINTERS,
 	 "stpi_family_register(): initialising printer_list...\n");
     }
-  printer_item = stp_list_get_start(printer_list);
-  while (printer_item)
+}
+
+const stp_vars_t *
+stp_printer_get_defaults(const stp_printer_t *printer)
+{
+  if (! printer->vars_initialized)
     {
-      stp_deprintf
-	(STP_DBG_PRINTERS, "  ==>init %s\n",
-	 ((stp_printer_t *)(stp_list_item_get_data(printer_item)))->driver);
-      set_printer_defaults
-	(((stp_printer_t *)(stp_list_item_get_data(printer_item)))->printvars, 1);
-      printer_item = stp_list_item_next(printer_item);
+      stp_printer_t *nc_printer = (stp_printer_t *) printer;
+      stp_deprintf(STP_DBG_PRINTERS, "  ==>init %s\n", printer->driver);
+      set_printer_defaults (nc_printer->printvars, 1);
+      nc_printer->vars_initialized = 1;
     }
+  return printer->printvars;
 }
 
 void
@@ -900,8 +897,7 @@ stp_family_register(stp_list_t *family)
       while(printer_item)
 	{
 	  printer = (const stp_printer_t *) stp_list_item_get_data(printer_item);
-	  if (!stp_list_get_item_by_name(printer_list,
-					  stp_get_driver(printer->printvars)))
+	  if (!stp_list_get_item_by_name(printer_list, printer->driver))
 	    stp_list_item_create(printer_list, NULL, printer);
 	  printer_item = stp_list_item_next(printer_item);
 	}
@@ -933,8 +929,7 @@ stp_family_unregister(stp_list_t *family)
 	{
 	  printer = (const stp_printer_t *) stp_list_item_get_data(printer_item);
 	  old_printer_item =
-	    stp_list_get_item_by_name(printer_list,
-				      stp_get_driver(printer->printvars));
+	    stp_list_get_item_by_name(printer_list, printer->driver);
 
 	  if (old_printer_item)
 	    stp_list_item_destroy(printer_list, old_printer_item);
