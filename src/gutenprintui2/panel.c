@@ -255,6 +255,7 @@ static void plist_build_combo(GtkWidget *combo,
 			      int (*check_func)(const char *string),
 			      gpointer data);
 static void initialize_thumbnail(void);
+static void reset_callback (GtkObject *widget, gpointer data);
 static void set_color_defaults (void);
 static void set_printer_defaults (void);
 static void redraw_color_swatch (void);
@@ -915,6 +916,8 @@ populate_options(const stp_vars_t *v)
 	    }
 	  if (opt->checkbox)
 	    gtk_widget_destroy(GTK_WIDGET(opt->checkbox));
+	  if (opt->reset_btn)
+	    gtk_widget_destroy(GTK_WIDGET(opt->reset_btn));
 	}
       g_free(current_options);
     }
@@ -935,6 +938,7 @@ populate_options(const stp_vars_t *v)
 	  opt->fast_desc = stp_parameter_list_param(params, i);
 	  stp_describe_parameter(v, opt->fast_desc->name, &desc);
 	  opt->checkbox = NULL;
+	  opt->reset_btn = NULL;
 	  opt->is_active = 0;
 	  opt->is_enabled = 0;
 	  switch (opt->fast_desc->p_type)
@@ -1006,6 +1010,17 @@ static void
 destroy_something(GtkWidget *widget, gpointer data)
 {
   gtk_widget_destroy(widget);
+}
+
+static void
+add_reset_button(option_t *opt, GtkWidget *table, gint column, gint row)
+{
+  GtkWidget *button = gtk_button_new_with_label(_("Reset"));
+  gtk_table_attach(GTK_TABLE(table), button, column, column + 1,
+		   row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+  g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(reset_callback), opt);
+  opt->reset_btn = button;
+  gtk_widget_show(button);
 }
 
 static void
@@ -1092,9 +1107,14 @@ populate_option_table(GtkWidget *table, int p_class)
 	  gdouble unit_scaler;
 	  gdouble minor_increment;
 	  gint digits;
+	  if (p_class == STP_PARAMETER_CLASS_OUTPUT)
+	    opt->reset_all = FALSE;
+	  else
+	    opt->reset_all = TRUE;
 	  switch (desc->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_new_combo(opt, table, 0,
 				     vpos[desc->p_level][desc->p_type]++,
 				     !(desc->is_mandatory));
@@ -1103,6 +1123,7 @@ populate_option_table(GtkWidget *table, int p_class)
 						STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
+	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
 				       vpos[desc->p_level][desc->p_type]++,
 				       gettext(desc->text), 200, 0,
@@ -1142,6 +1163,7 @@ populate_option_table(GtkWidget *table, int p_class)
 		  digits = 0;
 		  minor_increment = 1;
 		}
+	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
 				       vpos[desc->p_level][desc->p_type]++,
 				       gettext(desc->text), 200, 0,
@@ -1166,6 +1188,7 @@ populate_option_table(GtkWidget *table, int p_class)
 		opt->info.curve.current = stp_curve_create_copy(xcurve);
 	      else
 		opt->info.curve.current = NULL;
+	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_curve(opt, GTK_TABLE(table), 0,
 				 vpos[desc->p_level][desc->p_type]++,
 				 gettext(desc->text), opt->info.curve.deflt,
@@ -1177,6 +1200,7 @@ populate_option_table(GtkWidget *table, int p_class)
 	    case STP_PARAMETER_TYPE_BOOLEAN:
 	      opt->info.bool.current =
 		stp_get_boolean_parameter(pv->v, opt->fast_desc->name);
+	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
 	      stpui_create_boolean(opt, GTK_TABLE(table), 0,
 				   vpos[desc->p_level][desc->p_type]++,
 				   gettext(desc->text), opt->info.bool.deflt,
@@ -1195,10 +1219,13 @@ populate_option_table(GtkWidget *table, int p_class)
 	      break;
 	    case STP_PARAMETER_TYPE_FILE:
 	      if (strcmp(opt->fast_desc->name, "PPDFile") != 0)
-		stpui_create_file_browser(opt, GTK_TABLE(table), 0,
-					  vpos[desc->p_level][desc->p_type]++,
-					  gettext(desc->text),
-					  !(desc->is_mandatory));
+		{
+		  add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
+		  stpui_create_file_browser(opt, GTK_TABLE(table), 0,
+					    vpos[desc->p_level][desc->p_type]++,
+					    gettext(desc->text),
+					    !(desc->is_mandatory));
+		}
 	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
 		stp_set_file_parameter_active(pv->v, desc->name,
 					      STP_PARAMETER_INACTIVE);
@@ -1289,12 +1316,24 @@ set_options_active(const char *omit)
 	default:
 	  break;
 	}
-      if (opt->checkbox)
+      if (!(opt->is_active) || desc->p_level > MAXIMUM_PARAMETER_LEVEL)
 	{
-	  if (!(opt->is_active) || desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+	  if (opt->checkbox)
 	    gtk_widget_hide(GTK_WIDGET(opt->checkbox));
-	  else if (!(desc->is_mandatory))
-	    gtk_widget_show(GTK_WIDGET(opt->checkbox));
+	  if (opt->reset_btn)
+	    gtk_widget_hide(GTK_WIDGET(opt->reset_btn));
+	}
+      else
+	{
+	  if (opt->checkbox)
+	    {
+	      if (!desc->is_mandatory)
+		gtk_widget_show(GTK_WIDGET(opt->checkbox));
+	      else
+		gtk_widget_hide(GTK_WIDGET(opt->checkbox));
+	    }
+	  if (opt->reset_btn)
+	    gtk_widget_show(GTK_WIDGET(opt->reset_btn));
 	}
     }
 }
@@ -2948,12 +2987,10 @@ set_adjustment_active(option_t *opt, gboolean active, gboolean do_toggle)
   GtkObject *adj = opt->info.flt.adjustment;
   if (do_toggle)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
-  gtk_widget_set_sensitive
-    (GTK_WIDGET (SCALE_ENTRY_LABEL (adj)), active);
-  gtk_widget_set_sensitive
-    (GTK_WIDGET (SCALE_ENTRY_SCALE (adj)), active);
-  gtk_widget_set_sensitive
-    (GTK_WIDGET (SCALE_ENTRY_SPINBUTTON (adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (SCALE_ENTRY_LABEL (adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (SCALE_ENTRY_SCALE (adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (SCALE_ENTRY_SPINBUTTON (adj)), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (opt->reset_btn), active);
 }
 
 static void
@@ -2963,6 +3000,7 @@ set_combo_active(option_t *opt, gboolean active, gboolean do_toggle)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
   gtk_widget_set_sensitive(GTK_WIDGET(opt->info.list.combo), active);
   gtk_widget_set_sensitive(GTK_WIDGET(opt->info.list.label), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (opt->reset_btn), active);
 }
 
 static void
@@ -2979,6 +3017,7 @@ set_curve_active(option_t *opt, gboolean active, gboolean do_toggle)
     }
   else
     gtk_widget_hide(GTK_WIDGET(opt->info.curve.dialog));
+  gtk_widget_set_sensitive (GTK_WIDGET (opt->reset_btn), active);
 }
 
 static void
@@ -2987,6 +3026,7 @@ set_bool_active(option_t *opt, gboolean active, gboolean do_toggle)
   if (do_toggle)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(opt->checkbox), active);
   gtk_widget_set_sensitive(GTK_WIDGET(opt->info.bool.checkbox), active);
+  gtk_widget_set_sensitive (GTK_WIDGET (opt->reset_btn), active);
 }
 
 static void
@@ -3004,6 +3044,7 @@ set_file_active(option_t *opt, gboolean active, gboolean do_toggle)
     }
   else
     gtk_widget_hide(GTK_WIDGET(opt->info.file.f_browser));
+  gtk_widget_set_sensitive (GTK_WIDGET (opt->reset_btn), active);
 }
 
 static void
@@ -5291,6 +5332,68 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 }
 
 static void
+set_one_default(option_t *opt)
+{
+  stp_parameter_activity_t active;
+  gdouble unit_scaler;
+  switch (opt->fast_desc->p_type)
+    {
+    case STP_PARAMETER_TYPE_DOUBLE:
+      active = stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
+      stp_set_float_parameter(pv->v, opt->fast_desc->name,
+			      opt->info.flt.deflt);
+      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
+				     active);
+      break;
+    case STP_PARAMETER_TYPE_DIMENSION:
+      unit_scaler = units[pv->unit].scale;
+      active = stp_get_dimension_parameter_active(pv->v,
+					   opt->fast_desc->name);
+      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
+				  opt->info.flt.deflt * unit_scaler);
+      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
+					 active);
+      break;
+    case STP_PARAMETER_TYPE_BOOLEAN:
+      active = stp_get_boolean_parameter_active(pv->v, opt->fast_desc->name);
+      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
+				opt->info.bool.deflt);
+      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
+				       active);
+      break;
+    case STP_PARAMETER_TYPE_STRING_LIST:
+      active = stp_get_string_parameter_active(pv->v, opt->fast_desc->name);
+      stp_set_string_parameter(pv->v, opt->fast_desc->name,
+			       opt->info.list.default_val);
+      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
+				      active);
+      break;
+    case STP_PARAMETER_TYPE_FILE:
+      active = stp_get_file_parameter_active(pv->v, opt->fast_desc->name);
+      stp_set_file_parameter(pv->v, opt->fast_desc->name, "");
+      stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
+				    active);
+      break;
+    default:
+      break;
+    }
+}
+
+static void
+reset_callback(GtkObject *button, gpointer xopt)
+{
+  option_t *opt = (option_t *)xopt;
+  if (opt)
+    {
+      set_one_default(opt);
+      if (opt->reset_all)
+	do_all_updates ();
+      else
+	do_color_updates ();
+    }
+}
+
+static void
 set_printer_defaults (void)
 {
   int i;
@@ -5300,56 +5403,7 @@ set_printer_defaults (void)
       if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
 	  opt->fast_desc->p_class == STP_PARAMETER_CLASS_FEATURE &&
 	  opt->is_active && !opt->fast_desc->read_only)
-	{
-	  stp_parameter_activity_t active;
-	  gdouble unit_scaler;
-	  switch (opt->fast_desc->p_type)
-	    {
-	    case STP_PARAMETER_TYPE_DOUBLE:
-	      active =
-		stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
-				      opt->info.flt.deflt);
-	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-					     active);
-	      break;
-	    case STP_PARAMETER_TYPE_DIMENSION:
-	      unit_scaler = units[pv->unit].scale;
-	      active =
-		stp_get_dimension_parameter_active(pv->v,
-						   opt->fast_desc->name);
-	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
-					  opt->info.flt.deflt * unit_scaler);
-	      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
-						 active);
-	      break;
-	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      active =
-		stp_get_boolean_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
-					opt->info.bool.deflt);
-	      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
-					       active);
-	      break;
-	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      active =
-		stp_get_string_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_string_parameter(pv->v, opt->fast_desc->name,
-				       opt->info.list.default_val);
-	      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
-					      active);
-	      break;
-	    case STP_PARAMETER_TYPE_FILE:
-	      active =
-		stp_get_file_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_file_parameter(pv->v, opt->fast_desc->name, "");
-	      stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
-					    active);
-	      break;
-	    default:
-	      break;
-	    }
-	}
+	set_one_default(opt);
     }
 
   do_all_updates ();
@@ -5365,56 +5419,7 @@ set_color_defaults (void)
       if (opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
 	  opt->fast_desc->p_class == STP_PARAMETER_CLASS_OUTPUT &&
 	  opt->is_active && !opt->fast_desc->read_only)
-	{
-	  stp_parameter_activity_t active;
-	  gdouble unit_scaler;
-	  switch (opt->fast_desc->p_type)
-	    {
-	    case STP_PARAMETER_TYPE_DOUBLE:
-	      active =
-		stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_float_parameter(pv->v, opt->fast_desc->name,
-				      opt->info.flt.deflt);
-	      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-					     active);
-	      break;
-	    case STP_PARAMETER_TYPE_DIMENSION:
-	      unit_scaler = units[pv->unit].scale;
-	      active =
-		stp_get_dimension_parameter_active(pv->v,
-						   opt->fast_desc->name);
-	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
-					  opt->info.flt.deflt * unit_scaler);
-	      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
-						 active);
-	      break;
-	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      active =
-		stp_get_boolean_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
-					opt->info.bool.deflt);
-	      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
-					       active);
-	      break;
-	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      active =
-		stp_get_string_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_string_parameter(pv->v, opt->fast_desc->name,
-				       opt->info.list.default_val);
-	      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
-					      active);
-	      break;
-	    case STP_PARAMETER_TYPE_FILE:
-	      active =
-		stp_get_file_parameter_active(pv->v, opt->fast_desc->name);
-	      stp_set_file_parameter(pv->v, opt->fast_desc->name, "");
-	      stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
-					    active);
-	      break;
-	    default:
-	      break;
-	    }
-	}
+	set_one_default(opt);
     }
 
   do_color_updates ();

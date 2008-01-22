@@ -89,7 +89,9 @@ typedef struct
   const stp_parameter_t *fast_desc;
   int is_active;
   int is_enabled;
+  int reset_all;
   GtkWidget *checkbox;
+  GtkWidget *reset_btn;
   union {
     list_option_t list;
     float_option_t flt;
