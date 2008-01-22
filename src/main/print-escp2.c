@@ -733,6 +733,30 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
+  {
+    {
+      "BlackTrans", N_("GCR Transition"), N_("Advanced Output Control"),
+      N_("Adjust the gray component transition rate"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+    }, 0.0, 1.0, 1.0, 1
+  },
+  {
+    {
+      "GCRLower", N_("GCR Lower Bound"), N_("Advanced Output Control"),
+      N_("Lower bound of gray component reduction"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+    }, 0.0, 1.0, 0.2, 1
+  },
+  {
+    {
+      "GCRUpper", N_("GCR Upper Bound"), N_("Advanced Output Control"),
+      N_("Upper bound of gray component reduction"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+    }, 0.0, 5.0, 0.5, 1
+  },
 };
 
 static const int float_parameter_count =
@@ -2293,6 +2317,28 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	}
       else
 	description->is_active = 0;
+    }
+  else if (strcmp(name, "BlackTrans") == 0 ||
+	   strcmp(name, "GCRLower") == 0 ||
+	   strcmp(name, "GCRUpper") == 0)
+    {
+      const paper_adjustment_t *paper_adj = get_media_adjustment(v);
+      if (paper_adj &&
+	  stp_get_string_parameter(v, "PrintingMode") &&
+	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
+	{
+	  if (paper_adj)
+	    {
+	      if (strcmp(name, "BlackTrans") == 0)
+		description->deflt.dbl = paper_adj->k_transition;
+	      else if (strcmp(name, "GCRUpper") == 0)
+		description->deflt.dbl = paper_adj->k_upper;
+	      else if (strcmp(name, "GCRLower") == 0)
+		description->deflt.dbl = paper_adj->k_lower;
+	    }
+	}
+      else
+	description->p_type = STP_PARAMETER_TYPE_INVALID;
     }
   else if (strcmp(name, "GrayValue") == 0)
     set_gray_value_parameter(v, description, 2);
