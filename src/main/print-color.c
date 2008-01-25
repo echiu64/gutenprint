@@ -1272,7 +1272,7 @@ stpi_do_dump_lut_to_file(stp_vars_t *v, FILE *fp)
 			   lut->invert_output && ! channel_is_synthesized(lut, i));
     }
   curve = stp_channel_get_gcr_curve(v);
-  if (v)
+  if (curve)
     {
       fprintf(fp, "GCR curve: '");
       stp_curve_write(fp, curve);
