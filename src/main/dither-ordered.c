@@ -308,6 +308,46 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
     }
 }
 
+typedef struct {
+  unsigned short shift;
+  unsigned short mask;
+  unsigned short x_mask;
+} stpi_segmented_t;
+
+static void
+free_dither_segmented(stpi_dither_t *d)
+{
+  int i;
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
+    {
+      stpi_dither_channel_t *dc = &CHANNEL(d, i);
+      if (dc->aux_data)
+	stp_free(dc->aux_data);
+      dc->aux_data = NULL;
+    }
+  stp_free(d->aux_data);
+}
+
+static void
+init_dither_segmented(stpi_dither_t *d, stp_vars_t *v)
+{
+  int i;
+  d->aux_data = stp_malloc(1);
+  d->aux_freefunc = &free_dither_segmented;
+  stp_dprintf(STP_DBG_INK, v, "init_dither_ordered_new\n");
+  for (i = 0; i < CHANNEL_COUNT(d); i++)
+    {
+      stpi_dither_channel_t *dc = &CHANNEL(d, i);
+      stpi_segmented_t *s;
+      dc->aux_data = stp_malloc(sizeof(stpi_segmented_t));
+      s = (stpi_segmented_t *) dc->aux_data;
+      s->shift = 16 - dc->signif_bits;
+      s->mask = ((1 << dc->signif_bits) - 1) << s->shift;
+      s->x_mask = ~(s->mask);
+      stp_dprintf(STP_DBG_INK, v, "   channel %d: shift %d mask 0x%x x_mask 0x%x\n",
+		  i, s->shift, s->mask, s->x_mask);
+    }
+}
 
 void
 stpi_dither_ordered(stp_vars_t *v,
@@ -360,6 +400,40 @@ stpi_dither_ordered(stp_vars_t *v,
 		    {
 		      set_row_ends(&(CHANNEL(d, i)), x);
 		      CHANNEL(d, i).ptr[d->ptr_offset] |= bit;
+		    }
+		}
+	    }
+	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
+				 xerror, xstep, xmod);
+	}
+    }
+  else if (d->stpi_dither_type == D_ORDERED_SEGMENTED)
+    {
+      if (! d->aux_data)
+	init_dither_segmented(d, v);
+      for (x = 0; x < d->dst_width; x ++)
+	{
+	  if (!mask || (*(mask + d->ptr_offset) & bit))
+	    {
+	      for (i = 0; i < CHANNEL_COUNT(d); i++)
+		{
+		  stpi_dither_channel_t *dc = &CHANNEL(d, i);
+		  stpi_segmented_t *s = (stpi_segmented_t *) dc->aux_data;
+		  unsigned short bits = raw[i] >> s->shift;
+		  unsigned short val = raw[i] << dc->signif_bits;
+		  val |= val >> s->shift;
+
+		  if (val && bits &&
+		      val >= ditherpoint(d, &(CHANNEL(d, i).dithermat), x))
+		    {
+		      int j;
+		      unsigned char *tptr = dc->ptr + d->ptr_offset;
+		      set_row_ends(dc, x);
+		      for (j = 1; j <= bits; j += j, tptr += length)
+			{
+			  if (j & bits)
+			    tptr[0] |= bit;
+			}
 		    }
 		}
 	    }

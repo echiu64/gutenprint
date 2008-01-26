@@ -66,7 +66,8 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "Fast",	      N_ ("Fast"),                   D_FAST },
   { "VeryFast",	      N_ ("Very Fast"),              D_VERY_FAST },
   { "Floyd",	      N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
-  { "Predithered",    N_ ("Predithered Input"),      D_PREDITHERED }
+  { "Predithered",    N_ ("Predithered Input"),      D_PREDITHERED },
+  { "Segmented",      N_ ("Drop Size Segmented"),    D_ORDERED_SEGMENTED }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(stpi_dither_algorithm_t);
@@ -176,6 +177,9 @@ stpi_set_dither_function(stp_vars_t *v)
 
   if (color_correction && strcmp(color_correction, "Predithered") == 0)
     d->stpi_dither_type = D_PREDITHERED;
+  else if (color_correction && strcmp(color_correction, "Raw") != 0 &&
+	   algorithm && strcmp(algorithm, "Segmented") == 0)
+    d->stpi_dither_type = D_ORDERED;
   else if (algorithm && strcmp(algorithm, "None") != 0)
     {
       for (i = 0; i < num_dither_algos; i++)
@@ -256,6 +260,7 @@ stpi_set_dither_function(stp_vars_t *v)
     case D_VERY_FAST:
       RETURN_DITHERFUNC(stpi_dither_very_fast, v);
     case D_ORDERED:
+    case D_ORDERED_SEGMENTED:
     case D_ORDERED_NEW:
     case D_FAST:
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
