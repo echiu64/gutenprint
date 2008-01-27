@@ -114,10 +114,11 @@ gray			yylval.ival = GRAY;DBG(GRAY); return GRAY;
 white			yylval.ival = WHITE;DBG(WHITE); return WHITE;
 output			DBG(OUTPUT); return OUTPUT;
 message			DBG(MESSAGE); return MESSAGE;
+noscale			DBG(NOSCALE); return NOSCALE;
 end			DBG(END); return END;
 
 
-{integer}		yylval.ival = atoi(yytext); DBG(tINT); return tINT;
+{integer}		yylval.ival = atoi(yytext); yylval.dval = (double) yylval.ival; DBG(tINT); return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
 {string}		yylval.sval = c_strstrip(yytext); DBG(tSTRING); return tSTRING;
 {ws}			DBG(whitespace); 	/* Skip blanks/tabs */

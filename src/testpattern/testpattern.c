@@ -87,6 +87,7 @@ int global_channel_depth;
 int global_invert_data = 0;
 int global_use_raw_cmyk;
 int global_did_something;
+int global_noscale = 0;
 int global_suppress_output = 0;
 char *global_output = NULL;
 
@@ -137,10 +138,10 @@ clear_testpattern(testpattern_t *p)
   int i;
   for (i = 0; i < STP_CHANNEL_LIMIT; i++)
     {
-      p->d.p.mins[i] = 0;
-      p->d.p.vals[i] = 0;
-      p->d.p.gammas[i] = 1;
-      p->d.p.levels[i] = 0;
+      p->d.pattern.mins[i] = 0;
+      p->d.pattern.vals[i] = 0;
+      p->d.pattern.gammas[i] = 1;
+      p->d.pattern.levels[i] = 0;
     }
 }
   
@@ -639,8 +640,8 @@ fill_grid_##bits(unsigned char *data, size_t len, size_t scount,	\
 {									\
   int i;								\
   int xlen = (len / scount) * scount;					\
-  int errdiv = (p->d.g.ticks) / (xlen - 1);				\
-  int errmod = (p->d.g.ticks) % (xlen - 1);				\
+  int errdiv = (p->d.grid.ticks) / (xlen - 1);				\
+  int errmod = (p->d.grid.ticks) % (xlen - 1);				\
   int errval  = 0;							\
   int errlast = -1;							\
   int errline  = 0;							\
@@ -683,97 +684,102 @@ fill_grid(unsigned char *data, size_t len, size_t scount,
     }
 }
 
-#define FILL_COLORS_EXTENDED_FUNCTION(T, bits)				    \
-static void								    \
-fill_colors_extended_##bits(unsigned char *data, size_t len,		    \
-			    size_t scount, testpattern_t *p)		    \
-{									    \
-  double mins[STP_CHANNEL_LIMIT];					    \
-  double vals[STP_CHANNEL_LIMIT];					    \
-  double gammas[STP_CHANNEL_LIMIT];					    \
-  int i;								    \
-  int j;								    \
-  int k;								    \
-  int pixels;								    \
-  int channel_limit = global_channel_depth <= 7 ? 7 : global_channel_depth; \
-  T *s_data = (T *) data;						    \
-  unsigned multiplier = (1 << bits) - 1;				    \
-									    \
-  for (j = 0; j < channel_limit; j++)					    \
-    {									    \
-      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j];   \
-      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j];   \
-      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];	    \
-      vals[j] -= mins[j];						    \
-    }									    \
-  if (scount > len)							    \
-    scount = len;							    \
-  pixels = len / scount;						    \
-  for (i = 0; i < scount; i++)						    \
-    {									    \
-      double where = (double) i / ((double) scount - 1);		    \
-      double val = where;						    \
-      double xvals[STP_CHANNEL_LIMIT];					    \
-									    \
-      for (j = 0; j < channel_limit; j++)				    \
-	{								    \
-	  xvals[j] = mins[j] + val * vals[j];				    \
-	  xvals[j] = pow(xvals[j], gammas[j]);				    \
-	  xvals[j] *= global_ink_limit * multiplier;			    \
-	}								    \
-      for (k = 0; k < pixels; k++)					    \
-	{								    \
-	  switch (global_channel_depth)					    \
-	    {								    \
-	    case 1:							    \
-	      s_data[0] = xvals[0];					    \
-	      break;							    \
-	    case 2:							    \
-	      s_data[0] = xvals[0];					    \
-	      s_data[1] = xvals[4];					    \
-	      break;							    \
-	    case 3:							    \
-	      s_data[0] = xvals[1];					    \
-	      s_data[1] = xvals[2];					    \
-	      s_data[2] = xvals[3];					    \
-	      break;							    \
-	    case 4:							    \
-	      s_data[0] = xvals[0];					    \
-	      s_data[1] = xvals[1];					    \
-	      s_data[2] = xvals[2];					    \
-	      s_data[3] = xvals[3];					    \
-	      break;							    \
-	    case 5:							    \
-	      s_data[0] = xvals[1];					    \
-	      s_data[1] = xvals[5];					    \
-	      s_data[2] = xvals[2];					    \
-	      s_data[3] = xvals[6];					    \
-	      s_data[4] = xvals[3];					    \
-	      break;							    \
-	    case 6:							    \
-	      s_data[0] = xvals[0];					    \
-	      s_data[1] = xvals[1];					    \
-	      s_data[2] = xvals[5];					    \
-	      s_data[3] = xvals[2];					    \
-	      s_data[4] = xvals[6];					    \
-	      s_data[5] = xvals[3];					    \
-	      break;							    \
-	    case 7:							    \
-	      s_data[0] = xvals[0];					    \
-	      s_data[1] = xvals[4];					    \
-	      s_data[2] = xvals[1];					    \
-	      s_data[3] = xvals[5];					    \
-	      s_data[4] = xvals[2];					    \
-	      s_data[5] = xvals[6];					    \
-	      s_data[6] = xvals[3];					    \
-	      break;							    \
-	    default:							    \
-	      for (j = 0; j < global_channel_depth; j++)		    \
-		s_data[j] = xvals[j];					    \
-	    }								    \
-	  s_data += global_channel_depth;				    \
-	}								    \
-    }									    \
+#define FILL_COLORS_EXTENDED_FUNCTION(T, bits)				\
+static void								\
+fill_colors_extended_##bits(unsigned char *data, size_t len,		\
+			    size_t scount, testpattern_t *p)		\
+{									\
+  double mins[STP_CHANNEL_LIMIT];					\
+  double vals[STP_CHANNEL_LIMIT];					\
+  double gammas[STP_CHANNEL_LIMIT];					\
+  int i;								\
+  int j;								\
+  int k;								\
+  int pixels;								\
+  int channel_limit =							\
+    global_channel_depth <= 7 ? 7 : global_channel_depth;		\
+  T *s_data = (T *) data;						\
+  unsigned multiplier = global_noscale ? 1 : (1 << bits) - 1;		\
+									\
+  for (j = 0; j < channel_limit; j++)					\
+    {									\
+      mins[j] = p->d.pattern.mins[j] == -2 ?				\
+	global_levels[j] : p->d.pattern.mins[j];			\
+      vals[j] = p->d.pattern.vals[j] == -2 ?				\
+	global_levels[j] : p->d.pattern.vals[j];			\
+      gammas[j] =							\
+	p->d.pattern.gammas[j] * global_gamma * global_gammas[j];	\
+      vals[j] -= mins[j];						\
+    }									\
+  if (scount > len)							\
+    scount = len;							\
+  pixels = len / scount;						\
+  for (i = 0; i < scount; i++)						\
+    {									\
+      double where = (double) i / ((double) scount - 1);		\
+      double val = where;						\
+      double xvals[STP_CHANNEL_LIMIT];					\
+									\
+      for (j = 0; j < channel_limit; j++)				\
+	{								\
+	  xvals[j] = mins[j] + val * vals[j];				\
+	  xvals[j] = pow(xvals[j], gammas[j]);				\
+	  xvals[j] *= global_ink_limit * multiplier;			\
+	  xvals[j] += 0.9;						\
+	}								\
+      for (k = 0; k < pixels; k++)					\
+	{								\
+	  switch (global_channel_depth)					\
+	    {								\
+	    case 1:							\
+	      s_data[0] = xvals[0];					\
+	      break;							\
+	    case 2:							\
+	      s_data[0] = xvals[0];					\
+	      s_data[1] = xvals[4];					\
+	      break;							\
+	    case 3:							\
+	      s_data[0] = xvals[1];					\
+	      s_data[1] = xvals[2];					\
+	      s_data[2] = xvals[3];					\
+	      break;							\
+	    case 4:							\
+	      s_data[0] = xvals[0];					\
+	      s_data[1] = xvals[1];					\
+	      s_data[2] = xvals[2];					\
+	      s_data[3] = xvals[3];					\
+	      break;							\
+	    case 5:							\
+	      s_data[0] = xvals[1];					\
+	      s_data[1] = xvals[5];					\
+	      s_data[2] = xvals[2];					\
+	      s_data[3] = xvals[6];					\
+	      s_data[4] = xvals[3];					\
+	      break;							\
+	    case 6:							\
+	      s_data[0] = xvals[0];					\
+	      s_data[1] = xvals[1];					\
+	      s_data[2] = xvals[5];					\
+	      s_data[3] = xvals[2];					\
+	      s_data[4] = xvals[6];					\
+	      s_data[5] = xvals[3];					\
+	      break;							\
+	    case 7:							\
+	      s_data[0] = xvals[0];					\
+	      s_data[1] = xvals[4];					\
+	      s_data[2] = xvals[1];					\
+	      s_data[3] = xvals[5];					\
+	      s_data[4] = xvals[2];					\
+	      s_data[5] = xvals[6];					\
+	      s_data[6] = xvals[3];					\
+	      break;							\
+	    default:							\
+	      for (j = 0; j < global_channel_depth; j++)		\
+		s_data[j] = xvals[j];					\
+	    }								\
+	  s_data += global_channel_depth;				\
+	}								\
+    }									\
 }
 
 FILL_COLORS_EXTENDED_FUNCTION(unsigned short, 16)
@@ -794,117 +800,121 @@ fill_colors_extended(unsigned char *data, size_t len, size_t scount,
     }
 }
 
-#define FILL_COLORS_FUNCTION(T, bits)					  \
-static void								  \
-fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	  \
-		   testpattern_t *p)					  \
-{									  \
-  double mins[4];							  \
-  double vals[4];							  \
-  double gammas[4];							  \
-  double levels[4];							  \
-  double lower = p->d.p.lower;						  \
-  double upper = p->d.p.upper;						  \
-  int i;								  \
-  int j;								  \
-  int pixels;								  \
-  T *s_data = (T *) data;						  \
-  unsigned multiplier = (1 << bits) - 1;				  \
-									  \
-  vals[0] = p->d.p.vals[0];						  \
-  mins[0] = p->d.p.mins[0];						  \
-									  \
-  for (j = 1; j < 4; j++)						  \
-    {									  \
-      vals[j] = p->d.p.vals[j] == -2 ? global_levels[j] : p->d.p.vals[j]; \
-      mins[j] = p->d.p.mins[j] == -2 ? global_levels[j] : p->d.p.mins[j]; \
-      levels[j] = p->d.p.levels[j] ==					  \
-	-2 ? global_levels[j] : p->d.p.levels[j];			  \
-    }									  \
-  for (j = 0; j < 4; j++)						  \
-    {									  \
-      gammas[j] = p->d.p.gammas[j] * global_gamma * global_gammas[j];	  \
-      vals[j] -= mins[j];						  \
-    }									  \
-									  \
-  if (scount > len)							  \
-    scount = len;							  \
-  pixels = len / scount;						  \
-  for (i = 0; i < scount; i++)						  \
-    {									  \
-      int k;								  \
-      double where = (double) i / ((double) scount - 1);		  \
-      double cmyv;							  \
-      double kv;							  \
-      double val = where;						  \
-      double xvals[4];							  \
-      for (j = 0; j < 4; j++)						  \
-	{								  \
-	  if (j > 0)							  \
-	    xvals[j] = mins[j] + val * vals[j];				  \
-	  else								  \
-	    xvals[j] = mins[j] + vals[j];				  \
-	  xvals[j] = pow(xvals[j], gammas[j]);				  \
-	}								  \
-									  \
-      if (where <= lower)						  \
-	kv = 0;								  \
-      else if (where > upper)						  \
-	kv = where;							  \
-      else								  \
-	kv = (where - lower) * upper / (upper - lower);			  \
-      cmyv = vals[0] * (where - kv);					  \
-      xvals[0] *= kv;							  \
-      for (j = 1; j < 4; j++)						  \
-	xvals[j] += cmyv * levels[j];					  \
-      for (j = 0; j < 4; j++)						  \
-	{								  \
-	  if (xvals[j] > 1)						  \
-	    xvals[j] = 1;						  \
-	  xvals[j] *= global_ink_limit * multiplier;			  \
-	}								  \
-      for (k = 0; k < pixels; k++)					  \
-	{								  \
-	  switch (global_channel_depth)					  \
-	    {								  \
-	    case 0:							  \
-	      for (j = 0; j < 4; j++)					  \
-		s_data[j] = xvals[(j + 1) % 4];				  \
-	      s_data += 4;						  \
-	      break;							  \
-	    case 1:							  \
-	      s_data[0] = xvals[0];					  \
-	      break;							  \
-	    case 2:							  \
-	      s_data[0] = xvals[0];					  \
-	      s_data[1] = 0;						  \
-	      break;							  \
-	    case 3:							  \
-	      for (j = 1; j < 4; j++)					  \
-		s_data[j - 1] = xvals[j];				  \
-	      break;							  \
-	    case 4:							  \
-	      for (j = 0; j < 4; j++)					  \
-		s_data[j] = xvals[j];					  \
-	      break;							  \
-	    case 6:							  \
-	      s_data[0] = xvals[0];					  \
-	      s_data[1] = xvals[1];					  \
-	      s_data[2] = 0;						  \
-	      s_data[3] = xvals[2];					  \
-	      s_data[4] = 0;						  \
-	      s_data[5] = xvals[3];					  \
-	      break;							  \
-	    case 7:							  \
-	      for (j = 0; j < 4; j++)					  \
-		s_data[j * 2] = xvals[j];				  \
-	      for (j = 1; j < 6; j += 2)				  \
-		s_data[j] = 0;						  \
-	      break;							  \
-	    }								  \
-	  s_data += global_channel_depth;				  \
-	}								  \
-    }									  \
+#define FILL_COLORS_FUNCTION(T, bits)					\
+static void								\
+fill_colors_##bits(unsigned char *data, size_t len, size_t scount,	\
+		   testpattern_t *p)					\
+{									\
+  double mins[4];							\
+  double vals[4];							\
+  double gammas[4];							\
+  double levels[4];							\
+  double lower = p->d.pattern.lower;					\
+  double upper = p->d.pattern.upper;					\
+  int i;								\
+  int j;								\
+  int pixels;								\
+  T *s_data = (T *) data;						\
+  unsigned multiplier = global_noscale ? 1 : (1 << bits) - 1;		\
+									\
+  vals[0] = p->d.pattern.vals[0];					\
+  mins[0] = p->d.pattern.mins[0];					\
+									\
+  for (j = 1; j < 4; j++)						\
+    {									\
+      vals[j] = p->d.pattern.vals[j] == -2 ? global_levels[j] :		\
+	p->d.pattern.vals[j];						\
+      mins[j] = p->d.pattern.mins[j] == -2 ? global_levels[j] :		\
+	p->d.pattern.mins[j];						\
+      levels[j] = p->d.pattern.levels[j] ==				\
+	-2 ? global_levels[j] : p->d.pattern.levels[j];			\
+    }									\
+  for (j = 0; j < 4; j++)						\
+    {									\
+      gammas[j] =							\
+	p->d.pattern.gammas[j] * global_gamma * global_gammas[j];	\
+      vals[j] -= mins[j];						\
+    }									\
+									\
+  if (scount > len)							\
+    scount = len;							\
+  pixels = len / scount;						\
+  for (i = 0; i < scount; i++)						\
+    {									\
+      int k;								\
+      double where = (double) i / ((double) scount - 1);		\
+      double cmyv;							\
+      double kv;							\
+      double val = where;						\
+      double xvals[4];							\
+      for (j = 0; j < 4; j++)						\
+	{								\
+	  if (j > 0)							\
+	    xvals[j] = mins[j] + val * vals[j];				\
+	  else								\
+	    xvals[j] = mins[j] + vals[j];				\
+	  xvals[j] = pow(xvals[j], gammas[j]);				\
+	}								\
+									\
+      if (where <= lower)						\
+	kv = 0;								\
+      else if (where > upper)						\
+	kv = where;							\
+      else								\
+	kv = (where - lower) * upper / (upper - lower);			\
+      cmyv = vals[0] * (where - kv);					\
+      xvals[0] *= kv;							\
+      for (j = 1; j < 4; j++)						\
+	xvals[j] += cmyv * levels[j];					\
+      for (j = 0; j < 4; j++)						\
+	{								\
+	  if (xvals[j] > 1)						\
+	    xvals[j] = 1;						\
+	  xvals[j] *= global_ink_limit * multiplier;			\
+	  xvals[j] += 0.9;						\
+	}								\
+      for (k = 0; k < pixels; k++)					\
+	{								\
+	  switch (global_channel_depth)					\
+	    {								\
+	    case 0:							\
+	      for (j = 0; j < 4; j++)					\
+		s_data[j] = xvals[(j + 1) % 4];				\
+	      s_data += 4;						\
+	      break;							\
+	    case 1:							\
+	      s_data[0] = xvals[0];					\
+	      break;							\
+	    case 2:							\
+	      s_data[0] = xvals[0];					\
+	      s_data[1] = 0;						\
+	      break;							\
+	    case 3:							\
+	      for (j = 1; j < 4; j++)					\
+		s_data[j - 1] = xvals[j];				\
+	      break;							\
+	    case 4:							\
+	      for (j = 0; j < 4; j++)					\
+		s_data[j] = xvals[j];					\
+	      break;							\
+	    case 6:							\
+	      s_data[0] = xvals[0];					\
+	      s_data[1] = xvals[1];					\
+	      s_data[2] = 0;						\
+	      s_data[3] = xvals[2];					\
+	      s_data[4] = 0;						\
+	      s_data[5] = xvals[3];					\
+	      break;							\
+	    case 7:							\
+	      for (j = 0; j < 4; j++)					\
+		s_data[j * 2] = xvals[j];				\
+	      for (j = 1; j < 6; j += 2)				\
+		s_data[j] = 0;						\
+	      break;							\
+	    }								\
+	  s_data += global_channel_depth;				\
+	}								\
+    }									\
 }
 
 FILL_COLORS_FUNCTION(unsigned short, 16)
@@ -937,7 +947,7 @@ fill_pattern(testpattern_t *p, unsigned char *data, size_t width,
 	     size_t s_count, size_t image_depth, size_t byte_depth)
 {
   memset(data, 0, global_printer_width * image_depth * byte_depth);
-  switch (p->t)
+  switch (p->type)
     {
     case E_PATTERN:
       fill_colors(data, width, s_count, p, byte_depth);
@@ -959,12 +969,12 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	      size_t byte_limit, int row)
 {
   int depth = global_channel_depth;
-  if (static_testpatterns[0].t == E_IMAGE)
+  if (static_testpatterns[0].type == E_IMAGE)
     {
       testpattern_t *t = &(static_testpatterns[0]);
-      int total_read = fread(data, 1, t->d.i.x * depth * global_bit_depth / 8,
+      int total_read = fread(data, 1, t->d.image.x * depth * global_bit_depth / 8,
 			     yyin);
-      if (total_read != t->d.i.x * depth * global_bit_depth / 8)
+      if (total_read != t->d.image.x * depth * global_bit_depth / 8)
 	{
 	  fprintf(stderr, "Read failed!\n");
 	  return STP_IMAGE_STATUS_ABORT;
@@ -1008,8 +1018,8 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 static int
 Image_width(stp_image_t *image)
 {
-  if (static_testpatterns[0].t == E_IMAGE)
-    return static_testpatterns[0].d.i.x;
+  if (static_testpatterns[0].type == E_IMAGE)
+    return static_testpatterns[0].d.image.x;
   else
     return global_printer_width;
 }
@@ -1017,8 +1027,8 @@ Image_width(stp_image_t *image)
 static int
 Image_height(stp_image_t *image)
 {
-  if (static_testpatterns[0].t == E_IMAGE)
-    return static_testpatterns[0].d.i.y;
+  if (static_testpatterns[0].type == E_IMAGE)
+    return static_testpatterns[0].d.image.y;
   else
     return global_printer_height;
 }

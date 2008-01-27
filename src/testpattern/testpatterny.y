@@ -77,7 +77,7 @@ find_color(const char *name)
   int i = 0;
   while (color_map[i].name)
     {
-      if (strcmp(color_map[i].name, name) == 0)
+      if (strcasecmp(color_map[i].name, name) == 0)
 	return color_map[i].channel;
       i++;
     }
@@ -113,6 +113,7 @@ find_color(const char *name)
 %token HSIZE
 %token VSIZE
 %token BLACKLINE
+%token NOSCALE
 %token PATTERN
 %token XPATTERN
 %token EXTENDED
@@ -139,6 +140,8 @@ find_color(const char *name)
 
 COLOR: CYAN | L_CYAN | MAGENTA | L_MAGENTA
 	| YELLOW | D_YELLOW | BLACK | L_BLACK
+;
+NUMBER: tDOUBLE | tINT
 ;
 
 cmykspec: CMYK tINT
@@ -231,49 +234,49 @@ modespec: cmykspec | kcmyspec | rgbspec | cmyspec | grayspec | whitespec | exten
 inputspec: MODE modespec
 ;
 
-level: LEVEL COLOR tDOUBLE
+level: LEVEL COLOR NUMBER
 	{
 	  int channel = find_color($2.sval);
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>level %s %f\n", $2.sval, $3);
+	    fprintf(stderr, ">>>level %s %f\n", $2.sval, $3.dval);
 	  if (channel >= 0)
-	    global_levels[channel] = $3;
+	    global_levels[channel] = $3.dval;
 	}
 ;
 
-channel_level: LEVEL tINT tDOUBLE
+channel_level: LEVEL tINT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>channel_level %d %f\n", $2, $3);
+	    fprintf(stderr, ">>>channel_level %d %f\n", $2, $3.dval);
 	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
-	    global_levels[$2] = $3;
+	    global_levels[$2] = $3.dval;
 	}
 ;
 
-gamma: GAMMA COLOR tDOUBLE
+gamma: GAMMA COLOR NUMBER
 	{
 	  int channel = find_color($2.sval);
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>gamma %s %f\n", $2.sval, $3);
+	    fprintf(stderr, ">>>gamma %s %f\n", $2.sval, $3.dval);
 	  if (channel >= 0)
-	    global_gammas[channel] = $3;
+	    global_gammas[channel] = $3.dval;
 	}
 ;
 
-channel_gamma: GAMMA tINT tDOUBLE
+channel_gamma: GAMMA tINT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>channel_gamma %d %f\n", $2, $3);
+	    fprintf(stderr, ">>>channel_gamma %d %f\n", $2, $3.dval);
 	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
-	    global_gammas[$2] = $3;
+	    global_gammas[$2] = $3.dval;
 	}
 ;
 
-global_gamma: GAMMA tDOUBLE
+global_gamma: GAMMA NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>global_gamma %f\n", $2);
-	  global_gamma = $2;
+	    fprintf(stderr, ">>>global_gamma %f\n", $2.dval);
+	  global_gamma = $2.dval;
 	}
 ;
 steps: STEPS tINT
@@ -283,11 +286,11 @@ steps: STEPS tINT
 	  global_steps = $2;
 	}
 ;
-ink_limit: INK_LIMIT tDOUBLE
+ink_limit: INK_LIMIT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>ink_limit %f\n", $2);
-	  global_ink_limit = $2;
+	    fprintf(stderr, ">>>ink_limit %f\n", $2.dval);
+	  global_ink_limit = $2.dval;
 	}
 ;
 printer: PRINTER tSTRING
@@ -339,11 +342,11 @@ parameter_int: PARAMETER_INT tSTRING tINT
 	}
 ;
 
-parameter_float: PARAMETER_FLOAT tSTRING tDOUBLE
+parameter_float: PARAMETER_FLOAT tSTRING NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>parameter_float %s %f\n", $2, $3);
-	  stp_set_float_parameter(global_vars, $2, $3);
+	    fprintf(stderr, ">>>parameter_float %s %f\n", $2, $3.dval);
+	  stp_set_float_parameter(global_vars, $2, $3.dval);
 	  free($2);
 	}
 ;
@@ -364,39 +367,39 @@ parameter_curve: PARAMETER_CURVE tSTRING tSTRING
 
 parameter: parameter_string | parameter_int | parameter_float | parameter_curve
 ;
-density: DENSITY tDOUBLE
+density: DENSITY NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>density %f\n", $2);
-	  global_density = $2;
+	    fprintf(stderr, ">>>density %f\n", $2.dval);
+	  global_density = $2.dval;
 	}
 ;
-top: TOP tDOUBLE
+top: TOP NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>top %f\n", $2);
-	  global_xtop = $2;
+	    fprintf(stderr, ">>>top %f\n", $2.dval);
+	  global_xtop = $2.dval;
 	}
 ;
-left: LEFT tDOUBLE
+left: LEFT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>left %f\n", $2);
-	  global_xleft = $2;
+ 	    fprintf(stderr, ">>>left %f\n", $2.dval);
+	  global_xleft = $2.dval;
 	}
 ;
-hsize: HSIZE tDOUBLE
+hsize: HSIZE NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>hsize %f\n", $2);
-	  global_hsize = $2;
+	    fprintf(stderr, ">>>hsize %f\n", $2.dval);
+	  global_hsize = $2.dval;
 	}
 ;
-vsize: VSIZE tDOUBLE
+vsize: VSIZE NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>vsize %f\n", $2);
-	  global_vsize = $2;
+	    fprintf(stderr, ">>>vsize %f\n", $2.dval);
+	  global_vsize = $2.dval;
 	}
 ;
 blackline: BLACKLINE tINT
@@ -407,16 +410,24 @@ blackline: BLACKLINE tINT
 	}
 ;
 
-color_block1: tDOUBLE tDOUBLE tDOUBLE
+noscale: NOSCALE tINT
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>color_block1 %f %f %f (%d)\n", $1, $2, $3,
+	    fprintf(stderr, ">>>noscale %d\n", $2);
+	  global_noscale = $2;
+	}
+;
+
+color_block1: NUMBER NUMBER NUMBER
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>color_block1 %f %f %f (%d)\n", $1.dval, $2.dval, $3.dval,
 		    current_index);
 	  if (current_index < STP_CHANNEL_LIMIT)
 	    {
-	      current_testpattern->d.p.mins[current_index] = $1;
-	      current_testpattern->d.p.vals[current_index] = $2;
-	      current_testpattern->d.p.gammas[current_index] = $3;
+	      current_testpattern->d.pattern.mins[current_index] = $1.dval;
+	      current_testpattern->d.pattern.vals[current_index] = $2.dval;
+	      current_testpattern->d.pattern.gammas[current_index] = $3.dval;
 	      current_index++;
 	    }
 	}
@@ -431,29 +442,29 @@ color_blocks1b: /* empty */ | color_blocks1a
 color_blocks1: color_block1 color_blocks1b
 ;
 
-color_block2a: COLOR tDOUBLE tDOUBLE tDOUBLE
+color_block2a: COLOR NUMBER NUMBER NUMBER
 	{
 	  int channel = find_color($1.sval);
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>color_block2a %s %f %f %f\n", $1.sval, $2, $3, $4);
+	    fprintf(stderr, ">>>color_block2a %s %f %f %f\n", $1.sval, $2.dval, $3.dval, $4.dval);
 	  if (channel >= 0 && channel < STP_CHANNEL_LIMIT)
 	    {
-	      current_testpattern->d.p.mins[channel] = $2;
-	      current_testpattern->d.p.vals[channel] = $3;
-	      current_testpattern->d.p.gammas[channel] = $4;
+	      current_testpattern->d.pattern.mins[channel] = $2.dval;
+	      current_testpattern->d.pattern.vals[channel] = $3.dval;
+	      current_testpattern->d.pattern.gammas[channel] = $4.dval;
 	    }
 	}
 ;
 
-color_block2b: CHANNEL tINT tDOUBLE tDOUBLE tDOUBLE
+color_block2b: CHANNEL tINT NUMBER NUMBER NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>color_block2b %d %f %f %f\n", $2, $3, $4, $5);
+	    fprintf(stderr, ">>>color_block2b %d %f %f %f\n", $2, $3.dval, $4.dval, $5.dval);
 	  if ($2 >= 0 && $2 < STP_CHANNEL_LIMIT)
 	    {
-	      current_testpattern->d.p.mins[$2] = $3;
-	      current_testpattern->d.p.vals[$2] = $4;
-	      current_testpattern->d.p.gammas[$2] = $5;
+	      current_testpattern->d.pattern.mins[$2] = $3.dval;
+	      current_testpattern->d.pattern.vals[$2] = $4.dval;
+	      current_testpattern->d.pattern.gammas[$2] = $5.dval;
 	    }
 	}
 ;
@@ -470,16 +481,16 @@ color_blocks2: /* empty */ | color_blocks2a
 color_blocks: color_blocks1 | color_blocks2
 ;
 
-patvars: tDOUBLE tDOUBLE tDOUBLE tDOUBLE tDOUBLE
+patvars: NUMBER NUMBER NUMBER NUMBER NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>patvars %f %f %f %f %f\n", $1, $2, $3, $4, $5);
-	  current_testpattern->t = E_PATTERN;
-	  current_testpattern->d.p.lower = $1;
-	  current_testpattern->d.p.upper = $2;
-	  current_testpattern->d.p.levels[1] = $3;
-	  current_testpattern->d.p.levels[2] = $4;
-	  current_testpattern->d.p.levels[3] = $5;
+	    fprintf(stderr, ">>>patvars %f %f %f %f %f\n", $1.dval, $2.dval, $3.dval, $4.dval, $5.dval);
+	  current_testpattern->type = E_PATTERN;
+	  current_testpattern->d.pattern.lower = $1.dval;
+	  current_testpattern->d.pattern.upper = $2.dval;
+	  current_testpattern->d.pattern.levels[1] = $3.dval;
+	  current_testpattern->d.pattern.levels[2] = $4.dval;
+	  current_testpattern->d.pattern.levels[3] = $5.dval;
 	  current_testpattern = get_next_testpattern();
 	  current_index = 0;
 	}
@@ -497,7 +508,7 @@ xpattern: XPATTERN color_blocks
 	      fprintf(stderr, "xpattern may only be used with extended color depth\n");
 	      exit(1);
 	    }
-	  current_testpattern->t = E_XPATTERN;
+	  current_testpattern->type = E_XPATTERN;
 	  current_testpattern = get_next_testpattern();
 	  current_index = 0;
 	}
@@ -507,8 +518,8 @@ grid: GRID tINT
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
 	    fprintf(stderr, ">>>grid %d\n", $2);
-	  current_testpattern->t = E_GRID;
-	  current_testpattern->d.g.ticks = $2;
+	  current_testpattern->type = E_GRID;
+	  current_testpattern->d.grid.ticks = $2;
 	  current_testpattern = get_next_testpattern();
 	  current_index = 0;
 	}
@@ -518,11 +529,11 @@ image: IMAGE tINT tINT
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
 	    fprintf(stderr, ">>>image %d %d\n", $2, $3);
-	  current_testpattern->t = E_IMAGE;
-	  current_testpattern->d.i.x = $2;
-	  current_testpattern->d.i.y = $3;
-	  if (current_testpattern->d.i.x <= 0 ||
-	      current_testpattern->d.i.y <= 0)
+	  current_testpattern->type = E_IMAGE;
+	  current_testpattern->d.image.x = $2;
+	  current_testpattern->d.image.y = $3;
+	  if (current_testpattern->d.image.x <= 0 ||
+	      current_testpattern->d.image.y <= 0)
 	    {
 	      fprintf(stderr, "image width and height must be greater than zero\n");
 	      exit(1);
@@ -598,7 +609,7 @@ output: A_Output
 
 A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
-	| vsize | blackline | inputspec | page_size | message | output
+	| vsize | blackline | noscale | inputspec | page_size | message | output
 ;
 
 Rule: A_Rule SEMI

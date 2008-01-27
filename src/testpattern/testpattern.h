@@ -34,7 +34,7 @@ typedef struct
     E_XPATTERN,
     E_IMAGE,
     E_GRID
-  } t;
+  } type;
   union {
     struct {
       double mins[32];
@@ -43,16 +43,16 @@ typedef struct
       double levels[32];
       double lower;
       double upper;
-    } p;
+    } pattern;
     struct {
       int ticks;
-    } g;
+    } grid;
     struct {
       int x;
       int y;
       int bits;
       const char *data;
-    } i;
+    } image;
   } d;
 } testpattern_t;
 
@@ -81,13 +81,14 @@ extern int global_bit_depth;
 extern int global_channel_depth;
 extern int global_did_something;
 extern int global_invert_data;
+extern int global_noscale;
 extern char *global_output;
 
 
 extern char *c_strdup(const char *s);
 extern testpattern_t *get_next_testpattern(void);
 
-typedef union yylv {
+typedef struct yylv {
   int ival;
   double dval;
   char *sval;
