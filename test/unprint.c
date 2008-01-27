@@ -936,7 +936,7 @@ parse_escp2_extended(FILE *fp_r)
       else
 	{
 	  pstate.dotsize = buf[1];
-	  if (pstate.dotsize & 0x10)
+	  if (pstate.dotsize > 0x10)
 	    pstate.bpp = 2;
 	  else
 	    pstate.bpp = 1;
