@@ -84,6 +84,9 @@ typedef struct
 
 /*
  * Generic printing system, based on SysV lp
+ *
+ * CAUTION: Do not use lpstat -t or lpstat -p.
+ * See bug 742187 (huge delays with lpstat -d -p) for an explanation.
  */
 static const print_system_t default_printing_system =
   { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
