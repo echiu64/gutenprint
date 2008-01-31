@@ -90,31 +90,31 @@ typedef struct
  */
 static const print_system_t default_printing_system =
   { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
-    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'",
+    "/usr/bin/lpstat -v | awk '/^device for /i {sub(\":\", \"\", $3); print $3}'",
   "-n" };
 
 static print_system_t known_printing_systems[] =
 {
   { "CUPS", N_("CUPS"), "lp -s", "-d", "-oraw", "/usr/sbin/cupsd",
-    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'",
+    "/usr/bin/lpstat -v | awk '/^device for /i {sub(\":\", \"\", $3); print $3}'",
     "-n" },
   { "SysV", N_("System V lp"), "lp -s", "-d", "-oraw", "/usr/bin/lp",
-    "/usr/bin/lpstat -v | grep -i '^device for ' | awk '{print $3}' | sed 's/://'",
+    "/usr/bin/lpstat -v | awk '/^device for /i {sub(\":\", \"\", $3); print $3}'",
     "-n" },
   { "lpd", N_("Berkeley lpd (/etc/lpc)"), "lpr", "-P", "-l", "/etc/lpc",
-    "/etc/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "/etc/lpc status | awk '/^...*:/ {sub(\":.*\", \"\"); print}'",
     "-#" },
   { "lpd", N_("Berkeley lpd (/usr/bsd/lpc)"), "lpr", "-P", "-l", "/usr/bsd/lpc",
-    "/usr/bsd/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "/usr/bsd/lpc status | awk '/^...*:/ {sub(\":.*\", \"\"); print}'",
     "-#" },
   { "lpd", N_("Berkeley lpd (/usr/etc/lpc"), "lpr", "-P", "-l", "/usr/etc/lpc",
-    "/usr/etc/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "/usr/etc/lpc status | awk '/^...*:/ {sub(\":.*\", \"\"); print}'",
     "-#" },
   { "lpd", N_("Berkeley lpd (/usr/libexec/lpc)"), "lpr", "-P", "-l", "/usr/libexec/lpc",
-    "/usr/libexec/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "/usr/libexec/lpc status | awk '/^...*:/ {sub(\":.*\", \"\"); print}'",
     "-#" },
   { "lpd", N_("Berkeley lpd (/usr/sbin/lpc)"), "lpr", "-P", "-l", "/usr/sbin/lpc",
-    "/usr/sbin/lpc status | grep '^...*:' | sed 's/:.*//'",
+    "/usr/sbin/lpc status | awk '/^...*:/ {sub(\":.*\", \"\"); print}'",
     "-#" },
 };
 
