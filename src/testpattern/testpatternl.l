@@ -65,7 +65,7 @@ do							\
 %option noyywrap
 
 digit		[0-9]
-integer		[-+]?{digit}+
+integer		([-+]|0[xX])?{digit}+
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
 string		([\"][^\"]+[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)|([\'][^\']*[\'])
 ws		[ \t]+
@@ -118,7 +118,7 @@ noscale			DBG(NOSCALE); return NOSCALE;
 end			DBG(END); return END;
 
 
-{integer}		yylval.ival = atoi(yytext); yylval.dval = (double) yylval.ival; DBG(tINT); return tINT;
+{integer}		yylval.ival = strtol(yytext, NULL, 0); yylval.dval = (double) yylval.ival; DBG(tINT); return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
 {string}		yylval.sval = c_strstrip(yytext); DBG(tSTRING); return tSTRING;
 {ws}			DBG(whitespace); 	/* Skip blanks/tabs */
