@@ -208,7 +208,7 @@ static const escp2_base_resolutions_t c1_5_base_res =
 {  360,  360,  720,  720,  720,  720,  720,  720,  720 };
 
 static const escp2_base_resolutions_t claria_1400_base_res =
-{  360,  360,  720,  720,  360,  720,  720,  720,  720 };
+{  360,  360,  720,  720,  360,  360,  720,  720,  720 };
 
 static const escp2_base_resolutions_t stc900_base_res =
 {  360,  360,  360,  360,  180,  180,  360,  360,  360 };
