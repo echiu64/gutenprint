@@ -35,6 +35,7 @@
 #include <string.h>
 #include <assert.h>
 #include <math.h>
+#include <limits.h>
 #include "print-escp2.h"
 
 #ifdef __GNUC__
@@ -418,6 +419,9 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(right_margin),
   PARAMETER_INT(top_margin),
   PARAMETER_INT(bottom_margin),
+  PARAMETER_INT(ink_type),
+  PARAMETER_INT(bits),
+  PARAMETER_INT(base_res),
   PARAMETER_INT_RO(alignment_passes),
   PARAMETER_INT_RO(alignment_choices),
   PARAMETER_INT_RO(alternate_alignment_passes),
@@ -1014,11 +1018,11 @@ escp2_bits(const stp_vars_t *v, int resid)
     }
 }
 
-static double
+static int
 escp2_base_res(const stp_vars_t *v, int resid)
 {
-  if (stp_check_float_parameter(v, "escp2_base_res", STP_PARAMETER_ACTIVE))
-    return stp_get_float_parameter(v, "escp2_base_res");
+  if (stp_check_int_parameter(v, "escp2_base_res", STP_PARAMETER_ACTIVE))
+    return stp_get_int_parameter(v, "escp2_base_res");
   else
     {
       int model = stp_get_model_id(v);
@@ -1978,6 +1982,12 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     if (strcmp(name, the_parameters[i].name) == 0)
       {
 	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	if (description->p_type == STP_PARAMETER_TYPE_INT)
+	  {
+	    description->deflt.integer = 0;
+	    description->bounds.integer.upper = INT_MAX;
+	    description->bounds.integer.lower = INT_MIN;
+	  }
 	break;
       }
 
