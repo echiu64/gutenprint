@@ -389,7 +389,7 @@ static const escp2_drop_list_t claria_1400_drops =
   &escp2_claria_1400_720_dropsizes,
   &escp2_claria_1400_720_dropsizes,
   &escp2_claria_1400_1440_720_dropsizes,
-  &escp2_claria_1400_1440_dropsizes,
+  &escp2_claria_1400_1440_720_dropsizes,
   &escp2_claria_1400_1440_dropsizes,
   &escp2_claria_1400_2880_dropsizes,
   &escp2_claria_1400_5760_dropsizes,
