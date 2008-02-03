@@ -152,21 +152,21 @@ static const escp2_dropsize_t escp2_r300_2880_1440_dropsizes =
  * and 0x25.  The economy settings (0x10 and 0x0) don't provide any
  * bigger drops.  We get quite smooth output at 720x360 and 360 DPI, and
  * even 360x180 is surprisingly smooth.
- * Roy Harrington estimates the drop sizes are:
+ * Roy Harrington's estimates in first column; my remeasurements in second:
  *
- * 1  1.5 pl
- * 2  2.4 pl
- * 3  6.3 pl
- * 4 12   pl (rlk estimate)
- * 5 21   pl
+ * 1  1.5 pl			1.5 pl
+ * 2  2.4 pl			1.8 pl
+ * 3  6.3 pl			4.5 pl
+ * 4 12   pl (rlk estimate)	8.0 pl
+ * 5 21   pl		       11   pl (+/- 1 pl)
  */
 
 static const escp2_dropsize_t escp2_claria_720_dropsizes =
-  { "claria_720", 3, { 0.071, 0.3, 1.0 } };
+  { "claria_720", 3, { 0.125, 0.42, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1440_dropsizes =
-  { "claria_1440", 3, { 0.23, 0.37, 1.0 } };
+  { "claria_1440", 3, { 0.338, 0.40, 1.0 } };
 static const escp2_dropsize_t escp2_claria_2880_dropsizes =
-  { "claria_2880", 2, { 0.62, 1.0 } };
+  { "claria_2880", 2, { 0.833, 1.0 } };
 static const escp2_dropsize_t escp2_claria_5760_dropsizes =
   { "claria_5760", 1, { 1.0 } };
 
@@ -183,13 +183,13 @@ static const escp2_dropsize_t escp2_claria_5760_dropsizes =
 */
 
 static const escp2_dropsize_t escp2_claria_1400_720_dropsizes =
-  { "claria_1400_720", 3, { 0.3, 0.57, 1.0 } };
+  { "claria_1400_720", 3, { 0.42, 0.67, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_1440_720_dropsizes =
-  { "claria_1400_1440_720", 3, { 0.071, 0.3, 1.0 } };
+  { "claria_1400_1440_720", 3, { 0.125, 0.42, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_1440_dropsizes =
-  { "claria_1400_1440", 3, { 0.23, 0.37, 1.0 } };
+  { "claria_1400_1440", 3, { 0.338, 0.40, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_2880_dropsizes =
-  { "claria_1400_2880", 2, { 0.62, 1.0 } };
+  { "claria_1400_2880", 2, { 0.833, 1.0 } };
 static const escp2_dropsize_t escp2_claria_1400_5760_dropsizes =
   { "claria_1400_5760", 1, { 1.0 } };
 
@@ -376,7 +376,7 @@ static const escp2_drop_list_t claria_drops =
   &escp2_claria_720_dropsizes,
   &escp2_claria_720_dropsizes,
   &escp2_claria_720_dropsizes,
-  &escp2_claria_1440_dropsizes,
+  &escp2_claria_720_dropsizes,
   &escp2_claria_1440_dropsizes,
   &escp2_claria_2880_dropsizes,
   &escp2_claria_5760_dropsizes,
