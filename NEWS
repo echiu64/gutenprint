@@ -157,8 +157,10 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	EPSON Stylus Photo RX685
 
       * Canon inkjet printers:
-        Canon PIXMA MP520
+        Canon PIXMA MP520 (#1872394)
 	Canon PIXMA iP6000D
+
+   2) Printing for the Canon PIXMA iP4500 has been fixed (#1834153).
 
 ----------------
 
