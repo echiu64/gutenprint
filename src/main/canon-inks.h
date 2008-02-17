@@ -304,6 +304,19 @@ static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
         {0,0.0,NULL}
 };
 
+/* iP6000D */
+static const canon_inkset_t canon_9_C3M3Y3K3_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
+        {'K',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 /* iP4000 default print mode (quality 2) */
 static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},

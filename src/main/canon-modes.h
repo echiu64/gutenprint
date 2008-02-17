@@ -321,6 +321,10 @@ static const canon_mode_t canon_PIXMA_iP4200_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iP4200,2);
 
+static const canon_mode_t canon_PIXMA_iP6000_modes[] = {
+  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(9_C3M3Y3K3),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_PIXMA_iP6000,0);
 
 static const canon_mode_t canon_PIXMA_iP6700_modes[] = {
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(19_C3M3Y3k3),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
