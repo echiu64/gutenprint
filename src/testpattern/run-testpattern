@@ -144,7 +144,7 @@ fi
 
 #StandardDithers="EvenTone HybridEvenTone UniTone HybridUniTone Adaptive Ordered Fast VeryFast Floyd Predithered"
 
-StandardDithers="EvenTone HybridEvenTone Adaptive Ordered Fast VeryFast Floyd Predithered"
+StandardDithers="EvenTone HybridEvenTone Adaptive Ordered OrderedNew Fast VeryFast Floyd Predithered Segmented SegmentedNew"
 
 the_message=''
 

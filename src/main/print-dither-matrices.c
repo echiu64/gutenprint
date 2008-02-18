@@ -380,7 +380,6 @@ postinit_matrix(stp_vars_t *v, int x_shear, int y_shear)
 				  x_n * i, y_n * j);
 	  color++;
 	}
-  stp_dither_set_transition(v, d->transition);
 }
 
 void
@@ -435,11 +434,7 @@ stp_dither_set_transition(stp_vars_t *v, double exponent)
   unsigned y_n = d->dither_matrix.y_size / rc;
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     stp_dither_matrix_destroy(&(CHANNEL(d, i).pick));
-  stp_dither_matrix_destroy(&(d->transition_matrix));
-  stp_dither_matrix_copy(&(d->dither_matrix), &(d->transition_matrix));
-  d->transition = exponent;
   if (exponent < .999 || exponent > 1.001)
-    stp_dither_matrix_scale_exponentially(&(d->transition_matrix), exponent);
   for (i = 0; i < rc; i++)
     for (j = 0; j < rc; j++)
       if (color < CHANNEL_COUNT(d))

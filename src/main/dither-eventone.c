@@ -55,6 +55,8 @@ typedef struct
   int	physical_aspect;
   int	diff_factor;
   stpi_dither_channel_t *dummy_channel;
+  double transition;		/* Exponential scaling for transition region */
+  stp_dither_matrix_impl_t transition_matrix;
 } eventone_t;
 
 typedef struct shade_segment
@@ -94,6 +96,8 @@ free_eventone_data(stpi_dither_t *d)
     stpi_dither_channel_destroy(dc);
     STP_SAFE_FREE(et->dummy_channel);
   }
+  if (d->stpi_dither_type & D_UNITONE)
+    stp_dither_matrix_destroy(&(et->transition_matrix));
   STP_SAFE_FREE(et);
 }
 
@@ -113,7 +117,11 @@ et_setup(stpi_dither_t *d)
   if (d->stpi_dither_type & D_UNITONE) {
     stpi_dither_channel_t *dc = stp_zalloc(sizeof(stpi_dither_channel_t));
     stp_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
-    stp_dither_matrix_clone(&(d->transition_matrix), &(dc->pick), 0, 0);
+    et->transition = 0.7;
+    stp_dither_matrix_destroy(&(et->transition_matrix));
+    stp_dither_matrix_copy(&(d->dither_matrix), &(et->transition_matrix));
+    stp_dither_matrix_scale_exponentially(&(et->transition_matrix), et->transition);
+    stp_dither_matrix_clone(&(et->transition_matrix), &(dc->pick), 0, 0);
     dc->error_rows = 1;
     dc->errs = stp_zalloc(1 * sizeof(int *));
     dc->errs[0] = stp_zalloc(size * sizeof(int));
@@ -407,6 +415,8 @@ stpi_dither_et(stp_vars_t *v,
     return;
 
   et = (eventone_t *) d->aux_data;
+  if (d->stpi_dither_type & D_UNITONE)
+    stp_dither_matrix_set_row(&(et->transition_matrix), row);
 
   length = (d->dst_width + 7) / 8;
 

@@ -35,11 +35,19 @@
 #include "dither-inlined-functions.h"
 #include <assert.h>
 
+
 typedef struct {
   size_t channels;
   double *drops;
   unsigned short *lut;
 } stpi_new_ordered_t;
+
+typedef struct {
+  unsigned short shift;
+  unsigned short mask;
+  unsigned short x_mask;
+  stpi_new_ordered_t *ord_new;
+} stpi_ordered_t;
 
 static int
 compare_channels(const stpi_dither_channel_t *dc1,
@@ -52,28 +60,6 @@ compare_channels(const stpi_dither_channel_t *dc1,
     if (dc1->ranges[i].upper->value != dc2->ranges[i].upper->value)
       return 0;
   return 1;
-}
-
-static void
-free_dither_ordered_new(stpi_dither_t *d)
-{
-  int i;
-  stpi_dither_channel_t *dc0 = &CHANNEL(d, 0);
-  for (i = CHANNEL_COUNT(d) - 1; i >= 0 ; i--)
-    {
-      stpi_dither_channel_t *dc = &CHANNEL(d, i);
-      if (dc->aux_data && (i == 0 || dc->aux_data != dc0->aux_data))
-	{
-	  stpi_new_ordered_t *ord = (stpi_new_ordered_t *) dc->aux_data;
-	  if (ord->drops)
-	    stp_free(ord->drops);
-	  if (ord->lut)
-	    stp_free(ord->lut);
-	  stp_free(dc->aux_data);
-	}
-      dc->aux_data = NULL;
-    }
-  stp_free(d->aux_data);
 }
 
 const static double dp_fraction = 0.5;
@@ -95,7 +81,7 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
   double *val;
   unsigned short *data;
   stpi_new_ordered_t *ord = stp_malloc(sizeof(stpi_new_ordered_t));
-  dc->aux_data = ord;
+  ((stpi_ordered_t *) (dc->aux_data))->ord_new = ord;
   ord->channels = dc->nlevels - 1;
   ord->drops = stp_malloc(sizeof(double) * (ord->channels + 1));
   breakpoints = stp_malloc(sizeof(double) * (ord->channels + 1));
@@ -179,33 +165,6 @@ init_dither_channel_new(stpi_dither_channel_t *dc, stp_vars_t *v)
   stp_free(val);
 }
 
-static void
-init_dither_ordered_new(stpi_dither_t *d, stp_vars_t *v)
-{
-  int i;
-  d->aux_data = stp_malloc(1);
-  d->aux_freefunc = &free_dither_ordered_new;
-  stp_dprintf(STP_DBG_INK, v, "init_dither_ordered_new\n");
-  for (i = 0; i < CHANNEL_COUNT(d); i++)
-    {
-      if (CHANNEL(d, i).nlevels < 2)
-	{
-	  stp_dprintf(STP_DBG_INK, v, "    channel %d ignored\n", i);
-	  CHANNEL(d, i).aux_data = NULL;
-	}
-      else if (i == 0 || !compare_channels(&CHANNEL(d, 0), &CHANNEL(d, i)))
-	{
-	  stp_dprintf(STP_DBG_INK, v, "    channel %d\n", i);
-	  init_dither_channel_new(&CHANNEL(d, i), v);
-	}
-      else
-	{
-	  stp_dprintf(STP_DBG_INK, v, "    channel %d duplicated from channel 0\n", i);
-	  CHANNEL(d, i).aux_data = CHANNEL(d, 0).aux_data;
-	}
-    }
-}
-
 static inline void
 print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
 			int val, int x, int y, unsigned char bit, int length)
@@ -215,7 +174,8 @@ print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
   unsigned bits;
   int levels = dc->nlevels - 1;
   unsigned dpoint = ditherpoint(d, &(dc->dithermat), x);
-  const stpi_new_ordered_t *ord = (const stpi_new_ordered_t *) dc->aux_data;
+  const stpi_ordered_t *o = (const stpi_ordered_t *) dc->aux_data;
+  const stpi_new_ordered_t *ord = (const stpi_new_ordered_t *) o->ord_new;
   unsigned short swhere = (unsigned short) val;
   unsigned short *where = ord ? ord->lut + (val * levels) : &swhere;
   /*
@@ -308,44 +268,74 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
     }
 }
 
-typedef struct {
-  unsigned short shift;
-  unsigned short mask;
-  unsigned short x_mask;
-} stpi_segmented_t;
-
 static void
-free_dither_segmented(stpi_dither_t *d)
+free_dither_ordered(stpi_dither_t *d)
 {
   int i;
-  for (i = 0; i < CHANNEL_COUNT(d); i++)
+  stpi_dither_channel_t *dc0 = &CHANNEL(d, 0);
+  stpi_ordered_t *o0 = dc0->aux_data;
+  stpi_new_ordered_t *no0;
+  if (o0)
+    no0 = o0->ord_new;
+  for (i = CHANNEL_COUNT(d) - 1; i >= 0 ; i--)
     {
       stpi_dither_channel_t *dc = &CHANNEL(d, i);
       if (dc->aux_data)
-	stp_free(dc->aux_data);
-      dc->aux_data = NULL;
+	{
+	  stpi_ordered_t *ord = (stpi_ordered_t *) dc->aux_data;
+	  if (ord->ord_new && (i == 0 || ord->ord_new != no0))
+	    {
+	      stpi_new_ordered_t *no = (stpi_new_ordered_t *) ord->ord_new;
+	      if (no->drops)
+		stp_free(no->drops);
+	      if (no->lut)
+		stp_free(no->lut);
+	      stp_free(no);
+	    }
+	  stp_free(dc->aux_data);
+	  dc->aux_data = NULL;
+	}
     }
   stp_free(d->aux_data);
 }
 
 static void
-init_dither_segmented(stpi_dither_t *d, stp_vars_t *v)
+init_dither_ordered(stpi_dither_t *d, stp_vars_t *v)
 {
   int i;
   d->aux_data = stp_malloc(1);
-  d->aux_freefunc = &free_dither_segmented;
-  stp_dprintf(STP_DBG_INK, v, "init_dither_ordered_new\n");
+  d->aux_freefunc = &free_dither_ordered;
+  stp_dprintf(STP_DBG_INK, v, "init_dither_ordered\n");
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       stpi_dither_channel_t *dc = &CHANNEL(d, i);
-      stpi_segmented_t *s;
-      dc->aux_data = stp_malloc(sizeof(stpi_segmented_t));
-      s = (stpi_segmented_t *) dc->aux_data;
-      s->shift = 16 - dc->signif_bits;
-      s->mask = ((1 << dc->signif_bits) - 1) << s->shift;
-      s->x_mask = ~(s->mask);
-      stp_dprintf(STP_DBG_INK, v, "   channel %d: shift %d mask 0x%x x_mask 0x%x\n",
-		  i, s->shift, s->mask, s->x_mask);
+      stpi_ordered_t *s;
+      dc->aux_data = stp_malloc(sizeof(stpi_ordered_t));
+      s = (stpi_ordered_t *) dc->aux_data;
+      s->ord_new = NULL;
+      if (d->stpi_dither_type & D_ORDERED_SEGMENTED)
+	{
+	  s->shift = 16 - dc->signif_bits;
+	  s->mask = ((1 << dc->signif_bits) - 1) << s->shift;
+	  s->x_mask = ~(s->mask);
+	  stp_dprintf(STP_DBG_INK, v, "   channel %d: shift %d mask 0x%x x_mask 0x%x\n",
+		      i, s->shift, s->mask, s->x_mask);
+	}
+      if (d->stpi_dither_type & D_ORDERED_NEW)
+	{
+	  if (dc->nlevels < 2)
+	    stp_dprintf(STP_DBG_INK, v, "    channel %d ignored\n", i);
+	  else if (i == 0 || !compare_channels(&CHANNEL(d, 0), dc))
+	    {
+	      stp_dprintf(STP_DBG_INK, v, "    channel %d\n", i);
+	      init_dither_channel_new(dc, v);
+	    }
+	  else
+	    {
+	      stp_dprintf(STP_DBG_INK, v, "    channel %d duplicated from channel 0\n", i);
+	      s->ord_new = ((stpi_ordered_t *) (CHANNEL(d, 0).aux_data))->ord_new;
+	    }
+	}
     }
 }
 
@@ -386,6 +376,9 @@ stpi_dither_ordered(stp_vars_t *v,
       if (dc->nlevels != 1 || dc->ranges[0].upper->bits != 1)
 	one_bit_only = 0;
     }
+  if (! one_bit_only && ! d->aux_data &&
+      (d->stpi_dither_type & (D_ORDERED_SEGMENTED | D_ORDERED_NEW)))
+    init_dither_ordered(d, v);
 
   if (one_bit_only)
     {
@@ -407,10 +400,8 @@ stpi_dither_ordered(stp_vars_t *v,
 				 xerror, xstep, xmod);
 	}
     }
-  else if (d->stpi_dither_type == D_ORDERED_SEGMENTED)
+  else if (d->stpi_dither_type & D_ORDERED_SEGMENTED)
     {
-      if (! d->aux_data)
-	init_dither_segmented(d, v);
       for (x = 0; x < d->dst_width; x ++)
 	{
 	  if (!mask || (*(mask + d->ptr_offset) & bit))
@@ -418,7 +409,7 @@ stpi_dither_ordered(stp_vars_t *v,
 	      for (i = 0; i < CHANNEL_COUNT(d); i++)
 		{
 		  stpi_dither_channel_t *dc = &CHANNEL(d, i);
-		  stpi_segmented_t *s = (stpi_segmented_t *) dc->aux_data;
+		  stpi_ordered_t *s = (stpi_ordered_t *) dc->aux_data;
 		  unsigned short bits = raw[i] >> s->shift;
 		  unsigned short val = raw[i] << dc->signif_bits;
 		  val |= val >> s->shift;
@@ -439,8 +430,14 @@ stpi_dither_ordered(stp_vars_t *v,
 			}
 		    }
 		  else if (CHANNEL(d, i).ptr && val)
-		    print_color_ordered(d, &(CHANNEL(d, i)), val, x, row,
-					bit, length);
+		    {
+		      if (d->stpi_dither_type & D_ORDERED_NEW)
+			print_color_ordered_new(d, &(CHANNEL(d, i)), val, x,
+						row, bit, length);
+		      else
+			print_color_ordered(d, &(CHANNEL(d, i)), val, x,
+					    row, bit, length);
+		    }
 		}
 	    }
 	  ADVANCE_UNIDIRECTIONAL(d, bit, raw, CHANNEL_COUNT(d),
@@ -466,8 +463,6 @@ stpi_dither_ordered(stp_vars_t *v,
     }
   else
     {
-      if (! d->aux_data)
-	init_dither_ordered_new(d, v);
       for (x = 0; x != d->dst_width; x ++)
 	{
 	  if (!mask || (*(mask + d->ptr_offset) & bit))

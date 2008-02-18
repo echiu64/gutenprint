@@ -67,7 +67,8 @@ static const stpi_dither_algorithm_t dither_algos[] =
   { "VeryFast",	      N_ ("Very Fast"),              D_VERY_FAST },
   { "Floyd",	      N_ ("Hybrid Floyd-Steinberg"), D_FLOYD_HYBRID },
   { "Predithered",    N_ ("Predithered Input"),      D_PREDITHERED },
-  { "Segmented",      N_ ("Drop Size Segmented"),    D_ORDERED_SEGMENTED }
+  { "Segmented",      N_ ("Drop Size Segmented"),    D_ORDERED_SEGMENTED },
+  { "SegmentedNew",   N_ ("Drop Size Segmented New"),D_ORDERED_SEGMENTED_NEW }
 };
 
 static const int num_dither_algos = sizeof(dither_algos)/sizeof(stpi_dither_algorithm_t);
@@ -262,6 +263,7 @@ stpi_set_dither_function(stp_vars_t *v)
     case D_ORDERED:
     case D_ORDERED_SEGMENTED:
     case D_ORDERED_NEW:
+    case D_ORDERED_SEGMENTED_NEW:
     case D_FAST:
       RETURN_DITHERFUNC(stpi_dither_ordered, v);
     case D_HYBRID_EVENTONE:
@@ -330,7 +332,6 @@ stpi_dither_free(void *vd)
   STP_SAFE_FREE(d->offset0_table);
   STP_SAFE_FREE(d->offset1_table);
   stp_dither_matrix_destroy(&(d->dither_matrix));
-  stp_dither_matrix_destroy(&(d->transition_matrix));
   stp_free(d->channel);
   stp_free(d->channel_index);
   stp_free(d->subchannel_count);
@@ -363,7 +364,6 @@ stp_dither_init(stp_vars_t *v, stp_image_t *image, int out_width,
       d->y_aspect = 1;
     }
   d->ditherfunc = stpi_set_dither_function(v);
-  d->transition = 1.0;
   d->adaptive_limit = .75 * 65535;
 
   /*
@@ -406,7 +406,6 @@ stp_dither_init(stp_vars_t *v, stp_image_t *image, int out_width,
 	  stp_abort();
 	}
     }
-  stp_dither_set_transition(v, 0.7);
 
   d->src_width = in_width;
   d->dst_width = out_width;
@@ -474,7 +473,6 @@ stp_dither_internal(stp_vars_t *v, int row, const unsigned short *input,
   stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
   stpi_dither_finalize(v);
   stp_dither_matrix_set_row(&(d->dither_matrix), row);
-  stp_dither_matrix_set_row(&(d->transition_matrix), row);
   for (i = 0; i < CHANNEL_COUNT(d); i++)
     {
       CHANNEL(d, i).ptr = CHANNEL(d, i).ptr;
