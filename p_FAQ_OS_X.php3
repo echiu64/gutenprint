@@ -191,7 +191,7 @@ require('standard_html_header.php3');
 This occurs with Epson printers.  The printing system is not obtaining the proper resolution from the <b>Print Quality</b> setting and it is defaulting to the lowest printer resolution found.  The Gutenprint developers are aware of the problem and are working on a proper fix.
 </p>
 <p>
-This issue is resolved by installing a later version of the Gutenprint drivers.  It is recommended that you use the latest stable version -- at least version 5.0.2-beta1.  The developmental versions after version 5.1.3 will also resolve the issue. Stable versions are released with version numbers in the 5.0.x format.  Developmental versions are numbered in the 5.1.x format.
+This issue is resolved by installing a later version of the Gutenprint drivers.  It is recommended that you use the latest stable version -- version 5.0.2-beta1 or later.  The developmental versions after version 5.1.3 will also resolve the issue. Stable versions are released with version numbers in the 5.0.x format.  Developmental versions are numbered in the 5.1.x format.
 </p>
 <p>
 If the later versions do not resolve the issue for you, please post feedback to the <a href="http://sourceforge.net/forum/forum.php?forum_id=4359">Gutenprint Help forum</a>
@@ -213,7 +213,7 @@ follows:
 </p>
 <ol type="1" start="1">
 	<li>Go to print the document.  Use the item "Open PDF in Preview" item under the PDF Services drop down menu at the bottom left of the print window.</li>
-	<li>When the document appears in Preview, choose Save As… from the File menu.</li>
+	<li>When the document appears in Preview, choose Save As... from the File menu.</li>
 	<li>You can either change the name or use the Replace option when prompted.  Select the output format as PDF and use the Quartz Filter to select "Black and White".  </li>
 	<li>Make sure you have the name and location to save the document as you want it.  Click the Save button.</li>
 </ol>
@@ -249,10 +249,7 @@ Another work-around for new documents is to make a new Excel template.  To make 
 This does not appear to be a Gutenprint issue, but the Gutenprint team is monitoring the situation.  There has been at least one case reported whereby the  user tried the Gutenprint, <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/hpijs">HPIJS</a>, and <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/pxlmono">pxlmono</a> drivers.  All drivers printed in landscape mode when the printer was attached directly to the Mac computer via USB.  The same drivers would only print in portrait mode when the printer  was connected to a shared Windows printer.
 </p>
 <p>
-It has recently been suggested that it might be possible the printer driver on the Windows computer is causing this behavior.
-</p>
-<p>
-There are no recommended work-arounds for this issue.
+Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was included in the Mac OS X 10.5.2 update.
 </p>
 </li>
  </ol>
