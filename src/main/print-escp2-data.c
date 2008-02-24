@@ -1695,7 +1695,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
-    "superfine", "photo_gen3",
+    "superfine", "cmykrb",
     variable_bits, c1_5_base_res, "cd_roll_feed",
     "v2880", &new_init_sequence, &je_deinit_sequence,
     &spr800_borderless_sequence, NULL, "r800"
