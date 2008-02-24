@@ -985,10 +985,10 @@ B) BUILD/INSTALLATION ISSUES
      version, the genppd program operated correctly.  If instead the
      output looks like this:
 
-	 src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd.gz
-	 ppd/C/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	 ppd/da/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
-	 ppd/en_GB/stp-pcl-4.5.0.ppd.gz:*LanguageVersion: English
+	 src/cups$ zgrep LanguageVersion ppd/*/stp-pcl-4.5.1.ppd.gz
+	 ppd/C/stp-pcl-4.5.1.ppd.gz:*LanguageVersion: English
+	 ppd/da/stp-pcl-4.5.1.ppd.gz:*LanguageVersion: English
+	 ppd/en_GB/stp-pcl-4.5.1.ppd.gz:*LanguageVersion: English
 	 ...
 
      the program did not operate correctly.
@@ -996,7 +996,7 @@ B) BUILD/INSTALLATION ISSUES
      If you do not have 'zgrep' on your system, you can gunzip the
      PPD files, and use
 
-	 grep LanguageVersion ppd/*/stp-pcl-4.5.0.ppd
+	 grep LanguageVersion ppd/*/stp-pcl-4.5.1.ppd
 
      to accomplish the same test.
 
@@ -1103,7 +1103,7 @@ B) BUILD/INSTALLATION ISSUES
   3) There are multiple issues that one must be aware of when using
      Foomatic with Gutenprint.
 
-     i) Before installing any new release of Gutenprint 5.0, you must
+     i) Before installing any new release of Gutenprint 5.1, you must
 	manually remove any existing Foomatic option files.  This is
 	because the Foomatic utility to load data kits
 	(foomatic-kitload) does not remove obsolete data files from
@@ -1160,8 +1160,8 @@ B) BUILD/INSTALLATION ISSUES
 
      iii) The Foomatic data is version locked to the Gutenprint release
 	installed on the system.  For example, PPD files generated
-	with the Foomatic data for release 5.0.0 will not work with
-	the ijsgutenprint in release 5.0.1.  This is to prevent
+	with the Foomatic data for release 5.1.0 will not work with
+	the ijsgutenprint in release 5.1.1.  This is to prevent
 	accidentally using incorrect data, which could cause incorrect
 	function to take place.
 
