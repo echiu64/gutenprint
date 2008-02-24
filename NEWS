@@ -162,6 +162,56 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    2) Printing for the Canon PIXMA iP4500 has been fixed (#1834153).
 
+   3) Printing near the bottom of the page has been improved for many
+      modern Epson inkjet printers.  In addition, we have determined
+      that most of these printers can print with consistent high
+      quality at 2880x2880 and 5760x2880 DPI.  Therefore, these
+      resolutions will be used for Ultra Photo and Best qualities
+      respectively on these printers.
+
+      Printers affected include:
+
+      * Stylus Photo R800, R1800, PM-G820
+
+      * Stylus Photo R2400
+
+      * All printers using Claria ink
+
+   4) Full bleed printing now works properly on the Epson Stylus Photo
+      R2400.
+
+   5) The ink drop sizes on the Epson Stylus Photo printers using
+      Claria ink have been retuned, yielding improved quality at lower
+      resolutions.
+
+   6) A problem with determining the system printer queues in the GIMP
+      plugin on certain systems using languages other than English has
+      been fixed.
+
+   7) Envelope paper sizes are now offered in both portrait and
+      landscape form factor, as some printers expect envelopes to be
+      fed long edge first while some expect them to be fed short edge
+      first.
+
+   8) PCL laser printers now offer paper trays with adjustable guides.
+      Many laser printers use adjustable guides for manual feed of
+      papers narrower than letter size.
+
+   9) The Epson driver now offers additional controls for adjusting
+      the relationship between light and dark ink:
+
+      * The Value parameters (such as Light Cyan Value) specify the
+        relative darkness of the light vs. dark inks.
+
+      * The Cutoff parameters now specify the point at which the
+        darker ink is first used, relative to the value of the light
+        ink.
+
+      * The Scale parameters now specify the amount of light ink used
+        (essentially the density of the light ink).  This is the same
+        as the parameters previously called Cutoff.
+
+
 ----------------
 
 * NEW FEATURES AND FIXES IN GUTENPRINT 5.1.6:

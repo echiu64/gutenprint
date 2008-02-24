@@ -378,7 +378,7 @@ static const stp_raw_t sprx600_borderless_sequence = STP_RAW_STRING("SN\114\000\
 
 static const stp_raw_t sprx620_borderless_sequence = STP_RAW_STRING("SN\114\000\000\011\026\000\000\000\000\000\000\000\003\000\000\001\260\004\336\004\064\001\000\002\000\000\000\000\064\010\150\020\030\025\310\031\340\075\314\020\214\012\024\005\214\000\012\001\054\001\000\000\017\017\017\017\017\017\017\017\004\012\004\017\017\017\017\017\006\004\000\001\001\001\000\000\367\007");
 
-static const stp_raw_t sc120_borderless_sequence = STP_RAW_STRING("SN\001\000\000US\003\000\000\000\002");
+static const stp_raw_t generic_borderless_sequence = STP_RAW_STRING("SN\001\000\000US\003\000\000\000\002");
 
 #define INCH(x)		(72 * x)
 
@@ -1728,7 +1728,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 6,
     360, 28800, -1, 5760, 2880, 360, 180,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
+    10, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
     INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 0,
     4, 15, 0, 0,
@@ -1736,7 +1736,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "photo_gen3",
     variable_bits, c1_5_base_res, "rx700",
     "p1_5", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "rx700"
+    &generic_borderless_sequence, NULL, "rx700"
   },
   /* 71: Stylus Photo R2400 */
   {
@@ -1747,15 +1747,15 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
      MODEL_ENVELOPE_LANDSCAPE_NO),
     180, 1, 2, 180, 1, 2, 180, 1, 2, 8,
     360, 14400, -1, 5760, 2880, 360, 180,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 1440 * 1440,
+    10, 1, 0, 80, 42, 0, 0, 0, 1, 180, 1440 * 1440,
     INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     p3_5pl_dotsizes, p3_5pl_densities, "variable_r2400",
     "superfine", "f360_ultrachrome_k3",
     variable_bits, c1_5_base_res, "r2400",
-    "standard", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "r2400"
+    "v2880", &new_init_sequence, &je_deinit_sequence,
+    &generic_borderless_sequence, NULL, "r2400"
   },
   /* 72: Stylus CX3700/3800/3810 */
   {
@@ -1812,7 +1812,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "c64",
     variable_bits, variable_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "standard"
+    &generic_borderless_sequence, NULL, "standard"
   },
   /* 75: Japanese PM-A750 */
   {
@@ -1850,7 +1850,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "photo_gen3",
     variable_bits, variable_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "standard"
+    &generic_borderless_sequence, NULL, "standard"
   },
   /* 77: Japanese PM-D600 */
   {
@@ -1869,7 +1869,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "c64",
     variable_bits, variable_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "photo"
+    &generic_borderless_sequence, NULL, "photo"
   },
   /* 78: Stylus Photo 810/820 */
   {
@@ -1945,7 +1945,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "claria",
     variable_bits, c1_5_base_res, "cd_roll_feed",
     "v2880", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "sp1400"
+    &generic_borderless_sequence, NULL, "sp1400"
   },
   /* 82: Stylus Photo 1400 */
   {
@@ -1964,7 +1964,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "claria_1400", "claria",
     variable_bits, claria_1400_base_res, "cd_roll_feed",
     "v2880", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "sp1400"
+    &generic_borderless_sequence, NULL, "sp1400"
   },
   /* 83: Stylus Photo R240 */
   {
@@ -2021,7 +2021,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     "superfine", "c120",
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
-    &sc120_borderless_sequence, NULL, "c120"
+    &generic_borderless_sequence, NULL, "c120"
   },
 };
 
