@@ -1944,7 +1944,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     claria_dotsizes, claria_densities, "variable_claria",
     "superfine", "claria",
     variable_bits, c1_5_base_res, "cd_roll_feed",
-    "standard", &new_init_sequence, &je_deinit_sequence,
+    "v2880", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "sp1400"
   },
   /* 82: Stylus Photo 1400 */
@@ -1963,7 +1963,7 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     claria_1400_dotsizes, claria_1400_densities, "variable_claria_1400",
     "claria_1400", "claria",
     variable_bits, claria_1400_base_res, "cd_roll_feed",
-    "standard", &new_init_sequence, &je_deinit_sequence,
+    "v2880", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "sp1400"
   },
   /* 83: Stylus Photo R240 */

@@ -647,6 +647,21 @@ static const quality_t standard_qualities[] =
 
 DECLARE_QUALITY_LIST(standard);
 
+static const quality_t v2880_qualities[] =
+{
+  { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
+  { "Economy",     N_("Economy"),      360, 180, 360, 240, 360, 180 },
+  { "Draft",       N_("Draft"),        360, 360, 360, 360, 360, 360 },
+  { "Standard",    N_("Standard"),     0, 0, 0, 0, 720, 360 },
+  { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
+  { "Photo",       N_("Photo"),        1440, 720, 2880, 720, 1440, 720 },
+  { "HighPhoto",   N_("Super Photo"),  1440, 1440, 2880, 1440, 1440, 1440 },
+  { "UltraPhoto",  N_("Ultra Photo"),  2880, 2880, 2880, 2880, 2880, 2880 },
+  { "Best",        N_("Best"),         720, 360, 0, 0, -1, -1 },
+};
+
+DECLARE_QUALITY_LIST(v2880);
+
 static const quality_t p1_5_qualities[] =
 {
   { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
@@ -686,6 +701,7 @@ static const qual_t the_qualities[] =
   { "standard", &standard_quality_list },
   { "p1_5", &p1_5_quality_list },
   { "picturemate", &picturemate_quality_list },
+  { "v2880", &v2880_quality_list },
 };
 
 const quality_list_t *
