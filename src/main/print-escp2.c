@@ -2128,8 +2128,12 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     {
       const inklist_t *inks = escp2_inklist(v);
       int ninktypes = inks->n_inks;
+      int verified_inktypes = 0;
+      for (i = 0; i < ninktypes; i++)
+	if (verify_inktype(v, inks->inknames[i]))
+	  verified_inktypes++;
       description->bounds.str = stp_string_list_create();
-      if (ninktypes > 1)
+      if (verified_inktypes > 1)
 	{
 	  stp_string_list_add_string(description->bounds.str, "None",
 				     _("Standard"));
