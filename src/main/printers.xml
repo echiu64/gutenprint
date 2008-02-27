@@ -377,7 +377,7 @@
       <printer name="Epson Stylus DX8400" driver="escp2-dx8400" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer name="Epson Stylus DX8450" driver="escp2-dx8450" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate Dasy" driver="escp2-picmatedash" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer name="Epson PictureMate Deluxe" driver="escp2-picmated" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer name="Epson PictureMate Flash" driver="escp2-picmateflash" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer name="Epson PictureMate Pal" driver="escp2-picmatepal" manufacturer="Epson" model="73" parameters="standard_params" />
