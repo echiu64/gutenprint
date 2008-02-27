@@ -165,6 +165,11 @@
 #gptofoo escp2-e100 printer/Epson-E_100
 #gptofoo escp2-e150 printer/Epson-E_150
 #gptofoo escp2-e200 printer/Epson-E_200
+#gptofoo escp2-e300 printer/Epson-E_300
+#gptofoo escp2-e500 printer/Epson-E_500
+#gptofoo escp2-e520 printer/Epson-E_520
+#gptofoo escp2-e700 printer/Epson-E_700
+#gptofoo escp2-e720 printer/Epson-E_720
 #gptofoo escp2-mc10000 printer/Epson-MC_10000
 #gptofoo escp2-mc2000 printer/Epson-MC_2000
 #gptofoo escp2-mc5000 printer/Epson-MC_5000
@@ -245,9 +250,11 @@
 #gptofoo escp2-picmate240 printer/Epson-PictureMate_240
 #gptofoo escp2-picmate250 printer/Epson-PictureMate_250
 #gptofoo escp2-picmate260 printer/Epson-PictureMate_260
+#gptofoo escp2-picmate270 printer/Epson-PictureMate_270
 #gptofoo escp2-picmate280 printer/Epson-PictureMate_280
 #gptofoo escp2-picmate290 printer/Epson-PictureMate_290
 #gptofoo escp2-picmate500 printer/Epson-PictureMate_500
+#gptofoo escp2-picmate2005 printer/Epson-PictureMate_2005
 #gptofoo escp2-c20 printer/Epson-Stylus_C20
 #gptofoo escp2-c20sx printer/Epson-Stylus_C20SX
 #gptofoo escp2-c20ux printer/Epson-Stylus_C20UX

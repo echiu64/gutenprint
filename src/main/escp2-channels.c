@@ -1453,6 +1453,20 @@ static const escp2_inkname_t claria_four_color_standard_inkset =
   &claria_cmyk_channel_set
 };
 
+static const ink_channel_t *const four_color_picturemate_channels[] =
+{
+  &photo_black_channel, &picturemate_cyan_channel,
+  &picturemate_magenta_channel, &picturemate_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(four_color_picturemate);
+
+static const escp2_inkname_t four_color_picturemate_inkset =
+{
+  "CMYK", N_("Four Color Photo"), INKSET_CMYK,
+  &four_color_picturemate_channel_set
+};
+
 
 /*
  ****************************************************************
@@ -2114,6 +2128,12 @@ static const escp2_inkname_t claria_four_color_extended_inkset =
 {
   "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
   &claria_cmyk_channel_set
+};
+
+static const escp2_inkname_t four_color_picturemate_extended_inkset =
+{
+  "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
+  &four_color_picturemate_channel_set
 };
 
 static const escp2_inkname_t four_color_r800_extended_inkset =
@@ -2795,14 +2815,25 @@ static const escp2_inkname_t *const cmykrb_photo_ink_types[] =
 DECLARE_INKLIST("cmykrbphoto", cmykrb_photo, cmykrb_photo,
 		N_("Photo Black"), r800, r800_photo, standard);
 
-static const escp2_inkname_t *const picturemate_photo_ink_types[] =
+static const escp2_inkname_t *const picturemate_6_photo_ink_types[] =
 {
   &six_color_picturemate_inkset,
+  &four_color_picturemate_inkset,
   &six_color_picturemate_extended_inkset,
+  &four_color_picturemate_extended_inkset,
 };
 
-DECLARE_INKLIST("picturemate", picturemate, picturemate_photo,
-		N_("Standard"), picturemate, picturemate, standard);
+DECLARE_INKLIST("picturemate_6", picturemate_6, picturemate_6_photo,
+		N_("Standard"), picturemate, picturemate_6, standard);
+
+static const escp2_inkname_t *const picturemate_4_photo_ink_types[] =
+{
+  &four_color_picturemate_inkset,
+  &four_color_picturemate_extended_inkset,
+};
+
+DECLARE_INKLIST("picturemate_4", picturemate_4, picturemate_4_photo,
+		N_("Standard"), picturemate, picturemate_4, standard);
 
 
 #define DECLARE_INKGROUP(name)			\
@@ -2968,12 +2999,19 @@ static const inklist_t *const cmykrb_group[] =
 
 DECLARE_INKGROUP(cmykrb);
 
-static const inklist_t *const picturemate_group[] =
+static const inklist_t *const picturemate_4_group[] =
 {
-  &picturemate_inklist,
+  &picturemate_4_inklist,
 };
 
-DECLARE_INKGROUP(picturemate);
+DECLARE_INKGROUP(picturemate_4);
+
+static const inklist_t *const picturemate_6_group[] =
+{
+  &picturemate_6_inklist,
+};
+
+DECLARE_INKGROUP(picturemate_6);
 
 static const inklist_t *const claria_group[] =
 {
@@ -3010,7 +3048,8 @@ static const ink_t the_inks[] =
   { "f360_ultrachrome", &f360_ultrachrome_inkgroup },
   { "f360_ultrachrome_k3", &f360_ultrachrome_k3_inkgroup },
   { "cmykrb", &cmykrb_inkgroup },
-  { "picturemate", &picturemate_inkgroup },
+  { "picturemate_6", &picturemate_6_inkgroup },
+  { "picturemate_4", &picturemate_4_inkgroup },
   { "claria", &claria_inkgroup },
 };
 
@@ -3172,7 +3211,7 @@ static const char *r800_channel_names[] =
 
 DECLARE_CHANNEL_LIST(r800);
 
-static const char *picturemate_channel_names[] =
+static const char *picturemate_6_channel_names[] =
 {
   N_("Yellow"),
   N_("Magenta"),
@@ -3182,7 +3221,17 @@ static const char *picturemate_channel_names[] =
   N_("Blue"),
 };
 
-DECLARE_CHANNEL_LIST(picturemate);
+DECLARE_CHANNEL_LIST(picturemate_6);
+
+static const char *picturemate_4_channel_names[] =
+{
+  N_("Yellow"),
+  N_("Magenta"),
+  N_("Cyan"),
+  N_("Black"),
+};
+
+DECLARE_CHANNEL_LIST(picturemate_4);
 
 static const char *r2400_channel_names[] =
 {
@@ -3209,7 +3258,8 @@ static const channel_t the_channels[] =
   { "cx3800", &cx3800_channel_name_list },
   { "mfp2005", &mfp2005_channel_name_list },
   { "photo", &photo_channel_name_list },
-  { "picturemate", &picturemate_channel_name_list },
+  { "picturemate_6", &picturemate_6_channel_name_list },
+  { "picturemate_4", &picturemate_4_channel_name_list },
   { "pm_950c", &pm_950c_channel_name_list },
   { "r2400", &r2400_channel_name_list },
   { "sp1400", &sp1400_channel_name_list },

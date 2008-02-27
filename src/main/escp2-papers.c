@@ -1194,7 +1194,7 @@ static const paper_adjustment_t r800_matte_adjustments[] =
 
 DECLARE_PAPER_ADJUSTMENTS(r800_matte);
 
-static const paper_adjustment_t picturemate_adjustments[] =
+static const paper_adjustment_t picturemate_6_adjustments[] =
 {
   { "GlossyPhoto", 1.00, 1, 1, .02, 2.0, .882, 1, .250, 1, 1, 0.92,
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
@@ -1202,7 +1202,17 @@ static const paper_adjustment_t picturemate_adjustments[] =
     r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
 };
 
-DECLARE_PAPER_ADJUSTMENTS(picturemate);
+DECLARE_PAPER_ADJUSTMENTS(picturemate_6);
+
+static const paper_adjustment_t picturemate_4_adjustments[] =
+{
+  { "GlossyPhoto", 1.00, 1, 1, .02, 2.0, .882, 1, .250, 1, 1, 0.92,
+    r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
+  { "Other", 0.878, .1, 1, .02, 2.0, .882, 1, .250, 1, 1, 1.0,
+    r800_glossy_hue_adj, r800_glossy_lum_adj, r800_glossy_sat_adj },
+};
+
+DECLARE_PAPER_ADJUSTMENTS(picturemate_4);
 
 static const paper_adjustment_t durabrite_adjustments[] =
 {
@@ -1674,7 +1684,8 @@ static const paperadj_t the_adjustments[] =
   { "ultrachrome_k3_matte", &ultrachrome_k3_matte_paper_adjustment_list },
   { "r800_photo", &r800_photo_paper_adjustment_list },
   { "r800_matte", &r800_matte_paper_adjustment_list },
-  { "picturemate", &picturemate_paper_adjustment_list },
+  { "picturemate_4", &picturemate_4_paper_adjustment_list },
+  { "picturemate_6", &picturemate_6_paper_adjustment_list },
   { "claria", &claria_paper_adjustment_list },
 };
 

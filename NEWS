@@ -138,10 +138,25 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       * Epson inkjet printers:
 
 	EPSON PictureMate 100
+	EPSON PictureMate 210 (Corrected)
+	EPSON PictureMate 240 (Corrected)
+	EPSON PictureMate 250 (Corrected)
 	EPSON PictureMate 260
+	EPSON PictureMate 270
+	EPSON PictureMate 280 (Corrected)
 	EPSON PictureMate 290
 	EPSON PictureMate 500
+	EPSON PictureMate 2005
 	EPSON PictureMate Dash
+	EPSON PictureMate Flash (Corrected)
+	EPSON PictureMate Pal (Corrected)
+	EPSON PictureMate Snap (Corrected)
+	EPSON E 150 (Corrected)
+	EPSON E 300
+	EPSON E 520
+	EPSON E 500
+	EPSON E 720
+	EPSON E 700
 	EPSON Stylus D92
 	EPSON Stylus DX4400
 	EPSON Stylus DX4450
@@ -155,6 +170,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	EPSON Stylus Photo RX585
 	EPSON Stylus Photo RX680
 	EPSON Stylus Photo RX685
+
+	(Note that a number of the PictureMate printers that were
+	previously included generated grossly incorrect output.  Not
+	all of the PictureMate printers have been fully tuned at this
+	point.)
 
       * Canon inkjet printers:
         Canon PIXMA MP520 (#1872394)

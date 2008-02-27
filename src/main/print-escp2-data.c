@@ -1790,10 +1790,10 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
     4, 15, 0, 0,
     picturemate_dotsizes, picturemate_densities, "variable_picturemate",
-    "picturemate", "picturemate",
+    "picturemate", "picturemate_6",
     variable_bits, c1_5_base_res, "default",
     "picturemate", &new_init_sequence, &je_deinit_sequence,
-    NULL, NULL, "picturemate"
+    NULL, NULL, "picturemate_6"
   },
   /* 74: PM-A650 */
   {
@@ -2022,6 +2022,25 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, variable_base_res, "default",
     "standard", &new_init_sequence, &je_deinit_sequence,
     &generic_borderless_sequence, NULL, "c120"
+  },
+  /* 86: PictureMate 4-color */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
+     MODEL_ZEROMARGIN_FULL | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
+    90, 1, 3, 90, 1, 3, 90, 1, 3, 4,
+    360, 28800, -1, 5760, 1440, 1440, 720,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
+    INCH(4), INCH(1200), INCH(2), INCH(2), INCH(4), INCH(1200),
+    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
+    4, 15, 0, 0,
+    picturemate_dotsizes, picturemate_densities, "variable_picturemate",
+    "picturemate", "picturemate_4",
+    variable_bits, c1_5_base_res, "default",
+    "picturemate", &new_init_sequence, &je_deinit_sequence,
+    NULL, NULL, "picturemate_4"
   },
 };
 

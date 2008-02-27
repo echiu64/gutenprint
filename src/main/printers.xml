@@ -377,26 +377,33 @@
       <printer name="Epson Stylus DX8400" driver="escp2-dx8400" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer name="Epson Stylus DX8450" driver="escp2-dx8450" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer name="Epson PictureMate Deluxe" driver="escp2-picmated" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate Flash" driver="escp2-picmateflash" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate Pal" driver="escp2-picmatepal" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate Snap" driver="escp2-picmatesnap" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 100" driver="escp2-picmate100" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson PictureMate Flash" driver="escp2-picmateflash" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate Pal" driver="escp2-picmatepal" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate Snap" driver="escp2-picmatesnap" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 100" driver="escp2-picmate100" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer name="Epson PictureMate 200" driver="escp2-picmate200" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 210" driver="escp2-picmate210" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 240" driver="escp2-picmate240" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 250" driver="escp2-picmate250" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 260" driver="escp2-picmate260" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 280" driver="escp2-picmate280" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson PictureMate 290" driver="escp2-picmate290" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson PictureMate 210" driver="escp2-picmate210" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 240" driver="escp2-picmate240" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 250" driver="escp2-picmate250" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 260" driver="escp2-picmate260" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 270" driver="escp2-picmate270" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 280" driver="escp2-picmate280" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson PictureMate 290" driver="escp2-picmate290" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer name="Epson PictureMate 500" driver="escp2-picmate500" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson PictureMate 2005" driver="escp2-picmate2005" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer name="Epson CL 700" driver="escp2-cl700" manufacturer="Epson" model="38" parameters="480_params" />
       <printer name="Epson CL 750" driver="escp2-cl750" manufacturer="Epson" model="43" parameters="480_params" />
       <printer name="Epson CL 760" driver="escp2-cl760" manufacturer="Epson" model="56" parameters="480_params" />
       <printer name="Epson E 100" driver="escp2-e100" manufacturer="Epson" model="73" parameters="standard_params" />
-      <printer name="Epson E 150" driver="escp2-e150" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson E 150" driver="escp2-e150" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer name="Epson E 200" driver="escp2-e200" manufacturer="Epson" model="73" parameters="standard_params" />
+      <printer name="Epson E 300" driver="escp2-e300" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson E 500" driver="escp2-e500" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson E 520" driver="escp2-e520" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson E 700" driver="escp2-e700" manufacturer="Epson" model="86" parameters="standard_params" />
+      <printer name="Epson E 720" driver="escp2-e720" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer name="Epson EM 900C" driver="escp2-em900c" manufacturer="Epson" model="13" parameters="standard_params" />
       <printer name="Epson EM 930C" driver="escp2-em930c" manufacturer="Epson" model="34" parameters="standard_params" />
       <printer name="Epson MC 2000" driver="escp2-mc2000" manufacturer="Epson" model="26" parameters="standard_params" />
