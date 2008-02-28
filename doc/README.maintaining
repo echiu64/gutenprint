@@ -68,43 +68,6 @@ and also
 
 vi.  pkg-config (at least 0.18.0)
 
-GNU autoconf made some incompatible changes between the 2.13 and 2.50
-stable releases.  You cannot use a configure.in written for 2.13 with
-2.5x releases.  This means that to build the 4.2-branch and the
-mainline on the same machine, you need to install multiple versions of
-the autotools.  You can do this by running configure with the same
---prefix, but also use --program-suffix=VERSION where VERSION is the
-autoconf version you are building.
-
-Debian GNU/Linux has an autoconf2.13 package with a wrapper script
-which can correctly invoke the right autoconf version.  This makes
-using the old and new versions together very easy.  To get it,
-
-1. download the Debian (.deb) package from
-   ftp://ftp.debian.org/debian/pool/main/a/autoconf2.13/
-2. extract the file with
-   ar -xv autoconf2.13_2.13-43_all.deb data.tar.gz
-   ==> x - data.tar.gz
-   tar -xzf data.tar.gz  ./usr/bin
-3. copy ./usr/bin/autoconf-wrapper to /usr/bin
-4. symlink `autoconf', `autoreconf' and `autoheader' to
-   `autoconf-wrapper' (your real autoconf versions are named
-   autoconfVERSION).
-5. You may have to edit the wrapper to get in to invoke the right 2.5x
-   version.
-
-Similar problems may be seen with GNU automake, but you can again
-configure with a program suffix.  You will, however, need to update a
-symlink manually, perhaps using one in your home bindir.  automake 1.4
-works with autoconf2.13; automake1.5 works with autoconf2.13 and 2.5x
-but is old; automake1.6+ will only work with new 2.5x autoconf
-versions but are the current releases.  I suggest using 1.4 and 1.7
-together.  Different versions of autoconf need separate aclocal
-directories, to prevent m4 macros clashing.
-
-Hopefully these compatibility problems will not be as bad in the
-future...
-
 
 2. Integration of the autotools
 -------------------------------
@@ -200,10 +163,11 @@ list of options one can use.
 
 3.3 Building the package
 ------------------------
-The normal method is to run the `configure' script, and then `make'.
-The package can then be installed with 'make install':
+The normal method for building from CVS is to run the `autogen.sh'
+script, and then `make'.  The package can then be installed with 'make
+install':
 
-        $ ./configure
+        $ ./autogen.sh [options]
         $ make
         $ make [DESTDIR=... VAR1=val1 VARn=valn] install
 
@@ -225,8 +189,8 @@ is enabled, and should be present in the release tarball.
 
 Other packages (including the extra development packages on some
 systems) must be installed on your system to build correctly.  These
-include: autoconf, automake, libtool, gtk, gdk, gimp 1.2, gimp 2.0,
-cups, foomatic, readline, and a DocBook processor (db2html, db2pdf,
+include: autoconf, automake, libtool, gtk, gdk, gimp 2.x, cups,
+foomatic, readline, and a DocBook processor (db2html, db2pdf,
 db2html).  Not all these need to be installed, depending on the
 configure options used (GIMP, CUPS, Foomatic and readline are
 optional).  It might be necessary to get the latest releases of some
@@ -253,7 +217,7 @@ Some of the targets available are:
         dist                    make a distribution
         distcheck               as dist, but test it as well
 
-Other targets are available. See Makefile.in for details.
+Other targets are available. See Makefile for details.
 
 
 4. configure.ac
@@ -418,15 +382,14 @@ If a Makefile.am has a SUBDIRS macro, make will recurse through these
 subdirectories, running make in each one.  e.g. in the top-level
 Makefile.am:
 
-        SUBDIRS = intl lib man src test po
+        SUBDIRS = include src samples test po man doc scripts
 
 In this case the order of directories is critical: lib, src and test
-depend on intl being built and src and test depend on lib being built.
-Also, test depends on libgutenprint in src and po must be run after all
-the source has been built (as it parses all C source, possibly
-including dynamically generated code).  The same applies in
-src/Makefile.am: most directories require libgutenprint for linking
-with, and libgutenprint requires printdef.
+depend on include being built.  Also, test depends on libgutenprint in
+src and po must be run after all the source has been built (as it
+parses all C source, possibly including dynamically generated code).
+The same applies in src/Makefile.am: most directories require
+libgutenprint for linking with, and libgutenprint requires printdef.
 
 Therefore the order of building is critical!  It should be technically
 possible to run make in any subdirectory and have all the dependencies
@@ -548,16 +511,16 @@ is that if a program is linked with a libtool shared library in the
 build tree, then it is actually created in '.libs/program', and not
 'program'.  However, if it is statically linked (e.g. the platform
 does not support shared libraries, or you used --disable-shared with
-configure, perhaps to make the build faster), then it will be created
-as 'program'.  This is so that you can run the program before you
-install it.  If it is linked with shared libraries, a wrapper script
-does some magic with LD_LIBRARY_PATH.  However, this means that your
-install rules must take this into account by checking that
-'.libs/program exists', and installing it if it is present, but
-otherwise installing 'program'.  Automake install rules do this
-automatically, but it you write your own, you must take this into
-consideration.  The best option is to not use custom install rules for
-binaries.
+configure, perhaps to make the build faster or to be able to use
+`valgrind' usefully), then it will be created as 'program'.  This is
+so that you can run the program before you install it.  If it is
+linked with shared libraries, a wrapper script does some magic with
+LD_LIBRARY_PATH.  However, this means that your install rules must
+take this into account by checking that '.libs/program exists', and
+installing it if it is present, but otherwise installing 'program'.
+Automake install rules do this automatically, but it you write your
+own, you must take this into consideration.  The best option is to not
+use custom install rules for binaries.
 
 
 11. Testing changes to the build scripts
@@ -590,17 +553,6 @@ CVS:      cvs.info
 gettext:  gettext.info
 libtool:  libtool.info
 make:     make.info
-
-
-13. Known problems
-------------------
-
-If you have a version of the Gimp older than about 1.1.27, your
-gimp.m4 (in /usr/share/aclocal or equivalent) will be incorrect.  You
-should install the version of gimp.m4 from scripts/ prior to use.
-This should only be a problem when building from CVS; the configure
-script included in released versions will not have this problem.
-
 
 
 
