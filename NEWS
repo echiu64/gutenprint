@@ -200,6 +200,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
    4) Full bleed printing now works properly on the Epson Stylus Photo
       R2400.
 
+   5) The Epson Stylus C120 now allows printing at 2880x2880 and
+      5760x2880.  However, print quality near the bottom of the page
+      may be poor, and these settings are therefore not used for Ultra
+      Photo and Best quality.
+
    5) The ink drop sizes on the Epson Stylus Photo printers using
       Claria ink have been retuned, yielding improved quality at lower
       resolutions.
@@ -217,19 +222,63 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       Many laser printers use adjustable guides for manual feed of
       papers narrower than letter size.
 
-   9) The Epson driver now offers additional controls for adjusting
-      the relationship between light and dark ink:
+   9) The GIMP plugin now offers reset buttons for individual
+      settings, so it is possible to reset a single setting to its
+      default without resetting all settings.
 
-      * The Value parameters (such as Light Cyan Value) specify the
-        relative darkness of the light vs. dark inks.
+   9) Various new controls and settings have been added to assist in
+      printer calibration.  While the tools for using these controls
+      are not yet created, these tools will assist in calibrating
+      printers in the future.
 
-      * The Cutoff parameters now specify the point at which the
-        darker ink is first used, relative to the value of the light
-        ink.
+      * The Epson driver now offers additional controls for adjusting
+      	the relationship between light and dark ink:
 
-      * The Scale parameters now specify the amount of light ink used
-        (essentially the density of the light ink).  This is the same
-        as the parameters previously called Cutoff.
+	+ The Value parameters (such as Light Cyan Value) specify the
+	  relative darkness of the light vs. dark inks.
+
+	+ The Cutoff parameters now specify the point at which the
+	  darker ink is first used, relative to the value of the light
+	  ink.
+
+	+ The Scale parameters now specify the amount of light ink
+	  used (essentially the density of the light ink).  This is
+	  the same as the parameters previously called Cutoff.
+
+      * The Epson driver now exposes as defaults the actual GCR
+        settings used for the printer, paper, and ink combination in
+        use.
+
+      * The Epson driver now allows passing low level settings such as
+        printer base resolution, ink drop size selection, and relative
+        ink drop size as parameters.  The ink drop size can be
+        accessed in the GIMP plugin, while the base resolution and ink
+        drop size selection can only be used via the test pattern
+        generator or other application that allows setting integer
+        parameters.
+
+      * Two new dither algorithms, Segmented and Segmented New, have
+	been added.  These are not intended for normal use, and will
+	normally behave like Ordered and Ordered New.  However, if Raw
+	color correction is selected and a printer with multiple drop
+	sizes is used, the range of input will be divided up such that
+	the high order bits will select the drop size to be used and
+	the lower bits will specify the amount of ink.  High order
+	bits of 0 indicate that all drop sizes should be used.
+
+	For example, if a printer offers 3 drop sizes (2 bits), the
+	range of 0-16383 will print all drop sizes normally (with the
+	range of 0-16383 being scaled to 0-65535), 16384-32767 will
+	use the small drop size, and so forth.
+
+	This is intended to assist in tuning ink drop sizes.
+
+      * A new parameter allowing dumping out of color correction state
+	(lookup tables, GCR data, curves, etc.) has been added, and is
+	accessible in the GIMP plugin.  At present, this data cannot
+	be used directly, but it is intended that in the future this
+	mechanism be used to allow calibration information to be saved
+	and restored.
 
 
 ----------------
