@@ -86,15 +86,14 @@ static int standard_vars_initialized = 0;
 
 static stp_vars_t default_vars;
 
-static inline void
-check_vars(const stp_vars_t *v)
-{
-  if (v == NULL)
-    {
-      stp_erprintf("Null stp_vars_t! Please report this bug.\n");
-      stp_abort();
-    }
-}
+#define CHECK_VARS(v)							\
+do {									\
+  if (v == NULL)							\
+    {									\
+      stp_erprintf("Null stp_vars_t! Please report this bug.\n");	\
+      stp_abort();							\
+    }									\
+} while (0)
 
 static const char *
 value_namefunc(const void *item)
@@ -237,7 +236,7 @@ stp_allocate_component_data(stp_vars_t *v,
 {
   compdata_t *cd;
   stp_list_item_t *item;
-  check_vars(v);
+  CHECK_VARS(v);
   cd = stp_malloc(sizeof(compdata_t));
   item = stp_list_get_item_by_name(v->internal_data, name);
   if (item)
@@ -253,7 +252,7 @@ void
 stp_destroy_component_data(stp_vars_t *v, const char *name)
 {
   stp_list_item_t *item;
-  check_vars(v);
+  CHECK_VARS(v);
   item = stp_list_get_item_by_name(v->internal_data, name);
   if (item)
     stp_list_item_destroy(v->internal_data, item);
@@ -263,7 +262,7 @@ void *
 stp_get_component_data(const stp_vars_t *v, const char *name)
 {
   stp_list_item_t *item;
-  check_vars(v);
+  CHECK_VARS(v);
   item = stp_list_get_item_by_name(v->internal_data, name);
   if (item)
     return ((compdata_t *) stp_list_item_get_data(item))->data;
@@ -332,7 +331,7 @@ void
 stp_vars_destroy(stp_vars_t *v)
 {
   int i;
-  check_vars(v);
+  CHECK_VARS(v);
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     stp_list_destroy(v->params[i]);
   stp_list_destroy(v->internal_data);
@@ -345,7 +344,7 @@ stp_vars_destroy(stp_vars_t *v)
 void									\
 pre##_set_##s(stp_vars_t *v, const char *val)				\
 {									\
-  check_vars(v);							\
+  CHECK_VARS(v);							\
   if (val)								\
     stp_deprintf(STP_DBG_VARS, "set %s to %s (0x%p)\n", #s, val,	\
                  (const void *) v);					\
@@ -362,7 +361,7 @@ pre##_set_##s(stp_vars_t *v, const char *val)				\
 void									\
 pre##_set_##s##_n(stp_vars_t *v, const char *val, int n)		\
 {									\
-  check_vars(v);							\
+  CHECK_VARS(v);							\
   if (v->s == val)							\
     return;								\
   STP_SAFE_FREE(v->s);							\
@@ -373,7 +372,7 @@ pre##_set_##s##_n(stp_vars_t *v, const char *val, int n)		\
 const char *								\
 pre##_get_##s(const stp_vars_t *v)					\
 {									\
-  check_vars(v);							\
+  CHECK_VARS(v);							\
   return v->s;								\
 }
 
@@ -381,7 +380,7 @@ pre##_get_##s(const stp_vars_t *v)					\
 void							\
 pre##_set_##s(stp_vars_t *v, t val)			\
 {							\
-  check_vars(v);                                        \
+  CHECK_VARS(v);                                        \
   v->verified = 0;					\
   v->s = val;						\
 }							\
@@ -389,7 +388,7 @@ pre##_set_##s(stp_vars_t *v, t val)			\
 t							\
 pre##_get_##s(const stp_vars_t *v)			\
 {							\
-  check_vars(v);                                        \
+  CHECK_VARS(v);                                        \
   return v->s;						\
 }
 
@@ -409,14 +408,14 @@ DEF_FUNCS(errfunc, stp_outfunc_t, stp)
 void
 stp_set_verified(stp_vars_t *v, int val)
 {
-  check_vars(v);
+  CHECK_VARS(v);
   v->verified = val;
 }
 
 int
 stp_get_verified(const stp_vars_t *v)
 {
-  check_vars(v);
+  CHECK_VARS(v);
   return v->verified;
 }
 
