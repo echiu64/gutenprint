@@ -129,9 +129,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.6 is released!</span> 
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.7 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#5.1.6">January 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.6, a development release. This release incorporates the support for additional printers and other improvemnets in 5.1.5 as well as the improvements in 5.1.6. The release also offers an important bug fix over 5.1.5.  See the <b>Downloads</b> section. 
+			<a href="MacOSX.php3#5.1.7">March 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.7, a development release. This release incorporates the support for additional printers and other improvemnets.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -190,12 +190,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			Gutenprint 5.0.2 is the latest release from the stable branch of Gutenprint 5.0. This release supports additional printers and offers some important bug fixes. It is fully compatible with Mac OS X 10.5.x (Leopard).  The updated uninstaller is also included and is Mac OS X 10.5.x compatible.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.0.2.tar.bz2?download">source code</a>) 
 		</p>
 		<p>
-			<b>Gutenprint 5.1.6</b> 
+			<b>Gutenprint 5.1.7</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.6-ub.dmg?download">gutenprint-5.1.6-ub.dmg</a></span>&nbsp;&nbsp;(15.5 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.7-ub.dmg?download">gutenprint-5.1.7-ub.dmg</a></span>&nbsp;&nbsp;(16 MB) 
 		</p>
 		<p>
-			Gutenprint 5.1.6 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release supports additional printers and offers some important bug fixes over 5.1.4 - the last Mac OS X developmental release.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.6.tar.bz2?download">source code</a>) 
+			Gutenprint 5.1.7 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release supports additional printers and offers some important bug fixes and other additional features.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.7.tar.bz2?download">source code</a>) 
 		</p>
 <!-- deleted older release info as iCab was still displaying it -->
 		<p>
@@ -257,6 +257,84 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.1.7"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.1.7</b> 
+		</td>
+		<td align="right">
+			<b>2008-03-05</b> 
+		</td>
+	</tr>
+</table>
+<p>
+	Gutenprint 5.1.7 is a release of the developmental branch of Gutenprint 5.1.  The 5.1.7 release supports additional printers and offers some important bug fixes along with additional features. The most important changes for Mac OS X users are:
+</p>
+<ul style="list-style: disc;">
+<li>
+Added support for the following printers:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon PIXMA MP520<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon PIXMA iP6000D<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 100<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 210 (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 240 (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 250 (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 260<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 270<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 280 (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 290<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 500<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate 2005<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate Dash<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate Flash (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate Pal (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON PictureMate Snap (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON E 150 (Corrected)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON E 300<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON E 520<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON E 500<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON E 720<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON E 700<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus D92<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4400<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4450<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX7000F<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX7400<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX7450<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX8400<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX8450<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo R280<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo R285<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo RX585<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo RX680<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo RX685<br>
+	<b>Note:</b>&nbsp; Not all of the PictureMate printers have been fully tuned at this	point. 
+</li>
+<li>
+Printing for the Canon PIXMA iP4500 has been fixed 
+</li>
+<li>
+Printing near the bottom of the page has been improved for many modern Epson inkjet printers.  In addition, we have determined that most of these printers can print with consistent high quality at 2880x2880 and 5760x2880 DPI.  Therefore, these resolutions will be used for Ultra Photo and Best qualities respectively on these printers. Printers affected include:<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Stylus Photo R800, R1800, PM-G820<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;Stylus Photo R2400<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;All printers using Claria ink
+</li>
+	<li>Envelope paper sizes are now offered in both portrait and landscape form factor, as some printers expect envelopes to be fed long edge first while some expect them to be fed short edge first.</li>
+	<li>PCL laser printers now offer paper trays with adjustable guides. Many laser printers use adjustable guides for manual feed of papers narrower than letter size.</li>
+<li>
+Two new dither algorithms, Segmented and Segmented New, have been added.  These are not intended for normal use, and will normally behave like Ordered and Ordered New.  However, if Raw color correction is selected and a printer with multiple drop sizes is used, the range of input will be divided up such that the high order bits will select the drop size to be used and the lower bits will specify the amount of ink.  High order bits of 0 indicate that all drop sizes should be used.
+</li>
+</ul>
+<p>
+Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=582342">release notes</a>.
+</p>
+
+
+
+
+
+
 <a name="5.1.6"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
