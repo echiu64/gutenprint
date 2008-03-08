@@ -21,8 +21,9 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 
 <P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.
 Gimp-Print 4.2.7 (the last Gimp-Print 4.2 release) is still available
-for distribution.  You may install both Gimp-Print 4.2.7 and
-Gutenprint 5.0 concurrently and choose which to use.</p>
+for distribution, but is no longer supported.  You may install both
+Gimp-Print 4.2.7 and Gutenprint 5.0 concurrently and choose which to
+use.</p>
 
 <h2><strong><em><font color=#ff0000>Macintosh OS X
 Users!</font></em></strong></h2>
