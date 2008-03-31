@@ -65,8 +65,11 @@ my $exit_after_parse_args = 0;
 
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
-my $driver_version = `$driver_bin VERSION`;
-chomp $driver_version;
+my $driver_version = "";
+if (-x $driver_bin) {
+    $driver_version = `$driver_bin VERSION`;
+    chomp $driver_version;
+}
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
 
@@ -107,6 +110,8 @@ umask 0177;
 
 
 # Find all in-use Gutenprint PPD files...
+# For case-insensitive filesystems, use only one of .ppd and .PPD
+# (bug 1929738).
 
 my @ppdglob;
 if (@ARGV) {
@@ -123,11 +128,9 @@ if (@ARGV) {
 		 -f "$ppd_dir/$f.PPD") {
 	    if (-f "$ppd_dir/$f") {
 		push @ppdglob, "$ppd_dir/$f";
-	    }
-	    if (-f "$ppd_dir/$f.ppd") {
+	    } elsif (-f "$ppd_dir/$f.ppd") {
 		push @ppdglob, "$ppd_dir/$f.ppd";
-	    }
-	    if (-f "$ppd_dir/$f.PPD") {
+	    } elsif (-f "$ppd_dir/$f.PPD") {
 		push @ppdglob, "$ppd_dir/$f.PPD";
 	    }
 	}  else {
@@ -135,7 +138,20 @@ if (@ARGV) {
 	}
     }
 } else {
-    @ppdglob = glob("$ppd_dir/*.{ppd,PPD}");
+    my @ppdtmp = glob("$ppd_dir/*.{ppd,PPD}");
+    my (%ppd_map);
+    map { $ppd_map{$_} = 1 } @ppdglob;
+    foreach my $f (@ppdtmp) {
+	if ($f =~ /\.PPD$/) {
+	    my ($g) = $f;
+	    $g =~ s/\.PPD$/.ppd/;
+	    if (! $ppd_map{$g}) {
+		push @ppdglob, $f;
+	    }
+	} else {
+	    push @ppdglob, $f;
+	}
+    }
 }
 my $ppdlist = join ' ', @ppdglob;
 if (@ppdglob) {
