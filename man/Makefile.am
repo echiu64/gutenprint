@@ -30,7 +30,6 @@ if BUILD_CUPS
 CUPS_MAN = \
 	cups-calibrate.8 \
 	cups-genppd.8 \
-	cups-genppdconfig.8 \
 	cups-genppdupdate.8
 endif
 
@@ -47,7 +46,6 @@ man_MANS = $(CUPS_MAN) $(ESCPUTIL_MAN) $(GHOSTSCRIPT_MAN)
 EXTRA_man_MANS = \
 	cups-calibrate.8 \
 	cups-genppd.8 \
-	cups-genppdconfig.8 \
 	cups-genppdupdate.8 \
 	escputil.1 \
 	ijsgutenprint.1

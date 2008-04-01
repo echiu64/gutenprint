@@ -934,7 +934,6 @@ AC_CONFIG_FILES([include/gutenprint/gutenprint-version.h])
 AC_CONFIG_FILES([man/Makefile])
 AC_CONFIG_FILES([man/cups-calibrate.8])
 AC_CONFIG_FILES([man/cups-genppd.8])
-AC_CONFIG_FILES([man/cups-genppdconfig.8])
 AC_CONFIG_FILES([man/cups-genppdupdate.8])
 AC_CONFIG_FILES([man/escputil.1])
 AC_CONFIG_FILES([man/ijsgutenprint.1])
@@ -942,11 +941,6 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
-AC_CONFIG_FILES([src/cups/cups-genppdconfig],
-                [chmod +x src/cups/cups-genppdconfig;
-		 rm -f src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION};
-		 mv src/cups/cups-genppdconfig src/cups/cups-genppdconfig.${GUTENPRINT_RELEASE_VERSION};
-		 echo "    *** Ignore any warning that may follow that sed can't read src/cups/cups-genppdconfig"])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate;
 		 rm -f src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION};
