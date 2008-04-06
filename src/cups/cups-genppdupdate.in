@@ -608,12 +608,12 @@ default_loop:
 
     my $tmpnew = "${ppd_dest_filename}.new";
     if (! open NEWPPD, "> $tmpnew") {
-	warn "Can't open $tmpnew for writing: $!\n";
+	warn "Can't create $tmpnew: $!\n";
 	return 0;
     }
     print NEWPPD $source_data;
     if (! close NEWPPD) {
-	warn "Can't close ${tmpnew}.new for writing: $!\n";
+	warn "Can't close $tmpnew: $!\n";
 	unlink $tmpnew;
 	return 0;
     }
