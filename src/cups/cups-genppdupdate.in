@@ -42,18 +42,19 @@ our $opt_P; # PPD generator location
 our $opt_v; # Verbose mode
 our $opt_N; # Don't update PPD file options
 our $opt_o; # Output directory
+our $opt_r; # Guvenprint version
+our $opt_i; # Interactive
 
 my $debug = 0;
 my $verbose = 0;   # Verbose output
-if ($debug) {
-    $verbose = 1;
-}
+my $interactive = 0;
 my $quiet = 0;     # No output
 my $no_action = 0; # Don't output files
 my $reset_defaults = 0;		# Reset options to default settings
 my $version = "@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 my $micro_version = "@GUTENPRINT_VERSION@";
 my $use_static_ppd = "@BUILD_CUPS_PPDS@";
+my $file_version = '@VERSION@$';
 
 my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
 my $ppd_root_dir = "@cups_conf_datadir@/model";
@@ -61,6 +62,8 @@ my $ppd_base_dir = "$ppd_root_dir/gutenprint/$version"; # Available PPDs
 my $ppd_out_dir = "";		# By default output into source directory
 my $gzext = ".gz";
 my $updated_ppd_count = 0;
+my $skipped_ppd_count = 0;
+my $failed_ppd_count = 0;
 my $exit_after_parse_args = 0;
 
 my $serverdir = "@cups_conf_serverbin@";
@@ -182,8 +185,11 @@ if (!@ppd_files) {
 # Update each of the Gutenprint PPDs, where possible...
 
 foreach (@ppd_files) {
-    $updated_ppd_count += update_ppd($_);
-
+    my ($status) = update_ppd($_);
+    last if ($status == -2);
+    $failed_ppd_count++ if ($status == 0);
+    $updated_ppd_count++ if ($status == 1);
+    $skipped_ppd_count++ if ($status == -1);
 }
 
 if (!$quiet || $verbose) {
@@ -195,7 +201,7 @@ if (!$quiet || $verbose) {
 	print STDOUT "Updated $updated_ppd_count PPD file${plural}.  Restart cupsd for the changes to take effect.\n";
 	exit (0);
     } else {
-	if ($no_action) {
+	if ($no_action || $skipped_ppd_count > 0 || $failed_ppd_count == 0) {
 	    print STDOUT "Did not update any PPD files\n";
 	} else {
 	    print STDOUT "Failed to update any PPD files\n";
@@ -236,7 +242,7 @@ sub help() {
 }
 
 sub parse_options () {
-    if (!getopts('d:hnqs:vNo:p:P:')) {
+    if (!getopts('d:hnqs:vNo:p:P:r:i')) {
 	help();
     }
     if ($opt_n) {
@@ -288,11 +294,35 @@ sub parse_options () {
 	    die "$opt_o: invalid directory: $!\n";
 	}
     }
+    if ($opt_r) {
+	if ($version ne $opt_r) {
+	    $version = $opt_r;
+	    $ppd_base_dir = "$ppd_root_dir/gutenprint/$version";
+	    $driver_bin = "$serverdir/driver/gutenprint.$version";
+	    $driver_version = "";
+	    # If user specifies version, we're not going to be able to check
+	    # for an exact match.
+	    $file_version = "\"$version";
+	    if (-x $driver_bin) {
+		$driver_version = `$driver_bin VERSION`;
+		chomp $driver_version;
+		$file_version = "\"$driver_version\"\$";
+	    } elsif (! -d $ppd_base_dir && ! -l $ppd_base_dir) {
+		die "Gutenprint $version does not appear to be installed!\n";
+	    }
+	}
+    }
     if ($opt_h) {
 	help();
     }
+    if ($opt_i) {
+	$interactive = 1;
+    }
     if ($exit_after_parse_args) {
 	exit(0);
+    }
+    if ($verbose && $driver_version ne "") {
+	print STDOUT "Updating PPD files from Gutenprint $driver_version\n";
     }
 }
 
@@ -302,7 +332,7 @@ sub get_ppd_contents($$$$$) {
     my $source_data;
     my ($new_ppd_filename);
 
-    if ($use_static_ppd eq "no" && $driver_version eq "@VERSION@") {
+    if ($use_static_ppd eq "no" && $driver_version ne "") {
 	my ($simplified);
 	if ($filename =~ m,.*/([^/]*)(.sim)(.ppd)?(.gz)?$,) {
 	    $simplified = "simple";
@@ -455,6 +485,18 @@ sub update_ppd ($) {
 	return 0;
     }
 
+    if ($interactive) {
+	print "Update PPD $ppd_source_filename from $new_ppd_filename [nyq]? ";
+	my $input = readline(*STDIN);
+	if ($input =~ /^q/i) {
+	    print "Skipping all...\n";
+	    return -2;
+	} elsif (! ($input =~ /^y/i)) {
+	    print "Skipping...\n";
+	    return -1;
+	}
+    }
+
     # Save new PPD in a temporary file, for processing...
 
     my($tmpfile, $tmpfilename) = tmpnam();
@@ -469,6 +511,7 @@ sub update_ppd ($) {
     my %orig_default_types = get_default_types(ORIG);
     my %new_default_types = get_default_types($tmpfile);
     my %defaults = get_defaults(ORIG);
+    my %new_defaults = get_defaults($tmpfile);
     my %options = get_options($tmpfile, %new_default_types);
     my %resolution_map = get_resolution_map($tmpfile);
 
@@ -538,7 +581,7 @@ sub update_ppd ($) {
 	    }
 	}
 	return 0;
-    }	
+    }
 
     if  (! $reset_defaults) {
 	# Update source buffer with old defaults...
@@ -571,7 +614,7 @@ default_loop:
 			next default_loop;
 		    }
 		}
-		warn "Warning: $ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Using default setting.\n";
+		warn "Warning: $ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Using default setting $new_defaults{$default_option}.\n";
 		next;
 	    }
 	    warn "Warning: $ppd_source_filename: PPD OpenUI method $new_default_types{$default_option} not understood.\n";
@@ -615,7 +658,7 @@ default_loop:
 sub find_ppd ($$$$) {
     my($gutenprintfilename, $drivername, $lang, $region) = @_;
     my $file; # filename to return
-    my ($key) = '^\\*FileVersion:[ 	]*"@VERSION@"$';
+    my ($key) = '^\\*FileVersion:[ 	]*$file_version';
     my ($lingo, $suffix, $base, $basedir);
     my ($current_best_file, $current_best_time);
     my ($stored_name, $stored_dir, $simplified);

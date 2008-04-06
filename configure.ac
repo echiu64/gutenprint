@@ -942,10 +942,7 @@ AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
-                [chmod +x src/cups/cups-genppdupdate;
-		 rm -f src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION};
-		 mv src/cups/cups-genppdupdate src/cups/cups-genppdupdate.${GUTENPRINT_RELEASE_VERSION};
-		 echo "    *** Ignore any warning that may follow that sed can't read src/cups/cups-genppdupdate"])
+                [chmod +x src/cups/cups-genppdupdate])
 AC_CONFIG_FILES([src/escputil/Makefile])
 AC_CONFIG_FILES([src/foomatic/Makefile])
 AC_CONFIG_FILES([src/foomatic/foomatic-generator],
