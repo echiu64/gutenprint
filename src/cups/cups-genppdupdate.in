@@ -28,9 +28,7 @@ sub update_ppd ($); # Original PPD filename
 sub get_ppd_contents ($$$$$); # Return contents of desired PPD
 sub find_ppd ($$$$); # Gutenprint Filename, driver, language (e.g. en, sv),
 		     # region (e.g. GB, DE)
-sub get_default_types (*); # Source PPD FH
-sub get_defaults (*); # Source PPD FH
-sub get_options (*\%); # Source PPD FH, default_types hash ref
+sub get_ppd_data (*$$$$$); # Source PPD FH
 
 our $opt_d; # Debug mode
 our $opt_h; # Help
@@ -356,13 +354,7 @@ sub get_ppd_contents($$$$$) {
 		print "Trying $driver_bin cat $url for $driver, $simplified, $locale, $region\n";
 	    }
 	    if (open PPD, "$driver_bin cat $url 2>/dev/null |") {
-		while (<PPD>) {
-		    $source_data .= $_;
-		}
-		close PPD;
-		if ($source_data) {
-		    return ( $new_ppd_filename, $source_data );
-		}
+		return ($new_ppd_filename, \*PPD);
 	    }
 	}
 	# Otherwise fall through and try to find a static PPD
@@ -375,7 +367,7 @@ sub get_ppd_contents($$$$$) {
         # There wasn't a valid source PPD file, so give up.
         print STDERR "$ppd_source_filename: no valid candidate for replacement.  Skipping\n";
         print STDERR "$ppd_source_filename: please upgrade this PPD manually\n";
-	return ("", 0);
+	return ("", undef);
     }
     if ($debug & 1) {
 	print "Candidate PPD: $new_ppd_filename\n";
@@ -385,20 +377,13 @@ sub get_ppd_contents($$$$$) {
     if ($new_ppd_filename =~ m/.gz$/) { # Decompress input buffer
 	open GZIN, "gunzip -c $new_ppd_filename |"
 	    or die "$_: can't open for decompression: $!";
-	while (<GZIN>) {
-	    $source_data .= $_;
-	}
-	close GZIN;
+	return ($new_ppd_filename, \*GZIN);
     } else {
 	open SOURCE, $new_ppd_filename
 	    or die "$new_ppd_filename: can't open source file: $!";
 	binmode SOURCE;
-	my $source_size = (stat(SOURCE))[7];
-	read (SOURCE, $source_data, $source_size)
-	    or die "$new_ppd_filename: error reading source: $!";
-	close SOURCE or die "$new_ppd_filename: can't close file: $!";
+	return ($new_ppd_filename, \*SOURCE);
     }
-    return ( $new_ppd_filename, $source_data );
 }
 
 # Update the named PPD file.
@@ -411,7 +396,7 @@ sub update_ppd ($) {
     }
 
     open ORIG, $_ or die "$_: can't open PPD file: $!";
-    seek (ORIG, 0, 0) or die "can't seek to start of PPD file";
+    seek (ORIG, 0, 0) or die "can't seek to start of PPD file: $!";
     my @orig_metadata = stat(ORIG);
     if ($debug & 1) {
 	print "Source Filename: $ppd_source_filename\n";
@@ -478,11 +463,11 @@ sub update_ppd ($) {
 
     # Read in the new PPD, decompressing it if needed...
 
-    my ($new_ppd_filename, $source_data) =
+    my ($new_ppd_filename, $source_fd) =
 	get_ppd_contents($ppd_source_filename, $filename,
 			 $driver, $locale, $region);
 
-    if (! $source_data) {
+    if (! defined $source_fd) {
 	print "Unable to retrieve PPD file!\n";
 	return 0;
     }
@@ -491,32 +476,29 @@ sub update_ppd ($) {
 	print "Update PPD $ppd_source_filename from $new_ppd_filename [nyq]? ";
 	my $input = readline(*STDIN);
 	if ($input =~ /^q/i) {
+	    close $source_fd;
 	    print "Skipping all...\n";
 	    return -2;
 	} elsif (! ($input =~ /^y/i)) {
+	    close $source_fd;
 	    print "Skipping...\n";
 	    return -1;
 	}
     }
 
-    # Save new PPD in a temporary file, for processing...
-
-    my($tmpfile, $tmpfilename) = tmpnam();
-    unlink $tmpfilename or warn "can't unlink temporary file $tmpfile: $!\n";
-    print $tmpfile $source_data;
-
-
-
-
     # Extract the default values from the original PPD...
 
-    my %orig_default_types = get_default_types(ORIG);
-    my %new_default_types = get_default_types($tmpfile);
-    my %defaults = get_defaults(ORIG);
-    my %new_defaults = get_defaults($tmpfile);
-    my %options = get_options($tmpfile, %new_default_types);
-    my %resolution_map = get_resolution_map($tmpfile);
+    seek(ORIG, 0, 0);
 
+    my ($odt, $oopt, $ores, $odef) = get_ppd_data(ORIG, 1, 0, 0, 1, 0);
+    my ($ndt, $nopt, $nres, $ndef, $source_data) = get_ppd_data($source_fd, 1, 1, 1, 1, 1);
+
+    my %orig_default_types = %$odt;
+    my %new_default_types = %$ndt;
+    my %defaults = %$odef;
+    my %new_defaults = %$ndef;
+    my %options = %$nopt;
+    my %resolution_map = %$nres;
 
     # Close original and temporary files...
 
@@ -524,11 +506,10 @@ sub update_ppd ($) {
 	print "$_: can't close file: $!\n";
 	return 0;
     }
-    if (! close $tmpfile) {
-	print "can't close temporary file $tmpfile: $!\n";
+    if (! close $source_fd) {
+	print "can't close new PPD source: $!\n";
 	return 0;
     }
-
 
     if ($debug & 4) {
 	print "Options (Old->New Default Type):\n";
@@ -741,93 +722,44 @@ sub find_ppd ($$$$) {
     return undef;
 }
 
-# Return the default options from the given PPD filename
-sub get_default_types(*) {
-    my $fh = $_[0];
-    my %default_types;
+# Return default type, options, resolutions, and default values.
+# More efficient since it takes only one pass over the data.
+sub get_ppd_data(*$$$$$) {
+    my ($fh, $types, $opts, $resolutions, $defaults, $data) = @_;
+    my (%options, %defaults, %resolution_map, %default_types);
+    my $cur_opt = "";
+    my (@optionlist);
+    my ($source_data) = "";
 
-    # Read each line of the original PPD file, and store all OpenUI
-    # names and their types in a hash...
-    seek ($fh, 0, 0) or die "can't seek to start of PPD file";
     while (<$fh>) {
-	if ( m/^\*OpenUI/ ) {
-	    chomp;
+	$source_data .= $_ if ($data);
+	chomp;
+	if (($types || $opts) && m/^\*OpenUI/) {
 	    my ($key, $value) = /^\*OpenUI\s\*([[:alnum:]]+).*:\s([[:alnum:]]+)/;
 	    if ($key && $value) {
 		$default_types{$key}=$value;
+		$cur_opt = $key;
 	    }
-	}
-    }
-    return %default_types;
-}
-
-
-# Return the default options from the given PPD filename
-sub get_resolution_map(*) {
-    my $fh = $_[0];
-    my %resolution_map;
-
-    # Read each line of the original PPD file, and store all OpenUI
-    # names and their types in a hash...
-    seek ($fh, 0, 0) or die "can't seek to start of PPD file";
-    while (<$fh>) {
-	if ( m/^\*StpResolutionMap:/ ) {
-	    chomp;
+	} elsif ($opts && m/^\*CloseUI/) {
+	    if ($cur_opt ne "") {
+		$options{$cur_opt} = [ @optionlist ];
+		$cur_opt = "";
+	    }
+	    @optionlist = ();
+	} elsif ($opts && m/^\*$cur_opt/) {
+	    my ($value) = /^\*$cur_opt\s*([[:alnum:]]+)[\/:]/;
+	    if (defined $value && $value) {
+		push @optionlist, $value;
+	    }
+	} elsif ($resolutions && m/^\*StpResolutionMap:/) {
 	    my ($junk, $new, $old) = split;
 	    $resolution_map{$old} = $new;
-	}
-    }
-    return %resolution_map;
-}
-
-
-# Return the default options from the given PPD filename
-sub get_defaults(*) {
-    my $fh = $_[0];
-    my %defaults;
-
-    # Read each line of the original PPD file, and store all default
-    # names and their values in a hash...
-    seek ($fh, 0, 0) or die "can't seek to start of PPD file";
-    while (<$fh>) {
-	if ( m/^\*Default/ ) {
-	    chomp;
+	} elsif ($defaults && m/^\*Default/) {
 	    my($key, $value) = /^\*([[:alnum:]]+):\s*([[:alnum:]]+)/;
 	    if ($key && $value) {
 		$defaults{$key}=$value;
 	    }
 	}
     }
-    return %defaults;
-}
-
-
-# Return the available options from the given PPD filename
-sub get_options(*\%) {
-    my $fh = $_[0];
-    my $validopts = $_[1];
-    my %options;
-
-    # For each valid option name, grab each valid option for that name
-    # and store in a hash of arrays...
-
-    foreach (sort keys %$validopts) {
-	my $tmp = $_;
-	my @optionlist;
-
-	seek ($fh, 0, 0) or die "can't seek to start of PPD file";
-	while (<$fh>) {
-	    if ( m/^\*$tmp/ ) {
-		chomp;
-		my ($value) = /^\*$tmp\s*([[:alnum:]]+)[\/:]/;
-		if ($value) {
-		    push @optionlist, $value;
-		}
-	    }
-	}
-	if (@optionlist) {
-	    $options{$tmp} = [ @optionlist ];
-	}
-    }
-    return %options;
+    return (\%default_types, \%options, \%resolution_map, \%defaults, $source_data);
 }
