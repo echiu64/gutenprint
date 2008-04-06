@@ -1598,8 +1598,8 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
     for(channel_idx = 0; channel_idx < STP_NCOLORS ; channel_idx++){
         int i;
         unsigned int subchannel = 0;
-        channel = channel_order[channel_idx];
         stp_shade_t* shades = NULL;
+        channel = channel_order[channel_idx];
         if(channel == STP_ECOLOR_K && privdata->used_inks & CANON_INK_K_MASK){ /* black channel */
             /* find K and k inks */
             for(i=0;i<privdata->mode->num_inks;i++){
