@@ -293,6 +293,12 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
     return (1);
   }
 
+  if (strcmp(scheme, "gutenprint." GUTENPRINT_RELEASE_VERSION) != 0)
+    {
+      fprintf(stderr, "ERROR: Gutenprint version mismatch!\n");
+      return(1);
+    }
+
   s = strchr(resource + 1, '/');
   if (s)
     {
