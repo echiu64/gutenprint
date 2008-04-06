@@ -224,6 +224,8 @@ sub HELP_MESSAGE($;$$$) {
     print $fh "  -v          Verbose messages.\n";
     print $fh "  -N          Reset options to defaults.\n";
     print $fh "  -o out_dir  Output PPD files to out_dir.\n";
+    print $fh "  -r version  Use PPD files for Gutenprint major.minor version.\n";
+    print $fh "  -i          Prompt (interactively) for each PPD file.\n";
     exit(0);
 }
 
