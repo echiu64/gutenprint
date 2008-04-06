@@ -1588,14 +1588,17 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
     const char *secondary_density_control[STP_NCOLORS] = {NULL,"LightCyanTransition","LightMagentaTransition","LightYellowTransition"};
     /* ink darkness for every channel */
     const double ink_darkness[] = {1.0, 0.31 / .5, 0.61 / .97, 0.08};
+    const char channel_order[STP_NCOLORS] = { 0,1,2,3}; /* (in gutenprint notation) => KCMY,  1230 => CMYK etc. */
 
     int channel;
+    int channel_idx;
 
 
     /* loop through the dither channels */
-    for(channel=0; channel < STP_NCOLORS ; channel++){
+    for(channel_idx = 0; channel_idx < STP_NCOLORS ; channel_idx++){
         int i;
         unsigned int subchannel = 0;
+        channel = channel_order[channel_idx];
         stp_shade_t* shades = NULL;
         if(channel == STP_ECOLOR_K && privdata->used_inks & CANON_INK_K_MASK){ /* black channel */
             /* find K and k inks */
