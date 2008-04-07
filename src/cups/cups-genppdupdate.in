@@ -546,22 +546,31 @@ sub update_ppd ($) {
 default_loop:
 	foreach my $default_option (sort keys %defaults) {
 	    my $option;
+	    my $default_option_value = $defaults{$default_option};
 	    ($option = $default_option) =~ s/Default//; # Strip off `Default'
 	    # Check method is valid
 	    my $orig_method = $orig_default_types{$option};
 	    my $new_method = $new_default_types{$option};
+	    my $new_default = $new_defaults{$default_option};
 	    if ((!defined($orig_method) || !defined($new_method)) ||
 		$orig_method ne $new_method) {
+		next;
+	    }
+	    if (defined($new_default) &&
+		$default_option_value eq $new_default) {
+		if ($verbose) {
+		    print "$ppd_source_filename: Preserve *$default_option ($default_option_value)\n";
+		}
 		next;
 	    }
 	    if ($new_method eq "PickOne") {
 		# Check the old setting is valid
 		foreach my $opt (@{$options{$option}}) {
-		    my $def_option = $defaults{$default_option};
+		    my $def_option = $default_option_value;
 		    if (($def_option eq $opt) ||
 			($option eq "Resolution" &&
-			 (defined $resolution_map{$defaults{$default_option}}) &&
-			 ($def_option = $resolution_map{$defaults{$default_option}}) eq $opt)) { # Valid option
+			 (defined $resolution_map{$default_option_value}) &&
+			 ($def_option = $resolution_map{$default_option_value}) eq $opt)) { # Valid option
 			# Set the option in the new PPD
 			$source_data =~ s/\*($default_option).*/*$1:$def_option/m;
 			if ($verbose) {
