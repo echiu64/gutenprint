@@ -247,8 +247,17 @@ sub parse_options () {
     if ($opt_r) {
 	if ($version ne $opt_r) {
 	    $version = $opt_r;
-	    $ppd_base_dir = "$ppd_root_dir/gutenprint/$version";
-	    $driver_bin = "$serverdir/driver/gutenprint.$version";
+	    if ($opt_s) {
+		if (-d $opt_s) {
+		    $ppd_base_dir = "$opt_s";
+		    $driver_bin = "";
+		} else {
+		    die "$opt_s: invalid directory: $!\n";
+		}
+	    } else {
+		$ppd_base_dir = "$ppd_root_dir/gutenprint/$version";
+		$driver_bin = "$serverdir/driver/gutenprint.$version";
+	    }
 	    $driver_version = "";
 	    # If user specifies version, we're not going to be able to check
 	    # for an exact match.
