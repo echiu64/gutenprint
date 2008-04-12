@@ -5,6 +5,10 @@
 # This code is in the public domain and may be used
 # for any purpose.
 
+# Configuration options.
+$emailsuffix = '@sourceforge.net';
+$symbolic_name_regexp = '^(guten|gimp-|)print-[0-9]+_';
+
 %logmsgs = ();			# Index by date, time, and author
 %fileversions = ();
 $skipme = 0;
@@ -90,7 +94,7 @@ sub compare_versions
 
     my ($vw, $vl) = @_;
 
-    my (@vvl) = split /\./, $vl;
+    my (@vvl) = split(/\./, $vl);
 
     if ($vw eq "") {
 	if ($#vvl < 2) {
@@ -100,7 +104,7 @@ sub compare_versions
 	}
     }
 
-    my (@vvw) = split /\./, $vw;
+    my (@vvw) = split(/\./, $vw);
     if ($#vvl > $#vvw) {
 	return 3;
     }
@@ -118,50 +122,74 @@ sub compare_versions
     return 1;
 }
 
+my ($in_header) = 0;
+my (%symbols);
+my $revision;
+my $ignore;
+my $currentfile;
+my $currentbasefile;
+my %symbols_printed = ();
+
 while (<>) {
     if (/^Working file: /) {
+	$in_header = 1;
 	chomp;
 	($ignore, $ignore, $currentfile) = split;
+	next;
+    } elsif ($in_header && $_ =~ /^symbolic names:/) {
 	while (<>) {
-	    if (/^----------------------------$/) {
+	    if (/^\s/) {
+		my ($name, $revision) = split;
+		$name =~ s/:$//;
+		next if (! ($name =~ /$symbolic_name_regexp/));
+		if (! defined $symbols{$currentfile}{$revision}) {
+		    $symbols{$currentfile}{$revision} = ();
+		}
+		push @{$symbols{$currentfile}{$revision}}, $name;
+	    } else {
 		last;
 	    }
 	}
+    } elsif ($_ =~ /^----------------------------$/) {
+	$in_header = 0;
 	next;
-    } elsif (/^----------------------------$/) {
-	next;
-    } elsif (/^revision /) {
+    } elsif (! $in_header && $_ =~ /^revision /) {
 	($ignore, $revision) = split;
-	my ($currentbasefile) = $currentfile;
+	($currentbasefile) = $currentfile;
 	$currentbasefile =~ s;.*/([^/]+);\1;;
-	my ($check) =&compare_versions($fileversions{$currentfile}, $revision);
+	my ($check) = compare_versions($fileversions{$currentfile}, $revision);
 	#
 	# Special case -- if a file is not in the current sandbox, but it
 	# has the same base name as a file in the sandbox, log it;
 	# otherwise if it is not in the current sandbox, don't log it.
 	# 
 	if (($check == 2 && (1 || (
-	     ($basenames{"$currentbasefile"} || !($currentfile =~ /\//)) &&
+	     ($basenames{$currentbasefile} || !($currentfile =~ /\//)) &&
 	     ($currentfile =~ /\.[chly]$/)))) ||
 	    $check == 1) {
 	    $skipme = 0;
 	} else {
+	    # We don't want to print out any symbolic names associated with
+	    # skipped versions.
+	    map {
+		$symbols_printed{$_} = 1;
+	    } @{$symbols{$currentfile}{$revision}};
 	    $skipme = 1;
 	}
-    } elsif (/^date: /) {
-	($ignore, $date, $time, $ignore, $author, $ignore, $state,
-	 $ignore, $plus, $minus, $ignore) = split;
+    } elsif (! $in_header && $_ =~ /^date: /) {
+	my ($ignore, $date, $time, $ignore, $author, $ignore, $state,
+	    $ignore, $plus, $minus, $ignore) = split;
 #	$time =~ s/[0-9]:[0-9][0-9];$//;
 #	$time =~ s/[0-9][0-9];$//;
 	$author =~ s/;$//;
-	$body = "";
-	$firstline = 1;
+	my $body = "";
+	my $firstline = 1;
 	while (<>) {
-	    if (/^----------------------------$/) {
+	    if ($_ =~ /^----------------------------$/) {
 		last;
-	    } elsif (/^=============================================================================$/) {
+	    } elsif ($_ =~ /^=============================================================================$/) {
 		last;
-	    } elsif ($firstline && /^branches:([ \t]+[0-9]+(\.[0-9]+)+;)+$/) {
+	    } elsif ($firstline && $_ =~ /^branches:([ \t]+[0-9]+(\.[0-9]+)+;)+$/) {
 		next;
 	    } else {
 		$body .= $_;
@@ -171,7 +199,8 @@ while (<>) {
 	$junkbody = $body;
 	$junkbody =~ s/\s//g;
 	$junkbody .= "x";
-	$datetimeauthor = "$date $time $author $junkbody $currentfile $revision";
+	my $symbols = join " ", @{$symbols{$currentfile}{$revision}};
+	my $datetimeauthor = "$date $time $author $junkbody $currentfile $revision $symbols";
 	if ($skipme == 0) {
 	    $logmsgs{$datetimeauthor} = $body;
 	    if ($plus eq "") {
@@ -194,7 +223,7 @@ $header="";
 %filenames_printed = ();
 
 foreach $_ (@chlog) {
-    ($date, $time, $author, $junk, $file, $revision) = split;
+    my ($date, $time, $author, $junk, $file, $revision, @symbols) = split;
     $date =~ s,/,-,g;
     $msg = $logmsgs{$_};
     my $delta;
@@ -218,16 +247,30 @@ foreach $_ (@chlog) {
 	    print "$prevmsg\n";
 	    %filenames_printed = ();
 	}
-	$header = "$date\t<$author\@sourceforge.net>\n\n";
+	$header = "$date\t<$author$emailsuffix>\n\n";
 	$prevmsg = $msg;
 	@fileinfo = ();
 	push @fileinfo, "\t\t$file ($revision) ($delta)\n";
 	$filenames_printed{$file} = 1;
     }
+    my (@symbols_to_print);
+    foreach my $s (@symbols) {
+	if (! $symbols_printed{$s}) {
+	    push @symbols_to_print, $s;
+	    $symbols_printed{$s} = 1;
+	}
+    }
+    if (@symbols_to_print) {
+	print "===============================================================================\n";
+	map {
+	    print "Name: $_\n";
+	} @symbols_to_print;
+	print "\n";
+    }
 }
 
 if ($prevmsg ne "" or $#fileinfo >= 0) {
-    print "$date\t<$author\@sourceforge.net>\n\n";
+    print "$date\t<$author$emailsuffix>\n\n";
     $filestuff = join "", sort @fileinfo;
     $filestuff =~ s/\t/\tFiles:/;
     print "$filestuff\n";

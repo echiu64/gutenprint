@@ -60,7 +60,7 @@ ChangeLog: ChangeLogStamp
 	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
 	elif test -d CVS ; then \
 	  echo "ChangeLog: Updating ChangeLog from CVS" ; \
-	  cvs log -N | $(PERL) scripts/mkchlog > ChangeLog.tmp ; \
+	  cvs log | $(PERL) scripts/mkchlog > ChangeLog.tmp ; \
 	  if test -s ChangeLog.tmp ; then \
 	    mv ChangeLog.tmp ChangeLog ; \
 	  else \
