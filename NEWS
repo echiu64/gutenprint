@@ -1,62 +1,30 @@
-Welcome to Gutenprint 5.1.7!  Please read these release notes
-carefully.
+Welcome to Gutenprint 5.2.0-beta1 (5.1.98.1)!  Please read these
+release notes carefully.
 
-Gutenprint, formerly named Gimp-Print, is a suite of printer drivers
-that may be used with most common UNIX print spooling systems,
-including CUPS, lpr, LPRng, or others.  These drivers provide high
-quality printing for UNIX (including Macintosh OS X 10.2, 10.3, 10.4,
-and 10.5) and Linux systems that in many cases equal or exceed
-proprietary vendor-supplied drivers in quality and functionality, and
-can be used for demanding printing tasks requiring flexibility and
-high quality.  This software package includes an enhanced Print
-plug-in for GIMP that replaces the plug-in packaged with GIMP, and
-Ghostscript and CUPS drivers, as well as Foomatic data supporting the
-Ghostscript driver.
+Gutenprint is a suite of printer drivers that may be used with most
+common UNIX print spooling systems, including CUPS, lpr, LPRng, or
+others.  These drivers provide high quality printing for UNIX, Linux,
+and Macintosh OS X (10.2 and above) systems.  Gutenprint includes CUPS
+and Foomatic drivers, and an enhanced Print plug-in for GIMP that
+replaces the print plug-in packaged with the GIMP distribution.
 
-Gutenprint has been renamed in order to clearly distinguish it from
-GIMP.  While this package started out as the original Print plugin
-for GIMP, it has expanded into a collection of general purpose
-printer drivers, and the new, enhanced Print plugin for GIMP is
-now only a small part of the package.  Furthermore, the name
-Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
-type printing press.  Finally, the word "guten" means "good" in
-German.
+Gutenprint currently supports almost 900 printer models.
 
-Gutenprint currently supports about 700 printer models.
+Gutenprint 5.2.0-beta1 is the first beta release of Gutenprint 5.2.
 
-Gutenprint 5.1.7 is a development release of Gutenprint 5.1.
-
-*** NOTE TO PACKAGERS: This is a DEVELOPMENT version of Gutenprint.
-    It should not be packaged as the principal release of Gutenprint
-    in any OS or distribution release.  The most recent stable release
-    (the release with the second number being even -- for example,
-    5.0.1) should be used for that.
-
-    If you need a bug fix from the development release, you should
-    backport it to the stable release if possible.  If you really
-    think you need the development release, please contact us at
-    gimp-print-devel@lists.sourceforge.net well in advance of your
-    packaging deadline to discuss your particular needs with us.  We
-    normally back port bug fixes from the development release to the
-    next stable release, and we back port new printers and new
-    capabilities if we determine it's safe to.
-
-    By all means feel free to deliver this release as a
-    "gutenprint-unstable" release if you want to make bleeding edge
-    packages available as an option.
+*** NOTE TO PACKAGERS: This is a beta release of the forthcoming 5.2
+    stable release.  As of 5.2 and until further notice, Gutenprint
+    will no longer deliver separate "development" and "stable" release
+    series.
 
 These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
-	* New features and fixes in 5.1.7
-	* New features and fixes in 5.1.6
-	* New features and fixes in 5.1.5
-	* New features and fixes in 5.1.4
-	* New features and fixes in 5.1.3
-	* New features and fixes in 5.1.2
-	* New features and fixes in 5.1.1
-	* New features and fixes in 5.1.0
+        * General changes from Gutenprint 5.0
+	* Changes from Gutenprint 5.0.2 and 5.1.7
+	* Changes from Gutenprint 5.0.2 only
+	* Changes from Gutenprint 5.1.7 only
 III)   Exceptions and Workarounds
 	A) General Issues
 	B) Build/Installation Issues
@@ -131,7 +99,60 @@ for building and installing Gutenprint.
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.7:
+* GENERAL CHANGES FROM GUTENPRINT 5.0:
+
+   1) Gutenprint 5.2 and beyond no longer support GIMP 1.2.  Please
+      ensure that you are using GIMP 2.0 or above.
+
+   2) The PostScript driver has been rewritten, offering enhanced
+      functionality approaching that of the native printer drivers.
+      This driver is used by the enhanced Print plugin for the GIMP,
+      and by other packages (such as PhotoPrint) that utilize
+      Gutenprint.  In particular, the following specific functionality
+      has been added:
+
+      - All PPD file options are now offered.
+
+      - CMYK input is now handled correctly.
+
+      - The PostScript driver recognizes Gutenprint PPD files (from
+        the native CUPS driver, not from Foomatic) and presents
+        floating point options correctly.
+
+	Note that this driver does not offer the curve options offered
+	by the native drivers.
+
+----------------
+
+* CHANGES FROM GUTENPRINT 5.0.2 AND 5.1.7:
+
+   1) cups-genppdupdate is no longer versioned, as it was in 5.0 and
+      5.1 (cups-genppdupdate.5.0 and cups-genppdupdate.5.1).  It also
+      supports the following options:
+
+      -r Specify the major.minor version to update to, e. g. 5.0 or
+         5.1.
+
+      -f Bypass ownership/permissions checks on update PPD files.
+
+      -i Interactively ask whether to update each PPD file.
+
+   2) The performance of cups-genppdupdate has been improved
+      significantly.
+
+   3) cups-genppdupdate no longer updates PPD files that differ only
+      in case of the file extension (e. g. printer.ppd and
+      printer.PPD).  This avoids updating PPD files twice on
+      filesystems that are case insensitive, such as OS X.
+
+   4) cups-genppdconfig has been removed from this release.  This
+      command was used to configure CUPS printer queues, but is not
+      necessary as there are ample other tools available to configure
+      printer queues.
+
+----------------
+
+* CHANGES FROM GUTENPRINT 5.0.2 ONLY:
 
    1) New printers supported in this release:
 
@@ -205,28 +226,28 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       may be poor, and these settings are therefore not used for Ultra
       Photo and Best quality.
 
-   5) The ink drop sizes on the Epson Stylus Photo printers using
+   6) The ink drop sizes on the Epson Stylus Photo printers using
       Claria ink have been retuned, yielding improved quality at lower
       resolutions.
 
-   6) A problem with determining the system printer queues in the GIMP
+   7) A problem with determining the system printer queues in the GIMP
       plugin on certain systems using languages other than English has
       been fixed.
 
-   7) Envelope paper sizes are now offered in both portrait and
+   8) Envelope paper sizes are now offered in both portrait and
       landscape form factor, as some printers expect envelopes to be
       fed long edge first while some expect them to be fed short edge
       first.
 
-   8) PCL laser printers now offer paper trays with adjustable guides.
+   9) PCL laser printers now offer paper trays with adjustable guides.
       Many laser printers use adjustable guides for manual feed of
       papers narrower than letter size.
 
-   9) The GIMP plugin now offers reset buttons for individual
+   10) The GIMP plugin now offers reset buttons for individual
       settings, so it is possible to reset a single setting to its
       default without resetting all settings.
 
-   9) Various new controls and settings have been added to assist in
+   12) Various new controls and settings have been added to assist in
       printer calibration.  While the tools for using these controls
       are not yet created, these tools will assist in calibrating
       printers in the future.
@@ -283,160 +304,14 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 ----------------
 
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.6:
+* CHANGES FROM GUTENPRINT 5.1.7 ONLY:
 
-   1) A bug involving excessive memory consumption in certain cases
-      has been fixed.  Printing multiple page documents on Canon
-      inkjet printers with the Duplex option set to Long Edge resulted
-      in very large memory consumption on alternate pages, which was
-      not released until the job completed.  For example, in color at
-      600 DPI, the memory consumption would be about 120 megabytes on
-      alternate pages, so printing a 100 page document would result in
-      6 GB of memory consumption.  Depending upon the system, the
-      results might be that the job would fail to print or would only
-      partially print, the system might run very slowly while the job
-      was being processed, or other components of the system might
-      fail.
-
-   2) The Ordered New dither algorithm has been improved to produce
-      smoother output.
-
-
-----------------
-
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.5:
-
-   1) New printers supported in this release:
-
-      * Epson inkjet printers:
-
-      	EPSON Stylus C110
-      	EPSON Stylus C120
-      	EPSON Stylus D120
-      	EPSON PX V780
-
-      * PCL laser printers:
-
-      	Sharp AR-M257
-
-   2) Preliminary support for the following printers:
-
-      * Canon inkjet printers:
-
-      	Canon PIXMA iP8500
-      	Canon PIXMA Pro 9500
-	Canon PIXMA MP610
-	Canon i80
-
-   3) The printer maintenance utility for EPSON inkjet printers,
-      escputil, now reports status more reliably.  Previously some
-      people reported errors of the form "Unknown IEEE 1284.4 error";
-      these errors have been resolved.
-
-      In addition, escputil now correctly reports the ink color for
-      certain printers (in particular, printers using Claria (TM) inks
-      and printers using alternate ink cartridges (for example, the
-      Stylus Photo 1400 that allows either a photo black or a matte
-      black ink cartridge to be installed).
-
-   4) A few remaining problems with the PPD files have been fixed
-      (paper sizes for certain dye sublimation printers, and "Okidata"
-      has been renamed "Oki" to match the PPD specification for that
-      manufacturer).
-
-   5) A new dither algorithm, Ordered New, has been added.  This
-      dither algorithm is most likely to improve output at low
-      resolutions, particularly when printing black and white.  It
-      will only help on printers offering multiple drop sizes.
-
-   6) The color correction for the Canon PIXMA iP4200 has been improved.
-
-   7) The PPD file parsing code in the Postscript driver has been
-      rewritten.
-
-      We determined that the PPD file parsing code in the Postscript
-      driver was actually borrowed from CUPS, which is licensed under
-      the LGPL v2 and GPL v2 only.  However, the remainder of the core
-      of Gutenprint is licensed under GPL v2 or higher.  This is not
-      directly a license conflict -- it is permissible to mix code
-      licensed under the GPL v2 with code licensed under GPL v2 or
-      above -- but it means that Gutenprint (5.1.3 and 5.1.4, the two
-      releases that used this code) itself could only be licensed
-      under GPL v2, which is not the desire of this project, as it
-      would not permit usage with code licensed under GPL v3 (or
-      higher) only.
-
-      To resolve this, we wrote new PPD file parsing code that is
-      licensed under GPL v2 or above.  Therefore, Gutenprint may now
-      be used with any code licensed as GPL v2 or any later version of
-      the GPL.
-
-   8) The CUPS driver in Gutenprint, and all associated utilities, are
-      now licensed as GPL v2 or higher.  That code was previously
-      licensed as GPL v2 only.  While that did not cause any direct
-      problems, since the CUPS driver does not form a library that
-      other code may wish to link against, it was licensed differently
-      from the rest of the Gutenprint project.  That is now resolved,
-      and the entire Gutenprint code base is now licensed as GPL v2 or
-      higher.
-
-
-----------------
-
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.4:
-
-   1) New printers supported in this release:
-
-      * Epson inkjet printers:
-
-	Epson Stylus CX4400
-	Epson Stylus CX4900
-	Epson Stylus CX5600
-	Epson Stylus CX7400
-	Epson Stylus CX9400
-	Epson Stylus DX4050
-	Epson Stylus Photo RX595
-	Epson PM 670C
-
-      * Canon inkjet printers:
-
-	Canon MP710
-	Canon MP740
-
-      * Other printers:
-
-	HP LserJet 1022
-
-   2) Preliminary support for the following printers:
-
-      * Canon inkjet printers:
-
-        Canon BJC5100
-        Canon BJC5500
-        Canon BJC8500
-	Canon Pixma iX5000
-	Canon Pixma iP4500
-	Canon Pixma iP5300
-	Canon Pixma MP170
-	Canon Pixma MP180
-
-      * Dye sublimation printers:
-
-	Canon SELPHY ES1 (*)
-	Canon SELPHY ES2 (*)
-	Canon SELPHY ES20(*)
-	Shinko CHC S9045
-
-	(*) Note that these printers may not work on all systems due to
-	    communication requirements.
-
-   3) The following printers are no longer supported going forward in
-      Gutenprint 5.1 and beyond.  We recommend that users switch to
-      the HPIJS driver package (the printer part of HPLIP), available
-      from http://hplip.sourceforge.net.  This package is licensed
-      under the GPL and BSD licenses.
-
-      These printers will continue to be supported in Gutenprint 5.0.
+   1) The following HP inkjet printers are now supported.  Support for
+      these printers was dropped in 5.1.4, but is now restored as some
+      users have no alternative options.  We recommend that where
+      possible users switch to the HPIJS driver package (the printer
+      part of HPLIP), available from http://hplip.sourceforge.net.
+      The HPIJS package is licensed under the GPL and BSD licenses.
 
 	HP Business Inkjet 2200
 	HP Business Inkjet 2230
@@ -616,330 +491,6 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	HP PhotoSmart P1315
 	HP e-printer e20
 
-      All monochrome laser printers previously supported continue to
-      be supported.  In addition, the following wide format printers
-      that are not supported by HPLIP continue to be supported by
-      Gutenprint:
-
-	HP DesignJet 230
-	HP DesignJet 250C
-	HP DesignJet 430
-	HP DesignJet 450C
-	HP DesignJet 455CA
-	HP DesignJet 488CA
-	HP DesignJet 700
-	HP DesignJet 750C Plus
-	HP DesignJet 750C
-	HP DesignJet 2500CP
-	HP DesignJet 3500CP
-	HP DesignJet ColorPro CAD
-
-   4) All native CUPS PPD files are now perfectly compliant with the
-      PPD specification, as tested under CUPS 1.2.  Fixing this
-      requires some changes to the internal resolution names.  These
-      changes should be transparent if PPD files are updated with
-      cups-genppdupdate.5.1.
-
-   5) Borderless printing on the Epson Stylus Photo 2200 now works
-      correctly.
-
-   6) A bug in which certain data was not printed correctly by Canon
-      inkjet printers was fixed (in areas where the entire area was
-      filled with maximum color density, some lines could be silently
-      discarded).
-
-   7) Various fixes for the Canon iP4000, iP4200, and i560.
-
-   8) The paper size for the CD - Custom paper size has been changed
-      to 120 mm from 118.8 mm to allow correct printing from CUPS.
-
-   9) A compile problem on Solaris has been fixed.
-
-   10) It is now possible to specify the printer model to all escputil
-      commands, via the -m option.  It is no longer necessary to use
-      the -u option to specify a new printer vs. an old printer.
-
-   11) The Postscript driver now sends device-specific settings, such
-      as media type, to the print command.
-
-   12) The Epson driver will not select resolutions higher than
-      5760x1440 for the automatic quality settings, as we have
-      determined that many current printers offer poor quality at the
-      bottom of the page with resolutions of 2880x2880 and 5760x2880.
-      We have not removed these resolutions altogether, as they may
-      work well for certain applications, but they will not be
-      automatically selected by the Best or Ultra Photo quality
-      settings.
-
-   13) A problem where in some cases certain options were not handled
-      correctly by the CUPS driver has been fixed.  In particular,
-      yes/no options such as borderless printing were not handled
-      correctly in all cases when the printing system is CUPS 1.2 or
-      1.3.
-
-
-----------------
-
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.3:
-
-  1) The Canon PIXMA iP4300 and related printers now print black
-     properly.
-
-  2) Margins have been improved for Canon PIXMA printers.
-
-  3) Borderless printing has been improved for many of the Epson
-     R200/R300 series printers and related multifunction devices.
-
-  4) A build problem on certain systems has been fixed.
-
-
-----------------
-
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.2:
-
-  1) Improved tunings for Epson printers using Claria inks.
-
-     The driver for the Stylus Photo 1400 has two separate quality
-     settings for 720x360 and 720 DPI.  The 720x360 DPI Enhanced and
-     720 DPI High Quality options offer improved quality at some cost
-     in printing speed.  The small format Claria-based printers (R260,
-     R390, RX580, and related printers) offer 720x360 and 720 DPI
-     modes approximately equal in quality to the Enhanced and High
-     Quality modes on the 1400 without a speed penalty.
-
-  2) A problem whereby in some situations printers using Claria inks
-     did not print black ink has been fixed.
-
-  3) A problem with the Postscript driver always printing in grayscale
-     has been fixed.  This problem was apparently introduced in 5.1.1.
-
-  4) The range of sizes for printing custom CD's has been extended
-     down to 65 mm in both the Epson and Canon drivers.
-
-  5) The Epson Stylus Photo RX590 is now supported.
-
-  6) Borderless printing on the Epson Stylus Photo RX400, RX420,
-     RX425, RX430, RX500, RX510, RX600, RX630, and RX640 now works
-     correctly.
-
-  7) Printing to CD's on Epson printers now works correctly if the
-     image is not placed at the top of the page.
-
-
-----------------
-
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.1:
-
-  1) New printers supported in this release:
-
-     * Epson inkjet printers:
-
-       Epson Picturemate Flash
-       Epson Picturemate Pal
-       Epson Picturemate Snap
-       Epson Picturemate PM-200
-       Epson Picturemate PM-210
-       Epson Picturemate PM-240
-       Epson Picturemate PM-250
-       Epson Picturemate PM-280
-       Epson Stylus C79+
-       Epson Stylus C87+
-       Epson Stylus Photo 1400
-       Epson Stylus Photo 1410
-       Epson Stylus Photo R230
-       Epson Stylus Photo R350
-       Epson Stylus Photo R260
-       Epson Stylus Photo R265
-       Epson Stylus Photo R270
-       Epson Stylus Photo R360
-       Epson Stylus Photo R380
-       Epson Stylus Photo R390
-       Epson Stylus Photo RX560
-       Epson Stylus Photo RX580
-       Epson Stylus Photo RX640
-       Epson PM A820
-       Epson PM D870
-       Epson PM G850
-       Epson PM G4500
-
-  2) Preliminary support for the following printers:
-
-     * Epson inkjet printers:
-
-       Epson Stylus Photo R240
-       Epson Stylus Photo R245
-
-  3) A minor border problem with the R800 and related printers has
-     been fixed.  The standard bottom border is now slightly wider to
-     eliminate the very bottom of the print from being chopped off.
-
-  4) Some Canon printers have been renamed from "Multipass" to
-     "Pixma".
-
-  5) A build problem with the CUPS driver on some systems (in
-     particular, OS X and any system where --disable-nls is used) has
-     been fixed.
-
-  6) The CUPS PPD files now use the correct UTF-8 encoding.
-
-  7) Printing to CD's has been re-enabled for the Canon PIXMA iP4200.
-
-  8) CD printing for the Canon PIXMA iP4000 has been fixed.
-
-  9) The Canon driver now also supports the CD fine adjustment controls.
-
-  10) The resolutions for the Canon S300 have been fixed.
- 
-  11) Printing to Canon PIXMA printers that are connected to Microsoft
-     Windows hosts has been fixed (bug 1625202).
-
-  12) The Postscript driver now handles CMYK input correctly, fixing a
-     problem with Cinepaint (bug 1701954).
-
-  13) The Postscript driver and UI library now handle setting the
-     locale correctly.
-
-  14) The PPD file updater, cups-genppdupdate.5.1, now handles the -n
-     (don't do anything) correctly.  In addition, it handles --help
-     and --version.
-
-
-----------------
-
-* NEW FEATURES AND FIXES IN GUTENPRINT 5.1.0:
-
-  1) New printers supported in this release:
-
-     * Dye sublimation printers:
-
-       The driver for these printers has been renamed "dyesub", as
-       many of the printers are manufactured by companies other than
-       Olympus.
-
-       Canon CP-10
-       Fujifilm FinePix NX-500
-       Kodak Easyshare Printer
-       Olympus P-S100
-       Sony DPP-EX5
-       Sony UP-DR100
-
-     * Canon inkjet printers:
-
-       The support for these printers is under development, and there
-       are known issues with these printers.  Please check with the
-       mailing list (gimp-print-devel@lists.sourceforge.net) if you
-       have any questions.
-
-       Canon PIXMA iP2000
-       Canon PIXMA iP3000
-       Canon PIXMA iP3100
-       Canon PIXMA iP4100
-       Canon PIXMA iP4200
-       Canon PIXMA iP4300
-       Canon PIXMA iP5000
-       Canon PIXMA iP5200
-       Canon PIXMA iP6700
-       Canon PIXMA MP150
-       Canon PIXMA MP500
-       Canon PIXMA MP700
-       Canon PIXMA MP730
-       Canon PIXMA MP750
-       Canon PIXMA MP760
-       Canon PIXMA MP770
-       Canon PIXMA MP780
-       Canon PIXMA MP790
-       Canon PIXMA MP830
-       Canon PIXUS iP3100
-       Canon PIXUS iP4100
-       Canon i560
-       Canon i850
-       Canon i860
-       Canon i865
-
-     * Epson inkjet printers:
-
-       Epson Stylus CX5000
-       Epson Stylus CX5000F
-       Epson Stylus CX6000
-       Epson Stylus CX7000F
-
-     * Lexmark inkjet and compatible printers:
-
-       Compaq IJ1200
-       Lexmark X73
-
-     * PCL laser printers (monochrome only):
-
-       Lexmark Optra E220
-       Xerox WorkCentre M118
-
-  2) CUPS 1.2 is now supported using on-the-fly PPD file generation.
-     In addition, the resolution names are all compliant with the PPD
-     specification.  cups-genppdupdate correctly updates on-the-fly
-     PPD files.
-
-  3) The native CUPS driver offers a new Shrink Page If Necessary to
-     Fit Borders option, enabling the user to choose how to fit the
-     output to the imageable area of the page.  This is useful when a
-     printer offers a choice of imageable areas, typically normal
-     (which has margins) and full bleed (which allows printing to the
-     edge of the paper, or even beyond).  The following options are
-     available:
-
-     * Shrink (default): the output is shrunk if necessary to fit the
-       imageable area of the page.  If a printer is capable of
-       borderless operation but normal margins are selected, the
-       output will be shrunk.  This will print the entire page
-       (nothing will be lost), but will not preserve the dimensions of
-       the printout.  For example, a line intended to be 10 cm long
-       may print smaller than that.
-
-     * Crop: the output is cropped if necessary to fit the imageable
-       area of the page.  The dimensions of the page will be preserved
-       (a line intended to be 10 cm long will print out exactly 10
-       cm), but the edges of the output may be truncated (cropped).
-
-     * Expand: the output is expanded to fit the maximum possible
-       imageable area of the page.  When selected on printers capable
-       of full bleed output, in conjunction with any other necessary
-       options, the output will be expanded to match the maximum page
-       dimension.  The dimensions of the page will be expanded if
-       necessary beyond the page size; a line intended to be 10 cm
-       long may print longer than that.
-
-     This option has no effect on printers not capable of full bleed
-     or other expanded margins.  It also has no effect when printing
-     to CD's or the like.
-
-  4) Support for GIMP 1.2 has been removed.
-
-  5) An experimental PostScript driver has been added, enabling use of
-     all PPD file options in the enhanced GIMP plugin.  This is a work
-     in progress.
-
-  6) Epson inkjet printers now correctly support borderless printing.
-     In addition, printing at the top and bottom of the page has been
-     improved on printers that support borderless printing, although
-     this is still not perfect in all cases.
-
-     Certain printers (in particular the C/D8x and C6x series) do not
-     print correctly to the bottom of the page with all colors.  This
-     problem is understood, but we do not know when a fix will be
-     available.
-
-  7) The list of resolutions supported on newer Epson printers has
-     been changed; resolutions of 5760x1440, 2880x2880, and 5760x2880
-     (as appropriate) have been added, replacing various 1440x2880
-     enhanced resolutions.
-
-  8) The output for the Canon PIXMA printers has been improved.
-
-  9) The Canon driver now supports DuplexNoTumble for the PIXMA
-     iP4000.
-
- 10) Roll printing now works correctly on the Epson Stylus Photo
-     R800.
-
 
 ================================================================
 
@@ -947,10 +498,10 @@ III) EXCEPTIONS AND WORKAROUNDS
 
 A) GENERAL ISSUES
 
-  1) The Canon, Hewlett-Packard, and Lexmark drivers do not offer all
-     of the additional options and improvements that the Epson driver
-     does.  We do not have an estimated time for fix.  Please contact
-     us if you would like to assist with this.
+  1) The Canon, Hewlett-Packard, Lexmark, and dye sublimation drivers
+     do not offer all of the additional options and improvements that
+     the Epson driver does.  Please contact us if you would like to
+     assist with this.
 
 
 ----------------
@@ -1281,8 +832,8 @@ B) BUILD/INSTALLATION ISSUES
      ./configure --with-readline=libs (specifies the libraries to be
 				      linked against)
 
-     An hypothetical (this won't work anywhere!) example of the
-     latter would be
+     A hypothetical (this won't work anywhere!) example of the latter
+     would be
 
      ./configure --with-readline='-lncurses -ltermcap'
 
