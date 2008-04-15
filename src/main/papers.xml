@@ -81,6 +81,12 @@
       <height value="360"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w252h360">
+      <description value="3 1/2 x5"/>
+      <width value="252"/>
+      <height value="360"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w288h432">
       <description value="4x6"/>
       <width value="288"/>
