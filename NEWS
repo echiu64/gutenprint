@@ -247,6 +247,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       settings, so it is possible to reset a single setting to its
       default without resetting all settings.
 
+   11) A new dither algorithm, Ordered New, has been added.  This
+      dither algorithm is most likely to improve output at low
+      resolutions, particularly when printing black and white.  It
+      will only help on printers offering multiple drop sizes.
+
    12) Various new controls and settings have been added to assist in
       printer calibration.  While the tools for using these controls
       are not yet created, these tools will assist in calibrating
@@ -292,7 +297,8 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	range of 0-16383 being scaled to 0-65535), 16384-32767 will
 	use the small drop size, and so forth.
 
-	This is intended to assist in tuning ink drop sizes.
+	This is intended to assist in tuning ink drop sizes and is not
+	normally useful otherwise.
 
       * A new parameter allowing dumping out of color correction state
 	(lookup tables, GCR data, curves, etc.) has been added, and is
