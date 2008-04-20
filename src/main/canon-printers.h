@@ -46,6 +46,7 @@ typedef struct canon_caps {
   const char *lum_adjustment;
   const char *hue_adjustment;
   const char *sat_adjustment;
+  const char *channel_order; /* (in gutenprint notation) 0123 => KCMY,  1230 => CMYK etc. */
 } canon_cap_t;
 
 static const char standard_sat_adjustment[] =
@@ -164,6 +165,8 @@ static const char* control_cmd_MULTIPASS_MP150[] = {
   NULL
 };
 
+static const char iP4500_channel_order[STP_NCOLORS] = {1,2,3,0}; /* CMYK */
+
 static const canon_cap_t canon_model_capabilities[] =
 {
   /* the first printer is used as default in case something has gone wrong in printers.xml */
@@ -175,6 +178,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px,0,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP830_modelist,
     &canon_PIXMA_iP4000_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -204,6 +208,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
 
@@ -215,6 +220,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1 | CANON_CAP_r,0x61,control_cmd_ackshort,
     &canon_BJC_8500_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -230,6 +236,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon  BJC 85  *//* heads: BC-20 BC-21 BC-22 */
@@ -240,6 +247,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_85_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -255,6 +263,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
 
@@ -266,6 +275,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_4400_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -281,6 +291,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
 
@@ -292,6 +303,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,0,control_cmd_ackshort,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -307,6 +319,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 8200 *//* heads: BC-50 */
@@ -319,6 +332,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon S500 */
@@ -329,6 +343,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_r | CANON_CAP_p,0x61,control_cmd_ackshort,
     &canon_S500_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -351,6 +366,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 240 *//* heads: BC-02 BC-05 BC-06 */
@@ -361,6 +377,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -375,6 +392,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 1000 *//* heads: BC-02 BC-05 BC-06 */
@@ -385,6 +403,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_240_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -399,6 +418,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 3000 *//* heads: BC-30 BC-33 BC-34 */
@@ -409,6 +429,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_p,0,NULL, /*FIX? should have _r? */
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -423,6 +444,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 7000 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
@@ -433,6 +455,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD1,0,NULL,
     &canon_BJC_7000_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -447,6 +470,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
@@ -459,6 +483,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC i80 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
@@ -469,6 +494,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_i80_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -491,6 +517,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 5500 *//* heads: BC-20 BC-21 BC-29 */
@@ -501,6 +528,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
     &canon_BJC_5500_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -515,6 +543,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon BJC 8500 *//* heads: BC-80/BC-81 BC-82/BC-81 */
@@ -525,6 +554,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0,0,NULL,
     &canon_BJC_8500_modelist,
     &canon_default_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -539,6 +569,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon PIXMA iP3000 */
@@ -551,6 +582,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon PIXMA iP4000 */
@@ -561,6 +593,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px /*|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP4000_modelist,
     &canon_PIXMA_iP4000_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -576,6 +609,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
+    NULL
   },
   { /* Canon PIXMA iP5300, MP610 */
     "PIXMA iP5300", 3,          /*model, model_id*/
@@ -585,6 +619,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP5300_modelist,
     &canon_PIXMA_iP4000_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -599,7 +634,8 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
-    NULL
+    NULL,
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP4200 */
     "PIXMA iP4200", 3,          /*model, model_id*/
@@ -623,6 +659,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon PIXMA iP6700 */
@@ -633,6 +670,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP6700_modelist,
     &canon_PIXMA_iP4000_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -647,6 +685,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon PIXMA MP520 */
@@ -657,6 +696,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x61,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iX5000_modelist,
     &canon_PIXMA_iP4000_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL
@@ -671,6 +711,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon PIXMA iP8500 */
@@ -683,6 +724,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
+    NULL,
     NULL
   },
   { /* Canon MULTIPASS MP150 */
@@ -693,6 +735,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x61,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_PIXMA_iP4000_paperlist,
+    NULL,
     NULL,
     NULL,
     NULL

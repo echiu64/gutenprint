@@ -1579,6 +1579,8 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
 
 /* setup the dither channels */
 static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
+    /* (in gutenprint notation) => KCMY,  1230 => CMYK etc. */
+    const char default_channel_order[STP_NCOLORS] = {0,1,2,3};
     /* codes for the primary channels */
     const char primary[STP_NCOLORS] = {'K','C','M','Y',};
     /* codes for the subchannels */
@@ -1588,10 +1590,15 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
     const char *secondary_density_control[STP_NCOLORS] = {NULL,"LightCyanTransition","LightMagentaTransition","LightYellowTransition"};
     /* ink darkness for every channel */
     const double ink_darkness[] = {1.0, 0.31 / .5, 0.61 / .97, 0.08};
-    const char channel_order[STP_NCOLORS] = { 0,1,2,3}; /* (in gutenprint notation) => KCMY,  1230 => CMYK etc. */
+    const char* channel_order = default_channel_order;
+
+
 
     int channel;
     int channel_idx;
+
+    if(privdata->caps->channel_order)
+        channel_order = privdata->caps->channel_order;
 
 
     /* loop through the dither channels */
