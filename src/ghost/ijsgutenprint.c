@@ -95,13 +95,13 @@ static const char DeviceCMYK[] = "DeviceCMYK";
 
 static const char *version_id;
 static int version_is_ok = 1;
-static const char *version_mismatch = N_("\
-ijsgutenprint: the version of Gutenprint software installed (%s)\n\
-  does not match the PPD file (%s).  If you have upgraded your version\n\
-  of Gutenprint recently, you must reinstall all printer queues.\n\
-  Please refer to your vendor's documentation or the ``foomatic-ppdfile''\n\
-  command for instructions.\n\
-ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not match the PPD file (%s).\n");
+#define VERSION_MISMATCH "\
+ERROR: ijsgutenprint: the version of Gutenprint software installed (%s)\n\
+ERROR: ijsgutenprint: does not match the PPD file (%s).  If you have upgraded your version\n\
+ERROR: ijsgutenprint: of Gutenprint recently, you must reinstall all printer queues.\n\
+ERROR: ijsgutenprint: Please refer to your vendor's documentation or the ``foomatic-ppdfile''\n\
+ERROR: ijsgutenprint: command for instructions.\n\
+ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) does not match the PPD file (%s).\n"
 
 const char *gutenprint_ppd_version = NULL;
 static int ppd_mode = 0;	/* Use PPD-style margins */
@@ -188,7 +188,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
     }
   else
     {
-      fprintf(stderr, _("ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"),
+      fprintf(stderr, "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n",
 		img->bps, img->n_chan, ph->cs);
       /* unsupported */
       return -1;
@@ -196,7 +196,7 @@ image_init(IMAGE *img, IjsPageHeader *ph)
 
   if (img->row_buf == NULL)
     {
-      STP_DEBUG(fprintf(stderr, _("ERROR: ijsgutenprint: No row buffer\n")));
+      fprintf(stderr, "ERROR: ijsgutenprint: No row buffer\n");
       return -1;
     }
 
@@ -223,7 +223,7 @@ get_float(const char *str, const char *name, double *pval)
     *pval = new_value;
   else
     {
-      fprintf(stderr, _("ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"),
+      fprintf(stderr, "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n",
 	      name, str);
       status = -1;
     }
@@ -243,7 +243,7 @@ get_int(const char *str, const char *name, int *pval)
     *pval = new_value;
   else
     {
-      fprintf(stderr, _("ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"),
+      fprintf(stderr, "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n",
 	      name, str);
       status = -1;
     }
@@ -495,9 +495,9 @@ gutenprint_get_cb (void *get_cb_data,
   if (!printer)
     {
       if (strlen(stp_get_driver(v)) == 0)
-	fprintf(stderr, _("ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"));
+	fprintf(stderr, "ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n");
       else
-	fprintf(stderr, _("ERROR: ijsgutenprint: Printer %s is not a known model\n"),
+	fprintf(stderr, "ERROR: ijsgutenprint: Printer %s is not a known model\n",
 		stp_get_driver(v));
       return IJS_EUNKPARAM;
     }
@@ -653,7 +653,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
         }
       else
 	{
-	  fprintf(stderr, _("ijsgutenprint: unknown DeviceModel %s\n"), vbuf);
+	  fprintf(stderr, "ERROR: ijsgutenprint: unknown DeviceModel %s\n", vbuf);
 	  code = IJS_ERANGE;
 	}
     }
@@ -697,7 +697,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  stp_set_height(img->v, b - t);
 	}
       else
-	fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse TopLeft %s\n"), vbuf);
+	fprintf(stderr, "ERROR: ijsgutenprint: cannot parse TopLeft %s\n", vbuf);
     }
   else if (strcmp(key, "PaperSize") == 0)
     {
@@ -720,7 +720,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	    STP_DEBUG(fprintf(stderr, "ijsgutenprint: No matching paper size found\n"));
 	}
       else
-	fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse PaperSize %s\n"), vbuf);
+	fprintf(stderr, "ERROR: ijsgutenprint: cannot parse PaperSize %s\n", vbuf);
     }
 
 /*
@@ -744,7 +744,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       ppd_mode = 1;
       if (strcmp(vbuf, version_id) != 0)
 	{
-	  fprintf(stderr, gettext(version_mismatch),
+	  fprintf(stderr, VERSION_MISMATCH,
 		  version_id, vbuf, version_id, vbuf);
 	  version_is_ok = 0;
 	  gutenprint_ppd_version = c_strdup(vbuf);
@@ -792,28 +792,28 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	      stp_curve_destroy(curve);
 	    }
 	  else
-	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse curve %s\n"), vbuf);
+	    fprintf(stderr, "ERROR: ijsgutenprint: cannot parse curve %s\n", vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
 	  code = get_float(vbuf, xkey, &z);
 	  if (code == 0)
 	    stp_set_float_parameter(img->v, xkey, z);
 	  else
-	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s float %s\n"), xkey, vbuf);
+	    fprintf(stderr, "ERROR: ijsgutenprint: cannot parse %s float %s\n", xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_INT:
 	  code = get_int(vbuf, xkey, &i);
 	  if (code == 0)
 	    stp_set_int_parameter(img->v, xkey, i);
 	  else
-	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s int %s\n"), xkey, vbuf);
+	    fprintf(stderr, "ERROR: ijsgutenprint: cannot parse %s int %s\n", xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_DIMENSION:
 	  code = get_int(vbuf, xkey, &i);
 	  if (code == 0)
 	    stp_set_dimension_parameter(img->v, xkey, i);
 	  else
-	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s dimension %s\n"), xkey, vbuf);
+	    fprintf(stderr, "ERROR: ijsgutenprint: cannot parse %s dimension %s\n", xkey, vbuf);
 	  break;
 	case STP_PARAMETER_TYPE_BOOLEAN:
 	  if (strcmp(vbuf, "False") == 0 ||
@@ -827,7 +827,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 		   strcmp(vbuf, "0") == 0)
 	    stp_set_boolean_parameter(img->v, xkey, 1);
 	  else
-	    fprintf(stderr, _("ERROR: ijsgutenprint: cannot parse %s boolean %s\n"), xkey, vbuf);
+	    fprintf(stderr, "ERROR: ijsgutenprint: cannot parse %s boolean %s\n", xkey, vbuf);
 	  break;
 	default:
 	  if (strncmp(xkey, "Enable", strlen("Enable")) == 0)
@@ -838,7 +838,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	      stp_set_string_parameter(img->v, xkey, vbuf);
 	    }
 	  else
-	    fprintf(stderr, _("ERROR: ijsgutenprint: Bad parameter %s %d\n"), key, desc.p_type);
+	    fprintf(stderr, "ERROR: ijsgutenprint: Bad parameter %s %d\n", key, desc.p_type);
 	}
       stp_parameter_description_destroy(&desc);
     }
@@ -864,7 +864,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
       pl->value_size = value_size;
     }
   else
-    fprintf(stderr, _("ERROR: ijsgutenprint: bad key code %d\n"), code);
+    fprintf(stderr, "ERROR: ijsgutenprint: bad key code %d\n", code);
 
   return code;
 }
@@ -1305,7 +1305,7 @@ main (int argc, char **argv)
       status = image_init(&img, &ph);
       if (status)
 	{
-	  fprintf(stderr, _("ERROR: ijsgutenprint: image_init failed %d\n"), status);
+	  fprintf(stderr, "ERROR: ijsgutenprint: image_init failed %d\n", status);
 	  break;
 	}
 
@@ -1316,7 +1316,7 @@ main (int argc, char **argv)
 	      f = fdopen(img.fd - 1, "wb");
 	      if (!f)
 		{
-		  fprintf(stderr, _("ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"),
+		  fprintf(stderr, "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n",
 			  strerror(errno));
 		  status = -1;
 		  break;
@@ -1328,7 +1328,7 @@ main (int argc, char **argv)
 	      if (!f)
 		{
 		  status = -1;
-		  fprintf(stderr, _("ERROR: ijsgutenprint: Unable to open %s: %s\n"), img.filename,
+		  fprintf(stderr, "ERROR: ijsgutenprint: Unable to open %s: %s\n", img.filename,
 			  strerror(errno));
 		  break;
 		}
@@ -1341,7 +1341,7 @@ main (int argc, char **argv)
       printer = stp_get_printer(img.v);
       if (printer == NULL)
 	{
-	  fprintf(stderr, _("ERROR: ijsgutenprint: Unknown printer %s\n"),
+	  fprintf(stderr, "ERROR: ijsgutenprint: Unknown printer %s\n",
 		  stp_get_driver(img.v));
 	  status = -1;
 	  break;
@@ -1496,7 +1496,7 @@ main (int argc, char **argv)
       print_messages_as_errors = 1;
       if (!version_is_ok)
 	{
-	  fprintf(stderr, gettext(version_mismatch), version_id,
+	  fprintf(stderr, VERSION_MISMATCH, version_id,
 		  gutenprint_ppd_version, version_id, gutenprint_ppd_version);
 	  status = IJS_ERANGE;
 	  break;
@@ -1513,7 +1513,7 @@ main (int argc, char **argv)
 	}
       else
 	{
-	  fprintf(stderr, _("ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"));
+	  fprintf(stderr, "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n");
 	  status = IJS_ERANGE;
 	  break;
 	}
@@ -1531,7 +1531,7 @@ main (int argc, char **argv)
 	      status = image_next_row(&img);
 	      if (status)
 		{
-		  fprintf(stderr, _("ERROR: ijsgutenprint: Get next row failed at %.0f\n"),
+		  fprintf(stderr, "ERROR: ijsgutenprint: Get next row failed at %.0f\n",
 			  img.bytes_left);
 		  break;
 		}
@@ -1542,7 +1542,7 @@ main (int argc, char **argv)
 	}
       if (status > 0)
 	{
-	  fprintf(stderr, "Ending job after page %d\n", page);
+	  fprintf(stderr, "INFO: ijsgutenprint Ready to print.\n");
 	  stp_end_job(old_v, &si);
 	}
       else
