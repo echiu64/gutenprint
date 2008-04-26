@@ -150,11 +150,14 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       necessary as there are ample other tools available to configure
       printer queues.
 
-   5) Many translations have been updated.
+   5) Support for generic large format PCL laser printers has been
+      added.
 
-   6) The Canon iPixma 4500 has been fixed.
+   6) Many translations have been updated.
 
-   7) L-size photo paper (3 1/2x5 inches) has been added.
+   7) The Canon iPixma 4500 has been fixed.
+
+   8) L-size photo paper (3 1/2x5 inches) has been added.
 
 ----------------
 

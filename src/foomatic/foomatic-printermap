@@ -480,6 +480,11 @@
 #gptofoo pcl-g_5c printer/Generic-PCL_5c_Printer
 #gptofoo pcl-g_5e printer/Generic-PCL_5e_Printer
 #gptofoo pcl-g_6 printer/Generic-PCL_6_PCL_XL_Printer
+#gptofoo pcl-g_4_l printer/Generic-PCL_4_LF_Printer
+#gptofoo pcl-g_5_l printer/Generic-PCL_5_LF_Printer
+#gptofoo pcl-g_5c_l printer/Generic-PCL_5c_LF_Printer
+#gptofoo pcl-g_5e_l printer/Generic-PCL_5e_LF_Printer
+#gptofoo pcl-g_6_l printer/Generic-PCL_6_PCL_XL_LF_Printer
 #gptofoo pcl-2000 printer/HP-2000C
 #gptofoo pcl-2500 printer/HP-2500C
 #gptofoo hp-2500cm printer/HP-2500CM

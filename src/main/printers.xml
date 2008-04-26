@@ -553,10 +553,15 @@
       <printer name="Fujitsu PrintPartner 20W" driver="fujitsu-pp_20w" manufacturer="Fujitsu" model="6" parameters="pcl_laser_params" />
       <printer name="Fujitsu PrintPartner 8000" driver="fujitsu-pp_8000" manufacturer="Fujitsu" model="3" parameters="pcl_laser_params" />
       <printer name="Generic PCL 4 Printer" driver="pcl-g_4" manufacturer="Generic" model="2" parameters="pcl_laser_params" />
+      <printer name="Generic PCL 4 LF Printer" driver="pcl-g_4_l" manufacturer="Generic" model="23" parameters="pcl_laser_params" />
       <printer name="Generic PCL 5 Printer" driver="pcl-g_5" manufacturer="Generic" model="3" parameters="pcl_laser_params" />
+      <printer name="Generic PCL 5 LF Printer" driver="pcl-g_5_l" manufacturer="Generic" model="33" parameters="pcl_laser_params" />
       <printer name="Generic PCL 5c Printer" driver="pcl-g_5c" manufacturer="Generic" model="6" parameters="pcl_laser_params" />
+      <printer name="Generic PCL 5c LF Printer" driver="pcl-g_5c_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" />
       <printer name="Generic PCL 5e Printer" driver="pcl-g_5e" manufacturer="Generic" model="6" parameters="pcl_laser_params" />
+      <printer name="Generic PCL 5e LF Printer" driver="pcl-g_5e_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" />
       <printer name="Generic PCL 6/PCL XL Printer" driver="pcl-g_6" manufacturer="Generic" model="6" parameters="pcl_laser_params" />
+      <printer name="Generic PCL 6/PCL XL LF Printer" driver="pcl-g_6_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" />
       <printer name="HP Business Inkjet 2200" driver="hp-bij_2200" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer name="HP Business Inkjet 2230" driver="hp-bij_2230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer name="HP Business Inkjet 2250" driver="hp-bij_2250" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />

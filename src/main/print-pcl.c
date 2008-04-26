@@ -1049,8 +1049,34 @@ static const pcl_cap_t pcl_model_capabilities[] =
     emptylist,
     laserjet_papersources,
   },
+  /* PCL-4 with large paper */
+  { 23,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ,
+    ljbig_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
   /* LaserJet III series */
   { 3,
+    17 * 72 / 2, 14 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* LaserJet III series */
+  { 31,
     17 * 72 / 2, 14 * 72,
     1, 1,				/* Min paper size */
     PCL_RES_150_150 | PCL_RES_300_300,
@@ -1072,6 +1098,19 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* PCL-5 with large paper */
+  { 33,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    ljbig_papersizes,
     emptylist,
     laserjet_papersources,
   },
@@ -1126,6 +1165,20 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
       PCL_PRINTER_DUPLEX,
     ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* PCL-5c/5e/6/XL with large paper */
+  { 61,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljbig_papersizes,
     emptylist,
     laserjet_papersources,
   },
