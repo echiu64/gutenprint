@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.0-beta1 (5.1.98.1)!  Please read these
+Welcome to Gutenprint 5.2.0-beta2 (5.1.98.2)!  Please read these
 release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
@@ -21,6 +21,7 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
+	* Changes from Gutenprint 5.2.0-beta1
         * General changes from Gutenprint 5.0
 	* Changes from Gutenprint 5.0.2 and 5.1.7
 	* Changes from Gutenprint 5.0.2 only
@@ -98,6 +99,13 @@ for building and installing Gutenprint.
 ================================================================
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* CHANGES FROM GUTENPRINT 5.2.0-BETA1:
+
+   This release fixes a fatal bug that causes Gutenprint 5.2.0-beta1
+   to not initialize correctly.
+
+----------------
 
 * GENERAL CHANGES FROM GUTENPRINT 5.0:
 

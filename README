@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.0-beta1!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.0-beta2!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: This is a beta release of the forthcoming 5.2
     stable release.  As of 5.2 and until further notice, Gutenprint
@@ -9,7 +9,7 @@ Welcome to Gutenprint 5.2.0-beta1!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.2.0-beta1, a beta release of
+    This is Gutenprint version 5.2.0-beta2, a beta release of
     Gutenprint 5.2.  Gutenprint, formerly named Gimp-Print, is a suite
     of printer drivers that may be used with most common UNIX print
     spooling systems, including CUPS, lpr, LPRng, or others.  These

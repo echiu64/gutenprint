@@ -25,8 +25,8 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 pkgconfigdatadir = $(libdir)/pkgconfig
-pkgxmldatadir = $(pkgdatadir)/$(VERSION)/xml
-pkgmoduledir = $(pkglibdir)/$(VERSION)/modules
+pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml
+pkgmoduledir = $(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/modules
 
 
 ## Programs
