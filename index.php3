@@ -41,8 +41,7 @@ and 10.5 "Leopard", and provides direct download links.</p>
 announce Gutenprint 5.2.0-beta2, a beta release for the upcoming
 Gutenprint 5.2 stable release series.  This release offers a number of
 enhancements over the 5.0 and 5.1 release series.  This package is
-available in source form, and will shortly be available in binary
-installer for Macintosh OS X (10.2 and above).  <a
+available in source form, and in binary installer for Macintosh OS X (10.2 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 

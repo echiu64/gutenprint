@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta1 is released!</span> 
+			<br>
+			<a href="MacOSX.php3#5.2.0-beta2">April 28, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.0 and 5.1 release series.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.7 is released!</span> 
 			<br>
 			<a href="MacOSX.php3#5.1.7">March 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.7, a development release. This release incorporates the support for additional printers and other improvemnets.  See the <b>Downloads</b> section. 
@@ -181,6 +186,15 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
+		<p>
+			<b>Gutenprint 5.2.0-beta2</b> 
+			<br>
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta2-ub.dmg?download">gutenprint-5.2.0-beta2-ub.dmg</a></span>&nbsp;&nbsp;(16.9 MB) 
+		</p>
+		<p>
+The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.0 and 5.1 release series.  An updated uninstaller and Gutenprint Utility for EPSON Inkjet Printers are included.  Mac OS X Jaguar users need  GhostScript for full support.  Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.98.2.tar.bz2?download">source code</a>)
+</p>
+
 		<p>
 			<b>Gutenprint 5.0.2</b> 
 			<br>
@@ -257,7 +271,34 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-<a name="5.1.7"></a> 
+<a name="5.2.0-beta2"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.0-beta2</b> 
+		</td>
+		<td align="right">
+			<b>2008-04-28</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.0-beta2 (5.1.98.2)</b> release is the first beta release of the forthcoming 5.2 stable release.  It brings together the work from the stable 5.0.x branch and the developemental branch 5.1.x.  As of 5.2 and until further notice, Gutenprint will no longer deliver separate "development" and "stable" series.  There are several notable changes since the previous releases:</p> <ul style="list-style: disc;">
+	<li>
+Support for generic large format PCL laser printers has been added
+</li>
+<li>
+Printing for the Canon PIXMA iP4500 has been fixed 
+</li>
+<li>
+L-size phot paper (3 1/2 x 5 inches) has been added.
+</li>
+</ul>
+<p>
+Additional bug fixes and new features are listed in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=595643">release notes</a>.
+</p>
+ 
+ <a name="5.1.7"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
 		<td align="left">
