@@ -22,8 +22,8 @@ href="http://www.gimp.org">the Gimp</a>.</H4>
 <P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.
 Gimp-Print 4.2.7 (the last Gimp-Print 4.2 release) is still available
 for distribution, but is no longer supported.  You may install both
-Gimp-Print 4.2.7 and Gutenprint 5.0 concurrently and choose which to
-use.</p>
+Gimp-Print 4.2.7 and Gutenprint 5.0, 5.1, and/or 5.2 concurrently and
+choose which to use.</p>
 
 <h2><strong><em><font color=#ff0000>Macintosh OS X
 Users!</font></em></strong></h2>
@@ -34,11 +34,24 @@ page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 and 10.5 "Leopard", and provides direct download links.</p>
 
+<H2><font color="#ff0000">Gutenprint 5.2.0-beta2 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of March 5,
+2008!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.2.0-beta2, a beta release for the upcoming
+Gutenprint 5.2 stable release series.  This release offers a number of
+enhancements over the 5.0 and 5.1 release series.  This package is
+available in source form, and will shortly be available in binary
+installer for Macintosh OS X (10.2 and above).  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gutenprint 5.1.7 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of March 5,
 2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.7, a development release.  This release adds support for more EPSON and Canon prnters, imiproved tuning for many other printers, and contains several bug fixes.  This package is available in source form, and as a binary installer for Macintosh OS X (10.2 and above).  <a
+announce Gutenprint 5.1.7, a development release.  This release adds support for more EPSON and Canon printers, imiproved tuning for many other printers, and contains several bug fixes.  This package is available in source form, and as a binary installer for Macintosh OS X (10.2 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
