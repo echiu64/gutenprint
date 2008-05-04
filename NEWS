@@ -21,6 +21,7 @@ These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
+	* Changes from Gutenprint 5.2.0-beta2
 	* Changes from Gutenprint 5.2.0-beta1
         * General changes from Gutenprint 5.0
 	* Changes from Gutenprint 5.0.2 and 5.1.7
@@ -99,6 +100,450 @@ for building and installing Gutenprint.
 ================================================================
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* CHANGES FROM GUTENPRINT 5.2.0-BETA2:
+
+  1) A problem whereby some rows are not printed in color on the Epson
+     Stylus CX3700 and related printers has been fixed.
+
+  2) New printers supported in this release:
+
+     * Black and white laser printers:
+
+       Brother DCP-8045D
+       Brother HL-1430
+       Brother HL-1450
+       Brother HL-1470N
+       Brother HL-1650
+       Brother HL-1670N
+       Brother HL-1850
+       Brother HL-1870N
+       Brother HL-2060
+       Brother HL-2460
+       Brother HL-2460N
+       Brother HL-5030
+       Brother HL-5040
+       Brother HL-5050
+       Brother HL-5070N
+       Brother HL-5140
+       Brother HL-5150D
+       Brother HL-5170DN
+       Brother HL-7050
+       Brother HL-7050N
+       Epson EPL-N2050
+       Epson EPL-N2050PS
+       Epson EPL-N2050PS+
+       Epson EPL-N2050+
+       Epson EPL-N2120
+       Epson EPL-N2500
+       Epson EPL-N2500PS
+       Epson EPL-N2750
+       Epson EPL-N2750PS
+       Gestetner 10512
+       Gestetner 2212
+       Gestetner 2712
+       Gestetner 3212
+       Gestetner 3502
+       Gestetner 3532
+       Gestetner 4235g
+       Gestetner 4502
+       Gestetner 4532
+       Gestetner 4245g
+       Gestetner 6002
+       Gestetner 7502
+       Gestetner 9002
+       Gestetner DSm415
+       Gestetner DSm615
+       Gestetner DSm616
+       Gestetner DSm618
+       Gestetner DSm618d
+       Gestetner DSm620
+       Gestetner DSm620d
+       Gestetner DSm622
+       Gestetner DSm627
+       Gestetner DSm635
+       Gestetner DSm635G
+       Gestetner DSm645
+       Gestetner DS645G
+       Gestetner DSm651
+       Gestetner DSm660
+       Gestetner DSm675
+       Gestetner DSm725
+       Gestetner DSm730
+       Gestetner DSm735
+       Gestetner DSm735G
+       Gestetner DSm745
+       Gestetner DSm745G
+       Gestetner MP1100
+       Gestetner DSm7110
+       Gestetner MP1350
+       Gestetner DSm7135
+       Gestetner MP1600
+       Gestetner DSm716
+       Gestetner MP2000
+       Gestetner DSm721d
+       Gestetner MP2500
+       Gestetner DSm625
+       Gestetner MP3500
+       Gestetner DSm735e
+       Gestetner MP4500
+       Gestetner DSm745e
+       Gestetner MP5500
+       Gestetner DSm755
+       Gestetner MP6500
+       Gestetner DSm765
+       Gestetner MP7500
+       Gestetner DSm775
+       Gestetner MP9000
+       Gestetner DSm790
+       Gestetner MP 161
+       Gestetner DSm416
+       Gestetner MP 2510
+       Gestetner DSm725e
+       Gestetner MP 2550
+       Gestetner MP 2550B
+       Gestetner MP 3010
+       Gestetner DSm730e
+       Gestetner MP 3350
+       Gestetner MP 3350B
+       Gestetner MP 4000
+       Gestetner MP 4000B
+       Gestetner MP 5000
+       Gestetner MP 5000B
+       Infotec 4353 MF
+       Infotec 4452 MF
+       Infotec IS2022
+       Infotec IS2027
+       Infotec IS2032
+       Infotec IS2035
+       Infotec IS2045
+       Infotec IS2090
+       Infotec IS2105
+       Infotec IS 2015
+       Infotec IS 2018
+       Infotec IS 2018D
+       Infotec IS 2060
+       Infotec IS 2075
+       Infotec IS 2122
+       Infotec IS 2127
+       Infotec IS 2132
+       Infotec IS 2135
+       Infotec IS 2145
+       Infotec IS 2151
+       Infotec IS 2160
+       Infotec IS 2175
+       Infotec IS 2215
+       Infotec IS 2216
+       Infotec IS 2220
+       Infotec IS 2220D
+       Infotec IS 2225
+       Infotec IS 2230
+       Infotec IS 2235
+       Infotec IS 2245
+       Infotec IS 2255
+       Infotec IS 2265
+       Infotec IS 2275
+       Infotec IS 2316
+       Infotec IS 2320
+       Infotec IS 2325
+       Infotec IS 2416
+       Infotec IS 2425
+       Infotec IS 2430
+       Infotec IS 2435
+       Infotec IS 2445
+       Infotec IS 3090
+       Infotec IS 3110
+       Infotec IS 3135
+       Infotec MP 2550
+       Infotec MP 2550B
+       Infotec MP 3350
+       Infotec MP 3350B
+       Infotec MP 4000
+       Infotec MP 4000B
+       Infotec MP 5000
+       Infotec MP 5000B
+       Lanier 5622
+       Lanier 5627
+       Lanier 5632
+       Lanier 5635
+       Lanier 5645
+       Lanier LD0105
+       Lanier LD015
+       Lanier LD035
+       Lanier LD045
+       Lanier LD060
+       Lanier LD075
+       Lanier LD090
+       Lanier LD115
+       Lanier LD116
+       Lanier LD118
+       Lanier LD118d
+       Lanier LD120
+       Lanier LD120d
+       Lanier LD122
+       Lanier LD127
+       Lanier LD132
+       Lanier LD135
+       Lanier LD145
+       Lanier LD151
+       Lanier LD160
+       Lanier LD175
+       Lanier LD225
+       Lanier LD230
+       Lanier LD235
+       Lanier LD245
+       Lanier MP 2500
+       Lanier LD125
+       Lanier MP 1100
+       Lanier LD1100
+       Lanier MP 1350
+       Lanier LD1135
+       Lanier MP 1600
+       Lanier LD316
+       Lanier MP 161
+       Lanier LD016
+       Lanier MP 2000
+       Lanier LD320d
+       Lanier MP 2510
+       Lanier LD325
+       Lanier MP 2550B
+       Lanier LD425B
+       Lanier MP 2550
+       Lanier LD425
+       Lanier MP 3010
+       Lanier LD330
+       Lanier MP 3350B
+       Lanier LD433B
+       Lanier MP 3350
+       Lanier LD433
+       Lanier MP 3500
+       Lanier LD335
+       Lanier MP 4000B
+       Lanier LD040B
+       Lanier MP 4000
+       Lanier LD040
+       Lanier MP 4500
+       Lanier LD345
+       Lanier MP 5000B
+       Lanier LD050B
+       Lanier MP 5000
+       Lanier LD050
+       Lanier MP 5500
+       Lanier LD255
+       Lanier MP 6500
+       Lanier LD265
+       Lanier MP 7500
+       Lanier LD275
+       Lanier MP 9000
+       Lanier LD190
+       Lexmark Optra E321
+       NRG 10515
+       NRG 10518
+       NRG 10512
+       NRG 2205
+       NRG 2238
+       NRG 2212
+       NRG 2705
+       NRG 2738
+       NRG 2712
+       NRG 3205
+       NRG 3238
+       NRG 3212
+       NRG 3525
+       NRG 3508
+       NRG 3502
+       NRG 3545
+       NRG 3518
+       NRG 3532
+       NRG 4525
+       NRG 4508
+       NRG 4502
+       NRG 4545
+       NRG 4518
+       NRG 4532
+       NRG 6002
+       NRG 6005
+       NRG 6008
+       NRG 7502
+       NRG 7505
+       NRG 7508
+       NRG 9005
+       NRG 9008
+       NRG 9002
+       NRG DSm415
+       NRG DSm615
+       NRG DSm616
+       NRG DSm618
+       NRG DSm618d
+       NRG DSm620
+       NRG DSm620d
+       NRG DSm622
+       NRG DSm627
+       NRG DSm632
+       NRG DSm635
+       NRG DSm645
+       NRG DSm651
+       NRG DSm660
+       NRG DSm675
+       NRG DSm725
+       NRG DSm730
+       NRG DSm735
+       NRG DSm745
+       NRG MP 1100
+       NRG MP 1350
+       NRG MP 1600
+       NRG MP 161
+       NRG MP 2000
+       NRG MP 2500
+       NRG MP 2510
+       NRG MP 2550
+       NRG MP 2550B
+       NRG MP 3010
+       NRG MP 3350
+       NRG MP 3350B
+       NRG MP 3500
+       NRG MP 4000
+       NRG MP 4000B
+       NRG MP 4500
+       NRG MP 5000
+       NRG MP 5000B
+       NRG MP 5500
+       NRG MP 6500
+       NRG MP 7500
+       NRG MP 9000
+       Ricoh Aficio 1022
+       Ricoh Aficio 1027
+       Ricoh Aficio 1032
+       Ricoh Aficio 1035
+       Ricoh Aficio 1045
+       Ricoh Aficio 1060
+       Ricoh Aficio 1075
+       Ricoh Aficio 1515
+       Ricoh Aficio 2015
+       Ricoh Aficio 2016
+       Ricoh Aficio 2018
+       Ricoh Aficio 2018D
+       Ricoh Aficio 2020
+       Ricoh Aficio 2020D
+       Ricoh Aficio 2022
+       Ricoh Aficio 2027
+       Ricoh Aficio 2032
+       Ricoh Aficio 2035
+       Ricoh Aficio 2035e
+       Ricoh Aficio 2045
+       Ricoh Aficio 2045e
+       Ricoh Aficio 2051
+       Ricoh Aficio 2060
+       Ricoh Aficio 2075
+       Ricoh Aficio 2090
+       Ricoh Aficio 2105
+       Ricoh Aficio 220
+       Ricoh Aficio 3025
+       Ricoh Aficio 3030
+       Ricoh Aficio 3035
+       Ricoh Aficio 3045
+       Ricoh Aficio MP 1100
+       Ricoh Aficio MP 1350
+       Ricoh Aficio MP 1600
+       Ricoh Aficio MP 161
+       Ricoh Aficio MP 2000
+       Ricoh Aficio MP 2500
+       Ricoh Aficio MP 2510
+       Ricoh Aficio MP 2550
+       Ricoh Aficio MP 2550B
+       Ricoh Aficio MP 3010
+       Ricoh Aficio MP 3350
+       Ricoh Aficio MP 3350B
+       Ricoh Aficio MP 3500
+       Ricoh Aficio MP 4000
+       Ricoh Aficio MP 4000B
+       Ricoh Aficio MP 4500
+       Ricoh Aficio MP 5000
+       Ricoh Aficio MP 5000B
+       Ricoh Aficio MP 5500
+       Ricoh Aficio MP 6500
+       Ricoh Aficio MP 7500
+       Ricoh Aficio MP 9000
+       Samsung ML-1250
+       Samsung ML-1450
+       Samsung ML-1450PS
+       Samsung ML-1650
+       Samsung ML-1651N
+       Samsung ML-1750
+       Samsung ML-2150
+       Samsung ML-2150PS
+       Samsung ML-2151N
+       Samsung ML-2151NPS
+       Samsung ML-2152W
+       Samsung ML-2152WPS
+       Samsung ML-2250
+       Samsung ML-2550
+       Samsung ML-2551N
+       Samsung ML-2552W
+       Samsung ML-7300
+       Samsung ML-7300N
+       Savin 2522
+       Savin 2527
+       Savin 2532
+       Savin 2535
+       Savin 2235
+       Savin 2545
+       Savin 2245
+       Savin 2560
+       Savin 2575
+       Savin 3515
+       Savin 40105
+       Savin 4015
+       Savin 4018
+       Savin 4018d
+       Savin 4022
+       Savin 4027
+       Savin 4035
+       Savin 4135g
+       Savin 4035e
+       Savin 4135eG
+       Savin 4045
+       Savin 4145g
+       Savin 4045e
+       Savin 4145eG
+       Savin 4051
+       Savin 4060
+       Savin 4075
+       Savin 4090
+       Savin 7025
+       Savin 8016
+       Savin 8020
+       Savin 8020d
+       Savin 8025
+       Savin 8025e
+       Savin 8030
+       Savin 8030e
+       Savin 8035
+       Savin 8035g
+       Savin 8035e
+       Savin 8045
+       Savin 8045g
+       Savin 8045e
+       Savin 8055
+       Savin 8065
+       Savin 8075
+       Savin 8090
+       Savin 8110
+       Savin 8135
+       Savin 816
+       Savin 9016
+       Savin 9021d
+       Savin 9025
+       Savin 9025b
+       Savin 9033
+       Savin 9033b
+       Savin 9040
+       Savin 9040b
+       Savin 9050
+       Savin 9050b
+
+
+----------------
 
 * CHANGES FROM GUTENPRINT 5.2.0-BETA1:
 

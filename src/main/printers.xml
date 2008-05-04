@@ -497,24 +497,43 @@
       <printer name="Apple Color StyleWriter 6500" driver="pcl-apple-6500" manufacturer="Apple" model="800" parameters="pcl_inkjet_params" />	<!-- Uses 850 driver -->
       <printer name="Apple LaserWriter Select 360" driver="pcl-apple-lw360" manufacturer="Apple" model="2" parameters="pcl_laser_params" />
       <printer name="Brother DCP-1200" driver="brother-dcp-1200" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer name="Brother HL-10V" driver="brother-hl-10v" manufacturer="Brother" model="3" parameters="pcl_laser_params" />
-      <printer name="Brother HL-10h" driver="brother-hl-10h" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer name="Brother HL-630" driver="brother-hl-630" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer name="Brother HL-660" driver="brother-hl-660" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer name="Brother HL-760" driver="brother-hl-760" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer name="Brother HL-960" driver="brother-hl-960" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother DCP-8045D" driver="brother-dcp-8045d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1040" driver="brother-hl-1040" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer name="Brother HL-1050" driver="brother-hl-1050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1060" driver="brother-hl-1060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1070" driver="brother-hl-1070" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-10V" driver="brother-hl-10v" manufacturer="Brother" model="3" parameters="pcl_laser_params" />
+      <printer name="Brother HL-10h" driver="brother-hl-10h" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1240" driver="brother-hl-1240" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer name="Brother HL-1250" driver="brother-hl-1250" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1260" driver="brother-hl-1260" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1270N" driver="brother-hl-1270n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1430" driver="brother-hl-1430" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1440" driver="brother-hl-1440" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1450" driver="brother-hl-1450" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1470N" driver="brother-hl-1470n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1650" driver="brother-hl-1650" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-1660e" driver="brother-hl-1660e" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1670N" driver="brother-hl-1670n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1850" driver="brother-hl-1850" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-2460" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5030" driver="brother-hl-5030" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5040" driver="brother-hl-5040" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5050" driver="brother-hl-5050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5070N" driver="brother-hl-5070n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5140" driver="brother-hl-5140" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5150D" driver="brother-hl-5150d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-5170DN" driver="brother-hl-5170dn" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-630" driver="brother-hl-630" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
+      <printer name="Brother HL-660" driver="brother-hl-660" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-7050" driver="brother-hl-7050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-7050N" driver="brother-hl-7050n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-760" driver="brother-hl-760" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer name="Brother HL-960" driver="brother-hl-960" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer name="Brother MFC-6550MC" driver="brother-mfc-6550mc" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer name="Brother MFC-8300" driver="brother-mfc-8300" manufacturer="Brother" model="3" parameters="pcl_laser_params" />
       <printer name="Brother MFC-9500" driver="brother-mfc-9500" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
@@ -548,6 +567,15 @@
       <printer name="Epson EPL-6100" driver="epson-epl-6100" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer name="Epson EPL-6100PS" driver="epson-epl-6100ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer name="Epson EPL-7100" driver="epson-epl-7100" manufacturer="Epson" model="2" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2050" driver="epson-epl-n2050" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2050+" driver="epson-epl-n2050plus" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2050PS" driver="epson-epl-n2050ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2050PS+" driver="epson-epl-n2050psplus" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2120" driver="epson-epl-n2120" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2500" driver="epson-epl-n2500" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2500PS" driver="epson-epl-n2500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2750" driver="epson-epl-n2750" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer name="Epson EPL-N2750PS" driver="epson-epl-n2750ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer name="Fujitsu PrintPartner 10V" driver="fujitsu-pp_10v" manufacturer="Fujitsu" model="6" parameters="pcl_laser_params" />
       <printer name="Fujitsu PrintPartner 16DV" driver="fujitsu-pp_16dv" manufacturer="Fujitsu" model="6" parameters="pcl_laser_params" />
       <printer name="Fujitsu PrintPartner 20W" driver="fujitsu-pp_20w" manufacturer="Fujitsu" model="6" parameters="pcl_laser_params" />
@@ -562,6 +590,77 @@
       <printer name="Generic PCL 5e LF Printer" driver="pcl-g_5e_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" />
       <printer name="Generic PCL 6/PCL XL Printer" driver="pcl-g_6" manufacturer="Generic" model="6" parameters="pcl_laser_params" />
       <printer name="Generic PCL 6/PCL XL LF Printer" driver="pcl-g_6_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" />
+      <printer name="Gestetner 10512" driver="gestetner-10512" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 2212" driver="gestetner-2212" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 2712" driver="gestetner-2712" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 3212" driver="gestetner-3212" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 3502" driver="gestetner-3502" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 3532" driver="gestetner-3532" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 4235g" driver="gestetner-4235g" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 4502" driver="gestetner-4502" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 4532" driver="gestetner-4532" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 4245g" driver="gestetner-4245g" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 6002" driver="gestetner-6002" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 7502" driver="gestetner-7502" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner 9002" driver="gestetner-9002" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm415" driver="gestetner-dsm415" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm615" driver="gestetner-dsm615" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm616" driver="gestetner-dsm616" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm618" driver="gestetner-dsm618" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm618d" driver="gestetner-dsm618d" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm620" driver="gestetner-dsm620" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm620d" driver="gestetner-dsm620d" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm622" driver="gestetner-dsm622" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm627" driver="gestetner-dsm627" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm635" driver="gestetner-dsm635" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm635G" driver="gestetner-dsm635g" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm645" driver="gestetner-dsm645" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DS645G" driver="gestetner-ds645g" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm651" driver="gestetner-dsm651" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm660" driver="gestetner-dsm660" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm675" driver="gestetner-dsm675" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm725" driver="gestetner-dsm725" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm730" driver="gestetner-dsm730" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm735" driver="gestetner-dsm735" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm735G" driver="gestetner-dsm735g" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm745" driver="gestetner-dsm745" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm745G" driver="gestetner-dsm745g" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP1100" driver="gestetner-mp1100" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm7110" driver="gestetner-dsm7110" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP1350" driver="gestetner-mp1350" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm7135" driver="gestetner-dsm7135" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP1600" driver="gestetner-mp1600" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm716" driver="gestetner-dsm716" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP2000" driver="gestetner-mp2000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm721d" driver="gestetner-dsm721d" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP2500" driver="gestetner-mp2500" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm625" driver="gestetner-dsm625" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP3500" driver="gestetner-mp3500" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm735e" driver="gestetner-dsm735e" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP4500" driver="gestetner-mp4500" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm745e" driver="gestetner-dsm745e" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP5500" driver="gestetner-mp5500" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm755" driver="gestetner-dsm755" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP6500" driver="gestetner-mp6500" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm765" driver="gestetner-dsm765" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP7500" driver="gestetner-mp7500" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm775" driver="gestetner-dsm775" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP9000" driver="gestetner-mp9000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm790" driver="gestetner-dsm790" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 161" driver="gestetner-mp_161" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm416" driver="gestetner-dsm416" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 2510" driver="gestetner-mp_2510" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm725e" driver="gestetner-dsm725e" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 2550" driver="gestetner-mp_2550" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 2550B" driver="gestetner-mp_2550b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 3010" driver="gestetner-mp_3010" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner DSm730e" driver="gestetner-dsm730e" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 3350" driver="gestetner-mp_3350" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 3350B" driver="gestetner-mp_3350b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 4000" driver="gestetner-mp_4000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 4000B" driver="gestetner-mp_4000b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 5000" driver="gestetner-mp_5000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer name="Gestetner MP 5000B" driver="gestetner-mp_5000b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
       <printer name="HP Business Inkjet 2200" driver="hp-bij_2200" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer name="HP Business Inkjet 2230" driver="hp-bij_2230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer name="HP Business Inkjet 2250" driver="hp-bij_2250" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
@@ -817,7 +916,59 @@
       <printer name="IBM 4312" driver="ibm-4312" manufacturer="IBM" model="2" parameters="pcl_laser_params" />
       <printer name="IBM Infoprint 12" driver="ibm-infoprint_12" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
       <printer name="IBM Page Printer 3112" driver="ibm-pp_3112" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec 4353 MF" driver="infotec-4353_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec 4452 MF" driver="infotec-4452_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer name="Infotec 4651 MF" driver="infotec-4651_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2022" driver="infotec-is2022" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2027" driver="infotec-is2027" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2032" driver="infotec-is2032" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2035" driver="infotec-is2035" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2045" driver="infotec-is2045" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2090" driver="infotec-is2090" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS2105" driver="infotec-is2105" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2015" driver="infotec-is_2015" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2018" driver="infotec-is_2018" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2018D" driver="infotec-is_2018d" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2060" driver="infotec-is_2060" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2075" driver="infotec-is_2075" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2122" driver="infotec-is_2122" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2127" driver="infotec-is_2127" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2132" driver="infotec-is_2132" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2135" driver="infotec-is_2135" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2145" driver="infotec-is_2145" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2151" driver="infotec-is_2151" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2160" driver="infotec-is_2160" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2175" driver="infotec-is_2175" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2215" driver="infotec-is_2215" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2216" driver="infotec-is_2216" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2220" driver="infotec-is_2220" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2220D" driver="infotec-is_2220d" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2225" driver="infotec-is_2225" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2230" driver="infotec-is_2230" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2235" driver="infotec-is_2235" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2245" driver="infotec-is_2245" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2255" driver="infotec-is_2255" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2265" driver="infotec-is_2265" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2275" driver="infotec-is_2275" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2316" driver="infotec-is_2316" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2320" driver="infotec-is_2320" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2325" driver="infotec-is_2325" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2416" driver="infotec-is_2416" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2425" driver="infotec-is_2425" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2430" driver="infotec-is_2430" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2435" driver="infotec-is_2435" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 2445" driver="infotec-is_2445" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 3090" driver="infotec-is_3090" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 3110" driver="infotec-is_3110" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec IS 3135" driver="infotec-is_3135" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 2550" driver="infotec-mp_2550" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 2550B" driver="infotec-mp_2550b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 3350" driver="infotec-mp_3350" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 3350B" driver="infotec-mp_3350b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 4000" driver="infotec-mp_4000" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 4000B" driver="infotec-mp_4000b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer name="Kyocera F-1010" driver="kyocera-f-1010" manufacturer="Kyocera" model="22" parameters="pcl_laser_params" />
       <printer name="Kyocera FS-600 - KPDL-2" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer name="Kyocera FS-600" driver="kyocera-fs-600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
@@ -864,10 +1015,85 @@
       <printer name="Kyocera KM-5230" driver="kyocera-km-5230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer name="Kyocera KM-5530" driver="kyocera-km-5530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer name="Kyocera KM-6230" driver="kyocera-km-6230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer name="Lanier 5622" driver="lanier-5622" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier 5627" driver="lanier-5627" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier 5632" driver="lanier-5632" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier 5635" driver="lanier-5635" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier 5645" driver="lanier-5645" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD0105" driver="lanier-ld0105" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD015" driver="lanier-ld015" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD035" driver="lanier-ld035" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD045" driver="lanier-ld045" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD060" driver="lanier-ld060" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD075" driver="lanier-ld075" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD090" driver="lanier-ld090" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD115" driver="lanier-ld115" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD116" driver="lanier-ld116" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD118" driver="lanier-ld118" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD118d" driver="lanier-ld118d" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD120" driver="lanier-ld120" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD120d" driver="lanier-ld120d" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD122" driver="lanier-ld122" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD127" driver="lanier-ld127" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD132" driver="lanier-ld132" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD135" driver="lanier-ld135" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD145" driver="lanier-ld145" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD151" driver="lanier-ld151" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD160" driver="lanier-ld160" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD175" driver="lanier-ld175" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD225" driver="lanier-ld225" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD230" driver="lanier-ld230" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD235" driver="lanier-ld235" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD245" driver="lanier-ld245" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 2500" driver="lanier-mp_2500" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD125" driver="lanier-ld125" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 1100" driver="lanier-mp_1100" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD1100" driver="lanier-ld1100" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 1350" driver="lanier-mp_1350" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD1135" driver="lanier-ld1135" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 1600" driver="lanier-mp_1600" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD316" driver="lanier-ld316" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 161" driver="lanier-mp_161" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD016" driver="lanier-ld016" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 2000" driver="lanier-mp_2000" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD320d" driver="lanier-ld320d" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 2510" driver="lanier-mp_2510" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD325" driver="lanier-ld325" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 2550B" driver="lanier-mp_2550b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD425B" driver="lanier-ld425b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 2550" driver="lanier-mp_2550" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD425" driver="lanier-ld425" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 3010" driver="lanier-mp_3010" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD330" driver="lanier-ld330" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 3350B" driver="lanier-mp_3350b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD433B" driver="lanier-ld433b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 3350" driver="lanier-mp_3350" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD433" driver="lanier-ld433" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 3500" driver="lanier-mp_3500" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD335" driver="lanier-ld335" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 4000B" driver="lanier-mp_4000b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD040B" driver="lanier-ld040b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 4000" driver="lanier-mp_4000" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD040" driver="lanier-ld040" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 4500" driver="lanier-mp_4500" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD345" driver="lanier-ld345" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 5000B" driver="lanier-mp_5000b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD050B" driver="lanier-ld050b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 5000" driver="lanier-mp_5000" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD050" driver="lanier-ld050" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 5500" driver="lanier-mp_5500" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD255" driver="lanier-ld255" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 6500" driver="lanier-mp_6500" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD265" driver="lanier-ld265" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 7500" driver="lanier-mp_7500" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD275" driver="lanier-ld275" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier MP 9000" driver="lanier-mp_9000" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer name="Lanier LD190" driver="lanier-ld190" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark 4076" driver="lexmark-4076" manufacturer="Lexmark" model="500" parameters="pcl_inkjet_params" />
       <printer name="Lexmark Optra E" driver="lexmark-optra_e" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Optra E+" driver="lexmark-optra_eplus" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Optra E220" driver="lexmark-optra_e220" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
+      <printer name="Lexmark Optra E321" driver="lexmark-optra_e321" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Valuewriter 300" driver="lexmark-vw_300" manufacturer="Lexmark" model="2" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
@@ -881,6 +1107,80 @@
       <printer name="NEC SuperScript 1260" driver="nec-ssc_1260" manufacturer="NEC" model="2" parameters="pcl_laser_params" />
       <printer name="NEC SuperScript 1400" driver="nec-ssc_1400" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
       <printer name="NEC SuperScript 1800" driver="nec-ssc_1800" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 10515" driver="nrg-10515" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 10518" driver="nrg-10518" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 10512" driver="nrg-10512" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 2205" driver="nrg-2205" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 2238" driver="nrg-2238" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 2212" driver="nrg-2212" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 2705" driver="nrg-2705" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 2738" driver="nrg-2738" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 2712" driver="nrg-2712" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3205" driver="nrg-3205" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3238" driver="nrg-3238" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3212" driver="nrg-3212" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3525" driver="nrg-3525" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3508" driver="nrg-3508" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3502" driver="nrg-3502" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3545" driver="nrg-3545" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3518" driver="nrg-3518" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 3532" driver="nrg-3532" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 4525" driver="nrg-4525" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 4508" driver="nrg-4508" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 4502" driver="nrg-4502" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 4545" driver="nrg-4545" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 4518" driver="nrg-4518" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 4532" driver="nrg-4532" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 6002" driver="nrg-6002" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 6005" driver="nrg-6005" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 6008" driver="nrg-6008" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 7502" driver="nrg-7502" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 7505" driver="nrg-7505" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 7508" driver="nrg-7508" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 9005" driver="nrg-9005" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 9008" driver="nrg-9008" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG 9002" driver="nrg-9002" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm415" driver="nrg-dsm415" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm615" driver="nrg-dsm615" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm616" driver="nrg-dsm616" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm618" driver="nrg-dsm618" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm618d" driver="nrg-dsm618d" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm620" driver="nrg-dsm620" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm620d" driver="nrg-dsm620d" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm622" driver="nrg-dsm622" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm627" driver="nrg-dsm627" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm632" driver="nrg-dsm632" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm635" driver="nrg-dsm635" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm645" driver="nrg-dsm645" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm651" driver="nrg-dsm651" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm660" driver="nrg-dsm660" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm675" driver="nrg-dsm675" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm725" driver="nrg-dsm725" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm730" driver="nrg-dsm730" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm735" driver="nrg-dsm735" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG DSm745" driver="nrg-dsm745" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 1100" driver="nrg-mp_1100" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 1350" driver="nrg-mp_1350" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 1600" driver="nrg-mp_1600" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 161" driver="nrg-mp_161" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 2000" driver="nrg-mp_2000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 2500" driver="nrg-mp_2500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 2510" driver="nrg-mp_2510" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 2550" driver="nrg-mp_2550" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 2550B" driver="nrg-mp_2550b" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 3010" driver="nrg-mp_3010" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 3350" driver="nrg-mp_3350" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 3350B" driver="nrg-mp_3350b" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 3500" driver="nrg-mp_3500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 4000" driver="nrg-mp_4000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 4000B" driver="nrg-mp_4000b" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 4500" driver="nrg-mp_4500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 5000" driver="nrg-mp_5000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 5000B" driver="nrg-mp_5000b" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 5500" driver="nrg-mp_5500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 6500" driver="nrg-mp_6500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 7500" driver="nrg-mp_7500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer name="NRG MP 9000" driver="nrg-mp_9000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer name="Okidata OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
       <printer name="Okidata OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
       <printer name="Okidata OL400ex" driver="okidata-ol400ex" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
@@ -904,10 +1204,78 @@
       <printer name="Panasonic KX-P6150" driver="panasonic-kx-p6150" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer name="Panasonic KX-P6500" driver="panasonic-kx-p6500" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer name="Raven LP-410" driver="raven-lp-410" manufacturer="Raven" model="2" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1022" driver="ricoh-afc_1022" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1027" driver="ricoh-afc_1027" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1032" driver="ricoh-afc_1032" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1035" driver="ricoh-afc_1035" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1045" driver="ricoh-afc_1045" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1060" driver="ricoh-afc_1060" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1075" driver="ricoh-afc_1075" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 1515" driver="ricoh-afc_1515" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2015" driver="ricoh-afc_2015" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2016" driver="ricoh-afc_2016" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2018" driver="ricoh-afc_2018" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2018D" driver="ricoh-afc_2018d" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2020" driver="ricoh-afc_2020" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2020D" driver="ricoh-afc_2020d" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2022" driver="ricoh-afc_2022" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2027" driver="ricoh-afc_2027" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2032" driver="ricoh-afc_2032" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2035" driver="ricoh-afc_2035" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2035e" driver="ricoh-afc_2035e" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2045" driver="ricoh-afc_2045" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2045e" driver="ricoh-afc_2045e" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2051" driver="ricoh-afc_2051" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2060" driver="ricoh-afc_2060" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2075" driver="ricoh-afc_2075" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2090" driver="ricoh-afc_2090" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 2105" driver="ricoh-afc_2105" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer name="Ricoh Aficio 220" driver="ricoh-afc_220" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 3025" driver="ricoh-afc_3025" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 3030" driver="ricoh-afc_3030" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 3035" driver="ricoh-afc_3035" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio 3045" driver="ricoh-afc_3045" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer name="Ricoh Aficio 401" driver="ricoh-afc_401" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer name="Ricoh Aficio 700" driver="ricoh-afc_700" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 1100" driver="ricoh-afc_mp_1100" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 1350" driver="ricoh-afc_mp_1350" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 1600" driver="ricoh-afc_mp_1600" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 161" driver="ricoh-afc_mp_161" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 2000" driver="ricoh-afc_mp_2000" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 2500" driver="ricoh-afc_mp_2500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 2510" driver="ricoh-afc_mp_2510" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 2550" driver="ricoh-afc_mp_2550" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 2550B" driver="ricoh-afc_mp_2550b" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 3010" driver="ricoh-afc_mp_3010" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 3350" driver="ricoh-afc_mp_3350" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 3350B" driver="ricoh-afc_mp_3350b" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 3500" driver="ricoh-afc_mp_3500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 4000" driver="ricoh-afc_mp_4000" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 4000B" driver="ricoh-afc_mp_4000b" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 4500" driver="ricoh-afc_mp_4500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 5000" driver="ricoh-afc_mp_5000" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 5000B" driver="ricoh-afc_mp_5000b" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 5500" driver="ricoh-afc_mp_5500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 6500" driver="ricoh-afc_mp_6500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 7500" driver="ricoh-afc_mp_7500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer name="Ricoh Aficio MP 9000" driver="ricoh-afc_mp_9000" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung ML-85" driver="samsung-ml-85" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-1250" driver="samsung-ml-1250" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-1450" driver="samsung-ml-1450" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-1450PS" driver="samsung-ml-1450ps" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-1650" driver="samsung-ml-1650" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-1651N" driver="samsung-ml-1651n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-1750" driver="samsung-ml-1750" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2150" driver="samsung-ml-2150" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2150PS" driver="samsung-ml-2150ps" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2151N" driver="samsung-ml-2151n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2151NPS" driver="samsung-ml-2151nps" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2152W" driver="samsung-ml-2152w" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2152WPS" driver="samsung-ml-2152wps" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2250" driver="samsung-ml-2250" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2550" driver="samsung-ml-2550" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2551N" driver="samsung-ml-2551n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-2552W" driver="samsung-ml-2552w" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung ML-4600" driver="samsung-ml-4600" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung ML-5000a" driver="samsung-ml-5000a" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung ML-6000" driver="samsung-ml-6000" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
@@ -916,8 +1284,69 @@
       <printer name="Samsung ML-7000N" driver="samsung-ml-7000n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung ML-7000P" driver="samsung-ml-7000p" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung ML-7050" driver="samsung-ml-7050" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-7300" driver="samsung-ml-7300" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Samsung ML-7300N" driver="samsung-ml-7300n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung QL-5100A" driver="samsung-ql-5100a" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer name="Samsung QL-6050" driver="samsung-ql-6050" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2522" driver="savin-2522" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2527" driver="savin-2527" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2532" driver="savin-2532" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2535" driver="savin-2535" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2235" driver="savin-2235" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2545" driver="savin-2545" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2245" driver="savin-2245" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2560" driver="savin-2560" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 2575" driver="savin-2575" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 3515" driver="savin-3515" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 40105" driver="savin-40105" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4015" driver="savin-4015" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4018" driver="savin-4018" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4018d" driver="savin-4018d" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4022" driver="savin-4022" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4027" driver="savin-4027" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4035" driver="savin-4035" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4135g" driver="savin-4135g" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4035e" driver="savin-4035e" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4135eG" driver="savin-4135eg" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4045" driver="savin-4045" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4145g" driver="savin-4145g" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4045e" driver="savin-4045e" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4145eG" driver="savin-4145eg" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4051" driver="savin-4051" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4060" driver="savin-4060" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4075" driver="savin-4075" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 4090" driver="savin-4090" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 7025" driver="savin-7025" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8016" driver="savin-8016" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8020" driver="savin-8020" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8020d" driver="savin-8020d" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8025" driver="savin-8025" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8025e" driver="savin-8025e" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8030" driver="savin-8030" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8030e" driver="savin-8030e" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8035" driver="savin-8035" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8035g" driver="savin-8035g" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8035e" driver="savin-8035e" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8045" driver="savin-8045" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8045g" driver="savin-8045g" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8045e" driver="savin-8045e" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8055" driver="savin-8055" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8065" driver="savin-8065" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8075" driver="savin-8075" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8090" driver="savin-8090" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8110" driver="savin-8110" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 8135" driver="savin-8135" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 816" driver="savin-816" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9016" driver="savin-9016" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9021d" driver="savin-9021d" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9025" driver="savin-9025" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9025b" driver="savin-9025b" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9033" driver="savin-9033" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9033b" driver="savin-9033b" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9040" driver="savin-9040" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9040b" driver="savin-9040b" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9050" driver="savin-9050" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
+      <printer name="Savin 9050b" driver="savin-9050b" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
       <printer name="Seiko SpeedJET 200" driver="seiko-sj_200" manufacturer="Seiko" model="2" parameters="pcl_laser_params" />
       <printer name="Sharp AR-161" driver="sharp-ar-161" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
       <printer name="Sharp AR-M257" driver="sharp-ar-m257" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
