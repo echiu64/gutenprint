@@ -391,6 +391,9 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(min_nozzles),
   PARAMETER_INT(min_black_nozzles),
   PARAMETER_INT(min_fast_nozzles),
+  PARAMETER_INT(nozzle_start),
+  PARAMETER_INT(black_nozzle_start),
+  PARAMETER_INT(fast_nozzle_start),
   PARAMETER_INT(nozzle_separation),
   PARAMETER_INT(black_nozzle_separation),
   PARAMETER_INT(fast_nozzle_separation),
@@ -870,6 +873,9 @@ DEF_SIMPLE_ACCESSOR(fast_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(min_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(min_black_nozzles, unsigned)
 DEF_SIMPLE_ACCESSOR(min_fast_nozzles, unsigned)
+DEF_SIMPLE_ACCESSOR(nozzle_start, int)
+DEF_SIMPLE_ACCESSOR(black_nozzle_start, int)
+DEF_SIMPLE_ACCESSOR(fast_nozzle_start, int)
 DEF_SIMPLE_ACCESSOR(nozzle_separation, unsigned)
 DEF_SIMPLE_ACCESSOR(black_nozzle_separation, unsigned)
 DEF_SIMPLE_ACCESSOR(fast_nozzle_separation, unsigned)
@@ -3454,18 +3460,21 @@ setup_softweave_parameters(stp_vars_t *v)
     {
       pd->nozzles = escp2_fast_nozzles(v);
       pd->nozzle_separation = escp2_fast_nozzle_separation(v);
+      pd->nozzle_start = escp2_fast_nozzle_start(v);
       pd->min_nozzles = escp2_min_fast_nozzles(v);
     }
   else if (pd->use_black_parameters)
     {
       pd->nozzles = escp2_black_nozzles(v);
       pd->nozzle_separation = escp2_black_nozzle_separation(v);
+      pd->nozzle_start = escp2_black_nozzle_start(v);
       pd->min_nozzles = escp2_min_black_nozzles(v);
     }
   else
     {
       pd->nozzles = escp2_nozzles(v);
       pd->nozzle_separation = escp2_nozzle_separation(v);
+      pd->nozzle_start = escp2_nozzle_start(v);
       pd->min_nozzles = escp2_min_nozzles(v);
     }
 }
@@ -3477,6 +3486,7 @@ setup_printer_weave_parameters(stp_vars_t *v)
   pd->horizontal_passes = 1;
   pd->nozzles = 1;
   pd->nozzle_separation = 1;
+  pd->nozzle_start = 0;
   pd->min_nozzles = 1;
   pd->use_black_parameters = 0;
 }
@@ -3543,16 +3553,21 @@ setup_head_parameters(stp_vars_t *v)
     {
       if (pd->use_black_parameters)
 	pd->initial_vertical_offset =
-	  escp2_black_initial_vertical_offset(v) * pd->page_management_units /
+	  (escp2_black_initial_vertical_offset(v) -
+	   (escp2_black_nozzle_start(v) * (int) escp2_black_nozzle_separation(v))) *
+	  pd->page_management_units /
 	  escp2_base_separation(v);
       else
 	pd->initial_vertical_offset = pd->head_offset[0] +
-	  (escp2_initial_vertical_offset(v) *
+	  ((escp2_initial_vertical_offset(v) -
+	    (escp2_nozzle_start(v) * (int) escp2_nozzle_separation(v))) *
 	   pd->page_management_units / escp2_base_separation(v));
     }
   else
     pd->initial_vertical_offset =
-      escp2_initial_vertical_offset(v) * pd->page_management_units /
+      (escp2_initial_vertical_offset(v) -
+       (escp2_nozzle_start(v) * (int) escp2_nozzle_separation(v))) *
+      pd->page_management_units /
       escp2_base_separation(v);
 
   pd->printing_initial_vertical_offset = 0;

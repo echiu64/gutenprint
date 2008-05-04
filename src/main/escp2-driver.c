@@ -537,9 +537,10 @@ send_extra_data(stp_vars_t *v, int extralines)
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
 #ifdef TEST_UNCOMPRESSED
-  int i;
-  for (i = 0; i < pd->bitwidth * (lwidth + 7) / 8; i++)
-    stp_putc(0, v);
+  int i, k;
+  for (k = 0; k < extralines; k++)
+    for (i = 0; i < pd->bitwidth * (lwidth + 7) / 8; i++)
+      stp_putc(0, v);
 #else  /* !TEST_UNCOMPRESSED */
   int k, l;
   int bytes_to_fill = pd->bitwidth * ((lwidth + 7) / 8);
@@ -622,6 +623,7 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
   stp_pass_t *pass = stp_get_pass_by_pass(v, passno);
   stp_linecount_t *linecount = stp_get_linecount_by_pass(v, passno);
   int minlines = pd->min_nozzles;
+  int nozzle_start = pd->nozzle_start;
 
   for (j = 0; j < pd->channels_in_use; j++)
     {
@@ -644,14 +646,15 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 		{
 		  int lc = ((nlines + (sc - k - 1)) / sc);
 		  if (lc < minlines)
-		    {
-		      extralines = minlines - lc;
-		    }
+		    extralines = minlines - lc;
+		  extralines -= nozzle_start;
 		  if (lc + extralines > 0)
 		    {
 		      set_horizontal_position(v, pass, vertical_subpass);
 		      send_print_command(v, pass, pd->split_channels[k],
-					 lc + extralines);
+					 lc + extralines + nozzle_start);
+		      if (extralines)
+			send_extra_data(v, nozzle_start);
 		      for (l = 0; l < lc; l++)
 			{
 			  int sp = (l * sc) + k;
@@ -684,10 +687,12 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 		  nlines = minlines;
 		}
 	      send_print_command(v, pass, ncolor, nlines);
-
+	      extralines -= nozzle_start;
 	      /*
 	       * Send the data
 	       */
+	      if (nozzle_start)
+		send_extra_data(v, nozzle_start);
 	      stp_zfwrite((const char *)bufs->v[j], lineoffs->v[j], 1, v);
 	      if (extralines)
 		send_extra_data(v, extralines);
