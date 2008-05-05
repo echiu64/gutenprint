@@ -810,13 +810,24 @@
       <printer name="HP LaserJet 1100" driver="hp-lj_1100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1100A" driver="hp-lj_1100a" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1150" driver="hp-lj_1150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 1160" driver="hp-lj_1160" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1200" driver="hp-lj_1200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1220" driver="hp-lj_1220" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 1300" driver="hp-lj_1300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 1320" driver="hp-lj_1320" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 2100" driver="hp-lj_2100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 2100M" driver="hp-lj_2100m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 2200" driver="hp-lj_2200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 2300" driver="hp-lj_2300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 2410" driver="hp-lj_2410" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 2420" driver="hp-lj_2420" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 2430" driver="hp-lj_2430" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3015" driver="hp-lj_3015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3020" driver="hp-lj_3020" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3030" driver="hp-lj_3030" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3050" driver="hp-lj_3050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3052" driver="hp-lj_3052" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3055" driver="hp-lj_3055" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 3200" driver="hp-lj_3200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 3200m" driver="hp-lj_3200m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 3200se" driver="hp-lj_3200se" manufacturer="HP" model="6" parameters="pcl_laser_params" />
@@ -825,17 +836,39 @@
       <printer name="HP LaserJet 3320 MFP" driver="hp-lj_3320_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 3320N MFP" driver="hp-lj_3320n_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 3330 MFP" driver="hp-lj_3330_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3380" driver="hp-lj_3380" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3390" driver="hp-lj_3390" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 3392" driver="hp-lj_3392" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 4000" driver="hp-lj_4000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 4050" driver="hp-lj_4050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 4100" driver="hp-lj_4100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 4200" driver="hp-lj_4200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 4240" driver="hp-lj_4240" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 4250" driver="hp-lj_4250" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 4300" driver="hp-lj_4300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 4345 mfp" driver="hp-lj_4345_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 4350" driver="hp-lj_4350" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 5000" driver="hp-lj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 5100" driver="hp-lj_5100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 5200" driver="hp-lj_5200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 5200L" driver="hp-lj_5200l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 8000" driver="hp-lj_8000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 8100" driver="hp-lj_8100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 8150" driver="hp-lj_8150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP LaserJet 9000" driver="hp-lj_9000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 9040" driver="hp-lj_9040" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 9040 MFP" driver="hp-lj_9040_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 9050" driver="hp-lj_9050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet 9050 MFP" driver="hp-lj_9050_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet M3027 MFP" driver="hp-lj_m3027_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet M3035 MFP" driver="hp-lj_m3035_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet M4345 MFP" driver="hp-lj_m4345_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet M5025 MFP" driver="hp-lj_m5025_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet M5035 MFP" driver="hp-lj_m5035_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet P2010" driver="hp-lj_p2010" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet P2015" driver="hp-lj_p2015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet P3004" driver="hp-lj_p3004" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer name="HP LaserJet P3005" driver="hp-lj_p3005" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP Mopier 240" driver="hp-mopier_240" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP Mopier 320" driver="hp-mopier_320" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer name="HP OfficeJet 300" driver="hp-oj_300" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
@@ -1094,6 +1127,7 @@
       <printer name="Lexmark Optra E+" driver="lexmark-optra_eplus" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Optra E220" driver="lexmark-optra_e220" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Optra E321" driver="lexmark-optra_e321" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
+      <printer name="Lexmark Optra E323" driver="lexmark-optra_e323" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer name="Lexmark Valuewriter 300" driver="lexmark-vw_300" manufacturer="Lexmark" model="2" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
       <printer name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
