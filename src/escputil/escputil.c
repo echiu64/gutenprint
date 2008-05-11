@@ -1245,7 +1245,16 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
   int i = 0;
   int j;
   const char *ind;
+  const stp_string_list_t *color_list = NULL;
+  stp_parameter_t desc;
+  const stp_vars_t *printvars = stp_printer_get_defaults(printer);
+  stp_describe_parameter(printvars, "ChannelNames", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    color_list = desc.bounds.str;
   STP_DEBUG(fprintf(stderr, "New format bytes: %d bytes\n", bytes));
+  if (cmd == CMD_STATUS)
+    printf(_("Printer Name: %s\n"),
+	    printer ? stp_printer_get_long_name(printer) : _("Unknown"));
   while (i < bytes)
     {
       unsigned hdr = buf[i];
@@ -1292,60 +1301,49 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	      print_self_printing_state(param);
 	      break; 
 	    case 0x4:	/* Warning */
-#if 0
 	      /*
 	       * Bits mean different things on different printers
 	       * Need to figure out how to do this...
 	       * Maybe we don't really need to, since we're also
 	       * printing out ink levels
 	       */
-	      for (j = 0; j < total_param_count; i++)
+	      for (j = 0; j < total_param_count; j++)
 		{
 		  param = (unsigned) buf[i + j + 2];
-		  switch (param)
+		  if (param >= 0x10 && param < 0x20)
 		    {
-		    case 0x10:
-		      printf(_("Warning: Black Ink Low\n"));
-		      break;
-		    case 0x11:
-		      printf(_("Warning: Cyan Ink Low\n"));
-		      break;
-		    case 0x12:
-		      printf(_("Warning: Magenta Ink Low\n"));
-		      break;
-		    case 0x13:
-		      printf(_("Warning: Yellow Ink Low\n"));
-		      break;
-		    case 0x14:
-		      printf(_("Warning: Black Ink Low\n"));
-		      break;
-		    case 0x15:
-		      printf(_("Warning: Black Ink Low\n"));
-		      break;
-		    case 0x20:
-		      printf(_("Warning: Maintenance cartridge near full\n"));
-		      break;
-		    case 0x21:
-		      printf(_("Warning: Maintenance request pending\n"));
-		      break;
-		    case 0x11:
-		      printf(_("Warning: Black Cleaning Disabled\n"));
-		      break;
-		    case 0x12:
-		      printf(_("Warning: Cyan Cleaning Disabled\n"));
-		      break;
-		    case 0x13:
-		      printf(_("Warning: Magenta Cleaning Disabled\n"));
-		      break;
-		    case 0x14:
-		      printf(_("Warning: Yellow Cleaning Disabled\n"));
-		      break;
-		    default:
-		      printf(_("Warning: Unknown (%d)\n"), param);
-		      break;
+		      param &= 0xf;
+		      if (color_list && param < stp_string_list_count(color_list))
+			printf(_("Warning: %s Ink Low\n"),
+			       gettext(stp_string_list_param(color_list, param)->text));
+		      else
+			printf(_("Warning: Channel %d Ink Low\n"), param);
+		    }
+		  else if (param >= 0x50 && param < 0x60)
+		    {
+		      param &= 0xf;
+		      if (color_list && param < stp_string_list_count(color_list))
+			printf(_("Warning: %s Cleaning Disabled\n"),
+			       gettext(stp_string_list_param(color_list, param)->text));
+		      else
+			printf(_("Warning: Channel %d Cleaning \n"), param);
+		    }
+		  else
+		    {
+		      switch (param)
+			{
+			case 0x20:
+			  printf(_("Warning: Maintenance cartridge near full\n"));
+			  break;
+			case 0x21:
+			  printf(_("Warning: Maintenance request pending\n"));
+			  break;
+			default:
+			  printf(_("Warning: Unknown (%d)\n"), param);
+			  break;
+			}
 		    }
 		}
-#endif
 	      break;
 	    case 0x19:	/* Job name */
 	      if (total_param_count > 5)
@@ -1363,6 +1361,7 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	}
       i += total_param_count + 2;
     }
+  stp_parameter_description_destroy(&desc);
   exit(0);
 }
 
