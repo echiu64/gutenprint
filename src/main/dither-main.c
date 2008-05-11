@@ -254,6 +254,8 @@ stpi_set_dither_function(stp_vars_t *v)
 	  (d->x_aspect > 2 || d->y_aspect > 2))
 	d->stpi_dither_type = D_ADAPTIVE_HYBRID;
     }
+  if (d->stpi_dither_type == -1)
+    d->stpi_dither_type = D_ADAPTIVE_HYBRID;
   switch (d->stpi_dither_type)
     {
     case D_PREDITHERED:
