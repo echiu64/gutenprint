@@ -73,6 +73,9 @@ static const escp2_dot_size_t c3pl_pigment_dotsizes =
 static const escp2_dot_size_t c3pl_pigment_c120_dotsizes =
 { 0x11, 0x11, 0x12, 0x12, 0x13, 0x13, 0x13, 0x13, 0x13 };
 
+static const escp2_dot_size_t c3pl_pigment_b500_dotsizes =
+{ 0x11, 0x11, 0x11, 0x12, 0x13, 0x13, 0x13, 0x13, 0x13 };
+
 static const escp2_dot_size_t p3pl_dotsizes =
 { 0x10, 0x10, 0x10, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12 };
 
@@ -207,6 +210,9 @@ static const escp2_base_resolutions_t c1_8_base_res =
 static const escp2_base_resolutions_t c1_5_base_res =
 {  360,  360,  720,  720,  720,  720,  720,  720,  720 };
 
+static const escp2_base_resolutions_t b500_base_res =
+{  360,  360,  720,  720,  720,  720,  720,  720,  720 };
+
 static const escp2_base_resolutions_t claria_1400_base_res =
 {  360,  360,  720,  720,  360,  360,  720,  720,  720 };
 
@@ -276,6 +282,9 @@ static const escp2_densities_t claria_1400_densities =
 
 static const escp2_densities_t p3_5pl_densities =
 { 2.8, 1.4,  1.77, 0.886, 0.443, 0.221, 0.240, 0.293, 0.146 };
+
+static const escp2_densities_t c3pl_pigment_b500_densities =
+{ 6.0, 3.0,  1.63, 0.817, 1.250, 0.625, 0.460, 0.284, 0.142 };
 
 static const escp2_densities_t c2pl_densities =
 { 2.0, 1.0,  0.5,  0.650, 0.650, 0.0,   0.650, 0.325, 0.0   };
@@ -2041,6 +2050,25 @@ const stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     variable_bits, c1_5_base_res, "default",
     "picturemate", &new_init_sequence, &je_deinit_sequence,
     NULL, NULL, "picturemate_4"
+  },
+  /* 87: B-500DN */
+  {
+    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
+     MODEL_ZEROMARGIN_NO | MODEL_VACUUM_NO | MODEL_FAST_360_NO |
+     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
+     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
+     MODEL_ENVELOPE_LANDSCAPE_NO),
+    360, 1, 0, 1, 360, 1, 0, 1, 360, 1, 0, 1, 4,
+    360, 14400, -1, 5760, 2880, 360, 360,
+    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
+    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
+    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
+    4, 15, 0, 0,
+    c3pl_pigment_b500_dotsizes, c3pl_pigment_b500_densities, "variable_3pl_pigment_b500",
+    "superfine", "b500",
+    variable_bits, b500_base_res, "b500",
+    "standard", &new_init_sequence, &je_deinit_sequence,
+    NULL, NULL, "standard"
   },
 };
 

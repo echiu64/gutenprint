@@ -249,6 +249,18 @@ static const escp2_dropsize_t escp2_3pl_pigment_c120_2880_dropsizes =
 static const escp2_dropsize_t escp2_3pl_pigment_c120_5760_dropsizes =
   { "3pl_pigment_c120_5760", 1, { 1.0 } };
 
+/* Stylus B500 */
+static const escp2_dropsize_t escp2_low_pigment_b500_dropsizes =
+  { "low_pigment_b500", 3, { 0.3, 0.5, 1.0 } };
+static const escp2_dropsize_t escp2_720_pigment_b500_dropsizes =
+  { "720_pigment_b500", 3, { 0.227, 0.5, 1.0 } };
+static const escp2_dropsize_t escp2_high_pigment_b500_dropsizes =
+  { "high_pigment_b500", 3, { 0.55, 0.68, 1.0 } };
+static const escp2_dropsize_t escp2_high_pigment_b500_2880_dropsizes =
+  { "high_pigment_b500_2880", 2, { 0.81, 1.0 } };
+static const escp2_dropsize_t escp2_high_pigment_b500_5760_dropsizes =
+  { "high_pigment_b500_5760", 1, { 1.0 } };
+
 /* Stylus Photo 2000P */
 static const escp2_dropsize_t escp2_2000p_dropsizes =
   { "2000p", 2, { 0.55, 1.0 } };
@@ -499,6 +511,19 @@ static const escp2_drop_list_t variable_3pl_pigment_c120_drops =
   &escp2_3pl_pigment_c120_5760_dropsizes,
 };
 
+static const escp2_drop_list_t variable_3pl_pigment_b500_drops =
+{
+  &escp2_low_pigment_b500_dropsizes,
+  &escp2_low_pigment_b500_dropsizes,
+  &escp2_720_pigment_b500_dropsizes,
+  &escp2_720_pigment_b500_dropsizes,
+  &escp2_high_pigment_b500_dropsizes,
+  &escp2_high_pigment_b500_dropsizes,
+  &escp2_high_pigment_b500_2880_dropsizes,
+  &escp2_high_pigment_b500_5760_dropsizes,
+  &escp2_high_pigment_b500_5760_dropsizes,
+};
+
 static const escp2_drop_list_t spro10000_drops =
 {
   &escp2_spro10000_dropsizes,
@@ -529,6 +554,7 @@ static const drop_list_t the_drop_lists[] =
   { "variable_3pl_pigment", &variable_3pl_pigment_drops },
   { "variable_3pl_pigment_c66", &variable_3pl_pigment_c66_drops },
   { "variable_3pl_pigment_c120", &variable_3pl_pigment_c120_drops },
+  { "variable_3pl_pigment_b500", &variable_3pl_pigment_b500_drops },
   { "variable_3pl_pmg", &variable_3pl_pmg_drops },
   { "variable_claria", &claria_drops },
   { "variable_claria_1400", &claria_1400_drops },
@@ -552,5 +578,6 @@ stpi_escp2_get_drop_list_named(const char *n)
 	if (strcmp(n, the_drop_lists[i].name) == 0)
 	  return the_drop_lists[i].drop_list;
       }
+  stp_erprintf("Cannot find ink drop list named %s\n", n);
   return NULL;
 }

@@ -197,6 +197,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
   },
   {
+    "Duplex", N_("Double-Sided Printing"), N_("Basic Printer Setup"),
+    N_("Duplex/Tumble Setting"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+  },
+  {
     "CDInnerRadius", N_("CD Hub Size"), N_("Basic Printer Setup"),
     N_("Print only outside of the hub of the CD, or all the way to the hole"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -2277,6 +2283,44 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       else
 	description->is_active = 0;
     }
+  else if (strcmp(name, "Duplex") == 0)
+    {
+      int supports_duplex = 0;
+      const input_slot_list_t *slots = escp2_input_slots(v);
+      if (slots &&
+	  (!stp_get_string_parameter(v, "JobMode") ||
+	   strcmp(stp_get_string_parameter(v, "JobMode"), "Job") == 0))
+	{
+	  int k;
+	  for (k = 0; k < slots->n_input_slots; k++)
+	    {
+	      if (slots->slots[k].duplex)
+		{
+		  supports_duplex = 1;
+		  break;
+		}
+	    }
+	}
+      if (supports_duplex)
+	{
+	  const input_slot_t *slot = get_input_slot(v);
+	  if (slot && !slot->duplex)
+	    description->is_active = 0;
+	  else
+	    {
+	      description->bounds.str = stp_string_list_create();
+	      stp_string_list_add_string
+		(description->bounds.str, "None", _("Off"));
+	      stp_string_list_add_string
+		(description->bounds.str, "DuplexNoTumble", _("Long Edge (Standard)"));
+	      stp_string_list_add_string
+		(description->bounds.str, "DuplexTumble", _("Short Edge(Flip)"));
+	      description->deflt.str = "None";
+	    }
+	}
+      else
+	description->is_active = 0;
+    }
   else if (strcmp(name, "AdjustDotsize") == 0)
     {
       description->deflt.boolean = 0;
@@ -3242,6 +3286,36 @@ setup_head_offset(stp_vars_t *v)
       }
 }
 
+static int
+supports_split_channels(stp_vars_t *v)
+{
+  escp2_privdata_t *pd = get_privdata(v);
+  int i;
+  int split_channel_count = -1;
+  for (i = 0; i < pd->logical_channels; i++)
+    {
+      int j;
+      if (pd->inkname->channel_set->channels[i])
+	{
+	  for (j = 0; j < pd->inkname->channel_set->channels[i]->n_subchannels; j++)
+	    {
+	      int split_count = pd->inkname->channel_set->channels[i]->subchannels[j].split_channel_count;
+	      if (split_count == 0)
+		return 0;
+	      else if (split_channel_count >= 0 && split_count != split_channel_count)
+		return 0;
+	      else
+		split_channel_count = split_count;
+	    }
+	}
+    }
+  if (split_channel_count > 0)
+    return split_channel_count;
+  else
+    return 0;
+}
+	  
+
 static void
 setup_split_channels(stp_vars_t *v)
 {
@@ -3249,14 +3323,11 @@ setup_split_channels(stp_vars_t *v)
   /*
    * Set up the output channels
    */
-  if (pd->physical_channels == 1 &&
-      
-      pd->inkname->channel_set->channels[0]->subchannels->split_channel_count > 1)
+  pd->split_channel_count = supports_split_channels(v);
+  if (pd->split_channel_count)
     {
       int i;
       int incr = 1;
-      pd->split_channel_count =
-	pd->inkname->channel_set->channels[0]->subchannels->split_channel_count;
       if (pd->res->vres <
 	  (escp2_base_separation(v) / escp2_black_nozzle_separation(v)))
 	{
@@ -3268,13 +3339,7 @@ setup_split_channels(stp_vars_t *v)
 	  pd->nozzles /= incr;
 	  pd->min_nozzles /= incr;
 	}
-      pd->split_channels = stp_malloc(pd->split_channel_count * sizeof(short));
-      for (i = 0; i < pd->split_channel_count; i++)
-	pd->split_channels[i] =
-	  pd->inkname->channel_set->channels[0]->subchannels->split_channels[i * incr];
     }
-  else
-    pd->split_channel_count = 0;
 }
 
 static void
@@ -3301,6 +3366,16 @@ setup_misc(stp_vars_t *v)
   pd->paper_type = get_media_type(v);
   pd->paper_adjustment = get_media_adjustment(v);
   pd->ink_group = escp2_inkgroup(v);
+  if (stp_check_string_parameter(v, "Duplex", STP_PARAMETER_ACTIVE))
+    {
+      const char *duplex = stp_get_string_parameter(v, "Duplex");
+      if (strcmp(duplex, "DuplexTumble") == 0)
+	pd->duplex = DUPLEX_TUMBLE;
+      else if (strcmp(duplex, "DuplexNoTumble") == 0)
+	pd->duplex = DUPLEX_NO_TUMBLE;
+      else
+	pd->duplex = 0;
+    }
 }
 
 static void
@@ -3308,24 +3383,33 @@ allocate_channels(stp_vars_t *v, int line_length)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const escp2_inkname_t *ink_type = pd->inkname;
-  int i;
+  int i, j, k;
   int channel_id = 0;
+  int split_id = 0;
 
   pd->cols = stp_zalloc(sizeof(unsigned char *) * pd->channels_in_use);
   pd->channels =
     stp_zalloc(sizeof(physical_subchannel_t *) * pd->channels_in_use);
+  if (pd->split_channel_count)
+    pd->split_channels = stp_zalloc(sizeof(short) * pd->channels_in_use *
+				    pd->split_channel_count);
 
   for (i = 0; i < pd->logical_channels; i++)
     {
       const ink_channel_t *channel = ink_type->channel_set->channels[i];
       if (channel)
 	{
-	  int j;
 	  for (j = 0; j < channel->n_subchannels; j++)
 	    {
+	      const physical_subchannel_t *sc = &(channel->subchannels[j]);
 	      pd->cols[channel_id] = stp_zalloc(line_length);
-	      pd->channels[channel_id] = &(channel->subchannels[j]);
+	      pd->channels[channel_id] = sc;
 	      stp_dither_add_channel(v, pd->cols[channel_id], i, j);
+	      if (pd->split_channel_count)
+		{
+		  for (k = 0; k < pd->split_channel_count; k++)
+		    pd->split_channels[split_id++] = sc->split_channels[k];
+		}
 	      channel_id++;
 	    }
 	}
@@ -3335,13 +3419,18 @@ allocate_channels(stp_vars_t *v, int line_length)
       for (i = 0; i < ink_type->channel_set->aux_channel_count; i++)
 	{
 	  const ink_channel_t *channel = ink_type->channel_set->aux_channels[i];
-	  int j;
 	  for (j = 0; j < channel->n_subchannels; j++)
 	    {
+	      const physical_subchannel_t *sc = &(channel->subchannels[j]);
 	      pd->cols[channel_id] = stp_zalloc(line_length);
-	      pd->channels[channel_id] = &(channel->subchannels[j]);
+	      pd->channels[channel_id] = sc;
 	      stp_dither_add_channel(v, pd->cols[channel_id],
 				     i + pd->logical_channels, j);
+	      if (pd->split_channel_count)
+		{
+		  for (k = 0; k < pd->split_channel_count; k++)
+		    pd->split_channels[split_id++] = sc->split_channels[k];
+		}
 	      channel_id++;
 	    }
 	}
@@ -3943,6 +4032,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   int status = 1;
 
   escp2_privdata_t *pd;
+  int page_number = stp_get_int_parameter(v, "PageNumber");
 
   if (!stp_verify(v))
     {
@@ -3956,6 +4046,14 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
     return 0;
 
   pd = (escp2_privdata_t *) stp_zalloc(sizeof(escp2_privdata_t));
+  if ((print_op & OP_JOB_PRINT) && (page_number & 1) && pd->duplex)
+    {
+      /* If the hardware can't do the duplex operation, we need to
+	 emulate it in software */
+      if ((pd->duplex & pd->input_slot->duplex) == 0)
+	image = stpi_buffer_image(image, BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
+    }
+
   pd->printed_something = 0;
   pd->last_color = -1;
   pd->last_pass_offset = 0;

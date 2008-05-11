@@ -541,6 +541,7 @@ stpi_escp2_get_reslist_named(const char *n)
 	if (strcmp(n, the_resolutions[i].name) == 0)
 	  return the_resolutions[i].res_list;
       }
+  stp_erprintf("Cannot find resolution list named %s\n", n);
   return NULL;
 }
 
@@ -620,6 +621,7 @@ stpi_escp2_get_printer_weaves_named(const char *n)
 	if (strcmp(n, the_weaves[i].name) == 0)
 	  return the_weaves[i].weave_list;
       }
+  stp_erprintf("Cannot find weave list named %s\n", n);
   return NULL;
 }
 
@@ -714,5 +716,6 @@ stpi_escp2_get_quality_list_named(const char *n)
 	if (strcmp(n, the_qualities[i].name) == 0)
 	  return the_qualities[i].quality_list;
       }
+  stp_erprintf("Cannot find quality list named %s\n", n);
   return NULL;
 }

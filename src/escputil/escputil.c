@@ -1073,17 +1073,29 @@ print_error(int param)
     case 6:
       printf(_("Error: Paper out\n"));
       break;
+    case 0x10:
+      printf(_("Error: Maintenance cartridge overflow\n"));
+      break;
     case 0x11:
       printf(_("Error: Wait return from the tear-off position\n"));
       break;
     case 0x12:
       printf(_("Error: Double feed error\n"));
       break;
+    case 0x1a:
+      printf(_("Error: Ink cartridge lever released\n\n"));
+      break;
     case 0x1c:
       printf(_("Error: Unrecoverable cutter error\n"));
       break;
     case 0x1d:
       printf(_("Error: Recoverable cutter jam\n"));
+      break;
+    case 0x22:
+      printf(_("Error: No maintenance cartridge present\n"));
+      break;
+    case 0x25:
+      printf(_("Error: Rear cover open\n"));
       break;
     case 0x29:
       printf(_("Error: CD Tray Out\n"));
@@ -1093,6 +1105,15 @@ print_error(int param)
       break;
     case 0x2b:
       printf(_("Error: Tray cover open\n"));
+      break;
+    case 0x36:
+      printf(_("Error: Maintenance cartridge cover open\n"));
+      break;
+    case 0x37:
+      printf(_("Error: Front cover open\n"));
+      break;
+    case 0x41:
+      printf(_("Error: Maintenance request\n"));
       break;
     default:
       printf(_("Error: Unknown (%d)\n"), param);
@@ -1287,19 +1308,37 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 		      printf(_("Warning: Black Ink Low\n"));
 		      break;
 		    case 0x11:
-		      printf(_("Warning: Black Ink Low\n"));
+		      printf(_("Warning: Cyan Ink Low\n"));
 		      break;
 		    case 0x12:
-		      printf(_("Warning: Black Ink Low\n"));
+		      printf(_("Warning: Magenta Ink Low\n"));
 		      break;
 		    case 0x13:
-		      printf(_("Warning: Black Ink Low\n"));
+		      printf(_("Warning: Yellow Ink Low\n"));
 		      break;
 		    case 0x14:
 		      printf(_("Warning: Black Ink Low\n"));
 		      break;
 		    case 0x15:
 		      printf(_("Warning: Black Ink Low\n"));
+		      break;
+		    case 0x20:
+		      printf(_("Warning: Maintenance cartridge near full\n"));
+		      break;
+		    case 0x21:
+		      printf(_("Warning: Maintenance request pending\n"));
+		      break;
+		    case 0x11:
+		      printf(_("Warning: Black Cleaning Disabled\n"));
+		      break;
+		    case 0x12:
+		      printf(_("Warning: Cyan Cleaning Disabled\n"));
+		      break;
+		    case 0x13:
+		      printf(_("Warning: Magenta Cleaning Disabled\n"));
+		      break;
+		    case 0x14:
+		      printf(_("Warning: Yellow Cleaning Disabled\n"));
 		      break;
 		    default:
 		      printf(_("Warning: Unknown (%d)\n"), param);

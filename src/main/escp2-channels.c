@@ -318,6 +318,13 @@ static const physical_subchannel_t c120_black_subchannels[] =
 
 DECLARE_INK_CHANNEL(c120_black);
 
+static const physical_subchannel_t b500_black_subchannels[] =
+{
+  { 0, 4, 0, 2, "BlackDensity", NULL, NULL, NULL, { 0, 0x40 } }
+};
+
+DECLARE_INK_CHANNEL(b500_black);
+
 static const physical_subchannel_t c64_black_subchannels[] =
 {
   { 0, -1, 0, 0, "BlackDensity", NULL, NULL, NULL }
@@ -388,6 +395,13 @@ static const physical_subchannel_t c64_cyan_subchannels[] =
 
 DECLARE_INK_CHANNEL(c64_cyan);
 
+static const physical_subchannel_t b500_cyan_subchannels[] =
+{
+  { 2, 4, 0, 2, "CyanDensity", NULL, NULL, NULL, { 2, 0x42 } }
+};
+
+DECLARE_INK_CHANNEL(b500_cyan);
+
 static const physical_subchannel_t standard_magenta_subchannels[] =
 {
   { 1, -1, 0, 0, "MagentaDensity", NULL, NULL, NULL }
@@ -444,6 +458,13 @@ static const physical_subchannel_t c64_magenta_subchannels[] =
 
 DECLARE_INK_CHANNEL(c64_magenta);
 
+static const physical_subchannel_t b500_magenta_subchannels[] =
+{
+  { 1, 4, 0, 2, "MagentaDensity", NULL, NULL, NULL, { 1, 0x41 } }
+};
+
+DECLARE_INK_CHANNEL(b500_magenta);
+
 static const physical_subchannel_t standard_yellow_subchannels[] =
 {
   { 4, -1, 0, 0, "YellowDensity", NULL, NULL, NULL }
@@ -499,6 +520,13 @@ static const physical_subchannel_t picturemate_yellow_subchannels[] =
 };
 
 DECLARE_EXTENDED_INK_CHANNEL(picturemate_yellow);
+
+static const physical_subchannel_t b500_yellow_subchannels[] =
+{
+  { 4, 4, 0, 2, "YellowDensity", NULL, NULL, NULL, { 4, 0x44 } }
+};
+
+DECLARE_INK_CHANNEL(b500_yellow);
 
 static const physical_subchannel_t r800_red_subchannels[] =
 {
@@ -743,6 +771,16 @@ static const physical_subchannel_t c120_quadtone_subchannels[] =
 };
 
 DECLARE_INK_CHANNEL(c120_quadtone);
+
+static const physical_subchannel_t b500_quadtone_subchannels[] =
+{
+  { 0, 0, 0, 2, "BlackDensity", "GrayTransition", NULL, NULL, { 0, 0x40 } },
+  { 2, 0, 0, 2, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale", { 2, 0x42 } },
+  { 1, 0, 0, 2, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale", { 1, 0x41 } },
+  { 4, 0, 0, 2, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale", { 4, 0x44 } },
+};
+
+DECLARE_INK_CHANNEL(b500_quadtone);
 
 static const physical_subchannel_t c64_quadtone_subchannels[] =
 {
@@ -1062,6 +1100,19 @@ static const escp2_inkname_t c120_generic_quadtone_inkset =
   &c120_quadtone_channel_set
 };
 
+static const ink_channel_t *const b500_quadtone_channels[] =
+{
+  &b500_quadtone_channel
+};
+
+DECLARE_CHANNEL_SET(b500_quadtone);
+
+static const escp2_inkname_t b500_generic_quadtone_inkset =
+{
+  "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
+  &b500_quadtone_channel_set
+};
+
 static const ink_channel_t *const c64_quadtone_channels[] =
 {
   &c64_quadtone_channel
@@ -1165,6 +1216,20 @@ static const escp2_inkname_t c120_three_color_composite_inkset =
 {
   "RGB", N_("Three Color Composite"), INKSET_CMYK,
   &c120_cmy_channel_set
+};
+
+static const ink_channel_t *const b500_cmy_channels[] =
+{
+  NULL, &b500_cyan_channel,
+  &b500_magenta_channel, &b500_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(b500_cmy);
+
+static const escp2_inkname_t b500_three_color_composite_inkset =
+{
+  "RGB", N_("Three Color Composite"), INKSET_CMYK,
+  &b500_cmy_channel_set
 };
 
 static const ink_channel_t *const c64_cmy_channels[] =
@@ -1395,6 +1460,20 @@ static const escp2_inkname_t c120_four_color_standard_inkset =
 {
   "CMYK", N_("Four Color Standard"), INKSET_CMYK,
   &c120_cmyk_channel_set
+};
+
+static const ink_channel_t *const b500_cmyk_channels[] =
+{
+  &b500_black_channel, &b500_cyan_channel,
+  &b500_magenta_channel, &b500_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(b500_cmyk);
+
+static const escp2_inkname_t b500_four_color_standard_inkset =
+{
+  "CMYK", N_("Four Color Standard"), INKSET_CMYK,
+  &b500_cmyk_channel_set
 };
 
 static const ink_channel_t *const c64_cmyk_channels[] =
@@ -1903,6 +1982,18 @@ static const escp2_inkname_t c120_one_color_extended_inkset =
   &c120_one_color_extended_channel_set
 };
 
+static const ink_channel_t *const b500_one_color_extended_channels[] =
+{
+  &b500_black_channel
+};
+DECLARE_CHANNEL_SET(b500_one_color_extended);
+
+static const escp2_inkname_t b500_one_color_extended_inkset =
+{
+  "PhysicalBlack", N_("One Color Raw"), INKSET_EXTENDED,
+  &b500_one_color_extended_channel_set
+};
+
 static const escp2_inkname_t one_color_photo_extended_inkset =
 {
   "PhysicalBlack", N_("One Color Raw"), INKSET_EXTENDED,
@@ -2021,6 +2112,19 @@ static const escp2_inkname_t c120_three_color_extended_inkset =
   &c120_three_color_extended_channel_set
 };
 
+static const ink_channel_t *const b500_three_color_extended_channels[] =
+{
+  &b500_cyan_channel, &b500_magenta_channel, &b500_yellow_channel
+};
+
+DECLARE_CHANNEL_SET(b500_three_color_extended);
+
+static const escp2_inkname_t b500_three_color_extended_inkset =
+{
+  "PhysicalCMY", N_("Three Color Raw"), INKSET_EXTENDED,
+  &b500_three_color_extended_channel_set
+};
+
 static const ink_channel_t *const c64_three_color_extended_channels[] =
 {
   &c64_cyan_channel, &c64_magenta_channel, &c64_yellow_channel
@@ -2104,6 +2208,12 @@ static const escp2_inkname_t c120_four_color_extended_inkset =
 {
   "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
   &c120_cmyk_channel_set
+};
+
+static const escp2_inkname_t b500_four_color_extended_inkset =
+{
+  "PhysicalCMYK", N_("Four Color Raw"), INKSET_EXTENDED,
+  &b500_cmyk_channel_set
 };
 
 static const escp2_inkname_t c64_four_color_extended_inkset =
@@ -2568,6 +2678,26 @@ static const escp2_inkname_t *const c120_quadtone_ink_types[] =
 DECLARE_INKLIST("Quadtone", c120_quadtone, c120_quadtone, N_("Quadtone"),
 		standard, standard, quadtone);
 
+static const escp2_inkname_t *const b500_ink_types[] =
+{
+  &b500_four_color_standard_inkset,
+  &b500_three_color_composite_inkset,
+  &b500_one_color_extended_inkset,
+  &b500_three_color_extended_inkset,
+  &b500_four_color_extended_inkset,
+};
+
+DECLARE_INKLIST("None", b500, b500, N_("EPSON Standard Inks"),
+		durabrite2, durabrite3, standard);
+
+static const escp2_inkname_t *const b500_quadtone_ink_types[] =
+{
+  &b500_generic_quadtone_inkset,
+};
+
+DECLARE_INKLIST("Quadtone", b500_quadtone, b500_quadtone, N_("Quadtone"),
+		standard, standard, quadtone);
+
 static const escp2_inkname_t *const c64_ink_types[] =
 {
   &c64_four_color_standard_inkset,
@@ -2875,6 +3005,14 @@ static const inklist_t *const c120_group[] =
 
 DECLARE_INKGROUP(c120);
 
+static const inklist_t *const b500_group[] =
+{
+  &b500_inklist,
+  &b500_quadtone_inklist
+};
+
+DECLARE_INKGROUP(b500);
+
 static const inklist_t *const c82_group[] =
 {
   &c82_inklist,
@@ -3031,6 +3169,7 @@ static const ink_t the_inks[] =
   { "cmy", &cmy_inkgroup },
   { "standard", &standard_inkgroup },
   { "c120", &c120_inkgroup },
+  { "b500", &b500_inkgroup },
   { "c80", &c80_inkgroup },
   { "c82", &c82_inkgroup },
   { "c64", &c64_inkgroup },
@@ -3063,6 +3202,7 @@ stpi_escp2_get_inkgroup_named(const char *n)
 	if (strcmp(n, the_inks[i].name) == 0)
 	  return the_inks[i].inkgroup;
       }
+  stp_erprintf("Cannot find ink group named %s\n", n);
   return NULL;
 }
 
@@ -3281,5 +3421,6 @@ stpi_escp2_get_channel_names_named(const char *n)
 	if (strcmp(n, the_channels[i].name) == 0)
 	  return the_channels[i].channel_name;
       }
+  stp_erprintf("Couldn't find channel set named %s!\n", n);
   return NULL;
 }

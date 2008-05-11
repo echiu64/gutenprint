@@ -106,6 +106,7 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Use_softweave", pd->res->softweave);
   print_remote_int_param(v, "Use_printer_weave", pd->res->printer_weave);
   print_remote_int_param(v, "Use_printer_weave", pd->use_printer_weave);
+  print_remote_int_param(v, "Duplex", pd->duplex);
   print_remote_int_param(v, "Page_left", pd->page_left);
   print_remote_int_param(v, "Page_right", pd->page_right);
   print_remote_int_param(v, "Page_top", pd->page_top);
@@ -271,7 +272,15 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	      break;
 	    }
 	}
-
+      if (pd->duplex)
+	{
+	  /* If there's ever duplex no tumble, we'll need to special
+	     case it, too */
+	  if (pd->duplex == DUPLEX_TUMBLE && (pd->input_slot->duplex & DUPLEX_TUMBLE))
+	    stp_send_command(v, "DP", "bcc", 0, 2); /* Auto duplex */
+	  else
+	    stp_send_command(v, "DP", "bcc", 0, 2); /* Auto duplex */
+	}
       /* Exit remote mode */
 
       stp_send_command(v, "\033", "ccc", 0, 0, 0);
@@ -650,8 +659,9 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 		  extralines -= nozzle_start;
 		  if (lc + extralines > 0)
 		    {
+		      int sc_off = k + j * sc;
 		      set_horizontal_position(v, pass, vertical_subpass);
-		      send_print_command(v, pass, pd->split_channels[k],
+		      send_print_command(v, pass, pd->split_channels[sc_off],
 					 lc + extralines + nozzle_start);
 		      if (extralines)
 			send_extra_data(v, nozzle_start);

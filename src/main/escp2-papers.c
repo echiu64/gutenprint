@@ -1659,6 +1659,7 @@ stpi_escp2_get_paperlist_named(const char *n)
 	if (strcmp(n, the_papers[i].name) == 0)
 	  return the_papers[i].paper_list;
       }
+  stp_erprintf("Cannot find paper list named %s\n", n);
   return NULL;
 }
 
@@ -1699,6 +1700,7 @@ stpi_escp2_get_paper_adjustment_list_named(const char *n)
 	if (strcmp(n, the_adjustments[i].name) == 0)
 	  return the_adjustments[i].paper_list;
       }
+  stp_erprintf("Cannot find paper adjustment list named %s\n", n);
   return NULL;
 }
 
@@ -1719,6 +1721,7 @@ static const input_slot_t standard_roll_feed_input_slots[] =
     0,
     0,
     0,
+    0,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
     { 6, "IR\002\000\000\000"}
   },
@@ -1727,6 +1730,7 @@ static const input_slot_t standard_roll_feed_input_slots[] =
     N_("Roll Feed"),
     0,
     1,
+    0,
     ROLL_FEED_DONT_EJECT,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
     { 6, "IR\002\000\000\002" }
@@ -1743,6 +1747,7 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
     0,
     0,
     0,
+    0,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
     { 6, "IR\002\000\000\000"}
   },
@@ -1751,6 +1756,7 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
     N_("Roll Feed (cut each page)"),
     0,
     1,
+    0,
     ROLL_FEED_CUT_ALL,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
     { 6, "IR\002\000\000\002" }
@@ -1760,6 +1766,7 @@ static const input_slot_t cutter_roll_feed_input_slots[] =
     N_("Roll Feed (do not cut)"),
     0,
     1,
+    0,
     ROLL_FEED_DONT_EJECT,
     { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
     { 6, "IR\002\000\000\002" }
@@ -1776,12 +1783,14 @@ static const input_slot_t cd_cutter_roll_feed_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\000"}
   },
   {
     "Manual",
     N_("Manual Feed"),
+    0,
     0,
     0,
     0,
@@ -1794,6 +1803,7 @@ static const input_slot_t cd_cutter_roll_feed_input_slots[] =
     1,
     0,
     0,
+    0,
     { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
     { 6, "IR\002\000\000\000"}
   },
@@ -1802,6 +1812,7 @@ static const input_slot_t cd_cutter_roll_feed_input_slots[] =
     N_("Roll Feed (cut each page)"),
     0,
     1,
+    0,
     ROLL_FEED_CUT_ALL,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\002" }
@@ -1811,6 +1822,7 @@ static const input_slot_t cd_cutter_roll_feed_input_slots[] =
     N_("Roll Feed (do not cut)"),
     0,
     1,
+    0,
     ROLL_FEED_DONT_EJECT,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\002" }
@@ -1827,12 +1839,14 @@ static const input_slot_t cd_roll_feed_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\000"}
   },
   {
     "Manual",
     N_("Manual Feed"),
+    0,
     0,
     0,
     0,
@@ -1845,6 +1859,7 @@ static const input_slot_t cd_roll_feed_input_slots[] =
     1,
     0,
     0,
+    0,
     { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
     { 6, "IR\002\000\000\000"}
   },
@@ -1853,6 +1868,7 @@ static const input_slot_t cd_roll_feed_input_slots[] =
     N_("Roll Feed"),
     0,
     1,
+    0,
     ROLL_FEED_DONT_EJECT,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\002" }
@@ -1869,12 +1885,14 @@ static const input_slot_t r2400_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\000"}
   },
   {
     "Velvet",
     N_("Manual Sheet Guide"),
+    0,
     0,
     0,
     0,
@@ -1887,6 +1905,7 @@ static const input_slot_t r2400_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
     { 6, "IR\002\000\000\000"}
   },
@@ -1895,6 +1914,7 @@ static const input_slot_t r2400_input_slots[] =
     N_("Roll Feed"),
     0,
     1,
+    0,
     ROLL_FEED_DONT_EJECT,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\003\001" },
     { 6, "IR\002\000\000\002" }
@@ -1911,12 +1931,14 @@ static const input_slot_t r1800_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
     { 6, "IR\002\000\000\000"}
   },
   {
     "Velvet",
     N_("Manual Sheet Guide"),
+    0,
     0,
     0,
     0,
@@ -1929,6 +1951,7 @@ static const input_slot_t r1800_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
     { 6, "IR\002\000\000\000"}
   },
@@ -1937,6 +1960,7 @@ static const input_slot_t r1800_input_slots[] =
     N_("Roll Feed"),
     0,
     1,
+    0,
     ROLL_FEED_DONT_EJECT,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\003\001" },
     { 6, "IR\002\000\000\002" }
@@ -1945,6 +1969,7 @@ static const input_slot_t r1800_input_slots[] =
     "CD",
     N_("Print to CD"),
     1,
+    0,
     0,
     0,
     { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
@@ -1962,12 +1987,14 @@ static const input_slot_t rx700_input_slots[] =
     0,
     0,
     0,
+    0,
     { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\000" },
     { 6, "IR\002\000\000\000"}
   },
   {
     "Front",
     N_("Front Tray"),
+    0,
     0,
     0,
     0,
@@ -1980,12 +2007,14 @@ static const input_slot_t rx700_input_slots[] =
     1,
     0,
     0,
+    0,
     { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
     { 6, "IR\002\000\000\000"}
   },
   {
     "PhotoBoard",
     N_("Photo Board"),
+    0,
     0,
     0,
     0,
@@ -2004,6 +2033,7 @@ static const input_slot_t pro_roll_feed_input_slots[] =
     0,
     0,
     0,
+    0,
     { 7, "PP\003\000\000\002\000" },
     { 0, "" }
   },
@@ -2012,6 +2042,7 @@ static const input_slot_t pro_roll_feed_input_slots[] =
     N_("Roll Feed"),
     0,
     1,
+    0,
     0,
     { 7, "PP\003\000\000\003\000" },
     { 0, "" }
@@ -2028,12 +2059,14 @@ static const input_slot_t spro5000_input_slots[] =
     0,
     0,
     0,
+    0,
     { 7, "PP\003\000\000\001\001" },
     { 0, "" }
   },
   {
     "CutSheet2",
     N_("Cut Sheet Bin 2"),
+    0,
     0,
     0,
     0,
@@ -2046,6 +2079,7 @@ static const input_slot_t spro5000_input_slots[] =
     0,
     0,
     0,
+    0,
     { 7, "PP\003\000\000\001\377" },
     { 0, "" }
   },
@@ -2055,12 +2089,39 @@ static const input_slot_t spro5000_input_slots[] =
     0,
     0,
     0,
+    0,
     { 7, "PP\003\000\000\002\001" },
     { 0, "" }
   }
 };
 
 DECLARE_INPUT_SLOT(spro5000);
+
+static const input_slot_t b500_input_slots[] =
+{
+  {
+    "Rear",
+    N_("Rear Tray"),
+    0,
+    0,
+    DUPLEX_TUMBLE,
+    0,
+    { 7, "PP\003\000\000\001\000" },
+    { 0, "" }
+  },
+  {
+    "Front",
+    N_("Front Tray"),
+    0,
+    0,
+    DUPLEX_TUMBLE,
+    0,
+    { 7, "PP\003\000\000\001\001" },
+    { 0, "" }
+  }
+};
+
+DECLARE_INPUT_SLOT(b500);
 
 static const input_slot_list_t default_input_slot_list =
 {
@@ -2086,6 +2147,7 @@ static const inslot_t the_slots[] =
   { "r2400", &r2400_input_slot_list },
   { "rx700", &rx700_input_slot_list },
   { "spro5000", &spro5000_input_slot_list },
+  { "b500", &b500_input_slot_list },
   { "standard_roll_feed", &standard_roll_feed_input_slot_list },
 };
 
@@ -2099,5 +2161,6 @@ stpi_escp2_get_input_slot_list_named(const char *n)
 	if (strcmp(n, the_slots[i].name) == 0)
 	  return the_slots[i].input_slots;
       }
+  stp_erprintf("Cannot find input slot list named %s\n", n);
   return NULL;
 }
