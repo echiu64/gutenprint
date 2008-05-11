@@ -3233,8 +3233,8 @@ DECLARE_CHANNEL_LIST(standard);
 
 static const char *c120_channel_names[] =
 {
-  N_("Black"),
-  N_("Black"),
+  N_("Black 1"),
+  N_("Black 2"),
   N_("Magenta"),
   N_("Cyan"),
   N_("Yellow")
