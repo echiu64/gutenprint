@@ -14,7 +14,7 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType DitherAlgorithm Duplex);
+my @standard_options = qw(InkType DitherAlgorithm Duplex MediaType);
 my $global_status = 1;
 my $output = undef;
 
