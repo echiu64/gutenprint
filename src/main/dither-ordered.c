@@ -274,7 +274,7 @@ free_dither_ordered(stpi_dither_t *d)
   int i;
   stpi_dither_channel_t *dc0 = &CHANNEL(d, 0);
   stpi_ordered_t *o0 = dc0->aux_data;
-  stpi_new_ordered_t *no0;
+  stpi_new_ordered_t *no0 = NULL;
   if (o0)
     no0 = o0->ord_new;
   for (i = CHANNEL_COUNT(d) - 1; i >= 0 ; i--)
