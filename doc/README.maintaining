@@ -61,7 +61,7 @@ modifying them, you need to install a number of GNU tools:
 i.   GNU autoconf (at least 2.54; at least 2.59 recommended)
 ii.  GNU automake (at least 1.9)
 iii. GNU libtool (at least 1.5; at least 1.5.20 recommended)
-iv.  GNU gettext (at least 0.12; at least 0.14 recommended)
+iv.  GNU gettext (at least 0.16)
 v.   GNU make (any recent version)
 
 and also
