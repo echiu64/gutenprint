@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright 2000-2007 Robert Krawitz <rlk@alum.mit.edu>
+# Copyright 2000-2008 Robert Krawitz <rlk@alum.mit.edu>
 #
 #   This program is free software; you can redistribute it and/or modify it
 #   under the terms of the GNU General Public License as published by the Free
@@ -28,6 +28,7 @@ use vars qw($atend
 	    $opt_O
 	    $curpos
 	    $esc
+	    $initial_vertical_position
 	    $page_mgmt_unit
 	    $horizontal_position
 	    $horizontal_unit
@@ -63,6 +64,7 @@ $page_mgmt_unit = 360;
 $horizontal_unit = 180;
 $vertical_unit = 360;
 
+$initial_vertical_position = 0;
 $vertical_position = 0;
 $horizontal_position = 0;
 $print_offsets = 0;
@@ -335,9 +337,9 @@ sub get_byte($) {
 }
 
 if ($opt_O) {
-    my (@stuff) = split /,/, $opt_O;
+    my (@stuff) = split(/,/, $opt_O);
     map {
-	my ($key, $val) = split /=/;
+	my ($key, $val) = split(/=/, $_);
 	if ($val) {
 	    $print_offsets = 1;
 	}
@@ -422,8 +424,9 @@ while (! $atend) {
 					$top, $bottom, $top / $page_mgmt_unit,
 					$bottom / $page_mgmt_unit);
 			    }
-			    $vertical_position =
+			    $initial_vertical_position =
 				$top * $vertical_unit / $page_mgmt_unit;
+			    $vertical_position = $initial_vertical_position;
 			} elsif ($xchar eq "S") {
 			    my ($width, $height);
 			    if ($skipchars == 8) {
@@ -530,11 +533,13 @@ while (! $atend) {
 	get_stuff(1);
 	$char = substr($stuff, 0, 1);
 	$nchar = unpack("C", $char);
+	printf "\n%08x  ", $curpos;
 	if ($nchar >= 32 && $nchar < 127) {
 	    print " $char ";
 	} else {
 	    printf "%02x ", unpack("C", $char);
 	}
+	$vertical_position = $initial_vertical_position;
 	increment_curpos(1);
     } else {
 	get_stuff(1);
