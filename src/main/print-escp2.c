@@ -2235,7 +2235,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  const res_t *res = escp2_find_resolution(v);
 	  const printer_weave_list_t *printer_weaves = escp2_printer_weaves(v);
 	  int nprinter_weaves = 0;
-	  if (use_printer_weave(v) && (!res || res->printer_weave))
+	  if (printer_weaves && use_printer_weave(v) && (!res || res->printer_weave))
 	    nprinter_weaves = printer_weaves->n_printer_weaves;
 	  if (nprinter_weaves)
 	    {

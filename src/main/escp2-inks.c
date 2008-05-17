@@ -573,11 +573,13 @@ stpi_escp2_get_drop_list_named(const char *n)
 {
   int i;
   if (n)
-    for (i = 0; i < sizeof(the_drop_lists) / sizeof(drop_list_t); i++)
-      {
-	if (strcmp(n, the_drop_lists[i].name) == 0)
-	  return the_drop_lists[i].drop_list;
-      }
-  stp_erprintf("Cannot find ink drop list named %s\n", n);
+    {
+      for (i = 0; i < sizeof(the_drop_lists) / sizeof(drop_list_t); i++)
+	{
+	  if (strcmp(n, the_drop_lists[i].name) == 0)
+	    return the_drop_lists[i].drop_list;
+	}
+      stp_erprintf("Cannot find ink drop list named %s\n", n);
+    }
   return NULL;
 }

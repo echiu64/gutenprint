@@ -3197,12 +3197,14 @@ stpi_escp2_get_inkgroup_named(const char *n)
 {
   int i;
   if (n)
-    for (i = 0; i < sizeof(the_inks) / sizeof(ink_t); i++)
-      {
-	if (strcmp(n, the_inks[i].name) == 0)
-	  return the_inks[i].inkgroup;
-      }
-  stp_erprintf("Cannot find ink group named %s\n", n);
+    {
+      for (i = 0; i < sizeof(the_inks) / sizeof(ink_t); i++)
+	{
+	  if (strcmp(n, the_inks[i].name) == 0)
+	    return the_inks[i].inkgroup;
+	}
+      stp_erprintf("Cannot find ink group named %s\n", n);
+    }
   return NULL;
 }
 
@@ -3416,11 +3418,13 @@ stpi_escp2_get_channel_names_named(const char *n)
 {
   int i;
   if (n)
-    for (i = 0; i < sizeof(the_channels) / sizeof(channel_t); i++)
-      {
-	if (strcmp(n, the_channels[i].name) == 0)
-	  return the_channels[i].channel_name;
-      }
-  stp_erprintf("Couldn't find channel set named %s!\n", n);
+    {
+      for (i = 0; i < sizeof(the_channels) / sizeof(channel_t); i++)
+	{
+	  if (strcmp(n, the_channels[i].name) == 0)
+	    return the_channels[i].channel_name;
+	}
+      stp_erprintf("Couldn't find channel set named %s!\n", n);
+    }
   return NULL;
 }
