@@ -14,13 +14,14 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType DitherAlgorithm Duplex MediaType);
+my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType);
 my $global_status = 1;
 my $output = undef;
 
 my @extras = ();
 my @messages = ();
 my @global_messages = ();
+my @families = ();
 my %stpdata = ();
 my %models_found = ();
 my %models;
@@ -39,6 +40,7 @@ GetOptions("v+"  => \$valgrind,
 	   "p:i" => \$std_pages,
 	   "s!"  => \$skip_duplicate_printers,
 	   "o=s" => \@special_options,
+	   "f=s" => \@families,
 	   "O=s" => \$output,
 	   "d=s" => \@default_options,
 	   "m:s" => \$calc_md5);
@@ -200,6 +202,8 @@ sub do_printer {
     my $key;
     my %opt_vals = {};
     if ($skip_duplicate_printers && $models_found{$family_id}{$model_id}) {
+	return;
+    } elsif (@families && ! grep { $family_id eq $_ } @families) {
 	return;
     } else {
 	$models_found{$family_id}{$model_id} = 1;
