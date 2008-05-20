@@ -939,105 +939,6 @@ stp_family_unregister(stp_list_t *family)
   return 0;
 }
 
-static void
-stp_fill_printvars_from_xmltree(stp_mxml_node_t *prop,
-				stp_vars_t *v)
-{
-  while (prop)
-    {
-      if (prop->type == STP_MXML_ELEMENT)
-	{
-	  const char *prop_name = prop->value.element.name;
-	  if (!strcmp(prop_name, "parameter"))
-	    {
-	      const char *p_type = stp_mxmlElementGetAttr(prop, "type");
-	      const char *p_name = stp_mxmlElementGetAttr(prop, "name");
-	      stp_mxml_node_t *child = prop->child;
-	      if (!p_type || !p_name)
-		stp_erprintf("Bad property found!\n");
-	      else if (strcmp(p_type, "float") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    {
-		      stp_set_float_parameter
-			(v, p_name, stp_xmlstrtod(child->value.text.string));
-		      stp_deprintf(STP_DBG_XML, "  Set float '%s' to '%s' (%f)\n",
-				   p_name, child->value.text.string,
-				   stp_get_float_parameter(v, p_name));
-		    }
-		}
-	      else if (strcmp(p_type, "integer") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    {
-		      stp_set_int_parameter
-			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
-		      stp_deprintf(STP_DBG_XML, "  Set int '%s' to '%s' (%d)\n",
-				   p_name, child->value.text.string,
-				   stp_get_int_parameter(v, p_name));
-		    }
-		}
-	      else if (strcmp(p_type, "boolean") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    {
-		      stp_set_boolean_parameter
-			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
-		      stp_deprintf(STP_DBG_XML, "  Set bool '%s' to '%s' (%d)\n",
-				   p_name, child->value.text.string,
-				   stp_get_boolean_parameter(v, p_name));
-		    }
-		}
-	      else if (strcmp(p_type, "string") == 0)
-		{
-		  if (child->type == STP_MXML_TEXT)
-		    {
-		      stp_set_string_parameter
-			(v, p_name, child->value.text.string);
-		      stp_deprintf(STP_DBG_XML, "  Set string '%s' to '%s' (%s)\n",
-				   p_name, child->value.text.string,
-				   stp_get_string_parameter(v, p_name));
-		    }
-		}
-	      else if (strcmp(p_type, "curve") == 0)
-		{
-		  stp_curve_t *curve;
-		  while (child->type == STP_MXML_TEXT && child->next)
-		    child = child->next;
-		  curve = stp_curve_create_from_xmltree(child);
-		  if (curve)
-		    {
-		      stp_set_curve_parameter(v, p_name, curve);
-		      stp_deprintf(STP_DBG_XML, "  Set curve '%s' to '%s' (%s)\n",
-				   p_name, child->value.text.string,
-				   stp_curve_write_string(curve));
-		      stp_curve_destroy(curve);
-		    }
-		}
-	      else if (strcmp(p_type, "array") == 0)
-		{
-		  stp_array_t *array;
-		  while (child->type == STP_MXML_TEXT && child->next)
-		    child = child->next;
-		  array = stp_array_create_from_xmltree(child);
-		  if (array)
-		    {
-		      stp_set_array_parameter(v, p_name, array);
-		      stp_deprintf(STP_DBG_XML, "  Set array '%s' to '%s'\n",
-				   p_name, child->value.text.string);
-		      stp_array_destroy(array);
-		    }
-		}
-	      else
-		{
-		  stp_erprintf("Bad property %s type %s\n", p_name, p_type);
-		}
-	    }
-	}
-      prop = prop->next;
-    }
-} 
-
 static stp_printvars_t *
 stp_printvars_create_from_xmltree(stp_mxml_node_t *printer,
 				  const char *family)
@@ -1070,7 +971,7 @@ stp_printvars_create_from_xmltree(stp_mxml_node_t *printer,
   prop = printer->child;
   stp_deprintf(STP_DBG_XML, ">>stp_printvars_create_from_xmltree: %p, %s\n",
 	       (void *) (outprintvars->printvars), outprintvars->name);
-  stp_fill_printvars_from_xmltree(prop, outprintvars->printvars);
+  stp_vars_fill_from_xmltree(prop, outprintvars->printvars);
   stp_deprintf(STP_DBG_XML, "<<stp_printvars_create_from_xmltree: %p, %s\n",
 	       (void *) (outprintvars->printvars), outprintvars->name);
   return outprintvars;
@@ -1127,7 +1028,7 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
   outprinter->printfuncs = printfuncs;
 
   prop = printer->child;
-  stp_fill_printvars_from_xmltree(prop, outprinter->printvars);
+  stp_vars_fill_from_xmltree(prop, outprinter->printvars);
   if (driver && long_name && printfuncs)
     {
       if (stp_get_debug_level() & STP_DBG_XML)

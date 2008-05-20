@@ -1197,25 +1197,70 @@ stp_scale_float_parameter(stp_vars_t *v, const char *parameter,
   stp_set_float_parameter(v, parameter, val * scale);
 }
 
-static int
-check_parameter_generic(const stp_vars_t *v, stp_parameter_type_t p_type,
-			const char *parameter, stp_parameter_activity_t active)
+void
+stp_clear_parameter(stp_vars_t *v, const char *parameter, stp_parameter_type_t type)
 {
-  const stp_list_t *list = v->params[p_type];
-  const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  if (item &&
-      active <= ((const value_t *) stp_list_item_get_data(item))->active)
-    return 1;
-  else
-    return 0;
+  switch (type)
+    {
+    case STP_PARAMETER_TYPE_STRING_LIST:
+      stp_clear_string_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_FILE:
+      stp_clear_file_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_DOUBLE:
+      stp_clear_float_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_INT:
+      stp_clear_int_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_DIMENSION:
+      stp_clear_dimension_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_BOOLEAN:
+      stp_clear_boolean_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_CURVE:
+      stp_clear_curve_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_ARRAY:
+      stp_clear_array_parameter(v, parameter);
+      break;
+    case STP_PARAMETER_TYPE_RAW:
+      stp_clear_raw_parameter(v, parameter);
+      break;
+    default:
+      stp_eprintf(v, "Attempt to clear unknown type parameter!\n");
+    }
+}
+
+
+int
+stp_check_parameter(const stp_vars_t *v,
+		    const char *parameter,
+		    stp_parameter_activity_t active,
+		    stp_parameter_type_t p_type)
+{
+  if (p_type >= STP_PARAMETER_TYPE_STRING_LIST &&
+      p_type < STP_PARAMETER_TYPE_INVALID)
+    {
+      const stp_list_t *list = v->params[p_type];
+      const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+      if (item &&
+	  active <= ((const value_t *) stp_list_item_get_data(item))->active)
+	return 1;
+      else
+	return 0;
+    }
+  return 0;
 }
 
 #define CHECK_FUNCTION(type, index)					\
 int									\
-stp_check_##type##_parameter(const stp_vars_t *v, const char *parameter,	\
+stp_check_##type##_parameter(const stp_vars_t *v, const char *parameter, \
 			     stp_parameter_activity_t active)		\
 {									\
-  return check_parameter_generic(v, index, parameter, active);		\
+  return stp_check_parameter(v, parameter, active, index);		\
 }
 
 CHECK_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
@@ -1228,23 +1273,65 @@ CHECK_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
 CHECK_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 CHECK_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
-static stp_parameter_activity_t
-get_parameter_active_generic(const stp_vars_t *v, stp_parameter_type_t p_type,
-			     const char *parameter)
+stp_string_list_t *
+stp_list_parameters(const stp_vars_t *v, stp_parameter_type_t p_type)
 {
-  const stp_list_t *list = v->params[p_type];
-  const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  if (item)
-    return ((const value_t *) stp_list_item_get_data(item))->active;
-  else
-    return 0;
+  if (p_type >= STP_PARAMETER_TYPE_STRING_LIST &&
+      p_type < STP_PARAMETER_TYPE_INVALID)
+    {
+      const stp_list_t *list = v->params[p_type];
+      stp_string_list_t *answer = stp_string_list_create();
+      const stp_list_item_t *li = stp_list_get_start(list);
+      while (li)
+	{
+	  const value_t *val = (value_t *) stp_list_item_get_data(li);
+	  stp_string_list_add_string(answer, val->name, val->name);
+	  li = stp_list_item_next(li);
+	}
+      return answer;
+    }
+  return NULL;
 }
 
-#define GET_PARAMETER_ACTIVE_FUNCTION(type, index)			     \
-stp_parameter_activity_t						     \
+#define LIST_FUNCTION(type, index)			\
+stp_string_list_t *					\
+stp_list_##type##_parameters(const stp_vars_t *v)	\
+{							\
+  return stp_list_parameters(v, index);			\
+}
+
+LIST_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
+LIST_FUNCTION(file, STP_PARAMETER_TYPE_FILE)
+LIST_FUNCTION(float, STP_PARAMETER_TYPE_DOUBLE)
+LIST_FUNCTION(int, STP_PARAMETER_TYPE_INT)
+LIST_FUNCTION(dimension, STP_PARAMETER_TYPE_DIMENSION)
+LIST_FUNCTION(boolean, STP_PARAMETER_TYPE_BOOLEAN)
+LIST_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
+LIST_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
+LIST_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
+
+stp_parameter_activity_t
+stp_get_parameter_active(const stp_vars_t *v, const char *parameter,
+			 stp_parameter_type_t p_type)
+{
+  if (p_type >= STP_PARAMETER_TYPE_STRING_LIST &&
+      p_type < STP_PARAMETER_TYPE_INVALID)
+    {
+      const stp_list_t *list = v->params[p_type];
+      const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+      if (item)
+	return ((const value_t *) stp_list_item_get_data(item))->active;
+      else
+	return 0;
+    }
+  return 0;
+}
+
+#define GET_PARAMETER_ACTIVE_FUNCTION(type, index)			\
+stp_parameter_activity_t						\
 stp_get_##type##_parameter_active(const stp_vars_t *v, const char *parameter) \
-{									     \
-  return get_parameter_active_generic(v, index, parameter);		     \
+{									\
+  return stp_get_parameter_active(v, parameter, index);			\
 }
 
 GET_PARAMETER_ACTIVE_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
@@ -1257,27 +1344,32 @@ GET_PARAMETER_ACTIVE_FUNCTION(curve, STP_PARAMETER_TYPE_CURVE)
 GET_PARAMETER_ACTIVE_FUNCTION(array, STP_PARAMETER_TYPE_ARRAY)
 GET_PARAMETER_ACTIVE_FUNCTION(raw, STP_PARAMETER_TYPE_RAW)
 
-static void
-set_parameter_active_generic(const stp_vars_t *v, stp_parameter_type_t p_type,
-			     const char *parameter,
-			     stp_parameter_activity_t active)
+void
+stp_set_parameter_active(stp_vars_t *v,
+			 const char *parameter,
+			 stp_parameter_activity_t active,
+			 stp_parameter_type_t p_type)
 {
-  const stp_list_t *list = v->params[p_type];
-  const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
-  if (item && (active == STP_PARAMETER_ACTIVE ||
-	       active == STP_PARAMETER_INACTIVE))
-    ((value_t *) stp_list_item_get_data(item))->active = active;
+  if (p_type >= STP_PARAMETER_TYPE_STRING_LIST &&
+      p_type < STP_PARAMETER_TYPE_INVALID)
+    {
+      const stp_list_t *list = v->params[p_type];
+      const stp_list_item_t *item = stp_list_get_item_by_name(list, parameter);
+      if (item && (active == STP_PARAMETER_ACTIVE ||
+		   active == STP_PARAMETER_INACTIVE))
+	((value_t *) stp_list_item_get_data(item))->active = active;
+    }
 }
 
-#define SET_PARAMETER_ACTIVE_FUNCTION(type, index)			      \
-void									      \
-stp_set_##type##_parameter_active(const stp_vars_t *v, const char *parameter, \
-				  stp_parameter_activity_t active)	      \
-{									      \
-  stp_deprintf(STP_DBG_VARS,						      \
-	       "stp_set_%s_parameter_active(0x%p, %s, %d)\n",		      \
-	       #type, (const void *) v, parameter, active);			      \
-  set_parameter_active_generic(v, index, parameter, active);		      \
+#define SET_PARAMETER_ACTIVE_FUNCTION(type, index)			\
+void									\
+stp_set_##type##_parameter_active(stp_vars_t *v, const char *parameter, \
+				  stp_parameter_activity_t active)	\
+{									\
+  stp_deprintf(STP_DBG_VARS,						\
+	       "stp_set_%s_parameter_active(0x%p, %s, %d)\n",		\
+	       #type, (const void *) v, parameter, active);		\
+  stp_set_parameter_active(v, parameter, active, index);		\
 }
 
 SET_PARAMETER_ACTIVE_FUNCTION(string, STP_PARAMETER_TYPE_STRING_LIST)
@@ -1305,9 +1397,9 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->verify_this_parameter = param->verify_this_parameter;
       desc->read_only = param->read_only;
       desc->name = param->name;
-      desc->text = _(param->text);
-      desc->category = _(param->category);
-      desc->help = _(param->help);
+      desc->text = gettext(param->text);
+      desc->category = gettext(param->category);
+      desc->help = gettext(param->help);
       return;
     }
 }
@@ -1608,4 +1700,297 @@ stp_parameter_list_append(stp_parameter_list_t list,
       if (!stp_list_get_item_by_name(ilist, param->name))
 	stp_list_item_create(ilist, NULL, param);
     }
+}
+
+void
+stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
+{
+  while (prop)
+    {
+      if (prop->type == STP_MXML_ELEMENT && prop->child)
+	{
+	  stp_mxml_node_t *child = prop->child;
+	  const char *prop_name = prop->value.element.name;
+	  if (!strcmp(prop_name, "parameter"))
+	    {
+	      const char *p_type = stp_mxmlElementGetAttr(prop, "type");
+	      const char *p_name = stp_mxmlElementGetAttr(prop, "name");
+	      const char *active = stp_mxmlElementGetAttr(prop, "active");
+	      stp_parameter_type_t type = STP_PARAMETER_TYPE_INVALID;
+	      if (!p_type || !p_name)
+		stp_erprintf("Bad property found!\n");
+	      else if (strcmp(p_type, "float") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_set_float_parameter
+			(v, p_name, stp_xmlstrtod(child->value.text.string));
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set float '%s' to '%s' (%f)\n",
+				   p_name, child->value.text.string,
+				   stp_get_float_parameter(v, p_name));
+		    }
+		}
+	      else if (strcmp(p_type, "integer") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_set_int_parameter
+			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set int '%s' to '%s' (%d)\n",
+				   p_name, child->value.text.string,
+				   stp_get_int_parameter(v, p_name));
+		    }
+		}
+	      else if (strcmp(p_type, "dimension") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_set_dimension_parameter
+			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set dimension '%s' to '%s' (%d)\n",
+				   p_name, child->value.text.string,
+				   stp_get_dimension_parameter(v, p_name));
+		    }
+		}
+	      else if (strcmp(p_type, "boolean") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_set_boolean_parameter
+			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set bool '%s' to '%s' (%d)\n",
+				   p_name, child->value.text.string,
+				   stp_get_boolean_parameter(v, p_name));
+		    }
+		}
+	      else if (strcmp(p_type, "string") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_set_string_parameter
+			(v, p_name, child->value.text.string);
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set string '%s' to '%s' (%s)\n",
+				   p_name, child->value.text.string,
+				   stp_get_string_parameter(v, p_name));
+		    }
+		}
+	      else if (strcmp(p_type, "file") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_set_file_parameter
+			(v, p_name, child->value.text.string);
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set file '%s' to '%s' (%s)\n",
+				   p_name, child->value.text.string,
+				   stp_get_file_parameter(v, p_name));
+		    }
+		}
+	      else if (strcmp(p_type, "raw") == 0)
+		{
+		  if (child->type == STP_MXML_TEXT)
+		    {
+		      stp_raw_t *raw = stp_xmlstrtoraw(child->value.text.string);
+		      if (raw)
+			{
+			  stp_set_raw_parameter(v, p_name, raw->data,raw->bytes);
+			  type = STP_PARAMETER_TYPE_DOUBLE;
+			  stp_deprintf(STP_DBG_XML, "  Set raw '%s' to '%s'\n",
+				       p_name, child->value.text.string);
+			}
+		      stp_free((void *) raw->data);
+		      stp_free(raw);
+		    }
+		}
+	      else if (strcmp(p_type, "curve") == 0)
+		{
+		  stp_curve_t *curve;
+		  while (child->type == STP_MXML_TEXT && child->next)
+		    child = child->next;
+		  curve = stp_curve_create_from_xmltree(child);
+		  if (curve)
+		    {
+		      stp_set_curve_parameter(v, p_name, curve);
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_deprintf(STP_DBG_XML, "  Set curve '%s' to '%s' (%s)\n",
+				   p_name, child->value.text.string,
+				   stp_curve_write_string(curve));
+		      stp_curve_destroy(curve);
+		    }
+		}
+	      else if (strcmp(p_type, "array") == 0)
+		{
+		  stp_array_t *array;
+		  while (child->type == STP_MXML_TEXT && child->next)
+		    child = child->next;
+		  array = stp_array_create_from_xmltree(child);
+		  if (array)
+		    {
+		      type = STP_PARAMETER_TYPE_DOUBLE;
+		      stp_set_array_parameter(v, p_name, array);
+		      stp_deprintf(STP_DBG_XML, "  Set array '%s' to '%s'\n",
+				   p_name, child->value.text.string);
+		      stp_array_destroy(array);
+		    }
+		}
+	      else
+		{
+		  stp_erprintf("Bad property %s type %s\n", p_name, p_type);
+		}
+	      if (active && type != STP_PARAMETER_TYPE_INVALID)
+		{
+		  if (strcmp(active, "active") == 0)
+		    stp_set_parameter_active(v, p_name, STP_PARAMETER_ACTIVE, type);
+		  else if (strcmp(active, "inactive") == 0)
+		    stp_set_parameter_active(v, p_name, STP_PARAMETER_INACTIVE, type);
+		  else if (strcmp(active, "default") == 0)
+		    stp_set_parameter_active(v, p_name, STP_PARAMETER_DEFAULTED, type);
+		}
+
+	    }
+	  else if (child->type == STP_MXML_TEXT)
+	    {
+	      if (!strcmp(prop_name, "driver"))
+		stp_set_driver(v, child->value.text.string);
+	      else if (!strcmp(prop_name, "color_conversion"))
+		stp_set_color_conversion(v, child->value.text.string);
+	      else if (!strcmp(prop_name, "left"))
+		stp_set_left(v, stp_xmlstrtol(child->value.text.string));
+	      else if (!strcmp(prop_name, "top"))
+		stp_set_top(v, stp_xmlstrtol(child->value.text.string));
+	      else if (!strcmp(prop_name, "width"))
+		stp_set_width(v, stp_xmlstrtol(child->value.text.string));
+	      else if (!strcmp(prop_name, "height"))
+		stp_set_height(v, stp_xmlstrtol(child->value.text.string));
+	      else if (!strcmp(prop_name, "page_width"))
+		stp_set_page_width(v, stp_xmlstrtol(child->value.text.string));
+	      else if (!strcmp(prop_name, "page_height"))
+		stp_set_page_height(v, stp_xmlstrtol(child->value.text.string));
+	    }
+	}
+      prop = prop->next;
+    }
+}
+
+stp_vars_t *
+stp_vars_create_from_xmltree(stp_mxml_node_t *da)
+{
+  stp_vars_t *v = stp_vars_create();
+  stp_vars_fill_from_xmltree(da, v);
+  return v;
+}
+
+static void
+add_text_node(stp_mxml_node_t *node, const char *element, const char *value)
+{
+  if (value)
+    stp_mxmlNewOpaque(stp_mxmlNewElement(node, element), value);
+}
+
+stp_mxml_node_t *
+stp_xmltree_create_from_vars(const stp_vars_t *v)
+{
+  stp_mxml_node_t *varnode;
+  int i;
+  if (!v)
+    return NULL;
+  varnode = stp_mxmlNewElement(NULL, "vars");
+  add_text_node(varnode, "driver", stp_get_driver(v));
+  add_text_node(varnode, "color_conversion", stp_get_color_conversion(v));
+  stp_mxmlNewInteger(stp_mxmlNewElement(varnode, "left"), stp_get_left(v));
+  stp_mxmlNewInteger(stp_mxmlNewElement(varnode, "top"), stp_get_top(v));
+  stp_mxmlNewInteger(stp_mxmlNewElement(varnode, "width"), stp_get_width(v));
+  stp_mxmlNewInteger(stp_mxmlNewElement(varnode, "height"), stp_get_height(v));
+  stp_mxmlNewInteger(stp_mxmlNewElement(varnode, "page_width"), stp_get_page_width(v));
+  stp_mxmlNewInteger(stp_mxmlNewElement(varnode, "page_height"), stp_get_page_height(v));
+  for (i = STP_PARAMETER_TYPE_STRING_LIST; i < STP_PARAMETER_TYPE_INVALID; i++)
+    {
+      stp_string_list_t *list = stp_list_parameters(v, i);
+      if (list)
+	{
+	  int j;
+	  int count = stp_string_list_count(list);
+	  for (j = 0; j < count; j++)
+	    {
+	      const stp_param_string_t *pstr = stp_string_list_param(list, j);
+	      const char *name = pstr->name;
+	      char *data;
+	      stp_mxml_node_t *node = stp_mxmlNewElement(varnode, "parameter");
+	      stp_parameter_activity_t active =
+		stp_get_parameter_active(v, name, i);
+	      stp_mxmlElementSetAttr(node, "name", name);
+	      stp_mxmlElementSetAttr(node, "active",
+				     (active == STP_PARAMETER_INACTIVE ?
+				      "inactive" :
+				      (active == STP_PARAMETER_DEFAULTED ?
+				       "default" : "active")));
+	      switch (i)
+		{
+		case STP_PARAMETER_TYPE_STRING_LIST:
+		  stp_mxmlElementSetAttr(node, "type", "string");
+		  data = stp_strtoxmlstr(stp_get_string_parameter(v, name));
+		  if (data)
+		    {
+		      stp_mxmlNewOpaque(node, data);
+		      stp_free(data);
+		    }
+		  break;
+		case STP_PARAMETER_TYPE_INT:
+		  stp_mxmlElementSetAttr(node, "type", "integer");
+		  stp_mxmlNewInteger(node, stp_get_int_parameter(v, name));
+		  break;
+		case STP_PARAMETER_TYPE_BOOLEAN:
+		  stp_mxmlElementSetAttr(node, "type", "boolean");
+		  stp_mxmlNewInteger(node, stp_get_boolean_parameter(v, name));
+		  break;
+		case STP_PARAMETER_TYPE_DOUBLE:
+		  stp_mxmlElementSetAttr(node, "type", "float");
+		  stp_mxmlNewReal(node, stp_get_float_parameter(v, name));
+		  break;
+		case STP_PARAMETER_TYPE_CURVE:
+		  stp_mxmlElementSetAttr(node, "type", "curve");
+		  stp_mxmlAdd(node, STP_MXML_ADD_AFTER, NULL,
+			      stp_xmltree_create_from_curve(stp_get_curve_parameter(v, name)));
+		  break;
+		case STP_PARAMETER_TYPE_FILE:
+		  stp_mxmlElementSetAttr(node, "type", "file");
+		  data = stp_strtoxmlstr(stp_get_file_parameter(v, name));
+		  if (data)
+		    {
+		      stp_mxmlNewOpaque(node, data);
+		      stp_free(data);
+		    }
+		  break;
+		case STP_PARAMETER_TYPE_RAW:
+		  stp_mxmlElementSetAttr(node, "type", "raw");
+		  data = stp_rawtoxmlstr(stp_get_raw_parameter(v, name));
+		  if (data)
+		    {
+		      stp_mxmlNewOpaque(node, data);
+		      stp_free(data);
+		    }
+		  break;
+		case STP_PARAMETER_TYPE_ARRAY:
+		  stp_mxmlElementSetAttr(node, "type", "array");
+		  stp_mxmlAdd(node, STP_MXML_ADD_AFTER, NULL,
+			      stp_xmltree_create_from_array(stp_get_array_parameter(v, name)));
+		  break;
+		case STP_PARAMETER_TYPE_DIMENSION:
+		  stp_mxmlElementSetAttr(node, "type", "dimension");
+		  stp_mxmlNewInteger(node, stp_get_dimension_parameter(v, name));
+		  break;
+		default:
+		  stp_mxmlElementSetAttr(node, "type", "INVALID!");
+		  break;
+		}
+	    }
+	  stp_string_list_destroy(list);
+	}
+    }
+  return varnode;
 }

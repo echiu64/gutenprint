@@ -347,6 +347,129 @@ stp_xmlstrtod(const char *textval)
   return val;
 }
 
+/*
+ * Convert an encoded text string into a raw.
+ */
+stp_raw_t *
+stp_xmlstrtoraw(const char *textval)
+{
+  size_t tcount;
+  stp_raw_t *raw;
+  unsigned char *answer;
+  unsigned char *aptr;
+  if (! textval || *textval == 0)
+    return NULL;
+  tcount = strlen(textval);
+  raw = stp_zalloc(sizeof(stp_raw_t));
+  answer = stp_malloc(tcount + 1); /* Worst case -- we may not need it all */
+  aptr = answer;
+  raw->data = answer;
+  while (*textval)
+    {
+      if (*textval != '\\')
+	{
+	  *aptr++ = *textval++;
+	  raw->bytes++;
+	}
+      else
+	{
+	  textval++;
+	  if (textval[0] >= '0' && textval[0] <= '3' &&
+	      textval[1] >= '0' && textval[1] <= '7' &&
+	      textval[2] >= '0' && textval[2] <= '7')
+	    {
+	      *aptr++ = (((textval[0] - '0') << 6) +
+			 ((textval[1] - '0') << 3) +
+			 ((textval[2] - '0') << 0));
+	      raw->bytes++;
+	    }
+	  else if (textval[0] == '\0' || textval[1] == '\0' || textval[2] == '\0')
+	    break;
+	  else
+	    textval += 3;
+	}
+    }
+  *aptr = '\0';
+  return raw;
+}
+
+char *
+stp_rawtoxmlstr(const stp_raw_t *raw)
+{
+  if (raw && raw->bytes > 0)
+    {
+      int i;
+      const unsigned char *data = (const unsigned char *) (raw->data);
+      char *answer = stp_malloc((raw->bytes * 4) + 1); /* \012 */
+      unsigned char *aptr = (unsigned char *) answer;
+      for (i = 0; i < raw->bytes; i++)
+	{
+	  if (data[i] >= ' ' && data[i] < '\177' && data[i] != '\\')
+	    *aptr++ = data[i];
+	  else
+	    {
+	      *aptr++ = '\\';
+	      *aptr++ = '0' + ((data[i] & '\300') >> 6);
+	      *aptr++ = '0' + ((data[i] & '\070') >> 3);
+	      *aptr++ = '0' + ((data[i] & '\007') >> 0);
+	    }
+	}
+      *aptr = '\0';
+      return answer;
+    }
+  return NULL;
+}
+
+char *
+stp_strtoxmlstr(const char *str)
+{
+  if (str && strlen(str) > 0)
+    {
+      int i;
+      int bytes = strlen(str);
+      const unsigned char *data = (const unsigned char *) (str);
+      char *answer = stp_malloc((bytes * 4) + 1); /* "\012" is worst case */
+      unsigned char *aptr = (unsigned char *) answer;
+      for (i = 0; i < bytes; i++)
+	{
+	  if (data[i] >= ' ' && data[i] < '\177' && data[i] != '\\')
+	    *aptr++ = data[i];
+	  else
+	    {
+	      *aptr++ = '\\';
+	      *aptr++ = '0' + ((data[i] & '\300') >> 6);
+	      *aptr++ = '0' + ((data[i] & '\070') >> 3);
+	      *aptr++ = '0' + ((data[i] & '\007') >> 0);
+	    }
+	}
+      *aptr = '\0';
+      return answer;
+    }
+  return NULL;
+}
+
+void
+stp_prtraw(const stp_raw_t *raw, FILE *fp)
+{
+  if (raw && raw->bytes > 0)
+    {
+      int i;
+      const unsigned char *data = (const unsigned char *) (raw->data);
+      for (i = 0; i < raw->bytes; i++)
+	{
+	  if (data[i] >= ' ' && data[i] < '\177' && data[i] != '\\')
+	    fputc(data[i], fp);
+	  else
+	    {
+	      fputc('\\', fp);
+	      fputc('0' + ((data[i] & '\300') >> 6), fp);
+	      fputc('0' + ((data[i] & '\070') >> 3), fp);
+	      fputc('0' + ((data[i] & '\007') >> 0), fp);
+	    }
+	}
+    }
+}
+
 
 /*
  * Find a node in an XML tree.  This function takes an xmlNodePtr,

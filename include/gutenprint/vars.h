@@ -962,13 +962,95 @@ extern void stp_clear_array_parameter(stp_vars_t *v, const char *parameter);
 extern void stp_clear_raw_parameter(stp_vars_t *v, const char *parameter);
 
 /**
+ * Clear a parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param type the type of the parameter.
+ */
+extern void stp_clear_parameter(stp_vars_t *v, const char *parameter, stp_parameter_type_t type);
+
+
+/**
+ * List all string parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_string_parameters(const stp_vars_t *v);
+
+/**
+ * List all file parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_file_parameters(const stp_vars_t *v);
+
+/**
+ * List all float parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_float_parameters(const stp_vars_t *v);
+
+/**
+ * List all integer parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_int_parameters(const stp_vars_t *v);
+
+/**
+ * List all dimension parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_dimension_parameters(const stp_vars_t *v);
+
+/**
+ * List all boolean parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_boolean_parameters(const stp_vars_t *v);
+
+/**
+ * List all curve parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_curve_parameters(const stp_vars_t *v);
+
+/**
+ * List all array parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_array_parameters(const stp_vars_t *v);
+
+/**
+ * List all raw parameters.
+ * The return value must be freed after use.
+ * @param v the vars to use.
+ */
+extern stp_string_list_t *stp_list_raw_parameters(const stp_vars_t *v);
+
+/**
+ * List all parameters.
+ * @params v the vars to use.
+ * The return value must be freed after use.
+ * @param type the type of the parameter.
+ */
+extern stp_string_list_t *stp_list_parameters(const stp_vars_t *v,
+					      stp_parameter_type_t type);
+
+
+/**
  * Set the activity of a string parameter.
  * @param v the vars to use.
  * @param parameter the name of the parameter.
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_string_parameter_active(const stp_vars_t *v,
+extern void stp_set_string_parameter_active(stp_vars_t *v,
 					    const char *parameter,
 					    stp_parameter_activity_t active);
 
@@ -979,7 +1061,7 @@ extern void stp_set_string_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_file_parameter_active(const stp_vars_t *v,
+extern void stp_set_file_parameter_active(stp_vars_t *v,
 					  const char *parameter,
 					  stp_parameter_activity_t active);
 
@@ -990,7 +1072,7 @@ extern void stp_set_file_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_float_parameter_active(const stp_vars_t *v,
+extern void stp_set_float_parameter_active(stp_vars_t *v,
 					 const char *parameter,
 					 stp_parameter_activity_t active);
 
@@ -1001,7 +1083,7 @@ extern void stp_set_float_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_int_parameter_active(const stp_vars_t *v,
+extern void stp_set_int_parameter_active(stp_vars_t *v,
 					 const char *parameter,
 					 stp_parameter_activity_t active);
 
@@ -1012,7 +1094,7 @@ extern void stp_set_int_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_dimension_parameter_active(const stp_vars_t *v,
+extern void stp_set_dimension_parameter_active(stp_vars_t *v,
 					       const char *parameter,
 					       stp_parameter_activity_t active);
 
@@ -1023,7 +1105,7 @@ extern void stp_set_dimension_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_boolean_parameter_active(const stp_vars_t *v,
+extern void stp_set_boolean_parameter_active(stp_vars_t *v,
 					     const char *parameter,
 					     stp_parameter_activity_t active);
 
@@ -1034,7 +1116,7 @@ extern void stp_set_boolean_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_curve_parameter_active(const stp_vars_t *v,
+extern void stp_set_curve_parameter_active(stp_vars_t *v,
 					   const char *parameter,
 					   stp_parameter_activity_t active);
 
@@ -1045,7 +1127,7 @@ extern void stp_set_curve_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_array_parameter_active(const stp_vars_t *v,
+extern void stp_set_array_parameter_active(stp_vars_t *v,
 					   const char *parameter,
 					   stp_parameter_activity_t active);
 
@@ -1056,9 +1138,22 @@ extern void stp_set_array_parameter_active(const stp_vars_t *v,
  * @param active the activity status to set (should be set to
  * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
  */
-extern void stp_set_raw_parameter_active(const stp_vars_t *v,
+extern void stp_set_raw_parameter_active(stp_vars_t *v,
 					 const char *parameter,
 					 stp_parameter_activity_t active);
+
+/**
+ * Set the activity of a parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the activity status to set (should be set to
+ * STP_PARAMETER_ACTIVE or STP_PARAMETER_INACTIVE).
+ * @param type the type of the parameter.
+ */
+extern void stp_set_parameter_active(stp_vars_t *v,
+				     const char *parameter,
+				     stp_parameter_activity_t active,
+				     stp_parameter_type_t type);
 
 /**
  * Check if a string parameter is set.
@@ -1142,6 +1237,17 @@ extern int stp_check_raw_parameter(const stp_vars_t *v, const char *parameter,
 				   stp_parameter_activity_t active);
 
 /**
+ * Check if a parameter is set.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param active the minimum activity status.
+ * @param type the type of the parameter.
+ */
+extern int stp_check_parameter(const stp_vars_t *v, const char *parameter,
+			       stp_parameter_activity_t active,
+			       stp_parameter_type_t type);
+
+/**
  * Get the activity status of a string parameter.
  * @param v the vars to use.
  * @param parameter the name of the parameter.
@@ -1221,6 +1327,16 @@ stp_get_array_parameter_active(const stp_vars_t *v, const char *parameter);
  */
 extern stp_parameter_activity_t
 stp_get_raw_parameter_active(const stp_vars_t *v, const char *parameter);
+
+/**
+ * Get the activity status of a parameter.
+ * @param v the vars to use.
+ * @param parameter the name of the parameter.
+ * @param type the type of the parameter.
+ */
+extern stp_parameter_activity_t
+stp_get_parameter_active(const stp_vars_t *v, const char *parameter,
+			 stp_parameter_type_t type);
 
 
 
