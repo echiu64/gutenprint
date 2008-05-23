@@ -3366,16 +3366,6 @@ setup_misc(stp_vars_t *v)
   pd->paper_type = get_media_type(v);
   pd->paper_adjustment = get_media_adjustment(v);
   pd->ink_group = escp2_inkgroup(v);
-  if (stp_check_string_parameter(v, "Duplex", STP_PARAMETER_ACTIVE))
-    {
-      const char *duplex = stp_get_string_parameter(v, "Duplex");
-      if (strcmp(duplex, "DuplexTumble") == 0)
-	pd->duplex = DUPLEX_TUMBLE;
-      else if (strcmp(duplex, "DuplexNoTumble") == 0)
-	pd->duplex = DUPLEX_NO_TUMBLE;
-      else
-	pd->duplex = 0;
-    }
 }
 
 static void
@@ -3636,6 +3626,17 @@ setup_head_parameters(stp_vars_t *v)
 
   setup_head_offset(v);
   setup_split_channels(v);
+
+  if (stp_check_string_parameter(v, "Duplex", STP_PARAMETER_ACTIVE))
+    {
+      const char *duplex = stp_get_string_parameter(v, "Duplex");
+      if (strcmp(duplex, "DuplexTumble") == 0)
+	pd->duplex = DUPLEX_TUMBLE;
+      else if (strcmp(duplex, "DuplexNoTumble") == 0)
+	pd->duplex = DUPLEX_NO_TUMBLE;
+      else
+	pd->duplex = 0;
+    }
 
   if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
       pd->physical_channels == 1)
@@ -4046,13 +4047,6 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
     return 0;
 
   pd = (escp2_privdata_t *) stp_zalloc(sizeof(escp2_privdata_t));
-  if ((print_op & OP_JOB_PRINT) && (page_number & 1) && pd->duplex)
-    {
-      /* If the hardware can't do the duplex operation, we need to
-	 emulate it in software */
-      if ((pd->duplex & pd->input_slot->duplex) == 0)
-	image = stpi_buffer_image(image, BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
-    }
 
   pd->printed_something = 0;
   pd->last_color = -1;
@@ -4076,6 +4070,14 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   setup_head_parameters(v);
   setup_page(v);
   setup_misc(v);
+
+  if ((print_op & OP_JOB_PRINT) && (page_number & 1) && pd->duplex)
+    {
+      /* If the hardware can't do the duplex operation, we need to
+	 emulate it in software */
+      if ((pd->duplex & pd->input_slot->duplex) == 0)
+	image = stpi_buffer_image(image, BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
+    }
 
   adjust_density_and_ink_type(v, image);
   if (print_op & OP_JOB_START)
