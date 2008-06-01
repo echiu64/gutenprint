@@ -48,8 +48,6 @@ src/main/escp2-papers.c
 src/main/escp2-resolutions.c
 src/main/xml.c
 src/main/generic-options.c
-# Extracted XML translatable strings
-src/main/xmli18n-tmp.h
 src/main/util.h
 src/main/print-escp2.h
 src/main/generic-options.h
@@ -80,3 +78,5 @@ src/foomatic/printer_options.c
 # Ghostscript IJS driver
 src/ghost/ijsgutenprint.c
 
+# Extracted XML translatable strings
+src/xml/xmli18n-tmp.h

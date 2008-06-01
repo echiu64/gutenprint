@@ -1700,6 +1700,7 @@ write_ppd(
 		  (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
 		   lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
 		   lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
+		   lparam->p_type != STP_PARAMETER_TYPE_INT &&
 		   lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 		  continue;
 	      stp_describe_parameter(v, lparam->name, &desc);
@@ -1854,6 +1855,48 @@ write_ppd(
 			   */
 			  gzprintf(fp, "*Stp%s %d/%.1f mm: \"\"\n",
 				   desc.name, i, ((double) i) * 25.4 / 72);
+			}
+
+		      print_close_ui = 0;
+		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
+
+                     /*
+		      * Add custom option code and value parameter...
+		      */
+
+		      gzprintf(fp, "*CustomStp%s True: \"pop\"\n", desc.name);
+		      gzprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
+		               desc.name, _("Value"),
+			       desc.bounds.dimension.lower,
+			       desc.bounds.dimension.upper);
+
+		      break;
+		    case STP_PARAMETER_TYPE_INT:
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
+			       desc.p_class, desc.p_level, desc.channel,
+			       (double) desc.bounds.integer.lower,
+			       (double) desc.bounds.integer.upper,
+			       (double) desc.deflt.integer);
+		      if (desc.is_mandatory)
+			{
+			  gzprintf(fp, "*DefaultStp%s: %d\n",
+				   desc.name, desc.deflt.integer);
+			  gzprintf(fp, "*StpDefaultStp%s: %d\n",
+				   desc.name, desc.deflt.integer);
+			}
+		      else
+			{
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
+				   "None", _("None"));
+			}
+		      for (i = desc.bounds.integer.lower;
+			   i <= desc.bounds.integer.upper; i++)
+			{
+			  gzprintf(fp, "*Stp%s %d/%d: \"\"\n",
+				   desc.name, i, i);
 			}
 
 		      print_close_ui = 0;

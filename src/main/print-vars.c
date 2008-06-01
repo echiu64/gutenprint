@@ -1817,9 +1817,13 @@ stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
 		    {
 		      stp_set_curve_parameter(v, p_name, curve);
 		      type = STP_PARAMETER_TYPE_DOUBLE;
-		      stp_deprintf(STP_DBG_XML, "  Set curve '%s' to '%s' (%s)\n",
-				   p_name, child->value.text.string,
-				   stp_curve_write_string(curve));
+		      if (stp_get_debug_level() & STP_DBG_XML)
+			{
+			  char *cv = stp_curve_write_string(curve);
+			  stp_deprintf(STP_DBG_XML, "  Set curve '%s' to '%s' (%s)\n",
+				       p_name, child->value.text.string, cv);
+			  stp_free(cv);
+			}
 		      stp_curve_destroy(curve);
 		    }
 		}

@@ -33,8 +33,6 @@
 #include <unistd.h>
 
 static int stpi_path_check(const struct dirent *module);
-static char *stpi_path_merge(const char *path,
-			     const char *file);
 static int stpi_scandir (const char *dir,
 			 struct dirent ***namelist,
 			 int (*sel) (const struct dirent *),
@@ -150,11 +148,33 @@ stpi_path_check(const struct dirent *module) /* File to check */
   return status;
 }
 
+stp_list_t *
+stpi_data_path(void)
+{
+  stp_list_t *dir_list;                  /* List of directories to scan */
+  if (!(dir_list = stp_list_create()))
+    return NULL;
+  stp_list_set_freefunc(dir_list, stp_list_node_free_data);
+  if (getenv("STP_DATA_PATH"))
+    stp_path_split(dir_list, getenv("STP_DATA_PATH"));
+  else
+    stp_path_split(dir_list, PKGXMLDATADIR);
+  return dir_list;
+}
+
+stp_list_t *
+stpi_list_files_on_data_path(const char *name)
+{
+  stp_list_t *dir_list = stpi_data_path(); /* List of directories to scan */
+  stp_list_t *file_list = stp_path_search(dir_list, name);
+  stp_list_destroy(dir_list);
+  return file_list;
+}
 
 /*
  * Join a path and filename together.
  */
-static char *
+char *
 stpi_path_merge(const char *path, /* Path */
 	       const char *file) /* Filename */
 {

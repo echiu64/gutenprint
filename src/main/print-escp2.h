@@ -81,32 +81,6 @@ typedef const escp2_dropsize_t *escp2_drop_list_t[RES_N];
  ****************************************************************
  */
 
-typedef struct
-{
-  const char *name;
-  float base_density;
-  float subchannel_cutoff;
-  float k_transition;
-  float k_lower;
-  float k_upper;
-  float cyan;
-  float magenta;
-  float yellow;
-  float black;
-  float saturation;
-  float gamma;
-  const char *hue_adjustment;
-  const char *lum_adjustment;
-  const char *sat_adjustment;
-} paper_adjustment_t;
-
-typedef struct
-{
-  const char *listname;
-  short paper_count;
-  const paper_adjustment_t *papers;
-} paper_adjustment_list_t;
-
 typedef enum
 {
   PAPER_PLAIN         = 0x01,
@@ -118,24 +92,14 @@ typedef enum
 
 typedef struct
 {
+  const char *cname;
   const char *name;
   const char *text;
   paper_class_t paper_class;
-  short paper_feed_sequence;
-  short platen_gap;
-  short feed_adjustment;
-  short vacuum_intensity;
-  short paper_thickness;
   const char *preferred_ink_type;
   const char *preferred_ink_set;
+  stp_vars_t *v;
 } paper_t;
-
-typedef struct
-{
-  const char *listname;
-  short paper_count;
-  const paper_t *papers;
-} paperlist_t;
 
 
 /*
@@ -239,8 +203,6 @@ typedef struct
   const char *name;
   const char *text;
   const escp2_inkname_t *const *inknames;
-  const char *papers;
-  const char *paper_adjustments;
   const shade_set_t *shades;
   short n_inks;
 } inklist_t;
@@ -376,6 +338,7 @@ typedef struct
 #define MODEL_COMMAND_1999	0x1ul /* The 1999 series printers */
 #define MODEL_COMMAND_2000	0x2ul /* The 2000 series printers */
 #define MODEL_COMMAND_PRO	0x3ul /* Stylus Pro printers */
+#define MODEL_COMMAND_2005	0x4ul /* With SN 01 remote command */
 
 #define MODEL_ZEROMARGIN_MASK	0x30ul /* Does this printer support */
 #define MODEL_ZEROMARGIN_NO	0x00ul /* zero margin mode? */
@@ -391,33 +354,29 @@ typedef struct
 #define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
 #define MODEL_GRAYMODE_YES	0x80ul
 
-#define MODEL_VACUUM_MASK	0x100ul
-#define MODEL_VACUUM_NO		0x000ul
-#define MODEL_VACUUM_YES	0x100ul
-
-#define MODEL_FAST_360_MASK	0x200ul
+#define MODEL_FAST_360_MASK	0x100ul
 #define MODEL_FAST_360_NO	0x000ul
-#define MODEL_FAST_360_YES	0x200ul
+#define MODEL_FAST_360_YES	0x100ul
 
-#define MODEL_SEND_ZERO_ADVANCE_MASK	0x400ul
+#define MODEL_SEND_ZERO_ADVANCE_MASK	0x200ul
 #define MODEL_SEND_ZERO_ADVANCE_NO	0x000ul
-#define MODEL_SEND_ZERO_ADVANCE_YES	0x400ul
+#define MODEL_SEND_ZERO_ADVANCE_YES	0x200ul
 
-#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x800ul
+#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x400ul
 #define MODEL_SUPPORTS_INK_CHANGE_NO	0x000ul
-#define MODEL_SUPPORTS_INK_CHANGE_YES	0x800ul
+#define MODEL_SUPPORTS_INK_CHANGE_YES	0x400ul
 
-#define MODEL_PACKET_MODE_MASK	0x1000ul
-#define MODEL_PACKET_MODE_NO	0x0000ul
-#define MODEL_PACKET_MODE_YES	0x1000ul
+#define MODEL_PACKET_MODE_MASK	0x800ul
+#define MODEL_PACKET_MODE_NO	0x000ul
+#define MODEL_PACKET_MODE_YES	0x800ul
 
-#define MODEL_INTERCHANGEABLE_INK_MASK	0x2000ul
+#define MODEL_INTERCHANGEABLE_INK_MASK	0x1000ul
 #define MODEL_INTERCHANGEABLE_INK_NO	0x0000ul
-#define MODEL_INTERCHANGEABLE_INK_YES	0x2000ul
+#define MODEL_INTERCHANGEABLE_INK_YES	0x1000ul
 
-#define MODEL_ENVELOPE_LANDSCAPE_MASK	0x4000ul
+#define MODEL_ENVELOPE_LANDSCAPE_MASK	0x2000ul
 #define MODEL_ENVELOPE_LANDSCAPE_NO	0x0000ul
-#define MODEL_ENVELOPE_LANDSCAPE_YES	0x4000ul
+#define MODEL_ENVELOPE_LANDSCAPE_YES	0x2000ul
 
 typedef enum
 {
@@ -425,7 +384,6 @@ typedef enum
   MODEL_ZEROMARGIN,
   MODEL_VARIABLE_DOT,
   MODEL_GRAYMODE,
-  MODEL_VACUUM,
   MODEL_FAST_360,
   MODEL_SEND_ZERO_ADVANCE,
   MODEL_SUPPORTS_INK_CHANGE,
@@ -553,13 +511,16 @@ typedef struct escp2_printer
   const stp_raw_t *vertical_borderless_sequence;
   const char *const printer_weaves;
   const char *channel_names;
+/*****************************************************************************/
+  stp_mxml_node_t *caps;
+  stp_list_t *caps_cache;
+  stp_string_list_t *papers;
 } stpi_escp2_printer_t;
 
-extern const stpi_escp2_printer_t stpi_escp2_model_capabilities[];
+extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
-extern const paper_adjustment_list_t *stpi_escp2_get_paper_adjustment_list_named(const char *);
-extern const paperlist_t *stpi_escp2_get_paperlist_named(const char *);
+extern const stp_string_list_t *stpi_escp2_get_paperlist_named(const char *);
 extern const quality_list_t *stpi_escp2_get_quality_list_named(const char *);
 extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
 extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
@@ -611,14 +572,13 @@ typedef struct
   int use_extended_commands;	/* Do we use the extended commands? */
   const input_slot_t *input_slot; /* Input slot description */
   const paper_t *paper_type;	/* Paper type */
-  const paper_adjustment_t *paper_adjustment;	/* Paper adjustments */
+  stp_vars_t *media_settings;	/* Hardware media settings */
   const inkgroup_t *ink_group;	/* Which set of inks */
   const stp_raw_t *init_sequence; /* Initialization sequence */
   const stp_raw_t *deinit_sequence; /* De-initialization sequence */
   const stp_raw_t *borderless_sequence; /* Vertical borderless sequence */
   model_featureset_t command_set; /* Which command set this printer supports */
   int variable_dots;		/* Print supports variable dot sizes */
-  int has_vacuum;		/* Printer supports vacuum command */
   int has_graymode;		/* Printer supports fast grayscale mode */
   int base_separation;		/* Basic unit of separation */
   int resolution_scale;		/* Scale factor for ESC(D command */

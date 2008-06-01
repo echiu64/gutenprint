@@ -46,6 +46,12 @@ extern stp_list_t *stp_path_search(stp_list_t *dirlist,
 extern void stp_path_split(stp_list_t *list,
 			   const char *path);
 
+extern stp_list_t *stpi_data_path(void);
+
+extern stp_list_t *stpi_list_files_on_data_path(const char *name);
+
+extern char *stpi_path_merge(const char *path, const char *file);
+
 
 #ifdef __cplusplus
   }

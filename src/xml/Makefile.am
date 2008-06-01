@@ -1,0 +1,64 @@
+## $Id$
+## Copyright (C) 2008 Robert Krawitz
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+## Process this file with automake to produce Makefile.in.
+
+@SET_MAKE@
+
+include $(top_srcdir)/scripts/global.mk
+
+SUBDIRS = escp2
+
+## Variables
+
+pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml
+
+pkgxmldata_DATA =				\
+	dither-matrix-1x1.xml			\
+	dither-matrix-2x1.xml			\
+	dither-matrix-4x1.xml			\
+	papers.xml				\
+	printers.xml
+
+## Rules
+
+xml-stamp: $(pkgxmldata_DATA) escp2/xml-stamp
+	touch xml-stamp
+
+all-local: xmli18n-tmp.h xml-stamp
+
+
+xmli18n-tmp.h:  $(srcdir)/papers.xml $(srcdir)/printers.xml
+# Pull out translatable strings from XML files.  This is crude, but
+# works for now.
+	sed -e '/description.*value/!d' \
+	  -e 's/.*description.*value="\([^"]*\)".*/N_("\1");/' \
+	  < $(srcdir)/papers.xml > $@;
+	sed -e '/printer.*name/!d' \
+	  -e 's/.*printer.*name="\([^"]*\)".*/N_("\1");/' \
+	  < $(srcdir)/printers.xml >> $@;
+
+dist-hook: xmli18n-tmp.h
+# xmli18n-tmp.h is needed by po/POTFILES.in at dist time
+
+## Clean
+
+CLEANFILES = xmli18n-tmp.h xml-stamp
+
+EXTRA_DIST = $(pkgxmldata_DATA)
+
+MAINTAINERCLEANFILES = Makefile.in

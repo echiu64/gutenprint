@@ -63,13 +63,12 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "zero_margin",		4, 2 },
   { "variable_mode",		6, 1 },
   { "graymode",		 	7, 1 },
-  { "vacuum",			8, 1 },
-  { "fast_360",			9, 1 },
-  { "send_zero_advance",       10, 1 },
-  { "supports_ink_change",     11, 1 },
-  { "packet_mode",             12, 1 },
-  { "interchangeable_ink",     13, 1 },
-  { "envelope_landscape",      14, 1 },
+  { "fast_360",			8, 1 },
+  { "send_zero_advance",        9, 1 },
+  { "supports_ink_change",     10, 1 },
+  { "packet_mode",             11, 1 },
+  { "interchangeable_ink",     12, 1 },
+  { "envelope_landscape",      13, 1 },
 };
 
 typedef struct
@@ -156,6 +155,14 @@ typedef struct
   double defval;
   int color_only;
 } float_param_t;
+
+typedef struct
+{
+  const stp_parameter_t param;
+  int min;
+  int max;
+  int defval;
+} int_param_t;
 
 static const stp_parameter_t the_parameters[] =
 {
@@ -770,10 +777,90 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
     }, 0.0, 5.0, 0.5, 1
   },
+  {
+    {
+      "PageDryTime", N_("Drying Time Per Page"), N_("Advanced Printer Functionality"),
+      N_("Set drying time per page"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 60.0, 0.0, 1
+  },
+  {
+    {
+      "ScanDryTime", N_("Drying Time Per Scan"), N_("Advanced Printer Functionality"),
+      N_("Set drying time per scan"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 10.0, 0.0, 1
+  },
+  {
+    {
+      "ScanMinDryTime", N_("Minimum Drying Time Per Scan"), N_("Advanced Printer Functionality"),
+      N_("Set minimum drying time per scan"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 10.0, 0.0, 1
+  },
 };
 
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
+
+
+static const int_param_t int_parameters[] =
+{
+  {
+    {
+      "PaperThickness", N_("Paper Thickness"), N_("Advanced Printer Functionality"),
+      N_("Set printer paper thickness"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 255, 0
+  },
+  {
+    {
+      "VacuumIntensity", N_("Vacuum Intensity"), N_("Advanced Printer Functionality"),
+      N_("Set vacuum intensity (printer-specific)"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 255, 0
+  },
+  {
+    {
+      "FeedSequence", N_("Feed Sequence"), N_("Advanced Printer Functionality"),
+      N_("Set paper feed sequence (printer-specific)"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 255, 0
+  },
+  {
+    {
+      "PrintMethod", N_("Print Method"), N_("Advanced Printer Functionality"),
+      N_("Set print method (printer-specific)"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 255, 0
+  },
+  {
+    {
+      "PlatenGap", N_("Platen Gap"), N_("Advanced Printer Functionality"),
+      N_("Set platen gap (printer-specific)"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 255, 0
+  },
+  {
+    {
+      "FeedAdjustment", N_("Feed Adjustment"), N_("Advanced Printer Functionality"),
+      N_("Set paper feed adjustment (0.01% units)"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+    }, 0, 255, 0
+  },
+};
+
+static const int int_parameter_count =
+sizeof(int_parameters) / sizeof(const int_param_t);
 
 
 static escp2_privdata_t *
@@ -782,10 +869,158 @@ get_privdata(stp_vars_t *v)
   return (escp2_privdata_t *) stp_get_component_data(v, "Driver");
 }
 
+static stp_mxml_node_t *
+load_file(const stp_vars_t *v, const char *fn)
+{
+  FILE *fp = fopen(fn, "r");
+  stp_mxml_node_t *doc;
+
+  if (!fp)
+    return NULL;
+  stp_dprintf(STP_DBG_ESCP2, v, "Parsing XML source file %s\n", fn);
+  doc = stp_mxmlLoadFile(NULL, fp, STP_MXML_NO_CALLBACK);
+  fclose(fp);
+  return doc;
+}
+
+static stp_mxml_node_t *
+load_from_file(const stp_vars_t *v, const char *fn)
+{
+  int model = stp_get_model_id(v);
+  stp_mxml_node_t *answer = NULL;
+  stp_mxml_node_t *xmod = NULL;
+  FILE *fp = fopen(fn, "r");
+  stp_mxml_node_t *doc;
+
+  if (!fp)
+    return NULL;
+  stp_dprintf(STP_DBG_ESCP2, v, "Parsing XML source file %s\n", fn);
+  doc = stp_mxmlLoadFile(NULL, fp, STP_MXML_NO_CALLBACK);
+  fclose(fp);
+  if (!doc)
+    return NULL;
+  xmod =
+    stp_mxmlFindElement(doc, doc, "escp2_model", NULL, NULL, STP_MXML_DESCEND);
+  if (xmod)
+    {
+      const char *stmp = stp_mxmlElementGetAttr(xmod, "id");
+      if (stmp && stp_xmlstrtol(stmp) == model)
+	{
+	  stp_list_t *dirlist = stpi_data_path();
+	  stp_list_item_t *item;
+	  char buf[1024];
+	  stmp = stp_mxmlElementGetAttr(xmod, "media");
+	  sprintf(buf, "escp2/media/%s.xml", stmp);
+	  item = stp_list_get_start(dirlist);
+	  while (item)
+	    {
+	      const char *dn = (const char *) stp_list_item_get_data(item);
+	      char *ffn = stpi_path_merge(dn, buf);
+	      answer = load_file(v, ffn);
+	      stp_free(ffn);
+	      if (answer)
+		break;
+	      item = stp_list_item_next(item);
+	    }
+	  stp_list_destroy(dirlist);
+	}
+    }
+  stp_mxmlDelete(doc);
+  return answer;
+}
+
+static const char *
+paper_namefunc(const void *item)
+{
+  const paper_t *p = (const paper_t *) (item);
+  return p->cname;
+}
+
+static int
+check_model(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  if (! stpi_escp2_model_capabilities[model].caps)
+    {
+      stp_list_t *dirlist = stpi_data_path();
+      stp_list_item_t *item;
+      char buf[1024];
+      int found = 0;
+
+      stp_xml_init();
+      sprintf(buf, "escp2/model/model_%d.xml", model);
+      item = stp_list_get_start(dirlist);
+      while (item)
+	{
+	  const char *dn = (const char *) stp_list_item_get_data(item);
+	  char *fn = stpi_path_merge(dn, buf);
+	  stp_mxml_node_t *caps = load_from_file(v, fn);
+	  stp_free(fn);
+	  if (caps)
+	    {
+	      stp_mxml_node_t **xnode =
+		(stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].caps);
+	      stp_list_t **xlist =
+		(stp_list_t **) &(stpi_escp2_model_capabilities[model].caps_cache);
+	      stp_string_list_t **xpapers =
+		(stp_string_list_t **) &(stpi_escp2_model_capabilities[model].papers);
+	      stp_mxml_node_t *node = stp_mxmlFindElement(caps, caps, "papers",
+							  NULL, NULL,
+							  STP_MXML_DESCEND);
+	      *xnode = caps;
+	      *xlist = stp_list_create();
+	      stp_list_set_namefunc(*xlist, paper_namefunc);
+	      *xpapers = stp_string_list_create();
+	      if (node)
+		{
+		  node = node->child;
+		  while (node)
+		    {
+		      if (node->type == STP_MXML_ELEMENT &&
+			  strcmp(node->value.element.name, "paper") == 0)
+			stp_string_list_add_string(*xpapers,
+						   stp_mxmlElementGetAttr(node, "name"),
+						   stp_mxmlElementGetAttr(node, "text"));
+		      node = node->next;
+		    }
+		}
+	      found = 1;
+	      break;
+	    }
+	  item = stp_list_item_next(item);
+	}
+      if (! found)
+	stp_eprintf(v, "Unable to load definition for model %d!\n", model);
+      stp_list_destroy(dirlist);
+    }
+  return (stpi_escp2_model_capabilities[model].caps != NULL);
+}
+
+static int
+escp2_get_stp_model_id(const stp_vars_t *v)
+{
+  check_model(v);
+  return stp_get_model_id(v);
+}
+
+static stp_mxml_node_t *
+escp2_get_xml(const stp_vars_t *v)
+{
+  int model = escp2_get_stp_model_id(v);
+  return stpi_escp2_model_capabilities[model].caps;
+}
+
+static stp_list_t *
+escp2_get_caps_cache(const stp_vars_t *v)
+{
+  int model = escp2_get_stp_model_id(v);
+  return stpi_escp2_model_capabilities[model].caps_cache;
+}
+
 static model_featureset_t
 escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   if (feature < 0 || feature >= MODEL_LIMIT)
     return (model_featureset_t) -1;
   else
@@ -801,7 +1036,7 @@ static int
 escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
 	      model_featureset_t class)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   if (feature < 0 || feature >= MODEL_LIMIT)
     return -1;
   else
@@ -816,6 +1051,17 @@ escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
     }
 }
 
+static int
+escp2_has_printer_feature(const stp_vars_t *v, const char *name)
+{
+  stp_mxml_node_t *doc = escp2_get_xml(v);
+  if (doc)
+    return (stp_mxmlFindElement(doc, doc, "feature", "name", name,
+				STP_MXML_DESCEND) != NULL);
+  else
+    return 0;
+}
+
 #define DEF_SIMPLE_ACCESSOR(f, t)					\
 static inline t								\
 escp2_##f(const stp_vars_t *v)						\
@@ -824,7 +1070,7 @@ escp2_##f(const stp_vars_t *v)						\
     return stp_get_int_parameter(v, "escp2_" #f);			\
   else									\
     {									\
-      int model = stp_get_model_id(v);					\
+      int model = escp2_get_stp_model_id(v);				\
       return (stpi_escp2_model_capabilities[model].f);			\
     }									\
 }
@@ -837,7 +1083,7 @@ escp2_##f(const stp_vars_t *v)						\
     return stp_get_raw_parameter(v, "escp2_" #f);			\
   else									\
     {									\
-      int model = stp_get_model_id(v);					\
+      int model = escp2_get_stp_model_id(v);				\
       return (stpi_escp2_model_capabilities[model].f);			\
     }									\
 }
@@ -850,7 +1096,7 @@ escp2_##f(const stp_vars_t *v, int rollfeed)				\
     return stp_get_int_parameter(v, "escp2_" #f);			\
   else									\
     {									\
-      int model = stp_get_model_id(v);					\
+      int model = escp2_get_stp_model_id(v);				\
       const res_t *res = escp2_find_resolution(v);			\
       if (res && !(res->softweave))					\
 	{								\
@@ -929,7 +1175,7 @@ DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
 static inline const res_t *const *
 escp2_reslist(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   return (stpi_escp2_get_reslist_named
 	  (stpi_escp2_model_capabilities[model].reslist));
 }
@@ -937,7 +1183,7 @@ escp2_reslist(const stp_vars_t *v)
 static inline const printer_weave_list_t *
 escp2_printer_weaves(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   return (stpi_escp2_get_printer_weaves_named
 	  (stpi_escp2_model_capabilities[model].printer_weaves));
 }
@@ -945,7 +1191,7 @@ escp2_printer_weaves(const stp_vars_t *v)
 static inline const channel_name_t *
 escp2_channel_names(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   return (stpi_escp2_get_channel_names_named
 	  (stpi_escp2_model_capabilities[model].channel_names));
 }
@@ -953,7 +1199,7 @@ escp2_channel_names(const stp_vars_t *v)
 static inline const inkgroup_t *
 escp2_inkgroup(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   return (stpi_escp2_get_inkgroup_named
 	  (stpi_escp2_model_capabilities[model].inkgroup));
 }
@@ -961,7 +1207,7 @@ escp2_inkgroup(const stp_vars_t *v)
 static inline const quality_list_t *
 escp2_quality_list(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   return (stpi_escp2_get_quality_list_named
 	  (stpi_escp2_model_capabilities[model].quality_list));
 }
@@ -969,7 +1215,7 @@ escp2_quality_list(const stp_vars_t *v)
 static inline const input_slot_list_t *
 escp2_input_slots(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   return (stpi_escp2_get_input_slot_list_named
 	  (stpi_escp2_model_capabilities[model].input_slots));
 }
@@ -1001,7 +1247,7 @@ escp2_ink_type(const stp_vars_t *v, int resid)
     return stp_get_int_parameter(v, "escp2_ink_type");
   else
     {
-      int model = stp_get_model_id(v);
+      int model = escp2_get_stp_model_id(v);
       return stpi_escp2_model_capabilities[model].dot_sizes[resid];
     }
 }
@@ -1013,7 +1259,7 @@ escp2_density(const stp_vars_t *v, int resid)
     return stp_get_float_parameter(v, "escp2_density");
   else
     {
-      int model = stp_get_model_id(v);
+      int model = escp2_get_stp_model_id(v);
       return stpi_escp2_model_capabilities[model].densities[resid];
     }
 }
@@ -1025,7 +1271,7 @@ escp2_bits(const stp_vars_t *v, int resid)
     return stp_get_int_parameter(v, "escp2_bits");
   else
     {
-      int model = stp_get_model_id(v);
+      int model = escp2_get_stp_model_id(v);
       return stpi_escp2_model_capabilities[model].bits[resid];
     }
 }
@@ -1037,7 +1283,7 @@ escp2_base_res(const stp_vars_t *v, int resid)
     return stp_get_int_parameter(v, "escp2_base_res");
   else
     {
-      int model = stp_get_model_id(v);
+      int model = escp2_get_stp_model_id(v);
       return stpi_escp2_model_capabilities[model].base_resolutions[resid];
     }
 }
@@ -1045,7 +1291,7 @@ escp2_base_res(const stp_vars_t *v, int resid)
 static const escp2_dropsize_t *
 escp2_dropsizes(const stp_vars_t *v, int resid)
 {
-  int model = stp_get_model_id(v);
+  int model = escp2_get_stp_model_id(v);
   const escp2_drop_list_t *drops =
     stpi_escp2_get_drop_list_named(stpi_escp2_model_capabilities[model].drops);
   return (*drops)[resid];
@@ -1122,14 +1368,11 @@ escp2_free_shades(shade_t *shades)
     stp_free(shades);
 }
 
-static const paperlist_t *
+static const stp_string_list_t *
 escp2_paperlist(const stp_vars_t *v)
 {
-  const inklist_t *inklist = escp2_inklist(v);
-  if (inklist)
-    return stpi_escp2_get_paperlist_named(inklist->papers);
-  else
-    return NULL;
+  int model = escp2_get_stp_model_id(v);
+  return stpi_escp2_model_capabilities[model].papers;
 }
 
 static int
@@ -1262,24 +1505,129 @@ use_printer_weave(const stp_vars_t *v)
     return 0;
 }
 
+static paper_t *
+build_media_type(const stp_vars_t *v, const char *name, const inklist_t *ink,
+		 const res_t *res)
+{
+  stp_mxml_node_t *node;
+  stp_mxml_node_t *doc = escp2_get_xml(v);
+  const char *pclass;
+  paper_t *answer;
+  stp_vars_t *vv = stp_vars_create();
+  if (!doc)
+    return NULL;
+  node = stp_mxmlFindElement(doc, doc, "paper", "name", name, STP_MXML_DESCEND);
+  if (!node)
+    return NULL;
+  answer = stp_zalloc(sizeof(paper_t));
+  answer->name = stp_mxmlElementGetAttr(node, "name");
+  answer->text = gettext(stp_mxmlElementGetAttr(node, "text"));
+  pclass = stp_mxmlElementGetAttr(node, "class");
+  answer->v = vv;
+  if (! pclass || strcasecmp(pclass, "plain") == 0)
+    answer->paper_class = PAPER_PLAIN;
+  else if (strcasecmp(pclass, "good") == 0)
+    answer->paper_class = PAPER_GOOD;
+  else if (strcasecmp(pclass, "photo") == 0)
+    answer->paper_class = PAPER_PHOTO;
+  else if (strcasecmp(pclass, "premium") == 0)
+    answer->paper_class = PAPER_PREMIUM_PHOTO;
+  else if (strcasecmp(pclass, "transparency") == 0)
+    answer->paper_class = PAPER_TRANSPARENCY;
+  else
+    answer->paper_class = PAPER_PLAIN;
+  answer->preferred_ink_type = stp_mxmlElementGetAttr(node, "PreferredInktype");
+  answer->preferred_ink_set = stp_mxmlElementGetAttr(node, "PreferredInkset");
+  stp_vars_fill_from_xmltree(node->child, vv);
+  if (ink && ink->name)
+    {
+      stp_mxml_node_t *inknode = stp_mxmlFindElement(node, node, "ink",
+						     "name", ink->name,
+						     STP_MXML_DESCEND);
+      if (inknode)
+	stp_vars_fill_from_xmltree(inknode->child, vv);
+    }
+  if (res && res->name)
+    {
+      stp_mxml_node_t *resnode = stp_mxmlFindElement(node, node, "resolution",
+						     "name", res->name,
+						     STP_MXML_DESCEND);
+      if (resnode)
+	stp_vars_fill_from_xmltree(resnode->child, vv);
+    }
+  return answer;
+}
+
+static char *
+build_media_id(const char *name, const inklist_t *ink, const res_t *res)
+{
+  char *answer;
+  stp_asprintf(&answer, "%s %s %s",
+	       name,
+	       ink ? ink->name : "",
+	       res ? res->name : "");
+  return answer;
+}
 
 static const paper_t *
-get_media_type(const stp_vars_t *v)
+get_media_type_named(const stp_vars_t *v, const char *name,
+		     int ignore_res)
 {
+  paper_t *answer = NULL;
   int i;
-  const paperlist_t *p = escp2_paperlist(v);
+  const stp_string_list_t *p = escp2_paperlist(v);
+  const res_t *res = ignore_res ? NULL : escp2_find_resolution(v);
+  const inklist_t *inklist = escp2_inklist(v);
+  char *media_id = build_media_id(name, inklist, res);
+  stp_list_t *cache = escp2_get_caps_cache(v);
+  stp_list_item_t *li = stp_list_get_item_by_name(cache, media_id);
+  if (li)
+    {
+      stp_free(media_id);
+      answer = (paper_t *) stp_list_item_get_data(li);
+    }
+  else
+    {
+      int paper_type_count = stp_string_list_count(p);
+      for (i = 0; i < paper_type_count; i++)
+	{
+	  if (!strcmp(name, stp_string_list_param(p, i)->name))
+	    {
+	      answer = build_media_type(v, name, inklist, res);
+	      break;
+	    }
+	}
+      if (answer)
+	{
+	  answer->cname = media_id;
+	  stp_list_item_create(cache, NULL, answer);
+	}
+    }
+  return answer;
+}
+
+static const paper_t *
+get_media_type(const stp_vars_t *v, int ignore_res)
+{
+  const stp_string_list_t *p = escp2_paperlist(v);
   if (p)
     {
       const char *name = stp_get_string_parameter(v, "MediaType");
-      int paper_type_count = p->paper_count;
       if (name)
-	{
-	  for (i = 0; i < paper_type_count; i++)
-	    {
-	      if (!strcmp(name, p->papers[i].name))
-		return &(p->papers[i]);
-	    }
-	}
+	return get_media_type_named(v, name, ignore_res);
+    }
+  return NULL;
+}
+
+static const paper_t *
+get_default_media_type(const stp_vars_t *v)
+{
+  const stp_string_list_t *p = escp2_paperlist(v);
+  if (p)
+    {
+      int paper_type_count = stp_string_list_count(p);
+      if (paper_type_count >= 0)
+	return get_media_type_named(v, stp_string_list_param(p, 0)->name, 1);
     }
   return NULL;
 }
@@ -1289,7 +1637,7 @@ get_resolution_bounds_by_paper_type(const stp_vars_t *v,
 				    unsigned *max_x, unsigned *max_y,
 				    unsigned *min_x, unsigned *min_y)
 {
-  const paper_t *paper = get_media_type(v);
+  const paper_t *paper = get_media_type(v, 1);
   *min_x = 0;
   *min_y = 0;
   *max_x = 0;
@@ -1494,15 +1842,12 @@ static const char *
 get_default_inktype(const stp_vars_t *v)
 {
   const inklist_t *ink_list = escp2_inklist(v);
-  const paper_t *paper_type = get_media_type(v);
+  const paper_t *paper_type;
   if (!ink_list)
     return NULL;
+  paper_type = get_media_type(v, 0);
   if (!paper_type)
-    {
-      const paperlist_t *p = escp2_paperlist(v);
-      if (p)
-	paper_type = &(p->papers[0]);
-    }
+    paper_type = get_default_media_type(v);
   if (paper_type && paper_type->preferred_ink_type)
     return paper_type->preferred_ink_type;
   else if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
@@ -1557,29 +1902,15 @@ get_inktype(const stp_vars_t *v)
   return NULL;
 }
 
-static const paper_adjustment_t *
+static const stp_vars_t *
 get_media_adjustment(const stp_vars_t *v)
 {
-  const paper_t *pt = get_media_type(v);
-  const inklist_t *ink_list = escp2_inklist(v);
-  if (pt && ink_list && ink_list->paper_adjustments)
-    {
-      const paper_adjustment_list_t *adjlist =
-	stpi_escp2_get_paper_adjustment_list_named(ink_list->paper_adjustments);
-      if (adjlist)
-	{
-	  const char *paper_name = pt->name;
-	  int i;
-	  for (i = 0; i < adjlist->paper_count; i++)
-	    {
-	      if (strcmp(paper_name, adjlist->papers[i].name) == 0)
-		return &(adjlist->papers[i]);
-	    }
-	}
-    }
-  return NULL;
+  const paper_t *pt = get_media_type(v, 0);
+  if (pt)
+    return pt->v;
+  else
+    return NULL;
 }
-
 
 /*
  * 'escp2_parameters()' - Return the parameter values for the given parameter.
@@ -1594,6 +1925,8 @@ escp2_list_parameters(const stp_vars_t *v)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
   for (i = 0; i < float_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(float_parameters[i].param));
+  for (i = 0; i < int_parameter_count; i++)
+    stp_parameter_list_add_param(ret, &(int_parameters[i].param));
   return ret;
 }
 
@@ -1711,15 +2044,15 @@ set_gray_value_parameter(const stp_vars_t *v,
 
 static void
 fill_transition_parameters(const stp_vars_t *v,
-			       stp_parameter_t *description,
-			       int color)
+			   stp_parameter_t *description,
+			   int color)
 {
-  const paper_adjustment_t *paper_adj = get_media_adjustment(v);
+  const stp_vars_t *paper_adj = get_media_adjustment(v);
   description->is_active = 1;
   description->bounds.dbl.lower = 0;
   description->bounds.dbl.upper = 1.0;
-  if (paper_adj)
-    description->deflt.dbl = paper_adj->subchannel_cutoff;
+  if (paper_adj && stp_check_float_parameter(paper_adj, "SubchannelCutoff", STP_PARAMETER_ACTIVE))
+    description->deflt.dbl = stp_get_float_parameter(paper_adj, "SubchannelCutoff");
   else
     description->deflt.dbl = 1.0;
 }
@@ -1989,6 +2322,16 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	description->bounds.dbl.lower = float_parameters[i].min;
 	break;
       }
+  for (i = 0; i < int_parameter_count; i++)
+    if (strcmp(name, int_parameters[i].param.name) == 0)
+      {
+	stp_fill_parameter_settings(description,
+				     &(int_parameters[i].param));
+	description->deflt.integer = int_parameters[i].defval;
+	description->bounds.integer.upper = int_parameters[i].max;
+	description->bounds.integer.lower = int_parameters[i].min;
+	break;
+      }
 
   for (i = 0; i < the_parameter_count; i++)
     if (strcmp(name, the_parameters[i].name) == 0)
@@ -2183,20 +2526,23 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "MediaType") == 0)
     {
-      const paperlist_t *p = escp2_paperlist(v);
-      int nmediatypes = p->paper_count;
-      description->bounds.str = stp_string_list_create();
-      if (nmediatypes)
+      const stp_string_list_t *p = escp2_paperlist(v);
+      description->is_active = 0;
+      if (p)
 	{
-	  for (i = 0; i < nmediatypes; i++)
-	    stp_string_list_add_string(description->bounds.str,
-				       p->papers[i].name,
-				       gettext(p->papers[i].text));
-	  description->deflt.str =
-	    stp_string_list_param(description->bounds.str, 0)->name;
+	  int nmediatypes = stp_string_list_count(p);
+	  description->bounds.str = stp_string_list_create();
+	  if (nmediatypes)
+	    {
+	      description->is_active = 1;
+	      for (i = 0; i < nmediatypes; i++)
+		stp_string_list_add_string(description->bounds.str,
+					   stp_string_list_param(p, i)->name,
+					   gettext(stp_string_list_param(p, i)->text));
+	      description->deflt.str =
+		stp_string_list_param(description->bounds.str, 0)->name;
+	    }
 	}
-      else
-	description->is_active = 0;
     }
   else if (strcmp(name, "InputSlot") == 0)
     {
@@ -2386,20 +2732,15 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "GCRLower") == 0 ||
 	   strcmp(name, "GCRUpper") == 0)
     {
-      const paper_adjustment_t *paper_adj = get_media_adjustment(v);
+      const stp_vars_t *paper_adj = get_media_adjustment(v);
       if (paper_adj &&
 	  stp_get_string_parameter(v, "PrintingMode") &&
 	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
 	{
-	  if (paper_adj)
-	    {
-	      if (strcmp(name, "BlackTrans") == 0)
-		description->deflt.dbl = paper_adj->k_transition;
-	      else if (strcmp(name, "GCRUpper") == 0)
-		description->deflt.dbl = paper_adj->k_upper;
-	      else if (strcmp(name, "GCRLower") == 0)
-		description->deflt.dbl = paper_adj->k_lower;
-	    }
+	  if (paper_adj && stp_check_float_parameter(paper_adj, name, STP_PARAMETER_ACTIVE))
+	    description->deflt.dbl = stp_get_float_parameter(paper_adj, name);
+	  else
+	    description->p_type = STP_PARAMETER_TYPE_INVALID;	    
 	}
       else
 	description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -2536,6 +2877,20 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  if (ink_name && ink_name->inkset == INKSET_CMYKRB)
 	    description->is_active = 1;
 	}
+    }
+  else if (strcmp(name, "PageDryTime") == 0 ||
+	   strcmp(name, "ScanDryTime") == 0 ||
+	   strcmp(name, "ScanMinDryTime") == 0 ||
+	   strcmp(name, "FeedAdjustment") == 0 ||
+	   strcmp(name, "PaperThickness") == 0 ||
+	   strcmp(name, "VacuumIntensity") == 0 ||
+	   strcmp(name, "FeedSequence") == 0 ||
+	   strcmp(name, "PrintMethod") == 0 ||
+	   strcmp(name, "PlatenGap") == 0)
+    {
+      description->is_active = 0;
+      if (escp2_has_printer_feature(v, name))
+	description->is_active = 1;
     }
 }
 
@@ -2777,7 +3132,8 @@ escp2_has_advanced_command_set(const stp_vars_t *v)
 {
   return (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
 	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) ||
-	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000));
+	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000) ||
+	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2005));
 }
 
 static int
@@ -2827,14 +3183,14 @@ static void
 adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  const paper_adjustment_t *pt = pd->paper_adjustment;
+  const stp_vars_t *pv = pd->paper_type->v;
   double paper_density = .8;
   int o_resid = compute_virtual_resid(pd->res);
   int n_resid = compute_printed_resid(pd->res);
   double virtual_scale = 1;
 
-  if (pt)
-    paper_density = pt->base_density;
+  if (pv && stp_check_float_parameter(pv, "Density", STP_PARAMETER_ACTIVE))
+    paper_density = stp_get_float_parameter(pv, "Density");
 
   if (!stp_check_float_parameter(v, "Density", STP_PARAMETER_DEFAULTED))
     {
@@ -2926,8 +3282,7 @@ static void
 adjust_print_quality(stp_vars_t *v, stp_image_t *image)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  stp_curve_t *adjustment = NULL;
-  const paper_adjustment_t *pt;
+  const stp_vars_t *pv = pd->paper_type->v;
   double k_upper = 1.0;
   double k_lower = 0;
   double k_transition = 1.0;
@@ -2937,24 +3292,29 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
    * sometimes change.
    */
 
-  pt = pd->paper_adjustment;
-  if (pt)
+  if (pv)
     {
-      k_lower = pt->k_lower;
-      k_upper = pt->k_upper;
-      k_transition = pt->k_transition;
+      k_lower = stp_get_float_parameter(pv, "GCRLower");
+      k_upper = stp_get_float_parameter(pv, "GCRUpper");
+      k_transition = stp_get_float_parameter(pv, "BlackTrans");
       if (!stp_check_float_parameter(v, "CyanBalance", STP_PARAMETER_ACTIVE))
-	stp_set_float_parameter(v, "CyanBalance", pt->cyan);
+	stp_set_float_parameter(v, "CyanBalance",
+				stp_get_float_parameter(pv, "CyanBalance"));
       if (!stp_check_float_parameter(v, "MagentaBalance", STP_PARAMETER_ACTIVE))
-	stp_set_float_parameter(v, "MagentaBalance", pt->magenta);
+	stp_set_float_parameter(v, "MagentaBalance",
+				stp_get_float_parameter(pv, "MagentaBalance"));
       if (!stp_check_float_parameter(v, "YellowBalance", STP_PARAMETER_ACTIVE))
-	stp_set_float_parameter(v, "YellowBalance", pt->yellow);
+	stp_set_float_parameter(v, "YellowBalance",
+				stp_get_float_parameter(pv, "YellowBalance"));
       stp_set_default_float_parameter(v, "BlackDensity", 1.0);
-      stp_scale_float_parameter(v, "BlackDensity", pt->black);
+      stp_scale_float_parameter(v, "BlackDensity",
+				stp_get_float_parameter(pv, "BlackDensity"));
       stp_set_default_float_parameter(v, "Saturation", 1.0);
-      stp_scale_float_parameter(v, "Saturation", pt->saturation);
+      stp_scale_float_parameter(v, "Saturation",
+				stp_get_float_parameter(pv, "Saturation"));
       stp_set_default_float_parameter(v, "Gamma", 1.0);
-      stp_scale_float_parameter(v, "Gamma", pt->gamma);
+      stp_scale_float_parameter(v, "Gamma",
+				stp_get_float_parameter(pv, "Gamma"));
     }
 
   if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
@@ -2966,28 +3326,25 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
 
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
-      pt && pt->hue_adjustment)
+      pv && stp_check_curve_parameter(pv, "HueMap", STP_PARAMETER_ACTIVE))
     {
-      adjustment = stp_curve_create_from_string(pt->hue_adjustment);
-      stp_set_curve_parameter(v, "HueMap", adjustment);
+      stp_set_curve_parameter(v, "HueMap",
+			      stp_get_curve_parameter(pv, "HueMap"));
       stp_set_curve_parameter_active(v, "HueMap", STP_PARAMETER_ACTIVE);
-      stp_curve_destroy(adjustment);
     }
   if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
-      pt && pt->sat_adjustment)
+      pv && stp_check_curve_parameter(pv, "SatMap", STP_PARAMETER_ACTIVE))
     {
-      adjustment = stp_curve_create_from_string(pt->sat_adjustment);
-      stp_set_curve_parameter(v, "SatMap", adjustment);
+      stp_set_curve_parameter(v, "SatMap",
+			      stp_get_curve_parameter(pv, "SatMap"));
       stp_set_curve_parameter_active(v, "SatMap", STP_PARAMETER_ACTIVE);
-      stp_curve_destroy(adjustment);
     }
   if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
-      pt && pt->lum_adjustment)
+      pv && stp_check_curve_parameter(pv, "LumMap", STP_PARAMETER_ACTIVE))
     {
-      adjustment = stp_curve_create_from_string(pt->lum_adjustment);
-      stp_set_curve_parameter(v, "LumMap", adjustment);
+      stp_set_curve_parameter(v, "LumMap",
+			      stp_get_curve_parameter(pv, "LumMap"));
       stp_set_curve_parameter_active(v, "LumMap", STP_PARAMETER_ACTIVE);
-      stp_curve_destroy(adjustment);
     }
 }
 
@@ -3041,7 +3398,7 @@ setup_inks(stp_vars_t *v)
   int i, j;
   escp2_dropsize_t *drops;
   const escp2_inkname_t *ink_type = pd->inkname;
-  const paper_adjustment_t *paper = pd->paper_adjustment;
+  const stp_vars_t *pv = pd->paper_type->v;
   int gloss_channel = -1;
   double gloss_scale = get_double_param(v, "Density");
 
@@ -3118,9 +3475,16 @@ setup_inks(stp_vars_t *v)
 		  stp_check_float_parameter(v, subparam, STP_PARAMETER_ACTIVE))
 		stp_channel_set_cutoff_adjustment
 		  (v, i, j, stp_get_float_parameter(v, subparam));
-	      else if (paper)
-		stp_channel_set_cutoff_adjustment(v, i, j,
-						  paper->subchannel_cutoff);
+	      else if (pv)
+		{
+		  if (subparam &&
+		      stp_check_float_parameter(pv, subparam, STP_PARAMETER_ACTIVE))
+		    stp_channel_set_cutoff_adjustment
+		      (v, i, j, stp_get_float_parameter(pv, subparam));
+		  else if (stp_check_float_parameter(pv, "SubchannelCutoff", STP_PARAMETER_ACTIVE))
+		    stp_channel_set_cutoff_adjustment
+		      (v, i, j, stp_get_float_parameter(pv, "SubchannelCutoff"));
+		}
 	    }
 	  if (ink_type->inkset != INKSET_EXTENDED)
 	    {
@@ -3208,9 +3572,16 @@ setup_inks(stp_vars_t *v)
 		      stp_check_float_parameter(v, subparam, STP_PARAMETER_ACTIVE))
 		    stp_channel_set_cutoff_adjustment
 		      (v, ch, j, stp_get_float_parameter(v, subparam));
-		  else if (paper)
-		    stp_channel_set_cutoff_adjustment(v, ch, j,
-						      paper->subchannel_cutoff);
+		  else if (pv)
+		    {
+		      if (subparam &&
+			  stp_check_float_parameter(pv, subparam, STP_PARAMETER_ACTIVE))
+			stp_channel_set_cutoff_adjustment
+			  (v, ch, j, stp_get_float_parameter(pv, subparam));
+		      else if (stp_check_float_parameter(pv, "SubchannelCutoff", STP_PARAMETER_ACTIVE))
+			stp_channel_set_cutoff_adjustment
+			  (v, ch, j, stp_get_float_parameter(pv, "SubchannelCutoff"));
+		    }
 		}
 	      if (channel->hue_curve)
 		{
@@ -3314,7 +3685,7 @@ supports_split_channels(stp_vars_t *v)
   else
     return 0;
 }
-	  
+
 
 static void
 setup_split_channels(stp_vars_t *v)
@@ -3326,12 +3697,10 @@ setup_split_channels(stp_vars_t *v)
   pd->split_channel_count = supports_split_channels(v);
   if (pd->split_channel_count)
     {
-      int i;
-      int incr = 1;
       if (pd->res->vres <
 	  (escp2_base_separation(v) / escp2_black_nozzle_separation(v)))
 	{
-	  incr =
+	  int incr =
 	    (escp2_base_separation(v) / escp2_black_nozzle_separation(v)) /
 	    pd->res->vres;
 	  pd->split_channel_count /= incr;
@@ -3349,7 +3718,6 @@ setup_basic(stp_vars_t *v)
   pd->advanced_command_set = escp2_has_advanced_command_set(v);
   pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
   pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
-  pd->has_vacuum = escp2_has_cap(v, MODEL_VACUUM, MODEL_VACUUM_YES);
   pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
   pd->init_sequence = escp2_preinit_sequence(v);
   pd->deinit_sequence = escp2_postinit_remote_sequence(v);
@@ -3363,9 +3731,36 @@ setup_misc(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   pd->input_slot = get_input_slot(v);
-  pd->paper_type = get_media_type(v);
-  pd->paper_adjustment = get_media_adjustment(v);
+  pd->paper_type = get_media_type(v, 0);
   pd->ink_group = escp2_inkgroup(v);
+  pd->media_settings = stp_vars_create_copy(pd->paper_type->v);
+  if (stp_check_float_parameter(v, "PageDryTime", STP_PARAMETER_ACTIVE))
+    stp_set_float_parameter(pd->media_settings, "PageDryTime",
+			    stp_get_float_parameter(v, "PageDryTime"));
+  if (stp_check_float_parameter(v, "ScanDryTime", STP_PARAMETER_ACTIVE))
+    stp_set_float_parameter(pd->media_settings, "ScanDryTime",
+			    stp_get_float_parameter(v, "ScanDryTime"));
+  if (stp_check_float_parameter(v, "ScanMinDryTime", STP_PARAMETER_ACTIVE))
+    stp_set_float_parameter(pd->media_settings, "ScanMinDryTime",
+			    stp_get_float_parameter(v, "ScanMinDryTime"));
+  if (stp_check_int_parameter(v, "FeedAdjustment", STP_PARAMETER_ACTIVE))
+    stp_set_int_parameter(pd->media_settings, "FeedAdjustment",
+			  stp_get_int_parameter(v, "FeedAdjustment"));
+  if (stp_check_int_parameter(v, "PaperThickness", STP_PARAMETER_ACTIVE))
+    stp_set_int_parameter(pd->media_settings, "PaperThickness",
+			  stp_get_int_parameter(v, "PaperThickness"));
+  if (stp_check_int_parameter(v, "VacuumIntensity", STP_PARAMETER_ACTIVE))
+    stp_set_int_parameter(pd->media_settings, "VacuumIntensity",
+			  stp_get_int_parameter(v, "VacuumIntensity"));
+  if (stp_check_int_parameter(v, "FeedSequence", STP_PARAMETER_ACTIVE))
+    stp_set_int_parameter(pd->media_settings, "FeedSequence",
+			  stp_get_int_parameter(v, "FeedSequence"));
+  if (stp_check_int_parameter(v, "PrintMethod", STP_PARAMETER_ACTIVE))
+    stp_set_int_parameter(pd->media_settings, "PrintMethod",
+			  stp_get_int_parameter(v, "PrintMethod"));
+  if (stp_check_int_parameter(v, "PlatenGap", STP_PARAMETER_ACTIVE))
+    stp_set_int_parameter(pd->media_settings, "PlatenGap",
+			  stp_get_int_parameter(v, "PlatenGap"));
 }
 
 static void
@@ -4015,6 +4410,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
   for (i = 0; i < pd->channels_in_use; i++)
     if (pd->cols[i])
       stp_free(pd->cols[i]);
+  stp_vars_destroy(pd->media_settings);
   stp_free(pd->cols);
   stp_free(pd->channels);
   if (pd->split_channels)

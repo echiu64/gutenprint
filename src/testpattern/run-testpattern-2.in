@@ -16,6 +16,7 @@ my @printer_list = ();
 my @special_options = ();
 my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType);
 my $global_status = 1;
+my $run_installed = 0;
 my $output = undef;
 
 my @extras = ();
@@ -39,6 +40,7 @@ GetOptions("v+"  => \$valgrind,
 	   "n"   => \$dontrun,
 	   "p:i" => \$std_pages,
 	   "s!"  => \$skip_duplicate_printers,
+	   "i!"  => \$run_installed,
 	   "o=s" => \@special_options,
 	   "f=s" => \@families,
 	   "O=s" => \$output,
@@ -67,8 +69,8 @@ foreach my $opt (@default_options) {
 my $pwd = `pwd`;
 chomp $pwd;
 
-if (! defined $ENV{"STP_DATA_PATH"}) {
-    $ENV{"STP_DATA_PATH"} = "${pwd}/../main";
+if (! $run_installed && ! defined $ENV{"STP_DATA_PATH"}) {
+    $ENV{"STP_DATA_PATH"} = "${pwd}/../xml";
 }
 
 if (! defined $ENV{"STP_MODULE_PATH"}) {

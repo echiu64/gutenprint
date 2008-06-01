@@ -3,7 +3,7 @@
 retval=0
 
 if [ -z "$STP_DATA_PATH" ] ; then
-    STP_DATA_PATH=`pwd`/../main
+    STP_DATA_PATH=`pwd`/../xml
     export STP_DATA_PATH
 fi
 

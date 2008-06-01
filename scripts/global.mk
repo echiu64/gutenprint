@@ -4,7 +4,7 @@
 # Variables
 
 #export STP_MODULE_PATH = $(top_builddir)/src/main/.libs:$(top_builddir)/src/main
-#export STP_DATA_PATH = $(top_srcdir)/src/main
+#export STP_DATA_PATH = $(top_srcdir)/src/xml
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include $(LOCAL_CPPFLAGS) $(GNUCFLAGS)
 

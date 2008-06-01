@@ -147,7 +147,6 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Use_fast_360", pd->use_fast_360);
   print_remote_int_param(v, "Command_set", pd->command_set);
   print_remote_int_param(v, "Variable_dots", pd->variable_dots);
-  print_remote_int_param(v, "Has_vacuum", pd->has_vacuum);
   print_remote_int_param(v, "Has_graymode", pd->has_graymode);
   print_remote_int_param(v, "Base_separation", pd->base_separation);
   print_remote_int_param(v, "Resolution_scale", pd->resolution_scale);
@@ -211,44 +210,42 @@ escp2_set_remote_sequence(stp_vars_t *v)
 {
   /* Magic remote mode commands, whatever they do */
   escp2_privdata_t *pd = get_privdata(v);
+  const stp_vars_t *pv = pd->media_settings;
 
   if (stp_get_debug_level() & STP_DBG_MARK_FILE)
     print_debug_params(v);
   if (pd->advanced_command_set || pd->input_slot)
     {
-      int feed_sequence = 0;
       /* Enter remote mode */
       stp_send_command(v, "\033(R", "bcs", 0, "REMOTE1");
-      if (pd->command_set == MODEL_COMMAND_PRO)
+#if 0
+      if (pd->command_set == MODEL_COMMAND_2005)
+	stp_send_command(v, "SN", "bc", 0);
+      else
+#endif
+      if (pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO)
+	/* Function unknown */
+	stp_send_command(v, "PM", "bh", 0);
+      if (stp_check_int_parameter(pv, "PaperThickness", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "PH", "bcc", 0,
+			 stp_get_int_parameter(pv, "PaperThickness"));
+      if (stp_check_int_parameter(pv, "VacuumIntensity", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "SN", "bccc", 0, 5,
+			 stp_get_int_parameter(pv, "VacuumIntensity"));
+      if (stp_check_int_parameter(pv, "FeedAdjustment", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "SN", "bccc", 0, 4,
+			 stp_get_int_parameter(pv, "FeedAdjustment"));
+      if (stp_check_int_parameter(pv, "FeedSequence", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "SN", "bccc", 0, 0,
+			 stp_get_int_parameter(pv, "FeedSequence"));
+      if (stp_get_boolean_parameter(v, "FullBleed"))
 	{
-	  if (pd->paper_type)
-	    {
-	      stp_send_command(v, "PH", "bcc", 0,
-			       pd->paper_type->paper_thickness);
-	      if (pd->has_vacuum)
-		stp_send_command(v, "SN", "bccc", 0, 5,
-				 pd->paper_type->vacuum_intensity);
-	      stp_send_command(v, "SN", "bccc", 0, 4,
-			       pd->paper_type->feed_adjustment);
-	    }
-	}
-      else if (pd->advanced_command_set)
-	{
-	  if (pd->paper_type)
-	    feed_sequence = pd->paper_type->paper_feed_sequence;
-	  /* Function unknown */
-	  stp_send_command(v, "PM", "bh", 0);
-	  /* Set mechanism sequence */
-	  stp_send_command(v, "SN", "bccc", 0, 0, feed_sequence);
-	  if (stp_get_boolean_parameter(v, "FullBleed"))
-	    {
-	      stp_send_command(v, "FP", "bch", 0,
-			       (unsigned short) -pd->zero_margin_offset);
-	      if (pd->borderless_sequence)
-		stp_zfwrite(pd->borderless_sequence->data,
-			    pd->borderless_sequence->bytes,
-			    1, v);
-	    }
+	  stp_send_command(v, "FP", "bch", 0,
+			   (unsigned short) -pd->zero_margin_offset);
+	  if (pd->borderless_sequence)
+	    stp_zfwrite(pd->borderless_sequence->data,
+			pd->borderless_sequence->bytes,
+			1, v);
 	}
       if (pd->input_slot)
 	{
@@ -407,6 +404,7 @@ escp2_set_margins(stp_vars_t *v)
   bot += pd->page_extra_height;
   if (pd->use_extended_commands &&
       (pd->command_set == MODEL_COMMAND_2000 ||
+       pd->command_set == MODEL_COMMAND_2005 ||
        pd->command_set == MODEL_COMMAND_PRO))
     stp_send_command(v, "\033(c", "bll", top, bot);
   else
@@ -419,10 +417,14 @@ escp2_set_paper_dimensions(stp_vars_t *v)
   escp2_privdata_t *pd = get_privdata(v);
   if (pd->advanced_command_set)
     {
+      const stp_vars_t *pv = pd->media_settings;
       int w = pd->page_true_width * pd->page_management_units / 72;
       int h = (pd->page_true_height + pd->paper_extra_bottom) *
 	pd->page_management_units / 72;
       stp_send_command(v, "\033(S", "bll", w, h);
+      if (stp_check_int_parameter(pv, "PrintMethod", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "\033(m", "bc", 
+			 stp_get_int_parameter(pv, "FeedSequence"));
     }
 }
 

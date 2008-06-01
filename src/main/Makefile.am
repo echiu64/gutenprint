@@ -25,7 +25,6 @@ include $(top_srcdir)/scripts/global.mk
 ## Variables
 
 pkgconfigdatadir = $(libdir)/pkgconfig
-pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml
 pkgmoduledir = $(pkglibdir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/modules
 
 
@@ -165,37 +164,9 @@ libgutenprint_la_LDFLAGS = $(libgutenprint_version) \
 
 pkgconfigdata_DATA = gutenprint.pc
 
-pkgxmldata_DATA = \
-	dither-matrix-1x1.xml \
-	dither-matrix-2x1.xml \
-	dither-matrix-4x1.xml \
-	papers.xml \
-	printers.xml
-
-
-
-## Rules
-
-all-local: xmli18n-tmp.h
-
-
-xmli18n-tmp.h:  $(srcdir)/papers.xml $(srcdir)/printers.xml
-# Pull out translatable strings from XML files.  This is crude, but
-# works for now.
-	sed -e '/description.*value/!d' \
-	  -e 's/.*description.*value="\([^"]*\)".*/N_("\1");/' \
-	  < $(srcdir)/papers.xml > $@;
-	sed -e '/printer.*name/!d' \
-	  -e 's/.*printer.*name="\([^"]*\)".*/N_("\1");/' \
-	  < $(srcdir)/printers.xml >> $@;
-
-dist-hook: xmli18n-tmp.h
-# xmli18n-tmp.h is needed by po/POTFILES.in at dist time
-
 
 ## Clean
 
-CLEANFILES = xmli18n-tmp.h
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = $(pkgxmldata_DATA) libgutenprint.sym
+EXTRA_DIST = libgutenprint.sym

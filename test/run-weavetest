@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -z "$STP_DATA_PATH" ] ; then
-    STP_DATA_PATH=`pwd`/../src/main
+    STP_DATA_PATH=`pwd`/../src/xml
     export STP_DATA_PATH
 fi
 
