@@ -308,7 +308,7 @@ long
 stp_xmlstrtol(const char *textval)
 {
   long val; /* The value to return */
-  val = strtol(textval, (char **)NULL, 10);
+  val = strtol(textval, (char **)NULL, 0);
 
   return val;
 }
@@ -320,7 +320,7 @@ unsigned long
 stp_xmlstrtoul(const char *textval)
 {
   unsigned long val; /* The value to return */
-  val = strtoul(textval, (char **)NULL, 10);
+  val = strtoul(textval, (char **)NULL, 0);
 
   return val;
 }

@@ -218,12 +218,9 @@ escp2_set_remote_sequence(stp_vars_t *v)
     {
       /* Enter remote mode */
       stp_send_command(v, "\033(R", "bcs", 0, "REMOTE1");
-#if 0
       if (pd->command_set == MODEL_COMMAND_2005)
 	stp_send_command(v, "SN", "bc", 0);
-      else
-#endif
-      if (pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO)
+      else if (pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO)
 	/* Function unknown */
 	stp_send_command(v, "PM", "bh", 0);
       if (stp_check_int_parameter(pv, "PaperThickness", STP_PARAMETER_ACTIVE))
@@ -238,6 +235,25 @@ escp2_set_remote_sequence(stp_vars_t *v)
       if (stp_check_int_parameter(pv, "FeedSequence", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "SN", "bccc", 0, 0,
 			 stp_get_int_parameter(pv, "FeedSequence"));
+      if (stp_check_int_parameter(pv, "PlatenGap", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "US", "bccc", 0, 1,
+			 stp_get_int_parameter(pv, "PlatenGap"));
+      if (stp_check_int_parameter(pv, "PaperMedia", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "MI", "bcccc", 0, 1,
+			 stp_get_int_parameter(pv, "PaperMedia"),
+			 99);	/* User-defined size (for now!) */
+      if (stp_check_int_parameter(pv, "PageDryTime", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "DR", "bcch", 0, 1,
+			 (int) stp_get_float_parameter(pv, "PageDryTime"));
+      if (stp_check_int_parameter(pv, "ScanDryTime", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "DR", "bcch", 0, 1,
+			 (int) stp_get_float_parameter(pv, "ScanDryTime") * 1000);
+      if (stp_check_int_parameter(pv, "ScanMinDryTime", STP_PARAMETER_ACTIVE))
+	{
+	  stp_send_command(v, "DR", "bcccc", 0, 0x41, 0xff, 0xff);
+	  stp_send_command(v, "DR", "bcch", 0, 1,
+			   (int) stp_get_float_parameter(pv, "ScanMinDryTime") * 1000);
+	}
       if (stp_get_boolean_parameter(v, "FullBleed"))
 	{
 	  stp_send_command(v, "FP", "bch", 0,
@@ -424,7 +440,7 @@ escp2_set_paper_dimensions(stp_vars_t *v)
       stp_send_command(v, "\033(S", "bll", w, h);
       if (stp_check_int_parameter(pv, "PrintMethod", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "\033(m", "bc", 
-			 stp_get_int_parameter(pv, "FeedSequence"));
+			 stp_get_int_parameter(pv, "PrintMethod"));
     }
 }
 

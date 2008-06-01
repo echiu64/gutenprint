@@ -781,7 +781,7 @@ static const float_param_t float_parameters[] =
     {
       "PageDryTime", N_("Drying Time Per Page"), N_("Advanced Printer Functionality"),
       N_("Set drying time per page"),
-      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
     }, 0, 60.0, 0.0, 1
   },
@@ -789,7 +789,7 @@ static const float_param_t float_parameters[] =
     {
       "ScanDryTime", N_("Drying Time Per Scan"), N_("Advanced Printer Functionality"),
       N_("Set drying time per scan"),
-      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
     }, 0, 10.0, 0.0, 1
   },
@@ -797,7 +797,7 @@ static const float_param_t float_parameters[] =
     {
       "ScanMinDryTime", N_("Minimum Drying Time Per Scan"), N_("Advanced Printer Functionality"),
       N_("Set minimum drying time per scan"),
-      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
     }, 0, 10.0, 0.0, 1
   },
@@ -2886,6 +2886,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "VacuumIntensity") == 0 ||
 	   strcmp(name, "FeedSequence") == 0 ||
 	   strcmp(name, "PrintMethod") == 0 ||
+	   strcmp(name, "PaperMedia") == 0 ||
 	   strcmp(name, "PlatenGap") == 0)
     {
       description->is_active = 0;

@@ -772,16 +772,6 @@ static const physical_subchannel_t c120_quadtone_subchannels[] =
 
 DECLARE_INK_CHANNEL(c120_quadtone);
 
-static const physical_subchannel_t b500_quadtone_subchannels[] =
-{
-  { 0, 0, 0, 2, "BlackDensity", "GrayTransition", NULL, NULL, { 0, 0x40 } },
-  { 2, 0, 0, 2, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale", { 2, 0x42 } },
-  { 1, 0, 0, 2, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale", { 1, 0x41 } },
-  { 4, 0, 0, 2, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale", { 4, 0x44 } },
-};
-
-DECLARE_INK_CHANNEL(b500_quadtone);
-
 static const physical_subchannel_t c64_quadtone_subchannels[] =
 {
   { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
@@ -1098,19 +1088,6 @@ static const escp2_inkname_t c120_generic_quadtone_inkset =
 {
   "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
   &c120_quadtone_channel_set
-};
-
-static const ink_channel_t *const b500_quadtone_channels[] =
-{
-  &b500_quadtone_channel
-};
-
-DECLARE_CHANNEL_SET(b500_quadtone);
-
-static const escp2_inkname_t b500_generic_quadtone_inkset =
-{
-  "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
-  &b500_quadtone_channel_set
 };
 
 static const ink_channel_t *const c64_quadtone_channels[] =
@@ -2678,13 +2655,6 @@ static const escp2_inkname_t *const b500_ink_types[] =
 
 DECLARE_INKLIST("None", b500, b500, N_("EPSON Standard Inks"), standard);
 
-static const escp2_inkname_t *const b500_quadtone_ink_types[] =
-{
-  &b500_generic_quadtone_inkset,
-};
-
-DECLARE_INKLIST("Quadtone", b500_quadtone, b500_quadtone, N_("Quadtone"), quadtone);
-
 static const escp2_inkname_t *const c64_ink_types[] =
 {
   &c64_four_color_standard_inkset,
@@ -2976,7 +2946,6 @@ DECLARE_INKGROUP(c120);
 static const inklist_t *const b500_group[] =
 {
   &b500_inklist,
-  &b500_quadtone_inklist
 };
 
 DECLARE_INKGROUP(b500);

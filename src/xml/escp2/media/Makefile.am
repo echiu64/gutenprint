@@ -45,6 +45,7 @@ pkgxmldata_DATA =				\
 	photo_gen2.xml				\
 	photo_gen3.xml				\
 	photo_gen3_4.xml			\
+	photo_gen4.xml				\
 	photo_pigment.xml			\
 	picturemate_4.xml			\
 	picturemate_6.xml			\
