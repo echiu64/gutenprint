@@ -180,11 +180,6 @@ print_color_ordered_new(const stpi_dither_t *d, stpi_dither_channel_t *dc,
   unsigned short *where = ord ? ord->lut + (val * levels) : &swhere;
   /*
    * Look for the appropriate range into which the input value falls.
-   * Notice that we use the input, not the error, to decide what dot type
-   * to print (if any).  We actually use the "density" input to permit
-   * the caller to use something other that simply the input value, if it's
-   * desired to use some function of overall density, rather than just
-   * this color's input, for this purpose.
    */
   for (i = levels - 1; i >= 0; i--)
     {
@@ -223,11 +218,6 @@ print_color_ordered(const stpi_dither_t *d, stpi_dither_channel_t *dc, int val,
 
   /*
    * Look for the appropriate range into which the input value falls.
-   * Notice that we use the input, not the error, to decide what dot type
-   * to print (if any).  We actually use the "density" input to permit
-   * the caller to use something other that simply the input value, if it's
-   * desired to use some function of overall density, rather than just
-   * this color's input, for this purpose.
    */
   for (i = levels; i >= 0; i--)
     {
