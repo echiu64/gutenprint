@@ -129,7 +129,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta1 is released!</span> 
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta2 is released!</span> 
 			<br>
 			<a href="MacOSX.php3#5.2.0-beta2">April 28, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.0 and 5.1 release series.  An updated stand alone uninstaller has also been released. See the <b>Downloads</b> section. 
 		</p>
