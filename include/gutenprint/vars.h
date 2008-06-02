@@ -1035,8 +1035,8 @@ extern stp_string_list_t *stp_list_raw_parameters(const stp_vars_t *v);
 
 /**
  * List all parameters.
- * @params v the vars to use.
  * The return value must be freed after use.
+ * @param v the vars to use.
  * @param type the type of the parameter.
  */
 extern stp_string_list_t *stp_list_parameters(const stp_vars_t *v,
