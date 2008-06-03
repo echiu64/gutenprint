@@ -244,6 +244,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper name="Transparency" text="Transparencies" class="transparency">
 	<parameter type="integer" name="PaperMedia">9</parameter>
+	<parameter type="integer" name="PrintMethod">0x21</parameter>
 
 	<ink name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.830000</parameter>
@@ -359,6 +360,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper name="BackFilm" text="Back Light Film" class="transparency">
 	<parameter type="integer" name="PaperMedia">10</parameter>
+	<parameter type="integer" name="PrintMethod">0x30</parameter>
 
 	<ink name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.830000</parameter>

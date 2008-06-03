@@ -2740,7 +2740,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  if (paper_adj && stp_check_float_parameter(paper_adj, name, STP_PARAMETER_ACTIVE))
 	    description->deflt.dbl = stp_get_float_parameter(paper_adj, name);
 	  else
-	    description->p_type = STP_PARAMETER_TYPE_INVALID;	    
+	    description->p_type = STP_PARAMETER_TYPE_INVALID;
 	}
       else
 	description->p_type = STP_PARAMETER_TYPE_INVALID;
@@ -3295,27 +3295,141 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
 
   if (pv)
     {
-      k_lower = stp_get_float_parameter(pv, "GCRLower");
-      k_upper = stp_get_float_parameter(pv, "GCRUpper");
-      k_transition = stp_get_float_parameter(pv, "BlackTrans");
-      if (!stp_check_float_parameter(v, "CyanBalance", STP_PARAMETER_ACTIVE))
-	stp_set_float_parameter(v, "CyanBalance",
-				stp_get_float_parameter(pv, "CyanBalance"));
-      if (!stp_check_float_parameter(v, "MagentaBalance", STP_PARAMETER_ACTIVE))
-	stp_set_float_parameter(v, "MagentaBalance",
-				stp_get_float_parameter(pv, "MagentaBalance"));
-      if (!stp_check_float_parameter(v, "YellowBalance", STP_PARAMETER_ACTIVE))
-	stp_set_float_parameter(v, "YellowBalance",
-				stp_get_float_parameter(pv, "YellowBalance"));
+      int i;
+      stp_string_list_t *slist;
       stp_set_default_float_parameter(v, "BlackDensity", 1.0);
-      stp_scale_float_parameter(v, "BlackDensity",
-				stp_get_float_parameter(pv, "BlackDensity"));
       stp_set_default_float_parameter(v, "Saturation", 1.0);
-      stp_scale_float_parameter(v, "Saturation",
-				stp_get_float_parameter(pv, "Saturation"));
       stp_set_default_float_parameter(v, "Gamma", 1.0);
-      stp_scale_float_parameter(v, "Gamma",
-				stp_get_float_parameter(pv, "Gamma"));
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_STRING_LIST);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_string_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_string_parameter(v, name,
+					 stp_get_string_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_FILE);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_file_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_file_parameter(v, name,
+				       stp_get_file_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_INT);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_int_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_int_parameter(v, name,
+				      stp_get_int_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_DIMENSION);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_dimension_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_dimension_parameter(v, name,
+					    stp_get_dimension_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_BOOLEAN);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_boolean_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_boolean_parameter(v, name,
+					  stp_get_boolean_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_CURVE);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_curve_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_curve_parameter(v, name,
+					stp_get_curve_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_ARRAY);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_array_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_array_parameter(v, name,
+					stp_get_array_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_RAW);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (!stp_check_raw_parameter(v, name, STP_PARAMETER_ACTIVE))
+		{
+		  const stp_raw_t *r = stp_get_raw_parameter(pv, name);
+		  stp_set_raw_parameter(v, name, r->data, r->bytes);
+		}
+	    }
+	  stp_string_list_destroy(slist);
+	}
+      slist = stp_list_parameters(pv, STP_PARAMETER_TYPE_DOUBLE);
+      if (slist)
+	{
+	  int len = stp_string_list_count(slist);
+	  for (i = 0; i < len; i++)
+	    {
+	      const char *name = stp_string_list_param(slist, i)->name;
+	      if (strcmp(name, "BlackDensity") == 0 ||
+		  strcmp(name, "Saturation") == 0 ||
+		  strcmp(name, "Gamma") == 0)
+		stp_scale_float_parameter(v, name,
+					  stp_get_float_parameter(pv, name));
+	      else if (strcmp(name, "GCRLower") == 0)
+		k_lower = stp_get_float_parameter(pv, "GCRLower");
+	      else if (strcmp(name, "GCRUpper") == 0)
+		k_upper = stp_get_float_parameter(pv, "GCRUpper");
+	      else if (strcmp(name, "BlackTrans") == 0)
+		k_transition = stp_get_float_parameter(pv, "BlackTrans");
+	      else if (!stp_check_float_parameter(v, name, STP_PARAMETER_ACTIVE))
+		stp_set_float_parameter(v, name,
+					stp_get_float_parameter(pv, name));
+	    }
+	  stp_string_list_destroy(slist);
+	}
     }
 
   if (!stp_check_float_parameter(v, "GCRLower", STP_PARAMETER_ACTIVE))
@@ -3326,27 +3440,6 @@ adjust_print_quality(stp_vars_t *v, stp_image_t *image)
     stp_set_default_float_parameter(v, "BlackTrans", k_transition);
 
 
-  if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE) &&
-      pv && stp_check_curve_parameter(pv, "HueMap", STP_PARAMETER_ACTIVE))
-    {
-      stp_set_curve_parameter(v, "HueMap",
-			      stp_get_curve_parameter(pv, "HueMap"));
-      stp_set_curve_parameter_active(v, "HueMap", STP_PARAMETER_ACTIVE);
-    }
-  if (!stp_check_curve_parameter(v, "SatMap", STP_PARAMETER_ACTIVE) &&
-      pv && stp_check_curve_parameter(pv, "SatMap", STP_PARAMETER_ACTIVE))
-    {
-      stp_set_curve_parameter(v, "SatMap",
-			      stp_get_curve_parameter(pv, "SatMap"));
-      stp_set_curve_parameter_active(v, "SatMap", STP_PARAMETER_ACTIVE);
-    }
-  if (!stp_check_curve_parameter(v, "LumMap", STP_PARAMETER_ACTIVE) &&
-      pv && stp_check_curve_parameter(pv, "LumMap", STP_PARAMETER_ACTIVE))
-    {
-      stp_set_curve_parameter(v, "LumMap",
-			      stp_get_curve_parameter(pv, "LumMap"));
-      stp_set_curve_parameter_active(v, "LumMap", STP_PARAMETER_ACTIVE);
-    }
 }
 
 static int

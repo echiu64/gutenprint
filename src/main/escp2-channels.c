@@ -762,16 +762,6 @@ static const physical_subchannel_t c80_quadtone_subchannels[] =
 
 DECLARE_INK_CHANNEL(c80_quadtone);
 
-static const physical_subchannel_t c120_quadtone_subchannels[] =
-{
-  { 0, 4, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
-  { 2, -1, 0, 0, "BlackDensity", "GrayTransition", "Gray3Value", "Gray3Scale" },
-  { 1, -1, 120, 0, "BlackDensity", "GrayTransition", "Gray2Value", "Gray2Scale" },
-  { 4, -1, 240, 0, "BlackDensity", "GrayTransition", "Gray1Value", "Gray1Scale" },
-};
-
-DECLARE_INK_CHANNEL(c120_quadtone);
-
 static const physical_subchannel_t c64_quadtone_subchannels[] =
 {
   { 0, -1, 0, 0, "BlackDensity", "GrayTransition", NULL, NULL },
@@ -1075,19 +1065,6 @@ static const escp2_inkname_t c80_generic_quadtone_inkset =
 {
   "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
   &c80_quadtone_channel_set
-};
-
-static const ink_channel_t *const c120_quadtone_channels[] =
-{
-  &c120_quadtone_channel
-};
-
-DECLARE_CHANNEL_SET(c120_quadtone);
-
-static const escp2_inkname_t c120_generic_quadtone_inkset =
-{
-  "Quadtone", N_("Quadtone"), INKSET_QUADTONE,
-  &c120_quadtone_channel_set
 };
 
 static const ink_channel_t *const c64_quadtone_channels[] =
@@ -2637,13 +2614,6 @@ static const escp2_inkname_t *const c120_ink_types[] =
 
 DECLARE_INKLIST("None", c120, c120, N_("EPSON Standard Inks"), standard);
 
-static const escp2_inkname_t *const c120_quadtone_ink_types[] =
-{
-  &c120_generic_quadtone_inkset,
-};
-
-DECLARE_INKLIST("Quadtone", c120_quadtone, c120_quadtone, N_("Quadtone"), quadtone);
-
 static const escp2_inkname_t *const b500_ink_types[] =
 {
   &b500_four_color_standard_inkset,
@@ -2938,7 +2908,6 @@ DECLARE_INKGROUP(c80);
 static const inklist_t *const c120_group[] =
 {
   &c120_inklist,
-  &c120_quadtone_inklist
 };
 
 DECLARE_INKGROUP(c120);
@@ -3036,6 +3005,13 @@ static const inklist_t *const photo_gen3_4_group[] =
 };
 
 DECLARE_INKGROUP(photo_gen3_4);
+
+static const inklist_t *const photo_gen4_group[] =
+{
+  &photo_gen3_inklist,
+};
+
+DECLARE_INKGROUP(photo_gen4);
 
 static const inklist_t *const photo_pigment_group[] =
 {
@@ -3150,6 +3126,7 @@ static const ink_t the_inks[] =
   { "pro_gen2", &pro_gen2_inkgroup },
   { "photo_gen3", &photo_gen3_inkgroup },
   { "photo_gen3_4", &photo_gen3_4_inkgroup },
+  { "photo_gen4", &photo_gen4_inkgroup },
   { "photo_pigment", &photo_pigment_inkgroup },
   { "pro_pigment", &pro_pigment_inkgroup },
   { "ultrachrome", &ultrachrome_inkgroup },

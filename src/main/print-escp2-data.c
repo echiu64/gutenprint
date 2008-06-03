@@ -1742,7 +1742,7 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 0,
     4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, "variable_1_5pl",
-    "superfine", "photo_gen3",
+    "superfine", "photo_gen4",
     variable_bits, c1_5_base_res, "rx700",
     "p1_5", &new_init_sequence, &je_deinit_sequence,
     &generic_borderless_sequence, NULL, "rx700"
@@ -1856,7 +1856,7 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
     9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
     4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, "variable_2pl",
-    "superfine", "photo_gen3",
+    "superfine", "photo_gen4",
     variable_bits, variable_base_res, "cd_roll_feed",
     "standard", &new_init_sequence, &je_deinit_sequence,
     &generic_borderless_sequence, NULL, "standard"
