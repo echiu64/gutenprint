@@ -288,7 +288,7 @@ stp_printer_describe_parameter(const stp_vars_t *v, const char *name,
 }
 
 static void
-set_printer_defaults(stp_vars_t *v, int core_only)
+set_printer_defaults(stp_vars_t *v, int core_only, int soft)
 {
   stp_parameter_list_t *params;
   int count;
@@ -306,32 +306,60 @@ set_printer_defaults(stp_vars_t *v, int core_only)
 	  switch (p->p_type)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
-	      stp_set_string_parameter(v, p->name, desc.deflt.str);
-	      stp_set_string_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_string_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_string_parameter(v, p->name, desc.deflt.str);
+		  stp_set_string_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      stp_set_float_parameter(v, p->name, desc.deflt.dbl);
-	      stp_set_float_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_float_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_float_parameter(v, p->name, desc.deflt.dbl);
+		  stp_set_float_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_INT:
-	      stp_set_int_parameter(v, p->name, desc.deflt.integer);
-	      stp_set_int_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_int_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_int_parameter(v, p->name, desc.deflt.integer);
+		  stp_set_int_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_DIMENSION:
-	      stp_set_dimension_parameter(v, p->name, desc.deflt.dimension);
-	      stp_set_dimension_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_dimension_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_dimension_parameter(v, p->name, desc.deflt.dimension);
+		  stp_set_dimension_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      stp_set_boolean_parameter(v, p->name, desc.deflt.boolean);
-	      stp_set_boolean_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_boolean_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_boolean_parameter(v, p->name, desc.deflt.boolean);
+		  stp_set_boolean_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
-	      stp_set_curve_parameter(v, p->name, desc.deflt.curve);
-	      stp_set_curve_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_curve_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_curve_parameter(v, p->name, desc.deflt.curve);
+		  stp_set_curve_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    case STP_PARAMETER_TYPE_ARRAY:
-	      stp_set_array_parameter(v, p->name, desc.deflt.array);
-	      stp_set_array_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+	      if (!soft ||
+		  !stp_check_array_parameter(v, p->name, STP_PARAMETER_DEFAULTED))
+		{
+		  stp_set_array_parameter(v, p->name, desc.deflt.array);
+		  stp_set_array_parameter_active(v, p->name, STP_PARAMETER_ACTIVE);
+		}
 	      break;
 	    default:
 	      break;
@@ -346,7 +374,14 @@ void
 stp_set_printer_defaults(stp_vars_t *v, const stp_printer_t *printer)
 {
   stp_set_driver(v, stp_printer_get_driver(printer));
-  set_printer_defaults(v, 0);
+  set_printer_defaults(v, 0, 0);
+}
+
+void
+stp_set_printer_defaults_soft(stp_vars_t *v, const stp_printer_t *printer)
+{
+  stp_set_driver(v, stp_printer_get_driver(printer));
+  set_printer_defaults(v, 0, 1);
 }
 
 void
@@ -368,7 +403,7 @@ stp_printer_get_defaults(const stp_printer_t *printer)
     {
       stp_printer_t *nc_printer = (stp_printer_t *) printer;
       stp_deprintf(STP_DBG_PRINTERS, "  ==>init %s\n", printer->driver);
-      set_printer_defaults (nc_printer->printvars, 1);
+      set_printer_defaults (nc_printer->printvars, 1, 0);
       nc_printer->vars_initialized = 1;
     }
   return printer->printvars;

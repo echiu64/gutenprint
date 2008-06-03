@@ -349,6 +349,16 @@ do_print(void)
   stp_set_page_width(v, stp_get_page_width(global_vars));
   stp_set_page_height(v, stp_get_page_height(global_vars));
   stp_parameter_list_destroy(params);
+  if (stp_check_string_parameter(v, "PageSize", STP_PARAMETER_ACTIVE) &&
+      !strcmp(stp_get_string_parameter(v, "PageSize"), "Auto"))
+    {
+      stp_parameter_t desc;
+      stp_describe_parameter(v, "PageSize", &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	stp_set_string_parameter(v, "PageSize", desc.deflt.str);
+      stp_parameter_description_destroy(&desc);
+    }
+  stp_set_printer_defaults_soft(v, the_printer);
 
   stp_get_imageable_area(v, &left, &right, &bottom, &top);
   stp_describe_resolution(v, &x, &y);
