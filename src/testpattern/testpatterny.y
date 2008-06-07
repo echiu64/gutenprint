@@ -105,6 +105,7 @@ find_color(const char *name)
 %token PRINTER
 %token PARAMETER
 %token PARAMETER_INT
+%token PARAMETER_BOOL
 %token PARAMETER_FLOAT
 %token PARAMETER_CURVE
 %token DENSITY
@@ -342,6 +343,15 @@ parameter_int: PARAMETER_INT tSTRING tINT
 	}
 ;
 
+parameter_bool: PARAMETER_BOOL tSTRING tINT
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>parameter_bool %s %d\n", $2, $3);
+	  stp_set_boolean_parameter(global_vars, $2, $3);
+	  free($2);
+	}
+;
+
 parameter_float: PARAMETER_FLOAT tSTRING NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
@@ -365,7 +375,7 @@ parameter_curve: PARAMETER_CURVE tSTRING tSTRING
 	}
 ;
 
-parameter: parameter_string | parameter_int | parameter_float | parameter_curve
+parameter: parameter_string | parameter_int | parameter_float | parameter_curve | parameter_bool
 ;
 density: DENSITY NUMBER
 	{

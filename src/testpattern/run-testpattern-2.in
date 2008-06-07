@@ -14,7 +14,7 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType);
+my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed);
 my $global_status = 1;
 my $run_installed = 0;
 my $output = undef;
@@ -33,6 +33,10 @@ my $std_pages = 1;
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast",
 		     "ColorCorrection" => "Raw");
+
+my %param_types;
+my %param_classes;
+my %param_levels;
 
 GetOptions("v+"  => \$valgrind,
 	   "c"   => \$cachegrind,
@@ -77,9 +81,26 @@ if (! defined $ENV{"STP_MODULE_PATH"}) {
     $ENV{"STP_MODULE_PATH"} = "${pwd}/../main:${pwd}/../main/.libs";
 }
 
-sub set_opt($$) {
-    my ($opt, $val) = @_;
-    push @extras, "parameter \"$opt\" \"$val\";\n";
+sub set_opt($$$) {
+    my ($opt, $val, $printer) = @_;
+    my ($type) = $param_types{$printer}{$opt};
+    if ($type == 1) {
+	push @extras, "parameter_int \"$opt\" $val;\n";
+    } elsif ($type == 2) {
+	my ($xval) = $val;
+	if ($val =~ /true/i) {
+	    $xval = 1;
+	} elsif ($val =~ /false/i) {
+	    $xval = 0;
+	}
+	push @extras, "parameter_bool \"$opt\" $xval;\n";
+    } elsif ($type == 3) {
+	push @extras, "parameter_float \"$opt\" $val;\n";
+    } elsif ($type == 4) {
+	push @extras, "parameter_curve \"$opt\" \"$val\";\n";
+    } else {
+	push @extras, "parameter \"$opt\" \"$val\";\n";
+    } 
 }
 
 sub set_message($) {
@@ -242,9 +263,9 @@ sub do_printer {
 		set_global_message("$printer\n");
 		$first_time = 0;
 	    }
-	    set_opt("PrintingMode", $pmode);
-	    set_opt("Resolution", $resolution);
-	    map { set_opt($_, $base_settings{$_})} keys %base_settings;
+	    set_opt("PrintingMode", $pmode, $printer);
+	    set_opt("Resolution", $resolution, $printer);
+	    map { set_opt($_, $base_settings{$_}, $printer)} keys %base_settings;
 	    if (defined $output || defined $calc_md5) {
 		my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
 		my $md5_dir = $calc_md5;
@@ -283,14 +304,14 @@ sub do_printer {
 			set_global_message("$printer\n");
 			$first_time = 0;
 		    }
-		    set_opt("PrintingMode", $pmode);
-		    set_opt("Resolution", $min_res_name);
-		    set_opt($key, $opt);
+		    set_opt("PrintingMode", $pmode, $printer);
+		    set_opt("Resolution", $min_res_name, $printer);
+		    set_opt($key, $opt, $printer);
 		    map {
 			if ($key ne $_) {
-			    set_opt($_, $base_settings{$_});
+			    set_opt($_, $base_settings{$_}, $printer);
 			    if ($key eq "Duplex") {
-				set_opt("JobMode", "Job");
+				set_opt("JobMode", "Job", $printer);
 				$pages = 4;
 			    } else {
 				$pages = $std_pages;
