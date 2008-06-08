@@ -90,6 +90,10 @@ int global_did_something;
 int global_noscale = 0;
 int global_suppress_output = 0;
 char *global_output = NULL;
+FILE *output = NULL;
+int write_to_process = 0;
+int start_job = 0;
+int end_job = 0;
 
 static testpattern_t *static_testpatterns;
 
@@ -182,6 +186,19 @@ writefunc(void *file, const char *buf, size_t bytes)
     }
 }
 
+void
+close_output(void)
+{
+  if (output && output != stdout)
+    {
+      if (write_to_process)
+	(void) pclose(output);
+      else
+	(void) fclose(output);
+      output = NULL;
+    }
+}
+
 static void
 initialize_global_parameters(void)
 {
@@ -222,6 +239,8 @@ initialize_global_parameters(void)
   if (global_printer)
     free(global_printer); /* Allocated with strdup() */
   global_printer = NULL;
+  start_job = 0;
+  end_job = 0;
 }
 
 static int
@@ -237,8 +256,6 @@ do_print(void)
   int count;
   int i;
   char tmp[32];
-  FILE *output = stdout;
-  int write_to_process = 0;
 
   initialize_global_parameters();
   global_vars = stp_vars_create();
@@ -279,6 +296,7 @@ do_print(void)
 	output = NULL;
       else if (global_output[0] == '|')
 	{
+	  close_output();
 	  write_to_process = 1;
 	  output = popen(global_output+1, "w");
 	  if (! output)
@@ -291,6 +309,7 @@ do_print(void)
 	}
       else
 	{
+	  close_output();
 	  output = fopen(global_output, "wb");
 	  if (! output)
 	    {
@@ -301,8 +320,6 @@ do_print(void)
 	  global_output = NULL;
 	}
     }
-  else
-    output = stdout;
   stp_set_printer_defaults(v, the_printer);
   stp_set_outfunc(v, writefunc);
   stp_set_errfunc(v, writefunc);
@@ -401,18 +418,21 @@ do_print(void)
   stp_set_top(v, top);
 
   stp_merge_printvars(v, stp_printer_get_defaults(the_printer));
+  if (start_job)
+    {
+      stp_start_job(v, &theImage);
+      start_job = 0;
+    }
   if (stp_print(v, &theImage) != 1)
     return 2;
+  if (end_job)
+    {
+      stp_end_job(v, &theImage);
+      end_job = 0;
+    }
   stp_vars_destroy(v);
   stp_free(static_testpatterns);
   static_testpatterns = NULL;
-  if (output && output != stdout)
-    {
-      if (write_to_process)
-	(void) pclose(output);
-      else
-	(void) fclose(output);
-    }
   return 0;
 }
 
@@ -437,6 +457,7 @@ main(int argc, char **argv)
     }
 
   stp_init();
+  output = stdout;
   while (1)
     {
       status = do_print();
@@ -445,6 +466,7 @@ main(int argc, char **argv)
       else if (status != 0)
 	global_status = 1;
     }
+  close_output();
   return global_status;
 }
 

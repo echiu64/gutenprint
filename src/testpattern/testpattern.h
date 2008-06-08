@@ -83,10 +83,13 @@ extern int global_did_something;
 extern int global_invert_data;
 extern int global_noscale;
 extern char *global_output;
-
+extern FILE *output;
+extern int start_job;
+extern int end_job;
 
 extern char *c_strdup(const char *s);
 extern testpattern_t *get_next_testpattern(void);
+extern void close_output(void);
 
 typedef struct yylv {
   int ival;

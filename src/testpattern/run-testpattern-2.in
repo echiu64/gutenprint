@@ -20,6 +20,7 @@ my $run_installed = 0;
 my $output = undef;
 
 my @extras = ();
+my @job_extras = ();
 my @messages = ();
 my @global_messages = ();
 my @families = ();
@@ -116,6 +117,7 @@ sub set_global_message($) {
 sub print_one_testpattern($) {
     my ($printer) = @_;
     my $stuff = join "", @global_messages;
+    $stuff .= join "", @job_extras;
     foreach my $page (0..$pages - 1) {
     	$stuff .= "printer \"$printer\";\n";
 	$stuff .= join "", @extras, @messages;
@@ -123,6 +125,12 @@ sub print_one_testpattern($) {
 	    $stuff .= "message \"(page $page)\";\n";
 	}
 	$stuff .= "parameter_int \"PageNumber\" $page;\n";
+	if ($page == 0) {
+	    $stuff .= "start_job;\n";
+	}
+	if ($page == $pages - 1) {
+	    $stuff .= "end_job;\n";
+	}
 	$stuff .= << 'EOF';
 hsize 0.1;
 vsize 0.1;
@@ -257,6 +265,7 @@ sub do_printer {
 	$pages = $std_pages;
 	foreach $resolution (@resolutions) {
 	    @extras = ();
+	    @job_extras = ();
 	    @messages = ();
 	    @global_messages = ();
 	    if ($first_time) {
@@ -279,11 +288,11 @@ sub do_printer {
 		    $md5file = "${outkey}.md5";
 		}
 		if ($output && $calc_md5) {
-		    push @extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
+		    push @job_extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 		} elsif ($output) {
-		    push @extras, "output \"$outfile\";\n";
+		    push @job_extras, "output \"$outfile\";\n";
 		} else {
-		    push @extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
+		    push @job_extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 		}
 	    }
 	    set_message("    ${pmode}+${resolution}");
@@ -298,6 +307,7 @@ sub do_printer {
 		foreach $opt (@opts) {
 		    my ($out_file);
 		    @extras = ();
+		    @job_extras = ();
 		    @messages = ();
 		    @global_messages = ();
 		    if ($first_time) {
@@ -331,11 +341,11 @@ sub do_printer {
 			    $md5file = "${outkey}.md5";
 			}
 			if (defined $output && defined $calc_md5) {
-			    push @extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
+			    push @job_extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 			} elsif ($output) {
-			    push @extras, "output \"$outfile\";\n";
+			    push @job_extras, "output \"$outfile\";\n";
 			} else {
-			    push @extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
+			    push @job_extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 			}
 		    }
 		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");

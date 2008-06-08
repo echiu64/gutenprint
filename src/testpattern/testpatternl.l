@@ -116,6 +116,8 @@ white			yylval.ival = WHITE;DBG(WHITE); return WHITE;
 output			DBG(OUTPUT); return OUTPUT;
 message			DBG(MESSAGE); return MESSAGE;
 noscale			DBG(NOSCALE); return NOSCALE;
+start_job		DBG(START_JOB); return START_JOB;
+end_job			DBG(END_JOB); return END_JOB;
 end			DBG(END); return END;
 
 

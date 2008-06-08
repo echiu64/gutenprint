@@ -133,6 +133,8 @@ find_color(const char *name)
 %token PAGESIZE
 %token MESSAGE
 %token OUTPUT
+%token START_JOB
+%token END_JOB
 %token END
 
 %start Thing
@@ -601,9 +603,11 @@ message: A_Message
 
 Output0: OUTPUT
 	{
+	  close_output();
 	  if (global_output)
 	    free(global_output);
 	  global_output = NULL;
+	  output = stdout;
 	}
 
 Output1: OUTPUT tSTRING
@@ -617,9 +621,18 @@ A_Output: Output0 | Output1
 output: A_Output
 ;
 
+start_job: START_JOB
+	{ start_job = 1; }
+;
+
+end_job: END_JOB
+	{ end_job = 1; }
+;
+
 A_Rule: gamma | channel_gamma | level | channel_level | global_gamma | steps
 	| ink_limit | printer | parameter | density | top | left | hsize
-	| vsize | blackline | noscale | inputspec | page_size | message | output
+	| vsize | blackline | noscale | inputspec | page_size | message
+	| output | start_job | end_job
 ;
 
 Rule: A_Rule SEMI
