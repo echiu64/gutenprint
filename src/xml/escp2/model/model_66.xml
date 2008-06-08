@@ -20,5 +20,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2_model id="66" media="c64"/>
+<escp2:model id="66">
+	<media href="escp2/media/c64.xml"/>
+	<inputSlots href="escp2/inputslots/default.xml"/>
+	<verticalBorderlessSequence>SNL\000\000\011\026\000\000\000\000\000\000\000\003\000\000\000\260\004\352\0044\001\016\002\000\000\000\0004\010h\020\030\025\310\031\340=\314\020\214\012\024\005\214\000\012\001,\001\000\000\017\017\017\017\017\017\017\017\004\012\004\017\017\017\017\017\006\004\000\001\001\001\000\000\020\010</verticalBorderlessSequence>
+	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+	<postinitSequence>JE\001\000\000</postinitSequence>
+</escp2:model>
 </gutenprint>

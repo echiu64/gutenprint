@@ -29,464 +29,409 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #include "print-escp2.h"
 
-#define DECLARE_INPUT_SLOT(name)				\
-static const input_slot_list_t name##_input_slot_list =		\
-{								\
-  #name,							\
-  name##_input_slots,						\
-  sizeof(name##_input_slots) / sizeof(const input_slot_t),	\
+
+static const char *
+paper_namefunc(const void *item)
+{
+  const paper_t *p = (const paper_t *) (item);
+  return p->cname;
 }
 
-static const input_slot_t standard_roll_feed_input_slots[] =
+int
+stp_escp2_load_media(const stp_vars_t *v, const char *name)
 {
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Roll",
-    N_("Roll Feed"),
-    0,
-    1,
-    0,
-    ROLL_FEED_DONT_EJECT,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
-    { 6, "IR\002\000\000\002" }
-  }
-};
-
-DECLARE_INPUT_SLOT(standard_roll_feed);
-
-static const input_slot_t cutter_roll_feed_input_slots[] =
-{
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "RollCutPage",
-    N_("Roll Feed (cut each page)"),
-    0,
-    1,
-    0,
-    ROLL_FEED_CUT_ALL,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
-    { 6, "IR\002\000\000\002" }
-  },
-  {
-    "RollCutNone",
-    N_("Roll Feed (do not cut)"),
-    0,
-    1,
-    0,
-    ROLL_FEED_DONT_EJECT,
-    { 16, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001" },
-    { 6, "IR\002\000\000\002" }
-  }
-};
-
-DECLARE_INPUT_SLOT(cutter_roll_feed);
-
-static const input_slot_t cd_cutter_roll_feed_input_slots[] =
-{
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Manual",
-    N_("Manual Feed"),
-    0,
-    0,
-    0,
-    0,
-    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "CD",
-    N_("Print to CD"),
-    1,
-    0,
-    0,
-    0,
-    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "RollCutPage",
-    N_("Roll Feed (cut each page)"),
-    0,
-    1,
-    0,
-    ROLL_FEED_CUT_ALL,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\002" }
-  },
-  {
-    "RollCutNone",
-    N_("Roll Feed (do not cut)"),
-    0,
-    1,
-    0,
-    ROLL_FEED_DONT_EJECT,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\002" }
-  }
-};
-
-DECLARE_INPUT_SLOT(cd_cutter_roll_feed);
-
-static const input_slot_t cd_roll_feed_input_slots[] =
-{
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Manual",
-    N_("Manual Feed"),
-    0,
-    0,
-    0,
-    0,
-    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "CD",
-    N_("Print to CD"),
-    1,
-    0,
-    0,
-    0,
-    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Roll",
-    N_("Roll Feed"),
-    0,
-    1,
-    0,
-    ROLL_FEED_DONT_EJECT,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\002" }
-  }
-};
-
-DECLARE_INPUT_SLOT(cd_roll_feed);
-
-static const input_slot_t r2400_input_slots[] =
-{
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Velvet",
-    N_("Manual Sheet Guide"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\003\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Matte",
-    N_("Manual Feed (Front)"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Roll",
-    N_("Roll Feed"),
-    0,
-    1,
-    0,
-    ROLL_FEED_DONT_EJECT,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\003\001" },
-    { 6, "IR\002\000\000\002" }
-  }
-};
-
-DECLARE_INPUT_SLOT(r2400);
-
-static const input_slot_t r1800_input_slots[] =
-{
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Velvet",
-    N_("Manual Sheet Guide"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\003\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Matte",
-    N_("Manual Feed (Front)"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Roll",
-    N_("Roll Feed"),
-    0,
-    1,
-    0,
-    ROLL_FEED_DONT_EJECT,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\003\001" },
-    { 6, "IR\002\000\000\002" }
-  },
-  {
-    "CD",
-    N_("Print to CD"),
-    1,
-    0,
-    0,
-    0,
-    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-};
-
-DECLARE_INPUT_SLOT(r1800);
-
-static const input_slot_t rx700_input_slots[] =
-{
-  {
-    "Rear",
-    N_("Rear Tray"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "Front",
-    N_("Front Tray"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "CD",
-    N_("Print to CD"),
-    1,
-    0,
-    0,
-    0,
-    { 36, "PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001" },
-    { 6, "IR\002\000\000\000"}
-  },
-  {
-    "PhotoBoard",
-    N_("Photo Board"),
-    0,
-    0,
-    0,
-    0,
-    { 23, "IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000" },
-    { 6, "IR\002\000\000\000"}
-  },
-};
-
-DECLARE_INPUT_SLOT(rx700);
-
-static const input_slot_t pro_roll_feed_input_slots[] =
-{
-  {
-    "Standard",
-    N_("Standard"),
-    0,
-    0,
-    0,
-    0,
-    { 7, "PP\003\000\000\002\000" },
-    { 0, "" }
-  },
-  {
-    "Roll",
-    N_("Roll Feed"),
-    0,
-    1,
-    0,
-    0,
-    { 7, "PP\003\000\000\003\000" },
-    { 0, "" }
-  }
-};
-
-DECLARE_INPUT_SLOT(pro_roll_feed);
-
-static const input_slot_t spro5000_input_slots[] =
-{
-  {
-    "CutSheet1",
-    N_("Cut Sheet Bin 1"),
-    0,
-    0,
-    0,
-    0,
-    { 7, "PP\003\000\000\001\001" },
-    { 0, "" }
-  },
-  {
-    "CutSheet2",
-    N_("Cut Sheet Bin 2"),
-    0,
-    0,
-    0,
-    0,
-    { 7, "PP\003\000\000\002\001" },
-    { 0, "" }
-  },
-  {
-    "CutSheetAuto",
-    N_("Cut Sheet Autoselect"),
-    0,
-    0,
-    0,
-    0,
-    { 7, "PP\003\000\000\001\377" },
-    { 0, "" }
-  },
-  {
-    "ManualSelect",
-    N_("Manual Selection"),
-    0,
-    0,
-    0,
-    0,
-    { 7, "PP\003\000\000\002\001" },
-    { 0, "" }
-  }
-};
-
-DECLARE_INPUT_SLOT(spro5000);
-
-static const input_slot_t b500_input_slots[] =
-{
-  {
-    "Rear",
-    N_("Rear Tray"),
-    0,
-    0,
-    DUPLEX_TUMBLE,
-    0,
-    { 7, "PP\003\000\000\001\000" },
-    { 0, "" }
-  },
-  {
-    "Front",
-    N_("Front Tray"),
-    0,
-    0,
-    DUPLEX_TUMBLE,
-    0,
-    { 7, "PP\003\000\000\001\001" },
-    { 0, "" }
-  }
-};
-
-DECLARE_INPUT_SLOT(b500);
-
-static const input_slot_list_t default_input_slot_list =
-{
-  "Standard",
-  NULL,
-  0,
-};
-
-typedef struct
-{
-  const char *name;
-  const input_slot_list_t *input_slots;
-} inslot_t;
-
-static const inslot_t the_slots[] =
-{
-  { "cd_cutter_roll_feed", &cd_cutter_roll_feed_input_slot_list },
-  { "cd_roll_feed", &cd_roll_feed_input_slot_list },
-  { "cutter_roll_feed", &cutter_roll_feed_input_slot_list },
-  { "default", &default_input_slot_list },
-  { "pro_roll_feed", &pro_roll_feed_input_slot_list },
-  { "r1800", &r1800_input_slot_list },
-  { "r2400", &r2400_input_slot_list },
-  { "rx700", &rx700_input_slot_list },
-  { "spro5000", &spro5000_input_slot_list },
-  { "b500", &b500_input_slot_list },
-  { "standard_roll_feed", &standard_roll_feed_input_slot_list },
-};
-
-const input_slot_list_t *
-stpi_escp2_get_input_slot_list_named(const char *n)
-{
-  int i;
-  if (n)
+  int model = stp_get_model_id(v);
+  stp_list_t *dirlist = stpi_data_path();
+  stp_list_item_t *item;
+  int found = 0;
+  item = stp_list_get_start(dirlist);
+  while (item)
     {
-      for (i = 0; i < sizeof(the_slots) / sizeof(inslot_t); i++)
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *ffn = stpi_path_merge(dn, name);
+      stp_mxml_node_t *media =
+	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
+      stp_free(ffn);
+      if (media)
 	{
-	  if (strcmp(n, the_slots[i].name) == 0)
-	    return the_slots[i].input_slots;
+	  stp_mxml_node_t **xnode =
+	    (stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].media);
+	  stp_list_t **xlist =
+	    (stp_list_t **) &(stpi_escp2_model_capabilities[model].media_cache);
+	  stp_string_list_t **xpapers =
+	    (stp_string_list_t **) &(stpi_escp2_model_capabilities[model].papers);
+	  stp_mxml_node_t *node = stp_mxmlFindElement(media, media,
+						      "escp2:papers", NULL,
+						      NULL, STP_MXML_DESCEND);
+	  *xnode = media;
+	  *xlist = stp_list_create();
+	  stp_list_set_namefunc(*xlist, paper_namefunc);
+	  *xpapers = stp_string_list_create();
+	  if (node)
+	    {
+	      node = node->child;
+	      while (node)
+		{
+		  if (node->type == STP_MXML_ELEMENT &&
+		      strcmp(node->value.element.name, "paper") == 0)
+		    stp_string_list_add_string(*xpapers,
+					       stp_mxmlElementGetAttr(node, "name"),
+					       stp_mxmlElementGetAttr(node, "text"));
+		  node = node->next;
+		}
+	    }
+	  found = 1;
+	  break;
 	}
-      stp_erprintf("Cannot find input slot list named %s\n", n);
+      item = stp_list_item_next(item);
+    }
+  stp_list_destroy(dirlist);
+  return found;
+}
+
+static stp_mxml_node_t *
+get_media_xml(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return stpi_escp2_model_capabilities[model].media;
+}
+
+static stp_list_t *
+get_media_cache(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return stpi_escp2_model_capabilities[model].media_cache;
+}
+
+int
+stp_escp2_has_media_feature(const stp_vars_t *v, const char *name)
+{
+  stp_mxml_node_t *doc = get_media_xml(v);
+  if (doc)
+    return (stp_mxmlFindElement(doc, doc, "feature", "name", name,
+				STP_MXML_DESCEND) != NULL);
+  else
+    return 0;
+}
+
+
+static paper_t *
+build_media_type(const stp_vars_t *v, const char *name, const inklist_t *ink,
+		 const res_t *res)
+{
+  stp_mxml_node_t *node;
+  stp_mxml_node_t *doc = get_media_xml(v);
+  const char *pclass;
+  paper_t *answer;
+  stp_vars_t *vv = stp_vars_create();
+  if (!doc)
+    return NULL;
+  node = stp_mxmlFindElement(doc, doc, "paper", "name", name, STP_MXML_DESCEND);
+  if (!node)
+    return NULL;
+  answer = stp_zalloc(sizeof(paper_t));
+  answer->name = stp_mxmlElementGetAttr(node, "name");
+  answer->text = gettext(stp_mxmlElementGetAttr(node, "text"));
+  pclass = stp_mxmlElementGetAttr(node, "class");
+  answer->v = vv;
+  if (! pclass || strcasecmp(pclass, "plain") == 0)
+    answer->paper_class = PAPER_PLAIN;
+  else if (strcasecmp(pclass, "good") == 0)
+    answer->paper_class = PAPER_GOOD;
+  else if (strcasecmp(pclass, "photo") == 0)
+    answer->paper_class = PAPER_PHOTO;
+  else if (strcasecmp(pclass, "premium") == 0)
+    answer->paper_class = PAPER_PREMIUM_PHOTO;
+  else if (strcasecmp(pclass, "transparency") == 0)
+    answer->paper_class = PAPER_TRANSPARENCY;
+  else
+    answer->paper_class = PAPER_PLAIN;
+  answer->preferred_ink_type = stp_mxmlElementGetAttr(node, "PreferredInktype");
+  answer->preferred_ink_set = stp_mxmlElementGetAttr(node, "PreferredInkset");
+  stp_vars_fill_from_xmltree(node->child, vv);
+  if (ink && ink->name)
+    {
+      stp_mxml_node_t *inknode = stp_mxmlFindElement(node, node, "ink",
+						     "name", ink->name,
+						     STP_MXML_DESCEND);
+      if (inknode)
+	stp_vars_fill_from_xmltree(inknode->child, vv);
+    }
+  if (res && res->name)
+    {
+      stp_mxml_node_t *resnode = stp_mxmlFindElement(node, node, "resolution",
+						     "name", res->name,
+						     STP_MXML_DESCEND);
+      if (resnode)
+	stp_vars_fill_from_xmltree(resnode->child, vv);
+    }
+  return answer;
+}
+
+static char *
+build_media_id(const char *name, const inklist_t *ink, const res_t *res)
+{
+  char *answer;
+  stp_asprintf(&answer, "%s %s %s",
+	       name,
+	       ink ? ink->name : "",
+	       res ? res->name : "");
+  return answer;
+}
+
+static const paper_t *
+get_media_type_named(const stp_vars_t *v, const char *name,
+		     int ignore_res)
+{
+  paper_t *answer = NULL;
+  int i;
+  int model = stp_get_model_id(v);
+  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].papers;
+  const res_t *res = ignore_res ? NULL : stp_escp2_find_resolution(v);
+  const inklist_t *inklist = stp_escp2_inklist(v);
+  char *media_id = build_media_id(name, inklist, res);
+  stp_list_t *cache = get_media_cache(v);
+  stp_list_item_t *li = stp_list_get_item_by_name(cache, media_id);
+  if (li)
+    {
+      stp_free(media_id);
+      answer = (paper_t *) stp_list_item_get_data(li);
+    }
+  else
+    {
+      int paper_type_count = stp_string_list_count(p);
+      for (i = 0; i < paper_type_count; i++)
+	{
+	  if (!strcmp(name, stp_string_list_param(p, i)->name))
+	    {
+	      answer = build_media_type(v, name, inklist, res);
+	      break;
+	    }
+	}
+      if (answer)
+	{
+	  answer->cname = media_id;
+	  stp_list_item_create(cache, NULL, answer);
+	}
+    }
+  return answer;
+}
+
+const paper_t *
+stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res)
+{
+  int model = stp_get_model_id(v);
+  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].papers;
+  if (p)
+    {
+      const char *name = stp_get_string_parameter(v, "MediaType");
+      if (name)
+	return get_media_type_named(v, name, ignore_res);
+    }
+  return NULL;
+}
+
+const paper_t *
+stp_escp2_get_default_media_type(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].papers;
+  if (p)
+    {
+      int paper_type_count = stp_string_list_count(p);
+      if (paper_type_count >= 0)
+	return get_media_type_named(v, stp_string_list_param(p, 0)->name, 1);
+    }
+  return NULL;
+}
+
+
+static const char *
+slots_namefunc(const void *item)
+{
+  const input_slot_t *p = (const input_slot_t *) (item);
+  return p->name;
+}
+
+int
+stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
+{
+  int model = stp_get_model_id(v);
+  stp_list_t *dirlist = stpi_data_path();
+  stp_list_item_t *item;
+  int found = 0;
+  item = stp_list_get_start(dirlist);
+  while (item)
+    {
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *ffn = stpi_path_merge(dn, name);
+      stp_mxml_node_t *slots =
+	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
+      stp_free(ffn);
+      if (slots)
+	{
+	  stp_mxml_node_t **xnode =
+	    (stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].slots);
+	  stp_list_t **xlist =
+	    (stp_list_t **) &(stpi_escp2_model_capabilities[model].slots_cache);
+	  stp_string_list_t **xslots =
+	    (stp_string_list_t **) &(stpi_escp2_model_capabilities[model].input_slots);
+	  stp_mxml_node_t *node = stp_mxmlFindElement(slots, slots,
+						      "escp2:InputSlots", NULL,
+						      NULL, STP_MXML_DESCEND);
+	  *xnode = slots;
+	  *xlist = stp_list_create();
+	  stp_list_set_namefunc(*xlist, slots_namefunc);
+	  *xslots = stp_string_list_create();
+	  if (node)
+	    {
+	      node = node->child;
+	      while (node)
+		{
+		  if (node->type == STP_MXML_ELEMENT &&
+		      strcmp(node->value.element.name, "slot") == 0)
+		    stp_string_list_add_string(*xslots,
+					       stp_mxmlElementGetAttr(node, "name"),
+					       stp_mxmlElementGetAttr(node, "text"));
+		  node = node->next;
+		}
+	    }
+	  found = 1;
+	  break;
+	}
+      item = stp_list_item_next(item);
+    }
+  stp_list_destroy(dirlist);
+  return found;
+}
+
+static stp_mxml_node_t *
+get_slots_xml(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return stpi_escp2_model_capabilities[model].slots;
+}
+
+static stp_list_t *
+get_slots_cache(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return stpi_escp2_model_capabilities[model].slots_cache;
+}
+
+static input_slot_t *
+build_input_slot(const stp_vars_t *v, const char *name)
+{
+  stp_mxml_node_t *node, *n1;
+  stp_mxml_node_t *doc = get_slots_xml(v);
+  input_slot_t *answer;
+  if (!doc)
+    return NULL;
+  node = stp_mxmlFindElement(doc, doc, "slot", "name", name, STP_MXML_DESCEND);
+  if (!node)
+    return NULL;
+  answer = stp_zalloc(sizeof(input_slot_t));
+  answer->name = stp_mxmlElementGetAttr(node, "name");
+  answer->text = gettext(stp_mxmlElementGetAttr(node, "text"));
+  n1 = stp_mxmlFindElement(node, node, "CD", NULL, NULL, STP_MXML_DESCEND);
+  if (n1)
+    answer->is_cd = 1;
+  n1 = stp_mxmlFindElement(node, node, "RollFeed", NULL, NULL, STP_MXML_DESCEND);
+  if (n1)
+    {
+      answer->is_roll_feed = 1;
+      if (stp_mxmlFindElement(n1, n1, "CutAll", NULL, NULL, STP_MXML_DESCEND))
+	answer->roll_feed_cut_flags |= ROLL_FEED_CUT_ALL;
+      if (stp_mxmlFindElement(n1, n1, "CutLast", NULL, NULL, STP_MXML_DESCEND))
+	answer->roll_feed_cut_flags |= ROLL_FEED_CUT_LAST;
+      if (stp_mxmlFindElement(n1, n1, "DontEject", NULL, NULL, STP_MXML_DESCEND))
+	answer->roll_feed_cut_flags |= ROLL_FEED_DONT_EJECT;
+    }
+  n1 = stp_mxmlFindElement(node, node, "Duplex", NULL, NULL, STP_MXML_DESCEND);
+  if (n1)
+    {
+      if (stp_mxmlFindElement(n1, n1, "Tumble", NULL, NULL, STP_MXML_DESCEND))
+	answer->duplex |= DUPLEX_TUMBLE;
+      if (stp_mxmlFindElement(n1, n1, "NoTumble", NULL, NULL, STP_MXML_DESCEND))
+	answer->duplex |= DUPLEX_NO_TUMBLE;
+    }
+  n1 = stp_mxmlFindElement(node, node, "InitSequence", NULL, NULL, STP_MXML_DESCEND);
+  if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
+    answer->init_sequence = stp_xmlstrtoraw(n1->child->value.text.string);
+  n1 = stp_mxmlFindElement(node, node, "DeinitSequence", NULL, NULL, STP_MXML_DESCEND);
+  if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
+    answer->deinit_sequence = stp_xmlstrtoraw(n1->child->value.text.string);
+  return answer;
+}
+
+int
+stp_escp2_printer_supports_rollfeed(const stp_vars_t *v)
+{
+  stp_mxml_node_t *node = get_slots_xml(v);
+  if (stp_mxmlFindElement(node, node, "RollFeed", NULL, NULL, STP_MXML_DESCEND))
+    return 1;
+  else
+    return 0;
+}
+
+int
+stp_escp2_printer_supports_print_to_cd(const stp_vars_t *v)
+{
+  stp_mxml_node_t *node = get_slots_xml(v);
+  if (stp_mxmlFindElement(node, node, "CD", NULL, NULL, STP_MXML_DESCEND))
+    return 1;
+  else
+    return 0;
+}
+
+int
+stp_escp2_printer_supports_duplex(const stp_vars_t *v)
+{
+  stp_mxml_node_t *node = get_slots_xml(v);
+  if (stp_mxmlFindElement(node, node, "Duplex", NULL, NULL, STP_MXML_DESCEND))
+    return 1;
+  else
+    return 0;
+}
+
+static const input_slot_t *
+get_input_slot_named(const stp_vars_t *v, const char *name)
+{
+  input_slot_t *answer = NULL;
+  int i;
+  int model = stp_get_model_id(v);
+  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].input_slots;
+  stp_list_t *cache = get_slots_cache(v);
+  stp_list_item_t *li = stp_list_get_item_by_name(cache, name);
+  if (li)
+    answer = (input_slot_t *) stp_list_item_get_data(li);
+  else
+    {
+      int slot_count = stp_string_list_count(p);
+      for (i = 0; i < slot_count; i++)
+	{
+	  if (!strcmp(name, stp_string_list_param(p, i)->name))
+	    {
+	      answer = build_input_slot(v, name);
+	      break;
+	    }
+	}
+      if (answer)
+	stp_list_item_create(cache, NULL, answer);
+    }
+  return answer;
+}
+
+const input_slot_t *
+stp_escp2_get_input_slot(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].input_slots;
+  if (p)
+    {
+      const char *name = stp_get_string_parameter(v, "InputSlot");
+      if (name)
+	return get_input_slot_named(v, name);
     }
   return NULL;
 }

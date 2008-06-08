@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<papers name="f360_photo7_japan">
+<escp2:papers name="f360_photo7_japan">
 <feature name="FeedSequence"/>
 <paper name="Plain" text="Plain Paper" class="plain">
 	<parameter type="integer" name="FeedSequence">1</parameter>
@@ -822,5 +822,5 @@ class="premium">
 		</parameter>
 	</ink>
 </paper>
-</papers>
+</escp2:papers>
 </gutenprint>

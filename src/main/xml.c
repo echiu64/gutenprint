@@ -372,6 +372,7 @@ stp_xmlstrtoraw(const char *textval)
 			 ((textval[1] - '0') << 3) +
 			 ((textval[2] - '0') << 0));
 	      raw->bytes++;
+	      textval += 3;
 	    }
 	  else if (textval[0] == '\0' || textval[1] == '\0' || textval[2] == '\0')
 	    break;
@@ -394,7 +395,8 @@ stp_rawtoxmlstr(const stp_raw_t *raw)
       unsigned char *aptr = (unsigned char *) answer;
       for (i = 0; i < raw->bytes; i++)
 	{
-	  if (data[i] >= ' ' && data[i] < '\177' && data[i] != '\\')
+	  if (data[i] > ' ' && data[i] < '\177' && data[i] != '\\' &&
+	      data[i] != '<' && data[i] != '>' && data[i] != '&')
 	    *aptr++ = data[i];
 	  else
 	    {
@@ -422,7 +424,8 @@ stp_strtoxmlstr(const char *str)
       unsigned char *aptr = (unsigned char *) answer;
       for (i = 0; i < bytes; i++)
 	{
-	  if (data[i] >= ' ' && data[i] < '\177' && data[i] != '\\')
+	  if (data[i] > ' ' && data[i] < '\177' && data[i] != '\\' &&
+	      data[i] != '<' && data[i] != '>' && data[i] != '&')
 	    *aptr++ = data[i];
 	  else
 	    {
@@ -447,7 +450,8 @@ stp_prtraw(const stp_raw_t *raw, FILE *fp)
       const unsigned char *data = (const unsigned char *) (raw->data);
       for (i = 0; i < raw->bytes; i++)
 	{
-	  if (data[i] >= ' ' && data[i] < '\177' && data[i] != '\\')
+	  if (data[i] > ' ' && data[i] < '\177' && data[i] != '\\' &&
+	      data[i] != '<' && data[i] != '>' && data[i] != '&')
 	    fputc(data[i], fp);
 	  else
 	    {

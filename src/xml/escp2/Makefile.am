@@ -22,10 +22,11 @@
 include $(top_srcdir)/scripts/global.mk
 
 SUBDIRS = 					\
+	inputslots				\
 	model					\
 	media
 
-xml-stamp: media/xml-stamp model/xml-stamp
+xml-stamp: media/xml-stamp model/xml-stamp inputslots/xml-stamp
 	touch xml-stamp
 
 all-local: xml-stamp

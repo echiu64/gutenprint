@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<papers name="cmykrb">
+<escp2:papers name="cmykrb">
 <feature name="PaperMedia"/>
 <feature name="PrintMethod"/>
 <paper name="Plain" text="Plain Paper" class="plain" PreferredInkset="r800Matte">
@@ -2188,5 +2188,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 </paper>
-</papers>
+</escp2:papers>
 </gutenprint>

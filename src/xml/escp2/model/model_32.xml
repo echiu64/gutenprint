@@ -20,5 +20,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2_model id="32" media="standard"/>
+<escp2:model id="32">
+	<media href="escp2/media/standard.xml"/>
+	<inputSlots href="escp2/inputslots/default.xml"/>
+	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+	<postinitSequence>JE\001\000\000</postinitSequence>
+</escp2:model>
 </gutenprint>

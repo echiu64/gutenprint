@@ -283,16 +283,9 @@ typedef struct
   short is_roll_feed;
   short duplex;
   unsigned roll_feed_cut_flags;
-  const stp_raw_t init_sequence;
-  const stp_raw_t deinit_sequence;
+  const stp_raw_t *init_sequence;
+  const stp_raw_t *deinit_sequence;
 } input_slot_t;
-
-typedef struct
-{
-  const char *name;
-  const input_slot_t *slots;
-  size_t n_input_slots;
-} input_slot_list_t;
 
 typedef struct
 {
@@ -502,33 +495,49 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const short *bits;
   const short *base_resolutions;
-  const char *input_slots;
 /*****************************************************************************/
   const char *quality_list;
-  const stp_raw_t *preinit_sequence;
-  const stp_raw_t *postinit_remote_sequence;
-/*****************************************************************************/
-  const stp_raw_t *vertical_borderless_sequence;
   const char *const printer_weaves;
   const char *channel_names;
 /*****************************************************************************/
-  stp_mxml_node_t *caps;
-  stp_list_t *caps_cache;
+  stp_raw_t *preinit_sequence;
+  stp_raw_t *postinit_remote_sequence;
+  stp_raw_t *vertical_borderless_sequence;
+/*****************/
+  stp_mxml_node_t *media;
+  stp_list_t *media_cache;
   stp_string_list_t *papers;
+/*****************/
+  stp_mxml_node_t *slots;
+  stp_list_t *slots_cache;
+  stp_string_list_t *input_slots;
 } stpi_escp2_printer_t;
 
 extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
-extern const stp_string_list_t *stpi_escp2_get_paperlist_named(const char *);
 extern const quality_list_t *stpi_escp2_get_quality_list_named(const char *);
 extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
 extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
-extern const input_slot_list_t *stpi_escp2_get_input_slot_list_named(const char *);
 extern const res_t *const *stpi_escp2_get_reslist_named(const char *);
 extern const escp2_drop_list_t *stpi_escp2_get_drop_list_named(const char *);
 extern const printer_weave_list_t *stpi_escp2_get_printer_weaves_named(const char *);
 extern const channel_name_t *stpi_escp2_get_channel_names_named(const char *);
+
+/* From escp2-papers.c: */
+extern int stp_escp2_load_media(const stp_vars_t *v, const char *name);
+extern int stp_escp2_has_media_feature(const stp_vars_t *v, const char *name);
+extern const paper_t *stp_escp2_get_default_media_type(const stp_vars_t *v);
+extern const paper_t *stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res);
+extern int stp_escp2_load_input_slots(const stp_vars_t *v, const char *name);
+extern int stp_escp2_printer_supports_rollfeed(const stp_vars_t *v);
+extern int stp_escp2_printer_supports_print_to_cd(const stp_vars_t *v);
+extern int stp_escp2_printer_supports_duplex(const stp_vars_t *v);
+extern const input_slot_t *stp_escp2_get_input_slot(const stp_vars_t *v);
+
+/* From print-escp2.c: */
+extern const res_t *stp_escp2_find_resolution(const stp_vars_t *v);
+extern const inklist_t *stp_escp2_inklist(const stp_vars_t *v);
 
 typedef struct
 {

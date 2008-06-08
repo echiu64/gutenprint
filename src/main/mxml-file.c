@@ -86,6 +86,32 @@ stp_mxmlLoadFile(stp_mxml_node_t *top,		/* I - Top node */
   return (mxml_load_data(top, fp, cb, mxml_file_getc));
 }
 
+/*
+ * 'stp_mxmlLoadFromFile()' - Load a named file into an XML node tree.
+ *
+ * The nodes in the specified file are added to the specified top node.
+ * If no top node is provided, the XML file MUST be well-formed with a
+ * single parent node like <?xml> for the entire file. The callback
+ * function returns the value type that should be used for child nodes.
+ * If STP_MXML_NO_CALLBACK is specified then all child nodes will be either
+ * STP_MXML_ELEMENT or STP_MXML_TEXT nodes.
+ */
+
+stp_mxml_node_t *				/* O - First node or NULL if the file could not be read. */
+stp_mxmlLoadFromFile(stp_mxml_node_t *top,	/* I - Top node */
+		     const char *file,		/* I - File to read from */
+		     stp_mxml_type_t (*cb)(stp_mxml_node_t *))
+					/* I - Callback function or STP_MXML_NO_CALLBACK */
+{
+  FILE *fp = fopen(file, "r");
+  stp_mxml_node_t *doc;
+  if (! fp)
+    return NULL;
+  doc = stp_mxmlLoadFile(NULL, fp, STP_MXML_NO_CALLBACK);
+  fclose(fp);
+  return doc;
+}
+
 
 /*
  * 'stp_mxmlLoadString()' - Load a string into an XML node tree.
@@ -202,6 +228,24 @@ stp_mxmlSaveFile(stp_mxml_node_t *node,		/* I - Node to write */
   return (0);
 }
 
+int					/* O - 0 on success, -1 on error. */
+stp_mxmlSaveToFile(stp_mxml_node_t *node,	/* I - Node to write */
+		   const char      *file,	/* I - File to write to */
+		   int             (*cb)(stp_mxml_node_t *, int))
+					/* I - Whitespace callback or STP_MXML_NO_CALLBACK */
+{
+  FILE *fp = fopen(file, "w");
+  int answer;
+  int status;
+  if (!fp)
+    return -1;
+  answer = stp_mxmlSaveFile(node, fp, cb);
+  status = fclose(fp);
+  if (status != 0)
+    return -1;
+  else
+    return answer;
+}
 
 /*
  * 'stp_mxmlSaveString()' - Save an XML node tree to a string.

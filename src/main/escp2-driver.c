@@ -267,9 +267,9 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	{
 	  int divisor = pd->base_separation / 360;
 	  int height = pd->page_true_height * 5 / divisor;
-	  if (pd->input_slot->init_sequence.bytes)
-	    stp_zfwrite(pd->input_slot->init_sequence.data,
-			pd->input_slot->init_sequence.bytes, 1, v);
+	  if (pd->input_slot->init_sequence)
+	    stp_zfwrite(pd->input_slot->init_sequence->data,
+			pd->input_slot->init_sequence->bytes, 1, v);
 	  switch (pd->input_slot->roll_feed_cut_flags)
 	    {
 	    case ROLL_FEED_CUT_ALL:
@@ -624,9 +624,9 @@ stpi_escp2_deinit_printer(stp_vars_t *v)
   if (pd->advanced_command_set || pd->input_slot)
     {
       stp_send_command(v, "\033(R", "bcs", 0, "REMOTE1");
-      if (pd->input_slot && pd->input_slot->deinit_sequence.bytes)
-	stp_zfwrite(pd->input_slot->deinit_sequence.data,
-		    pd->input_slot->deinit_sequence.bytes, 1, v);
+      if (pd->input_slot && pd->input_slot->deinit_sequence)
+	stp_zfwrite(pd->input_slot->deinit_sequence->data,
+		    pd->input_slot->deinit_sequence->bytes, 1, v);
       /* Load settings from NVRAM */
       stp_send_command(v, "LD", "b");
 
@@ -738,7 +738,7 @@ stpi_escp2_terminate_page(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   if (!pd->input_slot ||
-      pd->input_slot->roll_feed_cut_flags != ROLL_FEED_DONT_EJECT)
+      !(pd->input_slot->roll_feed_cut_flags & ROLL_FEED_DONT_EJECT))
     {
       if (!pd->printed_something)
 	stp_send_command(v, "\n", "");
