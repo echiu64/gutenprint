@@ -870,35 +870,35 @@ get_privdata(stp_vars_t *v)
 static void
 load_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 {
-  const char *stmp = stp_mxmlElementGetAttr(xmod, "id");
-  if (stmp && stp_xmlstrtol(stmp) == model)
+  stp_mxml_node_t *tmp = xmod->child;
+  stpi_escp2_printer_t *p = &(stpi_escp2_model_capabilities[model]);
+  while (tmp)
     {
-      stp_mxml_node_t *tmp =
-	stp_mxmlFindElement(xmod, xmod, "verticalBorderlessSequence",
-			    NULL, NULL, STP_MXML_DESCEND);
-      if (tmp && tmp->child && tmp->child->type == STP_MXML_TEXT)
-	stpi_escp2_model_capabilities[model].vertical_borderless_sequence =
-	  stp_xmlstrtoraw(tmp->child->value.text.string);
-      tmp =
-	stp_mxmlFindElement(xmod, xmod, "preinitSequence",
-			    NULL, NULL, STP_MXML_DESCEND);
-      if (tmp && tmp->child && tmp->child->type == STP_MXML_TEXT)
-	stpi_escp2_model_capabilities[model].preinit_sequence =
-	  stp_xmlstrtoraw(tmp->child->value.text.string);
-      tmp =
-	stp_mxmlFindElement(xmod, xmod, "postinitSequence",
-			    NULL, NULL, STP_MXML_DESCEND);
-      if (tmp && tmp->child && tmp->child->type == STP_MXML_TEXT)
-	stpi_escp2_model_capabilities[model].postinit_remote_sequence =
-	  stp_xmlstrtoraw(tmp->child->value.text.string);
-      tmp =
-	stp_mxmlFindElement(xmod, xmod, "media", NULL, NULL, STP_MXML_DESCEND);
-      if (tmp && stp_mxmlElementGetAttr(tmp, "href"))
-	stp_escp2_load_media(v, stp_mxmlElementGetAttr(tmp, "href"));
-      tmp =
-	stp_mxmlFindElement(xmod, xmod, "inputSlots", NULL, NULL, STP_MXML_DESCEND);
-      if (tmp && stp_mxmlElementGetAttr(tmp, "href"))
-	stp_escp2_load_input_slots(v, stp_mxmlElementGetAttr(tmp, "href"));
+      if (tmp->type == STP_MXML_ELEMENT)
+	{
+	  const char *name = tmp->value.element.name;
+	  const char *target = stp_mxmlElementGetAttr(tmp, "href");
+	  if (tmp->child && tmp->child->type == STP_MXML_TEXT)
+	    {
+	      const char *val = tmp->child->value.text.string;
+	      if (!strcmp(name, "verticalBorderlessSequence"))
+		p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
+
+	      else if (!strcmp(tmp->value.element.name, "preinitSequence"))
+		p->preinit_sequence = stp_xmlstrtoraw(val);
+
+	      else if (!strcmp(tmp->value.element.name, "postinitSequence"))
+		p->postinit_remote_sequence = stp_xmlstrtoraw(val);
+	    }
+	  else if (target)
+	    {
+	      if (!strcmp(name, "media"))
+		stp_escp2_load_media(v, target);
+	      else if (!strcmp(name, "inputSlots"))
+		stp_escp2_load_input_slots(v, target);
+	    }
+	}
+      tmp = tmp->next;
     }
 }
 
@@ -926,8 +926,13 @@ load_model(const stp_vars_t *v, int model)
 				STP_MXML_DESCEND);
 	  if (xmod)
 	    {
-	      load_from_file(v, xmod, model);
-	      found = 1;
+	      const char *stmp = stp_mxmlElementGetAttr(xmod, "id");
+	      assert(stmp && stp_xmlstrtol(stmp) == model);
+	      if (stmp && stp_xmlstrtol(stmp) == model)
+		{
+		  load_from_file(v, xmod, model);
+		  found = 1;
+		}
 	    }
 	  stp_mxmlDelete(doc);
 	  if (found)

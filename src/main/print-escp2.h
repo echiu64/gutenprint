@@ -488,18 +488,17 @@ typedef struct escp2_printer
 /*****************************************************************************/
   const short *dot_sizes;	/* Vector of dot sizes for resolutions */
   const float *densities;	/* List of densities for each printer */
-  const char *drops; /* Drop sizes */
-/*****************************************************************************/
-  const char *reslist;
-  const char *inkgroup;
-/*****************************************************************************/
   const short *bits;
   const short *base_resolutions;
 /*****************************************************************************/
+  const char *drops; /* Drop sizes */
+  const char *reslist;
+  const char *inkgroup;
   const char *quality_list;
-  const char *const printer_weaves;
+  const char *printer_weaves;
   const char *channel_names;
 /*****************************************************************************/
+  /* Data filled in at runtime */
   stp_raw_t *preinit_sequence;
   stp_raw_t *postinit_remote_sequence;
   stp_raw_t *vertical_borderless_sequence;
