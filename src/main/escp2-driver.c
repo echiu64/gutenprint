@@ -53,8 +53,8 @@ escp2_reset_printer(stp_vars_t *v)
    * Magic initialization string that's needed to take printer out of
    * packet mode.
    */
-  if (pd->init_sequence)
-    stp_zfwrite(pd->init_sequence->data, pd->init_sequence->bytes, 1, v);
+  if (pd->preinit_sequence)
+    stp_zfwrite(pd->preinit_sequence->data, pd->preinit_sequence->bytes, 1, v);
 
   stp_send_command(v, "\033@", "");
 }
@@ -218,11 +218,9 @@ escp2_set_remote_sequence(stp_vars_t *v)
     {
       /* Enter remote mode */
       stp_send_command(v, "\033(R", "bcs", 0, "REMOTE1");
-      if (pd->command_set == MODEL_COMMAND_2005)
-	stp_send_command(v, "SN", "bc", 0);
-      else if (pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO)
-	/* Function unknown */
-	stp_send_command(v, "PM", "bh", 0);
+      if (pd->preinit_remote_sequence)
+	stp_zfwrite(pd->preinit_remote_sequence->data,
+		    pd->preinit_remote_sequence->bytes, 1, v);
       if (stp_check_int_parameter(pv, "PaperThickness", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "PH", "bcc", 0,
 			 stp_get_int_parameter(pv, "PaperThickness"));
@@ -241,7 +239,9 @@ escp2_set_remote_sequence(stp_vars_t *v)
       if (stp_check_int_parameter(pv, "PaperMedia", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "MI", "bcccc", 0, 1,
 			 stp_get_int_parameter(pv, "PaperMedia"),
-			 99);	/* User-defined size (for now!) */
+			 (stp_check_int_parameter(pv, "PaperMediaSize", STP_PARAMETER_ACTIVE) ?
+			  stp_get_int_parameter(pv, "PaperMediaSize") :
+			  99));	/* User-defined size (for now!) */
       if (stp_check_int_parameter(pv, "PageDryTime", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "DR", "bcch", 0, 1,
 			 (int) stp_get_float_parameter(pv, "PageDryTime"));
@@ -420,7 +420,6 @@ escp2_set_margins(stp_vars_t *v)
   bot += pd->page_extra_height;
   if (pd->use_extended_commands &&
       (pd->command_set == MODEL_COMMAND_2000 ||
-       pd->command_set == MODEL_COMMAND_2005 ||
        pd->command_set == MODEL_COMMAND_PRO))
     stp_send_command(v, "\033(c", "bll", top, bot);
   else
@@ -631,9 +630,9 @@ stpi_escp2_deinit_printer(stp_vars_t *v)
       stp_send_command(v, "LD", "b");
 
       /* Magic deinit sequence reported by Simone Falsini */
-      if (pd->deinit_sequence)
-	stp_zfwrite(pd->deinit_sequence->data, pd->deinit_sequence->bytes,
-		    1, v);
+      if (pd->deinit_remote_sequence)
+	stp_zfwrite(pd->deinit_remote_sequence->data,
+		    pd->deinit_remote_sequence->bytes, 1, v);
       /* Exit remote mode */
       stp_send_command(v, "\033", "ccc", 0, 0, 0);
     }

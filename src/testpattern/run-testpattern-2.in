@@ -120,6 +120,7 @@ sub print_one_testpattern($) {
     $stuff .= join "", @job_extras;
     foreach my $page (0..$pages - 1) {
     	$stuff .= "printer \"$printer\";\n";
+	$stuff .= "parameter \"PageSize\" \"Auto\";\n";
 	$stuff .= join "", @extras, @messages;
 	if ($pages > 1) {
 	    $stuff .= "message \"(page $page)\";\n";
@@ -139,7 +140,6 @@ top 0.15;
 blackline 0;
 steps 16;
 mode rgb 8;
-parameter_string "PageSize" "Auto";
 pattern 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0 ;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 0.0 1.0 0.0 1.0 1.0 0.0 0.0 1.0;

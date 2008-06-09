@@ -25,6 +25,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<inputSlots href="escp2/inputslots/default.xml"/>
 	<verticalBorderlessSequence>SN\003\000\000\011\001</verticalBorderlessSequence>
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
-	<postinitSequence>JE\001\000\000</postinitSequence>
+	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
+	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
 </escp2:model>
 </gutenprint>

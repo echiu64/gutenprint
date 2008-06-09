@@ -327,17 +327,16 @@ typedef struct
 } printer_weave_list_t;
 
 #define MODEL_COMMAND_MASK	0xful /* What general command set does */
-#define MODEL_COMMAND_1998	0x0ul
-#define MODEL_COMMAND_1999	0x1ul /* The 1999 series printers */
-#define MODEL_COMMAND_2000	0x2ul /* The 2000 series printers */
+#define MODEL_COMMAND_1998	0x0ul /* Old (ESC .) printers */
+#define MODEL_COMMAND_1999	0x1ul /* ESC i printers w/o extended ESC(c */
+#define MODEL_COMMAND_2000	0x2ul /* ESC i printers with extended ESC(c */
 #define MODEL_COMMAND_PRO	0x3ul /* Stylus Pro printers */
-#define MODEL_COMMAND_2005	0x4ul /* With SN 01 remote command */
 
 #define MODEL_ZEROMARGIN_MASK	0x30ul /* Does this printer support */
 #define MODEL_ZEROMARGIN_NO	0x00ul /* zero margin mode? */
-#define MODEL_ZEROMARGIN_YES	0x10ul /* (print to edge of the paper) */
-#define MODEL_ZEROMARGIN_FULL	0x20ul /* (print to edge of the paper) */
-#define MODEL_ZEROMARGIN_H_ONLY	0x30ul /* (print to edge of the paper) */
+#define MODEL_ZEROMARGIN_YES	0x10ul /* (print beyond bottom of page) */
+#define MODEL_ZEROMARGIN_FULL	0x20ul /* (do not print beyond bottom) */
+#define MODEL_ZEROMARGIN_H_ONLY	0x30ul /* (no special treatment for vertical) */
 
 #define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
 #define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
@@ -498,8 +497,10 @@ typedef struct escp2_printer
   const char *printer_weaves;
   const char *channel_names;
 /*****************************************************************************/
-  /* Data filled in at runtime */
+  /* Data filled in at runtime from XML */
   stp_raw_t *preinit_sequence;
+  stp_raw_t *preinit_remote_sequence;
+  stp_raw_t *postinit_sequence;
   stp_raw_t *postinit_remote_sequence;
   stp_raw_t *vertical_borderless_sequence;
 /*****************/
@@ -510,6 +511,8 @@ typedef struct escp2_printer
   stp_mxml_node_t *slots;
   stp_list_t *slots_cache;
   stp_string_list_t *input_slots;
+/*****************/
+  stp_mxml_node_t *media_sizes;
 } stpi_escp2_printer_t;
 
 extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
@@ -533,6 +536,8 @@ extern int stp_escp2_printer_supports_rollfeed(const stp_vars_t *v);
 extern int stp_escp2_printer_supports_print_to_cd(const stp_vars_t *v);
 extern int stp_escp2_printer_supports_duplex(const stp_vars_t *v);
 extern const input_slot_t *stp_escp2_get_input_slot(const stp_vars_t *v);
+extern int stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name);
+extern void stp_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src);
 
 /* From print-escp2.c: */
 extern const res_t *stp_escp2_find_resolution(const stp_vars_t *v);
@@ -582,8 +587,10 @@ typedef struct
   const paper_t *paper_type;	/* Paper type */
   stp_vars_t *media_settings;	/* Hardware media settings */
   const inkgroup_t *ink_group;	/* Which set of inks */
-  const stp_raw_t *init_sequence; /* Initialization sequence */
+  const stp_raw_t *preinit_sequence; /* Initialization sequence */
+  const stp_raw_t *preinit_remote_sequence; /* Initialization sequence */
   const stp_raw_t *deinit_sequence; /* De-initialization sequence */
+  const stp_raw_t *deinit_remote_sequence; /* De-initialization sequence */
   const stp_raw_t *borderless_sequence; /* Vertical borderless sequence */
   model_featureset_t command_set; /* Which command set this printer supports */
   int variable_dots;		/* Print supports variable dot sizes */

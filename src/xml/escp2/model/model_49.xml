@@ -24,6 +24,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<media href="escp2/media/pro_ultrachrome.xml"/>
 	<inputSlots href="escp2/inputslots/pro_roll_feed.xml"/>
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
-	<postinitSequence>JE\001\000\000</postinitSequence>
+	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
 </escp2:model>
 </gutenprint>

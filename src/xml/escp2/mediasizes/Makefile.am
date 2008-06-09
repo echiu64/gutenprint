@@ -21,19 +21,18 @@
 
 include $(top_srcdir)/scripts/global.mk
 
-SUBDIRS =					\
-	inputslots				\
-	model					\
-	media					\
-	mediasizes
+## Variables
 
-xml-stamp: media/xml-stamp model/xml-stamp inputslots/xml-stamp
+pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml/escp2/mediasizes
+
+pkgxmldata_DATA =				\
+	standard.xml
+
+xml-stamp: $(pkgxmldata_DATA)
 	touch xml-stamp
 
 all-local: xml-stamp
 
-## Clean
+CLEANFILES = xmli18n-tmp.h xml-stamp
 
-CLEANFILES = xml-stamp
-
-MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = $(pkgxmldata_DATA)

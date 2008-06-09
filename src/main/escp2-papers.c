@@ -29,6 +29,67 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #include "print-escp2.h"
 
+static stp_mxml_node_t *
+get_media_size_xml(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  return stpi_escp2_model_capabilities[model].media_sizes;
+}
+
+int
+stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
+{
+  int model = stp_get_model_id(v);
+  stp_list_t *dirlist = stpi_data_path();
+  stp_list_item_t *item;
+  int found = 0;
+  item = stp_list_get_start(dirlist);
+  while (item)
+    {
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *ffn = stpi_path_merge(dn, name);
+      stp_mxml_node_t *sizes =
+	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
+      stp_free(ffn);
+      if (sizes)
+	{
+	  stp_mxml_node_t **xnode =
+	    (stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].media_sizes);
+	  *xnode = sizes;
+	  found = 1;
+	  break;
+	}
+      item = stp_list_item_next(item);
+    }
+  stp_list_destroy(dirlist);
+  if (! found)
+    stp_eprintf(v, "Unable to load media sizes for model %d (%s)!\n", model, name);
+  return found;
+}
+
+void
+stp_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src)
+{
+  const char *name = stp_get_string_parameter(src, "PageSize");
+  if (name)
+    {
+      stp_mxml_node_t *node = get_media_size_xml(src);
+      stp_mxml_node_t *xnode = stp_mxmlFindElement(node, node, "MediaSize",
+						   "name", name, STP_MXML_DESCEND);
+      if (xnode)
+	{
+	  stp_vars_fill_from_xmltree(xnode->child, v);
+	  return;
+	}
+      xnode = stp_mxmlFindElement(node, node, "MediaSize", "type", "default",
+				  STP_MXML_DESCEND);
+      if (xnode)
+	{
+	  stp_vars_fill_from_xmltree(xnode->child, v);
+	  return;
+	}
+    }
+}
 
 static const char *
 paper_namefunc(const void *item)
@@ -86,6 +147,8 @@ stp_escp2_load_media(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
+  if (! found)
+    stp_eprintf(v, "Unable to load media for model %d (%s)!\n", model, name);
   return found;
 }
 
@@ -302,6 +365,8 @@ stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
+  if (! found)
+    stp_eprintf(v, "Unable to load input slots for model %d (%s)!\n", model, name);
   return found;
 }
 

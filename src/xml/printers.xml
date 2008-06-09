@@ -161,6 +161,7 @@
       </parameters>
       <printer name="Epson B-300" driver="escp2-b300" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" />
+      <printer name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer name="Epson Stylus C20" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" />
       <printer name="Epson Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42" parameters="480_params" />
       <printer name="Epson Stylus C20UX" driver="escp2-c20ux" manufacturer="Epson" model="42" parameters="480_params" />
@@ -466,6 +467,8 @@
       <printer name="Epson PM G850" driver="escp2-pmg850" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer name="Epson PM G4500" driver="escp2-pmg4500" manufacturer="Epson" model="82" parameters="standard_params" />
       <printer name="Epson PX A650" driver="escp2-pxa650" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer name="Epson Offirio PX B300" driver="escp2-pxb300" manufacturer="Epson" model="87" parameters="standard_params" />
+      <printer name="Epson Offirio PX B500" driver="escp2-pxb500" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer name="Epson PX G900" driver="escp2-pxg900" manufacturer="Epson" model="64" parameters="standard_params" />
       <printer name="Epson PX G920" driver="escp2-pxg920" manufacturer="Epson" model="64" parameters="standard_params" />
       <printer name="Epson PX G5000" driver="escp2-pxg5000" manufacturer="Epson" model="67" parameters="standard_params" />

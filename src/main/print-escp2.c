@@ -446,6 +446,7 @@ static const stp_parameter_t the_parameters[] =
   PARAMETER_INT(cd_page_height),
   PARAMETER_INT(paper_extra_bottom),
   PARAMETER_RAW(preinit_sequence),
+  PARAMETER_RAW(preinit_remote_sequence),
   PARAMETER_RAW(postinit_remote_sequence),
   PARAMETER_RAW(vertical_borderless_sequence)
 };
@@ -887,7 +888,10 @@ load_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 	      else if (!strcmp(tmp->value.element.name, "preinitSequence"))
 		p->preinit_sequence = stp_xmlstrtoraw(val);
 
-	      else if (!strcmp(tmp->value.element.name, "postinitSequence"))
+	      else if (!strcmp(tmp->value.element.name, "preinitRemoteSequence"))
+		p->preinit_remote_sequence = stp_xmlstrtoraw(val);
+
+	      else if (!strcmp(tmp->value.element.name, "postinitRemoteSequence"))
 		p->postinit_remote_sequence = stp_xmlstrtoraw(val);
 	    }
 	  else if (target)
@@ -896,6 +900,8 @@ load_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		stp_escp2_load_media(v, target);
 	      else if (!strcmp(name, "inputSlots"))
 		stp_escp2_load_input_slots(v, target);
+	      else if (!strcmp(name, "mediaSizes"))
+		stp_escp2_load_media_sizes(v, target);
 	    }
 	}
       tmp = tmp->next;
@@ -940,9 +946,9 @@ load_model(const stp_vars_t *v, int model)
 	}
       item = stp_list_item_next(item);
     }
+  stp_list_destroy(dirlist);
   if (! found)
     stp_eprintf(v, "Unable to load definition for model %d!\n", model);
-  stp_list_destroy(dirlist);
 }
 
 static int
@@ -1094,6 +1100,7 @@ DEF_ROLL_ACCESSOR(top_margin, unsigned)
 DEF_ROLL_ACCESSOR(bottom_margin, unsigned)
 
 DEF_RAW_ACCESSOR(preinit_sequence, const stp_raw_t *)
+DEF_RAW_ACCESSOR(preinit_remote_sequence, const stp_raw_t *)
 DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
 DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
@@ -2623,6 +2630,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "FeedSequence") == 0 ||
 	   strcmp(name, "PrintMethod") == 0 ||
 	   strcmp(name, "PaperMedia") == 0 ||
+	   strcmp(name, "PaperMediaSize") == 0 ||
 	   strcmp(name, "PlatenGap") == 0)
     {
       description->is_active = 0;
@@ -2869,8 +2877,7 @@ escp2_has_advanced_command_set(const stp_vars_t *v)
 {
   return (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
 	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) ||
-	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000) ||
-	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2005));
+	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000));
 }
 
 static int
@@ -3549,8 +3556,9 @@ setup_basic(stp_vars_t *v)
   pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
   pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
   pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
-  pd->init_sequence = escp2_preinit_sequence(v);
-  pd->deinit_sequence = escp2_postinit_remote_sequence(v);
+  pd->preinit_sequence = escp2_preinit_sequence(v);
+  pd->preinit_remote_sequence = escp2_preinit_remote_sequence(v);
+  pd->deinit_remote_sequence = escp2_postinit_remote_sequence(v);
   pd->borderless_sequence = escp2_vertical_borderless_sequence(v);
   pd->base_separation = escp2_base_separation(v);
   pd->resolution_scale = escp2_resolution_scale(v);
@@ -3564,6 +3572,7 @@ setup_misc(stp_vars_t *v)
   pd->paper_type = stp_escp2_get_media_type(v, 0);
   pd->ink_group = escp2_inkgroup(v);
   pd->media_settings = stp_vars_create_copy(pd->paper_type->v);
+  stp_escp2_set_media_size(pd->media_settings, v);
   if (stp_check_float_parameter(v, "PageDryTime", STP_PARAMETER_ACTIVE))
     stp_set_float_parameter(pd->media_settings, "PageDryTime",
 			    stp_get_float_parameter(v, "PageDryTime"));
