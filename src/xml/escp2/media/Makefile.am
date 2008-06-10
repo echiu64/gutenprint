@@ -59,8 +59,10 @@ pkgxmldata_DATA =				\
 	ultrachrome.xml				\
 	x80.xml
 
-xml-stamp: $(pkgxmldata_DATA)
+xml-stamp: $(pkgxmldata_DATA) Makefile.am
+	-rm -f xml-stamp
 	touch xml-stamp
+	for f in $(pkgxmldata_DATA) ; do echo $$f >> xml-stamp; done
 
 all-local: xml-stamp
 

@@ -22,23 +22,23 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InputSlots name="rx700">
 
-<slot name="Rear" text="Rear Tray">
+<slot translate="text" name="Rear" text="Rear Tray">
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\000</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="Front" text="Front Tray">
+<slot translate="text" name="Front" text="Front Tray">
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\001</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="CD" text="Print to CD">
+<slot translate="text" name="CD" text="Print to CD">
 	<CD/>
 	<InitSequence>PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="PhotoBoard" text="Photo Board">
+<slot translate="text" name="PhotoBoard" text="Photo Board">
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>

@@ -36,21 +36,23 @@ pkgxmldata_DATA =				\
 
 ## Rules
 
-xml-stamp: $(pkgxmldata_DATA) escp2/xml-stamp
+noinst_PROGRAMS = extract-strings
+
+extract_strings_SOURCES = extract-strings.c
+extract_strings_LDADD = $(GUTENPRINT_LIBS)
+
+xml-stamp: $(pkgxmldata_DATA) escp2/xml-stamp Makefile.am
+	-rm -f xml-stamp
 	touch xml-stamp
+	sed 's;^;escp2/;' escp2/xml-stamp >> xml-stamp
+	for f in $(pkgxmldata_DATA) ; do echo $$f >> xml-stamp; done
 
 all-local: xmli18n-tmp.h xml-stamp
 
 
-xmli18n-tmp.h:  $(srcdir)/papers.xml $(srcdir)/printers.xml
-# Pull out translatable strings from XML files.  This is crude, but
-# works for now.
-	sed -e '/description.*value/!d' \
-	  -e 's/.*description.*value="\([^"]*\)".*/N_("\1");/' \
-	  < $(srcdir)/papers.xml > $@;
-	sed -e '/printer.*name/!d' \
-	  -e 's/.*printer.*name="\([^"]*\)".*/N_("\1");/' \
-	  < $(srcdir)/printers.xml >> $@;
+xmli18n-tmp.h:  xml-stamp extract-strings
+	./extract-strings `cat xml-stamp` > xmli18n-tmp.h
+
 
 dist-hook: xmli18n-tmp.h
 # xmli18n-tmp.h is needed by po/POTFILES.in at dist time

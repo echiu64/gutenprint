@@ -27,8 +27,13 @@ SUBDIRS =					\
 	media					\
 	mediasizes
 
-xml-stamp: media/xml-stamp model/xml-stamp inputslots/xml-stamp
+xml-stamp: media/xml-stamp model/xml-stamp inputslots/xml-stamp mediasizes/xml-stamp Makefile.am
+	-rm -f xml-stamp
 	touch xml-stamp
+	sed 's;^;media/;' media/xml-stamp >> xml-stamp
+	sed 's;^;model/;' model/xml-stamp >> xml-stamp
+	sed 's;^;inputslots/;' inputslots/xml-stamp >> xml-stamp
+	sed 's;^;mediasizes/;' mediasizes/xml-stamp >> xml-stamp
 
 all-local: xml-stamp
 

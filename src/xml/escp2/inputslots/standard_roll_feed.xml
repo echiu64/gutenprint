@@ -22,12 +22,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InputSlots name="standard_roll_feed">
 
-<slot name="Standard" text="Standard">
+<slot translate="text" name="Standard" text="Standard">
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="Roll" text="Roll Feed">
+<slot translate="text" name="Roll" text="Roll Feed">
 	<RollFeed>	<DontEject/></RollFeed>
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\001</InitSequence>
 	<DeinitSequence>IR\002\000\000\002</DeinitSequence>

@@ -23,7 +23,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2:papers name="cmykrb">
 <feature name="PaperMedia"/>
 <feature name="PrintMethod"/>
-<paper name="Plain" text="Plain Paper" class="plain" PreferredInkset="r800Matte">
+<paper translate="text" name="Plain" text="Plain Paper" class="plain" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">0</parameter>
 	<parameter type="integer" name="PrintMethod">0x40</parameter>
 
@@ -58,7 +58,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x70</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -95,7 +95,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -133,7 +133,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Postcard" text="Postcard" class="plain" PreferredInkset="r800Matte">
+<paper translate="text" name="Postcard" text="Postcard" class="plain" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">1</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -168,7 +168,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x73</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -205,7 +205,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -243,7 +243,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="GlossyFilm" text="Glossy Film" class="photo" PreferredInkset="r800Photo">
+<paper translate="text" name="GlossyFilm" text="Glossy Film" class="photo" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">7</parameter>
 	<parameter type="integer" name="PrintMethod">0x40</parameter>
 
@@ -278,7 +278,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x70</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -315,7 +315,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -353,7 +353,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Transparency" text="Transparencies" class="transparency" PreferredInkset="r800Photo">
+<paper translate="text" name="Transparency" text="Transparencies" class="transparency" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">9</parameter>
 	<parameter type="integer" name="PrintMethod">0x40</parameter>
 
@@ -388,7 +388,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x70</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -425,7 +425,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -463,7 +463,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Envelope" text="Envelopes" class="plain" PreferredInkset="r800Matte">
+<paper translate="text" name="Envelope" text="Envelopes" class="plain" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">1</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -498,7 +498,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x71</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -535,7 +535,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -573,7 +573,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="BackFilm" text="Back Light Film" class="transparency" PreferredInkset="r800Photo">
+<paper translate="text" name="BackFilm" text="Back Light Film" class="transparency" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">10</parameter>
 	<parameter type="integer" name="PrintMethod">0x40</parameter>
 
@@ -608,7 +608,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x70</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -645,7 +645,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -683,7 +683,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Matte" text="Matte Paper" class="good" PreferredInkset="r800Matte">
+<paper translate="text" name="Matte" text="Matte Paper" class="good" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">3</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -718,7 +718,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x73</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -755,7 +755,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -793,7 +793,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="MatteHeavy" text="Matte Paper Heavyweight" class="good" PreferredInkset="r800Matte">
+<paper translate="text" name="MatteHeavy" text="Matte Paper Heavyweight" class="good" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">5</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -828,7 +828,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -865,7 +865,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -903,7 +903,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Inkjet" text="Inkjet Paper" class="good" PreferredInkset="r800Matte">
+<paper translate="text" name="Inkjet" text="Inkjet Paper" class="good" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">1</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -938,7 +938,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x71</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -975,7 +975,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.300000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1013,7 +1013,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Coated" text="Photo Quality Inkjet Paper" class="good" PreferredInkset="r800Photo">
+<paper translate="text" name="Coated" text="Photo Quality Inkjet Paper" class="good" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">3</parameter>
 	<parameter type="integer" name="PrintMethod">0x40</parameter>
 
@@ -1048,7 +1048,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x70</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1085,7 +1085,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1123,7 +1123,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Photo" text="Photo Paper" class="photo" PreferredInkset="r800Photo">
+<paper translate="text" name="Photo" text="Photo Paper" class="photo" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">6</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1158,7 +1158,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x72</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1195,7 +1195,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1233,7 +1233,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="GlossyPhoto" text="Premium Glossy Photo Paper" class="premium" PreferredInkset="r800Photo">
+<paper translate="text" name="GlossyPhoto" text="Premium Glossy Photo Paper" class="premium" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">11</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1268,7 +1268,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.600000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1305,7 +1305,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.546000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1343,7 +1343,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Semigloss" text="Premium Semigloss Photo Paper" class="premium" PreferredInkset="r800Photo">
+<paper translate="text" name="Semigloss" text="Premium Semigloss Photo Paper" class="premium" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">12</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1378,7 +1378,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.600000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1415,7 +1415,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.546000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1453,7 +1453,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Luster" text="Premium Luster Photo Paper" class="premium" PreferredInkset="r800Photo">
+<paper translate="text" name="Luster" text="Premium Luster Photo Paper" class="premium" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">13</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1488,7 +1488,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.600000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1525,7 +1525,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.546000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1563,7 +1563,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="ArchivalMatte" text="Archival Matte Paper" class="premium" PreferredInkset="r800Matte">
+<paper translate="text" name="ArchivalMatte" text="Archival Matte Paper" class="premium" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">15</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1598,7 +1598,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1635,7 +1635,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1673,7 +1673,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="WaterColorRadiant" text="Watercolor Paper - Radiant White" class="premium" PreferredInkset="r800Matte">
+<paper translate="text" name="WaterColorRadiant" text="Watercolor Paper - Radiant White" class="premium" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">16</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1708,7 +1708,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1745,7 +1745,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1783,7 +1783,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="GlossyPaper" text="Photo Quality Glossy Paper" class="photo" PreferredInkset="r800Photo">
+<paper translate="text" name="GlossyPaper" text="Photo Quality Glossy Paper" class="photo" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">19</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1818,7 +1818,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x72</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1855,7 +1855,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -1893,7 +1893,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Ilford" text="Ilford Heavy Paper" class="premium" PreferredInkset="r800Matte">
+<paper translate="text" name="Ilford" text="Ilford Heavy Paper" class="premium" PreferredInkset="r800Matte">
 	<parameter type="integer" name="PaperMedia">15</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -1928,7 +1928,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1965,7 +1965,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -2003,7 +2003,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="ColorLife" text="ColorLife Paper" class="premium" PreferredInkset="r800Photo">
+<paper translate="text" name="ColorLife" text="ColorLife Paper" class="premium" PreferredInkset="r800Photo">
 	<parameter type="integer" name="PaperMedia">23</parameter>
 	<parameter type="integer" name="PrintMethod">0x41</parameter>
 
@@ -2038,7 +2038,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		<parameter type="integer" name="PrintMethod">0x90</parameter>
 	</resolution>
 
-	<ink name="cmykrbphoto" text="Photo Black">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -2075,7 +2075,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -2113,8 +2113,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Other" text="Other" class="plain" PreferredInkset="r800Matte">
-	<ink name="cmykrbphoto" text="Photo Black">
+<paper translate="text" name="Other" text="Other" class="plain" PreferredInkset="r800Matte">
+	<ink translate="text" name="cmykrbphoto" text="Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -2151,7 +2151,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="cmykrbmatte" text="Matte Black">
+	<ink translate="text" name="cmykrbmatte" text="Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>

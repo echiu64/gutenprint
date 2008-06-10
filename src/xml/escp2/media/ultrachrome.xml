@@ -22,11 +22,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:papers name="ultrachrome">
 <feature name="FeedSequence"/>
-<paper name="Plain" text="Plain Paper" class="plain"
+<paper translate="text" name="Plain" text="Plain Paper" class="plain"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">1</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -66,7 +66,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -107,11 +107,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="PlainFast" text="Plain Paper Fast Load" class="plain"
+<paper translate="text" name="PlainFast" text="Plain Paper Fast Load" class="plain"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">5</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -151,7 +151,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -192,11 +192,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="Postcard" text="Postcard" class="plain"
+<paper translate="text" name="Postcard" text="Postcard" class="plain"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">2</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -236,7 +236,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -277,11 +277,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="GlossyFilm" text="Glossy Film" class="photo"
+<paper translate="text" name="GlossyFilm" text="Glossy Film" class="photo"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">3</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -321,7 +321,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -362,11 +362,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Transparency" text="Transparencies" class="transparency"
+<paper translate="text" name="Transparency" text="Transparencies" class="transparency"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">3</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -406,7 +406,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -447,11 +447,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Envelope" text="Envelopes" class="plain"
+<paper translate="text" name="Envelope" text="Envelopes" class="plain"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">4</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -491,7 +491,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -532,11 +532,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="BackFilm" text="Back Light Film" class="transparency"
+<paper translate="text" name="BackFilm" text="Back Light Film" class="transparency"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">6</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -576,7 +576,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -617,11 +617,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Matte" text="Matte Paper" class="good"
+<paper translate="text" name="Matte" text="Matte Paper" class="good"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -661,7 +661,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -702,11 +702,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="MatteHeavy" text="Matte Paper Heavyweight" class="good"
+<paper translate="text" name="MatteHeavy" text="Matte Paper Heavyweight" class="good"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -746,7 +746,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">0.400000</parameter>
@@ -787,11 +787,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="Inkjet" text="Inkjet Paper" class="good"
+<paper translate="text" name="Inkjet" text="Inkjet Paper" class="good"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -831,7 +831,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.300000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -872,11 +872,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="Coated" text="Photo Quality Inkjet Paper" class="good"
+<paper translate="text" name="Coated" text="Photo Quality Inkjet Paper" class="good"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -916,7 +916,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -957,11 +957,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Photo" text="Photo Paper" class="photo"
+<paper translate="text" name="Photo" text="Photo Paper" class="photo"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1001,7 +1001,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1042,11 +1042,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="GlossyPhoto" text="Premium Glossy Photo Paper"
+<paper translate="text" name="GlossyPhoto" text="Premium Glossy Photo Paper"
 class="premium" PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1086,7 +1086,7 @@ class="premium" PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1127,11 +1127,11 @@ class="premium" PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Semigloss" text="Premium Semigloss Photo Paper"
+<paper translate="text" name="Semigloss" text="Premium Semigloss Photo Paper"
 class="premium" PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1171,7 +1171,7 @@ class="premium" PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1212,11 +1212,11 @@ class="premium" PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Luster" text="Premium Luster Photo Paper" class="premium"
+<paper translate="text" name="Luster" text="Premium Luster Photo Paper" class="premium"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1256,7 +1256,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1297,11 +1297,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="ArchivalMatte" text="Archival Matte Paper" class="premium"
+<paper translate="text" name="ArchivalMatte" text="Archival Matte Paper" class="premium"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1341,14 +1341,14 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black"/>
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black"/>
 	</paper>
 
-	<paper name="WaterColorRadiant" text="Watercolor Paper - Radiant White"
+	<paper translate="text" name="WaterColorRadiant" text="Watercolor Paper - Radiant White"
 	class="premium" PreferredInkset="UltraMatte">
 		<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1388,7 +1388,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.920000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.400000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1429,11 +1429,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="GlossyPaper" text="Photo Quality Glossy Paper"
+<paper translate="text" name="GlossyPaper" text="Photo Quality Glossy Paper"
 class="photo" PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">6</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1473,7 +1473,7 @@ class="photo" PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1514,11 +1514,11 @@ class="photo" PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Ilford" text="Ilford Heavy Paper" class="premium"
+<paper translate="text" name="Ilford" text="Ilford Heavy Paper" class="premium"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1558,7 +1558,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1599,11 +1599,11 @@ PreferredInkset="UltraMatte">
 	</ink>
 </paper>
 
-<paper name="ColorLife" text="ColorLife Paper" class="premium"
+<paper translate="text" name="ColorLife" text="ColorLife Paper" class="premium"
 PreferredInkset="UltraPhoto">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1643,7 +1643,7 @@ PreferredInkset="UltraPhoto">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1684,11 +1684,11 @@ PreferredInkset="UltraPhoto">
 	</ink>
 </paper>
 
-<paper name="Other" text="Other" class="plain"
+<paper translate="text" name="Other" text="Other" class="plain"
 PreferredInkset="UltraMatte">
 	<parameter type="integer" name="FeedSequence">0</parameter>
 
-	<ink name="ultraphoto" text="UltraChrome Photo Black">
+	<ink translate="text" name="ultraphoto" text="UltraChrome Photo Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1728,7 +1728,7 @@ PreferredInkset="UltraMatte">
 		</parameter>
 	</ink>
 
-	<ink name="ultramatte" text="UltraChrome Matte Black">
+	<ink translate="text" name="ultramatte" text="UltraChrome Matte Black">
 		<parameter type="float" name="Density">0.720000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">0.400000</parameter>

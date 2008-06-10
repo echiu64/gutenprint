@@ -28,8 +28,10 @@ pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSI
 pkgxmldata_DATA =				\
 	standard.xml
 
-xml-stamp: $(pkgxmldata_DATA)
+xml-stamp: $(pkgxmldata_DATA) Makefile.am
+	-rm -f xml-stamp
 	touch xml-stamp
+	for f in $(pkgxmldata_DATA) ; do echo $$f >> xml-stamp; done
 
 all-local: xml-stamp
 

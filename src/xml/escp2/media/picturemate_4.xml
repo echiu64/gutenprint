@@ -22,11 +22,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:papers name="picturemate_4">
 <feature name="FeedSequence"/>
-<paper name="GlossyPhoto" text="Premium Glossy Photo Paper"
+<paper translate="text" name="GlossyPhoto" text="Premium Glossy Photo Paper"
 class="premium" PreferredInkset="picturematePhoto">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="picturemate_4" text="Standard">
+	<ink translate="text" name="picturemate_4" text="Standard">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -64,11 +64,11 @@ class="premium" PreferredInkset="picturematePhoto">
 	</ink>
 </paper>
 
-<paper name="Other" text="Other" class="plain"
+<paper translate="text" name="Other" text="Other" class="plain"
 PreferredInkset="picturemateMatte">
 	<parameter type="integer" name="FeedSequence">0</parameter>
 
-	<ink name="picturemate_4" text="Standard">
+	<ink translate="text" name="picturemate_4" text="Standard">
 		<parameter type="float" name="Density">0.878000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.100000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>

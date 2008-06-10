@@ -22,19 +22,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InputSlots name="spro5000">
 
-<slot name="CutSheet1" text="Cut Sheet Bin 1">
+<slot translate="text" name="CutSheet1" text="Cut Sheet Bin 1">
 	<InitSequence>PP\003\000\000\001\001</InitSequence>
 </slot>
 
-<slot name="CutSheet2" text="Cut Sheet Bin 2">
+<slot translate="text" name="CutSheet2" text="Cut Sheet Bin 2">
 	<InitSequence>PP\003\000\000\002\001</InitSequence>
 </slot>
 
-<slot name="CutSheetAuto" text="Cut Sheet Autoselect">
+<slot translate="text" name="CutSheetAuto" text="Cut Sheet Autoselect">
 	<InitSequence>PP\003\000\000\001\377</InitSequence>
 </slot>
 
-<slot name="ManualSelect" text="Manual Selection">
+<slot translate="text" name="ManualSelect" text="Manual Selection">
 	<InitSequence>PP\003\000\000\002\001</InitSequence>
 </slot>
 </escp2:InputSlots>

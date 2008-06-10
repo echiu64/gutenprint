@@ -22,10 +22,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:papers name="c64">
 <feature name="FeedSequence"/>
-<paper name="Plain" text="Plain Paper" class="plain">
+<paper translate="text" name="Plain" text="Plain Paper" class="plain">
 	<parameter type="integer" name="FeedSequence">1</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -63,7 +63,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.615000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -102,10 +102,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="PlainFast" text="Plain Paper Fast Load" class="plain">
+<paper translate="text" name="PlainFast" text="Plain Paper Fast Load" class="plain">
 	<parameter type="integer" name="FeedSequence">5</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -143,7 +143,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.615000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -182,10 +182,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Postcard" text="Postcard" class="plain">
+<paper translate="text" name="Postcard" text="Postcard" class="plain">
 	<parameter type="integer" name="FeedSequence">2</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -223,7 +223,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.830000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -262,10 +262,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="GlossyFilm" text="Glossy Film" class="photo">
+<paper translate="text" name="GlossyFilm" text="Glossy Film" class="photo">
 	<parameter type="integer" name="FeedSequence">3</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.800000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -303,7 +303,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -342,10 +342,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Transparency" text="Transparencies" class="transparency">
+<paper translate="text" name="Transparency" text="Transparencies" class="transparency">
 	<parameter type="integer" name="FeedSequence">3</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.800000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -383,7 +383,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -422,10 +422,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Envelope" text="Envelopes" class="plain">
+<paper translate="text" name="Envelope" text="Envelopes" class="plain">
 	<parameter type="integer" name="FeedSequence">4</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -463,7 +463,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.615000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -502,10 +502,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="BackFilm" text="Back Light Film" class="transparency">
+<paper translate="text" name="BackFilm" text="Back Light Film" class="transparency">
 	<parameter type="integer" name="FeedSequence">6</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.800000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -543,7 +543,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.750000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -582,10 +582,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Matte" text="Matte Paper" class="good">
+<paper translate="text" name="Matte" text="Matte Paper" class="good">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.900000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -623,7 +623,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.850000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.800000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -662,10 +662,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="MatteHeavy" text="Matte Paper Heavyweight" class="good">
+<paper translate="text" name="MatteHeavy" text="Matte Paper Heavyweight" class="good">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.900000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -703,7 +703,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -742,10 +742,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Inkjet" text="Inkjet Paper" class="good">
+<paper translate="text" name="Inkjet" text="Inkjet Paper" class="good">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -783,7 +783,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.850000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -822,10 +822,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Coated" text="Photo Quality Inkjet Paper" class="good">
+<paper translate="text" name="Coated" text="Photo Quality Inkjet Paper" class="good">
 	<parameter type="integer" name="FeedSequence">7</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -863,7 +863,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.100000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -902,10 +902,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="Photo" text="Photo Paper" class="photo">
+<paper translate="text" name="Photo" text="Photo Paper" class="photo">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">0.500000</parameter>
@@ -943,7 +943,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -982,11 +982,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	</ink>
 </paper>
 
-<paper name="GlossyPhoto" text="Premium Glossy Photo Paper"
+<paper translate="text" name="GlossyPhoto" text="Premium Glossy Photo Paper"
 class="premium">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1024,7 +1024,7 @@ class="premium">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.100000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1063,11 +1063,11 @@ class="premium">
 	</ink>
 </paper>
 
-<paper name="Semigloss" text="Premium Semigloss Photo Paper"
+<paper translate="text" name="Semigloss" text="Premium Semigloss Photo Paper"
 class="premium">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1105,7 +1105,7 @@ class="premium">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1144,10 +1144,10 @@ class="premium">
 	</ink>
 </paper>
 
-<paper name="Luster" text="Premium Luster Photo Paper" class="premium">
+<paper translate="text" name="Luster" text="Premium Luster Photo Paper" class="premium">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1185,7 +1185,7 @@ class="premium">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1224,11 +1224,11 @@ class="premium">
 	</ink>
 </paper>
 
-<paper name="GlossyPaper" text="Photo Quality Glossy Paper"
+<paper translate="text" name="GlossyPaper" text="Photo Quality Glossy Paper"
 class="photo">
 	<parameter type="integer" name="FeedSequence">6</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1266,7 +1266,7 @@ class="photo">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1305,10 +1305,10 @@ class="photo">
 	</ink>
 </paper>
 
-<paper name="Ilford" text="Ilford Heavy Paper" class="premium">
+<paper translate="text" name="Ilford" text="Ilford Heavy Paper" class="premium">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1346,7 +1346,7 @@ class="photo">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1385,10 +1385,10 @@ class="photo">
 	</ink>
 </paper>
 
-<paper name="ColorLife" text="ColorLife Paper" class="premium">
+<paper translate="text" name="ColorLife" text="ColorLife Paper" class="premium">
 	<parameter type="integer" name="FeedSequence">8</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">0.833000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1426,7 +1426,7 @@ class="photo">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">1.000000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1465,10 +1465,10 @@ class="photo">
 	</ink>
 </paper>
 
-<paper name="Other" text="Other" class="plain">
+<paper translate="text" name="Other" text="Other" class="plain">
 	<parameter type="integer" name="FeedSequence">0</parameter>
 
-	<ink name="None" text="EPSON Standard Inks">
+	<ink translate="text" name="None" text="EPSON Standard Inks">
 		<parameter type="float" name="Density">1.000000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>
@@ -1506,7 +1506,7 @@ class="photo">
 		</parameter>
 	</ink>
 
-	<ink name="Quadtone" text="Quadtone">
+	<ink translate="text" name="Quadtone" text="Quadtone">
 		<parameter type="float" name="Density">0.615000</parameter>
 		<parameter type="float" name="SubchannelCutoff">0.500000</parameter>
 		<parameter type="float" name="BlackTrans">1.000000</parameter>

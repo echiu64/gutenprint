@@ -22,29 +22,29 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InputSlots name="cd_cutter_roll_feed">
 
-<slot name="Standard" text="Standard">
+<slot translate="text" name="Standard" text="Standard">
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\377</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="Manual" text="Manual Feed">
+<slot translate="text" name="Manual" text="Manual Feed">
 	<InitSequence>PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="CD" text="Print to CD">
+<slot translate="text" name="CD" text="Print to CD">
 	<CD/>
 	<InitSequence>PM\002\000\000\000IR\002\000\000\001EX\006\000\000\000\000\000\005\000FP\003\000\000\000\000PP\003\000\000\002\001</InitSequence>
 	<DeinitSequence>IR\002\000\000\000</DeinitSequence>
 </slot>
 
-<slot name="RollCutPage" text="Roll Feed (cut each page)">
+<slot translate="text" name="RollCutPage" text="Roll Feed (cut each page)">
 	<RollFeed>	<CutAll/></RollFeed>
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377</InitSequence>
 	<DeinitSequence>IR\002\000\000\002</DeinitSequence>
 </slot>
 
-<slot name="RollCutNone" text="Roll Feed (do not cut)">
+<slot translate="text" name="RollCutNone" text="Roll Feed (do not cut)">
 	<RollFeed>	<DontEject/></RollFeed>
 	<InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\001PP\003\000\000\001\377</InitSequence>
 	<DeinitSequence>IR\002\000\000\002</DeinitSequence>
