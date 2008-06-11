@@ -218,33 +218,19 @@ escp2_set_remote_sequence(stp_vars_t *v)
     {
       /* Enter remote mode */
       stp_send_command(v, "\033(R", "bcs", 0, "REMOTE1");
+      /* Per the manual, job setup comes first, then SN command */
+      if (pd->input_slot &&
+	  pd->input_slot->roll_feed_cut_flags == ROLL_FEED_CUT_ALL)
+	      stp_send_command(v, "JS", "bh", 0);
       if (pd->preinit_remote_sequence)
 	stp_zfwrite(pd->preinit_remote_sequence->data,
 		    pd->preinit_remote_sequence->bytes, 1, v);
-      if (stp_check_int_parameter(pv, "PaperThickness", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "PH", "bcc", 0,
-			 stp_get_int_parameter(pv, "PaperThickness"));
-      if (stp_check_int_parameter(pv, "VacuumIntensity", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "SN", "bccc", 0, 5,
-			 stp_get_int_parameter(pv, "VacuumIntensity"));
       if (stp_check_int_parameter(pv, "FeedAdjustment", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "SN", "bccc", 0, 4,
 			 stp_get_int_parameter(pv, "FeedAdjustment"));
-      if (stp_check_int_parameter(pv, "FeedSequence", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "SN", "bccc", 0, 0,
-			 stp_get_int_parameter(pv, "FeedSequence"));
-      if (stp_check_int_parameter(pv, "PlatenGap", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "US", "bccc", 0, 1,
-			 stp_get_int_parameter(pv, "PlatenGap"));
-      if (stp_check_int_parameter(pv, "PaperMedia", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "MI", "bcccc", 0, 1,
-			 stp_get_int_parameter(pv, "PaperMedia"),
-			 (stp_check_int_parameter(pv, "PaperMediaSize", STP_PARAMETER_ACTIVE) ?
-			  stp_get_int_parameter(pv, "PaperMediaSize") :
-			  99));	/* User-defined size (for now!) */
-      if (stp_check_int_parameter(pv, "PageDryTime", STP_PARAMETER_ACTIVE))
-	stp_send_command(v, "DR", "bcch", 0, 1,
-			 (int) stp_get_float_parameter(pv, "PageDryTime"));
+      if (stp_check_int_parameter(pv, "VacuumIntensity", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "SN", "bccc", 0, 5,
+			 stp_get_int_parameter(pv, "VacuumIntensity"));
       if (stp_check_int_parameter(pv, "ScanDryTime", STP_PARAMETER_ACTIVE))
 	stp_send_command(v, "DR", "bcch", 0, 1,
 			 (int) stp_get_float_parameter(pv, "ScanDryTime") * 1000);
@@ -254,15 +240,10 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	  stp_send_command(v, "DR", "bcch", 0, 1,
 			   (int) stp_get_float_parameter(pv, "ScanMinDryTime") * 1000);
 	}
-      if (stp_get_boolean_parameter(v, "FullBleed"))
-	{
-	  stp_send_command(v, "FP", "bch", 0,
-			   (unsigned short) -pd->zero_margin_offset);
-	  if (pd->borderless_sequence)
-	    stp_zfwrite(pd->borderless_sequence->data,
-			pd->borderless_sequence->bytes,
-			1, v);
-	}
+      if (stp_check_int_parameter(pv, "PageDryTime", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "DR", "bcch", 0, 1,
+			 (int) stp_get_float_parameter(pv, "PageDryTime"));
+      /* Next comes paper path */
       if (pd->input_slot)
 	{
 	  int divisor = pd->base_separation / 360;
@@ -271,9 +252,12 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	    stp_zfwrite(pd->input_slot->init_sequence->data,
 			pd->input_slot->init_sequence->bytes, 1, v);
 	  switch (pd->input_slot->roll_feed_cut_flags)
+	  if (pd->input_slot->init_sequence)
+	    stp_zfwrite(pd->input_slot->init_sequence->data,
+			pd->input_slot->init_sequence->bytes, 1, v);
+	  switch (pd->input_slot->roll_feed_cut_flags)
 	    {
 	    case ROLL_FEED_CUT_ALL:
-	      stp_send_command(v, "JS", "bh", 0);
 	      stp_send_command(v, "CO", "bccccl", 0, 0, 1, 0, 0);
 	      stp_send_command(v, "CO", "bccccl", 0, 0, 0, 0, height);
 	      break;
@@ -285,6 +269,12 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	      break;
 	    }
 	}
+      if (stp_check_int_parameter(pv, "PaperMedia", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "MI", "bcccc", 0, 1,
+			 stp_get_int_parameter(pv, "PaperMedia"),
+			 (stp_check_int_parameter(pv, "PaperMediaSize", STP_PARAMETER_ACTIVE) ?
+			  stp_get_int_parameter(pv, "PaperMediaSize") :
+			  99));	/* User-defined size (for now!) */
       if (pd->duplex)
 	{
 	  /* If there's ever duplex no tumble, we'll need to special
@@ -293,6 +283,24 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	    stp_send_command(v, "DP", "bcc", 0, 2); /* Auto duplex */
 	  else
 	    stp_send_command(v, "DP", "bcc", 0, 2); /* Auto duplex */
+	}
+      if (stp_check_int_parameter(pv, "PaperThickness", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "PH", "bcc", 0,
+			 stp_get_int_parameter(pv, "PaperThickness"));
+      if (stp_check_int_parameter(pv, "FeedSequence", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "SN", "bccc", 0, 0,
+			 stp_get_int_parameter(pv, "FeedSequence"));
+      if (stp_check_int_parameter(pv, "PlatenGap", STP_PARAMETER_ACTIVE))
+	stp_send_command(v, "US", "bccc", 0, 1,
+			 stp_get_int_parameter(pv, "PlatenGap"));
+      if (stp_get_boolean_parameter(v, "FullBleed"))
+	{
+	  stp_send_command(v, "FP", "bch", 0,
+			   (unsigned short) -pd->zero_margin_offset);
+	  if (pd->borderless_sequence)
+	    stp_zfwrite(pd->borderless_sequence->data,
+			pd->borderless_sequence->bytes,
+			1, v);
 	}
       /* Exit remote mode */
 
