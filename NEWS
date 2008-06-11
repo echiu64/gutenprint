@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.2.0-beta2 (5.1.98.2)!  Please read these
-release notes carefully.
+Welcome to Gutenprint 5.2.0-beta3!  Please read these release notes
+carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -10,12 +10,28 @@ replaces the print plug-in packaged with the GIMP distribution.
 
 Gutenprint currently supports over 1300 printer models.
 
-Gutenprint 5.2.0-beta1 is the first beta release of Gutenprint 5.2.
+Gutenprint 5.2.0-beta3 is the third beta release of Gutenprint 5.2.
 
 *** NOTE TO PACKAGERS: This is a beta release of the forthcoming 5.2
     stable release.  As of 5.2 and until further notice, Gutenprint
     will no longer deliver separate "development" and "stable" release
     series.
+
+    The point release will be advanced between beta/RC releases and
+    stable releases.  The first stable release of 5.2 will be numbered
+    5.2.1; the betas and release candidates will be numbered
+    5.2.0-betaN or 5.2.0-rcN.  Any betas for the next stable release
+    will be numbered 5.2.2-betaN; the next stable release will be
+    numbered 5.2.3 (if there are beta or release candidate builds) or
+    5.2.2 (if there are not).
+
+    This ensures that the highest numbered release is always the most
+    current, and that there will be no confusion between beta releases
+    and stable releases.  Our experience with 5.0 was that many users
+    continued to use beta releases of 5.2 even after 5.2.0 was
+    released, and worse, in some cases referred to 5.2 beta releases
+    as "5.2.0".  We believe that the numbering scheme described above
+    will avoid that problem.
 
 These release notes contain the following sections:
 
@@ -106,7 +122,32 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   1) A problem whereby some rows are not printed in color on the Epson
      Stylus CX3700 and related printers has been fixed.
 
-  2) New printers supported in this release:
+  2) A problem whereby with certain combinations of options the output
+     appeared discontinuous (gradients would get darker then abruptly
+     lighten) has been fixed.
+
+  3) escputil now distinguishes between the two black cartridges in
+     the Epson Stylus C120.
+
+  4) Printing speed, and possibly quality, have been improved in
+     certain cases on newer Epson inkjet printers (C120, Stylus Photo
+     2400, RX700, and all printers using Claria ink).  The speed
+     improvement should be most noticeable with plain paper at lower
+     resolutions.  Quality improvements may or may not be noticeable.
+
+  5) The Epson driver is in the process of being converted to use data
+     stored in files external to the binary library.  While this
+     should have no impact on end-user use, it is a substantial change
+     that people should be aware of.  Please report any issues.
+
+  6) Test coverage has been significantly increased.
+
+  7) New printers supported in this release:
+
+     * Epson inkjet printers:
+
+       Offirio PX-B500 (preliminary)
+       Offirio PX-B300 (preliminary)
 
      * Black and white laser printers:
 
