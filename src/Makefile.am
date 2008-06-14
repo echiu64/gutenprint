@@ -22,8 +22,8 @@
 include $(top_srcdir)/scripts/global.mk
 
 SUBDIRS = 					\
-	xml					\
 	main					\
+	xml					\
 	gutenprintui2				\
 	escputil				\
 	gimp2					\
