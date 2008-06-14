@@ -1,4 +1,4 @@
-# translation of gutenprint-5.1.98.1.po to Dutch
+# translation of gutenprint-5.2.0-b3.po to Dutch
 # Dutch translations for gutenprint.
 # Copyright (C) 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gutenprint package.
@@ -8,17 +8,17 @@
 # Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gutenprint-5.1.98.1\n"
+"Project-Id-Version: gutenprint-5.2.0-b3\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-06-12 20:15-0400\n"
-"PO-Revision-Date: 2008-05-30 19:34+0200\n"
+"PO-Revision-Date: 2008-06-14 15:45+0200\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@hetnet.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. TRANSLATORS: "EvenTone" is the proper name, rather than a
 #. descriptive name, of this algorithm.
@@ -110,14 +110,8 @@ msgid "Output Level Adjustment"
 msgstr "Aanpassing van uitvoerniveau"
 
 #: src/main/dither-main.c:92
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"De dichtheid (hoeveelheid inkt) van de afdruk aanpassen. Verminder de "
-"dichtheid als de inkt vlekt of door het papier heen komt; verhoog de "
-"dichtheid als zwarte stukken niet goed dicht zijn."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "De dichtheid (hoeveelheid inkt) van de afdruk aanpassen. Verminder de dichtheid als de inkt vlekt of door het papier heen komt; verhoog de dichtheid als zwarte stukken niet goed dicht zijn."
 
 #: src/main/dither-main.c:100
 msgid "Dither Algorithm"
@@ -131,20 +125,16 @@ msgstr "Aanpassing van aftasting"
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Kies het ruis-algoritme.\n"
 "'Aangepast hybride' produceert meestal de beste algemene kwaliteit.\n"
-"'EvenTone' is een nieuw, experimenteel algoritme dat vaak een uitstekend "
-"resultaat geeft.\n"
+"'EvenTone' is een nieuw, experimenteel algoritme dat vaak een uitstekend resultaat geeft.\n"
 "'Geordend' is sneller en geeft bijna dezelfde kwaliteit bij foto's.\n"
-"'Snel' en 'Zeer snel' zijn aanzienlijk sneller, en doen het goed bij tekst "
-"en lijntekeningen.\n"
+"'Snel' en 'Zeer snel' zijn aanzienlijk sneller, en doen het goed bij tekst en lijntekeningen.\n"
 "'Hybride Floyd-Steinberg' produceert meestal een slecht resultaat."
 
 #: src/main/module.c:52
@@ -634,12 +624,8 @@ msgid "Composite Gamma"
 msgstr "Samengesteld gamma"
 
 #: src/main/print-color.c:249
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
-"De gamma van de afdruk aanpassen. Grotere waarden produceren een helderder "
-"afdruk, terwijl lagere waarden een over het geheel donkerder afdruk maken. "
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
+msgstr "De gamma van de afdruk aanpassen. Grotere waarden produceren een helderder afdruk, terwijl lagere waarden een over het geheel donkerder afdruk maken. "
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -784,8 +770,7 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "De verzadiging (kleurbalans) van de afdruk aanpassen\n"
-"Gebruik verzadiging nul voor een grijswaardenuitvoer met behulp van "
-"gekleurde en zwarte inkt"
+"Gebruik verzadiging nul voor een grijswaardenuitvoer met behulp van gekleurde en zwarte inkt"
 
 #: src/main/print-color.c:357
 msgid "Ink Limit"
@@ -1026,21 +1011,13 @@ msgstr "Breedte moet groter dan nul zijn\n"
 
 #: src/main/printers.c:848
 #, c-format
-msgid ""
-"Image is too wide for the page: left margin is %d, width %d, right edge is %"
-"d\n"
-msgstr ""
-"Afbeelding is te breed voor de pagina: linkermarge is %d, breedte %d, "
-"rechterrand is %d\n"
+msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
+msgstr "Afbeelding is te breed voor de pagina: linkermarge is %d, breedte %d, rechterrand is %d\n"
 
 #: src/main/printers.c:855
 #, c-format
-msgid ""
-"Image is too long for the page: top margin is %d, height %d, bottom edge is %"
-"d\n"
-msgstr ""
-"Afbeelding is te lang voor de pagina: bovenmarge is %d, hoogte %d, onderrand "
-"is %d\n"
+msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
+msgstr "Afbeelding is te lang voor de pagina: bovenmarge is %d, hoogte %d, onderrand is %d\n"
 
 #: src/main/print-escp2.c:169
 msgid "Automatic Printing Mode"
@@ -1086,9 +1063,7 @@ msgstr "Geavanceerde aanpassing van uitvoer"
 
 #: src/main/print-escp2.c:271
 msgid "Printing direction (unidirectional is higher quality, but slower)"
-msgstr ""
-"Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter "
-"langzamer)"
+msgstr "Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter langzamer)"
 
 #: src/main/print-escp2.c:276 src/main/print-olympus.c:1733
 msgid "Borderless"
@@ -1346,82 +1321,76 @@ msgstr "Middelgrijsschaal"
 
 #: src/main/print-escp2.c:781
 msgid "Drying Time Per Page"
-msgstr ""
+msgstr "Droogtijd per pagina"
 
 #: src/main/print-escp2.c:782
 msgid "Set drying time per page"
-msgstr ""
+msgstr "Stel droogtijd per pagina in"
 
 #: src/main/print-escp2.c:789
 msgid "Drying Time Per Scan"
-msgstr ""
+msgstr "Droogtijd per scan"
 
 #: src/main/print-escp2.c:790
 msgid "Set drying time per scan"
-msgstr ""
+msgstr "Stel droogtijd per scan in"
 
 #: src/main/print-escp2.c:797
 msgid "Minimum Drying Time Per Scan"
-msgstr ""
+msgstr "Minimale droogtijd per scan"
 
 #: src/main/print-escp2.c:798
 msgid "Set minimum drying time per scan"
-msgstr ""
+msgstr "Stel minimale droogtijd per scan in"
 
 #: src/main/print-escp2.c:813
-#, fuzzy
 msgid "Paper Thickness"
-msgstr "Papierafmetingen"
+msgstr "Papierdikte"
 
 #: src/main/print-escp2.c:814
-#, fuzzy
 msgid "Set printer paper thickness"
-msgstr "Stel standaardwaarden van printeropties in"
+msgstr "Stel de papierdikte van de printer in"
 
 #: src/main/print-escp2.c:821
-#, fuzzy
 msgid "Vacuum Intensity"
-msgstr "Hoeveelheid zwart"
+msgstr "Zuigkracht"
 
 #: src/main/print-escp2.c:822
 msgid "Set vacuum intensity (printer-specific)"
-msgstr ""
+msgstr "Stel zuigkracht in"
 
 #: src/main/print-escp2.c:829
 msgid "Feed Sequence"
-msgstr ""
+msgstr "Invoer-volgorde"
 
 #: src/main/print-escp2.c:830
 msgid "Set paper feed sequence (printer-specific)"
-msgstr ""
+msgstr "Stel de invoer-volgorde in (printerspecifiek)"
 
 #: src/main/print-escp2.c:837
-#, fuzzy
 msgid "Print Method"
 msgstr "Wijze van printen"
 
 #: src/main/print-escp2.c:838
 msgid "Set print method (printer-specific)"
-msgstr ""
+msgstr "Stel de wijze van printen in (printerspecifiek)"
 
 #: src/main/print-escp2.c:845
-#, fuzzy
 msgid "Platen Gap"
-msgstr "Blanco papier"
+msgstr "Kophoogte"
 
 #: src/main/print-escp2.c:846
 msgid "Set platen gap (printer-specific)"
-msgstr ""
+msgstr "Stel kophoogte in (printerspecifiek)"
 
 #: src/main/print-escp2.c:853
-#, fuzzy
 msgid "Feed Adjustment"
-msgstr "Fijnafstelling"
+msgstr "Invoerafstelling"
 
 #: src/main/print-escp2.c:854
 #, c-format
 msgid "Set paper feed adjustment (0.01% units)"
-msgstr ""
+msgstr "Stel de invoerafstelling in (0,01% units)"
 
 #: src/main/print-escp2.c:2110
 msgid "Full Manual Control"
@@ -1484,7 +1453,6 @@ msgid "Nearest Neighbor Avoidance"
 msgstr "Vermijden van naaste buur"
 
 #: src/main/print-escp2.c:2406
-#, fuzzy
 msgid "Short Edge(Flip)"
 msgstr "Korte zijde (omslaan)"
 
@@ -1897,7 +1865,7 @@ msgstr "Zwaar"
 
 #: src/main/print-pcl.c:187
 msgid "Premium"
-msgstr "Eerste klas"
+msgstr "Premium"
 
 #: src/main/print-pcl.c:188
 msgid "Glossy Photo"
@@ -1913,7 +1881,7 @@ msgstr "Sneldrogend foto"
 
 #: src/main/print-pcl.c:191
 msgid "Quick-dry Transparency"
-msgstr "Sneldrogend transparant"
+msgstr "Sneldrogende transparant"
 
 #: src/main/print-pcl.c:238 src/xml/xmli18n-tmp.h:1617
 msgid "Manual"
@@ -2025,8 +1993,7 @@ msgstr "Modelnaam in PPD-bestand"
 
 #: src/main/print-raw.c:223
 msgid "Image dimensions must match paper dimensions"
-msgstr ""
-"Afmeting van afbeelding moet overeenkomen met de afmetingen van het papier"
+msgstr "Afmeting van afbeelding moet overeenkomen met de afmetingen van het papier"
 
 #: src/main/escp2-channels.c:983 src/main/escp2-channels.c:996
 msgid "Two Level Grayscale"
@@ -2635,14 +2602,12 @@ msgid "Matte Black"
 msgstr "Matzwart"
 
 #: src/main/escp2-channels.c:3187
-#, fuzzy
 msgid "Black 1"
-msgstr "Zwart"
+msgstr "Zwart 1"
 
 #: src/main/escp2-channels.c:3188
-#, fuzzy
 msgid "Black 2"
-msgstr "Zwart"
+msgstr "Zwart 2"
 
 #: src/main/escp2-channels.c:3222 src/main/escp2-channels.c:3232
 #: src/main/escp2-channels.c:3244 src/main/escp2-channels.c:3258
@@ -3091,26 +3056,17 @@ msgstr "Voorbeeld"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Plaats de afbeelding op de pagina.\n"
 "Klik en sleep met de eerste knop om de afbeelding te plaatsen.\n"
-"Klik en sleep met de tweede knop om de afbeelding met een fijnere "
-"nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt "
-"(1/72\")\n"
-"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van "
-"zijn grootte te verplaatsen.\n"
-"Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen "
-"beperkt de beweging tot horizontaal of verticaal.\n"
-"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug "
-"naar zijn oorspronkelijke plaats."
+"Klik en sleep met de tweede knop om de afbeelding met een fijnere nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt (1/72\")\n"
+"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van zijn grootte te verplaatsen.\n"
+"Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen beperkt de beweging tot horizontaal of verticaal.\n"
+"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug naar zijn oorspronkelijke plaats."
 
 #: src/gutenprintui2/panel.c:1495
 msgid "Paper Size"
@@ -3177,12 +3133,8 @@ msgid "Seascape"
 msgstr "Seascape"
 
 #: src/gutenprintui2/panel.c:1640
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Kies de orientatie: portret, landschap, ondersteboven of seascape "
-"(ondersteboven landschap)"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Kies de orientatie: portret, landschap, ondersteboven of seascape (ondersteboven landschap)"
 
 #: src/gutenprintui2/panel.c:1642
 msgid "Orientation:"
@@ -3202,8 +3154,7 @@ msgstr "Rechts:"
 
 #: src/gutenprintui2/panel.c:1658
 msgid "Distance from the left of the paper to the right of the image"
-msgstr ""
-"Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
+msgstr "Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
 
 #: src/gutenprintui2/panel.c:1662
 msgid "Distance from the right of the paper to the image"
@@ -3223,8 +3174,7 @@ msgstr "Onder:"
 
 #: src/gutenprintui2/panel.c:1669
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr ""
-"Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
+msgstr "Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
 
 #: src/gutenprintui2/panel.c:1673
 msgid "Distance from the bottom of the paper to the image"
@@ -3296,12 +3246,8 @@ msgid "Choose the correct PPD filename for your printer"
 msgstr "Kies de juiste PPD bestandsnaam voor jouw printer"
 
 #: src/gutenprintui2/panel.c:1885
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) "
-"die u wilt uitprinten"
+msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
+msgstr "Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) die u wilt uitprinten"
 
 #: src/gutenprintui2/panel.c:1887
 msgid "Printer Queue:"
@@ -3348,36 +3294,24 @@ msgid "Printer Settings"
 msgstr "Printerinstellingen"
 
 #: src/gutenprintui2/panel.c:2060
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Selecteer de naam van de printer (Niet het type, of model, of printer) "
-"waarna je wenst te printen"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Selecteer de naam van de printer (Niet het type, of model, of printer) waarna je wenst te printen"
 
 #: src/gutenprintui2/panel.c:2077
 msgid "Setup Printer..."
 msgstr "Instellen Printer..."
 
 #: src/gutenprintui2/panel.c:2079
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar "
-"deze printer af te drukken."
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar deze printer af te drukken."
 
 #: src/gutenprintui2/panel.c:2092
 msgid "New Printer..."
 msgstr "Nieuwe Printer..."
 
 #: src/gutenprintui2/panel.c:2093
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definieer een logische printer. Deze kan gebruikt worden om een verzameling "
-"van instellingen die u bewaren wilt voor toekomstig gebruik."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Definieer een logische printer. Deze kan gebruikt worden om een verzameling van instellingen die u bewaren wilt voor toekomstig gebruik."
 
 #: src/gutenprintui2/panel.c:2123
 msgid "Set Printer Option Defaults"
@@ -3404,12 +3338,8 @@ msgid "Scale by:"
 msgstr "Schalen met:"
 
 #: src/gutenprintui2/panel.c:2203
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Moet schaling gemeten worden in het percentage van de beschikbare "
-"paginagrootte of het aantal punten per inch"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Moet schaling gemeten worden in het percentage van de beschikbare paginagrootte of het aantal punten per inch"
 
 #: src/gutenprintui2/panel.c:2206
 msgid "Percent"
@@ -3484,10 +3414,8 @@ msgid "Adjust Output..."
 msgstr "Past uitvoer aan..."
 
 #: src/gutenprintui2/panel.c:2477
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
 
 #: src/gutenprintui2/panel.c:2496
 msgid "Size Units:"
@@ -3646,14 +3574,12 @@ msgstr ""
 "Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
 "Dit programma is vrije software; u mag het verspreiden en/of wijzigen\n"
-"onder de termen van de GNU General Public License zoals gepubliceerd door de "
-"Free\n"
+"onder de termen van de GNU General Public License zoals gepubliceerd door de Free\n"
 "Software Foundation; ofwel versie 2 van de licentie, of (naar vrije keuze)\n"
 "elke latere versie.\n"
 "\n"
 "Dit programma is verspreid in de hoop dat het bruikbaar zou zijn, maar\n"
-"ZONDER ENIGE GARANTIE; zelfs zonder de impliete garantie van "
-"VERKOOPBAARHEID\n"
+"ZONDER ENIGE GARANTIE; zelfs zonder de impliete garantie van VERKOOPBAARHEID\n"
 "of GESCHKT VOOR EEN BEPAALD DOEL.  Zie de GNU General Public License\n"
 "voor meer details.\n"
 "\n"
@@ -3680,8 +3606,7 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -3716,14 +3641,11 @@ msgstr ""
 "  Commando's:\n"
 "    -c|--clean-head    Maak de printkop schoon.\n"
 "    -n|--nozzle-check  Print een nozzle testpatroon.\n"
-"                       Vuile of verstopte nozzles vertonen zich als gaten in "
-"het\n"
+"                       Vuile of verstopte nozzles vertonen zich als gaten in het\n"
 "                       patroon.  Als u een gat ziet dan moet u de printkop\n"
 "                       schoonmaken.\n"
-"    -a|--align-head    Lijn de printkop uit.  VOORZICHTIG: Verkeerd gebruik "
-"van dit\n"
-"                       programma kan resulteren in een slechte "
-"printkwaliteit en/of\n"
+"    -a|--align-head    Lijn de printkop uit.  VOORZICHTIG: Verkeerd gebruik van dit\n"
+"                       programma kan resulteren in een slechte printkwaliteit en/of\n"
 "                       beschadiging van de printer.\n"
 "    -s|--status        Haal de printerstatus op.\n"
 "    -i|--ink-level     Toon de inktniveaus van de printer.  Dit vereist\n"
@@ -3733,28 +3655,22 @@ msgstr ""
 "                       raw-printerapparaat.\n"
 "    -d|--identify      Vraag het merk en model van de printer. Dit vereist\n"
 "                       lees/schrijf-toegang tot het raw-printerapparaat.\n"
-"    -l|--license       Toon de licentie en garantie-bepalingen van dit "
-"programma.\n"
+"    -l|--license       Toon de licentie en garantie-bepalingen van dit programma.\n"
 "    -M|--list-models   Toon een lijst van de beschikbare printermodellen.\n"
 "    -h|--help          Toon dit hulpbericht.\n"
 "  Opties:\n"
 "    -P|--printer-name  Specificeer de naam van de printerqueue.\n"
 "                       Standaard is de standaard systeemprinter.\n"
-"    -r|--raw-device    Specificeer de naam van het apparaat waar direct "
-"naar\n"
+"    -r|--raw-device    Specificeer de naam van het apparaat waar direct naar\n"
 "                       geschreven moet worden i.p.v. via een pinterqueue.\n"
 "    -m|--model         Specificeer het printermodel.\n"
-"    -u|--new           De printer is een nieuwe printer (Stylus Color 740 "
-"of\n"
-"                       nieuwer).  Alleen noodzakelijk bij een niet-raw "
-"apparaat\n"
+"    -u|--new           De printer is een nieuwe printer (Stylus Color 740 of\n"
+"                       nieuwer).  Alleen noodzakelijk bij een niet-raw apparaat\n"
 "                       of wanneer het model niet gespecificeerd is.\n"
 "    -q|--quiet         Onderdruk de banner.\n"
 "    -S|--short-name    Toon de korte naam van de printer met --identify.\n"
-"    -C|--choices       Specificeer het aantal patroonkeuzes voor de "
-"uitlijning\n"
-"    -p|--patterns      Specificeer het aantal patroonsets voor de "
-"uitlijning\n"
+"    -C|--choices       Specificeer het aantal patroonkeuzes voor de uitlijning\n"
+"    -p|--patterns      Specificeer het aantal patroonsets voor de uitlijning\n"
 
 #: src/escputil/escputil.c:162
 msgid ""
@@ -3810,8 +3726,7 @@ msgstr ""
 "  Commando's:\n"
 "    -c Maak de printkop schoon.\n"
 "    -n Print een spuitgaatjes testpatroon.\n"
-"          Vuile of verstopte spuitgaatjes komen te voorschijn als gaten in "
-"het\n"
+"          Vuile of verstopte spuitgaatjes komen te voorschijn als gaten in het\n"
 "          patroon.  Als er zo'n gat is, dan moet de printkop schoongemaakt\n"
 "          worden.\n"
 "    -a Lijn de printkop uit.  VOORZICHTIG: Misbruik van dit\n"
@@ -4034,14 +3949,14 @@ msgid "Error: Paper out\n"
 msgstr "Fout: geen papier\n"
 
 #: src/escputil/escputil.c:1077
-#, fuzzy, c-format
+#, c-format
 msgid "Error: Miscellaneous paper error\n"
-msgstr "Fout: Onherstelbare fout in snij-instrument\n"
+msgstr "Fout: Een of andere papierfout\n"
 
 #: src/escputil/escputil.c:1080
 #, c-format
 msgid "Error: Maintenance cartridge overflow\n"
-msgstr ""
+msgstr "Fout: Overflow met onderhoudscartidge\n"
 
 #: src/escputil/escputil.c:1083
 #, c-format
@@ -4059,6 +3974,8 @@ msgid ""
 "Error: Ink cartridge lever released\n"
 "\n"
 msgstr ""
+"Fout: Inktcartridgehendel losgezet\n"
+"\n"
 
 #: src/escputil/escputil.c:1092
 #, c-format
@@ -4073,12 +3990,12 @@ msgstr "Fout: Herstelbaar snij-instrument zit vast\n"
 #: src/escputil/escputil.c:1098
 #, c-format
 msgid "Error: No maintenance cartridge present\n"
-msgstr ""
+msgstr "Fout: Geen onderhoudscartridge aanwezig\n"
 
 #: src/escputil/escputil.c:1101
-#, fuzzy, c-format
+#, c-format
 msgid "Error: Rear cover open\n"
-msgstr "Fout: Ladedeksel is open\n"
+msgstr "Fout: Achterdeksel is open\n"
 
 #: src/escputil/escputil.c:1104
 #, c-format
@@ -4096,19 +4013,19 @@ msgid "Error: Tray cover open\n"
 msgstr "Fout: Ladedeksel is open\n"
 
 #: src/escputil/escputil.c:1113
-#, fuzzy, c-format
+#, c-format
 msgid "Error: Maintenance cartridge cover open\n"
-msgstr "Fout: Ladedeksel is open\n"
+msgstr "Fout: Deksel van onderhoudscartidge is open\n"
 
 #: src/escputil/escputil.c:1116
-#, fuzzy, c-format
+#, c-format
 msgid "Error: Front cover open\n"
-msgstr "Fout: Ladedeksel is open\n"
+msgstr "Fout: Deksel aan de voorkant is open\n"
 
 #: src/escputil/escputil.c:1119
-#, fuzzy, c-format
+#, c-format
 msgid "Error: Maintenance request\n"
-msgstr "Fout: Het andere interface is gekozen\n"
+msgstr "Fout: Onderhoudsverzoek\n"
 
 #: src/escputil/escputil.c:1122
 #, c-format
@@ -4116,34 +4033,34 @@ msgid "Error: Unknown (%d)\n"
 msgstr "Fout: Onbekend (%d)\n"
 
 #: src/escputil/escputil.c:1134
-#, fuzzy, c-format
+#, c-format
 msgid "Warning: %s Ink Low\n"
-msgstr "Waarschuwing: Zwarte inkt laag\n"
+msgstr "Waarschuwing: %s inkt staat laag\n"
 
 #: src/escputil/escputil.c:1137
-#, fuzzy, c-format
+#, c-format
 msgid "Warning: Channel %d Ink Low\n"
-msgstr "Waarschuwing: Zwarte inkt laag\n"
+msgstr "Waarschuwing: Inkt in kanaal %d staat laag\n"
 
 #: src/escputil/escputil.c:1143
 #, c-format
 msgid "Warning: %s Cleaning Disabled\n"
-msgstr ""
+msgstr "Waarschuwing: %s schoonmaken uitgezet\n"
 
 #: src/escputil/escputil.c:1146
 #, c-format
 msgid "Warning: Channel %d Cleaning \n"
-msgstr ""
+msgstr "Waarschuwing: Kanaal %d schoonmaken\n"
 
 #: src/escputil/escputil.c:1153
 #, c-format
 msgid "Warning: Maintenance cartridge near full\n"
-msgstr ""
+msgstr "Waarschuwing: Onderhoudscartridge bijna vol\n"
 
 #: src/escputil/escputil.c:1156
 #, c-format
 msgid "Warning: Maintenance request pending\n"
-msgstr ""
+msgstr "Waarschuwing: Onderhoudsverzoek in behandeling\n"
 
 #: src/escputil/escputil.c:1159
 #, c-format
@@ -4171,9 +4088,9 @@ msgid "Percent remaining"
 msgstr "Percentage nog aanwezig"
 
 #: src/escputil/escputil.c:1297
-#, fuzzy, c-format
+#, c-format
 msgid "Printer Name: %s\n"
-msgstr "Printernaam:"
+msgstr "Printernaam: %s\n"
 
 #: src/escputil/escputil.c:1354
 #, c-format
@@ -4196,8 +4113,7 @@ msgstr "Verkrijgen van %s vereist een 'raw' apparaat.\n"
 #: src/escputil/escputil.c:1498
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr ""
-"Het verkrijgen van uitgebreide inktinformatie vereist een 'raw' apparaat.\n"
+msgstr "Het verkrijgen van uitgebreide inktinformatie vereist een 'raw' apparaat.\n"
 
 #: src/escputil/escputil.c:1639 src/escputil/escputil.c:1663
 #: src/escputil/escputil.c:1683
@@ -4232,9 +4148,7 @@ msgstr "Bezig met het schoonmaken van de koppen..\n"
 #: src/escputil/escputil.c:1769
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr ""
-"Bezig met het controleren van de spuitmondjes, let op dat er papier in de "
-"printer zit.\n"
+msgstr "Bezig met het controleren van de spuitmondjes, let op dat er papier in de printer zit.\n"
 
 #: src/escputil/escputil.c:1773
 #, c-format
@@ -4274,30 +4188,24 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"Leest u alstublieft deze instructies nauwkeurig door, voordat u verder "
-"gaat.\n"
+"Leest u alstublieft deze instructies nauwkeurig door, voordat u verder gaat.\n"
 "\n"
 "U kunt met deze applicatie de koppen van uw Epson Stylus inkjet\n"
 "printer uitlijnen. Onjuist gebruik van deze applicatie kan leiden tot\n"
-"verlies in kwaliteit en het kan zelfs uw printer beschadigen. Deze "
-"applicatie\n"
+"verlies in kwaliteit en het kan zelfs uw printer beschadigen. Deze applicatie\n"
 "is niet gecontroleerd op fouten door Seiko Epson, en wordt geleverd zonder\n"
 "enige vorm van garantie. het gebruik is volledig op eigen risico.\n"
 "\n"
 "Het programma zal %d patronen afdrukken. Elk patroon lijkt erg op de ander.\n"
-"Het patroon bestaat uit een serie paren van verticale lijnen die elkaar "
-"overlappen.\n"
+"Het patroon bestaat uit een serie paren van verticale lijnen die elkaar overlappen.\n"
 "Onder elk paar met lijnen staat een nummer tussen %d en %d.\n"
 "\n"
-"Wanneer u de lijnen bekijkt, moet u zoeken naar het paar die het beste is "
-"uitgelijnd,\n"
+"Wanneer u de lijnen bekijkt, moet u zoeken naar het paar die het beste is uitgelijnd,\n"
 "met andere woorden, diegen die samen  de beste enkele lijn vormen.\n"
 "Het gebruik van een loep of vergrootglas wordt aangeraden voor de\n"
 "meest critische inspectie. Er wordt ook aangeraden om een goede kwaliteit\n"
-"papier te gebruiken, zodat de lijnen mooi strak zijn, en niet over het "
-"papier\n"
-"uitvloeien. Wanneer u het nummer heeft uitgekozen, plaats dan het papier "
-"weer\n"
+"papier te gebruiken, zodat de lijnen mooi strak zijn, en niet over het papier\n"
+"uitvloeien. Wanneer u het nummer heeft uitgekozen, plaats dan het papier weer\n"
 "terug erug in de printer voordat u het nummer intypt.\n"
 "\n"
 "Each pattern is similar, but later patterns use finer dots for more\n"
@@ -4342,8 +4250,7 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -4359,42 +4266,32 @@ msgstr ""
 " programma ligt bij u.\n"
 "\n"
 "Dit programma print een testpatroon dat bestaat uit een aantal paren van\n"
-"verticale lijnen die elkaar overlappen. Onder elk paar lijnen staat een "
-"nummer\n"
+"verticale lijnen die elkaar overlappen. Onder elk paar lijnen staat een nummer\n"
 "tussen de %d en %d.\n"
 "\n"
 "Als u deze paren bekijkt, zult u een paar lijnen vinden die het beste zijn\n"
-"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn "
-"vormen.\n"
-"Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het "
-"gebruik\n"
+"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn vormen.\n"
+"Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het gebruik\n"
 "van een loupe of vergrootglas is aanbevolen voor de meest kritische\n"
-"inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit "
-"papier\n"
-"te gebruiken zodat de lijnen goed gevormd zijn en niet door het papier "
-"drukken.\n"
+"inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit papier\n"
+"te gebruiken zodat de lijnen goed gevormd zijn en niet door het papier drukken.\n"
 "Nadat u het nummer hebt gekozen, dat het beste overeenkomt, plaats u het\n"
 "papier terug in de printer voordat u het nummer intikt.\n"
 "\n"
-"Nadat het het uitlijnen nog eens gedaan is, zal het nog een keer geprint "
-"worden\n"
+"Nadat het het uitlijnen nog eens gedaan is, zal het nog een keer geprint worden\n"
 "U zou moeten vinden dat het middelste paar (#%d van de %d) het beste is.\n"
 "U krijgt dan de mogelijkheid om het resultaat in de printer op te slaan(s),\n"
-"het proces te he(r)halen of te stoppen zonder op te slaan(q). Stoppen zal "
-"niet\n"
-"de vorige instellingen terugzetten, maar de printer aan en uit zetten zal "
-"dat\n"
+"het proces te he(r)halen of te stoppen zonder op te slaan(q). Stoppen zal niet\n"
+"de vorige instellingen terugzetten, maar de printer aan en uit zetten zal dat\n"
 "wel doen. Als u stopt, zult u het hele proces opnieuw moeten doorlopen\n"
-"om de resultaten op te slaan. Het is essentieel dat u de printer niet "
-"uitzet\n"
+"om de resultaten op te slaan. Het is essentieel dat u de printer niet uitzet\n"
 "tijdens deze procedure.\n"
 "\n"
 
 #: src/escputil/escputil.c:1852
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr ""
-"Onmogelijk om commando's naar de printer te sturen, bezig te stoppen.\n"
+msgstr "Onmogelijk om commando's naar de printer te sturen, bezig te stoppen.\n"
 
 #: src/escputil/escputil.c:1866 src/escputil/escputil.c:2035
 #, c-format
@@ -4428,11 +4325,8 @@ msgstr "> "
 
 #: src/escputil/escputil.c:1884
 #, c-format
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Graag bevestiging dat u wilt stoppen zonder te bewaren door opnieuw 'q' te "
-"typen:\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr "Graag bevestiging dat u wilt stoppen zonder te bewaren door opnieuw 'q' te typen:\n"
 
 #: src/escputil/escputil.c:1891
 #, c-format
@@ -4536,8 +4430,7 @@ msgstr "Druk op enter om door te gaan > "
 #: src/escputil/escputil.c:2025
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Kijk naar de afdruk, en kies het beste paar lijnen in elk patroon.\n"
@@ -4586,8 +4479,7 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Kijk alstublief na of de uitlijning klopt. Kijk, nadat het "
-"uitlijningspatroon\n"
+"Kijk alstublief na of de uitlijning klopt. Kijk, nadat het uitlijningspatroon\n"
 "weer opnieuw is afgedrukt, of het beste patroon voor elk\n"
 "lijnpatroon %d is. Als dat niet zo is dan zult u de procedure moeten\n"
 "herhalen om de beste kwaliteit te krijgen.\n"
@@ -4602,9 +4494,8 @@ msgid "Printing..."
 msgstr "Bezig met afdrukken..."
 
 #: src/xml/xmli18n-tmp.h:3 src/xml/xmli18n-tmp.h:258 src/xml/xmli18n-tmp.h:302
-#, fuzzy
 msgid "Bright White Paper"
-msgstr "Mat papier"
+msgstr "Helder wit papier"
 
 #: src/xml/xmli18n-tmp.h:5 src/xml/xmli18n-tmp.h:53 src/xml/xmli18n-tmp.h:91
 #: src/xml/xmli18n-tmp.h:148 src/xml/xmli18n-tmp.h:205
@@ -4662,25 +4553,21 @@ msgstr "Zwaar mat papier"
 
 #: src/xml/xmli18n-tmp.h:17 src/xml/xmli18n-tmp.h:274
 #: src/xml/xmli18n-tmp.h:318
-#, fuzzy
 msgid "Premium Presentation Paper Matte"
-msgstr "Premium Luster Photo Papier"
+msgstr "Mat premium presentatiepapier"
 
 #: src/xml/xmli18n-tmp.h:27
-#, fuzzy
 msgid "Premium Glossy Photo Paper 170 wt"
-msgstr "Premium glanzend fotopapier"
+msgstr "Premium glanzend fotopapier 170 wt"
 
 #: src/xml/xmli18n-tmp.h:29
-#, fuzzy
 msgid "Premium Glossy Photo Paper 250 wt"
-msgstr "Premium glanzend fotopapier"
+msgstr "Premium glanzend fotopapier 250 wt"
 
 #: src/xml/xmli18n-tmp.h:31 src/xml/xmli18n-tmp.h:284
 #: src/xml/xmli18n-tmp.h:328
-#, fuzzy
 msgid "Ultra Glossy Photo Paper"
-msgstr "Premium glanzend fotopapier"
+msgstr "Extra glanzend fotopapier"
 
 #: src/xml/xmli18n-tmp.h:33 src/xml/xmli18n-tmp.h:75 src/xml/xmli18n-tmp.h:124
 #: src/xml/xmli18n-tmp.h:181 src/xml/xmli18n-tmp.h:238
@@ -4701,25 +4588,21 @@ msgid "Premium Semigloss Photo Paper"
 msgstr "Premium halfglanzend fotopapier"
 
 #: src/xml/xmli18n-tmp.h:35
-#, fuzzy
 msgid "Premium Semigloss Photo Paper 170 wt"
-msgstr "Premium halfglanzend fotopapier"
+msgstr "Premium halfglanzend fotopapier 170 wt"
 
 #: src/xml/xmli18n-tmp.h:37
-#, fuzzy
 msgid "Premium Semigloss Photo Paper 250 wt"
-msgstr "Premium halfglanzend fotopapier"
+msgstr "Premium halfglanzend fotopapier 250 wt"
 
 #: src/xml/xmli18n-tmp.h:41
-#, fuzzy
 msgid "Premium Luster Photo Paper 250 wt"
-msgstr "Premium Luster Photo Papier"
+msgstr "Premium luster fotopapier 250 wt"
 
 #: src/xml/xmli18n-tmp.h:43 src/xml/xmli18n-tmp.h:290
 #: src/xml/xmli18n-tmp.h:334
-#, fuzzy
 msgid "Ultra Premium Photo Paper Luster"
-msgstr "Premium glanzend fotopapier"
+msgstr "Ultra Premium Photo Paper Luster"
 
 #: src/xml/xmli18n-tmp.h:47 src/xml/xmli18n-tmp.h:81 src/xml/xmli18n-tmp.h:136
 #: src/xml/xmli18n-tmp.h:193 src/xml/xmli18n-tmp.h:250
@@ -5769,19 +5652,16 @@ msgid "Canon i865"
 msgstr "Canon i865"
 
 #: src/xml/xmli18n-tmp.h:1841
-#, fuzzy
 msgid "Epson B-300"
-msgstr "Epson E 300"
+msgstr "Epson B-300"
 
 #: src/xml/xmli18n-tmp.h:1842
-#, fuzzy
 msgid "Epson B-500DN"
-msgstr "Epson E 500"
+msgstr "Epson B-500DN"
 
 #: src/xml/xmli18n-tmp.h:1843
-#, fuzzy
 msgid "Epson B-508DN"
-msgstr "Epson E 150"
+msgstr "Epson B-508DN"
 
 #: src/xml/xmli18n-tmp.h:1844
 msgid "Epson Stylus C20"
@@ -6988,14 +6868,12 @@ msgid "Epson PX A650"
 msgstr "Epson PX A650"
 
 #: src/xml/xmli18n-tmp.h:2145
-#, fuzzy
 msgid "Epson Offirio PX B300"
-msgstr "Epson PX G900"
+msgstr "Epson Offirio PX B300"
 
 #: src/xml/xmli18n-tmp.h:2146
-#, fuzzy
 msgid "Epson Offirio PX B500"
-msgstr "Epson PX V500"
+msgstr "Epson Offirio PX B500"
 
 #: src/xml/xmli18n-tmp.h:2147
 msgid "Epson PX G900"
@@ -7090,9 +6968,8 @@ msgid "Brother DCP-1200"
 msgstr "Brother DCP-1200"
 
 #: src/xml/xmli18n-tmp.h:2170
-#, fuzzy
 msgid "Brother DCP-8045D"
-msgstr "Brother DCP-1200"
+msgstr "Brother DCP-8045D"
 
 #: src/xml/xmli18n-tmp.h:2171
 msgid "Brother HL-1040"
@@ -7135,100 +7012,84 @@ msgid "Brother HL-1270N"
 msgstr "Brother HL-1270N"
 
 #: src/xml/xmli18n-tmp.h:2181
-#, fuzzy
 msgid "Brother HL-1430"
-msgstr "Brother HL-1040"
+msgstr "Brother HL-1430"
 
 #: src/xml/xmli18n-tmp.h:2182
 msgid "Brother HL-1440"
 msgstr "Brother HL-1440"
 
 #: src/xml/xmli18n-tmp.h:2183
-#, fuzzy
 msgid "Brother HL-1450"
-msgstr "Brother HL-1040"
+msgstr "Brother HL-1450"
 
 #: src/xml/xmli18n-tmp.h:2184
-#, fuzzy
 msgid "Brother HL-1470N"
-msgstr "Brother HL-1270N"
+msgstr "Brother HL-1470N"
 
 #: src/xml/xmli18n-tmp.h:2185
-#, fuzzy
 msgid "Brother HL-1650"
-msgstr "Brother HL-1050"
+msgstr "Brother HL-1650"
 
 #: src/xml/xmli18n-tmp.h:2186
 msgid "Brother HL-1660e"
 msgstr "Brother HL-1660e"
 
 #: src/xml/xmli18n-tmp.h:2187
-#, fuzzy
 msgid "Brother HL-1670N"
-msgstr "Brother HL-1270N"
+msgstr "Brother HL-1670N"
 
 #: src/xml/xmli18n-tmp.h:2188
-#, fuzzy
 msgid "Brother HL-1850"
-msgstr "Brother HL-1050"
+msgstr "Brother HL-1850"
 
 #: src/xml/xmli18n-tmp.h:2189
-#, fuzzy
 msgid "Brother HL-1870N"
-msgstr "Brother HL-1270N"
+msgstr "Brother HL-1870N"
 
 #: src/xml/xmli18n-tmp.h:2190
 msgid "Brother HL-2060"
 msgstr "Brother HL-2060"
 
 #: src/xml/xmli18n-tmp.h:2191
-#, fuzzy
 msgid "Brother HL-2460"
-msgstr "Brother HL-1240"
+msgstr "Brother HL-2460"
 
 #: src/xml/xmli18n-tmp.h:2192
-#, fuzzy
 msgid "Brother HL-2460N"
-msgstr "Brother HL-1240"
+msgstr "Brother HL-2460N"
 
 #: src/xml/xmli18n-tmp.h:2193
 msgid "Brother HL-4Ve"
 msgstr "Brother HL-4Ve"
 
 #: src/xml/xmli18n-tmp.h:2194
-#, fuzzy
 msgid "Brother HL-5030"
-msgstr "Brother HL-630"
+msgstr "Brother HL-5030"
 
 #: src/xml/xmli18n-tmp.h:2195
-#, fuzzy
 msgid "Brother HL-5040"
-msgstr "Brother HL-1040"
+msgstr "Brother HL-5040"
 
 #: src/xml/xmli18n-tmp.h:2196
-#, fuzzy
 msgid "Brother HL-5050"
-msgstr "Brother HL-1050"
+msgstr "Brother HL-5050"
 
 #: src/xml/xmli18n-tmp.h:2197
-#, fuzzy
 msgid "Brother HL-5070N"
-msgstr "Brother HL-1070"
+msgstr "Brother HL-5070N"
 
 #: src/xml/xmli18n-tmp.h:2198
-#, fuzzy
 msgid "Brother HL-5140"
-msgstr "Brother HL-1040"
+msgstr "Brother HL-5140"
 
 #: src/xml/xmli18n-tmp.h:2199
-#, fuzzy
 msgid "Brother HL-5150D"
-msgstr "Brother HL-1050"
+msgstr "Brother HL-5150D"
 
 #: src/xml/xmli18n-tmp.h:2200
-#, fuzzy
 msgid "Brother HL-5170DN"
-msgstr "Brother HL-1270N"
+msgstr "Brother HL-5170DN"
 
 #: src/xml/xmli18n-tmp.h:2201
 msgid "Brother HL-630"
@@ -7239,14 +7100,12 @@ msgid "Brother HL-660"
 msgstr "Brother HL-660"
 
 #: src/xml/xmli18n-tmp.h:2203
-#, fuzzy
 msgid "Brother HL-7050"
-msgstr "Brother HL-1050"
+msgstr "Brother HL-7050"
 
 #: src/xml/xmli18n-tmp.h:2204
-#, fuzzy
 msgid "Brother HL-7050N"
-msgstr "Brother HL-1050"
+msgstr "Brother HL-7050N"
 
 #: src/xml/xmli18n-tmp.h:2205
 msgid "Brother HL-760"
@@ -7389,49 +7248,40 @@ msgid "Epson EPL-7100"
 msgstr "Epson EPL-7100"
 
 #: src/xml/xmli18n-tmp.h:2240
-#, fuzzy
 msgid "Epson EPL-N2050"
-msgstr "Epson EPL-5200"
+msgstr "Epson EPL-N2050"
 
 #: src/xml/xmli18n-tmp.h:2241
-#, fuzzy
 msgid "Epson EPL-N2050+"
-msgstr "Epson EPL-5200+"
+msgstr "Epson EPL-N2050+"
 
 #: src/xml/xmli18n-tmp.h:2242
-#, fuzzy
 msgid "Epson EPL-N2050PS"
-msgstr "Epson EPL-5700PS"
+msgstr "Epson EPL-N2050PS"
 
 #: src/xml/xmli18n-tmp.h:2243
-#, fuzzy
 msgid "Epson EPL-N2050PS+"
-msgstr "Epson EPL-5200+"
+msgstr "Epson EPL-N2050PS+"
 
 #: src/xml/xmli18n-tmp.h:2244
-#, fuzzy
 msgid "Epson EPL-N2120"
-msgstr "Epson EPL-5200"
+msgstr "Epson EPL-N2120"
 
 #: src/xml/xmli18n-tmp.h:2245
-#, fuzzy
 msgid "Epson EPL-N2500"
-msgstr "Epson EPL-5200"
+msgstr "Epson EPL-N2500"
 
 #: src/xml/xmli18n-tmp.h:2246
-#, fuzzy
 msgid "Epson EPL-N2500PS"
-msgstr "Epson EPL-5700PS"
+msgstr "Epson EPL-N2500PS"
 
 #: src/xml/xmli18n-tmp.h:2247
-#, fuzzy
 msgid "Epson EPL-N2750"
-msgstr "Epson EPL-5200"
+msgstr "Epson EPL-N2750"
 
 #: src/xml/xmli18n-tmp.h:2248
-#, fuzzy
 msgid "Epson EPL-N2750PS"
-msgstr "Epson EPL-5700PS"
+msgstr "Epson EPL-N2750PS"
 
 #: src/xml/xmli18n-tmp.h:2249
 msgid "Fujitsu PrintPartner 10V"
@@ -7454,330 +7304,324 @@ msgid "Generic PCL 4 Printer"
 msgstr "Generic PCL 4 Printer"
 
 #: src/xml/xmli18n-tmp.h:2254
-#, fuzzy
 msgid "Generic PCL 4 LF Printer"
-msgstr "Generic PCL 4 Printer"
+msgstr "Generic PCL 4 LF Printer"
 
 #: src/xml/xmli18n-tmp.h:2255
 msgid "Generic PCL 5 Printer"
 msgstr "Generic PCL 5 Printer"
 
 #: src/xml/xmli18n-tmp.h:2256
-#, fuzzy
 msgid "Generic PCL 5 LF Printer"
-msgstr "Generic PCL 5 Printer"
+msgstr "Generic PCL 5 LF Printer"
 
 #: src/xml/xmli18n-tmp.h:2257
 msgid "Generic PCL 5c Printer"
 msgstr "Generic PCL 5c Printer"
 
 #: src/xml/xmli18n-tmp.h:2258
-#, fuzzy
 msgid "Generic PCL 5c LF Printer"
-msgstr "Generic PCL 5c Printer"
+msgstr "Generic PCL 5c LF Printer"
 
 #: src/xml/xmli18n-tmp.h:2259
 msgid "Generic PCL 5e Printer"
 msgstr "Generic PCL 5e Printer"
 
 #: src/xml/xmli18n-tmp.h:2260
-#, fuzzy
 msgid "Generic PCL 5e LF Printer"
-msgstr "Generic PCL 5e Printer"
+msgstr "Generic PCL 5e LF Printer"
 
 #: src/xml/xmli18n-tmp.h:2261
 msgid "Generic PCL 6/PCL XL Printer"
 msgstr "Generic PCL 6/PCL XL Printer"
 
 #: src/xml/xmli18n-tmp.h:2262
-#, fuzzy
 msgid "Generic PCL 6/PCL XL LF Printer"
-msgstr "Generic PCL 6/PCL XL Printer"
+msgstr "Generic PCL 6/PCL XL LF Printer"
 
 #: src/xml/xmli18n-tmp.h:2263
 msgid "Gestetner 10512"
-msgstr ""
+msgstr "Gestetner 10512"
 
 #: src/xml/xmli18n-tmp.h:2264
 msgid "Gestetner 2212"
-msgstr ""
+msgstr "Gestetner 2212"
 
 #: src/xml/xmli18n-tmp.h:2265
 msgid "Gestetner 2712"
-msgstr ""
+msgstr "Gestetner 2712"
 
 #: src/xml/xmli18n-tmp.h:2266
 msgid "Gestetner 3212"
-msgstr ""
+msgstr "Gestetner 3212"
 
 #: src/xml/xmli18n-tmp.h:2267
 msgid "Gestetner 3502"
-msgstr ""
+msgstr "Gestetner 3502"
 
 #: src/xml/xmli18n-tmp.h:2268
 msgid "Gestetner 3532"
-msgstr ""
+msgstr "Gestetner 3532"
 
 #: src/xml/xmli18n-tmp.h:2269
 msgid "Gestetner 4235g"
-msgstr ""
+msgstr "Gestetner 4235g"
 
 #: src/xml/xmli18n-tmp.h:2270
 msgid "Gestetner 4502"
-msgstr ""
+msgstr "Gestetner 4502"
 
 #: src/xml/xmli18n-tmp.h:2271
 msgid "Gestetner 4532"
-msgstr ""
+msgstr "Gestetner 4532"
 
 #: src/xml/xmli18n-tmp.h:2272
 msgid "Gestetner 4245g"
-msgstr ""
+msgstr "Gestetner 4245g"
 
 #: src/xml/xmli18n-tmp.h:2273
 msgid "Gestetner 6002"
-msgstr ""
+msgstr "Gestetner 6002"
 
 #: src/xml/xmli18n-tmp.h:2274
 msgid "Gestetner 7502"
-msgstr ""
+msgstr "Gestetner 7502"
 
 #: src/xml/xmli18n-tmp.h:2275
 msgid "Gestetner 9002"
-msgstr ""
+msgstr "Gestetner 9002"
 
 #: src/xml/xmli18n-tmp.h:2276
 msgid "Gestetner DSm415"
-msgstr ""
+msgstr "Gestetner DSm415"
 
 #: src/xml/xmli18n-tmp.h:2277
 msgid "Gestetner DSm615"
-msgstr ""
+msgstr "Gestetner DSm615"
 
 #: src/xml/xmli18n-tmp.h:2278
 msgid "Gestetner DSm616"
-msgstr ""
+msgstr "Gestetner DSm616"
 
 #: src/xml/xmli18n-tmp.h:2279
 msgid "Gestetner DSm618"
-msgstr ""
+msgstr "Gestetner DSm618"
 
 #: src/xml/xmli18n-tmp.h:2280
 msgid "Gestetner DSm618d"
-msgstr ""
+msgstr "Gestetner DSm618d"
 
 #: src/xml/xmli18n-tmp.h:2281
 msgid "Gestetner DSm620"
-msgstr ""
+msgstr "Gestetner DSm620"
 
 #: src/xml/xmli18n-tmp.h:2282
 msgid "Gestetner DSm620d"
-msgstr ""
+msgstr "Gestetner DSm620d"
 
 #: src/xml/xmli18n-tmp.h:2283
 msgid "Gestetner DSm622"
-msgstr ""
+msgstr "Gestetner DSm622"
 
 #: src/xml/xmli18n-tmp.h:2284
 msgid "Gestetner DSm627"
-msgstr ""
+msgstr "Gestetner DSm627"
 
 #: src/xml/xmli18n-tmp.h:2285
 msgid "Gestetner DSm635"
-msgstr ""
+msgstr "Gestetner DSm635"
 
 #: src/xml/xmli18n-tmp.h:2286
 msgid "Gestetner DSm635G"
-msgstr ""
+msgstr "Gestetner DSm635G"
 
 #: src/xml/xmli18n-tmp.h:2287
 msgid "Gestetner DSm645"
-msgstr ""
+msgstr "Gestetner DSm645"
 
 #: src/xml/xmli18n-tmp.h:2288
 msgid "Gestetner DS645G"
-msgstr ""
+msgstr "Gestetner DS645G"
 
 #: src/xml/xmli18n-tmp.h:2289
 msgid "Gestetner DSm651"
-msgstr ""
+msgstr "Gestetner DSm651"
 
 #: src/xml/xmli18n-tmp.h:2290
 msgid "Gestetner DSm660"
-msgstr ""
+msgstr "Gestetner DSm660"
 
 #: src/xml/xmli18n-tmp.h:2291
 msgid "Gestetner DSm675"
-msgstr ""
+msgstr "Gestetner DSm675"
 
 #: src/xml/xmli18n-tmp.h:2292
 msgid "Gestetner DSm725"
-msgstr ""
+msgstr "Gestetner DSm725"
 
 #: src/xml/xmli18n-tmp.h:2293
 msgid "Gestetner DSm730"
-msgstr ""
+msgstr "Gestetner DSm730"
 
 #: src/xml/xmli18n-tmp.h:2294
 msgid "Gestetner DSm735"
-msgstr ""
+msgstr "Gestetner DSm735"
 
 #: src/xml/xmli18n-tmp.h:2295
 msgid "Gestetner DSm735G"
-msgstr ""
+msgstr "Gestetner DSm735G"
 
 #: src/xml/xmli18n-tmp.h:2296
 msgid "Gestetner DSm745"
-msgstr ""
+msgstr "Gestetner DSm745"
 
 #: src/xml/xmli18n-tmp.h:2297
 msgid "Gestetner DSm745G"
-msgstr ""
+msgstr "Gestetner DSm745G"
 
 #: src/xml/xmli18n-tmp.h:2298
 msgid "Gestetner MP1100"
-msgstr ""
+msgstr "Gestetner MP1100"
 
 #: src/xml/xmli18n-tmp.h:2299
 msgid "Gestetner DSm7110"
-msgstr ""
+msgstr "Gestetner DSm7110"
 
 #: src/xml/xmli18n-tmp.h:2300
 msgid "Gestetner MP1350"
-msgstr ""
+msgstr "Gestetner MP1350"
 
 #: src/xml/xmli18n-tmp.h:2301
 msgid "Gestetner DSm7135"
-msgstr ""
+msgstr "Gestetner DSm7135"
 
 #: src/xml/xmli18n-tmp.h:2302
 msgid "Gestetner MP1600"
-msgstr ""
+msgstr "Gestetner MP1600"
 
 #: src/xml/xmli18n-tmp.h:2303
 msgid "Gestetner DSm716"
-msgstr ""
+msgstr "Gestetner DSm716"
 
 #: src/xml/xmli18n-tmp.h:2304
 msgid "Gestetner MP2000"
-msgstr ""
+msgstr "Gestetner MP2000"
 
 #: src/xml/xmli18n-tmp.h:2305
 msgid "Gestetner DSm721d"
-msgstr ""
+msgstr "Gestetner DSm721d"
 
 #: src/xml/xmli18n-tmp.h:2306
 msgid "Gestetner MP2500"
-msgstr ""
+msgstr "Gestetner MP2500"
 
 #: src/xml/xmli18n-tmp.h:2307
 msgid "Gestetner DSm625"
-msgstr ""
+msgstr "Gestetner DSm625"
 
 #: src/xml/xmli18n-tmp.h:2308
 msgid "Gestetner MP3500"
-msgstr ""
+msgstr "Gestetner MP3500"
 
 #: src/xml/xmli18n-tmp.h:2309
 msgid "Gestetner DSm735e"
-msgstr ""
+msgstr "Gestetner DSm735e"
 
 #: src/xml/xmli18n-tmp.h:2310
 msgid "Gestetner MP4500"
-msgstr ""
+msgstr "Gestetner MP4500"
 
 #: src/xml/xmli18n-tmp.h:2311
 msgid "Gestetner DSm745e"
-msgstr ""
+msgstr "Gestetner DSm745e"
 
 #: src/xml/xmli18n-tmp.h:2312
 msgid "Gestetner MP5500"
-msgstr ""
+msgstr "Gestetner MP5500"
 
 #: src/xml/xmli18n-tmp.h:2313
 msgid "Gestetner DSm755"
-msgstr ""
+msgstr "Gestetner DSm755"
 
 #: src/xml/xmli18n-tmp.h:2314
 msgid "Gestetner MP6500"
-msgstr ""
+msgstr "Gestetner MP6500"
 
 #: src/xml/xmli18n-tmp.h:2315
 msgid "Gestetner DSm765"
-msgstr ""
+msgstr "Gestetner DSm765"
 
 #: src/xml/xmli18n-tmp.h:2316
 msgid "Gestetner MP7500"
-msgstr ""
+msgstr "Gestetner MP7500"
 
 #: src/xml/xmli18n-tmp.h:2317
 msgid "Gestetner DSm775"
-msgstr ""
+msgstr "Gestetner DSm775"
 
 #: src/xml/xmli18n-tmp.h:2318
 msgid "Gestetner MP9000"
-msgstr ""
+msgstr "Gestetner MP9000"
 
 #: src/xml/xmli18n-tmp.h:2319
 msgid "Gestetner DSm790"
-msgstr ""
+msgstr "Gestetner DSm790"
 
 #: src/xml/xmli18n-tmp.h:2320
 msgid "Gestetner MP 161"
-msgstr ""
+msgstr "Gestetner MP 161"
 
 #: src/xml/xmli18n-tmp.h:2321
 msgid "Gestetner DSm416"
-msgstr ""
+msgstr "Gestetner DSm416"
 
 #: src/xml/xmli18n-tmp.h:2322
 msgid "Gestetner MP 2510"
-msgstr ""
+msgstr "Gestetner MP 2510"
 
 #: src/xml/xmli18n-tmp.h:2323
 msgid "Gestetner DSm725e"
-msgstr ""
+msgstr "Gestetner DSm725e"
 
 #: src/xml/xmli18n-tmp.h:2324
 msgid "Gestetner MP 2550"
-msgstr ""
+msgstr "Gestetner MP 2550"
 
 #: src/xml/xmli18n-tmp.h:2325
 msgid "Gestetner MP 2550B"
-msgstr ""
+msgstr "Gestetner MP 2550B"
 
 #: src/xml/xmli18n-tmp.h:2326
 msgid "Gestetner MP 3010"
-msgstr ""
+msgstr "Gestetner MP 3010"
 
 #: src/xml/xmli18n-tmp.h:2327
 msgid "Gestetner DSm730e"
-msgstr ""
+msgstr "Gestetner DSm730e"
 
 #: src/xml/xmli18n-tmp.h:2328
 msgid "Gestetner MP 3350"
-msgstr ""
+msgstr "Gestetner MP 3350"
 
 #: src/xml/xmli18n-tmp.h:2329
 msgid "Gestetner MP 3350B"
-msgstr ""
+msgstr "Gestetner MP 3350B"
 
 #: src/xml/xmli18n-tmp.h:2330
 msgid "Gestetner MP 4000"
-msgstr ""
+msgstr "Gestetner MP 4000"
 
 #: src/xml/xmli18n-tmp.h:2331
 msgid "Gestetner MP 4000B"
-msgstr ""
+msgstr "Gestetner MP 4000B"
 
 #: src/xml/xmli18n-tmp.h:2332
-#, fuzzy
 msgid "Gestetner MP 5000"
-msgstr "Epson MC 5000"
+msgstr "Gestetner MP 5000"
 
 #: src/xml/xmli18n-tmp.h:2333
 msgid "Gestetner MP 5000B"
-msgstr ""
+msgstr "Gestetner MP 5000B"
 
 #: src/xml/xmli18n-tmp.h:2334
 msgid "HP Business Inkjet 2200"
@@ -8376,9 +8220,8 @@ msgid "HP LaserJet 1150"
 msgstr "HP LaserJet 1150"
 
 #: src/xml/xmli18n-tmp.h:2483
-#, fuzzy
 msgid "HP LaserJet 1160"
-msgstr "HP LaserJet 1010"
+msgstr "HP LaserJet 1160"
 
 #: src/xml/xmli18n-tmp.h:2484
 msgid "HP LaserJet 1200"
@@ -8393,9 +8236,8 @@ msgid "HP LaserJet 1300"
 msgstr "HP LaserJet 1300"
 
 #: src/xml/xmli18n-tmp.h:2487
-#, fuzzy
 msgid "HP LaserJet 1320"
-msgstr "HP LaserJet 1200"
+msgstr "HP LaserJet 1320"
 
 #: src/xml/xmli18n-tmp.h:2488
 msgid "HP LaserJet 2100"
@@ -8414,49 +8256,40 @@ msgid "HP LaserJet 2300"
 msgstr "HP LaserJet 2300"
 
 #: src/xml/xmli18n-tmp.h:2492
-#, fuzzy
 msgid "HP LaserJet 2410"
-msgstr "HP LaserJet 2100"
+msgstr "HP LaserJet 2410"
 
 #: src/xml/xmli18n-tmp.h:2493
-#, fuzzy
 msgid "HP LaserJet 2420"
-msgstr "HP LaserJet 1220"
+msgstr "HP LaserJet 2420"
 
 #: src/xml/xmli18n-tmp.h:2494
-#, fuzzy
 msgid "HP LaserJet 2430"
-msgstr "HP LaserJet 2300"
+msgstr "HP LaserJet 2430"
 
 #: src/xml/xmli18n-tmp.h:2495
-#, fuzzy
 msgid "HP LaserJet 3015"
-msgstr "HP LaserJet 1015"
+msgstr "HP LaserJet 3015"
 
 #: src/xml/xmli18n-tmp.h:2496
-#, fuzzy
 msgid "HP LaserJet 3020"
-msgstr "HP LaserJet 1300"
+msgstr "HP LaserJet 3020"
 
 #: src/xml/xmli18n-tmp.h:2497
-#, fuzzy
 msgid "HP LaserJet 3030"
-msgstr "HP LaserJet 1300"
+msgstr "HP LaserJet 3030"
 
 #: src/xml/xmli18n-tmp.h:2498
-#, fuzzy
 msgid "HP LaserJet 3050"
-msgstr "HP LaserJet 1300"
+msgstr "HP LaserJet 3050"
 
 #: src/xml/xmli18n-tmp.h:2499
-#, fuzzy
 msgid "HP LaserJet 3052"
-msgstr "HP LaserJet 2"
+msgstr "HP LaserJet 3052"
 
 #: src/xml/xmli18n-tmp.h:2500
-#, fuzzy
 msgid "HP LaserJet 3055"
-msgstr "HP LaserJet 3"
+msgstr "HP LaserJet 3055"
 
 #: src/xml/xmli18n-tmp.h:2501
 msgid "HP LaserJet 3200"
@@ -8491,19 +8324,16 @@ msgid "HP LaserJet 3330 MFP"
 msgstr "HP LaserJet 3330 MFP"
 
 #: src/xml/xmli18n-tmp.h:2509
-#, fuzzy
 msgid "HP LaserJet 3380"
-msgstr "HP LaserJet 3"
+msgstr "HP LaserJet 3380"
 
 #: src/xml/xmli18n-tmp.h:2510
-#, fuzzy
 msgid "HP LaserJet 3390"
-msgstr "HP LaserJet 3"
+msgstr "HP LaserJet 3390"
 
 #: src/xml/xmli18n-tmp.h:2511
-#, fuzzy
 msgid "HP LaserJet 3392"
-msgstr "HP LaserJet 2"
+msgstr "HP LaserJet 3392"
 
 #: src/xml/xmli18n-tmp.h:2512
 msgid "HP LaserJet 4000"
@@ -8522,28 +8352,24 @@ msgid "HP LaserJet 4200"
 msgstr "HP LaserJet 4200"
 
 #: src/xml/xmli18n-tmp.h:2516
-#, fuzzy
 msgid "HP LaserJet 4240"
-msgstr "HP LaserJet 4200"
+msgstr "HP LaserJet 4240"
 
 #: src/xml/xmli18n-tmp.h:2517
-#, fuzzy
 msgid "HP LaserJet 4250"
-msgstr "HP LaserJet 4050"
+msgstr "HP LaserJet 4250"
 
 #: src/xml/xmli18n-tmp.h:2518
 msgid "HP LaserJet 4300"
 msgstr "HP LaserJet 4300"
 
 #: src/xml/xmli18n-tmp.h:2519
-#, fuzzy
 msgid "HP LaserJet 4345 mfp"
-msgstr "HP LaserJet 3"
+msgstr "HP LaserJet 4345 mfp"
 
 #: src/xml/xmli18n-tmp.h:2520
-#, fuzzy
 msgid "HP LaserJet 4350"
-msgstr "HP LaserJet 4050"
+msgstr "HP LaserJet 4350"
 
 #: src/xml/xmli18n-tmp.h:2521
 msgid "HP LaserJet 5000"
@@ -8554,14 +8380,12 @@ msgid "HP LaserJet 5100"
 msgstr "HP LaserJet 5100"
 
 #: src/xml/xmli18n-tmp.h:2523
-#, fuzzy
 msgid "HP LaserJet 5200"
-msgstr "HP LaserJet 1200"
+msgstr "HP LaserJet 5200"
 
 #: src/xml/xmli18n-tmp.h:2524
-#, fuzzy
 msgid "HP LaserJet 5200L"
-msgstr "HP LaserJet 1200"
+msgstr "HP LaserJet 5200L"
 
 #: src/xml/xmli18n-tmp.h:2525
 msgid "HP LaserJet 8000"
@@ -8580,69 +8404,56 @@ msgid "HP LaserJet 9000"
 msgstr "HP LaserJet 9000"
 
 #: src/xml/xmli18n-tmp.h:2529
-#, fuzzy
 msgid "HP LaserJet 9040"
-msgstr "HP LaserJet 9000"
+msgstr "HP LaserJet 9040"
 
 #: src/xml/xmli18n-tmp.h:2530
-#, fuzzy
 msgid "HP LaserJet 9040 MFP"
-msgstr "HP LaserJet 3300 MFP"
+msgstr "HP LaserJet 9040 MFP"
 
 #: src/xml/xmli18n-tmp.h:2531
-#, fuzzy
 msgid "HP LaserJet 9050"
-msgstr "HP LaserJet 4050"
+msgstr "HP LaserJet 9050"
 
 #: src/xml/xmli18n-tmp.h:2532
-#, fuzzy
 msgid "HP LaserJet 9050 MFP"
-msgstr "HP LaserJet 3300 MFP"
+msgstr "HP LaserJet 9050 MFP"
 
 #: src/xml/xmli18n-tmp.h:2533
-#, fuzzy
 msgid "HP LaserJet M3027 MFP"
-msgstr "HP LaserJet 3300 MFP"
+msgstr "HP LaserJet M3027 MFP"
 
 #: src/xml/xmli18n-tmp.h:2534
-#, fuzzy
 msgid "HP LaserJet M3035 MFP"
-msgstr "HP LaserJet 3300 MFP"
+msgstr "HP LaserJet M3035 MFP"
 
 #: src/xml/xmli18n-tmp.h:2535
-#, fuzzy
 msgid "HP LaserJet M4345 MFP"
-msgstr "HP LaserJet 5MP"
+msgstr "HP LaserJet M4345 MFP"
 
 #: src/xml/xmli18n-tmp.h:2536
-#, fuzzy
 msgid "HP LaserJet M5025 MFP"
-msgstr "HP LaserJet 5MP"
+msgstr "HP LaserJet M5025 MFP"
 
 #: src/xml/xmli18n-tmp.h:2537
-#, fuzzy
 msgid "HP LaserJet M5035 MFP"
-msgstr "HP LaserJet 5MP"
+msgstr "HP LaserJet M5035 MFP"
 
 #: src/xml/xmli18n-tmp.h:2538
-#, fuzzy
 msgid "HP LaserJet P2010"
-msgstr "HP LaserJet 1010"
+msgstr "HP LaserJet P2010"
 
 #: src/xml/xmli18n-tmp.h:2539
-#, fuzzy
 msgid "HP LaserJet P2015"
-msgstr "HP LaserJet 1015"
+msgstr "HP LaserJet P2015"
 
 #: src/xml/xmli18n-tmp.h:2540
-#, fuzzy
 msgid "HP LaserJet P3004"
-msgstr "HP LaserJet 1300"
+msgstr "HP LaserJet P3004"
 
 #: src/xml/xmli18n-tmp.h:2541
-#, fuzzy
 msgid "HP LaserJet P3005"
-msgstr "HP LaserJet 1300"
+msgstr "HP LaserJet P3005"
 
 #: src/xml/xmli18n-tmp.h:2542
 msgid "HP Mopier 240"
@@ -8965,14 +8776,12 @@ msgid "IBM Page Printer 3112"
 msgstr "IBM Page Printer 3112"
 
 #: src/xml/xmli18n-tmp.h:2622
-#, fuzzy
 msgid "Infotec 4353 MF"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec 4353 MF"
 
 #: src/xml/xmli18n-tmp.h:2623
-#, fuzzy
 msgid "Infotec 4452 MF"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec 4452 MF"
 
 #: src/xml/xmli18n-tmp.h:2624
 msgid "Infotec 4651 MF"
@@ -8980,243 +8789,203 @@ msgstr "Infotec 4651 MF"
 
 #: src/xml/xmli18n-tmp.h:2625
 msgid "Infotec IS2022"
-msgstr ""
+msgstr "Infotec IS2022"
 
 #: src/xml/xmli18n-tmp.h:2626
 msgid "Infotec IS2027"
-msgstr ""
+msgstr "Infotec IS2027"
 
 #: src/xml/xmli18n-tmp.h:2627
 msgid "Infotec IS2032"
-msgstr ""
+msgstr "Infotec IS2032"
 
 #: src/xml/xmli18n-tmp.h:2628
-#, fuzzy
 msgid "Infotec IS2035"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS2035"
 
 #: src/xml/xmli18n-tmp.h:2629
-#, fuzzy
 msgid "Infotec IS2045"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS2045"
 
 #: src/xml/xmli18n-tmp.h:2630
 msgid "Infotec IS2090"
-msgstr ""
+msgstr "Infotec IS2090"
 
 #: src/xml/xmli18n-tmp.h:2631
-#, fuzzy
 msgid "Infotec IS2105"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS2105"
 
 #: src/xml/xmli18n-tmp.h:2632
-#, fuzzy
 msgid "Infotec IS 2015"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2015"
 
 #: src/xml/xmli18n-tmp.h:2633
-#, fuzzy
 msgid "Infotec IS 2018"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2018"
 
 #: src/xml/xmli18n-tmp.h:2634
 msgid "Infotec IS 2018D"
-msgstr ""
+msgstr "Infotec IS 2018D"
 
 #: src/xml/xmli18n-tmp.h:2635
-#, fuzzy
 msgid "Infotec IS 2060"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2060"
 
 #: src/xml/xmli18n-tmp.h:2636
-#, fuzzy
 msgid "Infotec IS 2075"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2075"
 
 #: src/xml/xmli18n-tmp.h:2637
-#, fuzzy
 msgid "Infotec IS 2122"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2122"
 
 #: src/xml/xmli18n-tmp.h:2638
-#, fuzzy
 msgid "Infotec IS 2127"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2127"
 
 #: src/xml/xmli18n-tmp.h:2639
-#, fuzzy
 msgid "Infotec IS 2132"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2132"
 
 #: src/xml/xmli18n-tmp.h:2640
-#, fuzzy
 msgid "Infotec IS 2135"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2135"
 
 #: src/xml/xmli18n-tmp.h:2641
-#, fuzzy
 msgid "Infotec IS 2145"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2145"
 
 #: src/xml/xmli18n-tmp.h:2642
-#, fuzzy
 msgid "Infotec IS 2151"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2151"
 
 #: src/xml/xmli18n-tmp.h:2643
-#, fuzzy
 msgid "Infotec IS 2160"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2160"
 
 #: src/xml/xmli18n-tmp.h:2644
-#, fuzzy
 msgid "Infotec IS 2175"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2175"
 
 #: src/xml/xmli18n-tmp.h:2645
-#, fuzzy
 msgid "Infotec IS 2215"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2215"
 
 #: src/xml/xmli18n-tmp.h:2646
-#, fuzzy
 msgid "Infotec IS 2216"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2216"
 
 #: src/xml/xmli18n-tmp.h:2647
-#, fuzzy
 msgid "Infotec IS 2220"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2220"
 
 #: src/xml/xmli18n-tmp.h:2648
 msgid "Infotec IS 2220D"
-msgstr ""
+msgstr "Infotec IS 2220D"
 
 #: src/xml/xmli18n-tmp.h:2649
-#, fuzzy
 msgid "Infotec IS 2225"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2225"
 
 #: src/xml/xmli18n-tmp.h:2650
-#, fuzzy
 msgid "Infotec IS 2230"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2230"
 
 #: src/xml/xmli18n-tmp.h:2651
-#, fuzzy
 msgid "Infotec IS 2235"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2235"
 
 #: src/xml/xmli18n-tmp.h:2652
-#, fuzzy
 msgid "Infotec IS 2245"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2245"
 
 #: src/xml/xmli18n-tmp.h:2653
-#, fuzzy
 msgid "Infotec IS 2255"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2255"
 
 #: src/xml/xmli18n-tmp.h:2654
-#, fuzzy
 msgid "Infotec IS 2265"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2265"
 
 #: src/xml/xmli18n-tmp.h:2655
-#, fuzzy
 msgid "Infotec IS 2275"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2275"
 
 #: src/xml/xmli18n-tmp.h:2656
-#, fuzzy
 msgid "Infotec IS 2316"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2316"
 
 #: src/xml/xmli18n-tmp.h:2657
-#, fuzzy
 msgid "Infotec IS 2320"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2320"
 
 #: src/xml/xmli18n-tmp.h:2658
-#, fuzzy
 msgid "Infotec IS 2325"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2325"
 
 #: src/xml/xmli18n-tmp.h:2659
-#, fuzzy
 msgid "Infotec IS 2416"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2416"
 
 #: src/xml/xmli18n-tmp.h:2660
-#, fuzzy
 msgid "Infotec IS 2425"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2425"
 
 #: src/xml/xmli18n-tmp.h:2661
-#, fuzzy
 msgid "Infotec IS 2430"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2430"
 
 #: src/xml/xmli18n-tmp.h:2662
-#, fuzzy
 msgid "Infotec IS 2435"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2435"
 
 #: src/xml/xmli18n-tmp.h:2663
-#, fuzzy
 msgid "Infotec IS 2445"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 2445"
 
 #: src/xml/xmli18n-tmp.h:2664
-#, fuzzy
 msgid "Infotec IS 3090"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 3090"
 
 #: src/xml/xmli18n-tmp.h:2665
-#, fuzzy
 msgid "Infotec IS 3110"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 3110"
 
 #: src/xml/xmli18n-tmp.h:2666
-#, fuzzy
 msgid "Infotec IS 3135"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec IS 3135"
 
 #: src/xml/xmli18n-tmp.h:2667
-#, fuzzy
 msgid "Infotec MP 2550"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec MP 2550"
 
 #: src/xml/xmli18n-tmp.h:2668
 msgid "Infotec MP 2550B"
-msgstr ""
+msgstr "Infotec MP 2550B"
 
 #: src/xml/xmli18n-tmp.h:2669
-#, fuzzy
 msgid "Infotec MP 3350"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec MP 3350"
 
 #: src/xml/xmli18n-tmp.h:2670
 msgid "Infotec MP 3350B"
-msgstr ""
+msgstr "Infotec MP 3350B"
 
 #: src/xml/xmli18n-tmp.h:2671
-#, fuzzy
 msgid "Infotec MP 4000"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec MP 4000"
 
 #: src/xml/xmli18n-tmp.h:2672
 msgid "Infotec MP 4000B"
-msgstr ""
+msgstr "Infotec MP 4000B"
 
 #: src/xml/xmli18n-tmp.h:2673
-#, fuzzy
 msgid "Infotec MP 5000"
-msgstr "Infotec 4651 MF"
+msgstr "Infotec MP 5000"
 
 #: src/xml/xmli18n-tmp.h:2674
 msgid "Infotec MP 5000B"
-msgstr ""
+msgstr "Infotec MP 5000B"
 
 #: src/xml/xmli18n-tmp.h:2675
 msgid "Kyocera F-1010"
@@ -9404,305 +9173,299 @@ msgstr "Kyocera KM-6230"
 
 #: src/xml/xmli18n-tmp.h:2721
 msgid "Lanier 5622"
-msgstr ""
+msgstr "Lanier 5622"
 
 #: src/xml/xmli18n-tmp.h:2722
 msgid "Lanier 5627"
-msgstr ""
+msgstr "Lanier 5627"
 
 #: src/xml/xmli18n-tmp.h:2723
 msgid "Lanier 5632"
-msgstr ""
+msgstr "Lanier 5632"
 
 #: src/xml/xmli18n-tmp.h:2724
 msgid "Lanier 5635"
-msgstr ""
+msgstr "Lanier 5635"
 
 #: src/xml/xmli18n-tmp.h:2725
 msgid "Lanier 5645"
-msgstr ""
+msgstr "Lanier 5645"
 
 #: src/xml/xmli18n-tmp.h:2726
 msgid "Lanier LD0105"
-msgstr ""
+msgstr "Lanier LD0105"
 
 #: src/xml/xmli18n-tmp.h:2727
 msgid "Lanier LD015"
-msgstr ""
+msgstr "Lanier LD015"
 
 #: src/xml/xmli18n-tmp.h:2728
 msgid "Lanier LD035"
-msgstr ""
+msgstr "Lanier LD035"
 
 #: src/xml/xmli18n-tmp.h:2729
 msgid "Lanier LD045"
-msgstr ""
+msgstr "Lanier LD045"
 
 #: src/xml/xmli18n-tmp.h:2730
 msgid "Lanier LD060"
-msgstr ""
+msgstr "Lanier LD060"
 
 #: src/xml/xmli18n-tmp.h:2731
 msgid "Lanier LD075"
-msgstr ""
+msgstr "Lanier LD075"
 
 #: src/xml/xmli18n-tmp.h:2732
 msgid "Lanier LD090"
-msgstr ""
+msgstr "Lanier LD090"
 
 #: src/xml/xmli18n-tmp.h:2733
 msgid "Lanier LD115"
-msgstr ""
+msgstr "Lanier LD115"
 
 #: src/xml/xmli18n-tmp.h:2734
 msgid "Lanier LD116"
-msgstr ""
+msgstr "Lanier LD116"
 
 #: src/xml/xmli18n-tmp.h:2735
 msgid "Lanier LD118"
-msgstr ""
+msgstr "Lanier LD118"
 
 #: src/xml/xmli18n-tmp.h:2736
 msgid "Lanier LD118d"
-msgstr ""
+msgstr "Lanier LD118d"
 
 #: src/xml/xmli18n-tmp.h:2737
 msgid "Lanier LD120"
-msgstr ""
+msgstr "Lanier LD120"
 
 #: src/xml/xmli18n-tmp.h:2738
 msgid "Lanier LD120d"
-msgstr ""
+msgstr "Lanier LD120d"
 
 #: src/xml/xmli18n-tmp.h:2739
 msgid "Lanier LD122"
-msgstr ""
+msgstr "Lanier LD122"
 
 #: src/xml/xmli18n-tmp.h:2740
 msgid "Lanier LD127"
-msgstr ""
+msgstr "Lanier LD127"
 
 #: src/xml/xmli18n-tmp.h:2741
 msgid "Lanier LD132"
-msgstr ""
+msgstr "Lanier LD132"
 
 #: src/xml/xmli18n-tmp.h:2742
 msgid "Lanier LD135"
-msgstr ""
+msgstr "Lanier LD135"
 
 #: src/xml/xmli18n-tmp.h:2743
 msgid "Lanier LD145"
-msgstr ""
+msgstr "Lanier LD145"
 
 #: src/xml/xmli18n-tmp.h:2744
 msgid "Lanier LD151"
-msgstr ""
+msgstr "Lanier LD151"
 
 #: src/xml/xmli18n-tmp.h:2745
 msgid "Lanier LD160"
-msgstr ""
+msgstr "Lanier LD160"
 
 #: src/xml/xmli18n-tmp.h:2746
 msgid "Lanier LD175"
-msgstr ""
+msgstr "Lanier LD175"
 
 #: src/xml/xmli18n-tmp.h:2747
 msgid "Lanier LD225"
-msgstr ""
+msgstr "Lanier LD225"
 
 #: src/xml/xmli18n-tmp.h:2748
 msgid "Lanier LD230"
-msgstr ""
+msgstr "Lanier LD230"
 
 #: src/xml/xmli18n-tmp.h:2749
 msgid "Lanier LD235"
-msgstr ""
+msgstr "Lanier LD235"
 
 #: src/xml/xmli18n-tmp.h:2750
 msgid "Lanier LD245"
-msgstr ""
+msgstr "Lanier LD245"
 
 #: src/xml/xmli18n-tmp.h:2751
 msgid "Lanier MP 2500"
-msgstr ""
+msgstr "Lanier MP 2500"
 
 #: src/xml/xmli18n-tmp.h:2752
 msgid "Lanier LD125"
-msgstr ""
+msgstr "Lanier LD125"
 
 #: src/xml/xmli18n-tmp.h:2753
-#, fuzzy
 msgid "Lanier MP 1100"
-msgstr "HP LaserJet 1100"
+msgstr "Lanier MP 1100"
 
 #: src/xml/xmli18n-tmp.h:2754
-#, fuzzy
 msgid "Lanier LD1100"
-msgstr "HP LaserJet 1100"
+msgstr "Lanier LD1100"
 
 #: src/xml/xmli18n-tmp.h:2755
 msgid "Lanier MP 1350"
-msgstr ""
+msgstr "Lanier MP 1350"
 
 #: src/xml/xmli18n-tmp.h:2756
 msgid "Lanier LD1135"
-msgstr ""
+msgstr "Lanier LD1135"
 
 #: src/xml/xmli18n-tmp.h:2757
 msgid "Lanier MP 1600"
-msgstr ""
+msgstr "Lanier MP 1600"
 
 #: src/xml/xmli18n-tmp.h:2758
 msgid "Lanier LD316"
-msgstr ""
+msgstr "Lanier LD316"
 
 #: src/xml/xmli18n-tmp.h:2759
 msgid "Lanier MP 161"
-msgstr ""
+msgstr "Lanier MP 161"
 
 #: src/xml/xmli18n-tmp.h:2760
 msgid "Lanier LD016"
-msgstr ""
+msgstr "Lanier LD016"
 
 #: src/xml/xmli18n-tmp.h:2761
 msgid "Lanier MP 2000"
-msgstr ""
+msgstr "Lanier MP 2000"
 
 #: src/xml/xmli18n-tmp.h:2762
 msgid "Lanier LD320d"
-msgstr ""
+msgstr "Lanier LD320d"
 
 #: src/xml/xmli18n-tmp.h:2763
 msgid "Lanier MP 2510"
-msgstr ""
+msgstr "Lanier MP 2510"
 
 #: src/xml/xmli18n-tmp.h:2764
 msgid "Lanier LD325"
-msgstr ""
+msgstr "Lanier LD325"
 
 #: src/xml/xmli18n-tmp.h:2765
 msgid "Lanier MP 2550B"
-msgstr ""
+msgstr "Lanier MP 2550B"
 
 #: src/xml/xmli18n-tmp.h:2766
 msgid "Lanier LD425B"
-msgstr ""
+msgstr "Lanier LD425B"
 
 #: src/xml/xmli18n-tmp.h:2767
 msgid "Lanier MP 2550"
-msgstr ""
+msgstr "Lanier MP 2550"
 
 #: src/xml/xmli18n-tmp.h:2768
 msgid "Lanier LD425"
-msgstr ""
+msgstr "Lanier LD425"
 
 #: src/xml/xmli18n-tmp.h:2769
 msgid "Lanier MP 3010"
-msgstr ""
+msgstr "Lanier MP 3010"
 
 #: src/xml/xmli18n-tmp.h:2770
 msgid "Lanier LD330"
-msgstr ""
+msgstr "Lanier LD330"
 
 #: src/xml/xmli18n-tmp.h:2771
 msgid "Lanier MP 3350B"
-msgstr ""
+msgstr "Lanier MP 3350B"
 
 #: src/xml/xmli18n-tmp.h:2772
 msgid "Lanier LD433B"
-msgstr ""
+msgstr "Lanier LD433B"
 
 #: src/xml/xmli18n-tmp.h:2773
-#, fuzzy
 msgid "Lanier MP 3350"
-msgstr "Canon GP 335"
+msgstr "Lanier MP 3350"
 
 #: src/xml/xmli18n-tmp.h:2774
 msgid "Lanier LD433"
-msgstr ""
+msgstr "Lanier LD433"
 
 #: src/xml/xmli18n-tmp.h:2775
 msgid "Lanier MP 3500"
-msgstr ""
+msgstr "Lanier MP 3500"
 
 #: src/xml/xmli18n-tmp.h:2776
 msgid "Lanier LD335"
-msgstr ""
+msgstr "Lanier LD335"
 
 #: src/xml/xmli18n-tmp.h:2777
 msgid "Lanier MP 4000B"
-msgstr ""
+msgstr "Lanier MP 4000B"
 
 #: src/xml/xmli18n-tmp.h:2778
 msgid "Lanier LD040B"
-msgstr ""
+msgstr "Lanier LD040B"
 
 #: src/xml/xmli18n-tmp.h:2779
-#, fuzzy
 msgid "Lanier MP 4000"
-msgstr "HP LaserJet 4000"
+msgstr "Lanier MP 4000"
 
 #: src/xml/xmli18n-tmp.h:2780
 msgid "Lanier LD040"
-msgstr ""
+msgstr "Lanier LD040"
 
 #: src/xml/xmli18n-tmp.h:2781
 msgid "Lanier MP 4500"
-msgstr ""
+msgstr "Lanier MP 4500"
 
 #: src/xml/xmli18n-tmp.h:2782
 msgid "Lanier LD345"
-msgstr ""
+msgstr "Lanier LD345"
 
 #: src/xml/xmli18n-tmp.h:2783
 msgid "Lanier MP 5000B"
-msgstr ""
+msgstr "Lanier MP 5000B"
 
 #: src/xml/xmli18n-tmp.h:2784
 msgid "Lanier LD050B"
-msgstr ""
+msgstr "Lanier LD050B"
 
 #: src/xml/xmli18n-tmp.h:2785
-#, fuzzy
 msgid "Lanier MP 5000"
-msgstr "HP LaserJet 5000"
+msgstr "Lanier MP 5000"
 
 #: src/xml/xmli18n-tmp.h:2786
 msgid "Lanier LD050"
-msgstr ""
+msgstr "Lanier LD050"
 
 #: src/xml/xmli18n-tmp.h:2787
 msgid "Lanier MP 5500"
-msgstr ""
+msgstr "Lanier MP 5500"
 
 #: src/xml/xmli18n-tmp.h:2788
 msgid "Lanier LD255"
-msgstr ""
+msgstr "Lanier LD255"
 
 #: src/xml/xmli18n-tmp.h:2789
 msgid "Lanier MP 6500"
-msgstr ""
+msgstr "Lanier MP 6500"
 
 #: src/xml/xmli18n-tmp.h:2790
 msgid "Lanier LD265"
-msgstr ""
+msgstr "Lanier LD265"
 
 #: src/xml/xmli18n-tmp.h:2791
 msgid "Lanier MP 7500"
-msgstr ""
+msgstr "Lanier MP 7500"
 
 #: src/xml/xmli18n-tmp.h:2792
 msgid "Lanier LD275"
-msgstr ""
+msgstr "Lanier LD275"
 
 #: src/xml/xmli18n-tmp.h:2793
-#, fuzzy
 msgid "Lanier MP 9000"
-msgstr "HP LaserJet 9000"
+msgstr "Lanier MP 9000"
 
 #: src/xml/xmli18n-tmp.h:2794
 msgid "Lanier LD190"
-msgstr ""
+msgstr "Lanier LD190"
 
 #: src/xml/xmli18n-tmp.h:2795
 msgid "Lexmark 4076"
@@ -9721,14 +9484,12 @@ msgid "Lexmark Optra E220"
 msgstr "Lexmark Optra E220"
 
 #: src/xml/xmli18n-tmp.h:2799
-#, fuzzy
 msgid "Lexmark Optra E321"
-msgstr "Lexmark Optra E"
+msgstr "Lexmark Optra E321"
 
 #: src/xml/xmli18n-tmp.h:2800
-#, fuzzy
 msgid "Lexmark Optra E323"
-msgstr "Lexmark Optra E"
+msgstr "Lexmark Optra E323"
 
 #: src/xml/xmli18n-tmp.h:2801
 msgid "Lexmark Valuewriter 300"
@@ -9784,299 +9545,299 @@ msgstr "NEC SuperScript 1800"
 
 #: src/xml/xmli18n-tmp.h:2814
 msgid "NRG 10515"
-msgstr ""
+msgstr "NRG 10515"
 
 #: src/xml/xmli18n-tmp.h:2815
 msgid "NRG 10518"
-msgstr ""
+msgstr "NRG 10518"
 
 #: src/xml/xmli18n-tmp.h:2816
 msgid "NRG 10512"
-msgstr ""
+msgstr "NRG 10512"
 
 #: src/xml/xmli18n-tmp.h:2817
 msgid "NRG 2205"
-msgstr ""
+msgstr "NRG 2205"
 
 #: src/xml/xmli18n-tmp.h:2818
 msgid "NRG 2238"
-msgstr ""
+msgstr "NRG 2238"
 
 #: src/xml/xmli18n-tmp.h:2819
 msgid "NRG 2212"
-msgstr ""
+msgstr "NRG 2212"
 
 #: src/xml/xmli18n-tmp.h:2820
 msgid "NRG 2705"
-msgstr ""
+msgstr "NRG 2705"
 
 #: src/xml/xmli18n-tmp.h:2821
 msgid "NRG 2738"
-msgstr ""
+msgstr "NRG 2738"
 
 #: src/xml/xmli18n-tmp.h:2822
 msgid "NRG 2712"
-msgstr ""
+msgstr "NRG 2712"
 
 #: src/xml/xmli18n-tmp.h:2823
 msgid "NRG 3205"
-msgstr ""
+msgstr "NRG 3205"
 
 #: src/xml/xmli18n-tmp.h:2824
 msgid "NRG 3238"
-msgstr ""
+msgstr "NRG 3238"
 
 #: src/xml/xmli18n-tmp.h:2825
 msgid "NRG 3212"
-msgstr ""
+msgstr "NRG 3212"
 
 #: src/xml/xmli18n-tmp.h:2826
 msgid "NRG 3525"
-msgstr ""
+msgstr "NRG 3525"
 
 #: src/xml/xmli18n-tmp.h:2827
 msgid "NRG 3508"
-msgstr ""
+msgstr "NRG 3508"
 
 #: src/xml/xmli18n-tmp.h:2828
 msgid "NRG 3502"
-msgstr ""
+msgstr "NRG 3502"
 
 #: src/xml/xmli18n-tmp.h:2829
 msgid "NRG 3545"
-msgstr ""
+msgstr "NRG 3545"
 
 #: src/xml/xmli18n-tmp.h:2830
 msgid "NRG 3518"
-msgstr ""
+msgstr "NRG 3518"
 
 #: src/xml/xmli18n-tmp.h:2831
 msgid "NRG 3532"
-msgstr ""
+msgstr "NRG 3532"
 
 #: src/xml/xmli18n-tmp.h:2832
 msgid "NRG 4525"
-msgstr ""
+msgstr "NRG 4525"
 
 #: src/xml/xmli18n-tmp.h:2833
 msgid "NRG 4508"
-msgstr ""
+msgstr "NRG 4508"
 
 #: src/xml/xmli18n-tmp.h:2834
 msgid "NRG 4502"
-msgstr ""
+msgstr "NRG 4502"
 
 #: src/xml/xmli18n-tmp.h:2835
 msgid "NRG 4545"
-msgstr ""
+msgstr "NRG 4545"
 
 #: src/xml/xmli18n-tmp.h:2836
 msgid "NRG 4518"
-msgstr ""
+msgstr "NRG 4518"
 
 #: src/xml/xmli18n-tmp.h:2837
 msgid "NRG 4532"
-msgstr ""
+msgstr "NRG 4532"
 
 #: src/xml/xmli18n-tmp.h:2838
 msgid "NRG 6002"
-msgstr ""
+msgstr "NRG 6002"
 
 #: src/xml/xmli18n-tmp.h:2839
 msgid "NRG 6005"
-msgstr ""
+msgstr "NRG 6005"
 
 #: src/xml/xmli18n-tmp.h:2840
 msgid "NRG 6008"
-msgstr ""
+msgstr "NRG 6008"
 
 #: src/xml/xmli18n-tmp.h:2841
 msgid "NRG 7502"
-msgstr ""
+msgstr "NRG 7502"
 
 #: src/xml/xmli18n-tmp.h:2842
 msgid "NRG 7505"
-msgstr ""
+msgstr "NRG 7505"
 
 #: src/xml/xmli18n-tmp.h:2843
 msgid "NRG 7508"
-msgstr ""
+msgstr "NRG 7508"
 
 #: src/xml/xmli18n-tmp.h:2844
 msgid "NRG 9005"
-msgstr ""
+msgstr "NRG 9005"
 
 #: src/xml/xmli18n-tmp.h:2845
 msgid "NRG 9008"
-msgstr ""
+msgstr "NRG 9008"
 
 #: src/xml/xmli18n-tmp.h:2846
 msgid "NRG 9002"
-msgstr ""
+msgstr "NRG 9002"
 
 #: src/xml/xmli18n-tmp.h:2847
 msgid "NRG DSm415"
-msgstr ""
+msgstr "NRG DSm415"
 
 #: src/xml/xmli18n-tmp.h:2848
 msgid "NRG DSm615"
-msgstr ""
+msgstr "NRG DSm615"
 
 #: src/xml/xmli18n-tmp.h:2849
 msgid "NRG DSm616"
-msgstr ""
+msgstr "NRG DSm616"
 
 #: src/xml/xmli18n-tmp.h:2850
 msgid "NRG DSm618"
-msgstr ""
+msgstr "NRG DSm618"
 
 #: src/xml/xmli18n-tmp.h:2851
 msgid "NRG DSm618d"
-msgstr ""
+msgstr "NRG DSm618d"
 
 #: src/xml/xmli18n-tmp.h:2852
 msgid "NRG DSm620"
-msgstr ""
+msgstr "NRG DSm620"
 
 #: src/xml/xmli18n-tmp.h:2853
 msgid "NRG DSm620d"
-msgstr ""
+msgstr "NRG DSm620d"
 
 #: src/xml/xmli18n-tmp.h:2854
 msgid "NRG DSm622"
-msgstr ""
+msgstr "NRG DSm622"
 
 #: src/xml/xmli18n-tmp.h:2855
 msgid "NRG DSm627"
-msgstr ""
+msgstr "NRG DSm627"
 
 #: src/xml/xmli18n-tmp.h:2856
 msgid "NRG DSm632"
-msgstr ""
+msgstr "NRG DSm632"
 
 #: src/xml/xmli18n-tmp.h:2857
 msgid "NRG DSm635"
-msgstr ""
+msgstr "NRG DSm635"
 
 #: src/xml/xmli18n-tmp.h:2858
 msgid "NRG DSm645"
-msgstr ""
+msgstr "NRG DSm645"
 
 #: src/xml/xmli18n-tmp.h:2859
 msgid "NRG DSm651"
-msgstr ""
+msgstr "NRG DSm651"
 
 #: src/xml/xmli18n-tmp.h:2860
 msgid "NRG DSm660"
-msgstr ""
+msgstr "NRG DSm660"
 
 #: src/xml/xmli18n-tmp.h:2861
 msgid "NRG DSm675"
-msgstr ""
+msgstr "NRG DSm675"
 
 #: src/xml/xmli18n-tmp.h:2862
 msgid "NRG DSm725"
-msgstr ""
+msgstr "NRG DSm725"
 
 #: src/xml/xmli18n-tmp.h:2863
 msgid "NRG DSm730"
-msgstr ""
+msgstr "NRG DSm730"
 
 #: src/xml/xmli18n-tmp.h:2864
 msgid "NRG DSm735"
-msgstr ""
+msgstr "NRG DSm735"
 
 #: src/xml/xmli18n-tmp.h:2865
 msgid "NRG DSm745"
-msgstr ""
+msgstr "NRG DSm745"
 
 #: src/xml/xmli18n-tmp.h:2866
 msgid "NRG MP 1100"
-msgstr ""
+msgstr "NRG MP 1100"
 
 #: src/xml/xmli18n-tmp.h:2867
 msgid "NRG MP 1350"
-msgstr ""
+msgstr "NRG MP 1350"
 
 #: src/xml/xmli18n-tmp.h:2868
 msgid "NRG MP 1600"
-msgstr ""
+msgstr "NRG MP 1600"
 
 #: src/xml/xmli18n-tmp.h:2869
 msgid "NRG MP 161"
-msgstr ""
+msgstr "NRG MP 161"
 
 #: src/xml/xmli18n-tmp.h:2870
 msgid "NRG MP 2000"
-msgstr ""
+msgstr "NRG MP 2000"
 
 #: src/xml/xmli18n-tmp.h:2871
 msgid "NRG MP 2500"
-msgstr ""
+msgstr "NRG MP 2500"
 
 #: src/xml/xmli18n-tmp.h:2872
 msgid "NRG MP 2510"
-msgstr ""
+msgstr "NRG MP 2510"
 
 #: src/xml/xmli18n-tmp.h:2873
 msgid "NRG MP 2550"
-msgstr ""
+msgstr "NRG MP 2550"
 
 #: src/xml/xmli18n-tmp.h:2874
 msgid "NRG MP 2550B"
-msgstr ""
+msgstr "NRG MP 2550B"
 
 #: src/xml/xmli18n-tmp.h:2875
 msgid "NRG MP 3010"
-msgstr ""
+msgstr "NRG MP 3010"
 
 #: src/xml/xmli18n-tmp.h:2876
 msgid "NRG MP 3350"
-msgstr ""
+msgstr "NRG MP 3350"
 
 #: src/xml/xmli18n-tmp.h:2877
 msgid "NRG MP 3350B"
-msgstr ""
+msgstr "NRG MP 3350B"
 
 #: src/xml/xmli18n-tmp.h:2878
 msgid "NRG MP 3500"
-msgstr ""
+msgstr "NRG MP 3500"
 
 #: src/xml/xmli18n-tmp.h:2879
 msgid "NRG MP 4000"
-msgstr ""
+msgstr "NRG MP 4000"
 
 #: src/xml/xmli18n-tmp.h:2880
 msgid "NRG MP 4000B"
-msgstr ""
+msgstr "NRG MP 4000B"
 
 #: src/xml/xmli18n-tmp.h:2881
 msgid "NRG MP 4500"
-msgstr ""
+msgstr "NRG MP 4500"
 
 #: src/xml/xmli18n-tmp.h:2882
 msgid "NRG MP 5000"
-msgstr ""
+msgstr "NRG MP 5000"
 
 #: src/xml/xmli18n-tmp.h:2883
 msgid "NRG MP 5000B"
-msgstr ""
+msgstr "NRG MP 5000B"
 
 #: src/xml/xmli18n-tmp.h:2884
 msgid "NRG MP 5500"
-msgstr ""
+msgstr "NRG MP 5500"
 
 #: src/xml/xmli18n-tmp.h:2885
 msgid "NRG MP 6500"
-msgstr ""
+msgstr "NRG MP 6500"
 
 #: src/xml/xmli18n-tmp.h:2886
 msgid "NRG MP 7500"
-msgstr ""
+msgstr "NRG MP 7500"
 
 #: src/xml/xmli18n-tmp.h:2887
 msgid "NRG MP 9000"
-msgstr ""
+msgstr "NRG MP 9000"
 
 #: src/xml/xmli18n-tmp.h:2888
 msgid "Okidata OL400"
@@ -10171,158 +9932,128 @@ msgid "Raven LP-410"
 msgstr "Raven LP-410"
 
 #: src/xml/xmli18n-tmp.h:2911
-#, fuzzy
 msgid "Ricoh Aficio 1022"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 1022"
 
 #: src/xml/xmli18n-tmp.h:2912
-#, fuzzy
 msgid "Ricoh Aficio 1027"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 1027"
 
 #: src/xml/xmli18n-tmp.h:2913
-#, fuzzy
 msgid "Ricoh Aficio 1032"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 1032"
 
 #: src/xml/xmli18n-tmp.h:2914
-#, fuzzy
 msgid "Ricoh Aficio 1035"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 1035"
 
 #: src/xml/xmli18n-tmp.h:2915
-#, fuzzy
 msgid "Ricoh Aficio 1045"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 1045"
 
 #: src/xml/xmli18n-tmp.h:2916
-#, fuzzy
 msgid "Ricoh Aficio 1060"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio 1060"
 
 #: src/xml/xmli18n-tmp.h:2917
-#, fuzzy
 msgid "Ricoh Aficio 1075"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 1075"
 
 #: src/xml/xmli18n-tmp.h:2918
-#, fuzzy
 msgid "Ricoh Aficio 1515"
-msgstr "Ricoh Aficio 401"
+msgstr "Ricoh Aficio 1515"
 
 #: src/xml/xmli18n-tmp.h:2919
-#, fuzzy
 msgid "Ricoh Aficio 2015"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2015"
 
 #: src/xml/xmli18n-tmp.h:2920
-#, fuzzy
 msgid "Ricoh Aficio 2016"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2016"
 
 #: src/xml/xmli18n-tmp.h:2921
-#, fuzzy
 msgid "Ricoh Aficio 2018"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2018"
 
 #: src/xml/xmli18n-tmp.h:2922
-#, fuzzy
 msgid "Ricoh Aficio 2018D"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2018D"
 
 #: src/xml/xmli18n-tmp.h:2923
-#, fuzzy
 msgid "Ricoh Aficio 2020"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2020"
 
 #: src/xml/xmli18n-tmp.h:2924
-#, fuzzy
 msgid "Ricoh Aficio 2020D"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2020D"
 
 #: src/xml/xmli18n-tmp.h:2925
-#, fuzzy
 msgid "Ricoh Aficio 2022"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2022"
 
 #: src/xml/xmli18n-tmp.h:2926
-#, fuzzy
 msgid "Ricoh Aficio 2027"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2027"
 
 #: src/xml/xmli18n-tmp.h:2927
-#, fuzzy
 msgid "Ricoh Aficio 2032"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2032"
 
 #: src/xml/xmli18n-tmp.h:2928
-#, fuzzy
 msgid "Ricoh Aficio 2035"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2035"
 
 #: src/xml/xmli18n-tmp.h:2929
-#, fuzzy
 msgid "Ricoh Aficio 2035e"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2035e"
 
 #: src/xml/xmli18n-tmp.h:2930
-#, fuzzy
 msgid "Ricoh Aficio 2045"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2045"
 
 #: src/xml/xmli18n-tmp.h:2931
-#, fuzzy
 msgid "Ricoh Aficio 2045e"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2045e"
 
 #: src/xml/xmli18n-tmp.h:2932
-#, fuzzy
 msgid "Ricoh Aficio 2051"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2051"
 
 #: src/xml/xmli18n-tmp.h:2933
-#, fuzzy
 msgid "Ricoh Aficio 2060"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2060"
 
 #: src/xml/xmli18n-tmp.h:2934
-#, fuzzy
 msgid "Ricoh Aficio 2075"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2075"
 
 #: src/xml/xmli18n-tmp.h:2935
-#, fuzzy
 msgid "Ricoh Aficio 2090"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2090"
 
 #: src/xml/xmli18n-tmp.h:2936
-#, fuzzy
 msgid "Ricoh Aficio 2105"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 2105"
 
 #: src/xml/xmli18n-tmp.h:2937
 msgid "Ricoh Aficio 220"
 msgstr "Ricoh Aficio 220"
 
 #: src/xml/xmli18n-tmp.h:2938
-#, fuzzy
 msgid "Ricoh Aficio 3025"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 3025"
 
 #: src/xml/xmli18n-tmp.h:2939
-#, fuzzy
 msgid "Ricoh Aficio 3030"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio 3030"
 
 #: src/xml/xmli18n-tmp.h:2940
-#, fuzzy
 msgid "Ricoh Aficio 3035"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 3035"
 
 #: src/xml/xmli18n-tmp.h:2941
-#, fuzzy
 msgid "Ricoh Aficio 3045"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio 3045"
 
 #: src/xml/xmli18n-tmp.h:2942
 msgid "Ricoh Aficio 401"
@@ -10333,198 +10064,160 @@ msgid "Ricoh Aficio 700"
 msgstr "Ricoh Aficio 700"
 
 #: src/xml/xmli18n-tmp.h:2944
-#, fuzzy
 msgid "Ricoh Aficio MP 1100"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 1100"
 
 #: src/xml/xmli18n-tmp.h:2945
-#, fuzzy
 msgid "Ricoh Aficio MP 1350"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 1350"
 
 #: src/xml/xmli18n-tmp.h:2946
-#, fuzzy
 msgid "Ricoh Aficio MP 1600"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 1600"
 
 #: src/xml/xmli18n-tmp.h:2947
-#, fuzzy
 msgid "Ricoh Aficio MP 161"
-msgstr "Ricoh Aficio 401"
+msgstr "Ricoh Aficio MP 161"
 
 #: src/xml/xmli18n-tmp.h:2948
-#, fuzzy
 msgid "Ricoh Aficio MP 2000"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 2000"
 
 #: src/xml/xmli18n-tmp.h:2949
-#, fuzzy
 msgid "Ricoh Aficio MP 2500"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 2500"
 
 #: src/xml/xmli18n-tmp.h:2950
-#, fuzzy
 msgid "Ricoh Aficio MP 2510"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 2510"
 
 #: src/xml/xmli18n-tmp.h:2951
-#, fuzzy
 msgid "Ricoh Aficio MP 2550"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 2550"
 
 #: src/xml/xmli18n-tmp.h:2952
-#, fuzzy
 msgid "Ricoh Aficio MP 2550B"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 2550B"
 
 #: src/xml/xmli18n-tmp.h:2953
-#, fuzzy
 msgid "Ricoh Aficio MP 3010"
-msgstr "Ricoh Aficio 401"
+msgstr "Ricoh Aficio MP 3010"
 
 #: src/xml/xmli18n-tmp.h:2954
-#, fuzzy
 msgid "Ricoh Aficio MP 3350"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 3350"
 
 #: src/xml/xmli18n-tmp.h:2955
-#, fuzzy
 msgid "Ricoh Aficio MP 3350B"
-msgstr "Ricoh Aficio 220"
+msgstr "Ricoh Aficio MP 3350B"
 
 #: src/xml/xmli18n-tmp.h:2956
-#, fuzzy
 msgid "Ricoh Aficio MP 3500"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 3500"
 
 #: src/xml/xmli18n-tmp.h:2957
-#, fuzzy
 msgid "Ricoh Aficio MP 4000"
-msgstr "Ricoh Aficio 401"
+msgstr "Ricoh Aficio MP 4000"
 
 #: src/xml/xmli18n-tmp.h:2958
-#, fuzzy
 msgid "Ricoh Aficio MP 4000B"
-msgstr "Ricoh Aficio 401"
+msgstr "Ricoh Aficio MP 4000B"
 
 #: src/xml/xmli18n-tmp.h:2959
-#, fuzzy
 msgid "Ricoh Aficio MP 4500"
-msgstr "Ricoh Aficio 401"
+msgstr "Ricoh Aficio MP 4500"
 
 #: src/xml/xmli18n-tmp.h:2960
-#, fuzzy
 msgid "Ricoh Aficio MP 5000"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 5000"
 
 #: src/xml/xmli18n-tmp.h:2961
-#, fuzzy
 msgid "Ricoh Aficio MP 5000B"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 5000B"
 
 #: src/xml/xmli18n-tmp.h:2962
-#, fuzzy
 msgid "Ricoh Aficio MP 5500"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 5500"
 
 #: src/xml/xmli18n-tmp.h:2963
-#, fuzzy
 msgid "Ricoh Aficio MP 6500"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 6500"
 
 #: src/xml/xmli18n-tmp.h:2964
-#, fuzzy
 msgid "Ricoh Aficio MP 7500"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 7500"
 
 #: src/xml/xmli18n-tmp.h:2965
-#, fuzzy
 msgid "Ricoh Aficio MP 9000"
-msgstr "Ricoh Aficio 700"
+msgstr "Ricoh Aficio MP 9000"
 
 #: src/xml/xmli18n-tmp.h:2966
 msgid "Samsung ML-85"
 msgstr "Samsung ML-85"
 
 #: src/xml/xmli18n-tmp.h:2967
-#, fuzzy
 msgid "Samsung ML-1250"
-msgstr "Samsung ML-6100"
+msgstr "Samsung ML-1250"
 
 #: src/xml/xmli18n-tmp.h:2968
-#, fuzzy
 msgid "Samsung ML-1450"
-msgstr "Samsung ML-4600"
+msgstr "Samsung ML-1450"
 
 #: src/xml/xmli18n-tmp.h:2969
-#, fuzzy
 msgid "Samsung ML-1450PS"
-msgstr "Samsung ML-4600"
+msgstr "Samsung ML-1450PS"
 
 #: src/xml/xmli18n-tmp.h:2970
-#, fuzzy
 msgid "Samsung ML-1650"
-msgstr "Samsung ML-4600"
+msgstr "Samsung ML-1650"
 
 #: src/xml/xmli18n-tmp.h:2971
-#, fuzzy
 msgid "Samsung ML-1651N"
-msgstr "Samsung ML-6100"
+msgstr "Samsung ML-1651N"
 
 #: src/xml/xmli18n-tmp.h:2972
-#, fuzzy
 msgid "Samsung ML-1750"
-msgstr "Samsung ML-7050"
+msgstr "Samsung ML-1750"
 
 #: src/xml/xmli18n-tmp.h:2973
-#, fuzzy
 msgid "Samsung ML-2150"
-msgstr "Samsung ML-6100"
+msgstr "Samsung ML-2150"
 
 #: src/xml/xmli18n-tmp.h:2974
-#, fuzzy
 msgid "Samsung ML-2150PS"
-msgstr "Samsung ML-6100"
+msgstr "Samsung ML-2150PS"
 
 #: src/xml/xmli18n-tmp.h:2975
-#, fuzzy
 msgid "Samsung ML-2151N"
-msgstr "Samsung ML-85"
+msgstr "Samsung ML-2151N"
 
 #: src/xml/xmli18n-tmp.h:2976
-#, fuzzy
 msgid "Samsung ML-2151NPS"
-msgstr "Samsung ML-85"
+msgstr "Samsung ML-2151NPS"
 
 #: src/xml/xmli18n-tmp.h:2977
-#, fuzzy
 msgid "Samsung ML-2152W"
-msgstr "Samsung ML-85"
+msgstr "Samsung ML-2152W"
 
 #: src/xml/xmli18n-tmp.h:2978
-#, fuzzy
 msgid "Samsung ML-2152WPS"
-msgstr "Samsung ML-85"
+msgstr "Samsung ML-2152WPS"
 
 #: src/xml/xmli18n-tmp.h:2979
-#, fuzzy
 msgid "Samsung ML-2250"
-msgstr "Samsung ML-7050"
+msgstr "Samsung ML-2250"
 
 #: src/xml/xmli18n-tmp.h:2980
-#, fuzzy
 msgid "Samsung ML-2550"
-msgstr "Samsung ML-7050"
+msgstr "Samsung ML-2550"
 
 #: src/xml/xmli18n-tmp.h:2981
-#, fuzzy
 msgid "Samsung ML-2551N"
-msgstr "Samsung ML-85"
+msgstr "Samsung ML-2551N"
 
 #: src/xml/xmli18n-tmp.h:2982
-#, fuzzy
 msgid "Samsung ML-2552W"
-msgstr "Samsung ML-85"
+msgstr "Samsung ML-2552W"
 
 #: src/xml/xmli18n-tmp.h:2983
 msgid "Samsung ML-4600"
@@ -10559,14 +10252,12 @@ msgid "Samsung ML-7050"
 msgstr "Samsung ML-7050"
 
 #: src/xml/xmli18n-tmp.h:2991
-#, fuzzy
 msgid "Samsung ML-7300"
-msgstr "Samsung ML-7000"
+msgstr "Samsung ML-7300"
 
 #: src/xml/xmli18n-tmp.h:2992
-#, fuzzy
 msgid "Samsung ML-7300N"
-msgstr "Samsung ML-7000N"
+msgstr "Samsung ML-7300N"
 
 #: src/xml/xmli18n-tmp.h:2993
 msgid "Samsung QL-5100A"
@@ -10578,247 +10269,239 @@ msgstr "Samsung QL-6050"
 
 #: src/xml/xmli18n-tmp.h:2995
 msgid "Savin 2522"
-msgstr ""
+msgstr "Savin 2522"
 
 #: src/xml/xmli18n-tmp.h:2996
 msgid "Savin 2527"
-msgstr ""
+msgstr "Savin 2527"
 
 #: src/xml/xmli18n-tmp.h:2997
 msgid "Savin 2532"
-msgstr ""
+msgstr "Savin 2532"
 
 #: src/xml/xmli18n-tmp.h:2998
 msgid "Savin 2535"
-msgstr ""
+msgstr "Savin 2535"
 
 #: src/xml/xmli18n-tmp.h:2999
 msgid "Savin 2235"
-msgstr ""
+msgstr "Savin 2235"
 
 #: src/xml/xmli18n-tmp.h:3000
 msgid "Savin 2545"
-msgstr ""
+msgstr "Savin 2545"
 
 #: src/xml/xmli18n-tmp.h:3001
 msgid "Savin 2245"
-msgstr ""
+msgstr "Savin 2245"
 
 #: src/xml/xmli18n-tmp.h:3002
-#, fuzzy
 msgid "Savin 2560"
-msgstr "Canon i560"
+msgstr "Savin 2560"
 
 #: src/xml/xmli18n-tmp.h:3003
 msgid "Savin 2575"
-msgstr ""
+msgstr "Savin 2575"
 
 #: src/xml/xmli18n-tmp.h:3004
 msgid "Savin 3515"
-msgstr ""
+msgstr "Savin 3515"
 
 #: src/xml/xmli18n-tmp.h:3005
-#, fuzzy
 msgid "Savin 40105"
-msgstr "Raven LP-410"
+msgstr "Savin 40105"
 
 #: src/xml/xmli18n-tmp.h:3006
 msgid "Savin 4015"
-msgstr ""
+msgstr "Savin 4015"
 
 #: src/xml/xmli18n-tmp.h:3007
 msgid "Savin 4018"
-msgstr ""
+msgstr "Savin 4018"
 
 #: src/xml/xmli18n-tmp.h:3008
 msgid "Savin 4018d"
-msgstr ""
+msgstr "Savin 4018d"
 
 #: src/xml/xmli18n-tmp.h:3009
 msgid "Savin 4022"
-msgstr ""
+msgstr "Savin 4022"
 
 #: src/xml/xmli18n-tmp.h:3010
 msgid "Savin 4027"
-msgstr ""
+msgstr "Savin 4027"
 
 #: src/xml/xmli18n-tmp.h:3011
 msgid "Savin 4035"
-msgstr ""
+msgstr "Savin 4035"
 
 #: src/xml/xmli18n-tmp.h:3012
 msgid "Savin 4135g"
-msgstr ""
+msgstr "Savin 4135g"
 
 #: src/xml/xmli18n-tmp.h:3013
 msgid "Savin 4035e"
-msgstr ""
+msgstr "Savin 4035e"
 
 #: src/xml/xmli18n-tmp.h:3014
 msgid "Savin 4135eG"
-msgstr ""
+msgstr "Savin 4135eG"
 
 #: src/xml/xmli18n-tmp.h:3015
 msgid "Savin 4045"
-msgstr ""
+msgstr "Savin 4045"
 
 #: src/xml/xmli18n-tmp.h:3016
 msgid "Savin 4145g"
-msgstr ""
+msgstr "Savin 4145g"
 
 #: src/xml/xmli18n-tmp.h:3017
 msgid "Savin 4045e"
-msgstr ""
+msgstr "Savin 4045e"
 
 #: src/xml/xmli18n-tmp.h:3018
 msgid "Savin 4145eG"
-msgstr ""
+msgstr "Savin 4145eG"
 
 #: src/xml/xmli18n-tmp.h:3019
 msgid "Savin 4051"
-msgstr ""
+msgstr "Savin 4051"
 
 #: src/xml/xmli18n-tmp.h:3020
-#, fuzzy
 msgid "Savin 4060"
-msgstr "Canon S400"
+msgstr "Savin 4060"
 
 #: src/xml/xmli18n-tmp.h:3021
 msgid "Savin 4075"
-msgstr ""
+msgstr "Savin 4075"
 
 #: src/xml/xmli18n-tmp.h:3022
-#, fuzzy
 msgid "Savin 4090"
-msgstr "Canon S400"
+msgstr "Savin 4090"
 
 #: src/xml/xmli18n-tmp.h:3023
 msgid "Savin 7025"
-msgstr ""
+msgstr "Savin 7025"
 
 #: src/xml/xmli18n-tmp.h:3024
 msgid "Savin 8016"
-msgstr ""
+msgstr "Savin 8016"
 
 #: src/xml/xmli18n-tmp.h:3025
-#, fuzzy
 msgid "Savin 8020"
-msgstr "Canon S800"
+msgstr "Savin 8020"
 
 #: src/xml/xmli18n-tmp.h:3026
 msgid "Savin 8020d"
-msgstr ""
+msgstr "Savin 8020d"
 
 #: src/xml/xmli18n-tmp.h:3027
 msgid "Savin 8025"
-msgstr ""
+msgstr "Savin 8025"
 
 #: src/xml/xmli18n-tmp.h:3028
 msgid "Savin 8025e"
-msgstr ""
+msgstr "Savin 8025e"
 
 #: src/xml/xmli18n-tmp.h:3029
-#, fuzzy
 msgid "Savin 8030"
-msgstr "Canon S800"
+msgstr "Savin 8030"
 
 #: src/xml/xmli18n-tmp.h:3030
 msgid "Savin 8030e"
-msgstr ""
+msgstr "Savin 8030e"
 
 #: src/xml/xmli18n-tmp.h:3031
 msgid "Savin 8035"
-msgstr ""
+msgstr "Savin 8035"
 
 #: src/xml/xmli18n-tmp.h:3032
 msgid "Savin 8035g"
-msgstr ""
+msgstr "Savin 8035g"
 
 #: src/xml/xmli18n-tmp.h:3033
 msgid "Savin 8035e"
-msgstr ""
+msgstr "Savin 8035e"
 
 #: src/xml/xmli18n-tmp.h:3034
 msgid "Savin 8045"
-msgstr ""
+msgstr "Savin 8045"
 
 #: src/xml/xmli18n-tmp.h:3035
 msgid "Savin 8045g"
-msgstr ""
+msgstr "Savin 8045g"
 
 #: src/xml/xmli18n-tmp.h:3036
 msgid "Savin 8045e"
-msgstr ""
+msgstr "Savin 8045e"
 
 #: src/xml/xmli18n-tmp.h:3037
 msgid "Savin 8055"
-msgstr ""
+msgstr "Savin 8055"
 
 #: src/xml/xmli18n-tmp.h:3038
-#, fuzzy
 msgid "Savin 8065"
-msgstr "Canon i865"
+msgstr "Savin 8065"
 
 #: src/xml/xmli18n-tmp.h:3039
 msgid "Savin 8075"
-msgstr ""
+msgstr "Savin 8075"
 
 #: src/xml/xmli18n-tmp.h:3040
-#, fuzzy
 msgid "Savin 8090"
-msgstr "Canon S800"
+msgstr "Savin 8090"
 
 #: src/xml/xmli18n-tmp.h:3041
 msgid "Savin 8110"
-msgstr ""
+msgstr "Savin 8110"
 
 #: src/xml/xmli18n-tmp.h:3042
 msgid "Savin 8135"
-msgstr ""
+msgstr "Savin 8135"
 
 #: src/xml/xmli18n-tmp.h:3043
 msgid "Savin 816"
-msgstr ""
+msgstr "Savin 816"
 
 #: src/xml/xmli18n-tmp.h:3044
 msgid "Savin 9016"
-msgstr ""
+msgstr "Savin 9016"
 
 #: src/xml/xmli18n-tmp.h:3045
 msgid "Savin 9021d"
-msgstr ""
+msgstr "Savin 9021d"
 
 #: src/xml/xmli18n-tmp.h:3046
 msgid "Savin 9025"
-msgstr ""
+msgstr "Savin 9025"
 
 #: src/xml/xmli18n-tmp.h:3047
 msgid "Savin 9025b"
-msgstr ""
+msgstr "Savin 9025b"
 
 #: src/xml/xmli18n-tmp.h:3048
 msgid "Savin 9033"
-msgstr ""
+msgstr "Savin 9033"
 
 #: src/xml/xmli18n-tmp.h:3049
 msgid "Savin 9033b"
-msgstr ""
+msgstr "Savin 9033b"
 
 #: src/xml/xmli18n-tmp.h:3050
 msgid "Savin 9040"
-msgstr ""
+msgstr "Savin 9040"
 
 #: src/xml/xmli18n-tmp.h:3051
 msgid "Savin 9040b"
-msgstr ""
+msgstr "Savin 9040b"
 
 #: src/xml/xmli18n-tmp.h:3052
 msgid "Savin 9050"
-msgstr ""
+msgstr "Savin 9050"
 
 #: src/xml/xmli18n-tmp.h:3053
 msgid "Savin 9050b"
-msgstr ""
+msgstr "Savin 9050b"
 
 #: src/xml/xmli18n-tmp.h:3054
 msgid "Seiko SpeedJET 200"
@@ -11075,98 +10758,3 @@ msgstr "RAW DATA 16 bit"
 #: src/xml/xmli18n-tmp.h:3117
 msgid "RAW DATA 8 bit"
 msgstr "RAW DATA 8 bit"
-
-#~ msgid "ISO A4"
-#~ msgstr "ISO A4"
-
-#~ msgid "ISO A5"
-#~ msgstr "ISO A5"
-
-#~ msgid ""
-#~ "ijsgutenprint: the version of Gutenprint software installed (%s)\n"
-#~ "  does not match the PPD file (%s).  If you have upgraded your version\n"
-#~ "  of Gutenprint recently, you must reinstall all printer queues.\n"
-#~ "  Please refer to your vendor's documentation or the ``foomatic-"
-#~ "ppdfile''\n"
-#~ "  command for instructions.\n"
-#~ "ERROR: ijsgutenprint: the version of Gutenprint software installed (%s) "
-#~ "does not match the PPD file (%s).\n"
-#~ msgstr ""
-#~ "ijsgutenprint: de versie van de geïstalleerde Gutenprint-software (%s)\n"
-#~ "  klopt niet met hetPPD-bestand (%s).  Als u uw versie van Gutenprint\n"
-#~ "  recent up-to-date hebt gebracht dan moet u alle printerqueues opnieuw\n"
-#~ "  installeren.\n"
-#~ "  Kijk in de documentatie van uw leverancier of het commando voor het\n"
-#~ "  ``foomatic-ppdbestand'' voor nadere instructies.\n"
-#~ "FOUT: ijsgutenprint: de versie van de geïnstalleerde Gutenprint software "
-#~ "(%s) klopt niet met het PPD bestand (%s).\n"
-
-#~ msgid "ERROR: ijsgutenprint: Bad color space: bps %d channels %d space %s\n"
-#~ msgstr ""
-#~ "FOUT: ijsgutenprint: Verkeerde kleurruimte: bps %d kanalen %d ruimte %s\n"
-
-#~ msgid "ERROR: ijsgutenprint: No row buffer\n"
-#~ msgstr "FOUT: ijsgutenprint: No rijbuffer\n"
-
-#~ msgid ""
-#~ "ERROR: ijsgutenprint: Unable to parse parameter %s=%s (expect a number)\n"
-#~ msgstr ""
-#~ "FOUT: ijsgutenprint: Kan parameter %s=%s niet onleden (verwacht een "
-#~ "nummer)\n"
-
-#~ msgid "ERROR: ijsgutenprint: Printer must be specified with -sDeviceModel\n"
-#~ msgstr ""
-#~ "FOUT: ijsgutenprint: Printer moet gespecificeerd worden met -sMODEL\n"
-
-#~ msgid "ERROR: ijsgutenprint: Printer %s is not a known model\n"
-#~ msgstr "FOUT: ijsgutenprint: Printer %s is geen bekend model\n"
-
-#~ msgid "ijsgutenprint: unknown DeviceModel %s\n"
-#~ msgstr "ijsgutenprint: onbekend MODEL %s\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse TopLeft %s\n"
-#~ msgstr "FOUT: ijsgutenprint: kan Linksboven %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse PaperSize %s\n"
-#~ msgstr "FOUT: ijsgutenprint: kan Papierafmetingen %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse curve %s\n"
-#~ msgstr "FOUT: ijsgutenprint: kan Kromme %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse %s float %s\n"
-#~ msgstr ""
-#~ "FOUT: ijsgutenprint: kan %s met drijvendekomma-getal %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse %s int %s\n"
-#~ msgstr "FOUT: ijsgutenprint: kan %s geheel getal %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse %s dimension %s\n"
-#~ msgstr "FOUT: ijsgutenprint: kan %s dimensie %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: cannot parse %s boolean %s\n"
-#~ msgstr "FOUT: ijsgutenprint: kan %s met logische waarde %s niet ontleden\n"
-
-#~ msgid "ERROR: ijsgutenprint: Bad parameter %s %d\n"
-#~ msgstr "FOUT: ijsgutenprint: Onjuiste parameter %s %d\n"
-
-#~ msgid "ERROR: ijsgutenprint: bad key code %d\n"
-#~ msgstr "FOUT: ijsgutenprint: onjuiste sleutelcode %d\n"
-
-#~ msgid "ERROR: ijsgutenprint: image_init failed %d\n"
-#~ msgstr "FOUT: ijsgutenprint: image_init mislukte %d\n"
-
-#~ msgid "ERROR: ijsgutenprint: Unable to open file descriptor: %s\n"
-#~ msgstr "FOUT: ijsgutenprint: Kan bestandsdescriptor niet openen: %s\n"
-
-#~ msgid "ERROR: ijsgutenprint: Unable to open %s: %s\n"
-#~ msgstr "FOUT: ijsgutenprint: Kan %s: %s niet openen\n"
-
-#~ msgid "ERROR: ijsgutenprint: Unknown printer %s\n"
-#~ msgstr "FOUT: ijsgutenprint: Onbekende printer %s\n"
-
-#~ msgid "ERROR: ijsgutenprint: Bad parameters; cannot continue!\n"
-#~ msgstr "FOUT: ijsgutenprint: Foute parameters; kan niet doorgaan!\n"
-
-#~ msgid "ERROR: ijsgutenprint: Get next row failed at %.0f\n"
-#~ msgstr ""
-#~ "FOUT: ijsgutenprint: Verkrijgen van volgende rij is mislukt op %.0f\n"
