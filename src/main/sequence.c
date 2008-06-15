@@ -420,8 +420,8 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 	      /* Datum was valid, so now add to the sequence */
 	      stp_sequence_set_point(ret, i, tmpval);
 	      i++;
-	      child = child->next;
 	    }
+	  child = child->next;
 	}
       if (i < point_count)
 	{
