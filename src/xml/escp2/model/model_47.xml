@@ -26,5 +26,46 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
 	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
 	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+	<commandSet>2000</commandSet>
+	<borderless>HorizontalOnly</borderless>
+	<supportsVariableDropsizes/>
+	<hasFastGraymode/>
+	<hasFast360DPI/>
+	<sendZeroAdvance/>
+	<supportsD4Mode/>
+	<hasInterchangeableInkCartridges/>
+	<preferredEnvelopeOrientation>Landscape</preferredEnvelopeOrientation>
+	<headConfiguration type="default">
+	<Nozzles>96</Nozzles>
+	<MinNozzles>96</MinNozzles>
+	<FirstNozzle>0</FirstNozzle>
+	<NozzleSeparation>2</NozzleSeparation>
+	</headConfiguration>
+	<headConfiguration type="fast">
+	<Nozzles>192</Nozzles>
+	<MinNozzles>192</MinNozzles>
+	<FirstNozzle>0</FirstNozzle>
+	<NozzleSeparation>1</NozzleSeparation>
+	</headConfiguration>
+	<physicalChannels>7</physicalChannels>
+	<baseSeparation>360</baseSeparation>
+	<resolutionScale>14400</resolutionScale>
+	<minimumResolution>360 180</minimumResolution>
+	<maximumResolution>2880 1440</maximumResolution>
+	<separationRows>1</separationRows>
+	<zeroMarginOffset>80</zeroMarginOffset>
+	<microLeftMargin>42</microLeftMargin>
+	<minHorizontalAlignment>1</minHorizontalAlignment>
+	<baseHorizontalAlignment>28800</baseHorizontalAlignment>
+	<bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
+	<minimumMediaSize>144 144</minimumMediaSize>
+	<maximumMediaSize>936 86400</maximumMediaSize>
+	<maximumImageableArea>936 86400</maximumImageableArea>
+	<margins interleave="soft" media="sheet">9 9 0 9</margins>
+	<margins interleave="printer" media="sheet">9 9 0 9</margins>
+	<margins interleave="soft" media="roll">9 9 0 0</margins>
+	<margins interleave="printer" media="roll">9 9 0 0</margins>
+	<CDOffset>204 191</CDOffset>
+	<AlignmentChoices>4 15 0 0</AlignmentChoices>
 </escp2:model>
 </gutenprint>

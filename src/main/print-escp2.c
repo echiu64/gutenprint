@@ -33,7 +33,6 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #include "gutenprint-internal.h"
 #include <string.h>
-#include <assert.h>
 #include <math.h>
 #include <limits.h>
 #include "print-escp2.h"
@@ -868,95 +867,12 @@ get_privdata(stp_vars_t *v)
   return (escp2_privdata_t *) stp_get_component_data(v, "Driver");
 }
 
-static void
-load_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
-{
-  stp_mxml_node_t *tmp = xmod->child;
-  stpi_escp2_printer_t *p = &(stpi_escp2_model_capabilities[model]);
-  while (tmp)
-    {
-      if (tmp->type == STP_MXML_ELEMENT)
-	{
-	  const char *name = tmp->value.element.name;
-	  const char *target = stp_mxmlElementGetAttr(tmp, "href");
-	  if (tmp->child && tmp->child->type == STP_MXML_TEXT)
-	    {
-	      const char *val = tmp->child->value.text.string;
-	      if (!strcmp(name, "verticalBorderlessSequence"))
-		p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
-
-	      else if (!strcmp(tmp->value.element.name, "preinitSequence"))
-		p->preinit_sequence = stp_xmlstrtoraw(val);
-
-	      else if (!strcmp(tmp->value.element.name, "preinitRemoteSequence"))
-		p->preinit_remote_sequence = stp_xmlstrtoraw(val);
-
-	      else if (!strcmp(tmp->value.element.name, "postinitRemoteSequence"))
-		p->postinit_remote_sequence = stp_xmlstrtoraw(val);
-	    }
-	  else if (target)
-	    {
-	      if (!strcmp(name, "media"))
-		stp_escp2_load_media(v, target);
-	      else if (!strcmp(name, "inputSlots"))
-		stp_escp2_load_input_slots(v, target);
-	      else if (!strcmp(name, "mediaSizes"))
-		stp_escp2_load_media_sizes(v, target);
-	    }
-	}
-      tmp = tmp->next;
-    }
-}
-
-static void
-load_model(const stp_vars_t *v, int model)
-{
-  stp_list_t *dirlist = stpi_data_path();
-  stp_list_item_t *item;
-  char buf[1024];
-  int found = 0;
-
-  stp_xml_init();
-  sprintf(buf, "escp2/model/model_%d.xml", model);
-  item = stp_list_get_start(dirlist);
-  while (item)
-    {
-      const char *dn = (const char *) stp_list_item_get_data(item);
-      char *fn = stpi_path_merge(dn, buf);
-      stp_mxml_node_t *doc = stp_mxmlLoadFromFile(NULL, fn, STP_MXML_NO_CALLBACK);
-      stp_free(fn);
-      if (doc)
-	{
-	  stp_mxml_node_t *xmod =
-	    stp_mxmlFindElement(doc, doc, "escp2:model", NULL, NULL,
-				STP_MXML_DESCEND);
-	  if (xmod)
-	    {
-	      const char *stmp = stp_mxmlElementGetAttr(xmod, "id");
-	      assert(stmp && stp_xmlstrtol(stmp) == model);
-	      if (stmp && stp_xmlstrtol(stmp) == model)
-		{
-		  load_from_file(v, xmod, model);
-		  found = 1;
-		}
-	    }
-	  stp_mxmlDelete(doc);
-	  if (found)
-	    break;
-	}
-      item = stp_list_item_next(item);
-    }
-  stp_list_destroy(dirlist);
-  if (! found)
-    stp_eprintf(v, "Unable to load definition for model %d!\n", model);
-}
-
 static int
 escp2_get_stp_model_id(const stp_vars_t *v)
 {
   int model = stp_get_model_id(v);
   if (! stpi_escp2_model_capabilities[model].media)
-    load_model(v, model);
+    stpi_escp2_load_model(v, model);
   return stp_get_model_id(v);
 }
 

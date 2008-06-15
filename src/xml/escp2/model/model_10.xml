@@ -24,5 +24,34 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<media href="escp2/media/standard.xml"/>
 	<inputSlots href="escp2/inputslots/default.xml"/>
 	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
+	<commandSet>1999</commandSet>
+	<borderless>No</borderless>
+	<hasFastGraymode/>
+	<sendZeroAdvance/>
+	<preferredEnvelopeOrientation>Landscape</preferredEnvelopeOrientation>
+	<headConfiguration type="default">
+	<Nozzles>21</Nozzles>
+	<MinNozzles>1</MinNozzles>
+	<FirstNozzle>0</FirstNozzle>
+	<NozzleSeparation>4</NozzleSeparation>
+	</headConfiguration>
+	<physicalChannels>4</physicalChannels>
+	<baseSeparation>360</baseSeparation>
+	<resolutionScale>14400</resolutionScale>
+	<minimumResolution>90 90</minimumResolution>
+	<maximumResolution>720 720</maximumResolution>
+	<separationRows>1</separationRows>
+	<extra720DPISeparation>8</extra720DPISeparation>
+	<minHorizontalAlignment>1</minHorizontalAlignment>
+	<baseHorizontalAlignment>28800</baseHorizontalAlignment>
+	<bidirectionalAutoUpperLimit>518400</bidirectionalAutoUpperLimit>
+	<minimumMediaSize>144 144</minimumMediaSize>
+	<maximumMediaSize>684 3168</maximumMediaSize>
+	<maximumImageableArea>612 3168</maximumImageableArea>
+	<margins interleave="soft" media="sheet">9 9 0 9</margins>
+	<margins interleave="printer" media="sheet">9 9 0 9</margins>
+	<margins interleave="soft" media="roll">9 9 0 0</margins>
+	<margins interleave="printer" media="roll">9 9 0 0</margins>
+	<AlignmentChoices>1 15 0 0</AlignmentChoices>
 </escp2:model>
 </gutenprint>

@@ -29,6 +29,7 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #include "print-escp2.h"
 #include <limits.h>
+#include <assert.h>
 
 /*
  * Dot sizes are for:
@@ -333,113 +334,36 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   /* FIRST GENERATION PRINTERS */
   /* 0: Stylus Color */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 1, 0, 4, 15, 1, 0, 4, 15, 1, 0, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g1_dotsizes, g1_densities, standard_bits, standard_base_res,
     "simple", "720dpi", "standard", "standard", NULL, "standard"
   },
   /* 1: Stylus Color 400/500 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g2_dotsizes, g1_densities, standard_bits, standard_base_res,
     "simple", "sc500", "standard", "standard", NULL, "standard"
   },
   /* 2: Stylus Color 1500 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17), INCH(44), INCH(2), INCH(2), INCH(17), INCH(44),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g1_dotsizes, sc1500_densities, standard_bits, standard_base_res,
     "simple", "sc500", "cmy", "standard", NULL, "standard"
   },
   /* 3: Stylus Color 600 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    8, 9, 0, 30, 8, 9, 0, 30, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     sc600_dotsizes, g3_densities, standard_bits, g3_base_res,
     "simple", "g3", "standard", "standard", NULL, "standard"
   },
   /* 4: Stylus Color 800 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    64, 1, 0, 2, 64, 1, 0, 2, 64, 1, 0, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180,
-    0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
     "simple", "g3", "standard", "standard", NULL, "standard"
   },
   /* 5: Stylus Color 850 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    64, 1, 0, 2, 64, 1, 0, 2, 64, 1, 0, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180,
-    0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
     "simple", "g3", "standard", "standard", NULL, "standard"
   },
   /* 6: Stylus Color 1520 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    64, 1, 0, 2, 64, 1, 0, 2, 64, 1, 0, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180,
-    0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17), INCH(44), INCH(2), INCH(2), INCH(136 / 10), INCH(44),
-    8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
     "simple", "g3", "standard", "standard", NULL, "standard"
   },
@@ -447,49 +371,16 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   /* SECOND GENERATION PRINTERS */
   /* 7: Stylus Photo 700 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 15, 0, 0,		/* Is it really 15 pairs??? */
     sp700_dotsizes, sp700_densities, standard_bits, g3_base_res,
     "simple", "g3", "photo_gen1", "standard", NULL, "photo"
   },
   /* 8: Stylus Photo EX */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_NO | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(118 / 10), INCH(44), INCH(2), INCH(2), INCH(118 / 10), INCH(44),
-    9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     sp700_dotsizes, sp700_densities, standard_bits, g3_base_res,
     "simple", "g3", "photo_gen1", "standard", NULL, "photo"
   },
   /* 9: Stylus Photo */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 6,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     sp700_dotsizes, sp700_densities, standard_bits, g3_base_res,
     "simple", "g3_720dpi", "photo_gen1", "standard", NULL, "photo"
   },
@@ -497,1249 +388,391 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   /* THIRD GENERATION PRINTERS */
   /* 10: Stylus Color 440/460 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    21, 1, 0, 4, 21, 1, 0, 4, 21, 1, 0, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 15, 0, 0,
     sc440_dotsizes, sc440_densities, standard_bits, standard_base_res,
     "simple", "g3_720dpi", "standard", "standard", NULL, "standard"
   },
   /* 11: Stylus Color 640 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 15, 0, 0,
     sc640_dotsizes, sc440_densities, standard_bits, standard_base_res,
     "simple", "sc640", "standard", "standard", NULL, "standard"
   },
   /* 12: Stylus Color 740/Stylus Scan 2000/Stylus Scan 2500 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, variable_bits, variable_base_res,
     "variable_6pl", "1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 13: Stylus Color 900 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    96, 1, 0, 2, 192, 1, 0, 1, 192, 1, 0, 1, 4,
-    360, 14400, -1, 1440, 720, 180, 180,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c3pl_dotsizes, c3pl_densities, variable_bits, stc900_base_res,
     "variable_3pl", "1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 14: Stylus Photo 750 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, variable_bits, variable_base_res,
     "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
   },
   /* 15: Stylus Photo 1200 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c6pl_dotsizes, c6pl_densities, variable_bits, variable_base_res,
     "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
   },
   /* 16: Stylus Color 860 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_1440_4pl", "1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 17: Stylus Color 1160 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_1440_4pl", "1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 18: Stylus Color 660 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 8, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 9, 9, 9, 9, 9, 26, 9, 9, 9, 0, 9, 9, 9, 0, -1, -1, 0, 0, 0,
-    1, 15, 0, 0,
     sc660_dotsizes, sc660_densities, standard_bits, standard_base_res,
     "simple", "sc640", "standard", "standard", NULL, "standard"
   },
   /* 19: Stylus Color 760 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_1440_4pl", "1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sp720_dotsizes, c6pl_densities, variable_bits, variable_base_res,
     "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
   },
   /* 21: Stylus Color 480 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 15, 0, 3, 48, 48, 0, 3, 48, 48, 0, 3, 4,
-    360, 14400, 360, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
     "variable_x80_6pl", "720dpi_soft", "x80", "standard", NULL, "standard"
   },
   /* 22: Stylus Photo 870/875 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_1440_4pl", "1440dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 23: Stylus Photo 1270 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_1440_4pl", "1440dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 24: Stylus Color 3000 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    64, 1, 0, 2, 64, 1, 0, 2, 64, 1, 0, 2, 4,
-    360, 14400, -1, 1440, 720, 180, 180,
-    0, 1, 4, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17), INCH(44), INCH(2), INCH(2), INCH(17), INCH(44),
-    8, 9, 9, 40, 8, 9, 9, 40, 8, 9, 0, 0, 8, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
     "simple", "g3", "standard", "standard", NULL, "standard"
   },
   /* 25: Stylus Color 670 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 64, 1, 0, 2, 64, 1, 0, 2, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sc670_dotsizes, c6pl_densities, variable_bits, variable_base_res,
     "variable_6pl", "1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 26: Stylus Photo 2000P */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    2, 15, 0, 0,
     sp2000_dotsizes, sp2000_densities, variable_bits, variable_base_res,
     "variable_2000p", "1440dpi", "photo_pigment", "standard", NULL, "photo"
   },
   /* 27: Stylus Pro 5000 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    64, 1, 0, 2, 64, 1, 0, 2, 64, 1, 0, 2, 6,
-    360, 14400, -1, 1440, 720, 180, 180,
-    0, 1, 0, 0, 0, 0, 0, 4, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
-    9, 9, 0, 30, 9, 9, 0, 30, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro5000_dotsizes, sp700_densities, standard_bits, g3_base_res,
     "simple", "1440dpi", "pro_gen1", "standard", NULL, "photo"
   },
   /* 28: Stylus Pro 7000 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(24), INCH(1200), INCH(7), INCH(7), INCH(24), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, standard_bits, pro_base_res,
     "simple", "pro", "pro_gen1", "standard", "pro7000", "photo"
   },
   /* 29: Stylus Pro 7500 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(24), INCH(1200), INCH(7), INCH(7), INCH(24), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, standard_bits, pro_base_res,
     "simple", "pro", "pro_pigment", "standard", "pro7500", "photo"
   },
   /* 30: Stylus Pro 9000 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro_dye_dotsizes, spro_dye_densities, standard_bits, pro_base_res,
     "simple", "pro", "pro_gen1", "standard", "pro7000", "photo"
   },
   /* 31: Stylus Pro 9500 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, standard_bits, pro_base_res,
     "simple", "pro", "pro_pigment", "standard", "pro7500", "photo"
   },
   /* 32: Stylus Color 777/680 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "standard", "standard", NULL, "standard"
   },
   /* 33: Stylus Color 880/83/C60 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "standard", "standard", NULL, "standard"
   },
   /* 34: Stylus Color 980 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    96, 1, 0, 2, 192, 1, 0, 1, 192, 1, 0, 1, 4,
-    360, 14400, -1, 2880, 720, 180, 180,
-    38, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c3pl_dotsizes, sc980_densities, variable_bits, variable_base_res,
     "variable_3pl", "2880dpi", "standard", "standard", NULL, "standard"
   },
   /* 35: Stylus Photo 780/790 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 36: Stylus Photo 785/890/895/915/935 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 37: Stylus Photo 1280/1290 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 38: Stylus Color 580 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 15, 0, 3, 48, 48, 0, 3, 48, 48, 0, 3, 4,
-    360, 14400, 360, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
     "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
   },
   /* 39: Stylus Color Pro XL */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    16, 1, 0, 4, 16, 1, 0, 4, 16, 1, 0, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g1_dotsizes, g1_densities, standard_bits, standard_base_res,
     "simple", "720dpi", "standard", "standard", NULL, "standard"
   },
   /* 40: Stylus Pro 5500 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro_pigment_dotsizes, spro_pigment_densities, standard_bits, pro_base_res,
     "simple", "pro", "pro_pigment", "standard", "pro7500", "photo"
   },
   /* 41: Stylus Pro 10000 */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_PRO | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 9, 9, 9, 9, 9, 9, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     spro10000_dotsizes, spro10000_densities, variable_bits, pro_base_res,
     "spro10000", "pro", "pro_gen2", "standard", "pro7000", "photo"
   },
   /* 42: Stylus C20SX/C20UX */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 15, 0, 3, 48, 48, 0, 3, 48, 48, 0, 3, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
     "variable_x80_6pl", "720dpi_soft", "x80", "standard", NULL, "standard"
   },
   /* 43: Stylus C40SX/C40UX/C41SX/C41UX/C42SX/C42UX */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 15, 0, 3, 48, 48, 0, 3, 48, 48, 0, 3, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
     "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
   },
   /* 44: Stylus C70/C80 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    60, 60, 0, 2, 180, 180, 0, 2, 180, 180, 0, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c80", "standard", NULL, "standard"
   },
   /* 45: Stylus Color Pro */
   {
-    (MODEL_VARIABLE_NO | MODEL_COMMAND_1998 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_NO| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    16, 1, 0, 4, 16, 1, 0, 4, 16, 1, 0, 4, 4,
-    360, 14400, -1, 720, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(44), INCH(2), INCH(2), INCH(17 / 2), INCH(44),
-    9, 9, 9, 40, 9, 9, 9, 40, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    1, 7, 0, 0,
     g1_dotsizes, g1_densities, standard_bits, standard_base_res,
     "simple", "720dpi", "standard", "standard", NULL, "standard"
   },
   /* 46: Stylus Photo 950/960 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_YES |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    96, 96, 0, 2, 96, 96, 0, 2, 24, 24, 0, 1, 6,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 24,
-    4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, stp950_bits, stp950_base_res,
     "variable_2pl", "superfine", "f360_photo", "standard", NULL, "sp960"
   },
   /* 47: Stylus Photo 2100/2200 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_H_ONLY | MODEL_FAST_360_YES |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_YES |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    96, 96, 0, 2, 96, 96, 0, 2, 192, 192, 0, 1, 7,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
-    4, 15, 0, 0,
     c4pl_pigment_dotsizes, c4pl_pigment_densities, ultrachrome_bits, ultrachrome_base_res,
     "variable_ultrachrome", "superfine", "f360_ultrachrome", "standard", NULL, "sp2200"
   },
   /* 48: Stylus Pro 7600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 7,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(24), INCH(1200), INCH(7), INCH(7), INCH(24), INCH(1200),
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, ultrachrome_bits, pro_base_res,
     "variable_ultrachrome", "pro", "pro_ultrachrome", "standard", "pro7600", "photo"
   },
   /* 49: Stylus Pro 9600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_PRO | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 7,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(44), INCH(1200), INCH(7), INCH(7), INCH(44), INCH(1200),
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, ultrachrome_bits, pro_base_res,
     "variable_ultrachrome", "pro", "pro_ultrachrome", "standard", "pro7600", "photo"
   },
   /* 50: Stylus Photo 825/830 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 1440, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880_1440dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 51: Stylus Photo 925 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 1440, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880_1440dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 52: Stylus Color C62 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    48, 1, 0, 3, 144, 1, 0, 1, 144, 1, 0, 1, 4,
-    360, 14400, -1, 2880, 1440, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880_1440dpi", "standard", "standard", NULL, "standard"
   },
   /* 53: Japanese PM-950C */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_YES |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    96, 96, 0, 2, 96, 96, 0, 2, 24, 24, 0, 1, 6,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 24,
-    4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, stp950_bits, stp950_base_res,
     "variable_2pl", "superfine", "f360_photo7_japan", "standard", NULL, "pm_950c"
   },
   /* 54: Stylus Photo EX3 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_1999 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    32, 1, 0, 4, 32, 1, 0, 4, 32, 1, 0, 4, 6,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(13), INCH(44), INCH(2), INCH(2), INCH(13), INCH(44),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     sp720_dotsizes, c6pl_densities, variable_bits, variable_base_res,
     "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
   },
   /* 55: Stylus C82/CX-5200 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    59, 60, 0, 2, 180, 180, 0, 2, 180, 180, 0, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 0, 0, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
   },
   /* 56: Stylus C50 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 15, 0, 3, 48, 48, 0, 3, 48, 48, 0, 3, 4,
-    360, 14400, -1, 1440, 720, 90, 90,
-    0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
   },
   /* 57: Japanese PM-970C */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_YES |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    180, 180, 0, 2, 360, 360, 0, 1, 360, 360, 0, 1, 7,
-    360, 14400, -1, 2880, 2880, 720, 360,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities, c1_8_bits, c1_8_base_res,
     "variable_2pl", "superfine", "f360_photo7_japan", "standard", NULL, "pm_950c"
   },
   /* 58: Japanese PM-930C */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 90, 0, 2, 90, 90, 0, 2, 90, 90, 0, 2, 6,
-    360, 14400, -1, 2880, 2880, 720, 360,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c1_8pl_dotsizes, c1_8pl_densities, c1_8_bits, c1_8_base_res,
     "variable_2pl", "superfine", "photo_gen2", "standard", NULL, "photo"
   },
   /* 59: Stylus C43SX/C43UX/C44SX/C44UX (WRONG -- see 43!) */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_YES |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    15, 15, 0, 3, 48, 48, 0, 3, 48, 48, 0, 3, 4,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 0, 0, -99, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 9, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
     "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
   },
   /* 60: Stylus C84 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    59, 60, 0, 2, 180, 180, 0, 2, 180, 180, 0, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
   },
   /* 61: Stylus Color C63/C64 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    29, 30, 0, 3, 90, 90, 0, 3, 90, 90, 0, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120,
-    0, 1, 0, 80, 42, -180, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c64", "standard", NULL, "standard"
   },
   /* 62: Stylus Photo 900 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 399, 394, 595, 842, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 63: Stylus Photo R300 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
-    4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
     "variable_3pl_pmg", "superfine", "photo_gen3", "standard", NULL, "photo"
   },
   /* 64: PM-G800/Stylus Photo R800 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    180, 1, 0, 2, 180, 1, 0, 2, 180, 1, 0, 2, 8,
-    360, 28800, -1, 5760, 2880, 360, 180,
-    180 * 2, 1, 0, 80, 42, 0, 0, 0, 1, 180, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
-    4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
     "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL, "r800"
   },
   /* 65: Stylus Photo CX4600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 4,
-    360, 14400, -1, 5760, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 180, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
-    4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
     "variable_3pl_pmg", "superfine", "cx3650", "standard", NULL, "mfp2005"
   },
   /* 66: Stylus Color C65/C66 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    29, 30, 0, 3, 90, 90, 0, 3, 90, 90, 0, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120,
-    0, 1, 0, 80, 42, -180, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment_c66", "2880_1440dpi", "c64", "standard", NULL, "standard"
   },
   /* 67: Stylus Photo R1800 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    180, 1, 0, 2, 180, 1, 0, 2, 180, 1, 0, 2, 8,
-    360, 28800, -1, 5760, 2880, 360, 180,
-    180 * 2, 1, 0, 96, 42, 0, 0, 0, 1, 180, 5760 * 2880,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
-    4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
     "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL, "r800"
   },
   /* 68: PM-G820 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    180, 1, 0, 2, 180, 1, 0, 2, 180, 1, 0, 2, 8,
-    360, 14400, -1, 5760, 2880, 360, 180,
-    180 * 2, 1, 0, 80, 42, 0, 0, 0, 1, 180, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 11, 9, 9, 0, 11, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
-    4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
     "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL, "r800"
   },
   /* 69: Stylus C86 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    59, 60, 0, 2, 180, 180, 0, 2, 180, 180, 0, 2, 4,
-    360, 14400, -1, 2880, 2880, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
   },
   /* 70: Stylus Photo RX700 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    180, 1, 0, 2, 180, 1, 0, 2, 180, 1, 0, 2, 6,
-    360, 28800, -1, 5760, 2880, 360, 180,
-    10, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 0,
-    4, 15, 0, 0,
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
     "variable_1_5pl", "superfine", "photo_gen4", "p1_5", NULL, "rx700"
   },
   /* 71: Stylus Photo R2400 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_YES |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    180, 1, 0, 2, 180, 1, 0, 2, 180, 1, 0, 2, 8,
-    360, 14400, -1, 5760, 2880, 360, 180,
-    10, 1, 0, 80, 42, 0, 0, 0, 1, 180, 1440 * 1440,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
-    4, 15, 0, 0,
     p3_5pl_dotsizes, p3_5pl_densities, variable_bits, c1_5_base_res,
     "variable_r2400", "superfine", "f360_ultrachrome_k3", "v2880", NULL, "r2400"
   },
   /* 72: Stylus CX3700/3800/3810 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    29, 30, 1, 3, 90, 90, 0, 3, 90, 90, 0, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120,
-    0, 1, 0, 80, 42, -180, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment_c66", "2880_1440dpi", "c64", "standard", NULL, "cx3800"
   },
   /* 73: E-100/PictureMate */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 6,
-    360, 28800, -1, 5760, 1440, 1440, 720,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(4), INCH(1200), INCH(2), INCH(2), INCH(4), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
-    4, 15, 0, 0,
     picturemate_dotsizes, picturemate_densities, variable_bits, c1_5_base_res,
     "variable_picturemate", "picturemate", "picturemate_6", "picturemate", NULL, "picturemate_6"
   },
   /* 74: PM-A650 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 90, 0, 3, 90, 90, 0, 3, 90, 90, 0, 3, 4,
-    360, 14400, -1, 5760, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment_c66", "superfine", "c64", "standard", NULL, "standard"
   },
   /* 75: Japanese PM-A750 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_YES |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 90, 0, 3, 90, 90, 0, 3, 90, 90, 0, 3, 4,
-    360, 14400, -1, 5760, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
-    4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, variable_bits, variable_base_res,
     "variable_2pl", "superfine", "c64", "standard", NULL, "standard"
   },
   /* 76: Japanese PM-A890 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_YES |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 90, 0, 3, 90, 90, 0, 3, 90, 90, 0, 3, 6,
-    360, 14400, -1, 5760, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 0, 0, 0,
-    4, 15, 0, 0,
     c2pl_dotsizes, c2pl_densities, variable_bits, variable_base_res,
     "variable_2pl", "superfine", "photo_gen4", "standard", NULL, "standard"
   },
   /* 77: Japanese PM-D600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 4,
-    360, 14400, -1, 2880, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
-    4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
     "variable_3pl_pmg", "superfine", "c64", "standard", NULL, "photo"
   },
   /* 78: Stylus Photo 810/820 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_YES),
-    48, 1, 0, 3, 48, 1, 0, 3, 48, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 720, 90, 90,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 720 * 720,
-    INCH(19 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    3, 15, 0, 0,
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
     "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
   },
   /* 79: Stylus CX6400 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    59, 60, 0, 2, 180, 180, 0, 2, 180, 180, 0, 2, 4,
-    360, 14400, -1, 2880, 1440, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
   },
   /* 80: Stylus CX6600 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    59, 60, 0, 2, 180, 180, 0, 2, 180, 180, 0, 2, 4,
-    360, 14400, -1, 2880, 2880, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 1440 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
   },
   /* 81: Stylus Photo R260 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 4, 90, 1, 0, 4, 90, 1, 0, 4, 6,
-    360, 14400, -1, 5760, 2880, 360, 90,
-    90 * 4, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 189, 595, 842, 24,
-    4, 15, 0, 0,
     claria_dotsizes, claria_densities, variable_bits, c1_5_base_res,
     "variable_claria", "superfine", "claria", "v2880", NULL, "sp1400"
   },
   /* 82: Stylus Photo 1400 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 4, 90, 1, 0, 4, 90, 1, 0, 4, 6,
-    360, 14400, -1, 5760, 2880, 360, 90,
-    90 * 4, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 5760 * 2880,
-    INCH(13), INCH(1200), INCH(2), INCH(2), INCH(13), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 263, 595, 842, 24,
-    4, 15, 0, 0,
     claria_1400_dotsizes, claria_1400_densities, variable_bits, claria_1400_base_res,
     "variable_claria_1400", "claria_1400", "claria", "v2880", NULL, "sp1400"
   },
   /* 83: Stylus Photo R240 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 4,
-    360, 14400, -1, 5760, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
-    4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
     "variable_3pl_pmg", "superfine", "photo_gen3_4", "standard", NULL, "standard"
   },
   /* 84: Stylus Photo RX500 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 6,
-    360, 14400, -1, 2880, 1440, 360, 120,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 24,
-    4, 15, 0, 0,
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
     "variable_3pl_pmg", "superfine", "photo_gen3", "standard", NULL, "photo"
   },
   /* 85: Stylus C120 */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_YES | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    59, 60, 0, 2, 360, 1, 0, 1, 360, 1, 0, 1, 4,
-    360, 14400, -1, 5760, 2880, 360, 180,
-    0, 1, 0, 80, 42, -240, 0, 0, 1, 28800, 5760 * 2880,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 0, 9, 9, 9, 0, 9, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 24,
-    4, 15, 0, 0,
     c3pl_pigment_c120_dotsizes, c3pl_pigment_c120_densities, variable_bits, variable_base_res,
     "variable_3pl_pigment_c120", "superfine", "c120", "standard", NULL, "c120"
   },
   /* 86: PictureMate 4-color */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_NO |
-     MODEL_ZEROMARGIN_FULL | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    90, 1, 0, 3, 90, 1, 0, 3, 90, 1, 0, 3, 4,
-    360, 28800, -1, 5760, 1440, 1440, 720,
-    0, 1, 0, 80, 42, 0, 0, 0, 1, 28800, 1440 * 1440,
-    INCH(4), INCH(1200), INCH(2), INCH(2), INCH(4), INCH(1200),
-    9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 9, 9, 0, 0, 204, 191, 595, 842, 0,
-    4, 15, 0, 0,
     picturemate_dotsizes, picturemate_densities, variable_bits, c1_5_base_res,
     "variable_picturemate", "picturemate", "picturemate_4", "picturemate", NULL, "picturemate_4"
   },
   /* 87: B-500DN */
   {
-    (MODEL_VARIABLE_YES | MODEL_COMMAND_2000 | MODEL_GRAYMODE_YES |
-     MODEL_ZEROMARGIN_NO | MODEL_FAST_360_NO |
-     MODEL_SEND_ZERO_ADVANCE_YES | MODEL_SUPPORTS_INK_CHANGE_NO |
-     MODEL_PACKET_MODE_YES| MODEL_INTERCHANGEABLE_INK_NO |
-     MODEL_ENVELOPE_LANDSCAPE_NO),
-    360, 1, 0, 1, 360, 1, 0, 1, 360, 1, 0, 1, 4,
-    360, 14400, -1, 5760, 2880, 360, 360,
-    0, 1, 0, 80, 42, -7, 0, 0, 1, 28800, 720 * 720,
-    INCH(17 / 2), INCH(1200), INCH(2), INCH(2), INCH(17 / 2), INCH(1200),
-    9, 9, 27, 27, 9, 9, 27, 27, 9, 9, 0, 0, 9, 9, 0, 0, -1, -1, 0, 0, 0,
-    4, 15, 0, 0,
     c3pl_pigment_b500_dotsizes, c3pl_pigment_b500_densities, variable_bits, b500_base_res,
     "variable_3pl_pigment_b500", "superfine", "b500", "standard", NULL, "standard"
   },
@@ -1747,3 +780,339 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
 
 const int stpi_escp2_model_limit =
 sizeof(stpi_escp2_model_capabilities) / sizeof(stpi_escp2_printer_t);
+
+static void
+load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
+{
+  stp_mxml_node_t *tmp = xmod->child;
+  stpi_escp2_printer_t *p = &(stpi_escp2_model_capabilities[model]);
+  int found_black_head_config = 0;
+  int found_fast_head_config = 0;
+  p->max_black_resolution = -1;
+  p->cd_x_offset = -1;
+  p->cd_y_offset = -1;
+  while (tmp)
+    {
+      if (tmp->type == STP_MXML_ELEMENT)
+	{
+	  const char *name = tmp->value.element.name;
+	  const char *target = stp_mxmlElementGetAttr(tmp, "href");
+	  if (target)
+	    {
+	      if (!strcmp(name, "media"))
+		stp_escp2_load_media(v, target);
+	      else if (!strcmp(name, "inputSlots"))
+		stp_escp2_load_input_slots(v, target);
+	      else if (!strcmp(name, "mediaSizes"))
+		stp_escp2_load_media_sizes(v, target);
+	    }
+	  else if (tmp->child && tmp->child->type == STP_MXML_TEXT)
+	    {
+	      const char *val = tmp->child->value.text.string;
+	      if (!strcmp(name, "verticalBorderlessSequence"))
+		p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
+
+	      else if (!strcmp(name, "preinitSequence"))
+		p->preinit_sequence = stp_xmlstrtoraw(val);
+
+	      else if (!strcmp(name, "preinitRemoteSequence"))
+		p->preinit_remote_sequence = stp_xmlstrtoraw(val);
+
+	      else if (!strcmp(name, "postinitRemoteSequence"))
+		p->postinit_remote_sequence = stp_xmlstrtoraw(val);
+	      else if (!strcmp(name, "commandSet"))
+		{
+		  if (!strcmp(val, "1998"))
+		    p->flags |= MODEL_COMMAND_1998;
+		  else if (!strcmp(val, "1999"))
+		    p->flags |= MODEL_COMMAND_1999;
+		  else if (!strcmp(val, "2000"))
+		    p->flags |= MODEL_COMMAND_2000;
+		  else if (!strcmp(val, "Pro"))
+		    p->flags |= MODEL_COMMAND_PRO;
+		}
+	      else if (!strcmp(name, "borderless"))
+		{
+		  if (!strcmp(val, "No"))
+		    p->flags |= MODEL_ZEROMARGIN_NO;
+		  else if (!strcmp(val, "Yes"))
+		    p->flags |= MODEL_ZEROMARGIN_YES;
+		  else if (!strcmp(val, "Full"))
+		    p->flags |= MODEL_ZEROMARGIN_FULL;
+		  else if (!strcmp(val, "HorizontalOnly"))
+		    p->flags |= MODEL_ZEROMARGIN_H_ONLY;
+		}
+	      else if (!strcmp(name, "preferredEnvelopeOrientation") &&
+		       !strcmp(val, "Landscape"))
+		p->flags |= MODEL_ENVELOPE_LANDSCAPE_YES;
+	      else if (!strcmp(name, "headConfiguration"))
+		{
+		  const char *htype = stp_mxmlElementGetAttr(tmp, "type");
+		  unsigned long data[4] = { 0, 0, 0, 0 };
+		  stp_mxml_node_t *child = tmp->child;
+		  while (child)
+		    {
+		      if (child->type == STP_MXML_ELEMENT && child->child &&
+			  child->child->type == STP_MXML_TEXT)
+			{
+			  const char *cname = child->value.element.name;
+			  const char *cval = child->child->value.text.string;
+			  if (!strcmp(cname, "Nozzles"))
+			    data[0] = stp_xmlstrtoul(cval);
+			  else if (!strcmp(cname, "MinNozzles"))
+			    data[1] = stp_xmlstrtoul(cval);
+			  else if (!strcmp(cname, "FirstNozzle"))
+			    data[2] = stp_xmlstrtoul(cval);
+			  else if (!strcmp(cname, "NozzleSeparation"))
+			    data[3] = stp_xmlstrtoul(cval);
+			}
+		      child = child->next;
+		    }		      
+		  if (!strcmp(htype, "default"))
+		    {
+		      p->nozzles = data[0];
+		      p->min_nozzles = data[1];
+		      p->nozzle_start = data[2];
+		      p->nozzle_separation = data[3];
+		      if (!found_black_head_config)
+			{
+			  p->black_nozzles = data[0];
+			  p->min_black_nozzles = data[1];
+			  p->black_nozzle_start = data[2];
+			  p->black_nozzle_separation = data[3];
+			}
+		      if (!found_fast_head_config)
+			{
+			  p->fast_nozzles = data[0];
+			  p->min_fast_nozzles = data[1];
+			  p->fast_nozzle_start = data[2];
+			  p->fast_nozzle_separation = data[3];
+			}
+		    }
+		  else if (!strcmp(htype, "black"))
+		    {
+		      p->black_nozzles = data[0];
+		      p->min_black_nozzles = data[1];
+		      p->black_nozzle_start = data[2];
+		      p->black_nozzle_separation = data[3];
+		      found_black_head_config = 1;
+		    }
+		  else if (!strcmp(htype, "fast"))
+		    {
+		      p->fast_nozzles = data[0];
+		      p->min_fast_nozzles = data[1];
+		      p->fast_nozzle_start = data[2];
+		      p->fast_nozzle_separation = data[3];
+		      found_fast_head_config = 1;
+		    }
+		}
+	      else if (!strcmp(name, "margins"))
+		{
+		  const char *itype = stp_mxmlElementGetAttr(tmp, "interleave");
+		  const char *mtype = stp_mxmlElementGetAttr(tmp, "media");
+		  unsigned long data[4];
+		  int i = 0;
+		  stp_mxml_node_t *child = tmp->child;
+		  while (child && i < 4)
+		    {
+		      if (child->type == STP_MXML_TEXT)
+			data[i++] = stp_xmlstrtoul(child->value.text.string);
+		      child = child->next;
+		    }		      
+		  if (itype && !strcmp(itype, "soft") &&
+		      mtype && !strcmp(mtype, "sheet"))
+		    {
+		      p->left_margin = data[0];
+		      p->right_margin = data[1];
+		      p->top_margin = data[2];
+		      p->bottom_margin = data[3];
+		    }
+		  else if (itype && !strcmp(itype, "printer") &&
+			   mtype && !strcmp(mtype, "sheet"))
+		    {
+		      p->m_left_margin = data[0];
+		      p->m_right_margin = data[1];
+		      p->m_top_margin = data[2];
+		      p->m_bottom_margin = data[3];
+		    }
+		  else if (itype && !strcmp(itype, "soft") &&
+			   mtype && !strcmp(mtype, "roll"))
+		    {
+		      p->roll_left_margin = data[0];
+		      p->roll_right_margin = data[1];
+		      p->roll_top_margin = data[2];
+		      p->roll_bottom_margin = data[3];
+		    }
+		  else if (itype && !strcmp(itype, "printer") &&
+			   mtype && !strcmp(mtype, "roll"))
+		    {
+		      p->m_roll_left_margin = data[0];
+		      p->m_roll_right_margin = data[1];
+		      p->m_roll_top_margin = data[2];
+		      p->m_roll_bottom_margin = data[3];
+		    }
+		}
+	      else if (!strcmp(name, "physicalChannels"))
+		p->physical_channels = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "baseSeparation"))
+		p->base_separation = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "resolutionScale"))
+		p->resolution_scale = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "maxBlackResolution"))
+		p->max_black_resolution = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "minimumResolution"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->min_hres = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->min_vres = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "maximumResolution"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->max_hres = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->max_vres = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "extraVerticalFeed"))
+		p->extra_feed = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "separationRows"))
+		p->separation_rows = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "pseudoSeparationRows"))
+		p->pseudo_separation_rows = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "zeroMarginOffset"))
+		p->zero_margin_offset = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "microLeftMargin"))
+		p->micro_left_margin = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "initialVerticalOffset"))
+		p->initial_vertical_offset = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "blackInitialVerticalOffset"))
+		p->black_initial_vertical_offset = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "extra720DPISeparation"))
+		p->extra_720dpi_separation = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "minHorizontalAlignment"))
+		p->min_horizontal_position_alignment = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "baseHorizontalAlignment"))
+		p->base_horizontal_position_alignment = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "bidirectionalAutoUpperLimit"))
+		p->bidirectional_upper_limit = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "minimumMediaSize"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->min_paper_width = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->min_paper_height = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "maximumMediaSize"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->max_paper_width = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->max_paper_height = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "maximumImageableArea"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->max_imageable_width = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->max_imageable_height = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "CDOffset"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->cd_x_offset = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->cd_y_offset = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "CDMediaSize"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->cd_page_width = stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->cd_page_height = stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "extraBottom"))
+		p->paper_extra_bottom = stp_xmlstrtoul(val);
+	      else if (!strcmp(name, "AlignmentChoices"))
+		{
+		  stp_mxml_node_t *child = tmp->child;
+		  p->alignment_passes =
+		    stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->alignment_choices =
+		    stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->alternate_alignment_passes =
+		    stp_xmlstrtoul(child->value.text.string);
+		  child = child->next;
+		  p->alternate_alignment_choices =
+		    stp_xmlstrtoul(child->value.text.string);
+		}
+	    }
+	  else if (tmp->child && tmp->child->type == STP_MXML_ELEMENT)
+	    {
+	    }
+	  else
+	    {
+	      if (!strcmp(name, "supportsVariableDropsizes"))
+		p->flags |= MODEL_VARIABLE_YES;
+	      else if (!strcmp(name, "hasFastGraymode"))
+		p->flags |= MODEL_GRAYMODE_YES;
+	      else if (!strcmp(name, "hasFast360DPI"))
+		p->flags |= MODEL_FAST_360_YES;
+	      else if (!strcmp(name, "sendZeroAdvance"))
+		p->flags |= MODEL_SEND_ZERO_ADVANCE_YES;
+	      else if (!strcmp(name, "supportsInkChange"))
+		p->flags |= MODEL_SUPPORTS_INK_CHANGE_YES;
+	      else if (!strcmp(name, "supportsD4Mode"))
+		p->flags |= MODEL_PACKET_MODE_YES;
+	      else if (!strcmp(name, "hasInterchangeableInkCartridges"))
+		p->flags |= MODEL_INTERCHANGEABLE_INK_YES;
+	    }
+	}
+      tmp = tmp->next;
+    }
+}
+
+void
+stpi_escp2_load_model(const stp_vars_t *v, int model)
+{
+  stp_list_t *dirlist = stpi_data_path();
+  stp_list_item_t *item;
+  char buf[1024];
+  int found = 0;
+
+  stp_xml_init();
+  sprintf(buf, "escp2/model/model_%d.xml", model);
+  item = stp_list_get_start(dirlist);
+  while (item)
+    {
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *fn = stpi_path_merge(dn, buf);
+      stp_mxml_node_t *doc = stp_mxmlLoadFromFile(NULL, fn, STP_MXML_NO_CALLBACK);
+      stp_free(fn);
+      if (doc)
+	{
+	  stp_mxml_node_t *xmod =
+	    stp_mxmlFindElement(doc, doc, "escp2:model", NULL, NULL,
+				STP_MXML_DESCEND);
+	  if (xmod)
+	    {
+	      const char *stmp = stp_mxmlElementGetAttr(xmod, "id");
+	      assert(stmp && stp_xmlstrtol(stmp) == model);
+	      if (stmp && stp_xmlstrtol(stmp) == model)
+		{
+		  load_model_from_file(v, xmod, model);
+		  found = 1;
+		}
+	    }
+	  stp_mxmlDelete(doc);
+	  if (found)
+	    break;
+	}
+      item = stp_list_item_next(item);
+    }
+  stp_list_destroy(dirlist);
+  if (! found)
+    stp_eprintf(v, "Unable to load definition for model %d!\n", model);
+}

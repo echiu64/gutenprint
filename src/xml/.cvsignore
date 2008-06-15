@@ -2,3 +2,6 @@ Makefile
 Makefile.in
 xml-stamp
 xmli18n-tmp.h
+.deps
+.libs
+extract-strings

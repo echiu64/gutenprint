@@ -26,5 +26,39 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
 	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
 	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+	<commandSet>2000</commandSet>
+	<borderless>Yes</borderless>
+	<supportsVariableDropsizes/>
+	<hasFastGraymode/>
+	<sendZeroAdvance/>
+	<supportsD4Mode/>
+	<preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
+	<headConfiguration type="default">
+	<Nozzles>90</Nozzles>
+	<MinNozzles>1</MinNozzles>
+	<FirstNozzle>0</FirstNozzle>
+	<NozzleSeparation>3</NozzleSeparation>
+	</headConfiguration>
+	<physicalChannels>4</physicalChannels>
+	<baseSeparation>360</baseSeparation>
+	<resolutionScale>14400</resolutionScale>
+	<minimumResolution>360 120</minimumResolution>
+	<maximumResolution>5760 1440</maximumResolution>
+	<separationRows>1</separationRows>
+	<zeroMarginOffset>80</zeroMarginOffset>
+	<microLeftMargin>42</microLeftMargin>
+	<minHorizontalAlignment>1</minHorizontalAlignment>
+	<baseHorizontalAlignment>180</baseHorizontalAlignment>
+	<bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
+	<minimumMediaSize>144 144</minimumMediaSize>
+	<maximumMediaSize>612 86400</maximumMediaSize>
+	<maximumImageableArea>612 86400</maximumImageableArea>
+	<margins interleave="soft" media="sheet">9 9 0 0</margins>
+	<margins interleave="printer" media="sheet">9 9 0 0</margins>
+	<margins interleave="soft" media="roll">9 9 0 0</margins>
+	<margins interleave="printer" media="roll">9 9 0 0</margins>
+	<CDOffset>204 191</CDOffset>
+	<CDMediaSize>595 842</CDMediaSize>
+	<AlignmentChoices>4 15 0 0</AlignmentChoices>
 </escp2:model>
 </gutenprint>
