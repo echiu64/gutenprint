@@ -13,11 +13,11 @@ require('standard_html_header.php3');
 # Please remember to use <P> </P> tags !  ?>
 
 <H4>High quality drivers for Canon, Epson, Lexmark, Sony, Olympus, and
-PCL printers for use with <a
-href="http://ghostscript.sourceforge.net">Ghostscript</a>, <A
-HREF="http://www.cups.org">CUPS</A>, <a
-href="http://www.linuxprinting.org/foomatic.html">Foomatic</a>, and <a
-href="http://www.gimp.org">the Gimp</a>.</H4>
+PCL printers for use with
+<a href="http://www.cups.org">CUPS</A>,
+<a href="http://ghostscript.sourceforge.net">Ghostscript</a>,
+<a href="http://www.linuxprinting.org/foomatic.html">Foomatic</a>, and 
+<a href="http://www.gimp.org">GIMP</a>.</H4>
 
 <P><B>Gutenprint</B> was formerly called <B>Gimp-Print</B>.
 Gimp-Print 4.2.7 (the last Gimp-Print 4.2 release) is still available
