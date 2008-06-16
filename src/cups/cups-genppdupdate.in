@@ -19,9 +19,6 @@
 
 use strict;
 use Getopt::Std;
-use Fcntl qw(:mode);
-use File::Temp qw(:POSIX);
-use File::Copy qw(mv);
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
