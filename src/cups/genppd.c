@@ -1625,7 +1625,7 @@ write_ppd(
   stp_parameter_description_destroy(&desc);
 
   stp_describe_parameter(v, "OutputOrder", &desc);
-  if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       gzputs(fp, "*OpenUI *OutputOrder: PickOne\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
