@@ -129,14 +129,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta2 is released!</span> 
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta3 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#5.2.0-beta2">April 28, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.0 and 5.1 release series.  An updated stand alone uninstaller has also been released. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.1.7 is released!</span> 
-			<br>
-			<a href="MacOSX.php3#5.1.7">March 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.1.7, a development release. This release incorporates the support for additional printers and other improvemnets.  See the <b>Downloads</b> section. 
+			<a href="MacOSX.php3#5.2.0-beta3">June 15, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -187,12 +182,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.0-beta2</b> 
+			<b>Gutenprint 5.2.0-beta3</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta2-ub.dmg?download">gutenprint-5.2.0-beta2-ub.dmg</a></span>&nbsp;&nbsp;(16.9 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta3-ub.dmg?download">gutenprint-5.2.0-beta3-ub.dmg</a></span>&nbsp;&nbsp;(18.6 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.0 and 5.1 release series.  An updated uninstaller and Gutenprint Utility for EPSON Inkjet Printers are included.  Mac OS X Jaguar users need  GhostScript for full support.  Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.98.2.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.2.0-beta2 release and also includes support for more than 450 additional black and white laser printers.  An uninstaller and Gutenprint Utility for EPSON Inkjet Printers are included.  Mac OS X Jaguar users need  GhostScript for full support.  Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta3.tar.bz2?download">source code</a>)
 </p>
 
 		<p>
@@ -202,14 +197,6 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta rel
 		</p>
 		<p>
 			Gutenprint 5.0.2 is the latest release from the stable branch of Gutenprint 5.0. This release supports additional printers and offers some important bug fixes. It is fully compatible with Mac OS X 10.5.x (Leopard).  The updated uninstaller is also included and is Mac OS X 10.5.x compatible.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.0.2.tar.bz2?download">source code</a>) 
-		</p>
-		<p>
-			<b>Gutenprint 5.1.7</b> 
-			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.7-ub.dmg?download">gutenprint-5.1.7-ub.dmg</a></span>&nbsp;&nbsp;(16 MB) 
-		</p>
-		<p>
-			Gutenprint 5.1.7 is a development release of Gutenprint 5.1. It is based on Gutenprint 5.0.0. This release supports additional printers and offers some important bug fixes and other additional features.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.1.7.tar.bz2?download">source code</a>) 
 		</p>
 <!-- deleted older release info as iCab was still displaying it -->
 		<p>
@@ -271,6 +258,38 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta2, a beta rel
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.0-beta3"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.0-beta3</b> 
+		</td>
+		<td align="right">
+			<b>2008-06-15</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.0-beta3 (5.2.0.3)</b> release is the second beta release of the forthcoming 5.2.x stable release.  There are several notable changes since the Gutenprint 5.2.0-beta2:</p> 
+	
+<ul type="disc">
+	<li>Macintosh users of OS X 10.4.x and later may notice a slightly different color output beginning with this release.  All printer PPDs now specify the use of the sRGB and the Generic CMYK color profiles rather than having the system use default color profiles.</li>
+	<li>A problem whereby some rows are not printed in color on the Epson Stylus CX3700 and related printers has been fixed.</li>
+	<li>A problem whereby with certain combinations of options the output appeared discontinuous (gradients would get darker then abruptly lighten) has been fixed.</li>
+	<li>escputil now distinguishes between the two black cartridges in the Epson Stylus C120.</li>
+	<li>Printing speed, and possibly quality, have been improved in certain cases on newer Epson inkjet printers (C120, Stylus Photo 2400, RX700, and all printers using Claria ink).  The speed improvement should be most noticeable with plain paper at lower resolutions.  Quality improvements may or may not be noticeable.</li>
+	<li>The Epson driver is in the process of being converted to use data stored in files external to the binary library.  While this should have no impact on end-user use, it is a substantial change that people should be aware of.  Please report any issues.</li>
+<li>
+New printers supported in this release:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Offirio PX-B500 (preliminary)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Offirio PX-B300 (preliminary)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Over 450 additional black and white laser printers from Brother, HP, and the Ricoh family of printers.
+</li>
+</ul>
+<p>
+Additional bug fixes and new features are listed in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=607228">release notes</a>.
+</p>
+
 <a name="5.2.0-beta2"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
