@@ -213,13 +213,6 @@ typedef struct
   const inklist_t *const *inklists;
   short n_inklists;
 } inkgroup_t;
-
-typedef struct
-{
-  const char *listname;
-  int count;
-  const char *const *names;
-} channel_name_t;
     
 
 /*
@@ -398,7 +391,6 @@ typedef struct escp2_printer
   const char *inkgroup;
   const char *quality_list;
   const char *printer_weaves;
-  const char *channel_names;
 /*****************************************************************************/
   /* Data filled in at runtime from XML */
   model_cap_t	flags;		/* Bitmask of flags, see above */
@@ -514,6 +506,8 @@ typedef struct escp2_printer
   stp_string_list_t *input_slots;
 /*****************/
   stp_mxml_node_t *media_sizes;
+/*****************/
+  stp_string_list_t *channel_names;
 } stpi_escp2_printer_t;
 
 extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
@@ -525,7 +519,6 @@ extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
 extern const res_t *const *stpi_escp2_get_reslist_named(const char *);
 extern const escp2_drop_list_t *stpi_escp2_get_drop_list_named(const char *);
 extern const printer_weave_list_t *stpi_escp2_get_printer_weaves_named(const char *);
-extern const channel_name_t *stpi_escp2_get_channel_names_named(const char *);
 
 /* From escp2-papers.c: */
 extern int stp_escp2_load_media(const stp_vars_t *v, const char *name);

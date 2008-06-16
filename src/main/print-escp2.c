@@ -284,12 +284,6 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1, 0
   },
   {
-    "AdjustDotsize", N_("Adjust dot size as necessary"), N_("Advanced Printer Setup"),
-    N_("Adjust dot size as necessary to achieve desired density"),
-    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED4, 1, 1, -1, 1, 0
-  },
-  {
     "OutputOrder", N_("Output Order"), N_("Basic Printer Setup"),
     N_("Output Order"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -1037,12 +1031,11 @@ escp2_printer_weaves(const stp_vars_t *v)
 	  (stpi_escp2_model_capabilities[model].printer_weaves));
 }
 
-static inline const channel_name_t *
+static inline const stp_string_list_t *
 escp2_channel_names(const stp_vars_t *v)
 {
   int model = escp2_get_stp_model_id(v);
-  return (stpi_escp2_get_channel_names_named
-	  (stpi_escp2_model_capabilities[model].channel_names));
+  return (stpi_escp2_model_capabilities[model].channel_names);
 }
 
 static inline const inkgroup_t *
@@ -2326,10 +2319,6 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       else
 	description->is_active = 0;
     }
-  else if (strcmp(name, "AdjustDotsize") == 0)
-    {
-      description->deflt.boolean = 0;
-    }
   else if (strcmp(name, "CyanDensity") == 0)
     set_density_parameter(v, description, STP_ECOLOR_C);
   else if (strcmp(name, "MagentaDensity") == 0)
@@ -2477,14 +2466,13 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "ChannelNames") == 0)
     {
-      const channel_name_t *channel_names = escp2_channel_names(v);
-      description->bounds.str = stp_string_list_create();
-      for (i = 0; i < channel_names->count; i++)
-	stp_string_list_add_string
-	  (description->bounds.str,
-	   channel_names->names[i], gettext(channel_names->names[i]));
-      description->deflt.str =
-	stp_string_list_param(description->bounds.str, 0)->name;
+      const stp_string_list_t *channel_names = escp2_channel_names(v);
+      if (channel_names)
+	{
+	  description->bounds.str = stp_string_list_create_copy(channel_names);
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
     }
   else if (strcmp(name, "SupportsPacketMode") == 0)
     {
@@ -2845,9 +2833,7 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   const stp_vars_t *pv = pd->paper_type->v;
   double paper_density = .8;
-  int o_resid = compute_virtual_resid(pd->res);
-  int n_resid = compute_printed_resid(pd->res);
-  double virtual_scale = 1;
+  int resid = compute_virtual_resid(pd->res);
 
   if (pv && stp_check_float_parameter(pv, "Density", STP_PARAMETER_ACTIVE))
     paper_density = stp_get_float_parameter(pv, "Density");
@@ -2857,85 +2843,12 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       stp_set_float_parameter_active(v, "Density", STP_PARAMETER_ACTIVE);
       stp_set_float_parameter(v, "Density", 1.0);
     }
+  stp_scale_float_parameter(v, "Density", paper_density * escp2_density(v, resid));
+  pd->drop_size = escp2_ink_type(v, resid);
+  pd->ink_resid = resid;
 
-  while (n_resid > o_resid)
-    {
-      virtual_scale /= 2.0;
-      n_resid--;
-    }
-  while (n_resid < o_resid)
-    {
-      virtual_scale *= 2.0;
-      n_resid++;
-    }
-  stp_scale_float_parameter
-    (v, "Density", virtual_scale * paper_density * escp2_density(v, o_resid));
-  pd->drop_size = escp2_ink_type(v, o_resid);
-  pd->ink_resid = o_resid;
-
-  /*
-   * If density is greater than 1, try to find the dot size from a lower
-   * resolution that will let us print.  This allows use of high ink levels
-   * on special paper types that need a lot of ink.
-   */
   if (stp_get_float_parameter(v, "Density") > 1.0)
-    {
-      if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE) ||
-	  stp_check_int_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE) ||
-	  stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE) ||
-	  virtual_scale != 1.0 ||
-	  (stp_check_boolean_parameter(v, "AdjustDotsize",
-				       STP_PARAMETER_ACTIVE) &&
-	   ! stp_get_boolean_parameter(v, "AdjustDotsize")))
-	{
-	  stp_set_float_parameter(v, "Density", 1.0);
-	}
-      else
-	{
-	  double density = stp_get_float_parameter(v, "Density");
-	  int resid = o_resid;
-	  int xresid = resid;
-	  double xdensity = density;
-	  while (density > 1.0 && resid >= RES_360)
-	    {
-	      int tresid = xresid - 1;
-	      int base_res_now = escp2_base_res(v, resid);
-	      int bits_now = escp2_bits(v, resid);
-	      double density_now = escp2_density(v, resid);
-	      int base_res_then = escp2_base_res(v, tresid);
-	      int bits_then = escp2_bits(v, tresid);
-	      double density_then = escp2_density(v, tresid);
-	      int drop_size_then = escp2_ink_type(v, tresid);
-
-	      /*
-	       * If we would change the number of bits in the ink type,
-	       * don't try this.  Some resolutions require using a certain
-	       * number of bits!
-	       */
-
-	      if (bits_now != bits_then || density_then <= 0.0 ||
-		  base_res_now != base_res_then || drop_size_then == -1)
-		break;
-	      xdensity = density * density_then / density_now / 2;
-	      xresid = tresid;
-
-	      /*
-	       * If we wouldn't get a significant improvement by changing the
-	       * resolution, don't waste the effort trying.
-	       */
-	      if (density / xdensity > 1.001)
-		{
-		  density = xdensity;
-		  resid = tresid;
-		}
-	    }
-	  pd->drop_size = escp2_ink_type(v, resid);
-	  pd->ink_resid = resid;
-	  if (density > 1.0)
-	    density = 1.0;
-	  stp_set_float_parameter(v, "Density", density);
-	}
-    }
+    stp_set_float_parameter(v, "Density", 1.0);
 }
 
 static void

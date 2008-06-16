@@ -335,446 +335,446 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   /* 0: Stylus Color */
   {
     g1_dotsizes, g1_densities, standard_bits, standard_base_res,
-    "simple", "720dpi", "standard", "standard", NULL, "standard"
+    "simple", "720dpi", "standard", "standard", NULL
   },
   /* 1: Stylus Color 400/500 */
   {
     g2_dotsizes, g1_densities, standard_bits, standard_base_res,
-    "simple", "sc500", "standard", "standard", NULL, "standard"
+    "simple", "sc500", "standard", "standard", NULL
   },
   /* 2: Stylus Color 1500 */
   {
     g1_dotsizes, sc1500_densities, standard_bits, standard_base_res,
-    "simple", "sc500", "cmy", "standard", NULL, "standard"
+    "simple", "sc500", "cmy", "standard", NULL
   },
   /* 3: Stylus Color 600 */
   {
     sc600_dotsizes, g3_densities, standard_bits, g3_base_res,
-    "simple", "g3", "standard", "standard", NULL, "standard"
+    "simple", "g3", "standard", "standard", NULL
   },
   /* 4: Stylus Color 800 */
   {
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
-    "simple", "g3", "standard", "standard", NULL, "standard"
+    "simple", "g3", "standard", "standard", NULL
   },
   /* 5: Stylus Color 850 */
   {
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
-    "simple", "g3", "standard", "standard", NULL, "standard"
+    "simple", "g3", "standard", "standard", NULL
   },
   /* 6: Stylus Color 1520 */
   {
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
-    "simple", "g3", "standard", "standard", NULL, "standard"
+    "simple", "g3", "standard", "standard", NULL
   },
 
   /* SECOND GENERATION PRINTERS */
   /* 7: Stylus Photo 700 */
   {
     sp700_dotsizes, sp700_densities, standard_bits, g3_base_res,
-    "simple", "g3", "photo_gen1", "standard", NULL, "photo"
+    "simple", "g3", "photo_gen1", "standard", NULL
   },
   /* 8: Stylus Photo EX */
   {
     sp700_dotsizes, sp700_densities, standard_bits, g3_base_res,
-    "simple", "g3", "photo_gen1", "standard", NULL, "photo"
+    "simple", "g3", "photo_gen1", "standard", NULL
   },
   /* 9: Stylus Photo */
   {
     sp700_dotsizes, sp700_densities, standard_bits, g3_base_res,
-    "simple", "g3_720dpi", "photo_gen1", "standard", NULL, "photo"
+    "simple", "g3_720dpi", "photo_gen1", "standard", NULL
   },
 
   /* THIRD GENERATION PRINTERS */
   /* 10: Stylus Color 440/460 */
   {
     sc440_dotsizes, sc440_densities, standard_bits, standard_base_res,
-    "simple", "g3_720dpi", "standard", "standard", NULL, "standard"
+    "simple", "g3_720dpi", "standard", "standard", NULL
   },
   /* 11: Stylus Color 640 */
   {
     sc640_dotsizes, sc440_densities, standard_bits, standard_base_res,
-    "simple", "sc640", "standard", "standard", NULL, "standard"
+    "simple", "sc640", "standard", "standard", NULL
   },
   /* 12: Stylus Color 740/Stylus Scan 2000/Stylus Scan 2500 */
   {
     c6pl_dotsizes, c6pl_densities, variable_bits, variable_base_res,
-    "variable_6pl", "1440dpi", "standard", "standard", NULL, "standard"
+    "variable_6pl", "1440dpi", "standard", "standard", NULL
   },
   /* 13: Stylus Color 900 */
   {
     c3pl_dotsizes, c3pl_densities, variable_bits, stc900_base_res,
-    "variable_3pl", "1440dpi", "standard", "standard", NULL, "standard"
+    "variable_3pl", "1440dpi", "standard", "standard", NULL
   },
   /* 14: Stylus Photo 750 */
   {
     c6pl_dotsizes, c6pl_densities, variable_bits, variable_base_res,
-    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
+    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL
   },
   /* 15: Stylus Photo 1200 */
   {
     c6pl_dotsizes, c6pl_densities, variable_bits, variable_base_res,
-    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
+    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL
   },
   /* 16: Stylus Color 860 */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_1440_4pl", "1440dpi", "standard", "standard", NULL, "standard"
+    "variable_1440_4pl", "1440dpi", "standard", "standard", NULL
   },
   /* 17: Stylus Color 1160 */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_1440_4pl", "1440dpi", "standard", "standard", NULL, "standard"
+    "variable_1440_4pl", "1440dpi", "standard", "standard", NULL
   },
   /* 18: Stylus Color 660 */
   {
     sc660_dotsizes, sc660_densities, standard_bits, standard_base_res,
-    "simple", "sc640", "standard", "standard", NULL, "standard"
+    "simple", "sc640", "standard", "standard", NULL
   },
   /* 19: Stylus Color 760 */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_1440_4pl", "1440dpi", "standard", "standard", NULL, "standard"
+    "variable_1440_4pl", "1440dpi", "standard", "standard", NULL
   },
   /* 20: Stylus Photo 720 (Australia) */
   {
     sp720_dotsizes, c6pl_densities, variable_bits, variable_base_res,
-    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
+    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL
   },
   /* 21: Stylus Color 480 */
   {
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
-    "variable_x80_6pl", "720dpi_soft", "x80", "standard", NULL, "standard"
+    "variable_x80_6pl", "720dpi_soft", "x80", "standard", NULL
   },
   /* 22: Stylus Photo 870/875 */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_1440_4pl", "1440dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_1440_4pl", "1440dpi", "photo_gen2", "standard", NULL
   },
   /* 23: Stylus Photo 1270 */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_1440_4pl", "1440dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_1440_4pl", "1440dpi", "photo_gen2", "standard", NULL
   },
   /* 24: Stylus Color 3000 */
   {
     g3_dotsizes, g3_densities, standard_bits, g3_base_res,
-    "simple", "g3", "standard", "standard", NULL, "standard"
+    "simple", "g3", "standard", "standard", NULL
   },
   /* 25: Stylus Color 670 */
   {
     sc670_dotsizes, c6pl_densities, variable_bits, variable_base_res,
-    "variable_6pl", "1440dpi", "standard", "standard", NULL, "standard"
+    "variable_6pl", "1440dpi", "standard", "standard", NULL
   },
   /* 26: Stylus Photo 2000P */
   {
     sp2000_dotsizes, sp2000_densities, variable_bits, variable_base_res,
-    "variable_2000p", "1440dpi", "photo_pigment", "standard", NULL, "photo"
+    "variable_2000p", "1440dpi", "photo_pigment", "standard", NULL
   },
   /* 27: Stylus Pro 5000 */
   {
     spro5000_dotsizes, sp700_densities, standard_bits, g3_base_res,
-    "simple", "1440dpi", "pro_gen1", "standard", NULL, "photo"
+    "simple", "1440dpi", "pro_gen1", "standard", NULL
   },
   /* 28: Stylus Pro 7000 */
   {
     spro_dye_dotsizes, spro_dye_densities, standard_bits, pro_base_res,
-    "simple", "pro", "pro_gen1", "standard", "pro7000", "photo"
+    "simple", "pro", "pro_gen1", "standard", "pro7000"
   },
   /* 29: Stylus Pro 7500 */
   {
     spro_pigment_dotsizes, spro_pigment_densities, standard_bits, pro_base_res,
-    "simple", "pro", "pro_pigment", "standard", "pro7500", "photo"
+    "simple", "pro", "pro_pigment", "standard", "pro7500"
   },
   /* 30: Stylus Pro 9000 */
   {
     spro_dye_dotsizes, spro_dye_densities, standard_bits, pro_base_res,
-    "simple", "pro", "pro_gen1", "standard", "pro7000", "photo"
+    "simple", "pro", "pro_gen1", "standard", "pro7000"
   },
   /* 31: Stylus Pro 9500 */
   {
     spro_pigment_dotsizes, spro_pigment_densities, standard_bits, pro_base_res,
-    "simple", "pro", "pro_pigment", "standard", "pro7500", "photo"
+    "simple", "pro", "pro_pigment", "standard", "pro7500"
   },
   /* 32: Stylus Color 777/680 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "standard", "standard", NULL, "standard"
+    "variable_2880_4pl", "2880dpi", "standard", "standard", NULL
   },
   /* 33: Stylus Color 880/83/C60 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "standard", "standard", NULL, "standard"
+    "variable_2880_4pl", "2880dpi", "standard", "standard", NULL
   },
   /* 34: Stylus Color 980 */
   {
     c3pl_dotsizes, sc980_densities, variable_bits, variable_base_res,
-    "variable_3pl", "2880dpi", "standard", "standard", NULL, "standard"
+    "variable_3pl", "2880dpi", "standard", "standard", NULL
   },
   /* 35: Stylus Photo 780/790 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL
   },
   /* 36: Stylus Photo 785/890/895/915/935 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL
   },
   /* 37: Stylus Photo 1280/1290 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL
   },
   /* 38: Stylus Color 580 */
   {
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
-    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
+    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL
   },
   /* 39: Stylus Color Pro XL */
   {
     g1_dotsizes, g1_densities, standard_bits, standard_base_res,
-    "simple", "720dpi", "standard", "standard", NULL, "standard"
+    "simple", "720dpi", "standard", "standard", NULL
   },
   /* 40: Stylus Pro 5500 */
   {
     spro_pigment_dotsizes, spro_pigment_densities, standard_bits, pro_base_res,
-    "simple", "pro", "pro_pigment", "standard", "pro7500", "photo"
+    "simple", "pro", "pro_pigment", "standard", "pro7500"
   },
   /* 41: Stylus Pro 10000 */
   {
     spro10000_dotsizes, spro10000_densities, variable_bits, pro_base_res,
-    "spro10000", "pro", "pro_gen2", "standard", "pro7000", "photo"
+    "spro10000", "pro", "pro_gen2", "standard", "pro7000"
   },
   /* 42: Stylus C20SX/C20UX */
   {
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
-    "variable_x80_6pl", "720dpi_soft", "x80", "standard", NULL, "standard"
+    "variable_x80_6pl", "720dpi_soft", "x80", "standard", NULL
   },
   /* 43: Stylus C40SX/C40UX/C41SX/C41UX/C42SX/C42UX */
   {
     sc480_dotsizes, sc480_densities, variable_bits, variable_base_res,
-    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
+    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL
   },
   /* 44: Stylus C70/C80 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c80", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c80", "standard", NULL
   },
   /* 45: Stylus Color Pro */
   {
     g1_dotsizes, g1_densities, standard_bits, standard_base_res,
-    "simple", "720dpi", "standard", "standard", NULL, "standard"
+    "simple", "720dpi", "standard", "standard", NULL
   },
   /* 46: Stylus Photo 950/960 */
   {
     c2pl_dotsizes, c2pl_densities, stp950_bits, stp950_base_res,
-    "variable_2pl", "superfine", "f360_photo", "standard", NULL, "sp960"
+    "variable_2pl", "superfine", "f360_photo", "standard", NULL
   },
   /* 47: Stylus Photo 2100/2200 */
   {
     c4pl_pigment_dotsizes, c4pl_pigment_densities, ultrachrome_bits, ultrachrome_base_res,
-    "variable_ultrachrome", "superfine", "f360_ultrachrome", "standard", NULL, "sp2200"
+    "variable_ultrachrome", "superfine", "f360_ultrachrome", "standard", NULL
   },
   /* 48: Stylus Pro 7600 */
   {
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, ultrachrome_bits, pro_base_res,
-    "variable_ultrachrome", "pro", "pro_ultrachrome", "standard", "pro7600", "photo"
+    "variable_ultrachrome", "pro", "pro_ultrachrome", "standard", "pro7600"
   },
   /* 49: Stylus Pro 9600 */
   {
     spro_c4pl_pigment_dotsizes, c4pl_pigment_densities, ultrachrome_bits, pro_base_res,
-    "variable_ultrachrome", "pro", "pro_ultrachrome", "standard", "pro7600", "photo"
+    "variable_ultrachrome", "pro", "pro_ultrachrome", "standard", "pro7600"
   },
   /* 50: Stylus Photo 825/830 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880_1440dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880_1440dpi", "photo_gen2", "standard", NULL
   },
   /* 51: Stylus Photo 925 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880_1440dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880_1440dpi", "photo_gen2", "standard", NULL
   },
   /* 52: Stylus Color C62 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880_1440dpi", "standard", "standard", NULL, "standard"
+    "variable_2880_4pl", "2880_1440dpi", "standard", "standard", NULL
   },
   /* 53: Japanese PM-950C */
   {
     c2pl_dotsizes, c2pl_densities, stp950_bits, stp950_base_res,
-    "variable_2pl", "superfine", "f360_photo7_japan", "standard", NULL, "pm_950c"
+    "variable_2pl", "superfine", "f360_photo7_japan", "standard", NULL
   },
   /* 54: Stylus Photo EX3 */
   {
     sp720_dotsizes, c6pl_densities, variable_bits, variable_base_res,
-    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL, "photo"
+    "variable_6pl", "1440dpi", "photo_gen1", "standard", NULL
   },
   /* 55: Stylus C82/CX-5200 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL
   },
   /* 56: Stylus C50 */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
+    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL
   },
   /* 57: Japanese PM-970C */
   {
     c1_8pl_dotsizes, c1_8pl_densities, c1_8_bits, c1_8_base_res,
-    "variable_2pl", "superfine", "f360_photo7_japan", "standard", NULL, "pm_950c"
+    "variable_2pl", "superfine", "f360_photo7_japan", "standard", NULL
   },
   /* 58: Japanese PM-930C */
   {
     c1_8pl_dotsizes, c1_8pl_densities, c1_8_bits, c1_8_base_res,
-    "variable_2pl", "superfine", "photo_gen2", "standard", NULL, "photo"
+    "variable_2pl", "superfine", "photo_gen2", "standard", NULL
   },
   /* 59: Stylus C43SX/C43UX/C44SX/C44UX (WRONG -- see 43!) */
   {
     c4pl_dotsizes, c4pl_densities, variable_bits, variable_base_res,
-    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL, "standard"
+    "variable_x80_6pl", "1440dpi", "x80", "standard", NULL
   },
   /* 60: Stylus C84 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL
   },
   /* 61: Stylus Color C63/C64 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c64", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c64", "standard", NULL
   },
   /* 62: Stylus Photo 900 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL
   },
   /* 63: Stylus Photo R300 */
   {
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
-    "variable_3pl_pmg", "superfine", "photo_gen3", "standard", NULL, "photo"
+    "variable_3pl_pmg", "superfine", "photo_gen3", "standard", NULL
   },
   /* 64: PM-G800/Stylus Photo R800 */
   {
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
-    "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL, "r800"
+    "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL
   },
   /* 65: Stylus Photo CX4600 */
   {
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
-    "variable_3pl_pmg", "superfine", "cx3650", "standard", NULL, "mfp2005"
+    "variable_3pl_pmg", "superfine", "cx3650", "standard", NULL
   },
   /* 66: Stylus Color C65/C66 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment_c66", "2880_1440dpi", "c64", "standard", NULL, "standard"
+    "variable_3pl_pigment_c66", "2880_1440dpi", "c64", "standard", NULL
   },
   /* 67: Stylus Photo R1800 */
   {
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
-    "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL, "r800"
+    "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL
   },
   /* 68: PM-G820 */
   {
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
-    "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL, "r800"
+    "variable_1_5pl", "superfine", "cmykrb", "v2880", NULL
   },
   /* 69: Stylus C86 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL
   },
   /* 70: Stylus Photo RX700 */
   {
     p1_5pl_dotsizes, p1_5pl_densities, variable_bits, c1_5_base_res,
-    "variable_1_5pl", "superfine", "photo_gen4", "p1_5", NULL, "rx700"
+    "variable_1_5pl", "superfine", "photo_gen4", "p1_5", NULL
   },
   /* 71: Stylus Photo R2400 */
   {
     p3_5pl_dotsizes, p3_5pl_densities, variable_bits, c1_5_base_res,
-    "variable_r2400", "superfine", "f360_ultrachrome_k3", "v2880", NULL, "r2400"
+    "variable_r2400", "superfine", "f360_ultrachrome_k3", "v2880", NULL
   },
   /* 72: Stylus CX3700/3800/3810 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment_c66", "2880_1440dpi", "c64", "standard", NULL, "cx3800"
+    "variable_3pl_pigment_c66", "2880_1440dpi", "c64", "standard", NULL
   },
   /* 73: E-100/PictureMate */
   {
     picturemate_dotsizes, picturemate_densities, variable_bits, c1_5_base_res,
-    "variable_picturemate", "picturemate", "picturemate_6", "picturemate", NULL, "picturemate_6"
+    "variable_picturemate", "picturemate", "picturemate_6", "picturemate", NULL
   },
   /* 74: PM-A650 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_c66_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment_c66", "superfine", "c64", "standard", NULL, "standard"
+    "variable_3pl_pigment_c66", "superfine", "c64", "standard", NULL
   },
   /* 75: Japanese PM-A750 */
   {
     c2pl_dotsizes, c2pl_densities, variable_bits, variable_base_res,
-    "variable_2pl", "superfine", "c64", "standard", NULL, "standard"
+    "variable_2pl", "superfine", "c64", "standard", NULL
   },
   /* 76: Japanese PM-A890 */
   {
     c2pl_dotsizes, c2pl_densities, variable_bits, variable_base_res,
-    "variable_2pl", "superfine", "photo_gen4", "standard", NULL, "standard"
+    "variable_2pl", "superfine", "photo_gen4", "standard", NULL
   },
   /* 77: Japanese PM-D600 */
   {
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
-    "variable_3pl_pmg", "superfine", "c64", "standard", NULL, "photo"
+    "variable_3pl_pmg", "superfine", "c64", "standard", NULL
   },
   /* 78: Stylus Photo 810/820 */
   {
     c4pl_dotsizes, c4pl_2880_densities, variable_bits, variable_base_res,
-    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL, "photo"
+    "variable_2880_4pl", "2880dpi", "photo_gen2", "standard", NULL
   },
   /* 79: Stylus CX6400 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL
   },
   /* 80: Stylus CX6600 */
   {
     c3pl_pigment_dotsizes, c3pl_pigment_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL, "standard"
+    "variable_3pl_pigment", "2880_1440dpi", "c82", "standard", NULL
   },
   /* 81: Stylus Photo R260 */
   {
     claria_dotsizes, claria_densities, variable_bits, c1_5_base_res,
-    "variable_claria", "superfine", "claria", "v2880", NULL, "sp1400"
+    "variable_claria", "superfine", "claria", "v2880", NULL
   },
   /* 82: Stylus Photo 1400 */
   {
     claria_1400_dotsizes, claria_1400_densities, variable_bits, claria_1400_base_res,
-    "variable_claria_1400", "claria_1400", "claria", "v2880", NULL, "sp1400"
+    "variable_claria_1400", "claria_1400", "claria", "v2880", NULL
   },
   /* 83: Stylus Photo R240 */
   {
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
-    "variable_3pl_pmg", "superfine", "photo_gen3_4", "standard", NULL, "standard"
+    "variable_3pl_pmg", "superfine", "photo_gen3_4", "standard", NULL
   },
   /* 84: Stylus Photo RX500 */
   {
     p3pl_dotsizes, p3pl_densities, variable_bits, variable_base_res,
-    "variable_3pl_pmg", "superfine", "photo_gen3", "standard", NULL, "photo"
+    "variable_3pl_pmg", "superfine", "photo_gen3", "standard", NULL
   },
   /* 85: Stylus C120 */
   {
     c3pl_pigment_c120_dotsizes, c3pl_pigment_c120_densities, variable_bits, variable_base_res,
-    "variable_3pl_pigment_c120", "superfine", "c120", "standard", NULL, "c120"
+    "variable_3pl_pigment_c120", "superfine", "c120", "standard", NULL
   },
   /* 86: PictureMate 4-color */
   {
     picturemate_dotsizes, picturemate_densities, variable_bits, c1_5_base_res,
-    "variable_picturemate", "picturemate", "picturemate_4", "picturemate", NULL, "picturemate_4"
+    "variable_picturemate", "picturemate", "picturemate_4", "picturemate", NULL
   },
   /* 87: B-500DN */
   {
     c3pl_pigment_b500_dotsizes, c3pl_pigment_b500_densities, variable_bits, b500_base_res,
-    "variable_3pl_pigment_b500", "superfine", "b500", "standard", NULL, "standard"
+    "variable_3pl_pigment_b500", "superfine", "b500", "standard", NULL
   },
 };
 
@@ -1047,6 +1047,21 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		  child = child->next;
 		  p->alternate_alignment_choices =
 		    stp_xmlstrtoul(child->value.text.string);
+		}
+	      else if (!strcmp(name, "ChannelNames"))
+		{
+		  p->channel_names = stp_string_list_create();
+		  stp_mxml_node_t *child = tmp->child;
+		  while (child)
+		    {
+		      if (child->type == STP_MXML_ELEMENT &&
+			  !strcmp(child->value.element.name, "ChannelName"))
+			{
+			  const char *name = stp_mxmlElementGetAttr(child, "name");
+			  stp_string_list_add_string(p->channel_names, name, name);
+			}
+		      child = child->next;
+		    }
 		}
 	    }
 	  else if (tmp->child && tmp->child->type == STP_MXML_ELEMENT)

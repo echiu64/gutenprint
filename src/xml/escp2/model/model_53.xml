@@ -67,5 +67,14 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<CDOffset>204 191</CDOffset>
 	<extraBottom>24</extraBottom>
 	<AlignmentChoices>4 15 0 0</AlignmentChoices>
+	<ChannelNames>
+	<ChannelName translate="name" name="Black"/>
+	<ChannelName translate="name" name="Cyan"/>
+	<ChannelName translate="name" name="Magenta"/>
+	<ChannelName translate="name" name="Yellow"/>
+	<ChannelName translate="name" name="Light Cyan"/>
+	<ChannelName translate="name" name="Light Magenta"/>
+	<ChannelName translate="name" name="Dark Yellow"/>
+	</ChannelNames>
 </escp2:model>
 </gutenprint>
