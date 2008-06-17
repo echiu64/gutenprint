@@ -19,6 +19,7 @@
 
 use strict;
 use Getopt::Std;
+use Fcntl qw(:mode);
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
