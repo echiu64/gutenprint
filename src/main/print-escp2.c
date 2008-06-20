@@ -866,7 +866,7 @@ escp2_get_stp_model_id(const stp_vars_t *v)
 {
   int model = stp_get_model_id(v);
   if (! stpi_escp2_model_capabilities[model].media)
-    stpi_escp2_load_model(v, model);
+    stp_escp2_load_model(v, model);
   return stp_get_model_id(v);
 }
 
@@ -1027,8 +1027,7 @@ static inline const printer_weave_list_t *
 escp2_printer_weaves(const stp_vars_t *v)
 {
   int model = escp2_get_stp_model_id(v);
-  return (stpi_escp2_get_printer_weaves_named
-	  (stpi_escp2_model_capabilities[model].printer_weaves));
+  return stpi_escp2_model_capabilities[model].printer_weaves;
 }
 
 static inline const stp_string_list_t *
@@ -1050,8 +1049,7 @@ static inline const quality_list_t *
 escp2_quality_list(const stp_vars_t *v)
 {
   int model = escp2_get_stp_model_id(v);
-  return (stpi_escp2_get_quality_list_named
-	  (stpi_escp2_model_capabilities[model].quality_list));
+  return stpi_escp2_model_capabilities[model].quality_list;
 }
 
 static const channel_count_t *
@@ -3660,7 +3658,7 @@ setup_head_parameters(stp_vars_t *v)
   if (pd->use_printer_weave)
     {
       pd->printer_weave = get_printer_weave(v);
-      if (pd->res->softweave && pd->printer_weave && pd->printer_weave->value == 0)
+      if (pd->res->softweave)
 	pd->printer_weave = NULL;
     }
 

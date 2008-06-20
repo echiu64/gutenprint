@@ -23,6 +23,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2:model id="53">
 	<media href="escp2/media/f360_photo7_japan.xml"/>
 	<inputSlots href="escp2/inputslots/cd_cutter_roll_feed.xml"/>
+	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
 	<verticalBorderlessSequence>SN4\000\000\002\027\000\000\000\000\000\000\001\003\000\204\003\252\000\204\006\270\004\364\006v\005\230\011\226\000\304\004\226\000\206\002\270\012\031\030\031\031\031\031\004444\004\001\000\000\040\011</verticalBorderlessSequence>
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
 	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>

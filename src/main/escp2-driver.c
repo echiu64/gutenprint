@@ -104,7 +104,7 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Printed_ydpi", pd->res->printed_vres);
   print_remote_int_param(v, "Printed_xdpi", pd->res->printed_hres);
   print_remote_int_param(v, "Use_softweave", pd->res->softweave);
-  print_remote_int_param(v, "Use_printer_weave", pd->res->printer_weave);
+  print_remote_int_param(v, "Printer_weave", pd->res->printer_weave);
   print_remote_int_param(v, "Use_printer_weave", pd->use_printer_weave);
   print_remote_int_param(v, "Duplex", pd->duplex);
   print_remote_int_param(v, "Page_left", pd->page_left);
@@ -344,12 +344,13 @@ static void
 escp2_set_printer_weave(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  int printer_weave_parm = 0;
-  if (pd->printer_weave)
-    printer_weave_parm = pd->printer_weave->value;
+  if (pd->printer_weave && pd->printer_weave->command)
+    stp_zfwrite(pd->printer_weave->command->data,
+		pd->printer_weave->command->bytes, 1, v);
   else if (pd->res->printer_weave)
-    printer_weave_parm = pd->res->printer_weave;
-  stp_send_command(v, "\033(i", "bc", printer_weave_parm);
+    stp_send_command(v, "\033(i", "bc", pd->res->printer_weave);
+  else
+    stp_send_command(v, "\033(i", "bc", 0);
 }
 
 static void

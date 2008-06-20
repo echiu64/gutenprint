@@ -282,8 +282,8 @@ typedef struct
 
 typedef struct
 {
-  const char *name;
-  const char *text;
+  char *name;
+  char *text;
   short min_hres;
   short min_vres;
   short max_hres;
@@ -294,29 +294,23 @@ typedef struct
 
 typedef struct
 {
-  const char *name;
-  const quality_t *qualities;
+  char *name;
+  quality_t *qualities;
   size_t n_quals;
 } quality_list_t;
 
-typedef enum
-{
-  AUTO_MODE_QUALITY,
-  AUTO_MODE_MANUAL
-} auto_mode_t;
-
 typedef struct
 {
-  const char *name;
-  const char *text;
-  short value;
+  char *name;
+  char *text;
+  stp_raw_t *command;
 } printer_weave_t;
 
 typedef struct
 {
-  const char *name;
+  char *name;
   size_t n_printer_weaves;
-  const printer_weave_t *printer_weaves;
+  printer_weave_t *printer_weaves;
 } printer_weave_list_t;
 
 #define MODEL_COMMAND_MASK	0xful /* What general command set does */
@@ -389,8 +383,6 @@ typedef struct escp2_printer
   const char *drops; /* Drop sizes */
   const char *reslist;
   const char *inkgroup;
-  const char *quality_list;
-  const char *printer_weaves;
 /*****************************************************************************/
   /* Data filled in at runtime from XML */
   model_cap_t	flags;		/* Bitmask of flags, see above */
@@ -508,17 +500,19 @@ typedef struct escp2_printer
   stp_mxml_node_t *media_sizes;
 /*****************/
   stp_string_list_t *channel_names;
+/*****************/
+  printer_weave_list_t *printer_weaves;
+/*****************/
+  quality_list_t *quality_list;
 } stpi_escp2_printer_t;
 
 extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
-extern const quality_list_t *stpi_escp2_get_quality_list_named(const char *);
 extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
 extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
 extern const res_t *const *stpi_escp2_get_reslist_named(const char *);
 extern const escp2_drop_list_t *stpi_escp2_get_drop_list_named(const char *);
-extern const printer_weave_list_t *stpi_escp2_get_printer_weaves_named(const char *);
 
 /* From escp2-papers.c: */
 extern int stp_escp2_load_media(const stp_vars_t *v, const char *name);
@@ -533,12 +527,16 @@ extern const input_slot_t *stp_escp2_get_input_slot(const stp_vars_t *v);
 extern int stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name);
 extern void stp_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src);
 
+/* From escp2-resolutions.c: */
+extern int stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name);
+extern int stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name);
+
 /* From print-escp2.c: */
 extern const res_t *stp_escp2_find_resolution(const stp_vars_t *v);
 extern const inklist_t *stp_escp2_inklist(const stp_vars_t *v);
 
 /* From print-escp2-data.c: */
-extern void stpi_escp2_load_model(const stp_vars_t *v, int model);
+extern void stp_escp2_load_model(const stp_vars_t *v, int model);
 
 typedef struct
 {

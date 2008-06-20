@@ -23,6 +23,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2:model id="64">
 	<media href="escp2/media/cmykrb.xml"/>
 	<inputSlots href="escp2/inputslots/r1800.xml"/>
+	<qualityPresets href="escp2/qualitypresets/v2880.xml"/>
 	<verticalBorderlessSequence>SNT\000\000\012\033\000\000\000\000\000\000\001\003\000\001\001\235\007T\001P\012\252\000\363\006?\002P\012\277\007(\002%\013,\001\253\000\037\001!\000\040\001\322\000\241\000\000\000\017\000\036\000\030\031\031\031\031\031\031\031\003\033\033ccccccccccc\002\000\001\000\001\001\362\014</verticalBorderlessSequence>
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
 	<preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>

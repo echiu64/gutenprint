@@ -23,6 +23,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2:model id="12">
 	<media href="escp2/media/standard.xml"/>
 	<inputSlots href="escp2/inputslots/default.xml"/>
+	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
 	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
 	<commandSet>1999</commandSet>
 	<borderless>No</borderless>

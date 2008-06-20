@@ -25,18 +25,27 @@ SUBDIRS =					\
 	inputslots				\
 	model					\
 	media					\
-	mediasizes
+	mediasizes				\
+	qualitypresets				\
+	weaves
 
-xml-stamp: media/xml-stamp model/xml-stamp inputslots/xml-stamp mediasizes/xml-stamp Makefile.am
+xml-stamp: media/xml-stamp			\
+	   model/xml-stamp			\
+	   inputslots/xml-stamp			\
+	   mediasizes/xml-stamp			\
+	   qualitypresets/Makefile.am		\
+	   weaves/Makefile.am			\
+	   Makefile.am
 	-rm -f xml-stamp
 	touch xml-stamp
 	sed 's;^;media/;' media/xml-stamp >> xml-stamp
 	sed 's;^;model/;' model/xml-stamp >> xml-stamp
 	sed 's;^;inputslots/;' inputslots/xml-stamp >> xml-stamp
 	sed 's;^;mediasizes/;' mediasizes/xml-stamp >> xml-stamp
+	sed 's;^;weaves/;' weaves/xml-stamp >> xml-stamp
+	sed 's;^;qualitypresets/;' qualitypresets/xml-stamp >> xml-stamp
 
 all-local: xml-stamp
-
 ## Clean
 
 CLEANFILES = xml-stamp

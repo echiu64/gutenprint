@@ -547,181 +547,176 @@ stpi_escp2_get_reslist_named(const char *n)
   return NULL;
 }
 
-#define DECLARE_PRINTER_WEAVES(name)				\
-static const printer_weave_list_t name##_printer_weave_list =	\
-{								\
-  #name,							\
-  sizeof(name##_printer_weaves) / sizeof(printer_weave_t),	\
-  name##_printer_weaves						\
-}
-
-static const printer_weave_t standard_printer_weaves[] =
+int
+stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
 {
-  { "Off", N_("Off"), 0 },
-  { "On", N_("On"), 1 }
-};
-
-DECLARE_PRINTER_WEAVES(standard);
-
-static const printer_weave_t pro7000_printer_weaves[] =
-{
-  { "Off", N_("Off"), 0 },
-  { "On", N_("Interleave"), 1 },
-  { "FOL", N_("Full Overlap"), 2 },
-  { "FourPass", N_("Four Pass"), 3 },
-  { "FOL2", N_("Full Overlap 2"), 4 },
-};
-
-DECLARE_PRINTER_WEAVES(pro7000);
-
-static const printer_weave_t pro7500_printer_weaves[] =
-{
-  { "Off", N_("Off"), 0 },
-  { "On", N_("Interleave"), 1 },
-  { "FOL", N_("Full Overlap"), 2 },
-  { "FourPass", N_("Four Pass"), 3 },
-  { "FOL2", N_("Full Overlap 2"), 4 },
-  { "MW2", N_("Interleave 2"), 5 },
-};
-
-DECLARE_PRINTER_WEAVES(pro7500);
-
-static const printer_weave_t pro7600_printer_weaves[] =
-{
-  { "Off", N_("Off"), 0 },
-  { "On", N_("Interleave"), 1 },
-  { "FOL", N_("Full Overlap"), 2 },
-  { "FourPass", N_("Four Pass"), 3 },
-  { "FOL2", N_("Full Overlap 2"), 4 },
-  { "MW2", N_("Interleave 2"), 5 },
-  { "EightPass", N_("Eight Pass"), 6 },
-};
-
-DECLARE_PRINTER_WEAVES(pro7600);
-
-typedef struct
-{
-  const char *name;
-  const printer_weave_list_t *weave_list;
-} weave_t;
-
-static const weave_t the_weaves[] =
-{
-  { "standard", &standard_printer_weave_list },
-  { "pro7000", &pro7000_printer_weave_list },
-  { "pro7500", &pro7500_printer_weave_list },
-  { "pro7600", &pro7600_printer_weave_list },
-};
-
-const printer_weave_list_t *
-stpi_escp2_get_printer_weaves_named(const char *n)
-{
-  int i;
-  if (n)
+  int model = stp_get_model_id(v);
+  stp_list_t *dirlist = stpi_data_path();
+  stp_list_item_t *item;
+  int found = 0;
+  item = stp_list_get_start(dirlist);
+  while (item)
     {
-      for (i = 0; i < sizeof(the_weaves) / sizeof(weave_t); i++)
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *ffn = stpi_path_merge(dn, name);
+      stp_mxml_node_t *weaves =
+	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
+      stp_free(ffn);
+      if (weaves)
 	{
-	  if (strcmp(n, the_weaves[i].name) == 0)
-	    return the_weaves[i].weave_list;
+	  stp_mxml_node_t *node = stp_mxmlFindElement(weaves, weaves,
+						      "escp2:PrinterWeaves", NULL,
+						      NULL, STP_MXML_DESCEND);
+	  if (node)
+	    {
+	      printer_weave_list_t *xpw = stp_malloc(sizeof(printer_weave_list_t));
+	      int count = 0;
+	      stp_mxml_node_t *child = node->child;
+	      while (child)
+		{
+		  if (child->type == STP_MXML_ELEMENT &&
+		      !strcmp(child->value.element.name, "weave"))
+		    count++;
+		  child = child->next;
+		}
+	      stpi_escp2_model_capabilities[model].printer_weaves = xpw;
+	      if (stp_mxmlElementGetAttr(node, "name"))
+		xpw->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
+	      else
+		xpw->name = stp_strdup(name);
+	      xpw->n_printer_weaves = count;
+	      xpw->printer_weaves = stp_zalloc(sizeof(printer_weave_t) * count);
+	      child = node->child;
+	      count = 0;
+	      while (child)
+		{
+		  if (child->type == STP_MXML_ELEMENT &&
+		      !strcmp(child->value.element.name, "weave"))
+		    {
+		      const char *wname = stp_mxmlElementGetAttr(child, "name");
+		      const char *wtext = stp_mxmlElementGetAttr(child, "text");
+		      const char *cmd = stp_mxmlElementGetAttr(child, "command");
+		      if (wname)
+			xpw->printer_weaves[count].name = stp_strdup(wname);
+		      if (wtext)
+			xpw->printer_weaves[count].text = stp_strdup(wtext);
+		      if (cmd)
+			xpw->printer_weaves[count].command =
+			  stp_xmlstrtoraw(cmd);
+		      count++;
+		    }
+		  child = child->next;
+		}
+	    }
+	  stp_mxmlDelete(weaves);
+	  found = 1;
+	  break;
 	}
-      stp_erprintf("Cannot find weave list named %s\n", n);
+      item = stp_list_item_next(item);
     }
-  return NULL;
+  stp_list_destroy(dirlist);
+  if (! found)
+    stp_eprintf(v, "Unable to load printer weaves for model %d (%s)!\n", model, name);
+  return found;
 }
 
-
-#define DECLARE_QUALITY_LIST(name)			\
-static const quality_list_t name##_quality_list =	\
-{							\
-  #name,						\
-  name##_qualities,					\
-  sizeof(name##_qualities) / sizeof(const quality_t),	\
-}
-
-static const quality_t standard_qualities[] =
+int
+stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
 {
-  { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
-  { "Economy",     N_("Economy"),      360, 180, 360, 240, 360, 180 },
-  { "Draft",       N_("Draft"),        360, 360, 360, 360, 360, 360 },
-  { "Standard",    N_("Standard"),     0, 0, 0, 0, 720, 360 },
-  { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
-  { "Photo",       N_("Photo"),        1440, 720, 2880, 720, 1440, 720 },
-  { "HighPhoto",   N_("Super Photo"),  1440, 1440, 2880, 1440, 1440, 1440 },
-  { "UltraPhoto",  N_("Ultra Photo"),  2880, 1440, 2880, 1440, 2880, 1440 },
-  { "Best",        N_("Best"),         720, 360, 0, 1440, -1, -1 },
-};
-
-DECLARE_QUALITY_LIST(standard);
-
-static const quality_t v2880_qualities[] =
-{
-  { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
-  { "Economy",     N_("Economy"),      360, 180, 360, 240, 360, 180 },
-  { "Draft",       N_("Draft"),        360, 360, 360, 360, 360, 360 },
-  { "Standard",    N_("Standard"),     0, 0, 0, 0, 720, 360 },
-  { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
-  { "Photo",       N_("Photo"),        1440, 720, 2880, 720, 1440, 720 },
-  { "HighPhoto",   N_("Super Photo"),  1440, 1440, 2880, 1440, 1440, 1440 },
-  { "UltraPhoto",  N_("Ultra Photo"),  2880, 2880, 2880, 2880, 2880, 2880 },
-  { "Best",        N_("Best"),         720, 360, 0, 0, -1, -1 },
-};
-
-DECLARE_QUALITY_LIST(v2880);
-
-static const quality_t p1_5_qualities[] =
-{
-  { "FastEconomy", N_("Fast Economy"), 180, 90, 360, 120, 360, 90 },
-  { "Economy",     N_("Economy"),      360, 180, 360, 240, 360, 180 },
-  { "Draft",       N_("Draft"),        360, 360, 360, 360, 360, 360 },
-  { "Standard",    N_("Standard"),     0, 0, 0, 0, 720, 360 },
-  { "High",        N_("High"),         0, 0, 0, 0, 720, 720 },
-  { "Photo",       N_("Photo"),        1440, 720, 1440, 720, 1440, 720 },
-  { "HighPhoto",   N_("Super Photo"),  1440, 1440, 2880, 1440, 1440, 1440 },
-  { "UltraPhoto",  N_("Ultra Photo"),  2880, 1440, 2880, 1440, 2880, 1440 },
-  { "Best",        N_("Best"),         720, 360, 0, 1440, -1, -1 },
-};
-
-DECLARE_QUALITY_LIST(p1_5);
-
-static const quality_t picturemate_qualities[] =
-{
-  { "Draft",       N_("Draft"),        1440,  720, 1440,  720, 1440,  720 },
-  { "Standard",    N_("Standard"),     1440, 1440, 1440, 1440, 1440, 1440 },
-  { "Photo",       N_("Photo"),        1440, 1440, 1440, 1440, 1440, 1440 },
-  { "High",        N_("High"),         2880, 1440, 2880, 1440, 2880, 1440 },
-  { "HighPhoto",   N_("Super Photo"),  2880, 1440, 2880, 1440, 2880, 1440 },
-  { "UltraPhoto",  N_("Ultra Photo"),  5760, 1440, 5760, 1440, 5760, 1440 },
-  { "Best",        N_("Best"),         5760, 1440, 5760, 1440, 5760, 1440 },
-};
-
-DECLARE_QUALITY_LIST(picturemate);
-
-typedef struct
-{
-  const char *name;
-  const quality_list_t *quality_list;
-} qual_t;
-
-static const qual_t the_qualities[] =
-{
-  { "standard", &standard_quality_list },
-  { "p1_5", &p1_5_quality_list },
-  { "picturemate", &picturemate_quality_list },
-  { "v2880", &v2880_quality_list },
-};
-
-const quality_list_t *
-stpi_escp2_get_quality_list_named(const char *n)
-{
-  int i;
-  if (n)
+  int model = stp_get_model_id(v);
+  stp_list_t *dirlist = stpi_data_path();
+  stp_list_item_t *item;
+  int found = 0;
+  item = stp_list_get_start(dirlist);
+  while (item)
     {
-      for (i = 0; i < sizeof(the_qualities) / sizeof(qual_t); i++)
+      const char *dn = (const char *) stp_list_item_get_data(item);
+      char *ffn = stpi_path_merge(dn, name);
+      stp_mxml_node_t *qualities =
+	stp_mxmlLoadFromFile(NULL, ffn, STP_MXML_NO_CALLBACK);
+      stp_free(ffn);
+      if (qualities)
 	{
-	  if (strcmp(n, the_qualities[i].name) == 0)
-	    return the_qualities[i].quality_list;
+	  stp_mxml_node_t *node = stp_mxmlFindElement(qualities, qualities,
+						      "escp2:QualityPresets", NULL,
+						      NULL, STP_MXML_DESCEND);
+	  if (node)
+	    {
+	      quality_list_t *qpw = stp_malloc(sizeof(quality_list_t));
+	      int count = 0;
+	      stp_mxml_node_t *child = node->child;
+	      while (child)
+		{
+		  if (child->type == STP_MXML_ELEMENT &&
+		      !strcmp(child->value.element.name, "quality"))
+		    count++;
+		  child = child->next;
+		}
+	      stpi_escp2_model_capabilities[model].quality_list = qpw;
+	      if (stp_mxmlElementGetAttr(node, "name"))
+		qpw->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
+	      else
+		qpw->name = stp_strdup(name);
+	      qpw->n_quals = count;
+	      qpw->qualities = stp_zalloc(sizeof(quality_t) * count);
+	      child = node->child;
+	      count = 0;
+	      while (child)
+		{
+		  if (child->type == STP_MXML_ELEMENT &&
+		      !strcmp(child->value.element.name, "quality"))
+		    {
+		      stp_mxml_node_t *cchild = child->child;
+		      const char *wname = stp_mxmlElementGetAttr(child, "name");
+		      const char *wtext = stp_mxmlElementGetAttr(child, "text");
+		      if (wname)
+			qpw->qualities[count].name = stp_strdup(wname);
+		      if (wtext)
+			qpw->qualities[count].text = stp_strdup(wtext);
+		      while (cchild)
+			{
+			  if (cchild->type == STP_MXML_ELEMENT &&
+			      (!strcmp(cchild->value.element.name, "minimumResolution") ||
+			       !strcmp(cchild->value.element.name, "maximumResolution") ||
+			       !strcmp(cchild->value.element.name, "desiredResolution")))
+			    {
+			      long data[2] = { 0, 0 };
+			      int i = 0;
+			      stp_mxml_node_t *ccchild = cchild->child;
+			      data[0] = stp_xmlstrtol(ccchild->value.text.string);
+			      ccchild = ccchild->next;
+			      data[1] = stp_xmlstrtol(ccchild->value.text.string);
+			      if (!strcmp(cchild->value.element.name, "minimumResolution"))
+				{
+				  qpw->qualities[count].min_hres = data[0];
+				  qpw->qualities[count].min_vres = data[1];
+				}			      
+			      else if (!strcmp(cchild->value.element.name, "maximumResolution"))
+				{
+				  qpw->qualities[count].max_hres = data[0];
+				  qpw->qualities[count].max_vres = data[1];
+				}			      
+			      else if (!strcmp(cchild->value.element.name, "desiredResolution"))
+				{
+				  qpw->qualities[count].desired_hres = data[0];
+				  qpw->qualities[count].desired_vres = data[1];
+				}			      
+			    }
+			  cchild = cchild->next;
+			}
+		      count++;
+		    }
+		  child = child->next;
+		}
+	    }
+	  stp_mxmlDelete(qualities);
+	  found = 1;
+	  break;
 	}
-      stp_erprintf("Cannot find quality list named %s\n", n);
+      item = stp_list_item_next(item);
     }
-  return NULL;
+  stp_list_destroy(dirlist);
+  if (! found)
+    stp_eprintf(v, "Unable to load quality presets for model %d (%s)!\n", model, name);
+  return found;
 }

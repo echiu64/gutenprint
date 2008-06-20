@@ -14,7 +14,7 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed);
+my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave PrintingDirection Density CyanDensity);
 my $global_status = 1;
 my $run_installed = 0;
 my $output = undef;
@@ -38,6 +38,7 @@ my %base_settings = ("DitherAlgorithm" => "Fast",
 my %param_types;
 my %param_classes;
 my %param_levels;
+my %stp_float_values;
 
 GetOptions("v+"  => \$valgrind,
 	   "c"   => \$cachegrind,
@@ -245,8 +246,20 @@ sub do_printer {
     $tmp = $stpdata{$printer}{'PrintingMode'};
     my (@printing_modes) = grep {$_ ne 'None' } keys %$tmp;
     foreach $key (@special_options) {
-	$tmp = $stpdata{$printer}{$key};
-	my (@tmp) = grep {$_ ne 'None' } keys %$tmp;
+	next if !defined($param_types{$printer}{$key});
+	my (@tmp);
+	if ($param_types{$printer}{$key} == 3) {
+	    my ($minv) = $stp_float_values{$printer}{'MINVAL'}{$key};
+	    my ($defv) = $stp_float_values{$printer}{'DEFVAL'}{$key};
+	    my ($maxv) = $stp_float_values{$printer}{'MAXVAL'}{$key};
+	    push @tmp, $minv;
+	    push @tmp, ($minv + $defv) / 2.0;
+	    push @tmp, $defv;
+	    push @tmp, ($defv + $maxv) / 2.0;
+	    push @tmp, $maxv;
+	} else {
+	    @tmp = grep {$_ ne 'None' } keys %{$stpdata{$printer}{$key}};
+	}
 	$opt_vals{$key} = \@tmp;
     }
     foreach $tmp (sort @resolutions) {
@@ -301,8 +314,8 @@ sub do_printer {
 	}
 	foreach $key (@special_options) {
 	    $tmp = $opt_vals{$key};
-	    my (@opts) = @$tmp;
-	    if ($#opts >= 1) {
+	    if (defined $tmp && $#{@$tmp} >= 1) {
+		my (@opts) = @$tmp;
 		my $opt;
 		foreach $opt (@opts) {
 		    my ($out_file);
@@ -315,7 +328,7 @@ sub do_printer {
 			$first_time = 0;
 		    }
 		    set_opt("PrintingMode", $pmode, $printer);
-		    set_opt("Resolution", $min_res_name, $printer);
+#		    set_opt("Resolution", $min_res_name, $printer);
 		    set_opt($key, $opt, $printer);
 		    map {
 			if ($key ne $_) {
@@ -329,7 +342,8 @@ sub do_printer {
 			}
 		    } keys %base_settings;
 		    if (defined $output || defined $calc_md5) {
-			my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}";
+#			my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}";
+			my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${key}_${opt}";
 			my $md5_dir = $calc_md5;
 			if (defined $calc_md5 && $calc_md5 eq "") {
 			    $md5_dir = $output;
@@ -348,7 +362,8 @@ sub do_printer {
 			    push @job_extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
 			}
 		    }
-		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
+#		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
+		    set_message("    ${key}=${opt}+${pmode}");
 		    my $output = print_one_testpattern($printer);
 		    do_print( $output, $fh );
 		}

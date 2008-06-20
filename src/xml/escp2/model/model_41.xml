@@ -23,6 +23,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2:model id="41">
 	<media href="escp2/media/pro_gen2.xml"/>
 	<inputSlots href="escp2/inputslots/pro_roll_feed.xml"/>
+	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
+	<printerWeaves href="escp2/weaves/pro7000.xml"/>
 	<commandSet>Pro</commandSet>
 	<borderless>No</borderless>
 	<sendZeroAdvance/>
