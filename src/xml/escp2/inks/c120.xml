@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ *   Copyright 2008 Robert Krawitz (rlk@alum.mit.edu)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+</copyright>
+<escp2:InkGroup name="c120">
+<InkList translate="text" name="None" text="EPSON Standard Inks">
+
+<InkName translate="text" name="CMYK" text="Four Color Standard"
+InkID="CMYK">
+	<Channels>
+	<channel name="c120_black" index="0">
+	<subchannel color="0" subchannel="4" shade="1.000000">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SplitChannels>0 64</SplitChannels>
+	</subchannel>
+	</channel>
+	<channel name="c120_cyan" index="1">
+	<subchannel color="2" shade="1.000000">
+	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_magenta" index="2">
+	<subchannel color="1" shade="1.000000" headOffset="120">
+	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_yellow" index="3">
+	<subchannel color="4" shade="1.000000" headOffset="240">
+	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	</Channels>
+</InkName>
+
+<InkName translate="text" name="RGB" text="Three Color Composite"
+InkID="CMYK">
+	<Channels>
+	<channel name="c120_cyan" index="1">
+	<subchannel color="2" shade="1.000000">
+	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_magenta" index="2">
+	<subchannel color="1" shade="1.000000" headOffset="120">
+	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_yellow" index="3">
+	<subchannel color="4" shade="1.000000" headOffset="240">
+	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	</Channels>
+</InkName>
+
+<InkName translate="text" name="PhysicalBlack" text="One Color Raw"
+InkID="Extended">
+	<Channels>
+	<channel name="c120_black" index="0">
+	<subchannel color="0" subchannel="4" shade="1.000000">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SplitChannels>0 64</SplitChannels>
+	</subchannel>
+	</channel>
+	</Channels>
+</InkName>
+
+<InkName translate="text" name="PhysicalCMY" text="Three Color Raw"
+InkID="Extended">
+	<Channels>
+	<channel name="c120_cyan" index="0">
+	<subchannel color="2" shade="1.000000">
+	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_magenta" index="1">
+	<subchannel color="1" shade="1.000000" headOffset="120">
+	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_yellow" index="2">
+	<subchannel color="4" shade="1.000000" headOffset="240">
+	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	</Channels>
+</InkName>
+
+<InkName translate="text" name="PhysicalCMYK" text="Four Color Raw"
+InkID="Extended">
+	<Channels>
+	<channel name="c120_black" index="0">
+	<subchannel color="0" subchannel="4" shade="1.000000">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SplitChannels>0 64</SplitChannels>
+	</subchannel>
+	</channel>
+	<channel name="c120_cyan" index="1">
+	<subchannel color="2" shade="1.000000">
+	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_magenta" index="2">
+	<subchannel color="1" shade="1.000000" headOffset="120">
+	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	<channel name="c120_yellow" index="3">
+	<subchannel color="4" shade="1.000000" headOffset="240">
+	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	</subchannel>
+	</channel>
+	</Channels>
+</InkName>
+</InkList>
+<InkList translate="text" name="Quadtone" text="Quadtone">
+
+<InkName translate="text" name="Quadtone" text="Quadtone"
+InkID="Quadtone">
+	<Channels>
+	<channel name="c120_quadtone" index="0">
+	<subchannel color="0" subchannel="4" shade="1.000000">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
+	</subchannel>
+	<subchannel color="2" shade="0.750000">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
+	<SubchannelValueParam>Gray3Value</SubchannelValueParam>
+	<SubchannelScaleParam>Gray3Scale</SubchannelScaleParam>
+	</subchannel>
+	<subchannel color="1" shade="0.500000" headOffset="120">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
+	<SubchannelValueParam>Gray2Value</SubchannelValueParam>
+	<SubchannelScaleParam>Gray2Scale</SubchannelScaleParam>
+	</subchannel>
+	<subchannel color="4" shade="0.250000" headOffset="240">
+	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
+	<SubchannelValueParam>Gray1Value</SubchannelValueParam>
+	<SubchannelScaleParam>Gray1Scale</SubchannelScaleParam>
+	</subchannel>
+	</channel>
+	</Channels>
+</InkName>
+</InkList>
+</escp2:InkGroup>
+</gutenprint>

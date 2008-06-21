@@ -24,6 +24,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<media href="escp2/media/photo_gen3.xml"/>
 	<inputSlots href="escp2/inputslots/cd_roll_feed.xml"/>
 	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
+	<resolutions href="escp2/resolutions/resolutions_84.xml"/>
+	<inkGroup href="escp2/inks/photo_gen3.xml"/>
 	<verticalBorderlessSequence>SNL\000\000\011\026\000\000\000\000\000\000\000\003\000\000\001\260\004\336\0044\001\000\002\000\000\000\0004\010h\020\030\025\310\031\340=\314\020\214\012\024\005\214\000\012\001,\001\000\000\017\017\017\017\017\017\017\017\004\012\004\017\017\017\017\017\006\004\000\001\001\001\000\000\367\007</verticalBorderlessSequence>
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
 	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>

@@ -24,6 +24,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<media href="escp2/media/cmy.xml"/>
 	<inputSlots href="escp2/inputslots/standard_roll_feed.xml"/>
 	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
+	<resolutions href="escp2/resolutions/resolutions_2.xml"/>
+	<inkGroup href="escp2/inks/cmy.xml"/>
 	<commandSet>1998</commandSet>
 	<borderless>No</borderless>
 	<sendZeroAdvance/>

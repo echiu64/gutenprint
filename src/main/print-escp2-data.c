@@ -327,8 +327,6 @@ static const escp2_densities_t picturemate_densities =
 {   0,   0,     0,     0, 1.596, 0.798, 0.650, 0.530, 0.0   };
 
 
-#define INCH(x)		(72 * x)
-
 stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
 {
   /* FIRST GENERATION PRINTERS */

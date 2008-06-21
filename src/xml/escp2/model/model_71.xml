@@ -24,10 +24,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 	<media href="escp2/media/f360_ultrachrome_k3.xml"/>
 	<inputSlots href="escp2/inputslots/r2400.xml"/>
 	<qualityPresets href="escp2/qualitypresets/v2880.xml"/>
+	<resolutions href="escp2/resolutions/resolutions_71.xml"/>
+	<inkGroup href="escp2/inks/f360_ultrachrome_k3.xml"/>
+	<mediaSizes href="escp2/mediasizes/standard.xml"/>
 	<verticalBorderlessSequence>US\003\000\000\000\002</verticalBorderlessSequence>
 	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
 	<preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>
-	<mediaSizes href="escp2/mediasizes/standard.xml"/>
 	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
 	<commandSet>2000</commandSet>
 	<borderless>Full</borderless>
