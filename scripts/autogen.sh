@@ -30,7 +30,7 @@ test "$libtool_major" -le 1 && {
 } && {
   echo
   echo "**Warning**: You should have \`libtool' 1.4.3 or newer installed to"
-  echo "create a gutenprint distribution.  Earlier versions of gettext do"
+  echo "create a gutenprint distribution.  Earlier versions of libtool do"
   echo "not generate correct code for all platforms."
   echo "Get ftp://ftp.gnu.org/pub/gnu/libtool/libtool-1.5.tar.gz"
   echo "(or a newer version if it is available)"
@@ -64,7 +64,7 @@ grep "^AM_GNU_GETTEXT" $srcdir/configure.ac >/dev/null && {
   (gettext --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`gettext' installed to compile gutenprint."
-    echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.11.5.tar.gz"
+    echo "Get ftp://ftp.gnu.org/pub/gnu/gettext/gettext-0.16.tar.gz"
     echo "(or a newer version if it is available)"
     DIE=1
   }
@@ -89,15 +89,13 @@ gettext_minor=`echo $gettextv | awk -F. '{print $2}'`
 gettext_point=`echo $gettextv | awk -F. '{print $3}'`
 
 test "$gettext_major" -eq 0 && {
-  test "$gettext_minor" -lt 11 || {
-    test "$gettext_minor" -eq 5
-  }
+  test "$gettext_minor" -lt 16
 } && {
   echo
-  echo "**Warning**: You must have \`gettext' 0.11.5 or newer installed to"
+  echo "**Warning**: You must have \`gettext' 0.16 or newer installed to"
   echo "create a gutenprint distribution.  Earlier versions of gettext do"
   echo "not generate the correct 'make uninstall' code."
-  echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.10.40.tar.gz"
+  echo "Get ftp://ftp.gnu.org/gnu/gettext/gettext-0.16.tar.gz"
   echo "(or a newer version if it is available)"
 }
 
@@ -278,9 +276,20 @@ test -z "$convertloc" && {
 }
 
 # Check for docbook version 4
+# Note workaround for Fedora installation
+# Include path for Fedora Docbook. A bit circuitous, but Fedora appends 
+# a bunch of extra stuff to the name of the directory-- including the 
+# version of Fedora (eg -fc9).  We don't want to test for every version 
+# of Fedora and modern bourne shells won't expand the glob (*); 
+# therefore, we do a `find` first and then test to see if there are any 
+# results.
+
+if test -d /usr/share/sgml/docbook ;  then
+  fedora_docbook=`find /usr/share/sgml/docbook -type d -name 'sgml-dtd-4.*' -print`
+fi
 
 {
-  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0" || test -d "/usr/share/sgml/docbook_4.1"
+  test -d "/usr/share/sgml/docbook_4" || test -d "/usr/share/sgml/docbook/dtd/4.0" || test -d "/usr/share/sgml/docbook_4.1" || test -n "$fedora_docbook"
 } || {
   echo " "
   echo "***Warning***: You must have "Docbook v4" installed to"

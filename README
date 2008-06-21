@@ -247,9 +247,11 @@ B) CUPS
     * Back ends for driving Canon and Epson printers, named "canon"
       and "epson".  These provide the ability to get information from
       the printer for CUPS to use, and are normally installed in
-      /usr/lib/cups/backend.  Additional utilities to send certain
-      commands to these printers are installed as commandtocanon and
-      commandtoepson; they are installed in /usr/lib/cups/filter.
+      /usr/lib/cups/backend.
+
+    * Additional utilities to send certain commands to these printers
+      are installed as commandtocanon and commandtoepson; they are
+      installed in /usr/lib/cups/filter.
 
     * One or more sets of PPD files describing all of the printers
       supported by Gutenprint.  These are normally installed in
@@ -360,8 +362,8 @@ B) CUPS
     exact command to restart CUPS varies; it is typically something
     like /etc/init.d/cups, /etc/software/init.d/cups, /etc/rc.d/cups,
     /usr/sbin/rccups, or even /etc/rc.d/init.d/cups.  Your system may
-    have a different way to restart the CUPS server.  OS X, for
-    example, uses the following command:
+    have a different way to restart the CUPS server.  OS X (10.2,
+    10.3, and 10.4), for example, uses the following command:
 
     sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
   
