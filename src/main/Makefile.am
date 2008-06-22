@@ -65,7 +65,6 @@ print_escp2_la_SOURCES = \
 	print-escp2.h \
 	print-escp2-data.c \
 	escp2-channels.c \
-	escp2-inks.c \
 	escp2-papers.c \
 	escp2-resolutions.c
 print_escp2_la_LDFLAGS = -module -avoid-version

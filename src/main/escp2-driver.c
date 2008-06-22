@@ -103,8 +103,10 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Xdpi", pd->res->hres);
   print_remote_int_param(v, "Printed_ydpi", pd->res->printed_vres);
   print_remote_int_param(v, "Printed_xdpi", pd->res->printed_hres);
+/*
   print_remote_int_param(v, "Use_softweave", pd->res->softweave);
   print_remote_int_param(v, "Printer_weave", pd->res->printer_weave);
+*/
   print_remote_int_param(v, "Use_printer_weave", pd->use_printer_weave);
   print_remote_int_param(v, "Duplex", pd->duplex);
   print_remote_int_param(v, "Page_left", pd->page_left);
@@ -137,7 +139,6 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Unit_scale", pd->unit_scale);
   print_remote_int_param(v, "Zero_advance", pd->send_zero_pass_advance);
   print_remote_int_param(v, "Bits", pd->bitwidth);
-  print_remote_int_param(v, "Resid", pd->ink_resid);
   print_remote_int_param(v, "Drop Size", pd->drop_size);
   print_remote_int_param(v, "Initial_vertical_offset", pd->initial_vertical_offset);
   print_remote_int_param(v, "Channels_in_use", pd->channels_in_use);
@@ -150,7 +151,9 @@ print_debug_params(stp_vars_t *v)
   print_remote_int_param(v, "Has_graymode", pd->has_graymode);
   print_remote_int_param(v, "Base_separation", pd->base_separation);
   print_remote_int_param(v, "Resolution_scale", pd->resolution_scale);
+#if 0
   print_remote_int_param(v, "Printing_resolution", pd->printing_resolution);
+#endif
   print_remote_int_param(v, "Separation_rows", pd->separation_rows);
   print_remote_int_param(v, "Pseudo_separation_rows", pd->pseudo_separation_rows);
   print_remote_int_param(v, "Extra_720dpi_separation", pd->extra_720dpi_separation);
@@ -344,11 +347,8 @@ static void
 escp2_set_printer_weave(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
-  if (pd->printer_weave && pd->printer_weave->command)
-    stp_zfwrite(pd->printer_weave->command->data,
-		pd->printer_weave->command->bytes, 1, v);
-  else if (pd->res->printer_weave)
-    stp_send_command(v, "\033(i", "bc", pd->res->printer_weave);
+  if (pd->printer_weave)
+    stp_zfwrite(pd->printer_weave->data, pd->printer_weave->bytes, 1, v);
   else
     stp_send_command(v, "\033(i", "bc", 0);
 }
@@ -389,7 +389,7 @@ escp2_set_printhead_speed(stp_vars_t *v)
   if (unidirectional)
     {
       stp_send_command(v, "\033U", "c", 1);
-      if (pd->res->hres > pd->printing_resolution)
+      if (pd->res->hres > pd->physical_xdpi)
 	stp_send_command(v, "\033(s", "bc", 2);
     }
   else
@@ -463,7 +463,7 @@ escp2_set_printhead_resolution(stp_vars_t *v)
 
       xres = pd->resolution_scale / pd->physical_xdpi;
 
-      if (pd->command_set == MODEL_COMMAND_PRO && !pd->res->softweave)
+      if (pd->command_set == MODEL_COMMAND_PRO && pd->printer_weave)
 	yres = yres /  pd->res->vres;
       else if (pd->split_channel_count > 1)
 	yres = yres * pd->nozzle_separation / pd->base_separation *

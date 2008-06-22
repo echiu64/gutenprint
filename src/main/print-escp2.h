@@ -44,35 +44,6 @@
 typedef unsigned long model_cap_t;
 typedef unsigned long model_featureset_t;
 
-
-#define RES_LOW		 0
-#define RES_360		 1
-#define RES_720_360	 2
-#define RES_720		 3
-#define RES_1440_720	 4
-#define RES_2880_720	 5
-#define RES_2880_1440	 6
-#define RES_2880_2880	 7
-#define RES_5760_2880	 8
-#define RES_N		 9
-
-/*
- ****************************************************************
- *                                                              *
- * DROP SIZES                                                   *
- *                                                              *
- ****************************************************************
- */
-
-typedef struct
-{
-  const char *listname;
-  short numdropsizes;
-  double dropsizes[MAX_DROP_SIZES];
-} escp2_dropsize_t;
-
-typedef const escp2_dropsize_t *escp2_drop_list_t[RES_N];
-
 /*
  ****************************************************************
  *                                                              *
@@ -110,20 +81,66 @@ typedef struct
  ****************************************************************
  */
 
+/* Drop sizes are grouped under resolution because each resolution
+   has different drop sizes. */
+typedef struct
+{
+  short numdropsizes;
+  double dropsizes[MAX_DROP_SIZES];
+} escp2_dropsize_t;
+
 typedef struct
 {
   const char *name;
   const char *text;
   short hres;
   short vres;
-  short virtual_hres;
-  short virtual_vres;
   short printed_hres;
   short printed_vres;
-  short softweave;
-  short printer_weave;
   short vertical_passes;
+  stp_raw_t *command;
+  stp_vars_t *v;
 } res_t;
+
+typedef struct
+{
+  char *name;
+  res_t *resolutions;
+  size_t n_resolutions;
+} resolution_list_t;
+
+typedef struct
+{
+  char *name;
+  char *text;
+  short min_hres;
+  short min_vres;
+  short max_hres;
+  short max_vres;
+  short desired_hres;
+  short desired_vres;
+} quality_t;
+
+typedef struct
+{
+  char *name;
+  quality_t *qualities;
+  size_t n_quals;
+} quality_list_t;
+
+typedef struct
+{
+  char *name;
+  char *text;
+  stp_raw_t *command;
+} printer_weave_t;
+
+typedef struct
+{
+  char *name;
+  size_t n_printer_weaves;
+  printer_weave_t *printer_weaves;
+} printer_weave_list_t;
 
 
 /*
@@ -218,48 +235,10 @@ typedef struct
 /*
  ****************************************************************
  *                                                              *
- * MISCELLANEOUS                                                *
+ * INPUT SLOTS                                                  *
  *                                                              *
  ****************************************************************
  */
-
-/*
- * For each printer, we can select from a variety of dot sizes.
- * For single dot size printers, the available sizes are usually 0,
- * which is the "default", and some subset of 1-4.  For simple variable
- * dot size printers (with only one kind of variable dot size), the
- * variable dot size is specified as 0x10.  For newer printers, there
- * is a choice of variable dot sizes available, 0x10, 0x11, and 0x12 in
- * order of increasing size.
- *
- * Normally, we want to specify the smallest dot size that lets us achieve
- * a density of less than .8 or thereabouts (above that we start to get
- * some dither artifacts).  This needs to be tested for each printer and
- * resolution.
- *
- * An entry of -1 in a slot means that this resolution is not available.
- */
-
-typedef short escp2_dot_size_t[RES_N];
-
-/*
- * Choose the number of bits to use at each resolution.
- */
-
-typedef short escp2_bits_t[RES_N];
-
-/*
- * Choose the base resolution to use at each resolution.
- */
-
-typedef short escp2_base_resolutions_t[RES_N];
-
-/*
- * Specify the base density for each available resolution.
- * This obviously depends upon the dot size.
- */
-
-typedef float escp2_densities_t[RES_N];
 
 #define ROLL_FEED_CUT_ALL (1)
 #define ROLL_FEED_CUT_LAST (2)
@@ -280,38 +259,13 @@ typedef struct
   const stp_raw_t *deinit_sequence;
 } input_slot_t;
 
-typedef struct
-{
-  char *name;
-  char *text;
-  short min_hres;
-  short min_vres;
-  short max_hres;
-  short max_vres;
-  short desired_hres;
-  short desired_vres;
-} quality_t;
-
-typedef struct
-{
-  char *name;
-  quality_t *qualities;
-  size_t n_quals;
-} quality_list_t;
-
-typedef struct
-{
-  char *name;
-  char *text;
-  stp_raw_t *command;
-} printer_weave_t;
-
-typedef struct
-{
-  char *name;
-  size_t n_printer_weaves;
-  printer_weave_t *printer_weaves;
-} printer_weave_list_t;
+/*
+ ****************************************************************
+ *                                                              *
+ * FLAGS                                                        *
+ *                                                              *
+ ****************************************************************
+ */
 
 #define MODEL_COMMAND_MASK	0xful /* What general command set does */
 #define MODEL_COMMAND_1998	0x0ul /* Old (ESC .) printers */
@@ -375,13 +329,6 @@ typedef enum
 typedef struct escp2_printer
 {
 /*****************************************************************************/
-  const short *dot_sizes;	/* Vector of dot sizes for resolutions */
-  const float *densities;	/* List of densities for each printer */
-  const short *bits;
-  const short *base_resolutions;
-/*****************************************************************************/
-  const char *drops; /* Drop sizes */
-  const char *reslist;
   const char *inkgroup;
 /*****************************************************************************/
   /* Data filled in at runtime from XML */
@@ -501,6 +448,8 @@ typedef struct escp2_printer
 /*****************/
   stp_string_list_t *channel_names;
 /*****************/
+  resolution_list_t *resolutions;
+/*****************/
   printer_weave_list_t *printer_weaves;
 /*****************/
   quality_list_t *quality_list;
@@ -509,25 +458,28 @@ typedef struct escp2_printer
 extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
 extern const int stpi_escp2_model_limit;
 
+/* From escp2-channels.c: */
+
 extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
 extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
-extern const res_t *const *stpi_escp2_get_reslist_named(const char *);
-extern const escp2_drop_list_t *stpi_escp2_get_drop_list_named(const char *);
 
 /* From escp2-papers.c: */
 extern int stp_escp2_load_media(const stp_vars_t *v, const char *name);
 extern int stp_escp2_has_media_feature(const stp_vars_t *v, const char *name);
 extern const paper_t *stp_escp2_get_default_media_type(const stp_vars_t *v);
 extern const paper_t *stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res);
-extern int stp_escp2_load_input_slots(const stp_vars_t *v, const char *name);
 extern int stp_escp2_printer_supports_rollfeed(const stp_vars_t *v);
 extern int stp_escp2_printer_supports_print_to_cd(const stp_vars_t *v);
 extern int stp_escp2_printer_supports_duplex(const stp_vars_t *v);
+
+extern int stp_escp2_load_input_slots(const stp_vars_t *v, const char *name);
 extern const input_slot_t *stp_escp2_get_input_slot(const stp_vars_t *v);
+
 extern int stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name);
 extern void stp_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src);
 
 /* From escp2-resolutions.c: */
+extern int stp_escp2_load_resolutions(const stp_vars_t *v, const char *name);
 extern int stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name);
 extern int stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name);
 
@@ -561,7 +513,6 @@ typedef struct
   /* Ink parameters */
   int bitwidth;			/* Number of bits per ink drop */
   int drop_size;		/* ID of the drop size we're using */
-  int ink_resid;		/* Array index for the drop set we're using */
   const escp2_inkname_t *inkname; /* Description of the ink set */
   int use_aux_channels;		/* Use gloss channel */
 
@@ -592,7 +543,6 @@ typedef struct
   int has_graymode;		/* Printer supports fast grayscale mode */
   int base_separation;		/* Basic unit of separation */
   int resolution_scale;		/* Scale factor for ESC(D command */
-  int printing_resolution;	/* Printing resolution for this resolution */
   int separation_rows;		/* Row separation scaling */
   int pseudo_separation_rows;	/* Special row separation for some printers */
   int extra_720dpi_separation;	/* Special separation needed at 720 DPI */
@@ -604,7 +554,7 @@ typedef struct
 				   to print a complete row */
   int physical_xdpi;		/* Horizontal distance between dots in pass */
   const res_t *res;		/* Description of the printing resolution */
-  const printer_weave_t *printer_weave; /* Printer weave parameters */
+  const stp_raw_t *printer_weave; /* Printer weave parameters */
   int use_printer_weave;	/* Use the printer weaving mechanism */
 
   /* page parameters */		/* Indexed from top left */

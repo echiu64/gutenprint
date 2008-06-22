@@ -511,7 +511,7 @@ static const float_param_t float_parameters[] =
       N_("Drop Size 1 (small)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
-    }, 0.0, 1.0, 0.0, 1
+    }, 0.0, 1.0, 1.0, 1
   },
   {
     {
@@ -940,7 +940,7 @@ escp2_##f(const stp_vars_t *v, int rollfeed)				\
     {									\
       int model = escp2_get_stp_model_id(v);				\
       const res_t *res = stp_escp2_find_resolution(v);			\
-      if (res && !(res->softweave))					\
+      if (res && res->command)						\
 	{								\
 	  if (rollfeed)							\
 	    return (stpi_escp2_model_capabilities[model].m_roll_##f);	\
@@ -1015,12 +1015,11 @@ DEF_RAW_ACCESSOR(postinit_remote_sequence, const stp_raw_t *)
 
 DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
 
-static inline const res_t *const *
+static const resolution_list_t *
 escp2_reslist(const stp_vars_t *v)
 {
   int model = escp2_get_stp_model_id(v);
-  return (stpi_escp2_get_reslist_named
-	  (stpi_escp2_model_capabilities[model].reslist));
+  return stpi_escp2_model_capabilities[model].resolutions;
 }
 
 static inline const printer_weave_list_t *
@@ -1073,74 +1072,116 @@ get_channel_count_by_number(unsigned count)
 }
 
 static int
-escp2_ink_type(const stp_vars_t *v, int resid)
+escp2_res_param(const stp_vars_t *v, const char *param, const res_t *res)
 {
-  if (stp_check_int_parameter(v, "escp2_ink_type", STP_PARAMETER_ACTIVE))
-    return stp_get_int_parameter(v, "escp2_ink_type");
+  if (res)
+    {
+      if (res->v &&
+	  stp_check_int_parameter(res->v, param, STP_PARAMETER_ACTIVE))
+	return stp_get_int_parameter(res->v, param);
+      else
+	return -1;
+    }
+  if (stp_check_int_parameter(v, param, STP_PARAMETER_ACTIVE))
+    return stp_get_int_parameter(v, param);
   else
     {
-      int model = escp2_get_stp_model_id(v);
-      return stpi_escp2_model_capabilities[model].dot_sizes[resid];
+      const res_t *res1 = stp_escp2_find_resolution(v);
+      if (res1->v &&
+	  stp_check_int_parameter(res1->v, param, STP_PARAMETER_ACTIVE))
+	return stp_get_int_parameter(res1->v, param);
     }
+  return -1;
+}
+
+static int
+escp2_ink_type(const stp_vars_t *v)
+{
+  return escp2_res_param(v, "escp2_ink_type", NULL);
 }
 
 static double
-escp2_density(const stp_vars_t *v, int resid)
+escp2_density(const stp_vars_t *v)
 {
   if (stp_check_float_parameter(v, "escp2_density", STP_PARAMETER_ACTIVE))
     return stp_get_float_parameter(v, "escp2_density");
   else
     {
-      int model = escp2_get_stp_model_id(v);
-      return stpi_escp2_model_capabilities[model].densities[resid];
+      const res_t *res1 = stp_escp2_find_resolution(v);
+      if (res1->v &&
+	  stp_check_float_parameter(res1->v, "escp2_density", STP_PARAMETER_ACTIVE))
+	return stp_get_float_parameter(res1->v, "escp2_density");
     }
+  return 0;
 }
 
 static int
-escp2_bits(const stp_vars_t *v, int resid)
+escp2_bits(const stp_vars_t *v)
 {
-  if (stp_check_int_parameter(v, "escp2_bits", STP_PARAMETER_ACTIVE))
-    return stp_get_int_parameter(v, "escp2_bits");
-  else
-    {
-      int model = escp2_get_stp_model_id(v);
-      return stpi_escp2_model_capabilities[model].bits[resid];
-    }
+  return escp2_res_param(v, "escp2_bits", NULL);
 }
 
 static int
-escp2_base_res(const stp_vars_t *v, int resid)
+escp2_base_res(const stp_vars_t *v)
 {
-  if (stp_check_int_parameter(v, "escp2_base_res", STP_PARAMETER_ACTIVE))
-    return stp_get_int_parameter(v, "escp2_base_res");
-  else
-    {
-      int model = escp2_get_stp_model_id(v);
-      return stpi_escp2_model_capabilities[model].base_resolutions[resid];
-    }
+  return escp2_res_param(v, "escp2_base_res", NULL);
 }
 
-static const escp2_dropsize_t *
-escp2_dropsizes(const stp_vars_t *v, int resid)
+static int
+escp2_ink_type_by_res(const stp_vars_t *v, const res_t *res)
 {
-  int model = escp2_get_stp_model_id(v);
-  const escp2_drop_list_t *drops =
-    stpi_escp2_get_drop_list_named(stpi_escp2_model_capabilities[model].drops);
-  return (*drops)[resid];
+  return escp2_res_param(v, "escp2_ink_type", res);
+}
+
+static double
+escp2_density_by_res(const stp_vars_t *v, const res_t *res)
+{
+  if (res)
+    {
+      if (res->v &&
+	  stp_check_float_parameter(res->v, "escp2_density", STP_PARAMETER_ACTIVE))
+	return stp_get_float_parameter(res->v, "escp2_density");
+    }
+  return 0.0;
+}
+
+static int
+escp2_bits_by_res(const stp_vars_t *v, const res_t *res)
+{
+  return escp2_res_param(v, "escp2_bits", res);
+}
+
+static int
+escp2_base_res_by_res(const stp_vars_t *v, const res_t *res)
+{
+  return escp2_res_param(v, "escp2_base_res", res);
 }
 
 static escp2_dropsize_t *
-escp2_copy_dropsizes(const stp_vars_t *v, int resid)
+escp2_copy_dropsizes(const stp_vars_t *v)
 {
-  const escp2_dropsize_t *drops = escp2_dropsizes(v, resid);
-  int i;
-  escp2_dropsize_t *ndrops = stp_zalloc(sizeof(escp2_dropsize_t));
-  if (! drops)
+  const res_t *res = stp_escp2_find_resolution(v);
+  escp2_dropsize_t *ndrops;
+  if (!res || !(res->v))
     return NULL;
-  ndrops->listname = drops->listname;
-  ndrops->numdropsizes = drops->numdropsizes;
-  for (i = 0; i < drops->numdropsizes; i++)
-    ndrops->dropsizes[i] = drops->dropsizes[i];
+  ndrops = stp_zalloc(sizeof(escp2_dropsize_t));
+  if (! ndrops)
+    return NULL;
+  if (stp_check_float_parameter(res->v, "DropSize1", STP_PARAMETER_ACTIVE))
+    {
+      ndrops->numdropsizes = 1;
+      ndrops->dropsizes[0] = stp_get_float_parameter(res->v, "DropSize1");
+    }
+  if (stp_check_float_parameter(res->v, "DropSize2", STP_PARAMETER_ACTIVE))
+    {
+      ndrops->numdropsizes = 2;
+      ndrops->dropsizes[1] = stp_get_float_parameter(res->v, "DropSize2");
+    }
+  if (stp_check_float_parameter(res->v, "DropSize3", STP_PARAMETER_ACTIVE))
+    {
+      ndrops->numdropsizes = 3;
+      ndrops->dropsizes[2] = stp_get_float_parameter(res->v, "DropSize3");
+    }
   return ndrops;
 }
 
@@ -1223,54 +1264,6 @@ supports_borderless(const stp_vars_t *v)
 }
 
 static int
-compute_internal_resid(int hres, int vres)
-{
-  static const int resolutions[RES_N] =
-    {
-      0,
-      360 * 360,
-      720 * 360,
-      720 * 720,
-      1440 * 720,
-      1440 * 1440,
-      2880 * 1440,
-      2880 * 2880,
-      5760 * 2880,
-    };
-  int total_resolution = hres * vres;
-  int i;
-  for (i = 0; i < RES_N; i++)
-    {
-      if (total_resolution < resolutions[i])
-	return i - 1;
-    }
-  return RES_N - 1;
-}
-
-static int
-compute_resid(const res_t *res)
-{
-  return compute_internal_resid(res->hres, res->vres);
-}
-
-static int
-compute_printed_resid(const res_t *res)
-{
-  return compute_internal_resid(res->printed_hres, res->printed_vres);
-}
-
-static int
-compute_virtual_resid(const res_t *res)
-{
-  int virtual = compute_internal_resid(res->virtual_hres, res->virtual_vres);
-  int normal = compute_internal_resid(res->hres, res->vres);
-  if (normal == virtual)
-    return compute_internal_resid(res->printed_hres, res->printed_vres);
-  else
-    return virtual;
-}
-
-static int
 max_nozzle_span(const stp_vars_t *v)
 {
   int nozzle_count = escp2_nozzles(v);
@@ -1285,10 +1278,11 @@ max_nozzle_span(const stp_vars_t *v)
     return nozzle_span;
 }
 
-static const printer_weave_t *
+static const stp_raw_t *
 get_printer_weave(const stp_vars_t *v)
 {
   int i;
+  const res_t *res = stp_escp2_find_resolution(v);
   const printer_weave_list_t *p = escp2_printer_weaves(v);
   if (p)
     {
@@ -1299,10 +1293,12 @@ get_printer_weave(const stp_vars_t *v)
 	  for (i = 0; i < printer_weave_count; i++)
 	    {
 	      if (!strcmp(name, p->printer_weaves[i].name))
-		return &(p->printer_weaves[i]);
+		return p->printer_weaves[i].command;
 	    }
 	}
     }
+  if (res)
+    return res->command;
   return NULL;
 }
 
@@ -1310,14 +1306,7 @@ static int
 use_printer_weave(const stp_vars_t *v)
 {
   const res_t *res = stp_escp2_find_resolution(v);
-  if (!res)
-    return 1;
-  else if (!(res->softweave))
-    return 1;
-  else if (res->printer_weave)
-    return 1;
-  else
-    return 0;
+  return (!res || res->command);
 }
 
 static void
@@ -1411,7 +1400,7 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
   int nozzle_width =
     (escp2_base_separation(v) / escp2_nozzle_separation(v));
   int nozzles = escp2_nozzles(v);
-  if (escp2_ink_type(v, compute_printed_resid(res)) != -1 &&
+  if (escp2_ink_type_by_res(v, res) != -1 &&
       res->vres <= escp2_max_vres(v) &&
       res->hres <= escp2_max_hres(v) &&
       res->vres >= escp2_min_vres(v) &&
@@ -1420,7 +1409,7 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
        ((res->vres / nozzle_width) * nozzle_width) == res->vres))
     {
       int xdpi = res->hres;
-      int physical_xdpi = escp2_base_res(v, compute_virtual_resid(res));
+      int physical_xdpi = escp2_base_res_by_res(v, res);
       int horizontal_passes, oversample;
       if (physical_xdpi > xdpi)
 	physical_xdpi = xdpi;
@@ -1431,7 +1420,7 @@ verify_resolution(const stp_vars_t *v, const res_t *res)
       if (oversample < 1)
 	oversample = 1;
       if (((horizontal_passes * res->vertical_passes) <= STP_MAX_WEAVE) &&
-	  (! res->softweave || (nozzles > 1 && nozzles > oversample)))
+	  (res->command || (nozzles > 1 && nozzles > oversample)))
 	return 1;
     }
   return 0;
@@ -1443,26 +1432,26 @@ get_printer_resolution_bounds(const stp_vars_t *v,
 			      unsigned *min_x, unsigned *min_y)
 {
   int i = 0;
-  const res_t *const *res = escp2_reslist(v);
+  const resolution_list_t *resolutions = escp2_reslist(v);
   *max_x = 0;
   *max_y = 0;
   *min_x = 0;
   *min_y = 0;
-  while (res[i])
+  for (i = 0; i < resolutions->n_resolutions; i++)
     {
-      if (verify_resolution(v, res[i]))
+      res_t *res = &(resolutions->resolutions[i]);
+      if (verify_resolution(v, res))
 	{
-	  if (res[i]->printed_hres * res[i]->vertical_passes > *max_x)
-	    *max_x = res[i]->printed_hres * res[i]->vertical_passes;
-	  if (res[i]->printed_vres > *max_y)
-	    *max_y = res[i]->printed_vres;
+	  if (res->printed_hres * res->vertical_passes > *max_x)
+	    *max_x = res->printed_hres * res->vertical_passes;
+	  if (res->printed_vres > *max_y)
+	    *max_y = res->printed_vres;
 	  if (*min_x == 0 ||
-	      res[i]->printed_hres * res[i]->vertical_passes < *min_x)
-	    *min_x = res[i]->printed_hres * res[i]->vertical_passes;
-	  if (*min_y == 0 || res[i]->printed_vres < *min_y)
-	    *min_y = res[i]->printed_vres;
+	      res->printed_hres * res->vertical_passes < *min_x)
+	    *min_x = res->printed_hres * res->vertical_passes;
+	  if (*min_y == 0 || res->printed_vres < *min_y)
+	    *min_y = res->printed_vres;
 	}
-      i++;
     }
   stp_dprintf(STP_DBG_ESCP2, v,
 	      "Printer bounds: %d %d %d %d\n", *min_x, *min_y, *max_x, *max_y);
@@ -1519,8 +1508,7 @@ get_default_inktype(const stp_vars_t *v)
       const res_t *res = stp_escp2_find_resolution(v);
       if (res)
 	{
-	  int resid = compute_printed_resid(res);
-	  if (res->vres == 360 && res->hres == escp2_base_res(v, resid))
+	  if (res->vres == 360 && res->hres == escp2_base_res(v))
 	    {
 	      int i;
 	      for (i = 0; i < ink_list->n_inks; i++)
@@ -1796,31 +1784,27 @@ set_gray_scale_parameter(const stp_vars_t *v,
 }
 
 static const res_t *
-find_default_resolution(const stp_vars_t *v, const quality_t *q,
-			int strict)
+find_default_resolution(const stp_vars_t *v, const quality_t *q, int strict)
 {
-  const res_t *const *res = escp2_reslist(v);
+  const resolution_list_t *resolutions = escp2_reslist(v);
   int i = 0;
   stp_dprintf(STP_DBG_ESCP2, v, "Quality %s: min %d %d max %d %d, des %d %d\n",
 	      q->name, q->min_hres, q->min_vres, q->max_hres, q->max_vres,
 	      q->desired_hres, q->desired_vres);
   if (q->desired_hres < 0 || q->desired_vres < 0)
     {
-      while (res[i])
-	i++;
-      i--;
-      while (i >= 0)
+      for (i = resolutions->n_resolutions - 1; i >= 0; i--)
 	{
+	  const res_t *res = &(resolutions->resolutions[i]);
 	  stp_dprintf(STP_DBG_ESCP2, v, "  Checking resolution %s %d...\n",
-		      res[i]->name, i);
-	  if ((q->max_hres <= 0 || res[i]->printed_hres <= q->max_hres) &&
-	      (q->max_vres <= 0 || res[i]->printed_vres <= q->max_vres) &&
-	      q->min_hres <= res[i]->printed_hres &&
-	      q->min_vres <= res[i]->printed_vres &&
-	      verify_resolution(v, res[i]) &&
-	      verify_resolution_by_paper_type(v, res[i]))
-	    return res[i];
-	  i--;
+		      res->name, i);
+	  if ((q->max_hres <= 0 || res->printed_hres <= q->max_hres) &&
+	      (q->max_vres <= 0 || res->printed_vres <= q->max_vres) &&
+	      q->min_hres <= res->printed_hres &&
+	      q->min_vres <= res->printed_vres &&
+	      verify_resolution(v, res) &&
+	      verify_resolution_by_paper_type(v, res))
+	    return res;
 	}
     }
   if (!strict)
@@ -1857,69 +1841,65 @@ find_default_resolution(const stp_vars_t *v, const quality_t *q,
 		      desired_vres, min_y);
 	  desired_vres = min_y;
 	}
-      i = 0;
-      while (res[i])
+      for (i = 0; i < resolutions->n_resolutions; i++)
 	{
-	  if (verify_resolution(v, res[i]) &&
-	      res[i]->printed_vres == desired_vres &&
-	      res[i]->printed_hres == desired_hres)
+	  res_t *res = &(resolutions->resolutions[i]);
+	  if (verify_resolution(v, res) &&
+	      res->printed_vres == desired_vres &&
+	      res->printed_hres == desired_hres)
 	    {
 	      stp_dprintf(STP_DBG_ESCP2, v,
 			  "  Found desired resolution w/o oversample: %s %d: %d * %d, %d\n",
-			  res[i]->name, i, res[i]->printed_hres,
-			  res[i]->vertical_passes, res[i]->printed_vres);
-	      return res[i];
+			  res->name, i, res->printed_hres,
+			  res->vertical_passes, res->printed_vres);
+	      return res;
 	    }
-	  i++;
 	}
-      i = 0;
-      while (res[i])
+      for (i = 0; i < resolutions->n_resolutions; i++)
 	{
-	  if (verify_resolution(v, res[i]) &&
-	      res[i]->printed_vres == desired_vres &&
-	      res[i]->printed_hres * res[i]->vertical_passes == desired_hres)
+	  res_t *res = &(resolutions->resolutions[i]);
+	  if (verify_resolution(v, res) &&
+	      res->printed_vres == desired_vres &&
+	      res->printed_hres * res->vertical_passes == desired_hres)
 	    {
 	      stp_dprintf(STP_DBG_ESCP2, v,
 			  "  Found desired resolution: %s %d: %d * %d, %d\n",
-			  res[i]->name, i, res[i]->printed_hres,
-			  res[i]->vertical_passes, res[i]->printed_vres);
-	      return res[i];
+			  res->name, i, res->printed_hres,
+			  res->vertical_passes, res->printed_vres);
+	      return res;
 	    }
-	  i++;
 	}
-      i = 0;
-      while (res[i])
+      for (i = 0; i < resolutions->n_resolutions; i++)
 	{
-	  if (verify_resolution(v, res[i]) &&
-	      (q->min_vres == 0 || res[i]->printed_vres >= q->min_vres) &&
-	      (q->max_vres == 0 || res[i]->printed_vres <= q->max_vres) &&
+	  res_t *res = &(resolutions->resolutions[i]);
+	  if (verify_resolution(v, res) &&
+	      (q->min_vres == 0 || res->printed_vres >= q->min_vres) &&
+	      (q->max_vres == 0 || res->printed_vres <= q->max_vres) &&
 	      (q->min_hres == 0 ||
-	       res[i]->printed_hres * res[i]->vertical_passes >=q->min_hres) &&
+	       res->printed_hres * res->vertical_passes >=q->min_hres) &&
 	      (q->max_hres == 0 ||
-	       res[i]->printed_hres * res[i]->vertical_passes <= q->max_hres))
+	       res->printed_hres * res->vertical_passes <= q->max_hres))
 	    {
 	      stp_dprintf(STP_DBG_ESCP2, v,
 			  "  Found acceptable resolution: %s %d: %d * %d, %d\n",
-			  res[i]->name, i, res[i]->printed_hres,
-			  res[i]->vertical_passes, res[i]->printed_vres);
-	      return res[i];
+			  res->name, i, res->printed_hres,
+			  res->vertical_passes, res->printed_vres);
+	      return res;
 	    }
-	  i++;
 	}
     }
 #if 0
   if (!strict)			/* Try again to find a match */
     {
-      i = 0;
-      while (res[i])
+      for (i = 0; i < resolutions->n_resolutions; i++)
 	{
-	  if (verify_resolution(v, res[i]) &&
-	      res[i]->printed_vres >= desired_vres &&
-	      res[i]->printed_hres * res[i]->vertical_passes >= desired_hres &&
-	      res[i]->printed_vres <= 2 * desired_vres &&
-	      res[i]->printed_hres * res[i]->vertical_passes <= 2 * desired_hres)
-	    return res[i];
-	  i++;
+	  res_t *res = &(resolutions->resolutions[i]);
+	  if (verify_resolution(v, res) &&
+	      res->printed_vres >= desired_vres &&
+	      res->printed_hres * res->vertical_passes >= desired_hres &&
+	      res->printed_vres <= 2 * desired_vres &&
+	      res->printed_hres * res->vertical_passes <= 2 * desired_hres)
+	    return res;
 	}
     }
 #endif
@@ -2128,18 +2108,17 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Resolution") == 0)
     {
-      const res_t *const *res = escp2_reslist(v);
+      const resolution_list_t *resolutions = escp2_reslist(v);
       description->bounds.str = stp_string_list_create();
       stp_string_list_add_string(description->bounds.str, "None",
 				 _("Default"));
       description->deflt.str = "None";
-      i = 0;
-      while (res[i])
+      for (i = 0; i < resolutions->n_resolutions; i++)
 	{
-	  if (verify_resolution(v, res[i]))
+	  res_t *res = &(resolutions->resolutions[i]);
+	  if (verify_resolution(v, res))
 	    stp_string_list_add_string(description->bounds.str,
-				       res[i]->name, gettext(res[i]->text));
-	  i++;
+				       res->name, gettext(res->text));
 	}
     }
   else if (strcmp(name, "InkType") == 0)
@@ -2247,7 +2226,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  const res_t *res = stp_escp2_find_resolution(v);
 	  const printer_weave_list_t *printer_weaves = escp2_printer_weaves(v);
 	  int nprinter_weaves = 0;
-	  if (printer_weaves && use_printer_weave(v) && (!res || res->printer_weave))
+	  if (printer_weaves && use_printer_weave(v) && (!res || res->command))
 	    nprinter_weaves = printer_weaves->n_printer_weaves;
 	  if (nprinter_weaves)
 	    {
@@ -2361,14 +2340,10 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     {
       if (escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES))
 	{
-	  int resid = compute_resid(stp_escp2_find_resolution(v));
-	  const escp2_dropsize_t *drops = escp2_dropsizes(v, resid);
-	  if (strcmp(name, "DropSize1") == 0 && drops->numdropsizes >= 1)
-	    description->deflt.dbl = drops->dropsizes[0];
-	  else if (strcmp(name, "DropSize2") == 0 && drops->numdropsizes >= 2)
-	    description->deflt.dbl = drops->dropsizes[1];
-	  else if (strcmp(name, "DropSize3") == 0 && drops->numdropsizes >= 3)
-	    description->deflt.dbl = drops->dropsizes[2];
+	  const res_t *res = stp_escp2_find_resolution(v);
+	  if (res && res->v &&
+	      stp_check_float_parameter(v, name, STP_PARAMETER_ACTIVE))
+	    description->deflt.dbl = stp_get_float_parameter(v, name);
 	  description->is_active = 1;
 	}
       else
@@ -2547,15 +2522,15 @@ stp_escp2_find_resolution(const stp_vars_t *v)
   const char *resolution = stp_get_string_parameter(v, "Resolution");
   if (resolution)
     {
-      const res_t *const *res = escp2_reslist(v);
-      int i = 0;
-      while (res[i])
+      const resolution_list_t *resolutions = escp2_reslist(v);
+      int i;
+      for (i = 0; i < resolutions->n_resolutions; i++)
 	{
-	  if (!strcmp(resolution, res[i]->name))
-	    return res[i];
-	  else if (!strcmp(res[i]->name, ""))
+	  const res_t *res = &(resolutions->resolutions[i]);
+	  if (!strcmp(resolution, res->name))
+	    return res;
+	  else if (!strcmp(res->name, ""))
 	    return NULL;
-	  i++;
 	}
     }
   if (stp_check_string_parameter(v, "Quality", STP_PARAMETER_ACTIVE))
@@ -2831,7 +2806,6 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
   escp2_privdata_t *pd = get_privdata(v);
   const stp_vars_t *pv = pd->paper_type->v;
   double paper_density = .8;
-  int resid = compute_virtual_resid(pd->res);
 
   if (pv && stp_check_float_parameter(pv, "Density", STP_PARAMETER_ACTIVE))
     paper_density = stp_get_float_parameter(pv, "Density");
@@ -2841,9 +2815,8 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
       stp_set_float_parameter_active(v, "Density", STP_PARAMETER_ACTIVE);
       stp_set_float_parameter(v, "Density", 1.0);
     }
-  stp_scale_float_parameter(v, "Density", paper_density * escp2_density(v, resid));
-  pd->drop_size = escp2_ink_type(v, resid);
-  pd->ink_resid = resid;
+  stp_scale_float_parameter(v, "Density", paper_density * escp2_density(v));
+  pd->drop_size = escp2_ink_type(v);
 
   if (stp_get_float_parameter(v, "Density") > 1.0)
     stp_set_float_parameter(v, "Density", 1.0);
@@ -3066,7 +3039,7 @@ setup_inks(stp_vars_t *v)
   int gloss_channel = -1;
   double gloss_scale = get_double_param(v, "Density");
 
-  drops = escp2_copy_dropsizes(v, pd->ink_resid);
+  drops = escp2_copy_dropsizes(v);
   stp_init_debug_messages(v);
   if (stp_check_float_parameter(v, "DropSize1", STP_PARAMETER_ACTIVE))
     {
@@ -3545,19 +3518,18 @@ setup_resolution(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const res_t *res = stp_escp2_find_resolution(v);
-  int resid = compute_resid(res);
 
   int vertical = adjusted_vertical_resolution(res);
   int horizontal = adjusted_horizontal_resolution(res);
 
   pd->res = res;
   pd->use_extended_commands =
-    escp2_use_extended_commands(v, pd->res->softweave);
-  pd->physical_xdpi = escp2_base_res(v, compute_virtual_resid(res));
+    escp2_use_extended_commands(v, !(pd->res->command));
+  pd->physical_xdpi = escp2_base_res(v);
   if (pd->physical_xdpi > pd->res->hres)
     pd->physical_xdpi = pd->res->hres;
 
-  if (escp2_use_extended_commands(v, pd->res->softweave))
+  if (pd->use_extended_commands)
     {
       pd->unit_scale = MAX(escp2_max_hres(v), escp2_max_vres(v));
       pd->horizontal_units = horizontal;
@@ -3578,7 +3550,6 @@ setup_resolution(stp_vars_t *v)
     pd->micro_units = 1440;
   pd->vertical_units = vertical;
   pd->page_management_units = vertical;
-  pd->printing_resolution = escp2_base_res(v, resid);
 }
 
 static void
@@ -3654,14 +3625,7 @@ setup_head_parameters(stp_vars_t *v)
 			      pd->use_aux_channels);
     }
 
-  pd->use_printer_weave = use_printer_weave(v);
-  if (pd->use_printer_weave)
-    {
-      pd->printer_weave = get_printer_weave(v);
-      if (pd->res->softweave)
-	pd->printer_weave = NULL;
-    }
-
+  pd->printer_weave = get_printer_weave(v);
 
   if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
       (pd->inkname->inkset == INKSET_CMYK || pd->physical_channels == 1) &&
@@ -3673,6 +3637,7 @@ setup_head_parameters(stp_vars_t *v)
   /*
    * Set up the printer-specific parameters (weaving)
    */
+  pd->use_printer_weave = use_printer_weave(v);
   if (pd->use_printer_weave)
     setup_printer_weave_parameters(v);
   else
@@ -3722,7 +3687,7 @@ setup_head_parameters(stp_vars_t *v)
       escp2_base_separation(v);
 
   pd->printing_initial_vertical_offset = 0;
-  pd->bitwidth = escp2_bits(v, compute_printed_resid(pd->res));
+  pd->bitwidth = escp2_bits(v);
 }
 
 static void

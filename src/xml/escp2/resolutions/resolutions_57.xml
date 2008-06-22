@@ -23,73 +23,56 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <escp2:resolutions name="resolutions_57">
 <resolution translate="text" name="720x360sw" text="720 x 360 DPI">
 	<physicalResolution>720 360</physicalResolution>
-	<printedResolution>720 360</printedResolution>
-	<softWeave/>
-	<verticalPasses>1</verticalPasses>
 	<parameter type="float" name="escp2_density">0.570000</parameter>
-	<parameter type="int" name="escp2_ink_type">16</parameter>
-	<parameter type="int" name="escp2_base_res">720</parameter>
-	<parameter type="int" name="escp2_bits">2</parameter>
+	<parameter type="integer" name="escp2_ink_type">16</parameter>
+	<parameter type="integer" name="escp2_base_res">720</parameter>
+	<parameter type="integer" name="escp2_bits">2</parameter>
 	<parameter type="float" name="DropSize1">0.250000</parameter>
 	<parameter type="float" name="DropSize2">0.500000</parameter>
 	<parameter type="float" name="DropSize3">1.000000</parameter>
 </resolution>
 <resolution translate="text" name="720sw" text="720 DPI">
 	<physicalResolution>720 720</physicalResolution>
-	<printedResolution>720 720</printedResolution>
-	<softWeave/>
-	<verticalPasses>1</verticalPasses>
 	<parameter type="float" name="escp2_density">0.650000</parameter>
-	<parameter type="int" name="escp2_ink_type">16</parameter>
-	<parameter type="int" name="escp2_base_res">720</parameter>
-	<parameter type="int" name="escp2_bits">2</parameter>
+	<parameter type="integer" name="escp2_ink_type">16</parameter>
+	<parameter type="integer" name="escp2_base_res">720</parameter>
+	<parameter type="integer" name="escp2_bits">2</parameter>
 	<parameter type="float" name="DropSize1">0.250000</parameter>
 	<parameter type="float" name="DropSize2">0.500000</parameter>
 	<parameter type="float" name="DropSize3">1.000000</parameter>
 </resolution>
 <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
 	<physicalResolution>1440 720</physicalResolution>
-	<printedResolution>1440 720</printedResolution>
-	<softWeave/>
-	<verticalPasses>1</verticalPasses>
 	<parameter type="float" name="escp2_density">0.650000</parameter>
-	<parameter type="int" name="escp2_ink_type">17</parameter>
-	<parameter type="int" name="escp2_base_res">720</parameter>
-	<parameter type="int" name="escp2_bits">2</parameter>
+	<parameter type="integer" name="escp2_ink_type">17</parameter>
+	<parameter type="integer" name="escp2_base_res">720</parameter>
+	<parameter type="integer" name="escp2_bits">2</parameter>
 	<parameter type="float" name="DropSize1">0.500000</parameter>
 	<parameter type="float" name="DropSize2">1.000000</parameter>
 </resolution>
 <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
 	<physicalResolution>2880 1440</physicalResolution>
 	<printedResolution>1440 1440</printedResolution>
-	<softWeave/>
-	<verticalPasses>1</verticalPasses>
 	<parameter type="float" name="escp2_density">0.000000</parameter>
-	<parameter type="int" name="escp2_ink_type">18</parameter>
-	<parameter type="int" name="escp2_base_res">1440</parameter>
-	<parameter type="int" name="escp2_bits">1</parameter>
+	<parameter type="integer" name="escp2_ink_type">18</parameter>
+	<parameter type="integer" name="escp2_base_res">1440</parameter>
+	<parameter type="integer" name="escp2_bits">1</parameter>
 	<parameter type="float" name="DropSize1">1.000000</parameter>
 </resolution>
 <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
 	<physicalResolution>2880 1440</physicalResolution>
-	<printedResolution>2880 1440</printedResolution>
-	<softWeave/>
-	<verticalPasses>1</verticalPasses>
 	<parameter type="float" name="escp2_density">0.650000</parameter>
-	<parameter type="int" name="escp2_ink_type">18</parameter>
-	<parameter type="int" name="escp2_base_res">1440</parameter>
-	<parameter type="int" name="escp2_bits">1</parameter>
+	<parameter type="integer" name="escp2_ink_type">18</parameter>
+	<parameter type="integer" name="escp2_base_res">1440</parameter>
+	<parameter type="integer" name="escp2_bits">1</parameter>
 	<parameter type="float" name="DropSize1">1.000000</parameter>
 </resolution>
 <resolution translate="text" name="2880x2880sw" text="2880 x 2880 DPI">
 	<physicalResolution>2880 2880</physicalResolution>
-	<printedResolution>2880 2880</printedResolution>
-	<softWeave/>
-	<verticalPasses>1</verticalPasses>
 	<parameter type="float" name="escp2_density">0.360000</parameter>
-	<parameter type="int" name="escp2_ink_type">19</parameter>
-	<parameter type="int" name="escp2_base_res">1440</parameter>
-	<parameter type="int" name="escp2_bits">1</parameter>
+	<parameter type="integer" name="escp2_ink_type">19</parameter>
+	<parameter type="integer" name="escp2_base_res">1440</parameter>
+	<parameter type="integer" name="escp2_bits">1</parameter>
 	<parameter type="float" name="DropSize1">1.000000</parameter>
 </resolution>
 </escp2:resolutions>
