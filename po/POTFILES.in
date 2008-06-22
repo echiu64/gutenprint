@@ -42,7 +42,6 @@ src/main/print-vars.c
 src/main/print-weave.c
 src/main/string-list.c
 src/main/escp2-driver.c
-src/main/escp2-inks.c
 src/main/escp2-channels.c
 src/main/escp2-papers.c
 src/main/escp2-resolutions.c
