@@ -516,11 +516,11 @@ while (! $atend) {
 			    } else {
 				my $page_mgmt = $nchartable{substr($stuff, $curoffset + 5, 1)};
 				if ($opt_v) {
-				    printf " (units base = %d/720)", $page_mgmt;
+				    printf " (units base = %d/3600)", $page_mgmt;
 				}
-				$page_mgmt_unit = $page_mgmt;
-				$horizontal_unit = $page_mgmt;
-				$vertical_unit = $page_mgmt;
+				$page_mgmt_unit = 3600 / $page_mgmt;
+				$horizontal_unit = 3600 / $page_mgmt;
+				$vertical_unit = 3600 / $page_mgmt;
 			    }
 			} elsif ($xchar eq "v") {
 			    my ($length);
