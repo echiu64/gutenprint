@@ -170,6 +170,7 @@
         <parameter type="float" name="BlackDensity">0.8</parameter>
       </parameters>
       <printer translate="name" name="Epson B-300" driver="escp2-b300" manufacturer="Epson" model="87" parameters="standard_params" />
+      <printer translate="name" name="Epson B-308" driver="escp2-b308" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C20" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" />

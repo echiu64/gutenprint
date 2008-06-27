@@ -147,6 +147,7 @@
 #gptofoo epson-acl_c8600 printer/Epson-AcuLaser_C8600
 #gptofoo epson-acl_c8600ps printer/Epson-AcuLaser_C8600PS
 #gptofoo escp2-b300 printer/Epson-B300
+#gptofoo escp2-b308 printer/Epson-B308
 #gptofoo escp2-b500dn printer/Epson-B500DN
 #gptofoo escp2-b508dn printer/Epson-B508DN
 #gptofoo escp2-cl700 printer/Epson-CL_700
