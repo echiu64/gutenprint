@@ -32,14 +32,14 @@
 static stp_mxml_node_t *
 get_media_size_xml(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  return stpi_escp2_model_capabilities[model].media_sizes;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->media_sizes;
 }
 
 int
 stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
 {
-  int model = stp_get_model_id(v);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
   int found = 0;
@@ -54,7 +54,7 @@ stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
       if (sizes)
 	{
 	  stp_mxml_node_t **xnode =
-	    (stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].media_sizes);
+	    (stp_mxml_node_t **) &(printdef->media_sizes);
 	  *xnode = sizes;
 	  found = 1;
 	  break;
@@ -63,7 +63,10 @@ stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load media sizes for model %d (%s)!\n", model, name);
+    {
+      stp_erprintf("Unable to load media sizes from %s!\n", name);
+      stp_abort();
+    }
   return found;
 }
 
@@ -101,7 +104,7 @@ paper_namefunc(const void *item)
 int
 stp_escp2_load_media(const stp_vars_t *v, const char *name)
 {
-  int model = stp_get_model_id(v);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
   int found = 0;
@@ -116,11 +119,11 @@ stp_escp2_load_media(const stp_vars_t *v, const char *name)
       if (media)
 	{
 	  stp_mxml_node_t **xnode =
-	    (stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].media);
+	    (stp_mxml_node_t **) &(printdef->media);
 	  stp_list_t **xlist =
-	    (stp_list_t **) &(stpi_escp2_model_capabilities[model].media_cache);
+	    (stp_list_t **) &(printdef->media_cache);
 	  stp_string_list_t **xpapers =
-	    (stp_string_list_t **) &(stpi_escp2_model_capabilities[model].papers);
+	    (stp_string_list_t **) &(printdef->papers);
 	  stp_mxml_node_t *node = stp_mxmlFindElement(media, media,
 						      "escp2:papers", NULL,
 						      NULL, STP_MXML_DESCEND);
@@ -148,22 +151,25 @@ stp_escp2_load_media(const stp_vars_t *v, const char *name)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load media for model %d (%s)!\n", model, name);
+    {
+      stp_erprintf("Unable to load media from %s!\n", name);
+      stp_abort();
+    }
   return found;
 }
 
 static stp_mxml_node_t *
 get_media_xml(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  return stpi_escp2_model_capabilities[model].media;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->media;
 }
 
 static stp_list_t *
 get_media_cache(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  return stpi_escp2_model_capabilities[model].media_cache;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->media_cache;
 }
 
 int
@@ -248,8 +254,8 @@ get_media_type_named(const stp_vars_t *v, const char *name,
 {
   paper_t *answer = NULL;
   int i;
-  int model = stp_get_model_id(v);
-  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].papers;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  const stp_string_list_t *p = printdef->papers;
   const res_t *res = ignore_res ? NULL : stp_escp2_find_resolution(v);
   const inklist_t *inklist = stp_escp2_inklist(v);
   char *media_id = build_media_id(name, inklist, res);
@@ -283,8 +289,8 @@ get_media_type_named(const stp_vars_t *v, const char *name,
 const paper_t *
 stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res)
 {
-  int model = stp_get_model_id(v);
-  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].papers;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  const stp_string_list_t *p = printdef->papers;
   if (p)
     {
       const char *name = stp_get_string_parameter(v, "MediaType");
@@ -297,8 +303,8 @@ stp_escp2_get_media_type(const stp_vars_t *v, int ignore_res)
 const paper_t *
 stp_escp2_get_default_media_type(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].papers;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  const stp_string_list_t *p = printdef->papers;
   if (p)
     {
       int paper_type_count = stp_string_list_count(p);
@@ -319,7 +325,7 @@ slots_namefunc(const void *item)
 int
 stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
 {
-  int model = stp_get_model_id(v);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
   int found = 0;
@@ -334,11 +340,11 @@ stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
       if (slots)
 	{
 	  stp_mxml_node_t **xnode =
-	    (stp_mxml_node_t **) &(stpi_escp2_model_capabilities[model].slots);
+	    (stp_mxml_node_t **) &(printdef->slots);
 	  stp_list_t **xlist =
-	    (stp_list_t **) &(stpi_escp2_model_capabilities[model].slots_cache);
+	    (stp_list_t **) &(printdef->slots_cache);
 	  stp_string_list_t **xslots =
-	    (stp_string_list_t **) &(stpi_escp2_model_capabilities[model].input_slots);
+	    (stp_string_list_t **) &(printdef->input_slots);
 	  stp_mxml_node_t *node = stp_mxmlFindElement(slots, slots,
 						      "escp2:InputSlots", NULL,
 						      NULL, STP_MXML_DESCEND);
@@ -366,22 +372,25 @@ stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load input slots for model %d (%s)!\n", model, name);
+    {
+      stp_erprintf("Unable to load input slots from %s!\n", name);
+      stp_abort();
+    }
   return found;
 }
 
 static stp_mxml_node_t *
 get_slots_xml(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  return stpi_escp2_model_capabilities[model].slots;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->slots;
 }
 
 static stp_list_t *
 get_slots_cache(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  return stpi_escp2_model_capabilities[model].slots_cache;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->slots_cache;
 }
 
 static input_slot_t *
@@ -464,8 +473,8 @@ get_input_slot_named(const stp_vars_t *v, const char *name)
 {
   input_slot_t *answer = NULL;
   int i;
-  int model = stp_get_model_id(v);
-  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].input_slots;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  const stp_string_list_t *p = printdef->input_slots;
   stp_list_t *cache = get_slots_cache(v);
   stp_list_item_t *li = stp_list_get_item_by_name(cache, name);
   if (li)
@@ -490,8 +499,8 @@ get_input_slot_named(const stp_vars_t *v, const char *name)
 const input_slot_t *
 stp_escp2_get_input_slot(const stp_vars_t *v)
 {
-  int model = stp_get_model_id(v);
-  const stp_string_list_t *p = stpi_escp2_model_capabilities[model].input_slots;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  const stp_string_list_t *p = printdef->input_slots;
   if (p)
     {
       const char *name = stp_get_string_parameter(v, "InputSlot");

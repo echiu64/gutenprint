@@ -455,9 +455,6 @@ typedef struct escp2_printer
   quality_list_t *quality_list;
 } stpi_escp2_printer_t;
 
-extern stpi_escp2_printer_t stpi_escp2_model_capabilities[];
-extern const int stpi_escp2_model_limit;
-
 /* From escp2-channels.c: */
 
 extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
@@ -489,6 +486,12 @@ extern const inklist_t *stp_escp2_inklist(const stp_vars_t *v);
 
 /* From print-escp2-data.c: */
 extern void stp_escp2_load_model(const stp_vars_t *v, int model);
+extern stpi_escp2_printer_t *stp_escp2_get_printer(const stp_vars_t *v);
+extern model_featureset_t stp_escp2_get_cap(const stp_vars_t *v,
+					    escp2_model_option_t feature);
+extern int stp_escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
+			     model_featureset_t class);
+
 
 typedef struct
 {

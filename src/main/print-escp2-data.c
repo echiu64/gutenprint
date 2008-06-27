@@ -31,7 +31,28 @@
 #include <limits.h>
 #include <assert.h>
 
-stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
+typedef struct
+{
+  const char *attr_name;
+  short bit_shift;
+  short bit_width;
+} escp2_printer_attr_t;
+
+static const escp2_printer_attr_t escp2_printer_attrs[] =
+{
+  { "command_mode",		0, 4 },
+  { "zero_margin",		4, 2 },
+  { "variable_mode",		6, 1 },
+  { "graymode",		 	7, 1 },
+  { "fast_360",			8, 1 },
+  { "send_zero_advance",        9, 1 },
+  { "supports_ink_change",     10, 1 },
+  { "packet_mode",             11, 1 },
+  { "interchangeable_ink",     12, 1 },
+  { "envelope_landscape",      13, 1 },
+};
+
+static stpi_escp2_printer_t escp2_model_capabilities[] =
 {
   /* FIRST GENERATION PRINTERS */
   /* 0: Stylus Color */
@@ -392,14 +413,14 @@ stpi_escp2_printer_t stpi_escp2_model_capabilities[] =
   },
 };
 
-const int stpi_escp2_model_limit =
-sizeof(stpi_escp2_model_capabilities) / sizeof(stpi_escp2_printer_t);
+static const int escp2_model_limit =
+sizeof(escp2_model_capabilities) / sizeof(stpi_escp2_printer_t);
 
-static void
+static
 load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 {
   stp_mxml_node_t *tmp = xmod->child;
-  stpi_escp2_printer_t *p = &(stpi_escp2_model_capabilities[model]);
+  stpi_escp2_printer_t *p = &(escp2_model_capabilities[model]);
   int found_black_head_config = 0;
   int found_fast_head_config = 0;
   p->max_black_resolution = -1;
@@ -746,5 +767,49 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load definition for model %d!\n", model);
+    {
+      stp_erprintf("Unable to find printer definition for model %d!\n", model);
+      stp_abort();
+    }
+}
+
+static int printer_is_loading = 0;
+
+stpi_escp2_printer_t *
+stp_escp2_get_printer(const stp_vars_t *v)
+{
+  int model = stp_get_model_id(v);
+  if (model < 0 || model >= escp2_model_limit)
+    {
+      stp_erprintf("Unable to find printer definition for model %d!\n", model);
+      stp_abort();
+    }
+  if (!printer_is_loading && ! escp2_model_capabilities[model].media)
+    {
+      printer_is_loading = 1;
+      stp_escp2_load_model(v, model);
+      printer_is_loading = 0;
+    }
+  return &(escp2_model_capabilities[model]);
+}
+
+model_featureset_t
+stp_escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
+{
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  model_featureset_t featureset =
+    (((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
+     escp2_printer_attrs[feature].bit_shift);
+  return printdef->flags & featureset;
+}
+
+int
+stp_escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
+		  model_featureset_t class)
+{
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  model_featureset_t featureset =
+    (((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
+     escp2_printer_attrs[feature].bit_shift);
+  return ((printdef->flags & featureset) == class);
 }

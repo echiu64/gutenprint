@@ -33,7 +33,7 @@
 int
 stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
 {
-  int model = stp_get_model_id(v);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
   int found = 0;
@@ -62,7 +62,7 @@ stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
 		    count++;
 		  child = child->next;
 		}
-	      stpi_escp2_model_capabilities[model].printer_weaves = xpw;
+	      printdef->printer_weaves = xpw;
 	      if (stp_mxmlElementGetAttr(node, "name"))
 		xpw->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
 	      else
@@ -99,14 +99,17 @@ stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load printer weaves for model %d (%s)!\n", model, name);
+    {
+      stp_erprintf("Unable to load printer weaves from %s!\n", name);
+      stp_abort();
+    }
   return found;
 }
 
 int
 stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
 {
-  int model = stp_get_model_id(v);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
   int found = 0;
@@ -135,7 +138,7 @@ stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
 		    count++;
 		  child = child->next;
 		}
-	      stpi_escp2_model_capabilities[model].resolutions = xrs;
+	      printdef->resolutions = xrs;
 	      if (stp_mxmlElementGetAttr(node, "name"))
 		xrs->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
 	      else
@@ -212,14 +215,17 @@ stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load resolutions for model %d (%s)!\n", model, name);
+    {
+      stp_erprintf("Unable to load resolutions from %s!\n", name);
+      stp_abort();
+    }
   return found;
 }
 
 int
 stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
 {
-  int model = stp_get_model_id(v);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   stp_list_t *dirlist = stpi_data_path();
   stp_list_item_t *item;
   int found = 0;
@@ -248,7 +254,7 @@ stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
 		    count++;
 		  child = child->next;
 		}
-	      stpi_escp2_model_capabilities[model].quality_list = qpw;
+	      printdef->quality_list = qpw;
 	      if (stp_mxmlElementGetAttr(node, "name"))
 		qpw->name = stp_strdup(stp_mxmlElementGetAttr(node, "name"));
 	      else
@@ -312,6 +318,9 @@ stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
     }
   stp_list_destroy(dirlist);
   if (! found)
-    stp_eprintf(v, "Unable to load quality presets for model %d (%s)!\n", model, name);
+    {
+      stp_erprintf("Unable to load quality presets from %s!\n", name);
+      stp_abort();
+    }
   return found;
 }

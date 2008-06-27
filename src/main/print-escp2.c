@@ -51,27 +51,6 @@
 
 typedef struct
 {
-  const char *attr_name;
-  short bit_shift;
-  short bit_width;
-} escp2_printer_attr_t;
-
-static const escp2_printer_attr_t escp2_printer_attrs[] =
-{
-  { "command_mode",		0, 4 },
-  { "zero_margin",		4, 2 },
-  { "variable_mode",		6, 1 },
-  { "graymode",		 	7, 1 },
-  { "fast_360",			8, 1 },
-  { "send_zero_advance",        9, 1 },
-  { "supports_ink_change",     10, 1 },
-  { "packet_mode",             11, 1 },
-  { "interchangeable_ink",     12, 1 },
-  { "envelope_landscape",      13, 1 },
-};
-
-typedef struct
-{
   unsigned count;
   const char *name;
 } channel_count_t;
@@ -861,49 +840,6 @@ get_privdata(stp_vars_t *v)
   return (escp2_privdata_t *) stp_get_component_data(v, "Driver");
 }
 
-static int
-escp2_get_stp_model_id(const stp_vars_t *v)
-{
-  int model = stp_get_model_id(v);
-  if (! stpi_escp2_model_capabilities[model].media)
-    stp_escp2_load_model(v, model);
-  return stp_get_model_id(v);
-}
-
-static model_featureset_t
-escp2_get_cap(const stp_vars_t *v, escp2_model_option_t feature)
-{
-  int model = escp2_get_stp_model_id(v);
-  if (feature < 0 || feature >= MODEL_LIMIT)
-    return (model_featureset_t) -1;
-  else
-    {
-      model_featureset_t featureset =
-	(((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
-	 escp2_printer_attrs[feature].bit_shift);
-      return stpi_escp2_model_capabilities[model].flags & featureset;
-    }
-}
-
-static int
-escp2_has_cap(const stp_vars_t *v, escp2_model_option_t feature,
-	      model_featureset_t class)
-{
-  int model = escp2_get_stp_model_id(v);
-  if (feature < 0 || feature >= MODEL_LIMIT)
-    return -1;
-  else
-    {
-      model_featureset_t featureset =
-	(((1ul << escp2_printer_attrs[feature].bit_width) - 1ul) <<
-	 escp2_printer_attrs[feature].bit_shift);
-      if ((stpi_escp2_model_capabilities[model].flags & featureset) == class)
-	return 1;
-      else
-	return 0;
-    }
-}
-
 #define DEF_SIMPLE_ACCESSOR(f, t)					\
 static inline t								\
 escp2_##f(const stp_vars_t *v)						\
@@ -912,8 +848,8 @@ escp2_##f(const stp_vars_t *v)						\
     return stp_get_int_parameter(v, "escp2_" #f);			\
   else									\
     {									\
-      int model = escp2_get_stp_model_id(v);				\
-      return (stpi_escp2_model_capabilities[model].f);			\
+      stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);	\
+      return printdef->f;						\
     }									\
 }
 
@@ -925,8 +861,8 @@ escp2_##f(const stp_vars_t *v)						\
     return stp_get_raw_parameter(v, "escp2_" #f);			\
   else									\
     {									\
-      int model = escp2_get_stp_model_id(v);				\
-      return (stpi_escp2_model_capabilities[model].f);			\
+      stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);	\
+      return printdef->f;						\
     }									\
 }
 
@@ -938,21 +874,21 @@ escp2_##f(const stp_vars_t *v, int rollfeed)				\
     return stp_get_int_parameter(v, "escp2_" #f);			\
   else									\
     {									\
-      int model = escp2_get_stp_model_id(v);				\
+      stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);	\
       const res_t *res = stp_escp2_find_resolution(v);			\
       if (res && res->command)						\
 	{								\
 	  if (rollfeed)							\
-	    return (stpi_escp2_model_capabilities[model].m_roll_##f);	\
+	    return (printdef->m_roll_##f);				\
 	  else								\
-	    return (stpi_escp2_model_capabilities[model].m_##f);	\
+	    return (printdef->m_##f);					\
 	}								\
       else								\
 	{								\
 	  if (rollfeed)							\
-	    return (stpi_escp2_model_capabilities[model].roll_##f);	\
+	    return (printdef->roll_##f);				\
 	  else								\
-	    return (stpi_escp2_model_capabilities[model].f);		\
+	    return (printdef->f);					\
 	}								\
     }									\
 }
@@ -1018,37 +954,36 @@ DEF_RAW_ACCESSOR(vertical_borderless_sequence, const stp_raw_t *)
 static const resolution_list_t *
 escp2_reslist(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return stpi_escp2_model_capabilities[model].resolutions;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->resolutions;
 }
 
 static inline const printer_weave_list_t *
 escp2_printer_weaves(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return stpi_escp2_model_capabilities[model].printer_weaves;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->printer_weaves;
 }
 
 static inline const stp_string_list_t *
 escp2_channel_names(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return (stpi_escp2_model_capabilities[model].channel_names);
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return (printdef->channel_names);
 }
 
 static inline const inkgroup_t *
 escp2_inkgroup(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return (stpi_escp2_get_inkgroup_named
-	  (stpi_escp2_model_capabilities[model].inkgroup));
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return (stpi_escp2_get_inkgroup_named(printdef->inkgroup));
 }
 
 static inline const quality_list_t *
 escp2_quality_list(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return stpi_escp2_model_capabilities[model].quality_list;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->quality_list;
 }
 
 static const channel_count_t *
@@ -1244,23 +1179,23 @@ escp2_free_shades(shade_t *shades)
 static const stp_string_list_t *
 escp2_paperlist(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return stpi_escp2_model_capabilities[model].papers;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->papers;
 }
 
 static const stp_string_list_t *
 escp2_slotlist(const stp_vars_t *v)
 {
-  int model = escp2_get_stp_model_id(v);
-  return stpi_escp2_model_capabilities[model].input_slots;
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->input_slots;
 }
 
 static int
 supports_borderless(const stp_vars_t *v)
 {
-  return (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) ||
-	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) ||
-	  escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY));
+  return (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) ||
+	  stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) ||
+	  stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY));
 }
 
 static int
@@ -1463,7 +1398,7 @@ verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
   unsigned int height_limit, width_limit;
   unsigned int min_height_limit, min_width_limit;
   unsigned int envelope_landscape =
-    escp2_has_cap(v, MODEL_ENVELOPE_LANDSCAPE, MODEL_ENVELOPE_LANDSCAPE_YES);
+    stp_escp2_has_cap(v, MODEL_ENVELOPE_LANDSCAPE, MODEL_ENVELOPE_LANDSCAPE_YES);
   width_limit = escp2_max_paper_width(v);
   height_limit = escp2_max_paper_height(v);
   min_width_limit = escp2_min_paper_width(v);
@@ -1502,7 +1437,7 @@ get_default_inktype(const stp_vars_t *v)
     paper_type = stp_escp2_get_default_media_type(v);
   if (paper_type && paper_type->preferred_ink_type)
     return paper_type->preferred_ink_type;
-  else if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
+  else if (stp_escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
 	   stp_check_string_parameter(v, "Resolution", STP_PARAMETER_ACTIVE))
     {
       const res_t *res = stp_escp2_find_resolution(v);
@@ -2221,7 +2156,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "Weave") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      if (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO))
+      if (stp_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO))
 	{
 	  const res_t *res = stp_escp2_find_resolution(v);
 	  const printer_weave_list_t *printer_weaves = escp2_printer_weaves(v);
@@ -2338,7 +2273,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "DropSize2") == 0 ||
 	   strcmp(name, "DropSize3") == 0)
     {
-      if (escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES))
+      if (stp_escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES))
 	{
 	  const res_t *res = stp_escp2_find_resolution(v);
 	  if (res && res->v &&
@@ -2422,7 +2357,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "SupportsInkChange") == 0)
     {
       description->deflt.integer =
-	escp2_has_cap(v, MODEL_SUPPORTS_INK_CHANGE,
+	stp_escp2_has_cap(v, MODEL_SUPPORTS_INK_CHANGE,
 		      MODEL_SUPPORTS_INK_CHANGE_YES);
     }
   else if (strcmp(name, "AlternateAlignmentPasses") == 0)
@@ -2450,7 +2385,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "SupportsPacketMode") == 0)
     {
       description->deflt.boolean =
-	escp2_has_cap(v, MODEL_PACKET_MODE, MODEL_PACKET_MODE_YES);
+	stp_escp2_has_cap(v, MODEL_PACKET_MODE, MODEL_PACKET_MODE_YES);
     }
   else if (strcmp(name, "PrintingMode") == 0)
     {
@@ -2752,16 +2687,16 @@ escp2_describe_output(const stp_vars_t *v)
 static int
 escp2_has_advanced_command_set(const stp_vars_t *v)
 {
-  return (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
-	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) ||
-	  escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000));
+  return (stp_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
+	  stp_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) ||
+	  stp_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_2000));
 }
 
 static int
 escp2_use_extended_commands(const stp_vars_t *v, int use_softweave)
 {
-  return (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
-	  (escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES) &&
+  return (stp_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_PRO) ||
+	  (stp_escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES) &&
 	   use_softweave));
 }
 
@@ -3353,9 +3288,9 @@ setup_basic(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   pd->advanced_command_set = escp2_has_advanced_command_set(v);
-  pd->command_set = escp2_get_cap(v, MODEL_COMMAND);
-  pd->variable_dots = escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
-  pd->has_graymode = escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
+  pd->command_set = stp_escp2_get_cap(v, MODEL_COMMAND);
+  pd->variable_dots = stp_escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_YES);
+  pd->has_graymode = stp_escp2_has_cap(v, MODEL_GRAYMODE, MODEL_GRAYMODE_YES);
   pd->preinit_sequence = escp2_preinit_sequence(v);
   pd->preinit_remote_sequence = escp2_preinit_remote_sequence(v);
   pd->deinit_remote_sequence = escp2_postinit_remote_sequence(v);
@@ -3545,8 +3480,8 @@ setup_resolution(stp_vars_t *v)
       pd->horizontal_units = vertical;
     }
   /* Note hard-coded 1440 -- from Epson manuals */
-  if (escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) &&
-      escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NO))
+  if (stp_escp2_has_cap(v, MODEL_COMMAND, MODEL_COMMAND_1999) &&
+      stp_escp2_has_cap(v, MODEL_VARIABLE_DOT, MODEL_VARIABLE_NO))
     pd->micro_units = 1440;
   pd->vertical_units = vertical;
   pd->page_management_units = vertical;
@@ -3627,7 +3562,7 @@ setup_head_parameters(stp_vars_t *v)
 
   pd->printer_weave = get_printer_weave(v);
 
-  if (escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
+  if (stp_escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
       (pd->inkname->inkset == INKSET_CMYK || pd->physical_channels == 1) &&
       pd->res->hres == pd->physical_xdpi && pd->res->vres == 360)
     pd->use_fast_360 = 1;
@@ -3728,7 +3663,7 @@ setup_page(stp_vars_t *v)
   /* Don't use full bleed mode if the paper itself has a margin */
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
-  if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) &&
+  if (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) &&
       ((!input_slot || !(input_slot->is_cd))))
     {
       pd->page_extra_height =
@@ -3739,7 +3674,7 @@ setup_page(stp_vars_t *v)
       else
 	pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
     }
-  else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) &&
+  else if (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) &&
 	   (stp_get_boolean_parameter(v, "FullBleed")) &&
 	   ((!input_slot || !(input_slot->is_cd))))
     {
@@ -3748,7 +3683,7 @@ setup_page(stp_vars_t *v)
 	escp2_zero_margin_offset(v) * pd->page_management_units /
 	escp2_base_separation(v);
     }
-  else if (escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY) &&
+  else if (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY) &&
 	   (stp_get_boolean_parameter(v, "FullBleed")) &&
 	   ((!input_slot || !(input_slot->is_cd))))
     {
@@ -4066,7 +4001,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   pd->last_pass_offset = 0;
   pd->last_pass = -1;
   pd->send_zero_pass_advance =
-    escp2_has_cap(v, MODEL_SEND_ZERO_ADVANCE, MODEL_SEND_ZERO_ADVANCE_YES);
+    stp_escp2_has_cap(v, MODEL_SEND_ZERO_ADVANCE, MODEL_SEND_ZERO_ADVANCE_YES);
   stp_allocate_component_data(v, "Driver", NULL, NULL, pd);
 
   pd->inkname = get_inktype(v);
