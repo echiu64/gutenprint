@@ -438,7 +438,7 @@ stp_escp2_get_printer(const stp_vars_t *v)
 	stp_realloc(escp2_model_capabilities,
 		    sizeof(stpi_escp2_printer_t) * (model + 1));
       (void) memset(escp2_model_capabilities + escp2_model_limit, 0,
-		    sizeof(stpi_escp2_printer_t) * (model - escp2_model_limit));
+		    sizeof(stpi_escp2_printer_t) * (model + 1 - escp2_model_limit));
       escp2_model_limit = model;
     }
   if (!(escp2_model_capabilities[model].active))

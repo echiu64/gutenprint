@@ -1144,6 +1144,12 @@ stp_escp2_inklist(const stp_vars_t *v)
 	    return &(inkgroup->inklists[i]);
 	}
     }
+  if (!inkgroup)
+    {
+      stp_erprintf("Cannot find inks for printer %s!\n",
+		   stp_get_driver(v));
+      stp_abort();
+    }
   return &(inkgroup->inklists[0]);
 }
 
