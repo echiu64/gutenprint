@@ -14,7 +14,7 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave PrintingDirection Density CyanDensity);
+my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave RawChannels PrintingDirection Density CyanDensity);
 my $global_status = 1;
 my $run_installed = 0;
 my $output = undef;
@@ -30,6 +30,7 @@ my %models;
 my %families;
 my $skip_duplicate_printers = 0;
 my $std_pages = 1;
+my $skip_resolutions = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast",
@@ -47,6 +48,7 @@ GetOptions("v+"  => \$valgrind,
 	   "p:i" => \$std_pages,
 	   "s!"  => \$skip_duplicate_printers,
 	   "i!"  => \$run_installed,
+	   "r!"  => \$skip_resolutions,
 	   "o=s" => \@special_options,
 	   "f=s" => \@families,
 	   "O=s" => \$output,
@@ -115,8 +117,8 @@ sub set_global_message($) {
     push @global_messages, "message \"$message\";\n";
 }
 
-sub print_one_testpattern($) {
-    my ($printer) = @_;
+sub print_one_testpattern($;$) {
+    my ($printer, $raw) = @_;
     my $stuff = join "", @global_messages;
     $stuff .= join "", @job_extras;
     foreach my $page (0..$pages - 1) {
@@ -140,6 +142,33 @@ left 0.15;
 top 0.15;
 blackline 0;
 steps 16;
+EOF
+	if ($raw > 0) {
+	    $stuff .= "mode extended $raw 16;\n";
+	    $stuff .= "xpattern ";
+	    for (my $i = 0; $i < $raw; $i++) {
+		$stuff .= "0.0 0.0 1.0  ";
+	    }
+	    $stuff .= ";\n";
+	    for (my $i = 0; $i < $raw; $i++) {
+		$stuff .= "xpattern ";
+		for (my $j = 0; $j < $raw; $j++) {
+		    if ($i == $j) {
+			$stuff .= "0.0 1.0 1.0  ";
+		    } else {
+			$stuff .= "0.0 0.0 1.0  ";
+		    }
+		}
+		$stuff .= ";\n";
+	    }
+	    $stuff .= "xpattern ";
+	    for (my $i = 0; $i < $raw; $i++) {
+		$stuff .= "0.0 0.0 1.0  ";
+	    }
+	    $stuff .= ";\n";
+	    $stuff .= "end;\n";
+	} else {
+	    $stuff .= << 'EOF';
 mode rgb 8;
 pattern 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0  0.0 0.0 1.0 ;
 pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.0 1.0  0.0 1.0 1.0 0.0 0.0 1.0 0.0 0.0 1.0;
@@ -189,6 +218,7 @@ pattern 1.0 1.0 1.0 1.0 1.0 0.0 0.9 1.0  0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0;
 pattern 0.0 0.0 1.0 1.0 1.0 0.0 0.9 1.0  0.0 0.1 1.0 0.0 0.1 1.0 0.0 0.0 1.0;
 end;
 EOF
+	}
     }
     return $stuff;
 }
@@ -276,47 +306,51 @@ sub do_printer {
     foreach $pmode (@printing_modes) {
 	my ($resolution);
 	$pages = $std_pages;
-	foreach $resolution (@resolutions) {
-	    @extras = ();
-	    @job_extras = ();
-	    @messages = ();
-	    @global_messages = ();
-	    if ($first_time) {
-		set_global_message("$printer\n");
-		$first_time = 0;
+	if (! $skip_resolutions) {
+	    foreach $resolution (@resolutions) {
+		@extras = ();
+		@job_extras = ();
+		@messages = ();
+		@global_messages = ();
+		if ($first_time) {
+		    set_global_message("$printer\n");
+		    $first_time = 0;
+		}
+		set_opt("PrintingMode", $pmode, $printer);
+		set_opt("Resolution", $resolution, $printer);
+		map { set_opt($_, $base_settings{$_}, $printer)} keys %base_settings;
+		if (defined $output || defined $calc_md5) {
+		    my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
+		    my $md5_dir = $calc_md5;
+		    if (defined $calc_md5 && $calc_md5 eq "") {
+			$md5_dir = $output;
+		    }
+		    my $outbase = "${outkey}.prn";
+		    my $outfile = "$output/$outbase";
+		    my $md5file = "$md5_dir/${outkey}.md5";
+		    if (! $md5_dir) {
+			$md5file = "${outkey}.md5";
+		    }
+		    if ($output && $calc_md5) {
+			push @job_extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
+		    } elsif ($output) {
+			push @job_extras, "output \"$outfile\";\n";
+		    } else {
+			push @job_extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
+		    }
+		}
+		set_message("    ${pmode}+${resolution}");
+		my $output = print_one_testpattern($printer);
+		do_print( $output, $fh );
 	    }
-	    set_opt("PrintingMode", $pmode, $printer);
-	    set_opt("Resolution", $resolution, $printer);
-	    map { set_opt($_, $base_settings{$_}, $printer)} keys %base_settings;
-	    if (defined $output || defined $calc_md5) {
-		my $outkey = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
-		my $md5_dir = $calc_md5;
-		if (defined $calc_md5 && $calc_md5 eq "") {
-		    $md5_dir = $output;
-		}
-		my $outbase = "${outkey}.prn";
-		my $outfile = "$output/$outbase";
-		my $md5file = "$md5_dir/${outkey}.md5";
-		if (! $md5_dir) {
-		    $md5file = "${outkey}.md5";
-		}
-		if ($output && $calc_md5) {
-		    push @job_extras, "output \"|tee '$outfile' | md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
-		} elsif ($output) {
-		    push @job_extras, "output \"$outfile\";\n";
-		} else {
-		    push @job_extras, "output \"|md5sum -b | sed 's/-/$outbase/' > '$md5file'\";\n";
-		}
-	    }
-	    set_message("    ${pmode}+${resolution}");
-	    my $output = print_one_testpattern($printer);
-	    do_print( $output, $fh );
 	}
 	foreach $key (@special_options) {
+	    next if ($key eq "RawChannels" && $pmode ne "Color");
 	    $tmp = $opt_vals{$key};
 	    if (defined $tmp && $#{@$tmp} >= 1) {
 		my (@opts) = @$tmp;
 		my $opt;
+		my $rawval;
 		foreach $opt (@opts) {
 		    my ($out_file);
 		    @extras = ();
@@ -329,7 +363,11 @@ sub do_printer {
 		    }
 		    set_opt("PrintingMode", $pmode, $printer);
 #		    set_opt("Resolution", $min_res_name, $printer);
-		    set_opt($key, $opt, $printer);
+		    if ($key eq "RawChannels") {
+			$rawval = $opt;
+		    } else {
+			set_opt($key, $opt, $printer);
+		    }
 		    map {
 			if ($key ne $_) {
 			    set_opt($_, $base_settings{$_}, $printer);
@@ -364,7 +402,7 @@ sub do_printer {
 		    }
 #		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
 		    set_message("    ${key}=${opt}+${pmode}");
-		    my $output = print_one_testpattern($printer);
+		    my $output = print_one_testpattern($printer, $rawval);
 		    do_print( $output, $fh );
 		}
 	    }
