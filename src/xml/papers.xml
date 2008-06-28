@@ -1,22 +1,49 @@
 <?xml version="1.0"?>
 
 <!--
-   XML description of papers known to libgutenprint.
-   It should be edited by hand.
-
    "$Id$"
--->
 
-<!--
+   XML description of papers known to libgutenprint.
+   You can add additional paper sizes here.
+
+   NOTE: Margins should ONLY be specified for papers where the margin
+   is a property of the paper itself, for example a tear-off border.
+   Do NOT specify margins here to work around issues such as margins
+   being cut off (not printed) by the driver or by the printer itself.
+   These should either be handled with the Shrink Page If Necessary to
+   Fit Borders option (in CUPS) or if that doesn't work, by filing a
+   bug.
+
+   Changing borders here will change borders for ALL printers, even
+   even printers without whatever limitation it is that induced you
+   to consider setting margins in this file.  It is not under ANY
+   circumstances (other than the paper itself having margins) the right
+   thing to do.
+
    Sizes are converted to 1/72in, then rounded down so that we don't
    print off the edge of the paper.
 -->
 
 
-
-<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<gutenprint xmlns="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
+<copyright>
+ *   Copyright 2008 Robert Krawitz (rlk@alum.mit.edu)
+ *
+ *   This program is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU General Public License as published by the Free
+ *   Software Foundation; either version 2 of the License, or (at your option)
+ *   any later version.
+ *
+ *   This program is distributed in the hope that it will be useful, but
+ *   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ *   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ *   for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+</copyright>
   <paperdef>
 <!-- GROUP: Imperial -->
     <paper name="Letter">
