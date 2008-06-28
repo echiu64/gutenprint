@@ -22,17 +22,27 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="cmykrb">
 <InkList translate="text" name="cmykrbphoto" text="Photo Black">
+<Shades>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+</Shades>
 
 <InkName translate="text" name="CMYKRBG" text="Six Color Photo"
 InkID="CMYKRB">
 	<Channels>
 	<channel name="f360_photo_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000"
-headOffset="1">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="4" headOffset="1">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -40,11 +50,12 @@ headOffset="1">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -52,11 +63,12 @@ headOffset="1">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -64,11 +76,12 @@ headOffset="1">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -76,11 +89,12 @@ headOffset="1">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -88,15 +102,15 @@ headOffset="1">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 	<AuxChannels>
 	<channel name="standard_gloss" index="0">
 	<subchannel color="9">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</AuxChannels>
@@ -106,6 +120,7 @@ headOffset="1">
 text="Five Color Photo Composite" InkID="CMYKRB">
 	<Channels>
 	<channel name="r800_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -113,11 +128,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -125,11 +141,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -137,11 +154,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -149,11 +167,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -161,15 +180,15 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 	<AuxChannels>
 	<channel name="standard_gloss" index="0">
 	<subchannel color="9">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</AuxChannels>
@@ -179,31 +198,30 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 InkID="CMYK">
 	<Channels>
 	<channel name="f360_photo_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000"
-headOffset="1">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="4" headOffset="1">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 	<AuxChannels>
 	<channel name="standard_gloss" index="0">
 	<subchannel color="9">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</AuxChannels>
@@ -213,25 +231,25 @@ headOffset="1">
 InkID="CMYK">
 	<Channels>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 	<AuxChannels>
 	<channel name="standard_gloss" index="0">
 	<subchannel color="9">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</AuxChannels>
@@ -241,8 +259,8 @@ InkID="CMYK">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -252,14 +270,13 @@ InkID="Extended">
 text="One Color Raw Enhanced Gloss" InkID="Extended">
 	<Channels>
 	<channel name="f360_photo_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000"
-headOffset="1">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="4" headOffset="1">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_gloss" index="1">
-	<subchannel color="9" shade="1.000000">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<subchannel color="9">
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -269,44 +286,44 @@ headOffset="1">
 InkID="Extended">
 	<Channels>
 	<channel name="f360_standard_cyan" index="0">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="1">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="2">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 </InkName>
 
-<InkName translate="text" name="PhysicalCMY"
+<InkName translate="text" name="PhysicalCMYGloss"
 text="Three Color Raw Gloss" InkID="Extended">
 	<Channels>
 	<channel name="f360_standard_cyan" index="0">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="1">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="2">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_gloss" index="3">
-	<subchannel color="9" shade="1.000000">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<subchannel color="9">
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -316,29 +333,28 @@ text="Three Color Raw Gloss" InkID="Extended">
 text="Four Color Raw Gloss" InkID="Extended">
 	<Channels>
 	<channel name="f360_photo_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000"
-headOffset="1">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="4" headOffset="1">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_gloss" index="4">
-	<subchannel color="9" shade="1.000000">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<subchannel color="9">
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -348,17 +364,17 @@ headOffset="1">
 text="Six Color Enhanced Gloss Raw" InkID="Extended">
 	<Channels>
 	<channel name="f360_photo_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000"
-headOffset="1">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="4" headOffset="1">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -366,11 +382,12 @@ headOffset="1">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -378,11 +395,12 @@ headOffset="1">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -390,11 +408,12 @@ headOffset="1">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -402,13 +421,13 @@ headOffset="1">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_gloss" index="6">
-	<subchannel color="9" shade="1.000000">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<subchannel color="9">
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -418,17 +437,17 @@ headOffset="1">
 text="Seven Color Enhanced Gloss Raw" InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_photo_black" index="1">
-	<subchannel color="0" subchannel="4" shade="1.000000"
-headOffset="1">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="4" headOffset="1">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_cyan" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -436,11 +455,12 @@ headOffset="1">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -448,11 +468,12 @@ headOffset="1">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -460,11 +481,12 @@ headOffset="1">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -472,11 +494,12 @@ headOffset="1">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="6">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -484,29 +507,38 @@ headOffset="1">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_gloss" index="7">
-	<subchannel color="9" shade="1.000000">
-	<ChannelDensityParam>GlossDensity</ChannelDensityParam>
+	<subchannel color="9">
+	<ChannelDensityParam name="GlossDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 </InkName>
 </InkList>
 <InkList translate="text" name="cmykrbmatte" text="Matte Black">
+<Shades>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+</Shades>
 
 <InkName translate="text" name="CMYKRB" text="Six Color Photo"
 InkID="CMYKRB">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -514,11 +546,12 @@ InkID="CMYKRB">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -526,11 +559,12 @@ InkID="CMYKRB">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -538,11 +572,12 @@ InkID="CMYKRB">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -550,11 +585,12 @@ InkID="CMYKRB">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -562,8 +598,8 @@ InkID="CMYKRB">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -573,6 +609,7 @@ InkID="CMYKRB">
 text="Five Color Photo Composite" InkID="CMYKRB">
 	<Channels>
 	<channel name="r800_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -580,11 +617,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -592,11 +630,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -604,11 +643,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -616,11 +656,12 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -628,8 +669,8 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -639,23 +680,23 @@ text="Five Color Photo Composite" InkID="CMYKRB">
 InkID="CMYK">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -665,18 +706,18 @@ InkID="CMYK">
 InkID="CMYK">
 	<Channels>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -686,8 +727,8 @@ InkID="CMYK">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -697,18 +738,18 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="f360_standard_cyan" index="0">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="1">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="2">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -718,23 +759,23 @@ InkID="Extended">
 text="Four Color Raw" InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="f360_standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -744,11 +785,12 @@ text="Four Color Raw" InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -756,11 +798,12 @@ InkID="Extended">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" headOffset="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -768,11 +811,12 @@ InkID="Extended">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -780,11 +824,12 @@ InkID="Extended">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" headOffset="1">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -792,11 +837,12 @@ InkID="Extended">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="r800_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -804,8 +850,8 @@ InkID="Extended">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>

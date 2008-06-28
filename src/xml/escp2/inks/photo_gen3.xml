@@ -22,42 +22,50 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="photo_gen3">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
+<Shades>
+	<shade count="1">1.000000</shade>
+	<shade count="2">1.000000 0.350000</shade>
+	<shade count="2">1.000000 0.350000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+</Shades>
 
 <InkName translate="text" name="PhotoCMYK" text="Six Color Photo"
 InkID="CcMmYK">
 	<Channels>
 	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
 	</subchannel>
-	<subchannel color="2" subchannel="1" shade="0.350000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightCyanValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightCyanScale</SubchannelScaleParam>
+	<subchannel color="2" subchannel="1">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
+	<SubchannelValueParam name="LightCyanValue"/>
+	<SubchannelScaleParam name="LightCyanScale"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
+	<subchannel color="1" subchannel="0">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
 	</subchannel>
-	<subchannel color="1" subchannel="1" shade="0.350000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightMagentaValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightMagentaScale</SubchannelScaleParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
+	<SubchannelValueParam name="LightMagentaValue"/>
+	<SubchannelScaleParam name="LightMagentaScale"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -67,32 +75,32 @@ InkID="CcMmYK">
 text="Five Color Photo Composite" InkID="CcMmYK">
 	<Channels>
 	<channel name="photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
 	</subchannel>
-	<subchannel color="2" subchannel="1" shade="0.350000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightCyanValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightCyanScale</SubchannelScaleParam>
+	<subchannel color="2" subchannel="1">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
+	<SubchannelValueParam name="LightCyanValue"/>
+	<SubchannelScaleParam name="LightCyanScale"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
+	<subchannel color="1" subchannel="0">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
 	</subchannel>
-	<subchannel color="1" subchannel="1" shade="0.350000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightMagentaValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightMagentaScale</SubchannelScaleParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
+	<SubchannelValueParam name="LightMagentaValue"/>
+	<SubchannelScaleParam name="LightMagentaScale"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -102,23 +110,23 @@ text="Five Color Photo Composite" InkID="CcMmYK">
 InkID="CMYK">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -128,18 +136,18 @@ InkID="CMYK">
 InkID="CMYK">
 	<Channels>
 	<channel name="standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -149,8 +157,8 @@ InkID="CMYK">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -160,18 +168,18 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_cyan" index="0">
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="1">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_yellow" index="2">
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -181,23 +189,23 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_yellow" index="3">
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -207,28 +215,28 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_cyan" index="0">
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_cyan" index="1">
-	<subchannel color="2" subchannel="1" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="2">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_magenta" index="3">
-	<subchannel color="1" subchannel="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_yellow" index="4">
-	<subchannel color="4" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -238,65 +246,68 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_cyan" index="1">
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_cyan" index="2">
-	<subchannel color="2" subchannel="1" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="1">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="standard_magenta" index="3">
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_magenta" index="4">
-	<subchannel color="1" subchannel="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="photo_yellow" index="5">
-	<subchannel color="4" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 </InkName>
 </InkList>
 <InkList translate="text" name="quadtone" text="Quadtone">
+<Shades>
+	<shade count="4">1.000000 0.750000 0.500000 0.250000</shade>
+</Shades>
 
 <InkName translate="text" name="Quadtone" text="Quadtone"
 InkID="Quadtone">
 	<Channels>
 	<channel name="quadtone" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
 	</subchannel>
-	<subchannel color="2" shade="0.750000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>Gray3Value</SubchannelValueParam>
-	<SubchannelScaleParam>Gray3Scale</SubchannelScaleParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SubchannelValueParam name="Gray3Value"/>
+	<SubchannelScaleParam name="Gray3Scale"/>
 	</subchannel>
-	<subchannel color="1" shade="0.500000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>Gray2Value</SubchannelValueParam>
-	<SubchannelScaleParam>Gray2Scale</SubchannelScaleParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SubchannelValueParam name="Gray2Value"/>
+	<SubchannelScaleParam name="Gray2Scale"/>
 	</subchannel>
-	<subchannel color="4" shade="0.250000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>Gray1Value</SubchannelValueParam>
-	<SubchannelScaleParam>Gray1Scale</SubchannelScaleParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SubchannelValueParam name="Gray1Value"/>
+	<SubchannelScaleParam name="Gray1Scale"/>
 	</subchannel>
 	</channel>
 	</Channels>

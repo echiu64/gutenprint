@@ -161,22 +161,16 @@ typedef struct
   const char *subchannel_transition;
   const char *subchannel_value;
   const char *subchannel_scale;
-  const short split_channels[PHYSICAL_CHANNEL_LIMIT];
+  short *split_channels;
 } physical_subchannel_t;
 
 typedef struct
 {
-  const char *curve_name;
-  const char *curve;
-  stp_curve_t *curve_impl;
-} hue_curve_t;
-
-typedef struct
-{
-  const char *listname;
-  const physical_subchannel_t *subchannels;
+  const char *name;
   short n_subchannels;
-  hue_curve_t *hue_curve;
+  physical_subchannel_t *subchannels;
+  const char *hue_curve_name;
+  stp_curve_t *hue_curve;
 } ink_channel_t;
 
 typedef enum
@@ -193,42 +187,35 @@ typedef enum
 typedef struct
 {
   const char *name;
-  const ink_channel_t *const *channels;
-  const ink_channel_t *const *aux_channels;
+  const char *text;
   short channel_count;
   short aux_channel_count;
-} channel_set_t;
-
-typedef struct
-{
-  const char *name;
-  const char *text;
   inkset_id_t inkset;
-  const channel_set_t *channel_set;
-} escp2_inkname_t;
+  ink_channel_t *channels;
+  ink_channel_t *aux_channels;
+} inkname_t;
 
 typedef struct
 {
   int n_shades;
-  double shades[PHYSICAL_CHANNEL_LIMIT];
+  double *shades;
 } shade_t;
-
-typedef shade_t shade_set_t[PHYSICAL_CHANNEL_LIMIT];
 
 typedef struct
 {
   const char *name;
   const char *text;
-  const escp2_inkname_t *const *inknames;
-  const shade_set_t *shades;
+  short n_shades;
   short n_inks;
+  shade_t *shades;
+  inkname_t *inknames;
 } inklist_t;
 
 typedef struct
 {
-  const char *listname;
-  const inklist_t *const *inklists;
+  const char *name;
   short n_inklists;
+  inklist_t *inklists;
 } inkgroup_t;
     
 
@@ -328,10 +315,8 @@ typedef enum
 
 typedef struct escp2_printer
 {
+  int		active;
 /*****************************************************************************/
-  const char *inkgroup;
-/*****************************************************************************/
-  /* Data filled in at runtime from XML */
   model_cap_t	flags;		/* Bitmask of flags, see above */
 /*****************************************************************************/
   /* Basic head configuration */
@@ -453,12 +438,14 @@ typedef struct escp2_printer
   printer_weave_list_t *printer_weaves;
 /*****************/
   quality_list_t *quality_list;
+/*****************/
+  inkgroup_t *inkgroup;
 } stpi_escp2_printer_t;
 
 /* From escp2-channels.c: */
 
-extern const escp2_inkname_t *stpi_escp2_get_default_black_inkset(void);
-extern const inkgroup_t *stpi_escp2_get_inkgroup_named(const char *);
+extern const inkname_t *stpi_escp2_get_default_black_inkset(void);
+extern int stp_escp2_load_inkgroup(const stp_vars_t *v, const char *name);
 
 /* From escp2-papers.c: */
 extern int stp_escp2_load_media(const stp_vars_t *v, const char *name);
@@ -516,7 +503,7 @@ typedef struct
   /* Ink parameters */
   int bitwidth;			/* Number of bits per ink drop */
   int drop_size;		/* ID of the drop size we're using */
-  const escp2_inkname_t *inkname; /* Description of the ink set */
+  const inkname_t *inkname;	/* Description of the ink set */
   int use_aux_channels;		/* Use gloss channel */
 
   /* Ink channels */

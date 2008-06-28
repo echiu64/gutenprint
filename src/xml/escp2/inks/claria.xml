@@ -22,45 +22,50 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="claria">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
+<Shades>
+	<shade count="1">1.000000</shade>
+	<shade count="2">1.000000 0.350000</shade>
+	<shade count="2">1.000000 0.330000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+</Shades>
 
 <InkName translate="text" name="PhotoCMYK" text="Six Color Photo"
 InkID="CcMmYK">
 	<Channels>
 	<channel name="claria_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
 	</subchannel>
-	<subchannel color="2" subchannel="1" shade="0.350000"
-headOffset="2">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightCyanValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightCyanScale</SubchannelScaleParam>
+	<subchannel color="2" subchannel="1" headOffset="2">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
+	<SubchannelValueParam name="LightCyanValue"/>
+	<SubchannelScaleParam name="LightCyanScale"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
 	</subchannel>
-	<subchannel color="1" subchannel="1" shade="0.330000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightMagentaValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightMagentaScale</SubchannelScaleParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
+	<SubchannelValueParam name="LightMagentaValue"/>
+	<SubchannelScaleParam name="LightMagentaScale"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -70,35 +75,32 @@ headOffset="2">
 text="Five Color Photo Composite" InkID="CcMmYK">
 	<Channels>
 	<channel name="claria_photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
 	</subchannel>
-	<subchannel color="2" subchannel="1" shade="0.350000"
-headOffset="2">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightCyanTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightCyanValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightCyanScale</SubchannelScaleParam>
+	<subchannel color="2" subchannel="1" headOffset="2">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SubchannelTransitionParam name="LightCyanTransition"/>
+	<SubchannelValueParam name="LightCyanValue"/>
+	<SubchannelScaleParam name="LightCyanScale"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
 	</subchannel>
-	<subchannel color="1" subchannel="1" shade="0.330000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>LightMagentaTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>LightMagentaValue</SubchannelValueParam>
-	<SubchannelScaleParam>LightMagentaScale</SubchannelScaleParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SubchannelTransitionParam name="LightMagentaTransition"/>
+	<SubchannelValueParam name="LightMagentaValue"/>
+	<SubchannelScaleParam name="LightMagentaScale"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -108,25 +110,23 @@ headOffset="2">
 InkID="CMYK">
 	<Channels>
 	<channel name="claria_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -136,20 +136,18 @@ headOffset="2">
 InkID="CMYK">
 	<Channels>
 	<channel name="claria_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -159,8 +157,8 @@ headOffset="2">
 InkID="Extended">
 	<Channels>
 	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -170,20 +168,18 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="claria_cyan" index="0">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_magenta" index="1">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="2">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -193,59 +189,54 @@ headOffset="2">
 InkID="Extended">
 	<Channels>
 	<channel name="claria_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="3">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
 </InkName>
 
-<InkName translate="text" name="PhysicalCcMmYK" text="Six Color Raw"
+<InkName translate="text" name="PhysicalCcMmY" text="Five Color Raw"
 InkID="Extended">
 	<Channels>
 	<channel name="claria_cyan" index="0">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_claria_cyan" index="1">
-	<subchannel color="2" subchannel="1" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="1" headOffset="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_magenta" index="2">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_claria_magenta" index="3">
-	<subchannel color="1" subchannel="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="4">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -255,36 +246,33 @@ headOffset="2">
 InkID="Extended">
 	<Channels>
 	<channel name="claria_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_cyan" index="1">
-	<subchannel color="2" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_claria_cyan" index="2">
-	<subchannel color="2" subchannel="1" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2" subchannel="1" headOffset="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_magenta" index="3">
-	<subchannel color="1" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="extended_claria_magenta" index="4">
-	<subchannel color="1" subchannel="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1" subchannel="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="claria_yellow" index="5">
-	<subchannel color="4" subchannel="0" shade="1.000000"
-headOffset="2">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4" subchannel="0" headOffset="2">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>

@@ -22,32 +22,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="b500">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
+<Shades>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+</Shades>
 
 <InkName translate="text" name="CMYK" text="Four Color Standard"
 InkID="CMYK">
 	<Channels>
 	<channel name="b500_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SplitChannels>0 64</SplitChannels>
+	<subchannel color="0" subchannel="4">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SplitChannels count="2">0 64</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_cyan" index="1">
-	<subchannel color="2" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SplitChannels>2 66</SplitChannels>
+	<subchannel color="2" subchannel="4">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SplitChannels count="2">2 66</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_magenta" index="2">
-	<subchannel color="1" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SplitChannels>1 65</SplitChannels>
+	<subchannel color="1" subchannel="4">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SplitChannels count="2">1 65</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_yellow" index="3">
-	<subchannel color="4" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
-	<SplitChannels>4 68</SplitChannels>
+	<subchannel color="4" subchannel="4">
+	<ChannelDensityParam name="YellowDensity"/>
+	<SplitChannels count="2">4 68</SplitChannels>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -57,21 +63,21 @@ InkID="CMYK">
 InkID="CMYK">
 	<Channels>
 	<channel name="b500_cyan" index="1">
-	<subchannel color="2" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SplitChannels>2 66</SplitChannels>
+	<subchannel color="2" subchannel="4">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SplitChannels count="2">2 66</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_magenta" index="2">
-	<subchannel color="1" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SplitChannels>1 65</SplitChannels>
+	<subchannel color="1" subchannel="4">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SplitChannels count="2">1 65</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_yellow" index="3">
-	<subchannel color="4" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
-	<SplitChannels>4 68</SplitChannels>
+	<subchannel color="4" subchannel="4">
+	<ChannelDensityParam name="YellowDensity"/>
+	<SplitChannels count="2">4 68</SplitChannels>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -81,9 +87,9 @@ InkID="CMYK">
 InkID="Extended">
 	<Channels>
 	<channel name="b500_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SplitChannels>0 64</SplitChannels>
+	<subchannel color="0" subchannel="4">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SplitChannels count="2">0 64</SplitChannels>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -93,21 +99,21 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="b500_cyan" index="0">
-	<subchannel color="2" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SplitChannels>2 66</SplitChannels>
+	<subchannel color="2" subchannel="4">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SplitChannels count="2">2 66</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_magenta" index="1">
-	<subchannel color="1" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SplitChannels>1 65</SplitChannels>
+	<subchannel color="1" subchannel="4">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SplitChannels count="2">1 65</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_yellow" index="2">
-	<subchannel color="4" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
-	<SplitChannels>4 68</SplitChannels>
+	<subchannel color="4" subchannel="4">
+	<ChannelDensityParam name="YellowDensity"/>
+	<SplitChannels count="2">4 68</SplitChannels>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -117,63 +123,66 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="b500_black" index="0">
-	<subchannel color="0" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SplitChannels>0 64</SplitChannels>
+	<subchannel color="0" subchannel="4">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SplitChannels count="2">0 64</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_cyan" index="1">
-	<subchannel color="2" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
-	<SplitChannels>2 66</SplitChannels>
+	<subchannel color="2" subchannel="4">
+	<ChannelDensityParam name="CyanDensity"/>
+	<SplitChannels count="2">2 66</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_magenta" index="2">
-	<subchannel color="1" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
-	<SplitChannels>1 65</SplitChannels>
+	<subchannel color="1" subchannel="4">
+	<ChannelDensityParam name="MagentaDensity"/>
+	<SplitChannels count="2">1 65</SplitChannels>
 	</subchannel>
 	</channel>
 	<channel name="b500_yellow" index="3">
-	<subchannel color="4" subchannel="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
-	<SplitChannels>4 68</SplitChannels>
+	<subchannel color="4" subchannel="4">
+	<ChannelDensityParam name="YellowDensity"/>
+	<SplitChannels count="2">4 68</SplitChannels>
 	</subchannel>
 	</channel>
 	</Channels>
 </InkName>
 </InkList>
 <InkList translate="text" name="Quadtone" text="Quadtone">
+<Shades>
+	<shade count="4">1.000000 0.750000 0.500000 0.250000</shade>
+</Shades>
 
 <InkName translate="text" name="Quadtone" text="Quadtone"
 InkID="Quadtone">
 	<Channels>
 	<channel name="b500_quadtone" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SplitChannels>0 64</SplitChannels>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SplitChannels count="2">0 64</SplitChannels>
 	</subchannel>
-	<subchannel color="2" subchannel="0" shade="0.750000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>Gray3Value</SubchannelValueParam>
-	<SubchannelScaleParam>Gray3Scale</SubchannelScaleParam>
-	<SplitChannels>2 66</SplitChannels>
+	<subchannel color="2" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SubchannelValueParam name="Gray3Value"/>
+	<SubchannelScaleParam name="Gray3Scale"/>
+	<SplitChannels count="2">2 66</SplitChannels>
 	</subchannel>
-	<subchannel color="1" subchannel="0" shade="0.500000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>Gray2Value</SubchannelValueParam>
-	<SubchannelScaleParam>Gray2Scale</SubchannelScaleParam>
-	<SplitChannels>1 65</SplitChannels>
+	<subchannel color="1" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SubchannelValueParam name="Gray2Value"/>
+	<SubchannelScaleParam name="Gray2Scale"/>
+	<SplitChannels count="2">1 65</SplitChannels>
 	</subchannel>
-	<subchannel color="4" subchannel="0" shade="0.250000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
-	<SubchannelTransitionParam>GrayTransition</SubchannelTransitionParam>
-	<SubchannelValueParam>Gray1Value</SubchannelValueParam>
-	<SubchannelScaleParam>Gray1Scale</SubchannelScaleParam>
-	<SplitChannels>4 68</SplitChannels>
+	<subchannel color="4" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="GrayTransition"/>
+	<SubchannelValueParam name="Gray1Value"/>
+	<SubchannelScaleParam name="Gray1Scale"/>
+	<SplitChannels count="2">4 68</SplitChannels>
 	</subchannel>
 	</channel>
 	</Channels>

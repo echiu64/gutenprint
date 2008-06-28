@@ -22,16 +22,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="picturemate_6">
 <InkList translate="text" name="picturemate_6" text="Standard">
+<Shades>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+	<shade count="1">1.000000</shade>
+</Shades>
 
 <InkName translate="text" name="CMYKRB" text="Six Color Photo"
 InkID="CMYKRB">
 	<Channels>
 	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -39,11 +48,12 @@ InkID="CMYKRB">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -51,11 +61,12 @@ InkID="CMYKRB">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -63,11 +74,12 @@ InkID="CMYKRB">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -75,11 +87,12 @@ InkID="CMYKRB">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -87,8 +100,8 @@ InkID="CMYKRB">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -98,11 +111,12 @@ InkID="CMYKRB">
 InkID="CMYK">
 	<Channels>
 	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -110,11 +124,12 @@ InkID="CMYK">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -122,11 +137,12 @@ InkID="CMYK">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -134,8 +150,8 @@ InkID="CMYK">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -145,11 +161,12 @@ InkID="CMYK">
 InkID="Extended">
 	<Channels>
 	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -157,11 +174,12 @@ InkID="Extended">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -169,11 +187,12 @@ InkID="Extended">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -181,11 +200,12 @@ InkID="Extended">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_red" index="4">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -193,11 +213,12 @@ InkID="Extended">
 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="7" shade="1.000000">
-	<ChannelDensityParam>RedDensity</ChannelDensityParam>
+	<subchannel color="7">
+	<ChannelDensityParam name="RedDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_blue" index="5">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -205,8 +226,8 @@ InkID="Extended">
 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="8" shade="1.000000" headOffset="1">
-	<ChannelDensityParam>BlueDensity</ChannelDensityParam>
+	<subchannel color="8" headOffset="1">
+	<ChannelDensityParam name="BlueDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>
@@ -216,11 +237,12 @@ InkID="Extended">
 InkID="Extended">
 	<Channels>
 	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0" shade="1.000000">
-	<ChannelDensityParam>BlackDensity</ChannelDensityParam>
+	<subchannel color="0" subchannel="0">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_cyan" index="1">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -228,11 +250,12 @@ InkID="Extended">
 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="2" shade="1.000000">
-	<ChannelDensityParam>CyanDensity</ChannelDensityParam>
+	<subchannel color="2">
+	<ChannelDensityParam name="CyanDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_magenta" index="2">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -240,11 +263,12 @@ InkID="Extended">
 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="1" shade="1.000000">
-	<ChannelDensityParam>MagentaDensity</ChannelDensityParam>
+	<subchannel color="1">
+	<ChannelDensityParam name="MagentaDensity"/>
 	</subchannel>
 	</channel>
 	<channel name="picturemate_yellow" index="3">
+	<HueCurveParam name="CyanCurve"/>
 	<HueCurve>
 	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
 	<sequence count="48" lower-bound="0" upper-bound="4">
@@ -252,8 +276,8 @@ InkID="Extended">
 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
 	</curve>
 	</HueCurve>
-	<subchannel color="4" shade="1.000000">
-	<ChannelDensityParam>YellowDensity</ChannelDensityParam>
+	<subchannel color="4">
+	<ChannelDensityParam name="YellowDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>

@@ -20,31 +20,17 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InkGroup name="cmy">
+<escp2:InkGroup name="defaultblack">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
 <Shades>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
+        <shade count="1">1.000000</shade>
 </Shades>
 
-<InkName translate="text" name="RGB" text="Three Color Composite"
-InkID="CMYK">
+<InkName translate="text" name="CMYK" text="Default Black" InkID="CMYK">
 	<Channels>
-	<channel name="standard_cyan" index="1">
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_magenta" index="2">
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_yellow" index="3">
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
+	<channel name="standard_black" index="0">
+	<subchannel color="0" shade="1.000000">
+	<ChannelDensityParam name="BlackDensity"/>
 	</subchannel>
 	</channel>
 	</Channels>

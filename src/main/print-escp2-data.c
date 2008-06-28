@@ -52,371 +52,11 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
   { "envelope_landscape",      13, 1 },
 };
 
-static stpi_escp2_printer_t escp2_model_capabilities[] =
-{
-  /* FIRST GENERATION PRINTERS */
-  /* 0: Stylus Color */
-  {
-    "standard"
-  },
-  /* 1: Stylus Color 400/500 */
-  {
-    "standard"
-  },
-  /* 2: Stylus Color 1500 */
-  {
-    "cmy"
-  },
-  /* 3: Stylus Color 600 */
-  {
-    "standard"
-  },
-  /* 4: Stylus Color 800 */
-  {
-    "standard"
-  },
-  /* 5: Stylus Color 850 */
-  {
-    "standard"
-  },
-  /* 6: Stylus Color 1520 */
-  {
-    "standard"
-  },
+static stpi_escp2_printer_t *escp2_model_capabilities;
 
-  /* SECOND GENERATION PRINTERS */
-  /* 7: Stylus Photo 700 */
-  {
-    "photo_gen1"
-  },
-  /* 8: Stylus Photo EX */
-  {
-    "photo_gen1"
-  },
-  /* 9: Stylus Photo */
-  {
-    "photo_gen1"
-  },
+static int escp2_model_limit = 0;
 
-  /* THIRD GENERATION PRINTERS */
-  /* 10: Stylus Color 440/460 */
-  {
-    "standard"
-  },
-  /* 11: Stylus Color 640 */
-  {
-    "standard"
-  },
-  /* 12: Stylus Color 740/Stylus Scan 2000/Stylus Scan 2500 */
-  {
-    "standard"
-  },
-  /* 13: Stylus Color 900 */
-  {
-    "standard"
-  },
-  /* 14: Stylus Photo 750 */
-  {
-    "photo_gen1"
-  },
-  /* 15: Stylus Photo 1200 */
-  {
-    "photo_gen1"
-  },
-  /* 16: Stylus Color 860 */
-  {
-    "standard"
-  },
-  /* 17: Stylus Color 1160 */
-  {
-    "standard"
-  },
-  /* 18: Stylus Color 660 */
-  {
-    "standard"
-  },
-  /* 19: Stylus Color 760 */
-  {
-    "standard"
-  },
-  /* 20: Stylus Photo 720 (Australia) */
-  {
-    "photo_gen1"
-  },
-  /* 21: Stylus Color 480 */
-  {
-    "x80"
-  },
-  /* 22: Stylus Photo 870/875 */
-  {
-    "photo_gen2"
-  },
-  /* 23: Stylus Photo 1270 */
-  {
-    "photo_gen2"
-  },
-  /* 24: Stylus Color 3000 */
-  {
-    "standard"
-  },
-  /* 25: Stylus Color 670 */
-  {
-    "standard"
-  },
-  /* 26: Stylus Photo 2000P */
-  {
-    "photo_pigment"
-  },
-  /* 27: Stylus Pro 5000 */
-  {
-    "pro_gen1"
-  },
-  /* 28: Stylus Pro 7000 */
-  {
-    "pro_gen1"
-  },
-  /* 29: Stylus Pro 7500 */
-  {
-    "pro_pigment"
-  },
-  /* 30: Stylus Pro 9000 */
-  {
-    "pro_gen1"
-  },
-  /* 31: Stylus Pro 9500 */
-  {
-    "pro_pigment"
-  },
-  /* 32: Stylus Color 777/680 */
-  {
-    "standard"
-  },
-  /* 33: Stylus Color 880/83/C60 */
-  {
-    "standard"
-  },
-  /* 34: Stylus Color 980 */
-  {
-    "standard"
-  },
-  /* 35: Stylus Photo 780/790 */
-  {
-    "photo_gen2"
-  },
-  /* 36: Stylus Photo 785/890/895/915/935 */
-  {
-    "photo_gen2"
-  },
-  /* 37: Stylus Photo 1280/1290 */
-  {
-    "photo_gen2"
-  },
-  /* 38: Stylus Color 580 */
-  {
-    "x80"
-  },
-  /* 39: Stylus Color Pro XL */
-  {
-    "standard"
-  },
-  /* 40: Stylus Pro 5500 */
-  {
-    "pro_pigment"
-  },
-  /* 41: Stylus Pro 10000 */
-  {
-    "pro_gen2"
-  },
-  /* 42: Stylus C20SX/C20UX */
-  {
-    "x80"
-  },
-  /* 43: Stylus C40SX/C40UX/C41SX/C41UX/C42SX/C42UX */
-  {
-    "x80"
-  },
-  /* 44: Stylus C70/C80 */
-  {
-    "c80"
-  },
-  /* 45: Stylus Color Pro */
-  {
-    "standard"
-  },
-  /* 46: Stylus Photo 950/960 */
-  {
-    "f360_photo"
-  },
-  /* 47: Stylus Photo 2100/2200 */
-  {
-    "f360_ultrachrome"
-  },
-  /* 48: Stylus Pro 7600 */
-  {
-    "pro_ultrachrome"
-  },
-  /* 49: Stylus Pro 9600 */
-  {
-    "pro_ultrachrome"
-  },
-  /* 50: Stylus Photo 825/830 */
-  {
-    "photo_gen2"
-  },
-  /* 51: Stylus Photo 925 */
-  {
-    "photo_gen2"
-  },
-  /* 52: Stylus Color C62 */
-  {
-    "standard"
-  },
-  /* 53: Japanese PM-950C */
-  {
-    "f360_photo7_japan"
-  },
-  /* 54: Stylus Photo EX3 */
-  {
-    "photo_gen1"
-  },
-  /* 55: Stylus C82/CX-5200 */
-  {
-    "c82"
-  },
-  /* 56: Stylus C50 */
-  {
-    "x80"
-  },
-  /* 57: Japanese PM-970C */
-  {
-    "f360_photo7_japan"
-  },
-  /* 58: Japanese PM-930C */
-  {
-    "photo_gen2"
-  },
-  /* 59: Stylus C43SX/C43UX/C44SX/C44UX (WRONG -- see 43!) */
-  {
-    "x80"
-  },
-  /* 60: Stylus C84 */
-  {
-    "c82"
-  },
-  /* 61: Stylus Color C63/C64 */
-  {
-    "c64"
-  },
-  /* 62: Stylus Photo 900 */
-  {
-    "photo_gen2"
-  },
-  /* 63: Stylus Photo R300 */
-  {
-    "photo_gen3"
-  },
-  /* 64: PM-G800/Stylus Photo R800 */
-  {
-    "cmykrb"
-  },
-  /* 65: Stylus Photo CX4600 */
-  {
-    "cx3650"
-  },
-  /* 66: Stylus Color C65/C66 */
-  {
-    "c64"
-  },
-  /* 67: Stylus Photo R1800 */
-  {
-    "cmykrb"
-  },
-  /* 68: PM-G820 */
-  {
-    "cmykrb"
-  },
-  /* 69: Stylus C86 */
-  {
-    "c82"
-  },
-  /* 70: Stylus Photo RX700 */
-  {
-    "photo_gen4"
-  },
-  /* 71: Stylus Photo R2400 */
-  {
-    "f360_ultrachrome_k3"
-  },
-  /* 72: Stylus CX3700/3800/3810 */
-  {
-    "c64"
-  },
-  /* 73: E-100/PictureMate */
-  {
-    "picturemate_6"
-  },
-  /* 74: PM-A650 */
-  {
-    "c64"
-  },
-  /* 75: Japanese PM-A750 */
-  {
-    "c64"
-  },
-  /* 76: Japanese PM-A890 */
-  {
-    "photo_gen4"
-  },
-  /* 77: Japanese PM-D600 */
-  {
-    "c64"
-  },
-  /* 78: Stylus Photo 810/820 */
-  {
-    "photo_gen2"
-  },
-  /* 79: Stylus CX6400 */
-  {
-    "c82"
-  },
-  /* 80: Stylus CX6600 */
-  {
-    "c82"
-  },
-  /* 81: Stylus Photo R260 */
-  {
-    "claria"
-  },
-  /* 82: Stylus Photo 1400 */
-  {
-    "claria"
-  },
-  /* 83: Stylus Photo R240 */
-  {
-    "photo_gen3_4"
-  },
-  /* 84: Stylus Photo RX500 */
-  {
-    "photo_gen3"
-  },
-  /* 85: Stylus C120 */
-  {
-    "c120"
-  },
-  /* 86: PictureMate 4-color */
-  {
-    "picturemate_4"
-  },
-  /* 87: B-500DN */
-  {
-    "b500"
-  },
-};
-
-static const int escp2_model_limit =
-sizeof(escp2_model_capabilities) / sizeof(stpi_escp2_printer_t);
-
-static
+static void
 load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 {
   stp_mxml_node_t *tmp = xmod->child;
@@ -446,6 +86,8 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		stp_escp2_load_quality_presets(v, target);
 	      else if (!strcmp(name, "resolutions"))
 		stp_escp2_load_resolutions(v, target);
+	      else if (!strcmp(name, "inkGroup"))
+		stp_escp2_load_inkgroup(v, target);
 	    }
 	  else if (tmp->child && tmp->child->type == STP_MXML_TEXT)
 	    {
@@ -779,16 +421,30 @@ stpi_escp2_printer_t *
 stp_escp2_get_printer(const stp_vars_t *v)
 {
   int model = stp_get_model_id(v);
-  if (model < 0 || model >= escp2_model_limit)
+  if (model < 0)
     {
       stp_erprintf("Unable to find printer definition for model %d!\n", model);
       stp_abort();
     }
-  if (!printer_is_loading && ! escp2_model_capabilities[model].media)
+  if (!escp2_model_capabilities)
     {
-      printer_is_loading = 1;
+      escp2_model_capabilities =
+	stp_zalloc(sizeof(stpi_escp2_printer_t) * (model + 1));
+      escp2_model_limit = model;
+    }
+  else if (model > escp2_model_limit)
+    {
+      escp2_model_capabilities =
+	stp_realloc(escp2_model_capabilities,
+		    sizeof(stpi_escp2_printer_t) * (model + 1));
+      (void) memset(escp2_model_capabilities + escp2_model_limit, 0,
+		    sizeof(stpi_escp2_printer_t) * (model - escp2_model_limit));
+      escp2_model_limit = model;
+    }
+  if (!(escp2_model_capabilities[model].active))
+    {
+      escp2_model_capabilities[model].active = 1;
       stp_escp2_load_model(v, model);
-      printer_is_loading = 0;
     }
   return &(escp2_model_capabilities[model]);
 }

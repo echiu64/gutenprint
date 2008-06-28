@@ -35,6 +35,7 @@ pkgxmldata_DATA =				\
 	cmy.xml					\
 	cmykrb.xml				\
 	cx3650.xml				\
+	defaultblack.xml			\
 	f360.xml				\
 	f360_photo.xml				\
 	f360_photo7_japan.xml			\
