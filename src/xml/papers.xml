@@ -1224,6 +1224,12 @@
       <height value="0"/>
       <unit value="english"/>
     </paper>
+    <paper name="w1224">
+      <description translate="value" value="17 Inch Roll Paper"/>
+      <width value="1224"/>
+      <height value="0"/>
+      <unit value="english"/>
+    </paper>
     <paper name="w1584">
       <description translate="value" value="22 Inch Roll Paper"/>
       <width value="1584"/>
@@ -1245,6 +1251,18 @@
     <paper name="w3168">
       <description translate="value" value="44 Inch Roll Paper"/>
       <width value="3168"/>
+      <height value="0"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="w4320">
+      <description translate="value" value="60 Inch Roll Paper"/>
+      <width value="4320"/>
+      <height value="0"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="w4608">
+      <description translate="value" value="64 Inch Roll Paper"/>
+      <width value="4608"/>
       <height value="0"/>
       <unit value="english"/>
     </paper>
