@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.0-beta3!  Please read these release notes
+Welcome to Gutenprint 5.2.0-beta4!  Please read these release notes
 carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
@@ -10,7 +10,7 @@ replaces the print plug-in packaged with the GIMP distribution.
 
 Gutenprint currently supports over 1300 printer models.
 
-Gutenprint 5.2.0-beta3 is the third beta release of Gutenprint 5.2.
+Gutenprint 5.2.0-beta4 a beta release of Gutenprint 5.2.
 
 *** NOTE TO PACKAGERS: This is a beta release of the forthcoming 5.2
     stable release.  As of 5.2 and until further notice, Gutenprint
