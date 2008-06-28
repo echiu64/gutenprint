@@ -31,6 +31,7 @@ my %families;
 my $skip_duplicate_printers = 0;
 my $std_pages = 1;
 my $skip_resolutions = 0;
+my $quiet = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast",
@@ -49,6 +50,7 @@ GetOptions("v+"  => \$valgrind,
 	   "s!"  => \$skip_duplicate_printers,
 	   "i!"  => \$run_installed,
 	   "r!"  => \$skip_resolutions,
+	   "q!"  => \$quiet,
 	   "o=s" => \@special_options,
 	   "f=s" => \@families,
 	   "O=s" => \$output,
@@ -109,12 +111,12 @@ sub set_opt($$$) {
 
 sub set_message($) {
     my ($message) = @_;
-    push @messages, "message \"$message\";\n";
+    push @messages, "message \"$message\";\n" if (! $quiet);
 }
 
 sub set_global_message($) {
     my ($message) = @_;
-    push @global_messages, "message \"$message\";\n";
+    push @global_messages, "message \"$message\";\n" if (! $quiet);
 }
 
 sub print_one_testpattern($;$) {
@@ -125,7 +127,7 @@ sub print_one_testpattern($;$) {
     	$stuff .= "printer \"$printer\";\n";
 	$stuff .= "parameter \"PageSize\" \"Auto\";\n";
 	$stuff .= join "", @extras, @messages;
-	if ($pages > 1) {
+	if (! $quiet && $pages > 1) {
 	    $stuff .= "message \"(page $page)\";\n";
 	}
 	$stuff .= "parameter_int \"PageNumber\" $page;\n";
@@ -446,7 +448,8 @@ if ($dontrun) {
     my $status = 1;
     my ($suppress);
     if (! defined $output && ! defined $calc_md5) { $suppress = '-n'; }
-    $testpattern_command = "$valgrind_command ./testpattern $suppress";
+    my ($qopt) = $quiet ? "-q" : "";
+    $testpattern_command = "$valgrind_command ./testpattern $suppress $qopt";
     open TESTPATTERN, "|$testpattern_command" or
 	die "Can't run $testpattern_command: $!\n";
     map { do_printer($_, \*TESTPATTERN) } @printer_list;

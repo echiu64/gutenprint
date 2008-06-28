@@ -89,6 +89,7 @@ int global_use_raw_cmyk;
 int global_did_something;
 int global_noscale = 0;
 int global_suppress_output = 0;
+int global_quiet = 0;
 char *global_output = NULL;
 FILE *output = NULL;
 int write_to_process = 0;
@@ -444,13 +445,17 @@ main(int argc, char **argv)
   int global_status = 0;
   while (1)
     {
-      c = getopt(argc, argv, "n");
+      c = getopt(argc, argv, "nq");
       if (c == -1)
 	break;
       switch (c)
 	{
 	case 'n':
 	  global_suppress_output = 1;
+	  break;
+	case 'q':
+	  global_quiet = 1;
+	  break;
 	default:
 	  break;
 	}
@@ -1023,7 +1028,8 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	  fprintf(stderr, "Read failed!\n");
 	  return STP_IMAGE_STATUS_ABORT;
 	}
-      fprintf(stderr, ".");
+      if (!global_quiet)
+	fprintf(stderr, ".");
     }
   else
     {
@@ -1035,7 +1041,8 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 		       global_printer_width, global_steps, depth,
 		       global_bit_depth / 8);
 	  previous_band = band;
-	  fprintf(stderr, ".");
+	  if (!global_quiet)
+	    fprintf(stderr, ".");
 	}
       else if (row == global_printer_height - 1)
 	fill_black(data, global_printer_width, global_steps,
@@ -1049,7 +1056,8 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 		       global_printer_width, global_steps, depth,
 		       global_bit_depth / 8);
 	  previous_band = band;
-	  fprintf(stderr, ".");
+	  if (!global_quiet)
+	    fprintf(stderr, ".");
 	}
       else
 	fill_pattern(&(static_testpatterns[band]), data,
@@ -1086,7 +1094,8 @@ Image_init(stp_image_t *image)
 static void
 Image_conclude(stp_image_t *image)
 {
-  fprintf(stderr, "\n");
+  if (!global_quiet)
+    fprintf(stderr, "\n");
 }
 
 static const char *

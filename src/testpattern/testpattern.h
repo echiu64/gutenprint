@@ -83,6 +83,7 @@ extern int global_did_something;
 extern int global_invert_data;
 extern int global_noscale;
 extern char *global_output;
+extern int global_quiet;
 extern FILE *output;
 extern int start_job;
 extern int end_job;
