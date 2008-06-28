@@ -187,7 +187,7 @@ paper_size_mismatch(int l, int w, const stp_papersize_t *val)
 {
   int hdiff = abs(l - (int) val->height);
   int vdiff = abs(w - (int) val->width);
-  return hdiff + vdiff;
+  return hdiff > vdiff ? hdiff : vdiff;
 }
 
 const stp_papersize_t *
@@ -207,7 +207,7 @@ stp_get_papersize_by_size(int l, int w)
       else
 	{
 	  int myscore = paper_size_mismatch(l, w, val);
-	  if (myscore < score && myscore < 20)
+	  if (myscore < score && myscore < 5)
 	    {
 	      ref = val;
 	      score = myscore;

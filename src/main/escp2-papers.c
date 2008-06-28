@@ -273,7 +273,15 @@ get_media_type_named(const stp_vars_t *v, const char *name,
 	{
 	  if (!strcmp(name, stp_string_list_param(p, i)->name))
 	    {
+#ifdef HAVE_LOCALE_H
+	      char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+	      setlocale(LC_ALL, "C");
+#endif
 	      answer = build_media_type(v, name, inklist, res);
+#ifdef HAVE_LOCALE_H
+	      setlocale(LC_ALL, locale);
+	      stp_free(locale);
+#endif
 	      break;
 	    }
 	}
@@ -486,7 +494,15 @@ get_input_slot_named(const stp_vars_t *v, const char *name)
 	{
 	  if (!strcmp(name, stp_string_list_param(p, i)->name))
 	    {
+#ifdef HAVE_LOCALE_H
+	      char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+	      setlocale(LC_ALL, "C");
+#endif
 	      answer = build_input_slot(v, name);
+#ifdef HAVE_LOCALE_H
+	      setlocale(LC_ALL, locale);
+	      stp_free(locale);
+#endif
 	      break;
 	    }
 	}

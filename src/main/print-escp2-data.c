@@ -443,8 +443,16 @@ stp_escp2_get_printer(const stp_vars_t *v)
     }
   if (!(escp2_model_capabilities[model].active))
     {
+#ifdef HAVE_LOCALE_H
+      char *locale = stp_strdup(setlocale(LC_ALL, NULL));
+      setlocale(LC_ALL, "C");
+#endif
       escp2_model_capabilities[model].active = 1;
       stp_escp2_load_model(v, model);
+#ifdef HAVE_LOCALE_H
+      setlocale(LC_ALL, locale);
+      stp_free(locale);
+#endif
     }
   return &(escp2_model_capabilities[model]);
 }
