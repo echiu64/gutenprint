@@ -121,7 +121,7 @@ set_string_parameter(stp_vars_t *v, const char *name, const char *val)
     fprintf(stderr, "DEBUG: Gutenprint   set special string %s to %s\n", name, val);
   stp_set_string_parameter(v, name, val);
 }
-  
+
 
 static void
 set_special_parameter(stp_vars_t *v, const char *name, int choice)
@@ -340,12 +340,12 @@ validate_options(stp_vars_t *v, cups_image_t *cups)
   if (! suppress_messages)
     fprintf(stderr, "DEBUG: Gutenprint   done validating options\n");
   stp_parameter_list_destroy(params);
-}  
+}
 
 static stp_vars_t *
-initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
+initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
+		const char *page_size_name)
 {
-  const stp_papersize_t	*size;		/* Paper size */
   int tmp_left, tmp_right, tmp_top, tmp_bottom, tmp_width, tmp_height;
   stp_vars_t *v = stp_vars_create_copy(default_settings);
 
@@ -413,13 +413,26 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings)
     fprintf(stderr, "DEBUG: Gutenprint   PageSize = %dx%d\n", cups->header.PageSize[0],
 	    cups->header.PageSize[1]);
 
-  if ((size = stp_get_papersize_by_size(cups->header.PageSize[1],
-					cups->header.PageSize[0])) != NULL)
-    set_string_parameter(v, "PageSize", size->name);
+  if (page_size_name)
+    {
+      if (strcmp(page_size_name, "Custom") == 0)
+	{
+	  if (!suppress_messages)
+	    fprintf(stderr, "DEBUG: Gutenprint using custom page size for (%d, %d)\n",
+		    cups->header.PageSize[1], cups->header.PageSize[0]);
+	}
+      else
+	{
+	  if (!suppress_messages)
+	    fprintf(stderr, "DEBUG: Gutenprint using page size %s with (%d, %d)\n",
+		    page_size_name, cups->header.PageSize[1], cups->header.PageSize[0]);
+	  set_string_parameter(v, "PageSize", page_size_name);
+	}
+    }
   else
     {
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint   UNABLE to get media size for (%d, %d)\n",
+	fprintf(stderr, "DEBUG: Gutenprint   no named media size for (%d, %d)\n",
 		cups->header.PageSize[1], cups->header.PageSize[0]);
     }
 
@@ -800,6 +813,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   cups_image_t		cups;		/* CUPS image */
   const char		*ppdfile;	/* PPD environment variable */
   ppd_file_t		*ppd;		/* PPD file */
+  ppd_size_t		*size;
   const stp_printer_t	*printer;	/* Printer driver */
   int			num_options;	/* Number of CUPS options */
   cups_option_t		*options;	/* CUPS options */
@@ -813,6 +827,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   long			clocks_per_sec;
   struct timeval	t1, t2;
   struct timezone	tz;
+  char			*page_size_name = NULL;
 
   if (getenv("STP_SUPPRESS_MESSAGES"))
     suppress_messages = 1;
@@ -932,6 +947,12 @@ main(int  argc,				/* I - Number of command-line arguments */
   */
 
   num_options = cupsParseOptions(argv[5], 0, &options);
+  ppdMarkDefaults(ppd);
+  cupsMarkOptions(ppd, num_options, options);
+  size = ppdPageSize(ppd, NULL);
+
+  if (size->name)
+    page_size_name = stp_strdup(size->name);
 
   if (! suppress_messages)
     fprintf(stderr, "DEBUG: Gutenprint CUPS option count is %d (%d bytes)\n",
@@ -1025,7 +1046,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  fprintf(stderr, "DEBUG: Gutenprint printing page %d\n", cups.page + 1);
 	  fprintf(stderr, "PAGE: %d 1\n", cups.page + 1);
 	}
-      v = initialize_page(&cups, default_settings);
+      v = initialize_page(&cups, default_settings, page_size_name);
       stp_set_int_parameter(v, "PageNumber", cups.page);
       cups.row = 0;
       if (! suppress_messages)
@@ -1085,9 +1106,11 @@ main(int  argc,				/* I - Number of command-line arguments */
 	  ((double) (t2.tv_usec - t1.tv_usec)) / 1000000.0);
   if (! suppress_messages)
     fputs("INFO: Gutenprint Ready to print.\n", stderr);
+  stp_vars_destroy(default_settings);
+  if (page_size_name)
+    stp_free(page_size_name);
   if (fd != 0)
     close(fd);
-  stp_vars_destroy(default_settings);
   return 0;
 
 cups_abort:
@@ -1111,6 +1134,8 @@ cups_abort:
   fputs("ERROR: Gutenprint No pages found!\n", stderr);
   fputs("ERROR: Gutenprint Invalid printer settings!\n", stderr);
   stp_vars_destroy(default_settings);
+  if (page_size_name)
+    stp_free(page_size_name);
   if (fd != 0)
     close(fd);
   return 1;
@@ -1221,9 +1246,9 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
     CHAR_BIT;
 
   left_margin = ((cups->left_trim * cups->header.cupsBitsPerPixel) + CHAR_BIT - 1) /
-    CHAR_BIT; 
+    CHAR_BIT;
   right_margin = ((cups->right_trim * cups->header.cupsBitsPerPixel) + CHAR_BIT - 1) /
-    CHAR_BIT; 
+    CHAR_BIT;
   margin = cups->header.cupsBytesPerLine - left_margin - bytes_per_line -
     right_margin;
 

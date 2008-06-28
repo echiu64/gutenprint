@@ -35,7 +35,6 @@ set_args() {
     done
 }
 
-
 set_args `getopt vcgs "$@"`
 
 version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
@@ -60,13 +59,20 @@ is_duplicate() {
     all_models="$model $all_models"
 }
 
+# Note that using CUPS arguments may trigger valgrind memory leaks in
+# CUPS.
+#cupsargs='PageSize=Custom.400.00x500.00'
+#cupsargs='PageSize=Custom.324x495 Resolution=180dpi'
+#cupsargs='PageSize=w324h495 Resolution=180dpi'
+#cupsargs='PageSize=A8'
+
 run_rastertogp() {
     case "$valgrind" in
-	1) valgrind $valopts -q --num-callers=100 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 '' ;;
-	2) valgrind $valopts --num-callers=100 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 '' ;;
-	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 '' ;;
-	4) valgrind $valopts ./rastertogutenprint.$version 1 1 1 1 '' ;;
-	*) ./rastertogutenprint.$version 1 1 1 1 '' ;;
+	1) valgrind $valopts -q --num-callers=100 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	2) valgrind $valopts --num-callers=100 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	4) valgrind $valopts ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	*) ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
     esac
     if [ $? -ne 0 ] ; then
 	retval=1
@@ -74,8 +80,65 @@ run_rastertogp() {
     exit $retval
 }
 
+get_ppds() {
+    args="$@"
+    if [ -n "$args" ] ; then
+	for f in "$@" ; do
+	    if [ -r "$f" ] ; then
+		echo $f
+	    elif [ -r "ppd/C/$f" ] ; then
+		echo "ppd/C/$f"
+	    elif [ -f "ppd/C/${f}.ppd" ] ; then
+		echo "ppd/C/${f}.ppd"
+	    elif [ -f "ppd/C/${f}.ppd.gz" ] ; then
+		echo "ppd/C/${f}.ppd.gz"
+	    elif [ -f "ppd/C/${f}.ppd.GZ" ] ; then
+		echo "ppd/C/${f}.ppd.GZ"
+	    elif [ -f "ppd/C/${f}.ppd.bz2" ] ; then
+		echo "ppd/C/${f}.ppd.bz2"
+	    elif [ -f "ppd/C/${f}.ppd.BZ2" ] ; then
+		echo "ppd/C/${f}.ppd.BZ2"
+	    elif [ -f "ppd/C/${f}.ppd.z" ] ; then
+		echo "ppd/C/${f}.ppd.z"
+	    elif [ -f "ppd/C/${f}.ppd.Z" ] ; then
+		echo "ppd/C/${f}.ppd.Z"
+	    elif [ -f "ppd/C/stp-${f}.ppd" ] ; then
+		echo "ppd/C/stp-${f}.ppd"
+	    elif [ -f "ppd/C/stp-${f}.ppd.gz" ] ; then
+		echo "ppd/C/stp-${f}.ppd.gz"
+	    elif [ -f "ppd/C/stp-${f}.ppd.GZ" ] ; then
+		echo "ppd/C/stp-${f}.ppd.GZ"
+	    elif [ -f "ppd/C/stp-${f}.ppd.bz2" ] ; then
+		echo "ppd/C/stp-${f}.ppd.bz2"
+	    elif [ -f "ppd/C/stp-${f}.ppd.BZ2" ] ; then
+		echo "ppd/C/stp-${f}.ppd.BZ2"
+	    elif [ -f "ppd/C/stp-${f}.ppd.z" ] ; then
+		echo "ppd/C/stp-${f}.ppd.z"
+	    elif [ -f "ppd/C/stp-${f}.ppd.Z" ] ; then
+		echo "ppd/C/stp-${f}.ppd.Z"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.gz" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd.gz"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.GZ" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd.GZ"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.bz2" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd.bz2"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.BZ2" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd.BZ2"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.z" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd.z"
+	    elif [ -f "ppd/C/stp-${f}.${version}.ppd.Z" ] ; then
+		echo "ppd/C/stp-${f}.${version}.ppd.Z"
+	    fi
+	done
+    else
+	echo ppd/C/*.ppd*
+    fi
+}
+
 if [ -d ppd/C ] ; then
-    for f in ppd/C/*.ppd* ; do
+    for f in `get_ppds "$@"` ; do
 	skip=''
 	if [ -n "$single" ] ; then
 	    is_duplicate $f
@@ -87,7 +150,7 @@ if [ -d ppd/C ] ; then
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
 		output="`($cupsdir/cgpdftoraster 1 1 1 1 page-ranges=$pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
 	    else
-		output="`($cupsdir/pdftops 1 1 1 1 page-ranges=$pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 page-ranges=$pages 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/pdftops 1 1 1 1 "page-ranges=$pages $cupsargs" < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 "page-ranges=$pages $cupsargs" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
 	    fi
 	    if [ $? -ne 0 ] ; then
 		retval=1
