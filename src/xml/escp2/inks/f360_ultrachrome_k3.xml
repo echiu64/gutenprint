@@ -39,6 +39,7 @@ InkID="CcMmYKk">
 	<channel name="f360_photo3_black" index="0">
 	<subchannel color="0" subchannel="0" headOffset="1">
 	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="DarkGrayTransition"/>
 	</subchannel>
 	<subchannel color="0" subchannel="1">
 	<ChannelDensityParam name="BlackDensity"/>
@@ -318,6 +319,7 @@ InkID="CcMmYKk">
 	<channel name="f360_photo3_black" index="0">
 	<subchannel color="0" subchannel="0" headOffset="1">
 	<ChannelDensityParam name="BlackDensity"/>
+	<SubchannelTransitionParam name="DarkGrayTransition"/>
 	</subchannel>
 	<subchannel color="0" subchannel="1">
 	<ChannelDensityParam name="BlackDensity"/>
