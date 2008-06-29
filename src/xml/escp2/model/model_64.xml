@@ -21,61 +21,61 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:model id="64">
-	<media href="escp2/media/cmykrb.xml"/>
-	<inputSlots href="escp2/inputslots/r1800.xml"/>
-	<qualityPresets href="escp2/qualitypresets/v2880.xml"/>
-	<resolutions href="escp2/resolutions/resolutions_64.xml"/>
-	<inkGroup href="escp2/inks/cmykrb.xml"/>
-	<mediaSizes href="escp2/mediasizes/standard.xml"/>
-	<verticalBorderlessSequence>SNT\000\000\012\033\000\000\000\000\000\000\001\003\000\001\001\235\007T\001P\012\252\000\363\006?\002P\012\277\007(\002%\013,\001\253\000\037\001!\000\040\001\322\000\241\000\000\000\017\000\036\000\030\031\031\031\031\031\031\031\003\033\033ccccccccccc\002\000\001\000\001\001\362\014</verticalBorderlessSequence>
-	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
-	<preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>
-	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
-	<commandSet>2000</commandSet>
-	<borderless>Full</borderless>
-	<supportsVariableDropsizes/>
-	<hasFastGraymode/>
-	<sendZeroAdvance/>
-	<supportsD4Mode/>
-	<preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
-	<headConfiguration type="default">
-	<Nozzles>180</Nozzles>
-	<MinNozzles>1</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>2</NozzleSeparation>
-	</headConfiguration>
-	<physicalChannels>8</physicalChannels>
-	<baseSeparation>360</baseSeparation>
-	<resolutionScale>28800</resolutionScale>
-	<minimumResolution>360 180</minimumResolution>
-	<maximumResolution>5760 2880</maximumResolution>
-	<extraVerticalFeed>360</extraVerticalFeed>
-	<separationRows>1</separationRows>
-	<zeroMarginOffset>80</zeroMarginOffset>
-	<microLeftMargin>42</microLeftMargin>
-	<minHorizontalAlignment>1</minHorizontalAlignment>
-	<baseHorizontalAlignment>180</baseHorizontalAlignment>
-	<bidirectionalAutoUpperLimit>16588800</bidirectionalAutoUpperLimit>
-	<minimumMediaSize>144 144</minimumMediaSize>
-	<maximumMediaSize>612 86400</maximumMediaSize>
-	<maximumImageableArea>612 86400</maximumImageableArea>
-	<margins interleave="soft" media="sheet">9 9 0 11</margins>
-	<margins interleave="printer" media="sheet">9 9 0 11</margins>
-	<margins interleave="soft" media="roll">9 9 0 0</margins>
-	<margins interleave="printer" media="roll">9 9 0 0</margins>
-	<CDOffset>204 191</CDOffset>
-	<CDMediaSize>595 842</CDMediaSize>
-	<extraBottom>24</extraBottom>
-	<AlignmentChoices>4 15 0 0</AlignmentChoices>
-	<ChannelNames>
-	<ChannelName translate="name" name="Yellow"/>
-	<ChannelName translate="name" name="Magenta"/>
-	<ChannelName translate="name" name="Cyan"/>
-	<ChannelName translate="name" name="Matte Black"/>
-	<ChannelName translate="name" name="Photo Black"/>
-	<ChannelName translate="name" name="Red"/>
-	<ChannelName translate="name" name="Blue"/>
-	<ChannelName translate="name" name="Gloss Optimizer"/>
-	</ChannelNames>
+ <media href="escp2/media/cmykrb.xml"/>
+ <inputSlots href="escp2/inputslots/r1800.xml"/>
+ <qualityPresets href="escp2/qualitypresets/v2880.xml"/>
+ <resolutions href="escp2/resolutions/resolutions_64.xml"/>
+ <inkGroup href="escp2/inks/cmykrb.xml"/>
+ <mediaSizes href="escp2/mediasizes/standard.xml"/>
+ <verticalBorderlessSequence>SNT\000\000\012\033\000\000\000\000\000\000\001\003\000\001\001\235\007T\001P\012\252\000\363\006?\002P\012\277\007(\002%\013,\001\253\000\037\001!\000\040\001\322\000\241\000\000\000\017\000\036\000\030\031\031\031\031\031\031\031\003\033\033ccccccccccc\002\000\001\000\001\001\362\014</verticalBorderlessSequence>
+ <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+ <preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>
+ <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+ <commandSet>2000</commandSet>
+ <borderless>Full</borderless>
+ <supportsVariableDropsizes/>
+ <hasFastGraymode/>
+ <sendZeroAdvance/>
+ <supportsD4Mode/>
+ <preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
+ <headConfiguration type="default">
+  <Nozzles>180</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>8</physicalChannels>
+ <baseSeparation>360</baseSeparation>
+ <resolutionScale>28800</resolutionScale>
+ <minimumResolution>360 180</minimumResolution>
+ <maximumResolution>5760 2880</maximumResolution>
+ <extraVerticalFeed>360</extraVerticalFeed>
+ <separationRows>1</separationRows>
+ <zeroMarginOffset>80</zeroMarginOffset>
+ <microLeftMargin>42</microLeftMargin>
+ <minHorizontalAlignment>1</minHorizontalAlignment>
+ <baseHorizontalAlignment>180</baseHorizontalAlignment>
+ <bidirectionalAutoUpperLimit>16588800</bidirectionalAutoUpperLimit>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>612 86400</maximumMediaSize>
+ <maximumImageableArea>612 86400</maximumImageableArea>
+ <margins interleave="soft" media="sheet">9 9 0 11</margins>
+ <margins interleave="printer" media="sheet">9 9 0 11</margins>
+ <margins interleave="soft" media="roll">9 9 0 0</margins>
+ <margins interleave="printer" media="roll">9 9 0 0</margins>
+ <CDOffset>204 191</CDOffset>
+ <CDMediaSize>595 842</CDMediaSize>
+ <extraBottom>24</extraBottom>
+ <AlignmentChoices>4 15 0 0</AlignmentChoices>
+ <ChannelNames>
+  <ChannelName translate="name" name="Yellow"/>
+  <ChannelName translate="name" name="Magenta"/>
+  <ChannelName translate="name" name="Cyan"/>
+  <ChannelName translate="name" name="Matte Black"/>
+  <ChannelName translate="name" name="Photo Black"/>
+  <ChannelName translate="name" name="Red"/>
+  <ChannelName translate="name" name="Blue"/>
+  <ChannelName translate="name" name="Gloss Optimizer"/>
+ </ChannelNames>
 </escp2:model>
 </gutenprint>

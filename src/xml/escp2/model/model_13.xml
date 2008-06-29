@@ -21,61 +21,61 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:model id="13">
-	<media href="escp2/media/standard.xml"/>
-	<inputSlots href="escp2/inputslots/default.xml"/>
-	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
-	<resolutions href="escp2/resolutions/resolutions_13.xml"/>
-	<inkGroup href="escp2/inks/standard.xml"/>
-	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
-	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
-	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
-	<commandSet>1999</commandSet>
-	<borderless>No</borderless>
-	<supportsVariableDropsizes/>
-	<hasFastGraymode/>
-	<sendZeroAdvance/>
-	<supportsD4Mode/>
-	<preferredEnvelopeOrientation>Landscape</preferredEnvelopeOrientation>
-	<headConfiguration type="default">
-	<Nozzles>96</Nozzles>
-	<MinNozzles>1</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>2</NozzleSeparation>
-	</headConfiguration>
-	<headConfiguration type="black">
-	<Nozzles>192</Nozzles>
-	<MinNozzles>1</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>1</NozzleSeparation>
-	</headConfiguration>
-	<headConfiguration type="fast">
-	<Nozzles>192</Nozzles>
-	<MinNozzles>1</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>1</NozzleSeparation>
-	</headConfiguration>
-	<physicalChannels>4</physicalChannels>
-	<baseSeparation>360</baseSeparation>
-	<resolutionScale>14400</resolutionScale>
-	<minimumResolution>180 180</minimumResolution>
-	<maximumResolution>1440 720</maximumResolution>
-	<separationRows>1</separationRows>
-	<minHorizontalAlignment>1</minHorizontalAlignment>
-	<baseHorizontalAlignment>28800</baseHorizontalAlignment>
-	<bidirectionalAutoUpperLimit>518400</bidirectionalAutoUpperLimit>
-	<minimumMediaSize>144 144</minimumMediaSize>
-	<maximumMediaSize>684 3168</maximumMediaSize>
-	<maximumImageableArea>612 3168</maximumImageableArea>
-	<margins interleave="soft" media="sheet">9 9 0 9</margins>
-	<margins interleave="printer" media="sheet">9 9 0 9</margins>
-	<margins interleave="soft" media="roll">9 9 0 0</margins>
-	<margins interleave="printer" media="roll">9 9 0 0</margins>
-	<AlignmentChoices>3 15 0 0</AlignmentChoices>
-	<ChannelNames>
-	<ChannelName translate="name" name="Black"/>
-	<ChannelName translate="name" name="Cyan"/>
-	<ChannelName translate="name" name="Magenta"/>
-	<ChannelName translate="name" name="Yellow"/>
-	</ChannelNames>
+ <media href="escp2/media/standard.xml"/>
+ <inputSlots href="escp2/inputslots/default.xml"/>
+ <qualityPresets href="escp2/qualitypresets/standard.xml"/>
+ <resolutions href="escp2/resolutions/resolutions_13.xml"/>
+ <inkGroup href="escp2/inks/standard.xml"/>
+ <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+ <preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
+ <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+ <commandSet>1999</commandSet>
+ <borderless>No</borderless>
+ <supportsVariableDropsizes/>
+ <hasFastGraymode/>
+ <sendZeroAdvance/>
+ <supportsD4Mode/>
+ <preferredEnvelopeOrientation>Landscape</preferredEnvelopeOrientation>
+ <headConfiguration type="default">
+  <Nozzles>96</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <headConfiguration type="black">
+  <Nozzles>192</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>1</NozzleSeparation>
+ </headConfiguration>
+ <headConfiguration type="fast">
+  <Nozzles>192</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>1</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>4</physicalChannels>
+ <baseSeparation>360</baseSeparation>
+ <resolutionScale>14400</resolutionScale>
+ <minimumResolution>180 180</minimumResolution>
+ <maximumResolution>1440 720</maximumResolution>
+ <separationRows>1</separationRows>
+ <minHorizontalAlignment>1</minHorizontalAlignment>
+ <baseHorizontalAlignment>28800</baseHorizontalAlignment>
+ <bidirectionalAutoUpperLimit>518400</bidirectionalAutoUpperLimit>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>684 3168</maximumMediaSize>
+ <maximumImageableArea>612 3168</maximumImageableArea>
+ <margins interleave="soft" media="sheet">9 9 0 9</margins>
+ <margins interleave="printer" media="sheet">9 9 0 9</margins>
+ <margins interleave="soft" media="roll">9 9 0 0</margins>
+ <margins interleave="printer" media="roll">9 9 0 0</margins>
+ <AlignmentChoices>3 15 0 0</AlignmentChoices>
+ <ChannelNames>
+  <ChannelName translate="name" name="Black"/>
+  <ChannelName translate="name" name="Cyan"/>
+  <ChannelName translate="name" name="Magenta"/>
+  <ChannelName translate="name" name="Yellow"/>
+ </ChannelNames>
 </escp2:model>
 </gutenprint>

@@ -22,392 +22,380 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="f360_photo7_japan">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
-<Shades>
-	<shade count="1">1.000000</shade>
-	<shade count="2">1.000000 0.316000</shade>
-	<shade count="2">1.000000 0.340000</shade>
-	<shade count="2">1.000000 0.500000</shade>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-</Shades>
+ <Shades>
+  <shade count="1">1.000000</shade>
+  <shade count="2">1.000000 0.316000</shade>
+  <shade count="2">1.000000 0.340000</shade>
+  <shade count="2">1.000000 0.500000</shade>
+  <shade count="1">1.000000</shade>
+  <shade count="1">1.000000</shade>
+  <shade count="1">1.000000</shade>
+ </Shades>
 
-<InkName translate="text" name="Photo7J" text="Seven Color Photo"
-InkID="CcMmYKk">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	</subchannel>
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	<SubchannelValueParam name="LightCyanValue"/>
-	<SubchannelScaleParam name="LightCyanScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	</subchannel>
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	<SubchannelValueParam name="LightMagentaValue"/>
-	<SubchannelScaleParam name="LightMagentaScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo2_yellow" index="3">
-	<subchannel color="4" subchannel="2">
-	<ChannelDensityParam name="YellowDensity"/>
-	<SubchannelTransitionParam name="DarkYellowTransition"/>
-	</subchannel>
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	<SubchannelTransitionParam name="DarkYellowTransition"/>
-	<SubchannelValueParam name="DarkYellowValue"/>
-	<SubchannelScaleParam name="DarkYellowScale"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="Photo7J" text="Seven Color Photo" InkID="CcMmYKk">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_cyan" index="1">
+    <subchannel color="2" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+    </subchannel>
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelValueParam name="LightCyanValue"/>
+     <SubchannelScaleParam name="LightCyanScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_magenta" index="2">
+    <subchannel color="1" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+    </subchannel>
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelValueParam name="LightMagentaValue"/>
+     <SubchannelScaleParam name="LightMagentaScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo2_yellow" index="3">
+    <subchannel color="4" subchannel="2">
+     <ChannelDensityParam name="YellowDensity"/>
+     <SubchannelTransitionParam name="DarkYellowTransition"/>
+    </subchannel>
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+     <SubchannelTransitionParam name="DarkYellowTransition"/>
+     <SubchannelValueParam name="DarkYellowValue"/>
+     <SubchannelScaleParam name="DarkYellowScale"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhotoEnhanceJ"
-text="Six Color Enhanced Composite" InkID="CcMmYyK">
-	<Channels>
-	<channel name="f360_photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	</subchannel>
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	<SubchannelValueParam name="LightCyanValue"/>
-	<SubchannelScaleParam name="LightCyanScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	</subchannel>
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	<SubchannelValueParam name="LightMagentaValue"/>
-	<SubchannelScaleParam name="LightMagentaScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo2_yellow" index="3">
-	<subchannel color="4" subchannel="2">
-	<ChannelDensityParam name="YellowDensity"/>
-	<SubchannelTransitionParam name="DarkYellowTransition"/>
-	</subchannel>
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	<SubchannelTransitionParam name="DarkYellowTransition"/>
-	<SubchannelValueParam name="DarkYellowValue"/>
-	<SubchannelScaleParam name="DarkYellowScale"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhotoEnhanceJ" text="Six Color Enhanced Composite" InkID="CcMmYyK">
+  <Channels>
+   <channel name="f360_photo_cyan" index="1">
+    <subchannel color="2" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+    </subchannel>
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelValueParam name="LightCyanValue"/>
+     <SubchannelScaleParam name="LightCyanScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_magenta" index="2">
+    <subchannel color="1" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+    </subchannel>
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelValueParam name="LightMagentaValue"/>
+     <SubchannelScaleParam name="LightMagentaScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo2_yellow" index="3">
+    <subchannel color="4" subchannel="2">
+     <ChannelDensityParam name="YellowDensity"/>
+     <SubchannelTransitionParam name="DarkYellowTransition"/>
+    </subchannel>
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+     <SubchannelTransitionParam name="DarkYellowTransition"/>
+     <SubchannelValueParam name="DarkYellowValue"/>
+     <SubchannelScaleParam name="DarkYellowScale"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhotoCMYK" text="Six Color Photo"
-InkID="CcMmYK">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	</subchannel>
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	<SubchannelValueParam name="LightCyanValue"/>
-	<SubchannelScaleParam name="LightCyanScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	</subchannel>
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	<SubchannelValueParam name="LightMagentaValue"/>
-	<SubchannelScaleParam name="LightMagentaScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_yellow" index="3">
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhotoCMYK" text="Six Color Photo" InkID="CcMmYK">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_cyan" index="1">
+    <subchannel color="2" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+    </subchannel>
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelValueParam name="LightCyanValue"/>
+     <SubchannelScaleParam name="LightCyanScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_magenta" index="2">
+    <subchannel color="1" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+    </subchannel>
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelValueParam name="LightMagentaValue"/>
+     <SubchannelScaleParam name="LightMagentaScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_yellow" index="3">
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhotoCMY"
-text="Five Color Photo Composite" InkID="CcMmYK">
-	<Channels>
-	<channel name="f360_photo_cyan" index="1">
-	<subchannel color="2" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	</subchannel>
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	<SubchannelTransitionParam name="LightCyanTransition"/>
-	<SubchannelValueParam name="LightCyanValue"/>
-	<SubchannelScaleParam name="LightCyanScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_magenta" index="2">
-	<subchannel color="1" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	</subchannel>
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	<SubchannelTransitionParam name="LightMagentaTransition"/>
-	<SubchannelValueParam name="LightMagentaValue"/>
-	<SubchannelScaleParam name="LightMagentaScale"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_yellow" index="3">
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhotoCMY" text="Five Color Photo Composite" InkID="CcMmYK">
+  <Channels>
+   <channel name="f360_photo_cyan" index="1">
+    <subchannel color="2" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+    </subchannel>
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelValueParam name="LightCyanValue"/>
+     <SubchannelScaleParam name="LightCyanScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_magenta" index="2">
+    <subchannel color="1" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+    </subchannel>
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelValueParam name="LightMagentaValue"/>
+     <SubchannelScaleParam name="LightMagentaScale"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_yellow" index="3">
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="CMYK" text="Four Color Standard"
-InkID="CMYK">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_cyan" index="1">
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_magenta" index="2">
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_yellow" index="3">
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="CMYK" text="Four Color Standard" InkID="CMYK">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_cyan" index="1">
+    <subchannel color="2">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_magenta" index="2">
+    <subchannel color="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_yellow" index="3">
+    <subchannel color="4">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="RGB" text="Three Color Composite"
-InkID="CMYK">
-	<Channels>
-	<channel name="standard_cyan" index="1">
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_magenta" index="2">
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_yellow" index="3">
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="RGB" text="Three Color Composite" InkID="CMYK">
+  <Channels>
+   <channel name="standard_cyan" index="1">
+    <subchannel color="2">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_magenta" index="2">
+    <subchannel color="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_yellow" index="3">
+    <subchannel color="4">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalBlack" text="One Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalBlack" text="One Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalCMY" text="Three Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="standard_cyan" index="0">
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_magenta" index="1">
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_yellow" index="2">
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalCMY" text="Three Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="standard_cyan" index="0">
+    <subchannel color="2">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_magenta" index="1">
+    <subchannel color="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_yellow" index="2">
+    <subchannel color="4">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalCMYK" text="Four Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_cyan" index="1">
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_magenta" index="2">
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="standard_yellow" index="3">
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalCMYK" text="Four Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_cyan" index="1">
+    <subchannel color="2">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_magenta" index="2">
+    <subchannel color="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="standard_yellow" index="3">
+    <subchannel color="4">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalCcMmY" text="Five Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="f360_standard_cyan" index="0">
-	<subchannel color="2" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_cyan" index="1">
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_standard_magenta" index="2">
-	<subchannel color="1" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_magenta" index="3">
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_yellow" index="4">
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalCcMmY" text="Five Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="f360_standard_cyan" index="0">
+    <subchannel color="2" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_cyan" index="1">
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_standard_magenta" index="2">
+    <subchannel color="1" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_magenta" index="3">
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_yellow" index="4">
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalCcMmYK" text="Six Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_standard_cyan" index="1">
-	<subchannel color="2" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_cyan" index="2">
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_standard_magenta" index="3">
-	<subchannel color="1" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_magenta" index="4">
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_yellow" index="5">
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalCcMmYK" text="Six Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_standard_cyan" index="1">
+    <subchannel color="2" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_cyan" index="2">
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_standard_magenta" index="3">
+    <subchannel color="1" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_magenta" index="4">
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_yellow" index="5">
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalCcMmYKk" text="Seven Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_black" index="1">
-	<subchannel color="0" subchannel="1">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_standard_cyan" index="2">
-	<subchannel color="2" headOffset="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_cyan" index="3">
-	<subchannel color="2" subchannel="1">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_standard_magenta" index="4">
-	<subchannel color="1" headOffset="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="extended_magenta" index="5">
-	<subchannel color="1" subchannel="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="f360_photo_yellow" index="6">
-	<subchannel color="4" subchannel="0" headOffset="1">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalCcMmYKk" text="Seven Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_black" index="1">
+    <subchannel color="0" subchannel="1">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_standard_cyan" index="2">
+    <subchannel color="2" headOffset="1">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_cyan" index="3">
+    <subchannel color="2" subchannel="1">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_standard_magenta" index="4">
+    <subchannel color="1" headOffset="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="extended_magenta" index="5">
+    <subchannel color="1" subchannel="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="f360_photo_yellow" index="6">
+    <subchannel color="4" subchannel="0" headOffset="1">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 </InkList>
 </escp2:InkGroup>
 </gutenprint>

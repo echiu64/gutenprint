@@ -22,112 +22,62 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="picturemate_4">
 <InkList translate="text" name="picturemate_4" text="Standard">
-<Shades>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-	<shade count="1">1.000000</shade>
-</Shades>
+ <Shades>
+  <shade count="1">1.000000</shade>
+  <shade count="1">1.000000</shade>
+  <shade count="1">1.000000</shade>
+  <shade count="1">1.000000</shade>
+ </Shades>
 
-<InkName translate="text" name="CMYK" text="Four Color Photo"
-InkID="CMYK">
-	<Channels>
-	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="picturemate_cyan" index="1">
-	<HueCurveParam name="CyanCurve"/>
-	<HueCurve>
-	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-	<sequence count="48" lower-bound="0" upper-bound="4">
-1 1 1 1 1 1 1 1 1 0.875 0.7 0.55 0.4 0.3 0.2 0.1 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
-	</curve>
-	</HueCurve>
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="picturemate_magenta" index="2">
-	<HueCurveParam name="CyanCurve"/>
-	<HueCurve>
-	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-	<sequence count="48" lower-bound="0" upper-bound="4">
-0 0 0 0 0 0 0 0 0 0 0 0.002 0.05 0.3 0.6 0.8 1 1 0.85 0.7 0.6 0.5 0.4 0.3
-0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
-	</curve>
-	</HueCurve>
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="picturemate_yellow" index="3">
-	<HueCurveParam name="CyanCurve"/>
-	<HueCurve>
-	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-	<sequence count="48" lower-bound="0" upper-bound="4">
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.15 0.25 0.35 0.45 0.55
-0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
-	</curve>
-	</HueCurve>
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="CMYK" text="Four Color Photo" InkID="CMYK">
+  <Channels>
+   <channel name="photo_black" index="0">
+    <subchannel color="0" subchannel="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="picturemate_cyan" index="1">
+    <subchannel color="2">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="picturemate_magenta" index="2">
+    <subchannel color="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="picturemate_yellow" index="3">
+    <subchannel color="4">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 
-<InkName translate="text" name="PhysicalCMYK" text="Four Color Raw"
-InkID="Extended">
-	<Channels>
-	<channel name="photo_black" index="0">
-	<subchannel color="0" subchannel="0">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="picturemate_cyan" index="1">
-	<HueCurveParam name="CyanCurve"/>
-	<HueCurve>
-	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-	<sequence count="48" lower-bound="0" upper-bound="4">
-1 1 1 1 1 1 1 1 1 0.875 0.7 0.55 0.4 0.3 0.2 0.1 0 0 0 0 0 0 0 0 0 0 0 0
-0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1	</sequence>
-	</curve>
-	</HueCurve>
-	<subchannel color="2">
-	<ChannelDensityParam name="CyanDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="picturemate_magenta" index="2">
-	<HueCurveParam name="CyanCurve"/>
-	<HueCurve>
-	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-	<sequence count="48" lower-bound="0" upper-bound="4">
-0 0 0 0 0 0 0 0 0 0 0 0.002 0.05 0.3 0.6 0.8 1 1 0.85 0.7 0.6 0.5 0.4 0.3
-0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0	</sequence>
-	</curve>
-	</HueCurve>
-	<subchannel color="1">
-	<ChannelDensityParam name="MagentaDensity"/>
-	</subchannel>
-	</channel>
-	<channel name="picturemate_yellow" index="3">
-	<HueCurveParam name="CyanCurve"/>
-	<HueCurve>
-	<curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-	<sequence count="48" lower-bound="0" upper-bound="4">
-0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.15 0.25 0.35 0.45 0.55
-0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125	</sequence>
-	</curve>
-	</HueCurve>
-	<subchannel color="4">
-	<ChannelDensityParam name="YellowDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="PhysicalCMYK" text="Four Color Raw" InkID="Extended">
+  <Channels>
+   <channel name="photo_black" index="0">
+    <subchannel color="0" subchannel="0">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="picturemate_cyan" index="1">
+    <subchannel color="2">
+     <ChannelDensityParam name="CyanDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="picturemate_magenta" index="2">
+    <subchannel color="1">
+     <ChannelDensityParam name="MagentaDensity"/>
+    </subchannel>
+   </channel>
+   <channel name="picturemate_yellow" index="3">
+    <subchannel color="4">
+     <ChannelDensityParam name="YellowDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 </InkList>
 </escp2:InkGroup>
 </gutenprint>

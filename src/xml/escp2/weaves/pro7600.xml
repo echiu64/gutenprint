@@ -21,12 +21,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:PrinterWeaves name="pro7600">
-	<weave translate="text" name="Off" text="Off" command="\033(i\001\000\000"/>
-	<weave translate="text" name="On" text="Interleave" command="\033(i\001\000\001"/>
-	<weave translate="text" name="FOL" text="Full Overlap" command="\033(i\001\000\002"/>
-	<weave translate="text" name="FourPass" text="Four Pass" command="\033(i\001\000\003"/>
-	<weave translate="text" name="FOL2" text="Full Overlap 2" command="\033(i\001\000\004"/>
-	<weave translate="text" name="MW2" text="Interleave 2" command="\033(i\001\000\005"/>
-	<weave translate="text" name="EightPass" text="Eight Pass" command="\033(i\001\000\006"/>
+ <weave translate="text" name="Off" text="Off" command="\033(i\001\000\000"/>
+ <weave translate="text" name="On" text="Interleave" command="\033(i\001\000\001"/>
+ <weave translate="text" name="FOL" text="Full Overlap" command="\033(i\001\000\002"/>
+ <weave translate="text" name="FourPass" text="Four Pass" command="\033(i\001\000\003"/>
+ <weave translate="text" name="FOL2" text="Full Overlap 2" command="\033(i\001\000\004"/>
+ <weave translate="text" name="MW2" text="Interleave 2" command="\033(i\001\000\005"/>
+ <weave translate="text" name="EightPass" text="Eight Pass" command="\033(i\001\000\006"/>
 </escp2:PrinterWeaves>
 </gutenprint>

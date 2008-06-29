@@ -21,68 +21,68 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:model id="57">
-	<media href="escp2/media/f360_photo7_japan.xml"/>
-	<inputSlots href="escp2/inputslots/cutter_roll_feed.xml"/>
-	<qualityPresets href="escp2/qualitypresets/standard.xml"/>
-	<resolutions href="escp2/resolutions/resolutions_57.xml"/>
-	<inkGroup href="escp2/inks/f360_photo7_japan.xml"/>
-	<verticalBorderlessSequence>SN8\000\000\007\033\000\000\000\000\000\000\001\003\000\330\006T\001\264\015,\013H\0070\011\316\022,\001\251\013,\001\002\003\363\027\031\030\031\031\031\031\004\031\031\031\001\004C\000\000\001\001\001\364\006</verticalBorderlessSequence>
-	<preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
-	<preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
-	<postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
-	<commandSet>2000</commandSet>
-	<borderless>Yes</borderless>
-	<supportsVariableDropsizes/>
-	<hasFast360DPI/>
-	<sendZeroAdvance/>
-	<supportsD4Mode/>
-	<preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
-	<headConfiguration type="default">
-	<Nozzles>180</Nozzles>
-	<MinNozzles>180</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>2</NozzleSeparation>
-	</headConfiguration>
-	<headConfiguration type="black">
-	<Nozzles>360</Nozzles>
-	<MinNozzles>360</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>1</NozzleSeparation>
-	</headConfiguration>
-	<headConfiguration type="fast">
-	<Nozzles>360</Nozzles>
-	<MinNozzles>360</MinNozzles>
-	<FirstNozzle>0</FirstNozzle>
-	<NozzleSeparation>1</NozzleSeparation>
-	</headConfiguration>
-	<physicalChannels>7</physicalChannels>
-	<baseSeparation>360</baseSeparation>
-	<resolutionScale>14400</resolutionScale>
-	<minimumResolution>720 360</minimumResolution>
-	<maximumResolution>2880 2880</maximumResolution>
-	<separationRows>1</separationRows>
-	<zeroMarginOffset>80</zeroMarginOffset>
-	<microLeftMargin>42</microLeftMargin>
-	<minHorizontalAlignment>1</minHorizontalAlignment>
-	<baseHorizontalAlignment>28800</baseHorizontalAlignment>
-	<bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
-	<minimumMediaSize>144 144</minimumMediaSize>
-	<maximumMediaSize>612 86400</maximumMediaSize>
-	<maximumImageableArea>612 86400</maximumImageableArea>
-	<margins interleave="soft" media="sheet">9 9 0 9</margins>
-	<margins interleave="printer" media="sheet">9 9 0 9</margins>
-	<margins interleave="soft" media="roll">9 9 0 0</margins>
-	<margins interleave="printer" media="roll">9 9 0 0</margins>
-	<extraBottom>24</extraBottom>
-	<AlignmentChoices>4 15 0 0</AlignmentChoices>
-	<ChannelNames>
-	<ChannelName translate="name" name="Black"/>
-	<ChannelName translate="name" name="Cyan"/>
-	<ChannelName translate="name" name="Magenta"/>
-	<ChannelName translate="name" name="Yellow"/>
-	<ChannelName translate="name" name="Light Cyan"/>
-	<ChannelName translate="name" name="Light Magenta"/>
-	<ChannelName translate="name" name="Dark Yellow"/>
-	</ChannelNames>
+ <media href="escp2/media/f360_photo7_japan.xml"/>
+ <inputSlots href="escp2/inputslots/cutter_roll_feed.xml"/>
+ <qualityPresets href="escp2/qualitypresets/standard.xml"/>
+ <resolutions href="escp2/resolutions/resolutions_57.xml"/>
+ <inkGroup href="escp2/inks/f360_photo7_japan.xml"/>
+ <verticalBorderlessSequence>SN8\000\000\007\033\000\000\000\000\000\000\001\003\000\330\006T\001\264\015,\013H\0070\011\316\022,\001\251\013,\001\002\003\363\027\031\030\031\031\031\031\004\031\031\031\001\004C\000\000\001\001\001\364\006</verticalBorderlessSequence>
+ <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+ <preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
+ <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+ <commandSet>2000</commandSet>
+ <borderless>Yes</borderless>
+ <supportsVariableDropsizes/>
+ <hasFast360DPI/>
+ <sendZeroAdvance/>
+ <supportsD4Mode/>
+ <preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
+ <headConfiguration type="default">
+  <Nozzles>180</Nozzles>
+  <MinNozzles>180</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>2</NozzleSeparation>
+ </headConfiguration>
+ <headConfiguration type="black">
+  <Nozzles>360</Nozzles>
+  <MinNozzles>360</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>1</NozzleSeparation>
+ </headConfiguration>
+ <headConfiguration type="fast">
+  <Nozzles>360</Nozzles>
+  <MinNozzles>360</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>1</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>7</physicalChannels>
+ <baseSeparation>360</baseSeparation>
+ <resolutionScale>14400</resolutionScale>
+ <minimumResolution>720 360</minimumResolution>
+ <maximumResolution>2880 2880</maximumResolution>
+ <separationRows>1</separationRows>
+ <zeroMarginOffset>80</zeroMarginOffset>
+ <microLeftMargin>42</microLeftMargin>
+ <minHorizontalAlignment>1</minHorizontalAlignment>
+ <baseHorizontalAlignment>28800</baseHorizontalAlignment>
+ <bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>612 86400</maximumMediaSize>
+ <maximumImageableArea>612 86400</maximumImageableArea>
+ <margins interleave="soft" media="sheet">9 9 0 9</margins>
+ <margins interleave="printer" media="sheet">9 9 0 9</margins>
+ <margins interleave="soft" media="roll">9 9 0 0</margins>
+ <margins interleave="printer" media="roll">9 9 0 0</margins>
+ <extraBottom>24</extraBottom>
+ <AlignmentChoices>4 15 0 0</AlignmentChoices>
+ <ChannelNames>
+  <ChannelName translate="name" name="Black"/>
+  <ChannelName translate="name" name="Cyan"/>
+  <ChannelName translate="name" name="Magenta"/>
+  <ChannelName translate="name" name="Yellow"/>
+  <ChannelName translate="name" name="Light Cyan"/>
+  <ChannelName translate="name" name="Light Magenta"/>
+  <ChannelName translate="name" name="Dark Yellow"/>
+ </ChannelNames>
 </escp2:model>
 </gutenprint>

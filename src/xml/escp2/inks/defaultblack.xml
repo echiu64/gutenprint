@@ -22,19 +22,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InkGroup name="defaultblack">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
-<Shades>
-        <shade count="1">1.000000</shade>
-</Shades>
+ <Shades>
+  <shade count="1">1.000000</shade>
+ </Shades>
 
-<InkName translate="text" name="CMYK" text="Default Black" InkID="CMYK">
-	<Channels>
-	<channel name="standard_black" index="0">
-	<subchannel color="0" shade="1.000000">
-	<ChannelDensityParam name="BlackDensity"/>
-	</subchannel>
-	</channel>
-	</Channels>
-</InkName>
+ <InkName translate="text" name="CMYK" text="Default Black" InkID="CMYK">
+  <Channels>
+   <channel name="standard_black" index="0">
+    <subchannel color="0" shade="1.000000">
+     <ChannelDensityParam name="BlackDensity"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
 </InkList>
 </escp2:InkGroup>
 </gutenprint>

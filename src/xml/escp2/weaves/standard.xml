@@ -21,7 +21,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:PrinterWeaves name="standard">
-	<weave translate="text" name="Off" text="Off" command="\033(i\001\000\000"/>
-	<weave translate="text" name="On" text="On" command="\033(i\001\000\001"/>
+ <weave translate="text" name="Off" text="Off" command="\033(i\001\000\000"/>
+ <weave translate="text" name="On" text="On" command="\033(i\001\000\001"/>
 </escp2:PrinterWeaves>
 </gutenprint>
