@@ -12,31 +12,15 @@ Gutenprint currently supports over 1300 printer models.
 
 Gutenprint 5.2.0-beta4 a beta release of Gutenprint 5.2.
 
-*** NOTE TO PACKAGERS: This is a beta release of the forthcoming 5.2
-    stable release.  As of 5.2 and until further notice, Gutenprint
-    will no longer deliver separate "development" and "stable" release
-    series.
-
-    The point release will be advanced between beta/RC releases and
-    stable releases.  The first stable release of 5.2 will be numbered
-    5.2.1; the betas and release candidates will be numbered
-    5.2.0-betaN or 5.2.0-rcN.  Any betas for the next stable release
-    will be numbered 5.2.2-betaN; the next stable release will be
-    numbered 5.2.3 (if there are beta or release candidate builds) or
-    5.2.2 (if there are not).
-
-    This ensures that the highest numbered release is always the most
-    current, and that there will be no confusion between beta releases
-    and stable releases.  Our experience with 5.0 was that many users
-    continued to use beta releases of 5.2 even after 5.2.0 was
-    released, and worse, in some cases referred to 5.2 beta releases
-    as "5.2.0".  We believe that the numbering scheme described above
-    will avoid that problem.
+*** NOTE TO PACKAGERS: Please read the file README.package for issues
+    that are of interest to distributors and packagers of Gutenprint.
+    It is not necessary for end users of Gutenprint to read this file.
 
 These release notes contain the following sections:
 
 I)    General Requirements
 II)   Changes from Previous Releases
+	* Changes from Gutenprint 5.2.0-beta3
 	* Changes from Gutenprint 5.2.0-beta2
 	* Changes from Gutenprint 5.2.0-beta1
         * General changes from Gutenprint 5.0
@@ -116,6 +100,47 @@ for building and installing Gutenprint.
 ================================================================
 
 II) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* CHANGES FROM GUTENPRINT 5.2.0-BETA3:
+
+  1) New printers supported in this release:
+
+     * Epson inkjet printers:
+
+       B-308
+       Stylus Pro 7800 (preliminary)
+       Stylus Pro 7880 (preliminary)
+       Stylus Pro 9800 (preliminary)
+       Stylus Pro 9880 (preliminary)
+       Stylus Pro 11880 (preliminary)
+
+  2) The CUPS driver will no longer attempt to find a matching
+     predefined page size when a custom page size is passed in.  This
+     yields more accurate printing sizes for custom paper sizes.  In
+     addition, it avoids a problem with unnecessary margins being
+     imposed when the paper size is approximately 4.7x6.8" (120x173
+     mm) due to a specific defined page size with those dimensions and
+     tear-off borders.
+
+     The IJS driver has not been fixed at this time.
+
+  3) The remainder of the data in the Epson driver has been converted
+     to files outside of the binary library, in XML format.  While
+     this should yield no user-visible change, these changes are
+     extensive.  Please report any issues.
+
+  4) The CUPS driver now provides an Output Order option, where
+     appropriate, in all cases.  This worked prior to 5.2.0-beta3 and
+     was broken in that release only.
+
+  5) The Danish and Dutch translations have been updated.
+
+  6) Borderless support has been added to the Epson Stylus Pro
+     7600/9600 and the margins have been corrected.
+
+  7) Print quality has been improved on Epson PictureMate printers
+     with 4-color inks.
+
 
 * CHANGES FROM GUTENPRINT 5.2.0-BETA2:
 
