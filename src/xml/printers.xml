@@ -349,12 +349,12 @@
       <printer translate="name" name="Epson Stylus Pro 7500" driver="escp2-7500" manufacturer="Epson" model="29" parameters="pro_5500_params" />
       <printer translate="name" name="Epson Stylus Pro 7600" driver="escp2-7600" manufacturer="Epson" model="48" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 7800" driver="escp2-7800" manufacturer="Epson" model="48" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Pro 7880" driver="escp2-7880" manufacturer="Epson" model="48" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 7880" driver="escp2-7880" manufacturer="Epson" model="89" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9000" driver="escp2-9000" manufacturer="Epson" model="30" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9500" driver="escp2-9500" manufacturer="Epson" model="31" parameters="pro_5500_params" />
       <printer translate="name" name="Epson Stylus Pro 9600" driver="escp2-9600" manufacturer="Epson" model="49" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 9800" driver="escp2-9800" manufacturer="Epson" model="49" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Pro 9880" driver="escp2-9880" manufacturer="Epson" model="49" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Pro 9880" driver="escp2-9880" manufacturer="Epson" model="90" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 10000" driver="escp2-10000" manufacturer="Epson" model="41" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 11880" driver="escp2-11880" manufacturer="Epson" model="88" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Scan 2000" driver="escp2-scan2000" manufacturer="Epson" model="12" parameters="standard_params" />
