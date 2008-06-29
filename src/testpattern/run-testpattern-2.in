@@ -35,8 +35,7 @@ my $skip_resolutions = 0;
 my $quiet = 0;
 
 my @default_options = ();
-my %base_settings = ("DitherAlgorithm" => "Fast",
-		     "ColorCorrection" => "Uncorrected");
+my %base_settings = ("DitherAlgorithm" => "Fast");
 
 my %param_types;
 my %param_classes;
