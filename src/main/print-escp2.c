@@ -359,6 +359,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 4, 1, 0
   },
   {
+    "OrangeHueCurve", N_("Orange Map"), N_("Advanced Output Control"),
+    N_("Adjust the orange map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 4, 1, 0
+  },
+  {
     "RedHueCurve", N_("Red Map"), N_("Advanced Output Control"),
     N_("Adjust the red map"),
     STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
@@ -472,6 +478,14 @@ static const float_param_t float_parameters[] =
     {
       "BlueDensity", N_("Blue Density"), N_("Output Level Adjustment"),
       N_("Adjust the blue density"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "OrangeDensity", N_("Orange Density"), N_("Output Level Adjustment"),
+      N_("Adjust the orange density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
     }, 0.0, 2.0, 1.0, 1
@@ -2246,6 +2260,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     set_density_parameter(v, description, XCOLOR_R);
   else if (strcmp(name, "BlueDensity") == 0)
     set_density_parameter(v, description, XCOLOR_B);
+  else if (strcmp(name, "OrangeDensity") == 0)
+    set_density_parameter(v, description, XCOLOR_B);
   else if (strcmp(name, "CyanHueCurve") == 0)
     set_hue_map_parameter(v, description, STP_ECOLOR_C);
   else if (strcmp(name, "MagentaHueCurve") == 0)
@@ -2255,6 +2271,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "RedHueCurve") == 0)
     set_hue_map_parameter(v, description, XCOLOR_R);
   else if (strcmp(name, "BlueHueCurve") == 0)
+    set_hue_map_parameter(v, description, XCOLOR_B);
+  else if (strcmp(name, "OrangeHueCurve") == 0)
     set_hue_map_parameter(v, description, XCOLOR_B);
   else if (strcmp(name, "UseGloss") == 0)
     {
@@ -2432,7 +2450,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
 	{
 	  const inkname_t *ink_name = get_inktype(v);
-	  if (ink_name && ink_name->inkset == INKSET_CMYKRB)
+	  if (ink_name && ink_name->inkset == INKSET_OTHER)
 	    description->is_active = 1;
 	}
     }
@@ -2669,7 +2687,7 @@ escp2_describe_output(const stp_vars_t *v)
 	    {
 	    case INKSET_QUADTONE:
 	      return "Grayscale";
-	    case INKSET_CMYKRB:
+	    case INKSET_OTHER:
 	    case INKSET_CMYK:
 	    case INKSET_CcMmYK:
 	    case INKSET_CcMmYyK:

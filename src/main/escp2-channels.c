@@ -215,8 +215,8 @@ load_inkname(stp_mxml_node_t *node, inkname_t *inl)
 	inl->inkset = INKSET_CcMmYKk;
       else if (!strcmp(name, "Quadtone"))
 	inl->inkset = INKSET_QUADTONE;
-      else if (!strcmp(name, "CMYKRB"))
-	inl->inkset = INKSET_CMYKRB;
+      else if (!strcmp(name, "OTHER"))
+	inl->inkset = INKSET_OTHER;
       else if (!strcmp(name, "Extended"))
 	inl->inkset = INKSET_EXTENDED;
     }

@@ -33,14 +33,15 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <shade count="1">1.000000</shade>
  </Shades>
 
- <InkName translate="text" name="CMYKRBG" text="Six Color Photo" InkID="OTHER">
+<!--
+ <InkName translate="text" name="CMYKROG" text="Six Color Photo" InkID="OTHER">
   <Channels>
    <channel name="f360_photo_black" index="0">
     <subchannel color="0" subchannel="4" headOffset="1">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_cyan" index="1">
+   <channel name="r1900_cyan" index="1">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -53,7 +54,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="2">
+   <channel name="r1900_magenta" index="2">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -66,7 +67,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="3">
+   <channel name="r1900_yellow" index="3">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -79,7 +80,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="4">
+   <channel name="r1900_red" index="4">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -92,7 +93,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="5">
+   <channel name="r1900_orange" index="5">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -101,8 +102,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
   </curve>
   </HueCurve>
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>
@@ -115,9 +116,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </AuxChannels>
  </InkName>
 
- <InkName translate="text" name="CMYRBG" text="Five Color Photo Composite" InkID="OTHER">
+ <InkName translate="text" name="CMYROG" text="Five Color Photo Composite" InkID="OTHER">
   <Channels>
-   <channel name="r800_cyan" index="1">
+   <channel name="r1900_cyan" index="1">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -130,7 +131,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="2">
+   <channel name="r1900_magenta" index="2">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -143,7 +144,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="3">
+   <channel name="r1900_yellow" index="3">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -156,7 +157,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="4">
+   <channel name="r1900_red" index="4">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -169,7 +170,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="5">
+   <channel name="r1900_orange" index="5">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -178,8 +179,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
   </curve>
   </HueCurve>
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>
@@ -191,6 +192,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    </channel>
   </AuxChannels>
  </InkName>
+-->
 
  <InkName translate="text" name="CMYKG" text="Four Color Standard" InkID="CMYK">
   <Channels>
@@ -351,7 +353,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 
- <InkName translate="text" name="PhysicalCMYKRB" text="Six Color Enhanced Gloss Raw" InkID="Extended">
+ <InkName translate="text" name="PhysicalCMYKRO" text="Six Color Enhanced Gloss Raw" InkID="Extended">
   <Channels>
    <channel name="f360_photo_black" index="0">
     <subchannel color="0" subchannel="4" headOffset="1">
@@ -363,24 +365,24 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="2">
+   <channel name="r1900_magenta" index="2">
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="3">
+   <channel name="r1900_yellow" index="3">
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="4">
+   <channel name="r1900_red" index="4">
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="5">
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+   <channel name="r1900_orange" index="5">
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="6">
@@ -391,7 +393,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 
- <InkName translate="text" name="PhysicalCMYKPRB" text="Seven Color Enhanced Gloss Raw" InkID="Extended">
+ <InkName translate="text" name="PhysicalCMYKPRO" text="Seven Color Enhanced Gloss Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
     <subchannel color="0">
@@ -403,29 +405,29 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_cyan" index="2">
+   <channel name="r1900_cyan" index="2">
     <subchannel color="2" headOffset="1">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="3">
+   <channel name="r1900_magenta" index="3">
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="4">
+   <channel name="r1900_yellow" index="4">
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="5">
+   <channel name="r1900_red" index="5">
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="6">
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+   <channel name="r1900_orange" index="6">
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="7">
@@ -447,14 +449,15 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <shade count="1">1.000000</shade>
  </Shades>
 
- <InkName translate="text" name="CMYKRB" text="Six Color Photo" InkID="OTHER">
+<!--
+ <InkName translate="text" name="CMYKRO" text="Six Color Photo" InkID="OTHER">
   <Channels>
    <channel name="standard_black" index="0">
     <subchannel color="0">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_cyan" index="1">
+   <channel name="r1900_cyan" index="1">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -467,7 +470,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="2">
+   <channel name="r1900_magenta" index="2">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -480,7 +483,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="3">
+   <channel name="r1900_yellow" index="3">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -493,7 +496,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="4">
+   <channel name="r1900_red" index="4">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -506,7 +509,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="5">
+   <channel name="r1900_orange" index="5">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -515,16 +518,16 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
   </curve>
   </HueCurve>
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>
  </InkName>
 
- <InkName translate="text" name="CMYRB" text="Five Color Photo Composite" InkID="OTHER">
+ <InkName translate="text" name="CMYRO" text="Five Color Photo Composite" InkID="OTHER">
   <Channels>
-   <channel name="r800_cyan" index="1">
+   <channel name="r1900_cyan" index="1">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -537,7 +540,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="2">
+   <channel name="r1900_magenta" index="2">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -550,7 +553,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="3">
+   <channel name="r1900_yellow" index="3">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -563,7 +566,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="4">
+   <channel name="r1900_red" index="4">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -576,7 +579,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="5">
+   <channel name="r1900_orange" index="5">
   <HueCurveParam name="CyanCurve"/>
   <HueCurve>
   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
@@ -585,12 +588,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
   </curve>
   </HueCurve>
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>
  </InkName>
+-->
 
  <InkName translate="text" name="CMYKG" text="Four Color Standard" InkID="CMYK">
   <Channels>
@@ -692,36 +696,36 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 
- <InkName translate="text" name="PhysicalCMYKRB" text="Six Color Raw" InkID="Extended">
+ <InkName translate="text" name="PhysicalCMYKRO" text="Six Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
     <subchannel color="0">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_cyan" index="1">
+   <channel name="r1900_cyan" index="1">
     <subchannel color="2" headOffset="1">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_magenta" index="2">
+   <channel name="r1900_magenta" index="2">
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_yellow" index="3">
+   <channel name="r1900_yellow" index="3">
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_red" index="4">
+   <channel name="r1900_red" index="4">
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
-   <channel name="r800_blue" index="5">
-    <subchannel color="8" headOffset="1">
-     <ChannelDensityParam name="BlueDensity"/>
+   <channel name="r1900_orange" index="5">
+    <subchannel color="10" headOffset="1">
+     <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>

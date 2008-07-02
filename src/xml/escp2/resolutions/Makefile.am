@@ -116,7 +116,8 @@ pkgxmldata_DATA =				\
 	resolutions_87.xml			\
 	resolutions_88.xml			\
 	resolutions_89.xml			\
-	resolutions_90.xml
+	resolutions_90.xml			\
+	resolutions_91.xml
 
 xml-stamp: $(pkgxmldata_DATA) Makefile.am
 	-rm -f xml-stamp

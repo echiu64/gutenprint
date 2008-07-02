@@ -31,7 +31,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <shade count="1">1.000000</shade>
  </Shades>
 
- <InkName translate="text" name="CMYKRB" text="Six Color Photo" InkID="CMYKRB">
+ <InkName translate="text" name="CMYKRB" text="Six Color Photo" InkID="OTHER">
   <Channels>
    <channel name="photo_black" index="0">
     <subchannel color="0" subchannel="0">

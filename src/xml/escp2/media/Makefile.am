@@ -35,6 +35,7 @@ pkgxmldata_DATA =				\
 	claria1400.xml				\
 	cmy.xml					\
 	cmykrb.xml				\
+	cmykro.xml				\
 	cx3650.xml				\
 	f360.xml				\
 	f360_photo.xml				\

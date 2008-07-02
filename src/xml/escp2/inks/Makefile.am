@@ -34,6 +34,7 @@ pkgxmldata_DATA =				\
 	claria.xml				\
 	cmy.xml					\
 	cmykrb.xml				\
+	cmykro.xml				\
 	cx3650.xml				\
 	defaultblack.xml			\
 	f360.xml				\

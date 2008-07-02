@@ -180,7 +180,7 @@ typedef enum
   INKSET_CcMmYyK          = 2,
   INKSET_CcMmYKk          = 3,
   INKSET_QUADTONE         = 4,
-  INKSET_CMYKRB		  = 5,
+  INKSET_OTHER		  = 5,
   INKSET_EXTENDED	  = 6
 } inkset_id_t;
 
