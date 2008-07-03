@@ -60,7 +60,7 @@ static void
 load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 {
   stp_mxml_node_t *tmp = xmod->child;
-  stpi_escp2_printer_t *p = &(escp2_model_capabilities[model]);
+  stpi_escp2_printer_t *p = stp_escp2_get_printer(v);
   int found_black_head_config = 0;
   int found_fast_head_config = 0;
   p->max_black_resolution = -1;
@@ -71,7 +71,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
       if (tmp->type == STP_MXML_ELEMENT)
 	{
 	  const char *name = tmp->value.element.name;
-	  const char *target = stp_mxmlElementGetAttr(tmp, "href");
+	  const char *target = stp_mxmlElementGetAttr(tmp, "src");
 	  if (target)
 	    {
 	      if (!strcmp(name, "media"))
@@ -91,7 +91,8 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 	    }
 	  else if (tmp->child && tmp->child->type == STP_MXML_TEXT)
 	    {
-	      const char *val = tmp->child->value.text.string;
+	      stp_mxml_node_t *child = tmp->child;
+	      const char *val = child->value.text.string;
 	      if (!strcmp(name, "verticalBorderlessSequence"))
 		p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
 
@@ -132,7 +133,6 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		{
 		  const char *htype = stp_mxmlElementGetAttr(tmp, "type");
 		  unsigned long data[4] = { 0, 0, 0, 0 };
-		  stp_mxml_node_t *child = tmp->child;
 		  while (child)
 		    {
 		      if (child->type == STP_MXML_ELEMENT && child->child &&
@@ -195,7 +195,6 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		  const char *mtype = stp_mxmlElementGetAttr(tmp, "media");
 		  unsigned long data[4];
 		  int i = 0;
-		  stp_mxml_node_t *child = tmp->child;
 		  while (child && i < 4)
 		    {
 		      if (child->type == STP_MXML_TEXT)
@@ -245,14 +244,12 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		p->max_black_resolution = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "minimumResolution"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->min_hres = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->min_vres = stp_xmlstrtoul(child->value.text.string);
 		}
 	      else if (!strcmp(name, "maximumResolution"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->max_hres = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->max_vres = stp_xmlstrtoul(child->value.text.string);
@@ -281,35 +278,30 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		p->bidirectional_upper_limit = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "minimumMediaSize"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->min_paper_width = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->min_paper_height = stp_xmlstrtoul(child->value.text.string);
 		}
 	      else if (!strcmp(name, "maximumMediaSize"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->max_paper_width = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->max_paper_height = stp_xmlstrtoul(child->value.text.string);
 		}
 	      else if (!strcmp(name, "maximumImageableArea"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->max_imageable_width = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->max_imageable_height = stp_xmlstrtoul(child->value.text.string);
 		}
 	      else if (!strcmp(name, "CDOffset"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->cd_x_offset = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->cd_y_offset = stp_xmlstrtoul(child->value.text.string);
 		}
 	      else if (!strcmp(name, "CDMediaSize"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->cd_page_width = stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
 		  p->cd_page_height = stp_xmlstrtoul(child->value.text.string);
@@ -318,7 +310,6 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		p->paper_extra_bottom = stp_xmlstrtoul(val);
 	      else if (!strcmp(name, "AlignmentChoices"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->alignment_passes =
 		    stp_xmlstrtoul(child->value.text.string);
 		  child = child->next;
@@ -333,7 +324,6 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		}
 	      else if (!strcmp(name, "ChannelNames"))
 		{
-		  stp_mxml_node_t *child = tmp->child;
 		  p->channel_names = stp_string_list_create();
 		  while (child)
 		    {
@@ -346,6 +336,8 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		      child = child->next;
 		    }
 		}
+	      else if (!strcmp(name, "resolutions"))
+		stp_escp2_load_resolutions_from_xml(v, tmp);
 	    }
 	  else
 	    {
@@ -363,6 +355,8 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		p->flags |= MODEL_PACKET_MODE_YES;
 	      else if (!strcmp(name, "hasInterchangeableInkCartridges"))
 		p->flags |= MODEL_INTERCHANGEABLE_INK_YES;
+	      else if (!strcmp(name, "resolutions"))
+		stp_escp2_load_resolutions_from_xml(v, tmp);
 	    }
 	}
       tmp = tmp->next;
@@ -388,16 +382,16 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
       stp_free(fn);
       if (doc)
 	{
-	  stp_mxml_node_t *xmod =
+	  stp_mxml_node_t *node =
 	    stp_mxmlFindElement(doc, doc, "escp2:model", NULL, NULL,
 				STP_MXML_DESCEND);
-	  if (xmod)
+	  if (node)
 	    {
-	      const char *stmp = stp_mxmlElementGetAttr(xmod, "id");
+	      const char *stmp = stp_mxmlElementGetAttr(node, "id");
 	      assert(stmp && stp_xmlstrtol(stmp) == model);
 	      if (stmp && stp_xmlstrtol(stmp) == model)
 		{
-		  load_model_from_file(v, xmod, model);
+		  load_model_from_file(v, node, model);
 		  found = 1;
 		}
 	    }

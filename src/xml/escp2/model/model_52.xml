@@ -21,11 +21,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:model id="52">
- <media href="escp2/media/standard.xml"/>
- <inputSlots href="escp2/inputslots/default.xml"/>
- <qualityPresets href="escp2/qualitypresets/standard.xml"/>
- <resolutions href="escp2/resolutions/resolutions_52.xml"/>
- <inkGroup href="escp2/inks/standard.xml"/>
+ <media src="escp2/media/standard.xml"/>
+ <inputSlots src="escp2/inputslots/default.xml"/>
+ <qualityPresets src="escp2/qualitypresets/standard.xml"/>
+ <inkGroup src="escp2/inks/standard.xml"/>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
  <preinitRemoteSequence>PM\002\000\000\000</preinitRemoteSequence>
  <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
@@ -77,5 +76,91 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <ChannelName translate="name" name="Magenta"/>
   <ChannelName translate="name" name="Yellow"/>
  </ChannelNames>
+ <resolutions>
+  <resolution translate="text" name="360x120sw" text="360 x 120 DPI Economy">
+   <physicalResolution>360 120</physicalResolution>
+   <parameter type="float" name="escp2_density">2.600000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.375000</parameter>
+   <parameter type="float" name="DropSize2">0.750000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="360x240sw" text="360 x 240 DPI Draft">
+   <physicalResolution>360 240</physicalResolution>
+   <parameter type="float" name="escp2_density">2.600000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.375000</parameter>
+   <parameter type="float" name="DropSize2">0.750000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="360sw" text="360 DPI">
+   <physicalResolution>360 360</physicalResolution>
+   <parameter type="float" name="escp2_density">1.300000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.375000</parameter>
+   <parameter type="float" name="DropSize2">0.750000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="720x360sw" text="720 x 360 DPI">
+   <physicalResolution>720 360</physicalResolution>
+   <parameter type="float" name="escp2_density">0.650000</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.375000</parameter>
+   <parameter type="float" name="DropSize2">0.750000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="720sw" text="720 DPI">
+   <physicalResolution>720 720</physicalResolution>
+   <parameter type="float" name="escp2_density">0.650000</parameter>
+   <parameter type="integer" name="escp2_ink_type">17</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.375000</parameter>
+   <parameter type="float" name="DropSize2">0.500000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
+   <physicalResolution>1440 720</physicalResolution>
+   <parameter type="float" name="escp2_density">0.650000</parameter>
+   <parameter type="integer" name="escp2_ink_type">16</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.500000</parameter>
+   <parameter type="float" name="DropSize2">0.750000</parameter>
+   <parameter type="float" name="DropSize3">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="2880x720sw" text="2880 x 720 DPI">
+   <physicalResolution>2880 720</physicalResolution>
+   <parameter type="float" name="escp2_density">0.650000</parameter>
+   <parameter type="integer" name="escp2_ink_type">16</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="1440x1440sw" text="1440 x 1440 DPI">
+   <physicalResolution>1440 1440</physicalResolution>
+   <parameter type="float" name="escp2_density">0.650000</parameter>
+   <parameter type="integer" name="escp2_ink_type">16</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">1.000000</parameter>
+  </resolution>
+  <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
+   <physicalResolution>2880 1440</physicalResolution>
+   <parameter type="float" name="escp2_density">0.320000</parameter>
+   <parameter type="integer" name="escp2_ink_type">16</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">1.000000</parameter>
+  </resolution>
+ </resolutions>
 </escp2:model>
 </gutenprint>
