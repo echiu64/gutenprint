@@ -509,6 +509,7 @@
       <printer translate="name" name="Epson PX G900" driver="escp2-pxg900" manufacturer="Epson" model="64" parameters="standard_params" />
       <printer translate="name" name="Epson PX G920" driver="escp2-pxg920" manufacturer="Epson" model="64" parameters="standard_params" />
       <printer translate="name" name="Epson PX G5000" driver="escp2-pxg5000" manufacturer="Epson" model="67" parameters="standard_params" />
+      <printer translate="name" name="Epson PX G5300" driver="escp2-pxg5300" manufacturer="Epson" model="91" parameters="standard_params" />
       <printer translate="name" name="Epson PX V500" driver="escp2-pxv500" manufacturer="Epson" model="61" parameters="standard_params" />
       <printer translate="name" name="Epson PX V600" driver="escp2-pxv600" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer translate="name" name="Epson PX V630" driver="escp2-pxv630" manufacturer="Epson" model="69" parameters="standard_params" />

@@ -238,6 +238,7 @@
 #gptofoo escp2-pxb300 printer/Epson-Offirio-PX_B300
 #gptofoo escp2-pxb500 printer/Epson-Offirio-PX_B500
 #gptofoo escp2-pxg5000 printer/Epson-PX_G5000
+#gptofoo escp2-pxg5300 printer/Epson-PX_G5300
 #gptofoo escp2-pxg900 printer/Epson-PX_G900
 #gptofoo escp2-pxg920 printer/Epson-PX_G920
 #gptofoo escp2-pxv500 printer/Epson-PX_V500
