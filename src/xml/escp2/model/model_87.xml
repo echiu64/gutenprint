@@ -24,6 +24,50 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <media src="escp2/media/b500.xml"/>
  <inputSlots src="escp2/inputslots/b500.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
+ <inkGroup src="escp2/inks/b500.xml"/>
+ <mediaSizes src="escp2/mediasizes/standard.xml"/>
+ <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
+ <preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>
+ <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
+ <commandSet>2000</commandSet>
+ <borderless>No</borderless>
+ <supportsVariableDropsizes/>
+ <hasFastGraymode/>
+ <sendZeroAdvance/>
+ <supportsD4Mode/>
+ <preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
+ <headConfiguration type="default">
+  <Nozzles>360</Nozzles>
+  <MinNozzles>1</MinNozzles>
+  <FirstNozzle>0</FirstNozzle>
+  <NozzleSeparation>1</NozzleSeparation>
+ </headConfiguration>
+ <physicalChannels>4</physicalChannels>
+ <baseSeparation>360</baseSeparation>
+ <minimumResolution>360 360</minimumResolution>
+ <maximumResolution>5760 2880</maximumResolution>
+ <separationRows>1</separationRows>
+ <zeroMarginOffset>80</zeroMarginOffset>
+ <microLeftMargin>42</microLeftMargin>
+ <initialVerticalOffset>-7</initialVerticalOffset>
+ <minHorizontalAlignment>1</minHorizontalAlignment>
+ <baseHorizontalAlignment>28800</baseHorizontalAlignment>
+ <bidirectionalAutoUpperLimit>518400</bidirectionalAutoUpperLimit>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>612 86400</maximumMediaSize>
+ <maximumImageableArea>612 86400</maximumImageableArea>
+ <margins interleave="soft" media="sheet">9 9 27 27</margins>
+ <margins interleave="printer" media="sheet">9 9 27 27</margins>
+ <margins interleave="soft" media="roll">9 9 0 0</margins>
+ <margins interleave="printer" media="roll">9 9 0 0</margins>
+ <AlignmentChoices>4 15 0 0</AlignmentChoices>
+ <ChannelNames>
+  <ChannelName translate="name" name="Black"/>
+  <ChannelName translate="name" name="Cyan"/>
+  <ChannelName translate="name" name="Magenta"/>
+  <ChannelName translate="name" name="Yellow"/>
+ </ChannelNames>
+ <resolutionScale>14400</resolutionScale>
  <resolutions>
   <resolution translate="text" name="360sw" text="360 DPI">
    <physicalResolution>360 360</physicalResolution>
@@ -110,49 +154,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="float" name="DropSize1">1.000000</parameter>
   </resolution>
  </resolutions>
- <inkGroup src="escp2/inks/b500.xml"/>
- <mediaSizes src="escp2/mediasizes/standard.xml"/>
- <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
- <preinitRemoteSequence>SN\001\000\000</preinitRemoteSequence>
- <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
- <commandSet>2000</commandSet>
- <borderless>No</borderless>
- <supportsVariableDropsizes/>
- <hasFastGraymode/>
- <sendZeroAdvance/>
- <supportsD4Mode/>
- <preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
- <headConfiguration type="default">
-  <Nozzles>360</Nozzles>
-  <MinNozzles>1</MinNozzles>
-  <FirstNozzle>0</FirstNozzle>
-  <NozzleSeparation>1</NozzleSeparation>
- </headConfiguration>
- <physicalChannels>4</physicalChannels>
- <baseSeparation>360</baseSeparation>
- <minimumResolution>360 360</minimumResolution>
- <maximumResolution>5760 2880</maximumResolution>
- <separationRows>1</separationRows>
- <zeroMarginOffset>80</zeroMarginOffset>
- <microLeftMargin>42</microLeftMargin>
- <initialVerticalOffset>-7</initialVerticalOffset>
- <minHorizontalAlignment>1</minHorizontalAlignment>
- <baseHorizontalAlignment>28800</baseHorizontalAlignment>
- <bidirectionalAutoUpperLimit>518400</bidirectionalAutoUpperLimit>
- <minimumMediaSize>144 144</minimumMediaSize>
- <maximumMediaSize>612 86400</maximumMediaSize>
- <maximumImageableArea>612 86400</maximumImageableArea>
- <margins interleave="soft" media="sheet">9 9 27 27</margins>
- <margins interleave="printer" media="sheet">9 9 27 27</margins>
- <margins interleave="soft" media="roll">9 9 0 0</margins>
- <margins interleave="printer" media="roll">9 9 0 0</margins>
- <AlignmentChoices>4 15 0 0</AlignmentChoices>
- <ChannelNames>
-  <ChannelName translate="name" name="Black"/>
-  <ChannelName translate="name" name="Cyan"/>
-  <ChannelName translate="name" name="Magenta"/>
-  <ChannelName translate="name" name="Yellow"/>
- </ChannelNames>
- <resolutionScale>14400</resolutionScale>
 </escp2:model>
 </gutenprint>
