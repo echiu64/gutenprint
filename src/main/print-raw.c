@@ -80,13 +80,13 @@ static const stp_parameter_t the_parameters[] =
     "InkType", N_("Ink Type"), N_("Advanced Printer Setup"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 

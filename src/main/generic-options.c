@@ -15,7 +15,7 @@
  *
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111STP_CHANNEL_NONE307, USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -62,25 +62,25 @@ static const stp_parameter_t the_parameters[] =
     "Quality", N_("Print Quality"), N_("Basic Output Adjustment"),
     N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "ImageType", N_("Image Type"), N_("Basic Image Adjustment"),
     N_("Type of image being printed"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_OUTPUT,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "JobMode", N_("Job Mode"), N_("Job Mode"),
     N_("Job vs. page mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "PageNumber", N_("Page Number"), N_("Job Mode"),
     N_("Page number"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 

@@ -1697,49 +1697,49 @@ static const stp_parameter_t the_parameters[] =
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MediaType", N_("Media Type"), N_("Basic Printer Setup"),
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "InputSlot", N_("Media Source"), N_("Basic Printer Setup"),
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "InkType", N_("Ink Type"), N_("Advanced Printer Setup"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Laminate", N_("Laminate Pattern"), N_("Advanced Printer Setup"),
     N_("Laminate Pattern"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Borderless", N_("Borderless"), N_("Advanced Printer Setup"),
     N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 0, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 0, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 };
 

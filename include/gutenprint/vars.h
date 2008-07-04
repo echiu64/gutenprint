@@ -146,6 +146,8 @@ typedef struct
   int upper; /*!< Upper bound. */
 } stp_int_bound_t;
 
+#define STP_CHANNEL_NONE ((unsigned char) -1)
+
 /** Parameter description. */
 typedef struct
 {

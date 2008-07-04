@@ -106,21 +106,21 @@ static const double ink_darknesses[] =
 {									\
   "escp2_" #s, "escp2_" #s, N_("Advanced Printer Functionality"), NULL,	\
   STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,			\
-  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 0				\
+  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0		\
 }
 
 #define PARAMETER_INT_RO(s)						\
 {									\
   "escp2_" #s, "escp2_" #s, N_("Advanced Printer Functionality"), NULL,	\
   STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,			\
-  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 1				\
+  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 1		\
 }
 
 #define PARAMETER_RAW(s)						\
 {									\
   "escp2_" #s, "escp2_" #s, N_("Advanced Printer Functionality"), NULL,	\
   STP_PARAMETER_TYPE_RAW, STP_PARAMETER_CLASS_FEATURE,			\
-  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, -1, 1, 0				\
+  STP_PARAMETER_LEVEL_INTERNAL, 0, 1, STP_CHANNEL_NONE, 1, 0		\
 }
 
 typedef struct
@@ -147,7 +147,7 @@ static const stp_parameter_t the_parameters[] =
     "AutoMode", N_("Automatic Printing Mode"), N_("Basic Output Adjustment"),
     N_("Automatic printing mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
 #endif
   /*
@@ -159,67 +159,67 @@ static const stp_parameter_t the_parameters[] =
     "Quality", N_("Print Quality"), N_("Basic Output Adjustment"),
     N_("Print Quality"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
     N_("Size of the paper being printed to"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "MediaType", N_("Media Type"), N_("Basic Printer Setup"),
     N_("Type of media (plain paper, photo paper, etc.)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "InputSlot", N_("Media Source"), N_("Basic Printer Setup"),
     N_("Source (input slot) of the media"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Duplex", N_("Double-Sided Printing"), N_("Basic Printer Setup"),
     N_("Duplex/Tumble Setting"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CDInnerRadius", N_("CD Hub Size"), N_("Basic Printer Setup"),
     N_("Print only outside of the hub of the CD, or all the way to the hole"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CDOuterDiameter", N_("CD Size (Custom)"), N_("Basic Printer Setup"),
     N_("Variable adjustment for the outer diameter of CD"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CDInnerDiameter", N_("CD Hub Size (Custom)"), N_("Basic Printer Setup"),
     N_("Variable adjustment to the inner hub of the CD"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CDXAdjustment", N_("CD Horizontal Fine Adjustment"), N_("Advanced Printer Setup"),
     N_("Fine adjustment to horizontal position for CD printing"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CDYAdjustment", N_("CD Vertical Fine Adjustment"), N_("Advanced Printer Setup"),
     N_("Fine adjustment to horizontal position for CD printing"),
     STP_PARAMETER_TYPE_DIMENSION, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
     N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   /*
    * Don't check this parameter.  We may offer different settings for
@@ -230,109 +230,109 @@ static const stp_parameter_t the_parameters[] =
     "InkType", N_("Ink Type"), N_("Advanced Printer Setup"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED2, 1, 1, -1, 0, 0
+    STP_PARAMETER_LEVEL_ADVANCED2, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "UseGloss", N_("Enhanced Gloss"), N_("Basic Printer Setup"),
     N_("Add gloss enhancement"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "InkSet", N_("Ink Set"), N_("Basic Printer Setup"),
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "PrintingDirection", N_("Printing Direction"), N_("Advanced Output Adjustment"),
     N_("Printing direction (unidirectional is higher quality, but slower)"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "FullBleed", N_("Borderless"), N_("Basic Printer Setup"),
     N_("Print without borders"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "Weave", N_("Interleave Method"), N_("Advanced Output Adjustment"),
     N_("Interleave pattern to use"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_ADVANCED1, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "OutputOrder", N_("Output Order"), N_("Basic Printer Setup"),
     N_("Output Order"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_BASIC, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "AlignmentPasses", N_("Alignment Passes"), N_("Advanced Printer Functionality"),
     N_("Alignment Passes"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "AlignmentChoices", N_("Alignment Choices"), N_("Advanced Printer Functionality"),
     N_("Alignment Choices"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "InkChange", N_("Ink change command"), N_("Advanced Printer Functionality"),
     N_("Ink change command"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "AlternateAlignmentPasses", N_("Alternate Alignment Passes"), N_("Advanced Printer Functionality"),
     N_("Alternate Alignment Passes"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "AlternateAlignmentChoices", N_("Alternate Alignment Choices"), N_("Advanced Printer Functionality"),
     N_("Alternate Alignment Choices"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "SupportsPacketMode", N_("Supports Packet Mode"), N_("Advanced Printer Functionality"),
     N_("Supports D4 Packet Mode"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "InterchangeableInk", N_("Has Interchangeable Ink Cartridges"), N_("Advanced Printer Functionality"),
     N_("Has multiple choices of ink cartridges"),
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "InkChannels", N_("Ink Channels"), N_("Advanced Printer Functionality"),
     N_("Ink Channels"),
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "ChannelNames", N_("Channel Names"), N_("Advanced Printer Functionality"),
     N_("Channel Names"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, -1, 0, 0
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
     "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "RawChannels", N_("Raw Channels"), N_("Core Parameter"),
     N_("Raw Channel Count"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 0, 1, -1, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
     "CyanHueCurve", N_("Cyan Map"), N_("Advanced Output Control"),
@@ -503,7 +503,7 @@ static const float_param_t float_parameters[] =
       "DropSize1", N_("Drop Size Small"), N_("Advanced Ink Adjustment"),
       N_("Drop Size 1 (small)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 1.0, 1.0, 1
   },
   {
@@ -511,7 +511,7 @@ static const float_param_t float_parameters[] =
       "DropSize2", N_("Drop Size Medium"), N_("Advanced Ink Adjustment"),
       N_("Drop Size 2 (medium)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 1.0, 0.0, 1
   },
   {
@@ -519,7 +519,7 @@ static const float_param_t float_parameters[] =
       "DropSize3", N_("Drop Size Large"), N_("Advanced Ink Adjustment"),
       N_("Drop Size 3 (large)"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 1.0, 0.0, 1
   },
   {
@@ -527,7 +527,7 @@ static const float_param_t float_parameters[] =
       "LightCyanValue", N_("Light Cyan Value"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -535,7 +535,7 @@ static const float_param_t float_parameters[] =
       "LightCyanTransition", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -543,7 +543,7 @@ static const float_param_t float_parameters[] =
       "LightCyanScale", N_("Light Cyan Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -551,7 +551,7 @@ static const float_param_t float_parameters[] =
       "LightMagentaValue", N_("Light Magenta Value"), N_("Advanced Ink Adjustment"),
       N_("Light Magenta Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -559,7 +559,7 @@ static const float_param_t float_parameters[] =
       "LightMagentaScale", N_("Light Magenta Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Light Magenta Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -567,7 +567,7 @@ static const float_param_t float_parameters[] =
       "LightMagentaTransition", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -575,7 +575,7 @@ static const float_param_t float_parameters[] =
       "DarkYellowValue", N_("Dark Yellow Value"), N_("Advanced Ink Adjustment"),
       N_("Dark Yellow Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -583,7 +583,7 @@ static const float_param_t float_parameters[] =
       "DarkYellowTransition", N_("Dark Yellow Transition"), N_("Advanced Ink Adjustment"),
       N_("Dark Yellow Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -591,7 +591,7 @@ static const float_param_t float_parameters[] =
       "DarkYellowScale", N_("Dark Yellow Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Dark Yellow Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -599,7 +599,7 @@ static const float_param_t float_parameters[] =
       "GrayValue", N_("Gray Value"), N_("Advanced Ink Adjustment"),
       N_("Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -607,7 +607,7 @@ static const float_param_t float_parameters[] =
       "GrayTransition", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -615,7 +615,7 @@ static const float_param_t float_parameters[] =
       "GrayScale", N_("Gray Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -623,7 +623,7 @@ static const float_param_t float_parameters[] =
       "DarkGrayValue", N_("Gray Value"), N_("Advanced Ink Adjustment"),
       N_("Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -631,7 +631,7 @@ static const float_param_t float_parameters[] =
       "DarkGrayTransition", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -639,7 +639,7 @@ static const float_param_t float_parameters[] =
       "DarkGrayScale", N_("Gray Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -647,7 +647,7 @@ static const float_param_t float_parameters[] =
       "LightGrayValue", N_("Light Gray Value"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -655,7 +655,7 @@ static const float_param_t float_parameters[] =
       "LightGrayTransition", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -663,7 +663,7 @@ static const float_param_t float_parameters[] =
       "LightGrayScale", N_("Light Gray Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -671,7 +671,7 @@ static const float_param_t float_parameters[] =
       "Gray3Value", N_("Dark Gray Value"), N_("Advanced Ink Adjustment"),
       N_("Dark Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -679,7 +679,7 @@ static const float_param_t float_parameters[] =
       "Gray3Transition", N_("Dark Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Dark Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -687,7 +687,7 @@ static const float_param_t float_parameters[] =
       "Gray3Scale", N_("Dark Gray Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Dark Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -695,7 +695,7 @@ static const float_param_t float_parameters[] =
       "Gray2Value", N_("Mid Gray Value"), N_("Advanced Ink Adjustment"),
       N_("Medium Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -703,7 +703,7 @@ static const float_param_t float_parameters[] =
       "Gray2Transition", N_("Mid Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Medium Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -711,7 +711,7 @@ static const float_param_t float_parameters[] =
       "Gray2Scale", N_("Mid Gray Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Medium Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -719,7 +719,7 @@ static const float_param_t float_parameters[] =
       "Gray1Value", N_("Light Gray Value"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Value"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -727,7 +727,7 @@ static const float_param_t float_parameters[] =
       "Gray1Transition", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -735,7 +735,7 @@ static const float_param_t float_parameters[] =
       "Gray1Scale", N_("Light Gray Density Scale"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Density Scale"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
-      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
   },
   {
@@ -767,7 +767,7 @@ static const float_param_t float_parameters[] =
       "PageDryTime", N_("Drying Time Per Page"), N_("Advanced Printer Functionality"),
       N_("Set drying time per page"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 60.0, 0.0, 1
   },
   {
@@ -775,7 +775,7 @@ static const float_param_t float_parameters[] =
       "ScanDryTime", N_("Drying Time Per Scan"), N_("Advanced Printer Functionality"),
       N_("Set drying time per scan"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 10.0, 0.0, 1
   },
   {
@@ -783,7 +783,7 @@ static const float_param_t float_parameters[] =
       "ScanMinDryTime", N_("Minimum Drying Time Per Scan"), N_("Advanced Printer Functionality"),
       N_("Set minimum drying time per scan"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 10.0, 0.0, 1
   },
 };
@@ -799,7 +799,7 @@ static const int_param_t int_parameters[] =
       "PaperThickness", N_("Paper Thickness"), N_("Advanced Printer Functionality"),
       N_("Set printer paper thickness"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 255, 0
   },
   {
@@ -807,7 +807,7 @@ static const int_param_t int_parameters[] =
       "VacuumIntensity", N_("Vacuum Intensity"), N_("Advanced Printer Functionality"),
       N_("Set vacuum intensity (printer-specific)"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 255, 0
   },
   {
@@ -815,7 +815,7 @@ static const int_param_t int_parameters[] =
       "FeedSequence", N_("Feed Sequence"), N_("Advanced Printer Functionality"),
       N_("Set paper feed sequence (printer-specific)"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 255, 0
   },
   {
@@ -823,7 +823,7 @@ static const int_param_t int_parameters[] =
       "PrintMethod", N_("Print Method"), N_("Advanced Printer Functionality"),
       N_("Set print method (printer-specific)"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 255, 0
   },
   {
@@ -831,7 +831,7 @@ static const int_param_t int_parameters[] =
       "PlatenGap", N_("Platen Gap"), N_("Advanced Printer Functionality"),
       N_("Set platen gap (printer-specific)"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 255, 0
   },
   {
@@ -839,7 +839,7 @@ static const int_param_t int_parameters[] =
       "FeedAdjustment", N_("Feed Adjustment"), N_("Advanced Printer Functionality"),
       N_("Set paper feed adjustment (0.01% units)"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
-      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, -1, 1, 0
+      STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0, 255, 0
   },
 };

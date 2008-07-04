@@ -1631,7 +1631,6 @@ stpui_print(const stpui_plist_t *printer, stpui_image_t *image)
 				  _exit(0);
 				}
 			    }
-			  /* NOTREACHED */
 			  write(syncfd[1], "Done", 5);
 			  _exit(0);
 			}

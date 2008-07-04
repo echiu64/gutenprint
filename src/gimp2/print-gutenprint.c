@@ -56,7 +56,8 @@ do_gimp_install_procedure(const char *blurb, const char *help,
   gimp_plugin_menu_register ((BAD_CONST_CHAR) "file_print_gutenprint",
 			     (BAD_CONST_CHAR) "<Image>/File/Send");
   gimp_plugin_icon_register ((BAD_CONST_CHAR) "file_print_gutenprint",
-                             GIMP_ICON_TYPE_STOCK_ID, GTK_STOCK_PRINT);
+                             GIMP_ICON_TYPE_STOCK_ID,
+			     (BAD_CONST_CHAR) GTK_STOCK_PRINT);
 #endif
 }
 			  

@@ -255,10 +255,6 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	    stp_zfwrite(pd->input_slot->init_sequence->data,
 			pd->input_slot->init_sequence->bytes, 1, v);
 	  switch (pd->input_slot->roll_feed_cut_flags)
-	  if (pd->input_slot->init_sequence)
-	    stp_zfwrite(pd->input_slot->init_sequence->data,
-			pd->input_slot->init_sequence->bytes, 1, v);
-	  switch (pd->input_slot->roll_feed_cut_flags)
 	    {
 	    case ROLL_FEED_CUT_ALL:
 	      stp_send_command(v, "CO", "bccccl", 0, 0, 1, 0, 0);
