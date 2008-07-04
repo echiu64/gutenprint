@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@SHELL@
 
 retval=0
 
@@ -39,7 +39,11 @@ set_args `getopt vcgs "$@"`
 
 version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 cupsdir="@cups_conf_serverbin@/filter"
-pages='24-26'
+if [ -x "$cupsdir/pstoraster" ] ; then
+    pages='page-ranges=24-26 '
+else
+    pages=''
+fi
 
 if [ ! -x "$cupsdir/cgpdftoraster" -a ! -x "$cupsdir/pdftops" ] ; then
     echo 'CUPS does not appear to be installed, skipping test'
@@ -148,9 +152,11 @@ if [ -d ppd/C ] ; then
 	    PPD=$f
 	    export PPD
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
-		output="`($cupsdir/cgpdftoraster 1 1 1 1 page-ranges=$pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+	    elif [ -x "$cupsdir/pstoraster" ] ; then
+		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
 	    else
-		output="`($cupsdir/pdftops 1 1 1 1 "page-ranges=$pages $cupsargs" < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 "page-ranges=$pages $cupsargs" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/imagetoraster 1 1 1 1 \"$pages$cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
 	    fi
 	    if [ $? -ne 0 ] ; then
 		retval=1
