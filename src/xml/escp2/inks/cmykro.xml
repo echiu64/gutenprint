@@ -20,8 +20,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InkGroup name="cmykrb">
-<InkList translate="text" name="cmykrbphoto" text="Photo Black">
+<escp2:InkGroup name="cmykro">
+<InkList translate="text" name="cmykrophoto" text="Photo Black">
  <Shades>
   <shade count="1">1.000000</shade>
   <shade count="1">1.000000</shade>
@@ -489,7 +489,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </InkName>
 </InkList>
 
-<InkList translate="text" name="cmykrbmatte" text="Matte Black">
+<InkList translate="text" name="cmykromatte" text="Matte Black">
  <Shades>
   <shade count="1">1.000000</shade>
   <shade count="1">1.000000</shade>
