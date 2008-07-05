@@ -21,7 +21,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:model id="89">
- <media src="escp2/media/pro_ultrachrome.xml"/>
+ <media src="escp2/media/pro_ultrachrome_k3.xml"/>
  <inputSlots src="escp2/inputslots/pro_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
  <inkGroup src="escp2/inks/pro_ultrachrome_k3.xml"/>
