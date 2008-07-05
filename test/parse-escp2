@@ -192,7 +192,7 @@ sub do_remote_command() {
 	printf " %02x %02x ", $nlchar, $nhchar;
 	increment_curpos(2);
 	fill_buffer($skipchars);
-	printf "%*v02x ", " ", substr($stuff, $curoffset + 1, $skipchars);
+	printf "%*v02x ", " ", substr($stuff, $curoffset, $skipchars);
 	increment_curpos($skipchars);
     }
 }
