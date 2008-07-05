@@ -5,23 +5,35 @@
 # This code is in the public domain and may be used
 # for any purpose.
 
+use Getopt::Long;
+Getopt::Long::Configure("bundling", "no_ignore_case", "pass_through");
+
+use strict;
+
 # Configuration options.
-$emailsuffix = '@sourceforge.net';
-$symbolic_name_regexp = '^(guten|gimp-|)print-[0-9]+_';
+my $emailsuffix;
+my $symbolic_name_regexp;
+my (@ignoreprefix);
 
-%logmsgs = ();			# Index by date, time, and author
-%fileversions = ();
-$skipme = 0;
-%basenames = ();
+GetOptions("e:s" => \$emailsuffix,
+	   "X=s" => \@ignoreprefix,
+	   "s:s" => \$symbolic_name_regexp);
 
-@cvsdirs=`find . -type d -name CVS -print`;
-map { chomp; s,^\./,, } @cvsdirs;
-foreach $d (@cvsdirs) {
+my %logmsgs = ();			# Index by date, time, and author
+my %fileversions = ();
+my $skipme = 0;
+my %basenames = ();
+my %plus = ();
+my %minus = ();
+
+my @cvsdirs=`find . -type d -name CVS -print`;
+@cvsdirs = map { chomp; s,^\./,, } @cvsdirs;
+foreach my $d (@cvsdirs) {
     if (open ENTRIES, "$d/Entries") {
-	local ($rootdir) = $d;
+	my ($rootdir) = $d;
 	$rootdir =~ s/CVS$//;
 	while (<ENTRIES>) {
-	    local ($type, $file, $version, @junk) = split /\//;
+	    my ($type, $file, $version, @junk) = split /\//;
 	    if ($type eq "") {
 		$basenames{"$file"} = "1";
 		$file = "$rootdir$file";
@@ -126,6 +138,7 @@ my ($in_header) = 0;
 my (%symbols);
 my $revision;
 my $ignore;
+my ($skipfile);
 my $currentfile;
 my $currentbasefile;
 my %symbols_printed = ();
@@ -135,6 +148,12 @@ while (<>) {
 	$in_header = 1;
 	chomp;
 	($ignore, $ignore, $currentfile) = split;
+	if (grep { $currentfile =~ /^$_/ } @ignoreprefix) {
+	    $skipfile = 1;
+	} else {
+	    $skipfile = 0;
+	}
+	$symbols{$currentfile} = {};
 	next;
     } elsif ($in_header && $_ =~ /^symbolic names:/) {
 	while (<>) {
@@ -196,12 +215,15 @@ while (<>) {
 		$firstline = 0;
 	    }
 	}
-	$junkbody = $body;
+	my $junkbody = $body;
 	$junkbody =~ s/\s//g;
 	$junkbody .= "x";
-	my $symbols = join " ", @{$symbols{$currentfile}{$revision}};
+	my $symbols;
+	if (defined $symbols{$currentfile}{$revision}) {
+	    $symbols = join " ", @{$symbols{$currentfile}{$revision}};
+	}
 	my $datetimeauthor = "$date $time $author $junkbody $currentfile $revision $symbols";
-	if ($skipme == 0) {
+	if ($skipfile == 0 && $skipme == 0) {
 	    $logmsgs{$datetimeauthor} = $body;
 	    if ($plus eq "") {
 		$plus{$datetimeauthor} = "added";
@@ -215,17 +237,19 @@ while (<>) {
     }				# Other junk we ignore
 }
 
-$prevmsg="";
-$header="";
-@fileinfo = ();
+my $prevmsg="";
+my $header="";
+my @fileinfo = ();
 
-@chlog = reverse sort keys %logmsgs;
-%filenames_printed = ();
+my @chlog = reverse sort keys %logmsgs;
+my %filenames_printed = ();
+my ($date, $time, $author, $junk, $file, $revision, @symbols);
+my $filestuff;
 
-foreach $_ (@chlog) {
-    my ($date, $time, $author, $junk, $file, $revision, @symbols) = split;
+foreach (@chlog) {
+    ($date, $time, $author, $junk, $file, $revision, @symbols) = split;
     $date =~ s,/,-,g;
-    $msg = $logmsgs{$_};
+    my $msg = $logmsgs{$_};
     my $delta;
     if (! $minus{$_}) {
 	$delta = "$plus{$_}";
