@@ -418,21 +418,28 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
       if (strcmp(page_size_name, "Custom") == 0)
 	{
 	  if (!suppress_messages)
-	    fprintf(stderr, "DEBUG: Gutenprint using custom page size for (%d, %d)\n",
+	    fprintf(stderr, "DEBUG:     Gutenprint using custom page size for (%d, %d)\n",
 		    cups->header.PageSize[1], cups->header.PageSize[0]);
+	}
+      else if (stp_get_papersize_by_name(page_size_name))
+	{
+	  if (!suppress_messages)
+	    fprintf(stderr, "DEBUG:     Gutenprint using page size %s with (%d, %d)\n",
+		    page_size_name, cups->header.PageSize[1], cups->header.PageSize[0]);
+	  set_string_parameter(v, "PageSize", page_size_name);
 	}
       else
 	{
 	  if (!suppress_messages)
-	    fprintf(stderr, "DEBUG: Gutenprint using page size %s with (%d, %d)\n",
+	    fprintf(stderr, "DEBUG:     Gutenprint can't find page size %s with (%d, %d), using custom page size\n",
 		    page_size_name, cups->header.PageSize[1], cups->header.PageSize[0]);
-	  set_string_parameter(v, "PageSize", page_size_name);
+	  
 	}
     }
   else
     {
       if (! suppress_messages)
-	fprintf(stderr, "DEBUG: Gutenprint   no named media size for (%d, %d)\n",
+	fprintf(stderr, "DEBUG: Gutenprint    no named media size for (%d, %d)\n",
 		cups->header.PageSize[1], cups->header.PageSize[0]);
     }
 

@@ -39,66 +39,91 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_cyan" index="1">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 1 1 1 1 1 1 1 1 1 0.875 0.7 0.55 0.4 0.3 0.2 0.1 0 0 0 0 0 0 0 0 0 0 0 0
- 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1 </sequence>
-  </curve>
-  </HueCurve>
+    <HueCurveParam name="CyanCurve"/>
+    <HueCurve>
+    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+     <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1	1	1	1	1
+	1	0.875	0.7	0.55	0.4	0.3	0.2	0.1
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+	0	0.125	0.25	0.375	0.5	0.625	0.75	0.875
+	1	1	1	1	1	1	1	1
+     </sequence>
+    </curve>
+    </HueCurve>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_magenta" index="2">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0.002 0.05 0.3 0.6 0.8 1 1 0.85 0.7 0.6 0.5 0.4 0.3
- 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
+    <HueCurveParam name="MagentaCurve"/>
+    <HueCurve>
+    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+     <sequence count="48" lower-bound="0" upper-bound="4">
+	0	0	0	0	0	0	0	0
+	0	0	0	0.002	0.05	0.3	0.6	0.8
+	1	1	0.85	0.7	0.6	0.5	0.4	0.3
+	0.2	0.1	0.05	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+     </sequence>
+    </curve>
+    </HueCurve>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_yellow" index="3">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.15 0.25 0.35 0.45 0.55
- 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125 </sequence>
-  </curve>
-  </HueCurve>
+    <HueCurveParam name="YellowCurve"/>
+    <HueCurve>
+    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+     <sequence count="48" lower-bound="0" upper-bound="4">
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0.05	0.15
+	0.25	0.35	0.45	0.55	0.65	0.75	0.85	0.95
+	1	1	1	1	1	1	1	1
+	1	0.875	0.75	0.625	0.5	0.375	0.25	0.125
+     </sequence>
+    </curve>
+    </HueCurve>
     <subchannel color="4">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_red" index="4">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0.4 0.6 0.75 0.89 1 1 1 1 0.875 0.75
- 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
+    <HueCurveParam name="RedCurve"/>
+    <HueCurve>
+    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+     <sequence count="48" lower-bound="0" upper-bound="4">
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+	0.025	0.4	0.6	0.75	0.89	1	1	1
+	1	0.875	0.75	0.625	0.5	0.375	0.25	0.125
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+     </sequence>
+    </curve>
+    </HueCurve>
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_blue" index="5">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0.25 0.475 0.7 0.81 0.875 0.94 1 1 0.975 0.93 0.875 0.81 0.74 0.65 0.4
- 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
+    <HueCurveParam name="BlueCurve"/>
+    <HueCurve>
+    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+     <sequence count="48" lower-bound="0" upper-bound="4">
+	0	0.25	0.475	0.7	0.81	0.875	0.94	1
+	1	0.975	0.93	0.875	0.81	0.74	0.65	0.4
+	0.04	0.002	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+	0	0	0	0	0	0	0	0
+     </sequence>
+    </curve>
+    </HueCurve>
     <subchannel color="8" headOffset="1">
      <ChannelDensityParam name="BlueDensity"/>
     </subchannel>
@@ -114,40 +139,16 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_cyan" index="1">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 1 1 1 1 1 1 1 1 1 0.875 0.7 0.55 0.4 0.3 0.2 0.1 0 0 0 0 0 0 0 0 0 0 0 0
- 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_magenta" index="2">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0.002 0.05 0.3 0.6 0.8 1 1 0.85 0.7 0.6 0.5 0.4 0.3
- 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_yellow" index="3">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.15 0.25 0.35 0.45 0.55
- 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="4">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -163,66 +164,26 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_cyan" index="1">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 1 1 1 1 1 1 1 1 1 0.875 0.7 0.55 0.4 0.3 0.2 0.1 0 0 0 0 0 0 0 0 0 0 0 0
- 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_magenta" index="2">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0.002 0.05 0.3 0.6 0.8 1 1 0.85 0.7 0.6 0.5 0.4 0.3
- 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_yellow" index="3">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.15 0.25 0.35 0.45 0.55
- 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="4">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_red" index="4">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.025 0.4 0.6 0.75 0.89 1 1 1 1 0.875 0.75
- 0.625 0.5 0.375 0.25 0.125 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_blue" index="5">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0.25 0.475 0.7 0.81 0.875 0.94 1 1 0.975 0.93 0.875 0.81 0.74 0.65 0.4
- 0.04 0.002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="8" headOffset="1">
      <ChannelDensityParam name="BlueDensity"/>
     </subchannel>
@@ -238,40 +199,16 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_cyan" index="1">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 1 1 1 1 1 1 1 1 1 0.875 0.7 0.55 0.4 0.3 0.2 0.1 0 0 0 0 0 0 0 0 0 0 0 0
- 0 0 0 0 0 0.125 0.25 0.375 0.5 0.625 0.75 0.875 1 1 1 1 1 1 1 1 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_magenta" index="2">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0.002 0.05 0.3 0.6 0.8 1 1 0.85 0.7 0.6 0.5 0.4 0.3
- 0.2 0.1 0.05 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="picturemate_yellow" index="3">
-  <HueCurveParam name="CyanCurve"/>
-  <HueCurve>
-  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-  <sequence count="48" lower-bound="0" upper-bound="4">
- 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0.15 0.25 0.35 0.45 0.55
- 0.65 0.75 0.85 0.95 1 1 1 1 1 1 1 1 1 0.875 0.75 0.625 0.5 0.375 0.25 0.125 </sequence>
-  </curve>
-  </HueCurve>
     <subchannel color="4">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>

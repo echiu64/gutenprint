@@ -203,7 +203,13 @@ stp_get_papersize_by_size(int l, int w)
       val = stp_get_papersize_by_index(i);
 
       if (val->width == w && val->height == l)
-	return val;
+	{
+	  if (val->top == 0 && val->left == 0 &&
+	      val->bottom == 0 && val->right == 0)
+	    return val;
+	  else
+	    ref = val;
+	}
       else
 	{
 	  int myscore = paper_size_mismatch(l, w, val);
@@ -212,6 +218,30 @@ stp_get_papersize_by_size(int l, int w)
 	      ref = val;
 	      score = myscore;
 	    }
+	}
+    }
+  return ref;
+}
+
+const stp_papersize_t *
+stp_get_papersize_by_size_exact(int l, int w)
+{
+  int score = INT_MAX;
+  const stp_papersize_t *ref = NULL;
+  const stp_papersize_t *val = NULL;
+  int i;
+  int sizes = stp_known_papersizes();
+  for (i = 0; i < sizes; i++)
+    {
+      val = stp_get_papersize_by_index(i);
+
+      if (val->width == w && val->height == l)
+	{
+	  if (val->top == 0 && val->left == 0 &&
+	      val->bottom == 0 && val->right == 0)
+	    return val;
+	  else
+	    ref = val;
 	}
     }
   return ref;

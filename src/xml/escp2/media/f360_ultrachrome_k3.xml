@@ -74,28 +74,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -114,28 +124,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -190,28 +210,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -230,28 +260,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -306,28 +346,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -346,28 +396,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -422,28 +482,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -462,28 +532,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -538,28 +618,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -578,28 +668,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -654,28 +754,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -694,28 +804,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -770,28 +890,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -810,28 +940,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -886,28 +1026,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -926,28 +1076,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1002,28 +1162,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1042,28 +1212,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1118,28 +1298,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1158,28 +1348,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1234,28 +1434,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1274,28 +1484,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1350,28 +1570,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">0.920000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.19 -0.22 -0.25 -0.22 -0.19 -0.15
-   -0.12 -0.1 -0.06 -0.03</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.19	-0.22
+	-0.25	-0.22	-0.19	-0.15	-0.12	-0.1	-0.06	-0.03
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.75 0.71 0.7 0.7 0.72 0.76 0.81
-   0.87 0.93 0.95 0.97 0.98 0.98 0.97 0.96 0.96 0.96 0.97 0.98 0.98 0.99 1
-   1 1 1 0.98 0.97 0.96 0.95 0.93 0.9 0.87 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.75	0.71	0.7	0.7	0.72	0.76	0.81	0.87
+	0.93	0.95	0.97	0.98	0.98	0.97	0.96	0.96
+	0.96	0.97	0.98	0.98	0.99	1	1	1
+	1	0.98	0.97	0.96	0.95	0.93	0.9	0.87
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1390,28 +1620,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">0.920000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.19 -0.22 -0.25 -0.22 -0.19 -0.15
-   -0.12 -0.1 -0.06 -0.03</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.19	-0.22
+	-0.25	-0.22	-0.19	-0.15	-0.12	-0.1	-0.06	-0.03
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.75 0.71 0.7 0.7 0.72 0.76 0.81
-   0.87 0.93 0.95 0.97 0.98 0.98 0.97 0.96 0.96 0.96 0.97 0.98 0.98 0.99 1
-   1 1 1 0.98 0.97 0.96 0.95 0.93 0.9 0.87 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.75	0.71	0.7	0.7	0.72	0.76	0.81	0.87
+	0.93	0.95	0.97	0.98	0.98	0.97	0.96	0.96
+	0.96	0.97	0.98	0.98	0.99	1	1	1
+	1	0.98	0.97	0.96	0.95	0.93	0.9	0.87
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1466,28 +1706,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">0.920000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.19 -0.22 -0.25 -0.22 -0.19 -0.15
-   -0.12 -0.1 -0.06 -0.03</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.19	-0.22
+	-0.25	-0.22	-0.19	-0.15	-0.12	-0.1	-0.06	-0.03
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.75 0.71 0.7 0.7 0.72 0.76 0.81
-   0.87 0.93 0.95 0.97 0.98 0.98 0.97 0.96 0.96 0.96 0.97 0.98 0.98 0.99 1
-   1 1 1 0.98 0.97 0.96 0.95 0.93 0.9 0.87 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.75	0.71	0.7	0.7	0.72	0.76	0.81	0.87
+	0.93	0.95	0.97	0.98	0.98	0.97	0.96	0.96
+	0.96	0.97	0.98	0.98	0.99	1	1	1
+	1	0.98	0.97	0.96	0.95	0.93	0.9	0.87
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1506,28 +1756,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">0.920000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.19 -0.22 -0.25 -0.22 -0.19 -0.15
-   -0.12 -0.1 -0.06 -0.03</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.19	-0.22
+	-0.25	-0.22	-0.19	-0.15	-0.12	-0.1	-0.06	-0.03
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.75 0.71 0.7 0.7 0.72 0.76 0.81
-   0.87 0.93 0.95 0.97 0.98 0.98 0.97 0.96 0.96 0.96 0.97 0.98 0.98 0.99 1
-   1 1 1 0.98 0.97 0.96 0.95 0.93 0.9 0.87 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.75	0.71	0.7	0.7	0.72	0.76	0.81	0.87
+	0.93	0.95	0.97	0.98	0.98	0.97	0.96	0.96
+	0.96	0.97	0.98	0.98	0.99	1	1	1
+	1	0.98	0.97	0.96	0.95	0.93	0.9	0.87
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1582,28 +1842,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">0.920000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.19 -0.22 -0.25 -0.22 -0.19 -0.15
-   -0.12 -0.1 -0.06 -0.03</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.19	-0.22
+	-0.25	-0.22	-0.19	-0.15	-0.12	-0.1	-0.06	-0.03
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.75 0.71 0.7 0.7 0.72 0.76 0.81
-   0.87 0.93 0.95 0.97 0.98 0.98 0.97 0.96 0.96 0.96 0.97 0.98 0.98 0.99 1
-   1 1 1 0.98 0.97 0.96 0.95 0.93 0.9 0.87 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.75	0.71	0.7	0.7	0.72	0.76	0.81	0.87
+	0.93	0.95	0.97	0.98	0.98	0.97	0.96	0.96
+	0.96	0.97	0.98	0.98	0.99	1	1	1
+	1	0.98	0.97	0.96	0.95	0.93	0.9	0.87
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1622,28 +1892,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">0.920000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.19 -0.22 -0.25 -0.22 -0.19 -0.15
-   -0.12 -0.1 -0.06 -0.03</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.19	-0.22
+	-0.25	-0.22	-0.19	-0.15	-0.12	-0.1	-0.06	-0.03
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.75 0.71 0.7 0.7 0.72 0.76 0.81
-   0.87 0.93 0.95 0.97 0.98 0.98 0.97 0.96 0.96 0.96 0.97 0.98 0.98 0.99 1
-   1 1 1 0.98 0.97 0.96 0.95 0.93 0.9 0.87 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.75	0.71	0.7	0.7	0.72	0.76	0.81	0.87
+	0.93	0.95	0.97	0.98	0.98	0.97	0.96	0.96
+	0.96	0.97	0.98	0.98	0.99	1	1	1
+	1	0.98	0.97	0.96	0.95	0.93	0.9	0.87
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1698,28 +1978,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1745,28 +2035,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1785,28 +2085,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1861,28 +2171,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1908,28 +2228,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -1948,28 +2278,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2024,28 +2364,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2064,28 +2414,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2140,28 +2500,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2180,28 +2550,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2256,28 +2636,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2296,28 +2686,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2338,28 +2738,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>
@@ -2378,28 +2788,38 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Gamma">1.000000</parameter>
   <parameter type="curve" name="HueMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="-6" upper-bound="6">
-   0 0.06 0.1 0.1 0.06 0 -0.06 -0.12 -0.18 -0.21 -0.22 -0.22 -0.22 -0.22 -0.22
-   -0.22 -0.22 -0.28 -0.34 -0.4 -0.5 -0.4 -0.3 -0.2 -0.12 -0.07 -0.04 -0.02
-   0 0 0 0 0 0 -0.03 -0.07 -0.11 -0.15 -0.17 -0.18 -0.19 -0.2 -0.19 -0.18 -0.16
-   -0.12 -0.08 -0.04</sequence>
+    <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0.06	0.1	0.1	0.06	0	-0.06	-0.12
+	-0.18	-0.21	-0.22	-0.22	-0.22	-0.22	-0.22	-0.22
+	-0.22	-0.28	-0.34	-0.4	-0.5	-0.4	-0.3	-0.2
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.07	-0.11	-0.15	-0.17	-0.18
+	-0.19	-0.2	-0.19	-0.18	-0.16	-0.12	-0.08	-0.04
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="LumMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   0.55 0.57 0.61 0.64 0.67 0.69 0.72 0.75 0.83 0.8 0.76 0.76 0.78 0.79 0.83
-   0.86 0.93 0.95 0.97 0.97 0.97 0.97 0.96 0.96 0.96 0.97 0.97 0.98 0.99 1
-   1 1 1 0.98 0.97 0.95 0.93 0.91 0.88 0.83 0.83 0.71 0.65 0.61 0.58 0.56 0.55
-   0.55</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	0.55	0.57	0.61	0.64	0.67	0.69	0.72	0.75
+	0.83	0.8	0.76	0.76	0.78	0.79	0.83	0.86
+	0.93	0.95	0.97	0.97	0.97	0.97	0.96	0.96
+	0.96	0.97	0.97	0.98	0.99	1	1	1
+	1	0.98	0.97	0.95	0.93	0.91	0.88	0.83
+	0.83	0.71	0.65	0.61	0.58	0.56	0.55	0.55
+    </sequence>
    </curve>
   </parameter>
   <parameter type="curve" name="SatMap">
    <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-   <sequence count="48" lower-bound="0" upper-bound="4">
-   1 1 1 1.05 1.1 1.15 1.15 1.15 1.15 1.15 1.15 1.1 1.1 1.05 1.05 1 1 1 1 1
-   1 1 1 1 1 1 1 1 1 1 1 1 1 1.05 1.15 1.25 1.35 1.45 1.5 1.5 1.5 1.5 1.5 1.45
-   1.35 1.25 1.15 1.05</sequence>
+    <sequence count="48" lower-bound="0" upper-bound="4">
+	1	1	1	1.05	1.1	1.15	1.15	1.15
+	1.15	1.15	1.15	1.1	1.1	1.05	1.05	1
+	1	1	1	1	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.05	1.15	1.25	1.35	1.45	1.5	1.5
+	1.5	1.5	1.5	1.45	1.35	1.25	1.15	1.05
+    </sequence>
    </curve>
   </parameter>
  </ink>

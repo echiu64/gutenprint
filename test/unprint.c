@@ -87,7 +87,7 @@ typedef struct {
  * actually read in the data.  This optimization may be worthwhile.
  */
 
-#define MAX_INKS 12
+#define MAX_INKS 13
 typedef struct {
    unsigned char *line[MAX_INKS];
    int startx[MAX_INKS];
@@ -128,6 +128,7 @@ line_type **page=NULL;
    P.Black  64      N/A      0
    Gloss    9       N/A      10
    LL.Black 48      768      11
+   Orange   10       N/A     12
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
@@ -166,6 +167,8 @@ seqcolor(int c)
     case 48:
     case 768:
       return 11;
+    case 10:
+      return 12;
     default:
       return 0;
     }
@@ -273,18 +276,20 @@ set_bits(unsigned char *p,int idx,int value)
 }
 
 static float ink_colors[MAX_INKS][4] =
-{{ 0,   0,  0,  1 },		/* K */
- { 1,  .1,  1,  1 },		/* M */
- { .1, .7, .7,  1 },		/* C */
- { 1,   1, .1,  1 },		/* Y */
- { 1,  .7,  1,  1 },		/* m */
- { .4,  1,  1,  1 },		/* c */
- { .7, .7, .7,  1 },		/* k */
- { .7, .7,  0,  1 },		/* dY */
- { 1,   0,  0,  1 },		/* R */
- { 0,   0,  1,  1 },		/* B */
- { 1,   1,  1,  1 },		/* Gloss */
- { .8, .8, .8,  1 },		/* llk */
+/* C(R) M(G) Y(B) K(W) */
+{{ 0,   0,   0,   1 },		/* K */
+ { 1,    .1, 1,   1 },		/* M */
+ {  .1, 1,   1,   1 },		/* C */
+ { 1,   1,    .1, 1 },		/* Y */
+ { 1,    .7, 1,   1 },		/* m */
+ {  .4, 1,   1,   1 },		/* c */
+ {  .7,  .7,  .7, 1 },		/* k */
+ {  .7,  .7, 0,   1 },		/* dY */
+ { 1,   0,   0,   1 },		/* R */
+ { 0,   0,   1,   1 },		/* B */
+ { 1,   1,   1,   1 },		/* Gloss */
+ {  .8,  .8,  .8, 1 },		/* llk */
+ {  .9,  .3, 0,   1 },		/* Orange */
 };
 
 static float quadtone_inks[] = { 0.0, .25, .5, .75 };
@@ -1040,6 +1045,7 @@ parse_escp2_extended(FILE *fp_r)
 
       break;
     case 's':		/* Set print speed */
+    case 'm':		/* Set paper type */
       break;
     case 'S': /* set paper dimensions */
       switch (bufsize)

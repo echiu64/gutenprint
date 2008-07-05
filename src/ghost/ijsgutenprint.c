@@ -711,7 +711,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  STP_DEBUG(fprintf(stderr, "ijsgutenprint: paper size %f %f %s\n", w, h, vbuf));
 	  stp_set_page_width(img->v, w);
 	  stp_set_page_height(img->v, h);
-	  if ((p = stp_get_papersize_by_size(h, w)) != NULL)
+	  if ((p = stp_get_papersize_by_size_exact(h, w)) != NULL)
 	    {
 	      STP_DEBUG(fprintf(stderr, "ijsgutenprint: Found page size %s\n", p->name));
 	      stp_set_string_parameter(img->v, "PageSize", p->name);
