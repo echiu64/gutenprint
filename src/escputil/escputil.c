@@ -972,22 +972,23 @@ get_printer(int quiet, int fail_if_not_found)
 
 static const char *colors_new[] =
   {
-    N_("Black"),		/* 0 */
-    N_("Photo Black"),		/* 1 */
-    N_("Unknown"),		/* 2 */
-    N_("Cyan"),			/* 3 */
-    N_("Magenta"),		/* 4 */
-    N_("Yellow"),		/* 5 */
-    N_("Light Cyan"),		/* 6 */
-    N_("Light Magenta"),	/* 7 */
-    N_("Unknown"),		/* 8 */
-    N_("Unknown"),		/* 9 */
-    N_("Light Black"),		/* a */
-    N_("Matte Black"),		/* b */
-    N_("Red"),			/* c */
-    N_("Blue"),			/* d */
-    N_("Gloss Optimizer"),	/* e */
-    N_("Light Light Black"),	/* f */
+    N_("Black"),		/* 00 */
+    N_("Photo Black"),		/* 01 */
+    N_("Unknown"),		/* 02 */
+    N_("Cyan"),			/* 03 */
+    N_("Magenta"),		/* 04 */
+    N_("Yellow"),		/* 05 */
+    N_("Light Cyan"),		/* 06 */
+    N_("Light Magenta"),	/* 07 */
+    N_("Unknown"),		/* 08 */
+    N_("Unknown"),		/* 09 */
+    N_("Light Black"),		/* 0a */
+    N_("Matte Black"),		/* 0b */
+    N_("Red"),			/* 0c */
+    N_("Blue"),			/* 0d */
+    N_("Gloss Optimizer"),	/* 0e */
+    N_("Light Light Black"),	/* 0f */
+    N_("Orange"),		/* 10 */
   };
 static int color_count = sizeof(colors_new) / sizeof(const char *);
 
@@ -1006,7 +1007,7 @@ static const char *aux_colors[] =
     N_("Blue"),			/* a */
     NULL,			/* b */
     NULL,			/* c */
-    NULL,			/* d */
+    N_("Orange"),		/* d */
     NULL,			/* e */
     NULL,			/* f */
   };
@@ -1320,7 +1321,7 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 		printf("%18s    %20d\n",
 		       gettext(aux_colors[(int) ind[1]]), ind[2]);
 	      else
-		printf("%8s 0x%2x 0x%2x    %20d\n",
+		printf("%8s 0x%02x 0x%02x    %20d\n",
 		       _("Unknown"), (unsigned char) ind[0],
 		       (unsigned char) ind[1], ind[2]);
 	      ind += param;
