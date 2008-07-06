@@ -282,7 +282,53 @@ sub do_output($) {
     }
 }
 
-sub do_printer {
+sub build_list($$) {
+    my ($keys, $printer) = @_;
+    my (@keys) = split (/,/, $keys);
+    my ($key) = $keys[0];
+    my ($rest);
+    my (@stuff);
+    if ($#keys > 0) {
+	$rest = join ",", @keys[1..$#keys];
+	@stuff = build_list($rest, $printer);
+    }
+    my (@tmp);
+    if ($param_types{$printer}{$key} == 3) {
+	my ($minv) = $stp_float_values{$printer}{'MINVAL'}{$key};
+	my ($defv) = $stp_float_values{$printer}{'DEFVAL'}{$key};
+	my ($maxv) = $stp_float_values{$printer}{'MAXVAL'}{$key};
+	push @tmp, $minv;
+	push @tmp, ($minv + $defv) / 2.0;
+	push @tmp, $defv;
+	push @tmp, ($defv + $maxv) / 2.0;
+	push @tmp, $maxv;
+    } elsif (defined($param_types{$printer}{$key})) {
+	@tmp = grep {$_ ne 'None' } keys %{$stpdata{$printer}{$key}};
+    }
+    if (! @tmp) {
+	return @stuff;
+    } elsif (! @stuff) {
+	return @tmp;
+    } else {
+	my (@answer);
+	foreach my $i (@tmp) {
+	    foreach my $j (@stuff) {
+		push @answer, "$i,$j";
+	    }
+	}
+	return @answer;
+    }
+    return @tmp;
+}
+
+sub build_key($$) {
+    my ($keys, $printer) = @_;
+    my (@keys) = split (/,/, $keys);
+    my (@answer) = grep { defined $param_types{$printer}{$_} } @keys;
+    return join ",", @answer;
+}
+
+sub do_printer($$) {
     my ($printer, $fh) = @_;
     my $tmp;
     my $min_res_name;
@@ -304,21 +350,11 @@ sub do_printer {
     $tmp = $stpdata{$printer}{'PrintingMode'};
     my (@printing_modes) = grep {$_ ne 'None' } keys %$tmp;
     foreach $key (@special_options) {
-	next if !defined($param_types{$printer}{$key});
-	my (@tmp);
-	if ($param_types{$printer}{$key} == 3) {
-	    my ($minv) = $stp_float_values{$printer}{'MINVAL'}{$key};
-	    my ($defv) = $stp_float_values{$printer}{'DEFVAL'}{$key};
-	    my ($maxv) = $stp_float_values{$printer}{'MAXVAL'}{$key};
-	    push @tmp, $minv;
-	    push @tmp, ($minv + $defv) / 2.0;
-	    push @tmp, $defv;
-	    push @tmp, ($defv + $maxv) / 2.0;
-	    push @tmp, $maxv;
-	} else {
-	    @tmp = grep {$_ ne 'None' } keys %{$stpdata{$printer}{$key}};
+	$key = build_key($key, $printer);
+	if ($key ne "") {
+	    my (@vals) = build_list($key, $printer);
+	    $opt_vals{$key} = \@vals;
 	}
-	$opt_vals{$key} = \@tmp;
     }
     foreach $tmp (sort @resolutions) {
 	my $res_value = ($stpdata{$printer}{'x_resolution'}{$tmp} *
@@ -353,15 +389,16 @@ sub do_printer {
 		do_print( $output, $fh );
 	    }
 	}
-	foreach $key (@special_options) {
+	foreach $key (keys %opt_vals) {
 	    next if ($key eq "RawChannels" && $pmode ne "Color");
+	    my (@subkeys) = split (/,/, $key);
 	    $tmp = $opt_vals{$key};
 	    if (defined $tmp && $#{@$tmp} >= 1) {
 		my (@opts) = @$tmp;
 		my $opt;
 		my $rawval;
 		foreach $opt (@opts) {
-		    my ($out_file);
+		    my (@subopts) = split (/,/, $opt);
 		    @extras = ();
 		    @job_extras = ();
 		    @messages = ();
@@ -372,11 +409,20 @@ sub do_printer {
 		    }
 		    set_opt("PrintingMode", $pmode, $printer);
 #		    set_opt("Resolution", $min_res_name, $printer);
-		    if ($key eq "RawChannels") {
-			$rawval = $opt;
-		    } else {
-			set_opt($key, $opt, $printer);
-		    }
+		    my (@mvals);
+		    my (@ovals);
+		    map {
+			my $k = $subkeys[$_];
+			my $v = $subopts[$_];
+			if ($k eq "RawChannels") {
+			    $rawval = $v;
+			} else {
+			    set_opt($k, $v, $printer);
+			}
+			push @mvals, "${k}_${v}";
+			push @ovals, "${k}=${v}";
+		    } (0..$#subkeys);
+		    # FIXME! need to handle Duplex as a subkey
 		    map {
 			if ($key ne $_) {
 			    set_opt($_, $base_settings{$_}, $printer);
@@ -388,8 +434,10 @@ sub do_printer {
 			    }
 			}
 		    } keys %base_settings;
-		    do_output("${printer}_PrintingMode_${pmode}_${key}_${opt}");
-		    set_message("    ${key}=${opt}+${pmode}");
+		    my ($mstring) = join "_", @mvals;
+		    do_output("${printer}_PrintingMode_${pmode}_${mstring}");
+		    my ($ostring) = join "+", @ovals;
+		    set_message("    ${ostring}+${pmode}");
 #		    do_output("${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}");
 #		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
 		    my $output = print_one_testpattern($printer, $rawval);
