@@ -350,10 +350,10 @@ sub do_printer($$) {
     $tmp = $stpdata{$printer}{'PrintingMode'};
     my (@printing_modes) = grep {$_ ne 'None' } keys %$tmp;
     foreach $key (@special_options) {
-	$key = build_key($key, $printer);
-	if ($key ne "") {
-	    my (@vals) = build_list($key, $printer);
-	    $opt_vals{$key} = \@vals;
+	my $nkey = build_key($key, $printer);
+	if ($nkey ne "") {
+	    my (@vals) = build_list($nkey, $printer);
+	    $opt_vals{$nkey} = \@vals;
 	}
     }
     foreach $tmp (sort @resolutions) {
