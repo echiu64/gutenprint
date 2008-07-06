@@ -71,9 +71,14 @@ extern stp_curve_t *stp_curve_create_from_xmltree(stp_mxml_node_t *da);
 extern stp_mxml_node_t *stp_xmltree_create_from_curve(const stp_curve_t *curve);
 
 extern stp_array_t *stp_array_create_from_xmltree(stp_mxml_node_t *array);
-extern stp_mxml_node_t *stp_xmltree_create_from_array(const stp_array_t *array);
 extern stp_vars_t *stp_vars_create_from_xmltree(stp_mxml_node_t *da);
+extern stp_mxml_node_t *stp_xmltree_create_from_array(const stp_array_t *array);
+extern stp_vars_t *stp_vars_create_from_xmltree_ref(stp_mxml_node_t *da,
+						    stp_mxml_node_t *root);
 extern void stp_vars_fill_from_xmltree(stp_mxml_node_t *da, stp_vars_t *v);
+extern void stp_vars_fill_from_xmltree_ref(stp_mxml_node_t *da,
+					   stp_mxml_node_t *root,
+					   stp_vars_t *v);
 extern stp_mxml_node_t *stp_xmltree_create_from_vars(const stp_vars_t *v);
 
 extern void stp_xml_parse_file_named(const char *name);

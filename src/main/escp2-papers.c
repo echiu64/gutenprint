@@ -81,14 +81,14 @@ stp_escp2_set_media_size(stp_vars_t *v, const stp_vars_t *src)
 						   "name", name, STP_MXML_DESCEND);
       if (xnode)
 	{
-	  stp_vars_fill_from_xmltree(xnode->child, v);
+	  stp_vars_fill_from_xmltree_ref(xnode->child, node, v);
 	  return;
 	}
       xnode = stp_mxmlFindElement(node, node, "MediaSize", "type", "default",
 				  STP_MXML_DESCEND);
       if (xnode)
 	{
-	  stp_vars_fill_from_xmltree(xnode->child, v);
+	  stp_vars_fill_from_xmltree_ref(xnode->child, node, v);
 	  return;
 	}
     }
@@ -217,14 +217,14 @@ build_media_type(const stp_vars_t *v, const char *name, const inklist_t *ink,
     answer->paper_class = PAPER_PLAIN;
   answer->preferred_ink_type = stp_mxmlElementGetAttr(node, "PreferredInktype");
   answer->preferred_ink_set = stp_mxmlElementGetAttr(node, "PreferredInkset");
-  stp_vars_fill_from_xmltree(node->child, vv);
+  stp_vars_fill_from_xmltree_ref(node->child, doc, vv);
   if (ink && ink->name)
     {
       stp_mxml_node_t *inknode = stp_mxmlFindElement(node, node, "ink",
 						     "name", ink->name,
 						     STP_MXML_DESCEND);
       if (inknode)
-	stp_vars_fill_from_xmltree(inknode->child, vv);
+	stp_vars_fill_from_xmltree_ref(inknode->child, doc, vv);
       else
 	{
 	  stp_erprintf("Cannot find ink %s for media %s, model %s!\n",
@@ -238,7 +238,7 @@ build_media_type(const stp_vars_t *v, const char *name, const inklist_t *ink,
 						     "name", res->name,
 						     STP_MXML_DESCEND);
       if (resnode)
-	stp_vars_fill_from_xmltree(resnode->child, vv);
+	stp_vars_fill_from_xmltree_ref(resnode->child, doc, vv);
     }
   return answer;
 }

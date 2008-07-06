@@ -32,7 +32,7 @@
 static inkgroup_t *default_black_inkgroup;
 
 static void
-load_subchannel(stp_mxml_node_t *node, physical_subchannel_t *icl)
+load_subchannel(stp_mxml_node_t *node, stp_mxml_node_t *root, physical_subchannel_t *icl)
 {
   const char *name;
   stp_mxml_node_t *child = node->child;
@@ -92,7 +92,7 @@ load_subchannel(stp_mxml_node_t *node, physical_subchannel_t *icl)
 }
 
 static void
-load_channel(stp_mxml_node_t *node, ink_channel_t *icl)
+load_channel(stp_mxml_node_t *node, stp_mxml_node_t *root, ink_channel_t *icl)
 {
   const char *name;
   stp_mxml_node_t *child = node->child;
@@ -116,13 +116,32 @@ load_channel(stp_mxml_node_t *node, ink_channel_t *icl)
       if (child->type == STP_MXML_ELEMENT)
 	{
 	  if (!strcmp(child->value.element.name, "subchannel"))
-	    load_subchannel(child, &(icl->subchannels[count++]));
+	    load_subchannel(child, root, &(icl->subchannels[count++]));
 	  else if (!strcmp(child->value.element.name, "HueCurve"))
 	    {
 	      stp_mxml_node_t *cchild = child->child;
 	      stp_curve_t *curve;
-	      while (cchild && cchild->type != STP_MXML_ELEMENT)
-		cchild = cchild->next;
+	      const char *cref = stp_mxmlElementGetAttr(child, "ref");
+	      if (cref)
+		{
+		  cchild = stp_mxmlFindElement(root, root, "curve", "name",
+					       cref, STP_MXML_DESCEND);
+		  if (!cchild)
+		    {
+		      stp_erprintf("Cannot find curve named '%s'!\n", cref);
+		      stp_abort();
+		    }
+		}
+	      else
+		{
+		  while (cchild && cchild->type != STP_MXML_ELEMENT)
+		    cchild = cchild->next;
+		  if (!cchild)
+		    {
+		      stp_erprintf("Cannot find curve!\n");
+		      stp_abort();
+		    }
+		}
 	      curve = stp_curve_create_from_xmltree(cchild);
 	      icl->hue_curve = curve;
 	    }
@@ -138,7 +157,7 @@ load_channel(stp_mxml_node_t *node, ink_channel_t *icl)
 }
 
 static void
-load_inkname(stp_mxml_node_t *node, inkname_t *inl)
+load_inkname(stp_mxml_node_t *node, stp_mxml_node_t *root, inkname_t *inl)
 {
   const char *name;
   stp_mxml_node_t *child = node->child;
@@ -240,7 +259,7 @@ load_inkname(stp_mxml_node_t *node, inkname_t *inl)
 		      if (name)
 			{
 			  unsigned idx = stp_xmlstrtoul(name);
-			  load_channel(cchild, &(inl->channels[idx]));
+			  load_channel(cchild, root, &(inl->channels[idx]));
 			}
 		    }
 		  cchild = cchild->next;
@@ -258,7 +277,7 @@ load_inkname(stp_mxml_node_t *node, inkname_t *inl)
 		      if (name)
 			{
 			  unsigned idx = stp_xmlstrtoul(name);
-			  load_channel(cchild, &(inl->aux_channels[idx]));
+			  load_channel(cchild, root, &(inl->aux_channels[idx]));
 			}
 		    }
 		  cchild = cchild->next;
@@ -270,7 +289,7 @@ load_inkname(stp_mxml_node_t *node, inkname_t *inl)
 }
 
 static void
-load_shades(stp_mxml_node_t *node, inklist_t *ikl)
+load_shades(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
 {
   stp_mxml_node_t *child = node->child;
   int count = 0;
@@ -350,9 +369,9 @@ load_inklist(stp_mxml_node_t *node, inklist_t *ikl)
       if (child->type == STP_MXML_ELEMENT)
 	{
 	  if (!strcmp(child->value.element.name, "InkName"))
-	    load_inkname(child, &(ikl->inknames[count++]));
+	    load_inkname(child, node, &(ikl->inknames[count++]));
 	  else if (!strcmp(child->value.element.name, "Shades"))
-	    load_shades(child, ikl);
+	    load_shades(child, node, ikl);
 	}
       child = child->next;
     }

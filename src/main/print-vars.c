@@ -1702,8 +1702,9 @@ stp_parameter_list_append(stp_parameter_list_t list,
     }
 }
 
-void
-stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
+static void
+fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
+		       stp_vars_t *v)
 {
 #ifdef HAVE_LOCALE_H
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
@@ -1715,97 +1716,113 @@ stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
 	{
 	  stp_mxml_node_t *child = prop->child;
 	  const char *prop_name = prop->value.element.name;
-	  if (!strcmp(prop_name, "parameter"))
+	  const char *p_type = stp_mxmlElementGetAttr(prop, "type");
+	  const char *p_name = stp_mxmlElementGetAttr(prop, "name");
+	  if (!strcmp(prop_name, "parameter") && (!p_type || !p_name))
+	    stp_erprintf("Bad property found!\n");
+	  else if (!strcmp(prop_name, "parameter"))
 	    {
-	      const char *p_type = stp_mxmlElementGetAttr(prop, "type");
-	      const char *p_name = stp_mxmlElementGetAttr(prop, "name");
 	      const char *active = stp_mxmlElementGetAttr(prop, "active");
+	      const char *cref = stp_mxmlElementGetAttr(prop, "ref");
+	      stp_mxml_node_t *cnode = child;
 	      stp_parameter_type_t type = STP_PARAMETER_TYPE_INVALID;
-	      if (!p_type || !p_name)
-		stp_erprintf("Bad property found!\n");
-	      else if (strcmp(p_type, "float") == 0)
+	      if (cref && root)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  cnode = stp_mxmlFindElement(root, root, "namedParam",
+					      "name", cref,
+					      STP_MXML_DESCEND);
+		  if (!cnode || cnode->type != STP_MXML_ELEMENT ||
+		      !(cnode->child))
+		    {
+		      stp_erprintf("Found parameter name %s type %s ref %s but no target!\n",
+				   p_name, p_type, cref);
+		      stp_abort();
+		    }
+		  cnode = cnode->child;
+		}
+	      if (strcmp(p_type, "float") == 0)
+		{
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_float_parameter
-			(v, p_name, stp_xmlstrtod(child->value.text.string));
+			(v, p_name, stp_xmlstrtod(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_deprintf(STP_DBG_XML, "  Set float '%s' to '%s' (%f)\n",
-				   p_name, child->value.text.string,
+				   p_name, cnode->value.text.string,
 				   stp_get_float_parameter(v, p_name));
 		    }
 		}
 	      else if (strcmp(p_type, "integer") == 0)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_int_parameter
-			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+			(v, p_name, (int) stp_xmlstrtol(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_deprintf(STP_DBG_XML, "  Set int '%s' to '%s' (%d)\n",
-				   p_name, child->value.text.string,
+				   p_name, cnode->value.text.string,
 				   stp_get_int_parameter(v, p_name));
 		    }
 		}
 	      else if (strcmp(p_type, "dimension") == 0)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_dimension_parameter
-			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+			(v, p_name, (int) stp_xmlstrtol(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_deprintf(STP_DBG_XML, "  Set dimension '%s' to '%s' (%d)\n",
-				   p_name, child->value.text.string,
+				   p_name, cnode->value.text.string,
 				   stp_get_dimension_parameter(v, p_name));
 		    }
 		}
 	      else if (strcmp(p_type, "boolean") == 0)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_boolean_parameter
-			(v, p_name, (int) stp_xmlstrtol(child->value.text.string));
+			(v, p_name, (int) stp_xmlstrtol(cnode->value.text.string));
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_deprintf(STP_DBG_XML, "  Set bool '%s' to '%s' (%d)\n",
-				   p_name, child->value.text.string,
+				   p_name, cnode->value.text.string,
 				   stp_get_boolean_parameter(v, p_name));
 		    }
 		}
 	      else if (strcmp(p_type, "string") == 0)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_string_parameter
-			(v, p_name, child->value.text.string);
+			(v, p_name, cnode->value.text.string);
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_deprintf(STP_DBG_XML, "  Set string '%s' to '%s' (%s)\n",
-				   p_name, child->value.text.string,
+				   p_name, cnode->value.text.string,
 				   stp_get_string_parameter(v, p_name));
 		    }
 		}
 	      else if (strcmp(p_type, "file") == 0)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
 		      stp_set_file_parameter
-			(v, p_name, child->value.text.string);
+			(v, p_name, cnode->value.text.string);
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_deprintf(STP_DBG_XML, "  Set file '%s' to '%s' (%s)\n",
-				   p_name, child->value.text.string,
+				   p_name, cnode->value.text.string,
 				   stp_get_file_parameter(v, p_name));
 		    }
 		}
 	      else if (strcmp(p_type, "raw") == 0)
 		{
-		  if (child->type == STP_MXML_TEXT)
+		  if (cnode->type == STP_MXML_TEXT)
 		    {
-		      stp_raw_t *raw = stp_xmlstrtoraw(child->value.text.string);
+		      stp_raw_t *raw = stp_xmlstrtoraw(cnode->value.text.string);
 		      if (raw)
 			{
 			  stp_set_raw_parameter(v, p_name, raw->data,raw->bytes);
 			  type = STP_PARAMETER_TYPE_DOUBLE;
 			  stp_deprintf(STP_DBG_XML, "  Set raw '%s' to '%s'\n",
-				       p_name, child->value.text.string);
+				       p_name, cnode->value.text.string);
 			}
 		      stp_free((void *) raw->data);
 		      stp_free(raw);
@@ -1814,9 +1831,9 @@ stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
 	      else if (strcmp(p_type, "curve") == 0)
 		{
 		  stp_curve_t *curve;
-		  while (child->type == STP_MXML_TEXT && child->next)
-		    child = child->next;
-		  curve = stp_curve_create_from_xmltree(child);
+		  while (cnode->type == STP_MXML_TEXT && cnode->next)
+		    cnode = cnode->next;
+		  curve = stp_curve_create_from_xmltree(cnode);
 		  if (curve)
 		    {
 		      stp_set_curve_parameter(v, p_name, curve);
@@ -1825,7 +1842,7 @@ stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
 			{
 			  char *cv = stp_curve_write_string(curve);
 			  stp_deprintf(STP_DBG_XML, "  Set curve '%s' to '%s' (%s)\n",
-				       p_name, child->value.text.string, cv);
+				       p_name, cnode->value.text.string, cv);
 			  stp_free(cv);
 			}
 		      stp_curve_destroy(curve);
@@ -1834,15 +1851,15 @@ stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
 	      else if (strcmp(p_type, "array") == 0)
 		{
 		  stp_array_t *array;
-		  while (child->type == STP_MXML_TEXT && child->next)
-		    child = child->next;
-		  array = stp_array_create_from_xmltree(child);
+		  while (cnode->type == STP_MXML_TEXT && cnode->next)
+		    cnode = cnode->next;
+		  array = stp_array_create_from_xmltree(cnode);
 		  if (array)
 		    {
 		      type = STP_PARAMETER_TYPE_DOUBLE;
 		      stp_set_array_parameter(v, p_name, array);
 		      stp_deprintf(STP_DBG_XML, "  Set array '%s' to '%s'\n",
-				   p_name, child->value.text.string);
+				   p_name, cnode->value.text.string);
 		      stp_array_destroy(array);
 		    }
 		}
@@ -1889,11 +1906,32 @@ stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
 #endif
 }
 
+void
+stp_vars_fill_from_xmltree(stp_mxml_node_t *prop, stp_vars_t *v)
+{
+  fill_vars_from_xmltree(prop, NULL, v);
+}
+
 stp_vars_t *
 stp_vars_create_from_xmltree(stp_mxml_node_t *da)
 {
   stp_vars_t *v = stp_vars_create();
-  stp_vars_fill_from_xmltree(da, v);
+  fill_vars_from_xmltree(da, NULL, v);
+  return v;
+}
+
+void
+stp_vars_fill_from_xmltree_ref(stp_mxml_node_t *prop, stp_mxml_node_t *root,
+			       stp_vars_t *v)
+{
+  fill_vars_from_xmltree(prop, root, v);
+}
+
+stp_vars_t *
+stp_vars_create_from_xmltree_ref(stp_mxml_node_t *da, stp_mxml_node_t *root)
+{
+  stp_vars_t *v = stp_vars_create();
+  fill_vars_from_xmltree(da, root, v);
   return v;
 }
 
