@@ -341,7 +341,7 @@ load_shades(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
 }
 
 static void
-load_inklist(stp_mxml_node_t *node, inklist_t *ikl)
+load_inklist(stp_mxml_node_t *node, stp_mxml_node_t *root, inklist_t *ikl)
 {
   const char *name;
   stp_mxml_node_t *child = node->child;
@@ -369,9 +369,9 @@ load_inklist(stp_mxml_node_t *node, inklist_t *ikl)
       if (child->type == STP_MXML_ELEMENT)
 	{
 	  if (!strcmp(child->value.element.name, "InkName"))
-	    load_inkname(child, node, &(ikl->inknames[count++]));
+	    load_inkname(child, root, &(ikl->inknames[count++]));
 	  else if (!strcmp(child->value.element.name, "Shades"))
-	    load_shades(child, node, ikl);
+	    load_shades(child, root, ikl);
 	}
       child = child->next;
     }
@@ -420,7 +420,7 @@ load_inkgroup(const char *name)
 		{
 		  if (child->type == STP_MXML_ELEMENT &&
 		      !strcmp(child->value.element.name, "InkList"))
-		    load_inklist(child, &(igl->inklists[count++]));
+		    load_inklist(child, node, &(igl->inklists[count++]));
 		  child = child->next;
 		}
 	    }
