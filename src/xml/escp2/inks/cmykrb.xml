@@ -94,35 +94,35 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="r800_cyan" index="1">
-    <HueCurveParam name="CyanCurve"/>
+    <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykrbCyan"/>
     <subchannel color="2" headOffset="1">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_magenta" index="2">
-    <HueCurveParam name="MagentaCurve"/>
+    <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykrbMagenta"/>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_yellow" index="3">
-    <HueCurveParam name="YellowCurve"/>
+    <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykrbYellow"/>
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_red" index="4">
-    <HueCurveParam name="RedCurve"/>
+    <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykrbRed"/>
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_blue" index="5">
-    <HueCurveParam name="BlueCurve"/>
+    <HueCurveParam name="BlueHueCurve"/>
     <HueCurve ref="cmykrbBlue"/>
     <subchannel color="8" headOffset="1">
      <ChannelDensityParam name="BlueDensity"/>
@@ -141,35 +141,35 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYRBG" text="Five Color Photo Composite" InkID="OTHER">
   <Channels>
    <channel name="r800_cyan" index="1">
-    <HueCurveParam name="CyanCurve"/>
+    <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykrbCyan"/>
     <subchannel color="2" headOffset="1">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_magenta" index="2">
-    <HueCurveParam name="MagentaCurve"/>
+    <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykrbMagenta"/>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_yellow" index="3">
-    <HueCurveParam name="YellowCurve"/>
+    <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykrbYellow"/>
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_red" index="4">
-    <HueCurveParam name="RedCurve"/>
+    <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykrbRed"/>
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_blue" index="5">
-    <HueCurveParam name="BlueCurve"/>
+    <HueCurveParam name="BlueHueCurve"/>
     <HueCurve ref="cmykrbBlue"/>
     <subchannel color="8" headOffset="1">
      <ChannelDensityParam name="BlueDensity"/>
@@ -448,35 +448,35 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="r800_cyan" index="1">
-    <HueCurveParam name="CyanCurve"/>
+    <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykrbCyan"/>
     <subchannel color="2" headOffset="1">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_magenta" index="2">
-    <HueCurveParam name="MagentaCurve"/>
+    <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykrbMagenta"/>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_yellow" index="3">
-    <HueCurveParam name="YellowCurve"/>
+    <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykrbYellow"/>
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_red" index="4">
-    <HueCurveParam name="RedCurve"/>
+    <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykrbRed"/>
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_blue" index="5">
-    <HueCurveParam name="BlueCurve"/>
+    <HueCurveParam name="BlueHueCurve"/>
     <HueCurve ref="cmykrbBlue"/>
     <subchannel color="8" headOffset="1">
      <ChannelDensityParam name="BlueDensity"/>
@@ -488,35 +488,35 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYRB" text="Five Color Photo Composite" InkID="OTHER">
   <Channels>
    <channel name="r800_cyan" index="1">
-    <HueCurveParam name="CyanCurve"/>
+    <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykrbCyan"/>
     <subchannel color="2" headOffset="1">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_magenta" index="2">
-    <HueCurveParam name="MagentaCurve"/>
+    <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykrbMagenta"/>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_yellow" index="3">
-    <HueCurveParam name="YellowCurve"/>
+    <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykrbYellow"/>
     <subchannel color="4" headOffset="1">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_red" index="4">
-    <HueCurveParam name="RedCurve"/>
+    <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykrbRed"/>
     <subchannel color="7">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r800_blue" index="5">
-    <HueCurveParam name="BlueCurve"/>
+    <HueCurveParam name="BlueHueCurve"/>
     <HueCurve ref="cmykrbBlue"/>
     <subchannel color="8" headOffset="1">
      <ChannelDensityParam name="BlueDensity"/>

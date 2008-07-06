@@ -39,7 +39,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_cyan" index="1">
-    <HueCurveParam name="CyanCurve"/>
+    <HueCurveParam name="CyanHueCurve"/>
     <HueCurve>
     <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
      <sequence count="48" lower-bound="0" upper-bound="4">
@@ -57,7 +57,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_magenta" index="2">
-    <HueCurveParam name="MagentaCurve"/>
+    <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve>
     <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
      <sequence count="48" lower-bound="0" upper-bound="4">
@@ -75,7 +75,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_yellow" index="3">
-    <HueCurveParam name="YellowCurve"/>
+    <HueCurveParam name="YellowHueCurve"/>
     <HueCurve>
     <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
      <sequence count="48" lower-bound="0" upper-bound="4">
@@ -93,7 +93,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_red" index="4">
-    <HueCurveParam name="RedCurve"/>
+    <HueCurveParam name="RedHueCurve"/>
     <HueCurve>
     <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
      <sequence count="48" lower-bound="0" upper-bound="4">
@@ -111,7 +111,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="picturemate_blue" index="5">
-    <HueCurveParam name="BlueCurve"/>
+    <HueCurveParam name="BlueHueCurve"/>
     <HueCurve>
     <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
      <sequence count="48" lower-bound="0" upper-bound="4">
