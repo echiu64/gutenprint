@@ -18,6 +18,7 @@ my @special_options = ();
 my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave RawChannels PrintingDirection Density CyanDensity);
 my $global_status = 1;
 my $run_installed = 0;
+my $use_min_res = 0;
 my $output = undef;
 
 my @extras = ();
@@ -50,6 +51,7 @@ GetOptions("v+"  => \$valgrind,
 	   "s!"  => \$skip_duplicate_printers,
 	   "i!"  => \$run_installed,
 	   "r!"  => \$skip_resolutions,
+	   "R!"  => \$use_min_res,
 	   "q!"  => \$quiet,
 	   "o=s" => \@special_options,
 	   "f=s" => \@families,
@@ -408,7 +410,9 @@ sub do_printer($$) {
 			$first_time = 0;
 		    }
 		    set_opt("PrintingMode", $pmode, $printer);
-#		    set_opt("Resolution", $min_res_name, $printer);
+		    if ($use_min_res) {
+			set_opt("Resolution", $min_res_name, $printer);
+		    }
 		    my (@mvals);
 		    my (@ovals);
 		    map {
@@ -435,11 +439,14 @@ sub do_printer($$) {
 			}
 		    } keys %base_settings;
 		    my ($mstring) = join "_", @mvals;
-		    do_output("${printer}_PrintingMode_${pmode}_${mstring}");
 		    my ($ostring) = join "+", @ovals;
-		    set_message("    ${ostring}+${pmode}");
-#		    do_output("${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${key}_${opt}");
-#		    set_message("    ${key}=${opt}+${pmode}+${min_res_name}");
+		    if ($use_min_res) {
+			do_output("${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${mstring}");
+			set_message("    ${ostring}+${pmode}+${min_res_name}");
+		    } else {
+			do_output("${printer}_PrintingMode_${pmode}_${mstring}");
+			set_message("    ${ostring}+${pmode}");
+		    }
 		    my $output = print_one_testpattern($printer, $rawval);
 		    do_print( $output, $fh );
 		}
