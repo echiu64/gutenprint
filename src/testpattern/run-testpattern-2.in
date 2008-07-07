@@ -305,7 +305,7 @@ sub build_list($$) {
 	push @tmp, ($defv + $maxv) / 2.0;
 	push @tmp, $maxv;
     } elsif (defined($param_types{$printer}{$key})) {
-	@tmp = grep {$_ ne 'None' } keys %{$stpdata{$printer}{$key}};
+	@tmp = keys %{$stpdata{$printer}{$key}};
     }
     if (! @tmp) {
 	return @stuff;
