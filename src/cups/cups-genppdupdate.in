@@ -427,10 +427,10 @@ sub update_ppd ($) {
     }
     if ($locale) {
 	# Split into the language and territory.
-	($locale, $region) = split(/-/, $locale);
+	($locale, $region) = split(/_/, $locale);
     } else {
 	# Split into the language and territory.
-	($locale, $region) = split(/-/, $lingo);
+	($locale, $region) = split(/_/, $lingo);
 	# Convert language into language code.
 	$locale = $languagemappings{"\L$lingo"};
 	if (!defined($locale)) {
