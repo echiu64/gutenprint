@@ -1510,7 +1510,10 @@ get_inktype(const stp_vars_t *v)
       if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
 	return &(ink_list->inknames[i]);
     }
-  return NULL;
+  /*
+   * If even *that* doesn't work, try using the first ink type on the list.
+   */
+  return &(ink_list->inknames[0]);
 }
 
 static const stp_vars_t *
