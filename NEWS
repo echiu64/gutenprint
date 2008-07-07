@@ -108,11 +108,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Epson inkjet printers:
 
        B-308
-       Stylus Pro 7800 (preliminary)
-       Stylus Pro 7880 (preliminary)
-       Stylus Pro 9800 (preliminary)
-       Stylus Pro 9880 (preliminary)
-       Stylus Pro 11880 (preliminary)
+       Stylus Photo R1900 (preliminary)
+       Stylus Pro 7800 (experimental)
+       Stylus Pro 7880 (experimental)
+       Stylus Pro 9800 (experimental)
+       Stylus Pro 9880 (experimental)
+       Stylus Pro 11880 (experimental)
 
   2) The CUPS driver will no longer attempt to find a matching
      predefined page size when a custom page size is passed in.  This
@@ -122,7 +123,9 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      mm) due to a specific defined page size with those dimensions and
      tear-off borders.
 
-     The IJS driver has not been fixed at this time.
+     The Foomatic/IJS driver has been partially fixed; it will only
+     attempt to find a precise match.  We are investigating whether it
+     is possible to completely fix this driver.
 
   3) The remainder of the data in the Epson driver has been converted
      to files outside of the binary library, in XML format.  While
