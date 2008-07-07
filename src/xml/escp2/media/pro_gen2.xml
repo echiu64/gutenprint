@@ -21,8 +21,47 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:papers name="pro_gen2">
-<feature name="PaperThickness"/><feature name="VacuumIntensity"/><feature
-name="FeedAdjustment"/>
+<feature name="PaperThickness"/>
+<feature name="VacuumIntensity"/>
+<feature name="FeedAdjustment"/>
+<Curves>
+ <namedParam name="hue_map">
+  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+   <sequence count="48" lower-bound="-6" upper-bound="6">
+	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
+	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
+	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
+	-0.12	-0.07	-0.04	-0.02	0	0	0	0
+	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
+	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
+   </sequence>
+  </curve>
+ </namedParam>
+ <namedParam name="lum_map">
+  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+   <sequence count="48" lower-bound="0" upper-bound="4">
+	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
+	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
+	0.87	0.9	0.94	0.97	1	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1	1	0.99	0.98	0.97	0.95	0.93
+	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
+   </sequence>
+  </curve>
+ </namedParam>
+ <namedParam name="sat_map">
+  <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
+   <sequence count="48" lower-bound="0" upper-bound="4">
+	1.2	1.2	1.3	1.5	1.7	1.9	2	2
+	2	2	2	2	2	2	2	2
+	2	1.8	1.6	1.4	1.2	1	1	1
+	1	1	1	1	1	1	1	1
+	1	1.15	1.4	1.7	2	2.3	2.4	2.4
+	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
+   </sequence>
+  </curve>
+ </namedParam>
+</Curves>
 <paper translate="text" name="Plain" text="Plain Paper" class="plain">
  <parameter type="integer" name="PaperThickness">1</parameter>
  <parameter type="integer" name="VacuumIntensity">26</parameter>
@@ -40,42 +79,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -90,42 +96,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -146,42 +119,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -196,42 +136,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -252,42 +159,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -302,42 +176,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -358,42 +199,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -408,42 +216,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -464,42 +239,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -514,42 +256,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -570,42 +279,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -620,42 +296,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -676,42 +319,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -726,42 +336,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -782,42 +359,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -832,42 +376,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -888,42 +399,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -938,42 +416,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -994,42 +439,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1044,42 +456,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1100,42 +479,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">0.900000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1150,42 +496,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1206,42 +519,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1256,42 +536,9 @@ name="FeedAdjustment"/>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1313,42 +560,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">0.900000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1363,42 +577,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1420,42 +601,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">0.900000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1470,42 +618,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1526,42 +641,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">0.900000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1576,42 +658,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1633,42 +682,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1683,42 +699,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1739,42 +722,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1789,42 +739,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1845,42 +762,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -1895,42 +779,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 
@@ -1951,42 +802,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 
  <ink translate="text" name="quadtone" text="Quadtone">
@@ -2001,42 +819,9 @@ class="premium">
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
-  <parameter type="curve" name="HueMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="-6" upper-bound="6">
-	0	0	0	-0.02	-0.04	-0.08	-0.12	-0.16
-	-0.2	-0.24	-0.28	-0.32	-0.32	-0.32	-0.32	-0.32
-	-0.36	-0.4	-0.44	-0.48	-0.5	-0.45	-0.4	-0.3
-	-0.12	-0.07	-0.04	-0.02	0	0	0	0
-	0	0	-0.03	-0.06	-0.09	-0.13	-0.17	-0.21
-	-0.25	-0.22	-0.19	-0.16	-0.13	-0.1	-0.07	-0.03
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="LumMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	0.56	0.58	0.62	0.68	0.73	0.78	0.82	0.85
-	0.85	0.82	0.78	0.78	0.79	0.8	0.82	0.85
-	0.87	0.9	0.94	0.97	1	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1	1	0.99	0.98	0.97	0.95	0.93
-	0.9	0.76	0.65	0.58	0.58	0.57	0.56	0.56
-    </sequence>
-   </curve>
-  </parameter>
-  <parameter type="curve" name="SatMap">
-   <curve wrap="wrap" type="linear" gamma="0" piecewise="false">
-    <sequence count="48" lower-bound="0" upper-bound="4">
-	1.2	1.2	1.3	1.5	1.7	1.9	2	2
-	2	2	2	2	2	2	2	2
-	2	1.8	1.6	1.4	1.2	1	1	1
-	1	1	1	1	1	1	1	1
-	1	1.15	1.4	1.7	2	2.3	2.4	2.4
-	2.4	2.4	2.4	2.3	2	1.7	1.4	1.15
-    </sequence>
-   </curve>
-  </parameter>
+  <parameter type="curve" name="HueMap" ref="hue_map"/>
+  <parameter type="curve" name="LumMap" ref="lum_map"/>
+  <parameter type="curve" name="SatMap" ref="sat_map"/>
  </ink>
 </paper>
 </escp2:papers>

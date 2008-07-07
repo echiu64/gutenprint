@@ -34,20 +34,23 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="c120_black" index="0">
     <subchannel color="0" subchannel="4">
      <ChannelDensityParam name="BlackDensity"/>
-  <SplitChannels count="2">0 64</SplitChannels>
+     <SplitChannels count="2">0 64</SplitChannels>
     </subchannel>
    </channel>
    <channel name="c120_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="c120_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" headOffset="120">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="c120_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4" headOffset="240">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -58,16 +61,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="RGB" text="Three Color Composite" InkID="CMYK">
   <Channels>
    <channel name="c120_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="c120_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" headOffset="120">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="c120_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4" headOffset="240">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -80,7 +86,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="c120_black" index="0">
     <subchannel color="0" subchannel="4">
      <ChannelDensityParam name="BlackDensity"/>
-  <SplitChannels count="2">0 64</SplitChannels>
+     <SplitChannels count="2">0 64</SplitChannels>
     </subchannel>
    </channel>
   </Channels>
@@ -111,7 +117,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="c120_black" index="0">
     <subchannel color="0" subchannel="4">
      <ChannelDensityParam name="BlackDensity"/>
-  <SplitChannels count="2">0 64</SplitChannels>
+     <SplitChannels count="2">0 64</SplitChannels>
     </subchannel>
    </channel>
    <channel name="c120_cyan" index="1">

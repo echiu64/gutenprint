@@ -47,6 +47,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
      <SubchannelTransitionParam name="LightCyanTransition"/>
@@ -59,6 +60,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
      <SubchannelTransitionParam name="LightMagentaTransition"/>
@@ -71,6 +73,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4" subchannel="0">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -86,6 +89,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
      <SubchannelTransitionParam name="LightCyanTransition"/>
@@ -98,6 +102,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
      <SubchannelTransitionParam name="LightMagentaTransition"/>
@@ -110,6 +115,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4" subchannel="0">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -120,6 +126,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhotoCMY" text="Five Color Photo Composite" InkID="CcMmYK">
   <Channels>
    <channel name="photo_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
      <SubchannelTransitionParam name="LightCyanTransition"/>
@@ -132,6 +139,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
      <SubchannelTransitionParam name="LightMagentaTransition"/>
@@ -144,6 +152,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="photo_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4" subchannel="0">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -159,16 +168,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="standard_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
@@ -179,16 +191,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="RGB" text="Three Color Composite" InkID="CMYK">
   <Channels>
    <channel name="standard_cyan" index="1">
+    <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
+    <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_yellow" index="3">
+    <HueCurveParam name="YellowHueCurve"/>
     <subchannel color="4">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
