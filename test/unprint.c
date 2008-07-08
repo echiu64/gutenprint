@@ -141,10 +141,13 @@ seqcolor(int c)
     case 64:
       return 0;
     case 1:
+    case 65:
       return 1;
     case 2:
+    case 66:
       return 2;
     case 4:
+    case 68:
       return 3;
     case 17:
     case 257:
