@@ -876,7 +876,8 @@ else
   AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/${PACKAGE}/${GUTENPRINT_RELEASE_VERSION}/")
 fi
 
-AC_ARG_WITH(nickname, [--with-nickname="nickname suffix" Suffix to add to PPD NickName, default=" - CUPS+Gutenprint v"],
+AC_ARG_WITH(cups_nickname, [  --with-cups-nickname="nickname suffix"
+                          Suffix to add to PPD NickName, default=" - CUPS+Gutenprint v"],
   CUPS_PPD_NICKNAME_STRING="$withval",
   CUPS_PPD_NICKNAME_STRING=" - CUPS+Gutenprint v")
 

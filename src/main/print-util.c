@@ -541,7 +541,7 @@ stp_strdup(const char *s)
 const char *
 stp_set_output_codeset(const char *codeset)
 {
-#ifdef ENABLE_NLS
+#if defined(ENABLE_NLS) && !defined(__APPLE__)
   return (const char *)(bind_textdomain_codeset(PACKAGE, codeset));
 #else
   return "US-ASCII";
