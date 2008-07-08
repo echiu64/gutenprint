@@ -51,7 +51,21 @@ INCLUDE_LOCALE_H
 #include <locale.h>
 #endif
 
-#ifdef ENABLE_NLS
+#ifdef __APPLE__
+/** CoreFoundation supports localization on Mac OS X **/
+#    include <CoreFoundation/CoreFoundation.h>
+extern const char	*stp_cfgettext(const char *string);
+extern const char	*stp_setlocale(const char *loc);
+#    define textdomain(String) (String)
+#    define gettext(String) stp_cfgettext(String)
+#    define dgettext(Domain,String) stp_cfgettext(String)
+#    define dcgettext(Domain,String,Type) stp_cfgettext(String)
+#    define bindtextdomain(Domain,Directory) (Domain)
+#    define _(String) stp_cfgettext(String)
+#    define N_(String) (String)
+#elif defined(ENABLE_NLS)
+
+extern const char	*stp_setlocale(const char *loc);
 
 #include <libintl.h>
 #ifndef _

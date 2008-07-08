@@ -211,7 +211,7 @@ BUILD_CUPS_PPDS="${BUILD_CUPS}"
 BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
 BUILD_CUPS_1_2="no"
 if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
-  cups_version=`${CUPS_CONFIG} --version`
+  cups_version=`${CUPS_CONFIG} --version | sed -e '1,$s/svn$/.0/'`
 dnl Quote to protect sed regexes
   [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
   [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
@@ -799,6 +799,13 @@ STP_CUPS_PATH
 
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
+# Mac OS X doesn't have GNU gettext, so instead we'll use CoreFoundation to
+# localize Gutenprint...
+if test `uname` = Darwin; then
+	USE_NLS="macosx"
+	LIBS="-framework CoreFoundation $LIBS"
+fi
+
 # loadable modules
 # portable sh has no AND test...
 if test -n "$HAVE_LTDL_H"; then
@@ -869,8 +876,12 @@ else
   AC_DEFINE_UNQUOTED(CUPS_MODELDIR, "${cups_conf_datadir}/model/${PACKAGE}/${GUTENPRINT_RELEASE_VERSION}/")
 fi
 
+AC_ARG_WITH(nickname, [--with-nickname="nickname suffix" Suffix to add to PPD NickName, default=" - CUPS+Gutenprint v"],
+  CUPS_PPD_NICKNAME_STRING="$withval",
+  CUPS_PPD_NICKNAME_STRING=" - CUPS+Gutenprint v")
+
 AH_TEMPLATE(CUPS_PPD_NICKNAME_STRING,, [CUPS PPD Nickname string])
-AC_DEFINE_UNQUOTED(CUPS_PPD_NICKNAME_STRING, [" - CUPS+Gutenprint v"])
+AC_DEFINE_UNQUOTED(CUPS_PPD_NICKNAME_STRING, "$CUPS_PPD_NICKNAME_STRING")
 
 
 AC_DEFINE_UNQUOTED(CUPS_PPD_PS_LEVEL, ${CUPS_PPD_PS_LEVEL}, [CUPS PPD PostScript level])
@@ -1012,6 +1023,11 @@ if test "$BUILD_CUPS" != "no" ; then
 	echo "                        build incorrect PPD files or cause other problems."
 	echo "                        Please review the README and release notes carefully!"
 	warnings_emitted=1
+    fi
+    if test "x$cups_bundledir" = "x"; then
+        echo "        Install CUPS as bundle:                 no"
+    else
+        echo "        Install CUPS as bundle:                 yes, $cups_bundledir"
     fi
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"

@@ -187,31 +187,6 @@ static int	write_ppd(gzFile fp, const stp_printer_t *p,
 			  int simplified);
 
 #ifdef ENABLE_NLS
-
-typedef struct {
-  const char *lang;
-  const char *mapping;
-} locale_map;
-
-static const locale_map lang_mappings[] =
-  {
-    { "cs", "CS_CZ" },
-    { "da", "da_DK" },
-    { "de", "de_DE" },
-    { "el", "el_GR" },
-    { "es", "es_ES" },
-    { "fr", "fr_FR" },
-    { "hu", "hu_HU" },
-    { "ja", "ja_JP" },
-    { "nb", "nb_NO" },
-    { "nl", "nl_NL" },
-    { "pl", "pl_PL" },
-    { "pt", "pt_PT" },
-    { "sk", "sk_SK" },
-    { "sv", "sv_SE" },
-  };
-static int lang_map_count = sizeof(lang_mappings) / sizeof(locale_map);
-
 static const char *baselocaledir = PACKAGE_LOCALE_DIR;
 #endif
 
@@ -307,7 +282,7 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
     }
 
 #ifdef ENABLE_NLS
-  if (!lang || strcmp(lang, "C") != 0)
+  if (lang && strcmp(lang, "C") != 0)
     {
       while (*all_langs)
 	{
@@ -376,54 +351,26 @@ list_ppds(const char *argv0)		/* I - Name of program */
 	  !strcmp(stp_printer_get_family(printer), "raw"))
         continue;
 
-      printf("\"%s://%s/expert/%s\" "
+      printf("\"%s://%s/expert\" "
              "%s "
 	     "\"%s\" "
              "\"%s" CUPS_PPD_NICKNAME_STRING VERSION "\" "
 	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
-             scheme, stp_printer_get_driver(printer), "C",
+             scheme, stp_printer_get_driver(printer),
 	     "en",
 	     stp_printer_get_manufacturer(printer),
 	     stp_printer_get_long_name(printer));
 
 #ifdef GENERATE_SIMPLIFIED_PPDS
-      printf("\"%s://%s/simple/%s\" "
+      printf("\"%s://%s/simple\" "
              "%s "
 	     "\"%s\" "
              "\"%s" CUPS_PPD_NICKNAME_STRING VERSION " Simplified\" "
 	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
-             scheme, stp_printer_get_driver(printer), "C",
+             scheme, stp_printer_get_driver(printer),
 	     "en",
 	     stp_printer_get_manufacturer(printer),
 	     stp_printer_get_long_name(printer));
-#endif
-#if defined(ENABLE_NLS) && defined(CUPS_TRANSLATED_PPDS)
-      langptr = langs;
-      while (*langptr != 0 && strcmp(*langptr, "") != 0)
-	{
-	  printf("\"%s://%s/expert/%s\" "
-		 "%s "
-		 "\"%s\" "
-		 "\"%s" CUPS_PPD_NICKNAME_STRING VERSION "\" "
-		 "\"\"\n",		/* No IEEE-1284 Device ID yet */
-		 scheme, stp_printer_get_driver(printer), *langptr,
-		 *langptr,
-		 stp_printer_get_manufacturer(printer),
-		 stp_printer_get_long_name(printer));
-
-#ifdef GENERATE_SIMPLIFIED_PPDS
-	  printf("\"%s://%s/simple/%s\" "
-		 "%s "
-		 "\"%s\" "
-		 "\"%s" CUPS_PPD_NICKNAME_STRING VERSION " Simplified\" "
-		 "\"\"\n",		/* No IEEE-1284 Device ID yet */
-		 scheme, stp_printer_get_driver(printer), *langptr,
-		 *langptr,
-		 stp_printer_get_manufacturer(printer),
-		 stp_printer_get_long_name(printer));
-#endif
-	  langptr++;
-	}
 #endif
     }
 
@@ -874,31 +821,9 @@ getlangs(void)
 static void
 set_language(const char *lang)		/* I - Locale name */
 {
-  char *l = setlocale(LC_ALL, lang ? lang : "");
+  stp_setlocale(lang);
 
-  /* Make sure the locale we tried to set was accepted! */
-  if (lang && !l)
-    {
-      int i;
-      for (i = 0; i < lang_map_count; i++)
-	{
-	  const locale_map *lm = &(lang_mappings[i]);
-	  if (!strcmp(lang, lm->lang))
-	    {
-	      l = setlocale(LC_ALL, lm->mapping);
-	      if (l)
-		break;
-	    }
-	}
-    }
-
-#  ifdef LC_CTYPE
-  setlocale(LC_CTYPE, l ? l : "");
-#  endif /* LC_CTYPE */
-#  ifdef LC_NUMERIC
-  setlocale(LC_NUMERIC, "C");
-#  endif /* LC_NUMERIC */
-
+#  ifndef __APPLE__
  /*
   * Set up the catalog
   */
@@ -912,10 +837,10 @@ set_language(const char *lang)		/* I - Locale name */
       exit(EXIT_FAILURE);
     }
 
-#  ifdef DEBUG
+#    ifdef DEBUG
     fprintf(stderr, "DEBUG: bound textdomain: %s under %s\n",
 	    PACKAGE, baselocaledir);
-#  endif /* DEBUG */
+#    endif /* DEBUG */
 
     if ((textdomain(PACKAGE)) == NULL)
     {
@@ -924,12 +849,14 @@ set_language(const char *lang)		/* I - Locale name */
               PACKAGE, baselocaledir, strerror(errno));
       exit(EXIT_FAILURE);
     }
-#  ifdef DEBUG
+#    ifdef DEBUG
     fprintf(stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
-#  endif /* DEBUG */
+#    endif /* DEBUG */
   }
+#  endif /* !__APPLE__ */
 }
 #endif /* ENABLE_NLS */
+
 
 /*
  * 'is_special_option()' - Determine if an option should be grouped.
@@ -1041,7 +968,7 @@ write_ppd(
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*% PPD file for CUPS/Gutenprint.\n");
-  gzputs(fp, "*% Copyright 1993-2006 by Easy Software Products and Robert Krawitz.\n");
+  gzputs(fp, "*% Copyright 1993-2008 by Mike Sweet and Robert Krawitz.\n");
   gzputs(fp, "*% This program is free software; you can redistribute it and/or\n");
   gzputs(fp, "*% modify it under the terms of the GNU General Public License,\n");
   gzputs(fp, "*% version 2, as published by the Free Software Foundation.\n");
@@ -1080,13 +1007,13 @@ write_ppd(
  /*
   * The Product attribute specifies the string returned by the PostScript
   * interpreter.  The last one will appear in the CUPS "product" field,
-  * while all instances are available as attributes.
+  * while all instances are available as attributes.  Rather than listing
+  * the PostScript interpreters we might encounter, we instead just list
+  * a single product line with the "long name" to be compatible with other
+  * CUPS-based drivers. (This is a change from Gutenprint 5.0 and earlier)
   */
 
-  gzputs(fp, "*Product:	\"(AFPL Ghostscript)\"\n");
-  gzputs(fp, "*Product:	\"(GNU Ghostscript)\"\n");
-  gzputs(fp, "*Product:	\"(ESP Ghostscript)\"\n");
-  gzputs(fp, "*Product:	\"(GPL Ghostscript)\"\n");
+  gzprintf(fp, "*Product:	\"(%s)\"\n", long_name);
 
  /*
   * The ModelName attribute now provides the long name rather than the
@@ -1112,18 +1039,7 @@ write_ppd(
   if (cups_ppd_ps_level == 2)
     gzputs(fp, "*PSVersion:	\"(2017.000) 550\"\n");
   else
-    {
-      gzputs(fp, "*PSVersion:	\"(3010.000) 651\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 652\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 653\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 704\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 705\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 707\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 800\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 815\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 850\"\n");
-      gzputs(fp, "*PSVersion:	\"(3010.000) 81501\"\n");
-    }
+    gzputs(fp, "*PSVersion:	\"(3010.000) 0\"\n");
   gzprintf(fp, "*LanguageLevel:	\"%d\"\n", cups_ppd_ps_level);
 
   /* Set Job Mode to "Job" as this enables the Duplex option */
