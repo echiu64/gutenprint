@@ -2413,11 +2413,9 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "PrintingMode") == 0)
     {
-      const inkname_t *ink_name = get_inktype(v);
       description->bounds.str = stp_string_list_create();
-      if (!ink_name || ink_name->inkset != INKSET_QUADTONE)
-	stp_string_list_add_string
-	  (description->bounds.str, "Color", _("Color"));
+      stp_string_list_add_string
+	(description->bounds.str, "Color", _("Color"));
       stp_string_list_add_string
 	(description->bounds.str, "BW", _("Black and White"));
       description->deflt.str =
@@ -4013,6 +4011,11 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
     pd->use_aux_channels = 1;
   else
     pd->use_aux_channels = 0;
+  if (pd->inkname && pd->inkname->inkset == INKSET_QUADTONE)
+    {
+      stp_eprintf(v, "Warning: Quadtone inkset only available in MONO\n");
+      stp_set_string_parameter(v, "PrintingMode", "BW");
+    }
   pd->channels_in_use = count_channels(pd->inkname, pd->use_aux_channels);
 
   setup_basic(v);
