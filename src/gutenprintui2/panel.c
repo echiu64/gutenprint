@@ -261,6 +261,7 @@ static void set_printer_defaults (void);
 static void redraw_color_swatch (void);
 static void color_update (GtkAdjustment *adjustment);
 static void dimension_update (GtkAdjustment *adjustment);
+static void integer_update (GtkAdjustment *adjustment);
 static void set_controls_active (GtkObject *checkbutton, gpointer optno);
 static void update_adjusted_thumbnail (gboolean regenerate_image);
 
@@ -882,6 +883,7 @@ populate_options(const stp_vars_t *v)
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	    case STP_PARAMETER_TYPE_DIMENSION:
+	    case STP_PARAMETER_TYPE_INT:
 	      if (opt->info.flt.adjustment)
 		{
 		  gtk_widget_destroy
@@ -967,6 +969,14 @@ populate_options(const stp_vars_t *v)
 	      opt->info.flt.adjustment = NULL;
 	      opt->info.flt.upper = desc.bounds.dimension.upper;
 	      opt->info.flt.lower = desc.bounds.dimension.lower;
+	      opt->info.flt.deflt = desc.deflt.dimension;
+	      opt->info.flt.scale = 1.0;
+	      opt->is_active = desc.is_active;
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      opt->info.flt.adjustment = NULL;
+	      opt->info.flt.upper = desc.bounds.integer.upper;
+	      opt->info.flt.lower = desc.bounds.integer.lower;
 	      opt->info.flt.deflt = desc.deflt.dimension;
 	      opt->info.flt.scale = 1.0;
 	      opt->is_active = desc.is_active;
@@ -1057,6 +1067,7 @@ populate_option_table(GtkWidget *table, int p_class)
 	    {
 	    case STP_PARAMETER_TYPE_STRING_LIST:
 	    case STP_PARAMETER_TYPE_DIMENSION:
+	    case STP_PARAMETER_TYPE_INT:
 	    case STP_PARAMETER_TYPE_DOUBLE:
 	    case STP_PARAMETER_TYPE_CURVE:
 	    case STP_PARAMETER_TYPE_BOOLEAN:
@@ -1182,6 +1193,25 @@ populate_option_table(GtkWidget *table, int p_class)
 		stp_set_dimension_parameter_active(pv->v, desc->name,
 						   STP_PARAMETER_INACTIVE);
 	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      add_reset_button(opt, table, 4, vpos[desc->p_level][desc->p_type]);
+	      stpui_create_scale_entry(opt, GTK_TABLE(table), 0,
+				       vpos[desc->p_level][desc->p_type]++,
+				       gettext(desc->text), 200, 0,
+				       opt->info.flt.deflt,
+				       opt->info.flt.lower,
+				       opt->info.flt.upper,
+				       1, 10, 0, TRUE, 0, 0, NULL,
+				       !(desc->is_mandatory));
+	      stpui_set_adjustment_tooltip(opt->info.flt.adjustment,
+					   gettext(desc->help));
+	      g_signal_connect(G_OBJECT(opt->info.flt.adjustment),
+			       "value_changed",
+			       G_CALLBACK(integer_update), opt);
+	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
+		stp_set_int_parameter_active(pv->v, desc->name,
+					     STP_PARAMETER_INACTIVE);
+	      break;
 	    case STP_PARAMETER_TYPE_CURVE:
 	      xcurve = stp_get_curve_parameter(pv->v, opt->fast_desc->name);
 	      if (xcurve)
@@ -1208,10 +1238,6 @@ populate_option_table(GtkWidget *table, int p_class)
 	      if (desc->p_level > MAXIMUM_PARAMETER_LEVEL)
 		stp_set_boolean_parameter_active(pv->v, desc->name,
 						 STP_PARAMETER_INACTIVE);
-	      break;
-	    case STP_PARAMETER_TYPE_INT:
-	      stp_set_int_parameter_active(pv->v, opt->fast_desc->name,
-					   STP_PARAMETER_INACTIVE);
 	      break;
 	    case STP_PARAMETER_TYPE_RAW:
 	      stp_set_raw_parameter_active(pv->v, opt->fast_desc->name,
@@ -1259,6 +1285,7 @@ set_options_active(const char *omit)
 	  break;
 	case STP_PARAMETER_TYPE_DOUBLE:
 	case STP_PARAMETER_TYPE_DIMENSION:
+	case STP_PARAMETER_TYPE_INT:
 	  adj = opt->info.flt.adjustment;
 	  if (adj)
 	    {
@@ -3083,6 +3110,21 @@ do_color_updates (void)
 		}
 	      if (stp_check_dimension_parameter(pv->v, opt->fast_desc->name,
 						STP_PARAMETER_ACTIVE) ||
+		  opt->fast_desc->is_mandatory)
+		set_adjustment_active(opt, TRUE, TRUE);
+	      else
+		set_adjustment_active(opt, FALSE, TRUE);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      if (stp_check_int_parameter(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_INACTIVE))
+		{
+		  gtk_adjustment_set_value
+		  (GTK_ADJUSTMENT(opt->info.flt.adjustment),
+		   (stp_get_int_parameter(pv->v, opt->fast_desc->name)));
+		}
+	      if (stp_check_int_parameter(pv->v, opt->fast_desc->name,
+					  STP_PARAMETER_ACTIVE) ||
 		  opt->fast_desc->is_mandatory)
 		set_adjustment_active(opt, TRUE, TRUE);
 	      else
@@ -5205,6 +5247,30 @@ dimension_update (GtkAdjustment *adjustment)
 }
 
 static void
+integer_update (GtkAdjustment *adjustment)
+{
+  int i;
+  for (i = 0; i < current_option_count; i++)
+    {
+      option_t *opt = &(current_options[i]);
+      if (opt->fast_desc->p_type == STP_PARAMETER_TYPE_INT &&
+	  opt->fast_desc->p_level <= MAXIMUM_PARAMETER_LEVEL &&
+	  opt->info.flt.adjustment &&
+	  adjustment == GTK_ADJUSTMENT(opt->info.flt.adjustment))
+	{
+	  invalidate_preview_thumbnail ();
+	  if (stp_get_int_parameter(pv->v, opt->fast_desc->name) !=
+	      (int) adjustment->value)
+	    {
+	      stp_set_int_parameter(pv->v, opt->fast_desc->name,
+				    (int) adjustment->value);
+	      update_adjusted_thumbnail(FALSE);
+	    }
+	}
+    }
+}
+
+static void
 set_controls_active (GtkObject *checkbutton, gpointer xopt)
 {
   option_t *opt = (option_t *) xopt;
@@ -5231,7 +5297,7 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	case STP_PARAMETER_TYPE_DIMENSION:
 	  set_adjustment_active(opt, TRUE, FALSE);
 	  if (! stp_check_dimension_parameter(pv->v, opt->fast_desc->name,
-					  STP_PARAMETER_INACTIVE))
+					      STP_PARAMETER_INACTIVE))
 	    {
 	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
 	      stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
@@ -5240,6 +5306,19 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	    }
 	  stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
 					     STP_PARAMETER_ACTIVE);
+	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  set_adjustment_active(opt, TRUE, FALSE);
+	  if (! stp_check_int_parameter(pv->v, opt->fast_desc->name,
+					    STP_PARAMETER_INACTIVE))
+	    {
+	      stp_describe_parameter(pv->v, opt->fast_desc->name, &desc);
+	      stp_set_int_parameter(pv->v, opt->fast_desc->name,
+				    desc.deflt.integer);
+	      stp_parameter_description_destroy(&desc);
+	    }
+	  stp_set_int_parameter_active(pv->v, opt->fast_desc->name,
+				       STP_PARAMETER_ACTIVE);
 	  break;
 	case STP_PARAMETER_TYPE_CURVE:
 	  set_curve_active(opt, TRUE, FALSE);
@@ -5303,6 +5382,11 @@ set_controls_active (GtkObject *checkbutton, gpointer xopt)
 	  stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
 					     STP_PARAMETER_INACTIVE);
 	  break;
+	case STP_PARAMETER_TYPE_INT:
+	  set_adjustment_active(opt, FALSE, FALSE);
+	  stp_set_int_parameter_active(pv->v, opt->fast_desc->name,
+				       STP_PARAMETER_INACTIVE);
+	  break;
 	case STP_PARAMETER_TYPE_CURVE:
 	  set_curve_active(opt, FALSE, FALSE);
 	  stp_set_curve_parameter_active(pv->v, opt->fast_desc->name,
@@ -5340,39 +5424,39 @@ set_one_default(option_t *opt)
     {
     case STP_PARAMETER_TYPE_DOUBLE:
       active = stp_get_float_parameter_active(pv->v, opt->fast_desc->name);
-      stp_set_float_parameter(pv->v, opt->fast_desc->name,
-			      opt->info.flt.deflt);
-      stp_set_float_parameter_active(pv->v, opt->fast_desc->name,
-				     active);
+      stp_set_float_parameter(pv->v, opt->fast_desc->name, opt->info.flt.deflt);
+      stp_set_float_parameter_active(pv->v, opt->fast_desc->name, active);
       break;
     case STP_PARAMETER_TYPE_DIMENSION:
       unit_scaler = units[pv->unit].scale;
-      active = stp_get_dimension_parameter_active(pv->v,
-					   opt->fast_desc->name);
+      active = stp_get_dimension_parameter_active(pv->v, opt->fast_desc->name);
       stp_set_dimension_parameter(pv->v, opt->fast_desc->name,
 				  opt->info.flt.deflt * unit_scaler);
-      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name,
-					 active);
+      stp_set_dimension_parameter_active(pv->v, opt->fast_desc->name, active);
+      break;
+    case STP_PARAMETER_TYPE_INT:
+      unit_scaler = units[pv->unit].scale;
+      active = stp_get_int_parameter_active(pv->v, opt->fast_desc->name);
+      stp_set_int_parameter(pv->v, opt->fast_desc->name,
+			    (int) opt->info.flt.deflt);
+      stp_set_int_parameter_active(pv->v, opt->fast_desc->name, active);
       break;
     case STP_PARAMETER_TYPE_BOOLEAN:
       active = stp_get_boolean_parameter_active(pv->v, opt->fast_desc->name);
       stp_set_boolean_parameter(pv->v, opt->fast_desc->name,
 				opt->info.bool.deflt);
-      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name,
-				       active);
+      stp_set_boolean_parameter_active(pv->v, opt->fast_desc->name, active);
       break;
     case STP_PARAMETER_TYPE_STRING_LIST:
       active = stp_get_string_parameter_active(pv->v, opt->fast_desc->name);
       stp_set_string_parameter(pv->v, opt->fast_desc->name,
 			       opt->info.list.default_val);
-      stp_set_string_parameter_active(pv->v, opt->fast_desc->name,
-				      active);
+      stp_set_string_parameter_active(pv->v, opt->fast_desc->name, active);
       break;
     case STP_PARAMETER_TYPE_FILE:
       active = stp_get_file_parameter_active(pv->v, opt->fast_desc->name);
       stp_set_file_parameter(pv->v, opt->fast_desc->name, "");
-      stp_set_file_parameter_active(pv->v, opt->fast_desc->name,
-				    active);
+      stp_set_file_parameter_active(pv->v, opt->fast_desc->name, active);
       break;
     default:
       break;
