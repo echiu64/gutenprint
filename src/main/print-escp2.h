@@ -541,6 +541,7 @@ typedef struct
   int extra_720dpi_separation;	/* Special separation needed at 720 DPI */
   int bidirectional_upper_limit; /* Max total resolution for auto-bidi */
   int duplex;
+  int extra_vertical_feed;	/* Extra vertical feed */
 
   /* weave parameters */
   int horizontal_passes;	/* Number of horizontal passes required

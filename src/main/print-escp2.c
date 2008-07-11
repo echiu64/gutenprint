@@ -3598,6 +3598,10 @@ setup_head_parameters(stp_vars_t *v)
       else
 	pd->duplex = 0;
     }
+  if (pd->duplex)
+    pd->extra_vertical_feed = 0;
+  else
+    pd->extra_vertical_feed = escp2_extra_feed(v);
 
   if (strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") == 0 &&
       pd->physical_channels == 1)
@@ -3689,6 +3693,13 @@ setup_page(stp_vars_t *v)
     {
       pd->paper_extra_bottom = 0;
       pd->page_extra_height = 0;
+    }
+  else if (stp_escp2_printer_supports_duplex(v) && !pd->duplex)
+    {
+      pd->paper_extra_bottom = escp2_paper_extra_bottom(v);
+      pd->page_extra_height =
+	max_nozzle_span(v) * pd->page_management_units /
+	escp2_base_separation(v);
     }
   else
     {
@@ -3946,7 +3957,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      ((pd->page_extra_height * pd->res->vres / pd->vertical_units) +
       (pd->image_top * pd->res->vres / 72)),
      (pd->page_extra_height +
-      (pd->page_height + escp2_extra_feed(v)) * pd->res->vres / 72),
+      (pd->page_height + pd->extra_vertical_feed) * pd->res->vres / 72),
      pd->head_offset,
      weave_pattern,
      stpi_escp2_flush_pass,
