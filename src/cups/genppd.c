@@ -84,22 +84,14 @@ static const char *gzext = "";
 #include <gutenprint/gutenprint-intl.h>
 
 /*
- * Some of the Gutenprint resolution names are not PPD-compliant.
- * In Gutenprint 5.0, use the legacy names with the CUPS 1.1 interface
- * for back compatibility.  With CUPS 1.2, or Gutenprint 5.1 or above,
- * generate compliant names.
- *
- * As of Gutenprint 5.0.2 and 5.1.4, *always* use the compliant names.
- * OS X Leopard seems to be very unhappy if there are invalid resolution
- * names.  We've added a mapping between the invalid names and the
- * valid names so that genppdupdate knows how to translate the names.
+ * Some applications use the XxYdpi tags rather than the actual
+ * hardware resolutions to decide what resolution to print at.  Some
+ * applications get very unhappy if the vertical resolution exceeds
+ * a certain amount.  Some of those applications even get very happy if
+ * the PPD file even contains a resolution that exceeds that limit.
+ * Feh.
  */
-
-#if 0
-#if defined(CUPS_DRIVER_INTERFACE) || (STP_MAJOR_VERSION > 5) || (STP_MAJOR_VERSION == 5 && STP_MINOR_VERSION > 0)
-#define USE_COMPLIANT_RESOLUTIONS 1
-#endif
-#endif
+#define MAXIMUM_SAFE_PPD_RESOLUTION (720)
 
 /*
  * Note:
@@ -1457,6 +1449,8 @@ write_ppd(
 	  stp_clear_string_parameter(v, "Quality");
 	  tmp_xdpi = xdpi;
 	  tmp_ydpi = ydpi;
+	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_RESOLUTION)
+	    tmp_ydpi /= 2;
 	  if (tmp_ydpi > tmp_xdpi)
 	    tmp_ydpi = tmp_xdpi;
 	  else
@@ -1467,7 +1461,7 @@ write_ppd(
 	     excess resolution.  However, make the hardware resolution
 	     match the printer default.
 	  */
-	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_xdpi + 1);
+	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
 	  stp_string_list_add_string(res_list, res_name, res_name);
 	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
 	  gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
@@ -1511,6 +1505,8 @@ write_ppd(
 	  resolution_ok = 0;
 	  tmp_xdpi = xdpi;
 	  tmp_ydpi = ydpi;
+	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_RESOLUTION)
+	    tmp_ydpi /= 2;
 	  do
 	    {
 	      if (tmp_xdpi == tmp_ydpi)
@@ -1523,7 +1519,11 @@ write_ppd(
 		  resolution_ok = 1;
 		  stp_string_list_add_string(res_list, res_name, res_name);
 		}
-	      else if (tmp_ydpi > tmp_xdpi)
+	      else if (tmp_ydpi > tmp_xdpi &&
+		       tmp_ydpi <= MAXIMUM_SAFE_PPD_RESOLUTION)
+		/* Note that we're incrementing the *higher* resolution.
+		   This will generate less aliasing, and apps that convert
+		   down to a square resolution will do the right thing. */
 		tmp_ydpi++;
 	      else
 		tmp_xdpi++;

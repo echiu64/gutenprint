@@ -473,7 +473,7 @@ sub update_ppd ($) {
 
     seek(ORIG, 0, 0);
 
-    my ($odt, $oopt, $ores, $odef) = get_ppd_data(ORIG, 1, 0, 0, 1, 0);
+    my ($odt, $oopt, $ores, $odef) = get_ppd_data(ORIG, 1, 0, 1, 1, 0);
     my ($ndt, $nopt, $nres, $ndef, $source_data) = get_ppd_data($source_fd, 1, 1, 1, 1, 1);
 
     # Close original and temporary files...
@@ -490,6 +490,7 @@ sub update_ppd ($) {
     my %new_defaults = %$ndef;
     my %options = %$nopt;
     my %resolution_map = %$nres;
+    my %old_resolution_map = reverse %$ores;
 
     if ($debug & 4) {
 	print "Options (Old->New Default Type):\n";
@@ -516,7 +517,13 @@ sub update_ppd ($) {
 	if (keys %resolution_map) {
 	    print "Resolution Map:\n";
 	    foreach (sort keys %resolution_map) {
-		print "$_: $resolution_map{$_}\n";
+		print "   $_: $resolution_map{$_}\n";
+	    }
+	}
+	if (keys %old_resolution_map) {
+	    print "Old Resolution Map:\n";
+	    foreach (sort keys %old_resolution_map) {
+		print "   $_: $old_resolution_map{$_}\n";
 	    }
 	}
 	print "Non-UI Defaults:\n";
@@ -574,10 +581,18 @@ default_loop:
 		# Check the old setting is valid
 		foreach my $opt (@{$options{$option}}) {
 		    my $def_option = $default_option_value;
+		    if ($option eq "Resolution" &&
+			defined $old_resolution_map{$def_option}) {
+			if ($debug & 4) {
+			    print "Intermapping old resolution $def_option to $old_resolution_map{$def_option}\n";
+			}
+			$def_option = $old_resolution_map{$def_option};
+		    }
+
 		    if (($def_option eq $opt) ||
 			($option eq "Resolution" &&
-			 (defined $resolution_map{$default_option_value}) &&
-			 ($def_option = $resolution_map{$default_option_value}) eq $opt)) { # Valid option
+			 (defined $resolution_map{$def_option}) &&
+			 ($def_option = $resolution_map{$def_option}) eq $opt)) { # Valid option
 			# Set the option in the new PPD
 			$source_data =~ s/\*($default_option).*/*$1:$def_option/m;
 			if ($verbose) {
