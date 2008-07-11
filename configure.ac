@@ -1027,10 +1027,12 @@ if test "$BUILD_CUPS" != "no" ; then
 	echo "                        Please review the README and release notes carefully!"
 	warnings_emitted=1
     fi
-    if test "x$cups_bundledir" = "x"; then
-        echo "        Install CUPS as bundle:                 no"
-    else
-        echo "        Install CUPS as bundle:                 yes, $cups_bundledir"
+    if test "`uname`" = Darwin ; then
+        if "x$cups_bundledir" = "x"; then
+	    echo "        Install CUPS as bundle:                 no"
+	else
+	    echo "        Install CUPS as bundle:                 yes, $cups_bundledir"
+	fi
     fi
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
@@ -1055,7 +1057,7 @@ echo "    Build EPSON Stylus utility:                 $BUILD_ESCPUTIL"
 echo "    Build test programs:                        $BUILD_TEST"
 echo "    Build testpattern generator:                $BUILD_TESTPATTERN"
 echo
-echo "Installation summary:"
+echo "  Installation summary:"
 echo "    Installation prefix:                        $prefix"
 echo "    Data directory:                             $PACKAGE_DATA_DIR"
 echo "    Library directory:                          $PACKAGE_LIB_DIR"
@@ -1063,7 +1065,7 @@ echo "    XML data directory:                         $PKGXMLDATADIR"
 echo "    Module directory:                           $PKGMODULEDIR"
 echo "    Install sample images:                      $INSTALL_SAMPLES"
 echo
-echo "General configuration:"
+echo "  General configuration:"
 if test x$ac_compiler_gnu = "xyes"; then
     echo "    Compiler options:                           $CFLAGS $GNUCFLAGS"
 else
