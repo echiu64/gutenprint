@@ -93,7 +93,7 @@ stp_setlocale(const char *lang)		/* I - Locale name or "" for default */
   return (lang);
 }
 
-#elif defined(ENABLE_NLS)
+#elif defined(ENABLE_NLS)	/* __APPLE__ */
 typedef struct {
   const char *lang;
   const char *mapping;
