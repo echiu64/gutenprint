@@ -354,12 +354,13 @@ escp2_set_printhead_speed(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const char *direction = stp_get_string_parameter(v, "PrintingDirection");
-  int unidirectional;
+  int unidirectional = -1;
   if (direction && strcmp(direction, "Unidirectional") == 0)
     unidirectional = 1;
   else if (direction && strcmp(direction, "Bidirectional") == 0)
     unidirectional = 0;
-  else if (pd->res->printed_hres * pd->res->printed_vres *
+  else if (pd->bidirectional_upper_limit >= 0 &&
+	   pd->res->printed_hres * pd->res->printed_vres *
 	   pd->res->vertical_passes >= pd->bidirectional_upper_limit)
     {
       stp_dprintf(STP_DBG_ESCP2, v,
@@ -371,7 +372,7 @@ escp2_set_printhead_speed(stp_vars_t *v)
 		  pd->bidirectional_upper_limit);
       unidirectional = 1;
     }
-  else
+  else if (pd->bidirectional_upper_limit >= 0)
     {
       stp_dprintf(STP_DBG_ESCP2, v,
 		  "Setting bidirectional: hres %d vres %d passes %d total %d limit %d\n",
@@ -382,13 +383,13 @@ escp2_set_printhead_speed(stp_vars_t *v)
 		  pd->bidirectional_upper_limit);
       unidirectional = 0;
     }
-  if (unidirectional)
+  if (unidirectional == 1)
     {
       stp_send_command(v, "\033U", "c", 1);
       if (pd->res->hres > pd->physical_xdpi)
 	stp_send_command(v, "\033(s", "bc", 2);
     }
-  else
+  else if (unidirectional == 0)
     stp_send_command(v, "\033U", "c", 0);
 }
 
