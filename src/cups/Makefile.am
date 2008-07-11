@@ -121,7 +121,8 @@ PPD_NLS_1 = ppd-nls
 endif
 
 
-## Rules
+if MACOSX
+## Rules for OS X
 # Override the default install targets that automake creates, since we need
 # to handle "normal" and "bundled" installs.
 #
@@ -193,6 +194,10 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	    ./po2strings $$file "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj/Localizable.strings"; \
 	  done \
 	fi
+
+# Use the default automake rules for non-OS X
+endif
+
 uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 # Remove PPDs installed in new PPD location
 	if test -z "DONT_UNINSTALL_PPDS" ; then \

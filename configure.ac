@@ -799,9 +799,11 @@ STP_CUPS_PATH
 
 AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
+AM_CONDITIONAL(MACOSX, test "`uname`" = Darwin)
+
 # Mac OS X doesn't have GNU gettext, so instead we'll use CoreFoundation to
 # localize Gutenprint...
-if test `uname` = Darwin; then
+if test "`uname`" = Darwin; then
 	USE_NLS="macosx"
 	LIBS="-framework CoreFoundation $LIBS"
 fi
