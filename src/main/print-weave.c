@@ -1155,10 +1155,10 @@ stp_initialize_weave(stp_vars_t *v,
 	      sw->ncolors, sw->bitwidth, linewidth, sw->horizontal_width,
 	      sw->vertical_height, first_line, last_line, maxHeadOffset);
   stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
-	      "      oversample %d line buffer count %d total buffer %d\n",
+	      "      oversample %d line buffer count %d total buffer %d, page_height %d\n",
 	      sw->oversample, sw->vmod,
 	      sw->vmod * sw->virtual_jets * sw->bitwidth *
-	      sw->ncolors * sw->horizontal_width);
+	      sw->ncolors * sw->horizontal_width, page_height);
   stp_allocate_component_data(v, "Weave", NULL, stpi_destroy_weave, sw);
   return;
 }
