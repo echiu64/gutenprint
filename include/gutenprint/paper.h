@@ -140,7 +140,7 @@ extern const stp_papersize_t *stp_get_papersize_by_index(int idx);
  * The default is derived from the PageSize parameter if set, otherwise
  * the default page size for the printer is used.  If no value can be
  * determined, 1x1 will be returned.
- * @param vars the Gutenprint vars object
+ * @param v the Gutenprint vars object
  * @param width pointer to storage that the width will be returned in.
  * @param height pointer to storage that the height will be returned in.
  */
