@@ -44,6 +44,9 @@ stp_cfgettext(const char *string)	/* I - Original English string */
   const char	*locstring;		/* Localized UTF-8 string */
 
 
+  if (!string)
+    return (NULL);
+
   if ((cfstring = CFStringCreateWithCString(NULL, string, kCFStringEncodingUTF8)) == NULL)
     return (string);
 
