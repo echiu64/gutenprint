@@ -1028,7 +1028,7 @@ if test "$BUILD_CUPS" != "no" ; then
 	warnings_emitted=1
     fi
     if test "`uname`" = Darwin ; then
-        if "x$cups_bundledir" = "x"; then
+        if test "x$cups_bundledir" = "x"; then
 	    echo "        Install CUPS as bundle:                 no"
 	else
 	    echo "        Install CUPS as bundle:                 yes, $cups_bundledir"
