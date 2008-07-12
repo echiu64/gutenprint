@@ -1399,7 +1399,7 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->name = param->name;
       desc->text = gettext(param->text);
       desc->category = gettext(param->category);
-      desc->help = gettext(param->help);
+      desc->help = param->help ? gettext(param->help) : NULL;
       return;
     }
 }
