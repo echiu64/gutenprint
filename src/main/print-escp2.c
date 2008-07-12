@@ -1547,21 +1547,32 @@ escp2_list_parameters(const stp_vars_t *v)
 static void
 set_density_parameter(const stp_vars_t *v,
 		      stp_parameter_t *description,
-		      int color)
+		      const char *name)
 {
+  const inkname_t *ink_name = get_inktype(v);
   description->is_active = 0;
-  if (stp_get_string_parameter(v, "PrintingMode") &&
+  if (ink_name && stp_get_string_parameter(v, "PrintingMode") &&
       strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
-      const inkname_t *ink_name = get_inktype(v);
-      if (ink_name &&
-	  ink_name->channel_count > color &&
-	  ink_name->channels[color].n_subchannels > 0)
+      int i, j;
+      for (i = 0; i < ink_name->channel_count; i++)
 	{
-	  description->is_active = 1;
-	  description->bounds.dbl.lower = 0;
-	  description->bounds.dbl.upper = 2.0;
-	  description->deflt.dbl = 1.0;
+	  ink_channel_t *ich = &(ink_name->channels[i]);
+	  if (ich)
+	    {
+	      for (j = 0; j < ich->n_subchannels; j++)
+		{
+		  physical_subchannel_t *sch = &(ich->subchannels[j]);
+		  if (sch && sch->channel_density &&
+		      !strcmp(name, sch->channel_density))
+		    {
+		      description->is_active = 1;
+		      description->bounds.dbl.lower = 0;
+		      description->bounds.dbl.upper = 2.0;
+		      description->deflt.dbl = 1.0;
+		    }
+		}
+	    }
 	}
     }
 }
@@ -1569,23 +1580,24 @@ set_density_parameter(const stp_vars_t *v,
 static void
 set_hue_map_parameter(const stp_vars_t *v,
 		      stp_parameter_t *description,
-		      int color)
+		      const char *name)
 {
+  const inkname_t *ink_name = get_inktype(v);
   description->is_active = 0;
   description->deflt.curve = hue_curve_bounds;
   description->bounds.curve = stp_curve_create_copy(hue_curve_bounds);
-  if (stp_get_string_parameter(v, "PrintingMode") &&
+  if (ink_name && stp_get_string_parameter(v, "PrintingMode") &&
       strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
-      const inkname_t *ink_name = get_inktype(v);
-      if (ink_name &&
-	  ink_name->channel_count > color &&
-	  ink_name->channels[color].n_subchannels > 0 &&
-	  ink_name->channels[color].hue_curve)
+      int i;
+      for (i = 0; i < ink_name->channel_count; i++)
 	{
-	  description->deflt.curve =
-	    ink_name->channels[color].hue_curve;
-	  description->is_active = 1;
+	  ink_channel_t *ich = &(ink_name->channels[i]);
+	  if (ich && ich->hue_curve && !strcmp(name, ich->hue_curve_name))
+	    {
+	      description->deflt.curve = ich->hue_curve;
+	      description->is_active = 1;
+	    }
 	}
     }
 }
@@ -2251,32 +2263,21 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       else
 	description->is_active = 0;
     }
-  else if (strcmp(name, "CyanDensity") == 0)
-    set_density_parameter(v, description, STP_ECOLOR_C);
-  else if (strcmp(name, "MagentaDensity") == 0)
-    set_density_parameter(v, description, STP_ECOLOR_M);
-  else if (strcmp(name, "YellowDensity") == 0)
-    set_density_parameter(v, description, STP_ECOLOR_Y);
-  else if (strcmp(name, "BlackDensity") == 0)
-    set_density_parameter(v, description, STP_ECOLOR_K);
-  else if (strcmp(name, "RedDensity") == 0)
-    set_density_parameter(v, description, XCOLOR_R);
-  else if (strcmp(name, "BlueDensity") == 0)
-    set_density_parameter(v, description, XCOLOR_B);
-  else if (strcmp(name, "OrangeDensity") == 0)
-    set_density_parameter(v, description, XCOLOR_B);
-  else if (strcmp(name, "CyanHueCurve") == 0)
-    set_hue_map_parameter(v, description, STP_ECOLOR_C);
-  else if (strcmp(name, "MagentaHueCurve") == 0)
-    set_hue_map_parameter(v, description, STP_ECOLOR_M);
-  else if (strcmp(name, "YellowHueCurve") == 0)
-    set_hue_map_parameter(v, description, STP_ECOLOR_Y);
-  else if (strcmp(name, "RedHueCurve") == 0)
-    set_hue_map_parameter(v, description, XCOLOR_R);
-  else if (strcmp(name, "BlueHueCurve") == 0)
-    set_hue_map_parameter(v, description, XCOLOR_B);
-  else if (strcmp(name, "OrangeHueCurve") == 0)
-    set_hue_map_parameter(v, description, XCOLOR_B);
+  else if (strcmp(name, "CyanDensity") == 0 ||
+	   strcmp(name, "MagentaDensity") == 0 ||
+	   strcmp(name, "YellowDensity") == 0 ||
+	   strcmp(name, "BlackDensity") == 0 ||
+	   strcmp(name, "RedDensity") == 0 ||
+	   strcmp(name, "BlueDensity") == 0 ||
+	   strcmp(name, "OrangeDensity") == 0)
+    set_density_parameter(v, description, name);
+  else if (strcmp(name, "CyanHueCurve") == 0 ||
+	   strcmp(name, "MagentaHueCurve") == 0 ||
+	   strcmp(name, "YellowHueCurve") == 0 ||
+	   strcmp(name, "RedHueCurve") == 0 ||
+	   strcmp(name, "BlueHueCurve") == 0 ||
+	   strcmp(name, "OrangeHueCurve") == 0)
+    set_hue_map_parameter(v, description, name);
   else if (strcmp(name, "UseGloss") == 0)
     {
       const inkname_t *ink_name = get_inktype(v);
