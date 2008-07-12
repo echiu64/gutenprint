@@ -254,7 +254,7 @@ ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 	  echo "$$language:" ; \
 	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l $$language -p ppd/$$language -c `pwd`/catalog/share/locale ; \
 	done
-	$(RM) -r catalog
+	-$(RM) -r catalog
 
 dist-hook:
 	for dir in commands ; do \
