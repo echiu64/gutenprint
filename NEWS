@@ -108,7 +108,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      * Epson inkjet printers:
 
        B-308
-       Stylus Photo R1900 (preliminary)
+       Stylus Photo R1900 (preliminary, further tuning expected)
        Stylus Pro 7800 (experimental)
        Stylus Pro 7880 (experimental)
        Stylus Pro 9800 (experimental)
@@ -143,6 +143,28 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   7) Print quality has been improved on Epson PictureMate printers
      with 4-color inks.
+
+  8) Certain legacy applications (most notably Microsoft Office) did
+     not print correctly on printers capable of high resolution, due
+     to inability to handle the specified resolutions.  This release
+     works around that issue by not advertising very high resolutions
+     in a way that these applications will fail on.
+
+  9) Print quality has been improved somewhat on the Epson B-300 and
+     related printers.
+
+  10) The GIMP plugin now offers additional options for certain
+     printers.
+
+  11) Color Correction is now shown on the basic output adjustment
+     menu rather than the advanced menu.
+
+  12) Epson printers will now correctly handle color output if
+     quadtone inks are in use by printing in grayscale even though
+     color is specified.
+
+  13) The Epson Stylus Photo R800 now works properly.  It was broken
+     in 5.2.0-beta2.
 
 
 * CHANGES FROM GUTENPRINT 5.2.0-BETA2:
