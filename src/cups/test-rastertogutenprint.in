@@ -14,6 +14,7 @@ fi
 
 single=''
 all_models=''
+verbose=''
 
 usage() {
     echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
@@ -28,6 +29,7 @@ set_args() {
 	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=`expr $valgrind + 1` ;;
 	    -c|--cachegrind) valopts='--tool=cachegrind'; valgrind=4 ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
+	    -V|--verbose) verbose=1 ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -35,7 +37,7 @@ set_args() {
     done
 }
 
-set_args `getopt vcgs "$@"`
+set_args `getopt vcgsV "$@"`
 
 version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 cupsdir="@cups_conf_serverbin@/filter"
@@ -50,8 +52,10 @@ if [ ! -x "$cupsdir/cgpdftoraster" -a ! -x "$cupsdir/pdftops" ] ; then
     exit 0
 fi
 
-STP_SUPPRESS_MESSAGES=1
-export STP_SUPPRESS_MESSAGES
+if [ -z "$verbose" ] ; then
+    STP_SUPPRESS_MESSAGES=1
+    export STP_SUPPRESS_MESSAGES
+fi
 
 is_duplicate() {
     model=`gunzip -c "$1" | grep '^.StpDriverModelFamily' | awk '{print $2}'`
