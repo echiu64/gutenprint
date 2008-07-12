@@ -1397,7 +1397,17 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->verify_this_parameter = param->verify_this_parameter;
       desc->read_only = param->read_only;
       desc->name = param->name;
+      if (!(param->text))
+	{
+	  stp_erprintf("No text string for parameter %s!\n", desc->name);
+	  stp_abort();
+	}
       desc->text = gettext(param->text);
+      if (!(param->category))
+	{
+	  stp_erprintf("No category string for parameter %s!\n", desc->name);
+	  stp_abort();
+	}
       desc->category = gettext(param->category);
       desc->help = param->help ? gettext(param->help) : NULL;
       return;
