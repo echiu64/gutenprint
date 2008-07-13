@@ -327,10 +327,6 @@ list_ppds(const char *argv0)		/* I - Name of program */
   const char		*scheme;	/* URI scheme */
   int			i;		/* Looping var */
   const stp_printer_t	*printer;	/* Pointer to printer driver */
-#if defined(ENABLE_NLS) && defined(CUPS_TRANSLATED_PPDS)
-  char **langs = getlangs();
-  char **langptr;
-#endif
 
   if ((scheme = strrchr(argv0, '/')) != NULL)
     scheme ++;
