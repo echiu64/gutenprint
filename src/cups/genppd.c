@@ -91,7 +91,8 @@ static const char *gzext = "";
  * the PPD file even contains a resolution that exceeds that limit.
  * Feh.
  */
-#define MAXIMUM_SAFE_PPD_RESOLUTION (720)
+#define MAXIMUM_SAFE_PPD_Y_RESOLUTION (720)
+#define MAXIMUM_SAFE_PPD_X_RESOLUTION (1500)
 
 /*
  * Note:
@@ -1448,8 +1449,10 @@ write_ppd(
 	  stp_describe_resolution(v, &xdpi, &ydpi);
 	  stp_clear_string_parameter(v, "Quality");
 	  tmp_xdpi = xdpi;
+	  while (tmp_xdpi > MAXIMUM_SAFE_PPD_X_RESOLUTION)
+	    tmp_xdpi /= 2;
 	  tmp_ydpi = ydpi;
-	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_RESOLUTION)
+	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
 	    tmp_ydpi /= 2;
 	  if (tmp_ydpi > tmp_xdpi)
 	    tmp_ydpi = tmp_xdpi;
@@ -1504,8 +1507,10 @@ write_ppd(
 
 	  resolution_ok = 0;
 	  tmp_xdpi = xdpi;
+	  while (tmp_xdpi > MAXIMUM_SAFE_PPD_X_RESOLUTION)
+	    tmp_xdpi /= 2;
 	  tmp_ydpi = ydpi;
-	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_RESOLUTION)
+	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
 	    tmp_ydpi /= 2;
 	  do
 	    {
@@ -1520,13 +1525,15 @@ write_ppd(
 		  stp_string_list_add_string(res_list, res_name, res_name);
 		}
 	      else if (tmp_ydpi > tmp_xdpi &&
-		       tmp_ydpi <= MAXIMUM_SAFE_PPD_RESOLUTION)
+		       tmp_ydpi < MAXIMUM_SAFE_PPD_Y_RESOLUTION)
 		/* Note that we're incrementing the *higher* resolution.
 		   This will generate less aliasing, and apps that convert
 		   down to a square resolution will do the right thing. */
 		tmp_ydpi++;
-	      else
+	      else if (tmp_xdpi < MAXIMUM_SAFE_PPD_X_RESOLUTION)
 		tmp_xdpi++;
+	      else
+		tmp_xdpi /= 2;
 	    } while (!resolution_ok);
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		   res_name, opt->text, xdpi, ydpi, i + 1);
