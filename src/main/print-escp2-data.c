@@ -414,8 +414,6 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
     }
 }
 
-static int printer_is_loading = 0;
-
 stpi_escp2_printer_t *
 stp_escp2_get_printer(const stp_vars_t *v)
 {

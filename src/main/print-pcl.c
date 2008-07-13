@@ -37,7 +37,6 @@
 #include <string.h>
 
 /* #define DEBUG */
-/* #define PCL_DEBUG_DISABLE_COMPRESSION */
 /* #define PCL_DEBUG_DISABLE_BLANKLINE_REMOVAL */
 
 /*
@@ -2498,13 +2497,12 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     }
   }
 
-#ifndef PCL_DEBUG_DISABLE_COMPRESSION
-  if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
+  if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF &&
+      !(stp_get_debug_level() & STP_DBG_NO_COMPRESSION))
   {
     stp_puts("\033*b2M", v);			/* Mode 2 (TIFF) */
   }
   else
-#endif
   {
     stp_puts("\033*b0M", v);			/* Mode 0 (no compression) */
   }
@@ -2615,14 +2613,13 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
 /* Allocate buffer for pcl_mode2 tiff compression */
 
-#ifndef PCL_DEBUG_DISABLE_COMPRESSION
-  if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF)
+  if ((caps->stp_printer_type & PCL_PRINTER_TIFF) == PCL_PRINTER_TIFF &&
+      !(stp_get_debug_level() & STP_DBG_NO_COMPRESSION))
   {
     privdata.comp_buf = stp_malloc((privdata.height + 128 + 7) * 129 / 128);
     privdata.writefunc = pcl_mode2;
   }
   else
-#endif
   {
     privdata.comp_buf = NULL;
     privdata.writefunc = pcl_mode0;

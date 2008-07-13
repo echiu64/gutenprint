@@ -3755,7 +3755,7 @@ setup_page(stp_vars_t *v)
 	 pd->horizontal_passes);
       pd->split_channel_width = (pd->split_channel_width + 7) / 8;
       pd->split_channel_width *= pd->bitwidth;
-      if (COMPRESSION)
+      if (!(stp_get_debug_level() & STP_DBG_NO_COMPRESSION))
 	{
 	  pd->comp_buf =
 	    stp_malloc(stp_compute_tiff_linewidth(v, pd->split_channel_width));
@@ -3962,9 +3962,15 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      pd->head_offset,
      weave_pattern,
      stpi_escp2_flush_pass,
-     FILLFUNC,
-     PACKFUNC,
-     COMPUTEFUNC);
+     (((stp_get_debug_level() & STP_DBG_NO_COMPRESSION) ||
+       pd->split_channel_count > 0) ?
+      stp_fill_uncompressed : stp_fill_tiff),
+     (((stp_get_debug_level() & STP_DBG_NO_COMPRESSION) ||
+       pd->split_channel_count > 0) ?
+      stp_pack_uncompressed : stp_pack_tiff),
+     (((stp_get_debug_level() & STP_DBG_NO_COMPRESSION) ||
+       pd->split_channel_count > 0) ?
+      stp_compute_uncompressed_linewidth : stp_compute_tiff_linewidth));
 
   stp_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
 		  pd->res->printed_vres);
@@ -4023,7 +4029,8 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
     pd->use_aux_channels = 1;
   else
     pd->use_aux_channels = 0;
-  if (pd->inkname && pd->inkname->inkset == INKSET_QUADTONE)
+  if (pd->inkname && pd->inkname->inkset == INKSET_QUADTONE &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
       stp_eprintf(v, "Warning: Quadtone inkset only available in MONO\n");
       stp_set_string_parameter(v, "PrintingMode", "BW");

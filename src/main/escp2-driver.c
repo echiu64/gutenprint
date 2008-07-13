@@ -539,7 +539,8 @@ send_print_command(stp_vars_t *v, stp_pass_t *pass, int ncolor, int nlines)
   if (pd->command_set == MODEL_COMMAND_PRO || pd->variable_dots)
     {
       int nwidth = pd->bitwidth * ((lwidth + 7) / 8);
-      stp_send_command(v, "\033i", "ccchh", ncolor, COMPRESSION,
+      stp_send_command(v, "\033i", "ccchh", ncolor,
+		       (stp_get_debug_level() & STP_DBG_NO_COMPRESSION) ? 0 : 1,
 		       pd->bitwidth, nwidth, nlines);
     }
   else
@@ -557,8 +558,9 @@ send_print_command(stp_vars_t *v, stp_pass_t *pass, int ncolor, int nlines)
 	ygap *= pd->pseudo_separation_rows;
       else
 	ygap *= pd->separation_rows;
-      stp_send_command(v, "\033.", "cccch", COMPRESSION, ygap, xgap, nlines,
-		       lwidth);
+      stp_send_command(v, "\033.", "cccch",
+		       (stp_get_debug_level() & STP_DBG_NO_COMPRESSION) ? 0 : 1,
+		       ygap, xgap, nlines, lwidth);
     }
 }
 
@@ -692,7 +694,7 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 			{
 			  int sp = (l * sc) + k;
 			  unsigned long offset = sp * pd->split_channel_width;
-			  if (COMPRESSION)
+			  if (!(stp_get_debug_level() & STP_DBG_NO_COMPRESSION))
 			    {
 			      unsigned char *comp_ptr;
 			      stp_pack_tiff(v, bufs->v[j] + offset,
