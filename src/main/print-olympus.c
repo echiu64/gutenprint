@@ -147,6 +147,7 @@ typedef struct
   const char* pagesize;
   const laminate_t* laminate;
   int print_mode;
+  char nputc_buf[4096];
 } dyesub_privdata_t;
 
 static dyesub_privdata_t privdata;
@@ -2167,9 +2168,24 @@ dyesub_describe_output(const stp_vars_t *v)
 static void
 dyesub_nputc(stp_vars_t *v, char byte, int count)
 {
-  int i;
-  for (i = 0; i < count; i++)
+  if (count == 1)
     stp_putc(byte, v);
+  else
+    {
+      int i;
+      char *buf = privdata.nputc_buf;
+      int size = count;
+      int blocks = size / 4096;
+      int leftover = size % 4096;
+      if (size > 4096)
+	size = count;
+      (void) memset(buf, byte, size);
+      if (blocks)
+	for (i = 0; i < blocks; i++)
+	  stp_zfwrite(buf, size, 1, v);
+      if (leftover)
+	stp_zfwrite(buf, leftover, 1, v);
+    }
 }
 
 static void
