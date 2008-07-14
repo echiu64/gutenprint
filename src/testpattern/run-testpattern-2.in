@@ -6,7 +6,7 @@ Getopt::Long::Configure("bundling", "no_ignore_case", "pass_through");
 use strict;
 
 my $valgrind = 0;
-my $cachegrind = 0;
+my $callgrind = 0;
 my $gdb_attach = 0;
 my $calc_md5_file = undef;
 my $calc_md5_dir = undef;
@@ -44,7 +44,7 @@ my %param_levels;
 my %stp_float_values;
 
 GetOptions("v+"  => \$valgrind,
-	   "c"   => \$cachegrind,
+	   "c"   => \$callgrind,
 	   "g"   => \$gdb_attach,
 	   "n"   => \$dontrun,
 	   "p:i" => \$std_pages,
@@ -461,8 +461,8 @@ if ($dontrun) {
 } else {
     my $valgrind_command;
     my $valopts;
-    if ($cachegrind) {
-	$valopts = '--tool=cachegrind';
+    if ($callgrind) {
+	$valopts = '--tool=callgrind --dump-instr=yes --trace-jump=yes';
 	$valgrind = 4;
     } elsif ($valgrind) {
 	$valopts = '--tool=memcheck';
