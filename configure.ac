@@ -934,6 +934,12 @@ AC_SUBST(PLUG_IN_PATH)
 AC_SUBST(WHICH_PPDS)
 AC_SUBST(BUILD_CUPS_PPDS)
 
+dnl Optional architecture options to be applied after all autoconf tests
+dnl are done...
+AC_ARG_WITH(archflags, [  --with-archflags="..."  additional options for CFLAGS and LDFLAGS],
+    CFLAGS="$CFLAGS $withval"
+    LDFLAGS="$LDFLAGS $withval")
+
 dnl Output files
 
 AC_CONFIG_FILES([Makefile])
