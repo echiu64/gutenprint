@@ -93,16 +93,41 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 	      stp_mxml_node_t *child = tmp->child;
 	      const char *val = child->value.text.string;
 	      if (!strcmp(name, "verticalBorderlessSequence"))
-		p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
-
+		{
+		  if (p->vertical_borderless_sequence)
+		    {
+		      stp_erprintf("Reassigning vertical borderless sequence for model %d\n", model);
+		      stp_abort();
+		    }
+		  p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
+		}
 	      else if (!strcmp(name, "preinitSequence"))
-		p->preinit_sequence = stp_xmlstrtoraw(val);
-
+		{
+		  if (p->preinit_sequence)
+		    {
+		      stp_erprintf("Reassigning pre-init sequence for model %d\n", model);
+		      stp_abort();
+		    }
+		  p->preinit_sequence = stp_xmlstrtoraw(val);
+		}
 	      else if (!strcmp(name, "preinitRemoteSequence"))
-		p->preinit_remote_sequence = stp_xmlstrtoraw(val);
-
+		{
+		  if (p->preinit_remote_sequence)
+		    {
+		      stp_erprintf("Reassigning pre-init remote sequence for model %d\n", model);
+		      stp_abort();
+		    }
+		  p->preinit_remote_sequence = stp_xmlstrtoraw(val);
+		}
 	      else if (!strcmp(name, "postinitRemoteSequence"))
-		p->postinit_remote_sequence = stp_xmlstrtoraw(val);
+		{
+		  if (p->postinit_remote_sequence)
+		    {
+		      stp_erprintf("Reassigning post-init remote sequence for model %d\n", model);
+		      stp_abort();
+		    }
+		  p->postinit_remote_sequence = stp_xmlstrtoraw(val);
+		}
 	      else if (!strcmp(name, "commandSet"))
 		{
 		  if (!strcmp(val, "1998"))

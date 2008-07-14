@@ -368,31 +368,45 @@ typedef struct cooked {
 	int *stagger_postmap;
 } cooked_t;
 
+typedef struct startmap {
+  int startrow;
+  int map;
+  int pos;			/* Secondary key for stable sort */
+} startmap_t;
+
+static int
+smap_compare(const void *p1, const void *p2)
+{
+  const startmap_t *s1 = (const startmap_t *)p1;
+  const startmap_t *s2 = (const startmap_t *)p2;
+  if (s1->startrow < s2->startrow)
+    return -1;
+  else if (s1->startrow > s2->startrow)
+    return 1;
+  else if (s1->pos < s2->pos)
+    return -1;
+  else
+    return 1;
+}
+
 static void
 sort_by_start_row(int *map, int *startrows, int count)
 {
-	/*
-	 * Yes, it's a bubble sort, but we do it no more than 4 times
-	 * per page, and we are only sorting a small number of items.
-	 */
-
-	int dirty;
-
-	do {
-		int x;
-		dirty = 0;
-		for (x = 1; x < count; x++) {
-			if (startrows[x - 1] > startrows[x]) {
-				int temp = startrows[x - 1];
-				startrows[x - 1] = startrows[x];
-				startrows[x] = temp;
-				temp = map[x - 1];
-				map[x - 1] = map[x];
-				map[x] = temp;
-				dirty = 1;
-			}
-		}
-	} while (dirty);
+  startmap_t *smap = stp_malloc(sizeof(startmap_t) * count);
+  int i;
+  for (i = 0; i < count; i++)
+    {
+      smap[i].startrow = startrows[i];
+      smap[i].map = map[i];
+      smap[i].pos = i;
+    }
+  qsort(smap, count, sizeof(startmap_t), smap_compare);
+  for (i = 0; i < count; i++)
+    {
+      startrows[i] = smap[i].startrow;
+      map[i] = smap[i].map;
+    }
+  stp_free(smap);
 }
 
 static void
