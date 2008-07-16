@@ -165,6 +165,7 @@ typedef struct {
   int imgh_px, imgw_px;
   int prnh_px, prnw_px, prnt_px, prnb_px, prnl_px, prnr_px;
   int print_mode;	/* portrait or landscape */
+  int image_rows;
 } dyesub_print_vars_t;
 
 typedef struct /* printer specific parameters */
@@ -2236,9 +2237,10 @@ dyesub_interpolate(int oldval, int oldsize, int newsize)
 }
 
 static void
-dyesub_free_image(unsigned short** image_data, stp_image_t *image)
+dyesub_free_image(dyesub_print_vars_t *pv, stp_image_t *image)
 {
-  int image_px_height = stp_image_height(image);
+  unsigned short** image_data = pv->image_data;
+  int image_px_height = pv->image_rows;
   int i;
 
   for (i = 0; i< image_px_height; i++)
@@ -2261,6 +2263,7 @@ dyesub_read_image(stp_vars_t *v,
   int i;
 
   image_data = stp_zalloc(image_px_height * sizeof(unsigned short *));
+  pv->image_rows = 0;
   if (!image_data)
     return NULL;	/* ? out of memory ? */
 
@@ -2271,16 +2274,17 @@ dyesub_read_image(stp_vars_t *v,
 	  stp_deprintf(STP_DBG_DYESUB,
 	  	"dyesub_read_image: "
 		"stp_color_get_row(..., %d, ...) == 0\n", i);
-	  dyesub_free_image(image_data, image);
+	  dyesub_free_image(pv, image);
 	  return NULL;
 	}	
       image_data[i] = stp_malloc(row_size);
+      pv->image_rows = i+1;
       if (!image_data[i])
         {
 	  stp_deprintf(STP_DBG_DYESUB,
 	  	"dyesub_read_image: "
 		"(image_data[%d] = stp_malloc()) == NULL\n", i);
-	  dyesub_free_image(image_data, image);
+	  dyesub_free_image(pv, image);
 	  return NULL;
 	}	
       memcpy(image_data[i], stp_channel_get_output(v), row_size);
@@ -2556,7 +2560,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   dyesub_adjust_curve(v, caps->adj_yellow, "YellowCurve");
   stp_set_float_parameter(v, "Density", 1.0);
 
-
   if (dyesub_feature(caps, DYESUB_FEATURE_FULL_HEIGHT))
     {
       pv.prnt_px = 0;
@@ -2627,7 +2630,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   /* printer end */
   dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
-  dyesub_free_image(pv.image_data, image);
+  dyesub_free_image(&pv, image);
   return status;
 }
 
