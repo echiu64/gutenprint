@@ -50,8 +50,10 @@ stp_cfgettext(const char *string)	/* I - Original English string */
   if ((cfstring = CFStringCreateWithCString(NULL, string, kCFStringEncodingUTF8)) == NULL)
     return (string);
 
-  cflocstring = CFCopyLocalizedString(cfstring, NULL);
-  locstring   = CFStringGetCStringPtr(cflocstring, kCFStringEncodingUTF8);
+  if ((cflocstring = CFCopyLocalizedString(cfstring, NULL)) == NULL)
+    return (string);
+
+  locstring = CFStringGetCStringPtr(cflocstring, kCFStringEncodingUTF8);
   CFRelease(cfstring);
 
   return (locstring ? locstring : string);
