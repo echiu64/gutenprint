@@ -137,6 +137,8 @@ typedef struct {
   size_t n_items;
 } laminate_list_t;
 
+#define NPUTC_BUFSIZE (4096)
+
 typedef struct
 {
   int w_dpi, h_dpi;
@@ -147,7 +149,7 @@ typedef struct
   const char* pagesize;
   const laminate_t* laminate;
   int print_mode;
-  char nputc_buf[4096];
+  char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
 static dyesub_privdata_t privdata;
@@ -2176,10 +2178,10 @@ dyesub_nputc(stp_vars_t *v, char byte, int count)
       int i;
       char *buf = privdata.nputc_buf;
       int size = count;
-      int blocks = size / 4096;
-      int leftover = size % 4096;
-      if (size > 4096)
-	size = count;
+      int blocks = size / NPUTC_BUFSIZE;
+      int leftover = size % NPUTC_BUFSIZE;
+      if (size > NPUTC_BUFSIZE)
+	size = NPUTC_BUFSIZE;
       (void) memset(buf, byte, size);
       if (blocks)
 	for (i = 0; i < blocks; i++)
@@ -2289,8 +2291,6 @@ dyesub_read_image(stp_vars_t *v,
 	}	
       memcpy(image_data[i], stp_channel_get_output(v), row_size);
     }
-  stp_image_conclude(image);
-
   return image_data;
 }
 
@@ -2469,6 +2469,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
       return 0;
     }
+  (void) memset(&pv, 0, sizeof(pv));
 
   stp_image_init(image);
   pv.imgw_px = stp_image_width(image);
@@ -2551,7 +2552,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.plane_interlacing = dyesub_feature(caps, DYESUB_FEATURE_PLANE_INTERLACE);
   pv.print_mode = page_mode;
   if (!pv.image_data)
-      return 2;	
+    {
+      stp_image_conclude(image);
+      return 2;
+    }
   /* /FIXME */
 
 
@@ -2631,6 +2635,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   dyesub_exec(v, caps->printer_end_func, "caps->printer_end");
 
   dyesub_free_image(&pv, image);
+  stp_image_conclude(image);
   return status;
 }
 
