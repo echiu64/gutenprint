@@ -63,7 +63,7 @@ static stp_image_t theImage =
   Image_conclude,
   NULL
 };
-stp_vars_t *global_vars;
+stp_vars_t *global_vars = NULL;
 
 double global_levels[STP_CHANNEL_LIMIT];
 double global_gammas[STP_CHANNEL_LIMIT];
