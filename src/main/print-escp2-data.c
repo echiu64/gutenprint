@@ -53,7 +53,7 @@ static const escp2_printer_attr_t escp2_printer_attrs[] =
 
 static stpi_escp2_printer_t *escp2_model_capabilities;
 
-static int escp2_model_limit = 0;
+static int escp2_model_count = 0;
 
 static void
 load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
@@ -452,16 +452,16 @@ stp_escp2_get_printer(const stp_vars_t *v)
     {
       escp2_model_capabilities =
 	stp_zalloc(sizeof(stpi_escp2_printer_t) * (model + 1));
-      escp2_model_limit = model;
+      escp2_model_count = model + 1;
     }
-  else if (model > escp2_model_limit)
+  else if (model >= escp2_model_count)
     {
       escp2_model_capabilities =
 	stp_realloc(escp2_model_capabilities,
 		    sizeof(stpi_escp2_printer_t) * (model + 1));
-      (void) memset(escp2_model_capabilities + escp2_model_limit, 0,
-		    sizeof(stpi_escp2_printer_t) * (model + 1 - escp2_model_limit));
-      escp2_model_limit = model;
+      (void) memset(escp2_model_capabilities + escp2_model_count, 0,
+		    sizeof(stpi_escp2_printer_t) * (model + 1 - escp2_model_count));
+      escp2_model_count = model + 1;
     }
   if (!(escp2_model_capabilities[model].active))
     {
