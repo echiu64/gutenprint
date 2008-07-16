@@ -51,11 +51,13 @@ static stp_image_status_t Image_get_row(stp_image_t *image,
 					unsigned char *data,
 					size_t byte_limit, int row);
 static int Image_height(stp_image_t *image);
+static void Image_reset(stp_image_t *image);
 static int Image_width(stp_image_t *image);
+static int Image_is_valid = 0;
 static stp_image_t theImage =
 {
   Image_init,
-  NULL,				/* reset */
+  Image_reset,
   Image_width,
   Image_height,
   Image_get_row,
@@ -1018,6 +1020,11 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 	      size_t byte_limit, int row)
 {
   int depth = global_channel_depth;
+  if (! Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_get_row with invalid image!\n");
+      abort();
+    }
   if (static_testpatterns[0].type == E_IMAGE)
     {
       testpattern_t *t = &(static_testpatterns[0]);
@@ -1070,6 +1077,11 @@ Image_get_row(stp_image_t *image, unsigned char *data,
 static int
 Image_width(stp_image_t *image)
 {
+  if (! Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_width with invalid image!\n");
+      abort();
+    }
   if (static_testpatterns[0].type == E_IMAGE)
     return static_testpatterns[0].d.image.x;
   else
@@ -1079,6 +1091,11 @@ Image_width(stp_image_t *image)
 static int
 Image_height(stp_image_t *image)
 {
+  if (! Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_height with invalid image!\n");
+      abort();
+    }
   if (static_testpatterns[0].type == E_IMAGE)
     return static_testpatterns[0].d.image.y;
   else
@@ -1088,12 +1105,35 @@ Image_height(stp_image_t *image)
 static void
 Image_init(stp_image_t *image)
 {
+  if (Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_init with already valid image!\n");
+      abort();
+    }
+  Image_is_valid = 1;
+ /* dummy function */
+}
+
+static void
+Image_reset(stp_image_t *image)
+{
+  if (!Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_reset with invalid image!\n");
+      abort();
+    }
  /* dummy function */
 }
 
 static void
 Image_conclude(stp_image_t *image)
 {
+  if (! Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_conclude with invalid image!\n");
+      abort();
+    }
+  Image_is_valid = 0;
   if (!global_quiet)
     fprintf(stderr, "\n");
 }
@@ -1101,5 +1141,10 @@ Image_conclude(stp_image_t *image)
 static const char *
 Image_get_appname(stp_image_t *image)
 {
+  if (! Image_is_valid)
+    {
+      fprintf(stderr, "Calling Image_get_appname with invalid image!\n");
+      abort();
+    }
   return "Test Pattern";
 }
