@@ -34,6 +34,7 @@ my $skip_duplicate_printers = 0;
 my $std_pages = 1;
 my $skip_resolutions = 0;
 my $quiet = 0;
+my $single = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -49,9 +50,10 @@ GetOptions("v+"  => \$valgrind,
 	   "n"   => \$dontrun,
 	   "p:i" => \$std_pages,
 	   "s!"  => \$skip_duplicate_printers,
+	   "S!"  => \$single,
 	   "i!"  => \$run_installed,
 	   "r!"  => \$skip_resolutions,
-	   "R!"  => \$use_min_res,
+	   "R+"  => \$use_min_res,
 	   "q!"  => \$quiet,
 	   "o=s" => \@special_options,
 	   "f=s" => \@families,
@@ -336,17 +338,8 @@ sub do_printer($$) {
     my $min_res_name;
     my $min_res_value = 0;
     my $first_time = 1;
-    my $model_id = $models{$printer};
-    my $family_id = $families{$printer};
     my $key;
     my %opt_vals = {};
-    if ($skip_duplicate_printers && $models_found{$family_id}{$model_id}) {
-	return;
-    } elsif (@families && ! grep { $family_id eq $_ } @families) {
-	return;
-    } else {
-	$models_found{$family_id}{$model_id} = 1;
-    }
     $tmp = $stpdata{$printer}{'Resolution'};
     my (@resolutions) = grep {$_ ne 'None' } keys %$tmp;
     $tmp = $stpdata{$printer}{'PrintingMode'};
@@ -365,6 +358,9 @@ sub do_printer($$) {
 	    $min_res_value = $res_value;
 	    $min_res_name = $tmp;
 	}
+    }
+    if ($use_min_res > 1) {
+	@resolutions = ($min_res_name);
     }
     # We want to do all resolutions and all ink types in both color modes.
     # We don't need to do both resolutions and ink types.
@@ -501,10 +497,31 @@ if ($dontrun) {
     }
     my ($qopt) = $quiet ? "-q" : "";
     $testpattern_command = "$valgrind_command ./testpattern $suppress $qopt";
-    open TESTPATTERN, "|$testpattern_command" or
-	die "Can't run $testpattern_command: $!\n";
-    map { do_printer($_, \*TESTPATTERN) } @printer_list;
-    $status = close TESTPATTERN;
+    my (@nprinter_list);
+    foreach my $printer (@printer_list) {
+	my $model_id = $models{$printer};
+	my $family_id = $families{$printer};
+	if (($skip_duplicate_printers && $models_found{$family_id}{$model_id}) ||
+	    (@families && ! grep { $family_id eq $_ } @families)) {
+	} else {
+	    $models_found{$family_id}{$model_id} = 1;
+	    push @nprinter_list, $printer;
+	}
+    }
+    @printer_list = @nprinter_list;
+    if ($single) {
+	foreach my $printer (@printer_list) {
+	    open TESTPATTERN, "|$testpattern_command" or
+		die "Can't run $testpattern_command: $!\n";
+	    do_printer($printer, \*TESTPATTERN);
+	    $status |= close TESTPATTERN;
+	}
+    } else {
+	open TESTPATTERN, "|$testpattern_command" or
+	    die "Can't run $testpattern_command: $!\n";
+	map { do_printer($_, \*TESTPATTERN) } @printer_list;
+	$status = close TESTPATTERN;
+    }
     if ($status) {
 	exit 0;
     } else {
