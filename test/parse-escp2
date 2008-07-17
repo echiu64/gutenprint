@@ -417,8 +417,10 @@ while (! $atend) {
 		    print "1b ";
 		    $startoff = 0;
 		    my $print_stuff = 0;
+		    my $print_variable = 0;
 		    if ($skipchars eq "VARIABLE") {
 			fill_buffer(3);
+			$print_variable = 1;
 			$kchar = substr($stuff, $curoffset + $klen + 1, 1);
 			$nkchar = unpack("C", $kchar);
 			$lchar = substr($stuff, $curoffset + $klen + 2, 1);
@@ -437,8 +439,13 @@ while (! $atend) {
 			$char = substr($stuff, $curoffset + 2, 1);
 			print "$chartable{$char} ";
 			if ($blen > 2) {
-			    printf ("%*v02x ", " ",
-				    substr($stuff, $curoffset + 3, $blen - 2));
+			    if ($print_variable && $char eq "d") {
+				printf ("%*v02x ", " ",
+					substr($stuff, $curoffset + 3, 2));
+			    } else {
+				printf ("%*v02x ", " ",
+					substr($stuff, $curoffset + 3, $blen - 2));
+			    }
 			}
 		    }
 		    if ($print_stuff) {
@@ -548,6 +555,8 @@ while (! $atend) {
 					$horizontal_position,
 					$horizontal_position / $horizontal_unit);
 			    }
+			} elsif ($xchar eq "d") {
+			    printf " (nop)";
 			}
 		    }
 		    $found = 1;
