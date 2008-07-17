@@ -2759,7 +2759,7 @@ set_raw_ink_type(stp_vars_t *v)
 }
 
 static void
-adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
+adjust_density_and_ink_type(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const stp_vars_t *pv = pd->paper_type->v;
@@ -2781,7 +2781,7 @@ adjust_density_and_ink_type(stp_vars_t *v, stp_image_t *image)
 }
 
 static void
-adjust_print_quality(stp_vars_t *v, stp_image_t *image)
+adjust_print_quality(stp_vars_t *v)
 {
   escp2_privdata_t *pd = get_privdata(v);
   const stp_vars_t *pv = pd->paper_type->v;
@@ -3975,7 +3975,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
   stp_dither_init(v, image, pd->image_printed_width, pd->res->printed_hres,
 		  pd->res->printed_vres);
   allocate_channels(v, line_width);
-  adjust_print_quality(v, image);
+  adjust_print_quality(v);
   out_channels = stp_color_init(v, image, 65536);
 
 /*  stpi_dither_set_expansion(v, pd->res->hres / pd->res->printed_hres); */
@@ -3983,7 +3983,6 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
   setup_inks(v);
 
   status = escp2_print_data(v, image);
-  stp_image_conclude(image);
   stp_flush_all(v);
   stpi_escp2_terminate_page(v);
   return status;
@@ -4006,7 +4005,6 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
       return 0;
     }
-  stp_image_init(image);
 
   if (strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0 &&
       !set_raw_ink_type(v))
@@ -4043,19 +4041,20 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   setup_page(v);
   setup_misc(v);
 
-  if ((print_op & OP_JOB_PRINT) && (page_number & 1) && pd->duplex)
-    {
-      /* If the hardware can't do the duplex operation, we need to
-	 emulate it in software */
-      if ((pd->duplex & pd->input_slot->duplex) == 0)
-	image = stpi_buffer_image(image, BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
-    }
-
-  adjust_density_and_ink_type(v, image);
+  adjust_density_and_ink_type(v);
   if (print_op & OP_JOB_START)
     stpi_escp2_init_printer(v);
   if (print_op & OP_JOB_PRINT)
-    status = escp2_print_page(v, image);
+    {
+      stp_image_init(image);
+      if ((page_number & 1) && pd->duplex &&
+	  ((pd->duplex & pd->input_slot->duplex) == 0))
+	  /* If the hardware can't do the duplex operation, we need to
+	     emulate it in software */
+	image = stpi_buffer_image(image, BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
+      status = escp2_print_page(v, image);
+      stp_image_conclude(image);
+    }
   if (print_op & OP_JOB_END)
     stpi_escp2_deinit_printer(v);
 
