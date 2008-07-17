@@ -516,6 +516,7 @@ if ($dontrun) {
 		die "Can't run $testpattern_command: $!\n";
 	    do_printer($printer, \*TESTPATTERN);
 	    $status |= close TESTPATTERN;
+	    $status |= ($? & 255);
 	    last if ($? & 255);
 	}
     } else {
