@@ -391,7 +391,7 @@ sub do_printer($$) {
 	    next if ($key eq "RawChannels" && $pmode ne "Color");
 	    my (@subkeys) = split (/,/, $key);
 	    $tmp = $opt_vals{$key};
-	    if (defined $tmp && $#{@$tmp} >= 1) {
+	    if (defined $tmp && $tmp >= 1) {
 		my (@opts) = @$tmp;
 		my $opt;
 		my $rawval;
@@ -451,6 +451,19 @@ sub do_printer($$) {
     }
 }
 
+my (@nprinter_list);
+foreach my $printer (@printer_list) {
+    my $model_id = $models{$printer};
+    my $family_id = $families{$printer};
+    if (($skip_duplicate_printers && $models_found{$family_id}{$model_id}) ||
+	(@families && ! grep { $family_id eq $_ } @families)) {
+    } else {
+	$models_found{$family_id}{$model_id} = 1;
+	push @nprinter_list, $printer;
+    }
+}
+@printer_list = @nprinter_list;
+
 if ($dontrun) {
     map { do_printer($_, \*STDOUT) } @printer_list;
     exit 0;
@@ -497,24 +510,13 @@ if ($dontrun) {
     }
     my ($qopt) = $quiet ? "-q" : "";
     $testpattern_command = "$valgrind_command ./testpattern $suppress $qopt";
-    my (@nprinter_list);
-    foreach my $printer (@printer_list) {
-	my $model_id = $models{$printer};
-	my $family_id = $families{$printer};
-	if (($skip_duplicate_printers && $models_found{$family_id}{$model_id}) ||
-	    (@families && ! grep { $family_id eq $_ } @families)) {
-	} else {
-	    $models_found{$family_id}{$model_id} = 1;
-	    push @nprinter_list, $printer;
-	}
-    }
-    @printer_list = @nprinter_list;
     if ($single) {
 	foreach my $printer (@printer_list) {
 	    open TESTPATTERN, "|$testpattern_command" or
 		die "Can't run $testpattern_command: $!\n";
 	    do_printer($printer, \*TESTPATTERN);
 	    $status |= close TESTPATTERN;
+	    last if ($? & 255);
 	}
     } else {
 	open TESTPATTERN, "|$testpattern_command" or
