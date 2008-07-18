@@ -210,18 +210,21 @@ raw_print(const stp_vars_t *v, stp_image_t *image)
   int ink_channels = 1;
   int rotate_output = 0;
   const char *ink_type = stp_get_string_parameter(nv, "InkType");
+  stp_image_init(image);
 
   stp_prune_inactive_options(nv);
   if (!stp_verify(nv))
     {
       stp_eprintf(nv, _("Print options not verified; cannot print.\n"));
       stp_vars_destroy(nv);
+      stp_image_conclude(image);
       return 0;
     }
   if (width != stp_image_width(image) || height != stp_image_height(image))
     {
       stp_eprintf(nv, _("Image dimensions must match paper dimensions"));
       stp_vars_destroy(nv);
+      stp_image_conclude(image);
       return 0;
     }
   if (ink_type)
@@ -251,6 +254,7 @@ raw_print(const stp_vars_t *v, stp_image_t *image)
     {
       stp_eprintf(nv, "Internal error!  Output channels or input channels must be 1\n");
       stp_vars_destroy(nv);
+      stp_image_conclude(image);
       return 0;
     }
 
