@@ -107,7 +107,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      * Epson inkjet printers:
 
+       B-300
        B-308
+       B-500DN
+       B-508DN
+       Offirio PX-B300
+       Offirio PX-B500
        Stylus Photo R1900 (preliminary, further tuning expected)
        Stylus Pro 7800 (experimental)
        Stylus Pro 7880 (experimental)

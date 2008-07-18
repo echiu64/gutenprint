@@ -570,40 +570,43 @@ send_extra_data(stp_vars_t *v, int extralines)
   escp2_privdata_t *pd = get_privdata(v);
   int lwidth = (pd->image_printed_width + (pd->horizontal_passes - 1)) /
     pd->horizontal_passes;
-#ifdef TEST_UNCOMPRESSED
-  int i, k;
-  for (k = 0; k < extralines; k++)
-    for (i = 0; i < pd->bitwidth * (lwidth + 7) / 8; i++)
-      stp_putc(0, v);
-#else  /* !TEST_UNCOMPRESSED */
-  int k, l;
-  int bytes_to_fill = pd->bitwidth * ((lwidth + 7) / 8);
-  int full_blocks = bytes_to_fill / 128;
-  int leftover = bytes_to_fill % 128;
-  int total_bytes = extralines * (full_blocks + 1) * 2;
-  unsigned char *buf = stp_malloc(total_bytes);
-  total_bytes = 0;
-  for (k = 0; k < extralines; k++)
+  if (stp_get_debug_level() & STP_DBG_NO_COMPRESSION)
     {
-      for (l = 0; l < full_blocks; l++)
-	{
-	  buf[total_bytes++] = 129;
-	  buf[total_bytes++] = 0;
-	}
-      if (leftover == 1)
-	{
-	  buf[total_bytes++] = 1;
-	  buf[total_bytes++] = 0;
-	}
-      else if (leftover > 0)
-	{
-	  buf[total_bytes++] = 257 - leftover;
-	  buf[total_bytes++] = 0;
-	}
+      int i, k;
+      for (k = 0; k < extralines; k++)
+	for (i = 0; i < pd->bitwidth * (lwidth + 7) / 8; i++)
+	  stp_putc(0, v);
     }
-  stp_zfwrite((const char *) buf, total_bytes, 1, v);
-  stp_free(buf);
-#endif /* TEST_UNCOMPRESSED */
+  else
+    {
+      int k, l;
+      int bytes_to_fill = pd->bitwidth * ((lwidth + 7) / 8);
+      int full_blocks = bytes_to_fill / 128;
+      int leftover = bytes_to_fill % 128;
+      int total_bytes = extralines * (full_blocks + 1) * 2;
+      unsigned char *buf = stp_malloc(total_bytes);
+      total_bytes = 0;
+      for (k = 0; k < extralines; k++)
+	{
+	  for (l = 0; l < full_blocks; l++)
+	    {
+	      buf[total_bytes++] = 129;
+	      buf[total_bytes++] = 0;
+	    }
+	  if (leftover == 1)
+	    {
+	      buf[total_bytes++] = 1;
+	      buf[total_bytes++] = 0;
+	    }
+	  else if (leftover > 0)
+	    {
+	      buf[total_bytes++] = 257 - leftover;
+	      buf[total_bytes++] = 0;
+	    }
+	}
+      stp_zfwrite((const char *) buf, total_bytes, 1, v);
+      stp_free(buf);
+    }
 }
 
 void
@@ -676,20 +679,31 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 	    {
 	      int sc = pd->split_channel_count;
 	      int k, l;
+	      int minlines_lo, nozzle_start_lo;
+	      minlines /= sc;
+	      nozzle_start /= sc;
+	      minlines_lo = pd->min_nozzles - (minlines * sc);
+	      nozzle_start_lo = pd->nozzle_start - (nozzle_start * sc);
 	      for (k = 0; k < sc; k++)
 		{
+		  int ml = minlines + (k < minlines_lo ? 1 : 0);
+		  int ns = nozzle_start + (k < nozzle_start_lo ? 1 : 0);
 		  int lc = ((nlines + (sc - k - 1)) / sc);
-		  if (lc < minlines)
-		    extralines = minlines - lc;
-		  extralines -= nozzle_start;
+		  if (lc < ml)
+		    extralines = ml - lc;
+		  else
+		    extralines = 0;
+		  extralines -= ns;
+		  if (extralines < 0)
+		    extralines = 0;
 		  if (lc + extralines > 0)
 		    {
 		      int sc_off = k + j * sc;
 		      set_horizontal_position(v, pass, vertical_subpass);
 		      send_print_command(v, pass, pd->split_channels[sc_off],
-					 lc + extralines + nozzle_start);
-		      if (extralines)
-			send_extra_data(v, nozzle_start);
+					 lc + extralines + ns);
+		      if (ns > 0)
+			send_extra_data(v, ns);
 		      for (l = 0; l < lc; l++)
 			{
 			  int sp = (l * sc) + k;
@@ -707,7 +721,7 @@ stpi_escp2_flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 			    stp_zfwrite((const char *) bufs->v[j] + offset,
 					pd->split_channel_width, 1, v);
 			}
-		      if (extralines)
+		      if (extralines > 0)
 			send_extra_data(v, extralines);
 		      stp_send_command(v, "\r", "");
 		    }
