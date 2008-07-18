@@ -87,7 +87,7 @@ typedef struct {
  * actually read in the data.  This optimization may be worthwhile.
  */
 
-#define MAX_INKS 13
+#define MAX_INKS 20
 typedef struct {
    unsigned char *line[MAX_INKS];
    int startx[MAX_INKS];
@@ -115,10 +115,10 @@ line_type **page=NULL;
 
 /* Color Codes:
    color    Epson1  Epson2   Sequential
-   Black    0       0        0
-   Magenta  1       1        1
-   Cyan     2       2        2
-   Yellow   4       4        3
+   Black    0       0        0/16
+   Magenta  1       1        1/17
+   Cyan     2       2        2/18
+   Yellow   4       4        3/19
    L.Mag.   17      257      4
    L.Cyan   18      258      5
    L.Black  16      256      6
@@ -138,16 +138,12 @@ seqcolor(int c)
   switch (c)
     {
     case 0:
-    case 64:
       return 0;
     case 1:
-    case 65:
       return 1;
     case 2:
-    case 66:
       return 2;
     case 4:
-    case 68:
       return 3;
     case 17:
     case 257:
@@ -172,6 +168,14 @@ seqcolor(int c)
       return 11;
     case 10:
       return 12;
+    case 64:
+      return 16;
+    case 65:
+      return 17;
+    case 66:
+      return 18;
+    case 68:
+      return 19;
     default:
       return 0;
     }
@@ -280,19 +284,26 @@ set_bits(unsigned char *p,int idx,int value)
 
 static float ink_colors[MAX_INKS][4] =
 /* C(R) M(G) Y(B) K(W) */
-{{ 0,   0,   0,   1 },		/* K */
- { 1,    .1, 1,   1 },		/* M */
- {  .1, 1,   1,   1 },		/* C */
- { 1,   1,    .1, 1 },		/* Y */
- { 1,    .7, 1,   1 },		/* m */
- {  .4, 1,   1,   1 },		/* c */
- {  .7,  .7,  .7, 1 },		/* k */
- {  .7,  .7, 0,   1 },		/* dY */
- { 1,   0,   0,   1 },		/* R */
- { 0,   0,   1,   1 },		/* B */
- { 1,   1,   1,   1 },		/* Gloss */
- {  .8,  .8,  .8, 1 },		/* llk */
- {  .9,  .3, 0,   1 },		/* Orange */
+{{ 0,   0,   0,   1 },		/* 0  K */
+ { 1,    .1, 1,   1 },		/* 1  M */
+ {  .1, 1,   1,   1 },		/* 2  C */
+ { 1,   1,    .1, 1 },		/* 3  Y */
+ { 1,    .7, 1,   1 },		/* 4  m */
+ {  .4, 1,   1,   1 },		/* 5  c */
+ {  .7,  .7,  .7, 1 },		/* 6  k */
+ {  .7,  .7, 0,   1 },		/* 7  dY */
+ { 1,   0,   0,   1 },		/* 8  R */
+ { 0,   0,   1,   1 },		/* 8  B */
+ { 1,   1,   1,   1 },		/* 10 Gloss */
+ {  .8,  .8,  .8, 1 },		/* 11 llk */
+ {  .9,  .3, 0,   1 },		/* 12 Orange */
+ { 0,   0,   0,   1 },		/* 13 K */
+ { 0,   0,   0,   1 },		/* 14 K */
+ { 0,   0,   0,   1 },		/* 15 K */
+ { 0,   0,   0,   1 },		/* 16 K */
+ { 1,    .1, 1,   1 },		/* 17 M */
+ {  .1, 1,   1,   1 },		/* 18 C */
+ { 1,   1,    .1, 1 },		/* 19 Y */
 };
 
 static float quadtone_inks[] = { 0.0, .25, .5, .75 };
