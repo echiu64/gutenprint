@@ -171,6 +171,9 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   13) The Epson Stylus Photo R800 now works properly.  It was broken
      in 5.2.0-beta2.
 
+  14) The Epson Stylus CX8300 and CX8400 now print correctly, although
+     the colors may be retuned before final release.
+
 
 * CHANGES FROM GUTENPRINT 5.2.0-BETA2:
 
