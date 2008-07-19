@@ -72,10 +72,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x10</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x10</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -126,10 +135,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -180,10 +198,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -234,10 +261,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -288,10 +324,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -342,10 +387,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -396,10 +450,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -450,10 +513,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -504,10 +576,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x10</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x10</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -558,10 +639,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x10</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x10</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x21</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -612,10 +702,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -666,10 +765,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -720,10 +828,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -774,10 +891,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x50</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x50</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -828,10 +954,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
@@ -882,10 +1017,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolution name="360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720x360sw">
   <parameter type="integer" name="PrintMethod">0x30</parameter>
  </resolution>
+ <resolution name="720x360hq">
+  <parameter type="integer" name="PrintMethod">0x30</parameter>
+ </resolution>
  <resolution name="720sw">
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
+ </resolution>
+ <resolution name="720hq">
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
