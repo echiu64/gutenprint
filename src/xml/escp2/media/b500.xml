@@ -82,25 +82,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -141,25 +141,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -194,31 +194,31 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="720sw">
-  <parameter type="integer" name="PrintMethod">0x52</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="720hq">
-  <parameter type="integer" name="PrintMethod">0x52</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -242,7 +242,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper translate="text" name="Transparency" text="Transparencies" class="transparency">
  <parameter type="integer" name="PaperMedia">9</parameter>
- <parameter type="integer" name="PrintMethod">0x21</parameter>
+ <parameter type="integer" name="PrintMethod">0x51</parameter>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
   <parameter type="float" name="Density">0.830000</parameter>
@@ -283,25 +283,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -325,7 +325,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper translate="text" name="BackFilm" text="Back Light Film" class="transparency">
  <parameter type="integer" name="PaperMedia">10</parameter>
- <parameter type="integer" name="PrintMethod">0x30</parameter>
+ <parameter type="integer" name="PrintMethod">0x52</parameter>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
   <parameter type="float" name="Density">0.830000</parameter>
@@ -348,7 +348,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper translate="text" name="Matte" text="Matte Paper" class="good">
  <parameter type="integer" name="PaperMedia">128</parameter>
- <parameter type="integer" name="PrintMethod">0x70</parameter>
+ <parameter type="integer" name="PrintMethod">0x71</parameter>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
   <parameter type="float" name="Density">0.920000</parameter>
@@ -371,7 +371,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper translate="text" name="MatteHeavy" text="Matte Paper Heavyweight" class="good">
  <parameter type="integer" name="PaperMedia">5</parameter>
- <parameter type="integer" name="PrintMethod">0x70</parameter>
+ <parameter type="integer" name="PrintMethod">0x71</parameter>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
   <parameter type="float" name="Density">0.920000</parameter>
@@ -403,34 +403,34 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="720x360hq">
-  <parameter type="integer" name="PrintMethod">0x21</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="720sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="720hq">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x51</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -472,25 +472,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -526,31 +526,31 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="integer" name="PrintMethod">0x21</parameter>
  </resolution>
  <resolution name="720sw">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x52</parameter>
  </resolution>
  <resolution name="720hq">
-  <parameter type="integer" name="PrintMethod">0x50</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="1440x720sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="1440x720hq">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="1440x1440ov">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="2880x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="5760x1440sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="2880x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
  <resolution name="5760x2880sw">
-  <parameter type="integer" name="PrintMethod">0x70</parameter>
+  <parameter type="integer" name="PrintMethod">0x71</parameter>
  </resolution>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
@@ -850,7 +850,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
 <paper translate="text" name="ColorLife" text="ColorLife Paper" class="premium">
  <parameter type="integer" name="PaperMedia">23</parameter>
- <parameter type="integer" name="PrintMethod">0x21</parameter>
+ <parameter type="integer" name="PrintMethod">0xb0</parameter>
 
  <ink translate="text" name="None" text="EPSON Standard Inks">
   <parameter type="float" name="Density">0.830000</parameter>
