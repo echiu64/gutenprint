@@ -396,8 +396,8 @@
       <printer translate="name" name="Epson Stylus CX7400" driver="escp2-cx7400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7800" driver="escp2-cx7800" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="79" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="79" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX9400" driver="escp2-cx9400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus D68" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus D88" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" />
