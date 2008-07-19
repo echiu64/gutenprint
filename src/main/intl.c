@@ -26,7 +26,8 @@
 #include <string.h>
 #include <gutenprint/gutenprint-intl-internal.h>
 
-#ifdef __APPLE__
+#ifdef ENABLE_NLS
+#  ifdef __APPLE__
 /*
  * Mac OS X uses the CoreFoundation framework to support localization via
  * language resource directories and files that are typically installed in
@@ -98,7 +99,7 @@ stp_setlocale(const char *lang)		/* I - Locale name or "" for default */
   return (lang);
 }
 
-#elif defined(ENABLE_NLS)	/* __APPLE__ */
+#  else
 typedef struct {
   const char *lang;
   const char *mapping;
@@ -149,11 +150,12 @@ stp_setlocale(const char *lang)		/* I - Locale name or "" for default */
 	}
     }
 
-#  ifdef LC_CTYPE
+#    ifdef LC_CTYPE
   setlocale(LC_CTYPE, l ? l : "");
-#  endif /* LC_CTYPE */
-#  ifdef LC_NUMERIC
+#    endif /* LC_CTYPE */
+#    ifdef LC_NUMERIC
   setlocale(LC_NUMERIC, "C");
-#  endif /* LC_NUMERIC */
+#    endif /* LC_NUMERIC */
 }
-#endif /* __APPLE__ */
+#  endif /* __APPLE__ */
+#endif /* ENABLE_NLS */

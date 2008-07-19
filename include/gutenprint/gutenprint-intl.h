@@ -3,7 +3,7 @@
  *
  *   I18N header file for Gimp-Print.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
+ *   Copyright 1997-2008 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -51,7 +51,8 @@ INCLUDE_LOCALE_H
 #include <locale.h>
 #endif
 
-#ifdef __APPLE__
+#ifdef ENABLE_NLS
+#  ifdef __APPLE__
 /** CoreFoundation supports localization on Mac OS X **/
 #    include <CoreFoundation/CoreFoundation.h>
 extern const char	*stp_cfgettext(const char *string);
@@ -63,27 +64,26 @@ extern const char	*stp_setlocale(const char *loc);
 #    define bindtextdomain(Domain,Directory) (Domain)
 #    define _(String) stp_cfgettext(String)
 #    define N_(String) (String)
-#elif defined(ENABLE_NLS)
-
+#  else /* !__APPLE__ */
 extern const char	*stp_setlocale(const char *loc);
 
-#include <libintl.h>
-#ifndef _
+#    include <libintl.h>
+#    ifndef _
 /** Translate String. */
-#define _(String) gettext (String)
-#endif
-#ifndef gettext_noop
+#      define _(String) gettext (String)
+#    endif
+#    ifndef gettext_noop
 /** Mark String for translation, but don't translate it right now. */
-#define gettext_noop(String) (String)
-#endif
-#ifdef gettext_noop
+#      define gettext_noop(String) (String)
+#    endif
+#    ifdef gettext_noop
 /** Mark String for translation, but don't translate it right now. */
-# define N_(String) gettext_noop (String)
-#else
+#      define N_(String) gettext_noop (String)
+#    else
 /** Mark String for translation, but don't translate it right now. */
-# define N_(String) (String)
-#endif
-
+#      define N_(String) (String)
+#    endif
+#  endif /* !__APPLE__ */
 #else /* ifndef ENABLE_NLS */
 /* Stubs that do something close enough.  */
 #    define textdomain(String) (String)

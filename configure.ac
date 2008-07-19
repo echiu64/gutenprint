@@ -803,7 +803,7 @@ AM_CONDITIONAL(MACOSX, test "`uname`" = Darwin)
 
 # Mac OS X doesn't have GNU gettext, so instead we'll use CoreFoundation to
 # localize Gutenprint...
-if test "`uname`" = Darwin; then
+if test "`uname`" = Darwin -a "x$USE_NLS" != xno; then
 	USE_NLS="macosx"
 	LIBS="-framework CoreFoundation $LIBS"
 fi

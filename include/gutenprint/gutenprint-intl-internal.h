@@ -3,7 +3,7 @@
  *
  *   I18N header file for the gimp-print.
  *
- *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
+ *   Copyright 1997-2008 Michael Sweet (mike@easysw.com),
  *	Robert Krawitz (rlk@alum.mit.edu) and Michael Natterer (mitch@gimp.org)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -54,7 +54,8 @@ INCLUDE_LOCALE_H
 #include <locale.h>
 #endif
 
-#ifdef __APPLE__
+#if defined(ENABLE_NLS) && !defined(DISABLE_NLS)
+#  ifdef __APPLE__
 /** CoreFoundation supports localization on Mac OS X **/
 #    include <CoreFoundation/CoreFoundation.h>
 extern const char	*stp_cfgettext(const char *string);
@@ -66,7 +67,7 @@ extern const char	*stp_setlocale(const char *loc);
 #    define bindtextdomain(Domain,Directory) (Domain)
 #    define _(String) stp_cfgettext(String)
 #    define N_(String) (String)
-#elif defined ENABLE_NLS && !defined DISABLE_NLS
+#  else /* !__APPLE__ */
 extern const char	*stp_setlocale(const char *loc);
 #    include <libintl.h>
 /** Translate String. */
@@ -81,6 +82,7 @@ extern const char	*stp_setlocale(const char *loc);
 /** Mark String for translation, but don't translate it right now. */
 #        define N_(String) (String)
 #    endif
+#  endif /* !__APPLE__ */
 #else /* ifndef ENABLE_NLS */
 /* Stubs that do something close enough.  */
 #    define textdomain(String) (String)
