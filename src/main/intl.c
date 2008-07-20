@@ -74,12 +74,6 @@ stp_setlocale(const char *lang)		/* I - Locale name or "" for default */
 
 
  /*
-  * Turn off buffering of stderr...
-  */
-
-  setbuf(stderr, NULL);
-
- /*
   * Setup the Core Foundation language environment for localized messages.
   */
 
