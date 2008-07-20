@@ -961,6 +961,7 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([samples/Makefile])
 AC_CONFIG_FILES([src/Makefile])
 AC_CONFIG_FILES([src/cups/Makefile])
+AC_CONFIG_FILES([src/cups/Info.plist])
 AC_CONFIG_FILES([src/cups/cups-genppdupdate],
                 [chmod +x src/cups/cups-genppdupdate])
 AC_CONFIG_FILES([src/escputil/Makefile])
