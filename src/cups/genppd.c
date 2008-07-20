@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2008 by Easy Software Products and Robert Krawitz.
+ *   Copyright 1993-2008 by Mike Sweet and Robert Krawitz.
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -1082,10 +1082,10 @@ write_ppd(
         continue;
 
       gzprintf(fp, "%s%s", prefix, all_langs[i]);
-      prefix = ",";
+      prefix = " ";
     }
 
-    if (!strcmp(prefix, ","))
+    if (!strcmp(prefix, " "))
       gzputs(fp, "\"\n");
   }
 #endif /* ENABLE_NLS */
@@ -1869,7 +1869,7 @@ write_ppd(
     }
 
 #ifdef ENABLE_NLS
-  if (language && !strcmp(language, "C"))
+  if (!language || !strcmp(language, "C"))
   {
    /*
     * Generate globalized PPDs when POSIX language is requested...

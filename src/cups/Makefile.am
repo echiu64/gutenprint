@@ -187,7 +187,7 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test ! -z "$(cups_bundledir)"; then \
           $(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents"; \
 	  cp Info.plist "$(DESTDIR)$(cups_bundledir)/Contents"; \
-	  gcc -o po2strings po2strings.c; \
+	  gcc -o po2strings po2strings.c -liconv; \
 	  for file in ../../po/*.po; do \
 	    lang=`basename $$file .po`; \
 	    $(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj"; \

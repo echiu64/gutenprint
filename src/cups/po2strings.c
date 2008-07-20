@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iconv.h>
 
 
 /*
@@ -64,11 +65,18 @@ main(int  argc,				/* I - Number of command-line args */
   char		line[4096],		/* Line buffer */
 		*ptr,			/* Pointer into buffer */
 		id[4096],		/* Translation ID */
-		str[4096];		/* Translation string */
+		utf8id[4096],		/* UTF-8 translation ID */
+		str[4096],		/* Translation string */
+		utf8str[4096];		/* UTF-8 translation string */
   int		in_id,			/* Processing "id" string? */
 		in_str,			/* Processing "str" string? */
 		count,			/* Number of translations */
 		linenum;		/* Line number in .po file */
+  iconv_t	ic;			/* Transcoder to UTF-8 */
+  size_t	inbytes,		/* Number of input buffer bytes */
+		outbytes;		/* Number of output buffer bytes */
+  char		*inptr,			/* Pointer into input buffer */
+		*outptr;		/* Pointer into output buffer */
 
 
   if (argc != 3)
@@ -97,6 +105,7 @@ main(int  argc,				/* I - Number of command-line args */
   str[0]  = '\0';
   in_id   = 0;
   in_str  = 0;
+  ic      = 0;
 
   while (fgets(line, sizeof(line), po))
   {
@@ -146,8 +155,75 @@ main(int  argc,				/* I - Number of command-line args */
 
       if (id[0] && str[0])
       {
-	write_message(strings, id, str);
+        if (ic)
+	{
+	 /*
+	  * Convert ID to UTF-8...
+	  */
+
+	  inbytes  = strlen(id);
+	  inptr    = id;
+	  outbytes = sizeof(utf8id);
+	  outptr   = utf8id;
+
+          iconv(ic, &inptr, &inbytes, &outptr, &outbytes);
+	  *outptr = '\0';
+
+	 /*
+	  * Convert string to UTF-8...
+	  */
+
+	  inbytes  = strlen(str);
+	  inptr    = str;
+	  outbytes = sizeof(utf8str);
+	  outptr   = utf8str;
+
+          iconv(ic, &inptr, &inbytes, &outptr, &outbytes);
+	  *outptr = '\0';
+
+	 /*
+	  * Write it...
+	  */
+
+	  write_message(strings, utf8id, utf8str);
+	}
+	else
+	  write_message(strings, id, str);
+
 	count ++;
+      }
+      else if (!id[0] && str[0] && !ic)
+      {
+       /*
+        * Look for the character set...
+	*/
+
+	const char	*charset = strstr(str, "charset=");
+					/* Source character set definition */
+	char		fromcode[255],	/* Source character set */
+			*fromptr;	/* Pointer into fromcode */
+
+	if (charset)
+	{
+	 /*
+	  * Extract character set and setup a transcode context...
+	  */
+
+	  strlcpy(fromcode, charset + 8, sizeof(fromcode));
+          for (fromptr = fromcode; *fromptr; fromptr ++)
+	    if (!isalnum(*fromptr & 255) && *fromptr != '-')
+	      break;
+          *fromptr = '\0';
+
+          if (strcasecmp(fromcode, "utf-8"))
+	  {
+            if ((ic = iconv_open("UTF-8", fromcode)) == (iconv_t)-1)
+	    {
+	      perror(fromcode);
+	      ic = 0;
+	    }
+	  }
+        }
       }
 
       strncpy(id, ptr, sizeof(id) - 1);
@@ -202,7 +278,41 @@ main(int  argc,				/* I - Number of command-line args */
 
   if (id[0] && str[0])
   {
-    write_message(strings, id, str);
+    if (ic)
+    {
+     /*
+      * Convert ID to UTF-8...
+      */
+
+      inbytes  = strlen(id);
+      inptr    = id;
+      outbytes = sizeof(utf8id);
+      outptr   = utf8id;
+
+      iconv(ic, &inptr, &inbytes, &outptr, &outbytes);
+      *outptr = '\0';
+
+     /*
+      * Convert string to UTF-8...
+      */
+
+      inbytes  = strlen(str);
+      inptr    = str;
+      outbytes = sizeof(utf8str);
+      outptr   = utf8str;
+
+      iconv(ic, &inptr, &inbytes, &outptr, &outbytes);
+      *outptr = '\0';
+
+     /*
+      * Write it...
+      */
+
+      write_message(strings, utf8id, utf8str);
+    }
+    else
+      write_message(strings, id, str);
+
     count ++;
   }
 
@@ -224,15 +334,11 @@ write_message(FILE       *strings,	/* I - .strings file */
               const char *id,		/* I - Original text */
 	      const char *str)		/* I - Translation text */
 {
-  write_utf16(strings, '\"');
   write_string(strings, id);
-  write_utf16(strings, '\"');
   write_utf16(strings, ' ');
   write_utf16(strings, '=');
   write_utf16(strings, ' ');
-  write_utf16(strings, '\"');
   write_string(strings, str);
-  write_utf16(strings, '\"');
   write_utf16(strings, ';');
   write_utf16(strings, '\n');
 }
@@ -246,33 +352,47 @@ static void
 write_string(FILE       *strings,	/* I - .strings file */
              const char *s)		/* I - String to write */
 {
-  putc('\"', strings);
+  int	ch;				/* Current character */
+
+
+  write_utf16(strings, '\"');
 
   while (*s)
   {
-    switch (*s)
+    ch = *s++;
+
+    if ((ch & 0xe0) == 0xc0)
     {
-      case '\n' :
-          fputs("\\n", strings);
-	  break;
-      case '\t' :
-          fputs("\\t", strings);
-	  break;
-      case '\\' :
-          fputs("\\\\", strings);
-	  break;
-      case '\"' :
-          fputs("\\\"", strings);
-	  break;
-      default :
-          putc(*s, strings);
-	  break;
+     /*
+      * Two-byte UTF-8...
+      */
+
+      ch = ((ch & 0x1f) << 6) | (*s++ & 0x3f);
+    }
+    else if ((ch & 0xf0) == 0xe0)
+    {
+     /*
+      * Three-byte UTF-8...
+      */
+
+      ch = ((ch & 0x0f) << 6) | (*s++ & 0x3f);
+      ch = (ch << 6) | (*s++ & 0x3f);
+    }
+    else if ((ch & 0xf8) == 0xf0)
+    {
+     /*
+      * Four-byte UTF-8...
+      */
+
+      ch = ((ch & 0x07) << 6) | (*s++ & 0x3f);
+      ch = (ch << 6) | (*s++ & 0x3f);
+      ch = (ch << 6) | (*s++ & 0x3f);
     }
 
-    s ++;
+    write_utf16(strings, ch);
   }
 
-  putc('\"', strings);
+  write_utf16(strings, '\"');
 }
 
 
