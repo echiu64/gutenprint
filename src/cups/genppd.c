@@ -3,7 +3,7 @@
  *
  *   PPD file generation program for the CUPS drivers.
  *
- *   Copyright 1993-2007 by Easy Software Products and Robert Krawitz.
+ *   Copyright 1993-2008 by Easy Software Products and Robert Krawitz.
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -179,7 +179,7 @@ static int	write_ppd(gzFile fp, const stp_printer_t *p,
 		          const char *language, const char *ppd_location,
 			  int simplified);
 
-#ifdef ENABLE_NLS
+#if defined(ENABLE_NLS) && !defined(__APPLE__)
 static const char *baselocaledir = PACKAGE_LOCALE_DIR;
 #endif
 
@@ -418,7 +418,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       verbose = 0;
       break;
     case 'c':
-#  ifdef ENABLE_NLS
+#  if defined(ENABLE_NLS) && !defined(__APPLE__)
       baselocaledir = optarg;
 #  ifdef DEBUG
       fprintf(stderr, "DEBUG: baselocaledir: %s\n", baselocaledir);
@@ -936,6 +936,9 @@ write_ppd(
   int printer_is_color = 0;
   int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
+#ifdef ENABLE_NLS
+  char		**all_langs = getlangs();/* All languages */
+#endif /* ENABLE_NLS */
 
 
  /*
@@ -1059,22 +1062,44 @@ write_ppd(
   gzputs(fp, "*LandscapeOrientation: Plus90\n");
   gzputs(fp, "*TTRasterizer:	Type42\n");
 
-  gzputs(fp, "*cupsVersion:	1.1\n");
-  gzprintf(fp, "*cupsModelNumber: \"0\"\n");
+  gzputs(fp, "*cupsVersion:	1.2\n");
   gzputs(fp, "*cupsManualCopies: True\n");
   gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
-  gzputs(fp, "\n");
-  gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
-  gzprintf(fp, "*StpDriverModelFamily:	\"%d_%s\"\n", model, family);
-  gzprintf(fp, "*StpPPDLocation: \"%s\"\n", ppd_location);
-  gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");
+#ifdef ENABLE_NLS
+  if (!strcmp(language, "C"))
+  {
+   /*
+    * Generate globalized PPDs when POSIX language is requested...
+    */
+
+    const char *prefix = "*cupsLanguages: \"";
+
+    for (i = 0; all_langs[i]; i ++)
+    {
+      if (!strcmp(all_langs[i], "C") || !strcmp(all_langs[i], "en"))
+        continue;
+
+      gzprintf(fp, "%s%s", prefix, all_langs[i]);
+      prefix = ",";
+    }
+
+    if (!strcmp(prefix, ","))
+      gzputs(fp, "\"\n");
+  }
+#endif /* ENABLE_NLS */
 
   /* Macintosh color management */
   gzputs(fp, "*cupsICCProfile Gray../Grayscale:	\"/System/Library/ColorSync/Profiles/sRGB Profile.icc\"\n");
   gzputs(fp, "*cupsICCProfile RGB../Color:	\"/System/Library/ColorSync/Profiles/sRGB Profile.icc\"\n");
   gzputs(fp, "*cupsICCProfile CMYK../Color:	\"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc\"\n");
+
+  gzputs(fp, "\n");
+  gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
+  gzprintf(fp, "*StpDriverModelFamily:	\"%d_%s\"\n", model, family);
+  gzprintf(fp, "*StpPPDLocation: \"%s\"\n", ppd_location);
+  gzprintf(fp, "*StpLocale:	\"%s\"\n", language ? language : "C");
 
  /*
   * Get the page sizes from the driver...
@@ -1152,7 +1177,7 @@ write_ppd(
 
   gzprintf(fp, "*VariablePaperSize: %s\n\n", variable_sizes ? "true" : "false");
 
-  gzputs(fp, "*OpenUI *PageSize: PickOne\n");
+  gzprintf(fp, "*OpenUI *PageSize/%s: PickOne\n", _("Media Size"));
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
   gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	   desc.name, desc.p_type, desc.is_mandatory,
@@ -1167,7 +1192,7 @@ write_ppd(
   }
   gzputs(fp, "*CloseUI: *PageSize\n\n");
 
-  gzputs(fp, "*OpenUI *PageRegion: PickOne\n");
+  gzprintf(fp, "*OpenUI *PageRegion/%s: PickOne\n", _("Media Size"));
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageRegion\n");
   gzprintf(fp, "*DefaultPageRegion: %s\n", desc.deflt.str);
   gzprintf(fp, "*StpDefaultPageRegion: %s\n", desc.deflt.str);
@@ -1240,7 +1265,7 @@ write_ppd(
   * Do we support color?
   */
 
-  gzputs(fp, "*OpenUI *ColorModel/Color Model: PickOne\n");
+  gzprintf(fp, "*OpenUI *ColorModel/%s: PickOne\n", _("Color Model"));
   gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
 
   if (printer_is_color)
@@ -1254,51 +1279,51 @@ write_ppd(
       gzputs(fp, "*StpDefaultColorModel: Gray\n");
     }
 
-  gzprintf(fp, "*ColorModel Gray/Grayscale:\t\"<<"
+  gzprintf(fp, "*ColorModel Gray/%s:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
 	       "%s"
 	       ">>setpagedevice\"\n",
-           CUPS_CSPACE_W, CUPS_ORDER_CHUNKED,
-	   simplified ? "/cupsBitsPerColor 8" : "");
-  gzprintf(fp, "*ColorModel Black/Inverted Grayscale:\t\"<<"
+           _("Grayscale"), CUPS_CSPACE_W, CUPS_ORDER_CHUNKED,
+	   simplified ? "/cupsBitsPerColor 8/cupsPreferredBitsPerColor 16" : "");
+  gzprintf(fp, "*ColorModel Black/%s:\t\"<<"
                "/cupsColorSpace %d"
 	       "/cupsColorOrder %d"
 	       "%s"
 	       ">>setpagedevice\"\n",
-           CUPS_CSPACE_K, CUPS_ORDER_CHUNKED,
-	   simplified ? "/cupsBitsPerColor 8" : "");
+           _("Inverted Grayscale"), CUPS_CSPACE_K, CUPS_ORDER_CHUNKED,
+	   simplified ? "/cupsBitsPerColor 8/cupsPreferredBitsPerColor 16" : "");
 
   if (printer_is_color)
   {
-    gzprintf(fp, "*ColorModel RGB/RGB Color:\t\"<<"
+    gzprintf(fp, "*ColorModel RGB/%s:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
 	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED,
-	     simplified ? "/cupsBitsPerColor 8" : "");
-    gzprintf(fp, "*ColorModel CMY/CMY Color:\t\"<<"
+             _("RGB Color"), CUPS_CSPACE_RGB, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8/cupsPreferredBitsPerColor 16" : "");
+    gzprintf(fp, "*ColorModel CMY/%s:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
 	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_CMY, CUPS_ORDER_CHUNKED,
-	     simplified ? "/cupsBitsPerColor 8" : "");
-    gzprintf(fp, "*ColorModel CMYK/CMYK:\t\"<<"
+             _("CMY Color"), CUPS_CSPACE_CMY, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8/cupsPreferredBitsPerColor 16" : "");
+    gzprintf(fp, "*ColorModel CMYK/%s:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
 	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED,
-	     simplified ? "/cupsBitsPerColor 8" : "");
-    gzprintf(fp, "*ColorModel KCMY/KCMY:\t\"<<"
+             _("CMYK"), CUPS_CSPACE_CMYK, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8/cupsPreferredBitsPerColor 16" : "");
+    gzprintf(fp, "*ColorModel KCMY/%s:\t\"<<"
                  "/cupsColorSpace %d"
 		 "/cupsColorOrder %d"
 	         "%s"
 		 ">>setpagedevice\"\n",
-             CUPS_CSPACE_KCMY, CUPS_ORDER_CHUNKED,
-	     simplified ? "/cupsBitsPerColor 8" : "");
+             _("KCMY"), CUPS_CSPACE_KCMY, CUPS_ORDER_CHUNKED,
+	     simplified ? "/cupsBitsPerColor 8/cupsPreferredBitsPerColor 16" : "");
   }
 
   gzputs(fp, "*CloseUI: *ColorModel\n\n");
@@ -1308,15 +1333,15 @@ write_ppd(
       /*
        * 8 or 16 bit color (16 bit is slower)
        */
-      gzputs(fp, "*OpenUI *StpColorPrecision/Color Precision: PickOne\n");
+      gzprintf(fp, "*OpenUI *StpColorPrecision/%s: PickOne\n", _("Color Precision"));
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
       gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
       gzputs(fp, "*StpDefaultStpColorPrecision: Normal\n");
-      gzputs(fp, "*StpColorPrecision Normal/Normal:\t\"<<"
-	     "/cupsBitsPerColor 8>>setpagedevice\"\n");
-      gzputs(fp, "*StpColorPrecision Best/Best:\t\"<<"
-	     "/cupsBitsPerColor 8"
-	     "/cupsPreferredBitsPerColor 16>>setpagedevice\"\n");
+      gzprintf(fp, "*StpColorPrecision Normal/%s:\t\"<<"
+	           "/cupsBitsPerColor 8>>setpagedevice\"\n", _("Normal"));
+      gzprintf(fp, "*StpColorPrecision Best/%s:\t\"<<"
+		   "/cupsBitsPerColor 8"
+		   "/cupsPreferredBitsPerColor 16>>setpagedevice\"\n", _("Best"));
       gzputs(fp, "*CloseUI: *StpColorPrecision\n\n");
     }
 
@@ -1450,9 +1475,7 @@ write_ppd(
 	  tmp_ydpi = ydpi;
 	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
 	    tmp_ydpi /= 2;
-	  if (tmp_ydpi > tmp_xdpi)
-	    tmp_ydpi = tmp_xdpi;
-	  else
+	  if (tmp_ydpi < tmp_xdpi)
 	    tmp_xdpi = tmp_ydpi;
 	  /*
 	     Make the default resolution look like an almost square resolution
@@ -1546,12 +1569,12 @@ write_ppd(
   stp_describe_parameter(v, "OutputOrder", &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
-      gzputs(fp, "*OpenUI *OutputOrder: PickOne\n");
+      gzprintf(fp, "*OpenUI *OutputOrder/%s: PickOne\n", _("Output Order"));
       gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
       gzprintf(fp, "*DefaultOutputOrder: %s\n", desc.deflt.str);
       gzprintf(fp, "*StpDefaultOutputOrder: %s\n", desc.deflt.str);
-      gzputs(fp, "*OutputOrder Normal/Normal: \"\"\n");
-      gzputs(fp, "*OutputOrder Reverse/Reverse: \"\"\n");
+      gzprintf(fp, "*OutputOrder Normal/%s: \"\"\n", _("Normal"));
+      gzprintf(fp, "*OutputOrder Reverse/%s: \"\"\n", _("Reverse"));
       gzputs(fp, "*CloseUI: *OutputOrder\n\n");
     }
   stp_parameter_description_destroy(&desc);
@@ -1844,6 +1867,254 @@ write_ppd(
 	    print_group_close(fp, j, k);
 	}
     }
+
+#ifdef ENABLE_NLS
+  if (!strcmp(language, "C"))
+  {
+   /*
+    * Generate globalized PPDs when POSIX language is requested...
+    */
+
+    const char *lang;
+    int langnum;
+
+    for (langnum = 0; all_langs[langnum]; langnum ++)
+    {
+      lang = all_langs[langnum];
+
+      if (!strcmp(lang, "C") || !strcmp(lang, "en"))
+        continue;
+
+      set_language(lang);
+
+     /*
+      * Get the page sizes from the driver...
+      */
+
+      if (printer_is_color)
+	stp_set_string_parameter(v, "PrintingMode", "Color");
+      else
+	stp_set_string_parameter(v, "PrintingMode", "BW");
+      stp_set_string_parameter(v, "ChannelBitDepth", "8");
+      stp_describe_parameter(v, "PageSize", &desc);
+      num_opts = stp_string_list_count(desc.bounds.str);
+
+      gzprintf(fp, "*%s.Translation PageSize/%s: \"\"\n", lang, _("Media Size"));
+      gzprintf(fp, "*%s.Translation PageRegion/%s: \"\"\n", lang, _("Media Size"));
+
+      for (i = 0; i < num_opts; i++)
+      {
+	const stp_papersize_t *papersize;
+	opt = stp_string_list_param(desc.bounds.str, i);
+	papersize = stp_get_papersize_by_name(opt->name);
+
+	if (!papersize)
+	  continue;
+
+	if (strcmp(opt->name, "Custom") == 0)
+	  continue;
+
+	if (simplified && num_opts >= 10 &&
+	    (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
+	     papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
+	  continue;
+
+	if (papersize->width <= 0 || papersize->height <= 0)
+	  continue;
+
+        gzprintf(fp, "*%s.PageSize %s/%s: \"\"\n", lang, opt->name, opt->text);
+        gzprintf(fp, "*%s.PageRegion %s/%s: \"\"\n", lang, opt->name, opt->text);
+      }
+
+      stp_parameter_description_destroy(&desc);
+
+     /*
+      * Do we support color?
+      */
+
+      gzprintf(fp, "*%s.Translation ColorModel/%s: \"\"\n", lang, _("Color Model"));
+      gzprintf(fp, "*%s.ColorModel Gray/%s: \"\"\n", lang, _("Grayscale"));
+      gzprintf(fp, "*%s.ColorModel Black/%s: \"\"\n", lang, _("Inverted Grayscale"));
+
+      if (printer_is_color)
+      {
+	gzprintf(fp, "*%s.ColorModel RGB/%s: \"\"\n", lang, _("RGB Color"));
+	gzprintf(fp, "*%s.ColorModel CMY/%s: \"\"\n", lang, _("CMY Color"));
+	gzprintf(fp, "*%s.ColorModel CMYK/%s: \"\"\n", lang, _("CMYK"));
+	gzprintf(fp, "*%s.ColorModel KCMY/%s: \"\"\n", lang, _("KCMY"));
+      }
+
+      if (!simplified)
+	{
+	  /*
+	   * 8 or 16 bit color (16 bit is slower)
+	   */
+	  gzprintf(fp, "*%s.Translation StpColorPrecision/%s: \"\"\n", lang, _("Color Precision"));
+	  gzprintf(fp, "*%s.StpColorPrecision Normal/%s: \"\"\n", lang, _("Normal"));
+	  gzprintf(fp, "*%s.StpColorPrecision Best/%s: \"\"\n", lang, _("Best"));
+	}
+
+     /*
+      * Media types...
+      */
+
+      stp_describe_parameter(v, "MediaType", &desc);
+      num_opts = stp_string_list_count(desc.bounds.str);
+
+      if (num_opts > 0)
+      {
+	gzprintf(fp, "*%s.Translation MediaType/%s: \"\"\n", lang, _("Media Type"));
+
+	for (i = 0; i < num_opts; i ++)
+	{
+	  opt = stp_string_list_param(desc.bounds.str, i);
+	  gzprintf(fp, "*%s.MediaType %s/%s: \"\"\n", lang, opt->name, opt->text);
+	}
+      }
+      stp_parameter_description_destroy(&desc);
+
+     /*
+      * Input slots...
+      */
+
+      stp_describe_parameter(v, "InputSlot", &desc);
+      num_opts = stp_string_list_count(desc.bounds.str);
+
+      if (num_opts > 0)
+      {
+	gzprintf(fp, "*%s.Translation InputSlot/%s: \"\"\n", lang, _("Media Source"));
+
+	for (i = 0; i < num_opts; i ++)
+	{
+	  opt = stp_string_list_param(desc.bounds.str, i);
+	  gzprintf(fp, "*%s.InputSlot %s/%s: \"\"\n", lang, opt->name, opt->text);
+	}
+      }
+      stp_parameter_description_destroy(&desc);
+
+     /*
+      * Quality settings
+      */
+
+      stp_describe_parameter(v, "Quality", &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
+	{
+	  gzprintf(fp, "*%s.OpenUI *StpQuality/%s: \"\"\n", lang, gettext(desc.text));
+	  num_opts = stp_string_list_count(desc.bounds.str);
+	  for (i = 0; i < num_opts; i++)
+	    {
+	      opt = stp_string_list_param(desc.bounds.str, i);
+	      gzprintf(fp, "*%s.StpQuality %s/%s: \"\"\n", lang, opt->name, opt->text);
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
+
+      stp_describe_parameter(v, "OutputOrder", &desc);
+      if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  gzprintf(fp, "*%s.Translation OutputOrder/%s: \"\"\n", lang, _("Output Order"));
+	  gzprintf(fp, "*%s.OutputOrder Normal/%s: \"\"\n", lang, _("Normal"));
+	  gzprintf(fp, "*%s.OutputOrder Reverse/%s: \"\"\n", lang, _("Reverse"));
+	}
+      stp_parameter_description_destroy(&desc);
+
+     /*
+      * Duplex
+      * Note that the opt->name strings MUST match those in the printer driver(s)
+      * else the PPD files will not be generated correctly
+      */
+
+      stp_describe_parameter(v, "Duplex", &desc);
+      if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  num_opts = stp_string_list_count(desc.bounds.str);
+	  if (num_opts > 0)
+	  {
+	    gzprintf(fp, "*%s.Translation Duplex/%s: \"\"\n", lang, _("2-Sided Printing"));
+
+	    for (i = 0; i < num_opts; i++)
+	      {
+		opt = stp_string_list_param(desc.bounds.str, i);
+		if (strcmp(opt->name, "None") == 0)
+		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, opt->text);
+		else if (strcmp(opt->name, "DuplexNoTumble") == 0)
+		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, opt->text);
+		else if (strcmp(opt->name, "DuplexTumble") == 0)
+		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, opt->text);
+	       }
+	  }
+	}
+      stp_parameter_description_destroy(&desc);
+
+      gzprintf(fp, "*%s.Translation StpiShrinkOutput/%s: \"\"\n", lang,
+	       _("Shrink Page If Necessary to Fit Borders"));
+      gzprintf(fp, "*%s.StpiShrinkOutput %s/%s: \"\"\n", lang, "Shrink", _("Shrink (print the whole page)"));
+      gzprintf(fp, "*%s.StpiShrinkOutput %s/%s: \"\"\n", lang, "Crop", _("Crop (preserve dimensions)"));
+      gzprintf(fp, "*%s.StpiShrinkOutput %s/%s: \"\"\n", lang, "Expand", _("Expand (use maximum page area)"));
+
+      param_list = stp_get_parameter_list(v);
+
+      for (j = 0; j <= STP_PARAMETER_CLASS_OUTPUT; j++)
+	{
+	  for (k = 0; k <= maximum_level; k++)
+	    {
+	      size_t param_count = stp_parameter_list_count(param_list);
+	      for (l = 0; l < param_count; l++)
+		{
+		  const stp_parameter_t *lparam =
+		    stp_parameter_list_param(param_list, l);
+		  if (lparam->p_class != j || lparam->p_level != k ||
+		      is_special_option(lparam->name) || lparam->read_only ||
+		      (lparam->p_type != STP_PARAMETER_TYPE_STRING_LIST &&
+		       lparam->p_type != STP_PARAMETER_TYPE_BOOLEAN &&
+		       lparam->p_type != STP_PARAMETER_TYPE_DIMENSION &&
+		       lparam->p_type != STP_PARAMETER_TYPE_INT &&
+		       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
+		      continue;
+		  stp_describe_parameter(v, lparam->name, &desc);
+		  if (desc.is_active)
+		    {
+		      gzprintf(fp, "*%s.Translation Stp%s/%s: \"\"\n", lang,
+			       desc.name, gettext(desc.text));
+		      switch (desc.p_type)
+			{
+			case STP_PARAMETER_TYPE_STRING_LIST:
+			  if (!desc.is_mandatory)
+			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
+				       "None", _("None"));
+			  num_opts = stp_string_list_count(desc.bounds.str);
+			  for (i = 0; i < num_opts; i++)
+			    {
+			      opt = stp_string_list_param(desc.bounds.str, i);
+			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
+				       desc.name, opt->name, opt->text);
+			    }
+			  break;
+			case STP_PARAMETER_TYPE_BOOLEAN:
+			  if (!desc.is_mandatory)
+			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
+				       "None", _("None"));
+			  gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
+				   desc.name, "False", _("No"));
+			  gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
+				   desc.name, "True", _("Yes"));
+			  break;
+			case STP_PARAMETER_TYPE_DOUBLE:
+			case STP_PARAMETER_TYPE_DIMENSION:
+			case STP_PARAMETER_TYPE_INT:
+			default:
+			  break;
+			}
+		    }
+		  stp_parameter_description_destroy(&desc);
+		}
+	    }
+	}
+      
+    }
+  }
+#endif /* ENABLE_NLS */
+
   stp_parameter_list_destroy(param_list);
 
  /*
