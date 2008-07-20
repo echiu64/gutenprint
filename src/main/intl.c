@@ -156,6 +156,8 @@ stp_setlocale(const char *lang)		/* I - Locale name or "" for default */
 #    ifdef LC_NUMERIC
   setlocale(LC_NUMERIC, "C");
 #    endif /* LC_NUMERIC */
+
+  return (l);
 }
 #  endif /* __APPLE__ */
 #endif /* ENABLE_NLS */
