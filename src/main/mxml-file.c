@@ -607,7 +607,7 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	  */
 
 	  fprintf(stderr, "Mismatched close tag <%s> under parent <%s>!\n",
-	          buffer, parent->value.element.name);
+	          buffer, parent ? parent->value.element.name : "(null)");
           break;
 	}
 
