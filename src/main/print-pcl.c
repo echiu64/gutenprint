@@ -1661,6 +1661,14 @@ pcl_parameters(const stp_vars_t *v, const char *name,
   stp_deprintf(STP_DBG_PCL, "Resolutions: %d\n", caps->resolutions);
   stp_deprintf(STP_DBG_PCL, "ColorType = %d, PrinterType = %d\n", caps->color_type, caps->stp_printer_type);
 
+  for (i = 0; i < the_parameter_count; i++)
+    if (strcmp(name, the_parameters[i].name) == 0)
+      {
+	stp_fill_parameter_settings(description, &(the_parameters[i]));
+	break;
+      }
+  description->deflt.str = NULL;
+
   for (i = 0; i < float_parameter_count; i++)
     if (strcmp(name, float_parameters[i].param.name) == 0)
       {
@@ -1669,15 +1677,8 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	description->deflt.dbl = float_parameters[i].defval;
 	description->bounds.dbl.upper = float_parameters[i].max;
 	description->bounds.dbl.lower = float_parameters[i].min;
-      }
-
-  for (i = 0; i < the_parameter_count; i++)
-    if (strcmp(name, the_parameters[i].name) == 0)
-      {
-	stp_fill_parameter_settings(description, &(the_parameters[i]));
 	break;
       }
-  description->deflt.str = NULL;
 
   if (strcmp(name, "PageSize") == 0)
     {
