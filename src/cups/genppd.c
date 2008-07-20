@@ -1068,7 +1068,7 @@ write_ppd(
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
 #ifdef ENABLE_NLS
-  if (!strcmp(language, "C"))
+  if (!language || !strcmp(language, "C"))
   {
    /*
     * Generate globalized PPDs when POSIX language is requested...
@@ -1869,7 +1869,7 @@ write_ppd(
     }
 
 #ifdef ENABLE_NLS
-  if (!strcmp(language, "C"))
+  if (language && !strcmp(language, "C"))
   {
    /*
     * Generate globalized PPDs when POSIX language is requested...
