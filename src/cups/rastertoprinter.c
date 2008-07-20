@@ -47,6 +47,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <sys/times.h>
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
