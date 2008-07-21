@@ -129,7 +129,6 @@ if MACOSX
 # Oh, yeah, I hate automake.
 install-cupsexec_driverPROGRAMS: $(cupsexec_driver_PROGRAMS)
 	@$(NORMAL_INSTALL)
-	test -z "$(cupsexec_driverdir)" || $(MKDIR_P) "$(DESTDIR)$(cupsexec_driverdir)"
 	test -z "$(cups_bundledir)" || $(MKDIR_P) "$(DESTDIR)$(cups_bundledir)/Contents/MacOS"
 	@list='$(cupsexec_driver_PROGRAMS)'; for p in $$list; do \
 	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
@@ -137,15 +136,10 @@ install-cupsexec_driverPROGRAMS: $(cupsexec_driver_PROGRAMS)
 	     || test -f $$p1 \
 	  ; then \
 	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-	   if test -z "$cups_bundledir"; then \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_driverPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(cupsexec_driverdir)/$$f'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_driverPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(cupsexec_driverdir)/$$f" || exit 1; \
-           else \
 	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_driverPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f'"; \
 	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_driverPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f" || exit 1; \
 	    echo " ln -sf '$(cups_bundledir)/Contents/MacOS/$$f' '$(DESTDIR)$(cupsexec_driverdir)/$$f'"; \
 	    ln -sf "$(cups_bundledir)/Contents/MacOS/$$f" "$(DESTDIR)$(cupsexec_driverdir)/$$f"; \
-	   fi; \
 	  fi; \
 	done
 
@@ -158,42 +152,22 @@ install-cupsexec_filterPROGRAMS: $(cupsexec_filter_PROGRAMS)
 	     || test -f $$p1 \
 	  ; then \
 	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-	   if test -z "$cups_bundledir"; then \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_filterPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(cupsexec_filterdir)/$$f'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_filterPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(cupsexec_filterdir)/$$f" || exit 1; \
-           else \
 	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_filterPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f'"; \
 	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_filterPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f" || exit 1; \
 	    echo " ln -sf '$(cups_bundledir)/Contents/MacOS/$$f' '$(DESTDIR)$(cupsexec_filterdir)/$$f'"; \
 	    ln -sf "$(cups_bundledir)/Contents/MacOS/$$f" "$(DESTDIR)$(cupsexec_filterdir)/$$f"; \
-	   fi; \
 	  fi; \
 	done
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
-	if test -n "$(CUPS_PKG)" -a -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(mkdir_p) $(DESTDIR)$(cups_modeldir); \
-	  cd ppd ; \
-	  for language in * ; do \
-	    cd ..; \
-	    $(mkdir_p) $(DESTDIR)$(cups_modeldir)/$$language; \
-	    cd ppd/$$language; \
-	    for ppdfile in * ; do \
-	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
-	    done; \
-	  cd ..; \
-	  done \
-	fi
-	if test ! -z "$(cups_bundledir)"; then \
-          $(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents"; \
-	  cp Info.plist "$(DESTDIR)$(cups_bundledir)/Contents"; \
-	  gcc -o po2strings po2strings.c -liconv; \
-	  for file in ../../po/*.po; do \
-	    lang=`basename $$file .po`; \
-	    $(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj"; \
-	    ./po2strings $$file "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj/Localizable.strings"; \
-	  done \
-	fi
+	$(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents"; \
+	cp Info.plist "$(DESTDIR)$(cups_bundledir)/Contents"; \
+	gcc -o po2strings po2strings.c -liconv; \
+	for file in ../../po/*.po; do \
+	  lang=`basename $$file .po`; \
+	  $(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj"; \
+	  ./po2strings $$file "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj/Localizable.strings"; \
+	done \
 
 # Use the default automake rules for non-OS X
 endif
@@ -203,6 +177,9 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -z "DONT_UNINSTALL_PPDS" ; then \
 	  if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	    $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
+	  fi \
+	  if test ! -z "$(cups_bundledir)"; then \
+            $(RM) -rf "$(DESTDIR)$(cups_bundledir)"; \
 	  fi \
 	fi
 

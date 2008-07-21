@@ -32,3 +32,6 @@ all-macosx:
 
 install-data-macosx:
 # do nothing here
+
+uninstall-data-macosx:
+# do nothing here

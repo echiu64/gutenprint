@@ -1733,8 +1733,8 @@ write_ppd(
 				     desc.name, i, ((double) i) * .001);
 			}
 		      if (!desc.is_mandatory)
-			gzprintf(fp, "*Stp%s None/None: \"\"\n",
-				 desc.name);
+			gzprintf(fp, "*Stp%s None/%s: \"\"\n",
+				 desc.name, _("None"));
 		      else if (! printed_default_value)
 			gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
 				 desc.name, desc.deflt.dbl);
@@ -2090,6 +2090,7 @@ write_ppd(
 				       desc.name, opt->name, opt->text);
 			    }
 			  break;
+
 			case STP_PARAMETER_TYPE_BOOLEAN:
 			  if (!desc.is_mandatory)
 			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
@@ -2099,9 +2100,72 @@ write_ppd(
 			  gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
 				   desc.name, "True", _("Yes"));
 			  break;
+
 			case STP_PARAMETER_TYPE_DOUBLE:
+			  for (i = desc.bounds.dbl.lower * 1000;
+			       i <= desc.bounds.dbl.upper * 1000 ; i += 100)
+			    {
+			      if (desc.deflt.dbl * 1000 == i && desc.is_mandatory)
+				{
+				  gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
+					   desc.name, ((double) i) * .001);
+				  printed_default_value = 1;
+				}
+			      else
+				gzprintf(fp, "*%s.Stp%s %d/%.3f: \"\"\n", lang,
+					 desc.name, i, ((double) i) * .001);
+			    }
+			  if (!desc.is_mandatory)
+			    gzprintf(fp, "*%s.Stp%s None/%s: \"\"\n", lang,
+				     desc.name, _("None"));
+			  else if (! printed_default_value)
+			    gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
+				     desc.name, desc.deflt.dbl);
+			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+				   desc.name, _("Value"));
+			  if (!simplified)
+			    {
+			      gzprintf(fp, "*%s.StpFine%s None/%.3f: \"\"\n", lang,
+			               desc.name, 0.0);
+			      for (i = 0; i < 100; i += 5)
+				gzprintf(fp, "*%s.StpFine%s %d/%.3f: \"\"\n", lang,
+					 desc.name, i, ((double) i) * .001);
+			    }
+			  break;
+
 			case STP_PARAMETER_TYPE_DIMENSION:
+			  if (!desc.is_mandatory)
+			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
+				     "None", _("None"));
+			  for (i = desc.bounds.dimension.lower;
+			       i <= desc.bounds.dimension.upper; i++)
+			    {
+			      /* FIXME
+			       * For now, just use mm; we'll fix it later
+			       * for the locale-appropriate setting.
+			       * --rlk 20040818
+			       */
+			      gzprintf(fp, "*%s.Stp%s %d/%.1f mm: \"\"\n", lang,
+				       desc.name, i, ((double) i) * 25.4 / 72);
+			    }
+			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+				   desc.name, _("Value"));
+			  break;
+
 			case STP_PARAMETER_TYPE_INT:
+			  if (!desc.is_mandatory)
+			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
+				     "None", _("None"));
+			  for (i = desc.bounds.integer.lower;
+			       i <= desc.bounds.integer.upper; i++)
+			    {
+			      gzprintf(fp, "*%s.Stp%s %d/%d: \"\"\n", lang,
+				       desc.name, i, i);
+			    }
+			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+				   desc.name, _("Value"));
+			  break;
+
 			default:
 			  break;
 			}
