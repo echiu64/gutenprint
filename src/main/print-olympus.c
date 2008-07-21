@@ -1225,7 +1225,7 @@ static void updr150_printer_end_func(stp_vars_t *v)
 static const dyesub_pagesize_t cx400_page[] =
 {
   { "w288h432", NULL, 295, 428, 24, 24, 23, 22, DYESUB_PORTRAIT},
-  { "w288h387", "4x5 3/8 (Digital Camera 3:4)", 295, 386, 24, 24, 23, 23, DYESUB_PORTRAIT},
+  { "w288h387", "4x5 3/8", 295, 386, 24, 24, 23, 23, DYESUB_PORTRAIT},
   { "w288h504", NULL, 295, 513, 24, 24, 23, 22, DYESUB_PORTRAIT},
   { "Custom", NULL, 295, 428, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
