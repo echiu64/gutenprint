@@ -1,8 +1,9 @@
 #!/bin/sh
 
-rm -rf ppd ppd-stamp
-
-make ppd
+if [ "$#" = 0 ] ; then
+    rm -rf ppd ppd-stamp
+    make ppd
+fi
 
 ppd_count=`find ppd \( -name '*.ppd.gz' -o -name '*.ppd' \) -print | wc -l`
 
