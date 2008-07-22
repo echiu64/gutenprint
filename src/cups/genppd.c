@@ -2106,11 +2106,8 @@ write_ppd(
 			       i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			    {
 			      if (desc.deflt.dbl * 1000 == i && desc.is_mandatory)
-				{
-				  gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
-					   desc.name, ((double) i) * .001);
-				  printed_default_value = 1;
-				}
+				gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
+				         desc.name, ((double) i) * .001);
 			      else
 				gzprintf(fp, "*%s.Stp%s %d/%.3f: \"\"\n", lang,
 					 desc.name, i, ((double) i) * .001);
@@ -2118,9 +2115,6 @@ write_ppd(
 			  if (!desc.is_mandatory)
 			    gzprintf(fp, "*%s.Stp%s None/%s: \"\"\n", lang,
 				     desc.name, _("None"));
-			  else if (! printed_default_value)
-			    gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
-				     desc.name, desc.deflt.dbl);
 			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
 				   desc.name, _("Value"));
 			  if (!simplified)
