@@ -354,7 +354,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightCyanTransition", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
+      "LightCyanTrans", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -362,7 +362,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightMagentaTransition", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
+      "LightMagentaTrans", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -2024,21 +2024,21 @@ densityDivisor /= 1.2;
       {
 	stp_channel_set_density_adjustment
 	  (v, STP_ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
-			    get_double_param(v, "LightCyanTransition") *
+			    get_double_param(v, "LightCyanTrans") *
 			    get_double_param(v, "Density")));
       }
     if (cols.p.M)
       {
 	stp_channel_set_density_adjustment
 	  (v, STP_ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
-			    get_double_param(v, "LightMagentaTransition") *
+			    get_double_param(v, "LightMagentaTrans") *
 			    get_double_param(v, "Density")));
       }
     if (cols.p.Y)
       {
 	stp_channel_set_density_adjustment
 	  (v, STP_ECOLOR_Y, 1, (get_double_param(v, "YellowDensity") *
-			    get_double_param(v, "LightYellowTransition") *
+			    get_double_param(v, "LightYellowTrans") *
 			    get_double_param(v, "Density")));
       }
   }

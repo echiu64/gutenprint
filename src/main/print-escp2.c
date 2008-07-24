@@ -532,7 +532,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightCyanTransition", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
+      "LightCyanTrans", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -564,7 +564,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightMagentaTransition", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
+      "LightMagentaTrans", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -580,7 +580,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "DarkYellowTransition", N_("Dark Yellow Transition"), N_("Advanced Ink Adjustment"),
+      "DarkYellowTrans", N_("Dark Yellow Transition"), N_("Advanced Ink Adjustment"),
       N_("Dark Yellow Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -604,7 +604,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "GrayTransition", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
+      "GrayTrans", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -628,7 +628,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "DarkGrayTransition", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
+      "DarkGrayTrans", N_("Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -652,7 +652,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightGrayTransition", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
+      "LightGrayTrans", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -676,7 +676,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "Gray3Transition", N_("Dark Gray Transition"), N_("Advanced Ink Adjustment"),
+      "Gray3Trans", N_("Dark Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Dark Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -700,7 +700,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "Gray2Transition", N_("Mid Gray Transition"), N_("Advanced Ink Adjustment"),
+      "Gray2Trans", N_("Mid Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Medium Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -724,7 +724,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "Gray1Transition", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
+      "Gray1Trans", N_("Light Gray Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Gray Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -2341,20 +2341,20 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     set_color_value_parameter(v, description, STP_ECOLOR_M);
   else if (strcmp(name, "DarkYellowValue") == 0)
     set_color_value_parameter(v, description, STP_ECOLOR_Y);
-  else if (strcmp(name, "GrayTransition") == 0)
+  else if (strcmp(name, "GrayTrans") == 0)
     set_gray_transition_parameter(v, description, 2);
-  else if (strcmp(name, "DarkGrayTransition") == 0 ||
-	   strcmp(name, "LightGrayTransition") == 0)
+  else if (strcmp(name, "DarkGrayTrans") == 0 ||
+	   strcmp(name, "LightGrayTrans") == 0)
     set_gray_transition_parameter(v, description, 3);
-  else if (strcmp(name, "Gray1Transition") == 0 ||
-	   strcmp(name, "Gray2Transition") == 0 ||
-	   strcmp(name, "Gray3Transition") == 0)
+  else if (strcmp(name, "Gray1Trans") == 0 ||
+	   strcmp(name, "Gray2Trans") == 0 ||
+	   strcmp(name, "Gray3Trans") == 0)
     set_gray_transition_parameter(v, description, 4);
-  else if (strcmp(name, "LightCyanTransition") == 0)
+  else if (strcmp(name, "LightCyanTrans") == 0)
     set_color_transition_parameter(v, description, STP_ECOLOR_C);
-  else if (strcmp(name, "LightMagentaTransition") == 0)
+  else if (strcmp(name, "LightMagentaTrans") == 0)
     set_color_transition_parameter(v, description, STP_ECOLOR_M);
-  else if (strcmp(name, "DarkYellowTransition") == 0)
+  else if (strcmp(name, "DarkYellowTrans") == 0)
     set_color_transition_parameter(v, description, STP_ECOLOR_Y);
   else if (strcmp(name, "GrayScale") == 0)
     set_gray_scale_parameter(v, description, 2);

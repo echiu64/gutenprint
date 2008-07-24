@@ -215,11 +215,16 @@ ppd-stamp-pre:
 	-mkdir ppd
 
 ppd-nonls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+	wdir=`pwd` ; \
+	cd $(top_builddir)/po ; \
+	$(MAKE) ; \
+	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
 	for language in C ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/$$language ; \
+	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/$$language -c `pwd`/catalog/share/locale ; \
 	done
+	-$(RM) -r catalog
 
 ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 	wdir=`pwd` ; \

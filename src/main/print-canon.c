@@ -324,7 +324,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightCyanTransition", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
+      "LightCyanTrans", N_("Light Cyan Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Cyan Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -332,7 +332,7 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "LightMagentaTransition", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
+      "LightMagentaTrans", N_("Light Magenta Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Magenta Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -340,7 +340,7 @@ static const float_param_t float_parameters[] =
   },
  {
     {
-      "LightYellowTransition", N_("Light Yellow Transition"), N_("Advanced Ink Adjustment"),
+      "LightYellowTrans", N_("Light Yellow Transition"), N_("Advanced Ink Adjustment"),
       N_("Light Yellow Transition"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
@@ -1587,7 +1587,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
     const char secondary[STP_NCOLORS] = {'k','c','m','y'};
     /* names of the density adjustment controls */
     const char *primary_density_control[STP_NCOLORS] = {"BlackDensity","CyanDensity","MagentaDensity","YellowDensity"};
-    const char *secondary_density_control[STP_NCOLORS] = {NULL,"LightCyanTransition","LightMagentaTransition","LightYellowTransition"};
+    const char *secondary_density_control[STP_NCOLORS] = {NULL,"LightCyanTrans","LightMagentaTrans","LightYellowTrans"};
     /* ink darkness for every channel */
     const double ink_darkness[] = {1.0, 0.31 / .5, 0.61 / .97, 0.08};
     const char* channel_order = default_channel_order;

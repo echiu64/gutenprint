@@ -145,23 +145,23 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="cx3650_quadtone" index="0">
     <subchannel color="0">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
     </subchannel>
     <subchannel color="2" headOffset="2">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="Gray3Value"/>
      <SubchannelScaleParam name="Gray3Scale"/>
     </subchannel>
     <subchannel color="1" headOffset="1">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="Gray2Value"/>
      <SubchannelScaleParam name="Gray2Scale"/>
     </subchannel>
     <subchannel color="4">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="Gray1Value"/>
      <SubchannelScaleParam name="Gray1Scale"/>
     </subchannel>

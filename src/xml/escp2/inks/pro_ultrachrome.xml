@@ -37,11 +37,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo2_black" index="0">
     <subchannel color="0" subchannel="0">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
     </subchannel>
     <subchannel color="0" subchannel="1">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="GrayValue"/>
      <SubchannelScaleParam name="GrayScale"/>
     </subchannel>
@@ -50,11 +50,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
     </subchannel>
     <subchannel color="2" subchannel="1">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
      <SubchannelValueParam name="LightCyanValue"/>
      <SubchannelScaleParam name="LightCyanScale"/>
     </subchannel>
@@ -63,11 +63,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
     </subchannel>
     <subchannel color="1" subchannel="1">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
      <SubchannelValueParam name="LightMagentaValue"/>
      <SubchannelScaleParam name="LightMagentaScale"/>
     </subchannel>
@@ -92,11 +92,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
     </subchannel>
     <subchannel color="2" subchannel="1">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
      <SubchannelValueParam name="LightCyanValue"/>
      <SubchannelScaleParam name="LightCyanScale"/>
     </subchannel>
@@ -105,11 +105,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
     </subchannel>
     <subchannel color="1" subchannel="1">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
      <SubchannelValueParam name="LightMagentaValue"/>
      <SubchannelScaleParam name="LightMagentaScale"/>
     </subchannel>
@@ -129,11 +129,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
     </subchannel>
     <subchannel color="2" subchannel="1">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
      <SubchannelValueParam name="LightCyanValue"/>
      <SubchannelScaleParam name="LightCyanScale"/>
     </subchannel>
@@ -142,11 +142,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     <HueCurveParam name="MagentaHueCurve"/>
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
     </subchannel>
     <subchannel color="1" subchannel="1">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
      <SubchannelValueParam name="LightMagentaValue"/>
      <SubchannelScaleParam name="LightMagentaScale"/>
     </subchannel>
@@ -216,11 +216,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo2_black" index="0">
     <subchannel color="0" subchannel="0">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
     </subchannel>
     <subchannel color="0" subchannel="1">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="GrayValue"/>
      <SubchannelScaleParam name="GrayScale"/>
     </subchannel>
@@ -420,11 +420,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo2_black" index="0">
     <subchannel color="0" subchannel="0">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
     </subchannel>
     <subchannel color="0" subchannel="1">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="GrayValue"/>
      <SubchannelScaleParam name="GrayScale"/>
     </subchannel>
@@ -432,11 +432,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo_cyan" index="1">
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
     </subchannel>
     <subchannel color="2" subchannel="1">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
      <SubchannelValueParam name="LightCyanValue"/>
      <SubchannelScaleParam name="LightCyanScale"/>
     </subchannel>
@@ -444,11 +444,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo_magenta" index="2">
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
     </subchannel>
     <subchannel color="1" subchannel="1">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
      <SubchannelValueParam name="LightMagentaValue"/>
      <SubchannelScaleParam name="LightMagentaScale"/>
     </subchannel>
@@ -471,11 +471,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo_cyan" index="1">
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
     </subchannel>
     <subchannel color="2" subchannel="1">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
      <SubchannelValueParam name="LightCyanValue"/>
      <SubchannelScaleParam name="LightCyanScale"/>
     </subchannel>
@@ -483,11 +483,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo_magenta" index="2">
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
     </subchannel>
     <subchannel color="1" subchannel="1">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
      <SubchannelValueParam name="LightMagentaValue"/>
      <SubchannelScaleParam name="LightMagentaScale"/>
     </subchannel>
@@ -505,11 +505,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo_cyan" index="1">
     <subchannel color="2" subchannel="0">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
     </subchannel>
     <subchannel color="2" subchannel="1">
      <ChannelDensityParam name="CyanDensity"/>
-     <SubchannelTransitionParam name="LightCyanTransition"/>
+     <SubchannelTransitionParam name="LightCyanTrans"/>
      <SubchannelValueParam name="LightCyanValue"/>
      <SubchannelScaleParam name="LightCyanScale"/>
     </subchannel>
@@ -517,11 +517,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo_magenta" index="2">
     <subchannel color="1" subchannel="0">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
     </subchannel>
     <subchannel color="1" subchannel="1">
      <ChannelDensityParam name="MagentaDensity"/>
-     <SubchannelTransitionParam name="LightMagentaTransition"/>
+     <SubchannelTransitionParam name="LightMagentaTrans"/>
      <SubchannelValueParam name="LightMagentaValue"/>
      <SubchannelScaleParam name="LightMagentaScale"/>
     </subchannel>
@@ -584,11 +584,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="photo2_black" index="0">
     <subchannel color="0" subchannel="0">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
     </subchannel>
     <subchannel color="0" subchannel="1">
      <ChannelDensityParam name="BlackDensity"/>
-     <SubchannelTransitionParam name="GrayTransition"/>
+     <SubchannelTransitionParam name="GrayTrans"/>
      <SubchannelValueParam name="GrayValue"/>
      <SubchannelScaleParam name="GrayScale"/>
     </subchannel>
