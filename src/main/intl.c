@@ -43,10 +43,14 @@ stp_cfgettext(const char *string)	/* I - Original English string */
   CFStringRef	cfstring;		/* Copy of English string */
   CFStringRef	cflocstring;		/* Copy of localized string */
   const char	*locstring;		/* Localized UTF-8 string */
+  static int	bundled = -1;		/* Is this app bundled? */
 
 
-  if (!string)
-    return (NULL);
+  if (bundled < 0)
+    bundled = getenv("CFProcessPath") != NULL;
+
+  if (!string || !bundled)
+    return (string);
 
   if ((cfstring = CFStringCreateWithCString(NULL, string, kCFStringEncodingUTF8)) == NULL)
     return (string);
