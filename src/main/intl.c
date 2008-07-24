@@ -110,7 +110,7 @@ typedef struct {
 
 static const locale_map lang_mappings[] =
   {
-    { "cs", "CS_CZ" },
+    { "cs", "cs_CZ" },
     { "da", "da_DK" },
     { "de", "de_DE" },
     { "el", "el_GR" },
@@ -124,6 +124,20 @@ static const locale_map lang_mappings[] =
     { "pt", "pt_PT" },
     { "sk", "sk_SK" },
     { "sv", "sv_SE" },
+    { "cs.UTF8", "cs_CZ.UTF8" },
+    { "da.UTF8", "da_DK.UTF8" },
+    { "de.UTF8", "de_DE.UTF8" },
+    { "el.UTF8", "el_GR.UTF8" },
+    { "es.UTF8", "es_ES.UTF8" },
+    { "fr.UTF8", "fr_FR.UTF8" },
+    { "hu.UTF8", "hu_HU.UTF8" },
+    { "ja.UTF8", "ja_JP.UTF8" },
+    { "nb.UTF8", "nb_NO.UTF8" },
+    { "nl.UTF8", "nl_NL.UTF8" },
+    { "pl.UTF8", "pl_PL.UTF8" },
+    { "pt.UTF8", "pt_PT.UTF8" },
+    { "sk.UTF8", "sk_SK.UTF8" },
+    { "sv.UTF8", "sv_SE.UTF8" },
   };
 static int lang_map_count = sizeof(lang_mappings) / sizeof(locale_map);
 
