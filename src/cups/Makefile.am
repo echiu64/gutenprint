@@ -222,7 +222,7 @@ ppd-nonls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 	for language in C ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/$$language -c `pwd`/catalog/share/locale ; \
+	  LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/$$language -c `pwd`/catalog/share/locale ; \
 	done
 	-$(RM) -r catalog
 

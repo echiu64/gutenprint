@@ -676,12 +676,9 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
       char *ppd_option_name = stp_malloc(strlen(param->name) + 8);	/* StpFineFOO\0 */
 
       stp_describe_parameter(v, param->name, &desc);
-      if (!strcmp(desc.name, "LightMagentaTransition"))
-        strcpy(ppd_option_name, "StpLtMagentaTransition");
-      else
-	sprintf(ppd_option_name, "Stp%s", desc.name);
       if (desc.p_type == STP_PARAMETER_TYPE_DOUBLE)
 	{
+	  sprintf(ppd_option_name, "Stp%s", desc.name);
 	  val = cupsGetOption(ppd_option_name, num_options, options);
 	  if (!val)
 	    {
@@ -713,10 +710,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	      else
 		{
 		  double coarse_val = atof(val) * 0.001;
-		  if (!strcmp(desc.name, "LightMagentaTransition"))
-		    strcpy(ppd_option_name, "StpFineLtMagentaTransition");
-		  else
-		    sprintf(ppd_option_name, "StpFine%s", desc.name);
+		  sprintf(ppd_option_name, "StpFine%s", desc.name);
 		  val = cupsGetOption(ppd_option_name, num_options, options);
 		  if (!val)
 		    {
@@ -740,6 +734,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 	}
       else
 	{
+	  sprintf(ppd_option_name, "Stp%s", desc.name);
 	  val = cupsGetOption(ppd_option_name, num_options, options);
 	  if (!val)
 	    {

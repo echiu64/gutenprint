@@ -924,7 +924,6 @@ write_ppd(
   const stp_vars_t *printvars;		/* Printer option names */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
-  char		option_name[24];	/* Option name */
   int		variable_sizes;		/* Does the driver support variable sizes? */
   int		min_width,		/* Min/max custom size */
 		min_height,
@@ -938,8 +937,8 @@ write_ppd(
   int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
 #ifdef ENABLE_NLS
-  char		auto_resolution[64],	/* Automatic resolution name */
-		resolutions[100][64];	/* Resolution names */
+  char		*default_resolution;  /* Default resolution mapped name */
+  stp_string_list_t *resolutions = stp_string_list_create();
   char		**all_langs = getlangs();/* All languages */
 #endif /* ENABLE_NLS */
 
@@ -1488,7 +1487,7 @@ write_ppd(
 	  */
 	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
 #ifdef ENABLE_NLS
-	  strcpy(auto_resolution, res_name);
+	  default_resolution = stp_strdup(res_name);
 #endif /* ENABLE_NLS */
 	  stp_string_list_add_string(res_list, res_name, res_name);
 	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
@@ -1526,7 +1525,7 @@ write_ppd(
 	  stp_set_string_parameter(v, "Resolution", opt->name);
 	  stp_describe_resolution(v, &xdpi, &ydpi);
 
-	  /* This should not happen! */
+	  /* This should only happen with a "None" resolution */
 	  if (xdpi == -1 || ydpi == -1)
 	    continue;
 
@@ -1561,7 +1560,7 @@ write_ppd(
 		tmp_xdpi /= 2;
 	    } while (!resolution_ok);
 #ifdef ENABLE_NLS
-          strcpy(resolutions[i], res_name); /* Save for localization */
+	  stp_string_list_add_string(resolutions, res_name, res_name);
 #endif /* ENABLE_NLS */
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		   res_name, opt->text, xdpi, ydpi, i + 1);
@@ -1655,10 +1654,6 @@ write_ppd(
 		   lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 		  continue;
 	      stp_describe_parameter(v, lparam->name, &desc);
-	      if (!strcmp(desc.name, "LightMagentaTransition"))
-		strcpy(option_name, "StpLtMagentaTransition");
-	      else
-		snprintf(option_name, sizeof(option_name), "Stp%s", desc.name);
 	      if (desc.is_active)
 		{
 		  int printed_default_value = 0;
@@ -1667,143 +1662,137 @@ write_ppd(
 		      print_group_open(fp, j, k);
 		      printed_open_group = 1;
 		    }
-		  gzprintf(fp, "*OpenUI *%s/%s: PickOne\n",
-			   option_name, gettext(desc.text));
-		  gzprintf(fp, "*OrderDependency: 10 AnySetup *%s\n",
-			   option_name);
+		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
+			   desc.name, gettext(desc.text));
+		  gzprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n",
+			   desc.name);
 		  switch (desc.p_type)
 		    {
 		    case STP_PARAMETER_TYPE_STRING_LIST:
-		      gzprintf(fp, "*Stp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-			       option_name, desc.p_type, desc.is_mandatory,
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
 			       0.0, 0.0, 0.0);
 		      if (desc.is_mandatory)
 			{
-			  gzprintf(fp, "*Default%s: %s\n",
-				   option_name, desc.deflt.str);
-			  gzprintf(fp, "*StpDefault%s: %s\n",
-				   option_name, desc.deflt.str);
+			  gzprintf(fp, "*DefaultStp%s: %s\n",
+				   desc.name, desc.deflt.str);
+			  gzprintf(fp, "*StpDefaultStp%s: %s\n",
+				   desc.name, desc.deflt.str);
 			}
 		      else
 			{
-			  gzprintf(fp, "*Default%s: None\n", option_name);
-			  gzprintf(fp, "*StpDefault%s: None\n", option_name);
-			  gzprintf(fp, "*%s %s/%s: \"\"\n", option_name,
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
 		      num_opts = stp_string_list_count(desc.bounds.str);
 		      for (i = 0; i < num_opts; i++)
 			{
 			  opt = stp_string_list_param(desc.bounds.str, i);
-			  gzprintf(fp, "*%s %s/%s: \"\"\n",
-				   option_name, opt->name, opt->text);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
+				   desc.name, opt->name, opt->text);
 			}
 		      break;
 		    case STP_PARAMETER_TYPE_BOOLEAN:
-		      gzprintf(fp, "*Stp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-			       option_name, desc.p_type, desc.is_mandatory,
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
 			       0.0, 0.0, desc.deflt.boolean ? 1.0 : 0.0);
 		      if (desc.is_mandatory)
 			{
-			  gzprintf(fp, "*Default%s: %s\n", option_name,
+			  gzprintf(fp, "*DefaultStp%s: %s\n", desc.name,
 				   desc.deflt.boolean ? "True" : "False");
-			  gzprintf(fp, "*StpDefault%s: %s\n", option_name,
+			  gzprintf(fp, "*StpDefaultStp%s: %s\n", desc.name,
 				   desc.deflt.boolean ? "True" : "False");
 			}
 		      else
 			{
-			  gzprintf(fp, "*Default%s: None\n", option_name);
-			  gzprintf(fp, "*StpDefault%s: None\n", option_name);
-			  gzprintf(fp, "*%s %s/%s: \"\"\n", option_name,
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
-		      gzprintf(fp, "*%s %s/%s: \"\"\n",
-			       option_name, "False", _("No"));
-		      gzprintf(fp, "*%s %s/%s: \"\"\n",
-			       option_name, "True", _("Yes"));
+		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
+			       desc.name, "False", _("No"));
+		      gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
+			       desc.name, "True", _("Yes"));
 		      break;
 		    case STP_PARAMETER_TYPE_DOUBLE:
-		      gzprintf(fp, "*Stp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-			       option_name, desc.p_type, desc.is_mandatory,
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
 			       desc.bounds.dbl.lower, desc.bounds.dbl.upper,
 			       desc.deflt.dbl);
-		      gzprintf(fp, "*Default%s: None\n", option_name);
-		      gzprintf(fp, "*StpDefault%s: None\n", option_name);
+		      gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+		      gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
 		      for (i = desc.bounds.dbl.lower * 1000;
 			   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			{
 			  if (desc.deflt.dbl * 1000 == i && desc.is_mandatory)
 			    {
-			      gzprintf(fp, "*%s None/%.3f: \"\"\n",
-				       option_name, ((double) i) * .001);
+			      gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
+				       desc.name, ((double) i) * .001);
 			      printed_default_value = 1;
 			    }
 			  else
-			    gzprintf(fp, "*%s %d/%.3f: \"\"\n",
-				     option_name, i, ((double) i) * .001);
+			    gzprintf(fp, "*Stp%s %d/%.3f: \"\"\n",
+				     desc.name, i, ((double) i) * .001);
 			}
 		      if (!desc.is_mandatory)
-			gzprintf(fp, "*%s None/%s: \"\"\n",
-				 option_name, _("None"));
+			gzprintf(fp, "*Stp%s None/%s: \"\"\n",
+				 desc.name, _("None"));
 		      else if (! printed_default_value)
-			gzprintf(fp, "*%s None/%.3f: \"\"\n",
-				 option_name, desc.deflt.dbl);
-		      gzprintf(fp, "*CloseUI: *%s\n\n", option_name);
+			gzprintf(fp, "*Stp%s None/%.3f: \"\"\n",
+				 desc.name, desc.deflt.dbl);
+		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 
                      /*
 		      * Add custom option code and value parameter...
 		      */
 
-		      gzprintf(fp, "*Custom%s True: \"pop\"\n", option_name);
-		      gzprintf(fp, "*ParamCustom%s Value/%s: 1 real %.3f %.3f\n\n",
-		               option_name, _("Value"),  desc.bounds.dbl.lower,
+		      gzprintf(fp, "*CustomStp%s True: \"pop\"\n", desc.name);
+		      gzprintf(fp, "*ParamCustomStp%s Value/%s: 1 real %.3f %.3f\n\n",
+		               desc.name, _("Value"),  desc.bounds.dbl.lower,
 			       desc.bounds.dbl.upper);
 		      if (!simplified)
 			{
-			  char fine_option_name[41];
-
-			  if (!strcmp(desc.name, "LightMagentaTransition"))
-			    strcpy(fine_option_name, "StpFineLtMagentaTransition");
-			  else
-			    snprintf(fine_option_name, sizeof(fine_option_name), "StpFine%s", desc.name);
-			  gzprintf(fp, "*OpenUI *%s/%s %s: PickOne\n",
-				   fine_option_name, gettext(desc.text), _("Fine Adjustment"));
-			  gzprintf(fp, "*Stp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-				   fine_option_name, STP_PARAMETER_TYPE_INVALID, 0,
+			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
+				   desc.name, gettext(desc.text), _("Fine Adjustment"));
+			  gzprintf(fp, "*StpStpFine%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+				   desc.name, STP_PARAMETER_TYPE_INVALID, 0,
 				   0, 0, -1, 0.0, 0.0, 0.0);
-			  gzprintf(fp, "*Default%s:None\n", fine_option_name);
-			  gzprintf(fp, "*StpDefault%s:None\n", fine_option_name);
-			  gzprintf(fp, "*%s None/0.000: \"\"\n", fine_option_name);
+			  gzprintf(fp, "*DefaultStpFine%s:None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStpFine%s:None\n", desc.name);
+			  gzprintf(fp, "*StpFine%s None/0.000: \"\"\n", desc.name);
 			  for (i = 0; i < 100; i += 5)
-			    gzprintf(fp, "*%s %d/%.3f: \"\"\n",
-				     option_name, i, ((double) i) * .001);
-			  gzprintf(fp, "*CloseUI: *%s\n\n", option_name);
+			    gzprintf(fp, "*StpFine%s %d/%.3f: \"\"\n",
+				     desc.name, i, ((double) i) * .001);
+			  gzprintf(fp, "*CloseUI: *StpFine%s\n\n", desc.name);
 			}
 		      print_close_ui = 0;
 
 		      break;
 		    case STP_PARAMETER_TYPE_DIMENSION:
-		      gzprintf(fp, "*Stp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-			       option_name, desc.p_type, desc.is_mandatory,
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
 			       (double) desc.bounds.dimension.lower,
 			       (double) desc.bounds.dimension.upper,
 			       (double) desc.deflt.dimension);
 		      if (desc.is_mandatory)
 			{
-			  gzprintf(fp, "*Default%s: %d\n",
-				   option_name, desc.deflt.dimension);
-			  gzprintf(fp, "*StpDefault%s: %d\n",
-				   option_name, desc.deflt.dimension);
+			  gzprintf(fp, "*DefaultStp%s: %d\n",
+				   desc.name, desc.deflt.dimension);
+			  gzprintf(fp, "*StpDefaultStp%s: %d\n",
+				   desc.name, desc.deflt.dimension);
 			}
 		      else
 			{
-			  gzprintf(fp, "*Default%s: None\n", option_name);
-			  gzprintf(fp, "*StpDefault%s: None\n", option_name);
-			  gzprintf(fp, "*%s %s/%s: \"\"\n", option_name,
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
 		      for (i = desc.bounds.dimension.lower;
@@ -1814,62 +1803,62 @@ write_ppd(
 			   * for the locale-appropriate setting.
 			   * --rlk 20040818
 			   */
-			  gzprintf(fp, "*%s %d/%.1f mm: \"\"\n",
-				   option_name, i, ((double) i) * 25.4 / 72);
+			  gzprintf(fp, "*Stp%s %d/%.1f mm: \"\"\n",
+				   desc.name, i, ((double) i) * 25.4 / 72);
 			}
 
 		      print_close_ui = 0;
-		      gzprintf(fp, "*CloseUI: *%s\n\n", option_name);
+		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 
                      /*
 		      * Add custom option code and value parameter...
 		      */
 
-		      gzprintf(fp, "*Custom%s True: \"pop\"\n", option_name);
-		      gzprintf(fp, "*ParamCustom%s Value/%s: 1 points %d %d\n\n",
-		               option_name, _("Value"),
+		      gzprintf(fp, "*CustomStp%s True: \"pop\"\n", desc.name);
+		      gzprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
+		               desc.name, _("Value"),
 			       desc.bounds.dimension.lower,
 			       desc.bounds.dimension.upper);
 
 		      break;
 		    case STP_PARAMETER_TYPE_INT:
-		      gzprintf(fp, "*Stp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-			       option_name, desc.p_type, desc.is_mandatory,
+		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
 			       (double) desc.bounds.integer.lower,
 			       (double) desc.bounds.integer.upper,
 			       (double) desc.deflt.integer);
 		      if (desc.is_mandatory)
 			{
-			  gzprintf(fp, "*Default%s: %d\n",
-				   option_name, desc.deflt.integer);
-			  gzprintf(fp, "*StpDefault%s: %d\n",
-				   option_name, desc.deflt.integer);
+			  gzprintf(fp, "*DefaultStp%s: %d\n",
+				   desc.name, desc.deflt.integer);
+			  gzprintf(fp, "*StpDefaultStp%s: %d\n",
+				   desc.name, desc.deflt.integer);
 			}
 		      else
 			{
-			  gzprintf(fp, "*Default%s: None\n", option_name);
-			  gzprintf(fp, "*StpDefault%s: None\n", option_name);
-			  gzprintf(fp, "*%s %s/%s: \"\"\n", option_name,
+			  gzprintf(fp, "*DefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*StpDefaultStp%s: None\n", desc.name);
+			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
 		      for (i = desc.bounds.integer.lower;
 			   i <= desc.bounds.integer.upper; i++)
 			{
-			  gzprintf(fp, "*%s %d/%d: \"\"\n",
-				   option_name, i, i);
+			  gzprintf(fp, "*Stp%s %d/%d: \"\"\n",
+				   desc.name, i, i);
 			}
 
 		      print_close_ui = 0;
-		      gzprintf(fp, "*CloseUI: *%s\n\n", option_name);
+		      gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 
                      /*
 		      * Add custom option code and value parameter...
 		      */
 
-		      gzprintf(fp, "*Custom%s True: \"pop\"\n", option_name);
-		      gzprintf(fp, "*ParamCustom%s Value/%s: 1 points %d %d\n\n",
-		               option_name, _("Value"),
+		      gzprintf(fp, "*CustomStp%s True: \"pop\"\n", desc.name);
+		      gzprintf(fp, "*ParamCustomStp%s Value/%s: 1 points %d %d\n\n",
+		               desc.name, _("Value"),
 			       desc.bounds.dimension.lower,
 			       desc.bounds.dimension.upper);
 
@@ -1878,7 +1867,7 @@ write_ppd(
 		      break;
 		    }
 		  if (print_close_ui)
-		    gzprintf(fp, "*CloseUI: *%s\n\n", option_name);
+		    gzprintf(fp, "*CloseUI: *Stp%s\n\n", desc.name);
 		}
 	      stp_parameter_description_destroy(&desc);
 	    }
@@ -2033,20 +2022,20 @@ write_ppd(
       */
 
       stp_describe_parameter(v, "Resolution", &desc);
-      num_opts = stp_string_list_count(desc.bounds.str);
+      num_opts = stp_string_list_count(resolutions);
 
       if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
 	{
 	  gzprintf(fp, "*%s.Translation Resolution/%s: \"\"\n", lang, _("Resolution"));
 	  if (has_quality_parameter)
 	    gzprintf(fp, "*%s.Resolution %s/%s: \"\"\n", lang,
-		     auto_resolution, _("Automatic"));
+		     default_resolution, _("Automatic"));
 
 	  for (i = 0; i < num_opts; i ++)
 	    {
-	      opt = stp_string_list_param(desc.bounds.str, i);
+	      opt = stp_string_list_param(resolutions, i);
 	      gzprintf(fp, "*%s.Resolution %s/%s: \"\"\n", lang,
-		       resolutions[i], opt->text);
+		       opt->name, opt->text);
 	    }
 	}
 
@@ -2119,37 +2108,33 @@ write_ppd(
 		       lparam->p_type != STP_PARAMETER_TYPE_DOUBLE))
 		      continue;
 		  stp_describe_parameter(v, lparam->name, &desc);
-		  if (!strcmp(desc.name, "LightMagentaTransition"))
-		    strcpy(option_name, "StpLtMagentaTransition");
-		  else
-		    snprintf(option_name, sizeof(option_name), "Stp%s", desc.name);
 		  if (desc.is_active)
 		    {
-		      gzprintf(fp, "*%s.Translation %s/%s: \"\"\n", lang,
-			       option_name, gettext(desc.text));
+		      gzprintf(fp, "*%s.Translation Stp%s/%s: \"\"\n", lang,
+			       desc.name, gettext(desc.text));
 		      switch (desc.p_type)
 			{
 			case STP_PARAMETER_TYPE_STRING_LIST:
 			  if (!desc.is_mandatory)
-			      gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang, option_name,
+			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				       "None", _("None"));
 			  num_opts = stp_string_list_count(desc.bounds.str);
 			  for (i = 0; i < num_opts; i++)
 			    {
 			      opt = stp_string_list_param(desc.bounds.str, i);
-			      gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang,
-				       option_name, opt->name, opt->text);
+			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
+				       desc.name, opt->name, opt->text);
 			    }
 			  break;
 
 			case STP_PARAMETER_TYPE_BOOLEAN:
 			  if (!desc.is_mandatory)
-			      gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang, option_name,
+			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				       "None", _("None"));
-			  gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang,
-				   option_name, "False", _("No"));
-			  gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang,
-				   option_name, "True", _("Yes"));
+			  gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
+				   desc.name, "False", _("No"));
+			  gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
+				   desc.name, "True", _("Yes"));
 			  break;
 
 			case STP_PARAMETER_TYPE_DOUBLE:
@@ -2157,38 +2142,32 @@ write_ppd(
 			       i <= desc.bounds.dbl.upper * 1000 ; i += 100)
 			    {
 			      if (desc.deflt.dbl * 1000 == i && desc.is_mandatory)
-				gzprintf(fp, "*%s.%s None/%.3f: \"\"\n", lang,
-				         option_name, ((double) i) * .001);
+				gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
+				         desc.name, ((double) i) * .001);
 			      else
-				gzprintf(fp, "*%s.%s %d/%.3f: \"\"\n", lang,
-					 option_name, i, ((double) i) * .001);
+				gzprintf(fp, "*%s.Stp%s %d/%.3f: \"\"\n", lang,
+					 desc.name, i, ((double) i) * .001);
 			    }
 			  if (!desc.is_mandatory)
-			    gzprintf(fp, "*%s.%s None/%s: \"\"\n", lang,
-				     option_name, _("None"));
-			  gzprintf(fp, "*%s.ParamCustom%s Value/%s: \"\"\n", lang,
-				   option_name, _("Value"));
+			    gzprintf(fp, "*%s.Stp%s None/%s: \"\"\n", lang,
+				     desc.name, _("None"));
+			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+				   desc.name, _("Value"));
 			  if (!simplified)
 			    {
-			      char fine_option_name[41];
-
-			      if (!strcmp(desc.name, "LightMagentaTransition"))
-				strcpy(fine_option_name, "StpFineLtMagentaTransition");
-			      else
-				snprintf(fine_option_name, sizeof(fine_option_name), "StpFine%s", desc.name);
-			      gzprintf(fp, "*%s.Translation %s/%s %s: \"\"\n", lang,
-			               fine_option_name, gettext(desc.text), _("Fine Adjustment"));
-			      gzprintf(fp, "*%s.%s None/%.3f: \"\"\n", lang,
-			               fine_option_name, 0.0);
+			      gzprintf(fp, "*%s.Translation StpFine%s/%s %s: \"\"\n", lang,
+				       desc.name, gettext(desc.text), _("Fine Adjustment"));
+			      gzprintf(fp, "*%s.StpFine%s None/%.3f: \"\"\n", lang,
+			               desc.name, 0.0);
 			      for (i = 0; i < 100; i += 5)
-				gzprintf(fp, "*%s.%s %d/%.3f: \"\"\n", lang,
-					 fine_option_name, i, ((double) i) * .001);
+				gzprintf(fp, "*%s.StpFine%s %d/%.3f: \"\"\n", lang,
+					 desc.name, i, ((double) i) * .001);
 			    }
 			  break;
 
 			case STP_PARAMETER_TYPE_DIMENSION:
 			  if (!desc.is_mandatory)
-			    gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang, option_name,
+			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				     "None", _("None"));
 			  for (i = desc.bounds.dimension.lower;
 			       i <= desc.bounds.dimension.upper; i++)
@@ -2198,25 +2177,25 @@ write_ppd(
 			       * for the locale-appropriate setting.
 			       * --rlk 20040818
 			       */
-			      gzprintf(fp, "*%s.%s %d/%.1f mm: \"\"\n", lang,
-				       option_name, i, ((double) i) * 25.4 / 72);
+			      gzprintf(fp, "*%s.Stp%s %d/%.1f mm: \"\"\n", lang,
+				       desc.name, i, ((double) i) * 25.4 / 72);
 			    }
-			  gzprintf(fp, "*%s.ParamCustom%s Value/%s: \"\"\n", lang,
-				   option_name, _("Value"));
+			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+				   desc.name, _("Value"));
 			  break;
 
 			case STP_PARAMETER_TYPE_INT:
 			  if (!desc.is_mandatory)
-			    gzprintf(fp, "*%s.%s %s/%s: \"\"\n", lang, option_name,
+			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				     "None", _("None"));
 			  for (i = desc.bounds.integer.lower;
 			       i <= desc.bounds.integer.upper; i++)
 			    {
-			      gzprintf(fp, "*%s.%s %d/%d: \"\"\n", lang,
-				       option_name, i, i);
+			      gzprintf(fp, "*%s.Stp%s %d/%d: \"\"\n", lang,
+				       desc.name, i, i);
 			    }
-			  gzprintf(fp, "*%s.ParamCustom%s Value/%s: \"\"\n", lang,
-				   option_name, _("Value"));
+			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
+				   desc.name, _("Value"));
 			  break;
 
 			default:
@@ -2230,6 +2209,9 @@ write_ppd(
       
     }
   }
+  if (has_quality_parameter)
+    stp_free(default_resolution);
+  stp_string_list_destroy(resolutions);
 #endif /* ENABLE_NLS */
 
   stp_parameter_list_destroy(param_list);
