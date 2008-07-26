@@ -355,8 +355,6 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
   if (! suppress_messages)
     fprintf(stderr, "DEBUG: Gutenprint: Initialize page\n");
 
-  stp_set_page_width(v, cups->header.PageSize[0]);
-  stp_set_page_height(v, cups->header.PageSize[1]);
   stp_set_outfunc(v, cups_writefunc);
   stp_set_errfunc(v, cups_errfunc);
   stp_set_outdata(v, stdout);
@@ -423,6 +421,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 	  if (!suppress_messages)
 	    fprintf(stderr, "DEBUG: Gutenprint:   Using custom page size for (%d, %d)\n",
 		    cups->header.PageSize[1], cups->header.PageSize[0]);
+	  stp_set_page_width(v, cups->header.PageSize[0]);
+	  stp_set_page_height(v, cups->header.PageSize[1]);
 	}
       else if (stp_get_papersize_by_name(page_size_name))
 	{
@@ -436,7 +436,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 	  if (!suppress_messages)
 	    fprintf(stderr, "DEBUG: Gutenprint:   Can't find page size %s with (%d, %d), using custom page size\n",
 		    page_size_name, cups->header.PageSize[1], cups->header.PageSize[0]);
-	  
+	  stp_set_page_width(v, cups->header.PageSize[0]);
+	  stp_set_page_height(v, cups->header.PageSize[1]);
 	}
     }
   else
@@ -444,6 +445,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
       if (! suppress_messages)
 	fprintf(stderr, "DEBUG: Gutenprint:   No named media size for (%d, %d)\n",
 		cups->header.PageSize[1], cups->header.PageSize[0]);
+      stp_set_page_width(v, cups->header.PageSize[0]);
+      stp_set_page_height(v, cups->header.PageSize[1]);
     }
 
  /*
