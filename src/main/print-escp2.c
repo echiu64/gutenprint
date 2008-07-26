@@ -2521,6 +2521,71 @@ imax(int a, int b)
 }
 
 static void
+escp2_media_size(const stp_vars_t *v,	/* I */
+		 int  *width,		/* O - Width in points */
+		 int  *height) 		/* O - Height in points */
+{
+  if (stp_get_page_width(v) > 0 && stp_get_page_height(v) > 0)
+    {
+      *width = stp_get_page_width(v);
+      *height = stp_get_page_height(v);
+    }
+  else
+    {
+      const char *page_size = stp_get_string_parameter(v, "PageSize");
+      const stp_papersize_t *papersize = NULL;
+      if (page_size)
+	papersize = stp_get_papersize_by_name(page_size);
+      if (!papersize)
+	{
+	  *width = 1;
+	  *height = 1;
+	}
+      else
+	{
+	  *width = papersize->width;
+	  *height = papersize->height;
+	}
+      if (*width == 0 || *height == 0)
+	{
+	  const input_slot_t *slot = stp_escp2_get_input_slot(v);
+	  if (slot && slot->is_cd)
+	    {
+	      papersize = stp_get_papersize_by_name("CDCustom");
+	      if (papersize)
+		{
+		  if (*width == 0)
+		    *width = papersize->width;
+		  if (*height == 0)
+		    *height = papersize->height;
+		}
+	    }
+	  else
+	    {
+	      int papersizes = stp_known_papersizes();
+	      int i;
+	      for (i = 0; i < papersizes; i++)
+		{
+		  papersize = stp_get_papersize_by_index(i);
+		  if (verify_papersize(v, papersize))
+		    {
+		      if (*width == 0)
+			*width = papersize->width;
+		      if (*height == 0)
+			*height = papersize->height;
+		      break;
+		    }
+		}
+	    }
+	}
+      if (*width == 0)
+	*width = 612;
+      if (*height == 0)
+	*height = 792;
+    }
+}
+
+static void
 internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 			int use_maximum_area,
 			int *left, int *right, int *bottom, int *top)
@@ -2546,7 +2611,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
       rollfeed = input_slot->is_roll_feed;
     }
 
-  stp_default_media_size(v, &width, &height);
+  escp2_media_size(v, &width, &height);
   if (cd)
     {
       if (pt)
@@ -3664,7 +3729,7 @@ setup_page(stp_vars_t *v)
 				   safe and print 16 mm */
     }
 
-  stp_default_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
+  escp2_media_size(v, &(pd->page_true_width), &(pd->page_true_height));
   /* Don't use full bleed mode if the paper itself has a margin */
   if (pd->page_left > 0 || pd->page_top > 0)
     stp_set_boolean_parameter(v, "FullBleed", 0);
@@ -4125,7 +4190,7 @@ static const stp_printfuncs_t print_escp2_printfuncs =
 {
   escp2_list_parameters,
   escp2_parameters,
-  stp_default_media_size,
+  escp2_media_size,
   escp2_imageable_area,
   escp2_maximum_imageable_area,
   escp2_limit,
