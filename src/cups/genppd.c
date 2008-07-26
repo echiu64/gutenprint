@@ -135,9 +135,9 @@ const char *special_options[] =
 
 /*
  * TRANSLATORS:
- * Please keep these translated names SHORT.  The number of characters in
- * the parameter class name plus the number of characters in the parameter
- * name must not exceed ~36
+ * Please keep these translated names SHORT.  The number of bytes in
+ * the parameter class name plus the number of bytes in the parameter
+ * name must not exceed 38 BYTES (not characters!)
  */
 
 const char *parameter_class_names[] =
@@ -179,9 +179,11 @@ static void	set_language(const char *lang);
 #endif /* ENABLE_NLS */
 static int	is_special_option(const char *name);
 static void	print_group_close(gzFile fp, stp_parameter_class_t p_class,
-				  stp_parameter_level_t p_level);
+				  stp_parameter_level_t p_level,
+				  const char *language);
 static void	print_group_open(gzFile fp, stp_parameter_class_t p_class,
-				 stp_parameter_level_t p_level);
+				 stp_parameter_level_t p_level,
+				 const char *language);
 static int	write_ppd(gzFile fp, const stp_printer_t *p,
 		          const char *language, const char *ppd_location,
 			  int simplified);
@@ -883,6 +885,55 @@ is_special_option(const char *name)	/* I - Option name */
   return 0;
 }
 
+static size_t
+bytelen(const char *buffer)
+{
+  size_t answer = 0;
+  while (*buffer++ != '\0')
+    answer++;
+  return answer;
+}
+
+static void
+print_group(
+    gzFile                fp,		/* I - File to write to */
+    const char		 *what,
+    stp_parameter_class_t p_class,	/* I - Option class */
+    stp_parameter_level_t p_level,
+    const char		 *language)	/* I - Option level */
+{
+  char buf[64];
+  const char *class = gettext(parameter_class_names[p_class]);
+  const char *level = gettext(parameter_level_names[p_level]);
+  size_t bytes = bytelen(class) + bytelen(level);
+  snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
+  gzprintf(fp, "*%sGroup: C%dL%d/%s\n", what, p_class, p_level, buf);
+#ifdef ENABLE_NLS
+  if (language && !strcmp(language, "C"))
+    {
+      char		**all_langs = getlangs();/* All languages */
+      const char *lang;
+      int langnum;
+
+      for (langnum = 0; all_langs[langnum]; langnum ++)
+	{
+	  lang = all_langs[langnum];
+
+	  if (!strcmp(lang, "C") || !strcmp(lang, "en"))
+	    continue;
+	  set_language(lang);
+	  class = gettext(parameter_class_names[p_class]);
+	  level = gettext(parameter_level_names[p_level]);
+	  bytes = bytelen(class) + bytelen(level);
+	  snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
+	  gzprintf(fp, "*%s.Translation C%dL%d/%s: \"\"\n",
+		   lang, p_class, p_level, buf);
+	}
+      set_language("C");
+    }
+#endif
+  gzputs(fp, "\n");
+}
 
 /*
  * 'print_group_close()' - Close a UI group.
@@ -892,11 +943,10 @@ static void
 print_group_close(
     gzFile                fp,		/* I - File to write to */
     stp_parameter_class_t p_class,	/* I - Option class */
-    stp_parameter_level_t p_level)	/* I - Option level */
+    stp_parameter_level_t p_level,	/* I - Option level */
+    const char		 *language)	/* I - language */
 {
-  gzprintf(fp, "*CloseGroup: %s %s\n\n",
-	   gettext(parameter_class_names[p_class]),
-	   gettext(parameter_level_names[p_level]));
+  print_group(fp, "Close", p_class, p_level, NULL);
 }
 
 
@@ -908,11 +958,10 @@ static void
 print_group_open(
     gzFile                fp,		/* I - File to write to */
     stp_parameter_class_t p_class,	/* I - Option class */
-    stp_parameter_level_t p_level)	/* I - Option level */
+    stp_parameter_level_t p_level,	/* I - Option level */
+    const char		 *language)	/* I - language */
 {
-  gzprintf(fp, "*OpenGroup: %s %s\n\n",
-	   gettext(parameter_class_names[p_class]),
-	   gettext(parameter_level_names[p_level]));
+  print_group(fp, "Open", p_class, p_level, language ? language : "C");
 }
 
 
@@ -956,7 +1005,7 @@ write_ppd(
   int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
 #ifdef ENABLE_NLS
-  char		*default_resolution;  /* Default resolution mapped name */
+  char		*default_resolution = NULL;  /* Default resolution mapped name */
   stp_string_list_t *resolutions = stp_string_list_create();
   char		**all_langs = getlangs();/* All languages */
 
@@ -1683,7 +1732,7 @@ write_ppd(
 		  int printed_default_value = 0;
 		  if (!printed_open_group)
 		    {
-		      print_group_open(fp, j, k);
+		      print_group_open(fp, j, k, language);
 		      printed_open_group = 1;
 		    }
 		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
@@ -1896,7 +1945,7 @@ write_ppd(
 	      stp_parameter_description_destroy(&desc);
 	    }
 	  if (printed_open_group)
-	    print_group_close(fp, j, k);
+	    print_group_close(fp, j, k, language);
 	}
     }
 
@@ -1943,15 +1992,18 @@ write_ppd(
 	if (!papersize)
 	  continue;
 
+/*
 	if (strcmp(opt->name, "Custom") == 0)
 	  continue;
+*/
 
 	if (simplified && num_opts >= 10 &&
 	    (papersize->paper_unit == PAPERSIZE_ENGLISH_EXTENDED ||
 	     papersize->paper_unit == PAPERSIZE_METRIC_EXTENDED))
 	  continue;
 
-	if (papersize->width <= 0 || papersize->height <= 0)
+	if ((papersize->width <= 0 || papersize->height <= 0) &&
+	    strcmp(opt->name, "Custom") != 0)
 	  continue;
 
         gzprintf(fp, "*%s.PageSize %s/%s: \"\"\n", lang, opt->name, opt->text);
