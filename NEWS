@@ -194,6 +194,10 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      output performance.  These offer improvements primarily for
      grayscale output.
 
+  19) A problem whereby use of custom page size with Epson
+     PictureMate/E-series printers would cause the CUPS driver to hang
+     has been fixed.
+
 
 * CHANGES FROM GUTENPRINT 5.2.0-BETA2:
 
