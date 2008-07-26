@@ -133,6 +133,13 @@ const char *special_options[] =
   NULL
 };
 
+/*
+ * TRANSLATORS:
+ * Please keep these translated names SHORT.  The number of characters in
+ * the parameter class name plus the number of characters in the parameter
+ * name must not exceed ~36
+ */
+
 const char *parameter_class_names[] =
 {
   N_("Printer Features"),
