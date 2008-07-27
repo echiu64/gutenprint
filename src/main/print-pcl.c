@@ -273,26 +273,16 @@ static const pcl_t pcl_resolutions[] =
 };
 #define NUM_RESOLUTIONS		(sizeof(pcl_resolutions) / sizeof (pcl_t))
 
-static void
-pcl_describe_resolution(const stp_vars_t *v, int *x, int *y)
+static const pcl_t pcl_qualities[] =
 {
-  int i;
-  const char *resolution = stp_get_string_parameter(v, "Resolution");
-  if (resolution)
-    {
-      for (i = 0; i < NUM_RESOLUTIONS; i++)
-	{
-	  if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
-	    {
-	      *x = pcl_resolutions[i].p0;
-	      *y = pcl_resolutions[i].p1;
-	      return;
-	    }
-	}
-    }
-  *x = -1;
-  *y = -1;
-}
+    { "Draft", N_("Draft"), PCL_RES_150_150, 150, 150},
+    { "Standard", N_("Standard"), PCL_RES_300_300, 300, 300},
+    { "High", N_("High"), PCL_RES_600_600, 600, 600},
+    { "High", N_("Standard"), PCL_RES_600_300, 600, 300},
+    { "Photo", N_("Photo"), PCL_RES_1200_600, 1200, 600},
+    { "Photo", N_("Photo"), PCL_RES_2400_600, 2400, 600},
+};
+#define NUM_QUALITIES		(sizeof(pcl_qualities) / sizeof (pcl_t))
 
 typedef struct {
   int top_margin;
@@ -1278,6 +1268,18 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "Quality", N_("Print Quality"), N_("Basic Output Adjustment"),
+    N_("Print Quality"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+  },
+  {
+    "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
+    N_("Resolution of the print"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
     N_("Resolution and quality of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -1488,6 +1490,51 @@ pcl_get_model_capabilities(int model)	/* I: Model */
   }
   stp_erprintf("pcl: model %d not found in capabilities list.\n",model);
   return &(pcl_model_capabilities[0]);
+}
+
+/*
+ * Determine the current resolution based on quality and resolution settings
+ */
+
+static void
+pcl_describe_resolution(const stp_vars_t *v, int *x, int *y)
+{
+  int i;
+  int model = stp_get_model_id(v);
+  const char *resolution = stp_get_string_parameter(v, "Resolution");
+  const char *quality;
+  const pcl_cap_t *caps = NULL;
+  if (resolution)
+    {
+      for (i = 0; i < NUM_RESOLUTIONS; i++)
+	{
+	  if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
+	    {
+	      *x = pcl_resolutions[i].p0;
+	      *y = pcl_resolutions[i].p1;
+	      return;
+	    }
+	}
+    }
+  quality = stp_get_string_parameter(v, "Quality");
+  caps = pcl_get_model_capabilities(model);
+  if (quality && strcmp(quality, "None") == 0)
+    quality = "Standard";
+  if (quality)
+    {
+      for (i = 0; i < NUM_QUALITIES; i++)
+	{
+	  if ((caps->resolutions & pcl_qualities[i].pcl_code) &&
+	      !strcmp(quality, pcl_qualities[i].pcl_name))
+	    {
+	      *x = pcl_qualities[i].p0;
+	      *y = pcl_qualities[i].p1;
+	      return;
+	    }
+	}
+    }
+  *x = -1;
+  *y = -1;
 }
 
 /*
@@ -1735,15 +1782,11 @@ pcl_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "Resolution") == 0)
   {
     description->bounds.str = stp_string_list_create();
-    description->deflt.str = NULL;
+    stp_string_list_add_string(description->bounds.str, "None", _("Default"));
+    description->deflt.str = "None";
     for (i = 0; i < NUM_RESOLUTIONS; i++)
       if (caps->resolutions & pcl_resolutions[i].pcl_code)
 	{
-	  if (pcl_resolutions[i].pcl_code >= PCL_RES_300_300 &&
-	      description->deflt.str == NULL)
-	    description->deflt.str =
-	      pcl_val_to_string(pcl_resolutions[i].pcl_code,
-				pcl_resolutions, NUM_RESOLUTIONS);
 	  stp_string_list_add_string
 	    (description->bounds.str,
 	     pcl_val_to_string(pcl_resolutions[i].pcl_code,
@@ -1751,8 +1794,31 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	     pcl_val_to_text(pcl_resolutions[i].pcl_code,
 			     pcl_resolutions, NUM_RESOLUTIONS));
 	}
-    if (description->deflt.str == NULL)
-      stp_erprintf("No default resolution set!\n");
+  }
+  else if (strcmp(name, "Quality") == 0)
+  {
+    int has_standard_quality = 0;
+    description->bounds.str = stp_string_list_create();
+    stp_string_list_add_string(description->bounds.str, "None",
+			       _("Manual Control"));
+    for (i = 0; i < NUM_QUALITIES; i++)
+      if (caps->resolutions & pcl_qualities[i].pcl_code)
+	{
+	  const char *qual =
+	    pcl_val_to_string(pcl_qualities[i].pcl_code,
+			      pcl_qualities, NUM_QUALITIES);
+	  if (! stp_string_list_is_present(description->bounds.str, qual))
+	    stp_string_list_add_string
+	      (description->bounds.str, qual,
+	       pcl_val_to_text(pcl_qualities[i].pcl_code,
+			       pcl_qualities, NUM_QUALITIES));
+	  if (strcmp(qual, "Standard") == 0)
+	    has_standard_quality = 1;
+	}
+    if (has_standard_quality)
+      description->deflt.str = "Standard";
+    else
+      description->deflt.str = "None";
   }
   else if (strcmp(name, "InkType") == 0)
   {
@@ -2100,11 +2166,9 @@ get_double_param(stp_vars_t *v, const char *param)
 static int
 pcl_do_print(stp_vars_t *v, stp_image_t *image)
 {
-  int i;
   pcl_privdata_t privdata;
   int		status = 1;
   int		model = stp_get_model_id(v);
-  const char	*resolution = stp_get_string_parameter(v, "Resolution");
   const char	*media_size = stp_get_string_parameter(v, "PageSize");
   const char	*media_type = stp_get_string_parameter(v, "MediaType");
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
@@ -2175,24 +2239,14 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   * Figure out the output resolution...
   */
 
-  xdpi = 0;
-  ydpi = 0;
-  if (resolution)
-    {
-      for (i = 0; i < NUM_RESOLUTIONS; i++)
-	{
-	  if (!strcmp(resolution, pcl_resolutions[i].pcl_name))
-	    {
-	      xdpi = pcl_resolutions[i].p0;
-	      ydpi = pcl_resolutions[i].p1;
-	      break;
-	    }
-	}
-    }
+  pcl_describe_resolution(v, &xdpi, &ydpi);
 
   stp_deprintf(STP_DBG_PCL,"pcl: resolution=%dx%d\n",xdpi,ydpi);
-  if (xdpi == 0 || ydpi == 0)
-    return 0;
+  if (xdpi <= 0 || ydpi <= 0)
+    {
+      stp_eprintf(v, "No resolution found; cannot print.\n");
+      return 0;
+    }
 
  /*
   * Choose the correct color conversion function...
