@@ -252,10 +252,13 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
   int			port;		/* URI port (unused) */
   http_uri_status_t	status;		/* URI decode status */
   const stp_printer_t	*p;		/* Printer driver */
-  const char		*lang = "C";
+  const char		*lang = NULL;
   char			*s;
   char			filename[1024],		/* Filename */
 			ppd_location[1024];	/* Installed location */
+#ifdef ENABLE_NLS
+  char		**all_langs = getlangs();/* All languages */
+#endif
 
   if ((status = httpSeparateURI(HTTP_URI_CODING_ALL, uri,
                                 scheme, sizeof(scheme),
@@ -282,7 +285,6 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
     }
 
 #ifdef ENABLE_NLS
-#if 0
   if (lang && strcmp(lang, "C") != 0)
     {
       while (*all_langs)
@@ -298,9 +300,6 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
 	}
     }
   set_language(lang);
-#else
-  set_language("C");
-#endif
 #endif
 
   if ((p = stp_get_printer_by_driver(hostname)) == NULL)

@@ -63,7 +63,7 @@ my $updated_ppd_count = 0;
 my $skipped_ppd_count = 0;
 my $failed_ppd_count = 0;
 my $exit_after_parse_args = 0;
-my @languages = qw(@ALL_LINGUAS@);
+my @languages = qw(C @ALL_LINGUAS@);
 
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
@@ -204,6 +204,8 @@ sub HELP_MESSAGE($;$$$) {
     print $fh "  -i          Prompt (interactively) for each PPD file.\n";
     print $fh "  -l language Language choice (Gutenprint 5.1 or below).\n";
     print $fh "              Choices: " . join(" ", @languages) . "\n";
+    print $fh "              Or -loriginal to preserve original language\n";
+    print $fh "                 with Gutenprint 5.2 or above\n";
     exit(0);
 }
 
@@ -306,7 +308,7 @@ sub parse_options () {
     if ($opt_h) {
 	help();
     }
-    if ($opt_l && ! grep { $_ eq $opt_l } @languages) {
+    if ($opt_l && lc $opt_l ne "original" && ! grep { $_ eq $opt_l } @languages) {
 	print STDERR "Unknown language '$opt_l'\n";
 	help();
     }
@@ -336,7 +338,9 @@ sub get_ppd_fh($$$$$) {
 	}
 	my ($url);
 	my (@url_list);
-	if ($locale) {
+	if (((defined $opt_r && $opt_r < 5.2) ||
+	     (defined $opt_l && $opt_l ne "")) &&
+	    $locale ne "") {
 	    if ($region) {
 		push @url_list, "gutenprint.$version://$driver/$simplified/${locale}_${region}";
 	    }
@@ -431,7 +435,7 @@ sub update_ppd ($) {
 #	print STDERR "Skipping $ppd_source_filename: not a Gutenprint PPD file\n";
 	return -1;
     }
-    if ($opt_l) {
+    if (defined $opt_l && $opt_l ne "" && lc $opt_l ne "original") {
 	$locale = $opt_l;
     }
     if ($debug & 2) {
