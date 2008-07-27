@@ -106,7 +106,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   1) New printers supported in this release:
 
-     * Epson inkjet printers:
+     - Epson inkjet printers:
 
        B-300
        B-308
@@ -146,7 +146,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      single-language files.  This behavior can be controlled as
      follows:
 
-     * If -l<language> (language = C, cs, fr, etc.) is passed to
+     - If -l<language> (language = C, cs, fr, etc.) is passed to
        cups-genppdupdate, it will be honored no matter what release of
        Gutenprint is in use.  This may be used if applications have
        issues with globalized PPD files.  We would like reports of any
@@ -171,10 +171,10 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
        sv	Swedish
        zh_TW	Simplified Chinese
 
-     * If -loriginal is passed, the original language of the PPD file
+     - If -loriginal is passed, the original language of the PPD file
        will be honored.
 
-     * If no -l option is passed, the original language will be
+     - If no -l option is passed, the original language will be
        honored if -r5.0 or -r5.1 is passed (i. e. if cups-genppdupdate
        is used to downgrade to an older version of Gutenprint), or if
        CUPS 1.1 is in used.
@@ -243,6 +243,8 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      E-series compact photo printers has been fixed.
 
 
+----------------
+
 * CHANGES FROM GUTENPRINT 5.2.0-BETA2:
 
   1) A problem whereby some rows are not printed in color on the Epson
@@ -270,12 +272,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   7) New printers supported in this release:
 
-     * Epson inkjet printers:
+     - Epson inkjet printers:
 
        Offirio PX-B500 (preliminary)
        Offirio PX-B300 (preliminary)
 
-     * Black and white laser printers:
+     - Black and white laser printers:
 
        Brother DCP-8045D
        Brother HL-1430
@@ -818,7 +820,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    1) New printers supported in this release:
 
-      * Epson inkjet printers:
+      - Epson inkjet printers:
 
 	EPSON PictureMate 100
 	EPSON PictureMate 210 (Corrected)
@@ -859,7 +861,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	all of the PictureMate printers have been fully tuned at this
 	point.)
 
-      * Canon inkjet printers:
+      - Canon inkjet printers:
         Canon PIXMA MP520 (#1872394)
 	Canon PIXMA iP6000D
 
@@ -919,7 +921,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
       are not yet created, these tools will assist in calibrating
       printers in the future.
 
-      * The Epson driver now offers additional controls for adjusting
+      - The Epson driver now offers additional controls for adjusting
       	the relationship between light and dark ink:
 
 	+ The Value parameters (such as Light Cyan Value) specify the
@@ -933,11 +935,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	  used (essentially the density of the light ink).  This is
 	  the same as the parameters previously called Cutoff.
 
-      * The Epson driver now exposes as defaults the actual GCR
+      - The Epson driver now exposes as defaults the actual GCR
         settings used for the printer, paper, and ink combination in
         use.
 
-      * The Epson driver now allows passing low level settings such as
+      - The Epson driver now allows passing low level settings such as
         printer base resolution, ink drop size selection, and relative
         ink drop size as parameters.  The ink drop size can be
         accessed in the GIMP plugin, while the base resolution and ink
@@ -945,7 +947,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
         generator or other application that allows setting integer
         parameters.
 
-      * Two new dither algorithms, Segmented and Segmented New, have
+      - Two new dither algorithms, Segmented and Segmented New, have
 	been added.  These are not intended for normal use, and will
 	normally behave like Ordered and Ordered New.  However, if Raw
 	color correction is selected and a printer with multiple drop
@@ -962,7 +964,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
 	This is intended to assist in tuning ink drop sizes and is not
 	normally useful otherwise.
 
-      * A new parameter allowing dumping out of color correction state
+      - A new parameter allowing dumping out of color correction state
 	(lookup tables, GCR data, curves, etc.) has been added, and is
 	accessible in the GIMP plugin.  At present, this data cannot
 	be used directly, but it is intended that in the future this
@@ -1254,6 +1256,9 @@ B) BUILD/INSTALLATION ISSUES
      as KUPS or http://localhost:631 to display many copies of each
      PPD file, all in the English (en) language.  In fact, the PPD
      files should be translated into many different languages.
+
+     Note that this issue should become less severe with globalized
+     PPD files, introduced in Gutenprint 5.2.0-beta4.
 
      The PPD files are created by a program named "genppd" in the
      src/cups directory.  This program is called once for each
