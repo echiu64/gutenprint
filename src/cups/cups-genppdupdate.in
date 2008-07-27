@@ -41,6 +41,7 @@ our $opt_o; # Output directory
 our $opt_r; # Gutenprint version
 our $opt_i; # Interactive
 our $opt_f; # Force upgrade
+our $opt_l; # Language
 
 my $debug = 0;
 my $verbose = 0;   # Verbose output
@@ -62,6 +63,7 @@ my $updated_ppd_count = 0;
 my $skipped_ppd_count = 0;
 my $failed_ppd_count = 0;
 my $exit_after_parse_args = 0;
+my @languages = qw(@ALL_LINGUAS@);
 
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
@@ -168,7 +170,11 @@ if (!$quiet || $verbose) {
 	print STDOUT "No Gutenprint PPD files to update.\n";
     } elsif ($updated_ppd_count > 0) {
 	my $plural = $updated_ppd_count == 1 ? "" : "s";
-	print STDOUT "Updated $updated_ppd_count PPD file${plural}.  Restart cupsd for the changes to take effect.\n";
+	print STDOUT "Updated $updated_ppd_count PPD file${plural}.";
+	if ($opt_o ne "") {
+	    print STDOUT "Restart cupsd for the changes to take effect.";
+	}
+	print STDOUT "\n";
     } else {
 	if ($failed_ppd_count > 0) {
 	    print STDOUT "Failed to update any PPD files\n";
@@ -196,6 +202,8 @@ sub HELP_MESSAGE($;$$$) {
     print $fh "  -r version  Use PPD files for Gutenprint major.minor version.\n";
     print $fh "  -f          Ignore new PPD file safety checks.\n";
     print $fh "  -i          Prompt (interactively) for each PPD file.\n";
+    print $fh "  -l language Language choice (Gutenprint 5.1 or below).\n";
+    print $fh "              Choices: " . join(" ", @languages) . "\n";
     exit(0);
 }
 
@@ -214,7 +222,7 @@ sub help() {
 }
 
 sub parse_options () {
-    if (!getopts('d:hnqs:vNo:p:P:r:if')) {
+    if (!getopts('d:hnqs:vNo:p:P:r:ifl:')) {
 	help();
     }
     if ($opt_n) {
@@ -296,6 +304,10 @@ sub parse_options () {
 	}
     }
     if ($opt_h) {
+	help();
+    }
+    if ($opt_l && ! grep { $_ eq $opt_l } @languages) {
+	print STDERR "Unknown language '$opt_l'\n";
 	help();
     }
     if ($opt_i) {
@@ -419,11 +431,23 @@ sub update_ppd ($) {
 #	print STDERR "Skipping $ppd_source_filename: not a Gutenprint PPD file\n";
 	return -1;
     }
+    if ($opt_l) {
+	$locale = $opt_l;
+    }
     if ($debug & 2) {
 	print "Gutenprint Filename: $filename\n";
-	print "Locale: $locale\n";
+	if ($opt_r eq "" || $opt_r >= 5.2) {
+	    print "Locale: $locale (ignored for Gutenprint >= 5.2)\n";
+	} elsif ($opt_l) {
+	    print "Locale: $locale (from -l)\n";
+	} else {
+	    print "Locale: $locale\n";
+	}
 	print "Language: $lingo\n";
 	print "Driver: $driver\n";
+    }
+    if ($opt_r eq "" || $opt_r >= 5.2) {
+	$locale = "C";
     }
     if ($locale) {
 	# Split into the language and territory.
@@ -581,6 +605,7 @@ default_loop:
 		# Check the old setting is valid
 		foreach my $opt (@{$options{$option}}) {
 		    my $def_option = $default_option_value;
+		    my $odef_option = $def_option;
 		    if ($option eq "Resolution" &&
 			defined $old_resolution_map{$def_option}) {
 			if ($debug & 4) {
@@ -588,17 +613,23 @@ default_loop:
 			}
 			$def_option = $old_resolution_map{$def_option};
 		    }
+		    my @dopts = ($def_option);
+		    if ($def_option ne $odef_option) {
+			push @dopts, $odef_option;
+		    }
 
-		    if (($def_option eq $opt) ||
-			($option eq "Resolution" &&
-			 (defined $resolution_map{$def_option}) &&
-			 ($def_option = $resolution_map{$def_option}) eq $opt)) { # Valid option
-			# Set the option in the new PPD
-			$source_data =~ s/\*($default_option).*/*$1:$def_option/m;
-			if ($verbose) {
-			    print "$ppd_source_filename: Set *$default_option to $def_option\n";
+		    foreach my $dopt (@dopts) {
+			if (($dopt eq $opt) ||
+			    ($option eq "Resolution" &&
+			     (defined $resolution_map{$dopt}) &&
+			     ($dopt = $resolution_map{$dopt}) eq $opt)) { # Valid option
+			    # Set the option in the new PPD
+			    $source_data =~ s/\*($default_option).*/*$1:$dopt/m;
+			    if ($verbose) {
+				print "$ppd_source_filename: Set *$default_option to $dopt\n";
+			    }
+			    next default_loop;
 			}
-			next default_loop;
 		    }
 		}
 		warn "Warning: $ppd_source_filename: Invalid option: *$default_option: $defaults{$default_option}.  Using default setting $new_defaults{$default_option}.\n";

@@ -102,6 +102,7 @@ static const char *gzext = "";
  */
 
 int cups_ppd_ps_level = CUPS_PPD_PS_LEVEL;
+int localize_numbers = 0;
 
 /*
  * File handling stuff...
@@ -253,9 +254,6 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
   const stp_printer_t	*p;		/* Printer driver */
   const char		*lang = "C";
   char			*s;
-#ifdef ENABLE_NLS
-  char			**all_langs = getlangs();
-#endif
   char			filename[1024],		/* Filename */
 			ppd_location[1024];	/* Installed location */
 
@@ -284,6 +282,7 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
     }
 
 #ifdef ENABLE_NLS
+#if 0
   if (lang && strcmp(lang, "C") != 0)
     {
       while (*all_langs)
@@ -299,6 +298,9 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
 	}
     }
   set_language(lang);
+#else
+  set_language("C");
+#endif
 #endif
 
   if ((p = stp_get_printer_by_driver(hostname)) == NULL)
@@ -405,7 +407,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:sa")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saN")) == -1)
       break;
 
     switch (i)
@@ -457,6 +459,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'a':
       which_ppds = 3;
+      break;
+    case 'N':
+      localize_numbers = !localize_numbers;
       break;
     case 'V':
       printf("cups-genppd version %s, "
@@ -522,6 +527,8 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   if (language)
     set_language(language);
+  else
+    set_language("C");
 #  endif /* ENABLE_NLS */
 
  /*
@@ -1143,7 +1150,7 @@ write_ppd(
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
 #ifdef ENABLE_NLS
-  if (!language || !strcmp(language, "C"))
+  if (!language)
   {
    /*
     * Generate globalized PPDs when POSIX language is requested...
@@ -1950,7 +1957,7 @@ write_ppd(
     }
 
 #ifdef ENABLE_NLS
-  if (!language || !strcmp(language, "C"))
+  if (!language)
   {
    /*
     * Generate globalized PPDs when POSIX language is requested...
@@ -2214,18 +2221,19 @@ write_ppd(
 			  break;
 
 			case STP_PARAMETER_TYPE_DOUBLE:
-#  ifdef LOCALIZE_NUMBERS
-			  for (i = desc.bounds.dbl.lower * 1000;
-			       i <= desc.bounds.dbl.upper * 1000 ; i += 100)
+			  if (localize_numbers)
 			    {
-			      if (desc.deflt.dbl * 1000 == i && desc.is_mandatory)
-				gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
-				         desc.name, ((double) i) * .001);
-			      else
-				gzprintf(fp, "*%s.Stp%s %d/%.3f: \"\"\n", lang,
-					 desc.name, i, ((double) i) * .001);
+			      for (i = desc.bounds.dbl.lower * 1000;
+				   i <= desc.bounds.dbl.upper * 1000 ; i += 100)
+				{
+				  if (desc.deflt.dbl * 1000 == i && desc.is_mandatory)
+				    gzprintf(fp, "*%s.Stp%s None/%.3f: \"\"\n", lang,
+					     desc.name, ((double) i) * .001);
+				  else
+				    gzprintf(fp, "*%s.Stp%s %d/%.3f: \"\"\n", lang,
+					     desc.name, i, ((double) i) * .001);
+				}
 			    }
-#  endif /* LOCALIZE_NUMBERS */
 			  if (!desc.is_mandatory)
 			    gzprintf(fp, "*%s.Stp%s None/%s: \"\"\n", lang,
 				     desc.name, _("None"));
@@ -2237,11 +2245,12 @@ write_ppd(
 				       desc.name, gettext(desc.text), _("Fine Adjustment"));
 			      gzprintf(fp, "*%s.StpFine%s None/%.3f: \"\"\n", lang,
 			               desc.name, 0.0);
-#  ifdef LOCALIZE_NUMBERS
-			      for (i = 0; i < 100; i += 5)
-				gzprintf(fp, "*%s.StpFine%s %d/%.3f: \"\"\n", lang,
-					 desc.name, i, ((double) i) * .001);
-#  endif /* LOCALIZE_NUMBERS */
+			      if (localize_numbers)
+				{
+				  for (i = 0; i < 100; i += 5)
+				    gzprintf(fp, "*%s.StpFine%s %d/%.3f: \"\"\n", lang,
+					     desc.name, i, ((double) i) * .001);
+				}
 			    }
 			  break;
 
@@ -2249,19 +2258,20 @@ write_ppd(
 			  if (!desc.is_mandatory)
 			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				     "None", _("None"));
-#  ifdef LOCALIZE_NUMBERS
-			  for (i = desc.bounds.dimension.lower;
-			       i <= desc.bounds.dimension.upper; i++)
+			  if (localize_numbers)
 			    {
-			      /* FIXME
-			       * For now, just use mm; we'll fix it later
-			       * for the locale-appropriate setting.
-			       * --rlk 20040818
-			       */
-			      gzprintf(fp, "*%s.Stp%s %d/%.1f mm: \"\"\n", lang,
-				       desc.name, i, ((double) i) * 25.4 / 72);
+			      for (i = desc.bounds.dimension.lower;
+				   i <= desc.bounds.dimension.upper; i++)
+				{
+				  /* FIXME
+				   * For now, just use mm; we'll fix it later
+				   * for the locale-appropriate setting.
+				   * --rlk 20040818
+				   */
+				  gzprintf(fp, "*%s.Stp%s %d/%.1f mm: \"\"\n", lang,
+					   desc.name, i, ((double) i) * 25.4 / 72);
+				}
 			    }
-#  endif /* LOCALIZE_NUMBERS */
 			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
 				   desc.name, _("Value"));
 			  break;
@@ -2270,14 +2280,15 @@ write_ppd(
 			  if (!desc.is_mandatory)
 			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				     "None", _("None"));
-#  ifdef LOCALIZE_NUMBERS
-			  for (i = desc.bounds.integer.lower;
-			       i <= desc.bounds.integer.upper; i++)
+			  if (localize_numbers)
 			    {
-			      gzprintf(fp, "*%s.Stp%s %d/%d: \"\"\n", lang,
-				       desc.name, i, i);
+			      for (i = desc.bounds.integer.lower;
+				   i <= desc.bounds.integer.upper; i++)
+				{
+				  gzprintf(fp, "*%s.Stp%s %d/%d: \"\"\n", lang,
+					   desc.name, i, i);
+				}
 			    }
-#  endif /* LOCALIZE_NUMBERS */
 			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
 				   desc.name, _("Value"));
 			  break;

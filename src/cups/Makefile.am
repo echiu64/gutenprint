@@ -50,9 +50,11 @@ STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main
 ## Programs
 
 if BUILD_TRANSLATED_CUPS_PPDS
-PPD_NLS = $(PPD_NLS_1)
+PPD = $(PPD_NLS_1)
 LINGUAS = $(ALL_LINGUAS)
 TRANSLATE_PPDS = -DCUPS_TRANSLATED_PPDS
+else
+PPD = ppd-nonls
 endif
 
 if BUILD_SIMPLIFIED_CUPS_PPDS
@@ -208,30 +210,42 @@ ppd-stamp: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ $(t
 	$(MAKE) ppd-stamp-phony
 	touch ppd-stamp
 
-ppd-stamp-phony: ppd-stamp-pre ppd-nonls $(PPD_NLS)
+ppd-stamp-phony: ppd-stamp-pre $(PPD)
 
 ppd-stamp-pre:
 	-$(RM) -r ppd
 	-mkdir ppd
 
 ppd-nonls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
-	wdir=`pwd` ; \
-	cd $(top_builddir)/po ; \
-	$(MAKE) ; \
-	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
-	for language in C ; do \
-	  mkdir ppd/$$language ; \
-	  echo "$$language:" ; \
-	  LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/$$language -c `pwd`/catalog/share/locale ; \
-	done
-	-$(RM) -r catalog
+	-mkdir ppd/C
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/C
 
 ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 	wdir=`pwd` ; \
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
-	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L -c \`pwd\`/catalog/share/locale` ; do \
+	-mkdir ppd/Global
+	@echo "Global PPDs:"
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -c `pwd`/catalog/share/locale
+	-$(RM) -r catalog
+
+ppd-nls-ln: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+	wdir=`pwd` ; \
+	cd $(top_builddir)/po ; \
+	$(MAKE) ; \
+	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+	-mkdir ppd/Global
+	@echo "Global PPDs:"
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -c `pwd`/catalog/share/locale -N
+	-$(RM) -r catalog
+
+ppd-discrete: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+	wdir=`pwd` ; \
+	cd $(top_builddir)/po ; \
+	$(MAKE) ; \
+	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+	for language in C `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L -c \`pwd\`/catalog/share/locale` ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
 	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l $$language -p ppd/$$language -c `pwd`/catalog/share/locale ; \
