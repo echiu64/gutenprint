@@ -436,18 +436,13 @@ sub update_ppd ($) {
     }
     if ($debug & 2) {
 	print "Gutenprint Filename: $filename\n";
-	if ($opt_r eq "" || $opt_r >= 5.2) {
-	    print "Locale: $locale (ignored for Gutenprint >= 5.2)\n";
-	} elsif ($opt_l) {
+	if ($opt_l) {
 	    print "Locale: $locale (from -l)\n";
 	} else {
 	    print "Locale: $locale\n";
 	}
 	print "Language: $lingo\n";
 	print "Driver: $driver\n";
-    }
-    if ($opt_r eq "" || $opt_r >= 5.2) {
-	$locale = "C";
     }
     if ($locale) {
 	# Split into the language and territory.
