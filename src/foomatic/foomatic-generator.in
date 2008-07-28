@@ -1653,10 +1653,9 @@ sub getprintoutmode {
 		(($respersquareinch == $veryhighmaxres) &&
 		 ($symmetry == $veryhighbestsymmetry) &&
 		 (qualityorder($qualstr, $veryhighbestqualstr) > 0))) {
-		unless (($stpprn =~ /^escp2/) && # Epson
-			(($xres > 1440) || # Resolution not higher than
-			 ($yres > 720) ||  # 1440x720
-			 ($qualstr eq "hq2"))) {  # Not "hq2"
+		unless (($xres > 1440) || # Resolution not higher than
+			($yres > 720) ||  # 1440x720
+			($qualstr eq "hq2")) { # Not "hq2"
 		    $veryhighbestsymmetry = $symmetry;
 		    $veryhighmaxres = $respersquareinch;
 		    $veryhighbestqualstr = $qualstr;
