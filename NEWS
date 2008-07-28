@@ -146,12 +146,11 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      single-language files.  This behavior can be controlled as
      follows:
 
-     - If -l<language> (language = C, cs, fr, etc.) is passed to
-       cups-genppdupdate, it will be honored no matter what release of
-       Gutenprint is in use.  This may be used if applications have
-       issues with globalized PPD files.  We would like reports of any
-       such applications.  The list of languages accepted is as
-       follows:
+     - If -l<language> is passed to cups-genppdupdate, it will be
+       honored no matter what release of Gutenprint is in use.  This
+       may be used if applications have issues with globalized PPD
+       files.  We would like reports of any such applications.  The
+       list of languages accepted is as follows:
 
        C	English (US)
        cs	Czech
