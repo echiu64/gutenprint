@@ -51,6 +51,10 @@
       <comment value="8.5in x 11in"/>
       <width value="612"/>
       <height value="792"/>
+<!-- DISTRIBUTORS: Please do NOT insert margins here to work around -->
+<!-- problems with page margins that were present in 5.0.0.  That -->
+<!-- workaround is no longer needed.  Please see the explanation at the -->
+<!-- top of this file. -->
       <unit value="english"/>
     </paper>
     <paper name="Legal">
@@ -58,6 +62,10 @@
       <comment value="8.5in x 14in"/>
       <width value="612"/>
       <height value="1008"/>
+<!-- DISTRIBUTORS: Please do NOT insert margins here to work around -->
+<!-- problems with page margins that were present in 5.0.0.  That -->
+<!-- workaround is no longer needed.  Please see the explanation at the -->
+<!-- top of this file. -->
       <unit value="english"/>
     </paper>
     <paper name="Tabloid">
@@ -314,6 +322,10 @@
       <width value="595"/>
       <height value="842"/>
       <unit value="metric"/>
+<!-- DISTRIBUTORS: Please do NOT insert margins here to work around -->
+<!-- problems with page margins that were present in 5.0.0.  That -->
+<!-- workaround is no longer needed.  Please see the explanation at the -->
+<!-- top of this file. -->
     </paper>
     <paper name="A5">
       <description translate="value" value="A5"/>
