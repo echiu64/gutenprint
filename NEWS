@@ -178,6 +178,13 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
        is used to downgrade to an older version of Gutenprint), or if
        CUPS 1.1 is in used.
 
+     - A new configure option --enable-globalized-cups-ppds (or if not
+       desired, --disable-globalized-cups-ppds) has been added to
+       enable or disable pre-generating globalized PPD files.  This
+       option is only used if --enable-cups-ppds is set.  It defaults
+       to "yes" if CUPS 1.2 or above is in use or "no" if CUPS 1.1 is
+       in use.
+
   4) On the Macintosh, Gutenprint is now localized natively using the
      CoreFoundation framework on Mac OS X, eliminating the need for
      the non-standard GNU gettext software.
