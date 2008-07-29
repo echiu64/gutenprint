@@ -50,7 +50,11 @@ STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main
 ## Programs
 
 if BUILD_TRANSLATED_CUPS_PPDS
+if BUILD_GLOBALIZED_CUPS_PPDS
+PPD = ppd-global
+else
 PPD = $(PPD_NLS_1)
+endif
 LINGUAS = $(ALL_LINGUAS)
 TRANSLATE_PPDS = -DCUPS_TRANSLATED_PPDS
 else
@@ -217,6 +221,7 @@ ppd-stamp-pre:
 	-mkdir ppd
 
 ppd-nonls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
+	-mkdir ppd
 	-mkdir ppd/C
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l C -p ppd/C
 
@@ -225,6 +230,7 @@ ppd-global: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+	-mkdir ppd
 	-mkdir ppd/Global
 	@echo "Global PPDs:"
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -c `pwd`/catalog/share/locale
@@ -245,6 +251,7 @@ ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-n
 	cd $(top_builddir)/po ; \
 	$(MAKE) ; \
 	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+	-mkdir ppd
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L -c \`pwd\`/catalog/share/locale` ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \

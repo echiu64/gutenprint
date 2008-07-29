@@ -206,9 +206,13 @@ STP_ARG_WITH_DETAILED(
      cups_prefix="${prefix}"
   ])
 
+dnl GNU gettext checks.
+AM_GNU_GETTEXT_VERSION([0.16])
+AM_GNU_GETTEXT([external])
+
 USE_LEVEL3_PS=no
 BUILD_CUPS_PPDS="${BUILD_CUPS}"
-BUILD_TRANSLATED_CUPS_PPDS="${BUILD_CUPS}"
+BUILD_TRANSLATED_CUPS_PPDS=no
 BUILD_CUPS_1_2="no"
 if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
   cups_version=`${CUPS_CONFIG} --version | sed -e '1,$s/svn$/.0/'`
@@ -236,10 +240,25 @@ STP_ARG_ENABLE([cups-1_2-enhancements],
                [BUILD_CUPS_1_2],
                [(automatic)])
 
+if test "$USE_NLS" = yes -a "$BUILD_CUPS_PPDS" = yes ; then
+   BUILD_TRANSLATED_CUPS_PPDS="yes"
+fi
+
 STP_ARG_ENABLE([translated-cups-ppds],
                [build translated CUPS PPD files],
                [BUILD_TRANSLATED_CUPS_PPDS],
-               [yes])
+               [(automatic)])
+
+if test "$BUILD_CUPS_1_2" = yes -a "$BUILD_TRANSLATED_CUPS_PPDS" = yes ; then
+   BUILD_GLOBALIZED_CUPS_PPDS=yes
+else
+   BUILD_GLOBALIZED_CUPS_PPDS=no
+fi
+
+STP_ARG_ENABLE([globalized-cups-ppds],
+               [build globalized CUPS PPD files],
+               [BUILD_GLOBALIZED_CUPS_PPDS],
+               [(automatic)])
 
 STP_ARG_ENABLE_DETAILED([simplified-cups-ppds],
 			[],
@@ -536,10 +555,6 @@ if test x${BUILD_GHOSTSCRIPT} = xyes ; then
   IJS_LIBS=`$IJS_CONFIG --libs`
 fi
 
-dnl GNU gettext checks.
-AM_GNU_GETTEXT_VERSION([0.16])
-AM_GNU_GETTEXT([external])
-
 GUTENPRINT_RELEASE_VERSION=${GUTENPRINT_MAJOR_VERSION}.${GUTENPRINT_MINOR_VERSION}
 AH_TEMPLATE(GUTENPRINT_RELEASE_VERSION,, [Gutenprint release version])
 AC_DEFINE_UNQUOTED(GUTENPRINT_RELEASE_VERSION, "${GUTENPRINT_RELEASE_VERSION}")
@@ -767,7 +782,9 @@ AM_CONDITIONAL(BUILD_CUPS_PPDS, test x${BUILD_CUPS_PPDS} = xyes)
 
 AM_CONDITIONAL(CUPS_PPDS_AT_TOP_LEVEL, test x${CUPS_PPDS_AT_TOP_LEVEL} = xyes)
 
-AM_CONDITIONAL(BUILD_TRANSLATED_CUPS_PPDS, test x${BUILD_TRANSLATED_CUPS_PPDS} = xyes)
+AM_CONDITIONAL(BUILD_TRANSLATED_CUPS_PPDS, test x${BUILD_TRANSLATED_CUPS_PPDS} = xyes )
+
+AM_CONDITIONAL(BUILD_GLOBALIZED_CUPS_PPDS, test x${BUILD_GLOBALIZED_CUPS_PPDS} = xyes )
 
 AM_CONDITIONAL(BUILD_SIMPLIFIED_CUPS_PPDS, test x${BUILD_SIMPLIFIED_CUPS_PPDS} = xyes)
 
@@ -1018,6 +1035,7 @@ if test "$BUILD_CUPS" != "no" ; then
     echo "        Build CUPS PPD files:                   $BUILD_CUPS_PPDS"
     if test "$BUILD_CUPS_PPDS" != "no" ; then
 	echo "            Build translated CUPS PPD files:    $BUILD_TRANSLATED_CUPS_PPDS"
+	echo "                Build global CUPS PPD files:    $BUILD_GLOBALIZED_CUPS_PPDS"
 	echo "            Build simplified CUPS PPD files:    $BUILD_SIMPLIFIED_CUPS_PPDS"
 	echo "            Install CUPS PPDs at top level:     $CUPS_PPDS_AT_TOP_LEVEL"
     fi
