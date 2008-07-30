@@ -210,6 +210,17 @@ dnl GNU gettext checks.
 AM_GNU_GETTEXT_VERSION([0.16])
 AM_GNU_GETTEXT([external])
 
+AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
+
+AM_CONDITIONAL(MACOSX, test "`uname`" = Darwin)
+
+# Mac OS X doesn't have GNU gettext, so instead we'll use CoreFoundation to
+# localize Gutenprint...
+if test "`uname`" = Darwin -a "x$USE_NLS" != xno; then
+	USE_NLS="macosx"
+	LIBS="-framework CoreFoundation $LIBS"
+fi
+
 USE_LEVEL3_PS=no
 BUILD_CUPS_PPDS="${BUILD_CUPS}"
 BUILD_TRANSLATED_CUPS_PPDS=no
@@ -240,7 +251,7 @@ STP_ARG_ENABLE([cups-1_2-enhancements],
                [BUILD_CUPS_1_2],
                [(automatic)])
 
-if test "$USE_NLS" = yes -a "$BUILD_CUPS_PPDS" = yes ; then
+if test "$USE_NLS" != no -a "$BUILD_CUPS_PPDS" = yes ; then
    BUILD_TRANSLATED_CUPS_PPDS="yes"
 fi
 
@@ -813,17 +824,6 @@ AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
 STP_CUPS_PATH
-
-AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
-
-AM_CONDITIONAL(MACOSX, test "`uname`" = Darwin)
-
-# Mac OS X doesn't have GNU gettext, so instead we'll use CoreFoundation to
-# localize Gutenprint...
-if test "`uname`" = Darwin -a "x$USE_NLS" != xno; then
-	USE_NLS="macosx"
-	LIBS="-framework CoreFoundation $LIBS"
-fi
 
 # loadable modules
 # portable sh has no AND test...
