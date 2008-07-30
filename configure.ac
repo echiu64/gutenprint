@@ -214,9 +214,20 @@ AM_CONDITIONAL(USE_NLS, test x${USE_NLS} = xyes)
 
 AM_CONDITIONAL(MACOSX, test "`uname`" = Darwin)
 
+if test "`uname`" = Darwin ; then
+   USE_NLS_OSX=yes
+else
+   USE_NLS_OSX=no
+fi
+
+STP_ARG_ENABLE([nls-macosx],
+               [build CUPS PPD files],
+               [USE_NLS_OSX],
+               [(automatic)])
+
 # Mac OS X doesn't have GNU gettext, so instead we'll use CoreFoundation to
 # localize Gutenprint...
-if test "`uname`" = Darwin -a "x$USE_NLS" != xno; then
+if test "`uname`" = Darwin -a "x$USE_NLS_OSX" != xno; then
 	USE_NLS="macosx"
 	LIBS="-framework CoreFoundation $LIBS"
 fi
@@ -1108,6 +1119,7 @@ if test -n "$EXTRA_LIBREADLINE_DEPS" ; then
 else
     echo "    Use readline libraries:                     $USE_READLINE"
 fi
+echo "    uname -a output:                            `uname -a`"
 echo "================================================================"
 if test $warnings_emitted -ne 0 ; then
     echo
