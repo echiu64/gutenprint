@@ -1259,6 +1259,7 @@ write_ppd(
   gzprintf(fp, "*VariablePaperSize: %s\n\n", variable_sizes ? "true" : "false");
 
   gzprintf(fp, "*OpenUI *PageSize/%s: PickOne\n", _("Media Size"));
+  gzputs(fp, "*OPOptionHints PageSize: dropdown\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
   gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	   desc.name, desc.p_type, desc.is_mandatory,
@@ -1274,6 +1275,7 @@ write_ppd(
   gzputs(fp, "*CloseUI: *PageSize\n\n");
 
   gzprintf(fp, "*OpenUI *PageRegion/%s: PickOne\n", _("Media Size"));
+  gzputs(fp, "*OPOptionHints PageRegion: dropdown\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageRegion\n");
   gzprintf(fp, "*DefaultPageRegion: %s\n", desc.deflt.str);
   gzprintf(fp, "*StpDefaultPageRegion: %s\n", desc.deflt.str);
@@ -1309,8 +1311,7 @@ write_ppd(
 
   if (variable_sizes)
   {
-    stp_get_size_limit(v, &max_width, &max_height,
-			       &min_width, &min_height);
+    stp_get_size_limit(v, &max_width, &max_height, &min_width, &min_height);
     stp_set_string_parameter(v, "PageSize", "Custom");
     stp_get_media_size(v, &width, &height);
     stp_get_maximum_imageable_area(v, &left, &right, &bottom, &top);
@@ -1347,6 +1348,7 @@ write_ppd(
   */
 
   gzprintf(fp, "*OpenUI *ColorModel/%s: PickOne\n", _("Color Model"));
+  gzputs(fp, "*OPOptionHints ColorModel: radiobuttons\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
 
   if (printer_is_color)
@@ -1415,6 +1417,7 @@ write_ppd(
        * 8 or 16 bit color (16 bit is slower)
        */
       gzprintf(fp, "*OpenUI *StpColorPrecision/%s: PickOne\n", _("Color Precision"));
+      gzputs(fp, "*OPOptionHints StpColorPrecision: radiobuttons\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
       gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
       gzputs(fp, "*StpDefaultStpColorPrecision: Normal\n");
@@ -1436,6 +1439,7 @@ write_ppd(
   if (num_opts > 0)
   {
     gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
+    gzputs(fp, "*OPOptionHints MediaType: dropdown\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
     gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	     desc.name, desc.p_type, desc.is_mandatory,
@@ -1464,6 +1468,7 @@ write_ppd(
   if (num_opts > 0)
   {
     gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
+    gzputs(fp, "*OPOptionHints InputSlot: dropdown\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
     gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	     desc.name, desc.p_type, desc.is_mandatory,
@@ -1491,14 +1496,18 @@ write_ppd(
     {
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
+      num_opts = stp_string_list_count(desc.bounds.str);
       gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", gettext(desc.text));
+      if (num_opts > 3)
+	gzputs(fp, "*OPOptionHints Quality: radiobuttons\n");
+      else
+	gzputs(fp, "*OPOptionHints Quality: dropdown\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpQuality\n");
       gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	       desc.name, desc.p_type, desc.is_mandatory,
 	       desc.p_type, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
       gzprintf(fp, "*DefaultStpQuality: %s\n", desc.deflt.str);
       gzprintf(fp, "*StpDefaultStpQuality: %s\n", desc.deflt.str);
-      num_opts = stp_string_list_count(desc.bounds.str);
       for (i = 0; i < num_opts; i++)
 	{
 	  opt = stp_string_list_param(desc.bounds.str, i);
@@ -1537,6 +1546,10 @@ write_ppd(
       int tmp_xdpi, tmp_ydpi;
 
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
+      if (num_opts > 3)
+	gzputs(fp, "*OPOptionHints Resolution: resolution, radiobuttons\n");
+      else
+	gzputs(fp, "*OPOptionHints Resolution: resolution, dropdown\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
       gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 	       desc.name, desc.p_type, desc.is_mandatory,
@@ -1657,6 +1670,7 @@ write_ppd(
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
     {
       gzprintf(fp, "*OpenUI *OutputOrder/%s: PickOne\n", _("Output Order"));
+      gzputs(fp, "*OPOptionHints OutputOrder: radiobuttons\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *OutputOrder\n");
       gzprintf(fp, "*DefaultOutputOrder: %s\n", desc.deflt.str);
       gzprintf(fp, "*StpDefaultOutputOrder: %s\n", desc.deflt.str);
@@ -1679,6 +1693,7 @@ write_ppd(
       if (num_opts > 0)
       {
         gzprintf(fp, "*OpenUI *Duplex/%s: PickOne\n", _("2-Sided Printing"));
+	gzputs(fp, "*OPOptionHints Duplex: radiobuttons\n");
         gzputs(fp, "*OrderDependency: 10 AnySetup *Duplex\n");
 	gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 		 desc.name, desc.p_type, desc.is_mandatory,
@@ -1703,6 +1718,7 @@ write_ppd(
 
   gzprintf(fp, "*OpenUI *StpiShrinkOutput/%s: PickOne\n",
 	   _("Shrink Page If Necessary to Fit Borders"));
+  gzputs(fp, "*OPOptionHints StpiShrinkOutput: radiobuttons\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *StpiShrinkOutput\n");
   gzputs(fp, "*DefaultStpiShrinkOutput: Shrink\n");
   gzputs(fp, "*StpDefaultStpiShrinkOutput: Shrink\n");
@@ -1748,6 +1764,13 @@ write_ppd(
 		  switch (desc.p_type)
 		    {
 		    case STP_PARAMETER_TYPE_STRING_LIST:
+		      num_opts = stp_string_list_count(desc.bounds.str);
+		      if (num_opts > 3)
+			gzprintf(fp, "*OPOptionHints %s: dropdown\n",
+				 lparam->name);
+		      else
+			gzprintf(fp, "*OPOptionHints %s: radiobuttons\n",
+				 lparam->name);
 		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
@@ -1766,7 +1789,6 @@ write_ppd(
 			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n", desc.name,
 				   "None", _("None"));
 			}
-		      num_opts = stp_string_list_count(desc.bounds.str);
 		      for (i = 0; i < num_opts; i++)
 			{
 			  opt = stp_string_list_param(desc.bounds.str, i);
@@ -1775,6 +1797,8 @@ write_ppd(
 			}
 		      break;
 		    case STP_PARAMETER_TYPE_BOOLEAN:
+		      gzprintf(fp, "*OPOptionHints %s: checkbox\n",
+			       lparam->name);
 		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
@@ -1799,6 +1823,8 @@ write_ppd(
 			       desc.name, "True", _("Yes"));
 		      break;
 		    case STP_PARAMETER_TYPE_DOUBLE:
+		      gzprintf(fp, "*OPOptionHints %s: slider, input, spinbox\n",
+			       lparam->name);
 		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
@@ -1854,6 +1880,8 @@ write_ppd(
 
 		      break;
 		    case STP_PARAMETER_TYPE_DIMENSION:
+		      gzprintf(fp, "*OPOptionHints %s: length, slider, input, spinbox\n",
+			       lparam->name);
 		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
@@ -1901,6 +1929,8 @@ write_ppd(
 
 		      break;
 		    case STP_PARAMETER_TYPE_INT:
+		      gzprintf(fp, "*OPOptionHints %s: input, spinbox\n",
+			       lparam->name);
 		      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 			       desc.name, desc.p_type, desc.is_mandatory,
 			       desc.p_class, desc.p_level, desc.channel,
@@ -1954,6 +1984,23 @@ write_ppd(
 	    print_group_close(fp, j, k, language);
 	}
     }
+  stp_describe_parameter(v, "ImageType", &desc);
+  if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+    {
+      num_opts = stp_string_list_count(desc.bounds.str);
+      if (num_opts > 0)
+	{
+	  for (i = 0; i < num_opts; i++)
+	    {
+	      opt = stp_string_list_param(desc.bounds.str, i);
+	      if (strcmp(opt->name, "None") != 0)
+		gzprintf(fp, "*APPrinterPreset %s/%s: \"*StpImageType %s\"\n",
+			 opt->name, opt->text, opt->name);
+	    }
+	  gzputs(fp, "\n");
+	}
+    }
+  stp_parameter_description_destroy(&desc);
 
 #ifdef ENABLE_NLS
   if (!language)
@@ -2300,6 +2347,22 @@ write_ppd(
 		}
 	    }
 	}
+      stp_describe_parameter(v, "ImageType", &desc);
+      if (desc.is_active && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
+	{
+	  num_opts = stp_string_list_count(desc.bounds.str);
+	  if (num_opts > 0)
+	    {
+	      for (i = 0; i < num_opts; i++)
+		{
+		  opt = stp_string_list_param(desc.bounds.str, i);
+		  if (strcmp(opt->name, "None") != 0)
+		    gzprintf(fp, "*%s.APPrinterPreset %s/%s: \"*StpImageType %s\"\n",
+			     lang, opt->name, opt->text, opt->name);
+		}
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
       
     }
   }
@@ -2314,7 +2377,7 @@ write_ppd(
   * Fonts...
   */
 
-  gzputs(fp, "*DefaultFont: Courier\n");
+  gzputs(fp, "\n*DefaultFont: Courier\n");
   gzputs(fp, "*Font AvantGarde-Book: Standard \"(001.006S)\" Standard ROM\n");
   gzputs(fp, "*Font AvantGarde-BookOblique: Standard \"(001.006S)\" Standard ROM\n");
   gzputs(fp, "*Font AvantGarde-Demi: Standard \"(001.007S)\" Standard ROM\n");
