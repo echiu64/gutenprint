@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
   stp_init();
 
 #ifdef DEBUG
-  fprintf(stderr, "stp-xml-parse: reading  `%s'...\n", file);
+  fprintf(stderr, "stp-xml-parse: reading  `%s'...\n", argv[1]);
 #endif
 
   fprintf(stderr, "Using file: %s\n", argv[1]);
