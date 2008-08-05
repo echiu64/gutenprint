@@ -248,6 +248,10 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      amounts of CPU and generate no output with Epson PictureMate and
      E-series compact photo printers has been fixed.
 
+  21) The Epson Stylus CX7400, DX7400, and DX7450 now print correctly
+     at all resolutions.  Previously, printing at 720x360 DPI or below
+     was incorrect.  Output will be rather grainy.
+
 
 ----------------
 
