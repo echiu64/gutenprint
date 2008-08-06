@@ -274,6 +274,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+  {
+    "Quality", N_("Print Quality"), N_("Basic Output Adjustment"),
+    N_("Print Quality"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
+  },
 };
 
 static const int the_parameter_count =
@@ -454,9 +460,11 @@ canon_source_type(const char *name, const canon_cap_t * caps)
 static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char* input_slot = stp_get_string_parameter(v, "InputSlot");
     const char *resolution = stp_get_string_parameter(v, "Resolution");
+    const char *quality = stp_get_string_parameter(v, "Quality");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
     int i;
+
     if(resolution){
         for(i=0;i<caps->modelist->count;i++){
             if(!strcmp(resolution,caps->modelist->modes[i].name)){
@@ -465,8 +473,18 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
             }
         }
     }
+
     if(!mode)
         mode = &caps->modelist->modes[caps->modelist->default_mode];
+
+#if 0
+    if(quality && strcmp(quality, "None") == 0)
+        quality = "Standard";
+
+    if(quality && !strcmp(quality,"Standard")){
+        return &caps->modelist->modes[caps->modelist->default_mode];
+    }
+#endif
 
 #if 0
     /* only some modes can print to cd */
@@ -805,6 +823,16 @@ canon_parameters(const stp_vars_t *v, const char *name,
     }
     else
       description->is_active = 0;
+  }
+  else if (strcmp(name, "Quality") == 0)
+  {
+    int has_standard_quality = 0;
+    description->bounds.str = stp_string_list_create();
+    stp_string_list_add_string(description->bounds.str, "None",
+			       _("Manual Control"));
+    stp_string_list_add_string(description->bounds.str, "Standard",
+			       _("Standard"));
+    description->deflt.str = "Standard";
   }
 }
 
