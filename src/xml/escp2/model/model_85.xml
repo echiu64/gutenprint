@@ -60,6 +60,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 180</minimumResolution>
  <maximumResolution>5760 2880</maximumResolution>
+ <extraVerticalFeed>10</extraVerticalFeed>
  <separationRows>1</separationRows>
  <zeroMarginOffset>80</zeroMarginOffset>
  <microLeftMargin>42</microLeftMargin>
