@@ -210,45 +210,64 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
   10) Quality presets have been added to the PCL (HP printers and
      laser printers).
 
-  11) Print quality has been improved on Epson PictureMate printers
-     with 4-color inks.
-
-  12) Certain legacy applications (most notably Microsoft Office) did
+  11) Certain legacy applications (most notably Microsoft Office) did
      not print correctly on printers capable of high resolution, due
      to inability to handle the specified resolutions.  This release
      works around that issue by not advertising very high resolutions
      in a way that these applications will fail on.
 
+  12) Print quality has been improved on Epson PictureMate printers
+     with 4-color inks.
+
   13) Print quality has been improved on the Epson B-300 and related
      printers.
 
-  14) The GIMP plugin now offers additional options for certain
+  14) Print quality has been improved in borderless mode on a large
+     number of Epson photo-oriented inkjet printers.  The specific
+     issue is that print faded near the bottom of the page when using
+     borderless mode.
+
+  15) Printing has been corrected in borderless mode on the Epson
+     Stylus C110 and C120 printers.  The specific issue is that
+     printing near the bottom of the page was compressed vertically.
+     This problem is related to, but not identical to, the previous
+     issue.
+
+  16) Print quality has been improved at very high resolutions
+     (resolution settings of 2880x2880 and 5760x2880 DPI, or quality
+     settings of Ultra Photo or Best when high quality photo papers
+     are in use) on a large number of Epson photo-oriented inkjet
+     printers.  The specific issue is that print showed fine lines
+     (without actually fading) near the bottom of the page.  This
+     issue was present in both borderless and non-borderless printing.
+
+  17) The GIMP plugin now offers additional options for certain
      printers.
 
-  15) Color Correction is now shown on the basic output adjustment
+  18) Color Correction is now shown on the basic output adjustment
      menu rather than the advanced menu.
 
-  16) Epson printers will now correctly handle color output if
+  19) Epson printers will now correctly handle color output if
      quadtone inks are in use by printing in grayscale even though
      color is specified.
 
-  17) The Epson Stylus Photo R800 now works properly.  It was broken
-     in 5.2.0-beta2.
+  20) The Epson Stylus Photo R800 now works properly.  It was broken
+     in 5.2.0-beta2 and would not print at all.
 
-  18) The Epson Stylus CX8300 and CX8400 now print correctly, although
+  21) The Epson Stylus CX8300 and CX8400 now print correctly, although
      the colors may be retuned before final release.
 
-  19) Additional resolutions of 360 DPI Enhanced, 720x360 DPI
+  22) Additional resolutions of 360 DPI Enhanced, 720x360 DPI
      Enhanced, and 720 DPI High Quality have been added for the Epson
      Stylus C110 and C120 to reduce banding at the expense of some
      output performance.  These offer improvements primarily for
      grayscale output.
 
-  20) A problem whereby the CUPS driver could consume excessive
+  23) A problem whereby the CUPS driver could consume excessive
      amounts of CPU and generate no output with Epson PictureMate and
      E-series compact photo printers has been fixed.
 
-  21) The Epson Stylus CX7400, DX7400, and DX7450 now print correctly
+  24) The Epson Stylus CX7400, DX7400, and DX7450 now print correctly
      at all resolutions.  Previously, printing at 720x360 DPI or below
      was incorrect.  Output will be rather grainy.
 
