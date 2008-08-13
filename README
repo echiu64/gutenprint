@@ -227,11 +227,6 @@ C) CUPS
       printer-specific data.  This is most commonly installed in
       /usr/lib/cups/filter.
 
-    * Back ends for driving Canon and Epson printers, named "canon"
-      and "epson".  These provide the ability to get information from
-      the printer for CUPS to use, and are normally installed in
-      /usr/lib/cups/backend.
-
     * Additional utilities to send certain commands to these printers
       are installed as commandtocanon and commandtoepson; they are
       installed in /usr/lib/cups/filter.
