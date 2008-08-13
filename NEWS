@@ -186,9 +186,9 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
        to "yes" if CUPS 1.2 or above is in use or "no" if CUPS 1.1 is
        in use.
 
-  4) On the Macintosh, Gutenprint is now localized natively using the
-     CoreFoundation framework on Mac OS X, eliminating the need for
-     the non-standard GNU gettext software.
+  4) The CUPS driver is now localized using built-in code, hopefully
+     eliminating problems with PPD files not always being translated
+     properly.
 
   5) Progress and error messages produced by the CUPS raster driver
      are now localized.
