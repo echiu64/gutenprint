@@ -10,7 +10,8 @@ replaces the print plug-in packaged with the GIMP distribution.
 
 Gutenprint currently supports over 1300 printer models.
 
-Gutenprint 5.2.0-beta4 a beta release of Gutenprint 5.2.
+Gutenprint 5.2.0-beta4 is the final planned beta release of Gutenprint
+5.2.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -114,7 +115,7 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
        B-508DN
        Offirio PX-B300
        Offirio PX-B500
-       Stylus Photo R1900 (preliminary, further tuning expected)
+       Stylus Photo R1900 (preliminary, further tuning may be performed)
        Stylus Pro 7800 (experimental)
        Stylus Pro 7880 (experimental)
        Stylus Pro 9800 (experimental)
