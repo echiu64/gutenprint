@@ -35,7 +35,7 @@ I) INTRODUCTION
     information than this README file.  The user's manual contains a
     complete list of supported printers.  In addition, please read the
     release notes (NEWS), as it has information on the latest changes.
-    This package has changed extensively since Gimp-Print 4.2.
+    This package has changed significantly since Gutenprint 5.0.
 
     Gutenprint supports only the printer part of multi-function
     devices (devices that typically include scanning, copying, and fax
@@ -455,13 +455,7 @@ D) FOOMATIC
     The Ghostscript driver in Gutenprint 5.2 is based on the IJS
     protocol.  IJS is a protocol originally developed by
     Hewlett-Packard to allow new drivers to be used with Ghostscript
-    without having to be compiled into Ghostscript.  As this driver
-    runs in a separate process, and IJS is licensed in a way
-    compatible with the GPL, this driver may be used with AFPL
-    Ghostscript if desired.  We no longer offer the legacy "stp"
-    driver provided in Gimp-Print 4.2.  This driver was difficult to
-    maintain and required a complex procedure to integrate with
-    Ghostscript.
+    without having to be compiled into Ghostscript.
 
     Gutenprint 5.2 offers two Foomatic drivers, one supporting the
     full range of options and the other supporting simplified options,
@@ -505,10 +499,8 @@ E) GIMP
 
     Gutenprint may be used with an enhanced Print plug-in for GIMP
     (2.0 and above), providing the ability to print images.  Please
-    read the release notes in addition to this README, as there have
-    been some changes in procedure since Gimp-Print 4.2 if you are
-    using certain versions of GIMP.  Gutenprint 5.2 no longer supports
-    GIMP 1.2.
+    read the release notes in addition to this README.  Gutenprint 5.2
+    no longer supports GIMP 1.2.
 
     The enhanced Print plugin for GIMP replaces the Gimp-Print
     4.2-based plugin provided with GIMP 2.0 and 2.2.  As of the GIMP
@@ -536,11 +528,12 @@ E) GIMP
 
     ./configure --enable-user-install
 
-    It is not possible for Gimp-Print 4.2 and Gutenprint 5.2 (or any
-    future release) to coexist in the same installation of GIMP.  The
-    Gutenprint 5.2-based plugin can read settings from previous
-    versions of Gimp-Print, but the configuration file format in
-    Gutenprint 5.2 cannot be read by older versions of Gimp-Print.
+    It is not possible for Gimp-Print 4.2, Gutenprint 5.0, and
+    Gutenprint 5.2 (or any future release) to coexist in the same
+    installation of GIMP.  The Gutenprint 5.2-based plugin can read
+    settings from previous versions of Gimp-Print, but the
+    configuration file format in Gutenprint 5.2 cannot be read by
+    older versions of Gimp-Print or Gutenprint.
 
 
 ----------------
@@ -560,12 +553,6 @@ F) ESCPUTIL
     to link against; the exact sequence is described in the release
     notes.  If you do not wish to use readline, you may use
     --without-readline.
-
-    Unlike the case in Gimp-Print 4.2, this utility is not standalone;
-    it requires the installation of the core Gutenprint package to
-    function.  This allows it to support new printers without
-    modification.
-
 
 
 ================================================================
