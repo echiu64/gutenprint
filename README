@@ -120,7 +120,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.0-beta3 generated on 10 Jun 2008
+	  Release: gutenprint 5.2.0-beta4 generated on 12 Aug 2008
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -138,15 +138,15 @@ A) OVERVIEW
 	    Build test programs:                        yes
 	    Build testpattern generator:                yes
 
-	Installation summary:
+	  Installation summary:
 	    Installation prefix:                        /usr/local
 	    Data directory:                             /usr/local/share/gutenprint
 	    Library directory:                          /usr/local/lib/gutenprint
-	    XML data directory:                         /usr/local/share/gutenprint/5.1/xml
-	    Module directory:                           /usr/local/lib/gutenprint/5.1/modules
+	    XML data directory:                         /usr/local/share/gutenprint/5.2/xml
+	    Module directory:                           /usr/local/lib/gutenprint/5.2/modules
 	    Install sample images:                      yes
 
-	General configuration:
+	  General configuration:
 	    Compiler options:                           -Disfinite=finite  -O6  -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Wwrite-strings -Werror-implicit-function-declaration -Winline -Wformat=2 -finline-limit=131072 -pedantic -Waggregate-return -Wcast-qual -Wshadow -Wredundant-decls
 	    Build static libraries:                     yes
 	    Build shared libraries:                     no
@@ -156,6 +156,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
+	    uname -a output:                            Linux linuxhome 2.6.25.11-0.1-default #1 SMP 2008-07-13 20:48:28 +0200 x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS, GIMP, Foomatic, and Ghostscript components require that
