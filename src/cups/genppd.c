@@ -32,7 +32,6 @@
  *   print_group_open()  - Open a new UI group.
  *   printlangs()        - Print list of available translations.
  *   printmodels()       - Print a list of available models.
- *   set_language()      - Set the current translation language.
  *   usage()             - Show program usage.
  *   write_ppd()         - Write a PPD file.
  */
@@ -80,8 +79,7 @@ static const char *gzext = "";
 #include <cups/cups.h>
 #include <cups/raster.h>
 
-#include <gutenprint/gutenprint.h>
-#include <gutenprint/gutenprint-intl.h>
+#include "i18n.h"
 
 /*
  * Some applications use the XxYdpi tags rather than the actual
@@ -143,18 +141,18 @@ const char *special_options[] =
 
 const char *parameter_class_names[] =
 {
-  N_("Printer Features"),
-  N_("Output Control")
+  _("Printer Features"),
+  _("Output Control")
 };
 
 const char *parameter_level_names[] =
 {
-  N_("Common"),
-  N_("Extra 1"),
-  N_("Extra 2"),
-  N_("Extra 3"),
-  N_("Extra 4"),
-  N_("Extra 5")
+  _("Common"),
+  _("Extra 1"),
+  _("Extra 2"),
+  _("Extra 3"),
+  _("Extra 4"),
+  _("Extra 5")
 };
 
 
@@ -174,24 +172,18 @@ static void	printlangs(char** langs);
 static void	printmodels(int verbose);
 static void	usage(void);
 #endif /* !CUPS_DRIVER_INTERFACE */
-#ifdef ENABLE_NLS
 static char	**getlangs(void);
-static void	set_language(const char *lang);
-#endif /* ENABLE_NLS */
 static int	is_special_option(const char *name);
 static void	print_group_close(gzFile fp, stp_parameter_class_t p_class,
 				  stp_parameter_level_t p_level,
-				  const char *language);
+				  const char *language, stp_string_list_t *po);
 static void	print_group_open(gzFile fp, stp_parameter_class_t p_class,
 				 stp_parameter_level_t p_level,
-				 const char *language);
+				 const char *language, stp_string_list_t *po);
 static int	write_ppd(gzFile fp, const stp_printer_t *p,
 		          const char *language, const char *ppd_location,
 			  int simplified);
 
-#if defined(ENABLE_NLS) && !defined(__APPLE__)
-static const char *baselocaledir = PACKAGE_LOCALE_DIR;
-#endif
 
 /*
  * Global variables...
@@ -256,9 +248,7 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
   char			*s;
   char			filename[1024],		/* Filename */
 			ppd_location[1024];	/* Installed location */
-#ifdef ENABLE_NLS
-  char		**all_langs = getlangs();/* All languages */
-#endif
+
 
   if ((status = httpSeparateURI(HTTP_URI_CODING_ALL, uri,
                                 scheme, sizeof(scheme),
@@ -283,24 +273,6 @@ cat_ppd(int argc, char **argv)	/* I - Driver URI */
       lang = s + 1;
       *s = '\0';
     }
-
-#ifdef ENABLE_NLS
-  if (lang && strcmp(lang, "C") != 0)
-    {
-      while (*all_langs)
-	{
-	  if (!strcmp(lang, *all_langs))
-	    break;
-	  all_langs++;
-	}
-      if (! *all_langs)
-	{
-	  fprintf(stderr, "ERROR: Unable to find language \"%s\"!\n", lang);
-	  return (1);
-	}
-    }
-  set_language(lang);
-#endif
 
   if ((p = stp_get_printer_by_driver(hostname)) == NULL)
   {
@@ -428,12 +400,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       verbose = 0;
       break;
     case 'c':
-#  if defined(ENABLE_NLS) && !defined(__APPLE__)
-      baselocaledir = optarg;
-#  ifdef DEBUG
-      fprintf(stderr, "DEBUG: baselocaledir: %s\n", baselocaledir);
-#  endif
-#  endif
+      fputs("ERROR: -c option no longer supported!\n", stderr);
       break;
     case 'p':
       prefix = optarg;
@@ -464,7 +431,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     case 'V':
       printf("cups-genppd version %s, "
-	     "Copyright 1993-2006 by Easy Software Products and Robert Krawitz.\n\n",
+	     "Copyright 1993-2008 by Michael R Sweet and Robert Krawitz.\n\n",
 	     VERSION);
       printf("Default CUPS PPD PostScript Level: %d\n", cups_ppd_ps_level);
       printf("Default PPD location (prefix):     %s\n", CUPS_MODELDIR);
@@ -476,20 +443,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	   "This program is distributed in the hope that it will be useful,\n"
 	   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 	   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-	   "GNU General Public License for more details.\n"
-	   "\n");
-      puts("You should have received a copy of the GNU General Public License\n"
-	   "along with this program; if not, please contact Easy Software\n"
-	   "Products at:\n"
-	   "\n"
-	   "    Attn: CUPS Licensing Information\n"
-	   "    Easy Software Products\n"
-	   "    44141 Airport View Drive, Suite 204\n"
-	   "    Hollywood, Maryland 20636-3111 USA\n"
-	   "\n"
-	   "    Voice: (301) 373-9603\n"
-	   "    EMail: cups-info@cups.org\n"
-	   "      WWW: http://www.cups.org\n");
+	   "GNU General Public License for more details.\n");
       exit(EXIT_SUCCESS);
       break;
     default:
@@ -517,18 +471,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   stp_init();
 
- /*
-  * Set the language...
-  */
-
-#  ifdef ENABLE_NLS
   langs = getlangs();
-
-  if (language)
-    set_language(language);
-  else
-    set_language("C");
-#  endif /* ENABLE_NLS */
 
  /*
   * Print lists
@@ -703,7 +646,6 @@ help(void)
        "  -V            Show version information and defaults.\n"
        "  The default is to output PPDs.\n");
   puts("Options:\n"
-       "  -c localedir  Use localedir as the base directory for locale data.\n"
        "  -l locale     Output PPDs translated with messages for locale.\n"
        "  -p prefix     Output PPDs in directory prefix.\n"
        "  -d prefix     Embed directory prefix in PPD file.\n"
@@ -722,9 +664,9 @@ help(void)
 void
 usage(void)
 {
-  puts("Usage: cups-genppd [-c localedir] "
+  puts("Usage: cups-genppd "
         "[-l locale] [-p prefix] [-s | -a] [-q] [-v] models...\n"
-        "       cups-genppd -L [-c localedir]\n"
+        "       cups-genppd -L\n"
 	"       cups-genppd -M [-v]\n"
 	"       cups-genppd -h\n"
 	"       cups-genppd -V\n");
@@ -784,7 +726,6 @@ printmodels(int verbose)		/* I - Verbosity level */
  * 'getlangs()' - Get a list of available translations.
  */
 
-#ifdef ENABLE_NLS
 char **					/* O - Array of languages */
 getlangs(void)
 {
@@ -818,61 +759,6 @@ getlangs(void)
   return (langs);
 }
 
-/*
- * 'set_language()' - Set the current translation language.
- */
-
-static void
-set_language(const char *lang)		/* I - Locale name */
-{
-  char *xlang = NULL;
-  const char *answer;
-  if (lang)
-    {
-      xlang = stp_malloc(strlen(lang) + sizeof(".UTF8") + 1);
-      sprintf(xlang, "%s.UTF8", lang);
-      answer = stp_setlocale(xlang);
-      if (!answer)
-	answer = stp_setlocale(lang);
-      stp_free(xlang);
-    }
-  else
-    stp_setlocale(lang);
-
-#  ifndef __APPLE__
- /*
-  * Set up the catalog
-  */
-
-  if (baselocaledir)
-  {
-    if ((bindtextdomain(PACKAGE, baselocaledir)) == NULL)
-    {
-      fprintf(stderr, "cups-genppd: cannot load message catalog %s under %s: %s\n",
-	      PACKAGE, baselocaledir, strerror(errno));
-      exit(EXIT_FAILURE);
-    }
-
-#    ifdef DEBUG
-    fprintf(stderr, "DEBUG: bound textdomain: %s under %s\n",
-	    PACKAGE, baselocaledir);
-#    endif /* DEBUG */
-
-    if ((textdomain(PACKAGE)) == NULL)
-    {
-      fprintf(stderr,
-              "cups-genppd: cannot select message catalog %s under %s: %s\n",
-              PACKAGE, baselocaledir, strerror(errno));
-      exit(EXIT_FAILURE);
-    }
-#    ifdef DEBUG
-    fprintf(stderr, "DEBUG: textdomain set: %s\n", PACKAGE);
-#    endif /* DEBUG */
-  }
-#  endif /* !__APPLE__ */
-}
-#endif /* ENABLE_NLS */
-
 
 /*
  * 'is_special_option()' - Determine if an option should be grouped.
@@ -903,19 +789,19 @@ bytelen(const char *buffer)
 static void
 print_group(
     gzFile                fp,		/* I - File to write to */
-    const char		 *what,
+    const char		  *what,
     stp_parameter_class_t p_class,	/* I - Option class */
-    stp_parameter_level_t p_level,
-    const char		 *language)	/* I - Option level */
+    stp_parameter_level_t p_level,	/* I - Option level */
+    const char		  *language,	/* I - Language */
+    stp_string_list_t     *po)		/* I - Message catalog */
 {
   char buf[64];
-  const char *class = gettext(parameter_class_names[p_class]);
-  const char *level = gettext(parameter_level_names[p_level]);
+  const char *class = stp_i18n_lookup(po, parameter_class_names[p_class]);
+  const char *level = stp_i18n_lookup(po, parameter_level_names[p_level]);
   size_t bytes = bytelen(class) + bytelen(level);
   snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
   gzprintf(fp, "*%sGroup: C%dL%d/%s\n", what, p_class, p_level, buf);
-#ifdef ENABLE_NLS
-  if (language && !strcmp(language, "C"))
+  if (language && !strcmp(language, "C") && !strcmp(what, "Open"))
     {
       char		**all_langs = getlangs();/* All languages */
       const char *lang;
@@ -923,21 +809,23 @@ print_group(
 
       for (langnum = 0; all_langs[langnum]; langnum ++)
 	{
+	  stp_string_list_t *altpo;
+
 	  lang = all_langs[langnum];
 
 	  if (!strcmp(lang, "C") || !strcmp(lang, "en"))
 	    continue;
-	  set_language(lang);
-	  class = gettext(parameter_class_names[p_class]);
-	  level = gettext(parameter_level_names[p_level]);
-	  bytes = bytelen(class) + bytelen(level);
-	  snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
-	  gzprintf(fp, "*%s.Translation C%dL%d/%s: \"\"\n",
-		   lang, p_class, p_level, buf);
+	  if ((altpo = stp_i18n_load(lang)) != NULL)
+	    {
+	      class = stp_i18n_lookup(altpo, parameter_class_names[p_class]);
+	      level = stp_i18n_lookup(altpo, parameter_level_names[p_level]);
+	      bytes = bytelen(class) + bytelen(level);
+	      snprintf(buf, 40, "%s%s%s", class, bytes < 39 ? " " : "", level);
+	      gzprintf(fp, "*%s.Translation C%dL%d/%s: \"\"\n",
+		       lang, p_class, p_level, buf);
+            }
 	}
-      set_language("C");
     }
-#endif
   gzputs(fp, "\n");
 }
 
@@ -950,9 +838,10 @@ print_group_close(
     gzFile                fp,		/* I - File to write to */
     stp_parameter_class_t p_class,	/* I - Option class */
     stp_parameter_level_t p_level,	/* I - Option level */
-    const char		 *language)	/* I - language */
+    const char		 *language,	/* I - language */
+    stp_string_list_t    *po)		/* I - Message catalog */
 {
-  print_group(fp, "Close", p_class, p_level, NULL);
+  print_group(fp, "Close", p_class, p_level, NULL, NULL);
 }
 
 
@@ -965,9 +854,10 @@ print_group_open(
     gzFile                fp,		/* I - File to write to */
     stp_parameter_class_t p_class,	/* I - Option class */
     stp_parameter_level_t p_level,	/* I - Option level */
-    const char		 *language)	/* I - language */
+    const char		 *language,	/* I - language */
+    stp_string_list_t    *po)		/* I - Message catalog */
 {
-  print_group(fp, "Open", p_class, p_level, language ? language : "C");
+  print_group(fp, "Open", p_class, p_level, language ? language : "C", po);
 }
 
 
@@ -1010,16 +900,11 @@ write_ppd(
   int printer_is_color = 0;
   int maximum_level = simplified ?
     STP_PARAMETER_LEVEL_BASIC : STP_PARAMETER_LEVEL_ADVANCED4;
-#ifdef ENABLE_NLS
   char		*default_resolution = NULL;  /* Default resolution mapped name */
   stp_string_list_t *resolutions = stp_string_list_create();
   char		**all_langs = getlangs();/* All languages */
-
-  if (!language)
-    set_language("C");
-  else
-    set_language(language);
-#endif /* ENABLE_NLS */
+  stp_string_list_t	*po = stp_i18n_load(language);
+					/* Message catalog */
 
 
  /*
@@ -1038,6 +923,9 @@ write_ppd(
  /*
   * Write a standard header...
   */
+
+#undef _
+#define _(x) stp_i18n_lookup(po, x)
 
   gzputs(fp, "*PPD-Adobe: \"4.3\"\n");
   gzputs(fp, "*% PPD file for CUPS/Gutenprint.\n");
@@ -1062,8 +950,7 @@ write_ppd(
    * Use the English name of your language here, e.g. "Swedish" instead of
    * "Svenska". */
   gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
-  /* TRANSLATORS: Specify PPD translation encoding e.g. ISOLatin1 */
-  gzprintf(fp, "*LanguageEncoding: %s\n", _("ISOLatin1"));
+  gzputs(fp, "*LanguageEncoding: UTF-8\n");
 
  /*
   * Strictly speaking, the PCFileName attribute should be a 12 character
@@ -1148,7 +1035,6 @@ write_ppd(
   gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
-#ifdef ENABLE_NLS
   if (!language)
   {
    /*
@@ -1169,12 +1055,13 @@ write_ppd(
     if (!strcmp(prefix, " "))
       gzputs(fp, "\"\n");
   }
-#endif /* ENABLE_NLS */
 
   /* Macintosh color management */
   gzputs(fp, "*cupsICCProfile Gray../Grayscale:	\"/System/Library/ColorSync/Profiles/sRGB Profile.icc\"\n");
   gzputs(fp, "*cupsICCProfile RGB../Color:	\"/System/Library/ColorSync/Profiles/sRGB Profile.icc\"\n");
   gzputs(fp, "*cupsICCProfile CMYK../Color:	\"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc\"\n");
+  gzputs(fp, "*APSupportsCustomColorMatching: true\n");
+  gzputs(fp, "*APCustomColorMatchingProfile: sRGB\n");
 
   gzputs(fp, "\n");
   gzprintf(fp, "*StpDriverName:	\"%s\"\n", driver);
@@ -1497,7 +1384,7 @@ write_ppd(
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
       num_opts = stp_string_list_count(desc.bounds.str);
-      gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", gettext(desc.text));
+      gzprintf(fp, "*OpenUI *StpQuality/%s: PickOne\n", stp_i18n_lookup(po, desc.text));
       if (num_opts > 3)
 	gzputs(fp, "*OPOptionHints Quality: \"radiobuttons\"\n");
       else
@@ -1578,9 +1465,7 @@ write_ppd(
 	     match the printer default.
 	  */
 	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
-#ifdef ENABLE_NLS
 	  default_resolution = stp_strdup(res_name);
-#endif /* ENABLE_NLS */
 	  stp_string_list_add_string(res_list, res_name, res_name);
 	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
 	  gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
@@ -1651,9 +1536,7 @@ write_ppd(
 	      else
 		tmp_xdpi /= 2;
 	    } while (!resolution_ok);
-#ifdef ENABLE_NLS
 	  stp_string_list_add_string(resolutions, res_name, res_name);
-#endif /* ENABLE_NLS */
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
 		   res_name, opt->text, xdpi, ydpi, i + 1);
 	  if (strcmp(res_name, opt->name) != 0)
@@ -1754,11 +1637,11 @@ write_ppd(
 		  int printed_default_value = 0;
 		  if (!printed_open_group)
 		    {
-		      print_group_open(fp, j, k, language);
+		      print_group_open(fp, j, k, language, po);
 		      printed_open_group = 1;
 		    }
 		  gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
-			   desc.name, gettext(desc.text));
+			   desc.name, stp_i18n_lookup(po, desc.text));
 		  gzprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n",
 			   desc.name);
 		  switch (desc.p_type)
@@ -1864,7 +1747,7 @@ write_ppd(
 		      if (!simplified)
 			{
 			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
-				   desc.name, gettext(desc.text), _("Fine Adjustment"));
+				   desc.name, stp_i18n_lookup(po, desc.text), _("Fine Adjustment"));
 			  gzprintf(fp, "*OPOptionHints Stp%s: \"hide\"\n",
 				   lparam->name);
 			  gzprintf(fp, "*StpStpFine%s: %d %d %d %d %d %.3f %.3f %.3f\n",
@@ -1983,7 +1866,7 @@ write_ppd(
 	      stp_parameter_description_destroy(&desc);
 	    }
 	  if (printed_open_group)
-	    print_group_close(fp, j, k, language);
+	    print_group_close(fp, j, k, language, po);
 	}
     }
   stp_describe_parameter(v, "ImageType", &desc);
@@ -2004,7 +1887,9 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
-#ifdef ENABLE_NLS
+#undef _
+#define _(x) stp_i18n_lookup(altpo, x)
+
   if (!language)
   {
    /*
@@ -2012,6 +1897,7 @@ write_ppd(
     */
 
     const char *lang;
+    stp_string_list_t *altpo;
     int langnum;
 
     for (langnum = 0; all_langs[langnum]; langnum ++)
@@ -2021,7 +1907,8 @@ write_ppd(
       if (!strcmp(lang, "C") || !strcmp(lang, "en"))
         continue;
 
-      set_language(lang);
+      if ((altpo = stp_i18n_load(lang)) == NULL)
+        continue;
 
      /*
       * Get the page sizes from the driver...
@@ -2138,7 +2025,7 @@ write_ppd(
       stp_describe_parameter(v, "Quality", &desc);
       if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
 	{
-	  gzprintf(fp, "*%s.Translation StpQuality/%s: \"\"\n", lang, gettext(desc.text));
+	  gzprintf(fp, "*%s.Translation StpQuality/%s: \"\"\n", lang, stp_i18n_lookup(altpo, desc.text));
 	  num_opts = stp_string_list_count(desc.bounds.str);
 	  for (i = 0; i < num_opts; i++)
 	    {
@@ -2242,7 +2129,7 @@ write_ppd(
 		  if (desc.is_active)
 		    {
 		      gzprintf(fp, "*%s.Translation Stp%s/%s: \"\"\n", lang,
-			       desc.name, gettext(desc.text));
+			       desc.name, stp_i18n_lookup(altpo, desc.text));
 		      switch (desc.p_type)
 			{
 			case STP_PARAMETER_TYPE_STRING_LIST:
@@ -2290,7 +2177,7 @@ write_ppd(
 			  if (!simplified)
 			    {
 			      gzprintf(fp, "*%s.Translation StpFine%s/%s %s: \"\"\n", lang,
-				       desc.name, gettext(desc.text), _("Fine Adjustment"));
+				       desc.name, stp_i18n_lookup(altpo, desc.text), _("Fine Adjustment"));
 			      gzprintf(fp, "*%s.StpFine%s None/%.3f: \"\"\n", lang,
 			               desc.name, 0.0);
 			      if (localize_numbers)
@@ -2365,15 +2252,17 @@ write_ppd(
 	    }
 	}
       stp_parameter_description_destroy(&desc);
-      
     }
   }
   if (has_quality_parameter)
     stp_free(default_resolution);
   stp_string_list_destroy(resolutions);
-#endif /* ENABLE_NLS */
 
   stp_parameter_list_destroy(param_list);
+
+#undef _
+#define _(x) x
+
 
  /*
   * Fonts...
@@ -2421,6 +2310,7 @@ write_ppd(
 	   ppdext);
 
   stp_vars_destroy(v);
+
   return (0);
 }
 

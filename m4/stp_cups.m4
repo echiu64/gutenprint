@@ -174,12 +174,4 @@ else
     fi
   fi
 fi
-
-# Support bundled installations on Mac OS X
-if test "x`uname`" = xDarwin; then
-	cups_bundledir=/Library/Printers/Gutenprint.bundle
-else
-	cups_bundledir=""
-fi
-AC_SUBST(cups_bundledir)
 ])

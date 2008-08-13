@@ -45,7 +45,7 @@ endif
 
 LOCAL_CPPFLAGS = $(GUTENPRINT_CFLAGS) $(CUPS_CFLAGS)
 
-STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml
+STP_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/src/main STP_DATA_PATH=$(top_srcdir)/src/xml STP_LOCALEDIR=$(top_srcdir)/src/cups/catalog
 
 ## Programs
 
@@ -92,17 +92,17 @@ commandtocanon_LDADD = $(CUPS_LIBS)
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
-cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c
+cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c i18n.c
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DALL_LINGUAS='"@ALL_LINGUAS@"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GENPPD_LIBS) $(GUTENPRINT_LIBS)
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
-gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c
+gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c i18n.c
 gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DCUPS_DRIVER_INTERFACE -DALL_LINGUAS='"@ALL_LINGUAS@"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
 gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS)
 gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
-rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c
+rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c i18n.c
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS)
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
 
@@ -127,56 +127,13 @@ PPD_NLS_1 = ppd-nls
 endif
 
 
-if MACOSX
-## Rules for OS X
-# Override the default install targets that automake creates, since we need
-# to handle "normal" and "bundled" installs.
-#
-# Oh, yeah, I hate automake.
-install-cupsexec_driverPROGRAMS: $(cupsexec_driver_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	test -z "$(cups_bundledir)" || $(MKDIR_P) "$(DESTDIR)$(cups_bundledir)/Contents/MacOS"
-	@list='$(cupsexec_driver_PROGRAMS)'; for p in $$list; do \
-	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
-	  if test -f $$p \
-	     || test -f $$p1 \
-	  ; then \
-	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_driverPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_driverPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f" || exit 1; \
-	    echo " ln -sf '$(cups_bundledir)/Contents/MacOS/$$f' '$(DESTDIR)$(cupsexec_driverdir)/$$f'"; \
-	    ln -sf "$(cups_bundledir)/Contents/MacOS/$$f" "$(DESTDIR)$(cupsexec_driverdir)/$$f"; \
-	  fi; \
-	done
-
-install-cupsexec_filterPROGRAMS: $(cupsexec_filter_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	test -z "$(cupsexec_filterdir)" || $(MKDIR_P) "$(DESTDIR)$(cupsexec_filterdir)"
-	@list='$(cupsexec_filter_PROGRAMS)'; for p in $$list; do \
-	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
-	  if test -f $$p \
-	     || test -f $$p1 \
-	  ; then \
-	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_filterPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(cupsexec_filterPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(cups_bundledir)/Contents/MacOS/$$f" || exit 1; \
-	    echo " ln -sf '$(cups_bundledir)/Contents/MacOS/$$f' '$(DESTDIR)$(cupsexec_filterdir)/$$f'"; \
-	    ln -sf "$(cups_bundledir)/Contents/MacOS/$$f" "$(DESTDIR)$(cupsexec_filterdir)/$$f"; \
-	  fi; \
-	done
-
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
-	$(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents"; \
-	cp Info.plist "$(DESTDIR)$(cups_bundledir)/Contents"; \
-	gcc -o po2strings po2strings.c -liconv; \
+	$(mkdir_p) "$(DESTDIR)$(localedir)"
 	for file in ../../po/*.po; do \
 	  lang=`basename $$file .po`; \
-	  $(mkdir_p) "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj"; \
-	  ./po2strings $$file "$(DESTDIR)$(cups_bundledir)/Contents/Resources/$$lang.lproj/Localizable.strings"; \
+	  $(mkdir_p) "$(DESTDIR)$(localedir)/$$lang"; \
+	  $(INSTALL_DATA) $$file "$(DESTDIR)$(localedir)/$$lang/gutenprint_$$lang.po"; \
 	done
-
-# Use the default automake rules for non-OS X
-endif
 
 uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 # Remove PPDs installed in new PPD location
@@ -188,6 +145,10 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
             $(RM) -rf "$(DESTDIR)$(cups_bundledir)"; \
 	  fi \
 	fi
+	for file in ../../po/*.po; do \
+	  lang=`basename $$file .po`; \
+	  $(RM) "$(DESTDIR)$(localedir)/$$lang/gutenprint_$$lang.po"; \
+	done
 
 install-data-hook:
 # Remove unused directories in install tree
@@ -219,43 +180,39 @@ ppd-stamp-phony: ppd-stamp-pre $(PPD)
 ppd-stamp-pre:
 	-$(RM) -r ppd
 
+ppd-catalog:
+	-mkdir catalog
+	for file in ../../po/*.po; do \
+	  lang=`basename $$file .po`; \
+	  $(mkdir_p) "catalog/$$lang"; \
+	  $(INSTALL_DATA) $$file "catalog/$$lang/gutenprint_$$lang.po"; \
+	done
+
 ppd-nonls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
 	-mkdir ppd
 	-mkdir ppd/C
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l C -p ppd/C
 
-ppd-global: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
-	wdir=`pwd` ; \
-	cd $(top_builddir)/po ; \
-	$(MAKE) ; \
-	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+ppd-global: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-catalog
 	-mkdir ppd
 	-mkdir ppd/Global
 	@echo "Global PPDs:"
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -c `pwd`/catalog/share/locale
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global
 	-$(RM) -r catalog
 
-ppd-global-ln: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
-	wdir=`pwd` ; \
-	cd $(top_builddir)/po ; \
-	$(MAKE) ; \
-	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+ppd-global-ln: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-catalog
 	-mkdir ppd
 	-mkdir ppd/Global
 	@echo "Global PPDs (localized numbers for testing):"
-	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -c `pwd`/catalog/share/locale -N
+	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -N
 	-$(RM) -r catalog
 
-ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-nonls
-	wdir=`pwd` ; \
-	cd $(top_builddir)/po ; \
-	$(MAKE) ; \
-	$(MAKE) DESTDIR= prefix=$${wdir}/catalog datadir=$${wdir}/catalog/share install
+ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-catalog ppd-nonls
 	-mkdir ppd
-	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L -c \`pwd\`/catalog/share/locale` ; do \
+	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L` ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \
-	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l $$language -p ppd/$$language -c `pwd`/catalog/share/locale ; \
+	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l $$language -p ppd/$$language; \
 	done
 	-$(RM) -r catalog
 
@@ -287,8 +244,7 @@ EXTRA_DIST = \
 	calibrate.ppm \
 	command.txt \
 	command.types \
-	test-ppds \
-	po2strings.c
+	test-ppds
 
 
 

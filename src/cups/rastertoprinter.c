@@ -52,8 +52,7 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#include <gutenprint/gutenprint.h>
-#include <gutenprint/gutenprint-intl.h>
+#include "i18n.h"
 
 /* Solaris with gcc has problems because gcc's limits.h doesn't #define */
 /* this */
@@ -115,6 +114,7 @@ static volatile stp_image_status_t Image_status = STP_IMAGE_STATUS_OK;
 static double total_bytes_printed = 0;
 static int print_messages_as_errors = 0;
 static int suppress_messages = 0;
+static stp_string_list_t *po = NULL;
 
 static void
 set_string_parameter(stp_vars_t *v, const char *name, const char *val)
@@ -142,9 +142,9 @@ set_special_parameter(stp_vars_t *v, const char *name, int choice)
       else if (choice >= stp_string_list_count(desc.bounds.str))
 	{
 	  if (! suppress_messages)
-	    fprintf(stderr,
-	            _("ERROR: Unable to set Gutenprint option %s (%d > %d)!\n"),
-		    name, choice, stp_string_list_count(desc.bounds.str));
+	    stp_i18n_printf(po, _("ERROR: Unable to set Gutenprint option %s "
+	                          "(%d > %d)!\n"), name, choice,
+				  stp_string_list_count(desc.bounds.str));
 	}
       else
 	{
@@ -395,8 +395,8 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
       set_string_parameter(v, "InputImageType", "KCMY");
       break;
     default :
-      fprintf(stderr, _("ERROR: Gutenprint detected a bad colorspace (%d)!\n"),
-	      cups->header.cupsColorSpace);
+      stp_i18n_printf(po, _("ERROR: Gutenprint detected a bad colorspace "
+                            "(%d)!\n"), cups->header.cupsColorSpace);
       break;
     }
 
@@ -842,16 +842,15 @@ main(int  argc,				/* I - Number of command-line arguments */
   struct timezone	tz;
   char			*page_size_name = NULL;
 
+
   if (getenv("STP_SUPPRESS_MESSAGES"))
     suppress_messages = 1;
 
  /*
-  * Initialise libgutenprint
+  * Initialize libgutenprint
   */
 
-#ifdef ENABLE_NLS
-  stp_setlocale("");
-#endif /* ENABLE_NLS */
+  po = stp_i18n_load(getenv("LANG"));
 
   theImage.rep = &cups;
 
@@ -860,6 +859,7 @@ main(int  argc,				/* I - Number of command-line arguments */
   version_id = stp_get_version();
   release_version_id = stp_get_release_version();
   default_settings = stp_vars_create();
+
  /*
   * Check for valid arguments...
   */
@@ -870,8 +870,8 @@ main(int  argc,				/* I - Number of command-line arguments */
     * and return.
     */
 
-    fputs(_("ERROR: Gutenprint rastertoprinter job-id user title copies "
-            "options [file]\n"), stderr);
+    stp_i18n_printf(po, _("Usage: rastertoprinter job-id user title copies "
+                          "options [file]\n"));
     return (1);
   }
 
@@ -891,7 +891,7 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   if ((ppdfile = getenv("PPD")) == NULL)
   {
-    fputs(_("ERROR: No PPD file, unable to continue!\n"), stderr);
+    stp_i18n_printf(po, _("ERROR: No PPD file, unable to continue!\n"));
     return (1);
   }
   if (! suppress_messages)
@@ -899,34 +899,31 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   if ((ppd = ppdOpenFile(ppdfile)) == NULL)
   {
-    fprintf(stderr, _("ERROR: Gutenprint was unable to load PPD file \"%s\"!\n"),
-            ppdfile);
+    stp_i18n_printf(po, _("ERROR: Gutenprint was unable to load PPD file "
+                          "\"%s\"!\n"), ppdfile);
     return (1);
   }
 
   if (ppd->modelname == NULL)
   {
-    fprintf(stderr,
-            _("ERROR: Gutenprint did not find a ModelName attribute in PPD file \"%s\"!\n"),
-            ppdfile);
+    stp_i18n_printf(po, _("ERROR: Gutenprint did not find a ModelName "
+                          "attribute in PPD file \"%s\"!\n"), ppdfile);
     ppdClose(ppd);
     return (1);
   }
 
   if (ppd->nickname == NULL)
   {
-    fprintf(stderr,
-            _("ERROR: Gutenprint did not find a NickName attribute in PPD file \"%s\"!\n"),
-            ppdfile);
+    stp_i18n_printf(po, _("ERROR: Gutenprint did not find a NickName attribute "
+                          "in PPD file \"%s\"!\n"), ppdfile);
     ppdClose(ppd);
     return (1);
   }
   else if (strlen(ppd->nickname) <
 	   strlen(ppd->modelname) + strlen(CUPS_PPD_NICKNAME_STRING) + 3)
   {
-    fprintf(stderr,
-            _("ERROR: Gutenprint found a corrupted NickName attribute in PPD file \"%s\"!\n"),
-	    ppdfile);
+    stp_i18n_printf(po, _("ERROR: Gutenprint found a corrupted NickName "
+                          "attribute in PPD file \"%s\"!\n"), ppdfile);
     ppdClose(ppd);
     return (1);
   }
@@ -940,10 +937,10 @@ main(int  argc,				/* I - Number of command-line arguments */
 	      *(ppd->nickname + strlen(ppd->modelname) +
 		strlen(CUPS_PPD_NICKNAME_STRING)) != ' ')))
   {
-    fprintf(stderr,
-            _("ERROR: The PPD version (%d) is not compatible with Gutenprint %s.\n"),
-	    ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING),
-	    version_id);
+    stp_i18n_printf(po, _("ERROR: The PPD version (%d) is not compatible with "
+                          "Gutenprint %s.\n"),
+	            ppd->nickname+strlen(ppd->modelname)+strlen(CUPS_PPD_NICKNAME_STRING),
+	            version_id);
     fprintf(stderr, "DEBUG: Gutenprint: If you have upgraded your version of Gutenprint\n");
     fprintf(stderr, "DEBUG: Gutenprint: recently, you must reinstall all printer queues.\n");
     fprintf(stderr, "DEBUG: Gutenprint: If the previous installed version of Gutenprint\n");
@@ -990,9 +987,8 @@ main(int  argc,				/* I - Number of command-line arguments */
 
   if (printer == NULL)
     {
-      fprintf(stderr,
-              _("ERROR: Unable to find Gutenprint driver named \"%s\"!\n"),
-              ppd->modelname);
+      stp_i18n_printf(po, _("ERROR: Unable to find Gutenprint driver named "
+                            "\"%s\"!\n"), ppd->modelname);
       ppdClose(ppd);
       return (1);
     }
@@ -1007,9 +1003,8 @@ main(int  argc,				/* I - Number of command-line arguments */
   {
     if ((fd = open(argv[6], O_RDONLY)) == -1)
     {
-      fprintf(stderr,
-              _("ERROR: Gutenprint was unable to open raster file \"%s\" - %s"),
-              argv[6], strerror(errno));
+      stp_i18n_printf(po, _("ERROR: Gutenprint was unable to open raster file "
+                            "\"%s\" - %s"), argv[6], strerror(errno));
       sleep(1);
       return (1);
     }
@@ -1142,7 +1137,7 @@ cups_abort:
 	  (double) tms.tms_stime / clocks_per_sec,
 	  (double) (t2.tv_sec - t1.tv_sec) +
 	  ((double) (t2.tv_usec - t1.tv_usec)) / 1000000.0);
-  fputs(_("ERROR: Invalid Gutenprint driver settings!\n"), stderr);
+  stp_i18n_printf(po, _("ERROR: Invalid Gutenprint driver settings!\n"));
   stp_vars_destroy(default_settings);
   if (page_size_name)
     stp_free(page_size_name);
@@ -1173,7 +1168,7 @@ cups_errfunc(void *file, const char *buf, size_t bytes)
   while (where < bytes)
     {
       if (print_messages_as_errors)
-	fputs(_("ERROR: Gutenprint error: "), prn);
+	fputs("ERROR: Gutenprint error: ", prn);
       else
 	fputs("DEBUG: Gutenprint internal: ", prn);
       while (next_nl < bytes)
@@ -1248,8 +1243,9 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 
   if ((cups = (cups_image_t *)(image->rep)) == NULL)
     {
-      fputs(_("ERROR: Gutenprint image is not initialized!  Please report this "
-              "bug to gimp-print-devel@lists.sourceforge.net\n"), stderr);
+      stp_i18n_printf(po, _("ERROR: Gutenprint image is not initialized!  "
+                            "Please report this bug to "
+			    "gimp-print-devel@lists.sourceforge.net\n"));
       return STP_IMAGE_STATUS_ABORT;
     }
   bytes_per_line =
@@ -1303,9 +1299,8 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
 	  memset(data, ((1 << CHAR_BIT) - 1), bytes_per_line);
 	  break;
 	default:
-	  fprintf(stderr,
-	          _("ERROR: Gutenprint detected a bad colorspace (%d)!\n"),
-		  cups->header.cupsColorSpace);
+	  stp_i18n_printf(po, _("ERROR: Gutenprint detected a bad colorspace "
+	                        "(%d)!\n"), cups->header.cupsColorSpace);
 	  return STP_IMAGE_STATUS_ABORT;
 	}
     }

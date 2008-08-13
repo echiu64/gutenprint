@@ -55,34 +55,19 @@ INCLUDE_LOCALE_H
 #endif
 
 #if defined(ENABLE_NLS) && !defined(DISABLE_NLS)
-#  ifdef __APPLE__
-/** CoreFoundation supports localization on Mac OS X **/
-#    include <CoreFoundation/CoreFoundation.h>
-extern const char	*stp_cfgettext(const char *string);
-extern const char	*stp_setlocale(const char *loc);
-#    define textdomain(String) (String)
-#    define gettext(String) stp_cfgettext(String)
-#    define dgettext(Domain,String) stp_cfgettext(String)
-#    define dcgettext(Domain,String,Type) stp_cfgettext(String)
-#    define bindtextdomain(Domain,Directory) (Domain)
-#    define _(String) stp_cfgettext(String)
-#    define N_(String) (String)
-#  else /* !__APPLE__ */
-extern const char	*stp_setlocale(const char *loc);
-#    include <libintl.h>
+#  include <libintl.h>
 /** Translate String. */
-#    define _(String) dgettext (PACKAGE, String)
-#    undef gettext
+#  define _(String) dgettext (PACKAGE, String)
+#  undef gettext
 /** Translate String. */
-#    define gettext(String) dgettext (PACKAGE, String)
-#    ifdef gettext_noop
+#  define gettext(String) dgettext (PACKAGE, String)
+#  ifdef gettext_noop
 /** Mark String for translation, but don't translate it right now. */
-#        define N_(String) gettext_noop (String)
-#    else
+#      define N_(String) gettext_noop (String)
+#  else
 /** Mark String for translation, but don't translate it right now. */
 #        define N_(String) (String)
-#    endif
-#  endif /* !__APPLE__ */
+#  endif
 #else /* ifndef ENABLE_NLS */
 /* Stubs that do something close enough.  */
 #    define textdomain(String) (String)
