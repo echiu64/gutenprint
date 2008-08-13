@@ -196,7 +196,7 @@ MAINTAINERCLEANFILES = \
 	$(CLEANMFOUR) \
 	$(CLEANPO)
 
-EXTRA_DIST = autogen.sh ChangeLogStamp
+EXTRA_DIST = autogen.sh ChangeLogStamp README.package
 
 .PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLogPhony dist-time-check
 
