@@ -1126,7 +1126,7 @@ write_ppd(
       top = 0;
 
     the_papers[cur_opt].name   = opt->name;
-    the_papers[cur_opt].text   = opt->text;
+    the_papers[cur_opt].text   = stp_i18n_lookup(po, opt->text);
     the_papers[cur_opt].width  = width;
     the_papers[cur_opt].height = height;
     the_papers[cur_opt].left   = left;
@@ -1338,7 +1338,7 @@ write_ppd(
     {
       opt = stp_string_list_param(desc.bounds.str, i);
       gzprintf(fp, "*MediaType %s/%s:\t\"<</MediaType(%s)>>setpagedevice\"\n",
-               opt->name, opt->text, opt->name);
+               opt->name, stp_i18n_lookup(po, opt->text), opt->name);
     }
 
     gzputs(fp, "*CloseUI: *MediaType\n\n");
@@ -1367,7 +1367,7 @@ write_ppd(
     {
       opt = stp_string_list_param(desc.bounds.str, i);
       gzprintf(fp, "*InputSlot %s/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n",
-               opt->name, opt->text, opt->name);
+               opt->name, stp_i18n_lookup(po, opt->text), opt->name);
     }
 
     gzputs(fp, "*CloseUI: *InputSlot\n\n");
@@ -1411,7 +1411,7 @@ write_ppd(
 	      stp_parameter_description_destroy(&res_desc);
 	    }
 	  gzprintf(fp, "*StpQuality %s/%s:\t\"<</HWResolution[%d %d]/cupsRowFeed %d>>setpagedevice\"\n",
-		   opt->name, opt->text, xdpi, ydpi, i + 1);
+		   opt->name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
 	}
       gzputs(fp, "*CloseUI: *StpQuality\n\n");
     }
@@ -1538,7 +1538,7 @@ write_ppd(
 	    } while (!resolution_ok);
 	  stp_string_list_add_string(resolutions, res_name, res_name);
 	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		   res_name, opt->text, xdpi, ydpi, i + 1);
+		   res_name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
 	  if (strcmp(res_name, opt->name) != 0)
 	    gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
 	}
@@ -1588,11 +1588,11 @@ write_ppd(
           {
             opt = stp_string_list_param(desc.bounds.str, i);
             if (strcmp(opt->name, "None") == 0)
-              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex false>>setpagedevice\"\n", opt->name, opt->text);
+              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex false>>setpagedevice\"\n", opt->name, stp_i18n_lookup(po, opt->text));
             else if (strcmp(opt->name, "DuplexNoTumble") == 0)
-              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex true/Tumble false>>setpagedevice\"\n", opt->name, opt->text);
+              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex true/Tumble false>>setpagedevice\"\n", opt->name, stp_i18n_lookup(po, opt->text));
             else if (strcmp(opt->name, "DuplexTumble") == 0)
-              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex true/Tumble true>>setpagedevice\"\n", opt->name, opt->text);
+              gzprintf(fp, "*Duplex %s/%s: \"<</Duplex true/Tumble true>>setpagedevice\"\n", opt->name, stp_i18n_lookup(po, opt->text));
            }
         gzputs(fp, "*CloseUI: *Duplex\n\n");
       }
@@ -1676,7 +1676,7 @@ write_ppd(
 			{
 			  opt = stp_string_list_param(desc.bounds.str, i);
 			  gzprintf(fp, "*Stp%s %s/%s: \"\"\n",
-				   desc.name, opt->name, opt->text);
+				   desc.name, opt->name, stp_i18n_lookup(po, opt->text));
 			}
 		      break;
 		    case STP_PARAMETER_TYPE_BOOLEAN:
@@ -1880,7 +1880,7 @@ write_ppd(
 	      opt = stp_string_list_param(desc.bounds.str, i);
 	      if (strcmp(opt->name, "None") != 0)
 		gzprintf(fp, "*APPrinterPreset %s/%s: \"*StpImageType %s\"\n",
-			 opt->name, opt->text, opt->name);
+			 opt->name, stp_i18n_lookup(po, opt->text), opt->name);
 	    }
 	  gzputs(fp, "\n");
 	}
@@ -1948,8 +1948,8 @@ write_ppd(
 	    strcmp(opt->name, "Custom") != 0)
 	  continue;
 
-        gzprintf(fp, "*%s.PageSize %s/%s: \"\"\n", lang, opt->name, opt->text);
-        gzprintf(fp, "*%s.PageRegion %s/%s: \"\"\n", lang, opt->name, opt->text);
+        gzprintf(fp, "*%s.PageSize %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
+        gzprintf(fp, "*%s.PageRegion %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
       }
 
       stp_parameter_description_destroy(&desc);
@@ -1994,7 +1994,7 @@ write_ppd(
 	for (i = 0; i < num_opts; i ++)
 	{
 	  opt = stp_string_list_param(desc.bounds.str, i);
-	  gzprintf(fp, "*%s.MediaType %s/%s: \"\"\n", lang, opt->name, opt->text);
+	  gzprintf(fp, "*%s.MediaType %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
 	}
       }
       stp_parameter_description_destroy(&desc);
@@ -2013,7 +2013,7 @@ write_ppd(
 	for (i = 0; i < num_opts; i ++)
 	{
 	  opt = stp_string_list_param(desc.bounds.str, i);
-	  gzprintf(fp, "*%s.InputSlot %s/%s: \"\"\n", lang, opt->name, opt->text);
+	  gzprintf(fp, "*%s.InputSlot %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
 	}
       }
       stp_parameter_description_destroy(&desc);
@@ -2030,7 +2030,7 @@ write_ppd(
 	  for (i = 0; i < num_opts; i++)
 	    {
 	      opt = stp_string_list_param(desc.bounds.str, i);
-	      gzprintf(fp, "*%s.StpQuality %s/%s: \"\"\n", lang, opt->name, opt->text);
+	      gzprintf(fp, "*%s.StpQuality %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
 	    }
 	}
       stp_parameter_description_destroy(&desc);
@@ -2053,7 +2053,7 @@ write_ppd(
 	    {
 	      opt = stp_string_list_param(resolutions, i);
 	      gzprintf(fp, "*%s.Resolution %s/%s: \"\"\n", lang,
-		       opt->name, opt->text);
+		       opt->name, stp_i18n_lookup(altpo, opt->text));
 	    }
 	}
 
@@ -2090,11 +2090,11 @@ write_ppd(
 	      {
 		opt = stp_string_list_param(desc.bounds.str, i);
 		if (strcmp(opt->name, "None") == 0)
-		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, opt->text);
+		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
 		else if (strcmp(opt->name, "DuplexNoTumble") == 0)
-		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, opt->text);
+		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
 		else if (strcmp(opt->name, "DuplexTumble") == 0)
-		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, opt->text);
+		  gzprintf(fp, "*%s.Duplex %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(altpo, opt->text));
 	       }
 	  }
 	}
@@ -2141,7 +2141,7 @@ write_ppd(
 			    {
 			      opt = stp_string_list_param(desc.bounds.str, i);
 			      gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang,
-				       desc.name, opt->name, opt->text);
+				       desc.name, opt->name, stp_i18n_lookup(altpo, opt->text));
 			    }
 			  break;
 

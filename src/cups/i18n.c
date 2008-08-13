@@ -83,13 +83,6 @@ static void	stpi_unquote(char *s);
 static stpi_i18n_t	*stpi_pocache = NULL;
 
 
-static void
-stp_strlcpy(char *dest, const char *src, size_t size)
-{
-  strncpy(dest, src, size);
-  dest[size - 1] = '\0';
-}
-
 /*
  * 'stp_i18n_load()' - Load a message catalog for a locale.
  */
@@ -266,7 +259,8 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
 	  * Extract character set and setup a transcode context...
 	  */
 
-	  stp_strlcpy(fromcode, charset + 8, sizeof(fromcode));
+	  strncpy(fromcode, charset + 8, sizeof(fromcode) - 1);
+	  fromcode[sizeof(fromcode) - 1] = '\0';
           for (fromptr = fromcode; *fromptr; fromptr ++)
 	    if (!isalnum(*fromptr & 255) && *fromptr != '-')
 	      break;
