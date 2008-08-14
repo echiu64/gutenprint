@@ -478,6 +478,7 @@ dnl aclocal flags.
 dnl AM_ACLOCAL_INCLUDE(m4 m4local)
 
 dnl Checks for programs.
+AM_ICONV_LINK
 AC_ISC_POSIX
 AC_PROG_AWK
 AC_PROG_CC
