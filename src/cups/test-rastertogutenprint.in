@@ -160,6 +160,8 @@ get_ppds() {
     fi
 }
 
+make ppd-nonls
+
 if [ -d ppd/C ] ; then
     for f in `get_ppds "$@"` ; do
 	skip=''
