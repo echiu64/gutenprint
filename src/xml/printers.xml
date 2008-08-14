@@ -1259,21 +1259,21 @@
       <printer translate="name" name="NRG MP 6500" driver="nrg-mp_6500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 7500" driver="nrg-mp_7500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 9000" driver="nrg-mp_9000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL400ex" driver="okidata-ol400ex" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL410e" driver="okidata-ol410e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL600e" driver="okidata-ol600e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL610e/S" driver="okidata-ol610e_s" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL800" driver="okidata-ol800" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata OL810ex" driver="okidata-ol810ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Okipage 6e" driver="okidata-okp_6e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Okipage 6ex" driver="okidata-okp_6ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Okipage 8p" driver="okidata-okp_8p" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Okipage 10e" driver="okidata-okp_10e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Okipage 10ex" driver="okidata-okp_10ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Okipage 14ex" driver="okidata-okp_14ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Okidata Super 6e" driver="okidata-super_6e" manufacturer="Oki" model="4" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL400ex" driver="okidata-ol400ex" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL410e" driver="okidata-ol410e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL600e" driver="okidata-ol600e" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL610e/S" driver="okidata-ol610e_s" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL800" driver="okidata-ol800" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki OL810ex" driver="okidata-ol810ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 6e" driver="okidata-okp_6e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 6ex" driver="okidata-okp_6ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 8p" driver="okidata-okp_8p" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 10e" driver="okidata-okp_10e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 10ex" driver="okidata-okp_10ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 14ex" driver="okidata-okp_14ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Super 6e" driver="okidata-super_6e" manufacturer="Oki" model="4" parameters="pcl_laser_params" />
       <printer translate="name" name="Olivetti JP350S" driver="olivetti-jp350s" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Olivetti PG 306" driver="olivetti-pg_306" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="PCPI 1030" driver="pcpi-1030" manufacturer="PCPI" model="2" parameters="pcl_laser_params" />
