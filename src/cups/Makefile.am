@@ -128,6 +128,19 @@ endif
 
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
+	if test -n "$(CUPS_PKG)" -a -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
+	  $(mkdir_p) $(DESTDIR)$(cups_modeldir); \
+	  cd ppd ; \
+	  for language in * ; do \
+	    cd ..; \
+	    $(mkdir_p) $(DESTDIR)$(cups_modeldir)/$$language; \
+	    cd ppd/$$language; \
+	    for ppdfile in * ; do \
+	      (cd ../..; $(INSTALL_DATA) ppd/$$language/$$ppdfile $(DESTDIR)$(cups_modeldir)/$$language) ; \
+	    done; \
+	  cd ..; \
+	  done \
+	fi
 	$(mkdir_p) "$(DESTDIR)$(localedir)"
 	for file in ../../po/*.po; do \
 	  lang=`basename $$file .po`; \
@@ -181,7 +194,7 @@ ppd-stamp-pre:
 	-$(RM) -r ppd
 
 ppd-catalog:
-	-mkdir catalog
+	$(mkdir_p) catalog
 	for file in ../../po/*.po; do \
 	  lang=`basename $$file .po`; \
 	  $(mkdir_p) "catalog/$$lang"; \
@@ -189,26 +202,23 @@ ppd-catalog:
 	done
 
 ppd-nonls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@
-	-mkdir ppd
-	-mkdir ppd/C
+	$(mkdir_p) ppd/C
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -l C -p ppd/C
 
 ppd-global: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-catalog
-	-mkdir ppd
-	-mkdir ppd/Global
+	$(mkdir_p) ppd/Global
 	@echo "Global PPDs:"
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global
 	-$(RM) -r catalog
 
 ppd-global-ln: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-catalog
-	-mkdir ppd
-	-mkdir ppd/Global
+	$(mkdir_p) ppd/Global
 	@echo "Global PPDs (localized numbers for testing):"
 	LC_ALL= LANG= LANGUAGE= $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ @WHICH_PPDS@ -p ppd/Global -N
 	-$(RM) -r catalog
 
 ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-catalog ppd-nonls
-	-mkdir ppd
+	$(mkdir_p) ppd
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L` ; do \
 	  mkdir ppd/$$language ; \
 	  echo "$$language:" ; \

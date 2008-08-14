@@ -63,7 +63,7 @@ my $updated_ppd_count = 0;
 my $skipped_ppd_count = 0;
 my $failed_ppd_count = 0;
 my $exit_after_parse_args = 0;
-my @languages = qw(C @ALL_LINGUAS@);
+my @languages = qw(Global C @ALL_LINGUAS@);
 
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
@@ -259,6 +259,7 @@ sub parse_options () {
 		if (-d $opt_s) {
 		    $ppd_base_dir = "$opt_s";
 		    $driver_bin = "";
+		    $use_static_ppd = "yes";
 		} else {
 		    die "$opt_s: invalid directory: $!\n";
 		}
@@ -272,6 +273,7 @@ sub parse_options () {
 	    $file_version = "\"$version";
 	    if (-x $driver_bin) {
 		$driver_version = `$driver_bin VERSION`;
+		$use_static_ppd = "no";
 		chomp $driver_version;
 		$file_version = "\"$driver_version\"\$";
 	    } elsif (! -d $ppd_base_dir && ! -l $ppd_base_dir) {
@@ -284,6 +286,7 @@ sub parse_options () {
 	    $ppd_base_dir = "$opt_s";
 	    $driver_bin = "";
 	    $driver_version = "";
+	    $use_static_ppd = "yes";
 	}
 	else {
 	    die "$opt_s: invalid directory: $!\n";
@@ -300,6 +303,7 @@ sub parse_options () {
     if ($opt_P) {
 	if (-x $opt_P) {
 	    $driver_bin = "$opt_P";
+	    $use_static_ppd = "no";
 	}
 	else {
 	    die "$opt_P: invalid executable: $!\n";
@@ -707,6 +711,7 @@ sub find_ppd ($$$$) {
 	push @lingos, "C/";
     }
     push @lingos, "en/", "";
+    push @lingos, "Global/";
     my (@bases);
     push @bases, "stp-${drivername}.$version${simplified}";
     push @bases, "${drivername}.$version${simplified}";
