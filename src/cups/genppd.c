@@ -1519,7 +1519,8 @@ write_ppd(
 		(void) snprintf(res_name, 63, "%ddpi", tmp_xdpi);
 	      else
 		(void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
-	      if (strcmp(opt->name, desc.deflt.str) == 0 ||
+	      if ((!has_quality_parameter &&
+		   strcmp(opt->name, desc.deflt.str) == 0) ||
 		  !stp_string_list_is_present(res_list, res_name))
 		{
 		  resolution_ok = 1;
