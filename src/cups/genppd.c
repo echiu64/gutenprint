@@ -950,7 +950,10 @@ write_ppd(
    * Use the English name of your language here, e.g. "Swedish" instead of
    * "Svenska". */
   gzprintf(fp, "*LanguageVersion: %s\n", _("English"));
-  gzputs(fp, "*LanguageEncoding: UTF-8\n");
+  if (language)
+    gzputs(fp, "*LanguageEncoding: UTF-8\n");
+  else
+    gzputs(fp, "*LanguageEncoding: ISOLatin1\n");
 
  /*
   * Strictly speaking, the PCFileName attribute should be a 12 character
