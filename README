@@ -13,7 +13,7 @@ I) INTRODUCTION
     of printer drivers that may be used with most common UNIX print
     spooling systems, including CUPS, lpr, LPRng, or others.  These
     drivers provide high quality printing for UNIX (including
-    Macintosh OS X 10.2 and newer) and Linux systems in many cases
+    Macintosh OS X 10.3 and newer) and Linux systems in many cases
     equal to or better than proprietary vendor-supplied drivers.
     Gutenprint also includes an enhanced print plug-in for the GIMP
     image editor, replacing the Gimp-Print 4.2-based plugin supplied
@@ -348,7 +348,7 @@ C) CUPS
     like /etc/init.d/cups restart, /etc/software/init.d/cups restart,
     /etc/rc.d/cups restart, /usr/sbin/rccups, or even
     /etc/rc.d/init.d/cups restart.  Your system may have a different
-    way to restart the CUPS server.  OS X (10.2, 10.3, and 10.4), for
+    way to restart the CUPS server.  OS X (10.3, 10.4, and 10.5), for
     example, uses the following command:
 
     sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart

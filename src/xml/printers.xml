@@ -385,6 +385,7 @@
       <printer translate="name" name="Epson Stylus CX5200" driver="escp2-cx5200" manufacturer="Epson" model="55" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5300" driver="escp2-cx5300" manufacturer="Epson" model="55" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5400" driver="escp2-cx5400" manufacturer="Epson" model="55" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX5500" driver="escp2-cx5500" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus CX5600" driver="escp2-cx5600" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus CX5700" driver="escp2-cx5700" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5800" driver="escp2-cx5800" manufacturer="Epson" model="65" parameters="cx3500_params" />
