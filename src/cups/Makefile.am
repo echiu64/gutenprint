@@ -153,7 +153,7 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -z "DONT_UNINSTALL_PPDS" ; then \
 	  if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	    $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
-	  fi \
+	  fi ; \
 	fi
 	for file in ../../po/*.po; do \
 	  lang=`basename $$file .po`; \
