@@ -179,7 +179,7 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
       if (line[1] == ':')
         fuzzy = 0;
 
-      if (strstr(line, fuzzy))
+      if (strstr(line, "fuzzy"))
         fuzzy = 1;
     }
 
