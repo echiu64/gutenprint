@@ -154,9 +154,6 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	  if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	    $(RM) -fr $(DESTDIR)$(cups_modeldir)/* ; \
 	  fi \
-	  if test ! -z "$(cups_bundledir)"; then \
-            $(RM) -rf "$(DESTDIR)$(cups_bundledir)"; \
-	  fi \
 	fi
 	for file in ../../po/*.po; do \
 	  lang=`basename $$file .po`; \
