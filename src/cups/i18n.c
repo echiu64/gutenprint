@@ -109,7 +109,8 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
 			outbytes;	/* Number of output buffer bytes */
   char			*inptr,		/* Pointer into input buffer */
 			*outptr;	/* Pointer into output buffer */
-  int			skip_message = 0;
+  int			fuzzy = 0;	/* Fuzzy translation? */
+
 
   if (!locale)
     return (NULL);
@@ -173,13 +174,16 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
     * Skip blank and comment lines...
     */
 
-    if (line[0] == '#' && line[1] == ':')
-      skip_message = 0;
+    if (line[0] == '#')
+    {
+      if (line[1] == ':')
+        fuzzy = 0;
 
-    if (strcmp(line, "#, fuzzy\n") == 0)
-      skip_message = 1;
+      if (strstr(line, fuzzy))
+        fuzzy = 1;
+    }
 
-    if (skip_message || line[0] == '#' || line[0] == '\n')
+    if (fuzzy || line[0] == '#' || line[0] == '\n')
       continue;
 
    /*
