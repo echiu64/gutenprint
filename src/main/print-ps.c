@@ -71,6 +71,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "PageSize", N_("Page Size"), N_("Basic Printer Setup"),
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "ModelName", N_("Model Name"), N_("Basic Printer Setup"),
     N_("PPD File Model Name"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
@@ -182,6 +188,12 @@ ps_option_to_param(stp_parameter_t *param, stp_mxml_node_t *option)
  */
 
 static int
+ppd_whitespace_callback(stp_mxml_node_t *node, int where)
+{
+  return 0;
+}
+
+static int
 check_ppd_file(const stp_vars_t *v)
 {
   const char *ppd_file = stp_get_file_parameter(v, "PPDFile");
@@ -214,6 +226,12 @@ check_ppd_file(const stp_vars_t *v)
 	  stp_eprintf(v, "Unable to open PPD file %s\n", ppd_file);
 	  return 0;
 	}
+      if (stp_get_debug_level() & STP_DBG_PS)
+	{
+	  char *ppd_stuff = stp_mxmlSaveAllocString(m_ppd, ppd_whitespace_callback);
+	  stp_dprintf(STP_DBG_PS, v, "%s", ppd_stuff);
+	  stp_free(ppd_stuff);
+	}
 
       m_ppd_file = stp_strdup(ppd_file);
       return 1;
@@ -228,8 +246,8 @@ ps_list_parameters(const stp_vars_t *v)
   stp_mxml_node_t *option;
   int i;
   int status = check_ppd_file(v);
-  stp_dprintf(STP_DBG_PS, v, "Adding parameters from %s\n",
-	      m_ppd_file ? m_ppd_file : "(null)");
+  stp_dprintf(STP_DBG_PS, v, "Adding parameters from %s (%d)\n",
+	      m_ppd_file ? m_ppd_file : "(null)", status);
 
   for (i = 0; i < the_parameter_count; i++)
     stp_parameter_list_add_param(ret, &(the_parameters[i]));
@@ -237,6 +255,7 @@ ps_list_parameters(const stp_vars_t *v)
   if (status)
     {
       int num_options = stpi_xmlppd_find_option_count(m_ppd);
+      stp_dprintf(STP_DBG_PS, v, "Found %d parameters\n", num_options);
       for (i=0; i < num_options; i++)
 	{
 	  /* MEMORY LEAK!!! */
@@ -246,7 +265,8 @@ ps_list_parameters(const stp_vars_t *v)
 	    {
 	      ps_option_to_param(param, option);
 	      if (param->p_type != STP_PARAMETER_TYPE_INVALID &&
-		  strcmp(param->name, "PageRegion") != 0)
+		  strcmp(param->name, "PageRegion") != 0 &&
+		  strcmp(param->name, "PageSize") != 0)
 		{
 		  stp_dprintf(STP_DBG_PS, v, "Adding parameter %s %s\n",
 			      param->name, param->text);
@@ -288,17 +308,16 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
 	  description->is_active = 1;
 	else if (strcmp(name, "ModelName") == 0)
 	  {
+	    const char *nickname;
+	    description->bounds.str = stp_string_list_create();
 	    if (m_ppd && stp_mxmlElementGetAttr(m_ppd, "nickname"))
-	      {
-		const char *nickname = stp_mxmlElementGetAttr(m_ppd, "nickname");
-		description->bounds.str = stp_string_list_create();
-		stp_string_list_add_string(description->bounds.str,
-					   nickname, nickname);
-		description->deflt.str = nickname;
-		description->is_active = status;
-	      }
+	      nickname = stp_mxmlElementGetAttr(m_ppd, "nickname");
 	    else
-	      description->is_active = 0;
+	      nickname = _("None; please provide a PPD file");
+	    stp_string_list_add_string(description->bounds.str,
+				       nickname, nickname);
+	    description->deflt.str = nickname;
+	    description->is_active = 1;
 	    return;
 	  }
 	else if (strcmp(name, "PrintingMode") == 0)
@@ -321,20 +340,38 @@ ps_parameters_internal(const stp_vars_t *v, const char *name,
       }
   }
 
-  if (!status)
+  if (!status && strcmp(name, "PageSize") != 0)
     return;
   if ((option = stpi_xmlppd_find_option_named(m_ppd, name)) == NULL)
   {
-    char *tmp = stp_malloc(strlen(name) + 4);
-    strcpy(tmp, "Stp");
-    strncat(tmp, name, strlen(name) + 3);
-    if ((option = stpi_xmlppd_find_option_named(m_ppd, tmp)) == NULL)
+    if (strcmp(name, "PageSize") == 0)
       {
-	stp_dprintf(STP_DBG_PS, v, "no parameter %s", name);
-	stp_free(tmp);
+	/* Provide a default set of page sizes */
+	description->bounds.str = stp_string_list_create();
+	stp_string_list_add_string
+	  (description->bounds.str, "Letter", _("Letter"));
+	stp_string_list_add_string
+	  (description->bounds.str, "A4", _("A4"));
+	stp_string_list_add_string
+	  (description->bounds.str, "Custom", _("Custom"));
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
+	description->is_active = 1;
 	return;
       }
-    stp_free(tmp);
+    else
+      {
+	char *tmp = stp_malloc(strlen(name) + 4);
+	strcpy(tmp, "Stp");
+	strncat(tmp, name, strlen(name) + 3);
+	if ((option = stpi_xmlppd_find_option_named(m_ppd, tmp)) == NULL)
+	  {
+	    stp_dprintf(STP_DBG_PS, v, "no parameter %s", name);
+	    stp_free(tmp);
+	    return;
+	  }
+	stp_free(tmp);
+      }
   }
 
   ps_option_to_param(description, option);

@@ -212,6 +212,7 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
   int		option_count;
   int		order_length;
   char		*order_list;
+  int		in_comment;
 
 
  /*
@@ -276,6 +277,22 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
       bufptr    = buffer + 1;
       inquote   = 0;
       sawcolon  = 0;
+      in_comment = 0;
+      if (ch == '*')
+	{
+	  if ((ch = getc(fp)) == '%')
+	    {
+	      while (1)
+		{
+		  ch = getc(fp);
+		  if (ch == '\n' || ch == EOF)
+		    break;
+		}
+	      continue;
+	    }
+	  else
+	    ungetc(ch, fp);
+	}
 
       while ((ch != '\n' || inquote) && bufptr < (buffer + sizeof(buffer) - 1))
 	{

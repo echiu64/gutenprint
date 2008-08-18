@@ -273,6 +273,12 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
      at all resolutions.  Previously, printing at 720x360 DPI or below
      was incorrect.  Output will be rather grainy.
 
+  26) The PostScript driver now correctly handles certain PPD files
+     that were not correctly handled in recent releases.
+
+  27) The PostScript driver now provides default page sizes of Letter,
+     A4, and Custom in the event that no PPD file is provided.
+
 
 ----------------
 
