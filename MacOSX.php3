@@ -258,7 +258,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta rel
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
 
-<a name="5.2.0-beta3"></a> 
+<a name="5.2.0-beta4"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
 		<td align="left">
