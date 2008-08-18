@@ -131,7 +131,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta4 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#5.2.0-beta4">August 18, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
+			<a href="MacOSX.php3#5.2.0-beta4">August 17, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta3 is released!</span> 
@@ -265,7 +265,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta rel
 			<b>Gutenprint 5.2.0-beta4</b> 
 		</td>
 		<td align="right">
-			<b>2008-08-18</b> 
+			<b>2008-08-17</b> 
 		</td>
 	</tr>
 </table>
@@ -303,7 +303,7 @@ The <b>Gutenprint 5.2.0-beta4 (5.2.0.4)</b> release is the third beta release of
 </li>
 </ul>
 <p>
-Additional bug fixes and new features are listed in the release notes.
+Additional bug fixes and new features are listed in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=620411">release notes</a>.
 </p>
 
 <a name="5.2.0-beta3"></a> 
