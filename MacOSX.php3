@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta4 is released!</span> 
+			<br>
+			<a href="MacOSX.php3#5.2.0-beta4">August 18, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta3 is released!</span> 
 			<br>
 			<a href="MacOSX.php3#5.2.0-beta3">June 15, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series.  See the <b>Downloads</b> section. 
@@ -137,11 +142,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
 			<br>
 			<a href="MacOSX.php3#5.0.2">January 3, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0 series. This release features full support for borderless printing on Epson inkjet printers, support for more Epson, Canon, and dye sublimation printers, and more. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Updated Mac Uninstaller</span> 
-			<br>
-			<a href="MacOSX.php3#Uninstall_1.2.1">December 2, 2007</a> - The Gutenprint project is pleased to announce that the Gutenprint uninstaller for Mac OS X has been  updated.  It can now remove the Gutenprint drivers Apple supplied with Mac OS X 10.5.x (Leopard). See the <b>Downloads</b> section.
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Mac OS X FAQs updated for Leopard</span> 
@@ -182,17 +182,16 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.0-beta3</b> 
+			<b>Gutenprint 5.2.0-beta4</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta3-ub.dmg?download">gutenprint-5.2.0-beta3-ub.dmg</a></span>&nbsp;&nbsp;(18.6 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta4-ub.dmg?download">gutenprint-5.2.0-beta4-ub.dmg</a></span>&nbsp;&nbsp;(44.7 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series. This release offers a number of enhancements over the 5.2.0-beta2 release and also includes support for more than 450 additional black and white laser printers.  An uninstaller and Gutenprint Utility for EPSON Inkjet Printers are included.  Mac OS X Jaguar users need  GhostScript for full support.  Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta3.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.  Included in this release is a work around for certain applications (most notably Microsoft Office) that did not print correctly on printers capable of high resolution, due to inability to handle the specified resolutions. Also, PPD files are now globalized. They include, by default, all localizations in a single file.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta4.tar.bz2?download">source code</a>)
 </p>
-
-		<p>
-			<b>Gutenprint 5.0.2</b> 
-			<br>
+<p>
+	<b>Gutenprint 5.0.2</b> 
+	<br>
 			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.2-ub.dmg?download">gutenprint-5.0.2-ub.dmg</a></span>&nbsp;&nbsp;(16.5 MB) 
 		</p>
 		<p>
@@ -214,7 +213,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta rel
 		<p>
 			<b>Gutenprint Uninstaller</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.2.2.dmg?download">gutenprint-uninstaller-1.2.2.dmg</a></span>&nbsp;&nbsp;(764 KB) 
+			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.2.3.dmg?download">gutenprint-uninstaller-1.2.3.dmg</a></span>&nbsp;&nbsp;(780 KB) 
 		</p>
 		<p>
 			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), and Mac OS X "Leopard" (MacOS X 10.5.x).
@@ -258,6 +257,55 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta rel
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+
+<a name="5.2.0-beta3"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.0-beta4</b> 
+		</td>
+		<td align="right">
+			<b>2008-08-18</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.0-beta4 (5.2.0.4)</b> release is the third beta release of the forthcoming 5.2.x stable release.  There are several notable changes since the Gutenprint 5.2.0-beta3:</p> 
+	
+<ul type="disc">
+	<li>Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher.  This is due to a new library requirement (for the iconv library) that is not present in 10.2.</li>
+	<li>Certain legacy applications (most notably Microsoft Office) did not print correctly on printers capable of high resolution, due to inability to handle the specified resolutions.  This release works around that issue by not advertising very high resolutions in a way that these applications will fail on.</li>
+	<li>PPD files are now globalized.  They include, by default, all localizations in a single file.  Mac OS X 10.5.x will be able to use the translations.  Mac OS X 10.3.x and OS X 10.4.x will ignore the extra language support. </li>
+		<li>The CUPS driver is now localized using built-in code, hopefully eliminating problems with PPD files not always being translated properly.</li>
+	<li>	Progress and error messages produced by the CUPS raster driver are now localized.</li>
+	<li>The CUPS driver will no longer attempt to find a matching predefined page size when a custom page size is passed in.  This yields more accurate printing sizes for custom paper sizes.  In addition, it avoids a problem with unnecessary margins being imposed when the paper size is approximately 4.7x6.8" (120x173mm) due to a specific defined page size with those dimensions and tear-off borders.</li>
+	<li>Borderless support has been added to the Epson Stylus Pro 7600/9600 and the margins have been corrected.</li>
+	<li>	Quality presets have been added to the PCL (HP printers and laser printers).</li>	
+	<li>Print quality has been improved on the Epson B-300 and related printers.</li>
+	<li>	Printing has been corrected in borderless mode on the Epson Stylus C110 and C120 printers.  The specific issue is that printing near the bottom of the page was compressed vertically. This problem is related to, but not identical to, the previous issue.</li>
+	<li>	Print quality has been improved at very high resolutions (resolution settings of 2880x2880 and 5760x2880 DPI, or quality settings of Ultra Photo or Best when high quality photo papers are in use) on a large number of Epson photo-oriented inkjet printers.  The specific issue is that print showed fine lines (without actually fading) near the bottom of the page.  This issue was present in both borderless and non-borderless printing.</li>
+	<li>The Epson Stylus Photo R800 now works properly.  It was broken in 5.2.0-beta2 and would not print at all.</li>
+	<li>
+	New printers supported in this release:<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EpsonB-300<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EpsonB-308<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EpsonB-500N<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EpsonB-508N<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Offirio PX-B300 (preliminary)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Offirio PX-B500 (preliminary)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus CX5500<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Photo R1900 (preliminary, further tuning may be performed)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Pro 7800 (experimental)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Pro 7880 (experimental)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Pro 9800 (experimental)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Pro 9880 (experimental)<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson Pro 11880 (experimental)<br>
+</li>
+</ul>
+<p>
+Additional bug fixes and new features are listed in the release notes.
+</p>
+
 <a name="5.2.0-beta3"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
