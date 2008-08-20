@@ -15,6 +15,9 @@ fi
 single=''
 all_models=''
 verbose=''
+make_ppds=1
+md5dir=''
+outdir=''
 
 usage() {
     echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
@@ -30,6 +33,9 @@ set_args() {
 	    -c|--cachegrind) valopts='--tool=cachegrind'; valgrind=4 ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
 	    -V|--verbose) verbose=1 ;;
+	    -n|--no-make-ppds) make_ppds='' ;;
+	    -O|--output) shift; outdir="$1" ;;
+	    -m|--md5dir) shift; md5dir="$1" ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -37,7 +43,14 @@ set_args() {
     done
 }
 
-set_args `getopt vcgsV "$@"`
+set_args `getopt vcgsVnO:m: "$@"`
+
+if [ -n "$outdir" -a ! -d "$outdir" ] ; then
+    mkdir -p "$outdir"
+fi
+if [ -n "$md5dir" -a ! -d "$md5dir" ] ; then
+    mkdir -p "$md5dir"
+fi
 
 version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 cupsdir="@cups_conf_serverbin@/filter"
@@ -160,10 +173,30 @@ get_ppds() {
     fi
 }
 
-make ppd-nonls
+if [ -n "$make_ppds" -o ! -d ppd/C ] ; then
+    make ppd-nonls
+fi
+
+do_output() {
+    if [ -n "`echo "$PPD" |grep '\.gz$'`" ] ; then
+	driver=`gunzip -c "$PPD" | grep '^\*StpDriverName:' |awk '{print $2}' | sed 's/"//g'`
+    else
+	driver=`grep '^\*StpDriverName:' "$PPD" |awk '{print $2}' | sed 's/"//g'`
+    fi
+    if [ -n "$outdir" ] ; then
+	cat > "$outdir/$driver.prn"
+	if [ -n "$md5dir" ] ; then
+	    (cd "$outdir"; cat "$driver.prn") | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
+	fi
+    elif [ -n "$md5dir" ] ; then
+	cat | md5sum | sed "s/-/\*$driver/" > "$md5dir/$driver.md5"
+    else
+	cat > /dev/null
+    fi
+}
 
 if [ -d ppd/C ] ; then
-    for f in `get_ppds "$@"` ; do
+    for f in `get_ppds $args` ; do
 	skip=''
 	if [ -n "$single" ] ; then
 	    is_duplicate $f
@@ -173,13 +206,13 @@ if [ -d ppd/C ] ; then
 	    PPD=$f
 	    export PPD
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
-		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    elif [ -f "$tfile" ] ; then
-		output="`($cupsdir/pstops 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/pstops 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    elif [ -x "$cupsdir/pstoraster" ] ; then
-		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    else
-		output="`($cupsdir/imagetoraster 1 1 1 1 \"$pages$cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp > /dev/null) 2>&1`"
+		output="`($cupsdir/imagetoraster 1 1 1 1 \"$pages$cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    fi
 	    if [ $? -ne 0 ] ; then
 		retval=1
