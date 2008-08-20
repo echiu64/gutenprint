@@ -18,6 +18,7 @@ verbose=''
 make_ppds=1
 md5dir=''
 outdir=''
+cupsargs=''
 
 usage() {
     echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
@@ -35,6 +36,7 @@ set_args() {
 	    -V|--verbose) verbose=1 ;;
 	    -n|--no-make-ppds) make_ppds='' ;;
 	    -O|--output) shift; outdir="$1" ;;
+	    -o|--option) shift; cupsargs="$cupsargs $1" ;;
 	    -m|--md5dir) shift; md5dir="$1" ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
@@ -43,7 +45,7 @@ set_args() {
     done
 }
 
-set_args `getopt vcgsVnO:m: "$@"`
+set_args `getopt vcgsVnO:m:o: "$@"`
 
 if [ -n "$outdir" -a ! -d "$outdir" ] ; then
     mkdir -p "$outdir"
