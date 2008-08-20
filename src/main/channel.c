@@ -88,6 +88,9 @@ typedef struct
   int black_channel;
   int gloss_channel;
   int gloss_physical_channel;
+  double cyan_balance;
+  double magenta_balance;
+  double yellow_balance;
 } stpi_channel_group_t;
 
 
@@ -598,13 +601,16 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 	}
       cg->gcr_channels = cg->aux_output_channels;
     }
+  cg->cyan_balance = stp_get_float_parameter(v, "CyanBalance");
+  cg->magenta_balance = stp_get_float_parameter(v, "MagentaBalance");
+  cg->yellow_balance = stp_get_float_parameter(v, "YellowBalance");
   stp_dprintf(STP_DBG_INK, v, "stp_channel_initialize:\n");
   stp_dprintf(STP_DBG_INK, v, "   channel_count  %d\n", cg->channel_count);
   stp_dprintf(STP_DBG_INK, v, "   total_channels %d\n", cg->total_channels);
   stp_dprintf(STP_DBG_INK, v, "   input_channels %d\n", cg->input_channels);
   stp_dprintf(STP_DBG_INK, v, "   aux_channels   %d\n", cg->aux_output_channels);
   stp_dprintf(STP_DBG_INK, v, "   gcr_channels   %d\n", cg->gcr_channels);
-  stp_dprintf(STP_DBG_INK, v, "   width          %d\n", cg->width);
+  stp_dprintf(STP_DBG_INK, v, "   width          %d\n", (int) cg->width);
   stp_dprintf(STP_DBG_INK, v, "   ink_limit      %d\n", cg->ink_limit);
   stp_dprintf(STP_DBG_INK, v, "   gloss_limit    %d\n", cg->gloss_limit);
   stp_dprintf(STP_DBG_INK, v, "   max_density    %d\n", cg->max_density);
@@ -612,6 +618,9 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   black_channel  %d\n", cg->black_channel);
   stp_dprintf(STP_DBG_INK, v, "   gloss_channel  %d\n", cg->gloss_channel);
   stp_dprintf(STP_DBG_INK, v, "   gloss_physical %d\n", cg->gloss_physical_channel);
+  stp_dprintf(STP_DBG_INK, v, "   cyan           %.3f", cg->cyan_balance);
+  stp_dprintf(STP_DBG_INK, v, "   magenta        %.3f", cg->magenta_balance);
+  stp_dprintf(STP_DBG_INK, v, "   yellow         %.3f", cg->yellow_balance);
   stp_dprintf(STP_DBG_INK, v, "   input_data     %p\n",
 	      (void *) cg->input_data);
   stp_dprintf(STP_DBG_INK, v, "   multi_tmp      %p\n",
@@ -1080,9 +1089,6 @@ do_gcr(const stp_vars_t *v)
   const unsigned short *gcr_lookup;
   unsigned short *output = cg->gcr_data;
   size_t count;
-  double cb = stp_get_float_parameter(v, "CyanBalance");
-  double mb = stp_get_float_parameter(v, "MagentaBalance");
-  double yb = stp_get_float_parameter(v, "YellowBalance");
   int i;
 
   stp_curve_resample(cg->gcr_curve, 65536);
@@ -1098,9 +1104,9 @@ do_gcr(const stp_vars_t *v)
 	    kk = k;
 	  ck = k - kk;
 	  output[0] = kk;
-	  output[1] += ck * cb;
-	  output[2] += ck * mb;
-	  output[3] += ck * yb;
+	  output[1] += ck * cg->cyan_balance;
+	  output[2] += ck * cg->magenta_balance;
+	  output[3] += ck * cg->yellow_balance;
 	}
       output += cg->gcr_channels;
     }
