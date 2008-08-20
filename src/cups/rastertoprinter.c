@@ -426,17 +426,20 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 	}
       else if (stp_get_papersize_by_name(page_size_name))
 	{
-	  const stp_papersize_t *ps;
+	  int width, height;
 	  if (!suppress_messages)
 	    fprintf(stderr, "DEBUG: Gutenprint:   Using page size %s with (%d, %d)\n",
 		    page_size_name, cups->header.PageSize[1], cups->header.PageSize[0]);
 	  set_string_parameter(v, "PageSize", page_size_name);
-	  ps = stp_get_papersize_by_name(page_size_name);
-	  if (ps)
-	    {
-	      stp_set_page_width(v, ps->width);
-	      stp_set_page_height(v, ps->height);
-	    }
+	  stp_get_media_size(v, &width, &height);
+	  if (width > 0)
+	    stp_set_page_width(v, width);
+	  else
+	    stp_set_page_width(v, cups->header.PageSize[0]);
+	  if (height > 0)
+	    stp_set_page_height(v, height);
+	  else
+	    stp_set_page_height(v, cups->header.PageSize[1]);
 	}
       else
 	{
