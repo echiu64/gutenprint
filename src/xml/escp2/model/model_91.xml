@@ -62,7 +62,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins interleave="printer" media="sheet">9 9 0 11</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
- <CDOffset>204 191</CDOffset>
+ <CDOffset>204 263</CDOffset>
  <CDMediaSize>595 842</CDMediaSize>
  <extraBottom>24</extraBottom>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
