@@ -294,7 +294,7 @@ D) CHANGES TO THE CUPS INTERFACE
 
 E) CHANGES TO THE FOOMATIC INTERFACE
 
-   3) The Foomatic-based driver will only attempt to find a precisely
+   1) The Foomatic-based driver will only attempt to find a precisely
       matching page size when a custom page size is passed in.  This
       yields more accurate printing sizes for custom paper sizes.
 

@@ -39,6 +39,7 @@ main(int argc, char **argv)
 	     stp_printer_get_long_name(p));
       printf("$printer_make{'%s'} = '%s';\n", stp_printer_get_driver(p),
 	     stp_printer_get_manufacturer(p));
+      printf("push @printer_list, '%s';\n", stp_printer_get_driver(p));
     }
   return 0;
 }

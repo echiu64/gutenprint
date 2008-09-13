@@ -8,7 +8,8 @@ GetOptions("m=s" => \$opt_m,         # Map file
            "t=s" => \$opt_t,         # Template directory
 	   "f=s" => \$opt_f,         # Foomatic version
            "d=s" => \@opt_d,         # which Drivers?
-	   "s"   => \$opt_s);        # Generate simplified data
+	   "s"   => \$opt_s,         # Generate simplified data
+	   "x"   => \$opt_x);	     # Generate printer list
 
 
 # Wherever we put it...
@@ -97,26 +98,28 @@ my $opt_index = 0;
 
 use Data::Dumper;
 
-open PIPE, "./printer_options $simplified_subopt|" or die "Cannot run printer_options: $!\n";
-print STDERR "Loading options from ./printer_options $simplified_subopt...";
-while(<PIPE>) {
-    #print $_;
-    next if m!^#!;
-    eval $_;
-}
-close PIPE or die "Cannot run printer_options: $!\n";
-print STDERR "done.\n";
-
-if ($foomatic3) {
-    open PIPE, "./printer_margins $simplified_subopt|" or die "Cannot run printer_margins: $!\n";
-    print STDERR "Loading margins from ./printer_margins $simplified_subopt...";
+if (! $opt_x) {
+    open PIPE, "./printer_options $simplified_subopt|" or die "Cannot run printer_options: $!\n";
+    print STDERR "Loading options from ./printer_options $simplified_subopt...";
     while(<PIPE>) {
 	#print $_;
 	next if m!^#!;
 	eval $_;
     }
-    close PIPE or die "Cannot run printer_margins: $!\n";
+    close PIPE or die "Cannot run printer_options: $!\n";
     print STDERR "done.\n";
+
+    if ($foomatic3) {
+	open PIPE, "./printer_margins $simplified_subopt|" or die "Cannot run printer_margins: $!\n";
+	print STDERR "Loading margins from ./printer_margins $simplified_subopt...";
+	while(<PIPE>) {
+	    #print $_;
+	    next if m!^#!;
+	    eval $_;
+	}
+	close PIPE or die "Cannot run printer_margins: $!\n";
+	print STDERR "done.\n";
+    }
 }
 
 open PIPE, "./printers|" or die "Cannot run printers: $!\n";
@@ -138,22 +141,27 @@ $missing_drivers = 0;
 
 %driverlist = ();
 %foolist = ();
+%foomap = ();
 
 open PRINTERS, $mapfile or die "Cannot open mapfile $mapfile: $!\n";
 for (<PRINTERS>) {
     if (m!^#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
-	if ($driverlist{$1}) {
+	my $pname = $1;
+	my $fname = $2;
+	if ($driverlist{$pname}) {
 	    $missing_drivers = 1;
-	    warn "Duplicate driver $1\n";
+	    warn "Duplicate driver $pname\n";
 	}
-	$driverlist{$1} = 1;
-	if ($foolist{$2}) {
+	$driverlist{$pname} = $fname;
+	if ($foolist{$fname}) {
 	    $missing_drivers = 1;
-	    warn "Duplicate Foomatic ID $2\n";
+	    warn "Duplicate Foomatic ID $fname\n";
 	}
-	$foolist{$2} = 1;
-	push (@{$mapstp{$1}}, $2);
-	$mapfoo{$2} = $1;	# do we need?
+	$foolist{$fname} = 1;
+	push (@{$mapstp{$pname}}, $fname);
+	$mapfoo{$fname} = $pname;	# do we need?
+	$fname =~ s,printer/,,;
+	$foomap{$pname} = $fname;
     }
 }
 
@@ -166,7 +174,7 @@ for (keys(%stpdata)) {
 }
 
 for (keys(%mapstp)) {
-    if (!defined($stpdata{$_})) {
+    if (!defined($printer_name{$_})) {
 	$missing_drivers = 1;
 	warn "No gutenprint printer for foomatic ID $_.\n";
     }
@@ -174,6 +182,15 @@ for (keys(%mapstp)) {
 
 if ($missing_drivers) {
    die "Cannot continue\n";
+}
+
+if ($opt_x) {
+    for (sort @printer_list) {
+	if (defined $printer_name{$_}) {
+	    printf("%s	%s	%s\n", $printer_name{$_}, $_, $foomap{$_});
+	}
+    }
+    exit;
 }
 
 # OK, now %stpdata is a big honking thing, and %defaults is in there, too.
