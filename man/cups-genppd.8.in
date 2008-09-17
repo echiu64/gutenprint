@@ -45,7 +45,7 @@ are commands to find out what printer models and languages are
 supported.
 .SH EXAMPLES
 .TP
-.B cups\-genppd \-v bjc\-6200 'EPSON Stylus Photo 1280' 'HP DeskJet 850C'
+.B cups\-genppd \-v bjc\-6200 'Epson Stylus Photo 1280' 'HP DeskJet 850C'
 verbosely generate three PPD files, listing the driver name in the
 first case, and the full name in the second.
 .TP
