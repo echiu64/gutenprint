@@ -101,6 +101,13 @@ II) MAJOR CHANGES FROM PREVIOUS RELEASES
    1) The CUPS driver correctly prints page sizes larger than letter
       on PCL printers (this was broken in 5.2.0-beta4 only).
 
+   2) The CD position on the R1900 has been corrected.
+
+   3) Printing on the Epson Stylux DX8400/DX8450 has been corrected
+      (the CX8400 was corrected in the previous release).
+
+   4) The user manual has been updated.
+
 
 ================================================================
 
