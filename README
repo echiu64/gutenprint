@@ -221,6 +221,13 @@ C) CUPS
     with your ability to continue using the Gutenprint 5.0 or
     Gimp-Print 4.2 CUPS driver.
 
+    WARNING: The "canon" and "epson" CUPS backends that previously
+    were distributed with Gutenprint are no longer distributed, so you
+    will need to ensure that none of your printer queues use these
+    backends.  Please read the Critical Upgrade Note in the release
+    notes for more information and the procedure for modifying your
+    printer queues.
+
     The Gutenprint CUPS driver consists of the following components:
 
     * The core Gutenprint CUPS driver, rastertogutenprint.5.2.  This

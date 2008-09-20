@@ -18,8 +18,9 @@ Gutenprint 5.2 no longer supports Macintosh OS X 10.2.
 These release notes contain the following sections:
 
 I)    General Requirements
-II)   Changes from Previous Releases
-III)  Overall changes from 5.0.2 to 5.2
+II)   Critical Upgrade Note
+III)  Changes from Previous Releases
+IV)   Overall changes from 5.0.2 to 5.2
 	A) General User-visible Changes
 	B) New Functionality
 	C) Changes to the Enhanced Print plugin for GIMP
@@ -28,7 +29,7 @@ III)  Overall changes from 5.0.2 to 5.2
 	F) Quality Improvements
 	G) Architectural Changes
 	H) New Printers Supported in this Release
-IV)   Exceptions and Workarounds
+V)    Exceptions and Workarounds
 	A) General Issues
 	B) Build/Installation Issues
 
@@ -94,24 +95,177 @@ for building and installing Gutenprint.
 
 ================================================================
 
-II) MAJOR CHANGES FROM PREVIOUS RELEASES
+II) CRITICAL UPGRADE NOTE
+
+If you are using CUPS with Gutenprint on a non-Macintosh system, and
+are upgrading from an earlier version of Gutenprint or Gimp-Print,
+please read this note carefully as there are special procedures that
+you should follow in addition to the normal procedure of running
+cups-genppdupdate.
+
+Background: older versions of Gutenprint distributed CUPS backends,
+named "epson" and "canon", that we have determined have compatibility
+problems on certain systems.  The symptom of this problem is that the
+last page of each print job does not complete; it prints almost to the
+end of the page, and the printer stops.  The only way to clear this
+condition is to power the printer off and back on after each job.
+
+A CUPS "backend" is a special program whose purpose is to transfer
+data from the printer driver to the printer itself.  CUPS provides a
+number of general purpose backends.  The "epson" and "canon" backends
+previously provided with Gutenprint are capable of retrieving ink
+level information from Epson and Canon inkjet printers respectively.
+These backends are no longer needed in CUPS 1.2, and are not strictly
+necessary in CUPS 1.1.  Therefore, these backends have been removed
+from Gutenprint as of 5.2.
+
+Due to a subtle issue, these backends may not correctly send all of
+the data to the printer on some systems.  While we have not fully
+characterized the systems on which this happens, it appears likely
+that it is on certain operating system versions.  The backend believes
+that all data has been sent, but the way it does I/O results in some
+data not being sent on all systems.  As a result, the printer
+continues to wait for more data to be received.
+
+We recommend that if you have any printer queues using these backends
+that you modify the queues to use a different backend.  Even if you
+are not currently having problems, we recommend that you do this, as a
+future operating system upgrade may result in this problem becoming
+visible.  If this is the first version of Gutenprint or Gimp-Print you
+have installed on your system, you should not have these backends
+present.  Here are the steps we recommend that you follow.
+
+1) Determine whether any printers on your system use the epson or
+   canon backends.
+
+   This can be determined via "lpstat -v".  This may be done without
+   administrator privileges:
+
+      $ lpstat -v
+      device for EPSON_Stylus_Photo_R300_USB_1: usb://EPSON/Stylus%20Photo%20R300
+      device for espr300-ez: usb://EPSON/Stylus%20Photo%20R300
+      device for r300-test: epson:/dev/usb/lp0
+      device for HP_LaserJet_1022_USB_1: usb://HP/LaserJet%201022
+
+   Inspect each device line for a device that begins with "epson:" or
+   "canon:".  These are the queues you must modify.  In this case, the
+   only queue that must be modified is "r300-test".  The other queues
+   all have devices that begin with "usb:"; these queues use the
+   standard CUPS USB backend that does not have this problem.
+
+2) For each queue that uses the epson or canon backend, modify it to
+   use an appropriate backend.
+
+   If your system provides a user interface for administering
+   printers, we recommend that you use that interface.  If you're
+   comfortable with the KDE or GNOME print manager, you may use that
+   interface.  However, we recommend using the CUPS web interface
+   (http://localhost:631/printers) to modify the printer.  The steps
+   you should follow (assuming that you are using the CUPS web
+   interface) are:
+
+   i) Click "Modify Printer", to start leading you through a series of
+      screens allowing you to change the printer properties.
+
+   ii) The first screen, entitled "Modify Printer r300-test" (the
+      printer name, of course, will vary), will display the name of
+      the printer, along with the location and description.  You may
+      modify these if you wish, but it isn't necessary.  Click
+      "Continue".
+
+   iii) The next screen, entitled "Device for r300-test", is the
+      important one.  This provides you a drop-down list of devices.
+      These devices typically include "AppSocket/HP JetDirect",
+      "LP#1", and so forth.  It is critical that you select the
+      correct device at this point.
+
+      The entries that you want are of the form
+
+      EPSON Stylus Photo R300 USB #1 (EPSON Stylus Photo R300)
+
+      or
+
+      EPSON Stylus Photo EX Parallel #1 (EPSON Stylus Photo EX)
+
+      Make sure to select the one that's appropriate for your printer
+      model.
+
+      You will likely also see entries such as "Gutenprint USB Printer
+      #1 (EPSON USB2.0 Printer (Hi-speed)".  These are the entries
+      corresponding to the "epson" and "canon" backends, and you must
+      avoid these.
+
+   iv) The next screen, entitled "Make/Manufacturer for r300-test",
+      allows you to select the manufacturer of the printer.  Normally,
+      the correct manufacturer (Epson or Canon) will be highlighted,
+      and you can click Continue.
+
+   v) The next screen, entitled "Model/Driver for r300-test", allows
+      you to select the precise model of the printer.  Normally, the
+      correct model (which will be named something like "Epson Stylus
+      Photo R300 - CUPS+Gutenprint v5.2.0-rc1") will already be
+      highlighted, and you can click "Modify Printer".  Otherwise, you
+      must find and select the correct printer model before clicking
+      Modify Printer.  You will likely need to provide your
+      administrator username and password to continue here.
+
+      After this, you should see a message "Printer r300-test modified
+      successfully".
+
+3) Remove the epson and canon backends.
+
+   On most systems, the backends will be named
+   /usr/lib/cups/backend/canon and /usr/lib/cups/backend/epson.  On
+   some systems, the backends will be named
+   /usr/lib64/cups/backend/canon and /usr/lib64/cups/backend/epson.
+   They may be present in other locations, but these are the most
+   common locations.  If these files are present, you should create a
+   directory named /usr/lib/cups/old-backend or
+   /usr/lib64/cups/old-backend, and move the epson and canon backends
+   there just in case you later need them.
+
+      % cd /usr/lib/cups
+      % sudo mkdir old-backend
+      Password: <type your administrator password>
+      % cd backend
+      % sudo mv canon epson ../old-backend
+      Password: <retype your administrator password if prompted>
+
+The specific underlying technical problem appears to be that when at
+least certain devices are in non-blocking mode (O_NONBLOCK or
+O_NDELAY) with certain operating system versions (Linux 2.6.25 appears
+to be suffer this problem, and most likely some other versions also
+do), the close() call does not result in all data being flushed to the
+device.  We have determined that the data is in fact written by the
+"epson" process, but it's never getting to the printer.
+
+================================================================
+
+III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.0-beta4
 
-   1) The CUPS driver correctly prints page sizes larger than letter
+   1) cups-genppdupdate now preserves the language of the original PPD
+      file, even if the PPD file is being converted to a globalized
+      PPD file.  This enables use of cups-genppdupdate -loriginal to
+      restore the previous language of the PPD file.  Note that
+      cups-genppdupdate -l<language> changes the stored language of
+      the PPD file.
+
+   2) The CUPS driver correctly prints page sizes larger than letter
       on PCL printers (this was broken in 5.2.0-beta4 only).
 
-   2) The CD position on the R1900 has been corrected.
+   3) The CD position on the R1900 has been corrected.
 
-   3) Printing on the Epson Stylux DX8400/DX8450 has been corrected
+   4) Printing on the Epson Stylux DX8400/DX8450 has been corrected
       (the CX8400 was corrected in the previous release).
 
-   4) The user manual has been updated.
+   5) The user manual has been updated.
 
 
 ================================================================
 
-III) OVERALL CHANGES FROM 5.0.2 TO 5.2
+IV) OVERALL CHANGES FROM 5.0.2 TO 5.2
 
 A) GENERAL USER-VISIBLE CHANGES
 
@@ -1047,7 +1201,7 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
 
 ================================================================
 
-IV) EXCEPTIONS AND WORKAROUNDS
+V) EXCEPTIONS AND WORKAROUNDS
 
 A) GENERAL ISSUES
 
