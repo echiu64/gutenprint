@@ -411,11 +411,13 @@ sub update_ppd ($) {
     my ($lingo) = "";
     my ($region) = "";
     my ($valid) = 0;
+    my ($orig_locale) = "";
     while (<ORIG>) {
 	if (/\*StpLocale:/) {
-	    ($locale) = m/^\*StpLocale:\s\"*(.*)\"$/;
+	    ($locale) = m/^\*StpLocale:\s*\"(.*)\"$/;
+	    $orig_locale = $locale;
 	    $valid = 1;
-	} elsif (/\*LanguageVersion/) {
+	} elsif (/^\*LanguageVersion/) {
 	    ($lingo) = m/^\*LanguageVersion:\s*(.*)$/;
 	} elsif (/^\*StpDriverName:/ ) {
 	    ($driver) = m/^\*StpDriverName:\s*\"(.*)\"$/;
@@ -441,6 +443,7 @@ sub update_ppd ($) {
     }
     if (defined $opt_l && $opt_l ne "" && lc $opt_l ne "original") {
 	$locale = $opt_l;
+	$orig_locale = $locale;
     }
     if ($debug & 2) {
 	print "Gutenprint Filename: $filename\n";
@@ -518,6 +521,13 @@ sub update_ppd ($) {
     my %options = %$nopt;
     my %resolution_map = %$nres;
     my %old_resolution_map = reverse %$ores;
+
+    # Store previous language in the PPD file so that -l original works
+    # correctly.
+
+    if ($orig_locale ne "") {
+	$source_data =~ s/(\*StpLocale:\s*\")(.*)(\")/$1$orig_locale$3/;
+    }
 
     if ($debug & 4) {
 	print "Options (Old->New Default Type):\n";
@@ -627,7 +637,7 @@ default_loop:
 			     (defined $resolution_map{$dopt}) &&
 			     ($dopt = $resolution_map{$dopt}) eq $opt)) { # Valid option
 			    # Set the option in the new PPD
-			    $source_data =~ s/\*($default_option).*/*$1:$dopt/m;
+			    $source_data =~ s/^\*($default_option).*/*$1:$dopt/m;
 			    if ($verbose) {
 				print "$ppd_source_filename: Set *$default_option to $dopt\n";
 			    }
