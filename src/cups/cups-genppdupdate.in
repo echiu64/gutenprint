@@ -303,6 +303,8 @@ sub parse_options () {
     if ($opt_P) {
 	if (-x $opt_P) {
 	    $driver_bin = "$opt_P";
+	    $driver_version = `$driver_bin VERSION`;
+	    chomp $driver_version;
 	    $use_static_ppd = "no";
 	}
 	else {
