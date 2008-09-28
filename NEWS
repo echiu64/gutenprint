@@ -257,10 +257,32 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    3) The CD position on the R1900 has been corrected.
 
-   4) Printing on the Epson Stylux DX8400/DX8450 has been corrected
-      (the CX8400 was corrected in the previous release).
+   4) Printing on the Epson Stylus DX8400/DX8450 has been corrected
+      (the CX8400 was corrected in the previous release).  Previously,
+      these printers fed paper endlessly without printing.
 
    5) The user manual has been updated.
+
+   6) Color and tonal correctness at low and medium resolutions has
+      been fixed on many Epson Stylus multi-function devices,
+      including
+
+      Stylus CX3500, Stylus CX3600, Stylus CX3650, Stylus CX5100,
+      Stylus CX4200, Stylus CX4500, Stylus CX4600, Stylus CX4700,
+      Stylus CX4800, Stylus CX4900, Stylus CX5000, Stylus CX5000F,
+      Stylus CX5700, Stylus CX5800, Stylus CX6000, Stylus CX7000F,
+      Stylus CX7800, Stylus CX8300, Stylus CX8400, Stylus CX9400,
+      Stylus DX4200, Stylus DX4250, Stylus DX4800, Stylus DX7000F,
+      Stylus DX8400, DX8450, PX A650
+
+      This issue affected printing at 720 DPI and below.  This issue
+      was fixed for the Stylus CX7400, Stylus DX7400, and Stylus
+      DX7450 in Gutenprint 5.2.0-beta4, but not on other printers at
+      that time.  Since then, we have determined that the same fix is
+      needed on these printers.
+
+      Output will be quite grainy at these resolutions, but colors
+      will be correct.
 
 
 ================================================================

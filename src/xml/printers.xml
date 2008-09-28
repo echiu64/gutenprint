@@ -395,7 +395,7 @@
       <printer translate="name" name="Epson Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7000F" driver="escp2-cx7000f" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX7400" driver="escp2-cx7400" manufacturer="Epson" model="92" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX7400" driver="escp2-cx7400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7800" driver="escp2-cx7800" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="65" parameters="cx3500_params" />
@@ -414,8 +414,8 @@
       <printer translate="name" name="Epson Stylus DX4450" driver="escp2-dx4450" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX4800" driver="escp2-dx4800" manufacturer="Epson" model="65" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX7000F" driver="escp2-dx7000f" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus DX7400" driver="escp2-dx7400" manufacturer="Epson" model="92" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus DX7450" driver="escp2-dx7450" manufacturer="Epson" model="92" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus DX7400" driver="escp2-dx7400" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus DX7450" driver="escp2-dx7450" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus DX8400" driver="escp2-dx8400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus DX8450" driver="escp2-dx8450" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
