@@ -273,7 +273,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       Stylus CX5700, Stylus CX5800, Stylus CX6000, Stylus CX7000F,
       Stylus CX7800, Stylus CX8300, Stylus CX8400, Stylus CX9400,
       Stylus DX4200, Stylus DX4250, Stylus DX4800, Stylus DX7000F,
-      Stylus DX8400, DX8450, PX A650
+      Stylus DX8400, Stylus DX8450, PX A650
 
       This issue affected printing at 720 DPI and below.  This issue
       was fixed for the Stylus CX7400, Stylus DX7400, and Stylus
@@ -283,6 +283,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
       Output will be quite grainy at these resolutions, but colors
       will be correct.
+
+   7) CUPS progress messages now work reliably on OS X 10.5.  In
+      5.2.0-beta4, page progress messages were not reported on that
+      operating system, and possibly others.
 
 
 ================================================================
