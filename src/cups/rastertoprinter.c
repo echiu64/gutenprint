@@ -1354,7 +1354,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   if (new_percent > cups->last_percent)
     {
       if (! suppress_messages)
-	stp_i18n_printf(_("INFO: Printing page %d, %d%%\n"),
+	stp_i18n_printf(po, _("INFO: Printing page %d, %d%%\n"),
 		        cups->page + 1, new_percent);
       fprintf(stderr, "ATTR: job-media-progress=%d\n", new_percent);
       cups->last_percent = new_percent;
@@ -1402,7 +1402,7 @@ Image_init(stp_image_t *image)		/* I - Image */
   cups->last_percent = 0;
 
   if (! suppress_messages)
-    stp_i18n_printf(_("INFO: Starting page %d...\n"), cups->page + 1);
+    stp_i18n_printf(po, _("INFO: Starting page %d...\n"), cups->page + 1);
   /* cups->page + 1 because users expect 1-based counting */
 }
 
@@ -1420,7 +1420,7 @@ Image_conclude(stp_image_t *image)	/* I - Image */
     return;
 
   if (! suppress_messages)
-    stp_i18n_printf(_("INFO: Finished page %d...\n"), cups->page + 1);
+    stp_i18n_printf(po, _("INFO: Finished page %d...\n"), cups->page + 1);
 }
 
 /*
