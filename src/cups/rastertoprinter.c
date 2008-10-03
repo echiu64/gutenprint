@@ -853,6 +853,12 @@ main(int  argc,				/* I - Number of command-line arguments */
   char			*page_size_name = NULL;
 
 
+ /*
+  * Don't buffer error/status messages...
+  */
+
+  setbuf(stderr, NULL);
+
   if (getenv("STP_SUPPRESS_MESSAGES"))
     suppress_messages = 1;
 
@@ -1350,6 +1356,7 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
       if (! suppress_messages)
 	fprintf(stderr, _("INFO: Printing page %d, %d%%\n"),
 		cups->page + 1, new_percent);
+      fprintf(stderr, "ATTR: job-media-progress=%d\n", new_percent);
       cups->last_percent = new_percent;
     }
 
