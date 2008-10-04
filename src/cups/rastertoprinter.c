@@ -1354,9 +1354,11 @@ Image_get_row(stp_image_t   *image,	/* I - Image */
   if (new_percent > cups->last_percent)
     {
       if (! suppress_messages)
-	stp_i18n_printf(po, _("INFO: Printing page %d, %d%%\n"),
-		        cups->page + 1, new_percent);
-      fprintf(stderr, "ATTR: job-media-progress=%d\n", new_percent);
+	{
+	  stp_i18n_printf(po, _("INFO: Printing page %d, %d%%\n"),
+			  cups->page + 1, new_percent);
+	  fprintf(stderr, "ATTR: job-media-progress=%d\n", new_percent);
+	}
       cups->last_percent = new_percent;
     }
 
