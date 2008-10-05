@@ -1,11 +1,11 @@
 <?
-require('functions.php3');
+require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
 $title = 'Gutenprint Features';
 ###############################################
 ###############################################
-require('standard_html_header.php3');
+require('standard_html_header.php');
 
 
 ### Content Below  ###
@@ -70,4 +70,4 @@ Lexmark printers.</li></p>
 
 </ul>
 
-<?require('standard_html_footer.php3');?>
+<?require('standard_html_footer.php');?>

@@ -1,12 +1,12 @@
 <?
 
-require('functions.php3');
+require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
 $title = 'Gutenprint Printer Drivers';
 ###############################################
 ###############################################
-require('standard_html_header.php3');
+require('standard_html_header.php');
 
 
 ### Content Below  ###
@@ -29,7 +29,7 @@ choose which to use.</p>
 Users!</font></em></strong></h2>
 
 <p>There is now a <a
-href="http://gimp-print.sourceforge.net/MacOSX.php3">Gutenprint web
+href="http://gimp-print.sourceforge.net/MacOSX.php">Gutenprint web
 page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 and 10.5 "Leopard", and provides direct download links.</p>
@@ -450,4 +450,4 @@ capabilities of Gutenprint 5.0. However, these changes can be made
 later, either in later 5.0 releases or in the next release series.
 Gutenprint is not "finished" and never will be!</P>
 
-<?require('standard_html_footer.php3');?>
+<?require('standard_html_footer.php');?>

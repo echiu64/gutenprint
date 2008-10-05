@@ -1,5 +1,5 @@
 <?
-require('state.php3');
+require('state.php');
 
 function includeImage ($imageName,$altString = "Image",$border="0",$misc="") {
 	$imageName = ereg_replace("^","images/",$imageName);
@@ -33,7 +33,7 @@ function navbar($navbar_text='') {
 	
 	$returning = '<table border="0" width="100%" cellspacing="0"><tr><td bgcolor="#eeeeee"><table border="0"><TR>';
 
-	$filename = "index.php3";
+	$filename = "index.php";
 	$destname = "Home";
 
 	if (ereg($filename,$GLOBALS['SCRIPT_NAME'])) {
@@ -44,8 +44,8 @@ function navbar($navbar_text='') {
 
 
 	while ($filename = readdir($handle)) {
-		if ( is_file($filename) & ( ereg("^p_.*php3$",$filename) ) ) {
-			$destname = ereg_replace(".php3$","",$filename);
+		if ( is_file($filename) & ( ereg("^p_.*php$",$filename) ) ) {
+			$destname = ereg_replace(".php$","",$filename);
 			$destname = ereg_replace("^p_","",$destname);
 			$returning = $returning . '<TD BGCOLOR="#eeeeee"><font color="#dddddd">|-|</font></TD>';
 			if (ereg($filename,$GLOBALS['SCRIPT_NAME'])) {

@@ -42,7 +42,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 				<tr>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="index.php3">Home</a> 
+							<a href="index.php">Home</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -50,7 +50,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Documentation.php3">Documentation</a> 
+							<a href="p_Documentation.php">Documentation</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -58,7 +58,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Download.php3">Download</a> 
+							<a href="p_Download.php">Download</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -66,7 +66,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_FAQ_OS_X.php3">FAQ_OS_X</a> 
+							<a href="p_FAQ_OS_X.php">FAQ_OS_X</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -74,7 +74,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Features.php3">Features</a> 
+							<a href="p_Features.php">Features</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -82,7 +82,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Mailing_Lists.php3">Mailing_Lists</a> 
+							<a href="p_Mailing_Lists.php">Mailing_Lists</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -90,7 +90,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Screenshot.php3">Screenshot</a> 
+							<a href="p_Screenshot.php">Screenshot</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -98,7 +98,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Supported_Printers.php3">Supported_Printers</a> 
+							<a href="p_Supported_Printers.php">Supported_Printers</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -106,7 +106,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_ToDo.php3">ToDo</a> 
+							<a href="p_ToDo.php">ToDo</a> 
 						</p>
 					</td>
 				</tr>
@@ -131,44 +131,44 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta4 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#5.2.0-beta4">August 17, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
+			<a href="MacOSX.php#5.2.0-beta4">August 17, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta3 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#5.2.0-beta3">June 15, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series.  See the <b>Downloads</b> section. 
+			<a href="MacOSX.php#5.2.0-beta3">June 15, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#5.0.2">January 3, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0 series. This release features full support for borderless printing on Epson inkjet printers, support for more Epson, Canon, and dye sublimation printers, and more. See the <b>Downloads</b> section. 
+			<a href="MacOSX.php#5.0.2">January 3, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0 series. This release features full support for borderless printing on Epson inkjet printers, support for more Epson, Canon, and dye sublimation printers, and more. See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Mac OS X FAQs updated for Leopard</span> 
 			<br>
-			<a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">November 27, 2007</a> - Some of the most common questions about using Gutenprint with Mac OS X 10.5.x have been added to the <a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php3">Mac OS X FAQ</a>.  In particular, <b>all Epson owners</b> are encouraged to read these FAQs.
+			<a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php">November 27, 2007</a> - Some of the most common questions about using Gutenprint with Mac OS X 10.5.x have been added to the <a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php">Mac OS X FAQ</a>.  In particular, <b>all Epson owners</b> are encouraged to read these FAQs.
 		</p>
 		<p>
 			<span style="color:#ff0000; font-size:110%;font-weight:bold;">ESP Ghostscript version 7.07.1 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#downloadESPGS">Aug 17, 2004</a> - ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section. This release fixes security problems related to libPNG. Anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the uninstaller included with this package to remove the old software. 
+			<a href="MacOSX.php#downloadESPGS">Aug 17, 2004</a> - ESP Ghostscript version 7.07.1 (ESPGS) is now available as a Mac OS X installer package in the downloads section. This release fixes security problems related to libPNG. Anyone who has ever installed an earlier release of ESP Ghostscript should either upgrade to this version or use the uninstaller included with this package to remove the old software. 
 		</p>
 		<p>
 			<span style="color:#ff0000; font-size:110%;font-weight:bold;"> Gimp-Print 4.2.7 is released!</span> 
 			<br>
-			<a href="MacOSX.php3#4.2.7">July 14, 2004</a> - This is the last stable release of Gimp-Print in the 4.2.x series. 
+			<a href="MacOSX.php#4.2.7">July 14, 2004</a> - This is the last stable release of Gimp-Print in the 4.2.x series. 
 		</p>
 		<hr>
 		<h2> Support </h2> <h2> <font color="#ff0000">Read the FAQ!</font> </h2> 
 		<p>
-			The <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">Gutenprint FAQ for OS X</a> answers most questions about Gutenprint and how to print in Mac OS X 10.2 Jaguar. 
+			The <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php">Gutenprint FAQ for OS X</a> answers most questions about Gutenprint and how to print in Mac OS X 10.2 Jaguar. 
 		</p>
 		<h2> <font color="#ff0000">Check the Forums</font> </h2> 
 		<p>
-			If your question about Gutenprint is not answered in the <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">FAQ</a> or in the documentation included with the installer your next stop should be the Gutenprint project <a href="http://sourceforge.net/forum/?group_id=1537">forums</a>. 
+			If your question about Gutenprint is not answered in the <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php">FAQ</a> or in the documentation included with the installer your next stop should be the Gutenprint project <a href="http://sourceforge.net/forum/?group_id=1537">forums</a>. 
 		</p>
 		<p>
-			If you are experiencing a problem that you believe may be a driver bug please check the <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537">bug tracker</a>. If the problem you are facing is not listed in the installer disk documentation, the <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php3">FAQ</a>, the <a href="http://sourceforge.net/forum/?group_id=1537">forums</a>, or the <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537">bug tracker</a> then you should file a <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=201537">support request</a> against it. If there is a feature missing from Gutenprint that you would like to see added please file a <a href="https://sourceforge.net/tracker/?atid=351537&amp;group_id=1537&amp;func=browse">feature request</a>. 
+			If you are experiencing a problem that you believe may be a driver bug please check the <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537">bug tracker</a>. If the problem you are facing is not listed in the installer disk documentation, the <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php">FAQ</a>, the <a href="http://sourceforge.net/forum/?group_id=1537">forums</a>, or the <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=101537">bug tracker</a> then you should file a <a href="http://sourceforge.net/tracker/?group_id=1537&amp;atid=201537">support request</a> against it. If there is a feature missing from Gutenprint that you would like to see added please file a <a href="https://sourceforge.net/tracker/?atid=351537&amp;group_id=1537&amp;func=browse">feature request</a>. 
 		</p>
 		
 <!-- close div that indented text  -->
@@ -687,7 +687,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 	This is the version included with the distribution of Mac OS X 10.4 (Tiger). 
 </p>
 <p>
-	Please note that the behavior of the 5.0.0-beta2 Mac OS X installer for Gimp-Print is unchanged from <a href="MacOSX.php3#5.0.0-beta1">5.0.0-beta1</a>. 
+	Please note that the behavior of the 5.0.0-beta2 Mac OS X installer for Gimp-Print is unchanged from <a href="MacOSX.php#5.0.0-beta1">5.0.0-beta1</a>. 
 </p>
 <a name="5.0.0-beta1"></a> 
 <table width="60%" bgcolor="#d0d0d0">
@@ -858,7 +858,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 				<tr>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="index.php3">Home</a> 
+							<a href="index.php">Home</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -866,7 +866,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Documentation.php3">Documentation</a> 
+							<a href="p_Documentation.php">Documentation</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -874,7 +874,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Download.php3">Download</a> 
+							<a href="p_Download.php">Download</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -882,7 +882,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_FAQ_OS_X.php3">FAQ_OS_X</a> 
+							<a href="p_FAQ_OS_X.php">FAQ_OS_X</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -890,7 +890,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Features.php3">Features</a> 
+							<a href="p_Features.php">Features</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -898,7 +898,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Mailing_Lists.php3">Mailing_Lists</a> 
+							<a href="p_Mailing_Lists.php">Mailing_Lists</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -906,7 +906,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Screenshot.php3">Screenshot</a> 
+							<a href="p_Screenshot.php">Screenshot</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -914,7 +914,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_Supported_Printers.php3">Supported_Printers</a> 
+							<a href="p_Supported_Printers.php">Supported_Printers</a> 
 						</p>
 					</td>
 					<td bgcolor="#eeeeee">
@@ -922,7 +922,7 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 					</td>
 					<td bgcolor="#dedede">
 						<p>
-							<a href="p_ToDo.php3">ToDo</a> 
+							<a href="p_ToDo.php">ToDo</a> 
 						</p>
 					</td>
 				</tr>

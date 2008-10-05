@@ -1,11 +1,11 @@
 <?
-require('functions.php3');
+require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
 $title = 'Gutenprint Features';
 ###############################################
 ###############################################
-require('standard_html_header.php3');
+require('standard_html_header.php');
 
 
 ### Content Below  ###
@@ -18,4 +18,4 @@ href="gutenprint-users-manual.pdf">here</a>.</p>
 manual</a> is available <a
 href="developer-html/book1.html">here</a> (PDF version is <a href="gutenprint-developer-manual.pdf">here</a>).</p>
 
-<?require('standard_html_footer.php3');?>
+<?require('standard_html_footer.php');?>

@@ -1,11 +1,11 @@
 <?
-require('functions.php3');
+require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
 $title = 'Gutenprint Supported Printers';
 ###############################################
 ###############################################
-require('standard_html_header.php3');
+require('standard_html_header.php');
 
 
 ### Content Below  ###
@@ -766,4 +766,4 @@ and reporting the results!</p>
 <tr><td>Xerox DocuPrint P8e<td>xerox-dp_p8e<td>Xerox-DocuPrint_P8e<td>&nbsp;</tr>
 </table>
 
-<?require('standard_html_footer.php3');?>
+<?require('standard_html_footer.php');?>

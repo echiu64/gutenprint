@@ -1,11 +1,11 @@
 <?
-require('functions.php3');
+require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
 $title = 'Gutenprint FAQ for Mac OS X and Darwin';
 ###############################################
 ###############################################
-require('standard_html_header.php3');
+require('standard_html_header.php');
 
 
 ### Content Below  ###
@@ -13,170 +13,170 @@ require('standard_html_header.php3');
 <h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
 
 <ol type="1" start="1">
-	<li><a href="p_FAQ_OS_X.php3#EconomyMode">All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</a></li>
-	<li><a href="p_FAQ_OS_X.php3#BlackWhite">How do I print in black and white?</a></li>
-	<li><a href="p_FAQ_OS_X.php3#ExcelPreview">Print preview in Excel does not work.  I only get a blank page.</a></li>
-	<li><a href="p_FAQ_OS_X.php3#WindowsLandscape">Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</a></li>
+	<li><a href="p_FAQ_OS_X.php#EconomyMode">All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</a></li>
+	<li><a href="p_FAQ_OS_X.php#BlackWhite">How do I print in black and white?</a></li>
+	<li><a href="p_FAQ_OS_X.php#ExcelPreview">Print preview in Excel does not work.  I only get a blank page.</a></li>
+	<li><a href="p_FAQ_OS_X.php#WindowsLandscape">Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</a></li>
 </ol>
 
 
 <h2>Gutenprint FAQ for Mac OS X and Darwin</h2>
  <ol>
- <li><a href="p_FAQ_OS_X.php3#description">
+ <li><a href="p_FAQ_OS_X.php#description">
  What is Gimp-Print? Why would I want to install it?
  </a>
- <li><a href="p_FAQ_OS_X.php3#getMoreInfo">
+ <li><a href="p_FAQ_OS_X.php#getMoreInfo">
  How can I find out more information about Gimp-Print? Where can I get
  the newest version?
  </a>
- <li><a href="p_FAQ_OS_X.php3#contactInfo">
+ <li><a href="p_FAQ_OS_X.php#contactInfo">
  I've read this entire document but I'm still having problems. How can I
  contact the developers?
  </a>
- <li><a href="p_FAQ_OS_X.php3#pictwpstopdf">
+ <li><a href="p_FAQ_OS_X.php#pictwpstopdf">
  I am trying to print from (Quark, Phtoshop, etc...) using Gimp-Print on
  Mac OS X Panther (10.3.x) but whenever I include EPS files I get really
  low quality output. This did not happen on Mac OS X Jaguar (10.2.x). Did
  the the printing behavior change between Mac OS 10.2 and Mac OS 10.3? How
  can I get the high quality output in Panther?
  </a>
- <li><a href="p_FAQ_OS_X.php3#pantherInstallerBug">
+ <li><a href="p_FAQ_OS_X.php#pantherInstallerBug">
  I am trying to install Gimp-Print on Mac OS X Panther (10.3.x) but when I get
  to the installer screen where I select the destination volume, there is a large 
  red exclamation mark and I can't install it.
  </a>
- <li><a href="p_FAQ_OS_X.php3#noPPDsInCUPSWebAdmin">
+ <li><a href="p_FAQ_OS_X.php#noPPDsInCUPSWebAdmin">
  After installing Gimp-Print 4.2.6 (or later), when I go to set up a printer via
  the CUPS web interface I get to the point where I need to choose a driver, but the
  Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
  4.2.5 so where did they go?
  </a>
- <li><a href="p_FAQ_OS_X.php3#didntReadTheInstructions">
+ <li><a href="p_FAQ_OS_X.php#didntReadTheInstructions">
  I do not see the "Advanced" option in Print Center. How can I find it?
  </a>
- <li><a href="p_FAQ_OS_X.php3#espgs">
+ <li><a href="p_FAQ_OS_X.php#espgs">
  Printing does not work from "Carbon" applications (Adobe Photoshop, Acrobat,
  Appleworks, etc...), but I can print from "Cocoa" applications (Preview,
  TextEdit, etc...) just fine. How can I fix this ?
  </a>
- <li><a href="p_FAQ_OS_X.php3#tellMeMore">
+ <li><a href="p_FAQ_OS_X.php#tellMeMore">
  I want to know more about the new printing system in Mac OS X Jaguar. How do
  the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
  </a>
- <li><a href="p_FAQ_OS_X.php3#tcpip">
+ <li><a href="p_FAQ_OS_X.php#tcpip">
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
  type-B ethernet card. HELP!!!
  </a>
- <li><a href="p_FAQ_OS_X.php3#1394">
+ <li><a href="p_FAQ_OS_X.php#1394">
  How can I print using FireWire (IEEE 1394)?
  </a>
- <li><a href="p_FAQ_OS_X.php3#pap">
+ <li><a href="p_FAQ_OS_X.php#pap">
  How can I print using AppleTalk?
  </a>
- <li><a href="p_FAQ_OS_X.php3#USB-to-parallel">
+ <li><a href="p_FAQ_OS_X.php#USB-to-parallel">
  I am having trouble printing with a certain brand of USB-to-parallel converter cable. Which cable brands are supported on Mac OS X?
  </a>
- <li><a href="p_FAQ_OS_X.php3#InDesign">
+ <li><a href="p_FAQ_OS_X.php#InDesign">
  How can I print correctly from Adobe InDesign using Gimp-Print?
  </a>
- <li><a href="p_FAQ_OS_X.php3#HPUSB">
+ <li><a href="p_FAQ_OS_X.php#HPUSB">
  My multi-function HP Device is not printing over the USB port. What's wrong?
  </a>
- <li><a href="p_FAQ_OS_X.php3#escp2-7600">
+ <li><a href="p_FAQ_OS_X.php#escp2-7600">
  I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
  </a>
- <li><a href="p_FAQ_OS_X.php3#installer">
+ <li><a href="p_FAQ_OS_X.php#installer">
  What files are installed by the Gimp-Print installer for Jaguar and
  Darwin? Where are they installed? I want to remove them; how do I do it?
  </a>
- <li><a href="p_FAQ_OS_X.php3#uninstaller">
+ <li><a href="p_FAQ_OS_X.php#uninstaller">
  The Gimp-Print installer for Jaguar is very nice, thanks for providing
  it. But, why haven't you provided me with an easy way to remove the
  Gimp-Print files from my system?
  </a>
- <li><a href="p_FAQ_OS_X.php3#pslevel1">
+ <li><a href="p_FAQ_OS_X.php#pslevel1">
  The list of supported printers says that PostScript Level 1 printing is
  supported, but I can't use Gimp-Print to print to my Level 1 printer
  (Laserwriter plus, Laserwriter IINT, etc...). What's wrong?
  </a>
- <li><a href="p_FAQ_OS_X.php3#version">
+ <li><a href="p_FAQ_OS_X.php#version">
  Which versions of Mac OS are compatible with Gimp-Print?
  </a>
- <li><a href="p_FAQ_OS_X.php3#versionX">
+ <li><a href="p_FAQ_OS_X.php#versionX">
  I have never heard of version "10.1.x" but I have 10.1.5, does
  Gimp-Print work with that?
  </a>
- <li><a href="p_FAQ_OS_X.php3#supportedPrinters">
+ <li><a href="p_FAQ_OS_X.php#supportedPrinters">
  Is my printer supported by Gimp-Print?
  </a>
- <li><a href="p_FAQ_OS_X.php3#generalSetup">
+ <li><a href="p_FAQ_OS_X.php#generalSetup">
  OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
  print but I can't figure out how to set up my printer in print center.
  </a>
  <dl>
- <dd><a href="p_FAQ_OS_X.php3#usbSetup">
+ <dd><a href="p_FAQ_OS_X.php#usbSetup">
  USB connection
  </a>
- <dd><a href="p_FAQ_OS_X.php3#networkSetup">
+ <dd><a href="p_FAQ_OS_X.php#networkSetup">
  Network connection
  </a>
- <dd><a href="p_FAQ_OS_X.php3#sambaSetup">
+ <dd><a href="p_FAQ_OS_X.php#sambaSetup">
  Windows printer via SAMBA
  </a>
  </dl>
- <li><a href="p_FAQ_OS_X.php3#whereAreTheSettings">
+ <li><a href="p_FAQ_OS_X.php#whereAreTheSettings">
  OK, my printer is printing now, but how do I change the print settings
  like paper type and resolution?
  </a>
- <li><a href="p_FAQ_OS_X.php3#whatSettings">
+ <li><a href="p_FAQ_OS_X.php#whatSettings">
  Ok, I found all the settings, but what do they do?
  </a>
  </ol>
 <H2>Gimp-Print General FAQ</H2>
  <ol>
- <li><a href="p_FAQ_OS_X.php3#onlyForGimp">
+ <li><a href="p_FAQ_OS_X.php#onlyForGimp">
  Is it only for Gimp? 
  </a>
- <li><a href="p_FAQ_OS_X.php3#missingFiles">
+ <li><a href="p_FAQ_OS_X.php#missingFiles">
   I cannot install it, it complains about missing Gimp files
  </a>
- <li><a href="p_FAQ_OS_X.php3#imageType">
+ <li><a href="p_FAQ_OS_X.php#imageType">
  What is the difference between B/W, Line art, solid color and Photo mode (or ImageType in Ghostscript)? 
  </a>
- <li><a href="p_FAQ_OS_X.php3#noWorky">
+ <li><a href="p_FAQ_OS_X.php#noWorky">
   I selected my printer and it doesn't work at all!
  </a>
- <li><a href="p_FAQ_OS_X.php3#feedsPaper">
+ <li><a href="p_FAQ_OS_X.php#feedsPaper">
  I selected my printer and it simply feeds paper without printing 
  </a>
- <li><a href="p_FAQ_OS_X.php3#distortedImage">
+ <li><a href="p_FAQ_OS_X.php#distortedImage">
  I selected my printer, and it prints the image badly distorted, or at completely the wrong place on the page
  </a>
- <li><a href="p_FAQ_OS_X.php3#printsGarbage">
+ <li><a href="p_FAQ_OS_X.php#printsGarbage">
  I selected the right printer, but garbage, or only part of the page, gets printed
  </a>
- <li><a href="p_FAQ_OS_X.php3#dj1200">
+ <li><a href="p_FAQ_OS_X.php#dj1200">
   What's up with the HP Deskjet 1200?
  </a>
- <li><a href="p_FAQ_OS_X.php3#lowRes">
+ <li><a href="p_FAQ_OS_X.php#lowRes">
   I selected the right printer and the quality is lousy
  </a>
- <li><a href="p_FAQ_OS_X.php3#GSopts">
+ <li><a href="p_FAQ_OS_X.php#GSopts">
   How do I start setting options for Ghostscript?
  </a>
- <li><a href="p_FAQ_OS_X.php3#noEscputil">
+ <li><a href="p_FAQ_OS_X.php#noEscputil">
   <tt>escputil -i</tt> or <tt>escputil -d</tt> fails as follows:
  </a>
- <li><a href="p_FAQ_OS_X.php3#noASCII">
+ <li><a href="p_FAQ_OS_X.php#noASCII">
   I tried to test my Epson printer by 'cat .cshrc > /dev/lp0' and nothing prints!!!???
  </a>
- <li><a href="p_FAQ_OS_X.php3#BSD">
+ <li><a href="p_FAQ_OS_X.php#BSD">
   My USB-connected Epson Stylus printer won't work with {Free,Net,Open}BSD!
  </a>
- <li><a href="p_FAQ_OS_X.php3#starOffice">
+ <li><a href="p_FAQ_OS_X.php#starOffice">
   I try to print with StarOffice and it doesn't print correctly!
  </a>
- <li><a href="p_FAQ_OS_X.php3#sambaGarbage">
+ <li><a href="p_FAQ_OS_X.php#sambaGarbage">
   I'm printing through Samba, and my printer prints garbage!
  </a>
  </ol>
@@ -281,7 +281,7 @@ Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was incl
  </h3>
  <p>
  For the latest information or the newest version of Gimp-Print be sure
- to check the <a href= "http://gimp-print.sourceforge.net/MacOSX.php3"
+ to check the <a href= "http://gimp-print.sourceforge.net/MacOSX.php"
  >Gimp-Print web page</a>.
  </p>
  <a name="contactInfo"></a>
@@ -349,7 +349,7 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  is not present in Jaguar; the workaround in Panther is to run the Gimp-Print
  uninstaller and remove any other versions of Gimp-Print.
 <br><br>
- Please note that when you run the uninstaller you will most likely want to click <b>Customize</b> and skip the <b>Gimp-Print printer remover</b> option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php3#usbSetup">secret option-click-elbow process</a> again to recreate them.
+ Please note that when you run the uninstaller you will most likely want to click <b>Customize</b> and skip the <b>Gimp-Print printer remover</b> option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php#usbSetup">secret option-click-elbow process</a> again to recreate them.
  </p>
 <a name="noPPDsInCUPSWebAdmin"></a>
  <li><h3>
@@ -668,7 +668,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  </h3>
  <p>
  There is a comprehensive <a href=
- "http://Gimp-Print.sourceforge.net/p_Supported_Printers.php3" >list of
+ "http://Gimp-Print.sourceforge.net/p_Supported_Printers.php" >list of
  supported printers</a> at the Gimp-Print website. If your printer is
  listed as "Fully Operational" then you should expect excellent output
  when using Gimp-Print. Printers listed as something other than "Fully
@@ -836,7 +836,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  Ok, I found all the settings, but what do they do?
  </h3>
  <p>
- Please see the <! a href= "http://Gimp-Print.sourceforge.net/p_FAQ.php3"
+ Please see the <! a href= "http://Gimp-Print.sourceforge.net/p_FAQ.php"
  >Gimp-Print General FAQ<! /a> for answers to these questions.
  <p>
  </ol>
@@ -1191,4 +1191,4 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  </p>
  </ol>
 
-<?require('standard_html_footer.php3');?>
+<?require('standard_html_footer.php');?>

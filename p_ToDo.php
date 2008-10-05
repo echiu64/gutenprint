@@ -1,11 +1,11 @@
 <?
-require('functions.php3');
+require('functions.php');
 ###############################################
 ##    Set title of this page here    ##########
 $title = 'Gutenprint Things To Do';
 ###############################################
 ###############################################
-require('standard_html_header.php3');
+require('standard_html_header.php');
 
 
 ### Content Below  ###
@@ -24,4 +24,4 @@ really a major architectural project.</p>
 
 </ul>
 
-<?require('standard_html_footer.php3');?>
+<?require('standard_html_footer.php');?>
