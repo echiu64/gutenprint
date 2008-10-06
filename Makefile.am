@@ -30,6 +30,7 @@ include $(top_srcdir)/scripts/global.mk
 SUBDIRS = include src samples test po man doc scripts
 DISTDIRS = m4 m4extra
 
+docdir = $(datadir)/$(PACKAGE)/doc
 
 ## Rules
 
@@ -37,6 +38,17 @@ DISTDIRS = m4 m4extra
 libtool: $(LIBTOOL_DEPS)
 	cd $(srcdir); \
 	$(SHELL) ./config.status --recheck
+
+# Don't list ChangeLog as a dependency here because it forces network
+# access, and because it usually runs as superuser rather than the user
+# who normally builds Gutenprint.
+install-data-local: NEWS AUTHORS COPYING README
+	$(mkdir_p) $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/NEWS $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/ChangeLog $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/AUTHORS $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/COPYING $(DESTDIR)$(docdir)
+	$(INSTALL_DATA) $(srcdir)/README $(DESTDIR)$(docdir)
 
 # This rather strange-looking code ensures that the change log is only
 # rebuilt if any of the CVS/Entries files have changed since the change log
