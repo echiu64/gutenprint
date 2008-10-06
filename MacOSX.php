@@ -129,14 +129,14 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-rc1 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.0-rc1">October 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-rc1, a release candidate for the upcoming Gutenprint 5.2 stable release series. See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta4 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.0-beta4">August 17, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta3 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.0-beta3">June 15, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta3, a beta release for the upcoming Gutenprint 5.2 stable release series.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -182,12 +182,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.0-beta4</b> 
+			<b>Gutenprint 5.2.0-rc1</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta4-ub.dmg?download">gutenprint-5.2.0-beta4-ub.dmg</a></span>&nbsp;&nbsp;(44.7 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-rc1-ub.dmg?download">gutenprint-5.2.0-rc1-ub.dmg</a></span>&nbsp;&nbsp;(43.4 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.  Included in this release is a work around for certain applications (most notably Microsoft Office) that did not print correctly on printers capable of high resolution, due to inability to handle the specified resolutions. Also, PPD files are now globalized. They include, by default, all localizations in a single file.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.0-beta4.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.0-rc1, a release candidate for the upcoming Gutenprint 5.2 stable release series. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.0-rc1.tar.bz2?download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -227,7 +227,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta rel
 			ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from GNU Ghostscript. This package is required for users running Mac OS X &quot;Jaguar&quot; as it provides full support for printing from all &quot;Carbon&quot; applications. Gimp-Print users running &quot;Panther&quot; and later versions of Mac OS X do not require this software.&nbsp;&nbsp;(<a href="http://prdownloads.sourceforge.net/espgs/espgs-7.07.1-source.tar.gz?download">source code</a>) 
 		</p>
 		<p>
-			<em>Gutenprint for Mac requires Mac OS X Jaguar (version 10.2) or later!</em> 
+			<em>Gutenprint 5.2.0-beta4 and later require Mac OS X Panther (10.3) or later! Gutenprint 5.0.2 and Gimp-Print 4.2.7 for Mac require Mac OS X Jaguar (version 10.2) or later!</em> 
 		</p>
 <!--  close div that indented text -->
 	</div>
@@ -257,6 +257,31 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta rel
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.0-rc1"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.0-rc1</b> 
+		</td>
+		<td align="right">
+			<b>2008-10-05</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.0-rc1 (5.2.0.5)</b> release is a release candidate of the forthcoming 5.2.x stable release.  There are several notable changes since the Gutenprint 5.2.0-beta4:</p> 
+	
+<ul type="disc">
+	<li>Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher.  This is due to a new library requirement (for the iconv library) that is not present in 10.2.</li>
+	<li>The CUPS driver correctly prints page sizes larger than letter on PCL printers (this was broken in 5.2.0-beta4 only).</li>
+	<li>The CD position on the R1900 has been corrected.</li>
+	<li>Printing on the Epson Stylus DX8400/DX8450 has been corrected (the CX8400 was corrected in the previous release).  Previously, these printers fed paper endlessly without printing.</li>
+	<li>Color and tonal correctness at low and medium resolutions has been fixed on many Epson Stylus multi-function devices, including:<br> Stylus CX3500, Stylus CX3600, Stylus CX3650, Stylus CX5100, Stylus CX4200, Stylus CX4500, Stylus CX4600, Stylus CX4700, Stylus CX4800, Stylus CX4900, Stylus CX5000, Stylus CX5000F, Stylus CX5700, Stylus CX5800, Stylus CX6000, Stylus CX7000F,      Stylus CX7800, Stylus CX8300, Stylus CX8400, Stylus CX9400, Stylus DX4200, Stylus DX4250, Stylus DX4800, Stylus DX7000F, Stylus DX8400, Stylus DX8450, PX A650</li>
+	<li>The user manual has been updated.</li>
+</ul>
+<p>
+Additional bug fixes and new features are listed in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=630990">release notes</a>.
+</p>
 
 <a name="5.2.0-beta4"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
@@ -435,7 +460,7 @@ Two new dither algorithms, Segmented and Segmented New, have been added.  These 
 </li>
 </ul>
 <p>
-Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=582342">release notes</a>.
+Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=582342">release notes</a>.
 </p>
 
 
@@ -480,7 +505,7 @@ Added preliminary support for the following printers:<br>
 <li>The CUPS driver in Gutenprint, and all associated utilities, are now licensed as GPL v2 or higher.  That code was previously licensed as GPL v2 only.  While that did not cause any direct problems, since the CUPS driver does not form a library that other code may wish to link against, it was licensed differently from the rest of the Gutenprint project.  That is now resolved, and the entire Gutenprint code base is now licensed as GPL v2 or higher.</li>
 </ul>
 <p>
-Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=565661">release notes</a>.
+Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&&amp;release_id=565661">release notes</a>.
 </p>
 <a name="5.0.2"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
@@ -548,7 +573,7 @@ Additional bug fixes are listed in the Release notes.
 </li>
 </ul>
  <p>
-Additional information can be found in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&release_id=565663">release notes</a>.
+Additional information can be found in the <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=565663">release notes</a>.
 </p>
 <a name="5.0.2-beta1"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
