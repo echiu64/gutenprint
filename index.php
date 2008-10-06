@@ -34,6 +34,20 @@ page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 and 10.5 "Leopard", and provides direct download links.</p>
 
+<H2><font color="#ff0000">Gutenprint 5.2.0-rc1 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of October 6,
+2008!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.2.0-rc1, a release candidate for the upcoming
+Gutenprint 5.2 stable release series.  This release offers a number of
+enhancements over the 5.0 and 5.1 release series.  This package is
+available in source form, and in binary installer form for Macintosh
+OS X (10.3 and above).  <b>Note that this release is no longer
+compatible with OS X 10.2!</b> <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gutenprint 5.2.0-beta4 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of August 17,
