@@ -1,4 +1,4 @@
-# Danish translation of gutenprint-5.2.0-b4
+# Danish translation of gutenprint-5.2.0-rc1
 # Copyright (C) 2001, 2006, 2007, 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gutenprint package.
 #
@@ -8,10 +8,10 @@
 # Mogens Jaeger <mogensjaeger@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gutenprint 5.2.0-b4\n"
+"Project-Id-Version: gutenprint 5.2.0-rc1\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-10-04 11:57-0400\n"
-"PO-Revision-Date: 2008-07-28 02:46+0200\n"
+"PO-Revision-Date: 2008-10-07 11:36+0200\n"
 "Last-Translator: Mogens Jaeger <mogensjaeger@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -112,14 +112,8 @@ msgid "Output Level Adjustment"
 msgstr "Udskrifts niveaujustering"
 
 #: src/main/dither-main.c:92
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"Justér udskriftens tæthed (blækmængde). Reducér tætheden hvis blækket "
-"trækker igennem papiret, eller hvis det flyder ud. Øg tætheden hvis de sorte "
-"områder ikke er gennemfarvet."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "Justér udskriftens tæthed (blækmængde). Reducér tætheden hvis blækket trækker igennem papiret, eller hvis det flyder ud. Øg tætheden hvis de sorte områder ikke er gennemfarvet."
 
 #: src/main/dither-main.c:100
 msgid "Dither Algorithm"
@@ -133,20 +127,16 @@ msgstr "Visningsjustering"
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Vælg den ditherings-algoritme der skal bruges.\n"
 "Tilpasset Blandet giver sædvanligvis den bedste all-round kvalitet.\n"
-"EvenTone er en ny eksperimentel algoritme, der ofte giver excellente "
-"resultater.\n"
+"EvenTone er en ny eksperimentel algoritme, der ofte giver excellente resultater.\n"
 "Ordnet er hurtig og giver en næsten lige så god fotokvalitet.\n"
-"Hurtig og Meget Hurtig er betragteligt hurtigere, og fungerer godt med tekst "
-"og streg kunst.\n"
+"Hurtig og Meget Hurtig er betragteligt hurtigere, og fungerer godt med tekst og streg kunst.\n"
 "Blandet Floyd-Steinberg giver generelt ringere kvalitet."
 
 #: src/main/module.c:52
@@ -672,12 +662,8 @@ msgid "Composite Gamma"
 msgstr "Sammensat gamma"
 
 #: src/main/print-color.c:249
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
-"Justér udskriftens gamma. Større værdier giver et generelt lysere resultat, "
-"mens mindre værdier giver et generelt mørkere resultat. "
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
+msgstr "Justér udskriftens gamma. Større værdier giver et generelt lysere resultat, mens mindre værdier giver et generelt mørkere resultat. "
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -1222,21 +1208,13 @@ msgstr "Bredde skal være større end nul\n"
 
 #: src/main/printers.c:848
 #, c-format
-msgid ""
-"Image is too wide for the page: left margin is %d, width %d, right edge is %"
-"d\n"
-msgstr ""
-"Billedet er for bredt til siden: venstre margin er %d, bredde %d, højre kant "
-"er %d\n"
+msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
+msgstr "Billedet er for bredt til siden: venstre margin er %d, bredde %d, højre kant er %d\n"
 
 #: src/main/printers.c:855
 #, c-format
-msgid ""
-"Image is too long for the page: top margin is %d, height %d, bottom edge is %"
-"d\n"
-msgstr ""
-"Billedet er for langt til siden: top margin er %d, højde %d, bund kant er %"
-"d\n"
+msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
+msgstr "Billedet er for langt til siden: top margin er %d, højde %d, bund kant er %d\n"
 
 #: src/main/print-escp2.c:147
 msgid "Automatic Printing Mode"
@@ -2272,7 +2250,7 @@ msgstr "PPD fil modelnavn"
 
 #: src/main/print-ps.c:316
 msgid "None; please provide a PPD file"
-msgstr ""
+msgstr "Ingen; fremskaf en PPD fil"
 
 #: src/main/print-ps.c:352 src/xml/xmli18n-tmp.h:3480
 msgid "Letter"
@@ -2554,25 +2532,17 @@ msgstr "Smugkig"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Placer billedet på siden.\n"
 "Klik og træk med venstre musetaste for at placere billedet.\n"
-"Klik og træk med højre musetaste for at flytte billedet med større "
-"præcision. Hver enhed af bevægelse flytter billedet et punkt (1/72\").\n"
-"Klik og træk med midterste musetaste for at flytte billedet i enheder af "
-"billedets størrelse.\n"
-"Tryk på skift tasten når du klikker og trækker bevirker, at billedet kun "
-"flyttes i enten lodret eller vandret retning.\n"
-"Hvis du trykker på en anden musetaste mens du trækker med musen, vil "
-"billedet returnere til dets oprindelig position."
+"Klik og træk med højre musetaste for at flytte billedet med større præcision. Hver enhed af bevægelse flytter billedet et punkt (1/72\").\n"
+"Klik og træk med midterste musetaste for at flytte billedet i enheder af billedets størrelse.\n"
+"Tryk på skift tasten når du klikker og trækker bevirker, at billedet kun flyttes i enten lodret eller vandret retning.\n"
+"Hvis du trykker på en anden musetaste mens du trækker med musen, vil billedet returnere til dets oprindelig position."
 
 #: src/gutenprintui2/panel.c:1522
 msgid "Paper Size"
@@ -2639,12 +2609,8 @@ msgid "Seascape"
 msgstr "Tværformat vendt op/ned"
 
 #: src/gutenprintui2/panel.c:1667
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Vælg papirretning: portræt, tværformat eller portræt og tværformat vendt op/"
-"ned"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Vælg papirretning: portræt, tværformat eller portræt og tværformat vendt op/ned"
 
 #: src/gutenprintui2/panel.c:1669
 msgid "Orientation:"
@@ -2756,12 +2722,8 @@ msgid "Choose the correct PPD filename for your printer"
 msgstr "Vælg korrekt PPD filnavn for printeren"
 
 #: src/gutenprintui2/panel.c:1912
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Vælg navnet på uddatakøen (hverken type eller model af printer) som du "
-"ønsker at printe til"
+msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
+msgstr "Vælg navnet på uddatakøen (hverken type eller model af printer) som du ønsker at printe til"
 
 #: src/gutenprintui2/panel.c:1914
 msgid "Printer Queue:"
@@ -2808,36 +2770,24 @@ msgid "Printer Settings"
 msgstr "Printer indstillinger"
 
 #: src/gutenprintui2/panel.c:2087
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Vælg navnet på printeren (hverken type eller model af printer) som du ønsker "
-"at udskrive til"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Vælg navnet på printeren (hverken type eller model af printer) som du ønsker at udskrive til"
 
 #: src/gutenprintui2/panel.c:2104
 msgid "Setup Printer..."
 msgstr "Opsætning printer..."
 
 #: src/gutenprintui2/panel.c:2106
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Vælg printermodel, PPD fil og kommando, der skal bruges for at printe til "
-"denne printer"
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Vælg printermodel, PPD fil og kommando, der skal bruges for at printe til denne printer"
 
 #: src/gutenprintui2/panel.c:2119
 msgid "New Printer..."
 msgstr "Ny printer..."
 
 #: src/gutenprintui2/panel.c:2120
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definer en ny logisk printer. Dette kan bruges til at navngive en samling af "
-"indstillinger, som du ønsker at huske til senere brug."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Definer en ny logisk printer. Dette kan bruges til at navngive en samling af indstillinger, som du ønsker at huske til senere brug."
 
 #: src/gutenprintui2/panel.c:2150
 msgid "Set Printer Option Defaults"
@@ -2864,12 +2814,8 @@ msgid "Scale by:"
 msgstr "Skalér med:"
 
 #: src/gutenprintui2/panel.c:2230
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Vælg om skalering måles i procent af valgt arkstørrelse, eller antal af "
-"udskriftspunkter pr. tomme"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Vælg om skalering måles i procent af valgt arkstørrelse, eller antal af udskriftspunkter pr. tomme"
 
 #: src/gutenprintui2/panel.c:2233
 msgid "Percent"
@@ -2944,8 +2890,7 @@ msgid "Adjust Output..."
 msgstr "Justér udskrift..."
 
 #: src/gutenprintui2/panel.c:2504
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
 msgstr "Justér farvebalance, lyshed, kontrast, mætning og ditherings algoritme"
 
 #: src/gutenprintui2/panel.c:2523
@@ -3129,11 +3074,9 @@ msgid ""
 msgstr ""
 "Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"Dette program er fri software; du kan redistribuere det og/eller modificere "
-"det\n"
+"Dette program er fri software; du kan redistribuere det og/eller modificere det\n"
 "under bestemmelserne i the GNU General Public License som offentliggjort af\n"
-"the Free Software Foundation; enten version 2 af licensen, eller (efter dit "
-"valg)\n"
+"the Free Software Foundation; enten version 2 af licensen, eller (efter dit valg)\n"
 "enhver senere version.\n"
 "\n"
 "Dette program er distribueret i det håb, at det vil være nyttigt, men\n"
@@ -3164,8 +3107,7 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -3203,18 +3145,14 @@ msgstr ""
 "                       Beskidte eller stoppede dyser viser sig som huller i\n"
 "                       mønsteret. Hvis der er huller, bør du rense\n"
 "                       print hovedet.\n"
-"    -a|--align-head    Retter printhovedet ind.    FORSIGTIG     forkert "
-"brug\n"
-"                       af denne funktion kan resultere i dårlig "
-"printkvalitet, og/eller\n"
+"    -a|--align-head    Retter printhovedet ind.    FORSIGTIG     forkert brug\n"
+"                       af denne funktion kan resultere i dårlig printkvalitet, og/eller\n"
 "                       forårsage direkte skade på printeren.\n"
 "    -s|--status        Viser printer status.\n"
 "    -i|--ink-level     Henter blæk niveau fra printeren. Dette kræver\n"
 "                       direkte læse/skrive adgang til printeren.\n"
-"    -e|--extended-ink-info     Henter udvidet information om blæk niveau "
-"fra\n"
-"                        printeren. Dette kræver direkte læse/skrive adgang "
-"til printeren.\n"
+"    -e|--extended-ink-info     Henter udvidet information om blæk niveau fra\n"
+"                        printeren. Dette kræver direkte læse/skrive adgang til printeren.\n"
 "    -d|--identify      Forespørger printer om fremstiller og model.Dette\n"
 "                       kræver direkte læse/skrive adgang til printeren.\n"
 "    -l|--license       Viser licens/garanti bestemmelser for dette program.\n"
@@ -3223,18 +3161,15 @@ msgstr ""
 "  Indstillinger:\n"
 "    -P|--printer-name  Specificer den valgte printerkø.\n"
 "                       Uden angivelse = system printeren lp.\n"
-"    -r|--raw-device    Specificer navnet på den enhed der skrives til "
-"direkte\n"
+"    -r|--raw-device    Specificer navnet på den enhed der skrives til direkte\n"
 "                       i stedet for at gå gennem en printerkø.\n"
 "    -m|--model         Specificer den præcise printermodel.\n"
 "    -u|--new           Printeren er ny (Stylus Color 740 eller nyere).\n"
 "                       Bruges kun når der ikke anvendes direkte adgang.\n"
 "    -q|--quiet         Undertrykker banneret.\n"
 "    -S|--short-name    Printer kort-navn for printer med --identify.\n"
-"    -C|--choices       Angiv antallet af mønstre, ved printerhoved retten "
-"ind.\n"
-"    -p|--patterns      Angiv antallet af sæt af mønstre, ved printerhoved "
-"retten ind.\n"
+"    -C|--choices       Angiv antallet af mønstre, ved printerhoved retten ind.\n"
+"    -p|--patterns      Angiv antallet af sæt af mønstre, ved printerhoved retten ind.\n"
 
 #: src/escputil/escputil.c:162
 msgid ""
@@ -3848,8 +3783,7 @@ msgstr "Hentning af %s kræver brug af en ufiltreret enhed.\n"
 #: src/escputil/escputil.c:1499
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr ""
-"Hentning af udvidede blækinformationer kræver brug af en ufiltreret enhed.\n"
+msgstr "Hentning af udvidede blækinformationer kræver brug af en ufiltreret enhed.\n"
 
 #: src/escputil/escputil.c:1640 src/escputil/escputil.c:1664
 #: src/escputil/escputil.c:1684
@@ -3928,8 +3862,7 @@ msgstr ""
 "\n"
 "Denne funktion lader dig rette print hovedet ind, på din Epson Stylus\n"
 "inkjet printer. Forkert anvendelse af funktionen kan forårsage reduktion\n"
-"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er "
-"ikke\n"
+"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er ikke\n"
 "blevet testet af Seiko Epson for korrekt funktion, og tilbydes uden nogen\n"
 "former for garanti i det hele taget. Brug af funktionen er derfor på egen\n"
 "regning og risiko.\n"
@@ -3941,8 +3874,7 @@ msgstr ""
 "Når du undersøger linieparrene, skal du finde det liniepar, der er bedst\n"
 "rettet-ind, d.v.s. det par der bedst danner en ret linie.\n"
 "Undersøg parrene meget omhyggeligt for at finde det bedste match. Det\n"
-"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste "
-"par.\n"
+"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste par.\n"
 "Det kan også anbefales at bruge et kvalitetspapir til testen, så linierne\n"
 "er præcist formede og ikke 'løber ud' i papiret.\n"
 "Når du har valgt det flotteste par, og har noteret tallet under, lægges\n"
@@ -3950,17 +3882,14 @@ msgstr ""
 "\n"
 "Hvert mønster er identisk, men senere mønstre anvender en finere dot\n"
 "for en mere kritisk retten-ind. Du skal køre alle gennemløbene for at opnå\n"
-"en perfekt retten-ind af din printer. Når du har kørt alle gennemløbene, "
-"bliver\n"
+"en perfekt retten-ind af din printer. Når du har kørt alle gennemløbene, bliver\n"
 "mønsteret printet igen. Nu skal det midterste af parrene (#%d ud af de %d)\n"
 "være det bedste.\n"
 "\n"
 "Når dette er sket, har du mulighed for at gemme(s) resultatet i printeren,\n"
 "gentage(r) processen, eller afbryde(q) uden at gemme. Når du afbryder,\n"
-"bliver den hidtidige indstilling ikke genskabt, før der har været slukket "
-"for\n"
-"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren "
-"mens\n"
+"bliver den hidtidige indstilling ikke genskabt, før der har været slukket for\n"
+"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren mens\n"
 "processen løber.\n"
 "\n"
 
@@ -3992,8 +3921,7 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -4003,8 +3931,7 @@ msgstr ""
 "\n"
 "Denne funktion lader dig rette print hovedet ind, på din Epson Stylus\n"
 "inkjet printer. Forkert anvendelse af funktionen kan forårsage reduktion\n"
-"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er "
-"ikke\n"
+"i print kvalitet, og sandsynligvis skade din printer. Denne funktion er ikke\n"
 "blevet testet af Seiko Epson for korrekt funktion, og tilbydes uden nogen\n"
 "former for garanti i det hele taget. Brug af funktionen er derfor på egen\n"
 "regning og risiko.\n"
@@ -4016,13 +3943,10 @@ msgstr ""
 "Når du undersøger linieparrene, skal du finde det liniepar, der er bedst\n"
 "rettet-ind, d.v.s. det par der bedst danner en ret linie.\n"
 "Undersøg parrene meget omhyggeligt for at finde det bedste match. Det\n"
-"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste "
-"par.\n"
-"Det kan også anbefales at bruge et kvalitetspapir til testen, så linierne "
-"er\n"
+"anbefales at bruge en lup eller et forstørrelsesglas for at finde det bedste par.\n"
+"Det kan også anbefales at bruge et kvalitetspapir til testen, så linierne er\n"
 "præcist formede og ikke 'løber ud' i papiret.\n"
-"Når du har valgt det flotteste par, og har noteret tallet under, lægges "
-"papiret\n"
+"Når du har valgt det flotteste par, og har noteret tallet under, lægges papiret\n"
 "i printeren igen, inden tallet indtastes.\n"
 "\n"
 "Når du har kørt retten-ind mønsteret, bliver det printet igen. Nu skal det\n"
@@ -4030,10 +3954,8 @@ msgstr ""
 "\n"
 "Når dette er sket, har du mulighed for at gemme(s) resultatet i printeren,\n"
 "gentage(r) processen, eller afbryde(q) uden at gemme. Når du afbryder,\n"
-"bliver den hidtidige indstilling ikke genskabt, før der har været slukket "
-"for\n"
-"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren "
-"mens\n"
+"bliver den hidtidige indstilling ikke genskabt, før der har været slukket for\n"
+"printeren. Det er derfor vigtigt at der ikke bliver slukket for printeren mens\n"
 "processen løber.\n"
 "\n"
 
@@ -4074,8 +3996,7 @@ msgstr "> "
 
 #: src/escputil/escputil.c:1885
 #, c-format
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
 msgstr "Bekræft ved at taste 'q' igen, at du vil afbryde uden at gemme:\n"
 
 #: src/escputil/escputil.c:1892
@@ -4111,8 +4032,7 @@ msgstr ""
 "Dette vil blivende ændre konfigurationen af din printer.\n"
 "ADVARSEL: denne procedure er ikke blevet godkendt af Seiko Epson,\n"
 "og det kan skade din printer. Fortsæt?\n"
-"Bekræft ved at taste 's' igen, at du vil gemme indstillingerne i din "
-"printer:\n"
+"Bekræft ved at taste 's' igen, at du vil gemme indstillingerne i din printer:\n"
 
 #: src/escputil/escputil.c:1925
 #, c-format
@@ -4178,8 +4098,7 @@ msgstr "Tryk på enter-tasten for at fortsætte > "
 #: src/escputil/escputil.c:2026
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Undersøg printet, og vælg det bedste liniepar i hvert mønster.\n"
@@ -4228,8 +4147,7 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Kontroller at retten-ind er korrekt. Efter retten-ind mønsteret er printet "
-"igen,\n"
+"Kontroller at retten-ind er korrekt. Efter retten-ind mønsteret er printet igen,\n"
 "skal du sikre dig, at det bedste mønster for hver linie er mønster %d.\n"
 "Hvis dette ikke er tilfældet, bør du gentage processen, for at opnå den\n"
 "bedste kvalitet i printning.\n"
@@ -6482,9 +6400,8 @@ msgid "Canon PIXMA MP150"
 msgstr "Canon PIXMA MP150"
 
 #: src/xml/xmli18n-tmp.h:3701
-#, fuzzy
 msgid "Canon PIXMA MP160"
-msgstr "Canon PIXMA MP150"
+msgstr "Canon PIXMA MP160"
 
 #: src/xml/xmli18n-tmp.h:3702
 msgid "Canon PIXMA MP170"
@@ -7339,9 +7256,8 @@ msgid "Epson Stylus CX5400"
 msgstr "Epson Stylus CX5400"
 
 #: src/xml/xmli18n-tmp.h:3915
-#, fuzzy
 msgid "Epson Stylus CX5500"
-msgstr "Epson Stylus CX1500"
+msgstr "Epson Stylus CX5500"
 
 #: src/xml/xmli18n-tmp.h:3916
 msgid "Epson Stylus CX5600"
@@ -10800,79 +10716,64 @@ msgid "NRG MP 9000"
 msgstr "NRG MP 9000"
 
 #: src/xml/xmli18n-tmp.h:4780
-#, fuzzy
 msgid "Oki OL400"
-msgstr "Okidata OL400"
+msgstr "Oki OL400"
 
 #: src/xml/xmli18n-tmp.h:4781
-#, fuzzy
 msgid "Oki OL400e"
-msgstr "Okidata OL400e"
+msgstr "Oki OL400e"
 
 #: src/xml/xmli18n-tmp.h:4782
-#, fuzzy
 msgid "Oki OL400ex"
-msgstr "Okidata OL400ex"
+msgstr "Oki OL400ex"
 
 #: src/xml/xmli18n-tmp.h:4783
-#, fuzzy
 msgid "Oki OL410e"
-msgstr "Okidata OL410e"
+msgstr "Oki OL410e"
 
 #: src/xml/xmli18n-tmp.h:4784
-#, fuzzy
 msgid "Oki OL600e"
-msgstr "Okidata OL600e"
+msgstr "Oki OL600e"
 
 #: src/xml/xmli18n-tmp.h:4785
-#, fuzzy
 msgid "Oki OL610e/S"
-msgstr "Okidata OL610e/S"
+msgstr "Oki OL610e/S"
 
 #: src/xml/xmli18n-tmp.h:4786
-#, fuzzy
 msgid "Oki OL800"
-msgstr "Okidata OL800"
+msgstr "Oki OL800"
 
 #: src/xml/xmli18n-tmp.h:4787
-#, fuzzy
 msgid "Oki OL810ex"
-msgstr "Okidata OL810ex"
+msgstr "Oki OL810ex"
 
 #: src/xml/xmli18n-tmp.h:4788
-#, fuzzy
 msgid "Oki Okipage 6e"
-msgstr "Okidata Okipage 6e"
+msgstr "Oki Okipage 6e"
 
 #: src/xml/xmli18n-tmp.h:4789
-#, fuzzy
 msgid "Oki Okipage 6ex"
-msgstr "Okidata Okipage 6ex"
+msgstr "Oki Okipage 6ex"
 
 #: src/xml/xmli18n-tmp.h:4790
-#, fuzzy
 msgid "Oki Okipage 8p"
-msgstr "Okidata Okipage 8p"
+msgstr "Oki Okipage 8p"
 
 #: src/xml/xmli18n-tmp.h:4791
-#, fuzzy
 msgid "Oki Okipage 10e"
-msgstr "Okidata Okipage 10e"
+msgstr "Oki Okipage 10e"
 
 #: src/xml/xmli18n-tmp.h:4792
-#, fuzzy
 msgid "Oki Okipage 10ex"
-msgstr "Okidata Okipage 10ex"
+msgstr "Oki Okipage 10ex"
 
 #: src/xml/xmli18n-tmp.h:4793
-#, fuzzy
 msgid "Oki Okipage 14ex"
-msgstr "Okidata Okipage 14ex"
+msgstr "Oki Okipage 14ex"
 
 #: src/xml/xmli18n-tmp.h:4794
-#, fuzzy
 msgid "Oki Super 6e"
-msgstr "Okidata Super 6e"
+msgstr "Oki Super 6e"
 
 #: src/xml/xmli18n-tmp.h:4795
 msgid "Olivetti JP350S"
@@ -11733,6 +11634,3 @@ msgstr "RAW DATA 16 bit"
 #: src/xml/xmli18n-tmp.h:5009
 msgid "RAW DATA 8 bit"
 msgstr "RAW DATA 8 bit"
-
-#~ msgid "ISOLatin1"
-#~ msgstr "ISOLatin1"

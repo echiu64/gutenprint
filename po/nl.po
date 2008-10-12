@@ -1,4 +1,4 @@
-# translation of gutenprint-5.2.0-b4.po to Dutch
+# translation of gutenprint-5.2.0-rc1.po to Dutch
 # Dutch translations for gutenprint.
 # Copyright (C) 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gutenprint package.
@@ -8,17 +8,17 @@
 # Freek de Kruijf <f.de.kruijf@hetnet.nl>, 2006, 2007, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gutenprint-5.2.0-b4\n"
+"Project-Id-Version: gutenprint-5.2.0-rc1\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2008-10-04 11:57-0400\n"
-"PO-Revision-Date: 2008-08-01 23:48+0200\n"
+"PO-Revision-Date: 2008-10-09 20:51+0200\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@hetnet.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: LoKalize 0.2\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #. TRANSLATORS: "EvenTone" is the proper name, rather than a
 #. descriptive name, of this algorithm.
@@ -111,14 +111,8 @@ msgid "Output Level Adjustment"
 msgstr "Aanpassing van uitvoerniveau"
 
 #: src/main/dither-main.c:92
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"De dichtheid (hoeveelheid inkt) van de afdruk aanpassen. Verminder de "
-"dichtheid als de inkt vlekt of door het papier heen komt; verhoog de "
-"dichtheid als zwarte stukken niet goed dicht zijn."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "De dichtheid (hoeveelheid inkt) van de afdruk aanpassen. Verminder de dichtheid als de inkt vlekt of door het papier heen komt; verhoog de dichtheid als zwarte stukken niet goed dicht zijn."
 
 #: src/main/dither-main.c:100
 msgid "Dither Algorithm"
@@ -132,20 +126,16 @@ msgstr "Aanpassing van aftasting"
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Kies het ruis-algoritme.\n"
 "'Aangepast hybride' produceert meestal de beste algemene kwaliteit.\n"
-"'EvenTone' is een nieuw, experimenteel algoritme dat vaak een uitstekend "
-"resultaat geeft.\n"
+"'EvenTone' is een nieuw, experimenteel algoritme dat vaak een uitstekend resultaat geeft.\n"
 "'Geordend' is sneller en geeft bijna dezelfde kwaliteit bij foto's.\n"
-"'Snel' en 'Zeer snel' zijn aanzienlijk sneller, en doen het goed bij tekst "
-"en lijntekeningen.\n"
+"'Snel' en 'Zeer snel' zijn aanzienlijk sneller, en doen het goed bij tekst en lijntekeningen.\n"
 "'Hybride Floyd-Steinberg' produceert meestal een slecht resultaat."
 
 #: src/main/module.c:52
@@ -671,12 +661,8 @@ msgid "Composite Gamma"
 msgstr "Samengesteld gamma"
 
 #: src/main/print-color.c:249
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
-"De gamma van de afdruk aanpassen. Grotere waarden produceren een helderder "
-"afdruk, terwijl lagere waarden een over het geheel donkerder afdruk maken. "
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
+msgstr "De gamma van de afdruk aanpassen. Grotere waarden produceren een helderder afdruk, terwijl lagere waarden een over het geheel donkerder afdruk maken. "
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -979,8 +965,7 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "De verzadiging (kleurbalans) van de afdruk aanpassen\n"
-"Gebruik verzadiging nul voor een grijswaardenuitvoer met behulp van "
-"gekleurde en zwarte inkt"
+"Gebruik verzadiging nul voor een grijswaardenuitvoer met behulp van gekleurde en zwarte inkt"
 
 #: src/main/print-color.c:357
 msgid "Ink Limit"
@@ -1222,21 +1207,13 @@ msgstr "Breedte moet groter dan nul zijn\n"
 
 #: src/main/printers.c:848
 #, c-format
-msgid ""
-"Image is too wide for the page: left margin is %d, width %d, right edge is %"
-"d\n"
-msgstr ""
-"Afbeelding is te breed voor de pagina: linkermarge is %d, breedte %d, "
-"rechterrand is %d\n"
+msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
+msgstr "Afbeelding is te breed voor de pagina: linkermarge is %d, breedte %d, rechterrand is %d\n"
 
 #: src/main/printers.c:855
 #, c-format
-msgid ""
-"Image is too long for the page: top margin is %d, height %d, bottom edge is %"
-"d\n"
-msgstr ""
-"Afbeelding is te lang voor de pagina: bovenmarge is %d, hoogte %d, onderrand "
-"is %d\n"
+msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
+msgstr "Afbeelding is te lang voor de pagina: bovenmarge is %d, hoogte %d, onderrand is %d\n"
 
 #: src/main/print-escp2.c:147
 msgid "Automatic Printing Mode"
@@ -1272,9 +1249,7 @@ msgstr "Geavanceerde aanpassing van uitvoer"
 
 #: src/main/print-escp2.c:249
 msgid "Printing direction (unidirectional is higher quality, but slower)"
-msgstr ""
-"Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter "
-"langzamer)"
+msgstr "Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter langzamer)"
 
 #: src/main/print-escp2.c:254 src/main/print-olympus.c:1740
 msgid "Borderless"
@@ -2274,7 +2249,7 @@ msgstr "Modelnaam in PPD-bestand"
 
 #: src/main/print-ps.c:316
 msgid "None; please provide a PPD file"
-msgstr ""
+msgstr "Geen; gaarne een PPD-bestand aanleveren"
 
 #: src/main/print-ps.c:352 src/xml/xmli18n-tmp.h:3480
 msgid "Letter"
@@ -2290,8 +2265,7 @@ msgstr "Gebruiker"
 
 #: src/main/print-raw.c:225
 msgid "Image dimensions must match paper dimensions"
-msgstr ""
-"Afmeting van afbeelding moet overeenkomen met de afmetingen van het papier"
+msgstr "Afmeting van afbeelding moet overeenkomen met de afmetingen van het papier"
 
 #: src/main/generic-options.c:33 src/xml/xmli18n-tmp.h:3446
 #: src/xml/xmli18n-tmp.h:3462 src/xml/xmli18n-tmp.h:3471
@@ -2557,26 +2531,17 @@ msgstr "Voorbeeld"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Plaats de afbeelding op de pagina.\n"
 "Klik en sleep met de eerste knop om de afbeelding te plaatsen.\n"
-"Klik en sleep met de tweede knop om de afbeelding met een fijnere "
-"nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt "
-"(1/72\")\n"
-"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van "
-"zijn grootte te verplaatsen.\n"
-"Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen "
-"beperkt de beweging tot horizontaal of verticaal.\n"
-"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug "
-"naar zijn oorspronkelijke plaats."
+"Klik en sleep met de tweede knop om de afbeelding met een fijnere nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt (1/72\")\n"
+"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van zijn grootte te verplaatsen.\n"
+"Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen beperkt de beweging tot horizontaal of verticaal.\n"
+"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug naar zijn oorspronkelijke plaats."
 
 #: src/gutenprintui2/panel.c:1522
 msgid "Paper Size"
@@ -2643,12 +2608,8 @@ msgid "Seascape"
 msgstr "Seascape"
 
 #: src/gutenprintui2/panel.c:1667
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Kies de orientatie: portret, landschap, ondersteboven of seascape "
-"(ondersteboven landschap)"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Kies de orientatie: portret, landschap, ondersteboven of seascape (ondersteboven landschap)"
 
 #: src/gutenprintui2/panel.c:1669
 msgid "Orientation:"
@@ -2668,8 +2629,7 @@ msgstr "Rechts:"
 
 #: src/gutenprintui2/panel.c:1685
 msgid "Distance from the left of the paper to the right of the image"
-msgstr ""
-"Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
+msgstr "Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
 
 #: src/gutenprintui2/panel.c:1689
 msgid "Distance from the right of the paper to the image"
@@ -2689,8 +2649,7 @@ msgstr "Onder:"
 
 #: src/gutenprintui2/panel.c:1696
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr ""
-"Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
+msgstr "Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
 
 #: src/gutenprintui2/panel.c:1700
 msgid "Distance from the bottom of the paper to the image"
@@ -2762,12 +2721,8 @@ msgid "Choose the correct PPD filename for your printer"
 msgstr "Kies de juiste PPD bestandsnaam voor jouw printer"
 
 #: src/gutenprintui2/panel.c:1912
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) "
-"die u wilt uitprinten"
+msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
+msgstr "Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) die u wilt uitprinten"
 
 #: src/gutenprintui2/panel.c:1914
 msgid "Printer Queue:"
@@ -2814,36 +2769,24 @@ msgid "Printer Settings"
 msgstr "Printerinstellingen"
 
 #: src/gutenprintui2/panel.c:2087
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Selecteer de naam van de printer (Niet het type, of model, of printer) "
-"waarna je wenst te printen"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Selecteer de naam van de printer (Niet het type, of model, of printer) waarna je wenst te printen"
 
 #: src/gutenprintui2/panel.c:2104
 msgid "Setup Printer..."
 msgstr "Instellen Printer..."
 
 #: src/gutenprintui2/panel.c:2106
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar "
-"deze printer af te drukken."
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar deze printer af te drukken."
 
 #: src/gutenprintui2/panel.c:2119
 msgid "New Printer..."
 msgstr "Nieuwe Printer..."
 
 #: src/gutenprintui2/panel.c:2120
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definieer een logische printer. Deze kan gebruikt worden om een verzameling "
-"van instellingen die u bewaren wilt voor toekomstig gebruik."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Definieer een logische printer. Deze kan gebruikt worden om een verzameling van instellingen die u bewaren wilt voor toekomstig gebruik."
 
 #: src/gutenprintui2/panel.c:2150
 msgid "Set Printer Option Defaults"
@@ -2870,12 +2813,8 @@ msgid "Scale by:"
 msgstr "Schalen met:"
 
 #: src/gutenprintui2/panel.c:2230
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Moet schaling gemeten worden in het percentage van de beschikbare "
-"paginagrootte of het aantal punten per inch"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Moet schaling gemeten worden in het percentage van de beschikbare paginagrootte of het aantal punten per inch"
 
 #: src/gutenprintui2/panel.c:2233
 msgid "Percent"
@@ -2950,10 +2889,8 @@ msgid "Adjust Output..."
 msgstr "Past uitvoer aan..."
 
 #: src/gutenprintui2/panel.c:2504
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
 
 #: src/gutenprintui2/panel.c:2523
 msgid "Size Units:"
@@ -3137,14 +3074,12 @@ msgstr ""
 "Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
 "Dit programma is vrije software; u mag het verspreiden en/of wijzigen\n"
-"onder de termen van de GNU General Public License zoals gepubliceerd door de "
-"Free\n"
+"onder de termen van de GNU General Public License zoals gepubliceerd door de Free\n"
 "Software Foundation; ofwel versie 2 van de licentie, of (naar vrije keuze)\n"
 "elke latere versie.\n"
 "\n"
 "Dit programma is verspreid in de hoop dat het bruikbaar zou zijn, maar\n"
-"ZONDER ENIGE GARANTIE; zelfs zonder de impliete garantie van "
-"VERKOOPBAARHEID\n"
+"ZONDER ENIGE GARANTIE; zelfs zonder de impliete garantie van VERKOOPBAARHEID\n"
 "of GESCHKT VOOR EEN BEPAALD DOEL.  Zie de GNU General Public License\n"
 "voor meer details.\n"
 "\n"
@@ -3171,8 +3106,7 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -3207,14 +3141,11 @@ msgstr ""
 "  Commando's:\n"
 "    -c|--clean-head    Maak de printkop schoon.\n"
 "    -n|--nozzle-check  Print een nozzle testpatroon.\n"
-"                       Vuile of verstopte nozzles vertonen zich als gaten in "
-"het\n"
+"                       Vuile of verstopte nozzles vertonen zich als gaten in het\n"
 "                       patroon.  Als u een gat ziet dan moet u de printkop\n"
 "                       schoonmaken.\n"
-"    -a|--align-head    Lijn de printkop uit.  VOORZICHTIG: Verkeerd gebruik "
-"van dit\n"
-"                       programma kan resulteren in een slechte "
-"printkwaliteit en/of\n"
+"    -a|--align-head    Lijn de printkop uit.  VOORZICHTIG: Verkeerd gebruik van dit\n"
+"                       programma kan resulteren in een slechte printkwaliteit en/of\n"
 "                       beschadiging van de printer.\n"
 "    -s|--status        Haal de printerstatus op.\n"
 "    -i|--ink-level     Toon de inktniveaus van de printer.  Dit vereist\n"
@@ -3224,28 +3155,22 @@ msgstr ""
 "                       raw-printerapparaat.\n"
 "    -d|--identify      Vraag het merk en model van de printer. Dit vereist\n"
 "                       lees/schrijf-toegang tot het raw-printerapparaat.\n"
-"    -l|--license       Toon de licentie en garantie-bepalingen van dit "
-"programma.\n"
+"    -l|--license       Toon de licentie en garantie-bepalingen van dit programma.\n"
 "    -M|--list-models   Toon een lijst van de beschikbare printermodellen.\n"
 "    -h|--help          Toon dit hulpbericht.\n"
 "  Opties:\n"
 "    -P|--printer-name  Specificeer de naam van de printerqueue.\n"
 "                       Standaard is de standaard systeemprinter.\n"
-"    -r|--raw-device    Specificeer de naam van het apparaat waar direct "
-"naar\n"
+"    -r|--raw-device    Specificeer de naam van het apparaat waar direct naar\n"
 "                       geschreven moet worden i.p.v. via een pinterqueue.\n"
 "    -m|--model         Specificeer het printermodel.\n"
-"    -u|--new           De printer is een nieuwe printer (Stylus Color 740 "
-"of\n"
-"                       nieuwer).  Alleen noodzakelijk bij een niet-raw "
-"apparaat\n"
+"    -u|--new           De printer is een nieuwe printer (Stylus Color 740 of\n"
+"                       nieuwer).  Alleen noodzakelijk bij een niet-raw apparaat\n"
 "                       of wanneer het model niet gespecificeerd is.\n"
 "    -q|--quiet         Onderdruk de banner.\n"
 "    -S|--short-name    Toon de korte naam van de printer met --identify.\n"
-"    -C|--choices       Specificeer het aantal patroonkeuzes voor de "
-"uitlijning\n"
-"    -p|--patterns      Specificeer het aantal patroonsets voor de "
-"uitlijning\n"
+"    -C|--choices       Specificeer het aantal patroonkeuzes voor de uitlijning\n"
+"    -p|--patterns      Specificeer het aantal patroonsets voor de uitlijning\n"
 
 #: src/escputil/escputil.c:162
 msgid ""
@@ -3301,8 +3226,7 @@ msgstr ""
 "  Commando's:\n"
 "    -c Maak de printkop schoon.\n"
 "    -n Print een spuitgaatjes testpatroon.\n"
-"          Vuile of verstopte spuitgaatjes komen te voorschijn als gaten in "
-"het\n"
+"          Vuile of verstopte spuitgaatjes komen te voorschijn als gaten in het\n"
 "          patroon.  Als er zo'n gat is, dan moet de printkop schoongemaakt\n"
 "          worden.\n"
 "    -a Lijn de printkop uit.  VOORZICHTIG: Misbruik van dit\n"
@@ -3858,8 +3782,7 @@ msgstr "Verkrijgen van %s vereist een 'raw' apparaat.\n"
 #: src/escputil/escputil.c:1499
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr ""
-"Het verkrijgen van uitgebreide inktinformatie vereist een 'raw' apparaat.\n"
+msgstr "Het verkrijgen van uitgebreide inktinformatie vereist een 'raw' apparaat.\n"
 
 #: src/escputil/escputil.c:1640 src/escputil/escputil.c:1664
 #: src/escputil/escputil.c:1684
@@ -3894,9 +3817,7 @@ msgstr "Bezig met het schoonmaken van de koppen..\n"
 #: src/escputil/escputil.c:1770
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr ""
-"Bezig met het controleren van de spuitmondjes, let op dat er papier in de "
-"printer zit.\n"
+msgstr "Bezig met het controleren van de spuitmondjes, let op dat er papier in de printer zit.\n"
 
 #: src/escputil/escputil.c:1774
 #, c-format
@@ -3936,30 +3857,24 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"Leest u alstublieft deze instructies nauwkeurig door, voordat u verder "
-"gaat.\n"
+"Leest u alstublieft deze instructies nauwkeurig door, voordat u verder gaat.\n"
 "\n"
 "U kunt met deze applicatie de koppen van uw Epson Stylus inkjet\n"
 "printer uitlijnen. Onjuist gebruik van deze applicatie kan leiden tot\n"
-"verlies in kwaliteit en het kan zelfs uw printer beschadigen. Deze "
-"applicatie\n"
+"verlies in kwaliteit en het kan zelfs uw printer beschadigen. Deze applicatie\n"
 "is niet gecontroleerd op fouten door Seiko Epson, en wordt geleverd zonder\n"
 "enige vorm van garantie. het gebruik is volledig op eigen risico.\n"
 "\n"
 "Het programma zal %d patronen afdrukken. Elk patroon lijkt erg op de ander.\n"
-"Het patroon bestaat uit een serie paren van verticale lijnen die elkaar "
-"overlappen.\n"
+"Het patroon bestaat uit een serie paren van verticale lijnen die elkaar overlappen.\n"
 "Onder elk paar met lijnen staat een nummer tussen %d en %d.\n"
 "\n"
-"Wanneer u de lijnen bekijkt, moet u zoeken naar het paar die het beste is "
-"uitgelijnd,\n"
+"Wanneer u de lijnen bekijkt, moet u zoeken naar het paar die het beste is uitgelijnd,\n"
 "met andere woorden, diegen die samen  de beste enkele lijn vormen.\n"
 "Het gebruik van een loep of vergrootglas wordt aangeraden voor de\n"
 "meest critische inspectie. Er wordt ook aangeraden om een goede kwaliteit\n"
-"papier te gebruiken, zodat de lijnen mooi strak zijn, en niet over het "
-"papier\n"
-"uitvloeien. Wanneer u het nummer heeft uitgekozen, plaats dan het papier "
-"weer\n"
+"papier te gebruiken, zodat de lijnen mooi strak zijn, en niet over het papier\n"
+"uitvloeien. Wanneer u het nummer heeft uitgekozen, plaats dan het papier weer\n"
 "terug erug in de printer voordat u het nummer intypt.\n"
 "\n"
 "Each pattern is similar, but later patterns use finer dots for more\n"
@@ -4004,8 +3919,7 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -4021,42 +3935,32 @@ msgstr ""
 " programma ligt bij u.\n"
 "\n"
 "Dit programma print een testpatroon dat bestaat uit een aantal paren van\n"
-"verticale lijnen die elkaar overlappen. Onder elk paar lijnen staat een "
-"nummer\n"
+"verticale lijnen die elkaar overlappen. Onder elk paar lijnen staat een nummer\n"
 "tussen de %d en %d.\n"
 "\n"
 "Als u deze paren bekijkt, zult u een paar lijnen vinden die het beste zijn\n"
-"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn "
-"vormen.\n"
-"Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het "
-"gebruik\n"
+"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn vormen.\n"
+"Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het gebruik\n"
 "van een loupe of vergrootglas is aanbevolen voor de meest kritische\n"
-"inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit "
-"papier\n"
-"te gebruiken zodat de lijnen goed gevormd zijn en niet door het papier "
-"drukken.\n"
+"inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit papier\n"
+"te gebruiken zodat de lijnen goed gevormd zijn en niet door het papier drukken.\n"
 "Nadat u het nummer hebt gekozen, dat het beste overeenkomt, plaats u het\n"
 "papier terug in de printer voordat u het nummer intikt.\n"
 "\n"
-"Nadat het het uitlijnen nog eens gedaan is, zal het nog een keer geprint "
-"worden\n"
+"Nadat het het uitlijnen nog eens gedaan is, zal het nog een keer geprint worden\n"
 "U zou moeten vinden dat het middelste paar (#%d van de %d) het beste is.\n"
 "U krijgt dan de mogelijkheid om het resultaat in de printer op te slaan(s),\n"
-"het proces te he(r)halen of te stoppen zonder op te slaan(q). Stoppen zal "
-"niet\n"
-"de vorige instellingen terugzetten, maar de printer aan en uit zetten zal "
-"dat\n"
+"het proces te he(r)halen of te stoppen zonder op te slaan(q). Stoppen zal niet\n"
+"de vorige instellingen terugzetten, maar de printer aan en uit zetten zal dat\n"
 "wel doen. Als u stopt, zult u het hele proces opnieuw moeten doorlopen\n"
-"om de resultaten op te slaan. Het is essentieel dat u de printer niet "
-"uitzet\n"
+"om de resultaten op te slaan. Het is essentieel dat u de printer niet uitzet\n"
 "tijdens deze procedure.\n"
 "\n"
 
 #: src/escputil/escputil.c:1853
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr ""
-"Onmogelijk om commando's naar de printer te sturen, bezig te stoppen.\n"
+msgstr "Onmogelijk om commando's naar de printer te sturen, bezig te stoppen.\n"
 
 #: src/escputil/escputil.c:1867 src/escputil/escputil.c:2036
 #, c-format
@@ -4090,11 +3994,8 @@ msgstr "> "
 
 #: src/escputil/escputil.c:1885
 #, c-format
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Graag bevestiging dat u wilt stoppen zonder te bewaren door opnieuw 'q' te "
-"typen:\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr "Graag bevestiging dat u wilt stoppen zonder te bewaren door opnieuw 'q' te typen:\n"
 
 #: src/escputil/escputil.c:1892
 #, c-format
@@ -4198,8 +4099,7 @@ msgstr "Druk op enter om door te gaan > "
 #: src/escputil/escputil.c:2026
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Kijk naar de afdruk, en kies het beste paar lijnen in elk patroon.\n"
@@ -4248,8 +4148,7 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Kijk alstublief na of de uitlijning klopt. Kijk, nadat het "
-"uitlijningspatroon\n"
+"Kijk alstublief na of de uitlijning klopt. Kijk, nadat het uitlijningspatroon\n"
 "weer opnieuw is afgedrukt, of het beste patroon voor elk\n"
 "lijnpatroon %d is. Als dat niet zo is dan zult u de procedure moeten\n"
 "herhalen om de beste kwaliteit te krijgen.\n"
@@ -6502,9 +6401,8 @@ msgid "Canon PIXMA MP150"
 msgstr "Canon PIXMA MP150"
 
 #: src/xml/xmli18n-tmp.h:3701
-#, fuzzy
 msgid "Canon PIXMA MP160"
-msgstr "Canon PIXMA MP150"
+msgstr "Canon PIXMA MP160"
 
 #: src/xml/xmli18n-tmp.h:3702
 msgid "Canon PIXMA MP170"
@@ -7359,9 +7257,8 @@ msgid "Epson Stylus CX5400"
 msgstr "Epson Stylus CX5400"
 
 #: src/xml/xmli18n-tmp.h:3915
-#, fuzzy
 msgid "Epson Stylus CX5500"
-msgstr "Epson Stylus CX1500"
+msgstr "Epson Stylus CX5500"
 
 #: src/xml/xmli18n-tmp.h:3916
 msgid "Epson Stylus CX5600"
@@ -10820,79 +10717,64 @@ msgid "NRG MP 9000"
 msgstr "NRG MP 9000"
 
 #: src/xml/xmli18n-tmp.h:4780
-#, fuzzy
 msgid "Oki OL400"
-msgstr "Okidata OL400"
+msgstr "Oki OL400"
 
 #: src/xml/xmli18n-tmp.h:4781
-#, fuzzy
 msgid "Oki OL400e"
-msgstr "Okidata OL400e"
+msgstr "Oki OL400e"
 
 #: src/xml/xmli18n-tmp.h:4782
-#, fuzzy
 msgid "Oki OL400ex"
-msgstr "Okidata OL400ex"
+msgstr "Oki OL400ex"
 
 #: src/xml/xmli18n-tmp.h:4783
-#, fuzzy
 msgid "Oki OL410e"
-msgstr "Okidata OL410e"
+msgstr "Oki OL410e"
 
 #: src/xml/xmli18n-tmp.h:4784
-#, fuzzy
 msgid "Oki OL600e"
-msgstr "Okidata OL600e"
+msgstr "Oki OL600e"
 
 #: src/xml/xmli18n-tmp.h:4785
-#, fuzzy
 msgid "Oki OL610e/S"
-msgstr "Okidata OL610e/S"
+msgstr "Oki OL610e/S"
 
 #: src/xml/xmli18n-tmp.h:4786
-#, fuzzy
 msgid "Oki OL800"
-msgstr "Okidata OL800"
+msgstr "Oki OL800"
 
 #: src/xml/xmli18n-tmp.h:4787
-#, fuzzy
 msgid "Oki OL810ex"
-msgstr "Okidata OL810ex"
+msgstr "Oki OL810ex"
 
 #: src/xml/xmli18n-tmp.h:4788
-#, fuzzy
 msgid "Oki Okipage 6e"
-msgstr "Okidata Okipage 6e"
+msgstr "Oki Okipage 6e"
 
 #: src/xml/xmli18n-tmp.h:4789
-#, fuzzy
 msgid "Oki Okipage 6ex"
-msgstr "Okidata Okipage 6ex"
+msgstr "Oki Okipage 6ex"
 
 #: src/xml/xmli18n-tmp.h:4790
-#, fuzzy
 msgid "Oki Okipage 8p"
-msgstr "Okidata Okipage 8p"
+msgstr "Oki Okipage 8p"
 
 #: src/xml/xmli18n-tmp.h:4791
-#, fuzzy
 msgid "Oki Okipage 10e"
-msgstr "Okidata Okipage 10e"
+msgstr "Oki Okipage 10e"
 
 #: src/xml/xmli18n-tmp.h:4792
-#, fuzzy
 msgid "Oki Okipage 10ex"
-msgstr "Okidata Okipage 10ex"
+msgstr "Oki Okipage 10ex"
 
 #: src/xml/xmli18n-tmp.h:4793
-#, fuzzy
 msgid "Oki Okipage 14ex"
-msgstr "Okidata Okipage 14ex"
+msgstr "Oki Okipage 14ex"
 
 #: src/xml/xmli18n-tmp.h:4794
-#, fuzzy
 msgid "Oki Super 6e"
-msgstr "Okidata Super 6e"
+msgstr "Oki Super 6e"
 
 #: src/xml/xmli18n-tmp.h:4795
 msgid "Olivetti JP350S"
@@ -11753,24 +11635,3 @@ msgstr "RAW DATA 16 bit"
 #: src/xml/xmli18n-tmp.h:5009
 msgid "RAW DATA 8 bit"
 msgstr "RAW DATA 8 bit"
-
-#~ msgid "ISOLatin1"
-#~ msgstr "ISOLatin1"
-
-#~ msgid "Adjust dot size as necessary"
-#~ msgstr "Pas de puntgrootte aan"
-
-#~ msgid "Adjust dot size as necessary to achieve desired density"
-#~ msgstr "Pas de puntgrootte aan om de gewenste dichtheid te verkrijgen"
-
-#~ msgid "Three Level Grayscale"
-#~ msgstr "Grijsschaal met drie waarden"
-
-#~ msgid "Seven Color Enhanced"
-#~ msgstr "Zevenkleuren verbeterd"
-
-#~ msgid "720 x 720 DPI"
-#~ msgstr "720 x 720 DPI"
-
-#~ msgid "2880 x 1440 DPI Transposed"
-#~ msgstr "2880 x 1440 DPI getransponeerd"
