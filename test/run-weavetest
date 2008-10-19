@@ -13,7 +13,7 @@ fi
 passes='1,1,1 2,1,1 1,2,1 1,2,2 1,4,1 4,1,1 4,2,1 2,2,1 1,4,2 2,2,2 2,4,2 8,1,1 4,4,2 8,2,1 16,1,1'
 
 # All numbers of jets used by any printer.
-jets='1 2 4 8 15 16 20 21 24 29 32 47 48 59 60 64 90 96 128 144 180 192 208 358 360'
+jets='1 2 4 8 15 16 20 21 24 29 32 47 48 59 60 64 90 96 128 144 180 192 208 358 360 384'
 
 # All nozzle separations used by any printer at any resolution.
 separations='1 2 3 4 6 8 12 16 24'
@@ -27,11 +27,11 @@ strategies='0 1 2 3 4'
 arrangements='0 1 2 3'
 
 # Set to the largest possible multiple of the number of heads and
-# the nozzle separation.  At present, the PM-970C has 360 heads spaced
+# the nozzle separation.  At present, the WorkForce 40 has 384 heads spaced
 # 1/360" apart, with a maximum resolution of 2880x2880.  There's no
 # point right now in testing anything higher than this, and it's very
 # time consuming.
-head_limit=2880
+head_limit=3072
 
 if [ $# -eq 0 ] ; then
     QUIET=1

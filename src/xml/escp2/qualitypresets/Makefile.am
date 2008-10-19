@@ -29,7 +29,8 @@ pkgxmldata_DATA =				\
 	p1_5.xml				\
 	picturemate.xml				\
 	standard.xml				\
-	v2880.xml
+	v2880.xml				\
+	wf40.xml
 
 xml-stamp: $(pkgxmldata_DATA) Makefile.am
 	-rm -f xml-stamp

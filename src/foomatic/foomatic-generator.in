@@ -185,10 +185,11 @@ if ($missing_drivers) {
 }
 
 if ($opt_x) {
-    for (sort @printer_list) {
-	if (defined $printer_name{$_}) {
-	    printf("%s	%s	%s\n", $printer_name{$_}, $_, $foomap{$_});
-	}
+    my (%printer_long_name) = reverse %printer_name;
+    for (sort keys %printer_long_name) {
+	my ($pn) = $printer_long_name{$_};
+	next if $printer_family{$pn} eq "ps" || $printer_family{$pn} eq "raw";
+	printf("%s	%s	%s\n", $_, $pn, $foomap{$pn});
     }
     exit;
 }

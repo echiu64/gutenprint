@@ -20,11 +20,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="92">
- <media src="escp2/media/c120.xml"/>
+<escp2:model id="94">
+ <media src="escp2/media/wf500.xml"/>
  <inputSlots src="escp2/inputslots/default.xml"/>
  <qualityPresets src="escp2/qualitypresets/wf40.xml"/>
- <inkGroup src="escp2/inks/wf40.xml"/>
+ <inkGroup src="escp2/inks/nx100.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
  <verticalBorderlessSequence>US\003\000\000\000\002</verticalBorderlessSequence>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
@@ -38,22 +38,22 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <supportsD4Mode/>
  <preferredEnvelopeOrientation>Portrait</preferredEnvelopeOrientation>
  <headConfiguration type="default">
-  <Nozzles>128</Nozzles>
-  <MinNozzles>1</MinNozzles>
-  <FirstNozzle>0</FirstNozzle>
+  <Nozzles>29</Nozzles>
+  <MinNozzles>30</MinNozzles>
+  <FirstNozzle>1</FirstNozzle>
   <NozzleSeparation>3</NozzleSeparation>
  </headConfiguration>
  <headConfiguration type="black">
-  <Nozzles>384</Nozzles>
-  <MinNozzles>1</MinNozzles>
+  <Nozzles>90</Nozzles>
+  <MinNozzles>90</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
-  <NozzleSeparation>1</NozzleSeparation>
+  <NozzleSeparation>3</NozzleSeparation>
  </headConfiguration>
  <headConfiguration type="fast">
-  <Nozzles>384</Nozzles>
-  <MinNozzles>1</MinNozzles>
+  <Nozzles>90</Nozzles>
+  <MinNozzles>90</MinNozzles>
   <FirstNozzle>0</FirstNozzle>
-  <NozzleSeparation>1</NozzleSeparation>
+  <NozzleSeparation>3</NozzleSeparation>
  </headConfiguration>
  <physicalChannels>4</physicalChannels>
  <baseSeparation>360</baseSeparation>
@@ -76,12 +76,14 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
  <extraBottom>24</extraBottom>
+ <CDOffset>204 191</CDOffset>
+ <CDMediaSize>595 842</CDMediaSize>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
-  <ChannelName translate="name" name="Black"/>
+  <ChannelName translate="name" name="Cyan"/>
   <ChannelName translate="name" name="Magenta"/>
   <ChannelName translate="name" name="Yellow"/>
-  <ChannelName translate="name" name="Cyan"/>
+  <ChannelName translate="name" name="Black"/>
  </ChannelNames>
  <resolutions>
   <resolution translate="text" name="360x120sw" text="360 x 120 DPI Economy">
@@ -121,8 +123,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.220000</parameter>
-   <parameter type="float" name="DropSize2">0.320000</parameter>
+   <parameter type="float" name="DropSize1">0.200000</parameter>
+   <parameter type="float" name="DropSize2">0.330000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="720x360hq" text="720 x 360 DPI Enhanced">
@@ -132,8 +134,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.220000</parameter>
-   <parameter type="float" name="DropSize2">0.320000</parameter>
+   <parameter type="float" name="DropSize1">0.200000</parameter>
+   <parameter type="float" name="DropSize2">0.330000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="720sw" text="720 DPI">
@@ -142,8 +144,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.220000</parameter>
-   <parameter type="float" name="DropSize2">0.320000</parameter>
+   <parameter type="float" name="DropSize1">0.200000</parameter>
+   <parameter type="float" name="DropSize2">0.330000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="720hq" text="720 DPI High Quality">
@@ -153,13 +155,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.220000</parameter>
-   <parameter type="float" name="DropSize2">0.320000</parameter>
+   <parameter type="float" name="DropSize1">0.200000</parameter>
+   <parameter type="float" name="DropSize2">0.330000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="1440x720sw" text="1440 x 720 DPI">
    <physicalResolution>1440 720</physicalResolution>
-   <parameter type="float" name="escp2_density">0.768000</parameter>
+   <parameter type="float" name="escp2_density">0.512000</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -170,26 +172,24 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="1440x1440ov" text="1440 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
    <printedResolution>1440 1440</printedResolution>
-   <parameter type="float" name="escp2_density">0.384000</parameter>
-   <parameter type="integer" name="escp2_ink_type">19</parameter>
-   <parameter type="integer" name="escp2_base_res">360</parameter>
-   <parameter type="integer" name="escp2_bits">2</parameter>
-   <parameter type="float" name="DropSize1">0.250000</parameter>
-   <parameter type="float" name="DropSize2">0.500000</parameter>
-   <parameter type="float" name="DropSize3">1.000000</parameter>
-  </resolution>
-  <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
-   <physicalResolution>2880 1440</physicalResolution>
-   <parameter type="float" name="escp2_density">0.384</parameter>
+   <parameter type="float" name="escp2_density">0.512000</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.500000</parameter>
    <parameter type="float" name="DropSize2">1.000000</parameter>
   </resolution>
+  <resolution translate="text" name="2880x1440sw" text="2880 x 1440 DPI">
+   <physicalResolution>2880 1440</physicalResolution>
+   <parameter type="float" name="escp2_density">0.512</parameter>
+   <parameter type="integer" name="escp2_ink_type">19</parameter>
+   <parameter type="integer" name="escp2_base_res">360</parameter>
+   <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">1.000000</parameter>
+  </resolution>
   <resolution translate="text" name="5760x1440sw" text="5760 x 1440 DPI">
    <physicalResolution>5760 1440</physicalResolution>
-   <parameter type="float" name="escp2_density">0.384000</parameter>
+   <parameter type="float" name="escp2_density">0.256000</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -197,7 +197,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </resolution>
   <resolution translate="text" name="2880x2880sw" text="2880 x 2880 DPI">
    <physicalResolution>2880 2880</physicalResolution>
-   <parameter type="float" name="escp2_density">0.384000</parameter>
+   <parameter type="float" name="escp2_density">0.256000</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -205,7 +205,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </resolution>
   <resolution translate="text" name="5760x2880sw" text="5760 x 2880 DPI">
    <physicalResolution>5760 2880</physicalResolution>
-   <parameter type="float" name="escp2_density">0.192000</parameter>
+   <parameter type="float" name="escp2_density">0.128000</parameter>
    <parameter type="integer" name="escp2_ink_type">19</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>

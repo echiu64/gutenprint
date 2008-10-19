@@ -60,6 +60,7 @@ pkgxmldata_DATA =				\
 	standard.xml				\
 	standard_gen0.xml			\
 	ultrachrome.xml				\
+	wf500.xml				\
 	x80.xml
 
 xml-stamp: $(pkgxmldata_DATA) Makefile.am

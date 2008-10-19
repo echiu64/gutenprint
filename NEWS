@@ -3,7 +3,7 @@ Welcome to Gutenprint 5.2.0-rc1, a release candidate of Gutenprint
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  Gutenprint currently supports over 1300 printer models.
+others.  Gutenprint currently supports over 1400 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
 Macintosh OS X (10.3 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
@@ -20,6 +20,8 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.0-rc1
+        * Changes from 5.2.0-beta4
 IV)   Overall changes from 5.0.2 to 5.2
 	A) General User-visible Changes
 	B) New Functionality
@@ -242,6 +244,76 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.0-rc1
+
+   1) Preliminary support for the following printers.  These printers
+      may be retuned for improved quality or performance in future
+      releases.
+
+      Epson inkjet printers:
+
+	Epson PictureMate 215
+	Epson PX 101
+	Epson PX 201
+	Epson PX 601F
+	Epson Stylus CX9300F
+	Epson Stylus CX9400F
+	Epson Stylus CX9475F
+	Epson Stylus DX9400F
+	Epson Stylus NX200
+	Epson Stylus NX400
+	Epson Stylus Photo R290
+	Epson Stylus Photo RX610
+	Epson Stylus Photo RX690
+	Epson Stylus Office B30
+	Epson Stylus Office B33
+	Epson Stylus Office B40W
+	Epson Stylus Office T30
+	Epson Stylus Office T33
+	Epson Stylus Office T40W
+	Epson Stylus Office BX300F
+	Epson Stylus Office BX600FW
+	Epson Stylus Office SX600FW
+	Epson Stylus Office TX300F
+	Epson Stylus Office TX600FW
+	Epson Stylus SX200
+	Epson Stylus SX205
+	Epson Stylus SX400
+	Epson Stylus SX405
+	Epson Stylus TX200
+	Epson Stylus TX400
+	Epson ME Office 70
+	Epson ME Office 80W
+	Epson ME Office 700FW
+	Epson WorkForce 30
+	Epson WorkForce 40
+	Epson WorkForce 500
+	Epson WorkForce 600
+
+   2) Experimental support for the following printers.  These printers
+      may not function correctly, and may be retuned for improved
+      quality or performance in future releases.
+
+      Epson inkjet printers:
+
+	Epson Artisan 700
+	Epson Artisan 800
+	Epson Stylus NX100
+	Epson Stylus NX300
+	Epson Stylus PX700FW
+	Epson Stylus PX800FW
+	Epson Stylus S20
+	Epson Stylus SX100
+	Epson Stylus SX105
+	Epson Stylus T20
+	Epson Stylus TX100
+	Epson Stylus Photo TX700W
+	Epson Stylus Photo TX800W
+
+   3) The ChangeLog, NEWS, AUTHORS, COPYING, and README files are
+      installed into the documentation directory.
+
 
 * Changes from 5.2.0-beta4
 
@@ -603,10 +675,30 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       B-308
       B-500DN
       B-508DN
+      E 150
+      E 300
+      E 500
+      E 520
+      E 700
+      E 720
+      ME Office 70
+      ME Office 700FW
+      ME Office 80W
       Offirio PX-B300
       Offirio PX-B500
+      PM 670C
+      PM A820
+      PM D870
+      PM G4500
+      PM G850
+      PX 101
+      PX 201
+      PX 601F
+      PX V780
       PictureMate 100
+      PictureMate 2005
       PictureMate 210
+      PictureMate 215
       PictureMate 240
       PictureMate 250
       PictureMate 260
@@ -614,27 +706,14 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       PictureMate 280
       PictureMate 290
       PictureMate 500
-      PictureMate 2005
       PictureMate Dash
       PictureMate Flash
       PictureMate Pal
       PictureMate Snap
-      E 150
-      E 300
-      E 500
-      E 520
-      E 700
-      E 720
-      PM 670C
-      PM A820
-      PM D870
-      PM G4500
-      PM G850
-      PX V780
-      Stylus C79+
-      Stylus C87+
       Stylus C110
       Stylus C120
+      Stylus C79+
+      Stylus C87+
       Stylus CX4400
       Stylus CX4900
       Stylus CX5000
@@ -644,9 +723,12 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus CX6000
       Stylus CX7000F
       Stylus CX7400
+      Stylus CX9300F
       Stylus CX9400
-      Stylus D92
+      Stylus CX9400F
+      Stylus CX9475F
       Stylus D120
+      Stylus D92
       Stylus DX4050
       Stylus DX4400
       Stylus DX4450
@@ -655,6 +737,20 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus DX7450
       Stylus DX8400
       Stylus DX8450
+      Stylus DX9400F
+      Stylus NX200
+      Stylus NX400
+      Stylus Office B30
+      Stylus Office B33
+      Stylus Office B40W
+      Stylus Office BX300F
+      Stylus Office BX600FW
+      Stylus Office SX600FW
+      Stylus Office T30
+      Stylus Office T33
+      Stylus Office T40W
+      Stylus Office TX300F
+      Stylus Office TX600FW
       Stylus Photo 1400
       Stylus Photo 1410
       Stylus Photo R230
@@ -665,6 +761,7 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus Photo R270
       Stylus Photo R280
       Stylus Photo R285
+      Stylus Photo R290
       Stylus Photo R350
       Stylus Photo R360
       Stylus Photo R380
@@ -675,14 +772,39 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus Photo RX585
       Stylus Photo RX590
       Stylus Photo RX595
+      Stylus Photo RX610
       Stylus Photo RX640
       Stylus Photo RX680
       Stylus Photo RX685
-      Stylus Pro 11880 (experimental)
+      Stylus Photo RX690
+      Stylus SX200
+      Stylus SX205
+      Stylus SX400
+      Stylus SX405
+      Stylus TX200
+      Stylus TX400
+      WorkForce 30
+      WorkForce 40
+      WorkForce 500
+      WorkForce 600
+      Artisan 700 (experimental)
+      Artisan 800 (experimental)
+      Stylus NX100 (experimental)
+      Stylus NX300 (experimental)
+      Stylus PX700FW (experimental)
+      Stylus PX800FW (experimental)
+      Stylus Photo TX700W (experimental)
+      Stylus Photo TX800W (experimental)
       Stylus Pro 7800 (experimental)
       Stylus Pro 7880 (experimental)
       Stylus Pro 9800 (experimental)
       Stylus Pro 9880 (experimental)
+      Stylus Pro 11880 (experimental)
+      Stylus S20 (experimental)
+      Stylus SX100 (experimental)
+      Stylus SX105 (experimental)
+      Stylus T20 (experimental)
+      Stylus TX100 (experimental)
 
    2) Canon inkjet printers:
 
@@ -733,7 +855,7 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Canon CP-10
       Canon SELPHY ES1 (*)
       Canon SELPHY ES2 (*)
-      Canon SELPHY ES20(*)
+      Canon SELPHY ES20 (*)
       Fujifilm FinePix NX-500
       Kodak Easyshare Printer
       Olympus P-S100
