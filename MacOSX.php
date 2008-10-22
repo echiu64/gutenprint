@@ -179,7 +179,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			<b>Gutenprint 5.2.1</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.1-ub.dmg?download">gutenprint-5.2.1-ub.dmg</a></span>&nbsp;&nbsp;(43.4 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.1-ub.dmg?download">gutenprint-5.2.1-ub.dmg</a></span>&nbsp;&nbsp;(46.7 MB) 
 		</p>
 		<p>
 The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.1.tar.bz2?download">source code</a>)
@@ -252,7 +252,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-<a name="5.2.0-rc1"></a> 
+<a name="5.2.1"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
 		<td align="left">
