@@ -129,14 +129,9 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-rc1 is released!</span> 
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.1 is released!</span> 
 			<br>
-			<a href="MacOSX.php#5.2.0-rc1">October 5, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-rc1, a release candidate for the upcoming Gutenprint 5.2 stable release series. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.0-beta4 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.0-beta4">August 17, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.0-beta4, a beta release for the upcoming Gutenprint 5.2 stable release series.  An updated Mac OS X uninstaller has also been released.  See the <b>Downloads</b> section. 
+			<a href="MacOSX.php#5.2.1">October 21, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable release of the Gutenprint 5.2. An updated Mac OS X uninstaller has also been released. See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -182,12 +177,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.0-rc1</b> 
+			<b>Gutenprint 5.2.1</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.0-rc1-ub.dmg?download">gutenprint-5.2.0-rc1-ub.dmg</a></span>&nbsp;&nbsp;(43.4 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.1-ub.dmg?download">gutenprint-5.2.1-ub.dmg</a></span>&nbsp;&nbsp;(43.4 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.0-rc1, a release candidate for the upcoming Gutenprint 5.2 stable release series. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.0-rc1.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.1.tar.bz2?download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -257,6 +252,79 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.0-rc1, a release ca
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.0-rc1"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.1</b> 
+		</td>
+		<td align="right">
+			<b>2008-10-21</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.1</b> release is the initial stable release of Gutenprint 5.2.  Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. Notable changes since the Gutenprint 5.2.0-rc1:</p> 
+	
+<ul style="list-style:disc;">
+	<li>
+Preliminary support has been added for the following Epson injet printers.  These printers may be retuned for improved quality or performance in future releases.<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Epson PictureMate 215<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson PX 101<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson PX 201<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson PX 601F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus CX9300F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus CX9400F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus CX9475F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus DX9400F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus NX200<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus NX400<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Photo R290<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Photo RX610<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Photo RX690<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office B30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office B33<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office B40W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office T30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office T33<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office T40W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office BX300F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office BX600FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office SX600FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office TX300F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Office TX600FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus SX200<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus SX205<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus SX400<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus SX405<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus TX200<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus TX400<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson ME Office 70<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson ME Office 80W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson ME Office 700FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson WorkForce 30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson WorkForce 40<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson WorkForce 500<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson WorkForce 600<br>
+</li>
+<li>
+Experimental support for the following printers.  These printers may not function correctly, and may be retuned for improved quality or performance in future releases.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Artisan 700<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Artisan 800<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus NX100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus NX300<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus PX700FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus PX800FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus S20<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus SX100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus SX105<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus T20<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus TX100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Photo TX700W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus Photo TX800W<br>
+</li>
+</ul>
+
 <a name="5.2.0-rc1"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
