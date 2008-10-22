@@ -34,74 +34,15 @@ page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 and 10.5 "Leopard", and provides direct download links.</p>
 
-<H2><font color="#ff0000">Gutenprint 5.2.0-rc1 is released!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.2.1 is released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of October 6,
+<P><strong><em><font color="#ff0000">New as of October 21,
 2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.2.0-rc1, a release candidate for the upcoming
-Gutenprint 5.2 stable release series.  This release offers a number of
-enhancements over the 5.0 and 5.1 release series.  This package is
-available in source form, and in binary installer form for Macintosh
-OS X (10.3 and above).  <b>Note that this release is no longer
-compatible with OS X 10.2!</b> <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.2.0-beta4 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of August 17,
-2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.2.0-beta4, a beta release for the upcoming
-Gutenprint 5.2 stable release series.  This release offers a number of
-enhancements over the 5.0 and 5.1 release series.  This package is
-available in source form, and in binary installer form for Macintosh
-OS X (10.3 and above).  <b>Note that this release is no longer
-compatible with OS X 10.2!</b>  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.2.0-beta3 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of June 15,
-2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.2.0-beta3, a beta release for the upcoming
-Gutenprint 5.2 stable release series.  This release offers a number of
-enhancements over the 5.0 and 5.1 release series.  This package is
-available in source form, and in binary installer form for Macintosh
-OS X (10.2 and above).  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.2.0-beta2 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of March 5,
-2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.2.0-beta2, a beta release for the upcoming
-Gutenprint 5.2 stable release series.  This release offers a number of
-enhancements over the 5.0 and 5.1 release series.  This package is
-available in source form, and in binary installer for Macintosh OS X (10.2 and above).  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.1.7 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of March 5,
-2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.7, a development release.  This release adds support for more EPSON and Canon printers, imiproved tuning for many other printers, and contains several bug fixes.  This package is available in source form, and as a binary installer for Macintosh OS X (10.2 and above).  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-
-<H2><font color="#ff0000">Gutenprint 5.1.6 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of January 3,
-2008!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.6, a development release.  This release offers
-an important bug fix over 5.1.5.  This package is available in source form, and as a binary installer for Macintosh OS X (10.2 and above).  <a
+announce Gutenprint 5.2.1, the first stable release of Gutenprint 5.2.
+This release offers many fixes and improvements over the 5.0 and 5.1
+release series.  This package is available in source form, and in
+binary installer form for Macintosh OS X (10.3 and above).  <b>Note
+that this release is no longer compatible with OS X 10.2!</b> <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
@@ -116,26 +57,6 @@ more Epson, Canon, and dye sublimation printers, and more.  This package is avai
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
-<H2><font color="#ff0000">Gutenprint 5.1.5 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of December 29,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.5, a development release.  This release
-supports additional printers and offers some important bug fixes over
-5.1.4.  This package is available in source form.  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-<H2><font color="#ff0000">Gutenprint 5.1.4 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of December 8,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.4, a development release.  This release
-supports additional printers and offers some important bug fixes over
-5.1.3.  This package is available in source form.  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
 <H2><font color="#ff0000">Gutenprint 5.0.1 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of June 17,
@@ -146,48 +67,6 @@ for borderless printing on Epson inkjet printers, support for many
 more Epson, Canon, and dye sublimation printers, and more.  This
 package is available in source form, and as a binary installer for
 Macintosh OS X (10.2 and above).  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-<H2><font color="#ff0000">Gutenprint 5.1.3 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of June 17,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.3, a development release.  This release offers
-a few bug fixes over 5.1.2.  This package is available in source form,
-and as a binary installer for Macintosh OS X (10.2 and above).  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-<H2><font color="#ff0000">Gutenprint 5.1.2 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of June 2,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.2, a development release.  This release offers
-a number of bug fixes and improved quality on newer Epson printers.
-This package is available in source form, and a Macintosh OS X (10.2
-and above) binary installer is also available.  <a
-href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
-can read the release notes and download it here</a>.  </p>
-
-<H2><font color="#ff0000">Gutenprint 5.1.1 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of May 20,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.1, a development release.  This release
-features support for additional Epson inkjet printers, improvements to
-some Canon printers, and a variety of bug fixes.
-
-<H2><font color="#ff0000">Gutenprint 5.1.0 is released!</font></h2>
-
-<P><strong><em><font color="#ff0000">New as of March 3,
-2007!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.1.0, a development release.  This release
-features full support for CUPS 1.2, support for borderless printing on
-Epson inkjet printers, and an experimental new Postscript driver.</p>
-
-<p>Currently only
-the source package is available.  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
@@ -247,14 +126,12 @@ Gutenprint recognizes Johannes Gutenberg, the inventor of the movable
 type printing press.  Finally, the word <I>guten</I> is the German
 word for <I>good</I>.</P>
 
-<p>Gutenprint 5.0 incorporates extensive feedback from the beta and
-release candidate programs.  It has been completely revised since the
-very popular Gimp-Print 4.2 series, and you should read this manual
-carefully.</P>
+<p>Gutenprint 5.2 incorporates extensive feedback from the beta and
+release candidate programs.</P>
 
-<p>Gutenprint supports only the printer part of multi-function
+<p>Gutenprint supports only the printer portion of multi-function
 devices (devices that typically include scanning, copying, and fax
-capabilities).</P>
+capabilities).  </P>
 
 <p>We recommend that all users who wish to use this package for
 general purpose printing use either CUPS or, if they use another
@@ -469,13 +346,11 @@ this finally felt like a real release candidate. We received
 extensive feedback from this release, and fixed other problems and
 made some other changes to improve quality.</P>
 
-<p>Unfortunately, we didn't accomplish all of our goals for
-Gutenprint 5.0. We have not incorporated true color management; our
-Postscript output driver in the GIMP plugin (and indeed, the GIMP
-plugin itself) is still in need of a rewrite; the drivers other than
-the Epson driver haven't been fully updated to take advantage of the
-capabilities of Gutenprint 5.0. However, these changes can be made
-later, either in later 5.0 releases or in the next release series.
-Gutenprint is not "finished" and never will be!</P>
+<p>In Gutenprint 5.2, we accomplished many of our outstanding goals
+left over from Gutenprint 5.0, but not all.  We've rewritten the
+Postscript output driver, converted the data in the Epson driver to be
+data-driven, and much more.  Unfortunately, Gutenprint 5.2 still does
+not offer true color management, but many of the hooks required are
+there.</p>
 
 <?require('standard_html_footer.php');?>
