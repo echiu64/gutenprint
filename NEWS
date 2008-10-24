@@ -1,5 +1,6 @@
-Welcome to Gutenprint 5.2.1, the initial release of Gutenprint 5.2.
-Please read these release notes carefully.
+Welcome to Gutenprint 5.2.2, a stable release of Gutenprint 5.2.  This
+release has minor bug fixes over 5.2.1.  Please read these release
+notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -20,8 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
-        * Changes from 5.2.0-rc1
-        * Changes from 5.2.0-beta4
+        * Changes from 5.2.1
 IV)   Overall changes from 5.0.2 to 5.2
 	A) General User-visible Changes
 	B) New Functionality
@@ -247,114 +247,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.0-rc1
 
-   1) Preliminary support for the following printers.  These printers
-      may be retuned for improved quality or performance in future
-      releases.
+   1) Builds using the VPATH feature, allowing building outside of the
+      source tree, have been fixed.  This has no user-visible
+      implications, but it may have implications to distributors
+      building Gutenprint.
 
-      Epson inkjet printers:
-
-	Epson PictureMate 215
-	Epson PX 101
-	Epson PX 201
-	Epson PX 601F
-	Epson Stylus CX9300F
-	Epson Stylus CX9400F
-	Epson Stylus CX9475F
-	Epson Stylus DX9400F
-	Epson Stylus NX200
-	Epson Stylus NX400
-	Epson Stylus Photo R290
-	Epson Stylus Photo RX610
-	Epson Stylus Photo RX690
-	Epson Stylus Office B30
-	Epson Stylus Office B33
-	Epson Stylus Office B40W
-	Epson Stylus Office T30
-	Epson Stylus Office T33
-	Epson Stylus Office T40W
-	Epson Stylus Office BX300F
-	Epson Stylus Office BX600FW
-	Epson Stylus Office SX600FW
-	Epson Stylus Office TX300F
-	Epson Stylus Office TX600FW
-	Epson Stylus SX200
-	Epson Stylus SX205
-	Epson Stylus SX400
-	Epson Stylus SX405
-	Epson Stylus TX200
-	Epson Stylus TX400
-	Epson ME Office 70
-	Epson ME Office 80W
-	Epson ME Office 700FW
-	Epson WorkForce 30
-	Epson WorkForce 40
-	Epson WorkForce 500
-	Epson WorkForce 600
-
-   2) Experimental support for the following printers.  These printers
-      may not function correctly, and may be retuned for improved
-      quality or performance in future releases.
-
-      Epson inkjet printers:
-
-	Epson Artisan 700
-	Epson Artisan 800
-	Epson Stylus NX100
-	Epson Stylus NX300
-	Epson Stylus PX700FW
-	Epson Stylus PX800FW
-	Epson Stylus S20
-	Epson Stylus SX100
-	Epson Stylus SX105
-	Epson Stylus T20
-	Epson Stylus TX100
-	Epson Stylus Photo TX700W
-	Epson Stylus Photo TX800W
-
-   3) The ChangeLog, NEWS, AUTHORS, COPYING, and README files are
-      installed into the documentation directory.
-
-
-* Changes from 5.2.0-beta4
-
-   1) cups-genppdupdate now preserves the language of the original PPD
-      file, even if the PPD file is being converted to a globalized
-      PPD file.  This enables use of cups-genppdupdate -loriginal to
-      restore the previous language of the PPD file.  Note that
-      cups-genppdupdate -l<language> changes the stored language of
-      the PPD file.
-
-   2) The CUPS driver correctly prints page sizes larger than letter
-      on PCL printers (this was broken in 5.2.0-beta4 only).
-
-   3) The CD position on the R1900 has been corrected.
-
-   4) Printing on the Epson Stylus DX8400/DX8450 has been corrected
-      (the CX8400 was corrected in the previous release).  Previously,
-      these printers fed paper endlessly without printing.
-
-   5) The user manual has been updated.
-
-   6) Color and tonal correctness at low and medium resolutions has
-      been fixed on many Epson Stylus multi-function devices,
-      including
-
-      Stylus CX3500, Stylus CX3600, Stylus CX3650, Stylus CX5100,
-      Stylus CX4200, Stylus CX4500, Stylus CX4600, Stylus CX4700,
-      Stylus CX4800, Stylus CX4900, Stylus CX5000, Stylus CX5000F,
-      Stylus CX5700, Stylus CX5800, Stylus CX6000, Stylus CX7000F,
-      Stylus CX7800, Stylus CX8300, Stylus CX8400, Stylus CX9400,
-      Stylus DX4200, Stylus DX4250, Stylus DX4800, Stylus DX7000F,
-      Stylus DX8400, Stylus DX8450, PX A650
-
-      This issue affected printing at 720 DPI and below.  This issue
-      was fixed for the Stylus CX7400, Stylus DX7400, and Stylus
-      DX7450 in Gutenprint 5.2.0-beta4, but not on other printers at
-      that time.  Since then, we have determined that the same fix is
-      needed on these printers.
-
-      Output will be quite grainy at these resolutions, but colors
-      will be correct.
+   2) A duplicate entry has been removed from the printer list.  We do
+      not believe this to have any user-visible implications.
 
 
 ================================================================
