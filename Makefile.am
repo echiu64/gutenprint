@@ -69,23 +69,23 @@ ChangeLogStamp: ChangeLogPhony
 ChangeLog: ChangeLogStamp
 	@cd $(top_srcdir) ; \
 	if test -f $(top_builddir)/.noupdate ; then \
-	  echo "ChangeLog: .noupdate found: NOT updating ChangeLog from CVS" ; \
+	  echo "$@: .noupdate found: NOT updating $@ from CVS" ; \
 	elif test -d CVS ; then \
-	  echo "ChangeLog: Updating ChangeLog from CVS" ; \
-	  cvs log | $(PERL) scripts/mkchlog -e @sourceforge.net -X src/xml/escp2/resolutions -s '^(guten|gimp-|)print-[0-9]+_' > ChangeLog.tmp ; \
-	  if test -s ChangeLog.tmp ; then \
-	    mv ChangeLog.tmp ChangeLog ; \
+	  echo "$@: Updating $@ from CVS" ; \
+	  cvs log | $(PERL) scripts/mkchlog -e @sourceforge.net -X src/xml/escp2/resolutions -s '^(guten|gimp-|)print-[0-9]+_' > $@.tmp ; \
+	  if test -s $@.tmp ; then \
+	    mv $@.tmp $@ ; \
 	  else \
-	    echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
-	    $(RM) ChangeLog.tmp ; \
+	    echo "$@: Failed to update $@ ['touch .noupdate' to skip]" ; \
+	    $(RM) $@.tmp ; \
 	    exit 1 ; \
 	  fi \
-	elif test -s ChangeLog ; then \
-	  echo "ChangeLog: This is not a CVS version of Gutenprint" ; \
-	  echo "ChangeLog: Not updating ChangeLog from CVS!" ; \
+	elif test -s $@ ; then \
+	  echo "$@: This is not a CVS version of Gutenprint" ; \
+	  echo "$@: Not updating $@ from CVS!" ; \
 	else \
-	  echo "ChangeLog: No ChangeLog or ChangeLog of zero size found!" ; \
-	  echo "ChangeLog: Failed to update ChangeLog ['touch .noupdate' to skip]" ; \
+	  echo "$@: No $@ or $@ of zero size found!" ; \
+	  echo "$@: Failed to update $@ ['touch .noupdate' to skip]" ; \
 	  exit 1 ; \
 	fi
 
@@ -189,7 +189,7 @@ CLEANPO = \
 	po/remove-potcdate.sin \
 	po/Rules-quot
 
-CLEANFILES = .noupdate
+CLEANFILES = .noupdate ChangeLog.tmp
 
 MAINTAINERCLEANFILES = \
 	ABOUT-NLS \
@@ -210,5 +210,5 @@ MAINTAINERCLEANFILES = \
 
 EXTRA_DIST = autogen.sh ChangeLogStamp README.package
 
-.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLogPhony dist-time-check
+.PHONY: deb html install-cups install-gimp install-ghost snapshot ChangeLog Phony dist-time-check
 

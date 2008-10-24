@@ -29,12 +29,13 @@ pkgxmldata_DATA =				\
 	standard.xml
 
 xml-stamp: $(pkgxmldata_DATA) Makefile.am
-	-rm -f xml-stamp
-	touch xml-stamp
-	for f in $(pkgxmldata_DATA) ; do echo $$f >> xml-stamp; done
+	-rm -f $@ $@.tmp
+	touch $@.tmp
+	for f in $(pkgxmldata_DATA) ; do echo $$f >> $@.tmp; done
+	mv $@.tmp $@
 
 all-local: xml-stamp
 
-CLEANFILES = xmli18n-tmp.h xml-stamp
+CLEANFILES = xmli18n-tmp.h xml-stamp xml-stamp.tmp
 
 EXTRA_DIST = $(pkgxmldata_DATA)
