@@ -383,8 +383,8 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
     }
 
   stp_deprintf(STP_DBG_XML,
-	       "stp_sequence_create_from_xmltree: stp_sequence_set_size: %d\n",
-	       point_count);
+	       "stp_sequence_create_from_xmltree: stp_sequence_set_size: %ld\n",
+	       (long)point_count);
   stp_sequence_set_size(ret, point_count);
   stp_sequence_set_bounds(ret, low, high);
 
@@ -427,7 +427,7 @@ stp_sequence_create_from_xmltree(stp_mxml_node_t *da)
 	{
 	  stp_erprintf("stp_sequence_create_from_xmltree: "
 		       "read aborted: too little data "
-		       "(n=%d, needed %d)\n", i, point_count);
+		       "(n=%d, needed %ld)\n", i, (long)point_count);
 	  goto error;
 	}
     }

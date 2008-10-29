@@ -980,7 +980,7 @@ lexmark_head_offset(int ydpi,                       /* i */
 {
   int i;
 
-  stp_deprintf(STP_DBG_LEXMARK, "  sizie %d,  size_v %d, size_v[0] %d\n", sizeof(*lineoff_buffer), sizeof(lineoff_buffer->v), sizeof(lineoff_buffer->v[0]));
+  stp_deprintf(STP_DBG_LEXMARK, "  sizie %d,  size_v %d, size_v[0] %d\n", (int)sizeof(*lineoff_buffer), (int)sizeof(lineoff_buffer->v), (int)sizeof(lineoff_buffer->v[0]));
   memcpy(lineoff_buffer, ink_parameter->head_offset, sizeof(*lineoff_buffer));
 
   for (i=0; i < (sizeof(lineoff_buffer->v) / sizeof(lineoff_buffer->v[0])); i++) {

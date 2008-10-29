@@ -1499,9 +1499,9 @@ add_to_row(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
   size_t count = linecount->v[color];
   if (place + nbytes > sw->virtual_jets * sw->bitwidth * sw->horizontal_width)
     {
-      stp_eprintf(v, "Buffer overflow: limit %d, actual %d, count %d\n",
+      stp_eprintf(v, "Buffer overflow: limit %d, actual %ld, count %ld\n",
 		  sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
-		  place + nbytes, count);
+		  (long)(place + nbytes), (long)count);
       stp_abort();
     }
   memcpy(bufs->v[color] + lineoffs->v[color], buf, nbytes);

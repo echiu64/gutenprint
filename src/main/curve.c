@@ -617,8 +617,8 @@ stp_curve_set_data(stp_curve_t *curve, size_t count, const double *data)
       {
 	stp_deprintf(STP_DBG_CURVE_ERRORS,
 		     "stp_curve_set_data: datum out of bounds: "
-		     "%g (require %g <= x <= %g), n = %d\n",
-		     data[i], low, high, i);
+		     "%g (require %g <= x <= %g), n = %ld\n",
+		     data[i], low, high, (long)i);
 	return 0;
       }
   /* Allocate sequence; also accounts for WRAP_MODE */
@@ -646,7 +646,7 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
   if (count < 2)
     {
       stp_deprintf(STP_DBG_CURVE_ERRORS,
-		   "stp_curve_set_data_points: too few points %d\n", count);
+		   "stp_curve_set_data_points: too few points %ld\n", (long)count);
       return 0;
     }
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
@@ -654,8 +654,8 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
   if (real_count > curve_point_limit)
     {
       stp_deprintf(STP_DBG_CURVE_ERRORS,
-		   "stp_curve_set_data_points: too many points %d\n",
-		   real_count);
+		   "stp_curve_set_data_points: too many points %ld\n",
+		   (long)real_count);
       return 0;
     }
 
@@ -667,8 +667,8 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
 	{
 	  stp_deprintf(STP_DBG_CURVE_ERRORS,
 		       "stp_curve_set_data_points: datum out of bounds: "
-		       "%g (require %g <= x <= %g), n = %d\n",
-		       data[i].y, low, high, i);
+		       "%g (require %g <= x <= %g), n = %ld\n",
+		       data[i].y, low, high, (long)i);
 	  return 0;
 	}
       if (i == 0 && data[i].x != 0.0)
@@ -696,16 +696,16 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
 	{
 	  stp_deprintf(STP_DBG_CURVE_ERRORS,
 		       "stp_curve_set_data_points: horizontal position out of bounds: "
-		       "%g, n = %d\n",
-		       data[i].x, i);
+		       "%g, n = %ld\n",
+		       data[i].x, (long)i);
 	  return 0;
 	}
       if (data[i].x - .000001 < last_x)
 	{
 	  stp_deprintf(STP_DBG_CURVE_ERRORS,
 		       "stp_curve_set_data_points: horizontal position must "
-		       "exceed previous position by .000001: %g, %g, n = %d\n",
-		       data[i].x, last_x, i);
+		       "exceed previous position by .000001: %g, %g, n = %ld\n",
+		       data[i].x, last_x, (long)i);
 	  return 0;
 	}
       last_x = data[i].x;
@@ -1218,8 +1218,8 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
 	      return 0;
 	    }
 	  stp_deprintf(STP_DBG_CURVE,
-		       "Filling slots at %d %d: %f %f  %f %f  %d\n",
-		       i,curpos, high, low, high_y, low_y, limit);
+		       "Filling slots at %ld %d: %f %f  %f %f  %ld\n",
+		       (long)i,curpos, high, low, high_y, low_y, (long)limit);
 	  x_delta = high - low;
 	  high *= (limit - 1);
 	  low *= (limit - 1);
@@ -1560,8 +1560,8 @@ stp_curve_create_from_xmltree(stp_mxml_node_t *curve)  /* The curve node */
 	  if ((seq_count % 2) != 0)
 	    {
 	      stp_deprintf(STP_DBG_CURVE_ERRORS,
-			   "stp_curve_create_from_xmltree: invalid data count %d\n",
-			   seq_count);
+			   "stp_curve_create_from_xmltree: invalid data count %ld\n",
+			   (long)seq_count);
 	      goto error;
 	    }
 	  if (stp_curve_set_data_points(ret, seq_count / 2,

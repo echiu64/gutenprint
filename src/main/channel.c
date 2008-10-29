@@ -610,7 +610,7 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   input_channels %d\n", cg->input_channels);
   stp_dprintf(STP_DBG_INK, v, "   aux_channels   %d\n", cg->aux_output_channels);
   stp_dprintf(STP_DBG_INK, v, "   gcr_channels   %d\n", cg->gcr_channels);
-  stp_dprintf(STP_DBG_INK, v, "   width          %d\n", (int) cg->width);
+  stp_dprintf(STP_DBG_INK, v, "   width          %ld\n", (long)cg->width);
   stp_dprintf(STP_DBG_INK, v, "   ink_limit      %d\n", cg->ink_limit);
   stp_dprintf(STP_DBG_INK, v, "   gloss_limit    %d\n", cg->gloss_limit);
   stp_dprintf(STP_DBG_INK, v, "   max_density    %d\n", cg->max_density);

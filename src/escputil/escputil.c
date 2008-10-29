@@ -1252,9 +1252,9 @@ do_old_status(status_cmd_t cmd, const char *buf, const stp_printer_t *printer)
 		{
 		  color_list = stp_string_list_create_copy(desc.bounds.str);
 		  STP_DEBUG(fprintf(stderr,
-				    "Using color list from driver (%d %d)\n",
-				    stp_string_list_count(desc.bounds.str),
-				    stp_string_list_count(color_list)));
+				    "Using color list from driver (%ld %ld)\n",
+				    (long)stp_string_list_count(desc.bounds.str),
+				    (long)stp_string_list_count(color_list)));
 		  stp_parameter_description_destroy(&desc);
 		}
 	    }
@@ -1520,9 +1520,9 @@ do_extended_ink_info(int extended_output)
       if (printer)
 	{
 	  color_list = stp_string_list_create_copy(desc.bounds.str);
-	  STP_DEBUG(fprintf(stderr, "Using color list from driver (%d %d)\n",
-			    stp_string_list_count(desc.bounds.str),
-			    stp_string_list_count(color_list)));
+	  STP_DEBUG(fprintf(stderr, "Using color list from driver (%ld %ld)\n",
+			    (long)stp_string_list_count(desc.bounds.str),
+			    (long)stp_string_list_count(color_list)));
 	  stp_parameter_description_destroy(&desc);
 	}
       else
