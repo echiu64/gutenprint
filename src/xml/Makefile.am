@@ -52,7 +52,7 @@ all-local: xmli18n-tmp.h xml-stamp
 
 
 xmli18n-tmp.h: xml-stamp extract-strings
-	./extract-strings `cat xml-stamp | sed -e 's/^/$(srcdir)/` > $@.tmp
+	./extract-strings `cat xml-stamp | sed -e 's;^;$(srcdir)/;'` > $@.tmp
 	mv $@.tmp $@
 
 
@@ -61,7 +61,7 @@ dist-hook: xmli18n-tmp.h
 
 ## Clean
 
-CLEANFILES = xmli18n-tmp.h xmli18n-tmp.h.tmp xmli18n-tmp2.h xml-stamp xml-stamp.tmp
+CLEANFILES = xmli18n-tmp.h xmli18n-tmp.h.tmp xml-stamp xml-stamp.tmp
 
 EXTRA_DIST = $(pkgxmldata_DATA)
 
