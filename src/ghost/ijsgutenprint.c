@@ -824,7 +824,7 @@ gutenprint_set_cb (void *set_cb_data, IjsServerCtx *ctx, IjsJobId jobid,
 	  else if (strcmp(vbuf, "True") == 0 ||
 		   strcmp(vbuf, "true") == 0 ||
 		   strcmp(vbuf, "TRUE") == 0 ||
-		   strcmp(vbuf, "0") == 0)
+		   strcmp(vbuf, "1") == 0)
 	    stp_set_boolean_parameter(img->v, xkey, 1);
 	  else
 	    fprintf(stderr, "ERROR: ijsgutenprint: cannot parse %s boolean %s\n", xkey, vbuf);
