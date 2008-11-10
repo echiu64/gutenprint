@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="65">
+<escp2:model id="95">
  <media src="escp2/media/cx3650.xml"/>
  <inputSlots src="escp2/inputslots/default.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -75,6 +75,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">16</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.300000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="360x240sw" text="360 x 240 DPI Draft">
@@ -83,6 +85,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">16</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.300000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="360sw" text="360 DPI">
@@ -91,6 +95,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">16</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.300000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="720x360sw" text="720 x 360 DPI">
@@ -99,6 +105,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="integer" name="escp2_ink_type">16</parameter>
    <parameter type="integer" name="escp2_base_res">360</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
+   <parameter type="float" name="DropSize1">0.150000</parameter>
+   <parameter type="float" name="DropSize2">0.300000</parameter>
    <parameter type="float" name="DropSize3">1.000000</parameter>
   </resolution>
   <resolution translate="text" name="720sw" text="720 DPI">
