@@ -245,15 +245,35 @@ device.  We have determined that the data is in fact written by the
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
-* Changes from 5.2.0-rc1
+* Changes from 5.2.1
 
-   1) Builds using the VPATH feature, allowing building outside of the
+   1) Printing at standard and draft quality to a number of Epson
+      multi-function devices has been corrected.  The printers that
+      have been corrected are:
+
+      EPSON Stylus CX4100
+      EPSON Stylus CX4200
+      EPSON Stylus CX4700
+      EPSON Stylus CX4800
+      EPSON Stylus CX5700
+      EPSON Stylus CX5800
+      EPSON Stylus CX7700
+      EPSON Stylus CX7800
+      EPSON Stylus DX4200
+      EPSON Stylus DX4250
+      EPSON Stylus DX4800
+      EPSON Stylus DX4850
+      EPSON PX A650
+
+   2) Printing at standard and draft quality to the Epson Stylus Photo
+      R1900 has been corrected.
+
+   3) An Italian translation has been added.
+
+   4) Builds using the VPATH feature, allowing building outside of the
       source tree, have been fixed.  This has no user-visible
       implications, but it may have implications to distributors
       building Gutenprint.
-
-   2) A duplicate entry has been removed from the printer list.  We do
-      not believe this to have any user-visible implications.
 
 
 ================================================================
