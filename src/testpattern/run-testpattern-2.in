@@ -80,12 +80,23 @@ foreach my $opt (@default_options) {
 my $pwd = `pwd`;
 chomp $pwd;
 
+my $srcdir = $ENV{"srcdir"};
+my $sdir;
+
+if ("$srcdir" eq "" || "$srcdir" eq ".") {
+    $sdir = $pwd;
+} elsif ($srcdir =~ /^\//) {
+    $sdir = "$srcdir";
+} else {
+    $sdir = "$pwd/$srcdir";
+}
+
 if (! $run_installed && ! defined $ENV{"STP_DATA_PATH"}) {
-    $ENV{"STP_DATA_PATH"} = "${pwd}/../xml";
+    $ENV{"STP_DATA_PATH"} = "${sdir}/../xml";
 }
 
 if (! defined $ENV{"STP_MODULE_PATH"}) {
-    $ENV{"STP_MODULE_PATH"} = "${pwd}/../main:${pwd}/../main/.libs";
+    $ENV{"STP_MODULE_PATH"} = "${sdir}/../main:${sdir}/../main/.libs";
 }
 
 sub set_opt($$$) {

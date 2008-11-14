@@ -1,12 +1,20 @@
 #!/bin/sh
 
+if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
+    sdir=`pwd`
+elif [ -n "`echo $srcdir |grep '^/'`" ] ; then
+    sdir="$srcdir"
+else
+    sdir="`pwd`/$srcdir"
+fi
+
 if [ -z "$STP_DATA_PATH" ] ; then
-    STP_DATA_PATH=`pwd`/../src/xml
+    STP_DATA_PATH="$sdir/../src/xml"
     export STP_DATA_PATH
 fi
 
 if [ -z "$STP_MODULE_PATH" ] ; then
-    STP_MODULE_PATH=`pwd`/../src/main:`pwd`/../src/main/.libs
+    STP_MODULE_PATH="$sdir/../src/main:$sdir/../src/main/.libs"
     export STP_MODULE_PATH
 fi
 

@@ -2,13 +2,21 @@
 
 retval=0
 
+if [ -z "$srcdir" -o "$srcdir" = "." ] ; then
+    sdir=`pwd`
+elif [ -n "`echo $srcdir |grep '^/'`" ] ; then
+    sdir="$srcdir"
+else
+    sdir="`pwd`/$srcdir"
+fi
+
 if [ -z "$STP_DATA_PATH" ] ; then
-    STP_DATA_PATH=`pwd`/../xml
+    STP_DATA_PATH="$sdir/../xml"
     export STP_DATA_PATH
 fi
 
 if [ -z "$STP_MODULE_PATH" ] ; then
-    STP_MODULE_PATH=`pwd`/../main:`pwd`/../main/.libs
+    STP_MODULE_PATH="$sdir/../main:$sdir/../main/.libs"
     export STP_MODULE_PATH
 fi
 
@@ -79,7 +87,7 @@ pdftops="`type -p pdftops`"
 if [ -n "$pdftops" -a ! -x "$cupsdir/cgpdftoraster" ] ; then
     tfile=`mktemp`
     trap cleanup 1 2 3 6 14 15 30
-    $pdftops -f 24 -l 26 ../../doc/gutenprint-users-manual.pdf $tfile
+    $pdftops -f 24 -l 26 "$sdir/../../doc/gutenprint-users-manual.pdf" $tfile
 fi
 
 if [ -z "$verbose" ] ; then
@@ -208,11 +216,11 @@ if [ -d ppd/C ] ; then
 	    PPD=$f
 	    export PPD
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
-		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < '$sdir/../../doc/gutenprint-users-manual.pdf' 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    elif [ -f "$tfile" ] ; then
 		output="`($cupsdir/pstops 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    elif [ -x "$cupsdir/pstoraster" ] ; then
-		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < ../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < '$sdir/../../doc/gutenprint-users-manual.pdf' 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    else
 		output="`($cupsdir/imagetoraster 1 1 1 1 \"$pages$cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp | do_output) 2>&1`"
 	    fi
