@@ -158,6 +158,9 @@
 #gptofoo escp2-cl760 printer/Epson-CL_760
 #gptofoo escp2-em900c printer/Epson-EM_900C
 #gptofoo escp2-em930c printer/Epson-EM_930C
+#gptofoo escp2-ep801a printer/Epson-EP_801A
+#gptofoo escp2-ep901a printer/Epson-EP_901A
+#gptofoo escp2-ep901f printer/Epson-EP_801F
 #gptofoo epson-epl-5200 printer/Epson-EPL-5200
 #gptofoo epson-epl-5200plus printer/Epson-EPL-5200plus
 #gptofoo epson-epl-5700 printer/Epson-EPL-5700

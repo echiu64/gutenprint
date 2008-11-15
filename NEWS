@@ -268,9 +268,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    2) Printing at standard and draft quality to the Epson Stylus Photo
       R1900 has been corrected.
 
-   3) An Italian translation has been added.
+   3) Printing to the Epson Artisan 700, Artisan 800, Stylus Photo
+      TX700W, Stylus Photo TX800W, Stylus PX700FW, Stylus PX800FW,
+      EP-801A, EP-901A, and EP-901F is believed to be corrected based
+      on updated specifications.  The printers have not been tuned and
+      are still considered experimental.
 
-   4) Builds using the VPATH feature, allowing building outside of the
+   4) An Italian translation has been added.
+
+   5) Builds using the VPATH feature, allowing building outside of the
       source tree, have been fixed.  This has no user-visible
       implications, but it may have implications to distributors
       building Gutenprint.
