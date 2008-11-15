@@ -64,7 +64,7 @@ fi
 
 version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 cupsdir="@cups_conf_serverbin@/filter"
-if [ -x "$cupsdir/pstoraster" ] ; then
+if [ -x "$cupsdir/pstoraster" -o -x "$cupsdir/cgpdftoraster" ] ; then
     pages='page-ranges=24-26 '
 else
     pages=''
@@ -185,6 +185,8 @@ get_ppds() {
 
 if [ -n "$make_ppds" -o ! -d ppd/C ] ; then
     make ppd-nonls
+## Not all systems can work with gzipped PPDs
+    find ppd/C -name '*.ppd.gz' | xargs gunzip
 fi
 
 do_output() {
