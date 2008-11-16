@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.2 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.2">November 16, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.2, a stable release of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.1 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.1">October 21, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable release of the Gutenprint 5.2. An updated Mac OS X uninstaller has also been released. See the <b>Downloads</b> section. 
@@ -137,11 +142,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.0.2">January 3, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.0.2, a stable release in the Gutenprint 5.0 series. This release features full support for borderless printing on Epson inkjet printers, support for more Epson, Canon, and dye sublimation printers, and more. See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Mac OS X FAQs updated for Leopard</span> 
-			<br>
-			<a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php">November 27, 2007</a> - Some of the most common questions about using Gutenprint with Mac OS X 10.5.x have been added to the <a href="http://gutenprint.sourceforge.net/p_FAQ_OS_X.php">Mac OS X FAQ</a>.  In particular, <b>all Epson owners</b> are encouraged to read these FAQs.
 		</p>
 		<p>
 			<span style="color:#ff0000; font-size:110%;font-weight:bold;">ESP Ghostscript version 7.07.1 is released!</span> 
@@ -177,12 +177,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.1</b> 
+			<b>Gutenprint 5.2.2</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.1-ub.dmg?download">gutenprint-5.2.1-ub.dmg</a></span>&nbsp;&nbsp;(46.7 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.2-ub.dmg?download">gutenprint-5.2.2-ub.dmg</a></span>&nbsp;&nbsp;(49 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.1.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.2, a stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.2.tar.bz2?download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -252,6 +252,52 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.2"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.2</b> 
+		</td>
+		<td align="right">
+			<b>2008-11-16</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.2</b> release is a stable release of Gutenprint 5.2.  Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. Notable changes since the Gutenprint 5.2.1:</p> 
+	
+<ul style="list-style:disc;">
+	<li>
+Printing at standard and draft quality to a number of Epson multi-function devices has been corrected.  The printers that have been corrected are:
+<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX4100<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX4200<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX4700<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX4800<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX5700<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX5800<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX7700<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus CX7800<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4200<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4250<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4800<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4850<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON PX A650<br>
+</li>
+	<li>Printing at standard and draft quality to the Epson Stylus Photo R1900 has been corrected.</li>
+	<li>Printing to the Epson Artisan 700, Artisan 800, Stylus Photo TX700W, Stylus Photo TX800W, Stylus PX700FW, Stylus PX800FW, EP-801A, EP-901A, and EP-901F is believed to be corrected based on updated specifications.  The printers have not been tuned and are still considered experimental.</li>
+	<li>An Italian translation has been added.</li>
+</ul>
+<p>
+Full details are listed in the <a href="https://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=640907">release notes</a>.
+</p>
+
+
+
+
+
+
+
 <a name="5.2.1"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
@@ -573,7 +619,7 @@ Added preliminary support for the following printers:<br>
 <li>The CUPS driver in Gutenprint, and all associated utilities, are now licensed as GPL v2 or higher.  That code was previously licensed as GPL v2 only.  While that did not cause any direct problems, since the CUPS driver does not form a library that other code may wish to link against, it was licensed differently from the rest of the Gutenprint project.  That is now resolved, and the entire Gutenprint code base is now licensed as GPL v2 or higher.</li>
 </ul>
 <p>
-Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&&amp;release_id=565661">release notes</a>.
+Additional information can be found in the  <a href="http://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=565661">release notes</a>.
 </p>
 <a name="5.0.2"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
@@ -590,7 +636,7 @@ Additional information can be found in the  <a href="http://sourceforge.net/proj
 	Gutenprint 5.0.2 is a release of the stable branch of Gutenprint 5.0.  The 5.0.2 release supports additional printers and offers some important bug fixes over 5.0.1. The most important changes are:
 </p>
  <ul style="list-style: disc;">
-	<li>Fixed an issue in Mac OSX 10.5.x where the printing system was not obtaining the proper resolution from the <b>Print Quality</b> setting and was defaulting to the lowest printer resolution found. 
+	<li>Fixed an issue in Mac OSX 10.5.x where the printing system was not obtaining the proper resolution from the <b>Print Quality</b> setting and was defaulting to the lowest printer resolution found.</li> 
 	<li>Added support for the following printers:<br>
 	&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus CX4400<br>
 	&nbsp;&nbsp;&nbsp;&nbsp;Epson Stylus CX4900<br>
