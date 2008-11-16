@@ -396,7 +396,7 @@
       <printer translate="name" name="Epson Stylus CX4600" driver="escp2-cx4600" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX4700" driver="escp2-cx4700" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX4800" driver="escp2-cx4800" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX4900" driver="escp2-cx4900" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX4900" driver="escp2-cx4900" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5000" driver="escp2-cx5000" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5000F" driver="escp2-cx5000f" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5100" driver="escp2-cx5100" manufacturer="Epson" model="55" parameters="cx3500_params" />
