@@ -2708,12 +2708,6 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
     }
   if (!use_maximum_area && duplex && strcmp(duplex, "None") != 0)
     {
-      stp_erprintf("Adjusting duplex margins from %d %d %d %d to %d %d %d %d\n",
-		   left_margin, right_margin, bottom_margin, top_margin,
-		   escp2_duplex_left_margin(v),
-		   escp2_duplex_right_margin(v),
-		   escp2_duplex_bottom_margin(v),
-		   escp2_duplex_top_margin(v));		   
       left_margin = imax(left_margin, escp2_duplex_left_margin(v));
       right_margin = imax(right_margin, escp2_duplex_right_margin(v));
       bottom_margin = imax(bottom_margin, escp2_duplex_bottom_margin(v));
