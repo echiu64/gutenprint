@@ -1000,6 +1000,34 @@ escp2_quality_list(const stp_vars_t *v)
   return printdef->quality_list;
 }
 
+static short
+escp2_duplex_left_margin(const stp_vars_t *v)
+{
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->duplex_left_margin;
+}
+
+static short
+escp2_duplex_right_margin(const stp_vars_t *v)
+{
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->duplex_right_margin;
+}
+
+static short
+escp2_duplex_top_margin(const stp_vars_t *v)
+{
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->duplex_top_margin;
+}
+
+static short
+escp2_duplex_bottom_margin(const stp_vars_t *v)
+{
+  stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
+  return printdef->duplex_bottom_margin;
+}
+
 static const channel_count_t *
 get_channel_count_by_name(const char *name)
 {
@@ -2594,6 +2622,7 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
   int	rollfeed = 0;			/* Roll feed selected */
   int	cd = 0;			/* CD selected */
   const char *media_size = stp_get_string_parameter(v, "PageSize");
+  const char *duplex = stp_get_string_parameter(v, "Duplex");
   int left_margin = 0;
   int right_margin = 0;
   int bottom_margin = 0;
@@ -2677,6 +2706,20 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 	    }
 	}
     }
+  if (!use_maximum_area && duplex && strcmp(duplex, "None") != 0)
+    {
+      stp_erprintf("Adjusting duplex margins from %d %d %d %d to %d %d %d %d\n",
+		   left_margin, right_margin, bottom_margin, top_margin,
+		   escp2_duplex_left_margin(v),
+		   escp2_duplex_right_margin(v),
+		   escp2_duplex_bottom_margin(v),
+		   escp2_duplex_top_margin(v));		   
+      left_margin = imax(left_margin, escp2_duplex_left_margin(v));
+      right_margin = imax(right_margin, escp2_duplex_right_margin(v));
+      bottom_margin = imax(bottom_margin, escp2_duplex_bottom_margin(v));
+      top_margin = imax(top_margin, escp2_duplex_top_margin(v));
+    }
+
   if (width > escp2_max_imageable_width(v))
     width = escp2_max_imageable_width(v);
   if (height > escp2_max_imageable_height(v))

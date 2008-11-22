@@ -65,6 +65,10 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
   p->max_black_resolution = -1;
   p->cd_x_offset = -1;
   p->cd_y_offset = -1;
+  p->duplex_left_margin = SHRT_MIN;
+  p->duplex_right_margin = SHRT_MIN;
+  p->duplex_top_margin = SHRT_MIN;
+  p->duplex_bottom_margin = SHRT_MIN;
   while (tmp)
     {
       if (tmp->type == STP_MXML_ELEMENT)
@@ -217,6 +221,7 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		{
 		  const char *itype = stp_mxmlElementGetAttr(tmp, "interleave");
 		  const char *mtype = stp_mxmlElementGetAttr(tmp, "media");
+		  const char *dtype = stp_mxmlElementGetAttr(tmp, "duplex");
 		  unsigned long data[4];
 		  int i = 0;
 		  while (child && i < 4)
@@ -225,8 +230,15 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 			data[i++] = stp_xmlstrtoul(child->value.text.string);
 		      child = child->next;
 		    }		      
-		  if (itype && !strcmp(itype, "soft") &&
-		      mtype && !strcmp(mtype, "sheet"))
+		  if (dtype && !strcmp(dtype, "duplex"))
+		    {
+		      p->duplex_left_margin = data[0];
+		      p->duplex_right_margin = data[1];
+		      p->duplex_top_margin = data[2];
+		      p->duplex_bottom_margin = data[3];
+		    }
+		  else if (itype && !strcmp(itype, "soft") &&
+			   mtype && !strcmp(mtype, "sheet"))
 		    {
 		      p->left_margin = data[0];
 		      p->right_margin = data[1];

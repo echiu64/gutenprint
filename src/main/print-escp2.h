@@ -401,6 +401,11 @@ typedef struct escp2_printer
   short		m_roll_right_margin;	/* Right margin, points */
   short		m_roll_top_margin;	/* Absolute top margin, points */
   short		m_roll_bottom_margin;	/* Absolute bottom margin, points */
+				/* Duplex margin limit (SHRT_MIN = no limit): */
+  short		duplex_left_margin;	/* Left margin, points */
+  short		duplex_right_margin;	/* Right margin, points */
+  short		duplex_top_margin;	/* Absolute top margin, points */
+  short		duplex_bottom_margin;	/* Absolute bottom margin, points */
 				/* Print directly to CD */
   short		cd_x_offset;	/* Center of CD (horizontal offset) */
   short		cd_y_offset;	/* Center of CD (vertical offset) */
