@@ -539,7 +539,7 @@ read_from_printer(int fd, char *buf, int bufsize, int quiet)
   int retry = 100;
 #ifdef HAVE_FCNTL_H
   fcntl(fd, F_SETFL,
-	O_NONBLOCK | fcntl(fd, F_GETFL));
+	O_NONBLOCK | (fcntl(fd, F_GETFL) & ~(O_RDONLY|O_WRONLY|O_RDWR)));
 #endif
   memset(buf, 0, bufsize);
 
@@ -855,6 +855,7 @@ initialize_printer(int quiet, int fail_if_not_found)
 	  if (credit < 0)
 	    {
 	      STP_DEBUG(fprintf(stderr, "Cannot get credit\n"));
+	      close(fd);
 	      return NULL;
 	    }
 	  /* request status command */
@@ -864,6 +865,7 @@ initialize_printer(int quiet, int fail_if_not_found)
 	    {
 	      fprintf(stderr, _("\nCannot write to %s: %s\n"),
 		      raw_device, strerror(errno));
+	      close(fd);
 	      return NULL;
 	    }
 	  do
@@ -872,13 +874,17 @@ initialize_printer(int quiet, int fail_if_not_found)
 	      STP_DEBUG(fprintf(stderr, "readData try %d status %d\n",
 				retry, status));
 	      if (status <= -1 )
-		return NULL;
+		{
+		  close(fd);
+		  return NULL;
+		}
 	    }
 	  while ( (retry-- != 0) && strncmp("di", (char*)buf, 2) &&
 		  strncmp("@EJL ID", (char*)buf, 7));
 	  if (!retry)
 	    {
 	      STP_DEBUG(fprintf(stderr, "No retries left!\n"));
+	      close(fd);
 	      return NULL;
 	    }
 	}
@@ -887,16 +893,16 @@ initialize_printer(int quiet, int fail_if_not_found)
       if (status > 0)
 	{
 	  pos = strstr((char*)buf, "@EJL ID");
-	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos ? pos : "(null)"));
 	  if (pos)
 	    pos = strchr(pos, (int) ';');
-	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos ? pos : "(null)"));
 	  if (pos)
 	    pos = strchr(pos + 1, (int) ';');
-	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos ? pos : "(null)"));
 	  if (pos)
 	    pos = strchr(pos, (int) ':');
-	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos));
+	  STP_DEBUG(fprintf(stderr, "pos: %s\n", pos ? pos : "(null)"));
 	  if (pos)
 	    {
 	      spos = strchr(pos, (int) ';');
@@ -930,6 +936,7 @@ initialize_printer(int quiet, int fail_if_not_found)
 	      else
 		{
 		  STP_DEBUG(fprintf(stderr, "Can't get response to @EJL ID\n"));
+		  close(fd);
 		  return NULL;
 		}
 	    }
