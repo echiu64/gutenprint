@@ -200,6 +200,13 @@ int				    /* O - Exit status */
 main(int  argc,			    /* I - Number of command-line arguments */
      char *argv[])		    /* I - Command-line arguments */
 {
+ /*
+  * Force POSIX locale, since stp_init incorrectly calls setlocale...
+  */
+
+  putenv((char *)"LANG=C");
+  putenv((char *)"LC_ALL=C");
+  putenv((char *)"LC_NUMERIC=C");
 
  /*
   * Initialise libgutenprint
@@ -893,6 +900,7 @@ write_ppd(
 		min_height,
 		max_width,
 		max_height;
+  char		dimstr[255];		/* Dimension string */
   stp_parameter_t desc;
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
@@ -1794,13 +1802,10 @@ write_ppd(
 		      for (i = desc.bounds.dimension.lower;
 			   i <= desc.bounds.dimension.upper; i++)
 			{
-			  /* FIXME
-			   * For now, just use mm; we'll fix it later
-			   * for the locale-appropriate setting.
-			   * --rlk 20040818
-			   */
-			  gzprintf(fp, "*Stp%s %d/%.1f mm: \"\"\n",
-				   desc.name, i, ((double) i) * 25.4 / 72);
+			  snprintf(dimstr, sizeof(dimstr), _("%.1f mm"),
+			           (double)i * 25.4 / 72.0);
+			  gzprintf(fp, "*Stp%s %d/%s: \"\"\n",
+				   desc.name, i, dimstr);
 			}
 
 		      print_close_ui = 0;
@@ -2197,19 +2202,14 @@ write_ppd(
 			  if (!desc.is_mandatory)
 			    gzprintf(fp, "*%s.Stp%s %s/%s: \"\"\n", lang, desc.name,
 				     "None", _("None"));
-			  if (localize_numbers)
+			  /* Unlike the other fields, dimensions are not strictly numbers */
+			  for (i = desc.bounds.dimension.lower;
+			       i <= desc.bounds.dimension.upper; i++)
 			    {
-			      for (i = desc.bounds.dimension.lower;
-				   i <= desc.bounds.dimension.upper; i++)
-				{
-				  /* FIXME
-				   * For now, just use mm; we'll fix it later
-				   * for the locale-appropriate setting.
-				   * --rlk 20040818
-				   */
-				  gzprintf(fp, "*%s.Stp%s %d/%.1f mm: \"\"\n", lang,
-					   desc.name, i, ((double) i) * 25.4 / 72);
-				}
+			      snprintf(dimstr, sizeof(dimstr), _("%.1f mm"),
+				       (double)i * 25.4 / 72.0);
+			      gzprintf(fp, "*%s.Stp%s %d/%s: \"\"\n", lang,
+				       desc.name, i, dimstr);
 			    }
 			  gzprintf(fp, "*%s.ParamCustomStp%s Value/%s: \"\"\n", lang,
 				   desc.name, _("Value"));
