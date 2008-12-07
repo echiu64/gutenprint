@@ -64,6 +64,7 @@ static color_t color_map[] =
     { "l_cyan", 5 },
     { "l_magenta", 6 },
     { "d_yellow", 4 },
+    { "l_l_black", 7 },
     { NULL, -1 }
   };
 

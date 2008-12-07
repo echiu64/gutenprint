@@ -26,6 +26,7 @@ include $(top_srcdir)/scripts/global.mk
 pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@/xml/escp2/inks
 
 pkgxmldata_DATA =				\
+	artisan.xml				\
 	b500.xml				\
 	c120.xml				\
 	c64.xml					\
