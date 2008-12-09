@@ -22,7 +22,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:model id="96">
  <media src="escp2/media/claria.xml"/>
- <inputSlots src="escp2/inputslots/cd_roll_feed.xml"/>
+ <inputSlots src="escp2/inputslots/artisan.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/artisan.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
@@ -62,9 +62,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins interleave="printer" media="sheet">9 9 0 9</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
- <CDOffset>204 189</CDOffset>
+ <margins duplex="duplex">9 9 27 27</margins>
+ <CDOffset>204 184</CDOffset>
  <CDMediaSize>595 842</CDMediaSize>
- <extraBottom>24</extraBottom>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
   <ChannelName translate="name" name="Yellow"/>
