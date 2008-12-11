@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.2
         * Changes from 5.2.1
 IV)   Overall changes from 5.0.2 to 5.2
 	A) General User-visible Changes
@@ -244,6 +245,31 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.2
+
+   1) CUPS PPD files in non-English locales are now generated
+      correctly when the CUPS driver interface is used (with CUPS 1.2
+      and above).
+
+   2) Epson inkjet printers that support duplex printing now use less
+      restrictive margins (allowing use of more of the page) when
+      duplex printing is not used.
+
+   3) Printing to the Epson Artisan 700, Artisan 800, Stylus Photo
+      TX700W, Stylus Photo TX800W, Stylus PX700FW, Stylus PX800FW,
+      EP-801A, EP-901A, and EP-901F has been corrected and these
+      printers should be fully functional.  They may be subject to
+      further tuning.
+
+   4) Duplex printing has been enabled on the Epson Stylus RX680.
+      Support for this printer is still considered experimental.
+
+   5) Printing at standard and draft quality to the Epson Stylus
+      CX4900 has been corrected.
+
+
+----------------
 
 * Changes from 5.2.1
 
