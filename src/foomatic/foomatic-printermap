@@ -223,6 +223,7 @@
 #gptofoo escp2-pma820 printer/Epson-PM_A820
 #gptofoo escp2-pma890 printer/Epson-PM_A890
 #gptofoo escp2-pma900 printer/Epson-PM_A900
+#gptofoo escp2-pma940 printer/Epson-PM_A940
 #gptofoo escp2-pma950 printer/Epson-PM_A950
 #gptofoo escp2-pmd1000 printer/Epson-PM_D1000
 #gptofoo escp2-pmd600 printer/Epson-PM_D600
@@ -237,6 +238,7 @@
 #gptofoo escp2-pmg820 printer/Epson-PM_G820
 #gptofoo escp2-pmg850 printer/Epson-PM_G850
 #gptofoo escp2-pmg4500 printer/Epson-PM_G4500
+#gptofoo escp2-pmt960 printer/Epson-PM_T960
 #gptofoo escp2-px5500 printer/Epson-PX_5500
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000
@@ -404,6 +406,7 @@
 #gptofoo escp2-dx8450 printer/Epson-Stylus_DX8450
 #gptofoo escp2-dx9400f printer/Epson-Stylus_DX9400F
 #gptofoo escp2-nx100 printer/Epson-Stylus_NX100
+#gptofoo escp2-nx105 printer/Epson-Stylus_NX105
 #gptofoo escp2-nx200 printer/Epson-Stylus_NX200
 #gptofoo escp2-nx300 printer/Epson-Stylus_NX300
 #gptofoo escp2-nx400 printer/Epson-Stylus_NX400
@@ -503,6 +506,7 @@
 #gptofoo escp2-scan2500 printer/Epson-Stylus_Scan_2500
 #gptofoo escp2-px101 printer/Epson-PX_101
 #gptofoo escp2-px201 printer/Epson-PX_201
+#gptofoo escp2-px401a printer/Epson-PX_401
 #gptofoo escp2-px601f printer/Epson-PX_601F
 #gptofoo escp2-of-b30 printer/Epson-Stylus_Office_B30
 #gptofoo escp2-of-b33 printer/Epson-Stylus_Office_B33
@@ -515,8 +519,10 @@
 #gptofoo escp2-of-sx600fw printer/Epson-Stylus_Office_SX600FW
 #gptofoo escp2-of-tx600fw printer/Epson-Stylus_Office_TX600FW
 #gptofoo escp2-of-tx300f printer/Epson-Stylus_Office_TX300F
+#gptofoo escp2-me300 printer/Epson-ME_300
 #gptofoo escp2-meof70 printer/Epson-ME_Office_70
 #gptofoo escp2-meof80w printer/Epson-ME_Office_80W
+#gptofoo escp2-meof360 printer/Epson-ME_Office_360
 #gptofoo escp2-meof700fw printer/Epson-ME_Office_700FW
 #gptofoo escp2-wf30 printer/Epson-WorkForce_30
 #gptofoo escp2-wf40 printer/Epson-WorkForce_40
@@ -533,6 +539,13 @@
 #gptofoo escp2-sx405 printer/Epson-Stylus_SX405
 #gptofoo escp2-t20 printer/Epson-Stylus_T20
 #gptofoo escp2-tx100 printer/Epson-Stylus_TX100
+#gptofoo escp2-tx101 printer/Epson-Stylus_TX101
+#gptofoo escp2-tx102 printer/Epson-Stylus_TX102
+#gptofoo escp2-tx103 printer/Epson-Stylus_TX103
+#gptofoo escp2-tx104 printer/Epson-Stylus_TX104
+#gptofoo escp2-tx105 printer/Epson-Stylus_TX105
+#gptofoo escp2-tx106 printer/Epson-Stylus_TX106
+#gptofoo escp2-tx109 printer/Epson-Stylus_TX109
 #gptofoo escp2-tx200 printer/Epson-Stylus_TX200
 #gptofoo escp2-tx400 printer/Epson-Stylus_TX400
 #gptofoo escp2-tx700w printer/Epson-Stylus_Photo_TX700W

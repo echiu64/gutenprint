@@ -256,17 +256,25 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       restrictive margins (allowing use of more of the page) when
       duplex printing is not used.
 
-   3) Printing to the Epson Artisan 700, Artisan 800, Stylus Photo
+   3) Printing at standard and draft quality to the Epson Stylus
+      CX4900 has been corrected.
+
+   4) Printing to the Epson Artisan 700, Artisan 800, Stylus Photo
       TX700W, Stylus Photo TX800W, Stylus PX700FW, Stylus PX800FW,
       EP-801A, EP-901A, and EP-901F has been corrected and these
       printers should be fully functional.  They may be subject to
       further tuning.
 
-   4) Duplex printing has been enabled on the Epson Stylus RX680.
-      Support for this printer is still considered experimental.
+   5) Duplex printing has been enabled on the Epson Stylus RX680,
+      RX685, RX690, PM-A940, and PM-T960.  Support for these printers
+      is still considered experimental.
 
-   5) Printing at standard and draft quality to the Epson Stylus
-      CX4900 has been corrected.
+   6) Printing to the Epson Stylus NX100, NX105, SX100, SX105, TX100,
+      TX101, TX102, TX103, TX105, TX106, TX109, ME 300, ME Office 360,
+      and PX-401A has been corrected to the specification and will
+      probably function correctly.  However, these printers are not
+      tuned and support for these printers is still considered
+      experimental.
 
 
 ----------------
