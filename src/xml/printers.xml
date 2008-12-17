@@ -448,7 +448,6 @@
       <printer translate="name" name="Epson Stylus NX400" driver="escp2-nx400" manufacturer="Epson" model="93" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus PX700FW" driver="escp2-px700fw" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus PX800FW" driver="escp2-px800fw" manufacturer="Epson" model="96" parameters="claria_params" />
-<!-- Based on report by Henning Paul -- I would expect NX100 driver to work -->
       <printer translate="name" name="Epson Stylus S20" driver="escp2-s20" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus SX100" driver="escp2-sx100" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus SX105" driver="escp2-sx105" manufacturer="Epson" model="94" parameters="standard_params" />
@@ -456,7 +455,6 @@
       <printer translate="name" name="Epson Stylus SX205" driver="escp2-sx205" manufacturer="Epson" model="93" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus SX400" driver="escp2-sx400" manufacturer="Epson" model="93" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus SX405" driver="escp2-sx405" manufacturer="Epson" model="93" parameters="standard_params" />
-<!-- Based on report by Henning Paul -- I would expect NX100 driver to work -->
       <printer translate="name" name="Epson Stylus T20" driver="escp2-t20" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX100" driver="escp2-tx100" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX101" driver="escp2-tx101" manufacturer="Epson" model="94" parameters="standard_params" />
