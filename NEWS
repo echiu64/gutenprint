@@ -273,10 +273,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    7) Printing to the Epson Stylus NX100, NX105, SX100, SX105, TX100,
       TX101, TX102, TX103, TX105, TX106, TX109, ME 300, ME Office 360,
-      S20, T20, BX300F, TX300F, and PX-401A has been corrected to the
-      specification and will probably function correctly.  However,
-      these printers are not tuned and support for these printers is
-      still considered experimental.
+      S20, T20, BX300F, TX300F, and PX-401A has been corrected and
+      these printers should be fully functional.  However, these
+      printers are not tuned and support for these printers is still
+      considered experimental.  In addition, note that escputil does
+      not function correctly with these printers; it does not
+      autodetect the printer correctly.  You must use the option "-m
+      escp2-nx100" with escputil with any of these printers.
 
 
 ----------------
