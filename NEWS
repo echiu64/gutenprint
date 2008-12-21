@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.2.1, a prerelease of Gutenprint 5.2.3.  This
+Welcome to Gutenprint 5.2.3, a stable release of Gutenprint 5.2.  This
 release has bug fixes over 5.2.2.  Please read these release notes
 carefully.
 
@@ -256,30 +256,42 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       restrictive margins (allowing use of more of the page) when
       duplex printing is not used.
 
-   3) Printing at standard and draft quality to the Epson Stylus
-      CX4900 has been corrected.
+   3) Printing to the following Epson printers has been corrected:
 
-   4) Printing to the Epson Artisan 700, Artisan 800, Stylus Photo
-      TX700W, Stylus Photo TX800W, Stylus PX700FW, Stylus PX800FW,
-      EP-801A, EP-901A, and EP-901F has been corrected and these
-      printers should be fully functional.  They may be subject to
-      further tuning.
+      EPSON Artisan 700
+      EPSON Artisan 800
+      EPSON BX300F
+      EPSON EP-801A
+      EPSON EP-901A
+      EPSON EP-901F
+      EPSON ME 300
+      EPSON ME Office 360
+      EPSON PX-401A
+      EPSON Stylus NX100
+      EPSON Stylus NX105
+      EPSON Stylus Photo PX700FW
+      EPSON Stylus Photo PX800FW
+      EPSON Stylus Photo TX700W
+      EPSON Stylus Photo TX800W
+      EPSON Stylus S20
+      EPSON Stylus SX100
+      EPSON Stylus SX105
+      EPSON Stylus T20
+      EPSON Stylus TX100
+      EPSON Stylus TX101
+      EPSON Stylus TX102
+      EPSON Stylus TX103
+      EPSON Stylus TX105
+      EPSON Stylus TX106
+      EPSON Stylus TX109
+      EPSON TX300F
 
-   5) Duplex printing has been enabled on the Epson Stylus RX680,
+      These printers should all be fully functional, but may be
+      further tuned in the future.
+
+   4) Duplex printing has been enabled on the Epson Stylus RX680,
       RX685, RX690, PM-A940, and PM-T960.  Support for these printers
       is still considered experimental.
-
-   6) Printing to the Epson Stylus S20 and T20 has been corrected.
-
-   7) Printing to the Epson Stylus NX100, NX105, SX100, SX105, TX100,
-      TX101, TX102, TX103, TX105, TX106, TX109, ME 300, ME Office 360,
-      S20, T20, BX300F, TX300F, and PX-401A has been corrected and
-      these printers should be fully functional.  However, these
-      printers are not tuned and support for these printers is still
-      considered experimental.  In addition, note that escputil does
-      not function correctly with these printers; it does not
-      autodetect the printer correctly.  You must use the option "-m
-      escp2-nx100" with escputil with any of these printers.
 
 
 ----------------
