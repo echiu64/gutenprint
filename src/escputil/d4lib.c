@@ -67,6 +67,8 @@ static signalHandler_t sig;
 static int timeoutGot = 0;
 static int _readData(int fd, unsigned char *buf, int len);
 
+static int d4Errno = 0;
+
 /* commands for the D4 protocol
 
 Transaction    Cmd    Reply
@@ -305,7 +307,8 @@ static int printError(unsigned char errorNb)
    {
       if ( msg->result == errorNb )
       {
-         fprintf(stderr,"%s\n", msg->message);
+	 if (debugD4)
+	   fprintf(stderr,"%s\n", msg->message);
          return msg->errorClass;
       }
       msg++;
@@ -326,9 +329,11 @@ static int printError(unsigned char errorNb)
 
 static void printCmdType(unsigned char *cmd)
 {
+   if (cmd[6] & 0x80)
+     fprintf(stderr, ">>>");
    if ( cmd[0] == 0 && cmd[1] == 0 )
    {
-      switch(cmd[6])
+      switch(cmd[6] & 0x7f)
       {
          case    0: fprintf(stderr,"--- Init           ---\n");break;
          case    1: fprintf(stderr,"--- OpenChannel    ---\n");break;
@@ -436,7 +441,7 @@ static int writeCmd(int fd, unsigned char *cmd, int len)
 /*                                                                 */
 /*******************************************************************/
 
-int readAnswer(int fd, unsigned char *buf, int len)
+int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
 {
    int rd    = 0;
    int total = 0;
@@ -445,6 +450,7 @@ int readAnswer(int fd, unsigned char *buf, int len)
    long dt;
    int count = 0;
    int first_read = 1;
+   int excess = 0;
    /* wait a little bit before reading an answer */
    usleep(d4RdTimeout);
 
@@ -508,15 +514,50 @@ int readAnswer(int fd, unsigned char *buf, int len)
             /* in case of errors this may differ from   */
             /* the expected lenght. Setting len to this */
             /* value will avoid waiting for timeout     */
-	    len = (buf[2] << 8) + buf[3];
-	    len = (len > sizeof(buf))?sizeof(buf) - 1:len;
+	    int newlen = (buf[2] << 8) + buf[3];
+	    if (len > newlen)
+	      {
+		if (debugD4)
+		  fprintf(stderr, "Changing len from %d to %d\n", len, newlen);
+		len = newlen;
+	      }
+	    else if (len < newlen)
+	      {
+		excess = newlen - len;
+		if (debugD4)
+		  fprintf(stderr, "Expected %d, getting %d, %sflushing %d\n",
+			  len, newlen, allowExtra ? "not " : "", excess);
+	      }
          }
       }
       usleep(d4RdTimeout);
    }
+   if (! allowExtra)
+     {
+       int retry_count = 0;
+       while (excess > 0)
+	 {
+	   char wastebuf[256];
+	   int bytes = excess > 256 ? 256 : excess;
+	   int status = read(fd, wastebuf, bytes);
+	   if (status < 0)
+	     break;
+	   else if (status == 0 && retry_count > 2)
+	     break;
+	   else if (status == 0)
+	     retry_count++;
+	   else
+	     retry_count = 0;
+	   if (status < bytes)
+	     usleep(d4RdTimeout);
+	   printHexValues("waste", (const unsigned char *) wastebuf, status);
+	   excess -= status;
+	 }
+     }
    
    if ( debugD4 )
    {
+      printCmdType(buf);
 #  if PTIME
       gettimeofday(&end, NULL);
 #  endif
@@ -673,15 +714,16 @@ static int _readData(int fd, unsigned char *buf, int len)
 /*                                                                 */
 /*******************************************************************/
 
-static int sendReceiveCmd(int fd, unsigned char *cmd, int len, unsigned char *answer, int expectedlen)
+static int sendReceiveCmd(int fd, unsigned char *cmd, int len, unsigned char *answer, int expectedlen, int allowExtra)
 {
    int rd;
+   d4Errno = 0;
    if ( (rd = writeCmd(fd, cmd, len ) ) != len )
    {
       if ( rd < 0 ) return -1;
       return 0;
    }
-   rd = readAnswer(fd, answer, expectedlen );
+   rd = readAnswer(fd, answer, expectedlen, allowExtra );
    if ( rd == 0 )
    {
       /* no answer from device */
@@ -700,10 +742,12 @@ static int sendReceiveCmd(int fd, unsigned char *cmd, int len, unsigned char *an
       if ( answer[6] == 0x7f )
       {
          printError(answer[9]);
+	 d4Errno = answer[9];
          return -1;
       }
       else if (  answer[7] != 0 )
       {
+	 d4Errno = answer[7];
          if ( printError(answer[7]) )
          {
             return -1;
@@ -742,7 +786,7 @@ Loop:
    {
       return 0;
    }
-   rd = readAnswer(fd, buf, 8);
+   rd = readAnswer(fd, buf, 8, 0);
    if ( rd == 0 )
    {
       /* no answer from device */
@@ -789,7 +833,7 @@ int Init(int fd)
    cmd.head.command  = 0;
    cmd.revision      = 0x10;
     
-   rd = sendReceiveCmd(fd, (unsigned char*)&cmd, sizeof(cmd), buf, 9 );
+   rd = sendReceiveCmd(fd, (unsigned char*)&cmd, sizeof(cmd), buf, 9, 0 );
    return rd == 9 ? 1 : 0;
 }
 
@@ -815,7 +859,7 @@ int Exit(int fd)
    cmd.control  = 0;
    cmd.command  = 8;
 
-   rd = sendReceiveCmd(fd, (unsigned char*)&cmd, sizeof(cmd), buf, 8 );
+   rd = sendReceiveCmd(fd, (unsigned char*)&cmd, sizeof(cmd), buf, 8, 0 );
    return rd > 0 ? 1 : rd;
 }
 
@@ -846,7 +890,7 @@ int GetSocketID(int fd, const char *serviceName)
    cmd->command  = 0x09;
    strcpy(buf + sizeof(cmdHeader_t), serviceName);
 
-   rd = sendReceiveCmd(fd, (unsigned char*)buf, len, rBuf, len + 2);
+   rd = sendReceiveCmd(fd, (unsigned char*)buf, len, rBuf, len + 2, 0);
    if ( rd > 0 )
    {
       return rBuf[8];
@@ -873,8 +917,9 @@ int OpenChannel(int fd, unsigned char sockId, int *sndSz, int *rcvSz)
    unsigned char  cmd[17];
    unsigned char  buf[20];
    int rd;
+   int i;
 
-   for(;;)
+   for(i = 0; i < 5; i++)	/* Retry count */
    {
       cmd[0]  = 0;       /* transaction sockets */
       cmd[1]  = 0;
@@ -894,10 +939,20 @@ int OpenChannel(int fd, unsigned char sockId, int *sndSz, int *rcvSz)
       cmd[15] = 0;    /* initial credit for us ? */
       cmd[16] = 0;
 
-      rd = sendReceiveCmd(fd, cmd, 17, buf, 16);
+      rd = sendReceiveCmd(fd, cmd, 17, buf, 16, 0);
       if ( rd == -1 )
       {
-         return -1;
+	if (debugD4)
+	  fprintf(stderr, "OpenChannel %d fails, error %d\n", sockId, d4Errno);
+	if (d4Errno == 6)	/* channel already open */
+	  {
+	    if ( debugD4 )
+	      fprintf(stderr, "Channel %d already open, closing\n", sockId);
+	    CloseChannel(fd, sockId);
+	    continue;
+	  }
+	else
+	  return -1;
       }
       else if ( rd == 16 )
       {
@@ -908,6 +963,8 @@ int OpenChannel(int fd, unsigned char sockId, int *sndSz, int *rcvSz)
          }
          else if ( buf[7] != 0 )
          {
+	   if (debugD4)
+	     fprintf(stderr, "OpenChannel %d fails, hard error\n", sockId);
             /* hard error */
             return -1;
          }
@@ -917,7 +974,16 @@ int OpenChannel(int fd, unsigned char sockId, int *sndSz, int *rcvSz)
       }
       else
       {
+	if (d4Errno == 6)	/* channel already open */
+	  {
+	    if ( debugD4 )
+	      fprintf(stderr, "Channel %d already open, closing\n", sockId);
+	    CloseChannel(fd, sockId);
+	    continue;
+	  }
          /* at this stage we can only have an error */
+	if (debugD4)
+	  fprintf(stderr, "OpenChannel %d fails, wrong count %d\n", sockId, rd);
          return -1;
       }
    }
@@ -949,7 +1015,7 @@ int CloseChannel(int fd, unsigned char socketID)
    buf[sizeof(cmdHeader_t)+0] = socketID;
    buf[sizeof(cmdHeader_t)+1] = socketID;
    buf[sizeof(cmdHeader_t)+2] = 0;
-   rd = sendReceiveCmd(fd, buf,10, buf, 10);
+   rd = sendReceiveCmd(fd, buf,10, buf, 10, 0);
    return rd == 10 ? 1 : rd;
 }
 
@@ -982,7 +1048,7 @@ int CreditRequest(int fd, unsigned char socketID)
    buf[sizeof(cmdHeader_t)+3] = 0x80;
    buf[sizeof(cmdHeader_t)+4] = 0xff;
    buf[sizeof(cmdHeader_t)+5] = 0xff;
-   rd = sendReceiveCmd(fd, buf, 13, rBuf, 12);
+   rd = sendReceiveCmd(fd, buf, 13, rBuf, 12, 0);
    if ( rd == 12 )
    {
       /* this is the credit */
@@ -1023,7 +1089,7 @@ int Credit(int fd, unsigned char socketID, int credit)
    buf[sizeof(cmdHeader_t)+1] = socketID;
    buf[sizeof(cmdHeader_t)+2] = credit >> 8;
    buf[sizeof(cmdHeader_t)+3] = credit & 0xff;
-   rd = sendReceiveCmd(fd, buf, 11, rBuf, 10);
+   rd = sendReceiveCmd(fd, buf, 11, rBuf, 10, 0);
    if ( rd == 10 )
    {
       return 1;
@@ -1039,7 +1105,7 @@ int Credit(int fd, unsigned char socketID, int credit)
 /*        Convenience function                                     */
 /*        handle the CreditRequest command                         */
 /* Input:  int   fd    file handle                                 */
-/*         unsigned char    socketID                                          */
+/*         unsigned char    socketID                               */
 /* IN/Out  int  *sndSize  for error handling                       */
 /* IN/Out  int  *rcvSize  for error handling                       */
 /*                                                                 */
@@ -1054,10 +1120,11 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
 {
    int credit = 0;
    int count  = 0;
+   int retries = 10;
    
-   while (credit == 0 )
+   while (credit == 0 && retries-- >= 0 )
    {
-      while((credit=CreditRequest(fd,socketID)) == 0  && count < MAX_CREDIT_REQUEST )
+      while((credit=CreditRequest(fd,socketID)) == 0  && count < MAX_CREDIT_REQUEST && retries-- >= 0)
          usleep(d4RdTimeout);
 
       if ( credit == -1 )
@@ -1069,8 +1136,11 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
          credit = 0;
          /* init printer and reopen the printer channel */
          CloseChannel(fd, socketID);
+	 socketID = GetSocketID(fd, "EPSON-CTRL");
          if ( Init(fd) )
          {
+	   if (debugD4)
+	     fprintf(stderr, "askForCredit init succeeded, now try to open\n");
             OpenChannel(fd, socketID, sndSize, rcvSize);
          }
       }
@@ -1087,8 +1157,8 @@ int askForCredit(int fd, unsigned char socketID, int *sndSize, int *rcvSize)
 /*        Convenience function                                     */
 /*        write the data to the device                             */
 /* Input:  int   fd    file handle                                 */
-/*         unsigned char    socketID  the deetination socket                  */
-/*         unsigned char   *buf       the datas to be send                    */
+/*         unsigned char    socketID  the deetination socket       */
+/*         unsigned char   *buf       the datas to be send         */
 /*         int   len       how many datas are to we send           */
 /*         int   eoj       set out of band flag if eoj set         */
 /*                                                                 */
@@ -1177,11 +1247,11 @@ int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len,
 /*        Convenience function                                     */
 /*        give credit and read then the expected datas             */
 /* Input:  int   fd    file handle                                 */
-/*         unsigned char    socketID  the destination socket                  */
-/*         unsigned char   *buf       the datas to be send                    */
+/*         unsigned char    socketID  the destination socket       */
+/*         unsigned char   *buf       the datas to be send         */
 /*         int   len       howmany datas are to we send            */
 /*                                                                 */
-/* Return: number of bytes written or -1;                          */
+/* Return: number of bytes read or -1;                             */
 /*                                                                 */
 /*******************************************************************/
 
@@ -1200,6 +1270,58 @@ int readData(int fd, unsigned char socketID, unsigned char *buf, int len)
    {
       return -1;
    }
+}
+
+/*******************************************************************/
+/* Function writeAndReadData()                                     */
+/*        Convenience function                                     */
+/*        give credit and read then the expected datas             */
+/* Input:  int   fd    file handle                                 */
+/*         unsigned char    socketID  the destination socket       */
+/*         unsigned char   *cmd       the datas to be send         */
+/*         int   cmd_len       howmany datas are to we send        */
+/*         int   eoj       set out of band flag if eoj set         */
+/*         unsigned char   *buf       the datas to be send         */
+/*         int   *sndSz    Send buffer size                        */
+/*         int   *rcvSz    Receive buffer size                     */
+/*         int   len       how many datas are to we send           */
+/*         fptr  test      function to verify buffer contents      */ 
+/*                                                                 */
+/* Return: number of bytes read or -1;                             */
+/*                                                                 */
+/* This allows us to give credit before sending the command.       */
+/* Sending the command and then giving credit sometimes causes     */
+/* the actual data to be sent as a reply to the credit command.    */
+/*                                                                 */
+/*******************************************************************/
+
+int writeAndReadData(int fd, unsigned char socketID,
+		     const unsigned char *cmd, int cmd_len, int eoj,
+		     unsigned char *buf, int len, int *sndSz, int *rcvSz,
+		     int (*test)(const unsigned char *buf))
+{
+   int ret;
+   int retry = 5;
+   int credit = askForCredit(fd, socketID, sndSz, rcvSz);
+   if (credit < 0)
+     return -1;
+   /* give credit */
+   if ( Credit(fd, socketID, 1) == 1 )
+     {
+       if (writeData(fd, socketID, cmd, cmd_len, eoj) <= 0)
+	 return -1;
+       /* wait a little bit */
+       do
+	 {
+	   usleep(1000);
+	   ret = _readData(fd, buf, len);
+	   if (ret < 0)
+	     return ret;
+	 } while (retry-- >= 0 && (!test || !(*test)(buf)));
+       return ret;
+     }
+   else
+     return -1;
 }
 
 /*******************************************************************/

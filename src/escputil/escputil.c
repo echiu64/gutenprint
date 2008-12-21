@@ -279,6 +279,14 @@ initialize_print_cmd(int do_init)
     exit_packet_mode_old(do_init);
 }
 
+static void
+initialize_print_cmd_new(int do_init)
+{
+  bufpos = 0;
+  STP_DEBUG(fprintf(stderr, "Initialize print command (force new)\n"));
+  exit_packet_mode_old(do_init);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -784,13 +792,32 @@ set_printer_model(void)
   the_printer_t = NULL;
 }
 
+static int
+test_for_di(const unsigned char *buf)
+{
+  return !(strncmp("di", (const char *)buf, 2) &&
+	   strncmp("@EJL ID", (const char *)buf, 7));
+}
+
+static int
+test_for_st(const unsigned char *buf)
+{
+  return !(strncmp("st", (const char *)buf, 2) &&
+	   strncmp("@BDC ST", (const char *)buf, 7));
+}
+
+static int
+test_for_ii(const unsigned char *buf)
+{
+  return !(strncmp("ii", (const char *)buf, 2) &&
+	   strncmp("@BDC PS", (const char *)buf, 7));
+}
+
 static const stp_printer_t *
 initialize_printer(int quiet, int fail_if_not_found)
 {
   int packet_initialized = 0;
   int fd;
-  int credit;
-  int retry = 4;
   int tries = 0;
   int status;
   int forced_packet_mode = 0;
@@ -847,43 +874,28 @@ initialize_printer(int quiet, int fail_if_not_found)
 
       if (forced_packet_mode || ((buf[3] == status) && (buf[6] == 0x7f)))
 	{
+	  /*
+	   * NX100 looks like it's in D4 mode, but it doesn't really
+	   * respond correctly.  So we force it out of D4 mode and
+	   * then back in to ensure that it's right.  Trying to force
+	   * it into D4 mode alone isn't good enough.
+	   */
+	  initialize_print_cmd_new(0);
+	  (void) SafeWrite(fd, printer_cmd, bufpos);
+	  flushData(fd, (unsigned char) -1);
+	  forced_packet_mode = !init_packet(fd, 1);
 	  STP_DEBUG(fprintf(stderr, "Printer in packet mode....\n"));
 	  packet_initialized = 1;
 	  isnew = 1;
-
-	  credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-	  if (credit < 0)
-	    {
-	      STP_DEBUG(fprintf(stderr, "Cannot get credit\n"));
-	      close(fd);
-	      return NULL;
-	    }
 	  /* request status command */
-	  status = writeData(fd, socket_id, (const unsigned char*)"di\1\0\1",
-			     5, 1);
+	  status =
+	    writeAndReadData(fd, socket_id, (const unsigned char*)"di\1\0\1",
+			     5, 1, (unsigned char *) buf, 1023,
+			     &send_size, &receive_size, &test_for_di);
 	  if (status <= 0)
 	    {
 	      fprintf(stderr, _("\nCannot write to %s: %s\n"),
 		      raw_device, strerror(errno));
-	      close(fd);
-	      return NULL;
-	    }
-	  do
-	    {
-	      status = readData(fd, socket_id, (unsigned char*)buf, 1023);
-	      STP_DEBUG(fprintf(stderr, "readData try %d status %d\n",
-				retry, status));
-	      if (status <= -1 )
-		{
-		  close(fd);
-		  return NULL;
-		}
-	    }
-	  while ( (retry-- != 0) && strncmp("di", (char*)buf, 2) &&
-		  strncmp("@EJL ID", (char*)buf, 7));
-	  if (!retry)
-	    {
-	      STP_DEBUG(fprintf(stderr, "No retries left!\n"));
 	      close(fd);
 	      return NULL;
 	    }
@@ -1239,6 +1251,9 @@ print_old_ink_levels(const char *ind, stp_string_list_t *color_list)
 static void
 do_old_status(status_cmd_t cmd, const char *buf, const stp_printer_t *printer)
 {
+  if (cmd == CMD_STATUS)
+    printf(_("Printer Name: %s\n"),
+	   printer ? stp_printer_get_long_name(printer) : _("Unknown"));
   do
     {
       const char *ind;
@@ -1381,7 +1396,6 @@ do_status_command_internal(status_cmd_t cmd)
 {
   int fd;
   int status;
-  int credit;
   int retry = 4;
   char buf[1024];
   const stp_printer_t *printer;
@@ -1414,33 +1428,15 @@ do_status_command_internal(status_cmd_t cmd)
 
   if (isnew)
     {
-      credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-      if (credit < 0)
-        {
-          STP_DEBUG(fprintf(stderr, "\nCannot get credit\n"));
-          exit(1);
-        }
       /* request status command */
-      status = writeData(fd, socket_id, (const unsigned char*)"st\1\0\1",
-			 5, 1);
+      status =
+	writeAndReadData(fd, socket_id, (const unsigned char*)"st\1\0\1",
+			 5, 1, (unsigned char *) buf, 1023,
+			 &send_size, &receive_size, &test_for_st);
       if (status <= 0)
 	{
 	  fprintf(stderr, _("\nCannot write to %s: %s\n"), raw_device, strerror(errno));
-	  exit(1);
-	}
-      do
-	{
-	  status = readData(fd, socket_id, (unsigned char*)buf, 1023);
-	  if (status < 0)
-	    {
-	      exit(1);
-	    }
-	  STP_DEBUG(fprintf(stderr, "readData try %d status %d\n", retry, status));
-	} while ((retry-- != 0) && strncmp("st", buf, 2) &&
-		 strncmp("@BDC ST", buf, 7));
-      /* "@BCD ST ST"  found */
-      if (!retry)
-	{
+	  CloseChannel(fd, socket_id);
 	  exit(1);
 	}
       buf[status] = '\0';
@@ -1489,8 +1485,6 @@ do_extended_ink_info(int extended_output)
 {
   int fd;
   int status;
-  int credit;
-  int retry = 4;
   char buf[1024];
   unsigned val, id, id2, year, year2, month, month2;
   unsigned iv[6];
@@ -1540,40 +1534,16 @@ do_extended_ink_info(int extended_output)
 	   * message rather than from the ink list.  This gives us a
 	   * last chance to determine the inks
 	   */
-	  credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-	  if (credit < 0)
-	    {
-	      stp_parameter_description_destroy(&desc);
-	      STP_DEBUG(fprintf(stderr, "Cannot get credit\n"));
-	      exit(1);
-	    }
 	  /* request status command */
-	  status = writeData(fd, socket_id, (const unsigned char*)"st\1\0\1",
-			     5, 1);
+	  status =
+	    writeAndReadData(fd, socket_id, (const unsigned char*)"st\1\0\1",
+			     5, 1, (unsigned char *) buf, 1023,
+			     &send_size, &receive_size, &test_for_st);
 	  if (status <= 0)
 	    {
 	      stp_parameter_description_destroy(&desc);
 	      fprintf(stderr, _("\nCannot write to %s: %s\n"),
 		      raw_device, strerror(errno));
-	      exit(1);
-	    }
-	  do
-	    {
-	      status = readData(fd, socket_id, (unsigned char*)buf, 1023);
-	      if (status < 0)
-		{
-		  stp_parameter_description_destroy(&desc);
-		  exit(1);
-		}
-	      STP_DEBUG(fprintf(stderr, "readData try %d status %d\n",
-				retry, status));
-	    }
-	  while ((retry-- != 0) && strncmp("st", buf, 2) &&
-		 strncmp("@BDC ST", buf, 7));
-	  /* "@BCD ST ST"  found */
-	  if (!retry)
-	    {
-	      stp_parameter_description_destroy(&desc);
 	      exit(1);
 	    }
 	  buf[status] = '\0';
@@ -1608,26 +1578,16 @@ do_extended_ink_info(int extended_output)
       for (i = 0; i < stp_string_list_count(color_list); i++)
         {
 	  char req[] = "ii\2\0\1\1";
-          credit = askForCredit(fd, socket_id, &send_size, &receive_size);
-	  if (credit < 0)
-	    exit(1);
 	  req[5] = i + 1;
-	  /* request status command */
-	  status = writeData(fd, socket_id, (const unsigned char*)req, 6, 1);
+	  status =
+	    writeAndReadData(fd, socket_id, (const unsigned char*)req,
+			     6, 1, (unsigned char *) buf, 1023,
+			     &send_size, &receive_size, &test_for_ii);
 	  if (status <= 0)
-	    exit(1);
-	  retry = 4;
-	  do
 	    {
-	      status = readData(fd, socket_id, (unsigned char*) buf, 1023);
-	      if (status < 0)
-		{
-		  exit(1);
-		}
-	    } while ((retry-- != 0) && strncmp("ii", buf, 2) &&
-		     strncmp("@BDC PS", buf, 7));
-	  if (!retry) /* couldn't read answer */
-	    exit(1);
+	      CloseChannel(fd, socket_id);
+	      exit(1);
+	    }
 	  ind = strchr(buf, 'I');
 	  if (!ind)
 	    printf("Cannot identify cartridge in slot %d\n", i);

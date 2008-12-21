@@ -35,7 +35,11 @@ extern int SafeWrite(int fd, const void *data, int len);
 extern int askForCredit(int fd, unsigned char socketID, int *sndSz, int *rcvSz);
 extern int writeData(int fd, unsigned char socketID, const unsigned char *buf, int len, int eoj);
 extern int readData(int fd, unsigned char socketID, unsigned char *buf, int len);
-extern int readAnswer(int fd, unsigned char *buf, int len);
+extern int writeAndReadData(int fd, unsigned char socketID,
+			    const unsigned char *cmd, int cmd_len, int eoj,
+			    unsigned char *buf, int len, int *sndSz, int *rcvSz,
+			    int (*test)(const unsigned char *buf));
+extern int readAnswer(int fd, unsigned char *buf, int len, int allowExtra);
 extern void flushData(int fd, unsigned char socketID);
 extern void setDebug(int debug);
 
