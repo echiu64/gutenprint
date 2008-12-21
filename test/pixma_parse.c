@@ -163,7 +163,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				}
 			}
 			/* adjust the maximum image width */
-			if(color && img->width < size*8/color->bpp){
+			if(color && color->bpp && img->width < size*8/color->bpp){
 				unsigned int newwidth = size * 8 / color->bpp;
 				if(maxw && newwidth > maxw)
 					newwidth = maxw;
