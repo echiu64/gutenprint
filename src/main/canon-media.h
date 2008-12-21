@@ -72,6 +72,15 @@ static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP4000);
 
+static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf },
+  { "CD",         N_ ("CD tray"), 0xa }
+};
+DECLARE_SLOTS(canon_PIXMA_iP4600);
+
 /* media types */
 
 typedef struct {
