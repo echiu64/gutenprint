@@ -70,7 +70,6 @@
 
 
 
-#define RASTER_LINES_PER_BLOCK 8   /* number of raster lines in every F) command */
 
 
 
@@ -1388,7 +1387,7 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
 	return;
 
   canon_cmd(v,ESC28,0x49, 1, 0x1);  /* enable MultiLine Raster? */
-  canon_cmd(v,ESC28,0x4a, 1, RASTER_LINES_PER_BLOCK);    /* set number of lines per raster block */
+  canon_cmd(v,ESC28,0x4a, 1, init->caps->raster_lines_per_block);    /* set number of lines per raster block */
  
   /* set the color sequence */ 
   stp_zfwrite("\033(L", 3, 1, v);
@@ -1427,7 +1426,7 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   mytop= (init->top*init->mode->ydpi)/72;
 
   if(init->caps->features & CANON_CAP_I)
-    mytop /= RASTER_LINES_PER_BLOCK;
+    mytop /= init->caps->raster_lines_per_block;
 
   if(mytop)
     canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
@@ -1912,7 +1911,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   /* Allocate compression buffer */
   if(caps->features & CANON_CAP_I)
-      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * RASTER_LINES_PER_BLOCK * privdata.num_channels); /* for multiraster we need to buffer 8 lines for every color */
+      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * caps->raster_lines_per_block * privdata.num_channels); /* for multiraster we need to buffer 8 lines for every color */
   else
       privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
   /* Allocate fold buffer */
@@ -2394,9 +2393,10 @@ static void canon_write_block(stp_vars_t* v,canon_privdata_t* pd,unsigned char* 
 
 static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y){
     int i;
-    unsigned int max_length = 2*pd->buf_length_max * RASTER_LINES_PER_BLOCK;
+    int raster_lines_per_block = pd->caps->raster_lines_per_block;
+    unsigned int max_length = 2*pd->buf_length_max * raster_lines_per_block;
     /* a new raster block begins */
-    if(!(y % RASTER_LINES_PER_BLOCK)){
+    if(!(y % raster_lines_per_block)){
         if(y != 0){
             /* write finished blocks */
             for(i=0;i<pd->num_channels;i++)
@@ -2414,9 +2414,9 @@ static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y){
     }
     if(y == pd->out_height - 1){
         /* we just compressed our last line */
-        if(pd->out_height % RASTER_LINES_PER_BLOCK){
+        if(pd->out_height % raster_lines_per_block){
             /* but our raster block is not finished yet */
-            int missing = RASTER_LINES_PER_BLOCK - (pd->out_height % RASTER_LINES_PER_BLOCK); /* calculate missing lines */
+            int missing = raster_lines_per_block - (pd->out_height % raster_lines_per_block); /* calculate missing lines */
             for(i=0;i<pd->num_channels;i++){
                 /* add missing empty lines and write blocks */
                 int x;
