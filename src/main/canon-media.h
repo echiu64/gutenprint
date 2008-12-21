@@ -88,6 +88,7 @@ typedef struct {
   const char *text;                        /* Translateable name */
   unsigned char media_code_c;              /* Media Code used for the ESC (c (SetColor) command */
   unsigned char media_code_l;              /* Media Code used for the ESC (l (SetTray) command */
+  unsigned char media_code_P;              /* Media Code used for the ESC (P (Unknown) command  */
   double base_density;
   double k_lower_scale;
   double k_upper;
@@ -113,37 +114,59 @@ static const canon_paperlist_t name##_paperlist = {     \
 /* paperlists for the various printers. The first entry will be the default */
 
 static const canon_paper_t canon_default_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),		0x00, 0x00,0.50, 0.25, 0.500, 0, 0, 0 },
-  { "Transparency",	N_ ("Transparencies"),		0x02, 0x02,1.00, 1.00, 0.900, 0, 0, 0 },
-  { "BackPrint",	N_ ("Back Print Film"),		0x03, 0x03,1.00, 1.00, 0.900, 0, 0, 0 },
-  { "Fabric",		N_ ("Fabric Sheets"),		0x04, 0x04,0.50, 0.25, 0.500, 0, 0, 0 },
-  { "Envelope",		N_ ("Envelope"),		0x08, 0x08,0.50, 0.25, 0.500, 0, 0, 0 },
-  { "Coated",		N_ ("High Resolution Paper"),	0x07, 0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),	0x03, 0x03,0.50, 0.25, 0.500, 0, 0, 0 },
-  { "GlossyFilm",	N_ ("High Gloss Film"),		0x06, 0x06,1.00, 1.00, 0.999, 0, 0, 0 },
-  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	0x05, 0x05,1.00, 1.00, 0.999, 0, 0, 0 },
-  { "GlossyCard",	N_ ("Glossy Photo Cards"),	0x0a, 0x0a,1.00, 1.00, 0.999, 0, 0, 0 },
-  { "GlossyPro",	N_ ("Photo Paper Pro"),		0x09, 0x09,1.00, 1.00, 0.999, 0, 0, 0 },
-  { "Other",		N_ ("Other"),                   0x00, 0x00,0.50, 0.25, .5, 0, 0, 0 },
+  { "Plain",		N_ ("Plain Paper"),		0x00, 0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency",	N_ ("Transparencies"),		0x02, 0x02,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
+  { "BackPrint",	N_ ("Back Print Film"),		0x03, 0x03,0x00,1.00, 1.00, 0.900, 0, 0, 0 },
+  { "Fabric",		N_ ("Fabric Sheets"),		0x04, 0x04,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),		0x08, 0x08,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),	0x07, 0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),	0x03, 0x03,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyFilm",	N_ ("High Gloss Film"),		0x06, 0x06,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	0x05, 0x05,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyCard",	N_ ("Glossy Photo Cards"),	0x0a, 0x0a,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPro",	N_ ("Photo Paper Pro"),		0x09, 0x09,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "Other",		N_ ("Other"),                   0x00, 0x00,0x00,0.50, 0.25, .5, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_default);
 
 static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "CD",		N_ ("CD"),				0x00,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, 
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "CD",		N_ ("CD"),				0x00,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, 
   /* FIXME media code for c) should be 0x0c for CD but this will restrict CD printing to a single, not well supported, resolution */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPlusDouble", N_ ("Photoper Plus Double-Sided"),	0x10,0x15,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photoper Plus Double-Sided"),	0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP4000);
+
+
+static const canon_paper_t canon_PIXMA_iP4600_papers[] = {    /*                  k_lower_scale   *hue_adjustment *sat_adjustment */
+  /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGloss2", 	N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),		0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),		0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }
+};
+DECLARE_PAPERS(canon_PIXMA_iP4600);
+
 
 #endif
 
