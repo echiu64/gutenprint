@@ -129,14 +129,14 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.3 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.3">December 22, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.2 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.2">November 16, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.2, a stable release of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.1 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.1">October 21, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.1, the first stable release of the Gutenprint 5.2. An updated Mac OS X uninstaller has also been released. See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -177,12 +177,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.2</b> 
+			<b>Gutenprint 5.2.3</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.2-ub.dmg?download">gutenprint-5.2.2-ub.dmg</a></span>&nbsp;&nbsp;(49 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.3-ub.dmg?download">gutenprint-5.2.3-ub.dmg</a></span>&nbsp;&nbsp;(50.9 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.2, a stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.2.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.3.tar.bz2?download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -252,6 +252,59 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.2, a stable release
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.3"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.3</b> 
+		</td>
+		<td align="right">
+			<b>2008-12-22</b> 
+		</td>
+	</tr>
+</table>
+<p>
+The <b>Gutenprint 5.2.3</b> release is a stable release of Gutenprint 5.2.  Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. Notable changes since the Gutenprint 5.2.2:</p> 
+	
+<ul style="list-style:disc;">
+	<li>
+Printing to following Epson printers has been corrected. These printers should all be fully functional, but may be further tuned in the future.
+<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Artisan 700<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Artisan 800<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON BX300F<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON EP-801A<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON EP-901A<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON EP-901F<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON ME 300<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON ME Office 360<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON PX-401A<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus NX100<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus NX105<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX700FW<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX800FW<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX700W<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX800W<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus S20<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX100<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX105<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus T20<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX100<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX101<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX102<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX103<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX105<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX106<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX109<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON TX300F<br>
+  </li>
+  <li>Duplex printing has been enabled on the Epson Stylus RX680, RX685, RX690, PM-A940, and PM-T960.  Support for these printers is still considered experimental.</li>
+  <li>    Support has been added for the Canon MULTIPASS MP220.</li>
+  <li>    Preliminary support has been added for the Canon PIXMA iP4600.</li>
+</ul>
+<p>
+Full details are listed in the <a href="https://sourceforge.net/project/shownotes.php?release_id=649090&amp;group_id=1537">release notes</a>.
+</p>
 <a name="5.2.2"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
@@ -291,13 +344,6 @@ Printing at standard and draft quality to a number of Epson multi-function devic
 <p>
 Full details are listed in the <a href="https://sourceforge.net/project/shownotes.php?group_id=1537&amp;release_id=640907">release notes</a>.
 </p>
-
-
-
-
-
-
-
 <a name="5.2.1"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
