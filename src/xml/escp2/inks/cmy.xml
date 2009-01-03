@@ -33,19 +33,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <Channels>
    <channel name="standard_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>

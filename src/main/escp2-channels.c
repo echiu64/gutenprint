@@ -47,6 +47,12 @@ load_subchannel(stp_mxml_node_t *node, stp_mxml_node_t *root, physical_subchanne
   name = stp_mxmlElementGetAttr(node, "headOffset");
   if (name)
     icl->head_offset = stp_xmlstrtol(name);
+  name = stp_mxmlElementGetAttr(node, "name");
+  if (name)
+    icl->name = stp_strdup(name);
+  name = stp_mxmlElementGetAttr(node, "text");
+  if (name)
+    icl->text = stp_strdup(name);
   while (child)
     {
       if (child->type == STP_MXML_ELEMENT)

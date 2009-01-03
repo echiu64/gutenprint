@@ -161,6 +161,8 @@ typedef struct
   const char *subchannel_transition;
   const char *subchannel_value;
   const char *subchannel_scale;
+  const char *name;
+  const char *text;
   short *split_channels;
 } physical_subchannel_t;
 

@@ -88,49 +88,49 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYKROG" text="Six Color Photo" InkID="OTHER">
   <Channels>
    <channel name="f360_photo_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykroCyan"/>
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykroMagenta"/>
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykroYellow"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="4">
     <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykroRed"/>
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="5">
     <HueCurveParam name="OrangeHueCurve"/>
     <HueCurve ref="cmykroOrange"/>
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -142,42 +142,42 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="r1900_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykroCyan"/>
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykroMagenta"/>
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykroYellow"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="4">
     <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykroRed"/>
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="5">
     <HueCurveParam name="OrangeHueCurve"/>
     <HueCurve ref="cmykroOrange"/>
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -187,29 +187,29 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYKG" text="Four Color Standard" InkID="CMYK">
   <Channels>
    <channel name="f360_photo_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -219,24 +219,24 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="RGBG" text="Three Color Composite" InkID="CMYK">
   <Channels>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -246,7 +246,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalBlack" text="One Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0">
+    <subchannel color="0" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
@@ -256,12 +256,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalBlackGloss" text="One Color Raw Enhanced Gloss" InkID="Extended">
   <Channels>
    <channel name="f360_photo_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="1">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -271,17 +271,17 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMY" text="Three Color Raw" InkID="Extended">
   <Channels>
    <channel name="f360_standard_cyan" index="0">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="1">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="2">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -291,22 +291,22 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYGloss" text="Three Color Raw Gloss" InkID="Extended">
   <Channels>
    <channel name="f360_standard_cyan" index="0">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="1">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="2">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="3">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -316,27 +316,27 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYKGloss" text="Four Color Raw Gloss" InkID="Extended">
   <Channels>
    <channel name="f360_photo_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="4">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -346,37 +346,37 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYKRO" text="Six Color Enhanced Gloss Raw" InkID="Extended">
   <Channels>
    <channel name="f360_photo_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="4">
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="5">
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="6">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -386,42 +386,42 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYKPRO" text="Seven Color Enhanced Gloss Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0">
+    <subchannel color="0" name="MatteBlack" text="MatteBlack" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_photo_black" index="1">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_cyan" index="2">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="3">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="4">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="5">
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="6">
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="7">
-    <subchannel color="9">
+    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -442,42 +442,42 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYKRO" text="Six Color Photo" InkID="OTHER">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0" headOffset="1">
+    <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykroCyan"/>
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykroMagenta"/>
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykroYellow"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="4">
     <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykroRed"/>
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="5">
     <HueCurveParam name="OrangeHueCurve"/>
     <HueCurve ref="cmykroOrange"/>
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
@@ -489,35 +489,35 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <channel name="r1900_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <HueCurve ref="cmykroCyan"/>
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
     <HueCurve ref="cmykroMagenta"/>
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
     <HueCurve ref="cmykroYellow"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="4">
     <HueCurveParam name="RedHueCurve"/>
     <HueCurve ref="cmykroRed"/>
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="5">
     <HueCurveParam name="OrangeHueCurve"/>
     <HueCurve ref="cmykroOrange"/>
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>
@@ -527,22 +527,22 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYKG" text="Four Color Standard" InkID="CMYK">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0" headOffset="1">
+    <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -552,17 +552,17 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="RGBG" text="Three Color Composite" InkID="CMYK">
   <Channels>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -572,7 +572,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalBlack" text="One Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0" headOffset="1">
+    <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
@@ -582,17 +582,17 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMY" text="Three Color Raw" InkID="Extended">
   <Channels>
    <channel name="f360_standard_cyan" index="0">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="1">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="2">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -602,22 +602,22 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYKGloss" text="Four Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0" headOffset="1">
+    <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="standard_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="f360_standard_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -627,32 +627,32 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYKRO" text="Six Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0" headOffset="1">
+    <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_cyan" index="1">
-    <subchannel color="2">
+    <subchannel color="2" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_magenta" index="2">
-    <subchannel color="1">
+    <subchannel color="1" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_red" index="4">
-    <subchannel color="7">
+    <subchannel color="7" name="Red" text="Red" translate="text">
      <ChannelDensityParam name="RedDensity"/>
     </subchannel>
    </channel>
    <channel name="r1900_orange" index="5">
-    <subchannel color="10">
+    <subchannel color="10" name="Orange" text="Orange" translate="text">
      <ChannelDensityParam name="OrangeDensity"/>
     </subchannel>
    </channel>

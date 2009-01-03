@@ -32,25 +32,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYK" text="Four Color Standard" InkID="CMYK">
   <Channels>
    <channel name="x80_black" index="0">
-    <subchannel color="0" headOffset="48">
+    <subchannel color="0" headOffset="48" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
-    <subchannel color="2" headOffset="96">
+    <subchannel color="2" headOffset="96" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1" headOffset="48">
+    <subchannel color="1" headOffset="48" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -61,19 +61,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <Channels>
    <channel name="x80_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
-    <subchannel color="2" headOffset="96">
+    <subchannel color="2" headOffset="96" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1" headOffset="48">
+    <subchannel color="1" headOffset="48" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -83,7 +83,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalBlack" text="One Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0">
+    <subchannel color="0" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
@@ -93,17 +93,17 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMY" text="Three Color Raw" InkID="Extended">
   <Channels>
    <channel name="x80_cyan" index="0">
-    <subchannel color="2" headOffset="96">
+    <subchannel color="2" headOffset="96" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_magenta" index="1">
-    <subchannel color="1" headOffset="48">
+    <subchannel color="1" headOffset="48" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_yellow" index="2">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>
@@ -113,22 +113,22 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYK" text="Four Color Raw" InkID="Extended">
   <Channels>
    <channel name="x80_black" index="0">
-    <subchannel color="0" headOffset="48">
+    <subchannel color="0" headOffset="48" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_cyan" index="1">
-    <subchannel color="2" headOffset="96">
+    <subchannel color="2" headOffset="96" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_magenta" index="2">
-    <subchannel color="1" headOffset="48">
+    <subchannel color="1" headOffset="48" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
     </subchannel>
    </channel>
    <channel name="x80_yellow" index="3">
-    <subchannel color="4">
+    <subchannel color="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
     </subchannel>
    </channel>

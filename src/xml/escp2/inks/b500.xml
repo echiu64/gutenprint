@@ -32,28 +32,28 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYK" text="Four Color Standard" InkID="CMYK">
   <Channels>
    <channel name="b500_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
      <SplitChannels count="2">0 64</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
-    <subchannel color="2" subchannel="4">
+    <subchannel color="2" subchannel="4" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
      <SplitChannels count="2">2 66</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1" subchannel="4">
+    <subchannel color="1" subchannel="4" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
      <SplitChannels count="2">1 65</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>
-    <subchannel color="4" subchannel="4">
+    <subchannel color="4" subchannel="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
      <SplitChannels count="2">4 68</SplitChannels>
     </subchannel>
@@ -65,21 +65,21 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <Channels>
    <channel name="b500_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
-    <subchannel color="2" subchannel="4">
+    <subchannel color="2" subchannel="4" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
      <SplitChannels count="2">2 66</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_magenta" index="2">
     <HueCurveParam name="MagentaHueCurve"/>
-    <subchannel color="1" subchannel="4">
+    <subchannel color="1" subchannel="4" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
      <SplitChannels count="2">1 65</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_yellow" index="3">
     <HueCurveParam name="YellowHueCurve"/>e
-    <subchannel color="4" subchannel="4">
+    <subchannel color="4" subchannel="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
      <SplitChannels count="2">4 68</SplitChannels>
     </subchannel>
@@ -90,7 +90,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalBlack" text="One Color Raw" InkID="Extended">
   <Channels>
    <channel name="b500_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
      <SplitChannels count="2">0 64</SplitChannels>
     </subchannel>
@@ -101,19 +101,19 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMY" text="Three Color Raw" InkID="Extended">
   <Channels>
    <channel name="b500_cyan" index="0">
-    <subchannel color="2" subchannel="4">
+    <subchannel color="2" subchannel="4" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
      <SplitChannels count="2">2 66</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_magenta" index="1">
-    <subchannel color="1" subchannel="4">
+    <subchannel color="1" subchannel="4" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
      <SplitChannels count="2">1 65</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_yellow" index="2">
-    <subchannel color="4" subchannel="4">
+    <subchannel color="4" subchannel="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
      <SplitChannels count="2">4 68</SplitChannels>
     </subchannel>
@@ -124,25 +124,25 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="PhysicalCMYK" text="Four Color Raw" InkID="Extended">
   <Channels>
    <channel name="b500_black" index="0">
-    <subchannel color="0" subchannel="4">
+    <subchannel color="0" subchannel="4" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
      <SplitChannels count="2">0 64</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_cyan" index="1">
-    <subchannel color="2" subchannel="4">
+    <subchannel color="2" subchannel="4" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
      <SplitChannels count="2">2 66</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_magenta" index="2">
-    <subchannel color="1" subchannel="4">
+    <subchannel color="1" subchannel="4" name="Magenta" text="Magenta" translate="text">
      <ChannelDensityParam name="MagentaDensity"/>
      <SplitChannels count="2">1 65</SplitChannels>
     </subchannel>
    </channel>
    <channel name="b500_yellow" index="3">
-    <subchannel color="4" subchannel="4">
+    <subchannel color="4" subchannel="4" name="Yellow" text="Yellow" translate="text">
      <ChannelDensityParam name="YellowDensity"/>
      <SplitChannels count="2">4 68</SplitChannels>
     </subchannel>

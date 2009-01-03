@@ -29,7 +29,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <InkName translate="text" name="CMYK" text="Default Black" InkID="CMYK">
   <Channels>
    <channel name="standard_black" index="0">
-    <subchannel color="0" shade="1.000000">
+    <subchannel color="0" shade="1.000000" name="Black" text="Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>

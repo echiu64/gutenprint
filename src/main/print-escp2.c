@@ -317,8 +317,8 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
-    "ChannelNames", N_("Channel Names"), N_("Advanced Printer Functionality"),
-    N_("Channel Names"),
+    "RawChannelNames", N_("Raw Channel Names"), N_("Advanced Printer Functionality"),
+    N_("Raw Channel Names"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
@@ -1941,6 +1941,30 @@ find_resolution_from_quality(const stp_vars_t *v, const char *quality,
   return NULL;
 }
 
+static const inkname_t *
+get_raw_inktype(const stp_vars_t *v)
+{
+  if (strcmp(stp_get_string_parameter(v, "InputImageType"), "Raw") == 0)
+    {
+      const inklist_t *inks = stp_escp2_inklist(v);
+      int ninktypes = inks->n_inks;
+      int i;
+      const char *channel_name = stp_get_string_parameter(v, "RawChannels");
+      const channel_count_t *count;
+      if (!channel_name)
+	goto none;
+      count = get_channel_count_by_name(channel_name);
+      if (!count)
+	goto none;
+      for (i = 0; i < ninktypes; i++)
+	if (inks->inknames[i].inkset == INKSET_EXTENDED &&
+	    (inks->inknames[i].channel_count == count->count))
+	  return &(inks->inknames[i]);
+    }
+ none:
+  return get_inktype(v);
+}
+
 static void
 escp2_parameters(const stp_vars_t *v, const char *name,
 		 stp_parameter_t *description)
@@ -2472,6 +2496,38 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	}
       if (ninktypes <= 1)
 	description->is_active = 0;
+    }
+  else if (strcmp(name, "RawChannelNames") == 0)
+    {
+      const inkname_t *ink_name = get_raw_inktype(v);
+      if (ink_name)
+	{
+	  description->bounds.str = stp_string_list_create();
+	  for (i = 0; i < ink_name->channel_count; i++)
+	    {
+	      int j;
+	      const ink_channel_t *ic = &(ink_name->channels[i]);
+	      if (ic)
+		for (j = 0; j < ic->n_subchannels; j++)
+		  if (ic->subchannels[j].name)
+		    stp_string_list_add_string(description->bounds.str,
+					       ic->subchannels[j].name,
+					       gettext(ic->subchannels[j].text));
+	    }
+	  for (i = 0; i < ink_name->aux_channel_count; i++)
+	    {
+	      int j;
+	      const ink_channel_t *ic = &(ink_name->aux_channels[i]);
+	      if (ic)
+		for (j = 0; j < ic->n_subchannels; j++)
+		  if (ic->subchannels[j].name)
+		    stp_string_list_add_string(description->bounds.str,
+					       ic->subchannels[j].name,
+					       gettext(ic->subchannels[j].text));
+	    }
+	  description->deflt.str =
+	    stp_string_list_param(description->bounds.str, 0)->name;
+	}
     }
   else if (strcmp(name, "MultiChannelLimit") == 0)
     {
