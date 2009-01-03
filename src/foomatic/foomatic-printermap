@@ -530,7 +530,7 @@
 #gptofoo escp2-wf40 printer/Epson-WorkForce_40
 #gptofoo escp2-wf500 printer/Epson-WorkForce_500
 #gptofoo escp2-wf600 printer/Epson-WorkForce_600
-#gptofoo escp2-px700fw printer/Epson-Stylus_PX700FW
+#gptofoo escp2-px700fw printer/Epson-Stylus_PX700W
 #gptofoo escp2-px800fw printer/Epson-Stylus_PX800FW
 #gptofoo escp2-s20 printer/Epson-Stylus_S20
 #gptofoo escp2-sx100 printer/Epson-Stylus_SX100
@@ -551,7 +551,7 @@
 #gptofoo escp2-tx200 printer/Epson-Stylus_TX200
 #gptofoo escp2-tx400 printer/Epson-Stylus_TX400
 #gptofoo escp2-tx700w printer/Epson-Stylus_Photo_TX700W
-#gptofoo escp2-tx800w printer/Epson-Stylus_Photo_TX800W
+#gptofoo escp2-tx800w printer/Epson-Stylus_Photo_TX800FW
 #gptofoo fujifilm-cx400 printer/Fujifilm-Printpix-CX-400
 #gptofoo fujifilm-cx550 printer/Fujifilm-Printpix-CX-550
 #gptofoo fujifilm-nx500 printer/Fujifilm-FinePix-NX-500

@@ -364,7 +364,7 @@
       <printer translate="name" name="Epson Stylus Photo RX690" driver="escp2-rx690" manufacturer="Epson" model="97" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX700" driver="escp2-rx700" manufacturer="Epson" model="70" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo TX700W" driver="escp2-tx700w" manufacturer="Epson" model="96" parameters="claria_params" />
-      <printer translate="name" name="Epson Stylus Photo TX800W" driver="escp2-tx800w" manufacturer="Epson" model="96" parameters="claria_params" />
+      <printer translate="name" name="Epson Stylus Photo TX800FW" driver="escp2-tx800w" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Pro 5000" driver="escp2-5000" manufacturer="Epson" model="27" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro 5500" driver="escp2-5500" manufacturer="Epson" model="40" parameters="pro_5500_params" />
       <printer translate="name" name="Epson Stylus Pro 7000" driver="escp2-7000" manufacturer="Epson" model="28" parameters="standard_params" />
@@ -448,7 +448,7 @@
       <printer translate="name" name="Epson Stylus NX200" driver="escp2-nx200" manufacturer="Epson" model="93" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus NX300" driver="escp2-nx300" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus NX400" driver="escp2-nx400" manufacturer="Epson" model="93" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus PX700FW" driver="escp2-px700fw" manufacturer="Epson" model="96" parameters="claria_params" />
+      <printer translate="name" name="Epson Stylus PX700W" driver="escp2-px700fw" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus PX800FW" driver="escp2-px800fw" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus S20" driver="escp2-s20" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus SX100" driver="escp2-sx100" manufacturer="Epson" model="94" parameters="standard_params" />
