@@ -15,7 +15,7 @@ my $retval = 0;
 my $testpattern_command;
 my @printer_list = ();
 my @special_options = ();
-my @standard_options = qw(InkType InkSet DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave RawChannels PrintingDirection Density CyanDensity);
+my @standard_options = qw(InkType InkSet,RawChannels DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave PrintingDirection Density CyanDensity);
 my $global_status = 1;
 my $run_installed = 0;
 my $use_min_res = 0;
@@ -412,10 +412,6 @@ sub do_printer($$) {
 		    @job_extras = ();
 		    @messages = ();
 		    @global_messages = ();
-		    if ($first_time) {
-			set_global_message("$printer\n");
-			$first_time = 0;
-		    }
 		    set_opt("PrintingMode", $pmode, $printer);
 		    if ($use_min_res) {
 			set_opt("Resolution", $min_res_name, $printer);
@@ -426,6 +422,7 @@ sub do_printer($$) {
 			my $k = $subkeys[$_];
 			my $v = $subopts[$_];
 			if ($k eq "RawChannels") {
+			    next if ($v ne "None" && $pmode ne "Color");
 			    $rawval = $v;
 			} else {
 			    set_opt($k, $v, $printer);
@@ -433,6 +430,10 @@ sub do_printer($$) {
 			push @mvals, "${k}_${v}";
 			push @ovals, "${k}=${v}";
 		    } (0..$#subkeys);
+		    if ($first_time) {
+			set_global_message("$printer\n");
+			$first_time = 0;
+		    }
 		    # FIXME! need to handle Duplex as a subkey
 		    map {
 			if ($key ne $_) {
