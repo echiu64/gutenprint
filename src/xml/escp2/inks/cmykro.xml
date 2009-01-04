@@ -130,7 +130,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -177,7 +177,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -209,7 +209,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -236,7 +236,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
   <AuxChannels>
    <channel name="standard_gloss" index="0">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -261,7 +261,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="1">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -306,7 +306,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="3">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -336,7 +336,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="4">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -376,7 +376,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="6">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -421,7 +421,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
     </subchannel>
    </channel>
    <channel name="standard_gloss" index="7">
-    <subchannel color="9" name="Gloss" text="Gloss" translate="text">
+    <subchannel color="9" name="Gloss" text="Gloss Optimizer" translate="text">
      <ChannelDensityParam name="GlossDensity"/>
     </subchannel>
    </channel>
@@ -599,7 +599,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 
- <InkName translate="text" name="PhysicalCMYKGloss" text="Four Color Raw" InkID="Extended">
+ <InkName translate="text" name="PhysicalCMYK" text="Four Color Raw" InkID="Extended">
   <Channels>
    <channel name="standard_black" index="0">
     <subchannel color="0" headOffset="1" name="Black" text="Black" translate="text">
