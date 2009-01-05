@@ -138,6 +138,16 @@
       <right value="18"/>
       <bottom value="45"/>
     </paper>
+    <paper name="w297h421">
+      <description translate="value" value="Epson L Photo Paper (tear-off borders)"/>
+      <width value="252"/>
+      <height value="360"/>
+      <unit value="english-extended"/>
+      <top value="17"/>
+      <left value="22"/>
+      <right value="22"/>
+      <bottom value="43"/>
+    </paper>
     <paper name="w360h504">
       <description translate="value" value="5x7"/>
       <width value="360"/>
