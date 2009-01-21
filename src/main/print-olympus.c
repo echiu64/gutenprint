@@ -851,6 +851,37 @@ static const dyesub_printsize_t cp220_printsize[] =
 
 LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
+
+/* Canon SELPHY CP-520 */
+static void cp520_printer_init_func(stp_vars_t *v)
+{
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\1' :
+		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
+		(strcmp(privdata.pagesize, "w155h244") == 0 ? '\3' :
+		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\4' : 
+		 '\1' ))));
+
+  stp_put16_be(0x4000, v);
+  stp_putc('\0', v);
+  stp_putc(pg, v);
+  dyesub_nputc(v, '\0', 8); 
+  /* The CP520 does not want the printer_init and plane_init command to be sent
+     in the same USB-packet so we fill up first USB-Packet  with '\0'. */
+  dyesub_nputc(v, '\0', 1012); 
+}
+
+static void cp520_plane_init_func(stp_vars_t *v)
+{
+  stp_put16_be(0x4001, v);
+  stp_putc(3 - privdata.plane, v);  /* The CP520 differs from the cp-printer
+                                       in that it reqires the plane in the 3rd
+                                       byte not in the 4th */
+  stp_putc('\0', v);
+  stp_put32_le(privdata.w_size * privdata.h_size, v);
+  dyesub_nputc(v, '\0', 4);
+}
+
+
 /* Canon SELPHY ES series */
 static void es1_printer_init_func(stp_vars_t *v)
 {
@@ -1545,6 +1576,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+  { /* Canon CP-520 */
+    1004,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &cp220_page_list,
+    &cp220_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &cp520_printer_init_func, NULL,
+    &cp520_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
