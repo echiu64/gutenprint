@@ -618,9 +618,9 @@ stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
   stp_dprintf(STP_DBG_INK, v, "   black_channel  %d\n", cg->black_channel);
   stp_dprintf(STP_DBG_INK, v, "   gloss_channel  %d\n", cg->gloss_channel);
   stp_dprintf(STP_DBG_INK, v, "   gloss_physical %d\n", cg->gloss_physical_channel);
-  stp_dprintf(STP_DBG_INK, v, "   cyan           %.3f", cg->cyan_balance);
-  stp_dprintf(STP_DBG_INK, v, "   magenta        %.3f", cg->magenta_balance);
-  stp_dprintf(STP_DBG_INK, v, "   yellow         %.3f", cg->yellow_balance);
+  stp_dprintf(STP_DBG_INK, v, "   cyan           %.3f\n", cg->cyan_balance);
+  stp_dprintf(STP_DBG_INK, v, "   magenta        %.3f\n", cg->magenta_balance);
+  stp_dprintf(STP_DBG_INK, v, "   yellow         %.3f\n", cg->yellow_balance);
   stp_dprintf(STP_DBG_INK, v, "   input_data     %p\n",
 	      (void *) cg->input_data);
   stp_dprintf(STP_DBG_INK, v, "   multi_tmp      %p\n",
