@@ -142,6 +142,8 @@
 #gptofoo compaq-ij1200 printer/Compaq-IJ1200
 #gptofoo dec-1800 printer/DEC-1800
 #gptofoo dec-ln17 printer/DEC-LN17
+#gptofoo dnp-ds40 printer/DNP-DS40
+#gptofoo dnp-ds80 printer/DNP-DS80
 #gptofoo epson-actl_1100 printer/Epson-ActionLaser_1100
 #gptofoo epson-actl_ii printer/Epson-ActionLaser_II
 #gptofoo epson-acl_c2000 printer/Epson-AcuLaser_C2000
