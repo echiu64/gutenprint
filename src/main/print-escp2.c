@@ -1544,6 +1544,40 @@ get_inktype(const stp_vars_t *v)
   return &(ink_list->inknames[0]);
 }
 
+static const inkname_t *
+get_inktype_only(const stp_vars_t *v)
+{
+  const char	*ink_type = stp_get_string_parameter(v, "InkType");
+
+  if (!ink_type)
+    return NULL;
+  else
+    return get_inktype(v);
+}
+
+static int
+printer_supports_quadtone(const stp_vars_t *v)
+{
+  const inkgroup_t *ink_group = escp2_inkgroup(v);
+  int i;
+  for (i = 0; i < ink_group->n_inklists; i++)
+    {
+      const inklist_t *ink_list = &(ink_group->inklists[i]);
+      if (ink_list)
+	{
+	  int j;
+	  for (j = 0; j < ink_list->n_inks; j++)
+	    {
+	      if (ink_list->inknames[j].inkset == INKSET_QUADTONE)
+		{
+		  return 1;
+		}
+	    }
+	}
+    }
+  return 0;
+}
+
 static const stp_vars_t *
 get_media_adjustment(const stp_vars_t *v)
 {
@@ -1680,9 +1714,11 @@ set_gray_value_parameter(const stp_vars_t *v,
 			 stp_parameter_t *description,
 			 int expected_channels)
 {
-  const inkname_t *ink_name = get_inktype(v);
+  const inkname_t *ink_name = get_inktype_only(v);
   description->is_active = 0;
-  if (ink_name && 
+  if (expected_channels == 4 && !ink_name && printer_supports_quadtone(v))
+    fill_value_parameters(v, description, STP_ECOLOR_K);
+  else if (ink_name && 
       (ink_name->channels[STP_ECOLOR_K].n_subchannels ==
        expected_channels))
     fill_value_parameters(v, description, STP_ECOLOR_K);
@@ -1727,8 +1763,10 @@ set_gray_transition_parameter(const stp_vars_t *v,
 			      stp_parameter_t *description,
 			      int expected_channels)
 {
-  const inkname_t *ink_name = get_inktype(v);
+  const inkname_t *ink_name = get_inktype_only(v);
   description->is_active = 0;
+  if (expected_channels == 4 && !ink_name && printer_supports_quadtone(v))
+    fill_transition_parameters(v, description, STP_ECOLOR_K);
   if (ink_name && 
       (ink_name->channels[STP_ECOLOR_K].n_subchannels ==
        expected_channels))
@@ -1768,8 +1806,10 @@ set_gray_scale_parameter(const stp_vars_t *v,
 			      stp_parameter_t *description,
 			      int expected_channels)
 {
-  const inkname_t *ink_name = get_inktype(v);
+  const inkname_t *ink_name = get_inktype_only(v);
   description->is_active = 0;
+  if (expected_channels == 4 && !ink_name && printer_supports_quadtone(v))
+    fill_transition_parameters(v, description, STP_ECOLOR_K);
   if (ink_name &&
       (ink_name->channels[STP_ECOLOR_K].n_subchannels ==
        expected_channels))
