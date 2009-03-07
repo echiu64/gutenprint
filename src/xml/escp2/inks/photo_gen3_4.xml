@@ -170,5 +170,40 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 </InkList>
+
+<InkList translate="text" name="MISQuadtone" text="MIS Quadtone">
+ <Shades>
+  <shade count="4">1.000000 0.750000 0.500000 0.250000</shade>
+ </Shades>
+
+ <InkName translate="text" name="Quadtone" text="Quadtone" InkID="Quadtone">
+  <Channels>
+   <channel name="quadtone" index="0">
+    <subchannel color="0" name="Black" text="Black" translate="text">
+     <ChannelDensityParam name="BlackDensity"/>
+     <SubchannelTransitionParam name="Gray3Trans"/>
+    </subchannel>
+    <subchannel color="1" name="Gray3" text="Gray 3" translate="text">
+     <ChannelDensityParam name="BlackDensity"/>
+     <SubchannelTransitionParam name="Gray3Trans"/>
+     <SubchannelValueParam name="Gray3Value"/>
+     <SubchannelScaleParam name="Gray3Scale"/>
+    </subchannel>
+    <subchannel color="4" name="Gray2" text="Gray 2" translate="text">
+     <ChannelDensityParam name="BlackDensity"/>
+     <SubchannelTransitionParam name="Gray2Trans"/>
+     <SubchannelValueParam name="Gray2Value"/>
+     <SubchannelScaleParam name="Gray2Scale"/>
+    </subchannel>
+    <subchannel color="2" name="Gray1" text="Gray 1" translate="text">
+     <ChannelDensityParam name="BlackDensity"/>
+     <SubchannelTransitionParam name="Gray1Trans"/>
+     <SubchannelValueParam name="Gray1Value"/>
+     <SubchannelScaleParam name="Gray1Scale"/>
+    </subchannel>
+   </channel>
+  </Channels>
+ </InkName>
+</InkList>
 </escp2:InkGroup>
 </gutenprint>

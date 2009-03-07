@@ -36,6 +36,12 @@
 #define inline __inline__
 #endif
 
+typedef enum {
+  QT_NONE,
+  QT_QUAD,
+  QT_MIS
+} quadtone_t;
+
 /*
  * Printer state variable.
  */
@@ -65,7 +71,7 @@ typedef struct {
   int right_edge;
   int top_edge;
   int bottom_edge;
-  int quadtone;
+  quadtone_t quadtone;
 } pstate_t;
 
 /* We'd need about a gigabyte of ram to hold a ppm file of an 8.5 x 11
@@ -132,7 +138,7 @@ line_type **page=NULL;
  */
 
 /* convert either Epson1 or Epson2 color encoding into a sequential encoding */
-static inline int
+static int
 seqcolor(int c)
 {
   switch (c)
@@ -289,7 +295,7 @@ static float ink_colors[MAX_INKS][4] =
  {  .1, 1,   1,   1 },		/* 2  C */
  { 1,   1,    .1, 1 },		/* 3  Y */
  { 1,    .7, 1,   1 },		/* 4  m */
- {  .4, 1,   1,   1 },		/* 5  c */
+ {  .7, 1,   1,   1 },		/* 5  c */
  {  .7,  .7,  .7, 1 },		/* 6  k */
  {  .7,  .7, 0,   1 },		/* 7  dY */
  { 1,   0,   0,   1 },		/* 8  R */
@@ -306,12 +312,14 @@ static float ink_colors[MAX_INKS][4] =
  { 1,   1,    .1, 1 },		/* 19 Y */
 };
 
-static float quadtone_inks[] = { 0.0, .5, .25, .75 };
+static float quadtone_inks[] = { 0.0, .5, .25, .75, .9, .8 };
+
+static float mis_quadtone_inks[] = { 0.0, .25, .75, .5, .55, .85 };
 
 static float bpp_shift[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255 };
 
 static inline void
-mix_ink(ppmpixel p, int color, unsigned int amount, float *ink, int quadtone)
+mix_ink(ppmpixel p, int color, unsigned int amount, float *ink, quadtone_t quadtone)
 {
   /* this is pretty crude */
 
@@ -321,12 +329,20 @@ mix_ink(ppmpixel p, int color, unsigned int amount, float *ink, int quadtone)
       float size;
 
       size = (float) amount / bpp_shift[pstate.bpp];
-      if (quadtone)
-	for (i = 0; i < 3; i++)
-	  p[i] *= (1 - size) + size * quadtone_inks[color];
-      else
-	for (i = 0; i < 3; i++)
-	  p[i] *= (1 - size) + size * ink[i];
+      switch (quadtone)
+	{
+	case QT_QUAD:
+	  for (i = 0; i < 3; i++)
+	    p[i] *= (1 - size) + size * quadtone_inks[color];
+	  break;
+	case QT_MIS:
+	  for (i = 0; i < 3; i++)
+	    p[i] *= (1 - size) + size * mis_quadtone_inks[color];
+	  break;
+	default:
+	  for (i = 0; i < 3; i++)
+	    p[i] *= (1 - size) + size * ink[i];
+	}
     }
 }
 
@@ -1672,7 +1688,10 @@ main(int argc,char *argv[])
 	      no_output = 1;
 	      break;
 	    case 'Q':
-	      pstate.quadtone = 1;
+	      pstate.quadtone = QT_QUAD;
+	      break;
+	    case 'M':
+	      pstate.quadtone = QT_MIS;
 	      break;
 	    case 'u':
 	      unweave = 1;

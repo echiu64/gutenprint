@@ -740,6 +740,126 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "HGray5Value", N_("Hextone Gray 5 Value"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 5 (Darkest) Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray5Trans", N_("Hextone Gray 5 Transition"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 5 (Darkest) Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray5Scale", N_("Hextone Gray 5 Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 5 (Darkest) Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray4Value", N_("Hextone Gray 4 Value"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 4 Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray4Trans", N_("Hextone Gray 4 Transition"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 4 Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray4Scale", N_("Hextone Gray 4 Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 4 Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray3Value", N_("Hextone Gray 3 Value"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 3 Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray3Trans", N_("Hextone Gray 3 Transition"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 3 Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray3Scale", N_("Hextone Gray 3 Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 3 Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray2Value", N_("Hextone Gray 2 Value"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 2 Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray2Trans", N_("Hextone Gray 2 Transition"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 2 Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray2Scale", N_("Hextone Gray 2 Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 2 Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray1Value", N_("Hextone Gray 1 Value"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 1 (Lightest) Value"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray1Trans", N_("Hextone Gray 1 Transition"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 1 (Lightest) Transition"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HGray1Scale", N_("Hextone Gray 1 Density Scale"), N_("Advanced Ink Adjustment"),
+      N_("Hextone Gray 1 (Lightest) Density Scale"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
       "BlackTrans", N_("GCR Transition"), N_("Advanced Output Control"),
       N_("Adjust the gray component transition rate"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
@@ -1556,7 +1676,7 @@ get_inktype_only(const stp_vars_t *v)
 }
 
 static int
-printer_supports_quadtone(const stp_vars_t *v)
+printer_supports_inkset(const stp_vars_t *v, inkset_id_t inkset)
 {
   const inkgroup_t *ink_group = escp2_inkgroup(v);
   int i;
@@ -1568,7 +1688,7 @@ printer_supports_quadtone(const stp_vars_t *v)
 	  int j;
 	  for (j = 0; j < ink_list->n_inks; j++)
 	    {
-	      if (ink_list->inknames[j].inkset == INKSET_QUADTONE)
+	      if (ink_list->inknames[j].inkset == inkset)
 		{
 		  return 1;
 		}
@@ -1716,7 +1836,9 @@ set_gray_value_parameter(const stp_vars_t *v,
 {
   const inkname_t *ink_name = get_inktype_only(v);
   description->is_active = 0;
-  if (expected_channels == 4 && !ink_name && printer_supports_quadtone(v))
+  if (!ink_name &&
+      ((expected_channels == 4 && printer_supports_inkset(v, INKSET_QUADTONE)) ||
+       (expected_channels == 6 && printer_supports_inkset(v, INKSET_HEXTONE))))
     fill_value_parameters(v, description, STP_ECOLOR_K);
   else if (ink_name && 
       (ink_name->channels[STP_ECOLOR_K].n_subchannels ==
@@ -1765,7 +1887,9 @@ set_gray_transition_parameter(const stp_vars_t *v,
 {
   const inkname_t *ink_name = get_inktype_only(v);
   description->is_active = 0;
-  if (expected_channels == 4 && !ink_name && printer_supports_quadtone(v))
+  if (!ink_name &&
+      ((expected_channels == 4 && printer_supports_inkset(v, INKSET_QUADTONE)) ||
+       (expected_channels == 6 && printer_supports_inkset(v, INKSET_HEXTONE))))
     fill_transition_parameters(v, description, STP_ECOLOR_K);
   if (ink_name && 
       (ink_name->channels[STP_ECOLOR_K].n_subchannels ==
@@ -1808,7 +1932,9 @@ set_gray_scale_parameter(const stp_vars_t *v,
 {
   const inkname_t *ink_name = get_inktype_only(v);
   description->is_active = 0;
-  if (expected_channels == 4 && !ink_name && printer_supports_quadtone(v))
+  if (!ink_name &&
+      ((expected_channels == 4 && printer_supports_inkset(v, INKSET_QUADTONE)) ||
+       (expected_channels == 6 && printer_supports_inkset(v, INKSET_HEXTONE))))
     fill_transition_parameters(v, description, STP_ECOLOR_K);
   if (ink_name &&
       (ink_name->channels[STP_ECOLOR_K].n_subchannels ==
@@ -2886,6 +3012,7 @@ escp2_describe_output(const stp_vars_t *v)
 	  switch (ink_type->inkset)
 	    {
 	    case INKSET_QUADTONE:
+	    case INKSET_HEXTONE:
 	      return "Grayscale";
 	    case INKSET_OTHER:
 	    case INKSET_CMYK:
@@ -4229,6 +4356,12 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
       strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
     {
       stp_eprintf(v, "Warning: Quadtone inkset only available in MONO\n");
+      stp_set_string_parameter(v, "PrintingMode", "BW");
+    }
+  if (pd->inkname && pd->inkname->inkset == INKSET_HEXTONE &&
+      strcmp(stp_get_string_parameter(v, "PrintingMode"), "BW") != 0)
+    {
+      stp_eprintf(v, "Warning: Hextone inkset only available in MONO\n");
       stp_set_string_parameter(v, "PrintingMode", "BW");
     }
   pd->channels_in_use = count_channels(pd->inkname, pd->use_aux_channels);
