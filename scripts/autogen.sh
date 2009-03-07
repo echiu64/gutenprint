@@ -16,7 +16,7 @@ else
   mkdir m4local
 fi
 
-libtoolv=`libtool --version | head -1 | sed 's,.*[        ]\([0-9][0-9]*\.[0-9][0-9]*\(\.[0-9][0-9]*\)*\)[a-z]*[   ].*,\1,'`
+libtoolv=`libtool --version | head -1 | sed 's,.*[      ]\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\).*[a-z]*\([   ]?.*\|\)$,\1,'`
 libtool_major=`echo $libtoolv | awk -F. '{print $1}'`
 libtool_minor=`echo $libtoolv | awk -F. '{print $2}'`
 libtool_point=`echo $libtoolv | awk -F. '{print $3}'`
