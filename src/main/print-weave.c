@@ -1149,6 +1149,10 @@ stp_initialize_weave(stp_vars_t *v,
   sw->horizontal_width =
     (sw->compute_linewidth)(v, ((sw->linewidth + sw->horizontal_weave - 1) /
 				 sw->horizontal_weave));
+  stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+	      "Computing linewidth for linewidth %d weave %d => %d (%d)\n",
+	      sw->linewidth, sw->horizontal_weave, sw->horizontal_width,
+	      ((sw->horizontal_width + 7) / 8));
   sw->horizontal_width = ((sw->horizontal_width + 7) / 8);
 
   for (i = 0; i < sw->vmod; i++)
@@ -1173,6 +1177,10 @@ stp_initialize_weave(stp_vars_t *v,
 	      sw->oversample, sw->vmod,
 	      sw->vmod * sw->virtual_jets * sw->bitwidth *
 	      sw->ncolors * sw->horizontal_width, page_height);
+  stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+	      "      ***Buffer limit %d (vj %d bw %d hw %d)\n",
+	      sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
+	      sw->virtual_jets, sw->bitwidth, sw->horizontal_width);
   stp_allocate_component_data(v, "Weave", NULL, stpi_destroy_weave, sw);
   return;
 }
@@ -1499,9 +1507,44 @@ add_to_row(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
   size_t count = linecount->v[color];
   if (place + nbytes > sw->virtual_jets * sw->bitwidth * sw->horizontal_width)
     {
-      stp_eprintf(v, "Buffer overflow: limit %d, actual %ld, count %ld\n",
+      int i;
+      stp_eprintf(v, "ERROR: %s\n", _("Fatal error!"));
+      stp_eprintf(v, "ERROR: Static weave data follows:\n");
+      stp_eprintf(v, "ERROR:    jets: %d\n", sw->jets);
+      stp_eprintf(v, "ERROR:    virtual_jets: %d\n", sw->virtual_jets);
+      stp_eprintf(v, "ERROR:    separation: %d\n", sw->separation);
+      stp_eprintf(v, "ERROR:    horizontal_weave: %d\n", sw->horizontal_weave);
+      stp_eprintf(v, "ERROR:    vertical_subpasses: %d\n", sw->vertical_subpasses);
+      stp_eprintf(v, "ERROR:    vmod: %d\n", sw->vmod);
+      stp_eprintf(v, "ERROR:    oversample: %d\n", sw->oversample);
+      stp_eprintf(v, "ERROR:    repeat_count: %d\n", sw->repeat_count);
+      stp_eprintf(v, "ERROR:    ncolors: %d\n", sw->ncolors);
+      stp_eprintf(v, "ERROR:    linewidth: %d\n", sw->linewidth);
+      stp_eprintf(v, "ERROR:    vertical_height: %d\n", sw->vertical_height);
+      stp_eprintf(v, "ERROR:    firstline: %d\n", sw->firstline);
+      stp_eprintf(v, "ERROR:    bitwidth: %d\n", sw->bitwidth);
+      stp_eprintf(v, "ERROR:    vertical_oversample: %d\n", sw->vertical_oversample);
+      stp_eprintf(v, "ERROR:    horizontal_width: %d\n", sw->horizontal_width);
+      if (sw->head_offset)
+	{
+	  stp_eprintf(v, "ERROR:    head_offset:\n");
+	  for (i = 0; i < sw->ncolors; i++)
+	    stp_eprintf(v, "ERROR:      head %d: %d\n", i, sw->head_offset[i]);
+	}
+      stp_eprintf(v, "ERROR: Dynamic weave data follows:\n");
+      stp_eprintf(v, "ERROR:    last_pass_offset: %d\n", sw->last_pass_offset);
+      stp_eprintf(v, "ERROR:    last_pass: %d\n", sw->last_pass);
+      stp_eprintf(v, "ERROR:    lineno: %d\n", sw->lineno);
+      stp_eprintf(v, "ERROR:    current_vertical_subpass: %d\n", sw->current_vertical_subpass);
+      stp_eprintf(v, "ERROR:    rcache: %d\n", sw->rcache);
+      stp_eprintf(v, "ERROR:    vcache: %d\n", sw->vcache);
+      stp_eprintf(v, "ERROR: Other parameters: row %d color %d setactive %d hpass %d\n",
+		  row, color, setactive, h_pass);
+      stp_eprintf(v, "ERROR: Buffer overflow: limit %d (jets %d bits %d horizontal %d), actual %ld (current %d added %d), count %d\n",
 		  sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
-		  (long)(place + nbytes), (long)count);
+		  sw->virtual_jets, sw->bitwidth, sw->horizontal_width,
+		  (long) (place + nbytes), (int) place, (int) nbytes, (long) count);
+      stp_eprintf(v, "ERROR: %s\n", _("Please report the above information to gimp-print-devel@lists.sourceforge.net"));
       stp_abort();
     }
   memcpy(bufs->v[color] + lineoffs->v[color], buf, nbytes);
@@ -1582,10 +1625,23 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
   int cpass = sw->current_vertical_subpass * h_passes;
 
   if (!sw->fold_buf)
-    sw->fold_buf = stp_zalloc(sw->bitwidth * ylength);
+    {
+      stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+		  "fold buffer allocation: length %d lw %d weave %d xlength %d ylength %d\n",
+		  length, sw->linewidth, sw->horizontal_weave, xlength, ylength);
+      stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+		  "Allocating fold buf %d * %d (%d)\n", ylength, sw->bitwidth,
+		  sw->bitwidth * ylength);
+      sw->fold_buf = stp_zalloc(sw->bitwidth * ylength);
+    }
   if (!sw->comp_buf)
-    sw->comp_buf = stp_zalloc(sw->bitwidth *
-			      (sw->compute_linewidth)(v,ylength));
+    {
+      stp_dprintf(STP_DBG_WEAVE_PARAMS, v,
+		  "Allocating compression buffer based on %d, %d\n",
+		  sw->bitwidth, ylength);
+      sw->comp_buf = stp_zalloc(sw->bitwidth *
+				(sw->compute_linewidth)(v,ylength));
+    }
   if (sw->current_vertical_subpass == 0)
     initialize_row(v, sw, sw->lineno, xlength, cols);
 
