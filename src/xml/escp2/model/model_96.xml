@@ -21,7 +21,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
 <escp2:model id="96">
- <media src="escp2/media/claria.xml"/>
+ <media src="escp2/media/artisan.xml"/>
  <inputSlots src="escp2/inputslots/artisan.xml"/>
  <qualityPresets src="escp2/qualitypresets/v2880.xml"/>
  <inkGroup src="escp2/inks/artisan.xml"/>
