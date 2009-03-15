@@ -14,9 +14,11 @@ use strict;
 my $emailsuffix;
 my $symbolic_name_regexp;
 my (@ignoreprefix);
+my $reverse = 0;
 
 GetOptions("e:s" => \$emailsuffix,
 	   "X=s" => \@ignoreprefix,
+	   "r!"  => \$reverse,
 	   "s:s" => \$symbolic_name_regexp);
 
 my %logmsgs = ();			# Index by date, time, and author
@@ -147,7 +149,8 @@ while (<>) {
     if (/^Working file: /) {
 	$in_header = 1;
 	chomp;
-	($ignore, $ignore, $currentfile) = split;
+	($ignore, $ignore, $currentfile) = split(/\s+/, $_, 3);
+	$currentfile =~ s/\s/\000/g;
 	if (grep { $currentfile =~ /^$_/ } @ignoreprefix) {
 	    $skipfile = 1;
 	} else {
@@ -241,7 +244,7 @@ my $prevmsg="";
 my $header="";
 my @fileinfo = ();
 
-my @chlog = reverse sort keys %logmsgs;
+my @chlog = $reverse ? sort keys %logmsgs : reverse sort keys %logmsgs;
 my %filenames_printed = ();
 my ($date, $time, $author, $junk, $file, $revision, @symbols);
 my $filestuff;
@@ -262,6 +265,7 @@ foreach (@chlog) {
 	if ($prevmsg ne "" || $#fileinfo >= 0) {
 	    print $header;
 	    $filestuff = join "", sort @fileinfo;
+	    $filestuff =~ s/\000/ /g;
 	    $filestuff =~ s/\t/\tFiles:/;
 	    print "$filestuff\n";
 	    $prevmsg =~ s/^/\t/g;
