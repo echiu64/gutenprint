@@ -22,12 +22,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:InputSlots name="artisan">
 
- <slot translate="text" name="LowerFront" text="Lower Front Tray">
+ <slot translate="text" name="LowerFront" text="Main Tray">
   <Duplex><Tumble/></Duplex>
   <InitSequence>PP\003\000\000\001\001</InitSequence>
  </slot>
 
- <slot translate="text" name="UpperFront" text="Upper Front Tray">
+ <slot translate="text" name="UpperFront" text="Photo Tray">
   <Duplex><Tumble/></Duplex>
   <InitSequence>PP\003\000\000\001\002</InitSequence>
  </slot>
