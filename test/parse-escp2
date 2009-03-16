@@ -556,7 +556,9 @@ while (! $atend) {
 					$horizontal_position / $horizontal_unit);
 			    }
 			} elsif ($xchar eq "d") {
-			    printf " (nop)";
+			    if ($opt_v) {
+				printf " (nop)";
+			    }
 			}
 		    }
 		    $found = 1;
