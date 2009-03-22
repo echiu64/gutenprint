@@ -1242,7 +1242,7 @@ print_old_ink_levels(const char *ind, stp_string_list_t *color_list)
       if (!ind[0] || ind[0] == ';')
 	return;
       val = (get_digit(ind[0]) << 4) + get_digit(ind[1]);
-      printf("%18s    %20d\n",
+      printf("%20s    %20d\n",
 	     gettext(stp_string_list_param(color_list, i)->text), val);
       ind += 2;
     }
@@ -1292,7 +1292,7 @@ do_old_status(status_cmd_t cmd, const char *buf, const stp_printer_t *printer)
 	  
 	  if (cmd == CMD_STATUS)
 	    printf(_("Ink Levels:\n"));
-	  printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
+	  printf("%20s    %20s\n", _("Ink color"), _("Percent remaining"));
 	  print_old_ink_levels(ind, color_list);
 	  stp_string_list_destroy(color_list);
 	  if (cmd == CMD_STATUS)
@@ -1331,16 +1331,16 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	  ind = buf + i + 3;
 	  if (cmd == CMD_STATUS)
 	    printf(_("Ink Levels:\n"));
-	  printf("%18s    %20s\n", _("Ink color"), _("Percent remaining"));
+	  printf("%20s    %20s\n", _("Ink color"), _("Percent remaining"));
 	  for (j = 0; j < count; j++)
 	    {
 	      if (ind[0] < color_count && param == 3 &&
 		  (interchangeable_inks || ind[1] >= aux_color_count ||
 		   ! aux_colors[(int) ind[1]]))
-		printf("%18s    %20d\n",
+		printf("%20s    %20d\n",
 		       gettext(colors_new[(int) ind[0]]), ind[2]);
 	      else if (ind[1] < aux_color_count && aux_colors[(int) ind[1]])
-		printf("%18s    %20d\n",
+		printf("%20s    %20d\n",
 		       gettext(aux_colors[(int) ind[1]]), ind[2]);
 	      else
 		printf("%8s 0x%02x 0x%02x    %20d\n",
@@ -1603,14 +1603,14 @@ do_extended_ink_info(int extended_output)
 			  &year2, &month2, &id2) == 12)
 	    {
 	      int j;
-	      printf("%18s    %20s   %12s   %7s\n",
+	      printf("%20s    %20s   %12s   %7s\n",
 		     _("Ink cartridge"), _("Percent remaining"), _("Part number"),
 		     _("Date"));
-	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+	      printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
 		     gettext(stp_string_list_param(color_list, 0)->text),
 		     iv[0], id, (year > 80 ? 19 : 20), year, month);
 	      for (j = 1; j < 6; j++)
-		printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+		printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
 		       gettext(stp_string_list_param(color_list, j)->text),
 		       iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
 	      break;
@@ -1627,14 +1627,14 @@ do_extended_ink_info(int extended_output)
 			  &year2, &month2, &id2) == 10)
 	    {
 	      int j;
-	      printf("%18s    %20s   %12s   %7s\n",
+	      printf("%20s    %20s   %12s   %7s\n",
 		     _("Ink cartridge"), _("Percent remaining"), _("Part number"),
 		     _("Date"));
-	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+	      printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
 		     gettext(stp_string_list_param(color_list, 0)->text),
 		     iv[0], id, (year > 80 ? 19 : 20), year, month);
 	      for (j = 1; j < 4; j++)
-		printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+		printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
 		       gettext(stp_string_list_param(color_list, j)->text),
 		       iv[j], id2, (year2 > 80 ? 19 : 20), year2, month2);
 	      break;
@@ -1647,10 +1647,10 @@ do_extended_ink_info(int extended_output)
 			  &val, &year, &month, &id ) == 4)
 	    {
 	      if (i == 0)
-		printf("%18s    %20s   %12s   %7s\n",
+		printf("%20s    %20s   %12s   %7s\n",
 		       _("Ink cartridge"), _("Percent remaining"), _("Part number"),
 		       _("Date"));
-	      printf("%18s    %20d    T0%03d            %2d%02d-%02d\n",
+	      printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
 		     gettext(stp_string_list_param(color_list, i)->text),
 		     val, id, (year > 80 ? 19 : 20), year, month);
 	    }
