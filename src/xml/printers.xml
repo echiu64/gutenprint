@@ -587,6 +587,7 @@
       <printer translate="name" name="Epson PX V630" driver="escp2-pxv630" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer translate="name" name="Epson PX V780" driver="escp2-pxv780" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson PX 5500" driver="escp2-px5500" manufacturer="Epson" model="71" parameters="standard_params" />
+      <printer translate="name" name="Epson PX G5600" driver="escp2-pxg5600" manufacturer="Epson" model="98" parameters="standard_params" />
       <printer translate="name" name="Epson PX 7000" driver="escp2-px7000" manufacturer="Epson" model="48" parameters="standard_params" />
       <printer translate="name" name="Epson PX 9000" driver="escp2-px9000" manufacturer="Epson" model="49" parameters="standard_params" />
     </family>

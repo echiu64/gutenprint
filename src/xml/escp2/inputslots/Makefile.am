@@ -35,6 +35,7 @@ pkgxmldata_DATA =				\
 	pro_roll_feed.xml			\
 	r1800.xml				\
 	r2400.xml				\
+	r2880.xml				\
 	rx680.xml				\
 	rx700.xml				\
 	spro5000.xml				\

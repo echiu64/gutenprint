@@ -245,6 +245,7 @@
 #gptofoo escp2-pmg4500 printer/Epson-PM_G4500
 #gptofoo escp2-pmt960 printer/Epson-PM_T960
 #gptofoo escp2-px5500 printer/Epson-PX_5500
+#gptofoo escp2-pxg5600 printer/Epson-PX_G5600
 #gptofoo escp2-px7000 printer/Epson-PX_7000
 #gptofoo escp2-px9000 printer/Epson-PX_9000
 #gptofoo escp2-pxa650 printer/Epson-PX_A650
