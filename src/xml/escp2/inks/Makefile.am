@@ -43,6 +43,7 @@ pkgxmldata_DATA =				\
 	f360_photo7_japan.xml			\
 	f360_ultrachrome.xml			\
 	f360_ultrachrome_k3.xml			\
+	f360_ultrachrome_k3v.xml		\
 	nx100.xml				\
 	photo_gen0.xml				\
 	photo_gen1.xml				\
