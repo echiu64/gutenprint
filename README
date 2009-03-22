@@ -170,6 +170,14 @@ A) OVERVIEW
     the development packages to match exactly the versions of the
     runtime packages they are related to.
 
+    PLEASE INSPECT THE OUTPUT CAREFULLY BEFORE PROCEEDING.  If you
+    expect to build a particular component (particularly the CUPS
+    driver or enhanced Print plugin for GIMP), and the configure
+    output states that that component will not be built, please make
+    certain that you have the required development packages installed,
+    as described below in the sections for the particular components.
+
+
 ----------------
 
 B) CORE DRIVER LIBRARY
@@ -215,7 +223,29 @@ C) CUPS
     commonly development packages for TIFF (libtiff-devel), JPEG
     (jpeg-devel or libjpeg-devel), PNG (libpng-devel) and OpenSSL
     (openssl-devel) will be required.  Failure to install these
-    packages will lead to errors when the package is compiled.
+    packages will lead to errors when the package is compiled.  The
+    errors will typically look like this; the important error is
+    "cups/cups.h: No such file or directory".
+
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.3/src/cups'
+	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
+	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
+	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
+	   -Werror-implicit-function-declaration -Winline -Wformat=2
+	   -finline-limit=131072  -DCUPS_DRIVER_INTERFACE -DALL_LINGUAS='"cs da
+	   de el en_GB es fr hu it ja nb nl pl pt sk sv zh_TW"'
+	   -Disfinite=finite  -O6 -MT gutenprint_5_2-genppd.o -MD -MP -MF
+	   .deps/gutenprint_5_2-genppd.Tpo -c -o gutenprint_5_2-genppd.o
+	   `test -f 'genppd.c' || echo './'`genppd.c
+	genppd.c:79:23: error: cups/cups.h: No such file or directory
+	genppd.c:80:25: error: cups/raster.h: No such file or directory
+	make[3]: *** [gutenprint_5_2-genppd.o] Error 1
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.3/src/cups'
+	make[2]: *** [all-recursive] Error 1
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.3/src'
+	make[1]: *** [all-recursive] Error 1
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.3'
+	make: *** [all] Error 2
 
     Installing the CUPS driver for Gutenprint 5.2 will not interfere
     with your ability to continue using the Gutenprint 5.0 or
@@ -559,7 +589,30 @@ E) GIMP
     If your system separates development packages from runtime
     packages, you will typically have to install development packages
     for GIMP itself, in addition to Gtk and Glib.  With GIMP 2.x and
-    GTK 2.x, additional packages may be required.
+    GTK 2.x, additional packages may be required.  Failure to install
+    these packages will lead to errors when the package is compiled.
+    The errors will typically look like this; the important errors are
+    the ones "No such file or directory".
+
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.3/src/gimp2'
+	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
+	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
+	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
+	   -Werror-implicit-function-declaration -Winline -Wformat=2
+	   -finline-limit=131072   -Disfinite=finite  -O6 -MT print-image-gimp.o
+	   -MD -MP -MF .deps/print-image-gimp.Tpo -c -o print-image-gimp.o
+	   print-image-gimp.c
+	In file included from print-image-gimp.c:30:
+	print_gimp.h:36:21: error: gtk/gtk.h: No such file or directory
+	print_gimp.h:37:26: error: libgimp/gimp.h: No such file or directory
+	print_gimp.h:38:28: error: libgimp/gimpui.h: No such file or directory
+	make[3]: *** [print-image-gimp.o] Error 1
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.3/src/gimp2'
+	make[2]: *** [all-recursive] Error 1
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.3/src'
+	make[1]: *** [all-recursive] Error 1
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.3'
+	make: *** [all] Error 2
 
     Normally, the Gutenprint configure script detects which version,
     if any, of GIMP is installed and builds an appropriate plugin.  If
@@ -576,8 +629,8 @@ E) GIMP
     It is not possible for Gimp-Print 4.2, Gutenprint 5.0, and
     Gutenprint 5.2 (or any future release) to coexist in the same
     installation of GIMP.  The Gutenprint 5.2-based plugin can read
-    settings from previous versions of Gimp-Print, but the
-    configuration file format in Gutenprint 5.2 cannot be read by
+    settings from previous versions of Gutenprint and Gimp-Print, but
+    the configuration file format in Gutenprint 5.2 cannot be read by
     older versions of Gimp-Print or Gutenprint.
 
 

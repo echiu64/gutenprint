@@ -1022,6 +1022,16 @@ echo
 echo "If you have any problems, please report the information below to"
 echo "$PACKAGE_BUGREPORT"
 echo
+echo "VERY IMPORTANT:"
+echo "If you expect to build the CUPS driver or the enhanced Print plugin for"
+echo "GIMP, but the output below indicates that that component will not be built,"
+echo "it almost certainly indicates that development packages required to build"
+echo "that component are not installed on your system.  Please read the README"
+echo "file and install the necessary development packages before reporting any"
+echo "error to the development team.  Depending upon your operating system version,"
+echo "you may have to install packages from the installation medium or over"
+echo "the network."
+echo
 echo "================================================================"
 echo "  Release: $PACKAGE_STRING generated on $RELEASE_DATE"
 echo
@@ -1105,6 +1115,6 @@ if test $warnings_emitted -ne 0 ; then
     echo '*** NOTE: Please review the warnings shown above carefully!'
 fi
 echo
-echo "Finished configuring.  Please review the configuration summary above."
+echo "Finished configuring.  Please review CAREFULLY the configuration summary above."
 echo "Type 'make clean' followed by 'make' to build the package"
 echo "then 'make install' to install it."
