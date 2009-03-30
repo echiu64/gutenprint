@@ -136,13 +136,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -156,10 +156,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.100000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -206,13 +206,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -226,10 +226,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.100000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -276,13 +276,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.830000</parameter>
-  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -296,10 +296,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -348,11 +348,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Density">0.830000</parameter>
   <parameter type="float" name="SubchannelCutoff">0.750000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -366,10 +366,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -416,13 +416,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -436,10 +436,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.100000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -488,11 +488,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Density">0.830000</parameter>
   <parameter type="float" name="SubchannelCutoff">0.750000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -506,10 +506,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -556,13 +556,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.920000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -576,10 +576,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -626,13 +626,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.920000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -646,10 +646,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -696,13 +696,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -716,10 +716,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.300000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -766,13 +766,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.830000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -786,10 +786,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.400000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -838,11 +838,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Density">1.000000</parameter>
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -856,10 +856,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -906,13 +906,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.800000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
@@ -926,10 +926,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
@@ -976,13 +976,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.800000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
@@ -996,10 +996,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
@@ -1046,13 +1046,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.800000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
@@ -1066,10 +1066,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">0.920000</parameter>
@@ -1116,13 +1116,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.920000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1135,9 +1135,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Density">0.920000</parameter>
   <parameter type="float" name="SubchannelCutoff">0.400000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">0.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
   <parameter type="float" name="MagentaBalance">1.000000</parameter>
   <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">0.600000</parameter>
@@ -1188,11 +1188,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="Density">0.920000</parameter>
   <parameter type="float" name="SubchannelCutoff">0.800000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1206,10 +1206,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.400000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1256,13 +1256,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.830000</parameter>
-  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1276,10 +1276,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1326,13 +1326,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.830000</parameter>
-  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1346,10 +1346,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1396,13 +1396,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.830000</parameter>
-  <parameter type="float" name="SubchannelCutoff">1.000000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1416,10 +1416,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1432,13 +1432,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 <paper translate="text" name="Other" text="Other" class="plain" PreferredInkset="UltraMatte">
  <ink translate="text" name="ultra3photo" text="Photo Black">
   <parameter type="float" name="Density">0.720000</parameter>
-  <parameter type="float" name="SubchannelCutoff">0.100000</parameter>
+  <parameter type="float" name="SubchannelCutoff">0.500000</parameter>
   <parameter type="float" name="BlackTrans">1.000000</parameter>
-  <parameter type="float" name="GCRLower">0.010000</parameter>
-  <parameter type="float" name="GCRUpper">1.500000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRLower">0.000000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
@@ -1452,10 +1452,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <parameter type="float" name="SubchannelCutoff">0.100000</parameter>
   <parameter type="float" name="BlackTrans">0.400000</parameter>
   <parameter type="float" name="GCRLower">0.000000</parameter>
-  <parameter type="float" name="GCRUpper">1.250000</parameter>
-  <parameter type="float" name="CyanBalance">1.000000</parameter>
-  <parameter type="float" name="MagentaBalance">0.950000</parameter>
-  <parameter type="float" name="YellowBalance">0.900000</parameter>
+  <parameter type="float" name="GCRUpper">0.000000</parameter>
+  <parameter type="float" name="CyanBalance">0.900000</parameter>
+  <parameter type="float" name="MagentaBalance">1.000000</parameter>
+  <parameter type="float" name="YellowBalance">1.000000</parameter>
   <parameter type="float" name="BlackDensity">1.000000</parameter>
   <parameter type="float" name="Saturation">1.000000</parameter>
   <parameter type="float" name="Gamma">1.000000</parameter>
