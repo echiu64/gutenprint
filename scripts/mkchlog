@@ -249,6 +249,21 @@ my %filenames_printed = ();
 my ($date, $time, $author, $junk, $file, $revision, @symbols);
 my $filestuff;
 
+sub printmsg
+{
+    my ($date, $author, $emailsuffix, $prevmsg, @fileinfo) = @_;
+    print "$date\t<$author$emailsuffix>\n\n";
+    my $filestuff = join "", sort @fileinfo;
+    $filestuff =~ s/\000/ /g;
+    $filestuff =~ s/\t/\tFiles:/;
+    print "$filestuff\n";
+    $prevmsg =~ s/^/\t/g;
+    $prevmsg =~ s/\n/\n\t/g;
+    $prevmsg =~ s/[ \t]+\n/\n/g;
+    $prevmsg =~ s/[ \t]+$//g;
+    print "$prevmsg\n";
+}
+
 foreach (@chlog) {
     ($date, $time, $author, $junk, $file, $revision, @symbols) = split;
     $date =~ s,/,-,g;
@@ -263,16 +278,7 @@ foreach (@chlog) {
 	push @fileinfo, "\t\t$file ($revision) ($delta)\n";
     } else {
 	if ($prevmsg ne "" || $#fileinfo >= 0) {
-	    print $header;
-	    $filestuff = join "", sort @fileinfo;
-	    $filestuff =~ s/\000/ /g;
-	    $filestuff =~ s/\t/\tFiles:/;
-	    print "$filestuff\n";
-	    $prevmsg =~ s/^/\t/g;
-	    $prevmsg =~ s/\n/\n\t/g;
-	    $prevmsg =~ s/[ \t]+\n/\n/g;
-	    $prevmsg =~ s/[ \t]+$//g;
-	    print "$prevmsg\n";
+	    printmsg($date, $author, $emailsuffix, $prevmsg, @fileinfo);
 	    %filenames_printed = ();
 	}
 	$header = "$date\t<$author$emailsuffix>\n\n";
@@ -298,13 +304,5 @@ foreach (@chlog) {
 }
 
 if ($prevmsg ne "" or $#fileinfo >= 0) {
-    print "$date\t<$author$emailsuffix>\n\n";
-    $filestuff = join "", sort @fileinfo;
-    $filestuff =~ s/\t/\tFiles:/;
-    print "$filestuff\n";
-    $prevmsg =~ s/^/\t/g;
-    $prevmsg =~ s/\n/\n\t/g;
-    $prevmsg =~ s/[ \t]+\n/\n/g;
-    $prevmsg =~ s/[ \t]+$//g;
-    print "$prevmsg\n";
+    printmsg($date, $author, $emailsuffix, $prevmsg, @fileinfo);
 }
