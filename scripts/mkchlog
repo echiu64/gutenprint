@@ -289,6 +289,15 @@ sub printmsg($$$$\%\%)
     print "$prevmsg\n";
 }
 
+sub printsyms(@) {
+    my (@symbols_to_print) = @_;
+    print "===============================================================================\n";
+    map {
+	print "Name: $_\n";
+    } @symbols_to_print;
+    print "\n";
+}
+
 foreach (@chlog) {
     ($date, $time, $author, $junk, $file, $revision, @symbols) = split;
     $date =~ s,/,-,g;
@@ -303,7 +312,7 @@ foreach (@chlog) {
 	$deltainfo{$file} = $delta;
 	$revinfo{$file} = $revision;
     } else {
-	if ($prevmsg ne "" || keys %deltainfo >= 0) {
+	if ($prevmsg ne "" || keys %deltainfo > 0) {
 	    printmsg($date, $author, $emailsuffix, $prevmsg, %revinfo, %deltainfo);
 	    %filenames_printed = ();
 	}
@@ -323,14 +332,10 @@ foreach (@chlog) {
 	}
     }
     if (@symbols_to_print) {
-	print "===============================================================================\n";
-	map {
-	    print "Name: $_\n";
-	} @symbols_to_print;
-	print "\n";
+	printsyms(@symbols_to_print);
     }
 }
 
-if ($prevmsg ne "" || keys %deltainfo >= 0) {
+if ($prevmsg ne "" || keys %deltainfo > 0) {
     printmsg($date, $author, $emailsuffix, $prevmsg, %revinfo, %deltainfo);
 }
