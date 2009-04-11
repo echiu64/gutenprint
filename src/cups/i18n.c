@@ -397,7 +397,7 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
 
 const char *				/* O - Localized message */
 stp_i18n_lookup(
-    stp_string_list_t *po,		/* I - Message catalog */
+    const stp_string_list_t *po,		/* I - Message catalog */
     const char        *message)		/* I - Message */
 {
   stp_param_string_t	*param;		/* Matching message */
@@ -416,7 +416,7 @@ stp_i18n_lookup(
 
 void
 stp_i18n_printf(
-    stp_string_list_t *po,		/* I - Message catalog */
+    const stp_string_list_t *po,		/* I - Message catalog */
     const char        *message,		/* I - Printf-style message */
     ...)				/* I - Additional arguments as needed */
 {

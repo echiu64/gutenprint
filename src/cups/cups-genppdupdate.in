@@ -20,6 +20,8 @@
 use strict;
 use Getopt::Std;
 use Fcntl qw(:mode);
+use FileHandle;
+use IPC::Open2;
 
 sub parse_options ();
 sub update_ppd ($); # Original PPD filename
@@ -68,7 +70,15 @@ my @languages = qw(Global C @ALL_LINGUAS@);
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
 my $driver_version = "";
+my $server_dog = 0;
+my $server_dog_initialized = 0;
+		  
 if (-x $driver_bin) {
+    if (system("$driver_bin BREED 2>/dev/null") == 0) {
+	$server_dog = 1;
+    } else {
+	$server_dog = 0;
+    }
     $driver_version = `$driver_bin VERSION`;
     chomp $driver_version;
 }
@@ -259,6 +269,7 @@ sub parse_options () {
 		if (-d $opt_s) {
 		    $ppd_base_dir = "$opt_s";
 		    $driver_bin = "";
+		    $server_dog = 0;
 		    $use_static_ppd = "yes";
 		} else {
 		    die "$opt_s: invalid directory: $!\n";
@@ -272,6 +283,11 @@ sub parse_options () {
 	    # for an exact match.
 	    $file_version = "\"$version";
 	    if (-x $driver_bin) {
+		if (system("$driver_bin BREED 2>/dev/null") == 0) {
+		    $server_dog = 1;
+		} else {
+		    $server_dog = 0;
+		}
 		$driver_version = `$driver_bin VERSION`;
 		$use_static_ppd = "no";
 		chomp $driver_version;
@@ -285,6 +301,7 @@ sub parse_options () {
 	if (-d $opt_s) {
 	    $ppd_base_dir = "$opt_s";
 	    $driver_bin = "";
+	    $server_dog = 0;
 	    $driver_version = "";
 	    $use_static_ppd = "yes";
 	}
@@ -303,6 +320,11 @@ sub parse_options () {
     if ($opt_P) {
 	if (-x $opt_P) {
 	    $driver_bin = "$opt_P";
+	    if (system("$driver_bin BREED 2>/dev/null") == 0) {
+		$server_dog = 1;
+	    } else {
+		$server_dog = 0;
+	    }
 	    $driver_version = `$driver_bin VERSION`;
 	    chomp $driver_version;
 	    $use_static_ppd = "no";
@@ -357,6 +379,14 @@ sub get_ppd_fh($$$$$) {
 	    $new_ppd_filename = $url;
 	    if ($debug & 8) {
 		print "Trying $driver_bin cat $url for $driver, $simplified, $locale, $region\n";
+	    }
+	    if ($server_dog) {
+		if (! $server_dog_initialized) {
+		    my ($pid) = open2(*Reader, *Writer, "$driver_bin dog");
+		    $server_dog_initialized = 1;
+		}
+		print Writer "$url\n";
+		return ($new_ppd_filename, \*Reader);
 	    }
 	    if (open PPD, "$driver_bin cat $url |") {
 		return ($new_ppd_filename, \*PPD);
@@ -491,11 +521,11 @@ sub update_ppd ($) {
 	print "Update PPD $ppd_source_filename from $new_ppd_filename [nyq]? ";
 	my $input = readline(*STDIN);
 	if ($input =~ /^q/i) {
-	    close $source_fd;
+	    close $source_fd if !$server_dog;
 	    print "Skipping all...\n";
 	    return -2;
 	} elsif (! ($input =~ /^y/i)) {
-	    close $source_fd;
+	    close $source_fd if !$server_dog;;
 	    print "Skipping...\n";
 	    return -1;
 	}
@@ -511,7 +541,7 @@ sub update_ppd ($) {
     # Close original and temporary files...
 
     close ORIG;
-    if (! close $source_fd) {
+    if (! $server_dog && ! close $source_fd) {
 	print "Unable to retrieve new PPD file: $!\n";
 	return 0;
     }
@@ -808,6 +838,7 @@ sub get_ppd_data(*$$$$$) {
 
     if ($resolutions || $types || $opts || $defaults || $data) {
 	while (<$fh>) {
+	    last if $_ eq "*%*%EOFEOF\n";
 	    $source_data .= $_ if ($data);
 	    chomp;
 	    if (($types || $opts) && m/^\*OpenUI/) {

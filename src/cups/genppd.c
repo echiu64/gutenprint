@@ -161,7 +161,7 @@ const char *parameter_level_names[] =
  */
 
 #ifdef CUPS_DRIVER_INTERFACE
-static int	cat_ppd(int argc, char **argv);
+static int	cat_ppd(const char *uri);
 static int	list_ppds(const char *argv0);
 #else  /* !CUPS_DRIVER_INTERFACE */
 static int	generate_ppd(const char *prefix, int verbose,
@@ -176,10 +176,12 @@ static char	**getlangs(void);
 static int	is_special_option(const char *name);
 static void	print_group_close(gzFile fp, stp_parameter_class_t p_class,
 				  stp_parameter_level_t p_level,
-				  const char *language, stp_string_list_t *po);
+				  const char *language,
+				  const stp_string_list_t *po);
 static void	print_group_open(gzFile fp, stp_parameter_class_t p_class,
 				 stp_parameter_level_t p_level,
-				 const char *language, stp_string_list_t *po);
+				 const char *language,
+				 const stp_string_list_t *po);
 static int	write_ppd(gzFile fp, const stp_printer_t *p,
 		          const char *language, const char *ppd_location,
 			  int simplified);
@@ -221,7 +223,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
   if (argc == 2 && !strcmp(argv[1], "list"))
     return (list_ppds(argv[0]));
   else if (argc == 3 && !strcmp(argv[1], "cat"))
-    return (cat_ppd(argc, argv));
+    return (cat_ppd(argv[2]));
   else if (argc == 2 && !strcmp(argv[1], "VERSION"))
     {
       printf("%s\n", VERSION);
@@ -241,9 +243,8 @@ main(int  argc,			    /* I - Number of command-line arguments */
  */
 
 static int				/* O - Exit status */
-cat_ppd(int argc, char **argv)	/* I - Driver URI */
+cat_ppd(const char *uri)	/* I - Driver URI */
 {
-  const char		*uri = argv[2];
   char			scheme[64],	/* URI scheme */
 			userpass[32],	/* URI user/pass (unused) */
 			hostname[32],	/* URI hostname */
@@ -800,7 +801,7 @@ print_group(
     stp_parameter_class_t p_class,	/* I - Option class */
     stp_parameter_level_t p_level,	/* I - Option level */
     const char		  *language,	/* I - Language */
-    stp_string_list_t     *po)		/* I - Message catalog */
+    const stp_string_list_t     *po)		/* I - Message catalog */
 {
   char buf[64];
   const char *class = stp_i18n_lookup(po, parameter_class_names[p_class]);
@@ -846,7 +847,7 @@ print_group_close(
     stp_parameter_class_t p_class,	/* I - Option class */
     stp_parameter_level_t p_level,	/* I - Option level */
     const char		 *language,	/* I - language */
-    stp_string_list_t    *po)		/* I - Message catalog */
+    const stp_string_list_t    *po)		/* I - Message catalog */
 {
   print_group(fp, "Close", p_class, p_level, NULL, NULL);
 }
@@ -862,7 +863,7 @@ print_group_open(
     stp_parameter_class_t p_class,	/* I - Option class */
     stp_parameter_level_t p_level,	/* I - Option level */
     const char		 *language,	/* I - language */
-    stp_string_list_t    *po)		/* I - Message catalog */
+    const stp_string_list_t    *po)		/* I - Message catalog */
 {
   print_group(fp, "Open", p_class, p_level, language ? language : "C", po);
 }
@@ -911,7 +912,7 @@ write_ppd(
   char		*default_resolution = NULL;  /* Default resolution mapped name */
   stp_string_list_t *resolutions = stp_string_list_create();
   char		**all_langs = getlangs();/* All languages */
-  stp_string_list_t	*po = stp_i18n_load(language);
+  const stp_string_list_t	*po = stp_i18n_load(language);
 					/* Message catalog */
 
 
@@ -1907,7 +1908,7 @@ write_ppd(
     */
 
     const char *lang;
-    stp_string_list_t *altpo;
+    const stp_string_list_t *altpo;
     int langnum;
 
     for (langnum = 0; all_langs[langnum]; langnum ++)
