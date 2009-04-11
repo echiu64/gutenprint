@@ -87,7 +87,7 @@ static stpi_i18n_t	*stpi_pocache = NULL;
  * 'stp_i18n_load()' - Load a message catalog for a locale.
  */
 
-stp_string_list_t *			/* O - Message catalog */
+const stp_string_list_t *		/* O - Message catalog */
 stp_i18n_load(const char *locale)	/* I - Locale name */
 {
   stp_string_list_t	*po;		/* Message catalog */
@@ -385,6 +385,8 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
     stpi_pocache  = pocache;
   }
   
+  if (ic)
+    iconv_close(ic);
   return (po);
 }
 
