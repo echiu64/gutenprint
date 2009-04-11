@@ -182,10 +182,11 @@ all-local: $(INSTALL_DATA_LOCAL_DEPS)
 ppd: ppd-stamp
 
 ppd-stamp: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ $(top_srcdir)/src/xml/xml-stamp
+	$(MAKE) ppd-stamp-pre
 	$(MAKE) ppd-stamp-phony
 	touch ppd-stamp
 
-ppd-stamp-phony: ppd-stamp-pre $(PPD)
+ppd-stamp-phony: $(PPD)
 
 ppd-stamp-pre:
 	-$(RM) -r ppd
