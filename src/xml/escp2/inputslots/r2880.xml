@@ -38,6 +38,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </slot>
 
  <slot translate="text" name="CD" text="Print to CD">
+  <CD/>
   <InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\001</InitSequence>
   <DeinitSequence>IR\002\000\000\000</DeinitSequence>
  </slot>
