@@ -140,8 +140,8 @@
     </paper>
     <paper name="w297h421">
       <description translate="value" value="Epson L Photo Paper (tear-off borders)"/>
-      <width value="252"/>
-      <height value="360"/>
+      <width value="297"/>
+      <height value="421"/>
       <unit value="english-extended"/>
       <top value="17"/>
       <left value="22"/>
