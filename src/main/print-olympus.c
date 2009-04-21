@@ -2528,7 +2528,7 @@ dyesub_print_row(stp_vars_t *v,
     {
       col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
-	ret = dyesub_print_pixel(v, pv, row, pv->imgw_px - col, plane);
+	ret = dyesub_print_pixel(v, pv, row, pv->imgw_px - col - 1, plane);
       else
 	ret = dyesub_print_pixel(v, pv, row, col, plane);
       if (ret > 1)
