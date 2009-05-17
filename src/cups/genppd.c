@@ -224,9 +224,30 @@ main(int  argc,			    /* I - Number of command-line arguments */
     return (list_ppds(argv[0]));
   else if (argc == 3 && !strcmp(argv[1], "cat"))
     return (cat_ppd(argv[2]));
+  else if (argc == 2 && !strcmp(argv[1], "dog"))
+    {
+      char buf[1024];
+      int status = 0;
+      while (status == 0 && fgets(buf, sizeof(buf) - 1, stdin))
+	{
+	  size_t len = strlen(buf);
+	  if (len == 0)
+	    continue;
+	  if (buf[len - 1] == '\n')
+	    buf[len - 1] = '\0';
+	  status = cat_ppd(buf);
+	  fputs("*%*%EOFEOF\n", stdout);
+	  (void) fflush(stdout);
+	}
+      return status;
+    }
   else if (argc == 2 && !strcmp(argv[1], "VERSION"))
     {
       printf("%s\n", VERSION);
+      return (0);
+    }
+  else if (argc == 2 && !strcmp(argv[1], "BREED"))
+    {
       return (0);
     }
   else

@@ -916,6 +916,14 @@ static const int_param_t int_parameters[] =
 {
   {
     {
+      "QualityEnhancement", N_("Quality Enhancement"), N_("Advanced Printer Functionality"),
+      N_("Enhance print quality by additional passes"),
+      STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+      STP_PARAMETER_LEVEL_ADVANCED2, 0, 1, STP_CHANNEL_NONE, 1, 0
+    }, 0, 4, 0
+  },
+  {
+    {
       "PaperThickness", N_("Paper Thickness"), N_("Advanced Printer Functionality"),
       N_("Set printer paper thickness"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
@@ -2722,6 +2730,10 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       if (stp_escp2_has_media_feature(v, name))
 	description->is_active = 1;
     }
+  else if (strcmp(name, "QualityEnhancement") == 0)
+    {
+      description->is_active = 1;
+    }
 }
 
 const res_t *
@@ -3861,6 +3873,7 @@ setup_printer_weave_parameters(stp_vars_t *v)
   pd->nozzle_start = 0;
   pd->min_nozzles = 1;
   pd->use_black_parameters = 0;
+  pd->extra_vertical_passes = 1;
 }
 
 static void
@@ -3888,6 +3901,7 @@ setup_head_parameters(stp_vars_t *v)
 
   pd->printer_weave = get_printer_weave(v);
 
+  pd->extra_vertical_passes = 1 << stp_get_int_parameter(v, "QualityEnhancement");
   if (stp_escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
       (pd->inkname->inkset == INKSET_CMYK || pd->physical_channels == 1) &&
       pd->res->hres == pd->physical_xdpi && pd->res->vres == 360)
@@ -4274,7 +4288,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
      pd->nozzles,
      pd->nozzle_separation * pd->res->vres / escp2_base_separation(v),
      pd->horizontal_passes,
-     pd->res->vertical_passes,
+     pd->res->vertical_passes * pd->extra_vertical_passes,
      1,
      pd->channels_in_use,
      pd->bitwidth,

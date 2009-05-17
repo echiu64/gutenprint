@@ -1678,47 +1678,15 @@ stp_write_weave(stp_vars_t *v, unsigned char *const cols[])
 	    }
 	  else
 	    in = cols[j];
-	  switch (sw->horizontal_weave)
+	  if (sw->horizontal_weave == 1)
+	    memcpy(sw->s[0], in, length * sw->bitwidth);
+	  else
+	    stp_unpack(length, sw->bitwidth, sw->horizontal_weave, in, sw->s);
+	  if (sw->vertical_subpasses > 1)
 	    {
-	    case 1:
-	      memcpy(sw->s[0], in, length * sw->bitwidth);
-	      break;
-	    case 2:
-	      stp_unpack_2(length, sw->bitwidth, in, sw->s[0], sw->s[1]);
-	      break;
-	    case 4:
-	      stp_unpack_4(length, sw->bitwidth, in,
-			   sw->s[0], sw->s[1], sw->s[2], sw->s[3]);
-	      break;
-	    case 8:
-	      stp_unpack_8(length, sw->bitwidth, in,
-			   sw->s[0], sw->s[1], sw->s[2], sw->s[3],
-			   sw->s[4], sw->s[5], sw->s[6], sw->s[7]);
-	      break;
-	    case 16:
-	      stp_unpack_16(length, sw->bitwidth, in,
-			    sw->s[0], sw->s[1], sw->s[2], sw->s[3],
-			    sw->s[4], sw->s[5], sw->s[6], sw->s[7],
-			    sw->s[8], sw->s[9], sw->s[10], sw->s[11],
-			    sw->s[12], sw->s[13], sw->s[14], sw->s[15]);
-	      break;
-	    }
-	  switch (sw->vertical_subpasses)
-	    {
-	    case 4:
 	      for (idx = 0; idx < sw->horizontal_weave; idx++)
-		stp_split_4(length, sw->bitwidth, sw->s[idx], sw->s[idx],
-			    sw->s[idx + sw->horizontal_weave],
-			    sw->s[idx + sw->horizontal_weave * 2],
-			    sw->s[idx + sw->horizontal_weave * 3]);
-	      break;
-	    case 2:
-	      for (idx = 0; idx < sw->horizontal_weave; idx++)
-		stp_split_2(length, sw->bitwidth, sw->s[idx], sw->s[idx],
-			    sw->s[idx + sw->horizontal_weave]);
-	      break;
-	      /* case 1 is taken care of because the various unpack */
-	      /* functions will do the trick themselves */
+		stp_split(length, sw->bitwidth, sw->vertical_subpasses,
+			  sw->s[idx], sw->horizontal_weave, &(sw->s[idx]));
 	    }
 	  for (i = 0; i < h_passes; i++)
 	    {

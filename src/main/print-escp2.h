@@ -558,6 +558,7 @@ typedef struct
   const res_t *res;		/* Description of the printing resolution */
   const stp_raw_t *printer_weave; /* Printer weave parameters */
   int use_printer_weave;	/* Use the printer weaving mechanism */
+  int extra_vertical_passes;	/* Quality enhancement */
 
   /* page parameters */		/* Indexed from top left */
   int page_left;		/* Left edge of page (points) */
