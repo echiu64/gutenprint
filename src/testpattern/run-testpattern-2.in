@@ -19,6 +19,7 @@ my @standard_options = qw(InkType InkSet,RawChannels DitherAlgorithm Duplex Medi
 my $global_status = 1;
 my $run_installed = 0;
 my $use_min_res = 0;
+my $help = 0;
 my $output = undef;
 
 my @extras = ();
@@ -60,7 +61,56 @@ GetOptions("v+"  => \$valgrind,
 	   "O=s" => \$output,
 	   "d=s" => \@default_options,
 	   "m:s" => \$calc_md5_dir,
-	   "M:s" => \$calc_md5_file);
+	   "M:s" => \$calc_md5_file,
+	   "h"   => \$help);
+
+if ($help) {
+    my $options = join("\n                        ", sort @standard_options);
+    print STDERR <<EOF;
+Usage: run-testpattern-2 [opts] [model ...]
+
+  Options:
+    -c              Use callgrind (incompatible with -v)
+    -f family       Test printers only in the specified family.  Multiple
+                    families may be tested.  By default, all printer families
+		    are tested.
+    -g              Attach testpattern job to gdb
+    -i              Use the installed Gutenprint libraries rather than
+                    source tree
+    -m md5_dir      Generate MD5 checksums and place them in the specified
+                    directory, one file per run.  Directory will be created
+		    if necessary.
+    -M md5_file     Generate MD5 checksums and place them in the specified
+                    file, one line per run.
+    -n              Do not actually run testpattern
+    -O out_dir      Generate actual output and place it in the specified
+                    directory, one file per run.  Directory will be created
+		    if necessary.
+    -o option       Test this option.  Multiple -o options may be specified.
+                    option1,option2 indicates to test each value of option1
+		    in combination with each value of option2.  For floating
+		    point and integer options, a selection of values is
+		    tested.
+		    Default:
+		        $options
+    -p page count   Specify number of pages to print per printer.  Default 1.
+    -q              Do not print progress messages
+    -r              Do not test each resolution (test only the default)
+    -R              Use the minimum resolution (rather than the default)
+                    to test other options.
+    -RR             Use only the minimum resolution, and do not test other
+                    resolutions.
+    -s              Skip duplicate printers (with the same model number
+                    in printers.xml)
+    -S              Run a separate testpattern command for each printer
+    -v[v[v[v]]]     Use valgrind.  Number of -v options controls usage:
+                    -v    Basic valgrind checking, no leak checking
+                    -vv   Additional leak checking
+                    -vvv  Show reachable data also
+                    -vvvv Minimal checks only
+EOF
+exit 1;
+}
 
 my $pages = $std_pages;
 
