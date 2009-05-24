@@ -287,6 +287,9 @@ while (<>) {
 }
 
 my $prevmsg="";
+my $prevdate="";
+my $prevtime="";
+my $prevauthor="";
 my $header="";
 my %deltainfo = ();
 my %revinfo = ();
@@ -340,11 +343,14 @@ foreach (@chlog) {
 	$revinfo{$file} = $revision;
     } else {
 	if ($prevmsg ne "" || keys %deltainfo > 0) {
-	    printmsg($date, $time, $author, $emailsuffix, $prevmsg, %revinfo, %deltainfo);
+	    printmsg($prevdate, $prevtime, $prevauthor, $emailsuffix, $prevmsg, %revinfo, %deltainfo);
 	    %filenames_printed = ();
 	}
 	$header = "$date\t<$author$emailsuffix>\n\n";
 	$prevmsg = $msg;
+	$prevdate = $date;
+	$prevauthor = $author;
+	$prevtime = $time;
 	%deltainfo = ();
 	%revinfo = ();
 	$deltainfo{$file} = $delta;
@@ -364,5 +370,5 @@ foreach (@chlog) {
 }
 
 if ($prevmsg ne "" || keys %deltainfo > 0) {
-    printmsg($date, $time, $author, $emailsuffix, $prevmsg, %revinfo, %deltainfo);
+    printmsg($prevdate, $prevtime, $prevauthor, $emailsuffix, $prevmsg, %revinfo, %deltainfo);
 }
