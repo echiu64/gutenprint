@@ -1540,7 +1540,7 @@ add_to_row(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
       stp_eprintf(v, "ERROR:    vcache: %d\n", sw->vcache);
       stp_eprintf(v, "ERROR: Other parameters: row %d color %d setactive %d hpass %d\n",
 		  row, color, setactive, h_pass);
-      stp_eprintf(v, "ERROR: Buffer overflow: limit %d (jets %d bits %d horizontal %d), actual %ld (current %d added %d), count %d\n",
+      stp_eprintf(v, "ERROR: Buffer overflow: limit %d (jets %d bits %d horizontal %d), actual %ld (current %d added %d), count %ld\n",
 		  sw->virtual_jets * sw->bitwidth * sw->horizontal_width,
 		  sw->virtual_jets, sw->bitwidth, sw->horizontal_width,
 		  (long) (place + nbytes), (int) place, (int) nbytes, (long) count);
