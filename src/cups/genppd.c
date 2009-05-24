@@ -1,4 +1,4 @@
-/*
+ /*
  * "$Id$"
  *
  *   PPD file generation program for the CUPS drivers.
@@ -198,6 +198,13 @@ static int	write_ppd(gzFile fp, const stp_printer_t *p,
  * 'main()' - Process files on the command-line...
  */
 
+const char slang_c[] = "LANG=C";
+const char slcall_c[] = "LC_ALL=C";
+const char slcnumeric_c[] = "LC_NUMERIC=C";
+char lang_c[sizeof(slang_c) + 1];
+char lcall_c[sizeof(slcall_c) + 1];
+char lcnumeric_c[sizeof(slcnumeric_c) + 1];
+
 int				    /* O - Exit status */
 main(int  argc,			    /* I - Number of command-line arguments */
      char *argv[])		    /* I - Command-line arguments */
@@ -206,9 +213,12 @@ main(int  argc,			    /* I - Number of command-line arguments */
   * Force POSIX locale, since stp_init incorrectly calls setlocale...
   */
 
-  putenv((char *)"LANG=C");
-  putenv((char *)"LC_ALL=C");
-  putenv((char *)"LC_NUMERIC=C");
+  strcpy(lang_c, slang_c);
+  strcpy(lcall_c, slcall_c);
+  strcpy(lcnumeric_c, slcnumeric_c);
+  putenv(lang_c);
+  putenv(lcall_c);
+  putenv(lcnumeric_c);
 
  /*
   * Initialise libgutenprint
