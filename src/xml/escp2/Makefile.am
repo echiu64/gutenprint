@@ -50,6 +50,8 @@ xml-stamp: media/xml-stamp			\
 	mv $@.tmp $@
 
 all-local: xml-stamp
+
+dist-hook: xml-stamp
 ## Clean
 
 CLEANFILES = xml-stamp

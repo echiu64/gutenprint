@@ -56,7 +56,7 @@ xmli18n-tmp.h: xml-stamp extract-strings
 	mv $@.tmp $@
 
 
-dist-hook: xmli18n-tmp.h
+dist-hook: xmli18n-tmp.h xml-stamp
 # xmli18n-tmp.h is needed by po/POTFILES.in at dist time
 
 ## Clean
