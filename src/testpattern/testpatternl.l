@@ -64,8 +64,11 @@ do							\
 
 %option noyywrap
 
+ldigit		[1-9]
 digit		[0-9]
-integer		([-+]|0[xX])?{digit}+
+odigit		[0-7]
+xdigit		[0-9a-fA-F]
+integer		([-+]?(0|{ldigit}{digit}*))|(0{odigit}*)|(0[xX]{xdigit}+)
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
 string		([\"][^\"]+[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)|([\'][^\']*[\'])
 ws		[ \t]+

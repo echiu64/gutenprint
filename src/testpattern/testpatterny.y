@@ -138,6 +138,9 @@ find_color(const char *name)
 %token END_JOB
 %token END
 
+%type <sval> COLOR
+%type <dval> NUMBER
+
 %start Thing
 
 %%
@@ -240,47 +243,47 @@ inputspec: MODE modespec
 
 level: LEVEL COLOR NUMBER
 	{
-	  int channel = find_color($2.sval);
+	  int channel = find_color($2);
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>level %s %f\n", $2.sval, $3.dval);
+	    fprintf(stderr, ">>>level %s %f\n", $2, $3);
 	  if (channel >= 0)
-	    global_levels[channel] = $3.dval;
+	    global_levels[channel] = $3;
 	}
 ;
 
 channel_level: LEVEL tINT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>channel_level %d %f\n", $2, $3.dval);
+	    fprintf(stderr, ">>>channel_level %d %f\n", $2, $3);
 	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
-	    global_levels[$2] = $3.dval;
+	    global_levels[$2] = $3;
 	}
 ;
 
 gamma: GAMMA COLOR NUMBER
 	{
-	  int channel = find_color($2.sval);
+	  int channel = find_color($2);
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>gamma %s %f\n", $2.sval, $3.dval);
+	    fprintf(stderr, ">>>gamma %s %f\n", $2, $3);
 	  if (channel >= 0)
-	    global_gammas[channel] = $3.dval;
+	    global_gammas[channel] = $3;
 	}
 ;
 
 channel_gamma: GAMMA tINT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>channel_gamma %d %f\n", $2, $3.dval);
+	    fprintf(stderr, ">>>channel_gamma %d %f\n", $2, $3);
 	  if ($2 >= 0 && $2 <= STP_CHANNEL_LIMIT)
-	    global_gammas[$2] = $3.dval;
+	    global_gammas[$2] = $3;
 	}
 ;
 
 global_gamma: GAMMA NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>global_gamma %f\n", $2.dval);
-	  global_gamma = $2.dval;
+	    fprintf(stderr, ">>>global_gamma %f\n", $2);
+	  global_gamma = $2;
 	}
 ;
 steps: STEPS tINT
@@ -293,8 +296,8 @@ steps: STEPS tINT
 ink_limit: INK_LIMIT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>ink_limit %f\n", $2.dval);
-	  global_ink_limit = $2.dval;
+	    fprintf(stderr, ">>>ink_limit %f\n", $2);
+	  global_ink_limit = $2;
 	}
 ;
 printer: PRINTER tSTRING
@@ -358,8 +361,8 @@ parameter_bool: PARAMETER_BOOL tSTRING tINT
 parameter_float: PARAMETER_FLOAT tSTRING NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>parameter_float %s %f\n", $2, $3.dval);
-	  stp_set_float_parameter(global_vars, $2, $3.dval);
+	    fprintf(stderr, ">>>parameter_float %s %f\n", $2, $3);
+	  stp_set_float_parameter(global_vars, $2, $3);
 	  free($2);
 	}
 ;
@@ -383,36 +386,36 @@ parameter: parameter_string | parameter_int | parameter_float | parameter_curve 
 density: DENSITY NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>density %f\n", $2.dval);
-	  global_density = $2.dval;
+	    fprintf(stderr, ">>>density %f\n", $2);
+	  global_density = $2;
 	}
 ;
 top: TOP NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>top %f\n", $2.dval);
-	  global_xtop = $2.dval;
+	    fprintf(stderr, ">>>top %f\n", $2);
+	  global_xtop = $2;
 	}
 ;
 left: LEFT NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
- 	    fprintf(stderr, ">>>left %f\n", $2.dval);
-	  global_xleft = $2.dval;
+ 	    fprintf(stderr, ">>>left %f\n", $2);
+	  global_xleft = $2;
 	}
 ;
 hsize: HSIZE NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>hsize %f\n", $2.dval);
-	  global_hsize = $2.dval;
+	    fprintf(stderr, ">>>hsize %f\n", $2);
+	  global_hsize = $2;
 	}
 ;
 vsize: VSIZE NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>vsize %f\n", $2.dval);
-	  global_vsize = $2.dval;
+	    fprintf(stderr, ">>>vsize %f\n", $2);
+	  global_vsize = $2;
 	}
 ;
 blackline: BLACKLINE tINT
@@ -434,13 +437,13 @@ noscale: NOSCALE tINT
 color_block1: NUMBER NUMBER NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>color_block1 %f %f %f (%d)\n", $1.dval, $2.dval, $3.dval,
+	    fprintf(stderr, ">>>color_block1 %f %f %f (%d)\n", $1, $2, $3,
 		    current_index);
 	  if (current_index < STP_CHANNEL_LIMIT)
 	    {
-	      current_testpattern->d.pattern.mins[current_index] = $1.dval;
-	      current_testpattern->d.pattern.vals[current_index] = $2.dval;
-	      current_testpattern->d.pattern.gammas[current_index] = $3.dval;
+	      current_testpattern->d.pattern.mins[current_index] = $1;
+	      current_testpattern->d.pattern.vals[current_index] = $2;
+	      current_testpattern->d.pattern.gammas[current_index] = $3;
 	      current_index++;
 	    }
 	}
@@ -457,14 +460,14 @@ color_blocks1: color_block1 color_blocks1b
 
 color_block2a: COLOR NUMBER NUMBER NUMBER
 	{
-	  int channel = find_color($1.sval);
+	  int channel = find_color($1);
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>color_block2a %s %f %f %f\n", $1.sval, $2.dval, $3.dval, $4.dval);
+	    fprintf(stderr, ">>>color_block2a %s %f %f %f\n", $1, $2, $3, $4);
 	  if (channel >= 0 && channel < STP_CHANNEL_LIMIT)
 	    {
-	      current_testpattern->d.pattern.mins[channel] = $2.dval;
-	      current_testpattern->d.pattern.vals[channel] = $3.dval;
-	      current_testpattern->d.pattern.gammas[channel] = $4.dval;
+	      current_testpattern->d.pattern.mins[channel] = $2;
+	      current_testpattern->d.pattern.vals[channel] = $3;
+	      current_testpattern->d.pattern.gammas[channel] = $4;
 	    }
 	}
 ;
@@ -472,12 +475,12 @@ color_block2a: COLOR NUMBER NUMBER NUMBER
 color_block2b: CHANNEL tINT NUMBER NUMBER NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>color_block2b %d %f %f %f\n", $2, $3.dval, $4.dval, $5.dval);
+	    fprintf(stderr, ">>>color_block2b %d %f %f %f\n", $2, $3, $4, $5);
 	  if ($2 >= 0 && $2 < STP_CHANNEL_LIMIT)
 	    {
-	      current_testpattern->d.pattern.mins[$2] = $3.dval;
-	      current_testpattern->d.pattern.vals[$2] = $4.dval;
-	      current_testpattern->d.pattern.gammas[$2] = $5.dval;
+	      current_testpattern->d.pattern.mins[$2] = $3;
+	      current_testpattern->d.pattern.vals[$2] = $4;
+	      current_testpattern->d.pattern.gammas[$2] = $5;
 	    }
 	}
 ;
@@ -497,13 +500,13 @@ color_blocks: color_blocks1 | color_blocks2
 patvars: NUMBER NUMBER NUMBER NUMBER NUMBER
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>patvars %f %f %f %f %f\n", $1.dval, $2.dval, $3.dval, $4.dval, $5.dval);
+	    fprintf(stderr, ">>>patvars %f %f %f %f %f\n", $1, $2, $3, $4, $5);
 	  current_testpattern->type = E_PATTERN;
-	  current_testpattern->d.pattern.lower = $1.dval;
-	  current_testpattern->d.pattern.upper = $2.dval;
-	  current_testpattern->d.pattern.levels[1] = $3.dval;
-	  current_testpattern->d.pattern.levels[2] = $4.dval;
-	  current_testpattern->d.pattern.levels[3] = $5.dval;
+	  current_testpattern->d.pattern.lower = $1;
+	  current_testpattern->d.pattern.upper = $2;
+	  current_testpattern->d.pattern.levels[1] = $3;
+	  current_testpattern->d.pattern.levels[2] = $4;
+	  current_testpattern->d.pattern.levels[3] = $5;
 	  current_testpattern = get_next_testpattern();
 	  current_index = 0;
 	}
