@@ -70,7 +70,7 @@ odigit		[0-7]
 xdigit		[0-9a-fA-F]
 integer		([-+]?(0|{ldigit}{digit}*))|(0{odigit}*)|(0[xX]{xdigit}+)
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
-string		([\"][^\"]+[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)|([\'][^\']*[\'])
+string		([\"][^\"]*[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)|([\'][^\']*[\'])
 ws		[ \t]+
 
 %%
