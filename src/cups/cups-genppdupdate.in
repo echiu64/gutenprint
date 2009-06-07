@@ -24,6 +24,7 @@ use FileHandle;
 use IPC::Open2;
 
 sub parse_options ();
+sub get_driver_version ();
 sub update_ppd ($); # Original PPD filename
 sub get_ppd_fh ($$$$$); # Return contents of desired PPD
 sub find_ppd ($$$$); # Gutenprint Filename, driver, language (e.g. en, sv),
@@ -70,17 +71,11 @@ my @languages = qw(Global C @ALL_LINGUAS@);
 my $serverdir = "@cups_conf_serverbin@";
 my $driver_bin = "$serverdir/driver/gutenprint.$version";
 my $driver_version = "";
-my $server_dog = 0;
-my $server_dog_initialized = 0;
-		  
+my $server_multicat = 0;
+my $server_multicat_initialized = 0;
+
 if (-x $driver_bin) {
-    if (system("$driver_bin BREED 2>/dev/null") == 0) {
-	$server_dog = 1;
-    } else {
-	$server_dog = 0;
-    }
-    $driver_version = `$driver_bin VERSION`;
-    chomp $driver_version;
+    get_driver_version();
 }
 
 $Getopt::Std::STANDARD_HELP_VERSION = 1;
@@ -232,6 +227,24 @@ sub VERSION_MESSAGE($;$$$) {
 sub help() {
     HELP_MESSAGE(\*STDOUT);
 }
+		  
+sub check_multicat() {
+}
+
+sub get_driver_version() {
+    open(DBIN, "$driver_bin org.gutenprint.extensions 2>/dev/null |") or return 0;
+    my ($line);
+    $server_multicat = 0;
+    while ($line = <DBIN>) {
+	if ($line =~ /^org.gutenprint.multicat$/) {
+	    $server_multicat = 1;
+	    last;
+	}
+    }
+    close DBIN;
+    $driver_version = `$driver_bin VERSION`;
+    chomp $driver_version;
+}
 
 sub parse_options () {
     if (!getopts('d:hnqs:vNo:p:P:r:ifl:')) {
@@ -269,7 +282,7 @@ sub parse_options () {
 		if (-d $opt_s) {
 		    $ppd_base_dir = "$opt_s";
 		    $driver_bin = "";
-		    $server_dog = 0;
+		    $server_multicat = 0;
 		    $use_static_ppd = "yes";
 		} else {
 		    die "$opt_s: invalid directory: $!\n";
@@ -283,14 +296,8 @@ sub parse_options () {
 	    # for an exact match.
 	    $file_version = "\"$version";
 	    if (-x $driver_bin) {
-		if (system("$driver_bin BREED 2>/dev/null") == 0) {
-		    $server_dog = 1;
-		} else {
-		    $server_dog = 0;
-		}
-		$driver_version = `$driver_bin VERSION`;
+		get_driver_version();
 		$use_static_ppd = "no";
-		chomp $driver_version;
 		$file_version = "\"$driver_version\"\$";
 	    } elsif (! -d $ppd_base_dir && ! -l $ppd_base_dir) {
 		die "Gutenprint $version does not appear to be installed!\n";
@@ -301,7 +308,7 @@ sub parse_options () {
 	if (-d $opt_s) {
 	    $ppd_base_dir = "$opt_s";
 	    $driver_bin = "";
-	    $server_dog = 0;
+	    $server_multicat = 0;
 	    $driver_version = "";
 	    $use_static_ppd = "yes";
 	}
@@ -320,13 +327,7 @@ sub parse_options () {
     if ($opt_P) {
 	if (-x $opt_P) {
 	    $driver_bin = "$opt_P";
-	    if (system("$driver_bin BREED 2>/dev/null") == 0) {
-		$server_dog = 1;
-	    } else {
-		$server_dog = 0;
-	    }
-	    $driver_version = `$driver_bin VERSION`;
-	    chomp $driver_version;
+	    get_driver_version();
 	    $use_static_ppd = "no";
 	}
 	else {
@@ -378,12 +379,12 @@ sub get_ppd_fh($$$$$) {
 	foreach $url (@url_list) {
 	    $new_ppd_filename = $url;
 	    if ($debug & 8) {
-		print "Trying ", (! $server_dog ? "$driver_bin cat " : ""), "$url for $driver, $simplified, $locale, $region\n";
+		print "Trying ", (! $server_multicat ? "$driver_bin cat " : ""), "$url for $driver, $simplified, $locale, $region\n";
 	    }
-	    if ($server_dog) {
-		if (! $server_dog_initialized) {
-		    my ($pid) = open2(*Reader, *Writer, "$driver_bin dog");
-		    $server_dog_initialized = 1;
+	    if ($server_multicat) {
+		if (! $server_multicat_initialized) {
+		    my ($pid) = open2(*Reader, *Writer, "$driver_bin org.gutenprint.multicat");
+		    $server_multicat_initialized = 1;
 		}
 		print Writer "$url\n";
 		return ($new_ppd_filename, \*Reader);
@@ -521,11 +522,11 @@ sub update_ppd ($) {
 	print "Update PPD $ppd_source_filename from $new_ppd_filename [nyq]? ";
 	my $input = readline(*STDIN);
 	if ($input =~ /^q/i) {
-	    close $source_fd if !$server_dog;
+	    close $source_fd if !$server_multicat;
 	    print "Skipping all...\n";
 	    return -2;
 	} elsif (! ($input =~ /^y/i)) {
-	    close $source_fd if !$server_dog;;
+	    close $source_fd if !$server_multicat;
 	    print "Skipping...\n";
 	    return -1;
 	}
@@ -541,7 +542,7 @@ sub update_ppd ($) {
     # Close original and temporary files...
 
     close ORIG;
-    if (! $server_dog && ! close $source_fd) {
+    if (! $server_multicat && ! close $source_fd) {
 	print "Unable to retrieve new PPD file: $!\n";
 	return 0;
     }
