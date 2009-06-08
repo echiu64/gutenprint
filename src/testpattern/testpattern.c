@@ -92,11 +92,14 @@ int global_did_something;
 int global_noscale = 0;
 int global_suppress_output = 0;
 int global_quiet = 0;
+int global_fail_verify_ok = 0;
 char *global_output = NULL;
 FILE *output = NULL;
 int write_to_process = 0;
 int start_job = 0;
 int end_job = 0;
+int failures = 0;
+int skipped = 0;
 
 static testpattern_t *static_testpatterns;
 
@@ -422,18 +425,44 @@ do_print(void)
   stp_set_top(v, top);
 
   stp_merge_printvars(v, stp_printer_get_defaults(the_printer));
-  if (start_job)
+  if (stp_verify(v))
     {
-      stp_start_job(v, &theImage);
-      start_job = 0;
+      if (start_job)
+	{
+	  stp_start_job(v, &theImage);
+	  start_job = 0;
+	}
+      if (stp_print(v, &theImage) != 1)
+	{
+	  if (!global_quiet)
+	    fprintf(stderr, "FAILED!");
+	  failures++;
+	  status = 2;
+	}
+      if (end_job)
+	{
+	  stp_end_job(v, &theImage);
+	  end_job = 0;
+	}
     }
-  if (stp_print(v, &theImage) != 1)
-    status = 2;
-  if (end_job)
+  else
     {
-      stp_end_job(v, &theImage);
-      end_job = 0;
+      if (! global_fail_verify_ok)
+	{
+	  if (!global_quiet)
+	    fprintf(stderr, "FAILED!");
+	  failures++;
+	  status = 2;
+	}
+      else
+	{
+	  if (!global_quiet)
+	    fprintf(stderr, "(skipped)");
+	  skipped++;
+	}
     }
+  if (!global_quiet)
+    fprintf(stderr, "\n");
   stp_vars_destroy(v);
   stp_free(static_testpatterns);
   static_testpatterns = NULL;
@@ -448,7 +477,7 @@ main(int argc, char **argv)
   int global_status = 0;
   while (1)
     {
-      c = getopt(argc, argv, "nq");
+      c = getopt(argc, argv, "nqy");
       if (c == -1)
 	break;
       switch (c)
@@ -458,6 +487,9 @@ main(int argc, char **argv)
 	  break;
 	case 'q':
 	  global_quiet = 1;
+	  break;
+	case 'y':
+	  global_fail_verify_ok = 1;
 	  break;
 	default:
 	  break;
@@ -475,6 +507,8 @@ main(int argc, char **argv)
 	global_status = 1;
     }
   close_output();
+  if (!global_quiet)
+    fprintf(stderr, "%d fail, %d skipped\n", failures, skipped);
   return global_status;
 }
 
@@ -1135,8 +1169,6 @@ Image_conclude(stp_image_t *image)
       abort();
     }
   Image_is_valid = 0;
-  if (!global_quiet)
-    fprintf(stderr, "\n");
 }
 
 static const char *

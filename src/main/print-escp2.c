@@ -2653,7 +2653,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       const inklist_t *inks = stp_escp2_inklist(v);
       int ninktypes = inks->n_inks;
       description->bounds.str = stp_string_list_create();
-      if (ninktypes > 1)
+      if (ninktypes >= 1)
 	{
 	  stp_string_list_add_string(description->bounds.str, "None", "None");
 	  for (i = 0; i < ninktypes; i++)
@@ -2668,7 +2668,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
-      if (ninktypes <= 1)
+      else
 	description->is_active = 0;
     }
   else if (strcmp(name, "RawChannelNames") == 0)

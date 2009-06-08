@@ -33,6 +33,7 @@ my %models;
 my %families;
 my $skip_duplicate_printers = 0;
 my $std_pages = 1;
+my $duplex_pages = 4;
 my $skip_resolutions = 0;
 my $quiet = 0;
 my $single = 0;
@@ -50,6 +51,7 @@ GetOptions("v+"  => \$valgrind,
 	   "g"   => \$gdb_attach,
 	   "n"   => \$dontrun,
 	   "p:i" => \$std_pages,
+	   "P:i" => \$duplex_pages,
 	   "s!"  => \$skip_duplicate_printers,
 	   "S!"  => \$single,
 	   "i!"  => \$run_installed,
@@ -93,7 +95,9 @@ Usage: run-testpattern-2 [opts] [model ...]
 		    tested.
 		    Default:
 		        $options
-    -p page count   Specify number of pages to print per printer.  Default 1.
+    -p page count   Specify number of pages to print per printer.  Default $std_pages.
+    -P page count   Specify number of pages to print per printer when testing
+                    duplex mode.  Default $duplex_pages.
     -q              Do not print progress messages
     -r              Do not test each resolution (test only the default)
     -R              Use the minimum resolution (rather than the default)
@@ -486,13 +490,12 @@ sub do_printer($$) {
 		    }
 		    # FIXME! need to handle Duplex as a subkey
 		    map {
+			$pages = $std_pages;
 			if ($key ne $_) {
 			    set_opt($_, $base_settings{$_}, $printer);
 			    if ($key eq "Duplex") {
 				set_opt("JobMode", "Job", $printer);
-				$pages = 4;
-			    } else {
-				$pages = $std_pages;
+				$pages = $duplex_pages;
 			    }
 			}
 		    } keys %base_settings;
@@ -571,7 +574,7 @@ if ($dontrun) {
 	$suppress = '-n';
     }
     my ($qopt) = $quiet ? "-q" : "";
-    $testpattern_command = "$valgrind_command ./testpattern $suppress $qopt";
+    $testpattern_command = "$valgrind_command ./testpattern -y $suppress $qopt";
     if ($single) {
 	foreach my $printer (@printer_list) {
 	    open TESTPATTERN, "|$testpattern_command" or
