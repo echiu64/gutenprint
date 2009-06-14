@@ -122,7 +122,6 @@ find_color(const char *name)
 %token CMY
 %token GRAY
 %token WHITE
-%token RAW
 %token MODE
 %token PAGESIZE
 %token MESSAGE
