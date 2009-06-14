@@ -1,6 +1,6 @@
-Welcome to Gutenprint 5.2.4, a stable release of Gutenprint 5.2.  This
-release has bug fixes and a few new features over 5.2.3.  Please read
-these release notes carefully.
+Welcome to Gutenprint 5.2.4-rc1 (5.2.3.99.1), a pre-release of
+Gutenprint 5.2.4.  This release has bug fixes and a few new features
+over 5.2.3.  Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
