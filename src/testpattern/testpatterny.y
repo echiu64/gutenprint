@@ -545,48 +545,17 @@ image: IMAGE tINT tINT
 	}
 ;
 
-Message0: MESSAGE tSTRING
+Message: tSTRING
 	{
-	  fprintf(stderr,"%s",$2);
-	  free($2);
-	}
-;
-Message1: MESSAGE tSTRING tSTRING
-	{
-	  fprintf(stderr,"%s%s", $2, $3);
-	  free($2);
-	  free($3);
-	}
-;
-Message2: MESSAGE tSTRING tSTRING tSTRING
-	{
-	  fprintf(stderr,"%s%s%s", $2, $3, $4);
-	  free($2);
-	  free($3);
-	  free($4);
-	}
-;
-Message3: MESSAGE tSTRING tSTRING tSTRING tSTRING
-	{
-	  fprintf(stderr, "%s%s%s%s", $2, $3, $4, $5);
-	  free($2);
-	  free($3);
-	  free($4);
-	  free($5);
-	}
-;
-Message4: MESSAGE tSTRING tSTRING tSTRING tSTRING tSTRING
-	{
-	  fprintf(stderr, "%s%s%s%s%s", $2, $3, $4, $5, $6);
-	  free($2);
-	  free($3);
-	  free($4);
-	  free($5);
-	  free($6);
+	  fprintf(stderr,"%s",$1);
+	  free($1);
 	}
 ;
 
-message: Message0 | Message1 | Message2 | Message3 | Message4
+Messages: /* empty */ | Messages Message
+;
+
+message: MESSAGE Messages
 ;
 
 Output0: OUTPUT
@@ -597,11 +566,13 @@ Output0: OUTPUT
 	  global_output = NULL;
 	  output = stdout;
 	}
+;
 
 Output1: OUTPUT tSTRING
 	{
 	  global_output = $2;
 	}
+;
 
 output: Output0 | Output1
 ;
