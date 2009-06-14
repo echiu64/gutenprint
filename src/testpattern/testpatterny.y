@@ -641,7 +641,7 @@ Image: image
 Rules: /* empty */ | Rules Rule
 ;
 
-Output: Patterns | Image
+Print: Patterns | Image
 ;
 
 EOF: /* empty */ | END SEMI
@@ -652,7 +652,7 @@ Thing: 	Rules
 	{
 	  current_testpattern = get_next_testpattern();
 	}
-	Output EOF
+	Print EOF
 ;
 
 %%
