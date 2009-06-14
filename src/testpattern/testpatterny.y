@@ -90,15 +90,8 @@ find_color(const char *name)
 %token <ival> tINT
 %token <dval> tDOUBLE
 %token <sval> tSTRING
+%token <sval> COLOR
 
-%token CYAN
-%token L_CYAN
-%token MAGENTA
-%token L_MAGENTA
-%token YELLOW
-%token D_YELLOW
-%token BLACK
-%token L_BLACK
 %token GAMMA
 %token LEVEL
 %token STEPS
@@ -138,104 +131,99 @@ find_color(const char *name)
 %token END_JOB
 %token END
 
-%type <sval> COLOR
 %type <dval> NUMBER
 
 %start Thing
 
 %%
 
-COLOR: CYAN | L_CYAN | MAGENTA | L_MAGENTA
-	| YELLOW | D_YELLOW | BLACK | L_BLACK
-;
 NUMBER: tDOUBLE | tINT
+	{
+	}
 ;
 
-cmykspec: CMYK tINT
+cmykspec: CMYK
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>cmykspec %d\n", $2);
+	    fprintf(stderr, ">>>cmykspec\n");
 	  global_image_type = "CMYK";
 	  global_channel_depth = 4;
 	  global_invert_data = 0;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $2;
 	}
 ;
 
-kcmyspec: KCMY tINT
+kcmyspec: KCMY
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>kcmyspec %d\n", $2);
+	    fprintf(stderr, ">>>kcmyspec\n");
 	  global_image_type = "KCMY";
 	  global_channel_depth = 4;
 	  global_invert_data = 0;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $2;
 	}
 ;
 
-rgbspec: RGB tINT
+rgbspec: RGB
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>rgbspec %d\n", $2);
+	    fprintf(stderr, ">>>rgbspec\n");
 	  global_image_type = "RGB";
 	  global_channel_depth = 3;
 	  global_invert_data = 1;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $2;
 	}
 ;
 
-cmyspec: CMY tINT
+cmyspec: CMY
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>cmyspec %d\n", $2);
+	    fprintf(stderr, ">>>cmyspec\n");
 	  global_image_type = "CMY";
 	  global_channel_depth = 3;
 	  global_invert_data = 0;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $2;
 	}
 ;
 
-grayspec: GRAY tINT
+grayspec: GRAY
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>grayspec %d\n", $2);
+	    fprintf(stderr, ">>>grayspec\n");
 	  global_image_type = "Grayscale";
 	  global_channel_depth = 1;
 	  global_invert_data = 0;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $2;
 	}
 ;
 
-whitespec: WHITE tINT
+whitespec: WHITE
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
-	    fprintf(stderr, ">>>whitespec %d\n", $2);
+	    fprintf(stderr, ">>>whitespec\n");
 	  global_image_type = "Whitescale";
 	  global_channel_depth = 1;
 	  global_invert_data = 1;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $2;
 	}
 ;
 
-extendedspec: EXTENDED tINT tINT
+extendedspec: EXTENDED tINT
 	{
 	  if (getenv("STP_TESTPATTERN_DEBUG"))
 	    fprintf(stderr, ">>>extendedspec %d\n", $2);
 	  global_image_type = "Raw";
 	  global_invert_data = 0;
 	  global_channel_depth = $2;
-	  if ($2 == 8 || $2 == 16)
-	    global_bit_depth = $3;
 	}
 ;
 
-modespec: cmykspec | kcmyspec | rgbspec | cmyspec | grayspec | whitespec | extendedspec
+modespec1: cmykspec | kcmyspec | rgbspec | cmyspec | grayspec | whitespec | extendedspec
+;
+
+modespec2: modespec1 tINT
+	{
+	  if (getenv("STP_TESTPATTERN_DEBUG"))
+	    fprintf(stderr, ">>>modespec2 %d\n", $2);
+	  if ($2 == 8 || $2 == 16)
+	    global_bit_depth = $2;
+	}
+
+modespec: modespec1 | modespec2
 ;
 
 inputspec: MODE modespec

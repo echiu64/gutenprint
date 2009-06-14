@@ -72,17 +72,10 @@ integer		([-+]?(0|{ldigit}{digit}*))|(0{odigit}*)|(0[xX]{xdigit}+)
 float		[-+]?{digit}+(\.{digit}+)?([eE][-+]?{digit}+)?
 string		([\"][^\"]*[\"])|([a-zA-Z0-9_][-a-zA-Z0-9_]*)|([\'][^\']*[\'])
 ws		[ \t]+
+color		((l_)?(cyan|magenta|yellow|black))|(l_l_black)|(d_yellow)
 
 %%
 
-cyan			yylval.sval = yytext;DBG(CYAN); return CYAN;
-l_cyan			yylval.sval = yytext;DBG(L_CYAN); return L_CYAN;
-magenta			yylval.sval = yytext;DBG(MAGENTA); return MAGENTA;
-l_magenta		yylval.sval = yytext;DBG(L_MAGENTA); return L_MAGENTA;
-yellow			yylval.sval = yytext;DBG(YELLOW); return YELLOW;
-d_yellow		yylval.sval = yytext;DBG(D_YELLOW); return D_YELLOW;
-black			yylval.sval = yytext;DBG(BLACK); return BLACK;
-l_black			yylval.sval = yytext;DBG(L_BLACK); return L_BLACK;
 gamma			DBG(GAMMA); return GAMMA;
 level			DBG(LEVEL); return LEVEL;
 steps			DBG(STEPS); return STEPS;
@@ -123,7 +116,7 @@ start_job		DBG(START_JOB); return START_JOB;
 end_job			DBG(END_JOB); return END_JOB;
 end			DBG(END); return END;
 
-
+{color}			yylval.sval = yytext;DBG(COLOR); return COLOR;
 {integer}		yylval.ival = strtol(yytext, NULL, 0); yylval.dval = (double) yylval.ival; DBG(tINT); return tINT;
 {float}			yylval.dval = strtod(yytext, NULL); DBG(tDOUBLE); return tDOUBLE;
 {string}		yylval.sval = c_strstrip(yytext); DBG(tSTRING); return tSTRING;
