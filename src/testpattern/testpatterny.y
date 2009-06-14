@@ -587,10 +587,7 @@ Message4: MESSAGE tSTRING tSTRING tSTRING tSTRING tSTRING
 	}
 ;
 
-A_Message: Message0 | Message1 | Message2 | Message3 | Message4
-;
-
-message: A_Message
+message: Message0 | Message1 | Message2 | Message3 | Message4
 ;
 
 Output0: OUTPUT
@@ -607,10 +604,7 @@ Output1: OUTPUT tSTRING
 	  global_output = $2;
 	}
 
-A_Output: Output0 | Output1
-;
-
-output: A_Output
+output: Output0 | Output1
 ;
 
 start_job: START_JOB
