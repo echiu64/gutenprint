@@ -129,14 +129,14 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.4-rc1 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.4-rc1">June 16, 2009</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.4-rc1, a release candiddate from the stable branch of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.3 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.3">December 22, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.2 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.2">November 16, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.2, a stable release of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -177,12 +177,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.3</b> 
+			<b>Gutenprint 5.2.4-rc1</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.3-ub.dmg?download">gutenprint-5.2.3-ub.dmg</a></span>&nbsp;&nbsp;(50.9 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.4-rc1.dmg?download">gutenprint-5.2.4-rc1.dmg</a></span>&nbsp;&nbsp;(13.8 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.2.3.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.4-rc1, a release candidate from the stable branch of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/project/downloading.php?group_id=1537&filename=gutenprint-5.2.3.99.1.tar.bz2?download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -208,7 +208,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release
 		<p>
 			<b>Gutenprint Uninstaller</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.2.3.dmg?download">gutenprint-uninstaller-1.2.3.dmg</a></span>&nbsp;&nbsp;(780 KB) 
+			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.2.5.dmg?download">gutenprint-uninstaller-1.2.5.dmg</a></span>&nbsp;&nbsp;(800 KB) 
 		</p>
 		<p>
 			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), and Mac OS X "Leopard" (MacOS X 10.5.x).
@@ -252,6 +252,60 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+
+<a name="5.2.4-rc1"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.3</b> 
+		</td>
+		<td align="right">
+			<b>2009-06-16</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.4-rc1</b> is a release candidate from the stable branch of Gutenprint 5.2.  Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. Notable changes since the Gutenprint 5.2.3:</p> 
+	
+<ul style="list-style:disc;">
+	<li>The packaging for Mac OS X has been changed:
+	<ol style="list-style:lower-alpha">
+	<li>Printer PPDs are no longer included in the download.  The PPDs will be created during the installation process.  This will add several minutes to the installation process.  This change will reduce the download by over 30 MB.  </li>
+	<li>There are now separate binaries for Leopard (OS X 10.5).  The proper files will automatically be instlled based on the version of OS X on the boot disk.</li>	
+	</ol>
+	</li>
+	
+	<li>
+New printers supported in this release:
+<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;Canon SELPHY CP-520<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo R2880<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus DX4000<br>
+  	</li>
+ 	<li>Printing to the Epson PM-D600 has been corrected.</li>
+	<li> Printing to the EPSON Artisan 700 and 800 and Stylus Photo P/TX700 and 800 series printers has been corrected.  Among other issues, it should now be possible to print reliably using the photo tray.</li>
+	<li> The names of the following Epson printers have been corrected:<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX700W<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX700W<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX800FW<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX800FW<br>
+	</li>
+	<li>The names of various Ricoh and Ricoh-based printers have been corrected to match Ricoh's model names and the OpenPrinting database.</li>
+	<li> Support has been added for L-size paper with tear-off borders.</li>
+	<li> The ordering of inks in quadtone ink sets on Epson printers has been corrected.  In addition, support has been added for MIS quadtone and 6 tone inks.</li>
+	<li> It is now possible to adjust the ink parameters for quadtone inks in CUPS.  Previously, these parameters could only be adjusted in the enhanced Print plugin for GIMP and other native Gutenprint applications.</li>
+	<li> Updating CUPS PPD files is now faster.</li>
+	</ul>
+ <p>
+Full details are listed in the <a href="http://sourceforge.net/project/shownotes.php?release_id=689646&group_id=1537">release notes</a>.
+</p>
+
+
+
+
+
+
+
 <a name="5.2.3"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
