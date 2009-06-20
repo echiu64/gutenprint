@@ -965,6 +965,7 @@ static const int_param_t int_parameters[] =
   {
     {
       "FeedAdjustment", N_("Feed Adjustment"), N_("Advanced Printer Functionality"),
+      /* xgettext:no-c-format */
       N_("Set paper feed adjustment (0.01% units)"),
       STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
       STP_PARAMETER_LEVEL_ADVANCED3, 0, 1, STP_CHANNEL_NONE, 1, 0
