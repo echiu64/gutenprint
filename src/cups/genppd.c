@@ -1793,7 +1793,7 @@ write_ppd(
 			{
 			  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 				   desc.name, stp_i18n_lookup(po, desc.text), _("Fine Adjustment"));
-			  gzprintf(fp, "*OPOptionHints Stp%s: \"hide\"\n",
+			  gzprintf(fp, "*OPOptionHints StpFine%s: \"hide\"\n",
 				   lparam->name);
 			  gzprintf(fp, "*StpStpFine%s: %d %d %d %d %d %.3f %.3f %.3f\n",
 				   desc.name, STP_PARAMETER_TYPE_INVALID, 0,
