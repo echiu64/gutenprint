@@ -139,7 +139,7 @@ dnl Specify a configuration file.
 AM_CONFIG_HEADER([config.h])
 
 dnl Available languages (translations)
-ALL_LINGUAS="cs da de el en_GB es fr hu it ja nb nl pl pt sk sv zh_TW"
+ALL_LINGUAS="cs da de el en_GB es fr hu it ja nb nl pl pt ru sk sv zh_TW"
 AC_SUBST(ALL_LINGUAS)
 
 dnl Set up libtool scripts.
