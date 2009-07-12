@@ -323,6 +323,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
   {
+    "ChannelNames", N_("Channel Names"), N_("Advanced Printer Functionality"),
+    N_("Channel Names"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
+  },
+  {
     "PrintingMode", N_("Printing Mode"), N_("Core Parameter"),
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
