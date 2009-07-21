@@ -30,6 +30,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <slot translate="text" name="Velvet" text="Manual Sheet Guide">
   <InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\003\000</InitSequence>
   <DeinitSequence>IR\002\000\000\000</DeinitSequence>
+  <ExtraHeight>360</ExtraHeight>
  </slot>
 
  <slot translate="text" name="Matte" text="Manual Feed (Front)">

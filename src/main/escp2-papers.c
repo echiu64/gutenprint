@@ -449,6 +449,9 @@ build_input_slot(const stp_vars_t *v, const char *name)
   n1 = stp_mxmlFindElement(node, node, "DeinitSequence", NULL, NULL, STP_MXML_DESCEND);
   if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
     answer->deinit_sequence = stp_xmlstrtoraw(n1->child->value.text.string);
+  n1 = stp_mxmlFindElement(node, node, "ExtraHeight", NULL, NULL, STP_MXML_DESCEND);
+  if (n1 && n1->child && n1->child->type == STP_MXML_TEXT)
+    answer->extra_height = stp_xmlstrtoul(n1->child->value.text.string);
   return answer;
 }
 

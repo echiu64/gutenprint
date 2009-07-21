@@ -244,6 +244,7 @@ typedef struct
   short is_cd;
   short is_roll_feed;
   short duplex;
+  short extra_height;
   unsigned roll_feed_cut_flags;
   const stp_raw_t *init_sequence;
   const stp_raw_t *deinit_sequence;
