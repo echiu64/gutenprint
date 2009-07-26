@@ -1,6 +1,6 @@
-Welcome to Gutenprint 5.2.4-rc1 (5.2.3.99.1), a pre-release of
-Gutenprint 5.2.4.  This release has bug fixes and a few new features
-over 5.2.3.  Please read these release notes carefully.
+Welcome to Gutenprint 5.2.4, a stable release of Gutenprint 5.2.  This
+release has bug fixes and a few new features over 5.2.3.  Please read
+these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -251,40 +251,53 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    1) New printers supported in this release:
 
+      Canon PIXMA iX4000
       Canon SELPHY CP-520
       EPSON Stylus Photo R2880
       EPSON Stylus DX4000
 
    2) Printing to the Epson PM-D600 has been corrected.
 
-   3) Printing to the EPSON Artisan 700 and 800 and Stylus Photo
+   3) Printing using the manual sheet guide on the Epson Stylus Photo
+      R2400 has been corrected.
+
+   4) Printing to the EPSON Artisan 700 and 800 and Stylus Photo
       P/TX700 and 800 series printers has been corrected.  Among other
       issues, it should now be possible to print reliably using the
       photo tray.
 
-   4) The names of the following Epson printers have been corrected:
+   5) The names of the following Epson printers have been corrected:
 
       EPSON Stylus Photo PX700W
       EPSON Stylus Photo TX700W
       EPSON Stylus Photo PX800FW
       EPSON Stylus Photo TX800FW
 
-   5) The names of various Ricoh and Ricoh-based printers have been
+   6) The names of various Ricoh and Ricoh-based printers have been
       corrected to match Ricoh's model names and the OpenPrinting
       database.
 
-   6) Support has been added for L-size paper with tear-off borders.
+   7) The EPSON inkjet utility, escputil, now correctly prints the
+      color name for low ink warnings.
 
-   7) The ordering of inks in quadtone ink sets on Epson printers has
+   8) Printing resolution names have been fixed in non-English locales
+      in CUPS PPD files.
+
+   9) A Russian translation has been added.  The Danish and Italian
+      translations have been updated.
+
+   10) Support has been added for L-size paper with tear-off borders.
+
+   11) The ordering of inks in quadtone ink sets on Epson printers has
       been corrected.  In addition, support has been added for MIS
       quadtone and 6 tone inks.
 
-   8) It is now possible to adjust the ink parameters for quadtone
+   12) It is now possible to adjust the ink parameters for quadtone
       inks in CUPS.  Previously, these parameters could only be
       adjusted in the enhanced Print plugin for GIMP and other native
       Gutenprint applications.
 
-   9) Updating CUPS PPD files is now faster.
+   13) Updating CUPS PPD files is now faster.
 
 
 * Changes from 5.2.2
