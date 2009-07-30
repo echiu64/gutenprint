@@ -179,10 +179,10 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 			<b>Gutenprint 5.2.4</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.2.dmg?download">gutenprint-5.2.4.dmg</a></span>&nbsp;&nbsp;(12.9 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.4/gutenprint-5.2.4.dmg/download">gutenprint-5.2.4.dmg</a></span>&nbsp;&nbsp;(12.9 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from the stable branch of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/project/downloading.php?group_id=1537&amp;filename=gutenprint-5.2.4.tar.bz2?download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from the stable branch of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.4/gutenprint-5.2.4.tar.bz2/download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -208,7 +208,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from t
 		<p>
 			<b>Gutenprint Uninstaller</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://downloads.sourceforge.net/gimp-print/gutenprint-uninstaller-1.2.6.dmg?download">gutenprint-uninstaller-1.2.6.dmg</a></span>&nbsp;&nbsp;(221 KB) 
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/1.2.6/gutenprint-uninstaller-1.2.6.dmg/download">gutenprint-uninstaller-1.2.6.dmg</a></span>&nbsp;&nbsp;(221 KB) 
 		</p>
 		<p>
 			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), and Mac OS X "Leopard" (MacOS X 10.5.x).
