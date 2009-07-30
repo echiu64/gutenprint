@@ -187,19 +187,19 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from t
 <p>
 	<b>Gutenprint 5.0.2</b> 
 	<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gutenprint-5.0.2-ub.dmg?download">gutenprint-5.0.2-ub.dmg</a></span>&nbsp;&nbsp;(16.5 MB) 
+			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.0/5.0.2/gutenprint-5.0.2-ub.dmg/download">gutenprint-5.0.2-ub.dmg</a></span>&nbsp;&nbsp;(16.5 MB) 
 		</p>
 		<p>
-			Gutenprint 5.0.2 is the latest release from the stable branch of Gutenprint 5.0. This release supports additional printers and offers some important bug fixes. It is fully compatible with Mac OS X 10.5.x (Leopard).  The updated uninstaller is also included and is Mac OS X 10.5.x compatible.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="http://downloads.sourceforge.net/gimp-print/gutenprint-5.0.2.tar.bz2?download">source code</a>) 
+			Gutenprint 5.0.2 is the latest release from the stable branch of Gutenprint 5.0. This release supports additional printers and offers some important bug fixes. It is fully compatible with Mac OS X 10.5.x (Leopard).  The updated uninstaller is also included and is Mac OS X 10.5.x compatible.  Mac OS X Jaguar users need ESP GhostScript for full support. ESP Ghostscript is not required for users running Mac OS X "Panther" or later.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.0/5.0.2/gutenprint-5.0.2.tar.bz2/download">source code</a>) 
 		</p>
 <!-- deleted older release info as iCab was still displaying it -->
 		<p>
 			<b>Gimp-Print 4.2.7</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.7-0.ppc.dmg?download">gimp-print-4.2.7-0.ppc.dmg</a></span>&nbsp;&nbsp;(5.9 MB) 
+			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gimp-print-4.2/4.2.7/gimp-print-4.2.7-0.ppc.dmg/download">gimp-print-4.2.7-0.ppc.dmg</a></span>&nbsp;&nbsp;(5.9 MB) 
 		</p>
 		<p>
-			Gimp-Print 4.2.7 is the last stable release of Gimp-Print version 4.2.x for Mac OS X; it includes 225 drivers supporting over 600 printers. The disk-image file includes an OS X installer package, an uninstaller package, plus illustrated documentation to easily guide you through the printer set-up process.&nbsp;&nbsp;(<a href="http://prdownloads.sourceforge.net/gimp-print/gimp-print-4.2.7.tar.gz?download">source code</a>) 
+			Gimp-Print 4.2.7 is the last stable release of Gimp-Print version 4.2.x for Mac OS X; it includes 225 drivers supporting over 600 printers. The disk-image file includes an OS X installer package, an uninstaller package, plus illustrated documentation to easily guide you through the printer set-up process.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gimp-print-4.2/4.2.7/gimp-print-4.2.7.tar.gz/download">source code</a>) 
 		</p>
 		<p>
 			<em>Please note</em>: Mac OS X Jaguar (10.2.x) users need ESP Ghostscript (see below); later versions of Mac OS X do not require this companion software! 
@@ -216,10 +216,10 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from t
 		<p>
 			<a name="downloadESPGS"></a> <b>ESP Ghostscript 7.07.1</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://prdownloads.sourceforge.net/gimp-print/espgs-7.07.1.ppc.dmg?download">espgs-7.07.1-0.ppc.dmg</a></span>&nbsp;&nbsp;(5.4 MB) 
+			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/ESP%20Ghostscript%20-%20Jaguar%20ONLY%21/7.07.1/espgs-7.07.1.ppc.dmg/download">espgs-7.07.1-0.ppc.dmg</a></span>&nbsp;&nbsp;(5.4 MB) 
 		</p>
 		<p>
-			ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from GNU Ghostscript. This package is required for users running Mac OS X &quot;Jaguar&quot; as it provides full support for printing from all &quot;Carbon&quot; applications. Gimp-Print users running &quot;Panther&quot; and later versions of Mac OS X do not require this software.&nbsp;&nbsp;(<a href="http://prdownloads.sourceforge.net/espgs/espgs-7.07.1-source.tar.gz?download">source code</a>) 
+			ESP Ghostscript (ESPGS) is an open-source PostScript interpreter derived from GNU Ghostscript. This package is required for users running Mac OS X &quot;Jaguar&quot; as it provides full support for printing from all &quot;Carbon&quot; applications. Gimp-Print users running &quot;Panther&quot; and later versions of Mac OS X do not require this software.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/ESP%20Ghostscript%20-%20Jaguar%20ONLY%21/7.07.1/espgs-7.07.1-source.tar.bz2/download">source code</a>) 
 		</p>
 		<p>
 			<em>Gutenprint 5.2.0-beta4 and later require Mac OS X Panther (10.3) or later! Gutenprint 5.0.2 and Gimp-Print 4.2.7 for Mac require Mac OS X Jaguar (version 10.2) or later!</em> 
