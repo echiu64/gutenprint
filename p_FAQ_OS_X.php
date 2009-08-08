@@ -524,21 +524,8 @@ Here it is more generically:
  I am having trouble printing with a certain brand of USB-to-parallel converter cable. Which cable brands are supported on Mac OS X?
  </h3>
  <p>  
-While the Gimp-Print drivers are not partial about any particular brand or model
-of USB-to-parallel converter cable, when used with Mac OS X certain brands of 
-cable appear to work better than others. Some cables which work fine in Mac OS 9
-(such as the Keyspan USB-to-parallel cable) reportedly do not work at all in Mac
-OS X. If you are researching the purchase of a USB-to-parallel converter, or if 
-you are experiencing printing problems while using a USB-to-parallel cable with
-an otherwise-supported printer please check with the cable manufacturer to 
-confirm that the cable is supported on Mac OS X. Additionally, there is a 
-<a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&gro
-up_id=1537"
->user feedback forum</a> dedicated to this subject where many Gimp-Print OS X 
-users have entered compatibility reports for a wide variety of cable brands and 
-models. If you have experience using a particular brand and model of cable 
-please consider helping out your fellow users by adding your report to the 
-<a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&group_id=1537" >list</a>.
+The Gutenprint drivers are not partial about any particular brand or model
+of USB-to-parallel converter cable. When used with Mac OS X, some cables appear to work better than others.  If you are researching the purchase of a USB-to-parallel converter, or if you are experiencing printing problems while using a USB-to-parallel cable with an otherwise-supported printer please check with the cable manufacturer to confirm that the cable is supported on Mac OS X.  Additionally, you should try <b>usbtb</b>--an alternative communications software.  It is available from the <a href="https://sourceforge.net/projects/gimp-print/files/">Gutenprint downloads page</a>. 
  </p>  
  <a name="InDesign"></a>
  <li><h3>
@@ -566,16 +553,13 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  </h3>
  <p>  
  Several users have reported USB compatibility issues with certain HP 
- multi-function devices. While the driver generates the correct device code to 
- produce printing, the USB connection (the Mac OS X CUPS usb "backend") may
- not be capable of communicating properly with the device.
+ multi-function devices. While the Gutenprint driver generates the correct device code to produce printing, the USB connection (the Mac OS X CUPS usb "backend") may not be capable of communicating properly with the device.
  </p><p>
  If your device fails to print and you are reasonably sure that you set it up 
  correctly then you may be experienceing this problem. As a workaround you may 
  be able to print to your device by using an alternate connection interface 
  (but this method is not well tested). For devices with a parallel port you can
- try a <a href="https://sourceforge.net/tracker/?func=detail&atid=351537&aid=644565&group_id=1537"
- >compatible USB-to-parallel cable</a>, or a parallel-port print server. 
+ try a  USB-to-parallel cable, or a parallel-port print server. 
  Devices that lack a parallel port may possibly function with a compatible USB
  print server.
  </p>  
