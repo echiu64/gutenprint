@@ -854,6 +854,22 @@
       <unit value="metric-extended"/>
       <type value="envelope"/>
     </paper>
+    <paper name="EA5">
+      <description translate="value" value="EA5"/>
+      <comment value="229mm x 156mm"/>
+      <width value="442"/>
+      <height value="649"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="EA5_l">
+      <description translate="value" value="EA5 landscape"/>
+      <comment value="229mm x 156mm landscape"/>
+      <width value="649"/>
+      <height value="442"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
 <!-- GROUP: US CAD -->
 <!--
     US CAD standard paper sizes
