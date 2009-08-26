@@ -23,6 +23,8 @@
 
 #include <stdio.h>
 #include <gutenprint/mxml.h>
+#include <gutenprint/util.h>
+#include <gutenprint/string-list.h>
 #include <stdlib.h>
 #include "xmlppd.h"
 
@@ -213,6 +215,8 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
   int		order_length;
   char		*order_list;
   int		in_comment;
+  stp_string_list_t *ialist = stp_string_list_create();
+  stp_string_list_t *pdlist = stp_string_list_create();
 
 
  /*
@@ -478,35 +482,51 @@ stpi_xmlppd_read_ppd_file(const char *filename)	/* I - PPD file */
 	}
       else if (!option && !strcmp(buffer, "*ImageableArea"))
 	{
-	  stp_mxml_node_t *psize = stpi_xmlppd_find_page_size(ppd, keyword);
-	  if (psize)
-	    {
-	      const char *data[4];
-	      parse_values(data, 4, value);
-	      if (data[3])
-		{
-		  stp_mxmlElementSetAttr(psize, "left", data[0]);
-		  stp_mxmlElementSetAttr(psize, "bottom", data[1]);
-		  stp_mxmlElementSetAttr(psize, "right", data[2]);
-		  stp_mxmlElementSetAttr(psize, "top", data[3]);
-		}
-	    }
+	  stp_string_list_add_string(ialist, keyword, value);
 	}
       else if (!option && !strcmp(buffer, "*PaperDimension"))
 	{
-	  stp_mxml_node_t *psize = stpi_xmlppd_find_page_size(ppd, keyword);
-	  if (psize)
-	    {
-	      const char *data[2];
-	      parse_values(data, 2, value);
-	      if (data[1])
-		{
-		  stp_mxmlElementSetAttr(psize, "width", data[0]);
-		  stp_mxmlElementSetAttr(psize, "height", data[1]);
-		}
-	    }
+	  stp_string_list_add_string(pdlist, keyword, value);
 	}
     }
+  for (i = 0; i < stp_string_list_count(ialist); i++)
+    {
+      stp_param_string_t *pstr = stp_string_list_param(ialist, i);
+      stp_mxml_node_t *psize = stpi_xmlppd_find_page_size(ppd, pstr->name);
+      if (psize)
+	{
+	  const char *data[4];
+	  value = stp_strdup(pstr->text);
+	  parse_values(data, 4, value);
+	  if (data[3])
+	    {
+	      stp_mxmlElementSetAttr(psize, "left", data[0]);
+	      stp_mxmlElementSetAttr(psize, "bottom", data[1]);
+	      stp_mxmlElementSetAttr(psize, "right", data[2]);
+	      stp_mxmlElementSetAttr(psize, "top", data[3]);
+	    }
+	  stp_free(value);
+	}
+    }
+  stp_string_list_destroy(ialist);
+  for (i = 0; i < stp_string_list_count(pdlist); i++)
+    {
+      stp_param_string_t *pstr = stp_string_list_param(pdlist, i);
+      stp_mxml_node_t *psize = stpi_xmlppd_find_page_size(ppd, pstr->name);
+      if (psize)
+	{
+	  const char *data[2];
+	  value = stp_strdup(pstr->text);
+	  parse_values(data, 2, value);
+	  if (data[1])
+	    {
+	      stp_mxmlElementSetAttr(psize, "width", data[0]);
+	      stp_mxmlElementSetAttr(psize, "height", data[1]);
+	    }
+	  stp_free(value);
+	}
+    }
+  stp_string_list_destroy(pdlist);
   option_count = stpi_xmlppd_find_option_count(ppd);
   order_length = 1;		/* Terminating null */
   order_array = malloc(sizeof(order_t) * option_count);
