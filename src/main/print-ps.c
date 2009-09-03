@@ -771,6 +771,121 @@ ps_external_options(const stp_vars_t *v)
 }
 
 /*
+ * 'ps_print_device_settings()' - output postscript code from PPD into the
+ * postscript stream.
+ */
+
+static void
+ps_print_device_settings(stp_vars_t *v)
+{
+  int i;
+  stp_parameter_list_t param_list = ps_list_parameters(v);
+  if (! param_list)
+    return;
+  stp_puts("%%BeginSetup\n", v);
+  for (i = 0; i < stp_parameter_list_count(param_list); i++)
+    {
+      const stp_parameter_t *param = stp_parameter_list_param(param_list, i);
+      stp_parameter_t desc;
+      stp_describe_parameter(v, param->name, &desc);
+      if (desc.is_active)
+	{
+	  switch (desc.p_type)
+	    {
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      {
+		const char *val=NULL;
+		const char *defval=NULL;
+
+		/* If this is a bool parameter, set val to "True" or "False" - otherwise fetch from string parameter. */
+		if(desc.p_type==STP_PARAMETER_TYPE_BOOLEAN)
+		  {
+		    val=stp_get_boolean_parameter(v,desc.name) ? "True" : "False";
+		    defval=desc.deflt.boolean ? "True" : "False";
+		  }
+		else
+		  {
+		    val=stp_get_string_parameter(v,desc.name);
+		    defval=desc.deflt.str;
+		  }
+
+		/* We only include the option's code if it's set to a value other than the default. */
+		if(val && defval && (strcmp(val,defval)!=0))
+		  {
+		    if(m_ppd)
+		      {
+			/* If we have a PPD xml tree we hunt for the appropriate "option" and "choice"... */
+			stp_mxml_node_t *node=m_ppd;
+			node=stp_mxmlFindElement(node,node, "option", "name", desc.name, STP_MXML_DESCEND);
+			if(node)
+			  {
+			    node=stp_mxmlFindElement(node,node, "choice", "name", val, STP_MXML_DESCEND);
+			    if(node)
+			      {
+				if(node->child && node->child->value.opaque && (strlen(node->child->value.opaque)>1))
+				  {
+				    /* If we have opaque data for the child, we use %%BeginFeature and copy the code verbatim. */
+				    stp_puts("[{\n", v);
+				    stp_zprintf(v, "%%%%BeginFeature: *%s %s\n", desc.name, val);
+				    if(node->child->value.opaque)
+				      stp_puts(node->child->value.opaque,v);
+				    stp_puts("\n%%EndFeature\n", v);
+				    stp_puts("} stopped cleartomark\n", v);
+				  }
+				else
+				  {
+				    /* If we don't have code, we use %%IncludeFeature instead. */
+				    stp_puts("[{\n", v);
+				    stp_zprintf(v, "%%%%IncludeFeature: *%s %s\n", desc.name, val);
+				    if(node->child->value.opaque)
+				      stp_puts(node->child->value.opaque,v);
+				    stp_puts("} stopped cleartomark\n", v);
+				  }
+			      }
+			  }
+		      }
+		  }
+	      }
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      if(stp_get_int_parameter(v,desc.name)!=desc.deflt.integer)
+		{
+		  stp_puts("[{\n", v);
+		  stp_zprintf(v, "%%%%IncludeFeature: *%s %d\n", desc.name,
+			      stp_get_int_parameter(v, desc.name));
+		  stp_puts("} stopped cleartomark\n", v);
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      if(stp_get_float_parameter(v,desc.name)!=desc.deflt.dbl)
+		{
+		  stp_puts("[{\n", v);
+		  stp_zprintf(v, "%%%%IncludeFeature: *%s %f\n", desc.name,
+			      stp_get_float_parameter(v, desc.name));
+		  stp_puts("} stopped cleartomark\n", v);
+		}
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      if(stp_get_dimension_parameter(v,desc.name)!=desc.deflt.dimension)
+		{
+		  stp_puts("[{\n", v);
+		  stp_zprintf(v, "%%%%IncludeFeature: *%s %d\n", desc.name,
+			      stp_get_dimension_parameter(v, desc.name));
+		  stp_puts("} stopped cleartomark\n", v);
+		}
+	      break;
+	    default:
+	      break;
+	    }
+	}
+      stp_parameter_description_destroy(&desc);
+    }
+  stp_puts("%%EndSetup\n", v);
+  stp_parameter_list_destroy(param_list);
+}
+
+/*
  * 'ps_print()' - Print an image to a PostScript printer.
  */
 
@@ -867,10 +982,7 @@ ps_print_internal(stp_vars_t *v, stp_image_t *image)
   stp_puts("%%Orientation: Portrait\n", v);
   stp_puts("%%EndComments\n", v);
 
-#if 0
-  /* This is still not correct -- rlk 20070601 */
   ps_print_device_settings(v);
-#endif
 
  /*
   * Output the page...
