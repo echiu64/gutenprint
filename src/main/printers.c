@@ -65,6 +65,7 @@ struct stp_printer
   char       *long_name;        /* Long name for UI */
   char       *family;           /* Printer family */
   char	     *manufacturer;	/* Printer manufacturer */
+  char	     *device_id; /* IEEE 1284 device ID */
   int        model;             /* Model number */
   int	     vars_initialized;
   const stp_printfuncs_t *printfuncs;
@@ -187,6 +188,12 @@ stpi_printer_long_namefunc(const void *item)
 }
 
 const char *
+stp_printer_get_device_id(const stp_printer_t *printer)
+{
+  return printer->device_id;
+}
+
+const char *
 stp_printer_get_family(const stp_printer_t *printer)
 {
   return printer->family;
@@ -241,6 +248,30 @@ stp_get_printer_by_driver(const char *driver)
   if (!printer_item)
     return NULL;
   return (const stp_printer_t *) stp_list_item_get_data(printer_item);
+}
+
+const stp_printer_t *
+stp_get_printer_by_device_id(const char *device_id)
+{
+  stp_list_item_t *printer_item;
+  if (printer_list == NULL)
+    {
+      stp_erprintf("No printer drivers found: "
+		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
+      stpi_init_printer_list();
+    }
+  if (! device_id || strcmp(device_id, "") == 0)
+    return NULL;
+
+  printer_item = stp_list_get_start(printer_list);
+  while (printer_item)
+    {
+      if (strcmp(((const stp_printer_t *) stp_list_item_get_data(printer_item)),
+		 device_id) == 0)
+	return ((const stp_printer_t *) stp_list_item_get_data(printer_item));
+      printer_item = stp_list_item_next(printer_item);
+    }
+  return NULL;
 }
 
 int
@@ -1054,6 +1085,9 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
   outprinter->manufacturer = stp_strdup(stp_mxmlElementGetAttr(printer, "manufacturer"));
   outprinter->model = stp_xmlstrtol(stp_mxmlElementGetAttr(printer, "model"));
   outprinter->family = stp_strdup((const char *) family);
+  stmp = stp_mxmlElementGetAttr(printer, "deviceid");
+  if (stmp)
+    outprinter->device_id = stp_strdup(stmp);
 
   if (stp_get_driver(outprinter->printvars))
     driver = 1;

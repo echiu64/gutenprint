@@ -358,30 +358,34 @@ list_ppds(const char *argv0)		/* I - Name of program */
   for (i = 0; i < stp_printer_model_count(); i++)
     if ((printer = stp_get_printer_by_index(i)) != NULL)
     {
+      const char *device_id;
       if (!strcmp(stp_printer_get_family(printer), "ps") ||
 	  !strcmp(stp_printer_get_family(printer), "raw"))
         continue;
 
+      device_id = stp_printer_get_device_id(printer);
       printf("\"%s://%s/expert\" "
              "%s "
 	     "\"%s\" "
              "\"%s" CUPS_PPD_NICKNAME_STRING VERSION "\" "
-	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
+	     "\"%s\"\n",
              scheme, stp_printer_get_driver(printer),
 	     "en",
 	     stp_printer_get_manufacturer(printer),
-	     stp_printer_get_long_name(printer));
+	     stp_printer_get_long_name(printer),
+	     device_id ? device_id : "");
 
 #ifdef GENERATE_SIMPLIFIED_PPDS
       printf("\"%s://%s/simple\" "
              "%s "
 	     "\"%s\" "
              "\"%s" CUPS_PPD_NICKNAME_STRING VERSION " Simplified\" "
-	     "\"\"\n",			/* No IEEE-1284 Device ID yet */
+	     "\"%s\"\n",
              scheme, stp_printer_get_driver(printer),
 	     "en",
 	     stp_printer_get_manufacturer(printer),
-	     stp_printer_get_long_name(printer));
+	     stp_printer_get_long_name(printer),
+	     device_id ? device_id : "");
 #endif
     }
 
@@ -925,6 +929,7 @@ write_ppd(
   int		model;			/* Internal model ID */
   const char	*long_name;		/* Driver long name */
   const char	*manufacturer;		/* Manufacturer of printer */
+  const char	*device_id;		/* IEEE1284 device ID */
   const stp_vars_t *printvars;		/* Printer option names */
   paper_t	*the_papers;		/* Media sizes */
   int		cur_opt;		/* Current option */
@@ -957,6 +962,7 @@ write_ppd(
   model      = stp_printer_get_model(p);
   long_name  = stp_printer_get_long_name(p);
   manufacturer = stp_printer_get_manufacturer(p);
+  device_id  = stp_printer_get_device_id(p);
   printvars  = stp_printer_get_defaults(p);
   the_papers = NULL;
   cur_opt    = 0;
@@ -1079,6 +1085,8 @@ write_ppd(
   gzprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gzputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
+  if (device_id)
+    gzprintf(fp, "*1284DeviceID: \"%s\"\n", device_id);
   if (!language)
   {
    /*

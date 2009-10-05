@@ -90,39 +90,39 @@
         <parameter type="float" name="CyanGamma">1.3</parameter> 
       </parameters>
       <printer translate="name" name="Canon BJ-30" driver="bjc-30" manufacturer="Canon" model="30" parameters="gamma_2_density_800_params" />
-      <printer translate="name" name="Canon BJC-50" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
-      <printer translate="name" name="Canon BJC-55" driver="bjc-55" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
-      <printer translate="name" name="Canon BJC-80" driver="bjc-80" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
-      <printer translate="name" name="Canon BJC-85" driver="bjc-85" manufacturer="Canon" model="85" parameters="gamma_5_density_800_params" />
-      <printer translate="name" name="Canon BJC-210" driver="bjc-210" manufacturer="Canon" model="210" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-50" deviceid="MFG:Canon;MDL:BJC-50;" driver="bjc-50" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
+      <printer translate="name" name="Canon BJC-55" deviceid="MFG:Canon;MDL:BJC-55;" driver="bjc-55" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
+      <printer translate="name" name="Canon BJC-80" deviceid="MFG:Canon;MDL:BJC-80;" driver="bjc-80" manufacturer="Canon" model="4400" parameters="gamma_5_density_800_params" />
+      <printer translate="name" name="Canon BJC-85" deviceid="MFG:Canon;MDL:BJC-85;" driver="bjc-85" manufacturer="Canon" model="85" parameters="gamma_5_density_800_params" />
+      <printer translate="name" name="Canon BJC-210" deviceid="MFG:Canon;MDL:BJC-210;DES:Canon BJC-210;CMD:BJ,LQ,BJL,BJRaster;" driver="bjc-210" manufacturer="Canon" model="210" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-240" driver="bjc-240" manufacturer="Canon" model="240" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-250" driver="bjc-250" manufacturer="Canon" model="250" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-1000" driver="bjc-1000" manufacturer="Canon" model="1000" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-250" deviceid="MFG:Canon;MDL:BJC-250;DES:Canon BJC-250;CMD:BJ,LQ,BJL,BJRaster,BSCC;" driver="bjc-250" manufacturer="Canon" model="250" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-1000" deviceid="MFG:Canon;MDL:BJC-1000;DES:Canon BJC-1000;CMD:BJL,BJRaster,BSCC,TXT01;" driver="bjc-1000" manufacturer="Canon" model="1000" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-2000" driver="bjc-2000" manufacturer="Canon" model="2000" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-2010" driver="bjc-2010" manufacturer="Canon" model="2000" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-2100" driver="bjc-2100" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
+      <printer translate="name" name="Canon BJC-2100" deviceid="MFG:Canon;MDL:BJC-2100;DES:Canon BJC-2100;" driver="bjc-2100" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
       <printer translate="name" name="Canon BJC-2110" driver="bjc-2110" manufacturer="Canon" model="2000" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-3000" driver="bjc-3000" manufacturer="Canon" model="3000" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-3000" deviceid="MFG:Canon;MDL:BJC-3000;DES:Canon BJC-3000;CMD:BJL,BJRaster3,BSCC,TXT01,BJScan2;" driver="bjc-3000" manufacturer="Canon" model="3000" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-4000" driver="bjc-4000" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
-      <printer translate="name" name="Canon BJC-4300" driver="bjc-4300" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
-      <printer translate="name" name="Canon BJC-4400" driver="bjc-4400" manufacturer="Canon" model="4400" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-4300" deviceid="MFG:Canon;MDL:BJC-4300;DES:Canon BJC-4300;CMD:BJ,LQ,BJL,BJRaster,BSCC;" driver="bjc-4300" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
+      <printer translate="name" name="Canon BJC-4400" deviceid="MFG:Canon;MDL:BJC-4400;DES:Canon BJC-4400;CMD:BJ,LQ,BJL,BJRaster,BSCC;" driver="bjc-4400" manufacturer="Canon" model="4400" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-5100" driver="bjc-5100" manufacturer="Canon" model="5100" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-5500" driver="bjc-5500" manufacturer="Canon" model="5500" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-6000" driver="bjc-6000" manufacturer="Canon" model="6000" parameters="gamma_750_params" />
+      <printer translate="name" name="Canon BJC-6000" deviceid="MFG:Canon;MDL:BJC-6000;DES:Canon BJC-6000;CMD:BJL,BJRaster3,BSCC,TXT;" driver="bjc-6000" manufacturer="Canon" model="6000" parameters="gamma_750_params" />
       <printer translate="name" name="Canon BJC-6100" driver="bjc-6100" manufacturer="Canon" model="6100" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-6200" driver="bjc-6200" manufacturer="Canon" model="6200" parameters="gamma_750_params" />
+      <printer translate="name" name="Canon BJC-6200" deviceid="MFG:Canon;MDL:BJC-6200;DES:Canon BJC-6200;CMD:BJL,BJRaster3,BSCC,TXT01,BJScan2;" driver="bjc-6200" manufacturer="Canon" model="6200" parameters="gamma_750_params" />
       <printer translate="name" name="Canon BJC-6500" driver="bjc-6500" manufacturer="Canon" model="6500" parameters="gamma_750_params" />
       <printer translate="name" name="Canon BJC-7000" driver="bjc-7000" manufacturer="Canon" model="7000" parameters="gamma_6_density_800_params" />
       <printer translate="name" name="Canon BJC-7100" driver="bjc-7100" manufacturer="Canon" model="7100" parameters="density_800_params" />
-      <printer translate="name" name="Canon BJC-8200" driver="bjc-8200" manufacturer="Canon" model="8200" parameters="density_800_params" />
+      <printer translate="name" name="Canon BJC-8200" deviceid="MFG:Canon;MDL:BJC-8200;DES:Canon;CMD:BJL,BJRaster3,BSCC,TXT01;" driver="bjc-8200" manufacturer="Canon" model="8200" parameters="density_800_params" />
       <printer translate="name" name="Canon BJC-8500" driver="bjc-8500" manufacturer="Canon" model="8500" parameters="density_800_params" />
-      <printer translate="name" name="Canon S100" driver="bjc-s100" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
+      <printer translate="name" name="Canon S100" deviceid="MFG:Canon;MDL:S100SP;DES:Canon S100SP;CMD:BJL,BJRaster,BSCC,TXT01;" driver="bjc-s100" manufacturer="Canon" model="4300" parameters="gamma_750_params" />
       <printer translate="name" name="Canon S200" driver="bjc-s200" manufacturer="Canon" model="1000200" parameters="gamma_8_density_900_params" />
       <printer translate="name" name="Canon S300" driver="bjc-s300" manufacturer="Canon" model="1000300" parameters="density_800_params" />
       <printer translate="name" name="Canon S400" driver="bjc-s400" manufacturer="Canon" model="3000" parameters="density_800_params" />
       <printer translate="name" name="Canon S450" driver="bjc-s450" manufacturer="Canon" model="6200" parameters="gamma_750_params" />
       <printer translate="name" name="Canon S500" driver="bjc-s500" manufacturer="Canon" model="1000500" parameters="density_800_params" />
-      <printer translate="name" name="Canon S600" driver="bjc-s600" manufacturer="Canon" model="8200" parameters="density_800_params" />
+      <printer translate="name" name="Canon S600" deviceid="MFG:Canon;MDL:S600;DES:Canon S600;CMD:BJL,BJRaster3,BSCC,TXT01;" driver="bjc-s600" manufacturer="Canon" model="8200" parameters="density_800_params" />
       <printer translate="name" name="Canon S630" driver="bjc-s630" manufacturer="Canon" model="8200" parameters="density_800_params" />
       <printer translate="name" name="Canon S800" driver="bjc-s800" manufacturer="Canon" model="8200" parameters="density_800_params" />
       <printer translate="name" name="Canon S4500" driver="bjc-s4500" manufacturer="Canon" model="6500" parameters="gamma_750_params" />
@@ -199,46 +199,46 @@
       <printer translate="name" name="Epson B-308" driver="escp2-b308" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" />
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C20" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C20" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C20UX" driver="escp2-c20ux" manufacturer="Epson" model="42" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C40" driver="escp2-c40" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C20UX" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20ux" manufacturer="Epson" model="42" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C40" deviceid="MFG:EPSON;MDL:Stylus C40;DES:None;" driver="escp2-c40" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C40SX" driver="escp2-c40sx" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C40UX" driver="escp2-c40ux" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C41" driver="escp2-c41" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C41SX" driver="escp2-c41sx" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C41UX" driver="escp2-c41ux" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C42" driver="escp2-c42" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C42" deviceid="MFG:EPSON;MDL:Stylus C42;DES:EPSON Stylus C42;CMD:ESCPL2,BDC,D4;" driver="escp2-c42" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C42SX" driver="escp2-c42sx" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C42UX" driver="escp2-c42ux" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C43" driver="escp2-c43" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C43SX" driver="escp2-c43sx" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C43UX" driver="escp2-c43ux" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C44" driver="escp2-c44" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C44SX" driver="escp2-c44sx" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C44UX" driver="escp2-c44ux" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C45" driver="escp2-c45" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C46" driver="escp2-c46" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C48" driver="escp2-c48" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C42UX" deviceid="MFG:EPSON;MDL:Stylus C42;DES:EPSON Stylus C42;CMD:ESCPL2,BDC,D4;" driver="escp2-c42ux" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C43" deviceid="MFG:EPSON;MDL:Stylus C43;DES:EPSON Stylus C43;CMD:ESCPL2,BDC,D4;" driver="escp2-c43" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C43SX" deviceid="MFG:EPSON;MDL:Stylus C43;DES:EPSON Stylus C43;CMD:ESCPL2,BDC,D4;" driver="escp2-c43sx" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C43UX" deviceid="MFG:EPSON;MDL:Stylus C43;DES:EPSON Stylus C43;CMD:ESCPL2,BDC,D4;" driver="escp2-c43ux" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C44" deviceid="MFG:EPSON;MDL:Stylus C44;DES:EPSON Stylus C44;CMD:ESCPL2,BDC,D4;" driver="escp2-c44" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C44SX" deviceid="MFG:EPSON;MDL:Stylus C44;DES:EPSON Stylus C44;CMD:ESCPL2,BDC,D4;" driver="escp2-c44sx" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C44UX" deviceid="MFG:EPSON;MDL:Stylus C44;DES:EPSON Stylus C44;CMD:ESCPL2,BDC,D4;" driver="escp2-c44ux" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C45" deviceid="MFG:EPSON;MDL:Stylus C45;DES:EPSON Stylus C45;CMD:ESCPL2,BDC,D4;" driver="escp2-c45" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C46" deviceid="MFG:EPSON;MDL:Stylus C46;DES:EPSON Stylus C46;CMD:ESCPL2,BDC,D4;" driver="escp2-c46" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus C48" deviceid="MFG:EPSON;MDL:Stylus C48;DES:EPSON Stylus C48;CMD:ESCPL2,BDC,D4;" driver="escp2-c48" manufacturer="Epson" model="43" parameters="480_params" />
       <printer translate="name" name="Epson Stylus C50" driver="escp2-c50" manufacturer="Epson" model="56" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus C60" driver="escp2-c60" manufacturer="Epson" model="33" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C60" deviceid="MFG:EPSON;MDL:Stylus C60;DES:EPSON Stylus C60;CMD:ESCPL2,BDC,D4;" driver="escp2-c60" manufacturer="Epson" model="33" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C61" driver="escp2-c61" manufacturer="Epson" model="52" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C62" driver="escp2-c62" manufacturer="Epson" model="52" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C62" deviceid="MFG:EPSON;MDL:Stylus C62;DES:EPSON Stylus C62;CMD:ESCPL2,BDC,D4;" driver="escp2-c62" manufacturer="Epson" model="52" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C63" driver="escp2-c63" manufacturer="Epson" model="61" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C64" driver="escp2-c64" manufacturer="Epson" model="61" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C65" driver="escp2-c65" manufacturer="Epson" model="66" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C66" driver="escp2-c66" manufacturer="Epson" model="66" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C68" driver="escp2-c68" manufacturer="Epson" model="66" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C65" deviceid="MFG:EPSON;MDL:Stylus C65;DES:EPSON Stylus C65;CMD:ESCPL2,BDC,D4;" driver="escp2-c65" manufacturer="Epson" model="66" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C66" deviceid="MFG:EPSON;MDL:Stylus C66;DES:EPSON Stylus C66;CMD:ESCPL2,BDC,D4;" driver="escp2-c66" manufacturer="Epson" model="66" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C68" deviceid="MFG:EPSON;MDL:Stylus C68;DES:EPSON Stylus C68;CMD:ESCPL2,BDC,D4;" driver="escp2-c68" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C70" driver="escp2-c70" manufacturer="Epson" model="44" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C79" driver="escp2-c79" manufacturer="Epson" model="66" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C80" driver="escp2-c80" manufacturer="Epson" model="44" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C82" driver="escp2-c82" manufacturer="Epson" model="55" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C80" deviceid="MFG:EPSON;MDL:Stylus C80;DES:EPSON Stylus C80;CMD:ESCPL2,BDC,D4;" driver="escp2-c80" manufacturer="Epson" model="44" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C82" deviceid="MFG:EPSON;MDL:Stylus C82;DES:EPSON Stylus C82;CMD:ESCPL2,BDC,D4;" driver="escp2-c82" manufacturer="Epson" model="55" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C83" driver="escp2-c83" manufacturer="Epson" model="60" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C84" driver="escp2-c84" manufacturer="Epson" model="60" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C85" driver="escp2-c85" manufacturer="Epson" model="69" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C86" driver="escp2-c86" manufacturer="Epson" model="69" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C84" deviceid="MFG:EPSON;MDL:Stylus C84;DES:EPSON Stylus C84;CMD:ESCPL2,BDC,D4;" driver="escp2-c84" manufacturer="Epson" model="60" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C85" deviceid="MFG:EPSON;MDL:Stylus C85;DES:EPSON Stylus C85;CMD:ESCPL2,BDC,D4;" driver="escp2-c85" manufacturer="Epson" model="69" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C86" deviceid="MFG:EPSON;MDL:Stylus C86;DES:EPSON Stylus C86;CMD:ESCPL2,BDC,D4;" driver="escp2-c86" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C87" driver="escp2-c87" manufacturer="Epson" model="69" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus C88" driver="escp2-c88" manufacturer="Epson" model="69" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus C88" deviceid="MFG:EPSON;MDL:Stylus C88;DES:EPSON Stylus C88;CMD:ESCPL2,BDC,D4;" driver="escp2-c88" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C110" driver="escp2-c110" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus C120" driver="escp2-c120" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color" driver="escp2" manufacturer="Epson" model="0" parameters="standard_params" />
@@ -248,29 +248,29 @@
       <printer translate="name" name="Epson Stylus Color PRO" driver="escp2-pro" manufacturer="Epson" model="45" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Pro XL" driver="escp2-pro-xl" manufacturer="Epson" model="39" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 400" driver="escp2-400" manufacturer="Epson" model="1" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 440" driver="escp2-440" manufacturer="Epson" model="10" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 460" driver="escp2-460" manufacturer="Epson" model="10" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 480" driver="escp2-480" manufacturer="Epson" model="21" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus Color 440" deviceid="MFG:EPSON;MDL:Stylus COLOR 440;DES:EPSON Stylus COLOR 440;CMD:ESCPL2,BDC;" driver="escp2-440" manufacturer="Epson" model="10" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 460" deviceid="MFG:EPSON;MDL:Stylus COLOR 460;DES:EPSON Stylus COLOR 460;CMD:ESCPL2,BDC;" driver="escp2-460" manufacturer="Epson" model="10" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 480" deviceid="MFG:EPSON;MDL:Stylus COLOR 480;DES:EPSON Stylus COLOR 480;CMD:ESCPL2,BDC,D4;" driver="escp2-480" manufacturer="Epson" model="21" parameters="480_params" />
       <printer translate="name" name="Epson Stylus Color 500" driver="escp2-500" manufacturer="Epson" model="1" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 580" driver="escp2-580" manufacturer="Epson" model="38" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus Color 600" driver="escp2-600" manufacturer="Epson" model="3" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 600" deviceid="MFG:EPSON;MDL:Stylus COLOR 600;CMD:ESCPL2,BDC;" driver="escp2-600" manufacturer="Epson" model="3" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 640" driver="escp2-640" manufacturer="Epson" model="11" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 660" driver="escp2-660" manufacturer="Epson" model="18" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 670" driver="escp2-670" manufacturer="Epson" model="25" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 670" deviceid="MFG:EPSON;MDL:Stylus COLOR 670;DES:EPSON Stylus COLOR 670;CMD:ESCPL2,BDC,D4;" driver="escp2-670" manufacturer="Epson" model="25" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 680" driver="escp2-680" manufacturer="Epson" model="32" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 740" driver="escp2-740" manufacturer="Epson" model="12" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 760" driver="escp2-760" manufacturer="Epson" model="19" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 777" driver="escp2-777" manufacturer="Epson" model="32" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 800" driver="escp2-800" manufacturer="Epson" model="4" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 740" deviceid="MFG:EPSON;MDL:Stylus COLOR 740;DES:EPSON Stylus COLOR 740;CMD:ESCPL2,BDC,D4;" driver="escp2-740" manufacturer="Epson" model="12" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 760" deviceid="MFG:EPSON;MDL:Stylus COLOR 760;DES:EPSON Stylus COLOR 760;CMD:ESCPL2,BDC,D4;" driver="escp2-760" manufacturer="Epson" model="19" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 777" deviceid="MFG:EPSON;MDL:Stylus COLOR 777;DES:EPSON Stylus COLOR 777;CMD:ESCPL2,BDC,D4;" driver="escp2-777" manufacturer="Epson" model="32" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 800" deviceid="MFG:EPSON;MDL:Stylus COLOR 800;CMD:ESCPL2,PRPXL24,BDC;" driver="escp2-800" manufacturer="Epson" model="4" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 850" driver="escp2-850" manufacturer="Epson" model="5" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 860" driver="escp2-860" manufacturer="Epson" model="16" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 880" driver="escp2-880" manufacturer="Epson" model="33" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 880" deviceid="MFG:EPSON;MDL:Stylus COLOR 880;DES:EPSON Stylus COLOR 880;CMD:ESCPL2,BDC,D4;" driver="escp2-880" manufacturer="Epson" model="33" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 8 3" driver="escp2-83" manufacturer="Epson" model="33" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 900" driver="escp2-900" manufacturer="Epson" model="13" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 980" driver="escp2-980" manufacturer="Epson" model="34" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 900" deviceid="MFG:EPSON;MDL:Stylus COLOR 900;DES:EPSON Stylus COLOR 900;CMD:ESCPL2,PRPXL24,BDC,D4;" driver="escp2-900" manufacturer="Epson" model="13" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 980" deviceid="MFG:Epson;MDL:Stylus Color 980;CMD:ESC/P2;" driver="escp2-980" manufacturer="Epson" model="34" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 1160" driver="escp2-1160" manufacturer="Epson" model="17" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 1500" driver="escp2-1500" manufacturer="Epson" model="2" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Color 1520" driver="escp2-1520" manufacturer="Epson" model="6" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Color 1520" deviceid="MFG:EPSON;MDL:Stylus COLOR 1520;CMD:ESCP2E,PRPXL;" driver="escp2-1520" manufacturer="Epson" model="6" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Color 3000" driver="escp2-3000" manufacturer="Epson" model="24" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office B30" driver="escp2-of-b30" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office B33" driver="escp2-of-b33" manufacturer="Epson" model="85" parameters="standard_params" />
@@ -284,31 +284,31 @@
       <printer translate="name" name="Epson Stylus Office TX300F" driver="escp2-of-tx300f" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Office TX600FW" driver="escp2-of-tx600fw" manufacturer="Epson" model="92" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo" driver="escp2-photo" manufacturer="Epson" model="9" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 700" driver="escp2-700" manufacturer="Epson" model="7" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo EX" driver="escp2-ex" manufacturer="Epson" model="8" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 700" deviceid="MFG:EPSON;MDL:Stylus Photo 700;DES:EPSON Stylus Photo 700;CMD:ESCPL2,BDC;" driver="escp2-700" manufacturer="Epson" model="7" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo EX" deviceid="MFG:EPSON;MDL:Stylus Photo EX;CMD:ESCPL2,BDC;" driver="escp2-ex" manufacturer="Epson" model="8" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo EX3" driver="escp2-ex3" manufacturer="Epson" model="54" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 720" driver="escp2-720" manufacturer="Epson" model="20" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 750" driver="escp2-750" manufacturer="Epson" model="14" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 750" deviceid="MFG:EPSON;MDL:Stylus Photo 750;DES:EPSON Stylus Photo 750;CMD:ESCPL2,BDC,D4;" driver="escp2-750" manufacturer="Epson" model="14" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 780" driver="escp2-780" manufacturer="Epson" model="35" parameters="standard_params" />
     <!--
          Note that the 785EPX has a roll feed holder.  It's more like the 890
          than the 780, despite the name.
     -->
-      <printer translate="name" name="Epson Stylus Photo 785" driver="escp2-785" manufacturer="Epson" model="36" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 790" driver="escp2-790" manufacturer="Epson" model="35" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 785" deviceid="MFG:EPSON;MDL:Stylus Photo 785EPX;DES:EPSON Stylus Photo 785EPX;CMD:ESCPL2,BDC,D4;" driver="escp2-785" manufacturer="Epson" model="36" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 790" deviceid="MFG:EPSON;MDL:Stylus Photo 790;DES:EPSON Stylus Photo 790;CMD:ESCPL2,BDC,D4;" driver="escp2-790" manufacturer="Epson" model="35" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 810" driver="escp2-810" manufacturer="Epson" model="78" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 820" driver="escp2-820" manufacturer="Epson" model="78" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 825" driver="escp2-825" manufacturer="Epson" model="50" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 830" driver="escp2-830" manufacturer="Epson" model="50" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 820" deviceid="MFG:EPSON;MDL:Stylus Photo 820;DES:EPSON Stylus Photo 820;CMD:ESCPL2,BDC,D4;" driver="escp2-820" manufacturer="Epson" model="78" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 825" deviceid="MFG:EPSON;MDL:Stylus Photo 825;DES:EPSON Stylus Photo 825;CMD:ESCPL2,BDC,D4;" driver="escp2-825" manufacturer="Epson" model="50" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 830" deviceid="MFG:EPSON;MDL:Stylus Photo 830U;DES:EPSON Stylus Photo 830U;CMD:ESCPL2,BDC,D4;" driver="escp2-830" manufacturer="Epson" model="50" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 830U" driver="escp2-830u" manufacturer="Epson" model="50" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 870" driver="escp2-870" manufacturer="Epson" model="22" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 870" deviceid="MFG:EPSON;MDL:Stylus Photo 870;DES:EPSON Stylus Photo 870;CMD:ESCPL2,BDC,D4;" driver="escp2-870" manufacturer="Epson" model="22" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 875" driver="escp2-875" manufacturer="Epson" model="22" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 890" driver="escp2-890" manufacturer="Epson" model="36" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 895" driver="escp2-895" manufacturer="Epson" model="36" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 900" driver="escp2-ph900" manufacturer="Epson" model="62" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 915" driver="escp2-915" manufacturer="Epson" model="36" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 890" deviceid="MFG:EPSON;MDL:Stylus Photo 890;DES:EPSON Stylus Photo 890;CMD:ESCPL2,BDC,D4;" driver="escp2-890" manufacturer="Epson" model="36" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 895" deviceid="MFG:EPSON;MDL:Stylus Photo 895;DES:EPSON Stylus Photo 895;CMD:ESCPL2,BDC,D4;" driver="escp2-895" manufacturer="Epson" model="36" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 900" deviceid="MFG:EPSON;MDL:Stylus Photo 900;DES:EPSON Stylus Photo 900;CMD:ESCPL2,BDC,D4;" driver="escp2-ph900" manufacturer="Epson" model="62" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 915" deviceid="MFG:EPSON;MDL:Stylus Photo 915;DES:EPSON Stylus Photo 915;CMD:ESCPL2,BDC,D4;" driver="escp2-915" manufacturer="Epson" model="36" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 925" driver="escp2-925" manufacturer="Epson" model="51" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo 935" driver="escp2-935" manufacturer="Epson" model="36" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo 935" deviceid="MFG:EPSON;MDL:Stylus Photo 935;DES:EPSON Stylus Photo 935;CMD:ESCPL2,BDC,D4;" driver="escp2-935" manufacturer="Epson" model="36" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 950" driver="escp2-950" manufacturer="Epson" model="46" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 960" driver="escp2-960" manufacturer="Epson" model="46" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 1200" driver="escp2-1200" manufacturer="Epson" model="15" parameters="standard_params" />
@@ -320,9 +320,9 @@
       <printer translate="name" name="Epson Stylus Photo 2000P" driver="escp2-2000" manufacturer="Epson" model="26" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 2100" driver="escp2-2100" manufacturer="Epson" model="47" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 2200" driver="escp2-2200" manufacturer="Epson" model="47" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo R200" driver="escp2-r200" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo R210" driver="escp2-r210" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo R220" driver="escp2-r220" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R200" deviceid="MFG:EPSON;MDL:Stylus Photo R200;DES:EPSON Stylus Photo R200;CMD:ESCPL2,BDC,D4;" driver="escp2-r200" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R210" deviceid="MFG:EPSON;MDL:Stylus Photo R210;DES:EPSON Stylus Photo R210;CMD:ESCPL2,BDC,D4;" driver="escp2-r210" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R220" deviceid="MFG:EPSON;MDL:Stylus Photo R220;DES:EPSON Stylus Photo R220;CMD:ESCPL2,BDC,D4;" driver="escp2-r220" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R230" driver="escp2-r230" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R240" driver="escp2-r240" manufacturer="Epson" model="83" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R245" driver="escp2-r245" manufacturer="Epson" model="83" parameters="standard_params" />
@@ -332,10 +332,10 @@
       <printer translate="name" name="Epson Stylus Photo R280" driver="escp2-r280" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo R285" driver="escp2-r285" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo R290" driver="escp2-r290" manufacturer="Epson" model="81" parameters="claria_params" />
-      <printer translate="name" name="Epson Stylus Photo R300" driver="escp2-r300" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo R310" driver="escp2-r310" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo R320" driver="escp2-r320" manufacturer="Epson" model="63" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo R340" driver="escp2-r340" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R300" deviceid="MFG:EPSON;MDL:Stylus Photo R300;DES:EPSON Stylus Photo R300;" driver="escp2-r300" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R310" deviceid="MFG:EPSON;MDL:Stylus Photo R310;DES:EPSON Stylus Photo R310;" driver="escp2-r310" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R320" deviceid="MFG:EPSON;MDL:Stylus Photo R320;DES:EPSON Stylus Photo R320;" driver="escp2-r320" manufacturer="Epson" model="63" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo R340" deviceid="MFG:EPSON;MDL:Stylus Photo R340;DES:EPSON Stylus Photo R340;" driver="escp2-r340" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R350" driver="escp2-r350" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R360" driver="escp2-r360" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo R380" driver="escp2-r380" manufacturer="Epson" model="81" parameters="claria_params" />
@@ -345,12 +345,12 @@
       <printer translate="name" name="Epson Stylus Photo R1900" driver="escp2-r1900" manufacturer="Epson" model="91" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R2400" driver="escp2-r2400" manufacturer="Epson" model="71" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R2880" driver="escp2-r2880" manufacturer="Epson" model="98" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX400" driver="escp2-rx400" manufacturer="Epson" model="84" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX420" driver="escp2-rx420" manufacturer="Epson" model="84" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX425" driver="escp2-rx425" manufacturer="Epson" model="84" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX430" driver="escp2-rx430" manufacturer="Epson" model="84" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX500" driver="escp2-rx500" manufacturer="Epson" model="84" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX510" driver="escp2-rx510" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX400" deviceid="MFG:EPSON;MDL:Stylus Photo RX400;DES:EPSON Stylus Photo RX400;CMD:ESCPL2,BDC,D4;" driver="escp2-rx400" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX420" deviceid="MFG:EPSON;MDL:Stylus Photo RX420;DES:EPSON Stylus Photo RX420;CMD:ESCPL2,BDC,D4;" driver="escp2-rx420" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX425" deviceid="MFG:EPSON;MDL:Stylus Photo RX425;DES:EPSON Stylus Photo RX425;CMD:ESCPL2,BDC,D4;" driver="escp2-rx425" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX430" deviceid="MFG:EPSON;MDL:Stylus Photo RX430;DES:EPSON Stylus Photo RX430;CMD:ESCPL2,BDC,D4;" driver="escp2-rx430" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX500" deviceid="MFG:EPSON;MDL:Stylus Photo RX500;DES:EPSON Stylus Photo RX500;CMD:ESCPL2,BDC,D4;" driver="escp2-rx500" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX510" deviceid="MFG:EPSON;MDL:Stylus Photo RX510;DES:EPSON Stylus Photo RX510;CMD:ESCPL2,BDC,D4;" driver="escp2-rx510" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo RX560" driver="escp2-rx560" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX580" driver="escp2-rx580" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX585" driver="escp2-rx585" manufacturer="Epson" model="81" parameters="claria_params" />
@@ -358,13 +358,13 @@
       <printer translate="name" name="Epson Stylus Photo RX595" driver="escp2-rx595" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX600" driver="escp2-rx600" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo RX610" driver="escp2-rx610" manufacturer="Epson" model="81" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX620" driver="escp2-rx620" manufacturer="Epson" model="84" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus Photo RX630" driver="escp2-rx630" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX620" deviceid="MFG:EPSON;MDL:Stylus Photo RX620;DES:EPSON Stylus Photo RX620;CMD:ESCPL2,BDC,D4;" driver="escp2-rx620" manufacturer="Epson" model="84" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX630" deviceid="MFG:EPSON;MDL:Stylus Photo RX630;DES:EPSON Stylus Photo RX630;CMD:ESCPL2,BDC,D4;" driver="escp2-rx630" manufacturer="Epson" model="84" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo RX640" driver="escp2-rx640" manufacturer="Epson" model="81" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX680" driver="escp2-rx680" manufacturer="Epson" model="97" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX685" driver="escp2-rx685" manufacturer="Epson" model="97" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo RX690" driver="escp2-rx690" manufacturer="Epson" model="97" parameters="claria_params" />
-      <printer translate="name" name="Epson Stylus Photo RX700" driver="escp2-rx700" manufacturer="Epson" model="70" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo RX700" deviceid="MFG:EPSON;MDL:Stylus Photo RX700;DES:EPSON Stylus Photo RX700;CMD:ESCPL2,BDC,D4;" driver="escp2-rx700" manufacturer="Epson" model="70" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo TX700W" driver="escp2-tx700w" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo TX800FW" driver="escp2-tx800w" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Pro 5000" driver="escp2-5000" manufacturer="Epson" model="27" parameters="standard_params" />
@@ -383,62 +383,62 @@
       <printer translate="name" name="Epson Stylus Pro 11880" driver="escp2-11880" manufacturer="Epson" model="88" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Scan 2000" driver="escp2-scan2000" manufacturer="Epson" model="12" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Scan 2500" driver="escp2-scan2500" manufacturer="Epson" model="12" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX1500" driver="escp2-cx1500" manufacturer="Epson" model="43" parameters="480_params" />
-      <printer translate="name" name="Epson Stylus CX3100" driver="escp2-cx3100" manufacturer="Epson" model="52" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX3200" driver="escp2-cx3200" manufacturer="Epson" model="52" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX3500" driver="escp2-cx3500" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX3600" driver="escp2-cx3600" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX3650" driver="escp2-cx3650" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX3700" driver="escp2-cx3700" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX3800" driver="escp2-cx3800" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX3805" driver="escp2-cx3805" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX3810" driver="escp2-cx3810" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX4100" driver="escp2-cx4100" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX4200" driver="escp2-cx4200" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX1500" deviceid="MFG:EPSON;MDL:Stylus CX1500;DES:EPSON Stylus CX1500;CMD:ESCPL2,BDC,D4;" driver="escp2-cx1500" manufacturer="Epson" model="43" parameters="480_params" />
+      <printer translate="name" name="Epson Stylus CX3100" deviceid="MFG:EPSON;MDL:Stylus CX3100;DES:EPSON Stylus CX3100;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3100" manufacturer="Epson" model="52" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus CX3200" deviceid="MFG:EPSON;MDL:Stylus CX3200;DES:EPSON Stylus CX3200;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3200" manufacturer="Epson" model="52" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus CX3500" deviceid="MFG:EPSON;MDL:Stylus CX3500;DES:EPSON Stylus CX3500;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3500" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX3600" deviceid="MFG:EPSON;MDL:Stylus CX3600;DES:EPSON Stylus CX3600;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3600" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX3650" deviceid="MFG:EPSON;MDL:Stylus CX3650;DES:EPSON Stylus CX3650;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3650" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX3700" deviceid="MFG:EPSON;MDL:Stylus CX3700;DES:EPSON Stylus CX3700;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3700" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus CX3800" deviceid="MFG:EPSON;MDL:Stylus CX3800;DES:EPSON Stylus CX3800;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3800" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus CX3805" deviceid="MFG:EPSON;MDL:Stylus CX3805;DES:EPSON Stylus CX3805;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3805" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus CX3810" deviceid="MFG:EPSON;MDL:Stylus CX3810;DES:EPSON Stylus CX3810;CMD:ESCPL2,BDC,D4;" driver="escp2-cx3810" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus CX4100" deviceid="MFG:EPSON;MDL:Stylus CX4100;DES:EPSON Stylus CX4100;CMD:ESCPL2,BDC,D4;" driver="escp2-cx4100" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX4200" deviceid="MFG:EPSON;MDL:Stylus CX4200;DES:EPSON Stylus CX4200;CMD:ESCPL2,BDC,D4;" driver="escp2-cx4200" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX4400" driver="escp2-cx4400" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX4500" driver="escp2-cx4500" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX4600" driver="escp2-cx4600" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX4700" driver="escp2-cx4700" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX4800" driver="escp2-cx4800" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX4500" deviceid="MFG:EPSON;MDL:Stylus CX4500;DES:EPSON Stylus CX4500;CMD:ESCPL2,BDC,D4;" driver="escp2-cx4500" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX4600" deviceid="MFG:EPSON;MDL:Stylus CX4600;DES:EPSON Stylus CX4600;CMD:ESCPL2,BDC,D4;" driver="escp2-cx4600" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX4700" deviceid="MFG:EPSON;MDL:Stylus CX4700;DES:EPSON Stylus CX4700;CMD:ESCPL2,BDC,D4;" driver="escp2-cx4700" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX4800" deviceid="MFG:EPSON;MDL:Stylus CX4800;DES:EPSON Stylus CX4800;CMD:ESCPL2,BDC,D4;" driver="escp2-cx4800" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX4900" driver="escp2-cx4900" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5000" driver="escp2-cx5000" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5000F" driver="escp2-cx5000f" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX5100" driver="escp2-cx5100" manufacturer="Epson" model="55" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX5100" deviceid="MFG:EPSON;MDL:Stylus CX5100;DES:EPSON Stylus CX5100;CMD:ESCPL2,BDC,D4;" driver="escp2-cx5100" manufacturer="Epson" model="55" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5200" driver="escp2-cx5200" manufacturer="Epson" model="55" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX5300" driver="escp2-cx5300" manufacturer="Epson" model="55" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX5400" driver="escp2-cx5400" manufacturer="Epson" model="55" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX5300" deviceid="MFG:EPSON;MDL:Stylus CX5300;DES:EPSON Stylus CX5300;CMD:ESCPL2,BDC,D4;" driver="escp2-cx5300" manufacturer="Epson" model="55" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX5400" deviceid="MFG:EPSON;MDL:Stylus CX5400;DES:EPSON Stylus CX5400;CMD:ESCPL2,BDC,D4;" driver="escp2-cx5400" manufacturer="Epson" model="55" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX5500" driver="escp2-cx5500" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus CX5600" driver="escp2-cx5600" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus CX5700" driver="escp2-cx5700" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX5800" driver="escp2-cx5800" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX5700" deviceid="MFG:EPSON;MDL:Stylus CX5700;DES:EPSON Stylus CX5700;CMD:ESCPL2,BDC,D4;" driver="escp2-cx5700" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX5800" deviceid="MFG:EPSON;MDL:Stylus CX5800;DES:EPSON Stylus CX5800;CMD:ESCPL2,BDC,D4;" driver="escp2-cx5800" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX6000" driver="escp2-cx6000" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX6300" driver="escp2-cx6300" manufacturer="Epson" model="79" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX6300" deviceid="MFG:EPSON;MDL:Stylus CX6300;DES:EPSON Stylus CX6300;CMD:ESCPL2,BDC,D4;" driver="escp2-cx6300" manufacturer="Epson" model="79" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX6400" driver="escp2-cx6400" manufacturer="Epson" model="79" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX6500" driver="escp2-cx6500" manufacturer="Epson" model="80" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX6600" driver="escp2-cx6600" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX6500" deviceid="MFG:EPSON;MDL:Stylus CX6500;DES:EPSON Stylus CX6500;CMD:ESCPL2,BDC,D4;" driver="escp2-cx6500" manufacturer="Epson" model="80" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX6600" deviceid="MFG:EPSON;MDL:Stylus CX6600;DES:EPSON Stylus CX6600;CMD:ESCPL2,BDC,D4;" driver="escp2-cx6600" manufacturer="Epson" model="80" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7000F" driver="escp2-cx7000f" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX7400" driver="escp2-cx7400" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX7700" driver="escp2-cx7700" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX7800" driver="escp2-cx7800" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX8300" driver="escp2-cx8300" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus CX8400" driver="escp2-cx8400" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX7700" deviceid="MFG:EPSON;MDL:Stylus CX7700;DES:EPSON Stylus CX7700;CMD:ESCPL2,BDC,D4;" driver="escp2-cx7700" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX7800" deviceid="MFG:EPSON;MDL:Stylus CX7800;DES:EPSON Stylus CX7800;CMD:ESCPL2,BDC,D4;" driver="escp2-cx7800" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX8300" deviceid="MFG:EPSON;MDL:Stylus CX8300;DES:EPSON Stylus CX8300;CMD:ESCPL2,BDC,D4;" driver="escp2-cx8300" manufacturer="Epson" model="65" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus CX8400" deviceid="MFG:EPSON;MDL:Stylus CX8400;DES:EPSON Stylus CX8400;CMD:ESCPL2,BDC,D4;" driver="escp2-cx8400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX9300F" driver="escp2-cx9300f" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX9400" driver="escp2-cx9400" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX9400F" driver="escp2-cx9400f" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus CX9475F" driver="escp2-cx9475f" manufacturer="Epson" model="65" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus D68" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus D88" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus D68" deviceid="MFG:EPSON;MDL:Stylus D68;DES:EPSON Stylus D68;CMD:ESCPL2,BDC,D4;" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus D88" deviceid="MFG:EPSON;MDL:Stylus D88;DES:EPSON Stylus D88;CMD:ESCPL2,BDC,D4;" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus D92" driver="escp2-d92" manufacturer="Epson" model="66" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus D120" driver="escp2-d120" manufacturer="Epson" model="85" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus DX3800" driver="escp2-dx3800" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus DX3850" driver="escp2-dx3850" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus DX3800" deviceid="MFG:EPSON;MDL:Stylus DX3800;DES:EPSON Stylus DX3800;CMD:ESCPL2,BDC,D4;" driver="escp2-dx3800" manufacturer="Epson" model="72" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus DX3850" deviceid="MFG:EPSON;MDL:Stylus DX3850;DES:EPSON Stylus DX3850;CMD:ESCPL2,BDC,D4;" driver="escp2-dx3850" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX4000" driver="escp2-dx4000" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX4050" driver="escp2-dx4050" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus DX4200" driver="escp2-dx4200" manufacturer="Epson" model="95" parameters="cx3500_params" />
-      <printer translate="name" name="Epson Stylus DX4250" driver="escp2-dx4250" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus DX4200" deviceid="MFG:EPSON;MDL:Stylus DX4200;DES:EPSON Stylus DX4200;CMD:ESCPL2,BDC,D4;" driver="escp2-dx4200" manufacturer="Epson" model="95" parameters="cx3500_params" />
+      <printer translate="name" name="Epson Stylus DX4250" deviceid="MFG:EPSON;MDL:Stylus DX4250;DES:EPSON Stylus DX4250;CMD:ESCPL2,BDC,D4;" driver="escp2-dx4250" manufacturer="Epson" model="95" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus DX4400" driver="escp2-dx4400" manufacturer="Epson" model="72" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX4450" driver="escp2-dx4450" manufacturer="Epson" model="72" parameters="standard_params" />
-      <printer translate="name" name="Epson Stylus DX4800" driver="escp2-dx4800" manufacturer="Epson" model="95" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus DX4800" deviceid="MFG:EPSON;MDL:Stylus DX4800;DES:EPSON Stylus DX4800;CMD:ESCPL2,BDC,D4;" driver="escp2-dx4800" manufacturer="Epson" model="95" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX4850" driver="escp2-dx4850" manufacturer="Epson" model="95" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus DX7000F" driver="escp2-dx7000f" manufacturer="Epson" model="65" parameters="cx3500_params" />
       <printer translate="name" name="Epson Stylus DX7400" driver="escp2-dx7400" manufacturer="Epson" model="65" parameters="cx3500_params" />
@@ -604,7 +604,7 @@
       </parameters>
       <printer translate="name" name="Apollo P-2100" driver="pcl-apollo-p2100" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Apollo P-2150" driver="pcl-apollo-p2150" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="Apollo P-2200" driver="pcl-apollo-p2200" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="Apollo P-2200" deviceid="MFG:EPSON;MDL:Stylus DX4800;DES:EPSON Stylus DX4800;CMD:ESCPL2,BDC,D4;" driver="pcl-apollo-p2200" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Apollo P-2250" driver="pcl-apollo-p2250" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Apollo P-2500" driver="pcl-apollo-p2500" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Apollo P-2550" driver="pcl-apollo-p2550" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" />
@@ -617,38 +617,38 @@
       <printer translate="name" name="Brother DCP-1200" driver="brother-dcp-1200" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother DCP-8045D" driver="brother-dcp-8045d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1040" driver="brother-hl-1040" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1050" driver="brother-hl-1050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1050" deviceid="MFG:Brother;MDL:HL-1050 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1060" driver="brother-hl-1060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1070" driver="brother-hl-1070" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1070" deviceid="MFG:Brother;MDL:HL-1070 series;CMD:PCL5,POSTSCRIPT2,PJL,PCLXL;" driver="brother-hl-1070" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-10V" driver="brother-hl-10v" manufacturer="Brother" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-10h" driver="brother-hl-10h" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1240" driver="brother-hl-1240" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1250" driver="brother-hl-1250" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1260" driver="brother-hl-1260" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1240" deviceid="MFG:Brother;MDL:HL-1240 series;CMD:PCL4,PJL;" driver="brother-hl-1240" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1250" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1250" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1260" deviceid="MFG:Brother;MDL:HL-1250 series;CMD:PCL5,PJL,PCLXL;" driver="brother-hl-1260" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1270N" driver="brother-hl-1270n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1430" driver="brother-hl-1430" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1440" driver="brother-hl-1440" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1450" driver="brother-hl-1450" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-1470N" driver="brother-hl-1470n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1430" deviceid="MFG:Brother;MDL:HL-1430 series;CMD:PJL;" driver="brother-hl-1430" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1440" deviceid="MFG:Brother;MDL:HL-1440 series;CMD:PCL4,PJL;" driver="brother-hl-1440" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1450" deviceid="MFG:Brother;MDL:Brother HL-1450 series;" driver="brother-hl-1450" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-1470N" deviceid="MFG:Brother;MDL:Brother HL-1470N series;" driver="brother-hl-1470n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1650" driver="brother-hl-1650" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1660e" driver="brother-hl-1660e" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1670N" driver="brother-hl-1670n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1850" driver="brother-hl-1850" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-2460" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2060" deviceid="MFG:Brother;MDL:HL-2040 series;DES:None;CMD:PJL,HBP;" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-5030" driver="brother-hl-5030" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5040" driver="brother-hl-5040" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5050" driver="brother-hl-5050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5070N" driver="brother-hl-5070n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5140" driver="brother-hl-5140" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5150D" driver="brother-hl-5150d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-5170DN" driver="brother-hl-5170dn" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5040" deviceid="MFG:Brother;MDL:HL-5040 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5040" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5050" deviceid="MFG:Brother;MDL:Brother HL-5050 series;" driver="brother-hl-5050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5070N" deviceid="MFG:Brother;MDL:Brother HL-5070N series;" driver="brother-hl-5070n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5140" deviceid="MFG:Brother;MDL:HL-5140 series;CMD:PJL,PCL,PCLXL;" driver="brother-hl-5140" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5150D" deviceid="MFG:Brother;MDL:Brother HL-5150D series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5150d" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-5170DN" deviceid="MFG:Brother;MDL:Brother HL-5170DN series;CMD:PJL,PCL,PCLXL,POSTSCRIPT;" driver="brother-hl-5170dn" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-630" driver="brother-hl-630" manufacturer="Brother" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-660" driver="brother-hl-660" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Brother HL-7050" driver="brother-hl-7050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Brother HL-7050" deviceid="MFG:Brother;MDL:Brother HL-7050 series;" driver="brother-hl-7050" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-7050N" driver="brother-hl-7050n" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-760" driver="brother-hl-760" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Brother HL-960" driver="brother-hl-960" manufacturer="Brother" model="6" parameters="pcl_laser_params" />
@@ -659,7 +659,7 @@
       <printer translate="name" name="Canon GP 335" driver="canon-gp_335" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-4sx" driver="canon-lbp-4sx" manufacturer="Canon" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-430" driver="canon-lbp-430" manufacturer="Canon" model="4" parameters="pcl_laser_params" />
-      <printer translate="name" name="Canon LBP-1000" driver="canon-lbp-1000" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Canon LBP-1000" deviceid="MFG:Canon;MDL:LBP-1000;DES:LBP-1000;CMD:PCL-XL;" driver="canon-lbp-1000" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-1260" driver="canon-lbp-1260" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon LBP-1760" driver="canon-lbp-1760" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Canon imageRunner 330s" driver="canon-ir_330s" manufacturer="Canon" model="6" parameters="pcl_laser_params" />
@@ -669,21 +669,21 @@
       <printer translate="name" name="Epson ActionLaser 1100" driver="epson-actl_1100" manufacturer="Epson" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson ActionLaser II" driver="epson-actl_ii" manufacturer="Epson" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AcuLaser C2000" driver="epson-acl_c2000" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson AcuLaser C2000PS" driver="epson-acl_c2000ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Epson AcuLaser C2000PS" deviceid="MFG:Epson;MDL:AL-C2000 PS3;" driver="epson-acl_c2000ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AcuLaser C8500" driver="epson-acl_c8500" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AcuLaser C8500PS" driver="epson-acl_c8500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson AcuLaser C8600" driver="epson-acl_c8600" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson AcuLaser C8600PS" driver="epson-acl_c8600ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Epson AcuLaser C8600PS" deviceid="MFG:Epson;MDL:AL-C8600 PS3;" driver="epson-acl_c8600ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5200" driver="epson-epl-5200" manufacturer="Epson" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5200+" driver="epson-epl-5200plus" manufacturer="Epson" model="3" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson EPL-5700" driver="epson-epl-5700" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Epson EPL-5700" deviceid="MFG:EPSON;MDL:EPL-5700;DES:EPSON EPL-5700;CMD:PJL,EJL,ESCPL2-00,ESCP9-84,PRPXL24-01,HP ENHANCED PCL5,HPGL2-01,;" driver="epson-epl-5700" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5700PS" driver="epson-epl-5700ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5800" driver="epson-epl-5800" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5800PS" driver="epson-epl-5800ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-5900" driver="epson-epl-5900" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson EPL-5900PS" driver="epson-epl-5900ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Epson EPL-5900PS" deviceid="MFG:Epson;MDL:EPL-5900 PS3;" driver="epson-epl-5900ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-6100" driver="epson-epl-6100" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Epson EPL-6100PS" driver="epson-epl-6100ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Epson EPL-6100PS" deviceid="MFG:Epson;MDL:EPL-6100 PS3;" driver="epson-epl-6100ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-7100" driver="epson-epl-7100" manufacturer="Epson" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-N2050" driver="epson-epl-n2050" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Epson EPL-N2050+" driver="epson-epl-n2050plus" manufacturer="Epson" model="6" parameters="pcl_laser_params" />
@@ -759,17 +759,17 @@
       <printer translate="name" name="Gestetner MP 4000B" driver="gestetner-mp_4000b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner MP 5000" driver="gestetner-mp_5000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner MP 5000B" driver="gestetner-mp_5000b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Business Inkjet 2200" driver="hp-bij_2200" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP Business Inkjet 2230" driver="hp-bij_2230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP Business Inkjet 2250" driver="hp-bij_2250" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP Business Inkjet 2250TN" driver="hp-bij_2250tn" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP Business Inkjet 2280" driver="hp-bij_2280" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP Business Inkjet 2200" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2200;DES:Hewlett-Packard Business Inkjet 2200;CMD:MLC,PML,PJL;" driver="hp-bij_2200" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP Business Inkjet 2230" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2230;DES:Hewlett-Packard Business Inkjet 2230;CMD:MLC,PML,PJL;" driver="hp-bij_2230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP Business Inkjet 2250" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2250;DES:Hewlett-Packard Business Inkjet 2250;CMD:MLC,PML,PJL,PCL5,POSTSCRIPT;" driver="hp-bij_2250" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP Business Inkjet 2250TN" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2250;DES:Hewlett-Packard Business Inkjet 2250;CMD:MLC,PML,PJL,PCL5,POSTSCRIPT;" driver="hp-bij_2250tn" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP Business Inkjet 2280" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2280;DES:Hewlett-Packard Business Inkjet 2280;CMD:MLC,PML,PJL,PCL5,POSTSCRIPT;" driver="hp-bij_2280" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Color Inkjet Printer CP1160" driver="hp-cij_cp1160" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP Color Inkjet Printer CP1700" driver="hp-cij_cp1700" manufacturer="HP" model="901" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP Color Inkjet Printer CP1700" deviceid="MFG:HEWLETT-PACKARD;MDL:HP Color Inkjet CP1700;DES:HP Color Inkjet CP1700;" driver="hp-cij_cp1700" manufacturer="HP" model="901" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Color LaserJet 2500" driver="hp-clj_2500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4500" driver="hp-clj_4500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4550" driver="hp-clj_4550" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP Color LaserJet 4600" driver="hp-clj_4600" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 4500" deviceid="MFG:Hewlett-Packard;MDL:LaserJet Color 4500;" driver="hp-clj_4500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 4550" deviceid="MFG:Hewlett-Packard;MDL:HP Color LaserJet 4550;DES:Hewlett-Packard Color LaserJet 4550;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL,PJL;" driver="hp-clj_4550" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP Color LaserJet 4600" deviceid="MFG:Hewlett-Packard;MDL:hp color LaserJet 4600;DES:Hewlett-Packard color LaserJet 4600;" driver="hp-clj_4600" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP Color LaserJet 5" driver="hp-clj_5" manufacturer="HP" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="HP Color LaserJet 5000" driver="hp-clj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP Color LaserJet 5500" driver="hp-clj_5500" manufacturer="HP" model="6" parameters="pcl_laser_params" />
@@ -786,9 +786,9 @@
       <printer translate="name" name="HP DesignJet 2500CP" driver="pcl-desnj-2500" manufacturer="HP" model="12500" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DesignJet 3500CP" driver="pcl-desnj-3500" manufacturer="HP" model="13500" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DesignJet ColorPro CAD" driver="hp-desnj_cp_cad" manufacturer="HP" model="2500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 400" driver="pcl-400" manufacturer="HP" model="400" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 400" deviceid="MFG:Hewlett-Packard;MDL:HP DeskJet 400;DES:HP DeskJet 400 Printer;CMD:PCL,C32;" driver="pcl-400" manufacturer="HP" model="400" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 420C" driver="hp-dj_420c" manufacturer="HP" model="540" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 450" driver="hp-dj_450" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 450" deviceid="MFG:hp;MDL:dj450;DES:hp dj450;CMD:MLC,PCL,PML,DESKJET,DW-PCL,DYN;" driver="hp-dj_450" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 500" driver="pcl-500" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 500C" driver="pcl-501" manufacturer="HP" model="501" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 505J Plus" driver="hp-dj_505j_plus" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
@@ -796,84 +796,84 @@
       <printer translate="name" name="HP DeskJet 520" driver="pcl-520" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 540C" driver="pcl-540" manufacturer="HP" model="540" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 550C" driver="pcl-550" manufacturer="HP" model="550" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 5550" driver="hp-dj_5550" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 5550" deviceid="MFG:hp;MDL:deskjet 5550;DES:hp deskjet 5550;CMD:MLC,PCL,PML,DW-PCL,DYN,DESKJET;" driver="hp-dj_5550" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 5551" driver="hp-dj_5551" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 560C" driver="pcl-560" manufacturer="HP" model="550" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 600" driver="pcl-600" manufacturer="HP" model="600" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 600" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 600;DES:Hewlett-Packard DeskJet 600;CMD:MLC,PCL,PML;" driver="pcl-600" manufacturer="HP" model="600" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 600C" driver="pcl-601" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 610C" driver="hp-dj_610c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 610CL" driver="hp-dj_610cl" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 6122" driver="hp-dj_6122" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 610C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 610C;DES:Hewlett-Packard DeskJet 610C;CMD:MLC,PCL,PML;" driver="hp-dj_610c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 610CL" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 610C;DES:Hewlett-Packard DeskJet 610C;CMD:MLC,PCL,PML;" driver="hp-dj_610cl" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 6122" deviceid="MFG:hp;MDL:deskjet 6122;DES:hp deskjet 6122;CMD:MLC,PCL,PML,DW-PCL,DYN,DESKJET;" driver="hp-dj_6122" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 6127" driver="hp-dj_6127" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 612C" driver="hp-dj_612c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 640C" driver="hp-dj_640c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 612C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 610C;DES:Hewlett-Packard DeskJet 610C;CMD:MLC,PCL,PML;" driver="hp-dj_612c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 640C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 640C;DES:Hewlett-Packard DeskJet 640C;CMD:MLC,PCL,PML;" driver="hp-dj_640c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 648C" driver="hp-dj_648c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 660C" driver="hp-dj_660c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 670C" driver="hp-dj_670c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 660C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 660C;DES:Hewlett-Packard DeskJet 660C;CMD:MLC,PCL,PML;" driver="hp-dj_660c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 670C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 670C;DES:Hewlett-Packard DeskJet 670C;CMD:MLC,PCL,PML;" driver="hp-dj_670c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 670TV" driver="hp-dj_670tv" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 672C" driver="hp-dj_672c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 680C" driver="hp-dj_680c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 682C" driver="hp-dj_682c" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 690C" driver="pcl-690" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 690C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 690C;DES:Hewlett-Packard DeskJet 690C;CMD:MLC,PCL,PML;" driver="pcl-690" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 692C" driver="hp-dj_692c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 693C" driver="hp-dj_693c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 694C" driver="hp-dj_694c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 694C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 690C;DES:Hewlett-Packard DeskJet 690C;CMD:MLC,PCL,PML;" driver="hp-dj_694c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 695C" driver="hp-dj_695c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 697C" driver="hp-dj_697c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 697C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 690C;DES:Hewlett-Packard DeskJet 690C;CMD:MLC,PCL,PML;" driver="hp-dj_697c" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 810C" driver="pcl-810" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
-      <printer translate="name" name="HP DeskJet 812C" driver="pcl-812" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
-      <printer translate="name" name="HP DeskJet 815C" driver="hp-dj_815c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 816C" driver="hp-dj_816c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 825C" driver="hp-dj_825c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 812C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 810C;DES:Hewlett-Packard DeskJet 810C;CMD:MLC,PCL,PML;" driver="pcl-812" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
+      <printer translate="name" name="HP DeskJet 815C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 815C;DES:Hewlett-Packard DeskJet 815C;CMD:MLC,PCL,PML;" driver="hp-dj_815c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 816C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 815C;DES:Hewlett-Packard DeskJet 815C;CMD:MLC,PCL,PML;" driver="hp-dj_816c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 825C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 825C;DES:Hewlett-Packard DeskJet 825C;CMD:MLC,PCL,PML;" driver="hp-dj_825c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 830C" driver="hp-dj_830c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 832C" driver="hp-dj_832c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 840C" driver="pcl-840" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
-      <printer translate="name" name="HP DeskJet 841C" driver="hp-dj_841c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 842C" driver="pcl-842" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
-      <printer translate="name" name="HP DeskJet 843C" driver="hp-dj_843c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 845C" driver="pcl-845" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
-      <printer translate="name" name="HP DeskJet 850C" driver="pcl-850" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 855C" driver="pcl-855" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 870C" driver="pcl-870" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 880C" driver="hp-dj_880c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 840C" deviceid="MFG:Hewlett-Packard;MDL:DeskJet 840C;" driver="pcl-840" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
+      <printer translate="name" name="HP DeskJet 841C" deviceid="MFG:Hewlett-Packard;MDL:DeskJet 841C;" driver="hp-dj_841c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 842C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 840C;DES:Hewlett-Packard DeskJet 840C;CMD:MLC,PCL,PML;" driver="pcl-842" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
+      <printer translate="name" name="HP DeskJet 843C" deviceid="MFG:Hewlett-Packard;MDL:DeskJet 843C;" driver="hp-dj_843c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 845C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 845C;DES:Hewlett-Packard DeskJet 845C;CMD:MLC,PCL,PML;" driver="pcl-845" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
+      <printer translate="name" name="HP DeskJet 850C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 850C;DES:Hewlett-Packard Deskjet 850C;CMD:PCL,MLC,PML;" driver="pcl-850" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 855C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 850C;DES:Hewlett-Packard Deskjet 850C;CMD:PCL,MLC,PML;" driver="pcl-855" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 870C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 870C;DES:Hewlett-Packard Deskjet 870C;CMD:PCL,MLC,PML;" driver="pcl-870" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 880C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 880C;DES:Hewlett-Packard DeskJet 880C;CMD:MLC,PCL,PML;" driver="hp-dj_880c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 882C" driver="hp-dj_882c" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 890C" driver="pcl-890" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 895C" driver="pcl-895" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
+      <printer translate="name" name="HP DeskJet 890C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 890C;DES:Hewlett-Packard Deskjet 890C;CMD:PCL,MLC,PML;" driver="pcl-890" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 895C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 895C;DES:Hewlett-Packard DeskJet 895C;CMD:MLC,PCL,PML;" driver="pcl-895" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />  <!-- Uses 840 driver -->
       <printer translate="name" name="HP DeskJet 916C" driver="pcl-900" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 920C" driver="hp-dj_920c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 920C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 920C;DES:Hewlett-Packard DeskJet 920C;CMD:MLC,PCL,PML;" driver="hp-dj_920c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 9300" driver="hp-dj_9300" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 930C" driver="hp-dj_930c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 930C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 930C;DES:Hewlett-Packard DeskJet 930C;CMD:MLC,PCL,PML;" driver="hp-dj_930c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 932C" driver="hp-dj_932c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 933C" driver="hp-dj_933c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 934C" driver="hp-dj_934c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 935C" driver="hp-dj_935c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 940C" driver="hp-dj_940c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 940C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 940C;DES:Hewlett-Packard DeskJet 940C;CMD:MLC,PCL,PML;" driver="hp-dj_940c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 948C" driver="hp-dj_948c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 950C" driver="hp-dj_950c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 950C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 950C;DES:Hewlett-Packard DeskJet 950C;CMD:MLC,PCL,PML;" driver="hp-dj_950c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 952C" driver="hp-dj_952c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 955C" driver="hp-dj_955c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 957C" driver="hp-dj_957c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 959C" driver="hp-dj_959c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 960C" driver="hp-dj_960c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 970C" driver="hp-dj_970c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 960C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 960C;DES:Hewlett-Packard DeskJet 960C;CMD:MLC,PCL,PML;" driver="hp-dj_960c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 970C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 970C;DES:Hewlett-Packard DeskJet 970C;CMD:MLC,PCL,PML;" driver="hp-dj_970c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 975C" driver="hp-dj_975c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 980C" driver="hp-dj_980c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 990C" driver="hp-dj_990c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 980C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 980C;DES:Hewlett-Packard DeskJet 980C;CMD:MLC,PCL,PML;" driver="hp-dj_980c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 990C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 990C;DES:Hewlett-Packard DeskJet 990C;CMD:MLC,PCL,PML;" driver="hp-dj_990c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 995C" driver="hp-dj_995c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 1100C" driver="pcl-1100" manufacturer="HP" model="1100" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 1120C" driver="pcl-1120" manufacturer="HP" model="1100" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 1120C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 1120C;DES:Hewlett-Packard Deskjet 1120C;CMD:PCL,MLC,PML;" driver="pcl-1120" manufacturer="HP" model="1100" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 1125C" driver="hp-dj_1125c" manufacturer="HP" model="1100" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 1200C" driver="pcl-1200" manufacturer="HP" model="1200" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 1220C" driver="pcl-1220" manufacturer="HP" model="901" parameters="pcl_inkjet_params" />  <!-- Uses 900 series driver (large) -->
+      <printer translate="name" name="HP DeskJet 1220C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 1220C;DES:Hewlett-Packard DeskJet 1220;CMD:MLC,PCL,PML;" driver="pcl-1220" manufacturer="HP" model="901" parameters="pcl_inkjet_params" />  <!-- Uses 900 series driver (large) -->
       <printer translate="name" name="HP DeskJet 1600C" driver="pcl-1600" manufacturer="HP" model="1600" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 1600CM" driver="hp-dj_1600cm" manufacturer="HP" model="1600" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 2000" driver="pcl-2000" manufacturer="HP" model="2000" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 2500" driver="pcl-2500" manufacturer="HP" model="2500" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 2500CM" driver="hp-2500cm" manufacturer="HP" model="2500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 340C" driver="pcl-340" manufacturer="HP" model="340" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 340C" deviceid="MFG:Hewlett-Packard;MDL:HP DeskJet 340;DES:HP;CMD:PCL,C32;" driver="pcl-340" manufacturer="HP" model="340" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 3810" driver="hp-dj_3810" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 3816" driver="hp-dj_3816" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP DeskJet 3820" driver="hp-dj_3820" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP DeskJet 3820" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 3820;DES:Hewlett-Packard DeskJet 3820;CMD:MLC,PCL,PML;" driver="hp-dj_3820" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP DeskJet 3822" driver="hp-dj_3822" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP LaserJet 2" driver="pcl-2" manufacturer="HP" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 2D" driver="hp-lj_2d" manufacturer="HP" model="2" parameters="pcl_laser_params" />
@@ -883,173 +883,173 @@
       <printer translate="name" name="HP LaserJet 3D" driver="hp-lj_3d" manufacturer="HP" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 3P w/ PCL5" driver="hp-lj_3p_w_pcl5" manufacturer="HP" model="4" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 3P w/PS" driver="hp-lj_3p_w_ps" manufacturer="HP" model="3" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4 Plus" driver="hp-lj_4_plus" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4 Plus" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 4 Plus;CMD:PJL,PCL,POSTSCRIPT;" driver="hp-lj_4_plus" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4" driver="pcl-4" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4L" driver="pcl-4l" manufacturer="HP" model="4" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4L" deviceid="MFG:Hewlett-Packard;MDL:LaserJet 4L;CMD:HP ENHANCED PCL5,PJL;" driver="pcl-4l" manufacturer="HP" model="4" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4M" driver="hp-lj_4m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4ML" driver="hp-lj_4ml" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4P" driver="hp-lj_4p" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4Si" driver="pcl-4si" manufacturer="HP" model="51" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4V" driver="pcl-4v" manufacturer="HP" model="5" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5" driver="pcl-5" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 5L" driver="hp-lj_5l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 5L" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5L;DES:Hewlett-Packard LaserJet 5L Printer;CMD:HP ENHANCED PCL5,PJL;" driver="hp-lj_5l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5M" driver="hp-lj_5m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 5MP" driver="hp-lj_5mp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 5P" driver="hp-lj_5p" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 5Si" driver="pcl-5si" manufacturer="HP" model="7" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 5MP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5MP;DES:Hewlett-Packard LaserJet 5MP Printer;CMD:HP ENHANCED PCL5,PJL,POSTSCRIPT;" driver="hp-lj_5mp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 5P" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5P;DES:Hewlett-Packard LaserJet 5P Printer;CMD:HP ENHANCED PCL5,PJL;" driver="hp-lj_5p" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 5Si" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5Si;DES:None;CMD:PJL,MLC,PCL,POSTSCRIPT;" driver="pcl-5si" manufacturer="HP" model="7" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 6" driver="pcl-6" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 6L" driver="hp-lj_6l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 6MP" driver="hp-lj_6mp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 6P" driver="hp-lj_6p" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1010" driver="hp-lj_1010" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1012" driver="hp-lj_1012" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1015" driver="hp-lj_1015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 6L" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 6L;DES:Hewlett-Packard LaserJet 6L Printer;" driver="hp-lj_6l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 6MP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 6MP;DES:Hewlett-Packard LaserJet 6MP Printer;CMD:PJL,MLC,PCLXL,PCL,POSTSCRIPT;" driver="hp-lj_6mp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 6P" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 6P;DES:Hewlett-Packard LaserJet 6P Printer;CMD:HP ENHANCED PCL5,PJL;" driver="hp-lj_6p" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1010" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1010;CMD:FastRaster;" driver="hp-lj_1010" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1012" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1012;CMD:FastRaster;" driver="hp-lj_1012" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1015" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1015;CMD:FastRaster;" driver="hp-lj_1015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 1022" driver="hp-lj_1022" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1100" driver="hp-lj_1100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1100A" driver="hp-lj_1100a" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1150" driver="hp-lj_1150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1160" driver="hp-lj_1160" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1200" driver="hp-lj_1200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1220" driver="hp-lj_1220" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1300" driver="hp-lj_1300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 1320" driver="hp-lj_1320" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 2100" driver="hp-lj_2100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 2100M" driver="hp-lj_2100m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 2200" driver="hp-lj_2200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 2300" driver="hp-lj_2300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1100" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 1100;DES:HP LaserJet 1100 Printer;CMD:MLC,PCL,PJL;" driver="hp-lj_1100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1100A" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 1100;DES:HP LaserJet 1100A Printer-Copier-Scanner;CMD:MLC,MFPDTF1,PCL,PJL;" driver="hp-lj_1100a" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1150" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1150;DES:Hewlett-Packard LaserJet 1150;CMD:PJL,MLC,BIDI-ECP,PCL,DW-PCL;" driver="hp-lj_1150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1160" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1160 series;DES:Hewlett-Packard LaserJet 1160 series;CMD:PJL,MLC,BIDI-ECP,PCL,DW-PCL;" driver="hp-lj_1160" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1200" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 1200;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_1200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1220" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 1220;DES:Hewlett-Packard LaserJet 1220;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_1220" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1300" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1300;DES:Hewlett-Packard LaserJet 1300;CMD:PJL,MLC,BIDI-ECP,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_1300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 1320" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 1320 series;DES:Hewlett-Packard LaserJet 1320 series;CMD:PJL,MLC,BIDI-ECP,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_1320" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 2100" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 2100 Series;DES:Hewlett-Packard LaserJet 2100 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_2100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 2100M" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 2100 Series;DES:Hewlett-Packard LaserJet 2100 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_2100m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 2200" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 2200;DES:Hewlett-Packard LaserJet 2200;" driver="hp-lj_2200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 2300" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 2300 series;DES:Hewlett-Packard LaserJet 2300 series;CMD:PJL,MLC,BIDI-ECP,PCLXL,PCL,PJL,POSTSCRIPT;" driver="hp-lj_2300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 2410" driver="hp-lj_2410" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 2420" driver="hp-lj_2420" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 2430" driver="hp-lj_2430" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3015" driver="hp-lj_3015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3020" driver="hp-lj_3020" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3030" driver="hp-lj_3030" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3050" driver="hp-lj_3050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3052" driver="hp-lj_3052" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3055" driver="hp-lj_3055" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3200" driver="hp-lj_3200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3200m" driver="hp-lj_3200m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 2420" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 2420;DES:Hewlett-Packard LaserJet 2420;CMD:PJL,MLC,PCLXL,PCL,PJL,POSTSCRIPT;" driver="hp-lj_2420" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 2430" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 2430;DES:Hewlett-Packard LaserJet 2430;CMD:PJL,MLC,PCLXL,PCL,PJL,POSTSCRIPT,PDF;" driver="hp-lj_2430" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3015" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3015;DES:Hewlett-Packard LaserJet 3015;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3020" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 3020;DES:Hewlett-Packard LaserJet 3020;CMD:PJL,MLC,BIDI-ECP,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3020" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3030" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3030;DES:Hewlett-Packard LaserJet 3030;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3030" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3050" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3050;DES:Hewlett-Packard LaserJet 3050;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3052" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3052;DES:Hewlett-Packard LaserJet 3052;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3052" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3055" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3055;DES:Hewlett-Packard LaserJet 3055;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3055" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3200" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3200;DES:Hewlett-Packard LaserJet 3200;CMD:PJL,MLC,PCL,PCLXL;" driver="hp-lj_3200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3200m" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3200M;DES:Hewlett-Packard LaserJet 3200M;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_3200m" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 3200se" driver="hp-lj_3200se" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3300 MFP" driver="hp-lj_3300_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3310 MFP" driver="hp-lj_3310_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3320 MFP" driver="hp-lj_3320_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3320N MFP" driver="hp-lj_3320n_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3330 MFP" driver="hp-lj_3330_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3380" driver="hp-lj_3380" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3390" driver="hp-lj_3390" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 3392" driver="hp-lj_3392" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4000" driver="hp-lj_4000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4050" driver="hp-lj_4050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4100" driver="hp-lj_4100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4200" driver="hp-lj_4200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3300 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3300/3310/3320;DES:Hewlett-Packard LaserJet 3300/3310/3320;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3300_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3310 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3300/3310/3320;DES:Hewlett-Packard LaserJet 3300/3310/3320;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3310_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3320 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3300/3310/3320;DES:Hewlett-Packard LaserJet 3300/3310/3320;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3320_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3320N MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3300/3310/3320;DES:Hewlett-Packard LaserJet 3300/3310/3320;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3320n_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3330 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3330;DES:Hewlett-Packard LaserJet 3330;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3330_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3380" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3380;DES:Hewlett-Packard LaserJet 3380;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3380" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3390" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3390;DES:Hewlett-Packard LaserJet 3390;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3390" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 3392" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 3390;DES:Hewlett-Packard LaserJet 3390;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_3392" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4000" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 4000 Series;DES:Hewlett-Packard LaserJet 4000 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_4000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4050" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 4050 Series;DES:Hewlett-Packard LaserJet 4050 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_4050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4100" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 4100 Series;DES:Hewlett-Packard LaserJet 4100 Series;CMD:PJL,MLC,PCL,POSTSCRIPT,PCLXL,PJL;" driver="hp-lj_4100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4200" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 4200;DES:Hewlett-Packard LaserJet 4200;CMD:PJL,MLC,POSTSCRIPT,PJL,PCLXL,PCL;" driver="hp-lj_4200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4240" driver="hp-lj_4240" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4250" driver="hp-lj_4250" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4300" driver="hp-lj_4300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4250" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 4250;DES:Hewlett-Packard LaserJet 4250;CMD:PJL,MLC,PCLXL,PCL,PJL,POSTSCRIPT;" driver="hp-lj_4250" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4300" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 4300;CMD:PJL,MLC,POSTSCRIPT,PJL,PCLXL,PCL;" driver="hp-lj_4300" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 4345 mfp" driver="hp-lj_4345_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 4350" driver="hp-lj_4350" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 5000" driver="hp-lj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 4350" deviceid="MFG:HP;MDL:hp LaserJet 4350L;" driver="hp-lj_4350" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 5000" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5000 Series;DES:Hewlett-Packard LaserJet 5000 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5100" driver="hp-lj_5100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5200" driver="hp-lj_5200" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 5200L" driver="hp-lj_5200l" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 8000" driver="hp-lj_8000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 8100" driver="hp-lj_8100" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet 8150" driver="hp-lj_8150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet 8150" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 8150 Series;DES:Hewlett-Packard LaserJet 8150 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_8150" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 9000" driver="hp-lj_9000" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 9040" driver="hp-lj_9040" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 9040 MFP" driver="hp-lj_9040_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 9050" driver="hp-lj_9050" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP LaserJet 9050 MFP" driver="hp-lj_9050_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet M3027 MFP" driver="hp-lj_m3027_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet M3035 MFP" driver="hp-lj_m3035_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet M4345 MFP" driver="hp-lj_m4345_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet M5025 MFP" driver="hp-lj_m5025_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet M5035 MFP" driver="hp-lj_m5035_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet P2010" driver="hp-lj_p2010" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet P2015" driver="hp-lj_p2015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet P3004" driver="hp-lj_p3004" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP LaserJet P3005" driver="hp-lj_p3005" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet M3027 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 8150 Series;DES:Hewlett-Packard LaserJet 8150 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_m3027_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet M3035 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 8150 Series;DES:Hewlett-Packard LaserJet 8150 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_m3035_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet M4345 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 8150 Series;DES:Hewlett-Packard LaserJet 8150 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_m4345_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet M5025 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 8150 Series;DES:Hewlett-Packard LaserJet 8150 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_m5025_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet M5035 MFP" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 8150 Series;DES:Hewlett-Packard LaserJet 8150 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_m5035_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet P2010" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet P2010 series;DES:Hewlett-Packard LaserJet P2010 series;CMD:PJL,MLC,BIDI-ECP,PCL,DW-PCL;" driver="hp-lj_p2010" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet P2015" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet P2015 Series;DES:Hewlett-Packard LaserJet P2015 series;CMD:PJL,MLC,BIDI-ECP,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_p2015" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet P3004" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet P3004 Series;DES:Hewlett-Packard LaserJet P3004 Series;CMD:PJL,MLC,BIDI-ECP,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_p3004" manufacturer="HP" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="HP LaserJet P3005" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet P3005 Series;DES:Hewlett-Packard LaserJet P3005 Series;CMD:PJL,MLC,BIDI-ECP,PCL,POSTSCRIPT,PCLXL;" driver="hp-lj_p3005" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP Mopier 240" driver="hp-mopier_240" manufacturer="HP" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="HP Mopier 320" driver="hp-mopier_320" manufacturer="HP" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="HP OfficeJet 300" driver="hp-oj_300" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 330" driver="hp-oj_330" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 350" driver="hp-oj_350" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 500" driver="hp-oj_500" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 520" driver="hp-oj_520" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 570" driver="hp-oj_570" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 580" driver="hp-oj_580" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 590" driver="hp-oj_590" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 600" driver="hp-oj_600" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 610" driver="hp-oj_610" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 625" driver="hp-oj_625" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 630" driver="hp-oj_630" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 635" driver="hp-oj_635" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 700" driver="hp-oj_700" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 710" driver="hp-oj_710" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 720" driver="hp-oj_720" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 725" driver="hp-oj_725" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 5105" driver="hp-oj_5105" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 5110" driver="hp-oj_5110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 300" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 300;DES:Hewlett-Packard OfficeJet Series 300;CMD:MLC,PCL,PML;" driver="hp-oj_300" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 330" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 300;DES:Hewlett-Packard OfficeJet Series 300;CMD:MLC,PCL,PML;" driver="hp-oj_330" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 350" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 300;DES:Hewlett-Packard OfficeJet Series 300;CMD:MLC,PCL,PML;" driver="hp-oj_350" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 500" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 500;CMD:MLC,PCL,PML;" driver="hp-oj_500" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 520" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 500;CMD:MLC,PCL,PML;" driver="hp-oj_520" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 570" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 500;CMD:MLC,PCL,PML;" driver="hp-oj_570" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 580" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 500;CMD:MLC,PCL,PML;" driver="hp-oj_580" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 590" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 500;CMD:MLC,PCL,PML;" driver="hp-oj_590" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 600" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 600;CMD:MLC,PCL,PML;" driver="hp-oj_600" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 610" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 600;CMD:MLC,PCL,PML;" driver="hp-oj_610" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 625" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 600;CMD:MLC,PCL,PML;" driver="hp-oj_625" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 630" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 600;CMD:MLC,PCL,PML;" driver="hp-oj_630" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 635" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 600;CMD:MLC,PCL,PML;" driver="hp-oj_635" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 700" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 700;CMD:MLC,PCL,PML;" driver="hp-oj_700" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 710" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 700;CMD:MLC,PCL,PML;" driver="hp-oj_710" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 720" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 700;CMD:MLC,PCL,PML;" driver="hp-oj_720" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 725" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet Series 700;CMD:MLC,PCL,PML;" driver="hp-oj_725" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 5105" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet 5105;DES:Hewlett-Packard OfficeJet 5100 Series;CMD:MLC,PCL,PML;" driver="hp-oj_5105" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 5110" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet 5110v;DES:Hewlett-Packard OfficeJet 5100 Series;CMD:MLC,PCL,PML;" driver="hp-oj_5110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP OfficeJet 5110xi" driver="hp-oj_5110xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 6105" driver="hp-oj_6105" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 6110" driver="hp-oj_6110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 7110" driver="hp-oj_7110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 7130" driver="hp-oj_7130" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet 7140" driver="hp-oj_7140" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet D125" driver="hp-oj_d125" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet D135" driver="hp-oj_d135" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet D145" driver="hp-oj_d145" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet D155" driver="hp-oj_d155" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet G55" driver="hp-oj_g55" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet G85" driver="hp-oj_g85" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet G95" driver="hp-oj_g95" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet K60" driver="hp-oj_k60" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet K60xi" driver="hp-oj_k60xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet K80" driver="hp-oj_k80" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet K80xi" driver="hp-oj_k80xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet LX" driver="hp-oj_lx" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet Pro 1150C" driver="hp-oj_pro_1150c" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet Pro 1170C" driver="hp-oj_pro_1170c" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet Pro 1175C" driver="hp-oj_pro_1175c" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet R40" driver="hp-oj_r40" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet R45" driver="hp-oj_r45" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet R60" driver="hp-oj_r60" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet R65" driver="hp-oj_r65" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet R80" driver="hp-oj_r80" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet T45" driver="hp-oj_t45" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet T65" driver="hp-oj_t65" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet V40" driver="hp-oj_v40" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP OfficeJet V40xi" driver="hp-oj_v40xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 6105" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet 6100 Series;CMD:MLC,PCL,PML,DW-PCL,DYN;" driver="hp-oj_6105" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 6110" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet 6100 Series;CMD:MLC,PCL,PML,DW-PCL,DYN;" driver="hp-oj_6110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 7110" deviceid="MFG:Hewlett-Packard;MDL:officejet 7100 series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_7110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 7130" deviceid="MFG:Hewlett-Packard;MDL:officejet 7100 series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_7130" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet 7140" deviceid="MFG:Hewlett-Packard;MDL:officejet 7100 series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_7140" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet D125" deviceid="MFG:Hewlett-Packard;MDL:officejet d series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_d125" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet D135" deviceid="MFG:Hewlett-Packard;MDL:officejet d series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_d135" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet D145" deviceid="MFG:Hewlett-Packard;MDL:officejet d series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_d145" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet D155" deviceid="MFG:Hewlett-Packard;MDL:officejet d series;CMD:MLC,PCL,PML,DW-PCL,BIDI-ECP;" driver="hp-oj_d155" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet G55" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet G55;DES:Hewlett-Packard OfficeJet G Series;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_g55" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet G85" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet G85;DES:Hewlett-Packard OfficeJet G Series;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_g85" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet G95" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet G95;DES:Hewlett-Packard OfficeJet G Series;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_g95" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet K60" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet  K60;DES:Hewlett-Packard OfficeJet K Series;CMD:MLC,PCL,PML;" driver="hp-oj_k60" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet K60xi" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet  K60xi;DES:Hewlett-Packard OfficeJet K Series;CMD:MLC,PCL,PML;" driver="hp-oj_k60xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet K80" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet  K80;DES:Hewlett-Packard OfficeJet K Series;CMD:MLC,PCL,PML;" driver="hp-oj_k80" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet K80xi" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet  K80xi;DES:Hewlett-Packard OfficeJet K Series;CMD:MLC,PCL,PML;" driver="hp-oj_k80xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet LX" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet;CMD:MLC,PCL,PML;" driver="hp-oj_lx" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet Pro 1150C" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET PRO 1150C;DES:Hewlett-Packard OfficeJet Pro 1150C;CMD:PCL,MLC,PML,PJL;" driver="hp-oj_pro_1150c" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet Pro 1170C" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET PRO 1170C SERIES;DES:Hewlett-Packard OfficeJet Pro 1170C Series;CMD:PCL,MLC,PML,PJL;" driver="hp-oj_pro_1170c" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet Pro 1175C" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET PRO 1170C SERIES;DES:Hewlett-Packard OfficeJet Pro 1170C Series;CMD:PCL,MLC,PML,PJL;" driver="hp-oj_pro_1175c" manufacturer="HP" model="800" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet R40" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET R40;DES:Hewlett-Packard OfficeJet R40;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_r40" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet R45" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET R40;DES:Hewlett-Packard OfficeJet R40;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_r45" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet R60" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET R60;DES:Hewlett-Packard OfficeJet R60;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_r60" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet R65" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET R65;DES:Hewlett-Packard OfficeJet R65;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_r65" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet R80" deviceid="MFG:HEWLETT-PACKARD;MDL:OFFICEJET R80;DES:Hewlett-Packard OfficeJet R80;CMD:MLC,PCL,PML,SCL;" driver="hp-oj_r80" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet T45" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet T Series;DES:Hewlett-Packard OfficeJet T Series;CMD:MLC,PCL,PML;" driver="hp-oj_t45" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet T65" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet T Series;DES:Hewlett-Packard OfficeJet T Series;CMD:MLC,PCL,PML;" driver="hp-oj_t65" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet V40" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet V40;DES:Hewlett-Packard OfficeJet V Series;CMD:MLC,PCL,PML;" driver="hp-oj_v40" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP OfficeJet V40xi" deviceid="MFG:Hewlett-Packard;MDL:OfficeJet V40xi;DES:Hewlett-Packard OfficeJet V Series;CMD:MLC,PCL,PML;" driver="hp-oj_v40xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP OfficeJet" driver="hp-oj" manufacturer="HP" model="500" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 370" driver="hp-psc_370" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 380" driver="hp-psc_380" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 500" driver="hp-psc_500" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 750" driver="hp-psc_750" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 950" driver="hp-psc_950" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 950xi" driver="hp-psc_950xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 2110" driver="hp-psc_2110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 2150" driver="hp-psc_2150" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PSC 2210" driver="hp-psc_2210" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart 7150" driver="hp-psc_7150" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 370" deviceid="MFG:Hewlett-Packard;MDL:Printer/Scanner/Copier 300;CMD:MLC,PCL,PML;" driver="hp-psc_370" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 380" deviceid="MFG:Hewlett-Packard;MDL:Printer/Scanner/Copier 300;CMD:MLC,PCL,PML;" driver="hp-psc_380" manufacturer="HP" model="690" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 500" deviceid="MFG:HEWLETT-PACKARD;MDL:PSC 500;DES:Hewlett-Packard PSC 500;CMD:MLC,PCL,PML,SCL;" driver="hp-psc_500" manufacturer="HP" model="840" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 750" deviceid="MFG:Hewlett-Packard;MDL:PSC 750;DES:Hewlett-Packard PSC 700 Series;CMD:MLC,PCL,PML;" driver="hp-psc_750" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 950" deviceid="MFG:Hewlett-Packard;MDL:PSC 900 Series;DES:Hewlett-Packard PSC 900 Series;CMD:MLC,PCL,PML;" driver="hp-psc_950" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 950xi" deviceid="MFG:Hewlett-Packard;MDL:PSC 900 Series;DES:Hewlett-Packard PSC 900 Series;CMD:MLC,PCL,PML;" driver="hp-psc_950xi" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 2110" deviceid="MFG:Hewlett-Packard;MDL:PSC 2100 Series;CMD:MLC,PCL,PML,DW-PCL,DYN;" driver="hp-psc_2110" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 2150" deviceid="MFG:Hewlett-Packard;MDL:PSC 2150 Series;CMD:MLC,PCL,PML,DW-PCL,DYN;" driver="hp-psc_2150" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PSC 2210" deviceid="MFG:Hewlett-Packard;MDL:PSC 2200 Series;CMD:MLC,PCL,PML,DW-PCL,DYN;" driver="hp-psc_2210" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart 7150" deviceid="MFG:hp;MDL:photosmart 7150;DES:hp photosmart 7150;CMD:MLC,PCL,PML,DW-PCL,DYN,DESKJET;" driver="hp-psc_7150" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP PhotoSmart 7345" driver="hp-psc_7345" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart 7350" driver="hp-psc_7350" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart 7550" driver="hp-psc_7550" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart P100" driver="hp-psc_p100" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart 7350" deviceid="MFG:hp;MDL:photosmart 7350;DES:hp photosmart 7350;CMD:MLC,PCL,PML,DW-PCL,DYN,DESKJET;" driver="hp-psc_7350" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart 7550" deviceid="MFG:hp;MDL:photosmart 7550;DES:hp photosmart 7550;CMD:MLC,PCL,PML,DW-PCL,DYN,DESKJET;" driver="hp-psc_7550" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart P100" deviceid="MFG:HP;MDL:PHOTOSMART 100;DES:hp photosmart 100;CMD:MLC,PCL,PML,BIDI-ECP,ECP18,DW-PCL;" driver="hp-psc_p100" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP PhotoSmart P130" driver="hp-psc_p130" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP PhotoSmart P230" driver="hp-psc_p230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart P1000" driver="pcl-P1000" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />  <!-- Uses 900 series driver -->
-      <printer translate="name" name="HP PhotoSmart P1100" driver="pcl-P1100" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />  <!-- Uses 900 series driver -->
-      <printer translate="name" name="HP PhotoSmart P1115" driver="hp-psc_p1115" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart P1000" deviceid="MFG:HEWLETT-PACKARD;MDL:PHOTOSMART P1000;DES:Hewlett-Packard PhotoSmart P1000;CMD:MLC,PCL,PML;" driver="pcl-P1000" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />  <!-- Uses 900 series driver -->
+      <printer translate="name" name="HP PhotoSmart P1100" deviceid="MFG:HEWLETT-PACKARD;MDL:PHOTOSMART P1100;DES:Hewlett-Packard PhotoSmart P1100;CMD:MLC,PCL,PML;" driver="pcl-P1100" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />  <!-- Uses 900 series driver -->
+      <printer translate="name" name="HP PhotoSmart P1115" deviceid="MFG:HP;MDL:PHOTOSMART 1115;DES:hp photosmart 1115;CMD:MLC,PCL,PML,BIDI-ECP,ECP18,DW-PCL;" driver="hp-psc_p1115" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP PhotoSmart P1215" driver="hp-psc_p1215" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart P1218" driver="hp-psc_p1218" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
-      <printer translate="name" name="HP PhotoSmart P1315" driver="hp-psc_p1315" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart P1218" deviceid="MFG:HP;MDL:PHOTOSMART 1218;DES:hp photosmart 1218;CMD:MLC,PCL,PML,BIDI-ECP,ECP18,DW-PCL;" driver="hp-psc_p1218" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="HP PhotoSmart P1315" deviceid="MFG:HP;MDL:PHOTOSMART 1315;DES:hp photosmart 1315;CMD:MLC,PCL,PML,BIDI-ECP,ECP18,DW-PCL;" driver="hp-psc_p1315" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP e-printer e20" driver="hp-e-printer_e20" manufacturer="HP" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="IBM 4019" driver="ibm-4019" manufacturer="IBM" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="IBM 4029 030 LaserPrinter 10" driver="ibm-4029_030_lp_10" manufacturer="IBM" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="IBM 4312" driver="ibm-4312" manufacturer="IBM" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="IBM Infoprint 12" driver="ibm-infoprint_12" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="IBM Page Printer 3112" driver="ibm-pp_3112" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="IBM Infoprint 12" deviceid="MFG:IBM;MDL:Infoprint;CMD:PCL5E,PCL6;" driver="ibm-infoprint_12" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="IBM Page Printer 3112" deviceid="MFG:Lexmark International;MDL:IBM 3112 Page Printer;DES:IBM 3112 Page Printer;CMD:PCL 5 Emulation, PostScript Level 2 Emulation, NPAP, PJL;" driver="ibm-pp_3112" manufacturer="IBM" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec 4353 MF" driver="infotec-4353_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec 4452 MF" driver="infotec-4452_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Infotec 4651 MF" driver="infotec-4651_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Infotec 4651 MF" deviceid="MFG:Lexmark International;MDL:IBM 3112 Page Printer;DES:IBM 3112 Page Printer;CMD:PCL 5 Emulation, PostScript Level 2 Emulation, NPAP, PJL;" driver="infotec-4651_mf" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec IS2022" driver="infotec-is2022" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec IS2027" driver="infotec-is2027" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec IS2032" driver="infotec-is2032" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
@@ -1100,52 +1100,52 @@
       <printer translate="name" name="Infotec MP 4000B" driver="infotec-mp_4000b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera F-1010" driver="kyocera-f-1010" manufacturer="Kyocera" model="22" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera F-1010" deviceid="MFG:Kyocera;MDL:F-1010;DES:Kyocera F-1010;" driver="kyocera-f-1010" manufacturer="Kyocera" model="22" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-600 - KPDL-2" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-600" driver="kyocera-fs-600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-680" driver="kyocera-fs-680" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-800" driver="kyocera-fs-800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1000" driver="kyocera-fs-1000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-600" deviceid="MFG:Kyocera;MDL:Kyocera FS-600;DES:Kyocera FS-600;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-680" deviceid="MFG:Kyocera;MDL:Kyocera FS-680;DES:Kyocera FS-680;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-680" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-800" deviceid="MFG:Kyocera;MDL:Kyocera FS-800;DES:Kyocera FS-800;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1000" deviceid="MFG:Kyocera;MDL:Kyocera FS-1000;DES:Kyocera FS-1000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-1000+" driver="kyocera-fs-1000plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1010" driver="kyocera-fs-1010" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1050" driver="kyocera-fs-1050" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1200" driver="kyocera-fs-1200" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1600" driver="kyocera-fs-1600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1010" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1010;DES:Kyocera FS-1010;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1010" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1050" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1050;DES:Kyocera FS-1050;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1050" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1200" deviceid="MFG:Kyocera;MDL:Kyocera FS-1200;DES:Kyocera FS-1200;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1200" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1600" deviceid="MFG:Kyocera;MDL:FS-1600;DES:Kyocera FS-1600;" driver="kyocera-fs-1600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-1600+" driver="kyocera-fs-1600plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1700" driver="kyocera-fs-1700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1700" deviceid="MFG:Kyocera;MDL:Kyocera FS-1700;DES:Kyocera FS-1700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-1700+" driver="kyocera-fs-1700plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1750" driver="kyocera-fs-1750" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1800" driver="kyocera-fs-1800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1750" deviceid="MFG:Kyocera;MDL:Kyocera FS-1750;DES:Kyocera FS-1750;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1750" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1800" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1800;DES:Kyocera FS-1800;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-1800+" driver="kyocera-fs-1800plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-1900" driver="kyocera-fs-1900" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-3500" driver="kyocera-fs-3500" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-3600" driver="kyocera-fs-3600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-1900" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1900;DES:Kyocera FS-1900;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1900" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-3500" deviceid="MFG:Kyocera;MDL:FS-3500;DES:Kyocera FS-3500;" driver="kyocera-fs-3500" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-3600" deviceid="MFG:Kyocera;MDL:FS-3600;DES:Kyocera FS-3600;" driver="kyocera-fs-3600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-3600+" driver="kyocera-fs-3600plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-3700" driver="kyocera-fs-3700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-3700" deviceid="MFG:Kyocera;MDL:Kyocera FS-3700;DES:Kyocera FS-3700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-3700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-3700+" driver="kyocera-fs-3700plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-3750" driver="kyocera-fs-3750" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-3800" driver="kyocera-fs-3800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-5800C" driver="kyocera-fs-5800c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-5900C" driver="kyocera-fs-5900c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-6500" driver="kyocera-fs-6500" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-3750" deviceid="MFG:Kyocera;MDL:Kyocera FS-3750;DES:Kyocera FS-3750;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-3750" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-3800" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-3800;DES:Kyocera FS-3800;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-3800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-5800C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5800C;DES:Kyocera FS-5800C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5800c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-5900C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5900C;DES:Kyocera FS-5900C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5900c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-6500" deviceid="MFG:Kyocera;MDL:FS-6500;DES:Kyocera FS-6500;" driver="kyocera-fs-6500" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-6500+" driver="kyocera-fs-6500plus" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-6700" driver="kyocera-fs-6700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-7000" driver="kyocera-fs-7000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-6700" deviceid="MFG:Kyocera;MDL:Kyocera FS-6700;DES:Kyocera FS-6700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-6700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-7000" deviceid="MFG:Kyocera;MDL:Kyocera FS-7000;DES:Kyocera FS-7000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-7000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-7000+" driver="kyocera-fs-7000plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-8000C" driver="kyocera-fs-8000c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-9000" driver="kyocera-fs-9000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-9100DN" driver="kyocera-fs-9100dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera FS-9500DN" driver="kyocera-fs-9500dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-1530" driver="kyocera-km-1530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-1810" driver="kyocera-km-1810" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-2030" driver="kyocera-km-2030" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-2530" driver="kyocera-km-2530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-3530" driver="kyocera-km-3530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-4230" driver="kyocera-km-4230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-4530" driver="kyocera-km-4530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-5230" driver="kyocera-km-5230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-5530" driver="kyocera-km-5530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
-      <printer translate="name" name="Kyocera KM-6230" driver="kyocera-km-6230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-8000C" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-8000C;DES:Kyocera FS-8000C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-8000c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-9000" deviceid="MFG:Kyocera;MDL:Kyocera FS-9000;DES:Kyocera FS-9000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-9100DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9100DN;DES:Kyocera FS-9100DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9100dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera FS-9500DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9500DN;DES:Kyocera FS-9500DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9500dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-1530" deviceid="MFG:Kyocera Mita;MDL:KM-1530;DES:Kyocera Mita KM-1530;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-1530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-1810" deviceid="MFG:Kyocera Mita;MDL:KM-1810;DES:Kyocera Mita KM-1810;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-1810" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-2030" deviceid="MFG:Kyocera Mita;MDL:KM-2030;DES:Kyocera Mita KM-2030;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-2030" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-2530" deviceid="MFG:Kyocera Mita;MDL:KM-2530;DES:Kyocera Mita KM-2530;" driver="kyocera-km-2530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-3530" deviceid="MFG:Kyocera Mita;MDL:KM-3530;DES:Kyocera Mita KM-3530;" driver="kyocera-km-3530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-4230" deviceid="MFG:Kyocera Mita;MDL:KM-4230;DES:Kyocera Mita KM-4230;" driver="kyocera-km-4230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-4530" deviceid="MFG:Kyocera Mita;MDL:KM-4530;DES:Kyocera Mita KM-4530;" driver="kyocera-km-4530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-5230" deviceid="MFG:Kyocera Mita;MDL:KM-5230;DES:Kyocera Mita KM-5230;" driver="kyocera-km-5230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-5530" deviceid="MFG:Kyocera Mita;MDL:KM-5530;DES:Kyocera Mita KM-5530;" driver="kyocera-km-5530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
+      <printer translate="name" name="Kyocera KM-6230" deviceid="MFG:Kyocera Mita;MDL:KM-6230;DES:Kyocera Mita KM-6230;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-6230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5622" driver="lanier-5622" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5627" driver="lanier-5627" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier 5632" driver="lanier-5632" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
@@ -1202,21 +1202,21 @@
       <printer translate="name" name="Lexmark Optra E" driver="lexmark-optra_e" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lexmark Optra E+" driver="lexmark-optra_eplus" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lexmark Optra E220" driver="lexmark-optra_e220" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Lexmark Optra E321" driver="lexmark-optra_e321" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lexmark Optra E321" deviceid="MFG:Lexmark International;MDL:Lexmark E321;DES:Lexmark E321;CMD:PCL 5 Emulation, PostScript Level 3 For Mac Emulation, NPAP, PJL;" driver="lexmark-optra_e321" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lexmark Optra E323" driver="lexmark-optra_e323" manufacturer="Lexmark" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lexmark Valuewriter 300" driver="lexmark-vw_300" manufacturer="Lexmark" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Minolta PagePro 6" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Minolta PagePro 6" deviceid="MFG:MINOLTA;MDL:PagePro 6;CMD:HP ENHANCED PCL5;" driver="minolta-pp_6" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Minolta PagePro 6e" driver="minolta-pp_6e" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Minolta PagePro 6ex" driver="minolta-pp_6ex" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Minolta PagePro 8" driver="minolta-pp_8" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Minolta PagePro 8L" driver="minolta-pp_8l" manufacturer="Minolta" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Minolta PagePro 1100" driver="minolta-pp_1100" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Minolta PagePro 6ex" deviceid="MFG:Minolta;MDL:PagePro   6e;CMD:HP ENHANCED PCL5e,PJL,WinStyler;" driver="minolta-pp_6ex" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Minolta PagePro 8" deviceid="MFG:MINOLTA;MDL:PagePro 8;CMD:HP ENHANCED PCL6,PJL;" driver="minolta-pp_8" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Minolta PagePro 8L" deviceid="MFG:Minolta;MDL:PagePro 8L;CMD:PrintGear;PCL;PLJ;" driver="minolta-pp_8l" manufacturer="Minolta" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Minolta PagePro 1100" deviceid="MFG:MINOLTA;MDL:PagePro 1100;CMD:HP ENHANCED PCL6,PJL;" driver="minolta-pp_1100" manufacturer="Minolta" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NEC SuperScript 660i" driver="nec-ssc_660i" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NEC SuperScript 860" driver="nec-ssc_860" manufacturer="NEC" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="NEC SuperScript 870" driver="nec-ssc_870" manufacturer="NEC" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="NEC SuperScript 870" deviceid="MFG:NEC;MDL:SuperScript 870;DES:SuperScript 870;CMD:PrintGear,PCL,PJL;" driver="nec-ssc_870" manufacturer="NEC" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="NEC SuperScript 1260" driver="nec-ssc_1260" manufacturer="NEC" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="NEC SuperScript 1400" driver="nec-ssc_1400" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="NEC SuperScript 1800" driver="nec-ssc_1800" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="NEC SuperScript 1800" deviceid="MFG:NEC;MDL:SuperScript 1800;CMD:PCL6,PCL5E;" driver="nec-ssc_1800" manufacturer="NEC" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG 10515/10518/10512" driver="nrg-10512" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG 2205/2238/2212" driver="nrg-2212" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG 2705/2738/2712" driver="nrg-2712" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
@@ -1277,20 +1277,20 @@
       <printer translate="name" name="Oki OL610e/S" driver="okidata-ol610e_s" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki OL800" driver="okidata-ol800" manufacturer="Oki" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Oki OL810ex" driver="okidata-ol810ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Okipage 6e" driver="okidata-okp_6e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Okipage 6ex" driver="okidata-okp_6ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Okipage 8p" driver="okidata-okp_8p" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Okipage 10e" driver="okidata-okp_10e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Okipage 10ex" driver="okidata-okp_10ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Okipage 14ex" driver="okidata-okp_14ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Oki Super 6e" driver="okidata-super_6e" manufacturer="Oki" model="4" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 6e" deviceid="MFG:OKI DATA CORP;MDL:OKIDATA OKIPAGE 6e;DES:OKIDATA OKIPAGE 6e (HP4P);CMD:ENHANCED PCL5,PJL,EPSONFX,IBMPPR,HIPERWINDOWS;" driver="okidata-okp_6e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 6ex" deviceid="MFG:OKI DATA CORP;MDL:OKIDATA OKIPAGE 6ex;DES:OKIDATA OKIPAGE 6ex (HP4P);CMD:ENHANCED PCL5,PJL,EPSONFX,IBMPR,HIPERWINDOWS;" driver="okidata-okp_6ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 8p" deviceid="MFG:OKI DATA CORP;MDL:OKIPAGE 8p;DES:OKIPAGE 8p;CMD:PJL,PCLXL,PCL,EPSONFX,IBMPPR;" driver="okidata-okp_8p" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 10e" deviceid="MFG:OKI DATA CORP;MDL:OKIPAGE 10e;DES:OKIPAGE 10e;CMD:PJL,PCLXL,PCL,EPSONFX,IBMPPR;" driver="okidata-okp_10e" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 10ex" deviceid="MFG:OKI DATA CORP;MDL:OKIPAGE 10ex;DES:OKIPAGE 10ex;CMD:PJL,PCLXL,PCL,EPSONFX,IBMPPR;" driver="okidata-okp_10ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Okipage 14ex" deviceid="MFG:OKI DATA CORP;MDL:OKIPAGE 14ex;DES:OKIPAGE 14ex;CMD:PJL,PCLXL,PCL,EPSONFX,IBMPPR;" driver="okidata-okp_14ex" manufacturer="Oki" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Oki Super 6e" deviceid="MFG:OKI DATA CORP;MDL:OKIPAGE 14ex;DES:OKIPAGE 14ex;CMD:PJL,PCLXL,PCL,EPSONFX,IBMPPR;" driver="okidata-super_6e" manufacturer="Oki" model="4" parameters="pcl_laser_params" />
       <printer translate="name" name="Olivetti JP350S" driver="olivetti-jp350s" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Olivetti PG 306" driver="olivetti-pg_306" manufacturer="Olivetti" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="PCPI 1030" driver="pcpi-1030" manufacturer="PCPI" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P4410" driver="panasonic-kx-p4410" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P4450" driver="panasonic-kx-p4450" manufacturer="Panasonic" model="3" parameters="pcl_laser_params" />
       <printer translate="name" name="Panasonic KX-P6150" driver="panasonic-kx-p6150" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Panasonic KX-P6500" driver="panasonic-kx-p6500" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Panasonic KX-P6500" deviceid="MFG:Panasonic;MDL:KX-P6500;DES:(no such line for this device);CMD:GDI;" driver="panasonic-kx-p6500" manufacturer="Panasonic" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Raven LP-410" driver="raven-lp-410" manufacturer="Raven" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio 1022" driver="ricoh-afc_1022" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio 1027" driver="ricoh-afc_1027" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
@@ -1351,7 +1351,7 @@
       <printer translate="name" name="Samsung ML-1250" driver="samsung-ml-1250" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-1450" driver="samsung-ml-1450" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-1450PS" driver="samsung-ml-1450ps" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Samsung ML-1650" driver="samsung-ml-1650" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Samsung ML-1650" deviceid="MFG:Samsung;MDL:ML-1650;CMD:PCL5E,PCL6;" driver="samsung-ml-1650" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-1651N" driver="samsung-ml-1651n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-1750" driver="samsung-ml-1750" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-2150" driver="samsung-ml-2150" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
@@ -1375,7 +1375,7 @@
       <printer translate="name" name="Samsung ML-7300" driver="samsung-ml-7300" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung ML-7300N" driver="samsung-ml-7300n" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Samsung QL-5100A" driver="samsung-ql-5100a" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Samsung QL-6050" driver="samsung-ql-6050" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Samsung QL-6050" deviceid="MFG:Samsung;MDL:6050;CMD:PCL6;" driver="samsung-ql-6050" manufacturer="Samsung" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 2522" driver="savin-2522" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 2527" driver="savin-2527" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 2532" driver="savin-2532" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
@@ -1428,9 +1428,9 @@
       <printer translate="name" name="Savin 9050" driver="savin-9050" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Savin 9050b" driver="savin-9050b" manufacturer="Savin" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Seiko SpeedJET 200" driver="seiko-sj_200" manufacturer="Seiko" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Sharp AR-161" driver="sharp-ar-161" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Sharp AR-161" deviceid="MFG:SHARP;MDL:AR-160/200 series;DES:None;CMD:PCL;" driver="sharp-ar-161" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Sharp AR-M257" driver="sharp-ar-m257" manufacturer="Sharp" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Sony IJP-V100" driver="sony-ijp-v100" manufacturer="Sony" model="601" parameters="pcl_inkjet_params" />
+      <printer translate="name" name="Sony IJP-V100" deviceid="MFG:Sony;MDL:All-in-One IJP-V100;CMD:MLC,PCL,PML;" driver="sony-ijp-v100" manufacturer="Sony" model="601" parameters="pcl_inkjet_params" />
       <printer translate="name" name="Star LS-04" driver="star-ls-04" manufacturer="Star" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Star LaserPrinter 8" driver="star-lp_8" manufacturer="Star" model="2" parameters="pcl_laser_params" />
       <printer translate="name" name="Tally MT908" driver="tally-mt908" manufacturer="Tally" model="3" parameters="pcl_laser_params" />
@@ -1439,11 +1439,11 @@
       <printer translate="name" name="Xerox DocuPrint C20" driver="xerox-dp_c20" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint N4512" driver="xerox-dp_n4512" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint N4512PS" driver="xerox-dp_n4512ps" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox DocuPrint P12" driver="xerox-dp_p12" manufacturer="Xerox" model="2" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox DocuPrint P1202" driver="xerox-dp_p1202" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox DocuPrint P8e" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox DocuPrint P12" deviceid="MFG:XEROX;MDL:DocuPrint P12;DES:Xerox DocuPrint P12;CMD:PrintGear,PCL,PJL;" driver="xerox-dp_p12" manufacturer="Xerox" model="2" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox DocuPrint P1202" deviceid="MFG:Xerox;MDL:DocuPrint;CMD:PCL5E;" driver="xerox-dp_p1202" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox DocuPrint P8e" deviceid="MFG:Xerox;MDL:DocuPrint P8e;CMD:PCL5E2;" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Document Centre 400" driver="xerox-dc_400" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox WorkCentre M118" driver="xerox-wc_m118" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox WorkCentre M118" deviceid="MFG:XEROX;MDL:WorkCentre M118;DES:XEROX WorkCentre M118;" driver="xerox-wc_m118" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
     </family>
     <family name="lexmark">
       <parameters name="standard_params">
@@ -1452,10 +1452,10 @@
         <parameter type="float" name="Density">2.0</parameter>
       </parameters>
       <printer translate="name" name="Compaq IJ1200" driver="compaq-ij1200" manufacturer="Compaq" model="10042" parameters="standard_params" />
-      <printer translate="name" name="Lexmark X73" driver="lexmark-x73" manufacturer="Lexmark" model="10042" parameters="standard_params" />
-      <printer translate="name" name="Lexmark Z42" driver="lexmark-z42" manufacturer="Lexmark" model="10042" parameters="standard_params" />
+      <printer translate="name" name="Lexmark X73" deviceid="MFG:Lexmark;MDL:Lexmark X73;DES:Lexmark X73;CMD:LNPAP;" driver="lexmark-x73" manufacturer="Lexmark" model="10042" parameters="standard_params" />
+      <printer translate="name" name="Lexmark Z42" deviceid="MFG:Lexmark;MDL:Lexmark Z42;DES:Lexmark Z42;CMD:LNPAP;" driver="lexmark-z42" manufacturer="Lexmark" model="10042" parameters="standard_params" />
       <printer translate="name" name="Lexmark Z43" driver="lexmark-z43" manufacturer="Lexmark" model="10042" parameters="standard_params" />
-      <printer translate="name" name="Lexmark Z52" driver="lexmark-z52" manufacturer="Lexmark" model="10052" parameters="standard_params" />
+      <printer translate="name" name="Lexmark Z52" deviceid="MFG:Lexmark;MDL:Lexmark Z52;DES:Lexmark Z52;" driver="lexmark-z52" manufacturer="Lexmark" model="10052" parameters="standard_params" />
       <printer translate="name" name="Lexmark Z53" driver="lexmark-z53" manufacturer="Lexmark" model="10052" parameters="standard_params" />
     </family>
     <family name="dyesub">
