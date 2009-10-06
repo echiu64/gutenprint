@@ -10,23 +10,16 @@ require('standard_html_header.php');
 
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
-<h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
 
-<ol type="1" start="1">
-	<li><a href="p_FAQ_OS_X.php#EconomyMode">All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</a></li>
-	<li><a href="p_FAQ_OS_X.php#BlackWhite">How do I print in black and white?</a></li>
-	<li><a href="p_FAQ_OS_X.php#ExcelPreview">Print preview in Excel does not work.  I only get a blank page.</a></li>
-	<li><a href="p_FAQ_OS_X.php#WindowsLandscape">Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</a></li>
-</ol>
 
 
 <h2>Gutenprint FAQ for Mac OS X and Darwin</h2>
  <ol>
  <li><a href="p_FAQ_OS_X.php#description">
- What is Gimp-Print? Why would I want to install it?
+ What is Gutenprint? Why would I want to install it?
  </a>
  <li><a href="p_FAQ_OS_X.php#getMoreInfo">
- How can I find out more information about Gimp-Print? Where can I get
+ How can I find out more information about Gutenprint? Where can I get
  the newest version?
  </a>
  <li><a href="p_FAQ_OS_X.php#contactInfo">
@@ -34,21 +27,21 @@ require('standard_html_header.php');
  contact the developers?
  </a>
  <li><a href="p_FAQ_OS_X.php#pictwpstopdf">
- I am trying to print from (Quark, Phtoshop, etc...) using Gimp-Print on
+ I am trying to print from (Quark, Phtoshop, etc...) using Gutenprint on
  Mac OS X Panther (10.3.x) but whenever I include EPS files I get really
  low quality output. This did not happen on Mac OS X Jaguar (10.2.x). Did
  the the printing behavior change between Mac OS 10.2 and Mac OS 10.3? How
  can I get the high quality output in Panther?
  </a>
  <li><a href="p_FAQ_OS_X.php#pantherInstallerBug">
- I am trying to install Gimp-Print on Mac OS X Panther (10.3.x) but when I get
+ I am trying to install Gutenprint on Mac OS X Panther (10.3.x) but when I get
  to the installer screen where I select the destination volume, there is a large 
  red exclamation mark and I can't install it.
  </a>
  <li><a href="p_FAQ_OS_X.php#noPPDsInCUPSWebAdmin">
- After installing Gimp-Print 4.2.6 (or later), when I go to set up a printer via
+ After installing Gutenprint, when I go to set up a printer via
  the CUPS web interface I get to the point where I need to choose a driver, but the
- Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
+ Gutenprint drivers (PPDs) are not listed there. They use to be there in Gimp-Print
  4.2.5 so where did they go?
  </a>
  <li><a href="p_FAQ_OS_X.php#didntReadTheInstructions">
@@ -61,7 +54,7 @@ require('standard_html_header.php');
  </a>
  <li><a href="p_FAQ_OS_X.php#tellMeMore">
  I want to know more about the new printing system in Mac OS X Jaguar. How do
- the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
+ the various components like CUPS, Gutenprint, Ghostscript, etc... interact?
  </a>
  <li><a href="p_FAQ_OS_X.php#tcpip">
   I'm trying to set up TCP/IP printing for my Epson 1520 (900N, etc...) with
@@ -77,40 +70,27 @@ require('standard_html_header.php');
  I am having trouble printing with a certain brand of USB-to-parallel converter cable. Which cable brands are supported on Mac OS X?
  </a>
  <li><a href="p_FAQ_OS_X.php#InDesign">
- How can I print correctly from Adobe InDesign using Gimp-Print?
+ How can I print correctly from Adobe InDesign using Gutenprint?
  </a>
  <li><a href="p_FAQ_OS_X.php#HPUSB">
  My multi-function HP Device is not printing over the USB port. What's wrong?
  </a>
- <li><a href="p_FAQ_OS_X.php#escp2-7600">
- I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
- </a>
  <li><a href="p_FAQ_OS_X.php#installer">
- What files are installed by the Gimp-Print installer for Jaguar and
+ What files are installed by the Gutenprint installer for Jaguar and
  Darwin? Where are they installed? I want to remove them; how do I do it?
  </a>
- <li><a href="p_FAQ_OS_X.php#uninstaller">
- The Gimp-Print installer for Jaguar is very nice, thanks for providing
- it. But, why haven't you provided me with an easy way to remove the
- Gimp-Print files from my system?
- </a>
- <li><a href="p_FAQ_OS_X.php#pslevel1">
- The list of supported printers says that PostScript Level 1 printing is
- supported, but I can't use Gimp-Print to print to my Level 1 printer
- (Laserwriter plus, Laserwriter IINT, etc...). What's wrong?
- </a>
  <li><a href="p_FAQ_OS_X.php#version">
- Which versions of Mac OS are compatible with Gimp-Print?
+ Which versions of Mac OS are compatible with Gutenprint?
  </a>
  <li><a href="p_FAQ_OS_X.php#versionX">
  I have never heard of version "10.1.x" but I have 10.1.5, does
- Gimp-Print work with that?
+ Gutenprint work with that?
  </a>
  <li><a href="p_FAQ_OS_X.php#supportedPrinters">
- Is my printer supported by Gimp-Print?
+ Is my printer supported by Gutenprint?
  </a>
  <li><a href="p_FAQ_OS_X.php#generalSetup">
- OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
+ OK, I just installed Gutenprint on Mac OS 10.2 (or later) and I tried to
  print but I can't figure out how to set up my printer in print center.
  </a>
  <dl>
@@ -119,9 +99,6 @@ require('standard_html_header.php');
  </a>
  <dd><a href="p_FAQ_OS_X.php#networkSetup">
  Network connection
- </a>
- <dd><a href="p_FAQ_OS_X.php#sambaSetup">
- Windows printer via SAMBA
  </a>
  </dl>
  <li><a href="p_FAQ_OS_X.php#whereAreTheSettings">
@@ -132,7 +109,15 @@ require('standard_html_header.php');
  Ok, I found all the settings, but what do they do?
  </a>
  </ol>
-<H2>Gimp-Print General FAQ</H2>
+ <h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
+
+<ol type="1" start="1">
+	<li><a href="p_FAQ_OS_X.php#EconomyMode">All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</a></li>
+	<li><a href="p_FAQ_OS_X.php#BlackWhite">How do I print in black and white?</a></li>
+	<li><a href="p_FAQ_OS_X.php#ExcelPreview">Print preview in Excel does not work.  I only get a blank page.</a></li>
+	<li><a href="p_FAQ_OS_X.php#WindowsLandscape">Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</a></li>
+</ol>
+<H2>Gutenprint General FAQ</H2>
  <ol>
  <li><a href="p_FAQ_OS_X.php#onlyForGimp">
  Is it only for Gimp? 
@@ -182,87 +167,16 @@ require('standard_html_header.php');
  </ol>
  <br>
  <br>
- <h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
- <ol>
- <a name="EconomyMode"></a>
- <li>
-<h3>All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</h3>
-<p>
-This occurs with Epson printers.  The printing system is not obtaining the proper resolution from the <b>Print Quality</b> setting and it is defaulting to the lowest printer resolution found.  The Gutenprint developers are aware of the problem and are working on a proper fix.
-</p>
-<p>
-This issue is resolved by installing a later version of the Gutenprint drivers.  It is recommended that you use the latest stable version -- version 5.0.2-beta1 or later.  The developmental versions after version 5.1.3 will also resolve the issue. Stable versions are released with version numbers in the 5.0.x format.  Developmental versions are numbered in the 5.1.x format.
-</p>
-<p>
-If the later versions do not resolve the issue for you, please post feedback to the <a href="http://sourceforge.net/forum/forum.php?forum_id=4359">Gutenprint Help forum</a>
-</p>
-
-</li>
-<a name="BlackWhite"></a>
-<li>
-<h3>How do I print in black and white?</h3>
-<p>
-The Quartz Filter entry under ColorSync (now Color Management) is not present in OS X 10.5.x (Leopard).  This was a feature that Apple provided in previous versions of Mac OS X.  It was not a feature of the Gutenprint drivers.
-</p>
-<p>
-For most users, the work-around is to set the <b>Color Model</b> setting to <b>Grayscale</b>.  This is not the same as printing in black and white only, but it may give you what you want.  
-</p>
-<p>
-For those users who must use black and white only, the good news is that the Quartz Filter for Black and White still exists.  It's just not tied into the print window. The easiest way to use the Black and White option is as
-follows:
-</p>
-<ol type="1" start="1">
-	<li>Go to print the document.  Use the item "Open PDF in Preview" item under the PDF Services drop down menu at the bottom left of the print window.</li>
-	<li>When the document appears in Preview, choose Save As... from the File menu.</li>
-	<li>You can either change the name or use the Replace option when prompted.  Select the output format as PDF and use the Quartz Filter to select "Black and White".  </li>
-	<li>Make sure you have the name and location to save the document as you want it.  Click the Save button.</li>
-</ol>
-<p>
-The resulting document will be in Black and White and you can print it normally.  
-</p>
-</li>
-<a name="ExcelPreview"></a>
-<li>
-<h3>Print preview in Excel does not work.  I only get a blank page.</h3>
-<p>
-This has been noted when the printer is capable of resolutions greater than 1440 dpi.  It does not appear to be a Gutenprint issue as there have been similar instances reported with some Brother printers using the Brother supplied drivers.  Those instances also indicated that a printer capable of higher resolutions will produce the same error.  The Gutenprint team will continue to monitor this situation.
-</p>
-<p>
-The work-around is to set the preview resolution before clicking on the Excel print preview icon in the toolbar. Go to File menu -> Page Setup.  Under the <b>Page</b> tab there is an option to set the <b>Print Quality</b>.  Set that to <b>Normal</b> or anything below 1440.  The Excel default is <b>High</b>.
- Click OK.  Now Excel will provide you with a print preview. This setting is most likely stored on a per document basis.  There does not seem to be any general preference to alter the default resolution for print preview.
-</p>
-<p>
-Another work-around for new documents is to make a new Excel template.  To make the template:
-</p>
-<ol type="1" start="1">
-	<li>Create a new workbook with only one sheet</li>
-	<li>Go to the File menu -> Page Setup and change the print quality to <b>Normal</b>.  </li>
-	<li>Save the file as a template by selecting <b>Template</b> in the format box of the <b>Save As</b> dialog.  </li>
-	<li>Name the file "Workbook" without an extension - YES REMOVE the '.xlt' extension.</li>
-	<li>Save the template in the  /Applications/Microsoft Office 2004/Office/Startup/Excel folder.  This should now act as the default template.</li>
-</ol>
-</li>
-<a name="WindowsLandscape"></a>
-<li>
-<h3>Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</h3>
-<p>
-This does not appear to be a Gutenprint issue, but the Gutenprint team is monitoring the situation.  There has been at least one case reported whereby the  user tried the Gutenprint, <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/hpijs">HPIJS</a>, and <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/pxlmono">pxlmono</a> drivers.  All drivers printed in landscape mode when the printer was attached directly to the Mac computer via USB.  The same drivers would only print in portrait mode when the printer  was connected to a shared Windows printer.
-</p>
-<p>
-Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was included in the Mac OS X 10.5.2 update.
-</p>
-</li>
- </ol>
+ 
  <h2>Gutenprint FAQ for Mac OS X and Darwin</h2>
  <ol>
  
   <a name="description"></a>
  <li><h3>
- What is Gimp-Print for Jaguar and Darwin? Why would I want to install it?
+ What is Gutenprint? Why would I want to install it?
  </h3>
  <p>
- Gimp-Print is a package of high quality printer drivers for Mac OS X
- Jaguar, Darwin, Linux, BSD, Solaris, IRIX, and other UNIX-alike
+ Gutenprint (formerly called Gimp-Print) is a package of high quality printer drivers for Mac OS X, Darwin, Linux, BSD, Solaris, IRIX, and other UNIX-alike
  operating systems. In many cases, these drivers rival or exceed the OEM
  drivers in quality and functionality. Our goal is to produce the highest
  possible output quality from all supported printers. To that end, we have
@@ -270,19 +184,19 @@ Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was incl
  printer feature utilization. We are continuing our work in all of these
  areas to produce ever higher quality results, particularly on the
  ubiquitous, inexpensive inkjet printers that are nonetheless capable of
- nearly photographic output quality. Additionally, Gimp-Print provides
+ nearly photographic output quality. Additionally, Gutenprint provides
  excellent drivers for many printers that are otherwise unsupported on
  Mac OS X.
  </p>
  <a name="getMoreInfo"></a>
  <li><h3>
- How can I find out more information about Gimp-Print? Where can I get
+ How can I find out more information about Gutenprint? Where can I get
  the newest version?
  </h3>
  <p>
- For the latest information or the newest version of Gimp-Print be sure
- to check the <a href= "http://gimp-print.sourceforge.net/MacOSX.php"
- >Gimp-Print web page</a>.
+ For the latest information or the newest version of Gutenprint be sure
+ to check the <a href= "http://gutenprint.sourceforge.net/MacOSX.php"
+ >Gutenprint web page</a>.
  </p>
  <a name="contactInfo"></a>
  <li><h3>
@@ -292,22 +206,20 @@ Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was incl
  <p>
  If you're having problems it's a good bet that you are not the only one.
  If you can't find a solution to your problem in this FAQ or in <em>How
- to Print with Gimp-Print</em>, located on the installer disk, your next
- stop should be the Gimp-Print project <a href=
- "http://sourceforge.net/forum/?group_id=1537" >forums</a>. If you have
+ to Print with Gutenprint</em>, located on the installer disk, your next
+ stop should be the Gutenprint project forums.  These can be accessed from the <a href="http://sourceforge.net/projects/gimp-print/support">support page</a>. If you have
  looked through the forums and you still cannot find a reference to your
- problem then you may simply be the first person to encouter it. It is
- helpful to the developers and users of Gimp-Print if you post a
- description of the problem you are facing in the Gimp-Print project <a
- href= "http://sourceforge.net/forum/forum.php?forum_id=4359" >help
- forums</a>. When you post in the forums, developers can respond to your
+ problem then you may simply be the first person to encounter it. It is
+ helpful to the developers and users of Gutenprint if you post a
+ description of the problem you are facing in the Gutenprint project help
+ forums. When you post in the forums, developers can respond to your
  post and everyone browsing the forums can benefit from the exchange.
  Please browse the forums before posting as your question may already be
  answered.
  </p>
  <a name="pictwpstopdf"></a>
  <li><h3>
- I am trying to print from (Quark, Phtoshop, etc...) using Gimp-Print on
+ I am trying to print from (Quark, Phtoshop, etc...) using Gutenprint on
  Mac OS X Panther (10.3.x) but whenever I include EPS files I get really
  low quality output. This did not happen on Mac OS X Jaguar (10.2.x). Did
  the the printing behavior change between Mac OS 10.2 and Mac OS 10.3? How
@@ -316,9 +228,9 @@ Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was incl
  <p>
 Yes, printing behavior changed between 10.2 and 10.3, and more so for a certain class of applications that use the so-called 'deprecated printing path,' which means that Apple has discouraged application developers from creating programs that print in this manner. Within this class, the quality and type of printed output generated by the application is dependent on whether the system describes the printer as a raster device or a PostScript device. Your application seems to be a member of this class.
 </p><p>
-In Mac OS 10.2, the system <b>always</b> describes any printer driven by Gimp-Print as a PostScript device. Technically, this behavior is a 'bug' and it requires that a PostScript interpreter (such as ESP Ghostscript) be available to CUPS (the underlying print spooler) to enable the Gimp-Print driver (or any CUPS raster driver) to print from this class of application.
+In Mac OS 10.2, the system <b>always</b> describes any printer driven by Gutenprint as a PostScript device. Technically, this behavior is a 'bug' and it requires that a PostScript interpreter (such as ESP Ghostscript) be available to CUPS (the underlying print spooler) to enable the Gutenprint driver (or any CUPS raster driver) to print from this class of application.
 </p><p>
-In Mac OS 10.3, by default the system <b>always</b> describes any printer driven by Gimp-Print as a raster device, which is technically correct. The reason why your printed EPS files look 'jaggedy' in 10.3 has to do with the quality of raster generated by your application (it turns out that the 'bug' in Jaguar was actually a 'feature' for most end users!). You can force Panther to emulate the 'buggy' behavior of Jaguar by setting a specific 'system default'. Here is the procedure to do that:</p>
+In Mac OS 10.3, by default the system <b>always</b> describes any printer driven by Gutenprint as a raster device, which is technically correct. The reason why your printed EPS files look 'jaggedy' in 10.3 has to do with the quality of raster generated by your application (it turns out that the 'bug' in Jaguar was actually a 'feature' for most end users!). You can force Panther to emulate the 'buggy' behavior of Jaguar by setting a specific 'system default'. Here is the procedure to do that:</p>
 <ol>
 <li> Quit your application, if it is running</li>
 <li> open the Terminal application found in /Applications/Utilities/</li>
@@ -334,11 +246,11 @@ This setting is permanent, and it affects all applications on your system. If yo
 
 defaults write -g com.apple.print.apple.pictwpstopdf NO
 </pre>
-<b>Note:</b> Although you may set the default in Panther to force certain applications to produce PostScript rather than raster, you will never need to install ESP Ghostscript in Panther for use with Gimp-Print because the operating system includes software that performs PostScript to raster conversion. Other printer drivers may still require ESP Ghostscript, but installing it in Panther will have no effect on Gimp-Print.
+<b>Note:</b> Although you may set the default in Panther to force certain applications to produce PostScript rather than raster, you will never need to install ESP Ghostscript in Panther for use with Gutenprint because the operating system includes software that performs PostScript to raster conversion. Other printer drivers may still require ESP Ghostscript, but installing it in Panther will have no effect on Gutenprint.
  </p>
  <a name="pantherInstallerBug"></a>
  <li><h3>
- I am trying to install Gimp-Print on Mac OS X Panther (10.3.x) but when I get
+ I am trying to install Gutenprint on Mac OS X Panther (10.3.x) but when I get
  to the installer screen where I select the destination volume, there is a large 
  red exclamation mark and I cannot install it.
  </h3>
@@ -346,20 +258,18 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  There is an apparent bug in the Panther Installer that prevents the installer
  from running over "newer" releases. So if you are trying to install 4.2.6 and
  you have ever installed 4.3.x or 5.0alpha then this bug may bite you. This bug
- is not present in Jaguar; the workaround in Panther is to run the Gimp-Print
- uninstaller and remove any other versions of Gimp-Print.
-<br><br>
- Please note that when you run the uninstaller you will most likely want to click <b>Customize</b> and skip the <b>Gimp-Print printer remover</b> option, which you accomplish by removing the check from the box. If you skip this option your current Gimp-Print printers will be preserved, which is likely what you want. Otherwise, your printers will be removed and you may need to go through the <a href="p_FAQ_OS_X.php#usbSetup">secret option-click-elbow process</a> again to recreate them.
+ is not present in Jaguar; the workaround in Panther is to run the Gutenprint
+ uninstaller and remove any other versions of Gutenprint.
  </p>
 <a name="noPPDsInCUPSWebAdmin"></a>
  <li><h3>
- With Gimp-Print 4.2.6 (or later), when I go to set up a printer via
+ With Gutenprint, when I go to set up a printer via
  the CUPS web interface I get to the point where I need to choose a driver, but the
- Gimp-Print drivers (PPDs) are not listed there. They use to be there in Gimp-Print
+ Gutenprint drivers (PPDs) are not listed there. They use to be there in Gimp-Print
  4.2.5 so where did they go?
  </h3>
  <p>Starting with version 4.2.6-pre2 of the Mac OS X installer package the
- Gimp-Print PPDs are installed into the "standard" location recommended by Apple,
+ Gutenprint PPDs are installed into the "standard" location recommended by Apple,
  <pre>/Library/Printers/PPDs/Contents/Resources/en.lproj</pre>
  rather than in the CUPS-standard location of 
  <pre>/usr/share/cups/model/C</pre>
@@ -367,13 +277,13 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  implemented primarily for performance reasons, but it also provides a means for
  normal users to find a PPD if need be (the previous PPD path is hidden from users
  in the Mac OS X Finder).  As a consequence of this change,
- the Gimp-Print PPDs will no longer be available for printer setup when
- using the CUPS web admin; the Apple provided Print Center application
+ the Gutenprint PPDs will no longer be available for printer setup when
+ using the CUPS web admin; the Apple provided user interface
  is not affected by this change. If you want or need to use the CUPS web
  admin to create a printer (if you need to create a serial printer, for example)
  you can still use the CUPS web admin to create the printer, but you will need to
- select one of the available models and then open Print Center/Printer Setup Utility 
- and change the driver to the correct Gimp-Print model (select the printer in the list, choose "Show info..." and select the correct model).
+ select one of the available models and then open Print Center/Printer Setup Utility/Print &amp; Fax system preference 
+ and change the driver to the correct Gutenprint model (select the printer in the list, choose "Show info..." and select the correct model).
 </p>
 <a name="didntReadTheInstructions"></a>
  <li><h3>
@@ -390,7 +300,7 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  TextEdit, etc...) just fine. How can I fix this ?
  </h3>
  <p>
- The Gimp-Print drivers for OS X are CUPS plugin filters. In Mac OS 10.2
+ The Gutenprint drivers for OS X are CUPS plugin filters. In Mac OS 10.2
  and 10.2.1 when users print with CUPS-based drivers from a "Carbon"
  application the application generates PostScript output instead of the
  OS X native PDF (this is not the case with vendor-supplied printer
@@ -405,7 +315,7 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  <a name="tellMeMore"></a>
  <li><h3>
  I want to know more about the new printing system in Mac OS X Jaguar. How do
- the various components like CUPS, Gimp-Print, Ghostscript, etc... interact?
+ the various components like CUPS, Gutenprint, Ghostscript, etc... interact?
  </h3>
  <p>
  The best place to start is with the CUPS documentation. In particular, the <a
@@ -416,12 +326,12 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  When printing, CUPS tries to string together a series of tools in order to
  convert the submitted file to the format needed by a printer. In OS X the
  files submitted are generally either PDF or PICT files with embedded
- PostScript. When printing to a gimp-print driver, if the input file format is
+ PostScript. When printing to a Gutenprint driver, if the input file format is
  PDF then the OS X PDF to raster filter is run and the raster data handed to
- the gimp-print driver. If instead the input file format is PICT with
+ the Gutenprint driver. If instead the input file format is PICT with
  PostScript, then the OS X PICT to PostScript filter is run. In order to get
  from PostScript to raster, the ESP GhostScript filter is run next in the chain
- and then the raster data is handed to the gimp-printer.
+ and then the raster data is handed to the printer.
  </p><p>
  So you have the following two chains:
  </p>
@@ -484,7 +394,7 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  <p>If you don't get a response from Ping you won't be able to print; go back and
  try a different IP Address.
  As soon as you can ping the printer from your Mac go to page 3 of <em>How
- to Print with Gimp-Print</em> (or the set up section in this FAQ) and follow
+ to Print with Gutenprint</em> (or the set up section in this FAQ) and follow
  the instructions for TCP/IP setup.
  </p>
   <a name="1394"></a>
@@ -492,7 +402,7 @@ defaults write -g com.apple.print.apple.pictwpstopdf NO
  How can I print using FireWire (IEEE 1394)?
  </h3>
  <p>
- In a nutshell, you can't. Not yet.  CUPS uses "backends" to transfer the driver code to the printer. On Mac OS X Gimp-Print uses CUPS and since there is not yet a FireWire backend available for Mac OS X you can't print with Gimp-Print over Firewire.  You <em>can</em> print to a printer that has a FireWire port, you simply need to use a <em>different</em> port, such as the USB port, an ethernet port, or the parallel port via a converter.
+ In a nutshell, you can't. Not yet.  CUPS uses "backends" to transfer the driver code to the printer. On Mac OS X Gutenprint uses CUPS and since there is not yet a FireWire backend available for Mac OS X you can't print with Gutenprint over Firewire.  You <em>can</em> print to a printer that has a FireWire port, you simply need to use a <em>different</em> port, such as the USB port, an ethernet port, or the parallel port via a converter.
  </p>
   <a name="pap"></a>
  <li><h3>
@@ -519,6 +429,8 @@ Here it is more generically:
 </p><pre>
 	pap://zone/Appletalk_Device_Name/protocol
 </pre>
+<br>
+<b>NOTE:</b>&nbsp:&nbsp;AppleTalk is no longer available beginning with OS X 10.6.
  <a name="USB-to-parallel"></a>
  <li><h3>
  I am having trouble printing with a certain brand of USB-to-parallel converter cable. Which cable brands are supported on Mac OS X?
@@ -529,7 +441,7 @@ of USB-to-parallel converter cable. When used with Mac OS X, some cables appear 
  </p>  
  <a name="InDesign"></a>
  <li><h3>
- How can I print correctly from Adobe InDesign using Gimp-Print?
+ How can I print correctly from Adobe InDesign using Gutenprint?
  </h3>
  <p>  
 The InDesign application uses a somewhat non-standard printing procedure. The 
@@ -538,7 +450,7 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  <dd> Select <b>Print...</b> from the <b>File</b> menu, or press <em>command-P</em>.
  <dd>Within the InDesign print dialog, click the <b>Printer...</b> button (*not* the blue flashing <b>Print</b> button!)
  <dd>Dismiss any warning dialog by clicking <b>OK</b>
- <dd>Set any Gimp-Print driver features under the <b>Printer Features</b> popup item.
+ <dd>Set any Gutenprint driver features under the <b>Printer Features</b> popup item.
  <dd>Click <b>Print</b> in the system print dialog (you will return to the InDesign
   print dialog).
  <dd>Click <b>Print</b> in the InDesign dialog.
@@ -556,132 +468,77 @@ The InDesign application uses a somewhat non-standard printing procedure. The
  multi-function devices. While the Gutenprint driver generates the correct device code to produce printing, the USB connection (the Mac OS X CUPS usb "backend") may not be capable of communicating properly with the device.
  </p><p>
  If your device fails to print and you are reasonably sure that you set it up 
- correctly then you may be experienceing this problem. As a workaround you may 
+ correctly then you may be experiencing this problem. As a workaround you may 
  be able to print to your device by using an alternate connection interface 
  (but this method is not well tested). For devices with a parallel port you can
  try a  USB-to-parallel cable, or a parallel-port print server. 
  Devices that lack a parallel port may possibly function with a compatible USB
  print server.
  </p>  
- <a name="escp2-7600"></a>
- <li><h3>
- I can not print to my Epson Stylus Pro 7600, but it's supposed to be supported.
- </h3>
- <p>  
- That driver has been fixed since the the 4.2.3 release.  You will likely get much
- better quality output if you use 4.2.5-pre1 or later, as this printer was not tuned
- before the 4.2.5 release. If you still cannot print and you are trying to print on
- roll-feed paper make sure that you have selected the "Roll Feed" option in the 
- "Paper Feed" print dialog (the "Auto Select" option is currently non-functional).
- </p>
  <a name="installer"></a>
  <li><h3>
- What files are installed by the Gimp-Print installer for Jaguar and
+ What files are installed by the Gutenprint installer for Jaguar and
  Darwin? Where are they installed? I want to remove them; how do I do it?
  </h3>
  <p>
- "The Gimp-Print drivers for <a href= "http://www.cups.org/" >CUPS</a>,
+ "The Gutenprint drivers for <a href= "http://www.cups.org/" >CUPS</a>,
  and the required PPD files." That's the short answer to the first
  question. The long answer is that a lot of files are installed into the
- (typically) hidden BSD unix layer of Jaguar. You shouldn't need to
- remove Gimp-Print in order to restore your previous printing capability.
- Just delete any Gimp-Print printers that are set up in Print Center. That
- said, if you are really fired up about saving the 8.2MB of disk space you can
-use a tip provided by Wil Shipley to get rid of those pesky files.
-</p><p>
-To remove Gimp-Print 4.2.3 open a Terminal window and type the following command 
-</p>
-<pre>lsbom -f -l -s /Library/Receipts/Gimp-Print-4.2.3.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
-<p>
- To remove version 4.2.4 of Gimp-Print use this command:
-</p>
-<pre>lsbom -f -l -s /Library/Receipts/Gimp-Print-4.2.4.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
-<p>
- To remove version 4.2.5 (and all later versions) of Gimp-Print use this command:
-</p>
-<pre>lsbom -f -l -s /Library/Receipts/Gimp-Print.pkg/Contents/Archive.bom | (cd /; sudo xargs rm)</pre
-<p>
- You will need to enter an admin password (yours if you're the only user on
- your system) to use sudo.
- </p>
- <a name="uninstaller"></a>
- <li><h3>
- The Gimp-Print installer for Jaguar is very nice, thanks for providing
- it. But, why haven't you provided me with an easy way to remove the
- Gimp-Print files from my system?
- </h3>
- <p>
- An unistaller is under development.  Again, if you delete all of the Gimp-Print
- Printers from your Print Center "Printer List" the software will be completely
- disabled. If you simply <em>must</em> remove the files then see the answer to the preceding question.
- </p>
- <a name="pslevel1"></a>
- <li><h3>
- The list of supported printers says that PostScript Level 1 printing is
- supported, but I can't use Gimp-Print to print to my Level 1 printer
- (Laserwriter plus, Laserwriter IINT, etc...). What's wrong?
- </h3>
- <p>
- Currently, printing to level 1 printers is not supported on Jaguar.
- Generating the necessary level 1 compatible output requires a postscript
- generator, like <a href= "http://sourceforge.net/projects/espgs/" >ESP
- Ghostscript</a> and some special printing "filters". A solution to this
- problem may become available in the future.
+ (typically) hidden BSD unix layer of OS X. You shouldn't need to
+ remove Gutenprint in order to restore your previous printing capability.
+ Just delete any Gutenprint printers. That
+ said, if you are really fired up about saving disk space you can
+use the Gutenprint Unisntaller.  The uninstaller is included on the disk image with the Gutenprint drivers.  It is also available as a separate download from the <a href="https://sourceforge.net/projects/gimp-print/files/">Gutenprint downloads page</a>.
  </p>
  <a name="version"></a>
  <li><h3>
- Which versions of Mac OS are compatible with Gimp-Print?
+ Which versions of Mac OS are compatible with Gutenprint?
  </h3>
  <p>
- Gimp-Print is compatible with Mac OS X version 10.2.x (Jaguar) or later.
+ Gutenprint is compatible with Mac OS X version 10.2.x (Jaguar) or later.
  It does not work with version 10.1.x or 10.0.x or any version of Mac OS 9.
  </p>
  <a name="versionX"></a>
  <li><h3>
  I have never heard of version "10.1.x" but I have 10.1.5, does
- Gimp-Print work with that?
+ Gutenprint work with that?
  </h3>
  <p>
  "10.1.x" means "any" minor version of 10.1 such as 10.1.1, 10.1.2,
- ...,10.1.5. So, if you want to use Gimp-Print you should upgrade to at
+ ...,10.1.5. So, if you want to use Gutenprint you should upgrade to at
  least 10.2.
  </p>
  <a name="supportedPrinters"></a>
  <li><h3>
- Is my printer supported by Gimp-Print?
+ Is my printer supported by Gutenprint?
  </h3>
  <p>
  There is a comprehensive <a href=
  "http://Gimp-Print.sourceforge.net/p_Supported_Printers.php" >list of
- supported printers</a> at the Gimp-Print website. If your printer is
- listed as "Fully Operational" then you should expect excellent output
- when using Gimp-Print. Printers listed as something other than "Fully
- Operational" may still work, but not all the features of the printer
- will be available. For printers that are not listed as supported you may
+ supported printers</a> at the Gutenprint website. For printers that are not listed as supported you may
  still be able to print by trying the driver for a printer that is similar
  to yours, but the results may disappoint you.
- </p>
+ </p> 
  <a name="generalSetup"></a>
  <li><h3>
- OK, I just installed Gimp-Print on Mac OS 10.2 (or later) and I tried to
+ OK, I just installed Gutenprint on Mac OS 10.2 (or later) and I tried to
  print but I can't figure out how to set up my printer in print center.
  </h3>
  <p>
- The Gimp-Print 4.2.2 installer package (and all later versions) contains
- an illustrated set-up guide called <em>How to Print with Gimp-Print</em> 
- located at the root level of the installer disk image. This guide will
+ An illustrated set-up guide called <em>How to Print with Gutenprint</em> 
+ located on the disk image that contains the drivers. This guide will
  walk you through the printer set-up process for USB and TCP/IP printers.
  If you don't have access to this set-up guide the following instructions
  should help:
  </p>
  <p>
- Setting up printers using the Gimp-Print driver can be slightly
+ Setting up printers using the Gutenprint driver can be slightly
  different than setting up other drivers depending on how you are
  connecting to your printer.
  <ul>
  <li>
  <h4>
- Make sure your printer is supported by Gimp-Print
+ Make sure your printer is supported by Gutenprint
  </h4>
  <p>
  see question on supported printers.
@@ -691,7 +548,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  <h4>
  <li>USB connection
  </h4>
- If your printer is supported by Gimp-Print and it is connected directly
+ If your printer is supported by Gutenprint and it is connected directly
  to your Mac with a USB cable then you should follow these steps to set
  it up:
  <ol>
@@ -702,33 +559,22 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  <li>Restart your Mac (if you know what you're doing and you know that
  you do not have any print jobs in progress you can do <tt>sudo killall
  -HUP cupsd</tt> instead of restarting)
- <li>Open the Print Center utility (located in
- <tt>/Applications/Utilities/</tt>).
- <li>Hold down the option key on your keyboard and either click on the
- "Add" button in the Print Center toolbar or select "<tt>Add
- printer...</tt>" from the "<tt>Printers</tt>" menu. A new sheet will
- open.
- <li>In the sheet click on the top popup menu and select "Advanced" from
- the very bottom of the list.
- <li>Next, click on the "<tt>Device:</tt>" popup menu and select your
- printer's name from the very bottom of the list (if you see only
- "<tt>USB Printer (usb)</tt>" and not your printer's name you need to
- restart your mac with your printer turned on and connected).
- <li>Finally, click on the "<tt>Printer Model</tt>" popup menu and select
- the manufacturer for your printer, and in the small window at the bottom
- of the sheet select the PPD file for your printer model. It's important
- that you select the correct PPD file, and the names are not overly
- descriptive, but if you match your printer model number with the number
- in the PPD file name you should be OK.
- <li> Click "<tt>Add</tt>".
- <li> Print a test page.
- </p>
+ 
+ 
+ <li>
+ Leopard (OS X 10.5.x) and Snow Leopard (OS X 10.6.x) users should use the Print &amp; Fax from System Preferences.  Click on the <b>+</b> (plus) icon at the lower left. A new window will open. In that window, click the <b>Default Browser</b> icon at the top left. Highlight your printer in the section below. Use the "Print Using" pop-up menu near the bottom of the window to select the correct PPD for your printer and click <b>Add</b>.
+<br><br>
+Tiger (OS X 10.4.x) users should open the Printer Setup Utility and click on the <b>Add</b> icon at the top of the Printer List window. A new window will open. In that window, click the <b>Default Browser</b> icon at the top left. Highlight your printer in the section below. Use the "Print Using" pop-up menu near the bottom of the window to select the correct PPD for your printer and click <b>Add</b>. 
+<br><br>
+Jaguar (OS X 10.2.x) and Panther (OS X 10.3.x) users should open Print Center (Jaguar) or Printer Setup Utility (Panther), hold down the <b>Option</b> key, and click the <b>Add Printer</b> button in the Print Center toolbar. Within the setup sheet, choose <b>Advanced</b> from the top popup menu; then in the "Device:" popup menu select your printer by name (it should be the last item in the menu list). Finally, select the correct PPD from the model browser and click <b>Add</b>.  
+ </li>
+ <li> Print a test page.</li>
  </ol>
  <a name="networkSetup"></a>
  <h4>
  <li>Network connection
  </h4>
- If your printer is supported by Gimp-Print and it is available over
+ If your printer is supported by Gutenprint and it is available over
  TCP/IP via a built-in network card (such as the Epson 10/100 ethernet
  type-b card available for certain printers) or an inexpensive network
  print server (parallel to ethernet converter) then you can set it up
@@ -744,11 +590,9 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  server try using the default queue first. If that fails try a common
  queue name like lp (lower case LP). If you have the correct IP Address
  but you don't use the correct queue name you won't print.
- <li>Open the Print Center utility (located in
- <tt>/Applications/Utilities/</tt>).
- <li>Click on the "<tt>Add</tt>" button in the Print Center toolbar or
- select "<tt>Add printer...</tt>" from the "Printers" menu. A new sheet
- will open.
+ <li>Leopard (OS X 10.5.x) and Snow Leopard (OS X 10.6.x) users should use the Print & Fax from System Preferences. Click on the + (plus) icon at the lower left.<br><br>
+ Tiger (OS X 10.4.x) users should open the Printer Setup Utility (<tt>/Applications/Utilities</tt>) and click on the Add icon at the top of the Printer List window.<br><br>
+ Jaguar (OS X 10.2.x) and Panther (OS X 10.3.x) users should open Print Center (Jaguar) or Printer Setup Utility (Panther) (<tt>/Applications/Utilities</tt>), and click the Add Printer button in the Print Center toolbar.
  <li>In the sheet click on the top popup menu and select "<tt>IP
  Printing</tt>".
  <li>Fill in the IP address of the printer and the queue name in the
@@ -762,47 +606,6 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  <li> Click "<tt>Add</tt>".
  <li> Print a test page.
  </ol>
- </p>
- <a name="sambaSetup"></a>
- <h4>
- <li>Windows printer via SAMBA
- </h4>
- If you want to print to a shared printer connected to a Windows XP
- computer try these instructions (this procedure has not been thoroughly
- tested):
- <p>
- <ol>
- <li>Open the Print Center utility (located in
- <tt>/Applications/Utilities/</tt>).
- <li>Hold down the option key on your keyboard and either click on the
- <tt>Add</tt> button in the Print Center toolbar or select <tt>Add
- printer...</tt> from the <tt>Printers</tt> menu. A new sheet will open.
- <li>In the sheet click on the top popup menu and select
- <tt>Advanced</tt> from the very bottom of the list.
- <li>Next, click on the <tt>Device:</tt> popup menu and select
- <tt>Windows Printer via SAMBA</tt>.
- <li> In the <tt>Device Name:</tt> field enter a descriptive name for
- this printer.
- <li>In the <tt>Device URI:</tt> field enter the device URI in the
- following form:
- <p>
- <tt>smb://winuser:password@workgroup/server/printer </tt>
- <dl>
- <dt><tt>winuser</tt> <dd>XP login name <dt><tt>password</tt> <dd>XP
- login password <dt><tt>workgroup</tt> <dd>XP workgroup name
- <dt><tt>server</tt> <dd>Computer name of the XP machine
- <dt><tt>printer</tt> <dd>Share name of the shared XP printer
- </dl>
- </p>
- <li>Finally, click on the <tt>Printer Model</tt> popup menu and select
- the manufacturer for your printer, and in the small window at the bottom
- of the sheet select the PPD file for your printer model. It's important
- that you select the correct PPD file, and the names are not overly
- descriptive, but if you match your printer model number with the number
- in the PPD file name you should be OK.
- <li> Click <tt>Add</tt>.
- <li> Print a test page.
- </ol>
  </ul>
  </p>
  <a name="whereAreTheSettings"></a>
@@ -811,22 +614,99 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  like paper type and resolution?
  </h3>
  <p>
- You can access the settings for the Gimp-Print driver whenever a print
+ You can access the settings for the Gutenprint driver whenever a print
  sheet is open. Just click on the popup menu that says "<tt>Copies &
- Pages</tt>" and choose "<tt>Printer Features</tt>".
+ Pages</tt>" or "<tt>Layout</tt>" and choose "<tt>Printer Features</tt>".
+ </p>
+<h3>
+ I do not see any popup menu like you mentioned.
+ </h3>
+ <p>
+ Sometimes the print window is collapsed.  There is a "disclosure" triangle to the right of the <b>Printer:</b> popup menu.  Click on the triangle and the print window will show more options.
  </p>
  <a name="whatSettings"></a>
  <li><h3>
- Ok, I found all the settings, but what do they do?
+ OK, I found all the settings, but what do they do?
  </h3>
  <p>
  Please see the <! a href= "http://Gimp-Print.sourceforge.net/p_FAQ.php"
- >Gimp-Print General FAQ<! /a> for answers to these questions.
+ >Gutenprint General FAQ<! /a> for answers to these questions.
  <p>
+ </ol>
+ <h2>Gutenprint FAQ for Mac OS X Leopard (10.5.x)</h2>
+ <ol>
+ <a name="EconomyMode"></a>
+ <li>
+<h3>All my documents look the same regardless of the print quality I select. All my documents look too light.  All my documents are printing in Economy or Draft mode.</h3>
+<p>
+This occurs with Epson printers.  The printing system is not obtaining the proper resolution from the <b>Print Quality</b> setting and it is defaulting to the lowest printer resolution found.
+</p>
+<p>
+This issue is resolved by installing a later version of the Gutenprint drivers.  It is recommended that you use the latest stable version from the <a href="http://gutenprint.sourceforge.net/MacOSX.php">Gutenprint Mac OS X home page</a>.
+</p>
+<p>
+If the later versions do not resolve the issue for you, please post feedback to the <a href="http://sourceforge.net/forum/forum.php?forum_id=4359">Gutenprint Help forum</a>
+</p>
+
+</li>
+<a name="BlackWhite"></a>
+<li>
+<h3>How do I print in black and white?</h3>
+<p>
+The Quartz Filter entry under ColorSync (now Color Management) is not present in OS X 10.5.x (Leopard).  This was a feature that Apple provided in previous versions of Mac OS X.  It was not a feature of the Gutenprint drivers.
+</p>
+<p>
+For most users, the work-around is to set the <b>Color Model</b> setting to <b>Grayscale</b>.  This is not the same as printing in black and white only, but it may give you what you want.  
+</p>
+<p>
+For those users who must use black and white only, the good news is that the Quartz Filter for Black and White still exists.  It's just not tied into the print window. The easiest way to use the Black and White option is as
+follows:
+</p>
+<ol type="1" start="1">
+	<li>Go to print the document.  Use the item "Open PDF in Preview" item under the PDF Services drop down menu at the bottom left of the print window.</li>
+	<li>When the document appears in Preview, choose Save As... from the File menu.</li>
+	<li>You can either change the name or use the Replace option when prompted.  Select the output format as PDF and use the Quartz Filter to select "Black and White".  </li>
+	<li>Make sure you have the name and location to save the document as you want it.  Click the Save button.</li>
+</ol>
+<p>
+The resulting document will be in Black and White and you can print it normally.  
+</p>
+</li>
+<a name="ExcelPreview"></a>
+<li>
+<h3>Print preview in Excel does not work.  I only get a blank page.</h3>
+<p>
+This has been noted when the printer is capable of resolutions greater than 1440 dpi.  It does not appear to be a Gutenprint issue as there have been similar instances reported with some Brother printers using the Brother supplied drivers.  Those instances also indicated that a printer capable of higher resolutions will produce the same error.
+</p>
+<p>
+The work-around is to set the preview resolution before clicking on the Excel print preview icon in the toolbar. Go to File menu -> Page Setup.  Under the <b>Page</b> tab there is an option to set the <b>Print Quality</b>.  Set that to <b>Normal</b> or anything below 1440.  The Excel default is <b>High</b>.
+ Click OK.  Now Excel will provide you with a print preview. This setting is most likely stored on a per document basis.  There does not seem to be any general preference to alter the default resolution for print preview.
+</p>
+<p>
+Another work-around for new documents is to make a new Excel template.  To make the template:
+</p>
+<ol type="1" start="1">
+	<li>Create a new workbook with only one sheet</li>
+	<li>Go to the File menu -> Page Setup and change the print quality to <b>Normal</b>.  </li>
+	<li>Save the file as a template by selecting <b>Template</b> in the format box of the <b>Save As</b> dialog.  </li>
+	<li>Name the file "Workbook" without an extension - YES REMOVE the '.xlt' extension.</li>
+	<li>Save the template in the  /Applications/Microsoft Office 2004/Office/Startup/Excel folder.  This should now act as the default template.</li>
+</ol>
+</li>
+<a name="WindowsLandscape"></a>
+<li>
+<h3>Trying to print in landscape mode to a shared Windows printer always prints in portrait mode.</h3>
+<p>
+This does not appear to be a Gutenprint issue.  There has been at least one case reported whereby the  user tried the Gutenprint, <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/hpijs">HPIJS</a>, and <a href="http://www.linux-foundation.org/en/OpenPrinting/MacOSX/pxlmono">pxlmono</a> drivers.  All drivers printed in landscape mode when the printer was attached directly to the Mac computer via USB.  The same drivers would only print in portrait mode when the printer  was connected to a shared Windows printer.
+</p>
+<p>
+Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was included in the Mac OS X 10.5.2 update.
+</p>
+</li>
  </ol>
  <p>
  <h2>
- Gimp-Print General FAQ
+ Gutenprint General FAQ
  </h2>
  </p>
  <ol>
@@ -837,7 +717,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  Is it only for Gimp?
  </h3>
  <p>
- No, it can be used for many printing needs. Gimp-Print started out as a
+ No, it can be used for many printing needs. Gutenprint started out as a
  driver for The Gimp, the well known image manipulation program. Early in
  development versions for Ghostscript and later CUPS were added. The
  emphasis is still on quality color printing, though performance gets a
@@ -867,7 +747,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  reboot.
  <p>
  <li>If you don't have the Gimp installed on your system, and just want
- to compile Gimp-Print for CUPS (for example), you need to pass
+ to compile Gutenprint for CUPS (for example), you need to pass
  <tt>configure</tt> the option <tt>--with-gimp=no</tt>, so it won't try
  to look for the Gimp and fail.
  </ul>
@@ -902,7 +782,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  </h3>
  <p>
  Many Epson printers (in particular) do this if they encounter an error
- in the command stream. This usually indicates a bug in Gimp-Print;
+ in the command stream. This usually indicates a bug in Gutenprint;
  please report it to <a
  mailto= "Gimp-Print-devel@sourceforge.net" >Gimp-Print-devel@
  sourceforge.net</a> or via the bug tracking system at <a
@@ -1060,7 +940,7 @@ To remove Gimp-Print 4.2.3 open a Terminal window and type the following command
  printer, you might have a different problem; see above).
  </p>
  <p>
- Printing to your printer from Gimp-Print, whether you use the Print
+ Printing to your printer from Gutenprint, whether you use the Print
  plugin, the CUPS driver, or the Ghostscript driver, will also take the
  printer out of packet mode. But then again, if you successfully print to
  your printer, you know it's working, so why worry? If you're trying to
