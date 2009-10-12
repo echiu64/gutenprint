@@ -556,6 +556,7 @@
 #gptofoo escp2-tx106 printer/Epson-Stylus_TX106
 #gptofoo escp2-tx109 printer/Epson-Stylus_TX109
 #gptofoo escp2-tx200 printer/Epson-Stylus_TX200
+#gptofoo escp2-tx210 printer/Epson-Stylus_TX210
 #gptofoo escp2-tx400 printer/Epson-Stylus_TX400
 #gptofoo escp2-tx700w printer/Epson-Stylus_Photo_TX700W
 #gptofoo escp2-tx800w printer/Epson-Stylus_Photo_TX800FW

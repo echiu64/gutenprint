@@ -470,6 +470,8 @@
       <printer translate="name" name="Epson Stylus TX106" driver="escp2-tx106" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX109" driver="escp2-tx109" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX200" driver="escp2-tx200" manufacturer="Epson" model="93" parameters="standard_params" />
+<!-- The TX210 has the same head configuration as the TX100, not TX200 -->
+      <printer translate="name" name="Epson Stylus TX210" driver="escp2-tx210" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX400" driver="escp2-tx400" manufacturer="Epson" model="93" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="86" parameters="standard_params" />
