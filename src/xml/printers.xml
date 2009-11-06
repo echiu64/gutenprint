@@ -760,8 +760,8 @@
       <printer translate="name" name="Gestetner MP 3350B" driver="gestetner-mp_3350b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner MP 4000" driver="gestetner-mp_4000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Gestetner MP 4000B" driver="gestetner-mp_4000b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Gestetner MP 5000" driver="gestetner-mp_5000" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Gestetner MP 5000B" driver="gestetner-mp_5000b" manufacturer="Gestetner" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Gestetner MP 5000" driver="gestetner-mp_5000" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Gestetner MP 5000B" driver="gestetner-mp_5000b" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="HP Business Inkjet 2200" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2200;DES:Hewlett-Packard Business Inkjet 2200;CMD:MLC,PML,PJL;" driver="hp-bij_2200" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Business Inkjet 2230" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2230;DES:Hewlett-Packard Business Inkjet 2230;CMD:MLC,PML,PJL;" driver="hp-bij_2230" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
       <printer translate="name" name="HP Business Inkjet 2250" deviceid="MFG:HEWLETT-PACKARD;MDL:HP BUSINESS INKJET 2250;DES:Hewlett-Packard Business Inkjet 2250;CMD:MLC,PML,PJL,PCL5,POSTSCRIPT;" driver="hp-bij_2250" manufacturer="HP" model="900" parameters="pcl_inkjet_params" />
@@ -1101,8 +1101,8 @@
       <printer translate="name" name="Infotec MP 3350B" driver="infotec-mp_3350b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 4000" driver="infotec-mp_4000" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Infotec MP 4000B" driver="infotec-mp_4000b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera F-1010" deviceid="MFG:Kyocera;MDL:F-1010;DES:Kyocera F-1010;" driver="kyocera-f-1010" manufacturer="Kyocera" model="22" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-600 - KPDL-2" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
       <printer translate="name" name="Kyocera FS-600" deviceid="MFG:Kyocera;MDL:Kyocera FS-600;DES:Kyocera FS-600;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" />
@@ -1195,8 +1195,8 @@
       <printer translate="name" name="Lanier MP 4000B/LD040B" driver="lanier-ld040b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 4000/LD040" driver="lanier-ld040" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 4500/LD345" driver="lanier-ld345" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Lanier MP 5000B/LD050B" driver="lanier-ld050b" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Lanier MP 5000/LD050" driver="lanier-ld050" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier MP 5000B/LD050B" driver="lanier-ld050b" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Lanier MP 5000/LD050" driver="lanier-ld050" manufacturer="Lanier" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 5500/LD255" driver="lanier-ld255" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 6500/LD265" driver="lanier-ld265" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Lanier MP 7500/LD275" driver="lanier-ld275" manufacturer="Lanier" model="6" parameters="pcl_laser_params" />
@@ -1266,8 +1266,8 @@
       <printer translate="name" name="NRG MP 4000" driver="nrg-mp_4000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 4000B" driver="nrg-mp_4000b" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 4500" driver="nrg-mp_4500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="NRG MP 5000" driver="nrg-mp_5000" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="NRG MP 5000B" driver="nrg-mp_5000b" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="NRG MP 5000" driver="nrg-mp_5000" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="NRG MP 5000B" driver="nrg-mp_5000b" manufacturer="NRG" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 5500" driver="nrg-mp_5500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 6500" driver="nrg-mp_6500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="NRG MP 7500" driver="nrg-mp_7500" manufacturer="NRG" model="6" parameters="pcl_laser_params" />
