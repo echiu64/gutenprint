@@ -473,6 +473,7 @@
 <!-- The TX210 has the same head configuration as the TX100, not TX200 -->
       <printer translate="name" name="Epson Stylus TX210" driver="escp2-tx210" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX400" driver="escp2-tx400" manufacturer="Epson" model="93" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus TX410" driver="escp2-tx410" manufacturer="Epson" model="93" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Deluxe" driver="escp2-picmated" manufacturer="Epson" model="73" parameters="standard_params" />
@@ -1343,8 +1344,8 @@
       <printer translate="name" name="Ricoh Aficio MP 4000" driver="ricoh-afc_mp_4000" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio MP 4000B" driver="ricoh-afc_mp_4000b" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio MP 4500" driver="ricoh-afc_mp_4500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5000" driver="ricoh-afc_mp_5000" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Ricoh Aficio MP 5000B" driver="ricoh-afc_mp_5000b" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5000" driver="ricoh-afc_mp_5000" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
+      <printer translate="name" name="Ricoh Aficio MP 5000B" driver="ricoh-afc_mp_5000b" manufacturer="Ricoh" model="61" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio MP 5500" driver="ricoh-afc_mp_5500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio MP 6500" driver="ricoh-afc_mp_6500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Ricoh Aficio MP 7500" driver="ricoh-afc_mp_7500" manufacturer="Ricoh" model="6" parameters="pcl_laser_params" />
@@ -1445,7 +1446,7 @@
       <printer translate="name" name="Xerox DocuPrint P1202" deviceid="MFG:Xerox;MDL:DocuPrint;CMD:PCL5E;" driver="xerox-dp_p1202" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox DocuPrint P8e" deviceid="MFG:Xerox;MDL:DocuPrint P8e;CMD:PCL5E2;" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
       <printer translate="name" name="Xerox Document Centre 400" driver="xerox-dc_400" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
-      <printer translate="name" name="Xerox WorkCentre M118" deviceid="MFG:XEROX;MDL:WorkCentre M118;DES:XEROX WorkCentre M118;" driver="xerox-wc_m118" manufacturer="Xerox" model="6" parameters="pcl_laser_params" />
+      <printer translate="name" name="Xerox WorkCentre M118" deviceid="MFG:XEROX;MDL:WorkCentre M118;DES:XEROX WorkCentre M118;" driver="xerox-wc_m118" manufacturer="Xerox" model="61" parameters="pcl_laser_params" />
     </family>
     <family name="lexmark">
       <parameters name="standard_params">
