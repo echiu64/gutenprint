@@ -2737,7 +2737,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       if (stp_escp2_has_media_feature(v, name))
 	description->is_active = 1;
     }
-  else if (strcmp(name, "QualityEnhancement") == 0)
+  else if (strcmp(name, "BandEnhancement") == 0)
     {
       description->is_active = 1;
     }
@@ -3909,9 +3909,9 @@ setup_head_parameters(stp_vars_t *v)
   pd->printer_weave = get_printer_weave(v);
 
   pd->extra_vertical_passes = 1;
-  if (stp_check_int_parameter(v, "QualityEnhancement", STP_PARAMETER_ACTIVE))
+  if (stp_check_int_parameter(v, "BandEnhancement", STP_PARAMETER_ACTIVE))
     pd->extra_vertical_passes =
-      1 << stp_get_int_parameter(v, "QualityEnhancement");
+      1 << stp_get_int_parameter(v, "BandEnhancement");
   if (stp_escp2_has_cap(v, MODEL_FAST_360, MODEL_FAST_360_YES) &&
       (pd->inkname->inkset == INKSET_CMYK || pd->physical_channels == 1) &&
       pd->res->hres == pd->physical_xdpi && pd->res->vres == 360)
