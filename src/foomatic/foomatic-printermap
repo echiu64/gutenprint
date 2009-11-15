@@ -558,6 +558,7 @@
 #gptofoo escp2-tx200 printer/Epson-Stylus_TX200
 #gptofoo escp2-tx210 printer/Epson-Stylus_TX210
 #gptofoo escp2-tx400 printer/Epson-Stylus_TX400
+#gptofoo escp2-tx410 printer/Epson-Stylus_TX410
 #gptofoo escp2-tx700w printer/Epson-Stylus_Photo_TX700W
 #gptofoo escp2-tx800w printer/Epson-Stylus_Photo_TX800FW
 #gptofoo fujifilm-cx400 printer/Fujifilm-Printpix-CX-400
