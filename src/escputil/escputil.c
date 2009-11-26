@@ -381,6 +381,7 @@ main(int argc, char **argv)
 	      printf(_("Alignment choices must be at least 1."));
 	      do_help(1);
 	    }
+	  break;
 	case 'p':
 	  alignment_passes = atoi(optarg);
 	  if (alignment_passes < 1)
@@ -388,6 +389,7 @@ main(int argc, char **argv)
 	      printf(_("Alignment passes must be at least 1."));
 	      do_help(1);
 	    }
+	  break;
 	default:
 	  printf("%s\n", gettext(banner));
 	  fprintf(stderr, _("Unknown option %c\n"), c);
