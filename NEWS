@@ -303,6 +303,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       EPSON Stylus Photo TX710W
       EPSON Stylus Photo TX800FW
       EPSON Stylus Photo TX810FW
+
+   2) Corrected status output for Epson Artisan and TX/SX 7xx/8xx
+      printer families.
       
 
 * Changes from 5.2.3
