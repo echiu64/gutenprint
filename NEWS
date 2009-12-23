@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.2.4, a stable release of Gutenprint 5.2.  This
-release has bug fixes and a few new features over 5.2.3.  Please read
+Welcome to Gutenprint 5.2.5, a stable release of Gutenprint 5.2.  This
+release has bug fixes and a few new features over 5.2.4.  Please read
 these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.4
         * Changes from 5.2.3
         * Changes from 5.2.2
         * Changes from 5.2.1
@@ -246,6 +247,63 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.3
+
+   1) New printers supported in this release:
+
+      EPSON Artisan 710
+      EPSON Artisan 810
+      EPSON Stylus NX115
+      EPSON Stylus NX215
+      EPSON Stylus NX415
+      EPSON Stylus NX515
+      EPSON Stylus Photo 1290s
+      EPSON PX 1001
+      EPSON Stylus Office B1100
+      EPSON Stylus Office T1100
+      EPSON Stylus Office T1110
+      EPSON ME Office 1100
+      EPSON WorkForce 310
+      EPSON WorkForce 315
+      EPSON WorkForce 610
+      EPSON WorkForce 615
+      EPSON WorkForce 1100
+      EPSON Stylus Photo PX650
+      EPSON Stylus Photo PX700W
+      EPSON Stylus Photo PX710W
+      EPSON Stylus Photo PX800FW
+      EPSON Stylus Photo PX810FW
+      EPSON Stylus S21
+      EPSON Stylus Photo S50
+      EPSON Stylus SX110
+      EPSON Stylus SX115
+      EPSON Stylus SX210
+      EPSON Stylus SX215
+      EPSON Stylus SX410
+      EPSON Stylus SX415
+      EPSON Stylus SX510W
+      EPSON Stylus SX515
+      EPSON Stylus SX600FW
+      EPSON Stylus SX610FW
+      EPSON Stylus SX615
+      EPSON Stylus SX650
+      EPSON Stylus T21
+      EPSON Stylus T26
+      EPSON Stylus T30
+      EPSON Stylus T40W
+      EPSON Stylus T50
+      EPSON Stylus TX110
+      EPSON Stylus TX300F
+      EPSON Stylus TX510FN
+      EPSON Stylus TX550W
+      EPSON Stylus TX610FW
+      EPSON Stylus TX615
+      EPSON Stylus TX650
+      EPSON Stylus Photo TX710W
+      EPSON Stylus Photo TX800FW
+      EPSON Stylus Photo TX810FW
+      
 
 * Changes from 5.2.3
 

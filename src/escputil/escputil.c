@@ -1019,8 +1019,8 @@ static const char *aux_colors[] =
     N_("Cyan"),			/* 1 */
     N_("Magenta"),		/* 2 */
     N_("Yellow"),		/* 3 */
-    NULL,			/* 4 */
-    NULL,			/* 5 */
+    N_("Light Cyan"),		/* 4 */
+    N_("Light Magenta"),	/* 5 */
     NULL,			/* 6 */
     NULL,			/* 7 */
     NULL,			/* 8 */
@@ -1336,6 +1336,9 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	  printf("%20s    %20s\n", _("Ink color"), _("Percent remaining"));
 	  for (j = 0; j < count; j++)
 	    {
+	      STP_DEBUG(fprintf(stderr, "    Ink %d: ind[0] %d ind[1] %d ind[2] %d interchangeable %d param %d count %d aux %d\n",
+				j, ind[0], ind[1], ind[2], interchangeable_inks,
+				param, color_count, aux_color_count));
 	      if (ind[0] < color_count && param == 3 &&
 		  (interchangeable_inks || ind[1] >= aux_color_count ||
 		   ! aux_colors[(int) ind[1]]))
