@@ -294,7 +294,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       EPSON Stylus T40W
       EPSON Stylus T50
       EPSON Stylus TX110
+      EPSON Stylus TX210
       EPSON Stylus TX300F
+      EPSON Stylus TX410
       EPSON Stylus TX510FN
       EPSON Stylus TX550W
       EPSON Stylus TX610FW
@@ -304,9 +306,29 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       EPSON Stylus Photo TX800FW
       EPSON Stylus Photo TX810FW
 
-   2) Corrected status output for Epson Artisan and TX/SX 7xx/8xx
-      printer families.
-      
+   2) Add Device ID strings for printers for which they are known.
+
+   3) Correctly handle installable options in PPD files in PostScript
+      driver.
+
+   4) Correctly handle certain PPD files that previously caused the
+      PostScript driver (and hence the Enhanced Print plugin) to
+      crash.
+
+   5) Changed Xerox WorkCentre 118 and MP5000/MP5000B printers made by
+      various manufacturers to be large format.
+
+   6) Make the QualityEnhancement option (available in the Epson
+      driver for certain printers) function correctly.
+
+   7) Alow Epson printers using Claria inks to select quadtone or
+      hextone output.
+
+   9) Corrected escputil status output for Epson Artisan and TX/SX
+      7xx/8xx printer families.
+
+   10) Update the German translation.
+
 
 * Changes from 5.2.3
 
