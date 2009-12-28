@@ -25,7 +25,11 @@ III)  Changes from Previous Releases
         * Changes from 5.2.3
         * Changes from 5.2.2
         * Changes from 5.2.1
-IV)   Overall changes from 5.0.2 to 5.2
+IV)   Exceptions and Workarounds
+	A) General Issues
+	B) Printer-Specific Issues
+	C) Build/Installation Issues
+V)    Overall changes from 5.0.2 to 5.2
 	A) General User-visible Changes
 	B) New Functionality
 	C) Changes to the Enhanced Print plugin for GIMP
@@ -34,9 +38,6 @@ IV)   Overall changes from 5.0.2 to 5.2
 	F) Quality Improvements
 	G) Architectural Changes
 	H) New Printers Supported in this Release
-V)    Exceptions and Workarounds
-	A) General Issues
-	B) Build/Installation Issues
 
 
 ================================================================
@@ -474,10 +475,252 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       implications, but it may have implications to distributors
       building Gutenprint.
 
+================================================================
+
+
+IV) EXCEPTIONS AND WORKAROUNDS
+
+A) GENERAL ISSUES
+
+  1) The Canon, Hewlett-Packard, Lexmark, and dye sublimation drivers
+     do not offer all of the additional options and improvements that
+     the Epson driver does.  Please contact us if you would like to
+     assist with making these options available (requires C
+     programming skills).
+
+
+----------------
+
+B) PRINTER-SPECIFIC ISSUES
+
+  1) A number of Epson printers have been reported to produce poor
+     quality at the bottom of the page in borderless mode when the
+     resolution is set to 5760x2880 DPI.  The specific problem
+     observed is that the print fades at the bottom of the page.
+     Other than reducing the resolution or avoiding use of borderless
+     mode, there is no known workaround for this problem.
+
+  2) There have been reports of poor color fidelity on the Epson
+     Stylus Photo R2880 with certain paper types.  This problem has
+     not been reproduced.
+
+  3) A number of laser printers capable of large format printing are
+     incorrectly classified as small format, thereby not permitting
+     users to select large paper sizes.  The workaround is to use the
+     printer named "Generic PCL 6/PCL XL LF Printer".  Please report
+     any such printers to gimp-print-devel@lists.sourceforge.net; they
+     will be fixed in the next available release.
+
+  4) Color laser printers are currently supported only in black and
+     white mode.  At present, we do not have resources to add a color
+     laser driver.  If you have interest in this area and the
+     requisite skills, please contact
+     gimp-print-devel@lists.sourceforge.net.
+
+
+----------------
+
+C) BUILD/INSTALLATION ISSUES
+
+  1) With certain versions of CUPS and in certain non-default
+     configurations, if a new version of Gutenprint is installed over
+     an existing version genppd will create PPD files based on the
+     older version of Gutenprint rather than the newer version.  This
+     will happen if all of the following are true:
+
+     i) The cups-config provided by the CUPS driver adds
+        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
+        reportedly because in some cases the runtime linker does not
+        pick up libraries out of /usr/lib.  This can be checked by
+        running
+
+        cups-config --libs --ldflags
+
+        and inspecting the output for any mention of "rpath", "RPATH",
+        "RUN_PATH", or the like.  This is controlled by the CUPS
+        installation on your system.
+
+     ii) There is presently a version of Gutenprint installed in /usr
+        (--prefix=/usr) rather than /usr/local or the like.  The
+        default location of Gutenprint installation is in /usr/local,
+        but system vendors typically install Gutenprint in /usr.
+
+     iii) Gutenprint is built dynamically only (--disable-static or
+        --disable-static-genppd).  This is not a default, and requires
+        the explicit --disable-static or --disable-static-genppd on
+	the Gutenprint "configure" command line.  Therefore, if you
+	build Gutenprint normally you should not be vulnerable to this
+	problem.
+
+     Note that in general if you install CUPS into a non-standard
+     location, and install Gutenprint into the same location, this
+     problem can surface.  For example, if you choose to install CUPS
+     in /usr/local and Gutenprint in /usr/local you are vulnerable to
+     this.  However, it is not standard practice to install CUPS
+     anywhere but /usr.
+
+     In this case, the run path embedded in the genppd executable
+     points to the version of Gutenprint installed in /usr/lib.  This
+     run path overrides any attempt by libtool to look in the build
+     directory.  The result is that cups-genppd and rastertogutenprint
+     are run against the older version of Gutenprint.  If the new
+     version contains additional features (more printers, changes to
+     printer options, etc.) they will not be available.
+
+     This bug is difficult to detect in a normal build.  It normally
+     does not cause an error to happen during build unless there is an
+     API change from the version installed and the version being
+     built; the only failure is frequently that some PPD files may not
+     be built or may be built with missing options.  Due to the PPD
+     version checking introduced in this release, the behavior might
+     manifest itself as a runtime error.  It is also possible that
+     there will be no error at all other than the older version of
+     Gutenprint being used, with the result that new features and bug
+     fixes are not available.
+
+     If you wish to use only shared libraries, do not wish to build
+     static libraries at all, and are vulnerable to this issue
+     (because cups-config --ldflags sets the run path), there are
+     three workarounds available:
+
+     i) Build and install Gutenprint into /usr (rather than
+        /usr/local) and then rebuild Gutenprint from scratch.  This
+        will install the correct libgutenprint.so in /usr/lib, and in
+        the rebuild genppd will be run against the correct library.
+
+     ii) Remove the old version of Gutenprint prior to building the
+        new version of Gutenprint.  The important files to remove are
+        anything named /usr/lib/libgutenprint*.
+
+     iii) Edit cups-config to remove the reference to the run path.
+
+  2) There are multiple issues that one must be aware of when using
+     Foomatic with Gutenprint.
+
+     i) Before installing any new release of Gutenprint 5.2, you must
+	manually remove any existing Foomatic option files.  This is
+	because the Foomatic utility to load data kits
+	(foomatic-kitload) does not remove obsolete data files from
+	the Foomatic database.  If you do not do this, any PPD files
+	you generate will be incorrect and printing may work
+	incorrectly or not at all.
+
+	Foomatic option files are usually located in
+
+	/usr/local/share/foomatic/db/source/opt
+
+	or
+
+	/usr/share/foomatic/db/source/opt
+
+	Assuming they're in the former location, you must remove data
+	files associated with the Gutenprint driver.  The command to do
+	this, which must be run as the superuser (root) is
+
+	cd /usr/local/share/foomatic/db/source/opt
+	ls -l gutenprint-ijs*.xml
+
+	If there are existing files present, you must remove them:
+
+	rm -f gutenprint-ijs*.xml
+
+	Now check to make sure that they are gone:
+
+	ls -l gutenprint-ijs*.xml
+
+	CAUTION: Be very careful when typing this command!  Minor
+	errors in typing these commands may result in severe damage to
+	your system.
+
+	After this, you may run 'make install' in your Gutenprint
+	source directory to install the package.  You will then need to
+	re-create any printer queues using Foomatic.
+
+	In general, you will have to perform this procedure any time
+	you install a new version of Gutenprint.
+
+	Please check the Foomatic site
+	(http://www.openprinting.org/foomatic.html) and the Gutenprint
+	site (http://gimp-print.sourceforge.net) for updated
+	instructions about this.
+
+     ii) Unlike with the CUPS native driver, there is no simple way to
+	update all PPD files when you install a new version of
+	Gutenprint.  You must either use the foomatic-ppdfile command
+	to upgrade PPD files individually, or foomatic-compiledb to
+	build all PPD files.  Your system may provide an alternate way
+	to install new PPD files, in which case you may use that
+	method.
+
+     iii) The Foomatic data is version locked to the Gutenprint release
+	installed on the system.  For example, PPD files generated
+	with the Foomatic data for release 5.2.0 will not work with
+	the ijsgutenprint in release 5.2.1.  This is to prevent
+	accidentally using incorrect data, which could cause incorrect
+	function to take place.
+
+  3) There is a known complication building "escputil" that causes
+     problems on a small number of systems.  "escputil" uses the
+     "readline" package, to support command editing and history within
+     the program.  Unfortunately, linking programs with "readline"
+     often requires linking against additional libraries, and the
+     exact library depends upon the system (e. g. not all Linux/UNIX
+     systems have the same requirements).
+
+     The configure script attempts to determine which additional
+     library must be linked against.  It tries using the following
+     libraries in this order to build a test executable:
+
+     -lncurses
+     -lcurses
+     -ltermcap
+     no additional libraries
+
+     The reason it tries other libraries first is that some systems
+     will link successfully, but only fail when an attempt is made to
+     actually call readline.  Therefore, we assume that additional
+     libraries are required.  Since we try the extra libraries in
+     order from most recent to oldest, we expect that the first one we
+     find will be appropriate.  For example, if the "ncurses" library
+     is the standard on a given system, the "termcap" library may be
+     provided for back compatibility, but it is unlikely that
+     "termcap" will be the standard with "curses" or "ncurses" being
+     provided for compatibility only (so that the link will succeed
+     but the command will use the incorrect library).
+
+     As this procedure is not failsafe, we provide the following
+     configure options to control this behavior:
+
+     ./configure --with-readline=yes  (the default; attempts to
+				      determine the correct library
+				      to link against)
+
+     ./configure --with-readline=no   (turns off use of readline
+				      altogether)
+
+     ./configure --with-readline=only (specifically instructs
+				      configure to not attempt to
+				      link against any other
+				      libraries)
+
+     ./configure --with-readline=libs (specifies the libraries to be
+				      linked against)
+
+     A hypothetical (this won't work anywhere!) example of the latter
+     would be
+
+     ./configure --with-readline='-lncurses -ltermcap'
+
+     Note that configure will not allow readline to be used if it
+     cannot successfully build the test program, regardless of the
+     option selected.  If you are having difficulty getting escputil
+     to build, we suggest using --with-readline=no.  The commands
+     used within escputil are very short and seldom require
+     significant editing.
 
 ================================================================
 
-IV) OVERALL CHANGES FROM 5.0.2 TO 5.2
+V) OVERALL CHANGES FROM 5.0.2 TO 5.2
 
 A) GENERAL USER-VISIBLE CHANGES
 
@@ -789,6 +1032,10 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
 
    1) Epson inkjet printers:
 
+      Artisan 700
+      Artisan 710
+      Artisan 800
+      Artisan 810
       B-300
       B-308
       B-500DN
@@ -799,6 +1046,7 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       E 520
       E 700
       E 720
+      ME Office 1100
       ME Office 70
       ME Office 700FW
       ME Office 80W
@@ -809,6 +1057,7 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       PM D870
       PM G4500
       PM G850
+      PX 1001
       PX 101
       PX 201
       PX 601F
@@ -856,21 +1105,39 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus DX8400
       Stylus DX8450
       Stylus DX9400F
+      Stylus NX100
+      Stylus NX115
       Stylus NX200
+      Stylus NX215
+      Stylus NX300
       Stylus NX400
+      Stylus NX415
+      Stylus NX515
+      Stylus Office B1100
       Stylus Office B30
       Stylus Office B33
       Stylus Office B40W
       Stylus Office BX300F
       Stylus Office BX600FW
       Stylus Office SX600FW
+      Stylus Office T1100
+      Stylus Office T1110
       Stylus Office T30
       Stylus Office T33
       Stylus Office T40W
       Stylus Office TX300F
       Stylus Office TX600FW
+      Stylus PX700FW
+      Stylus PX800FW
+      Stylus Photo 1290s
       Stylus Photo 1400
       Stylus Photo 1410
+      Stylus Photo PX650
+      Stylus Photo PX700W
+      Stylus Photo PX710W
+      Stylus Photo PX800FW
+      Stylus Photo PX810FW
+      Stylus Photo R1900
       Stylus Photo R230
       Stylus Photo R240
       Stylus Photo R245
@@ -884,7 +1151,6 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus Photo R360
       Stylus Photo R380
       Stylus Photo R390
-      Stylus Photo R1900
       Stylus Photo RX560
       Stylus Photo RX580
       Stylus Photo RX585
@@ -895,34 +1161,64 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Stylus Photo RX680
       Stylus Photo RX685
       Stylus Photo RX690
+      Stylus Photo S50
+      Stylus Photo TX700W
+      Stylus Photo TX710W
+      Stylus Photo TX800FW
+      Stylus Photo TX800W
+      Stylus Photo TX810FW
+      Stylus Pro 11880
+      Stylus Pro 7800
+      Stylus Pro 7880
+      Stylus Pro 9800
+      Stylus Pro 9880
+      Stylus S20
+      Stylus S21
+      Stylus SX100
+      Stylus SX105
+      Stylus SX110
+      Stylus SX115
       Stylus SX200
       Stylus SX205
+      Stylus SX210
+      Stylus SX215
       Stylus SX400
       Stylus SX405
+      Stylus SX410
+      Stylus SX415
+      Stylus SX510W
+      Stylus SX515
+      Stylus SX600FW
+      Stylus SX610FW
+      Stylus SX615
+      Stylus SX650
+      Stylus T20
+      Stylus T21
+      Stylus T26
+      Stylus T30
+      Stylus T40W
+      Stylus T50
+      Stylus TX100
+      Stylus TX110
       Stylus TX200
+      Stylus TX210
+      Stylus TX300F
       Stylus TX400
+      Stylus TX410
+      Stylus TX510FN
+      Stylus TX550W
+      Stylus TX610FW
+      Stylus TX615
+      Stylus TX650
+      WorkForce 1100
       WorkForce 30
+      WorkForce 310
+      WorkForce 315
       WorkForce 40
       WorkForce 500
       WorkForce 600
-      Artisan 700 (experimental)
-      Artisan 800 (experimental)
-      Stylus NX100 (experimental)
-      Stylus NX300 (experimental)
-      Stylus PX700FW (experimental)
-      Stylus PX800FW (experimental)
-      Stylus Photo TX700W (experimental)
-      Stylus Photo TX800W (experimental)
-      Stylus Pro 7800 (experimental)
-      Stylus Pro 7880 (experimental)
-      Stylus Pro 9800 (experimental)
-      Stylus Pro 9880 (experimental)
-      Stylus Pro 11880 (experimental)
-      Stylus S20 (experimental)
-      Stylus SX100 (experimental)
-      Stylus SX105 (experimental)
-      Stylus T20 (experimental)
-      Stylus TX100 (experimental)
+      WorkForce 610
+      WorkForce 615
 
    2) Canon inkjet printers:
 
@@ -1459,217 +1755,3 @@ H) NEW PRINTERS SUPPORTED SINCE GUTENPRINT 5.0.0
       Savin 9050b
       Sharp AR-M257
       Xerox WorkCentre M118
-
-
-================================================================
-
-V) EXCEPTIONS AND WORKAROUNDS
-
-A) GENERAL ISSUES
-
-  1) The Canon, Hewlett-Packard, Lexmark, and dye sublimation drivers
-     do not offer all of the additional options and improvements that
-     the Epson driver does.  Please contact us if you would like to
-     assist with making these options available (requires C
-     programming skills).
-
-
-----------------
-
-B) BUILD/INSTALLATION ISSUES
-
-  1) With certain versions of CUPS and in certain non-default
-     configurations, if a new version of Gutenprint is installed over
-     an existing version genppd will create PPD files based on the
-     older version of Gutenprint rather than the newer version.  This
-     will happen if all of the following are true:
-
-     i) The cups-config provided by the CUPS driver adds
-        -Wl,rpath=/usr/lib. This is done by some versions of CUPS
-        reportedly because in some cases the runtime linker does not
-        pick up libraries out of /usr/lib.  This can be checked by
-        running
-
-        cups-config --libs --ldflags
-
-        and inspecting the output for any mention of "rpath", "RPATH",
-        "RUN_PATH", or the like.  This is controlled by the CUPS
-        installation on your system.
-
-     ii) There is presently a version of Gutenprint installed in /usr
-        (--prefix=/usr) rather than /usr/local or the like.  The
-        default location of Gutenprint installation is in /usr/local,
-        but system vendors typically install Gutenprint in /usr.
-
-     iii) Gutenprint is built dynamically only (--disable-static or
-        --disable-static-genppd).  This is not a default, and requires
-        the explicit --disable-static or --disable-static-genppd on
-	the Gutenprint "configure" command line.  Therefore, if you
-	build Gutenprint normally you should not be vulnerable to this
-	problem.
-
-     Note that in general if you install CUPS into a non-standard
-     location, and install Gutenprint into the same location, this
-     problem can surface.  For example, if you choose to install CUPS
-     in /usr/local and Gutenprint in /usr/local you are vulnerable to
-     this.  However, it is not standard practice to install CUPS
-     anywhere but /usr.
-
-     In this case, the run path embedded in the genppd executable
-     points to the version of Gutenprint installed in /usr/lib.  This
-     run path overrides any attempt by libtool to look in the build
-     directory.  The result is that cups-genppd and rastertogutenprint
-     are run against the older version of Gutenprint.  If the new
-     version contains additional features (more printers, changes to
-     printer options, etc.) they will not be available.
-
-     This bug is difficult to detect in a normal build.  It normally
-     does not cause an error to happen during build unless there is an
-     API change from the version installed and the version being
-     built; the only failure is frequently that some PPD files may not
-     be built or may be built with missing options.  Due to the PPD
-     version checking introduced in this release, the behavior might
-     manifest itself as a runtime error.  It is also possible that
-     there will be no error at all other than the older version of
-     Gutenprint being used, with the result that new features and bug
-     fixes are not available.
-
-     If you wish to use only shared libraries, do not wish to build
-     static libraries at all, and are vulnerable to this issue
-     (because cups-config --ldflags sets the run path), there are
-     three workarounds available:
-
-     i) Build and install Gutenprint into /usr (rather than
-        /usr/local) and then rebuild Gutenprint from scratch.  This
-        will install the correct libgutenprint.so in /usr/lib, and in
-        the rebuild genppd will be run against the correct library.
-
-     ii) Remove the old version of Gutenprint prior to building the
-        new version of Gutenprint.  The important files to remove are
-        anything named /usr/lib/libgutenprint*.
-
-     iii) Edit cups-config to remove the reference to the run path.
-
-  2) There are multiple issues that one must be aware of when using
-     Foomatic with Gutenprint.
-
-     i) Before installing any new release of Gutenprint 5.2, you must
-	manually remove any existing Foomatic option files.  This is
-	because the Foomatic utility to load data kits
-	(foomatic-kitload) does not remove obsolete data files from
-	the Foomatic database.  If you do not do this, any PPD files
-	you generate will be incorrect and printing may work
-	incorrectly or not at all.
-
-	Foomatic option files are usually located in
-
-	/usr/local/share/foomatic/db/source/opt
-
-	or
-
-	/usr/share/foomatic/db/source/opt
-
-	Assuming they're in the former location, you must remove data
-	files associated with the Gutenprint driver.  The command to do
-	this, which must be run as the superuser (root) is
-
-	cd /usr/local/share/foomatic/db/source/opt
-	ls -l gutenprint-ijs*.xml
-
-	If there are existing files present, you must remove them:
-
-	rm -f gutenprint-ijs*.xml
-
-	Now check to make sure that they are gone:
-
-	ls -l gutenprint-ijs*.xml
-
-	CAUTION: Be very careful when typing this command!  Minor
-	errors in typing these commands may result in severe damage to
-	your system.
-
-	After this, you may run 'make install' in your Gutenprint
-	source directory to install the package.  You will then need to
-	re-create any printer queues using Foomatic.
-
-	In general, you will have to perform this procedure any time
-	you install a new version of Gutenprint.
-
-	Please check the Foomatic site
-	(http://www.openprinting.org/foomatic.html) and the Gutenprint
-	site (http://gimp-print.sourceforge.net) for updated
-	instructions about this.
-
-     ii) Unlike with the CUPS native driver, there is no simple way to
-	update all PPD files when you install a new version of
-	Gutenprint.  You must either use the foomatic-ppdfile command
-	to upgrade PPD files individually, or foomatic-compiledb to
-	build all PPD files.  Your system may provide an alternate way
-	to install new PPD files, in which case you may use that
-	method.
-
-     iii) The Foomatic data is version locked to the Gutenprint release
-	installed on the system.  For example, PPD files generated
-	with the Foomatic data for release 5.2.0 will not work with
-	the ijsgutenprint in release 5.2.1.  This is to prevent
-	accidentally using incorrect data, which could cause incorrect
-	function to take place.
-
-  3) There is a known complication building "escputil" that causes
-     problems on a small number of systems.  "escputil" uses the
-     "readline" package, to support command editing and history within
-     the program.  Unfortunately, linking programs with "readline"
-     often requires linking against additional libraries, and the
-     exact library depends upon the system (e. g. not all Linux/UNIX
-     systems have the same requirements).
-
-     The configure script attempts to determine which additional
-     library must be linked against.  It tries using the following
-     libraries in this order to build a test executable:
-
-     -lncurses
-     -lcurses
-     -ltermcap
-     no additional libraries
-
-     The reason it tries other libraries first is that some systems
-     will link successfully, but only fail when an attempt is made to
-     actually call readline.  Therefore, we assume that additional
-     libraries are required.  Since we try the extra libraries in
-     order from most recent to oldest, we expect that the first one we
-     find will be appropriate.  For example, if the "ncurses" library
-     is the standard on a given system, the "termcap" library may be
-     provided for back compatibility, but it is unlikely that
-     "termcap" will be the standard with "curses" or "ncurses" being
-     provided for compatibility only (so that the link will succeed
-     but the command will use the incorrect library).
-
-     As this procedure is not failsafe, we provide the following
-     configure options to control this behavior:
-
-     ./configure --with-readline=yes  (the default; attempts to
-				      determine the correct library
-				      to link against)
-
-     ./configure --with-readline=no   (turns off use of readline
-				      altogether)
-
-     ./configure --with-readline=only (specifically instructs
-				      configure to not attempt to
-				      link against any other
-				      libraries)
-
-     ./configure --with-readline=libs (specifies the libraries to be
-				      linked against)
-
-     A hypothetical (this won't work anywhere!) example of the latter
-     would be
-
-     ./configure --with-readline='-lncurses -ltermcap'
-
-     Note that configure will not allow readline to be used if it
-     cannot successfully build the test program, regardless of the
-     option selected.  If you are having difficulty getting escputil
-     to build, we suggest using --with-readline=no.  The commands
-     used within escputil are very short and seldom require
-     significant editing.
