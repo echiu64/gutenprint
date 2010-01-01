@@ -326,7 +326,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       hextone output.
 
    9) Corrected escputil status output for Epson Artisan and TX/SX
-      7xx/8xx printer families.
+      7xx/8xx printer families and for a number of the R-series
+      printers.
 
    10) Update the German translation.
 
