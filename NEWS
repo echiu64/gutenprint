@@ -329,7 +329,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       7xx/8xx printer families and for a number of the R-series
       printers.
 
-   10) Update the German translation.
+   10) Add support for EA5 envelope (paper size).
+
+   11) Update the German translation.
 
 
 * Changes from 5.2.3
