@@ -1665,7 +1665,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon CP-520 */
+  { /* Canon CP-520, SELPHY CP-530 */
     1004,
     &ymc_ink_list,
     &res_300dpi_list,

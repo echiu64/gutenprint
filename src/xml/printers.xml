@@ -1531,6 +1531,7 @@
       <printer translate="name" name="Canon SELPHY-CP-500" driver="canon-cp500" manufacturer="Canon" model="1001" />
       <printer translate="name" name="Canon SELPHY-CP-510" driver="canon-cp510" manufacturer="Canon" model="1001" />
       <printer translate="name" name="Canon SELPHY-CP-520" driver="canon-cp520" manufacturer="Canon" model="1004" />
+      <printer translate="name" name="Canon SELPHY-CP-530" driver="canon-cp530" manufacturer="Canon" model="1004" />
       <printer translate="name" name="Canon SELPHY-CP-600" driver="canon-cp600" manufacturer="Canon" model="1001" />
       <printer translate="name" name="Canon SELPHY-CP-710" driver="canon-cp710" manufacturer="Canon" model="1001" />
       <printer translate="name" name="Canon SELPHY-CP-720" driver="canon-cp720" manufacturer="Canon" model="1001" />
