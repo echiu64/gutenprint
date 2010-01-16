@@ -467,8 +467,14 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
   right = pstate.right_edge;
   height = oversample * (last - first + 1);
 
-  fprintf(stderr, "Image from (%d,%d) to (%d,%d) (%dx%d) (%.3fx%.3f)\n",
-	  left, first, right, last, right - left + 1, last - first + 1,
+  fprintf(stderr, "Image from (%d,%d) (%.3fx%.3f) to (%d,%d) (%.3fx%.3f) size (%dx%d) (%.3fx%.3f)\n",
+	  left, first - pstate.top_margin,
+	  (left / (double) pstate.page_management_units),
+	  (first / (double) pstate.page_management_units),
+	  right, last - pstate.top_margin,
+	  (right / (double) pstate.page_management_units),
+	  (last / (double) pstate.page_management_units),
+	  right - left + 1, last - first + 1,
 	  (right - left + 1) / (double) pstate.page_management_units,
 	  (last - first + 1) / (double) pstate.page_management_units);
 
@@ -479,6 +485,8 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
   out_row = stp_malloc(sizeof(ppmpixel) * width);
   fprintf(stderr, "Writing output...\n");
 
+  if (dontwrite)
+    return;
   /* write out the PPM header */
   fprintf(fp_w, "P6\n");
   fprintf(fp_w, "%d %d\n", width, height);
@@ -495,24 +503,17 @@ write_output(FILE *fp_w, int dontwrite, int allblack)
 	      float *ink = ink_colors[inknum];
 	      if (lt->line[c])
 		{
-		  if (dontwrite)
-		    donothing += lt->line[c][0] ^
-		      lt->line[c][lt->stopx[c] - lt->startx[c] + 1];
-		  else
+		  for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
 		    {
-		      for (p = lt->startx[c]; p <= lt->stopx[c]; p++)
-			{
-			  amount = get_bits(lt->line[c], p - lt->startx[c]);
-			  mix_ink(out_row[p - left], c, amount, ink,
-				  pstate.quadtone);
-			}
+		      amount = get_bits(lt->line[c], p - lt->startx[c]);
+		      mix_ink(out_row[p - left], c, amount, ink,
+			      pstate.quadtone);
 		    }
 		}
 	    }
 	}
-      if (!dontwrite)
-	for (i = 0; i < oversample; i++)
-	  fwrite(out_row, sizeof(ppmpixel), width, fp_w);
+      for (i = 0; i < oversample; i++)
+	fwrite(out_row, sizeof(ppmpixel), width, fp_w);
     }
   stp_free(out_row);
 }
