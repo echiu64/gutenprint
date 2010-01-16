@@ -4,7 +4,7 @@
 # values for each of these settings
 # Printer model
 printer escp2-2200;
-mode extended 7;
+mode extended 7 16;
 # Resolution, or print quality
 parameter Resolution 720sw;
 # Media source (if appropriate for your printer)
