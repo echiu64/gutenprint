@@ -20,9 +20,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="99">
+<escp2:model id="100">
  <media src="escp2/media/c120.xml"/>
- <inputSlots src="escp2/inputslots/default.xml"/>
+ <inputSlots src="escp2/inputslots/cd.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
  <inkGroup src="escp2/inks/c120.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>
@@ -75,6 +75,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins interleave="printer" media="sheet">9 9 0 9</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
+ <CDOffset>204 189</CDOffset>
+ <CDMediaSize>595 842</CDMediaSize>
  <extraBottom>24</extraBottom>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>

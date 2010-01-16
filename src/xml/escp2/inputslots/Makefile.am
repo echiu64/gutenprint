@@ -28,6 +28,7 @@ pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSI
 pkgxmldata_DATA =				\
 	artisan.xml				\
 	b500.xml				\
+	cd.xml					\
 	cd_cutter_roll_feed.xml			\
 	cd_roll_feed.xml			\
 	cutter_roll_feed.xml			\

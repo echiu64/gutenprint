@@ -630,7 +630,7 @@
       <printer translate="name" name="Epson PX 201" driver="escp2-px201" manufacturer="Epson" model="92" parameters="standard_params" />
       <printer translate="name" name="Epson PX 401A" driver="escp2-px401a" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson PX 601F" driver="escp2-px601f" manufacturer="Epson" model="92" parameters="standard_params" />
-      <printer translate="name" name="Epson PX 1001" driver="escp2-px1001" manufacturer="Epson" model="99" parameters="standard_params" />
+      <printer translate="name" name="Epson PX 1001" driver="escp2-px1001" manufacturer="Epson" model="100" parameters="standard_params" />
       <printer translate="name" name="Epson PX G900" driver="escp2-pxg900" manufacturer="Epson" model="64" parameters="standard_params" />
       <printer translate="name" name="Epson PX G920" driver="escp2-pxg920" manufacturer="Epson" model="64" parameters="standard_params" />
       <printer translate="name" name="Epson PX G5000" driver="escp2-pxg5000" manufacturer="Epson" model="67" parameters="standard_params" />
