@@ -66,7 +66,7 @@ GetOptions("v+"  => \$valgrind,
 	   "M:s" => \$calc_md5_file,
 	   "h"   => \$help);
 
-if ($help) {
+sub print_help_and_exit() {
     my $options = join("\n                        ", sort @standard_options);
     print STDERR <<EOF;
 Usage: run-testpattern-2 [opts] [model ...]
@@ -95,6 +95,8 @@ Usage: run-testpattern-2 [opts] [model ...]
 		    tested.
 		    Default:
 		        $options
+    -d option=value Test this option with only the specified (default) value,
+		    if available
     -p page count   Specify number of pages to print per printer.  Default $std_pages.
     -P page count   Specify number of pages to print per printer when testing
                     duplex mode.  Default $duplex_pages.
@@ -116,19 +118,33 @@ EOF
 exit 1;
 }
 
+if ($help) {
+    print_help_and_exit();
+}
+
 my $pages = $std_pages;
 
 if (! @special_options) {
     @special_options = @standard_options;
 }
 
+my $bad_opt = 0;
+
 foreach my $opt (@default_options) {
+    if (! ($opt =~ /=/)) {
+	print STDERR "Malformed default option `$opt'\n";
+	$bad_opt = 1;
+    }
     my ($option, $value) = split(/=/, $opt);
     if (! $value) {
 	delete $base_settings{$option};
     } else {
 	$base_settings{$option} = $value;
     }
+}
+
+if ($bad_opt) {
+    print_help_and_exit();
 }
 
 my $pwd = `pwd`;
@@ -409,6 +425,18 @@ sub do_printer($$) {
     my (@resolutions) = grep {$_ ne 'None' } keys %$tmp;
     $tmp = $stpdata{$printer}{'PrintingMode'};
     my (@printing_modes) = grep {$_ ne 'None' } keys %$tmp;
+    if ($base_settings{'PrintingMode'}) {
+	if ($base_settings{'PrintingMode'} eq 'Color' &&
+	    grep { $_ eq 'Color' } @printing_modes) {
+	    @printing_modes = 'Color';
+	} elsif ($base_settings{'PrintingMode'} eq 'BW' &&
+		 grep { $_ eq 'BW' } @printing_modes) {
+	    @printing_modes = 'BW';
+	} else {
+	    return;
+	}
+    }
+	    
     foreach $key (@special_options) {
 	my $nkey = build_key($key, $printer);
 	if ($nkey ne "") {
