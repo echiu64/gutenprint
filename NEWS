@@ -316,8 +316,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       PostScript driver (and hence the Enhanced Print plugin) to
       crash.
 
-   5) Changed Xerox WorkCentre 118 and MP5000/MP5000B printers made by
-      various manufacturers to be large format.
+   5) Changed a number of laser printers by Gestetner, Infotec,
+      Lanier, NRG, Ricoh, Savin, and Xerox to be large format
+      (A3/tabloid instead of A4/letter).  Please inform us at
+      gimp-print-devel@lists.sourceforge.net if you encounter other
+      printers that should be changed.
 
    6) Make the QualityEnhancement option (available in the Epson
       driver for certain printers) function correctly.
