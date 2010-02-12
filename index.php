@@ -32,13 +32,26 @@ Users!</font></em></strong></h2>
 href="http://gimp-print.sourceforge.net/MacOSX.php">Gutenprint web
 page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
-and 10.5 "Leopard", and provides direct download links.</p>
+10.5 "Leopard" and 10.6 "Snow Leopard", and provides direct download
+links.</p>
+
+<H2><font color="#ff0000">Gutenprint 5.2.5 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of February 11,
+2010!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.2.5, a stable release of 5.2.  This release
+offers several fixes, new features, and support for new printers over
+5.2.5.  This package is available in source form, and will shortly be
+available in binary installer form for Macintosh OS X (10.3 and
+above).  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
 
 <H2><font color="#ff0000">Gutenprint 5.2.4 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of July 29,
 2009!</strong></em></font> The Gutenprint project is pleased to
-announce Gutenprint 5.24, a stable release of 5.2.  This release
+announce Gutenprint 5.2.4, a stable release of 5.2.  This release
 offers several fixes, new features, and support for new printers for
 5.2.4.  This package is available in source form, and in binary
 installer form for Macintosh OS X (10.3 and above).  <a
