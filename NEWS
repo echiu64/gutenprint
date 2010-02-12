@@ -334,7 +334,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    10) Add support for EA5 envelope (paper size).
 
-   11) Update the German translation.
+   11) Fixed the margins for the HP LaserJet 2100 and 2100M with A4
+      paper.  It is likely that other printers will need similar
+      correction.
+
+   12) Update the German translation.
 
 
 * Changes from 5.2.3

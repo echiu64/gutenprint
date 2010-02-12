@@ -204,6 +204,7 @@ static const pcl_t pcl_media_types[] =
 
 #define PCL_PAPERSOURCE_STANDARD	0	/* Don't output code */
 #define PCL_PAPERSOURCE_MANUAL		2
+#define PCL_PAPERSOURCE_MANUAL_ADJ	(PCL_PAPERSOURCE_MANUAL + PAPERSOURCE_ADJ_GUIDE)
 #define PCL_PAPERSOURCE_ENVELOPE	3	/* Not used */
 
 /* LaserJet types */
@@ -235,6 +236,7 @@ static const pcl_t pcl_media_sources[] =
 {
     { "Standard", N_ ("Standard"), PCL_PAPERSOURCE_STANDARD},
     { "Manual", N_ ("Manual"), PCL_PAPERSOURCE_MANUAL},
+    { "ManualAdj", N_ ("Manual - Movable Guides"), PCL_PAPERSOURCE_MANUAL_ADJ},
 /*  {"Envelope", PCL_PAPERSOURCE_ENVELOPE}, */
     { "MultiPurposeAdj", N_ ("Tray 1 - Movable Guides"), PCL_PAPERSOURCE_LJ_TRAY1_ADJ},
     { "MultiPurpose", N_ ("Tray 1"), PCL_PAPERSOURCE_LJ_TRAY1},
@@ -610,6 +612,7 @@ static const short new_papertypes[] =
 static const short laserjet_papersources[] =
 {
   PCL_PAPERSOURCE_STANDARD,
+  PCL_PAPERSOURCE_MANUAL_ADJ,
   PCL_PAPERSOURCE_MANUAL,
   PCL_PAPERSOURCE_LJ_TRAY1_ADJ,
   PCL_PAPERSOURCE_LJ_TRAY1,
@@ -1051,6 +1054,19 @@ static const pcl_cap_t pcl_model_capabilities[] =
     emptylist,
     laserjet_papersources,
   },
+  /* PCL-4 with large paper, no expanded A4 margins */
+  { 24,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ,
+    ljbig_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
   /* LaserJet III series */
   { 3,
     17 * 72 / 2, 14 * 72,
@@ -1097,6 +1113,19 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_RES_150_150 | PCL_RES_300_300,
     {12, 12, 18, 18},
     {12, 12, 10, 10},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
+    ljbig_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* PCL-5 with large paper, no expanded margins */
+  { 34,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE,
     ljbig_papersizes,
@@ -1182,6 +1211,20 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
       PCL_PRINTER_DUPLEX,
     ljsmall_papersizes,
+    emptylist,
+    laserjet_papersources,
+  },
+  /* PCL-5c/5e/6/XL with large paper, no expanded A4 margins */
+  { 63,
+    13 * 72, 19 * 72,
+    1, 1,				/* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,
+    {12, 12, 18, 18},
+    {12, 12, 18, 18},	/* Check/Fix */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_NEW_ERG | PCL_PRINTER_TIFF | PCL_PRINTER_BLANKLINE |
+      PCL_PRINTER_DUPLEX,
+    ljbig_papersizes,
     emptylist,
     laserjet_papersources,
   },
