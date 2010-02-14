@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.5 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.5">February 13, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from the stable branch of Gutenprint 5.2.  This release offers several bug fixes, and support for new printers.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.4 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.4">July 29, 2009</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from the stable branch of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  The standalone Uninstaller has also been updated.  See the <b>Downloads</b> section. 
@@ -137,11 +142,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.4-rc1 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.4-rc1">June 16, 2009</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.4-rc1, a release candiddate from the stable branch of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.3 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.3">December 22, 2008</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.3, a stable release of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -177,12 +177,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.4</b> 
+			<b>Gutenprint 5.2.5</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.4/gutenprint-5.2.4.dmg/download">gutenprint-5.2.4.dmg</a></span>&nbsp;&nbsp;(12.9 MB) 
+			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.5/gutenprint-5.2.5.dmg/download">gutenprint-5.2.5.dmg</a></span>&nbsp;&nbsp;(12.9 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from the stable branch of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.4/gutenprint-5.2.4.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from the stable branch of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.5/gutenprint-5.2.5.tar.bz2/download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -252,7 +252,95 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from t
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
-
+<a name="5.2.5"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.5</b> 
+		</td>
+		<td align="right">
+			<b>2010-02-13</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.5</b> is a release from the stable branch of Gutenprint 5.2.  Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. Notable changes since the Gutenprint 5.2.4:</p> 
+	
+<ul style="list-style:disc;">
+	<li>The packaging for Mac OS X has been changed:
+	<ol style="list-style:lower-alpha">
+	<li>Printer PPDs are no longer included in the download.  The PPDs will be created during the installation process.  This will add several minutes to the installation process.  This change will reduce the download by over 30 MB.  </li>
+	<li>There are now separate binaries for Leopard (OS X 10.5).  The proper files will automatically be instlled based on the version of OS X on the boot disk.</li>	
+	</ol>
+	</li>
+	<li>
+New printers supported in this release:
+<br>
+	&nbsp;&nbsp;&nbsp;&nbsp;EPSON Artisan 710<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Artisan 810<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus NX115<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus NX215<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus NX415<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus NX515<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo 1290s<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON PX 1001<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Office B1100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Office T1100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Office T1110<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON ME Office 1100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON WorkForce 310<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON WorkForce 315<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON WorkForce 610<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON WorkForce 615<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON WorkForce 1100<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX650<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX700W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX710W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX800FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo PX810FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus S21<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo S50<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX110<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX115<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX210<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX215<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX410<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX415<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX510W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX515<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX600FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX610FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX615<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus SX650<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus T21<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus T26<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus T30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus T40W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus T50<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX110<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX210<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX300F<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX410<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX510FN<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX550W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX610FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX615<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus TX650<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX710W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX800FW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;EPSON Stylus Photo TX810FW<br> 
+  	</li>
+ 		<li>Add Device ID strings for printers for which they are known.</li>
+	<li>Changed a number of laser printers by Gestetner, Infotec, Lanier, NRG, Ricoh, Savin, and Xerox to be large format (A3/tabloid instead of A4/letter).  Please inform us at gimp-print-devel@lists.sourceforge.net if you encounter other printers that should be changed.</li>
+	<li>Make the QualityEnhancement option (available in the Epson driver for certain printers) function correctly.</li>
+	<li>Alow Epson printers using Claria inks to select quadtone or hextone output.</li>
+	<li>Add support for EA5 envelope (paper size).</li>
+	<li>Fixed the margins for the HP LaserJet 2100 and 2100M with A4 paper.</li>
+	<li>Update the German translation.</li>
+</ul>
+ <p>
+Full details are listed in the <a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.5/NEWS/view">release notes</a>.
+</p>
 <a name="5.2.4"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
