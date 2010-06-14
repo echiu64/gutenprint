@@ -216,6 +216,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "CDAllowOtherMedia", N_("CD Allow Other Media Sizes"), N_("Advanced Printer Setup"),
+    N_("Allow non-CD media sizes when printing to CD"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_ADVANCED, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "Resolution", N_("Resolution"), N_("Basic Printer Setup"),
     N_("Resolution of the print"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -2204,7 +2210,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       int papersizes = stp_known_papersizes();
       const input_slot_t *slot = stp_escp2_get_input_slot(v);
       description->bounds.str = stp_string_list_create();
-      if (slot && slot->is_cd)
+      if (slot && slot->is_cd &&
+	  !stp_get_boolean_parameter(v, "CDAllowOtherMedia"))
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
@@ -2225,6 +2232,14 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
+    }
+  else if (strcmp(name, "CDAllowOtherMedia") == 0)
+    {
+      if (stp_escp2_printer_supports_print_to_cd(v) &&
+	  (!slot || slot->is_cd))
+	description->is_active = 1;
+      else
+	description->is_active = 0;
     }
   else if (strcmp(name, "CDInnerRadius") == 0 )
     {
