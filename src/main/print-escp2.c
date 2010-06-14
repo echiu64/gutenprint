@@ -2235,6 +2235,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "CDAllowOtherMedia") == 0)
     {
+      const input_slot_t *slot = stp_escp2_get_input_slot(v);
       if (stp_escp2_printer_supports_print_to_cd(v) &&
 	  (!slot || slot->is_cd))
 	description->is_active = 1;
