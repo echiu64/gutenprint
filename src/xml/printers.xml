@@ -162,6 +162,7 @@
       <printer translate="name" name="Canon PIXMA MP780" driver="bjc-MULTIPASS-MP780" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon PIXMA MP790" driver="bjc-MULTIPASS-MP790" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon PIXMA MP830" driver="bjc-MULTIPASS-MP830" manufacturer="Canon" model="5000830" parameters="PIXMA_iP4000_params" />
+      <printer translate="name" name="Canon PIXMA MP970" driver="bjc-MULTIPASS-MP970" manufacturer="Canon" model="5000970" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" />
       <printer translate="name" name="Canon i80" driver="bjc-i80"   manufacturer="Canon" model="2000080" parameters="density_800_params" />

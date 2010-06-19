@@ -347,6 +347,11 @@ static const canon_mode_t canon_MULTIPASS_MP830_modes[] = {
 };
 DECLARE_MODES(canon_MULTIPASS_MP830,0);
 
+static const canon_mode_t canon_MULTIPASS_MP970_modes[] = {
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(7_C4M4Y4c4m4k4K4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,1},
+};
+DECLARE_MODES(canon_MULTIPASS_MP970,0);
+
 static const canon_mode_t canon_PIXMA_iX5000_modes[] = {
   {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
