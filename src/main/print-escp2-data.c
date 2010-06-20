@@ -40,15 +40,15 @@ typedef struct
 static const escp2_printer_attr_t escp2_printer_attrs[] =
 {
   { "command_mode",		0, 4 },
-  { "zero_margin",		4, 2 },
-  { "variable_mode",		6, 1 },
-  { "graymode",		 	7, 1 },
-  { "fast_360",			8, 1 },
-  { "send_zero_advance",        9, 1 },
-  { "supports_ink_change",     10, 1 },
-  { "packet_mode",             11, 1 },
-  { "interchangeable_ink",     12, 1 },
-  { "envelope_landscape",      13, 1 },
+  { "zero_margin",		4, 3 },
+  { "variable_mode",		7, 1 },
+  { "graymode",		 	8, 1 },
+  { "fast_360",			9, 1 },
+  { "send_zero_advance",       10, 1 },
+  { "supports_ink_change",     11, 1 },
+  { "packet_mode",             12, 1 },
+  { "interchangeable_ink",     13, 1 },
+  { "envelope_landscape",      14, 1 },
 };
 
 static stpi_escp2_printer_t *escp2_model_capabilities;
@@ -151,6 +151,8 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 		    p->flags |= MODEL_ZEROMARGIN_YES;
 		  else if (!strcmp(val, "Full"))
 		    p->flags |= MODEL_ZEROMARGIN_FULL;
+		  else if (!strcmp(val, "VerticalRestricted"))
+		    p->flags |= MODEL_ZEROMARGIN_RESTR;
 		  else if (!strcmp(val, "HorizontalOnly"))
 		    p->flags |= MODEL_ZEROMARGIN_H_ONLY;
 		}

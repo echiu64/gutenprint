@@ -264,43 +264,44 @@ typedef struct
 #define MODEL_COMMAND_2000	0x2ul /* ESC i printers with extended ESC(c */
 #define MODEL_COMMAND_PRO	0x3ul /* Stylus Pro printers */
 
-#define MODEL_ZEROMARGIN_MASK	0x30ul /* Does this printer support */
+#define MODEL_ZEROMARGIN_MASK	0x70ul /* Does this printer support */
 #define MODEL_ZEROMARGIN_NO	0x00ul /* zero margin mode? */
 #define MODEL_ZEROMARGIN_YES	0x10ul /* (print beyond bottom of page) */
 #define MODEL_ZEROMARGIN_FULL	0x20ul /* (do not print beyond bottom) */
-#define MODEL_ZEROMARGIN_H_ONLY	0x30ul /* (no special treatment for vertical) */
+#define MODEL_ZEROMARGIN_RESTR	0x30ul /* (no special treatment for vertical) */
+#define MODEL_ZEROMARGIN_H_ONLY	0x40ul /* (borderless only horizontal) */
 
-#define MODEL_VARIABLE_DOT_MASK	0x40ul /* Does this printer support var */
+#define MODEL_VARIABLE_DOT_MASK	0x80ul /* Does this printer support var */
 #define MODEL_VARIABLE_NO	0x00ul /* dot size printing? The newest */
-#define MODEL_VARIABLE_YES	0x40ul /* printers support multiple modes */
+#define MODEL_VARIABLE_YES	0x80ul /* printers support multiple modes */
 
-#define MODEL_GRAYMODE_MASK	0x80ul /* Does this printer support special */
-#define MODEL_GRAYMODE_NO	0x00ul /* fast black printing? */
-#define MODEL_GRAYMODE_YES	0x80ul
+#define MODEL_GRAYMODE_MASK	0x100ul /* Does this printer support special */
+#define MODEL_GRAYMODE_NO	0x000ul /* fast black printing? */
+#define MODEL_GRAYMODE_YES	0x100ul
 
-#define MODEL_FAST_360_MASK	0x100ul
+#define MODEL_FAST_360_MASK	0x200ul
 #define MODEL_FAST_360_NO	0x000ul
-#define MODEL_FAST_360_YES	0x100ul
+#define MODEL_FAST_360_YES	0x200ul
 
-#define MODEL_SEND_ZERO_ADVANCE_MASK	0x200ul
+#define MODEL_SEND_ZERO_ADVANCE_MASK	0x400ul
 #define MODEL_SEND_ZERO_ADVANCE_NO	0x000ul
-#define MODEL_SEND_ZERO_ADVANCE_YES	0x200ul
+#define MODEL_SEND_ZERO_ADVANCE_YES	0x400ul
 
-#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x400ul
+#define MODEL_SUPPORTS_INK_CHANGE_MASK	0x800ul
 #define MODEL_SUPPORTS_INK_CHANGE_NO	0x000ul
-#define MODEL_SUPPORTS_INK_CHANGE_YES	0x400ul
+#define MODEL_SUPPORTS_INK_CHANGE_YES	0x800ul
 
-#define MODEL_PACKET_MODE_MASK	0x800ul
-#define MODEL_PACKET_MODE_NO	0x000ul
-#define MODEL_PACKET_MODE_YES	0x800ul
+#define MODEL_PACKET_MODE_MASK	0x1000ul
+#define MODEL_PACKET_MODE_NO	0x0000ul
+#define MODEL_PACKET_MODE_YES	0x1000ul
 
-#define MODEL_INTERCHANGEABLE_INK_MASK	0x1000ul
+#define MODEL_INTERCHANGEABLE_INK_MASK	0x2000ul
 #define MODEL_INTERCHANGEABLE_INK_NO	0x0000ul
-#define MODEL_INTERCHANGEABLE_INK_YES	0x1000ul
+#define MODEL_INTERCHANGEABLE_INK_YES	0x2000ul
 
-#define MODEL_ENVELOPE_LANDSCAPE_MASK	0x2000ul
+#define MODEL_ENVELOPE_LANDSCAPE_MASK	0x4000ul
 #define MODEL_ENVELOPE_LANDSCAPE_NO	0x0000ul
-#define MODEL_ENVELOPE_LANDSCAPE_YES	0x2000ul
+#define MODEL_ENVELOPE_LANDSCAPE_YES	0x4000ul
 
 typedef enum
 {

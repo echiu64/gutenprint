@@ -1389,7 +1389,8 @@ supports_borderless(const stp_vars_t *v)
 {
   return (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_YES) ||
 	  stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_FULL) ||
-	  stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY));
+	  stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY) ||
+	  stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_RESTR));
 }
 
 static int
@@ -2950,15 +2951,23 @@ internal_imageable_area(const stp_vars_t *v, int use_paper_margins,
 		  right_margin = delta; /* positioned correctly */
 		  if (width - right_margin - 3 > width_limit)
 		    right_margin = width - width_limit - 3;
-		  top_margin = -7;
-		  bottom_margin = -7;
+		  if (! stp_escp2_has_cap(v, MODEL_ZEROMARGIN,
+					  MODEL_ZEROMARGIN_H_ONLY))
+		    {
+		      top_margin = -7;
+		      bottom_margin = -7;
+		    }
 		}
 	      else
 		{
 		  left_margin = 0;
 		  right_margin = 0;
-		  top_margin = 0;
-		  bottom_margin = 0;
+		  if (! stp_escp2_has_cap(v, MODEL_ZEROMARGIN,
+					  MODEL_ZEROMARGIN_H_ONLY))
+		    {
+		      top_margin = 0;
+		      bottom_margin = 0;
+		    }
 		}
 	    }
 	}
@@ -4053,7 +4062,7 @@ setup_page(stp_vars_t *v)
 	escp2_zero_margin_offset(v) * pd->page_management_units /
 	escp2_base_separation(v);
     }
-  else if (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_H_ONLY) &&
+  else if (stp_escp2_has_cap(v, MODEL_ZEROMARGIN, MODEL_ZEROMARGIN_RESTR) &&
 	   (stp_get_boolean_parameter(v, "FullBleed")) &&
 	   ((!input_slot || !(input_slot->is_cd))))
     {
