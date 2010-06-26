@@ -86,6 +86,8 @@ extern void stp_zprintf(const stp_vars_t *v, const char *format, ...)
 extern void stp_zfwrite(const char *buf, size_t bytes, size_t nitems,
 			const stp_vars_t *v);
 
+extern void stp_write_raw(const stp_raw_t *raw, const stp_vars_t *v);
+
 extern void stp_putc(int ch, const stp_vars_t *v);
 extern void stp_put16_le(unsigned short sh, const stp_vars_t *v);
 extern void stp_put16_be(unsigned short sh, const stp_vars_t *v);

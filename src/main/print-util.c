@@ -125,6 +125,12 @@ stp_zfwrite(const char *buf, size_t bytes, size_t nitems, const stp_vars_t *v)
 }
 
 void
+stp_write_raw(const stp_raw_t *raw, const stp_vars_t *v)
+{
+  (stp_get_outfunc(v))((void *)(stp_get_outdata(v)), raw->data, raw->bytes);
+}
+
+void
 stp_putc(int ch, const stp_vars_t *v)
 {
   unsigned char a = (unsigned char) ch;

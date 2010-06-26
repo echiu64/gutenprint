@@ -266,7 +266,7 @@ stp_get_printer_by_device_id(const char *device_id)
   printer_item = stp_list_get_start(printer_list);
   while (printer_item)
     {
-      if (strcmp(((const stp_printer_t *) stp_list_item_get_data(printer_item)),
+      if (strcmp(((const stp_printer_t *) stp_list_item_get_data(printer_item))->device_id,
 		 device_id) == 0)
 	return ((const stp_printer_t *) stp_list_item_get_data(printer_item));
       printer_item = stp_list_item_next(printer_item);

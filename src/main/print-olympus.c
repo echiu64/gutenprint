@@ -257,8 +257,7 @@ LIST(dyesub_printsize_list_t, p10_printsize_list, dyesub_printsize_t, p10_prints
 static void p10_printer_init_func(stp_vars_t *v)
 {
   stp_zfwrite("\033R\033M\033S\2\033N\1\033D\1\033Y", 1, 15, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-		  (privdata.laminate->seq).bytes, v); /* laminate */
+  stp_write_raw(&(privdata.laminate->seq), v); /* laminate */
   stp_zfwrite("\033Z\0", 1, 3, v);
 }
 
@@ -592,8 +591,7 @@ static void p440_printer_init_func(stp_vars_t *v)
 
   stp_zprintf(v, "\033FP"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033Y");
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-		  (privdata.laminate->seq).bytes, v); /* laminate */ 
+  stp_write_raw(&(privdata.laminate->seq), v); /* laminate */ 
   dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033FC"); dyesub_nputc(v, '\0', 61);
   stp_zprintf(v, "\033ZF");
@@ -1142,8 +1140,7 @@ static void updr100_printer_init_func(stp_vars_t *v)
   stp_put32_le(dim1, v);
   stp_put32_le(dim2, v);
   stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-		(privdata.laminate->seq).bytes, v); /* laminate pattern */
+  stp_write_raw(&(privdata.laminate->seq), v); /* laminate pattern */
   dyesub_nputc(v, '\0', 13);
   stp_zfwrite("\x01\x00\x01\x00\x03", 1, 5, v);
   dyesub_nputc(v, '\0', 19);
