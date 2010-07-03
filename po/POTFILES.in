@@ -47,7 +47,6 @@ src/main/escp2-papers.c
 src/main/escp2-resolutions.c
 src/main/xml.c
 src/main/generic-options.c
-src/main/util.h
 src/main/print-escp2.h
 src/main/generic-options.h
 src/main/color-conversion.h
