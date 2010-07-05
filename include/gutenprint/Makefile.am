@@ -36,7 +36,6 @@ pkginclude_HEADERS = \
 	curve-cache.h \
 	curve.h \
 	dither.h \
-	sequence.h \
 	image.h \
 	list.h \
 	module.h \
