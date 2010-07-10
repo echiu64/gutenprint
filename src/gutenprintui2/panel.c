@@ -46,7 +46,7 @@
  */
 static int preview_size_vert = 360;
 static int preview_size_horiz = 300;
-static const int minimum_image_percent = 5.0;
+static gdouble minimum_image_percent = 5.0;
 static const int thumbnail_hintw = 128;
 static const int thumbnail_hinth = 128;
 
@@ -2686,6 +2686,11 @@ compute_scaling_limits(gdouble *min_ppi_scaling, gdouble *max_ppi_scaling)
     }
 
   *max_ppi_scaling = *min_ppi_scaling * 100 / minimum_image_percent;
+  if (*max_ppi_scaling < image_xres)
+    *max_ppi_scaling = image_xres;
+  if (*max_ppi_scaling < image_yres)
+    *max_ppi_scaling = image_yres;
+  minimum_image_percent = *min_ppi_scaling * 100 / *max_ppi_scaling;
 }
 
 /*
