@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.5, a stable release of Gutenprint 5.2.  This
+Welcome to Gutenprint 5.2.6, a stable release of Gutenprint 5.2.  This
 release has bug fixes, support for some new printers, and a few new
 features over 5.2.4.  Please read these release notes carefully.
 
@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.5
         * Changes from 5.2.4
         * Changes from 5.2.3
         * Changes from 5.2.2
@@ -248,6 +249,15 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.5
+
+   1) New printers supported in this release:
+
+      Canon PIXMA MP970
+
+   2) Fix printing to Epson Stylus S20, S21, T20, and T21.
+   
 
 * Changes from 5.2.4
 
