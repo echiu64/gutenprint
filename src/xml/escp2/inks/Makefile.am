@@ -59,6 +59,7 @@ pkgxmldata_DATA =				\
 	pro_pigment.xml				\
 	pro_ultrachrome.xml			\
 	pro_ultrachrome_k3.xml			\
+	pro_ultrachrome_k3v.xml			\
 	standard.xml				\
 	standard_gen0.xml			\
 	ultrachrome.xml				\

@@ -34,6 +34,7 @@ pkgxmldata_DATA =				\
 	cutter_roll_feed.xml			\
 	default.xml				\
 	pro_roll_feed.xml			\
+	pro_cutter_roll_feed.xml		\
 	r1800.xml				\
 	r2400.xml				\
 	r2880.xml				\

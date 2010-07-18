@@ -20,16 +20,17 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="88">
- <media src="escp2/media/pro_ultrachrome_k3v.xml"/>
- <inputSlots src="escp2/inputslots/pro_cutter_roll_feed.xml"/>
+<escp2:model id="103">
+ <media src="escp2/media/pro_ultrachrome_k3.xml"/>
+ <inputSlots src="escp2/inputslots/pro_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
- <inkGroup src="escp2/inks/pro_ultrachrome_k3v.xml"/>
+ <inkGroup src="escp2/inks/pro_ultrachrome_k3.xml"/>
  <printerWeaves src="escp2/weaves/pro7600.xml"/>
+ <verticalBorderlessSequence>SN\003\000\000\011\001</verticalBorderlessSequence>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
  <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
  <commandSet>Pro</commandSet>
- <borderless>HorizontalOnly</borderless>
+ <borderless>Yes</borderless>
  <supportsVariableDropsizes/>
  <hasFastGraymode/>
  <sendZeroAdvance/>
@@ -41,34 +42,32 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>1</NozzleSeparation>
  </headConfiguration>
- <physicalChannels>8</physicalChannels>
+ <physicalChannels>7</physicalChannels>
  <baseSeparation>360</baseSeparation>
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 180</minimumResolution>
  <maximumResolution>2880 1440</maximumResolution>
  <separationRows>1</separationRows>
- <zeroMarginOffset>43</zeroMarginOffset>
- <microLeftMargin>5</microLeftMargin>
+ <zeroMarginOffset>80</zeroMarginOffset>
+ <microLeftMargin>42</microLeftMargin>
  <minHorizontalAlignment>1</minHorizontalAlignment>
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
  <minimumMediaSize>504 504</minimumMediaSize>
- <maximumMediaSize>4608 86400</maximumMediaSize>
- <maximumImageableArea>4608 86400</maximumImageableArea>
+ <maximumMediaSize>1728 86400</maximumMediaSize>
+ <maximumImageableArea>1728 86400</maximumImageableArea>
  <margins interleave="soft" media="sheet">9 9 9 40</margins>
  <margins interleave="printer" media="sheet">9 9 9 40</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
  <AlignmentChoices>3 15 0 0</AlignmentChoices>
  <ChannelNames>
-  <ChannelName translate="name" name="Light Light Black"/>
-  <ChannelName translate="name" name="Vivid Light Magenta"/>
-  <ChannelName translate="name" name="Light Cyan"/>
-  <ChannelName translate="name" name="Light Black"/>
   <ChannelName translate="name" name="Black"/>
   <ChannelName translate="name" name="Cyan"/>
-  <ChannelName translate="name" name="Vivid Magenta"/>
+  <ChannelName translate="name" name="Magenta"/>
   <ChannelName translate="name" name="Yellow"/>
+  <ChannelName translate="name" name="Light Cyan"/>
+  <ChannelName translate="name" name="Light Magenta"/>
  </ChannelNames>
  <resolutions>
   <resolution translate="text" name="360x180dpi" text="360 x 180 DPI Draft">

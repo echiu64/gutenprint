@@ -255,8 +255,18 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    1) New printers supported in this release:
 
       Canon PIXMA MP970
+      EPSON Stylus Pro 4800
+      EPSON Stylus Pro 4880
+      EPSON Stylus Pro 11800
 
    2) Fix printing to Epson Stylus S20, S21, T20, and T21.
+
+   3) Correct printer definitions of EPSON Stylus Pro 7800 and 9800
+      (to use Ultrachrome K3 rather than Ultrachrome inks and media
+      definitions).
+
+   4) Adjusted the printer definitions of the Epson Stylus Pro 7880,
+      9880, and 11880 to be consistent with new definition of 4880.
    
 
 * Changes from 5.2.4

@@ -4,7 +4,7 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.xsd">
 <copyright>
- *   Copyright 2008 Robert Krawitz (rlk@alum.mit.edu)
+ *   Copyright 2010 Lutz Sammer (johns98@gmx.net)
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="88">
+<escp2:model id="102">
  <media src="escp2/media/pro_ultrachrome_k3v.xml"/>
  <inputSlots src="escp2/inputslots/pro_cutter_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -52,9 +52,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <minHorizontalAlignment>1</minHorizontalAlignment>
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
- <minimumMediaSize>504 504</minimumMediaSize>
- <maximumMediaSize>4608 86400</maximumMediaSize>
- <maximumImageableArea>4608 86400</maximumImageableArea>
+ <minimumMediaSize>144 144</minimumMediaSize>
+ <maximumMediaSize>1224 86400</maximumMediaSize>
+ <maximumImageableArea>1224 86400</maximumImageableArea>
  <margins interleave="soft" media="sheet">9 9 9 40</margins>
  <margins interleave="printer" media="sheet">9 9 9 40</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>

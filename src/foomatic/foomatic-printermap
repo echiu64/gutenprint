@@ -505,6 +505,8 @@
 #gptofoo escp2-rx685 printer/Epson-Stylus_Photo_RX685
 #gptofoo escp2-rx690 printer/Epson-Stylus_Photo_RX690
 #gptofoo escp2-rx700 printer/Epson-Stylus_Photo_RX700
+#gptofoo escp2-4800 printer/Epson-Stylus_Pro_4800
+#gptofoo escp2-4880 printer/Epson-Stylus_Pro_4880
 #gptofoo escp2-5000 printer/Epson-Stylus_Pro_5000
 #gptofoo escp2-5500 printer/Epson-Stylus_Pro_5500
 #gptofoo escp2-7000 printer/Epson-Stylus_Pro_7000
@@ -518,6 +520,7 @@
 #gptofoo escp2-9800 printer/Epson-Stylus_Pro_9800
 #gptofoo escp2-9880 printer/Epson-Stylus_Pro_9880
 #gptofoo escp2-10000 printer/Epson-Stylus_Pro_10000
+#gptofoo escp2-11800 printer/Epson-Stylus_Pro_11800
 #gptofoo escp2-11880 printer/Epson-Stylus_Pro_11880
 #gptofoo escp2-pro-xl printer/Epson-Stylus_Pro_XL
 #gptofoo escp2-scan2000 printer/Epson-Stylus_Scan_2000
