@@ -110,8 +110,7 @@ libgutenprint_headers =				\
 	dither-impl.h				\
 	dither-inlined-functions.h		\
 	generic-options.h			\
-	gutenprint-internal.h			\
-	util.h
+	gutenprint-internal.h
 
 libgutenprint_la_SOURCES =			\
 	array.c					\
