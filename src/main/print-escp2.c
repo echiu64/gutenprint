@@ -3904,7 +3904,10 @@ setup_printer_weave_parameters(stp_vars_t *v)
   pd->nozzle_separation = 1;
   pd->nozzle_start = 0;
   pd->min_nozzles = 1;
-  pd->use_black_parameters = 0;
+  if (pd->physical_channels == 1)
+    pd->use_black_parameters = 1;
+  else
+    pd->use_black_parameters = 0;
   pd->extra_vertical_passes = 1;
 }
 
@@ -4142,7 +4145,7 @@ setup_page(stp_vars_t *v)
   pd->image_left_position = pd->image_left * pd->micro_units / 72;
   pd->zero_margin_offset = escp2_zero_margin_offset(v);
   if (supports_borderless(v) &&
-      pd->advanced_command_set && pd->command_set != MODEL_COMMAND_PRO &&
+      pd->advanced_command_set &&
       ((!input_slot || !(input_slot->is_cd)) &&
        stp_get_boolean_parameter(v, "FullBleed")))
     {
