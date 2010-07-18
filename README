@@ -120,7 +120,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.5 generated on 23 Dec 2009
+	  Release: gutenprint 5.2.6 generated on 18 Jul 2010
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -156,7 +156,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux linuxhome 2.6.27.39-0.2-default #1 SMP 2009-11-23 12:57:38 +0100 x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux dsl092-065-009 2.6.27.45-0.1-default #1 SMP 2010-02-22 16:49:47 +0100 x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS, GIMP, Foomatic, and Ghostscript components require that
