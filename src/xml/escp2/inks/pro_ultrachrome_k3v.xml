@@ -53,7 +53,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <SubchannelScaleParam name="LightGrayScale"/>
     </subchannel>
    </channel>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -102,7 +102,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <SubchannelScaleParam name="GrayScale"/>
     </subchannel>
    </channel>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -144,7 +144,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -181,7 +181,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <InkName translate="text" name="PhotoCMY" text="Five Color Photo Composite" InkID="CcMmYK">
   <Channels>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -345,7 +345,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <SubchannelScaleParam name="LightGrayScale"/>
     </subchannel>
    </channel>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -394,7 +394,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <SubchannelScaleParam name="GrayScale"/>
     </subchannel>
    </channel>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -436,7 +436,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <ChannelDensityParam name="BlackDensity"/>
     </subchannel>
    </channel>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
@@ -473,7 +473,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 
  <InkName translate="text" name="PhotoCMY" text="Five Color Photo Composite" InkID="CcMmYK">
   <Channels>
-   <channel name="f360x_photo_cyan" index="1">
+   <channel name="photo_cyan" index="1">
     <HueCurveParam name="CyanHueCurve"/>
     <subchannel color="2" subchannel="0" name="Cyan" text="Cyan" translate="text">
      <ChannelDensityParam name="CyanDensity"/>
