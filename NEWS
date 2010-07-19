@@ -267,6 +267,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    4) Adjusted the printer definitions of the Epson Stylus Pro 7880,
       9880, and 11880 to be consistent with new definition of 4880.
+
+   5) Correct printer definition of Canon ImageRunner 330s (large
+      format).
+
+   6) Add CD Allow Other Media Sizes option to Epson printers to
+      permit printing to other media sizes when using third party
+      trays.
+
+   7) Correct the behavior of scan and page dry times for Epson Stylus
+      Pro printers.
+
+   8) The Enhanced Print plugin for GIMP now allows printing very
+      small images at their correct sizes.
+
+   9) A Finnish translation has been added.
    
 
 * Changes from 5.2.4
