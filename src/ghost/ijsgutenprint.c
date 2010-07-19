@@ -41,16 +41,16 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 
 
-static int stp_debug = 1;
+static int suppress_messages = 0;
 volatile int SDEBUG = 1;
 static int job_aborted = 0;
 
 #define STP_DEBUG(x)				\
 do						\
 {						\
-  if (stp_debug || getenv("STP_DEBUG"))		\
+  if (!suppress_messages)			\
     fprintf(stderr, "DEBUG: ");			\
-  if (stp_debug || getenv("STP_DEBUG"))		\
+  if (!suppress_messages)			\
     x;						\
 } while (0)
 
@@ -1053,7 +1053,7 @@ stp_dbg(const char *msg, const stp_vars_t *v)
   stp_parameter_list_t params = stp_get_parameter_list(v);
   int count = stp_parameter_list_count(params);
   int i;
-  if (!stp_debug && !getenv("STP_DEBUG"))
+  if (suppress_messages)
     return;
   fprintf(stderr, "DEBUG: %s\n", msg);
   fprintf(stderr, "DEBUG: ijsgutenprint: Settings: Model %s\n", stp_get_driver(v));
@@ -1246,6 +1246,9 @@ main (int argc, char **argv)
   FILE *f = NULL;
   int l, t, r, b, w, h;
   int width, height;
+
+  if (getenv("STP_SUPPRESS_MESSAGES"))
+    suppress_messages = 1;
 
   if (getenv("STP_DEBUG_STARTUP"))
     while (SDEBUG)
