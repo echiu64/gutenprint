@@ -23,7 +23,8 @@ PCL printers for use with
 Gimp-Print 4.2.7 (the last Gimp-Print 4.2 release) is still available
 for distribution, but is no longer supported.  You may install both
 Gimp-Print 4.2.7 and Gutenprint 5.0, 5.1, and/or 5.2 concurrently and
-choose which to use.</p>
+choose which to use.  We recommend that all users use the latest 5.2
+release; we are not going to do any further 5.0 releases.</p>
 
 <h2><strong><em><font color=#ff0000>Macintosh OS X
 Users!</font></em></strong></h2>
@@ -35,15 +36,66 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 10.5 "Leopard" and 10.6 "Snow Leopard", and provides direct download
 links.</p>
 
+<H2><font color="#ff0000">Gutenprint 5.2.6-pre1 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of July 18,
+2010!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.2.6-pre1, a prerelease of 5.2.6.  This release
+offers additional support for Epson Stylus Pro printers, along with
+some changes for other Epson printers.  We particularly encourage
+users of the following printers to test this release:</p>
+
+<ul>
+
+<li><b>Epson Stylus Pro 4800, 4880, 7600, 7800, 7880, 9600, 9800, 9880,
+11800, 11880</b>:</li>
+
+<ul>
+
+<li>Test for correct functionality and output in general at different
+resolutions.</li>
+
+<li>Test black and white with Ink Types of Three Color Composite, Four
+Color Standard, Five Color Photo Composite, and Six Color Photo.</li>
+
+<li>Test full bleed in both color and black and white mode, and
+specifically check horizontal positioning of the output compared to
+5.2.5.</li>
+
+</ul>
+
+<li><b>Epson Stylus Pro 3880</b>: test that the printer functions correctly
+and produces good output using the Stylus Pro 4880 driver (obviously
+roll feed functionality won't work).</li>
+
+<li><b>Epson Stylus Pro 3800</b>: test that the printer functions correctly
+and produces good output using the Stylus Pro 4800 driver (obviously
+roll feed functionality won't work).</li>
+
+<li><b>Epson Stylus Color 3000, Stylus Color 440</b>: test black and white at
+resolutions 360x90, 180, 360x180, and 360 MicroWeave (360x90 isn't
+available on the SC3000).  Also, test Quality settings of Fast
+Economy, Economy, and Draft.</li>
+
+<li><b>Epson Stylus Color</b>: test black and white mode at all resolutions
+(use defaults for other settings).</li>
+
+</ul>
+
+<p>This package is available in source form, and will shortly be
+available in binary installer form for Macintosh OS X (10.3 and
+above).  <a
+href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
+can read the release notes and download it here</a>.  </p>
+
 <H2><font color="#ff0000">Gutenprint 5.2.5 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of February 11,
 2010!</strong></em></font> The Gutenprint project is pleased to
 announce Gutenprint 5.2.5, a stable release of 5.2.  This release
 offers several fixes, new features, and support for new printers over
-5.2.5.  This package is available in source form, and will shortly be
-available in binary installer form for Macintosh OS X (10.3 and
-above).  <a
+5.2.4.  This package is available in source form, and also in binary
+installer form for Macintosh OS X (10.3 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
@@ -53,7 +105,7 @@ can read the release notes and download it here</a>.  </p>
 2009!</strong></em></font> The Gutenprint project is pleased to
 announce Gutenprint 5.2.4, a stable release of 5.2.  This release
 offers several fixes, new features, and support for new printers for
-5.2.4.  This package is available in source form, and in binary
+5.2.3.  This package is available in source form, and in binary
 installer form for Macintosh OS X (10.3 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
