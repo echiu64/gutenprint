@@ -82,9 +82,8 @@ Economy, Economy, and Draft.</li>
 
 </ul>
 
-<p>This package is available in source form, and will shortly be
-available in binary installer form for Macintosh OS X (10.3 and
-above).  <a
+<p>This package is available in source form, and also in binary
+installer form for Macintosh OS X (10.3 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
 
