@@ -194,6 +194,7 @@
         <parameter type="float" name="Gamma">0.470</parameter>
         <parameter type="float" name="BlackDensity">0.8</parameter>
       </parameters>
+      <printer translate="name" name="Epson Artisan 50" driver="escp2-artisan50" manufacturer="Epson" model="97" parameters="claria_params" />
       <printer translate="name" name="Epson Artisan 700" driver="escp2-artisan700" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Artisan 710" driver="escp2-artisan710" manufacturer="Epson" model="96" parameters="claria_params" />
       <printer translate="name" name="Epson Artisan 800" driver="escp2-artisan800" manufacturer="Epson" model="96" parameters="claria_params" />
@@ -327,6 +328,8 @@
       <printer translate="name" name="Epson Stylus Photo 2000P" driver="escp2-2000" manufacturer="Epson" model="26" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 2100" driver="escp2-2100" manufacturer="Epson" model="47" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo 2200" driver="escp2-2200" manufacturer="Epson" model="47" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus Photo P50" driver="escp2-p50" manufacturer="Epson" model="97" parameters="claria_params" />
+      <printer translate="name" name="Epson Stylus Photo PX650" driver="escp2-px650" manufacturer="Epson" model="97" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus Photo R200" deviceid="MFG:EPSON;MDL:Stylus Photo R200;DES:EPSON Stylus Photo R200;CMD:ESCPL2,BDC,D4;" driver="escp2-r200" manufacturer="Epson" model="63" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R210" deviceid="MFG:EPSON;MDL:Stylus Photo R210;DES:EPSON Stylus Photo R210;CMD:ESCPL2,BDC,D4;" driver="escp2-r210" manufacturer="Epson" model="63" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus Photo R220" deviceid="MFG:EPSON;MDL:Stylus Photo R220;DES:EPSON Stylus Photo R220;CMD:ESCPL2,BDC,D4;" driver="escp2-r220" manufacturer="Epson" model="84" parameters="standard_params" />
@@ -499,6 +502,8 @@
       <printer translate="name" name="Epson Stylus T30" driver="escp2-t30" manufacturer="Epson" model="92" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus T40W" driver="escp2-t40w" manufacturer="Epson" model="85" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus T50" driver="escp2-t50" manufacturer="Epson" model="97" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus T59" driver="escp2-t59" manufacturer="Epson" model="97" parameters="claria_params" />
+      <printer translate="name" name="Epson Stylus T60" driver="escp2-t60" manufacturer="Epson" model="97" parameters="claria_params" />
       <printer translate="name" name="Epson Stylus TX100" driver="escp2-tx100" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX101" driver="escp2-tx101" manufacturer="Epson" model="94" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX102" driver="escp2-tx102" manufacturer="Epson" model="94" parameters="standard_params" />
@@ -519,6 +524,7 @@
       <printer translate="name" name="Epson Stylus TX610FW" driver="escp2-tx610fw" manufacturer="Epson" model="92" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX615" driver="escp2-tx615" manufacturer="Epson" model="92" parameters="standard_params" />
       <printer translate="name" name="Epson Stylus TX650" driver="escp2-tx650" manufacturer="Epson" model="97" parameters="standard_params" />
+      <printer translate="name" name="Epson Stylus TX659" driver="escp2-tx659" manufacturer="Epson" model="97" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate" driver="escp2-picmate" manufacturer="Epson" model="73" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Dash" driver="escp2-picmatedash" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer translate="name" name="Epson PictureMate Deluxe" driver="escp2-picmated" manufacturer="Epson" model="73" parameters="standard_params" />
@@ -559,6 +565,8 @@
       <printer translate="name" name="Epson E 720" driver="escp2-e720" manufacturer="Epson" model="86" parameters="standard_params" />
       <printer translate="name" name="Epson EM 900C" driver="escp2-em900c" manufacturer="Epson" model="13" parameters="standard_params" />
       <printer translate="name" name="Epson EM 930C" driver="escp2-em930c" manufacturer="Epson" model="34" parameters="standard_params" />
+      <printer translate="name" name="Epson EP 302" driver="escp2-ep302" manufacturer="Epson" model="96" parameters="standard_params" />
+      <printer translate="name" name="Epson EP 702A" driver="escp2-ep702a" manufacturer="Epson" model="96" parameters="standard_params" />
       <printer translate="name" name="Epson EP 801A" driver="escp2-ep801a" manufacturer="Epson" model="96" parameters="standard_params" />
       <printer translate="name" name="Epson EP 901A" driver="escp2-ep901a" manufacturer="Epson" model="96" parameters="standard_params" />
       <printer translate="name" name="Epson EP 901F" driver="escp2-ep901f" manufacturer="Epson" model="96" parameters="standard_params" />

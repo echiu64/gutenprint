@@ -89,12 +89,12 @@ create a driver that may be built much more easily than traditional
 Ghostscript drivers.  This driver should be used in conjunction with
 Foomatic to configure printers.
 
-Users of Macintosh 10.3 (Panther), 10.4 (Tiger), and 10.5 (Leopard)
-can use this package, as the printing system is based on CUPS.  For
-ease of installation, a pre-built package with installer is normally
-supplied a few days after the release of the source package.  We
-strongly recommend that OS X users use the pre-built package rather
-than attempt to build it themselves.
+Users of Macintosh 10.3 (Panther), 10.4 (Tiger) 10.5 (Leopard), and
+10.6 (Snow Leopard) can use this package, as the printing system is
+based on CUPS.  For ease of installation, a pre-built package with
+installer is normally supplied a few days after the release of the
+source package.  We strongly recommend that OS X users use the
+pre-built package rather than attempt to build it themselves.
 
 The README file included with this package provides full instructions
 for building and installing Gutenprint.
@@ -255,9 +255,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    1) New printers supported in this release:
 
       Canon PIXMA MP970
+      EPSON Artisan 50
+      EPSON EP-302
+      EPSON EP-702A
+      EPSON Stylus Photo P50
       EPSON Stylus Pro 4800
       EPSON Stylus Pro 4880
       EPSON Stylus Pro 11800
+      EPSON Stylus T59
+      EPSON Stylus T60
+      EPSON Stylus TX659
 
    2) Fix printing to Epson Stylus S20, S21, T20, and T21.
 
@@ -870,6 +877,7 @@ D) CHANGES TO THE CUPS INTERFACE
 	el	Greek
 	en_GB	English (UK)
 	es	Spanish
+	fi	Finnish
 	fr	French
 	hu	Hungarian
 	ja	Japanese
