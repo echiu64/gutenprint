@@ -37,6 +37,7 @@ my $duplex_pages = 4;
 my $skip_resolutions = 0;
 my $quiet = 0;
 my $single = 0;
+my $rerun = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -45,6 +46,7 @@ my %param_types;
 my %param_classes;
 my %param_levels;
 my %stp_float_values;
+my %rerun_cases;
 
 GetOptions("v+"  => \$valgrind,
 	   "c"   => \$callgrind,
@@ -64,6 +66,7 @@ GetOptions("v+"  => \$valgrind,
 	   "d=s" => \@default_options,
 	   "m:s" => \$calc_md5_dir,
 	   "M:s" => \$calc_md5_file,
+	   "X"   => \$rerun,
 	   "h"   => \$help);
 
 sub print_help_and_exit() {
@@ -109,6 +112,7 @@ Usage: run-testpattern-2 [opts] [model ...]
     -s              Skip duplicate printers (with the same model number
                     in printers.xml)
     -S              Run a separate testpattern command for each printer
+    -X              Repeat specified cases listed on standard input
     -v[v[v[v]]]     Use valgrind.  Number of -v options controls usage:
                     -v    Basic valgrind checking, no leak checking
                     -vv   Additional leak checking
@@ -188,7 +192,7 @@ sub set_opt($$$) {
 	push @extras, "parameter_curve \"$opt\" \"$val\";\n";
     } else {
 	push @extras, "parameter \"$opt\" \"$val\";\n";
-    } 
+    }
 }
 
 sub set_message($) {
@@ -436,7 +440,7 @@ sub do_printer($$) {
 	    return;
 	}
     }
-	    
+
     foreach $key (@special_options) {
 	my $nkey = build_key($key, $printer);
 	if ($nkey ne "") {
@@ -469,15 +473,18 @@ sub do_printer($$) {
 		@global_messages = ();
 		if ($first_time) {
 		    set_global_message("$printer\n");
-		    $first_time = 0;
 		}
 		set_opt("PrintingMode", $pmode, $printer);
 		set_opt("Resolution", $resolution, $printer);
 		map { set_opt($_, $base_settings{$_}, $printer)} keys %base_settings;
-		do_output("${printer}_PrintingMode_${pmode}_Resolution_${resolution}");
-		set_message("    ${pmode}+${resolution}");
-		my $output = print_one_testpattern($printer);
-		do_print( $output, $fh );
+		my ($case) = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
+		if (! $rerun || $rerun_cases{$case}) {
+		    $first_time = 0;
+		    do_output($case);
+		    set_message("    ${pmode}+${resolution}");
+		    my $output = print_one_testpattern($printer);
+		    do_print( $output, $fh );
+		}
 	    }
 	}
 	foreach $key (keys %opt_vals) {
@@ -529,18 +536,34 @@ sub do_printer($$) {
 		    } keys %base_settings;
 		    my ($mstring) = join "_", @mvals;
 		    my ($ostring) = join "+", @ovals;
+		    my $case;
 		    if ($use_min_res) {
-			do_output("${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${mstring}");
-			set_message("    ${ostring}+${pmode}+${min_res_name}");
+			$case = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${mstring}";
 		    } else {
-			do_output("${printer}_PrintingMode_${pmode}_${mstring}");
-			set_message("    ${ostring}+${pmode}");
+			$case = "${printer}_PrintingMode_${pmode}_${mstring}";
 		    }
-		    my $output = print_one_testpattern($printer, $rawval);
-		    do_print( $output, $fh );
+		    if (! $rerun || $rerun_cases{$case}) {
+			do_output($case);
+			if ($use_min_res) {
+			    set_message("    ${ostring}+${pmode}+${min_res_name}");
+			} else {
+			    set_message("    ${ostring}+${pmode}");
+			}
+			my $output = print_one_testpattern($printer, $rawval);
+			do_print( $output, $fh );
+		    }
 		}
 	    }
 	}
+    }
+}
+
+if ($rerun) {
+    while (<>) {
+	chomp;
+	s/^[^a-zA-Z]*//;
+	s/\.prn//;
+	$rerun_cases{$_} = 1;
     }
 }
 
