@@ -132,21 +132,13 @@ load_channel(stp_mxml_node_t *node, stp_mxml_node_t *root, ink_channel_t *icl)
 		{
 		  cchild = stp_mxmlFindElement(root, root, "curve", "name",
 					       cref, STP_MXML_DESCEND);
-		  if (!cchild)
-		    {
-		      stp_erprintf("Cannot find curve named '%s'!\n", cref);
-		      stp_abort();
-		    }
+		  STPI_ASSERT(cchild, NULL);
 		}
 	      else
 		{
 		  while (cchild && cchild->type != STP_MXML_ELEMENT)
 		    cchild = cchild->next;
-		  if (!cchild)
-		    {
-		      stp_erprintf("Cannot find curve!\n");
-		      stp_abort();
-		    }
+		  STPI_ASSERT(cchild, NULL);
 		}
 	      curve = stp_curve_create_from_xmltree(cchild);
 	      icl->hue_curve = curve;
@@ -446,13 +438,8 @@ stp_escp2_load_inkgroup(const stp_vars_t *v, const char *name)
 {
   stpi_escp2_printer_t *printdef = stp_escp2_get_printer(v);
   inkgroup_t *igl = load_inkgroup(name);
-  if (igl)
-    printdef->inkgroup = igl;
-  else
-    {
-      stp_erprintf("Unable to load ink definitions from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(igl, v);
+  printdef->inkgroup = igl;
   return (igl != NULL);
 }
 
@@ -462,14 +449,9 @@ stpi_escp2_get_default_black_inkset(void)
   if (! default_black_inkgroup)
     {
       default_black_inkgroup = load_inkgroup("escp2/inks/defaultblack.xml");
-      if (! default_black_inkgroup ||
-	  default_black_inkgroup->n_inklists < 1 ||
-	  default_black_inkgroup->inklists[0].n_inks < 1)
-	{
-	  stp_erprintf("Default black inkgroup: %lx\n", (long) default_black_inkgroup);
-	  stp_erprintf("Unable to load default black ink definition!\n");
-	  stp_abort();
-	}
+      STPI_ASSERT(default_black_inkgroup &&
+		  default_black_inkgroup->n_inklists >= 1 &&
+		  default_black_inkgroup->inklists[0].n_inks >= 1, NULL);
     }
   return &(default_black_inkgroup->inklists[0].inknames[0]);
 }

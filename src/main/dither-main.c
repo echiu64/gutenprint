@@ -393,20 +393,12 @@ stp_dither_init(stp_vars_t *v, stp_image_t *image, int out_width,
     }
   else
     {
-      stp_array_t *array;
-      int transposed;
-	array = stp_find_standard_dither_array(d->y_aspect, d->x_aspect);
-      transposed = d->y_aspect < d->x_aspect ? 1 : 0;
-      if (array)
-	{
-	  stp_dither_set_matrix_from_dither_array(v, array, transposed);
-	  stp_array_destroy(array);
-	}
-      else
-	{
-	  stp_eprintf(v, "Cannot find dither matrix file!  Aborting.\n");
-	  stp_abort();
-	}
+      stp_array_t *array =
+	stp_find_standard_dither_array(d->y_aspect, d->x_aspect);
+      int transposed = d->y_aspect < d->x_aspect ? 1 : 0;
+      STPI_ASSERT(array, v);
+      stp_dither_set_matrix_from_dither_array(v, array, transposed);
+      stp_array_destroy(array);
     }
 
   d->src_width = in_width;

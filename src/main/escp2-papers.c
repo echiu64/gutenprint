@@ -62,11 +62,7 @@ stp_escp2_load_media_sizes(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to load media sizes from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
   return found;
 }
 
@@ -150,11 +146,7 @@ stp_escp2_load_media(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to load media from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
   return found;
 }
 
@@ -223,14 +215,8 @@ build_media_type(const stp_vars_t *v, const char *name, const inklist_t *ink,
       stp_mxml_node_t *inknode = stp_mxmlFindElement(node, node, "ink",
 						     "name", ink->name,
 						     STP_MXML_DESCEND);
-      if (inknode)
-	stp_vars_fill_from_xmltree_ref(inknode->child, doc, vv);
-      else
-	{
-	  stp_erprintf("Cannot find ink %s for media %s, model %s!\n",
-		       ink->name, name, stp_get_driver(v));
-	  stp_abort();
-	}
+      STPI_ASSERT(inknode, v);
+      stp_vars_fill_from_xmltree_ref(inknode->child, doc, vv);
     }
   if (res && res->name)
     {
@@ -385,11 +371,7 @@ stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to load input slots from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
   return found;
 }
 

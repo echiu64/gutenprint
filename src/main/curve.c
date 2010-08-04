@@ -45,6 +45,16 @@
 #undef inline
 #define inline
 
+/*
+ * We could do more sanity checks here if we want.
+ */
+#define CHECK_CURVE(curve)			\
+do						\
+  {						\
+    STPI_ASSERT((curve) != NULL, NULL);		\
+    STPI_ASSERT((curve)->seq != NULL, NULL);	\
+  } while (0)
+
 static const int curve_point_limit = 1048576;
 
 struct stp_curve
@@ -77,24 +87,6 @@ static const char *const stpi_wrap_mode_names[] =
 
 static const int stpi_wrap_mode_count =
 (sizeof(stpi_wrap_mode_names) / sizeof(const char *));
-
-/*
- * We could do more sanity checks here if we want.
- */
-static void
-check_curve(const stp_curve_t *curve)
-{
-  if (curve == NULL)
-    {
-      stp_erprintf("Null curve! Please report this bug.\n");
-      stp_abort();
-    }
-  if (curve->seq == NULL)
-    {
-      stp_erprintf("Bad curve (seq == NULL)! Please report this bug.\n");
-      stp_abort();
-    }
-}
 
 /*
  * Get the total number of points in the base sequence class
@@ -430,7 +422,7 @@ stp_curve_create(stp_curve_wrap_mode_t wrap_mode)
 static void
 curve_dtor(stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   clear_curve_data(curve);
   if (curve->seq)
     stp_sequence_destroy(curve->seq);
@@ -448,8 +440,8 @@ stp_curve_destroy(stp_curve_t *curve)
 void
 stp_curve_copy(stp_curve_t *dest, const stp_curve_t *source)
 {
-  check_curve(dest);
-  check_curve(source);
+  CHECK_CURVE(dest);
+  CHECK_CURVE(source);
   curve_dtor(dest);
   dest->curve_type = source->curve_type;
   dest->wrap_mode = source->wrap_mode;
@@ -463,7 +455,7 @@ stp_curve_t *
 stp_curve_create_copy(const stp_curve_t *curve)
 {
   stp_curve_t *ret;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   ret = stp_curve_create(curve->wrap_mode);
   stp_curve_copy(ret, curve);
   return ret;
@@ -472,8 +464,8 @@ stp_curve_create_copy(const stp_curve_t *curve)
 void
 stp_curve_reverse(stp_curve_t *dest, const stp_curve_t *source)
 {
-  check_curve(dest);
-  check_curve(source);
+  CHECK_CURVE(dest);
+  CHECK_CURVE(source);
   curve_dtor(dest);
   dest->curve_type = source->curve_type;
   dest->wrap_mode = source->wrap_mode;
@@ -506,7 +498,7 @@ stp_curve_t *
 stp_curve_create_reverse(const stp_curve_t *curve)
 {
   stp_curve_t *ret;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   ret = stp_curve_create(curve->wrap_mode);
   stp_curve_reverse(ret, curve);
   return ret;
@@ -515,14 +507,14 @@ stp_curve_create_reverse(const stp_curve_t *curve)
 int
 stp_curve_set_bounds(stp_curve_t *curve, double low, double high)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   return stp_sequence_set_bounds(curve->seq, low, high);
 }
 
 void
 stp_curve_get_bounds(const stp_curve_t *curve, double *low, double *high)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   stp_sequence_get_bounds(curve->seq, low, high);
 }
 
@@ -535,35 +527,35 @@ stp_curve_get_bounds(const stp_curve_t *curve, double *low, double *high)
 void
 stp_curve_get_range(const stp_curve_t *curve, double *low, double *high)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   stp_sequence_get_range(curve->seq, low, high);
 }
 
 size_t
 stp_curve_count_points(const stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   return get_point_count(curve);
 }
 
 stp_curve_wrap_mode_t
 stp_curve_get_wrap(const stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   return curve->wrap_mode;
 }
 
 int
 stp_curve_is_piecewise(const stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   return curve->piecewise;
 }
 
 int
 stp_curve_set_interpolation_type(stp_curve_t *curve, stp_curve_type_t itype)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (itype < 0 || itype >= stpi_curve_type_count)
     return 0;
   curve->curve_type = itype;
@@ -573,14 +565,14 @@ stp_curve_set_interpolation_type(stp_curve_t *curve, stp_curve_type_t itype)
 stp_curve_type_t
 stp_curve_get_interpolation_type(const stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   return curve->curve_type;
 }
 
 int
 stp_curve_set_gamma(stp_curve_t *curve, double fgamma)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (curve->wrap_mode || ! isfinite(fgamma) || fgamma == 0.0)
     return 0;
   clear_curve_data(curve);
@@ -592,7 +584,7 @@ stp_curve_set_gamma(stp_curve_t *curve, double fgamma)
 double
 stp_curve_get_gamma(const stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   return curve->gamma;
 }
 
@@ -602,7 +594,7 @@ stp_curve_set_data(stp_curve_t *curve, size_t count, const double *data)
   size_t i;
   size_t real_count = count;
   double low, high;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (count < 2)
     return 0;
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)
@@ -642,7 +634,7 @@ stp_curve_set_data_points(stp_curve_t *curve, size_t count,
   size_t real_count = count;
   double low, high;
   double last_x = -1;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (count < 2)
     {
       stp_deprintf(STP_DBG_CURVE_ERRORS,
@@ -736,7 +728,7 @@ const double *
 stp_curve_get_data(const stp_curve_t *curve, size_t *count)
 {
   const double *ret;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (curve->piecewise)
     return NULL;
   stp_sequence_get_data(curve->seq, count, &ret);
@@ -748,7 +740,7 @@ const stp_curve_point_t *
 stp_curve_get_data_points(const stp_curve_t *curve, size_t *count)
 {
   const double *ret;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (!curve->piecewise)
     return NULL;
   stp_sequence_get_data(curve->seq, count, &ret);
@@ -760,7 +752,7 @@ static const double *
 stpi_curve_get_data_internal(const stp_curve_t *curve, size_t *count)
 {
   const double *ret;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   stp_sequence_get_data(curve->seq, count, &ret);
   *count = get_point_count(curve);
   if (curve->piecewise)
@@ -780,7 +772,7 @@ stp_curve_set_##name##_data(stp_curve_t *curve, size_t count, const t *data) \
   int status;                                                              \
   size_t real_count = count;                                               \
                                                                            \
-  check_curve(curve);                                                      \
+  CHECK_CURVE(curve);                                                      \
   if (count < 2)                                                           \
     return 0;                                                              \
   if (curve->wrap_mode == STP_CURVE_WRAP_AROUND)                           \
@@ -853,7 +845,7 @@ stp_curve_set_subrange(stp_curve_t *curve, const stp_curve_t *range,
   double rlo, rhi;
   const double *data;
   size_t count;
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (start + stp_curve_count_points(range) > stp_curve_count_points(curve))
     return 0;
   if (curve->piecewise)
@@ -875,7 +867,7 @@ stp_curve_set_subrange(stp_curve_t *curve, const stp_curve_t *range,
 int
 stp_curve_set_point(stp_curve_t *curve, size_t where, double data)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (where >= get_point_count(curve))
     return 0;
   curve->gamma = 0.0;
@@ -895,7 +887,7 @@ stp_curve_set_point(stp_curve_t *curve, size_t where, double data)
 int
 stp_curve_get_point(const stp_curve_t *curve, size_t where, double *data)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (where >= get_point_count(curve))
     return 0;
   if (curve->piecewise)
@@ -906,7 +898,7 @@ stp_curve_get_point(const stp_curve_t *curve, size_t where, double *data)
 const stp_sequence_t *
 stp_curve_get_sequence(const stp_curve_t *curve)
 {
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (curve->piecewise)
     return NULL;
   return curve->seq;
@@ -922,7 +914,7 @@ stp_curve_rescale(stp_curve_t *curve, double scale,
   double nbhi;
   size_t count;
 
-  check_curve(curve);
+  CHECK_CURVE(curve);
 
   real_point_count = get_real_point_count(curve);
 
@@ -1133,7 +1125,7 @@ stp_curve_interpolate_value(const stp_curve_t *curve, double where,
 {
   size_t limit;
 
-  check_curve(curve);
+  CHECK_CURVE(curve);
   if (curve->piecewise)
     return 0;
 
@@ -1156,7 +1148,7 @@ stp_curve_resample(stp_curve_t *curve, size_t points)
   size_t i;
   double *new_vec;
 
-  check_curve(curve);
+  CHECK_CURVE(curve);
 
   if (points == get_point_count(curve) && curve->seq && !(curve->piecewise))
     return 1;

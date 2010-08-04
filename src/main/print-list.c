@@ -34,7 +34,6 @@
 #include <gutenprint/gutenprint.h>
 #include "gutenprint-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -125,7 +124,7 @@ stp_list_node_free_data (void *item)
 }
 
 /** Check the validity of a list. */
-#define check_list(List) assert(List != NULL)
+#define check_list(List) STPI_ASSERT(List != NULL, NULL)
 
 /* List head functions.
  * These functions operate on the list as a whole, and not the

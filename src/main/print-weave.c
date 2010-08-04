@@ -36,25 +36,6 @@
 #include <limits.h>
 #endif
 
-#if 1
-#define ASSERTIONS
-#endif
-
-#ifdef ASSERTIONS
-#define assert(x,v)							\
-do									\
-{									\
-  if (!(x))								\
-    {									\
-      stp_eprintf(v, "Assertion %s failed! file %s, line %d.\n",	\
-		  #x, __FILE__, __LINE__);				\
-      stp_abort();							\
-    }									\
-} while (0)
-#else
-#define assert(x,v) do {} while (0)
-#endif
-
 static int
 gcd(int x, int y)
 {
@@ -453,8 +434,8 @@ make_passmap(raw_t *w, int **map, int **starts, int first_pass_number,
 	int passes_to_map = first_pass_after_map - first_pass_to_map;
 	int i;
 
-	assert(first_pass_to_map <= first_pass_after_map, w->v);
-	assert(first_pass_to_stagger <= first_pass_after_stagger, w->v);
+	STPI_ASSERT(first_pass_to_map <= first_pass_after_map, w->v);
+	STPI_ASSERT(first_pass_to_stagger <= first_pass_after_stagger, w->v);
 
 	*map = passmap = stp_malloc(passes_to_map * sizeof(int));
 	*starts = startrows = stp_malloc(passes_to_map * sizeof(int));
@@ -646,8 +627,8 @@ stpi_calculate_row_parameters(void *vw,		/* I - weave parameters */
 	int stagger = 0;
 	int extra;
 
-	assert(row >= w->first_row_printed, w->rw.v);
-	assert(row <= w->last_row_printed, w->rw.v);
+	STPI_ASSERT(row >= w->first_row_printed, w->rw.v);
+	STPI_ASSERT(row <= w->last_row_printed, w->rw.v);
 	calculate_raw_row_parameters(&w->rw,
 	                             row + w->rw.separation * w->rw.jets,
 	                             subpass, &raw_pass, &jet, &startrow);
@@ -656,11 +637,11 @@ stpi_calculate_row_parameters(void *vw,		/* I - weave parameters */
 	phantomrows = 0;
 
 	if (raw_pass < w->first_normal_pass) {
-	        assert(raw_pass >= w->first_premapped_pass, w->rw.v);
+	        STPI_ASSERT(raw_pass >= w->first_premapped_pass, w->rw.v);
 		*pass = w->pass_premap[raw_pass - w->first_premapped_pass];
 		stagger = w->stagger_premap[raw_pass - w->first_premapped_pass];
 	} else if (raw_pass >= w->first_postmapped_pass) {
-	        assert(raw_pass >= w->first_postmapped_pass, w->rw.v);
+	        STPI_ASSERT(raw_pass >= w->first_postmapped_pass, w->rw.v);
 		*pass = w->pass_postmap[raw_pass - w->first_postmapped_pass];
 		stagger = w->stagger_postmap[raw_pass
 		                             - w->first_postmapped_pass];

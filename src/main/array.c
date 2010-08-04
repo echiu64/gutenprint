@@ -44,16 +44,7 @@ struct stp_array
 /*
  * We could do more sanity checks here if we want.
  */
-static inline void
-check_array(const stp_array_t *array)
-{
-  if (array == NULL)
-    {
-      stp_erprintf("Null stp_array_t! Please report this bug.\n");
-      stp_abort();
-    }
-}
-
+#define CHECK_ARRAY(array) STPI_ASSERT(array != NULL, NULL)
 
 static void array_ctor(stp_array_t *array)
 {
@@ -85,7 +76,7 @@ array_dtor(stp_array_t *array)
 void
 stp_array_destroy(stp_array_t *array)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
   array_dtor(array);
   stp_free(array);
 }
@@ -93,8 +84,8 @@ stp_array_destroy(stp_array_t *array)
 void
 stp_array_copy(stp_array_t *dest, const stp_array_t *source)
 {
-  check_array(dest);
-  check_array(source);
+  CHECK_ARRAY(dest);
+  CHECK_ARRAY(source);
 
   dest->x_size = source->x_size;
   dest->y_size = source->y_size;
@@ -107,7 +98,7 @@ stp_array_t *
 stp_array_create_copy(const stp_array_t *array)
 {
   stp_array_t *ret;
-  check_array(array);
+  CHECK_ARRAY(array);
   ret = stp_array_create(0, 0); /* gets freed next */
   stp_array_copy(ret, array);
   return ret;
@@ -117,7 +108,7 @@ stp_array_create_copy(const stp_array_t *array)
 void
 stp_array_set_size(stp_array_t *array, int x_size, int y_size)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
   if (array->data) /* Free old data */
     stp_sequence_destroy(array->data);
   array->x_size = x_size;
@@ -129,7 +120,7 @@ stp_array_set_size(stp_array_t *array, int x_size, int y_size)
 void
 stp_array_get_size(const stp_array_t *array, int *x_size, int *y_size)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
   *x_size = array->x_size;
   *y_size = array->y_size;
   return;
@@ -138,7 +129,7 @@ stp_array_get_size(const stp_array_t *array, int *x_size, int *y_size)
 void
 stp_array_set_data(stp_array_t *array, const double *data)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
   stp_sequence_set_data(array->data, array->x_size * array->y_size,
 			data);
 }
@@ -146,14 +137,14 @@ stp_array_set_data(stp_array_t *array, const double *data)
 void
 stp_array_get_data(const stp_array_t *array, size_t *size, const double **data)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
   stp_sequence_get_data(array->data, size, data);
 }
 
 int
 stp_array_set_point(stp_array_t *array, int x, int y, double data)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
 
   if (((array->x_size * x) + y) >= (array->x_size * array->y_size))
     return 0;
@@ -163,7 +154,7 @@ stp_array_set_point(stp_array_t *array, int x, int y, double data)
 int
 stp_array_get_point(const stp_array_t *array, int x, int y, double *data)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
 
   if (((array->x_size * x) + y) >= array->x_size * array->y_size)
     return 0;
@@ -174,7 +165,7 @@ stp_array_get_point(const stp_array_t *array, int x, int y, double *data)
 const stp_sequence_t *
 stp_array_get_sequence(const stp_array_t *array)
 {
-  check_array(array);
+  CHECK_ARRAY(array);
 
   return array->data;
 }

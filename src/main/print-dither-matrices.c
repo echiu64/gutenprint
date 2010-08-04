@@ -33,7 +33,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <assert.h>
 #include "dither-impl.h"
 
 #ifdef __GNUC__
@@ -493,7 +492,7 @@ stp_xml_dither_cache_set(int x, int y, const char *filename)
 {
   stp_xml_dither_cache_t *cacheval;
 
-  assert(x && y && filename);
+  STPI_ASSERT(x && y && filename, NULL);
 
   stp_xml_init();
 

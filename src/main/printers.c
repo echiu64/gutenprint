@@ -109,20 +109,6 @@ stp_printer_model_count(void)
   return stp_list_get_length(printer_list);
 }
 
-static void
-null_printer(void)
-{
-  stp_erprintf("Null stp_printer_t! Please report this bug.\n");
-  stp_abort();
-}
-
-static inline void
-check_printer(const stp_printer_t *p)
-{
-  if (p == NULL)
-    null_printer();
-}
-
 const stp_printer_t *
 stp_get_printer_by_index(int idx)
 {

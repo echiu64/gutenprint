@@ -98,38 +98,22 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 	      const char *val = child->value.text.string;
 	      if (!strcmp(name, "verticalBorderlessSequence"))
 		{
-		  if (p->vertical_borderless_sequence)
-		    {
-		      stp_erprintf("Reassigning vertical borderless sequence for model %d\n", model);
-		      stp_abort();
-		    }
+		  STPI_ASSERT(!p->vertical_borderless_sequence, NULL);
 		  p->vertical_borderless_sequence = stp_xmlstrtoraw(val);
 		}
 	      else if (!strcmp(name, "preinitSequence"))
 		{
-		  if (p->preinit_sequence)
-		    {
-		      stp_erprintf("Reassigning pre-init sequence for model %d\n", model);
-		      stp_abort();
-		    }
+		  STPI_ASSERT(!p->preinit_sequence, NULL);
 		  p->preinit_sequence = stp_xmlstrtoraw(val);
 		}
 	      else if (!strcmp(name, "preinitRemoteSequence"))
 		{
-		  if (p->preinit_remote_sequence)
-		    {
-		      stp_erprintf("Reassigning pre-init remote sequence for model %d\n", model);
-		      stp_abort();
-		    }
+		  STPI_ASSERT(!p->preinit_remote_sequence, NULL);
 		  p->preinit_remote_sequence = stp_xmlstrtoraw(val);
 		}
 	      else if (!strcmp(name, "postinitRemoteSequence"))
 		{
-		  if (p->postinit_remote_sequence)
-		    {
-		      stp_erprintf("Reassigning post-init remote sequence for model %d\n", model);
-		      stp_abort();
-		    }
+		  STPI_ASSERT(!p->postinit_remote_sequence, NULL);
 		  p->postinit_remote_sequence = stp_xmlstrtoraw(val);
 		}
 	      else if (!strcmp(name, "commandSet"))
@@ -426,17 +410,9 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
 	  if (node)
 	    {
 	      const char *stmp = stp_mxmlElementGetAttr(node, "id");
-	      if (stmp && stp_xmlstrtol(stmp) == model)
-		{
-		  load_model_from_file(v, node, model);
-		  found = 1;
-		}
-	      else
-		{
-		  stp_erprintf("Model id %d does not match definition %s!\n",
-			       model, stmp);
-		  stp_abort();
-		}
+	      STPI_ASSERT(stmp && stp_xmlstrtol(stmp) == model, v);
+	      load_model_from_file(v, node, model);
+	      found = 1;
 	    }
 	  stp_mxmlDelete(doc);
 	  if (found)
@@ -446,22 +422,14 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
     }
   stp_xml_exit();
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to find printer definition for model %d!\n", model);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
 }
 
 stpi_escp2_printer_t *
 stp_escp2_get_printer(const stp_vars_t *v)
 {
   int model = stp_get_model_id(v);
-  if (model < 0)
-    {
-      stp_erprintf("Unable to find printer definition for model %d!\n", model);
-      stp_abort();
-    }
+  STPI_ASSERT(model >= 0, v);
   if (!escp2_model_capabilities)
     {
       escp2_model_capabilities =

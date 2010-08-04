@@ -132,6 +132,7 @@ extern void stp_catprintf(char **strp, const char *format, ...)
 #define STP_DBG_CURVE_ERRORS	0x100000
 #define STP_DBG_PPD		0x200000
 #define STP_DBG_NO_COMPRESSION	0x400000
+#define STP_DBG_ASSERTIONS	0x800000
 
 extern unsigned long stp_get_debug_level(void);
 extern void stp_dprintf(unsigned long level, const stp_vars_t *v,

@@ -35,7 +35,6 @@
 #include <limits.h>
 #endif
 #include <math.h>
-#include <assert.h>
 #include <string.h>
 #include "dither-impl.h"
 
@@ -111,7 +110,7 @@ initialize_channel(stp_vars_t *v, int channel, int subchannel)
   stpi_dither_channel_t *dc = &(CHANNEL(d, idx));
   stp_shade_t shade;
   stp_dotsize_t dot;
-  assert(idx >= 0);
+  STPI_ASSERT(idx >= 0, NULL);
   memset(dc, 0, sizeof(stpi_dither_channel_t));
   stp_dither_matrix_clone(&(d->dither_matrix), &(dc->dithermat), 0, 0);
   shade.dot_sizes = &dot;
@@ -194,7 +193,7 @@ stp_dither_add_channel(stp_vars_t *v, unsigned char *data,
   if (subchannel >= d->subchannel_count[channel])
     insert_subchannel(v, d, channel, subchannel);
   idx = stpi_dither_translate_channel(v, channel, subchannel);
-  assert(idx >= 0);
+  STPI_ASSERT(idx >= 0, NULL);
   d->channel[idx].ptr = data;
 }
 
@@ -378,7 +377,7 @@ stp_dither_set_inks_full(stp_vars_t *v, int color, int nshades,
     {
       int subchannel = nshades - i - 1;
       idx = stpi_dither_translate_channel(v, color, subchannel);
-      assert(idx >= 0);
+      STPI_ASSERT(idx >= 0, NULL);
       dc = &(CHANNEL(d, idx));
 
       stp_channel_add(v, color, subchannel, shades[i].value);

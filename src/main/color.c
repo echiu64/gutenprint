@@ -79,17 +79,7 @@ stp_color_count(void)
   return stp_list_get_length(color_list);
 }
 
-
-static inline void
-check_color(const stp_color_t *c)
-{
-  if (c == NULL)
-    {
-      stp_erprintf("Null stp_color_t! Please report this bug.\n");
-      stp_abort();
-    }
-}
-
+#define CHECK_COLOR(c) STPI_ASSERT(c != NULL, NULL)
 
 const stp_color_t *
 stp_get_color_by_index(int idx)
@@ -109,7 +99,7 @@ static const char *
 stpi_color_namefunc(const void *item)
 {
   const stp_color_t *color = (const stp_color_t *) item;
-  check_color(color);
+  CHECK_COLOR(color);
   return color->short_name;
 }
 
@@ -118,7 +108,7 @@ static const char *
 stpi_color_long_namefunc(const void *item)
 {
   const stp_color_t *color = (const stp_color_t *) item;
-  check_color(color);
+  CHECK_COLOR(color);
   return color->long_name;
 }
 
@@ -127,7 +117,7 @@ const char *
 stp_color_get_name(const stp_color_t *c)
 {
   const stp_color_t *val = (const stp_color_t *) c;
-  check_color(val);
+  CHECK_COLOR(val);
   return val->short_name;
 }
 
@@ -135,7 +125,7 @@ const char *
 stp_color_get_long_name(const stp_color_t *c)
 {
   const stp_color_t *val = (const stp_color_t *) c;
-  check_color(val);
+  CHECK_COLOR(val);
   return gettext(val->long_name);
 }
 
@@ -144,7 +134,7 @@ static const stp_colorfuncs_t *
 stpi_get_colorfuncs(const stp_color_t *c)
 {
   const stp_color_t *val = (const stp_color_t *) c;
-  check_color(val);
+  CHECK_COLOR(val);
   return val->colorfuncs;
 }
 
@@ -231,7 +221,7 @@ stp_color_register(const stp_color_t *color)
 		   "stpi_color_register(): initialising color_list...\n");
     }
 
-  check_color(color);
+  CHECK_COLOR(color);
 
   if (color)
     {
@@ -263,7 +253,7 @@ stp_color_unregister(const stp_color_t *color)
 	 "stpi_family_unregister(): initialising color_list...\n");
     }
 
-  check_color(color);
+  CHECK_COLOR(color);
 
   color_item = stp_list_get_start(color_list);
   while (color_item)

@@ -60,15 +60,8 @@ struct stp_sequence
 /*
  * We could do more sanity checks here if we want.
  */
-static inline void
-check_sequence(const stp_sequence_t *v)
-{
-  if (v == NULL)
-    {
-      stp_erprintf("Null stp_sequence_t! Please report this bug.\n");
-      stp_abort();
-    }
-}
+
+#define CHECK_SEQUENCE(sequence) STPI_ASSERT(sequence, NULL)
 
 static inline stp_sequence_t *
 deconst_sequence(const stp_sequence_t *sequence)
@@ -119,7 +112,7 @@ sequence_dtor(stp_sequence_t *sequence)
 void
 stp_sequence_destroy(stp_sequence_t *sequence)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   sequence_dtor(sequence);
   stp_free(sequence);
 }
@@ -127,8 +120,8 @@ stp_sequence_destroy(stp_sequence_t *sequence)
 void
 stp_sequence_copy(stp_sequence_t *dest, const stp_sequence_t *source)
 {
-  check_sequence(dest);
-  check_sequence(source);
+  CHECK_SEQUENCE(dest);
+  CHECK_SEQUENCE(source);
 
   dest->recompute_range = source->recompute_range;
   dest->blo = source->blo;
@@ -144,8 +137,8 @@ void
 stp_sequence_reverse(stp_sequence_t *dest, const stp_sequence_t *source)
 {
   int i;
-  check_sequence(dest);
-  check_sequence(source);
+  CHECK_SEQUENCE(dest);
+  CHECK_SEQUENCE(source);
 
   dest->recompute_range = source->recompute_range;
   dest->blo = source->blo;
@@ -162,7 +155,7 @@ stp_sequence_t *
 stp_sequence_create_copy(const stp_sequence_t *sequence)
 {
   stp_sequence_t *ret;
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   ret = stp_sequence_create();
   stp_sequence_copy(ret, sequence);
   return ret;
@@ -172,7 +165,7 @@ stp_sequence_t *
 stp_sequence_create_reverse(const stp_sequence_t *sequence)
 {
   stp_sequence_t *ret;
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   ret = stp_sequence_create();
   stp_sequence_reverse(ret, sequence);
   return ret;
@@ -181,7 +174,7 @@ stp_sequence_create_reverse(const stp_sequence_t *sequence)
 int
 stp_sequence_set_bounds(stp_sequence_t *sequence, double low, double high)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   if (low > high)
     return 0;
   sequence->rlo = sequence->blo = low;
@@ -194,7 +187,7 @@ void
 stp_sequence_get_bounds(const stp_sequence_t *sequence,
 			double *low, double *high)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   *low = sequence->blo;
   *high = sequence->bhi;
 }
@@ -235,7 +228,7 @@ stp_sequence_get_range(const stp_sequence_t *sequence,
 int
 stp_sequence_set_size(stp_sequence_t *sequence, size_t size)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   if (sequence->data) /* Free old data */
     {
       stp_free(sequence->data);
@@ -254,7 +247,7 @@ stp_sequence_set_size(stp_sequence_t *sequence, size_t size)
 size_t
 stp_sequence_get_size(const stp_sequence_t *sequence)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   return sequence->size;
 }
 
@@ -264,7 +257,7 @@ int
 stp_sequence_set_data(stp_sequence_t *sequence,
 		      size_t size, const double *data)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   sequence->size = size;
   if (sequence->data)
     stp_free(sequence->data);
@@ -279,7 +272,7 @@ int
 stp_sequence_set_subrange(stp_sequence_t *sequence, size_t where,
 			  size_t size, const double *data)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   if (where + size > sequence->size) /* Exceeds data size */
     return 0;
   memcpy(sequence->data+where, data, (sizeof(double) * size));
@@ -293,7 +286,7 @@ void
 stp_sequence_get_data(const stp_sequence_t *sequence, size_t *size,
 		      const double **data)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
   *size = sequence->size;
   *data = sequence->data;
 }
@@ -303,7 +296,7 @@ int
 stp_sequence_set_point(stp_sequence_t *sequence, size_t where,
 		       double data)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
 
   if (where >= sequence->size || ! isfinite(data) ||
       data < sequence->blo || data > sequence->bhi)
@@ -324,7 +317,7 @@ int
 stp_sequence_get_point(const stp_sequence_t *sequence, size_t where,
 		       double *data)
 {
-  check_sequence(sequence);
+  CHECK_SEQUENCE(sequence);
 
   if (where >= sequence->size)
     return 0;
@@ -500,60 +493,42 @@ stp_xmltree_create_from_sequence(const stp_sequence_t *seq)   /* The sequence */
 
 /* "Overloaded" functions */
 
-#define DEFINE_DATA_SETTER(t, name)					     \
-int									     \
-stp_sequence_set_##name##_data(stp_sequence_t *sequence,                     \
-                               size_t count, const t *data)                  \
-{									     \
-  int i;								     \
-  check_sequence(sequence);					             \
-  if (count < 2)							     \
-    return 0;								     \
-									     \
-  /* Validate the data before we commit to it. */			     \
-  for (i = 0; i < count; i++)						     \
-    if (data[i] < sequence->blo ||                                           \
-        data[i] > sequence->bhi)                                             \
-      return 0;								     \
-  stp_sequence_set_size(sequence, count);                                    \
-  for (i = 0; i < count; i++)						     \
-    stp_sequence_set_point(sequence, i, (double) data[i]);                   \
-  return 1;								     \
+#define DEFINE_DATA_SETTER(t, name, checkfinite)		\
+int								\
+stp_sequence_set_##name##_data(stp_sequence_t *sequence,	\
+                               size_t count, const t *data)	\
+{								\
+  int i;							\
+  CHECK_SEQUENCE(sequence);					\
+  if (count < 2)						\
+    return 0;							\
+								\
+  /* Validate the data before we commit to it. */		\
+  for (i = 0; i < count; i++)					\
+    if (((checkfinite) && ! isfinite(data[i])) ||		\
+	data[i] < sequence->blo ||				\
+        data[i] > sequence->bhi)				\
+      return 0;							\
+  stp_sequence_set_size(sequence, count);			\
+  for (i = 0; i < count; i++)					\
+    stp_sequence_set_point(sequence, i, (double) data[i]);	\
+  return 1;							\
 }
 
-int
-stp_sequence_set_float_data(stp_sequence_t *sequence,
-			    size_t count, const float *data)
-{
-  int i;
-  check_sequence(sequence);
-  if (count < 2)
-    return 0;
-
-  /* Validate the data before we commit to it. */
-  for (i = 0; i < count; i++)
-    if (! isfinite(data[i]) ||
-        data[i] < sequence->blo ||
-        data[i] > sequence->bhi)
-      return 0;
-  stp_sequence_set_size(sequence, count);
-  for (i = 0; i < count; i++)
-    stp_sequence_set_point(sequence, i, (double) data[i]);
-  return 1;
-}
-
-DEFINE_DATA_SETTER(long, long)
-DEFINE_DATA_SETTER(unsigned long, ulong)
-DEFINE_DATA_SETTER(int, int)
-DEFINE_DATA_SETTER(unsigned int, uint)
-DEFINE_DATA_SETTER(short, short)
-DEFINE_DATA_SETTER(unsigned short, ushort)
+DEFINE_DATA_SETTER(float, float, 1)
+DEFINE_DATA_SETTER(long, long, 0)
+DEFINE_DATA_SETTER(unsigned long, ulong, 0)
+DEFINE_DATA_SETTER(int, int, 0)
+DEFINE_DATA_SETTER(unsigned int, uint, 0)
+DEFINE_DATA_SETTER(short, short, 0)
+DEFINE_DATA_SETTER(unsigned short, ushort, 0)
 
 #define DEFINE_DATA_ACCESSOR(t, lb, ub, name)				      \
 const t *								      \
 stp_sequence_get_##name##_data(const stp_sequence_t *sequence, size_t *count) \
 {									      \
   int i;								      \
+  CHECK_SEQUENCE(sequence);						      \
   if (sequence->blo < (double) lb || sequence->bhi > (double) ub)	      \
     return NULL;							      \
   if (!sequence->name##_data)						      \

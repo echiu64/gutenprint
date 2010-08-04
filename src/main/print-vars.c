@@ -86,14 +86,7 @@ static int standard_vars_initialized = 0;
 
 static stp_vars_t default_vars;
 
-#define CHECK_VARS(v)							\
-do {									\
-  if (v == NULL)							\
-    {									\
-      stp_erprintf("Null stp_vars_t! Please report this bug.\n");	\
-      stp_abort();							\
-    }									\
-} while (0)
+#define CHECK_VARS(v) STPI_ASSERT(v, NULL)
 
 static const char *
 value_namefunc(const void *item)
@@ -1397,17 +1390,9 @@ stp_fill_parameter_settings(stp_parameter_t *desc,
       desc->verify_this_parameter = param->verify_this_parameter;
       desc->read_only = param->read_only;
       desc->name = param->name;
-      if (!(param->text))
-	{
-	  stp_erprintf("No text string for parameter %s!\n", desc->name);
-	  stp_abort();
-	}
+      STPI_ASSERT(param->text, NULL);
       desc->text = gettext(param->text);
-      if (!(param->category))
-	{
-	  stp_erprintf("No category string for parameter %s!\n", desc->name);
-	  stp_abort();
-	}
+      STPI_ASSERT(param->category, NULL);
       desc->category = gettext(param->category);
       desc->help = param->help ? gettext(param->help) : NULL;
       return;
@@ -1743,15 +1728,9 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		  cnode = stp_mxmlFindElement(root, root, "namedParam",
 					      "name", cref,
 					      STP_MXML_DESCEND);
-		  if (!cnode || cnode->type != STP_MXML_ELEMENT ||
-		      !(cnode->child))
-		    {
-		      stp_erprintf("Found parameter name %s type %s ref %s but no target!\n",
-				   p_name, p_type, cref);
-		      stp_abort();
-		    }
-		  else
-		    stp_deprintf(STP_DBG_XML, "Found parameter ref %s\n", cref);
+		  STPI_ASSERT(cnode && cnode->type == STP_MXML_ELEMENT &&
+			 cnode->child, v);
+		  stp_deprintf(STP_DBG_XML, "Found parameter ref %s\n", cref);
 		  cnode = cnode->child;
 		}
 	      if (strcmp(p_type, "float") == 0)
@@ -1853,54 +1832,32 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		  stp_curve_t *curve;
 		  while (cnode->type != STP_MXML_ELEMENT && cnode->next)
 		    cnode = cnode->next;
-		  if (!cnode)
-		    {
-		      stp_erprintf("Unable to find XML curve!\n");
-		      stp_abort();
-		    }
+		  STPI_ASSERT(cnode, v);
 		  curve = stp_curve_create_from_xmltree(cnode);
-		  if (curve)
+		  STPI_ASSERT(curve, v);
+		  stp_set_curve_parameter(v, p_name, curve);
+		  type = STP_PARAMETER_TYPE_DOUBLE;
+		  if (stp_get_debug_level() & STP_DBG_XML)
 		    {
-		      stp_set_curve_parameter(v, p_name, curve);
-		      type = STP_PARAMETER_TYPE_DOUBLE;
-		      if (stp_get_debug_level() & STP_DBG_XML)
-			{
-			  char *cv = stp_curve_write_string(curve);
-			  stp_deprintf(STP_DBG_XML, "  Set curve '%s' (%s)\n",
-				       p_name, cv);
-			  stp_free(cv);
-			}
-		      stp_curve_destroy(curve);
+		      char *cv = stp_curve_write_string(curve);
+		      stp_deprintf(STP_DBG_XML, "  Set curve '%s' (%s)\n",
+				   p_name, cv);
+		      stp_free(cv);
 		    }
-		  else
-		    {
-		      stp_erprintf("Unable to extract curve!\n");
-		      stp_abort();
-		    }
+		  stp_curve_destroy(curve);
 		}
 	      else if (strcmp(p_type, "array") == 0)
 		{
 		  stp_array_t *array;
 		  while (cnode->type != STP_MXML_ELEMENT && cnode->next)
 		    cnode = cnode->next;
-		  if (!cnode)
-		    {
-		      stp_erprintf("Unable to find XML array!\n");
-		      stp_abort();
-		    }
+		  STPI_ASSERT(cnode, v);
 		  array = stp_array_create_from_xmltree(cnode);
-		  if (array)
-		    {
-		      type = STP_PARAMETER_TYPE_DOUBLE;
-		      stp_set_array_parameter(v, p_name, array);
-		      stp_deprintf(STP_DBG_XML, "  Set array '%s'\n", p_name);
-		      stp_array_destroy(array);
-		    }
-		  else
-		    {
-		      stp_erprintf("Unable to extract array!\n");
-		      stp_abort();
-		    }
+		  STPI_ASSERT(array, v);
+		  type = STP_PARAMETER_TYPE_DOUBLE;
+		  stp_set_array_parameter(v, p_name, array);
+		  stp_deprintf(STP_DBG_XML, "  Set array '%s'\n", p_name);
+		  stp_array_destroy(array);
 		}
 	      else
 		{

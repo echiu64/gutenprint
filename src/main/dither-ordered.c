@@ -33,7 +33,6 @@
 #include <gutenprint/gutenprint-intl-internal.h>
 #include "dither-impl.h"
 #include "dither-inlined-functions.h"
-#include <assert.h>
 
 
 typedef struct {

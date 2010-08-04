@@ -2645,11 +2645,7 @@ const stp_vars_t *lex_open_tmp_file() {
   }
       stp_erprintf("Create file %s !\n", tmpstr);
   ofile = fopen(tmpstr, "wb");
-  if (ofile == NULL)
-    {
-      stp_erprintf("Can't create file !\n");
-      stp_abort();
-    }
+  STPI_ASSERT(ofile);
   return ofile;
 }
 

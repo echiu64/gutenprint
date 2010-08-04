@@ -101,11 +101,7 @@ stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to load printer weaves from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
   return found;
 }
 
@@ -220,11 +216,7 @@ stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to load resolutions from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
   return found;
 }
 
@@ -326,10 +318,6 @@ stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
       item = stp_list_item_next(item);
     }
   stp_list_destroy(dirlist);
-  if (! found)
-    {
-      stp_erprintf("Unable to load quality presets from %s!\n", name);
-      stp_abort();
-    }
+  STPI_ASSERT(found, v);
   return found;
 }
