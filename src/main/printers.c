@@ -65,7 +65,8 @@ struct stp_printer
   char       *long_name;        /* Long name for UI */
   char       *family;           /* Printer family */
   char	     *manufacturer;	/* Printer manufacturer */
-  char	     *device_id; /* IEEE 1284 device ID */
+  char	     *device_id; 	/* IEEE 1284 device ID */
+  char       *foomatic_id;	/* Foomatic printer ID */
   int        model;             /* Model number */
   int	     vars_initialized;
   const stp_printfuncs_t *printfuncs;
@@ -191,6 +192,12 @@ stp_printer_get_manufacturer(const stp_printer_t *printer)
   return printer->manufacturer;
 }
 
+const char *
+stp_printer_get_foomatic_id(const stp_printer_t *printer)
+{
+  return printer->foomatic_id;
+}
+
 int
 stp_printer_get_model(const stp_printer_t *printer)
 {
@@ -254,6 +261,30 @@ stp_get_printer_by_device_id(const char *device_id)
     {
       if (strcmp(((const stp_printer_t *) stp_list_item_get_data(printer_item))->device_id,
 		 device_id) == 0)
+	return ((const stp_printer_t *) stp_list_item_get_data(printer_item));
+      printer_item = stp_list_item_next(printer_item);
+    }
+  return NULL;
+}
+
+const stp_printer_t *
+stp_get_printer_by_foomatic_id(const char *foomatic_id)
+{
+  stp_list_item_t *printer_item;
+  if (printer_list == NULL)
+    {
+      stp_erprintf("No printer drivers found: "
+		   "are STP_DATA_PATH and STP_MODULE_PATH correct?\n");
+      stpi_init_printer_list();
+    }
+  if (! foomatic_id || strcmp(foomatic_id, "") == 0)
+    return NULL;
+
+  printer_item = stp_list_get_start(printer_list);
+  while (printer_item)
+    {
+      if (strcmp(((const stp_printer_t *) stp_list_item_get_data(printer_item))->foomatic_id,
+		 foomatic_id) == 0)
 	return ((const stp_printer_t *) stp_list_item_get_data(printer_item));
       printer_item = stp_list_item_next(printer_item);
     }
@@ -1074,6 +1105,9 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
   stmp = stp_mxmlElementGetAttr(printer, "deviceid");
   if (stmp)
     outprinter->device_id = stp_strdup(stmp);
+  stmp = stp_mxmlElementGetAttr(printer, "foomaticid");
+  if (stmp)
+    outprinter->foomatic_id = stp_strdup(stmp);
 
   if (stp_get_driver(outprinter->printvars))
     driver = 1;

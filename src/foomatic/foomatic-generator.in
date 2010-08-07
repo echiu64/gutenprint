@@ -4,18 +4,11 @@
 # Get command line options
 use Getopt::Long;
 Getopt::Long::Configure("no_ignore_case", "pass_through");
-GetOptions("m=s" => \$opt_m,         # Map file
-           "t=s" => \$opt_t,         # Template directory
+GetOptions("t=s" => \$opt_t,         # Template directory
 	   "f=s" => \$opt_f,         # Foomatic version
            "d=s" => \@opt_d,         # which Drivers?
 	   "s"   => \$opt_s,         # Generate simplified data
 	   "x"   => \$opt_x);	     # Generate printer list
-
-
-# Wherever we put it...
-my $mapfile;
-# $mapfile = "../main/printers.xml";
-$mapfile = $opt_m;
 
 my $simplified = 0;
 my $simplified_subopt = "";
@@ -122,67 +115,20 @@ if (! $opt_x) {
     }
 }
 
+%foomap = ();
+%mapfoo = ();
+$errors = 0;
+
 open PIPE, "./printers|" or die "Cannot run printers: $!\n";
-print STDERR "Loading options from ./printers...";
+print STDERR "Loading printers from ./printers...";
 while(<PIPE>) {
     #print $_;
     next if m!^#!;
-    eval $_;
+    eval $_ or die "\nCan't parse `$_' $@\n";
 }
 close PIPE or die "Cannot run printers: $!\n";
+die "\nCannot continue\n" if ($errors > 0);
 print STDERR "done.\n";
-
-# Step 1: construct a map from Model= values to Foomatic model id's
-# this map is %mapstp.  The inverse from model to Model is %mapdb
-#
-# Foomatic is supposed to be a superset, so
-
-$missing_drivers = 0;
-
-%driverlist = ();
-%foolist = ();
-%foomap = ();
-
-open PRINTERS, $mapfile or die "Cannot open mapfile $mapfile: $!\n";
-for (<PRINTERS>) {
-    if (m!^#\s*gptofoo\s+([^\s]+)\s+([^\s]+)!) {
-	my $pname = $1;
-	my $fname = $2;
-	if ($driverlist{$pname}) {
-	    $missing_drivers = 1;
-	    warn "Duplicate driver $pname\n";
-	}
-	$driverlist{$pname} = $fname;
-	if ($foolist{$fname}) {
-	    $missing_drivers = 1;
-	    warn "Duplicate Foomatic ID $fname\n";
-	}
-	$foolist{$fname} = 1;
-	push (@{$mapstp{$pname}}, $fname);
-	$mapfoo{$fname} = $pname;	# do we need?
-	$fname =~ s,printer/,,;
-	$foomap{$pname} = $fname;
-    }
-}
-
-# Are we missing any stp printers?
-for (keys(%stpdata)) {
-    if (!defined($mapstp{$_})) {
-	$missing_drivers = 1;
-	warn "No foomatic printer IDs for gutenprint printer $_.\n";
-    }
-}
-
-for (keys(%mapstp)) {
-    if (!defined($printer_name{$_})) {
-	$missing_drivers = 1;
-	warn "No gutenprint printer for foomatic ID $_.\n";
-    }
-}
-
-if ($missing_drivers) {
-   die "Cannot continue\n";
-}
 
 if ($opt_x) {
     my (%printer_long_name) = reverse %printer_name;

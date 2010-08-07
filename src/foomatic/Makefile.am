@@ -95,10 +95,10 @@ clean-local:
 
 foomatic-data: foomatic-stamp
 
-foomatic-stamp: foomatic-generator foomatic-printermap $(noinst_PROGRAMS) mk_printerlist $(top_builddir)/src/xml/xml-stamp
+foomatic-stamp: foomatic-generator $(noinst_PROGRAMS) mk_printerlist $(top_builddir)/src/xml/xml-stamp
 	-$(RM) -r foomatic-db
-	$(FOOMATIC_GENERATOR) -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
-	$(FOOMATIC_GENERATOR) -s -m $(srcdir)/foomatic-printermap -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
+	$(FOOMATIC_GENERATOR) -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
+	$(FOOMATIC_GENERATOR) -s -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
 	touch foomatic-stamp
 
 dist-hook:
@@ -120,5 +120,3 @@ $(top_builddir)/src/xml/xml-stamp:
 
 CLEANFILES = foomatic-stamp
 MAINTAINERCLEANFILES = Makefile.in
-
-EXTRA_DIST = foomatic-printermap

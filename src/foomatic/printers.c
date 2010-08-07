@@ -24,24 +24,45 @@
 #include <config.h>
 #endif
 #include <stdio.h>
+#include <string.h>
 #include <gutenprint/gutenprint.h>
 
 int
 main(int argc, char **argv)
 {
   int i;
+  int status = 0;
 
   stp_init();
   for (i = 0; i < stp_printer_model_count(); i++)
     {
       const stp_printer_t *p = stp_get_printer_by_index(i);
-      printf("$printer_name{'%s'} = '%s';\n", stp_printer_get_driver(p),
-	     stp_printer_get_long_name(p));
-      printf("$printer_make{'%s'} = '%s';\n", stp_printer_get_driver(p),
-	     stp_printer_get_manufacturer(p));
-      printf("$printer_family{'%s'} = '%s';\n", stp_printer_get_driver(p),
-	     stp_printer_get_family(p));
-      printf("push @printer_list, '%s';\n", stp_printer_get_driver(p));
+      const char *driver = stp_printer_get_driver(p);
+      const char *long_name = stp_printer_get_long_name(p);
+      const char *manufacturer = stp_printer_get_manufacturer(p);
+      const char *family = stp_printer_get_family(p);
+      const char *foomatic_id = stp_printer_get_foomatic_id(p);
+
+      if (foomatic_id)
+	{
+	  printf("if (defined($foomap{'%s'})) { print STDERR \"\\n*** Duplicate printer %s\"; $errors++; } ",
+		 driver, driver);
+	  printf("if (defined($mapfoo{'%s'})) { print STDERR \"\\n*** Duplicate foomatic ID %s\"; $errors++; } ",
+		 foomatic_id, foomatic_id);
+	  printf("$printer_name{'%s'} = '%s';", driver, long_name);
+	  printf("$printer_make{'%s'} = '%s';", driver, manufacturer);
+	  printf("$printer_family{'%s'} = '%s';", driver, family);
+	  printf("$foomap{'%s'} = '%s';", driver, foomatic_id);
+	  printf("$mapfoo{'%s'} = '%s';", foomatic_id, driver);
+	  printf("push (@{$mapstp{'%s'}}, 'printer/%s');", driver, foomatic_id);
+	  printf("push @printer_list, '%s';\n", driver);
+	}
+      else if (strcmp(family, "raw") != 0 && strcmp(family, "ps") != 0)
+	{
+	  fprintf(stderr, "No foomatic ID for printer %s!\n", driver);
+	  status = 1;
+	}
+
     }
-  return 0;
+  return status;
 }
