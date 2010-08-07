@@ -1246,7 +1246,7 @@
       <printer translate="name" name="Kyocera KM-5530" deviceid="MFG:Kyocera Mita;MDL:KM-5530;DES:Kyocera Mita KM-5530;" driver="kyocera-km-5530" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-5530" />
       <printer translate="name" name="Kyocera KM-6030" driver="kyocera-km-6030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-6030" />
       <printer translate="name" name="Kyocera KM-6230" deviceid="MFG:Kyocera Mita;MDL:KM-6230;DES:Kyocera Mita KM-6230;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-6230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-6230" />
-      <printer translate="name" name="Kyocera KM-8030" driver="kyocera-km-8030" manufacturer="Kyocera" model="63" parameters="pcl_laser_params" foomaticid="Kyocera-KM-8030" />
+      <printer translate="name" name="Kyocera KM-8030" driver="kyocera-km-8030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-8030" />
       <printer translate="name" name="Lanier 5622" driver="lanier-5622" manufacturer="Lanier" model="61" parameters="pcl_laser_params" foomaticid="Lanier-5622" />
       <printer translate="name" name="Lanier 5627" driver="lanier-5627" manufacturer="Lanier" model="61" parameters="pcl_laser_params" foomaticid="Lanier-5627" />
       <printer translate="name" name="Lanier 5632" driver="lanier-5632" manufacturer="Lanier" model="61" parameters="pcl_laser_params" foomaticid="Lanier-5632" />
