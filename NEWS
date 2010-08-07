@@ -4,7 +4,7 @@ new features over 5.2.5.  Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  Gutenprint currently supports over 1400 printer models.
+others.  Gutenprint currently supports over 1500 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
 Macintosh OS X (10.3 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
@@ -105,7 +105,7 @@ for building and installing Gutenprint.
 II) CRITICAL UPGRADE NOTE
 
 If you are using CUPS with Gutenprint on a non-Macintosh system, and
-are upgrading from an earlier version of Gutenprint or Gimp-Print,
+are upgrading from a version of Gutenprint prior to 5.2 or Gimp-Print,
 please read this note carefully as there are special procedures that
 you should follow in addition to the normal procedure of running
 cups-genppdupdate.
@@ -254,20 +254,137 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    1) New printers supported in this release:
 
-      Canon PIXMA MP360
-      Canon PIXMA MP370
-      Canon PIXMA MP380
-      Canon PIXMA MP970
-      EPSON Artisan 50
-      EPSON EP-302
-      EPSON EP-702A
-      EPSON Stylus Photo P50
-      EPSON Stylus Pro 4800
-      EPSON Stylus Pro 4880
-      EPSON Stylus Pro 11800
-      EPSON Stylus T59
-      EPSON Stylus T60
-      EPSON Stylus TX659
+      - Canon inkjet printers:
+
+	Canon PIXMA MP360
+	Canon PIXMA MP370
+	Canon PIXMA MP380
+	Canon PIXMA MP970
+
+      - Epson inkjet printers:
+
+	EPSON Artisan 50
+	EPSON EP-302
+	EPSON EP-702A
+	EPSON Stylus Photo P50
+	EPSON Stylus Pro 4800
+	EPSON Stylus Pro 4880
+	EPSON Stylus Pro 11800
+	EPSON Stylus T59
+	EPSON Stylus T60
+	EPSON Stylus TX659
+
+      - PCL laser printers:
+
+	Brother HL-2030
+	Brother HL-2035
+	Canon LBP-3360
+	Kyocera CS-1815
+	Kyocera FS-1018MFP
+	Kyocera FS-1020D
+	Kyocera FS-1030D
+	Kyocera FS-1118MFP
+	Kyocera FS-1714M
+	Kyocera FS-1920
+	Kyocera FS-2000D
+	Kyocera FS-3718M
+	Kyocera FS-3820N
+	Kyocera FS-3830N
+	Kyocera FS-3900DN
+	Kyocera FS-4000DN
+	Kyocera FS-6020
+	Kyocera FS-6026
+	Kyocera FS-6300
+	Kyocera FS-6750
+	Kyocera FS-6900
+	Kyocera FS-6950DN
+	Kyocera FS-7028M
+	Kyocera FS-9130DN
+	Kyocera FS-920
+	Kyocera FS-9530DN
+	Kyocera KM-1510
+	Kyocera KM-1815
+	Kyocera KM-1820
+	Kyocera KM-3050
+	Kyocera KM-4050
+	Kyocera KM-4230/5230
+	Kyocera KM-5050
+	Kyocera KM-6030
+	Kyocera KM-8030
+	Oki B4350
+	Tektronix Phaser 750DP
+	Tektronix Phaser 750DX
+	Tektronix Phaser 750N
+	Tektronix Phaser 750P
+	Xerox Phaser 2135
+	Xerox Phaser 4400B
+	Xerox Phaser 4400DT
+	Xerox Phaser 4400DX
+	Xerox Phaser 4400N
+	Xerox Phaser 4500B
+	Xerox Phaser 4500DT
+	Xerox Phaser 4500DX
+	Xerox Phaser 4500N
+	Xerox Phaser 4510B
+	Xerox Phaser 4510DT
+	Xerox Phaser 4510DX
+	Xerox Phaser 4510N
+	Xerox Phaser 5500B
+	Xerox Phaser 5500DN
+	Xerox Phaser 5500DT
+	Xerox Phaser 5500DX
+	Xerox Phaser 5500N
+	Xerox Phaser 6130N
+	Xerox Phaser 6180DN
+	Xerox Phaser 6180MFP-D
+	Xerox Phaser 6200B
+	Xerox Phaser 6200DP
+	Xerox Phaser 6200DX
+	Xerox Phaser 6200N
+	Xerox Phaser 6250B
+	Xerox Phaser 6250DP
+	Xerox Phaser 6250DT
+	Xerox Phaser 6250DX
+	Xerox Phaser 6250N
+	Xerox Phaser 6300DN
+	Xerox Phaser 6300N
+	Xerox Phaser 6350DP
+	Xerox Phaser 6350DT
+	Xerox Phaser 6350DX
+	Xerox Phaser 6360DN
+	Xerox Phaser 6360DX
+	Xerox Phaser 7300B
+	Xerox Phaser 7300DN
+	Xerox Phaser 7300DT
+	Xerox Phaser 7300DX
+	Xerox Phaser 7300N
+	Xerox Phaser 7400DN
+	Xerox Phaser 7400DT
+	Xerox Phaser 7400DX
+	Xerox Phaser 7400DXF
+	Xerox Phaser 7400N
+	Xerox Phaser 7700DN
+	Xerox Phaser 7700DX
+	Xerox Phaser 7700GX
+	Xerox Phaser 7750B
+	Xerox Phaser 7750DN
+	Xerox Phaser 7750DXF
+	Xerox Phaser 7750GX
+	Xerox Phaser 7760DN
+	Xerox Phaser 7760DX
+	Xerox Phaser 7760GX
+	Xerox Phaser 8400B
+	Xerox Phaser 8400BD
+	Xerox Phaser 8400DP
+	Xerox Phaser 8400DX
+	Xerox Phaser 8400N
+	Xerox Phaser 8500DN
+	Xerox Phaser 8500N
+	Xerox Phaser 8550DP
+	Xerox Phaser 8550DT
+	Xerox Phaser 8550DX
+	Xerox Phaser 8560DN
+	Xerox WorkCentre 7345
 
    2) Fix printing to Epson Stylus S20, S21, T20, and T21.
 
@@ -275,23 +392,26 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       (to use Ultrachrome K3 rather than Ultrachrome inks and media
       definitions).
 
-   4) Adjusted the printer definitions of the Epson Stylus Pro 7880,
+   4) Correct printer definitions of some Kyocera laser printers to
+      specify tabloid-size (11.7x17) output.
+
+   5) Adjusted the printer definitions of the Epson Stylus Pro 7880,
       9880, and 11880 to be consistent with new definition of 4880.
 
-   5) Correct printer definition of Canon ImageRunner 330s (large
+   6) Correct printer definition of Canon ImageRunner 330s (large
       format).
 
-   6) Add CD Allow Other Media Sizes option to Epson printers to
+   7) Add CD Allow Other Media Sizes option to Epson printers to
       permit printing to other media sizes when using third party
       trays.
 
-   7) Correct the behavior of scan and page dry times for Epson Stylus
+   8) Correct the behavior of scan and page dry times for Epson Stylus
       Pro printers.
 
-   8) The Enhanced Print plugin for GIMP now allows printing very
+   9) The Enhanced Print plugin for GIMP now allows printing very
       small images at their correct sizes.
 
-   9) A Finnish translation has been added.
+   10) A Finnish translation has been added.
    
 
 * Changes from 5.2.4

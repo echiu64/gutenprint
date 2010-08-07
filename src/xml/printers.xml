@@ -701,6 +701,8 @@
       <printer translate="name" name="Brother HL-1670N" driver="brother-hl-1670n" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-1670N" />
       <printer translate="name" name="Brother HL-1850" driver="brother-hl-1850" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-1850" />
       <printer translate="name" name="Brother HL-1870N" driver="brother-hl-1870n" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-1870N" />
+      <printer translate="name" name="Brother HL-2030" driver="brother-hl-2030" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2030" />
+      <printer translate="name" name="Brother HL-2035" driver="brother-hl-2035" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2035" />
       <printer translate="name" name="Brother HL-2060" deviceid="MFG:Brother;MDL:HL-2040 series;DES:None;CMD:PJL,HBP;" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2060" />
       <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2460" />
       <printer translate="name" name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2460N" />
@@ -728,6 +730,7 @@
       <printer translate="name" name="Canon LBP-1000" deviceid="MFG:Canon;MDL:LBP-1000;DES:LBP-1000;CMD:PCL-XL;" driver="canon-lbp-1000" manufacturer="Canon" model="6" parameters="pcl_laser_params" foomaticid="Canon-LBP-1000" />
       <printer translate="name" name="Canon LBP-1260" driver="canon-lbp-1260" manufacturer="Canon" model="6" parameters="pcl_laser_params" foomaticid="Canon-LBP-1260" />
       <printer translate="name" name="Canon LBP-1760" driver="canon-lbp-1760" manufacturer="Canon" model="6" parameters="pcl_laser_params" foomaticid="Canon-LBP-1760" />
+      <printer translate="name" name="Canon LBP-3360" driver="canon-lbp-3360" manufacturer="Canon" model="6" parameters="pcl_laser_params" foomaticid="Canon-LBP-3360" />
       <printer translate="name" name="Canon imageRunner 330s" driver="canon-ir_330s" manufacturer="Canon" model="61" parameters="pcl_laser_params" foomaticid="Canon-imageRunner_330s" />
       <printer translate="name" name="Citizen ProJet II" driver="citizen-projet_ii" manufacturer="Citizen" model="2" parameters="pcl_laser_params" foomaticid="Citizen-ProJet_II" />
       <printer translate="name" name="DEC 1800" driver="dec-1800" manufacturer="DEC" model="3" parameters="pcl_laser_params" foomaticid="DEC-1800" />
@@ -1166,52 +1169,84 @@
       <printer translate="name" name="Infotec MP 4000B" driver="infotec-mp_4000b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" foomaticid="Infotec-MP_4000B" />
       <printer translate="name" name="Infotec MP 5000" driver="infotec-mp_5000" manufacturer="Infotec" model="61" parameters="pcl_laser_params" foomaticid="Infotec-MP_5000" />
       <printer translate="name" name="Infotec MP 5000B" driver="infotec-mp_5000b" manufacturer="Infotec" model="61" parameters="pcl_laser_params" foomaticid="Infotec-MP_5000B" />
+      <printer translate="name" name="Kyocera CS-1815" driver="kyocera-cs-1815" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-CS-1815" />
       <printer translate="name" name="Kyocera F-1010" deviceid="MFG:Kyocera;MDL:F-1010;DES:Kyocera F-1010;" driver="kyocera-f-1010" manufacturer="Kyocera" model="22" parameters="pcl_laser_params" foomaticid="Kyocera-F-1010" />
       <printer translate="name" name="Kyocera FS-600 - KPDL-2" driver="kyocera-fs-600_kpdl-2" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-600_KPDL-2" />
       <printer translate="name" name="Kyocera FS-600" deviceid="MFG:Kyocera;MDL:Kyocera FS-600;DES:Kyocera FS-600;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-600" />
       <printer translate="name" name="Kyocera FS-680" deviceid="MFG:Kyocera;MDL:Kyocera FS-680;DES:Kyocera FS-680;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-680" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-680" />
       <printer translate="name" name="Kyocera FS-800" deviceid="MFG:Kyocera;MDL:Kyocera FS-800;DES:Kyocera FS-800;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-800" />
+      <printer translate="name" name="Kyocera FS-920" driver="kyocera-fs-920" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-920" />
       <printer translate="name" name="Kyocera FS-1000" deviceid="MFG:Kyocera;MDL:Kyocera FS-1000;DES:Kyocera FS-1000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1000" />
       <printer translate="name" name="Kyocera FS-1000+" driver="kyocera-fs-1000plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1000plus" />
       <printer translate="name" name="Kyocera FS-1010" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1010;DES:Kyocera FS-1010;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1010" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1010" />
+      <printer translate="name" name="Kyocera FS-1018MFP" driver="kyocera-fs-1018mfp" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1018MFP" />
+      <printer translate="name" name="Kyocera FS-1020D" driver="kyocera-fs-1020d" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1020D" />
+      <printer translate="name" name="Kyocera FS-1030D" driver="kyocera-fs-1030d" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1030D" />
       <printer translate="name" name="Kyocera FS-1050" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1050;DES:Kyocera FS-1050;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1050" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1050" />
+      <printer translate="name" name="Kyocera FS-1118MFP" driver="kyocera-fs-1118mfp" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1118MFP" />
       <printer translate="name" name="Kyocera FS-1200" deviceid="MFG:Kyocera;MDL:Kyocera FS-1200;DES:Kyocera FS-1200;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1200" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1200" />
       <printer translate="name" name="Kyocera FS-1600" deviceid="MFG:Kyocera;MDL:FS-1600;DES:Kyocera FS-1600;" driver="kyocera-fs-1600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1600" />
       <printer translate="name" name="Kyocera FS-1600+" driver="kyocera-fs-1600plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1600plus" />
       <printer translate="name" name="Kyocera FS-1700" deviceid="MFG:Kyocera;MDL:Kyocera FS-1700;DES:Kyocera FS-1700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1700" />
       <printer translate="name" name="Kyocera FS-1700+" driver="kyocera-fs-1700plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1700plus" />
+      <printer translate="name" name="Kyocera FS-1714M" driver="kyocera-fs-1714m" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1714M" />
       <printer translate="name" name="Kyocera FS-1750" deviceid="MFG:Kyocera;MDL:Kyocera FS-1750;DES:Kyocera FS-1750;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1750" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1750" />
       <printer translate="name" name="Kyocera FS-1800" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1800;DES:Kyocera FS-1800;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1800" />
       <printer translate="name" name="Kyocera FS-1800+" driver="kyocera-fs-1800plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1800plus" />
       <printer translate="name" name="Kyocera FS-1900" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-1900;DES:Kyocera FS-1900;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-1900" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1900" />
+      <printer translate="name" name="Kyocera FS-1920" driver="kyocera-fs-1920" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-1920" />
+      <printer translate="name" name="Kyocera FS-2000D" driver="kyocera-fs-2000d" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-2000D" />
       <printer translate="name" name="Kyocera FS-3500" deviceid="MFG:Kyocera;MDL:FS-3500;DES:Kyocera FS-3500;" driver="kyocera-fs-3500" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3500" />
       <printer translate="name" name="Kyocera FS-3600" deviceid="MFG:Kyocera;MDL:FS-3600;DES:Kyocera FS-3600;" driver="kyocera-fs-3600" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3600" />
       <printer translate="name" name="Kyocera FS-3600+" driver="kyocera-fs-3600plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3600plus" />
       <printer translate="name" name="Kyocera FS-3700" deviceid="MFG:Kyocera;MDL:Kyocera FS-3700;DES:Kyocera FS-3700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-3700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3700" />
       <printer translate="name" name="Kyocera FS-3700+" driver="kyocera-fs-3700plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3700plus" />
+      <printer translate="name" name="Kyocera FS-3718M" driver="kyocera-fs-3718m" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3718M" />
       <printer translate="name" name="Kyocera FS-3750" deviceid="MFG:Kyocera;MDL:Kyocera FS-3750;DES:Kyocera FS-3750;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-3750" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3750" />
       <printer translate="name" name="Kyocera FS-3800" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-3800;DES:Kyocera FS-3800;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-3800" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3800" />
+      <printer translate="name" name="Kyocera FS-3820N" driver="kyocera-fs-3820n" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3820N" />
+      <printer translate="name" name="Kyocera FS-3830N" driver="kyocera-fs-3830n" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3830N" />
+      <printer translate="name" name="Kyocera FS-3900DN" driver="kyocera-fs-3900dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-3900DN" />
+      <printer translate="name" name="Kyocera FS-4000DN" driver="kyocera-fs-4000dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-4000DN" />
       <printer translate="name" name="Kyocera FS-5800C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5800C;DES:Kyocera FS-5800C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5800c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-5800C" />
       <printer translate="name" name="Kyocera FS-5900C" deviceid="MFG:Kyocera;MDL:Kyocera FS-5900C;DES:Kyocera FS-5900C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-5900c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-5900C" />
+      <printer translate="name" name="Kyocera FS-6020" driver="kyocera-fs-6020" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6020" />
+      <printer translate="name" name="Kyocera FS-6026" driver="kyocera-fs-6026" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6026" />
+      <printer translate="name" name="Kyocera FS-6300" driver="kyocera-fs-6300" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6300" />
       <printer translate="name" name="Kyocera FS-6500" deviceid="MFG:Kyocera;MDL:FS-6500;DES:Kyocera FS-6500;" driver="kyocera-fs-6500" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6500" />
-      <printer translate="name" name="Kyocera FS-6500+" driver="kyocera-fs-6500plus" manufacturer="Kyocera" model="32" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6500plus" />
-      <printer translate="name" name="Kyocera FS-6700" deviceid="MFG:Kyocera;MDL:Kyocera FS-6700;DES:Kyocera FS-6700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-6700" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6700" />
-      <printer translate="name" name="Kyocera FS-7000" deviceid="MFG:Kyocera;MDL:Kyocera FS-7000;DES:Kyocera FS-7000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-7000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-7000" />
-      <printer translate="name" name="Kyocera FS-7000+" driver="kyocera-fs-7000plus" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-7000plus" />
-      <printer translate="name" name="Kyocera FS-8000C" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-8000C;DES:Kyocera FS-8000C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-8000c" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-8000C" />
-      <printer translate="name" name="Kyocera FS-9000" deviceid="MFG:Kyocera;MDL:Kyocera FS-9000;DES:Kyocera FS-9000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9000" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9000" />
-      <printer translate="name" name="Kyocera FS-9100DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9100DN;DES:Kyocera FS-9100DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9100dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9100DN" />
-      <printer translate="name" name="Kyocera FS-9500DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9500DN;DES:Kyocera FS-9500DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9500dn" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9500DN" />
+      <printer translate="name" name="Kyocera FS-6500+" driver="kyocera-fs-6500plus" manufacturer="Kyocera" model="35" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6500plus" />
+      <printer translate="name" name="Kyocera FS-6700" deviceid="MFG:Kyocera;MDL:Kyocera FS-6700;DES:Kyocera FS-6700;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-6700" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6700" />
+      <printer translate="name" name="Kyocera FS-6750" driver="kyocera-fs-6750" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6750" />
+      <printer translate="name" name="Kyocera FS-6900" driver="kyocera-fs-6900" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6900" />
+      <printer translate="name" name="Kyocera FS-6950DN" driver="kyocera-fs-6950dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-6950DN" />
+      <printer translate="name" name="Kyocera FS-7000" deviceid="MFG:Kyocera;MDL:Kyocera FS-7000;DES:Kyocera FS-7000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-7000" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-7000" />
+      <printer translate="name" name="Kyocera FS-7000+" driver="kyocera-fs-7000plus" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-7000plus" />
+      <printer translate="name" name="Kyocera FS-7028M" driver="kyocera-fs-7028m" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-7028M" />
+      <printer translate="name" name="Kyocera FS-8000C" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-8000C;DES:Kyocera FS-8000C;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-8000c" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-8000C" />
+      <printer translate="name" name="Kyocera FS-9000" deviceid="MFG:Kyocera;MDL:Kyocera FS-9000;DES:Kyocera FS-9000;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9000" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9000" />
+      <printer translate="name" name="Kyocera FS-9100DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9100DN;DES:Kyocera FS-9100DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9100dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9100DN" />
+      <printer translate="name" name="Kyocera FS-9130DN" driver="kyocera-fs-9130dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9130DN" />
+      <printer translate="name" name="Kyocera FS-9500DN" deviceid="MFG:Kyocera Mita;MDL:Kyocera Mita FS-9500DN;DES:Kyocera FS-9500DN;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-fs-9500dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9500DN" />
+      <printer translate="name" name="Kyocera FS-9530DN" driver="kyocera-fs-9530dn" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-FS-9530DN" />
+      <printer translate="name" name="Kyocera KM-1510" driver="kyocera-km-1510" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-1510" />
       <printer translate="name" name="Kyocera KM-1530" deviceid="MFG:Kyocera Mita;MDL:KM-1530;DES:Kyocera Mita KM-1530;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-1530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-1530" />
       <printer translate="name" name="Kyocera KM-1810" deviceid="MFG:Kyocera Mita;MDL:KM-1810;DES:Kyocera Mita KM-1810;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-1810" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-1810" />
-      <printer translate="name" name="Kyocera KM-2030" deviceid="MFG:Kyocera Mita;MDL:KM-2030;DES:Kyocera Mita KM-2030;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-2030" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-2030" />
-      <printer translate="name" name="Kyocera KM-2530" deviceid="MFG:Kyocera Mita;MDL:KM-2530;DES:Kyocera Mita KM-2530;" driver="kyocera-km-2530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-2530" />
-      <printer translate="name" name="Kyocera KM-3530" deviceid="MFG:Kyocera Mita;MDL:KM-3530;DES:Kyocera Mita KM-3530;" driver="kyocera-km-3530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-3530" />
-      <printer translate="name" name="Kyocera KM-4230" deviceid="MFG:Kyocera Mita;MDL:KM-4230;DES:Kyocera Mita KM-4230;" driver="kyocera-km-4230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-4230" />
-      <printer translate="name" name="Kyocera KM-4530" deviceid="MFG:Kyocera Mita;MDL:KM-4530;DES:Kyocera Mita KM-4530;" driver="kyocera-km-4530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-4530" />
-      <printer translate="name" name="Kyocera KM-5230" deviceid="MFG:Kyocera Mita;MDL:KM-5230;DES:Kyocera Mita KM-5230;" driver="kyocera-km-5230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-5230" />
-      <printer translate="name" name="Kyocera KM-5530" deviceid="MFG:Kyocera Mita;MDL:KM-5530;DES:Kyocera Mita KM-5530;" driver="kyocera-km-5530" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-5530" />
-      <printer translate="name" name="Kyocera KM-6230" deviceid="MFG:Kyocera Mita;MDL:KM-6230;DES:Kyocera Mita KM-6230;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-6230" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-6230" />
+      <printer translate="name" name="Kyocera KM-1815" driver="kyocera-km-1815" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-1815" />
+      <printer translate="name" name="Kyocera KM-1820" driver="kyocera-km-1820" manufacturer="Kyocera" model="62" parameters="pcl_laser_params" foomaticid="Kyocera-KM-1820" />
+      <printer translate="name" name="Kyocera KM-2030" deviceid="MFG:Kyocera Mita;MDL:KM-2030;DES:Kyocera Mita KM-2030;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-2030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-2030" />
+      <printer translate="name" name="Kyocera KM-2530" deviceid="MFG:Kyocera Mita;MDL:KM-2530;DES:Kyocera Mita KM-2530;" driver="kyocera-km-2530" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-2530" />
+      <printer translate="name" name="Kyocera KM-3050" driver="kyocera-km-3050" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-3050" />
+      <printer translate="name" name="Kyocera KM-3530" deviceid="MFG:Kyocera Mita;MDL:KM-3530;DES:Kyocera Mita KM-3530;" driver="kyocera-km-3530" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-3530" />
+      <printer translate="name" name="Kyocera KM-4050" driver="kyocera-km-4050" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-4050" />
+      <printer translate="name" name="Kyocera KM-4230" deviceid="MFG:Kyocera Mita;MDL:KM-4230;DES:Kyocera Mita KM-4230;" driver="kyocera-km-4230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-4230" />
+      <printer translate="name" name="Kyocera KM-4230/5230" driver="kyocera-km-4230_5230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-4230_5230" />
+      <printer translate="name" name="Kyocera KM-4530" deviceid="MFG:Kyocera Mita;MDL:KM-4530;DES:Kyocera Mita KM-4530;" driver="kyocera-km-4530" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-4530" />
+      <printer translate="name" name="Kyocera KM-5050" driver="kyocera-km-5050" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-5050" />
+      <printer translate="name" name="Kyocera KM-5230" deviceid="MFG:Kyocera Mita;MDL:KM-5230;DES:Kyocera Mita KM-5230;" driver="kyocera-km-5230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-5230" />
+      <printer translate="name" name="Kyocera KM-5530" deviceid="MFG:Kyocera Mita;MDL:KM-5530;DES:Kyocera Mita KM-5530;" driver="kyocera-km-5530" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-5530" />
+      <printer translate="name" name="Kyocera KM-6030" driver="kyocera-km-6030" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-6030" />
+      <printer translate="name" name="Kyocera KM-6230" deviceid="MFG:Kyocera Mita;MDL:KM-6230;DES:Kyocera Mita KM-6230;CMD:POSTSCRIPT,PJL,PCL;" driver="kyocera-km-6230" manufacturer="Kyocera" model="64" parameters="pcl_laser_params" foomaticid="Kyocera-KM-6230" />
+      <printer translate="name" name="Kyocera KM-8030" driver="kyocera-km-8030" manufacturer="Kyocera" model="63" parameters="pcl_laser_params" foomaticid="Kyocera-KM-8030" />
       <printer translate="name" name="Lanier 5622" driver="lanier-5622" manufacturer="Lanier" model="61" parameters="pcl_laser_params" foomaticid="Lanier-5622" />
       <printer translate="name" name="Lanier 5627" driver="lanier-5627" manufacturer="Lanier" model="61" parameters="pcl_laser_params" foomaticid="Lanier-5627" />
       <printer translate="name" name="Lanier 5632" driver="lanier-5632" manufacturer="Lanier" model="61" parameters="pcl_laser_params" foomaticid="Lanier-5632" />
@@ -1335,6 +1370,7 @@
       <printer translate="name" name="NRG MP 6500" driver="nrg-mp_6500" manufacturer="NRG" model="61" parameters="pcl_laser_params" foomaticid="NRG-MP_6500" />
       <printer translate="name" name="NRG MP 7500" driver="nrg-mp_7500" manufacturer="NRG" model="61" parameters="pcl_laser_params" foomaticid="NRG-MP_7500" />
       <printer translate="name" name="NRG MP 9000" driver="nrg-mp_9000" manufacturer="NRG" model="61" parameters="pcl_laser_params" foomaticid="NRG-MP_9000" />
+      <printer translate="name" name="Oki B4350" driver="oki-b4350" manufacturer="Oki" model="6" parameters="pcl_laser_params" foomaticid="Oki-B4350" />
       <printer translate="name" name="Oki OL400" driver="okidata-ol400" manufacturer="Oki" model="2" parameters="pcl_laser_params" foomaticid="Oki-OL400" />
       <printer translate="name" name="Oki OL400e" driver="okidata-ol400e" manufacturer="Oki" model="2" parameters="pcl_laser_params" foomaticid="Oki-OL400e" />
       <printer translate="name" name="Oki OL400ex" driver="okidata-ol400ex" manufacturer="Oki" model="2" parameters="pcl_laser_params" foomaticid="Oki-OL400ex" />
@@ -1500,6 +1536,10 @@
       <printer translate="name" name="Star LS-04" driver="star-ls-04" manufacturer="Star" model="2" parameters="pcl_laser_params" foomaticid="Star-LS-04" />
       <printer translate="name" name="Star LaserPrinter 8" driver="star-lp_8" manufacturer="Star" model="2" parameters="pcl_laser_params" foomaticid="Star-LaserPrinter_8" />
       <printer translate="name" name="Tally MT908" driver="tally-mt908" manufacturer="Tally" model="3" parameters="pcl_laser_params" foomaticid="Tally-MT908" />
+      <printer translate="name" name="Tektronix Phaser 750DP" driver="tektronix-phaser_750dp" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" foomaticid="Tektronix-Phaser_750DP" />
+      <printer translate="name" name="Tektronix Phaser 750DX" driver="tektronix-phaser_750dx" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" foomaticid="Tektronix-Phaser_750DX" />
+      <printer translate="name" name="Tektronix Phaser 750N" driver="tektronix-phaser_750n" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" foomaticid="Tektronix-Phaser_750N" />
+      <printer translate="name" name="Tektronix Phaser 750P" driver="tektronix-phaser_750p" manufacturer="Tektronix" model="6" parameters="pcl_laser_params" foomaticid="Tektronix-Phaser_750P" />
       <printer translate="name" name="Xerox Able 1406" driver="xerox-able_1406" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Able_1406" />
       <printer translate="name" name="Xerox DocuPrint 4508" driver="xerox-dp_4508" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-DocuPrint_4508" />
       <printer translate="name" name="Xerox DocuPrint C20" driver="xerox-dp_c20" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-DocuPrint_C20" />
@@ -1509,6 +1549,75 @@
       <printer translate="name" name="Xerox DocuPrint P1202" deviceid="MFG:Xerox;MDL:DocuPrint;CMD:PCL5E;" driver="xerox-dp_p1202" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-DocuPrint_P1202" />
       <printer translate="name" name="Xerox DocuPrint P8e" deviceid="MFG:Xerox;MDL:DocuPrint P8e;CMD:PCL5E2;" driver="xerox-dp_p8e" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-DocuPrint_P8e" />
       <printer translate="name" name="Xerox Document Centre 400" driver="xerox-dc_400" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Document_Centre_400" />
+      <printer translate="name" name="Xerox Phaser 2135" driver="xerox-phaser_2135" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_2135" />
+      <printer translate="name" name="Xerox Phaser 4400B" driver="xerox-phaser_4400b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4400B" />
+      <printer translate="name" name="Xerox Phaser 4400DT" driver="xerox-phaser_4400dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4400DT" />
+      <printer translate="name" name="Xerox Phaser 4400DX" driver="xerox-phaser_4400dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4400DX" />
+      <printer translate="name" name="Xerox Phaser 4400N" driver="xerox-phaser_4400n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4400N" />
+      <printer translate="name" name="Xerox Phaser 4500B" driver="xerox-phaser_4500b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4500B" />
+      <printer translate="name" name="Xerox Phaser 4500DT" driver="xerox-phaser_4500dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4500DT" />
+      <printer translate="name" name="Xerox Phaser 4500DX" driver="xerox-phaser_4500dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4500DX" />
+      <printer translate="name" name="Xerox Phaser 4500N" driver="xerox-phaser_4500n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4500N" />
+      <printer translate="name" name="Xerox Phaser 4510B" driver="xerox-phaser_4510b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4510B" />
+      <printer translate="name" name="Xerox Phaser 4510DT" driver="xerox-phaser_4510dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4510DT" />
+      <printer translate="name" name="Xerox Phaser 4510DX" driver="xerox-phaser_4510dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4510DX" />
+      <printer translate="name" name="Xerox Phaser 4510N" driver="xerox-phaser_4510n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_4510N" />
+      <printer translate="name" name="Xerox Phaser 5500B" driver="xerox-phaser_5500b" manufacturer="Xerox" model="64" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_5500B" />
+      <printer translate="name" name="Xerox Phaser 5500DN" driver="xerox-phaser_5500dn" manufacturer="Xerox" model="64" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_5500DN" />
+      <printer translate="name" name="Xerox Phaser 5500DT" driver="xerox-phaser_5500dt" manufacturer="Xerox" model="64" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_5500DT" />
+      <printer translate="name" name="Xerox Phaser 5500DX" driver="xerox-phaser_5500dx" manufacturer="Xerox" model="64" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_5500DX" />
+      <printer translate="name" name="Xerox Phaser 5500N" driver="xerox-phaser_5500n" manufacturer="Xerox" model="64" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_5500N" />
+      <printer translate="name" name="Xerox Phaser 6130N" driver="xerox-phaser_6130n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6130N" />
+      <printer translate="name" name="Xerox Phaser 6180DN" driver="xerox-phaser_6180dn" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6180DN" />
+      <printer translate="name" name="Xerox Phaser 6180MFP-D" driver="xerox-phaser_6180mfp-d" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6180MFP-D" />
+      <printer translate="name" name="Xerox Phaser 6200B" driver="xerox-phaser_6200b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6200B" />
+      <printer translate="name" name="Xerox Phaser 6200DP" driver="xerox-phaser_6200dp" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6200DP" />
+      <printer translate="name" name="Xerox Phaser 6200DX" driver="xerox-phaser_6200dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6200DX" />
+      <printer translate="name" name="Xerox Phaser 6200N" driver="xerox-phaser_6200n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6200N" />
+      <printer translate="name" name="Xerox Phaser 6250B" driver="xerox-phaser_6250b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6250B" />
+      <printer translate="name" name="Xerox Phaser 6250DP" driver="xerox-phaser_6250dp" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6250DP" />
+      <printer translate="name" name="Xerox Phaser 6250DT" driver="xerox-phaser_6250dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6250DT" />
+      <printer translate="name" name="Xerox Phaser 6250DX" driver="xerox-phaser_6250dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6250DX" />
+      <printer translate="name" name="Xerox Phaser 6250N" driver="xerox-phaser_6250n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6250N" />
+      <printer translate="name" name="Xerox Phaser 6300DN" driver="xerox-phaser_6300dn" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6300DN" />
+      <printer translate="name" name="Xerox Phaser 6300N" driver="xerox-phaser_6300n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6300N" />
+      <printer translate="name" name="Xerox Phaser 6350DP" driver="xerox-phaser_6350dp" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6350DP" />
+      <printer translate="name" name="Xerox Phaser 6350DT" driver="xerox-phaser_6350dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6350DT" />
+      <printer translate="name" name="Xerox Phaser 6350DX" driver="xerox-phaser_6350dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6350DX" />
+      <printer translate="name" name="Xerox Phaser 6360DN" driver="xerox-phaser_6360dn" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6360DN" />
+      <printer translate="name" name="Xerox Phaser 6360DX" driver="xerox-phaser_6360dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_6360DX" />
+      <printer translate="name" name="Xerox Phaser 7300B" driver="xerox-phaser_7300b" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7300B" />
+      <printer translate="name" name="Xerox Phaser 7300DN" driver="xerox-phaser_7300dn" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7300DN" />
+      <printer translate="name" name="Xerox Phaser 7300DT" driver="xerox-phaser_7300dt" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7300DT" />
+      <printer translate="name" name="Xerox Phaser 7300DX" driver="xerox-phaser_7300dx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7300DX" />
+      <printer translate="name" name="Xerox Phaser 7300N" driver="xerox-phaser_7300n" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7300N" />
+      <printer translate="name" name="Xerox Phaser 7400DN" driver="xerox-phaser_7400dn" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7400DN" />
+      <printer translate="name" name="Xerox Phaser 7400DT" driver="xerox-phaser_7400dt" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7400DT" />
+      <printer translate="name" name="Xerox Phaser 7400DX" driver="xerox-phaser_7400dx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7400DX" />
+      <printer translate="name" name="Xerox Phaser 7400DXF" driver="xerox-phaser_7400dxf" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7400DXF" />
+      <printer translate="name" name="Xerox Phaser 7400N" driver="xerox-phaser_7400n" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7400N" />
+      <printer translate="name" name="Xerox Phaser 7700DN" driver="xerox-phaser_7700dn" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7700DN" />
+      <printer translate="name" name="Xerox Phaser 7700DX" driver="xerox-phaser_7700dx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7700DX" />
+      <printer translate="name" name="Xerox Phaser 7700GX" driver="xerox-phaser_7700gx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7700GX" />
+      <printer translate="name" name="Xerox Phaser 7750B" driver="xerox-phaser_7750b" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7750B" />
+      <printer translate="name" name="Xerox Phaser 7750DN" driver="xerox-phaser_7750dn" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7750DN" />
+      <printer translate="name" name="Xerox Phaser 7750DXF" driver="xerox-phaser_7750dxf" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7750DXF" />
+      <printer translate="name" name="Xerox Phaser 7750GX" driver="xerox-phaser_7750gx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7750GX" />
+      <printer translate="name" name="Xerox Phaser 7760DN" driver="xerox-phaser_7760dn" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7760DN" />
+      <printer translate="name" name="Xerox Phaser 7760DX" driver="xerox-phaser_7760dx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7760DX" />
+      <printer translate="name" name="Xerox Phaser 7760GX" driver="xerox-phaser_7760gx" manufacturer="Xerox" model="63" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_7760GX" />
+      <printer translate="name" name="Xerox Phaser 8400B" driver="xerox-phaser_8400b" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8400B" />
+      <printer translate="name" name="Xerox Phaser 8400BD" driver="xerox-phaser_8400bd" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8400BD" />
+      <printer translate="name" name="Xerox Phaser 8400DP" driver="xerox-phaser_8400dp" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8400DP" />
+      <printer translate="name" name="Xerox Phaser 8400DX" driver="xerox-phaser_8400dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8400DX" />
+      <printer translate="name" name="Xerox Phaser 8400N" driver="xerox-phaser_8400n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8400N" />
+      <printer translate="name" name="Xerox Phaser 8500DN" driver="xerox-phaser_8500dn" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8500DN" />
+      <printer translate="name" name="Xerox Phaser 8500N" driver="xerox-phaser_8500n" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8500N" />
+      <printer translate="name" name="Xerox Phaser 8550DP" driver="xerox-phaser_8550dp" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8550DP" />
+      <printer translate="name" name="Xerox Phaser 8550DT" driver="xerox-phaser_8550dt" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8550DT" />
+      <printer translate="name" name="Xerox Phaser 8550DX" driver="xerox-phaser_8550dx" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8550DX" />
+      <printer translate="name" name="Xerox Phaser 8560DN" driver="xerox-phaser_8560dn" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-Phaser_8560DN" />
+      <printer translate="name" name="Xerox WorkCentre 7345" driver="xerox-workcentre_7345" manufacturer="Xerox" model="6" parameters="pcl_laser_params" foomaticid="Xerox-WorkCentre_7345" />
       <printer translate="name" name="Xerox WorkCentre M118" deviceid="MFG:XEROX;MDL:WorkCentre M118;DES:XEROX WorkCentre M118;" driver="xerox-wc_m118" manufacturer="Xerox" model="61" parameters="pcl_laser_params" foomaticid="Xerox-Work_Centre_M118" />
     </family>
     <family name="lexmark">
