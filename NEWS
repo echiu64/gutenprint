@@ -388,30 +388,38 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
    2) Fix printing to Epson Stylus S20, S21, T20, and T21.
 
-   3) Correct printer definitions of EPSON Stylus Pro 7800 and 9800
-      (to use Ultrachrome K3 rather than Ultrachrome inks and media
-      definitions).
+   3) Adjust printer definitions of EPSON Stylus Pro 7800 and 9800 (to
+      use Ultrachrome K3 rather than Ultrachrome inks and media
+      definitions).  This may result in minor changes in color output;
+      if you determine this to be an issue, use the 7600 or 9600
+      driver as appropriate.
 
-   4) Correct printer definitions of some Kyocera laser printers to
+   4) Adjust the printer definitions of the Epson Stylus Pro 7880,
+      9880, and 11880 to be consistent with new definition of 4880 and
+      use Ultrachrome K3 w/Vivid Magenta ink.  This may result in
+      minor changes in color output.
+
+   5) Correct printing on Epson Stylus Pro printers (x600, x800, and
+      x880 series) to position images correctly on the page and to
+      correctly cut the print in roll feed mode.
+
+   6) Correct printer definitions of some Kyocera laser printers to
       specify tabloid-size (11.7x17) output.
 
-   5) Adjusted the printer definitions of the Epson Stylus Pro 7880,
-      9880, and 11880 to be consistent with new definition of 4880.
-
-   6) Correct printer definition of Canon ImageRunner 330s (large
+   7) Correct printer definition of Canon ImageRunner 330s (large
       format).
 
-   7) Add CD Allow Other Media Sizes option to Epson printers to
+   8) Add CD Allow Other Media Sizes option to Epson printers to
       permit printing to other media sizes when using third party
       trays.
 
-   8) Correct the behavior of scan and page dry times for Epson Stylus
+   9) Correct the behavior of scan and page dry times for Epson Stylus
       Pro printers.
 
-   9) The Enhanced Print plugin for GIMP now allows printing very
+   10) The Enhanced Print plugin for GIMP now allows printing very
       small images at their correct sizes.
 
-   10) A Finnish translation has been added.
+   11) A Finnish translation has been added.
    
 
 * Changes from 5.2.4
