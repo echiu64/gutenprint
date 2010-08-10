@@ -258,7 +258,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	Canon PIXMA MP360
 	Canon PIXMA MP370
-	Canon PIXMA MP380
+	Canon PIXMA MP390
+	Canon PIXMA MP510
 	Canon PIXMA MP970
 
       - Epson inkjet printers:
@@ -392,12 +393,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       use Ultrachrome K3 rather than Ultrachrome inks and media
       definitions).  This may result in minor changes in color output;
       if you determine this to be an issue, use the 7600 or 9600
-      driver as appropriate.
+      driver as appropriate or do not take this upgrade.
 
    4) Adjust the printer definitions of the Epson Stylus Pro 7880,
       9880, and 11880 to be consistent with new definition of 4880 and
       use Ultrachrome K3 w/Vivid Magenta ink.  This may result in
-      minor changes in color output.
+      minor changes in color output; if you determine this to be an
+      issue, use the 7600 or 9600 driver as appropriate or do not take
+      this upgrade.
 
    5) Correct printing on Epson Stylus Pro printers (x600, x800, and
       x880 series) to position images correctly on the page and to
