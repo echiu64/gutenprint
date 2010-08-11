@@ -268,12 +268,19 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	EPSON EP-302
 	EPSON EP-702A
 	EPSON Stylus Photo P50
+	EPSON Stylus Pro 3800 (EXPERIMENTAL)
+	EPSON Stylus Pro 3880 (EXPERIMENTAL)
 	EPSON Stylus Pro 4800
 	EPSON Stylus Pro 4880
 	EPSON Stylus Pro 11800
 	EPSON Stylus T59
 	EPSON Stylus T60
 	EPSON Stylus TX659
+
+	NOTE: The support for the Epson Stylus Pro 3800 and 3880 is
+	experimental and WILL CHANGE SUBSTANTIALLY in future releases.
+	It should not be considered suitable for production use at
+	this time.
 
       - PCL laser printers:
 

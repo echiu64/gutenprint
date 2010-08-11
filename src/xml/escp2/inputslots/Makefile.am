@@ -33,6 +33,7 @@ pkgxmldata_DATA =				\
 	cd_roll_feed.xml			\
 	cutter_roll_feed.xml			\
 	default.xml				\
+	pro3880.xml				\
 	pro_roll_feed.xml			\
 	pro_cutter_roll_feed.xml		\
 	r1800.xml				\

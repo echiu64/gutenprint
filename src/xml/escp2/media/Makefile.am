@@ -54,6 +54,7 @@ pkgxmldata_DATA =				\
 	photo_pigment.xml			\
 	picturemate_4.xml			\
 	picturemate_6.xml			\
+	pro3880_ultrachrome_k3v.xml		\
 	pro_gen1.xml				\
 	pro_gen2.xml				\
 	pro_pigment.xml				\
