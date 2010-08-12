@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.6 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.6">August 12, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.6,a stable release of 5.2. This release offers additional support for Epson Stylus Pro printers, along with some changes for other Epson printers and support for additional Canon inkjets and PCL laser printers.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.6-pre1 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.6-pre1">July 19, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.6-pre1, a release candidate for the upcoming 5.2.6 release. This release offers several bug fixes, and support for additional EPSON Pro printers.  See the <b>Downloads</b> section. 
@@ -142,11 +147,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.4 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.4">July 29, 2009</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from the stable branch of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  The standalone Uninstaller has also been updated.  See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.4-rc1 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.4-rc1">June 16, 2009</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.4-rc1, a release candiddate from the stable branch of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -182,12 +182,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
-			<b>Gutenprint 5.2.6-pre1</b> 
+			<b>Gutenprint 5.2.6</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6-pre1/gutenprint-5.2.6-pre1.dmg/download">gutenprint-5.2.6-pre1.dmg</a></span>&nbsp;&nbsp;(12.9 MB) 
+			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/gutenprint-5.2.6.dmg/download">gutenprint-5.2.6.dmg</a></span>&nbsp;&nbsp;(14.8 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.6-pre1, a release candidate for the upcoming 5.2.6 release. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6-pre1/gutenprint-5.2.6-pre1.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.6, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/gutenprint-5.2.6.tar.bz2/download">source code</a>)
 </p>
 		<p>
 			<b>Gutenprint 5.2.5</b> 
@@ -265,6 +265,180 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from t
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.6"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.6</b> 
+		</td>
+		<td align="right">
+			<b>2010-08-12</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.6</b> is a stable release of 5.2 This release offers additional support for Epson Stylus Pro printers, along with some changes for other Epson printers and support for additional Canon inkjets and PCL laser printers.</p> 
+	
+<ol>	
+	<li>
+New printers supported in this release:
+<br>
+	<ul>
+	<li>Canon inkjet printers:
+		<ul>
+		<li>Canon PIXMA MP360</li>
+	<li>Canon PIXMA MP370</li>
+	<li>Canon PIXMA MP390</li>
+	<li>Canon PIXMA MP510</li>
+	<li>Canon PIXMA MP970</li>
+	</ul></li>
+	<li>Epson inkjet printers:
+	<ul>
+	<li>EPSON Artisan 50</li>
+	<li>EPSON EP-302</li>
+	<li>EPSON EP-702A</li>
+	<li>EPSON Stylus Photo P50</li>
+	<li>EPSON Stylus Pro 3800 (EXPERIMENTAL)</li>
+	<li>EPSON Stylus Pro 3880 (EXPERIMENTAL)</li>
+	<li>EPSON Stylus Pro 4800</li>
+	<li>EPSON Stylus Pro 4880</li>
+	<li>EPSON Stylus Pro 11800</li>
+	<li>EPSON Stylus T59</li>
+	<li>EPSON Stylus T60</li>
+	<li>EPSON Stylus TX659</li>
+	</ul>
+	<br>
+	NOTE:  The support for the Epson Stylus Pro 3800 and 3880 is experimental and WILL CHANGE SUBSTANTIALLLY in future releases. It should not be considered suitable for productions use at this time.<br><br>
+	</li>
+	<li>PCL laser printers:
+	<ul>
+	<li>Brother HL-2030</li>
+	<li>Brother HL-2035</li>
+	<li>Canon LBP-3360</li>
+	<li>Kyocera CS-1815</li>
+	<li>Kyocera FS-1018MFP</li>
+	<li>Kyocera FS-1020D</li>
+	<li>Kyocera FS-1030D</li>
+	<li>Kyocera FS-1118MFP</li>
+	<li>Kyocera FS-1714M</li>
+	<li>Kyocera FS-1920</li>
+	<li>Kyocera FS-2000D</li>
+	<li>Kyocera FS-3718M</li>
+	<li>Kyocera FS-3820N</li>
+	<li>Kyocera FS-3830N</li>
+	<li>Kyocera FS-3900DN</li>
+	<li>Kyocera FS-4000DN</li>
+	<li>Kyocera FS-6020</li>
+	<li>Kyocera FS-6026</li>
+	<li>Kyocera FS-6300</li>
+	<li>Kyocera FS-6750</li>
+	<li>Kyocera FS-6900</li>
+	<li>Kyocera FS-6950DN</li>
+	<li>Kyocera FS-7028M</li>
+	<li>Kyocera FS-9130DN</li>
+	<li>Kyocera FS-920</li>
+	<li>Kyocera FS-9530DN</li>
+	<li>Kyocera KM-1510</li>
+	<li>Kyocera KM-1815</li>
+	<li>Kyocera KM-1820</li>
+	<li>Kyocera KM-3050</li>
+	<li>Kyocera KM-4050</li>
+	<li>Kyocera KM-4230/5230</li>
+	<li>Kyocera KM-5050</li>
+	<li>Kyocera KM-6030</li>
+	<li>Kyocera KM-8030</li>
+	<li>Oki B4350</li>
+	<li>Tektronix Phaser 750DP</li>
+	<li>Tektronix Phaser 750DX</li>
+	<li>Tektronix Phaser 750N</li>
+	<li>Tektronix Phaser 750P</li>
+	<li>Xerox Phaser 2135</li>
+	<li>Xerox Phaser 4400B</li>
+	<li>Xerox Phaser 4400DT</li>
+	<li>Xerox Phaser 4400DX</li>
+	<li>Xerox Phaser 4400N</li>
+	<li>Xerox Phaser 4500B</li>
+	<li>Xerox Phaser 4500DT</li>
+	<li>Xerox Phaser 4500DX</li>
+	<li>Xerox Phaser 4500N</li>
+	<li>Xerox Phaser 4510B</li>
+	<li>Xerox Phaser 4510DT</li>
+	<li>Xerox Phaser 4510DX</li>
+	<li>Xerox Phaser 4510N</li>
+	<li>Xerox Phaser 5500B</li>
+	<li>Xerox Phaser 5500DN</li>
+	<li>Xerox Phaser 5500DT</li>
+	<li>Xerox Phaser 5500DX</li>
+	<li>Xerox Phaser 5500N</li>
+	<li>Xerox Phaser 6130N</li>
+	<li>Xerox Phaser 6180DN</li>
+	<li>Xerox Phaser 6180MFP-D</li>
+	<li>Xerox Phaser 6200B</li>
+	<li>Xerox Phaser 6200DP</li>
+	<li>Xerox Phaser 6200DX</li>
+	<li>Xerox Phaser 6200N</li>
+	<li>Xerox Phaser 6250B</li>
+	<li>Xerox Phaser 6250DP</li>
+	<li>Xerox Phaser 6250DT</li>
+	<li>Xerox Phaser 6250DX</li>
+	<li>Xerox Phaser 6250N</li>
+	<li>Xerox Phaser 6300DN</li>
+	<li>Xerox Phaser 6300N</li>
+	<li>Xerox Phaser 6350DP</li>
+	<li>Xerox Phaser 6350DT</li>
+	<li>Xerox Phaser 6350DX</li>
+	<li>Xerox Phaser 6360DN</li>
+	<li>Xerox Phaser 6360DX</li>
+	<li>Xerox Phaser 7300B</li>
+	<li>Xerox Phaser 7300DN</li>
+	<li>Xerox Phaser 7300DT</li>
+	<li>Xerox Phaser 7300DX</li>
+	<li>Xerox Phaser 7300N</li>
+	<li>Xerox Phaser 7400DN</li>
+	<li>Xerox Phaser 7400DT</li>
+	<li>Xerox Phaser 7400DX</li>
+	<li>Xerox Phaser 7400DXF</li>
+	<li>Xerox Phaser 7400N</li>
+	<li>Xerox Phaser 7700DN</li>
+	<li>Xerox Phaser 7700DX</li>
+	<li>Xerox Phaser 7700GX</li>
+	<li>Xerox Phaser 7750B</li>
+	<li>Xerox Phaser 7750DN</li>
+	<li>Xerox Phaser 7750DXF</li>
+	<li>Xerox Phaser 7750GX</li>
+	<li>Xerox Phaser 7760DN</li>
+	<li>Xerox Phaser 7760DX</li>
+	<li>Xerox Phaser 7760GX</li>
+	<li>Xerox Phaser 8400B</li>
+	<li>Xerox Phaser 8400BD</li>
+	<li>Xerox Phaser 8400DP</li>
+	<li>Xerox Phaser 8400DX</li>
+	<li>Xerox Phaser 8400N</li>
+	<li>Xerox Phaser 8500DN</li>
+	<li>Xerox Phaser 8500N</li>
+	<li>Xerox Phaser 8550DP</li>
+	<li>Xerox Phaser 8550DT</li>
+	<li>Xerox Phaser 8550DX</li>
+	<li>Xerox Phaser 8560DN</li>
+	<li>Xerox WorkCentre 7345<br><br></li>
+	</ul>
+	</li>
+	</ul>
+	</li>
+	<li>Fix printing to Epson Stylus S20, S21, T20, and T21.</li>
+	<li>Adjust printer definitions of EPSON Stylus Pro 7800 and 9800 (to use Ultrachrome K3 rather than Ultrachrome inks and media definitions).  This may result in minor changes in color output; if you determine this to be an issue, use the 7600 or 9600 driver as appropriate or do not take this upgrade.</li>
+	<li>Adjust the printer definitions of the Epson Stylus Pro 7880, 9880, and 11880 to be consistent with new definition of 4880 and use Ultrachrome K3 w/Vivid Magenta ink.  This may result in minor changes in color output; if you determine this to be an issue, use the 7600 or 9600 driver as appropriate or do not take this upgrade.</li>
+	<li>Correct printing on Epson Stylus Pro printers (x600, x800, and x880 series) to position images correctly on the page and to correctly cut the print in roll feed mode.</li>
+	<li>Correct printer definitions of some Kyocera laser printers to specify tabloid-size (11.7x17) output.</li>
+	<li>Correct printer definition of Canon ImageRunner 330s (large format).</li>
+	<li>Add CD Allow Other Media Sizes option to Epson printers to permit printing to other media sizes when using third party trays.</li>
+	<li>Correct the behavior of scan and page dry times for Epson Stylus Pro printers.</li>
+	<li>A Finnish translation has been added.</li>
+</ol>
+ <p>
+Full details are listed in the <a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/NEWS/view">release notes</a>.
+</p>
+
 <a name="5.2.6-pre1"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
@@ -314,13 +488,6 @@ Economy, Economy, and Draft.</li>
  <p>
 Full details are listed in the <a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6-pre1/NEWS/view">release notes</a>.
 </p>
-
-
-
-
-
-
-
 
 <a name="5.2.5"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
