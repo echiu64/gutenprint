@@ -105,6 +105,19 @@ static const stp_dotsize_t dotsizes_4l[] = {
 
 DECLARE_INK(2,4);
 
+/*Gernot add:*/
+DECLARE_INK(4,4);
+
+/* Gernot: need 5 levels here */
+static const stp_dotsize_t dotsizes_5l[] = {
+  { 0x1, 0.45 },
+  { 0x2, 0.55 },
+  { 0x3, 0.68 },
+  { 0x4, 1.0 }
+};
+/*Gernot add:*/
+DECLARE_INK(4,5);
+
 static const stp_dotsize_t dotsizes_7l[] = {
   { 0x1, 0.45 },
   { 0x2, 0.55 },
@@ -137,6 +150,21 @@ static const stp_dotsize_t dotsizes_8l[] = {
 };
 
 DECLARE_INK(4,8);
+
+/* Gernot: need 9 levels here */
+static const stp_dotsize_t dotsizes_9l[] = {
+  { 0x1, 0.14 },
+  { 0x2, 0.29 },
+  { 0x3, 0.43 },
+  { 0x4, 0.55 },
+  { 0x5, 0.66 },
+  { 0x6, 0.71 },
+  { 0x7, 0.88 },
+  { 0x8, 1.00 }
+};
+/*Gernot add:*/
+DECLARE_INK(8,9);
+
 
 static const stp_dotsize_t dotsizes_16l[] = {
   { 0x1, 0.07 },
@@ -376,6 +404,8 @@ static const canon_inkset_t canon_9_C4M4Y4K2k4_inkset[] = {
 };
 
 /* iP4000 mode used for CD printing (quality 3) */
+/* Gernot: This is also the normal hi-quality mode for iP4000 at quality level 3 */
+/*         The same inket is used at quality levels 4, 3 and 2 for CD printing */
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -415,6 +445,41 @@ static const canon_inkset_t canon_11_C2M2Y2K2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL}
+};
+
+
+/* Gernot: MP150 (MP170 for tests) greyscale */
+static const canon_inkset_t canon_13_K2_inkset[] = {
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'K',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+/* Gernot: MP150 (MP250 for tests) greyscale */
+static const canon_inkset_t canon_13_K3_inkset[] = {
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'K',1.0,&canon_2b_3l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
 };
 
 static const canon_inkset_t canon_13_C2M2Y2K2_inkset[] = {
@@ -481,6 +546,104 @@ static const canon_inkset_t canon_13_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* Gernot: MP250 photo modes */
+static const canon_inkset_t canon_13_C4M4Y4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* Gernot: MP250 high mode */
+static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
+        {'K',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+
+/* Gernot: MP150 (MP170 for tests) high-quality mode */
+static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
+        {'C',1.0,&canon_4b_4l_ink},
+        {'M',1.0,&canon_4b_4l_ink},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_4b_4l_ink},
+        {'m',1.0,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* Gernot: MP150 (MP170 for tests) high-quality mode for
+           High Resolution Paper
+           Inkjet Hagaki
+	   pro Photo Paper
+	   super Photo Paper
+	   super Photo Paper Double Sided
+	   matte Photo Paper
+	   other Photo Paper
+
+Also used for all modes of gloss Photo Paper	  
+
+ for some reason there is a hack for iP6700 appearing here which might make the y into a k (swapping)
+*/
+static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
+        {'C',1.0,&canon_4b_4l_ink},
+        {'M',1.0,&canon_4b_4l_ink},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {'c',1.0,&canon_4b_4l_ink},
+        {'m',1.0,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* Gernot: MP150 (MP170 for tests) T-shirt transfers */
+static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
+        {'C',1.0,&canon_4b_5l_ink},
+        {'M',1.0,&canon_4b_5l_ink},
+        {'Y',1.0,&canon_4b_5l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_13_C6M6Y4K2k4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -537,6 +700,33 @@ static const canon_inkset_t canon_13_C8M8Y4k4yask_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{'k',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+/* Gernot: MP150 (MP170 for tests) high-quality mode for
+           High Resolution Paper
+           Inkjet Hagaki
+	   pro Photo Paper
+	   super Photo Paper
+	   super Photo Paper Double Sided
+	   matte Photo Paper
+	   other Photo Paper
+	  
+ for some reason there is a hack for iP6700 appearing here which might make the y into a k (swapping)
+*/
+static const canon_inkset_t canon_13_c9m9y9_inkset[] = {
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'c',1.0,&canon_8b_9l_ink},
+	{'m',1.0,&canon_8b_9l_ink},
+	{'y',1.0,&canon_8b_9l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
