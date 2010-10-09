@@ -1281,7 +1281,15 @@ sub qualityorder {
 		    # Canon
 		    "dmt",
 		    "dpi_high",
-		    "dpi_draft"
+		    "dpi_highmono",
+		    "dpi_mono",
+		    "dpi_draft",
+		    "dpi_draftmono",
+		    "dpi_glossphotohigh",
+		    "dpi_photohigh",
+	            "dpi_tshirt",
+		    "dpi_photo",
+		    "dpi_photodraft"
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case
