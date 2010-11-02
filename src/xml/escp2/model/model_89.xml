@@ -53,8 +53,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
  <minimumMediaSize>144 144</minimumMediaSize>
- <maximumMediaSize>1224 86400</maximumMediaSize>
- <maximumImageableArea>1224 86400</maximumImageableArea>
+ <maximumMediaSize>1728 86400</maximumMediaSize>
+ <maximumImageableArea>1728 86400</maximumImageableArea>
  <margins interleave="soft" media="sheet">9 9 9 40</margins>
  <margins interleave="printer" media="sheet">9 9 9 40</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
