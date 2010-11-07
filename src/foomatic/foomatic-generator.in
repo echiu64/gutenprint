@@ -1284,6 +1284,8 @@ sub qualityorder {
 		    "dpi_highmono",
 		    "dpi_mono",
 		    "dpi_draft",
+                    "dpi_std2",
+                    "dpi_draft2",
 		    "dpi_draftmono",
 		    "dpi_glossphotohigh",
 		    "dpi_photohigh",
