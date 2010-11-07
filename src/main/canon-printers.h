@@ -643,6 +643,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon PIXMA iP2700 */
+    "PIXMA iP2700", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP250_slotlist, /* rear only */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px,0,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP2700_modelist,
+    &canon_PIXMA_iP2700_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon PIXMA iP3000 */
     "PIXMA iP3000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
@@ -754,7 +768,7 @@ static const canon_cap_t canon_model_capabilities[] =
     iP4200_hue_adjustment,
     iP4200_sat_adjustment
   },
-  { /* Canon PIXMA iP6700 */
+  { /* Canon PIXMA iP6000 */
     "PIXMA iP6000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */

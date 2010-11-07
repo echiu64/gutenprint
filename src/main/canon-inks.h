@@ -482,6 +482,23 @@ static const canon_inkset_t canon_13_K3_inkset[] = {
 	{0,0.0,NULL},
 };
 
+/* iP2700 color cartridge only, plain fast mode */
+static const canon_inkset_t canon_13_C2M2Y2_inkset[] = {
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_13_C2M2Y2K2_inkset[] = {
 	{'C',1.0,&canon_1b_2l_ink},
 	{'M',1.0,&canon_1b_2l_ink},
@@ -507,6 +524,23 @@ static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {'k',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* iP2700 color cartridge only, plain mode */
+static const canon_inkset_t canon_13_C3M3Y2_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -766,6 +800,23 @@ static const canon_inkset_t canon_13_C8M8Y4k4yask_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{'k',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+/* iP2700 in user-defined highest quality mode for PPGlossPro paper */
+static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'c',1.0,&canon_2b_3l_ink},
+	{'m',1.0,&canon_2b_3l_ink},
+	{'y',1.0,&canon_2b_3l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
