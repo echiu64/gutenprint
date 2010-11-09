@@ -396,7 +396,8 @@ static const char* canon_families[] = {
  "PIXMA iX",
  "PIXMA MP",
  "PIXUS",
- "PIXMA Pro"
+ "PIXMA Pro",
+ "PIXMA MG"
 };
 
 /* canon model ids look like the following
