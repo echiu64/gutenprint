@@ -176,9 +176,9 @@
       <printer translate="name" name="Canon PIXMA MP970" driver="bjc-MULTIPASS-MP970" manufacturer="Canon" model="5000970" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP970" />
       <printer translate="name" name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3100" />
       <printer translate="name" name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP4100" />
-      <printer translate="name" name="Canon PIXMA MG5100" driver="bjc-PIXMA-MG5100" manufacturer="Canon" model="3005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5100" />
-      <printer translate="name" name="Canon PIXMA MG5200" driver="bjc-PIXMA-MG5200" manufacturer="Canon" model="3005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5200" />
-      <printer translate="name" name="Canon PIXMA MG6100" driver="bjc-PIXMA-MG6100" manufacturer="Canon" model="3006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6100" />
+      <printer translate="name" name="Canon PIXMA MG5100" driver="bjc-PIXMA-MG5100" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5100" />
+      <printer translate="name" name="Canon PIXMA MG5200" driver="bjc-PIXMA-MG5200" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5200" />
+      <printer translate="name" name="Canon PIXMA MG6100" driver="bjc-PIXMA-MG6100" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6100" />
       <printer translate="name" name="Canon i80" driver="bjc-i80"   manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-i80" />
       <printer translate="name" name="Canon i560" driver="bjc-i560" manufacturer="Canon" model="2000560" parameters="gamma_6_density_800_params" foomaticid="Canon-i560" />
       <printer translate="name" name="Canon i850" driver="bjc-i850" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-i850" />
