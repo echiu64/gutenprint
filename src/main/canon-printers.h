@@ -166,6 +166,12 @@ static const char* control_cmd_MULTIPASS_MP150[] = {
   NULL
 };
 
+static const char* control_cmd_PIXMA_iP2700[] = {
+/*"SetTime=20060722092503", */         /*what is this for?*/
+  "SetSilent=OFF",
+  NULL
+};
+
 static const char iP4500_channel_order[STP_NCOLORS] = {1,2,3,0}; /* CMYK */
 
 static const canon_cap_t canon_model_capabilities[] =
@@ -649,7 +655,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MP250_slotlist, /* rear only */
-    CANON_CAP_STD0|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px,0,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP2700_modelist,
     &canon_PIXMA_iP2700_paperlist,
     NULL,
