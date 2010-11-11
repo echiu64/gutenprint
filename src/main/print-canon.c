@@ -120,8 +120,10 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_px        0x2000ul
 #define CANON_CAP_rr        0x4000ul
 #define CANON_CAP_I         0x8000ul
+#define CANON_CAP_T         0x10000ul /* not sure of this yet! */
 #define CANON_CAP_P         0x20000ul
 #define CANON_CAP_DUPLEX    0x40000ul
+#define CANON_CAP_XML       0x80000ul /* not sure of this yet */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -1249,13 +1251,35 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 }
 
 /* ESC (P -- 0x50 -- unknown -- :
- */
+   seems to set media and page information. Different byte lengths depending on printer model. */
 static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
 	if(!(init->caps->features & CANON_CAP_P))
 		return;
-	canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,0x00 );
+	if (!strcmp(init->caps->name,"iP2700")) /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
+	  canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,0x00 );
+	else /* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
+	  {
+	    unsigned char
+	      /*arg_ESCP_1 = 0x03,*/ /* A4 size */
+	      arg_ESCP_2 = 0x00; /* plain paper */
+
+	    arg_ESCP_2 = init->pt->media_code_P;
+	    /*                             size      media                */
+	    canon_cmd( v,ESC28,0x50,6,0x00,0x03,0x00,arg_ESCP_2,0x01,0x00);
+	  }
+}
+
+/* ESC (T -- 0x54 -- setCartridge -- :
+ */
+static void
+canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_T))
+    return;
+
+  canon_cmd(v,ESC28,0x54,3,0x03,0x04,0x04); /* default: both cartridges */
 }
 
 /* ESC (q -- 0x71 -- setPageID -- :
@@ -1417,7 +1441,8 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   canon_init_setColor(v,init);           /* ESC (c */
   canon_init_setPageMargins(v,init);     /* ESC (g */
   canon_init_setPageMargins2(v,init);    /* ESC (p */
-  canon_init_setESC_P(v,init);           /* ESD (P */
+  canon_init_setESC_P(v,init);           /* ESC (P */
+  canon_init_setCartridge(v,init);       /* ESC (T */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
@@ -1448,6 +1473,12 @@ canon_deinit_printer(const stp_vars_t *v, const canon_privdata_t *init)
 static int
 canon_start_job(const stp_vars_t *v, stp_image_t *image)
 {
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
+  /* output XML for iP2700 and other devices */
+  if (caps->features & CANON_CAP_XML) {
+    int length=strlen(prexml_iP2700); /* 680 */
+    stp_zfwrite((const char*)prexml_iP2700,length,1,v);
+  }
   return 1;
 }
 
@@ -1455,6 +1486,12 @@ static int
 canon_end_job(const stp_vars_t *v, stp_image_t *image)
 {
   canon_cmd(v,ESC40,0,0);
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
+  /* output XML for iP2700 and other devices */
+  if (caps->features & CANON_CAP_XML) {
+    int length=strlen(postxml_iP2700); /* 263 */
+    stp_zfwrite((const char*)postxml_iP2700,length,1,v);
+  }
   return 1;
 }
 
