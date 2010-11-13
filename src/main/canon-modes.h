@@ -563,5 +563,19 @@ static const canon_mode_t canon_PIXMA_MG6100_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_MG6100,7);
 
+/* for this printer the photo modes have unknown inks, so these modes are not added. Now we get plain paper and non-photo hagaki. */
+static const canon_mode_t canon_PIXMA_MG8100_modes[] = {
+  /* high mode -- B/W also */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(30_C2M6K6m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  /* standard mode -- B/W also */
+  /*{  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(13_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},*/
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(30_C2M3K3m2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(30_C2M3K3m2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* draft modes -- B/W also */
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(30_C2M2K2m2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(30_C2M2K2m2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
+};
+DECLARE_MODES(canon_PIXMA_MG8100,4);
+
 #endif
 
