@@ -387,6 +387,8 @@ DECLARE_MODES(canon_MULTIPASS_MP250,12);
 
 /* user-defined highest quality mode not yet supported */
 static const canon_mode_t canon_PIXMA_iP2700_modes[] = {
+  /* user-defined mode: highest resolution, no mono */
+  {  1200, 1200,CANON_INK_CMYK,"1200x1200dpi_high",N_("1200x1200 DPI HIGH"),INKSET(13_c3m3y3),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},
   /* high mode -- B/W also */
   {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(13_C4M4Y3K3),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
   /* standard mode -- B/W also */
@@ -413,7 +415,7 @@ static const canon_mode_t canon_PIXMA_iP2700_modes[] = {
   {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(13_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(13_C2M2Y2K2),MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},/**/
 };
-DECLARE_MODES(canon_PIXMA_iP2700,16);
+DECLARE_MODES(canon_PIXMA_iP2700,17);
 
 /* Gernot: added modes for iP4700.
    I noticed that the monochrome modes use all inks but only K is sent in the printjob,
