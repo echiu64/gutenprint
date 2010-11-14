@@ -41,9 +41,9 @@
  *  cnt: len of the arguments
  *
  * return values:
- *   0 when a command has been succesfully read
+ *   0 when a command has been successfully read
  *   1 when EOF has been reached
- *  -1 when an error occureed
+ *  -1 when an error occurred
  */
 static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt)
 {
@@ -406,6 +406,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					printf(" bit_info: using detailed color settings for max %i colors\n",num_colors);
 					if(buf[1]==0x80)
 						printf(" format: BJ indexed color image format\n");
+                                        else if(buf[1]==0x00)
+						printf(" format: iP8500 flag set, BJ indexed color image format\n");
 					else{
 						printf(" format: settings not supported 0x%x\n",buf[1]);
 						returnv = -2;
@@ -465,8 +467,13 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				img->color_order=calloc(1,cnt+1);
 				/* check if the colors are sane => the iP4000 driver appends invalid bytes in the highest resolution mode */
 				for(i=0;i<cnt;i++){
-					if(!valid_color(buf[i]))
-						break;
+				  if(!valid_color(buf[i]))
+				    if (!(valid_color(buf[i]-0x60)))
+				      break;
+				    else {
+				      buf[i]=buf[i]-0x60;
+				      printf("subtracting 0x60 from color char\n");
+				    }
 				}
 				cnt = i;
 				memcpy(img->color_order,buf,cnt);
