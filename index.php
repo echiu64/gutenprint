@@ -36,9 +36,18 @@ and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
 10.5 "Leopard" and 10.6 "Snow Leopard", and provides direct download
 links.</p>
 
+<H2><font color="#ff0000">Gutenprint is Sourceforge Project of the
+Month for November, 2010!</font></h2>
+
+<p><strong><em><font color="#ff0000">New as of November 16,
+2010!</font></em></strong> The Gutenprint project is honored to have
+been selected Sourceforge Project of the Month for November, 2010.
+Please see the announcement at
+http://sourceforge.net/blog/project-of-the-month-november-2010/.</p>
+
 <H2><font color="#ff0000">Gutenprint 5.2.6 is released!</font></h2>
 
-<P><strong><em><font color="#ff0000">New as of August 10, 2010,
+<P><strong><em><font color="#ff0000">New as of August 10,
 2010!</strong></em></font> The Gutenprint project is pleased to
 announce Gutenprint 5.2.6, a stable release of 5.2.  This release
 offers additional support for Epson Stylus Pro printers, along with
