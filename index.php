@@ -53,7 +53,7 @@ announce Gutenprint 5.2.6, a stable release of 5.2.  This release
 offers additional support for Epson Stylus Pro printers, along with
 some changes for other Epson printers and support for additional Canon
 inkjets and PCL laser printers over 5.2.5.  This package is available
-in source form, and will shortly be available in binary installer form
+in source form, and also in binary installer form
 for Macintosh OS X (10.3 and above).  <a
 href="http://sourceforge.net/project/showfiles.php?group_id=1537">You
 can read the release notes and download it here</a>.  </p>
