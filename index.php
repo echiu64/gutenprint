@@ -43,7 +43,7 @@ Month for November, 2010!</font></h2>
 2010!</font></em></strong> The Gutenprint project is honored to have
 been selected Sourceforge Project of the Month for November, 2010.
 Please see the announcement at
-http://sourceforge.net/blog/project-of-the-month-november-2010/.</p>
+http://sourceforge.net/blog/potm-201011/.</p>
 
 <H2><font color="#ff0000">Gutenprint 5.2.6 is released!</font></h2>
 
