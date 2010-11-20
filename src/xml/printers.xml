@@ -152,6 +152,7 @@
       <printer translate="name" name="Canon PIXMA MP180" driver="bjc-MULTIPASS-MP180" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP180" />
       <printer translate="name" name="Canon PIXMA MP220" driver="bjc-MULTIPASS-MP220" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP220" />
       <printer translate="name" name="Canon PIXMA MP250" driver="bjc-MULTIPASS-MP250" manufacturer="Canon" model="5000250" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP250" />
+      <printer translate="name" name="Canon PIXMA MP280" driver="bjc-MULTIPASS-MP280" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP280" />
       <printer translate="name" name="Canon PIXMA MP360" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
       <printer translate="name" name="Canon PIXMA MP370" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
       <printer translate="name" name="Canon PIXMA MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
