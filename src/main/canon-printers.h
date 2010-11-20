@@ -914,6 +914,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon MULTIPASS MP280 */
+    "PIXMA MP280", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP250_slotlist, /* these models only have a rear tray.  */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_r|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0,control_cmd_MULTIPASS_MP150,  /*features  Also uses CAP_T. MP280 no duplex, no 0x61 */
+    &canon_MULTIPASS_MP280_modelist,
+    &canon_MULTIPASS_MP280_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon PIXMA MG5100 */
     "PIXMA MG5100", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
