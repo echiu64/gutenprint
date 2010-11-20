@@ -45,16 +45,34 @@
  *   1 when EOF has been reached
  *  -1 when an error occurred
  */
-static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt)
+static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned int *cnt, unsigned int *xml_read)
 {
 	unsigned char c1,c2;
+	unsigned int startxml, endxml;
+	unsigned int xmldata;
 	if (feof(infile))
 		return -1;
 	while (!feof(infile)){
 		c1 = fgetc(infile);
 		if(feof(infile)) /* NORMAL EOF */
 			return 1;
-		if (c1 == 27 ){  /* A new ESC command */
+		/* add skip for XML header and footer */
+		if (c1 == 60 ){  /* "<" for XML start */
+		  if (*xml_read==0){
+		    /* start: */
+		    startxml=680;
+		    xmldata=fread(buf,1,679,infile); /* 1 less than 680 */
+		    printf("nextcmd: read starting XML %d %d\n", *xml_read, startxml);
+		    *xml_read=1;
+		  }else if (*xml_read==1) {
+		    /* end */
+		    endxml=263;
+		    xmldata=fread(buf,1,262,infile); /* 1 less than 263*/
+		    printf("nextcmd: read ending XML %d %d\n", *xml_read, endxml);
+		    *xml_read=2;
+		  }
+		  /* no alternatives yet */
+		}else if (c1 == 27 ){  /* A new ESC command */
 			c2 = fgetc(infile);
 			if(feof(infile))
 				return 1;
@@ -348,11 +366,14 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
 	int i;
+	unsigned int xml_read;
+	xml_read=0;
+
 	printf("------- parsing the printjob -------\n");
 	while(!returnv && !feof(in)){
 		unsigned char cmd;
 		unsigned int cnt = 0;
-		if((returnv = nextcmd(in,&cmd,buf,&cnt)))
+		if((returnv = nextcmd(in,&cmd,buf,&cnt,&xml_read)))
 			break;
 		switch(cmd){
 			case 'c':
