@@ -442,6 +442,32 @@ static const canon_mode_t canon_PIXMA_iP2700_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iP2700,13);
 
+/* Gernot: added modes for iP4500.
+   I noticed that the monochrome modes use all inks but only K is sent in the printjob,
+   so the bw=1 flag does somehow do something even if the inkset contains all colors.
+   TODO: figure out how to set color setting for modes in order to use inkset for mono.
+*/
+static const canon_mode_t canon_PIXMA_iP4500_modes[] = {
+  /* high mode -- B/W also */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(13_C6M6Y4K2y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  /* standard mode -- B/W also */
+  /*{  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(13_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},*/
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(13_C3M3Y2K2y3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(13_C3M3Y2K2y3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* draft modes -- B/W also */
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(13_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(13_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  /* PhotoHi mode for high quality photo papers */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH 2"),INKSET(13_C8M8Y4y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo2",N_("600x600 DPI PHOTO 2"),INKSET(13_C8M8Y4y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft2",N_("600x600 DPI PHOTO DRAFT 2"),INKSET(13_C8M8Y4y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* PhotoHi2 mode for CDs, some photo papers, Tshirt */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(13_C4M4Y4K2c4m4y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(13_C4M4Y4K2c4m4y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT"),INKSET(13_C4M4Y4K2c4m4y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+};
+DECLARE_MODES(canon_PIXMA_iP4500,10);
+
 /* Gernot: added modes for iP4700.
    I noticed that the monochrome modes use all inks but only K is sent in the printjob,
    so the bw=1 flag does somehow do something even if the inkset contains all colors.

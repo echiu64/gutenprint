@@ -84,6 +84,16 @@ static const canon_slot_t canon_MULTIPASS_MP250_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP250);
 
+/* Gernot: iP4500 */
+static const canon_slot_t canon_PIXMA_iP4500_slots[] = {
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf }, /* no paper automatic change source*/
+  { "CD",         N_ ("CD tray"), 0xa }, /* CD-R tray F */
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },/*Paper alloction? no idea what this means compared to Continuous*/
+};
+DECLARE_SLOTS(canon_PIXMA_iP4500);
 
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
@@ -262,6 +272,27 @@ static const canon_paper_t canon_PIXMA_iP2700_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_iP2700);
+
+/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
+/* iP4500 */
+static const canon_paper_t canon_PIXMA_iP4500_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (recommended)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (others)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_PIXMA_iP4500);
 
 static const canon_paper_t canon_PIXMA_iP4600_papers[] = {    /*                  k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
