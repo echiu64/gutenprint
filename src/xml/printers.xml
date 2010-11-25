@@ -755,12 +755,12 @@
       <printer translate="name" name="DEC LN17" driver="dec-ln17" manufacturer="DEC" model="6" parameters="pcl_laser_params" foomaticid="DEC-LN17" />
       <printer translate="name" name="Epson ActionLaser 1100" driver="epson-actl_1100" manufacturer="Epson" model="3" parameters="pcl_laser_params" foomaticid="Epson-ActionLaser_1100" />
       <printer translate="name" name="Epson ActionLaser II" driver="epson-actl_ii" manufacturer="Epson" model="2" parameters="pcl_laser_params" foomaticid="Epson-ActionLaser_II" />
-      <printer translate="name" name="Epson AcuLaser C2000" driver="epson-acl_c2000" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AcuLaser_C2000" />
-      <printer translate="name" name="Epson AcuLaser C2000PS" deviceid="MFG:Epson;MDL:AL-C2000 PS3;" driver="epson-acl_c2000ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AcuLaser_C2000PS" />
-      <printer translate="name" name="Epson AcuLaser C8500" driver="epson-acl_c8500" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AcuLaser_C8500" />
-      <printer translate="name" name="Epson AcuLaser C8500PS" driver="epson-acl_c8500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AcuLaser_C8500PS" />
-      <printer translate="name" name="Epson AcuLaser C8600" driver="epson-acl_c8600" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AcuLaser_C8600" />
-      <printer translate="name" name="Epson AcuLaser C8600PS" deviceid="MFG:Epson;MDL:AL-C8600 PS3;" driver="epson-acl_c8600ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AcuLaser_C8600PS" />
+      <printer translate="name" name="Epson AL-C2000" driver="epson-acl_c2000" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AL-C2000" />
+      <printer translate="name" name="Epson AL-C2000 PS3" deviceid="MFG:Epson;MDL:AL-C2000 PS3;" driver="epson-acl_c2000ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AL-C2000_PS3" />
+      <printer translate="name" name="Epson AL-C8500" driver="epson-acl_c8500" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AL-C8500" />
+      <printer translate="name" name="Epson AL-C8500PS" driver="epson-acl_c8500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AL-C8500PS" />
+      <printer translate="name" name="Epson AL-C8600" driver="epson-acl_c8600" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AL-C8600" />
+      <printer translate="name" name="Epson AL-C8600 PS3" deviceid="MFG:Epson;MDL:AL-C8600 PS3;" driver="epson-acl_c8600ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-AL-C8600_PS3" />
       <printer translate="name" name="Epson EPL-5200" driver="epson-epl-5200" manufacturer="Epson" model="3" parameters="pcl_laser_params" foomaticid="Epson-EPL-5200" />
       <printer translate="name" name="Epson EPL-5200+" driver="epson-epl-5200plus" manufacturer="Epson" model="3" parameters="pcl_laser_params" foomaticid="Epson-EPL-5200plus" />
       <printer translate="name" name="Epson EPL-5700" deviceid="MFG:EPSON;MDL:EPL-5700;DES:EPSON EPL-5700;CMD:PJL,EJL,ESCPL2-00,ESCP9-84,PRPXL24-01,HP ENHANCED PCL5,HPGL2-01,;" driver="epson-epl-5700" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-5700" />
@@ -768,9 +768,9 @@
       <printer translate="name" name="Epson EPL-5800" driver="epson-epl-5800" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-5800" />
       <printer translate="name" name="Epson EPL-5800PS" driver="epson-epl-5800ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-5800PS" />
       <printer translate="name" name="Epson EPL-5900" driver="epson-epl-5900" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-5900" />
-      <printer translate="name" name="Epson EPL-5900PS" deviceid="MFG:Epson;MDL:EPL-5900 PS3;" driver="epson-epl-5900ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-5900PS" />
+      <printer translate="name" name="Epson EPL-5900 PS3" deviceid="MFG:Epson;MDL:EPL-5900 PS3;" driver="epson-epl-5900ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-5900_PS3" />
       <printer translate="name" name="Epson EPL-6100" driver="epson-epl-6100" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-6100" />
-      <printer translate="name" name="Epson EPL-6100PS" deviceid="MFG:Epson;MDL:EPL-6100 PS3;" driver="epson-epl-6100ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-6100PS" />
+      <printer translate="name" name="Epson EPL-6100 PS3" deviceid="MFG:Epson;MDL:EPL-6100 PS3;" driver="epson-epl-6100ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-6100_PS3" />
       <printer translate="name" name="Epson EPL-7100" driver="epson-epl-7100" manufacturer="Epson" model="2" parameters="pcl_laser_params" foomaticid="Epson-EPL-7100" />
       <printer translate="name" name="Epson EPL-N2050" driver="epson-epl-n2050" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2050" />
       <printer translate="name" name="Epson EPL-N2050+" driver="epson-epl-n2050plus" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2050plus" />
@@ -778,7 +778,7 @@
       <printer translate="name" name="Epson EPL-N2050PS+" driver="epson-epl-n2050psplus" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2050PSplus" />
       <printer translate="name" name="Epson EPL-N2120" driver="epson-epl-n2120" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2120" />
       <printer translate="name" name="Epson EPL-N2500" driver="epson-epl-n2500" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2500" />
-      <printer translate="name" name="Epson EPL-N2500PS" driver="epson-epl-n2500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2500PS" />
+      <printer translate="name" name="Epson EPL-N2500 PS3" deviceid="MFG:Epson;MDL:EPL-N2500 PS3;" driver="epson-epl-n2500ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2500_PS3" />
       <printer translate="name" name="Epson EPL-N2750" driver="epson-epl-n2750" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2750" />
       <printer translate="name" name="Epson EPL-N2750PS" driver="epson-epl-n2750ps" manufacturer="Epson" model="6" parameters="pcl_laser_params" foomaticid="Epson-EPL-N2750PS" />
       <printer translate="name" name="Fujitsu PrintPartner 10V" driver="fujitsu-pp_10v" manufacturer="Fujitsu" model="6" parameters="pcl_laser_params" foomaticid="Fujitsu-PrintPartner_10V" />
