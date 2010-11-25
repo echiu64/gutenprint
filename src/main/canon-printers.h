@@ -211,7 +211,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4600_slotlist, /* changed from iP4000 */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /* features */
     &canon_MULTIPASS_MP960_modelist,
     &canon_PIXMA_iP4600_paperlist, /* changed from iP4000 */
     NULL,
@@ -225,7 +225,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP970_modelist,
     &canon_PIXMA_iP4000_paperlist,
     NULL,
@@ -233,6 +233,21 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon PIXMA MP990 --- uses XML */
+    "PIXMA MP990", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_iP4600_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MP990_modelist,
+    &canon_MULTIPASS_MP990_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+
   /* ******************************** */
   /*                                  */
   /* tested and color-adjusted models */
