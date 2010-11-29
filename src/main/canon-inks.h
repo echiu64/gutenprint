@@ -1062,16 +1062,17 @@ static const canon_inkset_t canon_22_C2M2Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-
-/* MG6100 series: 30 inks */
 /* high */
-static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {
-        {'C',1.0,&canon_1b_2l_ink},
+/* MP990, MG6100, MG800 */
+/* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
+/*static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {*/
+static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
+        {'K',1.0,&canon_1b_2l_ink},
+        {'C',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
         {'M',1.0,&canon_4b_6l_ink},
         {0,0.0,NULL},
-        {'K',1.0,&canon_4b_6l_ink},
-        {0,0.0,NULL},
-        {'m',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
@@ -1099,13 +1100,16 @@ static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {
 };
 
 /* standard */
-static const canon_inkset_t canon_30_C2M3K3m2k3_c_inkset[] = {
-        {'C',1.0,&canon_1b_2l_ink},
+/* MP990, MG6100, MG800 */
+/* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
+/*static const canon_inkset_t canon_30_C2M3K3m2k3_c_inkset[] = {*/
+static const canon_inkset_t canon_30_K2C3M3Y2k3_c_inkset[] = {
+        {'K',1.0,&canon_1b_2l_ink},
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
         {'M',1.0,&canon_2b_3l_c_ink},
         {0,0.0,NULL},
-        {'K',1.0,&canon_2b_3l_c_ink},
-        {0,0.0,NULL},
-        {'m',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_3l_c_ink},
         {0,0.0,NULL},
@@ -1133,13 +1137,16 @@ static const canon_inkset_t canon_30_C2M3K3m2k3_c_inkset[] = {
 };
 
 /* fast */
-static const canon_inkset_t canon_30_C2M2K2m2_inkset[] = {
+/* MP990, MG6100, MG800 */
+/* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
+/*static const canon_inkset_t canon_30_C2M2K2m2_inkset[] = {*/
+static const canon_inkset_t canon_30_K2C2M2Y2_inkset[] = {
+        {'K',1.0,&canon_1b_2l_ink},
         {'C',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
         {'M',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-        {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {'m',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1167,13 +1174,15 @@ static const canon_inkset_t canon_30_C2M2K2m2_inkset[] = {
 };
 
 /* CD photo */
-static const canon_inkset_t canon_30_M5K5m4k4_inkset[] = {
+/* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
+/*static const canon_inkset_t canon_30_M5K5m4k4_inkset[] = {*/
+static const canon_inkset_t canon_30_C5M5Y4k4_inkset[] = {
+        {0,0.0,NULL},
+        {'C',1.0,&canon_4b_5l_ink},
         {0,0.0,NULL},
         {'M',1.0,&canon_4b_5l_ink},
         {0,0.0,NULL},
-        {'K',1.0,&canon_4b_5l_ink},
-        {0,0.0,NULL},
-        {'m',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
