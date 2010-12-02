@@ -1023,8 +1023,8 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4_inkset[] = {
         {'k',0.0,&canon_2b_4l_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {0xa3,0.0,&canon_2b_4l_ink},
-        {0xad,0.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1074,7 +1074,7 @@ static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
         {0,0.0,NULL},
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
-        {'k',1.0,&canon_2b_4l_ink},
+        {'k',0.0,&canon_2b_4l_ink}, /* will not use it, but need to specify it */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1111,7 +1111,7 @@ static const canon_inkset_t canon_30_K2C3M3Y2k3_c_inkset[] = {
         {0,0.0,NULL},
         {'Y',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-        {'k',1.0,&canon_2b_3l_c_ink},
+        {'k',0.0,&canon_2b_3l_c_ink}, /* will not use it, but need to specify it */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
