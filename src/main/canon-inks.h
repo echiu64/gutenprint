@@ -1066,15 +1066,16 @@ static const canon_inkset_t canon_22_C2M2Y2K2_inkset[] = {
 /* MP990, MG6100, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
 /*static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {*/
+/* swap k and K for some reason works for pixma_parse */
 static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
-        {'K',1.0,&canon_1b_2l_ink},
+        {'k',0.0,&canon_1b_2l_ink}, /* will not use it, but need to specify it */
         {'C',1.0,&canon_4b_6l_ink},
         {0,0.0,NULL},
         {'M',1.0,&canon_4b_6l_ink},
         {0,0.0,NULL},
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_4l_ink}, /* will not use it, but need to specify it */
+        {'K',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1102,16 +1103,16 @@ static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
 /* standard */
 /* MP990, MG6100, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
-/*static const canon_inkset_t canon_30_C2M3K3m2k3_c_inkset[] = {*/
+/* swap k and K for some reason works for pixma_parse */
 static const canon_inkset_t canon_30_K2C3M3Y2k3_c_inkset[] = {
-        {'K',1.0,&canon_1b_2l_ink},
+        {'k',0.0,&canon_1b_2l_ink}, /* will not use it, but need to specify it */
         {'C',1.0,&canon_2b_3l_c_ink},
         {0,0.0,NULL},
         {'M',1.0,&canon_2b_3l_c_ink},
         {0,0.0,NULL},
         {'Y',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink}, /* will not use it, but need to specify it */
+        {'K',1.0,&canon_2b_3l_c_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
