@@ -19,13 +19,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- *************    file was modified by Sergey Y.  from R2880 to be used for Pro3880
 </copyright>
-<escp2:model id="107">
- <media src="escp2/media/pro_ultrachrome_k3v.xml"/>
+<escp2:model id="108">
+ <media src="escp2/media/pro_ultrachrome_k3.xml"/>
  <inputSlots src="escp2/inputslots/pro3880.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
- <inkGroup src="escp2/inks/pro_ultrachrome_k3v.xml"/>
+ <inkGroup src="escp2/inks/pro_ultrachrome_k3.xml"/>
  <printerWeaves src="escp2/weaves/pro7600.xml"/>
  <verticalBorderlessSequence>US\003\000\000\000\002</verticalBorderlessSequence>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
@@ -66,12 +65,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <AlignmentChoices>3 15 0 0</AlignmentChoices>
  <ChannelNames>
   <ChannelName translate="name" name="Light Light Black"/>
-  <ChannelName translate="name" name="Vivid Light Magenta"/>
+  <ChannelName translate="name" name="Light Magenta"/>
   <ChannelName translate="name" name="Light Cyan"/>
   <ChannelName translate="name" name="Light Black"/>
   <ChannelName translate="name" name="Black"/>
   <ChannelName translate="name" name="Cyan"/>
-  <ChannelName translate="name" name="Vivid Magenta"/>
+  <ChannelName translate="name" name="Magenta"/>
   <ChannelName translate="name" name="Yellow"/>
  </ChannelNames>
  <resolutions>

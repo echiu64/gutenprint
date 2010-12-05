@@ -42,7 +42,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <FirstNozzle>0</FirstNozzle>
   <NozzleSeparation>1</NozzleSeparation>
  </headConfiguration>
- <physicalChannels>7</physicalChannels>
+ <physicalChannels>8</physicalChannels>
  <baseSeparation>360</baseSeparation>
  <resolutionScale>14400</resolutionScale>
  <minimumResolution>360 180</minimumResolution>
@@ -62,12 +62,14 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins interleave="printer" media="roll">9 9 0 0</margins>
  <AlignmentChoices>3 15 0 0</AlignmentChoices>
  <ChannelNames>
+  <ChannelName translate="name" name="Light Light Black"/>
+  <ChannelName translate="name" name="Light Magenta"/>
+  <ChannelName translate="name" name="Light Cyan"/>
+  <ChannelName translate="name" name="Light Black"/>
   <ChannelName translate="name" name="Black"/>
   <ChannelName translate="name" name="Cyan"/>
   <ChannelName translate="name" name="Magenta"/>
   <ChannelName translate="name" name="Yellow"/>
-  <ChannelName translate="name" name="Light Cyan"/>
-  <ChannelName translate="name" name="Light Magenta"/>
  </ChannelNames>
  <resolutions>
   <resolution translate="text" name="360x180dpi" text="360 x 180 DPI Draft">

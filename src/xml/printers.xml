@@ -400,7 +400,7 @@
       <printer translate="name" name="Epson Stylus Photo TX710W" driver="escp2-tx710w" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Stylus_Photo_TX710W" />
       <printer translate="name" name="Epson Stylus Photo TX800FW" driver="escp2-tx800w" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Stylus_Photo_TX800FW" />
       <printer translate="name" name="Epson Stylus Photo TX810FW" driver="escp2-tx810fw" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Stylus_Photo_TX810FW" />
-      <printer translate="name" name="Epson Stylus Pro 3800" driver="escp2-3800" manufacturer="Epson" model="107" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3800" />
+      <printer translate="name" name="Epson Stylus Pro 3800" driver="escp2-3800" manufacturer="Epson" model="108" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3800" />
       <printer translate="name" name="Epson Stylus Pro 3880" driver="escp2-3880" manufacturer="Epson" model="107" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3880" />
       <printer translate="name" name="Epson Stylus Pro 4800" driver="escp2-4800" manufacturer="Epson" model="106" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4800" />
       <printer translate="name" name="Epson Stylus Pro 4880" driver="escp2-4880" manufacturer="Epson" model="102" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4880" />
