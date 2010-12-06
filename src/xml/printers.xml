@@ -222,8 +222,10 @@
       <printer translate="name" name="Epson Artisan 810" driver="escp2-artisan810" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Artisan_810" />
       <printer translate="name" name="Epson B-300" driver="escp2-b300" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B300" />
       <printer translate="name" name="Epson B-308" driver="escp2-b308" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B308" />
+      <printer translate="name" name="Epson B-310" driver="escp2-b310" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B310" />
       <printer translate="name" name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B500DN" />
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B508DN" />
+      <printer translate="name" name="Epson B-510DN" driver="escp2-b510dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B510DN" />
       <printer translate="name" name="Epson Stylus C20" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" foomaticid="Epson-Stylus_C20" />
       <printer translate="name" name="Epson Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42" parameters="480_params" foomaticid="Epson-Stylus_C20SX" />
       <printer translate="name" name="Epson Stylus C20UX" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20ux" manufacturer="Epson" model="42" parameters="480_params" foomaticid="Epson-Stylus_C20UX" />
@@ -599,9 +601,12 @@
       <printer translate="name" name="Epson MC 9000" driver="escp2-mc9000" manufacturer="Epson" model="31" parameters="pro_5500_params" foomaticid="Epson-MC_9000" />
       <printer translate="name" name="Epson MC 10000" driver="escp2-mc10000" manufacturer="Epson" model="41" parameters="standard_params" foomaticid="Epson-MC_10000" />
       <printer translate="name" name="Epson ME 300" driver="escp2-me300" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_300" />
+      <printer translate="name" name="Epson ME 320" driver="escp2-me320" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_320" />
       <printer translate="name" name="Epson ME Office 70" driver="escp2-meof70" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-ME_Office_70" />
       <printer translate="name" name="Epson ME Office 80W" driver="escp2-meof80w" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-ME_Office_80W" />
       <printer translate="name" name="Epson ME Office 360" driver="escp2-meof360" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_Office_360" />
+      <printer translate="name" name="Epson ME Office 600F" driver="escp2-meof600f" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_Office_600F" />
+      <printer translate="name" name="Epson ME Office 620F" driver="escp2-meof620f" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_Office_620F" />
       <printer translate="name" name="Epson ME Office 700FW" driver="escp2-meof700fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-ME_Office_700FW" />
       <printer translate="name" name="Epson ME Office 1100" driver="escp2-meof1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-ME_Office_1100" />
       <printer translate="name" name="Epson MJ 930C" driver="escp2-mj930c" manufacturer="Epson" model="4" parameters="standard_params" foomaticid="Epson-MJ_930C" />
