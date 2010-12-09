@@ -1273,17 +1273,17 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	if(!(init->caps->features & CANON_CAP_P))
 		return;
 	if (!strcmp(init->caps->name,"iP2700")) /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
-	  canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,0x00 );
-	else /* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
-	  {
+	  { /* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
 	    unsigned char
 	      /*arg_ESCP_1 = 0x03,*/ /* A4 size */
 	      arg_ESCP_2 = 0x00; /* plain paper */
-
+	    
 	    arg_ESCP_2 = init->pt->media_code_P;
 	    /*                             size      media                */
 	    canon_cmd( v,ESC28,0x50,6,0x00,0x03,0x00,arg_ESCP_2,0x01,0x00);
 	  }
+	else
+	  canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,0x00 );
 }
 
 /* ESC (T -- 0x54 -- setCartridge -- :
