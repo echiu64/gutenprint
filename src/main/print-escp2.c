@@ -2654,6 +2654,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
 	}
+      else
+	description->p_type = STP_PARAMETER_TYPE_INVALID;
     }
   else if (strcmp(name, "SupportsPacketMode") == 0)
     {

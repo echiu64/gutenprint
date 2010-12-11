@@ -675,24 +675,51 @@ add_resets(int count)
 }
 
 static int
+send_nulls(int fd)
+{
+  char buf[16384];
+  (void) memset(buf, 0, sizeof(buf));
+  (void) write(fd, buf, sizeof(buf));
+}
+
+static int
 init_packet(int fd, int force)
 {
   int status;
+  int tries = 0;
+  STP_DEBUG(printf("Init packet mode %d\n", force));
 
+ Loop:
   if (!force)
     {
-      STP_DEBUG(printf("Flushing data...\n"));
+      STP_DEBUG(printf("Flushing early data...\n"));
       flushData(fd, (unsigned char) -1);
     }
 
   STP_DEBUG(printf("EnterIEEE...\n"));
   if (!EnterIEEE(fd))
     {
+      STP_DEBUG(printf("EnterIEEE failed!\n"));
+      if (tries++ < 5)
+	{
+	  STP_DEBUG(printf("Retrying\n"));
+	  send_nulls(fd);
+	  flushData(fd, (unsigned char) -1);
+	  goto Loop;
+	}
       return 1;
     }
   STP_DEBUG(printf("Init...\n"));
   if (!Init(fd))
     {
+      STP_DEBUG(printf("Init failed!\n"));
+      if (tries++ < 5)
+	{
+	  STP_DEBUG(printf("Retrying\n"));
+	  send_nulls(fd);
+	  flushData(fd, (unsigned char) -1);
+	  goto Loop;
+	}
       return 1;
     }
 
@@ -700,6 +727,7 @@ init_packet(int fd, int force)
   socket_id = GetSocketID(fd, "EPSON-CTRL");
   if (!socket_id)
     {
+      STP_DEBUG(printf("GetSocket failed!\n"));
       return 1;
     }
   STP_DEBUG(printf("OpenChannel...\n"));
@@ -1338,18 +1366,27 @@ do_new_status(status_cmd_t cmd, char *buf, int bytes,
 	      STP_DEBUG(printf("    Ink %d: ind[0] %d ind[1] %d ind[2] %d interchangeable %d param %d count %d aux %d\n",
 				j, ind[0], ind[1], ind[2], interchangeable_inks,
 				param, color_count, aux_color_count));
-	      if (ind[0] < color_count && param == 3 &&
+	      if (ind[0] < color_count && param == 3 /* &&
 		  (interchangeable_inks || ind[1] >= aux_color_count ||
-		   ! aux_colors[(int) ind[1]]))
-		printf("%20s    %20d\n",
-		       gettext(colors_new[(int) ind[0]]), ind[2]);
+		   ! aux_colors[(int) ind[1]]) */)
+		{
+		  STP_DEBUG(printf("Case 0\n"));
+		  printf("%20s    %20d\n",
+			 gettext(colors_new[(int) ind[0]]), ind[2]);
+		}
 	      else if (ind[1] < aux_color_count && aux_colors[(int) ind[1]])
-		printf("%20s    %20d\n",
-		       gettext(aux_colors[(int) ind[1]]), ind[2]);
+		{
+		  STP_DEBUG(printf("Case 1\n"));
+		  printf("%20s    %20d\n",
+			 gettext(aux_colors[(int) ind[1]]), ind[2]);
+		}
 	      else
-		printf("%8s 0x%02x 0x%02x    %20d\n",
-		       _("Unknown"), (unsigned char) ind[0],
-		       (unsigned char) ind[1], ind[2]);
+		{
+		  STP_DEBUG(printf("Case 2\n"));
+		  printf("%8s 0x%02x 0x%02x    %20d\n",
+			 _("Unknown"), (unsigned char) ind[0],
+			 (unsigned char) ind[1], ind[2]);
+		}
 	      ind += param;
 	    }
 	  if (cmd == CMD_STATUS)
@@ -1522,12 +1559,12 @@ do_extended_ink_info(int extended_output)
     {
       stp_string_list_t *color_list = stp_string_list_create();
 
-      if (printer)
+      if (printer && desc.p_type == STP_PARAMETER_TYPE_STRING_LIST)
 	{
-	  color_list = stp_string_list_create_copy(desc.bounds.str);
 	  STP_DEBUG(printf("Using color list from driver (%ld %ld)\n",
 			    (long)stp_string_list_count(desc.bounds.str),
 			    (long)stp_string_list_count(color_list)));
+	  color_list = stp_string_list_create_copy(desc.bounds.str);
 	  stp_parameter_description_destroy(&desc);
 	}
       else
@@ -1563,16 +1600,27 @@ do_extended_ink_info(int extended_output)
 	      while (i < ind[1])
 		{
 		  if (ind[i] < color_count)
-		    stp_string_list_add_string(color_list,
-					       colors_new[(int) ind[i]],
-					       colors_new[(int) ind[i]]);
+		    {
+		      STP_DEBUG(printf("   Case 0: Ink %d %d (%s)\n",
+				       i, ind[i], colors_new[(int) ind[i]]));
+		      stp_string_list_add_string(color_list,
+						 colors_new[(int) ind[i]],
+						 colors_new[(int) ind[i]]);
+		    }
 		  else if (ind[i] == 0x40 && ind[i + 1] < aux_color_count)
-		    stp_string_list_add_string(color_list,
-					       aux_colors[(int) ind[i + 1]],
-					       aux_colors[(int) ind[i + 1]]);
+		    {
+		      STP_DEBUG(printf("   Case 1: Ink %d %d (%s)\n",
+				       i, ind[i+1], aux_colors[(int) ind[i+1]]));
+		      stp_string_list_add_string(color_list,
+						 aux_colors[(int) ind[i + 1]],
+						 aux_colors[(int) ind[i + 1]]);
+		    }
 		  else
-		    stp_string_list_add_string(color_list, "Unknown",
-					       "Unknown");
+		    {
+		      STP_DEBUG(printf("   Case 2: Unknown\n"));
+		      stp_string_list_add_string(color_list, "Unknown",
+						 "Unknown");
+		    }
 		  i+=3;
 		}
 	    }
@@ -1594,7 +1642,10 @@ do_extended_ink_info(int extended_output)
 	    }
 	  ind = strchr(buf, 'I');
 	  if (!ind)
-	    printf("Cannot identify cartridge in slot %d\n", i);
+	    {
+	      STP_DEBUG(printf("Case 0: failure %i (%s)\n", i, buf));
+	      printf("Cannot identify cartridge in slot %d\n", i);
+	    }
 	  else if (sscanf(ind,
 			  "II:01;IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;IQT:%x,%x,%x,%x,%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*xIK1:%*x;IK2;%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
 			  &iv[0], &year, &month, &id,
@@ -1666,8 +1717,26 @@ do_extended_ink_info(int extended_output)
 		     gettext(stp_string_list_param(color_list, i)->text),
 		     val, id, (year > 80 ? 19 : 20), year, month);
 	    }
+	  else if (sscanf(ind,
+			  "IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:EPSON;",
+			  &val, &year, &month, &id ) == 4 ||
+		   sscanf(ind,
+			  "IQT:%x;TSH:%*4s;PDY:%x;PDM:%x;IC1:%x;IC2:%*x;IK1:%*x;IK2:%*x;TOV:%*x;TVU:%*x;LOG:INKbyEPSON;",
+			  &val, &year, &month, &id ) == 4)
+	    {
+	      STP_DEBUG(printf("Case 4: i %i val %ud year %ud mo %ud id %ud\n",
+				i, val, year, month, id));
+	      if (i == 0)
+		printf("%20s    %20s   %12s   %7s\n",
+		       _("Ink cartridge"), _("Percent remaining"), _("Part number"),
+		       _("Date"));
+	      printf("%20s    %20d    T0%03d            %2d%02d-%02d\n",
+		     gettext(stp_string_list_param(color_list, i)->text),
+		     val, id, (year > 80 ? 19 : 20), year, month);
+	    }
 	  else
 	    {
+	      STP_DEBUG(printf("Case 5: failure %i (%s)\n", i, ind));
 	      printf("Cannot identify cartridge in slot %d\n", i);
 	    }
 	}

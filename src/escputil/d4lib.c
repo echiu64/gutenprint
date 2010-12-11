@@ -52,12 +52,16 @@
 
 
 #ifndef RDTIMEOUT
-#define RDTIMEOUT 10000
-#define WRTIMEOUT 10000
+#define RDTIMEOUT     10000
+#define WRTIMEOUT     10000
+#define RDDATATIMEOUT 1000
+#define MICROTIMEOUT  1
 #endif
 
-int d4WrTimeout = WRTIMEOUT;
-int d4RdTimeout = RDTIMEOUT;
+int d4WrTimeout     = WRTIMEOUT;
+int d4RdTimeout     = RDTIMEOUT;
+int d4RdDataTimeout = RDDATATIMEOUT;
+int d4MicroTimeout  = 1;
 int ppid        = 0;
 
 int debugD4     = 1;
@@ -392,8 +396,9 @@ static int writeCmd(int fd, unsigned char *cmd, int len)
       }
    }
 
-   usleep(1); /* according to Glen Steward, this will solve problems  */
-              /* for the cartridge exchange with the Stylus Color 580 */
+   /* according to Glen Steward, this will solve problems  */
+   /* for the cartridge exchange with the Stylus Color 580 */
+   usleep(d4MicroTimeout);
 
    timeoutGot = 0;
    errno = 0;
@@ -550,7 +555,8 @@ int readAnswer(int fd, unsigned char *buf, int len, int allowExtra)
 	     retry_count = 0;
 	   if (status < bytes)
 	     usleep(d4RdTimeout);
-	   printHexValues("waste", (const unsigned char *) wastebuf, status);
+	   if (debugD4)
+	     printHexValues("waste", (const unsigned char *) wastebuf, status);
 	   excess -= status;
 	 }
      }
@@ -790,10 +796,14 @@ Loop:
    if ( rd == 0 )
    {
       /* no answer from device */
+      if (debugD4)
+        printf(">>>No answer from printer\n");
       return 0;
    }
    else if ( rd < 0 )
    {
+      if (debugD4)
+        printf(">>>Interrupted write\n");
       /* interrupted write call */
       return 0;
    }
@@ -1262,7 +1272,7 @@ int readData(int fd, unsigned char socketID, unsigned char *buf, int len)
    if ( Credit(fd, socketID, 1) == 1 )
    {
       /* wait a little bit */
-      usleep(1000);
+      usleep(d4RdDataTimeout);
       ret = _readData(fd, buf, len);
       return ret; 
    }
@@ -1313,7 +1323,7 @@ int writeAndReadData(int fd, unsigned char socketID,
        /* wait a little bit */
        do
 	 {
-	   usleep(1000);
+	   usleep(d4RdDataTimeout);
 	   ret = _readData(fd, buf, len);
 	   if (ret < 0)
 	     return ret;
@@ -1347,7 +1357,7 @@ void flushData(int fd, unsigned char socketID)
        if ( Credit(fd, socketID, 1) == 1 )
 	 {
 	   /* wait a little bit */
-	   usleep(1000);
+	   usleep(d4RdDataTimeout);
 	   _flushData(fd);
 	 }
      }
