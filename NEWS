@@ -305,6 +305,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      black ink automatically based on ink set choice (it is no longer
      necessary to set this on the front panel).
 
+  9) Improved reliability of escputil.
+
 
 * Changes from 5.2.5
 
