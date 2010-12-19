@@ -223,6 +223,7 @@
       <printer translate="name" name="Epson B-300" driver="escp2-b300" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B300" />
       <printer translate="name" name="Epson B-308" driver="escp2-b308" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B308" />
       <printer translate="name" name="Epson B-310" driver="escp2-b310" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B310" />
+      <printer translate="name" name="Epson B-310N" driver="escp2-b310n" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B310N" />
       <printer translate="name" name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B500DN" />
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B508DN" />
       <printer translate="name" name="Epson B-510DN" driver="escp2-b510dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B510DN" />
