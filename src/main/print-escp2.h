@@ -194,6 +194,8 @@ typedef struct
   short channel_count;
   short aux_channel_count;
   inkset_id_t inkset;
+  const stp_raw_t *init_sequence;
+  const stp_raw_t *deinit_sequence;
   ink_channel_t *channels;
   ink_channel_t *aux_channels;
 } inkname_t;
@@ -210,6 +212,8 @@ typedef struct
   const char *text;
   short n_shades;
   short n_inks;
+  const stp_raw_t *init_sequence;
+  const stp_raw_t *deinit_sequence;
   shade_t *shades;
   inkname_t *inknames;
 } inklist_t;

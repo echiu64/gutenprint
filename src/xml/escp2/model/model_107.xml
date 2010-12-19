@@ -66,7 +66,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="360x180dpi" text="360 x 180 DPI Draft">
    <physicalResolution>360 180</physicalResolution>
    <printerWeave command="\033(i\001\000\000"/>
-   <parameter type="float" name="escp2_density">5.776000</parameter>
+   <parameter type="float" name="escp2_density">10.000000</parameter>
    <parameter type="integer" name="escp2_ink_type">17</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -77,7 +77,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="360pro" text="360 DPI">
    <physicalResolution>360 360</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">2.888000</parameter>
+   <parameter type="float" name="escp2_density">5.000000</parameter>
    <parameter type="integer" name="escp2_ink_type">17</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -88,7 +88,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="720x360mw" text="720 x 360 DPI">
    <physicalResolution>720 360</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">1.444000</parameter>
+   <parameter type="float" name="escp2_density">2.520000</parameter>
    <parameter type="integer" name="escp2_ink_type">17</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -99,7 +99,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="720mw" text="720 DPI">
    <physicalResolution>720 720</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">0.722000</parameter>
+   <parameter type="float" name="escp2_density">1.260000</parameter>
    <parameter type="integer" name="escp2_ink_type">17</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -110,7 +110,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="1440x720mw" text="1440 x 720 DPI">
    <physicalResolution>1440 720</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">0.575000</parameter>
+   <parameter type="float" name="escp2_density">0.891000</parameter>
    <parameter type="integer" name="escp2_ink_type">16</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -121,7 +121,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="1440x1440mw" text="1440 x 1440 DPI">
    <physicalResolution>1440 1440</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">0.288000</parameter>
+   <parameter type="float" name="escp2_density">0.446000</parameter>
    <parameter type="integer" name="escp2_ink_type">16</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
@@ -132,7 +132,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="2880x1440mw" text="2880 x 1440 DPI">
    <physicalResolution>2880 1440</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">0.500000</parameter>
+   <parameter type="float" name="escp2_density">0.775000</parameter>
    <parameter type="integer" name="escp2_ink_type">5</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">1</parameter>
@@ -141,7 +141,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <resolution translate="text" name="2880x2880mw" text="2880 x 2880 DPI">
    <physicalResolution>2880 2880</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
-   <parameter type="float" name="escp2_density">0.250000</parameter>
+   <parameter type="float" name="escp2_density">0.388000</parameter>
    <parameter type="integer" name="escp2_ink_type">5</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">1</parameter>
