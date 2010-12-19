@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.6
         * Changes from 5.2.5
         * Changes from 5.2.4
         * Changes from 5.2.3
@@ -249,6 +250,61 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.6
+
+  1) New printers supported in this release:
+
+     - Canon inkjet printers:
+
+       Canon PIXMA iP2700
+       Canon PIXMA iP4700
+       Canon PIXMA MP250
+       Canon PIXMA MP270
+       Canon PIXMA MP280
+       Canon PIXMA MP450
+       Canon PIXMA MP460
+       Canon PIXMA MP480
+       Canon PIXMA MP495
+       Canon PIXMA MP950
+       Canon PIXMA MP960
+       Canon PIXMA MP990
+       Canon PIXUS iP2700
+       Canon PIXMA MG5100
+       Canon PIXMA MG5200
+       Canon PIXMA MG6100
+       Canon PIXMA MG8100
+
+     - Epson inkjet printers:
+
+       EPSON B-310
+       EPSON B-310N
+       EPSON B-510DN
+       EPSON ME Office 600F
+       EPSON ME Office 620F
+
+  2) Add additional photo modes to Canon inkjet printers.
+
+  3) Correct page size limit for EPSON Stylus Pro 7800, 7880, 9800,
+     and 9880 (previously these printers had overly restrictive page
+     limits).
+
+  4) Correct printing to the EPSON Stylus NX200, NX215, SX200, SX205,
+     SX210, and SX215.
+
+  5) Corrected basic printer definitions of EPSON Stylus Pro 3800,
+     3880, 7800, and 9800.
+
+  6) Corrected media definitions of EPSON Stylus Pro 3800, 3880, 4800,
+     4880, 7800, 7880, 9800, 9880, 11800, and 11880.
+
+  7) Improved printing quality for EPSON Stylus Pro 3880, 4880, 7880,
+     9880, and 11880.
+
+  8) Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo
+     black ink automatically based on ink set choice (it is no longer
+     necessary to set this on the front panel).
+
 
 * Changes from 5.2.5
 
