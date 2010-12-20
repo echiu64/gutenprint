@@ -331,7 +331,7 @@
       <printer translate="name" name="Epson Stylus Photo 820" deviceid="MFG:EPSON;MDL:Stylus Photo 820;DES:EPSON Stylus Photo 820;CMD:ESCPL2,BDC,D4;" driver="escp2-820" manufacturer="Epson" model="78" parameters="standard_params" foomaticid="Epson-Stylus_Photo_820" />
       <printer translate="name" name="Epson Stylus Photo 825" deviceid="MFG:EPSON;MDL:Stylus Photo 825;DES:EPSON Stylus Photo 825;CMD:ESCPL2,BDC,D4;" driver="escp2-825" manufacturer="Epson" model="50" parameters="standard_params" foomaticid="Epson-Stylus_Photo_825" />
       <printer translate="name" name="Epson Stylus Photo 830" deviceid="MFG:EPSON;MDL:Stylus Photo 830U;DES:EPSON Stylus Photo 830U;CMD:ESCPL2,BDC,D4;" driver="escp2-830" manufacturer="Epson" model="50" parameters="standard_params" foomaticid="Epson-Stylus_Photo_830" />
-      <printer translate="name" name="Epson Stylus Photo 830U" driver="escp2-830u" manufacturer="Epson" model="50" parameters="standard_params" foomaticid="Epson-Stylus_Photo_830U" />
+      <printer translate="name" name="Epson Stylus Photo 830U" deviceid="MFG:EPSON;MDL:Stylus Photo 830U;DES:EPSON Stylus Photo 830U;CMD:ESCPL2,BDC,D4;" driver="escp2-830u" manufacturer="Epson" model="50" parameters="standard_params" foomaticid="Epson-Stylus_Photo_830U" />
       <printer translate="name" name="Epson Stylus Photo 870" deviceid="MFG:EPSON;MDL:Stylus Photo 870;DES:EPSON Stylus Photo 870;CMD:ESCPL2,BDC,D4;" driver="escp2-870" manufacturer="Epson" model="22" parameters="standard_params" foomaticid="Epson-Stylus_Photo_870" />
       <printer translate="name" name="Epson Stylus Photo 875" driver="escp2-875" manufacturer="Epson" model="22" parameters="standard_params" foomaticid="Epson-Stylus_Photo_875" />
       <printer translate="name" name="Epson Stylus Photo 890" deviceid="MFG:EPSON;MDL:Stylus Photo 890;DES:EPSON Stylus Photo 890;CMD:ESCPL2,BDC,D4;" driver="escp2-890" manufacturer="Epson" model="36" parameters="standard_params" foomaticid="Epson-Stylus_Photo_890" />
@@ -347,7 +347,7 @@
       <printer translate="name" name="Epson Stylus Photo 1280" driver="escp2-1280" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1280" />
       <printer translate="name" name="Epson Stylus Photo 1290" driver="escp2-1290" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1290" />
       <printer translate="name" name="Epson Stylus Photo 1290s" driver="escp2-1290s" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1290s" />
-      <printer translate="name" name="Epson Stylus Photo 1400" driver="escp2-1400" manufacturer="Epson" model="82" parameters="claria_params" foomaticid="Epson-Stylus_Photo_1400" />
+      <printer translate="name" name="Epson Stylus Photo 1400" deviceid="MFG:EPSON;MDL:Stylus Photo 1400;DES:EPSON Stylus Photo 1400;CMD:ESCPL2,BDC,D4,D4PX,ESCPR1;" driver="escp2-1400" manufacturer="Epson" model="82" parameters="claria_params" foomaticid="Epson-Stylus_Photo_1400" />
       <printer translate="name" name="Epson Stylus Photo 1410" driver="escp2-1410" manufacturer="Epson" model="82" parameters="claria_params" foomaticid="Epson-Stylus_Photo_1410" />
       <printer translate="name" name="Epson Stylus Photo 2000P" driver="escp2-2000" manufacturer="Epson" model="26" parameters="standard_params" foomaticid="Epson-Stylus_Photo_2000P" />
       <printer translate="name" name="Epson Stylus Photo 2100" driver="escp2-2100" manufacturer="Epson" model="47" parameters="standard_params" foomaticid="Epson-Stylus_Photo_2100" />
@@ -357,7 +357,7 @@
       <printer translate="name" name="Epson Stylus Photo R200" deviceid="MFG:EPSON;MDL:Stylus Photo R200;DES:EPSON Stylus Photo R200;CMD:ESCPL2,BDC,D4;" driver="escp2-r200" manufacturer="Epson" model="63" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R200" />
       <printer translate="name" name="Epson Stylus Photo R210" deviceid="MFG:EPSON;MDL:Stylus Photo R210;DES:EPSON Stylus Photo R210;CMD:ESCPL2,BDC,D4;" driver="escp2-r210" manufacturer="Epson" model="63" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R210" />
       <printer translate="name" name="Epson Stylus Photo R220" deviceid="MFG:EPSON;MDL:Stylus Photo R220;DES:EPSON Stylus Photo R220;CMD:ESCPL2,BDC,D4;" driver="escp2-r220" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R220" />
-      <printer translate="name" name="Epson Stylus Photo R230" driver="escp2-r230" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R230" />
+      <printer translate="name" name="Epson Stylus Photo R230" deviceid="MFG:EPSON;MDL:Stylus Photo R230;" driver="escp2-r230" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R230" />
       <printer translate="name" name="Epson Stylus Photo R240" driver="escp2-r240" manufacturer="Epson" model="83" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R240" />
       <printer translate="name" name="Epson Stylus Photo R245" driver="escp2-r245" manufacturer="Epson" model="83" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R245" />
       <printer translate="name" name="Epson Stylus Photo R260" driver="escp2-r260" manufacturer="Epson" model="81" parameters="claria_params" foomaticid="Epson-Stylus_Photo_R260" />
@@ -469,7 +469,7 @@
       <printer translate="name" name="Epson Stylus CX9475F" driver="escp2-cx9475f" manufacturer="Epson" model="65" parameters="cx3500_params" foomaticid="Epson-Stylus_CX9475F" />
       <printer translate="name" name="Epson Stylus D68" deviceid="MFG:EPSON;MDL:Stylus D68;DES:EPSON Stylus D68;CMD:ESCPL2,BDC,D4;" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D68" />
       <printer translate="name" name="Epson Stylus D88" deviceid="MFG:EPSON;MDL:Stylus D88;DES:EPSON Stylus D88;CMD:ESCPL2,BDC,D4;" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" foomaticid="Epson-Stylus_D88" />
-      <printer translate="name" name="Epson Stylus D92" driver="escp2-d92" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D92" />
+      <printer translate="name" name="Epson Stylus D92" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Stylus D92;DES:EPSON Stylus D92;" driver="escp2-d92" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D92" />
       <printer translate="name" name="Epson Stylus D120" driver="escp2-d120" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-Stylus_D120" />
       <printer translate="name" name="Epson Stylus DX3800" deviceid="MFG:EPSON;MDL:Stylus DX3800;DES:EPSON Stylus DX3800;CMD:ESCPL2,BDC,D4;" driver="escp2-dx3800" manufacturer="Epson" model="72" parameters="standard_params" foomaticid="Epson-Stylus_DX3800" />
       <printer translate="name" name="Epson Stylus DX3850" deviceid="MFG:EPSON;MDL:Stylus DX3850;DES:EPSON Stylus DX3850;CMD:ESCPL2,BDC,D4;" driver="escp2-dx3850" manufacturer="Epson" model="72" parameters="standard_params" foomaticid="Epson-Stylus_DX3850" />
@@ -948,7 +948,7 @@
       <printer translate="name" name="HP DeskJet 952C" driver="hp-dj_952c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_952C" />
       <printer translate="name" name="HP DeskJet 955C" driver="hp-dj_955c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_955C" />
       <printer translate="name" name="HP DeskJet 957C" driver="hp-dj_957c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_957C" />
-      <printer translate="name" name="HP DeskJet 959C" driver="hp-dj_959c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_959C" />
+      <printer translate="name" name="HP DeskJet 959C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 950C;DES:Hewlett-Packard DeskJet 950C;CMD:MLC,PCL,PML;" driver="hp-dj_959c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_959C" />
       <printer translate="name" name="HP DeskJet 960C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 960C;DES:Hewlett-Packard DeskJet 960C;CMD:MLC,PCL,PML;" driver="hp-dj_960c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_960C" />
       <printer translate="name" name="HP DeskJet 970C" deviceid="MFG:HEWLETT-PACKARD;MDL:DESKJET 970C;DES:Hewlett-Packard DeskJet 970C;CMD:MLC,PCL,PML;" driver="hp-dj_970c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_970C" />
       <printer translate="name" name="HP DeskJet 975C" driver="hp-dj_975c" manufacturer="HP" model="900" parameters="pcl_inkjet_params" foomaticid="HP-DeskJet_975C" />
