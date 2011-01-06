@@ -413,11 +413,13 @@
       <printer translate="name" name="Epson Stylus Pro 7000" driver="escp2-7000" manufacturer="Epson" model="28" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7000" />
       <printer translate="name" name="Epson Stylus Pro 7500" driver="escp2-7500" manufacturer="Epson" model="29" parameters="pro_5500_params" foomaticid="Epson-Stylus_Pro_7500" />
       <printer translate="name" name="Epson Stylus Pro 7600" driver="escp2-7600" manufacturer="Epson" model="48" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7600" />
+      <printer translate="name" name="Epson Stylus Pro 9700" driver="escp2-9700" manufacturer="Epson" model="110" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9700" />
       <printer translate="name" name="Epson Stylus Pro 7800" driver="escp2-7800" manufacturer="Epson" model="103" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7800" />
       <printer translate="name" name="Epson Stylus Pro 7880" driver="escp2-7880" manufacturer="Epson" model="89" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7880" />
       <printer translate="name" name="Epson Stylus Pro 9000" driver="escp2-9000" manufacturer="Epson" model="30" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9000" />
       <printer translate="name" name="Epson Stylus Pro 9500" driver="escp2-9500" manufacturer="Epson" model="31" parameters="pro_5500_params" foomaticid="Epson-Stylus_Pro_9500" />
       <printer translate="name" name="Epson Stylus Pro 9600" driver="escp2-9600" manufacturer="Epson" model="49" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9600" />
+      <printer translate="name" name="Epson Stylus Pro 7700" driver="escp2-7700" manufacturer="Epson" model="109" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7700" />
       <printer translate="name" name="Epson Stylus Pro 9800" driver="escp2-9800" manufacturer="Epson" model="104" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9800" />
       <printer translate="name" name="Epson Stylus Pro 9880" driver="escp2-9880" manufacturer="Epson" model="90" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9880" />
       <printer translate="name" name="Epson Stylus Pro 10000" driver="escp2-10000" manufacturer="Epson" model="41" parameters="standard_params" foomaticid="Epson-Stylus_Pro_10000" />

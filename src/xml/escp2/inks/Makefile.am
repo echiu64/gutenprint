@@ -60,6 +60,7 @@ pkgxmldata_DATA =				\
 	pro_ultrachrome.xml			\
 	pro_ultrachrome_k3.xml			\
 	pro_ultrachrome_k3v.xml			\
+	pro_ultrachrome_k3v4.xml		\
 	standard.xml				\
 	standard_gen0.xml			\
 	ultrachrome.xml				\
