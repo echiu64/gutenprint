@@ -1076,7 +1076,7 @@ print_page_sizes(gzFile fp, stp_vars_t *v, int simplified,
 		max_width,
 		max_height;
   const stp_param_string_t *opt;
-  int cur_opt;
+  int cur_opt = 0;
 
   stp_describe_parameter(v, "PageSize", &desc);
   num_opts = stp_string_list_count(desc.bounds.str);
@@ -1796,7 +1796,6 @@ write_ppd(
   const char	*manufacturer;		/* Manufacturer of printer */
   const char	*device_id;		/* IEEE1284 device ID */
   const stp_vars_t *printvars;		/* Printer option names */
-  int		cur_opt;		/* Current option */
   stp_parameter_t desc;
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
@@ -1824,7 +1823,6 @@ write_ppd(
   manufacturer = stp_printer_get_manufacturer(p);
   device_id  = stp_printer_get_device_id(p);
   printvars  = stp_printer_get_defaults(p);
-  cur_opt    = 0;
 
   print_ppd_header(fp, ppd_type, model, driver, family, long_name,
 		   manufacturer, device_id, ppd_location, language, po,
