@@ -1863,6 +1863,7 @@ write_ppd(
   gzputs(fp, "*cupsICCProfile RGB../Color:	\"/System/Library/ColorSync/Profiles/sRGB Profile.icc\"\n");
   gzputs(fp, "*cupsICCProfile CMYK../Color:	\"/System/Library/ColorSync/Profiles/Generic CMYK Profile.icc\"\n");
   gzputs(fp, "*APSupportsCustomColorMatching: true\n");
+  gzputs(fp, "*APDefaultCustomColorMatchingProfile: sRGB\n");
   gzputs(fp, "*APCustomColorMatchingProfile: sRGB\n");
 
   gzputs(fp, "\n");
