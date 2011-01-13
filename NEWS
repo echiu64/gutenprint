@@ -316,8 +316,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
  10) Corrected color matching profile used for Mac OS X 10.5.x.
      sRGB will now be used instead of Generic RGB.  Users with work-
      flows dependant on the previously used Generic RGB can select
-     this color profile in the print window.  Use ColorSync to choose
-     the profile rather than using VendorMatching.
+     this color profile in the print window by using ColorSync to
+     choose the profile rather than using VendorMatching.
 
 
 * Changes from 5.2.5
