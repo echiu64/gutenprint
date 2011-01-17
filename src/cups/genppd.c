@@ -1143,6 +1143,8 @@ print_page_sizes(gzFile fp, stp_vars_t *v, int simplified,
 
   gzprintf(fp, "*VariablePaperSize: %s\n\n", variable_sizes ? "true" : "false");
 
+  if (stp_parameter_has_category_value(v, &desc, "Color", "Yes"))
+    gzputs(fp, "*ColorKeyWords: \"PageSize\"\n");
   gzprintf(fp, "*OpenUI *PageSize/%s: PickOne\n", _("Media Size"));
   gzputs(fp, "*OPOptionHints PageSize: \"dropdown\"\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageSize\n");
@@ -1159,6 +1161,8 @@ print_page_sizes(gzFile fp, stp_vars_t *v, int simplified,
     }
   gzputs(fp, "*CloseUI: *PageSize\n\n");
 
+  if (stp_parameter_has_category_value(v, &desc, "Color", "Yes"))
+    gzputs(fp, "*ColorKeyWords: \"PageRegion\"\n");
   gzprintf(fp, "*OpenUI *PageRegion/%s: PickOne\n", _("Media Size"));
   gzputs(fp, "*OPOptionHints PageRegion: \"dropdown\"\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *PageRegion\n");
@@ -1233,6 +1237,7 @@ static void
 print_color_setup(gzFile fp, int simplified, int printer_is_color,
 		  const stp_string_list_t *po)
 {
+  gzputs(fp, "*ColorKeyWords: \"ColorModel\"\n");
   gzprintf(fp, "*OpenUI *ColorModel/%s: PickOne\n", _("Color Model"));
   gzputs(fp, "*OPOptionHints ColorModel: \"radiobuttons\"\n");
   gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
@@ -1301,6 +1306,7 @@ print_color_setup(gzFile fp, int simplified, int printer_is_color,
       /*
        * 8 or 16 bit color (16 bit is slower)
        */
+      gzputs(fp, "*ColorKeyWords: \"StpColorPrecision\"\n");
       gzprintf(fp, "*OpenUI *StpColorPrecision/%s: PickOne\n", _("Color Precision"));
       gzputs(fp, "*OPOptionHints StpColorPrecision: \"radiobuttons\"\n");
       gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
@@ -1401,8 +1407,10 @@ print_one_option(gzFile fp, stp_vars_t *v, const stp_string_list_t *po,
   int simplified = ppd_type == PPD_SIMPLIFIED;
   char		dimstr[255];		/* Dimension string */
   int print_close_ui = 1;
-  int skip_color = (ppd_type == PPD_NO_COLOR_OPTS) ?
-    stp_parameter_has_category_value(v, desc, "Color", "Yes") : 0;
+  int is_color_opt = stp_parameter_has_category_value(v, desc, "Color", "Yes");
+  int skip_color = (ppd_type == PPD_NO_COLOR_OPTS && is_color_opt);
+  if (is_color_opt)
+    gzprintf(fp, "*ColorKeyWords: \"Stp%s\"\n", desc->name);
   gzprintf(fp, "*OpenUI *Stp%s/%s: PickOne\n",
 	   desc->name, stp_i18n_lookup(po, desc->text));
   gzprintf(fp, "*OrderDependency: 10 AnySetup *Stp%s\n", desc->name);
@@ -1511,6 +1519,8 @@ print_one_option(gzFile fp, stp_vars_t *v, const stp_string_list_t *po,
 	       desc->bounds.dbl.upper);
       if (!simplified && !skip_color)
 	{
+	  if (is_color_opt)
+	    gzprintf(fp, "*ColorKeyWords: \"StpFine%s\"\n", desc->name);
 	  gzprintf(fp, "*OpenUI *StpFine%s/%s %s: PickOne\n",
 		   desc->name, stp_i18n_lookup(po, desc->text),
 		   _("Fine Adjustment"));
@@ -1898,8 +1908,11 @@ write_ppd(
 
   if (num_opts > 0)
   {
-    int nocolor = skip_color &&
+    int is_color_opt =
       stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+    int nocolor = skip_color && is_color_opt;
+    if (is_color_opt)
+      gzprintf(fp, "*ColorKeyWords: \"MediaType\"\n");
     gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
     gzputs(fp, "*OPOptionHints MediaType: \"dropdown\"\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *MediaType\n");
@@ -1930,8 +1943,11 @@ write_ppd(
 
   if (num_opts > 0)
   {
-    int nocolor = skip_color &&
+    int is_color_opt =
       stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+    int nocolor = skip_color && is_color_opt;
+    if (is_color_opt)
+      gzprintf(fp, "*ColorKeyWords: \"InputSlot\"\n");
     gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
     gzputs(fp, "*OPOptionHints InputSlot: \"dropdown\"\n");
     gzputs(fp, "*OrderDependency: 10 AnySetup *InputSlot\n");
@@ -1960,8 +1976,11 @@ write_ppd(
   stp_describe_parameter(v, "Quality", &desc);
   if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
     {
-      int nocolor = skip_color &&
+      int is_color_opt =
 	stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+      int nocolor = skip_color && is_color_opt;
+      if (is_color_opt)
+	gzprintf(fp, "*ColorKeyWords: \"Quality\"\n");
       stp_clear_string_parameter(v, "Resolution");
       has_quality_parameter = 1;
       num_opts = stp_string_list_count(desc.bounds.str);
@@ -2009,13 +2028,16 @@ write_ppd(
 
   if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
     {
-      int nocolor = skip_color &&
+      int is_color_opt =
 	stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+      int nocolor = skip_color && is_color_opt;
       stp_string_list_t *res_list = stp_string_list_create();
       char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
       int resolution_ok;
       int tmp_xdpi, tmp_ydpi;
 
+      if (is_color_opt)
+	gzprintf(fp, "*ColorKeyWords: \"Resolution\"\n");
       gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
       if (num_opts > 3)
 	gzputs(fp, "*OPOptionHints Resolution: \"resolution radiobuttons\"\n");
@@ -2161,6 +2183,10 @@ write_ppd(
       num_opts = stp_string_list_count(desc.bounds.str);
       if (num_opts > 0)
       {
+	int is_color_opt =
+	  stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+	if (is_color_opt)
+	  gzprintf(fp, "*ColorKeyWords: \"InputSlot\"\n");
         gzprintf(fp, "*OpenUI *Duplex/%s: PickOne\n", _("2-Sided Printing"));
 	gzputs(fp, "*OPOptionHints Duplex: \"radiobuttons\"\n");
         gzputs(fp, "*OrderDependency: 10 AnySetup *Duplex\n");
