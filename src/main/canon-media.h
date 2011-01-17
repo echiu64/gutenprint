@@ -64,11 +64,11 @@ DECLARE_SLOTS(canon_default);
 
 /* Gernot: changes 2010-10-02 */
 static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
-  { "SelectKey",  N_ ("Selected by Paper Select Key"), 3 }, /*change to 0x3*/
-  { "Auto",       N_ ("Auto Sheet Feeder"), 4 }, /*change to 0x4*/
-  { "Cassette",   N_ ("Cassette"), 0x8 },/*OK*/
-  { "CD",         N_ ("CD tray"), 10 },/*change to 0xa*/
-  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },/*change to 0xf seems to be continuous autofeed*/
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 }, /* changed from 3 to 0x3*/
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 }, /* changed from 4 to 0x4*/
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "CD",         N_ ("CD tray"), 10 },/* change from 10 to 0xa? Check */
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },/* change to 0xf seems to be continuous autofeed? Check */
 };
 DECLARE_SLOTS(canon_PIXMA_iP4000);
 
@@ -79,12 +79,13 @@ static const canon_slot_t canon_MULTIPASS_MP170_slots[] = {
 DECLARE_SLOTS(canon_MULTIPASS_MP170);
 
 /* MP250 */
+/* iP2700 */
 static const canon_slot_t canon_MULTIPASS_MP250_slots[] = {
-  { "Read",       N_ ("Rear tray"), 0x4 },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP250);
 
-/* Gernot: iP4500 */
+/* iP4500 */
 static const canon_slot_t canon_PIXMA_iP4500_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Rear",       N_ ("Rear tray"), 0x4 },
@@ -95,6 +96,15 @@ static const canon_slot_t canon_PIXMA_iP4500_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP4500);
 
+static const canon_slot_t canon_MULTIPASS_MP520_slots[] = {
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Front",   N_ ("Front tray"), 0x8 },
+  /* There is also a "plain media only Front" option, but it seems to have same 0x8 when used, no idea whether it should take different values */
+};
+DECLARE_SLOTS(canon_MULTIPASS_MP520);
+
+/* iP4600, iP4700 */
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
@@ -114,7 +124,6 @@ static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_MG5100);
 
-
 /* Gernot --- added so check this*/
 static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
@@ -124,7 +133,7 @@ static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
   { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
   { "CD",         N_ ("CD tray"), 0xa }
 };
-DECLARE_SLOTS(canon_PIXMA_MG5200);
+DECLARE_SLOTS(canon_PIXMA_MG5200); /* also MG6100 */
 
 
 /* media types */
@@ -188,7 +197,7 @@ static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
   { "CD",		N_ ("CD"),				0x00,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, 
   /* FIXME media code for c) should be 0x0c for CD but this will restrict CD printing to a single, not well supported, resolution */
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double-Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP4000);
 
@@ -198,7 +207,7 @@ static const canon_paper_t canon_MULTIPASS_MP170_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double-Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -269,6 +278,24 @@ static const canon_paper_t canon_MULTIPASS_MP480_papers[] = {
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP480);
+
+/* MP520 */
+static const canon_paper_t canon_MULTIPASS_MP520_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPpro*/
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPsuper */
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPsuperDS */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPgloss */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPmatte */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPother */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* HiRes */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjetHagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
+};
+DECLARE_PAPERS(canon_MULTIPASS_MP520);
 
 /* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* iP2700 series */
@@ -371,7 +398,7 @@ static const canon_paper_t canon_MULTIPASS_MP960_papers[] = { /*                
   { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/*check variations*/
   { "FineArtPHotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
   { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
-  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double-Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
   { "Other",		N_ ("Other Coated Photo Paper"),	0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 } /*coated, OK*/
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP960);

@@ -124,6 +124,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_P         0x20000ul
 #define CANON_CAP_DUPLEX    0x40000ul
 #define CANON_CAP_XML       0x80000ul /* not sure of this yet */
+#define CANON_CAP_CARTRIDGE 0x100000ul /* not sure of this yet */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -851,6 +852,30 @@ canon_parameters(const stp_vars_t *v, const char *name,
 			       _("Standard"));
     description->deflt.str = "Standard";
   }
+  /* Cartridge selection for those printers that have it */
+  else if (strcmp(name, "Cartridge") == 0)
+  {
+    int offer_cartridge_selection = 0;
+    description->bounds.str = stp_string_list_create();
+    stp_string_list_add_string(description->bounds.str, "Both",
+			       _("Both"));
+    stp_string_list_add_string(description->bounds.str, "Color",
+			       _("Color"));
+    stp_string_list_add_string(description->bounds.str, "Black",
+			       _("Black"));
+
+    /* description->deflt.str = "Both"; */
+    /* Note: not necessary set cartridge if Mono mode */
+
+    if (caps->features & CANON_CAP_CARTRIDGE)
+      {
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
+      }
+    else
+      description->is_active = 0;
+  }
+
 }
 
 
@@ -1270,20 +1295,23 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
-	if(!(init->caps->features & CANON_CAP_P))
-		return;
-	if (!strcmp(init->caps->name,"iP2700")) /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
-	  { /* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
-	    unsigned char
-	      /*arg_ESCP_1 = 0x03,*/ /* A4 size */
-	      arg_ESCP_2 = 0x00; /* plain paper */
-	    
-	    arg_ESCP_2 = init->pt->media_code_P;
-	    /*                             size      media                */
-	    canon_cmd( v,ESC28,0x50,6,0x00,0x03,0x00,arg_ESCP_2,0x01,0x00);
-	  }
-	else
-	  canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,0x00 );
+  unsigned char arg_ESCP_2;
+  if(!(init->caps->features & CANON_CAP_P))
+    return;
+
+  arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
+
+  if (!strcmp(init->caps->name,"iP2700")) /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
+    {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
+
+      /* arg_ESCP_1 = 0x03; */ /* A4 size */
+      /* arg_ESCP_2 = 0x00; */ /* plain media */
+      /*                             size      media                */
+      canon_cmd( v,ESC28,0x50,6,0x00,0x03,0x00,arg_ESCP_2,0x01,0x00);
+    }
+  else 
+    /*                             size      media       */
+    canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,arg_ESCP_2 );
 }
 
 /* ESC (T -- 0x54 -- setCartridge -- :
@@ -1366,9 +1394,25 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
         if(init->mode->inks[i].ink){
           if(init->mode->inks[i].ink->flags & INK_FLAG_5pixel_in_1byte)
             buf[3+i*3+0]=(1<<5)|init->mode->inks[i].ink->bits; /*info*/
+           /*else if(init->mode->inks[i].ink->flags & INK_FLAG_lowresmode)
+             {
+               buf[3+i*3+1]=0x01;
+               buf[3+i*3+0]=init->mode->inks[i].ink->bits;
+             }*/
           else
             buf[3+i*3+0]=init->mode->inks[i].ink->bits;
+
+          /* workaround for now on the 4-4 inkset and others */
+          /*if (init->mode->inks[i].ink->bits == 4)
+            buf[3+i*3+2] = 0x04;*/
+          /*else if (init->mode->inks[i].ink->bits == 2)
+            buf[3+i*3+2] = 0x04;*/
+          /*else if (init->mode->inks[i].ink->bits == 1)
+            buf[3+i*3+2] = 0x02;*/
           buf[3+i*3+2]= init->mode->inks[i].ink->numsizes+1;/*level*/
+          /*else
+            buf[3+i*3+2] = 0x00;*/
+          /* this should show that there is an error */
        }
     }
     stp_zfwrite(ESC28,2,1,v);
@@ -1423,6 +1467,9 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
 static void
 canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
   
+  int i; /* introduced for channel counting */
+  char* raster_channel_order; /* introduced for channel counting */
+
   if(!(init->caps->features & CANON_CAP_I))
 	return;
 
@@ -1432,7 +1479,26 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
   /* set the color sequence */ 
   stp_zfwrite("\033(L", 3, 1, v);
   stp_put16_le(init->num_channels, v);
-  stp_zfwrite((const char *)init->channel_order,init->num_channels, 1, v);
+  /* add an exception here to add 0x60 of cmy channels for those printers/modes that require it */
+  raster_channel_order=init->channel_order;
+  /*  if (!strcmp(init->caps->name,"MP450"))*/
+    {
+      /* if cmy there, add 0x60 to each --- this is not yet correct, some modes do not require it! */
+      /*      if (init->num_channels==7) {*/
+	for(i=0;i<init->num_channels;i++){
+	  switch(init->channel_order[i]){
+	    /* case 'c':raster_channel_order[i]+=0x60; break;;*/
+	    /* case 'm':raster_channel_order[i]+=0x60; break;;*/
+	    /* case 'y':raster_channel_order[i]+=0x60; break;;*/
+	  }
+	}
+	/*}*/
+      stp_zfwrite((const char *)raster_channel_order,init->num_channels, 1, v);
+    }
+    /*  else
+    {
+      stp_zfwrite((const char *)init->channel_order,init->num_channels, 1, v);
+      }*/
 }
 
 
@@ -1631,7 +1697,7 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
         current->props = ink->ink;
         current->delay = delay;
         /* calculate buffer length */
-        current->buf_length = ((privdata->length * current->props->bits)+1)*(delay + 1);      
+        current->buf_length = ((privdata->length * current->props->bits)+1)*(delay + 1);
         /* update maximum buffer length */
         if(current->buf_length > privdata->buf_length_max)
              privdata->buf_length_max = current->buf_length;
@@ -1705,17 +1771,16 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 
         /* set inks and density */
         if(shades){
-            stp_dither_set_inks_full(v,channel, subchannel, shades, 1.0,ink_darkness[channel]);
-            for(i=0;i<subchannel;i++){
-                double density = get_double_param(v, primary_density_control[channel]) * get_double_param(v, "Density");
-                if(i > 0 && secondary_density_control[channel])
-                    density *= get_double_param(v, secondary_density_control[channel]);
-                stp_channel_set_density_adjustment(v,channel,subchannel,density);
-            }
-            stp_free(shades);
-        } 
+          stp_dither_set_inks_full(v,channel, subchannel, shades, 1.0, ink_darkness[channel]);
+          for(i=0;i<subchannel;i++){
+            double density = get_double_param(v, primary_density_control[channel]) * get_double_param(v, "Density");
+            if(i > 0 && secondary_density_control[channel])
+              density *= get_double_param(v, secondary_density_control[channel]);
+            stp_channel_set_density_adjustment(v,channel,subchannel,density);
+          }
+          stp_free(shades);
+        }
     }
-
 }
 
 

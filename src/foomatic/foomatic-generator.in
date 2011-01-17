@@ -1292,10 +1292,12 @@ sub qualityorder {
 		    "dpi_photohigh",
 		    "dpi_photohigh2",
 		    "dpi_photohigh3",
+		    "dpi_photohigh4",
 	            "dpi_tshirt",
 		    "dpi_photo",
 		    "dpi_photo2",
 		    "dpi_photo3",
+		    "dpi_photo4",
 		    "dpi_photodraft",
 		    "dpi_photodraft2",
 		    "dpi_photodraft3"
