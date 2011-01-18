@@ -506,10 +506,10 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    img->color[i].level=(buf[3+i*3+1] << 8) + buf[3+i*3+2];/* check this carefully */
 					    
 					    /* work around for levels not matching (bpp gives more) */
-					    if ((img->color[i].level == 3) && (img->color[i].bpp == 2)) {
+					    /*if ((img->color[i].level == 3) && (img->color[i].bpp == 2)) {
 					      printf("WARNING: color %c bpp %i declared levels %i, setting to 4 for testing \n",img->color[i].name,img->color[i].bpp,img->color[i].level);
 					      img->color[i].level = 4;
-					    } 
+					      } */
 					    /*else if ((img->color[i].level == 4) && (img->color[i].bpp == 4)) {*/
 					    /* levels is 16 but only each 2nd level is used */
 					    /*  printf("WARNING: color %c bpp %i declared levels %i, setting to 16 for testing \n",img->color[i].name,img->color[i].bpp,img->color[i].level);

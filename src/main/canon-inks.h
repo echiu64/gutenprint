@@ -88,6 +88,9 @@ static const stp_dotsize_t dotsizes_2l[] = {
 
 DECLARE_INK(1,2);
 
+/* test */
+DECLARE_INK(2,2);
+
 static const stp_dotsize_t dotsizes_3l[] = {
   { 0x1, 0.5  },
   { 0x2, 1.0  }
@@ -551,10 +554,44 @@ static const canon_inkset_t canon_13_C3M3Y2_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iP1900 color cartridge only, plain mode */
+static const canon_inkset_t canon_13_C3M3Y2b_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_13_C3M3Y2K2_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
         {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* iP1900, std mode, plain media */
+static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_2l_ink},
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
