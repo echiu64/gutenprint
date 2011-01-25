@@ -1112,7 +1112,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-
+  { /* Canon MULTIPASS MX700 */
+    "PIXMA MX700", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP520_slotlist, /* front, rear, button, and front/plain-only */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0,control_cmd_PIXMA_iP4000, /*features*/
+    &canon_MULTIPASS_MP520_modelist,
+    &canon_MULTIPASS_MX300_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
 };
 
 #endif

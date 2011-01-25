@@ -220,7 +220,7 @@ static const canon_paper_t canon_MULTIPASS_MP170_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP170);
 
-/* MX300, MX310 */
+/* MX300, MX310, MX700 */
 static const canon_paper_t canon_MULTIPASS_MX300_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
@@ -256,7 +256,7 @@ static const canon_paper_t canon_MULTIPASS_MX330_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX330);
 
-/* MX340 */
+/* MX340 --- MX350 is the same */
 static const canon_paper_t canon_MULTIPASS_MX340_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
