@@ -1069,6 +1069,50 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  /* MX series */
+  { /* Canon MULTIPASS MX300 --- MX310 is the same */
+    "PIXMA MX300", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MX300_modelist,
+    &canon_MULTIPASS_MX300_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* Canon MULTIPASS MX330 */
+    "PIXMA MX330", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MX330_modelist,
+    &canon_MULTIPASS_MX330_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* Canon MULTIPASS MX340 */
+    "PIXMA MX340", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MX330_modelist,
+    &canon_MULTIPASS_MX340_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+
 };
 
 #endif

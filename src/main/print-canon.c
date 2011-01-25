@@ -400,7 +400,8 @@ static const char* canon_families[] = {
  "PIXMA MP",
  "PIXUS",
  "PIXMA Pro",
- "PIXMA MG"
+ "PIXMA MG",
+ "PIXMA MX",
 };
 
 /* canon model ids look like the following
@@ -1301,7 +1302,12 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
-  if (!strcmp(init->caps->name,"iP2700")) /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
+  /* models that add two more bytes "1 0" to the end of the usual 4-byte sequence: */
+  /* iP2700 */
+  /* MX340 */
+  /* MX350 --- same driver as MX340 */
+  if ( (!strcmp(init->caps->name,"iP2700")) || (!strcmp(init->caps->name,"MX340")) )
+ /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
 
       /* arg_ESCP_1 = 0x03; */ /* A4 size */

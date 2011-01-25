@@ -828,6 +828,23 @@ static const canon_inkset_t canon_13_C6M6Y4K2k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
+/* MX7600 */
+static const canon_inkset_t canon_13_C6M6Y4K3k4_c_inkset[] = {
+	{'C',1.0,&canon_4b_6l_ink},
+	{'M',1.0,&canon_4b_6l_ink},
+	{'Y',1.0,&canon_2b_4l_ink},
+	{'K',1.0,&canon_2b_3l_c_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',0.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_13_C6M6Y4k4yask_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},

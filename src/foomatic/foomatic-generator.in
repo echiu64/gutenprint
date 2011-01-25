@@ -1281,7 +1281,9 @@ sub qualityorder {
 		    # Canon
 		    "dmt",
 		    "dpi_high",
+		    "dpi_high2",
 		    "dpi_highmono",
+		    "dpi_highmono2",
 		    "dpi_mono",
 		    "dpi_draft",
                     "dpi_std2",
