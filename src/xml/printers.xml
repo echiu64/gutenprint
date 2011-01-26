@@ -359,7 +359,6 @@
       <printer translate="name" name="Epson Stylus Photo 2100" driver="escp2-2100" manufacturer="Epson" model="47" parameters="standard_params" foomaticid="Epson-Stylus_Photo_2100" />
       <printer translate="name" name="Epson Stylus Photo 2200" driver="escp2-2200" manufacturer="Epson" model="47" parameters="standard_params" foomaticid="Epson-Stylus_Photo_2200" />
       <printer translate="name" name="Epson Stylus Photo P50" driver="escp2-p50" manufacturer="Epson" model="97" parameters="claria_params" foomaticid="Epson-Stylus_Photo_P50" />
-      <printer translate="name" name="Epson Stylus Photo PX650" driver="escp2-px650" manufacturer="Epson" model="97" parameters="claria_params" foomaticid="Epson-Stylus_Photo_PX650" />
       <printer translate="name" name="Epson Stylus Photo R200" deviceid="MFG:EPSON;MDL:Stylus Photo R200;DES:EPSON Stylus Photo R200;CMD:ESCPL2,BDC,D4;" driver="escp2-r200" manufacturer="Epson" model="63" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R200" />
       <printer translate="name" name="Epson Stylus Photo R210" deviceid="MFG:EPSON;MDL:Stylus Photo R210;DES:EPSON Stylus Photo R210;CMD:ESCPL2,BDC,D4;" driver="escp2-r210" manufacturer="Epson" model="63" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R210" />
       <printer translate="name" name="Epson Stylus Photo R220" deviceid="MFG:EPSON;MDL:Stylus Photo R220;DES:EPSON Stylus Photo R220;CMD:ESCPL2,BDC,D4;" driver="escp2-r220" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R220" />
@@ -1703,7 +1702,7 @@
       <printer translate="name" name="Canon SELPHY ES2" driver="canon-es2" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES2" />
       <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES20" />
       <printer translate="name" name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX5" />
-      <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex5" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX5" />
+      <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX7" />
       <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" foomaticid="Sony-UP-DP10" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" foomaticid="Sony-UP-DR100" />
       <printer translate="name" name="Sony UP-DR150" driver="sony-updr150" manufacturer="Sony" model="2001" foomaticid="Sony-UP-DR150" />
