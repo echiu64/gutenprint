@@ -47,7 +47,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
      <SubchannelValueParam name="DarkGrayValue"/>
      <SubchannelScaleParam name="DarkGrayScale"/>
     </subchannel>
-    <subchannel color="0" subchannel="2" name="LightLightBlack" text="Light Light Black" translate="text">
+    <subchannel color="0" subchannel="3" name="LightLightBlack" text="Light Light Black" translate="text">
      <ChannelDensityParam name="BlackDensity"/>
      <SubchannelTransitionParam name="LightGrayTrans"/>
      <SubchannelValueParam name="LightGrayValue"/>
