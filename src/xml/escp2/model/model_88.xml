@@ -26,10 +26,11 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
  <inkGroup src="escp2/inks/pro_ultrachrome_k3v.xml"/>
  <printerWeaves src="escp2/weaves/pro7600.xml"/>
+ <verticalBorderlessSequence>SN\003\000\000\011\001</verticalBorderlessSequence>
  <preinitSequence>\000\000\000\033\001@EJL\0401284.4\012@EJL\040\040\040\040\040\012\033@</preinitSequence>
  <postinitRemoteSequence>JE\001\000\000</postinitRemoteSequence>
  <commandSet>Pro</commandSet>
- <borderless>HorizontalOnly</borderless>
+ <borderless>Yes</borderless>
  <supportsVariableDropsizes/>
  <hasFastGraymode/>
  <sendZeroAdvance/>
