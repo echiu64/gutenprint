@@ -1715,6 +1715,13 @@
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" foomaticid="Fujifilm-Printpix-CX-550" />
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" foomaticid="Fujifilm-FinePix-NX-500" />
       <printer translate="name" name="Kodak Easyshare-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Easyshare-Printer-Dock" />
+      <printer translate="name" name="Kodak EasyShare-G600-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-EasyShare-G600-Printer-Dock" />
+      <printer translate="name" name="Kodak PD-4000" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-PD-4000" />
+      <printer translate="name" name="Kodak PD-6000" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-PD-6000" />
+      <printer translate="name" name="Kodak Photo-Printer" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Photo-Printer" />
+      <printer translate="name" name="Kodak Photo-Printer-500" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Photo-Printer-500" />
+      <printer translate="name" name="Kodak Printer-Dock-Plus" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Printer-Dock-Plus" />
+      <printer translate="name" name="Kodak Printer-Dock-Plus-S3" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Printer-Dock-Plus-S3" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Dai Nippon Printing DS40" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />
