@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<!--	<base href="http://gimp-print.sourceforge.net/"> -->
+	<base href="http://gimp-print.sourceforge.net/">
 	<title>Gutenprint for Mac OS X</title> 
 	<meta name="CLASSIFICATION" content="General HTML">
 	<meta name="Author" content="The Gutenprint Project">

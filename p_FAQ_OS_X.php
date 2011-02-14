@@ -195,7 +195,7 @@ require('standard_html_header.php');
  </h3>
  <p>
  For the latest information or the newest version of Gutenprint be sure
- to check the <a href= "MacOSX.php"
+ to check the <a href= "http://gutenprint.sourceforge.net/MacOSX.php"
  >Gutenprint web page</a>.
  </p>
  <a name="contactInfo"></a>

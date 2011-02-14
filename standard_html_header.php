@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
 <HTML>
 <HEAD>
-<!-- <BASE HREF="http://gutenprint.sourceforge.net/"> -->
+<BASE HREF="http://gutenprint.sourceforge.net/">
 <TITLE><? echo ($title) ?></TITLE>
 </HEAD>
 <META NAME="CLASSIFICATION" CONTENT="General HTML">
