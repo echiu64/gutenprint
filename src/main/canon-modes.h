@@ -772,7 +772,47 @@ static const canon_mode_t canon_MULTIPASS_MP960_modes[] = {
 DECLARE_MODES(canon_MULTIPASS_MP960,3);
 
 static const canon_mode_t canon_MULTIPASS_MP970_modes[] = {
-  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(7_C4M4Y4c4m4k4K4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /*  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(7_C4M4Y4c4m4k4K4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,1},*/
+  /* 300 dpi plain modes (also mono) */
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(19_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi",N_("300x300 DPI"),INKSET(19_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* 600dpi plain modes (also mono) */
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(19_C3M3Y3K2k3),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* hagaki fast uses this with output CMYKk (quality 2) */
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI STD / HAGAKI DRAFT"),INKSET(19_C3M3Y3K2k3),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(19_C6M6Y4K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  /* PPpro,  inkjet Hagaki High CMYcmk --- no 0x60 additions to c,m */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH / INKJET HAGAKI HIGH"),INKSET(19_C7M7Y4K2c7m7k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},/* CMYcmk */
+  /* hagaki high CMYKk (quality 4) OK! */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh4",N_("600x600 DPI HAGAKI HIGH"),INKSET(19_C6M6Y4K2c6m6k4hagaki),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},
+  /* hagaki std CMYKk (quality 3) OK! */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo4",N_("600x600 DPI HAGAKI STD"),INKSET(19_C6M6Y4K2c6m6k4hagaki),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  /* Inkjet Hagaki Std CMYcmk --- no 0x60 additions to c,m */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo",N_("600x600 DPI PHOTO / INKJET HAGAKI STD"),INKSET(19_C6M6Y4K2c6m6k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* CMYcmk */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT"),INKSET(19_C6M6Y4K2c6m6k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* PPmatte */
+  /* CMYcmk --- no cyan */
+  /*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH 2"),INKSET(19_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},*/
+  /* CMYcmk --- no cyan */
+  /*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo2",N_("600x600 DPI PHOTO 2"),INKSET(19_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},*/
+  /* CMYcmk --- no cyan */
+  /*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photodraft2",N_("600x600 DPI PHOTO DRAFT 2"),INKSET(19_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},*/
+  /* CD */
+  /* CMYcmk --- no cyan */
+  /*  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photohigh3",N_("600x600 DPI PHOTO HIGH 3"),INKSET(19_C4M4Y4c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},*/
+  /* CMYcmk --- no cyan */
+  /*  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo3",N_("600x600 DPI PHOTO 3"),INKSET(19_C4M4Y4c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},*/
+  /* CMYcmk --- no cyan */
+  /*  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photodraft3",N_("600x600 DPI PHOTO DRAFT 3"),INKSET(19_C4M4Y4c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},*/
+  /* T-shirt transfers CMYk --- works great! OK */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high2",N_("600x600 DPI T-SHIRT TRANSFERS"),INKSET(19_C4M4Y4K2k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* photo modes high & std (600dpi) CMYcmk */
+  /* photo mode 2 (600dpi) CMYcmk --- works, but c,m may need a bit of tone/density adjusting */
+  /* photo mode 3 CD (600dpi) CMYcmk --- c,m too light, may need adjusting tone/density */
+  /* inkjet hagaki outputs in CMYcmk std, hi --- c,m too light, may need adjusting tone/density */
+  /* hagaki outputs in CMYKk draft, std, high (OK) */
+  /* T-shirt transfer mode (600dpi) CMYk  (OK) */
 };
 DECLARE_MODES(canon_MULTIPASS_MP970,0);
 
