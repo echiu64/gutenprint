@@ -784,7 +784,7 @@ static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'y',1.0,&canon_2b_4l_ink},
+	{'k',1.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -803,7 +803,7 @@ static const canon_inkset_t canon_13_C6M6Y4K2y4_inkset[] = {
 	{'K',1.0,&canon_1b_2l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'y',1.0,&canon_2b_4l_ink},
+	{'k',1.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -871,7 +871,7 @@ static const canon_inkset_t canon_13_C8M8Y4y4_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'y',1.0,&canon_2b_4l_ink},
+	{'k',1.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
