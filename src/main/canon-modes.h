@@ -553,7 +553,7 @@ static const canon_mode_t canon_MULTIPASS_MP480_modes[] = {
 };
 DECLARE_MODES(canon_MULTIPASS_MP480,4);
 
-/* same family: iP3300, iP3500, MX700, MP510, MP520 */
+/* same family: iP3300, iP3500, MX700, MP510, MP520, MP600 */
 /* on photo media, same modes do not use K ink */
 static const canon_mode_t canon_MULTIPASS_MP520_modes[] = {
   {  600, 600,CANON_INK_K|CANON_INK_CcMmYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, /* 16 CMYKcm, mono: 16 K */
