@@ -166,6 +166,7 @@
       <printer translate="name" name="Canon PIXMA MP510" driver="bjc-MULTIPASS-MP510" manufacturer="Canon" model="5000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP510" />
       <printer translate="name" name="Canon PIXMA MP520" driver="bjc-MULTIPASS-MP520" manufacturer="Canon" model="5000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP520" />
       <printer translate="name" name="Canon PIXMA MP540" driver="bjc-MULTIPASS-MP540" manufacturer="Canon" model="5000540" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP540" />
+      <printer translate="name" name="Canon PIXMA MP550" driver="bjc-MULTIPASS-MP550" manufacturer="Canon" model="5000550" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP550" />
       <printer translate="name" name="Canon PIXMA MP610" driver="bjc-MULTIPASS-MP610" manufacturer="Canon" model="3005300" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP610" />
       <printer translate="name" name="Canon PIXMA MP700" driver="bjc-MULTIPASS-MP700" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP700" />
       <printer translate="name" name="Canon PIXMA MP710" driver="bjc-MULTIPASS-MP710" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP710" />

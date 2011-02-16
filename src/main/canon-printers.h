@@ -879,9 +879,23 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_MG5100_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_r,0x64,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP540_modelist,
     &canon_MULTIPASS_MX330_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon PIXMA MP550 ---wth XML */
+    "PIXMA MP550", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_MG5100_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_r|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MP540_modelist, /* seems to have same modes */
+    &canon_MULTIPASS_MP250_paperlist,
     NULL,
     NULL,
     NULL,
