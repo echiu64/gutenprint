@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.6, a stable release of Gutenprint 5.2.  This
+Welcome to Gutenprint 5.2.7, a stable release of Gutenprint 5.2.  This
 release has bug fixes, support for some new printers, and a few new
 features over 5.2.5.  Please read these release notes carefully.
 
@@ -257,8 +257,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Canon inkjet printers:
 
+       Canon PIXMA iP1900 (EXPERIMENTAL)
        Canon PIXMA iP2700
        Canon PIXMA iP4700
+       Canon PIXMA MG5100
+       Canon PIXMA MG5200
+       Canon PIXMA MG6100
+       Canon PIXMA MG8100
        Canon PIXMA MP250
        Canon PIXMA MP270
        Canon PIXMA MP280
@@ -266,14 +271,22 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MP460
        Canon PIXMA MP480
        Canon PIXMA MP495
+       Canon PIXMA MP520
+       Canon PIXMA MP540
        Canon PIXMA MP950
        Canon PIXMA MP960
        Canon PIXMA MP990
+       Canon PIXMA MX300 (EXPERIMENTAL)
+       Canon PIXMA MX310 (EXPERIMENTAL)
+       Canon PIXMA MX330 (EXPERIMENTAL)
+       Canon PIXMA MX340 (EXPERIMENTAL)
+       Canon PIXMA MX350 (EXPERIMENTAL)
+       Canon PIXMA MX700 (EXPERIMENTAL)
+       Canon PIXMA MX850 (EXPERIMENTAL)
+       Canon PIXMA MX860 (EXPERIMENTAL)
+       Canon PIXMA MX870 (EXPERIMENTAL)
+       Canon PIXMA MX7600 (EXPERIMENTAL)
        Canon PIXUS iP2700
-       Canon PIXMA MG5100
-       Canon PIXMA MG5200
-       Canon PIXMA MG6100
-       Canon PIXMA MG8100
 
      - Epson inkjet printers:
 
@@ -301,23 +314,26 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   5) Corrected basic printer definitions of EPSON Stylus Pro 3800,
      3880, 7800, and 9800.
 
-  6) Corrected media definitions of EPSON Stylus Pro 3800, 3880, 4800,
-     4880, 7800, 7880, 9800, 9880, 11800, and 11880.
+  6) Corrected media definitions and improve printing quality for
+     EPSON Stylus Pro 3800, 3880, 4800, 4880, 7800, 7880, 9800, 9880,
+     11800, and 11880.  This will result in substantial changes in
+     output; if this is an issue, please use the EPSON Stylus Pro 7600
+     or 9600 driver as appropriate.
 
-  7) Improved printing quality for EPSON Stylus Pro 3880, 4880, 7880,
-     9880, and 11880.
-
-  8) Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo
+  7) Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo
      black ink automatically based on ink set choice (it is no longer
      necessary to set this on the front panel).
 
-  9) Improved reliability of escputil.
+  8) Improved reliability of escputil.
   
- 10) Corrected color matching profile used for Mac OS X 10.5.x.
+  9) Corrected color matching profile used for Mac OS X 10.5.x.
      sRGB will now be used instead of Generic RGB.  Users with work-
      flows dependant on the previously used Generic RGB can select
      this color profile in the print window by using ColorSync to
      choose the profile rather than using VendorMatching.
+
+ 10) CUPS PPD files now correctly identify which options affect
+     color, for the Common Printer Dialog.
 
 
 * Changes from 5.2.5
