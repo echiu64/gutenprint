@@ -10,6 +10,10 @@
    printers that are functionally identical but have different ink
    characteristics.
 
+   Each printer must have a unique driver name (even if the underlying
+   driver is identical) to allow a unique mapping between driver
+   name and printer name (the mapping is done both ways).
+
    NOTE TO TRANSLATORS: Printer names should not be translated into
    their equivalents (the same printer sold under a different name) 
    in other countries.  The correct way to handle this is to add
