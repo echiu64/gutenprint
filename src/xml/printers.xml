@@ -422,6 +422,7 @@
       <printer translate="name" name="Epson Stylus Pro 3800" driver="escp2-3800" manufacturer="Epson" model="108" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3800" />
       <printer translate="name" name="Epson Stylus Pro 3880" driver="escp2-3880" manufacturer="Epson" model="107" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3880" />
       <printer translate="name" name="Epson Stylus Pro 3885" driver="escp2-3885" manufacturer="Epson" model="107" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3885" />
+      <printer translate="name" name="Epson Stylus Pro 4800/4880 Back Compatible" driver="escp2-4600" manufacturer="Epson" model="112" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4600" />
       <printer translate="name" name="Epson Stylus Pro 4800" driver="escp2-4800" manufacturer="Epson" model="106" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4800" />
       <printer translate="name" name="Epson Stylus Pro 4880" driver="escp2-4880" manufacturer="Epson" model="102" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4880" />
       <printer translate="name" name="Epson Stylus Pro 5000" driver="escp2-5000" manufacturer="Epson" model="27" parameters="standard_params" foomaticid="Epson-Stylus_Pro_5000" />
@@ -441,6 +442,7 @@
       <printer translate="name" name="Epson Stylus Pro 9880" driver="escp2-9880" manufacturer="Epson" model="90" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9880" />
       <printer translate="name" name="Epson Stylus Pro 9890" driver="escp2-9890" manufacturer="Epson" model="90" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9890" />
       <printer translate="name" name="Epson Stylus Pro 10000" driver="escp2-10000" manufacturer="Epson" model="41" parameters="standard_params" foomaticid="Epson-Stylus_Pro_10000" />
+      <printer translate="name" name="Epson Stylus Pro 11800/11880 Back Compatible" driver="escp2-11600" manufacturer="Epson" model="113" parameters="standard_params" foomaticid="Epson-Stylus_Pro_11600" />
       <printer translate="name" name="Epson Stylus Pro 11800" driver="escp2-11800" manufacturer="Epson" model="105" parameters="standard_params" foomaticid="Epson-Stylus_Pro_11800" />
       <printer translate="name" name="Epson Stylus Pro 11880" driver="escp2-11880" manufacturer="Epson" model="88" parameters="standard_params" foomaticid="Epson-Stylus_Pro_11880" />
       <printer translate="name" name="Epson Stylus Scan 2000" driver="escp2-scan2000" manufacturer="Epson" model="12" parameters="standard_params" foomaticid="Epson-Stylus_Scan_2000" />

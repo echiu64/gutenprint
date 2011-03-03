@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="49">
+<escp2:model id="113">
  <media src="escp2/media/pro_ultrachrome.xml"/>
  <inputSlots src="escp2/inputslots/pro_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -54,8 +54,8 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <baseHorizontalAlignment>28800</baseHorizontalAlignment>
  <bidirectionalAutoUpperLimit>2073600</bidirectionalAutoUpperLimit>
  <minimumMediaSize>144 144</minimumMediaSize>
- <maximumMediaSize>3168 86400</maximumMediaSize>
- <maximumImageableArea>3168 86400</maximumImageableArea>
+ <maximumMediaSize>4608 86400</maximumMediaSize>
+ <maximumImageableArea>4608 86400</maximumImageableArea>
  <margins interleave="soft" media="sheet">9 9 9 40</margins>
  <margins interleave="printer" media="sheet">9 9 9 40</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>

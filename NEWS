@@ -106,9 +106,9 @@ for building and installing Gutenprint.
 II) CRITICAL UPGRADE NOTE
 
 If you are using CUPS with Gutenprint on a non-Macintosh system, and
-are upgrading from a version of Gutenprint prior to 5.2 or Gimp-Print,
-please read this note carefully as there are special procedures that
-you should follow in addition to the normal procedure of running
+are upgrading from Gimp-Print 4.2 or a version of Gutenprint prior to
+5.2, please read this note carefully as there are special procedures
+that you should follow in addition to the normal procedure of running
 cups-genppdupdate.
 
 Background: older versions of Gutenprint distributed CUPS backends,
@@ -273,6 +273,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MP495
        Canon PIXMA MP520
        Canon PIXMA MP540
+       Canon PIXMA MP550
+       Canon PIXMA MP600
        Canon PIXMA MP950
        Canon PIXMA MP960
        Canon PIXMA MP990
@@ -286,7 +288,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX860 (EXPERIMENTAL)
        Canon PIXMA MX870 (EXPERIMENTAL)
        Canon PIXMA MX7600 (EXPERIMENTAL)
-       Canon PIXUS iP2700
 
      - Epson inkjet printers:
 
@@ -302,11 +303,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Epson Stylus Pro 9700 (EXPERIMENTAL)
        Epson Stylus Pro 9890 (EXPERIMENTAL)
 
+     - Dye sublimation printers:
+
+       Kodak EasyShare G600 Printer Dock
+       Kodak PD-4000
+       Kodak PD-6000
+       Kodak Photo Printer
+       Kodak Photo Printer 500
+       Kodak Printer Dock Plus
+       Kodak Printer Dock Plus S3
+
   2) Add additional photo modes to Canon inkjet printers.
 
-  3) Correct page size limit for EPSON Stylus Pro 7800, 7880, 9800,
-     and 9880 (previously these printers had overly restrictive page
-     limits).
+  3) Correct page size limit for EPSON Stylus Pro 7600, 7800, 7880,
+     9600, 9800, and 9880 (previously these printers had overly
+     restrictive page limits).
 
   4) Correct printing to the EPSON Stylus NX200, NX215, SX200, SX205,
      SX210, and SX215.
@@ -318,7 +329,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      EPSON Stylus Pro 3800, 3880, 4800, 4880, 7800, 7880, 9800, 9880,
      11800, and 11880.  This will result in substantial changes in
      output; if this is an issue, please use the EPSON Stylus Pro 7600
-     or 9600 driver as appropriate.
+     or 9600 driver as appropriate.  There are new printer definitions
+     named "EPSON Stylus Pro 4800/4880 Back Compatible" and "EPSON
+     Stylus Pro 11800/11880 Back Compatible" available for people with
+     existing tuned workflows for those printers.
+
+     There are no back compatibility modes for the EPSON Stylus Pro
+     3800 and 3880 as those printers were previously marked
+     experimental with a note that their output was expected to change
+     substantially.
 
   7) Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo
      black ink automatically based on ink set choice (it is no longer
@@ -334,6 +353,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
  10) CUPS PPD files now correctly identify which options affect
      color, for the Common Printer Dialog.
+
+ 11) A build problem on Solaris has been fixed.
 
 
 * Changes from 5.2.5
