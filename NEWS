@@ -344,7 +344,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      necessary to set this on the front panel).
 
   8) Improved reliability of escputil.
-  
+
   9) Corrected color matching profile used for Mac OS X 10.5.x.
      sRGB will now be used instead of Generic RGB.  Users with work-
      flows dependant on the previously used Generic RGB can select
@@ -537,7 +537,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       small images at their correct sizes.
 
    11) A Finnish translation has been added.
-   
+
 
 * Changes from 5.2.4
 
