@@ -395,6 +395,7 @@
       <printer translate="name" name="Epson Stylus Photo R1900" driver="escp2-r1900" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R1900" />
       <printer translate="name" name="Epson Stylus Photo R2400" driver="escp2-r2400" manufacturer="Epson" model="71" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2400" />
       <printer translate="name" name="Epson Stylus Photo R2880" driver="escp2-r2880" manufacturer="Epson" model="98" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2880" />
+      <printer translate="name" name="Epson Stylus Photo R3000" driver="escp2-r3000" manufacturer="Epson" model="115" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R3000" />
       <printer translate="name" name="Epson Stylus Photo RX400" deviceid="MFG:EPSON;MDL:Stylus Photo RX400;DES:EPSON Stylus Photo RX400;CMD:ESCPL2,BDC,D4;" driver="escp2-rx400" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_RX400" />
       <printer translate="name" name="Epson Stylus Photo RX420" deviceid="MFG:EPSON;MDL:Stylus Photo RX420;DES:EPSON Stylus Photo RX420;CMD:ESCPL2,BDC,D4;" driver="escp2-rx420" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_RX420" />
       <printer translate="name" name="Epson Stylus Photo RX425" deviceid="MFG:EPSON;MDL:Stylus Photo RX425;DES:EPSON Stylus Photo RX425;CMD:ESCPL2,BDC,D4;" driver="escp2-rx425" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_RX425" />
@@ -422,6 +423,7 @@
       <printer translate="name" name="Epson Stylus Pro 3800" driver="escp2-3800" manufacturer="Epson" model="108" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3800" />
       <printer translate="name" name="Epson Stylus Pro 3880" driver="escp2-3880" manufacturer="Epson" model="107" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3880" />
       <printer translate="name" name="Epson Stylus Pro 3885" driver="escp2-3885" manufacturer="Epson" model="107" parameters="standard_params" foomaticid="Epson-Stylus_Pro_3885" />
+      <printer translate="name" name="Epson Stylus Pro 4000" driver="escp2-4000" manufacturer="Epson" model="114" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4000" />
       <printer translate="name" name="Epson Stylus Pro 4800/4880 Back Compatible" driver="escp2-4600" manufacturer="Epson" model="112" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4600" />
       <printer translate="name" name="Epson Stylus Pro 4800" driver="escp2-4800" manufacturer="Epson" model="106" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4800" />
       <printer translate="name" name="Epson Stylus Pro 4880" driver="escp2-4880" manufacturer="Epson" model="102" parameters="standard_params" foomaticid="Epson-Stylus_Pro_4880" />
