@@ -297,6 +297,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        EPSON ME Office 600F
        EPSON ME Office 620F
        Epson Stylus Pro 3885
+       Epson Stylus Pro 4000 (EXPERIMENTAL)
        Epson Stylus Pro 4450 (EXPERIMENTAL)
        Epson Stylus Pro 7700 (EXPERIMENTAL)
        Epson Stylus Pro 7890 (EXPERIMENTAL)
@@ -354,7 +355,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
  10) CUPS PPD files now correctly identify which options affect
      color, for the Common Printer Dialog.
 
+ 11) A problem whereby certain malformed PPD files would cause the
+     PostScript driver to crash has been fixed.  In addition, the
+     PostScript driver now runs considerably faster.
+
  11) A build problem on Solaris has been fixed.
+
+ 12) A problem whereby an attempt to use the the optional ink map
+     curves (e. g. Cyan Hue Map) with the EPSON Stylus Photo R800,
+     R1800, and R1900 would cause an error has been fixed.
 
 
 * Changes from 5.2.5
