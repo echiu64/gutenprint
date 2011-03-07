@@ -321,6 +321,30 @@ static const canon_inkset_t canon_7_C4M4Y4c4m4k4K4_inkset[] = {
         {'K',1.0,&canon_2b_4l_ink},
 };
 
+static const canon_inkset_t canon_9_C2M2Y2K2_inkset[] = {
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_9_C3M3Y2K2h_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_2l_ink}, /* for iP1000 */
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_9_C3M3Y2K2_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -424,6 +448,17 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
         {0,0.0,NULL}
 };
 
+static const canon_inkset_t canon_9_C5M5Y5_inkset[] = {
+        {'C',1.0,&canon_4b_5l_ink},
+        {'M',1.0,&canon_4b_5l_ink},
+        {'Y',1.0,&canon_4b_5l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
 
 /* iP4000 mode used for Professional Photo Paper in Quality 4 */
 static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
