@@ -655,10 +655,24 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
-    &canon_MULTIPASS_MP170_slots, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1000_modelist,
     &canon_PIXMA_iP1000_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon PIXMA iP1200 --- iP1300 same */
+    "PIXMA iP1200", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP1200_modelist,
+    &canon_PIXMA_iP1200_paperlist,
     NULL,
     NULL,
     NULL,
