@@ -170,6 +170,7 @@ static const stp_dotsize_t dotsizes_9l[] = {
 };
 
 /*under development*/
+DECLARE_INK(4,9);
 DECLARE_INK(8,9);
 
 static const stp_dotsize_t dotsizes_16l[] = {
@@ -336,7 +337,7 @@ static const canon_inkset_t canon_9_C2M2Y2K2_inkset[] = {
 static const canon_inkset_t canon_9_C3M3Y2K2h_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
-        {'Y',1.0,&canon_2b_2l_ink}, /* for iP1000 */
+        {'Y',1.0,&canon_2b_2l_ink},
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -357,6 +358,18 @@ static const canon_inkset_t canon_9_C3M3Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -369,17 +382,6 @@ static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
-        {'C',1.0,&canon_2b_3l_c_ink},
-        {'M',1.0,&canon_2b_3l_c_ink},
-        {'Y',1.0,&canon_1b_2l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL}
-};
 
 /* iP6000D */
 static const canon_inkset_t canon_9_C3M3Y3K3_inkset[] = {
@@ -460,6 +462,18 @@ static const canon_inkset_t canon_9_C5M5Y5_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
+        {'C',1.0,&canon_4b_5l_ink},
+        {'M',1.0,&canon_4b_5l_ink},
+        {'Y',1.0,&canon_4b_5l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* for PPpro, so no use */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* iP4000 mode used for Professional Photo Paper in Quality 4 */
 static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
         {'C',1.0,&canon_4b_8l_ink},
@@ -470,6 +484,30 @@ static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
         {'m',0.5,&canon_4b_16l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_4b_8l_ink}, 
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C9M9Y9K2_inkset[] = {
+        {'C',1.0,&canon_4b_9l_ink},
+        {'M',1.0,&canon_4b_9l_ink},
+        {'Y',1.0,&canon_4b_9l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9_inkset[] = {
+        {'C',1.0,&canon_4b_9l_ink},
+        {'M',1.0,&canon_4b_9l_ink},
+        {'Y',1.0,&canon_4b_9l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* for PPpro, so no use */
+        {'c',1.0,&canon_4b_9l_ink},
+        {'m',1.0,&canon_4b_9l_ink},
+        {'y',1.0,&canon_4b_9l_ink},
+        {0,0.0,NULL},
         {0,0.0,NULL}
 };
 
