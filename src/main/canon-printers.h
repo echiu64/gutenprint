@@ -692,6 +692,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon PIXMA iP1600 */
+    "PIXMA iP1600", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_MULTIPASS_MP170_modelist,
+    &canon_PIXMA_iP1500_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon PIXMA iP1900 */
     "PIXMA iP1900", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
