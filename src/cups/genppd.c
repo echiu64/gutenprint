@@ -913,6 +913,8 @@ bytelen(const char *buffer)
 #endif
 #define _(x) stp_i18n_lookup(po, x)
 
+#define PPD_MAX_SHORT_NICKNAME (31)
+
 static void
 print_ppd_header(gzFile fp, ppd_type_t ppd_type, int model, const char *driver,
 		 const char *family, const char *long_name,
@@ -921,6 +923,7 @@ print_ppd_header(gzFile fp, ppd_type_t ppd_type, int model, const char *driver,
 		 const char *language, const stp_string_list_t *po,
 		 char **all_langs)
 {
+  char short_long_name[(PPD_MAX_SHORT_NICKNAME) + 1];
  /*
   * Write a standard header...
   */
@@ -980,7 +983,9 @@ print_ppd_header(gzFile fp, ppd_type_t ppd_type, int model, const char *driver,
   */
 
   gzprintf(fp, "*ModelName:     \"%s\"\n", long_name);
-  gzprintf(fp, "*ShortNickName: \"%s\"\n", long_name);
+  strncpy(short_long_name, long_name, PPD_MAX_SHORT_NICKNAME);
+  short_long_name[PPD_MAX_SHORT_NICKNAME] = '\0';
+  gzprintf(fp, "*ShortNickName: \"%s\"\n", short_long_name);
 
  /*
   * The Windows driver download stuff has problems with NickName fields
