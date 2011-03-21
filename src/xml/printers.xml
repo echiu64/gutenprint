@@ -139,6 +139,7 @@
       <printer translate="name" name="Canon PIXMA iP1800" driver="bjc-PIXMA-iP1600" manufacturer="Canon" model="3001600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1800" />
       <printer translate="name" name="Canon PIXMA iP1900" driver="bjc-PIXMA-iP1900" manufacturer="Canon" model="3001900" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1900" />
       <printer translate="name" name="Canon PIXMA iP2000" driver="bjc-PIXMA-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2000" />
+      <printer translate="name" name="Canon PIXMA iP2200" driver="bjc-PIXMA-iP2200" manufacturer="Canon" model="3002200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2200" />
       <printer translate="name" name="Canon PIXUS iP2700" driver="bjc-PIXUS-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP2700" />
       <printer translate="name" name="Canon PIXMA iP3000" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000" />
       <printer translate="name" name="Canon PIXMA iP3100" driver="bjc-PIXMA-iP3100" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3100" />

@@ -435,6 +435,30 @@ static const canon_inkset_t canon_9_C4M4Y4K2k4_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C4M4Y4K3_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
+        {'C',1.0,&canon_4b_4l_ink},
+        {'M',1.0,&canon_4b_4l_ink},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_4b_4l_ink},
+        {'m',0.5,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 /* iP4000 mode used for CD printing (quality 3) */
 /* Gernot: This is also the normal hi-quality mode for iP4000 at quality level 3 */
 /*         The same inket is used at quality levels 4, 3 and 2 for CD printing */
@@ -509,6 +533,22 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9_inkset[] = {
         {'y',1.0,&canon_4b_9l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'c',1.0,&canon_8b_9l_ink},
+	{'m',1.0,&canon_8b_9l_ink},
+	{'y',1.0,&canon_8b_9l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
 };
 
 /* PIXMA Pro9500, PIXMA iP8500 */
