@@ -804,6 +804,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon PIXMA iP3100 */
+    "PIXMA iP3100", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_iP3100_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP3100_modelist,
+    &canon_PIXMA_iP3100_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon PIXMA iP4000 */
     "PIXMA iP4000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */

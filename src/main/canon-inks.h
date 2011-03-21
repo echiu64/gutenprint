@@ -192,6 +192,7 @@ static const stp_dotsize_t dotsizes_16l[] = {
 };
 
 DECLARE_INK(4,16);
+DECLARE_INK(8,16);
 
 
 /* A inkset is a list of inks and their (relative) densities 
@@ -370,19 +371,6 @@ static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
-        {'C',1.0,&canon_2b_4l_ink},
-        {'M',1.0,&canon_2b_4l_ink},
-        {'Y',1.0,&canon_2b_4l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-};
-
-
 /* iP6000D */
 static const canon_inkset_t canon_9_C3M3Y3K3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
@@ -409,6 +397,18 @@ static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL}
 };
 
+static const canon_inkset_t canon_9_C3M3Y3K2c3m3_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_2b_3l_c_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_2b_3l_c_ink},
+        {'m',0.5,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 /* iP4000 mode used for Super Photo Paper (quality 1) */
 static const canon_inkset_t canon_9_C3M3Y3K2c3m3k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -420,6 +420,18 @@ static const canon_inkset_t canon_9_C3M3Y3K2c3m3k3_c_inkset[] = {
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_3l_c_ink},
         {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
 };
 
 /* iP4000 mode used for T-Shirt (quality 2) */
@@ -445,6 +457,18 @@ static const canon_inkset_t canon_9_C4M4Y4K3_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_2b_4l_ink},
+        {'m',0.5,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
 };
 
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
@@ -496,6 +520,18 @@ static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_9_C8M8Y8c16m16_inkset[] = {
+        {'C',1.0,&canon_4b_8l_ink},
+        {'M',1.0,&canon_4b_8l_ink},
+        {'Y',1.0,&canon_4b_8l_ink},
+        {0,0.0,NULL},
+        {'c',0.5,&canon_8b_16l_ink},
+        {'m',0.5,&canon_8b_16l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
 };
 
 /* iP4000 mode used for Professional Photo Paper in Quality 4 */

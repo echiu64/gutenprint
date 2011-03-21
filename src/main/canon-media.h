@@ -64,13 +64,23 @@ DECLARE_SLOTS(canon_default);
 
 /* Gernot: changes 2010-10-02 */
 static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
-  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 }, /* changed from 3 to 0x3*/
-  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 }, /* changed from 4 to 0x4*/
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "CD",         N_ ("CD tray"), 10 },/* change from 10 to 0xa? Check */
-  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },/* change to 0xf seems to be continuous autofeed? Check */
+  { "CD",         N_ ("CD tray"), 0xa },
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
 };
 DECLARE_SLOTS(canon_PIXMA_iP4000);
+
+static const canon_slot_t canon_PIXMA_iP3100_slots[] = {
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "CD",         N_ ("CD tray"), 0xa },
+  { "AutoSwitch", N_ ("Continuous Autofeed"), 0xf },
+};
+DECLARE_SLOTS(canon_PIXMA_iP3100);
 
 /* MP170, MP450, MP460, MX300 */
 static const canon_slot_t canon_MULTIPASS_MP170_slots[] = {
@@ -97,7 +107,7 @@ static const canon_slot_t canon_PIXMA_iP4500_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf }, /* no paper automatic change source*/
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf }, /* no paper automatic change source*/
   { "CD",         N_ ("CD tray"), 0xa }, /* CD-R tray F */
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },/*Paper alloction? no idea what this means compared to Continuous*/
 };
@@ -108,7 +118,7 @@ static const canon_slot_t canon_MULTIPASS_MX850_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf }, /* no paper automatic change source*/
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf }, /* no paper automatic change source*/
   { "CD",         N_ ("CD tray"), 0xa }, /* CD-R tray F */
 };
 DECLARE_SLOTS(canon_MULTIPASS_MX850);
@@ -126,7 +136,7 @@ static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf },
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
   { "CD",         N_ ("CD tray"), 0xa }
 };
 DECLARE_SLOTS(canon_PIXMA_iP4600);
@@ -136,7 +146,7 @@ static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf },
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
   { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
 };
 DECLARE_SLOTS(canon_PIXMA_MG5100);
@@ -146,7 +156,7 @@ static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous autofeed (both)"), 0xf },
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
   { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
   { "CD",         N_ ("CD tray"), 0xa }
 };
@@ -217,6 +227,26 @@ static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
   { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP4000);
+
+static const canon_paper_t canon_PIXMA_iP3100_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  /* FIXME media code for c) should be 0x0c for CD but this will restrict CD printing to a single, not well supported, resolution */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* experiment */
+};
+DECLARE_PAPERS(canon_PIXMA_iP3100);
 
 static const canon_paper_t canon_PIXMA_iP1000_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
