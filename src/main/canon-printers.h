@@ -1097,6 +1097,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon MULTIPASS MP493: new model after MP480(?) --- with XML */
+    "PIXMA MP493", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_MULTIPASS_MP250_slotlist, /* only rear tray also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0,control_cmd_MULTIPASS_MP150,  /*features */
+    &canon_MULTIPASS_MP480_modelist,
+    &canon_MULTIPASS_MP493_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon MULTIPASS MP495 identical to MP280 it seems --- with XML */
     "PIXMA MP495", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
