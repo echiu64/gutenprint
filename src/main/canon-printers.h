@@ -964,8 +964,8 @@ static const canon_cap_t canon_model_capabilities[] =
     8,
     &canon_MULTIPASS_MP250_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_iP4000,  /*features */
-    &canon_PIXMA_MP540_modelist,
-    &canon_PIXMA_MX880_paperlist,
+    &canon_MULTIPASS_MP540_modelist,
+    &canon_MULTIPASS_MX880_paperlist,
     NULL,
     NULL,
     NULL,
