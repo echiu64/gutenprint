@@ -1306,9 +1306,13 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   /* iP2700 */
   /* MX340 */
   /* MX350 --- same driver as MX340 */
+  /* MX420 */
   /* MX870 */
+  /* MX880 */
+  /* MP493 */
   /* MP550 */
-  if ( (!strcmp(init->caps->name,"iP2700")) || (!strcmp(init->caps->name,"MX340")) || (!strcmp(init->caps->name,"MX870"))  || (!strcmp(init->caps->name,"MP550")) )
+  /* iX6500 */
+  if ( (!strcmp(init->caps->name,"iP2700")) || (!strcmp(init->caps->name,"MX340")) || (!strcmp(init->caps->name,"MX420")) || (!strcmp(init->caps->name,"MX870"))  || (!strcmp(init->caps->name,"MX880"))  || (!strcmp(init->caps->name,"MP550")) || (!strcmp(init->caps->name,"MP493")) || (!strcmp(init->caps->name,"iX6500")) )
  /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
 
