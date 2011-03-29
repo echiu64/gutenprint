@@ -52,6 +52,7 @@ all-local: xmli18n-tmp.h xml-stamp
 
 
 xmli18n-tmp.h: xml-stamp extract-strings
+	-rm -f $@ $@.tmp
 	./extract-strings `cat xml-stamp | sed -e 's;^;$(srcdir)/;'` > $@.tmp
 	mv $@.tmp $@
 
