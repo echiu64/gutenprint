@@ -370,30 +370,34 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      black ink automatically based on ink set choice (it is no longer
      necessary to set this on the front panel).
 
-  8) Improved reliability of escputil.
+  8) Corrected base density for Photo Paper on printers using Claria
+     ink (use 20% less ink).  The default results in heavy ink
+     puddling in some cases.
 
-  9) Corrected color matching profile used for Mac OS X 10.5.x.
+  9) Improved reliability of escputil.
+
+ 10) Corrected color matching profile used for Mac OS X 10.5.x.
      sRGB will now be used instead of Generic RGB.  Users with work-
      flows dependant on the previously used Generic RGB can select
      this color profile in the print window by using ColorSync to
      choose the profile rather than using VendorMatching.
 
- 10) CUPS PPD files now correctly identify which options affect
+ 11) CUPS PPD files now correctly identify which options affect
      color, for the Common Printer Dialog.
 
- 11) A problem whereby certain malformed PPD files would cause the
+ 12) A problem whereby certain malformed PPD files would cause the
      PostScript driver to crash has been fixed.  In addition, the
      PostScript driver now runs considerably faster.
 
- 11) A build problem on Solaris has been fixed.
+ 13) A build problem on Solaris has been fixed.
 
- 12) A problem whereby an attempt to use the the optional ink map
+ 14) A problem whereby an attempt to use the the optional ink map
      curves (e. g. Cyan Hue Map) with the EPSON Stylus Photo R800,
      R1800, and R1900 would cause an error has been fixed.
 
- 13) The Dutch and Italian translations have been updated.
+ 15) The Dutch and Italian translations have been updated.
 
- 14) A Slovenian translation has been added.
+ 16) A Slovenian translation has been added.
 
 
 * Changes from 5.2.5
