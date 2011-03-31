@@ -1306,7 +1306,9 @@ sub qualityorder {
 		    "dpi_photo4",
 		    "dpi_photodraft",
 		    "dpi_photodraft2",
-		    "dpi_photodraft3"
+		    "dpi_photodraft3",
+                    "dpi_ohphigh",
+                    "dpi_ohp"
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case

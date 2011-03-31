@@ -68,7 +68,7 @@ static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "CD",         N_ ("CD tray"), 0xa },
-  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xf },
   { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
 };
 DECLARE_SLOTS(canon_PIXMA_iP4000);
