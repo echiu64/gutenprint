@@ -1580,8 +1580,8 @@ canon_start_job(const stp_vars_t *v, stp_image_t *image)
 static int
 canon_end_job(const stp_vars_t *v, stp_image_t *image)
 {
-  canon_cmd(v,ESC40,0,0);
   const canon_cap_t * caps = canon_get_model_capabilities(v);
+  canon_cmd(v,ESC40,0,0);
   /* output XML for iP2700 and other devices */
   if (caps->features & CANON_CAP_XML) {
     int length=strlen(postxml_iP2700); /* 263 */
