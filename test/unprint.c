@@ -1613,6 +1613,17 @@ main(int argc,char *argv[])
 	      else
 		fp_r = stdin;
 	      break;
+	    case 'h':
+	      fprintf(stderr, "Usage: %s [-m mask] [-n nozzle_sep] [-s extra] [-b] [-q] [-Q] [-M] [-u] [in [out]]\n", argv[0]);
+	      fprintf(stderr, "        -m mask       Color mask to unprint\n");
+	      fprintf(stderr, "        -n nozzle_sep Nozzle separation in vertical units for old printers\n");
+	      fprintf(stderr, "        -s extra      Extra feed requirement for old printers (typically 1)\n");
+	      fprintf(stderr, "        -b            Unprint everything in black\n");
+	      fprintf(stderr, "        -q            Don't produce output\n");
+	      fprintf(stderr, "        -Q            Assume quadtone inks\n");
+	      fprintf(stderr, "        -M            Assume MIS quadtone inks\n");
+	      fprintf(stderr, "        -u            Unweave\n");
+	      return 1;
 	    case 'm':
 	      if (argv[arg][2])
 		{
