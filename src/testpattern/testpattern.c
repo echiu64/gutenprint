@@ -449,6 +449,8 @@ do_print(void)
   global_printer_height = height * y / 72;
 
   global_band_height = global_printer_height / global_n_testpatterns;
+  if (global_band_height == 0)
+    global_band_height = 1;
   stp_set_left(v, left);
   stp_set_top(v, top);
 
