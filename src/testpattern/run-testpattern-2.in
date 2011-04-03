@@ -503,6 +503,7 @@ sub do_printer($$) {
 		my (@opts) = @$tmp;
 		my $opt;
 		my $rawval;
+		my $set_resolution = 0;
 		foreach $opt (@opts) {
 		    my (@subopts) = split (/,/, $opt);
 		    @extras = ();
@@ -536,7 +537,12 @@ sub do_printer($$) {
 			$pages = $std_pages;
 			if ($key ne $_) {
 			    set_opt($_, $base_settings{$_}, $printer);
-			    if ($key eq "Duplex") {
+			    push @mvals, "${_}_$base_settings{$_}";
+			    push @ovals, "${_}=$base_settings{$_}";
+			    if ($_ eq "Resolution") {
+				$set_resolution = 1;
+			    }
+			    if ($_ eq "Duplex") {
 				set_opt("JobMode", "Job", $printer);
 				$pages = $duplex_pages;
 			    }
@@ -545,14 +551,14 @@ sub do_printer($$) {
 		    my ($mstring) = join "_", @mvals;
 		    my ($ostring) = join "+", @ovals;
 		    my $case;
-		    if ($use_min_res) {
+		    if ($use_min_res && ! $set_resolution) {
 			$case = "${printer}_PrintingMode_${pmode}_Resolution_${min_res_name}_${mstring}";
 		    } else {
 			$case = "${printer}_PrintingMode_${pmode}_${mstring}";
 		    }
 		    if (! $rerun || $rerun_cases{$case}) {
 			do_output($case);
-			if ($use_min_res) {
+			if ($use_min_res && ! $set_resolution) {
 			    set_message("    ${ostring}+${pmode}+${min_res_name}");
 			} else {
 			    set_message("    ${ostring}+${pmode}");
