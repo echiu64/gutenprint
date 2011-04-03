@@ -46,6 +46,7 @@ my %param_types;
 my %param_classes;
 my %param_levels;
 my %stp_float_values;
+my %stp_int_values;
 my %rerun_cases;
 
 GetOptions("v+"  => \$valgrind,
@@ -391,6 +392,13 @@ sub build_list($$) {
 	push @tmp, $defv;
 	push @tmp, ($defv + $maxv) / 2.0;
 	push @tmp, $maxv;
+    } elsif ($param_types{$printer}{$key} == 1) {
+	my ($minv) = $stp_int_values{$printer}{'MINVAL'}{$key};
+	my ($maxv) = $stp_int_values{$printer}{'MAXVAL'}{$key};
+	push @tmp, ($minv..$maxv);
+    } elsif ($param_types{$printer}{$key} == 2) {
+	push @tmp, 0;
+	push @tmp, 1;
     } elsif (defined($param_types{$printer}{$key})) {
 	@tmp = keys %{$stpdata{$printer}{$key}};
     }
