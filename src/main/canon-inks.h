@@ -1433,7 +1433,7 @@ static const canon_inkset_t canon_22_C3M3Y3K2c3m3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_22_C4M4Y4K2_c_inkset[] = {
+static const canon_inkset_t canon_22_C4M4Y4K2_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
