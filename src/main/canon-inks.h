@@ -840,6 +840,7 @@ static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
 
 
 /* Gernot: MP150 (MP170 for tests) high-quality mode */
+/* to test: swap y and k */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -848,6 +849,23 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'c',1.0,&canon_4b_4l_ink},
         {'m',1.0,&canon_4b_4l_ink},
         {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* test on iP5300 --- swap y and k */
+static const canon_inkset_t canon_13_C4M4Y4K2c4m4k4_inkset[] = {
+        {'C',1.0,&canon_4b_4l_ink},
+        {'M',1.0,&canon_4b_4l_ink},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* do not use for photo modes */
+        {'c',1.0,&canon_4b_4l_ink},
+        {'m',1.0,&canon_4b_4l_ink},
+        {'k',1.0,&canon_4b_4l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
