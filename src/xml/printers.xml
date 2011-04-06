@@ -563,8 +563,11 @@
       <printer translate="name" name="Epson Stylus SX610FW" driver="escp2-sx610fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX610FW" />
       <printer translate="name" name="Epson Stylus SX615" driver="escp2-sx615" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX615" />
       <printer translate="name" name="Epson Stylus SX650" driver="escp2-sx650" manufacturer="Epson" model="97" parameters="standard_params" foomaticid="Epson-Stylus_SX650" />
+      <printer translate="name" name="Epson Stylus T13" driver="escp2-t13" manufacturer="Epson" model="101" parameters="standard_params" foomaticid="Epson-Stylus_T13" />
       <printer translate="name" name="Epson Stylus T20" driver="escp2-t20" manufacturer="Epson" model="101" parameters="standard_params" foomaticid="Epson-Stylus_T20" />
       <printer translate="name" name="Epson Stylus T21" driver="escp2-t21" manufacturer="Epson" model="101" parameters="standard_params" foomaticid="Epson-Stylus_T21" />
+      <printer translate="name" name="Epson Stylus T22" driver="escp2-t22" manufacturer="Epson" model="101" parameters="standard_params" foomaticid="Epson-Stylus_T22" />
+      <printer translate="name" name="Epson Stylus T22E" driver="escp2-t22e" manufacturer="Epson" model="101" parameters="standard_params" foomaticid="Epson-Stylus_T22E" />
       <printer translate="name" name="Epson Stylus T26" driver="escp2-t26" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-Stylus_T26" />
       <printer translate="name" name="Epson Stylus T30" driver="escp2-t30" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_T30" />
       <printer translate="name" name="Epson Stylus T40W" driver="escp2-t40w" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-Stylus_T40W" />
