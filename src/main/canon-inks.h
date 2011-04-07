@@ -1180,6 +1180,29 @@ static const canon_inkset_t canon_19_C2M2Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iP6700D Fast plain mode */
+static const canon_inkset_t canon_19_C2M2Y2k2_inkset[] = {
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_1b_2l_ink},/* swap y and k */
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_19_C3M3Y3k3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1187,7 +1210,7 @@ static const canon_inkset_t canon_19_C3M3Y3k3_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',1.0,&canon_2b_3l_ink},
+        {'k',1.0,&canon_2b_3l_ink}, /* swap y and k */
         {0,0.0,NULL}, 
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1225,6 +1248,29 @@ static const canon_inkset_t canon_19_C3M3Y3K2k3_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* photo mode iP6700D T-shirt transfers */
+static const canon_inkset_t canon_19_C4M4Y4k4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* photo mode MP960 T-shirt transfers --- works OK! */
 static const canon_inkset_t canon_19_C4M4Y4K2k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
@@ -1248,7 +1294,7 @@ static const canon_inkset_t canon_19_C4M4Y4K2k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode MP960 CDs */
+/* photo mode MP960 CDs and iP6700D Photo High 2 [PPmatte, Coated] */
 static const canon_inkset_t canon_19_C4M4Y4c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1263,6 +1309,29 @@ static const canon_inkset_t canon_19_C4M4Y4c4m4k4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* photo mode iP6700D CDs, position of cmk guessed */
+static const canon_inkset_t canon_19_C4M4Y4c4m4k4CD_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k  */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1317,6 +1386,52 @@ static const canon_inkset_t canon_19_C6M6Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iP6700D Plain High: CMYk */
+static const canon_inkset_t canon_19_C6M6Y4c6m6k4_inkset[] = {
+        {'C',1.0,&canon_4b_6l_ink},
+        {'M',1.0,&canon_4b_6l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'c',0.0,&canon_4b_6l_ink}, /* not used */
+        {'m',0,0,&canon_4b_6l_ink}, /* not used */
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */ 
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* iP6700D Photo Std: CMYKcmk */
+static const canon_inkset_t canon_19_C6M6Y4c6m6k4photo_inkset[] = {
+        {'C',1.0,&canon_4b_6l_ink},
+        {'M',1.0,&canon_4b_6l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'c',1.0,&canon_4b_6l_ink},
+        {'m',1.0,&canon_4b_6l_ink},
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */ 
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* hagaki std & high MP960 : CMYKk*/
 static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4hagaki_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
@@ -1349,6 +1464,29 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4_inkset[] = {
         {'c',1.0,&canon_4b_6l_ink},
         {'m',1.0,&canon_4b_6l_ink},
         {'k',1.0,&canon_2b_4l_ink}, /* change y to k */ 
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* iP6700D Photo High: CMYkcm */
+static const canon_inkset_t canon_19_C7M7Y4c7m7k4_inkset[] = {
+        {'C',1.0,&canon_4b_7l_ink},
+        {'M',1.0,&canon_4b_7l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'c',1.0,&canon_4b_7l_ink},
+        {'m',1.0,&canon_4b_7l_ink},
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */
         {0,0.0,NULL},
         {0,0.0,NULL}, 
         {0,0.0,NULL},
