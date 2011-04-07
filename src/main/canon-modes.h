@@ -1073,10 +1073,20 @@ static const canon_mode_t canon_PIXMA_Pro9500_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_Pro9500,0);
 
+/* iP8500 */
+/* ESC R command is 0x64 but another one befor data is sent: ESC R) 0x62 0x0 */
+/* Photo modes and CD mode have unsupported format 0x90, unsupported ink settings 0x4 --- need to debug this */
 static const canon_mode_t canon_PIXMA_iP8500_modes[] = {
-  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(11_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(11_C6M6Y6K9c6m6_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_std",N_("600x600 DPI"),INKSET(11_C6M6Y6K6_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_std2",N_("600x600 DPI 2"),INKSET(11_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* original single mode, but printer does not even use this via the driver! */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(11_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_draft2",N_("600x600 DPI DRAFT 2"),INKSET(11_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  /* Transparency */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_std3",N_("600x600 DPI OHP"),INKSET(11_C6M6Y6K6_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_draft3",N_("600x600 DPI DRAFT OHP"),INKSET(11_C6M6Y6K6_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
 };
-DECLARE_MODES(canon_PIXMA_iP8500,0);
+DECLARE_MODES(canon_PIXMA_iP8500,3);
 
 /* Gernot: added modes for MG5100.
    I noticed that the monochrome modes use all inks but only K is sent in the printjob,

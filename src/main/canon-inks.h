@@ -131,6 +131,7 @@ static const stp_dotsize_t dotsizes_6l[] = {
 
 /*under development*/
 DECLARE_INK(4,6);
+DECLARE_INK_EXTENDED(4,6,INK_FLAG_5pixel_in_1byte);
 
 static const stp_dotsize_t dotsizes_7l[] = {
   { 0x1, 0.45 },
@@ -621,6 +622,36 @@ static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
+};
+
+/* PIXMA iP8500 */
+static const canon_inkset_t canon_11_C6M6Y6K9c6m6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_9l_ink},
+        {'c',1.0,&canon_4b_6l_c_ink},
+        {'m',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* PIXMA iP8500 */
+static const canon_inkset_t canon_11_C6M6Y6K6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
 };
 
 /* PIXMA Pro9500, PIXMA iP8500 */
