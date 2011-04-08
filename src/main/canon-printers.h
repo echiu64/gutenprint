@@ -916,7 +916,8 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_paperlist,
     iP4200_lum_adjustment,
     iP4200_hue_adjustment,
-    iP4200_sat_adjustment
+    iP4200_sat_adjustment,
+    NULL
   },
   { /* Canon PIXMA iP6000 */
     "PIXMA iP6000", 3,          /*model, model_id*/

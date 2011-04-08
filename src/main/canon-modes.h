@@ -446,15 +446,21 @@ static const canon_mode_t canon_PIXMA_iP4000_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iP4000,3);
 
-
+/* Gernot: I added iP8500 flag to 300dpi modes since that appears to be needed according to the pixma_parse output */
+/*         Also added B/W functionality to the standard plain modes */
+/*         CD mode is not the one the printer driver uses. Given here is actually the plain media High quality mode (now added). */
+/*         But for CD should be CMYcmk output inks, which I am not sure how to set */
+/*         For plain media output inks for high quality mode are CMYKcmk which again I am not sure how to set */
 static const canon_mode_t canon_PIXMA_iP4200_modes[] = {
   /* Q0 - fastest mode (in windows driver it's Q5, printer uses 50% of ink ( I think )) */
-  {  300, 300,CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,iP4200_300dpi_draft_lum_adjustment,NULL,NULL,0},
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,iP4200_300dpi_draft_lum_adjustment,NULL,NULL,0},
   /* Q1 - normal 300x300 mode (in windows driver it's Q4 - normal darkness of printout ) */
-  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,iP4200_300dpi_lum_adjustment,NULL,NULL,1},
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,iP4200_300dpi_lum_adjustment,NULL,NULL,1},
   /* Q2 - standard mode for this driver (in windows driver it's Q3) */
-  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
- /* {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL}, */
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(22_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  600, 600,CANON_INK_CcMmYyK|CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,3},
+/* {  600, 600,CANON_INK_CcMmYyK|CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL}, */
 };
 DECLARE_MODES(canon_PIXMA_iP4200,2);
 
