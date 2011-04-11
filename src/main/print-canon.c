@@ -1766,6 +1766,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
         int i;
         unsigned int subchannel = 0;
         stp_shade_t* shades = NULL;
+	int is_black_channel = 0;
         channel = channel_order[channel_idx];
         if(channel == STP_ECOLOR_K && privdata->used_inks & CANON_INK_K_MASK){ /* black channel */
             /* find K and k inks */
@@ -1774,7 +1775,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
                 if(ink->channel == primary[channel] || ink->channel == secondary[channel])
                     subchannel += canon_setup_channel(v,privdata,channel,subchannel,ink,&shades);
             }
-            stp_channel_set_black_channel(v, STP_ECOLOR_K);
+	    is_black_channel = 1;
         }else if(channel != STP_ECOLOR_K && privdata->used_inks & CANON_INK_CMY_MASK){  /* color channels */
             for(i=0;i<privdata->mode->num_inks;i++){
                 const canon_inkset_t* ink = &privdata->mode->inks[i];
@@ -1792,6 +1793,8 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
               density *= get_double_param(v, secondary_density_control[channel]);
             stp_channel_set_density_adjustment(v,channel,subchannel,density);
           }
+	  if (is_black_channel)
+	    stp_channel_set_black_channel(v, channel);
           stp_free(shades);
         }
     }
