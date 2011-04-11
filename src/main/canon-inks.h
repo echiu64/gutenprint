@@ -830,7 +830,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'y',0.0,&canon_2b_3l_c_ink},
+        {'y',0.0,&canon_2b_3l_c_ink}, /* not sure what since it is not in output */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -907,7 +907,6 @@ static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
 
 
 /* Gernot: MP150 (MP170 for tests) high-quality mode */
-/* to test: swap y and k */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -915,7 +914,7 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {'c',1.0,&canon_4b_4l_ink},
         {'m',1.0,&canon_4b_4l_ink},
-        {'y',1.0,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink}, /* output uses y */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -971,8 +970,6 @@ static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	   other Photo Paper
 
 Also used for all modes of gloss Photo Paper	  
-
- for some reason there is a hack for iP6700 appearing here which might make the y into a k (swapping)
 */
 static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
@@ -981,7 +978,7 @@ static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {0,0.0,NULL},
         {'c',1.0,&canon_4b_4l_ink},
         {'m',1.0,&canon_4b_4l_ink},
-        {'y',1.0,&canon_4b_4l_ink},
+        {'k',1.0,&canon_4b_4l_ink}, /* swap y and k */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1016,7 +1013,7 @@ static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'y',1.0,&canon_2b_4l_ink},
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
