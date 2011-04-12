@@ -931,7 +931,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP6700 */
     "PIXMA iP6700", 3,          /*model, model_id*/
@@ -946,7 +946,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iX5000 */
     "PIXMA iX5000", 3,          /*model, model_id*/
