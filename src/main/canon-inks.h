@@ -1424,7 +1424,7 @@ static const canon_inkset_t canon_19_C6M6Y4c6m6k4_inkset[] = {
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {'c',0.0,&canon_4b_6l_ink}, /* not used */
-        {'m',0,0,&canon_4b_6l_ink}, /* not used */
+        {'m',0.0,&canon_4b_6l_ink}, /* not used */
         {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */ 
         {0,0.0,NULL},
         {0,0.0,NULL}, 
