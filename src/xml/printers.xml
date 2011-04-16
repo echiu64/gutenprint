@@ -1085,8 +1085,8 @@
       <printer translate="name" name="HP LaserJet 4300" deviceid="MFG:Hewlett-Packard;MDL:hp LaserJet 4300;CMD:PJL,MLC,POSTSCRIPT,PJL,PCLXL,PCL;" driver="hp-lj_4300" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4300" />
       <printer translate="name" name="HP LaserJet 4345 mfp" driver="hp-lj_4345_mfp" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4345_mfp" />
       <printer translate="name" name="HP LaserJet 4350" deviceid="MFG:HP;MDL:hp LaserJet 4350L;" driver="hp-lj_4350" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_4350" />
-      <printer translate="name" name="HP LaserJet 5000" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5000 Series;DES:Hewlett-Packard LaserJet 5000 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_5000" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5000" />
-      <printer translate="name" name="HP LaserJet 5100" driver="hp-lj_5100" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5100" />
+      <printer translate="name" name="HP LaserJet 5000" deviceid="MFG:Hewlett-Packard;MDL:HP LaserJet 5000 Series;DES:Hewlett-Packard LaserJet 5000 Series;CMD:PJL,MLC,PCL,PCLXL,POSTSCRIPT;" driver="hp-lj_5000" manufacturer="HP" model="63" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5000" />
+      <printer translate="name" name="HP LaserJet 5100" driver="hp-lj_5100" manufacturer="HP" model="63" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5100" />
       <printer translate="name" name="HP LaserJet 5200" driver="hp-lj_5200" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5200" />
       <printer translate="name" name="HP LaserJet 5200L" driver="hp-lj_5200l" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_5200L" />
       <printer translate="name" name="HP LaserJet 8000" driver="hp-lj_8000" manufacturer="HP" model="6" parameters="pcl_laser_params" foomaticid="HP-LaserJet_8000" />
