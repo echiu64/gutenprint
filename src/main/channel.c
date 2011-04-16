@@ -94,6 +94,14 @@ typedef struct
 } stpi_channel_group_t;
 
 
+static stpi_channel_group_t *
+get_channel_group(const stp_vars_t *v)
+{
+  stpi_channel_group_t *cg =
+    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  return cg;
+}
+
 static void
 clear_a_channel(stpi_channel_group_t *cg, int channel)
 {
@@ -139,8 +147,7 @@ stpi_channel_clear(void *vc)
 void
 stp_channel_reset(stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (cg)
     stpi_channel_clear(cg);
 }
@@ -148,8 +155,7 @@ stp_channel_reset(stp_vars_t *v)
 void
 stp_channel_reset_channel(stp_vars_t *v, int channel)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (cg)
     clear_a_channel(cg, channel);
 }
@@ -164,8 +170,7 @@ stpi_channel_free(void *vc)
 static stpi_subchannel_t *
 get_channel(stp_vars_t *v, unsigned channel, unsigned subchannel)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (!cg)
     return NULL;
   if (channel >= cg->channel_count)
@@ -179,8 +184,7 @@ void
 stp_channel_add(stp_vars_t *v, unsigned channel, unsigned subchannel,
 		double value)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   stpi_channel_t *chan;
   stp_dprintf(STP_DBG_INK, v, "Add channel %d, %d, %f\n",
 	      channel, subchannel, value);
@@ -269,71 +273,76 @@ stp_channel_get_density_adjustment(stp_vars_t *v, int color, int subchannel)
 void
 stp_channel_set_ink_limit(stp_vars_t *v, double limit)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   stp_dprintf(STP_DBG_INK, v, "ink_limit %f\n", limit);
-  if (limit > 0)
+  if (cg && limit > 0)
     cg->ink_limit = 65535 * limit;
 }
 
 double
 stp_channel_get_ink_limit(stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (!cg)
+    return 0.0;
   return cg->ink_limit / 65535.0;
 }
 
 void
 stp_channel_set_black_channel(stp_vars_t *v, int channel)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   stp_dprintf(STP_DBG_INK, v, "black_channel %d\n", channel);
-  cg->black_channel = channel;
+  if (cg)
+    cg->black_channel = channel;
 }
 
 int
 stp_channel_get_black_channel(stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
-  return cg->black_channel;
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (cg)
+    return cg->black_channel;
+  else
+    return -1;
 }
 
 void
 stp_channel_set_gloss_channel(stp_vars_t *v, int channel)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   stp_dprintf(STP_DBG_INK, v, "gloss_channel %d\n", channel);
-  cg->gloss_channel = channel;
+  if (cg)
+    cg->gloss_channel = channel;
 }
 
 int
 stp_channel_get_gloss_channel(stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
-  return cg->gloss_channel;
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (cg)
+    return cg->gloss_channel;
+  else
+    return -1;
 }
 
 void
 stp_channel_set_gloss_limit(stp_vars_t *v, double limit)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   stp_dprintf(STP_DBG_INK, v, "gloss_limit %f\n", limit);
-  if (limit > 0)
+  if (cg && limit > 0)
     cg->gloss_limit = 65535 * limit;
 }
 
 double
 stp_channel_get_gloss_limit(stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
-  return cg->gloss_limit / 65535.0;
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (cg)
+    return cg->gloss_limit / 65535.0;
+  else
+    return 0;
 }
 
 void
@@ -361,8 +370,7 @@ stp_channel_get_cutoff_adjustment(stp_vars_t *v, int color, int subchannel)
 void
 stp_channel_set_gcr_curve(stp_vars_t *v, const stp_curve_t *curve)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (!cg)
     return;
   stp_dprintf(STP_DBG_INK, v, "set_gcr_curve\n");
@@ -375,8 +383,7 @@ stp_channel_set_gcr_curve(stp_vars_t *v, const stp_curve_t *curve)
 const stp_curve_t *
 stp_channel_get_gcr_curve(stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (!cg)
     return NULL;
   stp_dprintf(STP_DBG_INK, v, "set_gcr_curve\n");
@@ -387,8 +394,7 @@ void
 stp_channel_set_curve(stp_vars_t *v, int color, const stp_curve_t *curve)
 {
   stpi_channel_t *ch;
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (!cg || color >= cg->channel_count)
     return;
   ch = &(cg->c[color]);
@@ -406,8 +412,7 @@ const stp_curve_t *
 stp_channel_get_curve(stp_vars_t *v, int color)
 {
   stpi_channel_t *ch;
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   if (!cg || color >= cg->channel_count)
     return NULL;
   ch = &(cg->c[color]);
@@ -466,8 +471,7 @@ void
 stp_channel_initialize(stp_vars_t *v, stp_image_t *image,
 		       int input_channel_count)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   int width = stp_image_width(image);
   int curve_count = 0;
   int i, j, k;
@@ -731,10 +735,9 @@ limit_ink(const stp_vars_t *v)
 {
   int i;
   int retval = 0;
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   unsigned short *ptr = cg->output_data;
-  if (cg->ink_limit == 0 || cg->ink_limit >= cg->max_density)
+  if (!cg || cg->ink_limit == 0 || cg->ink_limit >= cg->max_density)
     return 0;
   for (i = 0; i < cg->width; i++)
     {
@@ -784,11 +787,14 @@ short_copy(unsigned short *out, const unsigned short *in, size_t count)
 static void
 copy_channels(const stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   int i, j, k;
-  const unsigned short *input = cg->input_data;
-  unsigned short *output = cg->output_data;
+  const unsigned short *input;
+  unsigned short *output;
+  if (!cg)
+    return;
+  input = cg->input_data;
+  output = cg->output_data;
   for (i = 0; i < cg->width; i++)
     {
       for (j = 0; j < cg->channel_count; j++)
@@ -838,15 +844,20 @@ interpolate_value(const double *vec, double val)
 static void
 generate_special_channels(const stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   int i, j;
   const unsigned short *input_cache = NULL;
   const unsigned short *output_cache = NULL;
-  const unsigned short *input = cg->input_data;
-  unsigned short *output = cg->multi_tmp;
-  int offset = (cg->black_channel >= 0 ? 0 : -1);
-  int outbytes = cg->aux_output_channels * sizeof(unsigned short);
+  const unsigned short *input;
+  unsigned short *output;
+  int offset;
+  int outbytes;
+  if (!cg)
+    return;
+  input = cg->input_data;
+  output = cg->multi_tmp;
+  offset = (cg->black_channel >= 0 ? 0 : -1);
+  outbytes = cg->aux_output_channels * sizeof(unsigned short);
   for (i = 0; i < cg->width;
        input += cg->input_channels, output += cg->aux_output_channels, i++)
     {
@@ -908,15 +919,19 @@ generate_special_channels(const stp_vars_t *v)
 static void
 split_channels(const stp_vars_t *v, unsigned *zero_mask)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   int i, j, k;
   int nz[STP_CHANNEL_LIMIT];
-  int outbytes = cg->total_channels * sizeof(unsigned short);
+  int outbytes;
   const unsigned short *input_cache = NULL;
   const unsigned short *output_cache = NULL;
-  const unsigned short *input = cg->split_input;
-  unsigned short *output = cg->output_data;
+  const unsigned short *input;
+  unsigned short *output;
+  if (!cg)
+    return;
+  outbytes = cg->total_channels * sizeof(unsigned short);
+  input = cg->split_input;
+  output = cg->output_data;
   for (i = 0; i < cg->total_channels; i++)
     nz[i] = 0;
   for (i = 0; i < cg->width; i++)
@@ -1004,10 +1019,11 @@ split_channels(const stp_vars_t *v, unsigned *zero_mask)
 static void
 scale_channels(const stp_vars_t *v, unsigned *zero_mask)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   int i, j;
   int physical_channel = 0;
+  if (!cg)
+    return;
   if (zero_mask)
     *zero_mask = 0;
   for (i = 0; i < cg->channel_count; i++)
@@ -1048,12 +1064,11 @@ scale_channels(const stp_vars_t *v, unsigned *zero_mask)
 static void
 generate_gloss(const stp_vars_t *v, unsigned *zero_mask)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   unsigned short *output = cg->output_data;
   unsigned gloss_mask;
   int i, j, k;
-  if (cg->gloss_channel == -1 || cg->gloss_limit <= 0)
+  if (!cg || cg->gloss_channel == -1 || cg->gloss_limit <= 0)
     return;
   gloss_mask = ~(1 << cg->gloss_physical_channel);
   for (i = 0; i < cg->width; i++)
@@ -1092,13 +1107,16 @@ generate_gloss(const stp_vars_t *v, unsigned *zero_mask)
 static void
 do_gcr(const stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
   const unsigned short *gcr_lookup;
-  unsigned short *output = cg->gcr_data;
+  unsigned short *output;
   size_t count;
   int i;
 
+  if (!cg)
+    return;
+
+  output = cg->gcr_data;
   stp_curve_resample(cg->gcr_curve, 65536);
   gcr_lookup = stp_curve_get_ushort_data(cg->gcr_curve, &count);
   for (i = 0; i < cg->width; i++)
@@ -1140,15 +1158,17 @@ stp_channel_convert(const stp_vars_t *v, unsigned *zero_mask)
 unsigned short *
 stp_channel_get_input(const stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (!cg)
+    return NULL;
   return (unsigned short *) cg->input_data;
 }
 
 unsigned short *
 stp_channel_get_output(const stp_vars_t *v)
 {
-  stpi_channel_group_t *cg =
-    ((stpi_channel_group_t *) stp_get_component_data(v, "Channel"));
+  stpi_channel_group_t *cg = get_channel_group(v);
+  if (!cg)
+    return NULL;
   return cg->output_data;
 }
