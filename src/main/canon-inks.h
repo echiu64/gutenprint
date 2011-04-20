@@ -825,7 +825,9 @@ static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
 
 /* Gernot: iP4500 standard mode changed from the compressed one below */
 /*         iP4700 also uses this */
+/*         iP4800 also uses this */
 /*         MG5100, MG5200 */
+/* TODO: how to get both K and k working, for Hagaki and Env modes */
 static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -833,7 +835,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'y',0.0,&canon_2b_3l_c_ink}, /* not sure what since it is not in output */
+        {'k',0.0,&canon_2b_3l_c_ink}, /* swap y for k, but in any case it is not in output for plain modes */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1008,6 +1010,7 @@ static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
 };
 
 /* Gernot: added for iP4700 CD printing */
+/* iP4800 also uses this */
 /* also MG5200 */
 static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
@@ -1045,6 +1048,7 @@ static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
 
 /* Gernot: added for iP4500 high quality --- check the pos of k/y */
 /*         iP4700 also uses this */
+/*         iP4800 also uses this */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4K2y4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
@@ -1113,6 +1117,7 @@ static const canon_inkset_t canon_13_C6M6Y4k4yask_inkset[] = {
 
 /* Gernot: iP4500 photo mode */
 /*         iP4700 also uses this */
+/*         iP4800 also uses this */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C8M8Y4y4_inkset[] = {
 	{'C',1.0,&canon_4b_8l_ink},

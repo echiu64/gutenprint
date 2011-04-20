@@ -919,6 +919,20 @@ static const canon_cap_t canon_model_capabilities[] =
     iP4200_sat_adjustment,
     NULL
   },
+  { /* Canon PIXMA iP4800 CD-R tray G */
+    "PIXMA iP4800", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_iP4600_slotlist, /* there is some ESC (r 0x68 command for CD tray also, not sure why */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    &canon_PIXMA_iP4700_modelist,/* same for iP4800 */
+    &canon_PIXMA_iP4700_paperlist,/* same for iP4800 */
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA iP6000 */
     "PIXMA iP6000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */

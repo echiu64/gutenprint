@@ -891,9 +891,8 @@ static const canon_mode_t canon_MULTIPASS_MX7600_modes[] = {
 DECLARE_MODES(canon_MULTIPASS_MX7600,3);
 
 /* Gernot: added modes for iP4700.
-   I noticed that the monochrome modes use all inks but only K is sent in the printjob,
-   so the bw=1 flag does somehow do something even if the inkset contains all colors.
-   TODO: figure out how to set color setting for modes in order to use inkset for mono.
+           this appears to be same in iP4800 family.
+           y is swapped for k on all modes that use them.
 */
 static const canon_mode_t canon_PIXMA_iP4700_modes[] = {
   /* high mode -- B/W also */
