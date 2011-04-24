@@ -340,19 +340,25 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Kodak Printer Dock Plus
        Kodak Printer Dock Plus S3
 
-  2) Add additional photo modes to Canon inkjet printers.
+  2) Corrected color matching profile used for Mac OS X 10.5.x.
+     sRGB will now be used instead of Generic RGB.  Users with work-
+     flows dependant on the previously used Generic RGB can select
+     this color profile in the print window by using ColorSync to
+     choose the profile rather than using VendorMatching.
 
-  3) Correct page size limit for EPSON Stylus Pro 7600, 7800, 7880,
+  3) Add additional photo modes to Canon inkjet printers.
+
+  4) Correct page size limit for EPSON Stylus Pro 7600, 7800, 7880,
      9600, 9800, and 9880 (previously these printers had overly
      restrictive page limits).
 
-  4) Correct printing to the EPSON Stylus NX200, NX215, SX200, SX205,
+  5) Correct printing to the EPSON Stylus NX200, NX215, SX200, SX205,
      SX210, and SX215.
 
-  5) Corrected basic printer definitions of EPSON Stylus Pro 3800,
+  6) Corrected basic printer definitions of EPSON Stylus Pro 3800,
      3880, 7800, and 9800.
 
-  6) Corrected media definitions and improve printing quality for
+  7) Corrected media definitions and improve printing quality for
      EPSON Stylus Pro 3800, 3880, 4800, 4880, 7800, 7880, 9800, 9880,
      11800, and 11880.  This will result in substantial changes in
      output; if this is an issue, please use the EPSON Stylus Pro 7600
@@ -366,21 +372,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      experimental with a note that their output was expected to change
      substantially.
 
-  7) Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo
+  8) Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo
      black ink automatically based on ink set choice (it is no longer
      necessary to set this on the front panel).
 
-  8) Corrected base density for Photo Paper on printers using Claria
+  9) Corrected base density for Photo Paper on printers using Claria
      ink (use 20% less ink).  The default results in heavy ink
      puddling in some cases.
 
-  9) Improved reliability of escputil.
-
- 10) Corrected color matching profile used for Mac OS X 10.5.x.
-     sRGB will now be used instead of Generic RGB.  Users with work-
-     flows dependant on the previously used Generic RGB can select
-     this color profile in the print window by using ColorSync to
-     choose the profile rather than using VendorMatching.
+ 10) Improved reliability of escputil.
 
  11) CUPS PPD files now correctly identify which options affect
      color, for the Common Printer Dialog.
