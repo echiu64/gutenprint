@@ -489,11 +489,17 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 						printf(" format: BJ indexed color image format\n");
                                         else if(buf[1]==0x00)
 						printf(" format: iP8500 flag set, BJ indexed color image format\n");
+                                        else if(buf[1]==0x90)
+						printf(" format: Pro9500 flag set, BJ indexed color image format\n");
 					else{
 						printf(" format: settings not supported 0x%x\n",buf[1]);
 						/* returnv = -2; */
 					}
-					if(buf[2] != 0x1){
+					if(buf[2]==0x1)
+					        printf(" format: BJ indexed color image format\n");
+					else if(buf[2]==0x4)
+					        printf(" format: (Pro9000/9000Mk.II) probably also BJ indexed color image format\n");
+					else{
 						printf(" ink: settings not supported 0x%x\n",buf[2]);
 						/* returnv = -2; */
 					}

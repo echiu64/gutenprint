@@ -1395,7 +1395,7 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
     unsigned char* buf = stp_zalloc(length);
     buf[0]=0x80;
     if(init->mode->flags & MODE_FLAG_PRO){
-    	buf[1]=0x10;
+        buf[1]=0x90; /* was 0x10, but this should probably be 0x90 */
     	buf[2]=0x4;
     }else if(init->mode->flags & MODE_FLAG_IP8500){
     	buf[1]=0x00;

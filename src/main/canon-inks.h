@@ -120,6 +120,7 @@ static const stp_dotsize_t dotsizes_5l[] = {
 
 /*under development*/
 DECLARE_INK(4,5);
+DECLARE_INK_EXTENDED(4,5,INK_FLAG_5pixel_in_1byte);
 
 static const stp_dotsize_t dotsizes_6l[] = {
   { 0x1, 0.2 },
@@ -627,37 +628,7 @@ static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* PIXMA iP8500 */
-static const canon_inkset_t canon_11_C6M6Y6K9c6m6_c_inkset[] = {
-        {'C',1.0,&canon_4b_6l_c_ink},
-        {'M',1.0,&canon_4b_6l_c_ink},
-        {'Y',1.0,&canon_4b_6l_c_ink},
-        {'K',1.0,&canon_4b_9l_ink},
-        {'c',1.0,&canon_4b_6l_c_ink},
-        {'m',1.0,&canon_4b_6l_c_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL}
-};
-
-/* PIXMA iP8500 */
-static const canon_inkset_t canon_11_C6M6Y6K6_c_inkset[] = {
-        {'C',1.0,&canon_4b_6l_c_ink},
-        {'M',1.0,&canon_4b_6l_c_ink},
-        {'Y',1.0,&canon_4b_6l_c_ink},
-        {'K',1.0,&canon_4b_6l_c_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL}
-};
-
-/* PIXMA Pro9500, PIXMA iP8500 */
+/* PIXMA Pro9000, Pro9000 Mk.II, Pro9500, Pro9500 Mk.II, PIXMA iP8500 */
 static const canon_inkset_t canon_11_C2M2Y2K2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
@@ -672,6 +643,110 @@ static const canon_inkset_t canon_11_C2M2Y2K2_inkset[] = {
         {0,0.0,NULL}
 };
 
+/* Pro9000 */
+static const canon_inkset_t canon_11_C5M5Y5K5c5m5_c_inkset[] = {
+        {'C',1.0,&canon_4b_5l_c_ink},
+        {'M',1.0,&canon_4b_5l_c_ink},
+        {'Y',1.0,&canon_4b_5l_c_ink},
+        {'K',1.0,&canon_4b_5l_c_ink},
+        {'c',1.0,&canon_4b_5l_c_ink},
+        {'m',1.0,&canon_4b_5l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* PIXMA Pro9000, Pro9000 Mk.II, Pro9500, Pro9500 Mk.II, PIXMA iP8500 */
+static const canon_inkset_t canon_11_C6M6Y6K6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* Pro9000, Pro9000 Mk.II */
+static const canon_inkset_t canon_11_C6M6Y6K6c6m6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
+        {'c',1.0,&canon_4b_6l_c_ink},
+        {'m',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* Pro9000, Pro9000 Mk.II */
+static const canon_inkset_t canon_11_C6M6Y6K6c16m16_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
+        {'c',1.0,&canon_4b_16l_ink},
+        {'m',1.0,&canon_4b_16l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* Pro9000, Pro9000 Mk.II, PIXMA iP8500 */
+static const canon_inkset_t canon_11_C6M6Y6K9c6m6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_9l_ink},
+        {'c',1.0,&canon_4b_6l_c_ink},
+        {'m',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* PIXMA Pro9500, Pro9500 Mk.II */
+static const canon_inkset_t canon_11_C16M16Y16k16_inkset[] = {
+        {'C',1.0,&canon_4b_16l_ink},
+        {'M',1.0,&canon_4b_16l_ink},
+        {'Y',1.0,&canon_4b_16l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_4b_16l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* Pro9000 Mk.II */
+static const canon_inkset_t canon_11_C16M16Y16K16c16m16_inkset[] = {
+        {'C',1.0,&canon_4b_16l_ink},
+        {'M',1.0,&canon_4b_16l_ink},
+        {'Y',1.0,&canon_4b_16l_ink},
+        {'K',1.0,&canon_4b_16l_ink},
+        {'c',1.0,&canon_4b_16l_ink},
+        {'m',1.0,&canon_4b_16l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
 
 /* Gernot: MP150 (MP170 for tests) greyscale */
 static const canon_inkset_t canon_13_K2_inkset[] = {

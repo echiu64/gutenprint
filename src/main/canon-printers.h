@@ -1063,15 +1063,57 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon PIXMA Pro9000 */
+    "PIXMA Pro9000", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_Pro9000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_Pro9000_modelist,
+    &canon_PIXMA_Pro9000_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon PIXMA Pro9000 Mk.II */
+    "PIXMA Pro9002", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_Pro9000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_Pro9000mk2_modelist,
+    &canon_PIXMA_Pro9000mk2_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon PIXMA Pro9500 */
     "PIXMA Pro9500", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
-    &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x61,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_Pro9000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_Pro9500_modelist,
-    &canon_PIXMA_iP4000_paperlist,
+    &canon_PIXMA_Pro9500_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon PIXMA Pro9500 Mk.II */
+    "PIXMA Pro9502", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_Pro9000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_Pro9500mk2_modelist,
+    &canon_PIXMA_Pro9500mk2_paperlist,
     NULL,
     NULL,
     NULL,
@@ -1084,7 +1126,7 @@ static const canon_cap_t canon_model_capabilities[] =
     8,
     &canon_PIXMA_iP4000_slotlist,
     /*CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x61,control_cmd_PIXMA_iP4000,*/  /*features */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP8500_modelist,
     &canon_PIXMA_iP4000_paperlist,
     NULL,

@@ -1300,6 +1300,8 @@ sub qualityorder {
 		    "dpi_photohigh3",
 		    "dpi_photohigh4",
 	            "dpi_tshirt",
+		    "dpi_photomed",
+		    "dpi_photomed2",
 		    "dpi_photo",
 		    "dpi_photo2",
 		    "dpi_photo3",
@@ -1307,6 +1309,10 @@ sub qualityorder {
 		    "dpi_photodraft",
 		    "dpi_photodraft2",
 		    "dpi_photodraft3",
+		    "dpi_photomonohigh",
+		    "dpi_photomonomed",
+		    "dpi_photomono",
+		    "dpi_photomonodraft",
                     "dpi_ohphigh",
                     "dpi_ohp"
 		    );
