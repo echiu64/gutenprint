@@ -102,6 +102,13 @@ static const canon_slot_t canon_MULTIPASS_MX7600_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MX7600);
 
+static const canon_slot_t canon_PIXMA_iX7000_slots[] = {
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "HandFeed",  N_ ("Hand Feeding"), 0x1 },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+};
+DECLARE_SLOTS(canon_PIXMA_iX7000);
+
 /* iP4500 */
 static const canon_slot_t canon_PIXMA_iP4500_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
@@ -657,6 +664,22 @@ static const canon_paper_t canon_MULTIPASS_MX7600_papers[] = { /*               
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX7600);
 
+/* iX7000 */
+static const canon_paper_t canon_PIXMA_iX7000_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
+  /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_PIXMA_iX7000);
 
 /* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP250 */

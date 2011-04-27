@@ -815,6 +815,7 @@ static const canon_inkset_t canon_13_C2M2Y2K2_inkset[] = {
 	{0,0.0,NULL},
 };
 
+/* MX7600, iX7000 */
 static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
@@ -822,8 +823,8 @@ static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
+        {'k',1.0,&canon_1b_2l_ink}, /* swap y and k */
         {0,0.0,NULL},
-        {'k',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -919,6 +920,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iX7000 */
 static const canon_inkset_t canon_13_C3M3Y2K2k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -926,7 +928,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2k3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink},
+        {'k',0.0,&canon_2b_3l_c_ink}, /* swap y and k */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1103,6 +1105,23 @@ static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iX7000 photo mode */
+static const canon_inkset_t canon_13_C6M6Y2K2k4_inkset[] = {
+	{'C',1.0,&canon_4b_6l_ink},
+	{'M',1.0,&canon_4b_6l_ink},
+	{'Y',1.0,&canon_2b_2l_ink},
+	{'K',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_2b_4l_ink}, /* swap y and k */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
 /* Gernot: added for iP4700 photo standard quality */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
@@ -1157,7 +1176,7 @@ static const canon_inkset_t canon_13_C6M6Y4K2k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* MX7600 */
+/* MX7600, iX7000 */
 static const canon_inkset_t canon_13_C6M6Y4K3k4_c_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -1165,7 +1184,7 @@ static const canon_inkset_t canon_13_C6M6Y4K3k4_c_inkset[] = {
 	{'K',1.0,&canon_2b_3l_c_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',0.0,&canon_2b_4l_ink},
+	{'k',0.0,&canon_2b_4l_ink},/* swapped y and k */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
