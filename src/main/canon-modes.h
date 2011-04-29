@@ -939,6 +939,20 @@ static const canon_mode_t canon_PIXMA_iP5300_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iP5300,4);
 
+static const canon_mode_t canon_MULTIPASS_MP800_modes[] = {
+  /* plain modes --- for inkjet std outputs CMYk, for env CMYKk, no idea yet how to get this, or what masks */
+  {  600, 600,CANON_INK_CcMmYK|CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  /* Fast Photo paper mode */
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(22_C3M3Y3K2c3m3k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT"),INKSET(22_C3M3Y3K2c3m3k3_c),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* T-shirt --- Gernot: actually this should use CMYk but I don't know how to get this yet */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(22_C4M4Y4K2k4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_MULTIPASS_MP800,0);
+
 static const canon_mode_t canon_MULTIPASS_MP830_modes[] = {
   /* not a real mode of the printer */
   /*{  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(4_C2M2Y2K2),0,NULL,1.0,1.0,NULL,NULL,NULL,2},*/

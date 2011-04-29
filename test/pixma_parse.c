@@ -496,9 +496,9 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 						/* returnv = -2; */
 					}
 					if(buf[2]==0x1)
-					        printf(" format: BJ indexed color image format\n");
+					        printf(" ink: BJ indexed setting, also for iP8500 flag\n");
 					else if(buf[2]==0x4)
-					        printf(" format: (Pro9000/9000Mk.II) probably also BJ indexed color image format\n");
+					        printf(" ink: Pro series setting \n");
 					else{
 						printf(" ink: settings not supported 0x%x\n",buf[2]);
 						/* returnv = -2; */
