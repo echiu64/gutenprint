@@ -989,6 +989,34 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA iP6100 */
+    "PIXMA iP6100", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP6000_modelist,
+    &canon_PIXMA_iP6100_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* Canon PIXMA iP6600 */
+    "PIXMA iP6600", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    8,
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP6700_modelist,
+    &canon_PIXMA_iP6600_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA iP6700 */
     "PIXMA iP6700", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
@@ -997,7 +1025,6 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4000_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP6700_modelist,
-    /*&canon_PIXMA_iP4000_paperlist,*/
     &canon_PIXMA_iP6700_paperlist,
     NULL,
     NULL,
@@ -1009,12 +1036,10 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
-    /* &canon_PIXMA_iP4000_slotlist, */
     &canon_MULTIPASS_MP170_slotlist,
     /* CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x61,control_cmd_PIXMA_iP4000, */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iX5000_modelist,
-    /* &canon_PIXMA_iP4000_paperlist, */
     &canon_PIXMA_iP1500_paperlist,
     NULL,
     NULL,
