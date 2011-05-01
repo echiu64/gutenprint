@@ -591,10 +591,10 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				    }
 				    else {
 				      buf[i]=buf[i]-0x80;
-				      printf("subtracting 0x80 from color char to give [corrected]: %c\n", buf[i]);
+				      printf("subtracting 0x80 to give [corrected]: %c\n", buf[i]);
 				    }
 				  else
-				    printf("found valid color char [fall-through]: %c\n",buf[i]);
+				    printf("found valid color char: %c\n",buf[i]);
 				}
 				cnt = i;
 				memcpy(img->color_order,buf,cnt);
