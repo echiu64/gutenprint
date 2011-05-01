@@ -527,7 +527,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    if((img->color[i].name =='K')||(img->color[i].name =='C')||(img->color[i].name =='M')||(img->color[i].name =='Y') ) 
 					      img->color[i].density = 255;
 					    else
-					      img->color[i].density = 128; /*128+96;*/ /* try to add 0x60 to sub-channels for MP450 hi-quality mode */
+					      img->color[i].density = 128; /*128+96;*/ /* try to add 0x80 to sub-channels for MP450 hi-quality mode */
 					    if((order[i] == 'K' || order[i] == 'k') && img->color[i].bpp)
 					      black_found = 1;
 					    if(order[i] == 'y' && !black_found && img->color[i].level){
@@ -585,16 +585,16 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				/* check if the colors are sane => the iP4000 driver appends invalid bytes in the highest resolution mode */
 				for(i=0;i<cnt;i++){
 				  if (!valid_color(buf[i]))
-				    if (!(valid_color(buf[i]-0x60))) {
-				      printf("invalid color char\n");
+				    if (!(valid_color(buf[i]-0x80))) {
+				      printf("invalid color char [failed on initial]\n");
 				      break;
 				    }
 				    else {
-				      buf[i]=buf[i]-0x60;
-				      printf("subtracting 0x60 from color char to give: %c\n", buf[i]);
+				      buf[i]=buf[i]-0x80;
+				      printf("subtracting 0x80 from color char to give [corrected]: %c\n", buf[i]);
 				    }
 				  else
-				    printf("found valid color char: %c\n",buf[i]);
+				    printf("found valid color char [fall-through]: %c\n",buf[i]);
 				}
 				cnt = i;
 				memcpy(img->color_order,buf,cnt);
