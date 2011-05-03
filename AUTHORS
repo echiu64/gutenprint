@@ -17,7 +17,8 @@ was released in November 2001.  Roger Leigh in particular has
 reimplemented the build system to match the GNU standard, making for a
 far more flexible and powerful system.
 
-Version 4.3 is being developed by essentially the same team.
+Versions 5.0 and 5.2 have been developed by various people, who have
+changed over time.
 
 The list of contributors, in alphabetical order, is as follows.  The
 principal areas that each contributed to are listed in addition.
@@ -50,6 +51,9 @@ Eric Sharkey		<sharkey@ale.physics.sunysb.edu>
 Eugene Anikin		<eugene@anikin.com>
 	Performance instrumentation
 	Sharp-eyed bug fixer
+
+Gernot Hassenpflug	<aikishugyo@gmail.com>
+	Canon driver
 
 Grant Taylor		<gtaylor@picante.com>
 	Implementor of the "foomatic" spooler configuration system
