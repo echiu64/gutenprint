@@ -129,6 +129,11 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.7 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.7">May 2, 2011</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.7,a stable release of 5.2. This release offers support for more than 80 additional printers from Canon, Epson, and Kodak. There are also some changes for other Epson printers. An updated uninstaller is included and available separately.  See the <b>Downloads</b> section. 
+		</p>
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.6 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.6">August 12, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.6,a stable release of 5.2. This release offers additional support for Epson Stylus Pro printers, along with some changes for other Epson printers and support for additional Canon inkjets and PCL laser printers.  See the <b>Downloads</b> section. 
@@ -182,20 +187,20 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
+			<b>Gutenprint 5.2.7</b> 
+			<br>
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.dmg/download">gutenprint-5.2.7.dmg</a></span>&nbsp;&nbsp;(14.5 MB) 
+		</p>
+		<p>
+The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.tar.bz2/download">source code</a>)
+</p>
+		<p>
 			<b>Gutenprint 5.2.6</b> 
 			<br>
 			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/gutenprint-5.2.6.dmg/download">gutenprint-5.2.6.dmg</a></span>&nbsp;&nbsp;(14.8 MB) 
 		</p>
 		<p>
 The Gutenprint project is pleased to announce Gutenprint 5.2.6, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/gutenprint-5.2.6.tar.bz2/download">source code</a>)
-</p>
-		<p>
-			<b>Gutenprint 5.2.5</b> 
-			<br>
-			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.5/gutenprint-5.2.5.dmg/download">gutenprint-5.2.5.dmg</a></span>&nbsp;&nbsp;(12.9 MB) 
-		</p>
-		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from the stable branch of Gutenprint 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.5/gutenprint-5.2.5.tar.bz2/download">source code</a>)
 </p>
 <p>
 	<b>Gutenprint 5.0.2</b> 
@@ -221,10 +226,10 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from t
 		<p>
 			<b>Gutenprint Uninstaller</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/1.2.6/gutenprint-uninstaller-1.2.6.dmg/download">gutenprint-uninstaller-1.2.6.dmg</a></span>&nbsp;&nbsp;(221 KB) 
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/1.2.7/gutenprint-uninstaller-1.2.7.dmg/download">gutenprint-uninstaller-1.2.7.dmg</a></span>&nbsp;&nbsp;(798 KB) 
 		</p>
 		<p>
-			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), and Mac OS X "Leopard" (MacOS X 10.5.x).
+			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), Mac OS X "Leopard" (MacOS X 10.5.x), and Mac OS X "Snow Leopard (Mac OS X 10.6.x).
 		</p>
 		<p>
 			<a name="downloadESPGS"></a> <b>ESP Ghostscript 7.07.1</b> 
@@ -265,6 +270,141 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from t
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.7"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.7</b> 
+		</td>
+		<td align="right">
+			<b>2011-05-02</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.7</b> is a stable release of 5.2 This release offers support for more than 80 additional printers from Canon, Epson, and Kodak. There are also some changes for other Epson printers.</p> 
+<ol>
+	
+	
+	<li>
+New printers supported in this release:
+<br><br>
+Note that support for all printers marked "EXPERIMENTAL" (untested) or "PRELIMINARY" (minimally tested but untuned) is subject to change without notice.  Printers not marked "EXPERIMENTAL" generally will not change between releases, but notice will be given and if possible back compatibility will be provided.<br><br>
+	<ul>
+	<li>Canon inkjet printers:
+		<ul>
+	<li>Canon PIXMA iP1000 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1200 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1300 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1500 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1600 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1700 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1800 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP1900 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP2000 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP2200 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP2500 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP2600 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP2700</li>
+	<li>Canon PIXMA iP3100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP4700</li>
+	<li>Canon PIXMA iP4800 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP6100D</li>
+	<li>Canon PIXMA iP6600D</li>
+	<li>Canon PIXMA iX6500 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iX7000 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG5100</li>
+	<li>Canon PIXMA MG5200</li>
+	<li>Canon PIXMA MG6100</li>
+	<li>Canon PIXMA MG8100</li>
+	<li>Canon PIXMA MP250</li>
+	<li>Canon PIXMA MP270</li>
+	<li>Canon PIXMA MP280</li>
+	<li>Canon PIXMA MP450</li>
+	<li>Canon PIXMA MP460</li>
+	<li>Canon PIXMA MP480</li>
+	<li>Canon PIXMA MP493 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP495</li>
+	<li>Canon PIXMA MP520</li>
+	<li>Canon PIXMA MP540</li>
+	<li>Canon PIXMA MP550</li>
+	<li>Canon PIXMA MP600</li>
+	<li>Canon PIXMA MP620</li>
+	<li>Canon PIXMA MP630</li>
+	<li>Canon PIXMA MP640</li>
+	<li>Canon PIXMA MP800 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP810 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP950</li>
+	<li>Canon PIXMA MP960</li>
+	<li>Canon PIXMA MP980 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP990</li>
+	<li>Canon PIXMA MX300 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX310 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX330 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX340 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX350 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX360 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX410 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX420 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX700 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX850 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX860 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX870 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX880 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MX7600 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA Pro9000 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA Pro9000 Mk.II (EXPERIMENTAL)</li>
+	<li>Canon PIXMA Pro9500 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA Pro9500 Mk.II (EXPERIMENTAL)</li>
+	</ul></li>
+	<li style="margin-top:1em;">Epson inkjet printers:
+	<ul>
+	<li>EPSON B-310</li>
+    <li>EPSON B-310N</li>
+	<li>EPSON B-510DN</li>
+	<li>EPSON ME Office 600F</li>
+	<li>EPSON ME Office 620F</li>
+	<li>Epson Stylus Photo R3000 (EXPERIMENTAL)</li>
+	<li>Epson Stylus Pro 3885</li>
+	<li>Epson Stylus Pro 4000 (EXPERIMENTAL)</li>
+	<li>Epson Stylus Pro 4450 (EXPERIMENTAL)</li>
+	<li>Epson Stylus Pro 7700 (EXPERIMENTAL)</li>
+	<li>Epson Stylus Pro 7890 (EXPERIMENTAL)</li>
+	<li>Epson Stylus Pro 9700 (EXPERIMENTAL)</li>
+	<li>Epson Stylus Pro 9890 (EXPERIMENTAL)</li>
+	</ul>
+	</li>
+	<li style="margin-top:1em;">Dye sublimation printers:
+	<ul>
+		<li> Kodak EasyShare G600 Printer Dock</li>
+	<li>     Kodak PD-4000</li>
+	<li>     Kodak PD-6000</li>
+	<li>     Kodak Photo Printer</li>
+	<li>     Kodak Photo Printer 500</li>
+	<li>     Kodak Printer Dock Plus</li>
+	<li>     Kodak Printer Dock Plus S3</li>
+	</ul>
+	</li>
+	</ul>
+	</li>
+	<li style="margin-top:1em;">Corrected color matching profile used for Mac OS X 10.5.x. sRGB will now be used instead of Generic RGB.  Users with work-flows dependant on the previously used Generic RGB can select this color profile in the print window by using ColorSync to choose the profile rather than using VendorMatching.</li>
+	<li style="margin-top:1em;">Add additional photo modes to Canon inkjet printers.</li>
+	<li style="margin-top:1em;">Correct page size limit for EPSON Stylus Pro 7600, 7800, 7880, 9600, 9800, and 9880 (previously these printers had overly restrictive page limits).</li>
+	<li style="margin-top:1em;">Correct printing to the EPSON Stylus NX200, NX215, SX200, SX205, SX210, and SX215.</li>
+	<li style="margin-top:1em;">Corrected basic printer definitions of EPSON Stylus Pro 3800, 3880, 7800, and 9800.</li>
+	<li style="margin-top:1em;">Corrected media definitions and improve printing quality for EPSON Stylus Pro 3800, 3880, 4800, 4880, 7800, 7880, 9800, 9880, 11800, and 11880.  This will result in substantial changes in output; if this is an issue, please use the EPSON Stylus Pro 7600 or 9600 driver as appropriate.  There are new printer definitions named "EPSON Stylus Pro 4800/4880 Back Compatible" and "EPSON Stylus Pro 11800/11880 Back Compatible" available for people with existing tuned workflows for those printers.<br><br>There are no back compatibility modes for the EPSON Stylus Pro 3800 and 3880 as those printers were previously marked experimental with a note that their output was expected to change substantially.
+</li>
+	<li style="margin-top:1em;">Allow EPSON Stylus Pro 3800 and 3880 to select matte and photo black ink automatically based on ink set choice (it is no longer necessary to set this on the front panel).</li>
+	<li style="margin-top:1em;">Corrected base density for Photo Paper on printers using Claria ink (use 20% less ink).  The default results in heavy ink puddling in some cases.</li>
+	<li style="margin-top:1em;">Improved reliability of escputil.</li>
+	<li style="margin-top:1em;">A problem whereby an attempt to use the the optional ink map curves (e. g. Cyan Hue Map) with the EPSON Stylus Photo R800, R1800, and R1900 would cause an error has been fixed.</li>
+	<li style="margin-top:1em;">The Dutch and Italian translations have been updated.</li>
+	<li style="margin-top:1em;">A Slovenian translation has been added.</li>
+</ol>
+ <p>
+Full details are listed in the release notes included with the download.
+</p>
+
 <a name="5.2.6"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>

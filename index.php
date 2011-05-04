@@ -45,6 +45,16 @@ been selected Sourceforge Project of the Month for November, 2010.
 Please see the announcement at
 http://sourceforge.net/blog/potm-201011/.</p>
 
+<H2><font color="#ff0000">Gutenprint 5.2.7 is released!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of May 2, 2011!</strong></em></font> The Gutenprint project is pleased to
+announce Gutenprint 5.2.7, a stable release of 5.2.  This release offers support for more than 80 additional printers from Canon, Epson, and Kodak. There are also some changes for other Epson printers. This package is available
+in source form, and also in binary installer form
+for Macintosh OS X (10.3 and above).  <a
+href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/">You
+can read the release notes and download it here</a>.  </p>
+
+
 <H2><font color="#ff0000">Gutenprint 5.2.6 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of August 10,
