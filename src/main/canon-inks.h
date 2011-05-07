@@ -1820,15 +1820,16 @@ static const canon_inkset_t canon_22_C3M3Y2K2_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
+/* MP520: std used as photo */
+static const canon_inkset_t canon_22_C3M3Y2K2photo_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
         {'Y',1.0,&canon_1b_2l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* set to 0*/
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1845,16 +1846,15 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP520 photo standard */
-static const canon_inkset_t canon_22_C3M3Y3K2c3m3_c_inkset[] = {
+static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
-        {'Y',1.0,&canon_2b_3l_c_ink},
-        {'K',0.0,&canon_1b_2l_ink}, /* set to 0 */
-        {'c',1.0,&canon_2b_3l_c_ink},
-        {'m',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-	{'k',0.0,&canon_2b_3l_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1870,6 +1870,36 @@ static const canon_inkset_t canon_22_C3M3Y3K2c3m3_c_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
 };
+
+/*        {'k',0.0,&canon_2b_3l_c_ink}, */ /* even though we won't use the photo black in this mode its parameters have to be set */
+
+/* MP520 photo standard */
+static const canon_inkset_t canon_22_C3M3Y3K2c3m3_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_2b_3l_c_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* set to 0 */
+        {'c',1.0,&canon_2b_3l_c_ink},
+        {'m',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/*	{'k',0.0,&canon_2b_3l_ink}, */  /* even though we won't use the photo black in this mode its parameters have to be set */
 
 static const canon_inkset_t canon_22_C3M3Y3K2c3m3k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -1952,11 +1982,11 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
-        {'K',0.0,&canon_1b_2l_ink}, /* set to 0 */
+        {'K',1.0,&canon_1b_2l_ink},
         {'c',1.0,&canon_2b_4l_ink},
         {'m',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
-	{'k',0.0,&canon_2b_4l_ink},  /* even though we won't use the photo black in this mode its parameters have to be set */
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1972,6 +2002,34 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
 };
+/*	{'k',0.0,&canon_2b_4l_ink}, */ /* even though we won't use the photo black in this mode its parameters have to be set */
+
+/* MP520: Hi used as photo mode */
+static const canon_inkset_t canon_22_C4M4Y4K2c4m4photo_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* set to 0 */
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+/*	{'k',0.0,&canon_2b_4l_ink}, */ /* even though we won't use the photo black in this mode its parameters have to be set */
 
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},

@@ -119,6 +119,19 @@ static color_t* get_color(image_t* img,char name){
 	return NULL;
 }
 
+/* return pointer to color info structure matching name less 0x80 */
+static color_t* get_color2(image_t* img,char name){
+	int i;
+	for(i=0;i<MAX_COLORS;i++) {
+	  /*printf("get_color2: %i -- name=%c\n",i,img->color[i].name);*/
+	  if(img->color[i].name==(name)) { /* add 0x80 to get the hex value in the inkset */
+	    /*printf("get_color2: %i returning for %c\n",i,img->color[i].name);*/
+	    return &(img->color[i]);
+	  }
+	}
+	return NULL;
+}
+
 static int valid_color(unsigned char color){
 	int i;
 	for(i=0;i<sizeof(valid_colors) / sizeof(valid_colors[0]);i++)
@@ -222,6 +235,17 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 
 /* checks if the buffer contains a pixel definition at the given x and y position */
 static inline int inside_range(color_t* c,int x,int y){
+  /* debug*/
+  /*  if ((c->name=='C' || c->name=='M' || c->name=='Y' || c->name=='c' || c->name=='m') && x==0 && y==0){
+    printf("%c: bpp: %d\n",c->name,c->bpp);
+    printf("%c: y: %d\n",c->name,y);
+    printf("%c: c->pos->line: %d\n",c->name,c->pos->line);
+    printf("%c: c->pos->len: %d\n",c->name,c->pos->len);
+    printf("%c: x: %d\n",c->name,x);
+    printf("%c: c->bpp*x: %d\n",c->name,c->bpp*x);
+    printf("%c: c->pos->len *8: %d\n",c->name,c->pos->len *8);
+    printf("---\n");
+    }*/
 	if(c->bpp && c->pos &&  c->pos->line==y && c->pos->len && (c->pos->len *8 >= c->bpp*x))
 		return 1;
 	return 0;
@@ -254,9 +278,16 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 	color_t* m=get_color(img,'m');
 	color_t* y=get_color(img,'y');
 	color_t* k=get_color(img,'k');
-	color_t* H=get_color(img,'H');
-	color_t* R=get_color(img,'R');
-	color_t* G=get_color(img,'G');
+	/*color_t* H=get_color(img,'H');*/
+	/*color_t* R=get_color(img,'R');*/
+	/*color_t* G=get_color(img,'G');*/
+	/* experimenting with strange colors */
+	color_t* P=get_color2(img,'P');
+	color_t* Q=get_color2(img,'Q');
+	color_t* R=get_color2(img,'R');
+	color_t* S=get_color2(img,'S');
+	color_t* T=get_color2(img,'T');
+
 	/* color_t* A=get_color(img,'A'); */
 	/* color_t* B=get_color(img,'B'); */
 	/* color_t* D=get_color(img,'D'); */
@@ -292,22 +323,50 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 	}
 	for(x=0;x<img->width;x++){
 		int lK=0,lM=0,lY=0,lC=0;
-		/* get pixel values */
+		/* initialize so can add same colors together later  */
 		for(i=0;i<MAX_COLORS;i++){
-		  if(inside_range(&img->color[i],x,pos_y))
-		    img->color[i].value = get_bits(&gb[i],img->color[i].bpp);
-		  else
+		  img->color[i].value=0;
+		  }
+		for(i=0;i<MAX_COLORS;i++){
+		  if(inside_range(&img->color[i],x,pos_y)) {
+		    /*img->color[i].value = get_bits(&gb[i],img->color[i].bpp);*/
+		    img->color[i].value += get_bits(&gb[i],img->color[i].bpp);
+		    /*		    printf("getting pixel values for color %d\n",i);*/
+		    /*if (img->color[i].value != 0)
+		      printf("what pixel values for color %d: %x\n",i,img->color[i].value);*/
+		    if (i>7){
+		      printf("getting pixel values for color %d\n",i);/* only going 0 1 2 4 5 --- missing i>7 bugger! */
+		      /*img->color[i].value = 1;*/
+		      printf("color %c has value %d\n",img->color[i].name,img->color[i].value);
+		    }
+		    /* add 0x80 to colors where 0x80 is seen added in inkset */
+		  }
+		  else if(i>7) {
+		    /* can we force some results here? */
+		    /*img->color[i].value = 1;*/
+		    /*get_bits(&gb[i],img->color[i].bpp);*/
+		  }
+		  else {
+		    /*printf(" NOT getting pixel values for color %d\n",i);*/
 		    img->color[i].value = 0;
+		  }
 		  /* update statistics */
 		  (img->color[i].dots)[img->color[i].value] += 1;
 		  /* set to 1 if the level is used */	
 		  (img->color[i].usedlevels)[img->color[i].value]=1;
 		}
 		/* calculate CMYK values */
+		/*
+		lK=K->density * K->value/(K->level-1) + k->density * k->value/(k->level-1);
+		lM=M->density * M->value/(M->level-1) + m->density * m->value/(m->level-1);
+		lY=Y->density * Y->value/(Y->level-1) + y->density * y->value/(y->level-1);
+		lC=C->density * C->value/(C->level-1) + c->density * c->value/(c->level-1);*/
+
 		lK=K->density * K->value/(K->level-1) + k->density * k->value/(k->level-1);
 		lM=M->density * M->value/(M->level-1) + m->density * m->value/(m->level-1);
 		lY=Y->density * Y->value/(Y->level-1) + y->density * y->value/(y->level-1);
 		lC=C->density * C->value/(C->level-1) + c->density * c->value/(c->level-1);
+
 
 		/* detect image edges */
 		if(lK || lM || lY || lC){
@@ -473,7 +532,10 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				printf("ESC (t set image cnt %i\n",cnt);
 				if(buf[0]>>7){
 				        /* usual order */
-				        char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";
+				        /*char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
+				        /* iP3500 test */
+				        /*char order[]="CMYKcmykHRGBCMYcmykabd";*/
+				          char order[]="CMYKcmykHpnoPQRSTykabd";
 				        /* MP960 photo modes: k instead of K */
 					/* char order[]="CMYkcmyKHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 					/* T-shirt transfer mode: y changed to k --- no y, no K */
@@ -524,8 +586,12 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    
 					    /* this is not supposed to give accurate images */
 					    /* if(i<4) */ /* set to actual colors CMYK */
-					    if((img->color[i].name =='K')||(img->color[i].name =='C')||(img->color[i].name =='M')||(img->color[i].name =='Y') ) 
+					    if((img->color[i].name =='K')||(img->color[i].name =='C')||(img->color[i].name =='M')||(img->color[i].name =='Y') ) {
 					      img->color[i].density = 255;
+					      /*if (i>7)*/
+						/*img->color[i].density -= 128; */
+					      /* see if can subtract something from CMYK where 0x80 involved */
+					    }					    
 					    else
 					      img->color[i].density = 128; /*128+96;*/ /* try to add 0x80 to sub-channels for MP450 hi-quality mode */
 					    if((order[i] == 'K' || order[i] == 'k') && img->color[i].bpp)
@@ -557,7 +623,9 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					for(i=0;i<num_colors;i++){
 					  if(i<MAX_COLORS){	
 					        /* usual */
-					        const char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";
+					        /* const char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
+				                /* iP3500 test */
+				                char order[]="CMYKcmykHRGBCMYcmykabd";
 						/* MP990, MG6100, MG8100 plain modes */
 						/*const char order[]="KCcMmYykRHGABDEFIJLMNOPQSTUVWXZabdef";*/
 						img->color[i].name=order[i];

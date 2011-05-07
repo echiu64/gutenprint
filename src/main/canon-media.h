@@ -138,6 +138,13 @@ static const canon_slot_t canon_MULTIPASS_MP520_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP520);
 
+static const canon_slot_t canon_PIXMA_iP3500_slots[] = {
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Front",   N_ ("Front tray"), 0x8 },
+  /* There is also a "plain media only Front" option, but it seems to have same 0x8 when used, no idea whether it should take different values */
+};
+DECLARE_SLOTS(canon_PIXMA_iP3500);
+
 /* iP4600, iP4700 */
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
