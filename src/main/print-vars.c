@@ -1454,6 +1454,88 @@ stp_vars_copy(stp_vars_t *vd, const stp_vars_t *vs)
 }
 
 void
+stpi_vars_print_error(const stp_vars_t *v)
+{
+  int i;
+  char *cptr;
+  static const char *data_types[] = {
+    "String",
+    "Int",
+    "Bool",
+    "Double",
+    "Curve",
+    "File",
+    "Raw",
+    "Array",
+    "Dimension",
+    "(Inactive)"
+  };
+  stp_erprintf("ERROR: Gutenprint error: === BEGIN GUTENPRINT SETTINGS ===\n");
+  stp_erprintf("ERROR: Gutenprint error:     Driver: %s\n", stp_get_driver(v));
+  stp_erprintf("ERROR: Gutenprint error:     L: %d  T: %d  W: %d  H: %d\n", stp_get_left(v),
+	       stp_get_top(v), stp_get_width(v), stp_get_height(v));
+  stp_erprintf("ERROR: Gutenprint error:     Page: %dx%d\n", stp_get_page_width(v),
+	       stp_get_page_height(v));
+  stp_erprintf("ERROR: Gutenprint error:     Conversion: %s\n", stp_get_color_conversion(v));
+  for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+    {
+      const stp_list_item_t *item =
+	stp_list_get_start((const stp_list_t *) v->params[i]);
+      while (item)
+	{
+	  char *crep;
+	  const value_t *val = (const value_t *) stp_list_item_get_data(item);
+	  switch (val->typ)
+	    {
+	    case STP_PARAMETER_TYPE_CURVE:
+	      crep = stp_curve_write_string(val->value.cval);
+	      cptr = crep;
+	      while (cptr && *cptr)
+		{
+		  if (*cptr == '\n')
+		    *cptr = ' ';
+		  cptr++;
+		}
+	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%s]\n",
+			   val->name, val->active, data_types[val->typ],
+			   crep ? crep : "NULL");
+	      if (crep)
+		stp_free(crep);
+	      break;
+	    case STP_PARAMETER_TYPE_ARRAY:
+	      break;
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	    case STP_PARAMETER_TYPE_FILE:
+	    case STP_PARAMETER_TYPE_RAW:
+	      crep = stp_rawtoxmlstr(&(val->value.rval));
+	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%s]\n",
+			   val->name, val->active, data_types[val->typ],
+			   crep ? crep : "NULL");
+	      if (crep)
+		stp_free(crep);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%d]\n",
+			   val->name, val->active, data_types[val->typ],
+			   val->value.ival);
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%f]\n",
+			   val->name, val->active, data_types[val->typ],
+			   val->value.dval);
+	      break;
+	    default:
+	      break;
+	    }
+	  item = stp_list_item_next(item);
+	}
+    }
+  stp_erprintf("ERROR: === END GUTENPRINT SETTINGS ===\n");
+}
+
+void
 stp_prune_inactive_options(stp_vars_t *v)
 {
   stp_parameter_list_t params = stp_get_parameter_list(v);

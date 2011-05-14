@@ -831,7 +831,7 @@ compute_gcr_curve(const stp_vars_t *vars)
       }
   curve = stp_curve_create(STP_CURVE_WRAP_NONE);
   stp_curve_set_bounds(curve, 0, 65535);
-  STPI_ASSERT(stp_curve_set_data(curve, lut->steps, tmp_data), v);
+  STPI_ASSERT(stp_curve_set_data(curve, lut->steps, tmp_data), vars);
   stp_free(tmp_data);
   return curve;
 }
