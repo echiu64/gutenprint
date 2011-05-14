@@ -36,6 +36,7 @@ my %stpdata = ();
 my %models_found = ();
 my %models;
 my %families;
+my %defaults;
 my $skip_duplicate_printers = 0;
 my $std_pages = 1;
 my $duplex_pages = 4;
@@ -43,6 +44,9 @@ my $skip_resolutions = 0;
 my $quiet = 0;
 my $single = 0;
 my $rerun = 0;
+my $list_printers = 0;
+my $list_options = 0;
+my $verbose = 0;
 
 my @default_options = ();
 my %base_settings = ("DitherAlgorithm" => "Fast");
@@ -74,6 +78,9 @@ GetOptions("v+"  => \$valgrind,
 	   "m:s" => \$calc_md5_dir,
 	   "M:s" => \$calc_md5_file,
 	   "X"   => \$rerun,
+	   "l"   => \$list_printers,
+	   "L"   => \$list_options,
+	   "V"   => \$verbose,
 	   "h"   => \$help);
 
 sub print_help_and_exit() {
@@ -126,6 +133,9 @@ Usage: run-testpattern-2 [opts] [model ...]
                     -vv   Additional leak checking
                     -vvv  Show reachable data also
                     -vvvv Minimal checks only
+    -l              List available printers
+    -L              List available options for specified printer
+    -V              List available values for each option
 EOF
 exit 1;
 }
@@ -636,7 +646,46 @@ foreach my $printer (@printer_list) {
 }
 @printer_list = @nprinter_list;
 
-if ($dontrun) {
+if ($list_printers) {
+    print join("\n", sort @printer_list), "\n";
+    exit 0;
+} elsif ($list_options) {
+    if ($#printer_list > 0) {
+	die "-L must be used with one printer\n";
+    }
+    my ($printer) = $printer_list[0];
+    foreach my $opt (sort keys %{$stpdata{$printer}}) {
+	next if $opt eq "x_resolution";
+	next if $opt eq "y_resolution";
+	print "$opt\n";
+	if ($verbose) {
+	    if ($param_types{$printer}{$opt} == 3) {
+		print "    $stp_float_values{$printer}{'MINVAL'}{$opt}\n";
+		print "  =>$stp_float_values{$printer}{'DEFVAL'}{$opt}\n";
+		print "    $stp_float_values{$printer}{'MAXVAL'}{$opt}\n";
+	    } elsif ($param_types{$printer}{$opt} == 1) {
+		print "    $stp_int_values{$printer}{'MINVAL'}{$opt}\n";
+		print "    $stp_int_values{$printer}{'MAXVAL'}{$opt}\n";
+	    } elsif ($param_types{$printer}{$opt} == 2) {
+		if ($defaults{$printer}{$opt}) {
+		    print "    0\n";
+		    print "  =>1\n";
+		} else {
+		    print "  =>0\n";
+		    print "    1\n";
+		}
+	    } else {
+		foreach my $val (sort keys %{$stpdata{$printer}{$opt}}) {
+		    if ($val eq $defaults{$printer}{$opt}) {
+			print "  =>$val\n";
+		    } else {
+			print "    $val\n";
+		    }
+		}
+	    }
+	}
+    }
+} elsif ($dontrun) {
     map { do_printer($_, \*STDOUT) } @printer_list;
     exit 0;
 } else {
