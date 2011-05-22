@@ -53,7 +53,7 @@ set_args() {
     done
 }
 
-set_args `getopt vcgsVnO:m:o: "$@"`
+set_args `getopt hvcgsVnO:m:o: "$@"`
 
 if [ -n "$outdir" -a ! -d "$outdir" ] ; then
     mkdir -p "$outdir"
