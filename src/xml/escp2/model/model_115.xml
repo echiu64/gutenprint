@@ -66,8 +66,6 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <CDOffset>221 262</CDOffset>
  <CDMediaSize>595 842</CDMediaSize>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
- <ChannelNames>
- </ChannelNames>
  <resolutions>
   <resolution translate="text" name="360x180sw" text="360 x 180 DPI Draft">
    <physicalResolution>360 180</physicalResolution>
