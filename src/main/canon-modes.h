@@ -681,7 +681,7 @@ static const canon_mode_t canon_MULTIPASS_MP250_modes[] = {
   {  600, 600,CANON_INK_CMY,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(13_C4M4Y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CMY,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT"),INKSET(13_C4M4Y4),MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
 };
-DECLARE_MODES(canon_MULTIPASS_MP250,12);
+DECLARE_MODES(canon_MULTIPASS_MP250,3);
 
 /* still need to add 1200dpi mode user-defined */
 static const canon_mode_t canon_MULTIPASS_MP280_modes[] = {

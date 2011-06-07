@@ -1350,7 +1350,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MP250_slotlist, /* these models only have a rear tray. Also uses CAP_T  */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0x61,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0,control_cmd_MULTIPASS_MP150,  /*features */
     &canon_MULTIPASS_MP250_modelist,
     &canon_MULTIPASS_MP250_paperlist,
     NULL,
