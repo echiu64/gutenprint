@@ -2,8 +2,7 @@
  *   Print plug-in CANON BJL driver for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alum.mit.edu) and
- *      Andy Thaller (thaller@ph.tum.de)
+ *	Robert Krawitz (rlk@alumPIXMA_iP4200*      Andy Thaller (thaller@ph.tum.de)
  *   Copyright (c) 2006 Sascha Sommer (saschasommer@freenet.de)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -283,7 +282,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP990_modelist,
     &canon_MULTIPASS_MP990_paperlist,
     NULL,
