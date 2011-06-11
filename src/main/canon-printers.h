@@ -254,13 +254,13 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_P|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP970_modelist,
     &canon_PIXMA_iP4000_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP980 */
     "PIXMA MP980", 3,          /*model, model_id*/
@@ -268,13 +268,13 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_P|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP980_modelist,
     &canon_MULTIPASS_MP980_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP990 --- uses XML */
     "PIXMA MP990", 3,          /*model, model_id*/
@@ -288,7 +288,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
 
   /* ******************************** */
@@ -755,7 +755,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MP250_slotlist, /* rear only */
-    CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_P,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1900_modelist,
     &canon_PIXMA_iP1900_paperlist,
     NULL,
@@ -859,7 +859,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP3500 - like MP520 */
     "PIXMA iP3500", 3,          /*model, model_id*/
@@ -867,13 +867,13 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP3500_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP520_modelist,
     &canon_MULTIPASS_MP520_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP4000 */
     "PIXMA iP4000", 3,          /*model, model_id*/
@@ -909,14 +909,14 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP5300_modelist,
     /*&canon_PIXMA_iP4000_paperlist,*/
     &canon_MULTIPASS_MP600_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP4600 */
     "PIXMA iP4600", 3,          /*model, model_id*/
@@ -924,7 +924,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     16,
     &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x61,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP5300_modelist,
     &canon_PIXMA_iP4600_paperlist,
     NULL,
@@ -938,7 +938,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4500_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /* features */
     &canon_PIXMA_iP4500_modelist, /* changed from iP5300 */
     &canon_PIXMA_iP4500_paperlist,
     NULL,
@@ -980,7 +980,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4600_slotlist, /* there is some ESC (r 0x68 command for CD tray also, not sure why */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /* features */
     &canon_PIXMA_iP4700_modelist,/* same for iP4800 */
     &canon_PIXMA_iP4700_paperlist,/* same for iP4800 */
     NULL,
@@ -1050,7 +1050,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MP170_slotlist,
-    /* CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x61,control_cmd_PIXMA_iP4000, */
+    /* CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x61,control_cmd_PIXMA_iP4000, */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iX5000_modelist,
     &canon_PIXMA_iP1500_paperlist,
@@ -1093,7 +1093,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MP520_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP520_modelist,
     &canon_MULTIPASS_MP520_paperlist, /* Windows driver lacks PPGgold, but let us try anyway */
     NULL,
@@ -1107,7 +1107,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MP520_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP520_modelist,
     &canon_MULTIPASS_MP520_paperlist,
     NULL,
@@ -1149,7 +1149,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_MULTIPASS_MX850_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_P|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
     &canon_MULTIPASS_MP520_modelist,
     &canon_MULTIPASS_MP600_paperlist,
     NULL,
@@ -1163,7 +1163,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_r|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP640_modelist,
     &canon_MULTIPASS_MP630_paperlist,
     NULL,
@@ -1177,7 +1177,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_r,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_r|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP640_modelist,
     &canon_MULTIPASS_MP640_paperlist,
     NULL,
