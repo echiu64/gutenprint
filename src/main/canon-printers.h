@@ -1136,12 +1136,12 @@ static const canon_cap_t canon_model_capabilities[] =
     8,
     &canon_PIXMA_MG5100_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_r|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /*features */
-    &canon_MULTIPASS_MP540_modelist, /* seems to have same modes */
+    &canon_MULTIPASS_MP550_modelist, /* similar to MP540 but fewer modes */
     &canon_MULTIPASS_MP250_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP600 */
     "PIXMA MP600", 3,          /*model, model_id*/
