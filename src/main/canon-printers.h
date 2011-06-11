@@ -952,7 +952,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     8,
     &canon_PIXMA_iP4600_slotlist, /* there is some ESC (r 0x65 command for CD tray also, not sure why */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /* features */
     &canon_PIXMA_iP4700_modelist,
     &canon_PIXMA_iP4700_paperlist,
     NULL,
