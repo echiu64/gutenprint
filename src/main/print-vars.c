@@ -1454,7 +1454,7 @@ stp_vars_copy(stp_vars_t *vd, const stp_vars_t *vs)
 }
 
 void
-stpi_vars_print_error(const stp_vars_t *v)
+stpi_vars_print_error(const stp_vars_t *v, const char *prefix)
 {
   int i;
   char *cptr;
@@ -1470,13 +1470,13 @@ stpi_vars_print_error(const stp_vars_t *v)
     "Dimension",
     "(Inactive)"
   };
-  stp_erprintf("ERROR: Gutenprint error: === BEGIN GUTENPRINT SETTINGS ===\n");
-  stp_erprintf("ERROR: Gutenprint error:     Driver: %s\n", stp_get_driver(v));
-  stp_erprintf("ERROR: Gutenprint error:     L: %d  T: %d  W: %d  H: %d\n", stp_get_left(v),
+  stp_erprintf("%s: Gutenprint: === BEGIN GUTENPRINT SETTINGS ===\n", prefix);
+  stp_erprintf("%s: Gutenprint:     Driver: %s\n", prefix, stp_get_driver(v));
+  stp_erprintf("%s: Gutenprint:     L: %d  T: %d  W: %d  H: %d\n", prefix, stp_get_left(v),
 	       stp_get_top(v), stp_get_width(v), stp_get_height(v));
-  stp_erprintf("ERROR: Gutenprint error:     Page: %dx%d\n", stp_get_page_width(v),
+  stp_erprintf("%s: Gutenprint:     Page: %dx%d\n", prefix, stp_get_page_width(v),
 	       stp_get_page_height(v));
-  stp_erprintf("ERROR: Gutenprint error:     Conversion: %s\n", stp_get_color_conversion(v));
+  stp_erprintf("%s: Gutenprint:     Conversion: %s\n", prefix, stp_get_color_conversion(v));
   for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
     {
       const stp_list_item_t *item =
@@ -1496,7 +1496,7 @@ stpi_vars_print_error(const stp_vars_t *v)
 		    *cptr = ' ';
 		  cptr++;
 		}
-	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%s]\n",
+	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%s]\n", prefix,
 			   val->name, val->active, data_types[val->typ],
 			   crep ? crep : "NULL");
 	      if (crep)
@@ -1508,7 +1508,7 @@ stpi_vars_print_error(const stp_vars_t *v)
 	    case STP_PARAMETER_TYPE_FILE:
 	    case STP_PARAMETER_TYPE_RAW:
 	      crep = stp_rawtoxmlstr(&(val->value.rval));
-	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%s]\n",
+	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%s]\n", prefix,
 			   val->name, val->active, data_types[val->typ],
 			   crep ? crep : "NULL");
 	      if (crep)
@@ -1517,12 +1517,12 @@ stpi_vars_print_error(const stp_vars_t *v)
 	    case STP_PARAMETER_TYPE_INT:
 	    case STP_PARAMETER_TYPE_DIMENSION:
 	    case STP_PARAMETER_TYPE_BOOLEAN:
-	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%d]\n",
+	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%d]\n", prefix,
 			   val->name, val->active, data_types[val->typ],
 			   val->value.ival);
 	      break;
 	    case STP_PARAMETER_TYPE_DOUBLE:
-	      stp_erprintf("ERROR: Gutenprint error:         (%s) (%i) (%s) [%f]\n",
+	      stp_erprintf("%s: Gutenprint:         (%s) (%i) (%s) [%f]\n", prefix,
 			   val->name, val->active, data_types[val->typ],
 			   val->value.dval);
 	      break;
@@ -1532,7 +1532,7 @@ stpi_vars_print_error(const stp_vars_t *v)
 	  item = stp_list_item_next(item);
 	}
     }
-  stp_erprintf("ERROR: === END GUTENPRINT SETTINGS ===\n");
+  stp_erprintf("%s: Gutenprint: === END GUTENPRINT SETTINGS ===\n", prefix);
 }
 
 void
@@ -1794,7 +1794,6 @@ stp_parameter_has_category_value(const stp_vars_t *v,
 				 const stp_parameter_t *desc,
 				 const char *category, const char *value)
 {
-  const char *dptr;
   char *cptr;
   int answer = 0;
   if (!v || !desc || !category)
@@ -1878,6 +1877,57 @@ stp_parameter_list_append(stp_parameter_list_t list,
     }
 }
 
+void
+stp_copy_vars_from(stp_vars_t *to, const stp_vars_t *from)
+{
+  int i;
+  if (!from || !to)
+    return;
+  for (i = 0; i < STP_PARAMETER_TYPE_INVALID; i++)
+    {
+      const stp_list_item_t *item =
+	stp_list_get_start((const stp_list_t *) from->params[i]);
+      while (item)
+	{
+	  const value_t *val = (const value_t *) stp_list_item_get_data(item);
+	  switch (val->typ)
+	    {
+	    case STP_PARAMETER_TYPE_CURVE:
+	      stp_set_curve_parameter(to, val->name, val->value.cval);
+	      break;
+	    case STP_PARAMETER_TYPE_ARRAY:
+	      stp_set_array_parameter(to, val->name, val->value.aval);
+	      break;
+	    case STP_PARAMETER_TYPE_STRING_LIST:
+	      stp_set_string_parameter(to, val->name, val->value.rval.data);
+	      break;
+	    case STP_PARAMETER_TYPE_FILE:
+	      stp_set_file_parameter(to, val->name, val->value.rval.data);
+	      break;
+	    case STP_PARAMETER_TYPE_RAW:
+	      stp_set_raw_parameter(to, val->name, val->value.rval.data,
+				    val->value.rval.bytes);
+	      break;
+	    case STP_PARAMETER_TYPE_INT:
+	      stp_set_int_parameter(to, val->name, val->value.ival);
+	      break;
+	    case STP_PARAMETER_TYPE_DIMENSION:
+	      stp_set_dimension_parameter(to, val->name, val->value.ival);
+	      break;
+	    case STP_PARAMETER_TYPE_BOOLEAN:
+	      stp_set_boolean_parameter(to, val->name, val->value.bval);
+	      break;
+	    case STP_PARAMETER_TYPE_DOUBLE:
+	      stp_set_float_parameter(to, val->name, val->value.dval);
+	      break;
+	    default:
+	      break;
+	    }
+	  item = stp_list_item_next(item);
+	}
+    }
+}
+
 static void
 fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		       stp_vars_t *v)
@@ -1886,10 +1936,13 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
   char *locale = stp_strdup(setlocale(LC_ALL, NULL));
   setlocale(LC_ALL, "C");
 #endif
+  stp_deprintf(STP_DBG_XML, "Enter fill_vars_from_xmltree()\n");
   while (prop)
     {
+      stp_deprintf(STP_DBG_XML, "Property type %d (%s)\n", prop->type,
+		   prop->type == STP_MXML_ELEMENT ? prop->value.element.name :
+		   (prop->type == STP_MXML_TEXT ? prop->value.text.string : "(nil)"));
       if (prop->type == STP_MXML_ELEMENT &&
-	  !strcmp(prop->value.element.name, "parameter") &&
 	  (prop->child || stp_mxmlElementGetAttr(prop, "name")))
 	{
 	  stp_mxml_node_t *child = prop->child;
@@ -2057,6 +2110,9 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 	    }
 	  else if (child->type == STP_MXML_TEXT)
 	    {
+	      stp_deprintf(STP_DBG_XML, "  Set property %s ('%s')\n",
+			   prop_name, child->value.text.string ?
+			   child->value.text.string : "(nil)");
 	      if (!strcmp(prop_name, "driver"))
 		stp_set_driver(v, child->value.text.string);
 	      else if (!strcmp(prop_name, "color_conversion"))
@@ -2075,8 +2131,15 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 		stp_set_page_height(v, stp_xmlstrtol(child->value.text.string));
 	    }
 	}
+      else
+	{
+	  if (prop->type == STP_MXML_ELEMENT)
+	    stp_deprintf(STP_DBG_XML, "Unexpected node type %d name %s\n",
+			 prop->type, prop->value.element.name);
+	}
       prop = prop->next;
     }
+  stp_deprintf(STP_DBG_XML, "End fill_vars_from_xmltree()\n");
 #ifdef HAVE_LOCALE_H
   setlocale(LC_ALL, locale);
   stp_free(locale);

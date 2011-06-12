@@ -438,6 +438,14 @@ extern void *stp_get_errdata(const stp_vars_t *v);
  */
 extern void stp_merge_printvars(stp_vars_t *user, const stp_vars_t *print);
 
+/**
+ * Merge defaults for a printer with user-chosen settings.
+ * @deprecated This is likely to go away.
+ * @param user the destination vars.
+ * @param print the vars to merge into user.
+ */
+extern void stp_copy_vars_from(stp_vars_t *to, const stp_vars_t *from);
+
 
 /****************************************************************
 *                                                               *
