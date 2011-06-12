@@ -1490,7 +1490,8 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
 	return;
 
   canon_cmd(v,ESC28,0x49, 1, 0x1);  /* enable MultiLine Raster? */
-  canon_cmd(v,ESC28,0x4a, 1, init->caps->raster_lines_per_block);    /* set number of lines per raster block */
+  /* canon_cmd(v,ESC28,0x4a, 1, init->caps->raster_lines_per_block); */
+  canon_cmd(v,ESC28,0x4a, 1, init->mode->raster_lines_per_block);    /* set number of lines per raster block */
  
   /* set the color sequence */ 
   stp_zfwrite("\033(L", 3, 1, v);
@@ -1549,7 +1550,8 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   mytop= (init->top*init->mode->ydpi)/72;
 
   if(init->caps->features & CANON_CAP_I)
-    mytop /= init->caps->raster_lines_per_block;
+    /* mytop /= init->caps->raster_lines_per_block; */
+    mytop /= init->mode->raster_lines_per_block;
 
   if(mytop)
     canon_cmd(v,ESC28,0x65, 2, (mytop >> 8 ),(mytop & 255));
@@ -2048,7 +2050,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   /* Allocate compression buffer */
   if(caps->features & CANON_CAP_I)
-      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * caps->raster_lines_per_block * privdata.num_channels); /* for multiraster we need to buffer 8 lines for every color */
+    /*privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * caps->raster_lines_per_block * privdata.num_channels); */
+      privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2 * privdata.mode->raster_lines_per_block * privdata.num_channels); /* for multiraster we need to buffer 8 lines for every color */
   else
       privdata.comp_buf = stp_zalloc(privdata.buf_length_max * 2);
   /* Allocate fold buffer */
@@ -2530,7 +2533,8 @@ static void canon_write_block(stp_vars_t* v,canon_privdata_t* pd,unsigned char* 
 
 static void canon_write_multiraster(stp_vars_t *v,canon_privdata_t* pd,int y){
     int i;
-    int raster_lines_per_block = pd->caps->raster_lines_per_block;
+    /*int raster_lines_per_block = pd->caps->raster_lines_per_block;*/
+    int raster_lines_per_block = pd->mode->raster_lines_per_block;
     unsigned int max_length = 2*pd->buf_length_max * raster_lines_per_block;
     /* a new raster block begins */
     if(!(y % raster_lines_per_block)){
