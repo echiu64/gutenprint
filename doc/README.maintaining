@@ -76,7 +76,8 @@ vii.  flex/lex (for building the GIMP plugin and the test pattern generator)
 viii. bison/yacc (for building the GIMP plugin and the test pattern generator)
 ix.   doxygen (for building documentation)
 x.    DocBook processors (db2html, db2pdf) (for building documentation)
-xi.   DocBook-toys (for building documentation
+xi.   DocBook-toys (called docbook-utils on some systems) (for building
+      documentation)
 
 These packages are in addition to the packages normally required to
 build Gutenprint, as described in the README at top level.
