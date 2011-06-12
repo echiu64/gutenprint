@@ -27,6 +27,7 @@ make_ppds=1
 md5dir=''
 outdir=''
 cupsargs=''
+npages=3
 
 usage() {
     echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
@@ -46,6 +47,7 @@ set_args() {
 	    -O|--output) shift; outdir="$1" ;;
 	    -o|--option) shift; cupsargs="$cupsargs $1" ;;
 	    -m|--md5dir) shift; md5dir="$1" ;;
+	    -p|--pages) shift; npages="$1" ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -53,7 +55,7 @@ set_args() {
     done
 }
 
-set_args `getopt hvcgsVnO:m:o: "$@"`
+set_args `getopt hvcgsVnO:m:o:p: "$@"`
 
 if [ -n "$outdir" -a ! -d "$outdir" ] ; then
     mkdir -p "$outdir"
@@ -65,7 +67,7 @@ fi
 version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
 cupsdir="@cups_conf_serverbin@/filter"
 if [ -x "$cupsdir/pstoraster" -o -x "$cupsdir/cgpdftoraster" ] ; then
-    pages='page-ranges=24-26 '
+    pages="page-ranges=24-`expr 24 + $npages - 1` "
 else
     pages=''
 fi
@@ -91,7 +93,7 @@ fi
 if [ -n "$pdftops" -a ! -x "$cupsdir/cgpdftoraster" ] ; then
     tfile=`mktemp`
     trap cleanup 1 2 3 6 14 15 30
-    $pdftops -f 24 -l 26 "$sdir/../../doc/gutenprint-users-manual.pdf" $tfile
+    $pdftops -f 24 -l `expr 24 + $npages - 1` "$sdir/../../doc/gutenprint-users-manual.pdf" $tfile
 fi
 
 if [ -z "$verbose" ] ; then
@@ -118,10 +120,11 @@ is_duplicate() {
 
 run_rastertogp() {
     case "$valgrind" in
-	1) valgrind $valopts -q --num-callers=100 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
-	2) valgrind $valopts --num-callers=100 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
-	3) valgrind $valopts --error-limit=no --num-callers=100 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	1) valgrind $valopts -q --num-callers=50 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	2) valgrind $valopts --num-callers=50 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	3) valgrind $valopts --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
 	4) valgrind $valopts ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	5) cat ;;
 	*) ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
     esac
     if [ $? -ne 0 ] ; then
