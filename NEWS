@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.7, a stable release of Gutenprint 5.2.  This
+Welcome to Gutenprint 5.2.8, a stable release of Gutenprint 5.2.  This
 release has bug fixes, support for some new printers, and a few new
 features over 5.2.5.  Please read these release notes carefully.
 
@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.7
         * Changes from 5.2.6
         * Changes from 5.2.5
         * Changes from 5.2.4
@@ -250,6 +251,30 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.7
+
+  1) New printers supported in this release:
+
+     Note that support for all printers marked "EXPERIMENTAL"
+     (untested) or "PRELIMINARY" (minimally tested but untuned) is
+     subject to change without notice.  Printers not marked
+     "EXPERIMENTAL" generally will not change between releases, but
+     notice will be given and if possible back compatibility will be
+     provided.
+
+     - Canon inkjet printers:
+
+       Canon PIXMA iP3500 (EXPERIMENTAL)
+
+     - Epson inkjet printers:
+
+       EPSON Stylus CX3900
+
+  2) A crash with the EPSON Stylus Photo R3000 has been fixed.
+
+  3) (API) Added function stp_vars_copy_from() to override settings in
+     one settings object with those in anyother.
 
 * Changes from 5.2.6
 
