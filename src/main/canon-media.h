@@ -170,7 +170,7 @@ static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 } /*Paper allocation? no idea what this means compared to Continuous*/
 };
 DECLARE_SLOTS(canon_PIXMA_MG5100);
 
