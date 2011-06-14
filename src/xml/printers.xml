@@ -130,6 +130,8 @@
       <printer translate="name" name="Canon S630" driver="bjc-s630" manufacturer="Canon" model="8200" parameters="density_800_params" foomaticid="Canon-S630" />
       <printer translate="name" name="Canon S800" driver="bjc-s800" manufacturer="Canon" model="8200" parameters="density_800_params" foomaticid="Canon-S800" />
       <printer translate="name" name="Canon S4500" driver="bjc-s4500" manufacturer="Canon" model="6500" parameters="gamma_750_params" foomaticid="Canon-S4500" />
+      <printer translate="name" name="Canon SELPHY DS700" driver="bjc-SELPHY-DS700" manufacturer="Canon" model="10000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-SELPHY-DS700" />
+      <printer translate="name" name="Canon SELPHY DS810" driver="bjc-SELPHY-DS810" manufacturer="Canon" model="10000810" parameters="PIXMA_iP4000_params" foomaticid="Canon-SELPHY-DS810" />
       <printer translate="name" name="Canon PIXMA iP1000" driver="bjc-PIXMA-iP1000" manufacturer="Canon" model="3001000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1000" />
       <printer translate="name" name="Canon PIXMA iP1200" driver="bjc-PIXMA-iP1200" manufacturer="Canon" model="3001200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1200" />
       <printer translate="name" name="Canon PIXMA iP1300" driver="bjc-PIXMA-iP1200" manufacturer="Canon" model="3001200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1300" />

@@ -631,6 +631,37 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
 
+  /*************/
+  /* DS models */
+  /*************/
+
+  { /* Canon DS700 */
+    "SELPHY DS700", 3,
+    4*72, 6*72, /* US 4" x 6" */
+    10, 10, 9, 14, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,NULL,
+    &canon_SELPHY_DS700_modelist,
+    &canon_SELPHY_DS700_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon DS810 */
+    "SELPHY DS810", 3,
+    4*72, 8*72, /* US 4" x 8" */
+    10, 10, 9, 14, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,NULL,
+    &canon_SELPHY_DS810_modelist,
+    &canon_SELPHY_DS810_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+
   /*****************************/
   /*                           */
   /*  extremely fuzzy models   */

@@ -525,6 +525,28 @@ static const canon_paper_t canon_PIXMA_Pro9500mk2_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_Pro9500mk2);
 
+static const canon_paper_t canon_SELPHY_DS700_papers[] = {
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	        0x09, 0x0d,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 0x0b, 0x11,0x00,1.00, 1.00, 0.999, 0, 0, 0 },/*PPsuper*/
+  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),	0x0a, 0x10,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	0x05, 0x05,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),		0x0d, 0x09,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			0x08, 0x09,0x00,1.00, 1.00, 0.999, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_SELPHY_DS700);
+
+static const canon_paper_t canon_SELPHY_DS810_papers[] = {
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	        0x09, 0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 0x0b, 0x11,0x1d,1.00, 1.00, 0.999, 0, 0, 0 },/*PPsuper*/
+  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),	0x0a, 0x10,0x1c,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	0x05, 0x05,0x16,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),		0x0d, 0x09,0x1b,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			0x08, 0x09,0x07,1.00, 1.00, 0.999, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_SELPHY_DS810);
+
+
+
 /* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP150 so far */
 static const canon_paper_t canon_MULTIPASS_MP150_papers[] = {
