@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gutenprint 20110308\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-03-08 08:05-0500\n"
-"PO-Revision-Date: 2011-05-01 19:09+0300\n"
+"PO-Revision-Date: 2011-07-02 13:20+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
 "Language: \n"
@@ -78,15 +78,15 @@ msgstr "Гібридний Флойда-Штайнберга"
 
 #: src/main/dither-main.c:69
 msgid "Predithered Input"
-msgstr ""
+msgstr "Попередньо згладжені вхідні дані"
 
 #: src/main/dither-main.c:70
 msgid "Drop Size Segmented"
-msgstr ""
+msgstr "Сегментований розмір краплі"
 
 #: src/main/dither-main.c:71
 msgid "Drop Size Segmented New"
-msgstr ""
+msgstr "Новий сегментований розмір краплі"
 
 #: src/main/dither-main.c:91 src/main/print-color.c:56
 msgid "Density"
@@ -94,7 +94,7 @@ msgstr "Щільність"
 
 #: src/main/dither-main.c:92
 msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
-msgstr ""
+msgstr "Скоригувати щільність (об’єм чорнила) на відбитку. Зменшіть щільність, якщо чорнило просочується крізь папір або розмазується; збільшіть щільність, якщо темні ділянки є недостатньо суцільними."
 
 #: src/main/dither-main.c:100
 msgid "Dither Algorithm"
@@ -109,6 +109,12 @@ msgid ""
 "Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
+"Виберіть алгоритм згладжування, який буде використано.\n"
+"Використання адаптивного гібридного алгоритму зазвичай забезпечує найкращу якість.\n"
+"EvenTone — новий тестовий алгоритм, який часто дає чудові результати.\n"
+"Використання алгоритму «Впорядкований» пришвидшує обробку і надає змогу отримувати якість, близьку до якості фотографічних відбитків.\n"
+"Алгоритми «Швидкий» і «Дуже швидкий» є значно швидшими за інші, вони добре працюють для тексту та штрихових зображень.\n"
+"Використання алгоритму «Гібридний Флойда-Штайнберга» у загальному випадку дає доволі погані результати."
 
 #: src/main/module.c:52
 msgid "Miscellaneous (unclassified)"
@@ -116,7 +122,7 @@ msgstr "Різне (поза класифікацією)"
 
 #: src/main/module.c:53
 msgid "Family driver"
-msgstr ""
+msgstr "Драйвер сімейства"
 
 #: src/main/module.c:54
 msgid "Color conversion module"
@@ -160,7 +166,7 @@ msgstr "Джерело носія"
 #: src/main/print-lexmark.c:279 src/main/print-olympus.c:1876
 #: src/main/print-pcl.c:1359
 msgid "Source (input slot) of the media"
-msgstr ""
+msgstr "Джерело (вхідний лоток) носія"
 
 #: src/main/print-canon.c:220 src/main/print-escp2.c:192
 msgid "CD Hub Size"
@@ -168,7 +174,7 @@ msgstr "Внутрішній діаметр CD"
 
 #: src/main/print-canon.c:221 src/main/print-escp2.c:193
 msgid "Print only outside of the hub of the CD, or all the way to the hole"
-msgstr ""
+msgstr "Друкувати лише за межами отвору у компакт-диску або всюди, окрім дірки"
 
 #: src/main/print-canon.c:226 src/main/print-escp2.c:198
 msgid "CD Size (Custom)"
@@ -176,28 +182,28 @@ msgstr "Зовнішній діаметр CD (нетиповий)"
 
 #: src/main/print-canon.c:227 src/main/print-escp2.c:199
 msgid "Variable adjustment for the outer diameter of CD"
-msgstr ""
+msgstr "Коригування зовнішнього діаметра компакт-диска"
 
 #: src/main/print-canon.c:232 src/main/print-escp2.c:204
 msgid "CD Hub Size (Custom)"
-msgstr ""
+msgstr "Внутрішній діаметр CD (нетиповий)"
 
 #: src/main/print-canon.c:233 src/main/print-escp2.c:205
 msgid "Variable adjustment to the inner hub of the CD"
-msgstr ""
+msgstr "Коригування діаметра отвору компакт-диска"
 
 #: src/main/print-canon.c:238 src/main/print-escp2.c:210
 msgid "CD Horizontal Fine Adjustment"
-msgstr ""
+msgstr "Додаткове горизонтальне коригування"
 
 #: src/main/print-canon.c:239 src/main/print-canon.c:245
 #: src/main/print-escp2.c:211 src/main/print-escp2.c:217
 msgid "Fine adjustment to horizontal position for CD printing"
-msgstr ""
+msgstr "Додаткове коригування горизонтальної позиції друку компакт-диска"
 
 #: src/main/print-canon.c:244 src/main/print-escp2.c:216
 msgid "CD Vertical Fine Adjustment"
-msgstr ""
+msgstr "Додаткове вертикальне коригування"
 
 #: src/main/print-canon.c:250 src/main/print-escp2.c:228
 #: src/main/print-lexmark.c:284 src/main/print-olympus.c:1881
@@ -221,14 +227,14 @@ msgstr "Тип чорнил"
 #: src/main/print-olympus.c:1888 src/main/print-pcl.c:1377
 #: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
-msgstr ""
+msgstr "Тип чорнила у принтері"
 
 #: src/main/print-canon.c:262 src/main/print-canon.c:263
 #: src/main/print-escp2.c:323 src/main/print-escp2.c:324
 #: src/main/print-lexmark.c:296 src/main/print-lexmark.c:297
 #: src/main/print-pcl.c:1382 src/main/print-pcl.c:1383
 msgid "Ink Channels"
-msgstr ""
+msgstr "Канали чорнил"
 
 #: src/main/print-canon.c:268 src/main/print-escp2.c:341
 #: src/main/print-lexmark.c:302 src/main/print-olympus.c:1909
@@ -240,7 +246,7 @@ msgstr "Режим друку"
 #: src/main/print-lexmark.c:303 src/main/print-olympus.c:1910
 #: src/main/print-pcl.c:1389 src/main/print-ps.c:87 src/main/print-raw.c:87
 msgid "Printing Output Mode"
-msgstr ""
+msgstr "Режим виводу друку"
 
 #: src/main/print-canon.c:274 src/main/print-escp2.c:186
 #: src/main/print-pcl.c:1394
@@ -250,7 +256,7 @@ msgstr "Двосторонній друк"
 #: src/main/print-canon.c:275 src/main/print-escp2.c:187
 #: src/main/print-pcl.c:1395
 msgid "Duplex/Tumble Setting"
-msgstr ""
+msgstr "Параметр двостороннього друку"
 
 #: src/main/print-canon.c:280 src/main/print-canon.c:281
 #: src/main/print-escp2.c:162 src/main/print-escp2.c:163
@@ -346,7 +352,7 @@ msgstr "CD — 3 дюйма"
 #: src/main/print-canon.c:670 src/main/print-escp2.c:2220
 #: src/xml/xmli18n-tmp.h:6615
 msgid "CD - Custom"
-msgstr ""
+msgstr "CD — нетиповий"
 
 #: src/main/print-canon.c:693 src/main/print-escp2.c:2254
 #: src/cups/genppd.c:1316 src/cups/genppd.c:2168 src/cups/genppd.c:2366
@@ -356,7 +362,7 @@ msgstr "Звичайний"
 
 #: src/main/print-canon.c:695 src/main/print-escp2.c:2256
 msgid "Print To Hub"
-msgstr ""
+msgstr "Друкувати до отвору"
 
 #: src/main/print-canon.c:810 src/main/print-canon.c:864
 #: src/main/print-escp2.c:2669 src/main/print-lexmark.c:1279
@@ -630,7 +636,7 @@ msgstr "Без обробки"
 
 #: src/main/print-color.c:58
 msgid "Pre-Dithered"
-msgstr ""
+msgstr "Попереднє згладжування"
 
 #: src/main/print-color.c:121 src/gutenprintui2/panel.c:292
 #: src/cups/genppd.c:1261 src/cups/genppd.c:2349
@@ -639,7 +645,7 @@ msgstr "Тони сірого"
 
 #: src/main/print-color.c:123
 msgid "Whitescale"
-msgstr ""
+msgstr "Тони білого"
 
 #: src/main/print-color.c:125
 msgid "RGB"
@@ -704,7 +710,7 @@ msgstr "Канали Raw"
 
 #: src/main/print-color.c:216
 msgid "SimpleGamma"
-msgstr ""
+msgstr "Проста гама"
 
 #: src/main/print-color.c:217
 msgid "Do not correct for screen gamma"
@@ -732,7 +738,7 @@ msgstr "Лінійне виправлення контрастності"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
-msgstr ""
+msgstr "Використовувати лінійне виправлення контрастності за фіксованою кінцевою точкою"
 
 #: src/main/print-color.c:248
 msgid "Composite Gamma"
@@ -740,11 +746,11 @@ msgstr "Складена гама"
 
 #: src/main/print-color.c:249
 msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
+msgstr "Коригування гами відбитка. За більших значень відбиток буде яскравішим, за менших — темнішим."
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
-msgstr ""
+msgstr "Визначається програмою"
 
 #: src/main/print-color.c:259
 msgid "Gamma value assumed by application"
@@ -1530,6 +1536,8 @@ msgid ""
 "Adjust the saturation (color balance) of the print\n"
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
+"Коригування насиченості (балансу кольорів) відбитка.\n"
+"За нульового значення насиченості відбиток буде чорно-білим."
 
 #: src/main/print-color.c:357
 msgid "Ink Limit"
@@ -1545,27 +1553,27 @@ msgstr "Перехід GCR"
 
 #: src/main/print-color.c:366 src/main/print-escp2.c:879
 msgid "Adjust the gray component transition rate"
-msgstr ""
+msgstr "Коригування переходу напівтонів"
 
 #: src/main/print-color.c:373 src/main/print-escp2.c:886
 msgid "GCR Lower Bound"
-msgstr ""
+msgstr "Нижня межа GCR"
 
 #: src/main/print-color.c:374 src/main/print-escp2.c:887
 msgid "Lower bound of gray component reduction"
-msgstr ""
+msgstr "Нижня межа спрощення сірого компонента"
 
 #: src/main/print-color.c:381 src/main/print-escp2.c:894
 msgid "GCR Upper Bound"
-msgstr ""
+msgstr "Верхня межа GCR"
 
 #: src/main/print-color.c:382 src/main/print-escp2.c:895
 msgid "Upper bound of gray component reduction"
-msgstr ""
+msgstr "Верхня межа спрощення сірого компонента"
 
 #: src/main/print-color.c:421
 msgid "LUT dump file"
-msgstr ""
+msgstr "Файл дампу LUT"
 
 #: src/main/print-color.c:421
 msgid "Advanced Output Control"
@@ -1573,7 +1581,7 @@ msgstr "Додаткове керування над виводом"
 
 #: src/main/print-color.c:422
 msgid "Dump file for LUT for external color adjustment"
-msgstr ""
+msgstr "Файл дампу таблиці пошуку (LUT) для зовнішнього коригування кольорів"
 
 #: src/main/print-color.c:456
 msgid "Curve for raw channel "
@@ -1673,7 +1681,7 @@ msgstr "Спрощення сірого компонента"
 
 #: src/main/print-color.c:555
 msgid "Gray component reduction curve"
-msgstr ""
+msgstr "Крива спрощення сірого компонента"
 
 #: src/main/print-color.c:1740
 msgid "Traditional Gutenprint color conversion"
@@ -1692,129 +1700,128 @@ msgstr "«%s» не є коректним %s\n"
 #: src/main/printers.c:634
 #, c-format
 msgid "%s must be between %f and %f (is %f)\n"
-msgstr ""
+msgstr "%s має бути у межах від %f до %f (маємо %f)\n"
 
 #: src/main/printers.c:656 src/main/printers.c:680
 #, c-format
 msgid "%s must be between %d and %d (is %d)\n"
-msgstr ""
+msgstr "%s має бути у межах від %d до %d (маємо %d)\n"
 
 #: src/main/printers.c:711
 #, c-format
 msgid "%s bounds must be between %f and %f\n"
-msgstr ""
+msgstr "Межі %s мають бути між %f і %f\n"
 
 #: src/main/printers.c:719
 #, c-format
 msgid "%s wrap mode must be %s\n"
-msgstr ""
+msgstr "Режимом розбиття %s має бути %s\n"
 
 #: src/main/printers.c:723
 msgid "no wrap"
-msgstr ""
+msgstr "без розбиття"
 
 #: src/main/printers.c:723
-#, fuzzy
 msgid "wrap around"
-msgstr "Огорнути"
+msgstr "згортання"
 
 #: src/main/printers.c:767
 #, c-format
 msgid "Unknown type parameter %s (%d)\n"
-msgstr ""
+msgstr "Параметр невідомого типу %s (%d)\n"
 
 #: src/main/printers.c:780 src/main/printers.c:791
 #, c-format
 msgid "%s out of range (value %d, min %d, max %d)\n"
-msgstr ""
+msgstr "%s поза межами діапазону (значення: %d, мінімум: %d, максимум: %d)\n"
 
 #: src/main/printers.c:851
 msgid "Page size is not valid\n"
-msgstr ""
+msgstr "Некоректний розмір сторінки\n"
 
 #: src/main/printers.c:872
 #, c-format
 msgid "Top margin must not be less than %d\n"
-msgstr ""
+msgstr "Верхнє поле має бути меншим за %d\n"
 
 #: src/main/printers.c:878
 #, c-format
 msgid "Left margin must not be less than %d\n"
-msgstr ""
+msgstr "Ліве поле має бути меншим за %d\n"
 
 #: src/main/printers.c:884
 msgid "Height must be greater than zero\n"
-msgstr ""
+msgstr "Висота має бути більшою за нуль\n"
 
 #: src/main/printers.c:890
 msgid "Width must be greater than zero\n"
-msgstr ""
+msgstr "Ширина має бути більшою за нуль\n"
 
 #: src/main/printers.c:896
 #, c-format
 msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
-msgstr ""
+msgstr "Зображення є занадто широким для сторінки: ліве поле — %d, ширина %d, правий край — %d\n"
 
 #: src/main/printers.c:903
 #, c-format
 msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
-msgstr ""
+msgstr "Зображення є занадто довгим для сторінки: верхнє поле — %d, висота — %d, нижній край — %d\n"
 
 #: src/main/print-escp2.c:150
 msgid "Automatic Printing Mode"
-msgstr ""
+msgstr "Режим автоматичного друку"
 
 #: src/main/print-escp2.c:151
 msgid "Automatic printing mode"
-msgstr ""
+msgstr "Режим автоматичного друку"
 
 #: src/main/print-escp2.c:222
 msgid "CD Allow Other Media Sizes"
-msgstr ""
+msgstr "Інші розміри дисків"
 
 #: src/main/print-escp2.c:223
 msgid "Allow non-CD media sizes when printing to CD"
-msgstr ""
+msgstr "Дозволити використання розмірів, відмінних від звичайних, під час друку на компакт-дисках"
 
 #: src/main/print-escp2.c:229 src/main/print-pcl.c:1371
 msgid "Resolution of the print"
-msgstr ""
+msgstr "Роздільність друку"
 
 #: src/main/print-escp2.c:245
 msgid "Enhanced Gloss"
-msgstr ""
+msgstr "Покращений глянцевий"
 
 #: src/main/print-escp2.c:246
 msgid "Add gloss enhancement"
-msgstr ""
+msgstr "Додати покращення глянця"
 
 #: src/main/print-escp2.c:251
 msgid "Ink Set"
-msgstr ""
+msgstr "Набір чорнил"
 
 #: src/main/print-escp2.c:257
 msgid "Printing Direction"
-msgstr ""
+msgstr "Напрямок друку"
 
 #: src/main/print-escp2.c:258
 msgid "Printing direction (unidirectional is higher quality, but slower)"
-msgstr ""
+msgstr "Напрямок друку (якість однонапрямного вище, але він повільніший)"
 
 #: src/main/print-escp2.c:263 src/main/print-olympus.c:1903
 msgid "Borderless"
-msgstr ""
+msgstr "Без рамки"
 
 #: src/main/print-escp2.c:264 src/main/print-olympus.c:1904
 msgid "Print without borders"
-msgstr ""
+msgstr "Друк без рамки"
 
 #: src/main/print-escp2.c:269
 msgid "Interleave Method"
-msgstr ""
+msgstr "Метод черезрядковості"
 
 #: src/main/print-escp2.c:270
 msgid "Interleave pattern to use"
-msgstr ""
+msgstr "Візерунки накладання"
 
 #: src/main/print-escp2.c:275 src/main/print-escp2.c:276
 #: src/cups/genppd.c:2163 src/cups/genppd.c:2456
@@ -1839,349 +1846,349 @@ msgstr "Кроки почергового вирівнювання"
 
 #: src/main/print-escp2.c:305 src/main/print-escp2.c:306
 msgid "Alternate Alignment Choices"
-msgstr ""
+msgstr "Варіанти почергового вирівнювання"
 
 #: src/main/print-escp2.c:311
 msgid "Supports Packet Mode"
-msgstr ""
+msgstr "Підтримує пакетний режим"
 
 #: src/main/print-escp2.c:312
 msgid "Supports D4 Packet Mode"
-msgstr ""
+msgstr "Підтримує пакетний режим D4"
 
 #: src/main/print-escp2.c:317
 msgid "Has Interchangeable Ink Cartridges"
-msgstr ""
+msgstr "Має взаємозамінні картриджі з чорнилом"
 
 #: src/main/print-escp2.c:318
 msgid "Has multiple choices of ink cartridges"
-msgstr ""
+msgstr "Має декілька варіантів картриджів з чорнилом"
 
 #: src/main/print-escp2.c:329 src/main/print-escp2.c:330
 msgid "Raw Channel Names"
-msgstr ""
+msgstr "Назви простих каналів"
 
 #: src/main/print-escp2.c:335 src/main/print-escp2.c:336
 msgid "Channel Names"
-msgstr ""
+msgstr "Назви каналів"
 
 #: src/main/print-escp2.c:348
 msgid "Raw Channel Count"
-msgstr ""
+msgstr "Кількість простих каналів"
 
 #: src/main/print-escp2.c:353
 msgid "Cyan Map"
-msgstr ""
+msgstr "Карта блакитного"
 
 #: src/main/print-escp2.c:354
 msgid "Adjust the cyan map"
-msgstr ""
+msgstr "Виправити карту блакитного"
 
 #: src/main/print-escp2.c:359
 msgid "Magenta Map"
-msgstr ""
+msgstr "Карта пурпурового"
 
 #: src/main/print-escp2.c:360
 msgid "Adjust the magenta map"
-msgstr ""
+msgstr "Виправити карту пурпурового"
 
 #: src/main/print-escp2.c:365
 msgid "Yellow Map"
-msgstr ""
+msgstr "Карта жовтого"
 
 #: src/main/print-escp2.c:366
 msgid "Adjust the yellow map"
-msgstr ""
+msgstr "Виправити карту жовтого"
 
 #: src/main/print-escp2.c:371
 msgid "Blue Map"
-msgstr ""
+msgstr "Карта синього"
 
 #: src/main/print-escp2.c:372
 msgid "Adjust the blue map"
-msgstr ""
+msgstr "Виправити карту синього"
 
 #: src/main/print-escp2.c:377
 msgid "Orange Map"
-msgstr ""
+msgstr "Карта помаранчевого"
 
 #: src/main/print-escp2.c:378
 msgid "Adjust the orange map"
-msgstr ""
+msgstr "Виправити карту помаранчевого"
 
 #: src/main/print-escp2.c:383
 msgid "Red Map"
-msgstr ""
+msgstr "Карта червоного"
 
 #: src/main/print-escp2.c:384
 msgid "Adjust the red map"
-msgstr ""
+msgstr "Виправити карту червоного"
 
 #: src/main/print-escp2.c:486
 msgid "Red Density"
-msgstr ""
+msgstr "Щільність червоного"
 
 #: src/main/print-escp2.c:487
 msgid "Adjust the red density"
-msgstr ""
+msgstr "Виправити щільність червоного"
 
 #: src/main/print-escp2.c:494
 msgid "Blue Density"
-msgstr ""
+msgstr "Щільність синього"
 
 #: src/main/print-escp2.c:495
 msgid "Adjust the blue density"
-msgstr ""
+msgstr "Виправити щільність синього"
 
 #: src/main/print-escp2.c:502
 msgid "Orange Density"
-msgstr ""
+msgstr "Щільність помаранчевого"
 
 #: src/main/print-escp2.c:503
 msgid "Adjust the orange density"
-msgstr ""
+msgstr "Виправити щільність помаранчевого"
 
 #: src/main/print-escp2.c:510
 msgid "Gloss Level"
-msgstr ""
+msgstr "Рівень глянця"
 
 #: src/main/print-escp2.c:511
 msgid "Adjust the gloss level"
-msgstr ""
+msgstr "Виправити рівень глянця"
 
 #: src/main/print-escp2.c:518
 msgid "Drop Size Small"
-msgstr ""
+msgstr "Малий розмір краплі"
 
 #: src/main/print-escp2.c:519
 msgid "Drop Size 1 (small)"
-msgstr ""
+msgstr "Розмір краплі 1 (мала)"
 
 #: src/main/print-escp2.c:526
 msgid "Drop Size Medium"
-msgstr ""
+msgstr "Середній розмір краплі"
 
 #: src/main/print-escp2.c:527
 msgid "Drop Size 2 (medium)"
-msgstr ""
+msgstr "Розмір краплі 2 (середня)"
 
 #: src/main/print-escp2.c:534
 msgid "Drop Size Large"
-msgstr ""
+msgstr "Великий розмір краплі"
 
 #: src/main/print-escp2.c:535
 msgid "Drop Size 3 (large)"
-msgstr ""
+msgstr "Розмір краплі 3 (велика)"
 
 #: src/main/print-escp2.c:542 src/main/print-escp2.c:543
 msgid "Light Cyan Value"
-msgstr ""
+msgstr "Значення світло-бірюзового"
 
 #: src/main/print-escp2.c:558 src/main/print-escp2.c:559
 msgid "Light Cyan Density Scale"
-msgstr ""
+msgstr "Шкала щільності світло-бірюзового"
 
 #: src/main/print-escp2.c:566 src/main/print-escp2.c:567
 msgid "Light Magenta Value"
-msgstr ""
+msgstr "Значення світло-бузкового"
 
 #: src/main/print-escp2.c:574 src/main/print-escp2.c:575
 msgid "Light Magenta Density Scale"
-msgstr ""
+msgstr "Шкала щільності світло-бузкового"
 
 #: src/main/print-escp2.c:590 src/main/print-escp2.c:591
 msgid "Dark Yellow Value"
-msgstr ""
+msgstr "Значення темно-жовтого"
 
 #: src/main/print-escp2.c:598 src/main/print-escp2.c:599
 msgid "Dark Yellow Transition"
-msgstr ""
+msgstr "Перехід темно-жовтого"
 
 #: src/main/print-escp2.c:606 src/main/print-escp2.c:607
 msgid "Dark Yellow Density Scale"
-msgstr ""
+msgstr "Шкала щільності темно-жовтого"
 
 #: src/main/print-escp2.c:614 src/main/print-escp2.c:615
 #: src/main/print-escp2.c:638 src/main/print-escp2.c:639
 msgid "Gray Value"
-msgstr ""
+msgstr "Значення сірого"
 
 #: src/main/print-escp2.c:622 src/main/print-escp2.c:623
 #: src/main/print-escp2.c:646 src/main/print-escp2.c:647
 msgid "Gray Transition"
-msgstr ""
+msgstr "Перехід сірого"
 
 #: src/main/print-escp2.c:630 src/main/print-escp2.c:631
 #: src/main/print-escp2.c:654 src/main/print-escp2.c:655
 msgid "Gray Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого"
 
 #: src/main/print-escp2.c:662 src/main/print-escp2.c:663
 #: src/main/print-escp2.c:734 src/main/print-escp2.c:735
 msgid "Light Gray Value"
-msgstr ""
+msgstr "Значення світло-сірого"
 
 #: src/main/print-escp2.c:670 src/main/print-escp2.c:671
 #: src/main/print-escp2.c:742 src/main/print-escp2.c:743
 msgid "Light Gray Transition"
-msgstr ""
+msgstr "Перехід світло-сірого"
 
 #: src/main/print-escp2.c:678 src/main/print-escp2.c:679
 #: src/main/print-escp2.c:750 src/main/print-escp2.c:751
 msgid "Light Gray Density Scale"
-msgstr ""
+msgstr "Шкала щільності світло-сірого"
 
 #: src/main/print-escp2.c:686 src/main/print-escp2.c:687
 msgid "Dark Gray Value"
-msgstr ""
+msgstr "Значення темно-сірого"
 
 #: src/main/print-escp2.c:694 src/main/print-escp2.c:695
 msgid "Dark Gray Transition"
-msgstr ""
+msgstr "Перехід темно-сірого"
 
 #: src/main/print-escp2.c:702 src/main/print-escp2.c:703
 msgid "Dark Gray Density Scale"
-msgstr ""
+msgstr "Шкала щільності темно-сірого"
 
 #: src/main/print-escp2.c:710
 msgid "Mid Gray Value"
-msgstr ""
+msgstr "Значення проміжного сірого"
 
 #: src/main/print-escp2.c:711
 msgid "Medium Gray Value"
-msgstr ""
+msgstr "Середнє значення сірого"
 
 #: src/main/print-escp2.c:718
 msgid "Mid Gray Transition"
-msgstr ""
+msgstr "Перехід проміжного сірого"
 
 #: src/main/print-escp2.c:719
 msgid "Medium Gray Transition"
-msgstr ""
+msgstr "Перехід проміжного сірого"
 
 #: src/main/print-escp2.c:726
 msgid "Mid Gray Density Scale"
-msgstr ""
+msgstr "Шкала щільності проміжних тонів сірого"
 
 #: src/main/print-escp2.c:727
 msgid "Medium Gray Density Scale"
-msgstr ""
+msgstr "Шкала щільності середніх тонів сірого"
 
 #: src/main/print-escp2.c:758
 msgid "Hextone Gray 5 Value"
-msgstr ""
+msgstr "Значення сірого 5 у шеститоновому друці"
 
 #: src/main/print-escp2.c:759
 msgid "Hextone Gray 5 (Darkest) Value"
-msgstr ""
+msgstr "Значення сірого 5 (найтемнішого) у шеститоновому друці"
 
 #: src/main/print-escp2.c:766
 msgid "Hextone Gray 5 Transition"
-msgstr ""
+msgstr "Перехід сірого 5 у шеститоновому друці"
 
 #: src/main/print-escp2.c:767
 msgid "Hextone Gray 5 (Darkest) Transition"
-msgstr ""
+msgstr "Перехід сірого 5 (найтемнішого) у шеститоновому друці"
 
 #: src/main/print-escp2.c:774
 msgid "Hextone Gray 5 Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 5 у шеститоновому друці"
 
 #: src/main/print-escp2.c:775
 msgid "Hextone Gray 5 (Darkest) Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 5 (найтемнішого) у шеститоновому друці"
 
 #: src/main/print-escp2.c:782 src/main/print-escp2.c:783
 msgid "Hextone Gray 4 Value"
-msgstr ""
+msgstr "Значення сірого 4 у шеститоновому друці"
 
 #: src/main/print-escp2.c:790 src/main/print-escp2.c:791
 msgid "Hextone Gray 4 Transition"
-msgstr ""
+msgstr "Перехід сірого 4 у шеститоновому друці"
 
 #: src/main/print-escp2.c:798 src/main/print-escp2.c:799
 msgid "Hextone Gray 4 Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 4 у шеститоновому друці"
 
 #: src/main/print-escp2.c:806 src/main/print-escp2.c:807
 msgid "Hextone Gray 3 Value"
-msgstr ""
+msgstr "Значення сірого 3 у шеститоновому друці"
 
 #: src/main/print-escp2.c:814 src/main/print-escp2.c:815
 msgid "Hextone Gray 3 Transition"
-msgstr ""
+msgstr "Перехід сірого 3 у шеститоновому друці"
 
 #: src/main/print-escp2.c:822 src/main/print-escp2.c:823
 msgid "Hextone Gray 3 Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 3 у шеститоновому друці"
 
 #: src/main/print-escp2.c:830 src/main/print-escp2.c:831
 msgid "Hextone Gray 2 Value"
-msgstr ""
+msgstr "Значення сірого 2 у шеститоновому друці"
 
 #: src/main/print-escp2.c:838 src/main/print-escp2.c:839
 msgid "Hextone Gray 2 Transition"
-msgstr ""
+msgstr "Перехід сірого 2 у шеститоновому друці"
 
 #: src/main/print-escp2.c:846 src/main/print-escp2.c:847
 msgid "Hextone Gray 2 Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 2 у шеститоновому друці"
 
 #: src/main/print-escp2.c:854
 msgid "Hextone Gray 1 Value"
-msgstr ""
+msgstr "Значення сірого 1 у шеститоновому друці"
 
 #: src/main/print-escp2.c:855
 msgid "Hextone Gray 1 (Lightest) Value"
-msgstr ""
+msgstr "Значення сірого 1 (найсвітлішого) у шеститоновому друці"
 
 #: src/main/print-escp2.c:862
 msgid "Hextone Gray 1 Transition"
-msgstr ""
+msgstr "Перехід сірого 1 у шеститоновому друці"
 
 #: src/main/print-escp2.c:863
 msgid "Hextone Gray 1 (Lightest) Transition"
-msgstr ""
+msgstr "Перехід сірого 1 (найсвітлішого) у шеститоновому друці"
 
 #: src/main/print-escp2.c:870
 msgid "Hextone Gray 1 Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 1 у шеститоновому друці"
 
 #: src/main/print-escp2.c:871
 msgid "Hextone Gray 1 (Lightest) Density Scale"
-msgstr ""
+msgstr "Шкала щільності сірого 1 (найсвітлішого) у шеститоновому друці"
 
 #: src/main/print-escp2.c:902
 msgid "Drying Time Per Page"
-msgstr ""
+msgstr "Час висихання однієї сторінки"
 
 #: src/main/print-escp2.c:903
 msgid "Set drying time per page"
-msgstr ""
+msgstr "Встановити час висихання однієї сторінки"
 
 #: src/main/print-escp2.c:910
 msgid "Drying Time Per Scan"
-msgstr ""
+msgstr "Час висихання на одне сканування"
 
 #: src/main/print-escp2.c:911
 msgid "Set drying time per scan"
-msgstr ""
+msgstr "Встановити час висихання для одного сканування"
 
 #: src/main/print-escp2.c:918
 msgid "Minimum Drying Time Per Scan"
-msgstr ""
+msgstr "Мінімальний час висихання на одне сканування"
 
 #: src/main/print-escp2.c:919
 msgid "Set minimum drying time per scan"
-msgstr ""
+msgstr "Встановити мінімальний час висихання на одне сканування"
 
 #: src/main/print-escp2.c:934
 msgid "Quality Enhancement"
-msgstr ""
+msgstr "Покращення якості"
 
 #: src/main/print-escp2.c:935
 msgid "Enhance print quality by additional passes"
-msgstr ""
+msgstr "Покращити якість друку додатковими проходами"
 
 #: src/main/print-escp2.c:942
 msgid "Paper Thickness"
@@ -2189,52 +2196,52 @@ msgstr "Товщина паперу"
 
 #: src/main/print-escp2.c:943
 msgid "Set printer paper thickness"
-msgstr ""
+msgstr "Встановити товщину паперу принтера"
 
 #: src/main/print-escp2.c:950
 msgid "Vacuum Intensity"
-msgstr ""
+msgstr "Потужність втягування"
 
 #: src/main/print-escp2.c:951
 msgid "Set vacuum intensity (printer-specific)"
-msgstr ""
+msgstr "Встановити потужність втягування (для певного принтера)"
 
 #: src/main/print-escp2.c:958
 msgid "Feed Sequence"
-msgstr ""
+msgstr "Послідовність подавання"
 
 #: src/main/print-escp2.c:959
 msgid "Set paper feed sequence (printer-specific)"
-msgstr ""
+msgstr "Встановити послідовність подавання паперу (для певного принтера)"
 
 #: src/main/print-escp2.c:966
 msgid "Print Method"
-msgstr ""
+msgstr "Спосіб друку"
 
 #: src/main/print-escp2.c:967
 msgid "Set print method (printer-specific)"
-msgstr ""
+msgstr "Встановити спосіб друку (для певного принтера)"
 
 #: src/main/print-escp2.c:974
 msgid "Platen Gap"
-msgstr ""
+msgstr "Зазор"
 
 #: src/main/print-escp2.c:975
 msgid "Set platen gap (printer-specific)"
-msgstr ""
+msgstr "Встановити зазор (для певного принтера)"
 
 #: src/main/print-escp2.c:982
 msgid "Feed Adjustment"
-msgstr ""
+msgstr "Виправлення подавання"
 
 #: src/main/print-escp2.c:984
 #, no-c-format
 msgid "Set paper feed adjustment (0.01% units)"
-msgstr ""
+msgstr "Встановити виправлення подавання паперу (у одиницях 0,01%)"
 
 #: src/main/print-escp2.c:2202
 msgid "Full Manual Control"
-msgstr ""
+msgstr "Керування лише вручну"
 
 #: src/main/print-escp2.c:2204
 msgid "Automatic Setting Control"
@@ -2254,23 +2261,23 @@ msgstr "Однонапрямний"
 
 #: src/main/print-escp2.c:2463
 msgid "Alternate Fill"
-msgstr ""
+msgstr "Почергове заливання"
 
 #: src/main/print-escp2.c:2465
 msgid "Ascending Fill"
-msgstr ""
+msgstr "Висхідне заливання"
 
 #: src/main/print-escp2.c:2467
 msgid "Descending Fill"
-msgstr ""
+msgstr "Спадне заливання"
 
 #: src/main/print-escp2.c:2469
 msgid "Ascending Double"
-msgstr ""
+msgstr "Висхідне подвійне"
 
 #: src/main/print-escp2.c:2471
 msgid "Nearest Neighbor Avoidance"
-msgstr ""
+msgstr "Найближче сусіднє виключення"
 
 #: src/main/print-escp2.c:2507
 msgid "Short Edge(Flip)"
@@ -2279,12 +2286,12 @@ msgstr "Впродовж короткої сторони (з переворот�
 #: src/main/print-escp2.c:3125
 #, c-format
 msgid "This printer does not support raw printer output at depth %d\n"
-msgstr ""
+msgstr "У цьому принтері не передбачено простий друк з глибиною кольору %d\n"
 
 #: src/main/print-escp2.c:4380 src/main/print-olympus.c:2638
 #: src/main/print-raw.c:218
 msgid "Print options not verified; cannot print.\n"
-msgstr ""
+msgstr "Параметри друку не пройшли перевірки; друк неможливий.\n"
 
 #: src/main/print-lexmark.c:577 src/main/print-lexmark.c:653
 msgid "300 DPI x 600 DPI"
@@ -2783,36 +2790,35 @@ msgstr "Стиль ламінування"
 #: src/main/print-olympus.c:1932 src/main/print-olympus.c:1940
 #: src/main/print-olympus.c:1948 src/main/print-olympus.c:1956
 msgid "Output Level Adjustment"
-msgstr ""
+msgstr "Виправлення вихідних рівнів"
 
 #: src/main/print-olympus.c:1933
 msgid "Adjust the cyan balance"
-msgstr ""
+msgstr "Виправити баланс блакитного"
 
 #: src/main/print-olympus.c:1941
 msgid "Adjust the magenta balance"
-msgstr ""
+msgstr "Виправити баланс пурпурового"
 
 #: src/main/print-olympus.c:1949
 msgid "Adjust the yellow balance"
-msgstr ""
+msgstr "Виправити баланс жовтого"
 
 #: src/main/print-olympus.c:1956
 msgid "Black Balance"
-msgstr ""
+msgstr "Баланс чорного"
 
 #: src/main/print-olympus.c:1957
 msgid "Adjust the black balance"
-msgstr ""
+msgstr "Виправити баланс чорного"
 
 #: src/main/print-pcl.c:184
 msgid "Plain"
 msgstr "Простий"
 
 #: src/main/print-pcl.c:185
-#, fuzzy
 msgid "Bond"
-msgstr "Облігація"
+msgstr "Бонд"
 
 #: src/main/print-pcl.c:186
 msgid "Premium"
@@ -2993,7 +2999,7 @@ msgstr "Критична помилка!"
 
 #: src/main/print-weave.c:1528
 msgid "Please report the above information to gimp-print-devel@lists.sourceforge.net"
-msgstr ""
+msgstr "Будь ласка, повідомте наведені вище дані за адресою gimp-print-devel@lists.sourceforge.net"
 
 #: src/main/generic-options.c:33 src/xml/xmli18n-tmp.h:6566
 #: src/xml/xmli18n-tmp.h:6582 src/xml/xmli18n-tmp.h:6591
@@ -3446,7 +3452,7 @@ msgstr "Виберіть відповідну назву файла PPD для �
 
 #: src/gutenprintui2/panel.c:1912
 msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
-msgstr ""
+msgstr "Виберіть назву черги виведення даних (не тип або модель принтера), на якому слід друкувати дані"
 
 #: src/gutenprintui2/panel.c:1914
 msgid "Printer Queue:"
@@ -3494,7 +3500,7 @@ msgstr "Параметри принтера"
 
 #: src/gutenprintui2/panel.c:2087
 msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
-msgstr ""
+msgstr "Виберіть назву принтера (не тип або модель принтера), на якому слід друкувати дані"
 
 #: src/gutenprintui2/panel.c:2104
 msgid "Setup Printer..."
@@ -3502,7 +3508,7 @@ msgstr "Налаштувати принтер…"
 
 #: src/gutenprintui2/panel.c:2106
 msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
-msgstr ""
+msgstr "Виберіть модель принтера, файл PPD та команду, яку буде використано для друку на цьому принтері"
 
 #: src/gutenprintui2/panel.c:2119
 msgid "New Printer..."
@@ -3510,7 +3516,7 @@ msgstr "Додати принтер…"
 
 #: src/gutenprintui2/panel.c:2120
 msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
-msgstr ""
+msgstr "Визначити новий логічний принтер. Можна скористатися для створення набору параметрів, якими ви хочете скористатися у майбутньому."
 
 #: src/gutenprintui2/panel.c:2150
 msgid "Set Printer Option Defaults"
@@ -3530,7 +3536,7 @@ msgstr "Масштаб:"
 
 #: src/gutenprintui2/panel.c:2203
 msgid "Set the scale (size) of the image"
-msgstr ""
+msgstr "Встановити масштаб (розміри) зображення"
 
 #: src/gutenprintui2/panel.c:2225
 msgid "Scale by:"
@@ -3538,7 +3544,7 @@ msgstr "Масштабування до:"
 
 #: src/gutenprintui2/panel.c:2230
 msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
-msgstr ""
+msgstr "Вкажіть спосіб вимірювання масштабів, у відсотках до розмірів паперу чи у кількості точок на дюйм."
 
 #: src/gutenprintui2/panel.c:2233
 msgid "Percent"
@@ -3578,11 +3584,11 @@ msgstr "Встановити розмір області друку за роз�
 
 #: src/gutenprintui2/panel.c:2303
 msgid "Print Color Adjust"
-msgstr ""
+msgstr "Виправлення кольорів друку"
 
 #: src/gutenprintui2/panel.c:2306
 msgid "Set Defaults"
-msgstr ""
+msgstr "Встановити типові"
 
 #: src/gutenprintui2/panel.c:2308
 msgid "Close"
@@ -3755,9 +3761,8 @@ msgid "%.1f mm"
 msgstr "%.1f мм"
 
 #: src/cups/genppd.c:2169 src/cups/genppd.c:2458
-#, fuzzy
 msgid "Reverse"
-msgstr "Реверс"
+msgstr "Зворотний"
 
 #: src/cups/genppd.c:2190 src/cups/genppd.c:2474
 msgid "2-Sided Printing"
@@ -3765,23 +3770,23 @@ msgstr "Двосторонній друк"
 
 #: src/cups/genppd.c:2215 src/cups/genppd.c:2491
 msgid "Shrink Page If Necessary to Fit Borders"
-msgstr ""
+msgstr "Стискати сторінки, якщо потрібно для вміщення"
 
 #: src/cups/genppd.c:2220 src/cups/genppd.c:2492
 msgid "Shrink (print the whole page)"
-msgstr ""
+msgstr "Стиснути (надрукувати всю сторінку)"
 
 #: src/cups/genppd.c:2221 src/cups/genppd.c:2493
 msgid "Crop (preserve dimensions)"
-msgstr ""
+msgstr "Обрізати (зберегти розміри)"
 
 #: src/cups/genppd.c:2222 src/cups/genppd.c:2494
 msgid "Expand (use maximum page area)"
-msgstr ""
+msgstr "Розтягнути (максимально використати площу)"
 
 #: src/escputil/escputil.c:70
 msgid "Escputil version "
-msgstr ""
+msgstr "Версія escputil "
 
 #: src/escputil/escputil.c:76
 msgid ""
@@ -3801,6 +3806,18 @@ msgid ""
 "along with this program; if not, write to the Free Software\n"
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 msgstr ""
+"© Robert Krawitz (rlk@alum.mit.edu), 2000–2006\n"
+"\n"
+"Ця програма є відкритим програмним забезпеченням. Дозволяється поширювати\n"
+"її та змінювати на умовах ліцензії GNU 2 або старшої версії, що видана Free\n"
+"Software Foundation.\n"
+"\n"
+"Ця програма поширюється БЕЗ БУДЬ-ЯКИХ ГАРАНТІЙ, у тому числі не гарантується\n"
+"її придатність до певної мети. Докладнішу інформацію дивіться у ліцензії GNU.\n"
+"\n"
+"Копія ліцензії надається з цією програмою. Якщо ви не отримали копію ліцензії,\n"
+"повідомте про це Free Software Foundation, Inc. за адресою 59 Temple Place,\n"
+"Suite 330, Boston, MA 02111-1307 USA.\n"
 
 #: src/escputil/escputil.c:119
 msgid ""
@@ -3894,62 +3911,62 @@ msgstr ""
 #: src/escputil/escputil.c:341 src/escputil/escputil.c:349
 #, c-format
 msgid "You may only specify one printer or raw device."
-msgstr ""
+msgstr "Ви можете вказати або один принтер або пристрій друку без обробки."
 
 #: src/escputil/escputil.c:357
 #, c-format
 msgid "You may only specify one printer model."
-msgstr ""
+msgstr "Можна вказати лише одну модель принтера."
 
 #: src/escputil/escputil.c:381
 #, c-format
 msgid "Alignment choices must be at least 1."
-msgstr ""
+msgstr "Варіантів вирівнювання має бути принаймні 1."
 
 #: src/escputil/escputil.c:389
 #, c-format
 msgid "Alignment passes must be at least 1."
-msgstr ""
+msgstr "Кроків вирівнювання має бути принаймні 1."
 
 #: src/escputil/escputil.c:395
 #, c-format
 msgid "Unknown option %c\n"
-msgstr ""
+msgstr "Невідомий параметр %c\n"
 
 #: src/escputil/escputil.c:403
 #, c-format
 msgid "Usage: %s [OPTIONS] command\n"
-msgstr ""
+msgstr "Використання: %s [ПАРАМЕТРИ] команда\n"
 
 #: src/escputil/escputil.c:405
 #, c-format
 msgid "Type `%s --help' for more information.\n"
-msgstr ""
+msgstr "Віддайте команду «%s --help», щоб дізнатися більше.\n"
 
 #: src/escputil/escputil.c:407
 #, c-format
 msgid "Type `%s -h' for more information.\n"
-msgstr ""
+msgstr "Віддайте команду «%s -h», щоб дізнатися більше.\n"
 
 #: src/escputil/escputil.c:473
 #, c-format
 msgid "Cannot open device %s: %s\n"
-msgstr ""
+msgstr "Не вдалося відкрити пристрій %s: %s\n"
 
 #: src/escputil/escputil.c:496
 #, c-format
 msgid "Cannot print to printer %s with %s\n"
-msgstr ""
+msgstr "Не вдалося виконати друк на принтері %s за допомогою %s\n"
 
 #: src/escputil/escputil.c:512 src/escputil/escputil.c:522
 #, c-format
 msgid "Unable to send command to printer\n"
-msgstr ""
+msgstr "Не вдалося надіслати команду на принтер\n"
 
 #: src/escputil/escputil.c:582
 #, c-format
 msgid "Read from printer timed out\n"
-msgstr ""
+msgstr "Перевищення очікування на читання даних від принтера\n"
 
 #: src/escputil/escputil.c:587
 #, c-format
@@ -3959,7 +3976,7 @@ msgstr "Не вдалося виконати читання з %s: %s\n"
 #: src/escputil/escputil.c:767
 #, c-format
 msgid "Please specify a raw device\n"
-msgstr ""
+msgstr "Будь ласка, вкажіть простий пристрій\n"
 
 #: src/escputil/escputil.c:774
 #, c-format
@@ -3993,6 +4010,9 @@ msgid ""
 "Cannot detect printer type.\n"
 "Please use -m to specify your printer model.\n"
 msgstr ""
+"\n"
+"Не вдалося визначити тип принтера.\n"
+"Скористайтеся параметром -m, щоб вказати модель принтера.\n"
 
 #: src/escputil/escputil.c:1025 src/xml/xmli18n-tmp.h:618
 #: src/xml/xmli18n-tmp.h:621 src/xml/xmli18n-tmp.h:624
@@ -4342,7 +4362,7 @@ msgstr "матовий чорний"
 #: src/xml/xmli18n-tmp.h:4579 src/xml/xmli18n-tmp.h:4587
 #: src/xml/xmli18n-tmp.h:4596
 msgid "Gloss Optimizer"
-msgstr ""
+msgstr "Оптимізація глянця"
 
 #: src/escputil/escputil.c:1039 src/xml/xmli18n-tmp.h:3533
 #: src/xml/xmli18n-tmp.h:3907 src/xml/xmli18n-tmp.h:4023
@@ -4357,7 +4377,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6159 src/xml/xmli18n-tmp.h:6198
 #: src/xml/xmli18n-tmp.h:6208 src/xml/xmli18n-tmp.h:6247
 msgid "Light Light Black"
-msgstr ""
+msgstr "світло-світло чорний"
 
 #: src/escputil/escputil.c:1040 src/escputil/escputil.c:1059
 #: src/xml/xmli18n-tmp.h:3801 src/xml/xmli18n-tmp.h:4540
@@ -4375,32 +4395,32 @@ msgstr "Стан: помилка\n"
 #: src/escputil/escputil.c:1074
 #, c-format
 msgid "Status: Self-Printing\n"
-msgstr ""
+msgstr "Стан: автономний друк\n"
 
 #: src/escputil/escputil.c:1077
 #, c-format
 msgid "Status: Busy\n"
-msgstr ""
+msgstr "Стан: зайнято\n"
 
 #: src/escputil/escputil.c:1080
 #, c-format
 msgid "Status: Waiting\n"
-msgstr ""
+msgstr "Стан: очікування\n"
 
 #: src/escputil/escputil.c:1083
 #, c-format
 msgid "Status: Idle\n"
-msgstr ""
+msgstr "Стан: бездіяльність\n"
 
 #: src/escputil/escputil.c:1086
 #, c-format
 msgid "Status: Paused\n"
-msgstr ""
+msgstr "Стан: призупинка\n"
 
 #: src/escputil/escputil.c:1089
 #, c-format
 msgid "Status: Cleaning\n"
-msgstr ""
+msgstr "Стан: чищення\n"
 
 #: src/escputil/escputil.c:1092
 #, c-format
@@ -4410,42 +4430,42 @@ msgstr ""
 #: src/escputil/escputil.c:1095
 #, c-format
 msgid "Status: Shutting down\n"
-msgstr ""
+msgstr "Стан: завершення роботи\n"
 
 #: src/escputil/escputil.c:1098
 #, c-format
 msgid "Status: Unknown (%d)\n"
-msgstr ""
+msgstr "Стан: невідомий (%d)\n"
 
 #: src/escputil/escputil.c:1109
 #, c-format
 msgid "Error: Fatal Error\n"
-msgstr ""
+msgstr "Помилка: критична помилка\n"
 
 #: src/escputil/escputil.c:1112
 #, c-format
 msgid "Error: Other interface is selected\n"
-msgstr ""
+msgstr "Помилка: вибрано інший інтерфейс\n"
 
 #: src/escputil/escputil.c:1115
 #, c-format
 msgid "Error: Cover Open\n"
-msgstr ""
+msgstr "Помилка: відкрито кришку\n"
 
 #: src/escputil/escputil.c:1118
 #, c-format
 msgid "Error: Paper jam\n"
-msgstr ""
+msgstr "Помилка: застряг папір\n"
 
 #: src/escputil/escputil.c:1121
 #, c-format
 msgid "Error: Ink out\n"
-msgstr ""
+msgstr "Помилка: завершилися чорнила\n"
 
 #: src/escputil/escputil.c:1124
 #, c-format
 msgid "Error: Paper out\n"
-msgstr ""
+msgstr "Помилка: завершився папір\n"
 
 #: src/escputil/escputil.c:1127
 #, c-format
@@ -4460,12 +4480,12 @@ msgstr ""
 #: src/escputil/escputil.c:1133
 #, c-format
 msgid "Error: Wait return from the tear-off position\n"
-msgstr ""
+msgstr "Помилка: очікування повернення з позиції розриву\n"
 
 #: src/escputil/escputil.c:1136
 #, c-format
 msgid "Error: Double feed error\n"
-msgstr ""
+msgstr "Помилка: подвійне подавання\n"
 
 #: src/escputil/escputil.c:1139
 #, c-format
@@ -4473,16 +4493,18 @@ msgid ""
 "Error: Ink cartridge lever released\n"
 "\n"
 msgstr ""
+"Помилка: піднято важіль кріплення картриджа з чорнилом\n"
+"\n"
 
 #: src/escputil/escputil.c:1142
 #, c-format
 msgid "Error: Unrecoverable cutter error\n"
-msgstr ""
+msgstr "Помилка: критична помилка на різаку\n"
 
 #: src/escputil/escputil.c:1145
 #, c-format
 msgid "Error: Recoverable cutter jam\n"
-msgstr ""
+msgstr "Помилка: виправте зам’яття на різаку\n"
 
 #: src/escputil/escputil.c:1148
 #, c-format
@@ -4492,62 +4514,62 @@ msgstr ""
 #: src/escputil/escputil.c:1151
 #, c-format
 msgid "Error: Rear cover open\n"
-msgstr ""
+msgstr "Помилка: відкрито задню кришку\n"
 
 #: src/escputil/escputil.c:1154
 #, c-format
 msgid "Error: CD Tray Out\n"
-msgstr ""
+msgstr "Помилка: відкрито лоток CD\n"
 
 #: src/escputil/escputil.c:1157
 #, c-format
 msgid "Error: Card loading error\n"
-msgstr ""
+msgstr "Помилка: помилка завантаження картки\n"
 
 #: src/escputil/escputil.c:1160
 #, c-format
 msgid "Error: Tray cover open\n"
-msgstr ""
+msgstr "Помилка: відкрито кришку лотка\n"
 
 #: src/escputil/escputil.c:1163
 #, c-format
 msgid "Error: Maintenance cartridge cover open\n"
-msgstr ""
+msgstr "Помилка: відкрито кришку картриджа\n"
 
 #: src/escputil/escputil.c:1166
 #, c-format
 msgid "Error: Front cover open\n"
-msgstr ""
+msgstr "Помилка: відкрито передню кришку\n"
 
 #: src/escputil/escputil.c:1169
 #, c-format
 msgid "Error: Maintenance request\n"
-msgstr ""
+msgstr "Помилка: запит щодо обслуговування\n"
 
 #: src/escputil/escputil.c:1172
 #, c-format
 msgid "Error: Unknown (%d)\n"
-msgstr ""
+msgstr "Помилка: невідома (%d)\n"
 
 #: src/escputil/escputil.c:1184
 #, c-format
 msgid "Warning: %s Ink Low\n"
-msgstr ""
+msgstr "Попередження: мало чорнила кольору %s\n"
 
 #: src/escputil/escputil.c:1187
 #, c-format
 msgid "Warning: Channel %d Ink Low\n"
-msgstr ""
+msgstr "Попередження: мало чорнила на каналі %d\n"
 
 #: src/escputil/escputil.c:1193
 #, c-format
 msgid "Warning: %s Cleaning Disabled\n"
-msgstr ""
+msgstr "Попередження: чищення %s вимкнено\n"
 
 #: src/escputil/escputil.c:1196
 #, c-format
 msgid "Warning: Channel %d Cleaning \n"
-msgstr ""
+msgstr "Попередження: чищення каналу %d\n"
 
 #: src/escputil/escputil.c:1203
 #, c-format
@@ -4557,37 +4579,37 @@ msgstr ""
 #: src/escputil/escputil.c:1206
 #, c-format
 msgid "Warning: Maintenance request pending\n"
-msgstr ""
+msgstr "Попередження: запит щодо обслуговування у черзі дій\n"
 
 #: src/escputil/escputil.c:1209
 #, c-format
 msgid "Warning: Unknown (%d)\n"
-msgstr ""
+msgstr "Попередження: невідоме (%d)\n"
 
 #: src/escputil/escputil.c:1221
 #, c-format
 msgid "Printing nozzle self-test\n"
-msgstr ""
+msgstr "Самоперевірка сопел друку\n"
 
 #: src/escputil/escputil.c:1285 src/escputil/escputil.c:1349
 #, c-format
 msgid "Printer Name: %s\n"
-msgstr ""
+msgstr "Назва принтера: %s\n"
 
 #: src/escputil/escputil.c:1323 src/escputil/escputil.c:1362
 #, c-format
 msgid "Ink Levels:\n"
-msgstr ""
+msgstr "Рівні чорнил:\n"
 
 #: src/escputil/escputil.c:1324 src/escputil/escputil.c:1363
 msgid "Ink color"
-msgstr ""
+msgstr "Колір чорнила"
 
 #: src/escputil/escputil.c:1324 src/escputil/escputil.c:1363
 #: src/escputil/escputil.c:1665 src/escputil/escputil.c:1692
 #: src/escputil/escputil.c:1714 src/escputil/escputil.c:1731
 msgid "Percent remaining"
-msgstr ""
+msgstr "Залишилося (у %)"
 
 #: src/escputil/escputil.c:1418
 #, c-format
@@ -4605,17 +4627,17 @@ msgstr "стан"
 #: src/escputil/escputil.c:1455
 #, c-format
 msgid "Obtaining %s requires using a raw device.\n"
-msgstr ""
+msgstr "Для отримання %s слід вказати простий пристрій.\n"
 
 #: src/escputil/escputil.c:1541
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr ""
+msgstr "Для отримання додаткових даних щодо чорнил слід вказати простий пристрій.\n"
 
 #: src/escputil/escputil.c:1665 src/escputil/escputil.c:1692
 #: src/escputil/escputil.c:1714 src/escputil/escputil.c:1731
 msgid "Ink cartridge"
-msgstr "Картрідж з чорнилом"
+msgstr "Картридж з чорнилом"
 
 #: src/escputil/escputil.c:1665 src/escputil/escputil.c:1692
 #: src/escputil/escputil.c:1714 src/escputil/escputil.c:1731
@@ -4630,22 +4652,22 @@ msgstr "Дата"
 #: src/escputil/escputil.c:1761
 #, c-format
 msgid "Printer identification requires using a raw device.\n"
-msgstr ""
+msgstr "Для отримання даних щодо ідентифікації принтера слід вказати простий пристрій.\n"
 
 #: src/escputil/escputil.c:1779
 #, c-format
 msgid "Cannot identify printer model.\n"
-msgstr ""
+msgstr "Не вдалося визначити модель принтера.\n"
 
 #: src/escputil/escputil.c:1801
 #, c-format
 msgid "Cleaning heads...\n"
-msgstr ""
+msgstr "Чищення голівок…\n"
 
 #: src/escputil/escputil.c:1818
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr ""
+msgstr "Перевірка сопел, будь ласка, вставте у принтер папір.\n"
 
 #: src/escputil/escputil.c:1822
 #, c-format
@@ -4724,12 +4746,12 @@ msgstr ""
 #: src/escputil/escputil.c:1901
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr ""
+msgstr "Не вдалося надіслати команду на принтер, завершуємо роботу.\n"
 
 #: src/escputil/escputil.c:1915 src/escputil/escputil.c:2084
 #, c-format
 msgid "Exiting\n"
-msgstr ""
+msgstr "Вихід\n"
 
 #: src/escputil/escputil.c:1918
 #, c-format
@@ -4747,12 +4769,12 @@ msgstr ""
 #: src/escputil/escputil.c:1950 src/escputil/escputil.c:1968
 #: src/escputil/escputil.c:2088
 msgid "> "
-msgstr ""
+msgstr "> "
 
 #: src/escputil/escputil.c:1933
 #, c-format
 msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
+msgstr "Будь ласка, підтвердьте вихід без збереження параметрів повторним натисканням «q»:\n"
 
 #: src/escputil/escputil.c:1940
 #, c-format
@@ -4760,18 +4782,20 @@ msgid ""
 "OK, your printer is aligned, but the alignment has not been saved.\n"
 "If you wish to save the alignment, you must repeat this process.\n"
 msgstr ""
+"Гаразд, вирівнювання принтера виконано, але параметри не збережено.\n"
+"Якщо ви хочете зберегти параметри вирівнювання, вам доведеться повторити цю процедуру.\n"
 
 #: src/escputil/escputil.c:1947
 #, c-format
 msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
-msgstr ""
+msgstr "Будь ласка, підтвердьте повторення процедури вирівнювання повторним натисканням «r»:\n"
 
 #: src/escputil/escputil.c:1955
 #, c-format
 msgid "Repeating the alignment process.\n"
-msgstr ""
+msgstr "Повторення процедури вирівнювання.\n"
 
 #: src/escputil/escputil.c:1961
 #, c-format
@@ -4786,7 +4810,7 @@ msgstr ""
 #: src/escputil/escputil.c:1973
 #, c-format
 msgid "About to save settings..."
-msgstr ""
+msgstr "Приготування до збереження параметрів…"
 
 #: src/escputil/escputil.c:1979
 #, c-format
@@ -4799,6 +4823,8 @@ msgid ""
 "Your settings were not saved successfully.  You must repeat the\n"
 "alignment procedure.\n"
 msgstr ""
+"Значення параметрів не вдалося зберегти. Вам слід повторити\n"
+"процедуру вирівнювання.\n"
 
 #: src/escputil/escputil.c:1984
 #, c-format
@@ -4808,7 +4834,7 @@ msgstr "успішно.\n"
 #: src/escputil/escputil.c:1985
 #, c-format
 msgid "Your alignment settings have been saved to the printer.\n"
-msgstr ""
+msgstr "Значення параметрів вирівнювання було збережено.\n"
 
 #: src/escputil/escputil.c:1990
 #, c-format
@@ -4818,7 +4844,7 @@ msgstr "Невідома команда.\n"
 #: src/escputil/escputil.c:1993
 #, c-format
 msgid "Final command was not confirmed.\n"
-msgstr ""
+msgstr "Останню команду не було підтверджено.\n"
 
 #: src/escputil/escputil.c:1998
 #, c-format
@@ -4834,7 +4860,7 @@ msgstr ""
 #: src/escputil/escputil.c:2067 src/escputil/escputil.c:2098
 #: src/escputil/escputil.c:2141
 msgid "Press enter to continue > "
-msgstr ""
+msgstr "Натисніть Enter, щоб продовжити > "
 
 #: src/escputil/escputil.c:2074
 #, c-format
@@ -4846,22 +4872,22 @@ msgstr ""
 #: src/escputil/escputil.c:2087
 #, c-format
 msgid "Pass #%d"
-msgstr ""
+msgstr "Крок №%d"
 
 #: src/escputil/escputil.c:2095 src/escputil/escputil.c:2140
 #, c-format
 msgid "Please insert a fresh sheet of paper.\n"
-msgstr ""
+msgstr "Вставте чистий аркуш паперу.\n"
 
 #: src/escputil/escputil.c:2114
 #, c-format
 msgid "Number out of range!\n"
-msgstr ""
+msgstr "Число поза межами діапазону можливих значень!\n"
 
 #: src/escputil/escputil.c:2119
 #, c-format
 msgid "I cannot understand what you typed!\n"
-msgstr ""
+msgstr "Не можу зрозуміти ваші команди!\n"
 
 #: src/escputil/escputil.c:2125
 #, c-format
@@ -5181,7 +5207,7 @@ msgstr "Стандартні чорнила EPSON"
 #: src/xml/xmli18n-tmp.h:3 src/xml/xmli18n-tmp.h:49 src/xml/xmli18n-tmp.h:364
 #: src/xml/xmli18n-tmp.h:474
 msgid "Bright White Paper"
-msgstr ""
+msgstr "Світлий білий папір"
 
 #: src/xml/xmli18n-tmp.h:5 src/xml/xmli18n-tmp.h:51 src/xml/xmli18n-tmp.h:99
 #: src/xml/xmli18n-tmp.h:139 src/xml/xmli18n-tmp.h:215
@@ -5248,17 +5274,17 @@ msgstr "Діафільм"
 #: src/xml/xmli18n-tmp.h:2405 src/xml/xmli18n-tmp.h:2473
 #: src/xml/xmli18n-tmp.h:2526 src/xml/xmli18n-tmp.h:2562
 msgid "Matte Paper Heavyweight"
-msgstr ""
+msgstr "Матовий товстий папір"
 
 #: src/xml/xmli18n-tmp.h:19 src/xml/xmli18n-tmp.h:63 src/xml/xmli18n-tmp.h:404
 #: src/xml/xmli18n-tmp.h:514
 msgid "Premium Presentation Paper Matte"
-msgstr ""
+msgstr "Високоякісний матовий папір для презентацій"
 
 #: src/xml/xmli18n-tmp.h:29 src/xml/xmli18n-tmp.h:77 src/xml/xmli18n-tmp.h:429
 #: src/xml/xmli18n-tmp.h:539
 msgid "Ultra Glossy Photo Paper"
-msgstr ""
+msgstr "Якісний глянцевий фотопапір"
 
 #: src/xml/xmli18n-tmp.h:31 src/xml/xmli18n-tmp.h:79 src/xml/xmli18n-tmp.h:121
 #: src/xml/xmli18n-tmp.h:183 src/xml/xmli18n-tmp.h:259
@@ -5280,16 +5306,16 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:2425 src/xml/xmli18n-tmp.h:2488
 #: src/xml/xmli18n-tmp.h:2536 src/xml/xmli18n-tmp.h:2572
 msgid "Premium Semigloss Photo Paper"
-msgstr ""
+msgstr "Високоякісний напівглянцевий фотопапір"
 
 #: src/xml/xmli18n-tmp.h:35 src/xml/xmli18n-tmp.h:89 src/xml/xmli18n-tmp.h:444
 #: src/xml/xmli18n-tmp.h:554
 msgid "Ultra Premium Photo Paper Luster"
-msgstr ""
+msgstr "Блискучий високоякісний фотопапір"
 
 #: src/xml/xmli18n-tmp.h:37
 msgid "CD or DVD"
-msgstr ""
+msgstr "CD або DVD"
 
 #: src/xml/xmli18n-tmp.h:43 src/xml/xmli18n-tmp.h:93 src/xml/xmli18n-tmp.h:127
 #: src/xml/xmli18n-tmp.h:199 src/xml/xmli18n-tmp.h:275
@@ -5315,23 +5341,23 @@ msgstr "Папір ColorLife"
 
 #: src/xml/xmli18n-tmp.h:73
 msgid "Premium Glossy Photo Paper 170 wt"
-msgstr ""
+msgstr "Високоякісний глянцевий фотопапір (170)"
 
 #: src/xml/xmli18n-tmp.h:75
 msgid "Premium Glossy Photo Paper 250 wt"
-msgstr ""
+msgstr "Високоякісний глянцевий фотопапір (250)"
 
 #: src/xml/xmli18n-tmp.h:81
 msgid "Premium Semigloss Photo Paper 170 wt"
-msgstr ""
+msgstr "Високоякісний напівглянцевий фотопапір (170)"
 
 #: src/xml/xmli18n-tmp.h:83
 msgid "Premium Semigloss Photo Paper 250 wt"
-msgstr ""
+msgstr "Високоякісний напівглянцевий фотопапір (250)"
 
 #: src/xml/xmli18n-tmp.h:87
 msgid "Premium Luster Photo Paper 250 wt"
-msgstr ""
+msgstr "Глянцевий фотопапір найвищої якості (250)"
 
 #: src/xml/xmli18n-tmp.h:133 src/xml/xmli18n-tmp.h:137
 #: src/xml/xmli18n-tmp.h:141 src/xml/xmli18n-tmp.h:145
@@ -5512,7 +5538,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6333 src/xml/xmli18n-tmp.h:6334
 #: src/xml/xmli18n-tmp.h:6340
 msgid "Quadtone"
-msgstr "Чвертьтони"
+msgstr "Чотиритоновий"
 
 #: src/xml/xmli18n-tmp.h:134 src/xml/xmli18n-tmp.h:138
 #: src/xml/xmli18n-tmp.h:142 src/xml/xmli18n-tmp.h:146
@@ -5670,7 +5696,7 @@ msgstr "Чвертьтони"
 #: src/xml/xmli18n-tmp.h:2436 src/xml/xmli18n-tmp.h:2440
 #: src/xml/xmli18n-tmp.h:2444 src/xml/xmli18n-tmp.h:2448
 msgid "MISQuadtone"
-msgstr ""
+msgstr "MIS, чотиритоновий"
 
 #: src/xml/xmli18n-tmp.h:135 src/xml/xmli18n-tmp.h:211
 #: src/xml/xmli18n-tmp.h:287 src/xml/xmli18n-tmp.h:581
@@ -5777,7 +5803,7 @@ msgstr "Звичайний папір, швидке завантаження"
 #: src/xml/xmli18n-tmp.h:2001 src/xml/xmli18n-tmp.h:2006
 #: src/xml/xmli18n-tmp.h:2011
 msgid "MIS Hextone"
-msgstr ""
+msgstr "MIS, шеститоновий"
 
 #: src/xml/xmli18n-tmp.h:659 src/xml/xmli18n-tmp.h:719
 #: src/xml/xmli18n-tmp.h:1010 src/xml/xmli18n-tmp.h:1070
@@ -5787,7 +5813,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:2219 src/xml/xmli18n-tmp.h:2279
 #: src/xml/xmli18n-tmp.h:2494
 msgid "Archival Matte Paper"
-msgstr ""
+msgstr "Архівний матовий папір"
 
 #: src/xml/xmli18n-tmp.h:662 src/xml/xmli18n-tmp.h:722
 #: src/xml/xmli18n-tmp.h:1013 src/xml/xmli18n-tmp.h:1073
@@ -5797,7 +5823,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:2222 src/xml/xmli18n-tmp.h:2282
 #: src/xml/xmli18n-tmp.h:2497
 msgid "Watercolor Paper - Radiant White"
-msgstr ""
+msgstr "Акварельний папір — світлий білий"
 
 #: src/xml/xmli18n-tmp.h:966 src/xml/xmli18n-tmp.h:969
 #: src/xml/xmli18n-tmp.h:972 src/xml/xmli18n-tmp.h:975
@@ -5873,7 +5899,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:2510 src/xml/xmli18n-tmp.h:4824
 #: src/xml/xmli18n-tmp.h:5889 src/xml/xmli18n-tmp.h:6345
 msgid "UltraChrome Photo Black"
-msgstr ""
+msgstr "Чорний фотографічний ультрахромовий"
 
 #: src/xml/xmli18n-tmp.h:967 src/xml/xmli18n-tmp.h:970
 #: src/xml/xmli18n-tmp.h:973 src/xml/xmli18n-tmp.h:976
@@ -5949,7 +5975,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:2511 src/xml/xmli18n-tmp.h:4893
 #: src/xml/xmli18n-tmp.h:5958 src/xml/xmli18n-tmp.h:6414
 msgid "UltraChrome Matte Black"
-msgstr ""
+msgstr "Матовий чорний ультрахромований"
 
 #: src/xml/xmli18n-tmp.h:1585 src/xml/xmli18n-tmp.h:1590
 #: src/xml/xmli18n-tmp.h:1595 src/xml/xmli18n-tmp.h:1600
@@ -5965,7 +5991,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:5471 src/xml/xmli18n-tmp.h:5538
 #: src/xml/xmli18n-tmp.h:5768 src/xml/xmli18n-tmp.h:5835
 msgid "Hextone"
-msgstr ""
+msgstr "Шеститоновий"
 
 #: src/xml/xmli18n-tmp.h:2588 src/xml/xmli18n-tmp.h:2599
 #: src/xml/xmli18n-tmp.h:2612 src/xml/xmli18n-tmp.h:2625
@@ -5997,7 +6023,7 @@ msgstr "360⨯90 т/д швидкий, економія"
 #: src/xml/xmli18n-tmp.h:3122 src/xml/xmli18n-tmp.h:3135
 #: src/xml/xmli18n-tmp.h:3181 src/xml/xmli18n-tmp.h:3301
 msgid "180 DPI Economy"
-msgstr ""
+msgstr "180 т/д, економія"
 
 #: src/xml/xmli18n-tmp.h:2590 src/xml/xmli18n-tmp.h:2603
 #: src/xml/xmli18n-tmp.h:2616 src/xml/xmli18n-tmp.h:2627
@@ -6526,14 +6552,14 @@ msgstr "5760⨯2880 т/д"
 
 #: src/xml/xmli18n-tmp.h:3571 src/xml/xmli18n-tmp.h:3751
 msgid "1440 x 720 DPI Transposed"
-msgstr ""
+msgstr "1440⨯720 т/д, транспонований"
 
 #: src/xml/xmli18n-tmp.h:3692 src/xml/xmli18n-tmp.h:3737
 #: src/xml/xmli18n-tmp.h:3761 src/xml/xmli18n-tmp.h:3821
 #: src/xml/xmli18n-tmp.h:3838 src/xml/xmli18n-tmp.h:3934
 #: src/xml/xmli18n-tmp.h:3952
 msgid "720 x 360 DPI Enhanced"
-msgstr ""
+msgstr "720⨯360 т/д, покращений"
 
 #: src/xml/xmli18n-tmp.h:3728 src/xml/xmli18n-tmp.h:3925
 #: src/xml/xmli18n-tmp.h:3943
@@ -6549,19 +6575,19 @@ msgstr "Чорний 2"
 #: src/xml/xmli18n-tmp.h:3836 src/xml/xmli18n-tmp.h:3932
 #: src/xml/xmli18n-tmp.h:3950
 msgid "360 DPI Enhanced"
-msgstr ""
+msgstr "360 т/д, покращений"
 
 #: src/xml/xmli18n-tmp.h:3765
 msgid "1440 x 720 DPI High Quality"
-msgstr ""
+msgstr "1400⨯720 т/д, високої якості"
 
 #: src/xml/xmli18n-tmp.h:3908
 msgid "Vivid Light Magenta"
-msgstr ""
+msgstr "Яскравий світло-бузковий"
 
 #: src/xml/xmli18n-tmp.h:3913
 msgid "Vivid Magenta"
-msgstr ""
+msgstr "Яскравий бузковий"
 
 #: src/xml/xmli18n-tmp.h:4111
 msgid "Main Tray"
@@ -6576,7 +6602,7 @@ msgstr "Фотолоток"
 #: src/xml/xmli18n-tmp.h:4145 src/xml/xmli18n-tmp.h:4153
 #: src/xml/xmli18n-tmp.h:4157 src/xml/xmli18n-tmp.h:4160
 msgid "Print to CD"
-msgstr ""
+msgstr "Друк на CD"
 
 #: src/xml/xmli18n-tmp.h:4114 src/xml/xmli18n-tmp.h:4155
 #: src/xml/xmli18n-tmp.h:4158
@@ -6612,24 +6638,24 @@ msgstr "Подавання з рулону"
 #: src/xml/xmli18n-tmp.h:4131 src/xml/xmli18n-tmp.h:4142
 #: src/xml/xmli18n-tmp.h:4147 src/xml/xmli18n-tmp.h:4151
 msgid "Manual Sheet Guide"
-msgstr ""
+msgstr "Спрямовування аркушів вручну"
 
 #: src/xml/xmli18n-tmp.h:4132 src/xml/xmli18n-tmp.h:4143
 #: src/xml/xmli18n-tmp.h:4148 src/xml/xmli18n-tmp.h:4152
 msgid "Manual Feed (Front)"
-msgstr ""
+msgstr "Подача вручну (спереду)"
 
 #: src/xml/xmli18n-tmp.h:4138
 msgid "Roll Feed (borderless with single cut)"
-msgstr ""
+msgstr "Вальцьоване подавання (без меж з одинарним обрізанням)"
 
 #: src/xml/xmli18n-tmp.h:4139
 msgid "Roll Feed (borderless with double cut)"
-msgstr ""
+msgstr "Вальцьоване подавання (без меж з подвійним обрізанням)"
 
 #: src/xml/xmli18n-tmp.h:4161
 msgid "Photo Board"
-msgstr ""
+msgstr "Фотодошка"
 
 #: src/xml/xmli18n-tmp.h:4162
 msgid "Cut Sheet Bin 1"
@@ -6667,7 +6693,7 @@ msgstr "Вибір вручну"
 #: src/xml/xmli18n-tmp.h:6493 src/xml/xmli18n-tmp.h:6514
 #: src/xml/xmli18n-tmp.h:6535
 msgid "One Color Raw"
-msgstr ""
+msgstr "Простий однокольоровий"
 
 #: src/xml/xmli18n-tmp.h:4193 src/xml/xmli18n-tmp.h:4227
 #: src/xml/xmli18n-tmp.h:4248 src/xml/xmli18n-tmp.h:4269
@@ -6689,7 +6715,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6495 src/xml/xmli18n-tmp.h:6516
 #: src/xml/xmli18n-tmp.h:6537
 msgid "Three Color Raw"
-msgstr ""
+msgstr "Простий трикольоровий"
 
 #: src/xml/xmli18n-tmp.h:4197 src/xml/xmli18n-tmp.h:4231
 #: src/xml/xmli18n-tmp.h:4252 src/xml/xmli18n-tmp.h:4273
@@ -6713,7 +6739,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6499 src/xml/xmli18n-tmp.h:6520
 #: src/xml/xmli18n-tmp.h:6541
 msgid "Four Color Raw"
-msgstr ""
+msgstr "Простий чотирикольоровий"
 
 #: src/xml/xmli18n-tmp.h:4202 src/xml/xmli18n-tmp.h:4390
 #: src/xml/xmli18n-tmp.h:4741 src/xml/xmli18n-tmp.h:4803
@@ -6726,7 +6752,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6006 src/xml/xmli18n-tmp.h:6393
 #: src/xml/xmli18n-tmp.h:6462
 msgid "Five Color Raw"
-msgstr ""
+msgstr "Простий п’ятикольоровий"
 
 #: src/xml/xmli18n-tmp.h:4208 src/xml/xmli18n-tmp.h:4396
 #: src/xml/xmli18n-tmp.h:4526 src/xml/xmli18n-tmp.h:4631
@@ -6740,7 +6766,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:5943 src/xml/xmli18n-tmp.h:6012
 #: src/xml/xmli18n-tmp.h:6399 src/xml/xmli18n-tmp.h:6468
 msgid "Six Color Raw"
-msgstr ""
+msgstr "Простий шестикольоровий"
 
 #: src/xml/xmli18n-tmp.h:4281 src/xml/xmli18n-tmp.h:4287
 #: src/xml/xmli18n-tmp.h:4314 src/xml/xmli18n-tmp.h:4320
@@ -6817,14 +6843,14 @@ msgstr "Сірий 1"
 #: src/xml/xmli18n-tmp.h:5828 src/xml/xmli18n-tmp.h:6306
 #: src/xml/xmli18n-tmp.h:6339
 msgid "MIS Quadtone"
-msgstr ""
+msgstr "MIS, чотиритоновий"
 
 #: src/xml/xmli18n-tmp.h:4415 src/xml/xmli18n-tmp.h:5336
 #: src/xml/xmli18n-tmp.h:5403 src/xml/xmli18n-tmp.h:5470
 #: src/xml/xmli18n-tmp.h:5537 src/xml/xmli18n-tmp.h:5767
 #: src/xml/xmli18n-tmp.h:5834
 msgid "MIS Six Tone"
-msgstr ""
+msgstr "MIS, шеститоновий"
 
 #: src/xml/xmli18n-tmp.h:4418 src/xml/xmli18n-tmp.h:5339
 #: src/xml/xmli18n-tmp.h:5406 src/xml/xmli18n-tmp.h:5473
@@ -6842,31 +6868,31 @@ msgstr "Сірий 4"
 
 #: src/xml/xmli18n-tmp.h:4457 src/xml/xmli18n-tmp.h:4562
 msgid "One Color Raw Enhanced Gloss"
-msgstr ""
+msgstr "Однокольоровий простий покращений глянцевий"
 
 #: src/xml/xmli18n-tmp.h:4464 src/xml/xmli18n-tmp.h:4569
 msgid "Three Color Raw Gloss"
-msgstr ""
+msgstr "Простий трикольоровий глянцевий"
 
 #: src/xml/xmli18n-tmp.h:4469 src/xml/xmli18n-tmp.h:4574
 msgid "Four Color Raw Gloss"
-msgstr ""
+msgstr "Простий чотирикольоровий глянцевий"
 
 #: src/xml/xmli18n-tmp.h:4475 src/xml/xmli18n-tmp.h:4580
 msgid "Six Color Enhanced Gloss Raw"
-msgstr ""
+msgstr "Шестикольоровий покращений глянцевий простий"
 
 #: src/xml/xmli18n-tmp.h:4483 src/xml/xmli18n-tmp.h:4588
 msgid "Seven Color Enhanced Gloss Raw"
-msgstr ""
+msgstr "Семикольоровий покращений глянцевий простий"
 
 #: src/xml/xmli18n-tmp.h:4589
 msgid "MatteBlack"
-msgstr ""
+msgstr "Матовий чорний"
 
 #: src/xml/xmli18n-tmp.h:4672
 msgid "Default Black"
-msgstr ""
+msgstr "Типовий чорний"
 
 #: src/xml/xmli18n-tmp.h:4755 src/xml/xmli18n-tmp.h:4825
 #: src/xml/xmli18n-tmp.h:4894 src/xml/xmli18n-tmp.h:4972
@@ -6878,18 +6904,18 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6214 src/xml/xmli18n-tmp.h:6346
 #: src/xml/xmli18n-tmp.h:6415
 msgid "Seven Color Photo"
-msgstr "Семикольорове фото"
+msgstr "Семикольоровий фотографічний"
 
 #: src/xml/xmli18n-tmp.h:4763
 msgid "Six Color Enhanced Composite"
-msgstr "Шість кольорів покращений"
+msgstr "Шестикольоровий покращений"
 
 #: src/xml/xmli18n-tmp.h:4816 src/xml/xmli18n-tmp.h:4885
 #: src/xml/xmli18n-tmp.h:4954 src/xml/xmli18n-tmp.h:5950
 #: src/xml/xmli18n-tmp.h:6019 src/xml/xmli18n-tmp.h:6406
 #: src/xml/xmli18n-tmp.h:6475
 msgid "Seven Color Raw"
-msgstr ""
+msgstr "Простий семиколірний"
 
 #: src/xml/xmli18n-tmp.h:4855 src/xml/xmli18n-tmp.h:4924
 #: src/xml/xmli18n-tmp.h:5920 src/xml/xmli18n-tmp.h:5989
@@ -6901,7 +6927,7 @@ msgstr "Дворівневі градації сірого"
 #: src/xml/xmli18n-tmp.h:5925 src/xml/xmli18n-tmp.h:5994
 #: src/xml/xmli18n-tmp.h:6381 src/xml/xmli18n-tmp.h:6450
 msgid "Two Color Raw"
-msgstr ""
+msgstr "Простий двоколірний"
 
 #: src/xml/xmli18n-tmp.h:4963 src/xml/xmli18n-tmp.h:5012
 #: src/xml/xmli18n-tmp.h:5061 src/xml/xmli18n-tmp.h:5110
@@ -6909,7 +6935,7 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6028 src/xml/xmli18n-tmp.h:6077
 #: src/xml/xmli18n-tmp.h:6156 src/xml/xmli18n-tmp.h:6205
 msgid "Eight Color Photo"
-msgstr ""
+msgstr "Восьмиколірний фотографічний"
 
 #: src/xml/xmli18n-tmp.h:5002 src/xml/xmli18n-tmp.h:5051
 #: src/xml/xmli18n-tmp.h:5100 src/xml/xmli18n-tmp.h:5149
@@ -6917,42 +6943,41 @@ msgstr ""
 #: src/xml/xmli18n-tmp.h:6067 src/xml/xmli18n-tmp.h:6116
 #: src/xml/xmli18n-tmp.h:6195 src/xml/xmli18n-tmp.h:6244
 msgid "Eight Color Raw"
-msgstr ""
+msgstr "Простий восьмиколірний"
 
 #: src/xml/xmli18n-tmp.h:5673 src/xml/xmli18n-tmp.h:5691
 msgid "Four Color Photo"
-msgstr ""
+msgstr "Чотириколірний фотографічний"
 
 #: src/xml/xmli18n-tmp.h:6547 src/xml/xmli18n-tmp.h:6552
 #: src/xml/xmli18n-tmp.h:6558
 msgid "Interleave"
-msgstr ""
+msgstr "Накладання"
 
 #: src/xml/xmli18n-tmp.h:6548 src/xml/xmli18n-tmp.h:6553
 #: src/xml/xmli18n-tmp.h:6559
 msgid "Full Overlap"
-msgstr ""
+msgstr "Повне перекриття"
 
 #: src/xml/xmli18n-tmp.h:6549 src/xml/xmli18n-tmp.h:6554
 #: src/xml/xmli18n-tmp.h:6560
 msgid "Four Pass"
-msgstr ""
+msgstr "Чотирипрохідний"
 
 #: src/xml/xmli18n-tmp.h:6550 src/xml/xmli18n-tmp.h:6555
 #: src/xml/xmli18n-tmp.h:6561
 msgid "Full Overlap 2"
-msgstr ""
+msgstr "Повне перекриття 2"
 
 #: src/xml/xmli18n-tmp.h:6556 src/xml/xmli18n-tmp.h:6562
 msgid "Interleave 2"
-msgstr ""
+msgstr "Накладання 2"
 
 #: src/xml/xmli18n-tmp.h:6563
 msgid "Eight Pass"
-msgstr ""
+msgstr "Восьмипрохідний"
 
 #: src/xml/xmli18n-tmp.h:6565
-#, fuzzy
 msgid "On"
 msgstr "Увімкнено"
 
@@ -6977,7 +7002,6 @@ msgid "3 1/2 x5"
 msgstr "3 1/2 ⨯5"
 
 #: src/xml/xmli18n-tmp.h:6618
-#, fuzzy
 msgid "L"
 msgstr "L"
 
@@ -6986,17 +7010,16 @@ msgid "4x6"
 msgstr "4⨯6"
 
 #: src/xml/xmli18n-tmp.h:6620
-#, fuzzy
 msgid "KG"
-msgstr "кг"
+msgstr "KG"
 
 #: src/xml/xmli18n-tmp.h:6621
 msgid "Epson 4x6 Photo Paper (tear-off borders)"
-msgstr ""
+msgstr "Фотопапір Epson 4⨯6 (з фігурними краями)"
 
 #: src/xml/xmli18n-tmp.h:6622
 msgid "Epson L Photo Paper (tear-off borders)"
-msgstr ""
+msgstr "Фотопапір Epson L (з фігурними краями)"
 
 #: src/xml/xmli18n-tmp.h:6623
 msgid "4x8"
@@ -7008,7 +7031,7 @@ msgstr "5⨯7"
 
 #: src/xml/xmli18n-tmp.h:6625
 msgid "2L"
-msgstr ""
+msgstr "2L"
 
 #: src/xml/xmli18n-tmp.h:6626
 msgid "5x8"
@@ -7404,7 +7427,7 @@ msgstr "ArchA"
 
 #: src/xml/xmli18n-tmp.h:6726
 msgid "ArchA transposed"
-msgstr ""
+msgstr "ArchA (транспонований)"
 
 #: src/xml/xmli18n-tmp.h:6727
 msgid "ArchB"
@@ -7412,7 +7435,7 @@ msgstr "ArchB"
 
 #: src/xml/xmli18n-tmp.h:6728
 msgid "ArchB transposed"
-msgstr ""
+msgstr "ArchB (транспонований)"
 
 #: src/xml/xmli18n-tmp.h:6729
 msgid "ArchC"
@@ -7420,7 +7443,7 @@ msgstr "ArchC"
 
 #: src/xml/xmli18n-tmp.h:6730
 msgid "ArchC transposed"
-msgstr ""
+msgstr "ArchC (транспонований)"
 
 #: src/xml/xmli18n-tmp.h:6731
 msgid "ArchD"
@@ -7428,7 +7451,7 @@ msgstr "ArchD"
 
 #: src/xml/xmli18n-tmp.h:6732
 msgid "ArchD transposed"
-msgstr ""
+msgstr "ArchD (транспонований)"
 
 #: src/xml/xmli18n-tmp.h:6733
 msgid "ArchE"
@@ -7436,7 +7459,7 @@ msgstr "ArchE"
 
 #: src/xml/xmli18n-tmp.h:6734
 msgid "ArchE transposed"
-msgstr ""
+msgstr "ArchE (транспонований)"
 
 #: src/xml/xmli18n-tmp.h:6735
 msgid "American foolscap"
@@ -7492,7 +7515,7 @@ msgstr "Велика м’яка обкладинка Penguin"
 
 #: src/xml/xmli18n-tmp.h:6748
 msgid "10cm x 15cm"
-msgstr ""
+msgstr "10⨯15 см"
 
 #: src/xml/xmli18n-tmp.h:6749
 msgid "Hagaki Card"
@@ -7508,7 +7531,7 @@ msgstr "Довгий японський конверт #3"
 
 #: src/xml/xmli18n-tmp.h:6752
 msgid "Japanese long envelope #3 landscape"
-msgstr ""
+msgstr "Довгий японський конверт #3, альбомна"
 
 #: src/xml/xmli18n-tmp.h:6753
 msgid "Japanese long envelope #4"
@@ -7516,7 +7539,7 @@ msgstr "Довгий японський конверт #4"
 
 #: src/xml/xmli18n-tmp.h:6754
 msgid "Japanese long envelope #4 landscape"
-msgstr ""
+msgstr "Довгий японський конверт #4, альбомна"
 
 #: src/xml/xmli18n-tmp.h:6755
 msgid "Japanese Kaku envelope #4"
@@ -7524,7 +7547,7 @@ msgstr "Конверт Japanese Kaku #4"
 
 #: src/xml/xmli18n-tmp.h:6756
 msgid "Japanese Kaku envelope #4 landscape"
-msgstr ""
+msgstr "Японський конверт каку #4, альбомна"
 
 #: src/xml/xmli18n-tmp.h:6757
 msgid "Commercial 10"
@@ -7532,7 +7555,7 @@ msgstr "Commercial 10"
 
 #: src/xml/xmli18n-tmp.h:6758
 msgid "Commercial 10 landscape"
-msgstr ""
+msgstr "Commercial 10 , альбомна"
 
 #: src/xml/xmli18n-tmp.h:6759
 msgid "A2 Invitation"
@@ -7544,7 +7567,7 @@ msgstr "Конверт Monarch"
 
 #: src/xml/xmli18n-tmp.h:6761
 msgid "Monarch Envelope landscape"
-msgstr ""
+msgstr "Конверт Monarch, альбомна"
 
 #: src/xml/xmli18n-tmp.h:6762
 msgid "4x5 3/8"
@@ -7568,19 +7591,19 @@ msgstr "Картка"
 
 #: src/xml/xmli18n-tmp.h:6767
 msgid "Wide Postcard"
-msgstr ""
+msgstr "Широка листівка"
 
 #: src/xml/xmli18n-tmp.h:6768
 msgid "Chilean Office"
-msgstr ""
+msgstr "Чилійський офісний"
 
 #: src/xml/xmli18n-tmp.h:6769
 msgid "Chilean Double Letter"
-msgstr ""
+msgstr "Чилійський подвійний для листів"
 
 #: src/xml/xmli18n-tmp.h:6770
 msgid "Chilean Double Office"
-msgstr ""
+msgstr "Чилійський подвійний офісний"
 
 #: src/xml/xmli18n-tmp.h:6771
 msgid "A3+"
