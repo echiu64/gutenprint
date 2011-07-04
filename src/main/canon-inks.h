@@ -641,6 +641,7 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9_inkset[] = {
 };
 
 /* also for DS700 */
+/* also for iP90, iP90v */
 static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
