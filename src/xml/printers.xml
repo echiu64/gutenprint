@@ -446,6 +446,7 @@
       <printer translate="name" name="Epson Stylus Photo RX620" deviceid="MFG:EPSON;MDL:Stylus Photo RX620;DES:EPSON Stylus Photo RX620;CMD:ESCPL2,BDC,D4;" driver="escp2-rx620" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_RX620" />
       <printer translate="name" name="Epson Stylus Photo RX630" deviceid="MFG:EPSON;MDL:Stylus Photo RX630;DES:EPSON Stylus Photo RX630;CMD:ESCPL2,BDC,D4;" driver="escp2-rx630" manufacturer="Epson" model="84" parameters="standard_params" foomaticid="Epson-Stylus_Photo_RX630" />
       <printer translate="name" name="Epson Stylus Photo RX640" driver="escp2-rx640" manufacturer="Epson" model="81" parameters="claria_params" foomaticid="Epson-Stylus_Photo_RX640" />
+      <printer translate="name" name="Epson Stylus Photo RX650" driver="escp2-rx650" manufacturer="Epson" model="81" parameters="claria_params" foomaticid="Epson-Stylus_Photo_RX650" />
       <printer translate="name" name="Epson Stylus Photo RX680" driver="escp2-rx680" manufacturer="Epson" model="97" parameters="claria_params" foomaticid="Epson-Stylus_Photo_RX680" />
       <printer translate="name" name="Epson Stylus Photo RX685" driver="escp2-rx685" manufacturer="Epson" model="97" parameters="claria_params" foomaticid="Epson-Stylus_Photo_RX685" />
       <printer translate="name" name="Epson Stylus Photo RX690" driver="escp2-rx690" manufacturer="Epson" model="97" parameters="claria_params" foomaticid="Epson-Stylus_Photo_RX690" />

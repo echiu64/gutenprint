@@ -270,10 +270,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Epson inkjet printers:
 
        EPSON Stylus CX3900
+       EPSON Stylus Photo RX650
 
   2) A crash with the EPSON Stylus Photo R3000 has been fixed.
 
-  3) (API) Added function stp_vars_copy_from() to override settings in
+  3) A Ukrainian translation has been added.
+
+  4) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in anyother.
 
 * Changes from 5.2.6
