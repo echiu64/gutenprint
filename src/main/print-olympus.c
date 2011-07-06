@@ -783,7 +783,8 @@ static void cpx00_printer_init_func(stp_vars_t *v)
 static void cpx00_plane_init_func(stp_vars_t *v)
 {
   stp_put16_be(0x4001, v);
-  stp_put16_le(3 - privdata.plane, v);
+  stp_putc(3 - privdata.plane, v);
+  stp_putc('\0', v);
   stp_put32_le(privdata.w_size * privdata.h_size, v);
   dyesub_nputc(v, '\0', 4);
 }
@@ -851,38 +852,32 @@ static const dyesub_printsize_t cp220_printsize[] =
 
 LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
-
 /* Canon SELPHY CP-520 */
 static void cp520_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\1' :
-		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
-		(strcmp(privdata.pagesize, "w155h244") == 0 ? '\3' :
-		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\4' :
-		 '\1' ))));
-
-  stp_put16_be(0x4000, v);
-  stp_putc('\0', v);
-  stp_putc(pg, v);
-  dyesub_nputc(v, '\0', 8); 
+  cpx00_printer_init_func(v);
   /* The CP520 does not want the printer_init and plane_init command to be sent
      in the same USB-packet so we fill up first USB-Packet  with '\0'. */
   dyesub_nputc(v, '\0', 1012); 
 }
 
-static void cp520_plane_init_func(stp_vars_t *v)
+/* Canon SELPHY CP-790 */
+static void cp790_printer_init_func(stp_vars_t *v)
 {
-  stp_put16_be(0x4001, v);
-  stp_putc(3 - privdata.plane, v);  /* The CP520 differs from the cp-printer
-                                       in that it reqires the plane in the 3rd
-                                       byte not in the 4th */
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\0' :
+		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\1' :
+		(strcmp(privdata.pagesize, "w155h244") == 0 ? '\2' :
+		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\3' : 
+		 '\0' ))));
+
+  stp_put16_be(0x4000, v);
+  stp_putc(pg, v);
   stp_putc('\0', v);
+  dyesub_nputc(v, '\0', 8);
   stp_put32_le(privdata.w_size * privdata.h_size, v);
-  dyesub_nputc(v, '\0', 4);
 }
 
 /* Canon SELPHY ES series */
-
 static void es1_printer_init_func(stp_vars_t *v)
 {
   char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x11 :
@@ -943,24 +938,9 @@ static void es2_printer_init_func(stp_vars_t *v)
 
 static void es2_plane_init_func(stp_vars_t *v)
 {
-  unsigned char plane = 0;
-
-  switch (privdata.plane) {
-  case 3: /* Y */
-    plane = 0x01;
-    break;
-  case 2: /* M */
-    plane = 0x02;
-    break;
-  case 1: /* C */
-    plane = 0x03;
-    break;
-  }
-
   stp_put16_be(0x4001, v);
-  stp_putc(plane, v);
+  stp_putc(4 - privdata.plane, v);  
   stp_putc(0x0, v);
-
   dyesub_nputc(v, '\0', 8);
 }
 
@@ -976,7 +956,6 @@ static void es3_printer_init_func(stp_vars_t *v)
   stp_putc(pg, v);
   stp_putc(0x0, v);  /* 0x1 for P-BW */
   dyesub_nputc(v, 0x0, 8);
-
   stp_put32_le(privdata.w_size * privdata.h_size, v);
 }
 
@@ -1723,7 +1702,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-510,
        SELPHY CP-600, SELPHY CP-710, SELPHY CP-720, SELPHY CP-730,
-       SELPHY CP-740, SELPHY CP-750 */
+       SELPHY CP-760, SELPHY CP-770, SELPHY CP-780 */
     1001,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1739,7 +1718,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon CP-520, SELPHY CP-530 */
+  { /* Canon CP-520, SELPHY CP-530, SELPHY CP-740, SELPHY CP-750 */
     1004,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1750,7 +1729,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &cp520_printer_init_func, NULL,
-    &cp520_plane_init_func, NULL,
+    &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
@@ -1819,6 +1798,39 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
+  { /* Canon SELPHY CP790 (!experimental) */
+    1008,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &cp220_page_list,
+    &cp220_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &cp790_printer_init_func, &es3_printer_end_func,
+    &es2_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+  { /* Canon SELPHY CP-800 */
+    1009,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &cpx00_page_list,
+    &cpx00_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &cp520_printer_init_func, NULL,
+    &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+
   { /* Sony DPP-EX5, DPP-EX7 */
     2002,
     &rgb_ink_list,
