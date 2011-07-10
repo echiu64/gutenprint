@@ -1293,14 +1293,16 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 }
 
 /* ESC (P -- 0x50 -- unknown -- :
+    pt = stp_get_papersize_by_name(media_size);
    seems to set media and page information. Different byte lengths depending on printer model. */
 static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
-  unsigned char arg_ESCP_2;
+  unsigned char arg_ESCP_1, arg_ESCP_2;
   if(!(init->caps->features & CANON_CAP_P))
     return;
 
+  arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
   /* models that add two more bytes "1 0" to the end of the usual 4-byte sequence: */
@@ -1325,12 +1327,16 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
-      /*                             size      media                */
-      canon_cmd( v,ESC28,0x50,6,0x00,0x03,0x00,arg_ESCP_2,0x01,0x00);
+      /*                             size                media             */
+      canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00);
     }
-  else 
-    /*                             size      media       */
-    canon_cmd( v,ESC28,0x50,4,0x00,0x03,0x00,arg_ESCP_2 );
+  else if ( !(strcmp(init->caps->name,"SELPHY DS700")) )  {
+    /* 2 bytes only */
+      canon_cmd( v,ESC28,0x50,2,0x00,arg_ESCP_1 );
+    }	
+  else /* 4 bytes */
+    /*                             size            media       */
+    canon_cmd( v,ESC28,0x50,4,0x00,arg_ESCP_1,0x00,arg_ESCP_2 );
 }
 
 /* ESC (T -- 0x54 -- setCartridge -- :
