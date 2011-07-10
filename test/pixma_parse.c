@@ -137,7 +137,7 @@ static int valid_color(unsigned char color){
 	for(i=0;i<sizeof(valid_colors) / sizeof(valid_colors[0]);i++)
 		if(valid_colors[i] == color)
 			return 1;
-	printf("unknown color %c 0x%x\n",color,color);
+	printf(" [valid_color] unknown color 0x%x\n",color);
 	return 0;
 }
 
@@ -653,14 +653,14 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				/* check if the colors are sane => the iP4000 driver appends invalid bytes in the highest resolution mode */
 				for(i=0;i<cnt;i++){
 				  if (!valid_color(buf[i]))
-				    if (!(valid_color(buf[i]-0x80))) {
-				      printf("invalid color char [failed on initial]\n");
-				      break;
-				    }
-				    else {
-				      buf[i]=buf[i]-0x80;
-				      printf("subtracting 0x80 to give [corrected]: %c\n", buf[i]);
-				    }
+				    /*if (!(valid_color(buf[i]-0x60))) {*/
+				    /*  printf("invalid color char %c [failed on initial]\n", buf[i]);*/
+				    /*  break; */
+				    /*}*/
+				    /*else {*/
+				    /*  buf[i]=buf[i]-0x60;*/
+				      printf("subtracting 0x60 to give [corrected]: %c\n", buf[i]-0x60);
+				    /*}*/
 				  else
 				    printf("found valid color char: %c\n",buf[i]);
 				}

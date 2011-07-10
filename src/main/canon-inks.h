@@ -571,7 +571,7 @@ static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {'M',1.0,&canon_4b_5l_ink},
         {'Y',1.0,&canon_4b_5l_ink},
-        {'K',0.0,&canon_1b_2l_ink}, /* for PPpro, so no use */
+        {'K',0.0,&canon_1b_2l_ink}, /* for CMY only, so no use */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
