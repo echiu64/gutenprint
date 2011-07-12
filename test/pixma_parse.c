@@ -653,14 +653,15 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				/* check if the colors are sane => the iP4000 driver appends invalid bytes in the highest resolution mode */
 				for(i=0;i<cnt;i++){
 				  if (!valid_color(buf[i]))
+                                    {
 				    /*if (!(valid_color(buf[i]-0x60))) {*/
 				    /*  printf("invalid color char %c [failed on initial]\n", buf[i]);*/
 				    /*  break; */
 				    /*}*/
 				    /*else {*/
-				    /*  buf[i]=buf[i]-0x60;*/
-				      printf("subtracting 0x60 to give [corrected]: %c\n", buf[i]-0x60);
-				    /*}*/
+				      buf[i]=buf[i]-0x60;
+				      printf("subtracting 0x60 to give [corrected]: %c\n", buf[i]);
+				    }
 				  else
 				    printf("found valid color char: %c\n",buf[i]);
 				}
