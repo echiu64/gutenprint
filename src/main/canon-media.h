@@ -145,6 +145,14 @@ static const canon_slot_t canon_PIXMA_iP3500_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP3500);
 
+static const canon_slot_t canon_PIXMA_iP3600_slots[] = {
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
+  { "Rear",       N_ ("Rear tray"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf }
+};
+DECLARE_SLOTS(canon_PIXMA_iP3600);
+
 /* iP4600, iP4700 */
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
@@ -997,6 +1005,24 @@ static const canon_paper_t canon_PIXMA_iP2700_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_iP2700);
+
+static const canon_paper_t canon_PIXMA_iP3600_papers[] = {    /*                  k_lower_scale   *hue_adjustment *sat_adjustment */
+  /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGloss2", 	N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),		0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),		0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }
+};
+DECLARE_PAPERS(canon_PIXMA_iP3600);
 
 /* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* iP4500 */
