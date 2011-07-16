@@ -107,6 +107,7 @@ typedef struct {
 #define MODE_FLAG_CD 0x4               /* this mode can be used to print to cds */
 #define MODE_FLAG_PRO 0x8              /* special ink settings for the PIXMA Pro9500 not sure of this... maybe 0x4 */
 #define MODE_FLAG_IP8500 0x10          /* special ink settings for the PIXMA iP8500 */
+#define MODE_FLAG_MP360 0x84           /* special ink settings for the PIXMA MP360 */
   const canon_delay_t* delay;          /* delay settings for this printmode */
   const double density;                /* density multiplier    */
   const double gamma;                  /* gamma multiplier      */
@@ -597,6 +598,27 @@ static const canon_mode_t canon_MULTIPASS_MP170_modes[] = {
 };
 /*plenty of other photo paper modes to add here*/
 DECLARE_MODES(canon_MULTIPASS_MP170,3);
+
+/* MP360, MP370, MP375R, MP390 */
+static const canon_mode_t canon_MULTIPASS_MP360_modes[] = {
+  /* plain modes */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high2",N_("600x600 DPI HIGH 2"),INKSET(9_C4M4Y4K2c4m4y4plain),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C3M3Y2K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(9_C3M3Y2K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi_draft",N_("600x600 DPI DRAFT / STD OHP"),INKSET(9_C3M3Y2K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_CMYK | CANON_INK_K,"300x300dpi",N_("300x300 DPI"),INKSET(4_C2M2Y2K2),16,0,NULL,1.0,1.0,NULL,NULL,NULL,1},/* 1-bpp, ignore other inks */
+  {  300, 300,CANON_INK_CMYK | CANON_INK_K,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(4_C2M2Y2K2),16,0,NULL,1.0,1.0,NULL,NULL,NULL,0},/* 1-bpp, ignore other inks */
+  /* photo */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH 2"),INKSET(9_C4M4Y4K2c4m4y4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(9_C4M4Y4K2c4m4y4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo3",N_("600x600 DPI PHOTO 3"),INKSET(9_C4M4Y4c4m4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo2",N_("600x600 DPI PHOTO 2"),INKSET(9_C4M4Y4c4m4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(9_C5M5Y5K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMY,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(9_C5M5Y5K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* OHP */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh3",N_("600x600 DPI HIGH OHP"),INKSET(9_C4M4Y4K3),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+};
+DECLARE_MODES(canon_MULTIPASS_MP360,5);
 
 static const canon_mode_t canon_MULTIPASS_MX300_modes[] = {
   /* plain media */
