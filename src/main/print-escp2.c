@@ -899,6 +899,14 @@ static const float_param_t float_parameters[] =
   },
   {
     {
+      "SubchannelCutoff", N_("Subchannel Cutoff"), "Color=Yes,Category=Advanced Output Control",
+      N_("Upper limit for using light ink"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 0, 1, 0
+    }, 0.0, 1.0, 1.0, 1
+  },
+  {
+    {
       "PageDryTime", N_("Drying Time Per Page"), "Color=No,Category=Advanced Printer Functionality",
       N_("Set drying time per page"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_FEATURE,
