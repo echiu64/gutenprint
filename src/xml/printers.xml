@@ -584,6 +584,7 @@
       <printer translate="name" name="Epson Stylus SX415" driver="escp2-sx415" manufacturer="Epson" model="93" parameters="standard_params" foomaticid="Epson-Stylus_SX415" />
       <printer translate="name" name="Epson Stylus SX510W" driver="escp2-sx510w" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX510W" />
       <printer translate="name" name="Epson Stylus SX515" driver="escp2-sx515" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX515" />
+      <printer translate="name" name="Epson Stylus SX525" driver="escp2-sx525" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX525" />
       <printer translate="name" name="Epson Stylus SX600FW" driver="escp2-sx600fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX600FW" />
       <printer translate="name" name="Epson Stylus SX610FW" driver="escp2-sx610fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX610FW" />
       <printer translate="name" name="Epson Stylus SX615" driver="escp2-sx615" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX615" />
