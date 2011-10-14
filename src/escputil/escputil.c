@@ -674,7 +674,7 @@ add_resets(int count)
     }
 }
 
-static int
+static void
 send_nulls(int fd)
 {
   char buf[16384];
