@@ -829,6 +829,22 @@ static const canon_mode_t canon_MULTIPASS_MP520_modes[] = {
 };
 DECLARE_MODES(canon_MULTIPASS_MP520,1);
 
+/* on photo media, same modes do not use K ink */
+static const canon_mode_t canon_MULTIPASS_MP530_modes[] = {
+  {  600, 600,CANON_INK_K|CANON_INK_CcMmYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, /* 16 CMYKcmk, mono: 16 K */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(22_C3M3Y2K2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* 16 CMYK, mono: 16 K */
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1}, /* 8 CMYK, mono: 8 K */
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0}, /* 8 CMYK, mono: 8 K */
+  /* photo modes --- do not work because cannot deal with no k or K so make special modes with k/K set to 0 */
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo",N_("600x600 DPI PHOTO DRAFT"),INKSET(22_C3M3Y3K2c3m3k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1}, /* 16 CMYcmk */
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo",N_("600x600 DPI PHOTO HAGAKI"),INKSET(22_C3M3Y3K2c3m3k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* 16 CMYcmk */
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO HAGAKI DRAFT"),INKSET(22_C3M3Y2K2k3photo_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1}, /* 16 CMYk */
+  /*Env & Hagaki mode using both K and k---how to do?*/
+  /* TST mode */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(22_C4M4Y4K2k4one),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* 16 CMYk */
+};
+DECLARE_MODES(canon_MULTIPASS_MP530,1);
+
 /* similar to iP4500 */
 /* Hagaki, Envelope use plain mode but adds k to output inks */
 static const canon_mode_t canon_MULTIPASS_MP540_modes[] = {

@@ -82,6 +82,16 @@ static const canon_slot_t canon_PIXMA_iP3100_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP3100);
 
+static const canon_slot_t canon_MULTIPASS_MP530_slots[] = {
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "CD",         N_ ("CD tray"), 0xa },
+  { "AutoSwitch", N_ ("Continuous Autofeed"), 0xf },
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
+};
+DECLARE_SLOTS(canon_MULTIPASS_MP530);
+
 /* MP170, MP450, MP460, MX300 */
 static const canon_slot_t canon_MULTIPASS_MP170_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
