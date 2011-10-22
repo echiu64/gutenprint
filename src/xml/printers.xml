@@ -433,6 +433,7 @@
       <printer translate="name" name="Epson Stylus Photo R800" driver="escp2-r800" manufacturer="Epson" model="64" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R800" />
       <printer translate="name" name="Epson Stylus Photo R1800" driver="escp2-r1800" manufacturer="Epson" model="67" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R1800" />
       <printer translate="name" name="Epson Stylus Photo R1900" driver="escp2-r1900" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R1900" />
+      <printer translate="name" name="Epson Stylus Photo R2000" driver="escp2-r2000" manufacturer="Epson" model="116" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2000" />
       <printer translate="name" name="Epson Stylus Photo R2400" driver="escp2-r2400" manufacturer="Epson" model="71" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2400" />
       <printer translate="name" name="Epson Stylus Photo R2880" driver="escp2-r2880" manufacturer="Epson" model="98" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2880" />
       <printer translate="name" name="Epson Stylus Photo R3000" driver="escp2-r3000" manufacturer="Epson" model="115" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R3000" />
@@ -738,6 +739,7 @@
       <printer translate="name" name="Epson PX A650" driver="escp2-pxa650" manufacturer="Epson" model="95" parameters="cx3500_params" foomaticid="Epson-PX_A650" />
       <printer translate="name" name="Epson Offirio PX B300" driver="escp2-pxb300" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-Offirio-PX_B300" />
       <printer translate="name" name="Epson Offirio PX B500" driver="escp2-pxb500" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-Offirio-PX_B500" />
+      <printer translate="name" name="Epson PX 7V" driver="escp2-px7v" manufacturer="Epson" model="116" parameters="standard_params" foomaticid="Epson-PX_7V" />
       <printer translate="name" name="Epson PX 101" driver="escp2-px101" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-PX_101" />
       <printer translate="name" name="Epson PX 201" driver="escp2-px201" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_201" />
       <printer translate="name" name="Epson PX 401A" driver="escp2-px401a" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-PX_401" />
