@@ -1306,6 +1306,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
   /* models that add two more bytes "1 0" to the end of the usual 4-byte sequence: */
+  /* TODO: the code for 6-byte sequences can be replaced by a simple test of XML-capability */
   /* MX340 */
   /* MX350 --- same driver as MX340 */
   /* MX360 */
@@ -1313,7 +1314,12 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   /* MX420 */
   /* MX870 */
   /* MX880 */
+  /* MP250 */
+  /* MP270 */
+  /* MP280 */
+  /* MP490 */
   /* MP493 */
+  /* MP495 */
   /* MP550 */
   /* MP560 */
   /* MP640 */
@@ -1323,7 +1329,11 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   /* iP2700 */
   /* iP4700 */
   /* iP4800 */
-  if ( !(strcmp(init->caps->name,"PIXMA MX340")) || !(strcmp(init->caps->name,"PIXMA MX360")) || !(strcmp(init->caps->name,"PIXMA MX410")) || !(strcmp(init->caps->name,"PIXMA MX420")) || !(strcmp(init->caps->name,"PIXMA MX870"))  || !(strcmp(init->caps->name,"PIXMA MX880"))  || !(strcmp(init->caps->name,"PIXMA MP493")) || !(strcmp(init->caps->name,"PIXMA MP550")) || !(strcmp(init->caps->name,"PIXMA MP560")) || !(strcmp(init->caps->name,"PIXMA MP640")) ||  !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA iX6500")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA iP2700")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) )
+  /* MG5100 */
+  /* MG5200 */
+  /* MG6200 */
+  /* MG8100 */
+  if ( !(strcmp(init->caps->name,"PIXMA MX340")) || !(strcmp(init->caps->name,"PIXMA MX360")) || !(strcmp(init->caps->name,"PIXMA MX410")) || !(strcmp(init->caps->name,"PIXMA MX420")) || !(strcmp(init->caps->name,"PIXMA MX870")) || !(strcmp(init->caps->name,"PIXMA MX880")) || !(strcmp(init->caps->name,"PIXMA MP250")) || !(strcmp(init->caps->name,"PIXMA MP270")) || !(strcmp(init->caps->name,"PIXMA MP280")) || !(strcmp(init->caps->name,"PIXMA MP490")) || !(strcmp(init->caps->name,"PIXMA MP493")) || !(strcmp(init->caps->name,"PIXMA MP495")) || !(strcmp(init->caps->name,"PIXMA MP550")) || !(strcmp(init->caps->name,"PIXMA MP560")) || !(strcmp(init->caps->name,"PIXMA MP640")) ||  !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA iX6500")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA iP2700")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA MG5100")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) )
  /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
 
@@ -1332,7 +1342,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /*                             size                media             */
       canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00);
     }
-  else if ( !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375R")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA iP4000")) )  {
+  else if ( !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP130")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375R")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA MP900"))  || !(strcmp(init->caps->name,"PIXMA iP1000"))  || !(strcmp(init->caps->name,"PIXMA iP1500"))  || !(strcmp(init->caps->name,"PIXMA iP2000"))  || !(strcmp(init->caps->name,"PIXMA iP3000"))  || !(strcmp(init->caps->name,"PIXMA iP3100"))  || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP5000"))  || !(strcmp(init->caps->name,"PIXMA iP6000D")) || !(strcmp(init->caps->name,"PIXMA iP6100D")) || !(strcmp(init->caps->name,"PIXMA iP8500"))  )  {
     /* 2 bytes only */
       canon_cmd( v,ESC28,0x50,2,0x00,arg_ESCP_1 );
     }	

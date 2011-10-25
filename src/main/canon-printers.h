@@ -1533,7 +1533,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     /* 8, */
     &canon_PIXMA_MG5100_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG5100_modelist,
     &canon_PIXMA_MG5100_paperlist,
     NULL,
@@ -1547,7 +1547,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     /* 8, */
     &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG5200_modelist,/* there is some ESC (r 0x68 command for CD tray also, not sure why */
     &canon_PIXMA_MG5200_paperlist,
     NULL,
@@ -1561,7 +1561,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     /* 8, */
     &canon_PIXMA_MG5200_slotlist, /* same as MG5200 */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG6100_modelist,/* there is some ESC (r 0x68 command for CD tray also, not sure why */
     &canon_PIXMA_MG6100_paperlist,
     NULL,
@@ -1575,7 +1575,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     /* 8, */
     &canon_PIXMA_MG5200_slotlist, /* same as MG5200 */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_MULTIPASS_MP150,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG8100_modelist,/* there is some ESC (r 0x68 command for CD tray also, not sure why */
     &canon_PIXMA_MG6100_paperlist, /* same as MG6100 */
     NULL,
