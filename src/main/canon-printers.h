@@ -1443,6 +1443,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon MULTIPASS MP470 --- no XML */
+    "PIXMA MP470", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    /* 8, */
+    &canon_MULTIPASS_MP250_slotlist, /* only rear tray also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
+    &canon_MULTIPASS_MP470_modelist,
+    &canon_MULTIPASS_MP470_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon MULTIPASS MP480 --- no XML */
     "PIXMA MP480", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
@@ -1455,7 +1469,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon MULTIPASS MP490 --- with XML */
     "PIXMA MP490", 3,          /*model, model_id*/
