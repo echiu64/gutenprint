@@ -110,6 +110,7 @@ DECLARE_INK(2,4);
 
 /*under development*/
 DECLARE_INK(4,4);
+DECLARE_INK_EXTENDED(4,4,INK_FLAG_5pixel_in_1byte);
 
 static const stp_dotsize_t dotsizes_5l[] = {
   { 0x1, 0.45 },
@@ -323,6 +324,18 @@ static const canon_inkset_t canon_7_C4M4Y4c4m4k4K4_inkset[] = {
         {'m',1.0,&canon_2b_4l_ink},
         {'k',1.0,&canon_2b_4l_ink},
         {'K',1.0,&canon_2b_4l_ink},
+};
+
+static const canon_inkset_t canon_9_K2_inkset[] = {
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'K',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
 };
 
 static const canon_inkset_t canon_9_C2M2Y2K2_inkset[] = {
@@ -590,6 +603,54 @@ static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_9_C6M6Y6K6_c_inkset[] = {
+        {'C',1.0,&canon_4b_4l_c_ink},
+        {'M',1.0,&canon_4b_4l_c_ink},
+        {'Y',1.0,&canon_4b_4l_c_ink},
+        {'K',1.0,&canon_4b_4l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C6M6Y6K6c6m6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
+        {'c',1.0,&canon_4b_6l_c_ink},
+        {'m',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C6M6Y6K9c6m6_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_9l_ink},
+        {'c',1.0,&canon_4b_6l_c_ink},
+        {'m',1.0,&canon_4b_6l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C6M6Y6K6c16m16_c_inkset[] = {
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
+        {'c',1.0,&canon_4b_16l_ink},
+        {'m',1.0,&canon_4b_16l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
 };
 
 static const canon_inkset_t canon_9_C8M8Y4K4c8m8_inkset[] = {

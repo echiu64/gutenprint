@@ -106,6 +106,12 @@ static const canon_slot_t canon_MULTIPASS_MP250_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP250);
 
+static const canon_slot_t canon_MULTIPASS_MP900_slots[] = {
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "CD",         N_ ("CD tray"), 0xa },
+};
+DECLARE_SLOTS(canon_MULTIPASS_MP900);
+
 /* MX7600 */
 static const canon_slot_t canon_MULTIPASS_MX7600_slots[] = {
   { "Cassette",       N_ ("Cassette"), 0x8 },
@@ -300,7 +306,6 @@ static const canon_paper_t canon_PIXMA_iP3100_papers[] = {
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  /* FIXME media code for c) should be 0x0c for CD but this will restrict CD printing to a single, not well supported, resolution */
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* experiment */
 };
 DECLARE_PAPERS(canon_PIXMA_iP3100);
