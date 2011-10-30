@@ -1188,8 +1188,24 @@ static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
 
 /* Gernot: added for iP4700 CD printing */
 /* iP4800 also uses this */
-/* also MG5200 */
+/* also MG5100, MG5200 */
 static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
+        {'C',1.0,&canon_4b_5l_ink},
+        {'M',1.0,&canon_4b_5l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+/* test for MG5100 */
+static const canon_inkset_t canon_13_C5M5Y4k4_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {'M',1.0,&canon_4b_5l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
@@ -1225,6 +1241,22 @@ static const canon_inkset_t canon_13_C6M6Y2K2k4_inkset[] = {
 /* Gernot: added for iP4700 photo standard quality */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
+	{'C',1.0,&canon_4b_6l_ink},
+	{'M',1.0,&canon_4b_6l_ink},
+	{'Y',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+/* test for MG5100 */
+static const canon_inkset_t canon_13_C6M6Y4k4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
 	{'Y',1.0,&canon_2b_4l_ink},
@@ -1314,6 +1346,22 @@ static const canon_inkset_t canon_13_C6M6Y4k4yask_inkset[] = {
 /*         iP4800 also uses this */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C8M8Y4y4_inkset[] = {
+	{'C',1.0,&canon_4b_8l_ink},
+	{'M',1.0,&canon_4b_8l_ink},
+	{'Y',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+/* test for MG5100 */
+static const canon_inkset_t canon_13_C8M8Y4k4_inkset[] = {
 	{'C',1.0,&canon_4b_8l_ink},
 	{'M',1.0,&canon_4b_8l_ink},
 	{'Y',1.0,&canon_2b_4l_ink},
