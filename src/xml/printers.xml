@@ -436,7 +436,7 @@
       <printer translate="name" name="Epson Stylus Photo R800" driver="escp2-r800" manufacturer="Epson" model="64" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R800" />
       <printer translate="name" name="Epson Stylus Photo R1800" driver="escp2-r1800" manufacturer="Epson" model="67" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R1800" />
       <printer translate="name" name="Epson Stylus Photo R1900" driver="escp2-r1900" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R1900" />
-      <printer translate="name" name="Epson Stylus Photo R2000" driver="escp2-r2000" manufacturer="Epson" model="116" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2000" />
+      <printer translate="name" name="Epson Stylus Photo R2000" driver="escp2-r2000" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2000" />
       <printer translate="name" name="Epson Stylus Photo R2400" driver="escp2-r2400" manufacturer="Epson" model="71" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2400" />
       <printer translate="name" name="Epson Stylus Photo R2880" driver="escp2-r2880" manufacturer="Epson" model="98" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R2880" />
       <printer translate="name" name="Epson Stylus Photo R3000" driver="escp2-r3000" manufacturer="Epson" model="115" parameters="standard_params" foomaticid="Epson-Stylus_Photo_R3000" />
