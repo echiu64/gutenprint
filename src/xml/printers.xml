@@ -742,7 +742,7 @@
       <printer translate="name" name="Epson PX A650" driver="escp2-pxa650" manufacturer="Epson" model="95" parameters="cx3500_params" foomaticid="Epson-PX_A650" />
       <printer translate="name" name="Epson Offirio PX B300" driver="escp2-pxb300" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-Offirio-PX_B300" />
       <printer translate="name" name="Epson Offirio PX B500" driver="escp2-pxb500" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-Offirio-PX_B500" />
-      <printer translate="name" name="Epson PX 7V" driver="escp2-px7v" manufacturer="Epson" model="116" parameters="standard_params" foomaticid="Epson-PX_7V" />
+      <printer translate="name" name="Epson PX 7V" driver="escp2-px7v" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-PX_7V" />
       <printer translate="name" name="Epson PX 101" driver="escp2-px101" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-PX_101" />
       <printer translate="name" name="Epson PX 201" driver="escp2-px201" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_201" />
       <printer translate="name" name="Epson PX 401A" driver="escp2-px401a" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-PX_401" />
