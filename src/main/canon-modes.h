@@ -486,9 +486,9 @@ static const canon_mode_t canon_PIXMA_iP4000_modes[] = {
   {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(4_C2M2Y2K2),16,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi_std2",N_("600x600 DPI 2"),INKSET(9_C3M3Y2K2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   /*Gernot adding the normal hi-quality mode for iP4000 here*/
-/*  {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2c4m4k4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, */
-/*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2c4m4k4),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL},*/ /* this mode is used for CD printing, K is ignored by the printer then, the seperation between the small and large dot inks needs more work */
-/*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_superphoto",N_("600x600 DPI Superphoto"),INKSET(9_C8M8Y8c16m16k8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,4}, */
+  {  600, 600,CANON_INK_CcMmYK | CANON_INK_K,"600x600dpi_high",N_("600x600 DPI HIGH 2"),INKSET(9_C4M4Y4K2c4m4k4p),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+/*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2c4m4k4),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL},*/ /* this mode is used for CD printing, K is ignored by the printer then, the separation between the small and large dot inks needs more work */
+/*  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_superphoto",N_("600x600 DPI Superphoto"),INKSET(9_C8M8Y8c16m16k8),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,4}, */
 /* T-Shirt */
   {  600, 600,CANON_INK_CMY,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(9_C4M4Y4K2k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
 /* not sure yet about CMYKk modes, so not inserting yet */
