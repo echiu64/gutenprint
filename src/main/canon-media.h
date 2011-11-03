@@ -106,6 +106,11 @@ static const canon_slot_t canon_MULTIPASS_MP250_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP250);
 
+static const canon_slot_t canon_PIXMA_MG2100_slots[] = {
+  { "Front",       N_ ("Front tray"), 0x8 },
+};
+DECLARE_SLOTS(canon_PIXMA_MG2100);
+
 static const canon_slot_t canon_MULTIPASS_MP900_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
   { "CD",         N_ ("CD tray"), 0xa },

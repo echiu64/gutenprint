@@ -929,6 +929,23 @@ static const canon_inkset_t canon_13_C2M2Y2K2_inkset[] = {
 	{0,0.0,NULL},
 };
 
+/* color-only catrdige modes */
+static const canon_inkset_t canon_13_C2M2Y2K2off_inkset[] = {
+	{'C',1.0,&canon_1b_2l_ink},
+	{'M',1.0,&canon_1b_2l_ink},
+	{'Y',1.0,&canon_1b_2l_ink},
+	{'K',0.0,&canon_1b_2l_ink}, /* declared in inkset but not used */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
 /* MX7600, iX7000 */
 static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
@@ -985,6 +1002,40 @@ static const canon_inkset_t canon_13_C3M3Y2K2_inkset[] = {
         {'M',1.0,&canon_2b_3l_ink},
         {'Y',1.0,&canon_1b_2l_ink},
         {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* MG2100 */
+static const canon_inkset_t canon_13_C3M3Y2K3_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* color-only cartridge modes */
+static const canon_inkset_t canon_13_C3M3Y2K3off_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',0.0,&canon_2b_3l_ink}, /* declared in inkset but not used */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1107,6 +1158,23 @@ static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_3l_ink},
         {'K',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* MG2100 */
+static const canon_inkset_t canon_13_C4M4Y3K4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
+        {'K',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
