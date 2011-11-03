@@ -2359,6 +2359,40 @@ static const canon_inkset_t canon_30_K2C3M3Y2k3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* K and k both */
+static const canon_inkset_t canon_30_K2C3M3Y2k3on_c_inkset[] = {
+        {'K',1.0,&canon_1b_2l_ink},
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_3l_c_ink}, /* on */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* fast */
 /* MP990, MG6100, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
@@ -2404,6 +2438,40 @@ static const canon_inkset_t canon_30_C5M5Y4k4_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {0,0.0,NULL},
         {'M',1.0,&canon_4b_5l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* photo without grey (H) */
+static const canon_inkset_t canon_30_M8K8m4k4_inkset[] = {
+        {0,0.0,NULL},
+        {'C',1.0,&canon_4b_8l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_8l_ink},
         {0,0.0,NULL},
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
