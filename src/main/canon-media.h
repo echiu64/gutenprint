@@ -170,7 +170,7 @@ static const canon_slot_t canon_PIXMA_iP3600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf }
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
 };
 DECLARE_SLOTS(canon_PIXMA_iP3600);
 
@@ -180,7 +180,8 @@ static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
-  { "CD",         N_ ("CD tray"), 0xa }
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
+  { "CD",         N_ ("CD tray"), 0xa },
 };
 DECLARE_SLOTS(canon_PIXMA_iP4600);
 
@@ -188,7 +189,7 @@ DECLARE_SLOTS(canon_PIXMA_iP4600);
 static const canon_slot_t canon_PIXMA_Pro9000_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Front",   N_ ("Front tray"), 0xb },
-  { "CD",         N_ ("CD tray"), 0xa }
+  { "CD",         N_ ("CD tray"), 0xa },
 };
 DECLARE_SLOTS(canon_PIXMA_Pro9000);
 
@@ -199,7 +200,7 @@ static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 } /*Paper allocation? no idea what this means compared to Continuous*/
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 }, /*Paper allocation? no idea what this means compared to Continuous*/
 };
 DECLARE_SLOTS(canon_PIXMA_MG5100);
 
@@ -209,8 +210,8 @@ static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
-  { "CD",         N_ ("CD tray"), 0xa }
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
+  { "CD",         N_ ("CD tray"), 0xa },
 };
 DECLARE_SLOTS(canon_PIXMA_MG5200); /* also MG6100 */
 
