@@ -230,6 +230,7 @@
       <printer translate="name" name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP4100" />
       <printer translate="name" name="Canon PIXMA MG2100" driver="bjc-PIXMA-MG2100" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2100" />
       <printer translate="name" name="Canon PIXMA MG3100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3100" />
+      <printer translate="name" name="Canon PIXMA MG4100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4100" />
       <printer translate="name" name="Canon PIXMA MG5100" driver="bjc-PIXMA-MG5100" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5100" />
       <printer translate="name" name="Canon PIXMA MG5200" driver="bjc-PIXMA-MG5200" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5200" />
       <printer translate="name" name="Canon PIXMA MG5300" driver="bjc-PIXMA-MG5300" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5300" />
