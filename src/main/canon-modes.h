@@ -1591,7 +1591,7 @@ static const canon_mode_t canon_PIXMA_MG6200_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_MG6200,0);
 
-/* for this printer the photo modes have unknown inks, so these modes are not added. Now we get plain paper and non-photo hagaki. */
+/* for this printer the photo modes have grey (H) ink, so these modes are not added. Now we get plain paper and non-photo hagaki. */
 static const canon_mode_t canon_PIXMA_MG8100_modes[] = {
   /* high mode -- B/W also */
   {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(30_K2C6M6Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
@@ -1608,6 +1608,30 @@ static const canon_mode_t canon_PIXMA_MG8100_modes[] = {
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft3",N_("600x600 DPI PHOTO DRAFT 3"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
 };
 DECLARE_MODES(canon_PIXMA_MG8100,0);
+
+/* for this printer the photo modes have grey (H) ink, so these modes are not added. Now we get plain paper and non-photo hagaki. */
+static const canon_mode_t canon_PIXMA_MG8200_modes[] = {
+  /* high mode -- B/W also */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(30_K2C6M6Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  /* standard mode -- B/W also */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(30_K2C3M3Y2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_draft",N_("600x600 DPI DRAFT"),INKSET(30_K2C3M3Y2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* draft modes -- B/W also */
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(30_K2C2M2Y2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(30_K2C2M2Y2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  /* duplex, Hagaki, Env modes use K and k */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high2",N_("600x600 DPI HIGH duplex/Env/Hagaki"),INKSET(30_K2C3M3Y2k3on_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_std2",N_("600x600 DPI duplex/Env/Hagaki"),INKSET(30_K2C3M3Y2k3on_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* PhotoHi mode for matte photo paper and coated paper: CMYk */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(30_M8K8m4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(30_M8K8m4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT"),INKSET(30_M8K8m4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* PhotoHi3 mode for CDs, inkjet hagaki */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh3",N_("600x600 DPI PHOTO HIGH 3"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo3",N_("600x600 DPI PHOTO 3"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft3",N_("600x600 DPI PHOTO DRAFT 3"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+};
+DECLARE_MODES(canon_PIXMA_MG8200,0);
 
 
 #endif
