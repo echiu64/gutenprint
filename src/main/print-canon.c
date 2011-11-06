@@ -573,14 +573,16 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 */
       if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 */
       if (!strcmp(name,"w155h244"))    return 0x41; /* Business/Credit Card 54mm x 86mm */
-      /* if (!strcmp(name,"wh")) */    return 0x42; /* FineArt A4 35mm border --- iP7100: gap is 18 */
+      /* if (!strcmp(name,"A4"))       return 0x42; */ /* FineArt A4 35mm border --- iP7100: gap is 18 */
+      /* if (!strcmp(name,"A3"))       return 0x43; */ /* FineArt A3 35mm border --- iP7100: gap is 18 */
+      /* if (!strcmp(name,"Letter"))   return 0x44; */ /* FineArt Letter 35mm border --- iP7100: gap is 18 */
       if (!strcmp(name,"w288h576"))    return 0x46; /* US4x8 */
       if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17in */
       if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 in*/
       if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 */
-      /* if (!strcmp(name,"wh"))    return 0x4d; */ /* ArtA4 35mm border */
-      /* if (!strcmp(name,"wh"))    return 0x4e; */ /* ArtA3 35mm border */
-      /* if (!strcmp(name,"wh"))    return 0x4f; */ /* ArtLetter 35mm border */
+      /* if (!strcmp(name,"A4"))       return 0x4d; */ /* ArtA4 35mm border */
+      /* if (!strcmp(name,"A3"))       return 0x4e; */ /* ArtA3 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x4f; */ /* ArtLetter 35mm border */
       if (!strcmp(name,"w288h512"))    return 0x52; /* Wide101.6x180.6 */
       /* w283h566 Wide postcard 148mm x 200mm */
 
@@ -1199,7 +1201,8 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
 {
   unsigned char
     arg_6c_1 = 0x00,
-    arg_6c_2 = 0x00; /* plain paper */
+    arg_6c_2 = 0x00, /* plain paper */
+    arg_6c_3 = 0x00; /* special cases like iP7100 to be handled */
 
   if (!(init->caps->features & CANON_CAP_l))
     return;
@@ -1210,7 +1213,7 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
 
   if (init->pt) arg_6c_2= init->pt->media_code_l;
   if(init->caps->model_id >= 3)
-    canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, 0);
+    canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, arg_6c_3); /* 3rd arg is "gap" */
   else
     canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 }
@@ -1318,6 +1321,32 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
+
+  /* workaround for FineArt media having same size as non-FineArt media */
+  /* iP7100 is an exception needing yet another papersize code */
+  if ( (arg_ESCP_2 == 0x28) || ( arg_ESCP_2 == 0x29) || (arg_ESCP_2 ==  0x2c) || (arg_ESCP_2 == 0x31) ) {
+    /* A4 */
+    if ( arg_ESCP_1 == 0x03 ) {
+      arg_ESCP_1 == 0x4d;
+      if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
+	arg_ESCP_1 == 0x42;
+      }
+    }
+    /* A3 */
+    if ( arg_ESCP_1 == 0x05 ) {
+      arg_ESCP_1 == 0x4e;
+      if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
+	arg_ESCP_1 == 0x43;
+      }
+    }
+    /* Letter */
+    if ( arg_ESCP_1 == 0x0d ) {
+      arg_ESCP_1 == 0x4f;
+      if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
+	arg_ESCP_1 == 0x44;
+      }
+    }
+  }
 
   /* models that add two more bytes "1 0" to the end of the usual 4-byte sequence: */
   /* TODO: the code for 6-byte sequences can be replaced by a simple test of XML-capability */
