@@ -2,7 +2,8 @@
  *   Print plug-in CANON BJL driver for the GIMP.
  *
  *   Copyright 1997-2000 Michael Sweet (mike@easysw.com),
- *	Robert Krawitz (rlk@alumPIXMA_iP4200*      Andy Thaller (thaller@ph.tum.de)
+ *	Robert Krawitz (rlk@alum.mit.edu) and
+ *      Andy Thaller (thaller@ph.tum.de)
  *   Copyright (c) 2006 Sascha Sommer (saschasommer@freenet.de)
  *
  *   This program is free software; you can redistribute it and/or modify it
@@ -989,13 +990,13 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP4200_modelist,
-    &canon_PIXMA_iP4000_paperlist,
+    &canon_PIXMA_iP4200_paperlist,
     iP4200_lum_adjustment,
     iP4200_hue_adjustment,
     iP4200_sat_adjustment,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP4800 CD-R tray G */
     "PIXMA iP4800", 3,          /*model, model_id*/
