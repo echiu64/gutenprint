@@ -35,13 +35,15 @@
 #define CANON_INK_K           1
 #define CANON_INK_CMY         2
 #define CANON_INK_CMYK        4
-#define CANON_INK_CcMmYK      8
-#define CANON_INK_CcMmYyK    16
+#define CANON_INK_CMYKk       8 /* Gernot: inserted */
+#define CANON_INK_CcMmYK     16
+#define CANON_INK_CcMmYyK    32
 
-#define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYyK)     /* Ink is CcMmYyKk */
-#define CANON_INK_CMYK_MASK     (CANON_INK_CMYK|CANON_INK_CcMmYyKk_MASK) /* Ink is CMYK */
-#define CANON_INK_CMY_MASK      (CANON_INK_CMY|CANON_INK_CMYK_MASK)      /* Ink is CMY */
-#define CANON_INK_K_MASK        (CANON_INK_K|CANON_INK_CMYK_MASK)        /* Ink is K */
+#define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYyK)      /* Ink is CcMmYyKk */
+#define CANON_INK_CMYKk_MASK    (CANON_INK_CMYKk|CANON_INK_CcMmYyKk_MASK) /* Ink is CMYKk */
+#define CANON_INK_CMYK_MASK     (CANON_INK_CMYK|CANON_INK_CMYKk_MASK)     /* Ink is CMYK */
+#define CANON_INK_CMY_MASK      (CANON_INK_CMY|CANON_INK_CMYK_MASK)       /* Ink is CMY */
+#define CANON_INK_K_MASK        (CANON_INK_K|CANON_INK_CMYK_MASK)         /* Ink is K */
 
 
 
@@ -57,6 +59,7 @@ static struct canon_inktype_s {
 } canon_inktypes[] = {
     {CANON_INK_CcMmYyK,7,"PhotoCMYK","Photo CcMmYyK Color"},
     {CANON_INK_CcMmYK,6,"PhotoCMY", "Photo CcMmYK Color"},
+    {CANON_INK_CMYKk,5,"CMYKk","CMYKk Color"}, /* Gernot: inserted */
     {CANON_INK_CMYK,4,"CMYK","CMYK Color"},
     {CANON_INK_CMY,3,"RGB","CMY Color"},
     {CANON_INK_K,1,"Gray","Black"}

@@ -278,6 +278,9 @@ static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
   /* FIXME media code for c) should be 0x0c for CD but this will restrict CD printing to a single, not well supported, resolution */
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* test */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* test */
+  { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x00,1.00, 1.00, 0.900, 0, 0, 0 }, /* test */
 };
 DECLARE_PAPERS(canon_PIXMA_iP4000);
 
