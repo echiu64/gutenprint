@@ -1159,6 +1159,34 @@
       <unit value="metric-extended"/>
       <type value="envelope"/>
     </paper>
+    <paper name="w297h666">
+      <description translate="value" value="Japanese Western-style envelope #4"/>
+      <width value="297"/>
+      <height value="666"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w297h666_l">
+      <description translate="value" value="Japanese Western-style envelope #4 landscape"/>
+      <width value="666"/>
+      <height value="297"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w277h538">
+      <description translate="value" value="Japanese Western-style envelope #6"/>
+      <width value="277"/>
+      <height value="538"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
+    <paper name="w277h538_l">
+      <description translate="value" value="Japanese Western-style envelope #6 landscape"/>
+      <width value="538"/>
+      <height value="277"/>
+      <unit value="metric-extended"/>
+      <type value="envelope"/>
+    </paper>
     <paper name="w680h941">
       <description translate="value" value="Japanese Kaku envelope #4"/>
       <width value="680"/>
@@ -1245,9 +1273,16 @@
       <height value="244"/>
       <unit value="metric-extended"/>
     </paper>
+    <paper name="w155h257">
+      <description translate="value" value="Card"/>
+      <comment value="55mm x 91mm"/>
+      <width value="155"/>
+      <height value="257"/>
+      <unit value="metric-extended"/>
+    </paper>
     <paper name="w283h566">
       <description translate="value" value="Wide Postcard"/>
-      <comment value="100mm x 200mm"/>
+      <comment value="148mm x 200mm"/>
       <width value="283"/>
       <height value="566"/>
       <unit value="english-extended"/>

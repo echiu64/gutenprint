@@ -554,22 +554,36 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"Legal"))       return 0x0f;
       if (!strcmp(name,"Tabloid"))     return 0x11; /* 11x17 */
       if (!strcmp(name,"w283h420"))    return 0x14; /* Hagaki */
-      if (!strcmp(name,"COM10"))       return 0x16;
-      if (!strcmp(name,"DL"))          return 0x17;
-      if (!strcmp(name,"LetterExtra")) return 0x2a;
-      if (!strcmp(name,"A4Extra"))     return 0x2b;
+      /*      if (!strcmp(name,"COM10"))       return 0x16;*/
+      /*      if (!strcmp(name,"DL"))          return 0x17;*/
+      if (!strcmp(name,"LetterExtra")) return 0x2a; /* Letter navi --- Letter+ */
+      if (!strcmp(name,"A4Extra"))     return 0x2b; /* A4navi --- A4+ */
       if (!strcmp(name,"A3plus"))      return 0x2c; /* A3navi --- A3+ */
-      if (!strcmp(name,"w288h144"))    return 0x2d;
+      if (!strcmp(name,"w288h144"))    return 0x2d; /* ??? */
+      if (!strcmp(name,"COM10"))       return 0x2e; /* US Comm #10 Env */
+      if (!strcmp(name,"DL"))          return 0x2f; /* Euro DL Env */
+      if (!strcmp(name,"w297h666"))    return 0x30; /* Western Env #4 */
+      if (!strcmp(name,"w277h538"))    return 0x31; /* Western Env #6 */
       if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 size */
       if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 */
       if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 */
+      if (!strcmp(name,"w155h257"))    return 0x36; /* Japanese Business Card 55mm x 91mm */
       if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 */
       if (!strcmp(name,"w420h567"))    return 0x39; /* Ofuku Hagaki */
+      if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 */
+      if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 */
+      if (!strcmp(name,"w155h244"))    return 0x41; /* Business/Credit Card 54mm x 86mm */
+      /* if (!strcmp(name,"wh")) */    return 0x42; /* FineArt A4 35mm border --- iP7100: gap is 18 */
       if (!strcmp(name,"w288h576"))    return 0x46; /* US4x8 */
       if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17in */
       if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 in*/
       if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 */
+      /* if (!strcmp(name,"wh"))    return 0x4d; */ /* ArtA4 35mm border */
+      /* if (!strcmp(name,"wh"))    return 0x4e; */ /* ArtA3 35mm border */
+      /* if (!strcmp(name,"wh"))    return 0x4f; */ /* ArtLetter 35mm border */
       if (!strcmp(name,"w288h512"))    return 0x52; /* Wide101.6x180.6 */
+      /* w283h566 Wide postcard 148mm x 200mm */
+
       /* custom */
 
       stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
