@@ -998,6 +998,19 @@ static const canon_cap_t canon_model_capabilities[] =
     iP4200_sat_adjustment,
     iP4500_channel_order
   },
+  { /* Canon PIXMA iP4300 */
+    "PIXMA iP4300", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    &canon_PIXMA_iP4300_modelist, /* slight differences to iP4200 */
+    &canon_PIXMA_iP4200_paperlist,
+    iP4200_lum_adjustment,
+    iP4200_hue_adjustment,
+    iP4200_sat_adjustment,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA iP4800 CD-R tray G */
     "PIXMA iP4800", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
