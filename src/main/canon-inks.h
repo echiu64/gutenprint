@@ -1079,6 +1079,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
 };
 
 /* Gernot: iP4500 standard mode changed from the compressed one below */
+/*         iP4600 also uses this */
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
 /*         MG5100, MG5200 */
@@ -1090,7 +1091,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink}, /* swap y for k, but in any case it is not in output for plain modes */
+	{'k',0.0,&canon_2b_3l_c_ink}, /* swap y for k, but in any case it is not in output for plain modes */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1299,7 +1300,8 @@ static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: added for iP4700 CD printing */
+/* Gernot: added for iP4700 */
+/* iP4600 also uses this */
 /* iP4800 also uses this */
 /* also MG5100, MG5200 */
 static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
@@ -1352,6 +1354,7 @@ static const canon_inkset_t canon_13_C6M6Y2K2k4_inkset[] = {
 };
 
 /* Gernot: added for iP4700 photo standard quality */
+/*         iP4600 also uses this */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
@@ -1385,7 +1388,8 @@ static const canon_inkset_t canon_13_C6M6Y4k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* Gernot: added for iP4500 high quality --- check the pos of k/y */
+/* Gernot: added for iP4500 high quality */
+/*         iP4600 also uses this */
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
 /*         MG5100, MG5200 */
@@ -1396,7 +1400,7 @@ static const canon_inkset_t canon_13_C6M6Y4K2y4_inkset[] = {
 	{'K',1.0,&canon_1b_2l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',1.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
+	{'k',0.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1455,6 +1459,7 @@ static const canon_inkset_t canon_13_C6M6Y4k4yask_inkset[] = {
 };
 
 /* Gernot: iP4500 photo mode */
+/*         iP4600 also uses this */
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
 /*         MG5100, MG5200 */
