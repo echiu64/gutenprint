@@ -1589,20 +1589,21 @@ static const canon_mode_t canon_PIXMA_MG2100_modes[] = {
 DECLARE_MODES(canon_PIXMA_MG2100,0);
 
 static const canon_mode_t canon_PIXMA_MG5100_modes[] = {
-  /* high mode -- B/W also */
+  /* plain modes -- B/W also */
   {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(13_C6M6Y4K2y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
-  /* standard mode -- B/W also */
   {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(13_C3M3Y2K2y3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
-  /* draft modes -- B/W also */
   {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(13_C2M2Y2K2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
-  /* PhotoHi mode for high quality photo papers */
+  /* PhotoHi mode for high quality photo papers CMYk */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(13_C8M8Y4k4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(13_C8M8Y4k4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
-  /* PhotoStd mode for high quality photo papers */
+  /* PhotoStd mode for high quality photo papers CMYk */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photo2",N_("600x600 DPI PHOTO 2"),INKSET(13_C6M6Y4k4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
-  /* PhotoHi3 mode for inkjet hagaki */
-  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh3",N_("600x600 DPI PHOTO HIGH 3"),INKSET(13_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
-  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo3",N_("600x600 DPI PHOTO 3"),INKSET(13_C5M5Y4k4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* PhotoHi3 mode for inkjet hagaki CMYk */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh3",N_("600x600 DPI HIGH inkjet Hagaki"),INKSET(13_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo3",N_("600x600 DPI inkjet Hagaki"),INKSET(13_C5M5Y4k4),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* Hagaki/Env: use K and k both CMYKk */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYKk,"600x600dpi_high2",N_("600x600 DPI HIGH Env/Hagaki"),INKSET(13_C3M3Y2K2y3on_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYKk,"600x600dpi_std2",N_("600x600 DPI Env/Hagaki"),INKSET(13_C3M3Y2K2y3on_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
 DECLARE_MODES(canon_PIXMA_MG5100,0);
 
