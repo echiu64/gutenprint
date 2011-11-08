@@ -1415,6 +1415,11 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
     /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
     /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
   }
+  else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) || !(strcmp(init->caps->name,"PIXMA iP6220")) || !(strcmp(init->caps->name,"PIXMA iP6310")) ) {
+    canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
+    /* both:  0x3 0x6 0x6 */
+    /* color: 0x3 0x1 0x1 */
+  }
   else {
     canon_cmd(v,ESC28,0x54,3,0x03,0x04,0x04); /* default: both cartridges */
   }

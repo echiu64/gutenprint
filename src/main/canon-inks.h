@@ -960,6 +960,22 @@ static const canon_inkset_t canon_13_C2M2Y2K2off_inkset[] = {
 	{0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_13_C2M2Y2k2_inkset[] = {
+	{'C',1.0,&canon_1b_2l_ink},
+	{'M',1.0,&canon_1b_2l_ink},
+	{'Y',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
 /* MX7600, iX7000 */
 static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
@@ -1134,6 +1150,23 @@ static const canon_inkset_t canon_13_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iP6210D */
+static const canon_inkset_t canon_13_C3M3Y3k4_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* Gernot: MP250, MP280 photo modes */
 static const canon_inkset_t canon_13_C4M4Y4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
@@ -1201,6 +1234,39 @@ static const canon_inkset_t canon_13_C4M4Y3K4_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* iP6210D */
+static const canon_inkset_t canon_13_C4M4Y4k4_inkset[] = {
+	{'C',1.0,&canon_2b_4l_ink},
+	{'M',1.0,&canon_2b_4l_ink},
+	{'Y',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+/* iP6210D */
+static const canon_inkset_t canon_13_C4M4Y4k4c4m4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
 
 /* Gernot: MP150 (MP170 for tests) high-quality mode */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
@@ -1283,23 +1349,6 @@ static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: MP150 (MP170 for tests) T-shirt transfers */
-static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
-        {'C',1.0,&canon_4b_5l_ink},
-        {'M',1.0,&canon_4b_5l_ink},
-        {'Y',1.0,&canon_4b_5l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-};
-
 /* Gernot: added for iP4700 */
 /* iP4600 also uses this */
 /* iP4800 also uses this */
@@ -1328,6 +1377,24 @@ static const canon_inkset_t canon_13_C5M5Y4k4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink}, /* swap y and k */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* Gernot: MP150 (MP170 for tests) T-shirt transfers */
+/* also iP6210D */
+static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
+        {'C',1.0,&canon_4b_5l_ink},
+        {'M',1.0,&canon_4b_5l_ink},
+        {'Y',1.0,&canon_4b_5l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},

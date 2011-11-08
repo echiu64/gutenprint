@@ -1063,6 +1063,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA iP6210D */
+    "PIXMA iP6210", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP170_slotlist, /* has ESC (T */
+    CANON_CAP_STD0|CANON_CAP_T|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,  /*features */
+    &canon_PIXMA_iP6210_modelist,
+    &canon_PIXMA_iP90_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA iP6600 */
     "PIXMA iP6600", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
