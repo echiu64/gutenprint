@@ -2419,7 +2419,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4on_inkset[] = {
 };
 
 /* high */
-/* MP990, MG6100, MG800 */
+/* MP990, MG6100, MG6200, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
 /*static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {*/
 static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
@@ -2456,7 +2456,7 @@ static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
 };
 
 /* standard */
-/* MP990, MG6100, MG800 */
+/* MP990, MG6100, MG6200, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
 static const canon_inkset_t canon_30_K2C3M3Y2k3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
