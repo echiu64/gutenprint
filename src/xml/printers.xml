@@ -171,6 +171,7 @@
       <printer translate="name" name="Canon PIXMA iP6310D" driver="bjc-PIXMA-iP6310D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6310D" />
       <printer translate="name" name="Canon PIXMA iP6600D" driver="bjc-PIXMA-iP6600D" manufacturer="Canon" model="3006600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6600D" />
       <printer translate="name" name="Canon PIXMA iP6700" driver="bjc-PIXMA-iP6700" manufacturer="Canon" model="3006700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6700" />
+      <printer translate="name" name="Canon PIXMA iP7100" driver="bjc-PIXMA-iP7100" manufacturer="Canon" model="3007100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7100" />
       <printer translate="name" name="Canon PIXMA iP8500" driver="bjc-PIXMA-iP8500" manufacturer="Canon" model="3008500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8500" />
       <printer translate="name" name="Canon PIXMA iX4000" driver="bjc-PIXMA-iX4000" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX4000" />
       <printer translate="name" name="Canon PIXMA iX5000" driver="bjc-PIXMA-iX5000" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX5000" />

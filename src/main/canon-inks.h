@@ -756,6 +756,21 @@ static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
 };
 
+/* PIXMA iP7100 */
+static const canon_inkset_t canon_11_K2_inkset[] = {
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 /* PIXMA Pro9000, Pro9000 Mk.II, Pro9500, Pro9500 Mk.II, PIXMA iP8500 */
 static const canon_inkset_t canon_11_C2M2Y2K2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
