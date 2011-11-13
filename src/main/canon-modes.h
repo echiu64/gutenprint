@@ -1474,9 +1474,6 @@ static const canon_mode_t canon_PIXMA_iX7000_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iX7000,0);
 
-/* format: 0x90 */
-/* ink   : 0x4  */
-/* Not sure why MODE_FLAG_PRO is needed for Fast mode, or if it even works. Driver Fast mode uses iP8500 flag instead */
 static const canon_mode_t canon_PIXMA_Pro9000_modes[] = {
 /* original mode entered here */
 /*  { 600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(11_C2M2Y2K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_PRO,NULL,1.0,1.0,NULL,NULL,NULL,2},*/
