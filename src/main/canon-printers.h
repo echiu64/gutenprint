@@ -209,7 +209,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon MULTIPASS MP810 */
     "PIXMA MP810", 3,          /*model, model_id*/

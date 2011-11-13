@@ -2201,6 +2201,7 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+        {'k',0.0,&canon_2b_3l_c_ink}, /* off for plain modes */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
