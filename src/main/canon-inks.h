@@ -1114,7 +1114,6 @@ static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
 /*         MG5100, MG5200 */
-/* TODO: how to get both K and k working, for Hagaki and Env modes */
 static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -1132,7 +1131,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
 };
 
 /* k activated */
-static const canon_inkset_t canon_13_C3M3Y2K2y3on_c_inkset[] = {
+static const canon_inkset_t canon_13_C3M3Y2K2k3on_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
         {'Y',1.0,&canon_1b_2l_ink},
@@ -1148,15 +1147,15 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3on_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iX7000 */
-static const canon_inkset_t canon_13_C3M3Y2K2k3_c_inkset[] = {
+/* k activated, K off */
+static const canon_inkset_t canon_13_C3M3Y2K2k3photo_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
         {'Y',1.0,&canon_1b_2l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* switched off */
         {0,0.0,NULL},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_3l_c_ink}, /* swap y and k */
+        {'k',1.0,&canon_2b_3l_c_ink}, /* swap y for k */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1491,14 +1490,14 @@ static const canon_inkset_t canon_13_C6M6Y4K2y4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_13_C6M6Y4K2k4_inkset[] = {
+static const canon_inkset_t canon_13_C6M6Y4K2k4on_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
 	{'Y',1.0,&canon_2b_4l_ink},
 	{'K',1.0,&canon_1b_2l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',0.0,&canon_2b_4l_ink},
+	{'k',1.0,&canon_2b_4l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},

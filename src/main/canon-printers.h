@@ -222,7 +222,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP950 */
     "PIXMA MP950", 3,          /*model, model_id*/
