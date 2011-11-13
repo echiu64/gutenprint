@@ -1616,8 +1616,6 @@ static const canon_inkset_t canon_13_C8M8Y4k4yask_inkset[] = {
 	   super Photo Paper Double Sided
 	   matte Photo Paper
 	   other Photo Paper
-	  
- for some reason there is a hack for iP6700 appearing here which might make the y into a k (swapping)
 */
 static const canon_inkset_t canon_13_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
@@ -1635,15 +1633,14 @@ static const canon_inkset_t canon_13_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* MP980 uss 16 inks */
-static const canon_inkset_t canon_16_C8M8Y4k4_inkset[] = {
-	{'C',1.0,&canon_4b_8l_ink},
-	{'M',1.0,&canon_4b_8l_ink},
-	{'Y',1.0,&canon_2b_4l_ink},
+static const canon_inkset_t canon_16_C2M2Y2K2_inkset[] = {
+	{'C',1.0,&canon_1b_2l_ink},
+	{'M',1.0,&canon_1b_2l_ink},
+	{'Y',1.0,&canon_1b_2l_ink},
+	{'K',1.0,&canon_1b_2l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',1.0,&canon_2b_4l_ink}, /* y and k swapped */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1655,11 +1652,49 @@ static const canon_inkset_t canon_16_C8M8Y4k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_16_C6M6Y4K2k4_inkset[] = {
-	{'C',1.0,&canon_4b_6l_ink},
-	{'M',1.0,&canon_4b_6l_ink},
-	{'Y',1.0,&canon_2b_4l_ink},
+static const canon_inkset_t canon_16_C3M3Y2K2k3off_c_inkset[] = {
+	{'C',1.0,&canon_2b_3l_c_ink},
+	{'M',1.0,&canon_2b_3l_c_ink},
+	{'Y',1.0,&canon_1b_2l_ink},
 	{'K',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',0.0,&canon_2b_3l_c_ink}, /* y and k swapped */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_16_C3M3Y2K2k3on_c_inkset[] = {
+	{'C',1.0,&canon_2b_3l_c_ink},
+	{'M',1.0,&canon_2b_3l_c_ink},
+	{'Y',1.0,&canon_1b_2l_ink},
+	{'K',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_2b_3l_c_ink}, /* y and k swapped */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_16_C5M5Y4k4_inkset[] = {
+	{'C',1.0,&canon_4b_5l_ink},
+	{'M',1.0,&canon_4b_5l_ink},
+	{'Y',1.0,&canon_2b_4l_ink},
+	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{'k',1.0,&canon_2b_4l_ink}, /* y and k swapped */
@@ -1693,52 +1728,33 @@ static const canon_inkset_t canon_16_C6M6Y4k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_16_C5M5Y4k4_inkset[] = {
-	{'C',1.0,&canon_4b_5l_ink},
-	{'M',1.0,&canon_4b_5l_ink},
+static const canon_inkset_t canon_16_C6M6Y4K2k4off_inkset[] = {
+	{'C',1.0,&canon_4b_6l_ink},
+	{'M',1.0,&canon_4b_6l_ink},
+	{'Y',1.0,&canon_2b_4l_ink},
+	{'K',1.0,&canon_1b_2l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',0.0,&canon_2b_4l_ink}, /* y and k swapped */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_16_C8M8Y4k4_inkset[] = {
+	{'C',1.0,&canon_4b_8l_ink},
+	{'M',1.0,&canon_4b_8l_ink},
 	{'Y',1.0,&canon_2b_4l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{'k',1.0,&canon_2b_4l_ink}, /* y and k swapped */
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-};
-
-static const canon_inkset_t canon_16_C3M3Y2K2k3_c_inkset[] = {
-	{'C',1.0,&canon_2b_3l_c_ink},
-	{'M',1.0,&canon_2b_3l_c_ink},
-	{'Y',1.0,&canon_1b_2l_ink},
-	{'K',1.0,&canon_1b_2l_ink},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{'k',1.0,&canon_2b_3l_c_ink}, /* y and k swapped */
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-};
-
-static const canon_inkset_t canon_16_C2M2Y2K2_inkset[] = {
-	{'C',1.0,&canon_1b_2l_ink},
-	{'M',1.0,&canon_1b_2l_ink},
-	{'Y',1.0,&canon_1b_2l_ink},
-	{'K',1.0,&canon_1b_2l_ink},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
