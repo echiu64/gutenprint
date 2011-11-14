@@ -579,6 +579,19 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4plain_inkset[] = {
         {0,0.0,NULL}
 };
 
+/* attempt to output cmy inks only for hi-res photo modes (MP360 family) */
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4minor_inkset[] = {
+        {'C',0.0,&canon_4b_4l_ink},
+        {'M',0.0,&canon_4b_4l_ink},
+        {'Y',0.0,&canon_4b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_4b_4l_ink},
+        {'m',1.0,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 /* check this one!!! */
 /* also for DS700 */
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
