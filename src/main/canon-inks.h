@@ -1846,7 +1846,31 @@ static const canon_inkset_t canon_19_C3M3Y3k3_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* works OK on MP960 */
+/* plain std mod iP7500  */
+static const canon_inkset_t canon_19_C3M3Y3K2k3off_inkset[] = {
+        {'C',1.0,&canon_2b_3l_ink},
+        {'M',1.0,&canon_2b_3l_ink},
+        {'Y',1.0,&canon_2b_3l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_2b_3l_ink},/* need to swap y -> k, switch off */
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* MP960 */
+/* iP7500 Env/Hagaki */
 static const canon_inkset_t canon_19_C3M3Y3K2k3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1893,11 +1917,12 @@ static const canon_inkset_t canon_19_C4M4Y4k4_inkset[] = {
 };
 
 /* photo mode MP960 T-shirt transfers --- works OK! */
+/* also used by iP7500 */
 static const canon_inkset_t canon_19_C4M4Y4K2k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* not used */
         {0,0.0,NULL},
         {0,0.0,NULL}, 
         {'k',1.0,&canon_2b_4l_ink}, /* change y to k */
@@ -1961,7 +1986,8 @@ static const canon_inkset_t canon_19_C4M4Y4c4m4k4CD_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode MP960 PPmatte works! */
+/* photo mode MP960 PPmatte works */
+/* also used by iP7500 */
 static const canon_inkset_t canon_19_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2077,6 +2103,7 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4hagaki_inkset[] = {
 };
 
 /* photo std mode MP960 and inkjet Hagaki Std: CMYcmk*/
+/* also used by iP7500 */
 static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2085,6 +2112,29 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4_inkset[] = {
         {'c',1.0,&canon_4b_6l_ink},
         {'m',1.0,&canon_4b_6l_ink},
         {'k',1.0,&canon_2b_4l_ink}, /* change y to k */ 
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* plain high mode iP7500 */
+static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4off_inkset[] = {
+        {'C',1.0,&canon_4b_6l_ink},
+        {'M',1.0,&canon_4b_6l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_4b_6l_ink},
+        {'m',1.0,&canon_4b_6l_ink},
+        {'k',0.0,&canon_2b_4l_ink}, /* change y to k, switch off */ 
         {0,0.0,NULL},
         {0,0.0,NULL}, 
         {0,0.0,NULL},
@@ -2123,6 +2173,7 @@ static const canon_inkset_t canon_19_C7M7Y4c7m7k4_inkset[] = {
 };
 
 /* photo high mode MP960 and inkjetHagaki High: CMYcmk */
+/* also used by iP7500 */
 static const canon_inkset_t canon_19_C7M7Y4K2c7m7k4_inkset[] = {
         {'C',1.0,&canon_4b_7l_ink},
         {'M',1.0,&canon_4b_7l_ink},
