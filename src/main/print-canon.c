@@ -1448,10 +1448,17 @@ canon_init_setX72(const stp_vars_t *v, const canon_privdata_t *init)
 
   if ( (init->caps->features & CANON_CAP_r)
        || (init->caps->features & CANON_CAP_rr) )
-      canon_cmd(v,ESC28,0x72, 1, init->caps->ESC_r_arg); /* whatever for - 8200/S200 need it */
-  if (init->caps->features & CANON_CAP_rr)
+    canon_cmd(v,ESC28,0x72, 1, init->caps->ESC_r_arg); /* whatever for - 8200/S200 need it */
+  if (init->caps->features & CANON_CAP_rr) {
+    if ( !(strcmp(init->caps->name,"S200")) ) {
       canon_cmd(v,ESC28,0x72, 3, 0x63, 1, 0); /* whatever for - S200 needs it */
       /* probably to set the print direction of the head */
+    }
+    else if (  !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA MP900")) || !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
+      canon_cmd(v,ESC28,0x72, 2, 0x62, 0); /* 2 bytes */
+    }
+    /* no other cases yet */
+  }
 }
 
 /* ESC (r -- 0x72 -- ??? set direction ??? -- :

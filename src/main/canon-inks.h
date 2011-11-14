@@ -647,10 +647,10 @@ static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
 };
 
 static const canon_inkset_t canon_9_C6M6Y6K6_c_inkset[] = {
-        {'C',1.0,&canon_4b_4l_c_ink},
-        {'M',1.0,&canon_4b_4l_c_ink},
-        {'Y',1.0,&canon_4b_4l_c_ink},
-        {'K',1.0,&canon_4b_4l_c_ink},
+        {'C',1.0,&canon_4b_6l_c_ink},
+        {'M',1.0,&canon_4b_6l_c_ink},
+        {'Y',1.0,&canon_4b_6l_c_ink},
+        {'K',1.0,&canon_4b_6l_c_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},

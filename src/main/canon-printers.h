@@ -1276,7 +1276,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP900_slotlist, /* auto sheetfeeder amd CD tray only */
-    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x62,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP900_modelist,
     &canon_PIXMA_iP3100_paperlist,
     NULL,
@@ -1289,7 +1289,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_Pro9000_modelist,
     &canon_PIXMA_Pro9000_paperlist,
     NULL,
@@ -1302,7 +1302,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_Pro9000mk2_modelist,
     &canon_PIXMA_Pro9000mk2_paperlist,
     NULL,
@@ -1315,7 +1315,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_Pro9500_modelist,
     &canon_PIXMA_Pro9500_paperlist,
     NULL,
@@ -1328,7 +1328,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_Pro9500mk2_modelist,
     &canon_PIXMA_Pro9500mk2_paperlist,
     NULL,
@@ -1341,7 +1341,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP7100_modelist,
     &canon_PIXMA_iP7100_paperlist,
     NULL,
@@ -1354,7 +1354,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP8100_modelist,
     &canon_PIXMA_iP7100_paperlist,
     NULL,
@@ -1381,7 +1381,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP8600_modelist,
     &canon_PIXMA_iP7100_paperlist,
     NULL,
@@ -1394,7 +1394,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP900_slotlist,
-    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP9910_modelist,
     &canon_PIXMA_iP9910_paperlist,
     NULL,
