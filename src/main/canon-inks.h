@@ -1134,7 +1134,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
-	{'k',0.0,&canon_2b_3l_c_ink}, /* swap y for k, but in any case it is not in output for plain modes */
+	{'k',0.0,&canon_2b_3l_c_ink}, /* swap y for k, switch off */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -1494,7 +1494,7 @@ static const canon_inkset_t canon_13_C6M6Y4K2y4_inkset[] = {
 	{'K',1.0,&canon_1b_2l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',0.0,&canon_2b_4l_ink}, /* set y to k for photo modes */
+	{'k',0.0,&canon_2b_4l_ink}, /* set y to k, switched off */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
