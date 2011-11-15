@@ -1846,7 +1846,7 @@ static const canon_inkset_t canon_19_C3M3Y3k3_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* plain std mod iP7500  */
+/* plain std mod iP7500, MP960  */
 static const canon_inkset_t canon_19_C3M3Y3K2k3off_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
