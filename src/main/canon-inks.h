@@ -413,6 +413,7 @@ static const canon_inkset_t canon_9_C3M3Y3K3_inkset[] = {
 };
 
 /* iP4000 default print mode (quality 2) */
+/* also used by iP4100 */
 /* also used by iP5000 */
 static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -440,6 +441,18 @@ static const canon_inkset_t canon_9_C3M3Y2K2k3on_c_inkset[] = {
         {0,0.0,NULL}
 };
 
+static const canon_inkset_t canon_9_C3M3Y2K2k3photo_c_inkset[] = {
+        {'C',1.0,&canon_2b_3l_c_ink},
+        {'M',1.0,&canon_2b_3l_c_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* switch off */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL}
+};
+
 static const canon_inkset_t canon_9_C3M3Y3K2c3m3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -453,6 +466,7 @@ static const canon_inkset_t canon_9_C3M3Y3K2c3m3_c_inkset[] = {
 };
 
 /* iP4000 mode used for Super Photo Paper (quality 1) */
+/* also iP4100 */
 static const canon_inkset_t canon_9_C3M3Y3K2c3m3k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -517,6 +531,7 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4_inkset[] = {
 };
 
 /* iP4000 plain high mode */
+/* iP4100 plain high mode */
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4p_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -527,6 +542,59 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4p_inkset[] = {
         {0,0.0,NULL},
         {'k',0.0,&canon_2b_4l_ink}, /* do not use but need to define in inkset */
         {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* attempt to output cmy inks only for hi-res photo modes (MP360 family) */
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4minor_inkset[] = {
+        {'C',0.0,&canon_4b_4l_ink},
+        {'M',0.0,&canon_4b_4l_ink},
+        {'Y',0.0,&canon_4b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_4b_4l_ink},
+        {'m',1.0,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* check this one!!! */
+/* also for DS700 */
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
+        {'C',1.0,&canon_4b_4l_ink},
+        {'M',1.0,&canon_4b_4l_ink},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_4b_4l_ink},
+        {'m',0.5,&canon_4b_4l_ink},
+        {'y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* iP4000 mode used for CD printing (quality 3) */
+/* also iP4100 */
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_2b_4l_ink},
+        {'m',0.5,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4on_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',0.5,&canon_2b_4l_ink},
+        {'m',0.5,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL}
 };
 
@@ -578,48 +646,6 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4plain_inkset[] = {
         {'m',1.0,&canon_4b_4l_ink},
         {'y',1.0,&canon_4b_4l_ink},
         {0,0.0,NULL},
-        {0,0.0,NULL}
-};
-
-/* attempt to output cmy inks only for hi-res photo modes (MP360 family) */
-static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4minor_inkset[] = {
-        {'C',0.0,&canon_4b_4l_ink},
-        {'M',0.0,&canon_4b_4l_ink},
-        {'Y',0.0,&canon_4b_4l_ink},
-        {'K',0.0,&canon_1b_2l_ink},
-        {'c',1.0,&canon_4b_4l_ink},
-        {'m',1.0,&canon_4b_4l_ink},
-        {'y',1.0,&canon_4b_4l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL}
-};
-
-/* check this one!!! */
-/* also for DS700 */
-static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
-        {'C',1.0,&canon_4b_4l_ink},
-        {'M',1.0,&canon_4b_4l_ink},
-        {'Y',1.0,&canon_4b_4l_ink},
-        {'K',0.0,&canon_1b_2l_ink},
-        {'c',0.5,&canon_4b_4l_ink},
-        {'m',0.5,&canon_4b_4l_ink},
-        {'y',1.0,&canon_4b_4l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL}
-};
-
-/* iP4000 mode used for CD printing (quality 3) */
-/* Gernot: This is also the normal hi-quality mode for iP4000 at quality level 3 */
-/*         The same inket is used at quality levels 4, 3 and 2 for CD printing */
-static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
-        {'C',1.0,&canon_2b_4l_ink},
-        {'M',1.0,&canon_2b_4l_ink},
-        {'Y',1.0,&canon_2b_4l_ink},
-        {'K',0.0,&canon_1b_2l_ink},
-        {'c',0.5,&canon_2b_4l_ink},
-        {'m',0.5,&canon_2b_4l_ink},
-        {0,0.0,NULL},
-        {'k',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL}
 };
 
