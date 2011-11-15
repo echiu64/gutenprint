@@ -954,7 +954,6 @@ static const canon_paper_t canon_PIXMA_iX7000_papers[] = { /*               k_lo
 };
 DECLARE_PAPERS(canon_PIXMA_iX7000);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP250 */
 static const canon_paper_t canon_MULTIPASS_MP250_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
