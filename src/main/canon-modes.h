@@ -545,6 +545,26 @@ static const canon_mode_t canon_PIXMA_iP4300_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iP4300,0);
 
+/* plain high mode has more output inks than declared in inkset, and unknown to boot */
+static const canon_mode_t canon_PIXMA_iP5000_modes[] = {
+  /* plain modes */
+  {  600, 600,CANON_INK_CMYK|CANON_INK_K,"600x600dpi",N_("600x600 DPI"),INKSET(9_C3M3Y2K2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi_high",N_("300x300 DPI HIGH"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},/* 1-bpp, untested */
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi",N_("300x300 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},/* 1-bpp */
+  {  300, 300,CANON_INK_CMYK|CANON_INK_K,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},/* 1-bpp */
+  /* photo --- most use plain high mode which is currently unsupported */
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT PlusGlossy"),INKSET(9_C3M3Y3K2c3m3k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1}, /* CMYcmk */
+  /* TST CMY */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(9_C4M4Y4K2k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* OHP CMYKk */
+  {  600, 600,CANON_INK_CMYKk,"600x600dpi_photohigh",N_("600x600 DPI HIGH Transparency"),INKSET(9_C4M4Y4K2k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYKk,"600x600dpi_photo",N_("600x600 DPI Transparency"),INKSET(9_C4M4Y4K2k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* Env/Hagaki */
+  {  600, 600,CANON_INK_CMYKk|CANON_INK_K,"600x600dpi_high2",N_("600x600 DPI HIGH Env/Hagaki"),INKSET(9_C3M3Y2K2k3on_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYKk|CANON_INK_K,"600x600dpi_std2",N_("600x600 DPI Env/Hagaki"),INKSET(9_C3M3Y2K2k3on_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_PIXMA_iP5000,0);
+
 static const canon_mode_t canon_PIXMA_iP6000_modes[] = {
   /* plain modes */
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K4c4m4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
