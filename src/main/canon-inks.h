@@ -1297,6 +1297,23 @@ static const canon_inkset_t canon_13_C4M4Y4k4c4m4_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* used by iP4500 */
+static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4on2_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink}, /* switch off */
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {'k',1.0,&canon_2b_4l_ink}, /* swap to k */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* Gernot: MP150 (MP170 for tests) high-quality mode */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},

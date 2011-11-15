@@ -302,7 +302,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
 
-  5) The following printer models were completely redefined:
+  5) The following printer models were completely redefined or had
+     major changes carried out in the supported modes:
 
        Canon PIXMA iP5000 (EXPERIMENTAL)
 
