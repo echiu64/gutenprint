@@ -932,31 +932,30 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-  { /* Canon PIXMA iP5000 */
-    "PIXMA iP5000", 3,          /*model, model_id*/
+  { /* Canon PIXMA iP4200 */
+    "PIXMA iP4200", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
-    &canon_PIXMA_iP5000_modelist,
-    &canon_PIXMA_iP5000_paperlist,
-    NULL,
-    NULL,
-    NULL,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    &canon_PIXMA_iP4200_modelist,
+    &canon_PIXMA_iP4200_paperlist,
+    iP4200_lum_adjustment,
+    iP4200_hue_adjustment,
+    iP4200_sat_adjustment,
     iP4500_channel_order
   },
-  { /* Canon PIXMA iP5300, MP610 */
-    "PIXMA iP5300", 3,          /*model, model_id*/
+  { /* Canon PIXMA iP4300 */
+    "PIXMA iP4300", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
-    &canon_PIXMA_iP5300_modelist,
-    /*&canon_PIXMA_iP4000_paperlist,*/
-    &canon_MULTIPASS_MP600_paperlist,
-    NULL,
-    NULL,
-    NULL,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    &canon_PIXMA_iP4300_modelist, /* slight differences to iP4200 */
+    &canon_PIXMA_iP4200_paperlist,
+    iP4200_lum_adjustment,
+    iP4200_hue_adjustment,
+    iP4200_sat_adjustment,
     iP4500_channel_order
   },
   { /* Canon PIXMA iP4500 CD-R tray F */
@@ -998,32 +997,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon PIXMA iP4200 */
-    "PIXMA iP4200", 3,          /*model, model_id*/
-    842, 17*72,       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
-    &canon_PIXMA_iP4200_modelist,
-    &canon_PIXMA_iP4200_paperlist,
-    iP4200_lum_adjustment,
-    iP4200_hue_adjustment,
-    iP4200_sat_adjustment,
-    iP4500_channel_order
-  },
-  { /* Canon PIXMA iP4300 */
-    "PIXMA iP4300", 3,          /*model, model_id*/
-    842, 17*72,       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
-    &canon_PIXMA_iP4300_modelist, /* slight differences to iP4200 */
-    &canon_PIXMA_iP4200_paperlist,
-    iP4200_lum_adjustment,
-    iP4200_hue_adjustment,
-    iP4200_sat_adjustment,
-    iP4500_channel_order
-  },
   { /* Canon PIXMA iP4800 CD-R tray G */
     "PIXMA iP4800", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
@@ -1045,6 +1018,33 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_MG5300,  /* features Uses ESC (r only for CD media */
     &canon_PIXMA_iP4900_modelist,
     &canon_PIXMA_MG5200_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* Canon PIXMA iP5000 */
+    "PIXMA iP5000", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    &canon_PIXMA_iP5000_modelist,
+    &canon_PIXMA_iP5000_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* Canon PIXMA iP5300, MP610 */
+    "PIXMA iP5300", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP4000_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    &canon_PIXMA_iP5300_modelist,
+    /*&canon_PIXMA_iP4000_paperlist,*/
+    &canon_MULTIPASS_MP600_paperlist,
     NULL,
     NULL,
     NULL,
