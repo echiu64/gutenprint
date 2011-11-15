@@ -2599,19 +2599,20 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4on_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* high */
-/* MP990, MG6100, MG6200, MG800 */
+
+/* fast */
+/* MP990, MG6100, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
-/*static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {*/
-static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
+/*static const canon_inkset_t canon_30_C2M2K2m2_inkset[] = {*/
+static const canon_inkset_t canon_30_K2C2M2Y2_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
-        {'C',1.0,&canon_4b_6l_ink},
+        {'C',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-        {'M',1.0,&canon_4b_6l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-        {'Y',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
-        {'k',0.0,&canon_2b_4l_ink}, /* will not use it, but need to specify it */
+        {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -2706,19 +2707,19 @@ static const canon_inkset_t canon_30_K2C3M3Y2k3on_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* fast */
-/* MP990, MG6100, MG800 */
+/* high */
+/* MP990, MG6100, MG6200, MG800 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
-/*static const canon_inkset_t canon_30_C2M2K2m2_inkset[] = {*/
-static const canon_inkset_t canon_30_K2C2M2Y2_inkset[] = {
+/*static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {*/
+static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
-        {'C',1.0,&canon_1b_2l_ink},
+        {'C',1.0,&canon_4b_6l_ink},
         {0,0.0,NULL},
-        {'M',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_4b_6l_ink},
         {0,0.0,NULL},
-        {'Y',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
-        {0,0.0,NULL},
+        {'k',0.0,&canon_2b_4l_ink}, /* will not use it, but need to specify it */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -2778,6 +2779,41 @@ static const canon_inkset_t canon_30_C5M5Y4k4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
 };
+
+/* photo without grey (H) */
+static const canon_inkset_t canon_30_M6K6m4k4_inkset[] = {
+        {0,0.0,NULL},
+        {'C',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 
 /* photo without grey (H) */
 static const canon_inkset_t canon_30_M8K8m4k4_inkset[] = {
