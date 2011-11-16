@@ -1324,6 +1324,7 @@ static const canon_inkset_t canon_13_C4M4Y4k4c4m4_inkset[] = {
 };
 
 /* used by iP4500 */
+/* also iP5300 */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4on2_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
