@@ -1060,12 +1060,12 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon PIXMA iP6000 */
+  { /* Canon PIXMA iP6000D */
     "PIXMA iP6000", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP6000_modelist,
     &canon_PIXMA_iP4000_paperlist,
     NULL,
@@ -1078,7 +1078,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_I|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP6000_modelist,
     &canon_PIXMA_iP6100_paperlist,
     NULL,
@@ -1091,7 +1091,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP170_slotlist, /* has ESC (T */
-    CANON_CAP_STD0|CANON_CAP_T|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,  /*features */
+    CANON_CAP_STD0|CANON_CAP_T|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP6210_modelist,
     &canon_PIXMA_iP90_paperlist,
     NULL,
@@ -1099,12 +1099,12 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon PIXMA iP6600 */
+  { /* Canon PIXMA iP6600D */
     "PIXMA iP6600", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP6700_modelist,
     &canon_PIXMA_iP6600_paperlist,
     NULL,
@@ -1112,12 +1112,12 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon PIXMA iP6700 */
+  { /* Canon PIXMA iP6700D */
     "PIXMA iP6700", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_I|CANON_CAP_r|CANON_CAP_px,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP6700_modelist,
     &canon_PIXMA_iP6700_paperlist,
     NULL,
