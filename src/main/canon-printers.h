@@ -1403,14 +1403,13 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    /*CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px,0x61,control_cmd_PIXMA_iP4000,*/  /*features */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4000,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP8500_modelist,
-    &canon_PIXMA_iP4000_paperlist,
+    &canon_PIXMA_iP8500_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP8600 */
     "PIXMA iP8600", 3,          /*model, model_id*/
