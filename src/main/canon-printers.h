@@ -1318,7 +1318,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA Pro9000 Mk.II */
     "PIXMA Pro9002", 3,          /*model, model_id*/
@@ -1331,7 +1331,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA Pro9500 */
     "PIXMA Pro9500", 3,          /*model, model_id*/
