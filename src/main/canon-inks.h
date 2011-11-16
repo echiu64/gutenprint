@@ -2344,6 +2344,7 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
 };
 
 /* MP530: std used for photo */
+/* also MP830 */
 static const canon_inkset_t canon_22_C3M3Y2K2k3photo_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -2369,7 +2370,8 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3photo_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP4200: test K & k */
+/* iP4200: K & k */
+/* also MP830 */
 static const canon_inkset_t canon_22_C3M3Y2K2k3on_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -2470,7 +2472,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
 };
-/* MP8530 T-Shirt */
+/* MP830 T-Shirt */
 static const canon_inkset_t canon_22_C4M4Y4K2k4one_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2496,7 +2498,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2k4one_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP830 T-Shirt: K & k */
+/* K & k */
 static const canon_inkset_t canon_22_C4M4Y4K2k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2600,6 +2602,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4_inkset[] = {
 };
 
 /* iP4200: plain media high mode CcMmYKk */
+/* also MP830 */
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4on_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},

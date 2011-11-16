@@ -188,15 +188,13 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4000_slotlist,
-    /* CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px,0,control_cmd_MULTIPASS_MP150, */  /*features */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_MULTIPASS_MP150,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP830_modelist,
-    /* &canon_PIXMA_iP4000_paperlist, */
     &canon_MULTIPASS_MP600_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon MULTIPASS MP800 */
     "PIXMA MP800", 3,          /*model, model_id*/
