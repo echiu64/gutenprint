@@ -596,7 +596,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,
     11, 9, 10, 18,
     &canon_MULTIPASS_MP170_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i50_modelist,
     &canon_BJC_i50_paperlist,
     NULL,
@@ -609,7 +609,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,
     11, 9, 10, 18,
     &canon_MULTIPASS_MP170_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i70_modelist,
     &canon_BJC_i70_paperlist,
     NULL,
@@ -622,7 +622,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,
     11, 9, 10, 18,
     &canon_MULTIPASS_MP170_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i80_modelist,
     &canon_BJC_i80_paperlist,
     NULL,
@@ -630,6 +630,20 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon BJC i250 */ /* does not conform to any current model, commands not known yet */
+    "i250", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
+    &canon_BJC_i250_modelist,
+    &canon_BJC_i250_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+
 
   /*************/
   /* DS models */
