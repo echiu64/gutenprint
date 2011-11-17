@@ -316,6 +316,7 @@ static const canon_mode_t canon_BJC_i80_modes[] = {
 DECLARE_MODES(canon_BJC_i80,0);
 
 /* not known what is format of sending of logical color data, just sequence of (z commands like some iP devices */
+/* all modes use MP360 flag */
 static const canon_mode_t canon_BJC_i250_modes[] = {
   /* plain modes --- Env/Hagaki same (except no draft mode) */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
@@ -340,6 +341,37 @@ static const canon_mode_t canon_BJC_i250_modes[] = {
   {  600, 600,CANON_INK_CMY,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(9_C5M5Y5K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
 DECLARE_MODES(canon_BJC_i250,0);
+
+/* not known what is format of sending of logical color data, just sequence of (z commands like some iP devices */
+/* all modes use MP360 flag */
+static const canon_mode_t canon_BJC_i320_modes[] = {
+  /* plain modes */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_high2",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI MEDIUM"),INKSET(9_C3M3Y2K2h),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,2},/* untested */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(9_C3M3Y2K2h),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(9_C2M2Y2K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,1},/* untested */
+  {  300, 300,CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(9_C2M2Y2K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  /* mono modes */
+  {  600, 600,CANON_INK_K,"300x300dpi_highmono",N_("300x300 DPI HIGH MONO"),INKSET(9_K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_K,"300x300dpi_mono",N_("300x300 DPI MONO"),INKSET(9_K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,2},/* untested */
+  {  300, 300,CANON_INK_K,"300x300dpi_mono",N_("300x300 DPI MONO"),INKSET(9_K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  300, 300,CANON_INK_K,"300x300dpi_draftmono",N_("300x300 DPI DRAFT"),INKSET(9_K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,0},
+  /* photo modes */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH gloss"),INKSET(9_C7M7Y7K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,4},/* untested */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(9_C5M5Y5K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,4},
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photomed",N_("600x600 DPI PHOTO MEDIUM gloss"),INKSET(9_C5M5Y5K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photo",N_("600x600 DPI PHOTO coated/glossFilm"),INKSET(9_C5M5Y5K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photo2",N_("600x600 DPI PHOTO"),INKSET(9_C5M5Y5K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* Transparency */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh3",N_("600x600 DPI HIGH Transparency"),INKSET(9_C4M4Y4K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo3",N_("600x600 DPI Transparency"),INKSET(9_C3M3Y2K2h),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* T-Shirt */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(9_C5M5Y5K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* Env/Hagaki --- different quality settings to plain */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_high3",N_("600x600 DPI HIGH Env/Hagaki"),INKSET(9_C4M4Y4K2),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_std3",N_("600x600 DPI Env/Hagaki"),INKSET(9_C3M3Y2K2h),8,MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_BJC_i320,0);
 
 static const canon_mode_t canon_BJC_8200_modes[] = {
   {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
