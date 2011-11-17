@@ -154,6 +154,13 @@ static const char* control_cmd_PIXMA_iP4000[] = {
   NULL
 };
 
+static const char* control_cmd_BJC_i550[] = {
+/*"SetTime=20060722092503", */         /*what is this for?*/
+  "SetSilent=OFF",
+  "SelectParallel=ECP",
+  NULL
+};
+
 static const char* control_cmd_PIXMA_iP4200[] = {
 /*"SetTime=20060722092503", */         /*original driver sends current time, is it needed?*/
   "SetSilent=OFF",
@@ -681,6 +688,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     iP4500_channel_order
+  },
+  { /* Canon BJC i550 */
+    "i550", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_BJC_i550,
+    &canon_BJC_i550_modelist,
+    &canon_BJC_i550_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
   },
 
 
