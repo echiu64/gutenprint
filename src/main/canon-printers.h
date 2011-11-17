@@ -591,6 +591,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC i70 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
+    "i70", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
+    &canon_BJC_i70_modelist,
+    &canon_BJC_i70_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon BJC i80 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     "i80", 3,
     842, 17*72,
