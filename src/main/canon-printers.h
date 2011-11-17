@@ -656,6 +656,32 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC i450 */
+    "i450", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,
+    &canon_BJC_i450_modelist,
+    &canon_BJC_i450_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
+  { /* Canon BJC i455*/
+    "i455", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,
+    &canon_BJC_i455_modelist,
+    &canon_BJC_i450_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
 
 
   /*************/

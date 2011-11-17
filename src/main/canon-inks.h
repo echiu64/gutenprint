@@ -564,7 +564,7 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
         {'Y',1.0,&canon_4b_4l_ink},
-        {'K',0.0,&canon_1b_2l_ink},
+        {'K',0.0,&canon_1b_2l_ink},/* switch off */
         {'c',0.5,&canon_4b_4l_ink},
         {'m',0.5,&canon_4b_4l_ink},
         {'y',1.0,&canon_4b_4l_ink},
@@ -699,6 +699,18 @@ static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C5M5Y5K2plain_inkset[] = {
+        {'C',1.0,&canon_4b_5l_ink},
+        {'M',1.0,&canon_4b_5l_ink},
+        {'Y',1.0,&canon_4b_5l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_9_C6M6Y6K6_c_inkset[] = {
         {'C',1.0,&canon_4b_6l_c_ink},
         {'M',1.0,&canon_4b_6l_c_ink},
@@ -817,6 +829,19 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9_inkset[] = {
         {'c',1.0,&canon_4b_9l_ink},
         {'m',1.0,&canon_4b_9l_ink},
         {'y',1.0,&canon_4b_9l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+/* i450 */
+static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9plain8_inkset[] = {
+        {'C',1.0,&canon_8b_9l_ink},
+        {'M',1.0,&canon_8b_9l_ink},
+        {'Y',1.0,&canon_8b_9l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_8b_9l_ink},
+        {'m',1.0,&canon_8b_9l_ink},
+        {'y',1.0,&canon_8b_9l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL}
 };
