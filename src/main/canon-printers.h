@@ -595,14 +595,14 @@ static const canon_cap_t canon_model_capabilities[] =
     "i80", 3,
     842, 17*72,
     11, 9, 10, 18,
-    &canon_default_slotlist,
-    CANON_CAP_STD0,0,NULL,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i80_modelist,
-    &canon_default_paperlist,
+    &canon_BJC_i80_paperlist,
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
 
   /*************/

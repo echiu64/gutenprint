@@ -572,6 +572,31 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4_inkset[] = {
         {0,0.0,NULL}
 };
 
+/* i80 */
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4plain2_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C4M4Y4K2c4m4y4photo2_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {'m',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 /* iP4000 mode used for CD printing (quality 3) */
 /* also iP4100 */
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
