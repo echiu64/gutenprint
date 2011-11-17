@@ -261,6 +261,7 @@
        <printer translate="name" name="Canon PIXMA MX870" driver="bjc-MULTIPASS-MX870" manufacturer="Canon" model="9000870" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX870" />
        <printer translate="name" name="Canon PIXMA MX880" driver="bjc-MULTIPASS-MX880" manufacturer="Canon" model="9000880" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX880" />
        <printer translate="name" name="Canon PIXMA MX7600" driver="bjc-MULTIPASS-MX7600" manufacturer="Canon" model="9007600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX7600" />
+      <printer translate="name" name="Canon i50" driver="bjc-i50"   manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-i50" />
       <printer translate="name" name="Canon i70" driver="bjc-i70"   manufacturer="Canon" model="2000070" parameters="density_800_params" foomaticid="Canon-i70" />
       <printer translate="name" name="Canon i80" driver="bjc-i80"   manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-i80" />
       <printer translate="name" name="Canon i560" driver="bjc-i560" manufacturer="Canon" model="2000560" parameters="gamma_6_density_800_params" foomaticid="Canon-i560" />
