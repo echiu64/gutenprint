@@ -273,6 +273,7 @@
       <printer translate="name" name="Canon i550" driver="bjc-i550" manufacturer="Canon" model="2000550" parameters="density_800_params" foomaticid="Canon-i550" />
       <printer translate="name" name="Canon i560" driver="bjc-i560" manufacturer="Canon" model="2000560" parameters="gamma_6_density_800_params" foomaticid="Canon-i560" />
       <printer translate="name" name="Canon i850" driver="bjc-i850" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-i850" />
+      <printer translate="name" name="Canon i850-new" driver="bjc-i850" manufacturer="Canon" model="2000850" parameters="PIXMA_iP4000_params" foomaticid="Canon-i850new" />
       <printer translate="name" name="Canon i860" driver="bjc-i860" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-i860" />
       <printer translate="name" name="Canon i865" driver="bjc-i865" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-i865" />
     </family>

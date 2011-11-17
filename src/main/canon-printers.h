@@ -702,6 +702,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC i850 */
+    "i850", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP900_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_BJC_i550,
+    &canon_BJC_i850_modelist,
+    &canon_BJC_i850_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
 
 
   /*************/
