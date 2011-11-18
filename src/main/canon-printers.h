@@ -161,6 +161,12 @@ static const char* control_cmd_BJC_i550[] = {
   NULL
 };
 
+static const char* control_cmd_BJC_i6100[] = {
+/*"SetTime=20060722092503", */         /*what is this for?*/
+  "SelectParallel=ECP",
+  NULL
+};
+
 static const char* control_cmd_PIXMA_iP4200[] = {
 /*"SetTime=20060722092503", */         /*original driver sends current time, is it needed?*/
   "SetSilent=OFF",
@@ -766,6 +772,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     iP4500_channel_order
+  },
+  { /* Canon BJC i6100 */
+    "i6100", 3,
+    842, 17*72,
+    10, 10, 15, 15,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_BJC_i6100, /* 32 times 0x0 before form feed not implemented */
+    &canon_BJC_i6100_modelist,
+    &canon_BJC_i6100_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
   },
 
 

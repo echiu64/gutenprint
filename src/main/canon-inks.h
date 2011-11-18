@@ -350,6 +350,18 @@ static const canon_inkset_t canon_9_C2M2Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C2M2Y2K2c2m2y2_inkset[] = {
+        {'C',1.0,&canon_1b_2l_ink},
+        {'M',1.0,&canon_1b_2l_ink},
+        {'Y',1.0,&canon_1b_2l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {'c',1.0,&canon_1b_2l_ink},
+        {'m',1.0,&canon_1b_2l_ink},
+        {'y',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 /* also for DS810 */
 static const canon_inkset_t canon_9_c3m3y3_inkset[] = {
 	{0,0.0,NULL},
