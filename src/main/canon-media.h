@@ -117,6 +117,12 @@ static const canon_slot_t canon_MULTIPASS_MP900_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP900);
 
+static const canon_slot_t canon_BJC_i860_slots[] = {
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "Cassette",   N_ ("Cassette"), 0x8 },
+};
+DECLARE_SLOTS(canon_BJC_i860);
+
 /* MX7600 */
 static const canon_slot_t canon_MULTIPASS_MX7600_slots[] = {
   { "Cassette",       N_ ("Cassette"), 0x8 },

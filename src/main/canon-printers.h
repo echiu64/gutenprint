@@ -705,7 +705,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC i850 */
     "i850", 3,
     842, 17*72,
-    11, 9, 10, 18,
+    10, 10, 15, 15,
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_BJC_i550,
     &canon_BJC_i850_modelist,
@@ -714,6 +714,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL
+  },
+  { /* Canon BJC i860 */
+    "i860", 3,
+    842, 17*72,
+    10, 10, 15, 15,
+    &canon_BJC_i860_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,control_cmd_BJC_i550, /* ESC (M 0x0 0x0 0x0 */
+    &canon_BJC_i860_modelist,
+    &canon_BJC_i450_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
   },
 
 

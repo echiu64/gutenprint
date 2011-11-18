@@ -125,6 +125,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_DUPLEX    0x40000ul
 #define CANON_CAP_XML       0x80000ul /* not sure of this yet */
 #define CANON_CAP_CARTRIDGE 0x100000ul /* not sure of this yet */
+#define CANON_CAP_M         0x200000ul /* not sure of this yet */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -1048,8 +1049,15 @@ canon_init_setDuplex(const stp_vars_t *v, const canon_privdata_t *init)
 {
   if (!(init->caps->features & CANON_CAP_DUPLEX))
     return;
-  if (strncmp(init->duplex_str, "Duplex", 6)) 
-    return;
+  if (strncmp(init->duplex_str, "Duplex", 6)) {
+    if (!strcmp(init->caps->name,"i860")) {
+      /* i860 uses ESC ($ command even for simplex mode */
+      canon_cmd(v,ESC28,0x24,9,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
+      return;
+    }
+    else
+      return;
+  }
   /* The same command seems to be needed for both Duplex and DuplexTumble
      no idea about the meanings of the single bytes */
   canon_cmd(v,ESC28,0x24,9,0x01,0x00,0x02,0x00,0x00,0x00,0x00,0x00,0x02);
@@ -1259,6 +1267,17 @@ canon_init_setPrintMode(const stp_vars_t *v, const canon_privdata_t *init)
 	    arg_6d_a,arg_6d_b,arg_6d_2,0x00,arg_6d_3);
 }
 
+/* ESC (M -- 0x4d --  -- :
+ */
+static void
+canon_init_setESC_M(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_M))
+    return;
+
+  canon_cmd(v,ESC28,0x4d, 3, 0x00, 0x00, 0x00);
+}
+
 /* ESC (p -- 0x70 -- cmdSetPageMargins2 --:
  */
 static void
@@ -1393,7 +1412,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /*                             size                media             */
       canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00);
     }
-  else if ( !(strcmp(init->caps->name,"i80")) || !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP130")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375R")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA MP900"))  || !(strcmp(init->caps->name,"PIXMA iP1000"))  || !(strcmp(init->caps->name,"PIXMA iP1500"))  || !(strcmp(init->caps->name,"PIXMA iP2000"))  || !(strcmp(init->caps->name,"PIXMA iP3000"))  || !(strcmp(init->caps->name,"PIXMA iP3100"))  || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP4100")) || !(strcmp(init->caps->name,"PIXMA iP5000"))  || !(strcmp(init->caps->name,"PIXMA iP6000D")) || !(strcmp(init->caps->name,"PIXMA iP6100D")) || !(strcmp(init->caps->name,"PIXMA iP8500"))  )  {
+  else if ( !(strcmp(init->caps->name,"i80")) || !(strcmp(init->caps->name,"i860")) || !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP130")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375R")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA MP900"))  || !(strcmp(init->caps->name,"PIXMA iP1000"))  || !(strcmp(init->caps->name,"PIXMA iP1500"))  || !(strcmp(init->caps->name,"PIXMA iP2000"))  || !(strcmp(init->caps->name,"PIXMA iP3000"))  || !(strcmp(init->caps->name,"PIXMA iP3100"))  || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP4100")) || !(strcmp(init->caps->name,"PIXMA iP5000"))  || !(strcmp(init->caps->name,"PIXMA iP6000D")) || !(strcmp(init->caps->name,"PIXMA iP6100D")) || !(strcmp(init->caps->name,"PIXMA iP8500"))  )  {
     /* 2 bytes only */
       canon_cmd( v,ESC28,0x50,2,0x00,arg_ESCP_1 );
     }	
@@ -1623,6 +1642,7 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   /* init printer */
   if (init->is_first_page) {
     canon_init_resetPrinter(v,init);       /* ESC [K */
+    canon_init_setESC_M(v,init);           /* ESC (M */
     canon_init_setDuplex(v,init);          /* ESC ($ */
   }
   canon_init_setPageMode(v,init);        /* ESC (a */
