@@ -733,6 +733,54 @@ static const canon_inkset_t canon_9_C5M5Y5K2plain_inkset[] = {
         {0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_9_C5M5Y5K5_c_inkset[] = {
+        {'C',1.0,&canon_4b_5l_c_ink},
+        {'M',1.0,&canon_4b_5l_c_ink},
+        {'Y',1.0,&canon_4b_5l_c_ink},
+        {'K',1.0,&canon_4b_5l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C5M5Y5K5c5m5_c_inkset[] = {
+        {'C',1.0,&canon_4b_5l_c_ink},
+        {'M',1.0,&canon_4b_5l_c_ink},
+        {'Y',1.0,&canon_4b_5l_c_ink},
+        {'K',1.0,&canon_4b_5l_c_ink},
+        {'c',1.0,&canon_4b_5l_c_ink},
+        {'m',1.0,&canon_4b_5l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C5M5Y5K5c9m9_c_inkset[] = {
+        {'C',1.0,&canon_4b_5l_c_ink},
+        {'M',1.0,&canon_4b_5l_c_ink},
+        {'Y',1.0,&canon_4b_5l_c_ink},
+        {'K',1.0,&canon_4b_5l_c_ink},
+        {'c',1.0,&canon_4b_9l_ink},
+        {'m',1.0,&canon_4b_9l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
+static const canon_inkset_t canon_9_C5M5Y5K9c5m5_c_inkset[] = {
+        {'C',1.0,&canon_4b_5l_c_ink},
+        {'M',1.0,&canon_4b_5l_c_ink},
+        {'Y',1.0,&canon_4b_5l_c_ink},
+        {'K',1.0,&canon_4b_9l_ink},
+        {'c',1.0,&canon_4b_5l_c_ink},
+        {'m',1.0,&canon_4b_5l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL}
+};
+
 static const canon_inkset_t canon_9_C6M6Y6K6_c_inkset[] = {
         {'C',1.0,&canon_4b_6l_c_ink},
         {'M',1.0,&canon_4b_6l_c_ink},

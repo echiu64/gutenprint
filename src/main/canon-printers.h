@@ -786,6 +786,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC i9100 */
+    "i9100", 3,
+    842, 17*72,
+    10, 10, 15, 15,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,
+    &canon_BJC_i9100_modelist,
+    &canon_BJC_i6100_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
 
 
   /*************/
