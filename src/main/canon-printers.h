@@ -572,19 +572,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-  { /* Canon BJC i560 */
-    "i560", 3,
-    842, 17*72,
-    11, 9, 10, 18,
-    &canon_default_slotlist,
-    CANON_CAP_STD1,0,NULL,
-    &canon_BJC_i560_modelist,
-    &canon_default_paperlist,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-  },
   { /* Canon BJC 7100 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     "7100", 3,
     842, 17*72,
@@ -701,6 +688,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL
+  },
+  { /* Canon BJC i560 */
+    "i560", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_BJC_i550,
+    &canon_BJC_i560_modelist,
+    &canon_BJC_i250_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
   },
   { /* Canon BJC i850 */
     "i850", 3,
