@@ -639,7 +639,7 @@ static const canon_inkset_t canon_9_C4M4Y4K4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
-        {'K',1.0,&canon_2b_4l_ink}, /* put K back in for OHP */
+        {'K',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -647,7 +647,6 @@ static const canon_inkset_t canon_9_C4M4Y4K4_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* check this one !!! */
 static const canon_inkset_t canon_9_C4M4Y4K4c4m4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},

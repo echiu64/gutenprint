@@ -728,6 +728,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon BJC i900D */
+    "i900", 3,
+    842, 17*72,
+    10, 10, 15, 15,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,control_cmd_PIXMA_iP2700, /* ESC (M 0x0 0x0 0x0 */
+    &canon_BJC_i900_modelist,
+    &canon_BJC_i450_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon BJC i950 */
     "i950", 3,
     842, 17*72,
