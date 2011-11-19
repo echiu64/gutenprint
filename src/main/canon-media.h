@@ -483,7 +483,7 @@ static const canon_paper_t canon_BJC_i6100_papers[] = {
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x00,0.78, 0.25, 0.900, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* i9900 */
 };
 DECLARE_PAPERS(canon_BJC_i6100);
 
