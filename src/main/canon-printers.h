@@ -320,10 +320,10 @@ static const canon_cap_t canon_model_capabilities[] =
     "S200", 3,
     618, 936,       /* 8.58" x 13 " */
     10, 10, 9, 20,
-    &canon_default_slotlist,
+    &canon_MULTIPASS_MP170_slotlist,
     CANON_CAP_STD1 | CANON_CAP_rr,0x61,NULL,
     &canon_S200_modelist,
-    &canon_default_paperlist,
+    &canon_BJC_S200_paperlist,
     NULL,
     NULL,
     NULL,
