@@ -329,6 +329,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA i850   (EXPERIMENTAL) *1
        Canon PIXMA i860   (EXPERIMENTAL) *1
        Canon   BJC S300   (EXPERIMENTAL)
+       Canon   BJC S500   (EXPERIMENTAL)
 
        *1: for compatibility, the changed printers are named with
         "new" appended. The old printers will be deprecated in a

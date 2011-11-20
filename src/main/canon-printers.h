@@ -355,6 +355,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon S500 */
+    "S500", 3,
+    842, 17*72,
+    10, 10, 15, 15,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_p,0,control_cmd_BJC_i6100,
+    &canon_S500_modelist,
+    &canon_BJC_S300_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon  BJ 30   *//* heads: BC-10 */
     "30", 1,
     9.5*72, 14*72,
@@ -458,19 +471,6 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_default_slotlist,
     CANON_CAP_STD1 | CANON_CAP_r,0x61,control_cmd_ackshort,
     &canon_BJC_8200_modelist,
-    &canon_default_paperlist,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-  },
-  { /* Canon S500 */
-    "S500", 3,
-    842, 17*72,
-    10, 10, 15, 15,
-    &canon_default_slotlist,
-    CANON_CAP_STD0 | CANON_CAP_r | CANON_CAP_p,0x61,control_cmd_ackshort,
-    &canon_S500_modelist,
     &canon_default_paperlist,
     NULL,
     NULL,
