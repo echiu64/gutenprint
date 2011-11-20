@@ -329,7 +329,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-
   { /* Canon BJC S300 */
     "S300", 3,
     842, 17*72,
@@ -343,7 +342,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-
+  { /* Canon BJC S330 */
+    "S330", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
+    &canon_BJC_S330_modelist,
+    &canon_BJC_S330_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon  BJ 30   *//* heads: BC-10 */
     "30", 1,
     9.5*72, 14*72,

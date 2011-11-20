@@ -123,6 +123,7 @@
       <printer translate="name" name="Canon S100" deviceid="MFG:Canon;MDL:S100SP;DES:Canon S100SP;CMD:BJL,BJRaster,BSCC,TXT01;" driver="bjc-s100" manufacturer="Canon" model="4300" parameters="gamma_750_params" foomaticid="Canon-S100" />
       <printer translate="name" name="Canon S200" driver="bjc-s200" manufacturer="Canon" model="1000200" parameters="gamma_8_density_900_params" foomaticid="Canon-S200" />
       <printer translate="name" name="Canon S300" driver="bjc-s300" manufacturer="Canon" model="1000300" parameters="density_800_params" foomaticid="Canon-S300" />
+      <printer translate="name" name="Canon S330" driver="bjc-s330" manufacturer="Canon" model="1000330" parameters="density_800_params" foomaticid="Canon-S330" />
       <printer translate="name" name="Canon S400" driver="bjc-s400" manufacturer="Canon" model="3000" parameters="density_800_params" foomaticid="Canon-S400" />
       <printer translate="name" name="Canon S450" driver="bjc-s450" manufacturer="Canon" model="6200" parameters="gamma_750_params" foomaticid="Canon-S450" />
       <printer translate="name" name="Canon S500" driver="bjc-s500" manufacturer="Canon" model="1000500" parameters="density_800_params" foomaticid="Canon-S500" />
