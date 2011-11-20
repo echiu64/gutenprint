@@ -420,6 +420,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC S820 */
+    "S820", 3,
+    842, 17*72,
+    11, 9, 10, 18,
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,control_cmd_BJC_i550,
+    &canon_BJC_S820_modelist,
+    &canon_BJC_S800_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
   { /* Canon  BJ 30   *//* heads: BC-10 */
     "30", 1,
     9.5*72, 14*72,
