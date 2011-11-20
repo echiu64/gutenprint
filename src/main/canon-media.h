@@ -123,6 +123,12 @@ static const canon_slot_t canon_BJC_i860_slots[] = {
 };
 DECLARE_SLOTS(canon_BJC_i860);
 
+static const canon_slot_t canon_BJC_S800_slots[] = {
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "HandFeed",   N_ ("Hand Feeding"), 0x1 },
+};
+DECLARE_SLOTS(canon_BJC_S800);
+
 /* MX7600 */
 static const canon_slot_t canon_MULTIPASS_MX7600_slots[] = {
   { "Cassette",       N_ ("Cassette"), 0x8 },
@@ -418,6 +424,25 @@ static const canon_paper_t canon_BJC_S750_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
 };
 DECLARE_PAPERS(canon_BJC_S750);
+
+static const canon_paper_t canon_BJC_S800_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),		        0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0x0b 0x11 */
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0x0a 0x10 */
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "GlossyFilm",	N_ ("High Gloss Film"),		        0x06,0x06,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyCard",	N_ ("Glossy Photo Cards"),	        0x05,0x0a,0x00,1.00, 1.00, 0.999, 0, 0, 0 },/* different from expected 0xa 0xa */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x00,0.78, 0.25, 0.900, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x00,0x0f,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0xf 0x14 */
+};
+DECLARE_PAPERS(canon_BJC_S800);
 
 static const canon_paper_t canon_BJC_i50_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },

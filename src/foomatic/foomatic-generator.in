@@ -1329,10 +1329,12 @@ sub qualityorder {
 		    "dpi_photodraft4",
 		    "dpi_photodraft5",
 		    "dpi_photomonohigh",
+		    "dpi_photomonohigh2",
 		    "dpi_photomonomed",
 		    "dpi_photomono",
 		    "dpi_photomono2",
 		    "dpi_photomonodraft",
+		    "dpi_photomonodraft2",
                     "dpi_ohphigh",
                     "dpi_ohp"
 		    );
