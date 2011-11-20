@@ -268,6 +268,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon   BJC S330   (EXPERIMENTAL)
        Canon   BJC S520   (EXPERIMENTAL)
        Canon   BJC S530D  (EXPERIMENTAL)
+       Canon   BJC S630   (EXPERIMENTAL)
        Canon PIXMA i50    (EXPERIMENTAL)
        Canon PIXMA i70    (EXPERIMENTAL)
        Canon PIXMA i250   (EXPERIMENTAL)
@@ -332,6 +333,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA i860   (EXPERIMENTAL) *1
        Canon   BJC S300   (EXPERIMENTAL)
        Canon   BJC S500   (EXPERIMENTAL)
+       Canon   BJC S600   (EXPERIMENTAL)
 
        *1: for compatibility, the changed printers are named with
         "new" appended. The old printers will be deprecated in a
