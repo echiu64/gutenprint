@@ -107,7 +107,8 @@ typedef struct {
 #define MODE_FLAG_CD 0x4               /* this mode can be used to print to cds */
 #define MODE_FLAG_PRO 0x8              /* special ink settings for the PIXMA Pro9500 not sure of this... maybe 0x4 */
 #define MODE_FLAG_IP8500 0x10          /* special ink settings for the PIXMA iP8500 */
-#define MODE_FLAG_MP360 0x84           /* special ink settings for the PIXMA MP360 */
+#define MODE_FLAG_MP360 0x20           /* special ink settings for the PIXMA MP360 */
+#define MODE_FLAG_MP130 0x40           /* special ink settings for early devices */
   const canon_delay_t* delay;          /* delay settings for this printmode */
   const double density;                /* density multiplier    */
   const double gamma;                  /* gamma multiplier      */
