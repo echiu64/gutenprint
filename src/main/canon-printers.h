@@ -836,6 +836,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon BJC i865 --- i860 with CD capability */
+    "i865", 3,
+    842, 17*72,
+    10, 10, 15, 15,
+    &canon_BJC_i865_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,control_cmd_BJC_i550, /* ESC (M 0x0 0x0 0x0 */
+    &canon_BJC_i865_modelist,
+    &canon_BJC_i865_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon BJC i900D */
     "i900", 3,
     842, 17*72,
