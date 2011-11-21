@@ -1061,9 +1061,6 @@ static const canon_paper_t canon_SELPHY_DS810_papers[] = {
 };
 DECLARE_PAPERS(canon_SELPHY_DS810);
 
-
-
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP150 so far */
 static const canon_paper_t canon_MULTIPASS_MP150_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
@@ -1081,7 +1078,6 @@ static const canon_paper_t canon_MULTIPASS_MP150_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP150);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP170, MP450, MP460 */
 static const canon_paper_t canon_MULTIPASS_MP170_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
@@ -1338,7 +1334,6 @@ static const canon_paper_t canon_MULTIPASS_MP250_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP250);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP280 */
 static const canon_paper_t canon_MULTIPASS_MP280_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
@@ -1375,7 +1370,6 @@ static const canon_paper_t canon_MULTIPASS_MP470_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP470);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MP480 */
 static const canon_paper_t canon_MULTIPASS_MP480_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
@@ -1510,7 +1504,6 @@ static const canon_paper_t canon_MULTIPASS_MP640_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP640);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* iP2700 series */
 static const canon_paper_t canon_PIXMA_iP2700_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
@@ -1549,7 +1542,6 @@ static const canon_paper_t canon_PIXMA_iP3600_papers[] = {    /*                
 };
 DECLARE_PAPERS(canon_PIXMA_iP3600);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* iP4500 */
 static const canon_paper_t canon_PIXMA_iP4500_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
@@ -1681,7 +1673,6 @@ static const canon_paper_t canon_MULTIPASS_MP990_papers[] = {    /*  k_lower_sca
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP990);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MG5100 series */
 static const canon_paper_t canon_PIXMA_MG5100_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
@@ -1701,7 +1692,6 @@ static const canon_paper_t canon_PIXMA_MG5100_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_MG5100);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MG5200 series */
 static const canon_paper_t canon_PIXMA_MG5200_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
@@ -1723,7 +1713,6 @@ static const canon_paper_t canon_PIXMA_MG5200_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_MG5200);
 
-/* Gernot: added ---- note: ESC ( P code not used at all yet, check print-canon.c */
 /* MG6100 series */
 static const canon_paper_t canon_PIXMA_MG6100_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
