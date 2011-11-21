@@ -1239,7 +1239,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA iP4100 */
     "PIXMA iP4100", 3,          /*model, model_id*/
