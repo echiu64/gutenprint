@@ -126,6 +126,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_XML       0x80000ul /* not sure of this yet */
 #define CANON_CAP_CARTRIDGE 0x100000ul /* not sure of this yet */
 #define CANON_CAP_M         0x200000ul /* not sure of this yet */
+#define CANON_CAP_S         0x400000ul /* not sure of this yet */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)

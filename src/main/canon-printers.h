@@ -1023,8 +1023,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP90", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist,/* also has CANON_CAP_S which is a new command to be added later */
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T,0,control_cmd_PIXMA_iP2700,  /*features */
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP90_modelist,
     &canon_PIXMA_iP90_paperlist,
     NULL,
@@ -1036,8 +1036,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP100", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist,/* also has CANON_CAP_S which is a new command to be added later */
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T,0,control_cmd_PIXMA_iP2700,  /*features */
+    &canon_MULTIPASS_MP170_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP100_modelist,
     &canon_PIXMA_iP100_paperlist,
     NULL,
