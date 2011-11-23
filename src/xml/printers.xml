@@ -325,6 +325,7 @@
       <printer translate="name" name="Epson Artisan 710" driver="escp2-artisan710" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Artisan_710" />
       <printer translate="name" name="Epson Artisan 800" driver="escp2-artisan800" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Artisan_800" />
       <printer translate="name" name="Epson Artisan 810" driver="escp2-artisan810" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Artisan_810" />
+      <printer translate="name" name="Epson Artisan 835" driver="escp2-artisan835" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Artisan_835" />
       <printer translate="name" name="Epson B-300" driver="escp2-b300" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B300" />
       <printer translate="name" name="Epson B-308" driver="escp2-b308" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B308" />
       <printer translate="name" name="Epson B-310" driver="escp2-b310" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B310" />
@@ -697,6 +698,7 @@
       <printer translate="name" name="Epson WorkForce 600" driver="escp2-wf600" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_600" />
       <printer translate="name" name="Epson WorkForce 610" driver="escp2-wf610" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_610" />
       <printer translate="name" name="Epson WorkForce 615" driver="escp2-wf615" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_615" />
+      <printer translate="name" name="Epson WorkForce 635" driver="escp2-wf636" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_635" />
       <printer translate="name" name="Epson WorkForce 1100" driver="escp2-wf1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-WorkForce_1100" />
       <printer translate="name" name="Epson CL 700" driver="escp2-cl700" manufacturer="Epson" model="38" parameters="480_params" foomaticid="Epson-CL_700" />
       <printer translate="name" name="Epson CL 750" driver="escp2-cl750" manufacturer="Epson" model="43" parameters="480_params" foomaticid="Epson-CL_750" />
