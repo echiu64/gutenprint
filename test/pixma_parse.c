@@ -164,21 +164,25 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
         char* buf = (char*)buffer;
 	int size=0; /* size of unpacked buffer */
 	int cur_line=0; /* line relative to block begin */
-
 	unsigned char* dst=malloc(len*256); /* the destination buffer */
 	unsigned char* dstr=dst;
 	if(!color){
           printf("no matching color for %c (0x%x, %i) in the database => ignoring %i bytes\n",color_name,color_name,color_name, len);
 	}
+	/*printf("DEBUG enter Raster len=%i,color=%c\n",len,color_name);*/
 
 	/* decode pack bits */
-	while( len > 0){
+	while( len > 0){ /* why does this not work: because unsigned integer wraps! */
 		int c = *buf;
 		++buf;
 		--len;
+	
+		/*printf("DEBUG top of while loop len=%i\n",len);*/
+	
 		if(c >= 128)
 			c -=256;
 		if(c== -128){ /* end of line => decode and copy things here */
+		  /*printf("DEBUG end of line---decode and copy things here\n");*/
 			/* create new list entry */
 			if(color && size){
 				if(!color->tail)
@@ -192,9 +196,11 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 					color->head->buf=calloc(1,size+8); /* allocate slightly bigger buffer for get_bits */
 					memcpy(color->head->buf,dstr,size);
 					color->head->len=size;
+					/*printf("DEBUG color not compressed\n");*/
 				}else{ /* handle 5pixel in 8 bits compression */
 					color->head->buf=calloc(1,size*2+8);
 					size=color->head->len=eight2ten(dstr,color->head->buf,size,size*2);
+					/*printf("DEBUG color compressed 5pixel in 8 bits \n");*/
 				}
 			}
 			/* adjust the maximum image width */
@@ -215,12 +221,15 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				c=*buf;
 				++buf;
 				--len;
+				/*printf("DEBUG repeat character %i\n",len);*/
 				memset(dst,c,i);
 				dst +=i;
 				size+=i;
 			}else{ /* normal code */
+			        /*printf("DEBUG normal code\n");*/
 				i=c+1;
 				len-=i;
+				/*printf("DEBUG before memcpy dst,buf,i. %d, %i\n",i,len);*/
 				memcpy( dst, buf, i);
 				buf +=i;
 				dst +=i;
