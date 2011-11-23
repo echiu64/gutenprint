@@ -83,6 +83,15 @@ static const canon_slot_t canon_PIXMA_iP3100_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iP3100);
 
+static const canon_slot_t canon_PIXMA_iP2000_slots[] = {
+  { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "Front",      N_ ("Front Feeder"), 0x8 },
+  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 }, /*Paper allocation? no idea what this means compared to Continuous*/
+};
+DECLARE_SLOTS(canon_PIXMA_iP2000);
+
 static const canon_slot_t canon_MULTIPASS_MP530_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
@@ -302,6 +311,23 @@ static const canon_paper_t canon_PIXMA_iP4000_papers[] = {
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* untested */
 };
 DECLARE_PAPERS(canon_PIXMA_iP4000);
+
+static const canon_paper_t canon_PIXMA_iP2000_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* untested */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* untested */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_PIXMA_iP2000);
 
 static const canon_paper_t canon_PIXMA_iP3000_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },

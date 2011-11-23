@@ -333,17 +333,18 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   5) The following printer models were completely redefined or had
      major changes carried out in the supported modes:
 
-       Canon PIXMA iP5000 (EXPERIMENTAL)
-       Canon PIXMA iP4100 (EXPERIMENTAL)
+       Canon   BJC S300   (EXPERIMENTAL)
+       Canon   BJC S500   (EXPERIMENTAL)
+       Canon   BJC S600   (EXPERIMENTAL)
+       Canon   BJC S800   (EXPERIMENTAL)
        Canon PIXMA i80    (EXPERIMENTAL)
        Canon PIXMA i560   (EXPERIMENTAL)
        Canon PIXMA i850   (EXPERIMENTAL) *1
        Canon PIXMA i860   (EXPERIMENTAL) *1
        Canon PIXMA i865   (EXPERIMENTAL) *1
-       Canon   BJC S300   (EXPERIMENTAL)
-       Canon   BJC S500   (EXPERIMENTAL)
-       Canon   BJC S600   (EXPERIMENTAL)
-       Canon   BJC S800   (EXPERIMENTAL)
+       Canon PIXMA iP2000 (EXPERIMENTAL)
+       Canon PIXMA iP4100 (EXPERIMENTAL)
+       Canon PIXMA iP5000 (EXPERIMENTAL)
 
        *1: for compatibility, the original printers are named with
         "old" appended. These old printers will be deprecated in a
