@@ -1643,7 +1643,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon PIXMA MP900 --- ESC (r is 2 byes: 0x62 0x0 but only 1 byte supported for now */
+  { /* Canon PIXMA MP900 */
     "PIXMA MP900", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
