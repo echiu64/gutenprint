@@ -1524,7 +1524,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP520 */
     "PIXMA MP520", 3,          /*model, model_id*/
@@ -1537,7 +1537,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL,
-    NULL
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP530 */
     "PIXMA MP530", 3,          /*model, model_id*/
