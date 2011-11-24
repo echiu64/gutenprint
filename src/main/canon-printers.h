@@ -2239,7 +2239,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MX850_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4000, /*features*/
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200, /*features*/
     &canon_PIXMA_iP4500_modelist, /* same inksets as iP4500 */
     &canon_MULTIPASS_MX850_paperlist,
     NULL,
