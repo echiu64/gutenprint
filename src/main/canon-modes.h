@@ -1015,6 +1015,16 @@ static const canon_mode_t canon_BJC_S900_modes[] = {
 };
 DECLARE_MODES(canon_BJC_S900,0);
 
+/* no K used in any modes */
+static const canon_mode_t canon_PIXMA_mini220_modes[] = {
+  /*{  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH gloss"),INKSET(9_C4M4Y4c4m4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+    {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(9_C4M4Y4c4m4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},*/
+  /* Hagaki */
+  /*{  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photohigh2",N_("600x600 DPI HIGH Hagaki"),INKSET(9_C4M4Y4c4m4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},*/
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photo2",N_("600x600 DPI Hagaki"),INKSET(9_C5M5Y5),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_PIXMA_mini220,0);
+
 static const canon_mode_t canon_SELPHY_DS700_modes[] = {
   /*  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH 2"),INKSET(9_c9m9y9),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},*/
   /*  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(9_c9m9y9),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},*/
