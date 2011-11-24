@@ -1025,6 +1025,12 @@ static const canon_mode_t canon_PIXMA_mini220_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_mini220,0);
 
+static const canon_mode_t canon_PIXMA_mini320_modes[] = {
+  /* most modes used unsupported inks */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(11_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+};
+DECLARE_MODES(canon_PIXMA_mini320,0);
+
 static const canon_mode_t canon_SELPHY_DS700_modes[] = {
   /*  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH 2"),INKSET(9_c9m9y9),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,4},*/
   /*  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH"),INKSET(9_c9m9y9),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},*/

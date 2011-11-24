@@ -1126,6 +1126,18 @@ static const canon_paper_t canon_SELPHY_DS810_papers[] = {
 };
 DECLARE_PAPERS(canon_SELPHY_DS810);
 
+static const canon_paper_t canon_PIXMA_mini320_papers[] = {
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09, 0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"),         0x0b, 0x11,0x1d,1.00, 1.00, 0.999, 0, 0, 0 },/*PPsuper*/
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10, 0x15,0x25,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),	        0x0a, 0x10,0x1c,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),	        0x05, 0x05,0x16,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),      0x1d, 0x23,0x32,1.00, 1.00, 0.999, 0, 0, 0 },/*PPGgold*/
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),		        0x0d, 0x09,0x1b,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08, 0x09,0x07,1.00, 1.00, 0.999, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_PIXMA_mini320);
+
 /* MP150 so far */
 static const canon_paper_t canon_MULTIPASS_MP150_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },

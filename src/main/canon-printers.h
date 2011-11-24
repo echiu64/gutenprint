@@ -945,6 +945,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /*  mini320 */
+    "PIXMA mini320", 3,
+    4*72, 8*72, /* US 4" x 8" */
+    10, 10, 9, 14, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    &canon_MULTIPASS_MP250_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_MG5300,
+    &canon_PIXMA_mini320_modelist,
+    &canon_PIXMA_mini320_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
 
 
   /*************/

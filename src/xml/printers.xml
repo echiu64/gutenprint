@@ -141,6 +141,8 @@
       <printer translate="name" name="Canon SELPHY DS700" driver="bjc-SELPHY-DS700" manufacturer="Canon" model="10000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-SELPHY-DS700" />
       <printer translate="name" name="Canon SELPHY DS810" driver="bjc-SELPHY-DS810" manufacturer="Canon" model="10000810" parameters="PIXMA_iP4000_params" foomaticid="Canon-SELPHY-DS810" />
       <printer translate="name" name="Canon PIXMA mini220" driver="bjc-PIXMA-mini220" manufacturer="Canon" model="11000220" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini220" />
+      <printer translate="name" name="Canon PIXMA mini320" driver="bjc-PIXMA-mini320" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini320" />
+      <printer translate="name" name="Canon PIXMA mini360" driver="bjc-PIXMA-mini360" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini360" />
       <printer translate="name" name="Canon PIXMA iP90" driver="bjc-PIXMA-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90" />
       <printer translate="name" name="Canon PIXMA iP90v" driver="bjc-PIXMA-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90v" />
       <printer translate="name" name="Canon PIXMA iP1000" driver="bjc-PIXMA-iP1000" manufacturer="Canon" model="3001000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1000" />
