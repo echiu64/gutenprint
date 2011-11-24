@@ -355,6 +355,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         "old" appended. These old printers will be deprecated in a
         future release.
 
+   6) Support for the following printers was greatly improved, or
+      tested:
+
+      Canon PIXMA MX340
+      Canon PIXMA MX350
+      Canon PIXMA iP4000
+      Canon PIXMA MG5100
+
 * Changes from 5.2.6
 
   1) New printers supported in this release:
