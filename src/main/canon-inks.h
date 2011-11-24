@@ -2856,6 +2856,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4_inkset[] = {
 };
 
 /* iP4200: plain media high mode CcMmYKk */
+/* also MP600 */
 /* also MP830 */
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4on_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
