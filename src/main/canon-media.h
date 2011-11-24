@@ -1674,7 +1674,7 @@ static const canon_paper_t canon_MULTIPASS_MP960_papers[] = { /*                
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
   { "GlossyPro",	N_ ("Photo Paper Pro"),		        0x09,0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },/*check*/
-  { "PhotoSuper",       N_ ("Photo Paper Super"),	        0x1b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
+  { "PhotoSuper",       N_ ("Photo Paper Super"),	        0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
   { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
   { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
   { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
@@ -1690,6 +1690,28 @@ static const canon_paper_t canon_MULTIPASS_MP960_papers[] = { /*                
   { "Other",		N_ ("Other Coated Photo Paper"),	0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 } /*coated, OK*/
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP960);
+
+static const canon_paper_t canon_MULTIPASS_MP970_papers[] = { /*                  k_lower_scale   *hue_adjustment *sat_adjustment */
+  /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPro",	N_ ("Photo Paper Pro"),		        0x09,0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },
+  { "PhotoSuper",       N_ ("Photo Paper Plus Glossy"),	        0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGloss2", 	N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Other",		N_ ("Other Coated Photo Paper"),	0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
+};
+DECLARE_PAPERS(canon_MULTIPASS_MP970);
 
 static const canon_paper_t canon_MULTIPASS_MP980_papers[] = {    /*  k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
