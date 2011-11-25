@@ -231,9 +231,9 @@
       <printer translate="name" name="Canon PIXMA MP620" driver="bjc-MULTIPASS-MP620" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP620" />
       <printer translate="name" name="Canon PIXMA MP630" driver="bjc-MULTIPASS-MP630" manufacturer="Canon" model="5000630" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP630" />
       <printer translate="name" name="Canon PIXMA MP640" driver="bjc-MULTIPASS-MP640" manufacturer="Canon" model="5000640" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP640" />
-      <printer translate="name" name="Canon PIXMA MP700" driver="bjc-MULTIPASS-MP700" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP700" />
+      <printer translate="name" name="Canon PIXMA MP700" driver="bjc-MULTIPASS-MP700" manufacturer="Canon" model="5000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP700" />
       <printer translate="name" name="Canon PIXMA MP710" driver="bjc-MULTIPASS-MP710" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP710" />
-      <printer translate="name" name="Canon PIXMA MP730" driver="bjc-MULTIPASS-MP730" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP730" />
+      <printer translate="name" name="Canon PIXMA MP730" driver="bjc-MULTIPASS-MP730" manufacturer="Canon" model="5000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP730" />
       <printer translate="name" name="Canon PIXMA MP740" driver="bjc-MULTIPASS-MP740" manufacturer="Canon" model="5000740" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP740" />
       <printer translate="name" name="Canon PIXMA MP750" driver="bjc-MULTIPASS-MP750" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP750" />
       <printer translate="name" name="Canon PIXMA MP760" driver="bjc-MULTIPASS-MP760" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP760" />
