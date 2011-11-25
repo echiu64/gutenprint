@@ -403,7 +403,7 @@ static const canon_paper_t canon_PIXMA_iP4200_papers[] = {
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x01,0.78, 0.25, 0.900, 0, 0, 0 }, /* untested */
+  { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x01,0.78, 0.25, 0.900, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP4200);
 
