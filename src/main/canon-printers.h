@@ -255,7 +255,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_iP4600_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /* features */
     &canon_MULTIPASS_MP960_modelist,
-    &canon_PIXMA_iP4600_paperlist,
+    &canon_MULTIPASS_MP960_paperlist,
     NULL,
     NULL,
     NULL,
