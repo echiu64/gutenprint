@@ -279,9 +279,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA mini360(EXPERIMENTAL)
        Canon PIXMA i50    (EXPERIMENTAL)
        Canon PIXMA i70    (EXPERIMENTAL)
-       Canon PIXMA i250   (EXPERIMENTAL)
-       Canon PIXMA i320   (EXPERIMENTAL)
-       Canon PIXMA i350   (EXPERIMENTAL)
        Canon PIXMA i450   (EXPERIMENTAL)
        Canon PIXMA i455   (EXPERIMENTAL)
        Canon PIXMA i470D  (EXPERIMENTAL)
@@ -371,6 +368,39 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX350
        Canon PIXMA iP4000
        Canon PIXMA MG5100
+
+    7) The following printer models were either not added, or removed,
+       as they cannot currently be supported, even experimentally,
+       owing to an as-yet unknown command format or other issues:
+
+       Canon PIXMA i250
+       Canon PIXMA i320
+       Canon PIXMA i350
+       Canon PIXMA iP90
+       Canon PIXMA iP90v *1
+       Canon PIXMA iP100 *2
+       Canon PIXMA iP1000
+       Canon PIXMA iP1200
+       Canon PIXMA iP1300
+       Canon PIXMA iP1500
+       Canon PIXMA iP1600
+       Canon PIXMA iP1700
+       Canon PIXMA iP1800
+       Canon PIXMA iP1900
+       Canon PIXMA iP2200
+       Canon PIXMA iP2500
+       Canon PIXMA iP2600
+       Canon PIXMA MP5
+       Canon PIXMA MP10
+       Canon PIXMA MP55
+       Canon PIXMA MP110
+       Canon PIXMA MP130
+       Canon PIXMA PRO-1 *3
+
+       *1: data format partially understood (WIP)
+       *2: data format partially understood (WIP)
+       *3: protocol is supported but inks used are not yet supported
+          (WIP)
 
 * Changes from 5.2.6
 

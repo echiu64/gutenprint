@@ -143,20 +143,7 @@
       <printer translate="name" name="Canon PIXMA mini220" driver="bjc-PIXMA-mini220" manufacturer="Canon" model="11000220" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini220" />
       <printer translate="name" name="Canon PIXMA mini320" driver="bjc-PIXMA-mini320" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini320" />
       <printer translate="name" name="Canon PIXMA mini360" driver="bjc-PIXMA-mini360" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini360" />
-      <printer translate="name" name="Canon PIXMA iP90" driver="bjc-PIXMA-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90" />
-      <printer translate="name" name="Canon PIXMA iP90v" driver="bjc-PIXMA-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90v" />
-      <printer translate="name" name="Canon PIXMA iP1000" driver="bjc-PIXMA-iP1000" manufacturer="Canon" model="3001000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1000" />
-      <printer translate="name" name="Canon PIXMA iP1200" driver="bjc-PIXMA-iP1200" manufacturer="Canon" model="3001200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1200" />
-      <printer translate="name" name="Canon PIXMA iP1300" driver="bjc-PIXMA-iP1200" manufacturer="Canon" model="3001200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1300" />
-      <printer translate="name" name="Canon PIXMA iP1500" driver="bjc-PIXMA-iP1500" manufacturer="Canon" model="3001500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1500" />
-      <printer translate="name" name="Canon PIXMA iP1600" driver="bjc-PIXMA-iP1600" manufacturer="Canon" model="3001600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1600" />
-      <printer translate="name" name="Canon PIXMA iP1700" driver="bjc-PIXMA-iP1600" manufacturer="Canon" model="3001600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1700" />
-      <printer translate="name" name="Canon PIXMA iP1800" driver="bjc-PIXMA-iP1600" manufacturer="Canon" model="3001600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1800" />
-      <printer translate="name" name="Canon PIXMA iP1900" driver="bjc-PIXMA-iP1900" manufacturer="Canon" model="3001900" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP1900" />
       <printer translate="name" name="Canon PIXMA iP2000" driver="bjc-PIXMA-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2000" />
-      <printer translate="name" name="Canon PIXMA iP2200" driver="bjc-PIXMA-iP2200" manufacturer="Canon" model="3002200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2200" />
-      <printer translate="name" name="Canon PIXMA iP2500" driver="bjc-PIXMA-iP2500" manufacturer="Canon" model="3002500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2500" />
-      <printer translate="name" name="Canon PIXMA iP2600" driver="bjc-PIXMA-iP2600" manufacturer="Canon" model="3002600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2600" />
       <printer translate="name" name="Canon PIXUS iP2700" driver="bjc-PIXUS-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP2700" />
       <printer translate="name" name="Canon PIXMA iP3000" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000" />
       <printer translate="name" name="Canon PIXMA iP3100" driver="bjc-PIXMA-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3100" />
@@ -278,9 +265,6 @@
       <printer translate="name" name="Canon i50" driver="bjc-i50"   manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-i50" />
       <printer translate="name" name="Canon i70" driver="bjc-i70"   manufacturer="Canon" model="2000070" parameters="density_800_params" foomaticid="Canon-i70" />
       <printer translate="name" name="Canon i80" driver="bjc-i80"   manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-i80" />
-      <printer translate="name" name="Canon i250" driver="bjc-i250" manufacturer="Canon" model="2000250" parameters="density_800_params" foomaticid="Canon-i250" />
-      <printer translate="name" name="Canon i320" driver="bjc-i320" manufacturer="Canon" model="2000320" parameters="density_800_params" foomaticid="Canon-i320" />
-      <printer translate="name" name="Canon i350" driver="bjc-i350" manufacturer="Canon" model="2000250" parameters="density_800_params" foomaticid="Canon-i350" />
       <printer translate="name" name="Canon i450" driver="bjc-i450" manufacturer="Canon" model="2000450" parameters="density_800_params" foomaticid="Canon-i450" />
       <printer translate="name" name="Canon i455" driver="bjc-i455" manufacturer="Canon" model="2000455" parameters="density_800_params" foomaticid="Canon-i455" />
       <printer translate="name" name="Canon i470D" driver="bjc-i470D" manufacturer="Canon" model="2000450" parameters="density_800_params" foomaticid="Canon-i470D" />
