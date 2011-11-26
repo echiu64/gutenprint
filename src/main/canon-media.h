@@ -222,8 +222,6 @@ static const canon_slot_t canon_PIXMA_Pro9000_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_Pro9000);
 
-
-/* Gernot --- added so check this*/
 static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
@@ -233,7 +231,6 @@ static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_MG5100);
 
-/* Gernot --- added so check this*/
 static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
@@ -717,7 +714,7 @@ static const canon_paper_t canon_PIXMA_iP100_papers[] = {
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGgold*/
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/*PP kinumecho*/
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -800,8 +797,8 @@ static const canon_paper_t canon_PIXMA_iP2600_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -814,18 +811,18 @@ static const canon_paper_t canon_PIXMA_iP2600_papers[] = {
 DECLARE_PAPERS(canon_PIXMA_iP2600);
 
 static const canon_paper_t canon_PIXMA_iP3300_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPpro*/
-  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPsuper */
-  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPsuperDS */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPgloss */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPmatte */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPother */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* HiRes */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjetHagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },/* PPpro*/
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },/* PPsuper */
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },/* PPsuperDS */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPgloss */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PPmatte */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PPother */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* HiRes */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjetHagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
 };
 DECLARE_PAPERS(canon_PIXMA_iP3300);
 
@@ -866,7 +863,6 @@ static const canon_paper_t canon_PIXMA_iP6100_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_iP6100);
 
-/* iP6600D, Tray C for CD media */
 static const canon_paper_t canon_PIXMA_iP6600_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -886,7 +882,6 @@ static const canon_paper_t canon_PIXMA_iP6600_papers[] = { /*               k_lo
 };
 DECLARE_PAPERS(canon_PIXMA_iP6600);
 
-/* iP6700D, Tray C for CD media */
 static const canon_paper_t canon_PIXMA_iP6700_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -899,7 +894,7 @@ static const canon_paper_t canon_PIXMA_iP6700_papers[] = { /*               k_lo
   { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different from usual 13,1b,29 */
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -908,7 +903,6 @@ static const canon_paper_t canon_PIXMA_iP6700_papers[] = { /*               k_lo
 };
 DECLARE_PAPERS(canon_PIXMA_iP6700);
 
-/* iP7100, Tray B for CD media */
 static const canon_paper_t canon_PIXMA_iP7100_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -920,8 +914,8 @@ static const canon_paper_t canon_PIXMA_iP7100_papers[] = { /*               k_lo
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x02,0x0d,0x28,0.78, 0.25, 0.500, 0, 0, 0 }, /* note: different c,l from usual */
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x02,0x0d,0x29,0.78, 0.25, 0.500, 0, 0, 0 }, /* note: different c,l from usual */
+  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x02,0x0d,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different c,l from usual */
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x02,0x0d,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different c,l from usual */
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -931,7 +925,6 @@ static const canon_paper_t canon_PIXMA_iP7100_papers[] = { /*               k_lo
 };
 DECLARE_PAPERS(canon_PIXMA_iP7100);
 
-/* iP7500, Tray C for CD media */
 static const canon_paper_t canon_PIXMA_iP7500_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -962,8 +955,8 @@ static const canon_paper_t canon_PIXMA_iP8500_papers[] = {
   { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* untested */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 }, /* untested */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -973,7 +966,6 @@ static const canon_paper_t canon_PIXMA_iP8500_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_iP8500);
 
-/* iP9910, Tray A for CD media */
 static const canon_paper_t canon_PIXMA_iP9910_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -985,8 +977,8 @@ static const canon_paper_t canon_PIXMA_iP9910_papers[] = { /*               k_lo
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x09,0x0d,0x28,0.78, 0.25, 0.500, 0, 0, 0 }, /* note: different c,l from usual */
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x09,0x0d,0x29,0.78, 0.25, 0.500, 0, 0, 0 }, /* note: different c,l from usual */
+  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x09,0x0d,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different c,l from usual */
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x09,0x0d,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different c,l from usual */
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1002,7 +994,7 @@ static const canon_paper_t canon_PIXMA_Pro9000_papers[] = {
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },/*PPsuper*/
   { "PhotoPlusGloss2",	N_ ("Photo Paper Plus Glossy II"), 	0x0b,0x11,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGgold*/
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/*PPgloss*/
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/*PPkinumecho*/
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },/*PPpro*/
   { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x09,0x0d,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGpro*/
   { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x09,0x11,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGproPlat*/
@@ -1014,12 +1006,12 @@ static const canon_paper_t canon_PIXMA_Pro9000_papers[] = {
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x20,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/*check l*/
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x20,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different c,l from usual */
   /* special papers */
   { "Boardpaper",	N_ ("Board Paper"),		        0x18,0x1d,0x2e,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Canvas",	        N_ ("Canvas"),		                0x19,0x1e,0x2d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different from usual 13,1b,29 */
   { "FineArtPremiumMatte",N_ ("Fine Art Premium Matte"),	0x15,0x1a,0x2c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtMuseumEtching",N_ ("Fine Art Museum Etching"),      0x14,0x19,0x31,0.78, 0.25, 0.500, 0, 0, 0 },
 };
@@ -1046,61 +1038,59 @@ static const canon_paper_t canon_PIXMA_Pro9000mk2_papers[] = {
   { "Boardpaper",	N_ ("Board Paper"),		        0x18,0x1d,0x2e,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Canvas",	        N_ ("Canvas"),		                0x19,0x1e,0x2d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different from usual 13,1b,29 */
   { "FineArtPremiumMatte",N_ ("Fine Art Premium Matte"),	0x15,0x1a,0x2c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtMuseumEtching",N_ ("Fine Art Museum Etching"),      0x14,0x19,0x31,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_Pro9000mk2);
 
 /* PIXMA Pro9500 */
-/* added Envelope, glossy photo paper, HiRes, T-shirt, PhotopaperOther---must check printjobs if I forgot these ones */
 static const canon_paper_t canon_PIXMA_Pro9500_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGgold*/
-  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/*PP kinumecho*/
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGpro*/
   { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGproPlat*/
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   /* special papers */
   { "Boardpaper",	N_ ("Board Paper"),		        0x18,0x1d,0x2e,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Canvas",	        N_ ("Canvas"),		                0x19,0x1e,0x2d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different from usual 13,1b,29 */
   { "FineArtPremiumMatte",N_ ("Fine Art Premium Matte"),	0x15,0x1a,0x2c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtMuseumEtching",N_ ("Fine Art Museum Etching"),	0x14,0x19,0x31,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_Pro9500);
 
 /* PIXMA Pro9500 Mk.II */
-/* added Envelope, glossy photo paper, HiRes, T-shirt, PhotopaperOther---must check printjobs if I forgot these ones */
 static const canon_paper_t canon_PIXMA_Pro9500mk2_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGgold*/
-  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/*PP kinumecho*/
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* check */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   /* special papers */
   { "Boardpaper",	N_ ("Board Paper"),		        0x18,0x1d,0x2e,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Canvas",	        N_ ("Canvas"),		                0x19,0x1e,0x2d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x1b,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/* note: different from usual 13,1b,29 */
   { "FineArtPremiumMatte",N_ ("Fine Art Premium Matte"),	0x15,0x1a,0x2c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtMuseumEtching",N_ ("Fine Art Museum Etching"),	0x14,0x19,0x31,0.78, 0.25, 0.500, 0, 0, 0 },
 };
@@ -1138,7 +1128,6 @@ static const canon_paper_t canon_PIXMA_mini320_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_mini320);
 
-/* MP150 so far */
 static const canon_paper_t canon_MULTIPASS_MP150_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1172,14 +1161,13 @@ static const canon_paper_t canon_MULTIPASS_MP170_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP170);
 
-/* MP190 */
 static const canon_paper_t canon_MULTIPASS_MP190_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPpro */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },/* PPpro */
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1191,7 +1179,6 @@ static const canon_paper_t canon_MULTIPASS_MP190_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP190);
 
-/* MP360 */
 static const canon_paper_t canon_MULTIPASS_MP360_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1210,7 +1197,7 @@ DECLARE_PAPERS(canon_MULTIPASS_MP360);
 /* MX300, MX310, MX700 */
 static const canon_paper_t canon_MULTIPASS_MX300_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1225,15 +1212,14 @@ static const canon_paper_t canon_MULTIPASS_MX300_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX300);
 
-/* MX330 */
 static const canon_paper_t canon_MULTIPASS_MX330_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1246,16 +1232,16 @@ DECLARE_PAPERS(canon_MULTIPASS_MX330);
 /* MX340 --- MX350 is the same */
 static const canon_paper_t canon_MULTIPASS_MX340_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1266,15 +1252,15 @@ DECLARE_PAPERS(canon_MULTIPASS_MX340);
 /* MX360 --- MX410 is the same */
 static const canon_paper_t canon_MULTIPASS_MX360_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1282,17 +1268,16 @@ static const canon_paper_t canon_MULTIPASS_MX360_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX360);
 
-/* MX420 */
 static const canon_paper_t canon_MULTIPASS_MX420_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1300,21 +1285,20 @@ static const canon_paper_t canon_MULTIPASS_MX420_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX420);
 
-/* MX850 */
 static const canon_paper_t canon_MULTIPASS_MX850_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoSemiGloss",N_ ("Photo Paper Semi-gloss"),	        0x0b,0x11,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho new !! */
+  { "PhotoSemiGloss",N_ ("Photo Paper Semi-gloss"),	        0x0b,0x11,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho new !! */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
-  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1322,40 +1306,38 @@ static const canon_paper_t canon_MULTIPASS_MX850_papers[] = {
 DECLARE_PAPERS(canon_MULTIPASS_MX850);
 
 static const canon_paper_t canon_MULTIPASS_MX880_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX880);
 
-/* MX7600 */
 static const canon_paper_t canon_MULTIPASS_MX7600_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
-  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
-  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
-  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/*check variations*/
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_MULTIPASS_MX7600);
 
-/* iX7000 */
 static const canon_paper_t canon_PIXMA_iX7000_papers[] = { /*               k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1372,61 +1354,58 @@ static const canon_paper_t canon_PIXMA_iX7000_papers[] = { /*               k_lo
 };
 DECLARE_PAPERS(canon_PIXMA_iX7000);
 
-/* MP240 */
 static const canon_paper_t canon_MULTIPASS_MP240_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP240);
 
-/* MP250 */
 static const canon_paper_t canon_MULTIPASS_MP250_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "ProPhotoHagakiP",  N_ ("Hagaki P (Pro Photo)"),		0x1f,0x25,0x37,0.78, 0.25, 0.500, 0, 0, 0 }, /* pro photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "ProPhotoHagakiP",  N_ ("Hagaki P (Pro Photo)"),		0x1f,0x25,0x37,0.78, 0.25, 0.500, 0, 0, 0 },/* pro photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP250);
 
-/* MP280 */
 static const canon_paper_t canon_MULTIPASS_MP280_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP280);
 
@@ -1435,7 +1414,7 @@ static const canon_paper_t canon_MULTIPASS_MP470_papers[] = {
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1447,81 +1426,77 @@ static const canon_paper_t canon_MULTIPASS_MP470_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP470);
 
-/* MP480 */
 static const canon_paper_t canon_MULTIPASS_MP480_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP480);
 
 static const canon_paper_t canon_MULTIPASS_MP493_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "ProPhotoHagakiO",  N_ ("Hagaki Pro Photo"),		0x1f,0x25,0x37,0.78, 0.25, 0.500, 0, 0, 0 }, /* Pro photo hagaki*/
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "ProPhotoHagakiO",  N_ ("Hagaki Pro Photo"),		0x1f,0x25,0x37,0.78, 0.25, 0.500, 0, 0, 0 },/* Pro photo hagaki*/
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP493);
 
-/* MP520 */
 static const canon_paper_t canon_MULTIPASS_MP520_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPpro*/
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPsuper */
-  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPsuperDS */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPgloss */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPmatte */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPother */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* HiRes */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjetHagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },/* PPpro*/
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },/* PPsuper */
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },/* PPsuperDS */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPgloss */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PPmatte */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PPother */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* HiRes */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjetHagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP520);
 
-/* iP1900 series */
 static const canon_paper_t canon_PIXMA_iP1900_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_iP1900);
 
-/* MP600 */
 static const canon_paper_t canon_MULTIPASS_MP600_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1538,12 +1513,11 @@ static const canon_paper_t canon_MULTIPASS_MP600_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP600);
 
-/* MP610 */
 static const canon_paper_t canon_MULTIPASS_MP610_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1558,46 +1532,44 @@ static const canon_paper_t canon_MULTIPASS_MP610_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP610);
 
-/* MP640 */
 static const canon_paper_t canon_MULTIPASS_MP630_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
   { "DiscCompat",	N_ ("Printable Disc (recommended)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (others)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP630);
 
-/* MP640 */
 static const canon_paper_t canon_MULTIPASS_MP640_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "ProPhotoHagakiP",  N_ ("Hagaki P (Pro Photo)"),		0x1f,0x25,0x37,0.78, 0.25, 0.500, 0, 0, 0 }, /* pro photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "ProPhotoHagakiP",  N_ ("Hagaki P (Pro Photo)"),		0x1f,0x25,0x37,0.78, 0.25, 0.500, 0, 0, 0 },/* pro photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
   { "DiscCompat",	N_ ("Printable Disc (recommended)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (others)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP640);
 
@@ -1662,23 +1634,22 @@ static const canon_paper_t canon_MULTIPASS_MP750_papers[] = {
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP750);
 
-/* iP2700 series */
 static const canon_paper_t canon_PIXMA_iP2700_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
-  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGpro */
-  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGproPlat */
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPG */
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP matte */
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 }, /* hi res paper */
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoPro2",	N_ ("Photo Paper Pro II"),	        0x1f,0x25,0x34,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGpro */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),	        0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGproPlat */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho */
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* PPG */
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* PP matte */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* hi res paper */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_iP2700);
 
@@ -1700,10 +1671,9 @@ static const canon_paper_t canon_PIXMA_iP3600_papers[] = {    /*                
 };
 DECLARE_PAPERS(canon_PIXMA_iP3600);
 
-/* iP4500 */
 static const canon_paper_t canon_PIXMA_iP4500_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotopaperPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1765,21 +1735,21 @@ DECLARE_PAPERS(canon_PIXMA_iP4700);
 
 static const canon_paper_t canon_MULTIPASS_MP960_papers[] = { /*                  k_lower_scale   *hue_adjustment *sat_adjustment */
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
-  { "GlossyPro",	N_ ("Photo Paper Pro"),		        0x09,0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },/*check*/
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPro",	N_ ("Photo Paper Pro"),		        0x09,0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
-  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
-  { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
-  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
-  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
-  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
-  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
-  { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
-  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/*check variations*/
-  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
+  { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "InkJetHagaki",	N_ ("Ink Jet Hagaki"), 			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Other",		N_ ("Other Photo Paper"),	        0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP960);
@@ -1801,7 +1771,7 @@ static const canon_paper_t canon_MULTIPASS_MP970_papers[] = { /*                
   { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Other",		N_ ("Other Coated Photo Paper"),	0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP970);
@@ -1840,7 +1810,7 @@ static const canon_paper_t canon_MULTIPASS_MP990_papers[] = {    /*  k_lower_sca
   { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1853,66 +1823,63 @@ static const canon_paper_t canon_MULTIPASS_MP990_papers[] = {    /*  k_lower_sca
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP990);
 
-/* MG5100 series */
 static const canon_paper_t canon_PIXMA_MG5100_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotoProPlat",	N_ ("Photo Paper Platinum"),		0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_MG5100);
 
-/* MG5200 series */
 static const canon_paper_t canon_PIXMA_MG5200_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotoProPlat",	N_ ("Photo Paper Platinum"),		0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_MG5200);
 
-/* MG6100 series */
 static const canon_paper_t canon_PIXMA_MG6100_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 }, /* plain */
-  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 }, /* PPGgold */
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
   { "PhotoProPlat",	N_ ("Photo Paper Platinum"),		0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP kinumecho */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 }, /* all hagaki */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 }, /* inkjet hagaki */
-  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 }, /* Canon photo hagaki*/
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 }, /* hagaki*/
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* hagaki*/
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 }, /* T-shirt */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 }, /* env */
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }, /* PP other */
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* PP other */
 };
 DECLARE_PAPERS(canon_PIXMA_MG6100);
 
