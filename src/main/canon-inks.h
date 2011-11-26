@@ -2183,6 +2183,7 @@ static const canon_inkset_t canon_19_C3M3Y3K2k3off_inkset[] = {
 };
 
 /* MP960 */
+/* MP950 */
 /* iP7500 Env/Hagaki */
 static const canon_inkset_t canon_19_C3M3Y3K2k3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
@@ -2237,6 +2238,52 @@ static const canon_inkset_t canon_19_C4M4Y4K2k4_inkset[] = {
         {'M',1.0,&canon_2b_4l_ink},
         {'Y',1.0,&canon_2b_4l_ink},
         {'K',0.0,&canon_1b_2l_ink}, /* not used */
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {'k',1.0,&canon_2b_4l_ink}, /* change y to k */
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* CMYK */
+static const canon_inkset_t canon_19_C4M4Y4K2k4off_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {'k',0.0,&canon_2b_4l_ink}, /* switch off */
+        {0,0.0,NULL},
+        {0,0.0,NULL}, 
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* CMYKk */
+static const canon_inkset_t canon_19_C4M4Y4K2k4on_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL}, 
         {'k',1.0,&canon_2b_4l_ink}, /* change y to k */
@@ -2444,6 +2491,7 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4_inkset[] = {
 
 /* plain high mode iP7500 */
 /* also used by MP970 */
+/* also used by MP950 */
 static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4off_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
