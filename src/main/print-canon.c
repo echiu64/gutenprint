@@ -565,16 +565,16 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"w288h144"))    return 0x2d; /* ??? */
       if (!strcmp(name,"COM10"))       return 0x2e; /* US Comm #10 Env */
       if (!strcmp(name,"DL"))          return 0x2f; /* Euro DL Env */
-      if (!strcmp(name,"w297h666"))    return 0x30; /* Western Env #4 */
-      if (!strcmp(name,"w277h538"))    return 0x31; /* Western Env #6 */
+      if (!strcmp(name,"w297h666"))    return 0x30; /* Western Env #4 (you4) */
+      if (!strcmp(name,"w277h538"))    return 0x31; /* Western Env #6 (you6) */
       if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 size */
       if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 */
       if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 */
       if (!strcmp(name,"w155h257"))    return 0x36; /* Japanese Business Card 55mm x 91mm */
       if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 */
       if (!strcmp(name,"w420h567"))    return 0x39; /* Ofuku Hagaki */
-      if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 */
-      if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 */
+      if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 (chou3) */
+      if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 (chou4) */
       if (!strcmp(name,"w155h244"))    return 0x41; /* Business/Credit Card 54mm x 86mm */
       /* if (!strcmp(name,"A4"))       return 0x42; */ /* FineArt A4 35mm border --- iP7100: gap is 18 */
       /* if (!strcmp(name,"A3"))       return 0x43; */ /* FineArt A3 35mm border --- iP7100: gap is 18 */
@@ -590,6 +590,93 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       /* w283h566 Wide postcard 148mm x 200mm */
 
       /* custom */
+
+      /* media size codes for CD (and other media depending on printer model */
+      /*  850i:  CD Tray custom: none --- no ESC (P */
+      /*  865i:  CD Tray custom: 0x35               */
+      /* MP500:  CD Tray D     : 0x4b               */
+      /* MP530:  CD Tray D     : 0x4b               */
+      /* MP600:  CD Tray F     : 0x51               */
+      /* MP610:  CD Tray F     : 0x51               */
+      /* MP630:  CD Tray G     : 0x53               */
+      /* MP640:  CD Tray G     : 0x53               */
+      /* MP700:  CD tray custom: none --- no ESC (P */
+      /* MP710:  CD tray custom: 0x35               */
+      /* MP730:  CD tray custom: none --- no ESC (P */
+      /* MP740:  CD tray custom: 0x35               */
+      /* MP750:  CD Tray B     : 0x40               */
+      /* MP760:  CD Tray B     : 0x40               */
+      /* MP770:  CD Tray B     : 0x40               */
+      /* MP780:  CD Tray B     : 0x40               */
+      /* MP790:  CD Tray B     : 0x40               */
+      /* MP800:  CD Tray D     : 0x4b               */
+      /* MP810:  CD Tray F     : 0x51               */
+      /* MP830:  CD Tray D     : 0x4b               */
+      /* MP900:  CD Tray custom: 0x35               */
+      /* MP950:  CD Tray C     : 0x4a               */
+      /* MP960:  CD Tray F     : 0x51               */
+      /* MP970:  CD Tray F     : 0x51               */
+      /* MP980:  CD Tray G     : 0x53               */
+      /* MP990:  CD Tray G     : 0x53               */
+      /* MX850:  CD Tray F     : 0x51               */
+      /* iP3000: CD Tray B     : 0x40               */
+      /* iP3100: CD Tray B     : 0x40               */
+      /* iP4000: CD Tray B     : 0x40               */
+      /* iP4100: CD Tray B     : 0x40               */
+      /* iP4200: CD Tray C     : 0x4a               */
+      /* iP4300: CD Tray F     : 0x51               */
+      /* iP4500: CD Tray F     : 0x51               */
+      /* iP4600: CD Tray G     : 0x53               */
+      /* iP4700: CD Tray G     : 0x53               */
+      /* iP4800: CD Tray G     : 0x56               */
+      /* iP4900: CD Tray G     : 0x56               */
+      /* iP5000: CD Tray B     : 0x40               */
+      /* iP5200: CD Tray C     : 0x4a               */
+      /* iP5300: CD Tray F     : 0x51               */
+      /* iP6000D:CD Tray B     : 0x40               */
+      /* iP6100D:CD Tray B     : 0x40               */
+      /* iP6700D:CD Tray C     : 0x4a               */
+      /* iP7100: CD Tray B     : 0x40               */
+      /* iP7500: CD Tray C     : 0x4a               */
+      /* iP8100: CD Tray B     : 0x40               */
+      /* iP8500 :CD Tray B     : 0x40               */
+      /* iP8600: CD Tray B     : 0x40               */
+      /* iP9910: CD Tray A     : 0x3f               */
+      /* MG5200: CD Tray G     : 0x56               */
+      /* MG5300: CD Tray G     : 0x56               */
+      /* MG6100: CD Tray G     : 0x56               */
+      /* MG6200: CD Tray G     : 0x56               */
+      /* MG8100: CD Tray G     : 0x56               */
+      /* MG8200: CD Tray G     : 0x56               */
+      /* pro9000:CD Tray E     : 0x4c               */
+      /* pro9000mk2:CD Tray E  : 0x4c               */
+      /* pro9500:CD Tray E     : 0x4c               */
+      /* pro9500mk2:CD Tray E  : 0x4c               */
+      /* PRO-1:  CD Tray H     : 0x57               */
+
+      /* MP950:  FineArtA4     : 0x42               */
+      /* MP960:  FineArtA4     : 0x42               */
+      /* MP970:  FineArtA4     : 0x42               */
+      /* MP980:  FineArtA4     : 0x42               */
+      /* MP990:  FineArtA4     : 0x42               */
+      /* MX7600: FineArtA4     : 0x42               */
+      /* iP6700D:FineArtA4     : 0x42               */
+      /* iP7100: FineArtA4     : 0x42               */
+      /* iP7500: FineArtA4     : 0x42               */
+      /* iP8100: FineArtA4     : 0x42               */
+      /* iP8600: FineArtA4     : 0x42               */
+      /* iP9910: FineArtA4     : 0x42               */
+      /* iX7000: FineArtA4     : 0x42               */
+      /* MG6100: FineArtA4     : 0x42               */
+      /* MG6200: FineArtA4     : 0x42               */
+      /* MG8100: FineArtA4     : 0x42               */
+      /* MG8200: FineArtA4     : 0x42               */
+      /* pro9000:FineArtA4     : 0x4d               */
+      /* pro9000mk2:FineArtA4  : 0x4d               */
+      /* pro9500:FineArtA4     : 0x4d               */
+      /* pro9500mk2:FineArtA4  : 0x4d               */
+      /* PRO-1:  FineArtA4     : 0x4d               */
+
 
       stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
     } else {
