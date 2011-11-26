@@ -1297,19 +1297,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* PIXMA MP740 (== iP4000 without duplex) */
-    "PIXMA MP740", 3,          /*model, model_id*/
-    842, 17*72,       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4000_slotlist,
-    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_px /*,|CANON_CAP_I*/,0x64,control_cmd_PIXMA_iP4000,  /*features */
-    &canon_PIXMA_iP4000_modelist,
-    &canon_PIXMA_iP4000_paperlist,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-  },
   { /* Canon PIXMA iP4200 */
     "PIXMA iP4200", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
@@ -1701,6 +1688,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL,
     NULL
+  },
+  { /* PIXMA MP710/740 --- heavily modified from MP700/730 */
+    "PIXMA MP710", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP710_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
+    &canon_MULTIPASS_MP710_modelist,
+    &canon_MULTIPASS_MP710_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
   },
   { /* Canon PIXMA MP900 */
     "PIXMA MP900", 3,          /*model, model_id*/

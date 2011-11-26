@@ -121,6 +121,14 @@ static const canon_slot_t canon_PIXMA_MG2100_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_MG2100);
 
+/* MP710/740 have adjustment for thick media: gap=10 */
+static const canon_slot_t canon_MULTIPASS_MP710_slots[] = {
+  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
+  { "AutoThick",  N_ ("Auto Sheet Feeder (thick media)"), 0x4 },
+  { "CD",         N_ ("CD tray"), 0xa },
+};
+DECLARE_SLOTS(canon_MULTIPASS_MP710);
+
 static const canon_slot_t canon_MULTIPASS_MP900_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
   { "CD",         N_ ("CD tray"), 0xa },
@@ -1620,6 +1628,26 @@ static const canon_paper_t canon_MULTIPASS_MP700_papers[] = {            /* no E
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP700);
+
+static const canon_paper_t canon_MULTIPASS_MP710_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+  { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyFilm",	N_ ("High Gloss Film"),		        0x06,0x06,0x00,0.78, 0.25, 0.999, 0, 0, 0 },/* untested */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 07 09 */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
+};
+DECLARE_PAPERS(canon_MULTIPASS_MP710);
 
 /* iP2700 series */
 static const canon_paper_t canon_PIXMA_iP2700_papers[] = {

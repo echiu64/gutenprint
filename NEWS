@@ -350,8 +350,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP5000 (EXPERIMENTAL)
        Canon PIXMA MP600
        Canon PIXMA MP970
-       Canon PIXMA MP700
-       Canon PIXMA MP730
 
        *1: for compatibility, the original printers are named with
         "old" appended. These old printers will be deprecated in a
@@ -360,10 +358,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    6) Support for the following printers was greatly improved, or
       tested:
 
-      Canon PIXMA MX340
-      Canon PIXMA MX350
-      Canon PIXMA iP4000
-      Canon PIXMA MG5100
+       Canon PIXMA MP700
+       Canon PIXMA MP710
+       Canon PIXMA MP730
+       Canon PIXMA MP740
+       Canon PIXMA MX340
+       Canon PIXMA MX350
+       Canon PIXMA iP4000
+       Canon PIXMA MG5100
 
 * Changes from 5.2.6
 

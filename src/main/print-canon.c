@@ -1221,6 +1221,11 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
 
   arg_6c_1|= (init->slot->code & 0x0f);
 
+  /* set gap for MP710/740 if thick media selected */
+  if (!strcmp(init->slot->name,"AutoThick"))
+    if ( (!strcmp(init->caps->name,"PIXMA MP710")) || (!strcmp(init->caps->name,"PIXMA MP740")) ) 
+      arg_6c_3 = 0x10;
+
   if (init->pt) arg_6c_2= init->pt->media_code_l;
   if(init->caps->model_id >= 3)
     canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, arg_6c_3); /* 3rd arg is "gap" */
@@ -1414,7 +1419,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /*                             size                media             */
       canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00);
     }
-  else if ( !(strcmp(init->caps->name,"i80")) || !(strcmp(init->caps->name,"i560")) || !(strcmp(init->caps->name,"i860")) || !(strcmp(init->caps->name,"i865")) || !(strcmp(init->caps->name,"i900")) || !(strcmp(init->caps->name,"i950")) || !(strcmp(init->caps->name,"i960")) || !(strcmp(init->caps->name,"i9900")) || !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP130")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375R")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA MP900"))  || !(strcmp(init->caps->name,"PIXMA iP1000"))  || !(strcmp(init->caps->name,"PIXMA iP1500"))  || !(strcmp(init->caps->name,"PIXMA iP2000"))  || !(strcmp(init->caps->name,"PIXMA iP3000"))  || !(strcmp(init->caps->name,"PIXMA iP3100"))  || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP4100")) || !(strcmp(init->caps->name,"PIXMA iP5000"))  || !(strcmp(init->caps->name,"PIXMA iP6000D")) || !(strcmp(init->caps->name,"PIXMA iP6100D")) || !(strcmp(init->caps->name,"PIXMA iP8500"))  )  {
+  else if ( !(strcmp(init->caps->name,"i80")) || !(strcmp(init->caps->name,"i560")) || !(strcmp(init->caps->name,"i860")) || !(strcmp(init->caps->name,"i865")) || !(strcmp(init->caps->name,"i900")) || !(strcmp(init->caps->name,"i950")) || !(strcmp(init->caps->name,"i960")) || !(strcmp(init->caps->name,"i9900")) || !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP130")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375R")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA MP700")) || !(strcmp(init->caps->name,"PIXMA MP740")) || !(strcmp(init->caps->name,"PIXMA MP900"))  || !(strcmp(init->caps->name,"PIXMA iP1000"))  || !(strcmp(init->caps->name,"PIXMA iP1500"))  || !(strcmp(init->caps->name,"PIXMA iP2000"))  || !(strcmp(init->caps->name,"PIXMA iP3000"))  || !(strcmp(init->caps->name,"PIXMA iP3100"))  || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP4100")) || !(strcmp(init->caps->name,"PIXMA iP5000"))  || !(strcmp(init->caps->name,"PIXMA iP6000D")) || !(strcmp(init->caps->name,"PIXMA iP6100D")) || !(strcmp(init->caps->name,"PIXMA iP8500"))  )  {
     /* 2 bytes only */
       canon_cmd( v,ESC28,0x50,2,0x00,arg_ESCP_1 );
     }	
