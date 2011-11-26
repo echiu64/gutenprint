@@ -1674,7 +1674,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon PIXMA MP700/730 --- split from iP3000 driver, with modifications */
+  { /* Canon PIXMA MP700/MP730 --- split from iP3000 driver, with modifications */
     /* US model: control_cmd_iP2700 */
     /* Japanese model: control_BJC_i550, so chose this as base (more commands) */
     "PIXMA MP700", 3,          /*model, model_id*/
@@ -1689,7 +1689,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-  { /* PIXMA MP710/740 --- heavily modified from MP700/730 */
+  { /* PIXMA MP710/MP740 --- heavily modified from MP700/MP730 */
     "PIXMA MP710", 3,          /*model, model_id*/
     842, 17*72,       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
@@ -1697,6 +1697,19 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP710_modelist,
     &canon_MULTIPASS_MP710_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* PIXMA MP750/MP760/MP770/MP780/MP790 */
+    "PIXMA MP750", 3,          /*model, model_id*/
+    842, 17*72,       /* max paper width and height */
+    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP3100_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_r|CANON_CAP_P|CANON_CAP_I,0x64,control_cmd_PIXMA_iP2700,  /*features */
+    &canon_PIXMA_iP4100_modelist,
+    &canon_MULTIPASS_MP750_paperlist,
     NULL,
     NULL,
     NULL,

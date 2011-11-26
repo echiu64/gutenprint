@@ -1638,7 +1638,7 @@ static const canon_paper_t canon_MULTIPASS_MP710_papers[] = {
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyFilm",	N_ ("High Gloss Film"),		        0x06,0x06,0x00,0.78, 0.25, 0.999, 0, 0, 0 },/* untested */
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 07 09 */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0d 09 */
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1648,6 +1648,27 @@ static const canon_paper_t canon_MULTIPASS_MP710_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP710);
+
+/* MP750/MP760/MP770/MP780/MP790 */
+static const canon_paper_t canon_MULTIPASS_MP750_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPro",	N_ ("Professional Photo Paper"),	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Glossy Photo Paper Plus"), 	0x0b,0x11,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperMatte",	N_ ("Photo Paper Matte"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "GlossyFilm",	N_ ("High Gloss Film"),		        0x06,0x06,0x00,0.78, 0.25, 0.999, 0, 0, 0 },/* untested */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* from Japanese models */
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* from Japanese models */
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Transparency", 	N_ ("Transparencies"),			0x02,0x02,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* from US models */
+};
+DECLARE_PAPERS(canon_MULTIPASS_MP750);
 
 /* iP2700 series */
 static const canon_paper_t canon_PIXMA_iP2700_papers[] = {
