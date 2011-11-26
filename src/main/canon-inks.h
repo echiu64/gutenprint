@@ -1199,7 +1199,7 @@ static const canon_inkset_t canon_11_C16M16Y16K16c16m16_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* Gernot: MP150 (MP170 for tests) greyscale */
+/* MP150 (MP170 for tests) greyscale */
 static const canon_inkset_t canon_13_K2_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1417,7 +1417,7 @@ static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: iP4500 standard mode changed from the compressed one below */
+/*         iP4500 standard mode changed from the compressed one below */
 /*         iP4600 also uses this */
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
@@ -1489,7 +1489,7 @@ static const canon_inkset_t canon_13_C3M3Y3k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: MP250, MP280 photo modes */
+/* MP250, MP280 photo modes */
 static const canon_inkset_t canon_13_C4M4Y4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1522,7 +1522,7 @@ static const canon_inkset_t canon_13_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: MP250, MP270, MP280 high mode */
+/* MP250, MP270, MP280 high mode */
 static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1608,7 +1608,7 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4on2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: MP150 (MP170 for tests) high-quality mode */
+/* MP150 (MP170 for tests) high-quality mode */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -1662,7 +1662,7 @@ static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* Gernot: MP150 (MP170 for tests) high-quality mode for
+/*         MP150 (MP170 for tests) high-quality mode for
            High Resolution Paper
            Inkjet Hagaki
 	   pro Photo Paper
@@ -1689,7 +1689,7 @@ static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: added for iP4700 */
+/* added for iP4700 */
 /* iP4600 also uses this */
 /* iP4800 also uses this */
 /* also MG5100, MG5200 */
@@ -1725,7 +1725,7 @@ static const canon_inkset_t canon_13_C5M5Y4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* Gernot: MP150 (MP170 for tests) T-shirt transfers */
+/* MP150 (MP170 for tests) T-shirt transfers */
 /* also iP6210D */
 static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
@@ -1760,7 +1760,7 @@ static const canon_inkset_t canon_13_C6M6Y2K2k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* Gernot: added for iP4700 photo standard quality */
+/*         added for iP4700 photo standard quality */
 /*         iP4600 also uses this */
 /*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
@@ -1795,7 +1795,7 @@ static const canon_inkset_t canon_13_C6M6Y4k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* Gernot: added for iP4500 high quality */
+/*         added for iP4500 high quality */
 /*         iP4600 also uses this */
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
@@ -1865,7 +1865,7 @@ static const canon_inkset_t canon_13_C6M6Y4k4yask_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* Gernot: iP4500 photo mode */
+/*         iP4500 photo mode */
 /*         iP4600 also uses this */
 /*         iP4700 also uses this */
 /*         iP4800 also uses this */
@@ -1934,7 +1934,7 @@ static const canon_inkset_t canon_13_C8M8Y4k4yask_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* Gernot: MP150 (MP170 for tests) high-quality mode for
+/*         MP150 (MP170 for tests) high-quality mode for
            High Resolution Paper
            Inkjet Hagaki
 	   pro Photo Paper

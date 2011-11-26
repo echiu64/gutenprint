@@ -69,7 +69,7 @@ static const canon_slot_t canon_PIXMA_iP4000_slots[] = {
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "CD",         N_ ("CD tray"), 0xa },
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
 };
 DECLARE_SLOTS(canon_PIXMA_iP4000);
 
@@ -79,7 +79,7 @@ static const canon_slot_t canon_PIXMA_iP3100_slots[] = {
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "CD",         N_ ("CD tray"), 0xa },
   { "AutoSwitch", N_ ("Continuous Autofeed"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
 };
 DECLARE_SLOTS(canon_PIXMA_iP3100);
 
@@ -87,8 +87,8 @@ static const canon_slot_t canon_PIXMA_iP2000_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
   { "Front",      N_ ("Front Feeder"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 }, /*Paper allocation? no idea what this means compared to Continuous*/
+  { "Continuous", N_ ("Continuous Autofeed"), 0xf },
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
 };
 DECLARE_SLOTS(canon_PIXMA_iP2000);
 
@@ -98,19 +98,15 @@ static const canon_slot_t canon_MULTIPASS_MP530_slots[] = {
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "CD",         N_ ("CD tray"), 0xa },
   { "AutoSwitch", N_ ("Continuous Autofeed"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },/*Paper allocation? no idea what this means compared to Continuous*/
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP530);
 
-/* MP170, MP450, MP460, MX300 */
 static const canon_slot_t canon_MULTIPASS_MP170_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP170);
 
-/* MP250 */
-/* iP2700 */
-/* iP1900 */
 static const canon_slot_t canon_MULTIPASS_MP250_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
 };
@@ -154,7 +150,6 @@ static const canon_slot_t canon_BJC_S800_slots[] = {
 };
 DECLARE_SLOTS(canon_BJC_S800);
 
-/* MX7600 */
 static const canon_slot_t canon_MULTIPASS_MX7600_slots[] = {
   { "Cassette",       N_ ("Cassette"), 0x8 },
 };
@@ -167,24 +162,22 @@ static const canon_slot_t canon_PIXMA_iX7000_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_iX7000);
 
-/* iP4500 */
 static const canon_slot_t canon_PIXMA_iP4500_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf }, /* no paper automatic change source*/
-  { "CD",         N_ ("CD tray"), 0xa }, /* CD-R tray F */
-  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },/*Paper alloction? no idea what this means compared to Continuous*/
+  { "Continuous", N_ ("Continuous Autofeed"), 0xf }, /* no paper automatic change source*/
+  { "CD",         N_ ("CD tray"), 0xa },
+  { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 15 },
 };
 DECLARE_SLOTS(canon_PIXMA_iP4500);
 
-/* MX850 */
 static const canon_slot_t canon_MULTIPASS_MX850_slots[] = {
   { "SelectKey",  N_ ("Selected by Paper Select Key"), 0x3 },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
   { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf }, /* no paper automatic change source*/
-  { "CD",         N_ ("CD tray"), 0xa }, /* CD-R tray F */
+  { "CD",         N_ ("CD tray"), 0xa },
 };
 DECLARE_SLOTS(canon_MULTIPASS_MX850);
 
@@ -207,16 +200,15 @@ static const canon_slot_t canon_PIXMA_iP3600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
+  { "Continuous", N_ ("Continuous Autofeed"), 0xf },
 };
 DECLARE_SLOTS(canon_PIXMA_iP3600);
 
-/* iP4600, iP4700 */
 static const canon_slot_t canon_PIXMA_iP4600_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
+  { "Continuous", N_ ("Continuous Autofeed"), 0xf },
   { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
   { "CD",         N_ ("CD tray"), 0xa },
 };
@@ -236,8 +228,8 @@ static const canon_slot_t canon_PIXMA_MG5100_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
-  { "AllocPaper", N_ ("PaperAllocation"), 0x15 }, /*Paper allocation? no idea what this means compared to Continuous*/
+  { "Continuous", N_ ("Continuous Autofeed"), 0xf },
+  { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
 };
 DECLARE_SLOTS(canon_PIXMA_MG5100);
 
@@ -246,11 +238,11 @@ static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
   { "AutoSwitch", N_ ("Automatic Paper Source Switching"), 0xe },
   { "Rear",       N_ ("Rear tray"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-  { "Continuous", N_ ("Continuous Autofeed (both)"), 0xf },
+  { "Continuous", N_ ("Continuous Autofeed"), 0xf },
   { "AllocPaper", N_ ("PaperAllocation"), 0x15 },
   { "CD",         N_ ("CD tray"), 0xa },
 };
-DECLARE_SLOTS(canon_PIXMA_MG5200); /* also MG6100 */
+DECLARE_SLOTS(canon_PIXMA_MG5200);
 
 
 /* media types */
@@ -1061,7 +1053,7 @@ static const canon_paper_t canon_PIXMA_Pro9000mk2_papers[] = {
 DECLARE_PAPERS(canon_PIXMA_Pro9000mk2);
 
 /* PIXMA Pro9500 */
-/* added Envelope, glossy photo paper, coated, T-shirt, PhotopaperOther---must check printjobs if I forgot these ones */
+/* added Envelope, glossy photo paper, HiRes, T-shirt, PhotopaperOther---must check printjobs if I forgot these ones */
 static const canon_paper_t canon_PIXMA_Pro9500_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGgold*/
@@ -1089,7 +1081,7 @@ static const canon_paper_t canon_PIXMA_Pro9500_papers[] = {
 DECLARE_PAPERS(canon_PIXMA_Pro9500);
 
 /* PIXMA Pro9500 Mk.II */
-/* added Envelope, glossy photo paper, coated, T-shirt, PhotopaperOther---must check printjobs if I forgot these ones */
+/* added Envelope, glossy photo paper, HiRes, T-shirt, PhotopaperOther---must check printjobs if I forgot these ones */
 static const canon_paper_t canon_PIXMA_Pro9500mk2_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGLoss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/*PPGgold*/
@@ -1704,7 +1696,7 @@ static const canon_paper_t canon_PIXMA_iP3600_papers[] = {    /*                
   { "Hagaki",		N_ ("Hagaki"),				0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }
+  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP3600);
 
@@ -1744,7 +1736,7 @@ static const canon_paper_t canon_PIXMA_iP4600_papers[] = {    /*                
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }
+  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP4600);
 
@@ -1767,7 +1759,7 @@ static const canon_paper_t canon_PIXMA_iP4700_papers[] = {    /*                
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirtTransfer",	N_ ("T-Shirt Transfer"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 }
+  { "Other",		N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_PIXMA_iP4700);
 
@@ -1775,7 +1767,8 @@ static const canon_paper_t canon_MULTIPASS_MP960_papers[] = { /*                
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
   { "GlossyPro",	N_ ("Photo Paper Pro"),		        0x09,0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },/*check*/
-  { "PhotoSuper",       N_ ("Photo Paper Super"),	        0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/*check c*/
   { "MattePhoto",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
   { "HighResolution",	N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/*OK*/
@@ -1787,8 +1780,7 @@ static const canon_paper_t canon_MULTIPASS_MP960_papers[] = { /*                
   { "Envelope", 	N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/*check variations*/
   { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
   { "FineArtOther",     N_ ("Fine Art Other"),	                0x16,0x18,0x29,0.78, 0.25, 0.500, 0, 0, 0 },/*check*/
-  { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },/*check c,l*/
-  { "Other",		N_ ("Other Coated Photo Paper"),	0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 } /*coated, OK*/
+  { "Other",		N_ ("Other Photo Paper"),	        0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP960);
 
@@ -1796,7 +1788,7 @@ static const canon_paper_t canon_MULTIPASS_MP970_papers[] = { /*                
   /* Name                    Text                               (c   (l   (P   Density    k_upper    *lum_adjustment */
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPro",	N_ ("Photo Paper Pro"),		        0x09,0x0d,0x1a,1.00, 1.00, 0.999, 0, 0, 0 },
-  { "PhotoSuper",       N_ ("Photo Paper Plus Glossy"),	        0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble", N_ ("Photopaper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotoPlusGloss2", 	N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPhoto",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -1927,11 +1919,13 @@ DECLARE_PAPERS(canon_PIXMA_MG6100);
 #endif
 
 /*
-Plain:            Plain Paper, Canon High Resolution Paper;
-Super High Gloss: Photo Paper Pro Platinum;
-Glossy:           Photo Paper Plus Glossy II, Photo Paper Glossy;
-Semi-Gloss:       Photo Paper Plus Semi-Gloss;
-Matte:            Canon Matte Photo Paper;
-Fine Art:         Canon Fine Art Paper "Photo Rag";
-Envelope:         U.S.# 10 Envelope
+Plain:              Plain Paper, Canon High Resolution Paper;
+Super:              Photo Paper Plus Glossy;
+Super Double-Sided: Photo Paper Plus Double-Sided;
+Super High Gloss:   Photo Paper Pro Platinum;
+Glossy:             Photo Paper Plus Glossy II, Photo Paper Glossy;
+Semi-Gloss:         Photo Paper Plus Semi-Gloss;
+Matte:              Canon Matte Photo Paper;
+Fine Art:           Canon Fine Art Paper "Photo Rag";
+Envelope:           U.S.# 10 Envelope
 */
