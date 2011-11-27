@@ -1229,6 +1229,12 @@ canon_init_setColor(const stp_vars_t *v, const canon_privdata_t *init)
                            arg_63[4] = 1;
                        }
                    }
+		 else if (!strcmp(init->caps->name,"4550")) /* BJC-4550 */
+		    {
+		      numargs = 3;
+		      arg_63[2] = 0; /* not used in Black and Color, no idea about PhotoColor yet */
+		      arg_63[1] = init->quality;     /* hardcode to whatever this means for now; quality, apparently */
+		    }
                  else
                    arg_63[2] = init->quality;        /* hardcode to whatever this means for now; quality, apparently */
 

@@ -110,6 +110,7 @@
       <printer translate="name" name="Canon BJC-4000" driver="bjc-4000" manufacturer="Canon" model="4300" parameters="gamma_750_params" foomaticid="Canon-BJC-4000" />
       <printer translate="name" name="Canon BJC-4300" deviceid="MFG:Canon;MDL:BJC-4300;DES:Canon BJC-4300;CMD:BJ,LQ,BJL,BJRaster,BSCC;" driver="bjc-4300" manufacturer="Canon" model="4300" parameters="gamma_750_params" foomaticid="Canon-BJC-4300" />
       <printer translate="name" name="Canon BJC-4400" deviceid="MFG:Canon;MDL:BJC-4400;DES:Canon BJC-4400;CMD:BJ,LQ,BJL,BJRaster,BSCC;" driver="bjc-4400" manufacturer="Canon" model="4400" parameters="density_800_params" foomaticid="Canon-BJC-4400" />
+      <printer translate="name" name="Canon BJC-4550" driver="bjc-4550" manufacturer="Canon" model="4550" parameters="density_800_params" foomaticid="Canon-BJC-4550" />
       <printer translate="name" name="Canon BJC-5100" driver="bjc-5100" manufacturer="Canon" model="5100" parameters="density_800_params" foomaticid="Canon-BJC-5100" />
       <printer translate="name" name="Canon BJC-5500" driver="bjc-5500" manufacturer="Canon" model="5500" parameters="density_800_params" foomaticid="Canon-BJC-5500" />
       <printer translate="name" name="Canon BJC-6000" deviceid="MFG:Canon;MDL:BJC-6000;DES:Canon BJC-6000;CMD:BJL,BJRaster3,BSCC,TXT;" driver="bjc-6000" manufacturer="Canon" model="6000" parameters="gamma_750_params" foomaticid="Canon-BJC-6000" />

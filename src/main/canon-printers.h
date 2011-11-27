@@ -513,6 +513,19 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
+  { /* Canon BJC 4550 *//* heads: BC-21 BCI-21 BC-22 */
+    "4550", 3,
+    17*72, 22*72,
+    11, 9, 10, 18,
+    &canon_default_slotlist,
+    CANON_CAP_STD0 | CANON_CAP_a,0,NULL,
+    &canon_BJC_4550_modelist,
+    &canon_default_paperlist,
+    NULL,
+    NULL,
+    NULL,
+    NULL
+  },
 
   { /* Canon BJC 6000 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     "6000", 3,
