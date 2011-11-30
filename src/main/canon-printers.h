@@ -659,7 +659,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, 17*72,
     10, 10, 9, 15,
     &canon_default_slotlist,
-    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_p,0,NULL, /*FIX? should have _r? */
+    CANON_CAP_STD0 | CANON_CAP_p,0,contrl_cmd_BJC_i6100,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
     NULL,
