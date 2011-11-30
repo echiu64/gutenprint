@@ -110,6 +110,7 @@ typedef struct {
 #define MODE_FLAG_MP360 0x20           /* special ink settings for the PIXMA MP360 */
 #define MODE_FLAG_MP130 0x40           /* special ink settings for early devices */
 #define MODE_FLAG_S 0x80               /* mode-related setup command on iP90/iP9v and iP100 */
+#define MODE_FLAG_PHOTO 0x100          /* selection of photo color cartridge in BJC series printers (in lieu of color and black, or combined color/black) */
   const canon_delay_t* delay;          /* delay settings for this printmode */
   const double density;                /* density multiplier    */
   const double gamma;                  /* gamma multiplier      */
@@ -188,11 +189,13 @@ DECLARE_MODES(canon_BJC_2000,0);
 /*  these printers only have CMYK, so CcMmYK is not required I think */
 /*  using color (CMYK) cartridge, some media use CMYK, others only use CMY */
 /* some modes use ESC (t 0x2 0x80 0x9 which implies bits per ink > 1, but how to know how many? */
+/* added MODE_FLAG_PHOTO as a means to set ESC (t */
 static const canon_mode_t canon_BJC_3000_modes[] = {
   {  180, 180,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,"180x180dpi",N_("180x180 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  360, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi_draft",N_("360x360 DPI DRAFT"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  360, 360,CANON_INK_K | CANON_INK_CMY | CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi",N_("360x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  360, 360,CANON_INK_K | CANON_INK_CMY | CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dmt",N_("360x360 DPI DMT"),INKSET(6_C4M4Y4K4c4m4),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  360, 360,CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi_photo",N_("360x360 DPI PHOTO CARTRIDGE"),INKSET(6_C4M4Y4K4c4m4),8,MODE_FLAG_PHOTO,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  720, 720,CANON_INK_K | CANON_INK_CMY | CANON_INK_CMYK | CANON_INK_CcMmYK,"720x720dpi",N_("720x720 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   { 1440, 720,CANON_INK_K | CANON_INK_CMY | CANON_INK_CMYK | CANON_INK_CcMmYK,"1440x720dpi",N_("1440x720 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,delay_1440,1.0,1.0,NULL,NULL,NULL,2},
 };
