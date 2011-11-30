@@ -334,6 +334,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   5) The following printer models were completely redefined or had
      major changes carried out in the supported modes:
 
+       Canon   BJC 3000   (EXPERIMENTAL)
        Canon   BJC S300   (EXPERIMENTAL)
        Canon   BJC S500   (EXPERIMENTAL)
        Canon   BJC S600   (EXPERIMENTAL)
@@ -404,6 +405,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        *2: data format partially understood (WIP)
        *3: protocol is supported but inks used are not yet supported
           (WIP)
+
+  8) BJC series printers using photo cartridge have printing modes
+     added that will select this cartridge.
 
 * Changes from 5.2.6
 
