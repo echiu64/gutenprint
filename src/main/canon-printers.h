@@ -658,7 +658,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "3000", 3,
     842, 17*72,
     10, 10, 9, 15,
-    &canon_default_slotlist,
+    &canon_MULTIPASS_MP170_slotlist,
     CANON_CAP_STD0 | CANON_CAP_p,0,control_cmd_BJC_i6100,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,

@@ -1673,8 +1673,22 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
   if (init->mode->inks[0].ink->bits>1) {
     arg_74_1= 0x02;
     arg_74_2= 0x80;
-    arg_74_3= 0x09;
+    arg_74_3= 0x09; /* default for most media */
+    /* FIXME: (Gernot) below must be corrected I think, since CMY is
+       not a function of the cartridge but of the driver selection of
+       which logical inks get sent to the printer. So here the
+       printers that use this should be enumerated, rather than a
+       generic condition based on CANON_INK_CMY */
     if (init->used_inks == CANON_INK_CMY) arg_74_3= 0x02; /* for BC-06 cartridge!!! */
+    /* example of better way: for BJC-3000 series */
+    if  (!strcmp(init->caps->name,"3000")) {
+      /* T-Shirt (3), Backprint Film (3) or Transparencies (2) */
+      if ((init->pt->media_code_c==2) || (init->pt->media_code_c==3))
+	arg_74_3= 0x01;
+      else
+	/* other media */
+	arg_74_3= 0x09; /* return to default after broken code above */
+    }
   }
 
   /* workaround for the bjc8200 in 6color mode - not really understood */

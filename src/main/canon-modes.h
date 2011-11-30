@@ -186,6 +186,8 @@ DECLARE_MODES(canon_BJC_2000,0);
 
 
 /*  these printers only have CMYK, so CcMmYK is not required I think */
+/*  using color (CMYK) cartridge, some media use CMYK, others only use CMY */
+/* some modes use ESC (t 0x2 0x80 0x9 which implies bits per ink > 1, but how to know how many? */
 static const canon_mode_t canon_BJC_3000_modes[] = {
   {  180, 180,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,"180x180dpi",N_("180x180 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  360, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi_draft",N_("360x360 DPI DRAFT"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,1},
