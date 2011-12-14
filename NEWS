@@ -4,7 +4,7 @@ features over 5.2.5.  Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  Gutenprint currently supports over 1500 printer models.
+others.  Gutenprint currently supports over 1700 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
 Macintosh OS X (10.3 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
@@ -321,8 +321,31 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Epson inkjet printers:
 
+       EPSON ME Office 940FW
+       EPSON PX 204
+       EPSON PX 504A
        EPSON Stylus CX3900
+       EPSON Stylus NX530
+       EPSON Stylus NX635
+       EPSON Stylus Office BX535WD
+       EPSON Stylus Office BX630FW
+       EPSON Stylus Office BX635FWD
+       EPSON Stylus Office TX620FWD
        EPSON Stylus Photo RX650
+       EPSON Stylus SX535WD
+       EPSON WorkForce 545
+       EPSON WorkForce 630
+       EPSON WorkForce 645
+
+     - Epson wide carriage inkjet printers:
+
+       EPSON Stylus Pro 7900 (Partial -- no orange/green inks)
+       EPSON Stylus Pro 9900 (Partial -- no orange/green inks)
+
+       These printers function as 8 color photo printers using CMYK
+       inks, similar to the 7890/9890.  They have not been tuned.  At
+       present, we do not have a schedule for adding support for the
+       green and orange inks.
 
   2) A crash with the EPSON Stylus Photo R3000 has been fixed.
 
@@ -406,8 +429,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        *3: protocol is supported but inks used are not yet supported
           (WIP)
 
-  8) BJC series printers using photo cartridge have printing modes
+  8) Canon BJC series printers using photo cartridge have printing modes
      added that will select this cartridge.
+
 
 * Changes from 5.2.6
 

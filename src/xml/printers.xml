@@ -404,10 +404,14 @@
       <printer translate="name" name="Epson Stylus Office T1100" driver="escp2-of-t1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-Stylus_Office_T1100" />
       <printer translate="name" name="Epson Stylus Office T1110" driver="escp2-of-t1110" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-Stylus_Office_T1110" />
       <printer translate="name" name="Epson Stylus Office BX300F" driver="escp2-of-bx300f" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-Stylus_Office_BX300F" />
+      <printer translate="name" name="Epson Stylus Office BX535WD" driver="escp2-of-bx535wd" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_BX535WD" />
       <printer translate="name" name="Epson Stylus Office BX600FW" driver="escp2-of-bx600fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_BX600FW" />
+      <printer translate="name" name="Epson Stylus Office BX630FW" driver="escp2-of-bx630fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_BX630FW" />
+      <printer translate="name" name="Epson Stylus Office BX635FWD" driver="escp2-of-bx635fwd" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_BX635FWD" />
       <printer translate="name" name="Epson Stylus Office SX600FW" driver="escp2-of-sx600fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_SX600FW" />
       <printer translate="name" name="Epson Stylus Office TX300F" driver="escp2-of-tx300f" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-Stylus_Office_TX300F" />
       <printer translate="name" name="Epson Stylus Office TX600FW" driver="escp2-of-tx600fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_TX600FW" />
+      <printer translate="name" name="Epson Stylus Office TX620FWD" driver="escp2-of-tx620fwd" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_Office_TX620FWD" />
       <printer translate="name" name="Epson Stylus Photo" driver="escp2-photo" manufacturer="Epson" model="9" parameters="standard_params" foomaticid="Epson-Stylus_Photo" />
       <printer translate="name" name="Epson Stylus Photo 700" deviceid="MFG:EPSON;MDL:Stylus Photo 700;DES:EPSON Stylus Photo 700;CMD:ESCPL2,BDC;" driver="escp2-700" manufacturer="Epson" model="7" parameters="standard_params" foomaticid="Epson-Stylus_Photo_700" />
       <printer translate="name" name="Epson Stylus Photo EX" deviceid="MFG:EPSON;MDL:Stylus Photo EX;CMD:ESCPL2,BDC;" driver="escp2-ex" manufacturer="Epson" model="8" parameters="standard_params" foomaticid="Epson-Stylus_Photo_EX" />
@@ -515,6 +519,7 @@
       <printer translate="name" name="Epson Stylus Pro 7800" driver="escp2-7800" manufacturer="Epson" model="103" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7800" />
       <printer translate="name" name="Epson Stylus Pro 7880" driver="escp2-7880" manufacturer="Epson" model="89" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7880" />
       <printer translate="name" name="Epson Stylus Pro 7890" driver="escp2-7890" manufacturer="Epson" model="89" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7890" />
+      <printer translate="name" name="Epson Stylus Pro 7900" driver="escp2-7900" manufacturer="Epson" model="116" parameters="standard_params" foomaticid="Epson-Stylus_Pro_7900" />
       <printer translate="name" name="Epson Stylus Pro 9000" driver="escp2-9000" manufacturer="Epson" model="30" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9000" />
       <printer translate="name" name="Epson Stylus Pro 9500" driver="escp2-9500" manufacturer="Epson" model="31" parameters="pro_5500_params" foomaticid="Epson-Stylus_Pro_9500" />
       <printer translate="name" name="Epson Stylus Pro 9600" driver="escp2-9600" manufacturer="Epson" model="49" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9600" />
@@ -522,6 +527,7 @@
       <printer translate="name" name="Epson Stylus Pro 9800" driver="escp2-9800" manufacturer="Epson" model="104" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9800" />
       <printer translate="name" name="Epson Stylus Pro 9880" driver="escp2-9880" manufacturer="Epson" model="90" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9880" />
       <printer translate="name" name="Epson Stylus Pro 9890" driver="escp2-9890" manufacturer="Epson" model="90" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9890" />
+      <printer translate="name" name="Epson Stylus Pro 9900" driver="escp2-9900" manufacturer="Epson" model="117" parameters="standard_params" foomaticid="Epson-Stylus_Pro_9900" />
       <printer translate="name" name="Epson Stylus Pro 10000" driver="escp2-10000" manufacturer="Epson" model="41" parameters="standard_params" foomaticid="Epson-Stylus_Pro_10000" />
       <printer translate="name" name="Epson Stylus Pro 11800/11880 Back Compatible" driver="escp2-11600" manufacturer="Epson" model="113" parameters="standard_params" foomaticid="Epson-Stylus_Pro_11600" />
       <printer translate="name" name="Epson Stylus Pro 11800" driver="escp2-11800" manufacturer="Epson" model="105" parameters="standard_params" foomaticid="Epson-Stylus_Pro_11800" />
@@ -601,6 +607,8 @@
       <printer translate="name" name="Epson Stylus NX400" driver="escp2-nx400" manufacturer="Epson" model="93" parameters="standard_params" foomaticid="Epson-Stylus_NX400" />
       <printer translate="name" name="Epson Stylus NX415" driver="escp2-nx415" manufacturer="Epson" model="93" parameters="standard_params" foomaticid="Epson-Stylus_NX415" />
       <printer translate="name" name="Epson Stylus NX515" driver="escp2-nx515" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_NX515" />
+      <printer translate="name" name="Epson Stylus NX530" driver="escp2-nx530" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_NX530" />
+      <printer translate="name" name="Epson Stylus NX635" driver="escp2-nx635" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_NX635" />
       <printer translate="name" name="Epson Stylus Photo PX650" driver="escp2-px650" manufacturer="Epson" model="97" parameters="standard_params" foomaticid="Epson-Stylus_Photo_PX650" />
       <printer translate="name" name="Epson Stylus Photo PX700W" driver="escp2-px700fw" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Stylus_Photo_PX700W" />
       <printer translate="name" name="Epson Stylus Photo PX710W" driver="escp2-px710fw" manufacturer="Epson" model="96" parameters="claria_params" foomaticid="Epson-Stylus_Photo_PX710W" />
@@ -624,6 +632,7 @@
       <printer translate="name" name="Epson Stylus SX510W" driver="escp2-sx510w" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX510W" />
       <printer translate="name" name="Epson Stylus SX515" driver="escp2-sx515" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX515" />
       <printer translate="name" name="Epson Stylus SX525" driver="escp2-sx525" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX525" />
+      <printer translate="name" name="Epson Stylus SX535FW" driver="escp2-sx535FW" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX535FW" />
       <printer translate="name" name="Epson Stylus SX600FW" driver="escp2-sx600fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX600FW" />
       <printer translate="name" name="Epson Stylus SX610FW" driver="escp2-sx610fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX610FW" />
       <printer translate="name" name="Epson Stylus SX615" driver="escp2-sx615" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-Stylus_SX615" />
@@ -683,10 +692,13 @@
       <printer translate="name" name="Epson WorkForce 310" driver="escp2-wf310" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-WorkForce_310" />
       <printer translate="name" name="Epson WorkForce 315" driver="escp2-wf315" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-WorkForce_315" />
       <printer translate="name" name="Epson WorkForce 500" driver="escp2-wf500" manufacturer="Epson" model="93" parameters="standard_params" foomaticid="Epson-WorkForce_500" />
+      <printer translate="name" name="Epson WorkForce 545" driver="escp2-wf545" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_545" />
       <printer translate="name" name="Epson WorkForce 600" driver="escp2-wf600" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_600" />
       <printer translate="name" name="Epson WorkForce 610" driver="escp2-wf610" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_610" />
       <printer translate="name" name="Epson WorkForce 615" driver="escp2-wf615" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_615" />
+      <printer translate="name" name="Epson WorkForce 630" driver="escp2-wf630" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_630" />
       <printer translate="name" name="Epson WorkForce 635" driver="escp2-wf636" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_635" />
+      <printer translate="name" name="Epson WorkForce 645" driver="escp2-wf645" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_645" />
       <printer translate="name" name="Epson WorkForce 1100" driver="escp2-wf1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-WorkForce_1100" />
       <printer translate="name" name="Epson CL 700" driver="escp2-cl700" manufacturer="Epson" model="38" parameters="480_params" foomaticid="Epson-CL_700" />
       <printer translate="name" name="Epson CL 750" driver="escp2-cl750" manufacturer="Epson" model="43" parameters="480_params" foomaticid="Epson-CL_750" />
@@ -719,6 +731,7 @@
       <printer translate="name" name="Epson ME Office 600F" driver="escp2-meof600f" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_Office_600F" />
       <printer translate="name" name="Epson ME Office 620F" driver="escp2-meof620f" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-ME_Office_620F" />
       <printer translate="name" name="Epson ME Office 700FW" driver="escp2-meof700fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-ME_Office_700FW" />
+      <printer translate="name" name="Epson ME Office 940FW" driver="escp2-meof940fw" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-ME_Office_940FW" />
       <printer translate="name" name="Epson ME Office 1100" driver="escp2-meof1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-ME_Office_1100" />
       <printer translate="name" name="Epson MJ 930C" driver="escp2-mj930c" manufacturer="Epson" model="4" parameters="standard_params" foomaticid="Epson-MJ_930C" />
       <printer translate="name" name="Epson MJ 5100C" driver="escp2-mj5100c" manufacturer="Epson" model="39" parameters="standard_params" foomaticid="Epson-MJ_5100C" />
@@ -780,7 +793,9 @@
       <printer translate="name" name="Epson PX 7V" driver="escp2-px7v" manufacturer="Epson" model="91" parameters="standard_params" foomaticid="Epson-PX_7V" />
       <printer translate="name" name="Epson PX 101" driver="escp2-px101" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-PX_101" />
       <printer translate="name" name="Epson PX 201" driver="escp2-px201" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_201" />
+      <printer translate="name" name="Epson PX 204" driver="escp2-px204" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_204" />
       <printer translate="name" name="Epson PX 401A" driver="escp2-px401a" manufacturer="Epson" model="94" parameters="standard_params" foomaticid="Epson-PX_401" />
+      <printer translate="name" name="Epson PX 504A" driver="escp2-px504a" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_504A" />
       <printer translate="name" name="Epson PX 601F" driver="escp2-px601f" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_601F" />
       <printer translate="name" name="Epson PX 1001" driver="escp2-px1001" manufacturer="Epson" model="100" parameters="standard_params" foomaticid="Epson-PX_1001" />
       <printer translate="name" name="Epson PX G900" driver="escp2-pxg900" manufacturer="Epson" model="64" parameters="standard_params" foomaticid="Epson-PX_G900" />

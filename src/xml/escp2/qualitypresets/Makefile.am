@@ -28,6 +28,7 @@ pkgxmldatadir = $(pkgdatadir)/@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSI
 pkgxmldata_DATA =				\
 	p1_5.xml				\
 	picturemate.xml				\
+	prox900.xml				\
 	standard.xml				\
 	v2880.xml				\
 	wf40.xml
