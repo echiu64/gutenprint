@@ -247,6 +247,7 @@ print_debug_block(const stp_vars_t *v, const cups_image_t *cups)
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowCount = %d\n", cups->header.cupsRowCount);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowFeed = %d\n", cups->header.cupsRowFeed);
   fprintf(stderr, "DEBUG: Gutenprint:   cupsRowStep = %d\n", cups->header.cupsRowStep);
+  fprintf(stderr, "DEBUG: Gutenprint:   shrink page to fit %d\n", cups->shrink_to_fit);
   stpi_vars_print_error(v, "DEBUG");
   fprintf(stderr, "DEBUG: Gutenprint: End page data\n");
 }
