@@ -1937,19 +1937,19 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
     if(ink->channel && ink->density > 0.0){
         int delay = canon_get_delay(privdata,ink->channel);
         canon_channel_t* current;
-	stp_erprintf("canon_setup_channel: privdata->num_channels %i\n", privdata->num_channels);
+	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: privdata->num_channels %i\n", privdata->num_channels);
         /* create a new channel */
         privdata->channels = stp_realloc(privdata->channels,sizeof(canon_channel_t) * (privdata->num_channels + 1));
         privdata->channel_order = stp_realloc(privdata->channel_order,privdata->num_channels + 2);
         /* update channel order */
         privdata->channel_order[privdata->num_channels]=ink->channel;
-	stp_erprintf("canon_setup_channel: ink->channel %c\n", ink->channel);
+	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: ink->channel %c\n", ink->channel);
         privdata->channel_order[privdata->num_channels+1]='\0';
         current = &(privdata->channels[privdata->num_channels]);
         ++privdata->num_channels;
         /* fill ink properties */
         current->name = ink->channel;
-	stp_erprintf("canon_setup_channel: current->name %c\n", current->name);
+	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: current->name %c\n", current->name);
         current->props = ink->ink;
         current->delay = delay;
         /* calculate buffer length */
@@ -1968,7 +1968,7 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
 	if(subchannel)
 		memcpy(*shades + 1,*shades,sizeof(stp_shade_t) * subchannel);
         (*shades)[0].value = ink->density;
-	stp_erprintf("canon_setup_channel: ink->density %i\n", ink->density);
+	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: ink->density %.3f\n", ink->density);
         (*shades)[0].numsizes = ink->ink->numsizes;
         (*shades)[0].dot_sizes = ink->ink->dot_sizes;
         return 1;
@@ -2011,7 +2011,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
         stp_shade_t* shades = NULL;
 	int is_black_channel = 0;
         channel = channel_order[channel_idx];
-	stp_erprintf("canon_setup_channels: channel %c\n", channel);
+	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: channel %d\n", channel);
         if(channel == STP_ECOLOR_K && privdata->used_inks & CANON_INK_K_MASK){ /* black channel */
             /* find K and k inks */
             for(i=0;i<privdata->mode->num_inks;i++){
@@ -2022,7 +2022,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 	    is_black_channel = 1;
         }else if(channel != STP_ECOLOR_K && privdata->used_inks & CANON_INK_CMY_MASK){  /* color channels */
             for(i=0;i<privdata->mode->num_inks;i++){
-	      stp_erprintf("canon_setup_channels: loop non-K inks %i\n", i);
+	      stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop non-K inks %i\n", i);
                 const canon_inkset_t* ink = &privdata->mode->inks[i];
                 /* if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CcMmYyKk_MASK) && (ink->channel == secondary[channel]))) */
 		/* Gernot: see if this works: use the masks that includes secondary channels */
@@ -2035,7 +2035,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
         if(shades){
           stp_dither_set_inks_full(v,channel, subchannel, shades, 1.0, ink_darkness[channel]);
           for(i=0;i<subchannel;i++){
-	    stp_erprintf("canon_setup_channels: loop subchannels for shades %i\n", i);
+	    stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop subchannels for shades %i\n", i);
             double density = get_double_param(v, primary_density_control[channel]) * get_double_param(v, "Density");
             if(i > 0 && secondary_density_control[channel])
               density *= get_double_param(v, secondary_density_control[channel]);
