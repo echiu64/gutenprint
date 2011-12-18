@@ -21,6 +21,8 @@
 
 include $(top_srcdir)/scripts/global.mk
 
+.PHONY: foomatic-stamp-pre foomatic-stamp-full foomatic-stamp-simple \
+	foomatic-stamp-both
 
 ## Variables
 
@@ -95,10 +97,18 @@ clean-local:
 
 foomatic-data: foomatic-stamp
 
-foomatic-stamp: foomatic-generator $(noinst_PROGRAMS) mk_printerlist $(top_builddir)/src/xml/xml-stamp
+foomatic-stamp-pre: foomatic-generator $(noinst_PROGRAMS) mk_printerlist $(top_builddir)/src/xml/xml-stamp
 	-$(RM) -r foomatic-db
+
+foomatic-stamp-full: foomatic-stamp-pre
 	$(FOOMATIC_GENERATOR) -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
+
+foomatic-stamp-simple: foomatic-stamp-pre
 	$(FOOMATIC_GENERATOR) -s -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
+
+foomatic-stamp-both: foomatic-stamp-full foomatic-stamp-simple
+
+foomatic-stamp: foomatic-stamp-both
 	touch foomatic-stamp
 
 dist-hook:
