@@ -988,11 +988,6 @@ print_ppd_header(gzFile fp, ppd_type_t ppd_type, int model, const char *driver,
   gzprintf(fp, "*ShortNickName: \"%s\"\n", short_long_name);
 
  /*
-  * The Windows driver download stuff has problems with NickName fields
-  * with commas.  Now use a dash instead...
-  */
-
- /*
   * NOTE - code in rastertoprinter looks for this version string.
   * If this is changed, the corresponding change must be made in
   * rastertoprinter.c.  Look for "ppd->nickname"
@@ -1245,7 +1240,7 @@ print_color_setup(gzFile fp, int simplified, int printer_is_color,
   gzputs(fp, "*ColorKeyWords: \"ColorModel\"\n");
   gzprintf(fp, "*OpenUI *ColorModel/%s: PickOne\n", _("Color Model"));
   gzputs(fp, "*OPOptionHints ColorModel: \"radiobuttons\"\n");
-  gzputs(fp, "*OrderDependency: 10 AnySetup *ColorModel\n");
+  gzputs(fp, "*OrderDependency: 2 AnySetup *ColorModel\n");
 
   if (printer_is_color)
     {
@@ -1314,7 +1309,7 @@ print_color_setup(gzFile fp, int simplified, int printer_is_color,
       gzputs(fp, "*ColorKeyWords: \"StpColorPrecision\"\n");
       gzprintf(fp, "*OpenUI *StpColorPrecision/%s: PickOne\n", _("Color Precision"));
       gzputs(fp, "*OPOptionHints StpColorPrecision: \"radiobuttons\"\n");
-      gzputs(fp, "*OrderDependency: 10 AnySetup *StpColorPrecision\n");
+      gzputs(fp, "*OrderDependency: 1 AnySetup *StpColorPrecision\n");
       gzputs(fp, "*DefaultStpColorPrecision: Normal\n");
       gzputs(fp, "*StpDefaultStpColorPrecision: Normal\n");
       gzprintf(fp, "*StpColorPrecision Normal/%s:\t\"<<"
