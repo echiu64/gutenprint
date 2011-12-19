@@ -466,9 +466,11 @@ canon_source_type(const char *name, const canon_cap_t * caps)
 /* function returns the current set printmode (specified by resolution) */
 /* if no mode is set the default mode will be returned */
 static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
+#if 0
     const char* input_slot = stp_get_string_parameter(v, "InputSlot");
-    const char *resolution = stp_get_string_parameter(v, "Resolution");
     const char *quality = stp_get_string_parameter(v, "Quality");
+#endif
+    const char *resolution = stp_get_string_parameter(v, "Resolution");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
     int i;
@@ -846,7 +848,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
     }
   else if (strcmp(name, "Resolution") == 0)
   {
+#if 0
     const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+#endif
     description->bounds.str= stp_string_list_create();
     description->deflt.str = NULL;
     for(i=0;i<caps->modelist->count;i++){
@@ -952,7 +956,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "Quality") == 0)
   {
+#if 0
     int has_standard_quality = 0;
+#endif
     description->bounds.str = stp_string_list_create();
     stp_string_list_add_string(description->bounds.str, "None",
 			       _("Manual Control"));
@@ -963,7 +969,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
   /* Cartridge selection for those printers that have it */
   else if (strcmp(name, "Cartridge") == 0)
   {
+#if 0
     int offer_cartridge_selection = 0;
+#endif
     description->bounds.str = stp_string_list_create();
     stp_string_list_add_string(description->bounds.str, "Both",
 			       _("Both"));
@@ -1446,23 +1454,23 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   if ( (arg_ESCP_2 == 0x28) || ( arg_ESCP_2 == 0x29) || (arg_ESCP_2 ==  0x2c) || (arg_ESCP_2 == 0x31) ) {
     /* A4 */
     if ( arg_ESCP_1 == 0x03 ) {
-      arg_ESCP_1 == 0x4d;
+      arg_ESCP_1 = 0x4d;
       if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
-	arg_ESCP_1 == 0x42;
+	arg_ESCP_1 = 0x42;
       }
     }
     /* A3 */
     if ( arg_ESCP_1 == 0x05 ) {
-      arg_ESCP_1 == 0x4e;
+      arg_ESCP_1 = 0x4e;
       if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
-	arg_ESCP_1 == 0x43;
+	arg_ESCP_1 = 0x43;
       }
     }
     /* Letter */
     if ( arg_ESCP_1 == 0x0d ) {
-      arg_ESCP_1 == 0x4f;
+      arg_ESCP_1 = 0x4f;
       if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
-	arg_ESCP_1 == 0x44;
+	arg_ESCP_1 = 0x44;
       }
     }
   }
@@ -2022,8 +2030,8 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 	    is_black_channel = 1;
         }else if(channel != STP_ECOLOR_K && privdata->used_inks & CANON_INK_CMY_MASK){  /* color channels */
             for(i=0;i<privdata->mode->num_inks;i++){
-	      stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop non-K inks %d\n", i);
                 const canon_inkset_t* ink = &privdata->mode->inks[i];
+		stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop non-K inks %d\n", i);
                 /* if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CcMmYyKk_MASK) && (ink->channel == secondary[channel]))) */
 		/* Gernot: see if this works: use the masks that includes secondary channels */
                 if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CMYKk_MASK ) && (ink->channel == secondary[channel])))
@@ -2035,8 +2043,8 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
         if(shades){
           stp_dither_set_inks_full(v,channel, subchannel, shades, 1.0, ink_darkness[channel]);
           for(i=0;i<subchannel;i++){
-	    stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop subchannels for shades %d\n", i);
             double density = get_double_param(v, primary_density_control[channel]) * get_double_param(v, "Density");
+	    stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop subchannels for shades %d\n", i);
             if(i > 0 && secondary_density_control[channel])
               density *= get_double_param(v, secondary_density_control[channel]);
             stp_channel_set_density_adjustment(v,channel,subchannel,density);
@@ -2185,12 +2193,16 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
-		errlast,	/* Last raster line loaded */
+                errlast;	/* Last raster line loaded */
+#if 0
 		out_channels;	/* Output bytes per pixel */
+#endif
   unsigned	zero_mask;
   int           print_cd= (media_source && (!strcmp(media_source, "CD")));
-  int           image_height,
+  int           image_height;
+#if 0
                 image_width;
+#endif
   double        k_upper, k_lower;
   unsigned char *cd_mask = NULL;
   double outer_r_sq = 0;
@@ -2232,7 +2244,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   setup_page(v,&privdata);
 
   image_height = stp_image_height(image);
+#if 0
   image_width = stp_image_width(image);
+#endif
 
   privdata.pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   privdata.slot = canon_source_type(media_source,caps);
@@ -2433,7 +2447,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   canon_set_curve_parameter(v,"LumMap",STP_CURVE_COMPOSE_MULTIPLY,caps->lum_adjustment,privdata.pt->lum_adjustment,privdata.mode->lum_adjustment);
   canon_set_curve_parameter(v,"SatMap",STP_CURVE_COMPOSE_MULTIPLY,caps->sat_adjustment,privdata.pt->sat_adjustment,privdata.mode->sat_adjustment);
 
+#if 0
   out_channels = stp_color_init(v, image, 65536);
+#endif
   stp_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   privdata.emptylines = 0;
