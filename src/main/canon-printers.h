@@ -174,12 +174,6 @@ static const char* control_cmd_PIXMA_iP4200[] = {
   NULL
 };
 
-static const char* control_cmd_MULTIPASS_MP150[] = {
-  "AckTime=Short",
-  "MediaDetection=ON",
-  NULL
-};
-
 static const char* control_cmd_PIXMA_iP2700[] = {
 /*"SetTime=20060722092503", */         /*what is this for?*/
   "SetSilent=OFF",
