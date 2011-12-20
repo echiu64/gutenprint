@@ -732,6 +732,7 @@ if ($list_printers) {
     my ($qopt) = $quiet ? "-q" : "";
     $testpattern_command = "$valgrind_command ./testpattern -y $suppress $qopt";
     if ($single) {
+	$SIG{PIPE} = sub() { die "\ntestpattern crashed!\n" };
 	foreach my $printer (@printer_list) {
 	    open TESTPATTERN, "|$testpattern_command" or
 		die "Can't run $testpattern_command: $!\n";
@@ -741,6 +742,7 @@ if ($list_printers) {
 	    last if ($? & 255);
 	}
     } else {
+	$SIG{PIPE} = sub() { die "\ntestpattern crashed!\n" };
 	open TESTPATTERN, "|$testpattern_command" or
 	    die "Can't run $testpattern_command: $!\n";
 	map { do_printer($_, \*TESTPATTERN) } @printer_list;
