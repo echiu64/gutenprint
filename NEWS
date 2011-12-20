@@ -349,7 +349,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   2) A crash with the EPSON Stylus Photo R3000 has been fixed.
 
-  3) Galician and Ukrainian translations have been added.
+  3) Chinese (Mandarin), Galician, and Ukrainian translations have
+     been added.
 
   4) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
