@@ -2375,14 +2375,11 @@ escp2_parameters(const stp_vars_t *v, const char *name,
       description->bounds.str = stp_string_list_create();
       if (ninklists > 1)
 	{
-	  int has_default_choice = 0;
 	  for (i = 0; i < ninklists; i++)
 	    {
 	      stp_string_list_add_string(description->bounds.str,
 					 inks->inklists[i].name,
 					 gettext(inks->inklists[i].text));
-	      if (strcmp(inks->inklists[i].name, "None") == 0)
-		has_default_choice = 1;
 	    }
 	  description->deflt.str =
 	    stp_string_list_param(description->bounds.str, 0)->name;
@@ -3372,7 +3369,6 @@ setup_inks(stp_vars_t *v)
   escp2_dropsize_t *drops;
   const inkname_t *ink_type = pd->inkname;
   const stp_vars_t *pv = pd->paper_type->v;
-  int gloss_channel = -1;
   double gloss_scale = get_double_param(v, "Density");
 
   drops = escp2_copy_dropsizes(v);
@@ -3418,7 +3414,6 @@ setup_inks(stp_vars_t *v)
 	      else if (strcmp(param, "GlossDensity") == 0)
 		{
 		  gloss_scale *= get_double_param(v, param);
-		  gloss_channel = i;
 		}
 	    }
 	  for (j = 0; j < channel->n_subchannels; j++)
@@ -4310,7 +4305,6 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
 {
   int status;
   escp2_privdata_t *pd = get_privdata(v);
-  int out_channels;		/* Output bytes per pixel */
   int line_width = (pd->image_printed_width + 7) / 8 * pd->bitwidth;
   int weave_pattern = STP_WEAVE_ZIGZAG;
   if (stp_check_string_parameter(v, "Weave", STP_PARAMETER_ACTIVE))
@@ -4360,7 +4354,7 @@ escp2_print_page(stp_vars_t *v, stp_image_t *image)
 		  pd->res->printed_vres);
   allocate_channels(v, line_width);
   adjust_print_quality(v);
-  out_channels = stp_color_init(v, image, 65536);
+  (void) stp_color_init(v, image, 65536);
 
 /*  stpi_dither_set_expansion(v, pd->res->hres / pd->res->printed_hres); */
 
