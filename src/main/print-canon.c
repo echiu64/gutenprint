@@ -2193,8 +2193,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
-                errlast,	/* Last raster line loaded */
+                errlast;	/* Last raster line loaded */
+#if 0
 		out_channels;	/* Output bytes per pixel */
+#endif
   unsigned	zero_mask;
   int           print_cd= (media_source && (!strcmp(media_source, "CD")));
   int           image_height;
@@ -2445,7 +2447,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   canon_set_curve_parameter(v,"LumMap",STP_CURVE_COMPOSE_MULTIPLY,caps->lum_adjustment,privdata.pt->lum_adjustment,privdata.mode->lum_adjustment);
   canon_set_curve_parameter(v,"SatMap",STP_CURVE_COMPOSE_MULTIPLY,caps->sat_adjustment,privdata.pt->sat_adjustment,privdata.mode->sat_adjustment);
 
+#if 0
   out_channels = stp_color_init(v, image, 65536);
+#endif
+  (void) stp_color_init(v, image, 65536);
   stp_allocate_component_data(v, "Driver", NULL, NULL, &privdata);
 
   privdata.emptylines = 0;
