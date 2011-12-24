@@ -98,7 +98,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <physicalResolution>720 1440</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
    <parameter type="float" name="escp2_density">0.891000</parameter>
-   <parameter type="integer" name="escp2_ink_type">16</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.275000</parameter>
@@ -109,7 +109,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <physicalResolution>1440 1440</physicalResolution>
    <printerWeave command="\033(i\001\000\001"/>
    <parameter type="float" name="escp2_density">0.446000</parameter>
-   <parameter type="integer" name="escp2_ink_type">16</parameter>
+   <parameter type="integer" name="escp2_ink_type">18</parameter>
    <parameter type="integer" name="escp2_base_res">2880</parameter>
    <parameter type="integer" name="escp2_bits">2</parameter>
    <parameter type="float" name="DropSize1">0.275000</parameter>
