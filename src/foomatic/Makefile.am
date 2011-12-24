@@ -91,12 +91,12 @@ install-kit:
 	fi
 
 clean-local:
-	-$(RM) -r foomatic-db
+	-$(RM) -rf foomatic-db
 
 foomatic-data: foomatic-stamp
 
 foomatic-stamp: foomatic-generator $(noinst_PROGRAMS) mk_printerlist $(top_builddir)/src/xml/xml-stamp
-	-$(RM) -r foomatic-db
+	-$(RM) -rf foomatic-db
 	$(FOOMATIC_GENERATOR) -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
 	$(FOOMATIC_GENERATOR) -s -t $(srcdir)/foomatic-templates $(FOOMATIC_GENERATOR_EXTRA_OPTS) $(FOOMATIC_GENERATOR_FOOMATIC_3_OPTS)
 	touch foomatic-stamp
