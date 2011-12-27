@@ -278,6 +278,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA mini220(EXPERIMENTAL)
        Canon PIXMA mini320(EXPERIMENTAL)
        Canon PIXMA mini360(EXPERIMENTAL)
+       Canon PIXMA DS700  (EXPERIMENTAL)
+       Canon PIXMA DS810  (EXPERIMENTAL)
        Canon PIXMA i50    (EXPERIMENTAL)
        Canon PIXMA i70    (EXPERIMENTAL)
        Canon PIXMA i450   (EXPERIMENTAL)
@@ -549,7 +551,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   2) Corrected color matching profile used for Mac OS X 10.5.x.
      sRGB will now be used instead of Generic RGB.  Users with work-
-     flows dependant on the previously used Generic RGB can select
+     flows dependent on the previously used Generic RGB can select
      this color profile in the print window by using ColorSync to
      choose the profile rather than using VendorMatching.
 
@@ -868,7 +870,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    6) Make the QualityEnhancement option (available in the Epson
       driver for certain printers) function correctly.
 
-   7) Alow Epson printers using Claria inks to select quadtone or
+   7) Allow Epson printers using Claria inks to select quadtone or
       hextone output.
 
    9) Corrected escputil status output for Epson Artisan and TX/SX
