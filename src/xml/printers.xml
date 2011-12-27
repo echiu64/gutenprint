@@ -1810,21 +1810,27 @@
       <printer translate="name" name="Canon SELPHY-CP-530" driver="canon-cp530" manufacturer="Canon" model="1004" foomaticid="Canon-SELPHY-CP-530" />
       <printer translate="name" name="Canon SELPHY-CP-600" driver="canon-cp600" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP-600" />
       <printer translate="name" name="Canon SELPHY-CP-710" driver="canon-cp710" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP-710" />
+<!--
       <printer translate="name" name="Canon SELPHY-CP-720" driver="canon-cp720" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP-720" />
+-->
       <printer translate="name" name="Canon SELPHY-CP-730" driver="canon-cp730" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP-730" />
       <printer translate="name" name="Canon SELPHY-CP-740" driver="canon-cp740" manufacturer="Canon" model="1004" foomaticid="Canon-SELPHY-CP-740" />
       <printer translate="name" name="Canon SELPHY-CP-750" driver="canon-cp750" manufacturer="Canon" model="1004" foomaticid="Canon-SELPHY-CP-750" />
       <printer translate="name" name="Canon SELPHY-CP-760" driver="canon-cp760" manufacturer="Canon" model="1004" foomaticid="Canon-SELPHY-CP-760" />
       <printer translate="name" name="Canon SELPHY-CP-770" driver="canon-cp770" manufacturer="Canon" model="1004" foomaticid="Canon-SELPHY-CP-770" />
+<!--
       <printer translate="name" name="Canon SELPHY-CP-780" driver="canon-cp780" manufacturer="Canon" model="1004" foomaticid="Canon-SELPHY-CP-780" />
+-->
       <printer translate="name" name="Canon SELPHY-CP-790" driver="canon-cp790" manufacturer="Canon" model="1008" foomaticid="Canon-SELPHY-CP-790" />
+<!--
       <printer translate="name" name="Canon SELPHY-CP-800" driver="canon-cp800" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP-800" />
       <printer translate="name" name="Canon SELPHY ES1" driver="canon-es1" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES1" />
       <printer translate="name" name="Canon SELPHY ES2" driver="canon-es2" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES2" />
-      <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES20" />
       <printer translate="name" name="Canon SELPHY ES3" driver="canon-es3" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES3" />
+      <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES20" />
       <printer translate="name" name="Canon SELPHY ES30" driver="canon-es30" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES30" />
       <printer translate="name" name="Canon SELPHY ES40" driver="canon-es40" manufacturer="Canon" model="1007" foomaticid="Canon-SELPHY-ES40" />
+-->
       <printer translate="name" name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX5" />
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX7" />
       <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" foomaticid="Sony-UP-DP10" />

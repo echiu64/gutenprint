@@ -4,7 +4,7 @@ new features over 5.2.7.  Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  Gutenprint currently supports over 1700 printer models.
+others.  Gutenprint currently supports over 1600 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
 Macintosh OS X (10.3 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
@@ -424,11 +424,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MP110
        Canon PIXMA MP130
        Canon PIXMA PRO-1 *3
+       Canon SELPHY CP-720 *4
+       Canon SELPHY CP-780 *4
+       Canon SELPHY CP-800 *4
+       Canon SELPHY ES1 *4
+       Canon SELPHY ES2 *4
+       Canon SELPHY ES3 *4
+       Canon SELPHY ES20 *4
+       Canon SELPHY ES30 *4
+       Canon SELPHY ES40 *4
 
        *1: data format partially understood (WIP)
        *2: data format partially understood (WIP)
        *3: protocol is supported but inks used are not yet supported
           (WIP)
+       *4: requires special communication protocol
 
   8) Canon BJC series printers using photo cartridge have printing modes
      added that will select this cartridge.
