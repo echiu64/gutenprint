@@ -128,6 +128,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Headlines </h2>
+		
+		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.8-pre1 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.8-pre1">December 28, 2011</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.8-pre1, a stable release of 5.2. This release offers support for 70 additional printers from Canon and Epson. There are also improvements for other Canon printers.  See the <b>Downloads</b> section. 
+		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.7 is released!</span> 
 			<br>
@@ -147,11 +153,6 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.5 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.5">February 13, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.5, a release from the stable branch of Gutenprint 5.2.  This release offers several bug fixes, and support for new printers.  See the <b>Downloads</b> section. 
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.4 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.4">July 29, 2009</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.4, a release from the stable branch of Gutenprint 5.2.  This release offers several bug fixes from earlier Gutenprint 5.2 releases.  The standalone Uninstaller has also been updated.  See the <b>Downloads</b> section. 
 		</p>
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span> 
@@ -187,6 +188,14 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
 		<p>
+			<b>Gutenprint 5.2.8-pre1</b> 
+			<br>
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.8-pre1/gutenprint-5.2.8-pre1.dmg/download">gutenprint-5.2.8-pre1.dmg</a></span>&nbsp;&nbsp;(15.3 MB) 
+		</p>
+		<p>
+The Gutenprint project is pleased to announce Gutenprint 5.2.8-pre1, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.8-pre1/gutenprint-5.2.8-pre1.tar.bz2/download">source code</a>)
+</p>
+		<p>
 			<b>Gutenprint 5.2.7</b> 
 			<br>
 			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.dmg/download">gutenprint-5.2.7.dmg</a></span>&nbsp;&nbsp;(14.5 MB) 
@@ -194,14 +203,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<p>
 The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.tar.bz2/download">source code</a>)
 </p>
-		<p>
-			<b>Gutenprint 5.2.6</b> 
-			<br>
-			<span style="background-color:#d0ffff;"><a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/gutenprint-5.2.6.dmg/download">gutenprint-5.2.6.dmg</a></span>&nbsp;&nbsp;(14.8 MB) 
-		</p>
-		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.6, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.6/gutenprint-5.2.6.tar.bz2/download">source code</a>)
-</p>
+		
 <p>
 	<b>Gutenprint 5.0.2</b> 
 	<br>
@@ -270,6 +272,224 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.6, a stable release
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.8-pre1"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.8-pre1</b> 
+		</td>
+		<td align="right">
+			<b>2011-12-28</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.8-pre1</b> is a stable release of Gutenprint 5.2  This release has bug fixes, support for additional printers, and a few new features over 5.2.7.</p> 
+	
+<ol>	
+	<li>
+New printers supported in this release:
+<br><br>
+Note that support for all printers marked "EXPERIMENTAL" (untested) or "PRELIMINARY" (minimally tested but untuned) is subject to change without notice.  Printers not marked "EXPERIMENTAL" generally will not change between releases, but notice will be given and if possible back compatibility will be provided.<br><br>
+	<ul>
+	<li>Canon inkjet printers:
+		<ul>
+	<li>Canon   BJC 4550   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S330   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S520   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S530D  (EXPERIMENTAL)</li>
+	<li>Canon   BJC S630   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S750   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S820   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S830D  (EXPERIMENTAL)</li>
+	<li>Canon   BJC S900   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S9000  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA mini220(EXPERIMENTAL)</li>
+	<li>Canon PIXMA mini320(EXPERIMENTAL)</li>
+	<li>Canon PIXMA mini360(EXPERIMENTAL)</li>
+	<li>Canon PIXMA DS700  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA DS810  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i50    (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i70    (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i450   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i455   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i470D  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i550   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i900D  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i950   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i960   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i6100  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i6500  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i9100  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i9900  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP3600 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP3500 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP3300 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP4900 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP6210D(EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP6220D(EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP6310D(EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP7100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP7500 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP8100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP8600 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP9910 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP140  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP190  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP210  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP240  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP375R</li>
+	<li>Canon PIXMA MP470  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP490  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP530  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP900  (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG2100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG3100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG4100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG5300 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG6200 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MG8200 (EXPERIMENTAL)</li>
+	</ul></li>
+	<li style="margin-top:1em;">Epson inkjet printers:
+	<ul>
+	<li>EPSON ME Office 940FW</li>
+	<li>EPSON PX 204</li>
+	<li>EPSON PX 504A</li>
+	<li>EPSON Stylus CX3900</li>
+	<li>EPSON Stylus NX530</li>
+	<li>EPSON Stylus NX635</li>
+	<li>EPSON Stylus Office BX535WD</li>
+	<li>EPSON Stylus Office BX630FW</li>
+	<li>EPSON Stylus Office BX635FWD</li>
+	<li>EPSON Stylus Office TX620FWD</li>
+	<li>EPSON Stylus Photo RX650</li>
+	<li>EPSON Stylus SX535WD</li>
+	<li>EPSON WorkForce 545</li>
+	<li>EPSON WorkForce 630</li>
+	<li>EPSON WorkForce 645</li>
+	</ul>
+	</li>
+	<li style="margin-top:1em;">Epson wide carriage inkjet printers:
+	<ul>
+	<li>EPSON Stylus Pro 7900 (Partial -- no orange/green inks)</li>
+	<li>EPSON Stylus Pro 9900 (Partial -- no orange/green inks)</li>
+	</ul>
+	<br>
+	These printers function as 8 color photo printers using CMYK inks, similar to the 7890/9890.  They have not been tuned.  At present, we do not have a schedule for adding support for the green and orange inks.</li>
+	</ul>
+	</li>
+	<li style="margin-top:1em;">A crash with the EPSON Stylus Photo R3000 has been fixed.</li>
+
+	<li style="margin-top:1em;">Chinese (Mandarin), Galician, and Ukrainian translations have been added.</li>
+
+ <li style="margin-top:1em;">(API) Added function stp_vars_copy_from() to override settings in one settings object with those in another.</li>
+
+<li style="margin-top:1em;">The following printer models were completely redefined or had major changes carried out in the supported modes:
+
+<ul>
+	<li>Canon inkjet printers:
+		
+<ul>
+	<li>Canon   BJC 3000   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S300   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S500   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S600   (EXPERIMENTAL)</li>
+	<li>Canon   BJC S800   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i80    (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i560   (EXPERIMENTAL)</li>
+	<li>Canon PIXMA i850   (EXPERIMENTAL) *1</li>
+	<li>Canon PIXMA i860   (EXPERIMENTAL) *1</li>
+	<li>Canon PIXMA i865   (EXPERIMENTAL) *1</li>
+	<li>Canon PIXMA iP2000 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP4100 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA iP5000 (EXPERIMENTAL)</li>
+	<li>Canon PIXMA MP600</li>
+	<li>Canon PIXMA MP750</li>
+	<li>Canon PIXMA MP760</li>
+	<li>Canon PIXMA MP770</li>
+	<li>Canon PIXMA MP780</li>
+	<li>Canon PIXMA MP790</li>
+	<li>Canon PIXMA MP970</li>
+</ul>
+<br>
+*1: for compatibility, the original printers are named with "old" appended. These old printers will be deprecated in a future release.
+</li>
+</ul>
+</li>
+
+<li style="margin-top:1em;">Support for the following printers was greatly improved, or tested:
+<ul>
+	<li>Canon inkjet printers:
+	
+<ul>
+	<li>Canon PIXMA MP700</li>
+	<li>Canon PIXMA MP710</li>
+	<li>Canon PIXMA MP730</li>
+	<li>Canon PIXMA MP740</li>
+	<li>Canon PIXMA MP950</li>
+	<li>Canon PIXMA MP960</li>
+	<li>Canon PIXMA MX340</li>
+	<li>Canon PIXMA MX350</li>
+	<li>Canon PIXMA iP4000</li>
+	<li>Canon PIXMA MG5100</li>
+</uL>
+</li>
+</ul>
+</li>
+
+<li style="margin-top:1em;">The following printer models were either not added, or removed, as they cannot currently be supported, even experimentally, owing to an as-yet unknown command format or other issues:
+<ul>
+	<li>Canon inkjet printers:
+	
+<ul>
+	<li>Canon PIXMA i250</li>
+	<li>Canon PIXMA i320</li>
+	<li>Canon PIXMA i350</li>
+	<li>Canon PIXMA iP90</li>
+	<li>Canon PIXMA iP90v *1</li>
+	<li>Canon PIXMA iP100 *2</li>
+	<li>Canon PIXMA iP1000</li>
+	<li>Canon PIXMA iP1200</li>
+	<li>Canon PIXMA iP1300</li>
+	<li>Canon PIXMA iP1500</li>
+	<li>Canon PIXMA iP1600</li>
+	<li>Canon PIXMA iP1700</li>
+	<li>Canon PIXMA iP1800</li>
+	<li>Canon PIXMA iP1900</li>
+	<li>Canon PIXMA iP2200</li>
+	<li>Canon PIXMA iP2500</li>
+	<li>Canon PIXMA iP2600</li>
+	<li>Canon PIXMA MP5</li>
+	<li>Canon PIXMA MP10</li>
+	<li>Canon PIXMA MP55</li>
+	<li>Canon PIXMA MP110</li>
+	<li>Canon PIXMA MP130</li>
+	<li>Canon PIXMA PRO-1 *3</li>
+	<li>Canon SELPHY CP-720 *4</li>
+	<li>Canon SELPHY CP-780 *4</li>
+	<li>Canon SELPHY CP-800 *4</li>
+	<li>Canon SELPHY ES1 *4</li>
+	<li>Canon SELPHY ES2 *4</li>
+	<li>Canon SELPHY ES3 *4</li>
+	<li>Canon SELPHY ES20 *4</li>
+	<li>Canon SELPHY ES30 *4</li>
+	<li>Canon SELPHY ES40 *4</li>
+</ul>
+<br>
+*1: data format partially understood (WIP)<br>
+*2: data format partially understood (WIP)<br>
+*3: protocol is supported but inks used are not yet supported (WIP)<br>
+*4: requires special communication protocol
+</li>
+</ul>
+</li>
+<li style="margin-top:1em;">Canon BJC series printers using photo cartridge have printing modes added that will select this cartridge.
+</li>
+</ol>
+ <p>
+Full details are listed in the release notes included with the download.
+</p>
+
 <a name="5.2.7"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
