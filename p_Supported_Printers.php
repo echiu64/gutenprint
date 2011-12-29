@@ -10,7 +10,7 @@ require('standard_html_header.php');
 
 ### Content Below  ###
 # Please remember to use <P> </P> tags !  ?>
-
+<p style="font-size:115%;font-color:red;"><b>This page has not been updated for the 5.2.8-pre1 release yet.</b></p>
 <p>Please note that many of these drivers are currently under
 development, and we do not necessarily have full specifications on all
 of them.  We will fill in this list as we verify successful operation
