@@ -175,7 +175,14 @@ if (!$quiet || $verbose) {
 	print STDOUT "No Gutenprint PPD files to update.\n";
     } elsif ($updated_ppd_count > 0) {
 	my $plural = $updated_ppd_count == 1 ? "" : "s";
-	print STDOUT "Updated $updated_ppd_count PPD file${plural}.";
+	print STDOUT "Updated $updated_ppd_count PPD file${plural}";
+	if ($failed_ppd_count > 0) {
+	    print STDOUT ", $failed_ppd_count failed";
+	}
+	if ($skipped_ppd_count > 0) {
+	    print STDOUT ", $skipped_ppd_count skipped";
+	}
+	print STDOUT ".";
 	if (!defined $opt_o || $opt_o ne "") {
 	    print STDOUT "  Restart cupsd for the changes to take effect.";
 	}
@@ -514,7 +521,15 @@ sub update_ppd ($) {
 	get_ppd_fh($ppd_source_filename, $filename, $driver, $locale, $region);
 
     if (! defined $source_fd) {
-	print "Unable to retrieve PPD file!\n";
+	print "Unable to retrieve PPD file for $ppd_source_filename!\n";
+	close ORIG;
+	return 0;
+    }
+
+    my ($ndt, $nopt, $nres, $ndef, $source_data) = get_ppd_data($source_fd, 1, 1, 1, 1, 1);
+    if (! defined $ndt) {
+	print "Unable to retrieve PPD file for $ppd_source_filename!\n";
+	close ORIG;
 	return 0;
     }
 
@@ -537,14 +552,13 @@ sub update_ppd ($) {
     seek(ORIG, 0, 0);
 
     my ($odt, $oopt, $ores, $odef) = get_ppd_data(ORIG, 1, 0, 1, 1, 0);
-    my ($ndt, $nopt, $nres, $ndef, $source_data) = get_ppd_data($source_fd, 1, 1, 1, 1, 1);
 
     # Close original and temporary files...
 
     close ORIG;
     if (! $server_multicat && ! close $source_fd) {
 	print "Unable to retrieve new PPD file: $!\n";
-	return 0;
+	return -1;
     }
 
     my %orig_default_types = %$odt;
@@ -827,6 +841,7 @@ sub find_ppd ($$$$) {
 sub get_ppd_data(*$$$$$) {
     my ($fh, $types, $opts, $resolutions, $defaults, $data) = @_;
     my (%options, %defaults, %resolution_map, %default_types);
+    my ($fileversion_found) = 0;
     my $cur_opt = "";
     my (@optionlist);
     my ($source_data) = "";
@@ -840,6 +855,7 @@ sub get_ppd_data(*$$$$$) {
     if ($resolutions || $types || $opts || $defaults || $data) {
 	while (<$fh>) {
 	    last if $_ eq "*%*%EOFEOF\n";
+	    $fileversion_found = 1 if (/^\*FileVersion:/);
 	    $source_data .= $_ if ($data);
 	    chomp;
 	    if (($types || $opts) && m/^\*OpenUI/) {
@@ -870,5 +886,6 @@ sub get_ppd_data(*$$$$$) {
 	    }
 	}
     }
+    return (undef, undef, undef, undef, undef) if (! $fileversion_found);
     return (\%default_types, \%options, \%resolution_map, \%defaults, $source_data);
 }
