@@ -262,7 +262,8 @@ and reporting the results!</p>
 <tr><td>Canon PIXUS iP4100</td><td>bjc-PIXUS-iP4100</td><td>Canon-PIXUS-iP4100</td><td></td></tr>
 <tr><td>Canon S100</td><td>bjc-s100</td><td>Canon-S100</td><td></td></tr>
 <tr><td>Canon S200</td><td>bjc-s200</td><td>Canon-S200</td><td></td></tr>
-<tr><td>Canon S300</td><td>bjc-s300</td><td>Canon-S300</td><td></td></tr>
+<tr><td>Canon S300
+</td><td>bjc-s300</td><td>Canon-S300</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S330</td><td>bjc-s330</td><td>Canon-S330</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S400</td><td>bjc-s400</td><td>Canon-S400</td><td></td></tr>
 <tr><td>Canon S4500</td><td>bjc-s4500</td><td>Canon-S4500</td><td></td></tr>
@@ -270,10 +271,10 @@ and reporting the results!</p>
 <tr><td>Canon S500</td><td>bjc-s500</td><td>Canon-S500</td><td></td></tr>
 <tr><td>Canon S520</td><td>bjc-s520</td><td>Canon-S520</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S530D</td><td>bjc-s530D</td><td>Canon-S530D</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S600</td><td>bjc-s600</td><td>Canon-S600</td><td></td></tr>
+<tr><td>Canon S600</td><td>bjc-s600</td><td>Canon-S600</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S630</td><td>bjc-s630</td><td>Canon-S630</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S750</td><td>bjc-s750</td><td>Canon-S750</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S800</td><td>bjc-s800</td><td>Canon-S800</td><td></td></tr>
+<tr><td>Canon S800</td><td>bjc-s800</td><td>Canon-S800</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S820</td><td>bjc-s820</td><td>Canon-S820</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S830D</td><td>bjc-s830</td><td>Canon-S830D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S9000</td><td>bjc-s9000</td><td>Canon-S9000</td><td>EXPERIMENTAL</td></tr>
