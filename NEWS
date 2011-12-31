@@ -426,10 +426,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MP110
        Canon PIXMA MP130
        Canon PIXMA PRO-1 *3
-       Canon SELPHY CP-600 *4
-       Canon SELPHY CP-720 *4
-       Canon SELPHY CP-780 *4
-       Canon SELPHY CP-800 *4
+       Canon SELPHY CP600 *4
+       Canon SELPHY CP720 *4
+       Canon SELPHY CP780 *4
+       Canon SELPHY CP800 *4
        Canon SELPHY ES1 *4
        Canon SELPHY ES2 *4
        Canon SELPHY ES3 *4
@@ -892,7 +892,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
    1) New printers supported in this release:
 
       Canon PIXMA iX4000
-      Canon SELPHY CP-520
+      Canon SELPHY CP520
       EPSON Stylus Photo R2880
       EPSON Stylus DX4000
 
