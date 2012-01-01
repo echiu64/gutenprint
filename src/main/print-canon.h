@@ -39,9 +39,9 @@
 #define CANON_INK_CcMmYK     16
 #define CANON_INK_CcMmYKk    32 /* Gernot: inserted */
 #define CANON_INK_CcMmYyK    64
+#define CANON_INK_CcMmYyKk   128 /* Gernot: inserted */
 
-/* not sure if CcMmYKk needs a new MASK also */
-#define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYKk|CANON_INK_CcMmYyK) /* Ink is CcMmYyKk */
+#define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYKk|CANON_INK_CcMmYyK|CANON_INK_CcMmYyKk) /* Ink is CcMmYyKk */
 #define CANON_INK_CMYKk_MASK    (CANON_INK_CMYKk|CANON_INK_CcMmYyKk_MASK) /* Ink is CMYKk */
 #define CANON_INK_CMYK_MASK     (CANON_INK_CMYK|CANON_INK_CMYKk_MASK)     /* Ink is CMYK */
 #define CANON_INK_CMY_MASK      (CANON_INK_CMY|CANON_INK_CMYK_MASK)       /* Ink is CMY */
@@ -59,6 +59,7 @@ static struct canon_inktype_s {
     const char* name;
     const char* text;
 } canon_inktypes[] = {
+    {CANON_INK_CcMmYyKk,8,"PhotoCMYKk","Photo CcMmYyKk Color"},  /* Gernot: inserted */
     {CANON_INK_CcMmYyK,7,"PhotoCMYK","Photo CcMmYyK Color"},
     {CANON_INK_CcMmYKk,7,"PhotoCMYKk","Photo CcMmYKk Color"},  /* Gernot: inserted */
     {CANON_INK_CcMmYK,6,"PhotoCMY", "Photo CcMmYK Color"},

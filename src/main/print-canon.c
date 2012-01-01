@@ -523,20 +523,32 @@ canon_printhead_colors(const stp_vars_t*v)
   const canon_mode_t* mode;
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
   const char *ink_type = stp_get_string_parameter(v, "InkType");
-  if(print_mode && strcmp(print_mode, "BW") == 0)
+  /*if(print_mode && strcmp(print_mode, "BW") == 0)*/
+  if(print_mode && !strcmp(print_mode, "BW")){
+    /* GERNOT DEBUG list */
+    /*printf("(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
     return CANON_INK_K;
+  }
 
   if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-          if(ink_type && !strcmp(canon_inktypes[i].name,ink_type))
-              return canon_inktypes[i].ink_type;
+	if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {
+	  /* GERNOT DEBUG list */
+	  /*printf("(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
+            return canon_inktypes[i].ink_type;
+	}
      }
   }
   mode = canon_get_current_mode(v);
   for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-    if(mode->ink_types & canon_inktypes[i].ink_type)
+    if(mode->ink_types & canon_inktypes[i].ink_type) {
+	/* GERNOT DEBUG list */
+	/*printf("(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
         return canon_inktypes[i].ink_type;
+    }
   }
+  /* GERNOT DEBUG list */
+  /*printf("(canon_printhead_colors[fall-through]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
   return CANON_INK_K;
 }
 
@@ -591,94 +603,11 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"w288h512"))    return 0x52; /* Wide101.6x180.6 */
       /* w283h566 Wide postcard 148mm x 200mm */
 
-      /* custom */
-
       /* media size codes for CD (and other media depending on printer model */
-      /*  850i:  CD Tray custom: none --- no ESC (P */
-      /*  865i:  CD Tray custom: 0x35               */
-      /* MP500:  CD Tray D     : 0x4b               */
-      /* MP530:  CD Tray D     : 0x4b               */
-      /* MP600:  CD Tray F     : 0x51               */
-      /* MP610:  CD Tray F     : 0x51               */
-      /* MP630:  CD Tray G     : 0x53               */
-      /* MP640:  CD Tray G     : 0x53               */
-      /* MP700:  CD tray custom: none --- no ESC (P */
-      /* MP710:  CD tray custom: 0x35               */
-      /* MP730:  CD tray custom: none --- no ESC (P */
-      /* MP740:  CD tray custom: 0x35               */
-      /* MP750:  CD Tray B     : 0x40               */
-      /* MP760:  CD Tray B     : 0x40               */
-      /* MP770:  CD Tray B     : 0x40               */
-      /* MP780:  CD Tray B     : 0x40               */
-      /* MP790:  CD Tray B     : 0x40               */
-      /* MP800:  CD Tray D     : 0x4b               */
-      /* MP810:  CD Tray F     : 0x51               */
-      /* MP830:  CD Tray D     : 0x4b               */
-      /* MP900:  CD Tray custom: 0x35               */
-      /* MP950:  CD Tray C     : 0x4a               */
-      /* MP960:  CD Tray F     : 0x51               */
-      /* MP970:  CD Tray F     : 0x51               */
-      /* MP980:  CD Tray G     : 0x53               */
-      /* MP990:  CD Tray G     : 0x53               */
-      /* MX850:  CD Tray F     : 0x51               */
-      /* iP3000: CD Tray B     : 0x40               */
-      /* iP3100: CD Tray B     : 0x40               */
-      /* iP4000: CD Tray B     : 0x40               */
-      /* iP4100: CD Tray B     : 0x40               */
-      /* iP4200: CD Tray C     : 0x4a               */
-      /* iP4300: CD Tray F     : 0x51               */
-      /* iP4500: CD Tray F     : 0x51               */
-      /* iP4600: CD Tray G     : 0x53               */
-      /* iP4700: CD Tray G     : 0x53               */
-      /* iP4800: CD Tray G     : 0x56               */
-      /* iP4900: CD Tray G     : 0x56               */
-      /* iP5000: CD Tray B     : 0x40               */
-      /* iP5200: CD Tray C     : 0x4a               */
-      /* iP5300: CD Tray F     : 0x51               */
-      /* iP6000D:CD Tray B     : 0x40               */
-      /* iP6100D:CD Tray B     : 0x40               */
-      /* iP6700D:CD Tray C     : 0x4a               */
-      /* iP7100: CD Tray B     : 0x40               */
-      /* iP7500: CD Tray C     : 0x4a               */
-      /* iP8100: CD Tray B     : 0x40               */
-      /* iP8500 :CD Tray B     : 0x40               */
-      /* iP8600: CD Tray B     : 0x40               */
-      /* iP9910: CD Tray A     : 0x3f               */
-      /* MG5200: CD Tray G     : 0x56               */
-      /* MG5300: CD Tray G     : 0x56               */
-      /* MG6100: CD Tray G     : 0x56               */
-      /* MG6200: CD Tray G     : 0x56               */
-      /* MG8100: CD Tray G     : 0x56               */
-      /* MG8200: CD Tray G     : 0x56               */
-      /* pro9000:CD Tray E     : 0x4c               */
-      /* pro9000mk2:CD Tray E  : 0x4c               */
-      /* pro9500:CD Tray E     : 0x4c               */
-      /* pro9500mk2:CD Tray E  : 0x4c               */
-      /* PRO-1:  CD Tray H     : 0x57               */
+      if (!strcmp(name,"CD5Inch"))    return 0x53; /* CD --- arbitrary choice here, modify in ESC (P command */
+      /* similar needed for FineArt media which have common sizes but different codes */
 
-      /* MP950:  FineArtA4     : 0x42               */
-      /* MP960:  FineArtA4     : 0x42               */
-      /* MP970:  FineArtA4     : 0x42               */
-      /* MP980:  FineArtA4     : 0x42               */
-      /* MP990:  FineArtA4     : 0x42               */
-      /* MX7600: FineArtA4     : 0x42               */
-      /* iP6700D:FineArtA4     : 0x42               */
-      /* iP7100: FineArtA4     : 0x42               */
-      /* iP7500: FineArtA4     : 0x42               */
-      /* iP8100: FineArtA4     : 0x42               */
-      /* iP8600: FineArtA4     : 0x42               */
-      /* iP9910: FineArtA4     : 0x42               */
-      /* iX7000: FineArtA4     : 0x42               */
-      /* MG6100: FineArtA4     : 0x42               */
-      /* MG6200: FineArtA4     : 0x42               */
-      /* MG8100: FineArtA4     : 0x42               */
-      /* MG8200: FineArtA4     : 0x42               */
-      /* pro9000:FineArtA4     : 0x4d               */
-      /* pro9000mk2:FineArtA4  : 0x4d               */
-      /* pro9500:FineArtA4     : 0x4d               */
-      /* pro9500mk2:FineArtA4  : 0x4d               */
-      /* PRO-1:  FineArtA4     : 0x4d               */
-
+      /* custom */
 
       stp_deprintf(STP_DBG_CANON,"canon: Unknown paper size '%s' - using custom\n",name);
     } else {
@@ -874,6 +803,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
     for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
       if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
+	  /* GERNOT DEBUG list */
+	  /*printf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);*/
       }
     }
     description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
@@ -882,8 +813,11 @@ canon_parameters(const stp_vars_t *v, const char *name,
     {
       unsigned int ink_type = canon_printhead_colors(v);
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-          if(ink_type == canon_inktypes[i].ink_type)
+	if(ink_type == canon_inktypes[i].ink_type){
               description->deflt.integer = canon_inktypes[i].num_channels;
+	      /* GERNOT DEBUG list */
+	      /*printf("Added %d InkChannels\n",canon_inktypes[i].num_channels);*/
+	}
       }
       description->bounds.integer.lower = -1;
       description->bounds.integer.upper = -1;
@@ -1449,27 +1383,156 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
+  /* workaround for CD media */
+
+  if ( (arg_ESCP_2 == 0x1f) || ( arg_ESCP_2 == 0x20) ) {
+    if ( arg_ESCP_1 == 0x53 ) {
+      /* Tray G as default */
+      arg_ESCP_1 = 0x53;
+      /* Custom CD tray */
+      if ( !(strcmp(init->caps->name,"Canon i865")) || !(strcmp(init->caps->name,"PIXMA MP710")) || !(strcmp(init->caps->name,"PIXMA MP740")) || !(strcmp(init->caps->name,"PIXMA MP900")) ) {
+	arg_ESCP_1 = 0x35;
+      }
+      /* Tray A */
+      if ( !(strcmp(init->caps->name,"PIXMA iP9910")) ) {
+	arg_ESCP_1 = 0x3f;
+      }
+      /* Tray B */
+      if ( !(strcmp(init->caps->name,"PIXMA MP750")) || !(strcmp(init->caps->name,"PIXMA MP760")) || !(strcmp(init->caps->name,"PIXMA MP770")) || !(strcmp(init->caps->name,"PIXMA MP780")) || !(strcmp(init->caps->name,"PIXMA MP790")) || !(strcmp(init->caps->name,"PIXMA iP3000")) || !(strcmp(init->caps->name,"PIXMA iP3100")) || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP4100")) || !(strcmp(init->caps->name,"PIXMA iP4100R")) || !(strcmp(init->caps->name,"PIXMA iP5000")) || !(strcmp(init->caps->name,"PIXMA iP6000D")) || !(strcmp(init->caps->name,"PIXMA iP6100D")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8500")) || !(strcmp(init->caps->name,"PIXMA iP8600")) ) {
+	arg_ESCP_1 = 0x40;
+      }
+      /* Tray C */
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA iP4200")) || !(strcmp(init->caps->name,"PIXMA iP5200")) || !(strcmp(init->caps->name,"PIXMA iP6700D")) || !(strcmp(init->caps->name,"PIXMA iP7500")) ) {
+	arg_ESCP_1 = 0x4a;
+      }
+      /* Tray D */
+      if ( !(strcmp(init->caps->name,"PIXMA MP500")) || !(strcmp(init->caps->name,"PIXMA MP530")) || !(strcmp(init->caps->name,"PIXMA MP800")) || !(strcmp(init->caps->name,"PIXMA MP830")) ) {
+	arg_ESCP_1 = 0x4b;
+      }
+      /* Tray E */
+      if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9000mk2")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9500mk2")) ) {
+	arg_ESCP_1 = 0x4c;
+      }
+      /* Tray F */
+      if ( !(strcmp(init->caps->name,"PIXMA MP600")) || !(strcmp(init->caps->name,"PIXMA MP610")) || !(strcmp(init->caps->name,"PIXMA MP810")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MX850")) || !(strcmp(init->caps->name,"PIXMA iP4300")) || !(strcmp(init->caps->name,"PIXMA iP4500")) || !(strcmp(init->caps->name,"PIXMA iP5300")) ) {
+	arg_ESCP_1 = 0x51;
+      }
+      /* Tray G from iP4800 onwards */
+      if ( !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
+	arg_ESCP_1 = 0x56;
+      }
+    }
+  }
+      /*  850i:  CD Tray custom: none --- no ESC (P */
+      /*  865i:  CD Tray custom: 0x35               */
+      /* MP500:  CD Tray D     : 0x4b               */
+      /* MP530:  CD Tray D     : 0x4b               */
+      /* MP600:  CD Tray F     : 0x51               */
+      /* MP610:  CD Tray F     : 0x51               */
+      /* MP630:  CD Tray G     : 0x53               */
+      /* MP640:  CD Tray G     : 0x53               */
+      /* MP700:  CD tray custom: none --- no ESC (P */
+      /* MP710:  CD tray custom: 0x35               */
+      /* MP730:  CD tray custom: none --- no ESC (P */
+      /* MP740:  CD tray custom: 0x35               */
+      /* MP750:  CD Tray B     : 0x40               */
+      /* MP760:  CD Tray B     : 0x40               */
+      /* MP770:  CD Tray B     : 0x40               */
+      /* MP780:  CD Tray B     : 0x40               */
+      /* MP790:  CD Tray B     : 0x40               */
+      /* MP800:  CD Tray D     : 0x4b               */
+      /* MP810:  CD Tray F     : 0x51               */
+      /* MP830:  CD Tray D     : 0x4b               */
+      /* MP900:  CD Tray custom: 0x35               */
+      /* MP950:  CD Tray C     : 0x4a               */
+      /* MP960:  CD Tray F     : 0x51               */
+      /* MP970:  CD Tray F     : 0x51               */
+      /* MP980:  CD Tray G     : 0x53               */
+      /* MP990:  CD Tray G     : 0x53               */
+      /* MX850:  CD Tray F     : 0x51               */
+      /* iP3000: CD Tray B     : 0x40               */
+      /* iP3100: CD Tray B     : 0x40               */
+      /* iP4000: CD Tray B     : 0x40               */
+      /* iP4100: CD Tray B     : 0x40               */
+      /* iP4200: CD Tray C     : 0x4a               */
+      /* iP4300: CD Tray F     : 0x51               */
+      /* iP4500: CD Tray F     : 0x51               */
+      /* iP4600: CD Tray G     : 0x53               */
+      /* iP4700: CD Tray G     : 0x53               */
+      /* iP4800: CD Tray G     : 0x56               */
+      /* iP4900: CD Tray G     : 0x56               */
+      /* iP5000: CD Tray B     : 0x40               */
+      /* iP5200: CD Tray C     : 0x4a               */
+      /* iP5300: CD Tray F     : 0x51               */
+      /* iP6000D:CD Tray B     : 0x40               */
+      /* iP6100D:CD Tray B     : 0x40               */
+      /* iP6700D:CD Tray C     : 0x4a               */
+      /* iP7100: CD Tray B     : 0x40               */
+      /* iP7500: CD Tray C     : 0x4a               */
+      /* iP8100: CD Tray B     : 0x40               */
+      /* iP8500 :CD Tray B     : 0x40               */
+      /* iP8600: CD Tray B     : 0x40               */
+      /* iP9910: CD Tray A     : 0x3f               */
+      /* MG5200: CD Tray G     : 0x56               */
+      /* MG5300: CD Tray G     : 0x56               */
+      /* MG6100: CD Tray G     : 0x56               */
+      /* MG6200: CD Tray G     : 0x56               */
+      /* MG8100: CD Tray G     : 0x56               */
+      /* MG8200: CD Tray G     : 0x56               */
+      /* pro9000:CD Tray E     : 0x4c               */
+      /* pro9000mk2:CD Tray E  : 0x4c               */
+      /* pro9500:CD Tray E     : 0x4c               */
+      /* pro9500mk2:CD Tray E  : 0x4c               */
+      /* PRO-1:  CD Tray H     : 0x57               */
+
+
+
   /* workaround for FineArt media having same size as non-FineArt media */
+
+      /* MP950:  FineArtA4     : 0x42               */
+      /* MP960:  FineArtA4     : 0x42               */
+      /* MP970:  FineArtA4     : 0x42               */
+      /* MP980:  FineArtA4     : 0x42               */
+      /* MP990:  FineArtA4     : 0x42               */
+      /* MX7600: FineArtA4     : 0x42               */
+      /* iP6700D:FineArtA4     : 0x42               */
+      /* iP7100: FineArtA4     : 0x42               */
+      /* iP7500: FineArtA4     : 0x42               */
+      /* iP8100: FineArtA4     : 0x42               */
+      /* iP8600: FineArtA4     : 0x42               */
+      /* iP9910: FineArtA4     : 0x42               */
+      /* iX7000: FineArtA4     : 0x42               */
+      /* MG6100: FineArtA4     : 0x42               */
+      /* MG6200: FineArtA4     : 0x42               */
+      /* MG8100: FineArtA4     : 0x42               */
+      /* MG8200: FineArtA4     : 0x42               */
+      /* pro9000:FineArtA4     : 0x4d               */
+      /* pro9000mk2:FineArtA4  : 0x4d               */
+      /* pro9500:FineArtA4     : 0x4d               */
+      /* pro9500mk2:FineArtA4  : 0x4d               */
+      /* PRO-1:  FineArtA4     : 0x4d               */
+
   /* iP7100 is an exception needing yet another papersize code */
   if ( (arg_ESCP_2 == 0x28) || ( arg_ESCP_2 == 0x29) || (arg_ESCP_2 ==  0x2c) || (arg_ESCP_2 == 0x31) ) {
     /* A4 */
     if ( arg_ESCP_1 == 0x03 ) {
+      /* default */
       arg_ESCP_1 = 0x4d;
-      if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700D")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x42;
       }
     }
     /* A3 */
     if ( arg_ESCP_1 == 0x05 ) {
       arg_ESCP_1 = 0x4e;
-      if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700D")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x43;
       }
     }
     /* Letter */
     if ( arg_ESCP_1 == 0x0d ) {
       arg_ESCP_1 = 0x4f;
-      if ( !(strcmp(init->caps->name,"PIXMA iP7100")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700D")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x44;
       }
     }
