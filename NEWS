@@ -443,10 +443,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   7) Canon BJC series printers using photo cartridge have printing modes
      added that will select this cartridge.
 
-  8) Chinese (Mandarin), Galician, and Ukrainian translations have
+  8) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
+     to be corrected.
+
+  9) Chinese (Mandarin), Galician, and Ukrainian translations have
      been added.
 
-  9) (API) Added function stp_vars_copy_from() to override settings in
+  10) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
 
 
