@@ -1347,8 +1347,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP4600", 3,          /*model, model_id*/
     INCH(17/2), INCH(26.625), /* max paper width and height */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    &canon_PIXMA_iP4600_slotlist, /* iP4600 uses ESC (r 0x64 at reset followed by 0x65 later for CD media */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_P|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP4600_modelist,
     &canon_PIXMA_iP4600_paperlist,
     NULL,
@@ -1360,8 +1360,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP4700", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /* features */
+    &canon_PIXMA_iP4600_slotlist, /* iP4700 uses ESC (r 0x64 at reset followed by 0x65 later for CD media */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /* features */
     &canon_PIXMA_iP4700_modelist,
     &canon_PIXMA_iP4700_paperlist,
     NULL,
@@ -1373,8 +1373,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP4800", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4600_slotlist, /* there is some ESC (r 0x68 command for CD tray also, not sure why */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
+    &canon_PIXMA_iP4600_slotlist, /* iP4800 uses ESC (r 0x64 at reset followed by 0x68 later for CD media only */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_iP4700_modelist,/* same for iP4800 */
     &canon_PIXMA_iP4700_paperlist,/* same for iP4800 */
     NULL,
@@ -1386,8 +1386,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP4900", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_iP4600_slotlist, /* there is some ESC (r 0x68 command for CD tray also, not sure why */
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_MG5300,  /* features Uses ESC (r only for CD media */
+    &canon_PIXMA_iP4600_slotlist, /* iP4900 uses ESC (r 0x68 command for CD tray only */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_MG5300,  /* features Uses ESC (r only for CD media */
     &canon_PIXMA_iP4900_modelist,
     &canon_PIXMA_MG5200_paperlist,
     NULL,
