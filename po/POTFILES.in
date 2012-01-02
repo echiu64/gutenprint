@@ -67,6 +67,7 @@ src/cups/genppd.c
 src/escputil/escputil.c
 
 # GIMP sources
+src/gimp2/print-gutenprint.c
 src/gimp2/print-image-gimp.c
 src/gimp2/print.c
 
