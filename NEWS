@@ -396,7 +396,22 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP4000
        Canon PIXMA MG5100
 
-  6) The following printer models were either not added, or removed,
+  6) CD printing support for the following printers was added:
+
+       Canon PIXMA iP4600
+       Canon PIXMA iP4700
+       Canon PIXMA iP4800
+       Canon PIXMA iP4900
+       Canon PIXMA MP980
+       Canon PIXMA MP990
+       Canon PIXMA MG5200
+       Canon PIXMA MG5300
+       Canon PIXMA MG6100
+       Canon PIXMA MG6200
+       Canon PIXMA MG8100
+       Canon PIXMA MG8200
+
+  7) The following printer models were either not added, or removed,
      as they cannot currently be supported, even experimentally, owing
      to an as-yet unknown command format or other issues:
 
@@ -440,16 +455,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
           (WIP)
        *4: requires special communication protocol
 
-  7) Canon BJC series printers using photo cartridge have printing modes
+  8) Canon BJC series printers using photo cartridge have printing modes
      added that will select this cartridge.
 
-  8) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
+  9) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
      to be corrected.
 
-  9) Chinese (Mandarin), Galician, and Ukrainian translations have
+  10) Chinese (Mandarin), Galician, and Ukrainian translations have
      been added.
 
-  10) (API) Added function stp_vars_copy_from() to override settings in
+  11) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
 
 
