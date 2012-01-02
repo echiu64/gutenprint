@@ -1649,15 +1649,15 @@ canon_init_setX72(const stp_vars_t *v, const canon_privdata_t *init)
       canon_cmd(v,ESC28,0x72, 2, 0x62, 0); /* 2 bytes */
     }
     /* CD mode only */
-    else if ( (init->mode->flags & MODE_FLAG_CD) && (!(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) ) ) {
+    else if ( (init->mode->flags & MODE_FLAG_CD) && (!(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) ) ) {
       canon_cmd(v,ESC28,0x72, 1, 0x65);
     }
     /* CD mode only */
-    else if ( (init->mode->flags & MODE_FLAG_CD) && !(strcmp(init->caps->name,"PIXMA iP4800")) ) {
+    else if ( (init->mode->flags & MODE_FLAG_CD) && ( !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8100")) ) ) {
       canon_cmd(v,ESC28,0x72, 1, 0x68);
     }
     /* CD mode only -- no ESC (r at all otherwise */
-    else if ( (init->mode->flags & MODE_FLAG_CD) && !(strcmp(init->caps->name,"PIXMA iP4900")) ) {
+    else if ( (init->mode->flags & MODE_FLAG_CD) && ( !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) ) {
       canon_cmd(v,ESC28,0x72, 1, 0x68);
     }
     /* other cases here */

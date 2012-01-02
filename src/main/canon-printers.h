@@ -273,7 +273,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_P|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_P|CANON_CAP_px|CANON_CAP_I,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP980_modelist,
     &canon_MULTIPASS_MP980_paperlist,
     NULL,
@@ -286,7 +286,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4600_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /*features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP4200,  /*features */
     &canon_MULTIPASS_MP990_modelist,
     &canon_MULTIPASS_MP990_paperlist,
     NULL,
@@ -2129,8 +2129,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MG5200", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
+    &canon_PIXMA_MG5200_slotlist, /* ESC (r only for CD media */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG5200_modelist,
     &canon_PIXMA_MG5200_paperlist,
     NULL,
@@ -2142,8 +2142,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MG5300", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_MG5300,  /* features */
+    &canon_PIXMA_MG5200_slotlist, /* ESC (r only for CD media */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_MG5300,  /* features */
     &canon_PIXMA_MG5300_modelist,
     &canon_PIXMA_MG5200_paperlist,
     NULL,
@@ -2156,7 +2156,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG6100_modelist,
     &canon_PIXMA_MG6100_paperlist,
     NULL,
@@ -2168,8 +2168,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MG6200", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_MG5300,  /* features */
+    &canon_PIXMA_MG5200_slotlist, /* ESC (r only for CD media */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_MG5300,  /* features */
     &canon_PIXMA_MG6200_modelist,
     &canon_PIXMA_MG6100_paperlist,
     NULL,
@@ -2182,7 +2182,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_iP2700,  /* features */
     &canon_PIXMA_MG8100_modelist,
     &canon_PIXMA_MG6100_paperlist,
     NULL,
@@ -2194,8 +2194,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MG8200", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_PIXMA_MG5200_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0x64,control_cmd_PIXMA_MG5300,  /* features */
+    &canon_PIXMA_MG5200_slotlist, /* ESC (r only for CD media */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML,0,control_cmd_PIXMA_MG5300,  /* features */
     &canon_PIXMA_MG8200_modelist,
     &canon_PIXMA_MG6100_paperlist,
     NULL,
