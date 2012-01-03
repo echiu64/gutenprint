@@ -1341,30 +1341,31 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   if (!(init->caps->features & CANON_CAP_px) && !(init->caps->features & CANON_CAP_p))
 	return;
 
-  if ((init->caps->features & CANON_CAP_px) && !(input_slot && !strcmp(input_slot,"CD")))
-  {
-    unsigned int unit = 600;
-    stp_zfwrite(ESC28,2,1,v); /* ESC( */
-    stp_putc(0x70,v);         /* p    */
-    stp_put16_le(46, v);      /* len  */
-    stp_put16_be(printable_length,v);
-    stp_put16_be(0,v);
-    stp_put16_be(printable_width,v);
-    stp_put16_be(0,v);
-    stp_put32_be(0,v);
-    stp_put16_be(unit,v);
-    
-    stp_put32_be(init->caps->border_left * unit / 72,v); /* area_right */
-    stp_put32_be(init->caps->border_top * unit / 72,v);  /* area_top */
-    stp_put32_be(init->page_width  * unit / 72,v); /* area_width */
-    stp_put32_be(init->page_height * unit / 72,v); /* area_length */
-    stp_put32_be(0,v); /* paper_right */
-    stp_put32_be(0,v); /* paper_top */
-    stp_put32_be((init->page_width + init->caps->border_left + init->caps->border_right) * unit / 72,v); /* paper_width */
-    stp_put32_be((init->page_height + init->caps->border_top + init->caps->border_bottom) * unit / 72,v); /* paper_height */
-    return;
+  if ((init->caps->features & CANON_CAP_px) ) { /* && !(input_slot && !strcmp(input_slot,"CD")) ) */
+    if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP90")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
+      {
+	unsigned int unit = 600;
+	stp_zfwrite(ESC28,2,1,v); /* ESC( */
+	stp_putc(0x70,v);         /* p    */
+	stp_put16_le(46, v);      /* len  */
+	stp_put16_be(printable_length,v);
+	stp_put16_be(0,v);
+	stp_put16_be(printable_width,v);
+	stp_put16_be(0,v);
+	stp_put32_be(0,v);
+	stp_put16_be(unit,v);
+	
+	stp_put32_be(init->caps->border_left * unit / 72,v); /* area_right */
+	stp_put32_be(init->caps->border_top * unit / 72,v);  /* area_top */
+	stp_put32_be(init->page_width  * unit / 72,v); /* area_width */
+	stp_put32_be(init->page_height * unit / 72,v); /* area_length */
+	stp_put32_be(0,v); /* paper_right */
+	stp_put32_be(0,v); /* paper_top */
+	stp_put32_be((init->page_width + init->caps->border_left + init->caps->border_right) * unit / 72,v); /* paper_width */
+	stp_put32_be((init->page_height + init->caps->border_top + init->caps->border_bottom) * unit / 72,v); /* paper_height */
+	return;
+      }
   }
-
   canon_cmd(v,ESC28,0x70, 8,
    	      arg_70_1, arg_70_2, 0x00, 0x00,
 	      arg_70_3, arg_70_4, 0x00, 0x00);
