@@ -26,6 +26,8 @@
 
 #define MAX_COLORS 36  /* was: 8 maximum number of Colors: CMYKcmyk */
 
+#define DEBUG 0 /* 1 for debugging only */
+
 #include "pixma_parse.h"
 
 /*TODO: 
@@ -166,10 +168,11 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 	int cur_line=0; /* line relative to block begin */
 	unsigned char* dst=malloc(len*256); /* the destination buffer */
 	unsigned char* dstr=dst;
-	if(!color){
-          printf("no matching color for %c (0x%x, %i) in the database => ignoring %i bytes\n",color_name,color_name,color_name, len);
-	}
-	/*printf("DEBUG enter Raster len=%i,color=%c\n",len,color_name);*/
+	/* if(!color){
+	   printf("no matching color for %c (0x%x, %i) in the database => ignoring %i bytes\n",color_name,color_name,color_name, len); 
+	   } */
+	if (DEBUG)
+	  printf("DEBUG enter Raster len=%i,color=%c\n",len,color_name);
 
 	/* decode pack bits */
 	while( len > 0){ /* why does this not work: because unsigned integer wraps! */
@@ -544,7 +547,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				        /*char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 				        /* iP3500 test */
 				        /*char order[]="CMYKcmykHRGBCMYcmykabd";*/
-				          char order[]="CMYKcmykHpnoPQRSTykabd";
+				        /*char order[]="CMYKcmykHpnoPQRSTykabd";*/
+				          char order[]="KCMYkcmyHpnoPQRSTykabd";
 				        /* MP960 photo modes: k instead of K */
 					/* char order[]="CMYkcmyKHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 					/* T-shirt transfer mode: y changed to k --- no y, no K */
