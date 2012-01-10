@@ -1345,24 +1345,34 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
     if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP90")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
       {
 	unsigned int unit = 600;
+
+	int border_left=init->caps->border_left;
+	int border_right=init->caps->border_right;
+	int border_top=init->caps->border_top;
+	int border_bottom=init->caps->border_bottom;
+	if (input_slot && !strcmp(input_slot,"CD")) {
+	  border_top=9;
+	  border_bottom=9;
+	}
+
 	stp_zfwrite(ESC28,2,1,v); /* ESC( */
 	stp_putc(0x70,v);         /* p    */
 	stp_put16_le(46, v);      /* len  */
-	stp_put16_be(printable_length,v);
+	stp_put16_be(printable_length,v); /* Windows 698, gutenprint 570 */
 	stp_put16_be(0,v);
-	stp_put16_be(printable_width,v);
+	stp_put16_be(printable_width,v); /* Windows 352, gutenprint 342 */
 	stp_put16_be(0,v);
 	stp_put32_be(0,v);
 	stp_put16_be(unit,v);
 	
-	stp_put32_be(init->caps->border_left * unit / 72,v); /* area_right */
-	stp_put32_be(init->caps->border_top * unit / 72,v);  /* area_top */
-	stp_put32_be(init->page_width  * unit / 72,v); /* area_width */
-	stp_put32_be(init->page_height * unit / 72,v); /* area_length */
-	stp_put32_be(0,v); /* paper_right */
-	stp_put32_be(0,v); /* paper_top */
-	stp_put32_be((init->page_width + init->caps->border_left + init->caps->border_right) * unit / 72,v); /* paper_width */
-	stp_put32_be((init->page_height + init->caps->border_top + init->caps->border_bottom) * unit / 72,v); /* paper_height */
+	stp_put32_be(border_left * unit / 72,v); /* area_right : Windows seems to use 9.6, gutenprint uses 10 */
+	stp_put32_be(border_top * unit / 72,v);  /* area_top : Windows seems to use 8.4, gutenprint uses 15 */
+	stp_put32_be(init->page_width  * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
+	stp_put32_be(init->page_height * unit / 72,v); /* area_length : Windows seems to use 698.28 for Tray G, gutenprint uses 570 */
+	stp_put32_be(0,v); /* paper_right : Windows also 0 here for all Trays */
+	stp_put32_be(0,v); /* paper_top : Windows also 0 here for all Trays */
+	stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width : Windows 371.4, gutenprint 360.96 */
+	stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v); /* paper_height : Windows 720.96, gutenprint 600 */
 	return;
       }
   }
@@ -2140,8 +2150,11 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 
 
 /* FIXME move this to printercaps */
-#define CANON_CD_X 176
-#define CANON_CD_Y 405
+/* #define CANON_CD_X 176*/
+/* #define CANON_CD_Y 405*/
+
+#define CANON_CD_X 188
+#define CANON_CD_Y 534
 
 static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
   const char    *media_source = stp_get_string_parameter(v, "InputSlot");
