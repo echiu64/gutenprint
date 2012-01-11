@@ -1776,7 +1776,7 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
        generic condition based on CANON_INK_CMY */
     if (init->used_inks == CANON_INK_CMY) arg_74_3= 0x02; /* for BC-06 cartridge!!! */
     /* example of better way: for BJC-3000 series */
-    if  (!strcmp(init->caps->name,"3000")) {
+    if  (!strcmp(init->caps->name,"3000") || !strcmp(init->caps->name,"4300")) {
       /* but if photo cartridge selection, set differently again */
       if (init->mode->flags & MODE_FLAG_PHOTO)
 	arg_74_3= 0x0a;
