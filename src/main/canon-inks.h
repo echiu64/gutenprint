@@ -388,9 +388,9 @@ static const canon_inkset_t canon_9_C2M2Y2K2c2m2y2_inkset[] = {
 
 /* also for DS810 */
 static const canon_inkset_t canon_9_c3m3y3_inkset[] = {
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,NULL},
 	{'c',1.0,&canon_2b_3l_ink},
 	{'m',1.0,&canon_2b_3l_ink},
@@ -955,9 +955,9 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9plain8_inkset[] = {
 /* also for DS700 */
 /* also for iP90, iP90v */
 static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,NULL},
 	{'c',1.0,&canon_8b_9l_ink},
 	{'m',1.0,&canon_8b_9l_ink},
@@ -1647,9 +1647,9 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4k4_inkset[] = {
 /* MP280 same for PPGproPlat */
 /* less 0x60 in bytes */
 static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,NULL},
 	{'c',1.0,&canon_2b_3l_ink},
 	{'m',1.0,&canon_2b_3l_ink},
@@ -1944,9 +1944,9 @@ static const canon_inkset_t canon_13_C8M8Y4k4yask_inkset[] = {
 	   other Photo Paper
 */
 static const canon_inkset_t canon_13_c9m9y9_inkset[] = {
-	{0,0.0,NULL},
-	{0,0.0,NULL},
-	{0,0.0,NULL},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,NULL},
 	{'c',1.0,&canon_8b_9l_ink},
 	{'m',1.0,&canon_8b_9l_ink},
