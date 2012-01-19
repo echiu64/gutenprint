@@ -4402,7 +4402,7 @@ escp2_do_print(stp_vars_t *v, stp_image_t *image, int print_op)
   stp_allocate_component_data(v, "Driver", NULL, NULL, pd);
 
   pd->inkname = get_inktype(v);
-  if (pd->inkname->inkset != INKSET_EXTENDED &&
+  if (pd->inkname && pd->inkname->inkset != INKSET_EXTENDED &&
       stp_check_boolean_parameter(v, "UseGloss", STP_PARAMETER_ACTIVE) &&
       stp_get_boolean_parameter(v, "UseGloss"))
     pd->use_aux_channels = 1;
