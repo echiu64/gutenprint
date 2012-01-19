@@ -295,6 +295,7 @@ run (const char        *name,		/* I - Name of print program. */
 	    case 0:
 	    default:
 	      stp_set_string_parameter(gimp_vars.v, "PrintingMode", "BW");
+	      break;
 	    case 1:
 	      stp_set_string_parameter(gimp_vars.v, "PrintingMode", "Color");
 	    }

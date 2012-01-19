@@ -1409,6 +1409,8 @@ lexmark_init_printer(const stp_vars_t *v, const lexmark_cap_t * caps,
 #ifdef DEBUG
 			lex_write_tmp_file(dbgfileprn, (void *)startHeader_z52, LXM_Z52_STARTSIZE);
 #endif
+			break;
+
 		case m_z42:
 			stp_zfwrite((const char *) startHeader_z42,
 				    LXM_Z42_STARTSIZE,1,v);
