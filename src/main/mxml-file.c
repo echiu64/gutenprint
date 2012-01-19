@@ -956,6 +956,8 @@ mxml_parse_element(stp_mxml_node_t *node,	/* I - Element node */
       {
         fprintf(stderr, "Missing value for attribute '%s' in element %s!\n",
 	        name, node->value.element.name);
+	free(name);
+	free(value);
         return (EOF);
       }
 
