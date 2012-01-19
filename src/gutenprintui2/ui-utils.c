@@ -214,9 +214,9 @@ stpui_dialog_new (const gchar       *title,
   GtkWidget *dialog;
   va_list    args;
 
-  va_start (args, resizable);
-
   g_return_val_if_fail (title != NULL, NULL);
+
+  va_start (args, resizable);
 
   dialog = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (dialog), title);

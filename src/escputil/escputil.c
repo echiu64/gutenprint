@@ -634,6 +634,7 @@ do_remote_cmd(const char *cmd, int nargs, ...)
   STP_DEBUG(printf("\n"));
   bufpos += 2 + nargs;
   end_remote_sequence();
+  va_end(args);
 }
 
 static void
@@ -660,6 +661,7 @@ do_remote_cmd_only(const char *cmd, int nargs, ...)
       }
   STP_DEBUG(printf("\n"));
   bufpos += 2 + nargs;
+  va_end(args);
 }
 
 static void
