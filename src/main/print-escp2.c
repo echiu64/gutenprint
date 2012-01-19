@@ -1681,15 +1681,18 @@ get_inktype(const stp_vars_t *v)
    * This may mean duplicate work, but that's cheap enough.
    */
   ink_type = get_default_inktype(v);
-  for (i = 0; i < ink_list->n_inks; i++)
+  if (ink_type && ink_list)
     {
-      if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
-	return &(ink_list->inknames[i]);
+      for (i = 0; i < ink_list->n_inks; i++)
+        {
+          if (strcmp(ink_type, ink_list->inknames[i].name) == 0)
+	    return &(ink_list->inknames[i]);
+        }
     }
   /*
    * If even *that* doesn't work, try using the first ink type on the list.
    */
-  return &(ink_list->inknames[0]);
+  return (ink_list) ? &(ink_list->inknames[0]) : NULL;
 }
 
 static const inkname_t *

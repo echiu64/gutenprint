@@ -383,13 +383,16 @@ get_media_type(const canon_cap_t* caps,const char *name)
 {
   int i;
   if (name && caps->paperlist)
-    for (i = 0; i < caps->paperlist->count; i++)
-      {
-	/* translate paper_t.name */
-	if (!strcmp(name, caps->paperlist->papers[i].name))
-	  return &(caps->paperlist->papers[i]);
-      }
-  return &(caps->paperlist->papers[0]);
+    {
+      for (i = 0; i < caps->paperlist->count; i++)
+        {
+	  /* translate paper_t.name */
+	  if (!strcmp(name, caps->paperlist->papers[i].name))
+	    return &(caps->paperlist->papers[i]);
+        }
+      return &(caps->paperlist->papers[0]);
+    }
+  return NULL;
 }
 
 

@@ -96,7 +96,8 @@ module_list_freefunc(void *item /* module to remove */)
   if (module && module->fini) /* Call the module exit function */
     module->fini();
 #if defined(USE_LTDL) || defined(USE_DLOPEN)
-  DLCLOSE(module->handle); /* Close the module if it's not static */
+  if (module && module->handle)
+    DLCLOSE(module->handle); /* Close the module if it's not static */
 #endif
 }
 

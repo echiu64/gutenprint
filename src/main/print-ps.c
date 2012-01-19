@@ -821,9 +821,9 @@ ps_print_device_settings(stp_vars_t *v)
 			if(node)
 			  {
 			    node=stp_mxmlFindElement(node,node, "choice", "name", val, STP_MXML_DESCEND);
-			    if(node)
+			    if(node && node->child)
 			      {
-				if(node->child && node->child->value.opaque && (strlen(node->child->value.opaque)>1))
+				if(node->child->value.opaque && (strlen(node->child->value.opaque)>1))
 				  {
 				    /* If we have opaque data for the child, we use %%BeginFeature and copy the code verbatim. */
 				    stp_puts("[{\n", v);

@@ -273,7 +273,7 @@ escp2_set_remote_sequence(stp_vars_t *v)
 	{
 	  /* If there's ever duplex no tumble, we'll need to special
 	     case it, too */
-	  if (pd->duplex == DUPLEX_TUMBLE && (pd->input_slot->duplex & DUPLEX_TUMBLE))
+	  if (pd->duplex == DUPLEX_TUMBLE && pd->input_slot && (pd->input_slot->duplex & DUPLEX_TUMBLE))
 	    stp_send_command(v, "DP", "bcc", 0, 2); /* Auto duplex */
 	  else
 	    stp_send_command(v, "DP", "bcc", 0, 2); /* Auto duplex */

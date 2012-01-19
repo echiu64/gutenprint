@@ -1575,7 +1575,7 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		description->is_active = 1;
 	      else
 		description->is_active = 0;
-	      if (param->color_only &&
+	      if (param->color_only && color_description &&
 		  !(color_description->channels & ~CMASK_K))
 		description->is_active = 0;
 	    }
@@ -1698,7 +1698,7 @@ stpi_color_traditional_describe_parameter(const stp_vars_t *v,
 		description->is_active = 1;
 	      else
 		description->is_active = 0;
-	      if (param->color_only &&
+	      if (param->color_only && color_description &&
 		  !(color_description->channels & ~CMASK_K))
 		description->is_active = 0;
 	    }
