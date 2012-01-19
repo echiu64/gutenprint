@@ -2447,7 +2447,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
        privdata.ncolors = 4;
        privdata.head_offset = stp_zalloc(sizeof(int) * privdata.ncolors);
-       memset(privdata.head_offset, 0, sizeof(privdata.head_offset));
+       memset(privdata.head_offset, 0, sizeof(*privdata.head_offset));
 
        if ( privdata.used_inks == CANON_INK_K )
            privdata.nozzles = 64; /* black nozzles */
