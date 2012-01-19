@@ -1838,11 +1838,16 @@ const stp_parameter_t *
 stp_parameter_list_param(stp_const_parameter_list_t list, size_t item)
 {
   const stp_list_t *ilist = (const stp_list_t *)list;
+  stp_list_item_t *i = NULL;
   if (item >= stp_list_get_length(ilist))
     return NULL;
   else
-    return (const stp_parameter_t *)
-      stp_list_item_get_data(stp_list_get_item_by_index(ilist, item));
+    {
+      i = stp_list_get_item_by_index(ilist, item);
+      if (i == NULL)
+        return NULL;
+      return (const stp_parameter_t *) stp_list_item_get_data(i);
+    }
 }
 
 void
