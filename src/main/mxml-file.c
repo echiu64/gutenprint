@@ -493,7 +493,6 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	  break;
 	else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 	{
-          free(buffer);
 	  return (NULL);
 	}
 	else if ((bufptr - buffer) == 3 && !strncmp(buffer, "!--", 3))
@@ -514,7 +513,6 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	    break;
 	  else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	}
@@ -555,7 +553,6 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	    break;
 	  else if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	}
@@ -746,7 +743,6 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 
 	if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
 	{
-          free(buffer);
 	  return (NULL);
 	}
       }
@@ -760,12 +756,10 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	{
 	  if (mxml_add_char(0xc0 | (ch >> 6), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	  if (mxml_add_char(0x80 | (ch & 63), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
         }
@@ -773,17 +767,14 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	{
 	  if (mxml_add_char(0xe0 | (ch >> 12), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	  if (mxml_add_char(0x80 | ((ch >> 6) & 63), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	  if (mxml_add_char(0x80 | (ch & 63), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	}
@@ -791,22 +782,18 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 	{
 	  if (mxml_add_char(0xf0 | (ch >> 18), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	  if (mxml_add_char(0x80 | ((ch >> 12) & 63), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	  if (mxml_add_char(0x80 | ((ch >> 6) & 63), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	  if (mxml_add_char(0x80 | (ch & 63), &bufptr, &buffer, &bufsize))
 	  {
-            free(buffer);
 	    return (NULL);
 	  }
 	}
@@ -820,7 +807,6 @@ mxml_load_data(stp_mxml_node_t *top,	/* I - Top node */
 
       if (mxml_add_char(ch, &bufptr, &buffer, &bufsize))
       {
-        free(buffer);
 	return (NULL);
       }
     }
@@ -939,7 +925,6 @@ mxml_parse_element(stp_mxml_node_t *node,	/* I - Element node */
         break;
       else if (mxml_add_char(ch, &ptr, &name, &namesize))
       {
-        free(name);
 	free(value);
 	return (EOF);
       }
@@ -976,7 +961,6 @@ mxml_parse_element(stp_mxml_node_t *node,	/* I - Element node */
 	  else if (mxml_add_char(ch, &ptr, &value, &valsize))
 	  {
             free(name);
-	    free(value);
 	    return (EOF);
 	  }
 
@@ -997,7 +981,6 @@ mxml_parse_element(stp_mxml_node_t *node,	/* I - Element node */
 	  else if (mxml_add_char(ch, &ptr, &value, &valsize))
 	  {
             free(name);
-	    free(value);
 	    return (EOF);
 	  }
 
