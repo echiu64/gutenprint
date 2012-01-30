@@ -1650,7 +1650,7 @@ static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,&canon_2b_3l_ink},
-	{0,0.0,NULL},
+	{0,0.0,&canon_2b_3l_ink},
 	{'c',1.0,&canon_2b_3l_ink},
 	{'m',1.0,&canon_2b_3l_ink},
 	{'y',1.0,&canon_2b_3l_ink},

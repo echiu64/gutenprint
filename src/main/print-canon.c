@@ -637,6 +637,9 @@ canon_describe_output(const stp_vars_t *v)
     return "CMYK";
   if(ink_type & CANON_INK_CMY_MASK)
     return "CMY";
+  /* Gernot added */
+  /*if(ink_type & CANON_INK_cmy_MASK)
+    return "cmy";*/
   return "Grayscale";
 }
 
@@ -1722,7 +1725,7 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
     	buf[2]=0x01;
     }
     for(i=0;i<init->mode->num_inks;i++){
-        if(init->mode->inks[i].ink){
+        if(init->mode->inks[i].channel != 0){ /* 0 means ink is used in gutenprint for sub-channel setup but not intended for printer */
           if(init->mode->inks[i].ink->flags & INK_FLAG_5pixel_in_1byte)
             buf[3+i*3+0]=(1<<5)|init->mode->inks[i].ink->bits; /*info*/
            /*else if(init->mode->inks[i].ink->flags & INK_FLAG_lowresmode)
@@ -2114,18 +2117,29 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
             /* find K and k inks */
             for(i=0;i<privdata->mode->num_inks;i++){
                 const canon_inkset_t* ink = &privdata->mode->inks[i];
-                if(ink->channel == primary[channel] || ink->channel == secondary[channel])
+                if(ink->channel == primary[channel] || ink->channel == secondary[channel]) {
                     subchannel += canon_setup_channel(v,privdata,channel,subchannel,ink,&shades);
+		    /* Gernot: add */
+		    stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: got a black channel\n");
+		}
             }
 	    is_black_channel = 1;
+	    /* adding cmy channels */
+	    /*}else if(channel != STP_ECOLOR_K && privdata->used_inks & (CANON_INK_CMY_MASK | CANON_INK_cmy_MASK)){ */ /* color channels */
         }else if(channel != STP_ECOLOR_K && privdata->used_inks & CANON_INK_CMY_MASK){  /* color channels */
             for(i=0;i<privdata->mode->num_inks;i++){
                 const canon_inkset_t* ink = &privdata->mode->inks[i];
 		stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop non-K inks %d\n", i);
-                /* if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CcMmYyKk_MASK) && (ink->channel == secondary[channel]))) */
+                /*if(ink->channel == primary[channel] || ((privdata->used_inks & (CANON_INK_CcMmYyKk_MASK | CANON_INK_cmy_MASK)) && (ink->channel == secondary[channel]))) {*/
+                if(ink->channel == primary[channel] || ((privdata->used_inks & (CANON_INK_CcMmYyKk_MASK|CANON_INK_CMY_MASK)) && (ink->channel == secondary[channel]))) {
 		/* Gernot: see if this works: use the masks that includes secondary channels */
-                if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CMYKk_MASK ) && (ink->channel == secondary[channel])))
-                    subchannel += canon_setup_channel(v,privdata,channel,subchannel,ink,&shades);
+                /* if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CMYKk_MASK ) && (ink->channel == secondary[channel]))) {*/
+		  subchannel += canon_setup_channel(v,privdata,channel,subchannel,ink,&shades);
+		  stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: adding subchannel\n");
+		}
+		else {
+		  stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: not creating subchannel\n"); 
+		}
             } 
         }
 
@@ -2383,6 +2397,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     stp_set_string_parameter(v, "STPIOutputType", "KCMY");
   else if(privdata.used_inks & CANON_INK_CMY_MASK)
     stp_set_string_parameter(v, "STPIOutputType", "CMY");
+  /* Gernot: addition */
+  /*else if(privdata.used_inks & CANON_INK_cmy_MASK)
+    stp_set_string_parameter(v, "STPIOutputType", "cmy");*/
   else
     stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
 
