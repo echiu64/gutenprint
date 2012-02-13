@@ -546,9 +546,9 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				        /* usual order */
 				        /*char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 				        /* iP3500 test */
-				        /*char order[]="CMYKcmykHRGBCMYcmykabd";*/
+				        char order[]="CMYKcmykHRGBCMYcmykabd";
 				        /*char order[]="CMYKcmykHpnoPQRSTykabd";*/
-				          char order[]="KCMYkcmyHpnoPQRSTykabd";
+				        /*char order[]="KCMYkcmyHpnoPQRSTykabd";*/
 				        /* MP960 photo modes: k instead of K */
 					/* char order[]="CMYkcmyKHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 					/* T-shirt transfer mode: y changed to k --- no y, no K */
