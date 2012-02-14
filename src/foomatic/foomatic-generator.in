@@ -89,8 +89,6 @@ my @parameter_level_names = (
 my $option_remap = "";
 my $opt_index = 0;
 
-use Data::Dumper;
-
 if (! $opt_x) {
     open PIPE, "./printer_options $simplified_subopt|" or die "Cannot run printer_options: $!\n";
     print STDERR "Loading options from ./printer_options $simplified_subopt...";
