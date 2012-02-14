@@ -3,7 +3,7 @@
  <url>http://gimp-print.sourceforge.net/</url>
  <execution>
   <filter />
-  <prototype>gs -q -dPARANOIDSAFER -dNOPAUSE -dBATCH -sDEVICE=ijs -sIjsServer=ijsgutenprint.@@STPREL@@ -dIjsUseOutputFD%A -sIjsParams=&quot;@@REMAP@@STP_VERSION=@@STPVER@@,%B&quot;%Z -sOutputFile=- -</prototype>
+  <prototype>gs -q -dPARANOIDSAFER -dNOPAUSE -dBATCH -dNOINTERPOLATE -sDEVICE=ijs -sIjsServer=ijsgutenprint.@@STPREL@@ -dIjsUseOutputFD%A -sIjsParams=&quot;@@REMAP@@STP_VERSION=@@STPVER@@,%B&quot;%Z -sOutputFile=- -</prototype>
  </execution>
  <comments>
   <en>
