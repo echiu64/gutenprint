@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 use strict;
-use Getopt::Std;
+use Getopt::Long;
 use Fcntl qw(:mode);
 use FileHandle;
 use IPC::Open2;
@@ -77,8 +77,6 @@ my $server_multicat_initialized = 0;
 if (-x $driver_bin) {
     get_driver_version();
 }
-
-$Getopt::Std::STANDARD_HELP_VERSION = 1;
 
 my @ppd_files; # A list of in-use Gutenprint PPD files
 
@@ -254,7 +252,23 @@ sub get_driver_version() {
 }
 
 sub parse_options () {
-    if (!getopts('d:hnqs:vNo:p:P:r:ifl:')) {
+    Getopt::Long::Configure("bundling");
+    if (!GetOptions("d=i" => \$opt_d,
+                    "h" => \$opt_h,
+                    "n" => \$opt_n,
+                    "q" => \$opt_q,
+                    "s=s" => \$opt_s,
+                    "p=s" => \$opt_p,
+                    "P=s" => \$opt_P,
+                    "v" => \$opt_v,
+                    "N" => \$opt_N,
+                    "o=s" => \$opt_o,
+                    "r=s" => \$opt_r,
+                    "f" => \$opt_f,
+                    "i" => \$opt_i,
+                    "l=s" => \$opt_l,
+                    "version" => sub { VERSION_MESSAGE(\*STDOUT) },
+                    "help" => sub { VERSION_MESSAGE(\*STDOUT); HELP_MESSAGE(\*STDOUT) })) {
 	help();
     }
     if ($opt_n) {
