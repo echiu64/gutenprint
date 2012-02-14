@@ -1645,7 +1645,7 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4k4_inkset[] = {
 /* iP2700 in user-defined highest quality mode for PPGlossPro paper */
 /* MP270 same for PPGpro */
 /* MP280 same for PPGproPlat */
-/* less 0x60 in bytes */
+/* less 0x60 in cmy bytes */
 static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,&canon_2b_3l_ink},
@@ -1662,17 +1662,9 @@ static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/*         MP150 (MP170 for tests) high-quality mode for
-           High Resolution Paper
-           Inkjet Hagaki
-	   pro Photo Paper
-	   super Photo Paper
-	   super Photo Paper Double Sided
-	   matte Photo Paper
-	   other Photo Paper
 
-Also used for all modes of gloss Photo Paper	  
-*/
+/* MP140, MP150, MP160, MP170, MP180, MP190 and others */
+/* less 0x60 in cmy bytes */
 static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -1680,7 +1672,7 @@ static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {0,0.0,NULL},
         {'c',1.0,&canon_4b_4l_ink},
         {'m',1.0,&canon_4b_4l_ink},
-        {'k',1.0,&canon_4b_4l_ink}, /* swap y and k */
+        {'y',1.0,&canon_4b_4l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
