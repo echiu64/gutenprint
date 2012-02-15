@@ -1128,7 +1128,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
-    &canon_MULTIPASS_MP170_modelist,
+    &canon_MULTIPASS_MP150_modelist,
     &canon_PIXMA_iP1500_paperlist,
     NULL,
     NULL,
@@ -1865,19 +1865,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-  { /* Canon MULTIPASS MP140 */
-    "PIXMA MP140", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
-    &canon_MULTIPASS_MP150_modelist,
-    &canon_MULTIPASS_MP150_paperlist,
-    NULL,
-    NULL,
-    NULL,
-    iP4500_channel_order
-  },
   { /* Canon MULTIPASS MP150 */
     "PIXMA MP150", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
@@ -1886,19 +1873,6 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_MULTIPASS_MP150_paperlist,
-    NULL,
-    NULL,
-    NULL,
-    iP4500_channel_order
-  },
-  { /* Canon MULTIPASS MP170 */
-    "PIXMA MP170", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
-    &canon_MULTIPASS_MP170_modelist,
-    &canon_MULTIPASS_MP170_paperlist,
     NULL,
     NULL,
     NULL,
@@ -1962,8 +1936,8 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
-    &canon_MULTIPASS_MP170_modelist,
-    &canon_MULTIPASS_MP170_paperlist,
+    &canon_MULTIPASS_MP150_modelist,
+    &canon_MULTIPASS_MP150_paperlist,
     NULL,
     NULL,
     NULL,

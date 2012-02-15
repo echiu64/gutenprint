@@ -1307,7 +1307,6 @@ sub qualityorder {
 		    "dpi_draftmono3",
 		    "dpi_draftmono4",
 		    "dpi_draftmono5",
-		    "dpi_glossphotohigh",
 		    "dpi_photohigh",
 		    "dpi_photohigh2",
 		    "dpi_photohigh3",
