@@ -314,7 +314,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S200", 3,
     618, 936,       /* 8.58" x 13 " */
     10, 10, 9, 20,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD1 | CANON_CAP_rr,0x61,NULL,
     &canon_S200_modelist,
     &canon_BJC_S200_paperlist,
@@ -327,7 +327,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S300", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_ackshort,
     &canon_BJC_S300_modelist,
     &canon_BJC_S300_paperlist,
@@ -340,7 +340,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S330", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_S330_modelist,
     &canon_BJC_S330_paperlist,
@@ -353,7 +353,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S500", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_p,0,control_cmd_BJC_i6100,
     &canon_BJC_S500_modelist,
     &canon_BJC_S300_paperlist,
@@ -366,7 +366,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S520", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_BJC_i6100,
     &canon_BJC_S520_modelist,
     &canon_BJC_S520_paperlist,
@@ -379,7 +379,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S600", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_p,0,control_cmd_BJC_i6100,
     &canon_BJC_S600_modelist,
     &canon_BJC_S300_paperlist,
@@ -392,7 +392,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S750", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_BJC_i550,
     &canon_BJC_S750_modelist,
     &canon_BJC_S750_paperlist,
@@ -418,7 +418,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S820", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,control_cmd_BJC_i550,
     &canon_BJC_S820_modelist,
     &canon_BJC_S800_paperlist,
@@ -431,7 +431,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S830", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_S820_modelist,
     &canon_BJC_S800_paperlist,
@@ -444,7 +444,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "S900", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_S900_modelist,
     &canon_BJC_S800_paperlist,
@@ -652,7 +652,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "3000", 3,
     842, INCH(17),
     10, 10, 9, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0 | CANON_CAP_p,0,control_cmd_BJC_i6100,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
@@ -704,7 +704,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i50", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i50_modelist,
     &canon_BJC_i50_paperlist,
@@ -717,7 +717,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i70", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i70_modelist,
     &canon_BJC_i70_paperlist,
@@ -730,7 +730,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i80", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i80_modelist,
     &canon_BJC_i80_paperlist,
@@ -743,7 +743,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i250", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i250_modelist,
     &canon_BJC_i250_paperlist,
@@ -756,7 +756,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i320", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i320_modelist,
     &canon_BJC_i320_paperlist,
@@ -769,7 +769,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i450", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i450_modelist,
     &canon_BJC_i450_paperlist,
@@ -782,7 +782,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i455", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i455_modelist,
     &canon_BJC_i450_paperlist,
@@ -795,7 +795,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i550", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_BJC_i550,
     &canon_BJC_i550_modelist,
     &canon_BJC_i550_paperlist,
@@ -808,7 +808,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i560", 3,
     842, INCH(17),
     11, 9, 10, 18,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_BJC_i550,
     &canon_BJC_i560_modelist,
     &canon_BJC_i250_paperlist,
@@ -860,7 +860,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i900", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,control_cmd_PIXMA_iP2700, /* ESC (M 0x0 0x0 0x0 */
     &canon_BJC_i900_modelist,
     &canon_BJC_i450_paperlist,
@@ -873,7 +873,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i950", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i950_modelist,
     &canon_BJC_i250_paperlist,
@@ -899,7 +899,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i6100", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,control_cmd_BJC_i6100, /* 32 times 0x0 before form feed not implemented */
     &canon_BJC_i6100_modelist,
     &canon_BJC_i6100_paperlist,
@@ -912,7 +912,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i9100", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i9100_modelist,
     &canon_BJC_i6100_paperlist,
@@ -925,7 +925,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "i9900", 3,
     842, INCH(17),
     10, 10, 15, 15,
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,control_cmd_PIXMA_iP2700, /* ESC (M 0x0 0x0 0x0 */
     &canon_BJC_i9900_modelist,
     &canon_BJC_i6100_paperlist,
@@ -943,7 +943,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA mini220", 3,
     INCH(4), INCH(8), /* US 4" x 8" */
     10, 10, 9, 14, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_MG5300,
     &canon_PIXMA_mini220_modelist,
     &canon_SELPHY_DS810_paperlist,
@@ -975,7 +975,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "SELPHY DS700", 3,
     INCH(4), INCH(6), /* US 4" x 6" */
     10, 10, 9, 14, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,NULL,
     &canon_SELPHY_DS700_modelist,
     &canon_SELPHY_DS700_paperlist,
@@ -988,7 +988,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "SELPHY DS810", 3,
     INCH(4), INCH(8), /* US 4" x 8" */
     10, 10, 9, 14, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,NULL,
     &canon_SELPHY_DS810_modelist,
     &canon_SELPHY_DS810_paperlist,
@@ -1061,7 +1061,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP90", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP90_modelist,
     &canon_PIXMA_iP90_paperlist,
@@ -1074,7 +1074,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP100", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP100_modelist,
     &canon_PIXMA_iP100_paperlist,
@@ -1087,7 +1087,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP1000", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1000_modelist,
     &canon_PIXMA_iP1000_paperlist,
@@ -1100,7 +1100,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP1200", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1200_modelist,
     &canon_PIXMA_iP1200_paperlist,
@@ -1113,7 +1113,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP1500", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1500_modelist,
     &canon_PIXMA_iP1500_paperlist,
@@ -1126,7 +1126,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP1600", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_PIXMA_iP1500_paperlist,
@@ -1165,7 +1165,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP2200", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1900_modelist,
     &canon_PIXMA_iP2200_paperlist,
@@ -1178,7 +1178,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP2500", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1900_modelist,
     &canon_PIXMA_iP2200_paperlist,/* OHP experimental */
@@ -1191,7 +1191,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP2600", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* auto sheet feeder only */
+    &canon_MULTIPASS_MP150_slotlist, /* auto sheet feeder only */
     CANON_CAP_STD0,0,control_cmd_PIXMA_iP4000,  /*features */
     &canon_PIXMA_iP1900_modelist,
     &canon_PIXMA_iP2600_paperlist,
@@ -1451,7 +1451,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iP6210", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* has ESC (T */
+    &canon_MULTIPASS_MP150_slotlist, /* has ESC (T */
     CANON_CAP_STD0|CANON_CAP_T|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP6210_modelist,
     &canon_PIXMA_iP90_paperlist,
@@ -1490,7 +1490,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iX4000", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iX4000_modelist,
     &canon_PIXMA_iP1500_paperlist,
@@ -1503,7 +1503,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA iX5000", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist,
+    &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iX5000_modelist,
     &canon_PIXMA_iP1500_paperlist,
@@ -1869,7 +1869,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MP150", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_MULTIPASS_MP150_paperlist,
@@ -1882,7 +1882,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MP190", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP190_modelist,
     &canon_MULTIPASS_MP190_paperlist,
@@ -1921,7 +1921,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MP360", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP360_modelist,
     &canon_MULTIPASS_MP360_paperlist,
@@ -1934,7 +1934,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MP450", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP150_modelist,
     &canon_MULTIPASS_MP150_paperlist,
@@ -2182,7 +2182,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MX300", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MX300_modelist,
     &canon_MULTIPASS_MX300_paperlist,
@@ -2195,7 +2195,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MX330", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MX330_modelist,
     &canon_MULTIPASS_MX330_paperlist,
@@ -2208,7 +2208,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA MX340", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
-    &canon_MULTIPASS_MP170_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML,0,control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MX340_modelist,
     &canon_MULTIPASS_MX340_paperlist,

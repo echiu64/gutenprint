@@ -102,10 +102,10 @@ static const canon_slot_t canon_MULTIPASS_MP530_slots[] = {
 };
 DECLARE_SLOTS(canon_MULTIPASS_MP530);
 
-static const canon_slot_t canon_MULTIPASS_MP170_slots[] = {
+static const canon_slot_t canon_MULTIPASS_MP150_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
 };
-DECLARE_SLOTS(canon_MULTIPASS_MP170);
+DECLARE_SLOTS(canon_MULTIPASS_MP150);
 
 static const canon_slot_t canon_MULTIPASS_MP250_slots[] = {
   { "Rear",       N_ ("Rear tray"), 0x4 },
