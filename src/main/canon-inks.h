@@ -680,6 +680,7 @@ static const canon_inkset_t canon_9_C4M4Y4K4c4m4_inkset[] = {
         {0,0.0,NULL}
 };
 
+/* mini220 */
 /* also for DS810 */
 static const canon_inkset_t canon_9_C4M4Y4c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
