@@ -176,6 +176,24 @@ static const stp_dotsize_t dotsizes_9l[] = {
 DECLARE_INK(4,9);
 DECLARE_INK(8,9);
 
+static const stp_dotsize_t dotsizes_14l[] = {
+  { 0x1, 0.07 },
+  { 0x2, 0.13 },
+  { 0x3, 0.20 },
+  { 0x4, 0.27 },
+  { 0x5, 0.33 },
+  { 0x6, 0.40 },
+  { 0x7, 0.47 },
+  { 0x8, 0.53 },
+  { 0x9, 0.60 },
+  { 0xA, 0.67 },
+  { 0xB, 0.75 },
+  { 0xC, 0.87 },
+  { 0xD, 1.00 },
+};
+
+DECLARE_INK(4,14);
+
 static const stp_dotsize_t dotsizes_16l[] = {
   { 0x1, 0.07 },
   { 0x2, 0.13 },
@@ -1943,6 +1961,22 @@ static const canon_inkset_t canon_13_c9m9y9_inkset[] = {
 	{'c',1.0,&canon_8b_9l_ink},
 	{'m',1.0,&canon_8b_9l_ink},
 	{'y',1.0,&canon_8b_9l_ink},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_13_C14M14Y14c14m14y14_inkset[] = {
+	{'C',1.0,&canon_4b_14l_ink},
+	{'M',1.0,&canon_4b_14l_ink},
+	{'Y',1.0,&canon_4b_14l_ink},
+	{0,0.0,NULL},
+	{'c',1.0,&canon_4b_14l_ink},
+	{'m',1.0,&canon_4b_14l_ink},
+	{'y',1.0,&canon_4b_14l_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
