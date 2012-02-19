@@ -1846,6 +1846,31 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
       }
       stp_zfwrite((const char *)raster_channel_order,init->num_channels, 1, v);
     }
+  /* note these names are from canon-printers.h, only separate driver strings are required */
+  else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) || !(strcmp(init->caps->name,"PIXMA iP6220")) || !(strcmp(init->caps->name,"PIXMA iP6310")) ) {
+    /* if cmy there, add 0x60 to each --- only some modes using cmy require it */
+    /* case one: all modes with only cmy */
+    if (init->num_channels==3) {
+      for(i=0;i<init->num_channels;i++){
+	switch(init->channel_order[i]){
+	case 'c':raster_channel_order[i]+=0x60; break;;
+	case 'm':raster_channel_order[i]+=0x60; break;;
+	case 'y':raster_channel_order[i]+=0x60; break;;
+	}
+      }
+    }
+    /* case two: CMYcmy modes, but not CMYkcm modes */
+    else if ( (init->num_channels==6) && (init->used_inks==CANON_INK_CMY) ) {
+      for(i=0;i<init->num_channels;i++){
+	switch(init->channel_order[i]){
+	case 'c':raster_channel_order[i]+=0x60; break;;
+	case 'm':raster_channel_order[i]+=0x60; break;;
+	case 'y':raster_channel_order[i]+=0x60; break;;
+	}
+      }
+    }
+    stp_zfwrite((const char *)raster_channel_order,init->num_channels, 1, v);
+  }
   else
     {
       stp_zfwrite((const char *)init->channel_order,init->num_channels, 1, v);
