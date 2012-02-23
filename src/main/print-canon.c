@@ -272,6 +272,14 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+#if 1
+  {
+    "InkSet", N_("Ink Set"), "Color=Yes,Category=Basic Printer Setup",
+    N_("Type of inkset in the printer"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+#endif
   {
     "Duplex", N_("Double-Sided Printing"), "Color=No,Category=Basic Printer Setup",
     N_("Duplex/Tumble Setting"),
@@ -526,12 +534,20 @@ canon_printhead_colors(const stp_vars_t*v)
   const canon_mode_t* mode;
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
   const char *ink_type = stp_get_string_parameter(v, "InkType");
+#if 1
+  const char *ink_set = stp_get_string_parameter(v, "InkSet");
+#endif
   /*if(print_mode && strcmp(print_mode, "BW") == 0)*/
   if(print_mode && !strcmp(print_mode, "BW")){
     /* GERNOT DEBUG list */
     /*printf("(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
     return CANON_INK_K;
   }
+#if 1
+  if(ink_set && !strcmp(ink_set, "Black")){
+    return CANON_INK_K;
+  }
+#endif
 
   if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
@@ -865,6 +881,22 @@ canon_parameters(const stp_vars_t *v, const char *name,
     description->deflt.str =
       stp_string_list_param(description->bounds.str, 0)->name;
   } 
+  else if (strcmp(name, "InkSet") == 0)
+    {
+      /* const canon_mode_t* mode = canon_get_current_mode(v); */
+      description->bounds.str= stp_string_list_create();
+      if (caps->features & CANON_CAP_T) {
+	stp_string_list_add_string
+	  (description->bounds.str, "Black", _("Black"));
+	stp_string_list_add_string
+	  (description->bounds.str, "Color", _("Color"));
+      }
+      /* for now make sure to have at least a default value */
+      stp_string_list_add_string
+	(description->bounds.str, "Both", _("Both"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
   else if (strcmp(name, "Duplex") == 0)
   {
     int offer_duplex=0;
@@ -1618,16 +1650,56 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
   if (!(init->caps->features & CANON_CAP_T))
     return;
 
-  if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
-    canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
-    /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
-    /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
-    /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
+  const char *ink_set = stp_get_string_parameter(v, "InkSet");
+  if (ink_set && !(strcmp(ink_set,"Both"))) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
+      /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
+      /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
+      /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
+    } 
+    else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) || !(strcmp(init->caps->name,"PIXMA iP6220")) || !(strcmp(init->caps->name,"PIXMA iP6310")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
+      /* both:  0x3 0x6 0x6 */
+      /* color: 0x3 0x1 0x1 */
+    }
+    else {
+      canon_cmd(v,ESC28,0x54,3,0x03,0x04,0x04); /* default: both cartridges */
+    }
   }
-  else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) || !(strcmp(init->caps->name,"PIXMA iP6220")) || !(strcmp(init->caps->name,"PIXMA iP6310")) ) {
-    canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
-    /* both:  0x3 0x6 0x6 */
-    /* color: 0x3 0x1 0x1 */
+  else if (ink_set && !(strcmp(ink_set,"Black"))) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x02,0x01,0x01); /* default for iP90, iP100 */
+      /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
+      /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
+      /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
+    } 
+    else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) || !(strcmp(init->caps->name,"PIXMA iP6220")) || !(strcmp(init->caps->name,"PIXMA iP6310")) ) {
+	canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
+	/* both:  0x3 0x6 0x6 */
+	/* color: 0x3 0x1 0x1 */
+	/* workaround since does not have black option */
+    }
+    else {
+      canon_cmd(v,ESC28,0x54,3,0x03,0x02,0x02); /* default: black cartridge */
+    }
+  }
+  else if (ink_set && !(strcmp(ink_set,"Color"))) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
+      /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
+      /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
+      /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
+      /* workaround since maybe no color option on these printers */
+    } 
+    else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) || !(strcmp(init->caps->name,"PIXMA iP6220")) || !(strcmp(init->caps->name,"PIXMA iP6310")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x03,0x01,0x01); /* default for iP6210D, iP6220D, iP6310D */
+      /* both:  0x3 0x6 0x6 */
+      /* color: 0x3 0x1 0x1 */
+    }
+    else {
+      canon_cmd(v,ESC28,0x54,3,0x03,0x01,0x01); /* default: color cartridges */
+    }
   }
   else {
     canon_cmd(v,ESC28,0x54,3,0x03,0x04,0x04); /* default: both cartridges */
