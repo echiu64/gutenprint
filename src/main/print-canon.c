@@ -1302,7 +1302,11 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
 
   if (init->pt) arg_6c_2= init->pt->media_code_l;
   if(init->caps->model_id >= 3)
-    canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, arg_6c_3); /* 3rd arg is "gap" */
+    /* not all MP models have this, I believe it is a generation-related issue */
+    if ( (!strcmp(init->caps->name,"PIXMA MP450")) || (!strcmp(init->caps->name,"PIXMA MP460")) ) 
+      canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2); /* add MP150-MP470 */
+    else
+      canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, arg_6c_3); /* 3rd arg is "gap" */
   else
     canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 }
@@ -1381,7 +1385,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	return;
 
   if ((init->caps->features & CANON_CAP_px) ) { /* && !(input_slot && !strcmp(input_slot,"CD")) ) */
-    if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP90")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
+    if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
       {
 	unsigned int unit = 600;
 
@@ -1916,6 +1920,15 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
 	case 'y':raster_channel_order[i]+=0x60; break;;
 	}
       }
+      /* Gernot: debug */
+      /* if CMY there, add 0x80 to each to change to cmy+0x60 */
+      /*     for(i=0;i<init->num_channels;i++){
+	switch(init->channel_order[i]){
+	case 'C':raster_channel_order[i]+=0x80; break;;
+	case 'M':raster_channel_order[i]+=0x80; break;;
+	case 'Y':raster_channel_order[i]+=0x80; break;;
+	}
+	}*/
       stp_zfwrite((const char *)raster_channel_order,init->num_channels, 1, v);
     }
   /* note these names are from canon-printers.h, only separate driver strings are required */
@@ -2299,6 +2312,8 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
   privdata->top = stp_get_top(v);
   privdata->left = stp_get_left(v);
   privdata->out_width = stp_get_width(v);
+  stp_deprintf(STP_DBG_CANON,"stp_get_width: privdata->out_width is %i\n",privdata->out_width);
+
   privdata->out_height = stp_get_height(v);
 
   internal_imageable_area(v, 0, &page_left, &page_right,
@@ -2444,6 +2459,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   setup_page(v,&privdata);
 
   image_height = stp_image_height(image);
+
 #if 0
   image_width = stp_image_width(image);
 #endif
@@ -2458,6 +2474,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   */
 
   privdata.out_width  = privdata.mode->xdpi * privdata.out_width / 72;
+
   privdata.out_height = privdata.mode->ydpi * privdata.out_height / 72;
 
   privdata.left = privdata.mode->xdpi * privdata.left / 72;
@@ -2500,6 +2517,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
 
   privdata.length = (privdata.out_width + 7) / 8;
+  stp_deprintf(STP_DBG_CANON,"privdata.out_width is %i\n",privdata.out_width);
+  stp_deprintf(STP_DBG_CANON,"privdata.length is %i\n",privdata.length);
 
   stp_dither_init(v, image, privdata.out_width, privdata.mode->xdpi, privdata.mode->ydpi);
 
