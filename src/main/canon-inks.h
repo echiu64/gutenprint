@@ -169,10 +169,9 @@ static const stp_dotsize_t dotsizes_9l[] = {
   { 0x5, 0.66 },
   { 0x6, 0.71 },
   { 0x7, 0.88 },
-  { 0x8, 1.00 }
+  { 0x8, 1.00 },
 };
 
-/*under development*/
 DECLARE_INK(4,9);
 DECLARE_INK(8,9);
 
@@ -404,7 +403,6 @@ static const canon_inkset_t canon_9_C2M2Y2K2c2m2y2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* also for DS810 */
 static const canon_inkset_t canon_9_c3m3y3_inkset[] = {
 	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,&canon_2b_3l_ink},
@@ -453,7 +451,6 @@ static const canon_inkset_t canon_9_C3M3Y2K2_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* iP6000D */
 static const canon_inkset_t canon_9_C3M3Y3K3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -466,9 +463,6 @@ static const canon_inkset_t canon_9_C3M3Y3K3_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* iP4000 default print mode (quality 2) */
-/* also used by iP4100 */
-/* also used by iP5000 */
 static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -481,8 +475,6 @@ static const canon_inkset_t canon_9_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* iP4000 Env (quality 2) CMYKk */
-/* iP5000 too */
 static const canon_inkset_t canon_9_C3M3Y2K2k3on_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -519,8 +511,6 @@ static const canon_inkset_t canon_9_C3M3Y3K2c3m3_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* iP4000 mode used for Super Photo Paper (quality 1) */
-/* also iP4100 */
 static const canon_inkset_t canon_9_C3M3Y3K2c3m3k3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -545,8 +535,6 @@ static const canon_inkset_t canon_9_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP4000 mode used for T-Shirt (quality 2) CMY */
-/* iP4000 mode used for OHP (quality 3,2) CMYKk */
 static const canon_inkset_t canon_9_C4M4Y4K2k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -595,8 +583,6 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* iP4000 plain high mode */
-/* iP4100 plain high mode */
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4p_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -610,9 +596,6 @@ static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4p_inkset[] = {
         {0,0.0,NULL}
 };
 
-
-/* iP4000 mode used for CD printing (quality 3) */
-/* also iP4100 */
 static const canon_inkset_t canon_9_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -733,7 +716,6 @@ static const canon_inkset_t canon_9_C5M5Y5_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* also for DS700 */
 static const canon_inkset_t canon_9_C5M5Y5K2_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {'M',1.0,&canon_4b_5l_ink},
@@ -854,7 +836,6 @@ static const canon_inkset_t canon_9_C6M6Y6K6c16m16_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-
 static const canon_inkset_t canon_9_C7M7Y7K2_inkset[] = {
         {'C',1.0,&canon_4b_7l_ink},
         {'M',1.0,&canon_4b_7l_ink},
@@ -891,7 +872,6 @@ static const canon_inkset_t canon_9_C8M8Y8c16m16_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* iP4000 mode used for Professional Photo Paper in Quality 4 */
 static const canon_inkset_t canon_9_C8M8Y8c16m16k8_inkset[] = {
         {'C',1.0,&canon_4b_8l_ink},
         {'M',1.0,&canon_4b_8l_ink},
@@ -940,7 +920,6 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* i450 */
 static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9plain8_inkset[] = {
         {'C',1.0,&canon_8b_9l_ink},
         {'M',1.0,&canon_8b_9l_ink},
@@ -953,7 +932,6 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9plain8_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* cmy */
 static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9photo8_inkset[] = {
         {0,0.0,&canon_8b_9l_ink},
         {0,0.0,&canon_8b_9l_ink},
@@ -966,8 +944,6 @@ static const canon_inkset_t canon_9_C9M9Y9K2c9m9y9photo8_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* also for DS700 */
-/* also for iP90, iP90v */
 static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
 	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,&canon_2b_3l_ink},
@@ -980,7 +956,6 @@ static const canon_inkset_t canon_9_c9m9y9_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* PIXMA iP7100 */
 static const canon_inkset_t canon_11_K2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -995,7 +970,6 @@ static const canon_inkset_t canon_11_K2_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* PIXMA Pro9000, Pro9000 Mk.II, Pro9500, Pro9500 Mk.II, PIXMA iP8500 */
 static const canon_inkset_t canon_11_C2M2Y2K2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
@@ -1066,7 +1040,6 @@ static const canon_inkset_t canon_11_C5M5Y4k4_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* Pro9000 */
 static const canon_inkset_t canon_11_C5M5Y5K5c5m5_c_inkset[] = {
         {'C',1.0,&canon_4b_5l_c_ink},
         {'M',1.0,&canon_4b_5l_c_ink},
@@ -1109,7 +1082,6 @@ static const canon_inkset_t canon_11_C6M6Y4k4_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* PIXMA Pro9000, Pro9000 Mk.II, Pro9500, Pro9500 Mk.II, PIXMA iP8500 */
 static const canon_inkset_t canon_11_C6M6Y6K6_c_inkset[] = {
         {'C',1.0,&canon_4b_6l_c_ink},
         {'M',1.0,&canon_4b_6l_c_ink},
@@ -1124,7 +1096,6 @@ static const canon_inkset_t canon_11_C6M6Y6K6_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* Pro9000, Pro9000 Mk.II */
 static const canon_inkset_t canon_11_C6M6Y6K6c6m6_c_inkset[] = {
         {'C',1.0,&canon_4b_6l_c_ink},
         {'M',1.0,&canon_4b_6l_c_ink},
@@ -1139,7 +1110,6 @@ static const canon_inkset_t canon_11_C6M6Y6K6c6m6_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* Pro9000, Pro9000 Mk.II */
 static const canon_inkset_t canon_11_C6M6Y6K6c16m16_c_inkset[] = {
         {'C',1.0,&canon_4b_6l_c_ink},
         {'M',1.0,&canon_4b_6l_c_ink},
@@ -1154,7 +1124,6 @@ static const canon_inkset_t canon_11_C6M6Y6K6c16m16_c_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* Pro9000, Pro9000 Mk.II, PIXMA iP8500 */
 static const canon_inkset_t canon_11_C6M6Y6K9c6m6_c_inkset[] = {
         {'C',1.0,&canon_4b_6l_c_ink},
         {'M',1.0,&canon_4b_6l_c_ink},
@@ -1183,7 +1152,6 @@ static const canon_inkset_t canon_11_C9M9Y4k6_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* PIXMA Pro9500, Pro9500 Mk.II */
 static const canon_inkset_t canon_11_C16M16Y16k16_inkset[] = {
         {'C',1.0,&canon_4b_16l_ink},
         {'M',1.0,&canon_4b_16l_ink},
@@ -1198,7 +1166,6 @@ static const canon_inkset_t canon_11_C16M16Y16k16_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* Pro9000 Mk.II */
 static const canon_inkset_t canon_11_C16M16Y16K16c16m16_inkset[] = {
         {'C',1.0,&canon_4b_16l_ink},
         {'M',1.0,&canon_4b_16l_ink},
@@ -1213,7 +1180,6 @@ static const canon_inkset_t canon_11_C16M16Y16K16c16m16_inkset[] = {
         {0,0.0,NULL}
 };
 
-/* MP150 (MP170 for tests) greyscale */
 static const canon_inkset_t canon_13_K2_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1230,7 +1196,6 @@ static const canon_inkset_t canon_13_K2_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* MP150 (MP250 for tests) greyscale */
 static const canon_inkset_t canon_13_K3_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1247,7 +1212,6 @@ static const canon_inkset_t canon_13_K3_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* iP2700, MP270 color cartridge only, plain fast mode */
 static const canon_inkset_t canon_13_C2M2Y2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
@@ -1280,7 +1244,6 @@ static const canon_inkset_t canon_13_C2M2Y2K2_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* color-only catrdige modes */
 static const canon_inkset_t canon_13_C2M2Y2K2off_inkset[] = {
 	{'C',1.0,&canon_1b_2l_ink},
 	{'M',1.0,&canon_1b_2l_ink},
@@ -1313,7 +1276,6 @@ static const canon_inkset_t canon_13_C2M2Y2k2_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* MX7600, iX7000 */
 static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
@@ -1330,7 +1292,6 @@ static const canon_inkset_t canon_13_C2M2Y2K2k2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP2700, MP270 color cartridge only, plain mode */
 static const canon_inkset_t canon_13_C3M3Y2_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1347,7 +1308,6 @@ static const canon_inkset_t canon_13_C3M3Y2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP1900 color cartridge only, plain mode */
 static const canon_inkset_t canon_13_C3M3Y2b_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1380,7 +1340,6 @@ static const canon_inkset_t canon_13_C3M3Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MG2100 */
 static const canon_inkset_t canon_13_C3M3Y2K3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1397,7 +1356,6 @@ static const canon_inkset_t canon_13_C3M3Y2K3_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* color-only cartridge modes */
 static const canon_inkset_t canon_13_C3M3Y2K3off_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1414,7 +1372,6 @@ static const canon_inkset_t canon_13_C3M3Y2K3off_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP1900, std mode, plain media */
 static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1431,11 +1388,6 @@ static const canon_inkset_t canon_13_C3M3Y2K2b_inkset[] = {
         {0,0.0,NULL},
 };
 
-/*         iP4500 standard mode changed from the compressed one below */
-/*         iP4600 also uses this */
-/*         iP4700 also uses this */
-/*         iP4800 also uses this */
-/*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -1452,7 +1404,6 @@ static const canon_inkset_t canon_13_C3M3Y2K2y3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* k activated */
 static const canon_inkset_t canon_13_C3M3Y2K2k3on_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -1469,7 +1420,6 @@ static const canon_inkset_t canon_13_C3M3Y2K2k3on_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* k activated, K off */
 static const canon_inkset_t canon_13_C3M3Y2K2k3photo_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -1486,7 +1436,6 @@ static const canon_inkset_t canon_13_C3M3Y2K2k3photo_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP6210D */
 static const canon_inkset_t canon_13_C3M3Y3k4_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -1503,7 +1452,6 @@ static const canon_inkset_t canon_13_C3M3Y3k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP250, MP280 photo modes */
 static const canon_inkset_t canon_13_C4M4Y4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1536,7 +1484,6 @@ static const canon_inkset_t canon_13_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP250, MP270, MP280 high mode */
 static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1553,7 +1500,6 @@ static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MG2100 */
 static const canon_inkset_t canon_13_C4M4Y3K4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1570,7 +1516,6 @@ static const canon_inkset_t canon_13_C4M4Y3K4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP6210D */
 static const canon_inkset_t canon_13_C4M4Y4k4_inkset[] = {
 	{'C',1.0,&canon_2b_4l_ink},
 	{'M',1.0,&canon_2b_4l_ink},
@@ -1587,7 +1532,6 @@ static const canon_inkset_t canon_13_C4M4Y4k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* iP6210D */
 static const canon_inkset_t canon_13_C4M4Y4k4c4m4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1604,8 +1548,6 @@ static const canon_inkset_t canon_13_C4M4Y4k4c4m4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* used by iP4500 */
-/* also iP5300 */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4on2_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1622,7 +1564,6 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4on2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP150 (MP170 for tests) high-quality mode */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -1639,7 +1580,6 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4y4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* test on iP5300 --- swap y and k */
 static const canon_inkset_t canon_13_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -1656,10 +1596,6 @@ static const canon_inkset_t canon_13_C4M4Y4K2c4m4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP2700 in user-defined highest quality mode for PPGlossPro paper */
-/* MP270 same for PPGpro */
-/* MP280 same for PPGproPlat */
-/* less 0x60 in cmy bytes */
 static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	{0,0.0,&canon_2b_3l_ink},
 	{0,0.0,&canon_2b_3l_ink},
@@ -1676,9 +1612,6 @@ static const canon_inkset_t canon_13_c3m3y3_inkset[] = {
 	{0,0.0,NULL},
 };
 
-
-/* MP140, MP150, MP160, MP170, MP180, MP190 and others */
-/* less 0x60 in cmy bytes */
 static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {'C',1.0,&canon_4b_4l_ink},
         {'M',1.0,&canon_4b_4l_ink},
@@ -1695,10 +1628,6 @@ static const canon_inkset_t canon_13_C4M4Y4c4m4y4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* added for iP4700 */
-/* iP4600 also uses this */
-/* iP4800 also uses this */
-/* also MG5100, MG5200 */
 static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {'M',1.0,&canon_4b_5l_ink},
@@ -1714,7 +1643,7 @@ static const canon_inkset_t canon_13_C5M5Y4y4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
 };
-/* test for MG5100 */
+
 static const canon_inkset_t canon_13_C5M5Y4k4_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {'M',1.0,&canon_4b_5l_ink},
@@ -1731,8 +1660,6 @@ static const canon_inkset_t canon_13_C5M5Y4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP150 (MP170 for tests) T-shirt transfers */
-/* also iP6210D */
 static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
         {'C',1.0,&canon_4b_5l_ink},
         {'M',1.0,&canon_4b_5l_ink},
@@ -1749,7 +1676,6 @@ static const canon_inkset_t canon_13_C5M5Y5_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iX7000 photo mode */
 static const canon_inkset_t canon_13_C6M6Y2K2k4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -1766,9 +1692,6 @@ static const canon_inkset_t canon_13_C6M6Y2K2k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/*         added for iP4700 photo standard quality */
-/*         iP4600 also uses this */
-/*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -1784,7 +1707,7 @@ static const canon_inkset_t canon_13_C6M6Y4y4_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 };
-/* test for MG5100 */
+
 static const canon_inkset_t canon_13_C6M6Y4k4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -1801,11 +1724,6 @@ static const canon_inkset_t canon_13_C6M6Y4k4_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/*         added for iP4500 high quality */
-/*         iP4600 also uses this */
-/*         iP4700 also uses this */
-/*         iP4800 also uses this */
-/*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C6M6Y4K2y4_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -1838,7 +1756,6 @@ static const canon_inkset_t canon_13_C6M6Y4K2k4on_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/* MX7600, iX7000 */
 static const canon_inkset_t canon_13_C6M6Y4K3k4_c_inkset[] = {
 	{'C',1.0,&canon_4b_6l_ink},
 	{'M',1.0,&canon_4b_6l_ink},
@@ -1871,11 +1788,6 @@ static const canon_inkset_t canon_13_C6M6Y4k4yask_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/*         iP4500 photo mode */
-/*         iP4600 also uses this */
-/*         iP4700 also uses this */
-/*         iP4800 also uses this */
-/*         MG5100, MG5200 */
 static const canon_inkset_t canon_13_C8M8Y4y4_inkset[] = {
 	{'C',1.0,&canon_4b_8l_ink},
 	{'M',1.0,&canon_4b_8l_ink},
@@ -1891,7 +1803,7 @@ static const canon_inkset_t canon_13_C8M8Y4y4_inkset[] = {
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 };
-/* test for MG5100 */
+
 static const canon_inkset_t canon_13_C8M8Y4k4_inkset[] = {
 	{'C',1.0,&canon_4b_8l_ink},
 	{'M',1.0,&canon_4b_8l_ink},
@@ -1940,19 +1852,10 @@ static const canon_inkset_t canon_13_C8M8Y4k4yask_inkset[] = {
 	{0,0.0,NULL},
 };
 
-/*         MP150 (MP170 for tests) high-quality mode for
-           High Resolution Paper
-           Inkjet Hagaki
-	   pro Photo Paper
-	   super Photo Paper
-	   super Photo Paper Double Sided
-	   matte Photo Paper
-	   other Photo Paper
-*/
 static const canon_inkset_t canon_13_c9m9y9_inkset[] = {
-	{0,0.0,&canon_2b_3l_ink},
-	{0,0.0,&canon_2b_3l_ink},
-	{0,0.0,&canon_2b_3l_ink},
+	{0,0.0,&canon_8b_9l_ink},
+	{0,0.0,&canon_8b_9l_ink},
+	{0,0.0,&canon_8b_9l_ink},
 	{0,0.0,NULL},
 	{'c',1.0,&canon_8b_9l_ink},
 	{'m',1.0,&canon_8b_9l_ink},
@@ -2136,7 +2039,6 @@ static const canon_inkset_t canon_19_C2M2Y2K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP6700D Fast plain mode */
 static const canon_inkset_t canon_19_C2M2Y2k2_inkset[] = {
         {'C',1.0,&canon_1b_2l_ink},
         {'M',1.0,&canon_1b_2l_ink},
@@ -2181,7 +2083,6 @@ static const canon_inkset_t canon_19_C3M3Y3k3_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* plain std mod iP7500, MP960, MP970  */
 static const canon_inkset_t canon_19_C3M3Y3K2k3off_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -2204,9 +2105,6 @@ static const canon_inkset_t canon_19_C3M3Y3K2k3off_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP960 */
-/* MP950 */
-/* iP7500 Env/Hagaki */
 static const canon_inkset_t canon_19_C3M3Y3K2k3_inkset[] = {
         {'C',1.0,&canon_2b_3l_ink},
         {'M',1.0,&canon_2b_3l_ink},
@@ -2229,7 +2127,6 @@ static const canon_inkset_t canon_19_C3M3Y3K2k3_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode iP6700D T-shirt transfers */
 static const canon_inkset_t canon_19_C4M4Y4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2252,9 +2149,6 @@ static const canon_inkset_t canon_19_C4M4Y4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode MP960 T-shirt transfers --- works OK! */
-/* also used by iP7500 */
-/* alsoe used by MP970 */
 static const canon_inkset_t canon_19_C4M4Y4K2k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2277,7 +2171,6 @@ static const canon_inkset_t canon_19_C4M4Y4K2k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* CMYK */
 static const canon_inkset_t canon_19_C4M4Y4K2k4off_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2300,7 +2193,6 @@ static const canon_inkset_t canon_19_C4M4Y4K2k4off_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* CMYKk */
 static const canon_inkset_t canon_19_C4M4Y4K2k4on_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2323,7 +2215,6 @@ static const canon_inkset_t canon_19_C4M4Y4K2k4on_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode MP960 CDs and iP6700D Photo High 2 [PPmatte, Coated] */
 static const canon_inkset_t canon_19_C4M4Y4c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2346,7 +2237,6 @@ static const canon_inkset_t canon_19_C4M4Y4c4m4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode iP6700D CDs, position of cmk guessed */
 static const canon_inkset_t canon_19_C4M4Y4c4m4k4CD_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2369,9 +2259,6 @@ static const canon_inkset_t canon_19_C4M4Y4c4m4k4CD_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo mode MP960 PPmatte works */
-/* also used by iP7500 */
-/* also used by MP970 */
 static const canon_inkset_t canon_19_C4M4Y4K2c4m4k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2394,7 +2281,6 @@ static const canon_inkset_t canon_19_C4M4Y4K2c4m4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP960 HIGH works OK */
 static const canon_inkset_t canon_19_C6M6Y4K2_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2417,7 +2303,6 @@ static const canon_inkset_t canon_19_C6M6Y4K2_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP6700D Plain High: CMYk */
 static const canon_inkset_t canon_19_C6M6Y4c6m6k4_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2440,7 +2325,6 @@ static const canon_inkset_t canon_19_C6M6Y4c6m6k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP6700D Photo Std: CMYKcmk */
 static const canon_inkset_t canon_19_C6M6Y4c6m6k4photo_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2463,8 +2347,6 @@ static const canon_inkset_t canon_19_C6M6Y4c6m6k4photo_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* hagaki std & high MP960 : CMYKk*/
-/* also MP970 */
 static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4hagaki_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2487,8 +2369,6 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4hagaki_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo std mode MP960 and inkjet Hagaki Std: CMYcmk*/
-/* also used by iP7500 */
 static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2511,9 +2391,6 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* plain high mode iP7500 */
-/* also used by MP970 */
-/* also used by MP950 */
 static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4off_inkset[] = {
         {'C',1.0,&canon_4b_6l_ink},
         {'M',1.0,&canon_4b_6l_ink},
@@ -2536,7 +2413,6 @@ static const canon_inkset_t canon_19_C6M6Y4K2c6m6k4off_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP6700D Photo High: CMYkcm */
 static const canon_inkset_t canon_19_C7M7Y4c7m7k4_inkset[] = {
         {'C',1.0,&canon_4b_7l_ink},
         {'M',1.0,&canon_4b_7l_ink},
@@ -2559,9 +2435,6 @@ static const canon_inkset_t canon_19_C7M7Y4c7m7k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo high mode MP960 and inkjetHagaki High: CMYcmk */
-/* also used by iP7500 */
-/* also used by MP970 */
 static const canon_inkset_t canon_19_C7M7Y4K2c7m7k4_inkset[] = {
         {'C',1.0,&canon_4b_7l_ink},
         {'M',1.0,&canon_4b_7l_ink},
@@ -2634,7 +2507,6 @@ static const canon_inkset_t canon_22_C3M3Y2K2_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP520: std used as photo */
 static const canon_inkset_t canon_22_C3M3Y2K2photo_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -2686,8 +2558,6 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP530: std used for photo */
-/* also MP830 */
 static const canon_inkset_t canon_22_C3M3Y2K2k3photo_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -2713,8 +2583,6 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3photo_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP4200: K & k */
-/* also MP830 */
 static const canon_inkset_t canon_22_C3M3Y2K2k3on_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -2740,7 +2608,6 @@ static const canon_inkset_t canon_22_C3M3Y2K2k3on_c_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP520 photo standard */
 static const canon_inkset_t canon_22_C3M3Y3K2c3m3_c_inkset[] = {
         {'C',1.0,&canon_2b_3l_c_ink},
         {'M',1.0,&canon_2b_3l_c_ink},
@@ -2815,7 +2682,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
 };
-/* MP830 T-Shirt */
+
 static const canon_inkset_t canon_22_C4M4Y4K2k4one_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2841,7 +2708,6 @@ static const canon_inkset_t canon_22_C4M4Y4K2k4one_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* K & k */
 static const canon_inkset_t canon_22_C4M4Y4K2k4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2867,7 +2733,6 @@ static const canon_inkset_t canon_22_C4M4Y4K2k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP520 high */
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2893,7 +2758,6 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* MP520: Hi used as photo mode */
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4photo_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -2944,9 +2808,6 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* iP4200: plain media high mode CcMmYKk */
-/* also MP600 */
-/* also MP830 */
 static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4on_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -3153,7 +3014,6 @@ static const canon_inkset_t canon_30_C5M5Y4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-/* photo without grey (H) */
 static const canon_inkset_t canon_30_M6K6m4k4_inkset[] = {
         {0,0.0,NULL},
         {'C',1.0,&canon_4b_6l_ink},
@@ -3187,8 +3047,6 @@ static const canon_inkset_t canon_30_M6K6m4k4_inkset[] = {
         {0,0.0,NULL},
 };
 
-
-/* photo without grey (H) */
 static const canon_inkset_t canon_30_M8K8m4k4_inkset[] = {
         {0,0.0,NULL},
         {'C',1.0,&canon_4b_8l_ink},
