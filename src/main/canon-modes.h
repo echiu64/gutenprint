@@ -81,9 +81,7 @@ typedef struct {
 /* delay settings for the different printmodes  last entry has to be {0,0} */
 static const canon_delay_t delay_1440[] = {{'C',112},{'M',224},{'Y',336},{'c',112},{'m',224},{'y',336},{0,0}};
 static const canon_delay_t delay_S200[] = {{'C',0x30},{'M',0x50},{'Y',0x70},{0,0}};
-
-
-
+ 
 /*
  * A printmode is defined by its resolution (xdpi x ydpi), the inkset
  * and the installed printhead.
@@ -2544,7 +2542,7 @@ static const canon_mode_t canon_MULTIPASS_MP610_modes[] = {
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photohigh2",N_("600x600 DPI PHOTO HIGH matte/HiRes"),INKSET(13_C4M4Y4K2c4m4y4on2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(13_C8M8Y4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo2",N_("600x600 DPI PHOTO matte/HiRes"),INKSET(13_C4M4Y4K2c4m4y4on2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
-  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO DRAFT plusGlossy/GlossGold"),INKSET(13_C8M8Y4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT plusGlossy/GlossGold"),INKSET(13_C8M8Y4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
   /* inkjet Hagaki CMYk */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh3",N_("600x600 DPI HIGH inkjet Hagaki"),INKSET(13_C8M8Y4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photo3",N_("600x600 DPI inkjet Hagaki"),INKSET(13_C8M8Y4y4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
