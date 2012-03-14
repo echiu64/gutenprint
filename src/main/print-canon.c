@@ -1907,7 +1907,7 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
  
   /* set the color sequence */ 
   stp_zfwrite("\033(L", 3, 1, v);
-  /* stp_put16_le(init->num_channels, v); */
+  stp_put16_le(init->num_channels, v);
   /* add an exception here to add 0x60 of cmy channels for those printers/modes that require it */
   raster_channel_order=init->channel_order;
   if ( !(strcmp(init->caps->name,"PIXMA MP140")) || !(strcmp(init->caps->name,"PIXMA MP150")) || !(strcmp(init->caps->name,"PIXMA MP160")) || !(strcmp(init->caps->name,"PIXMA MP170")) || !(strcmp(init->caps->name,"PIXMA MP180")) || !(strcmp(init->caps->name,"PIXMA MP190")) || !(strcmp(init->caps->name,"PIXMA MP210")) || !(strcmp(init->caps->name,"PIXMA MP220")) || !(strcmp(init->caps->name,"PIXMA MP240")) || !(strcmp(init->caps->name,"PIXMA MP250")) || !(strcmp(init->caps->name,"PIXMA MP270")) || !(strcmp(init->caps->name,"PIXMA MP280")) || !(strcmp(init->caps->name,"PIXMA MP450")) || !(strcmp(init->caps->name,"PIXMA MP460")) || !(strcmp(init->caps->name,"PIXMA MP470")) || !(strcmp(init->caps->name,"PIXMA MP480")) || !(strcmp(init->caps->name,"PIXMA MP490")) || !(strcmp(init->caps->name,"PIXMA MP495")) || !(strcmp(init->caps->name,"PIXMA MX300")) || !(strcmp(init->caps->name,"PIXMA MX310")) || !(strcmp(init->caps->name,"PIXMA MX330")) || !(strcmp(init->caps->name,"PIXMA MX340")) || !(strcmp(init->caps->name,"PIXMA MX350")) || !(strcmp(init->caps->name,"PIXMA MX360")) || !(strcmp(init->caps->name,"PIXMA MX410")) || !(strcmp(init->caps->name,"PIXMA iP2700")) || !(strcmp(init->caps->name,"PIXMA MG2100")) )
@@ -1929,7 +1929,6 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
 	case 'Y':raster_channel_order[i]+=0x80; break;;
 	}
 	}*/
-      stp_put16_le(init->num_channels, v);
       stp_zfwrite((const char *)raster_channel_order,init->num_channels, 1, v);
     }
   /* note these names are from canon-printers.h, only separate driver strings are required */
@@ -1955,26 +1954,10 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
 	}
       }
     }
-    stp_put16_le(init->num_channels, v);
     stp_zfwrite((const char *)raster_channel_order,init->num_channels, 1, v);
-  }
-  else if ( !(strcmp(init->caps->name,"i80")) ) {
-    /* for plain and Envelope media, raster command for color is same as for monochrome! */
-    if ( (init->pt->media_code_c == 0) || (init->pt->media_code_c == 8) ) {
-      if ( init->used_inks != CANON_INK_K ) {
-	/* write 01 00 4b for all plain media in color also */
-	stp_put16_le(1, v);
-	stp_zfwrite("\113",1, 1, v); /* write K out only */
-      }
-    }
-    else {
-      stp_put16_le(init->num_channels, v);
-      stp_zfwrite((const char *)init->channel_order,init->num_channels, 1, v);
-    }
   }
   else
     {
-      stp_put16_le(init->num_channels, v);
       stp_zfwrite((const char *)init->channel_order,init->num_channels, 1, v);
     }
 }
