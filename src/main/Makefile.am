@@ -55,7 +55,8 @@ print_canon_la_SOURCES = \
 	canon-inks.h \
 	canon-media.h \
 	canon-modes.h \
-	canon-printers.h
+	canon-printers.h \
+	canon-media-mode.h
 
 print_canon_la_LDFLAGS = -module -avoid-version
 

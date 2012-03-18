@@ -138,7 +138,8 @@ pack_pixels(unsigned char* buf,int len)
 #include "canon-modes.h"
 #include "canon-media.h"
 #include "canon-printers.h"
-
+/* Gernot: cross-reference between media and modes */
+#include "canon-media-mode.h"
 
 typedef struct {
     char name;
@@ -156,6 +157,8 @@ typedef struct
   const canon_mode_t* mode; 
   const canon_slot_t* slot;
   const canon_paper_t *pt;
+  /* Gernot: cross-reference between media and modes */
+  /*const canon_modeuse_t* modeuse;*/
   unsigned int used_inks;
   int num_channels;
   int quality;
@@ -486,6 +489,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const canon_mode_t* mode = NULL;
     int i;
 
+    /* Gernot: need to add check for media here, and adjust mode if
+       current CUPS selection is not one of those possible for the
+       selected media 
+    */
+
     if(resolution){
         for(i=0;i<caps->modelist->count;i++){
             if(!strcmp(resolution,caps->modelist->modes[i].name)){
@@ -527,6 +535,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 }
 
 /* function returns the best ink_type for the current mode */
+/* Gernot: Here we need to check the mode chosen against the media chosen,
+   and if necessary change the mode before selecting the best inkset.
+*/
 static unsigned int
 canon_printhead_colors(const stp_vars_t*v)
 {
@@ -537,6 +548,9 @@ canon_printhead_colors(const stp_vars_t*v)
 #if 1
   const char *ink_set = stp_get_string_parameter(v, "InkSet");
 #endif
+  /* Gernot: add the media choice: this receives priority for deciding mode to use */
+  /*const char *media_type = stp_get_string_parameter(v, "MediaType");*/
+
   /*if(print_mode && strcmp(print_mode, "BW") == 0)*/
   if(print_mode && !strcmp(print_mode, "BW")){
     /* GERNOT DEBUG list */
@@ -558,7 +572,16 @@ canon_printhead_colors(const stp_vars_t*v)
 	}
      }
   }
+
   mode = canon_get_current_mode(v);
+
+  /* Gernot: loop cross-reference */ 
+  /*    for(i=0;i<caps->modelist->count;i++){
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+      }
+    }
+  */
+
   for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
     if(mode->ink_types & canon_inktypes[i].ink_type) {
 	/* GERNOT DEBUG list */
@@ -1820,7 +1843,8 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
             buf[3+i*3+2] = 0x04;*/
           /*else if (init->mode->inks[i].ink->bits == 1)
             buf[3+i*3+2] = 0x02;*/
-          buf[3+i*3+2]= init->mode->inks[i].ink->numsizes+1;/*level*/
+	  /*else*/ /* normal operation */
+	    buf[3+i*3+2]= init->mode->inks[i].ink->numsizes+1;/*level*/
           /*else
             buf[3+i*3+2] = 0x00;*/
           /* this should show that there is an error */
@@ -2180,6 +2204,10 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
         (*shades)[0].value = ink->density;
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: ink->density %.3f\n", ink->density);
         (*shades)[0].numsizes = ink->ink->numsizes;
+	/* test for 4-4 inket with 8 levels spaced every 2nd */
+	/*if (ink->ink->bits == 4)
+	  (*shades)[0].numsizes = 8;*/
+
         (*shades)[0].dot_sizes = ink->ink->dot_sizes;
         return 1;
     } 
