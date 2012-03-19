@@ -158,7 +158,7 @@ typedef struct
   const canon_slot_t* slot;
   const canon_paper_t *pt;
   /* Gernot: cross-reference between media and modes */
-  /*const canon_modeuse_t* modeuse;*/
+  const canon_modeuse_t* modeuse;
   unsigned int used_inks;
   int num_channels;
   int quality;

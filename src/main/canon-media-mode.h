@@ -24,8 +24,8 @@
 /* This file contains the usage matrix matching media with modes
 */
 
-#ifndef GUTENPRINT_INTERNAL_CANON_MODES_H
-#define GUTENPRINT_INTERNAL_CANON_MODES_H
+#ifndef GUTENPRINT_INTERNAL_CANON_MEDIA_MODE_H
+#define GUTENPRINT_INTERNAL_CANON_MEDIA_MODE_H
 
 /* create matrix of which media are used with which mode */
 
@@ -120,7 +120,7 @@ static const char *canon_MULTIPASS_MP610_modeuses_PPother[] = {
   NULL
 };
 
-static const canon_modeuse_t canon_MULTIPASS_MP610_modeuselist[] = {
+static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
  { "Plain",             &canon_MULTIPASS_MP610_modeuses_plain, 0 },
  { "PhotopaperPro",	&canon_MULTIPASS_MP610_modeuses_PPpro, 0 },
  { "PhotopaperPlus",	&canon_MULTIPASS_MP610_modeuses_PPplus, 0 },
