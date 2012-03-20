@@ -493,6 +493,13 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
        current CUPS selection is not one of those possible for the
        selected media 
     */
+    const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
+    const canon_modeuse_t* muse = NULL;
+
+    const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
+    /*    int modecheck;
+	  char *replaceres;*/
+    
 
     if(resolution){
         for(i=0;i<caps->modelist->count;i++){
@@ -505,6 +512,60 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 
     if(!mode)
         mode = &caps->modelist->modes[caps->modelist->default_mode];
+
+    /* Gernot: Test linked list */
+    /*stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) real mode: count '%i'\n",caps->modelist->count);*/
+    /*stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: count '%i'\n",mlist->count);*/
+    /*for(i=0;i<mlist->count;i++){
+      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: muse '%s'\n",mlist->modeuses[i].name);
+      }*/
+    
+    if (media_type != NULL)
+      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: media '%s'\n",media_type->name);
+    /* else
+       stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: media still NULL\n");*/
+
+    /* beginning of mode replacement code */
+    /* scroll through modeuse list to find media */
+    for(i=0;i<mlist->count;i++){
+      /* need media */
+      /*if(!strcmp(media_type->name,mlist->modeuses[i].name)){*/
+      if(!strcmp("InkJetHagaki",mlist->modeuses[i].name)){
+	muse = &mlist->modeuses[i];
+	/*if (muse->name != NULL)*/
+	  stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: direct '%s'\n",muse->name);
+	  /*else
+	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: replace mode name still NULL\n");*/
+	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: mlist ptr '%s'\n",mlist->modeuses[i].name);
+	break;
+      }
+    }
+#if 0
+    /* now scroll through to find if the mode is in the modeuses list */
+    i=0;
+    modecheck=1;
+    while (muse->mode_name_list[i]!=NULL){
+      if(!strcmp(mode->name,muse->mode_name_list[i])){
+	modecheck=0;
+	break;
+      }
+      i++;
+    }
+    /* if we did not find a mode*/
+    if (modecheck!=0) {
+      /* pick first mode for now, for that media */
+      replaceres = muse[0];
+    }
+    /* finally, do again with replaceres what we did with resolution */
+    for(i=0;i<caps->modelist->count;i++){
+      if(!strcmp(replaceres,caps->modelist->modes[i].name)){
+	mode = &caps->modelist->modes[i];
+	break;
+      }
+    }
+#endif
+    /* end of mode replacement code */
+
 
 #if 0
     if(quality && strcmp(quality, "None") == 0)
@@ -2471,6 +2532,18 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   memset(&privdata,0,sizeof(canon_privdata_t));
   privdata.caps = caps;
 
+  /* find the wanted media type */
+  /* - media type has priority 
+     - then we select source and duplex option
+     - after that we compare if mode is compatible with media
+     - if not, we replace it using closest quality setting
+     - then we decide on printhead colors based on actual mode to use
+   */
+
+  privdata.pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
+  privdata.slot = canon_source_type(media_source,caps);
+  privdata.duplex_str = duplex_mode;
+
   /* find the wanted print mode */
   privdata.mode = canon_get_current_mode(v);
 
@@ -2492,9 +2565,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   image_width = stp_image_width(image);
 #endif
 
-  privdata.pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
-  privdata.slot = canon_source_type(media_source,caps);
-  privdata.duplex_str = duplex_mode;
   privdata.is_first_page = (page_number == 0);
 
  /*

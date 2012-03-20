@@ -30,14 +30,14 @@
 /* create matrix of which media are used with which mode */
 
 typedef struct {
-  const char* name; /* unstranslated media name */
-  unsigned char* mode_name_list; /* untranslated mode names */
-  unsigned int use_flags;
+  const char *name; /* unstranslated media name */
+  /*  const char *mode_name_list; */ /* untranslated mode names */
+  const unsigned int use_flags;
 } canon_modeuse_t;
 
 typedef struct {
-  const char* name;
-  short count;
+  const char *name;
+  const short count;
   const canon_modeuse_t *modeuses;
 } canon_modeuselist_t;
 
@@ -50,16 +50,16 @@ static const canon_modeuselist_t name##_modeuselist = {     \
 
 
 /* Canon MP610 */
-static const char *canon_MULTIPASS_MP610_modeuses_plain[] = {
+/*static const char *canon_MULTIPASS_MP610_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
   "300x300dpi_draft",
   NULL
-};
+  };*/
 
 /* missing highest resolution mode as not yet implemented */
-static const char *canon_MULTIPASS_MP610_modeuses_PPpro[] = {
+/*static const char *canon_MULTIPASS_MP610_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
@@ -118,9 +118,26 @@ static const char *canon_MULTIPASS_MP610_modeuses_TShirt[] = {
 static const char *canon_MULTIPASS_MP610_modeuses_PPother[] = {
   "600x600dpi_photo",
   NULL
-};
+  };*/
 
 static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
+ { "Plain",              0 },
+ { "PhotopaperPro",	 0 },
+ { "PhotopaperPlus",	 0 },
+ { "PhotoPlusGloss2",    0 },
+ { "PhotopaperPlusDouble", 0 },
+ { "PhotopaperMatte",	 0 },
+ { "GlossyPaper",	 0 },
+ { "Coated",	         0 },
+ { "InkJetHagaki", 	 0 },
+ { "Hagaki", 	         0 },
+ { "DiscCompat",	 0 },
+ { "DiscOthers",	 0 },
+ { "TShirt",		 0 },
+ { "Envelope",		 0 },
+ { "PhotopaperOther",	 0 },
+};
+/*static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
  { "Plain",             &canon_MULTIPASS_MP610_modeuses_plain, 0 },
  { "PhotopaperPro",	&canon_MULTIPASS_MP610_modeuses_PPpro, 0 },
  { "PhotopaperPlus",	&canon_MULTIPASS_MP610_modeuses_PPplus, 0 },
@@ -136,7 +153,8 @@ static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
  { "TShirt",		&canon_MULTIPASS_MP610_modeuses_TShirt, 0 },
  { "Envelope",		&canon_MULTIPASS_MP610_modeuses_Hagaki, 0 },
  { "PhotopaperOther",	&canon_MULTIPASS_MP610_modeuses_PPother, 0 },
-};
+ };*/
+
 DECLARE_MODEUSES(canon_MULTIPASS_MP610);
 
 /*
