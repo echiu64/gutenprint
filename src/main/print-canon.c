@@ -497,9 +497,8 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const canon_modeuse_t* muse = NULL;
 
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
-    /*    int modecheck;
-	  char *replaceres;*/
-    
+    int modecheck;
+    char* replaceres;
 
     if(resolution){
         for(i=0;i<caps->modelist->count;i++){
@@ -520,50 +519,61 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: muse '%s'\n",mlist->modeuses[i].name);
       }*/
     
-    if (media_type != NULL)
-      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: media '%s'\n",media_type->name);
-    /* else
-       stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: media still NULL\n");*/
+    if (media_type)
+      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) media type selected: '%s'\n",media_type->name);
+
+
 
     /* beginning of mode replacement code */
+    if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
+
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
       /* need media */
-      /*if(!strcmp(media_type->name,mlist->modeuses[i].name)){*/
-      if(!strcmp("InkJetHagaki",mlist->modeuses[i].name)){
-	muse = &mlist->modeuses[i];
-	/*if (muse->name != NULL)*/
-	  stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: direct '%s'\n",muse->name);
-	  /*else
-	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: replace mode name still NULL\n");*/
-	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: mlist ptr '%s'\n",mlist->modeuses[i].name);
-	break;
-      }
+      if (media_type) {
+	if(!strcmp(media_type->name,mlist->modeuses[i].name)){
+	  muse = &mlist->modeuses[i];
+	  stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: assigned '%s'\n",muse->name);
+	  stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: mlist ptr '%s'\n",mlist->modeuses[i].name);
+	  break;
+	}
+      } /* end of media type block */
     }
-#if 0
     /* now scroll through to find if the mode is in the modeuses list */
     i=0;
     modecheck=1;
-    while (muse->mode_name_list[i]!=NULL){
-      if(!strcmp(mode->name,muse->mode_name_list[i])){
-	modecheck=0;
-	break;
+    if (media_type) {
+      while (muse->mode_name_list[i]!=NULL){
+	if(!strcmp(mode->name,muse->mode_name_list[i])){
+	  modecheck=0;
+	  break;
+	}
+	i++;
       }
-      i++;
     }
+    if (media_type) /* to prevert printing during compilation */
+      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) modecheck value: '%i'\n",modecheck);
+
     /* if we did not find a mode*/
     if (modecheck!=0) {
-      /* pick first mode for now, for that media */
-      replaceres = muse[0];
-    }
-    /* finally, do again with replaceres what we did with resolution */
-    for(i=0;i<caps->modelist->count;i++){
-      if(!strcmp(replaceres,caps->modelist->modes[i].name)){
-	mode = &caps->modelist->modes[i];
-	break;
+      /* pick first mode name for now, for that media */
+      if (media_type) {
+	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) first item in the name list: '%s'\n",muse->mode_name_list[0]);
+	replaceres = muse->mode_name_list[0];
+	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: replaced mode with: '%s'\n",replaceres);
       }
     }
-#endif
+    /* finally, do again with replaceres what we did with resolution */
+    if (media_type && resolution) {
+      for(i=0;i<caps->modelist->count;i++){
+	if(!strcmp(replaceres,caps->modelist->modes[i].name)){
+	  mode = &caps->modelist->modes[i];
+	  break;
+	}
+      }
+    }
+
+    } /* limited to MP610 for now */
     /* end of mode replacement code */
 
 

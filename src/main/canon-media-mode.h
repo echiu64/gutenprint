@@ -31,7 +31,7 @@
 
 typedef struct {
   const char *name; /* unstranslated media name */
-  /*  const char *mode_name_list; */ /* untranslated mode names */
+  const char** mode_name_list; /* untranslated mode names */
   const unsigned int use_flags;
 } canon_modeuse_t;
 
@@ -50,197 +50,94 @@ static const canon_modeuselist_t name##_modeuselist = {     \
 
 
 /* Canon MP610 */
-/*static const char *canon_MULTIPASS_MP610_modeuses_plain[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
   "300x300dpi_draft",
   NULL
-  };*/
+  };
 
 /* missing highest resolution mode as not yet implemented */
-/*static const char *canon_MULTIPASS_MP610_modeuses_PPpro[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_PPplus[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_PPplusG2[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_PPplusG2[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_PPplusDS[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_PPplusDS[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_PPmatte[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_PPmatte[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_inkjetHagaki[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
   "600x600dpi_photodraft3",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_Hagaki[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_disc[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_disc[] = {
   "600x600dpi_photohigh4",
   "600x600dpi_photo4",
   "600x600dpi_photodraft4",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_TShirt[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char *canon_MULTIPASS_MP610_modeuses_PPother[] = {
+static const char* canon_MULTIPASS_MP610_modeuses_PPother[] = {
   "600x600dpi_photo",
   NULL
-  };*/
+  };
 
 static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
- { "Plain",              0 },
- { "PhotopaperPro",	 0 },
- { "PhotopaperPlus",	 0 },
- { "PhotoPlusGloss2",    0 },
- { "PhotopaperPlusDouble", 0 },
- { "PhotopaperMatte",	 0 },
- { "GlossyPaper",	 0 },
- { "Coated",	         0 },
- { "InkJetHagaki", 	 0 },
- { "Hagaki", 	         0 },
- { "DiscCompat",	 0 },
- { "DiscOthers",	 0 },
- { "TShirt",		 0 },
- { "Envelope",		 0 },
- { "PhotopaperOther",	 0 },
-};
-/*static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
- { "Plain",             &canon_MULTIPASS_MP610_modeuses_plain, 0 },
- { "PhotopaperPro",	&canon_MULTIPASS_MP610_modeuses_PPpro, 0 },
- { "PhotopaperPlus",	&canon_MULTIPASS_MP610_modeuses_PPplus, 0 },
- { "PhotoPlusGloss2",   &canon_MULTIPASS_MP610_modeuses_PPplusG2, 0 },
- { "PhotopaperPlusDouble", &canon_MULTIPASS_MP610_modeuses_PPplusDS, 0 },
- { "PhotopaperMatte",	&canon_MULTIPASS_MP610_modeuses_PPmatte, 0 },
- { "GlossyPaper",	&canon_MULTIPASS_MP610_modeuses_PPplusDS, 0 },
- { "Coated",		&canon_MULTIPASS_MP610_modeuses_PPmatte, 0 },
- { "InkJetHagaki", 	&canon_MULTIPASS_MP610_modeuses_inkjetHagaki, 0 },
- { "Hagaki", 	        &canon_MULTIPASS_MP610_modeuses_Hagaki, 0 },
- { "DiscCompat",	&canon_MULTIPASS_MP610_modeuses_disc, 0 },
- { "DiscOthers",	&canon_MULTIPASS_MP610_modeuses_disc, 0 },
- { "TShirt",		&canon_MULTIPASS_MP610_modeuses_TShirt, 0 },
- { "Envelope",		&canon_MULTIPASS_MP610_modeuses_Hagaki, 0 },
- { "PhotopaperOther",	&canon_MULTIPASS_MP610_modeuses_PPother, 0 },
- };*/
+ { "Plain",             canon_MULTIPASS_MP610_modeuses_plain, 0 },
+ { "PhotopaperPro",	canon_MULTIPASS_MP610_modeuses_PPpro, 0 },
+ { "PhotopaperPlus",	canon_MULTIPASS_MP610_modeuses_PPplus, 0 },
+ { "PhotoPlusGloss2",   canon_MULTIPASS_MP610_modeuses_PPplusG2, 0 },
+ { "PhotopaperPlusDouble", canon_MULTIPASS_MP610_modeuses_PPplusDS, 0 },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP610_modeuses_PPmatte, 0 },
+ { "GlossyPaper",	canon_MULTIPASS_MP610_modeuses_PPplusDS, 0 },
+ { "Coated",		canon_MULTIPASS_MP610_modeuses_PPmatte, 0 },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP610_modeuses_inkjetHagaki, 0 },
+ { "Hagaki", 	        canon_MULTIPASS_MP610_modeuses_Hagaki, 0 },
+ { "DiscCompat",	canon_MULTIPASS_MP610_modeuses_disc, 0 },
+ { "DiscOthers",	canon_MULTIPASS_MP610_modeuses_disc, 0 },
+ { "TShirt",		canon_MULTIPASS_MP610_modeuses_TShirt, 0 },
+ { "Envelope",		canon_MULTIPASS_MP610_modeuses_Hagaki, 0 },
+ { "PhotopaperOther",	canon_MULTIPASS_MP610_modeuses_PPother, 0 },
+ };
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP610);
-
-/*
-static const char *canon_MULTIPASS_MP610_modeuses_plain_media[] = {
-  "Plain",
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_photohigh_media[] = {
-  "PhotopaperPro",	 
-  "PhotopaperPlus",	 
-  "PhotoPlusGloss2",	 
-  "PhotopaperPlusDouble", 
-  "GlossyPaper",		 
-  "InkJetHagaki",	 
-  "PhotopaperOther",      
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_photo_media[] = {
-  "PhotopaperPro",	 
-  "PhotopaperPlus",	 
-  "PhotoPlusGloss2",	 
-  "PhotopaperPlusDouble", 
-  "PhotopaperMatte",
-  "GlossyPaper",		 
-  "Coated",
-  "InkJetHagaki",	 
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_photodraft_media[] = {
-  "PhotopaperPlus",	 
-  "PhotoPlusGloss2",	 
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_photohigh2_media[] = {
-  "PhotopaperMatte",
-  "Coated",
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_photohigh3_media[] = {
-  "Hagaki",
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_photohigh4_media[] = {
-  "DiscCompat",
-  "DiscOthers",
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_plain2_media[] = {
-  "Hagaki",
-  "Envelope",
-  NULL
-};
-
-static const char *canon_MULTIPASS_MP610_modeuses_600x600dpi_tshirt_media[] = {
-  "TShirt",
-  NULL
-};
-
-static const canon_modeuselist_t canon_MULTIPASS_MP610_modeuselist[] = {
- { "600x600dpi_high", &canon_MULTIPASS_MP610_modeuses_plain_media, 0 },
- { "600x600dpi", &canon_MULTIPASS_MP610_modeuses_plain_media, 0 },
- { "300x300dpi", &canon_MULTIPASS_MP610_modeuses_plain_media, 0 },
- { "300x300dpi_draft", &canon_MULTIPASS_MP610_modeuses_plain_media, 0 },
- { "600x600dpi_photohigh", &canon_MULTIPASS_MP610_modeuses_600x600photohigh_media, 0 },
- { "600x600dpi_photo", &canon_MULTIPASS_MP610_modeuses_600x600photo_media, 0 },
- { "600x600dpi_photodraft", &canon_MULTIPASS_MP610_modeuses_600x600photodraft_media, 0 },
- { "600x600dpi_photohigh2", &canon_MULTIPASS_MP610_modeuses_600x600photohigh2_media, 0 },
- { "600x600dpi_photo2", &canon_MULTIPASS_MP610_modeuses_600x600photohigh2_media, 0 },
- { "600x600dpi_photohigh3", &canon_MULTIPASS_MP610_modeuses_600x600photohigh3_media, 0 },
- { "600x600dpi_photo3", &canon_MULTIPASS_MP610_modeuses_600x600photohigh3_media, 0 },
- { "600x600dpi_photodraft3", &canon_MULTIPASS_MP610_modeuses_600x600photohigh3_media, 0 },
- { "600x600dpi_photohigh4", &canon_MULTIPASS_MP610_modeuses_600x600photohigh4_media, 0 },
- { "600x600dpi_photo4", &canon_MULTIPASS_MP610_modeuses_600x600photohigh4_media, 0 },
- { "600x600dpi_photodraft4", &canon_MULTIPASS_MP610_modeuses_600x600photohigh4_media, 0 },
- { "600x600dpi_high2", &canon_MULTIPASS_MP610_modeuses_plain2_media, 0 },
- { "600x600dpi_std2", &canon_MULTIPASS_MP610_modeuses_plain2_media, 0 },
- { "600x600dpi_tshirt", &canon_MULTIPASS_MP610_modeuses_tshirt_media, 0 },
-};
-*/
-
 
 #endif
