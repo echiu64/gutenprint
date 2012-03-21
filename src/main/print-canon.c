@@ -515,10 +515,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     /* beginning of mode replacement code: this can maybe go into the above resolution block */
     if (media_type && resolution) {
 
-      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) media type selected: '%s'\n",media_type->name);
-
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
 	
+	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) media type selected: '%s'\n",media_type->name);
+
 	/* scroll through modeuse list to find media */
 	for(i=0;i<mlist->count;i++){
 	  if(!strcmp(media_type->name,mlist->modeuses[i].name)){
