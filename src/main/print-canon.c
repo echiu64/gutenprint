@@ -613,14 +613,14 @@ canon_printhead_colors(const stp_vars_t*v)
   /* but this is incorrect, since it does not check media or mode */
   /* change: return ink type only if mode has not been set yet */
   if (!mode) {
-  if(ink_type){
+    if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {
 	  /*stp_erprintf("(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
-            return canon_inktypes[i].ink_type;
+	  return canon_inktypes[i].ink_type;
 	}
-     }
-  }
+      }
+    }
   }
 
   /* else if InkType was not available, get current mode---or default mode */
@@ -748,7 +748,7 @@ static void
 canon_parameters(const stp_vars_t *v, const char *name,
 		 stp_parameter_t *description)
 {
-  int		i;
+  int		i,j;
 
   const canon_cap_t * caps=
     canon_get_model_capabilities(v);
@@ -889,13 +889,31 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "InkType") == 0)
   {
+    /* No list of InkType can be created for PPD if the mode is not set yet */
+    /* prepare two types, either when mode is defined, or when it is not */
     const canon_mode_t* mode = canon_get_current_mode(v);
     description->bounds.str= stp_string_list_create();
-    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-      if(mode->ink_types & canon_inktypes[i].ink_type){
+    if (mode) {
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
 	  /* stp_erprintf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	     stp_erprintf("Added InkName %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].name);*/
+	}
+      }
+    }
+    /* mode not defined yet */
+    else {
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	/*if(resolution){*/
+	  for(j=0;j<caps->modelist->count;i++){
+	    if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
+	      stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
+	      /* stp_erprintf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+		 stp_erprintf("Added InkName %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].name);*/
+	    }      
+	  }
+	  /*}*/
       }
     }
     description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
