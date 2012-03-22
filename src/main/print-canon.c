@@ -599,43 +599,44 @@ canon_printhead_colors(const stp_vars_t*v)
   const canon_mode_t* mode;
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
   const char *ink_type = stp_get_string_parameter(v, "InkType");
-#if 1
   const char *ink_set = stp_get_string_parameter(v, "InkSet");
-#endif
 
-  /*if(print_mode && strcmp(print_mode, "BW") == 0)*/
   if(print_mode && !strcmp(print_mode, "BW")){
-    /* GERNOT DEBUG list */
-    /*printf("(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
+    /*stp_erprintf("(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
     return CANON_INK_K;
   }
-#if 1
   if(ink_set && !strcmp(ink_set, "Black")){
     return CANON_INK_K;
   }
-#endif
 
+  /* finds selected InkType of form: CANON_INK_<inks> */
+  /* but this is incorrect, since it does not check media or mode */
+  /* change: return ink type only if mode has not been set yet */
+  if (!mode) {
   if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {
-	  /* GERNOT DEBUG list */
-	  /*printf("(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
+	  /*stp_erprintf("(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
             return canon_inktypes[i].ink_type;
 	}
      }
   }
+  }
 
+  /* else if InkType was not available, get current mode---or default mode */
   mode = canon_get_current_mode(v);
 
+  /* find the matching inks for the mode: chooses the first one found for a mode! */
+  /* ink types are arranged in decreasing order so those with more meta inks are discovered first */
   for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
     if(mode->ink_types & canon_inktypes[i].ink_type) {
-	/* GERNOT DEBUG list */
-	/*printf("(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
+	/*stp_erprintf("(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
         return canon_inktypes[i].ink_type;
     }
   }
-  /* GERNOT DEBUG list */
-  /*printf("(canon_printhead_colors[fall-through]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
+  /* else as fallback choose CANON_INK_K */
+  /* However, some Canon printers do not have monochrome mode at all, only color meta ink modes, like iP6000 series */
+  /*stp_erprintf("(canon_printhead_colors[fall-through]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
   return CANON_INK_K;
 }
 
@@ -893,9 +894,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
     for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
       if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	  /* GERNOT DEBUG list */
-	  /* printf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
-	     printf("Added InkName %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].name);*/
+	  /* stp_erprintf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	     stp_erprintf("Added InkName %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].name);*/
       }
     }
     description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
@@ -906,8 +906,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(ink_type == canon_inktypes[i].ink_type){
               description->deflt.integer = canon_inktypes[i].num_channels;
-	      /* GERNOT DEBUG list */
-	      /*printf("Added %d InkChannels\n",canon_inktypes[i].num_channels);*/
+	      /*stp_erprintf("Added %d InkChannels\n",canon_inktypes[i].num_channels);*/
 	}
       }
       description->bounds.integer.lower = -1;
