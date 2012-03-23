@@ -508,12 +508,15 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
         }
     }
 
+    /* do not set default mode: should return NULL if no modes found 
+       following code should handle this. */
+    /*
     if(!mode)
         mode = &caps->modelist->modes[caps->modelist->default_mode];
+    */
 
-    
     /* beginning of mode replacement code: this can maybe go into the above resolution block */
-    if (media_type && resolution) {
+    if (media_type && resolution && mode) {
 
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
 	
@@ -524,7 +527,6 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  if(!strcmp(media_type->name,mlist->modeuses[i].name)){
 	    muse = &mlist->modeuses[i];
 	    stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: assigned '%s'\n",muse->name);
-	    /*stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: mlist ptr '%s'\n",mlist->modeuses[i].name);*/
 	    break;
 	  }
 	}
@@ -609,9 +611,13 @@ canon_printhead_colors(const stp_vars_t*v)
     return CANON_INK_K;
   }
 
+
+  /* if a mode is available, use it. Else mode is NULL */
+  mode = canon_get_current_mode(v);
+
   /* finds selected InkType of form: CANON_INK_<inks> */
   /* but this is incorrect, since it does not check media or mode */
-  /* change: return ink type only if mode has not been set yet */
+  /* change: return an ink type only if mode has not been set yet */
   if (!mode) {
     if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
@@ -623,8 +629,7 @@ canon_printhead_colors(const stp_vars_t*v)
     }
   }
 
-  /* else if InkType was not available, get current mode---or default mode */
-  mode = canon_get_current_mode(v);
+  /* else if mode was already set, then return the ink types for only that mode */
 
   /* find the matching inks for the mode: chooses the first one found for a mode! */
   /* ink types are arranged in decreasing order so those with more meta inks are discovered first */
@@ -708,9 +713,17 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
 static void
 canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
 {
-    const canon_mode_t* mode = canon_get_current_mode(v);
-    *x = mode->xdpi;
-    *y = mode->ydpi;
+  const canon_mode_t* mode = NULL;
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
+ 
+  /* if mode is not yet set, it remains NULL */
+  mode = canon_get_current_mode(v);
+  
+  if(!mode)
+    mode = &caps->modelist->modes[caps->modelist->default_mode];
+  
+  *x = mode->xdpi;
+  *y = mode->ydpi;
 }
 
 static const char *
@@ -891,7 +904,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
   {
     /* No list of InkType can be created for PPD if the mode is not set yet */
     /* prepare two types, either when mode is defined, or when it is not */
-    const canon_mode_t* mode = canon_get_current_mode(v);
+    const canon_mode_t* mode = NULL;
+    mode=canon_get_current_mode(v);
     description->bounds.str= stp_string_list_create();
     if (mode) {
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
@@ -956,7 +970,13 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "PrintingMode") == 0)
   {
-    const canon_mode_t* mode = canon_get_current_mode(v);
+    const canon_mode_t* mode = NULL;
+    /* mode remains NULL if not yet set */
+    mode = canon_get_current_mode(v);
+
+    if(!mode)
+      mode = &caps->modelist->modes[caps->modelist->default_mode];
+
     description->bounds.str = stp_string_list_create();
     if (mode->ink_types != CANON_INK_K)
       stp_string_list_add_string
@@ -2545,8 +2565,12 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.slot = canon_source_type(media_source,caps);
   privdata.duplex_str = duplex_mode;
 
-  /* find the wanted print mode */
+  /* find the wanted print mode: NULL if not yet set */
   privdata.mode = canon_get_current_mode(v);
+
+  if(!privdata.mode)
+    privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
+
 
   /* set quality */
   privdata.quality = privdata.mode->quality;
