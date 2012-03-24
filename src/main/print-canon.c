@@ -719,10 +719,9 @@ canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
   /* if mode is not yet set, it remains NULL */
   mode = canon_get_current_mode(v);
 
-  /*  
   if(!mode)
     mode = &caps->modelist->modes[caps->modelist->default_mode];
-  */
+
   if (mode) {
     *x = mode->xdpi;
     *y = mode->ydpi;
@@ -906,10 +905,15 @@ canon_parameters(const stp_vars_t *v, const char *name,
   {
     /* No list of InkType can be created for PPD if the mode is not set yet */
     /* prepare two types, either when mode is defined, or when it is not */
+    const char *resolution = stp_get_string_parameter(v, "Resolution");
     const canon_mode_t* mode = NULL;
-    mode=canon_get_current_mode(v);
 
-    stp_erprintf("DEBUG: Gutenprint:  InkType enumeration --- Is it known? Mode: '%s'\n",mode->name);
+    /*
+    if (resolution) {
+      mode=canon_get_current_mode(v);
+      stp_erprintf("DEBUG: Gutenprint:  InkType enumeration --- Is it known? Mode: '%s'\n",mode->name);
+    }
+    */
 
     description->bounds.str= stp_string_list_create();
     if (mode) {
@@ -924,7 +928,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     else {
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	/*if(resolution){*/
-	  for(j=0;j<caps->modelist->count;i++){
+	  for(j=0;j<caps->modelist->count;j++){
 	    if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	      stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
 	      stp_erprintf(" no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
@@ -2584,11 +2588,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* find the wanted print mode: NULL if not yet set */
   privdata.mode = canon_get_current_mode(v);
 
-  /*
-    if(!privdata.mode)
+  if(!privdata.mode)
     privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
-  */
-
 
   /* set quality */
   privdata.quality = privdata.mode->quality;
