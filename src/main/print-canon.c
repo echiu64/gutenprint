@@ -487,19 +487,15 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char *resolution = stp_get_string_parameter(v, "Resolution");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
-    int i;
-
-    /* check for media here, and adjust mode if current selection is
-       not one of those possible for the selected media.
-    */
     const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
     const canon_modeuse_t* muse = NULL;
-
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
+    int i;
     int modecheck;
     char* replaceres;
 
     if(resolution){
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
         for(i=0;i<caps->modelist->count;i++){
             if(!strcmp(resolution,caps->modelist->modes[i].name)){
                 mode = &caps->modelist->modes[i];
@@ -507,6 +503,8 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
             }
         }
     }
+    else
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
 
     /* do not set default mode: should return NULL if no modes found 
        following code should handle this. */
@@ -517,16 +515,17 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 
     /* beginning of mode replacement code: this can maybe go into the above resolution block */
     if (media_type && resolution && mode) {
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
 
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
 	
-	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) media type selected: '%s'\n",media_type->name);
+	stp_erprintf("DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 
 	/* scroll through modeuse list to find media */
 	for(i=0;i<mlist->count;i++){
 	  if(!strcmp(media_type->name,mlist->modeuses[i].name)){
 	    muse = &mlist->modeuses[i];
-	    stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: assigned '%s'\n",muse->name);
+	    stp_erprintf("DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);
 	    break;
 	  }
 	}
@@ -540,18 +539,18 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  }
 	  i++;
 	}
-	stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) modecheck value: '%i'\n",modecheck);
+	stp_erprintf("DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
 	/* if we did not find a mode*/
 	if (modecheck!=0) {
 	  /* pick first mode name for now, for that media */
-	  stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) first item in the name list: '%s'\n",muse->mode_name_list[0]);
+	  stp_erprintf("DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
 	  replaceres = muse->mode_name_list[0];
-	  stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) mode searching: replaced mode with: '%s'\n",replaceres);
+	  stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
 	  /* finally, do again with replaceres what we did with resolution */
 	  for(i=0;i<caps->modelist->count;i++){
 	    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
 	      mode = &caps->modelist->modes[i];
-	      stp_erprintf("DEBUG: Gutenprint:  (stp_erprintf) setting mode finally to be: '%s'\n",mode->name);
+	      stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
 	      break;
 	    }
 	  }
@@ -583,9 +582,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     }
 #endif
 
-
-
-
+    if (mode)
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
+    else
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
 
     return mode;
 }
@@ -718,12 +718,15 @@ canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
  
   /* if mode is not yet set, it remains NULL */
   mode = canon_get_current_mode(v);
-  
+
+  /*  
   if(!mode)
     mode = &caps->modelist->modes[caps->modelist->default_mode];
-  
-  *x = mode->xdpi;
-  *y = mode->ydpi;
+  */
+  if (mode) {
+    *x = mode->xdpi;
+    *y = mode->ydpi;
+  }
 }
 
 static const char *
@@ -773,6 +776,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
   for (i = 0; i < float_parameter_count; i++)
     if (strcmp(name, float_parameters[i].param.name) == 0)
       {
+	/* presumably need to return the maximum number of inks the printer can handle */
 	unsigned int ink_type = canon_printhead_colors(v);
 
 	stp_fill_parameter_settings(description,
@@ -891,13 +895,11 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	if(!(input_slot && !strcmp(input_slot,"CD") && !(caps->modelist->modes[i].flags & MODE_FLAG_CD)))
 #endif
           stp_string_list_add_string(description->bounds.str,
-                                        caps->modelist->modes[i].name, gettext(caps->modelist->modes[i].text));
+				     caps->modelist->modes[i].name, gettext(caps->modelist->modes[i].text));
         stp_deprintf(STP_DBG_CANON,"supports mode '%s'\n",
-                      caps->modelist->modes[i].name);
+		     caps->modelist->modes[i].name);
         if(i == caps->modelist->default_mode)
-            description->deflt.str=caps->modelist->modes[i].name;
-
-
+	  description->deflt.str=caps->modelist->modes[i].name;
     }
   }
   else if (strcmp(name, "InkType") == 0)
@@ -906,25 +908,27 @@ canon_parameters(const stp_vars_t *v, const char *name,
     /* prepare two types, either when mode is defined, or when it is not */
     const canon_mode_t* mode = NULL;
     mode=canon_get_current_mode(v);
+
+    stp_erprintf("DEBUG: Gutenprint:  InkType enumeration --- Is it known? Mode: '%s'\n",mode->name);
+
     description->bounds.str= stp_string_list_create();
     if (mode) {
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	  /* stp_erprintf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
-	     stp_erprintf("Added InkName %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].name);*/
+	  stp_erprintf(" mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);
 	}
       }
     }
-    /* mode not defined yet */
+    /* mode not defined yet --- this case never seems to arise */
     else {
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	/*if(resolution){*/
 	  for(j=0;j<caps->modelist->count;i++){
 	    if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	      stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	      /* stp_erprintf("Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
-		 stp_erprintf("Added InkName %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].name);*/
+	      stp_erprintf(" no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	      break;
 	    }      
 	  }
 	  /*}*/
@@ -938,7 +942,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(ink_type == canon_inktypes[i].ink_type){
               description->deflt.integer = canon_inktypes[i].num_channels;
-	      /*stp_erprintf("Added %d InkChannels\n",canon_inktypes[i].num_channels);*/
+	      stp_erprintf("Added %d InkChannels\n",canon_inktypes[i].num_channels);
 	}
       }
       description->bounds.integer.lower = -1;
@@ -951,10 +955,13 @@ canon_parameters(const stp_vars_t *v, const char *name,
     description->bounds.str= stp_string_list_create();
     description->deflt.str= canon_paper_list[0].name;
 
-    for (i = 0; i < count; i ++)
+    for (i = 0; i < count; i ++) {
       stp_string_list_add_string(description->bounds.str,
 				canon_paper_list[i].name,
 				gettext(canon_paper_list[i].text));
+
+      stp_erprintf("DEBUG: Gutenprint:  Added Media Type: '%s'\n",canon_paper_list[i].name);
+    }
   }
   else if (strcmp(name, "InputSlot") == 0)
   {
@@ -973,14 +980,23 @@ canon_parameters(const stp_vars_t *v, const char *name,
     const canon_mode_t* mode = NULL;
     /* mode remains NULL if not yet set */
     mode = canon_get_current_mode(v);
-
+    
+    /* what to return if mode is not set yet?  probably need to search
+       ink types for all modes and see whether we have any color there
+     */
+    /*
     if(!mode)
       mode = &caps->modelist->modes[caps->modelist->default_mode];
-
+    */
     description->bounds.str = stp_string_list_create();
-    if (mode->ink_types != CANON_INK_K)
-      stp_string_list_add_string
-	(description->bounds.str, "Color", _("Color"));
+
+    if (mode)
+      if (mode->ink_types != CANON_INK_K)
+	stp_string_list_add_string
+	  (description->bounds.str, "Color", _("Color"));
+
+    /* add code to find color inks */
+
     stp_string_list_add_string
       (description->bounds.str, "BW", _("Black and White"));
     description->deflt.str =
@@ -2568,8 +2584,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* find the wanted print mode: NULL if not yet set */
   privdata.mode = canon_get_current_mode(v);
 
-  if(!privdata.mode)
+  /*
+    if(!privdata.mode)
     privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
+  */
 
 
   /* set quality */
