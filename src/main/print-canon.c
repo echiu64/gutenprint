@@ -908,6 +908,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	  /*stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);*/
 	}
       }
+      description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
     }
     /* mode not defined yet --- needed for genppd */
     else {
