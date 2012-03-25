@@ -81,6 +81,8 @@ static const char *gzext = "";
 
 #include "i18n.h"
 
+static int use_base_version = 0;
+
 /*
  * Some applications use the XxYdpi tags rather than the actual
  * hardware resolutions to decide what resolution to print at.  Some
@@ -457,7 +459,7 @@ main(int  argc,			    /* I - Number of command-line arguments */
 
   for (;;)
   {
-    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saNC")) == -1)
+    if ((i = getopt(argc, argv, "23hvqc:p:l:LMVd:saNCb")) == -1)
       break;
 
     switch (i)
@@ -527,6 +529,9 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 	   "GNU General Public License for more details.\n");
       exit(EXIT_SUCCESS);
+      break;
+    case 'b':
+      use_base_version = 1;
       break;
     default:
       usage();
@@ -944,7 +949,10 @@ print_ppd_header(gzFile fp, ppd_type_t ppd_type, int model, const char *driver,
   gzputs(fp, "*% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n");
   gzputs(fp, "*%\n");
   gzputs(fp, "*FormatVersion:	\"4.3\"\n");
-  gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
+  if (use_base_version)
+    gzputs(fp, "*FileVersion:	\"" BASE_VERSION "\"\n");
+  else
+    gzputs(fp, "*FileVersion:	\"" VERSION "\"\n");
   /* Specify language of PPD translation */
   /* TRANSLATORS: Specify the language of the PPD translation.
    * Use the English name of your language here, e.g. "Swedish" instead of

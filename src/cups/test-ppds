@@ -1,6 +1,6 @@
 #!/bin/sh
 
-make ppd-clean ppd-global ppd-nls ppd-nonls
+make EXTRA_GENPPD_OPTS=-b ppd-clean ppd-global ppd-nls ppd-nonls
 
 # Most non-Macintosh systems won't have the Macintosh-specific profiles
 # installed in Macintosh-specific locations.
