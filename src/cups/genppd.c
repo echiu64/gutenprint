@@ -2155,6 +2155,7 @@ write_ppd(
 	}
 
       stp_string_list_destroy(res_list);
+      stp_clear_string_parameter(v, "Resolution");
       gzputs(fp, "*CloseUI: *Resolution\n\n");
     }
 
