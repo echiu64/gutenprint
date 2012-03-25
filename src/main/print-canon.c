@@ -68,8 +68,8 @@
 #endif /* !MAX */
 
 
-
-
+/* set this to 1 to see errors in make, set to 0 (normal) to avoid noise */
+#define ERRPRINT 0
 
 
 
@@ -441,6 +441,8 @@ static char* canon_get_printername(const stp_vars_t* v)
   len = strlen(canon_families[family]) + 7; /* max model nr. + terminating 0 */
   name = stp_zalloc(len);
   snprintf(name,len,"%s%u",canon_families[family],nr);
+  if (ERRPRINT)
+    stp_erprintf("canon_get_printername: current printer name: %s\n", name);
   return name;
 }
 
@@ -496,6 +498,8 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 
     if(resolution){
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
         for(i=0;i<caps->modelist->count;i++){
             if(!strcmp(resolution,caps->modelist->modes[i].name)){
                 mode = &caps->modelist->modes[i];
@@ -503,22 +507,31 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
             }
         }
     }
-    else
+    else {
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
+    }
 
     /* beginning of mode replacement code: this can maybe go into the above resolution block */
     if (media_type && resolution && mode) {
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
 
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 
 	/* scroll through modeuse list to find media */
 	for(i=0;i<mlist->count;i++){
 	  if(!strcmp(media_type->name,mlist->modeuses[i].name)){
 	    muse = &mlist->modeuses[i];
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);
+	    if (ERRPRINT)
+	      stp_erprintf("DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);
 	    break;
 	  }
 	}
@@ -533,17 +546,25 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  i++;
 	}
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
 	/* if we did not find a mode*/
 	if (modecheck!=0) {
 	  /* pick first mode name for now, for that media */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
+	  if (ERRPRINT)
+	    stp_erprintf("DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
 	  replaceres = muse->mode_name_list[0];
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
+	  if (ERRPRINT)
+	    stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
 	  /* finally, do again with replaceres what we did with resolution */
 	  for(i=0;i<caps->modelist->count;i++){
 	    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
 	      mode = &caps->modelist->modes[i];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+	      if (ERRPRINT)
+		stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
 	      break;
 	    }
 	  }
@@ -575,67 +596,139 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     }
 #endif
 
-    if (mode)
+    if (mode) {
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
-    else
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
+    }
+    else {
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
+    }
 
     return mode;
 }
 
 /* function returns the best ink_type for the current mode */
-/* Gernot: Here we need to check the mode chosen against the media chosen,
-   and if necessary change the mode before selecting the best inkset.
-*/
 static unsigned int
 canon_printhead_colors(const stp_vars_t*v)
 {
-  int i;
+  int i,j;
   const canon_mode_t* mode;
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
   const char *print_mode = stp_get_string_parameter(v, "PrintingMode");
   const char *ink_type = stp_get_string_parameter(v, "InkType");
   const char *ink_set = stp_get_string_parameter(v, "InkSet");
 
+  if (ERRPRINT)
+    stp_erprintf(" entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
+
+  /* if the printing mode was already selected as BW, accept it */
   if(print_mode && !strcmp(print_mode, "BW")){
-    /*stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
+    stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
+    if (ERRPRINT)
+      stp_erprintf(" canon_printhead_colors Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
     return CANON_INK_K;
   }
+  /* alternatively, if the cartridge selection is in force, and black cartride is selected, accept it */
   if(ink_set && !strcmp(ink_set, "Black")){
+    stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkSet black selection\n");
+    if (ERRPRINT)
+      stp_erprintf("(canon_printhead_colors[BW]) Found InkSet black selection\n");
     return CANON_INK_K;
   }
 
 
   /* if a mode is available, use it. Else mode is NULL */
+  if (ERRPRINT)
+    stp_erprintf("Calling get_current_parameter from canon_printhead_colors");
   mode = canon_get_current_mode(v);
 
-  /* finds selected InkType of form: CANON_INK_<inks> */
+  
+  /* originaly finds selected InkType of form: CANON_INK_<inks> */
   /* but this is incorrect, since it does not check media or mode */
-  /* change: return an ink type only if mode has not been set yet */
-  if (!mode) {
+  /* change: deal with mode set and mode not set cases */
+
+  /* if mode was already set, then return the ink types for only that mode */
+
+  if (mode) {
+    /* if an inktype selected check what it is */
     if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {
-	  /*stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
+	/*if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {*/
+	if (mode->ink_types & canon_inktypes[i].ink_type) {
+	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	  if (ERRPRINT)
+	    stp_erprintf("(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	  return canon_inktypes[i].ink_type;
+	}
+      }
+    }
+    else {
+      /* find the matching inks for the mode: chooses the first one found for a mode! */
+      /* ink types are arranged in decreasing order so those with more meta inks are discovered first */
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	if(mode->ink_types & canon_inktypes[i].ink_type) {
+	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	  if (ERRPRINT)
+	    stp_erprintf("(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	  return canon_inktypes[i].ink_type;
 	}
       }
     }
   }
+  else { /* mode not yet set */
+    /* if an inktype selected check what it is */
+    if(ink_type){
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {
+	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	  if (ERRPRINT)
+	    stp_erprintf("(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	  return canon_inktypes[i].ink_type;
+	}
+      }
+    }
+    else { /* no ink type selected yet */
+      if (ERRPRINT)
+	stp_erprintf(" canon_printhead_colors: no mode and no inktype: we have to choose the highest one to return\n");
+      /* loop through all modes, and return the highest inktype found */
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	for(j=0;j<caps->modelist->count;j++){
+	  if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
+	    stp_dprintf(STP_DBG_CANON, v," highest inktype found ---  %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	    if (ERRPRINT)
+	      stp_erprintf(" highest inktype found --- %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	    return canon_inktypes[i].ink_type;
+	  }      
+	}
+      }
+    }
+    
+  }
 
-  /* else if mode was already set, then return the ink types for only that mode */
-
-  /* find the matching inks for the mode: chooses the first one found for a mode! */
-  /* ink types are arranged in decreasing order so those with more meta inks are discovered first */
-  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-    if(mode->ink_types & canon_inktypes[i].ink_type) {
-	/*stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);*/
-        return canon_inktypes[i].ink_type;
+  /* originally as fallback choose CANON_INK_K */
+  /* However, some Canon printers do not have monochrome mode at all, only color meta ink modes, like iP6000 series */
+#if 0
+  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[fall-through]) Returning InkType %i(CANON_INK_K)\n",CANON_INK_K);
+  if (ERRPRINT)
+    stp_erprintf("(canon_printhead_colors[fall-through]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
+  return CANON_INK_K;
+#endif
+  /* new fallback: loop through ink type in reverse order, picking first one found, which if CANON_INK_K is supported will be that, else the lowest amount of color */
+  for(i=((sizeof(canon_inktypes)/sizeof(canon_inktypes[0]))-1);i=0;i--){
+    for(j=0;j<caps->modelist->count;j++){
+      if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
+	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	if (ERRPRINT)
+	  stp_erprintf(" lowest inktype found --- %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	return canon_inktypes[i].ink_type;
+      }      
     }
   }
-  /* else as fallback choose CANON_INK_K */
-  /* However, some Canon printers do not have monochrome mode at all, only color meta ink modes, like iP6000 series */
-  /*stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[fall-through]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);*/
-  return CANON_INK_K;
+
+
 }
 
 static unsigned char
@@ -710,6 +803,8 @@ canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
   const canon_cap_t * caps = canon_get_model_capabilities(v);
  
   /* if mode is not yet set, it remains NULL */
+  if (ERRPRINT)
+    stp_erprintf("Calling get_current_parameter from canon_describe_resolution");
   mode = canon_get_current_mode(v);
 
   if(!mode)
@@ -898,6 +993,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
   {
     const canon_mode_t* mode = NULL;
 
+    if (ERRPRINT)
+      stp_erprintf("Calling get_current_parameter from InkType block in canon_parameters");
     mode=canon_get_current_mode(v);
 
     description->bounds.str= stp_string_list_create();
@@ -905,18 +1002,22 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	  /*stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);*/
+	  stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);
+	  if (ERRPRINT)
+	    stp_erprintf(" mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);
 	}
       }
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
     }
-    /* mode not defined yet --- needed for genppd */
+    /* mode not defined yet --- needed for PPD generation */
     else {
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	for(j=0;j<caps->modelist->count;j++){
 	  if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	    stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	    /*stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);*/	
+	    stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	    if (ERRPRINT)
+	      stp_erprintf(" no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	    break;
 	  }      
 	}
@@ -939,7 +1040,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(ink_type == canon_inktypes[i].ink_type){
               description->deflt.integer = canon_inktypes[i].num_channels;
-	      /*stp_dprintf(STP_DBG_CANON, v,"Added %d InkChannels\n",canon_inktypes[i].num_channels);*/
+	      stp_dprintf(STP_DBG_CANON, v,"Added %d InkChannels\n",canon_inktypes[i].num_channels);
+	      if (ERRPRINT)
+		stp_erprintf("Added %d InkChannels\n",canon_inktypes[i].num_channels);
 	}
       }
       description->bounds.integer.lower = -1;
@@ -974,28 +1077,114 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "PrintingMode") == 0)
   {
+    int found_color, found_mono;
     const canon_mode_t* mode = NULL;
     /* mode remains NULL if not yet set */
+    
+    if (ERRPRINT)
+      stp_erprintf("Calling get_current_mode from PrintingMode block in canon_parameter");
     mode = canon_get_current_mode(v);
     
-    /* what to return if mode is not set yet?  probably need to search
-       ink types for all modes and see whether we have any color there
+    /* If mode is not set need to search ink types for all modes and
+       see whether we have any color there
      */
-    /*
-    if(!mode)
-      mode = &caps->modelist->modes[caps->modelist->default_mode];
-    */
+
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint: PrintingMode---entered enumeration block in canon_printers\n");
+
     description->bounds.str = stp_string_list_create();
 
-    if (mode)
-      if (mode->ink_types != CANON_INK_K)
+    stp_erprintf("DEBUG: Gutenprint: PrintingMode---created list\n");
+
+    if (mode) {
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode known) what is the current mode inktype value: %i\n",mode->ink_types);
+      /* e.g., ink_types is 21 = 16 + 4 + 1 */
+      if (mode->ink_types > 1) {
 	stp_string_list_add_string
 	  (description->bounds.str, "Color", _("Color"));
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode known) added Color\n");
+      }
+      if (mode->ink_types & CANON_INK_K) {
+	stp_string_list_add_string
+	  (description->bounds.str, "BW", _("Black and White"));
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode known) added BW\n");
+      }
+    }
+#if 0
+      /* original code */
+      if (mode)
+	if (mode->ink_types != CANON_INK_K) {
+	  stp_string_list_add_string
+	    (description->bounds.str, "Color", _("Color"));
+	  if (ERRPRINT)
+	    stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode known) added Color\n");
+	}
+#endif
 
-    /* add code to find color inks */
+    else { /* mode not known yet --- needed for PPD generation */
+      stp_erprintf("DEBUG: Gutenprint: PrintingMode: entered mode not known conditional block\n");
+      /* add code to find color inks */
+      /* default type must be deduced from the default mode */
+      /* use color if available, so break after first (color) is found, since ink types ordered with gray last */
+      found_color=0;
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	for(j=0;j<caps->modelist->count;j++){
+	  if(caps->modelist->modes[j].ink_types > 1){
+	    stp_string_list_add_string
+	      (description->bounds.str, "Color", _("Color"));
+	    found_color=1;
+	    if (ERRPRINT)
+	      stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode not known) added Color\n");
+	    break;
+	  }
+	}
+	if (found_color==1)
+	  break;
+      }
+      found_mono=0;
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	for(j=0;j<caps->modelist->count;j++){
+	  if(caps->modelist->modes[j].ink_types & CANON_INK_K){
+	    stp_string_list_add_string
+	      (description->bounds.str, "BW", _("Black and White"));
+	    found_mono=1;
+	    if (ERRPRINT)
+	      stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode not known) added BW\n");
+	    break;
+	  }
+	}
+	if (found_mono==1)
+	  break;
+      }
 
-    stp_string_list_add_string
-      (description->bounds.str, "BW", _("Black and White"));
+#if 0
+      /* ink types for default mode*/
+      if(caps->modelist->modes[caps->modelist->default_mode].ink_types > 1){
+	stp_string_list_add_string
+	  (description->bounds.str, "Color", _("Color"));
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode not known) added Color\n");
+      }
+      if(caps->modelist->modes[caps->modelist->default_mode].ink_types & CANON_INK_K){
+	stp_string_list_add_string
+	(description->bounds.str, "BW", _("Black and White"));
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: PrintingMode: (mode not known) added BW\n");	
+      }
+#endif
+#if 0
+      /* original code */
+      stp_string_list_add_string
+	(description->bounds.str, "BW", _("Black and White"));
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint: PrintingMode: added BW\n");
+#endif
+    }
+    
+    /* original code --- fine as is */
     description->deflt.str =
       stp_string_list_param(description->bounds.str, 0)->name;
   } 
@@ -2579,6 +2768,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.duplex_str = duplex_mode;
 
   /* find the wanted print mode: NULL if not yet set */
+  if (ERRPRINT)
+    stp_erprintf("Calling get_current_parameter from canon_do_print routine");
   privdata.mode = canon_get_current_mode(v);
 
   if(!privdata.mode)
@@ -2593,6 +2784,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.used_inks = canon_printhead_colors(v);
   if (privdata.used_inks == CANON_INK_K)
       stp_set_string_parameter(v, "PrintingMode", "BW");
+  else
+    stp_set_string_parameter(v, "PrintingMode", "Color"); /* Gernot: added */
 
   setup_page(v,&privdata);
 
