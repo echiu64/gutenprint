@@ -134,6 +134,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_STD1 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|CANON_CAP_l|\
                         CANON_CAP_m|CANON_CAP_p|CANON_CAP_q|CANON_CAP_t)
 
+
 #include "canon-inks.h"
 #include "canon-modes.h"
 #include "canon-media.h"
@@ -2720,6 +2721,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
+  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
+  const canon_modeuse_t* muse = NULL;
+  int monocheck = 0;
+  int colcheck = 0;
   int		y;		/* Looping vars */
   canon_privdata_t privdata;
   int		errdiv,		/* Error dividend */
@@ -2775,6 +2780,41 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.slot = canon_source_type(media_source,caps);
 
   /* cartridge selection if any: default is Both---but should change to NULL if CANON_CAP_T is not available */
+  /* check if InkSet chosen is possible for this Media */
+  /* - if Black, check if modes for selected media have a black flag */
+  /*   else, set InkSet to "Both" for now */
+  if ( (!strcmp(caps->name,"PIXMA MP610")) ) { /* limited to MP610 for now */
+    
+    /* scroll through modeuse list to find media */
+    for(i=0;i<mlist->count;i++){
+      if(!strcmp(privdata.pt->name,mlist->modeuses[i].name)){
+	muse = &mlist->modeuses[i];
+	/*stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);*/
+	/*if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);*/
+	/* check if use_flags has black-only set */
+	break;
+      }
+    }
+
+    if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Black")) {
+      /* check if there is any mode for that media with K-only inktype */
+      /* if not, change it to "Both" NOTE: TODO---find a way to set monochrome printing */
+      if (!(mlist->modeuses[i].use_flags & INKSET_BLACK)) {
+	stp_set_string_parameter(v, "InkSet", "Both");	
+      }
+    }
+    else if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Color")) {
+      /* check if there is any mode for that media with no K in the inkset at all */
+      /* if not, change it to "Both" */
+      if (!(mlist->modeuses[i].use_flags & INKSET_COLOR)) {
+	stp_set_string_parameter(v, "InkSet", "Both");	
+      }
+    } /* no restriction for "Both" yet --- note there are other cartridge types too! */
+
+  } /* limited to MP610 for now */    
+
+  /* get InkSet after adjustment */
   privdata.ink_set = stp_get_string_parameter(v, "InkSet");
 
   privdata.duplex_str = duplex_mode;

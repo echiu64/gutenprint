@@ -33,6 +33,9 @@ typedef struct {
   const char *name; /* unstranslated media name */
   const char** mode_name_list; /* untranslated mode names */
   const unsigned int use_flags;
+#define INKSET_BLACK 0x1
+#define INKSET_COLOR 0x2
+#define INKSET_BOTH  0x4
 } canon_modeuse_t;
 
 typedef struct {
