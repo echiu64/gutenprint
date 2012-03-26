@@ -157,6 +157,8 @@ typedef struct
   const canon_mode_t* mode; 
   const canon_slot_t* slot;
   const canon_paper_t *pt;
+  /* cartridge selection for CANON_CAP_T */
+  const char *ink_set;
   /* Gernot: cross-reference between media and modes */
   const canon_modeuse_t* modeuse;
   unsigned int used_inks;
@@ -1094,7 +1096,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
 
     description->bounds.str = stp_string_list_create();
 
-    stp_erprintf("DEBUG: Gutenprint: PrintingMode---created list\n");
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint: PrintingMode---created list\n");
 
     if (mode) {
       if (ERRPRINT)
@@ -1125,7 +1128,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
 #endif
 
     else { /* mode not known yet --- needed for PPD generation */
-      stp_erprintf("DEBUG: Gutenprint: PrintingMode: entered mode not known conditional block\n");
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint: PrintingMode: entered mode not known conditional block\n");
       /* add code to find color inks */
       /* default type must be deduced from the default mode */
       /* use color if available, so break after first (color) is found, since ink types ordered with gray last */
@@ -2756,8 +2760,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.caps = caps;
 
   /* find the wanted media type */
-  /* - media type has priority 
-     - then we select source and duplex option
+  /* - media type has priority
+     - then we select source
+     - then inkset (cartridge selection)
+     - then we select duplex
      - after that we compare if mode is compatible with media
      - if not, we replace it using closest quality setting
      - then we decide on printhead colors based on actual mode to use
@@ -2765,6 +2771,10 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   privdata.pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   privdata.slot = canon_source_type(media_source,caps);
+
+  /* cartridge selection if any: default is Both---but should change to NULL if CANON_CAP_T is not available */
+  privdata.ink_set = get_media_type(caps,stp_get_string_parameter(v, "InkSet"));
+
   privdata.duplex_str = duplex_mode;
 
   /* find the wanted print mode: NULL if not yet set */
@@ -2772,11 +2782,15 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     stp_erprintf("Calling get_current_parameter from canon_do_print routine");
   privdata.mode = canon_get_current_mode(v);
 
-  if(!privdata.mode)
+  if(!privdata.mode) {
     privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
+    /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
+    privdata.mode = canon_get_current_mode(v);
+  }
 
   /* set quality */
   privdata.quality = privdata.mode->quality;
+
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
