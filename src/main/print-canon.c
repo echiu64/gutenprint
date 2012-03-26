@@ -159,8 +159,6 @@ typedef struct
   const canon_paper_t *pt;
   /* cartridge selection for CANON_CAP_T */
   const char *ink_set;
-  /* inkset selection for modes */
-  const char *ink_type;
   /* Gernot: cross-reference between media and modes */
   const canon_modeuse_t* modeuse;
   /* final inks used for output, after selection process completed */
@@ -2718,6 +2716,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int i;
   int		status = 1;
   const char	*media_source = stp_get_string_parameter(v, "InputSlot");
+  const char    *ink_type = stp_get_string_parameter(v, "InkType");
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
@@ -2776,10 +2775,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.slot = canon_source_type(media_source,caps);
 
   /* cartridge selection if any: default is Both---but should change to NULL if CANON_CAP_T is not available */
-  privdata.ink_set = get_media_type(caps,stp_get_string_parameter(v, "InkSet"));
-
-  /* InkType selection, input to mode selection code */
-  privdata.ink_type = get_media_type(caps,stp_get_string_parameter(v, "InkType"));
+  privdata.ink_set = stp_get_string_parameter(v, "InkSet");
 
   privdata.duplex_str = duplex_mode;
 
