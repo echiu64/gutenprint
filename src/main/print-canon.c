@@ -660,7 +660,6 @@ canon_printhead_colors(const stp_vars_t*v)
     /* if an inktype selected check what it is */
     if(ink_type){
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	/*if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {*/
 	if (mode->ink_types & canon_inktypes[i].ink_type) {
 	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	  if (ERRPRINT)
@@ -2818,6 +2817,22 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.ink_set = stp_get_string_parameter(v, "InkSet");
 
   privdata.duplex_str = duplex_mode;
+
+  /* make adjustment to InkType to comply with InkSet */
+  /* - although InSet adjustment is pre-supposed, even if InkSet is not adjusted, 
+       the InkType adjustment will be validated against mode later */
+  if (!strcmp(privdata.ink_set,"Black")) {
+    if (strcmp(ink_type,"Gray")) {/* if ink_type is NOT set to Gray yet */
+      stp_dprintf(STP_DBG_CANON, v, "canon_do_print: InkSet Black, so InkType set to Gray\n");
+      stp_set_string_parameter(v, "InkType", "Gray");
+    }
+  }
+  else if (!strcmp(privdata.ink_set,"Color")) {
+    if (strcmp(ink_type,"RGB")) {/* if ink_type is not set to RGB (CMY) */
+      stp_dprintf(STP_DBG_CANON, v, "canon_do_print: InkSet Color, so InkType changed to RGB (CMY)\n");
+      stp_set_string_parameter(v, "InkType", "RGB");
+    }
+  } /* no restriction for InkSet set to "Both" */
 
   /* find the wanted print mode: NULL if not yet set */
   if (ERRPRINT)
