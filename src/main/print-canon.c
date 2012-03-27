@@ -516,19 +516,19 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if (ERRPRINT)
 	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
     }
-
+    
     /* beginning of mode replacement code: this can maybe go into the above resolution block */
     if (media_type && resolution && mode) {
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
       if (ERRPRINT)
 	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
-
+      
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
 	  stp_erprintf("DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
-
+	
 	/* scroll through modeuse list to find media */
 	for(i=0;i<mlist->count;i++){
 	  if(!strcmp(media_type->name,mlist->modeuses[i].name)){
@@ -543,6 +543,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	i=0;
 	modecheck=1;
 	while (muse->mode_name_list[i]!=NULL){
+	  /* need to check for duplex in case it is a replacement for another mode */
 	  if(!strcmp(mode->name,muse->mode_name_list[i])){
 	    modecheck=0;
 	    break;
@@ -554,14 +555,19 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  stp_erprintf("DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
 	/* if we did not find a mode*/
 	if (modecheck!=0) {
+
 	  /* pick first mode name for now, for that media */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
 	  if (ERRPRINT)
 	    stp_erprintf("DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
+	  
+	  /* choose new mode based on InkSet, InkType, Duplex setting, quality of original mode */
 	  replaceres = muse->mode_name_list[0];
+	  
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
 	  if (ERRPRINT)
 	    stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
+	  
 	  /* finally, do again with replaceres what we did with resolution */
 	  for(i=0;i<caps->modelist->count;i++){
 	    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
@@ -572,6 +578,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      break;
 	    }
 	  }
+	}
+	else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
+	  /* need to check for duplex in case it is a replacement for another mode */
+	  /* code to check InkType compatibility: set InkType to that of mode, if more than one then need to know Ink Set */
+	  /*stp_set_string_parameter(v, "InkType", "XXX");*/
 	}
 	
       } /* limited to MP610 for now */
@@ -2778,6 +2789,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.pt = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   privdata.slot = canon_source_type(media_source,caps);
 
+  /* ---  make adjustment to InkSet based on Media --- */
+
   /* cartridge selection if any: default is Both---but should change to NULL if CANON_CAP_T is not available */
   /* check if InkSet chosen is possible for this Media */
   /* - if Black, check if modes for selected media have a black flag */
@@ -2788,17 +2801,14 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     for(i=0;i<mlist->count;i++){
       if(!strcmp(privdata.pt->name,mlist->modeuses[i].name)){
 	muse = &mlist->modeuses[i];
-	/*stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);*/
-	/*if (ERRPRINT)
-	  stp_erprintf("DEBUG: Gutenprint: mode searching: assigned '%s'\n",muse->name);*/
-	/* check if use_flags has black-only set */
 	break;
       }
     }
 
     if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Black")) {
       /* check if there is any mode for that media with K-only inktype */
-      /* if not, change it to "Both" NOTE: TODO---find a way to set monochrome printing */
+      /* if not, change it to "Both" */
+      /* NOTE: User cannot force monochrome printing here, since that would require changing the Color Model */
       if (!(mlist->modeuses[i].use_flags & INKSET_BLACK)) {
 	stp_set_string_parameter(v, "InkSet", "Both");	
       }
@@ -2816,11 +2826,16 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* get InkSet after adjustment */
   privdata.ink_set = stp_get_string_parameter(v, "InkSet");
 
+  /* --- no current restrictions for Duplex setting --- */
+
+  /* in particular, we do not constraint duplex printing to certain media */
   privdata.duplex_str = duplex_mode;
 
-  /* make adjustment to InkType to comply with InkSet */
-  /* - although InSet adjustment is pre-supposed, even if InkSet is not adjusted, 
-       the InkType adjustment will be validated against mode later */
+  /* ---  make adjustment to InkType to comply with InkSet --- */
+
+  /*  although InSet adjustment is pre-supposed, even if InkSet is not
+      adjusted, the InkType adjustment will be validated against mode
+      later */
   if (!strcmp(privdata.ink_set,"Black")) {
     if (strcmp(ink_type,"Gray")) {/* if ink_type is NOT set to Gray yet */
       stp_dprintf(STP_DBG_CANON, v, "canon_do_print: InkSet Black, so InkType set to Gray\n");
@@ -2828,22 +2843,28 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     }
   }
   else if (!strcmp(privdata.ink_set,"Color")) {
-    if (strcmp(ink_type,"RGB")) {/* if ink_type is not set to RGB (CMY) */
+    if (strcmp(ink_type,"RGB")) {/* if ink_type is NOT set to RGB (CMY) yet */
       stp_dprintf(STP_DBG_CANON, v, "canon_do_print: InkSet Color, so InkType changed to RGB (CMY)\n");
       stp_set_string_parameter(v, "InkType", "RGB");
     }
   } /* no restriction for InkSet set to "Both" */
 
+  /* --- make adjustments to mode --- */
+
   /* find the wanted print mode: NULL if not yet set */
   if (ERRPRINT)
-    stp_erprintf("Calling get_current_parameter from canon_do_print routine");
+    stp_erprintf("Calling get_current_parameter from canon_do_print routine (before default set)");
   privdata.mode = canon_get_current_mode(v);
 
   if(!privdata.mode) {
     privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
     /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
+  if (ERRPRINT)
+    stp_erprintf("Calling get_current_parameter from canon_do_print routine (after default set)");
     privdata.mode = canon_get_current_mode(v);
   }
+
+  /* --- completed all adjustments: options should be consistent --- */
 
   /* set quality */
   privdata.quality = privdata.mode->quality;
