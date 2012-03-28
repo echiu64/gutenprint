@@ -690,7 +690,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  else {
 	    if (!ink_set) {
 	      stp_set_string_parameter(v, "InkSet", "Both");
-	      ink_type = stp_get_string_parameter(v, "InkType");
+	      ink_set = stp_get_string_parameter(v, "InkSet");
 	    }
 	    /* if InkType does not match that of mode, change InkType to match it */
 	    /* choose highest color as default, as there is only one option for Black */
@@ -796,9 +796,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    }
 	    else {
 	      /* mode is fine */
-	      if (strcmp(ink_type,"Gray")) /* if it it not set to Gray already */
+	      if (strcmp(ink_type,"Gray")) {/* if it it not set to Gray already */
 		stp_set_string_parameter(v, "InkType", "Gray");
-	      ink_type = stp_get_string_parameter(v, "InkType");
+		ink_type = stp_get_string_parameter(v, "InkType");
+	      }
 	    }
 	  }
 	  else if (ink_set && !strcmp(ink_set,"Color")) {
@@ -857,13 +858,13 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  else {
 	    if (!ink_set) {
 	      stp_set_string_parameter(v, "InkSet", "Both");
-	      ink_type = stp_get_string_parameter(v, "InkType");
+	      ink_set = stp_get_string_parameter(v, "InkSet");
 	    }
 	    /* if InkType does not match that of mode, change InkType to match it */
 	    /* choose highest color as default, as there is only one option for Black */
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) {
-		if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
