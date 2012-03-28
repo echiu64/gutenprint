@@ -495,7 +495,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char *ink_type = stp_get_string_parameter(v, "InkType");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
-    const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
+    const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP450_modeuselist;
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
     int i,j;
@@ -525,7 +525,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if (ERRPRINT)
 	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
       
-      if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP450")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -580,7 +580,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  replaceres = muse->mode_name_list[0];
 
 	  /* start new find mode code */
-#if 0
+#if 1
 	  quality = mode->quality;
 	  if (ink_set && !strcmp(ink_set,"Black")) {
 	    if (!(mode->ink_types & CANON_INK_K)) {
@@ -886,7 +886,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  }
 	}
 	
-      } /* limited to MP610 for now */
+      } /* limited to MP450 for now */
     }
     /* end of mode replacement code */
 
@@ -923,6 +923,20 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
     }
 
+    /* set PrintingMode */
+    if (mode) { /* final mode takes precedence */
+      if (mode->ink_types == CANON_INK_K)
+	stp_set_string_parameter(v, "PrintingMode", "BW");
+      else
+	stp_set_string_parameter(v, "PrintingMode", "Color");
+    }
+    else if (ink_type) { /* mode not yet known, but InkType known. InkSet should have been handled together with InkType above */
+      if (!strcmp(ink_type,"Gray"))
+	stp_set_string_parameter(v, "PrintingMode", "BW");
+      else
+	stp_set_string_parameter(v, "PrintingMode", "Color");
+    }
+
     return mode;
 }
 
@@ -940,6 +954,14 @@ canon_printhead_colors(const stp_vars_t*v)
   if (ERRPRINT)
     stp_erprintf(" entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
 
+  /* if a mode is available, use it. Else mode is NULL */
+  if (ERRPRINT)
+    stp_erprintf("Calling get_current_parameter from canon_printhead_colors");
+  mode = canon_get_current_mode(v);
+  
+  /* get the printing mode again */
+  print_mode = stp_get_string_parameter(v, "PrintingMode");
+
   /* if the printing mode was already selected as BW, accept it */
   if(print_mode && !strcmp(print_mode, "BW")){
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
@@ -954,13 +976,6 @@ canon_printhead_colors(const stp_vars_t*v)
       stp_erprintf("(canon_printhead_colors[BW]) Found InkSet black selection\n");
     return CANON_INK_K;
   }
-
-
-  /* if a mode is available, use it. Else mode is NULL */
-  if (ERRPRINT)
-    stp_erprintf("Calling get_current_parameter from canon_printhead_colors");
-  mode = canon_get_current_mode(v);
-
   
   /* originaly finds selected InkType of form: CANON_INK_<inks> */
   /* but this is incorrect, since it does not check media or mode */
@@ -3032,7 +3047,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
-  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
+  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP450_modeuselist;
   const canon_modeuse_t* muse = NULL;
   int monocheck = 0;
   int colcheck = 0;
@@ -3096,7 +3111,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* check if InkSet chosen is possible for this Media */
   /* - if Black, check if modes for selected media have a black flag */
   /*   else, set InkSet to "Both" for now */
-  if ( (!strcmp(caps->name,"PIXMA MP610")) ) { /* limited to MP610 for now */
+  if ( (!strcmp(caps->name,"PIXMA MP450")) ) { /* limited to MP610 for now */
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
