@@ -503,10 +503,6 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     char* replaceres;
 
     /* for debugging */
-    if (!ink_set){
-      stp_set_string_parameter(v, "InkSet","Both");
-      ink_set = stp_get_string_parameter(v, "InkSet");
-    }
     if (!ink_type){
       stp_set_string_parameter(v, "InkType","Gray");
       ink_type = stp_get_string_parameter(v, "InkType");
@@ -578,7 +574,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	if (ERRPRINT)
 	  stp_erprintf("DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
 
-	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value: '%s'\n",ink_set);
+	if (ink_set)
+	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value: '%s'\n",ink_set);
+	else
+	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value is NULL\n");
 
 	/* if we did not find a mode*/
 	if (modecheck!=0) {
@@ -589,6 +588,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    stp_erprintf("DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
 	  
 	  /* TODO: finally want to choose new mode based on InkSet, InkType, Duplex setting, quality of original mode */
+
 	  replaceres = muse->mode_name_list[0];
 	  
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
@@ -620,8 +620,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
 	  /* need to check for duplex in case it is a replacement for another mode */
 	  quality = mode->quality;
-	  /* code to check InkType compatibility: set InkType to that of mode, if more than one then need to know Ink Set */
-	  if (!strcmp(ink_set,"Black")) {
+	  if (ink_set && !strcmp(ink_set,"Black")) {
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -673,7 +672,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      ink_type = stp_get_string_parameter(v, "InkType");
 	    }
 	  }
-	  else if (!strcmp(ink_type,"Color")) {
+	  else if (ink_set && !strcmp(ink_set,"Color")) {
 	    if (!(mode->ink_types & CANON_INK_CMY)) {
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -720,12 +719,17 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    }
 	    else {
 	      /* mode is fine */
-	      if (strcmp(stp_get_string_parameter(v, "InkType"),"RGB")) /* if it it not set to RGB/CMY already */
+	      if (strcmp(stp_get_string_parameter(v, "InkType"),"RGB")) { /* if it it not set to RGB/CMY already */
 		stp_set_string_parameter(v, "InkType", "RGB");
+		ink_type = stp_get_string_parameter(v, "InkType");
+	      }
+	    }
+	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
+	  else {
+	    if (!ink_set) {
+	      stp_set_string_parameter(v, "InkSet", "Both");
 	      ink_type = stp_get_string_parameter(v, "InkType");
 	    }
-	  } /* no restrictions for InkSet "Both" */
-	  else {
 	    /* if InkType does not match that of mode, change InkType to match it */
 	    /* choose highest color as default, as there is only one option for Black */
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
