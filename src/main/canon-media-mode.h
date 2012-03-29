@@ -33,9 +33,20 @@ typedef struct {
   const char *name; /* unstranslated media name */
   const char** mode_name_list; /* untranslated mode names */
   const unsigned int use_flags;
-#define INKSET_BLACK 0x1
-#define INKSET_COLOR 0x2
-#define INKSET_BOTH  0x4
+  /* flags to indicate support in the media */
+#define INKSET_BLACK_SUPPORT 0x1
+#define INKSET_COLOR_SUPPORT 0x2
+  /*#define INKSET_BOTH_SUPPORT  0x4*/
+#define INKSET_PHOTO_SUPPORT 0x8
+  /* duplex support for media --- this is currently not implemented: so duplex can be specified for all media types */
+#define DUPLEX_SUPPORT       0x10
+  /* flags to indicate existence of special replacement modes to search for */
+#define INKSET_BLACK_MODEREPL 0x100
+#define INKSET_COLOR_MODEREPL 0x200
+  /*#define INKSET_BOTH_MODEREPL  0x400*/
+#define INKSET_PHOTO_MODEREPL 0x800
+#define DUPLEX_MODEREPL       0x1000
+
 } canon_modeuse_t;
 
 typedef struct {
@@ -127,18 +138,18 @@ static const char* canon_MULTIPASS_MP450_modeuses_PPother[] = {
   };
 
 static const canon_modeuse_t canon_MULTIPASS_MP450_modeuses[] = {
- { "Plain",             canon_MULTIPASS_MP450_modeuses_plain, 0 },
- { "PhotopaperPro",	canon_MULTIPASS_MP450_modeuses_PPpro, 0 },
- { "PhotopaperPlus",	canon_MULTIPASS_MP450_modeuses_PPplus, 0 },
- { "PhotopaperPlusDouble", canon_MULTIPASS_MP450_modeuses_PPplusDS, 0 },
- { "PhotopaperMatte",	canon_MULTIPASS_MP450_modeuses_PPplusDS, 0 },
- { "GlossyPaper",	canon_MULTIPASS_MP450_modeuses_PPgloss, 0 },
- { "Coated",		canon_MULTIPASS_MP450_modeuses_PPplusDS, 0 },
- { "InkJetHagaki", 	canon_MULTIPASS_MP450_modeuses_PPplusDS, 0 },
- { "Hagaki", 	        canon_MULTIPASS_MP450_modeuses_Hagaki, 0 },
- { "TShirt",		canon_MULTIPASS_MP450_modeuses_TShirt, 0 },
- { "Envelope",		canon_MULTIPASS_MP450_modeuses_Hagaki, 0 },
- { "PhotopaperOther",	canon_MULTIPASS_MP450_modeuses_PPother, 0 },
+ { "Plain",             canon_MULTIPASS_MP450_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotopaperPro",	canon_MULTIPASS_MP450_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+ { "PhotopaperPlus",	canon_MULTIPASS_MP450_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotopaperPlusDouble", canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "GlossyPaper",	canon_MULTIPASS_MP450_modeuses_PPgloss, INKSET_COLOR_SUPPORT },
+ { "Coated",		canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "Hagaki", 	        canon_MULTIPASS_MP450_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "TShirt",		canon_MULTIPASS_MP450_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+ { "Envelope",		canon_MULTIPASS_MP450_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "PhotopaperOther",	canon_MULTIPASS_MP450_modeuses_PPother, INKSET_COLOR_SUPPORT },
  };
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP450);

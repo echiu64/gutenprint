@@ -3125,14 +3125,14 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       /* check if there is any mode for that media with K-only inktype */
       /* if not, change it to "Both" */
       /* NOTE: User cannot force monochrome printing here, since that would require changing the Color Model */
-      if (!(mlist->modeuses[i].use_flags & INKSET_BLACK)) {
+      if (!(mlist->modeuses[i].use_flags & INKSET_BLACK_SUPPORT)) {
 	stp_set_string_parameter(v, "InkSet", "Both");	
       }
     }
     else if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Color")) {
       /* check if there is any mode for that media with no K in the inkset at all */
       /* if not, change it to "Both" */
-      if (!(mlist->modeuses[i].use_flags & INKSET_COLOR)) {
+      if (!(mlist->modeuses[i].use_flags & INKSET_COLOR_SUPPORT)) {
 	stp_set_string_parameter(v, "InkSet", "Both");	
       }
     } /* no restriction for "Both" yet --- note there are other cartridge types too! */
