@@ -110,8 +110,9 @@ typedef struct {
 #define MODE_FLAG_S 0x80               /* mode-related setup command on iP90/iP9v and iP100 */
   /* cartridge/InkSet-specific modes for replacement */
 #define MODE_FLAG_BLACK 0x100          /* selection of black cartridge: replacement modes */
-#define MODE_FLAG_COLOR 0x100          /* selection of color cartridge: replacement modes */
-#define MODE_FLAG_PHOTO 0x100          /* selection of photo color cartridge in BJC series printers (in lieu of color and black, or combined color/black) */
+#define MODE_FLAG_COLOR 0x200          /* selection of color cartridge: replacement modes */
+#define MODE_FLAG_PHOTO 0x400          /* selection of photo color cartridge in BJC series printers (in lieu of color and black, or combined color/black) */
+#define MODE_FLAG_NODUPLEX 0x800       /* selection of mode for duplex: list modes that do not work for duplex---skip these in mode searches  */
   const canon_delay_t* delay;          /* delay settings for this printmode */
   const double density;                /* density multiplier    */
   const double gamma;                  /* gamma multiplier      */
