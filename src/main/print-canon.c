@@ -502,16 +502,17 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     int modecheck, quality, modefound;
     char* replaceres;
 
-    /* TODO: handle flags for inkset-specific and duplex-specific mode replacement */
     /*
       canon-mode-media:
-       INKSET_BLACK_MODEREPL
-       INKSET_COLOR_MODEREPL
-       DUPLEX_MODEREPL
+       INKSET_BLACK_SUPPORT: media type supports black-only cartridge
+       INKSET_COLOR_SUPPORT: media type supports color-only cartridge
+       INKSET_BLACK_MODEREPL: media type has special modes for black-only cartridge
+       INKSET_COLOR_MODEREPL: media type has special modes for black-only cartridge
+       DUPLEX_MODEREPL: media type has (a) special mode(s) for duplex
       canon-modes.h:
-       MODE_FLAG_BLACK
-       MODE_FLAG_COLOR
-       MODE_FLAG_NOPDUPLEX
+       MODE_FLAG_BLACK: mode can be used for supporting black-only cartridge
+       MODE_FLAG_COLOR: mode can be used for supporting color-only cartridge
+       MODE_FLAG_NOPDUPLEX: mode cannot be used for duplex, must be skipped
      */
 
     if(resolution){
@@ -581,24 +582,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	/* if we did not find a mode*/
 	if (modecheck!=0) {
 
-	  /* pick first mode name for now, for that media */
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
-	  if (ERRPRINT)
-	    stp_erprintf("DEBUG: Gutenprint: first item in the name list: '%s'\n",muse->mode_name_list[0]);
-	  
-	  /* TODO: finally want to choose new mode based on InkSet, InkType, Duplex setting, quality of original mode */
-
-	  /* old, simple find mode code */
-	  replaceres = muse->mode_name_list[0];
-
-	  /* start new find mode code */
-#if 1
 	  quality = mode->quality;
-	  if (ink_set && !strcmp(ink_set,"Black")) {
+	  if (ink_set && !strcmp(ink_set,"Black")) { /* Black InkSet */
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
-		 quality is major factor
 	       */
 	      i=0;
 	      modefound=0;
@@ -606,24 +594,56 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		/* need to check for duplex in case it is a replacement for another mode */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if (caps->modelist->modes[j].quality >= quality){ /* keep setting the mode until lowest matching quality is found */
-		      mode = &caps->modelist->modes[j];
-		      modefound=1;
+		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
+		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		      if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
 		    }
-		    break; /* go to next mode in muse list */
+		    else { /* no special replacement modes for black inkset */
+		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
+		    }
 		  }
 		}
 		i++;
 	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		replaceres = muse->mode_name_list[0];
-		for(i=0;i<caps->modelist->count;i++){
-		  if(!strcmp(replaceres,caps->modelist->modes[i].name)){
-		    mode = &caps->modelist->modes[i];
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    if (ERRPRINT)
-		      stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    break;
+	      if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
+		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		  i=0;
+		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		    /* pick first mode with MODE_FLAG_BLACK */
+		    for(j=0;j<caps->modelist->count;j++){
+		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			  break; /* go to next mode in muse list */
+			}
+		      }
+		    }
+		    i++;
+		  }
+		}
+		else {  /* no special replacement modes for black inkset */
+		  replaceres = muse->mode_name_list[0];
+		  for(i=0;i<caps->modelist->count;i++){
+		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
+		      mode = &caps->modelist->modes[i];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      if (ERRPRINT)
+			stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      break;
+		    }
 		  }
 		}
 	      }
@@ -646,11 +666,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      ink_type = stp_get_string_parameter(v, "InkType");
 	    }
 	  }
-	  else if (ink_set && !strcmp(ink_set,"Color")) {
+	  else if (ink_set && !strcmp(ink_set,"Color")) { /* Color InkSet */
 	    if (!(mode->ink_types & CANON_INK_CMY)) {
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
-		 quality is major factor
 	      */
 	      i=0;
 	      modefound=0;
@@ -658,24 +677,56 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		/* need to check for duplex in case it is a replacement for another mode */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if (caps->modelist->modes[j].quality >= quality){ /* keep setting the mode until lowest matching quality is found */
-		      mode = &caps->modelist->modes[j];
-		      modefound=1;
+		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
+		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
 		    }
-		    break; /* go to next mode in muse list */
+		    else { /* no special replacement modes for color inkset */
+		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
+		    }
 		  }
 		}
 		i++;
 	      }
 	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		replaceres = muse->mode_name_list[0];
-		for(i=0;i<caps->modelist->count;i++){
-		  if(!strcmp(replaceres,caps->modelist->modes[i].name)){
-		    mode = &caps->modelist->modes[i];
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    if (ERRPRINT)
-		      stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    break;
+		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
+		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		  i=0;
+		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		    /* pick first mode with MODE_FLAG_COLOR */
+		    for(j=0;j<caps->modelist->count;j++){
+		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			  break; /* go to next mode in muse list */
+			}
+		      }
+		    }
+		    i++;
+		  }
+		}
+		else {  /* no special replacement modes for color inkset */
+		  replaceres = muse->mode_name_list[0];
+		  for(i=0;i<caps->modelist->count;i++){
+		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
+		      mode = &caps->modelist->modes[i];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      if (ERRPRINT)
+			stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      break;
+		    }
 		  }
 		}
 	      }
@@ -728,23 +779,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  }
-#endif
-	  /* ended find a good mode code */
-	  
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
 	  if (ERRPRINT)
 	    stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
-	  
-	  /* finally, do again with replaceres what we did with resolution */
-	  for(i=0;i<caps->modelist->count;i++){
-	    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
-	      mode = &caps->modelist->modes[i];
-	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-	      if (ERRPRINT)
-		stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-	      break;
-	    }
-	  }      
 	  /* set InkType for the mode decided upon */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -756,41 +793,73 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  }
+
 	}
 
 	else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
+
 	  /* need to check for duplex in case it is a replacement for another mode */
 	  quality = mode->quality;
 	  if (ink_set && !strcmp(ink_set,"Black")) {
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
-		 quality is major factor
 	       */
 	      i=0;
 	      modefound=0;
 	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		/* need to check for duplex in case it is a replacement for another mode */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if (caps->modelist->modes[j].quality >= quality){ /* keep setting the mode until lowest matching quality is found */
-		      mode = &caps->modelist->modes[j];
-		      modefound=1;
+		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
+		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
 		    }
-		    break; /* go to next mode in muse list */
+		    else { /* no special replacement modes for black inkset */
+		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
+		    }
 		  }
 		}
 		i++;
 	      }
 	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		replaceres = muse->mode_name_list[0];
-		for(i=0;i<caps->modelist->count;i++){
-		  if(!strcmp(replaceres,caps->modelist->modes[i].name)){
-		    mode = &caps->modelist->modes[i];
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    if (ERRPRINT)
-		      stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    break;
+		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		  i=0;
+		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		    /* pick first mode with MODE_FLAG_BLACK */
+		    for(j=0;j<caps->modelist->count;j++){
+		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			  break; /* go to next mode in muse list */
+			}
+		      }
+		    }
+		    i++;
+		  }
+		}
+		else {  /* no special replacement modes for black inkset */
+		  replaceres = muse->mode_name_list[0];
+		  for(i=0;i<caps->modelist->count;i++){
+		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
+		      mode = &caps->modelist->modes[i];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      if (ERRPRINT)
+			stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      break;
+		    }
 		  }
 		}
 	      }
@@ -815,10 +884,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    }
 	  }
 	  else if (ink_set && !strcmp(ink_set,"Color")) {
-	    if (!(mode->ink_types & CANON_INK_CMY)) {
+	    if (!(mode->ink_types & CANON_INK_CMY)) { /* Colo InkSet */
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
-		 quality is major factor
 	      */
 	      i=0;
 	      modefound=0;
@@ -826,24 +894,56 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		/* need to check for duplex in case it is a replacement for another mode */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if (caps->modelist->modes[j].quality >= quality){ /* keep setting the mode until lowest matching quality is found */
-		      mode = &caps->modelist->modes[j];
-		      modefound=1;
+		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
+		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
 		    }
-		    break; /* go to next mode in muse list */
+		    else { /* no special replacement modes for color inkset */
+		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
+			/* keep setting the mode until lowest matching quality is found */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		      break; /* go to next mode in muse list */
+		    }
 		  }
 		}
 		i++;
 	      }
 	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		replaceres = muse->mode_name_list[0];
-		for(i=0;i<caps->modelist->count;i++){
-		  if(!strcmp(replaceres,caps->modelist->modes[i].name)){
-		    mode = &caps->modelist->modes[i];
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    if (ERRPRINT)
-		      stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
-		    break;
+		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
+		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		  i=0;
+		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		    /* pick first mode with MODE_FLAG_COLOR */
+		    for(j=0;j<caps->modelist->count;j++){
+		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			  break; /* go to next mode in muse list */
+			}
+		      }
+		    }
+		    i++;
+		  }
+		}
+		else {  /* no special replacement modes for color inkset */
+		  replaceres = muse->mode_name_list[0];
+		  for(i=0;i<caps->modelist->count;i++){
+		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
+		      mode = &caps->modelist->modes[i];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      if (ERRPRINT)
+			stp_erprintf("DEBUG: Gutenprint: setting mode finally to be: '%s'\n",mode->name);
+		      break;
+		    }
 		  }
 		}
 	      }
@@ -896,6 +996,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  }
+
 	}
 	
       } /* limited to MP450 for now */
