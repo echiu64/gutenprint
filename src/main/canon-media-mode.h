@@ -228,6 +228,7 @@ static const canon_modeuse_t canon_PIXMA_iP6000_modeuses[] = {
  { "Coated",		canon_PIXMA_iP6000_modeuses_PPmatte, 0 },
  { "InkJetHagaki", 	canon_PIXMA_iP6000_modeuses_inkjetHagaki, 0 },/*untested*/
  { "Hagaki", 	        canon_PIXMA_iP6000_modeuses_Hagaki, 0 },
+ { "CD",   	        canon_PIXMA_iP4000_modeuses_disc, 0 },/*NOTE:temporary*/
  { "DiscCompat",	canon_PIXMA_iP6000_modeuses_disc, 0 },
  { "DiscOthers",	canon_PIXMA_iP6000_modeuses_disc, 0 },
  { "TShirt",		canon_PIXMA_iP6000_modeuses_TShirt, 0 },

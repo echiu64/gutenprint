@@ -495,7 +495,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char *ink_type = stp_get_string_parameter(v, "InkType");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
-    const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP450_modeuselist;
+    const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
     int i,j;
@@ -538,7 +538,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if (ERRPRINT)
 	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
       
-      if ( (!strcmp(caps->name,"PIXMA MP450")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP6000")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -557,6 +557,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	/* now scroll through to find if the mode is in the modeuses list */
 	i=0;
 	modecheck=1;
+	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",muse->name);
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",muse->name);
 	while (muse->mode_name_list[i]!=NULL){
 	  if(!strcmp(mode->name,muse->mode_name_list[i])){
 	    modecheck=0;
@@ -1038,7 +1041,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 
 	}
 	
-      } /* limited to MP450 for now */
+      } /* limited to iP6000 for now */
     }
     /* end of mode replacement code */
 
@@ -3199,7 +3202,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
-  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP450_modeuselist;
+  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
   const canon_modeuse_t* muse = NULL;
   int monocheck = 0;
   int colcheck = 0;
