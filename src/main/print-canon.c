@@ -558,7 +558,6 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	i=0;
 	modecheck=1;
 	while (muse->mode_name_list[i]!=NULL){
-	  /* need to check for duplex in case it is a replacement for another mode */
 	  if(!strcmp(mode->name,muse->mode_name_list[i])){
 	    modecheck=0;
 	    break;
@@ -591,23 +590,28 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      i=0;
 	      modefound=0;
 	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		/* need to check for duplex in case it is a replacement for another mode */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
 		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 		      if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check -- rare for monochrome, cannot remember any such case */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
 		    else { /* no special replacement modes for black inkset */
 		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check -- rare for monochrome, cannot remember any such case */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
@@ -625,16 +629,20 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			  break; /* go to next mode in muse list */
+			  if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			    /* duplex check -- rare for monochrome, cannot remember any such case */
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
 			}
+			break; /* go to next mode in muse list */
 		      }
 		    }
 		    i++;
 		  }
 		}
 		else {  /* no special replacement modes for black inkset */
+		  /* need a while loop here to deal with duplex */
 		  replaceres = muse->mode_name_list[0];
 		  for(i=0;i<caps->modelist->count;i++){
 		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
@@ -674,23 +682,28 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      i=0;
 	      modefound=0;
 	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		/* need to check for duplex in case it is a replacement for another mode */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
 		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
 		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
 		    else { /* no special replacement modes for color inkset */
 		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
@@ -708,10 +721,13 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
 			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			  break; /* go to next mode in muse list */
+			  if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			    /* duplex check */
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
 			}
+			break; /* go to next mode in muse list */
 		      }
 		    }
 		    i++;
@@ -719,6 +735,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 		else {  /* no special replacement modes for color inkset */
 		  replaceres = muse->mode_name_list[0];
+		  /* need a while loop here to deal with duplex */
 		  for(i=0;i<caps->modelist->count;i++){
 		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
 		      mode = &caps->modelist->modes[i];
@@ -750,6 +767,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
+	  /* need to add duplex restrictions */
 	  else {
 	    if (!ink_set) {
 	      stp_set_string_parameter(v, "InkSet", "Both");
@@ -814,16 +832,22 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check -- rare for monochrome, cannot remember any such case */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
 		    else { /* no special replacement modes for black inkset */
 		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check -- rare for monochrome, cannot remember any such case */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
@@ -841,10 +865,13 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			  break; /* go to next mode in muse list */
+			  if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			    /* duplex check -- rare for monochrome, cannot remember any such case */
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
 			}
+			break; /* go to next mode in muse list */
 		      }
 		    }
 		    i++;
@@ -852,6 +879,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 		else {  /* no special replacement modes for black inkset */
 		  replaceres = muse->mode_name_list[0];
+		  /* need while loop here to deal with duplex */
 		  for(i=0;i<caps->modelist->count;i++){
 		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
 		      mode = &caps->modelist->modes[i];
@@ -884,7 +912,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    }
 	  }
 	  else if (ink_set && !strcmp(ink_set,"Color")) {
-	    if (!(mode->ink_types & CANON_INK_CMY)) { /* Colo InkSet */
+	    if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
 	      */
@@ -898,16 +926,22 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
 		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
 		    else { /* no special replacement modes for color inkset */
 		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
 			/* keep setting the mode until lowest matching quality is found */
-			mode = &caps->modelist->modes[j];
-			modefound=1;
+			if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
 		      }
 		      break; /* go to next mode in muse list */
 		    }
@@ -925,10 +959,13 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
 			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			  break; /* go to next mode in muse list */
+			  if ( !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			    /* duplex check */
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
 			}
+			break; /* go to next mode in muse list */
 		      }
 		    }
 		    i++;
@@ -936,6 +973,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 		else {  /* no special replacement modes for color inkset */
 		  replaceres = muse->mode_name_list[0];
+		  /* need while loop here to deal with duplex */
 		  for(i=0;i<caps->modelist->count;i++){
 		    if(!strcmp(replaceres,caps->modelist->modes[i].name)){
 		      mode = &caps->modelist->modes[i];
@@ -967,6 +1005,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
+	  /* need to add duplex checks */
 	  else {
 	    if (!ink_set) {
 	      stp_set_string_parameter(v, "InkSet", "Both");
