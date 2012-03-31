@@ -492,8 +492,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 #endif
     const char *resolution = stp_get_string_parameter(v, "Resolution");
     const char *ink_set = stp_get_string_parameter(v, "InkSet");
-    const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
+    const char *duplex_mode = stp_get_string_parameter(v, "Duplex");
     const char *ink_type = stp_get_string_parameter(v, "InkType");
+    const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
     const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
@@ -501,7 +502,16 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
     int i,j;
     int modecheck, quality, modefound;
-    char* replaceres;
+
+    /* Logic: priority of options
+       1. Media --- always present for final selection.
+       2. InkSet (cartridge selection) --- optional as only some printers offer this.
+       3. PrintingMode --- for printers which have K-only monochrome modes can choose BW.
+       4. Duplex --- for printers that have special duplex modes need to skip non-duplex modes.
+       5. InkType --- suggestion only, since modes are tied to ink types in most Canon printers.
+       6. Quality --- suggestion, based on initially-selected mode.
+       7. Mode --- once chosen, InkType is selected based on quality, inkset, printing mode.
+     */
 
     /*
       canon-mode-media:
@@ -586,7 +596,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	if (modecheck!=0) {
 
 	  quality = mode->quality;
-	  if (ink_set && !strcmp(ink_set,"Black")) { /* Black InkSet */
+	  /* Black InkSet, or InkSet available and PrintingMode set to BW */
+	  if ( (ink_set && !strcmp(ink_set,"Black")) || (ink_set && printing_mode && !strcmp(printing_mode,"BW")) ) {
+	    /* if PrintingMode is BW, set InkSet to Black */
+	    stp_set_string_parameter(v, "InkSet","BW");
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -768,7 +781,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    }
 #endif
 	  }
-	  else if (ink_set && !strcmp(ink_set,"Color")) { /* Color InkSet */
+	/* Color InkSet, or Inkset available and PrintingMode set to Color */
+	else if ( (ink_set && !strcmp(ink_set,"Color")) || (ink_set && printing_mode && !strcmp(printing_mode,"Color")) ) {
+	  /* if PrintingMode is Color, set InkSet to Color */
+	    stp_set_string_parameter(v, "InkSet","Color");
 	    if (!(mode->ink_types & CANON_INK_CMY)) {
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -951,6 +967,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 #endif
 	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
 	  else {
+	    /* need to add code for PrintingMode logic here */
 	    if (!ink_set) {
 	      stp_set_string_parameter(v, "InkSet", "Both");
 	      ink_set = stp_get_string_parameter(v, "InkSet");
@@ -989,9 +1006,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  }
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
+	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
 	  if (ERRPRINT)
-	    stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",replaceres);
+	    stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
 	  /* set InkType for the mode decided upon */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1009,7 +1026,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
 	  
 	  quality = mode->quality;
-	  if (ink_set && !strcmp(ink_set,"Black")) {
+	  /* Black InkSet, or InkSet available and PrintingMode set to BW */
+	  if ( (ink_set && !strcmp(ink_set,"Black")) || (ink_set && printing_mode && !strcmp(printing_mode,"BW")) ) {
+	    /* if PrintingMode is BW, set InkSet to Black */
+	    stp_set_string_parameter(v, "InkSet","BW");
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -1191,7 +1211,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 #endif
 	  }
-	  else if (ink_set && !strcmp(ink_set,"Color")) {
+	  else if ( (ink_set && !strcmp(ink_set,"Color")) || (ink_set && printing_mode && !strcmp(printing_mode,"Color")) ) {
+	    /* if PrintingMode is Color, set InkSet to Color */
+	    stp_set_string_parameter(v, "InkSet","Color");
 	    if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -1376,6 +1398,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 #endif
 	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
 	  else {
+	    /* need to add code for PrintingMode here */
 	    if (!ink_set) {
 	      stp_set_string_parameter(v, "InkSet", "Both");
 	      ink_set = stp_get_string_parameter(v, "InkSet");
