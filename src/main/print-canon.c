@@ -596,10 +596,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	if (modecheck!=0) {
 
 	  quality = mode->quality;
-	  /* Black InkSet, or InkSet available and PrintingMode set to BW */
-	  if ( (ink_set && !strcmp(ink_set,"Black")) || (ink_set && printing_mode && !strcmp(printing_mode,"BW")) ) {
-	    /* if PrintingMode is BW, set InkSet to Black */
-	    stp_set_string_parameter(v, "InkSet","BW");
+	  /* Black InkSet */
+	  if (ink_set && !strcmp(ink_set,"Black"))  {
+	    stp_set_string_parameter(v, "PrintingMode","BW");
+	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -773,18 +773,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 	      }
 	    }
-#if 0
-	      /* if it it not set to Gray already --- old code */
-	      if (strcmp(ink_type,"Gray")) 
-		stp_set_string_parameter(v, "InkType", "Gray");
-	      ink_type = stp_get_string_parameter(v, "InkType");
-	    }
-#endif
 	  }
-	/* Color InkSet, or Inkset available and PrintingMode set to Color */
-	else if ( (ink_set && !strcmp(ink_set,"Color")) || (ink_set && printing_mode && !strcmp(printing_mode,"Color")) ) {
-	  /* if PrintingMode is Color, set InkSet to Color */
-	    stp_set_string_parameter(v, "InkSet","Color");
+	  /* Color InkSet */
+	  else if (ink_set && !strcmp(ink_set,"Color")) {
+	    stp_set_string_parameter(v, "PrintingMode","Color");
+	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	    if (!(mode->ink_types & CANON_INK_CMY)) {
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -958,21 +951,82 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 	      }
 	    }
-#if 0	      
-	      /* if it it not set to RGB/CMY already --- old code */
-	      if (strcmp(stp_get_string_parameter(v, "InkType"),"RGB")) { /* if it it not set to RGB/CMY already */
-		stp_set_string_parameter(v, "InkType", "RGB");
-		ink_type = stp_get_string_parameter(v, "InkType");
-	      }
-#endif
-	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
+	  } /* no restrictions for InkSet "Both" or if no InkSet set yet --- do not worry about InkSet at all */
 	  else {
-	    /* need to add code for PrintingMode logic here */
-	    if (!ink_set) {
-	      stp_set_string_parameter(v, "InkSet", "Both");
-	      ink_set = stp_get_string_parameter(v, "InkSet");
+	    if (printing_mode && !strcmp(printing_mode,"Color")) {
+	      /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
+	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+		i=0;
+		quality = mode->quality;
+		modefound=0;
+		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		  for(j=0;j<caps->modelist->count;j++){
+		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		      if ( (caps->modelist->modes[j].quality >= quality) ) {
+			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
+			}
+		      }
+		      break; /* go to next mode in muse list */
+		    }
+		  }
+		  i++;
+		}
+	      }
 	    }
-	    /* if mode is not a matching duplex mode, need to find a new one */
+	    else if (printing_mode && !strcmp(printing_mode,"BW")) {
+	      /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
+	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+		i=0;
+		quality = mode->quality;
+		modefound=0;
+		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		  for(j=0;j<caps->modelist->count;j++){
+		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		      if ( (caps->modelist->modes[j].quality >= quality) ) {
+			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  if (caps->modelist->modes[j].ink_types == CANON_INK_K) {
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
+			}
+		      }
+		      break; /* go to next mode in muse list */
+		    }
+		  }
+		  i++;
+		}
+	      }
+	    }
+	    else { /* no restriction from PrintingMode if not set yet */
+	      /* if mode is not a matching duplex mode, need to find a new one */
+	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+		i=0;
+		quality = mode->quality;
+		modefound=0;
+		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		  for(j=0;j<caps->modelist->count;j++){
+		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		      if ( (caps->modelist->modes[j].quality >= quality) ) {
+			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
+		      }
+		      break; /* go to next mode in muse list */
+		    }
+		  }
+		  i++;
+		}
+	      }
+	    }
+	    /* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
 	    if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
 	      i=0;
 	      quality = mode->quality;
@@ -985,6 +1039,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 			/* duplex check */
 			mode = &caps->modelist->modes[j];
 			modefound=1;
+			/* set PrintingMode to whatever the mode is capable of */
+			if (caps->modelist->modes[j].ink_types > CANON_INK_K)
+			  stp_set_string_parameter(v,"PrintingMode","Color");
+			else
+			  stp_set_string_parameter(v,"PrintingMode","BW");
 		      }
 		    }
 		    break; /* go to next mode in muse list */
@@ -1020,16 +1079,15 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	      }
 	    }
 	  }
-
 	}
 
 	else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
 	  
 	  quality = mode->quality;
-	  /* Black InkSet, or InkSet available and PrintingMode set to BW */
-	  if ( (ink_set && !strcmp(ink_set,"Black")) || (ink_set && printing_mode && !strcmp(printing_mode,"BW")) ) {
-	    /* if PrintingMode is BW, set InkSet to Black */
-	    stp_set_string_parameter(v, "InkSet","BW");
+	  /* Black InkSet */
+	  if (ink_set && !strcmp(ink_set,"Black")) {
+	    stp_set_string_parameter(v, "PrintingMode","BW");
+	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	    if (!(mode->ink_types & CANON_INK_K)) {
 	      /* need a new mode: 
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -1203,17 +1261,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 	      }
 	    }
-#if 0
-	      /* if it it not set to Gray already --- old code */
-	      if (strcmp(ink_type,"Gray")) {
-		stp_set_string_parameter(v, "InkType", "Gray");
-		ink_type = stp_get_string_parameter(v, "InkType");
-	      }
-#endif
 	  }
-	  else if ( (ink_set && !strcmp(ink_set,"Color")) || (ink_set && printing_mode && !strcmp(printing_mode,"Color")) ) {
-	    /* if PrintingMode is Color, set InkSet to Color */
-	    stp_set_string_parameter(v, "InkSet","Color");
+	    /* InkSet Color */
+	  else if (ink_set && !strcmp(ink_set,"Color")) {
+	    stp_set_string_parameter(v, "PrintingMode","Color");
+	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	    if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
 	      /* need a new mode
 		 loop through modes in muse list searching for a matching inktype, comparing quality
@@ -1389,21 +1441,82 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		}
 	      }
 	    }
-#if 0
-	      /* if it it not set to RGB/CMY already --- old code */
-	      if (strcmp(stp_get_string_parameter(v, "InkType"),"RGB")) {
-		stp_set_string_parameter(v, "InkType", "RGB");
-		ink_type = stp_get_string_parameter(v, "InkType");
-	      }
-#endif
 	  } /* no restrictions for InkSet "Both" or if no InkSet set yet */
 	  else {
-	    /* need to add code for PrintingMode here */
-	    if (!ink_set) {
-	      stp_set_string_parameter(v, "InkSet", "Both");
-	      ink_set = stp_get_string_parameter(v, "InkSet");
+	    if (printing_mode && !strcmp(printing_mode,"Color")) {
+	      /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
+	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+		i=0;
+		quality = mode->quality;
+		modefound=0;
+		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		  for(j=0;j<caps->modelist->count;j++){
+		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		      if ( (caps->modelist->modes[j].quality >= quality) ) {
+			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
+			}
+		      }
+		      break; /* go to next mode in muse list */
+		    }
+		  }
+		  i++;
+		}
+	      }
 	    }
-	    /* if mode is not a matching duplex mode, need to find a new one */
+	    else if (printing_mode && !strcmp(printing_mode,"BW")) {
+	      /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
+	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+		i=0;
+		quality = mode->quality;
+		modefound=0;
+		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		  for(j=0;j<caps->modelist->count;j++){
+		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		      if ( (caps->modelist->modes[j].quality >= quality) ) {
+			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  if (caps->modelist->modes[j].ink_types == CANON_INK_K) {
+			    mode = &caps->modelist->modes[j];
+			    modefound=1;
+			  }
+			}
+		      }
+		      break; /* go to next mode in muse list */
+		    }
+		  }
+		  i++;
+		}
+	      }
+	    }
+	    else { /* no restriction from PrintingMode if not set yet */
+	      /* if mode is not a matching duplex mode, need to find a new one */
+	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+		i=0;
+		quality = mode->quality;
+		modefound=0;
+		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		  for(j=0;j<caps->modelist->count;j++){
+		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		      if ( (caps->modelist->modes[j].quality >= quality) ) {
+			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			  /* duplex check */
+			  mode = &caps->modelist->modes[j];
+			  modefound=1;
+			}
+		      }
+		      break; /* go to next mode in muse list */
+		    }
+		  }
+		  i++;
+		}
+	      }
+	    }
+	    /* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
 	    if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
 	      i=0;
 	      quality = mode->quality;
@@ -1416,6 +1529,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 			/* duplex check */
 			mode = &caps->modelist->modes[j];
 			modefound=1;
+			/* set PrintingMode to whatever the mode is capable of */
+			if (caps->modelist->modes[j].ink_types > CANON_INK_K)
+			  stp_set_string_parameter(v,"PrintingMode","Color");
+			else
+			  stp_set_string_parameter(v,"PrintingMode","BW");
 		      }
 		    }
 		    break; /* go to next mode in muse list */
