@@ -62,6 +62,94 @@ static const canon_modeuselist_t name##_modeuselist = {     \
   name##_modeuses                                           \
 }
 
+/* ----------------------------------- Canon iP3000  ----------------------------------- */
+static const char* canon_PIXMA_iP3000_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi_high",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* highest mode not supported yet */
+static const char* canon_PIXMA_iP3000_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3000_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3000_modeuses_PPplusDS[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+/* Note: iP3000 US driver does not have inkjetHagaki or Hagaki media */
+/* untested */
+static const char* canon_PIXMA_iP3000_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3000_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3000_modeuses_disc[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3000_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3000_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const char* canon_PIXMA_iP3000_modeuses_transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_iP3000_modeuses[] = {
+ { "Plain",             canon_PIXMA_iP3000_modeuses_plain, 0 },
+ { "PhotopaperPro",	canon_PIXMA_iP3000_modeuses_PPpro, 0 },
+ { "PhotopaperPlus",	canon_PIXMA_iP3000_modeuses_PPplus, 0 },
+ { "PhotopaperPlusDouble", canon_PIXMA_iP3000_modeuses_PPplusDS, 0 },
+ { "PhotopaperMatte",	canon_PIXMA_iP3000_modeuses_PPplusDS, 0 },
+ { "GlossyPaper",	canon_PIXMA_iP3000_modeuses_PPplusDS, 0 },
+ { "Coated",		canon_PIXMA_iP3000_modeuses_PPplusDS, 0 },
+ { "InkJetHagaki", 	canon_PIXMA_iP3000_modeuses_inkjetHagaki, 0 },/*untested*/
+ { "Hagaki", 	        canon_PIXMA_iP3000_modeuses_Hagaki, 0 },/*untested*/
+ { "DiscCompat",	canon_PIXMA_iP3000_modeuses_disc, 0 },
+ { "DiscOthers",	canon_PIXMA_iP3000_modeuses_disc, 0 },
+ { "TShirt",		canon_PIXMA_iP3000_modeuses_TShirt, 0 },
+ { "Envelope",		canon_PIXMA_iP3000_modeuses_Hagaki, 0 },
+ { "PhotopaperOther",	canon_PIXMA_iP3000_modeuses_PPother, 0 },
+ { "Transparency",      canon_PIXMA_iP3000_modeuses_transparency, 0 },
+ };
+
+DECLARE_MODEUSES(canon_PIXMA_iP3000);
 
 /* ----------------------------------- Canon iP4000  ----------------------------------- */
 static const char* canon_PIXMA_iP4000_modeuses_plain[] = {
@@ -94,6 +182,8 @@ static const char* canon_PIXMA_iP4000_modeuses_PPplusDS[] = {
   NULL
 };
 
+/* Note: iP4000 US driver does not have inkjetHagaki or Hagaki media */
+/* untested */
 static const char* canon_PIXMA_iP4000_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
@@ -138,8 +228,8 @@ static const canon_modeuse_t canon_PIXMA_iP4000_modeuses[] = {
  { "PhotopaperMatte",	canon_PIXMA_iP4000_modeuses_PPplusDS, 0 },
  { "GlossyPaper",	canon_PIXMA_iP4000_modeuses_PPplusDS, 0 },
  { "Coated",		canon_PIXMA_iP4000_modeuses_PPplusDS, 0 },
- { "InkJetHagaki", 	canon_PIXMA_iP4000_modeuses_inkjetHagaki, 0 },
- { "Hagaki", 	        canon_PIXMA_iP4000_modeuses_Hagaki, 0 },
+ { "InkJetHagaki", 	canon_PIXMA_iP4000_modeuses_inkjetHagaki, 0 },/*untested*/
+ { "Hagaki", 	        canon_PIXMA_iP4000_modeuses_Hagaki, 0 },/*untested*/
  { "CD",   	        canon_PIXMA_iP4000_modeuses_plain, 0 },/*NOTE:temporary replacement*/
  { "DiscCompat",	canon_PIXMA_iP4000_modeuses_disc, 0 },
  { "DiscOthers",	canon_PIXMA_iP4000_modeuses_disc, 0 },
@@ -239,8 +329,8 @@ static const canon_modeuse_t canon_PIXMA_iP6000_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP6000);
 
-/* ----------------------------------- Canon MP450  ----------------------------------- */
-static const char* canon_MULTIPASS_MP450_modeuses_plain[] = {
+/* ----------------------------------- Canon MP150  ----------------------------------- */
+static const char* canon_MULTIPASS_MP150_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "600x600dpi_draft",/*untested*/
@@ -262,33 +352,33 @@ static const char* canon_MULTIPASS_MP450_modeuses_plain[] = {
   };
 
 /* photohigh mode disabled in canon-modes.h until cmy (Photo CMY inks only) printing is fixed */
-static const char* canon_MULTIPASS_MP450_modeuses_PPpro[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh3",
   /*  "600x600dpi_photohigh",*/
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_MULTIPASS_MP450_modeuses_PPplus[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_PPplus[] = {
   /*  "600x600dpi_photohigh",*/
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_MULTIPASS_MP450_modeuses_PPplusDS[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_PPplusDS[] = {
   /*  "600x600dpi_photohigh",*/
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_MULTIPASS_MP450_modeuses_PPgloss[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_PPgloss[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_MULTIPASS_MP450_modeuses_Hagaki[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   "600x600dpi_draft2",
@@ -303,33 +393,33 @@ static const char* canon_MULTIPASS_MP450_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_MULTIPASS_MP450_modeuses_TShirt[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_MULTIPASS_MP450_modeuses_PPother[] = {
+static const char* canon_MULTIPASS_MP150_modeuses_PPother[] = {
   /*  "600x600dpi_photohigh",*/
   "600x600dpi_photo",/*NOTE: this mode does not exist for PPother, temporary replacement */
   NULL
   };
 
-static const canon_modeuse_t canon_MULTIPASS_MP450_modeuses[] = {
- { "Plain",             canon_MULTIPASS_MP450_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
- { "PhotopaperPro",	canon_MULTIPASS_MP450_modeuses_PPpro, INKSET_COLOR_SUPPORT },
- { "PhotopaperPlus",	canon_MULTIPASS_MP450_modeuses_PPplus, INKSET_COLOR_SUPPORT },
- { "PhotopaperPlusDouble", canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "PhotopaperMatte",	canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "GlossyPaper",	canon_MULTIPASS_MP450_modeuses_PPgloss, INKSET_COLOR_SUPPORT },
- { "Coated",		canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "InkJetHagaki", 	canon_MULTIPASS_MP450_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "Hagaki", 	        canon_MULTIPASS_MP450_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
- { "TShirt",		canon_MULTIPASS_MP450_modeuses_TShirt, INKSET_COLOR_SUPPORT },
- { "Envelope",		canon_MULTIPASS_MP450_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
- { "PhotopaperOther",	canon_MULTIPASS_MP450_modeuses_PPother, INKSET_COLOR_SUPPORT },
+static const canon_modeuse_t canon_MULTIPASS_MP150_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MP150_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotopaperPro",	canon_MULTIPASS_MP150_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+ { "PhotopaperPlus",	canon_MULTIPASS_MP150_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotopaperPlusDouble", canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "GlossyPaper",	canon_MULTIPASS_MP150_modeuses_PPgloss, INKSET_COLOR_SUPPORT },
+ { "Coated",		canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+ { "Hagaki", 	        canon_MULTIPASS_MP150_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "TShirt",		canon_MULTIPASS_MP150_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+ { "Envelope",		canon_MULTIPASS_MP150_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "PhotopaperOther",	canon_MULTIPASS_MP150_modeuses_PPother, INKSET_COLOR_SUPPORT },
  };
 
-DECLARE_MODEUSES(canon_MULTIPASS_MP450);
+DECLARE_MODEUSES(canon_MULTIPASS_MP150);
 
 /* ----------------------------------- Canon MP610  ----------------------------------- */
 static const char* canon_MULTIPASS_MP610_modeuses_plain[] = {
