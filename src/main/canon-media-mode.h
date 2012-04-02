@@ -268,12 +268,6 @@ static const char* canon_PIXMA_iP4200_modeuses_PPplus[] = {
   NULL
 };
 
-static const char* canon_PIXMA_iP4200_modeuses_PPplusDS[] = {
-  "600x600dpi_photohigh",
-  "600x600dpi_photo",
-  NULL
-};
-
 /* high mode not yet supported */
 static const char* canon_PIXMA_iP4200_modeuses_inkjetHagaki[] = {
   "600x600dpi_photo2",
@@ -726,6 +720,81 @@ static const canon_modeuse_t canon_MULTIPASS_MP610_modeuses[] = {
  };
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP610);
+
+/* ----------------------------------- Canon MP830  ----------------------------------- */
+static const char* canon_MULTIPASS_MP830_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/*most photo modes not yet supported */
+static const char* canon_MULTIPASS_MP830_modeuses_PPpro[] = {
+  "600x600dpi_photodraft",/*temporary stand-in*/
+  NULL
+};
+
+/* only draft available */
+static const char* canon_MULTIPASS_MP830_modeuses_PPplus[] = {
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/*most photo modes not yet supported */
+static const char* canon_MULTIPASS_MP830_modeuses_PPplusDS[] = {
+  "600x600dpi_photodraft",/*temporary stand-in*/
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_MULTIPASS_MP830_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP830_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP830_modeuses_disc[] = {
+  "600x600dpi_photodraft",/*temporary stand-in*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP830_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP830_modeuses_PPother[] = {
+  "600x600dpi_photodraft",/*temporary stand-in*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP830_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MP830_modeuses_plain, 0 },
+ { "PhotopaperPro",	canon_MULTIPASS_MP830_modeuses_PPpro, 0 },/*not supported yet*/
+ { "PhotopaperPlus",	canon_MULTIPASS_MP830_modeuses_PPplus, 0 },
+ { "PhotopaperPlusDouble", canon_MULTIPASS_MP830_modeuses_PPplusDS, 0 },/*not supported yet*/
+ { "GlossyPaper",	canon_MULTIPASS_MP830_modeuses_PPplusDS, 0 },/*not supported yet*/
+ { "PhotopaperMatte",	canon_MULTIPASS_MP830_modeuses_PPplusDS, 0 },/*not supported yet*/
+ { "Coated",		canon_MULTIPASS_MP830_modeuses_PPplusDS, 0 },/*not supported yet*/
+ { "InkJetHagaki", 	canon_MULTIPASS_MP830_modeuses_inkjetHagaki, 0 },
+ { "Hagaki", 	        canon_MULTIPASS_MP830_modeuses_Hagaki, 0 },
+ { "CD",   	        canon_MULTIPASS_MP830_modeuses_plain, 0 },/*NOTE:temporary replacement*/
+ { "DiscCompat",	canon_MULTIPASS_MP830_modeuses_disc, 0 },/*not supported yet*/
+ { "DiscOthers",	canon_MULTIPASS_MP830_modeuses_disc, 0 },/*not supported yet*/
+ { "TShirt",		canon_MULTIPASS_MP830_modeuses_TShirt, 0 },
+ { "Envelope",		canon_MULTIPASS_MP830_modeuses_Hagaki, 0 },
+ { "PhotopaperOther",	canon_MULTIPASS_MP830_modeuses_PPother, 0 },/*not supported yet*/
+ };
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP830);
 
 /* ----------------------------------- Canon MX360  ----------------------------------- */
 static const char* canon_MULTIPASS_MX360_modeuses_plain[] = {

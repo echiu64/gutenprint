@@ -1490,6 +1490,7 @@ static const canon_paper_t canon_MULTIPASS_MP600_papers[] = {
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "CD",	        N_ ("CD"),	                        0x00,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },/*allow plain modes for now*/
   { "DiscCompat",	N_ ("Printable Disc (recommended)"),	0x0c,0x12,0x1f,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (others)"),		0x0c,0x12,0x20,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
