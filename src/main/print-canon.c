@@ -502,13 +502,14 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4200_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP5300_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6700_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iX5000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP150_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6700_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP8500_modeuselist;
 
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
@@ -566,7 +567,8 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       /*if ( (!strcmp(caps->name,"PIXMA iP4200")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iP5300")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iP6000")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA iP6700")) ) {
+      /*if ( (!strcmp(caps->name,"PIXMA iP6700")) ) {*/
+      if ( (!strcmp(caps->name,"PIXMA iP8500")) ) {
       /*if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP150")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP550")) ) {*/
@@ -3747,13 +3749,14 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP4200_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP5300_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_iP6700_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iX5000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP150_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP6700_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_iP8500_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -3824,13 +3827,14 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA iP4200")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP5300")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP6000")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP6700")) ) {
       if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP150")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP550")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA iP6700")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP8500")) ) {
 
     
     /* scroll through modeuse list to find media */
