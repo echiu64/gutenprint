@@ -906,9 +906,6 @@ DECLARE_MODEUSES(canon_MULTIPASS_MP150);
 
 /* ----------------------------------- Canon MP250  ----------------------------------- */
 
-/* TODO: mark modes in canon-modes.h */ 
-/*       check color-only (duplex, highest-quality photo) and black-only modes */ 
-
 static const char* canon_MULTIPASS_MP250_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_high2",/* duplex */
@@ -923,7 +920,7 @@ static const char* canon_MULTIPASS_MP250_modeuses_plain[] = {
   "600x600dpi_draftmono",/*untested*/
   "300x300dpi_mono",
   "300x300dpi_draftmono",/*untested*/
-  /* color-only */
+  /* color-only --- no special duplex */
   "600x600dpi_high3",
   "600x600dpi_std3",
   "600x600dpi_draft3",/*untested*/
@@ -950,15 +947,15 @@ static const char* canon_MULTIPASS_MP250_modeuses_PPplus[] = {
 static const char* canon_MULTIPASS_MP250_modeuses_Hagaki[] = {
   "600x600dpi_high5",
   "600x600dpi_std2",
-  "600x600dpi_draft2",
+  "600x600dpi_draft2",/*untested*/
   /* mono */
   "600x600dpi_highmono5",
   "600x600dpi_mono2",
-  "600x600dpi_draftmono2",
+  "600x600dpi_draftmono2",/*untested*/
   /* color-only */
   "600x600dpi_high4",
   "600x600dpi_std4",
-  "600x600dpi_draft4",
+  "600x600dpi_draft4",/*untested*/
   NULL
 };
 
@@ -981,13 +978,13 @@ static const canon_modeuse_t canon_MULTIPASS_MP250_modeuses[] = {
  { "GlossyPaper",	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
  { "PhotopaperMatte",	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
  { "Coated",		canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
- { "HagakiA", 	        canon_MULTIPASS_MP250_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "HagakiA", 	        canon_MULTIPASS_MP250_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
  { "InkJetHagaki", 	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
- { "CanonPhotoHagakiK", canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
- { "ProPhotoHagakiP",   canon_MULTIPASS_MP250_modeuses_PPpro, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
- { "Hagaki", 	        canon_MULTIPASS_MP250_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "CanonPhotoHagakiK", canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "ProPhotoHagakiP",   canon_MULTIPASS_MP250_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+ { "Hagaki", 	        canon_MULTIPASS_MP250_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
  { "TShirt",		canon_MULTIPASS_MP250_modeuses_TShirt, INKSET_COLOR_SUPPORT },
- { "Envelope",		canon_MULTIPASS_MP250_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "Envelope",		canon_MULTIPASS_MP250_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
  { "PhotopaperOther",	canon_MULTIPASS_MP250_modeuses_PPother, INKSET_COLOR_SUPPORT },
  };
 
