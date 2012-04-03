@@ -511,8 +511,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
+	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
 
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
@@ -578,9 +579,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       /*if ( (!strcmp(caps->name,"PIXMA MP550")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP610")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP830")) ) {*/
+      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
       /*if ( (!strcmp(caps->name,"PIXMA MX360")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
+      /*if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -1734,7 +1736,7 @@ canon_printhead_colors(const stp_vars_t*v)
 	    if (ERRPRINT)
 	      stp_erprintf(" highest inktype found --- %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	    return canon_inktypes[i].ink_type;
-	  }      
+	  }
 	}
       }
     }
@@ -1750,18 +1752,20 @@ canon_printhead_colors(const stp_vars_t*v)
   return CANON_INK_K;
 #endif
   /* new fallback: loop through ink type in reverse order, picking first one found, which if CANON_INK_K is supported will be that, else the lowest amount of color */
-  for(i=((sizeof(canon_inktypes)/sizeof(canon_inktypes[0]))-1);i=0;i--){
+  for(i=((sizeof(canon_inktypes)/sizeof(canon_inktypes[0]))-1);i>=0;i--){
     for(j=0;j<caps->modelist->count;j++){
       if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	if (ERRPRINT)
 	  stp_erprintf(" lowest inktype found --- %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	return canon_inktypes[i].ink_type;
-      }      
+      }
     }
   }
 
-
+  /* if fails until here, return something reasonable in most situations */
+  return CANON_INK_K;
+  
 }
 
 static unsigned char
@@ -2998,7 +3002,7 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
 
   const char *ink_set = stp_get_string_parameter(v, "InkSet");
   if (ink_set && !(strcmp(ink_set,"Both"))) {
-    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
       canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
       /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
       /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
@@ -3014,7 +3018,7 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
     }
   }
   else if (ink_set && !(strcmp(ink_set,"Black"))) {
-    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
       canon_cmd(v,ESC28,0x54,3,0x02,0x01,0x01); /* default for iP90, iP100 */
       /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
       /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
@@ -3031,7 +3035,7 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
     }
   }
   else if (ink_set && !(strcmp(ink_set,"Color"))) {
-    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP90v")) ) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
       canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
       /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
       /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
@@ -3764,13 +3768,14 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
+      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
-  int monocheck = 0;
-  int colcheck = 0;
+  /*  int monocheck = 0;
+      int colcheck = 0; */
   int		y;		/* Looping vars */
   canon_privdata_t privdata;
   int		errdiv,		/* Error dividend */
@@ -3845,8 +3850,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
+      if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
+      if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
+      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
