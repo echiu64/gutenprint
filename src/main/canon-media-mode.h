@@ -904,6 +904,95 @@ static const canon_modeuse_t canon_MULTIPASS_MP150_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP150);
 
+/* ----------------------------------- Canon MP250  ----------------------------------- */
+
+/* TODO: mark modes in canon-modes.h */ 
+/*       check color-only (duplex, highest-quality photo) and black-only modes */ 
+
+static const char* canon_MULTIPASS_MP250_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high2",/* duplex */
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",/*untested*/
+  /* mono */
+  "600x600dpi_highmono",
+  "600x600dpi_highmono2",/* duplex */
+  "600x600dpi_mono",
+  "600x600dpi_draftmono",/*untested*/
+  "300x300dpi_mono",
+  "300x300dpi_draftmono",/*untested*/
+  /* color-only */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",/*untested*/
+  "300x300dpi_std3",
+  "300x300dpi_draft3",/*untested*/
+  NULL
+  };
+
+static const char* canon_MULTIPASS_MP250_modeuses_PPpro[] = {
+  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP250_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP250_modeuses_Hagaki[] = {
+  "600x600dpi_high5",
+  "600x600dpi_std2",
+  "600x600dpi_draft2",
+  /* mono */
+  "600x600dpi_highmono5",
+  "600x600dpi_mono2",
+  "600x600dpi_draftmono2",
+  /* color-only */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft4",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP250_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP250_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP250_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MP250_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotoPlusGloss2",	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotoPro2",	        canon_MULTIPASS_MP250_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+ { "PhotoProPlat",	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotoProSemiGloss", canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "GlossyPaper",	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "Coated",		canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "HagakiA", 	        canon_MULTIPASS_MP250_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "CanonPhotoHagakiK", canon_MULTIPASS_MP250_modeuses_PPplus, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "ProPhotoHagakiP",   canon_MULTIPASS_MP250_modeuses_PPpro, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "Hagaki", 	        canon_MULTIPASS_MP250_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "TShirt",		canon_MULTIPASS_MP250_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+ { "Envelope",		canon_MULTIPASS_MP250_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+ { "PhotopaperOther",	canon_MULTIPASS_MP250_modeuses_PPother, INKSET_COLOR_SUPPORT },
+ };
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP250);
+
 /* ----------------------------------- Canon MP550  ----------------------------------- */
 static const char* canon_MULTIPASS_MP550_modeuses_plain[] = {
   "600x600dpi_high",

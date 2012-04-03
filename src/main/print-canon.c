@@ -510,10 +510,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
 
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
@@ -576,10 +577,11 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       /*if ( (!strcmp(caps->name,"PIXMA iP8500")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP150")) ) {*/
+      if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
       /*if ( (!strcmp(caps->name,"PIXMA MP550")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP610")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MP830")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
+      /*if ( (!strcmp(caps->name,"PIXMA MP960")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA MX360")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
@@ -3767,10 +3769,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -3849,10 +3852,11 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA MP550")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
