@@ -1215,7 +1215,6 @@ static const canon_modeuse_t canon_MULTIPASS_MX360_modeuses[] = {
 DECLARE_MODEUSES(canon_MULTIPASS_MX360);
 
 /* ----------------------------------- Canon Pro9000 ----------------------------------- */
-/* TODO: Mono modes: Hagaki, Photo */
 
 static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
   "600x600dpi_hig2",
@@ -1235,6 +1234,9 @@ static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
 /* highest mode not yet supported (R,G inks) */
 static const char* canon_PIXMA_Pro9000_modeuses_PPplusG2[] = {
   "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
   NULL
 };
 
@@ -1242,12 +1244,19 @@ static const char* canon_PIXMA_Pro9000_modeuses_PPplusG2[] = {
 static const char* canon_PIXMA_Pro9000_modeuses_PPplus[] = {
   "600x600dpi_photo",
   "600x600dpi_photodraft2",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
+  "600x600dpi_photomonodraft",
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_PPgloss[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photodraft",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomonodraft",
   NULL
 };
 
@@ -1255,59 +1264,82 @@ static const char* canon_PIXMA_Pro9000_modeuses_PPgloss[] = {
 static const char* canon_PIXMA_Pro9000_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomonomed",
+  "600x600dpi_photomono",
   NULL
 };
 
 /* highest mode not yet supported (R,G inks) */
 static const char* canon_PIXMA_Pro9000_modeuses_PPproPlat[] = {
   "600x600dpi_photohigh",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomonomed",
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_PPmatte[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_inkjetHagaki[] = {
   "600x600dpi_photomed2",
   "600x600dpi_photomed",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_Hagaki[] = {
   "600x600dpi_high3",
-  "600x600dpi_std3",
-  "600x600dpi_std4",
-  "600x600dpi_draft3",
+  "600x600dpi_std3",/*Mono High*/
+  "600x600dpi_std4",/* bw=2 for mono */
+  "600x600dpi_draft3",/* bw=2 for mono */
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_disc[] = {
   "600x600dpi_photohigh4",
   "600x600dpi_photo2",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_board[] = {
   "600x600dpi_photohigh5",
+  /* Mono */
+  "600x600dpi_photomono",
   NULL
   };
 
 static const char* canon_PIXMA_Pro9000_modeuses_photorag[] = {
   "600x600dpi_photohigh5",
   "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
   NULL
   };
 
 static const char* canon_PIXMA_Pro9000_modeuses_TShirt[] = {
-  "600x600dpi_tshirt",
+  "600x600dpi_tshirt",/* bw=2 for mono */
   NULL
 };
 
 static const char* canon_PIXMA_Pro9000_modeuses_PPother[] = {
   "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomono",
   NULL
   };
 
