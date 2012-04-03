@@ -1370,4 +1370,148 @@ static const canon_modeuse_t canon_PIXMA_Pro9000_modeuses[] = {
  };
 
 DECLARE_MODEUSES(canon_PIXMA_Pro9000);
+
+/* ----------------------------------- Canon Pro9000mk2 ----------------------------------- */
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",
+  "600x600dpi_draft2",
+  /* Mono */
+  "600x600dpi_highmono",
+  "600x600dpi_mono",
+  "600x600dpi_draftmono",
+  "600x600dpi_draftmono2",
+  NULL
+  };
+
+/* highest mode not yet supported (R,G inks) */
+static const char* canon_PIXMA_Pro9000mk2_modeuses_PPplusG2[] = {
+  "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photodraft",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomonodraft",
+  NULL
+};
+
+/* highest mode not yet supported (R,G inks) */
+static const char* canon_PIXMA_Pro9000mk2_modeuses_PPpro2[] = {
+  "600x600dpi_photomed",
+  "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomonomed",/*untested: quality setting uncertain*/
+  "600x600dpi_photomono",
+  NULL
+};
+
+/* highest mode not yet supported (R,G inks) */
+static const char* canon_PIXMA_Pro9000mk2_modeuses_PPproPlat[] = {
+  "600x600dpi_photomed",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomonomed",
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_Hagaki[] = {
+  "600x600dpi_high2",/* bw=2 for mono */
+  "600x600dpi_std2",/* bw=2 for mono */
+  "600x600dpi_draft2",/* bw=2 for mono */
+  /* Mono */
+  "600x600dpi_high3",
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_disc[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_board[] = {
+  "600x600dpi_photohigh5",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  NULL
+  };
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_photorag[] = {
+  "600x600dpi_photohigh5",
+  "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomonohigh",
+  "600x600dpi_photomono",
+  NULL
+  };
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",/* bw=2 for mono */
+  NULL
+};
+
+static const char* canon_PIXMA_Pro9000mk2_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  /* Mono */
+  "600x600dpi_photomono",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_Pro9000mk2_modeuses[] = {
+ { "Plain",             canon_PIXMA_Pro9000mk2_modeuses_plain, 0 },
+ { "PhotoPlusGloss2",   canon_PIXMA_Pro9000mk2_modeuses_PPplusG2, 0 },
+ { "GlossyPaper",	canon_PIXMA_Pro9000mk2_modeuses_PPgloss, 0 },
+ { "PhotoProSemiGloss", canon_PIXMA_Pro9000mk2_modeuses_PPplusG2, 0 },
+ { "PhotoPro2",  	canon_PIXMA_Pro9000mk2_modeuses_PPpro2, 0 },
+ { "PhotoProPlat",	canon_PIXMA_Pro9000mk2_modeuses_PPproPlat, 0 },
+ { "PhotopaperMatte",	canon_PIXMA_Pro9000mk2_modeuses_PPmatte, 0 },
+ { "Coated",		canon_PIXMA_Pro9000mk2_modeuses_PPmatte, 0 },
+ { "InkJetHagaki", 	canon_PIXMA_Pro9000mk2_modeuses_inkjetHagaki, 0 },
+ { "Hagaki", 	        canon_PIXMA_Pro9000mk2_modeuses_Hagaki, 0 },
+ { "DiscCompat",	canon_PIXMA_Pro9000mk2_modeuses_disc, 0 },
+ { "DiscOthers",	canon_PIXMA_Pro9000mk2_modeuses_disc, 0 },
+ { "Boardpaper",	canon_PIXMA_Pro9000mk2_modeuses_board, 0 },
+ { "Canvas",	        canon_PIXMA_Pro9000mk2_modeuses_board, 0 },
+ { "FineArtPhotoRag",  canon_PIXMA_Pro9000mk2_modeuses_photorag, 0 },
+ { "FineArtOther",     canon_PIXMA_Pro9000mk2_modeuses_board, 0 },
+ { "FineArtPremiumMatte",canon_PIXMA_Pro9000mk2_modeuses_board, 0 },
+ { "FineArtMuseumEtching",canon_PIXMA_Pro9000mk2_modeuses_photorag, 0 },
+ { "TShirt",		canon_PIXMA_Pro9000mk2_modeuses_TShirt, 0 },
+ { "Envelope",		canon_PIXMA_Pro9000mk2_modeuses_Hagaki, 0 },
+ { "PhotopaperOther",	canon_PIXMA_Pro9000mk2_modeuses_PPother, 0 },
+ };
+
+DECLARE_MODEUSES(canon_PIXMA_Pro9000mk2);
+
 #endif
