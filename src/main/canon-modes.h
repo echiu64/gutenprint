@@ -2114,7 +2114,7 @@ static const canon_mode_t canon_MULTIPASS_MP520_modes[] = {
 };
 DECLARE_MODES(canon_MULTIPASS_MP520,1);
 
-/* photo modes mostly use unsopprted inks */
+/* photo modes mostly use unsupprted inks */
 static const canon_mode_t canon_MULTIPASS_MP530_modes[] = {
   /* plain modes --- duplex same */
   {  600, 600,CANON_INK_K|CANON_INK_CcMmYKk,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(22_C4M4Y4K2c4m4k4on),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},/* CMYKcmk */
@@ -2122,7 +2122,7 @@ static const canon_mode_t canon_MULTIPASS_MP530_modes[] = {
   {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(22_C2M2Y2K2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi_draft",N_("300x300 DPI DRAFT"),INKSET(22_C2M2Y2K2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
   /* photo modes CMYcmk */
-  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo",N_("600x600 DPI PHOTO DRAFT plusGlossy"),INKSET(22_C3M3Y3K2c3m3k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT plusGlossy"),INKSET(22_C3M3Y3K2c3m3k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
   /* inkjet Hagaki */
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photo2",N_("600x600 DPI inkjet Hagaki"),INKSET(22_C3M3Y3K2c3m3k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CcMmYK,"600x600dpi_photodraft2",N_("600x600 DPI DRAFT inkjet Hagaki"),INKSET(22_C3M3Y2K2k3photo_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
