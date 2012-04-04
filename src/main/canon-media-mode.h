@@ -1857,7 +1857,6 @@ static const char* canon_MULTIPASS_MP960_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   /* Mono not yet supported */
-
   NULL
 };
 
@@ -1950,6 +1949,94 @@ static const canon_modeuse_t canon_MULTIPASS_MP960_modeuses[] = {
  };
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP960);
+
+/* ----------------------------------- Canon MP970  ----------------------------------- */
+/* TODO: mono modes for photo media*/
+
+static const char* canon_MULTIPASS_MP970_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high",/*duplex*/
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/*highest mode not yet supported */
+static const char* canon_MULTIPASS_MP970_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_FA[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_disc[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  "600x600dpi_photodraft4",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP970_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP970_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MP970_modeuses_plain, DUPLEX_MODEREPL },
+  { "GlossyPro",	canon_MULTIPASS_MP970_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_MULTIPASS_MP970_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble", canon_MULTIPASS_MP970_modeuses_PPplus, 0 },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MP970_modeuses_PPplus, 0 },
+  { "GlossyPaper",	canon_MULTIPASS_MP970_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_MULTIPASS_MP970_modeuses_PPmatte, 0 },
+  { "Coated",		canon_MULTIPASS_MP970_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_MULTIPASS_MP970_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_MULTIPASS_MP970_modeuses_Hagaki, 0 },
+  { "DiscCompat",	canon_MULTIPASS_MP970_modeuses_disc, 0 },
+  { "DiscOthers",	canon_MULTIPASS_MP970_modeuses_disc, 0 },
+  { "TShirt",		canon_MULTIPASS_MP970_modeuses_TShirt, 0 },
+  { "Envelope",		canon_MULTIPASS_MP970_modeuses_Hagaki, 0 },
+  { "FineArtPhotoRag",	canon_MULTIPASS_MP970_modeuses_FA, 0 },
+  { "FineArtOther",	canon_MULTIPASS_MP970_modeuses_FA, 0 },
+  { "PhotopaperOther",	canon_MULTIPASS_MP970_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP970);
 
 /* ----------------------------------- Canon MX360  ----------------------------------- */
 static const char* canon_MULTIPASS_MX360_modeuses_plain[] = {
