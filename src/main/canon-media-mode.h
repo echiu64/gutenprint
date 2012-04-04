@@ -961,6 +961,86 @@ static const canon_modeuse_t canon_PIXMA_iP6000_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP6000);
 
+/* ----------------------------------- Canon iP6210  ----------------------------------- */
+static const char* canon_PIXMA_iP6210_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  /* Color */
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  "300x300dpi_std2",
+  "300x300dpi_draft2",
+  NULL
+  };
+
+/* Several modes not supported yet */
+static const char* canon_PIXMA_iP6210_modeuses_PPpro[] = {
+  "600x600dpi_photo",
+  /* Color */
+  "600x600dpi_photohigh4",
+  NULL
+};
+
+/* high mode not supported yet */
+static const char* canon_PIXMA_iP6210_modeuses_PPplus[] = {
+  "600x600dpi_photo",
+  /* Color */
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_iP6210_modeuses_PPplusDS[] = {
+/* high mode not supported yet */
+  "600x600dpi_photo",
+  /* Color */
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP6210_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  /* Color */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft4",
+  NULL
+};
+
+static const char* canon_PIXMA_iP6210_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  /* Color */
+  "600x600dpi_std5",
+  NULL
+};
+
+static const char* canon_PIXMA_iP6210_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  /* Color */
+  "600x600dpi_photo2",/* stand-in */
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP6210_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP6210_modeuses_plain, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "GlossyPro",	canon_PIXMA_iP6210_modeuses_PPpro, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "PhotopaperPlus",	canon_PIXMA_iP6210_modeuses_PPplus, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "PhotopaperPlusDouble", canon_PIXMA_iP6210_modeuses_PPplusDS, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "PhotopaperMatte",	canon_PIXMA_iP6210_modeuses_PPplusDS, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "GlossyPaper",	canon_PIXMA_iP6210_modeuses_PPplusDS, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "Coated",		canon_PIXMA_iP6210_modeuses_PPplusDS, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "InkJetHagaki", 	canon_PIXMA_iP6210_modeuses_PPplusDS, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "Hagaki", 	        canon_PIXMA_iP6210_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_PIXMA_iP6210_modeuses_TShirt, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "Envelope",		canon_PIXMA_iP6210_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "PhotopaperOther",	canon_PIXMA_iP6210_modeuses_PPother, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP6210);
+
 /* ----------------------------------- Canon iP6700  ----------------------------------- */
 static const char* canon_PIXMA_iP6700_modeuses_plain[] = {
   "600x600dpi_high",
