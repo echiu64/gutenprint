@@ -71,6 +71,77 @@ typedef struct {
    Pro
 */
 
+/* ----------------------------------- Canon iP2700  ----------------------------------- */
+static const char* canon_PIXMA_iP2700_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  /* Mono */
+  "600x600dpi_highmono",
+  "600x600dpi_mono",
+  "300x300dpi_mono",
+  /* Color */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "300x300dpi_std3",
+  NULL
+  };
+
+static const char* canon_PIXMA_iP2700_modeuses_PPpro[] = {
+  "1200x1200dpi_high",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP2700_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP2700_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  /* Mono */
+  "600x600dpi_highmono2",
+  "600x600dpi_mono2",
+  /* Color */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  NULL
+};
+
+static const char* canon_PIXMA_iP2700_modeuses_TShirt[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const char* canon_PIXMA_iP2700_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP2700_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP2700_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotoPlusGloss2",	canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoPro2",	canon_PIXMA_iP2700_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",	canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_PIXMA_iP2700_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "InkJetHagaki", 	canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_PIXMA_iP2700_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_iP2700_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_PIXMA_iP2700_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_iP2700_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotopaperOther",	canon_PIXMA_iP2700_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP2700);
+
 /* ----------------------------------- Canon iP3000  ----------------------------------- */
 static const char* canon_PIXMA_iP3000_modeuses_plain[] = {
   "600x600dpi_high",
@@ -141,8 +212,8 @@ static const char* canon_PIXMA_iP3000_modeuses_transparency[] = {
 };
 
 static const canon_modeuse_t canon_PIXMA_iP3000_modeuses[] = {
-  { "Plain",             canon_PIXMA_iP3000_modeuses_plain, 0 },
-  { "GlossyPro",	        canon_PIXMA_iP3000_modeuses_PPpro, 0 },
+  { "Plain",            canon_PIXMA_iP3000_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_iP3000_modeuses_PPpro, 0 },
   { "PhotopaperPlus",	canon_PIXMA_iP3000_modeuses_PPplus, 0 },
   { "PhotopaperPlusDouble", canon_PIXMA_iP3000_modeuses_PPplusDS, 0 },
   { "PhotopaperMatte",	canon_PIXMA_iP3000_modeuses_PPplusDS, 0 },
@@ -155,7 +226,7 @@ static const canon_modeuse_t canon_PIXMA_iP3000_modeuses[] = {
   { "TShirt",		canon_PIXMA_iP3000_modeuses_TShirt, 0 },
   { "Envelope",		canon_PIXMA_iP3000_modeuses_Hagaki, 0 },
   { "PhotopaperOther",	canon_PIXMA_iP3000_modeuses_PPother, 0 },
-  { "Transparency",      canon_PIXMA_iP3000_modeuses_transparency, 0 },
+  { "Transparency",     canon_PIXMA_iP3000_modeuses_transparency, 0 },
 };
 
 DECLARE_MODEUSES(canon_PIXMA_iP3000);

@@ -514,6 +514,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iX5000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP150_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP530_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
@@ -521,7 +522,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP530_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP2700_modeuselist;
 
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
@@ -591,6 +592,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP150")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP530")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP550")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
@@ -598,7 +600,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA MP530")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP2700")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -3787,6 +3789,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_PIXMA_iX5000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP150_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP530_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
@@ -3794,7 +3797,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP530_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_iP2700_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -3877,6 +3880,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP150")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP530")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP550")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
@@ -3884,7 +3888,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA MP530")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP2700")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
