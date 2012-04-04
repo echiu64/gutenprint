@@ -499,6 +499,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const canon_mode_t* mode = NULL;
     /*    const canon_modeuselist_t* mlist = &canon_PIXMA_iP3000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4000_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4100_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4200_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4500_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4600_modeuselist;
@@ -518,7 +519,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4100_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4300_modeuselist;
 
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
@@ -573,8 +574,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       
       /*if ( (!strcmp(caps->name,"PIXMA iP3000")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iP4000")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA iP4100")) ) {
+      /*if ( (!strcmp(caps->name,"PIXMA iP4100")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iP4200")) ) {*/
+      if ( (!strcmp(caps->name,"PIXMA iP4300")) ) {
       /*if ( (!strcmp(caps->name,"PIXMA iP4500")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iP4600")) ) {*/
       /*if ( (!strcmp(caps->name,"PIXMA iP4700")) ) {*/
@@ -3766,6 +3768,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const canon_cap_t * caps= canon_get_model_capabilities(v);
   /*  const canon_modeuselist_t* mlist = &canon_PIXMA_iP3000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP4000_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4100_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP4200_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP4500_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP4600_modeuselist;
@@ -3785,7 +3788,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4100_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4300_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -3853,6 +3856,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /*   else, set InkSet to "Both" for now */
   /*  if ( (!strcmp(caps->name,"PIXMA iP3000")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP4000")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP4100")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP4200")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP4500")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP4600")) ) {
@@ -3872,7 +3876,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA iP4100")) ) {
+      if ( (!strcmp(caps->name,"PIXMA iP4300")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){

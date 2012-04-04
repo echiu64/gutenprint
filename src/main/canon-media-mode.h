@@ -400,6 +400,68 @@ static const canon_modeuse_t canon_PIXMA_iP4200_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP4200);
 
+/* ----------------------------------- Canon iP4300  ----------------------------------- */
+static const char* canon_PIXMA_iP4300_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* most photo modes not supported yet --- used photodraft as stand-in everywhere */
+static const char* canon_PIXMA_iP4300_modeuses_PPplus[] = {
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/* high mode not yet supported */
+static const char* canon_PIXMA_iP4300_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP4300_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP4300_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+/*untested*/
+static const char* canon_PIXMA_iP4300_modeuses_transparency[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_iP4300_modeuses[] = {
+  { "Plain",             canon_PIXMA_iP4300_modeuses_plain, 0 },
+  { "GlossyPro",	        canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "PhotopaperPlus",	canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* mostly not yet supported */
+  { "PhotopaperPlusDouble", canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "PhotopaperMatte",	canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "GlossyPaper",	canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "Coated",		canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "InkJetHagaki", 	canon_PIXMA_iP4300_modeuses_inkjetHagaki, 0 },/* partially not yet supported */
+  { "Hagaki", 	        canon_PIXMA_iP4300_modeuses_Hagaki, 0 },
+  { "CD",   	        canon_PIXMA_iP4300_modeuses_plain, 0 },/*NOTE:temporary replacement*/
+  { "DiscCompat",	canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "DiscOthers",	canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "TShirt",		canon_PIXMA_iP4300_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_iP4300_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_iP4300_modeuses_PPplus, 0 },/* not yet supported */
+  { "Transparency",      canon_PIXMA_iP4300_modeuses_transparency, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP4300);
+
 /* ----------------------------------- Canon iP4500  ----------------------------------- */
 static const char* canon_PIXMA_iP4500_modeuses_plain[] = {
   "600x600dpi_high",
