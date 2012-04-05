@@ -1364,6 +1364,93 @@ static const canon_modeuse_t canon_PIXMA_iP6700_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP6700);
 
+/* ----------------------------------- Canon iP7500  ----------------------------------- */
+static const char* canon_PIXMA_iP7500_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* highest modes not yet supported */
+static const char* canon_PIXMA_iP7500_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+
+static const char* canon_PIXMA_iP7500_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP7500_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP7500_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  "600x600dpi_draft2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP7500_modeuses_FA[] = {
+  "600x600dpi_photohigh3",
+  NULL
+};
+
+static const char* canon_PIXMA_iP7500_modeuses_disc[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  "600x600dpi_photodraft4",
+  NULL
+};
+
+static const char* canon_PIXMA_iP7500_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+/*untested*/
+static const char* canon_PIXMA_iP7500_modeuses_Transparency[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP7500_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP7500_modeuses[] = {
+ { "Plain",             canon_PIXMA_iP7500_modeuses_plain, DUPLEX_MODEREPL },
+ { "GlossyPro",	        canon_PIXMA_iP7500_modeuses_PPpro, 0 },
+ { "PhotopaperPlus",	canon_PIXMA_iP7500_modeuses_PPplus, 0 },
+ { "PhotopaperPlusDouble", canon_PIXMA_iP7500_modeuses_PPplus, 0 },
+ { "PhotopaperMatte",	canon_PIXMA_iP7500_modeuses_PPmatte, 0 },
+ { "GlossyPaper",	canon_PIXMA_iP7500_modeuses_PPplus, 0 },
+ { "Coated",		canon_PIXMA_iP7500_modeuses_PPmatte, 0 },
+ { "InkJetHagaki", 	canon_PIXMA_iP7500_modeuses_PPplus, 0 },
+ { "Hagaki", 	        canon_PIXMA_iP7500_modeuses_Hagaki, 0 },
+ { "FineArtPhotoRag", 	canon_PIXMA_iP7500_modeuses_FA, 0 },
+ { "FineArtOther", 	canon_PIXMA_iP7500_modeuses_FA, 0 },
+ { "DiscCompat",	canon_PIXMA_iP7500_modeuses_disc, 0 },
+ { "DiscOthers",	canon_PIXMA_iP7500_modeuses_disc, 0 },
+ { "TShirt",		canon_PIXMA_iP7500_modeuses_TShirt, 0 },
+ { "Envelope",		canon_PIXMA_iP7500_modeuses_Hagaki, 0 },
+ { "Transparency",	canon_PIXMA_iP7500_modeuses_Transparency, 0 },/*untested*/
+ { "PhotopaperOther",	canon_PIXMA_iP7500_modeuses_PPother, 0 },
+ };
+
+DECLARE_MODEUSES(canon_PIXMA_iP7500);
+
 /* ----------------------------------- Canon iP8500  ----------------------------------- */
 static const char* canon_PIXMA_iP8500_modeuses_plain[] = {
   "600x600dpi_high",
