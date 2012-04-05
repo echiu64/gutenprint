@@ -1688,8 +1688,100 @@ static const canon_modeuse_t canon_MULTIPASS_MP150_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP150);
 
-/* ----------------------------------- Canon MP250  ----------------------------------- */
+/* ----------------------------------- Canon MP190  ----------------------------------- */
+static const char* canon_MULTIPASS_MP190_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  /* Mono */
+  "600x600dpi_highmono",
+  "600x600dpi_mono",
+  "600x600dpi_draftmono",/*untested*/
+  "300x300dpi_mono",
+  "300x300dpi_draftmono",
+  /* cColor */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",/*untested*/
+  "300x300dpi_std3",
+  "300x300dpi_draft3",
+  NULL
+  };
 
+/* one high mode not yet supported */
+static const char* canon_MULTIPASS_MP190_modeuses_PPpro[] = {
+  "1200x1200dpi_photohigh2",
+  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+/* one high mode not yet supported */
+static const char* canon_MULTIPASS_MP190_modeuses_PPplusG2[] = {
+  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+/* one high mode not yet supported */
+static const char* canon_MULTIPASS_MP190_modeuses_PPmatte[] = {
+  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP190_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  "600x600dpi_draft2",/*untested*/
+  /* Mono */
+  "600x600dpi_highmono2",
+  "600x600dpi_mono2",
+  "600x600dpi_draftmono2",/*untested*/
+  /* Color */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft4",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP190_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+/* one high mode not yet supported */
+static const char* canon_MULTIPASS_MP190_modeuses_PPother[] = {
+  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photo",/* stand-in */
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP190_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MP190_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotoPlusGloss2",	canon_MULTIPASS_MP190_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoPro2",	canon_MULTIPASS_MP190_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "GlossyPro",	canon_MULTIPASS_MP190_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotopaperPlus",	canon_MULTIPASS_MP190_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MP190_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_MULTIPASS_MP190_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_MULTIPASS_MP190_modeuses_PPmatte, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_MULTIPASS_MP190_modeuses_PPmatte, INKSET_COLOR_SUPPORT },
+  { "InkJetHagaki", 	canon_MULTIPASS_MP190_modeuses_PPmatte, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MP190_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_MULTIPASS_MP190_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MP190_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotopaperOther",	canon_MULTIPASS_MP190_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP190);
+
+/* ----------------------------------- Canon MP250  ----------------------------------- */
 static const char* canon_MULTIPASS_MP250_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_high2",/* duplex */
