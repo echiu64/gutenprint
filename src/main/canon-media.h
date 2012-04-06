@@ -603,7 +603,7 @@ static const canon_paper_t canon_BJC_i320_papers[] = {
 };
 DECLARE_PAPERS(canon_BJC_i320);
 
-/* i455 uses (P */
+/* i455 uses ESC (P */
 static const canon_paper_t canon_BJC_i450_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
