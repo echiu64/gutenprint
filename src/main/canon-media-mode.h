@@ -1027,6 +1027,84 @@ static const canon_modeuse_t canon_PIXMA_iP4900_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP4900);
 
+/* ----------------------------------- Canon iP5000  ----------------------------------- */
+/* high mode not supported yet */
+static const char* canon_PIXMA_iP5000_modeuses_plain[] = {
+  "600x600dpi",
+  "300x300dpi_high",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* high modes not supported yet */
+static const char* canon_PIXMA_iP5000_modeuses_PPpro[] = {
+  "600x600dpi_photodraft",/*stand-in*/
+  NULL
+};
+
+/* high modes not supported yet */
+static const char* canon_PIXMA_iP5000_modeuses_PPplus[] = {
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/* high modes not supported yet */
+static const char* canon_PIXMA_iP5000_modeuses_PPplusDS[] = {
+  "600x600dpi_photodraft",/*stand-in*/
+  NULL
+};
+
+/* US driver does not supply this media: untested */
+static const char* canon_PIXMA_iP5000_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+/* high modes not supported yet */
+static const char* canon_PIXMA_iP5000_modeuses_disc[] = {
+  "600x600dpi_photodraft",/*stand-in*/
+  NULL
+};
+
+static const char* canon_PIXMA_iP5000_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+/* high modes not supported yet */
+static const char* canon_PIXMA_iP5000_modeuses_PPother[] = {
+  "600x600dpi_photodraft",/*stand-in*/
+  NULL
+  };
+
+static const char* canon_PIXMA_iP5000_modeuses_transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_iP5000_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP5000_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_iP5000_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_iP5000_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble", canon_PIXMA_iP5000_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_iP5000_modeuses_PPplusDS, 0 },
+  { "GlossyPaper",	canon_PIXMA_iP5000_modeuses_PPplusDS, 0 },
+  { "Coated",		canon_PIXMA_iP5000_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_iP5000_modeuses_PPplusDS, 0 },/*untested*/
+  { "Hagaki", 	        canon_PIXMA_iP5000_modeuses_Hagaki, 0 },/*untested*/
+  { "DiscCompat",	canon_PIXMA_iP5000_modeuses_disc, 0 },
+  { "DiscOthers",	canon_PIXMA_iP5000_modeuses_disc, 0 },
+  { "TShirt",		canon_PIXMA_iP5000_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_iP5000_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_iP5000_modeuses_PPother, 0 },
+  { "Transparency",     canon_PIXMA_iP5000_modeuses_transparency, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP5000);
+
 /* ----------------------------------- Canon iP5300  ----------------------------------- */
 static const char* canon_PIXMA_iP5300_modeuses_plain[] = {
   "600x600dpi_high",
