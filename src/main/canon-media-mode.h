@@ -493,6 +493,78 @@ static const canon_modeuse_t canon_PIXMA_i850_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_i850);
 
+/* ----------------------------------- Canon i860  ----------------------------------- */
+static const char* canon_PIXMA_i860_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* highest mode not supported yet */
+static const char* canon_PIXMA_i860_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_PIXMA_i860_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_PIXMA_i860_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_i860_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  NULL
+};
+
+static const char* canon_PIXMA_i860_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_i860_modeuses_Transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const char* canon_PIXMA_i860_modeuses_PPother[] = {
+  "600x600dpi_photo",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_i860_modeuses[] = {
+  { "Plain",            canon_PIXMA_i860_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_i860_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_i860_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_PIXMA_i860_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_i860_modeuses_PPplus, 0 },
+  { "GlossyPaper",	canon_PIXMA_i860_modeuses_PPplus, 0 },
+  { "Coated",		canon_PIXMA_i860_modeuses_PPplus, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_i860_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_PIXMA_i860_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_PIXMA_i860_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_i860_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_i860_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_i860_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_i860);
+
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
   "600x600dpi_high2",
