@@ -147,6 +147,84 @@ static const canon_modeuse_t canon_PIXMA_i50_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_i50);
 
+/* ----------------------------------- Canon i450  ----------------------------------- */
+static const char* canon_PIXMA_i450_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_highmono",/* mono mode */
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* need to add support for higher modes */
+static const char* canon_PIXMA_i450_modeuses_PPpro[] = {
+  /*  "600x600dpi_photohigh2",*/
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_PPplus[] = {
+  /*  "600x600dpi_photohigh2",*/
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_PPplusDS[] = {
+  /*  "600x600dpi_photohigh2",*/
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_highmono2",/* mono */
+  "600x600dpi_std2",
+  "600x600dpi_draft2",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_Transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const char* canon_PIXMA_i450_modeuses_PPother[] = {
+  "600x600dpi_photo",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_i450_modeuses[] = {
+  { "Plain",            canon_PIXMA_i450_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_i450_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_i450_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_PIXMA_i450_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_i450_modeuses_PPplusDS, 0 },
+  { "GlossyPaper",	canon_PIXMA_i450_modeuses_PPgloss, 0 },
+  { "Coated",		canon_PIXMA_i450_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_i450_modeuses_PPplusDS, 0 },
+  { "Hagaki", 	        canon_PIXMA_i450_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_i450_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_i450_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_i450_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_i450_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_i450);
+
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
   "600x600dpi_high2",

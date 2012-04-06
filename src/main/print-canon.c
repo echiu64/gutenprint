@@ -498,6 +498,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
     /*
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_i50_modeuselist;
           const canon_modeuselist_t* mlist = &canon_PIXMA_iP2000_modeuselist;
           const canon_modeuselist_t* mlist = &canon_PIXMA_iP2700_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP3000_modeuselist;
@@ -534,7 +535,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i50_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_PIXMA_i450_modeuselist;
 
     const canon_modeuse_t* muse = NULL;
     const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
@@ -588,6 +589,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
       
       /*
+      if ( (!strcmp(caps->name,"i50")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP2000")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP2700")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP3000")) ) {
@@ -624,7 +626,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
-      if ( (!strcmp(caps->name,"i50")) ) {
+      if ( (!strcmp(caps->name,"i450")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -3797,6 +3799,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
   /*
+      const canon_modeuselist_t* mlist = &canon_PIXMA_i50_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP2000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP2700_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_iP3000_modeuselist;
@@ -3833,7 +3836,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i50_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_PIXMA_i450_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -3900,6 +3903,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* - if Black, check if modes for selected media have a black flag */
   /*   else, set InkSet to "Both" for now */
   /*
+      if ( (!strcmp(caps->name,"i50")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP2000")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP2700")) ) {
       if ( (!strcmp(caps->name,"PIXMA iP3000")) ) {
@@ -3936,7 +3940,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {*/
-      if ( (!strcmp(caps->name,"i50")) ) {
+      if ( (!strcmp(caps->name,"i450")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
