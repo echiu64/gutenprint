@@ -565,6 +565,75 @@ static const canon_modeuse_t canon_PIXMA_i860_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_i860);
 
+/* ----------------------------------- Canon i900  ----------------------------------- */
+static const char* canon_PIXMA_i900_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+static const char* canon_PIXMA_i900_modeuses_PPpro[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i900_modeuses_PPplus[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i900_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i900_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  NULL
+};
+
+static const char* canon_PIXMA_i900_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_i900_modeuses_Transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const char* canon_PIXMA_i900_modeuses_PPother[] = {
+  "600x600dpi_photo",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_i900_modeuses[] = {
+  { "Plain",            canon_PIXMA_i900_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_i900_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_i900_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_PIXMA_i900_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_i900_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_i900_modeuses_PPplus, 0 },
+  { "Coated",		canon_PIXMA_i900_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_i900_modeuses_PPplus, 0 },/*untested*/
+  { "Hagaki", 	        canon_PIXMA_i900_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_PIXMA_i900_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_i900_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_i900_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_i900_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_i900);
+
 /* ----------------------------------- Canon i950  ----------------------------------- */
 static const char* canon_PIXMA_i950_modeuses_plain[] = {
   "600x600dpi_high2",
@@ -668,7 +737,6 @@ static const char* canon_PIXMA_i960_modeuses_plain[] = {
   "600x600dpi_draft2",
   "600x600dpi_draftmono",/* mono */
   "600x600dpi_draftmono2",/* mono */
-
   NULL
   };
 
