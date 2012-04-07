@@ -876,7 +876,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I,0,control_cmd_PIXMA_iP2700,
     &canon_BJC_i950_modelist,
-    &canon_BJC_i250_paperlist,
+    &canon_BJC_i320_paperlist,
     NULL,
     NULL,
     NULL,

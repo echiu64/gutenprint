@@ -565,6 +565,99 @@ static const canon_modeuse_t canon_PIXMA_i860_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_i860);
 
+/* ----------------------------------- Canon i950  ----------------------------------- */
+static const char* canon_PIXMA_i950_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high"/*untested*/,
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "600x600dpi_draft2",
+  "600x600dpi_draftmono",/* mono --- untested*/
+  "600x600dpi_draftmono2",/* mono */
+  NULL
+  };
+
+static const char* canon_PIXMA_i950_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untestd*/
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_coated[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_GlossyFilm[] = {
+  "600x600dpi_photohigh2",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_high5",/*untested*/
+  "600x600dpi_std4",/*untested*/
+  "600x600dpi_std5",
+  "600x600dpi_draftmono4",/* mono---untested*/
+  "600x600dpi_draftmono5",/* mono */
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_Transparency[] = {
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  NULL
+};
+
+static const char* canon_PIXMA_i950_modeuses_PPother[] = {
+  "600x600dpi_photo2",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_i950_modeuses[] = {
+  { "Plain",            canon_PIXMA_i950_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_i950_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_i950_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_PIXMA_i950_modeuses_PPmatte, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_i950_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_i950_modeuses_PPmatte, 0 },
+  { "Coated",		canon_PIXMA_i950_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_i950_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_PIXMA_i950_modeuses_Hagaki, 0 },
+  { "GlossyFilm", 	canon_PIXMA_i950_modeuses_GlossyFilm, 0 },
+  { "TShirt",		canon_PIXMA_i950_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_i950_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_i950_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_i950_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_i950);
+
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
   "600x600dpi_high2",
