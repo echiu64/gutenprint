@@ -149,6 +149,77 @@ static const canon_modeuse_t canon_PIXMA_i50_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_i50);
 
+/* ----------------------------------- Canon i70  ----------------------------------- */
+static const char* canon_PIXMA_i70_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+static const char* canon_PIXMA_i70_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_i70_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_i70_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photomed",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_i70_modeuses_Hagaki[] = {
+  "600x600dpi_high3",/*mono*/
+  "600x600dpi_std3",/*color*/
+  "600x600dpi_std4",
+  "600x600dpi_draft2",
+  NULL
+};
+
+static const char* canon_PIXMA_i70_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_i70_modeuses_Transparency[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_i70_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photo2",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_i70_modeuses[] = {
+  { "Plain",            canon_PIXMA_i70_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_i70_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_i70_modeuses_PPpro, 0 },
+  { "PhotopaperPlusDouble",canon_PIXMA_i70_modeuses_PPpro, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_i70_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_i70_modeuses_PPgloss, 0 },
+  { "Coated",		canon_PIXMA_i70_modeuses_PPpro, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_i70_modeuses_PPgloss, 0 },/*untested*/
+  { "Hagaki", 	        canon_PIXMA_i70_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_i70_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_i70_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_i70_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_i70_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_i70);
+
 /* ----------------------------------- Canon i80  ----------------------------------- */
 static const char* canon_PIXMA_i80_modeuses_plain[] = {
   "600x600dpi_high",
