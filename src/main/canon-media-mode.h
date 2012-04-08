@@ -1305,6 +1305,102 @@ static const canon_modeuse_t canon_PIXMA_i9100_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_i9100);
 
+/* ----------------------------------- Canon i9900  ----------------------------------- */
+static const char* canon_PIXMA_i9900_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi",
+  "600x600dpi_draft",
+  "600x600dpi_draft2",
+  "600x600dpi_draftmono",/*mono*/
+  "600x600dpi_draftmono2",/*mono*/
+  NULL
+  };
+
+/* most photo modes use R,G inks and therefore unsupported */
+/* unsupported */
+static const char* canon_PIXMA_i9900_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_PIXMA_i9900_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/* unsupported */
+static const char* canon_PIXMA_i9900_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_PIXMA_i9900_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_i9900_modeuses_coated[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photomed",
+  "600x600dpi_photo",
+  NULL
+};
+
+/*untested*/
+static const char* canon_PIXMA_i9900_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photod",
+  NULL
+};
+
+static const char* canon_PIXMA_i9900_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft5",
+  "600x600dpi_draft4",
+  "600x600dpi_draftmono4",/*mono*/
+  "600x600dpi_draftmono5",/*mono*/
+  NULL
+};
+
+static const char* canon_PIXMA_i9900_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_i9900_modeuses_Transparency[] = {
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  NULL
+};
+
+static const char* canon_PIXMA_i9900_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_i9900_modeuses[] = {
+  { "Plain",            canon_PIXMA_i9900_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_i9900_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_i9900_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_PIXMA_i9900_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_i9900_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_i9900_modeuses_PPgloss, 0 },
+  { "Coated",		canon_PIXMA_i9900_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_i9900_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_PIXMA_i9900_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_PIXMA_i9900_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_i9900_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_i9900_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_i9900_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_i9900);
+
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
   "600x600dpi_high2",
