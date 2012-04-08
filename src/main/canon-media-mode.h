@@ -3091,6 +3091,79 @@ static const canon_modeuse_t canon_PIXMA_iX5000_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iX5000);
 
+/* ----------------------------------- Canon iX6500  ----------------------------------- */
+static const char* canon_PIXMA_iX6500_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+
+static const char* canon_PIXMA_iX6500_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+/* highest mode not supported yet */
+static const char* canon_PIXMA_iX6500_modeuses_PPproPlat[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iX6500_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iX6500_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_iX6500_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iX6500_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+/*untested*/
+static const char* canon_PIXMA_iX6500_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_iX6500_modeuses[] = {
+  { "Plain",            canon_PIXMA_iX6500_modeuses_plain, 0 },
+  { "PhotoPlusGloss2",	canon_PIXMA_iX6500_modeuses_PPplusG2, 0 },
+  { "PhotoProPlat",	canon_PIXMA_iX6500_modeuses_PPproPlat, 0 },
+  { "PhotoProSemiGloss",canon_PIXMA_iX6500_modeuses_PPplusG2, 0 },
+  { "GlossyPaper",	canon_PIXMA_iX6500_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_iX6500_modeuses_PPmatte, 0 },
+  { "Coated",		canon_PIXMA_iX6500_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_iX6500_modeuses_inkjetHagaki, 0 },
+  { "CanonPhotoHagakiK",canon_PIXMA_iX6500_modeuses_PPplusG2, 0 },
+  { "HagakiA", 	        canon_PIXMA_iX6500_modeuses_Hagaki, 0 },
+  { "Hagaki", 	        canon_PIXMA_iX6500_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_iX6500_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_iX6500_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_iX6500_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iX6500);
+
 /* ----------------------------------- Canon MP150  ----------------------------------- */
 static const char* canon_MULTIPASS_MP150_modeuses_plain[] = {
   "600x600dpi_high",
