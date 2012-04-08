@@ -3266,6 +3266,69 @@ static const canon_modeuse_t canon_PIXMA_iX6500_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iX6500);
 
+/* ----------------------------------- Canon iX7000  ----------------------------------- */
+static const char* canon_PIXMA_iX7000_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+
+static const char* canon_PIXMA_iX7000_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untested*/
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_iX7000_modeuses_PPproPlat[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/* highest mode not supported yet */
+static const char* canon_PIXMA_iX7000_modeuses_PPsemigloss[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_iX7000_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_iX7000_modeuses_Hagaki[] = {
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_PIXMA_iX7000_modeuses_FA[] = {
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_iX7000_modeuses[] = {
+  { "Plain",            canon_PIXMA_iX7000_modeuses_plain, 0 },
+  { "PhotoPlusGloss2",	canon_PIXMA_iX7000_modeuses_PPplusG2, 0 },
+  { "PhotoProPlat",	canon_PIXMA_iX7000_modeuses_PPproPlat, 0 },
+  { "PhotoProSemiGloss",canon_PIXMA_iX7000_modeuses_PPsemigloss, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_iX7000_modeuses_PPproPlat, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_iX7000_modeuses_inkjetHagaki, 0 },
+  { "HagakiA", 	        canon_PIXMA_iX7000_modeuses_Hagaki, 0 },
+  { "Hagaki", 	        canon_PIXMA_iX7000_modeuses_Hagaki, 0 },
+  { "FineArtPhotoRag", 	canon_PIXMA_iX7000_modeuses_FA, 0 },
+  { "FineArtOther", 	canon_PIXMA_iX7000_modeuses_FA, 0 },
+  { "Envelope",		canon_PIXMA_iX7000_modeuses_Hagaki, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iX7000);
+
 /* ----------------------------------- Canon MP150  ----------------------------------- */
 static const char* canon_MULTIPASS_MP150_modeuses_plain[] = {
   "600x600dpi_high",
