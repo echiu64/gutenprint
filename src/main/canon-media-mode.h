@@ -126,6 +126,56 @@ static const canon_modeuse_t canon_SELPHY_DS700_modeuses[] = {
 
 DECLARE_MODEUSES(canon_SELPHY_DS700);
 
+/* ----------------------------------- Canon DS810  ----------------------------------- */
+static const char* canon_SELPHY_DS810_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS810_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_SELPHY_DS810_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS810_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS810_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS810_modeuses_Hagaki[] = {
+  "600x600dpi_photo3",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const canon_modeuse_t canon_SELPHY_DS810_modeuses[] = {
+  { "GlossyPro",	canon_SELPHY_DS810_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_SELPHY_DS810_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_SELPHY_DS810_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_SELPHY_DS810_modeuses_PPgloss, 0 },
+  { "InkJetHagaki", 	canon_SELPHY_DS810_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_SELPHY_DS810_modeuses_Hagaki, 0 },
+};
+
+DECLARE_MODEUSES(canon_SELPHY_DS810);
+
 /* ----------------------------------- Canon i50  ----------------------------------- */
 static const char* canon_PIXMA_i50_modeuses_plain[] = {
   "600x600dpi_high",
