@@ -63,6 +63,7 @@ typedef struct {
 }
 
 /* Ordering of data: 
+   DS
    S
    i --- *i is Japanese model, with Hagaki/inkjetHagaki support. 
          i* is US model without such support. Not sure about European models.
@@ -73,6 +74,57 @@ typedef struct {
    MG
    Pro
 */
+
+
+/* ----------------------------------- Canon DS700  ----------------------------------- */
+static const char* canon_SELPHY_DS700_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS700_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_SELPHY_DS700_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS700_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS700_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_SELPHY_DS700_modeuses_Hagaki[] = {
+  "600x600dpi_photo3",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const canon_modeuse_t canon_SELPHY_DS700_modeuses[] = {
+  { "GlossyPro",	canon_SELPHY_DS700_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_SELPHY_DS700_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_SELPHY_DS700_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_SELPHY_DS700_modeuses_PPgloss, 0 },
+  { "InkJetHagaki", 	canon_SELPHY_DS700_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_SELPHY_DS700_modeuses_Hagaki, 0 },
+};
+
+DECLARE_MODEUSES(canon_SELPHY_DS700);
 
 /* ----------------------------------- Canon i50  ----------------------------------- */
 static const char* canon_PIXMA_i50_modeuses_plain[] = {
