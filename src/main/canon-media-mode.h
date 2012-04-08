@@ -4264,6 +4264,86 @@ static const canon_modeuse_t canon_MULTIPASS_MX360_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MX360);
 
+/* ----------------------------------- Canon MX420  ----------------------------------- */
+static const char* canon_MULTIPASS_MX420_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  /* Black */
+  "600x600dpi_highmono",
+  "600x600dpi_mono",
+  "600x600dpi_draftmono",/*untested*/
+  "300x300dpi_mono",
+  "300x300dpi_draftmono",
+  /* Color */
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  "600x600dpi_draft2",/*untested*/
+  "300x300dpi_std2",
+  "300x300dpi_draft2",
+  NULL
+  };
+
+static const char* canon_MULTIPASS_MX420_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX420_modeuses_PPproPlat[] = {
+  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX420_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  /* Black */
+  "600x600dpi_highmono3",
+  "600x600dpi_stdmono3",
+  /* Color */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX420_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX420_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photod",/*untested*/
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MX420_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MX420_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotoPlusGloss2",   canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "PhotoProPlat",	canon_MULTIPASS_MX420_modeuses_PPproPlat, INKSET_COLOR_SUPPORT },
+ { "PhotoProSemiGloss", canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "PhotopaperMatte",	canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "GlossyPaper",	canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "Coated",		canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "HagakiA", 	        canon_MULTIPASS_MX420_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "InkJetHagaki", 	canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "CanonPhotoHagakiK", canon_MULTIPASS_MX420_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+ { "Hagaki", 	        canon_MULTIPASS_MX420_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "TShirt",		canon_MULTIPASS_MX420_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+ { "Envelope",		canon_MULTIPASS_MX420_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotopaperOther",	canon_MULTIPASS_MX420_modeuses_PPother, INKSET_COLOR_SUPPORT },
+ };
+
+DECLARE_MODEUSES(canon_MULTIPASS_MX420);
+
 /* ----------------------------------- Canon Pro9000 ----------------------------------- */
 
 static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {

@@ -2223,7 +2223,7 @@ static const canon_cap_t canon_model_capabilities[] =
     10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP250_slotlist, /* only rear tray also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML,0,control_cmd_PIXMA_iP2700,  /*features */
-    &canon_MULTIPASS_MP480_modelist,
+    &canon_MULTIPASS_MX420_modelist,
     &canon_MULTIPASS_MX420_paperlist,
     NULL,
     NULL,
