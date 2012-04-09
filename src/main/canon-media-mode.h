@@ -5569,6 +5569,78 @@ static const canon_modeuse_t canon_MULTIPASS_MX860_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MX860);
 
+/* ----------------------------------- Canon MX870  ----------------------------------- */
+static const char* canon_MULTIPASS_MX870_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high2",/* duplex */
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX870_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_MULTIPASS_MX870_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX870_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX870_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX870_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX870_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX870_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_MULTIPASS_MX870_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MX870_modeuses_plain, DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MX870_modeuses_PPplusG2, 0 },
+  { "PhotoPro2",	canon_MULTIPASS_MX870_modeuses_PPpro, 0 },
+  { "PhotoProPlat",     canon_MULTIPASS_MX870_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_MULTIPASS_MX870_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_MULTIPASS_MX870_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MX870_modeuses_PPplusG2, 0 },
+  { "Coated",		canon_MULTIPASS_MX870_modeuses_PPmatte, 0 },
+  { "HagakiA", 	        canon_MULTIPASS_MX870_modeuses_Hagaki, 0 },
+  { "InkJetHagaki", 	canon_MULTIPASS_MX870_modeuses_PPplusG2, 0 },
+  { "CanonPhotoHagakiK",canon_MULTIPASS_MX870_modeuses_PPplusG2, 0 },
+  { "Hagaki", 	        canon_MULTIPASS_MX870_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_MULTIPASS_MX870_modeuses_TShirt, 0 },
+  { "Envelope",		canon_MULTIPASS_MX870_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_MULTIPASS_MX870_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MX870);
+
 /* ----------------------------------- Canon Pro9000 ----------------------------------- */
 
 static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
