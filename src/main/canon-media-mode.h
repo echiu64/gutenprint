@@ -3202,7 +3202,14 @@ static const char* canon_PIXMA_iX4000_modeuses_TShirt[] = {
 
 /* US driver does not have this media */
 static const char* canon_PIXMA_iX4000_modeuses_PPother[] = {
-  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+  };
+
+/* US driver does not have this media */
+static const char* canon_PIXMA_iX4000_modeuses_Transparency[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
   NULL
   };
 
@@ -3219,7 +3226,7 @@ static const canon_modeuse_t canon_PIXMA_iX4000_modeuses[] = {
  { "TShirt",		canon_PIXMA_iX4000_modeuses_TShirt, 0 },
  { "Envelope",		canon_PIXMA_iX4000_modeuses_Hagaki, 0 },
  { "PhotopaperOther",	canon_PIXMA_iX4000_modeuses_PPother, 0 },/*Note: US driver does not have this media*/
- { "Transparency",	canon_PIXMA_iX4000_modeuses_inkjetHagaki, 0 },/*Note: US driver does not have this media */
+ { "Transparency",	canon_PIXMA_iX4000_modeuses_Transparency, 0 },/*Note: US driver does not have this media */
  };
 
 DECLARE_MODEUSES(canon_PIXMA_iX4000);
