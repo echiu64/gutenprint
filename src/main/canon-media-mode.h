@@ -226,6 +226,58 @@ static const canon_modeuse_t canon_PIXMA_mini220_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_mini220);
 
+/* ----------------------------------- Canon mini320  ----------------------------------- */
+/*most nodes not supported*/
+static const char* canon_PIXMA_mini320_modeuses_PPpro[] = {
+  "1200x1200dpi_photohigh",
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  NULL
+};
+
+/*most nodes not supported*/
+static const char* canon_PIXMA_mini320_modeuses_PPplus[] = {
+  "600x600dpi_photo",
+  NULL
+};
+
+/*unsupported*/
+static const char* canon_PIXMA_mini320_modeuses_PPmatte[] = {
+  "600x600dpi_photo",/*stand-in*/
+  NULL
+};
+
+/*most nodes not supported*/
+static const char* canon_PIXMA_mini320_modeuses_PPgloss[] = {
+  "600x600dpi_photo",
+  NULL
+};
+
+/*unsupported*/
+static const char* canon_PIXMA_mini320_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photo",/*stand-in*/
+  NULL
+};
+
+/*unsupported*/
+static const char* canon_PIXMA_mini320_modeuses_Hagaki[] = {
+  "600x600dpi_photo",/*stand-in*/
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_mini320_modeuses[] = {
+  { "GlossyPro",	canon_PIXMA_mini320_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_mini320_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble", canon_PIXMA_mini320_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_mini320_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_mini320_modeuses_PPgloss, 0 },
+  { "PhotoPlusGloss2",	canon_PIXMA_mini320_modeuses_PPplus, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_mini320_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_PIXMA_mini320_modeuses_Hagaki, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_mini320);
+
 /* ----------------------------------- Canon i50  ----------------------------------- */
 static const char* canon_PIXMA_i50_modeuses_plain[] = {
   "600x600dpi_high",
