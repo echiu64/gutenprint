@@ -1279,7 +1279,7 @@ static const canon_paper_t canon_MULTIPASS_MX850_papers[] = {
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotoSemiGloss",   N_ ("Photo Paper Semi-gloss"),	        0x0b,0x11,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho new !! */
+  { "PhotoProSemiGloss",N_ ("Photo Paper Semi-gloss"),	        0x0b,0x11,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* PP kinumecho new !! */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
   { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },
