@@ -5641,6 +5641,55 @@ static const canon_modeuse_t canon_MULTIPASS_MX870_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MX870);
 
+/* ----------------------------------- Canon MX7600  ----------------------------------- */
+static const char* canon_MULTIPASS_MX7600_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX7600_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_MULTIPASS_MX7600_modeuses_PPsemiGloss[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX7600_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX7600_modeuses_FA[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const canon_modeuse_t canon_MULTIPASS_MX7600_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MX7600_modeuses_plain, 0 },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MX7600_modeuses_PPplusG2, 0 },
+  { "PhotopaperPlus",	canon_MULTIPASS_MX7600_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_MULTIPASS_MX7600_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MX7600_modeuses_PPsemiGloss, 0 },
+  { "InkJetHagaki", 	canon_MULTIPASS_MX7600_modeuses_PPplusG2, 0 },
+  { "FineArtPhotoRag", 	canon_MULTIPASS_MX7600_modeuses_FA, 0 },
+  { "FineArtOther", 	canon_MULTIPASS_MX7600_modeuses_FA, 0 },
+  { "Hagaki", 	        canon_MULTIPASS_MX7600_modeuses_Hagaki, 0 },
+  { "Envelope",		canon_MULTIPASS_MX7600_modeuses_Hagaki, 0 },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MX7600);
+
 /* ----------------------------------- Canon Pro9000 ----------------------------------- */
 
 static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
