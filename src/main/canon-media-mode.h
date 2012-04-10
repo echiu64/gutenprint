@@ -5019,6 +5019,92 @@ static const canon_modeuse_t canon_MULTIPASS_MP970_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP970);
 
+/* ----------------------------------- Canon MP980  ----------------------------------- */
+/* TODO: mono modes for photo media*/
+
+static const char* canon_MULTIPASS_MP980_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high",/*duplex*/
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/*photo modes not yet supported */
+static const char* canon_MULTIPASS_MP980_modeuses_PPpro[] = {
+  "600x600dpi_photo",/*stand-in*/
+  NULL
+};
+
+/*photo modes not yet supported */
+static const char* canon_MULTIPASS_MP980_modeuses_PPplus[] = {
+  "600x600dpi_photo",/*stand-in*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP980_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP980_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP980_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  NULL
+};
+
+/*photo modes not yet supported */
+static const char* canon_MULTIPASS_MP980_modeuses_FA[] = {
+  "600x600dpi_photo",/*stand-in*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP980_modeuses_disc[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP980_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP980_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP980_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MP980_modeuses_plain, DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MP980_modeuses_PPplus, 0 },/*unsupported*/
+  { "PhotoPro2",	canon_MULTIPASS_MP980_modeuses_PPpro, 0 },/*unsupported*/
+  { "PhotoProPlat",	canon_MULTIPASS_MP980_modeuses_PPplus, 0 },/*unsupported*/
+  { "PhotoProSemiGloss",canon_MULTIPASS_MP980_modeuses_PPplus, 0 },/*unsupported*/
+  { "GlossyPaper",	canon_MULTIPASS_MP980_modeuses_PPplus, 0 },/*unsupported*/
+  { "PhotopaperMatte",	canon_MULTIPASS_MP980_modeuses_PPmatte, 0 },
+  { "Coated",		canon_MULTIPASS_MP980_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_MULTIPASS_MP980_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_MULTIPASS_MP980_modeuses_Hagaki, 0 },
+  { "DiscCompat",	canon_MULTIPASS_MP980_modeuses_disc, 0 },
+  { "DiscOthers",	canon_MULTIPASS_MP980_modeuses_disc, 0 },
+  { "TShirt",		canon_MULTIPASS_MP980_modeuses_TShirt, 0 },
+  { "Envelope",		canon_MULTIPASS_MP980_modeuses_Hagaki, 0 },
+  { "FineArtPhotoRag",	canon_MULTIPASS_MP980_modeuses_FA, 0 },/*unsupported*/
+  { "FineArtOther",	canon_MULTIPASS_MP980_modeuses_FA, 0 },/*unsupported*/
+  { "PhotopaperOther",	canon_MULTIPASS_MP980_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP980);
+
 /* ----------------------------------- Canon MP990  ----------------------------------- */
 /* Most photo modes not supported */
 static const char* canon_MULTIPASS_MP990_modeuses_plain[] = {
