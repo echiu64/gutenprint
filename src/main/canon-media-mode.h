@@ -4657,6 +4657,96 @@ static const canon_modeuse_t canon_MULTIPASS_MP800_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP800);
 
+/* ----------------------------------- Canon MP810  ----------------------------------- */
+static const char* canon_MULTIPASS_MP810_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* highest mode not yet supported */
+static const char* canon_MULTIPASS_MP810_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_PPplusDS[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft2",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  "600x600dpi_photodraft3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_disc[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP810_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP810_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MP810_modeuses_plain, 0 },
+ { "GlossyPro",	        canon_MULTIPASS_MP810_modeuses_PPpro, 0 },
+ { "PhotopaperPlus",	canon_MULTIPASS_MP810_modeuses_PPplus, 0 },
+ { "PhotopaperPlusDouble", canon_MULTIPASS_MP810_modeuses_PPplusDS, 0 },
+ { "GlossyPaper",	canon_MULTIPASS_MP810_modeuses_PPplusDS, 0 },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP810_modeuses_PPmatte, 0 },
+ { "Coated",		canon_MULTIPASS_MP810_modeuses_PPmatte, 0 },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP810_modeuses_inkjetHagaki, 0 },
+ { "Hagaki", 	        canon_MULTIPASS_MP810_modeuses_Hagaki, 0 },
+ { "CD",   	        canon_MULTIPASS_MP810_modeuses_plain, 0 },/*NOTE:option*/
+ { "DiscCompat",	canon_MULTIPASS_MP810_modeuses_disc, 0 },
+ { "DiscOthers",	canon_MULTIPASS_MP810_modeuses_disc, 0 },
+ { "TShirt",		canon_MULTIPASS_MP810_modeuses_TShirt, 0 },
+ { "Envelope",		canon_MULTIPASS_MP810_modeuses_Hagaki, 0 },
+ { "PhotopaperOther",	canon_MULTIPASS_MP810_modeuses_PPother, 0 },
+ };
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP810);
+
 /* ----------------------------------- Canon MP830  ----------------------------------- */
 static const char* canon_MULTIPASS_MP830_modeuses_plain[] = {
   "600x600dpi_high",
