@@ -2001,6 +2001,75 @@ static const canon_modeuse_t canon_PIXMA_iP3300_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP3300);
 
+/* ----------------------------------- Canon iP3600 ----------------------------------- */
+static const char* canon_PIXMA_iP3600_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+/* highest mode not yet supported */
+static const char* canon_PIXMA_iP3600_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3600_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3600_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3600_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3600_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3600_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_iP3600_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP3600_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP3600_modeuses_plain, 0 },
+  { "PhotoPlusGloss2",	canon_PIXMA_iP3600_modeuses_PPplusG2, 0 },
+  { "PhotoPro2",	canon_PIXMA_iP3600_modeuses_PPpro, 0 },
+  { "PhotoProPlat",     canon_PIXMA_iP3600_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss", canon_PIXMA_iP3600_modeuses_PPplusG2, 0 },
+  { "GlossyPaper",	canon_PIXMA_iP3600_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_iP3600_modeuses_PPmatte, 0 },
+  { "Coated",		canon_PIXMA_iP3600_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_iP3600_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_PIXMA_iP3600_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_iP3600_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_iP3600_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_iP3600_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP3600);
+
 /* ----------------------------------- Canon iP4000  ----------------------------------- */
 static const char* canon_PIXMA_iP4000_modeuses_plain[] = {
   "600x600dpi_high",
