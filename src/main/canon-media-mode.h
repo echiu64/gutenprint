@@ -4611,6 +4611,76 @@ static const canon_modeuse_t canon_MULTIPASS_MP280_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP280);
 
+/* ----------------------------------- Canon MP360  ----------------------------------- */
+static const char* canon_MULTIPASS_MP360_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_highmono",/* mono */
+  "600x600dpi",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+static const char* canon_MULTIPASS_MP360_modeuses_PPpro[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP360_modeuses_PPplus[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP360_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP360_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP360_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_highmono2",/* mono */
+  "600x600dpi_std2",
+  "600x600dpi_draft2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP360_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP360_modeuses_Transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const canon_modeuse_t canon_MULTIPASS_MP360_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MP360_modeuses_plain, 0 },
+  { "GlossyPro",	canon_MULTIPASS_MP360_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_MULTIPASS_MP360_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_MULTIPASS_MP360_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_MULTIPASS_MP360_modeuses_PPgloss, 0 },
+  { "Coated",		canon_MULTIPASS_MP360_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_MULTIPASS_MP360_modeuses_PPmatte, 0 },
+  { "Hagaki", 	        canon_MULTIPASS_MP360_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_MULTIPASS_MP360_modeuses_TShirt, 0 },
+  { "Envelope",		canon_MULTIPASS_MP360_modeuses_Hagaki, 0 },
+  { "Transparency",	canon_MULTIPASS_MP360_modeuses_Transparency, 0 },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP360);
 
 /* ----------------------------------- Canon MP480  ----------------------------------- */
 static const char* canon_MULTIPASS_MP480_modeuses_plain[] = {
