@@ -3204,11 +3204,11 @@ static const char* canon_PIXMA_iP7100_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_high2",/* duplex */
   "600x600dpi",
-  "300x300dpi",
-  "300x300dpi_draft",
+  "600x600dpi_draft",
+  "600x600dpi_draft2",
   /* Mono */
   "600x600dpi_mono",
-  "600x600dpi_monodraft",
+  "600x600dpi_draftmono",
   NULL
   };
 
@@ -3247,7 +3247,7 @@ static const char* canon_PIXMA_iP7100_modeuses_Hagaki[] = {
 };
 
 static const char* canon_PIXMA_iP7100_modeuses_FA[] = {
-  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh3",
   NULL
 };
 
@@ -3383,6 +3383,118 @@ static const canon_modeuse_t canon_PIXMA_iP7500_modeuses[] = {
  };
 
 DECLARE_MODEUSES(canon_PIXMA_iP7500);
+
+/* ----------------------------------- Canon iP8100  ----------------------------------- */
+static const char* canon_PIXMA_iP8100_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high2",/* duplex */
+  "600x600dpi",
+  "600x600dpi_draft",
+  "600x600dpi_draft2",
+  /* Mono */
+  "600x600dpi_mono",
+  "600x600dpi_draftmono",
+  NULL
+  };
+
+/* no support for modes using R yet */
+static const char* canon_PIXMA_iP8100_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",/*untested*/
+  "600x600dpi_photo",
+  NULL
+};
+
+
+static const char* canon_PIXMA_iP8100_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_PPplusDS[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  /* Mono */
+  "600x600dpi_mono",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_FA[] = {
+  "600x600dpi_photohigh3",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_disc[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_TShirt[] = {
+  "600x600dpi",
+  NULL
+};
+
+static const char* canon_PIXMA_iP8100_modeuses_Transparency[] = {
+  "600x600dpi_std4",
+  "600x600dpi_draft4",
+  NULL
+};
+
+/*untested*/
+static const char* canon_PIXMA_iP8100_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photodraft2",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP8100_modeuses[] = {
+ { "Plain",             canon_PIXMA_iP8100_modeuses_plain, DUPLEX_MODEREPL },
+ { "GlossyPro",	        canon_PIXMA_iP8100_modeuses_PPpro, 0 },
+ { "PhotopaperPlus",	canon_PIXMA_iP8100_modeuses_PPplus, 0 },
+ { "PhotopaperPlusDouble", canon_PIXMA_iP8100_modeuses_PPplusDS, 0 },
+ { "PhotopaperMatte",	canon_PIXMA_iP8100_modeuses_PPmatte, 0 },
+ { "GlossyPaper",	canon_PIXMA_iP8100_modeuses_PPgloss, 0 },
+ { "Coated",		canon_PIXMA_iP8100_modeuses_PPmatte, 0 },
+ { "InkJetHagaki", 	canon_PIXMA_iP8100_modeuses_inkjetHagaki, 0 },
+ { "Hagaki", 	        canon_PIXMA_iP8100_modeuses_Hagaki, 0 },
+ { "FineArtPhotoRag", 	canon_PIXMA_iP8100_modeuses_FA, 0 },
+ { "FineArtOther", 	canon_PIXMA_iP8100_modeuses_FA, 0 },
+ { "DiscCompat",	canon_PIXMA_iP8100_modeuses_disc, 0 },
+ { "DiscOthers",	canon_PIXMA_iP8100_modeuses_disc, 0 },
+ { "TShirt",		canon_PIXMA_iP8100_modeuses_TShirt, 0 },
+ { "Envelope",		canon_PIXMA_iP8100_modeuses_Hagaki, 0 },
+ { "Transparency",	canon_PIXMA_iP8100_modeuses_Transparency, 0 },
+ { "PhotopaperOther",	canon_PIXMA_iP8100_modeuses_PPother, 0 },/*untested*/
+ };
+
+DECLARE_MODEUSES(canon_PIXMA_iP8100);
 
 /* ----------------------------------- Canon iP8500  ----------------------------------- */
 static const char* canon_PIXMA_iP8500_modeuses_plain[] = {
