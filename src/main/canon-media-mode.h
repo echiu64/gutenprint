@@ -4432,6 +4432,14 @@ static const char* canon_MULTIPASS_MP550_modeuses_plain[] = {
   NULL
   };
 
+/*highest mode not supported yet*/
+static const char* canon_MULTIPASS_MP550_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
 static const char* canon_MULTIPASS_MP550_modeuses_PPplusG2[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
@@ -4465,13 +4473,14 @@ static const char* canon_MULTIPASS_MP550_modeuses_TShirt[] = {
 
 static const char* canon_MULTIPASS_MP550_modeuses_PPother[] = {
   "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
   NULL
   };
 
 static const canon_modeuse_t canon_MULTIPASS_MP550_modeuses[] = {
   { "Plain",		canon_MULTIPASS_MP550_modeuses_plain, 0 },
   { "PhotoPlusGloss2",  canon_MULTIPASS_MP550_modeuses_PPplusG2, 0 },
-  { "PhotoPro2",	canon_MULTIPASS_MP550_modeuses_PPplusG2, 0 },
+  { "PhotoPro2",	canon_MULTIPASS_MP550_modeuses_PPpro, 0 },
   { "PhotoProPlat",	canon_MULTIPASS_MP550_modeuses_PPplusG2, 0 },
   { "PhotoProSemiGloss",canon_MULTIPASS_MP550_modeuses_PPplusG2, 0 },
   { "GlossyPaper",	canon_MULTIPASS_MP550_modeuses_PPplusG2, 0 },
@@ -4488,6 +4497,81 @@ static const canon_modeuse_t canon_MULTIPASS_MP550_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP550);
+
+/* ----------------------------------- Canon MP560  ----------------------------------- */
+static const char* canon_MULTIPASS_MP560_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high",/* duplex */
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+  };
+
+/*highest mode not supported yet*/
+static const char* canon_MULTIPASS_MP560_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP560_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP560_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP560_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP560_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP560_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP560_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP560_modeuses[] = {
+  { "Plain",		canon_MULTIPASS_MP560_modeuses_plain, DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MP560_modeuses_PPplusG2, 0 },
+  { "PhotoPro2",	canon_MULTIPASS_MP560_modeuses_PPpro, 0 },
+  { "PhotoProPlat",	canon_MULTIPASS_MP560_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MP560_modeuses_PPplusG2, 0 },
+  { "GlossyPaper",	canon_MULTIPASS_MP560_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_MULTIPASS_MP560_modeuses_PPmatte, 0 },
+  { "Coated",		canon_MULTIPASS_MP560_modeuses_PPmatte, 0 },
+  { "HagakiA", 	        canon_MULTIPASS_MP560_modeuses_Hagaki, 0 },
+  { "InkJetHagaki", 	canon_MULTIPASS_MP560_modeuses_inkjetHagaki, 0 },
+  { "CanonPhotoHagakiK",canon_MULTIPASS_MP560_modeuses_PPplusG2, 0 },
+  { "ProPhotoHagakiP",  canon_MULTIPASS_MP560_modeuses_PPplusG2, 0 },
+  { "Hagaki", 	        canon_MULTIPASS_MP560_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_MULTIPASS_MP560_modeuses_TShirt, 0 },
+  { "Envelope",		canon_MULTIPASS_MP560_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_MULTIPASS_MP560_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP560);
 
 /* ----------------------------------- Canon MP600  ----------------------------------- */
 static const char* canon_MULTIPASS_MP600_modeuses_plain[] = {
