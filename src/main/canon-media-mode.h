@@ -5855,6 +5855,108 @@ static const canon_modeuse_t canon_MULTIPASS_MP830_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP830);
 
+/* ----------------------------------- Canon MP900  ----------------------------------- */
+static const char* canon_MULTIPASS_MP900_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",
+  "600x600dpi_draft2",
+  /* Mono */
+  "600x600dpi_draftmono",
+  "600x600dpi_draftmono2",
+  NULL
+  };
+
+static const char* canon_MULTIPASS_MP900_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photo2",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_PPplusDS[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_coated[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft4",
+  "600x600dpi_draftmono4",/* Mono */
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_disc[] = {
+  "600x600dpi_photo4",
+  "600x600dpi_photodraft4",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP900_modeuses_Transparency[] = {
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  NULL
+};
+
+/*untested*/
+static const char* canon_MULTIPASS_MP900_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP900_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MP900_modeuses_plain, 0 },
+ { "GlossyPro",	        canon_MULTIPASS_MP900_modeuses_PPpro, 0 },
+ { "PhotopaperPlus",	canon_MULTIPASS_MP900_modeuses_PPplus, 0 },
+ { "PhotopaperPlusDouble", canon_MULTIPASS_MP900_modeuses_PPplusDS, 0 },
+ { "GlossyPaper",	canon_MULTIPASS_MP900_modeuses_PPplusDS, 0 },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP900_modeuses_PPmatte, 0 },
+ { "Coated",		canon_MULTIPASS_MP900_modeuses_coated, 0 },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP900_modeuses_inkjetHagaki, 0 },
+ { "Hagaki", 	        canon_MULTIPASS_MP900_modeuses_Hagaki, 0 },
+ { "DiscCompat",	canon_MULTIPASS_MP900_modeuses_disc, 0 },
+ { "DiscOthers",	canon_MULTIPASS_MP900_modeuses_disc, 0 },
+ { "TShirt",		canon_MULTIPASS_MP900_modeuses_TShirt, 0 },
+ { "Envelope",		canon_MULTIPASS_MP900_modeuses_Hagaki, 0 },
+ { "Transparency",	canon_MULTIPASS_MP900_modeuses_Transparency, 0 },
+ { "PhotopaperOther",	canon_MULTIPASS_MP900_modeuses_PPother, 0 },/*untested*/
+ };
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP900);
+
 /* ----------------------------------- Canon MP960  ----------------------------------- */
 static const char* canon_MULTIPASS_MP960_modeuses_plain[] = {
   "600x600dpi_high2",

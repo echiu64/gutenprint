@@ -554,6 +554,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP240_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP280_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP360_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP480_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP493_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP520_modeuselist;
@@ -588,7 +589,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP360_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP900_modeuselist;
 
 
     const canon_modeuse_t* muse = NULL;
@@ -699,6 +700,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if ( (!strcmp(caps->name,"PIXMA MP240")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP280")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP360")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP480")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP493")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP520")) ) {
@@ -733,7 +735,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9500")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9502")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA MP360")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP900")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -3962,6 +3964,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP240_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP280_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP360_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP480_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP493_modeuselist;
       const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP520_modeuselist;
@@ -3996,7 +3999,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP360_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP900_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -4119,6 +4122,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA MP240")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP280")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP360")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP480")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP493")) ) {
       if ( (!strcmp(caps->name,"PIXMA MP520")) ) {
@@ -4153,7 +4157,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9500")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9502")) ) {*/
-      if ( (!strcmp(caps->name,"PIXMA MP360")) ) {
+      if ( (!strcmp(caps->name,"PIXMA MP900")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
