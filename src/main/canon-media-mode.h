@@ -4858,6 +4858,88 @@ static const canon_modeuse_t canon_MULTIPASS_MP480_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP480);
 
+/* ----------------------------------- Canon MP490  ----------------------------------- */
+static const char* canon_MULTIPASS_MP490_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",
+  "300x300dpi",
+  "300x300dpi_draft",/*untested*/
+  /* Mono */
+  "600x600dpi_highmono",
+  "600x600dpi_mono",
+  "600x600dpi_draftmono",
+  "300x300dpi_mono",
+  "300x300dpi_draftmono",/*untested*/
+  /* Color */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  "300x300dpi_std3",
+  "300x300dpi_draft3",/*untested*/
+  NULL
+  };
+
+static const char* canon_MULTIPASS_MP490_modeuses_PPpro[] = {
+  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP490_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP490_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  /* Mono */
+  "600x600dpi_highmono2",
+  "600x600dpi_mono2",
+  /* Color */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP490_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MP490_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untested*/
+  "600x600dpi_photodraft",/*untested*/
+  NULL
+  };
+
+static const canon_modeuse_t canon_MULTIPASS_MP490_modeuses[] = {
+ { "Plain",             canon_MULTIPASS_MP490_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_MODEREPL},
+ { "PhotoPro2",	        canon_MULTIPASS_MP490_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+ { "PhotoProPlat",	canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotoPlusGloss2",	canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "GlossyPaper",	canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotopaperMatte",	canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "PhotoProSemiGloss", canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "Coated",		canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "InkJetHagaki", 	canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "ProPhotoHagakiP", 	canon_MULTIPASS_MP490_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+ { "CanonPhotoHagakiK", canon_MULTIPASS_MP490_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+ { "HagakiA", 	        canon_MULTIPASS_MP490_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "Hagaki", 	        canon_MULTIPASS_MP490_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "TShirt",		canon_MULTIPASS_MP490_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+ { "Envelope",		canon_MULTIPASS_MP490_modeuses_Hagaki,INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+ { "PhotopaperOther",	canon_MULTIPASS_MP490_modeuses_PPother, INKSET_COLOR_SUPPORT },
+ };
+
+DECLARE_MODEUSES(canon_MULTIPASS_MP490);
+
 /* ----------------------------------- Canon MP493  ----------------------------------- */
 static const char* canon_MULTIPASS_MP493_modeuses_plain[] = {
   "600x600dpi_high",
