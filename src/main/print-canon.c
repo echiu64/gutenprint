@@ -499,6 +499,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     /*
 	  const canon_modeuselist_t* mlist = &canon_BJC_3000_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_BJC_4300_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_BJC_4550_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_SELPHY_DS700_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_SELPHY_DS810_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_mini220_modeuselist;
@@ -606,7 +607,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500_modeuselist;
 	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_BJC_4550_modeuselist;
+	  const canon_modeuselist_t* mlist = &canon_BJC_S300_modeuselist;
 
 
     const canon_modeuse_t* muse = NULL;
@@ -665,6 +666,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       /*
       if ( (!strcmp(caps->name,"3000")) ) {
       if ( (!strcmp(caps->name,"4300")) ) {
+      if ( (!strcmp(caps->name,"4550")) ) {
       if ( (!strcmp(caps->name,"SELPHY DS700")) ) {
       if ( (!strcmp(caps->name,"SELPHY DS810")) ) {
       if ( (!strcmp(caps->name,"PIXMA mini220")) ) {
@@ -772,7 +774,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9500")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9502")) ) {*/
-      if ( (!strcmp(caps->name,"4550")) ) {
+      if ( (!strcmp(caps->name,"S300")) ) {
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
 	if (ERRPRINT)
@@ -4329,6 +4331,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /*
       const canon_modeuselist_t* mlist = &canon_BJC_3000_modeuselist;
       const canon_modeuselist_t* mlist = &canon_BJC_4300_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_BJC_4550_modeuselist;
       const canon_modeuselist_t* mlist = &canon_SELPHY_DS700_modeuselist;
       const canon_modeuselist_t* mlist = &canon_SELPHY_DS810_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_mini220_modeuselist;
@@ -4436,7 +4439,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500_modeuselist;
       const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_BJC_4550_modeuselist;
+      const canon_modeuselist_t* mlist = &canon_BJC_S300_modeuselist;
 
   
   const canon_modeuse_t* muse = NULL;
@@ -4505,6 +4508,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /*
       if ( (!strcmp(caps->name,"3000")) ) {
       if ( (!strcmp(caps->name,"4300")) ) {
+      if ( (!strcmp(caps->name,"4550")) ) {
       if ( (!strcmp(caps->name,"SELPHY DS700")) ) {
       if ( (!strcmp(caps->name,"SELPHY DS810")) ) {
       if ( (!strcmp(caps->name,"PIXMA mini220")) ) {
@@ -4612,7 +4616,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
       if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9500")) ) {
       if ( (!strcmp(caps->name,"PIXMA Pro9502")) ) {*/
-      if ( (!strcmp(caps->name,"4550")) ) {
+      if ( (!strcmp(caps->name,"S300")) ) {
     
     /* scroll through modeuse list to find media */
     for(i=0;i<mlist->count;i++){
