@@ -652,8 +652,8 @@ static const canon_cap_t canon_model_capabilities[] =
     "3000", 3,
     842, INCH(17),
     10, 10, 9, 15,
-    &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0 | CANON_CAP_p,0,control_cmd_BJC_i6100,
+    &canon_MULTIPASS_MP150_slotlist, /* cartridge selection option */
+    CANON_CAP_STD0 | CANON_CAP_p | CANON_CAP_cart,0,control_cmd_BJC_i6100,
     &canon_BJC_3000_modelist,
     &canon_default_paperlist,
     NULL,

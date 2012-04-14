@@ -63,6 +63,7 @@ typedef struct {
 }
 
 /* Ordering of data: 
+   BJC
    DS
    mini
    S
@@ -76,6 +77,85 @@ typedef struct {
    Pro
 */
 
+/* ----------------------------------- Canon BJC 3000 ----------------------------------- */
+
+static const char* canon_BJC_3000_modeuses_plain[] = {
+  "1440x720dpi",/*untested*/
+  "720x720dpi",
+  "360x360dpi",
+  "360x360dmt",
+  "360x360dpi_draft",
+  "180x180dpi",
+  /* Photo */
+  "360x360dpi_photo",
+  NULL
+};
+
+static const char* canon_BJC_3000_modeuses_PPgloss[] = {
+  "1440x720dpi",
+  "720x720dpi",
+  "360x360dpi",
+  "360x360dmt",
+  /* Photo */
+  "360x360dpi_photo",
+  NULL
+};
+
+static const char* canon_BJC_3000_modeuses_coated[] = {
+  "1440x720dpi",
+  "720x720dpi",
+  "360x360dpi",
+  "360x360dmt",
+  "360x360dpi_draft",
+  /* Photo */
+  "360x360dpi_photo",
+  NULL
+};
+
+static const char* canon_BJC_3000_modeuses_glossFilm[] = {
+  "720x720dpi",
+  "360x360dpi",
+  "360x360dmt",
+  NULL
+};
+
+static const char* canon_BJC_3000_modeuses_Tshirt[] = {
+  "360x360dpi",
+  "360x360dmt",
+  NULL
+};
+
+static const char* canon_BJC_3000_modeuses_Transparency[] = {
+  "360x360dpi",
+  "360x360dmt",
+  "360x360dpi_draft",
+  NULL
+};
+
+static const char* canon_BJC_3000_modeuses_Envelope[] = {
+  "720x720dpi",
+  "360x360dpi",
+  "360x360dmt",
+  "360x360dpi_draft",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_3000_modeuses[] = {
+  { "Plain",		canon_BJC_3000_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "Transparency",	canon_BJC_3000_modeuses_Transparency, INKSET_BLACK_SUPPORT },
+  { "BackPrint",	canon_BJC_3000_modeuses_Tshirt, 0 },
+  { "Fabric",		canon_BJC_3000_modeuses_Tshirt, 0 },/*untested*/
+  { "Envelope",		canon_BJC_3000_modeuses_Envelope, INKSET_BLACK_SUPPORT },
+  { "Coated",		canon_BJC_3000_modeuses_coated, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "TShirt",		canon_BJC_3000_modeuses_Tshirt, 0 },
+  { "GlossyFilm",	canon_BJC_3000_modeuses_glossFilm, 0 },
+  { "GlossyPaper",	canon_BJC_3000_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "GlossyCard",	canon_BJC_3000_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },
+  { "GlossyPro",	canon_BJC_3000_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },/*untested*/
+  { "Other",		canon_BJC_3000_modeuses_PPgloss, INKSET_BLACK_SUPPORT | INKSET_PHOTO_SUPPORT | INKSET_PHOTO_MODEREPL },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_BJC_3000);
 
 /* ----------------------------------- Canon DS700  ----------------------------------- */
 static const char* canon_SELPHY_DS700_modeuses_PPpro[] = {
