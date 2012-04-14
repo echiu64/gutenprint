@@ -77,6 +77,138 @@ typedef struct {
    Pro
 */
 
+/* ----------------------------------- Canon BJC 30 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_30_modeuses_plain[] = {
+  "720x360dpi",
+  "360x360dpi",
+  "180x180dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_30_modeuses[] = {
+  { "Plain",		canon_BJC_30_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_30_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_30_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_30_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_30_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_30_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_30_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_30_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_30_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_30_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_30_modeuses_plain, 0 },
+  { "Other",		canon_BJC_30_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_30);
+
+/* ----------------------------------- Canon BJC 85 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_85_modeuses_plain[] = {
+  "720x360dpi",
+  "360x360dmt",
+  "360x360dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_85_modeuses[] = {
+  { "Plain",		canon_BJC_85_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_85_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_85_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_85_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_85_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_85_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_85_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_85_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_85_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_85_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_85_modeuses_plain, 0 },
+  { "Other",		canon_BJC_85_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_85);
+
+/* ----------------------------------- Canon BJC 210 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_210_modeuses_plain[] = {
+  "720x360dpi",
+  "360x360dpi",
+  "180x180dpi",
+  "90x90dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_210_modeuses[] = {
+  { "Plain",		canon_BJC_210_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_210_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_210_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_210_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_210_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_210_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_210_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_210_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_210_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_210_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_210_modeuses_plain, 0 },
+  { "Other",		canon_BJC_210_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_210);
+
+/* ----------------------------------- Canon BJC 240 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_240_modeuses_plain[] = {
+  "720x360dpi",
+  "360x360dmt",
+  "360x360dpi",
+  "180x180dpi",
+  "90x90dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_240_modeuses[] = {
+  { "Plain",		canon_BJC_240_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_240_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_240_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_240_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_240_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_240_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_240_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_240_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_240_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_240_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_240_modeuses_plain, 0 },
+  { "Other",		canon_BJC_240_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_240);
+
+/* ----------------------------------- Canon BJC 2000 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_2000_modeuses_plain[] = {
+  "360x360dpi",
+  "180x180dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_2000_modeuses[] = {
+  { "Plain",		canon_BJC_2000_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_2000_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_2000_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_2000_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_2000_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_2000_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_2000_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_2000_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_2000_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_2000_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_2000_modeuses_plain, 0 },
+  { "Other",		canon_BJC_2000_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_2000);
+
 /* ----------------------------------- Canon BJC 3000 ----------------------------------- */
 
 static const char* canon_BJC_3000_modeuses_plain[] = {
@@ -217,6 +349,31 @@ static const canon_modeuse_t canon_BJC_4300_modeuses[] = {
 
 DECLARE_MODEUSES(canon_BJC_4300);
 
+/* ----------------------------------- Canon BJC 4400 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_4400_modeuses_plain[] = {
+  "720x360dpi",
+  "360x360dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_4400_modeuses[] = {
+  { "Plain",		canon_BJC_4400_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_4400_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_4400_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_4400_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_4400_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_4400_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_4400_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_4400_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_4400_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_4400_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_4400_modeuses_plain, 0 },
+  { "Other",		canon_BJC_4400_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_4400);
+
 /* ----------------------------------- Canon BJC 4550 ----------------------------------- */
 
 static const char* canon_BJC_4550_modeuses_plain[] = {
@@ -254,6 +411,161 @@ static const canon_modeuse_t canon_BJC_4550_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_BJC_4550);
+
+/* ----------------------------------- Canon BJC 5500 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_5500_modeuses_plain[] = {
+  "360x360dpi",
+  "180x180dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_5500_modeuses[] = {
+  { "Plain",		canon_BJC_5500_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_5500_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_5500_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_5500_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_5500_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_5500_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_5500_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_5500_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_5500_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_5500_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_5500_modeuses_plain, 0 },
+  { "Other",		canon_BJC_5500_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_5500);
+
+/* ----------------------------------- Canon BJC 6000 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_6000_modeuses_plain[] = {
+  "1440x720dpi",
+  "720x720dpi",
+  "360x360dmt",
+  "360x360dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_6000_modeuses[] = {
+  { "Plain",		canon_BJC_6000_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_6000_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_6000_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_6000_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_6000_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_6000_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_6000_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_6000_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_6000_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_6000_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_6000_modeuses_plain, 0 },
+  { "Other",		canon_BJC_6000_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_6000);
+
+/* ----------------------------------- Canon BJC 7000 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_7000_modeuses_plain[] = {
+  "1200x1200dpi",
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_7000_modeuses[] = {
+  { "Plain",		canon_BJC_7000_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_7000_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_7000_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_7000_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_7000_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_7000_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_7000_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_7000_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_7000_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_7000_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_7000_modeuses_plain, 0 },
+  { "Other",		canon_BJC_7000_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_7000);
+
+/* ----------------------------------- Canon BJC 7100 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_7100_modeuses_plain[] = {
+  "1200x1200dpi",
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_7100_modeuses[] = {
+  { "Plain",		canon_BJC_7100_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_7100_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_7100_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_7100_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_7100_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_7100_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_7100_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_7100_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_7100_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_7100_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_7100_modeuses_plain, 0 },
+  { "Other",		canon_BJC_7100_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_7100);
+
+/* ----------------------------------- Canon BJC 8200 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_8200_modeuses_plain[] = {
+  "1200x1200dpi",
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_8200_modeuses[] = {
+  { "Plain",		canon_BJC_8200_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_8200_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_8200_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_8200_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_8200_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_8200_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_8200_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_8200_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_8200_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_8200_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_8200_modeuses_plain, 0 },
+  { "Other",		canon_BJC_8200_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_8200);
+
+/* ----------------------------------- Canon BJC 8500 ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_8500_modeuses_plain[] = {
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_8500_modeuses[] = {
+  { "Plain",		canon_BJC_8500_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_8500_modeuses_plain, 0 }, 
+  { "BackPrint",	canon_BJC_8500_modeuses_plain, 0 },
+  { "Fabric",		canon_BJC_8500_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_8500_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_8500_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_8500_modeuses_plain, 0 },
+  { "GlossyFilm",	canon_BJC_8500_modeuses_plain, 0 },
+  { "GlossyPaper",	canon_BJC_8500_modeuses_plain, 0 },
+  { "GlossyCard",	canon_BJC_8500_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_8500_modeuses_plain, 0 },
+  { "Other",		canon_BJC_8500_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_8500);
 
 /* ----------------------------------- Canon DS700  ----------------------------------- */
 static const char* canon_SELPHY_DS700_modeuses_PPpro[] = {
@@ -455,6 +767,64 @@ static const canon_modeuse_t canon_PIXMA_mini320_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_PIXMA_mini320);
+
+/* ----------------------------------- Canon S200  ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_S200_modeuses_plain[] = {
+  "1440x1440dpi",
+  "1440x720dpi",
+  "720x720dpi",
+  "360x360dpi",
+  NULL
+  };
+
+static const canon_modeuse_t canon_BJC_S200_modeuses[] = {
+  { "Plain",            canon_BJC_S200_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_S200_modeuses_plain, 0 },
+  { "PhotopaperPlus",	canon_BJC_S200_modeuses_plain, 0 },/*untested*/
+  { "PhotopaperPlusDouble",canon_BJC_S200_modeuses_plain, 0 },/*untested*/
+  { "PhotopaperMatte",	canon_BJC_S200_modeuses_plain, 0 },/*untested*/
+  { "GlossyPaper",	canon_BJC_S200_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_S200_modeuses_plain, 0 },
+  { "InkJetHagaki", 	canon_BJC_S200_modeuses_plain, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_S200_modeuses_plain, 0 },/*untested*/
+  { "GlossyFilm", 	canon_BJC_S200_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_S200_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_S200_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_S200_modeuses_plain, 0 },
+  { "PhotopaperOther",	canon_BJC_S200_modeuses_plain, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_BJC_S200);
+
+/* ----------------------------------- Canon S400  ----------------------------------- */
+/* TODO: mode-media correlation */
+static const char* canon_BJC_S400_modeuses_plain[] = {
+  "1440x1440dpi",
+  "1440x720dpi",
+  "720x720dpi",
+  "360x360dpi",
+  NULL
+  };
+
+static const canon_modeuse_t canon_BJC_S400_modeuses[] = {
+  { "Plain",            canon_BJC_S400_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_S400_modeuses_plain, 0 },
+  { "PhotopaperPlus",	canon_BJC_S400_modeuses_plain, 0 },/*untested*/
+  { "PhotopaperPlusDouble",canon_BJC_S400_modeuses_plain, 0 },/*untested*/
+  { "PhotopaperMatte",	canon_BJC_S400_modeuses_plain, 0 },/*untested*/
+  { "GlossyPaper",	canon_BJC_S400_modeuses_plain, 0 },
+  { "Coated",		canon_BJC_S400_modeuses_plain, 0 },
+  { "InkJetHagaki", 	canon_BJC_S400_modeuses_plain, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_S400_modeuses_plain, 0 },/*untested*/
+  { "GlossyFilm", 	canon_BJC_S400_modeuses_plain, 0 },
+  { "TShirt",		canon_BJC_S400_modeuses_plain, 0 },
+  { "Transparency",	canon_BJC_S400_modeuses_plain, 0 },
+  { "Envelope",		canon_BJC_S400_modeuses_plain, 0 },
+  { "PhotopaperOther",	canon_BJC_S400_modeuses_plain, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_BJC_S400);
 
 /* ----------------------------------- Canon i50  ----------------------------------- */
 static const char* canon_PIXMA_i50_modeuses_plain[] = {
