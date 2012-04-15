@@ -139,8 +139,8 @@ pack_pixels(unsigned char* buf,int len)
 #include "canon-inks.h"
 #include "canon-modes.h"
 #include "canon-media.h"
-#include "canon-printers.h"
 #include "canon-media-mode.h"
+#include "canon-printers.h"
 
 typedef struct {
     char name;
@@ -486,990 +486,168 @@ canon_source_type(const char *name, const canon_cap_t * caps)
 /* if no mode is set the NULL will be returned */
 static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 #if 0
-    const char* input_slot = stp_get_string_parameter(v, "InputSlot");
-    const char *quality = stp_get_string_parameter(v, "Quality");
+  const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+  const char *quality = stp_get_string_parameter(v, "Quality");
 #endif
-    const char *resolution = stp_get_string_parameter(v, "Resolution");
-    const char *ink_set = stp_get_string_parameter(v, "InkSet");
-    const char *duplex_mode = stp_get_string_parameter(v, "Duplex");
-    const char *ink_type = stp_get_string_parameter(v, "InkType");
-    const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
-    const canon_cap_t * caps = canon_get_model_capabilities(v);
-    const canon_mode_t* mode = NULL;
-    /*
-	  const canon_modeuselist_t* mlist = &canon_BJC_3000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_4300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_4550_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_SELPHY_DS700_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_SELPHY_DS810_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_mini220_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_mini320_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S330_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S500_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S520_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S600_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S750_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S800_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_BJC_S820_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i50_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i70_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i80_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i450_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i455_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i550_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i560_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i850_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i860_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i865_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i900_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i950_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i960_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i6100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i9100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_i9900_modeuselist;
-          const canon_modeuselist_t* mlist = &canon_PIXMA_iP2000_modeuselist;
-          const canon_modeuselist_t* mlist = &canon_PIXMA_iP2700_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP3000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP3100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP3300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP3600_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4200_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4500_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4600_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4700_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP4900_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP5000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP5300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6210_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP6700_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP7100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP7500_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP8100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP8500_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP8600_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iP9910_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iX4000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iX5000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iX6500_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_iX7000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP150_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP190_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP210_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP240_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP280_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP360_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP470_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP480_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP490_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP493_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP520_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP530_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP540_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP560_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP600_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP620_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP630_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP640_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP700_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP710_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP750_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP800_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP810_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP900_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP950_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP970_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP980_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP990_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX330_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX340_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX420_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX700_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX850_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX860_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX870_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX880_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX7600_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG2100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG3100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG5100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG5200_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG5300_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG6100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG6200_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG8100_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_MG8200_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500_modeuselist;
-	  const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500mk2_modeuselist;*/
-	  const canon_modeuselist_t* mlist = &canon_BJC_S900_modeuselist;
+  const char *resolution = stp_get_string_parameter(v, "Resolution");
+  const char *ink_set = stp_get_string_parameter(v, "InkSet");
+  const char *duplex_mode = stp_get_string_parameter(v, "Duplex");
+  const char *ink_type = stp_get_string_parameter(v, "InkType");
+  const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
+  const canon_cap_t * caps = canon_get_model_capabilities(v);
+  const canon_mode_t* mode = NULL;
+  const canon_modeuselist_t* mlist = caps->modeuselist;
+  const canon_modeuse_t* muse = NULL;
+  const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
+  int i,j;
+  int modecheck, quality, modefound;
 
+  /* Logic: priority of options
+     1. Media --- always present for final selection.
+     2. InkSet (cartridge selection) --- optional as only some printers offer this.
+     3. PrintingMode --- for printers which have K-only monochrome modes can choose BW.
+     4. Duplex --- for printers that have special duplex modes need to skip non-duplex modes.
+     5. InkType --- suggestion only, since modes are tied to ink types in most Canon printers.
+     6. Quality --- suggestion, based on initially-selected mode.
+     7. Mode --- once chosen, InkType is selected based on quality, inkset, printing mode.
+  */
 
-    const canon_modeuse_t* muse = NULL;
-    const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
-    int i,j;
-    int modecheck, quality, modefound;
+  /*
+    canon-mode-media:
+    INKSET_BLACK_SUPPORT: media type supports black-only cartridge
+    INKSET_COLOR_SUPPORT: media type supports color-only cartridge
+    INKSET_BLACK_MODEREPL: media type has special modes for black-only cartridge
+    INKSET_COLOR_MODEREPL: media type has special modes for black-only cartridge
+    INKSET_PHOTO_SUPPORT: media type supports special photo cartridge
+    DUPLEX_MODEREPL: media type has (a) special mode(s) for duplex
+    canon-modes.h:
+    MODE_FLAG_BLACK: mode can be used for supporting black-only cartridge
+    MODE_FLAG_COLOR: mode can be used for supporting color-only cartridge
+    MODE_FLAG_PHOTO: mode can be used for supporting photo cartridge
+    MODE_FLAG_NOPDUPLEX: mode cannot be used for duplex, must be skipped
+  */
 
-    /* Logic: priority of options
-       1. Media --- always present for final selection.
-       2. InkSet (cartridge selection) --- optional as only some printers offer this.
-       3. PrintingMode --- for printers which have K-only monochrome modes can choose BW.
-       4. Duplex --- for printers that have special duplex modes need to skip non-duplex modes.
-       5. InkType --- suggestion only, since modes are tied to ink types in most Canon printers.
-       6. Quality --- suggestion, based on initially-selected mode.
-       7. Mode --- once chosen, InkType is selected based on quality, inkset, printing mode.
-     */
-
-    /*
-      canon-mode-media:
-       INKSET_BLACK_SUPPORT: media type supports black-only cartridge
-       INKSET_COLOR_SUPPORT: media type supports color-only cartridge
-       INKSET_BLACK_MODEREPL: media type has special modes for black-only cartridge
-       INKSET_COLOR_MODEREPL: media type has special modes for black-only cartridge
-       INKSET_PHOTO_SUPPORT: media type supports special photo cartridge
-       DUPLEX_MODEREPL: media type has (a) special mode(s) for duplex
-      canon-modes.h:
-       MODE_FLAG_BLACK: mode can be used for supporting black-only cartridge
-       MODE_FLAG_COLOR: mode can be used for supporting color-only cartridge
-       MODE_FLAG_PHOTO: mode can be used for supporting photo cartridge
-       MODE_FLAG_NOPDUPLEX: mode cannot be used for duplex, must be skipped
-     */
-
-    if(resolution){
-      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
-      if (ERRPRINT)
-	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
-      for(i=0;i<caps->modelist->count;i++){
-	if(!strcmp(resolution,caps->modelist->modes[i].name)){
-	  mode = &caps->modelist->modes[i];
-	  break;
-	}
+  if(resolution){
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
+    for(i=0;i<caps->modelist->count;i++){
+      if(!strcmp(resolution,caps->modelist->modes[i].name)){
+	mode = &caps->modelist->modes[i];
+	break;
       }
     }
-    else {
-      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
-      if (ERRPRINT)
-	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
-    }
+  }
+  else {
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
+  }
     
-    /* beginning of mode replacement code */
-    if (media_type && resolution && mode) {
-      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
-      if (ERRPRINT)
-	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
+  /* beginning of mode replacement code */
+  if (media_type && resolution && mode) {
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
       
-      /*
-      if ( (!strcmp(caps->name,"3000")) ) {
-      if ( (!strcmp(caps->name,"4300")) ) {
-      if ( (!strcmp(caps->name,"4550")) ) {
-      if ( (!strcmp(caps->name,"SELPHY DS700")) ) {
-      if ( (!strcmp(caps->name,"SELPHY DS810")) ) {
-      if ( (!strcmp(caps->name,"PIXMA mini220")) ) {
-      if ( (!strcmp(caps->name,"PIXMA mini320")) ) {
-      if ( (!strcmp(caps->name,"S300")) ) {
-      if ( (!strcmp(caps->name,"S330")) ) {
-      if ( (!strcmp(caps->name,"S500")) ) {
-      if ( (!strcmp(caps->name,"S520")) ) {
-      if ( (!strcmp(caps->name,"S600")) ) {
-      if ( (!strcmp(caps->name,"S750")) ) {
-      if ( (!strcmp(caps->name,"S800")) ) {
-      if ( (!strcmp(caps->name,"S820")) ) {
-      if ( (!strcmp(caps->name,"i50")) ) {
-      if ( (!strcmp(caps->name,"i70")) ) {
-      if ( (!strcmp(caps->name,"i80")) ) {
-      if ( (!strcmp(caps->name,"i450")) ) {
-      if ( (!strcmp(caps->name,"i455")) ) {
-      if ( (!strcmp(caps->name,"i550")) ) {
-      if ( (!strcmp(caps->name,"i560")) ) {
-      if ( (!strcmp(caps->name,"i850")) ) {
-      if ( (!strcmp(caps->name,"i860")) ) {
-      if ( (!strcmp(caps->name,"i865")) ) {
-      if ( (!strcmp(caps->name,"i900")) ) {
-      if ( (!strcmp(caps->name,"i950")) ) {
-      if ( (!strcmp(caps->name,"i960")) ) {
-      if ( (!strcmp(caps->name,"i6100")) ) {
-      if ( (!strcmp(caps->name,"i9100")) ) {
-      if ( (!strcmp(caps->name,"i9900")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP2000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP2700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4900")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP5000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP5300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6210")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP7100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP7500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP8100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP8500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP8600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP9910")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX4000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX6500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX7000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP150")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP190")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP210")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP240")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP280")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP360")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP470")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP480")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP490")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP493")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP520")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP530")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP540")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP550")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP560")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP620")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP630")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP640")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP710")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP750")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP800")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP810")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP900")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP950")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP970")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP980")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP990")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX330")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX340")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX420")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX850")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX860")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX870")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX880")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX7600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG2100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG3100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG5100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG5200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG5300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG6100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG6200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG8100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG8200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9502")) ) {*/
-      if ( (!strcmp(caps->name,"S900")) ) {
+    /* scroll through modeuse list to find media */
+    for(i=0;i<mlist->count;i++){
+      if(!strcmp(media_type->name,mlist->modeuses[i].name)){
+	muse = &mlist->modeuses[i];
+	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned media '%s'\n",mlist->name);
+	if (ERRPRINT)
+	  stp_erprintf("DEBUG: Gutenprint: mode searching: assigned media '%s'\n",mlist->name);
+	break;
+      }
+    }
+    /* now scroll through to find if the mode is in the modeuses list */
+    i=0;
+    modecheck=1;
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",mlist->name);
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",mlist->name);
+    while (muse->mode_name_list[i]!=NULL){
+      if(!strcmp(mode->name,muse->mode_name_list[i])){
+	modecheck=0;
+	break;
+      }
+      i++;
+    }
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
+      
+    if (ink_set)
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value: '%s'\n",ink_set);
+    else
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value is NULL\n");
+      
+    if (ink_type)
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkType value: '%s'\n",ink_type);
+    else
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkType value is NULL\n");
+      
+    /* if we did not find a mode*/
+    if (modecheck!=0) {
 	
-	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
-	if (ERRPRINT)
-	  stp_erprintf("DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
-	
-	/* scroll through modeuse list to find media */
-	for(i=0;i<mlist->count;i++){
-	  if(!strcmp(media_type->name,mlist->modeuses[i].name)){
-	    muse = &mlist->modeuses[i];
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned media '%s'\n",mlist->name);
-	    if (ERRPRINT)
-	      stp_erprintf("DEBUG: Gutenprint: mode searching: assigned media '%s'\n",mlist->name);
-	    break;
-	  }
-	}
-	/* now scroll through to find if the mode is in the modeuses list */
-	i=0;
-	modecheck=1;
-	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",mlist->name);
-	if (ERRPRINT)
-	  stp_erprintf("DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",mlist->name);
-	while (muse->mode_name_list[i]!=NULL){
-	  if(!strcmp(mode->name,muse->mode_name_list[i])){
-	    modecheck=0;
-	    break;
-	  }
-	  i++;
-	}
-	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
-	if (ERRPRINT)
-	  stp_erprintf("DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
-
-	if (ink_set)
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value: '%s'\n",ink_set);
-	else
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value is NULL\n");
-
-	if (ink_type)
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkType value: '%s'\n",ink_type);
-	else
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkType value is NULL\n");
-
-	/* if we did not find a mode*/
-	if (modecheck!=0) {
-
-	  quality = mode->quality;
-	  /* Black InkSet */
-	  if (ink_set && !strcmp(ink_set,"Black"))  {
-	    stp_set_string_parameter(v, "PrintingMode","BW");
-	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
-	    if (!(mode->ink_types & CANON_INK_K)) {
-	      /* need a new mode: 
-		 loop through modes in muse list searching for a matching inktype, comparing quality
-	       */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for black inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
-		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+      quality = mode->quality;
+      /* Black InkSet */
+      if (ink_set && !strcmp(ink_set,"Black"))  {
+	stp_set_string_parameter(v, "PrintingMode","BW");
+	printing_mode = stp_get_string_parameter(v, "PrintingMode");
+	if (!(mode->ink_types & CANON_INK_K)) {
+	  /* need a new mode: 
+	     loop through modes in muse list searching for a matching inktype, comparing quality
+	  */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
 		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_BLACK */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
+		  if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
 		    }
-		    i++;
 		  }
+		  break; /* go to next mode in muse list */
 		}
-		else {  /* no special replacement modes for black inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
+		else { /* no special replacement modes for black inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
 		    }
-		    i++;
 		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
+		  break; /* go to next mode in muse list */
 		}
 	      }
 	    }
-	    else {
-	      /* mode is fine */
-	      /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
+	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for black inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
-		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_BLACK */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for black inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	  } /* End of Black Inkset */
-	  /*-------------------------------------------------------------------------------------------------*/
-	  /* Color InkSet */
-	  /* Added limitation: "Color" for BJC corresponds to "Both" on other types */
-	  else if ( (ink_set && !strcmp(ink_set,"Color")) && (caps->features & CANON_CAP_T) ) {
-	    stp_set_string_parameter(v, "PrintingMode","Color");
-	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
-	    if (!(mode->ink_types & CANON_INK_CMY)) {
-	      /* need a new mode
-		 loop through modes in muse list searching for a matching inktype, comparing quality
-	      */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for color inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_COLOR */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for color inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	    else {
-	      /* mode is fine */
-	      /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for color inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_COLOR */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for color inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	  }  /* end of Color InkSet */
-	  /*-------------------------------------------------------------------------------------------------*/
-	  /* Photo cartridge selection: only use modes that support it */
-	  else if (ink_set && !strcmp(ink_set,"Photo")) {
-	    /* Photo cartridge printing does not seem to have any monochrome option */
-	    stp_set_string_parameter(v, "PrintingMode","Color");
-	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
-	    /* need to match photo cartridge mode flag */
-	    if (!(mode->flags & MODE_FLAG_PHOTO)) {
-	      /* need a new mode
-		 loop through modes in muse list searching for a matching inkset, comparing quality
-	      */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* if no special replacement modes for photo inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_PHOTO */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for photo inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	    else {
-	      /* mode is fine */
-	      /* matched expected inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for photo inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_PHOTO */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for photo inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    } 
-	  } /* end of Photo Inkset  */
-	  /*-------------------------------------------------------------------------------------------------*/
-	  /* no restrictions for InkSet "Both" (non-BJC) or "Color" (BJC) or if no InkSet set yet --- do not worry about InkSet at all */
-	  else {
-	    if (printing_mode && !strcmp(printing_mode,"Color")) {
-	      /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
-	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-		i=0;
-		quality = mode->quality;
-		modefound=0;
-		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		  for(j=0;j<caps->modelist->count;j++){
-		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		      if ( (caps->modelist->modes[j].quality >= quality) ) {
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		  i++;
-		}
-	      }
-	    }
-	    else if (printing_mode && !strcmp(printing_mode,"BW")) {
-	      /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
-	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-		i=0;
-		quality = mode->quality;
-		modefound=0;
-		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		  for(j=0;j<caps->modelist->count;j++){
-		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		      if ( (caps->modelist->modes[j].quality >= quality) ) {
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  if (caps->modelist->modes[j].ink_types == CANON_INK_K) {
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		  i++;
-		}
-	      }
-	    }
-	    else { /* no restriction from PrintingMode if not set yet */
-	      /* if mode is not a matching duplex mode, need to find a new one */
-	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-		i=0;
-		quality = mode->quality;
-		modefound=0;
-		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		  for(j=0;j<caps->modelist->count;j++){
-		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		      if ( (caps->modelist->modes[j].quality >= quality) ) {
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		  i++;
-		}
-	      }
-	    }
-	    /* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
-	    if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-	      i=0;
-	      quality = mode->quality;
-	      modefound=0;
 	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_BLACK */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
 		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			/* duplex check */
+			/* duplex check -- rare for monochrome, cannot remember any such case */
 			mode = &caps->modelist->modes[j];
 			modefound=1;
-			/* set PrintingMode to whatever the mode is capable of */
-			if (caps->modelist->modes[j].ink_types > CANON_INK_K)
-			  stp_set_string_parameter(v,"PrintingMode","Color");
-			else
-			  stp_set_string_parameter(v,"PrintingMode","BW");
 		      }
 		    }
 		    break; /* go to next mode in muse list */
@@ -1478,30 +656,28 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		i++;
 	      }
 	    }
-	    /* if InkType does not match that of mode, change InkType to match it */
-	    /* choose highest color as default, as there is only one option for Black */
-	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	      if (mode->ink_types & canon_inktypes[i].ink_type) {
-		if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		  ink_type = stp_get_string_parameter(v, "InkType");
-		  break;
+	    else {  /* no special replacement modes for black inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
 		}
+		i++;
 	      }
 	    }
 	  }
-
-	  /* end of cartridge option block */
-
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
-	  if (ERRPRINT)
-	    stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
-	  /* set InkType for the mode decided upon */
+	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
-	      if (strcmp(ink_type,canon_inktypes[i].name)) {
-		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1509,644 +685,55 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 	    }
 	  }
 	}
-
-	else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
-	  
-	  quality = mode->quality;
-	  /* Black InkSet */
-	  if (ink_set && !strcmp(ink_set,"Black")) {
-	    stp_set_string_parameter(v, "PrintingMode","BW");
-	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
-	    if (!(mode->ink_types & CANON_INK_K)) {
-	      /* need a new mode: 
-		 loop through modes in muse list searching for a matching inktype, comparing quality
-	       */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for black inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+	else {
+	  /* mode is fine */
+	  /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
 		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_BLACK */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
+		  if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
 		    }
-		    i++;
 		  }
+		  break; /* go to next mode in muse list */
 		}
-		else {  /* no special replacement modes for black inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
+		else { /* no special replacement modes for black inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
 		    }
-		    i++;
 		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
+		  break; /* go to next mode in muse list */
 		}
 	      }
 	    }
-	    else {
-	      /* mode is fine */
-	      /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
+	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for black inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check -- rare for monochrome, cannot remember any such case */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_BLACK */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for black inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	  } /* End of Black Inkset */
-	  /*-------------------------------------------------------------------------------------------------*/
-	  /* InkSet Color */
-	  else if ( (ink_set && !strcmp(ink_set,"Color")) && (caps->features & CANON_CAP_T) ) {
-	    stp_set_string_parameter(v, "PrintingMode","Color");
-	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
-	    if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
-	      /* need a new mode
-		 loop through modes in muse list searching for a matching inktype, comparing quality
-	      */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		/* need to check for duplex in case it is a replacement for another mode */
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for color inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_COLOR */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for color inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	    else {
-	      /* mode is fine */
-	      /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		/* need to check for duplex in case it is a replacement for another mode */
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for color inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_COLOR */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for color inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	  } /* End of Color Inkset */
-	  /*-------------------------------------------------------------------------------------------------*/
-	  /* Photo cartridge selection: only use modes that support it */
-	  else if (ink_set && !strcmp(ink_set,"Photo")) {
-	    /* Photo cartridge printing does not seem to have any monochrome option */
-	    stp_set_string_parameter(v, "PrintingMode","Color");
-	    printing_mode = stp_get_string_parameter(v, "PrintingMode");
-	    /* need to match photo cartridge mode flag */
-	    if (!(mode->flags & MODE_FLAG_PHOTO)) {
-	      /* need a new mode
-		 loop through modes in muse list searching for a matching inkset, comparing quality
-	      */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* if no special replacement modes for photo inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_PHOTO */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for photo inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    }
-	    else {
-	      /* mode is fine */
-	      /* matched expected inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
-	      i=0;
-	      modefound=0;
-	      while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
-		for(j=0;j<caps->modelist->count;j++){
-		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
-		      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		      if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		    else { /* no special replacement modes for photo inkset */
-		      if ( (caps->modelist->modes[j].quality >= quality) ){ 
-			/* keep setting the mode until lowest matching quality is found */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		}
-		i++;
-	      }
-	      if (modefound == 0) { /* still did not find a mode: pick first one for that media */
-		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
-		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    /* pick first mode with MODE_FLAG_PHOTO */
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			/* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
-			if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-			  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-		else {  /* no special replacement modes for photo inkset */
-		  i=0;
-		  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		    for(j=0;j<caps->modelist->count;j++){
-		      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			    /* duplex check -- rare for monochrome, cannot remember any such case */
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			break; /* go to next mode in muse list */
-		      }
-		    }
-		    i++;
-		  }
-		}
-	      }
-	      /* set InkType for the mode found */
-	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-		if (mode->ink_types & canon_inktypes[i].ink_type) {
-		  if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		    ink_type = stp_get_string_parameter(v, "InkType");
-		    break;
-		  }
-		}
-	      }
-	    } 
-	  } /* end of Photo Inkset  */
-	  /*-------------------------------------------------------------------------------------------------*/
-	  /* no restrictions for InkSet "Both" (non-BJC) or "Color" (BJC) or if no InkSet set yet */
-	  else {
-	    if (printing_mode && !strcmp(printing_mode,"Color")) {
-	      /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
-	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-		i=0;
-		quality = mode->quality;
-		modefound=0;
-		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		  for(j=0;j<caps->modelist->count;j++){
-		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		      if ( (caps->modelist->modes[j].quality >= quality) ) {
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		  i++;
-		}
-	      }
-	    }
-	    else if (printing_mode && !strcmp(printing_mode,"BW")) {
-	      /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
-	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-		i=0;
-		quality = mode->quality;
-		modefound=0;
-		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		  for(j=0;j<caps->modelist->count;j++){
-		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		      if ( (caps->modelist->modes[j].quality >= quality) ) {
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  if (caps->modelist->modes[j].ink_types == CANON_INK_K) {
-			    mode = &caps->modelist->modes[j];
-			    modefound=1;
-			  }
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		  i++;
-		}
-	      }
-	    }
-	    else { /* no restriction from PrintingMode if not set yet */
-	      /* if mode is not a matching duplex mode, need to find a new one */
-	      if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-		i=0;
-		quality = mode->quality;
-		modefound=0;
-		while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
-		  for(j=0;j<caps->modelist->count;j++){
-		    if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		      if ( (caps->modelist->modes[j].quality >= quality) ) {
-			if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			  /* duplex check */
-			  mode = &caps->modelist->modes[j];
-			  modefound=1;
-			}
-		      }
-		      break; /* go to next mode in muse list */
-		    }
-		  }
-		  i++;
-		}
-	      }
-	    }
-	    /* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
-	    if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
-	      i=0;
-	      quality = mode->quality;
-	      modefound=0;
 	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_BLACK */
 		for(j=0;j<caps->modelist->count;j++){
 		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-		    if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
 		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-			/* duplex check */
+			/* duplex check -- rare for monochrome, cannot remember any such case */
 			mode = &caps->modelist->modes[j];
 			modefound=1;
-			/* set PrintingMode to whatever the mode is capable of */
-			if (caps->modelist->modes[j].ink_types > CANON_INK_K)
-			  stp_set_string_parameter(v,"PrintingMode","Color");
-			else
-			  stp_set_string_parameter(v,"PrintingMode","BW");
 		      }
 		    }
 		    break; /* go to next mode in muse list */
@@ -2155,74 +742,1241 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 		i++;
 	      }
 	    }
-	    /* if InkType does not match that of mode, change InkType to match it */
-	    /* choose highest color as default, as there is only one option for Black */
-	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	      if (mode->ink_types & canon_inktypes[i].ink_type) {
-		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-		  ink_type = stp_get_string_parameter(v, "InkType");
-		  break;
+	    else {  /* no special replacement modes for black inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
 		}
+		i++;
 	      }
 	    }
 	  }
-
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
 	}
-	
-      } /* limited to specific model for now */
+      } /* End of Black Inkset */
+      /*-------------------------------------------------------------------------------------------------*/
+      /* Color InkSet */
+      /* Added limitation: "Color" for BJC corresponds to "Both" on other types */
+      else if ( (ink_set && !strcmp(ink_set,"Color")) && (caps->features & CANON_CAP_T) ) {
+	stp_set_string_parameter(v, "PrintingMode","Color");
+	printing_mode = stp_get_string_parameter(v, "PrintingMode");
+	if (!(mode->ink_types & CANON_INK_CMY)) {
+	  /* need a new mode
+	     loop through modes in muse list searching for a matching inktype, comparing quality
+	  */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for color inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_COLOR */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for color inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+	else {
+	  /* mode is fine */
+	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for color inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_COLOR */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for color inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+      }  /* end of Color InkSet */
+      /*-------------------------------------------------------------------------------------------------*/
+      /* Photo cartridge selection: only use modes that support it */
+      else if (ink_set && !strcmp(ink_set,"Photo")) {
+	/* Photo cartridge printing does not seem to have any monochrome option */
+	stp_set_string_parameter(v, "PrintingMode","Color");
+	printing_mode = stp_get_string_parameter(v, "PrintingMode");
+	/* need to match photo cartridge mode flag */
+	if (!(mode->flags & MODE_FLAG_PHOTO)) {
+	  /* need a new mode
+	     loop through modes in muse list searching for a matching inkset, comparing quality
+	  */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* if no special replacement modes for photo inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_PHOTO */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for photo inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+	else {
+	  /* mode is fine */
+	  /* matched expected inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for photo inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_PHOTO */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for photo inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	} 
+      } /* end of Photo Inkset  */
+      /*-------------------------------------------------------------------------------------------------*/
+      /* no restrictions for InkSet "Both" (non-BJC) or "Color" (BJC) or if no InkSet set yet --- do not worry about InkSet at all */
+      else {
+	if (printing_mode && !strcmp(printing_mode,"Color")) {
+	  /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
+	  if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	    i=0;
+	    quality = mode->quality;
+	    modefound=0;
+	    while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	      for(j=0;j<caps->modelist->count;j++){
+		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		  if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	      i++;
+	    }
+	  }
+	}
+	else if (printing_mode && !strcmp(printing_mode,"BW")) {
+	  /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
+	  if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	    i=0;
+	    quality = mode->quality;
+	    modefound=0;
+	    while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	      for(j=0;j<caps->modelist->count;j++){
+		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		  if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      if (caps->modelist->modes[j].ink_types == CANON_INK_K) {
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	      i++;
+	    }
+	  }
+	}
+	else { /* no restriction from PrintingMode if not set yet */
+	  /* if mode is not a matching duplex mode, need to find a new one */
+	  if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	    i=0;
+	    quality = mode->quality;
+	    modefound=0;
+	    while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	      for(j=0;j<caps->modelist->count;j++){
+		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		  if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	      i++;
+	    }
+	  }
+	}
+	/* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
+	if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	  i=0;
+	  quality = mode->quality;
+	  modefound=0;
+	  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (caps->modelist->modes[j].quality >= quality) ) {
+		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		    /* duplex check */
+		    mode = &caps->modelist->modes[j];
+		    modefound=1;
+		    /* set PrintingMode to whatever the mode is capable of */
+		    if (caps->modelist->modes[j].ink_types > CANON_INK_K)
+		      stp_set_string_parameter(v,"PrintingMode","Color");
+		    else
+		      stp_set_string_parameter(v,"PrintingMode","BW");
+		  }
+		}
+		break; /* go to next mode in muse list */
+	      }
+	    }
+	    i++;
+	  }
+	}
+	/* if InkType does not match that of mode, change InkType to match it */
+	/* choose highest color as default, as there is only one option for Black */
+	for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	  if (mode->ink_types & canon_inktypes[i].ink_type) {
+	    if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	      stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+	      ink_type = stp_get_string_parameter(v, "InkType");
+	      break;
+	    }
+	  }
+	}
+      }
+
+      /* end of cartridge option block */
+
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
+      if (ERRPRINT)
+	stp_erprintf("DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
+      /* set InkType for the mode decided upon */
+      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	if (mode->ink_types & canon_inktypes[i].ink_type) {
+	  if (strcmp(ink_type,canon_inktypes[i].name)) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	    break;
+	  }
+	}
+      }
     }
-    /* end of mode replacement code */
+
+    else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
+	  
+      quality = mode->quality;
+      /* Black InkSet */
+      if (ink_set && !strcmp(ink_set,"Black")) {
+	stp_set_string_parameter(v, "PrintingMode","BW");
+	printing_mode = stp_get_string_parameter(v, "PrintingMode");
+	if (!(mode->ink_types & CANON_INK_K)) {
+	  /* need a new mode: 
+	     loop through modes in muse list searching for a matching inktype, comparing quality
+	  */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for black inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_BLACK */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check -- rare for monochrome, cannot remember any such case */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for black inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+	else {
+	  /* mode is fine */
+	  /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for black inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_BLACK */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check -- rare for monochrome, cannot remember any such case */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for black inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+      } /* End of Black Inkset */
+      /*-------------------------------------------------------------------------------------------------*/
+      /* InkSet Color */
+      else if ( (ink_set && !strcmp(ink_set,"Color")) && (caps->features & CANON_CAP_T) ) {
+	stp_set_string_parameter(v, "PrintingMode","Color");
+	printing_mode = stp_get_string_parameter(v, "PrintingMode");
+	if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
+	  /* need a new mode
+	     loop through modes in muse list searching for a matching inktype, comparing quality
+	  */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    /* need to check for duplex in case it is a replacement for another mode */
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for color inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_COLOR */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for color inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+	else {
+	  /* mode is fine */
+	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    /* need to check for duplex in case it is a replacement for another mode */
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for color inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_COLOR */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for color inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+      } /* End of Color Inkset */
+      /*-------------------------------------------------------------------------------------------------*/
+      /* Photo cartridge selection: only use modes that support it */
+      else if (ink_set && !strcmp(ink_set,"Photo")) {
+	/* Photo cartridge printing does not seem to have any monochrome option */
+	stp_set_string_parameter(v, "PrintingMode","Color");
+	printing_mode = stp_get_string_parameter(v, "PrintingMode");
+	/* need to match photo cartridge mode flag */
+	if (!(mode->flags & MODE_FLAG_PHOTO)) {
+	  /* need a new mode
+	     loop through modes in muse list searching for a matching inkset, comparing quality
+	  */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* if no special replacement modes for photo inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_PHOTO */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for photo inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	}
+	else {
+	  /* mode is fine */
+	  /* matched expected inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
+	  i=0;
+	  modefound=0;
+	  while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) { 
+		  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+		else { /* no special replacement modes for photo inkset */
+		  if ( (caps->modelist->modes[j].quality >= quality) ){ 
+		    /* keep setting the mode until lowest matching quality is found */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	    }
+	    i++;
+	  }
+	  if (modefound == 0) { /* still did not find a mode: pick first one for that media */
+	    if ( (muse->use_flags & INKSET_PHOTO_MODEREPL) ) {  
+	      /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		/* pick first mode with MODE_FLAG_PHOTO */
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
+		    if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
+		      if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+			/* duplex check */
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	    else {  /* no special replacement modes for photo inkset */
+	      i=0;
+	      while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+		for(j=0;j<caps->modelist->count;j++){
+		  if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check -- rare for monochrome, cannot remember any such case */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		    break; /* go to next mode in muse list */
+		  }
+		}
+		i++;
+	      }
+	    }
+	  }
+	  /* set InkType for the mode found */
+	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	    if (mode->ink_types & canon_inktypes[i].ink_type) {
+	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		ink_type = stp_get_string_parameter(v, "InkType");
+		break;
+	      }
+	    }
+	  }
+	} 
+      } /* end of Photo Inkset  */
+      /*-------------------------------------------------------------------------------------------------*/
+      /* no restrictions for InkSet "Both" (non-BJC) or "Color" (BJC) or if no InkSet set yet */
+      else {
+	if (printing_mode && !strcmp(printing_mode,"Color")) {
+	  /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
+	  if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	    i=0;
+	    quality = mode->quality;
+	    modefound=0;
+	    while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	      for(j=0;j<caps->modelist->count;j++){
+		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		  if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	      i++;
+	    }
+	  }
+	}
+	else if (printing_mode && !strcmp(printing_mode,"BW")) {
+	  /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
+	  if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	    i=0;
+	    quality = mode->quality;
+	    modefound=0;
+	    while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	      for(j=0;j<caps->modelist->count;j++){
+		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		  if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      if (caps->modelist->modes[j].ink_types == CANON_INK_K) {
+			mode = &caps->modelist->modes[j];
+			modefound=1;
+		      }
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	      i++;
+	    }
+	  }
+	}
+	else { /* no restriction from PrintingMode if not set yet */
+	  /* if mode is not a matching duplex mode, need to find a new one */
+	  if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	    i=0;
+	    quality = mode->quality;
+	    modefound=0;
+	    while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	      for(j=0;j<caps->modelist->count;j++){
+		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		  if ( (caps->modelist->modes[j].quality >= quality) ) {
+		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		      /* duplex check */
+		      mode = &caps->modelist->modes[j];
+		      modefound=1;
+		    }
+		  }
+		  break; /* go to next mode in muse list */
+		}
+	      }
+	      i++;
+	    }
+	  }
+	}
+	/* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
+	if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {
+	  i=0;
+	  quality = mode->quality;
+	  modefound=0;
+	  while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
+	    for(j=0;j<caps->modelist->count;j++){
+	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
+		if ( (caps->modelist->modes[j].quality >= quality) ) {
+		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		    /* duplex check */
+		    mode = &caps->modelist->modes[j];
+		    modefound=1;
+		    /* set PrintingMode to whatever the mode is capable of */
+		    if (caps->modelist->modes[j].ink_types > CANON_INK_K)
+		      stp_set_string_parameter(v,"PrintingMode","Color");
+		    else
+		      stp_set_string_parameter(v,"PrintingMode","BW");
+		  }
+		}
+		break; /* go to next mode in muse list */
+	      }
+	    }
+	    i++;
+	  }
+	}
+	/* if InkType does not match that of mode, change InkType to match it */
+	/* choose highest color as default, as there is only one option for Black */
+	for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	  if (mode->ink_types & canon_inktypes[i].ink_type) {
+	    if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	      stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+	      ink_type = stp_get_string_parameter(v, "InkType");
+	      break;
+	    }
+	  }
+	}
+      }
+    }
+  }
+  /* end of mode replacement code */
 
 
 #if 0
-    if(quality && strcmp(quality, "None") == 0)
-        quality = "Standard";
+  if(quality && strcmp(quality, "None") == 0)
+    quality = "Standard";
 
-    if(quality && !strcmp(quality,"Standard")){
-        return &caps->modelist->modes[caps->modelist->default_mode];
-    }
+  if(quality && !strcmp(quality,"Standard")){
+    return &caps->modelist->modes[caps->modelist->default_mode];
+  }
 #endif
 
 #if 0
-    /* only some modes can print to cd */
-    if(input_slot && !strcmp(input_slot,"CD") && !(mode->flags & MODE_FLAG_CD)){
-        for(i=0;i<caps->modelist->count;i++){
-            if(caps->modelist->modes[i].flags & MODE_FLAG_CD){
-                mode = &caps->modelist->modes[i];
-                break;
-            }
-        }
+  /* only some modes can print to cd */
+  if(input_slot && !strcmp(input_slot,"CD") && !(mode->flags & MODE_FLAG_CD)){
+    for(i=0;i<caps->modelist->count;i++){
+      if(caps->modelist->modes[i].flags & MODE_FLAG_CD){
+	mode = &caps->modelist->modes[i];
+	break;
+      }
     }
+  }
 #endif
 
-    if (mode) {
-      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
-      if (ERRPRINT)
-	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
-    }
-    else {
-      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
-      if (ERRPRINT)
-	stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
-    }
+  if (mode) {
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode: '%s'\n",mode->name);
+  }
+  else {
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
+    if (ERRPRINT)
+      stp_erprintf("DEBUG: Gutenprint:  get_current_mode --- Final returned mode is NULL \n");
+  }
 
-    /* set PrintingMode */
-    if (mode) { /* final mode takes precedence */
-      if (mode->ink_types == CANON_INK_K)
-	stp_set_string_parameter(v, "PrintingMode", "BW");
-      else
-	stp_set_string_parameter(v, "PrintingMode", "Color");
-    }
-    else if (ink_type) { /* mode not yet known, but InkType known. InkSet should have been handled together with InkType above */
-      if (!strcmp(ink_type,"Gray"))
-	stp_set_string_parameter(v, "PrintingMode", "BW");
-      else
-	stp_set_string_parameter(v, "PrintingMode", "Color");
-    }
+  /* set PrintingMode */
+  if (mode) { /* final mode takes precedence */
+    if (mode->ink_types == CANON_INK_K)
+      stp_set_string_parameter(v, "PrintingMode", "BW");
+    else
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+  }
+  else if (ink_type) { /* mode not yet known, but InkType known. InkSet should have been handled together with InkType above */
+    if (!strcmp(ink_type,"Gray"))
+      stp_set_string_parameter(v, "PrintingMode", "BW");
+    else
+      stp_set_string_parameter(v, "PrintingMode", "Color");
+  }
 
-    return mode;
+  return mode;
 }
 
 /* function returns the best ink_type for the current mode */
@@ -4344,128 +4098,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   const char    *duplex_mode =stp_get_string_parameter(v, "Duplex");
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
-  /*
-      const canon_modeuselist_t* mlist = &canon_BJC_3000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_4300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_4550_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_SELPHY_DS700_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_SELPHY_DS810_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_mini220_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_mini320_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S330_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S500_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S520_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S600_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S750_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S800_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_BJC_S820_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i50_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i70_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i80_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i450_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i455_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i550_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i560_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i850_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i860_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i865_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i900_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i950_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i960_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i6100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i9100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_i9900_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP2000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP2700_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP3000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP3100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP3300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP3600_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4200_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4500_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4600_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4700_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP4900_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP5000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP5300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP6000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP6100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP6210_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP6700_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP7100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP7500_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP8100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP8500_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP8600_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iP9910_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iX4000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iX5000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iX6500_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_iX7000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP150_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP190_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP210_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP240_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP250_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP280_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP360_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP470_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP480_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP490_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP493_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP520_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP530_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP540_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP550_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP560_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP600_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP610_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP620_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP630_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP640_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP700_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP710_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP750_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP800_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP810_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP830_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP900_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP950_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP960_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP970_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP980_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MP990_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX330_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX340_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX360_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX420_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX700_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX850_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX860_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX870_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX880_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_MULTIPASS_MX7600_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG2100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG3100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG5100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG5200_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG5300_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG6100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG6200_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG8100_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_MG8200_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9000mk2_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500_modeuselist;
-      const canon_modeuselist_t* mlist = &canon_PIXMA_Pro9500mk2_modeuselist;*/
-      const canon_modeuselist_t* mlist = &canon_BJC_S900_modeuselist;
-
-  
+  const canon_modeuselist_t* mlist = caps->modeuselist;
   const canon_modeuse_t* muse = NULL;
   /*  int monocheck = 0;
       int colcheck = 0; */
@@ -4529,154 +4162,32 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* check if InkSet chosen is possible for this Media */
   /* - if Black, check if modes for selected media have a black flag */
   /*   else, set InkSet to "Both" for now */
-  /*
-      if ( (!strcmp(caps->name,"3000")) ) {
-      if ( (!strcmp(caps->name,"4300")) ) {
-      if ( (!strcmp(caps->name,"4550")) ) {
-      if ( (!strcmp(caps->name,"SELPHY DS700")) ) {
-      if ( (!strcmp(caps->name,"SELPHY DS810")) ) {
-      if ( (!strcmp(caps->name,"PIXMA mini220")) ) {
-      if ( (!strcmp(caps->name,"PIXMA mini320")) ) {
-      if ( (!strcmp(caps->name,"S300")) ) {
-      if ( (!strcmp(caps->name,"S330")) ) {
-      if ( (!strcmp(caps->name,"S500")) ) {
-      if ( (!strcmp(caps->name,"S520")) ) {
-      if ( (!strcmp(caps->name,"S600")) ) {
-      if ( (!strcmp(caps->name,"S750")) ) {
-      if ( (!strcmp(caps->name,"S800")) ) {
-      if ( (!strcmp(caps->name,"S820")) ) {
-      if ( (!strcmp(caps->name,"i50")) ) {
-      if ( (!strcmp(caps->name,"i70")) ) {
-      if ( (!strcmp(caps->name,"i80")) ) {
-      if ( (!strcmp(caps->name,"i450")) ) {
-      if ( (!strcmp(caps->name,"i455")) ) {
-      if ( (!strcmp(caps->name,"i550")) ) {
-      if ( (!strcmp(caps->name,"i560")) ) {
-      if ( (!strcmp(caps->name,"i850")) ) {
-      if ( (!strcmp(caps->name,"i860")) ) {
-      if ( (!strcmp(caps->name,"i865")) ) {
-      if ( (!strcmp(caps->name,"i900")) ) {
-      if ( (!strcmp(caps->name,"i950")) ) {
-      if ( (!strcmp(caps->name,"i960")) ) {
-      if ( (!strcmp(caps->name,"i6100")) ) {
-      if ( (!strcmp(caps->name,"i9100")) ) {
-      if ( (!strcmp(caps->name,"i9900")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP2000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP2700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP3600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP4900")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP5000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP5300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6210")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP6700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP7100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP7500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP8100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP8500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP8600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iP9910")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX4000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX5000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX6500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA iX7000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP150")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP190")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP210")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP240")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP250")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP280")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP360")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP470")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP480")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP490")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP493")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP520")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP530")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP540")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP550")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP560")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP610")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP620")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP630")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP640")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP710")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP750")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP800")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP810")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP830")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP900")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP950")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP960")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP970")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP980")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MP990")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX330")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX340")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX360")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX420")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX700")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX850")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX860")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX870")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX880")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MX7600")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG2100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG3100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG5100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG5200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG5300")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG6100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG6200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG8100")) ) {
-      if ( (!strcmp(caps->name,"PIXMA MG8200")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9000")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9002")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9500")) ) {
-      if ( (!strcmp(caps->name,"PIXMA Pro9502")) ) {*/
-      if ( (!strcmp(caps->name,"S900")) ) {
-    
-    /* scroll through modeuse list to find media */
-    for(i=0;i<mlist->count;i++){
-      if(!strcmp(privdata.pt->name,mlist->modeuses[i].name)){
-	muse = &mlist->modeuses[i];
-	break;
-      }
-    }
 
-    if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Black")) {
-      /* check if there is any mode for that media with K-only inktype */
-      /* if not, change it to "Both" */
-      /* NOTE: User cannot force monochrome printing here, since that would require changing the Color Model */
-      if (!(mlist->modeuses[i].use_flags & INKSET_BLACK_SUPPORT)) {
-	stp_set_string_parameter(v, "InkSet", "Both");	
-      }
+  /* scroll through modeuse list to find media */
+  for(i=0;i<mlist->count;i++){
+    if(!strcmp(privdata.pt->name,mlist->modeuses[i].name)){
+      muse = &mlist->modeuses[i];
+      break;
     }
-    /* Color-only */
-    else if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Color") && (caps->features & CANON_CAP_T) ) {
-      /* check if there is any mode for that media with no K in the inkset at all */
-      /* if not, change it to "Both" */
-      if (!(mlist->modeuses[i].use_flags & INKSET_COLOR_SUPPORT)) {
-	stp_set_string_parameter(v, "InkSet", "Both");	
-      }
+  }
+  
+  if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Black")) {
+    /* check if there is any mode for that media with K-only inktype */
+    /* if not, change it to "Both" */
+    /* NOTE: User cannot force monochrome printing here, since that would require changing the Color Model */
+    if (!(mlist->modeuses[i].use_flags & INKSET_BLACK_SUPPORT)) {
+      stp_set_string_parameter(v, "InkSet", "Both");	
     }
-    /* no restriction for "Both" (non-BJC) or "Color" (BJC) or "Photo" yet */
-
-  } /* limited to specific model for now */    
+  }
+  /* Color-only */
+  else if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Color") && (caps->features & CANON_CAP_T) ) {
+    /* check if there is any mode for that media with no K in the inkset at all */
+    /* if not, change it to "Both" */
+    if (!(mlist->modeuses[i].use_flags & INKSET_COLOR_SUPPORT)) {
+      stp_set_string_parameter(v, "InkSet", "Both");	
+    }
+  }
+  /* no restriction for "Both" (non-BJC) or "Color" (BJC) or "Photo" yet */
 
   /* get InkSet after adjustment */
   privdata.ink_set = stp_get_string_parameter(v, "InkSet");

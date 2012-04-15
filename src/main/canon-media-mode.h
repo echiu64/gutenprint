@@ -1446,7 +1446,7 @@ static const canon_modeuse_t canon_BJC_S900_modeuses[] = {
 DECLARE_MODEUSES(canon_BJC_S900);
 
 /* ----------------------------------- Canon i50  ----------------------------------- */
-static const char* canon_PIXMA_i50_modeuses_plain[] = {
+static const char* canon_BJC_i50_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
@@ -1454,74 +1454,74 @@ static const char* canon_PIXMA_i50_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i50_modeuses_PPpro[] = {
+static const char* canon_BJC_i50_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_PPplus[] = {
+static const char* canon_BJC_i50_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_PPmatte[] = {
+static const char* canon_BJC_i50_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_PPgloss[] = {
+static const char* canon_BJC_i50_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photomed",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_Hagaki[] = {
+static const char* canon_BJC_i50_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_TShirt[] = {
+static const char* canon_BJC_i50_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_Transparency[] = {
+static const char* canon_BJC_i50_modeuses_Transparency[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   NULL
 };
 
-static const char* canon_PIXMA_i50_modeuses_PPother[] = {
+static const char* canon_BJC_i50_modeuses_PPother[] = {
   "600x600dpi_photo2",
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i50_modeuses[] = {
-  { "Plain",            canon_PIXMA_i50_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i50_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i50_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i50_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i50_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i50_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i50_modeuses_PPmatte, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i50_modeuses_PPplus, 0 },
-  { "Hagaki", 	        canon_PIXMA_i50_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_PIXMA_i50_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i50_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i50_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i50_modeuses_PPother, 0 },
+static const canon_modeuse_t canon_BJC_i50_modeuses[] = {
+  { "Plain",            canon_BJC_i50_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i50_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i50_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i50_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i50_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i50_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i50_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_BJC_i50_modeuses_PPplus, 0 },
+  { "Hagaki", 	        canon_BJC_i50_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_BJC_i50_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i50_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i50_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i50_modeuses_PPother, 0 },
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i50);
+DECLARE_MODEUSES(canon_BJC_i50);
 
 /* ----------------------------------- Canon i70  ----------------------------------- */
-static const char* canon_PIXMA_i70_modeuses_plain[] = {
+static const char* canon_BJC_i70_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
@@ -1529,26 +1529,26 @@ static const char* canon_PIXMA_i70_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i70_modeuses_PPpro[] = {
+static const char* canon_BJC_i70_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i70_modeuses_PPmatte[] = {
+static const char* canon_BJC_i70_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i70_modeuses_PPgloss[] = {
+static const char* canon_BJC_i70_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photomed",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i70_modeuses_Hagaki[] = {
+static const char* canon_BJC_i70_modeuses_Hagaki[] = {
   "600x600dpi_high3",/*mono*/
   "600x600dpi_std3",/*color*/
   "600x600dpi_std4",
@@ -1556,43 +1556,43 @@ static const char* canon_PIXMA_i70_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i70_modeuses_TShirt[] = {
+static const char* canon_BJC_i70_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i70_modeuses_Transparency[] = {
+static const char* canon_BJC_i70_modeuses_Transparency[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   NULL
 };
 
-static const char* canon_PIXMA_i70_modeuses_PPother[] = {
+static const char* canon_BJC_i70_modeuses_PPother[] = {
   "600x600dpi_photo",
   "600x600dpi_photo2",
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i70_modeuses[] = {
-  { "Plain",            canon_PIXMA_i70_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i70_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i70_modeuses_PPpro, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i70_modeuses_PPpro, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i70_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i70_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i70_modeuses_PPpro, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i70_modeuses_PPgloss, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i70_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_PIXMA_i70_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i70_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i70_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i70_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i70_modeuses[] = {
+  { "Plain",            canon_BJC_i70_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i70_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i70_modeuses_PPpro, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i70_modeuses_PPpro, 0 },
+  { "PhotopaperMatte",	canon_BJC_i70_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i70_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i70_modeuses_PPpro, 0 },
+  { "InkJetHagaki", 	canon_BJC_i70_modeuses_PPgloss, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i70_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_BJC_i70_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i70_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i70_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i70_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i70);
+DECLARE_MODEUSES(canon_BJC_i70);
 
 /* ----------------------------------- Canon i80  ----------------------------------- */
-static const char* canon_PIXMA_i80_modeuses_plain[] = {
+static const char* canon_BJC_i80_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_high2",/*mono*/
   "600x600dpi",
@@ -1602,24 +1602,24 @@ static const char* canon_PIXMA_i80_modeuses_plain[] = {
   };
 
 /* need to add cmy modes */
-static const char* canon_PIXMA_i80_modeuses_PPpro[] = {
+static const char* canon_BJC_i80_modeuses_PPpro[] = {
   "600x600dpi_photo",
   NULL
 };
 
 /* need to add cmy modes */
-static const char* canon_PIXMA_i80_modeuses_PPplus[] = {
+static const char* canon_BJC_i80_modeuses_PPplus[] = {
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i80_modeuses_PPgloss[] = {
+static const char* canon_BJC_i80_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i80_modeuses_Hagaki[] = {
+static const char* canon_BJC_i80_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_high4",/*mono*/
   "600x600dpi_std3",
@@ -1627,12 +1627,12 @@ static const char* canon_PIXMA_i80_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i80_modeuses_TShirt[] = {
+static const char* canon_BJC_i80_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i80_modeuses_Transparency[] = {
+static const char* canon_BJC_i80_modeuses_Transparency[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   "600x600dpi_photodraft2",
@@ -1640,31 +1640,31 @@ static const char* canon_PIXMA_i80_modeuses_Transparency[] = {
 };
 
 /* need to add cmy modes */
-static const char* canon_PIXMA_i80_modeuses_PPother[] = {
+static const char* canon_BJC_i80_modeuses_PPother[] = {
   "600x600dpi_photo",/*stand-in*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i80_modeuses[] = {
-  { "Plain",            canon_PIXMA_i80_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i80_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i80_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i80_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i80_modeuses_PPplus, 0 },
-  { "GlossyPaper",	canon_PIXMA_i80_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i80_modeuses_PPplus, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i80_modeuses_PPplus, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i80_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_PIXMA_i80_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i80_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i80_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i80_modeuses_PPother, 0 },
+static const canon_modeuse_t canon_BJC_i80_modeuses[] = {
+  { "Plain",            canon_BJC_i80_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i80_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i80_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i80_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i80_modeuses_PPplus, 0 },
+  { "GlossyPaper",	canon_BJC_i80_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i80_modeuses_PPplus, 0 },
+  { "InkJetHagaki", 	canon_BJC_i80_modeuses_PPplus, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i80_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_BJC_i80_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i80_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i80_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i80_modeuses_PPother, 0 },
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i80);
+DECLARE_MODEUSES(canon_BJC_i80);
 
 /* ----------------------------------- Canon i450  ----------------------------------- */
-static const char* canon_PIXMA_i450_modeuses_plain[] = {
+static const char* canon_BJC_i450_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_highmono",/* mono mode */
   "600x600dpi",
@@ -1674,32 +1674,32 @@ static const char* canon_PIXMA_i450_modeuses_plain[] = {
   };
 
 /* need to add support for higher modes */
-static const char* canon_PIXMA_i450_modeuses_PPpro[] = {
+static const char* canon_BJC_i450_modeuses_PPpro[] = {
   /*  "600x600dpi_photohigh2",*/
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_PPplus[] = {
+static const char* canon_BJC_i450_modeuses_PPplus[] = {
   /*  "600x600dpi_photohigh2",*/
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_PPplusDS[] = {
+static const char* canon_BJC_i450_modeuses_PPplusDS[] = {
   /*  "600x600dpi_photohigh2",*/
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_PPgloss[] = {
+static const char* canon_BJC_i450_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_Hagaki[] = {
+static const char* canon_BJC_i450_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_highmono2",/* mono */
   "600x600dpi_std2",
@@ -1707,42 +1707,42 @@ static const char* canon_PIXMA_i450_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_TShirt[] = {
+static const char* canon_BJC_i450_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_Transparency[] = {
+static const char* canon_BJC_i450_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
-static const char* canon_PIXMA_i450_modeuses_PPother[] = {
+static const char* canon_BJC_i450_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i450_modeuses[] = {
-  { "Plain",            canon_PIXMA_i450_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i450_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i450_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i450_modeuses_PPplusDS, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i450_modeuses_PPplusDS, 0 },
-  { "GlossyPaper",	canon_PIXMA_i450_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i450_modeuses_PPplusDS, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i450_modeuses_PPplusDS, 0 },
-  { "Hagaki", 	        canon_PIXMA_i450_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_PIXMA_i450_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i450_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i450_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i450_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i450_modeuses[] = {
+  { "Plain",            canon_BJC_i450_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i450_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i450_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i450_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_BJC_i450_modeuses_PPplusDS, 0 },
+  { "GlossyPaper",	canon_BJC_i450_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i450_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_BJC_i450_modeuses_PPplusDS, 0 },
+  { "Hagaki", 	        canon_BJC_i450_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_BJC_i450_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i450_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i450_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i450_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i450);
+DECLARE_MODEUSES(canon_BJC_i450);
 
 /* ----------------------------------- Canon i455  ----------------------------------- */
-static const char* canon_PIXMA_i455_modeuses_plain[] = {
+static const char* canon_BJC_i455_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_highmono",/* mono mode */
   "600x600dpi",
@@ -1752,14 +1752,14 @@ static const char* canon_PIXMA_i455_modeuses_plain[] = {
   };
 
 /* need to add support for higher modes */
-static const char* canon_PIXMA_i455_modeuses_PPpro[] = {
+static const char* canon_BJC_i455_modeuses_PPpro[] = {
   /*  "600x600dpi_photohigh2",*/
   "600x600dpi_photo2",
   NULL
 };
 
 /* need to add support for higher modes */
-static const char* canon_PIXMA_i455_modeuses_PPplus[] = {
+static const char* canon_BJC_i455_modeuses_PPplus[] = {
   /*  "600x600dpi_photohigh2",*/
   "600x600dpi_photo2",
   "600x600dpi_photodraft",
@@ -1767,19 +1767,19 @@ static const char* canon_PIXMA_i455_modeuses_PPplus[] = {
 };
 
 /* need to add support for higher modes */
-static const char* canon_PIXMA_i455_modeuses_PPplusDS[] = {
+static const char* canon_BJC_i455_modeuses_PPplusDS[] = {
   /*  "600x600dpi_photohigh2",*/
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i455_modeuses_PPgloss[] = {
+static const char* canon_BJC_i455_modeuses_PPgloss[] = {
   "600x600dpi_photo3",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i455_modeuses_Hagaki[] = {
+static const char* canon_BJC_i455_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_highmono2",/* mono */
   "600x600dpi_std2",
@@ -1787,42 +1787,42 @@ static const char* canon_PIXMA_i455_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i455_modeuses_TShirt[] = {
+static const char* canon_BJC_i455_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i455_modeuses_Transparency[] = {
+static const char* canon_BJC_i455_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
-static const char* canon_PIXMA_i455_modeuses_PPother[] = {
+static const char* canon_BJC_i455_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i455_modeuses[] = {
-  { "Plain",            canon_PIXMA_i455_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i455_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i455_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i455_modeuses_PPplusDS, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i455_modeuses_PPplusDS, 0 },
-  { "GlossyPaper",	canon_PIXMA_i455_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i455_modeuses_PPplusDS, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i455_modeuses_PPplusDS, 0 },
-  { "Hagaki", 	        canon_PIXMA_i455_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_PIXMA_i455_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i455_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i455_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i455_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i455_modeuses[] = {
+  { "Plain",            canon_BJC_i455_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i455_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i455_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i455_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_BJC_i455_modeuses_PPplusDS, 0 },
+  { "GlossyPaper",	canon_BJC_i455_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i455_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_BJC_i455_modeuses_PPplusDS, 0 },
+  { "Hagaki", 	        canon_BJC_i455_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_BJC_i455_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i455_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i455_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i455_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i455);
+DECLARE_MODEUSES(canon_BJC_i455);
 
 /* ----------------------------------- Canon i550  ----------------------------------- */
-static const char* canon_PIXMA_i550_modeuses_plain[] = {
+static const char* canon_BJC_i550_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_highmono",/* mono mode */
   "600x600dpi",
@@ -1831,40 +1831,40 @@ static const char* canon_PIXMA_i550_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i550_modeuses_PPpro[] = {
+static const char* canon_BJC_i550_modeuses_PPpro[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_PPmatte[] = {
+static const char* canon_BJC_i550_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_PPgloss[] = {
+static const char* canon_BJC_i550_modeuses_PPgloss[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photomed",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_coated[] = {
+static const char* canon_BJC_i550_modeuses_coated[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i550_modeuses_inkjetHagaki[] = {
   "600x600dpi_photo3",
   "600x600dpi_photo",
   "600x600dpi_photodraft3",
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_Hagaki[] = {
+static const char* canon_BJC_i550_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_highmono3",/* mono */
   "600x600dpi_std3",
@@ -1872,19 +1872,19 @@ static const char* canon_PIXMA_i550_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_TShirt[] = {
+static const char* canon_BJC_i550_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i550_modeuses_Transparency[] = {
+static const char* canon_BJC_i550_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
 /*untested*/
-static const char* canon_PIXMA_i550_modeuses_PPother[] = {
+static const char* canon_BJC_i550_modeuses_PPother[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   "600x600dpi_photo",
@@ -1892,27 +1892,27 @@ static const char* canon_PIXMA_i550_modeuses_PPother[] = {
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i550_modeuses[] = {
-  { "Plain",            canon_PIXMA_i550_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i550_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i550_modeuses_PPpro, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i550_modeuses_PPpro, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i550_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i550_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i550_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i550_modeuses_inkjetHagaki, 0 },
-  { "Hagaki", 	        canon_PIXMA_i550_modeuses_Hagaki, 0 },
-  { "GlossyFilm", 	canon_PIXMA_i550_modeuses_PPpro, 0 },
-  { "TShirt",		canon_PIXMA_i550_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i550_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i550_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i550_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i550_modeuses[] = {
+  { "Plain",            canon_BJC_i550_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i550_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i550_modeuses_PPpro, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i550_modeuses_PPpro, 0 },
+  { "PhotopaperMatte",	canon_BJC_i550_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i550_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i550_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i550_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_BJC_i550_modeuses_Hagaki, 0 },
+  { "GlossyFilm", 	canon_BJC_i550_modeuses_PPpro, 0 },
+  { "TShirt",		canon_BJC_i550_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i550_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i550_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i550_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i550);
+DECLARE_MODEUSES(canon_BJC_i550);
 
 /* ----------------------------------- Canon i560  ----------------------------------- */
-static const char* canon_PIXMA_i560_modeuses_plain[] = {
+static const char* canon_BJC_i560_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi_high",/*untested*/
@@ -1922,80 +1922,80 @@ static const char* canon_PIXMA_i560_modeuses_plain[] = {
   };
 
 /* highest mode not supported yet */
-static const char* canon_PIXMA_i560_modeuses_PPpro[] = {
+static const char* canon_BJC_i560_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_PPplus[] = {
+static const char* canon_BJC_i560_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_PPplusDS[] = {
+static const char* canon_BJC_i560_modeuses_PPplusDS[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_coated[] = {
+static const char* canon_BJC_i560_modeuses_coated[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft2",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i560_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_Hagaki[] = {
+static const char* canon_BJC_i560_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_TShirt[] = {
+static const char* canon_BJC_i560_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_Transparency[] = {
+static const char* canon_BJC_i560_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
-static const char* canon_PIXMA_i560_modeuses_PPother[] = {
+static const char* canon_BJC_i560_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i560_modeuses[] = {
-  { "Plain",            canon_PIXMA_i560_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i560_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i560_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i560_modeuses_PPplusDS, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i560_modeuses_PPplusDS, 0 },
-  { "GlossyPaper",	canon_PIXMA_i560_modeuses_PPplusDS, 0 },
-  { "Coated",		canon_PIXMA_i560_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i560_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i560_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_PIXMA_i560_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i560_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i560_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i560_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i560_modeuses[] = {
+  { "Plain",            canon_BJC_i560_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i560_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i560_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i560_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_BJC_i560_modeuses_PPplusDS, 0 },
+  { "GlossyPaper",	canon_BJC_i560_modeuses_PPplusDS, 0 },
+  { "Coated",		canon_BJC_i560_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i560_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i560_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_BJC_i560_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i560_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i560_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i560_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i560);
+DECLARE_MODEUSES(canon_BJC_i560);
 
 /* ----------------------------------- Canon i850  ----------------------------------- */
-static const char* canon_PIXMA_i850_modeuses_plain[] = {
+static const char* canon_BJC_i850_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi_high",/*untested*/
@@ -2005,93 +2005,93 @@ static const char* canon_PIXMA_i850_modeuses_plain[] = {
   };
 
 /* highset mode not supported yet */
-static const char* canon_PIXMA_i850_modeuses_PPpro[] = {
+static const char* canon_BJC_i850_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_PPplus[] = {
+static const char* canon_BJC_i850_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
 /* highset mode not supported yet */
-static const char* canon_PIXMA_i850_modeuses_PPgloss[] = {
+static const char* canon_BJC_i850_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_coated[] = {
+static const char* canon_BJC_i850_modeuses_coated[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i850_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_Hagaki[] = {
+static const char* canon_BJC_i850_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_disc[] = {
+static const char* canon_BJC_i850_modeuses_disc[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
   "600x600dpi_photodraft3",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_TShirt[] = {
+static const char* canon_BJC_i850_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i850_modeuses_Transparency[] = {
+static const char* canon_BJC_i850_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
 /*untested*/
-static const char* canon_PIXMA_i850_modeuses_PPother[] = {
+static const char* canon_BJC_i850_modeuses_PPother[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i850_modeuses[] = {
-  { "Plain",            canon_PIXMA_i850_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i850_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i850_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i850_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i850_modeuses_PPplus, 0 },
-  { "GlossyPaper",	canon_PIXMA_i850_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i850_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i850_modeuses_inkjetHagaki, 0 },
-  { "Hagaki", 	        canon_PIXMA_i850_modeuses_Hagaki, 0 },
-  { "DiscCompat", 	canon_PIXMA_i850_modeuses_disc, 0 },
-  { "DiscOthers", 	canon_PIXMA_i850_modeuses_disc, 0 },
-  { "GlossyFilm", 	canon_PIXMA_i850_modeuses_PPplus, 0 },
-  { "TShirt",		canon_PIXMA_i850_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i850_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i850_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i850_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i850_modeuses[] = {
+  { "Plain",            canon_BJC_i850_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i850_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i850_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i850_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i850_modeuses_PPplus, 0 },
+  { "GlossyPaper",	canon_BJC_i850_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i850_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i850_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_BJC_i850_modeuses_Hagaki, 0 },
+  { "DiscCompat", 	canon_BJC_i850_modeuses_disc, 0 },
+  { "DiscOthers", 	canon_BJC_i850_modeuses_disc, 0 },
+  { "GlossyFilm", 	canon_BJC_i850_modeuses_PPplus, 0 },
+  { "TShirt",		canon_BJC_i850_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i850_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i850_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i850_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i850);
+DECLARE_MODEUSES(canon_BJC_i850);
 
 /* ----------------------------------- Canon i860  ----------------------------------- */
-static const char* canon_PIXMA_i860_modeuses_plain[] = {
+static const char* canon_BJC_i860_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
@@ -2100,71 +2100,71 @@ static const char* canon_PIXMA_i860_modeuses_plain[] = {
   };
 
 /* highest mode not supported yet */
-static const char* canon_PIXMA_i860_modeuses_PPpro[] = {
+static const char* canon_BJC_i860_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i860_modeuses_PPplus[] = {
+static const char* canon_BJC_i860_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i860_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i860_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
   "600x600dpi_std2",
   NULL
 };
 
-static const char* canon_PIXMA_i860_modeuses_Hagaki[] = {
+static const char* canon_BJC_i860_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i860_modeuses_TShirt[] = {
+static const char* canon_BJC_i860_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i860_modeuses_Transparency[] = {
+static const char* canon_BJC_i860_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
-static const char* canon_PIXMA_i860_modeuses_PPother[] = {
+static const char* canon_BJC_i860_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i860_modeuses[] = {
-  { "Plain",            canon_PIXMA_i860_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i860_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i860_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i860_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i860_modeuses_PPplus, 0 },
-  { "GlossyPaper",	canon_PIXMA_i860_modeuses_PPplus, 0 },
-  { "Coated",		canon_PIXMA_i860_modeuses_PPplus, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i860_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i860_modeuses_Hagaki, 0 },/*untested*/
-  { "TShirt",		canon_PIXMA_i860_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i860_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i860_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i860_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i860_modeuses[] = {
+  { "Plain",            canon_BJC_i860_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i860_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i860_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i860_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i860_modeuses_PPplus, 0 },
+  { "GlossyPaper",	canon_BJC_i860_modeuses_PPplus, 0 },
+  { "Coated",		canon_BJC_i860_modeuses_PPplus, 0 },
+  { "InkJetHagaki", 	canon_BJC_i860_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i860_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_BJC_i860_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i860_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i860_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i860_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i860);
+DECLARE_MODEUSES(canon_BJC_i860);
 
 /* ----------------------------------- Canon i865  ----------------------------------- */
 /* TODO: find i865 notes and check media-mode information for photo media */
-static const char* canon_PIXMA_i865_modeuses_plain[] = {
+static const char* canon_BJC_i865_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
@@ -2173,79 +2173,79 @@ static const char* canon_PIXMA_i865_modeuses_plain[] = {
   };
 
 /* highest mode not supported yet */
-static const char* canon_PIXMA_i865_modeuses_PPpro[] = {
+static const char* canon_BJC_i865_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_PPplus[] = {
+static const char* canon_BJC_i865_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i865_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
   "600x600dpi_std2",
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_Hagaki[] = {
+static const char* canon_BJC_i865_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_disc[] = {
+static const char* canon_BJC_i865_modeuses_disc[] = {
   "600x600dpi_photohigh4",
   "600x600dpi_photo4",
   "600x600dpi_photodraft4",
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_TShirt[] = {
+static const char* canon_BJC_i865_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_Transparency[] = {
+static const char* canon_BJC_i865_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
-static const char* canon_PIXMA_i865_modeuses_PPother[] = {
+static const char* canon_BJC_i865_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i865_modeuses[] = {
-  { "Plain",            canon_PIXMA_i865_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i865_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i865_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i865_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i865_modeuses_PPplus, 0 },
-  { "GlossyPaper",	canon_PIXMA_i865_modeuses_PPplus, 0 },
-  { "Coated",		canon_PIXMA_i865_modeuses_PPplus, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i865_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i865_modeuses_Hagaki, 0 },/*untested*/
-  { "DiscCompat",	canon_PIXMA_i865_modeuses_disc, 0 },
-  { "DiscOthers",	canon_PIXMA_i865_modeuses_disc, 0 },
-  { "TShirt",		canon_PIXMA_i865_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i865_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i865_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i865_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i865_modeuses[] = {
+  { "Plain",            canon_BJC_i865_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i865_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i865_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i865_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i865_modeuses_PPplus, 0 },
+  { "GlossyPaper",	canon_BJC_i865_modeuses_PPplus, 0 },
+  { "Coated",		canon_BJC_i865_modeuses_PPplus, 0 },
+  { "InkJetHagaki", 	canon_BJC_i865_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i865_modeuses_Hagaki, 0 },/*untested*/
+  { "DiscCompat",	canon_BJC_i865_modeuses_disc, 0 },
+  { "DiscOthers",	canon_BJC_i865_modeuses_disc, 0 },
+  { "TShirt",		canon_BJC_i865_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i865_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i865_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i865_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i865);
+DECLARE_MODEUSES(canon_BJC_i865);
 
 /* ----------------------------------- Canon i900  ----------------------------------- */
-static const char* canon_PIXMA_i900_modeuses_plain[] = {
+static const char* canon_BJC_i900_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
@@ -2253,68 +2253,68 @@ static const char* canon_PIXMA_i900_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i900_modeuses_PPpro[] = {
+static const char* canon_BJC_i900_modeuses_PPpro[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i900_modeuses_PPplus[] = {
+static const char* canon_BJC_i900_modeuses_PPplus[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i900_modeuses_PPmatte[] = {
+static const char* canon_BJC_i900_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i900_modeuses_Hagaki[] = {
+static const char* canon_BJC_i900_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i900_modeuses_TShirt[] = {
+static const char* canon_BJC_i900_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i900_modeuses_Transparency[] = {
+static const char* canon_BJC_i900_modeuses_Transparency[] = {
   "600x600dpi_ohphigh",
   "600x600dpi_ohp",
   NULL
 };
 
-static const char* canon_PIXMA_i900_modeuses_PPother[] = {
+static const char* canon_BJC_i900_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i900_modeuses[] = {
-  { "Plain",            canon_PIXMA_i900_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i900_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i900_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i900_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i900_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i900_modeuses_PPplus, 0 },
-  { "Coated",		canon_PIXMA_i900_modeuses_PPmatte, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i900_modeuses_PPplus, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i900_modeuses_Hagaki, 0 },/*untested*/
-  { "TShirt",		canon_PIXMA_i900_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i900_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i900_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i900_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i900_modeuses[] = {
+  { "Plain",            canon_BJC_i900_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i900_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i900_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i900_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i900_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i900_modeuses_PPplus, 0 },
+  { "Coated",		canon_BJC_i900_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_BJC_i900_modeuses_PPplus, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i900_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_BJC_i900_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i900_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i900_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i900_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i900);
+DECLARE_MODEUSES(canon_BJC_i900);
 
 /* ----------------------------------- Canon i950  ----------------------------------- */
-static const char* canon_PIXMA_i950_modeuses_plain[] = {
+static const char* canon_BJC_i950_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi_high"/*untested*/,
   "600x600dpi",
@@ -2325,43 +2325,43 @@ static const char* canon_PIXMA_i950_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i950_modeuses_PPpro[] = {
+static const char* canon_BJC_i950_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_PPplus[] = {
+static const char* canon_BJC_i950_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",/*untestd*/
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_PPmatte[] = {
+static const char* canon_BJC_i950_modeuses_PPmatte[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_coated[] = {
+static const char* canon_BJC_i950_modeuses_coated[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_GlossyFilm[] = {
+static const char* canon_BJC_i950_modeuses_GlossyFilm[] = {
   "600x600dpi_photohigh2",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i950_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_Hagaki[] = {
+static const char* canon_BJC_i950_modeuses_Hagaki[] = {
   "600x600dpi_high4",
   "600x600dpi_high5",/*untested*/
   "600x600dpi_std4",/*untested*/
@@ -2371,43 +2371,43 @@ static const char* canon_PIXMA_i950_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_TShirt[] = {
+static const char* canon_BJC_i950_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_Transparency[] = {
+static const char* canon_BJC_i950_modeuses_Transparency[] = {
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i950_modeuses_PPother[] = {
+static const char* canon_BJC_i950_modeuses_PPother[] = {
   "600x600dpi_photo2",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i950_modeuses[] = {
-  { "Plain",            canon_PIXMA_i950_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i950_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i950_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i950_modeuses_PPmatte, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i950_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i950_modeuses_PPmatte, 0 },
-  { "Coated",		canon_PIXMA_i950_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i950_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i950_modeuses_Hagaki, 0 },
-  { "GlossyFilm", 	canon_PIXMA_i950_modeuses_GlossyFilm, 0 },
-  { "TShirt",		canon_PIXMA_i950_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i950_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i950_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i950_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i950_modeuses[] = {
+  { "Plain",            canon_BJC_i950_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i950_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i950_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i950_modeuses_PPmatte, 0 },
+  { "PhotopaperMatte",	canon_BJC_i950_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i950_modeuses_PPmatte, 0 },
+  { "Coated",		canon_BJC_i950_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i950_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i950_modeuses_Hagaki, 0 },
+  { "GlossyFilm", 	canon_BJC_i950_modeuses_GlossyFilm, 0 },
+  { "TShirt",		canon_BJC_i950_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i950_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i950_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i950_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i950);
+DECLARE_MODEUSES(canon_BJC_i950);
 
 /* ----------------------------------- Canon i960  ----------------------------------- */
-static const char* canon_PIXMA_i960_modeuses_plain[] = {
+static const char* canon_BJC_i960_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi_high3",/* duplex */
   "600x600dpi_high",
@@ -2419,50 +2419,50 @@ static const char* canon_PIXMA_i960_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i960_modeuses_PPpro[] = {
+static const char* canon_BJC_i960_modeuses_PPpro[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_PPplus[] = {
+static const char* canon_BJC_i960_modeuses_PPplus[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_PPplusDS[] = {
+static const char* canon_BJC_i960_modeuses_PPplusDS[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_PPmatte[] = {
+static const char* canon_BJC_i960_modeuses_PPmatte[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_PPgloss[] = {
+static const char* canon_BJC_i960_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_coated[] = {
+static const char* canon_BJC_i960_modeuses_coated[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i960_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_Hagaki[] = {
+static const char* canon_BJC_i960_modeuses_Hagaki[] = {
   "600x600dpi_high4",
   "600x600dpi_high5",
   "600x600dpi_std4",/*untested*/
@@ -2473,42 +2473,42 @@ static const char* canon_PIXMA_i960_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_TShirt[] = {
+static const char* canon_BJC_i960_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_Transparency[] = {
+static const char* canon_BJC_i960_modeuses_Transparency[] = {
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i960_modeuses_PPother[] = {
+static const char* canon_BJC_i960_modeuses_PPother[] = {
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i960_modeuses[] = {
-  { "Plain",            canon_PIXMA_i960_modeuses_plain, DUPLEX_MODEREPL },
-  { "GlossyPro",	canon_PIXMA_i960_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i960_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i960_modeuses_PPplusDS, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i960_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i960_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i960_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i960_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i960_modeuses_Hagaki, 0 },/*untested*/
-  { "TShirt",		canon_PIXMA_i960_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i960_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i960_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i960_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i960_modeuses[] = {
+  { "Plain",            canon_BJC_i960_modeuses_plain, DUPLEX_MODEREPL },
+  { "GlossyPro",	canon_BJC_i960_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i960_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i960_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_BJC_i960_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i960_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i960_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i960_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i960_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_BJC_i960_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i960_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i960_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i960_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i960);
+DECLARE_MODEUSES(canon_BJC_i960);
 
 /* ----------------------------------- Canon i6100  ----------------------------------- */
-static const char* canon_PIXMA_i6100_modeuses_plain[] = {
+static const char* canon_BJC_i6100_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi_high",
   "600x600dpi",
@@ -2517,81 +2517,81 @@ static const char* canon_PIXMA_i6100_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i6100_modeuses_PPpro[] = {
+static const char* canon_BJC_i6100_modeuses_PPpro[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_PPmatte[] = {
+static const char* canon_BJC_i6100_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_PPgloss[] = {
+static const char* canon_BJC_i6100_modeuses_PPgloss[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_coated[] = {
+static const char* canon_BJC_i6100_modeuses_coated[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i6100_modeuses_inkjetHagaki[] = {
   "600x600dpi_photo3",
   "600x600dpi_photodraft3",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_Hagaki[] = {
+static const char* canon_BJC_i6100_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_TShirt[] = {
+static const char* canon_BJC_i6100_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_Transparency[] = {
+static const char* canon_BJC_i6100_modeuses_Transparency[] = {
   "600x600dpi_photohigh4",
   "600x600dpi_photo4",
   NULL
 };
 
-static const char* canon_PIXMA_i6100_modeuses_PPother[] = {
+static const char* canon_BJC_i6100_modeuses_PPother[] = {
   "600x600dpi_photo2",/*untested*/
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i6100_modeuses[] = {
-  { "Plain",            canon_PIXMA_i6100_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i6100_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i6100_modeuses_PPpro, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i6100_modeuses_PPpro, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i6100_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i6100_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i6100_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i6100_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i6100_modeuses_Hagaki, 0 },/*untested*/
-  { "TShirt",		canon_PIXMA_i6100_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i6100_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i6100_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i6100_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i6100_modeuses[] = {
+  { "Plain",            canon_BJC_i6100_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i6100_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i6100_modeuses_PPpro, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i6100_modeuses_PPpro, 0 },
+  { "PhotopaperMatte",	canon_BJC_i6100_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i6100_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i6100_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i6100_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i6100_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_BJC_i6100_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i6100_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i6100_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i6100_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i6100);
+DECLARE_MODEUSES(canon_BJC_i6100);
 
 /* ----------------------------------- Canon i9100  ----------------------------------- */
-static const char* canon_PIXMA_i9100_modeuses_plain[] = {
+static const char* canon_BJC_i9100_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi_high",
   "600x600dpi",
@@ -2601,38 +2601,38 @@ static const char* canon_PIXMA_i9100_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_i9100_modeuses_PPpro[] = {
+static const char* canon_BJC_i9100_modeuses_PPpro[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_PPplus[] = {
+static const char* canon_BJC_i9100_modeuses_PPplus[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo2",/*untested*/
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_PPmatte[] = {
+static const char* canon_BJC_i9100_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_coated[] = {
+static const char* canon_BJC_i9100_modeuses_coated[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo2",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i9100_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photod",
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_Hagaki[] = {
+static const char* canon_BJC_i9100_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   "600x600dpi_draft3",
@@ -2640,44 +2640,44 @@ static const char* canon_PIXMA_i9100_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_TShirt[] = {
+static const char* canon_BJC_i9100_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_Transparency[] = {
+static const char* canon_BJC_i9100_modeuses_Transparency[] = {
   "600x600dpi_photohigh3",
   "600x600dpi_photo3",/*untested*/
   "600x600dpi_photodraft3",
   NULL
 };
 
-static const char* canon_PIXMA_i9100_modeuses_PPother[] = {
+static const char* canon_BJC_i9100_modeuses_PPother[] = {
   "600x600dpi_photo2",/*untested*/
   "600x600dpi_photo",/*untested*/
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i9100_modeuses[] = {
-  { "Plain",            canon_PIXMA_i9100_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i9100_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i9100_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i9100_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i9100_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i9100_modeuses_PPmatte, 0 },
-  { "Coated",		canon_PIXMA_i9100_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i9100_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i9100_modeuses_Hagaki, 0 },/*untested*/
-  { "TShirt",		canon_PIXMA_i9100_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i9100_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i9100_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i9100_modeuses_PPother, 0 },/*untested*/
+static const canon_modeuse_t canon_BJC_i9100_modeuses[] = {
+  { "Plain",            canon_BJC_i9100_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i9100_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i9100_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i9100_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i9100_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i9100_modeuses_PPmatte, 0 },
+  { "Coated",		canon_BJC_i9100_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i9100_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i9100_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_BJC_i9100_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i9100_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i9100_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i9100_modeuses_PPother, 0 },/*untested*/
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i9100);
+DECLARE_MODEUSES(canon_BJC_i9100);
 
 /* ----------------------------------- Canon i9900  ----------------------------------- */
-static const char* canon_PIXMA_i9900_modeuses_plain[] = {
+static const char* canon_BJC_i9900_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi",
   "600x600dpi_draft",
@@ -2689,32 +2689,32 @@ static const char* canon_PIXMA_i9900_modeuses_plain[] = {
 
 /* most photo modes use R,G inks and therefore unsupported */
 /* unsupported */
-static const char* canon_PIXMA_i9900_modeuses_PPpro[] = {
+static const char* canon_BJC_i9900_modeuses_PPpro[] = {
   "600x600dpi_photohigh",/*stand-in*/
   NULL
 };
 
 /* highest mode not yet supported */
-static const char* canon_PIXMA_i9900_modeuses_PPplus[] = {
+static const char* canon_BJC_i9900_modeuses_PPplus[] = {
   "600x600dpi_photohigh",/*stand-in*/
   "600x600dpi_photodraft",
   NULL
 };
 
 /* unsupported */
-static const char* canon_PIXMA_i9900_modeuses_PPmatte[] = {
+static const char* canon_BJC_i9900_modeuses_PPmatte[] = {
   "600x600dpi_photohigh",/*stand-in*/
   NULL
 };
 
 /* highest mode not yet supported */
-static const char* canon_PIXMA_i9900_modeuses_PPgloss[] = {
+static const char* canon_BJC_i9900_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",/*stand-in*/
   "600x600dpi_photodraft",
   NULL
 };
 
-static const char* canon_PIXMA_i9900_modeuses_coated[] = {
+static const char* canon_BJC_i9900_modeuses_coated[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photomed",
   "600x600dpi_photo",
@@ -2722,13 +2722,13 @@ static const char* canon_PIXMA_i9900_modeuses_coated[] = {
 };
 
 /*untested*/
-static const char* canon_PIXMA_i9900_modeuses_inkjetHagaki[] = {
+static const char* canon_BJC_i9900_modeuses_inkjetHagaki[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photod",
   NULL
 };
 
-static const char* canon_PIXMA_i9900_modeuses_Hagaki[] = {
+static const char* canon_BJC_i9900_modeuses_Hagaki[] = {
   "600x600dpi_high4",
   "600x600dpi_std4",
   "600x600dpi_draft5",
@@ -2738,39 +2738,39 @@ static const char* canon_PIXMA_i9900_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_i9900_modeuses_TShirt[] = {
+static const char* canon_BJC_i9900_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_i9900_modeuses_Transparency[] = {
+static const char* canon_BJC_i9900_modeuses_Transparency[] = {
   "600x600dpi_std3",
   "600x600dpi_draft3",
   NULL
 };
 
-static const char* canon_PIXMA_i9900_modeuses_PPother[] = {
+static const char* canon_BJC_i9900_modeuses_PPother[] = {
   "600x600dpi_photo",
   NULL
   };
 
-static const canon_modeuse_t canon_PIXMA_i9900_modeuses[] = {
-  { "Plain",            canon_PIXMA_i9900_modeuses_plain, 0 },
-  { "GlossyPro",	canon_PIXMA_i9900_modeuses_PPpro, 0 },
-  { "PhotopaperPlus",	canon_PIXMA_i9900_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_PIXMA_i9900_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_PIXMA_i9900_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_i9900_modeuses_PPgloss, 0 },
-  { "Coated",		canon_PIXMA_i9900_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_PIXMA_i9900_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_PIXMA_i9900_modeuses_Hagaki, 0 },/*untested*/
-  { "TShirt",		canon_PIXMA_i9900_modeuses_TShirt, 0 },
-  { "Transparency",	canon_PIXMA_i9900_modeuses_Transparency, 0 },
-  { "Envelope",		canon_PIXMA_i9900_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_PIXMA_i9900_modeuses_PPother, 0 },
+static const canon_modeuse_t canon_BJC_i9900_modeuses[] = {
+  { "Plain",            canon_BJC_i9900_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i9900_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i9900_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i9900_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_BJC_i9900_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i9900_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i9900_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i9900_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_i9900_modeuses_Hagaki, 0 },/*untested*/
+  { "TShirt",		canon_BJC_i9900_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i9900_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i9900_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i9900_modeuses_PPother, 0 },
 };
 
-DECLARE_MODEUSES(canon_PIXMA_i9900);
+DECLARE_MODEUSES(canon_BJC_i9900);
 
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
@@ -9000,7 +9000,7 @@ static const char* canon_PIXMA_MG3100_modeuses_PPother[] = {
 };
 
 static const canon_modeuse_t canon_PIXMA_MG3100_modeuses[] = {
-  { "Plain",            canon_PIXMA_MG3100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL, DUPLEX_MODEREPL },
+  { "Plain",            canon_PIXMA_MG3100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_MODEREPL },
   { "PhotoPlusGloss2",  canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "PhotoProPlat",     canon_PIXMA_MG3100_modeuses_PPpro, INKSET_COLOR_SUPPORT },
   { "PhotoProSemiGloss",canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
