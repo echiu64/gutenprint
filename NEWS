@@ -458,8 +458,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
           (WIP)
        *4: requires special communication protocol
 
-  8) Canon BJC series printers using photo cartridge have printing modes
-     added that will select this cartridge.
+  8) Some Canon BJC series printers using photo cartridge have
+     printing modes added that will select this cartridge (BJC 3000,
+     4300, 4550, S400).
 
   9) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
      to be corrected.
@@ -469,6 +470,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   11) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
+
+  12) Canon printer modes for most models are now chosen, or if need
+      be substituted, based on the media for which these modes are
+      used in the Windows driver. Inktype is automatically adjusted.
 
 
 * Changes from 5.2.6

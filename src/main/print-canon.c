@@ -2990,14 +2990,12 @@ canon_init_setTray(const stp_vars_t *v, const canon_privdata_t *init)
     if ( (!strcmp(init->caps->name,"PIXMA MP710")) || (!strcmp(init->caps->name,"PIXMA MP740")) ) 
       arg_6c_3 = 0x10;
 
-  if (init->pt) arg_6c_2= init->pt->media_code_l;
-  if(init->caps->model_id >= 3)
-    /* not all MP models have this, I believe it is a generation-related issue */
-    if ( (!strcmp(init->caps->name,"PIXMA MP450")) || (!strcmp(init->caps->name,"PIXMA MP460")) || (!strcmp(init->caps->name,"i80")) ) 
-      canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2); /* add MP150-MP470, and i80 */
-    else
-      canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, arg_6c_3); /* 3rd arg is "gap" */
-  else
+  if (init->pt) arg_6c_2 = init->pt->media_code_l;
+  /* select between length 2 and 3 byte variations of command */
+  /*if(init->caps->model_id >= 3)*/
+  if(init->caps->ESC_l_len == 3)
+    canon_cmd(v,ESC28,0x6c, 3, arg_6c_1, arg_6c_2, arg_6c_3); /* 3rd arg is "gap" */
+  else /* else 2 bytes---no other option for now */
     canon_cmd(v,ESC28,0x6c, 2, arg_6c_1, arg_6c_2);
 }
 
