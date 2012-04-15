@@ -1370,6 +1370,81 @@ static const canon_modeuse_t canon_BJC_S820_modeuses[] = {
 
 DECLARE_MODEUSES(canon_BJC_S820);
 
+/* ----------------------------------- Canon BJC S900 ----------------------------------- */
+static const char* canon_BJC_S900_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",
+  /* Mono */
+  "600x600dpi_highmono2",/*untested*/
+  "600x600dpi_highmono",/*untested*/
+  "600x600dpi_mono",/*untested*/
+  "600x600dpi_draftmono",
+  NULL
+  };
+
+static const char* canon_BJC_S900_modeuses_PPpro[] = {
+  "600x600dpi_photohigh5",
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const char* canon_BJC_S900_modeuses_PPplus[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo2",/*untested*/
+  NULL
+};
+
+static const char* canon_BJC_S900_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_BJC_S900_modeuses_coated[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_BJC_S900_modeuses_glossFilm[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",/*untested*/
+  NULL
+};
+
+static const char* canon_BJC_S900_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_BJC_S900_modeuses_Transparency[] = {
+  "600x600dpi_std2",
+  "600x600dpi_draft2",
+  NULL
+};
+
+static const canon_modeuse_t canon_BJC_S900_modeuses[] = {
+  { "Plain",            canon_BJC_S900_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_S900_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_S900_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble", canon_BJC_S900_modeuses_PPplus, 0 },/*untested*/
+  { "PhotopaperMatte",	canon_BJC_S900_modeuses_PPgloss, 0 },
+  { "GlossyPaper",	canon_BJC_S900_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_S900_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_S900_modeuses_PPgloss, 0 },/*untested*/
+  { "Hagaki", 	        canon_BJC_S900_modeuses_plain, 0 },/*untested*/
+  { "GlossyFilm", 	canon_BJC_S900_modeuses_glossFilm, 0 },
+  { "GlossyCard", 	canon_BJC_S900_modeuses_PPgloss, 0 },
+  { "Transparency", 	canon_BJC_S900_modeuses_Transparency, 0 },
+  { "TShirt",		canon_BJC_S900_modeuses_TShirt, 0 },
+  { "Envelope",		canon_BJC_S900_modeuses_plain, 0 },
+  { "PhotopaperOther",	canon_BJC_S900_modeuses_plain, 0 },
+};
+
+DECLARE_MODEUSES(canon_BJC_S900);
+
 /* ----------------------------------- Canon i50  ----------------------------------- */
 static const char* canon_PIXMA_i50_modeuses_plain[] = {
   "600x600dpi_high",
