@@ -5273,20 +5273,20 @@ static const char* canon_MULTIPASS_MP150_modeuses_plain[] = {
 /* photohigh mode disabled in canon-modes.h until cmy (Photo CMY inks only) printing is fixed */
 static const char* canon_MULTIPASS_MP150_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh3",
-  /*  "600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",/*broken*/
   "600x600dpi_photo",
   NULL
 };
 
 static const char* canon_MULTIPASS_MP150_modeuses_PPplus[] = {
-  /*  "600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",/*broken*/
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
 static const char* canon_MULTIPASS_MP150_modeuses_PPplusDS[] = {
-  /*  "600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",/*broken*/
   "600x600dpi_photo",
   NULL
 };
@@ -5318,25 +5318,25 @@ static const char* canon_MULTIPASS_MP150_modeuses_TShirt[] = {
 };
 
 static const char* canon_MULTIPASS_MP150_modeuses_PPother[] = {
-  /*  "600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",/*broken*/
   "600x600dpi_photo",/*NOTE: this mode does not exist for PPother, temporary replacement */
   NULL
   };
 
 static const canon_modeuse_t canon_MULTIPASS_MP150_modeuses[] = {
- { "Plain",             canon_MULTIPASS_MP150_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
- { "GlossyPro",	        canon_MULTIPASS_MP150_modeuses_PPpro, INKSET_COLOR_SUPPORT },
- { "PhotopaperPlus",	canon_MULTIPASS_MP150_modeuses_PPplus, INKSET_COLOR_SUPPORT },
- { "PhotopaperPlusDouble", canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "PhotopaperMatte",	canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "GlossyPaper",	canon_MULTIPASS_MP150_modeuses_PPgloss, INKSET_COLOR_SUPPORT },
- { "Coated",		canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "InkJetHagaki", 	canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
- { "Hagaki", 	        canon_MULTIPASS_MP150_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
- { "TShirt",		canon_MULTIPASS_MP150_modeuses_TShirt, INKSET_COLOR_SUPPORT },
- { "Envelope",		canon_MULTIPASS_MP150_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
- { "PhotopaperOther",	canon_MULTIPASS_MP150_modeuses_PPother, INKSET_COLOR_SUPPORT },
- };
+  { "Plain",            canon_MULTIPASS_MP150_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "GlossyPro",	canon_MULTIPASS_MP150_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotopaperPlus",	canon_MULTIPASS_MP150_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "PhotopaperPlusDouble", canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_MULTIPASS_MP150_modeuses_PPgloss, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+  { "InkJetHagaki", 	canon_MULTIPASS_MP150_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MP150_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_MULTIPASS_MP150_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MP150_modeuses_Hagaki, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "PhotopaperOther",	canon_MULTIPASS_MP150_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
 
 DECLARE_MODEUSES(canon_MULTIPASS_MP150);
 

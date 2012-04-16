@@ -4113,8 +4113,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   unsigned	zero_mask;
   int           print_cd= (media_source && (!strcmp(media_source, "CD")));
   int           image_height;
-#if 0
-                image_width;
+#if 1
+  int           image_width;
 #endif
   double        k_upper, k_lower;
   unsigned char *cd_mask = NULL;
@@ -4247,7 +4247,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   image_height = stp_image_height(image);
 
-#if 0
+#if 1
   image_width = stp_image_width(image);
 #endif
 
@@ -4257,11 +4257,19 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   * Convert image size to printer resolution...
   */
 
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: unused image_width is %i pts(?)\n",image_width);
+
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.out_width is %i pts\n",privdata.out_width);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.out_height is %i pts\n",privdata.out_height);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.left is %i pts\n",privdata.left);
+
   privdata.out_width  = privdata.mode->xdpi * privdata.out_width / 72;
-
   privdata.out_height = privdata.mode->ydpi * privdata.out_height / 72;
+  privdata.left       = privdata.mode->xdpi * privdata.left / 72;
 
-  privdata.left = privdata.mode->xdpi * privdata.left / 72;
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.out_width is %i dots\n",privdata.out_width);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.out_height is %i dots\n",privdata.out_height);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.left is %i dots\n",privdata.left);
 
   stp_deprintf(STP_DBG_CANON,"density is %f\n",
                stp_get_float_parameter(v, "Density"));
@@ -4301,13 +4309,22 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     stp_set_string_parameter(v, "STPIOutputType", "Grayscale");
 
   privdata.length = (privdata.out_width + 7) / 8;
-  stp_deprintf(STP_DBG_CANON,"privdata.out_width is %i\n",privdata.out_width);
+
   stp_deprintf(STP_DBG_CANON,"privdata.length is %i\n",privdata.length);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.num_channels is %i\n",privdata.num_channels);
 
   stp_dither_init(v, image, privdata.out_width, privdata.mode->xdpi, privdata.mode->ydpi);
 
+
+  stp_deprintf(STP_DBG_CANON,"privdata.out_width is %i (after stp_dither_init)\n",privdata.out_width);
+  stp_deprintf(STP_DBG_CANON,"privdata.length is %i (after stp_dither_init)\n",privdata.length);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.num_channels is %i (after stp_dither_init)\n",privdata.num_channels);
+
   canon_setup_channels(v,&privdata);
 
+  stp_deprintf(STP_DBG_CANON,"privdata.out_width is %i (after canon_setup_channels)\n",privdata.out_width);
+  stp_deprintf(STP_DBG_CANON,"privdata.length is %i (after canon_setup_channels)\n",privdata.length);
+  stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.num_channels is %i (after canon_setup_channels)\n",privdata.num_channels);
 
   stp_deprintf(STP_DBG_CANON,
 	       "canon: driver will use colors %s\n",privdata.channel_order);
