@@ -5270,23 +5270,22 @@ static const char* canon_MULTIPASS_MP150_modeuses_plain[] = {
   NULL
   };
 
-/* photohigh mode disabled in canon-modes.h until cmy (Photo CMY inks only) printing is fixed */
 static const char* canon_MULTIPASS_MP150_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh3",
-  "600x600dpi_photohigh",/*broken*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
 static const char* canon_MULTIPASS_MP150_modeuses_PPplus[] = {
-  "600x600dpi_photohigh",/*broken*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
 static const char* canon_MULTIPASS_MP150_modeuses_PPplusDS[] = {
-  "600x600dpi_photohigh",/*broken*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
@@ -5318,8 +5317,8 @@ static const char* canon_MULTIPASS_MP150_modeuses_TShirt[] = {
 };
 
 static const char* canon_MULTIPASS_MP150_modeuses_PPother[] = {
-  "600x600dpi_photohigh",/*broken*/
-  "600x600dpi_photo",/*NOTE: this mode does not exist for PPother, temporary replacement */
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untested*/
   NULL
   };
 
@@ -5455,34 +5454,30 @@ static const char* canon_MULTIPASS_MP210_modeuses_plain[] = {
   NULL
   };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP210_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh2",
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested here*/
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP210_modeuses_PPplus[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP210_modeuses_PPplusDS[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested here*/
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP210_modeuses_PPmatte[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo2",
   "600x600dpi_photodraft",/*untested here*/
   NULL
@@ -5508,10 +5503,9 @@ static const char* canon_MULTIPASS_MP210_modeuses_TShirt[] = {
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP210_modeuses_PPother[] = {
-  /*"600x600dpi_photohigh",*/
-  "600x600dpi_photo",/* stand-in */
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untested*/
   NULL
   };
 
@@ -5874,31 +5868,28 @@ static const char* canon_MULTIPASS_MP470_modeuses_plain[] = {
 /* high mode not supported yet */
 static const char* canon_MULTIPASS_MP470_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh2",
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-/* high mode not supported yet */
 static const char* canon_MULTIPASS_MP470_modeuses_PPplus[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-/* high mode not supported yet */
 static const char* canon_MULTIPASS_MP470_modeuses_PPplusDS[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-/* high mode not supported yet */
 static const char* canon_MULTIPASS_MP470_modeuses_PPmatte[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo2",
   "600x600dpi_photodraft",/*untested*/
   NULL
@@ -5924,10 +5915,9 @@ static const char* canon_MULTIPASS_MP470_modeuses_TShirt[] = {
   NULL
 };
 
-/* high mode not yet supported */
 static const char* canon_MULTIPASS_MP470_modeuses_PPother[] = {
-  /*"600x600dpi_photohigh",*/
-  "600x600dpi_photo",/*stand-in*/
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untested*/
   NULL
 };
 
