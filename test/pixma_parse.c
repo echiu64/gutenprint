@@ -533,7 +533,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				printf(" model id 0x%x ",buf[0]>>4);
 				printf(" source 0x%x",buf[0]&15);
 				printf(" media: %x",buf[1]);
-				printf(" paper gap: %x\n",buf[2]);
+				if ( cnt == 3 )
+				  printf(" paper gap: %x\n",buf[2]);
 				break;
 			case 'd':
 				img->xres = (buf[0]<<8)|buf[1];
@@ -609,6 +610,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					      img->color[i].density = 128; /*128+96;*/ /* try to add 0x80 to sub-channels for MP450 hi-quality mode */
 					    if((order[i] == 'K' || order[i] == 'k') && img->color[i].bpp)
 					      black_found = 1;
+					    /*
 					    if(order[i] == 'y' && !black_found && img->color[i].level){
 					      printf("iP6700 hack: treating color definition at the y position as k\n");
 					      img->color[i].name = 'k';
@@ -616,7 +618,9 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					      order[i+1] = 'y';
 					      black_found = 1;
 					      img->color[i].density = 255;
-					    } /* %c*/
+					    } 
+					    */
+					    /* %c*/
 					    printf(" Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
 						   img->color[i].compression,img->color[i].bpp,img->color[i].level);
 					  }else{

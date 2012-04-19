@@ -4113,7 +4113,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   unsigned	zero_mask;
   int           print_cd= (media_source && (!strcmp(media_source, "CD")));
   int           image_height;
-#if 1
+#if 0
   int           image_width;
 #endif
   double        k_upper, k_lower;
@@ -4247,7 +4247,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   image_height = stp_image_height(image);
 
-#if 1
+#if 0
   image_width = stp_image_width(image);
 #endif
 
@@ -4256,9 +4256,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
  /*
   * Convert image size to printer resolution...
   */
-
+#if 0
   stp_deprintf(STP_DBG_CANON,"canon_do_print: unused image_width is %i pts(?)\n",image_width);
-
+#endif
   stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.out_width is %i pts\n",privdata.out_width);
   stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.out_height is %i pts\n",privdata.out_height);
   stp_deprintf(STP_DBG_CANON,"canon_do_print: privdata.left is %i pts\n",privdata.left);
@@ -4690,41 +4690,40 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
     offset2 = offset / 2; 
     bitoffset= offset % 2;
   }
-  else if (bits==8) {     /* no compression at all */
-                          /* we keep *in_ptr = line */
+  else if (bits==8) {
+    stp_fold_8bit(line,length,pd->fold_buf);
+    in_ptr= pd->fold_buf;
     length    = length*8; /* 1 pixel per 8 bits */
-    offset2   = offset;   /* change from initial value: number of bytes sent directly */
-    bitoffset = 0;        /* should not have any extra bits left over */
+    offset2   = offset;
+    bitoffset = 0;
   }
     
   /* pack left border rounded to multiples of 8 dots */
 
   comp_data= comp_buf;
 
-  if (bits<8) {/* testing: skipping for 8-bpp inks */
-    while (offset2>0) {
-      unsigned char toffset = offset2 > 127 ? 127 : offset2;
-      comp_data[0] = 1 - toffset;
-      comp_data[1] = 0;
-      comp_data += 2;
-      offset2-= toffset;
-    }
-    if (bitoffset) {
-      if (bitoffset<8)
-	{
-	  in_ptr[ length++ ] = 0;
-	  canon_shift_buffer(in_ptr,length,bitoffset);
-	}
-      else if (bitoffset == 8)
-	{
-	  memmove(in_ptr + 1,in_ptr,length++);
-	  in_ptr[0] = 0;
-	}
-      else
-	stp_deprintf(STP_DBG_CANON,"SEVERE BUG IN print-canon.c::canon_write() "
-		     "bitoffset=%d!!\n",bitoffset);
-    }
-  } /* end of if (bits<8) block */ 
+  while (offset2>0) {
+    unsigned char toffset = offset2 > 127 ? 127 : offset2;
+    comp_data[0] = 1 - toffset;
+    comp_data[1] = 0;
+    comp_data += 2;
+    offset2-= toffset;
+  }
+  if (bitoffset) {
+    if (bitoffset<8)
+      {
+	in_ptr[ length++ ] = 0;
+	canon_shift_buffer(in_ptr,length,bitoffset);
+      }
+    else if (bitoffset == 8)
+      {
+	memmove(in_ptr + 1,in_ptr,length++);
+	in_ptr[0] = 0;
+      }
+    else
+      stp_deprintf(STP_DBG_CANON,"SEVERE BUG IN print-canon.c::canon_write() "
+		   "bitoffset=%d!!\n",bitoffset);
+  }
   
   if(ink_flags & INK_FLAG_5pixel_in_1byte)
     length = pack_pixels(in_ptr,length);

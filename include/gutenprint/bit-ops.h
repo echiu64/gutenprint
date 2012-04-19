@@ -77,6 +77,17 @@ extern void	stp_fold_4bit(const unsigned char *line, int single_length,
 			 unsigned char *outbuf);
 
 /**
+ * Interleave a buffer consisting of eight bit strings of length single_length
+ * into one string of packed eight-bit ints.
+ *
+ * @param line the input bit string
+ * @param single_length the length (in bytes) of the input
+ * @param outbuf the output.
+ */
+extern void	stp_fold_8bit(const unsigned char *line, int single_length,
+			 unsigned char *outbuf);
+
+/**
  * Split an input sequence of packed 1 or 2 bit integers into two or more
  * outputs of equal length, distributing non-zero integers round robin
  * into each output.  Used in "high quality" modes when extra passes are
