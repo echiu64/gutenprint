@@ -495,9 +495,9 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
   const char *ink_type = stp_get_string_parameter(v, "InkType");
   const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
   const canon_cap_t * caps = canon_get_model_capabilities(v);
-  const canon_mode_t* mode = NULL;
+  canon_mode_t* mode = NULL;
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  const canon_modeuse_t* muse = NULL;
+  canon_modeuse_t* muse = NULL;
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   int i,j;
   int modecheck, quality, modefound;
@@ -3280,44 +3280,15 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     }
   }
 
-  /* models that add two more bytes "1 0" to the end of the usual 4-byte sequence: */
-  /* TODO: the code for 6-byte sequences can be replaced by a simple test of XML-capability */
-  /* MX340 */
-  /* MX350 --- same driver as MX340 */
-  /* MX360 */
-  /* MX410 --- same driver as MX360 */
-  /* MX420 */
-  /* MX870 */
-  /* MX880 */
-  /* MP250 */
-  /* MP270 */
-  /* MP280 */
-  /* MP490 */
-  /* MP493 */
-  /* MP495 */
-  /* MP550 */
-  /* MP560 */
-  /* MP640 */
-  /* MP990 */
-  /* iX6500 */
-  /* iX7000 */
-  /* iP2700 */
-  /* iP4700 */
-  /* iP4800 */
-  /* iP4900 */
-  /* iP9910 */
-  /* MG2100 */
-  /* MG3100 */
-  /* MG4100 */
-  /* MG5100 */
-  /* MG5200 */
-  /* MG5300 */
-  /* MG6100 */
-  /* MG6200 */
-  /* MG8100 */
-  /* MG8200 */
-  if ( !(strcmp(init->caps->name,"PIXMA MX340")) || !(strcmp(init->caps->name,"PIXMA MX350")) || !(strcmp(init->caps->name,"PIXMA MX360")) || !(strcmp(init->caps->name,"PIXMA MX410")) || !(strcmp(init->caps->name,"PIXMA MX420")) || !(strcmp(init->caps->name,"PIXMA MX870")) || !(strcmp(init->caps->name,"PIXMA MX880")) || !(strcmp(init->caps->name,"PIXMA MP250")) || !(strcmp(init->caps->name,"PIXMA MP270")) || !(strcmp(init->caps->name,"PIXMA MP280")) || !(strcmp(init->caps->name,"PIXMA MP490")) || !(strcmp(init->caps->name,"PIXMA MP493")) || !(strcmp(init->caps->name,"PIXMA MP495")) || !(strcmp(init->caps->name,"PIXMA MP550")) || !(strcmp(init->caps->name,"PIXMA MP560")) || !(strcmp(init->caps->name,"PIXMA MP640")) ||  !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA iX6500")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA iP2700")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA MG2100")) || !(strcmp(init->caps->name,"PIXMA MG3100")) || !(strcmp(init->caps->name,"PIXMA MG4100")) || !(strcmp(init->caps->name,"PIXMA MG5100")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
- /* add a lot more here: try if(init->caps->model_id >= 3) how to guess for 4 bytes or more */
+  if ( init->caps->ESC_P_len == 8 ) /* support for new devices from 2012. TODO: check if XML contents are identical to 6-byte devices */
+    {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
+
+      /* arg_ESCP_1 = 0x03; */ /* A4 size */
+      /* arg_ESCP_2 = 0x00; */ /* plain media */
+      /*                             size                media             */
+      canon_cmd( v,ESC28,0x50,8,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00);
+    }
+  else if ( init->caps->ESC_P_len == 6 ) /* first devices with XML header and ender */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
 
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
@@ -3325,13 +3296,17 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /*                             size                media             */
       canon_cmd( v,ESC28,0x50,6,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00);
     }
-  else if ( !(strcmp(init->caps->name,"i80")) || !(strcmp(init->caps->name,"i560")) || !(strcmp(init->caps->name,"i860")) || !(strcmp(init->caps->name,"i865")) || !(strcmp(init->caps->name,"i900")) || !(strcmp(init->caps->name,"i950")) || !(strcmp(init->caps->name,"i960")) || !(strcmp(init->caps->name,"i9900")) || !(strcmp(init->caps->name,"SELPHY DS700")) || !(strcmp(init->caps->name,"PIXMA MP130")) || !(strcmp(init->caps->name,"PIXMA MP360")) || !(strcmp(init->caps->name,"PIXMA MP370")) || !(strcmp(init->caps->name,"PIXMA MP375")) || !(strcmp(init->caps->name,"PIXMA MP390")) || !(strcmp(init->caps->name,"PIXMA MP710")) || !(strcmp(init->caps->name,"PIXMA MP740")) || !(strcmp(init->caps->name,"PIXMA MP750")) || !(strcmp(init->caps->name,"PIXMA MP760")) || !(strcmp(init->caps->name,"PIXMA MP770")) || !(strcmp(init->caps->name,"PIXMA MP780")) || !(strcmp(init->caps->name,"PIXMA MP790")) || !(strcmp(init->caps->name,"PIXMA MP900"))  || !(strcmp(init->caps->name,"PIXMA iP1000"))  || !(strcmp(init->caps->name,"PIXMA iP1500"))  || !(strcmp(init->caps->name,"PIXMA iP2000"))  || !(strcmp(init->caps->name,"PIXMA iP3000"))  || !(strcmp(init->caps->name,"PIXMA iP3100"))  || !(strcmp(init->caps->name,"PIXMA iP4000")) || !(strcmp(init->caps->name,"PIXMA iP4100")) || !(strcmp(init->caps->name,"PIXMA iP5000"))  || !(strcmp(init->caps->name,"PIXMA iP6000")) || !(strcmp(init->caps->name,"PIXMA iP6100")) || !(strcmp(init->caps->name,"PIXMA iP8500"))  )  {
+  else if ( init->caps->ESC_P_len == 4 )  {/* 4 bytes */
+    /*                             size            media       */
+    canon_cmd( v,ESC28,0x50,4,0x00,arg_ESCP_1,0x00,arg_ESCP_2 );
+  }
+  else if ( init->caps->ESC_P_len == 2 )  {
     /* 2 bytes only */
       canon_cmd( v,ESC28,0x50,2,0x00,arg_ESCP_1 );
     }	
-  else /* 4 bytes */
-    /*                             size            media       */
-    canon_cmd( v,ESC28,0x50,4,0x00,arg_ESCP_1,0x00,arg_ESCP_2 );
+  else /* error in definition */
+    stp_deprintf(STP_DBG_CANON,"SEVERE BUG IN print-canon.c::canon_init_setESC_P() "
+		 "ESC_P_len=%d!!\n",init->caps->ESC_P_len);
 }
 
 /* ESC (T -- 0x54 -- setCartridge -- :
@@ -4097,7 +4072,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  const canon_modeuse_t* muse = NULL;
+  canon_modeuse_t* muse = NULL;
   /*  int monocheck = 0;
       int colcheck = 0; */
   int		y;		/* Looping vars */

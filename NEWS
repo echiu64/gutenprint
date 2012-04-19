@@ -475,6 +475,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
       be substituted, based on the media for which these modes are
       used in the Windows driver. Inktype is automatically adjusted.
 
+  13) Added support for 8-bit inks to Canon backend, and modes using
+      them.
+
 
 * Changes from 5.2.6
 
