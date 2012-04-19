@@ -4220,7 +4220,8 @@ static const char* canon_PIXMA_iP6210_modeuses_plain[] = {
 static const char* canon_PIXMA_iP6210_modeuses_PPpro[] = {
   "600x600dpi_photo",
   /* Color */
-  "600x600dpi_photohigh4",
+  "1200x1200dpi_photohigh4",
+  "600x600dpi_photohigh3",
   NULL
 };
 
@@ -4229,6 +4230,7 @@ static const char* canon_PIXMA_iP6210_modeuses_PPplus[] = {
   "600x600dpi_photo",
   /* Color */
   "600x600dpi_photo3",
+  "600x600dpi_photo2",
   NULL
 };
 
@@ -4261,7 +4263,8 @@ static const char* canon_PIXMA_iP6210_modeuses_TShirt[] = {
 static const char* canon_PIXMA_iP6210_modeuses_PPother[] = {
   "600x600dpi_photo",
   /* Color */
-  "600x600dpi_photo2",/* stand-in */
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo2",/*untested*/
   NULL
   };
 
