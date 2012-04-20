@@ -486,6 +486,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   13) Added support for 8-bit inks to Canon backend, and modes using
       them.
 
+  14) Adjusted top margins of most Canon printers.
+
 
 * Changes from 5.2.6
 
