@@ -1601,14 +1601,15 @@ static const char* canon_BJC_i80_modeuses_plain[] = {
   NULL
   };
 
-/* need to add cmy modes */
 static const char* canon_BJC_i80_modeuses_PPpro[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
 
-/* need to add cmy modes */
 static const char* canon_BJC_i80_modeuses_PPplus[] = {
+  "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
@@ -1633,15 +1634,14 @@ static const char* canon_BJC_i80_modeuses_TShirt[] = {
 };
 
 static const char* canon_BJC_i80_modeuses_Transparency[] = {
-  "600x600dpi_photohigh2",
-  "600x600dpi_photo2",
-  "600x600dpi_photodraft2",
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  "600x600dpi_ohpdraft",
   NULL
 };
 
-/* need to add cmy modes */
 static const char* canon_BJC_i80_modeuses_PPother[] = {
-  "600x600dpi_photo",/*stand-in*/
+  "600x600dpi_photo2",
   NULL
   };
 
@@ -1673,22 +1673,22 @@ static const char* canon_BJC_i450_modeuses_plain[] = {
   NULL
   };
 
-/* need to add support for higher modes */
 static const char* canon_BJC_i450_modeuses_PPpro[] = {
-  /*  "600x600dpi_photohigh2",*/
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
 
 static const char* canon_BJC_i450_modeuses_PPplus[] = {
-  /*  "600x600dpi_photohigh2",*/
+  "600x600dpi_photohigh2",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
 static const char* canon_BJC_i450_modeuses_PPplusDS[] = {
-  /*  "600x600dpi_photohigh2",*/
+  "600x600dpi_photohigh2",
   "600x600dpi_photo",
   NULL
 };
@@ -1719,7 +1719,8 @@ static const char* canon_BJC_i450_modeuses_Transparency[] = {
 };
 
 static const char* canon_BJC_i450_modeuses_PPother[] = {
-  "600x600dpi_photo",/*untested*/
+  "600x600dpi_photohigh2",/*untested*/
+  "600x600dpi_photo2",/*untested*/
   NULL
   };
 
@@ -1751,31 +1752,29 @@ static const char* canon_BJC_i455_modeuses_plain[] = {
   NULL
   };
 
-/* need to add support for higher modes */
 static const char* canon_BJC_i455_modeuses_PPpro[] = {
-  /*  "600x600dpi_photohigh2",*/
-  "600x600dpi_photo2",
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
   NULL
 };
 
-/* need to add support for higher modes */
 static const char* canon_BJC_i455_modeuses_PPplus[] = {
-  /*  "600x600dpi_photohigh2",*/
-  "600x600dpi_photo2",
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-/* need to add support for higher modes */
 static const char* canon_BJC_i455_modeuses_PPplusDS[] = {
-  /*  "600x600dpi_photohigh2",*/
-  "600x600dpi_photo2",
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
   NULL
 };
 
 static const char* canon_BJC_i455_modeuses_PPgloss[] = {
-  "600x600dpi_photo3",
-  "600x600dpi_photo2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
   NULL
 };
 
@@ -1799,7 +1798,8 @@ static const char* canon_BJC_i455_modeuses_Transparency[] = {
 };
 
 static const char* canon_BJC_i455_modeuses_PPother[] = {
-  "600x600dpi_photo",/*untested*/
+  "600x600dpi_photohigh2",/*untested*/
+  "600x600dpi_photo2",/*untested*/
   NULL
   };
 
