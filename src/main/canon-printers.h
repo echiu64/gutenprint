@@ -2267,7 +2267,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon MULTIPASS MP190 */
     "PIXMA MP190", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,
     2,4, /* ESC (l and (P command lengths */
@@ -2283,7 +2283,7 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon MULTIPASS MP210 */
     "PIXMA MP210", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
-    10, 10, 15, 15,    /*border_left, border_right, border_top, border_bottom */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP250_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I,0,
     2,4, /* ESC (l and (P command lengths */

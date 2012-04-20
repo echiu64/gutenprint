@@ -5323,7 +5323,7 @@ static const char* canon_MULTIPASS_MP150_modeuses_PPother[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",/*untested*/
   NULL
-  };
+};
 
 static const canon_modeuse_t canon_MULTIPASS_MP150_modeuses[] = {
   { "Plain",            canon_MULTIPASS_MP150_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
@@ -5364,26 +5364,23 @@ static const char* canon_MULTIPASS_MP190_modeuses_plain[] = {
   NULL
   };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP190_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh2",
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP190_modeuses_PPplusG2[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",/*untested*/
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP190_modeuses_PPmatte[] = {
-  /*"600x600dpi_photohigh",*/
+  "600x600dpi_photohigh",
   "600x600dpi_photo2",
   "600x600dpi_photodraft",/*untested*/
   NULL
@@ -5409,12 +5406,11 @@ static const char* canon_MULTIPASS_MP190_modeuses_TShirt[] = {
   NULL
 };
 
-/* one high mode not yet supported */
 static const char* canon_MULTIPASS_MP190_modeuses_PPother[] = {
-  /*"600x600dpi_photohigh",*/
-  "600x600dpi_photo",/* stand-in */
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",/*untested*/
   NULL
-  };
+};
 
 static const canon_modeuse_t canon_MULTIPASS_MP190_modeuses[] = {
   { "Plain",            canon_MULTIPASS_MP190_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
@@ -5510,7 +5506,7 @@ static const char* canon_MULTIPASS_MP210_modeuses_PPother[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",/*untested*/
   NULL
-  };
+};
 
 static const canon_modeuse_t canon_MULTIPASS_MP210_modeuses[] = {
   { "Plain",            canon_MULTIPASS_MP210_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
