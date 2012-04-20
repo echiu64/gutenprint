@@ -1251,7 +1251,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL
   },
-#if 0
   { /* Canon PIXMA iP90, iP90v */
     "PIXMA iP90", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
@@ -1268,6 +1267,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+#if 0
   { /* Canon PIXMA iP100 */
     "PIXMA iP100", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */

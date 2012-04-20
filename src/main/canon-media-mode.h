@@ -2772,6 +2772,78 @@ static const canon_modeuse_t canon_BJC_i9900_modeuses[] = {
 
 DECLARE_MODEUSES(canon_BJC_i9900);
 
+/* ----------------------------------- Canon iP90 ----------------------------------- */
+static const char* canon_PIXMA_iP90_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high", /* mono */
+  "600x600dpi",
+  "600x600dpi_draft",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+  };
+
+static const char* canon_PIXMA_iP90_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2", /* no ESC (S */
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP90_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_iP90_modeuses_PPplusDS[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP90_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_high3", /* mono */
+  "600x600dpi_std2",
+  "600x600dpi_draft2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP90_modeuses_TShirt[] = {
+  "600x600dpi_tshirt", /* no ESC (S */
+  NULL
+};
+
+static const char* canon_PIXMA_iP90_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const char* canon_PIXMA_iP90_modeuses_transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_iP90_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP90_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_iP90_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_iP90_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble", canon_PIXMA_iP90_modeuses_PPplusDS, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_iP90_modeuses_PPplusDS, 0 },
+  { "GlossyPaper",	canon_PIXMA_iP90_modeuses_PPplusDS, 0 },
+  { "Coated",		canon_PIXMA_iP90_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_iP90_modeuses_PPplusDS, 0 },
+  { "Hagaki", 	        canon_PIXMA_iP90_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_iP90_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_iP90_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_iP90_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP90);
+
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
   "600x600dpi_high2",
