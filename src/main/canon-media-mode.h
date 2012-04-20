@@ -8134,28 +8134,28 @@ static const char* canon_MULTIPASS_MX300_modeuses_plain[] = {
   NULL
   };
 
-/*highest mode not supported yet*/
 static const char* canon_MULTIPASS_MX300_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-/*highest 600dpi mode not supported yet*/
 static const char* canon_MULTIPASS_MX300_modeuses_PPpro[] = {
   "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-/*highest mode not supported yet*/
 static const char* canon_MULTIPASS_MX300_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
   "600x600dpi_photo",
   "600x600dpi_photodraft",
   NULL
 };
 
-/*highest mode not supported yet*/
 static const char* canon_MULTIPASS_MX300_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
   "600x600dpi_photo2",
   NULL
 };
@@ -8180,9 +8180,8 @@ static const char* canon_MULTIPASS_MX300_modeuses_TShirt[] = {
   NULL
 };
 
-/*unsupported*/
 static const char* canon_MULTIPASS_MX300_modeuses_PPother[] = {
-  "600x600dpi_photo",/*stand-in*/
+  "600x600dpi_photohigh",
   NULL
 };
 
