@@ -146,6 +146,7 @@
       <printer translate="name" name="Canon PIXMA mini360" driver="bjc-PIXMA-mini360" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini360" />
       <printer translate="name" name="Canon PIXUS iP90" driver="bjc-PIXUS-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP90" />
       <printer translate="name" name="Canon PIXUS iP90v" driver="bjc-PIXUS-iP90v" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP90v" />
+      <printer translate="name" name="Canon PIXUS iP100" driver="bjc-PIXUS-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP100" />
       <printer translate="name" name="Canon PIXMA iP2000" driver="bjc-PIXMA-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2000" />
       <printer translate="name" name="Canon PIXUS iP2700" driver="bjc-PIXUS-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP2700" />
       <printer translate="name" name="Canon PIXMA iP2700" driver="bjc-PIXMA-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2700" />

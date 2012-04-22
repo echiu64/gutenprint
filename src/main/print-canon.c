@@ -3309,6 +3309,75 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 		 "ESC_P_len=%d!!\n",init->caps->ESC_P_len);
 }
 
+/* ESC (S -- 0x53 -- unknown -- :
+   Required by iP90/iP90v and iP100 printers.
+ */
+static void
+canon_init_setESC_S(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_S))
+    return;
+
+  if (!(init->mode->flags & MODE_FLAG_S))
+    return;
+
+  /* iP90 defaults: based on non-photo media */
+  char arg_ESCS_01 = 0x01;
+  char arg_ESCS_04 = 0xff;
+  char arg_ESCS_09 = 0x1a;
+  char arg_ESCS_11 = 0x68;
+  
+  /* hard-coded for different media, color and  quality settings */
+  /* iP90 bytes 1,4,9 and 11 vary */
+  if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
+    if ( !strcmp(init->mode->name,"600x600dpi_high2") || !strcmp(init->mode->name,"600x600dpi_high4") ) {
+      /* if inkset is color then set special bytes, else leave default.
+	 Note: in this case the mode only has CMYK, mono is a different mode.
+      */
+      if (init->used_inks == CANON_INK_CMYK) {
+	arg_ESCS_01 = 0xc1;
+	arg_ESCS_04 = 0xf1;
+	arg_ESCS_09 = 0x50;
+	arg_ESCS_11 = 0x28;
+      }
+    } else if ( !strcmp(init->mode->name,"300x300dpi_draft") ) {
+      /* set regardless of inkset */
+      arg_ESCS_09 = 0x02;
+      arg_ESCS_11 = 0x08;
+    } else if ( !strcmp(init->mode->name,"600x600dpi_draft2") ) {
+      /* if inkset is color then set special bytes, else leave default */
+      if (init->used_inks == CANON_INK_CMYK) {
+	arg_ESCS_09 = 0x0a;
+	arg_ESCS_11 = 0x28;
+      }
+    } else if ( !strcmp(init->mode->name,"600x600dpi_photohigh") || !strcmp(init->mode->name,"600x600dpi_photo") || !strcmp(init->mode->name,"600x600dpi_photodraft") ) {
+      /* almost all photo media need (same) changes from defaults */
+      /* exception: "600x600dpi_photohigh2" no ESC (S command */
+      /* exception: "600x600dpi_tshirt" no ESC (S command */
+      arg_ESCS_01 = 0xc1;
+      arg_ESCS_04 = 0xf0;
+      arg_ESCS_09 = 0x50;
+      arg_ESCS_11 = 0x28;
+    }
+  }
+  else if ( !(strcmp(init->caps->name,"PIXMA iP100")) ) {
+    /* iP100 bytes 9 and 11 vary */       
+    if ( !strcmp(init->mode->name,"300x300dpi_draft") ) {
+      /* set regardless of inkset */
+      arg_ESCS_09 = 0x02;
+      arg_ESCS_11 = 0x08;
+    } else if  ( !strcmp(init->mode->name,"600x600dpi_photohigh2") || !strcmp(init->mode->name,"600x600dpi_photohigh") || !strcmp(init->mode->name,"600x600dpi_photo2") || !strcmp(init->mode->name,"600x600dpi_photo") || !strcmp(init->mode->name,"600x600dpi_tshirt") ) {
+      /* all photo media need (same) changes from defaults */
+      arg_ESCS_09 = 0x0a;
+      arg_ESCS_11 = 0x28;
+    }
+  }
+
+      canon_cmd(v,ESC28,0x53,54,arg_ESCS_01,0x02,0xff,arg_ESCS_04,0x41,0x02,0x00,0x01,arg_ESCS_09,0x00,arg_ESCS_11,0x00,0x01,0x01,0x03,0x02,0x01,0x01,0x01,0x03,0x02,0x00,0x07,0x06,0x02,0x01,0x02,0x04,0x04,0x04,0x05,0x06,0x08,0x08,0x08,0x0a,0x0a,0x09,0x00,0x03,0x02,0x01,0x01,0x01,0x01,0x01,0x06,0x02,0x02,0x02,0x03,0x04,0x05,0x06);
+
+}
+
+
 /* ESC (T -- 0x54 -- setCartridge -- :
  */
 static void
@@ -3323,7 +3392,7 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
       canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
       /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
       /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
-      /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
+      /* both above set : AND of bytes above */
     } 
     else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) ) {
       canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
@@ -3339,7 +3408,7 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
       canon_cmd(v,ESC28,0x54,3,0x02,0x01,0x01); /* default for iP90, iP100 */
       /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
       /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
-      /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
+      /* both above set : AND of bytes above */
     } 
     else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) ) {
 	canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
@@ -3663,6 +3732,7 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   canon_init_setPageMargins2(v,init);    /* ESC (p */
   canon_init_setESC_P(v,init);           /* ESC (P */
   canon_init_setCartridge(v,init);       /* ESC (T */
+  canon_init_setESC_S(v,init);           /* ESC (S */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */

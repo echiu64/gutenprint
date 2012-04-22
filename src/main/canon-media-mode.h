@@ -2781,7 +2781,7 @@ static const char* canon_PIXMA_iP90_modeuses_plain[] = {
   "300x300dpi",
   "300x300dpi_draft",
   NULL
-  };
+};
 
 static const char* canon_PIXMA_iP90_modeuses_PPpro[] = {
   "600x600dpi_photohigh2", /* no ESC (S */
@@ -2819,12 +2819,6 @@ static const char* canon_PIXMA_iP90_modeuses_TShirt[] = {
 static const char* canon_PIXMA_iP90_modeuses_PPother[] = {
   "600x600dpi_photo",
   NULL
-  };
-
-static const char* canon_PIXMA_iP90_modeuses_transparency[] = {
-  "600x600dpi_ohphigh",
-  "600x600dpi_ohp",
-  NULL
 };
 
 static const canon_modeuse_t canon_PIXMA_iP90_modeuses[] = {
@@ -2843,6 +2837,72 @@ static const canon_modeuse_t canon_PIXMA_iP90_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_PIXMA_iP90);
+
+/* ----------------------------------- Canon iP100 ----------------------------------- */
+static const char* canon_PIXMA_iP100_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high", /* mono */
+  "600x600dpi",
+  "600x600dpi_draft",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+};
+
+static const char* canon_PIXMA_iP100_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP100_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP100_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP100_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_high3", /* mono */
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP100_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_iP100_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP100_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP100_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_iP100_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_PIXMA_iP100_modeuses_PPplus, 0 },
+  { "PhotoPlusGloss2",	canon_PIXMA_iP100_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble", canon_PIXMA_iP100_modeuses_PPplus, 0 },
+  { "PhotoProSemiGloss",canon_PIXMA_iP100_modeuses_PPplus, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_iP100_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_iP100_modeuses_PPplus, 0 },
+  { "Coated",		canon_PIXMA_iP100_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_iP100_modeuses_PPplus, 0 },
+  { "Hagaki", 	        canon_PIXMA_iP100_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_iP100_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_iP100_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_PIXMA_iP100_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP100);
 
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {

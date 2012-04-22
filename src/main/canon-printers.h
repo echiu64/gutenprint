@@ -1113,7 +1113,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA mini220", 3,
     INCH(4), INCH(8), /* US 4" x 8" */
     /*-6, -6, -6, -15,*/
-    0, 0, 0, 0, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
     2,4, /* ESC (l and (P command lengths */
@@ -1130,7 +1130,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "PIXMA mini320", 3,
     INCH(4), INCH(8), /* US 4" x 8" */
     /*-6, -6, -6, -15,*/
-    0, 0, 0, 0, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
     &canon_MULTIPASS_MP250_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
     2,4, /* ESC (l and (P command lengths */
@@ -1153,7 +1153,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "SELPHY DS700", 3,
     INCH(4), INCH(6), /* US 4" x 6" */
     /*-6, -6, -6, -15,*/
-    0, 0, 0, 0, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
     2,2, /* ESC (l and (P command lengths */
@@ -1170,7 +1170,7 @@ static const canon_cap_t canon_model_capabilities[] =
     "SELPHY DS810", 3,
     INCH(4), INCH(8), /* US 4" x 8" */
     /*-6, -6, -6, -15,*/
-    0, 0, 0, 0, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
     2,4, /* ESC (l and (P command lengths */
@@ -1271,7 +1271,6 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-#if 0
   { /* Canon PIXMA iP100 */
     "PIXMA iP100", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
@@ -1288,6 +1287,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+#if 0
   { /* Canon PIXMA iP1000 */
     "PIXMA iP1000", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
