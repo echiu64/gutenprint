@@ -8510,6 +8510,62 @@ static const canon_modeuse_t canon_MULTIPASS_MX360_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MX360);
 
+/* ----------------------------------- Canon MX370  ----------------------------------- */
+static const char* canon_MULTIPASS_MX370_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX370_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX370_modeuses_PPproPlat[] = {
+  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX370_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX370_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX370_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const canon_modeuse_t canon_MULTIPASS_MX370_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MX370_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",	canon_MULTIPASS_MX370_modeuses_PPproPlat, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "InkJetHagaki", 	canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "TShirt",		canon_MULTIPASS_MX370_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "PhotopaperOther",	canon_MULTIPASS_MX370_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MX370);
+
 /* ----------------------------------- Canon MX420  ----------------------------------- */
 static const char* canon_MULTIPASS_MX420_modeuses_plain[] = {
   "600x600dpi_high",
@@ -8566,7 +8622,7 @@ static const char* canon_MULTIPASS_MX420_modeuses_TShirt[] = {
 
 static const char* canon_MULTIPASS_MX420_modeuses_PPother[] = {
   "600x600dpi_photohigh",
-  "600x600dpi_photod",/*untested*/
+  "600x600dpi_photo",/*untested*/
   "600x600dpi_photodraft",/*untested*/
   NULL
   };

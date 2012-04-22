@@ -2685,6 +2685,22 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon MULTIPASS MX370 --- with XML */
+    "PIXMA MX370", 3,          /*model, model_id*/
+    842, INCH(17),       /* max paper width and height */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_MG2100_slotlist, /* only front tray also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML,0,
+    3,8, /* ESC (l and (P command lengths */
+    control_cmd_PIXMA_MG5300,
+    &canon_MULTIPASS_MX370_modelist,
+    &canon_MULTIPASS_MX420_paperlist,
+    &canon_MULTIPASS_MX370_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon MULTIPASS MX420 --- with XML */
     "PIXMA MX420", 3,          /*model, model_id*/
     842, INCH(17),       /* max paper width and height */
