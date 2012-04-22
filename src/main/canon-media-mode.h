@@ -4034,6 +4034,12 @@ static const char* canon_PIXMA_iP5000_modeuses_Hagaki[] = {
 
 /* high modes not supported yet */
 static const char* canon_PIXMA_iP5000_modeuses_disc[] = {
+  /* plain mode temporarily added here */
+  "600x600dpi",
+  "300x300dpi_high",/*untested*/
+  "300x300dpi",
+  "300x300dpi_draft",
+  /* photo modes temporarily added */
   "600x600dpi_photodraft",/*stand-in*/
   NULL
 };
@@ -5058,7 +5064,7 @@ static const char* canon_PIXMA_iP9910_modeuses_FA[] = {
 };
 
 static const char* canon_PIXMA_iP9910_modeuses_disc[] = {
-  "600x600dpi_photo",
+  "600x600dpi_photo2",
   "600x600dpi_photodraft",
   NULL
 };
