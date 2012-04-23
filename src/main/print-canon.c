@@ -105,29 +105,30 @@ pack_pixels(unsigned char* buf,int len)
 }
 
 /* model peculiarities */
-#define CANON_CAP_MSB_FIRST 0x02ul    /* how to send data           */
-#define CANON_CAP_a         0x04ul
-#define CANON_CAP_b         0x08ul
-#define CANON_CAP_q         0x10ul
-#define CANON_CAP_m         0x20ul
-#define CANON_CAP_d         0x40ul
-#define CANON_CAP_t         0x80ul
-#define CANON_CAP_c         0x100ul
-#define CANON_CAP_p         0x200ul
-#define CANON_CAP_l         0x400ul
-#define CANON_CAP_r         0x800ul
-#define CANON_CAP_g         0x1000ul
-#define CANON_CAP_px        0x2000ul
-#define CANON_CAP_rr        0x4000ul
-#define CANON_CAP_I         0x8000ul
-#define CANON_CAP_T         0x10000ul /* not sure of this yet! */
-#define CANON_CAP_P         0x20000ul
-#define CANON_CAP_DUPLEX    0x40000ul
-#define CANON_CAP_XML       0x80000ul /* not sure of this yet */
-#define CANON_CAP_CARTRIDGE 0x100000ul /* not sure of this yet */
-#define CANON_CAP_M         0x200000ul /* not sure of this yet */
-#define CANON_CAP_S         0x400000ul /* not sure of this yet */
-#define CANON_CAP_cart      0x800000ul /* BJC printers with Color, Black, Photo options */
+#define CANON_CAP_MSB_FIRST  0x02ul    /* how to send data           */
+#define CANON_CAP_a          0x04ul
+#define CANON_CAP_b          0x08ul
+#define CANON_CAP_q          0x10ul
+#define CANON_CAP_m          0x20ul
+#define CANON_CAP_d          0x40ul
+#define CANON_CAP_t          0x80ul
+#define CANON_CAP_c          0x100ul
+#define CANON_CAP_p          0x200ul
+#define CANON_CAP_l          0x400ul
+#define CANON_CAP_r          0x800ul
+#define CANON_CAP_g          0x1000ul
+#define CANON_CAP_px         0x2000ul
+#define CANON_CAP_rr         0x4000ul
+#define CANON_CAP_I          0x8000ul
+#define CANON_CAP_T          0x10000ul /* not sure of this yet! */
+#define CANON_CAP_P          0x20000ul
+#define CANON_CAP_DUPLEX     0x40000ul
+#define CANON_CAP_XML        0x80000ul /* not sure of this yet */
+#define CANON_CAP_CARTRIDGE  0x100000ul /* not sure of this yet */
+#define CANON_CAP_M          0x200000ul /* not sure of this yet */
+#define CANON_CAP_S          0x400000ul /* not sure of this yet */
+#define CANON_CAP_cart       0x800000ul /* BJC printers with Color, Black, Photo options */
+#define CANON_CAP_BORDERLESS 0x1000000ul /* borderless printing */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -278,14 +279,18 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#if 1
   {
     "InkSet", N_("Ink Set"), "Color=Yes,Category=Basic Printer Setup",
     N_("Type of inkset in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
-#endif
+  {
+    "FullBleed", N_("Borderless"), "Color=No,Category=Basic Printer Setup",
+    N_("Print without borders"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
   {
     "Duplex", N_("Double-Sided Printing"), "Color=No,Category=Basic Printer Setup",
     N_("Duplex/Tumble Setting"),
@@ -2587,6 +2592,17 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
+  /* Test implementation of borderless printing */
+  else if (strcmp(name, "FullBleed") == 0)
+    {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+      if (input_slot && !strcmp(input_slot,"CD"))
+	description->is_active = 0;
+      else if (caps->features & CANON_CAP_BORDERLESS)
+	description->deflt.boolean = 0;
+      else
+	description->is_active = 0;
+    }
   else if (strcmp(name, "Duplex") == 0)
   {
     int offer_duplex=0;
@@ -2670,7 +2686,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 			int  *bottom,	/* O - Bottom position in points */
 			int  *top)	/* O - Top position in points */
 {
-  int	width, length;			/* Size of page */
+  int width, length;			/* Size of page */
   int left_margin = 0;
   int right_margin = 0;
   int bottom_margin = 0;
@@ -2702,6 +2718,37 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
     right_margin = MAX(right_margin, caps->border_right);
     top_margin = MAX(top_margin, caps->border_top);
     bottom_margin = MAX(bottom_margin, caps->border_bottom);
+
+    if ( (caps->features & CANON_CAP_BORDERLESS) &&
+	  stp_get_boolean_parameter(v, "FullBleed") )
+      /* (use_maximum_area ||
+	  stp_get_boolean_parameter(v, "FullBleed")) )*/
+      {
+	if (pt)
+	  {
+	    if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
+		pt->bottom <= 0)
+	      {
+		if (use_paper_margins) 
+		  {
+		    unsigned width_limit = caps->max_width;
+		    left_margin = -7;
+		    right_margin = -7;
+		    if (width - right_margin - 3 > width_limit)
+		      right_margin = width - width_limit - 3;
+		    top_margin = -7;
+		    bottom_margin = -7;
+		  }
+		else
+		  { /* not sure what this means exactly */
+		    left_margin = 0;
+		    right_margin = 0;
+		    top_margin = 0;
+		    bottom_margin = 0;
+		  }
+	      }
+	  }
+      }
   }
 
   *left =	left_margin;
@@ -3063,45 +3110,85 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   int printable_width=  (init->page_width + 1)*5/6;
   int printable_length= (init->page_height + 1)*5/6;
 
+  const char* input_slot = stp_get_string_parameter(v, "InputSlot");  
+  int print_cd= (input_slot && (!strcmp(input_slot, "CD")));
+
+  if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
+       !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
+    {
+      /* set to 0 for borderless */
+      printable_width = 0;
+      printable_length = 0;
+    }
+
   unsigned char arg_70_1= (printable_length >> 8) & 0xff;
   unsigned char arg_70_2= (printable_length) & 0xff;
   unsigned char arg_70_3= (printable_width >> 8) & 0xff;
   unsigned char arg_70_4= (printable_width) & 0xff;
-  const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+
 
   if (!(init->caps->features & CANON_CAP_px) && !(init->caps->features & CANON_CAP_p))
 	return;
 
-  if ((init->caps->features & CANON_CAP_px) ) { /* && !(input_slot && !strcmp(input_slot,"CD")) ) */
+  if ((init->caps->features & CANON_CAP_px) ) {
     if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
       {
 	unsigned int unit = 600;
 
+	/* original borders */
 	int border_left=init->caps->border_left;
 	int border_right=init->caps->border_right;
 	int border_top=init->caps->border_top;
 	int border_bottom=init->caps->border_bottom;
-	if (input_slot && !strcmp(input_slot,"CD")) {
+
+	/* borders for borderless printing */
+	int border_left2=border_left;
+	int border_right2=border_right;
+	int border_top2=border_top;
+	int border_bottom2=border_bottom;
+
+	unsigned int area_right = border_left2 * unit / 72;
+	unsigned int area_top = border_top2 * unit / 72;
+
+	if (print_cd) {
 	  border_top=9;
 	  border_bottom=9;
 	}
+	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
+	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
+	  {
+	    /* set for borderless */
+	    border_left2=-8; /* mini series -6 */
+	    border_right2=-8;
+	    border_top2=-6; /* standard */
+	    border_bottom2=-15; /* standard */
+	    /* convert to 2's complement in case of -ve number: does not work yet */
+	    area_right = ~(border_left2 * unit / 72) + 1;
+	    area_top = ~(border_top2 * unit / 72) + 1;
+	  }
 
 	stp_zfwrite(ESC28,2,1,v); /* ESC( */
 	stp_putc(0x70,v);         /* p    */
 	stp_put16_le(46, v);      /* len  */
+	/* 0 for borderless, calculated otherwise */
 	stp_put16_be(printable_length,v); /* Windows 698, gutenprint 570 */
 	stp_put16_be(0,v);
+	/* 0 for borderless, calculated otherwise */
 	stp_put16_be(printable_width,v); /* Windows 352, gutenprint 342 */
 	stp_put16_be(0,v);
 	stp_put32_be(0,v);
 	stp_put16_be(unit,v);
 	
-	stp_put32_be(border_left * unit / 72,v); /* area_right : Windows seems to use 9.6, gutenprint uses 10 */
-	stp_put32_be(border_top * unit / 72,v);  /* area_top : Windows seems to use 8.4, gutenprint uses 15 */
-	stp_put32_be(init->page_width  * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
-	stp_put32_be(init->page_height * unit / 72,v); /* area_length : Windows seems to use 698.28 for Tray G, gutenprint uses 570 */
+	/* depends on borderless or not */
+	stp_put32_be(area_right,v); /* area_right : Windows seems to use 9.6, gutenprint uses 10 */
+	stp_put32_be(area_top,v);  /* area_top : Windows seems to use 8.4, gutenprint uses 15 */
+	/* calculated depending on borderless or not */
+	stp_put32_be((init->page_width + 2*(border_left - border_left2) ) * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
+	stp_put32_be((init->page_height + (border_top - border_top2) + (border_bottom - border_bottom2) ) * unit / 72,v); /* area_length : Windows seems to use 698.28 for Tray G, gutenprint uses 570 */
+	/* 0 under all currently known circumstances */
 	stp_put32_be(0,v); /* paper_right : Windows also 0 here for all Trays */
 	stp_put32_be(0,v); /* paper_top : Windows also 0 here for all Trays */
+	/* standard paper sizes, unchanged for borderless so use original borders */
 	stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width : Windows 371.4, gutenprint 360.96 */
 	stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v); /* paper_height : Windows 720.96, gutenprint 600 */
 	return;
@@ -4082,7 +4169,6 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->page_width = page_right - page_left;
     privdata->page_height = page_bottom - page_top;
   }
-
 }
 
 
