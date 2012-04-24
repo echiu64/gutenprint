@@ -2731,7 +2731,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 	      {
 		if (use_paper_margins) 
 		  {
-		    unsigned width_limit = caps->max_width;
+		    int width_limit = caps->max_width;
 		    left_margin = -7;
 		    right_margin = -7;
 		    if (width - right_margin - 3 > width_limit)
@@ -3133,7 +3133,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   if ((init->caps->features & CANON_CAP_px) ) {
     if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
       {
-	unsigned int unit = 600;
+	int unit = 600;
 
 	/* original borders */
 	int border_left=init->caps->border_left;
@@ -3141,19 +3141,26 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	int border_top=init->caps->border_top;
 	int border_bottom=init->caps->border_bottom;
 
-	/* borders for borderless printing */
+	if (print_cd) {
+	  border_top=9;
+	  border_bottom=9;
+	}
+
+	/* modified borders */
 	int border_left2=border_left;
 	int border_right2=border_right;
 	int border_top2=border_top;
 	int border_bottom2=border_bottom;
 
-	unsigned int area_right = border_left2 * unit / 72;
-	unsigned int area_top = border_top2 * unit / 72;
+	int area_right = border_left2 * unit / 72;
+	int area_top = border_top2 * unit / 72;
 
-	if (print_cd) {
-	  border_top=9;
-	  border_bottom=9;
+
+	if (ERRPRINT) {
+	  stp_erprintf("DEBUG: setPageMargins2: init->page_height = %d\n",init->page_height);
+	  stp_erprintf("DEBUG: setPageMargins2: printable_length = %d\n",printable_length);
 	}
+
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
 	  {
@@ -3162,9 +3169,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	    border_right2=-8;
 	    border_top2=-6; /* standard */
 	    border_bottom2=-15; /* standard */
-	    /* convert to 2's complement in case of -ve number: does not work yet */
-	    area_right = ~(border_left2 * unit / 72) + 1;
-	    area_top = ~(border_top2 * unit / 72) + 1;
+	    area_right = border_left2 * unit / 72;
+	    area_top = border_top2 * unit / 72;
 	  }
 
 	stp_zfwrite(ESC28,2,1,v); /* ESC( */
@@ -3179,10 +3185,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	stp_put32_be(0,v);
 	stp_put16_be(unit,v);
 	
-	/* depends on borderless or not */
+	/* depends on borderless or not: uses modified borders */
 	stp_put32_be(area_right,v); /* area_right : Windows seems to use 9.6, gutenprint uses 10 */
 	stp_put32_be(area_top,v);  /* area_top : Windows seems to use 8.4, gutenprint uses 15 */
-	/* calculated depending on borderless or not */
+	/* calculated depending on borderless or not: uses modified borders */
 	stp_put32_be((init->page_width + 2*(border_left - border_left2) ) * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
 	stp_put32_be((init->page_height + (border_top - border_top2) + (border_bottom - border_bottom2) ) * unit / 72,v); /* area_length : Windows seems to use 698.28 for Tray G, gutenprint uses 570 */
 	/* 0 under all currently known circumstances */
@@ -4168,6 +4174,28 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->top -= page_top;
     privdata->page_width = page_right - page_left;
     privdata->page_height = page_bottom - page_top;
+
+    if (ERRPRINT) {
+      stp_erprintf("============================set_imageable_area========================\n");
+      stp_erprintf("setup_page page_top = %i\n",page_top);
+      stp_erprintf("setup_page page_bottom = %i\n",page_bottom);
+      stp_erprintf("setup_page page_left = %i\n",page_left);
+      stp_erprintf("setup_page page_right = %i\n",page_right);
+      stp_erprintf("setup_page top = %i\n",privdata->top);
+      stp_erprintf("setup_page left = %i\n",privdata->left);
+      stp_erprintf("setup_page page_height = %i\n",privdata->page_height);
+      stp_erprintf("setup_page page_width = %i\n",privdata->page_width);
+    }
+
+    stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %i\n",page_top);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %i\n",page_bottom);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page page_left = %i\n",page_left);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page page_right = %i\n",page_right);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page top = %i\n",privdata->top);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page left = %i\n",privdata->left);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page page_height = %i\n",privdata->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page page_width = %i\n",privdata->page_width);
+
   }
 }
 
