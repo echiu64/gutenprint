@@ -2719,25 +2719,40 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
     top_margin = MAX(top_margin, caps->border_top);
     bottom_margin = MAX(bottom_margin, caps->border_bottom);
 
+    if (ERRPRINT) {
+      stp_erprintf("internal_imageage_area: about to enter the borderless condition block\n");
+      stp_erprintf("internal_imageage_area: is borderless available? %u\n",caps->features & CANON_CAP_BORDERLESS);
+      stp_erprintf("internal_imageage_area: is borderless selected? %d\n",stp_get_boolean_parameter(v, "FullBleed"));
+    }
+
     if ( (caps->features & CANON_CAP_BORDERLESS) &&
 	  stp_get_boolean_parameter(v, "FullBleed") )
       /* (use_maximum_area ||
 	  stp_get_boolean_parameter(v, "FullBleed")) )*/
       {
+	if (ERRPRINT)
+	  stp_erprintf("internal_imageage_area: entered borderless condition\n");
 	if (pt)
 	  {
+	    if (ERRPRINT)
+	      stp_erprintf("internal_imageage_area: entered pt condition\n");
+
 	    if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 		pt->bottom <= 0)
 	      {
+		if (ERRPRINT)
+		  stp_erprintf("internal_imageage_area: enetered margin<=0 condition\n");
 		if (use_paper_margins) 
 		  {
-		    int width_limit = caps->max_width;
-		    left_margin = -7;
-		    right_margin = -7;
-		    if (width - right_margin - 3 > width_limit)
-		      right_margin = width - width_limit - 3;
-		    top_margin = -7;
-		    bottom_margin = -7;
+		    /*int width_limit = caps->max_width;*/
+		    left_margin = 0;
+		    right_margin = 0;
+		    /*if (width - right_margin - 3 > width_limit)
+		      right_margin = width - width_limit - 3;*/
+		    top_margin = 0;
+		    bottom_margin = 0;
+		    if (ERRPRINT)
+		      stp_erprintf("internal_imageage_area: use_paper_margins so set margins all to -7\n");
 		  }
 		else
 		  { /* not sure what this means exactly */
@@ -2745,6 +2760,8 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 		    right_margin = 0;
 		    top_margin = 0;
 		    bottom_margin = 0;
+		    if (ERRPRINT)
+		      stp_erprintf("internal_imageage_area: does not use paper margins so set margins all to 0\n");
 		  }
 	      }
 	  }
@@ -3156,11 +3173,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	int area_top = border_top2 * unit / 72;
 
 
-	if (ERRPRINT) {
-	  stp_erprintf("DEBUG: setPageMargins2: init->page_height = %d\n",init->page_height);
-	  stp_erprintf("DEBUG: setPageMargins2: printable_length = %d\n",printable_length);
-	}
-
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
 	  {
@@ -3172,6 +3184,13 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	    area_right = border_left2 * unit / 72;
 	    area_top = border_top2 * unit / 72;
 	  }
+
+	if (ERRPRINT) {
+	  stp_erprintf("DEBUG: setPageMargins2: init->page_height = %d\n",init->page_height);
+	  stp_erprintf("DEBUG: setPageMargins2: printable_length = %d\n",printable_length);
+	  stp_erprintf("DEBUG: setPageMargins2: paper_height = %d\n",(init->page_height + border_top + border_bottom) * unit / 72);
+	}
+
 
 	stp_zfwrite(ESC28,2,1,v); /* ESC( */
 	stp_putc(0x70,v);         /* p    */
@@ -4157,6 +4176,9 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
   privdata->left = stp_get_left(v);
   privdata->out_width = stp_get_width(v);
   stp_deprintf(STP_DBG_CANON,"stp_get_width: privdata->out_width is %i\n",privdata->out_width);
+  /* Don't use full bleed mode if the paper itself has a margin */
+  if (privdata->left > 0 || privdata->top > 0)
+    stp_set_boolean_parameter(v, "FullBleed", 0);
 
   privdata->out_height = stp_get_height(v);
 
