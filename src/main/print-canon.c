@@ -2745,26 +2745,28 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 		  stp_erprintf("internal_imageable_area: enetered margin<=0 condition\n");
 		if (use_paper_margins) 
 		  {
-#if 0 /* debug: remove borderless option */
-		    /*int width_limit = caps->max_width;*/
+ /* debug: remove borderless option */
+		    /*
+		    int width_limit = caps->max_width;
 		    left_margin = 0;
 		    right_margin = 0;
-		    /*if (width - right_margin - 3 > width_limit)
-		      right_margin = width - width_limit - 3;*/
+		    if (width - right_margin - 3 > width_limit)
+		      right_margin = width - width_limit - 3;
 		    top_margin = 0;
-		    bottom_margin = 0;
-#endif
+		    bottom_margin = 0;*/
+
 		    if (ERRPRINT)
 		      stp_erprintf("internal_imageable_area: use_paper_margins so set margins all to -7\n");
 		  }
 		else
 		  { /* not sure what this means exactly */
-#if 0 /* debug: remove borderless option */
+ /* debug: remove borderless option */
+		    /*
 		    left_margin = 0;
 		    right_margin = 0;
 		    top_margin = 0;
-		    bottom_margin = 0;
-#endif
+		    bottom_margin = 0;*/
+
 		    if (ERRPRINT)
 		      stp_erprintf("internal_imageable_area: does not use paper margins so set margins all to 0\n");
 		  }
