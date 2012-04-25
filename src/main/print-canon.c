@@ -2725,10 +2725,11 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
       stp_erprintf("internal_imageage_area: is borderless selected? %d\n",stp_get_boolean_parameter(v, "FullBleed"));
     }
 
+#if 0 /* debug: remove borderless option */
     if ( (caps->features & CANON_CAP_BORDERLESS) &&
-	  stp_get_boolean_parameter(v, "FullBleed") )
+	 stp_get_boolean_parameter(v, "FullBleed") )
       /* (use_maximum_area ||
-	  stp_get_boolean_parameter(v, "FullBleed")) )*/
+	 stp_get_boolean_parameter(v, "FullBleed")) )*/
       {
 	if (ERRPRINT)
 	  stp_erprintf("internal_imageage_area: entered borderless condition\n");
@@ -2736,7 +2737,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 	  {
 	    if (ERRPRINT)
 	      stp_erprintf("internal_imageage_area: entered pt condition\n");
-
+	    
 	    if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
 		pt->bottom <= 0)
 	      {
@@ -2766,6 +2767,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 	      }
 	  }
       }
+#endif
   }
 
   *left =	left_margin;
@@ -3130,13 +3132,17 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");  
   int print_cd= (input_slot && (!strcmp(input_slot, "CD")));
 
+#if 1 /* debug: remove borderless option */
   if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
        !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
     {
+      if (ERRPRINT)
+	stp_erprintf("canon_init_setPageMargins2: for borderless set printable length and width to 0\n");
       /* set to 0 for borderless */
       printable_width = 0;
       printable_length = 0;
     }
+#endif
 
   unsigned char arg_70_1= (printable_length >> 8) & 0xff;
   unsigned char arg_70_2= (printable_length) & 0xff;
@@ -3172,18 +3178,19 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	int area_right = border_left2 * unit / 72;
 	int area_top = border_top2 * unit / 72;
 
-
+#if 1 /* debug: remove borderless option */
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
 	  {
 	    /* set for borderless */
-	    border_left2=-8; /* mini series -6 */
-	    border_right2=-8;
-	    border_top2=-6; /* standard */
-	    border_bottom2=-15; /* standard */
+	    border_left2=-8; /* -8 mini series -6 */
+	    border_right2=-8; /* -8 */
+	    border_top2=-6; /* -6 standard */
+	    border_bottom2=-15; /* -15 standard */
 	    area_right = border_left2 * unit / 72;
 	    area_top = border_top2 * unit / 72;
 	  }
+#endif
 
 	if (ERRPRINT) {
 	  stp_erprintf("DEBUG: setPageMargins2: init->page_height = %d\n",init->page_height);
