@@ -815,6 +815,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC i50 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
+    /* 50i sold outside of Japan as the i70 */
     "i50", 3,
     842, INCH(17),
     10, 10, 10, 15,
@@ -825,22 +826,6 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_BJC_i50_modelist,
     &canon_BJC_i50_paperlist,
     &canon_BJC_i50_modeuselist,
-    NULL,
-    NULL,
-    NULL,
-    NULL
-  },
-  { /* Canon BJC i70 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
-    "i70", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
-    &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,
-    2,0,
-    control_cmd_PIXMA_iP2700,
-    &canon_BJC_i70_modelist,
-    &canon_BJC_i70_paperlist,
-    &canon_BJC_i70_modeuselist,
     NULL,
     NULL,
     NULL,

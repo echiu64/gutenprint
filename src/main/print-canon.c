@@ -443,7 +443,7 @@ static char* canon_get_printername(const stp_vars_t* v)
   char* name;
   size_t len;
   if(family >= sizeof(canon_families) / sizeof(canon_families[0])){
-    stp_erprintf("canon_get_printername: no family %i using default BJC\n", family);
+    stp_eprintf(v,"canon_get_printername: no family %i using default BJC\n", family);
     family = 0;
   }
   len = strlen(canon_families[family]) + 7; /* max model nr. + terminating 0 */
@@ -468,7 +468,7 @@ static const canon_cap_t * canon_get_model_capabilities(const stp_vars_t*v)
       return &(canon_model_capabilities[i]);
     }
   }
-  stp_erprintf("canon: model %s not found in capabilities list=> using default\n",name);
+  stp_eprintf(v,"canon: model %s not found in capabilities list=> using default\n",name);
   stp_free(name);
   return &(canon_model_capabilities[0]);
 }
