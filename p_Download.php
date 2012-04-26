@@ -20,19 +20,10 @@ href="http://sourceforge.net/project/showfiles.php?group_id=1537">our project pa
 
 <p>Macintosh OS X users should download files whose names end in
 ".dmg".  These are pre-built packages that can be installed by opening
-the file and following instructions.  Please download the following
-packages:</p>
-
+the file and following instructions.  You can find information and download links for the latest release at <a href="http://gimp-print.sourceforge.net/MacOSX.php">http://gimp-print.sourceforge.net/MacOSX.php</a></p>
 <ul>
-
-<p><li>All users should download the main package, named
-"gutenprint-<?php echo $plugin_version_number; ?>.U.dmg".  This provides the Gutenprint drivers and
-PPD files required to print.  This is a universal binary, for both PPC
-and Intel Macintosh systems.  You do not need to download the source
-package "gutenprint-<?php echo $plugin_version_number; ?>.tar.bz2".</li></p>
-
 <p><li>Users of printers connected via USB (either directly or with
-USB-parallel converters) may need to download "usbtb-1.0.15.uni.dmg".
+USB-parallel converters) may want to download "usbtb-1.0.17.uni.dmg".
 This is an alternative USB driver that may provide better performance
 and functionality with certain printers and systems.  If you are
 unable to print to a directly connected printer, or printing stops
@@ -45,8 +36,8 @@ them.  This is also a universal binary.</li></p>
 legacy applications that generate PostScript should install
 "espgs-7.07.1.ppc.dmg".  This is a PPC-only binary.  You do not need
 to download the source package "espgs-7.07.1-source.tar.bz2".</li></p>
-
 </ul>
+
 
 <h3>All Other Users</h3>
 
