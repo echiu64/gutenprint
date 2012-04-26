@@ -4207,8 +4207,9 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
   privdata->out_width = stp_get_width(v);
   stp_deprintf(STP_DBG_CANON,"stp_get_width: privdata->out_width is %i\n",privdata->out_width);
   /* Don't use full bleed mode if the paper itself has a margin */
-  if (privdata->left > 0 || privdata->top > 0)
-    stp_set_boolean_parameter(v, "FullBleed", 0);
+  /* Correct this later */
+  /* if (privdata->left > 0 || privdata->top > 0)
+     stp_set_boolean_parameter(v, "FullBleed", 0); */
 
   privdata->out_height = stp_get_height(v);
 
