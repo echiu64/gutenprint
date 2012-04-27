@@ -280,7 +280,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA mini360(EXPERIMENTAL)
        Canon PIXMA DS700  (EXPERIMENTAL)
        Canon PIXMA DS810  (EXPERIMENTAL)
-       Canon PIXMA i50    (EXPERIMENTAL)
+       Canon PIXMA 50i    (EXPERIMENTAL)
+       Canon PIXMA 80i    (EXPERIMENTAL)
        Canon PIXMA i70    (EXPERIMENTAL)
        Canon PIXMA i450   (EXPERIMENTAL)
        Canon PIXMA i455   (EXPERIMENTAL)
@@ -495,6 +496,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   14) Adjusted top margins of most Canon printers.
 
+  15) Canon Japan printers of the *i series (e.g., 50i) have been
+      matched with non-Japan i* series (e.g., i70) printers, and
+      support for inkjet Hagaki and plain Hagaki added to the
+      non-Japan models where equivalent Japan models exist.
 
 * Changes from 5.2.6
 

@@ -1529,7 +1529,7 @@ static const char* canon_BJC_i80_modeuses_plain[] = {
   "300x300dpi",
   "300x300dpi_draft",
   NULL
-  };
+};
 
 static const char* canon_BJC_i80_modeuses_PPpro[] = {
   "600x600dpi_photohigh3",
@@ -1541,12 +1541,25 @@ static const char* canon_BJC_i80_modeuses_PPpro[] = {
 static const char* canon_BJC_i80_modeuses_PPplus[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_BJC_i80_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo",
   NULL
 };
 
 static const char* canon_BJC_i80_modeuses_PPgloss[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_BJC_i80_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
   NULL
 };
 
@@ -1573,17 +1586,17 @@ static const char* canon_BJC_i80_modeuses_Transparency[] = {
 static const char* canon_BJC_i80_modeuses_PPother[] = {
   "600x600dpi_photo2",
   NULL
-  };
+};
 
 static const canon_modeuse_t canon_BJC_i80_modeuses[] = {
   { "Plain",            canon_BJC_i80_modeuses_plain, 0 },
   { "GlossyPro",	canon_BJC_i80_modeuses_PPpro, 0 },
   { "PhotopaperPlus",	canon_BJC_i80_modeuses_PPplus, 0 },
-  { "PhotopaperPlusDouble",canon_BJC_i80_modeuses_PPplus, 0 },
-  { "PhotopaperMatte",	canon_BJC_i80_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i80_modeuses_PPmatte, 0 },
+  { "PhotopaperMatte",	canon_BJC_i80_modeuses_PPmatte, 0 },
   { "GlossyPaper",	canon_BJC_i80_modeuses_PPgloss, 0 },
-  { "Coated",		canon_BJC_i80_modeuses_PPplus, 0 },
-  { "InkJetHagaki", 	canon_BJC_i80_modeuses_PPplus, 0 },/*untested*/
+  { "Coated",		canon_BJC_i80_modeuses_PPmatte, 0 },
+  { "InkJetHagaki", 	canon_BJC_i80_modeuses_inkjetHagaki, 0 },
   { "Hagaki", 	        canon_BJC_i80_modeuses_Hagaki, 0 },
   { "TShirt",		canon_BJC_i80_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i80_modeuses_Transparency, 0 },

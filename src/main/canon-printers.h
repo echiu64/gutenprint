@@ -815,7 +815,7 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL
   },
   { /* Canon BJC i50 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
-    /* 50i sold outside of Japan as the i70 */
+    /* 50i sold outside of Japan as the i70, but we need i in front for the name */
     "i50", 3,
     842, INCH(17),
     10, 10, 10, 15,
