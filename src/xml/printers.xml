@@ -269,13 +269,13 @@
       <printer translate="name" name="Canon PIXMA MX510" driver="bjc-MULTIPASS-MX510" manufacturer="Canon" model="9000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX510" />
       <printer translate="name" name="Canon PIXMA MX700" driver="bjc-MULTIPASS-MX700" manufacturer="Canon" model="9000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX700" />
       <printer translate="name" name="Canon PIXMA MX710" driver="bjc-MULTIPASS-MX710" manufacturer="Canon" model="9000710" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX710" />
-       <printer translate="name" name="Canon PIXMA MX850" driver="bjc-MULTIPASS-MX850" manufacturer="Canon" model="9000850" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX850" />
-       <printer translate="name" name="Canon PIXMA MX860" driver="bjc-MULTIPASS-MX860" manufacturer="Canon" model="9000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX860" />
-       <printer translate="name" name="Canon PIXMA MX870" driver="bjc-MULTIPASS-MX870" manufacturer="Canon" model="9000870" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX870" />
-       <printer translate="name" name="Canon PIXMA MX880" driver="bjc-MULTIPASS-MX880" manufacturer="Canon" model="9000880" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX880" />
+      <printer translate="name" name="Canon PIXMA MX850" driver="bjc-MULTIPASS-MX850" manufacturer="Canon" model="9000850" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX850" />
+      <printer translate="name" name="Canon PIXMA MX860" driver="bjc-MULTIPASS-MX860" manufacturer="Canon" model="9000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX860" />
+      <printer translate="name" name="Canon PIXMA MX870" driver="bjc-MULTIPASS-MX870" manufacturer="Canon" model="9000870" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX870" />
+      <printer translate="name" name="Canon PIXMA MX880" driver="bjc-MULTIPASS-MX880" manufacturer="Canon" model="9000880" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX880" />
       <printer translate="name" name="Canon PIXMA MX890" driver="bjc-MULTIPASS-MX890" manufacturer="Canon" model="9000710" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX890" />
-       <printer translate="name" name="Canon PIXMA MX7600" driver="bjc-MULTIPASS-MX7600" manufacturer="Canon" model="9007600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX7600" />
-      <printer translate="name" name="Canon i50" driver="bjc-i50"   manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-i50" />
+      <printer translate="name" name="Canon PIXMA MX7600" driver="bjc-MULTIPASS-MX7600" manufacturer="Canon" model="9007600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX7600" />
+      <printer translate="name" name="Canon 50i" driver="bjc-50i"   manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-50i" />
       <printer translate="name" name="Canon i70" driver="bjc-i70"   manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-i70" />
       <printer translate="name" name="Canon i80" driver="bjc-i80"   manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-i80" />
       <printer translate="name" name="Canon i450" driver="bjc-i450" manufacturer="Canon" model="2000450" parameters="density_800_params" foomaticid="Canon-i450" />
