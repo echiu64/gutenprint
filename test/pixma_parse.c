@@ -535,7 +535,6 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				fprintf(stderr,"ESC (l select paper loading (len=%i):\n",cnt);
 				fprintf(stderr," model id 0x%x ",buf[0]>>4);
 				fprintf(stderr," source 0x%x",buf[0]&15);
-				fprintf(stderr," media: %x",buf[1]);
 				if ( cnt == 3 ) {
 				  fprintf(stderr," media: %x",buf[1]);
 				  fprintf(stderr," paper gap: %x\n",buf[2]);
