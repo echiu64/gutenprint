@@ -685,7 +685,7 @@ static const canon_paper_t canon_BJC_i6100_papers[] = {
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected a 10 */
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 08 */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected d */
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x00,0.78, 0.25, 0.900, 0, 0, 0 },

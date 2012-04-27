@@ -692,6 +692,7 @@ static const canon_mode_t canon_BJC_i960_modes[] = {
 };
 DECLARE_MODES(canon_BJC_i960,2);
 
+/* inkjetHagaki and Hagaki from 6100i */
 static const canon_mode_t canon_BJC_i6100_modes[] = {
   /* plain modes */
   {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high2",N_("600x600 DPI HIGH"),INKSET(9_C3M3Y2K2_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
