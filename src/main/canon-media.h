@@ -646,7 +646,7 @@ static const canon_paper_t canon_BJC_i850_papers[] = {
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 08 08 */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected d 9 */
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
