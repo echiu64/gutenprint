@@ -906,7 +906,7 @@ static const canon_cap_t canon_model_capabilities[] =
     2,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i455_modelist,
-    &canon_BJC_i450_paperlist,
+    &canon_BJC_i455_paperlist,
     &canon_BJC_i455_modeuselist,
     NULL,
     NULL,

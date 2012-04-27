@@ -314,8 +314,8 @@ static const canon_mode_t canon_BJC_i80_modes[] = {
   {  600, 600,CANON_INK_CMY,"600x600dpi_photo2",N_("600x600 DPI PHOTO other"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* cmy */
   {  600, 600,CANON_INK_CMY,"600x600dpi_photodraft",N_("600x600 DPI DRAFT plusGlossy"),INKSET(9_C5M5Y5K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
   /* inkjetHagaki */
-  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh4",N_("600x600 DPI HIGH inkjetHagaki"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, /* cmy */
-  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo4",N_("600x600 DPI inkjetHagaki"),INKSET(9_C4M4Y4K2c4m4y4photo),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh4",N_("600x600 DPI HIGH inkjet Hagaki"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, /* cmy */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo4",N_("600x600 DPI inkjet Hagaki"),INKSET(9_C4M4Y4K2c4m4y4photo),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   /* Transparency */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_ohphigh",N_("600x600 DPI HIGH Transparency"),INKSET(9_C4M4Y4K3),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
   {  600, 600,CANON_INK_CMYK,"600x600dpi_ohp",N_("600x600 DPI Transparency"),INKSET(9_C3M3Y2K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
@@ -390,7 +390,7 @@ static const canon_mode_t canon_BJC_i320_modes[] = {
 };
 DECLARE_MODES(canon_BJC_i320,2);
 
-/* has similarities to MP360 series */
+/* inkjetHagaki and Hagaki from 450i */
 static const canon_mode_t canon_BJC_i450_modes[] = {
   /* plain modes */
   {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2c4m4y4plain),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},/* color only */
@@ -405,6 +405,9 @@ static const canon_mode_t canon_BJC_i450_modes[] = {
   {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(9_C4M4Y4K2c4m4y4plain),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CMY,"600x600dpi_photo2",N_("600x600 DPI PHOTO Other"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* cmy */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT (plusGlossy)"),INKSET(9_C5M5Y5K2plain),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* inkjet Hagaki */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh4",N_("600x600 DPI HIGH inkjet Hagaki"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, /* cmy */
+  {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_photo4",N_("600x600 DPI inkjet Hagaki"),INKSET(9_C4M4Y4K2c4m4y4plain),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
   /* Transparency */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_ohphigh",N_("600x600 DPI HIGH Transparency"),INKSET(9_C4M4Y4K3),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
   {  600, 600,CANON_INK_CMYK,"600x600dpi_ohp",N_("600x600 DPI Transparency"),INKSET(9_C3M3Y2K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
@@ -418,7 +421,7 @@ static const canon_mode_t canon_BJC_i450_modes[] = {
 };
 DECLARE_MODES(canon_BJC_i450,2);
 
-/* similarities to MP360 series */
+/* inkjetHagaki and Hagaki from 455i */
 static const canon_mode_t canon_BJC_i455_modes[] = {
   /* plain modes */
   {  600, 600,CANON_INK_CcMmYyK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2c4m4y4plain),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
@@ -433,6 +436,9 @@ static const canon_mode_t canon_BJC_i455_modes[] = {
   {  600, 600,CANON_INK_CMY,"600x600dpi_photo",N_("600x600 DPI PHOTO"),INKSET(9_C4M4Y4K2c4m4y4photo),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},/* CMYcmy */
   {  600, 600,CANON_INK_CMY,"600x600dpi_photo2",N_("600x600 DPI PHOTO Other"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2}, /* cmy */
   {  600, 600,CANON_INK_CMY,"600x600dpi_photodraft",N_("600x600 DPI PHOTO DRAFT (plusGlossy)"),INKSET(9_C5M5Y5K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* inkjet Hagaki */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photohigh4",N_("600x600 DPI HIGH inkjet Hagaki"),INKSET(9_C9M9Y9K2c9m9y9photo8),8,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3}, /* cmy */
+  {  600, 600,CANON_INK_CMY,"600x600dpi_photo4",N_("600x600 DPI inkjet Hagaki"),INKSET(9_C4M4Y4K2c4m4y4photo),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},/* CMYcmy */
   /* Transparency */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_ohphigh",N_("600x600 DPI HIGH Transparency"),INKSET(9_C4M4Y4K3),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
   {  600, 600,CANON_INK_CMYK | CANON_INK_K,"600x600dpi_ohp",N_("600x600 DPI Transparency"),INKSET(9_C3M3Y2K2),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,1},
@@ -446,6 +452,7 @@ static const canon_mode_t canon_BJC_i455_modes[] = {
 };
 DECLARE_MODES(canon_BJC_i455,2);
 
+/* inkjetHagaki and Hagaki from 550i */
 static const canon_mode_t canon_BJC_i550_modes[] = {
   /* plain modes */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},

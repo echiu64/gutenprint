@@ -277,6 +277,9 @@
       <printer translate="name" name="Canon PIXMA MX7600" driver="bjc-MULTIPASS-MX7600" manufacturer="Canon" model="9007600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX7600" />
       <printer translate="name" name="Canon 50i" driver="bjc-50i" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-50i" />
       <printer translate="name" name="Canon 80i" driver="bjc-80i" manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-80i" />
+      <printer translate="name" name="Canon 450i" driver="bjc-450i" manufacturer="Canon" model="2000450" parameters="density_800_params" foomaticid="Canon-450i" />
+      <printer translate="name" name="Canon 455i" driver="bjc-455i" manufacturer="Canon" model="2000455" parameters="density_800_params" foomaticid="Canon-455i" />
+      <printer translate="name" name="Canon 550i" driver="bjc-550i" manufacturer="Canon" model="2000550" parameters="density_800_params" foomaticid="Canon-550i" />
       <printer translate="name" name="Canon i70" driver="bjc-i70" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-i70" />
       <printer translate="name" name="Canon i80" driver="bjc-i80" manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-i80" />
       <printer translate="name" name="Canon i450" driver="bjc-i450" manufacturer="Canon" model="2000450" parameters="density_800_params" foomaticid="Canon-i450" />

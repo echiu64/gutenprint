@@ -1642,6 +1642,12 @@ static const char* canon_BJC_i450_modeuses_PPgloss[] = {
   NULL
 };
 
+static const char* canon_BJC_i450_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  NULL
+};
+
 static const char* canon_BJC_i450_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_highmono2",/* mono */
@@ -1675,7 +1681,7 @@ static const canon_modeuse_t canon_BJC_i450_modeuses[] = {
   { "PhotopaperMatte",	canon_BJC_i450_modeuses_PPplusDS, 0 },
   { "GlossyPaper",	canon_BJC_i450_modeuses_PPgloss, 0 },
   { "Coated",		canon_BJC_i450_modeuses_PPplusDS, 0 },
-  { "InkJetHagaki", 	canon_BJC_i450_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_BJC_i450_modeuses_inkjetHagaki, 0 },
   { "Hagaki", 	        canon_BJC_i450_modeuses_Hagaki, 0 },
   { "TShirt",		canon_BJC_i450_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i450_modeuses_Transparency, 0 },
@@ -1721,6 +1727,12 @@ static const char* canon_BJC_i455_modeuses_PPgloss[] = {
   NULL
 };
 
+static const char* canon_BJC_i455_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  NULL
+};
+
 static const char* canon_BJC_i455_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_highmono2",/* mono */
@@ -1754,7 +1766,7 @@ static const canon_modeuse_t canon_BJC_i455_modeuses[] = {
   { "PhotopaperMatte",	canon_BJC_i455_modeuses_PPplusDS, 0 },
   { "GlossyPaper",	canon_BJC_i455_modeuses_PPgloss, 0 },
   { "Coated",		canon_BJC_i455_modeuses_PPplusDS, 0 },
-  { "InkJetHagaki", 	canon_BJC_i455_modeuses_PPplusDS, 0 },
+  { "InkJetHagaki", 	canon_BJC_i455_modeuses_inkjetHagaki, 0 },
   { "Hagaki", 	        canon_BJC_i455_modeuses_Hagaki, 0 },
   { "TShirt",		canon_BJC_i455_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i455_modeuses_Transparency, 0 },
