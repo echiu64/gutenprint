@@ -289,6 +289,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA 550i   (EXPERIMENTAL)
        Canon PIXMA 560i   (EXPERIMENTAL)
        Canon PIXMA 850i   (EXPERIMENTAL)
+       Canon PIXMA 860i   (EXPERIMENTAL)
        Canon PIXMA 6100i  (EXPERIMENTAL)
        Canon PIXMA 6500i  (EXPERIMENTAL)
        Canon PIXMA i70    (EXPERIMENTAL)
@@ -429,6 +430,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   6) CD printing support for the following printers was added:
 
        Canon PIXMA i560
+       Canon PIXMA i860
        Canon PIXMA iP4600
        Canon PIXMA iP4700
        Canon PIXMA iP4800
