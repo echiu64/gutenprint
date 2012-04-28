@@ -285,6 +285,7 @@
       <printer translate="name" name="Canon 560i" driver="bjc-560i" manufacturer="Canon" model="2000560" parameters="gamma_6_density_800_params" foomaticid="Canon-560i" />
       <printer translate="name" name="Canon 850i" driver="bjc-850i" manufacturer="Canon" model="2000850" parameters="PIXMA_iP4000_params" foomaticid="Canon-850i" />
       <printer translate="name" name="Canon 860i" driver="bjc-860i" manufacturer="Canon" model="2000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-860i" />
+      <printer translate="name" name="Canon 865R" driver="bjc-865R" manufacturer="Canon" model="2000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-865R" />
       <printer translate="name" name="Canon 6100i" driver="bjc-6100i" manufacturer="Canon" model="2006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-6100i" />
       <printer translate="name" name="Canon 6500i" driver="bjc-6500i" manufacturer="Canon" model="2006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-6500i" />
       <printer translate="name" name="Canon i70" driver="bjc-i70" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-i70" />
@@ -304,7 +305,7 @@
       <printer translate="name" name="Canon i860old" driver="bjc-i860old" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-i860old" />
       <printer translate="name" name="Canon i860" driver="bjc-i860" manufacturer="Canon" model="2000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-i860" />
       <printer translate="name" name="Canon i865old" driver="bjc-i865old" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-i865old" />
-      <printer translate="name" name="Canon i865" driver="bjc-i865" manufacturer="Canon" model="2000865" parameters="PIXMA_iP4000_params" foomaticid="Canon-i865" />
+      <printer translate="name" name="Canon i865" driver="bjc-i865" manufacturer="Canon" model="2000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-i865" />
       <printer translate="name" name="Canon i900D" driver="bjc-i900" manufacturer="Canon" model="2000900" parameters="PIXMA_iP4000_params" foomaticid="Canon-i900" />
       <printer translate="name" name="Canon i950" driver="bjc-i950" manufacturer="Canon" model="2000950" parameters="PIXMA_iP4000_params" foomaticid="Canon-i950" />
       <printer translate="name" name="Canon i960" driver="bjc-i960" manufacturer="Canon" model="2000960" parameters="PIXMA_iP4000_params" foomaticid="Canon-i960" />

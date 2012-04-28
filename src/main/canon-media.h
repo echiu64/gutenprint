@@ -134,15 +134,9 @@ DECLARE_SLOTS(canon_MULTIPASS_MP900);
 static const canon_slot_t canon_BJC_i860_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
   { "Cassette",   N_ ("Cassette"), 0x8 },
-};
-DECLARE_SLOTS(canon_BJC_i860);
-
-static const canon_slot_t canon_BJC_i865_slots[] = {
-  { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
-  { "Cassette",   N_ ("Cassette"), 0x8 },
   { "CD",         N_ ("CD tray"), 0xa },
 };
-DECLARE_SLOTS(canon_BJC_i865);
+DECLARE_SLOTS(canon_BJC_i860);
 
 static const canon_slot_t canon_BJC_S800_slots[] = {
   { "Auto",       N_ ("Auto Sheet Feeder"), 0x4 },
@@ -665,7 +659,7 @@ static const canon_paper_t canon_BJC_i850_papers[] = {
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected d 9 */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x07,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected d 9 */
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -676,25 +670,6 @@ static const canon_paper_t canon_BJC_i850_papers[] = {
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
 };
 DECLARE_PAPERS(canon_BJC_i850);
-
-static const canon_paper_t canon_BJC_i865_papers[] = {
-  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
-  { "GlossyPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x1a,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x0b,0x11,0x1d,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x25,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
-  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
-  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
-  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "Transparency",	N_ ("Transparencies"),		        0x02,0x02,0x01,0.78, 0.25, 0.900, 0, 0, 0 },
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
-};
-DECLARE_PAPERS(canon_BJC_i865);
 
 static const canon_paper_t canon_BJC_i6100_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
