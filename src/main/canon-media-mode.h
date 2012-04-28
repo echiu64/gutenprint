@@ -1904,14 +1904,22 @@ static const char* canon_BJC_i560_modeuses_coated[] = {
 };
 
 static const char* canon_BJC_i560_modeuses_inkjetHagaki[] = {
-  "600x600dpi_photohigh2",
-  "600x600dpi_photo2",
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  "600x600dpi_photodraft3",
   NULL
 };
 
 static const char* canon_BJC_i560_modeuses_Hagaki[] = {
   "600x600dpi_high2",
   "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_BJC_i560_modeuses_disc[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  "600x600dpi_photodraft4",
   NULL
 };
 
@@ -1939,8 +1947,10 @@ static const canon_modeuse_t canon_BJC_i560_modeuses[] = {
   { "PhotopaperMatte",	canon_BJC_i560_modeuses_PPplusDS, 0 },
   { "GlossyPaper",	canon_BJC_i560_modeuses_PPplusDS, 0 },
   { "Coated",		canon_BJC_i560_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_BJC_i560_modeuses_inkjetHagaki, 0 },/*untested*/
+  { "InkJetHagaki", 	canon_BJC_i560_modeuses_inkjetHagaki, 0 },
   { "Hagaki", 	        canon_BJC_i560_modeuses_Hagaki, 0 },
+  { "DiscCompat", 	canon_BJC_i560_modeuses_disc, 0 },
+  { "DiscOthers", 	canon_BJC_i560_modeuses_disc, 0 },
   { "TShirt",		canon_BJC_i560_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i560_modeuses_Transparency, 0 },
   { "Envelope",		canon_BJC_i560_modeuses_Hagaki, 0 },

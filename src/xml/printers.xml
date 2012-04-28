@@ -282,6 +282,7 @@
       <printer translate="name" name="Canon 470PD" driver="bjc-470PD" manufacturer="Canon" model="2000450" parameters="density_800_params" foomaticid="Canon-470PD" />
       <printer translate="name" name="Canon 475PD" driver="bjc-475PD" manufacturer="Canon" model="2000455" parameters="density_800_params" foomaticid="Canon-475PD" />
       <printer translate="name" name="Canon 550i" driver="bjc-550i" manufacturer="Canon" model="2000550" parameters="density_800_params" foomaticid="Canon-550i" />
+      <printer translate="name" name="Canon 560i" driver="bjc-560i" manufacturer="Canon" model="2000560" parameters="gamma_6_density_800_params" foomaticid="Canon-560i" />
       <printer translate="name" name="Canon 850i" driver="bjc-850i" manufacturer="Canon" model="2000850" parameters="PIXMA_iP4000_params" foomaticid="Canon-850i" />
       <printer translate="name" name="Canon 6100i" driver="bjc-6100i" manufacturer="Canon" model="2006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-6100i" />
       <printer translate="name" name="Canon 6500i" driver="bjc-6500i" manufacturer="Canon" model="2006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-6500i" />

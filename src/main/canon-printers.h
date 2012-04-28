@@ -820,7 +820,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 10, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,
+    CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i50_modelist,
@@ -836,7 +836,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     2,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i80_modelist,
@@ -853,7 +853,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i250_modelist,
@@ -869,7 +869,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i320_modelist,
@@ -886,7 +886,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i450_modelist,
@@ -902,7 +902,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     2,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i455_modelist,
@@ -918,7 +918,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_BJC_i550,
     &canon_BJC_i550_modelist,
@@ -933,12 +933,12 @@ static const canon_cap_t canon_model_capabilities[] =
     "i560", 3,
     842, INCH(17),
     10, 10, 9, 15,
-    &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P,0,
+    &canon_MULTIPASS_MP900_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     3,2, /* ESC (l and (P command lengths */
     control_cmd_BJC_i550,
     &canon_BJC_i560_modelist,
-    &canon_BJC_i250_paperlist,
+    &canon_BJC_i560_paperlist,
     &canon_BJC_i560_modeuselist,
     NULL,
     NULL,
@@ -950,7 +950,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP900_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_BJC_i550,
     &canon_BJC_i850_modelist,
@@ -966,7 +966,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_BJC_i860_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,/* ESC (M 0x0 0x0 0x0 */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
     control_cmd_BJC_i550,
     &canon_BJC_i860_modelist,
@@ -982,7 +982,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_BJC_i865_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,/* ESC (M 0x0 0x0 0x0 */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
     control_cmd_BJC_i550,
     &canon_BJC_i865_modelist,
@@ -998,7 +998,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,/* ESC (M 0x0 0x0 0x0 */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i900_modelist,
@@ -1014,7 +1014,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i950_modelist,
@@ -1030,7 +1030,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_BJC_i860_slotlist,
-    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,/* ESC (M 0x0 0x0 0x0 */
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i960_modelist,
@@ -1046,7 +1046,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_BJC_i6100, /* 32 times 0x0 before form feed not implemented */
     &canon_BJC_i6100_modelist,
@@ -1062,7 +1062,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i9100_modelist,
@@ -1078,7 +1078,7 @@ static const canon_cap_t canon_model_capabilities[] =
     842, INCH(17),
     10, 10, 9, 15,
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M,0,/* ESC (M 0x0 0x0 0x0 */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i9900_modelist,
