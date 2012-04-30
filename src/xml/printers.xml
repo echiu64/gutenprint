@@ -320,6 +320,7 @@
       <printer translate="name" name="Canon i6500" driver="bjc-i6500" manufacturer="Canon" model="2006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-i6500" />
       <printer translate="name" name="Canon i9100" driver="bjc-i9100" manufacturer="Canon" model="2009100" parameters="PIXMA_iP4000_params" foomaticid="Canon-i9100" />
       <printer translate="name" name="Canon i9900" driver="bjc-i9900" manufacturer="Canon" model="2009900" parameters="PIXMA_iP4000_params" foomaticid="Canon-i9900" />
+      <printer translate="name" name="Canon i9950" driver="bjc-i9950" manufacturer="Canon" model="2009900" parameters="PIXMA_iP4000_params" foomaticid="Canon-i9950" />
     </family>
     <family name="escp2">
       <parameters name="standard_params">
