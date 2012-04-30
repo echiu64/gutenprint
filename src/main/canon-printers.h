@@ -1050,7 +1050,7 @@ static const canon_cap_t canon_model_capabilities[] =
     2,0,
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i9100_modelist,
-    &canon_BJC_i6100_paperlist,
+    &canon_BJC_i9100_paperlist,
     &canon_BJC_i9100_modeuselist,
     NULL,
     NULL,
@@ -1061,12 +1061,12 @@ static const canon_cap_t canon_model_capabilities[] =
     "i9900", 3,
     842, INCH(17),
     10, 10, 9, 15,
-    &canon_MULTIPASS_MP150_slotlist,
+    &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,
     &canon_BJC_i9900_modelist,
-    &canon_BJC_i6100_paperlist,
+    &canon_BJC_i9900_paperlist,
     &canon_BJC_i9900_modeuselist,
     NULL,
     NULL,

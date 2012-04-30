@@ -2512,8 +2512,8 @@ static const canon_modeuse_t canon_BJC_i6100_modeuses[] = {
   { "PhotopaperMatte",	canon_BJC_i6100_modeuses_PPmatte, 0 },
   { "GlossyPaper",	canon_BJC_i6100_modeuses_PPgloss, 0 },
   { "Coated",		canon_BJC_i6100_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_BJC_i6100_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_BJC_i6100_modeuses_Hagaki, 0 },/*untested*/
+  { "InkJetHagaki", 	canon_BJC_i6100_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_BJC_i6100_modeuses_Hagaki, 0 },
   { "TShirt",		canon_BJC_i6100_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i6100_modeuses_Transparency, 0 },
   { "Envelope",		canon_BJC_i6100_modeuses_Hagaki, 0 },
@@ -2559,8 +2559,9 @@ static const char* canon_BJC_i9100_modeuses_coated[] = {
 };
 
 static const char* canon_BJC_i9100_modeuses_inkjetHagaki[] = {
-  "600x600dpi_photohigh",
-  "600x600dpi_photod",
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  "600x600dpi_photodraft4",
   NULL
 };
 
@@ -2598,8 +2599,8 @@ static const canon_modeuse_t canon_BJC_i9100_modeuses[] = {
   { "PhotopaperMatte",	canon_BJC_i9100_modeuses_PPmatte, 0 },
   { "GlossyPaper",	canon_BJC_i9100_modeuses_PPmatte, 0 },
   { "Coated",		canon_BJC_i9100_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_BJC_i9100_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_BJC_i9100_modeuses_Hagaki, 0 },/*untested*/
+  { "InkJetHagaki", 	canon_BJC_i9100_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_BJC_i9100_modeuses_Hagaki, 0 },
   { "TShirt",		canon_BJC_i9100_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i9100_modeuses_Transparency, 0 },
   { "Envelope",		canon_BJC_i9100_modeuses_Hagaki, 0 },
@@ -2653,10 +2654,15 @@ static const char* canon_BJC_i9900_modeuses_coated[] = {
   NULL
 };
 
-/*untested*/
+/* high mode not yet supported */
 static const char* canon_BJC_i9900_modeuses_inkjetHagaki[] = {
-  "600x600dpi_photohigh",
-  "600x600dpi_photod",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_BJC_i9900_modeuses_disc[] = {
+  "600x600dpi_photo3",
+  "600x600dpi_photodraft3",
   NULL
 };
 
@@ -2694,8 +2700,10 @@ static const canon_modeuse_t canon_BJC_i9900_modeuses[] = {
   { "PhotopaperMatte",	canon_BJC_i9900_modeuses_PPmatte, 0 },
   { "GlossyPaper",	canon_BJC_i9900_modeuses_PPgloss, 0 },
   { "Coated",		canon_BJC_i9900_modeuses_coated, 0 },
-  { "InkJetHagaki", 	canon_BJC_i9900_modeuses_inkjetHagaki, 0 },/*untested*/
-  { "Hagaki", 	        canon_BJC_i9900_modeuses_Hagaki, 0 },/*untested*/
+  { "InkJetHagaki", 	canon_BJC_i9900_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_BJC_i9900_modeuses_Hagaki, 0 },
+  { "DiscCompat", 	canon_BJC_i9900_modeuses_disc, 0 },
+  { "DiscOthers", 	canon_BJC_i9900_modeuses_disc, 0 },
   { "TShirt",		canon_BJC_i9900_modeuses_TShirt, 0 },
   { "Transparency",	canon_BJC_i9900_modeuses_Transparency, 0 },
   { "Envelope",		canon_BJC_i9900_modeuses_Hagaki, 0 },
