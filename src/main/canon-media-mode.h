@@ -2439,6 +2439,111 @@ static const canon_modeuse_t canon_BJC_i960_modeuses[] = {
 
 DECLARE_MODEUSES(canon_BJC_i960);
 
+/* ----------------------------------- Canon i990 ----------------------------------- */
+static const char* canon_BJC_i990_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high3", /*duplex*/
+  "600x600dpi",
+  "600x600dpi_draft",
+  "600x600dpi_draft2",
+  "600x600dpi_draftmono",/*mono*/
+  "600x600dpi_draftmono2",/*mono*/
+  NULL
+  };
+
+/* most photo modes use R ink and therefore unsupported */
+/* unsupported */
+static const char* canon_BJC_i990_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_BJC_i990_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/* unsupported */
+static const char* canon_BJC_i990_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  NULL
+};
+
+/* highest mode not yet supported */
+static const char* canon_BJC_i990_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh",/*stand-in*/
+  "600x600dpi_photodraft2",
+  NULL
+};
+
+static const char* canon_BJC_i990_modeuses_coated[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photomed",
+  "600x600dpi_photo",
+  NULL
+};
+
+/* high mode not yet supported */
+static const char* canon_BJC_i990_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_BJC_i990_modeuses_disc[] = {
+  "600x600dpi_photo3",
+  "600x600dpi_photodraft3",
+  NULL
+};
+
+static const char* canon_BJC_i990_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "600x600dpi_draft5",
+  "600x600dpi_draft4",
+  "600x600dpi_draftmono4",/*mono*/
+  "600x600dpi_draftmono5",/*mono*/
+  NULL
+};
+
+static const char* canon_BJC_i990_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_BJC_i990_modeuses_Transparency[] = {
+  "600x600dpi_std3",
+  "600x600dpi_draft3",
+  NULL
+};
+
+/* untested */
+static const char* canon_BJC_i990_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const canon_modeuse_t canon_BJC_i990_modeuses[] = {
+  { "Plain",            canon_BJC_i990_modeuses_plain, 0 },
+  { "GlossyPro",	canon_BJC_i990_modeuses_PPpro, 0 },
+  { "PhotopaperPlus",	canon_BJC_i990_modeuses_PPplus, 0 },
+  { "PhotopaperPlusDouble",canon_BJC_i990_modeuses_PPplus, 0 },/*untested*/
+  { "PhotopaperMatte",	canon_BJC_i990_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_BJC_i990_modeuses_PPgloss, 0 },
+  { "Coated",		canon_BJC_i990_modeuses_coated, 0 },
+  { "InkJetHagaki", 	canon_BJC_i990_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_BJC_i990_modeuses_Hagaki, 0 },
+  { "DiscCompat", 	canon_BJC_i990_modeuses_disc, 0 },
+  { "DiscOthers", 	canon_BJC_i990_modeuses_disc, 0 },
+  { "TShirt",		canon_BJC_i990_modeuses_TShirt, 0 },
+  { "Transparency",	canon_BJC_i990_modeuses_Transparency, 0 },
+  { "Envelope",		canon_BJC_i990_modeuses_Hagaki, 0 },
+  { "PhotopaperOther",	canon_BJC_i990_modeuses_PPother, 0 },/*untested*/
+};
+
+DECLARE_MODEUSES(canon_BJC_i990);
+
 /* ----------------------------------- Canon i6100  ----------------------------------- */
 static const char* canon_BJC_i6100_modeuses_plain[] = {
   "600x600dpi_high2",

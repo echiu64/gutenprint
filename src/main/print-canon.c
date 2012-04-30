@@ -2898,8 +2898,8 @@ canon_init_setDuplex(const stp_vars_t *v, const canon_privdata_t *init)
   if (!(init->caps->features & CANON_CAP_DUPLEX))
     return;
   if (strncmp(init->duplex_str, "Duplex", 6)) {
-    if ( !(strcmp(init->caps->name,"i860")) || !(strcmp(init->caps->name,"i865")) || !(strcmp(init->caps->name,"i950")) ) {
-      /* i860, i865, i950 use ESC ($ command even for simplex mode */
+    if ( !(strcmp(init->caps->name,"i860")) || !(strcmp(init->caps->name,"i865")) || !(strcmp(init->caps->name,"i950")) || !(strcmp(init->caps->name,"i960")) || !(strcmp(init->caps->name,"i990")) ) {
+      /* i860, i865, i950, i960, i990 use ESC ($ command even for simplex mode */
       canon_cmd(v,ESC28,0x24,9,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
       return;
     }
