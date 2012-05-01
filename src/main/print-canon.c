@@ -199,7 +199,7 @@ typedef struct
   double cd_outer_radius;
 } canon_privdata_t;
 
-static canon_mode_t* canon_check_current_mode(stp_vars_t *v);
+const canon_mode_t* canon_check_current_mode(stp_vars_t *v);
 
 static void canon_write_line(stp_vars_t *v);
 
@@ -543,7 +543,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 
 /* function checks printmode (specified by resolution) */
 /* and substitutes a mode if needed. NULL is returned for now */
-static canon_mode_t* canon_check_current_mode(stp_vars_t *v){
+const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 #if 0
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
   const char *quality = stp_get_string_parameter(v, "Quality");
@@ -554,9 +554,9 @@ static canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   const char *ink_type = stp_get_string_parameter(v, "InkType");
   const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
   const canon_cap_t * caps = canon_get_model_capabilities(v);
-  canon_mode_t* mode = NULL;
+  const canon_mode_t* mode = NULL;
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  canon_modeuse_t* muse = NULL;
+  const canon_modeuse_t* muse = NULL;
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   int i,j;
   int modecheck, quality, modefound;
@@ -3518,10 +3518,10 @@ canon_init_setESC_S(const stp_vars_t *v, const canon_privdata_t *init)
     return;
 
   /* iP90 defaults: based on non-photo media */
-  char arg_ESCS_01 = 0x01;
-  char arg_ESCS_04 = 0xff;
-  char arg_ESCS_09 = 0x1a;
-  char arg_ESCS_11 = 0x68;
+  unsigned char arg_ESCS_01 = 0x01;
+  unsigned char arg_ESCS_04 = 0xff;
+  unsigned char arg_ESCS_09 = 0x1a;
+  unsigned char arg_ESCS_11 = 0x68;
   
   /* hard-coded for different media, color and  quality settings */
   /* iP90 bytes 1,4,9 and 11 vary */
@@ -4376,7 +4376,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  canon_modeuse_t* muse = NULL;
+  const canon_modeuse_t* muse = NULL;
   /*  int monocheck = 0;
       int colcheck = 0; */
   int		y;		/* Looping vars */
