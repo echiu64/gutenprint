@@ -199,6 +199,8 @@ typedef struct
   double cd_outer_radius;
 } canon_privdata_t;
 
+static canon_mode_t* canon_check_current_mode(stp_vars_t *v);
+
 static void canon_write_line(stp_vars_t *v);
 
 static void canon_advance_paper(stp_vars_t *, int);
@@ -488,8 +490,60 @@ canon_source_type(const char *name, const canon_cap_t * caps)
 
 
 /* function returns the current set printmode (specified by resolution) */
-/* if no mode is set the NULL will be returned */
+/* if no mode is set the default mode will be returned */
 static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
+#if 0
+    const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+    const char *quality = stp_get_string_parameter(v, "Quality");
+#endif
+    const char *resolution = stp_get_string_parameter(v, "Resolution");
+    const canon_cap_t * caps = canon_get_model_capabilities(v);
+    const canon_mode_t* mode = NULL;
+    int i;
+
+    if(resolution){
+        for(i=0;i<caps->modelist->count;i++){
+            if(!strcmp(resolution,caps->modelist->modes[i].name)){
+                mode = &caps->modelist->modes[i];
+                break;
+            }
+        }
+    }
+
+    if(!mode)
+        mode = &caps->modelist->modes[caps->modelist->default_mode];
+
+#if 0
+    if(quality && strcmp(quality, "None") == 0)
+        quality = "Standard";
+
+    if(quality && !strcmp(quality,"Standard")){
+        return &caps->modelist->modes[caps->modelist->default_mode];
+    }
+#endif
+
+#if 0
+    /* only some modes can print to cd */
+    if(input_slot && !strcmp(input_slot,"CD") && !(mode->flags & MODE_FLAG_CD)){
+        for(i=0;i<caps->modelist->count;i++){
+            if(caps->modelist->modes[i].flags & MODE_FLAG_CD){
+                mode = &caps->modelist->modes[i];
+                break;
+            }
+        }
+    }
+#endif
+
+
+
+
+
+    return mode;
+}
+
+/* function checks printmode (specified by resolution) */
+/* and substitutes a mode if needed. NULL is returned for now */
+static canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 #if 0
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
   const char *quality = stp_get_string_parameter(v, "Quality");
@@ -4449,8 +4503,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
     privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
     /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
   if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_do_print routine (after default set)");
-    privdata.mode = canon_get_current_mode(v);
+    stp_eprintf(v,"Calling cannon_check_current_parameter from canon_do_print routine (after default set)");
+    privdata.mode = canon_check_current_mode(v);
   }
 
   /* --- completed all adjustments: options should be consistent --- */
