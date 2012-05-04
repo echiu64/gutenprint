@@ -509,9 +509,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
             }
         }
     }
-
+#if 0
     if(!mode)
         mode = &caps->modelist->modes[caps->modelist->default_mode];
+#endif
 
 #if 0
     if(quality && strcmp(quality, "None") == 0)
