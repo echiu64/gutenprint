@@ -502,7 +502,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     int i;
 
     if(resolution){
-        for(i=0;i<caps->modelist->count;i++){
+      for(i=0;i<caps->modelist->count;i++){
             if(!strcmp(resolution,caps->modelist->modes[i].name)){
                 mode = &caps->modelist->modes[i];
                 break;
@@ -535,10 +535,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     }
 #endif
 
-
-
-
-
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: current mode is '%s'\n",resolution);
+    if (ERRPRINT)
+      stp_eprintf(v,"current mode is '%s'\n",resolution);
+    
     return mode;
 }
 
@@ -898,7 +898,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
 	  mode=suitable_mode_monochrome(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -911,7 +911,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -932,7 +932,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_monochrome(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -969,7 +969,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -982,7 +982,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1003,7 +1003,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1016,7 +1016,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1046,7 +1046,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	     loop through modes in muse list searching for a matching inkset, comparing quality
 	  */
 	  mode=suitable_mode_photo(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1059,7 +1059,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1080,7 +1080,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_photo(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1093,7 +1093,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1258,7 +1258,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
 	  mode=suitable_mode_monochrome(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1271,7 +1271,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1292,7 +1292,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_monochrome(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1305,7 +1305,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1333,7 +1333,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1346,7 +1346,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1367,7 +1367,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1381,7 +1381,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1411,7 +1411,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	     loop through modes in muse list searching for a matching inkset, comparing quality
 	  */
 	  mode=suitable_mode_photo(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1424,7 +1424,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1445,7 +1445,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_photo(v,muse,caps,quality,duplex_mode);
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;
@@ -1458,7 +1458,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
-	  if (mode==NULL)
+	  if (!mode)
 	    modefound=0;
 	  else
 	    modefound=1;

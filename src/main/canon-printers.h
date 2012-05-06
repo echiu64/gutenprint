@@ -390,8 +390,8 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon S200x *//* heads: BC-24 */
     "S200", 3,
-    618, 936,       /* 8.58" x 13 " */
-    10, 10, 9, 20,
+    INCH(19/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 20,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD1 | CANON_CAP_rr,0x61,
     2,0,
@@ -406,8 +406,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC S300 */
     "S300", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,
     2,0,
@@ -422,8 +422,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC S330 */
     "S330", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,
     2,0,
@@ -438,8 +438,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon S500 */
     "S500", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_p,0,
     2,0,
@@ -454,8 +454,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon S520 */
     "S520", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,
     2,0,
@@ -486,8 +486,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC S750 */
     "S750", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px,0,
     2,0,
@@ -518,8 +518,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC S820 */
     "S820", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,
     2,0,
@@ -534,8 +534,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC S830D */
     "S830", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,
     2,0,
@@ -550,8 +550,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC S900 */
     "S900", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(17/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 15,  /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_rr,0,
     2,0,
@@ -582,8 +582,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon  BJC 85  *//* heads: BC-20 BC-21 BC-22 */
     "85", 1,
-    INCH(19/2), INCH(14),
-    11, 9, 10, 18, /* unconfirmed */
+    INCH(19/2), INCH(23),      /* from MacOSX driver */
+    10, 10, 9, 20, /* confirmed */
     &canon_default_slotlist,
     CANON_CAP_STD0 | CANON_CAP_a,0,
     2,0,
@@ -1147,8 +1147,7 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /*  mini220 */
     "PIXMA mini220", 3,
-    INCH(4), INCH(8), /* US 4" x 8" */
-    /*-6, -6, -6, -15,*/
+    INCH(4), INCH(8), /* US 4" x 8" */       /* from MacOSX driver */
     10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
@@ -1164,8 +1163,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /*  mini320 */
     "PIXMA mini320", 3,
-    INCH(4), INCH(8), /* US 4" x 8" */
-    /*-6, -6, -6, -15,*/
+    INCH(5), INCH(8),       /* from MacOSX driver */
     10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
     &canon_MULTIPASS_MP250_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
@@ -1187,9 +1185,8 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon DS700 */
     "SELPHY DS700", 3,
-    INCH(4), INCH(6), /* US 4" x 6" */
-    /*-6, -6, -6, -15,*/
-    10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    INCH(4), INCH(6), /* US 4" x 6" */       /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     2,2, /* ESC (l and (P command lengths */
@@ -1204,9 +1201,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon DS810 */
     "SELPHY DS810", 3,
-    INCH(4), INCH(8), /* US 4" x 8" */
-    /*-6, -6, -6, -15,*/
-    10, 10, 9, 15, /* for hagaki: 3.4mm L/R, 3mm top, 5mm bottom */
+    INCH(4), INCH(8), /* US 4" x 8" */       /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     2,4, /* ESC (l and (P command lengths */
@@ -1293,7 +1289,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA iP90, iP90v */
     "PIXMA iP90", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */        /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S|CANON_CAP_BORDERLESS,0,
@@ -1309,7 +1305,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA iP100 */
     "PIXMA iP100", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S|CANON_CAP_BORDERLESS,0,
@@ -2130,7 +2126,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA Pro9000 */
     "PIXMA Pro9000", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(14), INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
     CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P|CANON_CAP_BORDERLESS,0x64,
@@ -2146,7 +2142,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA Pro9000 Mk.II */
     "PIXMA Pro9002", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(14), 1917,       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
     CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P|CANON_CAP_BORDERLESS,0x64,
@@ -2162,7 +2158,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA Pro9500 */
     "PIXMA Pro9500", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(14), INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
     CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P|CANON_CAP_BORDERLESS,0x64,
@@ -2178,7 +2174,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA Pro9500 Mk.II */
     "PIXMA Pro9502", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(14), 1917,       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_Pro9000_slotlist,
     CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_px|CANON_CAP_P|CANON_CAP_BORDERLESS,0x64,
