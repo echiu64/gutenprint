@@ -1820,7 +1820,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA iX4000 --- like iX5000 but includes Transparency and ud1 mode is different */
     "PIXMA iX4000", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    933, INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
@@ -1836,7 +1836,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA iX5000 */
     "PIXMA iX5000", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    933, INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
@@ -1852,7 +1852,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA iX6500 --- with XML */
     "PIXMA iX6500", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    933, 1917,       /* max paper width and height */       /* from linux v3.50 driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP250_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -1868,7 +1868,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA iX7000 --- with XML */
     "PIXMA iX7000", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    933, INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iX7000_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_DUPLEX|CANON_CAP_I|CANON_CAP_r|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0x64,
