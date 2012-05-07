@@ -2062,7 +2062,7 @@ static const canon_cap_t canon_model_capabilities[] =
     /* US model: control_cmd_iP2700 */
     /* Japanese model: control_BJC_i550, so chose this as base (more commands) */
     "PIXMA MP700", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(17/2), INCH(23),       /* max paper width and height */ /* from user manual */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
@@ -2078,7 +2078,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* PIXMA MP710/MP740 --- heavily modified from MP700/MP730 */
     "PIXMA MP710", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(17/2), INCH(23),       /* max paper width and height */ /* from user manual */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP710_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
@@ -2334,7 +2334,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MP360/370/375R/390 */
     "PIXMA MP360", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(17/2), INCH(23),       /* max paper width and height */ /* from user manual */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
