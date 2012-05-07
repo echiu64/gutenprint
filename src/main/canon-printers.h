@@ -868,8 +868,8 @@ static const canon_cap_t canon_model_capabilities[] =
   { /* Canon BJC i50 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     /* 50i sold outside of Japan as the i70, but we need i in front for the name */
     "i50", 3,
-    842, INCH(17),
-    10, 10, 10, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15,/* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_I|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -884,8 +884,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i80 *//* heads: BC-60/BC-61 BC-60/BC-62   ??????? */
     "i80", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     2,2, /* ESC (l and (P command lengths */
@@ -901,8 +901,8 @@ static const canon_cap_t canon_model_capabilities[] =
 #if 0
   { /* Canon BJC i250 */ /* does not conform to any current model, commands not known yet */
     "i250", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -917,8 +917,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i320 */ /* does not conform to any current model, commands not known yet */
     "i320", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -934,8 +934,8 @@ static const canon_cap_t canon_model_capabilities[] =
 #endif
   { /* Canon BJC i450 */
     "i450", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -950,8 +950,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i455*/
     "i455", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     2,4, /* ESC (l and (P command lengths */
@@ -966,8 +966,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i550 */
     "i550", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -982,8 +982,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i560 */
     "i560", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_BORDERLESS,0,
     3,2, /* ESC (l and (P command lengths */
@@ -998,8 +998,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i850 */
     "i850", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -1014,8 +1014,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i860 */
     "i860", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_BJC_i860_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
@@ -1030,8 +1030,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i900D */
     "i900", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
@@ -1046,8 +1046,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i950 */
     "i950", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -1062,8 +1062,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i960 */
     "i960", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_BJC_i860_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
@@ -1078,8 +1078,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i990 */
     "i990", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    INCH(19/2), INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_BJC_i860_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
@@ -1094,8 +1094,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i6100 */
     "i6100", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    933, INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -1110,8 +1110,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i9100 */
     "i9100", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    933, INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP150_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
     2,0,
@@ -1126,8 +1126,8 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon BJC i9900 */
     "i9900", 3,
-    842, INCH(17),
-    10, 10, 9, 15,
+    933, INCH(23), /* from MacOSX driver */
+    10, 10, 9, 15, /* confirmed */
     &canon_MULTIPASS_MP900_slotlist,
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_M|CANON_CAP_BORDERLESS,0,/* ESC (M 0x0 0x0 0x0 */
     3,2, /* ESC (l and (P command lengths */
