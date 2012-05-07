@@ -2655,7 +2655,7 @@ static const canon_cap_t canon_model_capabilities[] =
   /* MX series */
   { /* Canon MULTIPASS MX300 --- MX310 is the same */
     "PIXMA MX300", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
@@ -2671,7 +2671,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX330 */
     "PIXMA MX330", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
@@ -2687,7 +2687,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX340 --- with XML*/
     "PIXMA MX340", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.30 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2703,7 +2703,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX360 -- with XML */
     "PIXMA MX360", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.50 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP250_slotlist, /* only rear tray also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2719,7 +2719,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX370 --- with XML */
     "PIXMA MX370", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.70 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG2100_slotlist, /* only front tray also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2735,7 +2735,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX420 --- with XML */
     "PIXMA MX420", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.50 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP250_slotlist, /* only rear tray also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2751,7 +2751,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX510 --- with XML */
     "PIXMA MX510", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.70 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG2100_slotlist, /* only front tray also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2767,7 +2767,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX700 */
     "PIXMA MX700", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP520_slotlist, /* front, rear, button, and front/plain-only */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
@@ -2783,7 +2783,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX710 --- with XML */
     "PIXMA MX710", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */ /* from linux driver v3.70 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG5100_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2799,7 +2799,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX850 */
     "PIXMA MX850", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MX850_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_BORDERLESS,0x64,
@@ -2815,7 +2815,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX860 */
     "PIXMA MX860", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG5100_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_BORDERLESS,0x64,
@@ -2831,7 +2831,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX870 --- with XML */
     "PIXMA MX870", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.30 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG5100_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0x64,
@@ -2847,7 +2847,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX880 --- with XML */
     "PIXMA MX880", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), 1917,       /* max paper width and height */ /* from linux driver v3.50 */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG5100_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
@@ -2863,7 +2863,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MX7600 */
     "PIXMA MX7600", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(19/2), INCH(23),       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MX7600_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_BORDERLESS,0x64,
