@@ -358,7 +358,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA MP990 --- uses XML */
     "PIXMA MP990", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(17/2), 1917,       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_iP4600_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0x64,
@@ -2414,7 +2414,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon MULTIPASS MP493 --- with XML */
     "PIXMA MP493", 3,          /*model, model_id*/
-    842, INCH(17),       /* max paper width and height */
+    INCH(17/2), 1917,       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP250_slotlist, /* only rear tray also uses CAP_T */
     CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_P|CANON_CAP_T|CANON_CAP_I|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
