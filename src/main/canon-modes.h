@@ -1530,7 +1530,7 @@ static const canon_mode_t canon_PIXMA_iP6000_modes[] = {
 };
 DECLARE_MODES(canon_PIXMA_iP6000,2);
 
-/* iP6210D, iP6220D, iP6310D */
+/* iP6210D, iP6220D, iP6310D, iP6320D */
 static const canon_mode_t canon_PIXMA_iP6210_modes[] = {
   /* both cartridges */
   /* plain modes */
