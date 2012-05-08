@@ -839,7 +839,7 @@ int main(int argc,char* argv[]){
 	char* filename_in=NULL,*filename_out=NULL;
 	FILE *in,*out=NULL;
 	int i;
-	printf("pixma_parse - parser for Canon BJL printjobs (c) 2005-2007 Sascha Sommer <saschasommer@freenet.de>\nPlease note parse output now goes to stderr.");
+	printf("pixma_parse - parser for Canon BJL printjobs (c) 2005-2007 Sascha Sommer <saschasommer@freenet.de>\nPlease note parse output now goes to stderr.\n");
 
 	/* parse args */
 	for(i=1;i<argc;i++){
