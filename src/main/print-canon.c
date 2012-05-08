@@ -441,6 +441,7 @@ static const char* canon_families[] = {
  "PIXMA MX",
  "SELPHY DS",
  "PIXMA mini",
+ "PIXMA E",
 };
 
 /* canon model ids look like the following
