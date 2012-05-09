@@ -468,9 +468,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA i250
        Canon PIXMA i320
        Canon PIXMA i350
-       Canon PIXMA iP90
-       Canon PIXMA iP90v *1
-       Canon PIXMA iP100 *2
        Canon PIXMA iP1000
        Canon PIXMA iP1200
        Canon PIXMA iP1300
@@ -487,23 +484,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MP55
        Canon PIXMA MP110
        Canon PIXMA MP130
-       Canon PIXMA PRO-1 *3
-       Canon SELPHY CP600 *4
-       Canon SELPHY CP720 *4
-       Canon SELPHY CP780 *4
-       Canon SELPHY CP800 *4
-       Canon SELPHY ES1 *4
-       Canon SELPHY ES2 *4
-       Canon SELPHY ES3 *4
-       Canon SELPHY ES20 *4
-       Canon SELPHY ES30 *4
-       Canon SELPHY ES40 *4
+       Canon PIXMA PRO-1 *1
+       Canon SELPHY CP600 *2
+       Canon SELPHY CP720 *2
+       Canon SELPHY CP780 *2
+       Canon SELPHY CP800 *2
+       Canon SELPHY ES1 *2
+       Canon SELPHY ES2 *2
+       Canon SELPHY ES3 *2
+       Canon SELPHY ES20 *2
+       Canon SELPHY ES30 *2
+       Canon SELPHY ES40 *2
 
-       *1: data format partially understood (WIP)
-       *2: data format partially understood (WIP)
-       *3: protocol is supported but inks used are not yet supported
+       *1: protocol is supported but inks used are not yet supported
           (WIP)
-       *4: requires special communication protocol
+       *2: requires special communication protocol
 
   8) Some Canon BJC series printers using photo cartridge have
      printing modes added that will select this cartridge (BJC 3000,
@@ -520,12 +515,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   12) Canon printer modes for most models are now chosen, or if need
       be substituted, based on the media for which these modes are
-      used in the Windows driver. Inktype is automatically adjusted.
+      used in the Windows driver. Mode substitution required under
+      cartridge selection and duplex selection is supported. Inktype
+      is automatically adjusted.
 
   13) Added support for 8-bit inks to Canon backend, and modes using
       them.
 
-  14) Adjusted top margins of most Canon printers.
+  14) Adjusted margins and page sizes of Canon printers.
 
   15) Canon Japan printers of the *i series (e.g., 50i) have been
       matched with non-Japan i* series (e.g., i70) printers, and

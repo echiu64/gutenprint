@@ -1297,7 +1297,7 @@ static const canon_cap_t canon_model_capabilities[] =
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP90_modelist,
     &canon_PIXMA_iP90_paperlist,
-    &canon_PIXMA_iP90_modeuselist,/*not created yet*/
+    &canon_PIXMA_iP90_modeuselist,
     NULL,
     NULL,
     NULL,
@@ -1313,7 +1313,7 @@ static const canon_cap_t canon_model_capabilities[] =
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP100_modelist,
     &canon_PIXMA_iP100_paperlist,
-    &canon_PIXMA_iP100_modeuselist,/*not created yet*/
+    &canon_PIXMA_iP100_modeuselist,
     NULL,
     NULL,
     NULL,
