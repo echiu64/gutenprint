@@ -2817,10 +2817,22 @@ canon_init_setESC_M(const stp_vars_t *v, const canon_privdata_t *init)
 static void
 canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 {
+  unsigned char arg_70_1,arg_70_2,arg_70_3,arg_70_4;
+
+  int border_left,border_right,border_top,border_bottom;
+  int border_left2,border_top2;
+#if 0
+  int border_right2;
+#endif
+  int border_bottom2;
+  int area_right,area_top;
+
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
    * Is is the printable width or the right border?
    */
+
+  int unit = 600;
   int printable_width=  (init->page_width + 1)*5/6;
   int printable_length= (init->page_height + 1)*5/6;
 
@@ -2842,25 +2854,24 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
       printable_length = 0;
     }
 
-  unsigned char arg_70_1= (printable_length >> 8) & 0xff;
-  unsigned char arg_70_2= (printable_length) & 0xff;
-  unsigned char arg_70_3= (printable_width >> 8) & 0xff;
-  unsigned char arg_70_4= (printable_width) & 0xff;
-
+  arg_70_1= (printable_length >> 8) & 0xff;
+  arg_70_2= (printable_length) & 0xff;
+  arg_70_3= (printable_width >> 8) & 0xff;
+  arg_70_4= (printable_width) & 0xff;
 
   if (!(init->caps->features & CANON_CAP_px) && !(init->caps->features & CANON_CAP_p))
 	return;
 
   if ((init->caps->features & CANON_CAP_px) ) {
+    /* workaround for CD writing that uses CANON_CAP_px --- fix with capabilities */
     if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
       {
-	int unit = 600;
 
 	/* original borders */
-	int border_left=init->caps->border_left;
-	int border_right=init->caps->border_right;
-	int border_top=init->caps->border_top;
-	int border_bottom=init->caps->border_bottom;
+	border_left=init->caps->border_left;
+	border_right=init->caps->border_right;
+	border_top=init->caps->border_top;
+	border_bottom=init->caps->border_bottom;
 
 	if (print_cd) {
 	  border_top=9;
@@ -2868,25 +2879,28 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	}
 
 	/* modified borders */
-	int border_left2=border_left;
-	int border_right2=border_right;
-	int border_top2=border_top;
-	int border_bottom2=border_bottom;
+	border_left2=border_left;
+	border_top2=border_top;
+#if 0
+	border_right2=border_right;
+#endif
+	border_bottom2=border_bottom;
 
-	int area_right = border_left2 * unit / 72;
-	int area_top = border_top2 * unit / 72;
+	area_right = border_left2 * unit / 72;
+	area_top = border_top2 * unit / 72;
 
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
-	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
-	  {
-	    /* set for borderless */
-	    border_left2=-8; /* -8 mini series -6 */
-	    border_right2=-8; /* -8 */
-	    border_top2=-6; /* -6 standard */
-	    border_bottom2=-15; /* -15 standard */
-	    area_right = border_left2 * unit / 72;
-	    area_top = border_top2 * unit / 72;
-	  }
+	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
+	  /* set for borderless */
+	  border_left2=-8; /* -8 mini series -6 */
+#if 0
+	  border_right2=-8; /* -8 */
+#endif
+	  border_top2=-6; /* -6 standard */
+	  border_bottom2=-15; /* -15 standard */
+	  area_right = border_left2 * unit / 72;
+	  area_top = border_top2 * unit / 72;
+	}
 
 	if (ERRPRINT) {
 	  stp_eprintf(v,"setPageMargins2: init->page_height = %d\n",init->page_height);
@@ -3130,6 +3144,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 static void
 canon_init_setESC_S(const stp_vars_t *v, const canon_privdata_t *init)
 {
+  unsigned char arg_ESCS_01,arg_ESCS_04,arg_ESCS_09,arg_ESCS_11;
+
   if (!(init->caps->features & CANON_CAP_S))
     return;
 
@@ -3137,10 +3153,10 @@ canon_init_setESC_S(const stp_vars_t *v, const canon_privdata_t *init)
     return;
 
   /* iP90 defaults: based on non-photo media */
-  unsigned char arg_ESCS_01 = 0x01;
-  unsigned char arg_ESCS_04 = 0xff;
-  unsigned char arg_ESCS_09 = 0x1a;
-  unsigned char arg_ESCS_11 = 0x68;
+  arg_ESCS_01 = 0x01;
+  arg_ESCS_04 = 0xff;
+  arg_ESCS_09 = 0x1a;
+  arg_ESCS_11 = 0x68;
   
   /* hard-coded for different media, color and  quality settings */
   /* iP90 bytes 1,4,9 and 11 vary */
@@ -3198,10 +3214,13 @@ canon_init_setESC_S(const stp_vars_t *v, const canon_privdata_t *init)
 static void
 canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
 {
+  const char *ink_set;
+
   if (!(init->caps->features & CANON_CAP_T))
     return;
 
-  const char *ink_set = stp_get_string_parameter(v, "InkSet");
+  ink_set = stp_get_string_parameter(v, "InkSet");
+
   if (ink_set && !(strcmp(ink_set,"Both"))) {
     if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
       canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
@@ -3995,7 +4014,9 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   int           page_number = stp_get_int_parameter(v, "PageNumber");
   const canon_cap_t * caps= canon_get_model_capabilities(v);
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  const canon_modeuse_t* muse = NULL;
+#if 0
+  const canon_modeuse_t* muse;
+#endif
   /*  int monocheck = 0;
       int colcheck = 0; */
   int		y;		/* Looping vars */
@@ -4062,11 +4083,13 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* scroll through modeuse list to find media */
   for(i=0;i<mlist->count;i++){
     if(!strcmp(privdata.pt->name,mlist->modeuses[i].name)){
+#if 0
       muse = &mlist->modeuses[i];
+#endif
       break;
     }
   }
-  
+
   if ( !strcmp(stp_get_string_parameter(v, "InkSet"),"Black")) {
     /* check if there is any mode for that media with K-only inktype */
     /* if not, change it to "Both" */
