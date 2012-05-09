@@ -9276,20 +9276,20 @@ static const char* canon_MULTIPASS_E500_modeuses_PPother[] = {
 };
 
 static const canon_modeuse_t canon_MULTIPASS_E500_modeuses[] = {
-  { "Plain",            canon_MULTIPASS_E500_modeuses_plain, 0 },
-  { "PhotoPlusGloss2",  canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "PhotoProPlat",     canon_MULTIPASS_E500_modeuses_PPproPlat, 0 },
-  { "PhotoProSemiGloss",canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "GlossyPaper",	canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "PhotopaperMatte",	canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "Coated",		canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "HagakiA", 	        canon_MULTIPASS_E500_modeuses_Hagaki, 0 },
-  { "InkJetHagaki", 	canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "CanonPhotoHagakiK",canon_MULTIPASS_E500_modeuses_PPplusG2, 0 },
-  { "Hagaki", 	        canon_MULTIPASS_E500_modeuses_Hagaki, 0 },
-  { "TShirt",		canon_MULTIPASS_E500_modeuses_TShirt, 0 },
-  { "Envelope",		canon_MULTIPASS_E500_modeuses_Hagaki, 0 },
-  { "PhotopaperOther",	canon_MULTIPASS_E500_modeuses_PPother, 0 },
+  { "Plain",            canon_MULTIPASS_E500_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",     canon_MULTIPASS_E500_modeuses_PPproPlat, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_MULTIPASS_E500_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "InkJetHagaki", 	canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_MULTIPASS_E500_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_E500_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_MULTIPASS_E500_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_E500_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotopaperOther",	canon_MULTIPASS_E500_modeuses_PPother, INKSET_COLOR_SUPPORT },
 };
 
 DECLARE_MODEUSES(canon_MULTIPASS_E500);
