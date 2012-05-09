@@ -8593,19 +8593,19 @@ static const char* canon_MULTIPASS_MX370_modeuses_PPother[] = {
 };
 
 static const canon_modeuse_t canon_MULTIPASS_MX370_modeuses[] = {
-  { "Plain",            canon_MULTIPASS_MX370_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "Plain",            canon_MULTIPASS_MX370_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "PhotoPlusGloss2",  canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "PhotoProPlat",	canon_MULTIPASS_MX370_modeuses_PPproPlat, INKSET_COLOR_SUPPORT },
   { "PhotoProSemiGloss",canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "PhotopaperMatte",	canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "GlossyPaper",	canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "Coated",		canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "HagakiA", 	        canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "InkJetHagaki", 	canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "CanonPhotoHagakiK",canon_MULTIPASS_MX370_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "Hagaki", 	        canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "TShirt",		canon_MULTIPASS_MX370_modeuses_TShirt, INKSET_COLOR_SUPPORT },
-  { "Envelope",		canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MX370_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "PhotopaperOther",	canon_MULTIPASS_MX370_modeuses_PPother, INKSET_COLOR_SUPPORT },
 };
 
@@ -8737,12 +8737,12 @@ static const canon_modeuse_t canon_MULTIPASS_MX510_modeuses[] = {
   { "PhotopaperMatte",	canon_MULTIPASS_MX510_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "GlossyPaper",	canon_MULTIPASS_MX510_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "Coated",		canon_MULTIPASS_MX510_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "HagakiA", 	        canon_MULTIPASS_MX510_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_MULTIPASS_MX510_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "InkJetHagaki", 	canon_MULTIPASS_MX510_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "CanonPhotoHagakiK",canon_MULTIPASS_MX510_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "Hagaki", 	        canon_MULTIPASS_MX510_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MX510_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "TShirt",		canon_MULTIPASS_MX510_modeuses_TShirt, INKSET_COLOR_SUPPORT },
-  { "Envelope",		canon_MULTIPASS_MX510_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MX510_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "PhotopaperOther",	canon_MULTIPASS_MX510_modeuses_PPother, INKSET_COLOR_SUPPORT },
 };
 
