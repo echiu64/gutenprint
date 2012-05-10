@@ -2245,7 +2245,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       if (caps->features & CANON_CAP_T) {
 	stp_string_list_add_string
 	  (description->bounds.str, "Both", _("Both"));
-	stp_string_list_add_string
+	stp_string_list_add_string /* iP90, iP100, iP6210 do not have black-only option */
 	  (description->bounds.str, "Black", _("Black"));
 	stp_string_list_add_string
 	  (description->bounds.str, "Color", _("Color"));
@@ -3222,11 +3222,8 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
   ink_set = stp_get_string_parameter(v, "InkSet");
 
   if (ink_set && !(strcmp(ink_set,"Both"))) {
-    if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP100")) ) {
       canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
-      /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
-      /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
-      /* both above set : AND of bytes above */
     } 
     else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) ) {
       canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
@@ -3238,11 +3235,8 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
     }
   }
   else if (ink_set && !(strcmp(ink_set,"Black"))) {
-    if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
-      canon_cmd(v,ESC28,0x54,3,0x02,0x01,0x01); /* default for iP90, iP100 */
-      /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
-      /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
-      /* both above set : AND of bytes above */
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP100")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
     } 
     else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) ) {
 	canon_cmd(v,ESC28,0x54,3,0x03,0x06,0x06); /* default for iP6210D, iP6220D, iP6310D */
@@ -3255,12 +3249,11 @@ canon_init_setCartridge(const stp_vars_t *v, const canon_privdata_t *init)
     }
   }
   else if (ink_set && !(strcmp(ink_set,"Color"))) {
-    if ( !(strcmp(init->caps->name,"PIXMA iP90")) ) {
-      canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x00); /* default for iP90, iP100 */
-      /* black save     : 2 1 0 for selected modes, rest 2 0 0 */
-      /* composite black: 2 0 1 for selected modes, rest 2 0 0 */
-      /* both blacks    : 2 1 1 for selected modes, some 2 0 1, rest 2 0 0  */
-      /* workaround since maybe no color option on these printers */
+    if ( !(strcmp(init->caps->name,"PIXMA iP90")) || !(strcmp(init->caps->name,"PIXMA iP100")) ) {
+      canon_cmd(v,ESC28,0x54,3,0x02,0x00,0x01); /* composite for iP90, iP100 */
+      /* black save     : 2 1 0 for selected plain (600dpi std) modes, rest remain 2 0 0 */
+      /* composite black: 2 0 1 for selected plain (600dpi std & draft) modes, rest remain 2 0 0 */
+      /* both above set : AND of bytes above */
     } 
     else if ( !(strcmp(init->caps->name,"PIXMA iP6210")) ) {
       canon_cmd(v,ESC28,0x54,3,0x03,0x01,0x01); /* default for iP6210D, iP6220D, iP6310D */
