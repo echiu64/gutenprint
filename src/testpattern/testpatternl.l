@@ -35,6 +35,8 @@
 
 int mylineno = 1;
 
+extern YYSTYPE yylval;
+
 static char *
 c_strstrip(char *s)
 {

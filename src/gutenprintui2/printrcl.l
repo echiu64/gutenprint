@@ -39,6 +39,8 @@
 
 int mylineno = 1;
 
+extern YYSTYPE yylval;
+
 #define DBG(x)						\
 do							\
   {							\
