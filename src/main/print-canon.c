@@ -2354,98 +2354,106 @@ canon_parameters(const stp_vars_t *v, const char *name,
 static void
 internal_imageable_area(const stp_vars_t *v,   /* I */
 			int  use_paper_margins,
+			int use_maximum_area,
 			int  *left,	/* O - Left position in points */
 			int  *right,	/* O - Right position in points */
 			int  *bottom,	/* O - Bottom position in points */
 			int  *top)	/* O - Top position in points */
 {
   int width, length;			/* Size of page */
+  int cd = 0;                           /* CD selected */
+  const char *media_size = stp_get_string_parameter(v, "PageSize");
   int left_margin = 0;
   int right_margin = 0;
   int bottom_margin = 0;
   int top_margin = 0;
-  int cd = 0;
-
-  const canon_cap_t * caps= canon_get_model_capabilities(v);
-  const char *media_size = stp_get_string_parameter(v, "PageSize");
   const stp_papersize_t *pt = NULL;
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+
+  const canon_cap_t * caps= canon_get_model_capabilities(v);
+
+  if (media_size)
+    pt = stp_get_papersize_by_name(media_size);
 
   if(input_slot && !strcmp(input_slot,"CD"))
     cd = 1;
 
-  if (media_size && use_paper_margins)
-    pt = stp_get_papersize_by_name(media_size);
-
   stp_default_media_size(v, &width, &length);
-  if (pt)
-    {
+  if (cd) {
+    /* ignore printer margins for the cd print, margins get adjusted in do_print for now */
+    if (pt) {
+      /* move code from do_print here */
+    }
+    else {
+      /* move code from do_print here */
+    }
+  }
+  /* non-CD media */
+  else {
+    if (pt && use_paper_margins) {
       left_margin = pt->left;
       right_margin = pt->right;
       bottom_margin = pt->bottom;
       top_margin = pt->top;
     }
-  /* ignore printer margins for the cd print, margins get adjusted in do_print */
-  if(!cd){
+    /* limit to printer capabilities---without fullbleed */
     left_margin = MAX(left_margin, caps->border_left);
     right_margin = MAX(right_margin, caps->border_right);
     top_margin = MAX(top_margin, caps->border_top);
     bottom_margin = MAX(bottom_margin, caps->border_bottom);
+  }
 
+  /* temporarily limit to non-CD media until page size code moved here from do_print */
+  /* Note: written beloe code to handle CD case as well */
+  if(!cd){
     if (ERRPRINT) {
       stp_eprintf(v,"internal_imageable_area: about to enter the borderless condition block\n");
       stp_eprintf(v,"internal_imageable_area: is borderless available? %016lx\n",caps->features & CANON_CAP_BORDERLESS);
       stp_eprintf(v,"internal_imageable_area: is borderless selected? %d\n",stp_get_boolean_parameter(v, "FullBleed"));
     }
-
-
+    
     if ( (caps->features & CANON_CAP_BORDERLESS) &&
-	 stp_get_boolean_parameter(v, "FullBleed") )
-      /* (use_maximum_area ||
-	 stp_get_boolean_parameter(v, "FullBleed")) )*/
-      {
+	 (use_maximum_area || (!cd && stp_get_boolean_parameter(v, "FullBleed")))) {
+      
+      if (ERRPRINT)
+	stp_eprintf(v,"internal_imageable_area: entered borderless condition\n");
+      
+      if (pt) {
+	
 	if (ERRPRINT)
-	  stp_eprintf(v,"internal_imageable_area: entered borderless condition\n");
-	if (pt)
-	  {
-	    if (ERRPRINT)
-	      stp_eprintf(v,"internal_imageable_area: entered pt condition\n");
+	  stp_eprintf(v,"internal_imageable_area: entered pt condition\n");
+	
+	if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 && pt->bottom <= 0) {
+	  
+	  if (ERRPRINT)
+	    stp_eprintf(v,"internal_imageable_area: enetered margin<=0 condition\n");
+	  
+	  if (use_paper_margins) {
+	    unsigned width_limit = caps->max_width;
+	    left_margin = 0;
+	    right_margin = 0;
+	    if (width - right_margin - 3 > width_limit)
+	      right_margin = width - width_limit - 3;
+	    top_margin = -7;
+	    bottom_margin = -7;
 	    
-	    if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 &&
-		pt->bottom <= 0)
-	      {
-		if (ERRPRINT)
-		  stp_eprintf(v,"internal_imageable_area: enetered margin<=0 condition\n");
-		if (use_paper_margins) 
-		  {
- /* debug: remove borderless option */
-		    /*
-		    int width_limit = caps->max_width;
-		    left_margin = 0;
-		    right_margin = 0;
-		    if (width - right_margin - 3 > width_limit)
-		      right_margin = width - width_limit - 3;
-		    top_margin = 0;
-		    bottom_margin = 0;*/
+	    if (ERRPRINT)
+	      stp_eprintf(v,"internal_imageable_area: use_paper_margins so set margins all to -7\n");
 
-		    if (ERRPRINT)
-		      stp_eprintf(v,"internal_imageable_area: use_paper_margins so set margins all to -7\n");
-		  }
-		else
-		  { /* not sure what this means exactly */
- /* debug: remove borderless option */
-		    /*
-		    left_margin = 0;
-		    right_margin = 0;
-		    top_margin = 0;
-		    bottom_margin = 0;*/
-
-		    if (ERRPRINT)
-		      stp_eprintf(v,"internal_imageable_area: does not use paper margins so set margins all to 0\n");
-		  }
-	      }
 	  }
+	  else {
+	    left_margin = 0;
+	    right_margin = 0;
+	    top_margin = 0;
+	    bottom_margin = 0;
+	    
+	    if (ERRPRINT)
+	      stp_eprintf(v,"internal_imageable_area: does not use paper margins so set margins all to 0\n");
+
+	  }
+	}
       }
+    }
   }
 
   if (ERRPRINT) 
@@ -2478,7 +2486,17 @@ canon_imageable_area(const stp_vars_t *v,   /* I */
                      int  *bottom,	/* O - Bottom position in points */
                      int  *top)		/* O - Top position in points */
 {
-  internal_imageable_area(v, 1, left, right, bottom, top);
+  internal_imageable_area(v, 1, 0, left, right, bottom, top);
+}
+
+static void
+canon_maximum_imageable_area(const stp_vars_t *v,   /* I */
+                     int  *left,	/* O - Left position in points */
+                     int  *right,	/* O - Right position in points */
+                     int  *bottom,	/* O - Bottom position in points */
+                     int  *top)		/* O - Top position in points */
+{
+  internal_imageable_area(v, 1, 1, left, right, bottom, top);
 }
 
 static void
@@ -2891,13 +2909,12 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
-	  /* set for borderless */
-	  border_left2=-8; /* -8 mini series -6 */
+	  border_left2=0; /* -8 mini series -6 */
 #if 0
-	  border_right2=-8; /* -8 */
+	  border_right2=0; /* -8 */
 #endif
-	  border_top2=-6; /* -6 standard */
-	  border_bottom2=-15; /* -15 standard */
+	  border_top2=-7; /* -6 standard */
+	  border_bottom2=-7; /* -15 standard */
 	  area_right = border_left2 * unit / 72;
 	  area_top = border_top2 * unit / 72;
 	}
@@ -3889,16 +3906,17 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
 
   privdata->top = stp_get_top(v);
   privdata->left = stp_get_left(v);
-  privdata->out_width = stp_get_width(v);
+  privdata->out_width = stp_get_width(v); /* check Epson: page_true_width */
+  privdata->out_height = stp_get_height(v); /* check Epson: page_true_height */
+
   stp_deprintf(STP_DBG_CANON,"stp_get_width: privdata->out_width is %i\n",privdata->out_width);
+  stp_deprintf(STP_DBG_CANON,"stp_get_height: privdata->out_height is %i\n",privdata->out_height);
+
   /* Don't use full bleed mode if the paper itself has a margin */
-  /* Correct this later */
-  /* if (privdata->left > 0 || privdata->top > 0)
-     stp_set_boolean_parameter(v, "FullBleed", 0); */
+  if (privdata->left > 0 || privdata->top > 0)
+    stp_set_boolean_parameter(v, "FullBleed", 0);
 
-  privdata->out_height = stp_get_height(v);
-
-  internal_imageable_area(v, 0, &page_left, &page_right,
+  internal_imageable_area(v, 0, 0, &page_left, &page_right,
                           &page_bottom, &page_top);
   if (print_cd) {
     privdata->cd_inner_radius = hub_size / 2;
@@ -3909,9 +3927,9 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->page_height = privdata->top + privdata->out_height;
   } else {
     privdata->left -= page_left;
-    privdata->top -= page_top;
-    privdata->page_width = page_right - page_left;
-    privdata->page_height = page_bottom - page_top;
+    privdata->top -= page_top; /* checked in Epson: matches */
+    privdata->page_width = page_right - page_left; /* checked in Epson: matches */
+    privdata->page_height = page_bottom - page_top; /* checked in Epson: matches */
 
     if (ERRPRINT) {
       stp_eprintf(v,"============================set_imageable_area========================\n");
@@ -3921,6 +3939,7 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
       stp_eprintf(v,"setup_page page_right = %i\n",page_right);
       stp_eprintf(v,"setup_page top = %i\n",privdata->top);
       stp_eprintf(v,"setup_page left = %i\n",privdata->left);
+      stp_eprintf(v,"setup_page out_height = %i\n",privdata->out_height);
       stp_eprintf(v,"setup_page page_height = %i\n",privdata->page_height);
       stp_eprintf(v,"setup_page page_width = %i\n",privdata->page_width);
     }
@@ -3931,6 +3950,7 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     stp_dprintf(STP_DBG_CANON, v, "setup_page page_right = %i\n",page_right);
     stp_dprintf(STP_DBG_CANON, v, "setup_page top = %i\n",privdata->top);
     stp_dprintf(STP_DBG_CANON, v, "setup_page left = %i\n",privdata->left);
+    stp_dprintf(STP_DBG_CANON, v, "setup_page out_height = %i\n",privdata->out_height);
     stp_dprintf(STP_DBG_CANON, v, "setup_page page_height = %i\n",privdata->page_height);
     stp_dprintf(STP_DBG_CANON, v, "setup_page page_width = %i\n",privdata->page_width);
 
@@ -4526,7 +4546,7 @@ static const stp_printfuncs_t print_canon_printfuncs =
   canon_parameters,
   stp_default_media_size,
   canon_imageable_area,
-  canon_imageable_area,
+  canon_maximum_imageable_area,
   canon_limit,
   canon_print,
   canon_describe_resolution,
