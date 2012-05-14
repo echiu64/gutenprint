@@ -2430,12 +2430,12 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 	  
 	  if (use_paper_margins) {
 	    unsigned width_limit = caps->max_width;
-	    left_margin = 0;
-	    right_margin = 0;
+	    left_margin = -8;
+	    right_margin = -8;
 	    if (width - right_margin - 3 > width_limit)
 	      right_margin = width - width_limit - 3;
-	    top_margin = -7;
-	    bottom_margin = -7;
+	    top_margin = -6;
+	    bottom_margin = -15;
 	    
 	    if (ERRPRINT)
 	      stp_eprintf(v,"internal_imageable_area: use_paper_margins so set margins all to -7\n");
@@ -2839,9 +2839,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 
   int border_left,border_right,border_top,border_bottom;
   int border_left2,border_top2;
-#if 0
   int border_right2;
-#endif
   int border_bottom2;
   int area_right,area_top;
 
@@ -2899,9 +2897,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	/* modified borders */
 	border_left2=border_left;
 	border_top2=border_top;
-#if 0
 	border_right2=border_right;
-#endif
 	border_bottom2=border_bottom;
 
 	area_right = border_left2 * unit / 72;
@@ -2909,12 +2905,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
-	  border_left2=0; /* -8 mini series -6 */
-#if 0
-	  border_right2=0; /* -8 */
-#endif
-	  border_top2=-7; /* -6 standard */
-	  border_bottom2=-7; /* -15 standard */
+	  border_left2=-8; /* -8 mini series -6 */
+	  border_right2=-8; /* -8 */
+	  border_top2=-6; /* -6 standard */
+	  border_bottom2=-15; /* -15 standard */
 	  area_right = border_left2 * unit / 72;
 	  area_top = border_top2 * unit / 72;
 	}
@@ -2942,7 +2936,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	stp_put32_be(area_right,v); /* area_right : Windows seems to use 9.6, gutenprint uses 10 */
 	stp_put32_be(area_top,v);  /* area_top : Windows seems to use 8.4, gutenprint uses 15 */
 	/* calculated depending on borderless or not: uses modified borders */
-	stp_put32_be((init->page_width + 2*(border_left - border_left2) ) * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
+	stp_put32_be((init->page_width + (border_left - border_left2) + (border_right - border_right2) ) * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
 	stp_put32_be((init->page_height + (border_top - border_top2) + (border_bottom - border_bottom2) ) * unit / 72,v); /* area_length : Windows seems to use 698.28 for Tray G, gutenprint uses 570 */
 	/* 0 under all currently known circumstances */
 	stp_put32_be(0,v); /* paper_right : Windows also 0 here for all Trays */
