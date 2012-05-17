@@ -514,23 +514,27 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      one settings object with those in another.
 
   12) Canon printer modes for most models are now chosen, or if need
-      be substituted, based on the media for which these modes are
-      used in the Windows driver. Mode substitution required under
-      cartridge selection and duplex selection is supported. Inktype
-      is automatically adjusted.
+     be substituted, based on the media for which these modes are used
+     in the Windows driver. Mode substitution required under cartridge
+     selection and duplex selection is supported. Inktype is
+     automatically adjusted.
 
   13) Added support for 8-bit inks to Canon backend, and modes using
-      them.
+     them.
 
   14) Adjusted margins and page sizes of Canon printers.
 
   15) Canon Japan printers of the *i series (e.g., 50i) have been
-      matched with non-Japan i* series (e.g., i70) printers, and
-      support for inkjet Hagaki and plain Hagaki added to the
-      non-Japan models where equivalent Japan models exist.
+     matched with non-Japan i* series (e.g., i70) printers, and
+     support for inkjet Hagaki and plain Hagaki added to the non-Japan
+     models where equivalent Japan models exist.
 
   16) Added borderless functionality to most Canon printers (except S
-      series and BJC series).
+     series and BJC series).
+
+  17) A build problem with libgutenprintui2 and testpattern on certain
+     platforms has been fixed.
+
 
 * Changes from 5.2.6
 
