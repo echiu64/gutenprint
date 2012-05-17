@@ -1292,7 +1292,7 @@ static const canon_cap_t canon_model_capabilities[] =
     INCH(17/2), INCH(23),       /* max paper width and height */        /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S|CANON_CAP_BORDERLESS,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_NOBLACK|CANON_CAP_S|CANON_CAP_BORDERLESS,0,
     2,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP90_modelist,
@@ -1308,7 +1308,7 @@ static const canon_cap_t canon_model_capabilities[] =
     INCH(17/2), INCH(23),       /* max paper width and height */       /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist,
-    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_S|CANON_CAP_BORDERLESS,0,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_NOBLACK|CANON_CAP_S|CANON_CAP_BORDERLESS,0,
     2,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP100_modelist,
@@ -1775,7 +1775,7 @@ static const canon_cap_t canon_model_capabilities[] =
     INCH(17/2), INCH(23),       /* max paper width and height */ /* from MacOSX driver */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_MULTIPASS_MP150_slotlist, /* has ESC (T */
-    CANON_CAP_STD0|CANON_CAP_T|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
+    CANON_CAP_STD0|CANON_CAP_T|CANON_CAP_NOBLACK|CANON_CAP_P|CANON_CAP_I|CANON_CAP_px|CANON_CAP_BORDERLESS,0,
     2,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP6210_modelist,

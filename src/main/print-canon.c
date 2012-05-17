@@ -129,6 +129,7 @@ pack_pixels(unsigned char* buf,int len)
 #define CANON_CAP_S          0x400000ul /* not sure of this yet */
 #define CANON_CAP_cart       0x800000ul /* BJC printers with Color, Black, Photo options */
 #define CANON_CAP_BORDERLESS 0x1000000ul /* borderless printing */
+#define CANON_CAP_NOBLACK    0x2000000ul /* no Black cartridge selection */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -1680,7 +1681,7 @@ canon_printhead_colors(const stp_vars_t*v)
   print_mode = stp_get_string_parameter(v, "PrintingMode");
 
   /* if the printing mode was already selected as BW, accept it */
-  if(print_mode && !strcmp(print_mode, "BW")){
+  if(print_mode && !strcmp(print_mode, "BW") && !(caps->features & CANON_CAP_NOBLACK) ){ /* workaround in case BW is a default */
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
     if (ERRPRINT)
       stp_eprintf(v,"canon_printhead_colors Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
@@ -2051,9 +2052,10 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	  stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);
+	  stp_dprintf(STP_DBG_CANON, v," mode known");
+	  stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for mode %s (inktype %u)\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name,mode->ink_types);
 	  if (ERRPRINT)
-	    stp_eprintf(v,"mode known --- Added InkType %s(%s) for %s\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name);
+	    stp_eprintf(v,"mode known --- Added InkType %s(%s) for mode %s (inktype %u)\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name,mode->ink_types);
 	}
       }
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
@@ -2064,9 +2066,10 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	for(j=0;j<caps->modelist->count;j++){
 	  if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	    stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	    stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	    stp_dprintf(STP_DBG_CANON, v," mode not known");
+	    stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s) for mode (%s) inktype %s\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
 	    if (ERRPRINT)
-	      stp_eprintf(v,"no mode --- Added InkType %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
+	      stp_eprintf(v,"no mode --- Added InkType %s(%s) for mode (%s) inktype %s\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
 	    break;
 	  }      
 	}
@@ -2245,8 +2248,10 @@ canon_parameters(const stp_vars_t *v, const char *name,
       if (caps->features & CANON_CAP_T) {
 	stp_string_list_add_string
 	  (description->bounds.str, "Both", _("Both"));
-	stp_string_list_add_string /* iP90, iP100, iP6210 do not have black-only option */
-	  (description->bounds.str, "Black", _("Black"));
+	if (!(caps->features & CANON_CAP_NOBLACK)) {
+	    stp_string_list_add_string
+	      (description->bounds.str, "Black", _("Black"));
+	}
 	stp_string_list_add_string
 	  (description->bounds.str, "Color", _("Color"));
       } /* mutually exclusive */

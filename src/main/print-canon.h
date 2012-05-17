@@ -35,13 +35,13 @@
 #define CANON_INK_K           1
 #define CANON_INK_CMY         2
 #define CANON_INK_CMYK        4
-#define CANON_INK_CMYKk       8 /* Gernot: inserted */
+#define CANON_INK_CMYKk       8
 #define CANON_INK_CcMmYK     16
-#define CANON_INK_CcMmYKk    32 /* Gernot: inserted */
+#define CANON_INK_CcMmYKk    32
 #define CANON_INK_CcMmYyK    64
-#define CANON_INK_CcMmYyKk   128 /* Gernot: inserted */
-#define CANON_INK_cmy        256 /* Gernot: inserted */
-#define CANON_INK_CcMmYy     512 /* Gernot: inserted */
+#define CANON_INK_CcMmYyKk   128
+#define CANON_INK_cmy        256
+#define CANON_INK_CcMmYy     512
 
 #define CANON_INK_CcMmYyKk_MASK (CANON_INK_CcMmYK|CANON_INK_CcMmYKk|CANON_INK_CcMmYyK|CANON_INK_CcMmYyKk) /* Ink is CcMmYyKk */
 #define CANON_INK_CMYKk_MASK    (CANON_INK_CMYKk|CANON_INK_CcMmYyKk_MASK) /* Ink is CMYKk */
