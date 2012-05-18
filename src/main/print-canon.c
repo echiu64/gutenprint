@@ -1682,9 +1682,12 @@ canon_printhead_colors(const stp_vars_t*v)
 
   /* if the printing mode was already selected as BW, accept it */
   if(print_mode && !strcmp(print_mode, "BW") && !(caps->features & CANON_CAP_NOBLACK) ){ /* workaround in case BW is a default */
-    stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
-    if (ERRPRINT)
-      stp_eprintf(v,"canon_printhead_colors Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
+    stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %u (CANON_INK_K)\n",CANON_INK_K);
+    stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) NOBLACK? %lu\n",(caps->features & CANON_CAP_NOBLACK));
+    if (ERRPRINT) {
+      stp_eprintf(v,"(canon_printhead_colors[BW]) Found InkType %u (CANON_INK_K)\n",CANON_INK_K);
+      stp_eprintf(v,"(canon_printhead_colors[BW]) NOBLACK? %lu\n",(caps->features & CANON_CAP_NOBLACK));
+    }
     return CANON_INK_K;
   }
   /* alternatively, if the cartridge selection is in force, and black cartride is selected, accept it */
