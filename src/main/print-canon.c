@@ -275,11 +275,16 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+  /*
+   * Don't check this parameter.  We may offer different settings for
+   * different ink sets, but we need to be able to handle settings from PPD
+   * files that don't have constraints set up.
+   */
   {
     "InkType", N_("Ink Type"), "Color=Yes,Category=Advanced Printer Setup",
     N_("Type of ink in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "InkChannels", N_("Ink Channels"), "Color=Yes,Category=Advanced Printer Functionality",
@@ -287,17 +292,27 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 0
   },
+  /*
+   * Don't check this parameter.  We may offer different settings for
+   * different ink sets, but we need to be able to handle settings from PPD
+   * files that don't have constraints set up.
+   */
   {
     "PrintingMode", N_("Printing Mode"), "Color=Yes,Category=Core Parameter",
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
+  /*
+   * Don't check this parameter.  We may offer different settings for
+   * different ink sets, but we need to be able to handle settings from PPD
+   * files that don't have constraints set up.
+   */
   {
     "InkSet", N_("Ink Set"), "Color=Yes,Category=Basic Printer Setup",
     N_("Type of inkset in the printer"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
-    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 0, 0
   },
   {
     "FullBleed", N_("Borderless"), "Color=No,Category=Basic Printer Setup",
