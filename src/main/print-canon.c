@@ -514,6 +514,10 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const canon_mode_t* mode = NULL;
     int i;
 
+  stp_dprintf(STP_DBG_CANON, v,"Entered canon_get_current_mode\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"entered canon_get_current_mode\n");
+
     if(resolution){
       for(i=0;i<caps->modelist->count;i++){
             if(!strcmp(resolution,caps->modelist->modes[i].name)){
@@ -826,6 +830,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   int i,j;
   int modecheck, quality, modefound;
+
+  stp_dprintf(STP_DBG_CANON, v,"Entered canon_check_current_mode: got PrintingMode %s\n",printing_mode);
+  if (ERRPRINT)
+    stp_eprintf(v,"entered canon_check_current_mode: got PrintingMode %s\n",printing_mode);
 
   /* Logic: priority of options
      1. Media --- always present for final selection.
@@ -1669,6 +1677,7 @@ canon_printhead_colors(const stp_vars_t*v)
   const char *ink_type = stp_get_string_parameter(v, "InkType");
   const char *ink_set = stp_get_string_parameter(v, "InkSet");
 
+  stp_dprintf(STP_DBG_CANON, v,"Entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
   if (ERRPRINT)
     stp_eprintf(v,"entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
 
@@ -2055,7 +2064,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	  stp_dprintf(STP_DBG_CANON, v," mode known");
 	  stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for mode %s (inktype %u)\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name,mode->ink_types);
 	  if (ERRPRINT)
 	    stp_eprintf(v,"mode known --- Added InkType %s(%s) for mode %s (inktype %u)\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name,mode->ink_types);
@@ -2069,10 +2077,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	for(j=0;j<caps->modelist->count;j++){
 	  if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	    stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
-	    stp_dprintf(STP_DBG_CANON, v," mode not known");
-	    stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s) for mode (%s) inktype %d\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
+	    stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s) for mode (%s) inktypes %u\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
 	    if (ERRPRINT)
-	      stp_eprintf(v,"no mode --- Added InkType %s(%s) for mode (%s) inktype %d\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
+	      stp_eprintf(v,"no mode --- Added InkType %s(%s) for mode (%s) inktypes %u\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
 	    break;
 	  }      
 	}
@@ -4056,6 +4063,8 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   double inner_r_sq = 0;
   unsigned char* weave_cols[4] ; /* TODO clean up weaving code to be more generic */
 
+  stp_dprintf(STP_DBG_CANON, v, "Entering canon_do_print\n");
+
   if (!stp_verify(v))
     {
       stp_eprintf(v, "Print options not verified; cannot print.\n");
@@ -4154,16 +4163,21 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* find the wanted print mode: NULL if not yet set */
   if (ERRPRINT)
     stp_eprintf(v,"Calling get_current_parameter from canon_do_print routine (before default set)");
+  stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_get_current_mode\n");
   privdata.mode = canon_get_current_mode(v);
 
   if(!privdata.mode) {
     privdata.mode = &caps->modelist->modes[caps->modelist->default_mode];
-    /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
+  }
+  
+  /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
   if (ERRPRINT)
     stp_eprintf(v,"Calling cannon_check_current_parameter from canon_do_print routine (after default set)");
-    privdata.mode = canon_check_current_mode(v);
-  }
+  
+  stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_check_current_mode\n");
 
+  privdata.mode = canon_check_current_mode(v);
+  
   /* --- completed all adjustments: options should be consistent --- */
 
   /* set quality */
