@@ -397,8 +397,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   3) A crash with the EPSON Stylus Photo R3000 has been fixed.
 
-  4) The following printer models were completely redefined or had
-     major changes carried out in the supported modes:
+  4) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
+     to be corrected.
+
+  5) The following Canon printer models were completely redefined or
+     had major changes carried out in the supported modes:
 
        Canon   BJC 3000   (EXPERIMENTAL)
        Canon   BJC S300   (EXPERIMENTAL)
@@ -428,7 +431,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         "old" appended. These old printers will be deprecated in a
         future release.
 
-  5) Support for the following printers was greatly improved, or
+  6) Support for the following Canon printers was greatly improved, or
      tested:
 
        Canon PIXMA MP700
@@ -442,7 +445,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP4000
        Canon PIXMA MG5100
 
-  6) CD printing support for the following printers was added:
+  7) CD printing support for the following Canon printers was added:
 
        Canon PIXMA i560
        Canon PIXMA i860
@@ -460,9 +463,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG8100
        Canon PIXMA MG8200
 
-  7) The following printer models were either not added, or removed,
-     as they cannot currently be supported, even experimentally, owing
-     to an as-yet unknown command format or other issues:
+  8) The following Canon printer models were either not added, or
+     removed, as they cannot currently be supported, even
+     experimentally, owing to an as-yet unknown command format or
+     other issues:
 
        Canon PIXMA 320i
        Canon PIXMA i250
@@ -500,40 +504,46 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
           (WIP)
        *2: requires special communication protocol
 
-  8) Some Canon BJC series printers using photo cartridge have
+  9) Some Canon BJC series printers using photo cartridge have
      printing modes added that will select this cartridge (BJC 3000,
      4300, 4550, S400).
 
-  9) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
-     to be corrected.
-
-  10) Chinese (Mandarin), Galician, and Ukrainian translations have
-     been added.
-
-  11) (API) Added function stp_vars_copy_from() to override settings in
-     one settings object with those in another.
-
-  12) Canon printer modes for most models are now chosen, or if need
-     be substituted, based on the media for which these modes are used
-     in the Windows driver. Mode substitution required under cartridge
-     selection and duplex selection is supported. Inktype is
-     automatically adjusted.
-
-  13) Added support for 8-bit inks to Canon backend, and modes using
-     them.
-
-  14) Adjusted margins and page sizes of Canon printers.
-
-  15) Canon Japan printers of the *i series (e.g., 50i) have been
+  10) Canon Japan printers of the *i series (e.g., 50i) have been
      matched with non-Japan i* series (e.g., i70) printers, and
      support for inkjet Hagaki and plain Hagaki added to the non-Japan
      models where equivalent Japan models exist.
 
-  16) Added borderless functionality to most Canon printers (except S
-     series and BJC series).
+  11) The Canon backend was modified extensively, with many new Canon
+     printer commands newly or better supported. Printer modes for
+     most printer models are now determined by the media, based on
+     information from the corresponding Windows driver. If an
+     incompatible mode is selected by the user, a suitable mode is
+     substituted, based on the other active parameters and quality
+     setting. Modes are also substituted based on cartridge selection
+     and duplex selection. Inktype is then automatically adjusted.
 
-  17) A build problem with libgutenprintui2 and testpattern on certain
+  12) Added support for 8-bit inks to Canon backend, and modes using
+     them.
+
+  13) Adjusted margins and page sizes of Canon printers.
+
+  14) Added borderless functionality to most Canon printers (except S
+     series and BJC series). Borderless uses photo modes, and should
+     therefore be usable for all photo media. For plain media and
+     Hagaki or Envelope media, there is currently no mode substitution
+     to use photo colors only in place of the normal modes, and
+     therefore borderless may work incorrectly or not at all. It is
+     therefore recommended to use borderless only for photo media
+     until further development.
+
+  15) A build problem with libgutenprintui2 and testpattern on certain
      platforms has been fixed.
+
+  16) (API) Added function stp_vars_copy_from() to override settings in
+     one settings object with those in another.
+
+  17) Chinese (Mandarin), Galician, and Ukrainian translations have
+     been added.
 
 
 * Changes from 5.2.6

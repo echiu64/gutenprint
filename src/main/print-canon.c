@@ -1671,6 +1671,12 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   }
 #endif
 
+
+  if (mode) {
+    stp_set_string_parameter(v, "Resolution",mode->text);  /* get_current_mode checks resolution! */
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- updated Resolution: '%s'\n",mode->name);
+  }
+
   if (mode) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Final returned mode: '%s'\n",mode->name);
     if (ERRPRINT)
@@ -4210,7 +4216,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_check_current_mode\n");
 
   privdata.mode = canon_check_current_mode(v);
-  stp_set_string_parameter(v, "Resolution",privdata.mode->text);  /* get_current_mode checks resolution! */
 
   /* --- completed all adjustments: options should be consistent --- */
 
