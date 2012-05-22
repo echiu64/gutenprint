@@ -864,15 +864,15 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
   const char *quality = stp_get_string_parameter(v, "Quality");
 #endif
-  const char *resolution = stp_get_string_parameter(v, "Resolution");
-  const char *ink_set = stp_get_string_parameter(v, "InkSet");
-  const char *duplex_mode = stp_get_string_parameter(v, "Duplex");
-  const char *ink_type = stp_get_string_parameter(v, "InkType");
-  const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
+  char *resolution = stp_get_string_parameter(v, "Resolution");
+  char *ink_set = stp_get_string_parameter(v, "InkSet");
+  char *duplex_mode = stp_get_string_parameter(v, "Duplex");
+  char *ink_type = stp_get_string_parameter(v, "InkType");
+  char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
   const canon_cap_t * caps = canon_get_model_capabilities(v);
-  const canon_mode_t* mode = NULL;
+  canon_mode_t* mode = NULL;
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  const canon_modeuse_t* muse = NULL;
+  canon_modeuse_t* muse = NULL;
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   int i,j;
   int modecheck, quality, modefound, inkfound;
@@ -1487,9 +1487,11 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    /* set PrintingMode to whatever the mode is capable of */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
 		      stp_set_string_parameter(v,"PrintingMode","Color");
+		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
 		    } else {
 		      stp_set_string_parameter(v,"PrintingMode","BW");
+		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
 		    }
 		  }
@@ -2148,9 +2150,11 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    /* set PrintingMode to whatever the mode is capable of */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K){
 		      stp_set_string_parameter(v,"PrintingMode","Color");
+		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
 		    } else {
 		      stp_set_string_parameter(v,"PrintingMode","BW");
+		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
 		    }
 		  }
