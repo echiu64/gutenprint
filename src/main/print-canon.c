@@ -875,7 +875,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   const canon_modeuse_t* muse = NULL;
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   int i,j;
-  int modecheck, quality, modefound;
+  int modecheck, quality, modefound, inkfound;
 
   stp_dprintf(STP_DBG_CANON, v,"Entered canon_check_current_mode: got PrintingMode %s\n",printing_mode);
   if (ERRPRINT)
@@ -1013,6 +1013,46 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	    }
 	  }
+
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1024,6 +1064,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
       } /* End of Black Inkset */
       /*-------------------------------------------------------------------------------------------------*/
@@ -1058,6 +1100,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1069,6 +1150,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
 	else {
 	  /* mode is fine */
@@ -1095,6 +1178,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1106,6 +1228,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
       }  /* end of Color InkSet */
       /*-------------------------------------------------------------------------------------------------*/
@@ -1138,6 +1262,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1149,6 +1312,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
 	else {
 	  /* mode is fine */
@@ -1172,6 +1337,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1183,6 +1387,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+
+#endif
+
 	} 
       } /* end of Photo Inkset  */
       /*-------------------------------------------------------------------------------------------------*/
@@ -1295,43 +1502,64 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	}
 	/* if InkType does not match that of mode, change InkType to match it */
 	/* choose highest color as default, as there is only one option for Black */
+	/* if InkType does not match that of mode, change InkType to match it */
+	/* choose highest color as default, as there is only one option for Black */
 	if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	  stp_set_string_parameter(v, "InkType", "Gray");
 	  ink_type = stp_get_string_parameter(v, "InkType");
 	} else {
+	  inkfound=0;
+	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	    if (mode->ink_types & canon_inktypes[i].ink_type) {
-	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
-		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	    if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+	      if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		inkfound=1;
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
 	      }
 	    }
 	  }
-	}
-      }
-
-      /* end of cartridge option block */
-
-      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
-      if (ERRPRINT)
-	stp_eprintf(v,"mode searching: replaced mode with: '%s'\n",mode->name);
-
-      /* set InkType for the mode decided upon */
-      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	if (mode->ink_types & canon_inktypes[i].ink_type) {
-	  if (strcmp(ink_type,canon_inktypes[i].name)) {
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-	    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
-	    ink_type = stp_get_string_parameter(v, "InkType");
-	    break;
+	  /* if no match found choose first available inkset */
+	  if (inkfound==0) {
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  inkfound=1; /* set */
+		  break;
+		}
+	      }
+	    }
 	  }
 	}
+	
+	/* end of cartridge option block */
+	
+	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
+	if (ERRPRINT)
+	  stp_eprintf(v,"mode searching: replaced mode with: '%s'\n",mode->name);
+	
+#if 0
+	/* set InkType for the mode decided upon */
+	for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	  if (mode->ink_types & canon_inktypes[i].ink_type) {
+	    if (strcmp(ink_type,canon_inktypes[i].name)) {
+	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	      stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+	      ink_type = stp_get_string_parameter(v, "InkType");
+	      break;
+	    }
+	  }
+	}
+#endif
+	
       }
-    }
-
+    }/* added one here */
     else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
 
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode):  mode exists, need to check for consistency (%s)\n",mode->name);
@@ -1362,7 +1590,46 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    modefound=0;
 	  else
 	    modefound=1;
-
+	  
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1374,6 +1641,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
 	else {
 	  /* mode is fine */
@@ -1397,6 +1666,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1408,6 +1716,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
       } /* End of Black Inkset */
       /*-------------------------------------------------------------------------------------------------*/
@@ -1442,6 +1752,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1453,6 +1802,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
 	else {
 	  /* mode is fine */
@@ -1479,6 +1830,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1490,6 +1880,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
       } /* End of Color Inkset */
       /*-------------------------------------------------------------------------------------------------*/
@@ -1522,6 +1914,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1533,6 +1964,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	}
 	else {
 	  /* mode is fine */
@@ -1556,6 +1989,45 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  else
 	    modefound=1;
 
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  /* if InkType does not match that of mode, change InkType to match it */
+	  /* choose highest color as default, as there is only one option for Black */
+	  if (printing_mode && !strcmp(printing_mode,"BW")) {
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_set_string_parameter(v, "InkType", "Gray");
+	    ink_type = stp_get_string_parameter(v, "InkType");
+	  } else {
+	    inkfound=0;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		  inkfound=1;
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  break;
+		}
+	      }
+	    }
+	    /* if no match found choose first available inkset */
+	    if (inkfound==0) {
+	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		    ink_type = stp_get_string_parameter(v, "InkType");
+		    inkfound=1; /* set */
+		    break;
+		  }
+		}
+	      }
+	    }
+	  }
+	  
+#if 0
 	  /* set InkType for the mode found */
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
@@ -1567,6 +2039,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	    }
 	  }
+#endif
+
 	} 
       } /* end of Photo Inkset  */
       /*-------------------------------------------------------------------------------------------------*/
@@ -1696,14 +2170,30 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  stp_set_string_parameter(v, "InkType", "Gray");
 	  ink_type = stp_get_string_parameter(v, "InkType");
 	} else {
-	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %u\n",mode->name,ink_type);
+	  inkfound=0;
+	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
-	    if (mode->ink_types & canon_inktypes[i].ink_type) {
-	      if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
-		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	    if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+	      if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
+		inkfound=1;
+		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
+	      }
+	    }
+	  }
+	  /* if no match found choose first available inkset */
+	  if (inkfound==0) {
+	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
+	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
+		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
+		  ink_type = stp_get_string_parameter(v, "InkType");
+		  inkfound=1; /* set */
+		  break;
+		}
 	      }
 	    }
 	  }
