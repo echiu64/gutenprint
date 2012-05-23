@@ -2867,7 +2867,7 @@ static const char* canon_PIXMA_iP90_modeuses_PPother[] = {
 };
 
 static const canon_modeuse_t canon_PIXMA_iP90_modeuses[] = {
-  { "Plain",            canon_PIXMA_iP90_modeuses_plain, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "Plain",            canon_PIXMA_iP90_modeuses_plain, 0 },/*INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL*/
   { "GlossyPro",	canon_PIXMA_iP90_modeuses_PPpro, INKSET_COLOR_SUPPORT },
   { "PhotopaperPlus",	canon_PIXMA_iP90_modeuses_PPplus, INKSET_COLOR_SUPPORT },
   { "PhotopaperPlusDouble", canon_PIXMA_iP90_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
@@ -2875,9 +2875,9 @@ static const canon_modeuse_t canon_PIXMA_iP90_modeuses[] = {
   { "GlossyPaper",	canon_PIXMA_iP90_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
   { "Coated",		canon_PIXMA_iP90_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
   { "InkJetHagaki", 	canon_PIXMA_iP90_modeuses_PPplusDS, INKSET_COLOR_SUPPORT },
-  { "Hagaki", 	        canon_PIXMA_iP90_modeuses_Hagaki, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_iP90_modeuses_Hagaki, 0 },/*INKSET_COLOR_SUPPORT*/
   { "TShirt",		canon_PIXMA_iP90_modeuses_TShirt, INKSET_COLOR_SUPPORT },
-  { "Envelope",		canon_PIXMA_iP90_modeuses_Hagaki, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_iP90_modeuses_Hagaki, 0 },/* INKSET_COLOR_SUPPORT*/
   { "PhotopaperOther",	canon_PIXMA_iP90_modeuses_PPother, INKSET_COLOR_SUPPORT },
 };
 
@@ -2931,7 +2931,7 @@ static const char* canon_PIXMA_iP100_modeuses_PPother[] = {
   };
 
 static const canon_modeuse_t canon_PIXMA_iP100_modeuses[] = {
-  { "Plain",            canon_PIXMA_iP100_modeuses_plain, INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL },
+  { "Plain",            canon_PIXMA_iP100_modeuses_plain, 0 },/*INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL*/
   { "GlossyPro",	canon_PIXMA_iP100_modeuses_PPpro, INKSET_COLOR_SUPPORT },
   { "PhotopaperPlus",	canon_PIXMA_iP100_modeuses_PPplus, INKSET_COLOR_SUPPORT },
   { "PhotoPlusGloss2",	canon_PIXMA_iP100_modeuses_PPplus, INKSET_COLOR_SUPPORT },
@@ -2941,9 +2941,9 @@ static const canon_modeuse_t canon_PIXMA_iP100_modeuses[] = {
   { "GlossyPaper",	canon_PIXMA_iP100_modeuses_PPplus, INKSET_COLOR_SUPPORT },
   { "Coated",		canon_PIXMA_iP100_modeuses_PPmatte, INKSET_COLOR_SUPPORT },
   { "InkJetHagaki", 	canon_PIXMA_iP100_modeuses_PPplus, INKSET_COLOR_SUPPORT },
-  { "Hagaki", 	        canon_PIXMA_iP100_modeuses_Hagaki, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_iP100_modeuses_Hagaki, 0 },/*INKSET_COLOR_SUPPORT*/
   { "TShirt",		canon_PIXMA_iP100_modeuses_TShirt, INKSET_COLOR_SUPPORT },
-  { "Envelope",		canon_PIXMA_iP100_modeuses_Hagaki, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_iP100_modeuses_Hagaki, 0 },/*INKSET_COLOR_SUPPORT*/
   { "PhotopaperOther",	canon_PIXMA_iP100_modeuses_PPother, INKSET_COLOR_SUPPORT },
 };
 
