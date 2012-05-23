@@ -528,11 +528,23 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char *resolution = stp_get_string_parameter(v, "Resolution");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
+    char *ink_type = stp_get_string_parameter(v, "InkType");/*debug*/
+    char *ink_set = stp_get_string_parameter(v, "InkSet");/*debug*/
     int i;
 
   stp_dprintf(STP_DBG_CANON, v,"Entered canon_get_current_mode\n");
   if (ERRPRINT)
     stp_eprintf(v,"entered canon_get_current_mode\n");
+
+    if (ink_set)
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value (high priority): '%s'\n",ink_set);
+    else
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value is NULL\n");
+      
+    if (ink_type)
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkType value (low priority): '%s'\n",ink_type);
+    else
+      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkType value is NULL\n");
 
     if(resolution){
       for(i=0;i<caps->modelist->count;i++){
@@ -907,9 +919,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   */
 
   if(resolution){
-    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution already known: '%s'\n",resolution);
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Resolution already known: '%s'\n",resolution);
     if (ERRPRINT)
-      stp_eprintf(v,"get_current_mode --- Resolution already known: '%s'\n",resolution);
+      stp_eprintf(v,"check_current_mode --- Resolution already known: '%s'\n",resolution);
     for(i=0;i<caps->modelist->count;i++){
       if(!strcmp(resolution,caps->modelist->modes[i].name)){
 	mode = &caps->modelist->modes[i];
@@ -918,16 +930,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
     }
   }
   else {
-    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution not yet known \n");
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Resolution not yet known \n");
     if (ERRPRINT)
-      stp_eprintf(v,"get_current_mode --- Resolution not yet known \n");
+      stp_eprintf(v,"check_current_mode --- Resolution not yet known \n");
   }
     
   /* beginning of mode replacement code */
   if (media_type && resolution && mode) {
-    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  get_current_mode --- Resolution, Media, Mode all known \n");
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Resolution, Media, Mode all known \n");
     if (ERRPRINT)
-      stp_eprintf(v,"get_current_mode --- Resolution, Media, Mode all known \n");
+      stp_eprintf(v,"check_current_mode --- Resolution, Media, Mode all known \n");
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
     if (ERRPRINT)
       stp_eprintf(v,"media type selected: '%s'\n",media_type->name);
@@ -2231,7 +2243,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 
 
   if (mode) {
-    stp_set_string_parameter(v, "Resolution",mode->text);  /* get_current_mode checks resolution! */
+    stp_set_string_parameter(v, "Resolution",mode->text);  /* check_current_mode checks resolution! */
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- updated Resolution: '%s'\n",mode->name);
   }
 
