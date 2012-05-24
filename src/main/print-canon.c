@@ -528,8 +528,8 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char *resolution = stp_get_string_parameter(v, "Resolution");
     const canon_cap_t * caps = canon_get_model_capabilities(v);
     const canon_mode_t* mode = NULL;
-    char *ink_type = stp_get_string_parameter(v, "InkType");/*debug*/
-    char *ink_set = stp_get_string_parameter(v, "InkSet");/*debug*/
+    const char *ink_type = stp_get_string_parameter(v, "InkType");/*debug*/
+    const char *ink_set = stp_get_string_parameter(v, "InkSet");/*debug*/
     int i;
 
   stp_dprintf(STP_DBG_CANON, v,"Entered canon_get_current_mode\n");
@@ -624,6 +624,8 @@ const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t
   int j;
   int modefound=0;
 
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_monochrome\n");
+
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
@@ -713,6 +715,8 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
   int j;
   int modefound=0;
   
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_color\n");
+
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
@@ -781,6 +785,8 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
   int i=0;
   int j;
   int modefound=0;
+
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_photo\n");
   
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -848,6 +854,8 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
   int i=0;
   int j;
   int modefound=0;
+
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_general\n");
   
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -876,15 +884,15 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
   const char *quality = stp_get_string_parameter(v, "Quality");
 #endif
-  char *resolution = stp_get_string_parameter(v, "Resolution");
-  char *ink_set = stp_get_string_parameter(v, "InkSet");
-  char *duplex_mode = stp_get_string_parameter(v, "Duplex");
-  char *ink_type = stp_get_string_parameter(v, "InkType");
-  char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
+  const char *resolution = stp_get_string_parameter(v, "Resolution");
+  const char *ink_set = stp_get_string_parameter(v, "InkSet");
+  const char *duplex_mode = stp_get_string_parameter(v, "Duplex");
+  const char *ink_type = stp_get_string_parameter(v, "InkType");
+  const char *printing_mode = stp_get_string_parameter(v, "PrintingMode");
   const canon_cap_t * caps = canon_get_model_capabilities(v);
-  canon_mode_t* mode = NULL;
+  const canon_mode_t* mode = NULL;
   const canon_modeuselist_t* mlist = caps->modeuselist;
-  canon_modeuse_t* muse = NULL;
+  const canon_modeuse_t* muse = NULL;
   const canon_paper_t* media_type = get_media_type(caps,stp_get_string_parameter(v, "MediaType"));
   int i,j;
   int modecheck, quality, modefound, inkfound;
@@ -1823,7 +1831,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
-	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
+	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode); /* something wrong here!!! */
+	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): returned mode for color inkset: %s\n",mode->name);
 	  if (!mode)
 	    modefound=0;
 	  else
