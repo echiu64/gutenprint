@@ -4973,7 +4973,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
          }
        else  /* colormode == CMY */
          {
-           privdata.ncolors = 1;
+           privdata.ncolors = 3;
            privdata.head_offset[0] = 0; /* K starts at 0 */
            privdata.head_offset[1] = 0 ;/* how far C starts after K */
            privdata.head_offset[2] = 64;/* how far M starts after K */
@@ -5017,7 +5017,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
        privdata.last_pass_offset = 0;
 
 
-       for(i=0;i<4;i++){
+       for(i=0;i<privdata.num_channels;i++){/* see if can do up to the number of colors instead of 4 */
            int x;
            for(x=0;x<privdata.num_channels;x++){
 	     if(weave_color_order[i] == privdata.channel_order[x]){
