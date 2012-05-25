@@ -5017,12 +5017,38 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
        privdata.last_pass_offset = 0;
 
 
-       for(i=0;i<privdata.num_channels;i++){/* see if can do up to the number of colors instead of 4 */
+       stp_eprintf(v, "DEBUG print-canon weave: weave_color_order[]: %d, %d, %d, %d\n",
+		   weave_color_order[0],weave_color_order[1],weave_color_order[2],weave_color_order[3]);
+       stp_eprintf(v, "DEBUG (2nd time) print-canon weave: weave_color_order[]: %d, %d, %d, %d\n",
+		   weave_color_order[0],weave_color_order[1],weave_color_order[2],weave_color_order[3]);
+
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[0]: %d\n",
+		   privdata.channel_order[0]);
+
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[1]: %d\n",
+		   privdata.channel_order[1]);
+
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[2]: %d\n",
+		   privdata.channel_order[2]);
+
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[3]: %d\n",
+		   privdata.channel_order[3]);
+
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[]: %d, %d, %d, %d\n",
+		   privdata.channel_order[0],privdata.channel_order[1],privdata.channel_order[2],privdata.channel_order[3]);
+
+       for(i=0;i<4;i++){/* all 4 channels have to be done 4 */
            int x;
+	   /* see if it helps to initialize to zero */
+	   weave_cols[i] = 0;
+	   privdata.weave_bits[i] = 0;
+
            for(x=0;x<privdata.num_channels;x++){
 	     if(weave_color_order[i] == privdata.channel_order[x]){
 	       weave_cols[i] = privdata.channels[x].buf;
 	       privdata.weave_bits[i] = privdata.channels[x].props->bits;
+	       stp_eprintf(v, "DEBUG print-canon weave: set weave_cols[%d] to privdata.channels[%d].buf\n",
+			   i, x);
 	     }
            }
        }
