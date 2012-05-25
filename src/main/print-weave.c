@@ -1421,13 +1421,6 @@ initialize_row(stp_vars_t *v, stpi_softweave_t *sw,
     {
       for (j = 0; j < sw->ncolors; j++)
 	{
-
-	  stp_eprintf(v, "DEBUG print-weave: initialize row (outer loop %d) inner loop %d ,  sw->ncolors=%d\n",
-		      i, j, sw->ncolors);
-
-	  stp_eprintf(v, "DEBUG print-weave: initialize row cols[]: %u, %u, %u, %u\n",
-		      (unsigned int)cols[0],(unsigned int)cols[1],(unsigned int)cols[2],(unsigned int)cols[3]);
-
 	  if (cols[j])
 	    {
 	      stp_lineoff_t *lineoffs =
