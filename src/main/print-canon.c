@@ -5022,20 +5022,20 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
        stp_eprintf(v, "DEBUG (2nd time) print-canon weave: weave_color_order[]: %d, %d, %d, %d\n",
 		   weave_color_order[0],weave_color_order[1],weave_color_order[2],weave_color_order[3]);
 
-       stp_eprintf(v, "DEBUG print-canon weave: channel_order[0]: %d\n",
-		   privdata.channel_order[0]);
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[0]: %u\n",
+		   (unsigned int)privdata.channel_order[0]);
 
-       stp_eprintf(v, "DEBUG print-canon weave: channel_order[1]: %d\n",
-		   privdata.channel_order[1]);
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[1]: %u\n",
+		   (unsigned int)privdata.channel_order[1]);
 
-       stp_eprintf(v, "DEBUG print-canon weave: channel_order[2]: %d\n",
-		   privdata.channel_order[2]);
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[2]: %u\n",
+		   (unsigned int)privdata.channel_order[2]);
 
-       stp_eprintf(v, "DEBUG print-canon weave: channel_order[3]: %d\n",
-		   privdata.channel_order[3]);
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[3]: %u\n",
+		   (unsigned int)privdata.channel_order[3]);
 
-       stp_eprintf(v, "DEBUG print-canon weave: channel_order[]: %d, %d, %d, %d\n",
-		   privdata.channel_order[0],privdata.channel_order[1],privdata.channel_order[2],privdata.channel_order[3]);
+       stp_eprintf(v, "DEBUG print-canon weave: channel_order[]: %u, %u, %u, %u\n",
+		   (unsigned int)privdata.channel_order[0],(unsigned int)privdata.channel_order[1],(unsigned int)privdata.channel_order[2],(unsigned int)privdata.channel_order[3]);
 
        for(i=0;i<4;i++){/* all 4 channels have to be done 4 */
            int x;
