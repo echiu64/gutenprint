@@ -1473,15 +1473,9 @@ initialize_row(stp_vars_t *v, stpi_softweave_t *sw,
 }
 
 static void
-add_to_row(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
-	   size_t nbytes, int color, int setactive, int h_pass)
+add_to_row_1(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
+	     size_t nbytes, int color, int setactive, int h_pass)
 {
-  if (!sw->head_offset)
-    {
-      stp_eprintf(v, "ERROR: %s\n", _("Fatal error!"));
-      stp_eprintf(v, "ERROR: add_to_row: sw->head_offset == NULL\n");
-      return;
-    }
   const stp_linebufs_t *bufs =
     stpi_get_linebases(v, sw, sw->lineno, h_pass, sw->head_offset[color]);
   stp_lineoff_t *lineoffs =
@@ -1538,6 +1532,19 @@ add_to_row(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
   lineoffs->v[color] += nbytes;
   if (setactive)
     lineactive->v[color] = 1;
+}
+
+static void
+add_to_row(stp_vars_t *v, stpi_softweave_t *sw, int row, unsigned char *buf,
+	   size_t nbytes, int color, int setactive, int h_pass)
+{
+  if (!sw->head_offset)
+    {
+      stp_eprintf(v, "ERROR: %s\n", _("Fatal error!"));
+      stp_eprintf(v, "ERROR: add_to_row: sw->head_offset == NULL\n");
+      return;
+    }
+  add_to_row_1(v, sw, row, buf, nbytes, color, setactive, h_pass);
 }
 
 static void
