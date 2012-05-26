@@ -50,9 +50,13 @@ MAINT_MODE = false
 endif
 
 if MAINTAINER_MODE
+if BUILD_DOC
 ALL_LOCAL_TARGETS = docs
+endif
 else
+if BUILD_DOC
 ALL_LOCAL_TARGETS = $(STANDARD_TARGETS)
+endif
 endif
 
 all-local: $(ALL_LOCAL_TARGETS)

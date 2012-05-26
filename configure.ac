@@ -161,6 +161,7 @@ AM_MAINTAINER_MODE
 if test x${USE_MAINTAINER_MODE} = xyes ; then
   MAINTAINER_MODE="true"
   BUILD_TEST="yes"
+  BUILD_DOC="yes"
   AC_DEFINE(HAVE_MAINTAINER_MODE,, [Define if maintainer-mode is to be used.])
 fi
 
@@ -452,6 +453,11 @@ STP_ARG_ENABLE([test],
                [build test programs],
                [BUILD_TEST],
                [yes])
+
+STP_ARG_WITH([doc],
+	     [build Gutenprint documentation],
+	     [BUILD_DOC],
+	     [yes])
 
 if test "$BUILD_TEST" = "yes" ; then
   BUILD_TESTPATTERN="yes"
@@ -813,6 +819,8 @@ AM_CONDITIONAL(BUILD_TESTPATTERN, test x${BUILD_TESTPATTERN} = xyes)
 AM_CONDITIONAL(BUILD_LIBGUTENPRINTUI2, test x${BUILD_LIBGUTENPRINTUI2} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP2, test x${BUILD_GIMP2} = xyes)
+
+AM_CONDITIONAL(BUILD_DOC, test x${BUILD_DOC} = xyes)
 
 AM_CONDITIONAL(BUILD_GIMP2_AS_GUTENPRINT, test x${BUILD_GIMP2_AS_GUTENPRINT} = xyes)
 

@@ -31,7 +31,11 @@ docdir = $(datadir)/$(PACKAGE)/doc
 ## Rules
 
 if MAINTAINER_MODE
+if BUILD_DOC
 all-local: gutenprint-stamp gutenprintui2-stamp
+else
+all-local:
+endif
 else
 all-local:
 endif
