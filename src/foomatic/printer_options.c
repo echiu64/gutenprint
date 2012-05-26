@@ -186,6 +186,7 @@ main(int argc, char **argv)
 				  printf("$$x_t{'%s'} = '%d';",param->name, x);
 				  printf("$$y_t{'%s'} = '%d';",param->name, y);
 				}
+			      stp_clear_string_parameter(pv, "Resolution");
 			    }
 			}
 		      printf("}\n");

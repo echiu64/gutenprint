@@ -146,6 +146,7 @@ main(int argc, char **argv)
 					 driver, "y_resolution", param->name, y);
 				}
 			    }
+			  stp_clear_string_parameter(pv, "Resolution");
 			}
 		    }
 		}
