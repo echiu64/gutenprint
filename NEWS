@@ -445,7 +445,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP4000
        Canon PIXMA MG5100
 
-  7) CD printing support for the following Canon printers was added:
+  7) The following PIXMA models have PIXUS aliases for reasons of
+     compatibility. In future, a complete compatibility is planned, for
+     which it will need to be determined whether all PIXMA models have
+     PIXUS counterparts, and vice versa.
+
+       Canon PIXUS iP2700
+       Canon PIXUS iP3100
+       Canon PIXUS iP4100
+
+  8) CD printing support for the following Canon printers was added:
 
        Canon PIXMA i560
        Canon PIXMA i860
@@ -463,7 +472,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG8100
        Canon PIXMA MG8200
 
-  8) The following Canon printer models were either not added, or
+  9) The following Canon printer models were either not added, or
      removed, as they cannot currently be supported, even
      experimentally, owing to an as-yet unknown command format or
      other issues:
@@ -501,19 +510,18 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY ES40 *2
 
        *1: protocol is supported but inks used are not yet supported
-          (WIP)
        *2: requires special communication protocol
 
-  9) Some Canon BJC series printers using photo cartridge have
+  10) Some Canon BJC series printers using photo cartridge have
      printing modes added that will select this cartridge (BJC 3000,
      4300, 4550, S400).
 
-  10) Canon Japan printers of the *i series (e.g., 50i) have been
+  11) Canon Japan printers of the *i series (e.g., 50i) have been
      matched with non-Japan i* series (e.g., i70) printers, and
      support for inkjet Hagaki and plain Hagaki added to the non-Japan
      models where equivalent Japan models exist.
 
-  11) The Canon backend was modified extensively, with many new Canon
+  12) The Canon backend was modified extensively, with many new Canon
      printer commands newly or better supported. Printer modes for
      most printer models are now determined by the media, based on
      information from the corresponding Windows driver. If an
@@ -522,12 +530,17 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      setting. Modes are also substituted based on cartridge selection
      and duplex selection. Inktype is then automatically adjusted.
 
-  12) Added support for 8-bit inks to Canon backend, and modes using
+     Since the printhead firmware converts the data sent to the
+     printer into the actual inks used, the format of the data sent to
+     the printer is rather strict, and the relationship between this
+     data and the actual inks is often unknown.
+
+  13) Added support for 8-bit inks to Canon backend, and modes using
      them.
 
-  13) Adjusted margins and page sizes of Canon printers.
+  14) Adjusted margins and page sizes of Canon printers.
 
-  14) Added borderless functionality to most Canon printers (except S
+  15) Added borderless functionality to most Canon printers (except S
      series and BJC series). Borderless uses photo modes, and should
      therefore be usable for all photo media. For plain media and
      Hagaki or Envelope media, there is currently no mode substitution
@@ -536,13 +549,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      therefore recommended to use borderless only for photo media
      until further development.
 
-  15) A build problem with libgutenprintui2 and testpattern on certain
+  16) A build problem with libgutenprintui2 and testpattern on certain
      platforms has been fixed.
 
-  16) (API) Added function stp_vars_copy_from() to override settings in
+  17) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
 
-  17) Chinese (Mandarin), Galician, and Ukrainian translations have
+  18) Chinese (Mandarin), Galician, and Ukrainian translations have
      been added.
 
 
