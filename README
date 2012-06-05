@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.8-pre1!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.8!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -8,18 +8,18 @@ Welcome to Gutenprint 5.2.8-pre1!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.2.8-pre1, a prerelease of Gutenprint
-    5.2.8.  Gutenprint, formerly named Gimp-Print, is a suite of
-    printer drivers that may be used with most common UNIX print
-    spooling systems, including CUPS, lpr, LPRng, or others.  These
-    drivers provide high quality printing for UNIX (including
-    Macintosh OS X 10.3 and newer) and Linux systems in many cases
-    equal to or better than proprietary vendor-supplied drivers.
-    Gutenprint also includes an enhanced print plug-in for the GIMP
-    image editor, replacing the Gimp-Print 4.2-based plugin supplied
-    with GIMP 1.2, 2.0, and 2.2, and offering an alternative with
-    additional capabilities to the GtkPrint-based plugin supplied with
-    GIMP 2.4 and beyond.
+    This is Gutenprint version 5.2.8, a stable release of Gutenprint
+    5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
+    drivers that may be used with most common UNIX print spooling
+    systems, including CUPS, lpr, LPRng, or others.  These drivers
+    provide high quality printing for UNIX (including Macintosh OS X
+    10.3 and newer) and Linux systems in many cases equal to or better
+    than proprietary vendor-supplied drivers.  Gutenprint also
+    includes an enhanced print plug-in for the GIMP image editor,
+    replacing the Gimp-Print 4.2-based plugin supplied with GIMP 1.2,
+    2.0, and 2.2, and offering an alternative with additional
+    capabilities to the GtkPrint-based plugin supplied with GIMP 2.4
+    and beyond.
 
     Gutenprint has been renamed in order to clearly distinguish it
     from GIMP.  While this package started out as the Print plugin for
@@ -124,7 +124,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.8-pre1 generated on 26 Dec 2011
+	  Release: gutenprint 5.2.8 generated on 04 Jun 2012
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -146,9 +146,9 @@ A) OVERVIEW
 	    Installation prefix:                        /usr/local
 	    Exec prefix:                                ${prefix}
 	    Data directory:                             /usr/local/share/gutenprint
-	    Library directory:                          /usr/local/lib/gutenprint
+	    Library directory:                          ${exec_prefix}/lib64/gutenprint
 	    XML data directory:                         /usr/local/share/gutenprint/5.2/xml
-	    Module directory:                           /usr/local/lib/gutenprint/5.2/modules
+	    Module directory:                           ${exec_prefix}/lib64/gutenprint/5.2/modules
 	    Install sample images:                      yes
 
 	  General configuration:
@@ -161,7 +161,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux dsl092-065-009 3.1.0-1.2-default #1 SMP Thu Nov 3 14:45:45 UTC 2011 (187dde0) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux dsl092-065-009 3.1.10-1.9-default #1 SMP Thu Apr 5 18:48:38 UTC 2012 (4a97ec8) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS, GIMP, Foomatic, and Ghostscript components require that
@@ -688,8 +688,8 @@ A) PRINTER INSTALLATION
     driver, so you may find more than one PPD file for your printer.
     Gutenprint PPD files are described as
 
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.0
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.0 Simplified
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.8
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.8 Simplified
     Epson Stylus Photo R300 Foomatic/gutenprint-ijs.5.2
     Epson Stylus Photo R300 Foomatic/gutenprint-ijs-simplified.5.2
 
@@ -729,7 +729,7 @@ A) PRINTER INSTALLATION
     identify printers using Gutenprint PPD files by the name of the
     PPD file, which will be something like:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.2.2(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.2.8(en)
 
     Linux users please note: If you are using CUPS 1.1.11 or higher,
     and you have a USB-connected printer, you must have a printer
