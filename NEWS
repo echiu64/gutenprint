@@ -412,14 +412,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        support for inkjet Hagaki and plain Hagaki added to the non-Japan
        models where equivalent Japan models exist.
 
-     * The Canon backend was modified extensively, with many new Canon
-       printer commands newly or better supported. Printer modes for
-       most printer models are now determined by the media, based on
-       information from the corresponding Windows driver. If an
-       incompatible mode is selected by the user, a suitable mode is
-       substituted, based on the other active parameters and quality
-       setting. Modes are also substituted based on cartridge selection
-       and duplex selection. Inktype is then automatically adjusted.
+     * Printer modes for most printer models are now determined by the
+       media, based on information from the corresponding Windows
+       driver. If an incompatible mode is selected by the user, a
+       suitable mode is substituted, based on the other active
+       parameters and quality setting. Modes are also substituted
+       based on cartridge selection and duplex selection. Inktype is
+       then automatically adjusted.
 
        Since the printer itself converts the data sent to the printer
        into the actual inks used, the format of the data sent to the
