@@ -254,7 +254,193 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.7
 
-  1) New printers supported in this release:
+  1) The Canon driver has been significantly overhauled for this
+     release, and output (and in some cases functionality) may be
+     significantly different from previous releases.  We expect to
+     perform further work in future releases.  Specific changes
+     include:
+
+     * All known combinations of offered modes now work in CUPS.
+       Previously, certain combinations would fail to print, with
+       error messages about invalid combinations of printing options.
+
+     * The following Canon printer models were completely redefined or
+       had major changes carried out in the supported modes:
+
+	 Canon   BJC 3000    (EXPERIMENTAL)
+	 Canon   BJC S300    (EXPERIMENTAL)
+	 Canon   BJC S500    (EXPERIMENTAL)
+	 Canon   BJC S600    (EXPERIMENTAL)
+	 Canon   BJC S800    (EXPERIMENTAL)
+	 Canon PIXMA i80     (EXPERIMENTAL)
+	 Canon PIXMA i560    (EXPERIMENTAL)
+	 Canon PIXMA i850    (EXPERIMENTAL) *1
+	 Canon PIXMA i860    (EXPERIMENTAL) *1
+	 Canon PIXMA i865    (EXPERIMENTAL) *1
+	 Canon PIXMA iP2000  (EXPERIMENTAL)
+	 Canon PIXMA iP4100  (EXPERIMENTAL)
+	 Canon PIXMA iP5000  (EXPERIMENTAL)
+	 Canon PIXMA iP6210D (EXPERIMENTAL)
+	 Canon PIXMA iP6220D (EXPERIMENTAL)
+	 Canon PIXMA iP6310D (EXPERIMENTAL)
+	 Canon PIXMA MP600
+	 Canon PIXMA MP750
+	 Canon PIXMA MP760
+	 Canon PIXMA MP770
+	 Canon PIXMA MP780
+	 Canon PIXMA MP790
+	 Canon PIXMA MP970
+
+	 *1: for compatibility, the original printers are named with
+	  "old" appended. These old printers will be deprecated in a
+	  future release.
+
+     * Support for the following Canon printers was greatly improved, or
+       tested:
+
+	 Canon PIXMA MP700
+	 Canon PIXMA MP710
+	 Canon PIXMA MP730
+	 Canon PIXMA MP740
+	 Canon PIXMA MP950
+	 Canon PIXMA MP960
+	 Canon PIXMA MX340
+	 Canon PIXMA MX350
+	 Canon PIXMA iP4000
+	 Canon PIXMA MG5100
+
+     * The following PIXMA models have PIXUS aliases for reasons of
+       compatibility. In future, a complete compatibility is planned, for
+       which it will need to be determined whether all PIXMA models have
+       PIXUS counterparts, and vice versa.
+
+	 Canon PIXUS iP2700
+	 Canon PIXUS iP3100
+	 Canon PIXUS iP4100
+
+     * CD printing support for the following Canon printers was added:
+
+	 Canon PIXMA i560
+	 Canon PIXMA i860
+	 Canon PIXMA i865
+	 Canon PIXMA iP4600
+	 Canon PIXMA iP4700
+	 Canon PIXMA iP4800
+	 Canon PIXMA iP4900
+	 Canon PIXMA MP980
+	 Canon PIXMA MP990
+	 Canon PIXMA MG5200
+	 Canon PIXMA MG5300
+	 Canon PIXMA MG6100
+	 Canon PIXMA MG6200
+	 Canon PIXMA MG8100
+	 Canon PIXMA MG8200
+
+     * The following Canon printer models were either not added, or
+       removed, as they cannot currently be supported, even
+       experimentally, owing to an as-yet unknown command format or
+       other issues:
+
+	 Canon PIXMA 320i
+	 Canon PIXMA i250
+	 Canon PIXMA i320
+	 Canon PIXMA i350
+	 Canon PIXMA iP1000
+	 Canon PIXMA iP1200
+	 Canon PIXMA iP1300
+	 Canon PIXMA iP1500
+	 Canon PIXMA iP1600
+	 Canon PIXMA iP1700
+	 Canon PIXMA iP1800
+	 Canon PIXMA iP1900
+	 Canon PIXMA iP2200
+	 Canon PIXMA iP2500
+	 Canon PIXMA iP2600
+	 Canon PIXMA MP5
+	 Canon PIXMA MP10
+	 Canon PIXMA MP55
+	 Canon PIXMA MP110
+	 Canon PIXMA MP130
+	 Canon PIXMA PRO-1 *1
+	 Canon SELPHY CP600 *2
+	 Canon SELPHY CP720 *2
+	 Canon SELPHY CP780 *2
+	 Canon SELPHY CP800 *2
+	 Canon SELPHY ES1 *2
+	 Canon SELPHY ES2 *2
+	 Canon SELPHY ES3 *2
+	 Canon SELPHY ES20 *2
+	 Canon SELPHY ES30 *2
+	 Canon SELPHY ES40 *2
+
+	 *1: protocol is supported but inks used are not yet supported
+	 *2: requires special communication protocol
+
+     * The following printers do not currently offer a grayscale
+       printing mode.  If you wish to print grayscale, you should
+       select the Desaturated color correction method.
+
+         Canon BJC-2000
+	 Canon BJC-5500
+	 Canon BJC-6000
+	 Canon BJC-6200
+	 Canon BJC-6500
+	 Canon BJC-7000
+	 Canon BJC-7100
+	 Canon BJC-8200
+	 Canon BJC-8500
+	 Canon SELPHY DS700
+	 Canon SELPHY DS810
+	 Canon PIXMA mini220
+	 Canon PIXMA mini320
+	 Canon PIXMA iP6000D
+	 Canon PIXMA iP6100D
+	 Canon PIXMA iP6210D
+	 Canon PIXMA iP6600D
+	 Canon PIXMA Pro9000
+	 Canon PIXMA Pro9000mk2
+	 Canon PIXMA Pro9500
+	 Canon PIXMA Pro9500mk2
+	 Canon 900PD
+
+     * Some Canon BJC series printers using photo cartridge have
+       printing modes added that will select this cartridge (BJC 3000,
+       4300, 4550, S400).
+
+     * Canon Japan printers of the *i series (e.g., 50i) have been
+       matched with non-Japan i* series (e.g., i70) printers, and
+       support for inkjet Hagaki and plain Hagaki added to the non-Japan
+       models where equivalent Japan models exist.
+
+     * The Canon backend was modified extensively, with many new Canon
+       printer commands newly or better supported. Printer modes for
+       most printer models are now determined by the media, based on
+       information from the corresponding Windows driver. If an
+       incompatible mode is selected by the user, a suitable mode is
+       substituted, based on the other active parameters and quality
+       setting. Modes are also substituted based on cartridge selection
+       and duplex selection. Inktype is then automatically adjusted.
+
+       Since the printer itself converts the data sent to the printer
+       into the actual inks used, the format of the data sent to the
+       printer is rather strict, and the relationship between this
+       data and the actual inks is often unknown.
+
+     * Added support for 8-bit inks to Canon backend, and modes using
+       them.
+
+     * Adjusted margins and page sizes of Canon printers.
+
+     * Added borderless functionality to most Canon printers (except S
+       series and BJC series). Borderless uses photo modes, and should
+       therefore be usable for all photo media. For plain media and
+       Hagaki or Envelope media, there is currently no mode substitution
+       to use photo colors only in place of the normal modes, and
+       therefore borderless may work incorrectly or not at all. It is
+       therefore recommended to use borderless only for photo media
+       until further development.
+
+  2) New printers supported in this release:
 
      Note that support for all printers marked "EXPERIMENTAL"
      (untested) or "PRELIMINARY" (minimally tested but untuned) is
@@ -265,101 +451,101 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Canon inkjet printers:
 
-       Canon   BJC 4550   (EXPERIMENTAL)
-       Canon   BJC S330   (EXPERIMENTAL)
-       Canon   BJC S520   (EXPERIMENTAL)
-       Canon   BJC S530D  (EXPERIMENTAL)
-       Canon   BJC S630   (EXPERIMENTAL)
-       Canon   BJC S750   (EXPERIMENTAL)
-       Canon   BJC S820   (EXPERIMENTAL)
-       Canon   BJC S830D  (EXPERIMENTAL)
-       Canon   BJC S900   (EXPERIMENTAL)
-       Canon   BJC S9000  (EXPERIMENTAL)
-       Canon PIXMA mini220(EXPERIMENTAL)
-       Canon PIXMA mini320(EXPERIMENTAL)
-       Canon PIXMA mini360(EXPERIMENTAL)
-       Canon PIXMA DS700  (EXPERIMENTAL)
-       Canon PIXMA DS810  (EXPERIMENTAL)
-       Canon PIXMA 50i    (EXPERIMENTAL)
-       Canon PIXMA 80i    (EXPERIMENTAL)
-       Canon PIXMA 450i   (EXPERIMENTAL)
-       Canon PIXMA 455i   (EXPERIMENTAL)
-       Canon PIXMA 470PD  (EXPERIMENTAL)
-       Canon PIXMA 475PD  (EXPERIMENTAL)
-       Canon PIXMA 550i   (EXPERIMENTAL)
-       Canon PIXMA 560i   (EXPERIMENTAL)
-       Canon PIXMA 850i   (EXPERIMENTAL)
-       Canon PIXMA 860i   (EXPERIMENTAL)
-       Canon PIXMA 865R   (EXPERIMENTAL)
-       Canon PIXMA 900PD  (EXPERIMENTAL)
-       Canon PIXMA 950i   (EXPERIMENTAL)
-       Canon PIXMA 960i   (EXPERIMENTAL)
-       Canon PIXMA 990i   (EXPERIMENTAL)
-       Canon PIXMA 6100i  (EXPERIMENTAL)
-       Canon PIXMA 6500i  (EXPERIMENTAL)
-       Canon PIXMA 9100i  (EXPERIMENTAL)
-       Canon PIXMA 9900i  (EXPERIMENTAL)
-       Canon PIXMA i70    (EXPERIMENTAL)
-       Canon PIXMA i450   (EXPERIMENTAL)
-       Canon PIXMA i450X  (EXPERIMENTAL)
-       Canon PIXMA i455   (EXPERIMENTAL)
-       Canon PIXMA i455X  (EXPERIMENTAL)
-       Canon PIXMA i470D  (EXPERIMENTAL)
-       Canon PIXMA i475D  (EXPERIMENTAL)
-       Canon PIXMA i550   (EXPERIMENTAL)
-       Canon PIXMA i550X  (EXPERIMENTAL)
-       Canon PIXMA i560X  (EXPERIMENTAL)
-       Canon PIXMA i900D  (EXPERIMENTAL)
-       Canon PIXMA i905D  (EXPERIMENTAL)
-       Canon PIXMA i950   (EXPERIMENTAL)
-       Canon PIXMA i960   (EXPERIMENTAL)
-       Canon PIXMA i965   (EXPERIMENTAL)
-       Canon PIXMA i990   (EXPERIMENTAL)
-       Canon PIXMA i6100  (EXPERIMENTAL)
-       Canon PIXMA i6500  (EXPERIMENTAL)
-       Canon PIXMA i9100  (EXPERIMENTAL)
-       Canon PIXMA i9900  (EXPERIMENTAL)
-       Canon PIXMA i9950  (EXPERIMENTAL)
-       Canon PIXMA iP90   (EXPERIMENTAL)
-       Canon PIXMA iP90v  (EXPERIMENTAL)
-       Canon PIXMA iP100  (EXPERIMENTAL)
-       Canon PIXMA iP3600 (EXPERIMENTAL)
-       Canon PIXMA iP3500 (EXPERIMENTAL)
-       Canon PIXMA iP3300 (EXPERIMENTAL)
-       Canon PIXMA iP4900 (EXPERIMENTAL)
-       Canon PIXMA iP6210D(EXPERIMENTAL)
-       Canon PIXMA iP6220D(EXPERIMENTAL)
-       Canon PIXMA iP6310D(EXPERIMENTAL)
-       Canon PIXMA iP6320D(EXPERIMENTAL)
-       Canon PIXMA iP7100 (EXPERIMENTAL)
-       Canon PIXMA iP7500 (EXPERIMENTAL)
-       Canon PIXMA iP8100 (EXPERIMENTAL)
-       Canon PIXMA iP8600 (EXPERIMENTAL)
-       Canon PIXMA iP9910 (EXPERIMENTAL)
-       Canon PIXMA MP140  (EXPERIMENTAL)
-       Canon PIXMA MP190  (EXPERIMENTAL)
-       Canon PIXMA MP210  (EXPERIMENTAL)
-       Canon PIXMA MP240  (EXPERIMENTAL)
-       Canon PIXMA MP260  (EXPERIMENTAL)
+       Canon   BJC 4550    (EXPERIMENTAL)
+       Canon   BJC S330    (EXPERIMENTAL)
+       Canon   BJC S520    (EXPERIMENTAL)
+       Canon   BJC S530D   (EXPERIMENTAL)
+       Canon   BJC S630    (EXPERIMENTAL)
+       Canon   BJC S750    (EXPERIMENTAL)
+       Canon   BJC S820    (EXPERIMENTAL)
+       Canon   BJC S830D   (EXPERIMENTAL)
+       Canon   BJC S900    (EXPERIMENTAL)
+       Canon   BJC S9000   (EXPERIMENTAL)
+       Canon PIXMA mini220 (EXPERIMENTAL)
+       Canon PIXMA mini320 (EXPERIMENTAL)
+       Canon PIXMA mini360 (EXPERIMENTAL)
+       Canon PIXMA DS700   (EXPERIMENTAL)
+       Canon PIXMA DS810   (EXPERIMENTAL)
+       Canon PIXMA 50i     (EXPERIMENTAL)
+       Canon PIXMA 80i     (EXPERIMENTAL)
+       Canon PIXMA 450i    (EXPERIMENTAL)
+       Canon PIXMA 455i    (EXPERIMENTAL)
+       Canon PIXMA 470PD   (EXPERIMENTAL)
+       Canon PIXMA 475PD   (EXPERIMENTAL)
+       Canon PIXMA 550i    (EXPERIMENTAL)
+       Canon PIXMA 560i    (EXPERIMENTAL)
+       Canon PIXMA 850i    (EXPERIMENTAL)
+       Canon PIXMA 860i    (EXPERIMENTAL)
+       Canon PIXMA 865R    (EXPERIMENTAL)
+       Canon PIXMA 900PD   (EXPERIMENTAL)
+       Canon PIXMA 950i    (EXPERIMENTAL)
+       Canon PIXMA 960i    (EXPERIMENTAL)
+       Canon PIXMA 990i    (EXPERIMENTAL)
+       Canon PIXMA 6100i   (EXPERIMENTAL)
+       Canon PIXMA 6500i   (EXPERIMENTAL)
+       Canon PIXMA 9100i   (EXPERIMENTAL)
+       Canon PIXMA 9900i   (EXPERIMENTAL)
+       Canon PIXMA i70     (EXPERIMENTAL)
+       Canon PIXMA i450    (EXPERIMENTAL)
+       Canon PIXMA i450X   (EXPERIMENTAL)
+       Canon PIXMA i455    (EXPERIMENTAL)
+       Canon PIXMA i455X   (EXPERIMENTAL)
+       Canon PIXMA i470D   (EXPERIMENTAL)
+       Canon PIXMA i475D   (EXPERIMENTAL)
+       Canon PIXMA i550    (EXPERIMENTAL)
+       Canon PIXMA i550X   (EXPERIMENTAL)
+       Canon PIXMA i560X   (EXPERIMENTAL)
+       Canon PIXMA i900D   (EXPERIMENTAL)
+       Canon PIXMA i905D   (EXPERIMENTAL)
+       Canon PIXMA i950    (EXPERIMENTAL)
+       Canon PIXMA i960    (EXPERIMENTAL)
+       Canon PIXMA i965    (EXPERIMENTAL)
+       Canon PIXMA i990    (EXPERIMENTAL)
+       Canon PIXMA i6100   (EXPERIMENTAL)
+       Canon PIXMA i6500   (EXPERIMENTAL)
+       Canon PIXMA i9100   (EXPERIMENTAL)
+       Canon PIXMA i9900   (EXPERIMENTAL)
+       Canon PIXMA i9950   (EXPERIMENTAL)
+       Canon PIXMA iP90    (EXPERIMENTAL)
+       Canon PIXMA iP90v   (EXPERIMENTAL)
+       Canon PIXMA iP100   (EXPERIMENTAL)
+       Canon PIXMA iP3600  (EXPERIMENTAL)
+       Canon PIXMA iP3500  (EXPERIMENTAL)
+       Canon PIXMA iP3300  (EXPERIMENTAL)
+       Canon PIXMA iP4900  (EXPERIMENTAL)
+       Canon PIXMA iP6210D (EXPERIMENTAL)
+       Canon PIXMA iP6220D (EXPERIMENTAL)
+       Canon PIXMA iP6310D (EXPERIMENTAL)
+       Canon PIXMA iP6320D (EXPERIMENTAL)
+       Canon PIXMA iP7100  (EXPERIMENTAL)
+       Canon PIXMA iP7500  (EXPERIMENTAL)
+       Canon PIXMA iP8100  (EXPERIMENTAL)
+       Canon PIXMA iP8600  (EXPERIMENTAL)
+       Canon PIXMA iP9910  (EXPERIMENTAL)
+       Canon PIXMA MP140   (EXPERIMENTAL)
+       Canon PIXMA MP190   (EXPERIMENTAL)
+       Canon PIXMA MP210   (EXPERIMENTAL)
+       Canon PIXMA MP240   (EXPERIMENTAL)
+       Canon PIXMA MP260   (EXPERIMENTAL)
        Canon PIXMA MP375R
-       Canon PIXMA MP470  (EXPERIMENTAL)
-       Canon PIXMA MP490  (EXPERIMENTAL)
-       Canon PIXMA MP530  (EXPERIMENTAL)
-       Canon PIXMA MP900  (EXPERIMENTAL)
-       Canon PIXMA MX320  (EXPERIMENTAL)
-       Canon PIXMA MX370  (EXPERIMENTAL)
-       Canon PIXMA MX430  (EXPERIMENTAL)
-       Canon PIXMA MX510  (EXPERIMENTAL)
-       Canon PIXMA MX710  (EXPERIMENTAL)
-       Canon PIXMA MX890  (EXPERIMENTAL)
-       Canon PIXMA MG2100 (EXPERIMENTAL)
-       Canon PIXMA MG3100 (EXPERIMENTAL)
-       Canon PIXMA MG4100 (EXPERIMENTAL)
-       Canon PIXMA MG5300 (EXPERIMENTAL)
-       Canon PIXMA MG6200 (EXPERIMENTAL)
-       Canon PIXMA MG8200 (EXPERIMENTAL)
-       Canon PIXMA E500   (EXPERIMENTAL)
-       Canon PIXMA E600   (EXPERIMENTAL)
+       Canon PIXMA MP470   (EXPERIMENTAL)
+       Canon PIXMA MP490   (EXPERIMENTAL)
+       Canon PIXMA MP530   (EXPERIMENTAL)
+       Canon PIXMA MP900   (EXPERIMENTAL)
+       Canon PIXMA MX320   (EXPERIMENTAL)
+       Canon PIXMA MX370   (EXPERIMENTAL)
+       Canon PIXMA MX430   (EXPERIMENTAL)
+       Canon PIXMA MX510   (EXPERIMENTAL)
+       Canon PIXMA MX710   (EXPERIMENTAL)
+       Canon PIXMA MX890   (EXPERIMENTAL)
+       Canon PIXMA MG2100  (EXPERIMENTAL)
+       Canon PIXMA MG3100  (EXPERIMENTAL)
+       Canon PIXMA MG4100  (EXPERIMENTAL)
+       Canon PIXMA MG5300  (EXPERIMENTAL)
+       Canon PIXMA MG6200  (EXPERIMENTAL)
+       Canon PIXMA MG8200  (EXPERIMENTAL)
+       Canon PIXMA E500    (EXPERIMENTAL)
+       Canon PIXMA E600    (EXPERIMENTAL)
 
      - Epson inkjet printers:
 
@@ -400,162 +586,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
      to be corrected.
 
-  5) The following Canon printer models were completely redefined or
-     had major changes carried out in the supported modes:
-
-       Canon   BJC 3000   (EXPERIMENTAL)
-       Canon   BJC S300   (EXPERIMENTAL)
-       Canon   BJC S500   (EXPERIMENTAL)
-       Canon   BJC S600   (EXPERIMENTAL)
-       Canon   BJC S800   (EXPERIMENTAL)
-       Canon PIXMA i80    (EXPERIMENTAL)
-       Canon PIXMA i560   (EXPERIMENTAL)
-       Canon PIXMA i850   (EXPERIMENTAL) *1
-       Canon PIXMA i860   (EXPERIMENTAL) *1
-       Canon PIXMA i865   (EXPERIMENTAL) *1
-       Canon PIXMA iP2000 (EXPERIMENTAL)
-       Canon PIXMA iP4100 (EXPERIMENTAL)
-       Canon PIXMA iP5000 (EXPERIMENTAL)
-       Canon PIXMA iP6210D(EXPERIMENTAL)
-       Canon PIXMA iP6220D(EXPERIMENTAL)
-       Canon PIXMA iP6310D(EXPERIMENTAL)
-       Canon PIXMA MP600
-       Canon PIXMA MP750
-       Canon PIXMA MP760
-       Canon PIXMA MP770
-       Canon PIXMA MP780
-       Canon PIXMA MP790
-       Canon PIXMA MP970
-
-       *1: for compatibility, the original printers are named with
-        "old" appended. These old printers will be deprecated in a
-        future release.
-
-  6) Support for the following Canon printers was greatly improved, or
-     tested:
-
-       Canon PIXMA MP700
-       Canon PIXMA MP710
-       Canon PIXMA MP730
-       Canon PIXMA MP740
-       Canon PIXMA MP950
-       Canon PIXMA MP960
-       Canon PIXMA MX340
-       Canon PIXMA MX350
-       Canon PIXMA iP4000
-       Canon PIXMA MG5100
-
-  7) The following PIXMA models have PIXUS aliases for reasons of
-     compatibility. In future, a complete compatibility is planned, for
-     which it will need to be determined whether all PIXMA models have
-     PIXUS counterparts, and vice versa.
-
-       Canon PIXUS iP2700
-       Canon PIXUS iP3100
-       Canon PIXUS iP4100
-
-  8) CD printing support for the following Canon printers was added:
-
-       Canon PIXMA i560
-       Canon PIXMA i860
-       Canon PIXMA i865
-       Canon PIXMA iP4600
-       Canon PIXMA iP4700
-       Canon PIXMA iP4800
-       Canon PIXMA iP4900
-       Canon PIXMA MP980
-       Canon PIXMA MP990
-       Canon PIXMA MG5200
-       Canon PIXMA MG5300
-       Canon PIXMA MG6100
-       Canon PIXMA MG6200
-       Canon PIXMA MG8100
-       Canon PIXMA MG8200
-
-  9) The following Canon printer models were either not added, or
-     removed, as they cannot currently be supported, even
-     experimentally, owing to an as-yet unknown command format or
-     other issues:
-
-       Canon PIXMA 320i
-       Canon PIXMA i250
-       Canon PIXMA i320
-       Canon PIXMA i350
-       Canon PIXMA iP1000
-       Canon PIXMA iP1200
-       Canon PIXMA iP1300
-       Canon PIXMA iP1500
-       Canon PIXMA iP1600
-       Canon PIXMA iP1700
-       Canon PIXMA iP1800
-       Canon PIXMA iP1900
-       Canon PIXMA iP2200
-       Canon PIXMA iP2500
-       Canon PIXMA iP2600
-       Canon PIXMA MP5
-       Canon PIXMA MP10
-       Canon PIXMA MP55
-       Canon PIXMA MP110
-       Canon PIXMA MP130
-       Canon PIXMA PRO-1 *1
-       Canon SELPHY CP600 *2
-       Canon SELPHY CP720 *2
-       Canon SELPHY CP780 *2
-       Canon SELPHY CP800 *2
-       Canon SELPHY ES1 *2
-       Canon SELPHY ES2 *2
-       Canon SELPHY ES3 *2
-       Canon SELPHY ES20 *2
-       Canon SELPHY ES30 *2
-       Canon SELPHY ES40 *2
-
-       *1: protocol is supported but inks used are not yet supported
-       *2: requires special communication protocol
-
-  10) Some Canon BJC series printers using photo cartridge have
-     printing modes added that will select this cartridge (BJC 3000,
-     4300, 4550, S400).
-
-  11) Canon Japan printers of the *i series (e.g., 50i) have been
-     matched with non-Japan i* series (e.g., i70) printers, and
-     support for inkjet Hagaki and plain Hagaki added to the non-Japan
-     models where equivalent Japan models exist.
-
-  12) The Canon backend was modified extensively, with many new Canon
-     printer commands newly or better supported. Printer modes for
-     most printer models are now determined by the media, based on
-     information from the corresponding Windows driver. If an
-     incompatible mode is selected by the user, a suitable mode is
-     substituted, based on the other active parameters and quality
-     setting. Modes are also substituted based on cartridge selection
-     and duplex selection. Inktype is then automatically adjusted.
-
-     Since the printhead firmware converts the data sent to the
-     printer into the actual inks used, the format of the data sent to
-     the printer is rather strict, and the relationship between this
-     data and the actual inks is often unknown.
-
-  13) Added support for 8-bit inks to Canon backend, and modes using
-     them.
-
-  14) Adjusted margins and page sizes of Canon printers.
-
-  15) Added borderless functionality to most Canon printers (except S
-     series and BJC series). Borderless uses photo modes, and should
-     therefore be usable for all photo media. For plain media and
-     Hagaki or Envelope media, there is currently no mode substitution
-     to use photo colors only in place of the normal modes, and
-     therefore borderless may work incorrectly or not at all. It is
-     therefore recommended to use borderless only for photo media
-     until further development.
-
-  16) A build problem with libgutenprintui2 and testpattern on certain
+  5) A build problem with libgutenprintui2 and testpattern on certain
      platforms has been fixed.
 
-  17) (API) Added function stp_vars_copy_from() to override settings in
+  6) (API) Added function stp_vars_copy_from() to override settings in
      one settings object with those in another.
 
-  18) Chinese (Mandarin), Galician, and Ukrainian translations have
+  7) Chinese (Mandarin), Galician, and Ukrainian translations have
      been added.
 
 
