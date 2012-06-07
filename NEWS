@@ -577,22 +577,22 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        present, we do not have a schedule for adding support for the
        green and orange inks.
 
-  2) A problem whereby printing did not work at all on some Linux
+  3) A problem whereby printing did not work at all on some Linux
      distributions has been fixed (3299815 CUPS PPD broken on Linux).
 
-  3) A crash with the EPSON Stylus Photo R3000 has been fixed.
+  4) A crash with the EPSON Stylus Photo R3000 has been fixed.
 
-  4) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
+  5) Printing on the Epson Stylus NX200, SX200, and SX205 is believed
      to be corrected.
 
-  5) A build problem with libgutenprintui2 and testpattern on certain
+  6) A build problem with libgutenprintui2 and testpattern on certain
      platforms has been fixed.
-
-  6) (API) Added function stp_vars_copy_from() to override settings in
-     one settings object with those in another.
 
   7) Chinese (Mandarin), Galician, and Ukrainian translations have
      been added.
+
+  8) (API) Added function stp_vars_copy_from() to override settings in
+     one settings object with those in another.
 
 
 * Changes from 5.2.6
