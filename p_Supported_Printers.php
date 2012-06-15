@@ -18,6 +18,7 @@ of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
 <table cellspacing="4">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Guitenprint 5.2.8</b></caption>
 <tr><td><b>Printer Model</b></td><td><b>Driver Name</b></td><td><b>Foomatic Name</b></td><td><b>Notes</b></td></tr>
 <tr><td>Apollo P-2100</td><td>pcl-apollo-p2100</td><td>Apollo-P-2100</td><td></td></tr>
 <tr><td>Apollo P-2150</td><td>pcl-apollo-p2150</td><td>Apollo-P-2150</td><td></td></tr>
@@ -75,6 +76,25 @@ and reporting the results!</p>
 <tr><td>Brother MFC-8300</td><td>brother-mfc-8300</td><td>Brother-MFC-8300</td><td></td></tr>
 <tr><td>Brother MFC-9500</td><td>brother-mfc-9500</td><td>Brother-MFC-9500</td><td></td></tr>
 <tr><td>Brother MFC-9600</td><td>brother-mfc-9600</td><td>Brother-MFC-9600</td><td></td></tr>
+<tr><td>Canon 450i</td><td>bjc-450i</td><td>Canon-450i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 455i</td><td>bjc-455i</td><td>Canon-455i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 470PD</td><td>bjc-470PD</td><td>Canon-470PD</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 475PD</td><td>bjc-475PD</td><td>Canon-475PD</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 50i</td><td>bjc-50i</td><td>Canon-50i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 550i</td><td>bjc-550i</td><td>Canon-550i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 560i</td><td>bjc-560i</td><td>Canon-560i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 6100i</td><td>bjc-6100i</td><td>Canon-6100i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 6500i</td><td>bjc-6500i</td><td>Canon-6500i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 80i</td><td>bjc-80i</td><td>Canon-80i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 850i</td><td>bjc-850i</td><td>Canon-850i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 860i</td><td>bjc-860i</td><td>Canon-860i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 865R</td><td>bjc-865R</td><td>Canon-865R</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 900PD</td><td>bjc-900PD</td><td>Canon-900PD</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 9100i</td><td>bjc-9100i</td><td>Canon-9100i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 950i</td><td>bjc-950i</td><td>Canon-950i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 960i</td><td>bjc-960i</td><td>Canon-960i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 9900i</td><td>bjc-9900i</td><td>Canon-9900i</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon 990i</td><td>bjc-990i</td><td>Canon-990i</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon BJ-30</td><td>bjc-30</td><td>Canon-BJ-30</td><td></td></tr>
 <tr><td>Canon BJC-1000</td><td>bjc-1000</td><td>Canon-BJC-1000</td><td></td></tr>
 <tr><td>Canon BJC-2000</td><td>bjc-2000</td><td>Canon-BJC-2000</td><td></td></tr>
@@ -84,14 +104,14 @@ and reporting the results!</p>
 <tr><td>Canon BJC-2110</td><td>bjc-2110</td><td>Canon-BJC-2110</td><td></td></tr>
 <tr><td>Canon BJC-240</td><td>bjc-240</td><td>Canon-BJC-240</td><td></td></tr>
 <tr><td>Canon BJC-250</td><td>bjc-250</td><td>Canon-BJC-250</td><td></td></tr>
-<tr><td>Canon BJC-3000</td><td>bjc-3000</td><td>Canon-BJC-3000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon BJC-3000</td><td>bjc-3000</td><td>Canon-BJC-3000</td><td></td></tr>
 <tr><td>Canon BJC-4000</td><td>bjc-4000</td><td>Canon-BJC-4000</td><td></td></tr>
 <tr><td>Canon BJC-4300</td><td>bjc-4300</td><td>Canon-BJC-4300</td><td></td></tr>
 <tr><td>Canon BJC-4400</td><td>bjc-4400</td><td>Canon-BJC-4400</td><td></td></tr>
 <tr><td>Canon BJC-4550</td><td>bjc-4550</td><td>Canon-BJC-4550</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon BJC-50</td><td>bjc-50</td><td>Canon-BJC-50</td><td></td></tr>
 <tr><td>Canon BJC-5100</td><td>bjc-5100</td><td>Canon-BJC-5100</td><td></td></tr>
-<tr><td>Canon BJC-5500</td><td>bjc-5500</td><td>Canon-BJC-5500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon BJC-5500</td><td>bjc-5500</td><td>Canon-BJC-5500</td><td></td></tr>
 <tr><td>Canon BJC-55</td><td>bjc-55</td><td>Canon-BJC-55</td><td></td></tr>
 <tr><td>Canon BJC-6000</td><td>bjc-6000</td><td>Canon-BJC-6000</td><td></td></tr>
 <tr><td>Canon BJC-6100</td><td>bjc-6100</td><td>Canon-BJC-6100</td><td></td></tr>
@@ -111,26 +131,34 @@ and reporting the results!</p>
 <tr><td>Canon CP-330</td><td>canon-cp330</td><td>Canon-CP-330</td><td></td></tr>
 <tr><td>Canon GP 335</td><td>canon-gp_335</td><td>Canon-GP_335</td><td></td></tr>
 <tr><td>Canon i450</td><td>bjc-i450</td><td>Canon-i450</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i450X</td><td>bjc-i450X</td><td>Canon-i450X</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i455</td><td>bjc-i455</td><td>Canon-i455</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i455X</td><td>bjc-i455X</td><td>Canon-i455X</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i470D</td><td>bjc-i470D</td><td>Canon-i470D</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i50</td><td>bjc-i50</td><td>Canon-i50</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i475D</td><td>bjc-i475D</td><td>Canon-i475D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i550</td><td>bjc-i550</td><td>Canon-i550</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i560</td><td>bjc-i560</td><td>Canon-i560</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i550X</td><td>bjc-i550X</td><td>Canon-i550X</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i560</td><td>bjc-i560</td><td>Canon-i560</td><td></td></tr>
+<tr><td>Canon i560X</td><td>bjc-i560X</td><td>Canon-i560X</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i6100</td><td>bjc-i6100</td><td>Canon-i6100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i6500</td><td>bjc-i6500</td><td>Canon-i6500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i70</td><td>bjc-i70</td><td>Canon-i70</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i80</td><td>bjc-i80</td><td>Canon-i80</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i80</td><td>bjc-i80</td><td>Canon-i80</td><td></td></tr>
 <tr><td>Canon i850</td><td>bjc-i850</td><td>Canon-i850</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i850old</td><td>bjc-i850old</td><td>Canon-i850old</td><td></td></tr>
+<tr><td>Canon i850old</td><td>bjc-i850old</td><td>Canon-i850old</td><td>Original printers are named with "old" appended</td></tr>
 <tr><td>Canon i860</td><td>bjc-i860</td><td>Canon-i860</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i860old</td><td>bjc-i860old</td><td>Canon-i860old</td><td></td></tr>
-<tr><td>Canon i865   </td><td>bjc-i865</td><td>Canon-i865</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i865old</td><td>bjc-i865old</td><td>Canon-i865old</td><td></td></tr>
-<tr><td>Canon i900D</td><td>bjc-i900</td><td>Canon-i900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i860old</td><td>bjc-i860old</td><td>Canon-i860old</td><td>Original printers are named with "old" appended</td></tr>
+<tr><td>Canon i865</td><td>bjc-i865</td><td>Canon-i865</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i865old</td><td>bjc-i865old</td><td>Canon-i865old</td><td>Original printers are named with "old" appended</td></tr>
+<tr><td>Canon i900D</td><td>bjc-i900D</td><td>Canon-i900D</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i905D</td><td>bjc-i905D</td><td>Canon-i905D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i9100</td><td>bjc-i9100</td><td>Canon-i9100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i950</td><td>bjc-i950</td><td>Canon-i950</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i960</td><td>bjc-i960</td><td>Canon-i960</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i965</td><td>bjc-i965</td><td>Canon-i965</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i9900</td><td>bjc-i9900</td><td>Canon-i9900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i990</td><td>bjc-i990</td><td>Canon-i990</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon i9950</td><td>bjc-i9950</td><td>Canon-i9950</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon imageRunner 330s</td><td>canon-ir_330s</td><td>Canon-imageRunner_330s</td><td></td></tr>
 <tr><td>Canon LBP-1000</td><td>canon-lbp-1000</td><td>Canon-LBP-1000</td><td></td></tr>
 <tr><td>Canon LBP-1260</td><td>canon-lbp-1260</td><td>Canon-LBP-1260</td><td></td></tr>
@@ -138,14 +166,20 @@ and reporting the results!</p>
 <tr><td>Canon LBP-3360</td><td>canon-lbp-3360</td><td>Canon-LBP-3360</td><td></td></tr>
 <tr><td>Canon LBP-430</td><td>canon-lbp-430</td><td>Canon-LBP-430</td><td></td></tr>
 <tr><td>Canon LBP-4sx</td><td>canon-lbp-4sx</td><td>Canon-LBP-4sx</td><td></td></tr>
+<tr><td>Canon PIXMA E500</td><td>bjc-MULTIPASS-E500</td><td>Canon-MULTIPASS-E500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA E600</td><td>bjc-MULTIPASS-E600</td><td>Canon-MULTIPASS-E600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP100</td><td>bjc-PIXMA-iP100</td><td>Canon-PIXMA-iP100</td><td></td></tr>
 <tr><td>Canon PIXMA iP2000</td><td>bjc-PIXMA-iP2000</td><td>Canon-PIXMA-iP2000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP2700</td><td>bjc-PIXMA-iP2700</td><td>Canon-PIXMA-iP2700</td><td></td></tr>
 <tr><td>Canon PIXMA iP3000</td><td>bjc-PIXMA-iP3000</td><td>Canon-PIXMA-iP3000</td><td></td></tr>
 <tr><td>Canon PIXMA iP3100</td><td>bjc-PIXMA-iP3100</td><td>Canon-PIXMA-iP3100</td><td></td></tr>
 <tr><td>Canon PIXMA iP3300</td><td>bjc-PIXMA-iP3300</td><td>Canon-PIXMA-iP3300</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP3500</td><td>bjc-PIXMA-iP3500</td><td>Canon-PIXMA-iP3500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP3600</td><td>bjc-PIXMA-iP3600</td><td>Canon-PIXMA-iP3600</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP4000</td><td>bjc-iP4000</td><td>Canon-iP4000</td><td></td></tr>
+<tr><td>Canon PIXMA iP4000R</td><td>bjc-PIXMA-iP4000R</td><td>Canon-iP4000R</td><td></td></tr>
 <tr><td>Canon PIXMA iP4100</td><td>bjc-PIXMA-iP4100</td><td>Canon-PIXMA-iP4100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP4100R</td><td>bjc-PIXMA-iP4100R</td><td>Canon-PIXMA-iP4100R</td><td></td></tr>
 <tr><td>Canon PIXMA iP4200</td><td>bjc-PIXMA-iP4200</td><td>Canon-PIXMA-iP4200</td><td></td></tr>
 <tr><td>Canon PIXMA iP4300</td><td>bjc-PIXMA-iP4300</td><td>Canon-PIXMA-iP4300</td><td></td></tr>
 <tr><td>Canon PIXMA iP4500</td><td>bjc-PIXMA-iP4500</td><td>Canon-PIXMA-iP4500</td><td></td></tr>
@@ -155,19 +189,23 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA iP4900</td><td>bjc-PIXMA-iP4900</td><td>Canon-PIXMA-iP4900</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP5000</td><td>bjc-PIXMA-iP5000</td><td>Canon-PIXMA-iP5000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP5200</td><td>bjc-PIXMA-iP5200</td><td>Canon-PIXMA-iP5200</td><td></td></tr>
+<tr><td>Canon PIXMA iP5200R</td><td>bjc-PIXMA-iP5200R</td><td>Canon-PIXMA-iP5200R</td><td></td></tr>
 <tr><td>Canon PIXMA iP5300</td><td>bjc-PIXMA-iP5300</td><td>Canon-PIXMA-iP5300</td><td></td></tr>
 <tr><td>Canon PIXMA iP6000D</td><td>bjc-PIXMA-iP6000D</td><td>Canon-PIXMA-iP6000D</td><td></td></tr>
 <tr><td>Canon PIXMA iP6100D</td><td>bjc-PIXMA-iP6100D</td><td>Canon-PIXMA-iP6100D</td><td></td></tr>
 <tr><td>Canon PIXMA iP6210D</td><td>bjc-PIXMA-iP6210D</td><td>Canon-PIXMA-iP6210D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP6220D</td><td>bjc-PIXMA-iP6220D</td><td>Canon-PIXMA-iP6220D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP6310D</td><td>bjc-PIXMA-iP6310D</td><td>Canon-PIXMA-iP6310D</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP6320D</td><td>bjc-PIXMA-iP6320D</td><td>Canon-PIXMA-iP6320D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP6600D</td><td>bjc-PIXMA-iP6600D</td><td>Canon-PIXMA-iP6600D</td><td></td></tr>
 <tr><td>Canon PIXMA iP6700</td><td>bjc-PIXMA-iP6700</td><td>Canon-PIXMA-iP6700</td><td></td></tr>
 <tr><td>Canon PIXMA iP7100</td><td>bjc-PIXMA-iP7100</td><td>Canon-PIXMA-iP7100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP7500</td><td>bjc-PIXMA-iP7500</td><td>Canon-PIXMA-iP7500</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA iP8100</td><td>bjc-PIXMA-iP8100</td><td>Canon-PIXMA-iP8100</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP8100</td><td>bjc-PIXMA-iP8100</td><td>Canon-PIXMA-iP8100</td><td></td></tr>
 <tr><td>Canon PIXMA iP8500</td><td>bjc-PIXMA-iP8500</td><td>Canon-PIXMA-iP8500</td><td></td></tr>
 <tr><td>Canon PIXMA iP8600</td><td>bjc-PIXMA-iP8600</td><td>Canon-PIXMA-iP8600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP90</td><td>bjc-PIXMA-iP90</td><td>Canon-PIXMA-iP90</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA iP90v</td><td>bjc-PIXMA-iP90v</td><td>Canon-PIXMA-iP90v</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP9910</td><td>bjc-PIXMA-iP9910</td><td>Canon-PIXMA-iP9910</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iX4000</td><td>bjc-PIXMA-iX4000</td><td>Canon-PIXMA-iX4000</td><td></td></tr>
 <tr><td>Canon PIXMA iX5000</td><td>bjc-PIXMA-iX5000</td><td>Canon-PIXMA-iX5000</td><td></td></tr>
@@ -175,7 +213,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA iX7000</td><td>bjc-PIXMA-iX7000</td><td>Canon-PIXMA-iX7000</td><td></td></tr>
 <tr><td>Canon PIXMA MG2100</td><td>bjc-PIXMA-MG2100</td><td>Canon-PIXMA-MG2100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MG3100</td><td>bjc-PIXMA-MG3100</td><td>Canon-PIXMA-MG3100</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA MG4100</td><td>bjc-PIXMA-MG3100</td><td>Canon-PIXMA-MG4100</td><td>Use driver for Canon PIXMA MG3100</td></tr>
+<tr><td>Canon PIXMA MG4100</td><td>bjc-PIXMA-MG4100</td><td>Canon-PIXMA-MG4100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MG5100</td><td>bjc-PIXMA-MG5100</td><td>Canon-PIXMA-MG5100</td><td></td></tr>
 <tr><td>Canon PIXMA MG5200</td><td>bjc-PIXMA-MG5200</td><td>Canon-PIXMA-MG5200</td><td></td></tr>
 <tr><td>Canon PIXMA MG5300</td><td>bjc-PIXMA-MG5300</td><td>Canon-PIXMA-MG5300</td><td>EXPERIMENTAL</td></tr>
@@ -196,11 +234,12 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA MP220</td><td>bjc-MULTIPASS-MP220</td><td>Canon-MULTIPASS-MP220</td><td></td></tr>
 <tr><td>Canon PIXMA MP240</td><td>bjc-MULTIPASS-MP240</td><td>Canon-MULTIPASS-MP240</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP250</td><td>bjc-MULTIPASS-MP250</td><td>Canon-MULTIPASS-MP250</td><td></td></tr>
+<tr><td>Canon PIXMA MP260</td><td>bjc-MULTIPASS-MP260</td><td>Canon-MULTIPASS-MP260</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP270</td><td>bjc-MULTIPASS-MP270</td><td>Canon-MULTIPASS-MP270</td><td></td></tr>
 <tr><td>Canon PIXMA MP280</td><td>bjc-MULTIPASS-MP280</td><td>Canon-MULTIPASS-MP280</td><td></td></tr>
 <tr><td>Canon PIXMA MP360</td><td>bjc-MULTIPASS-MP360</td><td>Canon-MULTIPASS-MP360</td><td></td></tr>
 <tr><td>Canon PIXMA MP370</td><td>bjc-MULTIPASS-MP370</td><td>Canon-MULTIPASS-MP370</td><td></td></tr>
-<tr><td>Canon PIXMA MP375R</td><td>bjc-MULTIPASS-MP375R</td><td>Canon-MULTIPASS-MP375R</td><td></td></tr>
+<tr><td>Canon PIXMA MP375R</td><td>bjc-MULTIPASS-MP375R</td><td>Canon-MULTIPASS-MP375R</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MP390</td><td>bjc-MULTIPASS-MP390</td><td>Canon-MULTIPASS-MP390</td><td></td></tr>
 <tr><td>Canon PIXMA MP450</td><td>bjc-MULTIPASS-MP450</td><td>Canon-MULTIPASS-MP450</td><td></td></tr>
 <tr><td>Canon PIXMA MP460</td><td>bjc-MULTIPASS-MP460</td><td>Canon-MULTIPASS-MP460</td><td></td></tr>
@@ -217,6 +256,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA MP550</td><td>bjc-MULTIPASS-MP550</td><td>Canon-MULTIPASS-MP550</td><td></td></tr>
 <tr><td>Canon PIXMA MP560</td><td>bjc-MULTIPASS-MP560</td><td>Canon-MULTIPASS-MP560</td><td></td></tr>
 <tr><td>Canon PIXMA MP600</td><td>bjc-MULTIPASS-MP600</td><td>Canon-MULTIPASS-MP600</td><td></td></tr>
+<tr><td>Canon PIXMA MP600R</td><td>bjc-MULTIPASS-MP600R</td><td>Canon-MULTIPASS-MP600R</td><td></td></tr>
 <tr><td>Canon PIXMA MP610</td><td>bjc-MULTIPASS-MP610</td><td>Canon-MULTIPASS-MP610</td><td></td></tr>
 <tr><td>Canon PIXMA MP620</td><td>bjc-MULTIPASS-MP620</td><td>Canon-MULTIPASS-MP620</td><td></td></tr>
 <tr><td>Canon PIXMA MP630</td><td>bjc-MULTIPASS-MP630</td><td>Canon-MULTIPASS-MP630</td><td></td></tr>
@@ -231,6 +271,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA MP780</td><td>bjc-MULTIPASS-MP780</td><td>Canon-MULTIPASS-MP780</td><td></td></tr>
 <tr><td>Canon PIXMA MP790</td><td>bjc-MULTIPASS-MP790</td><td>Canon-MULTIPASS-MP790</td><td></td></tr>
 <tr><td>Canon PIXMA MP800</td><td>bjc-MULTIPASS-MP800</td><td>Canon-MULTIPASS-MP800</td><td></td></tr>
+<tr><td>Canon PIXMA MP800R</td><td>bjc-MULTIPASS-MP800R</td><td>Canon-MULTIPASS-MP800R</td><td></td></tr>
 <tr><td>Canon PIXMA MP810</td><td>bjc-MULTIPASS-MP810</td><td>Canon-MULTIPASS-MP810</td><td></td></tr>
 <tr><td>Canon PIXMA MP830</td><td>bjc-MULTIPASS-MP830</td><td>Canon-MULTIPASS-MP830</td><td></td></tr>
 <tr><td>Canon PIXMA MP900</td><td>bjc-MULTIPASS-MP900</td><td>Canon-MULTIPASS-MP900</td><td>EXPERIMENTAL</td></tr>
@@ -240,19 +281,25 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA MP980</td><td>bjc-MULTIPASS-MP980</td><td>Canon-MULTIPASS-MP980</td><td></td></tr>
 <tr><td>Canon PIXMA MP990</td><td>bjc-MULTIPASS-MP990</td><td>Canon-MULTIPASS-MP990</td><td></td></tr>
 <tr><td>Canon PIXMA MX300</td><td>bjc-MULTIPASS-MX300</td><td>Canon-MULTIPASS-MX300</td><td></td></tr>
-<tr><td>Canon PIXMA MX310</td><td>bjc-MULTIPASS-MX300</td><td>Canon-MULTIPASS-MX310</td><td>Use driver for Canon PIXMA MX300</td></tr>
+<tr><td>Canon PIXMA MX310</td><td>bjc-MULTIPASS-MX310</td><td>Canon-MULTIPASS-MX310</td><td></td></tr>
+<tr><td>Canon PIXMA MX320</td><td>bjc-MULTIPASS-MX320</td><td>Canon-MULTIPASS-MX320</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MX330</td><td>bjc-MULTIPASS-MX330</td><td>Canon-MULTIPASS-MX330</td><td></td></tr>
 <tr><td>Canon PIXMA MX340</td><td>bjc-MULTIPASS-MX340</td><td>Canon-MULTIPASS-MX340</td><td></td></tr>
-<tr><td>Canon PIXMA MX350</td><td>bjc-MULTIPASS-MX340</td><td>Canon-MULTIPASS-MX350</td><td>Use driver for Canon PIXMA MX340</td></tr>
+<tr><td>Canon PIXMA MX350</td><td>bjc-MULTIPASS-MX350</td><td>Canon-MULTIPASS-MX350</td><td></td></tr>
 <tr><td>Canon PIXMA MX360</td><td>bjc-MULTIPASS-MX360</td><td>Canon-MULTIPASS-MX360</td><td></td></tr>
+<tr><td>Canon PIXMA MX370</td><td>bjc-MULTIPASS-MX370</td><td>Canon-MULTIPASS-MX370</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MX410</td><td>bjc-MULTIPASS-MX410</td><td>Canon-MULTIPASS-MX410</td><td></td></tr>
 <tr><td>Canon PIXMA MX420</td><td>bjc-MULTIPASS-MX420</td><td>Canon-MULTIPASS-MX420</td><td></td></tr>
+<tr><td>Canon PIXMA MX430</td><td>bjc-MULTIPASS-MX430</td><td>Canon-MULTIPASS-MX430</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA MX510</td><td>bjc-MULTIPASS-MX510</td><td>Canon-MULTIPASS-MX510</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MX700</td><td>bjc-MULTIPASS-MX700</td><td>Canon-MULTIPASS-MX700</td><td></td></tr>
+<tr><td>Canon PIXMA MX710</td><td>bjc-MULTIPASS-MX710</td><td>Canon-MULTIPASS-MX710</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA MX7600</td><td>bjc-MULTIPASS-MX7600</td><td>Canon-MULTIPASS-MX7600</td><td></td></tr>
 <tr><td>Canon PIXMA MX850</td><td>bjc-MULTIPASS-MX850</td><td>Canon-MULTIPASS-MX850</td><td></td></tr>
 <tr><td>Canon PIXMA MX860</td><td>bjc-MULTIPASS-MX860</td><td>Canon-MULTIPASS-MX860</td><td></td></tr>
 <tr><td>Canon PIXMA MX870</td><td>bjc-MULTIPASS-MX870</td><td>Canon-MULTIPASS-MX870</td><td></td></tr>
 <tr><td>Canon PIXMA MX880</td><td>bjc-MULTIPASS-MX880</td><td>Canon-MULTIPASS-MX880</td><td></td></tr>
+<tr><td>Canon PIXMA MX890</td><td>bjc-MULTIPASS-MX890</td><td>Canon-MULTIPASS-MX890</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA Pro9000</td><td>bjc-PIXMA-Pro9000</td><td>Canon-PIXMA-Pro9000</td><td></td></tr>
 <tr><td>Canon PIXMA Pro9000mk2</td><td>bjc-PIXMA-Pro9000mk2</td><td>Canon-PIXMA-Pro9000-Mk2</td><td></td></tr>
 <tr><td>Canon PIXMA Pro9500</td><td>bjc-PIXMA-Pro9500</td><td>Canon-PIXMA-Pro9500</td><td></td></tr>
@@ -262,8 +309,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXUS iP4100</td><td>bjc-PIXUS-iP4100</td><td>Canon-PIXUS-iP4100</td><td></td></tr>
 <tr><td>Canon S100</td><td>bjc-s100</td><td>Canon-S100</td><td></td></tr>
 <tr><td>Canon S200</td><td>bjc-s200</td><td>Canon-S200</td><td></td></tr>
-<tr><td>Canon S300
-</td><td>bjc-s300</td><td>Canon-S300</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S300</td><td>bjc-s300</td><td>Canon-S300</td><td></td></tr>
 <tr><td>Canon S330</td><td>bjc-s330</td><td>Canon-S330</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S400</td><td>bjc-s400</td><td>Canon-S400</td><td></td></tr>
 <tr><td>Canon S4500</td><td>bjc-s4500</td><td>Canon-S4500</td><td></td></tr>
@@ -271,29 +317,48 @@ and reporting the results!</p>
 <tr><td>Canon S500</td><td>bjc-s500</td><td>Canon-S500</td><td></td></tr>
 <tr><td>Canon S520</td><td>bjc-s520</td><td>Canon-S520</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S530D</td><td>bjc-s530D</td><td>Canon-S530D</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S600</td><td>bjc-s600</td><td>Canon-S600</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S630</td><td>bjc-s630</td><td>Canon-S630</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S750</td><td>bjc-s750</td><td>Canon-S750</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S800</td><td>bjc-s800</td><td>Canon-S800</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S820</td><td>bjc-s820</td><td>Canon-S820</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S830D</td><td>bjc-s830</td><td>Canon-S830D</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S600</td><td>bjc-s600</td><td>Canon-S600</td><td></td></tr>
+<tr><td>Canon S630</td><td>bjc-s630</td><td>Canon-S630</td><td></td></tr>
+<tr><td>Canon S750</td><td>bjc-s750</td><td>Canon-S750</td><td></td></tr>
+<tr><td>Canon S800</td><td>bjc-s800</td><td>Canon-S800</td><td></td></tr>
+<tr><td>Canon S820</td><td>bjc-s820</td><td>Canon-S820</td><td></td></tr>
+<tr><td>Canon S830D</td><td>bjc-s830</td><td>Canon-S830D</td><td></td></tr>
 <tr><td>Canon S9000</td><td>bjc-s9000</td><td>Canon-S9000</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S900</td><td>bjc-s900</td><td>Canon-S900</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S900</td><td>bjc-s900</td><td>Canon-S900</td><td></td></tr>
 <tr><td>Canon SELPHY DS700</td><td>bjc-SELPHY-DS700</td><td>Canon-SELPHY-DS700</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon SELPHY DS810</td><td>bjc-SELPHY-DS810</td><td>Canon-SELPHY-DS810</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon SELPHY-CP-400</td><td>canon-cp400</td><td>Canon-SELPHY-CP-400</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-500</td><td>canon-cp500</td><td>Canon-SELPHY-CP-500</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-510</td><td>canon-cp510</td><td>Canon-SELPHY-CP-510</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-520</td><td>canon-cp520</td><td>Canon-SELPHY-CP-520</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-530</td><td>canon-cp530</td><td>Canon-SELPHY-CP-530</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-600</td><td>canon-cp600</td><td>Canon-SELPHY-CP-600</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-710</td><td>canon-cp710</td><td>Canon-SELPHY-CP-710</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-730</td><td>canon-cp730</td><td>Canon-SELPHY-CP-730</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-740</td><td>canon-cp740</td><td>Canon-SELPHY-CP-740</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-750</td><td>canon-cp750</td><td>Canon-SELPHY-CP-750</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-760</td><td>canon-cp760</td><td>Canon-SELPHY-CP-760</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-770</td><td>canon-cp770</td><td>Canon-SELPHY-CP-770</td><td></td></tr>
-<tr><td>Canon SELPHY-CP-790</td><td>canon-cp790</td><td>Canon-SELPHY-CP-790</td><td></td></tr>
+<!-- 
+<tr><td>Canon SELPHY ES1</td><td>canon-es1</td><td>Canon-SELPHY-ES1</td><td></td></tr>
+<tr><td>Canon SELPHY ES20</td><td>canon-es20</td><td>Canon-SELPHY-ES20</td><td></td></tr>
+<tr><td>Canon SELPHY ES2</td><td>canon-es2</td><td>Canon-SELPHY-ES2</td><td></td></tr>
+<tr><td>Canon SELPHY ES30</td><td>canon-es30</td><td>Canon-SELPHY-ES30</td><td></td></tr>
+<tr><td>Canon SELPHY ES3</td><td>canon-es3</td><td>Canon-SELPHY-ES3</td><td></td></tr>
+<tr><td>Canon SELPHY ES40</td><td>canon-es40</td><td>Canon-SELPHY-ES40</td><td></td></tr>
+ -->
+<tr><td>Canon SELPHY-CP400</td><td>canon-cp400</td><td>Canon-SELPHY-CP-400</td><td></td></tr>
+<tr><td>Canon SELPHY-CP500</td><td>canon-cp500</td><td>Canon-SELPHY-CP-500</td><td></td></tr>
+<tr><td>Canon SELPHY-CP510</td><td>canon-cp510</td><td>Canon-SELPHY-CP-510</td><td></td></tr>
+<tr><td>Canon SELPHY-CP520</td><td>canon-cp520</td><td>Canon-SELPHY-CP-520</td><td></td></tr>
+<tr><td>Canon SELPHY-CP530</td><td>canon-cp530</td><td>Canon-SELPHY-CP-530</td><td></td></tr>
+<!-- 
+<tr><td>Canon SELPHY-CP600</td><td>canon-cp600</td><td>Canon-SELPHY-CP-600</td><td></td></tr>
+ -->
+<tr><td>Canon SELPHY-CP710</td><td>canon-cp710</td><td>Canon-SELPHY-CP-710</td><td></td></tr>
+<!-- 
+<tr><td>Canon SELPHY-CP720</td><td>canon-cp720</td><td>Canon-SELPHY-CP-720</td><td></td></tr>
+ -->
+<tr><td>Canon SELPHY-CP730</td><td>canon-cp730</td><td>Canon-SELPHY-CP-730</td><td></td></tr>
+<tr><td>Canon SELPHY-CP740</td><td>canon-cp740</td><td>Canon-SELPHY-CP-740</td><td></td></tr>
+<tr><td>Canon SELPHY-CP750</td><td>canon-cp750</td><td>Canon-SELPHY-CP-750</td><td></td></tr>
+<tr><td>Canon SELPHY-CP760</td><td>canon-cp760</td><td>Canon-SELPHY-CP-760</td><td></td></tr>
+<tr><td>Canon SELPHY-CP770</td><td>canon-cp770</td><td>Canon-SELPHY-CP-770</td><td></td></tr>
+<!-- 
+<tr><td>Canon SELPHY-CP780</td><td>canon-cp780</td><td>Canon-SELPHY-CP-780</td><td></td></tr>
+ -->
+<tr><td>Canon SELPHY-CP790</td><td>canon-cp790</td><td>Canon-SELPHY-CP-790</td><td></td></tr>
+<!-- 
+<tr><td>Canon SELPHY-CP800</td><td>canon-cp800</td><td>Canon-SELPHY-CP-800</td><td></td></tr>
+ -->
 <tr><td>Citizen ProJet II</td><td>citizen-projet_ii</td><td>Citizen-ProJet_II</td><td></td></tr>
 <tr><td>Compaq IJ1200</td><td>compaq-ij1200</td><td>Compaq-IJ1200</td><td></td></tr>
 <tr><td>Dai Nippon Printing DS40</td><td>dnp-ds40</td><td>DNP-DS40</td><td></td></tr>
@@ -613,6 +678,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus NX300</td><td>escp2-nx300</td><td>Epson-Stylus_NX300</td><td></td></tr>
 <tr><td>Epson Stylus NX400</td><td>escp2-nx400</td><td>Epson-Stylus_NX400</td><td></td></tr>
 <tr><td>Epson Stylus NX415</td><td>escp2-nx415</td><td>Epson-Stylus_NX415</td><td></td></tr>
+<tr><td>Epson Stylus NX420</td><td>escp2-nx420</td><td>Epson-Stylus_NX420</td><td></td></tr>
 <tr><td>Epson Stylus NX515</td><td>escp2-nx515</td><td>Epson-Stylus_NX515</td><td></td></tr>
 <tr><td>Epson Stylus NX530</td><td>escp2-nx530</td><td>Epson-Stylus_NX530</td><td></td></tr>
 <tr><td>Epson Stylus NX635</td><td>escp2-nx635</td><td>Epson-Stylus_NX635</td><td></td></tr>
@@ -773,6 +839,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus SX405</td><td>escp2-sx405</td><td>Epson-Stylus_SX405</td><td></td></tr>
 <tr><td>Epson Stylus SX410</td><td>escp2-sx410</td><td>Epson-Stylus_SX410</td><td></td></tr>
 <tr><td>Epson Stylus SX415</td><td>escp2-sx415</td><td>Epson-Stylus_SX415</td><td></td></tr>
+<tr><td>Epson Stylus SX420</td><td>escp2-sx420</td><td>Epson-Stylus_SX420</td><td></td></tr>
 <tr><td>Epson Stylus SX510W</td><td>escp2-sx510w</td><td>Epson-Stylus_SX510W</td><td></td></tr>
 <tr><td>Epson Stylus SX515</td><td>escp2-sx515</td><td>Epson-Stylus_SX515</td><td></td></tr>
 <tr><td>Epson Stylus SX525</td><td>escp2-sx525</td><td>Epson-Stylus_SX525</td><td></td></tr>
@@ -806,6 +873,7 @@ and reporting the results!</p>
 <tr><td>Epson Stylus TX300F</td><td>escp2-tx300f</td><td>Epson-Stylus_TX300F</td><td></td></tr>
 <tr><td>Epson Stylus TX400</td><td>escp2-tx400</td><td>Epson-Stylus_TX400</td><td></td></tr>
 <tr><td>Epson Stylus TX410</td><td>escp2-tx410</td><td>Epson-Stylus_TX410</td><td></td></tr>
+<tr><td>Epson Stylus TX420</td><td>escp2-tx420</td><td>Epson-Stylus_TX420</td><td></td></tr>
 <tr><td>Epson Stylus TX510FN</td><td>escp2-tx510fn</td><td>Epson-Stylus_TX510FN</td><td></td></tr>
 <tr><td>Epson Stylus TX550W</td><td>escp2-tx550w</td><td>Epson-Stylus_TX550W</td><td></td></tr>
 <tr><td>Epson Stylus TX610FW</td><td>escp2-tx610fw</td><td>Epson-Stylus_TX610FW</td><td></td></tr>
