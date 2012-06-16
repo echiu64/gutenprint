@@ -367,12 +367,12 @@ and reporting the results!</p>
 <tr><td>DEC LN17</td><td>dec-ln17</td><td>DEC-LN17</td><td></td></tr>
 <tr><td>Epson ActionLaser 1100</td><td>epson-actl_1100</td><td>Epson-ActionLaser_1100</td><td></td></tr>
 <tr><td>Epson ActionLaser II</td><td>epson-actl_ii</td><td>Epson-ActionLaser_II</td><td></td></tr>
-<tr><td>Epson AL-C2000 PS3</td><td>epson-acl_c2000ps</td><td>Epson-AL-C2000_PS3</td><td></td></tr>
-<tr><td>Epson AL-C2000</td><td>epson-acl_c2000</td><td>Epson-AL-C2000</td><td></td></tr>
-<tr><td>Epson AL-C8500</td><td>epson-acl_c8500</td><td>Epson-AL-C8500</td><td></td></tr>
-<tr><td>Epson AL-C8500PS</td><td>epson-acl_c8500ps</td><td>Epson-AL-C8500PS</td><td></td></tr>
-<tr><td>Epson AL-C8600 PS3</td><td>epson-acl_c8600ps</td><td>Epson-AL-C8600_PS3</td><td></td></tr>
-<tr><td>Epson AL-C8600</td><td>epson-acl_c8600</td><td>Epson-AL-C8600</td><td></td></tr>
+<tr><td>Epson AL-C2000 PS3</td><td>epson-acl_c2000ps</td><td>Epson-AL-C2000_PS3</td><td>Black and white only</td></tr>
+<tr><td>Epson AL-C2000</td><td>epson-acl_c2000</td><td>Epson-AL-C2000</td><td>Black and white only</td></tr>
+<tr><td>Epson AL-C8500</td><td>epson-acl_c8500</td><td>Epson-AL-C8500</td><td>Black and white only</td></tr>
+<tr><td>Epson AL-C8500PS</td><td>epson-acl_c8500ps</td><td>Epson-AL-C8500PS</td><td>Black and white only</td></tr>
+<tr><td>Epson AL-C8600 PS3</td><td>epson-acl_c8600ps</td><td>Epson-AL-C8600_PS3</td><td>Black and white only</td></tr>
+<tr><td>Epson AL-C8600</td><td>epson-acl_c8600</td><td>Epson-AL-C8600</td><td>Black and white only</td></tr>
 <tr><td>Epson Artisan 50</td><td>escp2-artisan50</td><td>Epson-Artisan_50</td><td></td></tr>
 <tr><td>Epson Artisan 700</td><td>escp2-artisan700</td><td>Epson-Artisan_700</td><td></td></tr>
 <tr><td>Epson Artisan 710</td><td>escp2-artisan710</td><td>Epson-Artisan_710</td><td></td></tr>
@@ -900,16 +900,16 @@ and reporting the results!</p>
 <tr><td>Fujitsu PrintPartner 16DV</td><td>fujitsu-pp_16dv</td><td>Fujitsu-PrintPartner_16DV</td><td></td></tr>
 <tr><td>Fujitsu PrintPartner 20W</td><td>fujitsu-pp_20w</td><td>Fujitsu-PrintPartner_20W</td><td></td></tr>
 <tr><td>Fujitsu PrintPartner 8000</td><td>fujitsu-pp_8000</td><td>Fujitsu-PrintPartner_8000</td><td></td></tr>
-<tr><td>Generic PCL 4 LF Printer</td><td>pcl-g_4_l</td><td>Generic-PCL_4_LF_Printer</td><td></td></tr>
-<tr><td>Generic PCL 4 Printer</td><td>pcl-g_4</td><td>Generic-PCL_4_Printer</td><td></td></tr>
-<tr><td>Generic PCL 5 LF Printer</td><td>pcl-g_5_l</td><td>Generic-PCL_5_LF_Printer</td><td></td></tr>
-<tr><td>Generic PCL 5 Printer</td><td>pcl-g_5</td><td>Generic-PCL_5_Printer</td><td></td></tr>
-<tr><td>Generic PCL 5c LF Printer</td><td>pcl-g_5c_l</td><td>Generic-PCL_5c_LF_Printer</td><td></td></tr>
-<tr><td>Generic PCL 5c Printer</td><td>pcl-g_5c</td><td>Generic-PCL_5c_Printer</td><td></td></tr>
-<tr><td>Generic PCL 5e LF Printer</td><td>pcl-g_5e_l</td><td>Generic-PCL_5e_LF_Printer</td><td></td></tr>
-<tr><td>Generic PCL 5e Printer</td><td>pcl-g_5e</td><td>Generic-PCL_5e_Printer</td><td></td></tr>
-<tr><td>Generic PCL 6/PCL XL LF Printer</td><td>pcl-g_6_l</td><td>Generic-PCL_6_PCL_XL_LF_Printer</td><td></td></tr>
-<tr><td>Generic PCL 6/PCL XL Printer</td><td>pcl-g_6</td><td>Generic-PCL_6_PCL_XL_Printer</td><td></td></tr>
+<tr><td>Generic PCL 4 LF Printer</td><td>pcl-g_4_l</td><td>Generic-PCL_4_LF_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 4 Printer</td><td>pcl-g_4</td><td>Generic-PCL_4_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 5 LF Printer</td><td>pcl-g_5_l</td><td>Generic-PCL_5_LF_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 5 Printer</td><td>pcl-g_5</td><td>Generic-PCL_5_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 5c LF Printer</td><td>pcl-g_5c_l</td><td>Generic-PCL_5c_LF_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 5c Printer</td><td>pcl-g_5c</td><td>Generic-PCL_5c_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 5e LF Printer</td><td>pcl-g_5e_l</td><td>Generic-PCL_5e_LF_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 5e Printer</td><td>pcl-g_5e</td><td>Generic-PCL_5e_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 6/PCL XL LF Printer</td><td>pcl-g_6_l</td><td>Generic-PCL_6_PCL_XL_LF_Printer</td><td>Black and white only</td></tr>
+<tr><td>Generic PCL 6/PCL XL Printer</td><td>pcl-g_6</td><td>Generic-PCL_6_PCL_XL_Printer</td><td>Black and white only</td></tr>
 <tr><td>Gestetner 10512</td><td>gestetner-10512</td><td>Gestetner-10512</td><td></td></tr>
 <tr><td>Gestetner 2212</td><td>gestetner-2212</td><td>Gestetner-2212</td><td></td></tr>
 <tr><td>Gestetner 2712</td><td>gestetner-2712</td><td>Gestetner-2712</td><td></td></tr>
@@ -968,14 +968,14 @@ and reporting the results!</p>
 <tr><td>HP Business Inkjet 2280</td><td>hp-bij_2280</td><td>HP-Business_Inkjet_2280</td><td></td></tr>
 <tr><td>HP Color Inkjet Printer CP1160</td><td>hp-cij_cp1160</td><td>HP-Color_Inkjet_Printer_CP1160</td><td></td></tr>
 <tr><td>HP Color Inkjet Printer CP1700</td><td>hp-cij_cp1700</td><td>HP-Color_Inkjet_Printer_CP1700</td><td></td></tr>
-<tr><td>HP Color LaserJet 2500</td><td>hp-clj_2500</td><td>HP-Color_LaserJet_2500</td><td></td></tr>
-<tr><td>HP Color LaserJet 4500</td><td>hp-clj_4500</td><td>HP-Color_LaserJet_4500</td><td></td></tr>
-<tr><td>HP Color LaserJet 4550</td><td>hp-clj_4550</td><td>HP-Color_LaserJet_4550</td><td></td></tr>
-<tr><td>HP Color LaserJet 4600</td><td>hp-clj_4600</td><td>HP-Color_LaserJet_4600</td><td></td></tr>
-<tr><td>HP Color LaserJet 5000</td><td>hp-clj_5000</td><td>HP-Color_LaserJet_5000</td><td></td></tr>
-<tr><td>HP Color LaserJet 5500</td><td>hp-clj_5500</td><td>HP-Color_LaserJet_5500</td><td></td></tr>
-<tr><td>HP Color LaserJet 5</td><td>hp-clj_5</td><td>HP-Color_LaserJet_5</td><td></td></tr>
-<tr><td>HP Color LaserJet 8550GN</td><td>hp-clj_8550gn</td><td>HP-Color_LaserJet_8550GN</td><td></td></tr>
+<tr><td>HP Color LaserJet 2500</td><td>hp-clj_2500</td><td>HP-Color_LaserJet_2500</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 4500</td><td>hp-clj_4500</td><td>HP-Color_LaserJet_4500</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 4550</td><td>hp-clj_4550</td><td>HP-Color_LaserJet_4550</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 4600</td><td>hp-clj_4600</td><td>HP-Color_LaserJet_4600</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 5000</td><td>hp-clj_5000</td><td>HP-Color_LaserJet_5000</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 5500</td><td>hp-clj_5500</td><td>HP-Color_LaserJet_5500</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 5</td><td>hp-clj_5</td><td>HP-Color_LaserJet_5</td><td>Black and white only</td></tr>
+<tr><td>HP Color LaserJet 8550GN</td><td>hp-clj_8550gn</td><td>HP-Color_LaserJet_8550GN</td><td>Black and white only</td></tr>
 <tr><td>HP DesignJet 230</td><td>pcl-desnj-230</td><td>HP-DesignJet_230</td><td></td></tr>
 <tr><td>HP DesignJet 2500CP</td><td>pcl-desnj-2500</td><td>HP-DesignJet_2500CP</td><td></td></tr>
 <tr><td>HP DesignJet 250C</td><td>pcl-desnj-250</td><td>HP-DesignJet_250C</td><td></td></tr>
