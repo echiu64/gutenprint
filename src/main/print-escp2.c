@@ -2304,8 +2304,8 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "CDYAdjustment") == 0)
     {
       const input_slot_t *slot = stp_escp2_get_input_slot(v);
-      description->bounds.dimension.lower = -15;
-      description->bounds.dimension.upper = 15;
+      description->bounds.dimension.lower = -30;
+      description->bounds.dimension.upper = 30;
       description->deflt.dimension = 0;
       if (stp_escp2_printer_supports_print_to_cd(v) && (!slot || slot->is_cd))
 	description->is_active = 1;
