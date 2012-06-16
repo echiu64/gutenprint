@@ -87,7 +87,7 @@ cleanup() {
 pdftops="`type -p pdftops`"
 
 if [ ! -n "$pdftops" -o ! -x "$pdftops" ] ; then
-    pdftops="`type -p pdftops`"
+    pdftops="`whence pdftops`"
 fi
 
 if [ -n "$pdftops" -a ! -x "$cupsdir/cgpdftoraster" ] ; then
