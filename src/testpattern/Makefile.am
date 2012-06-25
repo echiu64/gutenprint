@@ -41,7 +41,7 @@ AM_LFLAGS = -i
 AM_YFLAGS = -d
 
 testpattern_SOURCES = testpattern.c testpatterny.y testpatternl.l testpattern.h
-testpattern_LDADD = $(GUTENPRINT_LIBS)
+testpattern_LDADD = $(GUTENPRINT_LIBS) $(LIBM)
 
 testpatternl.o: testpatterny.o
 testpattern.o: testpatterny.o

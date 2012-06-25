@@ -23,13 +23,12 @@ dnl
 dnl Since the last release:
 dnl 1. if only source code (not the interface) has changed, set
 dnl      GUTENPRINT_MICRO_VERSION += 1;
-dnl      GUTENPRINT_INTERFACE_AGE += 1;
 dnl 2. if any functions have been added, removed, or changed, set
-dnl      GUTENPRINT_INTERFACE_AGE = 0;
 dnl      GUTENPRINT_CURRENT_INTERFACE += 1;
 dnl 3. if interfaces have been added, set
 dnl      GUTENPRINT_BINARY_AGE += 1;
-dnl 4. if interfaces have been removed, set
+dnl    or, if interfaces have been removed, set
+dnl      GUTENPRINT_CURRENT_INTERFACE -= GUTENPRINT_BINARY_AGE
 dnl      GUTENPRINT_BINARY_AGE = 0;
 dnl
 dnl For more detailed information, see the libtool info documentation.
@@ -40,10 +39,8 @@ pushdef([GUTENPRINT_MINOR_VERSION],     [2])
 pushdef([GUTENPRINT_MICRO_VERSION],     [8])
 pushdef([GUTENPRINT_EXTRA_VERSION],     [])
 pushdef([GUTENPRINT_CURRENT_INTERFACE], [3])
-pushdef([GUTENPRINT_INTERFACE_AGE],     [0])
-pushdef([GUTENPRINT_BINARY_AGE],        [0])
+pushdef([GUTENPRINT_BINARY_AGE],        [1])
 pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [1])
-pushdef([GUTENPRINTUI2_INTERFACE_AGE],     [0])
 pushdef([GUTENPRINTUI2_BINARY_AGE],        [0])
 pushdef([GUTENPRINT_VERSION], GUTENPRINT_MAJOR_VERSION.GUTENPRINT_MINOR_VERSION.GUTENPRINT_MICRO_VERSION[]GUTENPRINT_EXTRA_VERSION)
 
@@ -76,21 +73,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 [GUTENPRINT_MICRO_VERSION]=GUTENPRINT_MICRO_VERSION
 [GUTENPRINT_EXTRA_VERSION]=GUTENPRINT_EXTRA_VERSION
 [GUTENPRINT_CURRENT_INTERFACE]=GUTENPRINT_CURRENT_INTERFACE
-[GUTENPRINT_INTERFACE_AGE]=GUTENPRINT_INTERFACE_AGE
+[GUTENPRINT_INTERFACE_AGE]=0
 [GUTENPRINT_BINARY_AGE]=GUTENPRINT_BINARY_AGE
 [GUTENPRINT_VERSION]=GUTENPRINT_VERSION
 [GUTENPRINTUI2_CURRENT_INTERFACE]=GUTENPRINTUI2_CURRENT_INTERFACE
-[GUTENPRINTUI2_INTERFACE_AGE]=GUTENPRINTUI2_INTERFACE_AGE
+[GUTENPRINTUI2_INTERFACE_AGE]=0
 [GUTENPRINTUI2_BINARY_AGE]=GUTENPRINTUI2_BINARY_AGE
 popdef([GUTENPRINT_MAJOR_VERSION])
 popdef([GUTENPRINT_MINOR_VERSION])
 popdef([GUTENPRINT_MICRO_VERSION])
 popdef([GUTENPRINT_EXTRA_VERSION])
 popdef([GUTENPRINT_CURRENT_INTERFACE])
-popdef([GUTENPRINT_INTERFACE_AGE])
 popdef([GUTENPRINT_BINARY_AGE])
 popdef([GUTENPRINTUI2_CURRENT_INTERFACE])
-popdef([GUTENPRINTUI2_INTERFACE_AGE])
 popdef([GUTENPRINTUI2_BINARY_AGE])
 
 AC_SUBST([GUTENPRINT_MAJOR_VERSION])
@@ -738,7 +733,11 @@ AC_CHECK_LIB(dl, dlopen, [DLOPEN_LIBS="-ldl"])
 
 AC_CHECK_LIB(m,pow,
              GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
-             gutenprint_libdeps="${gutenprint_libdeps} -lm")
+             gutenprint_libdeps="${gutenprint_libdeps} -lm"
+             GUTENPRINTUI2_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
+             gutenprintui2_libdeps="${gutenprint_libdeps} -lm"
+	     LIBM=-lm
+)
 
 STP_CUPS_LIBS
 
@@ -950,6 +949,7 @@ AC_SUBST(gutenprintui2_cflags)
 gutenprintui2_libs="${GUTENPRINTUI2_LIBS} ${gutenprintui2_libdeps}"
 AC_SUBST(gutenprintui2_libs)
 AC_SUBST(gutenprintui2_libdeps)
+AC_SUBST(LIBM)
 AC_SUBST(LIBREADLINE_DEPS)
 AC_SUBST(MAINTAINER_CFLAGS)
 AC_SUBST(PLUG_IN_PATH)
