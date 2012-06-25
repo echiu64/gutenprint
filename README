@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.8!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.9!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -8,7 +8,7 @@ Welcome to Gutenprint 5.2.8!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.2.8, a stable release of Gutenprint
+    This is Gutenprint version 5.2.9, a stable release of Gutenprint
     5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
     drivers that may be used with most common UNIX print spooling
     systems, including CUPS, lpr, LPRng, or others.  These drivers
@@ -124,7 +124,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.8 generated on 04 Jun 2012
+	  Release: gutenprint 5.2.9 generated on 04 Jun 2012
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -234,7 +234,7 @@ C) CUPS
     directory" (other ".h" files may also be missing, depending upon
     the missing packages):
 
-	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.8/src/cups'
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.9/src/cups'
 	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
 	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
 	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
@@ -247,11 +247,11 @@ C) CUPS
 	genppd.c:79:23: error: cups/cups.h: No such file or directory
 	genppd.c:80:25: error: cups/raster.h: No such file or directory
 	make[3]: *** [gutenprint_5_2-genppd.o] Error 1
-	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.8/src/cups'
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.9/src/cups'
 	make[2]: *** [all-recursive] Error 1
-	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.8/src'
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.9/src'
 	make[1]: *** [all-recursive] Error 1
-	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.8'
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.9'
 	make: *** [all] Error 2
 
     Installing the CUPS driver for Gutenprint 5.2 will not interfere
@@ -601,7 +601,7 @@ E) GIMP
     The errors will typically look like this; the important errors are
     the ones "No such file or directory".
 
-	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.8/src/gimp2'
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.9/src/gimp2'
 	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
 	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
 	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
@@ -614,11 +614,11 @@ E) GIMP
 	print_gimp.h:37:26: error: libgimp/gimp.h: No such file or directory
 	print_gimp.h:38:28: error: libgimp/gimpui.h: No such file or directory
 	make[3]: *** [print-image-gimp.o] Error 1
-	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.8/src/gimp2'
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.9/src/gimp2'
 	make[2]: *** [all-recursive] Error 1
-	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.8/src'
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.9/src'
 	make[1]: *** [all-recursive] Error 1
-	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.8'
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.9'
 	make: *** [all] Error 2
 
     Normally, the Gutenprint configure script detects which version,
@@ -688,8 +688,8 @@ A) PRINTER INSTALLATION
     driver, so you may find more than one PPD file for your printer.
     Gutenprint PPD files are described as
 
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.8
-    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.8 Simplified
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.9
+    Epson Stylus Photo R300 - CUPS+Gutenprint v5.2.9 Simplified
     Epson Stylus Photo R300 Foomatic/gutenprint-ijs.5.2
     Epson Stylus Photo R300 Foomatic/gutenprint-ijs-simplified.5.2
 
@@ -729,7 +729,7 @@ A) PRINTER INSTALLATION
     identify printers using Gutenprint PPD files by the name of the
     PPD file, which will be something like:
 
-		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.2.8(en)
+		    EPSON Stylus Photo EX - CUPS+Gutenprint v5.2.9(en)
 
     Linux users please note: If you are using CUPS 1.1.11 or higher,
     and you have a USB-connected printer, you must have a printer

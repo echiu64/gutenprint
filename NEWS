@@ -1,6 +1,6 @@
-Welcome to Gutenprint 5.2.8, a stable release of Gutenprint 5.2.  This
-release has bug fixes, support for some new printers, and a few new
-features over 5.2.7.  Please read these release notes carefully.
+Welcome to Gutenprint 5.2.9, a stable release of Gutenprint 5.2.  This
+release has a few, mostly emergency bug fixes to 5.2.8.  Please read
+these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.8
         * Changes from 5.2.7
         * Changes from 5.2.6
         * Changes from 5.2.5
@@ -251,6 +252,22 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.8
+
+  1) This release fixes an inappropriate change to the internal
+     library version number (.soname or equivalent) made in 5.2.8.
+     All distributors should immediately apply this update to their
+     distributions to avoid other software linking against
+     libgutenprint breaking.
+
+  2) Duplicate Transparency entries in the media types for Canon
+     iP4100 and similar printers have been removed.
+
+  3) The range of fine position adjustment of CD media has been
+     increased for Epson printers.
+
+  4) The German translation has been updated.
 
 * Changes from 5.2.7
 
