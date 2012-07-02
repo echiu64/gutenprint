@@ -31,6 +31,15 @@ dnl    or, if interfaces have been removed, set
 dnl      GUTENPRINT_CURRENT_INTERFACE -= GUTENPRINT_BINARY_AGE
 dnl      GUTENPRINT_BINARY_AGE = 0;
 dnl
+dnl The .soname version is
+dnl (GUTENPRINT_CURRENT_INTERFACE - GUTENPRINT_BINARY_AGE).GUTENPRINT_BINARY_AGE
+dnl Example: if GUTENPRINT_CURRENT_INTERFACE is 3 and GUTENPRINT_BINARY_AGE is
+dnl 1, the version is 2.1.  To get 2.2, GUTENPRINT_CURRENT_INTERFACE would be
+dnl incremented to 4 and GUTENPRINT_BINARY_AGE to 2.
+dnl
+dnl *NOTE*: due to an error preparing 5.2.8, we must skip over major version of
+dnl 3 and go directly from 2 to 4.
+dnl
 dnl For more detailed information, see the libtool info documentation.
 dnl
 pushdef([GUTENPRINT_NAME],              [gutenprint])
