@@ -269,6 +269,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   4) The German translation has been updated.
 
+  5) Canon PIXMA Pro9000 plain media high quality mode bug fix.
+
 * Changes from 5.2.7
 
   1) The Canon driver has been significantly overhauled for this

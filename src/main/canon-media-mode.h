@@ -10112,8 +10112,7 @@ DECLARE_MODEUSES(canon_PIXMA_MG8200);
 /* ----------------------------------- Canon Pro9000 ----------------------------------- */
 
 static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
-  "600x600dpi_hig2",
-  "600x600dpi_high",
+  "600x600dpi_high2",
   "600x600dpi",
   "600x600dpi_std2",
   "600x600dpi_draft",
