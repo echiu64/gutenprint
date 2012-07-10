@@ -168,7 +168,7 @@ and reporting the results!</p>
 <tr><td>Canon LBP-4sx</td><td>canon-lbp-4sx</td><td>Canon-LBP-4sx</td><td></td></tr>
 <tr><td>Canon PIXMA E500</td><td>bjc-MULTIPASS-E500</td><td>Canon-MULTIPASS-E500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA E600</td><td>bjc-MULTIPASS-E600</td><td>Canon-MULTIPASS-E600</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA iP100</td><td>bjc-PIXMA-iP100</td><td>Canon-PIXMA-iP100</td><td></td></tr>
+<tr><td>Canon PIXMA iP100</td><td>bjc-PIXMA-iP100</td><td>Canon-PIXMA-iP100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP2000</td><td>bjc-PIXMA-iP2000</td><td>Canon-PIXMA-iP2000</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP2700</td><td>bjc-PIXMA-iP2700</td><td>Canon-PIXMA-iP2700</td><td></td></tr>
 <tr><td>Canon PIXMA iP3000</td><td>bjc-PIXMA-iP3000</td><td>Canon-PIXMA-iP3000</td><td></td></tr>
