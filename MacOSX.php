@@ -130,16 +130,18 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 		
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.9 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.9">July 7, 2012</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.9-, a stable release of 5.2. This release fixes a several bugs from 5.2.8.  The main impact is for developers that link against the Gutenprint library.  See the <a href="MacOSX.php#5.2.9">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links. 
+		</p>
+		
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.8 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.8">June 11, 2012</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.8-, a stable release of 5.2. This release provides a significant overhaul of the Canon driver.  Eighteen Epson printeres have also been added.  See the <b>Downloads</b> section. 
 		</p>
 		
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.8-pre1 is released!</span> 
-			<br>
-			<a href="MacOSX.php#5.2.8-pre1">December 28, 2011</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.8-pre1, a stable release of 5.2. This release offers support for 70 additional printers from Canon and Epson. There are also improvements for other Canon printers.  See the <b>Downloads</b> section. 
-		</p>
+	
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.7 is released!</span> 
 			<br>
@@ -188,25 +190,24 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
-		
 		<p>
-			<b>Gutenprint 5.2.8</b> 
+			<b>Gutenprint 5.2.9</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.8/gutenprint-5.2.8.dmg/download">gutenprint-5.2.8.dmg</a></span>&nbsp;&nbsp;(16.4 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.9/gutenprint-5.2.9.dmg/download">gutenprint-5.2.9.dmg</a></span>&nbsp;&nbsp;(16.2 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.8, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.8/gutenprint-5.2.8.tar.bz2/download">source code</a>)
+The Gutenprint project is pleased to announce Gutenprint 5.2.9, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.9/gutenprint-5.2.9.tar.bz2/download">source code</a>)
 </p>	
-	<p>
-			<b>Gutenprint 5.2.8-pre1</b> 
+		
+		<p>
+			<b>Gutenprint 5.2.7</b> 
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.8-pre1/gutenprint-5.2.8-pre1.dmg/download">gutenprint-5.2.8-pre1.dmg</a></span>&nbsp;&nbsp;(15.3 MB) 
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.dmg/download">gutenprint-5.2.7.dmg</a></span>&nbsp;&nbsp;(14.5 MB) 
 		</p>
 		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.8-pre1, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.8-pre1/gutenprint-5.2.8-pre1.tar.bz2/download">source code</a>)
-</p>
-		
-		
+The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.tar.bz2/download">source code</a>)
+</p>	
+
 <p>
 	<b>Gutenprint 5.0.2</b> 
 	<br>
@@ -276,6 +277,32 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.8-pre1, a stable re
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.9"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.9</b> 
+		</td>
+		<td align="right">
+			<b>2012-07-07</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.9</b> is a stable release of Gutenprint 5.2  This release fixes a several bugs from 5.2.8.  The main impact is for developers that link against the Gutenprint library.
+<ol style="margin-top:0.25em; list-style-type:decimal;">
+	<li>This release fixes an inappropriate change to the internal library version number (.soname or equivalent) made in 5.2.8. All distributors should immediately apply this update to their distributions to avoid other software linking against libgutenprint breaking.</li>
+
+	<li>  Duplicate Transparency entries in the media types for Canon iP4100 and similar printers have been removed.</li>
+
+	<li> The range of fine position adjustment of CD media has been increased for Epson printers.</li>
+
+	<li>   The German translation has been updated.</li>
+
+	<li>  Canon PIXMA Pro9000 plain media high quality mode bug fix.</li>
+</ol>
+</p> 
+
 <a name="5.2.8"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
