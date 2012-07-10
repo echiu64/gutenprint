@@ -17,8 +17,8 @@ of them.  We will fill in this list as we verify successful operation
 of these printers.  You can help by testing this with your own printer
 and reporting the results!</p>
 
-<table cellspacing="4">
-<caption style="font-size:135%;margin-bottom:0.50em;"><b>Guitenprint 5.2.8</b></caption>
+<table summary="Supported printers for Gutenrint 5.2.9" cellpadding="4">
+<caption style="font-size:135%;margin-bottom:0.50em;"><b>Guitenprint 5.2.9</b></caption>
 <tr><td><b>Printer Model</b></td><td><b>Driver Name</b></td><td><b>Foomatic Name</b></td><td><b>Notes</b></td></tr>
 <tr><td>Apollo P-2100</td><td>pcl-apollo-p2100</td><td>Apollo-P-2100</td><td></td></tr>
 <tr><td>Apollo P-2150</td><td>pcl-apollo-p2150</td><td>Apollo-P-2150</td><td></td></tr>
@@ -138,12 +138,12 @@ and reporting the results!</p>
 <tr><td>Canon i475D</td><td>bjc-i475D</td><td>Canon-i475D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i550</td><td>bjc-i550</td><td>Canon-i550</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i550X</td><td>bjc-i550X</td><td>Canon-i550X</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i560</td><td>bjc-i560</td><td>Canon-i560</td><td></td></tr>
+<tr><td>Canon i560</td><td>bjc-i560</td><td>Canon-i560</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i560X</td><td>bjc-i560X</td><td>Canon-i560X</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i6100</td><td>bjc-i6100</td><td>Canon-i6100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i6500</td><td>bjc-i6500</td><td>Canon-i6500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i70</td><td>bjc-i70</td><td>Canon-i70</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon i80</td><td>bjc-i80</td><td>Canon-i80</td><td></td></tr>
+<tr><td>Canon i80</td><td>bjc-i80</td><td>Canon-i80</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i850</td><td>bjc-i850</td><td>Canon-i850</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon i850old</td><td>bjc-i850old</td><td>Canon-i850old</td><td>Original printers are named with "old" appended</td></tr>
 <tr><td>Canon i860</td><td>bjc-i860</td><td>Canon-i860</td><td>EXPERIMENTAL</td></tr>
@@ -201,7 +201,7 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA iP6700</td><td>bjc-PIXMA-iP6700</td><td>Canon-PIXMA-iP6700</td><td></td></tr>
 <tr><td>Canon PIXMA iP7100</td><td>bjc-PIXMA-iP7100</td><td>Canon-PIXMA-iP7100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP7500</td><td>bjc-PIXMA-iP7500</td><td>Canon-PIXMA-iP7500</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA iP8100</td><td>bjc-PIXMA-iP8100</td><td>Canon-PIXMA-iP8100</td><td></td></tr>
+<tr><td>Canon PIXMA iP8100</td><td>bjc-PIXMA-iP8100</td><td>Canon-PIXMA-iP8100</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP8500</td><td>bjc-PIXMA-iP8500</td><td>Canon-PIXMA-iP8500</td><td></td></tr>
 <tr><td>Canon PIXMA iP8600</td><td>bjc-PIXMA-iP8600</td><td>Canon-PIXMA-iP8600</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXMA iP90</td><td>bjc-PIXMA-iP90</td><td>Canon-PIXMA-iP90</td><td>EXPERIMENTAL</td></tr>
@@ -300,31 +300,31 @@ and reporting the results!</p>
 <tr><td>Canon PIXMA MX870</td><td>bjc-MULTIPASS-MX870</td><td>Canon-MULTIPASS-MX870</td><td></td></tr>
 <tr><td>Canon PIXMA MX880</td><td>bjc-MULTIPASS-MX880</td><td>Canon-MULTIPASS-MX880</td><td></td></tr>
 <tr><td>Canon PIXMA MX890</td><td>bjc-MULTIPASS-MX890</td><td>Canon-MULTIPASS-MX890</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon PIXMA Pro9000</td><td>bjc-PIXMA-Pro9000</td><td>Canon-PIXMA-Pro9000</td><td></td></tr>
-<tr><td>Canon PIXMA Pro9000mk2</td><td>bjc-PIXMA-Pro9000mk2</td><td>Canon-PIXMA-Pro9000-Mk2</td><td></td></tr>
-<tr><td>Canon PIXMA Pro9500</td><td>bjc-PIXMA-Pro9500</td><td>Canon-PIXMA-Pro9500</td><td></td></tr>
-<tr><td>Canon PIXMA Pro9500mk2</td><td>bjc-PIXMA-Pro9500mk2</td><td>Canon-PIXMA-Pro9500-Mk2</td><td></td></tr>
+<tr><td>Canon PIXMA Pro9000</td><td>bjc-PIXMA-Pro9000</td><td>Canon-PIXMA-Pro9000</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA Pro9000mk2</td><td>bjc-PIXMA-Pro9000mk2</td><td>Canon-PIXMA-Pro9000-Mk2</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA Pro9500</td><td>bjc-PIXMA-Pro9500</td><td>Canon-PIXMA-Pro9500</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon PIXMA Pro9500mk2</td><td>bjc-PIXMA-Pro9500mk2</td><td>Canon-PIXMA-Pro9500-Mk2</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon PIXUS iP2700</td><td>bjc-PIXUS-iP2700</td><td>Canon-PIXUS-iP2700</td><td></td></tr>
 <tr><td>Canon PIXUS iP3100</td><td>bjc-PIXUS-iP3100</td><td>Canon-PIXUS-iP3100</td><td></td></tr>
 <tr><td>Canon PIXUS iP4100</td><td>bjc-PIXUS-iP4100</td><td>Canon-PIXUS-iP4100</td><td></td></tr>
 <tr><td>Canon S100</td><td>bjc-s100</td><td>Canon-S100</td><td></td></tr>
 <tr><td>Canon S200</td><td>bjc-s200</td><td>Canon-S200</td><td></td></tr>
-<tr><td>Canon S300</td><td>bjc-s300</td><td>Canon-S300</td><td></td></tr>
+<tr><td>Canon S300</td><td>bjc-s300</td><td>Canon-S300</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S330</td><td>bjc-s330</td><td>Canon-S330</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S400</td><td>bjc-s400</td><td>Canon-S400</td><td></td></tr>
 <tr><td>Canon S4500</td><td>bjc-s4500</td><td>Canon-S4500</td><td></td></tr>
 <tr><td>Canon S450</td><td>bjc-s450</td><td>Canon-S450</td><td></td></tr>
-<tr><td>Canon S500</td><td>bjc-s500</td><td>Canon-S500</td><td></td></tr>
+<tr><td>Canon S500</td><td>bjc-s500</td><td>Canon-S500</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S520</td><td>bjc-s520</td><td>Canon-S520</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S530D</td><td>bjc-s530D</td><td>Canon-S530D</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S600</td><td>bjc-s600</td><td>Canon-S600</td><td></td></tr>
-<tr><td>Canon S630</td><td>bjc-s630</td><td>Canon-S630</td><td></td></tr>
-<tr><td>Canon S750</td><td>bjc-s750</td><td>Canon-S750</td><td></td></tr>
-<tr><td>Canon S800</td><td>bjc-s800</td><td>Canon-S800</td><td></td></tr>
-<tr><td>Canon S820</td><td>bjc-s820</td><td>Canon-S820</td><td></td></tr>
-<tr><td>Canon S830D</td><td>bjc-s830</td><td>Canon-S830D</td><td></td></tr>
+<tr><td>Canon S600</td><td>bjc-s600</td><td>Canon-S600</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S630</td><td>bjc-s630</td><td>Canon-S630</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S750</td><td>bjc-s750</td><td>Canon-S750</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S800</td><td>bjc-s800</td><td>Canon-S800</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S820</td><td>bjc-s820</td><td>Canon-S820</td><td>EXPERIMENTAL</td></tr>
+<tr><td>Canon S830D</td><td>bjc-s830</td><td>Canon-S830D</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon S9000</td><td>bjc-s9000</td><td>Canon-S9000</td><td>EXPERIMENTAL</td></tr>
-<tr><td>Canon S900</td><td>bjc-s900</td><td>Canon-S900</td><td></td></tr>
+<tr><td>Canon S900</td><td>bjc-s900</td><td>Canon-S900</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon SELPHY DS700</td><td>bjc-SELPHY-DS700</td><td>Canon-SELPHY-DS700</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Canon SELPHY DS810</td><td>bjc-SELPHY-DS810</td><td>Canon-SELPHY-DS810</td><td>EXPERIMENTAL</td></tr>
 <!-- 
@@ -466,7 +466,7 @@ and reporting the results!</p>
 <tr><td>Epson PM 10000</td><td>escp2-pm10000</td><td>Epson-PM_10000</td><td></td></tr>
 <tr><td>Epson PM 2000C</td><td>escp2-pm2000c</td><td>Epson-PM_2000C</td><td></td></tr>
 <tr><td>Epson PM 2200C</td><td>escp2-pm2200c</td><td>Epson-PM_2200C</td><td></td></tr>
-<tr><td>Epson PM 3000C</td><td>escp2-pm3000c</td><td>Epson-PM_3000C</td><td></td></tr>
+<tr><td>Epson PM 3000C</td><td>escp2-pm3000c</td><td>Epson-PM_3000C</td><td>EXPERIMENTAL</td></tr>
 <tr><td>Epson PM 3300C</td><td>escp2-pm3300c</td><td>Epson-PM_3300C</td><td></td></tr>
 <tr><td>Epson PM 3500C</td><td>escp2-pm3500c</td><td>Epson-PM_3500C</td><td></td></tr>
 <tr><td>Epson PM 3700C</td><td>escp2-pm3700c</td><td>Epson-PM_3700C</td><td></td></tr>
@@ -1782,7 +1782,6 @@ and reporting the results!</p>
 <tr><td>Xerox Phaser 8560DN</td><td>xerox-phaser_8560dn</td><td>Xerox-Phaser_8560DN</td><td></td></tr>
 <tr><td>Xerox WorkCentre 7345</td><td>xerox-workcentre_7345</td><td>Xerox-WorkCentre_7345</td><td></td></tr>
 <tr><td>Xerox WorkCentre M118</td><td>xerox-wc_m118</td><td>Xerox-Work_Centre_M118</td><td></td></tr>
-
 </table>
 
 
