@@ -120,7 +120,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	</tr>
 </table>
 <!--  Main desination banner for Mac OS X  -->
-<h1 style="color:#999999;"> Gutenprint and Gimp-Print for Mac OS X (10.2 through 10.7 and later) </h1> <h4> High quality printer drivers for Canon, Epson, Lexmark, and PCL printers. <br>For multi-function devices, the drivers only support the printer function.</h4>  
+<h1 style="color:#999999;"> Gutenprint and Gimp-Print for Mac OS X (10.2 through 10.8 and later) </h1> <h4> High quality printer drivers for Canon, Epson, Lexmark, and PCL printers. <br>For multi-function devices, the drivers only support the printer function.</h4>  
 <hr>
 <!--         THE CONTENT       -->
 <!-- left column -->
