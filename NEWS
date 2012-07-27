@@ -21,6 +21,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.9
         * Changes from 5.2.8
         * Changes from 5.2.7
         * Changes from 5.2.6
@@ -252,6 +253,14 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.9
+
+  1) New printers supported in this release:
+
+     - Epson inkjets:
+
+       EPSON Stylus TX125
 
 * Changes from 5.2.8
 
