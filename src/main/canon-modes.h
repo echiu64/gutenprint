@@ -147,7 +147,7 @@ static const canon_mode_t canon_BJC_30_modes[] = {
   {  360, 360,CANON_INK_K,"360x360dpi",N_("360x360 DPI"),INKSET(1_K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  180, 180,CANON_INK_K,"180x180dpi",N_("180x180 DPI"),INKSET(1_K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_30,2);
+DECLARE_MODES(canon_BJC_30,0);
 
 
 static const canon_mode_t canon_BJC_85_modes[] = {
@@ -158,7 +158,7 @@ static const canon_mode_t canon_BJC_85_modes[] = {
   {  360, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
      "360x360dpi",N_("360x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_85,2);
+DECLARE_MODES(canon_BJC_85,0);
 
 
 /* we treat the printers that can either print in K or CMY as CMYK printers here by assigning a CMYK inkset */
@@ -168,7 +168,7 @@ static const canon_mode_t canon_BJC_210_modes[] = {
   {  180, 180,CANON_INK_K | CANON_INK_CMY,"180x180dpi",N_("180x180 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {   90,  90,CANON_INK_K | CANON_INK_CMY,"90x90dpi",N_("90x90 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_210,3);
+DECLARE_MODES(canon_BJC_210,0);
 
 
 static const canon_mode_t canon_BJC_240_modes[] = {
@@ -178,14 +178,14 @@ static const canon_mode_t canon_BJC_240_modes[] = {
   {  180, 180,CANON_INK_K | CANON_INK_CMY,"180x180dpi",N_("180x180 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {   90,  90,CANON_INK_K | CANON_INK_CMY,"90x90dpi",N_("90x90 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_240,4);
+DECLARE_MODES(canon_BJC_240,0);
 
 
 static const canon_mode_t canon_BJC_2000_modes[] = {
   {  360, 360,CANON_INK_CMYK,"360x360dpi",N_("360x360 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  180, 180,CANON_INK_CMYK,"180x180dpi",N_("180x180 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_2000,1);
+DECLARE_MODES(canon_BJC_2000,0);
 
 /* these printers only have CMYK, so CcMmYK is not required I think */
 /* using color (CMYK) cartridge, some media use CMYK, others only use CMY --- need to check this as my test image lacked Y apparently */
@@ -200,7 +200,7 @@ static const canon_mode_t canon_BJC_3000_modes[] = {
   {  180, 180,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,"180x180dpi",N_("180x180 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  360, 360,CANON_INK_CMY | CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi_photo",N_("360x360 DPI PHOTO CARTRIDGE"),INKSET(6_C4M4Y4K4c4m4),8,MODE_FLAG_PHOTO,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_3000,4);
+DECLARE_MODES(canon_BJC_3000,1);
 
 /* these printers only have K and CMYK, so CcMmYK is not required */
 /* using color (CMYK) cartridge, all media use CMYK */
@@ -216,7 +216,7 @@ static const canon_mode_t canon_BJC_4300_modes[] = {
   {  360, 360,CANON_INK_CMYK,"360x360dpi_photo",N_("360x360 DPI PHOTO CARTRIDGE"),INKSET(4_C4M4Y4K4),8,MODE_FLAG_PHOTO,NULL,1.0,1.0,NULL,NULL,NULL,2},
   /* there is another 720x360 mono mode */
 };
-DECLARE_MODES(canon_BJC_4300,5);
+DECLARE_MODES(canon_BJC_4300,1);
 
 static const canon_mode_t canon_BJC_4400_modes[] = {
   {  720, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
@@ -224,7 +224,7 @@ static const canon_mode_t canon_BJC_4400_modes[] = {
   {  360, 360,CANON_INK_K | CANON_INK_CMYK | CANON_INK_CcMmYK,
      "360x360dpi",N_("360x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_4400,1);
+DECLARE_MODES(canon_BJC_4400,0);
 
 /* this seems to use different ESC (c bit for quality than pixma devices. */
 /* these printers only have K, or (subset of) CMYK, so CcMmYK is not required. */
@@ -238,13 +238,13 @@ static const canon_mode_t canon_BJC_4550_modes[] = {
   {  180, 180,CANON_INK_K|CANON_INK_CMYK,"180x180dpi",N_("180x180 DPI"),INKSET(4_C2M2Y2K2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  360, 360,CANON_INK_CMYK,"360x360dpi_photo",N_("360x360 DPI PHOTO CARTRIDGE"),INKSET(4_C4M4Y4K4),8,MODE_FLAG_PHOTO,NULL,1.0,1.0,NULL,NULL,NULL,1},
 };
-DECLARE_MODES(canon_BJC_4550,4);
+DECLARE_MODES(canon_BJC_4550,1);
 
 static const canon_mode_t canon_BJC_5500_modes[] = {
   {  360, 360,CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi",N_("360x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  180, 180,CANON_INK_CMYK | CANON_INK_CcMmYK,"180x180dpi",N_("180x180 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_5500,1);
+DECLARE_MODES(canon_BJC_5500,0);
 
 
 static const canon_mode_t canon_BJC_6000_modes[] = {
@@ -253,7 +253,7 @@ static const canon_mode_t canon_BJC_6000_modes[] = {
   {  360, 360,CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dpi",N_("360x360 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.8,1.0,NULL,NULL,NULL,2},
   {  360, 360,CANON_INK_CMYK | CANON_INK_CcMmYK,"360x360dmt",N_("360x360 DPI DMT"),INKSET(6_C4M4Y4K4c4m4),8,0,NULL,1.8,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_6000,3);
+DECLARE_MODES(canon_BJC_6000,1);
 
 
 static const canon_mode_t canon_BJC_7000_modes[] = {
@@ -261,14 +261,14 @@ static const canon_mode_t canon_BJC_7000_modes[] = {
   {  600, 600,CANON_INK_CMYK | CANON_INK_CcMmYyK,"600x600dpi",N_("600x600 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.8,1.0,NULL,NULL,NULL,2},
   {  300, 300,CANON_INK_CMYK | CANON_INK_CcMmYyK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,3.5,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_7000,2);
+DECLARE_MODES(canon_BJC_7000,1);
 
 static const canon_mode_t canon_BJC_7100_modes[] = {
   { 1200, 600,CANON_INK_CMYK | CANON_INK_CcMmYyK,"1200x600dpi",N_("1200x600 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  600, 600,CANON_INK_CMYK | CANON_INK_CcMmYyK,"600x600dpi",N_("600x600 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  300, 300,CANON_INK_CMYK | CANON_INK_CcMmYyK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_7100,2);
+DECLARE_MODES(canon_BJC_7100,1);
 
 /* 50i sold as i70 outside of Japan */
 static const canon_mode_t canon_BJC_i50_modes[] = {
@@ -830,14 +830,14 @@ static const canon_mode_t canon_BJC_8200_modes[] = {
   {  300, 300,CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 
 };
-DECLARE_MODES(canon_BJC_8200,2);
+DECLARE_MODES(canon_BJC_8200,1);
 
 
 static const canon_mode_t canon_BJC_8500_modes[] = {
   {  600, 600,CANON_INK_CMYK | CANON_INK_CcMmYK,"600x600dpi",N_("600x600 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
   {  300, 300,CANON_INK_CMYK | CANON_INK_CcMmYK,"300x300dpi",N_("300x300 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_8500,1);
+DECLARE_MODES(canon_BJC_8500,0);
 
 
 static const canon_mode_t canon_S200_modes[] = {
@@ -850,7 +850,7 @@ static const canon_mode_t canon_S200_modes[] = {
   {  360, 360,CANON_INK_CMYK | CANON_INK_CMY | CANON_INK_K,
      "360x360dpi",N_("360x360 DPI"),INKSET(4_C2M2Y2K2),8,0,delay_S200,2.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_S200,3);
+DECLARE_MODES(canon_S200,2);
 
 static const canon_mode_t canon_BJC_S300_modes[] = {
   /* original two modes */
