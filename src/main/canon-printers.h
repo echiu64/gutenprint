@@ -649,12 +649,12 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 6000 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     "6000", 3,
-    618, 936,      /* 8.58" x 13 " */
-    11, 9, 10, 18, /* unconfirmed */
+    618, 4745,      /* 8.58" x 65.9" (banner paper) */
+    10, 10, 9, 20, /* l 3.4mm r 3.4mm t 3mm b 7mm */
     &canon_default_slotlist,
-    CANON_CAP_STD1,0,
+    CANON_CAP_STD1 | CANON_CAP_cart,0,
     2,0,
-    control_cmd_ackshort,
+    control_cmd_BJC_i6100,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
     &canon_BJC_6000_modeuselist,
@@ -683,12 +683,12 @@ static const canon_cap_t canon_model_capabilities[] =
 
   { /* Canon BJC 6500 *//* heads: BC-30/BC-31 BC-32/BC-31 */
     "6500", 3,
-    842, INCH(17),
-    11, 9, 10, 18, /* unconfirmed */
+    821, INCH(17), /* printing width: 289,6mm = 11.4" = 821 points */
+    10, 10, 9, 15, /* l 3.4mm r 3.4mm t 3mm b 5mm */
     &canon_default_slotlist,
-    CANON_CAP_STD1,0,
+    CANON_CAP_STD1 | CANON_CAP_cart,0,
     2,0,
-    NULL,
+    control_cmd_BJC_i6100,
     &canon_BJC_6000_modelist,
     &canon_default_paperlist,
     &canon_BJC_6000_modeuselist,

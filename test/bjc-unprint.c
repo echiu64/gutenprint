@@ -157,29 +157,43 @@ void rle_info(const unsigned char *inbuf, int n, int *first, int *last, int *wid
   if (width) *width= (f<0) ? 0 : l-f+1;
 }
 
+/* n is the size of the scanline */
 int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max)
 {
-  const char *ib= (const char *)inbuf;
+  const char *ib= (const char *)inbuf; /* input scanline */
   char cnt;
   int o= 0;
   int i=0,j,num;
 
+  /* Results of the decoding are in the output buffer already. 
+     We want to organize the decoded numbers to see 
+     the total number of levels, and their values.
+  */
+  /*fprintf(stderr,"rle_decode: decoding scanline\n");*/
   if (n<=0) return 0;
   while (i<n) {
     cnt= ib[i];
     if (cnt<0) {
       num= 1-cnt;
-      for (j=0; j<num; j++) outbuf[o+j]=inbuf[i+1];
+      /*for (j=0; j<num; j++) outbuf[o+j]=inbuf[i+1];*/
+      for (j=0; j<num; j++) {
+	outbuf[o+j]=inbuf[i+1];
+	/*fprintf(stderr," %d ",outbuf[o+j]);*/
+      }
       o+= num;
       i+= 2;
     } else {
       num= cnt+1;
-      for (j=0; j<num; j++) outbuf[o+j]=inbuf[i+j+1];
+      /* for (j=0; j<num; j++) outbuf[o+j]=inbuf[i+j+1]; */
+      for (j=0; j<num; j++) {
+	outbuf[o+j]=inbuf[i+j+1];
+	/*fprintf(stderr," %d ",outbuf[o+j]);*/
+      }
       o+= num;
       i+= num+1;
     }
   }
-
+  /*fprintf(stderr,"\n");*/
   return o;
 }
 
@@ -201,11 +215,11 @@ scanline_t* scanline_new(void)
 scanline_t *scanline_store(scanline_t *line, int y, unsigned char *buf, int size) {
   if (!line && !(line= scanline_new()))
     return 0;
-  line->size= size;
+  line->size= size; /* from cnt in nextcmd function */
   line->buf= (unsigned char *) stp_malloc (size);
   memcpy(line->buf,buf,size);
   rle_info(buf,size,&line->xmin,&line->xmax,&line->width,&line->osize);
-  /* fprintf(stderr,"%d %d %d %d  ",size,line->xmin,line->xmax,line->width); */
+  /*fprintf(stderr,"Scanline size %d, xmin %d, xmax %d, width %d\n",size,line->xmin,line->xmax,line->width);*/ /* originally commented out */
   line->y= y;
   return line;
 }
@@ -243,7 +257,7 @@ bitimage_t *scanlines2bitimage(scanline_t *slimg)
   for (sl=slimg; sl!=0; sl=sl->next) {
     y= sl->y- y0;
     if ((y>=0) && (y<h)) {
-      rle_decode(sl->buf,sl->size,img->buf+y*w,w);
+      rle_decode(sl->buf,sl->size,img->buf+y*w,w); /* add here a pointer to a color value structure to keep track of the decoded levels/values */
     }
   }
 
@@ -335,6 +349,7 @@ int nextcmd(FILE *infile,unsigned char *inbuff,int *cnt)
   c2= fgetc(infile);
   if (feof(infile)) return 0;
 
+  /* 2 bytes: seems to be the size+1 of one scanline in cases where command is a scanline */
   *cnt= c1+256*c2;
 
   if ((c=fread(inbuff,1,*cnt,infile) != *cnt)) {
@@ -469,12 +484,19 @@ int main(int argc, char **argv)
 
     process(infile,scanlines,&xmin,&xmax,&ymin,&ymax);
 
+    /*fprintf(stderr,"Color %c\n",colname[0]);*/
     save2xbm(outfilename,colname[0],scanlines2bitimage(scanlines[0]),xmin,ymin,xmax,ymax);
+    /*fprintf(stderr,"Color %c\n",colname[1]);*/
     save2xbm(outfilename,colname[1],scanlines2bitimage(scanlines[1]),xmin,ymin,xmax,ymax);
+    /*fprintf(stderr,"Color %c\n",colname[2]);*/
     save2xbm(outfilename,colname[2],scanlines2bitimage(scanlines[2]),xmin,ymin,xmax,ymax);
+    /*fprintf(stderr,"Color %c\n",colname[3]);*/
     save2xbm(outfilename,colname[3],scanlines2bitimage(scanlines[3]),xmin,ymin,xmax,ymax);
+    /*fprintf(stderr,"Color %c\n",colname[4]);*/
     save2xbm(outfilename,colname[4],scanlines2bitimage(scanlines[4]),xmin,ymin,xmax,ymax);
+    /*fprintf(stderr,"Color %c\n",colname[5]);*/
     save2xbm(outfilename,colname[5],scanlines2bitimage(scanlines[5]),xmin,ymin,xmax,ymax);
+    /*fprintf(stderr,"Color %c\n",colname[6]);*/
     save2xbm(outfilename,colname[6],scanlines2bitimage(scanlines[6]),xmin,ymin,xmax,ymax);
 
   } else {
