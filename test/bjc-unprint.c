@@ -305,7 +305,7 @@ bitimage_t *scanlines2bitimage(scanline_t *slimg, level_t *level)
   }
   fprintf(stderr,"numlevels: %d\n",level->numlevels);
   fprintf(stderr,"maxlevel: %d\n",level->maxlevel);
-  level->numbits = calc_bits(level->numlevels);
+  level->numbits = calc_bits(level->maxlevel);
   fprintf(stderr,"numbits: %d\n",level->numbits);
 
   return img;
