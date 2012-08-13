@@ -62,22 +62,34 @@ typedef struct bitimage_t_ {
   int xmax;
 } bitimage_t;
 
+typedef struct level_t_ {
+  /* Max number of bits per ink so far known is 8 
+     Thus max number of levels is 256 (including value 0)
+  */
+  int levelvals[256]; /* number of occurrences of each level */
+  int numlevels; /* number of actual levels used */
+  int maxlevel;  /* maximum value */
+  int numbits;  /* deduced number bits used for numlevels */
+} level_t;
+
 bitimage_t *bitimage_new (void);
 int last_bit (unsigned char i);
 int first_bit (unsigned char i);
 void rle_info (const unsigned char *inbuf, int n, int *first, int *last,
                int *width, int *length);
-int rle_decode (unsigned char *inbuf, int n, unsigned char *outbuf, int max);
+int rle_decode (unsigned char *inbuf, int n, unsigned char *outbuf, int max, level_t *levels);
 scanline_t* scanline_new (void);
+level_t* level_new (void);
+int calc_bits(int numlevels);
 scanline_t *scanline_store (scanline_t *line, int y, unsigned char *buf,
                             int size);
-bitimage_t *scanlines2bitimage (scanline_t *slimg);
+bitimage_t *scanlines2bitimage (scanline_t *slimg, level_t *levels);
 char conv (char i);
 void save2xbm (const char *filename,char col, bitimage_t *img,
                int xmin, int ymin, int xmax, int ymax);
 int nextcmd (FILE *infile, unsigned char *inbuff, int *cnt);
 int process(FILE *infile, scanline_t *sf[7], int *xmin_, int *xmax_,
-            int *ymin_, int *ymax_);
+            int *ymin_, int *ymax_, level_t *lv[7]);
 
 
 bitimage_t *bitimage_new(void)
@@ -158,7 +170,7 @@ void rle_info(const unsigned char *inbuf, int n, int *first, int *last, int *wid
 }
 
 /* n is the size of the scanline */
-int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max)
+int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max, level_t *levels)
 {
   const char *ib= (const char *)inbuf; /* input scanline */
   char cnt;
@@ -179,6 +191,8 @@ int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max)
       for (j=0; j<num; j++) {
 	outbuf[o+j]=inbuf[i+1];
 	/*fprintf(stderr," %d ",outbuf[o+j]);*/
+	levels->levelvals[outbuf[o+j]] += 1;
+	if ( outbuf[o+j] > levels->maxlevel ) levels->maxlevel = outbuf[o+j];
       }
       o+= num;
       i+= 2;
@@ -188,6 +202,8 @@ int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max)
       for (j=0; j<num; j++) {
 	outbuf[o+j]=inbuf[i+j+1];
 	/*fprintf(stderr," %d ",outbuf[o+j]);*/
+	levels->levelvals[outbuf[o+j]] += 1;
+	if ( outbuf[o+j] > levels->maxlevel ) levels->maxlevel = outbuf[o+j];
       }
       o+= num;
       i+= num+1;
@@ -196,7 +212,6 @@ int rle_decode(unsigned char *inbuf, int n, unsigned char *outbuf,int max)
   /*fprintf(stderr,"\n");*/
   return o;
 }
-
 
 scanline_t* scanline_new(void)
 {
@@ -212,6 +227,29 @@ scanline_t* scanline_new(void)
   return tmp;
 }
 
+level_t *level_new(void)
+{
+  int i;
+  level_t* tmp = (level_t*) stp_malloc (sizeof(level_t));
+  tmp->numlevels=0;
+  tmp->maxlevel=0;
+  tmp->numbits=0;
+  for (i=0; i<256; i++) tmp->levelvals[i]=0;
+  return tmp;
+}
+
+int calc_bits(int numlevels) {
+  if (numlevels > 128) return 8;
+  else if (numlevels > 64)  return 7;
+  else if (numlevels > 32)  return 6;
+  else if (numlevels > 16)  return 5;
+  else if (numlevels > 8)   return 4;
+  else if (numlevels > 4)   return 3;
+  else if (numlevels > 2)   return 2;
+  else if (numlevels > 1)   return 1;
+  else return 0;
+}
+
 scanline_t *scanline_store(scanline_t *line, int y, unsigned char *buf, int size) {
   if (!line && !(line= scanline_new()))
     return 0;
@@ -219,20 +257,19 @@ scanline_t *scanline_store(scanline_t *line, int y, unsigned char *buf, int size
   line->buf= (unsigned char *) stp_malloc (size);
   memcpy(line->buf,buf,size);
   rle_info(buf,size,&line->xmin,&line->xmax,&line->width,&line->osize);
-  /*fprintf(stderr,"Scanline size %d, xmin %d, xmax %d, width %d\n",size,line->xmin,line->xmax,line->width);*/ /* originally commented out */
+  /*fprintf(stderr,"Scanline size %d, xmin %d, xmax %d, width %d\n",size,line->xmin,line->xmax,line->width);*/
   line->y= y;
   return line;
 }
 
-
-bitimage_t *scanlines2bitimage(scanline_t *slimg)
+bitimage_t *scanlines2bitimage(scanline_t *slimg, level_t *level)
 {
   bitimage_t *img= 0;
   scanline_t *sl;
   int w= 0;
   int y0= -1;
   int y= 0;
-  int h;
+  int h,i;
 
   for (sl=slimg; sl!=0; sl=sl->next) {
     if (sl->width) {
@@ -257,9 +294,19 @@ bitimage_t *scanlines2bitimage(scanline_t *slimg)
   for (sl=slimg; sl!=0; sl=sl->next) {
     y= sl->y- y0;
     if ((y>=0) && (y<h)) {
-      rle_decode(sl->buf,sl->size,img->buf+y*w,w); /* add here a pointer to a color value structure to keep track of the decoded levels/values */
+      rle_decode(sl->buf,sl->size,img->buf+y*w,w,level);
     }
   }
+
+  /* print out stats of levels */
+  for (i=0;i<256;i++) {
+    fprintf(stderr,"level %d: %d\n",i,level->levelvals[i]);
+    if (level->levelvals[i] > 0) level->numlevels += 1;
+  }
+  fprintf(stderr,"numlevels: %d\n",level->numlevels);
+  fprintf(stderr,"maxlevel: %d\n",level->maxlevel);
+  level->numbits = calc_bits(level->numlevels);
+  fprintf(stderr,"numbits: %d\n",level->numbits);
 
   return img;
 }
@@ -276,7 +323,6 @@ char conv(char i) {
   if (i & 0x01) o|=0x80;
   return o;
 }
-
 
 void save2xbm(const char *filename,char col, bitimage_t *img,
 	      int xmin, int ymin, int xmax, int ymax)
@@ -361,7 +407,7 @@ int nextcmd(FILE *infile,unsigned char *inbuff,int *cnt)
   return cmd;
 }
 
-int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int *ymax_)
+int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int *ymax_,level_t *lv[7])
 {
   unsigned char inbuff[65540];
   scanline_t *sl[7], *nsl;
@@ -375,6 +421,8 @@ int process(FILE *infile,scanline_t *sf[7],int *xmin_,int *xmax_,int *ymin_,int 
   int cmd;
 
   for (i=0; i<7; i++) sf[i]= sl[i]= 0;
+
+  for (i=0; i<7; i++) lv[i] = level_new();
 
   if (!infile) return 0;
   fseek(infile,0,SEEK_SET);
@@ -468,6 +516,7 @@ int main(int argc, char **argv)
   FILE *infile= 0;
   scanline_t *scanlines[7];
   char colname[7] = { 'K', 'Y', 'M', 'C', 'y', 'm', 'c' };
+  level_t *levels[7];
   int xmin,xmax;
   int ymin,ymax;
 
@@ -482,22 +531,22 @@ int main(int argc, char **argv)
 
     xsize=ysize=0;
 
-    process(infile,scanlines,&xmin,&xmax,&ymin,&ymax);
+    process(infile,scanlines,&xmin,&xmax,&ymin,&ymax,levels);
 
-    /*fprintf(stderr,"Color %c\n",colname[0]);*/
-    save2xbm(outfilename,colname[0],scanlines2bitimage(scanlines[0]),xmin,ymin,xmax,ymax);
-    /*fprintf(stderr,"Color %c\n",colname[1]);*/
-    save2xbm(outfilename,colname[1],scanlines2bitimage(scanlines[1]),xmin,ymin,xmax,ymax);
-    /*fprintf(stderr,"Color %c\n",colname[2]);*/
-    save2xbm(outfilename,colname[2],scanlines2bitimage(scanlines[2]),xmin,ymin,xmax,ymax);
-    /*fprintf(stderr,"Color %c\n",colname[3]);*/
-    save2xbm(outfilename,colname[3],scanlines2bitimage(scanlines[3]),xmin,ymin,xmax,ymax);
-    /*fprintf(stderr,"Color %c\n",colname[4]);*/
-    save2xbm(outfilename,colname[4],scanlines2bitimage(scanlines[4]),xmin,ymin,xmax,ymax);
-    /*fprintf(stderr,"Color %c\n",colname[5]);*/
-    save2xbm(outfilename,colname[5],scanlines2bitimage(scanlines[5]),xmin,ymin,xmax,ymax);
-    /*fprintf(stderr,"Color %c\n",colname[6]);*/
-    save2xbm(outfilename,colname[6],scanlines2bitimage(scanlines[6]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[0]);
+    save2xbm(outfilename,colname[0],scanlines2bitimage(scanlines[0],levels[0]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[1]);
+    save2xbm(outfilename,colname[1],scanlines2bitimage(scanlines[1],levels[1]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[2]);
+    save2xbm(outfilename,colname[2],scanlines2bitimage(scanlines[2],levels[2]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[3]);
+    save2xbm(outfilename,colname[3],scanlines2bitimage(scanlines[3],levels[3]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[4]);
+    save2xbm(outfilename,colname[4],scanlines2bitimage(scanlines[4],levels[4]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[5]);
+    save2xbm(outfilename,colname[5],scanlines2bitimage(scanlines[5],levels[5]),xmin,ymin,xmax,ymax);
+    fprintf(stderr,"Color %c\n",colname[6]);
+    save2xbm(outfilename,colname[6],scanlines2bitimage(scanlines[6],levels[6]),xmin,ymin,xmax,ymax);
 
   } else {
     fprintf(stderr,"\nusage: bjc-unprint INFILE [OUTFILE]\n\n");
