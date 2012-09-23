@@ -70,6 +70,7 @@
 /* set this to 1 to see errors in make, set to 0 (normal) to avoid noise */
 #define ERRPRINT 0
 
+/* 5 3-level pixels into 1 byte */
 static int
 pack_pixels(unsigned char* buf,int len)
 {
@@ -78,7 +79,7 @@ pack_pixels(unsigned char* buf,int len)
   int shift = 6;
   while(read_pos < len)
   {
-    /* read 5pixels a 2 bit */
+    /* read 5pixels at 2 bit */
     unsigned short value = buf[read_pos] << 8;
     if(read_pos+1 < len)
       value += buf[read_pos + 1];
@@ -95,6 +96,70 @@ pack_pixels(unsigned char* buf,int len)
     else
     {
       shift -= 2;
+      ++read_pos;
+    }
+  }
+  return write_pos;
+}
+
+/* 3 5-level pixels into 1 byte */
+static int
+pack_pixels3_5(unsigned char* buf,int len)
+{
+  int read_pos = 0;
+  int write_pos = 0;
+  int shift = 7;
+  while(read_pos < len)
+  {
+    /* read 3pixels at 3 bit */
+    unsigned short value = buf[read_pos] << 8;
+    if(read_pos+1 < len)
+      value += buf[read_pos + 1];
+    if(shift)
+      value >>= shift;
+    /* write 8bit value representing the 10 bit pixel combination */
+    buf[write_pos] = ninetoeight[value & 4095];
+    ++write_pos;
+    if(shift == 0)
+    {
+      shift = 7;
+      read_pos += 2;
+    }
+    else
+    {
+      shift -= 7;
+      ++read_pos;
+    }
+  }
+  return write_pos;
+}
+
+/* 3 6-level pixels into 1 byte */
+static int
+pack_pixels3_6(unsigned char* buf,int len)
+{
+  int read_pos = 0;
+  int write_pos = 0;
+  int shift = 7;
+  while(read_pos < len)
+  {
+    /* read 3pixels at 3 bit */
+    unsigned short value = buf[read_pos] << 8;
+    if(read_pos+1 < len)
+      value += buf[read_pos + 1];
+    if(shift)
+      value >>= shift;
+    /* write 8bit value representing the 10 bit pixel combination */
+    buf[write_pos] = ninetoeight2[value & 4095];
+    ++write_pos;
+    if(shift == 0)
+    {
+      shift = 7;
+      read_pos += 2;
+    }
+    else
+    {
+      shift -= 7;
       ++read_pos;
     }
   }
@@ -5394,6 +5459,11 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
   
   if(ink_flags & INK_FLAG_5pixel_in_1byte)
     length = pack_pixels(in_ptr,length);
+  else if(ink_flags & INK_FLAG_3pixel5level_in_1byte)
+    length = pack_pixels3_5(in_ptr,length);
+  else if(ink_flags & INK_FLAG_3pixel6level_in_1byte)
+    length = pack_pixels3_6(in_ptr,length);
+
   
   stp_pack_tiff(v, in_ptr, length, comp_data, &comp_ptr, NULL, NULL);
   

@@ -54,6 +54,8 @@ typedef struct {
   const int bits;                     /* bitdepth */
   const int flags;                    /* flags:   */
 #define INK_FLAG_5pixel_in_1byte 0x1  /*  use special compression where 5 3level pixels get stored in 1 byte */
+#define INK_FLAG_3pixel5level_in_1byte 0x2  /*  use special compression where 3 5level pixels get stored in 1 byte */
+#define INK_FLAG_3pixel6level_in_1byte 0x3  /*  use special compression where 3 6level pixels get stored in 1 byte */
   int numsizes;                       /* number of possible {bit,density} tuples */
   const stp_dotsize_t *dot_sizes;     /* pointer to an array of {bit,density} tuples */ 
 } canon_ink_t;
@@ -110,7 +112,6 @@ DECLARE_INK(2,4);
 
 /*under development*/
 DECLARE_INK(4,4);
-DECLARE_INK_EXTENDED(4,4,INK_FLAG_5pixel_in_1byte);
 
 static const stp_dotsize_t dotsizes_5l[] = {
   { 0x1, 0.45 },
@@ -121,7 +122,7 @@ static const stp_dotsize_t dotsizes_5l[] = {
 
 /*under development*/
 DECLARE_INK(4,5);
-DECLARE_INK_EXTENDED(4,5,INK_FLAG_5pixel_in_1byte);
+DECLARE_INK_EXTENDED(4,5,INK_FLAG_3pixel5level_in_1byte);
 
 static const stp_dotsize_t dotsizes_6l[] = {
   { 0x1, 0.2 },
@@ -133,7 +134,7 @@ static const stp_dotsize_t dotsizes_6l[] = {
 
 /*under development*/
 DECLARE_INK(4,6);
-DECLARE_INK_EXTENDED(4,6,INK_FLAG_5pixel_in_1byte);
+DECLARE_INK_EXTENDED(4,6,INK_FLAG_3pixel6level_in_1byte);
 
 static const stp_dotsize_t dotsizes_7l[] = {
   { 0x1, 0.45 },
