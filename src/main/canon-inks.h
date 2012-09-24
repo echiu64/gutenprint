@@ -55,7 +55,7 @@ typedef struct {
   const int flags;                    /* flags:   */
 #define INK_FLAG_5pixel_in_1byte 0x1  /*  use special compression where 5 3level pixels get stored in 1 byte */
 #define INK_FLAG_3pixel5level_in_1byte 0x2  /*  use special compression where 3 5level pixels get stored in 1 byte */
-#define INK_FLAG_3pixel6level_in_1byte 0x3  /*  use special compression where 3 6level pixels get stored in 1 byte */
+#define INK_FLAG_3pixel6level_in_1byte 0x4  /*  use special compression where 3 6level pixels get stored in 1 byte */
   int numsizes;                       /* number of possible {bit,density} tuples */
   const stp_dotsize_t *dot_sizes;     /* pointer to an array of {bit,density} tuples */ 
 } canon_ink_t;
