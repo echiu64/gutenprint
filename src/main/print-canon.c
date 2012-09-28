@@ -4157,6 +4157,10 @@ canon_init_setImage(const stp_vars_t *v, const canon_privdata_t *init)
                buf[3+i*3+1]=0x01;
                buf[3+i*3+0]=init->mode->inks[i].ink->bits;
              }*/
+	  else if(init->mode->inks[i].ink->flags & INK_FLAG_3pixel5level_in_1byte)
+            buf[3+i*3+0]=(1<<5)|init->mode->inks[i].ink->bits; /*info*/
+	  else if(init->mode->inks[i].ink->flags & INK_FLAG_3pixel6level_in_1byte)
+            buf[3+i*3+0]=(1<<5)|init->mode->inks[i].ink->bits; /*info*/
           else
             buf[3+i*3+0]=init->mode->inks[i].ink->bits;
 
@@ -5416,11 +5420,19 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
     bitoffset= 0;
   }
   else if (bits==4) {
+    int pixels_per_byte = 2;
+    if(ink_flags & INK_FLAG_3pixel5level_in_1byte)
+      pixels_per_byte = 3;
+    else if(ink_flags & INK_FLAG_3pixel6level_in_1byte)
+      pixels_per_byte = 3;
+
     stp_fold_4bit(line,length,pd->fold_buf);
     in_ptr= pd->fold_buf;
     length= (length*8)/2;
-    offset2 = offset / 2; 
-    bitoffset= offset % 2;
+    /* calculate the number of compressed bytes that can be sent directly */
+    offset2 = offset / pixels_per_byte; 
+    /* calculate the number of (uncompressed) bits that have to be added to the raster data */
+    bitoffset= (offset % pixels_per_byte) * 2;
   }
   else if (bits==8) {
     stp_fold_8bit(line,length,pd->fold_buf);
