@@ -201,7 +201,7 @@ static int eight2twelve2(unsigned char* inbuffer,unsigned char* outbuffer,int nu
 	while(read_pos < num_bytes){
 		unsigned short value=Table6Level[inbuffer[read_pos]];
 		++read_pos;
-		put_bits(&s,12,value);
+		put_bits(&s,12,value);/*12*/
 	}
 	return s.buf_ptr-s.buf;
 }
