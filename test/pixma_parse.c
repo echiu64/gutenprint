@@ -273,7 +273,9 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 					color->head->buf=calloc(1,size+8); /* allocate slightly bigger buffer for get_bits */
 					memcpy(color->head->buf,dstr,size);
 					color->head->len=size;
-					/*printf("DEBUG color not compressed\n");*/
+					if (DEBUG) {
+					  printf("DEBUG color not compressed\n");
+					}
 				}else{
 				  if (img->color->bpp==2) {/* handle 5pixel in 8 bits compression */
 				    color->head->buf=calloc(1,size*2+8);
@@ -283,7 +285,9 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				    if (img->color->level==5) {/* 5-level compression*/
 				      color->head->buf=calloc(1,size*2+8);
 				      size=color->head->len=eight2twelve(dstr,color->head->buf,size,size*2);
-				      /*printf("DEBUG 5-level color compressed\n");*/
+				      if (DEBUG) {
+					printf("DEBUG 5-level color compressed\n");
+				      }
 				      /*maxtablevalue=analysiseight2twelve(dstr,color->head->buf,size,size*2);
 				      if (maxtablevalue!=0) {
 					printf("maxtablevalue: %x",maxtablevalue);
@@ -291,7 +295,9 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				    } else if (img->color->level==6) { /* 6-level compression*/
 				      color->head->buf=calloc(1,size*2+8);
 				      size=color->head->len=eight2twelve2(dstr,color->head->buf,size,size*2);
-				      /*printf("DEBUG 6-level color compressed\n");*/
+				      if (DEBUG) {
+					printf("DEBUG 6-level color compressed\n");
+				      }
 				      /*maxtablevalue=analysiseight2twelve2(dstr,color->head->buf,size,size*2);
 				      if (maxtablevalue!=0) {
 					printf("maxtablevalue: %x",maxtablevalue);
