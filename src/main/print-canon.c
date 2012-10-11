@@ -118,7 +118,7 @@ pack_pixels3_5(unsigned char* buf,int len)
     if(shift)
       value >>= shift;
     /* write 8bit value representing the 12 bit pixel combination */
-    buf[write_pos] = ninetoeight[value & 4095];
+    buf[write_pos] = twelve2eight[value & 1023];
     ++write_pos;
     if(shift == 0)
     {
@@ -150,7 +150,7 @@ pack_pixels3_6(unsigned char* buf,int len)
     if(shift)
       value >>= shift;
     /* write 8bit value representing the 12 bit pixel combination */
-    buf[write_pos] = ninetoeight2[value & 4095];
+    buf[write_pos] = twelve2eight2[value & 1023];
     ++write_pos;
     if(shift == 0)
     {
@@ -5380,7 +5380,7 @@ canon_shift_buffer(unsigned char *line,int length,int bits)
 }
 
 
-/* fold, apply 5 pixel in 1 byte compression, pack tiff and return the compressed length */
+/* fold, apply the necessary compression, pack tiff and return the compressed length */
 static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* line,int length,int offset,unsigned char* comp_buf,int bits, int ink_flags)
 {
   unsigned char
@@ -5406,17 +5406,17 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
       pixels_per_byte = 5;
     
     stp_fold(line,length,pd->fold_buf);
-    in_ptr= pd->fold_buf;
-    length= (length*8/4); /* 4 pixels in 8bit */
+    in_ptr    = pd->fold_buf;
+    length    = (length*8/4); /* 4 pixels in 8bit */
     /* calculate the number of compressed bytes that can be sent directly */
-    offset2 = offset / pixels_per_byte;
+    offset2   = offset / pixels_per_byte;
     /* calculate the number of (uncompressed) bits that have to be added to the raster data */
     bitoffset = (offset % pixels_per_byte) * 2;
   }
   else if (bits==3) {
     stp_fold_3bit_323(line,length,pd->fold_buf);
-    in_ptr= pd->fold_buf;
-    length= (length*8)/3;
+    in_ptr  = pd->fold_buf;
+    length  = (length*8)/3;
     offset2 = offset/3;
 #if 0
     switch(offset%3){
@@ -5435,12 +5435,12 @@ static int canon_compress(stp_vars_t *v, canon_privdata_t *pd, unsigned char* li
       pixels_per_byte = 3;
 
     stp_fold_4bit(line,length,pd->fold_buf);
-    in_ptr= pd->fold_buf;
-    length= (length*8)/2;
+    in_ptr    = pd->fold_buf;
+    length    = (length*8)/2; /* 2 pixels in 8 bits */
     /* calculate the number of compressed bytes that can be sent directly */
-    offset2 = offset / pixels_per_byte; 
+    offset2   = offset / pixels_per_byte; 
     /* calculate the number of (uncompressed) bits that have to be added to the raster data */
-    bitoffset= (offset % pixels_per_byte) * 2;
+    bitoffset = (offset % pixels_per_byte) * 2; /* not sure what this value means */
   }
   else if (bits==8) {
     stp_fold_8bit(line,length,pd->fold_buf);
