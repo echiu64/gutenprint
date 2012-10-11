@@ -9513,7 +9513,7 @@ static const canon_modeuse_t canon_PIXMA_MG3100_modeuses[] = {
 DECLARE_MODEUSES(canon_PIXMA_MG3100);
 
 /* ----------------------------------- Canon MG3200  ----------------------------------- */
-static const char* canon_PIXMA_MG3100_modeuses_plain[] = {
+static const char* canon_PIXMA_MG3200_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi_high5",/* duplex */
   "600x600dpi",
@@ -9529,26 +9529,26 @@ static const char* canon_PIXMA_MG3100_modeuses_plain[] = {
   NULL
   };
 
-static const char* canon_PIXMA_MG3100_modeuses_PPplusG2[] = {
+static const char* canon_PIXMA_MG3200_modeuses_PPplusG2[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_MG3100_modeuses_PPpro[] = {
+static const char* canon_PIXMA_MG3200_modeuses_PPpro[] = {
   "600x600dpi_photohigh2",
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_MG3100_modeuses_PPproLuster[] = {
+static const char* canon_PIXMA_MG3200_modeuses_PPproLuster[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
 };
 
-static const char* canon_PIXMA_MG3100_modeuses_Hagaki[] = {
+static const char* canon_PIXMA_MG3200_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
   /* Mono */
@@ -9560,32 +9560,32 @@ static const char* canon_PIXMA_MG3100_modeuses_Hagaki[] = {
   NULL
 };
 
-static const char* canon_PIXMA_MG3100_modeuses_TShirt[] = {
+static const char* canon_PIXMA_MG3200_modeuses_TShirt[] = {
   "600x600dpi_tshirt",
   NULL
 };
 
-static const char* canon_PIXMA_MG3100_modeuses_PPother[] = {
+static const char* canon_PIXMA_MG3200_modeuses_PPother[] = {
   "600x600dpi_photohigh",
   NULL
 };
 
-static const canon_modeuse_t canon_PIXMA_MG3100_modeuses[] = {
-  { "Plain",            canon_PIXMA_MG3100_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT | DUPLEX_MODEREPL },
-  { "PhotoPlusGloss2",  canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "PhotoProPlat",     canon_PIXMA_MG3100_modeuses_PPpro, INKSET_COLOR_SUPPORT },
-  { "PhotoProLuster",   canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "PhotoProSemiGloss",canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "PhotopaperMatte",	canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "GlossyPaper",	canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "Coated",		canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "HagakiA", 	        canon_PIXMA_MG3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT },
-  { "InkJetHagaki", 	canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "CanonPhotoHagakiK",canon_PIXMA_MG3100_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
-  { "Hagaki", 	        canon_PIXMA_MG3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT },
-  { "TShirt",		canon_PIXMA_MG3100_modeuses_TShirt, INKSET_COLOR_SUPPORT },
-  { "Envelope",		canon_PIXMA_MG3100_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL }, 
-  { "PhotopaperOther",	canon_PIXMA_MG3100_modeuses_PPother, INKSET_COLOR_SUPPORT },
+static const canon_modeuse_t canon_PIXMA_MG3200_modeuses[] = {
+  { "Plain",            canon_PIXMA_MG3200_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",     canon_PIXMA_MG3200_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",   canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_PIXMA_MG3200_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT },
+  { "InkJetHagaki", 	canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_PIXMA_MG3200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_MG3200_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT },
+  { "TShirt",		canon_PIXMA_MG3200_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_MG3200_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL }, 
+  { "PhotopaperOther",	canon_PIXMA_MG3200_modeuses_PPother, INKSET_COLOR_SUPPORT },
 };
 
 DECLARE_MODEUSES(canon_PIXMA_MG3200);
