@@ -2524,6 +2524,22 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA MG2200 */
+    "PIXMA MG2200", 3,          /*model, model_id*/
+    INCH(17/2), 1917,       /* max paper width and height */ /* no linux driver yet to check this */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_MG2100_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
+    3,6, /* ESC (l and (P command lengths */
+    control_cmd_PIXMA_MG5300,  /* features Also uses CAP_T */
+    &canon_PIXMA_MG2100_modelist,
+    &canon_PIXMA_MG3200_paperlist,
+    &canon_PIXMA_MG2200_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA MG3100 */
     "PIXMA MG3100", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height */ /* from linux driver v3.60 */
@@ -2542,7 +2558,7 @@ static const canon_cap_t canon_model_capabilities[] =
   },
   { /* Canon PIXMA MG3200 */
     "PIXMA MG3200", 3,          /*model, model_id*/
-    INCH(17/2), 1917,       /* max paper width and height */ /* from linux driver v3.60 --- ?  */
+    INCH(17/2), 1917,       /* max paper width and height */ /* no linux driver yet to check this */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
     &canon_PIXMA_MG2100_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
