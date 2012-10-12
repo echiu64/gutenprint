@@ -9470,12 +9470,6 @@ static const char* canon_PIXMA_MG2200_modeuses_PPpro[] = {
   NULL
 };
 
-static const char* canon_PIXMA_MG2200_modeuses_PPproLuster[] = {
-  "600x600dpi_photohigh",
-  "600x600dpi_photo",
-  NULL
-};
-
 static const char* canon_PIXMA_MG2200_modeuses_Hagaki[] = {
   "600x600dpi_high3",
   "600x600dpi_std3",
@@ -9502,7 +9496,7 @@ static const canon_modeuse_t canon_PIXMA_MG2200_modeuses[] = {
   { "Plain",            canon_PIXMA_MG2200_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
   { "PhotoPlusGloss2",  canon_PIXMA_MG2200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "PhotoProPlat",     canon_PIXMA_MG2200_modeuses_PPpro, INKSET_COLOR_SUPPORT },
-  { "PhotoProLuster",   canon_PIXMA_MG2200_modeuses_PPproLuster, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",   canon_PIXMA_MG2200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "PhotoProSemiGloss",canon_PIXMA_MG2200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "PhotopaperMatte",	canon_PIXMA_MG2200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
   { "GlossyPaper",	canon_PIXMA_MG2200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
@@ -9614,12 +9608,6 @@ static const char* canon_PIXMA_MG3200_modeuses_PPplusG2[] = {
 
 static const char* canon_PIXMA_MG3200_modeuses_PPpro[] = {
   "600x600dpi_photohigh2",
-  "600x600dpi_photohigh",
-  "600x600dpi_photo",
-  NULL
-};
-
-static const char* canon_PIXMA_MG3200_modeuses_PPproLuster[] = {
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
@@ -9892,6 +9880,85 @@ static const canon_modeuse_t canon_PIXMA_MG5300_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_PIXMA_MG5300);
+
+/* ----------------------------------- Canon MG5400  ----------------------------------- */
+static const char* canon_PIXMA_MG5400_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high2",/* duplex */
+  "600x600dpi",
+  "600x600dpi_std2",/*duplex*/
+  "300x300dpi",
+  NULL
+  };
+
+static const char* canon_PIXMA_MG5400_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+/* highest mode still unsupported */
+static const char* canon_PIXMA_MG5400_modeuses_PPpro[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5400_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5400_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5400_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5400_modeuses_disc[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photo3",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5400_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5400_modeuses_PPother[] = {
+  "600x600dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_MG5400_modeuses[] = {
+  { "Plain",            canon_PIXMA_MG5400_modeuses_plain, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_PIXMA_MG5400_modeuses_PPplusG2, 0 },
+  { "PhotoProPlat",     canon_PIXMA_MG5400_modeuses_PPpro, 0 },
+  { "PhotoProLuster",   canon_PIXMA_MG5400_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss",canon_PIXMA_MG5400_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_MG5400_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_MG5400_modeuses_PPplusG2, 0 },
+  { "Coated",		canon_PIXMA_MG5400_modeuses_PPmatte, 0 },
+  { "HagakiA", 	        canon_PIXMA_MG5400_modeuses_Hagaki, DUPLEX_SUPPORT },
+  { "InkJetHagaki", 	canon_PIXMA_MG5400_modeuses_inkjetHagaki, 0 },
+  { "CanonPhotoHagakiK",canon_PIXMA_MG5400_modeuses_PPplusG2, 0 },
+  { "Hagaki", 	        canon_PIXMA_MG5400_modeuses_Hagaki, DUPLEX_SUPPORT },
+  { "DiscCompat",	canon_PIXMA_MG5400_modeuses_disc, 0 },
+  { "DiscOthers",	canon_PIXMA_MG5400_modeuses_disc, 0 },
+  { "TShirt",		canon_PIXMA_MG5400_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_MG5400_modeuses_Hagaki, 0 }, 
+  { "PhotopaperOther",	canon_PIXMA_MG5400_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_MG5400);
 
 /* ----------------------------------- Canon MG6100  ----------------------------------- */
 /* most photo modes use gray ink which is unsupported */

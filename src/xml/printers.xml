@@ -255,9 +255,11 @@
       <printer translate="name" name="Canon PIXMA MG3100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3100" />
       <printer translate="name" name="Canon PIXMA MG3200" driver="bjc-PIXMA-MG3200" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3200" />
       <printer translate="name" name="Canon PIXMA MG4100" driver="bjc-PIXMA-MG4100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4100" />
+      <printer translate="name" name="Canon PIXMA MG4200" driver="bjc-PIXMA-MG4200" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4200" />
       <printer translate="name" name="Canon PIXMA MG5100" driver="bjc-PIXMA-MG5100" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5100" />
       <printer translate="name" name="Canon PIXMA MG5200" driver="bjc-PIXMA-MG5200" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5200" />
       <printer translate="name" name="Canon PIXMA MG5300" driver="bjc-PIXMA-MG5300" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5300" />
+      <printer translate="name" name="Canon PIXMA MG5400" driver="bjc-PIXMA-MG5400" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5400" />
       <printer translate="name" name="Canon PIXMA MG6100" driver="bjc-PIXMA-MG6100" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6100" />
       <printer translate="name" name="Canon PIXMA MG6200" driver="bjc-PIXMA-MG6200" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6200" />
       <printer translate="name" name="Canon PIXMA MG8100" driver="bjc-PIXMA-MG8100" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8100" />
