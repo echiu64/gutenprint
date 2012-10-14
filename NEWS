@@ -262,6 +262,25 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        EPSON Stylus TX125
 
+     - Canon inkjets:
+
+       Canon PIXMA MG2200 (EXPERIMENTAL)
+       Canon PIXMA MG3200 (EXPERIMENTAL)
+       Canon PIXMA MG4200 (EXPERIMENTAL)
+       Canon PIXMA MG5400 (EXPERIMENTAL)
+       Canon PIXMA MG6300 (EXPERIMENTAL)
+
+  2) The following Canon printer models were not added, as they cannot
+     currently be supported, even experimentally, owing to an as-yet
+     unknown command format or other issues:
+
+       Canon PIXMA PRO-10  *1
+       Canon PIXMA PRO-100 *1
+       Canon SELPHY CP900  *2
+
+       *1: protocol is supported but inks used are not yet supported
+       *2: requires special communication protocol
+
 * Changes from 5.2.8
 
   1) This release fixes an inappropriate change to the internal
