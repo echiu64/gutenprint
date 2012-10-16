@@ -3735,12 +3735,19 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
-  unsigned char arg_ESCP_1, arg_ESCP_2;
+  unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_9;
   if(!(init->caps->features & CANON_CAP_P))
     return;
 
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
+  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) ) {
+    arg_ESCP_9 = 0x02;
+  }
+  else {
+    arg_ESCP_9 = 0x00;
+  }
+
 
   /* workaround for CD media */
 
@@ -3779,6 +3786,11 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* Tray G from iP4800 onwards */
       if ( !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x56;
+      }
+      /* Tray J from iP7200 onwards */
+      if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) ) {
+	arg_ESCP_1 = 0x5b;
+	arg_ESCP_9 = 0x00;
       }
     }
   }
@@ -3827,6 +3839,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* iP6100D:CD Tray B     : 0x40               */
       /* iP6700D:CD Tray C     : 0x4a               */
       /* iP7100: CD Tray B     : 0x40               */
+      /* iP7200: CD Tray J     : 0x5b               */
       /* iP7500: CD Tray C     : 0x4a               */
       /* iP8100: CD Tray B     : 0x40               */
       /* iP8500 :CD Tray B     : 0x40               */
@@ -3834,8 +3847,10 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* iP9910: CD Tray A     : 0x3f               */
       /* MG5200: CD Tray G     : 0x56               */
       /* MG5300: CD Tray G     : 0x56               */
+      /* MG5400: CD Tray J     : 0x5b               */
       /* MG6100: CD Tray G     : 0x56               */
       /* MG6200: CD Tray G     : 0x56               */
+      /* MG6300: CD Tray J     : 0x5b               */
       /* MG8100: CD Tray G     : 0x56               */
       /* MG8200: CD Tray G     : 0x56               */
       /* pro9000:CD Tray E     : 0x4c               */
@@ -3899,11 +3914,11 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
   if ( init->caps->ESC_P_len == 9 ) /* support for new devices from October 2012. */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
-
+  
       /* arg_ESCP_1 = 0x03; */ /* A4 size */
       /* arg_ESCP_2 = 0x00; */ /* plain media */
-      /*                             size                media             */
-      canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00,0x00);
+      /*                             size                media                      tray */
+      canon_cmd( v,ESC28,0x50,9,0x00,arg_ESCP_1,0x00,arg_ESCP_2,0x01,0x00,0x01,0x00,arg_ESCP_9);
     }
   if ( init->caps->ESC_P_len == 8 ) /* support for new devices from 2012. */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */

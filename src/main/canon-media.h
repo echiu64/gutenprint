@@ -236,7 +236,7 @@ static const canon_slot_t canon_PIXMA_MG5200_slots[] = {
 DECLARE_SLOTS(canon_PIXMA_MG5200);
 
 static const canon_slot_t canon_PIXMA_MG5400_slots[] = {
-  { "Cassette",   N_ ("Cassette"), 0x8 },
+  { "Cassette",   N_ ("Cassette"), 0xd },
   { "CD",         N_ ("CD tray"), 0xa },
 };
 DECLARE_SLOTS(canon_PIXMA_MG5400);
