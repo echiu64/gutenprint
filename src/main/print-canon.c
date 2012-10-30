@@ -3619,6 +3619,19 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   int border_right2;
   int border_bottom2;
   int area_right,area_top;
+  int test_cd; /* variable for activating experimental adjustments */
+  int adjust_tray_A_x, adjust_tray_A_y;
+  int adjust_tray_B_x, adjust_tray_B_y;
+  int adjust_tray_C_x, adjust_tray_C_y;
+  int adjust_tray_D_x, adjust_tray_D_y;
+  int adjust_tray_E_x, adjust_tray_E_y;
+  int adjust_tray_F_x, adjust_tray_F_y;
+  int adjust_tray_G_x, adjust_tray_G_y;
+  int adjust_tray_H_x, adjust_tray_H_y;
+  int adjust_tray_J_x, adjust_tray_J_y;
+  int adjust_tray_custom_x, adjust_tray_custom_y;
+
+  test_cd = 0;
 
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -3657,7 +3670,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 
   if ((init->caps->features & CANON_CAP_px) ) {
     /* workaround for CD writing that uses CANON_CAP_px --- fix with capabilities */
-    if ( !(input_slot && !strcmp(input_slot,"CD")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
+    if ( !( input_slot && !(strcmp(input_slot,"CD")) ) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
       {
 
 	/* original borders */
@@ -3676,9 +3689,39 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	border_top2=border_top;
 	border_right2=border_right;
 	border_bottom2=border_bottom;
+	
+	/* Try to work backwards */
+	adjust_tray_A_x = 0;
+	adjust_tray_A_y = 0;
+	adjust_tray_B_x = 0;
+	adjust_tray_B_y = 0;
+	adjust_tray_C_x = 0;
+	adjust_tray_C_y = 0;
+	adjust_tray_D_x = 0;
+	adjust_tray_D_y = 0;
+	adjust_tray_E_x = 0;
+	adjust_tray_E_y = 0;
+	adjust_tray_F_x = 0;
+	adjust_tray_F_y = 0;
+	adjust_tray_G_x = -6;
+	adjust_tray_G_y = 0;
+	adjust_tray_H_x = 0;
+	adjust_tray_H_y = 0;
+	adjust_tray_J_x = 0;
+	adjust_tray_J_y = 0;
+	adjust_tray_custom_x = 0;
+	adjust_tray_custom_y = 0;
 
-	area_right = border_left2 * unit / 72;
-	area_top = border_top2 * unit / 72;
+	if ( !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
+	  border_left2   = adjust_tray_G_x;
+	  border_right2  = adjust_tray_G_x;
+	  border_top2    = adjust_tray_G_y;
+	  border_bottom2 = adjust_tray_G_y;
+	}
+
+	/* this does not seem to need adjustment, so use original borders */
+	area_right = border_left * unit / 72;
+	area_top = border_top * unit / 72;
 
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
