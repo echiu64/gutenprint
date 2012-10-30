@@ -192,6 +192,7 @@ pack_pixels3_6(unsigned char* buf,int len)
 #define CANON_CAP_cart       0x800000ul /* BJC printers with Color, Black, Photo options */
 #define CANON_CAP_BORDERLESS 0x1000000ul /* borderless printing */
 #define CANON_CAP_NOBLACK    0x2000000ul /* no Black cartridge selection */
+#define CANON_CAP_v          0x4000000ul /* not sure of this yet */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -4395,6 +4396,17 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
 
 
 
+/* ESC (v -- 0x76 -- */
+static void
+canon_init_setESC_v(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_v))
+    return;
+
+  canon_cmd(v,ESC28,0x76, 1, 0x00);
+}
+
+
 
 static void
 canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
@@ -4420,6 +4432,7 @@ canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
   canon_init_setESC_S(v,init);           /* ESC (S */
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
+  canon_init_setESC_v(v,init);           /* ESC (v */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
 
   /* some linefeeds */
