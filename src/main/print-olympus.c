@@ -852,15 +852,6 @@ static const dyesub_printsize_t cp220_printsize[] =
 
 LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
-/* Canon SELPHY CP-520 */
-static void cp520_printer_init_func(stp_vars_t *v)
-{
-  cpx00_printer_init_func(v);
-  /* The CP520 does not want the printer_init and plane_init command to be sent
-     in the same USB-packet so we fill up first USB-Packet  with '\0'. */
-  dyesub_nputc(v, '\0', 1012); 
-}
-
 /* Canon SELPHY CP-790 */
 static void cp790_printer_init_func(stp_vars_t *v)
 {
@@ -979,6 +970,12 @@ static void es40_printer_init_func(stp_vars_t *v)
   dyesub_nputc(v, 0x0, 8);
 
   stp_put32_le(privdata.w_size * privdata.h_size, v);
+}
+
+/* Canon SELPHY CP900 */
+static void cp900_printer_end_func(stp_vars_t *v)
+{
+  dyesub_nputc(v, 0x0, 4);
 }
 
 /* Sony DPP-EX5, DPP-EX7 */
@@ -1701,7 +1698,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL,
   },
   { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-510,
-       SELPHY CP-600, SELPHY CP-710, SELPHY CP-720, SELPHY CP-730,
+       SELPHY CP-520, SELPHY CP-530, SELPHY CP-600, SELPHY CP-710,
+       SELPHY CP-720, SELPHY CP-730, SELPHY CP-740, SELPHY CP-750,
        SELPHY CP-760, SELPHY CP-770, SELPHY CP-780 */
     1001,
     &ymc_ink_list,
@@ -1713,22 +1711,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &cpx00_printer_init_func, NULL,
-    &cpx00_plane_init_func, NULL,
-    NULL, NULL,
-    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
-    NULL,
-  },
-  { /* Canon CP-520, SELPHY CP-530, SELPHY CP-740, SELPHY CP-750 */
-    1004,
-    &ymc_ink_list,
-    &res_300dpi_list,
-    &cp220_page_list,
-    &cp220_printsize_list,
-    SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE,
-    &cp520_printer_init_func, NULL,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
@@ -1824,7 +1806,23 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE,
-    &cp520_printer_init_func, NULL,
+    &cpx00_printer_init_func, NULL,
+    &cpx00_plane_init_func, NULL,
+    NULL, NULL,
+    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL,
+  },
+  { /* Canon SELPHY CP-900 */
+    1010,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &cpx00_page_list,
+    &cpx00_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &cpx00_printer_init_func, &cp900_printer_end_func,
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
@@ -2865,7 +2863,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
     }
   /* /FIXME */
 
-
+  /* FIXME:  Provide a way of disabling/altering these curves */
   dyesub_adjust_curve(v, caps->adj_cyan, "CyanCurve");
   dyesub_adjust_curve(v, caps->adj_magenta, "MagentaCurve");
   dyesub_adjust_curve(v, caps->adj_yellow, "YellowCurve");
