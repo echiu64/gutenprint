@@ -852,7 +852,7 @@ static const dyesub_printsize_t cp220_printsize[] =
 
 LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_printsize);
 
-/* Canon SELPHY CP-790 */
+/* Canon SELPHY CP790 */
 static void cp790_printer_init_func(stp_vars_t *v)
 {
   char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\0' :
@@ -1697,10 +1697,10 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon CP-220, CP-330, SELPHY CP-400, SELPHY CP-500, SELPHY CP-510,
-       SELPHY CP-520, SELPHY CP-530, SELPHY CP-600, SELPHY CP-710,
-       SELPHY CP-720, SELPHY CP-730, SELPHY CP-740, SELPHY CP-750,
-       SELPHY CP-760, SELPHY CP-770, SELPHY CP-780 */
+  { /* Canon CP-220, CP-330, SELPHY CP400, SELPHY CP500, SELPHY CP510,
+       SELPHY CP520, SELPHY CP530, SELPHY CP600, SELPHY CP710,
+       SELPHY CP720, SELPHY CP730, SELPHY CP740, SELPHY CP750,
+       SELPHY CP760, SELPHY CP770, SELPHY CP780 */
     1001,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1716,7 +1716,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY ES1 (!experimental) */
+  { /* Canon SELPHY ES1 */
     1003,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1732,7 +1732,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY ES2, ES20 (!experimental) */
+  { /* Canon SELPHY ES2, SELPHY ES20 */
     1005,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1748,7 +1748,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY ES3, ES30 (!experimental) */
+  { /* Canon SELPHY ES3, SELPHY ES30 */
     1006,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1764,7 +1764,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY ES40 (!experimental) */
+  { /* Canon SELPHY ES40 */
     1007,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1780,7 +1780,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY CP790 (!experimental) */
+  { /* Canon SELPHY CP790 */
     1008,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1796,7 +1796,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY CP-800 */
+  { /* Canon SELPHY CP800 */
     1009,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1812,7 +1812,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-  { /* Canon SELPHY CP-900 */
+  { /* Canon SELPHY CP900 */
     1010,
     &ymc_ink_list,
     &res_300dpi_list,
@@ -1828,7 +1828,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL,
   },
-
   { /* Sony DPP-EX5, DPP-EX7 */
     2002,
     &rgb_ink_list,
