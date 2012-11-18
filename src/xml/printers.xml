@@ -1873,22 +1873,16 @@
       <printer translate="name" name="Canon SELPHY CP760" driver="canon-cp760" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP760" />
       <printer translate="name" name="Canon SELPHY CP770" driver="canon-cp770" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP770" />
       <printer translate="name" name="Canon SELPHY CP780" driver="canon-cp780" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP780" />
-<!--
       <printer translate="name" name="Canon SELPHY CP790" driver="canon-cp790" manufacturer="Canon" model="1008" foomaticid="Canon-SELPHY-CP790" />
--->
       <printer translate="name" name="Canon SELPHY CP800" driver="canon-cp800" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP800" />
       <printer translate="name" name="Canon SELPHY CP810" driver="canon-cp810" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP810" />
-<!--
       <printer translate="name" name="Canon SELPHY CP900" driver="canon-cp900" manufacturer="Canon" model="1010" foomaticid="Canon-SELPHY-CP900" />
--->
       <printer translate="name" name="Canon SELPHY ES1" driver="canon-es1" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES1" />
       <printer translate="name" name="Canon SELPHY ES2" driver="canon-es2" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES2" />
       <printer translate="name" name="Canon SELPHY ES3" driver="canon-es3" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES3" />
       <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES20" />
       <printer translate="name" name="Canon SELPHY ES30" driver="canon-es30" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES30" />
-<!--
       <printer translate="name" name="Canon SELPHY ES40" driver="canon-es40" manufacturer="Canon" model="1007" foomaticid="Canon-SELPHY-ES40" />
--->
       <printer translate="name" name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX5" />
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX7" />
       <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" foomaticid="Sony-UP-DP10" />
