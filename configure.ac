@@ -395,6 +395,13 @@ dnl if test -z "${[EXTRA_LIBREADLINE_DEPS]}" ; then
 dnl   [EXTRA_LIBREADLINE_DEPS]=""
 dnl fi
 
+# libusb-1.0 (For SELPHY backend)
+PKG_CHECK_MODULES([LIBUSB], [libusb-1.0],
+                  [HAVE_LIBUSB=yes
+                   BUILD_SELPHY=yes],
+                  [HAVE_LIBUSB=no
+	           BUILD_SELPHY=no])
+
 AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
   BUILD_GIMP2="no"
@@ -836,6 +843,8 @@ AM_CONDITIONAL(INSTALL_SAMPLES, test x${INSTALL_SAMPLES} = xyes)
 
 AM_CONDITIONAL(INSTALL_USER_GUIDE, test x${INSTALL_USER_GUIDE} = xyes)
 
+AM_CONDITIONAL(BUILD_SELPHY, test x${BUILD_SELPHY} = xyes)
+
 STP_CUPS_PATH
 
 # loadable modules
@@ -1069,6 +1078,7 @@ if test "$BUILD_CUPS" != "no" ; then
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
+echo "    Build Canon SELPHY spooler/backend:         $BUILD_SELPHY"
 echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
 echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
 if test "$BUILD_FOOMATIC" != "no" ; then

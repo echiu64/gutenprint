@@ -38,6 +38,11 @@ pkgsysconfdir = $(cups_conf_serverroot)
 
 cupsexec_driverdir = $(pkglibdir)/driver
 cupsexec_filterdir = $(pkglibdir)/filter
+
+if BUILD_SELPHY
+cups_backenddir = $(pkglibdir)/backend
+endif
+
 if CUPS_PPDS_AT_TOP_LEVEL
 cups_modeldir = $(pkgdatadir)/model/
 DONT_UNINSTALL_PPDS=true
@@ -52,7 +57,6 @@ STP_NONLS_ENV= STP_MODULE_PATH=$(top_builddir)/src/main/.libs:$(top_builddir)/sr
 STP_ENV= $(STP_NONLS_ENV) STP_LOCALEDIR=$(top_srcdir)/src/cups/catalog
 
 ## Programs
-
 if BUILD_TRANSLATED_CUPS_PPDS
 if BUILD_GLOBALIZED_CUPS_PPDS
 PPD = ppd-global
@@ -79,6 +83,10 @@ sbin_PROGRAMS = cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION
 sbin_SCRIPTS = cups-genppdupdate
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 
+if BUILD_SELPHY
+cups_backend_PROGRAMS = selphy
+endif
+
 TESTS= test-ppds test-rastertogutenprint
 noinst_SCRIPTS=test-rastertogutenprint
 endif
@@ -96,6 +104,16 @@ commandtocanon_LDADD = $(CUPS_LIBS)
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
+selphy_SOURCES = selphy_print.c
+selphy_CPPFLAGS = $(LIBUSB_CFLAGS)
+selphy_LDADD = $(LIBUSB_LIBS)
+cups_backend_install = -m 700
+
+if BUILD_SELPHY
+install-exec-hook:
+	chmod 700 selphy
+endif
+
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c i18n.c i18n.h
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DALL_LINGUAS='"$(ALL_LINGUAS)"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GENPPD_LIBS) $(GUTENPRINT_LIBS) @LIBICONV@
@@ -109,6 +127,7 @@ gutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STA
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = rastertoprinter.c i18n.c i18n.h
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDADD = $(CUPS_LIBS) $(GUTENPRINT_LIBS) @LIBICONV@
 rastertogutenprint_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_LDFLAGS = $(STATIC_LDOPTS)
+
 
 ## Data
 
