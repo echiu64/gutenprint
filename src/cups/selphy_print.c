@@ -47,7 +47,7 @@
 #define USB_PID_CANON_ES40  0x31EE
 #define USB_PID_CANON_CP10  0x304A
 #define USB_PID_CANON_CP100 0x3063 // - incoming G
-#define USB_PID_CANON_CP200 200 // XXX 307c? 307e? - incoming S (related to cp300)
+#define USB_PID_CANON_CP200 0x307C
 #define USB_PID_CANON_CP220 0x30BD
 #define USB_PID_CANON_CP300 0x307D
 #define USB_PID_CANON_CP330 0x30BE
