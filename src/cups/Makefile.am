@@ -40,7 +40,7 @@ cupsexec_driverdir = $(pkglibdir)/driver
 cupsexec_filterdir = $(pkglibdir)/filter
 
 if BUILD_SELPHY
-cups_backenddir = $(pkglibdir)/backend
+cupsexec_backenddir = $(pkglibdir)/backend
 endif
 
 if CUPS_PPDS_AT_TOP_LEVEL
@@ -84,8 +84,14 @@ sbin_SCRIPTS = cups-genppdupdate
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 
 if BUILD_SELPHY
-cups_backend_PROGRAMS = selphy
+cupsexec_backend_PROGRAMS = selphy
 endif
+
+if BUILD_SELPHY
+install-exec-hook:
+	chmod 700 $(pkglibdir)/backend/selphy
+endif
+
 
 TESTS= test-ppds test-rastertogutenprint
 noinst_SCRIPTS=test-rastertogutenprint
@@ -107,12 +113,6 @@ commandtoepson_LDADD = $(CUPS_LIBS)
 selphy_SOURCES = selphy_print.c
 selphy_CPPFLAGS = $(LIBUSB_CFLAGS)
 selphy_LDADD = $(LIBUSB_LIBS)
-cups_backend_install = -m 700
-
-if BUILD_SELPHY
-install-exec-hook:
-	chmod 700 selphy
-endif
 
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c i18n.c i18n.h
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DALL_LINGUAS='"$(ALL_LINGUAS)"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
@@ -191,6 +191,7 @@ install-data-hook:
 	-rmdir $(DESTDIR)$(pkgdatadir)
 	-rmdir $(DESTDIR)$(cupsexec_driverdir)
 	-rmdir $(DESTDIR)$(cupsexec_filterdir)
+	-rmdir $(DESTDIR)$(cupsexec_backenddir)
 	-rmdir $(DESTDIR)$(bindir)
 	-rmdir $(DESTDIR)$(pkglibdir)
 	-rmdir $(DESTDIR)$(pkgsysconfdir)
