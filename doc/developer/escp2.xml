@@ -3,11 +3,8 @@
   <para>
     This is a description of the ESC/P2 raster commands used by the
     Gutenprint printer driver, which is a subset of the complete
-    command set.  The full documents are found on <ulink
-    url="http://www.ercipd.com/isv/edr_docs.htm">
-    <citetitle>http://www.ercipd.com/isv/edr_docs.htm</citetitle></ulink>.
-    Note that these are <emphasis>not</emphasis> always correct, and
-    are certainly not complete.
+    command set.  Note that these are <emphasis>not</emphasis> always
+    correct, and are certainly not complete.
   </para>
   <para>
     All ESCP/2 raster commands begin with the <literal>ESC</literal>
