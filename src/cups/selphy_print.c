@@ -2,7 +2,11 @@
  *   Canon SELPHY ES/CP series print assister -- libusb-1.0 version
  *
  *   (c) 2007-2012 Solomon Peachy <pizza@shaftnet.org>
- *   
+ *
+ *   The latest version of this program can be found at:
+ *  
+ *     http://git.shaftnet.org/git/gitweb.cgi?p=selphy_print.git
+ *  
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -17,7 +21,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- *          [http://www.gnu.org/licenses/gpl-3.0.html]
+ *          [http://www.gnu.org/licenses/gpl-2.0.html]
  *
  */
 
@@ -52,7 +56,7 @@
 #define USB_PID_CANON_CP300 0x307D
 #define USB_PID_CANON_CP330 0x30BE
 #define USB_PID_CANON_CP400 0x30F6
-#define USB_PID_CANON_CP500 500 // XXX 30f5? 30f7? (related to cp400?)
+#define USB_PID_CANON_CP500 500 // XXX 30f5? 30f7? (related to cp400?) - incoming G
 #define USB_PID_CANON_CP510 0x3128
 #define USB_PID_CANON_CP520 520 // XXX 316f? 3172? (related to cp740/cp750)
 #define USB_PID_CANON_CP530 530 // XXX
@@ -185,18 +189,23 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		case USB_PID_CANON_CP780: // "Canon SELPHY CP780"
 		case USB_PID_CANON_CP800: // "Canon SELPHY CP800"
 		case USB_PID_CANON_CP810: // "Canon SELPHY CP810"
-			if (printer_type == P_CP_XXX)
-				found = i;
-			valid = 1;
-			break;
 		case USB_PID_CANON_CP900: // "Canon SELPHY CP900"
-			/* XXX deliberate.  no way to distinguish P_CP900 based
-			   on a streamed-in print job */
 			if (printer_type == P_CP_XXX)
 				found = i;
 			valid = 1;
 			break;
 		default:
+			/* Hook for testing unknown PIDs */
+			if (getenv("SELPHY_PID") && getenv("SELPHY_TYPE")) {
+				int pid = strtol(getenv("SELPHY_PID"), NULL, 16);
+				int type = atoi(getenv("SELPHY_TYPE"));
+				if (pid == desc.idProduct) {
+					valid = 1;
+					if (printer_type == type) {
+						found = i;
+					}
+				}
+			}
 			break;
 		}
 
@@ -221,7 +230,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		      (!valid) ? "UNRECOGNIZED: " : "",
 		      (found == i) ? "MATCH: " : "",
 		      desc.idProduct, product, serial);
-		
+
 		// XXX MATCH based on passed-in serial number?
 
 		if (valid && scan_only) {
@@ -423,6 +432,12 @@ top:
 		last_state = state;
 	}
 	fflush(stderr);       
+
+	if (!memcmp(rdbuf, printers[printer_type].error_readback, READBACK_LEN)) {
+		DEBUG("error condition; aborting.  (Out of ribbon/paper?)\n");
+		ret = 4;
+		goto done_claimed;
+	}
 
 	switch(state) {
 	case S_IDLE:
