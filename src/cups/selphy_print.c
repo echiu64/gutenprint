@@ -50,13 +50,13 @@
 #define USB_PID_CANON_ES30  0x31B0
 #define USB_PID_CANON_ES40  0x31EE
 #define USB_PID_CANON_CP10  0x304A
-#define USB_PID_CANON_CP100 0x3063 // - incoming G
+#define USB_PID_CANON_CP100 0x3063
 #define USB_PID_CANON_CP200 0x307C
 #define USB_PID_CANON_CP220 0x30BD
 #define USB_PID_CANON_CP300 0x307D
 #define USB_PID_CANON_CP330 0x30BE
 #define USB_PID_CANON_CP400 0x30F6
-#define USB_PID_CANON_CP500 500 // XXX 30f5? 30f7? (related to cp400?) - incoming G
+#define USB_PID_CANON_CP500 0x30F5
 #define USB_PID_CANON_CP510 0x3128
 #define USB_PID_CANON_CP520 520 // XXX 316f? 3172? (related to cp740/cp750)
 #define USB_PID_CANON_CP530 530 // XXX
@@ -80,7 +80,7 @@ static int dump_data_libusb(int remaining, int present, int data_fd,
 			    uint8_t *buf, uint16_t buflen) {
 	int cnt;
 	int i;
-	int wrote;
+	int wrote = 0;
 	int num;
 
 	while (remaining > 0) {
@@ -120,6 +120,7 @@ static int dump_data_libusb(int remaining, int present, int data_fd,
 
 static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
+			      char *match_serno,
 			      int printer_type,
 			      int scan_only)
 {
@@ -231,24 +232,28 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		      (found == i) ? "MATCH: " : "",
 		      desc.idProduct, product, serial);
 
-		// XXX MATCH based on passed-in serial number?
-
 		if (valid && scan_only) {
 			/* URL-ify model. */
 			char buf[128]; // XXX ugly..
 			i = 0;
 			while (*(product + i + strlen("Canon"))) {
-			  buf[i] = *(product + i + strlen("Canon "));
-			  if(buf[i] == ' ') {
-			    buf[i++] = '%';
-			    buf[i++] = '2';
-			    buf[i] = '0';
-			  }
-			  i++;
+				buf[i] = *(product + i + strlen("Canon "));
+				if(buf[i] == ' ') {
+					buf[i++] = '%';
+					buf[i++] = '2';
+					buf[i] = '0';
+				}
+				i++;
 			}
 			fprintf(stdout, "direct %sCanon/%s?serial=%s \"%s\" \"%s\" \"MFG:Canon;CMD:SelphyRaster;CLS:PRINTER;MDL:%s;DES:%s;SN:%s\" \"\"\n", URI_PREFIX,
 			        buf, serial, product, product,
 				product + strlen("Canon "), product, serial);
+		}
+
+		/* If a serial number was passed down, use it. */
+		if (found && match_serno &&
+		    strcmp(match_serno, (char*)serial)) {
+			found = -1;
 		}
 
 		libusb_close(dev);
@@ -301,7 +306,7 @@ int main (int argc, char **argv)
 		      VERSION,
 		      argv[0], argv[0]);
 		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, printer_type, 1);
+		find_and_enumerate(ctx, &list, NULL, printer_type, 1);
 		libusb_free_device_list(list, 1);
 		libusb_exit(ctx);
 		exit(1);
@@ -357,7 +362,7 @@ int main (int argc, char **argv)
 
 	/* Libusb setup */
 	libusb_init(&ctx);
-	found = find_and_enumerate(ctx, &list, printer_type, 0);
+	found = find_and_enumerate(ctx, &list, use_serno, printer_type, 0);
 
 	if (found == -1) {
 		ERROR("No suitable printers found!\n");
@@ -405,13 +410,21 @@ int main (int argc, char **argv)
 		}
 	}
 
-top:
 	/* Read in the printer status */
 	ret = libusb_bulk_transfer(dev, endp_up,
 				   rdbuf,
 				   READBACK_LEN,
 				   &num,
 				   2000);
+top:
+
+	/* Do it twice to clear initial state */
+	ret = libusb_bulk_transfer(dev, endp_up,
+				   rdbuf,
+				   READBACK_LEN,
+				   &num,
+				   2000);
+
 	if (ret < 0) {
 		ERROR("libusb error %d: (%d/%d from 0x%02x)\n", ret, num, READBACK_LEN, endp_up);
 		ret = 4;
@@ -433,8 +446,10 @@ top:
 	}
 	fflush(stderr);       
 
-	if (!memcmp(rdbuf, printers[printer_type].error_readback, READBACK_LEN)) {
-		DEBUG("error condition; aborting.  (Out of ribbon/paper?)\n");
+	/* Error detection */
+	if (printers[printer_type].error_offset != -1 &&
+	    rdbuf[printers[printer_type].error_offset]) {
+		ERROR("error condition %02x; aborting.  (Out of ribbon/paper?)\n", rdbuf[printers[printer_type].error_offset]);
 		ret = 4;
 		goto done_claimed;
 	}

@@ -25,7 +25,7 @@
  *
  */
 
-#define VERSION "0.34"
+#define VERSION "0.40"
 
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
 #define ERROR( ... ) fprintf(stderr, "ERROR: " __VA_ARGS__ )
@@ -56,10 +56,10 @@ struct printer_data {
 	int16_t ready_m_readback[READBACK_LEN];
 	int16_t ready_c_readback[READBACK_LEN];
 	int16_t done_c_readback[READBACK_LEN];
-	int16_t error_readback[READBACK_LEN];
 	int16_t paper_codes[256];
 	int16_t pgcode_offset;  /* Offset into printjob for paper type */
 	int16_t paper_code_offset; /* Offset in readback for paper type */
+	int16_t error_offset;
 };
 
 /* printer types */
@@ -82,10 +82,10 @@ struct printer_data printers[P_END] = {
 	  .ready_m_readback = { 0x04, 0x00, 0x03, 0x00, 0x02, 0x01, -1, 0x01, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x04, 0x00, 0x07, 0x00, 0x02, 0x01, -1, 0x01, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x04, 0x00, 0x00, 0x00, 0x02, 0x01, -1, 0x01, 0x00, 0x00, 0x00, 0x00 },
-	  // .error_readback
 	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
+	  .error_offset = 1,
 	},
 	{ .type = P_ES2_20,
 	  .model = "SELPHY ES2/ES20",
@@ -96,10 +96,10 @@ struct printer_data printers[P_END] = {
 	  .ready_m_readback = { 0x06, 0x00, 0x03, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x09, 0x00, 0x07, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x09, 0x00, 0x00, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00 },
-	  .error_readback = { 0x14, 0x00, -1, 0x00, -1, 0x00, -1, 0x00, -1, 0x00, 0x00, 0x00 },
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 4,
+	  .error_offset = 1,  // XXX insufficient
 	},
 	{ .type = P_ES3_30,
 	  .model = "SELPHY ES3/ES30",
@@ -110,38 +110,38 @@ struct printer_data printers[P_END] = {
 	  .ready_m_readback = { 0x03, 0xff, 0x02, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x05, 0xff, 0x03, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x00, 0xff, 0x10, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 },
-	  // .error_readback
 	  // .paper_codes
-	  .pgcode_offset = -1,
+	  .pgcode_offset = 2,
 	  .paper_code_offset = -1,
+	  .error_offset = 8, // or 10
 	},
 	{ .type = P_ES40_CP790,
 	  .model = "SELPHY ES40/CP790",
 	  .init_length = 16,
 	  .foot_length = 12,
-//	  .init_readback = 
-//	  .ready_y_readback = 
-//	  .ready_m_readback = 
-//	  .ready_c_readback = 
-//	  .done_c_readback = 
-	  // .error_readback
+	  .init_readback = { 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
 	  // .paper_codes
 	  .pgcode_offset = 2,
-//	  .paper_code_offset = -1,
+	  .paper_code_offset = 11,
+	  .error_offset = 3,
 	},
 	{ .type = P_CP_XXX,
 	  .model = "SELPHY CP Series (!CP790)",
 	  .init_length = 12,
 	  .foot_length = 0,  /* CP900 has four-byte NULL footer that can be safely ignored */
-	  .init_readback = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .init_readback = { 0x01, 0x00, 0x00, 0x00, -1, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .ready_y_readback = { 0x02, 0x00, 0x00, 0x00, 0x70, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .ready_m_readback = { 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .ready_c_readback = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .error_readback = { 0x02, 0x00, 0x08, 0x00, 0x70, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
+	  .error_offset = 2,
 	},
 };
 
@@ -173,11 +173,11 @@ static void setup_paper_codes(void)
 	//  printers[P_ES3_30]paper_codes[0x02] = -1;
 	//  printers[P_ES3_30]paper_codes[0x03] = -1;
 	
-	/* SELPHY ES40/CP790 paper codes -- UNKNOWN */
-	//  printers[P_ES40_CP790].paper_codes[0x00] = -1;
-	//  printers[P_ES40_CP790].paper_codes[0x01] = -1;
-	//  printers[P_ES40_CP790].paper_codes[0x02] = -1;
-	//  printers[P_ES40_CP790].paper_codes[0x03] = -1;
+	/* SELPHY ES40/CP790 paper codes -- ? guess */
+	printers[P_ES40_CP790].paper_codes[0x00] = 0x11;
+	printers[P_ES40_CP790].paper_codes[0x01] = 0x22;
+	printers[P_ES40_CP790].paper_codes[0x02] = 0x33;
+	printers[P_ES40_CP790].paper_codes[0x03] = 0x44;
 
 	/* SELPHY CP-series (except CP790) paper codes */
 	printers[P_CP_XXX].paper_codes[0x01] = 0x11;
