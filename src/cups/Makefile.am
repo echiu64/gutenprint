@@ -87,9 +87,12 @@ if BUILD_SELPHY
 cupsexec_backend_PROGRAMS = selphy
 endif
 
+## CUPS backends require no world-execute permissions if they are to be
+## executed as root, and the SELPHY backend must be run as root.
+## See http://www.cups.org/documentation.php/doc-1.6/man-backend.html
 if BUILD_SELPHY
 install-exec-hook:
-	chmod 700 $(pkglibdir)/backend/selphy
+	chmod 700 $(DESTDIR)$(pkglibdir)/backend/selphy
 endif
 
 
