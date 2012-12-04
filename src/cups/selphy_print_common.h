@@ -25,7 +25,7 @@
  *
  */
 
-#define VERSION "0.40"
+#define VERSION "0.41"
 
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
 #define ERROR( ... ) fprintf(stderr, "ERROR: " __VA_ARGS__ )
