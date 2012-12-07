@@ -750,8 +750,8 @@ AC_CHECK_LIB(dl, dlopen, [DLOPEN_LIBS="-ldl"])
 AC_CHECK_LIB(m,pow,
              GUTENPRINT_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
              gutenprint_libdeps="${gutenprint_libdeps} -lm"
-             GUTENPRINTUI2_LIBDEPS="${GUTENPRINT_LIBDEPS} -lm"
-             gutenprintui2_libdeps="${gutenprint_libdeps} -lm"
+             GUTENPRINTUI2_LIBDEPS="${GUTENPRINTUI2_LIBDEPS} -lm"
+             gutenprintui2_libdeps="${gutenprintui2_libdeps} -lm"
 	     LIBM=-lm
 )
 
