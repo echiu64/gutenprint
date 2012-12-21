@@ -74,6 +74,82 @@
 #define USB_PID_CANON_CP810 0x3256
 #define USB_PID_CANON_CP900 0x3255
 
+static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len, int16_t papercode_offset, int16_t papercode_val) 
+{
+	int i;
+  
+	for (i = 0 ; i < len ; i++) {
+		if (papercode_offset != -1 && i == papercode_offset) {
+			if (papercode_val == -1)
+				continue;
+			else if (buf_a[i] != papercode_val)
+				return INCORRECT_PAPER;
+		} else if (buf_b[i] == -1)
+			continue;
+		else if (buf_a[i] > buf_b[i])
+			return 1;
+		else if (buf_a[i] < buf_b[i])
+			return -1;
+	}
+	return 0;
+}
+
+static int parse_printjob(uint8_t *buffer, int *bw_mode, int *plane_len) 
+{
+	int printer_type = -1;
+
+	if (buffer[0] != 0x40 &&
+	    buffer[1] != 0x00) {
+		goto done;
+	}
+	
+	if (buffer[12] == 0x40 &&
+	    buffer[13] == 0x01) {
+		if (buffer[2] == 0x00) {
+			if (buffer[6] == 0x00)
+				printer_type = P_CP10;
+			else
+				printer_type = P_CP_XXX;
+		} else {
+			printer_type = P_ES1;
+			*bw_mode = (buffer[2] == 0x20);
+		}
+
+		*plane_len = *(uint32_t*)(&buffer[16]);
+		*plane_len = le32_to_cpu(*plane_len);
+		goto done;
+	}
+
+	*plane_len = *(uint32_t*)(&buffer[12]);
+	*plane_len = le32_to_cpu(*plane_len);
+
+	if (buffer[16] == 0x40 &&
+	    buffer[17] == 0x01) {
+
+		if (buffer[4] == 0x02) {
+			printer_type = P_ES2_20;
+			*bw_mode = (buffer[7] == 0x01);
+			goto done;
+		}
+    
+		if (es40_cp790_plane_lengths[buffer[2]] == *plane_len) {
+			printer_type = P_ES40_CP790; 
+			*bw_mode = (buffer[3] == 0x01);
+			goto done;
+		} else {
+			printer_type = P_ES3_30; 
+			*bw_mode = (buffer[3] == 0x01);
+			goto done;
+		}
+	}
+
+	return -1;
+
+done:
+
+	return printer_type;
+}
+
 static int dump_data_libusb(int remaining, int present, int data_fd, 
 			    struct libusb_device_handle *dev, 
 			    uint8_t endpoint,
@@ -169,6 +245,10 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			valid = 1;
 			break;
 		case USB_PID_CANON_CP10: // "Canon CP-10"
+			if (printer_type == P_CP10)
+				found = i;
+			valid = 1;
+			break;
 		case USB_PID_CANON_CP100: // "Canon CP-100"
 		case USB_PID_CANON_CP200: // "Canon CP-200"
 		case USB_PID_CANON_CP220: // "Canon CP-220"
@@ -355,14 +435,15 @@ int main (int argc, char **argv)
 
 	DEBUG("%sFile intended for a '%s' printer\n",  bw_mode? "B/W " : "", printers[printer_type].model);
 
-	plane_len += 12; /* Add in plane header */
-	paper_code_offset = printers[printer_type].paper_code_offset;
-	if (printers[printer_type].pgcode_offset != -1)
-		paper_code = printers[printer_type].paper_codes[buffer[printers[printer_type].pgcode_offset]];
-
 	/* Libusb setup */
 	libusb_init(&ctx);
 	found = find_and_enumerate(ctx, &list, use_serno, printer_type, 0);
+
+	/* Compute offsets and other such things */
+	plane_len += 12; /* Plane header length */
+	paper_code_offset = printers[printer_type].paper_code_offset;
+	if (printers[printer_type].pgcode_offset != -1)
+		paper_code = printers[printer_type].paper_codes[buffer[printers[printer_type].pgcode_offset]];
 
 	if (found == -1) {
 		ERROR("No suitable printers found!\n");
