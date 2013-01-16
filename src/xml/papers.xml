@@ -239,6 +239,13 @@
       <height value="864"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w612h864">
+      <description translate="value" value="8.5x12"/>
+      <comment value="8.5in x 12in"/>
+      <width value="612"/>
+      <height value="864"/>
+      <unit value="english"/>
+    </paper>
     <paper name="w720h864J">
       <description translate="value" value="YonKire"/>
       <comment value="10in x 12in"/>
