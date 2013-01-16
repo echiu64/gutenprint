@@ -1893,6 +1893,9 @@
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" foomaticid="Fujifilm-FinePix-NX-500" />
       <printer translate="name" name="Kodak Easyshare-Printer-Dock" driver="kodak-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-Easyshare-Printer-Dock" />
       <printer translate="name" name="Kodak EasyShare-G600-Printer-Dock" driver="kodak-g600-dock" manufacturer="Kodak" model="4000" foomaticid="Kodak-EasyShare-G600-Printer-Dock" />
+      <printer translate="name" name="Kodak 6800" driver="kodak-6800" manufacturer="Kodak" model="4001" foomaticid="Kodak-6800" />
+      <printer translate="name" name="Kodak 6850" driver="kodak-6850" manufacturer="Kodak" model="4002" foomaticid="Kodak-6850" />
+      <printer translate="name" name="Kodak 605" driver="kodak-605" manufacturer="Kodak" model="4003" foomaticid="Kodak-605" />
       <printer translate="name" name="Kodak PD-4000" driver="kodak-pd-4000" manufacturer="Kodak" model="4000" foomaticid="Kodak-PD-4000" />
       <printer translate="name" name="Kodak PD-6000" driver="kodak-pd-6000" manufacturer="Kodak" model="4000" foomaticid="Kodak-PD-6000" />
       <printer translate="name" name="Kodak Photo-Printer" driver="kodak-photo-printer" manufacturer="Kodak" model="4000" foomaticid="Kodak-Photo-Printer" />

@@ -1445,6 +1445,108 @@ static void kodak_dock_plane_init(stp_vars_t *v)
   dyesub_nputc(v, '\0', 4);
 }
 
+/* Kodak 6800 */
+static const dyesub_pagesize_t kodak_6800_page[] =
+{
+  { "w288h432", "4x6", PT(1844,300)+1, PT(1240,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 4x6 */
+  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 6x8 */
+  { "Custom", NULL, PT(1844,300)+1, PT(1240,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 4x6 */
+};
+
+LIST(dyesub_pagesize_list_t, kodak_6800_page_list, dyesub_pagesize_t, kodak_6800_page);
+
+static const dyesub_printsize_t kodak_6800_printsize[] =
+{
+  { "300x300", "w288h432", 1844, 1240},
+  { "300x300", "w432h576", 1844, 2434},
+  { "300x300", "Custom", 1844, 1240},
+};
+
+LIST(dyesub_printsize_list_t, kodak_6800_printsize_list, dyesub_printsize_t, kodak_6800_printsize);
+
+static const laminate_t kodak_6800_laminate[] =
+{
+  {"Coated", N_("Coated"), {1, "\x01"}},
+  {"None",  N_("None"),  {1, "\x00"}},
+};
+
+LIST(laminate_list_t, kodak_6800_laminate_list, laminate_t, kodak_6800_laminate);
+
+
+static void kodak_6800_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("\x03\x1b\x43\x48\x0a\x00\x01\x00", 1, 9, v);
+  dyesub_nputc(v, 0x01, 1);  /* Number of copies */
+  stp_zfwrite("\x07\x34", 1, 2, v);
+  stp_put16_be(privdata.h_size, v);
+  stp_putc(privdata.h_size == 1240 ? 0x00 : 0x06, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  stp_putc(0x00, v);
+}
+
+/* Kodak 6850 */
+static const dyesub_pagesize_t kodak_6850_page[] =
+{
+  { "w288h432", "4x6", PT(1844,300)+1, PT(1240,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 4x6 */
+  { "w360h504", "5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 5x7 */
+  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 6x8 */
+  { "Custom", NULL, PT(1844,300)+1, PT(1240,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 4x6 */
+};
+
+LIST(dyesub_pagesize_list_t, kodak_6850_page_list, dyesub_pagesize_t, kodak_6850_page);
+
+static const dyesub_printsize_t kodak_6850_printsize[] =
+{
+  { "300x300", "w288h432", 1844, 1240},
+  { "300x300", "w360h504", 1548, 2140},
+  { "300x300", "w432h576", 1844, 2434},
+  { "300x300", "Custom", 1844, 1240},
+};
+
+LIST(dyesub_printsize_list_t, kodak_6850_printsize_list, dyesub_printsize_t, kodak_6850_printsize);
+
+static void kodak_6850_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("\x03\x1b\x43\x48\x0a\x00\x01\x00", 1, 9, v);
+  dyesub_nputc(v, 0x01, 1);  /* Number of copies */
+  stp_zfwrite("\x07\x34", 1, 2, v);
+  stp_put16_be(privdata.h_size, v);
+  stp_putc(privdata.h_size == 1240 ? 0x00 : 
+	   privdata.h_size == 1548 ? 0x07 : 0x06, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  stp_putc(0x00, v);
+}
+
+/* Kodak 605 */
+
+static void kodak_605_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
+  dyesub_nputc(v, 0x01, 1);  /* Number of copies */
+  stp_zfwrite("\x00,\x07\x34", 1, 3, v);
+  stp_put16_be(privdata.h_size, v);
+  stp_putc(privdata.h_size == 1240 ? 0x01 : 0x03, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  stp_putc(0x00, v);
+}
+
+static const laminate_t kodak_605_laminate[] =
+{
+  {"Coated", N_("Coated"), {1, "\x02"}},
+  {"None",  N_("None"),  {1, "\x01"}},
+};
+
+LIST(laminate_list_t, kodak_605_laminate_list, laminate_t, kodak_605_laminate);
 
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
@@ -1957,6 +2059,48 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     NULL,
+  },
+  { /* Kodak Photo Printer 6800 */
+    4001, 		
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &kodak_6800_page_list,
+    &kodak_6800_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &kodak_6800_printer_init, NULL,
+    NULL, NULL, /* No plane funcs */
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_6800_laminate_list,
+  },
+  { /* Kodak Photo Printer 6850 */
+    4002, 		
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &kodak_6850_page_list,
+    &kodak_6850_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &kodak_6850_printer_init, NULL,
+    NULL, NULL, /* No plane funcs */
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_6800_laminate_list,
+  },
+  { /* Kodak Photo Printer 605 */
+    4003, 		
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &kodak_6800_page_list,
+    &kodak_6800_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &kodak_605_printer_init, NULL,
+    NULL, NULL, /* No plane funcs */
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_605_laminate_list,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
