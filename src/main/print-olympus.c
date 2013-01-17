@@ -1665,6 +1665,203 @@ static void kodak_805_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 12);
 }
 
+/* Kodak 9810 */
+static const dyesub_pagesize_t kodak_9810_page[] =
+{
+  { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "Custom", NULL, PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+};
+LIST(dyesub_pagesize_list_t, kodak_9810_page_list, dyesub_pagesize_t, kodak_9810_page);
+
+static const dyesub_printsize_t kodak_9810_printsize[] =
+{
+  { "300x300", "c8x10", 2464, 3024},
+  { "300x300", "w576h864", 2464, 3624},
+  { "300x300", "Custom", 2464, 3024},
+};
+
+LIST(dyesub_printsize_list_t, kodak_9810_printsize_list, dyesub_printsize_t, kodak_9810_printsize);
+
+static const laminate_t kodak_9810_laminate[] =
+{
+  {"Coated", N_("Coated"), {3, "\x4f\x6e\x20"}},
+  {"None",  N_("None"),  {3, "\x4f\x66\x66"}},
+};
+
+LIST(laminate_list_t, kodak_9810_laminate_list, laminate_t, kodak_9810_laminate);
+
+static void kodak_9810_printer_init(stp_vars_t *v)
+{
+  /* Command stream header */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndROSETTA V001.00100000020525072696E74657242696E4D6F74726C", 1, 59, v);
+
+  /* Begin Job */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndBgnJob  Print   ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(8, v);
+  stp_zfwrite("\x56\x30\x30\x31\x2e\x30\x30\x30", 1, 8, v);
+
+  /* Job Definition Start */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsSrtJbDefSetup   ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+
+  /* Paper selection */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsJbMkMed Name    ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(64, v);
+  if (privdata.h_size == 3624) {
+    stp_zfwrite("YMCX 8x12 Glossy", 1, 16, v);
+  } else {
+    stp_zfwrite("YMCX 8x10 Glossy", 1, 16, v);
+  }
+  dyesub_nputc(v, 0x00, 48);
+
+  /* Paper Selection II */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsPgMedia Name    ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(64, v);
+  stp_zfwrite("\x38\x22", 1, 2, v);
+  dyesub_nputc(v, 0x00, 62);
+
+  /* Lamination */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsJbLam   ", 1, 11, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  dyesub_nputc(v, 0x20, 5);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+
+  /* Job Definition End */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsStpJbDef        ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+
+  /* Begin Page */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndBgnLPageNormal  ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(4, v);
+  stp_put32_be(1, v);
+
+  /* Page dimensions I -- maybe this is physical media size? */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndSetLPage        ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(8, v);
+  stp_put32_be(privdata.w_size, v);
+  stp_put32_be(privdata.h_size, v);
+
+  /* Page dimensions II -- maybe this is image data size? */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndImSpec  Size    ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(16, v);
+  stp_put32_be(privdata.w_size, v);
+  stp_put32_be(privdata.h_size, v);
+  stp_put32_be(privdata.w_size, v);
+  stp_put32_be(0, v);
+
+  /* Positioning within page? */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsImPositnSpecify ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(8, v);
+  stp_put32_be(0, v);  /* Presumably X */
+  stp_put32_be(0, v);  /* Presumably Y */
+
+  /* Sharpening */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsImSharp SetLevel", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(2, v);
+  stp_putc(0xFF, v);
+  stp_putc(0x12, v);  /* SHARPENING -- 0 is off, 0x12 Normal, 0x19 is High */
+
+  /* Number of Copies */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsPgCopies        ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(4, v);
+  stp_put32_be(1, v);  /* Number of copies, at least 1 */
+
+  /* Mirroring */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsPgMirrorNone    ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+
+  /* Rotation */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsPgRotateNone    ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+
+  /* Cut list -- seems to be list of be16 row offsets for cuts. */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsCutList         ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(4, v);
+
+  /* Cut at start/end of sheet */
+  if (privdata.h_size == 3624) {
+    stp_zfwrite("\x00\x0c\x0e\x1c", 1, 4, v);
+  } else {
+    stp_zfwrite("\x00\x0c\x0b\xc4", 1, 4, v);
+  }
+
+#if 0  /* Additional Known Cut lists */
+  /* Single cut, down the center */
+  stp_put32_be(6, v);
+  if (privdata.h_size == 3624) {
+    stp_zfwrite("\x00\x0c\x07\x14\x0e\x1c", 1, 6, v);
+  } else {
+    stp_zfwrite("\x00\x0c\x05\xe8\x0b\xc4", 1, 6, v);
+  }
+  /* Double-Slug Cut, down the center */
+  stp_put32_be(8, v);
+  if (privdata.h_size == 3624) {
+    stp_zfwrite("\x00\x0c\x07\x01\x07\x27\x0e\x1c", 1, 6, v);
+  } else {
+    stp_zfwrite("\x00\x0c\x05\xd5\x05\xfb\x0b\xc4", 1, 6, v);
+  }
+#endif
+
+}
+
+static void kodak_9810_printer_end(stp_vars_t *v)
+{
+  /* End Page */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndEndLPage        ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+
+  /* End Job */
+  stp_putc(0x1b, v);
+  stp_zfwrite("MndEndJob          ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be(0, v);
+}
+
+static void kodak_9810_plane_init(stp_vars_t *v)
+{
+  /* Data block */
+  stp_putc(0x1b, v);
+  stp_zfwrite("FlsData    Block   ", 1, 19, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put32_be((privdata.w_size * privdata.h_size) + 8, v);
+  stp_zfwrite("Image   ", 1, 8, v);
+}
+
 
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
@@ -2250,6 +2447,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_6800_laminate_list, NULL,
+  },
+  { /* Kodak Professional 9810 */
+    4006,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &kodak_9810_page_list,
+    &kodak_9810_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &kodak_9810_printer_init, kodak_9810_printer_end,
+    &kodak_9810_plane_init, NULL, 
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_9810_laminate_list, NULL,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
