@@ -51,6 +51,7 @@
 #define DYESUB_FEATURE_WHITE_BORDER	0x00000010
 #define DYESUB_FEATURE_PLANE_INTERLACE	0x00000020
 #define DYESUB_FEATURE_PLANE_LEFTTORIGHT	0x00000040
+#define DYESUB_FEATURE_ROW_INTERLACE	0x00000080
 
 #define DYESUB_PORTRAIT	0
 #define DYESUB_LANDSCAPE	1
@@ -174,6 +175,7 @@ typedef struct {
   int bytes_per_out_channel;
   int bytes_per_ink_channel;
   int plane_interlacing;
+  int row_interlacing;
   char empty_byte;
   unsigned short **image_data;
   int outh_px, outw_px, outt_px, outb_px, outl_px, outr_px;
@@ -2842,7 +2844,7 @@ dyesub_print_pixel(stp_vars_t *v,
         ink_u8[i] = ink[i] / 257;
     }
 	
-  if (pv->plane_interlacing)
+  if (pv->plane_interlacing || pv->row_interlacing)
     stp_zfwrite((char *) ink + plane, pv->bytes_per_ink_channel, 1, v);
   else
 /*  stp_zfwrite((char *) ink, pv->bytes_per_ink_channel, pv->ink_channels, v);*/
@@ -2882,11 +2884,16 @@ dyesub_print_plane(stp_vars_t *v,
 		int plane)
 {
   int ret = 0;
-  int h, row;
-  int out_bytes = (pv->plane_interlacing ? 1 : pv->ink_channels)
+  int h, row, p;
+  int out_bytes = ((pv->plane_interlacing || pv->row_interlacing) ? 1 : pv->ink_channels)
   					* pv->bytes_per_ink_channel;
+
   for (h = 0; h <= pv->prnb_px - pv->prnt_px; h++)
     {
+      p = pv->row_interlacing ? 0 : plane;
+
+      do {
+
       if (h % caps->block_size == 0)
         { /* block init */
 	  privdata.block_min_h = h + pv->prnt_px;
@@ -2914,7 +2921,7 @@ dyesub_print_plane(stp_vars_t *v,
 	  					pv->outh_px, pv->imgh_px);
 	  stp_deprintf(STP_DBG_DYESUB,
 	  	"dyesub_print_plane: h = %d, row = %d\n", h, row);
-	  ret = dyesub_print_row(v, pv, row, plane);
+	  ret = dyesub_print_row(v, pv, row, p);
 
 	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
 	  	&& pv->outr_px < pv->prnw_px)
@@ -2928,6 +2935,8 @@ dyesub_print_plane(stp_vars_t *v,
         { /* block end */
 	  dyesub_exec(v, caps->block_end_func, "caps->block_end");
 	}
+
+      } while (pv->row_interlacing && ++p < pv->ink_channels);
     }
   return ret;
 }
@@ -3056,6 +3065,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
  		(strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0)
 		? '\xff' : '\0');
   pv.plane_interlacing = dyesub_feature(caps, DYESUB_FEATURE_PLANE_INTERLACE);
+  pv.row_interlacing = dyesub_feature(caps, DYESUB_FEATURE_ROW_INTERLACE);
   pv.plane_lefttoright = dyesub_feature(caps, DYESUB_FEATURE_PLANE_LEFTTORIGHT);
   pv.print_mode = page_mode;
   if (!pv.image_data)
