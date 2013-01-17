@@ -1902,6 +1902,8 @@
       <printer translate="name" name="Kodak 6800" driver="kodak-6800" manufacturer="Kodak" model="4001" foomaticid="Kodak-6800" />
       <printer translate="name" name="Kodak 6850" driver="kodak-6850" manufacturer="Kodak" model="4002" foomaticid="Kodak-6850" />
       <printer translate="name" name="Kodak 605" driver="kodak-605" manufacturer="Kodak" model="4003" foomaticid="Kodak-605" />
+      <printer translate="name" name="Kodak 1400" driver="kodak-1400" manufacturer="Kodak" model="4004" foomaticid="Kodak-1400" />
+      <printer translate="name" name="Kodak 805" driver="kodak-805" manufacturer="Kodak" model="4005" foomaticid="Kodak-805" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Dai Nippon Printing DS40" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />

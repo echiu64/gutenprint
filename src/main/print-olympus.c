@@ -1564,6 +1564,108 @@ static const laminate_t kodak_605_laminate[] =
 
 LIST(laminate_list_t, kodak_605_laminate_list, laminate_t, kodak_605_laminate);
 
+/* Kodak 1400 */
+static const dyesub_resolution_t res_301dpi[] =
+{
+  { "301x301", 301, 301},
+};
+
+LIST(dyesub_resolution_list_t, res_301dpi_list, dyesub_resolution_t, res_301dpi);
+
+static const dyesub_pagesize_t kodak_1400_page[] =
+{
+  /* Printer has 1" non-printable area on top and bottom of page, not part of
+     data sent over. 
+
+     Printer requires full-bleed data horizontally. However, not all pixels
+     are actually printed.  35+35 (8x14 paper) or 76+76 (8x12 paper) are 
+     effectively discarded (ie ~0.12" and ~0.25" respectively)
+  */
+  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
+  { "Custom", NULL,   PT(2560,301), PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, kodak_1400_page_list, dyesub_pagesize_t, kodak_1400_page);
+
+static const dyesub_media_t kodak_1400_media[] =
+{
+  { "Glossy", N_("Glossy"), {2, "\x00\x3c"}},
+  { "Matte+5",  N_("Matte +5"),  {2, "\x01\x28"}},
+  { "Matte+4",  N_("Matte +4"),  {2, "\x01\x2e"}},
+  { "Matte+3",  N_("Matte +3"),  {2, "\x01\x34"}},
+  { "Matte+2",  N_("Matte +2"),  {2, "\x01\x3a"}},
+  { "Matte+1",  N_("Matte +1"),  {2, "\x01\x40"}},
+  { "Matte",    N_("Matte"),     {2, "\x01\x46"}},
+  { "Matte-1",  N_("Matte -1"),  {2, "\x01\x52"}},
+  { "Matte-2",  N_("Matte -2"),  {2, "\x01\x5e"}},
+  { "Matte-3",  N_("Matte -3"),  {2, "\x01\x6a"}},
+  { "Matte-4",  N_("Matte -4"),  {2, "\x01\x76"}},
+  { "Matte-5",  N_("Matte -5"),  {2, "\x01\x82"}},
+};
+LIST(dyesub_media_list_t, kodak_1400_media_list, dyesub_media_t, kodak_1400_media);
+
+static const dyesub_printsize_t kodak_1400_printsize[] =
+{
+  { "301x301", "w612h864", 2560, 3010},
+  { "301x301", "Legal", 2560, 3612},
+  { "301x301", "A4", 2560, 3010},
+  { "301x301", "Custom", 2560, 3010},
+};
+
+LIST(dyesub_printsize_list_t, kodak_1400_printsize_list, dyesub_printsize_t, kodak_1400_printsize);
+
+static void kodak_1400_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("PGHD\x00\x0a\x00\x00", 1, 8, v);
+  stp_put16_le(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 2);
+  stp_put32_le(privdata.h_size*privdata.w_size, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_zfwrite((privdata.media->seq).data, 1, 1, v);  /* Matte or Glossy? */
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  stp_putc(0x01, v);
+  stp_zfwrite((const char*)((privdata.media->seq).data) + 1, 1, 1, v); /* Lamination intensity */
+  dyesub_nputc(v, 0x00, 12);
+}
+
+/* Kodak 805 */
+static const dyesub_pagesize_t kodak_805_page[] =
+{
+  /* Identical to the Kodak 1400 except for the lack of A4 support */
+  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "Custom", NULL,   PT(2560,301), PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, kodak_805_page_list, dyesub_pagesize_t, kodak_805_page);
+
+static const dyesub_printsize_t kodak_805_printsize[] =
+{
+  { "301x301", "w612h864", 2560, 3010},
+  { "301x301", "Legal", 2560, 3612},
+  { "301x301", "Custom", 2560, 3010},
+};
+
+LIST(dyesub_printsize_list_t, kodak_805_printsize_list, dyesub_printsize_t, kodak_805_printsize);
+
+static void kodak_805_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("PGHD\x00\x0a\x00\x00", 1, 8, v);
+  stp_put16_le(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 2);
+  stp_put32_le(privdata.h_size*privdata.w_size, v);
+  dyesub_nputc(v, 0x00, 5);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  stp_putc(0x01, v);
+  stp_putc(0x3c, v); /* Lamination intensity; fixed on glossy media */
+  dyesub_nputc(v, 0x00, 12);
+}
+
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -2117,6 +2219,37 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_605_laminate_list, NULL,
+  },
+  { /* Kodak Professional 1400 */
+    4004,	
+    &cmy_ink_list,
+    &res_301dpi_list,
+    &kodak_1400_page_list,
+    &kodak_1400_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_ROW_INTERLACE,
+    &kodak_1400_printer_init, NULL,
+    NULL, NULL, 
+    NULL, NULL, 
+    NULL, NULL, NULL, 
+    &kodak_6800_laminate_list, 
+    &kodak_1400_media_list,
+  },
+  { /* Kodak Photo Printer 805 */
+    4005, 		
+    &cmy_ink_list,
+    &res_301dpi_list,
+    &kodak_805_page_list,
+    &kodak_805_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_ROW_INTERLACE,
+    &kodak_805_printer_init, NULL,
+    NULL, NULL, /* No plane funcs */
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_6800_laminate_list, NULL,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
