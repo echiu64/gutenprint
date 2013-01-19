@@ -2419,7 +2419,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak Professional 1400 */
     4004,	
-    &cmy_ink_list,
+    &bgr_ink_list,
     &res_301dpi_list,
     &kodak_1400_page_list,
     &kodak_1400_printsize_list,
@@ -2435,7 +2435,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Kodak Photo Printer 805 */
     4005, 		
-    &cmy_ink_list,
+    &bgr_ink_list,
     &res_301dpi_list,
     &kodak_805_page_list,
     &kodak_805_printsize_list,
