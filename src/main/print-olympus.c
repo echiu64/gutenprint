@@ -2081,6 +2081,79 @@ static void mitsu_cp3020d_plane_end(stp_vars_t *v)
   }
 }
 
+/* Mitsubishi CP3020DA/DAE */
+static void mitsu_cp3020da_printer_init(stp_vars_t *v)
+{
+  /* Init */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x20, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0a, v);
+  stp_putc(0x10, v);
+  dyesub_nputc(v, 0x00, 7);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 32);
+  /* Page count */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x21, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x20, v);
+  stp_putc(0x00, v);
+  stp_putc(0x02, v);
+  dyesub_nputc(v, 0x00, 19);
+  stp_putc(0x01, v);  /* Copies -- 01-50d */
+  dyesub_nputc(v, 0x00, 20);
+  /* Contrast ? */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x22, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0xf0, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_putc(0x00, v); /* x00 = Photo, x01 = High Contrast, x02 = Natural */
+  dyesub_nputc(v, 0x00, 39);
+  /* Unknown */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x26, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x20, v);
+  dyesub_nputc(v, 0x00, 6);
+  stp_putc(0x01, v);
+  dyesub_nputc(v, 0x00, 37);
+}
+
+static void mitsu_cp3020da_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x51, v);
+  stp_putc(0x50, v);
+}
+
+static void mitsu_cp3020da_plane_init(stp_vars_t *v)
+{
+  /* Plane data header */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x54, v);
+  dyesub_nputc(v, 0x00, 3);
+  stp_put16_be(0, v); /* Starting row for this block */
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
+}
+
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -2711,6 +2784,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     NULL, NULL,
   },
+  { /* Mitsubishi CP3020DA/DAE */
+    4102,
+    &bgr_ink_list,
+    &res_314dpi_list,
+    &mitsu_cp3020d_page_list,
+    &mitsu_cp3020d_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &mitsu_cp3020da_printer_init, &mitsu_cp3020da_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
+  },
+
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
     &rgb_ink_list,
