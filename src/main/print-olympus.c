@@ -1867,6 +1867,121 @@ static void kodak_9810_plane_init(stp_vars_t *v)
 }
 
 
+/* Kodak Professional 8500 */
+static const dyesub_pagesize_t kodak_8500_page[] =
+{
+  { "w612h864", "8.5 x 12", PT(2508,314)+1, PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 8.5x12 & A4 */
+  { "Letter", "8.5 x 11", PT(2508,314)+1, PT(2954,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
+  { "Custom", NULL,   PT(2508,314), PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, kodak_8500_page_list, dyesub_pagesize_t, kodak_8500_page);
+
+static const dyesub_printsize_t kodak_8500_printsize[] =
+{
+  { "314x314", "w612h864", 2508, 3134},
+  { "314x314", "Letter", 2508, 2954},
+  { "314x314", "Custom", 2508, 3134},
+};
+
+LIST(dyesub_printsize_list_t, kodak_8500_printsize_list, dyesub_printsize_t, kodak_8500_printsize);
+
+static const dyesub_media_t kodak_8500_media[] =
+{
+  { "Glossy", N_("Glossy"), {2, "\x00\x00"}},
+  { "Matte+5",  N_("Matte +5"),  {2, "\x01\x05"}},
+  { "Matte+4",  N_("Matte +4"),  {2, "\x01\x04"}},
+  { "Matte+3",  N_("Matte +3"),  {2, "\x01\x03"}},
+  { "Matte+2",  N_("Matte +2"),  {2, "\x01\x02"}},
+  { "Matte+1",  N_("Matte +1"),  {2, "\x01\x01"}},
+  { "Matte",    N_("Matte"),     {2, "\x01\x00"}},
+  { "Matte-1",  N_("Matte -1"),  {2, "\x01\xff"}},
+  { "Matte-2",  N_("Matte -2"),  {2, "\x01\xfe"}},
+  { "Matte-3",  N_("Matte -3"),  {2, "\x01\xfd"}},
+  { "Matte-4",  N_("Matte -4"),  {2, "\x01\xfc"}},
+  { "Matte-5",  N_("Matte -5"),  {2, "\x01\xfb"}},
+};
+LIST(dyesub_media_list_t, kodak_8500_media_list, dyesub_media_t, kodak_8500_media);
+
+static const laminate_t kodak_8500_laminate[] =
+{
+  {"Coated", N_("Coated"), {1, "\x00"}},
+  {"None",  N_("None"),  {1, "\x02"}},
+};
+
+LIST(laminate_list_t, kodak_8500_laminate_list, laminate_t, kodak_8500_laminate);
+
+static void kodak_8500_printer_init(stp_vars_t *v)
+{
+  /* Start with NULL block */
+  dyesub_nputc(v, 0x00, 64);
+  /* Number of copies */
+  stp_putc(0x1b, v);
+  stp_putc(0x4e, v);
+  stp_putc(1, v); /* XXX always 1 for now, up to 50 */
+  dyesub_nputc(v, 0x00, 61);
+  /* Paper type.  Fixed. */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x46, v);
+  stp_putc(0x00, v); /* Fixed */
+  dyesub_nputc(v, 0x00, 60);
+  /* Print dimensions */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x53, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 57);
+  /* Sharpening -- XXX not exported. */
+  stp_putc(0x1b, v);
+  stp_putc(0x46, v);
+  stp_putc(0x50, v);
+  stp_putc(0, v);  /* 8-bit signed, range is +- 5.  IOW, 0xfb->0x5 */
+  dyesub_nputc(v, 0x00, 60);
+  /* Lamination */
+  stp_putc(0x1b, v);
+  stp_putc(0x59, v);
+  if (*((const char*)((privdata.laminate->seq).data)) == 0x02) { /* None */
+    stp_putc(0x02, v);
+    stp_putc(0x00, v);
+  } else {
+    stp_zfwrite((const char*)((privdata.media->seq).data), 1, 
+		(privdata.media->seq).bytes, v);
+  }
+  dyesub_nputc(v, 0x00, 60);
+  /* Unknown */
+  stp_putc(0x1b, v);
+  stp_putc(0x46, v);
+  stp_putc(0x47, v);
+  dyesub_nputc(v, 0x00, 61);
+
+
+  /* Data header */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x54, v);
+  dyesub_nputc(v, 0x00, 4);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 53);
+}
+
+static void kodak_8500_printer_end(stp_vars_t *v)
+{
+  /* Pad data to 64-byte block */
+  unsigned int length = privdata.w_size * privdata.h_size * 3;
+  length %= 64;
+  if (length)
+    length = 64 - length;
+  dyesub_nputc(v, 0x00, length);
+
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  dyesub_nputc(v, 0x00, 62);
+}
+
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
 {
@@ -2466,6 +2581,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_9810_laminate_list, NULL,
+  },
+  { /* Kodak Professional 8500 */
+    4100,
+    &bgr_ink_list,
+    &res_314dpi_list,
+    &kodak_8500_page_list,
+    &kodak_8500_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &kodak_8500_printer_init, kodak_8500_printer_end,
+    NULL, NULL, 
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_8500_laminate_list, 
+    &kodak_8500_media_list,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
