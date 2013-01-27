@@ -1961,9 +1961,10 @@ static void kodak_8500_printer_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  dyesub_nputc(v, 0x00, 4);
+  dyesub_nputc(v, 0x00, 2);
+  stp_put16_be(0, v); /* Starting row for this block */
   stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
   dyesub_nputc(v, 0x00, 53);
 }
 
@@ -1972,14 +1973,112 @@ static void kodak_8500_printer_end(stp_vars_t *v)
   /* Pad data to 64-byte block */
   unsigned int length = privdata.w_size * privdata.h_size * 3;
   length %= 64;
-  if (length)
+  if (length) {
     length = 64 - length;
-  dyesub_nputc(v, 0x00, length);
+    dyesub_nputc(v, 0x00, length);
+  }
 
   /* Page Footer */
   stp_putc(0x1b, v);
   stp_putc(0x50, v);
   dyesub_nputc(v, 0x00, 62);
+}
+
+/* Mitsubishi CP3020D/DU/DE */
+static const dyesub_pagesize_t mitsu_cp3020d_page[] =
+{
+  { "A4", "A4", PT(2508,314)+1, PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* A4 */
+  { "Legal", "Letter Long", PT(2508,314)+1, PT(3762,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
+  { "Custom", NULL,   PT(2508,314), PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cp3020d_page_list, dyesub_pagesize_t, mitsu_cp3020d_page);
+
+static const dyesub_printsize_t mitsu_cp3020d_printsize[] =
+{
+  { "314x314", "A4", 2508, 3134},
+  { "314x314", "Legal", 2508, 3762},
+  { "314x314", "Custom", 2508, 3134},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cp3020d_printsize_list, dyesub_printsize_t, mitsu_cp3020d_printsize);
+
+static void mitsu_cp3020d_printer_init(stp_vars_t *v)
+{
+  /* Start with NULL block */
+  dyesub_nputc(v, 0x00, 64);
+  /* Unknown */
+  stp_putc(0x1b, v);
+  stp_putc(0x51, v);
+  dyesub_nputc(v, 0x00, 62);
+  /* Paper type */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x46, v);
+  if (privdata.h_size == 3762)
+    stp_putc(0x04, v);
+  else
+    stp_putc(0x00, v);
+  dyesub_nputc(v, 0x00, 60);
+  /* Number of copies */
+  stp_putc(0x1b, v);
+  stp_putc(0x4e, v);
+  stp_putc(1, v); /* XXX always 1 for now, up to 50 */
+  dyesub_nputc(v, 0x00, 61);
+  /* Unknown */
+  stp_putc(0x1b, v);
+  stp_putc(0x46, v);
+  stp_putc(0x53, v);
+  dyesub_nputc(v, 0x00, 61);
+  /* Lamination.  Fixed on. */
+  stp_putc(0x1b, v);
+  stp_putc(0x59, v);
+  dyesub_nputc(v, 0x00, 62);
+  /* High Contrast */
+  stp_putc(0x1b, v);
+  stp_putc(0x46, v);
+  stp_putc(0x43, v);
+  stp_putc(0x00, v);  /* XXX or 0x01 for "High Contrast" */
+  dyesub_nputc(v, 0x00, 60);
+  /* Print dimensions */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x53, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  dyesub_nputc(v, 0x00, 57);
+}
+
+static void mitsu_cp3020d_printer_end(stp_vars_t *v)
+{
+  /* Page Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  dyesub_nputc(v, 0x00, 62);
+}
+
+static void mitsu_cp3020d_plane_init(stp_vars_t *v)
+{
+  /* Plane data header */
+  stp_putc(0x1b, v);
+  stp_putc(0x5a, v);
+  stp_putc(0x30 + 4 - privdata.plane, v); /* Y = x31, M = x32, C = x33 */
+  dyesub_nputc(v, 0x00, 2);
+  stp_put16_be(0, v); /* Starting row for this block */
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
+  dyesub_nputc(v, 0x00, 53);
+}
+
+static void mitsu_cp3020d_plane_end(stp_vars_t *v)
+{
+  /* Pad data to 64-byte block */
+  unsigned int length = privdata.w_size * privdata.h_size;
+  length %= 64;
+  if (length) {
+    length = 64 - length;
+    dyesub_nputc(v, 0x00, length);
+  }
 }
 
 /* Shinko CHC-S9045 (experimental) */
@@ -2576,7 +2675,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
-    &kodak_9810_printer_init, kodak_9810_printer_end,
+    &kodak_9810_printer_init, &kodak_9810_printer_end,
     &kodak_9810_plane_init, NULL, 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -2590,12 +2689,27 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_8500_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &kodak_8500_printer_init, kodak_8500_printer_end,
-    NULL, NULL, 
+    &kodak_8500_printer_init, &kodak_8500_printer_end,
+    NULL, NULL, /* No plane funcs */ 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_8500_laminate_list, 
     &kodak_8500_media_list,
+  },
+  { /* Mitsubishi CP3020D/DU/DE */
+    4101,
+    &ymc_ink_list,
+    &res_314dpi_list,
+    &mitsu_cp3020d_page_list,
+    &mitsu_cp3020d_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &mitsu_cp3020d_printer_init, &mitsu_cp3020d_printer_end,
+    &mitsu_cp3020d_plane_init, &mitsu_cp3020d_plane_end, 
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
