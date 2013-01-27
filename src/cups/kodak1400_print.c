@@ -39,7 +39,7 @@
 
 #include <libusb-1.0/libusb.h>
 
-#define VERSION "0.04"
+#define VERSION "0.05"
 #define STR_LEN_MAX 64
 #define CMDBUF_LEN 96
 #define READBACK_LEN 8
@@ -496,17 +496,17 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x59;
-		cmdbuf[2] = hdr.laminate; // ???
+		cmdbuf[2] = hdr.matte; // ???
 
 		if ((ret = send_data(dev, endp_down,
 				    cmdbuf, CMDBUF_LEN)))
 			goto done_claimed;
 
-		/* Send matte toggle? */
+		/* Send matte toggle */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x60;
-		cmdbuf[2] = hdr.matte; // ???
+		cmdbuf[2] = hdr.laminate; // ???
 
 		if (send_data(dev, endp_down,
 			     cmdbuf, CMDBUF_LEN))
@@ -522,7 +522,7 @@ top:
 				    cmdbuf, CMDBUF_LEN)))
 			goto done_claimed;
 
-		/* Send unknown? */
+		/* Send unknown */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x61;
@@ -672,8 +672,8 @@ done:
 
  <-- 1b 00                           # Reset/attention?
  <-- 1b 5a 53  0a 00  0b c2          # Setup (ie hdr.columns and hdr.rows)
- <-- 1b 59 01                        # ?? Lamination?
- <-- 1b 60 01                        # ?? Matte?
+ <-- 1b 59 01                        # ?? Matte?
+ <-- 1b 60 01                        # ?? Lamination?
  <-- 1b 62 46                        # hdr.lam_strength
  <-- 1b 61 01                        # ?? hdr.unk1
 
@@ -736,8 +736,19 @@ done:
  <-- 1b a2                           # ?? Reset cal tables?
  --> 00 01 00 00  00 00 00 00        
 
- <-- 1b a0 02 03 06 10               # ???
- <-- cal data, (256*2)*3 + 16 NULLs  # No idea what order.
+ <-- 1b a0 02 03 06 10               # 06 10 == 1552 bytes aka the CAL data.
+ <-- cal data
+
+  [[ Data is organized as three blocks of 512 bytes followed by 
+     16 NULL bytes. 
+
+     Each block appears to be 256 entries of 16-bit LE data, 
+     so each input value is translated into a 16-bit number in the printer.
+
+     Assuming blocks are ordered BGR.
+
+  ]] 
+
  --> 00 00 00 00  00 00 00 00        
 
 */
