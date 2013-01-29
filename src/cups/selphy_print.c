@@ -105,8 +105,11 @@ static int parse_printjob(uint8_t *buffer, int *bw_mode, int *plane_len)
 	
 	if (buffer[12] == 0x40 &&
 	    buffer[13] == 0x01) {
+		*plane_len = *(uint32_t*)(&buffer[16]);
+		*plane_len = le32_to_cpu(*plane_len);
+
 		if (buffer[2] == 0x00) {
-			if (buffer[6] == 0x00)
+			if (*plane_len == 688480)
 				printer_type = P_CP10;
 			else
 				printer_type = P_CP_XXX;
@@ -114,9 +117,6 @@ static int parse_printjob(uint8_t *buffer, int *bw_mode, int *plane_len)
 			printer_type = P_ES1;
 			*bw_mode = (buffer[2] == 0x20);
 		}
-
-		*plane_len = *(uint32_t*)(&buffer[16]);
-		*plane_len = le32_to_cpu(*plane_len);
 		goto done;
 	}
 
