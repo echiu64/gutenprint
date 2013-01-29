@@ -307,6 +307,9 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			libusb_get_string_descriptor_ascii(dev, desc.iSerialNumber, serial, STR_LEN_MAX);
 		}
 
+		if (!strlen(serial))
+			strcpy(serial, "NONE");
+
 		DEBUG("%s%sPID: %04X Product: '%s' Serial: '%s'\n",
 		      (!valid) ? "UNRECOGNIZED: " : "",
 		      (found == i) ? "MATCH: " : "",
