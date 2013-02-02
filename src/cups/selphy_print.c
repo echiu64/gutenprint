@@ -650,6 +650,7 @@ top:
 		goto top;
 
 	/* Done printing */
+	ret = 0;
 
 done_claimed:
 	libusb_release_interface(dev, iface);

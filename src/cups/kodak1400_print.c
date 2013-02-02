@@ -617,6 +617,8 @@ top:
 		goto top;
 	
 	/* All done, clean up */
+	ret = 0;
+
 done_claimed:
 	libusb_release_interface(dev, iface);
 
