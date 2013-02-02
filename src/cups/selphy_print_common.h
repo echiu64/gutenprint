@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series print assister -- Common Code
  *
- *   (c) 2007-2012 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at
  *  
@@ -25,7 +25,7 @@
  *
  */
 
-#define VERSION "0.43"
+#define VERSION "0.44"
 
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
 #define ERROR( ... ) fprintf(stderr, "ERROR: " __VA_ARGS__ )

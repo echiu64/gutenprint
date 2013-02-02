@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series print assister -- libusb-1.0 version
  *
- *   (c) 2007-2012 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *  
@@ -69,7 +69,7 @@
 #define USB_PID_CANON_CP760 0x31AB
 #define USB_PID_CANON_CP770 0x31AA
 #define USB_PID_CANON_CP780 0x31DD
-#define USB_PID_CANON_CP790 790 // XXX
+#define USB_PID_CANON_CP790 790 // XXX 31ed? 31ef? (related to es40)
 #define USB_PID_CANON_CP800 0x3214
 #define USB_PID_CANON_CP810 0x3256
 #define USB_PID_CANON_CP900 0x3255
@@ -307,8 +307,8 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			libusb_get_string_descriptor_ascii(dev, desc.iSerialNumber, serial, STR_LEN_MAX);
 		}
 
-		if (!strlen(serial))
-			strcpy(serial, "NONE");
+		if (!strlen((char*)serial))
+		  strcpy((char*)serial, "NONE");
 
 		DEBUG("%s%sPID: %04X Product: '%s' Serial: '%s'\n",
 		      (!valid) ? "UNRECOGNIZED: " : "",
@@ -403,6 +403,19 @@ int main (int argc, char **argv)
 				perror("ERROR:Can't open input file");
 				exit(1);
 			}
+		}
+
+		/* Ensure we're using BLOCKING I/O */
+		i = fcntl(data_fd, F_GETFL, 0);
+		if (i < 0) {
+			perror("ERROR:Can't open input");
+			exit(1);
+		}
+		i &= ~O_NONBLOCK;
+		i = fcntl(data_fd, F_SETFL, 0);
+		if (i < 0) {
+			perror("ERROR:Can't open input");
+			exit(1);
 		}
 
 		/* Start parsing URI 'selphy://PID/SERIAL' */
