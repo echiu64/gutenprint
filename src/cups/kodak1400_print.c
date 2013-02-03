@@ -39,7 +39,7 @@
 
 #include <libusb-1.0/libusb.h>
 
-#define VERSION "0.06"
+#define VERSION "0.07"
 #define STR_LEN_MAX 64
 #define CMDBUF_LEN 96
 #define READBACK_LEN 8
@@ -527,7 +527,7 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x60;
-		cmdbuf[2] = hdr.laminate; // ???
+		cmdbuf[2] = hdr.laminate;
 
 		if (send_data(dev, endp_down,
 			     cmdbuf, CMDBUF_LEN))
@@ -582,8 +582,12 @@ top:
 		state = S_PRINTER_SENT_C;
 		break;
 	case S_PRINTER_SENT_C:
-		if (!memcmp(rdbuf, idle_data, READBACK_LEN))
-			state = S_PRINTER_READY_L;
+		if (!memcmp(rdbuf, idle_data, READBACK_LEN)) {
+			if (hdr.laminate)
+				state = S_PRINTER_READY_L;
+			else
+				state = S_PRINTER_DONE;
+		}
 		break;
 	case S_PRINTER_READY_L:
 		if ((ret = send_plane(dev, endp_down,
@@ -695,10 +699,10 @@ done:
 
  <-- 1b 00                           # Reset/attention?
  <-- 1b 5a 53  0a 00  0b c2          # Setup (ie hdr.columns and hdr.rows)
- <-- 1b 59 01                        # ?? Matte?
- <-- 1b 60 01                        # ?? Lamination?
- <-- 1b 62 46                        # hdr.lam_strength
- <-- 1b 61 01                        # ?? hdr.unk1
+ <-- 1b 59 01                        # ?? hdr.matte ? 
+ <-- 1b 60 XX                        # hdr.lamination
+ <-- 1b 62 XX                        # hdr.lam_strength
+ <-- 1b 61 01                        # ?? hdr.unk1 ?
 
  <-- 1b 5a 54 01  00 00 00  0a 00  0b c2  # start of plane 1 data
  <-- row 1
@@ -739,6 +743,8 @@ done:
  <-- 1b 72                           # Status query
  --> e4 72 00 00  00 00 00 00        # Idle response
 
+ ## this block is only present if lamination is used
+
  <-- 1b 74 00 50                     # ??
  <-- 1b 5a 54 04                     # start of lamination
  <-- 1b 74 01 50                     # ??
@@ -748,6 +754,8 @@ done:
   [ repeats until...]
  <-- 1b 72                           # Status query
  --> e4 72 00 00  00 00 00 00        # Idle response
+
+ ## end lamination block
 
  <-- 1b 74 00 50                     # ??
 
