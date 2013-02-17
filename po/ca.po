@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gutenprint-20110308\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2011-03-08 08:05-0500\n"
-"PO-Revision-Date: 2013-02-04 19:40+0100\n"
+"PO-Revision-Date: 2013-02-17 11:04+0100\n"
 "Last-Translator: Walter Garcia-Fontes <walter.garcia@upf.edu>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "Language: ca\n"
@@ -254,7 +254,7 @@ msgstr "Impressió a doble cara"
 #: src/main/print-canon.c:275 src/main/print-escp2.c:187
 #: src/main/print-pcl.c:1395
 msgid "Duplex/Tumble Setting"
-msgstr "Paràmetres de dúplex/assecodorda"
+msgstr "Paràmetres de dúplex/volta doble"
 
 #: src/main/print-canon.c:280 src/main/print-canon.c:281
 #: src/main/print-escp2.c:162 src/main/print-escp2.c:163
@@ -1551,7 +1551,7 @@ msgstr "Transició GCR"
 
 #: src/main/print-color.c:366 src/main/print-escp2.c:879
 msgid "Adjust the gray component transition rate"
-msgstr "Ajusta la taxa de tansició del component gris"
+msgstr "Ajusta la taxa de transició del component gris"
 
 #: src/main/print-color.c:373 src/main/print-escp2.c:886
 msgid "GCR Lower Bound"
@@ -1671,7 +1671,7 @@ msgstr "Mapa de lluminositat"
 
 #: src/main/print-color.c:547
 msgid "Luminosity adjustment curve"
-msgstr "Corba d'ajusta de la lluminositat"
+msgstr "Corba d'ajust de la lluminositat"
 
 #: src/main/print-color.c:554
 msgid "Gray Component Reduction"
@@ -1856,7 +1856,7 @@ msgstr "Suporta el mode de paquet D4"
 
 #: src/main/print-escp2.c:317
 msgid "Has Interchangeable Ink Cartridges"
-msgstr "Té cartutxos de tinta intercambiables"
+msgstr "Té cartutxos de tinta intercanviables"
 
 #: src/main/print-escp2.c:318
 msgid "Has multiple choices of ink cartridges"
@@ -2146,7 +2146,7 @@ msgstr "Transició de gris 1 hextone"
 
 #: src/main/print-escp2.c:863
 msgid "Hextone Gray 1 (Lightest) Transition"
-msgstr "Transicó de gris 1 (el més clar) hextone"
+msgstr "Transició de gris 1 (el més clar) hextone"
 
 #: src/main/print-escp2.c:870
 msgid "Hextone Gray 1 Density Scale"
@@ -2202,7 +2202,7 @@ msgstr "Intensitat de buit"
 
 #: src/main/print-escp2.c:951
 msgid "Set vacuum intensity (printer-specific)"
-msgstr "Estableix la intensitat de buit (espcífic per a la impressora)"
+msgstr "Estableix la intensitat de buit (específic per a la impressora)"
 
 #: src/main/print-escp2.c:958
 msgid "Feed Sequence"
@@ -2367,7 +2367,7 @@ msgstr "impressió de prova"
 #: src/xml/xmli18n-tmp.h:6484 src/xml/xmli18n-tmp.h:6505
 #: src/xml/xmli18n-tmp.h:6526
 msgid "Four Color Standard"
-msgstr "Estàndar de quatre colors"
+msgstr "Estàndard de quatre colors"
 
 #: src/main/print-lexmark.c:604 src/main/print-lexmark.c:674
 #: src/xml/xmli18n-tmp.h:4187 src/xml/xmli18n-tmp.h:4221
@@ -2485,7 +2485,7 @@ msgstr "Paper bàsic"
 #: src/xml/xmli18n-tmp.h:2458 src/xml/xmli18n-tmp.h:2516
 #: src/xml/xmli18n-tmp.h:2552
 msgid "Glossy Film"
-msgstr "Film satinat"
+msgstr "Film setinat"
 
 #: src/main/print-lexmark.c:864 src/xml/xmli18n-tmp.h:9
 #: src/xml/xmli18n-tmp.h:53 src/xml/xmli18n-tmp.h:103
@@ -2647,7 +2647,7 @@ msgstr "Paper fotogràfic"
 #: src/xml/xmli18n-tmp.h:2421 src/xml/xmli18n-tmp.h:2485
 #: src/xml/xmli18n-tmp.h:2534 src/xml/xmli18n-tmp.h:2570
 msgid "Premium Glossy Photo Paper"
-msgstr "Paper fotogràfic satinat premium"
+msgstr "Paper fotogràfic setinat premium"
 
 #: src/main/print-lexmark.c:892 src/xml/xmli18n-tmp.h:33
 #: src/xml/xmli18n-tmp.h:85 src/xml/xmli18n-tmp.h:123
@@ -2670,7 +2670,7 @@ msgstr "Paper fotogràfic satinat premium"
 #: src/xml/xmli18n-tmp.h:2429 src/xml/xmli18n-tmp.h:2491
 #: src/xml/xmli18n-tmp.h:2538 src/xml/xmli18n-tmp.h:2574
 msgid "Premium Luster Photo Paper"
-msgstr "Paper fotogràfic ilustre premium"
+msgstr "Paper fotogràfic il·lustre premium"
 
 #: src/main/print-lexmark.c:896 src/xml/xmli18n-tmp.h:39
 #: src/xml/xmli18n-tmp.h:91 src/xml/xmli18n-tmp.h:125
@@ -2693,7 +2693,7 @@ msgstr "Paper fotogràfic ilustre premium"
 #: src/xml/xmli18n-tmp.h:2433 src/xml/xmli18n-tmp.h:2500
 #: src/xml/xmli18n-tmp.h:2540 src/xml/xmli18n-tmp.h:2576
 msgid "Photo Quality Glossy Paper"
-msgstr "Paper fotogràfic satinat de qualitat"
+msgstr "Paper fotogràfic setinat de qualitat"
 
 #: src/main/print-lexmark.c:900 src/xml/xmli18n-tmp.h:41
 #: src/xml/xmli18n-tmp.h:195 src/xml/xmli18n-tmp.h:271
@@ -2783,7 +2783,7 @@ msgstr "Mat"
 #. common are matte, glossy or texture.
 #: src/main/print-olympus.c:1897 src/main/print-olympus.c:1898
 msgid "Laminate Pattern"
-msgstr "Patró llaminat"
+msgstr "Patró laminat"
 
 #: src/main/print-olympus.c:1932 src/main/print-olympus.c:1940
 #: src/main/print-olympus.c:1948 src/main/print-olympus.c:1956
@@ -2973,7 +2973,7 @@ msgstr "Nom del model de fitxer PPD"
 
 #: src/main/print-ps.c:316
 msgid "None; please provide a PPD file"
-msgstr "Cap; sisplau proveïu un fitxer PPD"
+msgstr "Cap; si us plau proveïu un fitxer PPD"
 
 #: src/main/print-ps.c:352 src/xml/xmli18n-tmp.h:6608
 msgid "Letter"
@@ -3095,7 +3095,7 @@ msgstr "Mínim X"
 
 #: src/gutenprintui2/curve.c:140
 msgid "Minimum possible value for X"
-msgstr "El valor mínim possilbe per a X"
+msgstr "El valor mínim possible per a X"
 
 #: src/gutenprintui2/curve.c:149
 msgid "Maximum X"
@@ -3159,7 +3159,7 @@ msgstr "mm"
 
 #: src/gutenprintui2/panel.c:282
 msgid "Set the base unit of measurement to millimetres"
-msgstr "Estableix la unitat base de mesura a milímetres"
+msgstr "Estableix la unitat base de mesura a mil·límetres"
 
 #: src/gutenprintui2/panel.c:284
 msgid "Pica"
@@ -3191,7 +3191,7 @@ msgstr "Ordre personalitzada"
 
 #: src/gutenprintui2/panel.c:306
 msgid "Use custom print command"
-msgstr "Usa una ordre estàndard d'impressio"
+msgstr "Usa una ordre estàndard d'impressió"
 
 #: src/gutenprintui2/panel.c:307 src/gutenprintui2/plist.c:710
 #: src/gutenprintui2/plist.c:793
@@ -3247,7 +3247,7 @@ msgid ""
 "Save Settings"
 msgstr ""
 "Imprimeix i\n"
-"Desa la convinguració"
+"desa la configuració"
 
 #: src/gutenprintui2/panel.c:1396
 msgid ""
@@ -3275,11 +3275,11 @@ msgid ""
 "If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Posiciona la imatge a la pàgina.\n"
-"Clica i arrosega amb el botó principal per posicionar la imatge.\n"
-"Clica i arrosega amb el botó secundari per moure la imatge amb una\n"
+"Clica i arrossega amb el botó principal per posicionar la imatge.\n"
+"Clica i arrossega amb el botó secundari per moure la imatge amb una\n"
 "precisió més fina; cada unitat de moviment mou la imatge un punt (1/72\")\n"
-"Clica i arrossage amb el tercer botó (el del mig) per moure la image en unitats de la mida de la imatge.\n"
-"Prement la tecla majúscules mentre es clica i s'arrosega fa que la imatge sols es mogui horitzontal o verticalment"
+"Clica i arrossega amb el tercer botó (el del mig) per moure la imatge en unitats de la mida de la imatge.\n"
+"Prement la tecla majúscules mentre es clica i s'arrossega fa que la imatge sols es mogui horitzontal o verticalment"
 
 #: src/gutenprintui2/panel.c:1522
 msgid "Paper Size"
@@ -3335,7 +3335,7 @@ msgstr "Vertical"
 
 #: src/gutenprintui2/panel.c:1659
 msgid "Landscape"
-msgstr "Hoitzontal"
+msgstr "Horitzontal"
 
 #: src/gutenprintui2/panel.c:1661
 msgid "Upside down"
@@ -3468,7 +3468,7 @@ msgstr "Entreu l'ordre correcta per imprimir a la vostra impresora. "
 
 #: src/gutenprintui2/panel.c:1941
 msgid "Enter the file to print to. "
-msgstr "Entreu el fitxer al qual imprmir. "
+msgstr "Entreu el fitxer al qual imprimir. "
 
 #: src/gutenprintui2/panel.c:1949
 msgid "File to print to"
@@ -3512,7 +3512,7 @@ msgstr "Configureu la impressora..."
 
 #: src/gutenprintui2/panel.c:2106
 msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
-msgstr "Escoolliu el model d'impressora, el fitxer PPD i l'ordre que s'usa per imprimir a aquesta impressora"
+msgstr "Escolliu el model d'impressora, el fitxer PPD i l'ordre que s'usa per imprimir a aquesta impressora"
 
 #: src/gutenprintui2/panel.c:2119
 msgid "New Printer..."
@@ -3680,7 +3680,7 @@ msgstr "(Impressora predeterminada)"
 
 #: src/cups/genppd.c:152
 msgid "Printer Features"
-msgstr "Caracterítiques de la impressora"
+msgstr "Característiques de la impressora"
 
 #: src/cups/genppd.c:153
 msgid "Output Control"
@@ -3812,19 +3812,19 @@ msgid ""
 msgstr ""
 "Copyright 2000 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
-"Aquest programa és programari lliure; podeu redistribuir-lo i/o\n"
-"modificar-lo sota els terminis de la Llicència Pública General GNU tal\n"
-"tal com la publica la Free Software Foundation, o bé la versió 3 de la\n"
-"Llicència o (d'acord amb la vostra opció) qualsevol versió posterior.\n"
+"Aquest programa és lliure; podeu redistribuir-lo i/o modificar-lo \n"
+"d'acord amb els termes de la Llicència Pública General de GNU tal \n"
+"i com la publica la Free Software Foundation, tant se val  la versió 3 \n"
+"de la Llicència com (si ho preferiu) qualsevol versió posterior.\n"
 "\n"
-"Aquest programa es distribueix amb l'esperança que sigui útil,\n"
-"però SENSE CAP GARANTIA; sense ni tan sols la garantia implicada de\n"
-"COMERCIABILITAT o AJUST A UN PROPÒSIT PARTICULAR. Vegeu la LLicència\n"
-"Pública General GNU per a més detalls.\n"
+"Aquest programa es distribueix amb l'esperança que serà útil,\n"
+"però SENSE CAP GARANTIA; ni tan sols la garantia de \n"
+"COMERCIALITZABILITAT O APTITUD PER A PROPÒSITS DETERMINATS. Vegeu \n"
+"la LLicència General Pública de  GNU per a més detalls.\n"
 "\n"
-"Hauríeu d'haver rebut una còpia de la Llicència Pública General GNU\n"
-"conjuntament amb aquest programa; si no l'heu rebuda, escriviu a la Free\n"
-"Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
+"Hauríeu d'haver rebut una còpia de la Llicència Pública General de GNU\n"
+"amb aquest programa; si no, escriviu a la Free Software Foundation,\n"
+"Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
 #: src/escputil/escputil.c:119
 msgid ""
@@ -3900,7 +3900,7 @@ msgstr ""
 "                       d'aquest programa.\n"
 "    -M|--list-models   Llista els models disponibles d'impressora.\n"
 "    -h|--help          Imprimeix aquest missatge d'ajuda.\n"
-"  Opcionns:\n"
+"  Opcions:\n"
 "    -P|--printer-name  Especifiqueu el nom de la cua d'impressió on\n"
 "                       operar. Per defecte és la impressora de sistema\n"
 "                       predeterminada.\n"
@@ -3910,7 +3910,7 @@ msgstr ""
 "    -m|--model         Especifiqueu el model de la impressora.\n"
 "    -u|--new           La impressora és una impressora nova (Stylus\n"
 "                       Color 740 o més nova). Sols es necessita quan\n"
-"                       no s'està usant el dispositiu en brut o cuan no \n"
+"                       no s'està usant el dispositiu en brut o quan no \n"
 "                       s'especifica el model.\n"
 "    -q|--quiet         Suprimeix el cartell.\n"
 "    -S|--short-name    Imprimeix el nom curt de la impressora amb --identify.\n"
@@ -3994,12 +3994,12 @@ msgstr ""
 "  Opcions:\n"
 "    -P Especifica el nom de la cua de la impressora on operar.\n"
 "          Per defecte és la impressora de sistema predeterminada.\n"
-"    -r Especifica el nom de dispositiut on escriure directament en\n"
+"    -r Especifica el nom de dispositiu on escriure directament en\n"
 "          comptes d'anar a través d'una cua d'impressió.\n"
 "    -u La impressora és una impressora nova (Stylus Color 740 o més nova).\n"
 "          Sols es necessita quan no s'està usant un dispositiu en brut.\n"
 "    -q Suprimeix el cartell.\n"
-"    -S Imprimeis el nom curt de la impressora amb -d.\n"
+"    -S Imprimeix el nom curt de la impressora amb -d.\n"
 "    -m Especifica el model precís de la impressora per a la alineació\n"
 "          dels capçals.\n"
 "    -C Especifica el nombre d'opcions de patró per a l'alineació.\n"
@@ -4073,7 +4073,7 @@ msgstr "No es pot llegir de %s: %s\n"
 #: src/escputil/escputil.c:767
 #, c-format
 msgid "Please specify a raw device\n"
-msgstr "Sisplau especifiqueu un dispositiu en brut\n"
+msgstr "Si us plau especifiqueu un dispositiu en brut\n"
 
 #: src/escputil/escputil.c:774
 #, c-format
@@ -4631,7 +4631,7 @@ msgstr "Error: La coberta de la safata està oberta\n"
 #: src/escputil/escputil.c:1163
 #, c-format
 msgid "Error: Maintenance cartridge cover open\n"
-msgstr "Error: La coberta del cartutx de mateniment està oberta\n"
+msgstr "Error: La coberta del cartutx de manteniment està oberta\n"
 
 #: src/escputil/escputil.c:1166
 #, c-format
@@ -4806,7 +4806,7 @@ msgid ""
 msgstr ""
 "Si us plau llegiu aquestes instruccions amb molta cura abans de procedir.\n"
 "\n"
-"Aquesta utilitat us permet alinear el capçal de la vostra impresora\n"
+"Aquesta utilitat us permet alinear el capçal de la vostra impressora\n"
 "d'injecció de tinta Epson Stylus. Un mal ús d'aquesta utilitat pot\n"
 "causar que la qualitat d'impressió decaigui i que es produeixi un dany\n"
 "a la vostra impressora. Seiko Epson no ha revisat la correcció\n"
@@ -4814,8 +4814,8 @@ msgstr ""
 "completament el risc d'usar aquesta utilitat.\n"
 "\n"
 "Aquesta utilitat imprimeix %d patrons de prova. Cada patró es veu molt\n"
-"semblant. Els patrons consisteixn d'una sèrie de parells de línies\n"
-"verticals que se sol·lapen. A sota de cada parell de línies hi ha un\n"
+"semblant. Els patrons consisteixen d'una sèrie de parells de línies\n"
+"verticals que se solapen. A sota de cada parell de línies hi ha un\n"
 "número entre %d i %d.\n"
 "\n"
 "Quan inspeccioneu el parell de línies, hauríeu de trobar la millor parella de\n"
@@ -4835,12 +4835,12 @@ msgstr ""
 "d'alineació. Hauríeu de trobar la parella més al mig (#%d dels %d) és\n"
 "la millor per a tots els patrons.\n"
 "\n"
-"Després que les passades s'hagin imprimit un altre cop, rebreu\n"
+"Després que les passades s'hagin imprès un altre cop, rebreu\n"
 "l'oferta de desar (s)  els resultats en la impressora, repetir (r) el\n"
 "procés, o sortir (q) sense desar. Si sortiu no es recuperaran els\n"
 "paràmetres anteriors, però si apagueu i engegueu la impressora sí. Si\n"
 "sortiu, haureu de repetir tot el procés si voleu desar els resultats \n"
-"després. És esencial que no apagueu la vostra impressora durant aquest\n"
+"després. És essencial que no apagueu la vostra impressora durant aquest\n"
 "procediment. \n"
 "\n"
 
@@ -4878,7 +4878,7 @@ msgid ""
 "this procedure.\n"
 "\n"
 msgstr ""
-"Si us plau llegiur aquestes instruccions amb molta cura abans de procedir.\n"
+"Si us plau llegiu aquestes instruccions amb molta cura abans de procedir.\n"
 "\n"
 "Aquesta utilitat us permet alinear el capçal d'impressió de la vostra\n"
 "impressora d'injecció de tinta Epson Stylus.  Un mal ús d'aquesta\n"
@@ -4888,7 +4888,7 @@ msgstr ""
 "garanties. Assumiu completament el risc d'usar aquesta utilitat.\n"
 "\n"
 "Aquesta utilitat imprimeix un patró de prova que consisteix en una\n"
-"sèrie de parelles de línies verticals que se sol·lapen. A sota de cada\n"
+"sèrie de parelles de línies verticals que se solapen. A sota de cada\n"
 "parell de línies hi ha un número entre %d i %d.\n"
 "\n"
 "Quan inspeccioneu les parelles de línies, hauríeu de trobar la parella\n"
@@ -4903,7 +4903,7 @@ msgstr ""
 "\n"
 "Després d'executar al patró d'alineació, s'imprimirà un altre\n"
 "cop. Hauríeu de trobar que la parella de més al centre (#%d de %d) és\n"
-"la millor. A continuació rebreu l'oferta de les opccions de desar (s)\n"
+"la millor. A continuació rebreu l'oferta de les opcions de desar (s)\n"
 "el resultat a la impressora, repetir (r) el procés, o sortir (q) sense\n"
 "desar. Si sortiu no es restabliran els paràmetres anteriors, però si\n"
 "apagueu i engegueu la impressora sí. Si sortiu, haureu de repetir el\n"
@@ -4968,7 +4968,7 @@ msgid ""
 "Please confirm by typing 'r' again that you wish to repeat the\n"
 "alignment process:\n"
 msgstr ""
-"Si us plau confirmeu teclejan 'r' un altre cop qeu voleu repetir\n"
+"Si us plau confirmeu teclejant 'r' un altre cop que voleu repetir\n"
 "el procés d'alineació:\n"
 
 #: src/escputil/escputil.c:1955
@@ -4987,7 +4987,7 @@ msgid ""
 msgstr ""
 "Això alterarà permanentment la configuració de la vostra impressora.\n"
 "ADVERTIMENT: aquest procediment no ha estat aprovat per Seiko Epson, i\n"
-"pot danayr la vostra impressora. Procedeixo?\n"
+"pot danyar la vostra impressora. Procedeixo?\n"
 "Si us plau confirmeu teclejant 's' un altre cop que voleu desar la configuració\n"
 "a la vostra impressora:\n"
 
@@ -5104,7 +5104,7 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Si us plau verifiqueu que l'alineació és correcat. Després que s'imprimeixi\n"
+"Si us plau verifiqueu que l'alineació és correcta. Després que s'imprimeixi\n"
 "el patró d'alineació una altra vegada, si us plau assegureu-vos que el\n"
 "millor patró para cada línia és el patró %d. Si no ho és, hauríeu de\n"
 "repetir el procés per obtenir la impressió de millor qualitat.\n"
@@ -6095,7 +6095,7 @@ msgstr "Paper aquarel - Blanc radiant"
 #: src/xml/xmli18n-tmp.h:2510 src/xml/xmli18n-tmp.h:4824
 #: src/xml/xmli18n-tmp.h:5889 src/xml/xmli18n-tmp.h:6345
 msgid "UltraChrome Photo Black"
-msgstr "Paper fotrogràfic negre ultra cromat"
+msgstr "Paper fotogràfic negre ultra cromat"
 
 #: src/xml/xmli18n-tmp.h:967 src/xml/xmli18n-tmp.h:970
 #: src/xml/xmli18n-tmp.h:973 src/xml/xmli18n-tmp.h:976
@@ -7567,7 +7567,7 @@ msgstr "DL"
 
 #: src/xml/xmli18n-tmp.h:6712
 msgid "DL landscape"
-msgstr "DL apaisat"
+msgstr "DL apaïsat"
 
 #: src/xml/xmli18n-tmp.h:6713
 msgid "C7-6"
@@ -7811,7 +7811,7 @@ msgstr "Paper de rotllo 89 mm"
 
 #: src/xml/xmli18n-tmp.h:6774
 msgid "4 Inch Roll Paper"
-msgstr "Paper de rottlo 4 polsades"
+msgstr "Paper de rotllo 4 polsades"
 
 #: src/xml/xmli18n-tmp.h:6775
 msgid "5 Inch Roll Paper"
@@ -10611,7 +10611,7 @@ msgstr "Impressora PCL 4 genèrica"
 
 #: src/xml/xmli18n-tmp.h:7474
 msgid "Generic PCL 4 LF Printer"
-msgstr "Impressoras PCL 4 LF genèrica"
+msgstr "Impressores PCL 4 LF genèrica"
 
 #: src/xml/xmli18n-tmp.h:7475
 msgid "Generic PCL 5 Printer"
