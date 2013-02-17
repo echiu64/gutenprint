@@ -754,7 +754,7 @@
       <printer translate="name" name="Epson WorkForce 615" driver="escp2-wf615" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_615" />
       <printer translate="name" name="Epson WorkForce 630" driver="escp2-wf630" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_630" />
       <printer translate="name" name="Epson WorkForce 635" driver="escp2-wf636" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_635" />
-      <printer translate="name" name="Epson WorkForce 645" driver="escp2-wf645" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_645" />
+      <printer translate="name" name="Epson WorkForce 645" driver="escp2-wf645" manufacturer="Epson" model="118" parameters="standard_params" foomaticid="Epson-WorkForce_645" />
       <printer translate="name" name="Epson WorkForce 1100" driver="escp2-wf1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-WorkForce_1100" />
       <printer translate="name" name="Epson CL 700" driver="escp2-cl700" manufacturer="Epson" model="38" parameters="480_params" foomaticid="Epson-CL_700" />
       <printer translate="name" name="Epson CL 750" driver="escp2-cl750" manufacturer="Epson" model="43" parameters="480_params" foomaticid="Epson-CL_750" />
