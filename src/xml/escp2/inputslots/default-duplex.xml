@@ -20,6 +20,9 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InputSlots name="default"/>
+<escp2:InputSlots name="default-duplex">
+ <slot translate="text" name="Main" text="Main Input">
   <Duplex><Tumble/></Duplex>
+ </slot>
+</escp2:InputSlots>
 </gutenprint>
