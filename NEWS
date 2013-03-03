@@ -261,6 +261,19 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Epson inkjets:
 
        EPSON Stylus TX125
+       EPSON WorkForce WF-7010 (EXPERIMENTAL)
+       EPSON WorkForce WF-7011 (EXPERIMENTAL)
+       EPSON WorkForce WF-7015 (EXPERIMENTAL)
+       EPSON WorkForce WF-7018 (EXPERIMENTAL)
+       EPSON WorkForce WF-7510 (EXPERIMENTAL)
+       EPSON WorkForce WF-7511 (EXPERIMENTAL)
+       EPSON WorkForce WF-7515 (EXPERIMENTAL)
+       EPSON WorkForce WF-7520 (EXPERIMENTAL)
+       EPSON WorkForce WF-7521 (EXPERIMENTAL)
+       EPSON WorkForce WF-7525 (EXPERIMENTAL)
+       EPSON PX-1200 (EXPERIMENTAL)
+       EPSON PX-1600F (EXPERIMENTAL)
+       EPSON PX-1700F (EXPERIMENTAL)
 
      - Canon inkjets:
 
@@ -281,6 +294,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        *1: protocol is supported but inks used are not yet supported
        *2: requires special communication protocol
+
+  3) Added duplex support for the EPSON WorkForce 645.
+
+  4) Added Catalan translation.
 
 * Changes from 5.2.8
 

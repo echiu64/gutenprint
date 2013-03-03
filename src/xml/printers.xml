@@ -756,6 +756,16 @@
       <printer translate="name" name="Epson WorkForce 635" driver="escp2-wf636" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-WorkForce_635" />
       <printer translate="name" name="Epson WorkForce 645" driver="escp2-wf645" manufacturer="Epson" model="118" parameters="standard_params" foomaticid="Epson-WorkForce_645" />
       <printer translate="name" name="Epson WorkForce 1100" driver="escp2-wf1100" manufacturer="Epson" model="99" parameters="standard_params" foomaticid="Epson-WorkForce_1100" />
+      <printer translate="name" name="Epson WorkForce WF-7010" driver="escp2-wf7010" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7010" />
+      <printer translate="name" name="Epson WorkForce WF-7011" driver="escp2-wf7011" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7011" />
+      <printer translate="name" name="Epson WorkForce WF-7015" driver="escp2-wf7015" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7015" />
+      <printer translate="name" name="Epson WorkForce WF-7018" driver="escp2-wf7018" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7018" />
+      <printer translate="name" name="Epson WorkForce WF-7510" driver="escp2-wf7510" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7510" />
+      <printer translate="name" name="Epson WorkForce WF-7511" driver="escp2-wf7511" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7511" />
+      <printer translate="name" name="Epson WorkForce WF-7515" driver="escp2-wf7515" manufacturer="Epson" model="119" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7515" />
+      <printer translate="name" name="Epson WorkForce WF-7520" driver="escp2-wf7520" manufacturer="Epson" model="120" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7520" />
+      <printer translate="name" name="Epson WorkForce WF-7521" driver="escp2-wf7521" manufacturer="Epson" model="120" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7521" />
+      <printer translate="name" name="Epson WorkForce WF-7525" driver="escp2-wf7525" manufacturer="Epson" model="120" parameters="standard_params" foomaticid="Epson-WorkForce_WF-7525" />
       <printer translate="name" name="Epson CL 700" driver="escp2-cl700" manufacturer="Epson" model="38" parameters="480_params" foomaticid="Epson-CL_700" />
       <printer translate="name" name="Epson CL 750" driver="escp2-cl750" manufacturer="Epson" model="43" parameters="480_params" foomaticid="Epson-CL_750" />
       <printer translate="name" name="Epson CL 760" driver="escp2-cl760" manufacturer="Epson" model="56" parameters="480_params" foomaticid="Epson-CL_760" />
@@ -854,6 +864,9 @@
       <printer translate="name" name="Epson PX 504A" driver="escp2-px504a" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_504A" />
       <printer translate="name" name="Epson PX 601F" driver="escp2-px601f" manufacturer="Epson" model="92" parameters="standard_params" foomaticid="Epson-PX_601F" />
       <printer translate="name" name="Epson PX 1001" driver="escp2-px1001" manufacturer="Epson" model="100" parameters="standard_params" foomaticid="Epson-PX_1001" />
+      <printer translate="name" name="Epson PX 1200" driver="escp2-px1200" manufacturer="Epson" model="120" parameters="standard_params" foomaticid="Epson-PX_1200" />
+      <printer translate="name" name="Epson PX 1600F" driver="escp2-px1600f" manufacturer="Epson" model="120" parameters="standard_params" foomaticid="Epson-PX_1600F" />
+      <printer translate="name" name="Epson PX 1700F" driver="escp2-px1700f" manufacturer="Epson" model="120" parameters="standard_params" foomaticid="Epson-PX_1700F" />
       <printer translate="name" name="Epson PX G900" driver="escp2-pxg900" manufacturer="Epson" model="64" parameters="standard_params" foomaticid="Epson-PX_G900" />
       <printer translate="name" name="Epson PX G920" driver="escp2-pxg920" manufacturer="Epson" model="64" parameters="standard_params" foomaticid="Epson-PX_G920" />
       <printer translate="name" name="Epson PX G5000" driver="escp2-pxg5000" manufacturer="Epson" model="67" parameters="standard_params" foomaticid="Epson-PX_G5000" />
