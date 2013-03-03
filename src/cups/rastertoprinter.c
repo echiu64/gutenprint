@@ -330,7 +330,7 @@ static stp_vars_t *
 initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
 		const char *page_size_name)
 {
-  int tmp_left, tmp_right, tmp_top, tmp_bottom, tmp_width, tmp_height;
+  int tmp_left, tmp_right, tmp_top, tmp_bottom;
   stp_vars_t *v = stp_vars_create_copy(default_settings);
 
   if (! suppress_messages)
@@ -480,8 +480,6 @@ initialize_page(cups_image_t *cups, const stp_vars_t *default_settings,
     tmp_right = cups->width;
   if (tmp_bottom > tmp_top + cups->height)
     tmp_bottom = cups->height;
-  tmp_width = cups->right - cups->left;
-  tmp_height = cups->bottom - cups->top;
   if (tmp_left < cups->left)
     {
       if (cups->shrink_to_fit != 1)
@@ -1085,7 +1083,6 @@ main(int  argc,				/* I - Number of command-line arguments */
   const char            *version_id;
   const char            *release_version_id;
   struct tms		tms;
-  clock_t		clk;
   long			clocks_per_sec;
   struct timeval	t1, t2;
   struct timezone	tz;
@@ -1398,7 +1395,7 @@ main(int  argc,				/* I - Number of command-line arguments */
       stp_vars_destroy(v);
     }
   cupsRasterClose(cups.ras);
-  clk = times(&tms);
+  (void) times(&tms);
   (void) gettimeofday(&t2, &tz);
   clocks_per_sec = sysconf(_SC_CLK_TCK);
   fprintf(stderr, "DEBUG: Gutenprint: Printed total %.0f bytes\n",
