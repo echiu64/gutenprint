@@ -1,6 +1,5 @@
-Welcome to Gutenprint 5.2.9, a stable release of Gutenprint 5.2.  This
-release has a few, mostly emergency bug fixes to 5.2.8.  Please read
-these release notes carefully.
+Welcome to Gutenprint 5.2.10, a stable release of Gutenprint 5.2. Please 
+read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -291,21 +290,22 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Added back after removal in 5.2.9 release:
 
-       Canon SELPHY CP600
-       Canon SELPHY CP720
+       Canon SELPHY CP600 *1
+       Canon SELPHY CP720 
        Canon SELPHY CP780 (including improved support)
        Canon SELPHY CP800
        Canon SELPHY ES1
        Canon SELPHY ES2
        Canon SELPHY ES3
-       Canon SELPHY ES20
+       Canon SELPHY ES20 *1
        Canon SELPHY ES30
        Canon SELPHY ES40
 
        Improved support:
 
-       Canon SELPHY CP520
-       Canon SELPHY CP530
+       Canon CP-220       *1
+       Canon SELPHY CP520 *1
+       Canon SELPHY CP530 *1
        Canon SELPHY CP740
        Canon SELPHY CP750
        Canon SELPHY CP760
@@ -319,6 +319,36 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP520
        Canon SELPHY CP790
 
+	*1: We have not confirmed these printers function with the new
+	    backend, but they are presumed to work.
+
+     - Mitsubishi Dye-Sublimation printers:
+
+       Mitsubishi CP3020D/DU/DE (EXPERIMENTAL)
+       Mitsubishi CP3020DA/DAE  (EXPERIMENTAL)
+
+	None of these have been tested and confirmed to work (or not), so 
+	feedback is welcome.  
+
+     - Kodak Dye-Sublimation printers:
+
+       Kodak 1400
+
+	The Kodak 1400 requires an intelligent spooler/backend, which is
+	bundled with this release.
+
+       Kodak 6800 (EXPERIMENTAL)
+       Kodak 6850 (EXPERIMENTAL)
+       Kodak 605  (EXPERIMENTAL)
+       Kodak 805  (EXPERIMENTAL)
+       Kodak 9810 (EXPERIMENTAL)
+       Kodak 8500 (EXPERIMENTAL)
+
+	None of these have been tested and confirmed to work (or not), so 
+	feedback is welcome.  In particular, he 805 is an updated version
+	of the 1400, and presumably requires changes to the spooler in order
+	to function properly.
+	
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:
@@ -331,6 +361,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   3) Added duplex support for the EPSON WorkForce 645.
 
   4) Added Catalan translation.
+
+  5) Updated support for the Sony UP-DR150 Photo Printer
+
+	Its output now matches the current Windows drivers.
 
 * Changes from 5.2.8
 
