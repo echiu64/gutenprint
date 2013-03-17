@@ -22,7 +22,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
 </copyright>
 <escp2:model id="120">
  <media src="escp2/media/c120.xml"/>
- <inputSlots src="escp2/inputslots/default-duplex.xml"/>
+ <inputSlots src="escp2/inputslots/wf7000.xml"/>
  <qualityPresets src="escp2/qualitypresets/wf40.xml"/>
  <inkGroup src="escp2/inks/wf40.xml"/>
  <mediaSizes src="escp2/mediasizes/standard.xml"/>

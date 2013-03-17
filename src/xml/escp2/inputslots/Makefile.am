@@ -43,7 +43,8 @@ pkgxmldata_DATA =				\
 	rx680.xml				\
 	rx700.xml				\
 	spro5000.xml				\
-	standard_roll_feed.xml
+	standard_roll_feed.xml			\
+	wf7000.xml
 
 xml-stamp: $(pkgxmldata_DATA) Makefile.am
 	-rm -f $@ $@.tmp
