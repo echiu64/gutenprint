@@ -282,6 +282,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG4200 (EXPERIMENTAL)
        Canon PIXMA MG5400 (EXPERIMENTAL)
        Canon PIXMA MG6300 (EXPERIMENTAL)
+
        Canon MX390 series (EXPERIMENTAL)
        Canon PIXMA MX391  (EXPERIMENTAL)
        Canon PIXMA MX392  (EXPERIMENTAL)
@@ -291,6 +292,25 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX397  (EXPERIMENTAL)
        Canon PIXMA MX398  (EXPERIMENTAL)
 
+       Canon MX450 series (EXPERIMENTAL)
+       Canon PIXMA MX451  (EXPERIMENTAL)
+       Canon PIXMA MX452  (EXPERIMENTAL)
+       Canon PIXMA MX454  (EXPERIMENTAL)
+       Canon PIXMA MX455  (EXPERIMENTAL)
+       Canon PIXMA MX456  (EXPERIMENTAL)
+       Canon PIXMA MX457  (EXPERIMENTAL)
+       Canon PIXMA MX458  (EXPERIMENTAL)
+
+       Note: Area codes as follows:
+             1: Latin America
+             2: USA
+             3: Japan
+             4: Europe
+             5: UK
+             6: Australia
+             7: India
+             8: China
+             (for MG series includes a trailing 0)
 
      - Canon dye-sublimation printers:
 
