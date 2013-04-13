@@ -190,6 +190,18 @@
       <height value="576"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w432h612">
+      <description translate="value" value="6x8.5"/>
+      <width value="432"/>
+      <height value="612"/>
+      <unit value="english-extended"/>
+    </paper>
+    <paper name="w432h648">
+      <description translate="value" value="6x9"/>
+      <width value="432"/>
+      <height value="648"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="c8x10">
       <description translate="value" value="8x10"/>
       <width value="576"/>
