@@ -1944,6 +1944,8 @@
       <printer translate="name" name="Mitsubishi 3020DE" driver="mitsubishi-3020de" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DE" />
       <printer translate="name" name="Mitsubishi 3020DA" driver="mitsubishi-3020da" manufacturer="Mitsubishi" model="4102" foomaticid="Mitsubishi-3020DA" />
       <printer translate="name" name="Mitsubishi 3020DAE" driver="mitsubishi-3020dae" manufacturer="Mitsubishi" model="4102" foomaticid="Mitsubishi-3020DAE" />
+      <printer translate="name" name="Mitsubishi 9550D" driver="mitsubishi-9550d" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550D" />
+      <printer translate="name" name="Mitsubishi 9550DW" driver="mitsubishi-9550dw" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550DW" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Dai Nippon Printing DS40" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />
