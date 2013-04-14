@@ -8716,6 +8716,10 @@ static const char* canon_MULTIPASS_MX370_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
+  /* color-only */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "300x300dpi_draft3",
   NULL
 };
 
@@ -8771,6 +8775,10 @@ static const char* canon_MULTIPASS_MX390_modeuses_plain[] = {
   "600x600dpi_high",
   "600x600dpi",
   "300x300dpi",
+  /* color-only */
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  "300x300dpi_draft3",
   NULL
   };
 
@@ -8782,7 +8790,7 @@ static const char* canon_MULTIPASS_MX390_modeuses_PPplusG2[] = {
 };
 
 static const char* canon_MULTIPASS_MX390_modeuses_PPproPlat[] = {
-  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh2",
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
@@ -8909,6 +8917,10 @@ static const char* canon_MULTIPASS_MX510_modeuses_plain[] = {
   "600x600dpi_high3",/* duplex */
   "600x600dpi",
   "300x300dpi",
+  /* color-only */
+  "600x600dpi_high4",
+  "600x600dpi_std4",
+  "300x300dpi_std4",
   NULL
 };
 
@@ -8919,7 +8931,7 @@ static const char* canon_MULTIPASS_MX510_modeuses_PPplusG2[] = {
 };
 
 static const char* canon_MULTIPASS_MX510_modeuses_PPproPlat[] = {
-  "1200x1200dpi_photohigh2",
+  "600x600dpi_photohigh2",
   "600x600dpi_photohigh",
   "600x600dpi_photo",
   NULL
@@ -8959,6 +8971,64 @@ static const canon_modeuse_t canon_MULTIPASS_MX510_modeuses[] = {
 };
 
 DECLARE_MODEUSES(canon_MULTIPASS_MX510);
+
+/* ----------------------------------- Canon MX520  ----------------------------------- */
+static const char* canon_MULTIPASS_MX520_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high3",/* duplex */
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX520_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX520_modeuses_PPproPlat[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX520_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX520_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX520_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const canon_modeuse_t canon_MULTIPASS_MX520_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MX520_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",	canon_MULTIPASS_MX520_modeuses_PPproPlat, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",   canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_MULTIPASS_MX520_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "InkJetHagaki", 	canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_MULTIPASS_MX520_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MX520_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_MULTIPASS_MX520_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MX520_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotopaperOther",	canon_MULTIPASS_MX520_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MX520);
 
 /* ----------------------------------- Canon MX700  ----------------------------------- */
 static const char* canon_MULTIPASS_MX700_modeuses_plain[] = {
