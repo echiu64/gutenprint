@@ -52,6 +52,8 @@
 #define DYESUB_FEATURE_PLANE_INTERLACE	0x00000020
 #define DYESUB_FEATURE_PLANE_LEFTTORIGHT	0x00000040
 #define DYESUB_FEATURE_ROW_INTERLACE	0x00000080
+#define DYESUB_FEATURE_12BPP	0x00000100
+#define DYESUB_FEATURE_16BPP	0x00000200
 
 #define DYESUB_PORTRAIT	0
 #define DYESUB_LANDSCAPE	1
@@ -163,6 +165,7 @@ typedef struct
   const laminate_t* laminate;
   const dyesub_media_t* media;
   int print_mode;
+  int bpp;
   char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
@@ -172,8 +175,8 @@ typedef struct {
   int out_channels;
   int ink_channels;
   const char *ink_order;
-  int bytes_per_out_channel;
   int bytes_per_ink_channel;
+  int bits_per_ink_channel;
   int plane_interlacing;
   int row_interlacing;
   char empty_byte;
@@ -194,7 +197,7 @@ typedef struct /* printer specific parameters */
   const dyesub_pagesize_list_t *pages;
   const dyesub_printsize_list_t *printsize;
   int block_size;
-  int features;		
+  int features;
   void (*printer_init_func)(stp_vars_t *);
   void (*printer_end_func)(stp_vars_t *);
   void (*plane_init_func)(stp_vars_t *);
@@ -1543,7 +1546,6 @@ static void kodak_6850_printer_init(stp_vars_t *v)
 }
 
 /* Kodak 605 */
-
 static void kodak_605_printer_init(stp_vars_t *v)
 {
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
@@ -3565,7 +3567,7 @@ dyesub_read_image(stp_vars_t *v,
 {
   int image_px_width  = stp_image_width(image);
   int image_px_height = stp_image_height(image);
-  int row_size = image_px_width * pv->ink_channels * pv->bytes_per_out_channel;
+  int row_size = image_px_width * pv->ink_channels * sizeof(short);
   unsigned short **image_data;
   unsigned int zero_mask;
   int i;
@@ -3608,7 +3610,6 @@ dyesub_print_pixel(stp_vars_t *v,
 		int plane)
 {
   unsigned short ink[MAX_INK_CHANNELS * MAX_BYTES_PER_CHANNEL], *out;
-  unsigned char *ink_u8;
   int i, j, b;
   
   if (pv->print_mode == DYESUB_LANDSCAPE)
@@ -3638,20 +3639,30 @@ dyesub_print_pixel(stp_vars_t *v,
 	}
     }
    
-  if (pv->bytes_per_ink_channel == 1) /* convert 16bits to 8bit */
+  /* Downscale 16bpp to output bpp */
+  /* FIXME:  Do we want to round? */
+  if (pv->bytes_per_ink_channel == 1) 
     {
-      ink_u8 = (unsigned char *) ink;
+      unsigned char *ink_u8 = (unsigned char *) ink;
       for (i = 0; i < pv->ink_channels; i++)
-        ink_u8[i] = ink[i] / 257;
+	ink_u8[i] = ink[i] / 257;
+      /* FIXME:  This really should be corrected to be: */
+      /* ink_u8[i] = ink[i] >> 8; */
+    } 
+  else if (pv->bits_per_ink_channel != 16)
+    {
+      for (i = 0; i < pv->ink_channels; i++)
+	ink[i] = ink[i] >> (16 - pv->bits_per_ink_channel);
     }
 	
   if (pv->plane_interlacing || pv->row_interlacing)
-    stp_zfwrite((char *) ink + plane, pv->bytes_per_ink_channel, 1, v);
+    stp_zfwrite((char *) ink + (plane * pv->bytes_per_ink_channel), 
+		pv->bytes_per_ink_channel, 1, v);
   else
-/*  stp_zfwrite((char *) ink, pv->bytes_per_ink_channel, pv->ink_channels, v);*/
       /* print inks in right order, eg. RGB  BGR */
       for (b = 0; b < pv->ink_channels; b++)
-	stp_zfwrite((char *) ink + (pv->ink_order[b]-1), pv->bytes_per_ink_channel, 1, v);
+	stp_zfwrite((char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[b]-1)), 
+		    pv->bytes_per_ink_channel, 1, v);
 
   return 1;
 }
@@ -3859,8 +3870,18 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   for (i = 0; i < pv.ink_channels; i++)
     stp_channel_add(v, i, 0, 1.0);
   pv.out_channels = stp_color_init(v, image, 65536);
-  pv.bytes_per_ink_channel = 1;		/* FIXME: this is printer dependent */
-  pv.bytes_per_out_channel = 2;		/* FIXME: this is ??? */
+
+  if (dyesub_feature(caps, DYESUB_FEATURE_12BPP)) {
+    pv.bytes_per_ink_channel = 2;
+    pv.bits_per_ink_channel = 12;
+  } else if (dyesub_feature(caps, DYESUB_FEATURE_16BPP)) {
+    pv.bytes_per_ink_channel = 2;
+    pv.bits_per_ink_channel = 16;
+  } else {
+    pv.bytes_per_ink_channel = 1;
+    pv.bits_per_ink_channel = 8;
+  }
+
   pv.image_data = dyesub_read_image(v, &pv, image);
   pv.empty_byte = (ink_type &&
  		(strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0)
@@ -3925,12 +3946,13 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
       dyesub_swap_ints(&pv.imgh_px, &pv.imgw_px);
     }
 
-	/* assign private data *after* swaping image dimensions */
+  /* assign private data *after* swaping image dimensions */
   privdata.w_dpi = w_dpi;
   privdata.h_dpi = h_dpi;
   privdata.w_size = pv.prnw_px;
   privdata.h_size = pv.prnh_px;
   privdata.print_mode = pv.print_mode;
+  privdata.bpp = pv.bits_per_ink_channel;
 
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
