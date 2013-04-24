@@ -316,6 +316,16 @@
       <printer translate="name" name="Canon PIXMA MX870" driver="bjc-MULTIPASS-MX870" manufacturer="Canon" model="9000870" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX870" />
       <printer translate="name" name="Canon PIXMA MX880" driver="bjc-MULTIPASS-MX880" manufacturer="Canon" model="9000880" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX880" />
       <printer translate="name" name="Canon PIXMA MX890" driver="bjc-MULTIPASS-MX890" manufacturer="Canon" model="9000710" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX890" />
+      <!-- Canon MX920 family -->
+      <printer translate="name" name="Canon MX920 series Printer" driver="bjc-MULTIPASS-MX920" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX920" />
+      <printer translate="name" name="Canon PIXMA MX922" driver="bjc-MULTIPASS-MX922" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX922" />
+      <printer translate="name" name="Canon PIXUS MX923" driver="bjc-MULTIPASS-MX923" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX923" />
+      <printer translate="name" name="Canon PIXMA MX924" driver="bjc-MULTIPASS-MX924" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX924" />
+      <printer translate="name" name="Canon PIXMA MX925" driver="bjc-MULTIPASS-MX925" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX925" />
+      <printer translate="name" name="Canon PIXMA MX926" driver="bjc-MULTIPASS-MX926" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX926" />
+      <printer translate="name" name="Canon PIXMA MX927" driver="bjc-MULTIPASS-MX927" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX927" />
+      <printer translate="name" name="Canon PIXMA MX928" driver="bjc-MULTIPASS-MX928" manufacturer="Canon" model="9000920" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX928" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MX7600" driver="bjc-MULTIPASS-MX7600" manufacturer="Canon" model="9007600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX7600" />
       <printer translate="name" name="Canon PIXMA E500" driver="bjc-MULTIPASS-E500" manufacturer="Canon" model="12000500" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E500" />
       <printer translate="name" name="Canon PIXMA E600" driver="bjc-MULTIPASS-E600" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E600" />
