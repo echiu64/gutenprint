@@ -3832,7 +3832,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	arg_ESCP_1 = 0x56;
       }
       /* Tray J from iP7200 onwards */
-      if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
 	arg_ESCP_1 = 0x5b;
 	arg_ESCP_9 = 0x00;
       }
@@ -3865,6 +3865,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* MP980:  CD Tray G     : 0x53               */
       /* MP990:  CD Tray G     : 0x53               */
       /* MX850:  CD Tray F     : 0x51               */
+      /* MX920:  CD Tray J     : 0x5b               */
       /* iP3000: CD Tray B     : 0x40               */
       /* iP3100: CD Tray B     : 0x40               */
       /* iP4000: CD Tray B     : 0x40               */
@@ -3956,6 +3957,24 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
     }
   }
 
+  /* workaround for media type based differences in 9-parameter ESC (P commands */
+  /* MX720, MX920 uses 2 usually, 1 with various Hagaki media, and 0 with CD media */
+  if (  !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
+    switch(arg_ESCP_2)
+      {
+	/* Hagaki media */
+      case 0x07: arg_ESCP_9=0x01; break;;
+      case 0x16: arg_ESCP_9=0x01; break;;
+      case 0x36: arg_ESCP_9=0x01; break;;
+      case 0x38: arg_ESCP_9=0x01; break;;
+	/* CD media */
+      case 0x1f: arg_ESCP_9=0x00; break;;
+      case 0x20: arg_ESCP_9=0x00; break;;
+	/* other media */
+      default:   arg_ESCP_9=0x02; break;;
+      }
+  }
+  
   if ( init->caps->ESC_P_len == 9 ) /* support for new devices from October 2012. */
     {/* the 4th of the 6 bytes is the media type. 2nd byte is media size. Both read from canon-media array. */
   
