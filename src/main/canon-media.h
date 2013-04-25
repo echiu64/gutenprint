@@ -241,6 +241,11 @@ static const canon_slot_t canon_PIXMA_MG5400_slots[] = {
 };
 DECLARE_SLOTS(canon_PIXMA_MG5400);
 
+static const canon_slot_t canon_PIXMA_MX720_slots[] = {
+  { "Cassette",   N_ ("Cassette"), 0xd },
+};
+DECLARE_SLOTS(canon_PIXMA_MX720);
+
 
 /* media types */
 

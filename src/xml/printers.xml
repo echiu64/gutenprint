@@ -311,6 +311,14 @@
       <!-- -->
       <printer translate="name" name="Canon PIXMA MX700" driver="bjc-MULTIPASS-MX700" manufacturer="Canon" model="9000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX700" />
       <printer translate="name" name="Canon PIXMA MX710" driver="bjc-MULTIPASS-MX710" manufacturer="Canon" model="9000710" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX710" />
+      <!-- Canon MX720 family -->
+      <printer translate="name" name="Canon MX720 series Printer" driver="bjc-MULTIPASS-MX720" manufacturer="Canon" model="9000720" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX720" />
+      <printer translate="name" name="Canon PIXMA MX721" driver="bjc-MULTIPASS-MX721" manufacturer="Canon" model="9000720" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX721" />
+      <printer translate="name" name="Canon PIXMA MX722" driver="bjc-MULTIPASS-MX722" manufacturer="Canon" model="9000720" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX722" />
+      <printer translate="name" name="Canon PIXMA MX726" driver="bjc-MULTIPASS-MX726" manufacturer="Canon" model="9000720" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX726" />
+      <printer translate="name" name="Canon PIXMA MX727" driver="bjc-MULTIPASS-MX727" manufacturer="Canon" model="9000720" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX727" />
+      <printer translate="name" name="Canon PIXMA MX728" driver="bjc-MULTIPASS-MX728" manufacturer="Canon" model="9000720" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX728" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MX850" driver="bjc-MULTIPASS-MX850" manufacturer="Canon" model="9000850" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX850" />
       <printer translate="name" name="Canon PIXMA MX860" driver="bjc-MULTIPASS-MX860" manufacturer="Canon" model="9000860" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX860" />
       <printer translate="name" name="Canon PIXMA MX870" driver="bjc-MULTIPASS-MX870" manufacturer="Canon" model="9000870" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX870" />
