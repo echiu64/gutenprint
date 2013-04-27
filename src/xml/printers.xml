@@ -148,8 +148,18 @@
       <printer translate="name" name="Canon PIXMA iP90v" driver="bjc-PIXMA-iP90v" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90v" />
       <printer translate="name" name="Canon PIXMA iP100" driver="bjc-PIXMA-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP100" />
       <printer translate="name" name="Canon PIXMA iP2000" driver="bjc-PIXMA-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2000" />
+      <!-- Canon iP2700 family -->
+      <printer translate="name" name="Canon iP2700 series" driver="bjc-PIXMA-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2700" />
       <printer translate="name" name="Canon PIXMA iP2700" driver="bjc-PIXMA-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2700" />
       <printer translate="name" name="Canon PIXUS iP2700" driver="bjc-PIXUS-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP2700" />
+      <printer translate="name" name="Canon PIXMA iP2701" driver="bjc-PIXMA-iP2701" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2701" />
+      <printer translate="name" name="Canon PIXMA iP2702" driver="bjc-PIXMA-iP2702" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2702" />
+      <printer translate="name" name="Canon PIXMA iP2740" driver="bjc-PIXMA-iP2740" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2740" />
+      <printer translate="name" name="Canon PIXMA iP2760" driver="bjc-PIXMA-iP2760" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2760" />
+      <printer translate="name" name="Canon PIXMA iP2770" driver="bjc-PIXMA-iP2770" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2770" />
+      <printer translate="name" name="Canon PIXMA iP2772" driver="bjc-PIXMA-iP2772" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2772" />
+      <printer translate="name" name="Canon PIXMA iP2780" driver="bjc-PIXMA-iP2780" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2780" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA iP3000" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000" />
       <printer translate="name" name="Canon PIXMA iP3100" driver="bjc-PIXMA-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3100" />
       <printer translate="name" name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3100" />
