@@ -284,52 +284,71 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG6300 (EXPERIMENTAL)
 
        Canon MX390 series (EXPERIMENTAL)
-       Canon PIXMA MX391  (EXPERIMENTAL)
-       Canon PIXMA MX392  (EXPERIMENTAL)
-       Canon PIXMA MX394  (EXPERIMENTAL)
-       Canon PIXMA MX395  (EXPERIMENTAL)
-       Canon PIXMA MX396  (EXPERIMENTAL)
-       Canon PIXMA MX397  (EXPERIMENTAL)
-       Canon PIXMA MX398  (EXPERIMENTAL)
+       Canon PIXMA MX391  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX392  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX394  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX395  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX396  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX397  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX398  (EXPERIMENTAL)(*2)
 
        Canon MX450 series (EXPERIMENTAL)
-       Canon PIXMA MX451  (EXPERIMENTAL)
-       Canon PIXMA MX452  (EXPERIMENTAL)
-       Canon PIXMA MX454  (EXPERIMENTAL)
-       Canon PIXMA MX455  (EXPERIMENTAL)
-       Canon PIXMA MX456  (EXPERIMENTAL)
-       Canon PIXMA MX457  (EXPERIMENTAL)
-       Canon PIXMA MX458  (EXPERIMENTAL)
+       Canon PIXMA MX451  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX452  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX454  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX455  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX456  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX457  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX458  (EXPERIMENTAL)(*2)
 
        Canon MX520 series (EXPERIMENTAL)
-       Canon PIXMA MX521  (EXPERIMENTAL)
-       Canon PIXMA MX522  (EXPERIMENTAL)
-       Canon PIXUS MX523  (EXPERIMENTAL)
-       Canon PIXMA MX524  (EXPERIMENTAL)
-       Canon PIXMA MX525  (EXPERIMENTAL)
-       Canon PIXMA MX526  (EXPERIMENTAL)
-       Canon PIXMA MX527  (EXPERIMENTAL)
-       Canon PIXMA MX528  (EXPERIMENTAL)
+       Canon PIXMA MX521  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX522  (EXPERIMENTAL)(*2)
+       Canon PIXUS MX523  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX524  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX525  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX526  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX527  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX528  (EXPERIMENTAL)(*2)
 
        Canon MX720 series (EXPERIMENTAL)
-       Canon PIXMA MX721  (EXPERIMENTAL)
-       Canon PIXMA MX722  (EXPERIMENTAL)
-       Canon PIXMA MX726  (EXPERIMENTAL)
-       Canon PIXMA MX727  (EXPERIMENTAL)
-       Canon PIXMA MX728  (EXPERIMENTAL)
+       Canon PIXMA MX721  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX722  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX726  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX727  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX728  (EXPERIMENTAL)(*2)
 
        Canon MX920 series (EXPERIMENTAL)
-       Canon PIXMA MX922  (EXPERIMENTAL)
-       Canon PIXUS MX923  (EXPERIMENTAL)
-       Canon PIXMA MX924  (EXPERIMENTAL)
-       Canon PIXMA MX925  (EXPERIMENTAL)
-       Canon PIXMA MX926  (EXPERIMENTAL)
-       Canon PIXMA MX927  (EXPERIMENTAL)
-       Canon PIXMA MX928  (EXPERIMENTAL)
+       Canon PIXMA MX922  (EXPERIMENTAL)(*2)
+       Canon PIXUS MX923  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX924  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX925  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX926  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX927  (EXPERIMENTAL)(*2)
+       Canon PIXMA MX928  (EXPERIMENTAL)(*2)
 
-       Canon PIXMA E510   (EXPERIMENTAL)
+       Canon E500 series  (EXPERIMENTAL)(*1)
 
-       Note: Area codes as follows:
+       Canon E510 series  (EXPERIMENTAL)
+       Canon PIXMA E510   (EXPERIMENTAL)(*2)
+
+       Canon E600 series  (EXPERIMENTAL)(*1)
+
+       Canon E610 series  (EXPERIMENTAL)
+       Canon PIXMA E610   (EXPERIMENTAL)(*2)
+
+       Note 1: Added the printer family
+               identification string by
+               which all family instances
+               identify themselves.
+
+       Note 2: Added individual family
+               instances, even though the
+               printer identifies itself
+               by a generic family
+               identification string.
+
+       Area codes as follows:
              1: Latin America
              2: USA
              3: Japan
