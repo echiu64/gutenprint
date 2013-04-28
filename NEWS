@@ -276,7 +276,12 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Canon inkjets:
 
-       Canon iP7200 series (EXPERIMENTAL)(*1)
+       Canon MP230 series  (EXPERIMENTAL)
+       Canon PIXMA MP230   (EXPERIMENTAL)(*2)
+       Canon PIXMA MP236   (EXPERIMENTAL)(*2)
+       Canon PIXMA MP237   (EXPERIMENTAL)(*2)
+			   
+       Canon iP2700 series (EXPERIMENTAL)(*1)
        Canon PIXMA iP2701  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2702  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2740  (EXPERIMENTAL)(*2)
@@ -284,67 +289,67 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP2770  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2772  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2780  (EXPERIMENTAL)(*2)
-
-       Canon PIXMA iP7200 (EXPERIMENTAL)
-       Canon PIXMA MG2200 (EXPERIMENTAL)
-       Canon PIXMA MG3200 (EXPERIMENTAL)
-       Canon PIXMA MG4200 (EXPERIMENTAL)
-       Canon PIXMA MG5400 (EXPERIMENTAL)
-       Canon PIXMA MG6300 (EXPERIMENTAL)
-
-       Canon MX390 series (EXPERIMENTAL)
-       Canon PIXMA MX391  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX392  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX394  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX395  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX396  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX397  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX398  (EXPERIMENTAL)(*2)
-
-       Canon MX450 series (EXPERIMENTAL)
-       Canon PIXMA MX451  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX452  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX454  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX455  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX456  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX457  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX458  (EXPERIMENTAL)(*2)
-
-       Canon MX520 series (EXPERIMENTAL)
-       Canon PIXMA MX521  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX522  (EXPERIMENTAL)(*2)
-       Canon PIXUS MX523  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX524  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX525  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX526  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX527  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX528  (EXPERIMENTAL)(*2)
-
-       Canon MX720 series (EXPERIMENTAL)
-       Canon PIXMA MX721  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX722  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX726  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX727  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX728  (EXPERIMENTAL)(*2)
-
-       Canon MX920 series (EXPERIMENTAL)
-       Canon PIXMA MX922  (EXPERIMENTAL)(*2)
-       Canon PIXUS MX923  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX924  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX925  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX926  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX927  (EXPERIMENTAL)(*2)
-       Canon PIXMA MX928  (EXPERIMENTAL)(*2)
-
-       Canon E500 series  (EXPERIMENTAL)(*1)
-
-       Canon E510 series  (EXPERIMENTAL)
-       Canon PIXMA E510   (EXPERIMENTAL)(*2)
-
-       Canon E600 series  (EXPERIMENTAL)(*1)
-
-       Canon E610 series  (EXPERIMENTAL)
-       Canon PIXMA E610   (EXPERIMENTAL)(*2)
+			   
+       Canon PIXMA iP7200  (EXPERIMENTAL)
+       Canon PIXMA MG2200  (EXPERIMENTAL)
+       Canon PIXMA MG3200  (EXPERIMENTAL)
+       Canon PIXMA MG4200  (EXPERIMENTAL)
+       Canon PIXMA MG5400  (EXPERIMENTAL)
+       Canon PIXMA MG6300  (EXPERIMENTAL)
+			   
+       Canon MX390 series  (EXPERIMENTAL)
+       Canon PIXMA MX391   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX392   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX394   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX395   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX396   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX397   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX398   (EXPERIMENTAL)(*2)
+			   
+       Canon MX450 series  (EXPERIMENTAL)
+       Canon PIXMA MX451   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX452   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX454   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX455   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX456   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX457   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX458   (EXPERIMENTAL)(*2)
+			   
+       Canon MX520 series  (EXPERIMENTAL)
+       Canon PIXMA MX521   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX522   (EXPERIMENTAL)(*2)
+       Canon PIXUS MX523   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX524   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX525   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX526   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX527   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX528   (EXPERIMENTAL)(*2)
+			   
+       Canon MX720 series  (EXPERIMENTAL)
+       Canon PIXMA MX721   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX722   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX726   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX727   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX728   (EXPERIMENTAL)(*2)
+			   
+       Canon MX920 series  (EXPERIMENTAL)
+       Canon PIXMA MX922   (EXPERIMENTAL)(*2)
+       Canon PIXUS MX923   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX924   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX925   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX926   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX927   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX928   (EXPERIMENTAL)(*2)
+			   
+       Canon E500 series   (EXPERIMENTAL)(*1)
+			   
+       Canon E510 series   (EXPERIMENTAL)
+       Canon PIXMA E510    (EXPERIMENTAL)(*2)
+			   
+       Canon E600 series   (EXPERIMENTAL)(*1)
+			   
+       Canon E610 series   (EXPERIMENTAL)
+       Canon PIXMA E610    (EXPERIMENTAL)(*2)
 
        Note 1: Added the printer family
                identification string by
