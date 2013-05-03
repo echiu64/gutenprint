@@ -280,7 +280,145 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MP230   (EXPERIMENTAL)(*2)
        Canon PIXMA MP236   (EXPERIMENTAL)(*2)
        Canon PIXMA MP237   (EXPERIMENTAL)(*2)
-			   
+
+       Canon MG2100 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG2110  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2120  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG2130  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2140  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2150  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2160  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2170  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2180  (EXPERIMENTAL)(*2)
+
+       Canon MG2200 series (EXPERIMENTAL)
+       Canon PIXMA MG2210  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2220  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2240  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2250  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2260  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2270  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG2280  (EXPERIMENTAL)(*2)
+
+       Canon MG3100 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG3110  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3120  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG3130  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3140  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3150  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3160  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3170  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3180  (EXPERIMENTAL)(*2)
+
+       Canon MG3200 series (EXPERIMENTAL)
+       Canon PIXMA MG3210  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3220  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG3230  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3240  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3250  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3260  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3270  (EXPERIMENTAL)(*2)
+
+       Canon MG4100 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG4110  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4120  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG4130  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4140  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4150  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4160  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4170  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4180  (EXPERIMENTAL)(*2)
+
+       Canon MG4200 series (EXPERIMENTAL)
+       Canon PIXMA MG4210  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4220  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG4230  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4240  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4250  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4260  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4270  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG4280  (EXPERIMENTAL)(*2)
+
+       Canon MG5100 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG5120  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG5130  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5140  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5150  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5170  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5180  (EXPERIMENTAL)(*2)
+
+       Canon MG5200 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG5210  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5220  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG5230  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5240  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5250  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5270  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5280  (EXPERIMENTAL)(*2)
+
+       Canon MG5300 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG5310  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5320  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG5330  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5340  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5350  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5370  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5380  (EXPERIMENTAL)(*2)
+
+       Canon MG5400 series (EXPERIMENTAL)
+       Canon PIXMA MG5410  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5420  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG5430  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5440  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5450  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5460  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5470  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5480  (EXPERIMENTAL)(*2)
+
+       Canon MG6100 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG6110  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6120  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG6130  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6140  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6150  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6170  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6180  (EXPERIMENTAL)(*2)
+
+       Canon MG6200 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG6210  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6220  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG6230  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6240  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6250  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6270  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6280  (EXPERIMENTAL)(*2)
+
+       Canon MG6300 series (EXPERIMENTAL)
+       Canon PIXMA MG6310  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6320  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG6330  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6340  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6350  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6360  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6370  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG6380  (EXPERIMENTAL)(*2)
+
+       Canon MG8100 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG8120  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG8130  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8140  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8150  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8170  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8180  (EXPERIMENTAL)(*2)
+
+       Canon MG8200 series (EXPERIMENTAL)(*1)
+       Canon PIXMA MG8220  (EXPERIMENTAL)(*2)
+       Canon PIXUS MG8230  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8240  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8250  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8270  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG8280  (EXPERIMENTAL)(*2)
+
        Canon iP2700 series (EXPERIMENTAL)(*1)
        Canon PIXMA iP2701  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2702  (EXPERIMENTAL)(*2)
@@ -289,13 +427,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP2770  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2772  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2780  (EXPERIMENTAL)(*2)
-			   
-       Canon PIXMA iP7200  (EXPERIMENTAL)
-       Canon PIXMA MG2200  (EXPERIMENTAL)
-       Canon PIXMA MG3200  (EXPERIMENTAL)
-       Canon PIXMA MG4200  (EXPERIMENTAL)
-       Canon PIXMA MG5400  (EXPERIMENTAL)
-       Canon PIXMA MG6300  (EXPERIMENTAL)
 			   
        Canon MX390 series  (EXPERIMENTAL)
        Canon PIXMA MX391   (EXPERIMENTAL)(*2)
@@ -345,16 +476,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 			   
        Canon E510 series   (EXPERIMENTAL)
        Canon PIXMA E510    (EXPERIMENTAL)(*2)
+       Canon PIXMA E518    (EXPERIMENTAL)(*2)
 			   
        Canon E600 series   (EXPERIMENTAL)(*1)
 			   
        Canon E610 series   (EXPERIMENTAL)
        Canon PIXMA E610    (EXPERIMENTAL)(*2)
+       Canon PIXMA E618    (EXPERIMENTAL)(*2)
+
+       Canon PIXMA iP7200  (EXPERIMENTAL)
+
 
        Note 1: Added the printer family
                identification string by
                which all family instances
-               identify themselves.
+               identify themselves to the OS.
 
        Note 2: Added individual family
                instances, even though the

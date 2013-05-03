@@ -267,21 +267,155 @@
       <printer translate="name" name="Canon PIXMA MP970" driver="bjc-MULTIPASS-MP970" manufacturer="Canon" model="5000970" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP970" />
       <printer translate="name" name="Canon PIXMA MP980" driver="bjc-MULTIPASS-MP980" manufacturer="Canon" model="5000980" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP980" />
       <printer translate="name" name="Canon PIXMA MP990" driver="bjc-MULTIPASS-MP990" manufacturer="Canon" model="5000990" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP990" />
+      <!-- Canon MG2100 family -->
+      <printer translate="name" name="Canon MG2100 series Printer" driver="bjc-PIXMA-MG2100" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2100" />
       <printer translate="name" name="Canon PIXMA MG2100" driver="bjc-PIXMA-MG2100" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2100" />
-      <printer translate="name" name="Canon PIXMA MG2200" driver="bjc-PIXMA-MG2200" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2200" />
-      <printer translate="name" name="Canon PIXMA MG3100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3100" />
-      <printer translate="name" name="Canon PIXMA MG3200" driver="bjc-PIXMA-MG3200" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3200" />
+      <printer translate="name" name="Canon PIXMA MG2110" driver="bjc-PIXMA-MG2110" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2110" />
+      <printer translate="name" name="Canon PIXMA MG2120" driver="bjc-PIXMA-MG2120" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2120" />
+      <printer translate="name" name="Canon PIXUS MG2130" driver="bjc-PIXUS-MG2130" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG2130" />
+      <printer translate="name" name="Canon PIXMA MG2140" driver="bjc-PIXMA-MG2140" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2140" />
+      <printer translate="name" name="Canon PIXMA MG2150" driver="bjc-PIXMA-MG2150" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2150" />
+      <printer translate="name" name="Canon PIXMA MG2160" driver="bjc-PIXMA-MG2160" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2160" />
+      <printer translate="name" name="Canon PIXMA MG2170" driver="bjc-PIXMA-MG2170" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2170" />
+      <printer translate="name" name="Canon PIXMA MG2180" driver="bjc-PIXMA-MG2180" manufacturer="Canon" model="8002100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2180" />
+      <!-- Canon MG2200 family -->
+      <printer translate="name" name="Canon MG2200 series Printer" driver="bjc-PIXMA-MG2200" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2200" />
+      <printer translate="name" name="Canon PIXMA MG2210" driver="bjc-PIXMA-MG2210" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2210" />
+      <printer translate="name" name="Canon PIXMA MG2220" driver="bjc-PIXMA-MG2220" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2220" />
+      <printer translate="name" name="Canon PIXMA MG2240" driver="bjc-PIXMA-MG2240" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2240" />
+      <printer translate="name" name="Canon PIXMA MG2250" driver="bjc-PIXMA-MG2250" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2250" />
+      <printer translate="name" name="Canon PIXMA MG2260" driver="bjc-PIXMA-MG2260" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2260" />
+      <printer translate="name" name="Canon PIXMA MG2270" driver="bjc-PIXMA-MG2270" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2270" />
+      <printer translate="name" name="Canon PIXMA MG2280" driver="bjc-PIXMA-MG2280" manufacturer="Canon" model="8002200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG2280" />
+      <!-- Canon MG3100 family -->
+      <printer translate="name" name="Canon MG3100 series Printer" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3100" />
+     <printer translate="name" name="Canon PIXMA MG3100" driver="bjc-PIXMA-MG3100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3100" />
+      <printer translate="name" name="Canon PIXMA MG3110" driver="bjc-PIXMA-MG3110" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3110" />
+      <printer translate="name" name="Canon PIXMA MG3120" driver="bjc-PIXMA-MG3120" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3120" />
+      <printer translate="name" name="Canon PIXUS MG3130" driver="bjc-PIXUS-MG3130" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG3130" />
+      <printer translate="name" name="Canon PIXMA MG3140" driver="bjc-PIXMA-MG3140" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3140" />
+      <printer translate="name" name="Canon PIXMA MG3150" driver="bjc-PIXMA-MG3150" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3150" />
+      <printer translate="name" name="Canon PIXMA MG3160" driver="bjc-PIXMA-MG3160" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3160" />
+      <printer translate="name" name="Canon PIXMA MG3170" driver="bjc-PIXMA-MG3170" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3170" />
+      <printer translate="name" name="Canon PIXMA MG3180" driver="bjc-PIXMA-MG3180" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3180" />
+      <!-- Canon MG3200 family -->
+      <printer translate="name" name="Canon MG3200 series Printer" driver="bjc-PIXMA-MG3200" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3200" />
+      <printer translate="name" name="Canon PIXMA MG3210" driver="bjc-PIXMA-MG3210" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3210" />
+      <printer translate="name" name="Canon PIXMA MG3220" driver="bjc-PIXMA-MG3220" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3220" />
+      <printer translate="name" name="Canon PIXUS MG3230" driver="bjc-PIXUS-MG3230" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG3230" />
+      <printer translate="name" name="Canon PIXMA MG3240" driver="bjc-PIXMA-MG3240" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3240" />
+      <printer translate="name" name="Canon PIXMA MG3250" driver="bjc-PIXMA-MG3250" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3250" />
+      <printer translate="name" name="Canon PIXMA MG3260" driver="bjc-PIXMA-MG3260" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3260" />
+      <printer translate="name" name="Canon PIXMA MG3270" driver="bjc-PIXMA-MG3270" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG3270" />
+      <!-- Canon MG4100 family -->
+      <printer translate="name" name="Canon MG4100 series Printer" driver="bjc-PIXMA-MG4100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4100" />
       <printer translate="name" name="Canon PIXMA MG4100" driver="bjc-PIXMA-MG4100" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4100" />
-      <printer translate="name" name="Canon PIXMA MG4200" driver="bjc-PIXMA-MG4200" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4200" />
+      <printer translate="name" name="Canon PIXMA MG4110" driver="bjc-PIXMA-MG4110" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4110" />
+      <printer translate="name" name="Canon PIXMA MG4120" driver="bjc-PIXMA-MG4120" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4120" />
+      <printer translate="name" name="Canon PIXUS MG4130" driver="bjc-PIXUS-MG4130" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG4130" />
+      <printer translate="name" name="Canon PIXMA MG4140" driver="bjc-PIXMA-MG4140" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4140" />
+      <printer translate="name" name="Canon PIXMA MG4150" driver="bjc-PIXMA-MG4150" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4150" />
+      <printer translate="name" name="Canon PIXMA MG4160" driver="bjc-PIXMA-MG4160" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4160" />
+      <printer translate="name" name="Canon PIXMA MG4170" driver="bjc-PIXMA-MG4170" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4170" />
+      <printer translate="name" name="Canon PIXMA MG4180" driver="bjc-PIXMA-MG4180" manufacturer="Canon" model="8003100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4180" />
+      <!-- Canon MG4200 family -->
+      <printer translate="name" name="Canon MG4200 series Printer" driver="bjc-PIXMA-MG4200" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4200" />
+      <printer translate="name" name="Canon PIXMA MG4210" driver="bjc-PIXMA-MG4210" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4210" />
+      <printer translate="name" name="Canon PIXMA MG4220" driver="bjc-PIXMA-MG4220" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4220" />
+      <printer translate="name" name="Canon PIXUS MG4230" driver="bjc-PIXUS-MG4230" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG4230" />
+      <printer translate="name" name="Canon PIXMA MG4240" driver="bjc-PIXMA-MG4240" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4240" />
+      <printer translate="name" name="Canon PIXMA MG4250" driver="bjc-PIXMA-MG4250" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4250" />
+      <printer translate="name" name="Canon PIXMA MG4260" driver="bjc-PIXMA-MG4260" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4260" />
+      <printer translate="name" name="Canon PIXMA MG4270" driver="bjc-PIXMA-MG4270" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4270" />
+      <printer translate="name" name="Canon PIXMA MG4280" driver="bjc-PIXMA-MG4280" manufacturer="Canon" model="8003200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG4280" />
+      <!-- Canon MG5100 family -->
+      <printer translate="name" name="Canon MG5100 series Printer" driver="bjc-PIXMA-MG5100" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5100" />
       <printer translate="name" name="Canon PIXMA MG5100" driver="bjc-PIXMA-MG5100" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5100" />
+      <printer translate="name" name="Canon PIXMA MG5120" driver="bjc-PIXMA-MG5120" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5120" />
+      <printer translate="name" name="Canon PIXUS MG5130" driver="bjc-PIXUS-MG5130" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG5130" />
+      <printer translate="name" name="Canon PIXMA MG5140" driver="bjc-PIXMA-MG5140" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5140" />
+      <printer translate="name" name="Canon PIXMA MG5150" driver="bjc-PIXMA-MG5150" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5150" />
+      <printer translate="name" name="Canon PIXMA MG5170" driver="bjc-PIXMA-MG5170" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5170" />
+      <printer translate="name" name="Canon PIXMA MG5180" driver="bjc-PIXMA-MG5180" manufacturer="Canon" model="8005100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5180" />
+      <!-- Canon MG5200 family -->
+      <printer translate="name" name="Canon MG5200 series Printer" driver="bjc-PIXMA-MG5200" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5200" />
       <printer translate="name" name="Canon PIXMA MG5200" driver="bjc-PIXMA-MG5200" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5200" />
+      <printer translate="name" name="Canon PIXMA MG5210" driver="bjc-PIXMA-MG5210" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5210" />
+      <printer translate="name" name="Canon PIXMA MG5220" driver="bjc-PIXMA-MG5220" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5220" />
+      <printer translate="name" name="Canon PIXUS MG5230" driver="bjc-PIXUS-MG5230" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG5230" />
+      <printer translate="name" name="Canon PIXMA MG5240" driver="bjc-PIXMA-MG5240" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5240" />
+      <printer translate="name" name="Canon PIXMA MG5250" driver="bjc-PIXMA-MG5250" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5250" />
+      <printer translate="name" name="Canon PIXMA MG5270" driver="bjc-PIXMA-MG5270" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5270" />
+      <printer translate="name" name="Canon PIXMA MG5280" driver="bjc-PIXMA-MG5280" manufacturer="Canon" model="8005200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5280" />
+      <!-- Canon MG5300 family -->
+      <printer translate="name" name="Canon MG5300 series Printer" driver="bjc-PIXMA-MG5300" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5300" />
       <printer translate="name" name="Canon PIXMA MG5300" driver="bjc-PIXMA-MG5300" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5300" />
-      <printer translate="name" name="Canon PIXMA MG5400" driver="bjc-PIXMA-MG5400" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5400" />
+      <printer translate="name" name="Canon PIXMA MG5310" driver="bjc-PIXMA-MG5310" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5310" />
+      <printer translate="name" name="Canon PIXMA MG5320" driver="bjc-PIXMA-MG5320" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5320" />
+      <printer translate="name" name="Canon PIXUS MG5330" driver="bjc-PIXUS-MG5330" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG5330" />
+      <printer translate="name" name="Canon PIXMA MG5340" driver="bjc-PIXMA-MG5340" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5340" />
+      <printer translate="name" name="Canon PIXMA MG5350" driver="bjc-PIXMA-MG5350" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5350" />
+      <printer translate="name" name="Canon PIXMA MG5370" driver="bjc-PIXMA-MG5370" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5370" />
+      <printer translate="name" name="Canon PIXMA MG5380" driver="bjc-PIXMA-MG5380" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5380" />
+      <!-- Canon MG5400 family -->
+      <printer translate="name" name="Canon MG5400 series Printer" driver="bjc-PIXMA-MG5400" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5400" />
+      <printer translate="name" name="Canon PIXMA MG5410" driver="bjc-PIXMA-MG5410" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5410" />
+      <printer translate="name" name="Canon PIXMA MG5420" driver="bjc-PIXMA-MG5420" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5420" />
+      <printer translate="name" name="Canon PIXUS MG5430" driver="bjc-PIXUS-MG5430" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG5430" />
+      <printer translate="name" name="Canon PIXMA MG5440" driver="bjc-PIXMA-MG5440" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5440" />
+      <printer translate="name" name="Canon PIXMA MG5450" driver="bjc-PIXMA-MG5450" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5450" />
+      <printer translate="name" name="Canon PIXMA MG5460" driver="bjc-PIXMA-MG5460" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5460" />
+      <printer translate="name" name="Canon PIXMA MG5470" driver="bjc-PIXMA-MG5470" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5470" />
+      <printer translate="name" name="Canon PIXMA MG5480" driver="bjc-PIXMA-MG5480" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5480" />
+      <!-- Canon MG6100 family -->
+      <printer translate="name" name="Canon MG6100 series Printer" driver="bjc-PIXMA-MG6100" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6100" />
       <printer translate="name" name="Canon PIXMA MG6100" driver="bjc-PIXMA-MG6100" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6100" />
+      <printer translate="name" name="Canon PIXMA MG6110" driver="bjc-PIXMA-MG6110" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6110" />
+      <printer translate="name" name="Canon PIXMA MG6120" driver="bjc-PIXMA-MG6120" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6120" />
+      <printer translate="name" name="Canon PIXUS MG6130" driver="bjc-PIXUS-MG6130" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG6130" />
+      <printer translate="name" name="Canon PIXMA MG6140" driver="bjc-PIXMA-MG6140" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6140" />
+      <printer translate="name" name="Canon PIXMA MG6150" driver="bjc-PIXMA-MG6150" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6150" />
+      <printer translate="name" name="Canon PIXMA MG6170" driver="bjc-PIXMA-MG6170" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6170" />
+      <printer translate="name" name="Canon PIXMA MG6180" driver="bjc-PIXMA-MG6180" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6180" />
+      <!-- Canon MG6200 family -->
+      <printer translate="name" name="Canon MG6200 series Printer" driver="bjc-PIXMA-MG6200" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6200" />
       <printer translate="name" name="Canon PIXMA MG6200" driver="bjc-PIXMA-MG6200" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6200" />
-      <printer translate="name" name="Canon PIXMA MG6300" driver="bjc-PIXMA-MG6300" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6300" />
+      <printer translate="name" name="Canon PIXMA MG6210" driver="bjc-PIXMA-MG6210" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6210" />
+      <printer translate="name" name="Canon PIXMA MG6220" driver="bjc-PIXMA-MG6220" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6220" />
+      <printer translate="name" name="Canon PIXUS MG6230" driver="bjc-PIXUS-MG6230" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG6230" />
+      <printer translate="name" name="Canon PIXMA MG6240" driver="bjc-PIXMA-MG6240" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6240" />
+      <printer translate="name" name="Canon PIXMA MG6250" driver="bjc-PIXMA-MG6250" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6250" />
+      <printer translate="name" name="Canon PIXMA MG6270" driver="bjc-PIXMA-MG6270" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6270" />
+      <printer translate="name" name="Canon PIXMA MG6280" driver="bjc-PIXMA-MG6280" manufacturer="Canon" model="8006200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6280" />
+      <!-- Canon MG6300 family -->
+      <printer translate="name" name="Canon MG6300 series Printer" driver="bjc-PIXMA-MG6300" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6300" />
+      <printer translate="name" name="Canon PIXMA MG6310" driver="bjc-PIXMA-MG6310" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6310" />
+      <printer translate="name" name="Canon PIXMA MG6320" driver="bjc-PIXMA-MG6320" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6320" />
+      <printer translate="name" name="Canon PIXUS MG6330" driver="bjc-PIXUS-MG6330" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG6330" />
+      <printer translate="name" name="Canon PIXMA MG6340" driver="bjc-PIXMA-MG6340" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6340" />
+      <printer translate="name" name="Canon PIXMA MG6350" driver="bjc-PIXMA-MG6350" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6350" />
+      <printer translate="name" name="Canon PIXMA MG6360" driver="bjc-PIXMA-MG6360" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6360" />
+      <printer translate="name" name="Canon PIXMA MG6370" driver="bjc-PIXMA-MG6370" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6370" />
+      <printer translate="name" name="Canon PIXMA MG6380" driver="bjc-PIXMA-MG6380" manufacturer="Canon" model="8006300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6380" />
+      <!-- Canon MG8100 family -->
+      <printer translate="name" name="Canon MG8100 series Printer" driver="bjc-PIXMA-MG8100" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8100" />
       <printer translate="name" name="Canon PIXMA MG8100" driver="bjc-PIXMA-MG8100" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8100" />
+      <printer translate="name" name="Canon PIXMA MG8120" driver="bjc-PIXMA-MG8120" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8120" />
+      <printer translate="name" name="Canon PIXUS MG8130" driver="bjc-PIXUS-MG8130" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG8130" />
+      <printer translate="name" name="Canon PIXMA MG8140" driver="bjc-PIXMA-MG8140" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8140" />
+      <printer translate="name" name="Canon PIXMA MG8150" driver="bjc-PIXMA-MG8150" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8150" />
+      <printer translate="name" name="Canon PIXMA MG8170" driver="bjc-PIXMA-MG8170" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8170" />
+      <printer translate="name" name="Canon PIXMA MG8180" driver="bjc-PIXMA-MG8180" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8180" />
+      <!-- Canon MG8200 family -->
+      <printer translate="name" name="Canon MG8200 series Printer" driver="bjc-PIXMA-MG8200" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8200" />
       <printer translate="name" name="Canon PIXMA MG8200" driver="bjc-PIXMA-MG8200" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8200" />
+      <printer translate="name" name="Canon PIXMA MG8220" driver="bjc-PIXMA-MG8220" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8220" />
+      <printer translate="name" name="Canon PIXUS MG8230" driver="bjc-PIXUS-MG8230" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG8230" />
+      <printer translate="name" name="Canon PIXMA MG8240" driver="bjc-PIXMA-MG8240" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8240" />
+      <printer translate="name" name="Canon PIXMA MG8250" driver="bjc-PIXMA-MG8250" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8250" />
+      <printer translate="name" name="Canon PIXMA MG8270" driver="bjc-PIXMA-MG8270" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8270" />
+      <printer translate="name" name="Canon PIXMA MG8280" driver="bjc-PIXMA-MG8280" manufacturer="Canon" model="8008200" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8280" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MX300" driver="bjc-MULTIPASS-MX300" manufacturer="Canon" model="9000300" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX300" />
       <printer translate="name" name="Canon PIXMA MX310" driver="bjc-MULTIPASS-MX310" manufacturer="Canon" model="9000300" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX310" />
       <printer translate="name" name="Canon PIXMA MX320" driver="bjc-MULTIPASS-MX320" manufacturer="Canon" model="9000330" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX320" />
@@ -357,12 +491,14 @@
       <!-- Canon E510 family -->
       <printer translate="name" name="Canon E510 series Printer" driver="bjc-MULTIPASS-E510" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E510" />
       <printer translate="name" name="Canon PIXMA E510" driver="bjc-MULTIPASS-E510" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E510" />
+      <printer translate="name" name="Canon PIXMA E518" driver="bjc-MULTIPASS-E518" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E518" />
       <!-- Canon E600 family -->
       <printer translate="name" name="Canon E600 series Printer" driver="bjc-MULTIPASS-E600" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E600" />
       <printer translate="name" name="Canon PIXMA E600" driver="bjc-MULTIPASS-E600" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E600" />
       <!-- Canon E610 family -->
       <printer translate="name" name="Canon E610 series Printer" driver="bjc-MULTIPASS-E610" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E610" />
       <printer translate="name" name="Canon PIXMA E610" driver="bjc-MULTIPASS-E610" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E610" />
+      <printer translate="name" name="Canon PIXMA E618" driver="bjc-MULTIPASS-E618" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E618" />
       <!-- -->
       <printer translate="name" name="Canon 50i" driver="bjc-50i" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-50i" />
       <printer translate="name" name="Canon 80i" driver="bjc-80i" manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-80i" />
