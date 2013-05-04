@@ -303,6 +303,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MG3100 series (EXPERIMENTAL)(*1)
        Canon PIXMA MG3110  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3120  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3122  (EXPERIMENTAL)(*2)
        Canon PIXUS MG3130  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3140  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3150  (EXPERIMENTAL)(*2)
@@ -313,6 +314,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MG3200 series (EXPERIMENTAL)
        Canon PIXMA MG3210  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3220  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG3222  (EXPERIMENTAL)(*2)
        Canon PIXUS MG3230  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3240  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3250  (EXPERIMENTAL)(*2)
@@ -368,6 +370,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MG5400 series (EXPERIMENTAL)
        Canon PIXMA MG5410  (EXPERIMENTAL)(*2)
        Canon PIXMA MG5420  (EXPERIMENTAL)(*2)
+       Canon PIXMA MG5422  (EXPERIMENTAL)(*2)
        Canon PIXUS MG5430  (EXPERIMENTAL)(*2)
        Canon PIXMA MG5440  (EXPERIMENTAL)(*2)
        Canon PIXMA MG5450  (EXPERIMENTAL)(*2)
@@ -427,6 +430,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP2770  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2772  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2780  (EXPERIMENTAL)(*2)
+
+       Canon iP3600 series (EXPERIMENTAL)(*1)
+       Canon PIXUS iP3600  (EXPERIMENTAL)(*2)
+       Canon PIXMA iP3680  (EXPERIMENTAL)(*2)
 
        Canon iP4500 series (EXPERIMENTAL)(*1)
        Canon PIXUS iP4500  (EXPERIMENTAL)(*2)
@@ -527,6 +534,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA E518    (EXPERIMENTAL)(*2)
 			   
        Canon E600 series   (EXPERIMENTAL)(*1)
+       Canon PIXMA E608    (EXPERIMENTAL)(*2)
 			   
        Canon E610 series   (EXPERIMENTAL)
        Canon PIXMA E610    (EXPERIMENTAL)(*2)
@@ -628,6 +636,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:
 
+       Canon PIXMA iP1880
+       Canon PIXMA iP1980
+       Canon PIXMA iP2580
+       Canon PIXMA iP2680
        Canon PIXMA PRO-10  *1
        Canon PIXMA PRO-100 *1
 
