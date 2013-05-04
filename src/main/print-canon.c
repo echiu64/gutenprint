@@ -3745,10 +3745,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	stp_putc(0x70,v);         /* p    */
 	stp_put16_le(46, v);      /* len  */
 	/* 0 for borderless, calculated otherwise */
-	stp_put16_be(printable_length,v); /* Windows 698, gutenprint 570 */
+	stp_put16_be(printable_length,v);
 	stp_put16_be(0,v);
 	/* 0 for borderless, calculated otherwise */
-	stp_put16_be(printable_width,v); /* Windows 352, gutenprint 342 */
+	stp_put16_be(printable_width,v);
 	stp_put16_be(0,v);
 	stp_put32_be(0,v);
 	stp_put16_be(unit,v);
@@ -3756,15 +3756,33 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	/* depends on borderless or not: uses modified borders */
 	stp_put32_be(area_right,v); /* area_right : Windows seems to use 9.6, gutenprint uses 10 */
 	stp_put32_be(area_top,v);  /* area_top : Windows seems to use 8.4, gutenprint uses 15 */
+
 	/* calculated depending on borderless or not: uses modified borders */
-	stp_put32_be((init->page_width + (border_left - border_left2) + (border_right - border_right2) ) * unit / 72,v); /* area_width : Windows seems to use 352 for Tray G, gutenprint uses 340.92 */
-	stp_put32_be((init->page_height + (border_top - border_top2) + (border_bottom - border_bottom2) ) * unit / 72,v); /* area_length : Windows seems to use 698.28 for Tray G, gutenprint uses 570 */
+	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
+	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
+	  stp_put32_be((init->page_width - border_left2 - border_right2 ) * unit / 72,v);
+	  stp_put32_be((init->page_height - border_top2 - border_bottom2 ) * unit / 72,v);
+	}
+	else {
+	  stp_put32_be((init->page_width) * unit / 72,v); // area_width test
+	  stp_put32_be((init->page_height) * unit / 72,v); // area_length test
+	}
+ 
 	/* 0 under all currently known circumstances */
 	stp_put32_be(0,v); /* paper_right : Windows also 0 here for all Trays */
 	stp_put32_be(0,v); /* paper_top : Windows also 0 here for all Trays */
+
 	/* standard paper sizes, unchanged for borderless so use original borders */
-	stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width : Windows 371.4, gutenprint 360.96 */
-	stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v); /* paper_height : Windows 720.96, gutenprint 600 */
+	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
+	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
+	  stp_put32_be((init->page_width) * unit / 72,v);
+	  stp_put32_be((init->page_height) * unit / 72,v);
+	}
+	else {
+	  stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v);
+	  stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v);
+	}
+	
 	return;
       }
   }
