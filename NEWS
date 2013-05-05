@@ -645,11 +645,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        *1: protocol is supported but inks used are not yet supported
 
-  3) Added duplex support for the EPSON WorkForce 645.
+  3) Corrected page dimensions for borderless printing with Canon
+     printers.
 
-  4) Added Catalan translation.
+  4) Added duplex support for the EPSON WorkForce 645.
 
-  5) Updated support for the Sony UP-DR150 Photo Printer
+  5) Added Catalan translation.
+
+  6) Updated support for the Sony UP-DR150 Photo Printer
 
 	Its output now matches the current Windows drivers.
 
