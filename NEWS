@@ -525,6 +525,25 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX396   (EXPERIMENTAL)(*2)
        Canon PIXMA MX397   (EXPERIMENTAL)(*2)
        Canon PIXMA MX398   (EXPERIMENTAL)(*2)
+
+       Canon MX410 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MX416   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX418   (EXPERIMENTAL)(*2)
+
+       Canon MX420 series  (EXPERIMENTAL)(*1)
+       Canon PIXUS MX420   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX426   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX428   (EXPERIMENTAL)(*2)
+
+       Canon MX430 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MX431   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX432   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX434   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX435   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX436   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX437   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX438   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX439   (EXPERIMENTAL)(*2)
 			   
        Canon MX450 series  (EXPERIMENTAL)
        Canon PIXMA MX451   (EXPERIMENTAL)(*2)
@@ -534,7 +553,18 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX456   (EXPERIMENTAL)(*2)
        Canon PIXMA MX457   (EXPERIMENTAL)(*2)
        Canon PIXMA MX458   (EXPERIMENTAL)(*2)
-			   
+       Canon PIXMA MX459   (EXPERIMENTAL)(*2)
+
+       Canon MX510 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MX511   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX512   (EXPERIMENTAL)(*2)
+       Canon PIXUS MX513   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX514   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX515   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX516   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX517   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX518   (EXPERIMENTAL)(*2)
+
        Canon MX520 series  (EXPERIMENTAL)
        Canon PIXMA MX521   (EXPERIMENTAL)(*2)
        Canon PIXMA MX522   (EXPERIMENTAL)(*2)
@@ -544,6 +574,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX526   (EXPERIMENTAL)(*2)
        Canon PIXMA MX527   (EXPERIMENTAL)(*2)
        Canon PIXMA MX528   (EXPERIMENTAL)(*2)
+
+       Canon MX700 series  (EXPERIMENTAL)(*1)
+
+       Canon MX710 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MX711   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX712   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX714   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX715   (EXPERIMENTAL)(*2)
 			   
        Canon MX720 series  (EXPERIMENTAL)
        Canon PIXMA MX721   (EXPERIMENTAL)(*2)
@@ -551,7 +589,31 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX726   (EXPERIMENTAL)(*2)
        Canon PIXMA MX727   (EXPERIMENTAL)(*2)
        Canon PIXMA MX728   (EXPERIMENTAL)(*2)
-			   
+
+       Canon MX860 series  (EXPERIMENTAL)(*1)
+       Canon PIXUS MX860   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX868   (EXPERIMENTAL)(*2)			   
+
+       Canon MX870 series  (EXPERIMENTAL)(*1)
+       Canon PIXUS MX870   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX876   (EXPERIMENTAL)(*2)			   
+
+       Canon MX880 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MX882   (EXPERIMENTAL)(*2)
+       Canon PIXUS MX883   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX884   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX885   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX886   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX888   (EXPERIMENTAL)(*2)
+
+       Canon MX890 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MX892   (EXPERIMENTAL)(*2)
+       Canon PIXUS MX893   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX894   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX895   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX897   (EXPERIMENTAL)(*2)
+       Canon PIXMA MX898   (EXPERIMENTAL)(*2)
+
        Canon MX920 series  (EXPERIMENTAL)
        Canon PIXMA MX922   (EXPERIMENTAL)(*2)
        Canon PIXUS MX923   (EXPERIMENTAL)(*2)
@@ -560,7 +622,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MX926   (EXPERIMENTAL)(*2)
        Canon PIXMA MX927   (EXPERIMENTAL)(*2)
        Canon PIXMA MX928   (EXPERIMENTAL)(*2)
-			   
+
+       Canon MX7600 series (EXPERIMENTAL)(*1)
+       Canon PIXUS MX7600  (EXPERIMENTAL)(*2)
+
        Canon E500 series   (EXPERIMENTAL)(*1)
 			   
        Canon E510 series   (EXPERIMENTAL)
