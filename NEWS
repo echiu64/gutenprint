@@ -276,6 +276,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Canon inkjets:
 
+       Canon MP210 series  (EXPERIMENTAL)(*1)
+       Canon PIXMA MP210   (EXPERIMENTAL)(*2)
+       Canon PIXMA MP218   (EXPERIMENTAL)(*2)
+
        Canon MP220 series  (EXPERIMENTAL)(*1)
        Canon PIXMA MP220   (EXPERIMENTAL)(*2)
        Canon PIXMA MP228   (EXPERIMENTAL)(*2)
