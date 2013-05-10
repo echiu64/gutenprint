@@ -287,7 +287,14 @@
       <printer translate="name" name="Canon PIXMA MP250" driver="bjc-MULTIPASS-MP250" manufacturer="Canon" model="5000250" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP250" />
       <printer translate="name" name="Canon PIXMA MP260" driver="bjc-MULTIPASS-MP260" manufacturer="Canon" model="5000240" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP260" />
       <printer translate="name" name="Canon PIXMA MP270" driver="bjc-MULTIPASS-MP270" manufacturer="Canon" model="5000270" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP270" />
+      <!-- Canon MP280 family -->
+      <printer translate="name" name="Canon MP280 series Printer" driver="bjc-MULTIPASS-MP280" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP280" />
       <printer translate="name" name="Canon PIXMA MP280" driver="bjc-MULTIPASS-MP280" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP280" />
+      <printer translate="name" name="Canon PIXUS MP280" driver="bjc-MULTIPASS-MP280" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP280" />
+      <printer translate="name" name="Canon PIXMA MP282" driver="bjc-MULTIPASS-MP282" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP282" />
+      <printer translate="name" name="Canon PIXMA MP287" driver="bjc-MULTIPASS-MP287" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP287" />
+      <printer translate="name" name="Canon PIXMA MP288" driver="bjc-MULTIPASS-MP288" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP288" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MP360" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
       <printer translate="name" name="Canon PIXMA MP370" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
       <printer translate="name" name="Canon PIXMA MP375R" driver="bjc-MULTIPASS-MP375R" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP375R" />
