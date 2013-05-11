@@ -330,12 +330,31 @@
       <printer translate="name" name="Canon PIXMA MP282" driver="bjc-MULTIPASS-MP282" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP282" />
       <printer translate="name" name="Canon PIXMA MP287" driver="bjc-MULTIPASS-MP287" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP287" />
       <printer translate="name" name="Canon PIXMA MP288" driver="bjc-MULTIPASS-MP288" manufacturer="Canon" model="5000280" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP288" />
-      <!-- -->
+      <!-- Canon MP360 family (exception: capital S) Also, PIXMA MP360 does not exit. -->
+      <printer translate="name" name="Canon MP360 Series Printer" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
       <printer translate="name" name="Canon PIXMA MP360" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
+      <printer translate="name" name="Canon PIXUS MP360" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
+      <printer translate="name" name="Canon SmartBase MP360" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
+      <printer translate="name" name="Canon SmartBase MP360S" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
+      <printer translate="name" name="Canon MultiPASS MP360" driver="bjc-MULTIPASS-MP360" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP360" />
+      <!-- Canon MP370 family (exception: capital S) Also, PIXMA MP370, MP375R do not exist. -->
+      <printer translate="name" name="Canon MP370 Series Printer" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
       <printer translate="name" name="Canon PIXMA MP370" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
+      <printer translate="name" name="Canon PIXUS MP370" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
+      <printer translate="name" name="Canon SmartBase MP370" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
+      <printer translate="name" name="Canon MultiPASS MP370" driver="bjc-MULTIPASS-MP370" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP370" />
+      <printer translate="name" name="Canon MP375 Printer" driver="bjc-MULTIPASS-MP375R" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP375R" />
       <printer translate="name" name="Canon PIXMA MP375R" driver="bjc-MULTIPASS-MP375R" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP375R" />
+      <printer translate="name" name="Canon PIXUS MP375R" driver="bjc-MULTIPASS-MP375R" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP375R" />
+      <!-- Canon MP390 family (exception: capital S) Also, PIXMA MP390 does not exist.-->
+      <printer translate="name" name="Canon MP390 Series Printer" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
       <printer translate="name" name="Canon PIXMA MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
+      <printer translate="name" name="Canon PIXUS MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
+      <printer translate="name" name="Canon SmartBase MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
+      <printer translate="name" name="Canon MultiPASS MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
+      <!-- Canon MP450 family (exception: capital S) -->
       <printer translate="name" name="Canon PIXMA MP450" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
+      <!-- Canon MP460 family -->
       <printer translate="name" name="Canon PIXMA MP460" driver="bjc-MULTIPASS-MP460" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP460" />
       <!-- Canon MP470 family -->
       <printer translate="name" name="Canon MP470 series Printer" driver="bjc-MULTIPASS-MP470" manufacturer="Canon" model="5000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP470" />
