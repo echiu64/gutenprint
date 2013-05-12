@@ -353,9 +353,13 @@
       <printer translate="name" name="Canon SmartBase MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
       <printer translate="name" name="Canon MultiPASS MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
       <!-- Canon MP450 family (exception: capital S) -->
+      <printer translate="name" name="Canon MP450 Series Printer" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
       <printer translate="name" name="Canon PIXMA MP450" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
-      <!-- Canon MP460 family -->
+      <printer translate="name" name="Canon PIXUS MP450" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
+      <!-- Canon MP460 family (no series) -->
+      <printer translate="name" name="Canon MP460 Printer" driver="bjc-MULTIPASS-MP460" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP460" />
       <printer translate="name" name="Canon PIXMA MP460" driver="bjc-MULTIPASS-MP460" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP460" />
+      <printer translate="name" name="Canon PIXUS MP460" driver="bjc-MULTIPASS-MP460" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP460" />
       <!-- Canon MP470 family -->
       <printer translate="name" name="Canon MP470 series Printer" driver="bjc-MULTIPASS-MP470" manufacturer="Canon" model="5000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP470" />
       <printer translate="name" name="Canon PIXMA MP470" driver="bjc-MULTIPASS-MP470" manufacturer="Canon" model="5000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP470" />
