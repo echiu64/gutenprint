@@ -382,19 +382,46 @@
       <printer translate="name" name="Canon PIXMA MP497" driver="bjc-MULTIPASS-MP497" manufacturer="Canon" model="5000490" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP497" />
       <printer translate="name" name="Canon PIXMA MP498" driver="bjc-MULTIPASS-MP498" manufacturer="Canon" model="5000490" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP498" />
       <printer translate="name" name="Canon PIXMA MP499" driver="bjc-MULTIPASS-MP499" manufacturer="Canon" model="5000490" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP499" />
-      <!-- -->
+      <!-- Canon MP500 family (exception: capital S) -->
+      <printer translate="name" name="Canon MP500 Series Printer" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
       <printer translate="name" name="Canon PIXMA MP500" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
+      <printer translate="name" name="Canon PIXUS MP500" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
+      <!-- Canon MP510 family (no series) -->
+      <printer translate="name" name="Canon MP510 Printer" driver="bjc-MULTIPASS-MP510" manufacturer="Canon" model="5000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP510" />
       <printer translate="name" name="Canon PIXMA MP510" driver="bjc-MULTIPASS-MP510" manufacturer="Canon" model="5000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP510" />
+      <printer translate="name" name="Canon PIXUS MP510" driver="bjc-MULTIPASS-MP510" manufacturer="Canon" model="5000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP510" />
+      <!-- Canon MP520 family -->
+      <printer translate="name" name="Canon MP520 series Printer" driver="bjc-MULTIPASS-MP520" manufacturer="Canon" model="5000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP520" />
       <printer translate="name" name="Canon PIXMA MP520" driver="bjc-MULTIPASS-MP520" manufacturer="Canon" model="5000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP520" />
+      <printer translate="name" name="Canon PIXUS MP520" driver="bjc-MULTIPASS-MP520" manufacturer="Canon" model="5000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP520" />
+      <!-- Canon MP530 family (exception: capital S) -->
+      <printer translate="name" name="Canon MP530 Series Printer" driver="bjc-MULTIPASS-MP530" manufacturer="Canon" model="5000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP530" />
       <printer translate="name" name="Canon PIXMA MP530" driver="bjc-MULTIPASS-MP530" manufacturer="Canon" model="5000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP530" />
+      <!-- Canon MP540 family -->
+      <printer translate="name" name="Canon MP540 series Printer" driver="bjc-MULTIPASS-MP540" manufacturer="Canon" model="5000540" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP540" />
       <printer translate="name" name="Canon PIXMA MP540" driver="bjc-MULTIPASS-MP540" manufacturer="Canon" model="5000540" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP540" />
+      <printer translate="name" name="Canon PIXUS MP540" driver="bjc-MULTIPASS-MP540" manufacturer="Canon" model="5000540" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP540" />
+      <printer translate="name" name="Canon PIXMA MP545" driver="bjc-MULTIPASS-MP545" manufacturer="Canon" model="5000540" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP545" />
+      <!-- Canon MP550 family -->
+      <printer translate="name" name="Canon MP550 series Printer" driver="bjc-MULTIPASS-MP550" manufacturer="Canon" model="5000550" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP550" />
       <printer translate="name" name="Canon PIXMA MP550" driver="bjc-MULTIPASS-MP550" manufacturer="Canon" model="5000550" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP550" />
+      <printer translate="name" name="Canon PIXUS MP550" driver="bjc-MULTIPASS-MP550" manufacturer="Canon" model="5000550" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP550" />
+      <printer translate="name" name="Canon PIXMA MP558" driver="bjc-MULTIPASS-MP558" manufacturer="Canon" model="5000550" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP558" />
+      <!-- Canon MP560 family -->
+      <printer translate="name" name="Canon MP560 series Printer" driver="bjc-MULTIPASS-MP560" manufacturer="Canon" model="5000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP560" />
       <printer translate="name" name="Canon PIXMA MP560" driver="bjc-MULTIPASS-MP560" manufacturer="Canon" model="5000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP560" />
+      <printer translate="name" name="Canon PIXUS MP560" driver="bjc-MULTIPASS-MP560" manufacturer="Canon" model="5000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP560" />
+      <printer translate="name" name="Canon PIXMA MP568" driver="bjc-MULTIPASS-MP568" manufacturer="Canon" model="5000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP568" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MP600" driver="bjc-MULTIPASS-MP600" manufacturer="Canon" model="5000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP600" />
       <printer translate="name" name="Canon PIXMA MP600R" driver="bjc-MULTIPASS-MP600R" manufacturer="Canon" model="5000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP600R" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MP610" driver="bjc-MULTIPASS-MP610" manufacturer="Canon" model="5000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP610" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MP620" driver="bjc-MULTIPASS-MP620" manufacturer="Canon" model="5000620" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP620" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MP630" driver="bjc-MULTIPASS-MP630" manufacturer="Canon" model="5000630" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP630" />
+      <!-- -->
       <printer translate="name" name="Canon PIXMA MP640" driver="bjc-MULTIPASS-MP640" manufacturer="Canon" model="5000640" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP640" />
       <!-- Canon MP700 family -->
       <printer translate="name" name="Canon MP700 Printer" driver="bjc-MULTIPASS-MP700" manufacturer="Canon" model="5000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP700" />
