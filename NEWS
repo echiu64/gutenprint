@@ -616,6 +616,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA iP2770  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2772  (EXPERIMENTAL)(*2)
        Canon PIXMA iP2780  (EXPERIMENTAL)(*2)
+       Canon PIXMA iP2788  (EXPERIMENTAL)(*2)
+
+       Canon iP3100 series (EXPERIMENTAL)(*1)
+
+       Canon iP3300 series (EXPERIMENTAL)(*1)
+       Canon PIXUS iP3300  (EXPERIMENTAL)(*2)
+
+       Canon iP3500 series (EXPERIMENTAL)(*1)
+       Canon PIXUS iP3500  (EXPERIMENTAL)(*2)
 
        Canon iP3600 series (EXPERIMENTAL)(*1)
        Canon PIXUS iP3600  (EXPERIMENTAL)(*2)
@@ -921,6 +930,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:
 
+       Canon PIXMA iP1180
+       Canon PIXMA iP1188
        Canon PIXMA iP1880
        Canon PIXMA iP1980
        Canon PIXMA iP2580
