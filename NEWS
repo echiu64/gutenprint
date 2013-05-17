@@ -1021,9 +1021,17 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   4) Added duplex support for the EPSON WorkForce 645.
 
-  5) Added Catalan translation.
+  5) Added IEEE1284 device IDs for the following printers.
 
-  6) Updated support for the Sony UP-DR150 Photo Printer
+     - Device IDs added for the following Canon printers:
+       Canon SELPHY ES1
+       Canon SELPHY ES2
+       Canon SELPHY CP-220
+       Canon SELPHY CP710
+
+  6) Added Catalan translation.
+
+  7) Updated support for the Sony UP-DR150 Photo Printer
 
 	Its output now matches the current Windows drivers.
 

@@ -2499,7 +2499,7 @@
       <printer translate="name" name="Canon CP-10" driver="canon-cp10" manufacturer="Canon" model="1002" foomaticid="Canon-CP-10" />
       <printer translate="name" name="Canon CP-100" driver="canon-cp100" manufacturer="Canon" model="1000" foomaticid="Canon-CP-100" />
       <printer translate="name" name="Canon CP-200" driver="canon-cp200" manufacturer="Canon" model="1000" foomaticid="Canon-CP-200" />
-      <printer translate="name" name="Canon CP-220" driver="canon-cp220" manufacturer="Canon" model="1001" foomaticid="Canon-CP-220" />
+      <printer translate="name" name="Canon CP-220" deviceid="MFG:Canon;CMD:Raster3;MDL:CP-220;CLS:PRINTER;DES:Canon CP-220;VER:1.00;" driver="canon-cp220" manufacturer="Canon" model="1001" foomaticid="Canon-CP-220" />
       <printer translate="name" name="Canon CP-300" driver="canon-cp300" manufacturer="Canon" model="1000" foomaticid="Canon-CP-300" />
       <printer translate="name" name="Canon CP-330" driver="canon-cp330" manufacturer="Canon" model="1001" foomaticid="Canon-CP-330" />
       <printer translate="name" name="Canon SELPHY CP400" driver="canon-cp400" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP400" />
@@ -2508,7 +2508,7 @@
       <printer translate="name" name="Canon SELPHY CP520" driver="canon-cp520" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP520" />
       <printer translate="name" name="Canon SELPHY CP530" driver="canon-cp530" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP530" />
       <printer translate="name" name="Canon SELPHY CP600" driver="canon-cp600" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP600" />
-      <printer translate="name" name="Canon SELPHY CP710" driver="canon-cp710" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP710" />
+      <printer translate="name" name="Canon SELPHY CP710" deviceid="MFG:Canon;CMD:Raster3;MDL:CP710;CLS:PRINTER;DES:Canon CP710;VER:1.00;" driver="canon-cp710" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP710" />
       <printer translate="name" name="Canon SELPHY CP720" driver="canon-cp720" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP720" />
       <printer translate="name" name="Canon SELPHY CP730" driver="canon-cp730" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP730" />
       <printer translate="name" name="Canon SELPHY CP740" driver="canon-cp740" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP740" />
@@ -2520,8 +2520,8 @@
       <printer translate="name" name="Canon SELPHY CP800" driver="canon-cp800" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP800" />
       <printer translate="name" name="Canon SELPHY CP810" driver="canon-cp810" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP810" />
       <printer translate="name" name="Canon SELPHY CP900" driver="canon-cp900" manufacturer="Canon" model="1010" foomaticid="Canon-SELPHY-CP900" />
-      <printer translate="name" name="Canon SELPHY ES1" driver="canon-es1" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES1" />
-      <printer translate="name" name="Canon SELPHY ES2" driver="canon-es2" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES2" />
+      <printer translate="name" name="Canon SELPHY ES1" deviceid="MFG:Canon;CMD:Raster3;MDL:ES1;CLS:PRINTER;DES:Canon SELPHY ES1;VER:1.00;" driver="canon-es1" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES1" />
+      <printer translate="name" name="Canon SELPHY ES2" deviceid="MFG:Canon;CMD:Raster3;MDL:ES2;CLS:PRINTER;DES:Canon SELPHY ES2;VER:1.00;" driver="canon-es2" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES2" />
       <printer translate="name" name="Canon SELPHY ES3" driver="canon-es3" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES3" />
       <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES20" />
       <printer translate="name" name="Canon SELPHY ES30" driver="canon-es30" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES30" />
