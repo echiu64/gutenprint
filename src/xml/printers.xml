@@ -158,7 +158,7 @@
       <printer translate="name" name="Canon PIXMA iP100" driver="bjc-PIXMA-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP100" />
       <printer translate="name" name="Canon PIXMA iP2000" driver="bjc-PIXMA-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2000" />
       <!-- Canon iP2700 family -->
-      <printer translate="name" name="Canon iP2700 series" driver="bjc-PIXMA-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2700" />
+      <printer translate="name" name="Canon iP2700 series" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe,IVEC,IVECPLI;SOJ:TXT01;MDL:iP2700 series;CLS:PRINTER;DES:Canon iP2700 series;VER:1.030;STA:30;FSI:00;HRI:EU;MSI:AOFF,BOFF,DAT,E3;PDR:4;" driver="bjc-iP2700-series" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP2700-series" />
       <printer translate="name" name="Canon PIXMA iP2700" driver="bjc-PIXMA-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2700" />
       <printer translate="name" name="Canon PIXUS iP2700" driver="bjc-PIXUS-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP2700" />
       <printer translate="name" name="Canon PIXMA iP2701" driver="bjc-PIXMA-iP2701" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2701" />
