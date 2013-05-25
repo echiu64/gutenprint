@@ -260,6 +260,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Epson inkjets:
 
        EPSON Stylus TX125
+       EPSON Stylus C92
+       Epson Stylus D78
        EPSON WorkForce WF-7010 (EXPERIMENTAL)
        EPSON WorkForce WF-7011 (EXPERIMENTAL)
        EPSON WorkForce WF-7015 (EXPERIMENTAL)
@@ -1035,7 +1037,28 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP800
        Canon iP2700 series
        Canon PIXMA iP3000
+       Canon PIXMA iP4000 (possibly incomplete)
+       Canon PIXMA iP4200 (possibly incomplete)
+       Canon Pro9000 II series (possibly incomplete)
+       Canon MP250 series
+       Canon MP280 series (possibly incomplete)
        Epson Stylus Photo 1270
+       Epson Stylus Photo R2400
+       Epson Stylus C92
+       Epson Stylus D78
+       Epson Stylus Color 680
+       Brother HL-2030 series
+       HP Color LaserJet 2500
+       HP Color LaserJet 4550 (added space in DES)
+       HP LaserJet 4050 (added space in DES)
+       HP LaserJet 4100 (added space in DES)
+       HP LaserJet 4350 (improved)
+       HP LaserJet 5100
+       HP LaserJet 8000
+       HP LaserJet M3027 MFP (corrected)
+       HP LaserJet M3035 MFP (corrected)
+       HP LaserJet P3005 (corrected)
+       Samsung ML-1450 (possibly incomplete)
 
   6) Added Catalan translation.
 
