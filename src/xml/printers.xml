@@ -170,7 +170,7 @@
       <printer translate="name" name="Canon PIXMA iP2780" driver="bjc-PIXMA-iP2780" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2780" />
       <printer translate="name" name="Canon PIXMA iP2788" driver="bjc-PIXMA-iP2788" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2788" />
       <!-- Canon iP3000 family (exception: family name same as instance name) -->
-      <printer translate="name" name="Canon PIXMA iP3000" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000" />
+      <printer translate="name" name="Canon PIXMA iP3000" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe;SOJ:TXT01;MDL:iP3000;CLS:PRINTER;DES:Canon iP3000;VER:1.06;STA:10;FSI:03;" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000" />
       <!-- Canon iP3100 family (exception: family name same as instance name) Also PIXUS only, PIXMA iP3100 does not exist -->
       <printer translate="name" name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3100" />
       <printer translate="name" name="Canon PIXMA iP3100" driver="bjc-PIXMA-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3100" />
@@ -1123,7 +1123,8 @@
       <printer translate="name" name="Epson Stylus Photo 950" driver="escp2-950" manufacturer="Epson" model="46" parameters="standard_params" foomaticid="Epson-Stylus_Photo_950" />
       <printer translate="name" name="Epson Stylus Photo 960" driver="escp2-960" manufacturer="Epson" model="46" parameters="standard_params" foomaticid="Epson-Stylus_Photo_960" />
       <printer translate="name" name="Epson Stylus Photo 1200" driver="escp2-1200" manufacturer="Epson" model="15" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1200" />
-      <printer translate="name" name="Epson Stylus Photo 1270" driver="escp2-1270" manufacturer="Epson" model="23" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1270" />
+      <printer translate="name" name="Epson Stylus Photo 1270" deviceid="MFG:EPSON;MDL:Stylus Photo 1270;DES:EPSON Stylus Photo 1270;CMD:ESCPL2,BDC,D4;CLS:PRINTER;
+" driver="escp2-1270" manufacturer="Epson" model="23" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1270" />
       <printer translate="name" name="Epson Stylus Photo 1280" driver="escp2-1280" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1280" />
       <printer translate="name" name="Epson Stylus Photo 1290" driver="escp2-1290" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1290" />
       <printer translate="name" name="Epson Stylus Photo 1290s" driver="escp2-1290s" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1290s" />
@@ -2502,7 +2503,7 @@
       <printer translate="name" name="Canon CP-220" deviceid="MFG:Canon;CMD:Raster3;MDL:CP-220;CLS:PRINTER;DES:Canon CP-220;VER:1.00;" driver="canon-cp220" manufacturer="Canon" model="1001" foomaticid="Canon-CP-220" />
       <printer translate="name" name="Canon CP-300" driver="canon-cp300" manufacturer="Canon" model="1000" foomaticid="Canon-CP-300" />
       <printer translate="name" name="Canon CP-330" driver="canon-cp330" manufacturer="Canon" model="1001" foomaticid="Canon-CP-330" />
-      <printer translate="name" name="Canon SELPHY CP400" driver="canon-cp400" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP400" />
+      <printer translate="name" name="Canon SELPHY CP400" deviceid="MFG:Canon;CMD:Raster3;MDL:CP400;CLS:PRINTER;DES:Canon CP400;VER:1.00;" driver="canon-cp400" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP400" />
       <printer translate="name" name="Canon SELPHY CP500" driver="canon-cp500" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP500" />
       <printer translate="name" name="Canon SELPHY CP510" deviceid="MFG:Canon;CMD:Raster3;MDL:CP510;CLS:PRINTER;DES:Canon CP510;VER:1.00;" driver="canon-cp510" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP510" />
       <printer translate="name" name="Canon SELPHY CP520" driver="canon-cp520" manufacturer="Canon" model="1001" foomaticid="Canon-SELPHY-CP520" />
