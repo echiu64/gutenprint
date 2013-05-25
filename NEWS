@@ -912,8 +912,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon Pro9500 II series (EXPERIMENTAL)(*1)
        Canon PIXUS Pro9500 II  (EXPERIMENTAL)(*2)
 
-
-
        Note 1: Added the printer family
                identification string by
                which all family instances
@@ -1043,12 +1041,18 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon MP160 (possibly incomplete)
        Canon MP250 series
        Canon MP280 series (possibly incomplete)
+
+     - Device IDs added for the following Epson printers:
        Epson Stylus Photo 1270
        Epson Stylus Photo R2400
        Epson Stylus C92
        Epson Stylus D78
        Epson Stylus Color 680
+
+     - Device IDs added for the following Bother printers:
        Brother HL-2030 series
+
+     - Device IDs added for the following Hewlett-Packard printers:
        HP Color LaserJet 2500
        HP Color LaserJet 4550 (added space in DES)
        HP LaserJet 4050 (added space in DES)
@@ -1059,7 +1063,12 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        HP LaserJet M3027 MFP (corrected)
        HP LaserJet M3035 MFP (corrected)
        HP LaserJet P3005 (corrected)
+
+     - Device IDs added for the following Samsung printers:
        Samsung ML-1450 (possibly incomplete)
+
+     - Device IDs added for the following Kyocera printers:
+       Kyocera FS-1118MFP
 
   6) Added Catalan translation.
 
