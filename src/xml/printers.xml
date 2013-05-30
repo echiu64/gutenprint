@@ -426,7 +426,7 @@
       <printer translate="name" name="Canon SmartBase MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
       <printer translate="name" name="Canon MultiPASS MP390" driver="bjc-MULTIPASS-MP390" manufacturer="Canon" model="5000360" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP390" />
       <!-- Canon MP450 family (exception: capital S) -->
-      <printer translate="name" name="Canon MP450 Series Printer" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
+      <printer translate="name" name="Canon MP450 Series Printer" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe;MDL:MP450;DES:Canon MP450;CLS:PRINTER;VER:1.08;STA:10;HRI:JP;SOJ:TXT01;" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
       <printer translate="name" name="Canon PIXMA MP450" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
       <printer translate="name" name="Canon PIXUS MP450" driver="bjc-MULTIPASS-MP450" manufacturer="Canon" model="5000450" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP450" />
       <!-- Canon MP460 family (no series) -->
