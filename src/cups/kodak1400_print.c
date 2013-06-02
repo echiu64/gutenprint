@@ -27,25 +27,26 @@
 
 #include <arpa/inet.h>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <signal.h>
 
 #include <libusb-1.0/libusb.h>
 
-#define VERSION "0.07"
+#define VERSION "0.09"
 #define STR_LEN_MAX 64
 #define CMDBUF_LEN 96
 #define READBACK_LEN 8
 #define URI_PREFIX "kodak1400://"
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
-#define ERROR( ... ) fprintf(stderr, "ERROR: " __VA_ARGS__ )
+#define INFO( ... )  fprintf(stderr, "INFO: " __VA_ARGS__ )
+#define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
 #define le32_to_cpu(__x) __x
@@ -163,15 +164,15 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		if (scan_only) {
 			/* URL-ify model. */
 			char buf[128]; // XXX ugly..
-			i = 0;
-			while (*(product + i + strlen("Kodak"))) {
-				buf[i] = *(product + i + strlen("Kodak "));
-				if(buf[i] == ' ') {
-					buf[i++] = '%';
-					buf[i++] = '2';
-					buf[i] = '0';
+			int j = 0;
+			while (*(product + j + strlen("Kodak"))) {
+				buf[j] = *(product + i + strlen("Kodak "));
+				if(buf[j] == ' ') {
+					buf[j++] = '%';
+					buf[j++] = '2';
+					buf[j] = '0';
 				}
-				i++;
+				j++;
 			}
 			fprintf(stdout, "direct %sKodak/%s?serial=%s \"%s\" \"%s\" \"MFG:Kodak;CMD:Kodak1400Raster;CLS:PRINTER;MDL:%s;DES:%s;SN:%s\" \"\"\n", URI_PREFIX,
 			        buf, serial, product, product,
@@ -200,7 +201,7 @@ static int send_data(struct libusb_device_handle *dev, uint8_t endp,
 				       &num, 5000);
 
 	if (ret < 0) {
-		ERROR("libusb error %d: (%d/%d to 0x%02x)\n", ret, num, len, endp);
+		ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, len, endp);
 		return ret;
 	}
 	return 0;
@@ -265,6 +266,13 @@ static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
 	return 0;
 }
 
+static int terminate = 0;
+
+void sigterm_handler(int signum) {
+	terminate = 1;
+	INFO("Job Cancelled");
+}
+
 int main (int argc, char **argv) 
 {
 	struct libusb_context *ctx;
@@ -285,6 +293,7 @@ int main (int argc, char **argv)
 	int ret = 0;
 	int iface = 0;
 	int found = -1;
+	int copies = 1;
 	char *uri = getenv("DEVICE_URI");;
 	char *use_serno = NULL;
 
@@ -308,6 +317,8 @@ int main (int argc, char **argv)
 
 	/* Are we running as a CUPS backend? */
 	if (uri) {
+		if (argv[4])
+			copies = atoi(argv[4]);
 		if (argv[6]) {  /* IOW, is it specified? */
 			data_fd = open(argv[6], O_RDONLY);
 			if (data_fd < 0) {
@@ -349,6 +360,10 @@ int main (int argc, char **argv)
 			}
 		}
 	}
+
+	/* Ignore SIGPIPE */
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGTERM, sigterm_handler);
 
 	/* Read in then validate header */
 	read(data_fd, &hdr, sizeof(hdr));
@@ -399,20 +414,21 @@ int main (int argc, char **argv)
 			} while (remain);
 		}
 	}
+	close(data_fd); /* We're done reading! */
 
 	/* Libusb setup */
 	libusb_init(&ctx);
 	found = find_and_enumerate(ctx, &list, use_serno, 0);
 
 	if (found == -1) {
-		ERROR("No suitable printers found!\n");
+		ERROR("Printer open failure (No suitable printers found!)\n");
 		ret = 3;
 		goto done;
 	}
 
 	ret = libusb_open(list[found], &dev);
 	if (ret) {
-		ERROR("Could not open device (Need to be root?) (%d)\n", ret);
+		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
 		ret = 4;
 		goto done;
 	}
@@ -421,7 +437,7 @@ int main (int argc, char **argv)
 	if (claimed) {
 		ret = libusb_detach_kernel_driver(dev, iface);
 		if (ret) {
-			ERROR("Could not detach printer from kernel (%d)\n", ret);
+			ERROR("Printer open failure (Could not detach printer from kernel)\n");
 			ret = 4;
 			goto done_close;
 		}
@@ -429,14 +445,14 @@ int main (int argc, char **argv)
 
 	ret = libusb_claim_interface(dev, iface);
 	if (ret) {
-		ERROR("Could not claim printer interface (%d)\n", ret);
+		ERROR("Printer open failure (Could not claim printer interface)\n");
 		ret = 4;
 		goto done_close;
 	}
 
 	ret = libusb_get_active_config_descriptor(list[found], &config);
 	if (ret) {
-		ERROR("Could not fetch config descriptor (%d)\n", ret);
+		ERROR("Printer open failure (Could not fetch config descriptor)\n");
 		ret = 4;
 		goto done_close;
 	}
@@ -470,7 +486,7 @@ top:
 				   2000);
 
 	if (ret < 0) {
-		ERROR("libusb error %d: (%d/%d from 0x%02x)\n", ret, num, READBACK_LEN, endp_up);
+		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, endp_up);
 		ret = 4;
 		goto done_claimed;
 	}
@@ -491,12 +507,14 @@ top:
 
 	switch (state) {
 	case S_IDLE:
+		INFO("Printing started\n");
+
 		/* Send reset/attention */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 
 		if ((ret = send_data(dev, endp_down,
-				    cmdbuf, CMDBUF_LEN)))
+				     cmdbuf, CMDBUF_LEN)))
 			goto done_claimed;
 
 		/* Send page setup */
@@ -619,8 +637,20 @@ top:
 
 	if (state != S_FINISHED)
 		goto top;
-	
-	/* All done, clean up */
+
+	/* Clean up */
+	if (terminate)
+		copies = 1;
+
+	INFO("Print complete (%d remaining)\n", copies - 1);
+
+	if (copies && --copies) {
+		state = S_IDLE;
+		goto top;
+	}
+
+	/* Done printing */
+	INFO("All printing done\n");
 	ret = 0;
 
 done_claimed:
@@ -643,8 +673,6 @@ done:
 
 	libusb_free_device_list(list, 1);
 	libusb_exit(ctx);
-
-	close(data_fd);
 
 	return ret;
 }
