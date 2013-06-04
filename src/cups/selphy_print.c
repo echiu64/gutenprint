@@ -551,15 +551,16 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		if (valid && scan_only) {
 			/* URL-ify model. */
 			char buf[128]; // XXX ugly..
-			int j = 0;
+			int j = 0, k = 0;
 			char *ieee_id;
 			while (*(product + j + strlen("Canon"))) {
-				buf[j] = *(product + j + strlen("Canon "));
-				if(buf[j] == ' ') {
-					buf[j++] = '%';
-					buf[j++] = '2';
-					buf[j] = '0';
+				buf[k] = *(product + j + strlen("Canon "));
+				if(buf[k] == ' ') {
+					buf[k++] = '%';
+					buf[k++] = '2';
+					buf[k] = '0';
 				}
+				k++;
 				j++;
 			}
 			ieee_id = get_device_id(dev);
