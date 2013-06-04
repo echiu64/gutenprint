@@ -373,6 +373,60 @@ static int read_data(int remaining, int present, int data_fd, uint8_t *target,
 	return wrote;
 }
 
+#define ID_BUF_SIZE 2048
+static char *get_device_id(struct libusb_device_handle *dev)
+{
+	int   length;
+	int claimed = 0;
+	int iface = 0;
+	char *buf = malloc(ID_BUF_SIZE + 1);
+
+	claimed = libusb_kernel_driver_active(dev, iface);
+	if (claimed)
+		libusb_detach_kernel_driver(dev, iface);
+
+	libusb_claim_interface(dev, iface);
+
+	if (libusb_control_transfer(dev,
+				    LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_ENDPOINT_IN |
+				    LIBUSB_RECIPIENT_INTERFACE,
+				    0, 0,
+				    (iface << 8),
+				    (unsigned char *)buf, ID_BUF_SIZE, 5000) < 0)
+	{
+		*buf = '\0';
+		goto done;
+	}
+
+	/* length is the first two bytes, MSB first */
+	length = (((unsigned)buf[0] & 255) << 8) |
+		((unsigned)buf[1] & 255);
+
+	/* Sanity checks */
+	if (length > ID_BUF_SIZE || length < 14)
+		length = (((unsigned)buf[1] & 255) << 8) |
+			((unsigned)buf[0] & 255);
+	
+	if (length > ID_BUF_SIZE)
+		length = ID_BUF_SIZE;
+	
+	if (length < 14) {
+		*buf = '\0';
+		goto done;
+	}
+
+	/* Move, and terminate */
+	memmove(buf, buf + 2, length);
+	buf[length] = '\0';
+
+done:
+	libusb_release_interface(dev, iface);
+	if (claimed)
+		libusb_attach_kernel_driver(dev, iface);
+
+	return buf;
+}
+
 static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      char *match_serno,
@@ -487,7 +541,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		}
 
 		if (!strlen((char*)serial))
-		  strcpy((char*)serial, "NONE");
+			strcpy((char*)serial, "NONE");
 
 		DEBUG("%s%sPID: %04X Product: '%s' Serial: '%s'\n",
 		      (!valid) ? "UNRECOGNIZED: " : "",
@@ -498,6 +552,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			/* URL-ify model. */
 			char buf[128]; // XXX ugly..
 			int j = 0;
+			char *ieee_id;
 			while (*(product + j + strlen("Canon"))) {
 				buf[j] = *(product + j + strlen("Canon "));
 				if(buf[j] == ' ') {
@@ -507,9 +562,14 @@ static int find_and_enumerate(struct libusb_context *ctx,
 				}
 				j++;
 			}
-			fprintf(stdout, "direct %sCanon/%s?serial=%s \"%s\" \"%s\" \"MFG:Canon;CMD:SelphyRaster;CLS:PRINTER;MDL:%s;DES:%s;SN:%s\" \"\"\n", URI_PREFIX,
+			ieee_id = get_device_id(dev);
+
+			fprintf(stdout, "direct %sCanon/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n", URI_PREFIX,
 			        buf, serial, product, product,
-				product + strlen("Canon "), product, serial);
+				ieee_id);
+
+			if (ieee_id)
+				free(ieee_id);
 		}
 
 		/* If a serial number was passed down, use it. */
