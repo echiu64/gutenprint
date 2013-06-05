@@ -936,6 +936,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Canon dye-sublimation printers:
 
+       Support for all Canon SELPHY CP- and ES- printers has been improved
+       considerably through the addition of an intelligent CUPS backend.  As
+       well as enabling support for more recent printers, it improves support
+       for older models as well.
+
+       Newly added in this release:
+
        Canon SELPHY CP810
        Canon SELPHY CP900
 
@@ -943,7 +950,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Canon SELPHY CP600 *1
        Canon SELPHY CP720 
-       Canon SELPHY CP780 (including improved support)
+       Canon SELPHY CP780
        Canon SELPHY CP800
        Canon SELPHY ES1
        Canon SELPHY ES2
@@ -952,20 +959,32 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY ES30
        Canon SELPHY ES40
 
-       Improved support:
+       Improved support for existing models:
 
+       Canon CP-100
+       Canon CP-200
        Canon CP-220       *1
+       Canon CP-300
+       Canon CP-330
+       Canon SELPHY CP400
+       Canon SELPHY CP500
+       Canon SELPHY CP510
        Canon SELPHY CP520 *1
        Canon SELPHY CP530 *1
+       Canon SELPHY CP710
+       Canon SELPHY CP730
        Canon SELPHY CP740
        Canon SELPHY CP750
        Canon SELPHY CP760
        Canon SELPHY CP770
+       Canon SELPHY CP790
 
-       The intelligent CUPS spooler required to support the 
-       SELPHY CP and ES models is now part of the gutenprint package.
-       The USB PIDs for the following two SELPHY CP series models
-       are still missing, and therefore unsupported in the spooler:
+       Known Problematic models:
+
+       Canon CP-10        *2
+
+       The USB PIDs for the following two SELPHY CP series models are 
+       still unknown, and are therefore unsupported by the spooler:
 
        Canon SELPHY CP520
        Canon SELPHY CP790
@@ -973,21 +992,25 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	*1: We have not confirmed these printers function with the new
 	    backend, but they are presumed to work.
 
+	*2: The CP-10 requires power cycling between prints, for unknown 
+	    reasons.
+
      - Mitsubishi Dye-Sublimation printers:
 
        Mitsubishi CP3020D/DU/DE (EXPERIMENTAL)
        Mitsubishi CP3020DA/DAE  (EXPERIMENTAL)
        Mitsubishi CP9550D/DW    (EXPERIMENTAL)
+       Mitsubishi CP9810D/DW    (EXPERIMENTAL)
 
-	None of these have been tested and confirmed to work (or not), so 
-	feedback is welcome.  
+	None of these models have been tested and confirmed to work 
+	(or not), so feedback is welcome. 
 
      - Kodak Dye-Sublimation printers:
 
        Kodak 1400
 
-	The Kodak 1400 requires an intelligent spooler/backend, which is
-	bundled with this release.
+	The Kodak 1400 requires an intelligent CUPS backend, which is now
+	bundled with Gutenprint.
 
        Kodak 6800 (EXPERIMENTAL)
        Kodak 6850 (EXPERIMENTAL)
@@ -996,10 +1019,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Kodak 9810 (EXPERIMENTAL)
        Kodak 8500 (EXPERIMENTAL)
 
-	None of these have been tested and confirmed to work (or not), so 
-	feedback is welcome.  In particular, he 805 is an updated version
-	of the 1400, and presumably requires changes to the spooler in order
-	to function properly.
+	None of these models have been tested and confirmed to work 
+	(or not), so feedback is welcome.
 	
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
@@ -1026,13 +1047,20 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Device IDs added for the following Canon printers:
        Canon SELPHY ES1
        Canon SELPHY ES2
+       Canon SELPHY ES3
+       Canon SELPHY ES30
+       Canon SELPHY CP-100
+       Canon SELPHY CP-200
        Canon SELPHY CP-220
+       Canon SELPHY CP-330
        Canon SELPHY CP400
        Canon SELPHY CP510
        Canon SELPHY CP600
        Canon SELPHY CP710
+       Canon SELPHY CP720
        Canon SELPHY CP750
        Canon SELPHY CP760
+       Canon SELPHY CP780
        Canon SELPHY CP800
        Canon iP2700 series
        Canon PIXMA iP3000
