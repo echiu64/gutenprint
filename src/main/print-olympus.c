@@ -2149,7 +2149,8 @@ static void mitsu_cp3020da_plane_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  dyesub_nputc(v, 0x00, 3);
+  stp_putc((privdata.bpp > 8) ? 0x10: 0x00, v);
+  dyesub_nputc(v, 0x00, 2);
   stp_put16_be(0, v); /* Starting row for this block */
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v); /* Number of rows in this block */
@@ -2185,13 +2186,13 @@ LIST(dyesub_pagesize_list_t, mitsu_cp9550_page_list, dyesub_pagesize_t, mitsu_cp
 
 static const dyesub_printsize_t mitsu_cp9550_printsize[] =
 {
-  { "346x346", "B7", 1812, 2140},
-  { "346x346", "w288h432", 2152, 1416},
+  { "346x346", "B7", 1240, 1812},
+  { "346x346", "w288h432", 1416, 2152},
   { "346x346", "w360h504", 1812, 2402},
   { "346x346", "w432h576", 2152, 2792},
   { "346x346", "w432h612", 2152, 2956},
   { "346x346", "w432h648", 2152, 3146},
-  { "346x346", "Custom", 2152, 1416},
+  { "346x346", "Custom", 1416, 2152},
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cp9550_printsize_list, dyesub_printsize_t, mitsu_cp9550_printsize);
@@ -2224,9 +2225,9 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 19);
   stp_putc(0x01, v);  /* This is Copies on other models.. */
   dyesub_nputc(v, 0x00, 2);
-  stp_putc(0x00, v); // XXX 00 == normal, 83 = cut2x6
+  stp_putc(0x00, v); /* XXX 00 == normal, 83 = cut2x6 */
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(0x00, v); // XXX 00 == normal, 80 = fine
+  stp_putc(0x00, v); /* XXX 00 == normal, 80 = fine */
   dyesub_nputc(v, 0x00, 10);
   stp_putc(0x01, v);
   /* Parameters 2 */
@@ -2237,7 +2238,7 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_putc(0x40, v);
   dyesub_nputc(v, 0x00, 5);
-  stp_putc(0x00, v);  // XXX 00 == normal, 01 == finedeep (some models only)
+  stp_putc(0x00, v);  /* XXX 00 == normal, 01 == finedeep (some models only) */
   dyesub_nputc(v, 0x00, 38);
   /* Unknown */
   stp_putc(0x1b, v);
@@ -2259,6 +2260,141 @@ static void mitsu_cp9550_printer_end(stp_vars_t *v)
   stp_putc(0x50, v);
   stp_putc(0x46, v);
   stp_putc(0x00, v);
+}
+
+/* Mitsubishi 9810D/DW */
+static const dyesub_pagesize_t mitsu_cp9810_page[] =
+{
+  { "B7", "3.5x5", PT(1076,300)+1, PT(1572,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1228,300)+1, PT(1868,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1868,300)+1, PT(2442,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h612", "6x8.5", PT(1868,300)+1, PT(2564,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1868,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "Custom", NULL, PT(1220,300)+1, PT(1868,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cp9810_page_list, dyesub_pagesize_t, mitsu_cp9810_page);
+
+static const dyesub_printsize_t mitsu_cp9810_printsize[] =
+{
+  { "300x300", "B7", 1076, 1572},
+  { "300x300", "w288h432", 1228, 1868},
+  { "300x300", "w360h504", 1572, 2128},
+  { "300x300", "w432h576", 1868, 2442},
+  { "300x300", "w432h612", 1868, 2564},
+  { "300x300", "w432h648", 1868, 2730},
+  { "300x300", "Custom", 1220, 1868},
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cp9810_printsize_list, dyesub_printsize_t, mitsu_cp9810_printsize);
+
+static const laminate_t mitsu_cp9810_laminate[] =
+{
+  {"Matte", N_("Matte"), {1, "\x01"}},
+  {"None",  N_("None"),  {1, "\x00"}},
+};
+
+LIST(laminate_list_t, mitsu_cp9810_laminate_list, laminate_t, mitsu_cp9810_laminate);
+
+static void mitsu_cp9810_printer_init(stp_vars_t *v)
+{
+  /* Init */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x20, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x0a, v);
+  stp_putc(0x90, v);
+  dyesub_nputc(v, 0x00, 7);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+	      (privdata.laminate->seq).bytes, v); /* Lamination */
+  dyesub_nputc(v, 0x00, 31);
+  /* Parameters 1 */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x21, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x80, v);
+  stp_putc(0x00, v);
+  stp_putc(0x22, v);
+  stp_putc(0x08, v);
+  stp_putc(0x01, v);
+  dyesub_nputc(v, 0x00, 19);
+  stp_putc(0x01, v); /* Copies */
+  dyesub_nputc(v, 0x00, 8);
+  stp_putc(0x80, v); /* XXX 10 == Fine, 80 = SuperFine (required for lamination) */
+  dyesub_nputc(v, 0x00, 10);
+  stp_putc(0x01, v);
+  /* Unknown */
+  stp_putc(0x1b, v);
+  stp_putc(0x57, v);
+  stp_putc(0x26, v);
+  stp_putc(0x2e, v);
+  stp_putc(0x00, v);
+  stp_putc(0x70, v);
+  dyesub_nputc(v, 0x00, 6);
+  stp_putc(0x01, v);
+  stp_putc(0x01, v);
+  dyesub_nputc(v, 0x00, 36);
+}
+
+static void mitsu_cp9810_printer_end(stp_vars_t *v)
+{
+  /* Job Footer */
+  stp_putc(0x1b, v);
+  stp_putc(0x50, v);
+  stp_putc(0x4c, v);
+  stp_putc(0x00, v);
+
+  if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
+
+    /* Generate a full plane of lamination data */
+
+    /* The Windows drivers generate a lamination pattern consisting of
+       four values: 0x0202, 0x01f1, 0x0808, 0x0737 in roughly a 16:10:4:1
+       ratio. 
+
+       There seem to be some patterns but more analysis is needed.
+    */
+
+    int r, c;
+
+    mitsu_cp3020da_plane_init(v); /* First generate plane header */
+
+    /* Now generate lamination pattern */
+    for (c = 0 ; c < privdata.w_size ; c++) {
+      for (r = 0 ; r < privdata.h_size ; r++) {
+	int i = rand() & 0x1f;
+	if (i < 16)
+	  stp_put16_be(0x0202, v);
+	else if (i < 26)
+	  stp_put16_be(0x01f1, v);
+	else if (i < 30)
+	  stp_put16_be(0x0808, v);
+	else
+	  stp_put16_be(0x0737, v);
+      }
+    }
+
+    /* Lamination Footer */
+    stp_putc(0x1b, v);
+    stp_putc(0x50, v);
+    stp_putc(0x56, v);
+    stp_putc(0x00, v);
+  }
+
 }
 
 /* Shinko CHC-S9045 (experimental) */
@@ -2920,6 +3056,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     NULL, NULL,
+  },
+  { /* Mitsubishi CP9810D */
+    4104,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &mitsu_cp9810_page_list,
+    &mitsu_cp9810_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP,
+    &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
+    &mitsu_cp3020da_plane_init, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &mitsu_cp9810_laminate_list, NULL,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
