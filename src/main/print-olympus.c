@@ -54,6 +54,7 @@
 #define DYESUB_FEATURE_ROW_INTERLACE	0x00000080
 #define DYESUB_FEATURE_12BPP	0x00000100
 #define DYESUB_FEATURE_16BPP	0x00000200
+#define DYESUB_FEATURE_BIGENDIAN 0x00000400
 
 #define DYESUB_PORTRAIT	0
 #define DYESUB_LANDSCAPE	1
@@ -177,6 +178,7 @@ typedef struct {
   const char *ink_order;
   int bytes_per_ink_channel;
   int bits_per_ink_channel;
+  int byteswap;
   int plane_interlacing;
   int row_interlacing;
   char empty_byte;
@@ -3065,7 +3067,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp9810_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_12BPP
+      | DYESUB_FEATURE_BIGENDIAN,
     &mitsu_cp9810_printer_init, &mitsu_cp9810_printer_end,
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
@@ -3805,12 +3808,17 @@ dyesub_print_pixel(stp_vars_t *v,
       for (i = 0; i < pv->ink_channels; i++)
 	ink[i] = ink[i] >> (16 - pv->bits_per_ink_channel);
     }
-	
+
+  /* Byteswap as needed */
+  if (pv->bytes_per_ink_channel == 2 && pv->byteswap)
+    for (i = 0; i < pv->ink_channels; i++)
+      ink[i] = ((ink[i] >> 8) & 0xff) | ((ink[i] & 0xff) << 8);
+
   if (pv->plane_interlacing || pv->row_interlacing)
     stp_zfwrite((char *) ink + (plane * pv->bytes_per_ink_channel), 
 		pv->bytes_per_ink_channel, 1, v);
   else
-      /* print inks in right order, eg. RGB  BGR */
+      /* print inks in correct order, eg. RGB  BGR */
       for (b = 0; b < pv->ink_channels; b++)
 	stp_zfwrite((char *) ink + (pv->bytes_per_ink_channel * (pv->ink_order[b]-1)), 
 		    pv->bytes_per_ink_channel, 1, v);
@@ -4031,6 +4039,16 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   } else {
     pv.bytes_per_ink_channel = 1;
     pv.bits_per_ink_channel = 8;
+  }
+
+  if (pv.bytes_per_ink_channel > 1) {
+#if defined(__LITTLE_ENDIAN)
+    pv.byteswap = dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
+#elif defined (__BIG_ENDIAN)
+    pv.byteswap = !dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
+#else
+#error "Need __LITTLE_ENDIAN or __BIG_ENDIAN defined!"
+#endif    
   }
 
   pv.image_data = dyesub_read_image(v, &pv, image);
