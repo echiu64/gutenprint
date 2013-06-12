@@ -1124,8 +1124,7 @@
       <printer translate="name" name="Epson Stylus Photo 950" driver="escp2-950" manufacturer="Epson" model="46" parameters="standard_params" foomaticid="Epson-Stylus_Photo_950" />
       <printer translate="name" name="Epson Stylus Photo 960" driver="escp2-960" manufacturer="Epson" model="46" parameters="standard_params" foomaticid="Epson-Stylus_Photo_960" />
       <printer translate="name" name="Epson Stylus Photo 1200" driver="escp2-1200" manufacturer="Epson" model="15" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1200" />
-      <printer translate="name" name="Epson Stylus Photo 1270" deviceid="MFG:EPSON;MDL:Stylus Photo 1270;DES:EPSON Stylus Photo 1270;CMD:ESCPL2,BDC,D4;CLS:PRINTER;
-" driver="escp2-1270" manufacturer="Epson" model="23" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1270" />
+      <printer translate="name" name="Epson Stylus Photo 1270" deviceid="MFG:EPSON;MDL:Stylus Photo 1270;DES:EPSON Stylus Photo 1270;CMD:ESCPL2,BDC,D4;CLS:PRINTER;" driver="escp2-1270" manufacturer="Epson" model="23" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1270" />
       <printer translate="name" name="Epson Stylus Photo 1280" driver="escp2-1280" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1280" />
       <printer translate="name" name="Epson Stylus Photo 1290" driver="escp2-1290" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1290" />
       <printer translate="name" name="Epson Stylus Photo 1290s" driver="escp2-1290s" manufacturer="Epson" model="37" parameters="standard_params" foomaticid="Epson-Stylus_Photo_1290s" />
