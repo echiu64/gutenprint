@@ -4041,12 +4041,12 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   }
 
   if (pv.bytes_per_ink_channel > 1) {
-#if defined(__LITTLE_ENDIAN)
+#if defined(__LITTLE_ENDIAN) || defined(__LITTLE_ENDIAN__)
     pv.byteswap = dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
-#elif defined (__BIG_ENDIAN)
+#elif defined (__BIG_ENDIAN) || defined(__BIG_ENDIAN__)
     pv.byteswap = !dyesub_feature(caps, DYESUB_FEATURE_BIGENDIAN);
 #else
-#error "Need __LITTLE_ENDIAN or __BIG_ENDIAN defined!"
+#error "Unable to determine endianness, aborting compilation!"
 #endif    
   }
 
