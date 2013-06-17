@@ -1316,14 +1316,13 @@ static void updr150_printer_init_func(stp_vars_t *v)
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
 
-  stp_putc(pg, v);
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
   stp_put16_be(dim1, v);
   stp_put16_be(dim2, v);
   stp_zfwrite("\xf8\xff\xff\xff"
 	      "\xec\xff\xff\xff"
 	      "\x0b\x00\x00\x00\x1b\xea"
-	      "\x00\x00\x00\x00", 1, 14, v);
+	      "\x00\x00\x00\x00", 1, 18, v);
   stp_put32_be(privdata.w_size*privdata.h_size*3, v);
   stp_zfwrite("\x00", 1, 1, v);
   stp_put32_le(privdata.w_size*privdata.h_size*3, v);
@@ -1337,7 +1336,7 @@ static void updr150_printer_end_func(stp_vars_t *v)
 		    "\x00\x1b\x0a\x00\x00\x00\x00\x00"
 		    "\x07\x00\x00\x00\x1b\x17\x00\x00"
 		    "\x00\x00\x00\xf3\xff\xff\xff"
-		    , 1, 34, v);
+		    , 1, 38, v);
 }
 
 
