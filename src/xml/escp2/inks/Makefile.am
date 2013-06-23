@@ -65,6 +65,7 @@ pkgxmldata_DATA =				\
 	pro_ultrachrome_k3v4.xml		\
 	standard.xml				\
 	standard_gen0.xml			\
+	sx445.xml				\
 	ultrachrome.xml				\
 	wf40.xml				\
 	wf500.xml				\
