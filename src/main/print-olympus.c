@@ -1498,11 +1498,11 @@ LIST(laminate_list_t, kodak_6800_laminate_list, laminate_t, kodak_6800_laminate)
 
 static void kodak_6800_printer_init(stp_vars_t *v)
 {
-  stp_zfwrite("\x03\x1b\x43\x48\x0a\x00\x01\x00", 1, 9, v);
-  dyesub_nputc(v, 0x01, 1);  /* Number of copies */
-  stp_zfwrite("\x07\x34", 1, 2, v);
+  stp_zfwrite("\x03\x1b\x43\x48\x43\x0a\x00\x01\x00", 1, 9, v);
+  stp_putc(0x01, v);  /* Number of copies */
+  stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  stp_putc(privdata.h_size == 1240 ? 0x00 : 0x06, v);
+  stp_putc(privdata.h_size == 1240 ? 0x00 : 0x06, v); /* XXX seen it on some 4x6 prints too! */
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v);
   stp_putc(0x00, v);
