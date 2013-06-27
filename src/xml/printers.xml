@@ -2551,7 +2551,7 @@
       <printer translate="name" name="Kodak 6850" driver="kodak-6850" manufacturer="Kodak" model="4002" foomaticid="Kodak-6850" />
       <printer translate="name" name="Kodak 605" driver="kodak-605" manufacturer="Kodak" model="4003" foomaticid="Kodak-605" />
       <printer translate="name" name="Kodak 1400" deviceid="MFG:Eastman Kodak Company;CMD:EK1;MDL: 1400 Printer;CLS:Printer;DES:Kodak 1400 Printer;8`" driver="kodak-1400" manufacturer="Kodak" model="4004" foomaticid="Kodak-1400" />
-      <printer translate="name" name="Kodak 805" driver="kodak-805" manufacturer="Kodak" model="4005" foomaticid="Kodak-805" />
+      <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" foomaticid="Kodak-805" />
       <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" foomaticid="Kodak-9810" />
       <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" foomaticid="Kodak-8500" />
       <printer translate="name" name="Mitsubishi CP-3020D" driver="mitsubishi-3020d" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020D" />
