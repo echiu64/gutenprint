@@ -1583,12 +1583,15 @@ static const dyesub_pagesize_t kodak_1400_page[] =
 
      Printer requires full-bleed data horizontally. However, not all pixels
      are actually printed.  35+35 (8x14 paper) or 76+76 (8x12 paper) are 
-     effectively discarded (ie ~0.12" and ~0.25" respectively)
+     effectively discarded (ie ~0.125" and ~0.250" respectively).
+
+     The printer can technically print a little wider but these dimensions are
+     defined by the lamination area, which is fixed.
   */
-  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
-  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
-  { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
-  { "Custom", NULL,   PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT},
+  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301)+1, 0, 0, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
+  { "Custom", NULL,   PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301)+1, 72, 72, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, kodak_1400_page_list, dyesub_pagesize_t, kodak_1400_page);
@@ -1640,10 +1643,11 @@ static void kodak_1400_printer_init(stp_vars_t *v)
 /* Kodak 805 */
 static const dyesub_pagesize_t kodak_805_page[] =
 {
-  /* Identical to the Kodak 1400 except for the lack of A4 support */
-  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
-  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
-  { "Custom", NULL,   PT(2560,301)+1, PT(3010,301)+72*2, 0, 0, 72, 72, DYESUB_PORTRAIT},
+  /* Identical to the Kodak 1400 except for the lack of A4 support.
+     See the 1400 comments for explanations of this. */
+  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "Custom", NULL,   PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301)+1, 72, 72, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, kodak_805_page_list, dyesub_pagesize_t, kodak_805_page);
@@ -3064,7 +3068,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_1400_page_list,
     &kodak_1400_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+    DYESUB_FEATURE_FULL_WIDTH
+      | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_ROW_INTERLACE,
     &kodak_1400_printer_init, NULL,
     NULL, NULL, 
@@ -3080,7 +3085,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_805_page_list,
     &kodak_805_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+    DYESUB_FEATURE_FULL_WIDTH
+      | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_ROW_INTERLACE,
     &kodak_805_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
