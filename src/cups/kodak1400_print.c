@@ -25,8 +25,6 @@
  *
  */
 
-#include <arpa/inet.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,42 +35,15 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#include <libusb-1.0/libusb.h>
-
-#define VERSION "0.09"
-#define STR_LEN_MAX 64
-#define CMDBUF_LEN 96
-#define READBACK_LEN 8
+#define VERSION "0.12"
 #define URI_PREFIX "kodak1400://"
-#define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
-#define INFO( ... )  fprintf(stderr, "INFO: " __VA_ARGS__ )
-#define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
 
-#if (__BYTE_ORDER == __LITTLE_ENDIAN)
-#define le32_to_cpu(__x) __x
-#define le16_to_cpu(__x) __x
-#else
-#define le32_to_cpu(x)							\
-	({								\
-		uint32_t __x = (x);					\
-		((uint32_t)(						\
-			(((uint32_t)(__x) & (uint32_t)0x000000ffUL) << 24) | \
-			(((uint32_t)(__x) & (uint32_t)0x0000ff00UL) <<  8) | \
-			(((uint32_t)(__x) & (uint32_t)0x00ff0000UL) >>  8) | \
-			(((uint32_t)(__x) & (uint32_t)0xff000000UL) >> 24) )); \
-	})
-#define le16_to_cpu(x)							\
-	({								\
-		uint16_t __x = (x);					\
-		((uint16_t)(						\
-			(((uint16_t)(__x) & (uint16_t)0x00ff) <<  8) | \
-			(((uint16_t)(__x) & (uint16_t)0xff00) >>  8) | \
-	})
-#endif
+#include "backend_common.c"
 
 /* USB Identifiers */
 #define USB_VID_KODAK      0x040A
 #define USB_PID_KODAK_1400 0x4022
+#define USB_PID_KODAK_805  0x4034
 
 /* Program states */
 enum {
@@ -102,64 +73,13 @@ struct kodak1400_hdr {
 	uint8_t  unk1;  /* Always 0x01 */
 	uint8_t  lam_strength;
 	uint8_t  null4[12];
-};
+} __attribute__((packed));
+
+#define CMDBUF_LEN 96
+#define READBACK_LEN 8
 
 static uint8_t idle_data[READBACK_LEN] = { 0xe4, 0x72, 0x00, 0x00,
 					   0x00, 0x00, 0x00, 0x00 };
-
-#define ID_BUF_SIZE 2048
-static char *get_device_id(struct libusb_device_handle *dev)
-{
-	int   length;
-	int claimed = 0;
-	int iface = 0;
-	char *buf = malloc(ID_BUF_SIZE + 1);
-
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed)
-		libusb_detach_kernel_driver(dev, iface);
-
-	libusb_claim_interface(dev, iface);
-
-	if (libusb_control_transfer(dev,
-				    LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_ENDPOINT_IN |
-				    LIBUSB_RECIPIENT_INTERFACE,
-				    0, 0,
-				    (iface << 8),
-				    (unsigned char *)buf, ID_BUF_SIZE, 5000) < 0)
-	{
-		*buf = '\0';
-		goto done;
-	}
-
-	/* length is the first two bytes, MSB first */
-	length = (((unsigned)buf[0] & 255) << 8) |
-		((unsigned)buf[1] & 255);
-
-	/* Sanity checks */
-	if (length > ID_BUF_SIZE || length < 14)
-		length = (((unsigned)buf[1] & 255) << 8) |
-			((unsigned)buf[0] & 255);
-	
-	if (length > ID_BUF_SIZE)
-		length = ID_BUF_SIZE;
-	
-	if (length < 14) {
-		*buf = '\0';
-		goto done;
-	}
-
-	/* Move, and terminate */
-	memmove(buf, buf + 2, length);
-	buf[length] = '\0';
-
-done:
-	libusb_release_interface(dev, iface);
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
-
-	return buf;
-}
 
 static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
@@ -170,16 +90,11 @@ static int find_and_enumerate(struct libusb_context *ctx,
 	int i;
 	int found = -1;
 
-	struct libusb_device_handle *dev;
-
 	/* Enumerate and find suitable device */
 	num = libusb_get_device_list(ctx, list);
 
 	for (i = 0 ; i < num ; i++) {
 		struct libusb_device_descriptor desc;
-		unsigned char product[STR_LEN_MAX] = "";
-		unsigned char serial[STR_LEN_MAX] = "";
-		unsigned char manuf[STR_LEN_MAX] = "";
 
 		libusb_get_device_descriptor((*list)[i], &desc);
 
@@ -187,84 +102,25 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			continue;
 
 		switch(desc.idProduct) {
-		case USB_PID_KODAK_1400: // "Kodak 1400"
+		case USB_PID_KODAK_1400:
 			found = i;
 			break;
+#if 0
+		case USB_PID_KODAK_805:
+			found = i;
+			break;
+#endif
 		default:
 			continue;
 		}
 
-		if (libusb_open(((*list)[i]), &dev)) {
-			ERROR("Could not open device %04x:%04x\n", desc.idVendor, desc.idProduct);
-			found = -1;
-			continue;
-		}
-
-		/* Query detailed info */
-		if (desc.iManufacturer) {
-			libusb_get_string_descriptor_ascii(dev, desc.iManufacturer, manuf, STR_LEN_MAX);
-		}
-		if (desc.iProduct) {
-			libusb_get_string_descriptor_ascii(dev, desc.iProduct, product, STR_LEN_MAX);
-		}
-		if (desc.iSerialNumber) {
-			libusb_get_string_descriptor_ascii(dev, desc.iSerialNumber, serial, STR_LEN_MAX);
-		}
-
-		DEBUG("PID: %04X Product: '%s' Serial: '%s'\n",
-		      desc.idProduct, product, serial);
-
-		if (scan_only) {
-			/* URL-ify model. */
-			char buf[128]; // XXX ugly..
-			int j = 0, k = 0;
-			char *ieee_id;
-			while (*(product + j + strlen("Kodak"))) {
-				buf[k] = *(product + j + strlen("Kodak "));
-				if(buf[k] == ' ') {
-					buf[k++] = '%';
-					buf[k++] = '2';
-					buf[k] = '0';
-				}
-				k++;
-				j++;
-			}
-			ieee_id = get_device_id(dev);
-
-			fprintf(stdout, "direct %sKodak/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n", URI_PREFIX,
-			        buf, serial, product, product,
-				ieee_id);
-
-			if (ieee_id)
-				free(ieee_id);
-		}
-
-		/* If a serial number was passed down, use it. */
-		if (found && match_serno &&
-		    strcmp(match_serno, (char*)serial)) {
-			found = -1;
-		}
-
-		libusb_close(dev);
+		found = print_scan_output((*list)[i], &desc,
+					  URI_PREFIX, "Kodak", 
+					  found, (found == i), 1, 
+					  scan_only, match_serno);
 	}
 
 	return found;
-}
-
-static int send_data(struct libusb_device_handle *dev, uint8_t endp, 
-		    uint8_t *buf, uint16_t len)
-{
-	int num;
-
-	int ret = libusb_bulk_transfer(dev, endp,
-				       buf, len,
-				       &num, 5000);
-
-	if (ret < 0) {
-		ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, len, endp);
-		return ret;
-	}
-	return 0;
 }
 
 static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
@@ -326,13 +182,6 @@ static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
 	return 0;
 }
 
-static int terminate = 0;
-
-void sigterm_handler(int signum) {
-	terminate = 1;
-	INFO("Job Cancelled");
-}
-
 int main (int argc, char **argv) 
 {
 	struct libusb_context *ctx;
@@ -363,10 +212,11 @@ int main (int argc, char **argv)
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
 	int last_state = -1, state = S_IDLE;
 
+	DEBUG("Kodak 1400 CUPS backend version " VERSION " \n");
+
 	/* Cmdline help */
 	if (argc < 2) {
-		DEBUG("Kodak 1400 Print Assist version %s\nUsage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ] \n\n",
-		      VERSION,
+		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ] \n\n",
 		      argv[0], argv[0]);
 		libusb_init(&ctx);
 		find_and_enumerate(ctx, &list, NULL, 1);
@@ -582,9 +432,9 @@ top:
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x5a;
 		cmdbuf[2] = 0x53;
-		temp16 = ntohs(hdr.columns);
+		temp16 = be16_to_cpu(hdr.columns);
 		memcpy(cmdbuf+3, &temp16, 2);
-		temp16 = ntohs(hdr.rows);
+		temp16 = be16_to_cpu(hdr.rows);
 		memcpy(cmdbuf+5, &temp16, 2);
 
 		if ((ret = send_data(dev, endp_down,
@@ -745,7 +595,7 @@ done:
   Header:
 
   50 47 48 44     "PGHD"
-  00 0a           Number of columns, Little endian.  Fixed at 2560.
+  XX XX           Number of columns, Little endian.  Fixed at 2560.
   00 00           NULL
   XX XX           Number of rows, Little Endian
   00 00           NULL
@@ -803,6 +653,12 @@ done:
  --> e4 72 00 00  00 00 50 59        # Printing plane 1
   [ repeats until...]
  <-- 1b 72                           # Status query
+ --> e4 72 00 00  40 00 50 59        # Paper loaded?
+  [ repeats until...]
+ <-- 1b 72                           # Status query
+ --> e4 72 00 00  00 00 50 59        # Printing plane 1
+  [ repeats until...]
+ <-- 1b 72                           # Status query
  --> e4 72 00 00  00 00 00 00        # Idle response
 
  <-- 1b 74 00 50                     # ??
@@ -848,6 +704,15 @@ done:
  <-- 1b 74 00 50                     # ??
 
  [[ DONE ]]
+
+ Other readback codes seen:
+
+ e4 72 00 00  10 00 50 59  -- ???
+ e4 72 00 00  10 01 50 59  -- ???
+ e4 72 00 00  00 04 50 59  -- media red blink, error red  [media too small for image ?]
+ e4 72 00 00  02 00 50 59  -- media off, error red. [out of paper]
+ e4 72 00 00  02 01 00 00  -- media off, error red. [out of paper]
+ e4 72 00 00  02 00 00 00  -- media off, error red. [out of paper]
 
  *********************************************
   Calibration data:

@@ -35,10 +35,10 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#include <libusb-1.0/libusb.h>
-
-#define STR_LEN_MAX 64
+#define VERSION "0.50"
 #define URI_PREFIX "selphy://"
+
+#include "backend_common.c"
 
 /* USB Identifiers */
 #define USB_VID_CANON       0x04a9
@@ -72,26 +72,6 @@
 #define USB_PID_CANON_CP800 0x3214
 #define USB_PID_CANON_CP810 0x3256
 #define USB_PID_CANON_CP900 0x3255
-
-#define VERSION "0.46"
-
-#define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
-#define INFO( ... )  fprintf(stderr, "INFO: " __VA_ARGS__ )
-#define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
-
-#if (__BYTE_ORDER == __LITTLE_ENDIAN)
-#define le32_to_cpu(__x) __x
-#else
-#define le32_to_cpu(x)							\
-	({								\
-		uint32_t __x = (x);					\
-		((uint32_t)(						\
-			(((uint32_t)(__x) & (uint32_t)0x000000ffUL) << 24) | \
-			(((uint32_t)(__x) & (uint32_t)0x0000ff00UL) <<  8) | \
-			(((uint32_t)(__x) & (uint32_t)0x00ff0000UL) >>  8) | \
-			(((uint32_t)(__x) & (uint32_t)0xff000000UL) >> 24) )); \
-	})
-#endif
 
 #define READBACK_LEN 12
 
@@ -373,60 +353,6 @@ static int read_data(int remaining, int present, int data_fd, uint8_t *target,
 	return wrote;
 }
 
-#define ID_BUF_SIZE 2048
-static char *get_device_id(struct libusb_device_handle *dev)
-{
-	int   length;
-	int claimed = 0;
-	int iface = 0;
-	char *buf = malloc(ID_BUF_SIZE + 1);
-
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed)
-		libusb_detach_kernel_driver(dev, iface);
-
-	libusb_claim_interface(dev, iface);
-
-	if (libusb_control_transfer(dev,
-				    LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_ENDPOINT_IN |
-				    LIBUSB_RECIPIENT_INTERFACE,
-				    0, 0,
-				    (iface << 8),
-				    (unsigned char *)buf, ID_BUF_SIZE, 5000) < 0)
-	{
-		*buf = '\0';
-		goto done;
-	}
-
-	/* length is the first two bytes, MSB first */
-	length = (((unsigned)buf[0] & 255) << 8) |
-		((unsigned)buf[1] & 255);
-
-	/* Sanity checks */
-	if (length > ID_BUF_SIZE || length < 14)
-		length = (((unsigned)buf[1] & 255) << 8) |
-			((unsigned)buf[0] & 255);
-	
-	if (length > ID_BUF_SIZE)
-		length = ID_BUF_SIZE;
-	
-	if (length < 14) {
-		*buf = '\0';
-		goto done;
-	}
-
-	/* Move, and terminate */
-	memmove(buf, buf + 2, length);
-	buf[length] = '\0';
-
-done:
-	libusb_release_interface(dev, iface);
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
-
-	return buf;
-}
-
 static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      char *match_serno,
@@ -437,16 +363,11 @@ static int find_and_enumerate(struct libusb_context *ctx,
 	int i;
 	int found = -1;
 
-	struct libusb_device_handle *dev;
-
 	/* Enumerate and find suitable device */
 	num = libusb_get_device_list(ctx, list);
 
 	for (i = 0 ; i < num ; i++) {
 		struct libusb_device_descriptor desc;
-		unsigned char product[STR_LEN_MAX] = "";
-		unsigned char serial[STR_LEN_MAX] = "";
-		unsigned char manuf[STR_LEN_MAX] = "";
 		int valid = 0;
 		libusb_get_device_descriptor((*list)[i], &desc);
 
@@ -523,73 +444,13 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			break;
 		}
 
-		if (libusb_open(((*list)[i]), &dev)) {
-			ERROR("Could not open device %04x:%04x\n", desc.idVendor, desc.idProduct);
-			found = -1;
-			continue;
-		}
-
-		/* Query detailed info */
-		if (desc.iManufacturer) {
-			libusb_get_string_descriptor_ascii(dev, desc.iManufacturer, manuf, STR_LEN_MAX);
-		}
-		if (desc.iProduct) {
-			libusb_get_string_descriptor_ascii(dev, desc.iProduct, product, STR_LEN_MAX);
-		}
-		if (desc.iSerialNumber) {
-			libusb_get_string_descriptor_ascii(dev, desc.iSerialNumber, serial, STR_LEN_MAX);
-		}
-
-		if (!strlen((char*)serial))
-			strcpy((char*)serial, "NONE");
-
-		DEBUG("%s%sPID: %04X Product: '%s' Serial: '%s'\n",
-		      (!valid) ? "UNRECOGNIZED: " : "",
-		      (found == i) ? "MATCH: " : "",
-		      desc.idProduct, product, serial);
-
-		if (valid && scan_only) {
-			/* URL-ify model. */
-			char buf[128]; // XXX ugly..
-			int j = 0, k = 0;
-			char *ieee_id;
-			while (*(product + j + strlen("Canon"))) {
-				buf[k] = *(product + j + strlen("Canon "));
-				if(buf[k] == ' ') {
-					buf[k++] = '%';
-					buf[k++] = '2';
-					buf[k] = '0';
-				}
-				k++;
-				j++;
-			}
-			ieee_id = get_device_id(dev);
-
-			fprintf(stdout, "direct %sCanon/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n", URI_PREFIX,
-			        buf, serial, product, product,
-				ieee_id);
-
-			if (ieee_id)
-				free(ieee_id);
-		}
-
-		/* If a serial number was passed down, use it. */
-		if (found && match_serno &&
-		    strcmp(match_serno, (char*)serial)) {
-			found = -1;
-		}
-
-		libusb_close(dev);
+		found = print_scan_output((*list)[i], &desc,
+					  URI_PREFIX, "Canon", 
+					  found, (found == i), valid, 
+					  scan_only, match_serno);
 	}
 
 	return found;
-}
-
-static int terminate = 0;
-
-void sigterm_handler(int signum) {
-	terminate = 1;
-	INFO("Job Cancelled");
 }
 
 int main (int argc, char **argv)
@@ -633,10 +494,11 @@ int main (int argc, char **argv)
 	/* Static initialization */
 	setup_paper_codes();
 
+	DEBUG("Canon SELPHY ES/CP CUPS backend version " VERSION " \n");
+
 	/* Cmdline help */
 	if (argc < 2) {
-		DEBUG("SELPHY ES/CP Print Assist version %s\nUsage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ] \n\n",
-		      VERSION,
+		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ] \n\n",
 		      argv[0], argv[0]);
 		libusb_init(&ctx);
 		find_and_enumerate(ctx, &list, NULL, printer_type, 1);
@@ -696,6 +558,7 @@ int main (int argc, char **argv)
 	read(data_fd, buffer, MAX_HEADER);
 
 	printer_type = parse_printjob(buffer, &bw_mode, &plane_len);
+	plane_len += 12; /* Add in plane header length! */
 	if (printer_type < 0) {
 		ERROR("Unrecognized printjob file format!\n");
 		exit(1);
@@ -735,7 +598,6 @@ int main (int argc, char **argv)
 	found = find_and_enumerate(ctx, &list, use_serno, printer_type, 0);
 
 	/* Compute offsets and other such things */
-	plane_len += 12; /* Plane header length */
 	paper_code_offset = printers[printer_type].paper_code_offset;
 	if (printers[printer_type].pgcode_offset != -1)
 		paper_code = printers[printer_type].paper_codes[buffer[printers[printer_type].pgcode_offset]];
@@ -842,16 +704,8 @@ top:
 		INFO("Printing started\n");
 
 		/* Send printer init */
-		ret = libusb_bulk_transfer(dev, endp_down,
-					   header,
-					   header_len,
-					   &num,
-					   2000);
-		if (ret < 0) {
-			ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, header_len, endp_down);
-			ret = 4;
+		if ((ret = send_data(dev, endp_down, header, header_len)))
 			goto done_claimed;
-		}
 
 		state = S_PRINTER_INIT_SENT;
 		break;
@@ -865,15 +719,10 @@ top:
 			DEBUG("Sending BLACK plane\n");
 		else
 			DEBUG("Sending YELLOW plane\n");
-		ret = libusb_bulk_transfer(dev, endp_down,
-					   plane_y,
-					   plane_len,
-					   &num,
-					   10000);
-		if (ret < 0) {
-			ret = 4;
+
+		if ((ret = send_data(dev, endp_down, plane_y, plane_len)))
 			goto done_claimed;
-		}
+
 		state = S_PRINTER_Y_SENT;
 		break;
 	case S_PRINTER_Y_SENT:
@@ -886,16 +735,10 @@ top:
 		break;
 	case S_PRINTER_READY_M:
 		DEBUG("Sending MAGENTA plane\n");
-		ret = libusb_bulk_transfer(dev, endp_down,
-					   plane_m,
-					   plane_len,
-					   &num,
-					   10000);
-		if (ret < 0) {
-			ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, footer_len, endp_down);
-			ret = 4;
+
+		if ((ret = send_data(dev, endp_down, plane_m, plane_len)))
 			goto done_claimed;
-		}
+
 		state = S_PRINTER_M_SENT;
 		break;
 	case S_PRINTER_M_SENT:
@@ -905,16 +748,10 @@ top:
 		break;
 	case S_PRINTER_READY_C:
 		DEBUG("Sending CYAN plane\n");
-		ret = libusb_bulk_transfer(dev, endp_down,
-					   plane_c,
-					   plane_len,
-					   &num,
-					   10000);
-		if (ret < 0) {
-			ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, footer_len, endp_down);
-			ret = 4;
+
+		if ((ret = send_data(dev, endp_down, plane_c, plane_len)))
 			goto done_claimed;
-		}
+
 		state = S_PRINTER_C_SENT;
 		break;
 	case S_PRINTER_C_SENT:
@@ -926,16 +763,8 @@ top:
 		if (footer_len) {
 			DEBUG("Sending cleanup sequence\n");
 
-			ret = libusb_bulk_transfer(dev, endp_down,
-						   footer,
-						   footer_len,
-						   &num,
-						   2000);
-			if (ret < 0) {
-				ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, footer_len, endp_down);
-				ret = 4;
+			if ((ret = send_data(dev, endp_down, footer, footer_len)))
 				goto done_claimed;
-			}
 		}
 		state = S_FINISHED;
 		/* Intentional Fallthrough */
@@ -988,3 +817,281 @@ done:
 
 	return ret;
 }
+
+/* 
+
+ ***************************************************************************
+
+	Stream formats and readback codes for supported printers
+
+ ***************************************************************************
+ Selphy ES1:
+
+   Init func:   40 00 [typeA] [pgcode]  00 00 00 00  00 00 00 00
+   Plane func:  40 01 [typeB] [plane]  [length, 32-bit LE]  00 00 00 00 
+
+   TypeA codes are 0x10 for Color papers, 0x20 for B&W papers.
+   TypeB codes are 0x01 for Color papers, 0x02 for B&W papers.
+
+   Plane codes are 0x01, 0x03, 0x07 for Y, M, and C, respectively.
+   B&W Jobs have a single plane code of 0x01.
+
+   'P' papers pgcode of 0x11 and a plane length of 2227456 bytes
+   'L'        pgcode of 0x12 and a plane length of 1601600 bytes.
+   'C'        pgcode of 0x13 and a plane length of  698880 bytes.
+
+   Readback values seen:
+
+   02 00 00 00  02 01 [pg] 01  00 00 00 00   [idle, waiting for init seq]
+   04 00 00 00  02 01 [pg] 01  00 00 00 00   [init received, not ready..]
+   04 00 01 00  02 01 [pg] 01  00 00 00 00   [waiting for Y data]
+   04 00 03 00  02 01 [pg] 01  00 00 00 00   [waiting for M data]
+   04 00 07 00  02 01 [pg] 01  00 00 00 00   [waiting for C data]
+   04 00 00 00  02 01 [pg] 01  00 00 00 00   [all data sent; not ready..]
+   05 00 00 00  02 01 [pg] 01  00 00 00 00   [?? transitions to this]
+   06 00 00 00  02 01 [pg] 01  00 00 00 00   [?? transitions to this]
+   02 00 00 00  02 01 [pg] 01  00 00 00 00   [..transitions back to idle]
+
+   02 01 00 00  01 ff ff ff  00 80 00 00     [error, no media]
+   02 01 00 00  01 ff ff ff  00 00 00 00     [error, cover open]
+
+   Known paper types for all ES printers:  P, Pbw, L, C, Cl
+   Additional types for ES3/30/40:         Pg, Ps
+
+   [pg] is:  0x01 for P-papers
+   	     0x02 for L-papers
+             0x03 for C-papers
+
+ ***************************************************************************
+ Selphy ES2/20:
+
+   Init func:   40 00 [pgcode] 00  02 00 00 [type]  00 00 00 [pg2] [length, 32-bit LE]
+   Plane func:  40 01 [plane] 00  00 00 00 00  00 00 00 00 
+
+   Type codes are 0x00 for Color papers, 0x01 for B&W papers.
+
+   Plane codes are 0x01, 0x02, 0x03 for Y, M, and C, respectively.
+   B&W Jobs have a single plane code of 0x01.
+
+   'P' papers pgcode of 0x01 and a plane length of 2227456 bytes
+   'L' 	      pgcode of 0x02 and a plane length of 1601600 bytes.
+   'C'	      pgcode of 0x03 and a plane length of  698880 bytes.
+
+   pg2 is 0x00 for all media types except for 'C', which is 0x01.
+
+   Readback values seen on an ES2:
+
+   02 00 00 00  [pg] 00 [pg2] [xx]  00 00 00 00   [idle, waiting for init seq]
+   03 00 01 00  [pg] 00 [pg2] [xx]  00 00 00 00   [init complete, ready for Y]
+   04 00 01 00  [pg] 00 [pg2] [xx]  00 00 00 00   [? paper loaded]
+   05 00 01 00  [pg] 00 [pg2] [xx]  00 00 00 00   [? transitions to this]
+   06 00 03 00  [pg] 00 [pg2] [xx]  00 00 00 00   [ready for M]
+   08 00 03 00  [pg] 00 [pg2] [xx]  00 00 00 00   [? transitions to this]
+   09 00 07 00  [pg] 00 [pg2] [xx]  00 00 00 00   [ready for C]
+   09 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
+   0b 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transisions to this]
+   0c 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
+   0f 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
+   13 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [? transitions to this]
+
+   14 00 00 00  [pg] 00 [pg2] 00  00 00 00 00   [out of paper/ink]
+   14 00 01 00  [pg] 00 [pg2] 00  01 00 00 00   [out of paper/ink]
+
+   16 01 00 00  [pg] 00 [pg2] 00  00 00 00 00   [error, cover open]
+   02 00 00 00  05 05 02 00  00 00 00 00        [error, no media]
+
+   [xx] can be 0x00 or 0xff, depending on if a previous print job has 
+	completed or not.
+
+   [pg] is:  0x01 for P-papers
+   	     0x02 for L-papers
+             0x03 for C-papers
+
+   [pg2] is: 0x00 for P & L papers
+             0x01 for Cl-paper
+
+       *** note: may refer to Label (0x01) vs non-Label (0x00) media.
+
+ ***************************************************************************
+ Selphy ES3/30:
+
+   Init func:   40 00 [pgcode] [type]  00 00 00 00  00 00 00 00 [length, 32-bit LE]
+   Plane func:  40 01 [plane] 00  00 00 00 00  00 00 00 00 
+
+   End func:    40 20 00 00  00 00 00 00  00 00 00 00
+
+   Type codes are 0x00 for Color papers, 0x01 for B&W papers.
+
+   Plane codes are 0x01, 0x02, 0x03 for Y, M, and C, respectively.
+   B&W Jobs have a single plane code of 0x01.
+
+   'P' papers pgcode of 0x01 and a plane length of 2227456 bytes.
+   'L' 	      pgcode of 0x02 and a plane length of 1601600 bytes.
+   'C' 	      pgcode of 0x03 and a plane length of  698880 bytes.
+
+   Readback values seen on an ES3 & ES30:
+
+   00 ff 00 00  ff ff ff ff  00 00 00 00   [idle, waiting for init seq]
+   01 ff 01 00  ff ff ff ff  00 00 00 00   [init complete, ready for Y]
+   03 ff 01 00  ff ff ff ff  00 00 00 00   [?]
+   03 ff 02 00  ff ff ff ff  00 00 00 00   [ready for M]
+   05 ff 02 00  ff ff ff ff  00 00 00 00   [?]
+   05 ff 03 00  ff ff ff ff  00 00 00 00   [ready for C]
+   07 ff 03 00  ff ff ff ff  00 00 00 00   [?]
+   0b ff 03 00  ff ff ff ff  00 00 00 00   [?]
+   13 ff 03 00  ff ff ff ff  00 00 00 00   [?]
+   00 ff 10 00  ff ff ff ff  00 00 00 00   [ready for footer]
+
+   00 ff 00 00  ff ff ff ff  00 00 00 00   [cover open, no media]
+
+   00 ff 01 00  ff ff ff ff  03 00 02 00   [attempt to print with no media]
+   00 ff 01 00  ff ff ff ff  08 00 04 00   [attempt to print with cover open]
+
+   There appears to be no paper code in the readback; codes were identical for
+   the standard 'P-Color' and 'Cl' cartridges:
+
+ ***************************************************************************
+ Selphy ES40:
+
+   Init func:   40 00 [pgcode] [type]  00 00 00 00  00 00 00 00 [length, 32-bit LE]
+   Plane func:  40 01 [plane] 00  00 00 00 00  00 00 00 00 
+
+   End func:    40 20 00 00  00 00 00 00  00 00 00 00
+
+   Type codes are 0x00 for Color papers, 0x01 for B&W papers.
+
+   Plane codes are 0x01, 0x02, 0x03 for Y, M, and C, respectively.
+   B&W Jobs have a single plane code of 0x01.
+
+   'P' papers pgcode of 0x00 and a plane length of 2227456 bytes.
+   'L' 	      pgcode of 0x01 and a plane length of 1601600 bytes.
+   'C'	      pgcode of 0x02 and a plane length of  698880 bytes.
+
+   Readback values seen on an ES40:
+
+   00 00 ff 00  00 00 00 00  00 00 00 [pg]
+   00 00 00 00  00 00 00 00  00 00 00 [pg]   [idle, ready for header]
+   00 01 01 00  00 00 00 00  00 00 00 [pg]   [ready for Y data]
+   00 03 01 00  00 00 00 00  00 00 00 [pg]   [transitions to this]
+   00 03 02 00  00 00 00 00  00 00 00 [pg]   [ready for M data]
+   00 05 02 00  00 00 00 00  00 00 00 [pg]   [transitions to this]
+   00 05 03 00  00 00 00 00  00 00 00 [pg]   [ready for C data]
+   00 07 03 00  00 00 00 00  00 00 00 [pg]   [transitions to this]
+   00 0b ff 00  00 00 00 00  00 00 00 [pg]   [transitions to this]
+   00 0e ff 00  00 00 00 00  00 00 00 [pg]   [transitions to this]
+   00 00 10 00  00 00 00 00  00 00 00 [pg]   [ready for footer]
+
+   00 ** ** [xx]  00 00 00 00  00 00 00 [pg] [error]
+
+   [xx]:
+	01:  Generic communication error
+	32:  Cover open / media empty
+
+   [pg] is as follows:
+
+      'P' paper 0x11
+      'L' paper 0x22
+      'C' paper 0x33
+      'W' paper 0x44
+
+
+ ***************************************************************************
+ Selphy CP790:
+
+   Init func:   40 00 [pgcode] 00  00 00 00 00  00 00 00 00 [length, 32-bit LE]
+   Plane func:  40 01 [plane] 00  00 00 00 00  00 00 00 00 
+
+   End func:    40 20 00 00  00 00 00 00  00 00 00 00
+
+   Plane codes are 0x01, 0x02, 0x03 for Y, M, and C, respectively.
+
+   'P' papers pgcode of 0x00 and a plane length of 2227456 bytes.
+   'L' 	      pgcode of 0x01 and a plane length of 1601600 bytes.
+   'C'	      pgcode of 0x02 and a plane length of  698880 bytes.
+   'W' 	      pgcode of 0x03 and a plane length of 2976512 bytes.
+
+   Readback codes are completely unknown, but are likely to be the same
+   as the ES40.
+
+ ***************************************************************************
+ Selphy CP-10:
+
+   Init func:   40 00 00 00  00 00 00 00  00 00 00 00
+   Plane func:  40 01 00 [plane]  [length, 32-bit LE]  00 00 00 00 
+
+   plane codes are 0x00, 0x01, 0x02 for Y, M, and C, respectively.
+
+   length is always '00 60 81 0a' which is 688480 bytes.
+
+   Known readback values:
+
+   01 00 00 00  00 00 00 00  00 00 00 00   [idle, waiting for init]
+   02 00 00 00  00 00 00 00  00 00 00 00   [init sent, paper feeding]
+   02 00 00 00  00 00 00 00  00 00 00 00   [init sent, paper feeding] 
+   02 00 00 00  00 00 00 00  00 00 00 00   [waiting for Y data]
+   04 00 00 00  00 00 00 00  00 00 00 00   [waiting for M data]
+   08 00 00 00  00 00 00 00  00 00 00 00   [waiting for C data]
+   10 00 00 00  00 00 00 00  00 00 00 00   [C done, waiting]
+   20 00 00 00  00 00 00 00  00 00 00 00   [All done]
+
+   02 00 80 00  00 00 00 00  00 00 00 00   [No ink]
+   02 00 01 00  00 00 00 00  00 00 00 00   [No media]
+
+  There are no media type codes; the printer only supports one type.
+
+ ***************************************************************************
+ Selphy CP-series (except for CP790 & CP-10):
+ 
+    This is known to apply to:
+	CP-100, CP-200, CP-300, CP-330, CP400, CP500, CP510, CP710,
+	CP720, CP730, CP740, CP750, CP760, CP770, CP780, CP800, CP900
+
+   Init func:   40 00 00 [pgcode]  00 00 00 00  00 00 00 00
+   Plane func:  40 01 00 [plane]  [length, 32-bit LE]  00 00 00 00 
+   End func:    00 00 00 00      # NOTE:  CP900 only, and not necessary!
+
+   Error clear: 40 10 00 00  00 00 00 00  00 00 00 00  # CP800.  Others?
+
+   plane codes are 0x00, 0x01, 0x02 for Y, M, and C, respectively.
+
+   'P' papers pgcode 0x01   plane length 2227456 bytes.
+   'L' 	      pgcode 0x02   plane length 1601600 bytes.
+   'C' 	      pgcode 0x03   plane length  698880 bytes.
+   'W'	      pgcode 0x04   plane length 2976512 bytes.
+
+   Known readback values:
+
+   01 00 00 00  [ss] 00 [pg] 00  00 00 00 [xx]   [idle, waiting for init]
+   02 00 [rr] 00  00 00 [pg] 00  00 00 00 [xx]   [init sent, paper feeding]
+   02 00 [rr] 00  10 00 [pg] 00  00 00 00 [xx]   [init sent, paper feeding] 
+   02 00 [rr] 00  70 00 [pg] 00  00 00 00 [xx]   [waiting for Y data]
+   04 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [waiting for M data]
+   08 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [waiting for C data]
+   10 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [C done, waiting]
+   20 00 00 00  00 00 [pg] 00  00 00 00 [xx]   [All done]
+
+   [xx] is 0x01 on the CP780/CP800/CP900, 0x00 on all others.
+
+   [rr] is error code:
+   	0x00 no error
+	0x01 paper out
+	0x04 ribbon problem
+	0x08 ribbon depleted
+
+   [ss] is either 0x00 or 0x70.  Unsure as to its significance; perhaps it
+	means paper or ribbon is already set to go?
+
+   [pg] is as follows:
+
+      'P' paper 0x11
+      'L' paper 0x22
+      'C' paper 0x33
+      'W' paper 0x44
+
+      First four bits are paper, second four bits are the ribbon.  They aren't
+      necessarily identical.  So it's possible to have a code of, say,
+      0x41 if the 'Wide' paper tray is loaded with a 'P' ribbon. A '0' is used
+      to signify nothing being loaded.
+ 
+
+*/
