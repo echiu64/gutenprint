@@ -1078,7 +1078,7 @@ if test "$BUILD_CUPS" != "no" ; then
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
-echo "    Build CUPS spoolers/backends:	 	      $BUILD_LIBUSB_BACKENDS"
+echo "    Build CUPS spoolers/backends:               $BUILD_LIBUSB_BACKENDS"
 echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
 echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
 if test "$BUILD_FOOMATIC" != "no" ; then
