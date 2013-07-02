@@ -1012,15 +1012,19 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Kodak 1400
 
-	The Kodak 1400 requires an intelligent CUPS backend, which is now
+	The Kodak 1400 requires an intelligent CUPS backend, which 
+	is bundled with Gutenprint.
+
+       Kodak 6800
+
+	The Kodak 6800 requires an intelligent CUPS backend, which is
 	bundled with Gutenprint.
 
-       Kodak 6800 (EXPERIMENTAL)
        Kodak 6850 (EXPERIMENTAL)
        Kodak 605  (EXPERIMENTAL)
        Kodak 805  (EXPERIMENTAL)
+       Kodak 8500 (EXPERIMENTAL)	
        Kodak 9810 (EXPERIMENTAL)
-       Kodak 8500 (EXPERIMENTAL)
 
 	None of these models have been tested and confirmed to work 
 	(or not), so feedback is welcome.
@@ -1099,6 +1103,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Device IDs added for the following Samsung printers:
        Samsung ML-1450 (possibly incomplete)
+
+     - Device IDs added for the following Kodak printers:
+       Kodak 1400
+       Kodak 805
+       Kodak 6800
 
      - Device IDs added for the following Kyocera printers:
        Kyocera FS-1118MFP
