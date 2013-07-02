@@ -28,6 +28,8 @@
 #include <libusb-1.0/libusb.h>
 #include <arpa/inet.h>
 
+#define BACKEND_VERSION "0.1"
+
 #define STR_LEN_MAX 64
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
 #define DEBUG2( ... ) fprintf(stderr, __VA_ARGS__ )

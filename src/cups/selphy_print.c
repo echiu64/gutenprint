@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.50"
+#define VERSION "0.51"
 #define URI_PREFIX "selphy://"
 
 #include "backend_common.c"
@@ -494,7 +494,7 @@ int main (int argc, char **argv)
 	/* Static initialization */
 	setup_paper_codes();
 
-	DEBUG("Canon SELPHY ES/CP CUPS backend version " VERSION " \n");
+	DEBUG("Canon SELPHY ES/CP CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
 
 	/* Cmdline help */
 	if (argc < 2) {
@@ -694,15 +694,13 @@ top:
 
 	switch(state) {
 	case S_IDLE:
+		INFO("Waiting for printer idle\n");
 		if (!fancy_memcmp(rdbuf, printers[printer_type].init_readback, READBACK_LEN, paper_code_offset, paper_code)) {
 			state = S_PRINTER_READY;
 		}
 		break;
 	case S_PRINTER_READY:
-		DEBUG("Sending init sequence (%d bytes)\n", header_len);
-
-		INFO("Printing started\n");
-
+		INFO("Printing started; Sending init sequence\n");
 		/* Send printer init */
 		if ((ret = send_data(dev, endp_down, header, header_len)))
 			goto done_claimed;
@@ -716,9 +714,9 @@ top:
 		break;
 	case S_PRINTER_READY_Y:
 		if (bw_mode)
-			DEBUG("Sending BLACK plane\n");
+			INFO("Sending BLACK plane\n");
 		else
-			DEBUG("Sending YELLOW plane\n");
+			INFO("Sending YELLOW plane\n");
 
 		if ((ret = send_data(dev, endp_down, plane_y, plane_len)))
 			goto done_claimed;
@@ -734,7 +732,7 @@ top:
 		}
 		break;
 	case S_PRINTER_READY_M:
-		DEBUG("Sending MAGENTA plane\n");
+		INFO("Sending MAGENTA plane\n");
 
 		if ((ret = send_data(dev, endp_down, plane_m, plane_len)))
 			goto done_claimed;
@@ -747,7 +745,7 @@ top:
 		}
 		break;
 	case S_PRINTER_READY_C:
-		DEBUG("Sending CYAN plane\n");
+		INFO("Sending CYAN plane\n");
 
 		if ((ret = send_data(dev, endp_down, plane_c, plane_len)))
 			goto done_claimed;
@@ -761,7 +759,7 @@ top:
 		break;
 	case S_PRINTER_DONE:
 		if (footer_len) {
-			DEBUG("Sending cleanup sequence\n");
+			INFO("Cleaning up\n");
 
 			if ((ret = send_data(dev, endp_down, footer, footer_len)))
 				goto done_claimed;

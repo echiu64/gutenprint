@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.12"
+#define VERSION "0.13"
 #define URI_PREFIX "kodak1400://"
 
 #include "backend_common.c"
@@ -212,7 +212,7 @@ int main (int argc, char **argv)
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
 	int last_state = -1, state = S_IDLE;
 
-	DEBUG("Kodak 1400 CUPS backend version " VERSION " \n");
+	DEBUG("Kodak 1400 CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
 
 	/* Cmdline help */
 	if (argc < 2) {
@@ -484,6 +484,7 @@ top:
 		state = S_PRINTER_READY_Y;
 		break;
 	case S_PRINTER_READY_Y:
+		INFO("Sending YELLOW plane\n");
 		if ((ret = send_plane(dev, endp_down,
 				      1, plane_b, &hdr, cmdbuf)))
 			goto done_claimed;
@@ -494,6 +495,7 @@ top:
 			state = S_PRINTER_READY_M;
 		break;
 	case S_PRINTER_READY_M:
+		INFO("Sending MAGENTA plane\n");
 		if ((ret = send_plane(dev, endp_down,
 				      2, plane_g, &hdr, cmdbuf)))
 			goto done_claimed;		    
@@ -504,6 +506,7 @@ top:
 			state = S_PRINTER_READY_C;
 		break;
 	case S_PRINTER_READY_C:
+		INFO("Sending CYAN plane\n");
 		if ((ret = send_plane(dev, endp_down,
 				      3, plane_r, &hdr, cmdbuf)))
 			goto done_claimed;
@@ -518,6 +521,7 @@ top:
 		}
 		break;
 	case S_PRINTER_READY_L:
+		INFO("Laminating page\n");
 		if ((ret = send_plane(dev, endp_down,
 				      4, NULL, &hdr, cmdbuf)))
 			goto done_claimed;
@@ -528,6 +532,7 @@ top:
 			state = S_PRINTER_DONE;
 		break;
 	case S_PRINTER_DONE:
+		INFO("Cleaning up\n");
 		/* Cleanup */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
