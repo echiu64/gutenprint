@@ -128,6 +128,12 @@
       <height value="360"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w144h432">
+      <description translate="value" value="2x6"/>
+      <width value="144"/>
+      <height value="432"/>
+      <unit value="english"/>
+    </paper>
     <paper name="w288h432">
       <description translate="value" value="4x6"/>
       <width value="288"/>
