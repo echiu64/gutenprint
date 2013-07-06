@@ -2566,7 +2566,7 @@
       <printer translate="name" name="Mitsubishi CP-D70DW" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D70DW" />
       <printer translate="name" name="Mitsubishi CP-D707DW" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D707DW" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
-      <printer translate="name" name="Shinko CHC-S2145" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" />
+      <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" />
       <printer translate="name" name="Sinfonia CHC-S2145" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" />
       <printer translate="name" name="Dai Nippon Printing DS40" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />
