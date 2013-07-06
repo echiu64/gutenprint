@@ -84,7 +84,7 @@ sbin_SCRIPTS = cups-genppdupdate
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 
 if BUILD_LIBUSB_BACKENDS
-cupsexec_backend_PROGRAMS = selphy kodak1400 kodak6800
+cupsexec_backend_PROGRAMS = selphy kodak1400 kodak6800 shinko_s2145
 endif
 
 ## CUPS backends require no world-execute permissions if they are to be
@@ -95,6 +95,7 @@ install-exec-hook:
 	chmod 700 $(DESTDIR)$(pkglibdir)/backend/selphy
 	chmod 700 $(DESTDIR)$(pkglibdir)/backend/kodak1400
 	chmod 700 $(DESTDIR)$(pkglibdir)/backend/kodak6800
+	chmod 700 $(DESTDIR)$(pkglibdir)/backend/shinko_s2145
 endif
 
 
@@ -126,6 +127,10 @@ kodak1400_LDADD = $(LIBUSB_LIBS)
 kodak6800_SOURCES = kodak6800_print.c
 kodak6800_CPPFLAGS = $(LIBUSB_CFLAGS)
 kodak6800_LDADD = $(LIBUSB_LIBS)
+
+shinko_s2145_SOURCES = shinko_s2145_print.c
+shinko_s2145_CPPFLAGS = $(LIBUSB_CFLAGS)
+shinko_s2145_LDADD = $(LIBUSB_LIBS)
 
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c i18n.c i18n.h
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DALL_LINGUAS='"$(ALL_LINGUAS)"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)

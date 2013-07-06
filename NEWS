@@ -1028,7 +1028,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	None of these models have been tested and confirmed to work 
 	(or not), so feedback is welcome.
-	
+
+     - Shinko/Sinfonia Dye-Sublimation printers:
+
+       CHC-S2145
+
+	The CHC-S2145 requires an intelligent CUPS backend, which is
+	bundled with Gutenprint.
+
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:

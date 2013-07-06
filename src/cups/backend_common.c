@@ -28,7 +28,7 @@
 #include <libusb-1.0/libusb.h>
 #include <arpa/inet.h>
 
-#define BACKEND_VERSION "0.1"
+#define BACKEND_VERSION "0.2"
 
 #define STR_LEN_MAX 64
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
@@ -61,6 +61,11 @@
 #define be32_to_cpu(__x) __x
 #define be16_to_cpu(__x) __x
 #endif
+
+#define cpu_to_le16 le16_to_cpu
+#define cpu_to_le32 le32_to_cpu
+#define cpu_to_be16 be16_to_cpu
+#define cpu_to_be32 be32_to_cpu
 
 #define ID_BUF_SIZE 2048
 static char *get_device_id(struct libusb_device_handle *dev)
@@ -123,8 +128,8 @@ static int send_data(struct libusb_device_handle *dev, uint8_t endp,
 
 	while (len) {
 		int ret = libusb_bulk_transfer(dev, endp,
-					       buf, len,
-					       &num, 10000);
+					       buf, (len > 65536) ? 65536: len,
+					       &num, 5000);
 		if (ret < 0) {
 			ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, len, endp);
 			return ret;
