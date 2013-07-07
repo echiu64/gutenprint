@@ -28,7 +28,7 @@
 #include <libusb-1.0/libusb.h>
 #include <arpa/inet.h>
 
-#define BACKEND_VERSION "0.2"
+#define BACKEND_VERSION "0.3"
 
 #define STR_LEN_MAX 64
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
@@ -149,6 +149,16 @@ static void sigterm_handler(int signum) {
 	INFO("Job Cancelled");
 }
 
+static char *sanitize_string(char *str) {
+	int len = strlen(str);
+
+	while(len && (str[len-1] <= 0x20)) {
+		str[len-1] = 0;
+		len--;
+	}
+	return str;
+}
+
 static int print_scan_output(struct libusb_device *device,
 			     struct libusb_device_descriptor *desc,
 			     char *prefix, char *manuf2,
@@ -170,29 +180,32 @@ static int print_scan_output(struct libusb_device *device,
 	/* Query detailed info */
 	if (desc->iManufacturer) {
 		libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, manuf, STR_LEN_MAX);
+		sanitize_string((char*)manuf);
 	}
 	if (desc->iProduct) {
 		libusb_get_string_descriptor_ascii(dev, desc->iProduct, product, STR_LEN_MAX);
+		sanitize_string((char*)product);
 	}
 	if (desc->iSerialNumber) {
 		libusb_get_string_descriptor_ascii(dev, desc->iSerialNumber, serial, STR_LEN_MAX);
+		sanitize_string((char*)serial);
 	}
 	
 	if (!strlen((char*)serial))
 		strcpy((char*)serial, "NONE");
 	
-	DEBUG("%s%sPID: %04X Product: '%s' Serial: '%s'\n",
+	DEBUG("%s%sPID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
 	      (!valid) ? "UNRECOGNIZED: " : "",
 	      match ? "MATCH: " : "",
-	      desc->idProduct, product, serial);
+	      desc->idProduct, manuf, product, serial);
 	
 	if (valid && scan_only) {
 		/* URL-ify model. */
 		char buf[128]; // XXX ugly..
 		int j = 0, k = 0;
-		char *ieee_id;
+		char *ieee_id = get_device_id(dev);
 		while (*(product + j + strlen(manuf2))) {
-			buf[k] = *(product + j + strlen(manuf2) + 1);
+			buf[k] = *(product + j + (strlen(manuf2) ? (strlen(manuf2) + 1) : 0));
 			if(buf[k] == ' ') {
 				buf[k++] = '%';
 				buf[k++] = '2';
@@ -201,10 +214,10 @@ static int print_scan_output(struct libusb_device *device,
 			k++;
 			j++;
 		}
-		ieee_id = get_device_id(dev);
+		buf[k] = 0;
 		
 		fprintf(stdout, "direct %s%s/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n",
-			prefix, manuf2,
+			prefix, strlen(manuf2) ? manuf2 : (char*)manuf,
 			buf, serial, product, product,
 			ieee_id);
 		
