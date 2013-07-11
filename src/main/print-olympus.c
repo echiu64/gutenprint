@@ -1256,22 +1256,22 @@ LIST(dyesub_resolution_list_t, res_334dpi_list, dyesub_resolution_t, res_334dpi)
 
 static const dyesub_pagesize_t updr150_page[] =
 {
-  { "w288h432",	"2UPC-153 (4x6)", 298, 442, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "B7",	"2UPC-154 (3.5x5)", 261, 373, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h504",	"2UPC-155 (5x7)", 514, 373, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w432h576",	"2UPC-156 (6x8)", 588, 442, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "Custom", NULL, 298, 442, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w288h432", "2UPC-153 (4x6)", PT(2048,334)+1, PT(1382,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "2UPC-154 (3.5x5)", PT(1728,334)+1, PT(1210,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504", "2UPC-155 (5x7)", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "2UPC-156 (6x8)", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
+  { "Custom", NULL, PT(2048,334)+1, PT(1382,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, updr150_page_list, dyesub_pagesize_t, updr150_page);
 
 static const dyesub_printsize_t updr150_printsize[] =
 {
-  { "334x334", "w288h432", 1382, 2048},
-  { "334x334", "B7", 1210, 1728},
-  { "334x334", "w360h504", 2380, 1728},
-  { "334x334", "w432h576", 2724, 2048},
-  { "334x334", "Custom", 1382, 2048},
+  { "334x334", "w288h432", 2048, 1382},
+  { "334x334", "B7", 1728, 1210},
+  { "334x334", "w360h504", 1728, 2380},
+  { "334x334", "w432h576", 2048, 2724},
+  { "334x334", "Custom", 2048, 1382},
 };
 
 LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr150_printsize);
@@ -1279,10 +1279,6 @@ LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr15
 static void updr150_printer_init_func(stp_vars_t *v)
 {
   char pg = '\0';
-  int dim1 = (privdata.print_mode == DYESUB_LANDSCAPE ?
-  		privdata.w_size : privdata.h_size);
-  int dim2 = (privdata.print_mode == DYESUB_LANDSCAPE ?
-  		privdata.h_size : privdata.w_size);
 
   stp_zfwrite("\x6a\xff\xff\xff\xef\xff\xff\xff", 1, 8, v);
   if (strcmp(privdata.pagesize,"B7") == 0)
@@ -1307,8 +1303,8 @@ static void updr150_printer_init_func(stp_vars_t *v)
 	      "\x1b\x15\x00\x00\x00\x0d\x00\x0d"
 	      "\x00\x00\x00\x00\x00\x00\x00\x07"
 	      "\x00\x00\x00\x00", 1, 91, v);
-  stp_put16_be(dim1, v);
-  stp_put16_be(dim2, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   stp_zfwrite("\xf9\xff\xff\xff\x07\x00\x00\x00"
 	      "\x1b\xe1\x00\x00\x00\x0b\x00\x0b"
 	      "\x00\x00\x00\x00\x80", 1, 21, v);
@@ -1317,8 +1313,8 @@ static void updr150_printer_init_func(stp_vars_t *v)
 			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
 
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
-  stp_put16_be(dim1, v);
-  stp_put16_be(dim2, v);
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   stp_zfwrite("\xf8\xff\xff\xff"
 	      "\xec\xff\xff\xff"
 	      "\x0b\x00\x00\x00\x1b\xea"
