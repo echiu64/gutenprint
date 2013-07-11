@@ -1210,14 +1210,9 @@ LIST(dyesub_printsize_list_t, updr100_printsize_list, dyesub_printsize_t, updr10
 
 static void updr100_printer_init_func(stp_vars_t *v)
 {
-  int dim1 = (privdata.print_mode == DYESUB_LANDSCAPE ?
-  		privdata.h_size : privdata.w_size);
-  int dim2 = (privdata.print_mode == DYESUB_LANDSCAPE ?
-  		privdata.w_size : privdata.h_size);
-
   stp_zfwrite("UPD8D\x00\x00\x00\x10\x03\x00\x00", 1, 12, v);
-  stp_put32_le(dim1, v);
-  stp_put32_le(dim2, v);
+  stp_put32_le(privdata.w_size, v);
+  stp_put32_le(privdata.h_size, v);
   stp_zfwrite("\x1e\x00\x03\x00\x01\x00\x4e\x01\x00\x00", 1, 10, v);
   stp_write_raw(&(privdata.laminate->seq), v); /* laminate pattern */
   dyesub_nputc(v, '\0', 13);
@@ -1256,22 +1251,22 @@ LIST(dyesub_resolution_list_t, res_334dpi_list, dyesub_resolution_t, res_334dpi)
 
 static const dyesub_pagesize_t updr150_page[] =
 {
-  { "w288h432", "2UPC-153 (4x6)", PT(2048,334)+1, PT(1382,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "B7", "2UPC-154 (3.5x5)", PT(1728,334)+1, PT(1210,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w288h432", "2UPC-153 (4x6)", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "2UPC-154 (3.5x5)", PT(1210,334)+1, PT(1728,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w360h504", "2UPC-155 (5x7)", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "w432h576", "2UPC-156 (6x8)", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(2048,334)+1, PT(1382,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "Custom", NULL, PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, updr150_page_list, dyesub_pagesize_t, updr150_page);
 
 static const dyesub_printsize_t updr150_printsize[] =
 {
-  { "334x334", "w288h432", 2048, 1382},
-  { "334x334", "B7", 1728, 1210},
+  { "334x334", "w288h432", 1382, 2048},
+  { "334x334", "B7", 1210, 1728},
   { "334x334", "w360h504", 1728, 2380},
   { "334x334", "w432h576", 2048, 2724},
-  { "334x334", "Custom", 2048, 1382},
+  { "334x334", "Custom", 1382, 2048},
 };
 
 LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr150_printsize);
