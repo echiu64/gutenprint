@@ -302,4 +302,5 @@ EXTRA_DIST = \
 	calibrate.ppm \
 	command.txt \
 	command.types \
-	test-ppds
+	test-ppds \
+	backend-common.c
