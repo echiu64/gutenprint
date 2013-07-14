@@ -39,7 +39,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.06"
+#define VERSION "0.10"
 #define URI_PREFIX "shinko_s2145://"
 
 #include "backend_common.c"
@@ -234,6 +234,23 @@ struct s2145_update_cmd {
 	uint32_t size;
 } __attribute__((packed));
 
+#define UPDATE_TARGET_USER    0x03
+#define UPDATE_TARGET_CURRENT 0x04
+
+static char *update_targets[] = {
+	"Unused",
+	"Unused",
+	"Unused",
+	"User",
+	"Current",
+};
+
+#define UPDATE_SIZE 0x600
+/* Update is three channels, Y, M, C;
+   each is 256 entries of 11-bit data padded to 16-bits.
+   Printer expects LE data.  We use BE data on disk.
+*/
+
 struct s2145_setunique_cmd {
 	struct s2145_cmd_hdr hdr;
 	uint8_t  len;
@@ -404,7 +421,7 @@ struct s2145_getunique_resp {
 	uint8_t  data[24];  /* Not necessarily all used. */
 } __attribute__((packed));
 
-#define READBACK_LEN sizeof(struct s2145_status_resp)
+#define READBACK_LEN 128    /* Needs to be larger than largest response hdr */
 #define CMDBUF_LEN sizeof(struct s2145_print_cmd)
 
 static int find_and_enumerate(struct libusb_context *ctx,
@@ -447,8 +464,9 @@ static int find_and_enumerate(struct libusb_context *ctx,
 static int get_status(libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
-	struct s2145_status_resp resp;
+	struct s2145_status_resp *resp = (struct s2145_status_resp *) rdbuf;
 	int ret, num = 0;
 
 	cmd.cmd = cpu_to_le16(S2145_CMD_STATUS);
@@ -459,8 +477,8 @@ static int get_status(libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -469,37 +487,39 @@ static int get_status(libusb_device_handle *dev,
 		return ret;
 	}
 
-	INFO("Printer Status:  %02x\n", resp.hdr.status);
+	INFO("Printer Status:  0x%02x\n", resp->hdr.status);
 
-	INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-	     resp.hdr.result, resp.hdr.error, resp.hdr.printer_major,
-	     resp.hdr.printer_minor);
+	if (resp->hdr.result != RESULT_SUCCESS) {
+		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
+		     resp->hdr.result, resp->hdr.error, resp->hdr.printer_major,
+		     resp->hdr.printer_minor);
+	}
 
-	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s2145_status_resp) - sizeof(struct s2145_status_hdr)))
+	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_status_resp) - sizeof(struct s2145_status_hdr)))
 		return 0;
 
 	INFO(" Prints:\n");
-        INFO("\tLifetime:\t\t\t%08d\n", le32_to_cpu(resp.count_lifetime));
-	INFO("\tMaintainence:\t\t%08d\n", le32_to_cpu(resp.count_maint));
-	INFO("\tSince Paper Changed:\t%08d\n", le32_to_cpu(resp.count_paper));
-	INFO("\tCutter:\t\t\t%08d\n", le32_to_cpu(resp.count_cutter));
-	INFO("\tPrint Head:\t\t%08d\n", le32_to_cpu(resp.count_head));
-        INFO("\tRibbon Remaining:\t%08d\n", le32_to_cpu(resp.count_ribbon_left));
+        INFO("\tLifetime:\t\t%08d\n", le32_to_cpu(resp->count_lifetime));
+	INFO("\tMaintainence:\t\t%08d\n", le32_to_cpu(resp->count_maint));
+	INFO("\tSince Paper Changed:\t%08d\n", le32_to_cpu(resp->count_paper));
+	INFO("\tCutter:\t\t\t%08d\n", le32_to_cpu(resp->count_cutter));
+	INFO("\tPrint Head:\t\t%08d\n", le32_to_cpu(resp->count_head));
+        INFO("\tRibbon Remaining:\t%08d\n", le32_to_cpu(resp->count_ribbon_left));
 	INFO("Bank 1: 0x%02x (%s) Job %03d @ %03d/%03d (%03d remaining)\n",
-	     resp.bank1_status, bank_statuses[resp.bank1_status],
-	     resp.bank1_printid,
-	     le16_to_cpu(resp.bank1_remaining),
-	     le16_to_cpu(resp.bank1_finished),
-	     le16_to_cpu(resp.bank1_specified));
+	     resp->bank1_status, bank_statuses[resp->bank1_status],
+	     resp->bank1_printid,
+	     le16_to_cpu(resp->bank1_remaining),
+	     le16_to_cpu(resp->bank1_finished),
+	     le16_to_cpu(resp->bank1_specified));
 
 	INFO("Bank 2: 0x%02x (%s) Job %03d @ %03d/%03d (%03d remaining)\n",
-	     resp.bank2_status, bank_statuses[resp.bank1_status],
-	     resp.bank2_printid,
-	     le16_to_cpu(resp.bank2_remaining),
-	     le16_to_cpu(resp.bank2_finished),
-	     le16_to_cpu(resp.bank2_specified));
+	     resp->bank2_status, bank_statuses[resp->bank1_status],
+	     resp->bank2_printid,
+	     le16_to_cpu(resp->bank2_remaining),
+	     le16_to_cpu(resp->bank2_finished),
+	     le16_to_cpu(resp->bank2_specified));
 
-	INFO("Tonecurve Status: 0x%02x (%s)\n", resp.tonecurve_status, tonecurve_statuses[resp.tonecurve_status]);
+	INFO("Tonecurve Status: 0x%02x (%s)\n", resp->tonecurve_status, tonecurve_statuses[resp->tonecurve_status]);
 
 	return 0;
 }
@@ -507,8 +527,9 @@ static int get_status(libusb_device_handle *dev,
 static int get_fwinfo(libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_fwinfo_cmd  cmd;
-	struct s2145_fwinfo_resp resp;
+	struct s2145_fwinfo_resp *resp = (struct s2145_fwinfo_resp *)rdbuf;
 	int ret, num = 0;
 	int i;
 
@@ -524,8 +545,8 @@ static int get_fwinfo(libusb_device_handle *dev,
 			return -1;
 		
 		ret = libusb_bulk_transfer(dev, endp_up,
-					   (uint8_t *)&resp,
-					   sizeof(resp),
+					   rdbuf,
+					   READBACK_LEN,
 					   &num,
 					   5000);
 		
@@ -534,26 +555,26 @@ static int get_fwinfo(libusb_device_handle *dev,
 			return ret;
 		}
 		
-		if (resp.hdr.result != RESULT_SUCCESS) {
-			INFO("Printer Status:  %02x\n", resp.hdr.status);
+		if (resp->hdr.result != RESULT_SUCCESS) {
+			INFO("Printer Status:  %02x\n", resp->hdr.status);
 			
 			INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-			     resp.hdr.result, resp.hdr.error, resp.hdr.printer_major,
-			     resp.hdr.printer_minor);
+			     resp->hdr.result, resp->hdr.error, resp->hdr.printer_major,
+			     resp->hdr.printer_minor);
 			continue;
 		}
 
-		if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s2145_fwinfo_resp) - sizeof(struct s2145_status_hdr)))
+		if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_fwinfo_resp) - sizeof(struct s2145_status_hdr)))
 			continue;
 		
 		INFO(" '%s'\t ver %02x.%02x\n", fwinfo_targets[i],
-		     resp.major, resp.minor);
+		     resp->major, resp->minor);
 #if 0
-		INFO("  name:    '%s'\n", resp.name);
-		INFO("  type:    '%s'\n", resp.type);
-		INFO("  date:    '%s'\n", resp.date);
-		INFO("  version: %02x.%02x (CRC %04x)\n", resp.major, resp.minor,
-		     le16_to_cpu(resp.checksum));
+		INFO("  name:    '%s'\n", resp->name);
+		INFO("  type:    '%s'\n", resp->type);
+		INFO("  date:    '%s'\n", resp->date);
+		INFO("  version: %02x.%02x (CRC %04x)\n", resp->major, resp->minor,
+		     le16_to_cpu(resp->checksum));
 #endif
 	}
 	return 0;
@@ -562,8 +583,9 @@ static int get_fwinfo(libusb_device_handle *dev,
 static int get_errorlog(libusb_device_handle *dev, 
 			uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
-	struct s2145_errorlog_resp resp;
+	struct s2145_errorlog_resp *resp = (struct s2145_errorlog_resp *) rdbuf;
 	int ret, num = 0;
 	int i;
 
@@ -575,8 +597,8 @@ static int get_errorlog(libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -585,23 +607,23 @@ static int get_errorlog(libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.hdr.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.hdr.status);
+	if (resp->hdr.result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->hdr.status);
 		
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.hdr.result, resp.hdr.error, resp.hdr.printer_major,
-		     resp.hdr.printer_minor);
+		     resp->hdr.result, resp->hdr.error, resp->hdr.printer_major,
+		     resp->hdr.printer_minor);
 		return -1;
 	}
 	
-	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s2145_errorlog_resp) - sizeof(struct s2145_status_hdr)))
+	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_errorlog_resp) - sizeof(struct s2145_status_hdr)))
 		return -2;
 
-	INFO("Stored Error Events: %d entries:\n", resp.count);
-	for (i = 0 ; i < resp.count ; i++) {
+	INFO("Stored Error Events: %d entries:\n", resp->count);
+	for (i = 0 ; i < resp->count ; i++) {
 		INFO(" %02d: 0x%02x/0x%02x @ %08d prints\n", i,
-		     resp.items[i].major, resp.items[i].minor, 
-		     le32_to_cpu(resp.items[i].print_counter));
+		     resp->items[i].major, resp->items[i].minor, 
+		     le32_to_cpu(resp->items[i].print_counter));
 	}
 	return 0;
 }
@@ -609,8 +631,9 @@ static int get_errorlog(libusb_device_handle *dev,
 static int get_mediainfo(libusb_device_handle *dev, 
 			 uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
-	struct s2145_mediainfo_resp resp;
+	struct s2145_mediainfo_resp *resp = (struct s2145_mediainfo_resp *) rdbuf;
 	int ret, num = 0;
 	int i;
 
@@ -622,8 +645,8 @@ static int get_mediainfo(libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -632,26 +655,26 @@ static int get_mediainfo(libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.hdr.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.hdr.status);
+	if (resp->hdr.result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->hdr.status);
 		
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.hdr.result, resp.hdr.error, resp.hdr.printer_major,
-		     resp.hdr.printer_minor);
+		     resp->hdr.result, resp->hdr.error, resp->hdr.printer_major,
+		     resp->hdr.printer_minor);
 		return -1;
 	}
 	
-	if (le16_to_cpu(resp.hdr.payload_len) != (sizeof(struct s2145_mediainfo_resp) - sizeof(struct s2145_status_hdr)))
+	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_mediainfo_resp) - sizeof(struct s2145_status_hdr)))
 		return -2;
 
-	INFO("Supported Media Information: %d entries:\n", resp.count);
-	for (i = 0 ; i < resp.count ; i++) {
+	INFO("Supported Media Information: %d entries:\n", resp->count);
+	for (i = 0 ; i < resp->count ; i++) {
 		INFO(" %02d: C 0x%02x (%s), %04dx%04d, M 0x%02x (%s), P 0x%02x (%s)\n", i,
-		     resp.items[i].code, print_medias[resp.items[i].code],
-		     le16_to_cpu(resp.items[i].columns),
-		     le16_to_cpu(resp.items[i].rows), 
-		     resp.items[i].media_type, media_types[resp.items[i].media_type],
-		     resp.items[i].print_type, print_methods[resp.items[i].print_type]);
+		     resp->items[i].code, print_medias[resp->items[i].code],
+		     le16_to_cpu(resp->items[i].columns),
+		     le16_to_cpu(resp->items[i].rows), 
+		     resp->items[i].media_type, media_types[resp->items[i].media_type],
+		     resp->items[i].print_type, print_methods[resp->items[i].print_type]);
 	}
 	return 0;
 }
@@ -659,8 +682,9 @@ static int get_mediainfo(libusb_device_handle *dev,
 static int get_user_string(libusb_device_handle *dev, 
 			   uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
-	struct s2145_getunique_resp resp;
+	struct s2145_getunique_resp *resp = (struct s2145_getunique_resp*) rdbuf;
 	int ret, num = 0;
 
 	cmd.cmd = cpu_to_le16(S2145_CMD_GETUNIQUE);
@@ -671,8 +695,8 @@ static int get_user_string(libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -681,29 +705,30 @@ static int get_user_string(libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.hdr.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.hdr.status);
+	if (resp->hdr.result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->hdr.status);
 
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.hdr.result, resp.hdr.error, resp.hdr.printer_major,
-		     resp.hdr.printer_minor);
+		     resp->hdr.result, resp->hdr.error, resp->hdr.printer_major,
+		     resp->hdr.printer_minor);
 		return -1;
 	}
 
 	/* Null-terminate */
-	resp.hdr.payload_len = le16_to_cpu(resp.hdr.payload_len);
-	if (resp.hdr.payload_len > 23)
-		resp.hdr.payload_len = 23;
-	resp.data[resp.hdr.payload_len] = 0;
-	INFO("Unique String: '%s'\n", resp.data);
+	resp->hdr.payload_len = le16_to_cpu(resp->hdr.payload_len);
+	if (resp->hdr.payload_len > 23)
+		resp->hdr.payload_len = 23;
+	resp->data[resp->hdr.payload_len] = 0;
+	INFO("Unique String: '%s'\n", resp->data);
 	return 0;
 }
 
 static int set_user_string(char *str, libusb_device_handle *dev, 
 			   uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_setunique_cmd cmd;
-	struct s2145_status_hdr resp;
+	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
 
 	if (str) {
@@ -724,8 +749,8 @@ static int set_user_string(char *str, libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -734,12 +759,12 @@ static int set_user_string(char *str, libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.status);
+	if (resp->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->status);
 
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.result, resp.error, resp.printer_major,
-		     resp.printer_minor);
+		     resp->result, resp->error, resp->printer_major,
+		     resp->printer_minor);
 		return -1;
 	}
 
@@ -749,8 +774,9 @@ static int set_user_string(char *str, libusb_device_handle *dev,
 static int cancel_job(char *str, libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cancel_cmd cmd;
-	struct s2145_status_hdr resp;
+	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
 
 	if (!str)
@@ -766,8 +792,8 @@ static int cancel_job(char *str, libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -776,12 +802,12 @@ static int cancel_job(char *str, libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.status);
+	if (resp->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->status);
 
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.result, resp.error, resp.printer_major,
-		     resp.printer_minor);
+		     resp->result, resp->error, resp->printer_major,
+		     resp->printer_minor);
 		return -1;
 	}
 
@@ -791,8 +817,9 @@ static int cancel_job(char *str, libusb_device_handle *dev,
 static int flash_led(libusb_device_handle *dev, 
 		     uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
-	struct s2145_status_hdr resp;
+	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
 
 	cmd.cmd = cpu_to_le16(S2145_CMD_FLASHLED);
@@ -803,8 +830,8 @@ static int flash_led(libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -813,12 +840,12 @@ static int flash_led(libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.status);
+	if (resp->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->status);
 
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.result, resp.error, resp.printer_major,
-		     resp.printer_minor);
+		     resp->result, resp->error, resp->printer_major,
+		     resp->printer_minor);
 		return -1;
 	}
 
@@ -828,8 +855,9 @@ static int flash_led(libusb_device_handle *dev,
 static int reset_curve(int target, libusb_device_handle *dev, 
 		       uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_reset_cmd cmd;
-	struct s2145_status_hdr resp;
+	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
 
 	cmd.target = target;
@@ -842,8 +870,8 @@ static int reset_curve(int target, libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -852,12 +880,12 @@ static int reset_curve(int target, libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.status);
+	if (resp->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->status);
 
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.result, resp.error, resp.printer_major,
-		     resp.printer_minor);
+		     resp->result, resp->error, resp->printer_major,
+		     resp->printer_minor);
 		return -1;
 	}
 
@@ -867,8 +895,9 @@ static int reset_curve(int target, libusb_device_handle *dev,
 static int button_set(int enable, libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_button_cmd cmd;
-	struct s2145_status_hdr resp;
+	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
 
 	cmd.enabled = enable;
@@ -881,8 +910,8 @@ static int button_set(int enable, libusb_device_handle *dev,
 		return -1;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 
@@ -891,23 +920,24 @@ static int button_set(int enable, libusb_device_handle *dev,
 		return ret;
 	}
 
-	if (resp.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.status);
+	if (resp->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->status);
 
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.result, resp.error, resp.printer_major,
-		     resp.printer_minor);
+		     resp->result, resp->error, resp->printer_major,
+		     resp->printer_minor);
 		return -1;
 	}
 
 	return 0;
 }
 
-static int get_tonecurve(int type, libusb_device_handle *dev, 
+static int get_tonecurve(int type, char *fname, libusb_device_handle *dev, 
 			 uint8_t endp_down, uint8_t endp_up) 
 {
+	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_readtone_cmd  cmd;
-	struct s2145_readtone_resp resp;
+	struct s2145_readtone_resp *resp = (struct s2145_readtone_resp *) rdbuf;
 	int ret, num = 0;
 
 	uint8_t *data;
@@ -920,15 +950,15 @@ static int get_tonecurve(int type, libusb_device_handle *dev,
 	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_READTONE);
 	cmd.hdr.len = cpu_to_le16(1);
 
-	INFO("Read %s Tone Curve:\n", tonecurve_statuses[type]);
+	INFO("Dump %s Tone Curve to '%s'\n", tonecurve_statuses[type], fname);
 
 	if ((ret = send_data(dev, endp_down,
 			     (uint8_t *) &cmd, sizeof(cmd))))
 		return -1;
 	
 	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t *)&resp,
-				   sizeof(resp),
+				   rdbuf,
+				   READBACK_LEN,
 				   &num,
 				   5000);
 	
@@ -937,55 +967,128 @@ static int get_tonecurve(int type, libusb_device_handle *dev,
 		return ret;
 	}
 		
-	if (resp.hdr.result != RESULT_SUCCESS) {
-		INFO("Printer Status:  %02x\n", resp.hdr.status);
+	if (resp->hdr.result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->hdr.status);
 		
 		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
-		     resp.hdr.result, resp.hdr.error, resp.hdr.printer_major,
-		     resp.hdr.printer_minor);
+		     resp->hdr.result, resp->hdr.error, resp->hdr.printer_major,
+		     resp->hdr.printer_minor);
 		return -2;
 	}
 
-	resp.total_size = le16_to_cpu(resp.total_size);
+	resp->total_size = le16_to_cpu(resp->total_size);
 
-	data = malloc(resp.total_size * 2);
+	data = malloc(resp->total_size * 2);
 
 	i = 0;
-	while (i < resp.total_size) {
+	while (i < resp->total_size) {
 		ret = libusb_bulk_transfer(dev, endp_up,
 					   data + i,
-					   resp.total_size * 2 - i,
+					   resp->total_size * 2 - i,
 					   &num,
 					   5000);
 
 		if (ret < 0) {
-			ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num + i, (int)resp.total_size, endp_up);
+			ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num + i, (int)resp->total_size, endp_up);
 			return ret;
 		}
 		i += num;
 	}
 
 	i = j = 0;
-	while (i < resp.total_size) {
+	while (i < resp->total_size) {
 		memcpy(curves + j, data + i+2, data[i+1]);
 		j += data[i+1] / 2;
 		i += data[i+1] + 2;
 	}
 
-	INFO(" YELLOW:\n");
-	for (i = 0 ; i < 256; i++) {
-		INFO("  0x%02x -> 0x%03x\n", i, le16_to_cpu(curves[i]));
-	}
-	INFO(" MAGENTA:\n");
-	for (i = 256 ; i < 512; i++) {
-		INFO("  0x%02x -> 0x%03x\n", i-256, le16_to_cpu(curves[i]));
-	}
-	INFO(" CYAN:\n");
-	for (i = 512 ; i < 768; i++) {
-		INFO("  0x%02x -> 0x%03x\n", i-512, le16_to_cpu(curves[i]));
+	/* Open file and write it out */
+	{
+		int tc_fd = open(fname, O_WRONLY|O_CREAT);
+		if (tc_fd < 0)
+			return -1;
+		
+		for (i = 0 ; i < 768; i++) {
+			/* Byteswap appropriately */
+			curves[i] = cpu_to_be16(le16_to_cpu(curves[i]));
+			write(tc_fd, &curves[i], sizeof(uint16_t));
+		}
+		close(tc_fd);
 	}
 
 	free(data);
+	return 0;
+}
+
+static int set_tonecurve(int target, char *fname, libusb_device_handle *dev, 
+			 uint8_t endp_down, uint8_t endp_up) 
+{
+	uint8_t rdbuf[READBACK_LEN];
+	struct s2145_update_cmd cmd;
+	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
+	int ret, num = 0;
+
+	INFO("Set %s Tone Curve from '%s'\n", update_targets[target], fname);
+
+	uint16_t *data = malloc(UPDATE_SIZE);
+
+	/* Read in file */
+	int tc_fd = open(fname, O_RDONLY);
+	if (tc_fd < 0)
+		return -1;
+	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE)
+		return -2;
+	close(tc_fd);
+	/* Byteswap data to local CPU.. */
+	for (ret = 0; ret < UPDATE_SIZE ; ret+=2) {
+		data[ret] = be16_to_cpu(data[ret]);
+	}
+
+	/* Set up command */
+	cmd.target = target;
+	cmd.reserved = 0;
+	cmd.size = cpu_to_le32(UPDATE_SIZE);
+
+	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_UPDATE);
+	cmd.hdr.len = cpu_to_le16(sizeof(struct s2145_update_cmd)-sizeof(cmd.hdr));
+
+	/* Byteswap data to format printer is expecting.. */
+	for (ret = 0; ret < UPDATE_SIZE ; ret+=2) {
+		data[ret] = cpu_to_le16(data[ret]);
+	}
+
+	if ((ret = send_data(dev, endp_down,
+			     (uint8_t *) &cmd, sizeof(cmd))))
+		return -1;
+
+	ret = libusb_bulk_transfer(dev, endp_up,
+				   rdbuf,
+				   READBACK_LEN,
+				   &num,
+				   5000);
+
+	if (ret < 0 || (num < sizeof(struct s2145_status_hdr))) {
+		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(resp), endp_up);
+		return ret;
+	}
+
+	if (resp->result != RESULT_SUCCESS) {
+		INFO("Printer Status:  %02x\n", resp->status);
+
+		INFO(" Result: 0x%02x  Error: 0x%02x (0x%02x/0x%02x)\n",
+		     resp->result, resp->error, resp->printer_major,
+		     resp->printer_minor);
+		return -1;
+	}
+
+	/* Sent transfer */
+	if ((ret = send_data(dev, endp_down,
+			     (uint8_t *) data, UPDATE_SIZE))) {
+		return ret;
+	}
+
+	free(data);
+
 	return 0;
 }
 
@@ -1030,8 +1133,8 @@ int main (int argc, char **argv)
 
 	/* Cmdline help */
 	if (argc < 2) {
-		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ]\n\t%s [ -qs | -qm | -qf | -qe | -qu | -qtu | -qtc ]\n\t%s [ -su somestring | -pc id | -fl | -ru | -rp | -b1 | -b0 ]\n\n",
-		      argv[0], argv[0], argv[0], argv[0]);
+		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ]\n\t%s [ -qs | -qm | -qf | -qe | -qu | -qtu filename | -qtc filename ]\n\t%s [ -su somestring | -stu filename | -stc filename ]\n\t%s [ -pc id | -fl | -ru | -rp | -b1 | -b0 ]\n\n",
+		      argv[0], argv[0], argv[0], argv[0], argv[0]);
 		libusb_init(&ctx);
 		find_and_enumerate(ctx, &list, NULL, 1);
 		libusb_free_device_list(list, 1);
@@ -1090,6 +1193,8 @@ int main (int argc, char **argv)
 		    !strcmp("-rp", argv[1]) ||
 		    !strcmp("-b1", argv[1]) ||
 		    !strcmp("-b0", argv[1]) ||
+		    !strcmp("-stc", argv[1]) ||
+		    !strcmp("-stu", argv[1]) ||
 		    !strcmp("-su", argv[1])) {
 			query_only = 1;
 			goto skip_read;
@@ -1237,11 +1342,15 @@ skip_read:
 		else if (!strcmp("-qu", argv[1]))
 			get_user_string(dev, endp_down, endp_up);
 		else if (!strcmp("-qtu", argv[1]))
-			get_tonecurve(TONECURVE_USER, dev, endp_down, endp_up);
+			get_tonecurve(TONECURVE_USER, argv[2], dev, endp_down, endp_up);
 		else if (!strcmp("-qtc", argv[1]))
-			get_tonecurve(TONECURVE_CURRENT, dev, endp_down, endp_up);
+			get_tonecurve(TONECURVE_CURRENT, argv[2], dev, endp_down, endp_up);
 		else if (!strcmp("-su", argv[1]))
 			set_user_string(argv[2], dev, endp_down, endp_up);
+		else if (!strcmp("-stu", argv[1]))
+			set_tonecurve(UPDATE_TARGET_USER, argv[2], dev, endp_down, endp_up);
+		else if (!strcmp("-stc", argv[1]))
+			set_tonecurve(UPDATE_TARGET_CURRENT, argv[2], dev, endp_down, endp_up);
 		else if (!strcmp("-pc", argv[1]))
 			cancel_job(argv[2], dev, endp_down, endp_up);
 		else if (!strcmp("-fl", argv[1]))
