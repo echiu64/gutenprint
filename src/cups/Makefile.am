@@ -116,7 +116,7 @@ commandtocanon_LDADD = $(CUPS_LIBS)
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
-selphy_SOURCES = selphy_print.c selphy_print_common.h
+selphy_SOURCES = selphy_print.c
 selphy_CPPFLAGS = $(LIBUSB_CFLAGS)
 selphy_LDADD = $(LIBUSB_LIBS)
 
