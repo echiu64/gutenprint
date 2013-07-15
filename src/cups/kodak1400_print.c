@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.15"
+#define VERSION "0.16"
 #define URI_PREFIX "kodak1400://"
 
 #include "backend_common.c"

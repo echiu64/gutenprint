@@ -35,8 +35,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.01"
-#define URI_PREFIX "sony_updr150://"
+#define VERSION "0.02"
+#define URI_PREFIX "sonyupdr150://"
 #define STR_LEN_MAX 64
 
 #include "backend_common.c"

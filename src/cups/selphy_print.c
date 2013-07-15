@@ -35,8 +35,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.51"
-#define URI_PREFIX "selphy://"
+#define VERSION "0.52"
+#define URI_PREFIX "canonselphy://"
 
 #include "backend_common.c"
 

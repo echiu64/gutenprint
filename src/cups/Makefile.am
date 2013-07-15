@@ -84,7 +84,7 @@ sbin_SCRIPTS = cups-genppdupdate
 cupsexec_filter_PROGRAMS = rastertogutenprint.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ commandtoepson commandtocanon
 
 if BUILD_LIBUSB_BACKENDS
-cupsexec_backend_PROGRAMS = selphy kodak1400 kodak6800 shinko_s2145 sony_updr150
+cupsexec_backend_PROGRAMS = canonselphy kodak1400 kodak6800 shinkos2145 sonyupdr150
 endif
 
 ## CUPS backends require no world-execute permissions if they are to be
@@ -92,10 +92,11 @@ endif
 ## See http://www.cups.org/documentation.php/doc-1.6/man-backend.html
 if BUILD_LIBUSB_BACKENDS
 install-exec-hook:
-	chmod 700 $(DESTDIR)$(pkglibdir)/backend/selphy
+	chmod 700 $(DESTDIR)$(pkglibdir)/backend/canonselphy
 	chmod 700 $(DESTDIR)$(pkglibdir)/backend/kodak1400
 	chmod 700 $(DESTDIR)$(pkglibdir)/backend/kodak6800
-	chmod 700 $(DESTDIR)$(pkglibdir)/backend/shinko_s2145
+	chmod 700 $(DESTDIR)$(pkglibdir)/backend/shinkos2145
+	chmod 700 $(DESTDIR)$(pkglibdir)/backend/sonyupdr150
 endif
 
 
@@ -116,9 +117,9 @@ commandtocanon_LDADD = $(CUPS_LIBS)
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
-selphy_SOURCES = selphy_print.c
-selphy_CPPFLAGS = $(LIBUSB_CFLAGS)
-selphy_LDADD = $(LIBUSB_LIBS)
+canonselphy_SOURCES = selphy_print.c
+canonselphy_CPPFLAGS = $(LIBUSB_CFLAGS)
+canonselphy_LDADD = $(LIBUSB_LIBS)
 
 kodak1400_SOURCES = kodak1400_print.c
 kodak1400_CPPFLAGS = $(LIBUSB_CFLAGS)
@@ -128,13 +129,13 @@ kodak6800_SOURCES = kodak6800_print.c
 kodak6800_CPPFLAGS = $(LIBUSB_CFLAGS)
 kodak6800_LDADD = $(LIBUSB_LIBS)
 
-shinko_s2145_SOURCES = shinko_s2145_print.c
-shinko_s2145_CPPFLAGS = $(LIBUSB_CFLAGS)
-shinko_s2145_LDADD = $(LIBUSB_LIBS)
+shinkos2145_SOURCES = shinko_s2145_print.c
+shinkos2145_CPPFLAGS = $(LIBUSB_CFLAGS)
+shinkos2145_LDADD = $(LIBUSB_LIBS)
 
-sony_updr150_SOURCES = sony_updr150_print.c
-sony_updr150_CPPFLAGS = $(LIBUSB_CFLAGS)
-sony_updr150_LDADD = $(LIBUSB_LIBS)
+sonyupdr150_SOURCES = sony_updr150_print.c
+sonyupdr150_CPPFLAGS = $(LIBUSB_CFLAGS)
+sonyupdr150_LDADD = $(LIBUSB_LIBS)
 
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_SOURCES = genppd.c i18n.c i18n.h
 cups_genppd_@GUTENPRINT_MAJOR_VERSION@_@GUTENPRINT_MINOR_VERSION@_CFLAGS = -DALL_LINGUAS='"$(ALL_LINGUAS)"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
