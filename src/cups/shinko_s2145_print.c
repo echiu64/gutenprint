@@ -39,7 +39,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.11"
+#define VERSION "0.12"
 #define URI_PREFIX "shinkos2145://"
 
 #include "backend_common.c"
@@ -424,6 +424,8 @@ struct s2145_getunique_resp {
 #define READBACK_LEN 128    /* Needs to be larger than largest response hdr */
 #define CMDBUF_LEN sizeof(struct s2145_print_cmd)
 
+uint8_t rdbuf[READBACK_LEN];
+
 static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
 			      char *match_serno,
@@ -464,7 +466,6 @@ static int find_and_enumerate(struct libusb_context *ctx,
 static int get_status(libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
 	struct s2145_status_resp *resp = (struct s2145_status_resp *) rdbuf;
 	int ret, num = 0;
@@ -498,13 +499,13 @@ static int get_status(libusb_device_handle *dev,
 	if (le16_to_cpu(resp->hdr.payload_len) != (sizeof(struct s2145_status_resp) - sizeof(struct s2145_status_hdr)))
 		return 0;
 
-	INFO(" Prints:\n");
-        INFO("\tLifetime:\t\t%08d\n", le32_to_cpu(resp->count_lifetime));
-	INFO("\tMaintainence:\t\t%08d\n", le32_to_cpu(resp->count_maint));
+	INFO(" Print Counts:\n");
 	INFO("\tSince Paper Changed:\t%08d\n", le32_to_cpu(resp->count_paper));
-	INFO("\tCutter:\t\t\t%08d\n", le32_to_cpu(resp->count_cutter));
+	INFO("\tLifetime:\t\t%08d\n", le32_to_cpu(resp->count_lifetime));
+	INFO("\tMaintainence:\t\t%08d\n", le32_to_cpu(resp->count_maint));
 	INFO("\tPrint Head:\t\t%08d\n", le32_to_cpu(resp->count_head));
-        INFO("\tRibbon Remaining:\t%08d\n", le32_to_cpu(resp->count_ribbon_left));
+	INFO(" Cutter Actuations:\t%08d\n", le32_to_cpu(resp->count_cutter));
+	INFO(" Ribbon Remaining:\t%08d\n", le32_to_cpu(resp->count_ribbon_left));
 	INFO("Bank 1: 0x%02x (%s) Job %03d @ %03d/%03d (%03d remaining)\n",
 	     resp->bank1_status, bank_statuses[resp->bank1_status],
 	     resp->bank1_printid,
@@ -527,7 +528,6 @@ static int get_status(libusb_device_handle *dev,
 static int get_fwinfo(libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_fwinfo_cmd  cmd;
 	struct s2145_fwinfo_resp *resp = (struct s2145_fwinfo_resp *)rdbuf;
 	int ret, num = 0;
@@ -583,7 +583,6 @@ static int get_fwinfo(libusb_device_handle *dev,
 static int get_errorlog(libusb_device_handle *dev, 
 			uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
 	struct s2145_errorlog_resp *resp = (struct s2145_errorlog_resp *) rdbuf;
 	int ret, num = 0;
@@ -631,7 +630,6 @@ static int get_errorlog(libusb_device_handle *dev,
 static int get_mediainfo(libusb_device_handle *dev, 
 			 uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
 	struct s2145_mediainfo_resp *resp = (struct s2145_mediainfo_resp *) rdbuf;
 	int ret, num = 0;
@@ -682,7 +680,6 @@ static int get_mediainfo(libusb_device_handle *dev,
 static int get_user_string(libusb_device_handle *dev, 
 			   uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
 	struct s2145_getunique_resp *resp = (struct s2145_getunique_resp*) rdbuf;
 	int ret, num = 0;
@@ -726,7 +723,6 @@ static int get_user_string(libusb_device_handle *dev,
 static int set_user_string(char *str, libusb_device_handle *dev, 
 			   uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_setunique_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
@@ -774,7 +770,6 @@ static int set_user_string(char *str, libusb_device_handle *dev,
 static int cancel_job(char *str, libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cancel_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
@@ -817,7 +812,6 @@ static int cancel_job(char *str, libusb_device_handle *dev,
 static int flash_led(libusb_device_handle *dev, 
 		     uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_cmd_hdr cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
@@ -855,7 +849,6 @@ static int flash_led(libusb_device_handle *dev,
 static int reset_curve(int target, libusb_device_handle *dev, 
 		       uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_reset_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
@@ -895,7 +888,6 @@ static int reset_curve(int target, libusb_device_handle *dev,
 static int button_set(int enable, libusb_device_handle *dev, 
 		      uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_button_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
@@ -935,7 +927,6 @@ static int button_set(int enable, libusb_device_handle *dev,
 static int get_tonecurve(int type, char *fname, libusb_device_handle *dev, 
 			 uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_readtone_cmd  cmd;
 	struct s2145_readtone_resp *resp = (struct s2145_readtone_resp *) rdbuf;
 	int ret, num = 0;
@@ -1023,7 +1014,6 @@ static int get_tonecurve(int type, char *fname, libusb_device_handle *dev,
 static int set_tonecurve(int target, char *fname, libusb_device_handle *dev, 
 			 uint8_t endp_down, uint8_t endp_up) 
 {
-	uint8_t rdbuf[READBACK_LEN];
 	struct s2145_update_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 	int ret, num = 0;
@@ -1125,7 +1115,6 @@ int main (int argc, char **argv)
 	uint8_t *planedata = NULL, *cmdbuf = NULL;
 	uint32_t datasize;
 
-	uint8_t rdbuf[READBACK_LEN];
 	uint8_t rdbuf2[READBACK_LEN];
 	int last_state = -1, state = S_IDLE;
 
@@ -1501,9 +1490,10 @@ done_claimed:
 	libusb_release_interface(dev, iface);
 
 done_close:
+#if 0
 	if (claimed)
 		libusb_attach_kernel_driver(dev, iface);
-
+#endif
 	libusb_close(dev);
 done:
 	if (planedata)

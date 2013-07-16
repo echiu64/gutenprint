@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.16"
+#define VERSION "0.17"
 #define URI_PREFIX "kodak1400://"
 
 #include "backend_common.c"
@@ -675,9 +675,10 @@ done_claimed:
 	libusb_release_interface(dev, iface);
 
 done_close:
+#if 0
 	if (claimed)
 		libusb_attach_kernel_driver(dev, iface);
-
+#endif
 	libusb_close(dev);
 done:
 	if (plane_r)

@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.52"
+#define VERSION "0.53"
 #define URI_PREFIX "canonselphy://"
 
 #include "backend_common.c"
@@ -792,11 +792,11 @@ done_claimed:
 	libusb_release_interface(dev, iface);
 
 done_close:
+#if 0
 	if (claimed)
 		libusb_attach_kernel_driver(dev, iface);
-
+#endif
 	libusb_close(dev);
-
 done:
 	libusb_free_device_list(list, 1);
 	libusb_exit(ctx);

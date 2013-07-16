@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.02"
+#define VERSION "0.03"
 #define URI_PREFIX "sonyupdr150://"
 #define STR_LEN_MAX 64
 
@@ -295,9 +295,10 @@ done_claimed:
 	libusb_release_interface(dev, iface);
 
 done_close:
+#if 0
 	if (claimed)
 		libusb_attach_kernel_driver(dev, iface);
-
+#endif
 	libusb_close(dev);
 done:
 
