@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.53"
+#define VERSION "0.54"
 #define URI_PREFIX "canonselphy://"
 
 #include "backend_common.c"
@@ -656,6 +656,10 @@ int main (int argc, char **argv)
 				   2000);
 top:
 
+	if (state != last_state) {
+		DEBUG("last_state %d new %d\n", last_state, state);
+	}
+
 	/* Do it twice to clear initial state */
 	ret = libusb_bulk_transfer(dev, endp_up,
 				   rdbuf,
@@ -675,13 +679,11 @@ top:
 			rdbuf[4], rdbuf[5], rdbuf[6], rdbuf[7],
 			rdbuf[8], rdbuf[9], rdbuf[10], rdbuf[11]);
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
-	} else {
+	} else if (state == last_state) {
 		sleep(1);
 	}
-	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
-		last_state = state;
-	}
+	last_state = state;
+
 	fflush(stderr);       
 
 	/* Error detection */

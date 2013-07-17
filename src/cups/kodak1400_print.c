@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.17"
+#define VERSION "0.18"
 #define URI_PREFIX "kodak1400://"
 
 #include "backend_common.c"
@@ -482,7 +482,11 @@ skip_read:
 	/* Time for the main processing loop */
 
 top:
-	/* Send State Query */
+	if (state != last_state) {
+		DEBUG("last_state %d new %d\n", last_state, state);
+	}
+
+	/* Send Status Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x72;
@@ -509,13 +513,11 @@ top:
 		      rdbuf[0], rdbuf[1], rdbuf[2], rdbuf[3],
 		      rdbuf[4], rdbuf[5], rdbuf[6], rdbuf[7]);
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
-	} else {
+	} else if (state == last_state) {
 		sleep(1);
 	}
-	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
-		last_state = state;
-	}
+	last_state = state;
+
 	fflush(stderr);       
 
 	switch (state) {

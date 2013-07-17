@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.12"
+#define VERSION "0.13"
 #define URI_PREFIX "kodak6800://"
 #define STR_LEN_MAX 64
 
@@ -494,7 +494,11 @@ int main (int argc, char **argv)
 	/* Time for the main processing loop */
 
 top:
-	/* Send State Query */
+	if (state != last_state) {
+		DEBUG("last_state %d new %d\n", last_state, state);
+	}
+
+	/* Send Status Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
 	cmdbuf[0] = 0x03;
 	cmdbuf[1] = 0x1b;
@@ -527,13 +531,11 @@ top:
 			DEBUG2("%02x ", rdbuf[i]);
 		}
 		DEBUG2("\n");
-	} else {
+	} else if (state == last_state) {
 		sleep(1);
 	}
-	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
-		last_state = state;
-	}
+	last_state = state;
+
 	fflush(stderr);       
 
 	switch (state) {
