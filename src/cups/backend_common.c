@@ -28,7 +28,7 @@
 #include <libusb-1.0/libusb.h>
 #include <arpa/inet.h>
 
-#define BACKEND_VERSION "0.3"
+#define BACKEND_VERSION "0.4"
 
 #define STR_LEN_MAX 64
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
@@ -191,8 +191,14 @@ static int print_scan_output(struct libusb_device *device,
 		sanitize_string((char*)serial);
 	}
 	
-	if (!strlen((char*)serial))
-		strcpy((char*)serial, "NONE");
+	if (!strlen((char*)serial)) {
+		uint8_t bus_num;
+		uint8_t port_num;
+
+		bus_num = libusb_get_bus_number(device);
+		port_num = libusb_get_port_number(device);
+		sprintf((char*)serial, "NONE_B%03d_D%03d", bus_num, port_num);
+	}
 	
 	DEBUG("%s%sPID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
 	      (!valid) ? "UNRECOGNIZED: " : "",
