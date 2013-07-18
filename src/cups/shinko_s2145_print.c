@@ -39,7 +39,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.15"
+#define VERSION "0.16"
 #define URI_PREFIX "shinkos2145://"
 
 #include "backend_common.c"
@@ -1180,6 +1180,8 @@ int main (int argc, char **argv)
 		}
 		use_serno++;
 	} else {
+		use_serno = getenv("DEVICE");
+
 		if (!strcmp("-qs", argv[1]) ||
 		    !strcmp("-qf", argv[1]) ||
 		    !strcmp("-qe", argv[1]) ||

@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.54"
+#define VERSION "0.55"
 #define URI_PREFIX "canonselphy://"
 
 #include "backend_common.c"
@@ -544,6 +544,8 @@ int main (int argc, char **argv)
 		}
 		use_serno++;
 	} else {
+		use_serno = getenv("DEVICE");
+
 		/* Open Input File */
 		if (strcmp("-", argv[1])) {
 			data_fd = open(argv[1], O_RDONLY);

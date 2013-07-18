@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.13"
+#define VERSION "0.14"
 #define URI_PREFIX "kodak6800://"
 #define STR_LEN_MAX 64
 
@@ -374,6 +374,8 @@ int main (int argc, char **argv)
 		}
 		use_serno++;
 	} else {
+		use_serno = getenv("DEVICE");
+
 		if (!strcmp("-qtc", argv[1]) ||
 		    !strcmp("-stc", argv[1])) {
 			query_only = 1;

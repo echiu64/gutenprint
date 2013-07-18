@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.03"
+#define VERSION "0.04"
 #define URI_PREFIX "sonyupdr150://"
 #define STR_LEN_MAX 64
 
@@ -157,6 +157,8 @@ int main (int argc, char **argv)
 		}
 		use_serno++;
 	} else {
+		use_serno = getenv("DEVICE");
+
 		/* Open Input File */
 		if (strcmp("-", argv[1])) {
 			data_fd = open(argv[1], O_RDONLY);

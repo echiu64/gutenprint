@@ -1011,9 +1011,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Kodak Dye-Sublimation printers:
 
        Kodak 1400
+       Kodak 805
 
-	The Kodak 1400 requires an intelligent CUPS backend, which 
-	is bundled with Gutenprint.
+	The Kodak 1400 and 805 require an intelligent CUPS backend, 
+	which is bundled with Gutenprint.
 
        Kodak 6800
 
@@ -1022,7 +1023,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Kodak 6850 (EXPERIMENTAL)
        Kodak 605  (EXPERIMENTAL)
-       Kodak 805  (EXPERIMENTAL)
        Kodak 8500 (EXPERIMENTAL)	
        Kodak 9810 (EXPERIMENTAL)
 

@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.18"
+#define VERSION "0.20"
 #define URI_PREFIX "kodak1400://"
 
 #include "backend_common.c"
@@ -105,11 +105,9 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		case USB_PID_KODAK_1400:
 			found = i;
 			break;
-#if 0
 		case USB_PID_KODAK_805:
 			found = i;
 			break;
-#endif
 		default:
 			continue;
 		}
@@ -304,7 +302,7 @@ int main (int argc, char **argv)
 	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
 	int last_state = -1, state = S_IDLE;
 
-	DEBUG("Kodak 1400 CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
+	DEBUG("Kodak 1400/805 CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
 
 	/* Cmdline help */
 	if (argc < 2) {
@@ -353,10 +351,13 @@ int main (int argc, char **argv)
 		}
 		use_serno++;
 	} else {
+		use_serno = getenv("DEVICE");
+
 		if (!strcmp("-stc", argv[1])) {
 			query_only = 1;
 			goto skip_read;
 		}
+
 		/* Open Input File */
 		if (strcmp("-", argv[1])) {
 			data_fd = open(argv[1], O_RDONLY);
@@ -824,6 +825,7 @@ done:
  e4 72 00 00  02 00 50 59  -- media off, error red. [out of paper]
  e4 72 00 00  02 01 00 00  -- media off, error red. [out of paper]
  e4 72 00 00  02 00 00 00  -- media off, error red. [out of paper]
+ e4 72 00 00  02 00 50 50  -- media on, error red. [paper jam while laminating]
 
  *********************************************
   Calibration data:
