@@ -1,5 +1,5 @@
 /*
- *   Kodak 6800 Photo Printer print assister
+ *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
@@ -35,26 +35,13 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.14"
-#define URI_PREFIX "kodak6800://"
-#define STR_LEN_MAX 64
+#include "backend_common.h"
 
-#include "backend_common.c"
+#define USB_VID_KODAK       0x040A
+#define USB_PID_KODAK_6800  0x4021
+#define USB_PID_KODAK_6850  0x402B
 
-/* USB Identifiers */
-#define USB_VID_KODAK      0x040A
-#define USB_PID_KODAK_6800 0x4021
-
-/* Program states */
-enum {
-	S_IDLE = 0,
-	S_PRINTER_READY_HDR,
-	S_PRINTER_SENT_HDR,
-	S_PRINTER_SENT_HDR2,
-	S_PRINTER_SENT_DATA,
-	S_FINISHED,
-};
-
+/* File header */
 struct kodak6800_hdr {
 	uint8_t  hdr[9];
 	uint8_t  copies;
@@ -66,49 +53,40 @@ struct kodak6800_hdr {
 } __attribute__((packed));
 
 #define CMDBUF_LEN 17
-#define READBACK_LEN 58
 
-static int find_and_enumerate(struct libusb_context *ctx,
-			      struct libusb_device ***list,
-			      char *match_serno,
-			      int scan_only)
-{
-	int num;
-	int i;
-	int found = -1;
+/* Private data stucture */
+struct kodak6800_ctx {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
 
-	/* Enumerate and find suitable device */
-	num = libusb_get_device_list(ctx, list);
+	int type;
+	struct kodak6800_hdr hdr;
+	uint8_t *databuf;
+	int datalen;
+};
 
-	for (i = 0 ; i < num ; i++) {
-		struct libusb_device_descriptor desc;
+/* Program states */
+enum {
+	S_IDLE = 0,
+	S_6850_READY,
+	S_6850_READY_WAIT,
+	S_READY,
+	S_STARTED,
+	S_SENT_HDR,
+	S_SENT_DATA,
+	S_FINISHED,
+};
 
-		libusb_get_device_descriptor((*list)[i], &desc);
-
-		if (desc.idVendor != USB_VID_KODAK)
-			continue;
-
-		switch(desc.idProduct) {
-		case USB_PID_KODAK_6800:
-			found = i;
-			break;
-		default:
-			continue;
-		}
-
-		found = print_scan_output((*list)[i], &desc,
-					  URI_PREFIX, "Kodak", 
-					  found, (found == i), 1, 
-					  scan_only, match_serno);
-	}
-
-	return found;
-}
+#define READBACK_LEN 68
 
 #define UPDATE_SIZE 1536
-static int get_tonecurve(char *fname, libusb_device_handle *dev, 
-			 uint8_t endp_down, uint8_t endp_up) 
+static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 {
+	libusb_device_handle *dev = ctx->dev;
+	uint8_t endp_down = ctx->endp_down;
+	uint8_t endp_up = ctx->endp_up;
+
 	uint8_t cmdbuf[16];
 	uint8_t respbuf[64];
 	int ret, num = 0;
@@ -203,9 +181,12 @@ static int get_tonecurve(char *fname, libusb_device_handle *dev,
 	return 0;
 }
 
-static int set_tonecurve(char *fname, libusb_device_handle *dev, 
-			 uint8_t endp_down, uint8_t endp_up) 
+static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 {
+	libusb_device_handle *dev = ctx->dev;
+	uint8_t endp_down = ctx->endp_down;
+	uint8_t endp_up = ctx->endp_up;
+
 	uint8_t cmdbuf[64];
 	uint8_t respbuf[64];
 	int ret, num = 0;
@@ -294,211 +275,138 @@ static int set_tonecurve(char *fname, libusb_device_handle *dev,
 	return 0;
 }
 
-int main (int argc, char **argv) 
+static void kodak6800_cmdline(char *caller)
 {
-	struct libusb_context *ctx;
-	struct libusb_device **list;
-	struct libusb_device_handle *dev;
-	struct libusb_config_descriptor *config;
+	DEBUG("\t\t%s [ -qtc filename | -stc filename ]\n", caller);
+}
 
-	uint8_t endp_up = 0;
-	uint8_t endp_down = 0;
+int kodak6800_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+{
+	struct kodak6800_ctx *ctx = vctx;
 
-	int data_fd = fileno(stdin);
+	if (!run || !ctx)
+		return (!strcmp("-qtc", arg1) ||
+			!strcmp("-stc", arg1));
+	
+	if (!strcmp("-qtc", arg1))
+		return kodak6800_get_tonecurve(ctx, arg2);
+	if (!strcmp("-stc", arg1))
+		return kodak6800_set_tonecurve(ctx, arg2);
 
-	int i, num;
-	int claimed;
+	return -1;
+}
 
-	int query_only = 0;
-	int ret = 0;
-	int iface = 0;
-	int found = -1;
-	int copies = 1;
-	char *uri = getenv("DEVICE_URI");;
-	char *use_serno = NULL;
 
-	struct kodak6800_hdr hdr;
-	uint8_t *planedata, *cmdbuf;
-	uint32_t datasize;
+static void *kodak6800_init(void)
+{
+	struct kodak6800_ctx *ctx = malloc(sizeof(struct kodak6800_ctx));
+	if (!ctx)
+		return NULL;
+	memset(ctx, 0, sizeof(struct kodak6800_ctx));
 
-	uint8_t rdbuf[READBACK_LEN];
-	uint8_t rdbuf2[READBACK_LEN];
-	int last_state = -1, state = S_IDLE;
+	ctx->type = P_ANY;
 
-	DEBUG("Kodak 6800 CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
+	return ctx;
+}
 
-	/* Cmdline help */
-	if (argc < 2) {
-		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ]\n\t%s [ -qtc filename | -stc filename ] \n\n",
-		      argv[0], argv[0], argv[0]);
-		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, NULL, 1);
-		libusb_free_device_list(list, 1);
-		libusb_exit(ctx);
-		exit(1);
-	}
+static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev, 
+			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+{
+	struct kodak6800_ctx *ctx = vctx;
+	struct libusb_device *device;
+	struct libusb_device_descriptor desc;
 
-	/* Are we running as a CUPS backend? */
-	if (uri) {
-		if (argv[4])
-			copies = atoi(argv[4]);
-		if (argv[6]) {  /* IOW, is it specified? */
-			data_fd = open(argv[6], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
+	ctx->dev = dev;	
+	ctx->endp_up = endp_up;
+	ctx->endp_down = endp_down;
 
-		/* Ensure we're using BLOCKING I/O */
-		i = fcntl(data_fd, F_GETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		i &= ~O_NONBLOCK;
-		i = fcntl(data_fd, F_SETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		/* Start parsing URI 'selphy://PID/SERIAL' */
-		if (strncmp(URI_PREFIX, uri, strlen(URI_PREFIX))) {
-			ERROR("Invalid URI prefix (%s)\n", uri);
-			exit(1);
-		}
-		use_serno = strchr(uri, '=');
-		if (!use_serno || !*(use_serno+1)) {
-			ERROR("Invalid URI (%s)\n", uri);
-			exit(1);
-		}
-		use_serno++;
-	} else {
-		use_serno = getenv("DEVICE");
+	device = libusb_get_device(dev);
+	libusb_get_device_descriptor(device, &desc);
 
-		if (!strcmp("-qtc", argv[1]) ||
-		    !strcmp("-stc", argv[1])) {
-			query_only = 1;
-			goto skip_read;
-		}
+	/* Map out device type */
+	if (desc.idProduct == USB_PID_KODAK_6850)
+		ctx->type = P_KODAK_6850;
+	else
+		ctx->type = P_KODAK_6800;
+}
 
-		/* Open Input File */
-		if (strcmp("-", argv[1])) {
-			data_fd = open(argv[1], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
-	}
 
-	/* Ignore SIGPIPE */
-	signal(SIGPIPE, SIG_IGN);
-	signal(SIGTERM, sigterm_handler);
+static void kodak6800_teardown(void *vctx) {
+	struct kodak6800_ctx *ctx = vctx;
+
+	if (!ctx)
+		return;
+
+	if (ctx->databuf)
+		free(ctx->databuf);
+	free(ctx);
+}
+
+static int kodak6800_read_parse(void *vctx, int data_fd) {
+	struct kodak6800_ctx *ctx = vctx;
+
+	if (!ctx)
+		return 1;
 
 	/* Read in then validate header */
-	read(data_fd, &hdr, sizeof(hdr));
-	if (hdr.hdr[0] != 0x03 ||
-	    hdr.hdr[1] != 0x1b ||
-	    hdr.hdr[2] != 0x43 ||
-	    hdr.hdr[3] != 0x48 ||
-	    hdr.hdr[4] != 0x43) {
+	read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	if (ctx->hdr.hdr[0] != 0x03 ||
+	    ctx->hdr.hdr[1] != 0x1b ||
+	    ctx->hdr.hdr[2] != 0x43 ||
+	    ctx->hdr.hdr[3] != 0x48 ||
+	    ctx->hdr.hdr[4] != 0x43) {
 		ERROR("Unrecognized data format!\n");
-		exit(1);
+		return(1);
 	}
 
-	/* Read in image data */
-	cmdbuf = malloc(CMDBUF_LEN);
-	datasize = be16_to_cpu(hdr.rows) * be16_to_cpu(hdr.columns) * 3;
-	planedata = malloc(datasize);
-	if (!cmdbuf || !planedata) {
+	ctx->datalen = be16_to_cpu(ctx->hdr.rows) * be16_to_cpu(ctx->hdr.columns) * 3;
+	ctx->databuf = malloc(ctx->datalen);
+	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		exit(1);
+		return 2;
 	}
 
 	{
-		int remain;
-		uint8_t *ptr = planedata;
-		remain = datasize;
+		int remain = ctx->datalen;
+		uint8_t *ptr = ctx->databuf;
+		int ret;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
 				ERROR("Read failed (%d/%d/%d)\n", 
-				      ret, remain, datasize);
+				      ret, remain, ctx->datalen);
 				perror("ERROR: Read failed");
-				exit(1);
+				return ret;
 			}
 			ptr += ret;
 			remain -= ret;
 		} while (remain);
 	}
-	close(data_fd); /* We're done reading! */
 
- skip_read:	
-	/* Libusb setup */
-	libusb_init(&ctx);
-	found = find_and_enumerate(ctx, &list, use_serno, 0);
+	return 0;
+}
 
-	if (found == -1) {
-		ERROR("Printer open failure (No suitable printers found!)\n");
-		ret = 3;
-		goto done;
-	}
+static int kodak6800_main_loop(void *vctx, int copies) {
+	struct kodak6800_ctx *ctx = vctx;
 
-	ret = libusb_open(list[found], &dev);
-	if (ret) {
-		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
-		ret = 4;
-		goto done;
-	}
-	
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed) {
-		ret = libusb_detach_kernel_driver(dev, iface);
-		if (ret) {
-			ERROR("Printer open failure (Could not detach printer from kernel)\n");
-			ret = 4;
-			goto done_close;
-		}
-	}
+	uint8_t rdbuf[READBACK_LEN];
+	uint8_t rdbuf2[READBACK_LEN];
+	uint8_t cmdbuf[CMDBUF_LEN];
 
-	ret = libusb_claim_interface(dev, iface);
-	if (ret) {
-		ERROR("Printer open failure (Could not claim printer interface)\n");
-		ret = 4;
-		goto done_close;
-	}
+	int last_state = -1, state = S_IDLE;
+	int i, num, ret;
+	int pending = 0;
 
-	ret = libusb_get_active_config_descriptor(list[found], &config);
-	if (ret) {
-		ERROR("Printer open failure (Could not fetch config descriptor)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-		if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
-			if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-				endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-			else
-				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
-		}
-	}
-
-	if (query_only) {
-		if (!strcmp("-qtc", argv[1]))
-			get_tonecurve(argv[2], dev, endp_down, endp_up);
-		if (!strcmp("-stc", argv[1]))
-			set_tonecurve(argv[2], dev, endp_down, endp_up);
-		goto done_claimed;
-	}
-
-	/* Time for the main processing loop */
+	if (!ctx)
+		return 1;
 
 top:
 	if (state != last_state) {
 		DEBUG("last_state %d new %d\n", last_state, state);
 	}
+
+	if (pending)
+		goto skip_query;
 
 	/* Send Status Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
@@ -509,23 +417,33 @@ top:
 	cmdbuf[4] = 0x43;
 	cmdbuf[5] = 0x03;
 
-	if ((ret = send_data(dev, endp_down,
-			    cmdbuf, CMDBUF_LEN - 1)))
-		goto done_claimed;
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, CMDBUF_LEN - 1)))
+		return ret;
 
+skip_query:
 	/* Read in the printer status */
 	memset(rdbuf, 0, READBACK_LEN);
-	ret = libusb_bulk_transfer(dev, endp_up,
+	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
 				   rdbuf,
 				   READBACK_LEN,
 				   &num,
 				   5000);
 
-	if (ret < 0 || ((num != 51) && (num != 58))) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, endp_up);
-		ret = 4;
-		goto done_claimed;
+	if (ret < 0 || num < 51) {
+		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
+		if (ret < 0)
+			return ret;
+		return 4;
 	}
+
+	if (num != 51 && num != 58 && num != 68) {
+		ERROR("Unexpected readback from printer (%d/%d from 0x%02x))\n",
+		      num, READBACK_LEN, ctx->endp_up);
+		return ret;
+	}
+
+	// XXX detect media type based on readback?
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
 		DEBUG("readback: ");
@@ -533,12 +451,15 @@ top:
 			DEBUG2("%02x ", rdbuf[i]);
 		}
 		DEBUG2("\n");
+		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
 	}
 	last_state = state;
 
 	fflush(stderr);       
+
+	pending = 0;
 
 	switch (state) {
 	case S_IDLE:
@@ -549,10 +470,38 @@ top:
 			break;
 		}
 
-		state = S_PRINTER_READY_HDR;
-		break;
-	case S_PRINTER_READY_HDR:
 		INFO("Printing started; Sending init sequence\n");
+		if (ctx->type == P_KODAK_6850)
+			state = S_6850_READY;
+		else
+			state = S_READY;
+		break;
+	case S_6850_READY:
+		INFO("Sending 6850 init sequence\n");
+		memset(cmdbuf, 0, CMDBUF_LEN);
+		cmdbuf[0] = 0x03;
+		cmdbuf[1] = 0x1b;
+		cmdbuf[2] = 0x43;
+		cmdbuf[3] = 0x48;
+		cmdbuf[4] = 0x43;
+		cmdbuf[5] = 0x4c;
+
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
+				     cmdbuf, CMDBUF_LEN -1)))
+			return ret;
+		pending = 1;
+		state = S_6850_READY_WAIT;	
+		break;
+	case S_6850_READY_WAIT:
+		if (rdbuf[0] != 0x01 ||
+		    rdbuf[2] != 0x43) {
+			state = S_6850_READY;
+			break;
+		}
+		state = S_READY;
+		break;
+	case S_READY:
+		INFO("Sending attention sequence\n");
 		/* Send reset/attention */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x03;
@@ -561,23 +510,40 @@ top:
 		cmdbuf[3] = 0x48;
 		cmdbuf[4] = 0x43;
 		cmdbuf[5] = 0x1a;
-		if ((ret = send_data(dev, endp_down,
+
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     cmdbuf, CMDBUF_LEN -1)))
-			goto done_claimed;
-		state = S_PRINTER_SENT_HDR;
+			return ret;
+		pending = 1;
+		state = S_STARTED;
 		break;
-	case S_PRINTER_SENT_HDR:
-		INFO("Waiting for printer to acknowledge start\n");
-		if (rdbuf[0] != 0x01 ||
-		    rdbuf[1] != 0x03 ||
-		    rdbuf[2] != 0x00) {
-			break;
+	case S_STARTED:
+		if (ctx->type == P_KODAK_6850) {
+			if (rdbuf[0] != 0x01 ||
+			    rdbuf[1] != 0x0b ||
+			    rdbuf[2] != 0x00) {
+				break;
+			}
+		} else {
+			if (rdbuf[0] != 0x01 ||
+			    rdbuf[1] != 0x03 ||
+			    rdbuf[2] != 0x00) {
+				break;
+			}
 		}
 
-		memcpy(cmdbuf, &hdr, CMDBUF_LEN);
+		memcpy(cmdbuf, &ctx->hdr, CMDBUF_LEN);
+
+		/* 6850 uses same spool format but different header gets sent */
+		if (ctx->type == P_KODAK_6850) {
+			if (ctx->hdr.media == 0x00)
+				cmdbuf[7] = 0x04;
+			else if (ctx->hdr.media == 0x06)
+				cmdbuf[7] = 0x05;
+		}
 
 		/* If we're printing a 4x6 on 8x6 media... */
-		if (hdr.media == 0x00 &&
+		if (ctx->hdr.media == 0x00 &&
 		    rdbuf[11] == 0x09 &&
 		    rdbuf[12] == 0x82) {
 			cmdbuf[14] = 0x06;
@@ -585,13 +551,13 @@ top:
 		}
 
 		INFO("Sending image header\n");
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
-
-		state = S_PRINTER_SENT_HDR2;
+			return ret;
+		pending = 1;
+		state = S_SENT_HDR;
 		break;
-	case S_PRINTER_SENT_HDR2:
+	case S_SENT_HDR:
 		INFO("Waiting for printer to accept data\n");
 		if (rdbuf[0] != 0x01 ||
 		    rdbuf[1] != 0x02 ||
@@ -600,13 +566,14 @@ top:
 		}
 
 		INFO("Sending image data\n");
-		if ((ret = send_data(dev, endp_down, planedata, datasize)))
-			goto done_claimed;
+		if ((ret = send_data(ctx->dev, ctx->endp_down, 
+				     ctx->databuf, ctx->datalen)))
+			return ret;
 
 		INFO("Image data sent\n");
-		state = S_PRINTER_SENT_DATA;
+		state = S_SENT_DATA;
 		break;
-	case S_PRINTER_SENT_DATA:
+	case S_SENT_DATA:
 		INFO("Waiting for printer to acknowledge completion\n");
 		if (rdbuf[0] != 0x01 ||
 		    rdbuf[1] != 0x02 ||
@@ -634,30 +601,27 @@ top:
 		goto top;
 	}
 
-	/* Done printing */
-	INFO("All printing done\n");
-	ret = 0;
-
-done_claimed:
-	libusb_release_interface(dev, iface);
-
-done_close:
-#if 0
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
-#endif
-	libusb_close(dev);
-done:
-	if (planedata)
-		free(planedata);
-	if (cmdbuf)
-		free(cmdbuf);
-
-	libusb_free_device_list(list, 1);
-	libusb_exit(ctx);
-
-	return ret;
+	return 0;
 }
+
+/* Exported */
+struct dyesub_backend kodak6800_backend = {
+	.name = "Kodak 6800/6850",
+	.version = "0.21",
+	.uri_prefix = "kodak6800",
+	.cmdline_usage = kodak6800_cmdline,
+	.cmdline_arg = kodak6800_cmdline_arg,
+	.init = kodak6800_init,
+	.attach = kodak6800_attach,
+	.teardown = kodak6800_teardown,
+	.read_parse = kodak6800_read_parse,
+	.main_loop = kodak6800_main_loop,
+	.devices = { 
+	{ USB_VID_KODAK, USB_PID_KODAK_6800, P_KODAK_6800, "Kodak"},
+	{ USB_VID_KODAK, USB_PID_KODAK_6850, P_KODAK_6850, "Kodak"},
+	{ 0, 0, 0, ""}
+	}
+};
 
 /* Kodak 6800/6850 data format
 
@@ -678,20 +642,17 @@ done:
 
   ************************************************************************
 
-  The data format actually sent to the Kodak 6800 is subtly different.
+   Kodak 6800 Printer Comms:
 
-[file header] 03 1b 43 48 43 0a 00 01  00 CC WW WW HH HH MT LL 00
+   [[file header]] 03 1b 43 48 43 0a 00 01  00 CC WW WW HH HH MT LL 00
 
 ->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00  [status query]
 <-  [51 octets]
 
-    01 02 01 00 00 00 00 00  00 00 a2 7b 00 00 a2 7b  [ a2 7b may be print counters, increments after each print ]
-    00 00 02 f4 00 00 e6 b1  00 00 00 1a 00 03 00 e8  [ e6 b1 may be a print counter, increments by 2 after each print ]
-    00 01 00 83 00 00 00 00  00 00 00 00 00 00 00 00  [ "00" after "83" seems to be a per-powerup print counter, increments by 1 after each "get ready" command ]
+    01 02 01 00 00 00 00 00  00 00 a2 7b 00 00 a2 7b
+    00 00 02 f4 00 00 e6 b1  00 00 00 1a 00 03 00 e8
+    00 01 00 83 00 00 00 00  00 00 00 00 00 00 00 00
     00 00 00
-
-->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00  [status query]
-<-  [51 octets -- same as above]
 
 ->  03 1b 43 48 43 1a 00 00  00 00 00 00 00 00 00 00  [get ready]
 <-  [58 octets]
@@ -701,7 +662,9 @@ done:
     HH 01 01 00 00 00 06 WW  WW MM MM 01 03 00 00 00
     00 00 00 00 00 00 00 00  00 00
 
-->  03 1b 43 48 43 0a 00 01  00 01 07 34 04 d8 06 01 01 [ image header, modified -- last octet is always 0x01.  '06' may be the expected media size in the printer? ]
+->  03 1b 43 48 43 0a 00 01  00 01 WW WW HH HH 06 01  [ image header, modified (trailing 0x01, '0x06' as media type) ]
+    01 
+
 <-  [51 octets]
 
     01 02 01 00 00 00 00 00  00 00 a2 7b 00 00 a2 7b
@@ -717,12 +680,12 @@ done:
 ->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00 [status query]
 <-  [51 octets]
 
-    01 02 01 00 00 00 00 00  00 00 a2 7b 00 00 a2 7b
-    00 00 02 f4 00 00 e6 b1  00 00 00 1a 00 03 00 e8
-    00 01 00 83 01 00 00 01  00 00 00 01 00 00 00 00
+    01 02 01 00 00 00 00 00  00 00 a2 7c 00 00 a2 7c [ note a2 7c vs a2 7b ]
+    00 00 01 7a 00 00 e6 b3  00 00 00 1a 00 03 00 e8 [ note 01 7a vs 02 f4, e6 b3 vs e6 b1 ]
+    00 01 00 83 01 00 00 00  00 01 00 01 00 00 00 00 [ note the moved '01' in the middle ]
     00 00 00
 
-->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00
+->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00 [ status query ]
 <-  [51 octets, repeats]
 
   Other stuff seen:
@@ -737,7 +700,7 @@ done:
 <-  [51 octets]
 
     [[ typical status response ]]
-    [[ Followed by reset. ]]s
+    [[ Followed by reset. ]]
 
   Read tone curve data:  
 
@@ -758,6 +721,133 @@ done:
 <-  [64 octets]
 
   [[ repeats for total of 24 packets.  total of 1.5KiB. ]]
+
+  Write tone curve data:
+
+->  03 1b 43 48 43 0c 54 4f  4e 45 77 01 00 00 00 00
+<-  [51 octets]
+
+    [[ typical status response ]]
+
+->  03 00 00 46 06 53 06 c0  06 07 07 37 07 5d 07 87 
+    07 a1 07 c8 07 08 08 08  08 08 08 48 08 68 08 88
+    08 a9 08 b9 08 d9 08 f9  08 12 09 2e 09 49 09 70
+    09 89 08 99 09 ba 09 ca  08 da 09 0a 0a 24 0a 38
+<-  [51 octets]
+
+    [[ typical status response ]]
+
+->  03 0a 53 0a 66 0a 81 0a ...
+   ....
+->  03 cf 38 0a 39 3d 39 79  39 96 39 b6 39 fb 39 01
+    34 0a 34 08 3a 0c 1a 10  3a
+<-  [51 octets]
+
+    [[ typical status response ]]
+
+  [[ total of 24 packets * 64, and then one final packet of 25: 1562 total. ]]
+  [[ It apepars the extra 25 bytes are to compensate for the leading '03' on 
+     each of the 25 URBs. ]]
+
+   ***********************************************************************
+
+   Kodak 6850 Printer Comms:
+
+   [[file header]] 03 1b 43 48 43 0a 00 01  00 CC WW WW HH HH MT LL 00
+
+->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00  [status query]
+<-  [51 octets]
+
+    01 02 01 00 00 00 00 00  00 00 21 75 00 00 08 52
+    00 00 01 29 00 00 3b 0a  00 00 00 0e 00 03 02 90
+    00 01 02 1d 03 00 00 00  00 01 00 01 00 00 00 00
+    00 00 00
+
+->  03 1b 43 48 43 4c 00 00  00 00 00 00 00 00 00 00  [???]
+<-  [51 octets]
+
+    01 01 43 48 43 4c 00 00  00 00 00 00 00 00 00 00
+    00 00 01 29 00 00 3b 0a  00 00 00 0e 00 03 02 90
+    00 01 02 1d 03 00 00 00  00 01 00 01 00 00 00 00
+    00 00 00
+
+->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00  [status query]
+<-  [51 octets -- same as status query before ]
+
+->  03 1b 43 48 43 1a 00 00  00 00 00 00 00 00 00 00  [get ready]
+<-  [68 octets]
+
+    01 0b 00 00 00 00 00 06  06 WW WW MM MM 01 00 00  [MM MM == max printable size of media, 09 82 == 2434 for 6x8!]
+    00 00 06 WW WW 09 ba 01  02 01 00 00 06 WW WW HH  [09 ba == 2940 == cut area?]
+    HH 01 01 00 00 00 06 WW  WW MM MM 01 03 00 00 00
+    06 WW WW 09 ba 01 05 01  00 00 06 WW WW HH HH 01
+    04 00 00 00
+
+->  03 1b 43 48 43 0a 00 04  00 01 07 34 04 d8 06 01 [ image header, modified ] 
+    01       [ note we use '04' for 4x6, '05' for 6x8. last octet is always 0x01 when 4x6. ]
+
+<-  [51 octets]
+
+    01 02 01 00 00 00 00 00  00 00 21 75 00 00 08 52
+    00 00 01 29 00 00 3b 0a  00 00 00 0e 00 03 02 90
+    00 01 02 1d 04 00 00 01  00 00 00 01 00 00 00 00 [ note the "04" after "1d", and the moved '01' ]
+    00 00 00
+
+->  [4K of plane data]
+->  ...
+->  [4K of plane data]
+->  [remainder of plane data]
+
+->  03 1b 43 48 43 03 00 00  00 00 00 00 00 00 00 00 [status query]
+<-  [51 octets]
+
+    01 02 01 00 00 00 00 00  00 00 21 76 00 00 08 53 [ note 21 76, 08 53, 01 2a incremented by 1 ]
+    00 00 01 2a 00 00 3b 0c  00 00 00 0e 00 03 02 90 [ note 3b 0c incremeted by 2 ]
+    00 01 02 1d 04 00 00 01  00 00 00 01 00 00 00 00
+    00 00 00
+
+  Other stuff seen:
+
+->  03 1b 43 48 43 12 00 00  00 00 00 00 00 00 00 00  
+    00 
+<-  [32 octets]
+
+    00 20 20 20 20 20 20 20  20 20 20 20 20 20 20 20  [[ Pascal string? ]]
+    20 20 20 20 20 20 20 20  36 30 39 37 4b 53 34 39  [[ ..."  6097KS49" ]]
+
+  Read tone curve data:  
+
+->  03 1b 43 48 43 0c 54 4f  4e 45 72 01 00 00 00 00
+<-  [51 octets]
+
+    [[ typical status response ]]
+
+->  03 1b 43 48 43 0c 54 4f  4e 45 20
+<-  [64 octets]
+
+    81 01 07 07 27 07 72 07  c8 07 f8 07 22 07 48 08
+    68 08 88 08 b3 08 db 08  f7 08 09 09 2e 09 49 09
+    65 09 80 09 aa 09 ca 09  e2 09 fa 09 12 0a 32 0a
+    42 0a 66 0a 81 0a 9a 0a  c3 0a d9 0a ee 0a 04 0b
+
+->  03 1b 43 48 43 0c 54 4f  4e 45 20
+<-  [64 octets]
+
+  [[ repeats for total of 24 packets.  total of 1.5KiB. ]]
+
+->  03 1b 43 48 43 0c 54 4f  4e 45 65 00 00 00 00 00
+<-  [51 octets]
+
+    [[ typical status response ]]
+
+  Maybe this resets the calibration table:
+
+->  03 1b 43 48 43 05 00 00  00 00 00 00 00 00 00 00 [???]
+<-  [34 octets]
+
+    01 00 04 00 00 00 01 00  01 00 02 00 00 00 01 00
+    01 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00
+    00 00 
 
   Write tone curve data:
 

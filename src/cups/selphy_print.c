@@ -1,5 +1,5 @@
 /*
- *   Canon SELPHY ES/CP series print assister -- libusb-1.0 version
+ *   Canon SELPHY ES/CP series CUPS backend -- libusb-1.0 version
  *
  *   (c) 2007-2013 Solomon Peachy <pizza@shaftnet.org>
  *
@@ -35,43 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.55"
-#define URI_PREFIX "canonselphy://"
-
-#include "backend_common.c"
-
-/* USB Identifiers */
-#define USB_VID_CANON       0x04a9
-#define USB_PID_CANON_ES1   0x3141
-#define USB_PID_CANON_ES2   0x3185
-#define USB_PID_CANON_ES20  0x3186
-#define USB_PID_CANON_ES3   0x31AF
-#define USB_PID_CANON_ES30  0x31B0
-#define USB_PID_CANON_ES40  0x31EE
-#define USB_PID_CANON_CP10  0x304A
-#define USB_PID_CANON_CP100 0x3063
-#define USB_PID_CANON_CP200 0x307C
-#define USB_PID_CANON_CP220 0x30BD
-#define USB_PID_CANON_CP300 0x307D
-#define USB_PID_CANON_CP330 0x30BE
-#define USB_PID_CANON_CP400 0x30F6
-#define USB_PID_CANON_CP500 0x30F5
-#define USB_PID_CANON_CP510 0x3128
-#define USB_PID_CANON_CP520 520 // XXX 316f? 3172? (related to cp740/cp750)
-#define USB_PID_CANON_CP530 0x31b1
-#define USB_PID_CANON_CP600 0x310B
-#define USB_PID_CANON_CP710 0x3127
-#define USB_PID_CANON_CP720 0x3143
-#define USB_PID_CANON_CP730 0x3142
-#define USB_PID_CANON_CP740 0x3171
-#define USB_PID_CANON_CP750 0x3170
-#define USB_PID_CANON_CP760 0x31AB
-#define USB_PID_CANON_CP770 0x31AA
-#define USB_PID_CANON_CP780 0x31DD
-#define USB_PID_CANON_CP790 790 // XXX 31ed? 31ef? (related to es40)
-#define USB_PID_CANON_CP800 0x3214
-#define USB_PID_CANON_CP810 0x3256
-#define USB_PID_CANON_CP900 0x3255
+#include "backend_common.h"
 
 #define READBACK_LEN 12
 
@@ -92,18 +56,7 @@ struct printer_data {
 	int16_t error_offset;
 };
 
-/* printer types */
-enum {
-	P_ES1 = 0,
-	P_ES2_20,
-	P_ES3_30,
-	P_ES40_CP790,
-	P_CP_XXX,
-	P_CP10,
-	P_END
-};
-
-struct printer_data printers[P_END] = {
+static struct printer_data selphy_printers[] = {
 	{ .type = P_ES1,
 	  .model = "SELPHY ES1",
 	  .init_length = 12,
@@ -194,45 +147,55 @@ struct printer_data printers[P_END] = {
 	  .paper_code_offset = -1,
 	  .error_offset = 2,
 	},
+	{ .type = -1 },
 };
 
 #define MAX_HEADER 28
-#define BUF_LEN 4096
 
-static const int es40_cp790_plane_lengths[4] = { 2227456, 1601600, 698880, 2976512 };
+static const uint32_t es40_cp790_plane_lengths[4] = { 2227456, 1601600, 698880, 2976512 };
 
 static void setup_paper_codes(void)
 {
-	/* Default all to IGNORE */
 	int i, j;
-	for (i = 0; i < P_END ; i++)
+	for (i = 0 ; ; i++) {
+		if (selphy_printers[i].type == -1)
+			break;
+		/* Default all to IGNORE */
 		for (j = 0 ; j < 256 ; j++) 
-			printers[i].paper_codes[j] = -1;
-	
-	/* SELPHY ES1 paper codes */
-	printers[P_ES1].paper_codes[0x11] = 0x01;
-	printers[P_ES1].paper_codes[0x12] = 0x02; // ? guess
-	printers[P_ES1].paper_codes[0x13] = 0x03;
-	
-	/* SELPHY ES2/20 paper codes */
-	printers[P_ES2_20].paper_codes[0x01] = 0x01;
-	printers[P_ES2_20].paper_codes[0x02] = 0x02; // ? guess
-	printers[P_ES2_20].paper_codes[0x03] = 0x03;
-	
-	/* SELPHY ES3/30 paper codes -- N/A, printer does not report paper type */	
-	/* SELPHY ES40/CP790 paper codes -- ? guess */
-	printers[P_ES40_CP790].paper_codes[0x00] = 0x11;
-	printers[P_ES40_CP790].paper_codes[0x01] = 0x22;
-	printers[P_ES40_CP790].paper_codes[0x02] = 0x33;
-	printers[P_ES40_CP790].paper_codes[0x03] = 0x44;
+			selphy_printers[i].paper_codes[j] = -1;
 
-	/* SELPHY CP-series (except CP790) paper codes */
-	printers[P_CP_XXX].paper_codes[0x01] = 0x11;
-	printers[P_CP_XXX].paper_codes[0x02] = 0x22;
-	printers[P_CP_XXX].paper_codes[0x03] = 0x33;
-	printers[P_CP_XXX].paper_codes[0x04] = 0x44;
-
-	/* SELPHY CP-10 paper codes -- N/A, only one type */
+		/* Set up specifics */
+		switch (selphy_printers[i].type) {
+		case P_ES1:
+			selphy_printers[i].paper_codes[0x11] = 0x01;
+			selphy_printers[i].paper_codes[0x12] = 0x02; // ? guess
+			selphy_printers[i].paper_codes[0x13] = 0x03;
+			break;
+		case P_ES2_20:
+			selphy_printers[i].paper_codes[0x01] = 0x01;
+			selphy_printers[i].paper_codes[0x02] = 0x02; // ? guess
+			selphy_printers[i].paper_codes[0x03] = 0x03;
+			break;
+		case P_ES3_30:
+			/* N/A, printer does not report types */
+			break;
+		case P_ES40_CP790: // ? guess
+			selphy_printers[i].paper_codes[0x00] = 0x11;
+			selphy_printers[i].paper_codes[0x01] = 0x22;
+			selphy_printers[i].paper_codes[0x02] = 0x33;
+			selphy_printers[i].paper_codes[0x03] = 0x44;
+			break;
+		case P_CP_XXX:
+			selphy_printers[i].paper_codes[0x01] = 0x11;
+			selphy_printers[i].paper_codes[0x02] = 0x22;
+			selphy_printers[i].paper_codes[0x03] = 0x33;
+			selphy_printers[i].paper_codes[0x04] = 0x44;
+			break;
+		case P_CP10:
+			/* N/A, printer supports one type only */
+			break;
+		}
+	}
 }
 
 #define INCORRECT_PAPER -999
@@ -254,10 +217,10 @@ enum {
 
 static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len, int16_t papercode_offset, int16_t papercode_val) 
 {
-	int i;
+	uint i;
   
 	for (i = 0 ; i < len ; i++) {
-		if (papercode_offset != -1 && i == papercode_offset) {
+		if (papercode_offset != -1 && i == (uint) papercode_offset) {
 			if (papercode_val == -1)
 				continue;
 			else if (buf_a[i] != papercode_val)
@@ -272,7 +235,7 @@ static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len, in
 	return 0;
 }
 
-static int parse_printjob(uint8_t *buffer, int *bw_mode, int *plane_len) 
+static int parse_printjob(uint8_t *buffer, uint8_t *bw_mode, uint32_t *plane_len) 
 {
 	int printer_type = -1;
 
@@ -321,337 +284,150 @@ static int parse_printjob(uint8_t *buffer, int *bw_mode, int *plane_len)
 		}
 	}
 
-	return -1;
-
 done:
-
 	return printer_type;
 }
 
-static int read_data(int remaining, int present, int data_fd, uint8_t *target,
-		     uint8_t *buf, uint16_t buflen) {
-	int cnt;
-	int wrote = 0;
-
-	while (remaining > 0) {
-		cnt = read(data_fd, buf + present, (remaining < (buflen-present)) ? remaining : (buflen-present));
-		
-		if (cnt < 0)
-			return -1;
-
-		if (present) {
-			cnt += present;
-			present = 0;
-		}
-
-		memcpy(target + wrote, buf, cnt);
-
-		wrote += cnt;
-		remaining -= cnt;
-	}
-	
-	return wrote;
-}
-
-static int find_and_enumerate(struct libusb_context *ctx,
-			      struct libusb_device ***list,
-			      char *match_serno,
-			      int printer_type,
-			      int scan_only)
-{
-	int num;
-	int i;
-	int found = -1;
-
-	/* Enumerate and find suitable device */
-	num = libusb_get_device_list(ctx, list);
-
-	for (i = 0 ; i < num ; i++) {
-		struct libusb_device_descriptor desc;
-		int valid = 0;
-		libusb_get_device_descriptor((*list)[i], &desc);
-
-		if (desc.idVendor != USB_VID_CANON)
-			continue;
-
-		switch(desc.idProduct) {
-		case USB_PID_CANON_ES1: // "Canon SELPHY ES1"
-			if (printer_type == P_ES1)
-				found = i;
-			valid = 1;
-			break;
-		case USB_PID_CANON_ES2: // "Canon SELPHY ES2"
-		case USB_PID_CANON_ES20: // "Canon SELPHY ES20"
-			if (printer_type == P_ES2_20)
-				found = i;
-			valid = 1;
-			break;
-		case USB_PID_CANON_ES3: // "Canon SELPHY ES3"
-		case USB_PID_CANON_ES30: // "Canon SELPHY ES30"
-			if (printer_type == P_ES3_30)
-				found = i;
-			valid = 1;
-			break;
-		case USB_PID_CANON_ES40: // "Canon SELPHY ES40"
-		case USB_PID_CANON_CP790:
-			if (printer_type == P_ES40_CP790)
-				found = i;
-			valid = 1;
-			break;
-		case USB_PID_CANON_CP10: // "Canon CP-10"
-			if (printer_type == P_CP10)
-				found = i;
-			valid = 1;
-			break;
-		case USB_PID_CANON_CP100: // "Canon CP-100"
-		case USB_PID_CANON_CP200: // "Canon CP-200"
-		case USB_PID_CANON_CP220: // "Canon CP-220"
-		case USB_PID_CANON_CP300: // "Canon CP-300"
-		case USB_PID_CANON_CP330: // "Canon CP-330"
-		case USB_PID_CANON_CP400: // "Canon SELPHY CP400"
-		case USB_PID_CANON_CP500: // "Canon SELPHY CP500"
-		case USB_PID_CANON_CP510: // "Canon SELPHY CP510"
-		case USB_PID_CANON_CP520: // "Canon SELPHY CP520"
-		case USB_PID_CANON_CP530: // "Canon SELPHY CP530"
-		case USB_PID_CANON_CP600: // "Canon SELPHY CP600"
-		case USB_PID_CANON_CP710: // "Canon SELPHY CP710"
-		case USB_PID_CANON_CP720: // "Canon SELPHY CP720"
-		case USB_PID_CANON_CP730: // "Canon SELPHY CP730"
-		case USB_PID_CANON_CP740: // "Canon SELPHY CP740"
-		case USB_PID_CANON_CP750: // "Canon SELPHY CP750"
-		case USB_PID_CANON_CP760: // "Canon SELPHY CP760"
-		case USB_PID_CANON_CP770: // "Canon SELPHY CP770"
-		case USB_PID_CANON_CP780: // "Canon SELPHY CP780"
-		case USB_PID_CANON_CP800: // "Canon SELPHY CP800"
-		case USB_PID_CANON_CP810: // "Canon SELPHY CP810"
-		case USB_PID_CANON_CP900: // "Canon SELPHY CP900"
-			if (printer_type == P_CP_XXX)
-				found = i;
-			valid = 1;
-			break;
-		default:
-			/* Hook for testing unknown PIDs */
-			if (getenv("SELPHY_PID") && getenv("SELPHY_TYPE")) {
-				int pid = strtol(getenv("SELPHY_PID"), NULL, 16);
-				int type = atoi(getenv("SELPHY_TYPE"));
-				if (pid == desc.idProduct) {
-					valid = 1;
-					if (printer_type == type) {
-						found = i;
-					}
-				}
-			}
-			break;
-		}
-
-		found = print_scan_output((*list)[i], &desc,
-					  URI_PREFIX, "Canon", 
-					  found, (found == i), valid, 
-					  scan_only, match_serno);
-	}
-
-	return found;
-}
-
-int main (int argc, char **argv)
-{
-	struct libusb_context *ctx;
-	struct libusb_device **list;
+/* Private data stucture */
+struct canonselphy_ctx {
 	struct libusb_device_handle *dev;
-	struct libusb_config_descriptor *config;
+	uint8_t endp_up;
+	uint8_t endp_down;
 
-	uint8_t endp_up = 0;
-	uint8_t endp_down = 0;
+	struct printer_data *printer;
 
-	int printer_type = P_END;
+	uint8_t bw_mode;
 
-	int iface = 0;
+	int16_t paper_code;
 
-	int num, i;
-	int ret = 0;
-	int claimed;
-	int found = -1;
+	uint32_t plane_len;
 
-	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
-	int last_state = -1, state = S_IDLE;
+	uint8_t *header;
+	uint8_t *plane_y;
+	uint8_t *plane_m;
+	uint8_t *plane_c;
+	uint8_t *footer;
 
-	int plane_len = 0, header_len = 0, footer_len = 0;
+	uint8_t *buffer;
+};
 
-	int bw_mode = 0;
-	int16_t paper_code_offset = -1;
-	int16_t paper_code = -1;
-
-	uint8_t buffer[BUF_LEN];
-
-	int data_fd = fileno(stdin);
-
-	int copies = 1;
-	char *uri = getenv("DEVICE_URI");;
-	char *use_serno = NULL;
-
-	uint8_t *plane_y, *plane_m, *plane_c, *footer, *header;
+static void *canonselphy_init(void)
+{
+	struct canonselphy_ctx *ctx = malloc(sizeof(struct canonselphy_ctx));
+	if (!ctx)
+		return NULL;
+	memset(ctx, 0, sizeof(struct canonselphy_ctx));
 
 	/* Static initialization */
 	setup_paper_codes();
 
-	DEBUG("Canon SELPHY ES/CP CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
+	return ctx;
+}
 
-	/* Cmdline help */
-	if (argc < 2) {
-		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ] \n\n",
-		      argv[0], argv[0]);
-		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, NULL, printer_type, 1);
-		libusb_free_device_list(list, 1);
-		libusb_exit(ctx);
-		exit(1);
-	}
+static void canonselphy_attach(void *vctx, struct libusb_device_handle *dev, 
+			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+{
+	struct canonselphy_ctx *ctx = vctx;
 
-	/* Are we running as a CUPS backend? */
-	if (uri) {
-		if (argv[4])
-			copies = atoi(argv[4]);
-		if (argv[6]) {  /* IOW, is it specified? */
-			data_fd = open(argv[6], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
+	ctx->dev = dev;
+	ctx->endp_up = endp_up;
+	ctx->endp_down = endp_down;
+}
 
-		/* Ensure we're using BLOCKING I/O */
-		i = fcntl(data_fd, F_GETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		i &= ~O_NONBLOCK;
-		i = fcntl(data_fd, F_SETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
+static void canonselphy_teardown(void *vctx) {
+	struct canonselphy_ctx *ctx = vctx;
 
-		/* Start parsing URI 'selphy://PID/SERIAL' */
-		if (strncmp(URI_PREFIX, uri, strlen(URI_PREFIX))) {
-			ERROR("Invalid URI prefix (%s)\n", uri);
-			exit(1);
-		}
-		use_serno = strchr(uri, '=');
-		if (!use_serno || !*(use_serno+1)) {
-			ERROR("Invalid URI (%s)\n", uri);
-			exit(1);
-		}
-		use_serno++;
-	} else {
-		use_serno = getenv("DEVICE");
+	if (!ctx)
+		return;
 
-		/* Open Input File */
-		if (strcmp("-", argv[1])) {
-			data_fd = open(argv[1], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
-	}
+	if (ctx->header)
+		free(ctx->header);
+	if (ctx->plane_y)
+		free(ctx->plane_y);
+	if (ctx->plane_m)
+		free(ctx->plane_m);
+	if (ctx->plane_c)
+		free(ctx->plane_c);
+	if (ctx->footer)
+		free(ctx->footer);
+	if (ctx->buffer)
+		free(ctx->buffer);
+
+	free(ctx);
+}
+
+static int canonselphy_early_parse(void *vctx, int data_fd)
+{
+	struct canonselphy_ctx *ctx = vctx;
+	int printer_type, i;
+
+	ctx->buffer = malloc(MAX_HEADER);
 
 	/* Figure out printer this file is intended for */
-	read(data_fd, buffer, MAX_HEADER);
+	read(data_fd, ctx->buffer, MAX_HEADER);
 
-	printer_type = parse_printjob(buffer, &bw_mode, &plane_len);
-	plane_len += 12; /* Add in plane header length! */
-	if (printer_type < 0) {
-		ERROR("Unrecognized printjob file format!\n");
-		exit(1);
+	printer_type = parse_printjob(ctx->buffer, &ctx->bw_mode, &ctx->plane_len);
+	for (i = 0; selphy_printers[i].type != -1; i++) {
+		if (selphy_printers[i].type == printer_type) {
+			ctx->printer = &selphy_printers[i];
+			break;
+		}
 	}
-	footer_len = printers[printer_type].foot_length;
-	header_len = printers[printer_type].init_length;
-	DEBUG("%sFile intended for a '%s' printer\n",  bw_mode? "B/W " : "", printers[printer_type].model);
+	if (!ctx->printer) {
+		ERROR("Unrecognized printjob file format!\n");
+		return -1;
+	}
+
+	ctx->plane_len += 12; /* Add in plane header length! */
+	if (ctx->printer->pgcode_offset != -1)
+		ctx->paper_code = ctx->printer->paper_codes[ctx->buffer[ctx->printer->pgcode_offset]];
+	else
+		ctx->paper_code = -1;
+
+	DEBUG("%sFile intended for a '%s' printer\n",  ctx->bw_mode? "B/W " : "", ctx->printer->model);
+
+	return printer_type;
+}
+
+static int canonselphy_read_parse(void *vctx, int data_fd)
+{
+	struct canonselphy_ctx *ctx = vctx;
 
 	/* Set up buffers */
-	plane_y = malloc(plane_len);
-	plane_m = malloc(plane_len);
-	plane_c = malloc(plane_len);
-	header = malloc(header_len);
-	footer = malloc(footer_len);
-	if (!plane_y || !plane_m || !plane_c || !header ||
-	    (footer_len && !footer)) {
+	ctx->plane_y = malloc(ctx->plane_len);
+	ctx->plane_m = malloc(ctx->plane_len);
+	ctx->plane_c = malloc(ctx->plane_len);
+	ctx->header = malloc(ctx->printer->init_length);
+	ctx->footer = malloc(ctx->printer->foot_length);
+	if (!ctx->plane_y || !ctx->plane_m || !ctx->plane_c || !ctx->header ||
+	    (ctx->printer->foot_length && !ctx->footer)) {
 		ERROR("Memory allocation failure!\n");
-		exit(1);
+		return 1;
 	}
-
-	/* Ignore SIGPIPE */
-	signal(SIGPIPE, SIG_IGN);
-	signal(SIGTERM, sigterm_handler);
 
 	/* Read in entire print job */
-	memcpy(header, buffer, header_len);
-	memmove(buffer, buffer+header_len,
-		MAX_HEADER-header_len);
-	read_data(plane_len, MAX_HEADER-header_len, data_fd, plane_y, buffer, BUF_LEN);
-	read_data(plane_len, 0, data_fd, plane_m, buffer, BUF_LEN);
-	read_data(plane_len, 0, data_fd, plane_c, buffer, BUF_LEN);
-	read_data(footer_len, 0, data_fd, footer, buffer, BUF_LEN);
-	close(data_fd);  /* We're done */
+	memcpy(ctx->header, ctx->buffer, ctx->printer->init_length);
+	memcpy(ctx->plane_y, ctx->buffer+ctx->printer->init_length, MAX_HEADER-ctx->printer->init_length);
 
-	/* Libusb setup */
-	libusb_init(&ctx);
-	found = find_and_enumerate(ctx, &list, use_serno, printer_type, 0);
+	read(data_fd, ctx->plane_y + (MAX_HEADER-ctx->printer->init_length),
+	     ctx->plane_len - (MAX_HEADER-ctx->printer->init_length));
+	read(data_fd, ctx->plane_m, ctx->plane_len);
+	read(data_fd, ctx->plane_c, ctx->plane_len);
+	if (ctx->printer->foot_length)
+		read(data_fd, ctx->footer, ctx->printer->foot_length);
 
-	/* Compute offsets and other such things */
-	paper_code_offset = printers[printer_type].paper_code_offset;
-	if (printers[printer_type].pgcode_offset != -1)
-		paper_code = printers[printer_type].paper_codes[buffer[printers[printer_type].pgcode_offset]];
+	return 0;
+}
 
-	if (found == -1) {
-		ERROR("No suitable printers found!\n");
-		ret = 3;
-		goto done;
-	}
+static int canonselphy_main_loop(void *vctx, int copies) {
+	struct canonselphy_ctx *ctx = vctx;
 
-	ret = libusb_open(list[found], &dev);
-	if (ret) {
-		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
-		ret = 4;
-		goto done;
-	}
-	
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed) {
-		ret = libusb_detach_kernel_driver(dev, iface);
-		if (ret) {
-			ERROR("Printer open failure (Could not detach printer)\n");
-			ret = 4;
-			goto done_close;
-		}
-	}
-
-	ret = libusb_claim_interface(dev, iface);
-	if (ret) {
-		ERROR("Printer open failure (Could not claim printer interface)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	ret = libusb_get_active_config_descriptor(list[found], &config);
-	if (ret) {
-		ERROR("Printer open failire (Could not fetch config descriptor)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-		if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
-			if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-				endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-			else
-				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
-		}
-	}
+	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
+	int last_state = -1, state = S_IDLE;
+	int ret, num;
 
 	/* Read in the printer status */
-	ret = libusb_bulk_transfer(dev, endp_up,
+	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
 				   rdbuf,
 				   READBACK_LEN,
 				   &num,
@@ -663,23 +439,24 @@ top:
 	}
 
 	/* Do it twice to clear initial state */
-	ret = libusb_bulk_transfer(dev, endp_up,
+	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
 				   rdbuf,
 				   READBACK_LEN,
 				   &num,
 				   2000);
 
-	if (ret < 0) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, endp_up);
-		ret = 4;
-		goto done_claimed;
+	if (ret < 0 || num != READBACK_LEN) {
+		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
+		return 4;
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		DEBUG("readback:  %02x %02x %02x %02x  %02x %02x %02x %02x  %02x %02x %02x %02x\n",
-			rdbuf[0], rdbuf[1], rdbuf[2], rdbuf[3],
-			rdbuf[4], rdbuf[5], rdbuf[6], rdbuf[7],
-			rdbuf[8], rdbuf[9], rdbuf[10], rdbuf[11]);
+		int i;
+		DEBUG("readback: ");
+		for (i = 0 ; i < num ; i++) {
+			DEBUG2("%02x ", rdbuf[i]);
+		}
+		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
@@ -689,47 +466,46 @@ top:
 	fflush(stderr);       
 
 	/* Error detection */
-	if (printers[printer_type].error_offset != -1 &&
-	    rdbuf[printers[printer_type].error_offset]) {
-		ERROR("Printer reported error condition %02x; aborting.  (Out of ribbon/paper?)\n", rdbuf[printers[printer_type].error_offset]);
-		ret = 4;
-		goto done_claimed;
+	if (ctx->printer->error_offset != -1 &&
+	    rdbuf[ctx->printer->error_offset]) {
+		ERROR("Printer reported error condition %02x; aborting.  (Out of ribbon/paper?)\n", rdbuf[ctx->printer->error_offset]);
+		return 4;
 	}
 
 	switch(state) {
 	case S_IDLE:
 		INFO("Waiting for printer idle\n");
-		if (!fancy_memcmp(rdbuf, printers[printer_type].init_readback, READBACK_LEN, paper_code_offset, paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->init_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
 			state = S_PRINTER_READY;
 		}
 		break;
 	case S_PRINTER_READY:
 		INFO("Printing started; Sending init sequence\n");
 		/* Send printer init */
-		if ((ret = send_data(dev, endp_down, header, header_len)))
-			goto done_claimed;
+		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->header, ctx->printer->init_length)))
+			return ret;
 
 		state = S_PRINTER_INIT_SENT;
 		break;
 	case S_PRINTER_INIT_SENT:
-		if (!fancy_memcmp(rdbuf, printers[printer_type].ready_y_readback, READBACK_LEN, paper_code_offset, paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->ready_y_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
 			state = S_PRINTER_READY_Y;
 		}
 		break;
 	case S_PRINTER_READY_Y:
-		if (bw_mode)
+		if (ctx->bw_mode)
 			INFO("Sending BLACK plane\n");
 		else
 			INFO("Sending YELLOW plane\n");
 
-		if ((ret = send_data(dev, endp_down, plane_y, plane_len)))
-			goto done_claimed;
+		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->plane_y, ctx->plane_len)))
+			return ret;
 
 		state = S_PRINTER_Y_SENT;
 		break;
 	case S_PRINTER_Y_SENT:
-		if (!fancy_memcmp(rdbuf, printers[printer_type].ready_m_readback, READBACK_LEN, paper_code_offset, paper_code)) {
-			if (bw_mode)
+		if (!fancy_memcmp(rdbuf, ctx->printer->ready_m_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
+			if (ctx->bw_mode)
 				state = S_PRINTER_DONE;
 			else
 				state = S_PRINTER_READY_M;
@@ -738,35 +514,35 @@ top:
 	case S_PRINTER_READY_M:
 		INFO("Sending MAGENTA plane\n");
 
-		if ((ret = send_data(dev, endp_down, plane_m, plane_len)))
-			goto done_claimed;
+		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->plane_m, ctx->plane_len)))
+			return ret;
 
 		state = S_PRINTER_M_SENT;
 		break;
 	case S_PRINTER_M_SENT:
-		if (!fancy_memcmp(rdbuf, printers[printer_type].ready_c_readback, READBACK_LEN, paper_code_offset, paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->ready_c_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
 			state = S_PRINTER_READY_C;
 		}
 		break;
 	case S_PRINTER_READY_C:
 		INFO("Sending CYAN plane\n");
 
-		if ((ret = send_data(dev, endp_down, plane_c, plane_len)))
-			goto done_claimed;
+		if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->plane_c, ctx->plane_len)))
+			return ret;
 
 		state = S_PRINTER_C_SENT;
 		break;
 	case S_PRINTER_C_SENT:
-		if (!fancy_memcmp(rdbuf, printers[printer_type].done_c_readback, READBACK_LEN, paper_code_offset, paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->done_c_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
 			state = S_PRINTER_DONE;
 		}
 		break;
 	case S_PRINTER_DONE:
-		if (footer_len) {
+		if (ctx->printer->foot_length) {
 			INFO("Cleaning up\n");
 
-			if ((ret = send_data(dev, endp_down, footer, footer_len)))
-				goto done_claimed;
+			if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->footer, ctx->printer->foot_length)))
+				return ret;
 		}
 		state = S_FINISHED;
 		/* Intentional Fallthrough */
@@ -788,38 +564,86 @@ top:
 		goto top;
 	}
 
-	/* Done printing */
-	INFO("All printing done\n");
-	ret = 0;
-
-done_claimed:
-	libusb_release_interface(dev, iface);
-
-done_close:
-#if 0
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
-#endif
-	libusb_close(dev);
-done:
-	libusb_free_device_list(list, 1);
-	libusb_exit(ctx);
-
-	if (plane_y)
-		free(plane_y);
-	if (plane_m)
-		free(plane_m);
-	if (plane_c)
-		free(plane_c);
-	if (header)
-		free(header);
-	if (footer)
-		free(footer);
-
-
-	return ret;
+	return 0;
 }
 
+/* Exported */
+#define USB_VID_CANON       0x04a9
+#define USB_PID_CANON_CP10  0x304A
+#define USB_PID_CANON_CP100 0x3063
+#define USB_PID_CANON_CP200 0x307C
+#define USB_PID_CANON_CP220 0x30BD
+#define USB_PID_CANON_CP300 0x307D
+#define USB_PID_CANON_CP330 0x30BE
+#define USB_PID_CANON_CP400 0x30F6
+#define USB_PID_CANON_CP500 0x30F5
+#define USB_PID_CANON_CP510 0x3128
+#define USB_PID_CANON_CP520 520 // XXX 316f? 3172? (related to cp740/cp750)
+#define USB_PID_CANON_CP530 0x31b1
+#define USB_PID_CANON_CP600 0x310B
+#define USB_PID_CANON_CP710 0x3127
+#define USB_PID_CANON_CP720 0x3143
+#define USB_PID_CANON_CP730 0x3142
+#define USB_PID_CANON_CP740 0x3171
+#define USB_PID_CANON_CP750 0x3170
+#define USB_PID_CANON_CP760 0x31AB
+#define USB_PID_CANON_CP770 0x31AA
+#define USB_PID_CANON_CP780 0x31DD
+#define USB_PID_CANON_CP790 790 // XXX 31ed? 31ef? (related to es40)
+#define USB_PID_CANON_CP800 0x3214
+#define USB_PID_CANON_CP810 0x3256
+#define USB_PID_CANON_CP900 0x3255
+#define USB_PID_CANON_ES1   0x3141
+#define USB_PID_CANON_ES2   0x3185
+#define USB_PID_CANON_ES20  0x3186
+#define USB_PID_CANON_ES3   0x31AF
+#define USB_PID_CANON_ES30  0x31B0
+#define USB_PID_CANON_ES40  0x31EE
+
+struct dyesub_backend canonselphy_backend = {
+	.name = "Canon SELPHY CP/ES",
+	.version = "0.60",
+	.uri_prefix = "canonselphy",
+	.init = canonselphy_init,
+	.attach = canonselphy_attach,
+	.teardown = canonselphy_teardown,
+	.early_parse = canonselphy_early_parse,
+	.read_parse = canonselphy_read_parse,
+	.main_loop = canonselphy_main_loop,
+	.devices = {
+	{ USB_VID_CANON, USB_PID_CANON_CP10, P_CP10, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP100, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP200, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP220, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP300, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP330, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP400, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP500, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP510, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP520, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP530, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP600, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP710, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP720, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP730, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP740, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP750, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP760, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP770, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP780, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP790, P_ES40_CP790, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP800, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP810, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP900, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_ES1, P_ES1, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_ES2, P_ES2_20, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_ES20, P_ES2_20, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_ES3, P_ES3_30, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_ES30, P_ES3_30, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_ES40, P_ES40_CP790, "Canon"},
+	{ 0, 0, 0, ""}
+	}
+};
 /* 
 
  ***************************************************************************
@@ -944,8 +768,9 @@ done:
    13 ff 03 00  ff ff ff ff  00 00 00 00   [?]
    00 ff 10 00  ff ff ff ff  00 00 00 00   [ready for footer]
 
+   01 ff 10 00  ff ff ff ff  01 00 0f 00   [communication error]
    00 ff 00 00  ff ff ff ff  00 00 00 00   [cover open, no media]
-
+   00 ff 01 00  ff ff ff ff  01 00 01 00   [error, no media/ink]
    00 ff 01 00  ff ff ff ff  03 00 02 00   [attempt to print with no media]
    00 ff 01 00  ff ff ff ff  08 00 04 00   [attempt to print with cover open]
 

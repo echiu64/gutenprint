@@ -1,5 +1,5 @@
 /*
- *   Kodak Professional 1400 print assister
+ *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
@@ -35,15 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.20"
-#define URI_PREFIX "kodak1400://"
-
-#include "backend_common.c"
-
-/* USB Identifiers */
-#define USB_VID_KODAK      0x040A
-#define USB_PID_KODAK_1400 0x4022
-#define USB_PID_KODAK_805  0x4034
+#include "backend_common.h"
 
 /* Program states */
 enum {
@@ -60,6 +52,10 @@ enum {
 	S_FINISHED,
 };
 
+#define CMDBUF_LEN 96
+#define READBACK_LEN 8
+
+/* File header */
 struct kodak1400_hdr {
 	uint8_t  hdr[4];
 	uint16_t columns;
@@ -75,55 +71,22 @@ struct kodak1400_hdr {
 	uint8_t  null4[12];
 } __attribute__((packed));
 
-#define CMDBUF_LEN 96
-#define READBACK_LEN 8
 
-static uint8_t idle_data[READBACK_LEN] = { 0xe4, 0x72, 0x00, 0x00,
-					   0x00, 0x00, 0x00, 0x00 };
+/* Private data stucture */
+struct kodak1400_ctx {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
 
-static int find_and_enumerate(struct libusb_context *ctx,
-			      struct libusb_device ***list,
-			      char *match_serno,
-			      int scan_only)
-{
-	int num;
-	int i;
-	int found = -1;
+	struct kodak1400_hdr hdr;
+	uint8_t *plane_r;
+	uint8_t *plane_g;
+	uint8_t *plane_b;
+};
 
-	/* Enumerate and find suitable device */
-	num = libusb_get_device_list(ctx, list);
-
-	for (i = 0 ; i < num ; i++) {
-		struct libusb_device_descriptor desc;
-
-		libusb_get_device_descriptor((*list)[i], &desc);
-
-		if (desc.idVendor != USB_VID_KODAK)
-			continue;
-
-		switch(desc.idProduct) {
-		case USB_PID_KODAK_1400:
-			found = i;
-			break;
-		case USB_PID_KODAK_805:
-			found = i;
-			break;
-		default:
-			continue;
-		}
-
-		found = print_scan_output((*list)[i], &desc,
-					  URI_PREFIX, "Kodak", 
-					  found, (found == i), 1, 
-					  scan_only, match_serno);
-	}
-
-	return found;
-}
-
-static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
+static int send_plane(struct kodak1400_ctx *ctx,
 		      uint8_t planeno, uint8_t *planedata,
-		      struct kodak1400_hdr *hdr, uint8_t *cmdbuf)
+		      uint8_t *cmdbuf)
 {
 	int i;
 	uint16_t temp16;
@@ -136,7 +99,7 @@ static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
 		cmdbuf[2] = 0x00;
 		cmdbuf[3] = 0x50;
 	
-		if ((ret = send_data(dev, endp,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     cmdbuf, CMDBUF_LEN)))
 			return ret;
 	}
@@ -148,21 +111,21 @@ static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
 	cmdbuf[3] = planeno;
 
 	if (planedata) {
-		temp16 = htons(hdr->columns);
+		temp16 = htons(ctx->hdr.columns);
 		memcpy(cmdbuf+7, &temp16, 2);
-		temp16 = htons(hdr->rows);
+		temp16 = htons(ctx->hdr.rows);
 		memcpy(cmdbuf+9, &temp16, 2);
 	}
 
-	if ((ret = send_data(dev, endp,
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
 
 	if (planedata) {
-		for (i = 0 ; i < hdr->rows ; i++) {
-			if ((ret = send_data(dev, endp,
-					     planedata + i * hdr->columns, 
-					     hdr->columns)))
+		for (i = 0 ; i < ctx->hdr.rows ; i++) {
+			if ((ret = send_data(ctx->dev, ctx->endp_down,
+					     planedata + i * ctx->hdr.columns, 
+					     ctx->hdr.columns)))
 				return ret;
 		}
 	}
@@ -173,7 +136,7 @@ static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
 	cmdbuf[2] = 0x01;
 	cmdbuf[3] = 0x50;
 	
-	if ((ret = send_data(dev, endp,
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
 
@@ -181,10 +144,12 @@ static int send_plane(struct libusb_device_handle *dev, uint8_t endp,
 }
 
 #define UPDATE_SIZE 1552
-
-static int set_tonecurve(char *fname, libusb_device_handle *dev, 
-			 uint8_t endp_down, uint8_t endp_up) 
+static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 {
+	libusb_device_handle *dev = ctx->dev;
+	uint8_t endp_down = ctx->endp_down;
+	uint8_t endp_up = ctx->endp_up;
+
 	uint8_t cmdbuf[8];
 	uint8_t respbuf[64];
 	int ret, num = 0;
@@ -271,216 +236,131 @@ static int set_tonecurve(char *fname, libusb_device_handle *dev,
 	return 0;
 }
 
-int main (int argc, char **argv) 
+static void kodak1400_cmdline(char *caller)
 {
-	struct libusb_context *ctx;
-	struct libusb_device **list;
-	struct libusb_device_handle *dev;
-	struct libusb_config_descriptor *config;
+	DEBUG("\t\t%s [ -stc filename ]\n", caller);
+}
 
-	uint8_t endp_up = 0;
-	uint8_t endp_down = 0;
+int kodak1400_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+{
+	struct kodak1400_ctx *ctx = vctx;
 
-	uint16_t temp16;
+	if (!run || !ctx)
+		return (!strcmp("-stc", arg1));
 
-	int data_fd = fileno(stdin);
+	if (!strcmp("-stc", arg1))
+		return kodak1400_set_tonecurve(ctx, arg2);
 
-	int i, num;
-	int claimed;
+	return -1;
+}
 
-	int query_only = 0;
-	int ret = 0;
-	int iface = 0;
-	int found = -1;
-	int copies = 1;
-	char *uri = getenv("DEVICE_URI");;
-	char *use_serno = NULL;
+static void *kodak1400_init(void)
+{
+	struct kodak1400_ctx *ctx = malloc(sizeof(struct kodak1400_ctx));
+	if (!ctx)
+		return NULL;
+	memset(ctx, 0, sizeof(struct kodak1400_ctx));
+	
+	return ctx;
+}
 
-	struct kodak1400_hdr hdr;
-	uint8_t *plane_r, *plane_g, *plane_b, *cmdbuf;
+static void kodak1400_attach(void *vctx, struct libusb_device_handle *dev, 
+			     uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
+{
+	struct kodak1400_ctx *ctx = vctx;
 
-	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
-	int last_state = -1, state = S_IDLE;
+	ctx->dev = dev;
+	ctx->endp_up = endp_up;
+	ctx->endp_down = endp_down;
+}
 
-	DEBUG("Kodak 1400/805 CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
 
-	/* Cmdline help */
-	if (argc < 2) {
-		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ]\n\t%s [ -stc filename ] \n\n",
-		      argv[0], argv[0], argv[0]);
-		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, NULL, 1);
-		libusb_free_device_list(list, 1);
-		libusb_exit(ctx);
-		exit(1);
-	}
+static void kodak1400_teardown(void *vctx) {
+	struct kodak1400_ctx *ctx = vctx;
 
-	/* Are we running as a CUPS backend? */
-	if (uri) {
-		if (argv[4])
-			copies = atoi(argv[4]);
-		if (argv[6]) {  /* IOW, is it specified? */
-			data_fd = open(argv[6], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
+	if (!ctx)
+		return;
 
-		/* Ensure we're using BLOCKING I/O */
-		i = fcntl(data_fd, F_GETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		i &= ~O_NONBLOCK;
-		i = fcntl(data_fd, F_SETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		/* Start parsing URI 'selphy://PID/SERIAL' */
-		if (strncmp(URI_PREFIX, uri, strlen(URI_PREFIX))) {
-			ERROR("Invalid URI prefix (%s)\n", uri);
-			exit(1);
-		}
-		use_serno = strchr(uri, '=');
-		if (!use_serno || !*(use_serno+1)) {
-			ERROR("Invalid URI (%s)\n", uri);
-			exit(1);
-		}
-		use_serno++;
-	} else {
-		use_serno = getenv("DEVICE");
+	if (ctx->plane_r)
+		free(ctx->plane_r);
+	if (ctx->plane_g)
+		free(ctx->plane_g);
+	if (ctx->plane_b)
+		free(ctx->plane_b);
+	free(ctx);
+}
 
-		if (!strcmp("-stc", argv[1])) {
-			query_only = 1;
-			goto skip_read;
-		}
+static int kodak1400_read_parse(void *vctx, int data_fd) {
+	struct kodak1400_ctx *ctx = vctx;
+	int i, ret;
 
-		/* Open Input File */
-		if (strcmp("-", argv[1])) {
-			data_fd = open(argv[1], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
-	}
+	if (!ctx)
+		return 1;
 
-	/* Ignore SIGPIPE */
-	signal(SIGPIPE, SIG_IGN);
-	signal(SIGTERM, sigterm_handler);
 
 	/* Read in then validate header */
-	read(data_fd, &hdr, sizeof(hdr));
-	if (hdr.hdr[0] != 'P' ||
-	    hdr.hdr[1] != 'G' ||
-	    hdr.hdr[2] != 'H' ||
-	    hdr.hdr[3] != 'D') {
+	read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	if (ctx->hdr.hdr[0] != 'P' ||
+	    ctx->hdr.hdr[1] != 'G' ||
+	    ctx->hdr.hdr[2] != 'H' ||
+	    ctx->hdr.hdr[3] != 'D') {
 		ERROR("Unrecognized data format!\n");
-		exit(1);
+		return 1;
 	}
-	hdr.planesize = le32_to_cpu(hdr.planesize);
-	hdr.rows = le16_to_cpu(hdr.rows);
-	hdr.columns = le16_to_cpu(hdr.columns);
-
+	ctx->hdr.planesize = le32_to_cpu(ctx->hdr.planesize);
+	ctx->hdr.rows = le16_to_cpu(ctx->hdr.rows);
+	ctx->hdr.columns = le16_to_cpu(ctx->hdr.columns);
+	
 	/* Set up plane data */
-	cmdbuf = malloc(CMDBUF_LEN);
-	plane_r = malloc(hdr.planesize);
-	plane_g = malloc(hdr.planesize);
-	plane_b = malloc(hdr.planesize);
-	if (!cmdbuf || !plane_r || !plane_g || !plane_b) {
+	ctx->plane_r = malloc(ctx->hdr.planesize);
+	ctx->plane_g = malloc(ctx->hdr.planesize);
+	ctx->plane_b = malloc(ctx->hdr.planesize);
+	if (!ctx->plane_r || !ctx->plane_g || !ctx->plane_b) {
 		ERROR("Memory allocation failure!\n");
-		exit(1);
+		return 1;
 	}
-	for (i = 0 ; i < hdr.rows ; i++) {
+	for (i = 0 ; i < ctx->hdr.rows ; i++) {
 		int j;
 		int remain;
 		uint8_t *ptr;
 		for (j = 0 ; j < 3 ; j++) {
 			if (j == 0)
-				ptr = plane_r + i * hdr.columns;
+				ptr = ctx->plane_r + i * ctx->hdr.columns;
 			else if (j == 1)
-				ptr = plane_g + i * hdr.columns;
+				ptr = ctx->plane_g + i * ctx->hdr.columns;
 			else if (j == 2)
-				ptr = plane_b + i * hdr.columns;
+				ptr = ctx->plane_b + i * ctx->hdr.columns;
 
-			remain = hdr.columns;
+			remain = ctx->hdr.columns;
 			do {
 				ret = read(data_fd, ptr, remain);
 				if (ret < 0) {
 					ERROR("Read failed (%d/%d/%d) (%d/%d @ %d)\n", 
-					      ret, remain, hdr.columns,
-					      i, hdr.rows, j);
+					      ret, remain, ctx->hdr.columns,
+					      i, ctx->hdr.rows, j);
 					perror("ERROR: Read failed");
-					exit(1);
+					return ret;
 				}
 				ptr += ret;
 				remain -= ret;
 			} while (remain);
 		}
 	}
-	close(data_fd); /* We're done reading! */
 
-skip_read:
-	/* Libusb setup */
-	libusb_init(&ctx);
-	found = find_and_enumerate(ctx, &list, use_serno, 0);
+	return 0;
+}
 
-	if (found == -1) {
-		ERROR("Printer open failure (No suitable printers found!)\n");
-		ret = 3;
-		goto done;
-	}
+static uint8_t idle_data[READBACK_LEN] = { 0xe4, 0x72, 0x00, 0x00,
+					   0x00, 0x00, 0x00, 0x00 };
 
-	ret = libusb_open(list[found], &dev);
-	if (ret) {
-		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
-		ret = 4;
-		goto done;
-	}
-	
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed) {
-		ret = libusb_detach_kernel_driver(dev, iface);
-		if (ret) {
-			ERROR("Printer open failure (Could not detach printer from kernel)\n");
-			ret = 4;
-			goto done_close;
-		}
-	}
+static int kodak1400_main_loop(void *vctx, int copies) {
+	struct kodak1400_ctx *ctx = vctx;
 
-	ret = libusb_claim_interface(dev, iface);
-	if (ret) {
-		ERROR("Printer open failure (Could not claim printer interface)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	ret = libusb_get_active_config_descriptor(list[found], &config);
-	if (ret) {
-		ERROR("Printer open failure (Could not fetch config descriptor)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-		if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
-			if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-				endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-			else
-				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
-		}
-	}
-
-	if (query_only) {
-		if (!strcmp("-stc", argv[1]))
-			set_tonecurve(argv[2], dev, endp_down, endp_up);
-		goto done_claimed;
-	}
-
-	/* Time for the main processing loop */
+	uint8_t rdbuf[READBACK_LEN], rdbuf2[READBACK_LEN];
+	uint8_t cmdbuf[CMDBUF_LEN];
+	int last_state = -1, state = S_IDLE;
+	int num, ret;
+	uint16_t temp16;
 
 top:
 	if (state != last_state) {
@@ -492,27 +372,29 @@ top:
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0x72;
 
-	if ((ret = send_data(dev, endp_down,
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			    cmdbuf, CMDBUF_LEN)))
-		goto done_claimed;
+		return ret;
 
 	/* Read in the printer status */
-	ret = libusb_bulk_transfer(dev, endp_up,
+	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
 				   rdbuf,
 				   READBACK_LEN,
 				   &num,
 				   2000);
 
 	if (ret < 0) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, endp_up);
-		ret = 4;
-		goto done_claimed;
+		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
+		return ret;
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		DEBUG("readback:  %02x %02x %02x %02x  %02x %02x %02x %02x\n",
-		      rdbuf[0], rdbuf[1], rdbuf[2], rdbuf[3],
-		      rdbuf[4], rdbuf[5], rdbuf[6], rdbuf[7]);
+		int i;
+		DEBUG("readback: ");
+		for (i = 0 ; i < num ; i++) {
+			DEBUG2("%02x ", rdbuf[i]);
+		}
+		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
@@ -529,71 +411,70 @@ top:
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
+			return ret;
 
 		/* Send page setup */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x5a;
 		cmdbuf[2] = 0x53;
-		temp16 = be16_to_cpu(hdr.columns);
+		temp16 = be16_to_cpu(ctx->hdr.columns);
 		memcpy(cmdbuf+3, &temp16, 2);
-		temp16 = be16_to_cpu(hdr.rows);
+		temp16 = be16_to_cpu(ctx->hdr.rows);
 		memcpy(cmdbuf+5, &temp16, 2);
 
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
+			return ret;
 
 		/* Send lamination toggle? */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x59;
-		cmdbuf[2] = hdr.matte; // ???
+		cmdbuf[2] = ctx->hdr.matte; // ???
 
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
+			return ret;
 
 		/* Send matte toggle */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x60;
-		cmdbuf[2] = hdr.laminate;
+		cmdbuf[2] = ctx->hdr.laminate;
 
-		if (send_data(dev, endp_down,
+		if (send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN))
-			goto done_claimed;
+			return ret;
 
 		/* Send lamination strength */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x62;
-		cmdbuf[2] = hdr.lam_strength;
+		cmdbuf[2] = ctx->hdr.lam_strength;
 
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
+			return ret;
 
 		/* Send unknown */
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		cmdbuf[0] = 0x1b;
 		cmdbuf[1] = 0x61;
-		cmdbuf[2] = hdr.unk1; // ???
+		cmdbuf[2] = ctx->hdr.unk1; // ???
 
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
+			return ret;
 
 		state = S_PRINTER_READY_Y;
 		break;
 	case S_PRINTER_READY_Y:
 		INFO("Sending YELLOW plane\n");
-		if ((ret = send_plane(dev, endp_down,
-				      1, plane_b, &hdr, cmdbuf)))
-			goto done_claimed;
+		if ((ret = send_plane(ctx, 1, ctx->plane_b, cmdbuf)))
+			return ret;
 		state = S_PRINTER_SENT_Y;
 		break;
 	case S_PRINTER_SENT_Y:
@@ -602,9 +483,8 @@ top:
 		break;
 	case S_PRINTER_READY_M:
 		INFO("Sending MAGENTA plane\n");
-		if ((ret = send_plane(dev, endp_down,
-				      2, plane_g, &hdr, cmdbuf)))
-			goto done_claimed;		    
+		if ((ret = send_plane(ctx, 2, ctx->plane_g, cmdbuf)))
+			return ret;
 		state = S_PRINTER_SENT_M;
 		break;
 	case S_PRINTER_SENT_M:
@@ -613,14 +493,13 @@ top:
 		break;
 	case S_PRINTER_READY_C:
 		INFO("Sending CYAN plane\n");
-		if ((ret = send_plane(dev, endp_down,
-				      3, plane_r, &hdr, cmdbuf)))
-			goto done_claimed;
+		if ((ret = send_plane(ctx, 3, ctx->plane_r, cmdbuf)))
+			return ret;
 		state = S_PRINTER_SENT_C;
 		break;
 	case S_PRINTER_SENT_C:
 		if (!memcmp(rdbuf, idle_data, READBACK_LEN)) {
-			if (hdr.laminate)
+			if (ctx->hdr.laminate)
 				state = S_PRINTER_READY_L;
 			else
 				state = S_PRINTER_DONE;
@@ -628,9 +507,8 @@ top:
 		break;
 	case S_PRINTER_READY_L:
 		INFO("Laminating page\n");
-		if ((ret = send_plane(dev, endp_down,
-				      4, NULL, &hdr, cmdbuf)))
-			goto done_claimed;
+		if ((ret = send_plane(ctx, 4, NULL, cmdbuf)))
+			return ret;
 		state = S_PRINTER_SENT_L;
 		break;
 	case S_PRINTER_SENT_L:
@@ -646,9 +524,9 @@ top:
 		cmdbuf[2] = 0x00;
 		cmdbuf[3] = 0x50;
 
-		if ((ret = send_data(dev, endp_down,
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			goto done_claimed;
+			return ret;
 
 		state = S_FINISHED;
 		break;
@@ -670,34 +548,31 @@ top:
 		goto top;
 	}
 
-	/* Done printing */
-	INFO("All printing done\n");
-	ret = 0;
-
-done_claimed:
-	libusb_release_interface(dev, iface);
-
-done_close:
-#if 0
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
-#endif
-	libusb_close(dev);
-done:
-	if (plane_r)
-		free(plane_r);
-	if (plane_b)
-		free(plane_b);
-	if (plane_g)
-		free(plane_g);
-	if (cmdbuf)
-		free(cmdbuf);
-
-	libusb_free_device_list(list, 1);
-	libusb_exit(ctx);
-
-	return ret;
+	return 0;
 }
+
+/* Exported */
+#define USB_VID_KODAK       0x040A
+#define USB_PID_KODAK_1400  0x4022
+#define USB_PID_KODAK_805   0x4034
+
+struct dyesub_backend kodak1400_backend = {
+	.name = "Kodak 1400/805",
+	.version = "0.21",
+	.uri_prefix = "kodak1400",
+	.cmdline_usage = kodak1400_cmdline,
+	.cmdline_arg = kodak1400_cmdline_arg,
+	.init = kodak1400_init,
+	.attach = kodak1400_attach,
+	.teardown = kodak1400_teardown,
+	.read_parse = kodak1400_read_parse,
+	.main_loop = kodak1400_main_loop,
+	.devices = {
+	{ USB_VID_KODAK, USB_PID_KODAK_1400, P_KODAK_1400_805, "Kodak"},
+	{ USB_VID_KODAK, USB_PID_KODAK_805, P_KODAK_1400_805, "Kodak"},
+	{ 0, 0, 0, ""}
+	}
+};
 
 /* Kodak 1400/805 data format
 

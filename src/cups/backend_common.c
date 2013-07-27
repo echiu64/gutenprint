@@ -25,58 +25,23 @@
  *
  */
 
-#include <libusb-1.0/libusb.h>
-#include <arpa/inet.h>
+#include "backend_common.h"
 
-#define BACKEND_VERSION "0.4a"
-
-#define STR_LEN_MAX 64
-#define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
-#define DEBUG2( ... ) fprintf(stderr, __VA_ARGS__ )
-#define INFO( ... )  fprintf(stderr, "INFO: " __VA_ARGS__ )
-#define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
-
-#if (__BYTE_ORDER == __LITTLE_ENDIAN)
-#define le32_to_cpu(__x) __x
-#define le16_to_cpu(__x) __x
-#define be16_to_cpu(__x) ntohs(__x)
-#define be32_to_cpu(__x) ntohl(__x)
-#else
-#define le32_to_cpu(x)							\
-	({								\
-		uint32_t __x = (x);					\
-		((uint32_t)(						\
-			(((uint32_t)(__x) & (uint32_t)0x000000ffUL) << 24) | \
-			(((uint32_t)(__x) & (uint32_t)0x0000ff00UL) <<  8) | \
-			(((uint32_t)(__x) & (uint32_t)0x00ff0000UL) >>  8) | \
-			(((uint32_t)(__x) & (uint32_t)0xff000000UL) >> 24) )); \
-	})
-#define le16_to_cpu(x)							\
-	({								\
-		uint16_t __x = (x);					\
-		((uint16_t)(						\
-			(((uint16_t)(__x) & (uint16_t)0x00ff) <<  8) | \
-			(((uint16_t)(__x) & (uint16_t)0xff00) >>  8) | \
-	})
-#define be32_to_cpu(__x) __x
-#define be16_to_cpu(__x) __x
+#define BACKEND_VERSION "0.18"
+#ifndef URI_PREFIX
+#define URI_PREFIX "gutenprint+usb"
 #endif
 
-#define cpu_to_le16 le16_to_cpu
-#define cpu_to_le32 le32_to_cpu
-#define cpu_to_be16 be16_to_cpu
-#define cpu_to_be32 be32_to_cpu
+/* Support Functions */
 
 #define ID_BUF_SIZE 2048
 static char *get_device_id(struct libusb_device_handle *dev)
 {
-	int   length;
-	int claimed = 0;
+	int length;
 	int iface = 0;
 	char *buf = malloc(ID_BUF_SIZE + 1);
 
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed)
+	if (libusb_kernel_driver_active(dev, iface))
 		libusb_detach_kernel_driver(dev, iface);
 
 	libusb_claim_interface(dev, iface);
@@ -115,14 +80,13 @@ static char *get_device_id(struct libusb_device_handle *dev)
 
 done:
 	libusb_release_interface(dev, iface);
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
 
 	return buf;
 }
 
-static int send_data(struct libusb_device_handle *dev, uint8_t endp, 
-		    uint8_t *buf, int len)
+
+int send_data(struct libusb_device_handle *dev, uint8_t endp, 
+	      uint8_t *buf, int len)
 {
 	int num;
 
@@ -142,7 +106,7 @@ static int send_data(struct libusb_device_handle *dev, uint8_t endp,
 	return 0;
 }
 
-static int terminate = 0;
+int terminate = 0;
 
 static void sigterm_handler(int signum) {
 	terminate = 1;
@@ -162,8 +126,9 @@ static char *sanitize_string(char *str) {
 static int print_scan_output(struct libusb_device *device,
 			     struct libusb_device_descriptor *desc,
 			     char *prefix, char *manuf2,
-			     int found, int match, int valid, 
-			     int scan_only, char *match_serno)
+			     int found, int match,
+			     int scan_only, char *match_serno,
+			     struct dyesub_backend *backend)
 {
 	struct libusb_device_handle *dev;
 
@@ -172,7 +137,7 @@ static int print_scan_output(struct libusb_device *device,
 	unsigned char manuf[STR_LEN_MAX] = "";
 	
 	if (libusb_open(device, &dev)) {
-		ERROR("Could not open device %04x:%04x\n", desc->idVendor, desc->idProduct);
+		ERROR("Could not open device %04x:%04x (need to be root?)\n", desc->idVendor, desc->idProduct);
 		found = -1;
 		goto abort;
 	}
@@ -189,6 +154,26 @@ static int print_scan_output(struct libusb_device *device,
 	if (desc->iSerialNumber) {
 		libusb_get_string_descriptor_ascii(dev, desc->iSerialNumber, serial, STR_LEN_MAX);
 		sanitize_string((char*)serial);
+	} else if (backend->query_serno) { /* XXX this is ... a cut-n-paste hack */
+		uint8_t endp_up, endp_down;
+		int i, iface = 0;
+		struct libusb_config_descriptor *config;
+
+		if (libusb_kernel_driver_active(dev, iface))
+			libusb_detach_kernel_driver(dev, iface);
+		libusb_claim_interface(dev, iface);
+		libusb_get_active_config_descriptor(device, &config);
+		for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
+			if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
+				if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
+					endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
+				else
+					endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
+			}
+		}
+
+		backend->query_serno(dev, endp_up, endp_down, (char*)serial, STR_LEN_MAX);
+		libusb_release_interface(dev, iface);
 	}
 	
 	if (!strlen((char*)serial)) {
@@ -204,12 +189,11 @@ static int print_scan_output(struct libusb_device *device,
 		sprintf((char*)serial, "NONE_B%03d_D%03d", bus_num, port_num);
 	}
 	
-	DEBUG("%s%sPID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
-	      (!valid) ? "UNRECOGNIZED: " : "",
+	DEBUG("%sVID: %04X PID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
 	      match ? "MATCH: " : "",
-	      desc->idProduct, manuf, product, serial);
+	      desc->idVendor, desc->idProduct, manuf, product, serial);
 	
-	if (valid && scan_only) {
+	if (scan_only) {
 		/* URL-ify model. */
 		char buf[128]; // XXX ugly..
 		int j = 0, k = 0;
@@ -226,7 +210,7 @@ static int print_scan_output(struct libusb_device *device,
 		}
 		buf[k] = 0;
 		
-		fprintf(stdout, "direct %s%s/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n",
+		fprintf(stdout, "direct %s://%s/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n",
 			prefix, strlen(manuf2) ? manuf2 : (char*)manuf,
 			buf, serial, product, product,
 			ieee_id);
@@ -245,3 +229,367 @@ static int print_scan_output(struct libusb_device *device,
 abort:
 	return found;
 }
+
+static struct dyesub_backend *backends[] = {
+	&canonselphy_backend,
+	&kodak6800_backend,
+	&kodak1400_backend,
+	&shinkos2145_backend,
+	&updr150_backend,
+	NULL,
+};
+
+static int find_and_enumerate(struct libusb_context *ctx,
+			      struct libusb_device ***list,
+			      char *match_serno,
+			      int printer_type,
+			      int scan_only)
+{
+	int num;
+	int i, j, k;
+	int found = -1;
+
+	/* Enumerate and find suitable device */
+	num = libusb_get_device_list(ctx, list);
+
+	for (i = 0 ; i < num ; i++) {
+		struct libusb_device_descriptor desc;
+		int match = 0;
+		libusb_get_device_descriptor((*list)[i], &desc);
+		
+		for (k = 0 ; backends[k] ; k++) {
+			for (j = 0 ; backends[k]->devices[j].vid ; j++) {
+				if (desc.idVendor == backends[k]->devices[j].vid &&
+				    desc.idProduct == backends[k]->devices[j].pid) {
+					match = 1;
+					if (printer_type == P_ANY ||
+					    printer_type == backends[k]->devices[j].type)
+						found = i;
+					goto match;
+				}
+			}
+		}
+
+	match:
+		if (!match) {
+			if (getenv("EXTRA_PID") && getenv("EXTRA_TYPE") && getenv("EXTRA_VID")) {
+				int pid = strtol(getenv("EXTRA_PID"), NULL, 16);
+				int vid = strtol(getenv("EXTRA_VID"), NULL, 16);
+				int type = atoi(getenv("EXTRA_TYPE"));
+				if (vid == desc.idVendor &&
+				    pid == desc.idProduct) {
+					match = 1;
+					if (printer_type == P_ANY ||
+					    printer_type == type)
+						found = i;
+				}
+			}
+		}
+
+		if (!match)
+			continue;
+
+		found = print_scan_output((*list)[i], &desc,
+					  URI_PREFIX, backends[k]->devices[j].manuf_str,
+					  found, (found == i),
+					  scan_only, match_serno,
+					  backends[k]);
+	}
+
+	return found;
+}
+
+static struct dyesub_backend *find_backend(char *uri_prefix)
+{
+	int i;
+	struct dyesub_backend *backend;
+
+	if (!uri_prefix)
+		return NULL;
+
+	for (i = 0; ; i++) {
+		backend = backends[i];
+		if (!backend)
+			return NULL;
+		if (!strcmp(uri_prefix, backend->uri_prefix))
+			return backend;
+	}
+	return NULL;
+}
+
+/* MAIN */
+
+int main (int argc, char **argv) 
+{
+	struct libusb_context *ctx = NULL;
+	struct libusb_device **list = NULL;
+	struct libusb_device_handle *dev;
+	struct libusb_config_descriptor *config;
+
+	struct dyesub_backend *backend;
+	void * backend_ctx = NULL;
+
+	uint8_t endp_up = 0;
+	uint8_t endp_down = 0;
+
+	int data_fd = fileno(stdin);
+
+	int i;
+	int claimed;
+
+	int ret = 0;
+	int iface = 0;
+	int found = -1;
+	int copies = 1;
+	int jobid = 0;
+
+	char *uri = getenv("DEVICE_URI");
+	char *use_serno = NULL;
+	int query_only = 0;
+	int printer_type = P_ANY;
+
+	DEBUG("Multi-Call Gutenprint DyeSub CUPS Backend version %s\n",
+	      BACKEND_VERSION);
+	DEBUG("Copyright 2007-2013 Solomon Peachy\n");
+
+	/* Cmdline help */
+	if (argc < 2) {
+		char *ptr = strrchr(argv[0], '/');
+		if (ptr)
+			ptr++;
+		else
+			ptr = argv[0];
+		backend = find_backend(getenv("BACKEND"));
+		if (!backend)
+			backend = find_backend(ptr);
+
+		if (!backend) {
+			DEBUG("CUPS Usage:\n\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n\n",
+			      URI_PREFIX);
+			DEBUG("Internal Backends: (prefix with SERIAL=serno for specific device)\n");
+			for (i = 0; ; i++) {
+				backend = backends[i];
+				if (!backend)
+					break;
+				DEBUG(" %s backend version %s (BACKEND=%s)\n",
+				      backend->name, backend->version, backend->uri_prefix);
+				DEBUG("\t\t%s [ infile | - ]\n",
+				      backend->uri_prefix);
+				
+				if (backend->cmdline_usage) {
+					backend->cmdline_usage(backend->uri_prefix);
+				}
+			}
+		} else {
+			DEBUG(" %s backend version %s (BACKEND=%s)\n",
+			      backend->name, backend->version, backend->uri_prefix);
+			DEBUG("  Standalone Usage: (prefix with SERIAL=serno for specific device)\n");
+			DEBUG("\t\t%s [ infile | - ]\n",
+			      backend->uri_prefix);
+
+			if (backend->cmdline_usage) {
+				backend->cmdline_usage(backend->uri_prefix);
+			}
+		}
+		libusb_init(&ctx);
+		find_and_enumerate(ctx, &list, NULL, P_ANY, 1);
+		libusb_free_device_list(list, 1);
+		libusb_exit(ctx);
+		exit(1);
+	}
+
+	/* Are we running as a CUPS backend? */
+	if (uri) {
+		if (argv[1])
+			jobid = atoi(argv[1]);
+		if (argv[4])
+			copies = atoi(argv[4]);
+		if (argv[6]) {  /* IOW, is it specified? */
+			data_fd = open(argv[6], O_RDONLY);
+			if (data_fd < 0) {
+				perror("ERROR:Can't open input file");
+				exit(1);
+			}
+		}
+
+		/* Ensure we're using BLOCKING I/O */
+		i = fcntl(data_fd, F_GETFL, 0);
+		if (i < 0) {
+			perror("ERROR:Can't open input");
+			exit(1);
+		}
+		i &= ~O_NONBLOCK;
+		i = fcntl(data_fd, F_SETFL, 0);
+		if (i < 0) {
+			perror("ERROR:Can't open input");
+			exit(1);
+		}
+
+		/* Figure out backend */
+		{
+			char *ptr = strchr (uri, ':');
+			if (!ptr) {
+				ERROR("Invalid URI prefix (%s)\n", uri);
+				exit(1);
+			}
+			*ptr = 0;
+			backend = find_backend(uri);
+			if (!backend) {
+				ERROR("Invalid backend (%s)\n", uri);
+				exit(1);
+			}
+			*ptr = ':';
+		}
+
+		use_serno = strchr(uri, '=');
+		if (!use_serno || !*(use_serno+1)) {
+			ERROR("Invalid URI (%s)\n", uri);
+			exit(1);
+		}
+		use_serno++;
+	} else {
+		use_serno = getenv("DEVICE");
+
+		/* find backend */
+		backend = find_backend(getenv("BACKEND"));
+		if (!backend) {
+			char *ptr = strrchr(argv[0], '/');
+			if (ptr)
+				ptr++;
+			else
+				ptr = argv[0];
+			backend = find_backend(ptr);
+		}
+		if (!backend) {
+			ERROR("Invalid backend (%s)\n", uri);
+			exit(1);
+		}
+
+		srand(getpid());
+		jobid = rand();
+
+		if (backend->cmdline_arg && backend->cmdline_arg(NULL, 0, argv[1], argv[2])) {
+			query_only = 1;
+		} else {
+			/* Open Input File */
+			if (strcmp("-", argv[1])) {
+				data_fd = open(argv[1], O_RDONLY);
+				if (data_fd < 0) {
+					perror("ERROR:Can't open input file");
+					exit(1);
+				}
+			}
+		}
+	}
+
+	/* Ignore SIGPIPE */
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGTERM, sigterm_handler);
+
+	/* Initialize backend */
+	INFO("Initializing '%s' backend (version %s)\n",
+	     backend->name, backend->version);
+	backend_ctx = backend->init();
+
+	/* Parse printjob if necessary */
+	if (!query_only && backend->early_parse) {
+		printer_type = backend->early_parse(backend_ctx, data_fd);
+		if (printer_type < 0) {
+			ret = 4;
+			goto done;
+		}
+	}
+
+	/* Libusb setup */
+	libusb_init(&ctx);
+	/* Enumerate devices */
+	found = find_and_enumerate(ctx, &list, use_serno, printer_type, 0);
+
+	if (found == -1) {
+		ERROR("Printer open failure (No suitable printers found!)\n");
+		ret = 3;
+		goto done;
+	}
+
+	ret = libusb_open(list[found], &dev);
+	if (ret) {
+		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
+		goto done;
+	}
+	
+	claimed = libusb_kernel_driver_active(dev, iface);
+	if (claimed) {
+		ret = libusb_detach_kernel_driver(dev, iface);
+		if (ret) {
+			ERROR("Printer open failure (Could not detach printer from kernel)\n");
+			goto done_close;
+		}
+	}
+
+	ret = libusb_claim_interface(dev, iface);
+	if (ret) {
+		ERROR("Printer open failure (Could not claim printer interface)\n");
+		goto done_close;
+	}
+
+	ret = libusb_get_active_config_descriptor(list[found], &config);
+	if (ret) {
+		ERROR("Printer open failure (Could not fetch config descriptor)\n");
+		goto done_close;
+	}
+
+	for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
+		if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
+			if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
+				endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
+			else
+				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
+		}
+	}
+
+	/* Attach backend to device */
+	backend->attach(backend_ctx, dev, endp_up, endp_down, jobid);
+	
+	if (query_only) {
+		backend->cmdline_arg(backend_ctx, 1, argv[1], argv[2]);
+		goto done_claimed;
+	} 
+
+	/* Read in data */
+	if (backend->read_parse(backend_ctx, data_fd))
+		goto done_claimed;
+	close(data_fd);
+
+	/* Time for the main processing loop */
+	INFO("Printing started (%d copies)\n", copies);
+
+	ret = backend->main_loop(backend_ctx, copies);
+	if (ret)
+		goto done_claimed;
+
+	/* Done printing */
+	INFO("All printing done\n");
+	ret = 0;
+
+done_claimed:
+	libusb_release_interface(dev, iface);
+
+done_close:
+#if 0
+	if (claimed)
+		libusb_attach_kernel_driver(dev, iface);
+#endif
+	libusb_close(dev);
+done:
+
+	if (backend && backend_ctx)
+		backend->teardown(backend_ctx);
+
+	if (list)
+		libusb_free_device_list(list, 1);
+	if (ctx)
+		libusb_exit(ctx);
+
+	return ret;
+}
+

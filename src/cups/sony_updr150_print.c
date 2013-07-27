@@ -1,5 +1,5 @@
 /*
- *   Sony UP-DR150 Photo Printer print assister
+ *   Sony UP-DR150 Photo Printer CUPS backend -- libusb-1.0 version
  *
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
@@ -35,214 +35,79 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#define VERSION "0.04"
-#define URI_PREFIX "sonyupdr150://"
-#define STR_LEN_MAX 64
+#include "backend_common.h"
 
-#include "backend_common.c"
+/* Private data stucture */
+struct updr150_ctx {
+	struct libusb_device_handle *dev;
+	uint8_t endp_up;
+	uint8_t endp_down;
 
-/* USB Identifiers */
-#define USB_VID_SONY      0x054C
-#define USB_PID_UP_DR150  0x01E8
+	uint8_t *databuf;
+	int datalen;
+};
 
-#define MAX_PRINTJOB_LEN 16736455
-
-static int find_and_enumerate(struct libusb_context *ctx,
-			      struct libusb_device ***list,
-			      char *match_serno,
-			      int scan_only)
+static void* updr150_init(void)
 {
-	int num;
-	int i;
-	int found = -1;
-
-	/* Enumerate and find suitable device */
-	num = libusb_get_device_list(ctx, list);
-
-	for (i = 0 ; i < num ; i++) {
-		struct libusb_device_descriptor desc;
-
-		libusb_get_device_descriptor((*list)[i], &desc);
-
-		if (desc.idVendor != USB_VID_SONY)
-			continue;
-
-		switch(desc.idProduct) {
-		case USB_PID_UP_DR150:
-			found = i;
-			break;
-		default:
-			continue;
-		}
-
-		found = print_scan_output((*list)[i], &desc,
-					  URI_PREFIX, "", 
-					  found, (found == i), 1, 
-					  scan_only, match_serno);
-	}
-
-	return found;
+	struct updr150_ctx *ctx = malloc(sizeof(struct updr150_ctx));
+	if (!ctx)
+		return NULL;
+	memset(ctx, 0, sizeof(struct updr150_ctx));
+	return ctx;
 }
 
-int main (int argc, char **argv) 
+static void updr150_attach(void *vctx, struct libusb_device_handle *dev, 
+			   uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
-	struct libusb_context *ctx;
-	struct libusb_device **list;
-	struct libusb_device_handle *dev;
-	struct libusb_config_descriptor *config;
+	struct updr150_ctx *ctx = vctx;
 
-	uint8_t endp_up = 0;
-	uint8_t endp_down = 0;
+	ctx->dev = dev;
+	ctx->endp_up = endp_up;
+	ctx->endp_down = endp_down;
+}
 
-	int data_fd = fileno(stdin);
+static void updr150_teardown(void *vctx) {
+	struct updr150_ctx *ctx = vctx;
 
+	if (!ctx)
+		return;
+
+	if (ctx->databuf)
+		free(ctx->databuf);
+	free(ctx);
+}
+
+#define MAX_PRINTJOB_LEN 16736455
+static int updr150_read_parse(void *vctx, int data_fd) {
+	struct updr150_ctx *ctx = vctx;
 	int i;
-	int claimed;
 
-	int ret = 0;
-	int iface = 0;
-	int found = -1;
-	int copies = 1;
-	char *uri = getenv("DEVICE_URI");;
-	char *use_serno = NULL;
-	uint8_t *databuf = NULL;
-	int datalen = 0;
+	if (!ctx)
+		return 1;
 
-	DEBUG("Sony UP-DR150 CUPS backend version " VERSION "/" BACKEND_VERSION " \n");
-
-	/* Cmdline help */
-	if (argc < 2) {
-		DEBUG("Usage:\n\t%s [ infile | - ]\n\t%s job user title num-copies options [ filename ]\n\n",
-		      argv[0], argv[0]);
-		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, NULL, 1);
-		libusb_free_device_list(list, 1);
-		libusb_exit(ctx);
-		exit(1);
-	}
-
-	/* Are we running as a CUPS backend? */
-	if (uri) {
-		if (argv[4])
-			copies = atoi(argv[4]);
-		if (argv[6]) {  /* IOW, is it specified? */
-			data_fd = open(argv[6], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
-
-		/* Ensure we're using BLOCKING I/O */
-		i = fcntl(data_fd, F_GETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		i &= ~O_NONBLOCK;
-		i = fcntl(data_fd, F_SETFL, 0);
-		if (i < 0) {
-			perror("ERROR:Can't open input");
-			exit(1);
-		}
-		/* Start parsing URI 'selphy://PID/SERIAL' */
-		if (strncmp(URI_PREFIX, uri, strlen(URI_PREFIX))) {
-			ERROR("Invalid URI prefix (%s)\n", uri);
-			exit(1);
-		}
-		use_serno = strchr(uri, '=');
-		if (!use_serno || !*(use_serno+1)) {
-			ERROR("Invalid URI (%s)\n", uri);
-			exit(1);
-		}
-		use_serno++;
-	} else {
-		use_serno = getenv("DEVICE");
-
-		/* Open Input File */
-		if (strcmp("-", argv[1])) {
-			data_fd = open(argv[1], O_RDONLY);
-			if (data_fd < 0) {
-				perror("ERROR:Can't open input file");
-				exit(1);
-			}
-		}
-	}
-
-	/* Ignore SIGPIPE */
-	signal(SIGPIPE, SIG_IGN);
-	signal(SIGTERM, sigterm_handler);
-
-	/* Read in data */
-	databuf = malloc(MAX_PRINTJOB_LEN);
-	if (!databuf) {
+	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
+	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		exit(1);
+		return 2;
 	}
 
-	while((i = read(data_fd, databuf+datalen, 4096)) > 0) {
-		datalen += i;
+	while((i = read(data_fd, ctx->databuf + ctx->datalen, 4096)) > 0) {
+		ctx->datalen += i;
 	}
 
-	close(data_fd); /* We're done reading! */
+	return 0;
+}
 
-	/* Libusb setup */
-	libusb_init(&ctx);
-	found = find_and_enumerate(ctx, &list, use_serno, 0);
+static int updr150_main_loop(void *vctx, int copies) {
+	struct updr150_ctx *ctx = vctx;
+	int i, ret;
 
-	if (found == -1) {
-		ERROR("Printer open failure (No suitable printers found!)\n");
-		ret = 3;
-		goto done;
-	}
-
-	ret = libusb_open(list[found], &dev);
-	if (ret) {
-		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
-		ret = 4;
-		goto done;
-	}
-	
-	claimed = libusb_kernel_driver_active(dev, iface);
-	if (claimed) {
-		ret = libusb_detach_kernel_driver(dev, iface);
-		if (ret) {
-			ERROR("Printer open failure (Could not detach printer from kernel)\n");
-			ret = 4;
-			goto done_close;
-		}
-	}
-
-	ret = libusb_claim_interface(dev, iface);
-	if (ret) {
-		ERROR("Printer open failure (Could not claim printer interface)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	ret = libusb_get_active_config_descriptor(list[found], &config);
-	if (ret) {
-		ERROR("Printer open failure (Could not fetch config descriptor)\n");
-		ret = 4;
-		goto done_close;
-	}
-
-	for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-		if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
-			if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-				endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-			else
-				endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
-		}
-	}
-
-	/* Time for the main processing loop */
-
-	INFO("Printing started (%d copies)\n", copies);
+	if (!ctx)
+		return 1;
 
 top:
-	for (i = 0 ; i < datalen ; ) {
-		uint8_t *ptr = databuf + i;
+	for (i = 0 ; i < ctx->datalen ; ) {
+		uint8_t *ptr = ctx->databuf + i;
 		i += 4;
 		if (*ptr & 0xf0) {
 			switch (*ptr) {
@@ -272,9 +137,9 @@ top:
 			uint32_t len = le32_to_cpu(*((uint32_t*)ptr));
 
 			DEBUG("Sending %d bytes to printer\n", len);
-			if ((ret = send_data(dev, endp_down,
-					     databuf + i, len)))
-				goto done_claimed;
+			if ((ret = send_data(ctx->dev, ctx->endp_down,
+					     ctx->databuf + i, len)))
+				return ret;
 			i += len;
 		}
 	}
@@ -289,29 +154,27 @@ top:
 		goto top;
 	}
 
-	/* Done printing */
-	INFO("All printing done\n");
-	ret = 0;
-
-done_claimed:
-	libusb_release_interface(dev, iface);
-
-done_close:
-#if 0
-	if (claimed)
-		libusb_attach_kernel_driver(dev, iface);
-#endif
-	libusb_close(dev);
-done:
-
-	if (databuf)
-		free(databuf);
-
-	libusb_free_device_list(list, 1);
-	libusb_exit(ctx);
-
-	return ret;
+	return 0;
 }
+
+/* Exported */
+#define USB_VID_SONY         0x054C
+#define USB_PID_SONY_UPDR150 0x01E8
+
+struct dyesub_backend updr150_backend = {
+	.name = "Sony UP-DR150",
+	.version = "0.05",
+	.uri_prefix = "sonyupdr150",
+	.init = updr150_init,
+	.attach = updr150_attach,
+	.teardown = updr150_teardown,
+	.read_parse = updr150_read_parse,
+	.main_loop = updr150_main_loop,
+	.devices = {
+	{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, ""},
+	{ 0, 0, 0, ""}
+	}
+};
 
 /* Sony UP-DR150 Spool file format
 
