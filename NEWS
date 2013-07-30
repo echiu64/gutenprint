@@ -1017,11 +1017,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	which is bundled with Gutenprint.
 
        Kodak 6800
+       Kodak 6850
 
-	The Kodak 6800 requires an intelligent CUPS backend, which is
-	bundled with Gutenprint.
+	The Kodak 6800 and 6850 require an intelligent CUPS backend, 
+	which is bundled with Gutenprint.
 
-       Kodak 6850 (EXPERIMENTAL)
        Kodak 605  (EXPERIMENTAL)
        Kodak 8500 (EXPERIMENTAL)	
        Kodak 9810 (EXPERIMENTAL)
@@ -1122,6 +1122,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Kodak 1400
        Kodak 805
        Kodak 6800
+       Kodak 6850
 
      - Device IDs added for the following Kyocera printers:
        Kyocera FS-1118MFP
@@ -1148,6 +1149,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Kodak Professional 1400
 	Kodak 805 Photo Printer
    	Kodak 6800 Photo Printer
+   	Kodak 6850 Photo Printer
    	Shinko/Sinfonia CHC-S2145 
    	Sony UP-DR150
 
