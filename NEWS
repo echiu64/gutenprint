@@ -998,10 +998,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Mitsubishi Dye-Sublimation printers:
 
+       Mitsubishi CP9810D/DW
+
+	This model has been verified to work
+
        Mitsubishi CP3020D/DU/DE (EXPERIMENTAL)
        Mitsubishi CP3020DA/DAE  (EXPERIMENTAL)
        Mitsubishi CP9550D/DW    (EXPERIMENTAL)
-       Mitsubishi CP9810D/DW    (EXPERIMENTAL)
        Mitsubishi CPD70D/DW     (EXPERIMENTAL)
        Mitsubishi CPD707D/DW    (EXPERIMENTAL)
 
@@ -1031,7 +1034,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Shinko/Sinfonia Dye-Sublimation printers:
 
-       Shinko/Sinfonia CHC-S2145
+       Shinko/Sinfonia CHC-S2145 (aka S2)
 
 	The CHC-S2145 requires an intelligent CUPS backend, which is
 	bundled with Gutenprint.
