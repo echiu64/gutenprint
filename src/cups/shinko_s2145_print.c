@@ -9,7 +9,7 @@
  * 
  *   The latest version of this program can be found at:
  *
- *     http://git.shaftnet.org/git/gitweb.cgi?p=selphy_print.git
+ *     http://git.shaftnet.org/cgit/selphy_print.git
  *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
@@ -829,16 +829,20 @@ struct s2145_getunique_resp {
 
 uint8_t rdbuf[READBACK_LEN];
 
-static int s2145_do_cmd(libusb_device_handle *dev, 
-			uint8_t endp_up, uint8_t endp_down,
-			uint8_t *cmd, int cmdlen, int minlen, int *num)
+static int s2145_do_cmd(struct shinkos2145_ctx *ctx,
+			uint8_t *cmd, int cmdlen,
+			int minlen, int *num)
 {
 	int ret;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
 
+	libusb_device_handle *dev = ctx->dev;
+	uint8_t endp_up = ctx->endp_up;
+	uint8_t endp_down = ctx->endp_down;
+
 	if ((ret = send_data(dev, endp_down,
 			     cmd, cmdlen)))
-		return -99;
+		return (ret < 0) ? ret : -99;
 
 	ret = libusb_bulk_transfer(dev, endp_up,
 				   rdbuf,
@@ -848,7 +852,7 @@ static int s2145_do_cmd(libusb_device_handle *dev,
 
 	if (ret < 0 || (*num < minlen)) {
 		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, *num, minlen, endp_up);
-		return ret;
+		return (ret < 0) ? ret : -99;
 	}
 
 	if (resp->result != RESULT_SUCCESS) {
@@ -872,7 +876,7 @@ static int get_status(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(S2145_CMD_STATUS);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -935,7 +939,7 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= FWINFO_TARGET_TABLES ; i++) {
 		cmd.target = i;
 
-		if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+		if ((ret = s2145_do_cmd(ctx,
 					(uint8_t*)&cmd, sizeof(cmd),
 					sizeof(*resp),
 					&num)) < 0) {
@@ -969,7 +973,7 @@ static int get_errorlog(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(S2145_CMD_ERRORLOG);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1000,7 +1004,7 @@ static int get_mediainfo(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(S2145_CMD_MEDIAINFO);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1032,7 +1036,7 @@ static int get_user_string(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(S2145_CMD_GETUNIQUE);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp) - 1,
 				&num)) < 0) {
@@ -1068,7 +1072,7 @@ static int set_user_string(struct shinkos2145_ctx *ctx, char *str)
 	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_SETUNIQUE);
 	cmd.hdr.len = cpu_to_le16(cmd.len + 1);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, cmd.len + 1 + sizeof(cmd.hdr),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1093,7 +1097,7 @@ static int cancel_job(struct shinkos2145_ctx *ctx, char *str)
 	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_CANCELJOB);
 	cmd.hdr.len = cpu_to_le16(1);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1113,7 +1117,7 @@ static int flash_led(struct shinkos2145_ctx *ctx)
 	cmd.cmd = cpu_to_le16(S2145_CMD_FLASHLED);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1124,7 +1128,7 @@ static int flash_led(struct shinkos2145_ctx *ctx)
 	return 0;
 }
 
-static int reset_curve(struct shinkos2145_ctx *ctx, int target) 
+static int reset_curve(struct shinkos2145_ctx *ctx, int target)
 {
 	struct s2145_reset_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
@@ -1135,7 +1139,7 @@ static int reset_curve(struct shinkos2145_ctx *ctx, int target)
 	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_RESET);
 	cmd.hdr.len = cpu_to_le16(1);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1146,7 +1150,7 @@ static int reset_curve(struct shinkos2145_ctx *ctx, int target)
 	return 0;
 }
 
-static int button_set(struct shinkos2145_ctx *ctx, int enable) 
+static int button_set(struct shinkos2145_ctx *ctx, int enable)
 {
 	struct s2145_button_cmd cmd;
 	struct s2145_status_hdr *resp = (struct s2145_status_hdr *) rdbuf;
@@ -1157,7 +1161,7 @@ static int button_set(struct shinkos2145_ctx *ctx, int enable)
 
 	cmd.enabled = enable;
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1186,7 +1190,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 
 	INFO("Dump %s Tone Curve to '%s'\n", tonecurve_statuses(type), fname);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1273,7 +1277,7 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 		data[ret] = cpu_to_le16(data[ret]);
 	}
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp),
 				&num)) < 0) {
@@ -1478,7 +1482,7 @@ top:
 	cmd->cmd = cpu_to_le16(S2145_CMD_STATUS);
 	cmd->len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+	if ((ret = s2145_do_cmd(ctx,
 				cmdbuf, sizeof(*cmd),
 				sizeof(struct s2145_status_hdr),
 				&num)) < 0) {
@@ -1537,7 +1541,7 @@ top:
 		print->mode = le32_to_cpu(ctx->hdr.mode);
 		print->method = le32_to_cpu(ctx->hdr.method);
 
-		if ((ret = s2145_do_cmd(ctx->dev, ctx->endp_up, ctx->endp_down, 
+		if ((ret = s2145_do_cmd(ctx,
 					cmdbuf, sizeof(*print),
 					sizeof(struct s2145_status_hdr),
 					&num)) < 0) {
@@ -1609,10 +1613,16 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 	struct s2145_getunique_resp *resp = (struct s2145_getunique_resp*) rdbuf;
 	int ret, num = 0;
 
+	struct shinkos2145_ctx ctx = {
+		.dev = dev,
+		.endp_up = endp_up,
+		.endp_down = endp_down,
+	};
+
 	cmd.cmd = cpu_to_le16(S2145_CMD_GETUNIQUE);
 	cmd.len = cpu_to_le16(0);
 
-	if ((ret = s2145_do_cmd(dev, endp_up, endp_down,
+	if ((ret = s2145_do_cmd(&ctx,
 				(uint8_t*)&cmd, sizeof(cmd),
 				sizeof(*resp) - 1,
 				&num)) < 0) {
@@ -1637,7 +1647,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.20",
+	.version = "0.21",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
