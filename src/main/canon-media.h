@@ -1894,6 +1894,25 @@ static const canon_paper_t canon_MULTIPASS_MP990_papers[] = {    /*  k_lower_sca
 };
 DECLARE_PAPERS(canon_MULTIPASS_MP990);
 
+static const canon_paper_t canon_PIXMA_MG2400_papers[] = {
+  { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },/* plain */
+  { "PhotoPlusGloss2",  N_ ("Photo Paper Plus Glossy II"),	0x1d,0x23,0x32,0.78, 0.25, 0.500, 0, 0, 0 },/* PPGgold */
+  { "PhotoProPlat",	N_ ("Photo Paper Platinum"),		0x1e,0x24,0x33,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed */
+  { "PhotoProLuster",	N_ ("Photo Paper Pro Luster"),		0x25,0x28,0x3f,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  PPproLuster*/
+  { "PhotoProSemiGloss",N_ ("Photo Paper Plus Semi-gloss"),	0x1a,0x1f,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed */
+  { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x16,0.78, 0.25, 0.500, 0, 0, 0 },/* glossy */
+  { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x1c,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed */
+  { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x10,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed */
+  { "HagakiA", 	        N_ ("Hagaki A (address side)"),	        0x08,0x09,0x38,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  all hagaki */
+  { "InkJetHagaki", 	N_ ("Ink Jet Hagaki"),			0x0d,0x09,0x1b,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  inkjet hagaki */
+  { "CanonPhotoHagakiK",N_ ("Hagaki K (Canon Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  Canon photo hagaki*/
+  { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  hagaki*/
+  { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  T-shirt */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* uncomfirmed:  PP other */
+};
+DECLARE_PAPERS(canon_PIXMA_MG2400);
+
 /* new paper type from October 2012 */
 static const canon_paper_t canon_PIXMA_MG3200_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },

@@ -10013,6 +10013,63 @@ static const canon_modeuse_t canon_PIXMA_MG2200_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_MG2200);
 
+/* ----------------------------------- Canon MG2400  ----------------------------------- */
+static const char* canon_PIXMA_MG2400_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+  };
+
+static const char* canon_PIXMA_MG2400_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_MG2400_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_MG2400_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_MG2400_modeuses_TShirt[] = {
+  "600x600dpi_photo",
+  NULL
+  };
+
+static const char* canon_PIXMA_MG2400_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_MG2400_modeuses[] = {
+  { "Plain",            canon_PIXMA_MG2400_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "PhotoPlusGloss2",  canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",     canon_PIXMA_MG2400_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",   canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_PIXMA_MG2400_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "InkJetHagaki", 	canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_PIXMA_MG2400_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_MG2400_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_PIXMA_MG2400_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_MG2400_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL }, 
+  { "PhotopaperOther",	canon_PIXMA_MG2400_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_MG2400);
+
 /* ----------------------------------- Canon MG3100  ----------------------------------- */
 static const char* canon_PIXMA_MG3100_modeuses_plain[] = {
   "600x600dpi_high",

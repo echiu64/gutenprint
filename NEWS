@@ -489,6 +489,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon PIXMA MG2270  (EXPERIMENTAL)(*2)
        Canon PIXMA MG2280  (EXPERIMENTAL)(*2)
 
+       Canon MG2400 series (EXPERIMENTAL)(*3)
+       Canon PIXMA MG2400  (EXPERIMENTAL)
+       Canon PIXMA MG2410  (EXPERIMENTAL)
+       Canon PIXMA MG2420  (EXPERIMENTAL)
+       Canon PIXMA MG2440  (EXPERIMENTAL)
+       Canon PIXMA MG2450  (EXPERIMENTAL)
+       Canon PIXMA MG2470  (EXPERIMENTAL)
+
        Canon MG3100 series (EXPERIMENTAL)(*1)
        Canon PIXMA MG3110  (EXPERIMENTAL)(*2)
        Canon PIXMA MG3120  (EXPERIMENTAL)(*2)
@@ -923,6 +931,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
                printer identifies itself
                by a generic family
                identification string.
+
+       Note 3: MG2400 line only has support for 4 media types:
+               plain, photo paper gloss Gold, photo paper gloss, and envelope.
+               We have retained support for other media types common
+               to recent Canon printers, but it is unconfirmed whether
+               the printer firmware will accept these.
+               The line also lacks support for borderless printing 
+               in the Windows driver, and we have not tried to add
+               experimental support.
 
        Area codes as follows:
              1: Latin America

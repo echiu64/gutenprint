@@ -2572,6 +2572,22 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA MG2400 */
+    "PIXMA MG2400", 3,          /*model, model_id*/
+    INCH(17/2), 1917,       /* max paper width and height */ /* not confirmed yet */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP250_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_XML,0,
+    3,9, /* ESC (l and (P command lengths */
+    control_cmd_PIXMA_MG5300,  /* features Also uses CAP_T */
+    &canon_PIXMA_MG2400_modelist,
+    &canon_PIXMA_MG2400_paperlist,
+    &canon_PIXMA_MG2400_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA MG3100 */
     "PIXMA MG3100", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height */ /* from linux driver v3.60 */
