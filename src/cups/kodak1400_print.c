@@ -401,6 +401,13 @@ top:
 	}
 	last_state = state;
 
+	/* Error handling */
+	if (rdbuf[4] || rdbuf[5]) {
+		ERROR("Error code reported by printer (%02x/%02x), terminating print\n",
+		      rdbuf[4], rdbuf[5]);
+		return 1;
+	}
+
 	fflush(stderr);       
 
 	switch (state) {
@@ -558,7 +565,7 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.21",
+	.version = "0.22",
 	.uri_prefix = "kodak1400",
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
