@@ -632,7 +632,7 @@ else
   PACKAGE_LIB_DIR="${libdir}/${PACKAGE}"
 fi
 
-AC_DEFINE_UNQUOTED(PACKAGE_LIB_DIR, "${PACKAGE_LIB_DIR}")
+AC_DEFINE_UNQUOTED(PACKAGE_LIB_DIR, ["${PACKAGE_LIB_DIR}"])
 
 AH_TEMPLATE(PKGXMLDATADIR,, [Package XML data directory])
 PKGXMLDATADIR="${PACKAGE_DATA_DIR}/${GUTENPRINT_RELEASE_VERSION}/xml"
@@ -933,6 +933,8 @@ dnl Some versions of make get very grouchy about $(RM)
 RM='rm'
 
 dnl Substitutions
+AC_SUBST(prefix)
+AC_SUBST(exec_prefix)
 AC_SUBST(cups_prefix)
 AC_SUBST(cups_exec_prefix)
 AC_SUBST(cups_bindir)
@@ -1101,11 +1103,13 @@ echo "    Build testpattern generator:                $BUILD_TESTPATTERN"
 echo
 echo "  Installation summary:"
 echo "    Installation prefix:                        $prefix"
-echo "    Exec prefix:                                $exec_prefix"
+# Configure intentionally does not expand exec_prefix to allow make
+# to do so.
+echo -n "    Exec prefix:                                $exec_prefix (";echo -n $exec_prefix | sed "s,\${prefix},$prefix,";echo ")";
 echo "    Data directory:                             $PACKAGE_DATA_DIR"
-echo "    Library directory:                          $PACKAGE_LIB_DIR"
+echo -n "    Library directory:                          $PACKAGE_LIB_DIR (";echo -n $PACKAGE_LIB_DIR | sed "s,\${exec_prefix},$exec_prefix," | sed "s,\${prefix},$prefix,";echo ")"
 echo "    XML data directory:                         $PKGXMLDATADIR"
-echo "    Module directory:                           $PKGMODULEDIR"
+echo -n "    Module directory:                           $PKGMODULEDIR (";echo -n $PKGMODULEDIR | sed "s,\${exec_prefix},$exec_prefix," | sed "s,\${prefix},$prefix,"; echo ")"
 echo "    Install sample images:                      $INSTALL_SAMPLES"
 echo
 echo "  General configuration:"
