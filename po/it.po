@@ -1,7 +1,6 @@
-# translation of gutenprint.po to Italiano
 # Italian translation for gutenprint
 # Partially based on Italian translation ok ppdtranslations.po
-# Copyright (C) 2006, 2008 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2008, 2013 Free Software Foundation, Inc.
 #
 # This file is distributed under the same license as the gutenprint package.
 #
@@ -13,20 +12,22 @@
 # Luca Ferretti <elle.uca@libero.it>, 2006.
 # Gruppo traduzione Italiano di Ubuntu <gruppo-traduzione@ubuntu-it.org>, 2008.
 # Marco Poletti <poletti.marco@gmail.com>, 2008, 2009, 2011.
+# Milo Casagrande <milo@milo.name>, 2013.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: gutenprint-20110308\n"
+"Project-Id-Version: gutenprint-5.2.9\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-06-04 22:38-0400\n"
-"PO-Revision-Date: 2011-03-20 19:51+0100\n"
-"Last-Translator: Marco Poletti <poletti.marco@gmail.com>\n"
+"PO-Revision-Date: 2013-09-08 16:42+0200\n"
+"Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.2\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+"Content-Transfer-Encoding: 8-bit\n"
+"X-Generator: Gtranslator 2.91.6\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #: src/main/dither-main.c:44 src/main/print-color.c:49
 #: src/main/print-escp2.c:2341 src/main/print-pcl.c:1872
@@ -103,14 +104,8 @@ msgid "Density"
 msgstr "Densità"
 
 #: src/main/dither-main.c:92
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"Regola la densità (quantità d'inchiostro) della stampa. Ridurre la densità "
-"se l'inchiostro passa attraverso la carta o macchia; aumentare la densità se "
-"le parti nere non sono uniformi."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "Regola la densità (quantità d'inchiostro) della stampa. Ridurre la densità se l'inchiostro passa attraverso la carta o macchia; aumentare la densità se le parti nere non sono uniformi."
 
 #: src/main/dither-main.c:100
 msgid "Dither Algorithm"
@@ -120,19 +115,16 @@ msgstr "Algoritmo di retinatura"
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Scegliere l'algoritmo di retinatura da usare.\n"
 "Ibrido adattabile di solito dà i migliori risultati in generale.\n"
 "EvenTone è un nuovo algoritmo sperimentale che spesso dà ottimi risultati.\n"
 "Ordinato è più veloce e dà quasi la stessa qualità nelle fotografie.\n"
-"Veloce e Molto veloce sono decisamente più veloci e vanno bene per testo e "
-"disegni al tratto.\n"
+"Veloce e Molto veloce sono decisamente più veloci e vanno bene per testo e disegni al tratto.\n"
 "Floyd-Steinberg ibrido di solito dà risultati peggiori."
 
 #: src/main/module.c:52
@@ -272,9 +264,8 @@ msgid "Ink Set"
 msgstr "Tipo d'inchiostri"
 
 #: src/main/print-canon.c:307
-#, fuzzy
 msgid "Type of inkset in the printer"
-msgstr "Tipo d'inchiostro nella stampante"
+msgstr "Tipo d'inchiostri nella stampante"
 
 #: src/main/print-canon.c:312 src/main/print-escp2.c:263
 #: src/main/print-olympus.c:2040
@@ -808,20 +799,15 @@ msgstr "Regolazione lineare contrasto"
 
 #: src/main/print-color.c:241
 msgid "Use linear vs. fixed end point contrast adjustment"
-msgstr ""
-"Usa la regolazione lineare del contrasto al posto di quella a punto fisso"
+msgstr "Usa la regolazione lineare del contrasto al posto di quella a punto fisso"
 
 #: src/main/print-color.c:248
 msgid "Composite Gamma"
 msgstr "Gamma composito"
 
 #: src/main/print-color.c:249
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
-"Regola il gamma della stampa. L'aumento del valore produrrà una stampa più "
-"luminosa in generale, mentre la diminuzione scurirà la stampa. "
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
+msgstr "Regola il gamma della stampa. L'aumento del valore produrrà una stampa più luminosa in generale, mentre la diminuzione scurirà la stampa. "
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -1612,8 +1598,7 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "Regola la saturazione (bilanciamento colore) della stampa\n"
-"Usare una saturazione pari a zero per produrre una stampa in scala di grigi "
-"usando inchiostro nero e a colori"
+"Usare una saturazione pari a zero per produrre una stampa in scala di grigi usando inchiostro nero e a colori"
 
 #: src/main/print-color.c:357
 msgid "Ink Limit"
@@ -1836,21 +1821,13 @@ msgstr "La larghezza deve essere maggiore di zero\n"
 
 #: src/main/printers.c:896
 #, c-format
-msgid ""
-"Image is too wide for the page: left margin is %d, width %d, right edge is "
-"%d\n"
-msgstr ""
-"L'immagine è troppo larga per la pagina: il margine sinistro è %d, la "
-"larghezza %d e il bordo destro è %d\n"
+msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
+msgstr "L'immagine è troppo larga per la pagina: il margine sinistro è %d, la larghezza %d e il bordo destro è %d\n"
 
 #: src/main/printers.c:903
 #, c-format
-msgid ""
-"Image is too long for the page: top margin is %d, height %d, bottom edge is "
-"%d\n"
-msgstr ""
-"L'immagine è troppo lunga per la pagina: il margine superiore è %d, "
-"l'altezza è %d e il bordo inferiore è %d\n"
+msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
+msgstr "L'immagine è troppo lunga per la pagina: il margine superiore è %d, l'altezza è %d e il bordo inferiore è %d\n"
 
 #: src/main/print-escp2.c:150
 msgid "Automatic Printing Mode"
@@ -1866,8 +1843,7 @@ msgstr "Permetti altre dimensioni dei CD"
 
 #: src/main/print-escp2.c:223
 msgid "Allow non-CD media sizes when printing to CD"
-msgstr ""
-"Permette di usare dimensioni diverse da quelle dei CD, per la stampa su CD"
+msgstr "Permette di usare dimensioni diverse da quelle dei CD, per la stampa su CD"
 
 #: src/main/print-escp2.c:229 src/main/print-pcl.c:1371
 msgid "Resolution of the print"
@@ -1887,8 +1863,7 @@ msgstr "Direzione di stampa"
 
 #: src/main/print-escp2.c:258
 msgid "Printing direction (unidirectional is higher quality, but slower)"
-msgstr ""
-"Direzione di stampa (monodirezionale ha una qualità maggiore, ma è più lenta)"
+msgstr "Direzione di stampa (monodirezionale ha una qualità maggiore, ma è più lenta)"
 
 #: src/main/print-escp2.c:269
 msgid "Interleave Method"
@@ -2235,11 +2210,11 @@ msgstr "Scala di densità del grigio Hextone 1 (il più chiaro)"
 
 #: src/main/print-escp2.c:902
 msgid "Subchannel Cutoff"
-msgstr ""
+msgstr "Limite massimo sotto-canale"
 
 #: src/main/print-escp2.c:903
 msgid "Upper limit for using light ink"
-msgstr ""
+msgstr "Limite superiore per usare inchiostro leggero"
 
 #: src/main/print-escp2.c:910
 msgid "Drying Time Per Page"
@@ -2295,8 +2270,7 @@ msgstr "Sequenza d'avanzamento carta"
 
 #: src/main/print-escp2.c:967
 msgid "Set paper feed sequence (printer-specific)"
-msgstr ""
-"Imposta la sequenza d'avanzamento della carta (dipende dalla stampante)"
+msgstr "Imposta la sequenza d'avanzamento della carta (dipende dalla stampante)"
 
 #: src/main/print-escp2.c:974
 msgid "Print Method"
@@ -3067,18 +3041,15 @@ msgstr "Personalizzato"
 
 #: src/main/print-raw.c:225
 msgid "Image dimensions must match paper dimensions"
-msgstr ""
-"Le dimensioni dell'immagine devono corrispondere alle dimensioni della carta"
+msgstr "Le dimensioni dell'immagine devono corrispondere alle dimensioni della carta"
 
 #: src/main/print-weave.c:1492 src/main/print-weave.c:1543
 msgid "Fatal error!"
 msgstr "Errore irrecuperabile."
 
 #: src/main/print-weave.c:1528
-msgid ""
-"Please report the above information to gimp-print-devel@lists.sourceforge.net"
-msgstr ""
-"Inviare le informazioni precedenti a gimp-print-devel@lists.sourceforge.net"
+msgid "Please report the above information to gimp-print-devel@lists.sourceforge.net"
+msgstr "Inviare le informazioni precedenti a gimp-print-devel@lists.sourceforge.net"
 
 #: src/main/generic-options.c:33 src/xml/xmli18n-tmp.h:6580
 #: src/xml/xmli18n-tmp.h:6596 src/xml/xmli18n-tmp.h:6605
@@ -3176,8 +3147,7 @@ msgstr "Tipo di curva"
 
 #: src/gutenprintui2/curve.c:131
 msgid "Is this curve linear, spline interpolated, or free-form"
-msgstr ""
-"Indica se la curva è lineare, interpolata con spline o con forma libera"
+msgstr "Indica se la curva è lineare, interpolata con spline o con forma libera"
 
 #: src/gutenprintui2/curve.c:139
 msgid "Minimum X"
@@ -3362,27 +3332,17 @@ msgstr "Anteprima"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Posiziona l'immagine sulla pagina.\n"
-"Fare clic e trascinare con il pulsante principale per posizionare "
-"l'immagine.\n"
-"Fare clic e trascinare con il pulsante secondario per spostare l'immagine "
-"con una maggiore precisione; ciascuna unità di movimento sposta l'immagine "
-"di un punto (1/72\").\n"
-"Fare clic e trascinare con il terzo pulsante (centrale) per spostare "
-"l'immagine in unità della dimensione dell'immagine.\n"
-"Mantenendo premuto il tasto Maiusc mentre si fa clic e si trascina, si "
-"limita l'immagine ai soli movimenti orizzontali o verticali.\n"
-"Facendo clic con un altro pulsante mentre si trascina il mouse, l'immagine "
-"viene riportata alla sua posizione originale. "
+"Fare clic e trascinare con il pulsante principale per posizionare l'immagine.\n"
+"Fare clic e trascinare con il pulsante secondario per spostare l'immagine con una maggiore precisione; ciascuna unità di movimento sposta l'immagine di un punto (1/72\").\n"
+"Fare clic e trascinare con il terzo pulsante (centrale) per spostare l'immagine in unità della dimensione dell'immagine.\n"
+"Mantenendo premuto il tasto Maiusc mentre si fa clic e si trascina, si limita l'immagine ai soli movimenti orizzontali o verticali.\n"
+"Facendo clic con un altro pulsante mentre si trascina il mouse, l'immagine viene riportata alla sua posizione originale. "
 
 #: src/gutenprintui2/panel.c:1522
 msgid "Paper Size"
@@ -3449,12 +3409,8 @@ msgid "Seascape"
 msgstr "Orizzontale riflesso"
 
 #: src/gutenprintui2/panel.c:1667
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Selezionare l'orientamento: verticale, orizzontale, capovolto o orizzontale "
-"capovolto"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Selezionare l'orientamento: verticale, orizzontale, capovolto o orizzontale capovolto"
 
 #: src/gutenprintui2/panel.c:1669
 msgid "Orientation:"
@@ -3474,8 +3430,7 @@ msgstr "Destro:"
 
 #: src/gutenprintui2/panel.c:1685
 msgid "Distance from the left of the paper to the right of the image"
-msgstr ""
-"Distanza tra il bordo sinistro della carta e quello destro dell'immagine"
+msgstr "Distanza tra il bordo sinistro della carta e quello destro dell'immagine"
 
 #: src/gutenprintui2/panel.c:1689
 msgid "Distance from the right of the paper to the image"
@@ -3495,8 +3450,7 @@ msgstr "Inferiore:"
 
 #: src/gutenprintui2/panel.c:1696
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr ""
-"Distanza tra il bordo superiore della carta e quello inferiore dell'immagine"
+msgstr "Distanza tra il bordo superiore della carta e quello inferiore dell'immagine"
 
 #: src/gutenprintui2/panel.c:1700
 msgid "Distance from the bottom of the paper to the image"
@@ -3565,12 +3519,8 @@ msgstr "Scegliere il nome di file PPD corretto per la propria stampante"
 
 # (ndt) Vedi sopra per le convenzioni
 #: src/gutenprintui2/panel.c:1912
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Selezionare il nome della coda di stampa (non il tipo, o modello, di "
-"stampante) su cui stampare"
+msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
+msgstr "Selezionare il nome della coda di stampa (non il tipo, o modello, di stampante) su cui stampare"
 
 #: src/gutenprintui2/panel.c:1914
 msgid "Printer Queue:"
@@ -3617,36 +3567,24 @@ msgid "Printer Settings"
 msgstr "Impostazioni stampante"
 
 #: src/gutenprintui2/panel.c:2087
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Seleziona il nome della stampante (non il tipo, o modello, di stampante) su "
-"cui stampare"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Seleziona il nome della stampante (non il tipo, o modello, di stampante) su cui stampare"
 
 #: src/gutenprintui2/panel.c:2104
 msgid "Setup Printer..."
 msgstr "Imposta stampante..."
 
 #: src/gutenprintui2/panel.c:2106
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Sceglie il modello di stampante, il file PPD e il comando da usare per "
-"stampare su questa stampante"
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Sceglie il modello di stampante, il file PPD e il comando da usare per stampare su questa stampante"
 
 #: src/gutenprintui2/panel.c:2119
 msgid "New Printer..."
 msgstr "Nuova stampante..."
 
 #: src/gutenprintui2/panel.c:2120
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definisce una nuova stampante logica. Ciò può essere usato per definire una "
-"collezione di impostazioni da mantenere per uso futuro."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Definisce una nuova stampante logica. Ciò può essere usato per definire una collezione di impostazioni da mantenere per uso futuro."
 
 #: src/gutenprintui2/panel.c:2150
 msgid "Set Printer Option Defaults"
@@ -3673,12 +3611,8 @@ msgid "Scale by:"
 msgstr "Ridimensiona per:"
 
 #: src/gutenprintui2/panel.c:2230
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Selezionare se il ridimensionamento è misurato come percentuale della "
-"dimensione della pagina o come numero di punti per pollice"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Selezionare se il ridimensionamento è misurato come percentuale della dimensione della pagina o come numero di punti per pollice"
 
 #: src/gutenprintui2/panel.c:2233
 msgid "Percent"
@@ -3758,11 +3692,8 @@ msgid "Adjust Output..."
 msgstr "Impostazioni di stampa..."
 
 #: src/gutenprintui2/panel.c:2504
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Permette di impostare il bilanciamento del colore, la luminosità, il "
-"contrasto, la saturazione e l'algoritmo di retinatura."
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Permette di impostare il bilanciamento del colore, la luminosità, il contrasto, la saturazione e l'algoritmo di retinatura."
 
 #: src/gutenprintui2/panel.c:2523
 msgid "Size Units:"
@@ -3965,15 +3896,12 @@ msgstr ""
 "dalla Free Software Foundation; versione 2 della licenza, o (a scelta) una\n"
 "versione più recente.\n"
 "\n"
-"Questo programma è distribuito nella speranza che possa risultare utile, ma "
-"SENZA\n"
+"Questo programma è distribuito nella speranza che possa risultare utile, ma SENZA\n"
 "ALCUNA GARANZIA, nemmeno la garanzia implicita di COMMERCIABILITÀ o\n"
-"APPLICABILITÀ PER UNO SCOPO PARTICOLARE. Per maggiori dettagli consultare "
-"la\n"
+"APPLICABILITÀ PER UNO SCOPO PARTICOLARE. Per maggiori dettagli consultare la\n"
 "GNU General Public License.\n"
 "\n"
-"Una copia della GNU General Public License dovrebbe essere stata fornita "
-"con\n"
+"Una copia della GNU General Public License dovrebbe essere stata fornita con\n"
 "questo programma. In caso contrario scrivere a: Free Software Foundation,\n"
 "Inc. Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA\n"
 
@@ -3996,8 +3924,7 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -4032,15 +3959,11 @@ msgstr ""
 "  Comandi:\n"
 "    -c|--clean-head    Pulisce le testine.\n"
 "    -n|--nozzle-check  Stampa un motivo di verifica degli ugelli.\n"
-"                       È possibile visualizzare gli ugelli sporchi o "
-"intasati\n"
-"                       come delle interruzioni nel motivo. Nel caso in cui "
-"siano\n"
-"                       presenti delle interruzioni, è utile pulire le "
-"testine.\n"
+"                       È possibile visualizzare gli ugelli sporchi o intasati\n"
+"                       come delle interruzioni nel motivo. Nel caso in cui siano\n"
+"                       presenti delle interruzioni, è utile pulire le testine.\n"
 "    -a|--align-head    Allinea le testine. ATTENZIONE: un uso improprio di\n"
-"                       questa funzione può causare una bassa qualità di "
-"stampa e\n"
+"                       questa funzione può causare una bassa qualità di stampa e\n"
 "                       danni alla stampante.\n"
 "    -s|--status        Recupera lo stato della stampante.\n"
 "    -i|--ink-level     Ottiene il livello d'inchiostro dalla stampante.\n"
@@ -4050,25 +3973,21 @@ msgstr ""
 "                       d'inchiostro dalla stampante.\n"
 "                       Richiede accesso in lettura/scrittura al device\n"
 "                       raw della stampante.\n"
-"    -d|--identify      Interroga la stampante riguardo costruttore e "
-"modello.\n"
+"    -d|--identify      Interroga la stampante riguardo costruttore e modello.\n"
 "                       Richiede accesso in lettura e scrittura al device\n"
 "                       raw della stampante.\n"
 "    -l|--license       Visualizza la licenza/avviso di questo programma.\n"
 "    -M|--list-models   Elenca i modelli di stampante disponibili.\n"
 "    -h|--help          Stampa questo messaggio di aiuto.\n"
 "  Opzioni:\n"
-"    -P|--printer-name  Specifica il nome della coda di stampa su cui "
-"operare.\n"
+"    -P|--printer-name  Specifica il nome della coda di stampa su cui operare.\n"
 "                       Il valore predefinito è la stampante predefinita del\n"
 "                       sistema.\n"
 "    -r|--raw-device    Specifica il nome del device su cui stampare\n"
 "                       direttamente, senza passare per una coda di stampa.\n"
 "    -m|--model         Specifica il modello della stampante.\n"
-"    -u|--new           La stampante è recente (Stylus Color 740 o "
-"successiva).\n"
-"                       Necessario solo quando non viene usato un device raw "
-"o\n"
+"    -u|--new           La stampante è recente (Stylus Color 740 o successiva).\n"
+"                       Necessario solo quando non viene usato un device raw o\n"
 "                       quando il modello non è specificato.\n"
 "    -q|--quiet         Elimina il banner.\n"
 "    -S|--short-name    Stampa il nome corto della stampante con --identify.\n"
@@ -4133,14 +4052,12 @@ msgstr ""
 "       È possibile visualizzare ugelli sporchi o intasati come delle\n"
 "       interruzioni nel motivo. Nel caso in cui siano presenti delle\n"
 "       interruzioni, è utile pulire le testine.\n"
-"    -a Allinea le testine. ATTENZIONE: un uso improprio di questa funzione "
-"può\n"
+"    -a Allinea le testine. ATTENZIONE: un uso improprio di questa funzione può\n"
 "       causare bassa qualità di stampa e danni alla stampante.\n"
 "    -s Recupera lo stato della stampante.\n"
 "    -i Ottiene il livello d'inchiostro dalla stampante. Richiede accesso in\n"
 "       lettura e scrittura al device raw della stampante.\n"
-"    -e Ottiene informazioni estese sul livello d'inchiostro dalla "
-"stampante.\n"
+"    -e Ottiene informazioni estese sul livello d'inchiostro dalla stampante.\n"
 "       Richiede accesso in lettura e scrittura al device raw della\n"
 "       stampante.\n"
 "    -d Interroga la stampante riguardo costruttore e modello.\n"
@@ -4887,9 +4804,7 @@ msgstr "Per ottenere %s è richiesto l'uso di un device raw.\n"
 #: src/escputil/escputil.c:1563
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr ""
-"Per ottenere le informazioni estese sull'inchiostro è necessario usare un "
-"device raw.\n"
+msgstr "Per ottenere le informazioni estese sull'inchiostro è necessario usare un device raw.\n"
 
 #: src/escputil/escputil.c:1687 src/escputil/escputil.c:1714
 #: src/escputil/escputil.c:1736 src/escputil/escputil.c:1753
@@ -4930,9 +4845,7 @@ msgstr "Pulizia testine...\n"
 #: src/escputil/escputil.c:1840
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr ""
-"Verifica degli ugelli in corso, assicurarsi che ci sia carta nella "
-"stampante.\n"
+msgstr "Verifica degli ugelli in corso, assicurarsi che ci sia carta nella stampante.\n"
 
 #: src/escputil/escputil.c:1844
 #, c-format
@@ -4996,18 +4909,15 @@ msgstr ""
 "\n"
 "Ogni motivo è simile agli altri, ma vengono usati punti sempre più fini\n"
 "per un allineamento più preciso. È necessario completare tutti i passi\n"
-"per allineare correttamente la stampante. Dopo aver completato la "
-"procedura,\n"
-"il motivo di verifica verrà stampato un'altra volta. Si dovrebbe notare che "
-"la coppia\n"
+"per allineare correttamente la stampante. Dopo aver completato la procedura,\n"
+"il motivo di verifica verrà stampato un'altra volta. Si dovrebbe notare che la coppia\n"
 "centrale (la %d° tra le %d stampate) è la migliore in tutti i motivi.\n"
 "\n"
 "Dopo l'ulteriore stampa dei motivi, verranno offerte tre possibilità:\n"
 "salvare le modifiche nella stampante (s), ripetere il processo (r)\n"
 "o uscire senza salvare (q). Se si sceglie di uscire, non verranno\n"
 "ripristinate le impostazioni precedenti: per farlo bisogna spegnere\n"
-"e riaccendere la stampante. Se si esce, è necessario ripetere l'intero "
-"processo\n"
+"e riaccendere la stampante. Se si esce, è necessario ripetere l'intero processo\n"
 "se si vogliono salvare i risultati. È essenziale non spegnere la stampante\n"
 "durante la procedura.\n"
 "\n"
@@ -5040,8 +4950,7 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -5085,8 +4994,7 @@ msgstr ""
 #: src/escputil/escputil.c:1923
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr ""
-"Impossibile inviare il comando alla stampante, il programma si chiuderà.\n"
+msgstr "Impossibile inviare il comando alla stampante, il programma si chiuderà.\n"
 
 #: src/escputil/escputil.c:1937 src/escputil/escputil.c:2106
 #, c-format
@@ -5120,10 +5028,8 @@ msgstr "> "
 
 #: src/escputil/escputil.c:1955
 #, c-format
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Confermare l'uscita senza salvare premendo nuovamente il tasto \"q\":\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr "Confermare l'uscita senza salvare premendo nuovamente il tasto \"q\":\n"
 
 #: src/escputil/escputil.c:1962
 #, c-format
@@ -5226,14 +5132,12 @@ msgstr "Premere Invio per continuare > "
 #: src/escputil/escputil.c:2096
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Controllare la stampa e scegliere la coppia migliore di linee\n"
 "di ogni motivo.\n"
-"Digitare \"?\" per l'aiuto, \"r\" per ripetere la procedura o un numero di "
-"coppia\n"
+"Digitare \"?\" per l'aiuto, \"r\" per ripetere la procedura o un numero di coppia\n"
 
 #: src/escputil/escputil.c:2109
 #, c-format
@@ -5258,8 +5162,7 @@ msgstr "Impossibile comprendere ciò che è stato digitato.\n"
 #: src/escputil/escputil.c:2147
 #, c-format
 msgid "The best pair of lines should be numbered between 1 and %d.\n"
-msgstr ""
-"La coppia di linee migliore dovrebbe avere un numero compreso tra 1 e %d.\n"
+msgstr "La coppia di linee migliore dovrebbe avere un numero compreso tra 1 e %d.\n"
 
 #: src/escputil/escputil.c:2154
 #, c-format
@@ -5290,13 +5193,12 @@ msgid "Error in input\n"
 msgstr "Errore nell'input\n"
 
 #: src/gimp2/print-gutenprint.c:47
-#, fuzzy
 msgid "_Print with Gutenprint..."
-msgstr "Stampa senza bordi"
+msgstr "_Stampa con Gutenprint..."
 
 #: src/gimp2/print-gutenprint.c:49
 msgid "<Image>/File/Print with Gutenprint..."
-msgstr ""
+msgstr "<Image>/File/Stampa con Gutenprint..."
 
 # questo appare nella barra di avanzamento nella parte inferiore della
 #: src/gimp2/print-image-gimp.c:225
@@ -7930,24 +7832,20 @@ msgid "Japanese long envelope #4 landscape"
 msgstr "Busta giapponese lunga #4 orizzontale"
 
 #: src/xml/xmli18n-tmp.h:6778
-#, fuzzy
 msgid "Japanese Western-style envelope #4"
-msgstr "Busta giapponese lunga #4"
+msgstr "Busta giapponese stile occidentale #4"
 
 #: src/xml/xmli18n-tmp.h:6779
-#, fuzzy
 msgid "Japanese Western-style envelope #4 landscape"
-msgstr "Busta giapponese lunga #4 orizzontale"
+msgstr "Busta giapponese stile occidentale #4 orizzontale"
 
 #: src/xml/xmli18n-tmp.h:6780
-#, fuzzy
 msgid "Japanese Western-style envelope #6"
-msgstr "Busta giapponese lunga #3"
+msgstr "Busta giapponese stile occidentale #6"
 
 #: src/xml/xmli18n-tmp.h:6781
-#, fuzzy
 msgid "Japanese Western-style envelope #6 landscape"
-msgstr "Busta giapponese lunga #3 orizzontale"
+msgstr "Busta giapponese stile occidentale #3 orizzontale"
 
 #: src/xml/xmli18n-tmp.h:6782
 msgid "Japanese Kaku envelope #4"
@@ -8142,9 +8040,8 @@ msgid "Canon BJC-4400"
 msgstr "Canon BJC-4400"
 
 #: src/xml/xmli18n-tmp.h:6832
-#, fuzzy
 msgid "Canon BJC-4550"
-msgstr "Canon BJC-5500"
+msgstr "Canon BJC-4550"
 
 #: src/xml/xmli18n-tmp.h:6833
 msgid "Canon BJC-5100"
@@ -8199,9 +8096,8 @@ msgid "Canon S300"
 msgstr "Canon S300"
 
 #: src/xml/xmli18n-tmp.h:6846
-#, fuzzy
 msgid "Canon S330"
-msgstr "Canon S300"
+msgstr "Canon S330"
 
 #: src/xml/xmli18n-tmp.h:6847
 msgid "Canon S400"
@@ -8216,14 +8112,12 @@ msgid "Canon S500"
 msgstr "Canon S500"
 
 #: src/xml/xmli18n-tmp.h:6850
-#, fuzzy
 msgid "Canon S520"
-msgstr "Canon S500"
+msgstr "Canon S520"
 
 #: src/xml/xmli18n-tmp.h:6851
-#, fuzzy
 msgid "Canon S530D"
-msgstr "Canon S500"
+msgstr "Canon S530D"
 
 #: src/xml/xmli18n-tmp.h:6852
 msgid "Canon S600"
@@ -8234,86 +8128,72 @@ msgid "Canon S630"
 msgstr "Canon S630"
 
 #: src/xml/xmli18n-tmp.h:6854
-#, fuzzy
 msgid "Canon S750"
-msgstr "Canon S450"
+msgstr "Canon S750"
 
 #: src/xml/xmli18n-tmp.h:6855
 msgid "Canon S800"
 msgstr "Canon S800"
 
 #: src/xml/xmli18n-tmp.h:6856
-#, fuzzy
 msgid "Canon S820"
-msgstr "Canon S800"
+msgstr "Canon S820"
 
 #: src/xml/xmli18n-tmp.h:6857
-#, fuzzy
 msgid "Canon S830D"
-msgstr "Canon S800"
+msgstr "Canon S830D"
 
 #: src/xml/xmli18n-tmp.h:6858
-#, fuzzy
 msgid "Canon S900"
-msgstr "Canon S100"
+msgstr "Canon S900"
 
 #: src/xml/xmli18n-tmp.h:6859
-#, fuzzy
 msgid "Canon S9000"
-msgstr "Canon S100"
+msgstr "Canon S9000"
 
 #: src/xml/xmli18n-tmp.h:6860
 msgid "Canon S4500"
 msgstr "Canon S4500"
 
 #: src/xml/xmli18n-tmp.h:6861
-#, fuzzy
 msgid "Canon SELPHY DS700"
-msgstr "Canon SELPHY ES20"
+msgstr "Canon SELPHY DS700"
 
 #: src/xml/xmli18n-tmp.h:6862
-#, fuzzy
 msgid "Canon SELPHY DS810"
-msgstr "Canon SELPHY ES1"
+msgstr "Canon SELPHY DS810"
 
 #: src/xml/xmli18n-tmp.h:6863
-#, fuzzy
 msgid "Canon PIXMA mini220"
-msgstr "Canon PIXMA iP2000"
+msgstr "Canon PIXMA mini220"
 
 #: src/xml/xmli18n-tmp.h:6864
-#, fuzzy
 msgid "Canon PIXMA mini320"
-msgstr "Canon PIXMA iP1900"
+msgstr "Canon PIXMA mini320"
 
 #: src/xml/xmli18n-tmp.h:6865
-#, fuzzy
 msgid "Canon PIXMA mini360"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon PIXMA mini360"
 
 #: src/xml/xmli18n-tmp.h:6866
-#, fuzzy
 msgid "Canon PIXMA iP90"
-msgstr "Canon PIXMA MP990"
+msgstr "Canon PIXMA iP90"
 
 #: src/xml/xmli18n-tmp.h:6867
-#, fuzzy
 msgid "Canon PIXMA iP90v"
-msgstr "Canon PIXMA MP990"
+msgstr "Canon PIXMA iP90v"
 
 #: src/xml/xmli18n-tmp.h:6868
-#, fuzzy
 msgid "Canon PIXMA iP100"
-msgstr "Canon PIXMA iP1900"
+msgstr "Canon PIXMA iP100"
 
 #: src/xml/xmli18n-tmp.h:6869
 msgid "Canon PIXMA iP2000"
 msgstr "Canon PIXMA iP2000"
 
 #: src/xml/xmli18n-tmp.h:6870
-#, fuzzy
 msgid "Canon PIXMA iP2700"
-msgstr "Canon PIXMA iP2000"
+msgstr "Canon PIXMA iP2700"
 
 #: src/xml/xmli18n-tmp.h:6871
 msgid "Canon PIXMA iP3000"
@@ -8324,37 +8204,32 @@ msgid "Canon PIXMA iP3100"
 msgstr "Canon PIXMA iP3100"
 
 #: src/xml/xmli18n-tmp.h:6873
-#, fuzzy
 msgid "Canon PIXMA iP3300"
-msgstr "Canon PIXMA iP3000"
+msgstr "Canon PIXMA iP3300"
 
 #: src/xml/xmli18n-tmp.h:6874
-#, fuzzy
 msgid "Canon PIXMA iP3500"
-msgstr "Canon PIXMA iP3000"
+msgstr "Canon PIXMA iP3500"
 
 #: src/xml/xmli18n-tmp.h:6875
-#, fuzzy
 msgid "Canon PIXMA iP3600"
-msgstr "Canon PIXMA iP3000"
+msgstr "Canon PIXMA iP3600"
 
 #: src/xml/xmli18n-tmp.h:6876
 msgid "Canon PIXMA iP4000"
 msgstr "Canon PIXMA iP4000"
 
 #: src/xml/xmli18n-tmp.h:6877
-#, fuzzy
 msgid "Canon PIXMA iP4000R"
-msgstr "Canon PIXMA iP4000"
+msgstr "Canon PIXMA iP4000R"
 
 #: src/xml/xmli18n-tmp.h:6878
 msgid "Canon PIXMA iP4100"
 msgstr "Canon PIXMA iP4100"
 
 #: src/xml/xmli18n-tmp.h:6879
-#, fuzzy
 msgid "Canon PIXMA iP4100R"
-msgstr "Canon PIXMA iP4100"
+msgstr "Canon PIXMA iP4100R"
 
 #: src/xml/xmli18n-tmp.h:6880
 msgid "Canon PIXMA iP4200"
@@ -8377,14 +8252,12 @@ msgid "Canon PIXMA iP4700"
 msgstr "Canon PIXMA iP4700"
 
 #: src/xml/xmli18n-tmp.h:6885
-#, fuzzy
 msgid "Canon PIXMA iP4800"
-msgstr "Canon PIXMA iP4000"
+msgstr "Canon PIXMA iP4800"
 
 #: src/xml/xmli18n-tmp.h:6886
-#, fuzzy
 msgid "Canon PIXMA iP4900"
-msgstr "Canon PIXMA iP4000"
+msgstr "Canon PIXMA iP4900"
 
 #: src/xml/xmli18n-tmp.h:6887
 msgid "Canon PIXMA iP5000"
@@ -8395,9 +8268,8 @@ msgid "Canon PIXMA iP5200"
 msgstr "Canon PIXMA iP5200"
 
 #: src/xml/xmli18n-tmp.h:6889
-#, fuzzy
 msgid "Canon PIXMA iP5200R"
-msgstr "Canon PIXMA iP5200"
+msgstr "Canon PIXMA iP5200R"
 
 #: src/xml/xmli18n-tmp.h:6890
 msgid "Canon PIXMA iP5300"
@@ -8408,67 +8280,56 @@ msgid "Canon PIXMA iP6000D"
 msgstr "Canon PIXMA iP6000D"
 
 #: src/xml/xmli18n-tmp.h:6892
-#, fuzzy
 msgid "Canon PIXMA iP6100D"
-msgstr "Canon PIXMA iP6000D"
+msgstr "Canon PIXMA iP6100D"
 
 #: src/xml/xmli18n-tmp.h:6893
-#, fuzzy
 msgid "Canon PIXMA iP6210D"
-msgstr "Canon PIXMA iP6000D"
+msgstr "Canon PIXMA iP6210D"
 
 #: src/xml/xmli18n-tmp.h:6894
-#, fuzzy
 msgid "Canon PIXMA iP6220D"
-msgstr "Canon PIXMA iP2000"
+msgstr "Canon PIXMA iP6220D"
 
 #: src/xml/xmli18n-tmp.h:6895
-#, fuzzy
 msgid "Canon PIXMA iP6310D"
-msgstr "Canon PIXMA iP6000D"
+msgstr "Canon PIXMA iP6310D"
 
 #: src/xml/xmli18n-tmp.h:6896
-#, fuzzy
 msgid "Canon PIXMA iP6320D"
-msgstr "Canon PIXMA iP6000D"
+msgstr "Canon PIXMA iP6320D"
 
 #: src/xml/xmli18n-tmp.h:6897
-#, fuzzy
 msgid "Canon PIXMA iP6600D"
-msgstr "Canon PIXMA iP6000D"
+msgstr "Canon PIXMA iP6600D"
 
 #: src/xml/xmli18n-tmp.h:6898
 msgid "Canon PIXMA iP6700"
 msgstr "Canon PIXMA iP6700"
 
 #: src/xml/xmli18n-tmp.h:6899
-#, fuzzy
 msgid "Canon PIXMA iP7100"
-msgstr "Canon PIXMA iP1900"
+msgstr "Canon PIXMA iP7100"
 
 #: src/xml/xmli18n-tmp.h:6900
-#, fuzzy
 msgid "Canon PIXMA iP7500"
-msgstr "Canon PIXMA iP1900"
+msgstr "Canon PIXMA iP7500"
 
 #: src/xml/xmli18n-tmp.h:6901
-#, fuzzy
 msgid "Canon PIXMA iP8100"
-msgstr "Canon PIXMA iP8500"
+msgstr "Canon PIXMA iP8100"
 
 #: src/xml/xmli18n-tmp.h:6902
 msgid "Canon PIXMA iP8500"
 msgstr "Canon PIXMA iP8500"
 
 #: src/xml/xmli18n-tmp.h:6903
-#, fuzzy
 msgid "Canon PIXMA iP8600"
-msgstr "Canon PIXMA iP8500"
+msgstr "Canon PIXMA iP8600"
 
 #: src/xml/xmli18n-tmp.h:6904
-#, fuzzy
 msgid "Canon PIXMA iP9910"
-msgstr "Canon PIXMA MP990"
+msgstr "Canon PIXMA iP9910"
 
 #: src/xml/xmli18n-tmp.h:6905
 msgid "Canon PIXMA iX4000"
@@ -8479,38 +8340,32 @@ msgid "Canon PIXMA iX5000"
 msgstr "Canon PIXMA iP5000"
 
 #: src/xml/xmli18n-tmp.h:6907
-#, fuzzy
 msgid "Canon PIXMA iX6500"
-msgstr "Canon PIXMA iP5000"
+msgstr "Canon PIXMA iX6500"
 
 #: src/xml/xmli18n-tmp.h:6908
-#, fuzzy
 msgid "Canon PIXMA iX7000"
-msgstr "Canon PIXMA iX4000"
+msgstr "Canon PIXMA iX7000"
 
 #: src/xml/xmli18n-tmp.h:6909
-#, fuzzy
 msgid "Canon PIXMA Pro9000"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon PIXMA Pro9000"
 
 #: src/xml/xmli18n-tmp.h:6910
-#, fuzzy
 msgid "Canon PIXMA Pro9000mk2"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon PIXMA Pro9000mk2"
 
 #: src/xml/xmli18n-tmp.h:6911
 msgid "Canon PIXMA Pro9500"
 msgstr "Canon PIXMA Pro9500"
 
 #: src/xml/xmli18n-tmp.h:6912
-#, fuzzy
 msgid "Canon PIXMA Pro9500mk2"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon PIXMA Pro9500mk2"
 
 #: src/xml/xmli18n-tmp.h:6913
-#, fuzzy
 msgid "Canon PIXMA MP140"
-msgstr "Canon PIXMA MP150"
+msgstr "Canon PIXMA MP140"
 
 #: src/xml/xmli18n-tmp.h:6914
 msgid "Canon PIXMA MP150"
@@ -8529,32 +8384,28 @@ msgid "Canon PIXMA MP180"
 msgstr "Canon PIXMA MP180"
 
 #: src/xml/xmli18n-tmp.h:6918
-#, fuzzy
 msgid "Canon PIXMA MP190"
-msgstr "Canon PIXMA MP150"
+msgstr "Canon PIXMA MP190"
 
 #: src/xml/xmli18n-tmp.h:6919
-#, fuzzy
 msgid "Canon PIXMA MP210"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MP210"
 
 #: src/xml/xmli18n-tmp.h:6920
 msgid "Canon PIXMA MP220"
 msgstr "Canon PIXMA MP220"
 
 #: src/xml/xmli18n-tmp.h:6921
-#, fuzzy
 msgid "Canon PIXMA MP240"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MP240"
 
 #: src/xml/xmli18n-tmp.h:6922
 msgid "Canon PIXMA MP250"
 msgstr "Canon PIXMA MP250"
 
 #: src/xml/xmli18n-tmp.h:6923
-#, fuzzy
 msgid "Canon PIXMA MP260"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MP260"
 
 #: src/xml/xmli18n-tmp.h:6924
 msgid "Canon PIXMA MP270"
@@ -8573,9 +8424,8 @@ msgid "Canon PIXMA MP370"
 msgstr "Canon PIXMA MP370"
 
 #: src/xml/xmli18n-tmp.h:6928
-#, fuzzy
 msgid "Canon PIXMA MP375R"
-msgstr "Canon PIXMA MP370"
+msgstr "Canon PIXMA MP375R"
 
 #: src/xml/xmli18n-tmp.h:6929
 msgid "Canon PIXMA MP390"
@@ -8590,23 +8440,20 @@ msgid "Canon PIXMA MP460"
 msgstr "Canon PIXMA MP460"
 
 #: src/xml/xmli18n-tmp.h:6932
-#, fuzzy
 msgid "Canon PIXMA MP470"
-msgstr "Canon PIXMA MP450"
+msgstr "Canon PIXMA MP470"
 
 #: src/xml/xmli18n-tmp.h:6933
 msgid "Canon PIXMA MP480"
 msgstr "Canon PIXMA MP480"
 
 #: src/xml/xmli18n-tmp.h:6934
-#, fuzzy
 msgid "Canon PIXMA MP490"
-msgstr "Canon PIXMA MP495"
+msgstr "Canon PIXMA MP490"
 
 #: src/xml/xmli18n-tmp.h:6935
-#, fuzzy
 msgid "Canon PIXMA MP493"
-msgstr "Canon PIXMA MP495"
+msgstr "Canon PIXMA MP493"
 
 #: src/xml/xmli18n-tmp.h:6936
 msgid "Canon PIXMA MP495"
@@ -8625,9 +8472,8 @@ msgid "Canon PIXMA MP520"
 msgstr "Canon PIXMA MP520"
 
 #: src/xml/xmli18n-tmp.h:6940
-#, fuzzy
 msgid "Canon PIXMA MP530"
-msgstr "Canon PIXMA MP500"
+msgstr "Canon PIXMA MP530"
 
 #: src/xml/xmli18n-tmp.h:6941
 msgid "Canon PIXMA MP540"
@@ -8638,37 +8484,32 @@ msgid "Canon PIXMA MP550"
 msgstr "Canon PIXMA MP550"
 
 #: src/xml/xmli18n-tmp.h:6943
-#, fuzzy
 msgid "Canon PIXMA MP560"
-msgstr "Canon PIXMA MP500"
+msgstr "Canon PIXMA MP560"
 
 #: src/xml/xmli18n-tmp.h:6944
 msgid "Canon PIXMA MP600"
 msgstr "Canon PIXMA MP600"
 
 #: src/xml/xmli18n-tmp.h:6945
-#, fuzzy
 msgid "Canon PIXMA MP600R"
-msgstr "Canon PIXMA MP600"
+msgstr "Canon PIXMA MP600R"
 
 #: src/xml/xmli18n-tmp.h:6946
 msgid "Canon PIXMA MP610"
 msgstr "Canon PIXMA MP610"
 
 #: src/xml/xmli18n-tmp.h:6947
-#, fuzzy
 msgid "Canon PIXMA MP620"
-msgstr "Canon PIXMA MP600"
+msgstr "Canon PIXMA MP620"
 
 #: src/xml/xmli18n-tmp.h:6948
-#, fuzzy
 msgid "Canon PIXMA MP630"
-msgstr "Canon PIXMA MP600"
+msgstr "Canon PIXMA MP630"
 
 #: src/xml/xmli18n-tmp.h:6949
-#, fuzzy
 msgid "Canon PIXMA MP640"
-msgstr "Canon PIXMA MP600"
+msgstr "Canon PIXMA MP640"
 
 #: src/xml/xmli18n-tmp.h:6950
 msgid "Canon PIXMA MP700"
@@ -8707,28 +8548,24 @@ msgid "Canon PIXMA MP790"
 msgstr "Canon PIXMA MP790"
 
 #: src/xml/xmli18n-tmp.h:6959
-#, fuzzy
 msgid "Canon PIXMA MP800"
-msgstr "Canon PIXMA MP830"
+msgstr "Canon PIXMA MP800"
 
 #: src/xml/xmli18n-tmp.h:6960
-#, fuzzy
 msgid "Canon PIXMA MP800R"
-msgstr "Canon PIXMA MP830"
+msgstr "Canon PIXMA MP800R"
 
 #: src/xml/xmli18n-tmp.h:6961
-#, fuzzy
 msgid "Canon PIXMA MP810"
-msgstr "Canon PIXMA MP830"
+msgstr "Canon PIXMA MP810"
 
 #: src/xml/xmli18n-tmp.h:6962
 msgid "Canon PIXMA MP830"
 msgstr "Canon PIXMA MP830"
 
 #: src/xml/xmli18n-tmp.h:6963
-#, fuzzy
 msgid "Canon PIXMA MP900"
-msgstr "Canon PIXMA MP950"
+msgstr "Canon PIXMA MP900"
 
 #: src/xml/xmli18n-tmp.h:6964
 msgid "Canon PIXMA MP950"
@@ -8743,9 +8580,8 @@ msgid "Canon PIXMA MP970"
 msgstr "Canon PIXMA MP970"
 
 #: src/xml/xmli18n-tmp.h:6967
-#, fuzzy
 msgid "Canon PIXMA MP980"
-msgstr "Canon PIXMA MP950"
+msgstr "Canon PIXMA MP980"
 
 #: src/xml/xmli18n-tmp.h:6968
 msgid "Canon PIXMA MP990"
@@ -8764,19 +8600,16 @@ msgid "Canon PIXUS iP4100"
 msgstr "Canon PIXUS iP4100"
 
 #: src/xml/xmli18n-tmp.h:6972
-#, fuzzy
 msgid "Canon PIXMA MG2100"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG2100"
 
 #: src/xml/xmli18n-tmp.h:6973
-#, fuzzy
 msgid "Canon PIXMA MG3100"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG3100"
 
 #: src/xml/xmli18n-tmp.h:6974
-#, fuzzy
 msgid "Canon PIXMA MG4100"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG4100"
 
 #: src/xml/xmli18n-tmp.h:6975
 msgid "Canon PIXMA MG5100"
@@ -8787,27 +8620,24 @@ msgid "Canon PIXMA MG5200"
 msgstr "Canon PIXMA MG5200"
 
 #: src/xml/xmli18n-tmp.h:6977
-#, fuzzy
 msgid "Canon PIXMA MG5300"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5300"
 
 #: src/xml/xmli18n-tmp.h:6978
 msgid "Canon PIXMA MG6100"
 msgstr "Canon PIXMA MG6100"
 
 #: src/xml/xmli18n-tmp.h:6979
-#, fuzzy
 msgid "Canon PIXMA MG6200"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6200"
 
 #: src/xml/xmli18n-tmp.h:6980
 msgid "Canon PIXMA MG8100"
 msgstr "Canon PIXMA MG8100"
 
 #: src/xml/xmli18n-tmp.h:6981
-#, fuzzy
 msgid "Canon PIXMA MG8200"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXMA MG8200"
 
 #: src/xml/xmli18n-tmp.h:6982
 msgid "Canon PIXMA MX300"
@@ -8818,9 +8648,8 @@ msgid "Canon PIXMA MX310"
 msgstr "Canon PIXMA MX310"
 
 #: src/xml/xmli18n-tmp.h:6984
-#, fuzzy
 msgid "Canon PIXMA MX320"
-msgstr "Canon PIXMA MX300"
+msgstr "Canon PIXMA MX320"
 
 #: src/xml/xmli18n-tmp.h:6985
 msgid "Canon PIXMA MX330"
@@ -8835,43 +8664,36 @@ msgid "Canon PIXMA MX350"
 msgstr "Canon PIXMA MX350"
 
 #: src/xml/xmli18n-tmp.h:6988
-#, fuzzy
 msgid "Canon PIXMA MX360"
-msgstr "Canon PIXMA MX300"
+msgstr "Canon PIXMA MX360"
 
 #: src/xml/xmli18n-tmp.h:6989
-#, fuzzy
 msgid "Canon PIXMA MX370"
-msgstr "Canon PIXMA MX300"
+msgstr "Canon PIXMA MX370"
 
 #: src/xml/xmli18n-tmp.h:6990
-#, fuzzy
 msgid "Canon PIXMA MX410"
-msgstr "Canon PIXMA MX310"
+msgstr "Canon PIXMA MX410"
 
 #: src/xml/xmli18n-tmp.h:6991
-#, fuzzy
 msgid "Canon PIXMA MX420"
-msgstr "Canon PIXMA MX340"
+msgstr "Canon PIXMA MX420"
 
 #: src/xml/xmli18n-tmp.h:6992
-#, fuzzy
 msgid "Canon PIXMA MX430"
-msgstr "Canon PIXMA MX310"
+msgstr "Canon PIXMA MX430"
 
 #: src/xml/xmli18n-tmp.h:6993
-#, fuzzy
 msgid "Canon PIXMA MX510"
-msgstr "Canon PIXMA MX310"
+msgstr "Canon PIXMA MX510"
 
 #: src/xml/xmli18n-tmp.h:6994
 msgid "Canon PIXMA MX700"
 msgstr "Canon PIXMA MX700"
 
 #: src/xml/xmli18n-tmp.h:6995
-#, fuzzy
 msgid "Canon PIXMA MX710"
-msgstr "Canon PIXMA MX700"
+msgstr "Canon PIXMA MX710"
 
 #: src/xml/xmli18n-tmp.h:6996
 msgid "Canon PIXMA MX850"
@@ -8886,264 +8708,216 @@ msgid "Canon PIXMA MX870"
 msgstr "Canon PIXMA MX870"
 
 #: src/xml/xmli18n-tmp.h:6999
-#, fuzzy
 msgid "Canon PIXMA MX880"
-msgstr "Canon PIXMA MX850"
+msgstr "Canon PIXMA MX880"
 
 #: src/xml/xmli18n-tmp.h:7000
-#, fuzzy
 msgid "Canon PIXMA MX890"
-msgstr "Canon PIXMA MX850"
+msgstr "Canon PIXMA MX890"
 
 #: src/xml/xmli18n-tmp.h:7001
 msgid "Canon PIXMA MX7600"
 msgstr "Canon PIXMA MX7600"
 
 #: src/xml/xmli18n-tmp.h:7002
-#, fuzzy
 msgid "Canon PIXMA E500"
-msgstr "Canon PIXMA MP500"
+msgstr "Canon PIXMA E500"
 
 #: src/xml/xmli18n-tmp.h:7003
-#, fuzzy
 msgid "Canon PIXMA E600"
-msgstr "Canon PIXMA MP600"
+msgstr "Canon PIXMA E600"
 
 #: src/xml/xmli18n-tmp.h:7004
-#, fuzzy
 msgid "Canon 50i"
-msgstr "Canon i560"
+msgstr "Canon 50i"
 
 #: src/xml/xmli18n-tmp.h:7005
-#, fuzzy
 msgid "Canon 80i"
-msgstr "Canon i80"
+msgstr "Canon 80i"
 
 #: src/xml/xmli18n-tmp.h:7006
-#, fuzzy
 msgid "Canon 450i"
-msgstr "Canon S450"
+msgstr "Canon 450i"
 
 #: src/xml/xmli18n-tmp.h:7007
-#, fuzzy
 msgid "Canon 455i"
-msgstr "Canon i560"
+msgstr "Canon 455i"
 
 #: src/xml/xmli18n-tmp.h:7008
-#, fuzzy
 msgid "Canon 470PD"
-msgstr "Canon i80"
+msgstr "Canon 470PD"
 
 #: src/xml/xmli18n-tmp.h:7009
-#, fuzzy
 msgid "Canon 475PD"
-msgstr "Canon i80"
+msgstr "Canon 475PD"
 
 #: src/xml/xmli18n-tmp.h:7010
-#, fuzzy
 msgid "Canon 550i"
-msgstr "Canon i560"
+msgstr "Canon 550i"
 
 #: src/xml/xmli18n-tmp.h:7011
-#, fuzzy
 msgid "Canon 560i"
-msgstr "Canon i560"
+msgstr "Canon 560i"
 
 #: src/xml/xmli18n-tmp.h:7012
-#, fuzzy
 msgid "Canon 850i"
-msgstr "Canon i850"
+msgstr "Canon 850i"
 
 #: src/xml/xmli18n-tmp.h:7013
-#, fuzzy
 msgid "Canon 860i"
-msgstr "Canon i860"
+msgstr "Canon 860i"
 
 #: src/xml/xmli18n-tmp.h:7014
-#, fuzzy
 msgid "Canon 865R"
-msgstr "Canon i850"
+msgstr "Canon 865R"
 
 #: src/xml/xmli18n-tmp.h:7015
-#, fuzzy
 msgid "Canon 900PD"
-msgstr "Canon i80"
+msgstr "Canon 900PD"
 
 #: src/xml/xmli18n-tmp.h:7016
-#, fuzzy
 msgid "Canon 950i"
-msgstr "Canon i560"
+msgstr "Canon 950i"
 
 #: src/xml/xmli18n-tmp.h:7017
-#, fuzzy
 msgid "Canon 960i"
-msgstr "Canon i560"
+msgstr "Canon 960i"
 
 #: src/xml/xmli18n-tmp.h:7018
-#, fuzzy
 msgid "Canon 990i"
-msgstr "Canon i80"
+msgstr "Canon 990i"
 
 #: src/xml/xmli18n-tmp.h:7019
-#, fuzzy
 msgid "Canon 6100i"
-msgstr "Canon i560"
+msgstr "Canon 6100i"
 
 #: src/xml/xmli18n-tmp.h:7020
-#, fuzzy
 msgid "Canon 6500i"
-msgstr "Canon i560"
+msgstr "Canon 6500i"
 
 #: src/xml/xmli18n-tmp.h:7021
-#, fuzzy
 msgid "Canon 9100i"
-msgstr "Canon S100"
+msgstr "Canon 9100i"
 
 #: src/xml/xmli18n-tmp.h:7022
-#, fuzzy
 msgid "Canon 9900i"
-msgstr "Canon i80"
+msgstr "Canon 9900i"
 
 #: src/xml/xmli18n-tmp.h:7023
-#, fuzzy
 msgid "Canon i70"
-msgstr "Canon i80"
+msgstr "Canon i70"
 
 #: src/xml/xmli18n-tmp.h:7024
 msgid "Canon i80"
 msgstr "Canon i80"
 
 #: src/xml/xmli18n-tmp.h:7025
-#, fuzzy
 msgid "Canon i450"
-msgstr "Canon i560"
+msgstr "Canon i450"
 
 #: src/xml/xmli18n-tmp.h:7026
-#, fuzzy
 msgid "Canon i450X"
-msgstr "Canon i560"
+msgstr "Canon i450X"
 
 #: src/xml/xmli18n-tmp.h:7027
-#, fuzzy
 msgid "Canon i455"
-msgstr "Canon i560"
+msgstr "Canon i455"
 
 #: src/xml/xmli18n-tmp.h:7028
-#, fuzzy
 msgid "Canon i455X"
-msgstr "Canon i560"
+msgstr "Canon i455X"
 
 #: src/xml/xmli18n-tmp.h:7029
-#, fuzzy
 msgid "Canon i470D"
-msgstr "Canon i80"
+msgstr "Canon i470D"
 
 #: src/xml/xmli18n-tmp.h:7030
-#, fuzzy
 msgid "Canon i475D"
-msgstr "Canon i80"
+msgstr "Canon i475D"
 
 #: src/xml/xmli18n-tmp.h:7031
-#, fuzzy
 msgid "Canon i550"
-msgstr "Canon i560"
+msgstr "Canon i550"
 
 #: src/xml/xmli18n-tmp.h:7032
-#, fuzzy
 msgid "Canon i550X"
-msgstr "Canon i560"
+msgstr "Canon i550X"
 
 #: src/xml/xmli18n-tmp.h:7033
 msgid "Canon i560"
 msgstr "Canon i560"
 
 #: src/xml/xmli18n-tmp.h:7034
-#, fuzzy
 msgid "Canon i560X"
-msgstr "Canon i560"
+msgstr "Canon i560X"
 
 #: src/xml/xmli18n-tmp.h:7035
-#, fuzzy
 msgid "Canon i850old"
-msgstr "Canon i850"
+msgstr "Canon i850old"
 
 #: src/xml/xmli18n-tmp.h:7036
 msgid "Canon i850"
 msgstr "Canon i850"
 
 #: src/xml/xmli18n-tmp.h:7037
-#, fuzzy
 msgid "Canon i860old"
-msgstr "Canon i860"
+msgstr "Canon i860old"
 
 #: src/xml/xmli18n-tmp.h:7038
 msgid "Canon i860"
 msgstr "Canon i860"
 
 #: src/xml/xmli18n-tmp.h:7039
-#, fuzzy
 msgid "Canon i865old"
-msgstr "Canon i865"
+msgstr "Canon i865old"
 
 #: src/xml/xmli18n-tmp.h:7040
-#, fuzzy
 msgid "Canon i865"
-msgstr "Canon i860"
+msgstr "Canon i865"
 
 #: src/xml/xmli18n-tmp.h:7041
-#, fuzzy
 msgid "Canon i900D"
-msgstr "Canon i80"
+msgstr "Canon i900D"
 
 #: src/xml/xmli18n-tmp.h:7042
-#, fuzzy
 msgid "Canon i905D"
-msgstr "Canon i80"
+msgstr "Canon i905D"
 
 #: src/xml/xmli18n-tmp.h:7043
-#, fuzzy
 msgid "Canon i950"
-msgstr "Canon i560"
+msgstr "Canon i950"
 
 #: src/xml/xmli18n-tmp.h:7044
-#, fuzzy
 msgid "Canon i960"
-msgstr "Canon i560"
+msgstr "Canon i960"
 
 #: src/xml/xmli18n-tmp.h:7045
-#, fuzzy
 msgid "Canon i965"
-msgstr "Canon i560"
+msgstr "Canon i965"
 
 #: src/xml/xmli18n-tmp.h:7046
-#, fuzzy
 msgid "Canon i990"
-msgstr "Canon i80"
+msgstr "Canon i990"
 
 #: src/xml/xmli18n-tmp.h:7047
-#, fuzzy
 msgid "Canon i6100"
-msgstr "Canon i560"
+msgstr "Canon i6100"
 
 #: src/xml/xmli18n-tmp.h:7048
-#, fuzzy
 msgid "Canon i6500"
-msgstr "Canon i560"
+msgstr "Canon i6500"
 
 #: src/xml/xmli18n-tmp.h:7049
-#, fuzzy
 msgid "Canon i9100"
-msgstr "Canon S100"
+msgstr "Canon i9100"
 
 #: src/xml/xmli18n-tmp.h:7050
-#, fuzzy
 msgid "Canon i9900"
-msgstr "Canon i80"
+msgstr "Canon i9900"
 
 #: src/xml/xmli18n-tmp.h:7051
-#, fuzzy
 msgid "Canon i9950"
-msgstr "Canon i560"
+msgstr "Canon i9950"
 
 #: src/xml/xmli18n-tmp.h:7052
 msgid "Epson Artisan 50"
@@ -9166,9 +8940,8 @@ msgid "Epson Artisan 810"
 msgstr "Epson Artisan 810"
 
 #: src/xml/xmli18n-tmp.h:7057
-#, fuzzy
 msgid "Epson Artisan 835"
-msgstr "Epson Artisan 50"
+msgstr "Epson Artisan 835"
 
 #: src/xml/xmli18n-tmp.h:7058
 msgid "Epson B-300"
@@ -9531,23 +9304,20 @@ msgid "Epson Stylus Office BX300F"
 msgstr "Epson Stylus Office BX300F"
 
 #: src/xml/xmli18n-tmp.h:7148
-#, fuzzy
 msgid "Epson Stylus Office BX535WD"
-msgstr "Epson Stylus Office B30"
+msgstr "Epson Stylus Office BX535WD"
 
 #: src/xml/xmli18n-tmp.h:7149
 msgid "Epson Stylus Office BX600FW"
 msgstr "Epson Stylus Office BX600FW"
 
 #: src/xml/xmli18n-tmp.h:7150
-#, fuzzy
 msgid "Epson Stylus Office BX630FW"
-msgstr "Epson Stylus Office BX600FW"
+msgstr "Epson Stylus Office BX630FW"
 
 #: src/xml/xmli18n-tmp.h:7151
-#, fuzzy
 msgid "Epson Stylus Office BX635FWD"
-msgstr "Epson Stylus Office BX600FW"
+msgstr "Epson Stylus Office BX635FWD"
 
 #: src/xml/xmli18n-tmp.h:7152
 msgid "Epson Stylus Office SX600FW"
@@ -9562,9 +9332,8 @@ msgid "Epson Stylus Office TX600FW"
 msgstr "Epson Stylus Office TX600FW"
 
 #: src/xml/xmli18n-tmp.h:7155
-#, fuzzy
 msgid "Epson Stylus Office TX620FWD"
-msgstr "Epson Stylus Office TX600FW"
+msgstr "Epson Stylus Office TX620FWD"
 
 #: src/xml/xmli18n-tmp.h:7156
 msgid "Epson Stylus Photo"
@@ -9799,9 +9568,8 @@ msgid "Epson Stylus Photo R1900"
 msgstr "Epson Stylus Photo R1900"
 
 #: src/xml/xmli18n-tmp.h:7214
-#, fuzzy
 msgid "Epson Stylus Photo R2000"
-msgstr "Epson Stylus Photo R200"
+msgstr "Epson Stylus Photo R2000"
 
 #: src/xml/xmli18n-tmp.h:7215
 msgid "Epson Stylus Photo R2400"
@@ -9880,9 +9648,8 @@ msgid "Epson Stylus Photo RX640"
 msgstr "Epson Stylus Photo RX640"
 
 #: src/xml/xmli18n-tmp.h:7234
-#, fuzzy
 msgid "Epson Stylus Photo RX650"
-msgstr "Epson Stylus Photo RX600"
+msgstr "Epson Stylus Photo RX650"
 
 #: src/xml/xmli18n-tmp.h:7235
 msgid "Epson Stylus Photo RX680"
@@ -9981,9 +9748,8 @@ msgid "Epson Stylus Pro 7890"
 msgstr "Epson Stylus Pro 7890"
 
 #: src/xml/xmli18n-tmp.h:7259
-#, fuzzy
 msgid "Epson Stylus Pro 7900"
-msgstr "Epson Stylus Pro 7000"
+msgstr "Epson Stylus Pro 7900"
 
 #: src/xml/xmli18n-tmp.h:7260
 msgid "Epson Stylus Pro 9000"
@@ -10014,9 +9780,8 @@ msgid "Epson Stylus Pro 9890"
 msgstr "Epson Stylus Pro 9890"
 
 #: src/xml/xmli18n-tmp.h:7267
-#, fuzzy
 msgid "Epson Stylus Pro 9900"
-msgstr "Epson Stylus Pro 9000"
+msgstr "Epson Stylus Pro 9900"
 
 #: src/xml/xmli18n-tmp.h:7268
 msgid "Epson Stylus Pro 10000"
@@ -10083,9 +9848,8 @@ msgid "Epson Stylus CX3810"
 msgstr "Epson Stylus CX3810"
 
 #: src/xml/xmli18n-tmp.h:7284
-#, fuzzy
 msgid "Epson Stylus CX3900"
-msgstr "Epson Stylus CX3100"
+msgstr "Epson Stylus CX3900"
 
 #: src/xml/xmli18n-tmp.h:7285
 msgid "Epson Stylus CX4100"
@@ -10332,23 +10096,20 @@ msgid "Epson Stylus NX415"
 msgstr "Epson Stylus NX415"
 
 #: src/xml/xmli18n-tmp.h:7346
-#, fuzzy
 msgid "Epson Stylus NX420"
-msgstr "Epson Stylus NX400"
+msgstr "Epson Stylus NX420"
 
 #: src/xml/xmli18n-tmp.h:7347
 msgid "Epson Stylus NX515"
 msgstr "Epson Stylus NX515"
 
 #: src/xml/xmli18n-tmp.h:7348
-#, fuzzy
 msgid "Epson Stylus NX530"
-msgstr "Epson Stylus NX300"
+msgstr "Epson Stylus NX530"
 
 #: src/xml/xmli18n-tmp.h:7349
-#, fuzzy
 msgid "Epson Stylus NX635"
-msgstr "Epson Stylus NX105"
+msgstr "Epson Stylus NX635"
 
 #: src/xml/xmli18n-tmp.h:7350
 msgid "Epson Stylus Photo PX650"
@@ -10431,9 +10192,8 @@ msgid "Epson Stylus SX415"
 msgstr "Epson Stylus SX415"
 
 #: src/xml/xmli18n-tmp.h:7370
-#, fuzzy
 msgid "Epson Stylus SX420"
-msgstr "Epson Stylus SX400"
+msgstr "Epson Stylus SX420"
 
 #: src/xml/xmli18n-tmp.h:7371
 msgid "Epson Stylus SX510W"
@@ -10444,14 +10204,12 @@ msgid "Epson Stylus SX515"
 msgstr "Epson Stylus SX515"
 
 #: src/xml/xmli18n-tmp.h:7373
-#, fuzzy
 msgid "Epson Stylus SX525"
-msgstr "Epson Stylus SX515"
+msgstr "Epson Stylus SX525"
 
 #: src/xml/xmli18n-tmp.h:7374
-#, fuzzy
 msgid "Epson Stylus SX535FW"
-msgstr "Epson Stylus SX515"
+msgstr "Epson Stylus SX535FW"
 
 #: src/xml/xmli18n-tmp.h:7375
 msgid "Epson Stylus SX600FW"
@@ -10470,9 +10228,8 @@ msgid "Epson Stylus SX650"
 msgstr "Epson Stylus SX650"
 
 #: src/xml/xmli18n-tmp.h:7379
-#, fuzzy
 msgid "Epson Stylus T13"
-msgstr "Epson Stylus TX103"
+msgstr "Epson Stylus T13"
 
 #: src/xml/xmli18n-tmp.h:7380
 msgid "Epson Stylus T20"
@@ -10483,14 +10240,12 @@ msgid "Epson Stylus T21"
 msgstr "Epson Stylus T21"
 
 #: src/xml/xmli18n-tmp.h:7382
-#, fuzzy
 msgid "Epson Stylus T22"
-msgstr "Epson Stylus T20"
+msgstr "Epson Stylus T22"
 
 #: src/xml/xmli18n-tmp.h:7383
-#, fuzzy
 msgid "Epson Stylus T22E"
-msgstr "Epson Stylus T20"
+msgstr "Epson Stylus T22E"
 
 #: src/xml/xmli18n-tmp.h:7384
 msgid "Epson Stylus T26"
@@ -10573,9 +10328,8 @@ msgid "Epson Stylus TX410"
 msgstr "Epson Stylus TX410"
 
 #: src/xml/xmli18n-tmp.h:7404
-#, fuzzy
 msgid "Epson Stylus TX420"
-msgstr "Epson Stylus TX400"
+msgstr "Epson Stylus TX420"
 
 #: src/xml/xmli18n-tmp.h:7405
 msgid "Epson Stylus TX510FN"
@@ -10694,9 +10448,8 @@ msgid "Epson WorkForce 500"
 msgstr "Epson WorkForce 500"
 
 #: src/xml/xmli18n-tmp.h:7434
-#, fuzzy
 msgid "Epson WorkForce 545"
-msgstr "Epson WorkForce 40"
+msgstr "Epson WorkForce 545"
 
 #: src/xml/xmli18n-tmp.h:7435
 msgid "Epson WorkForce 600"
@@ -10711,19 +10464,16 @@ msgid "Epson WorkForce 615"
 msgstr "Epson WorkForce 615"
 
 #: src/xml/xmli18n-tmp.h:7438
-#, fuzzy
 msgid "Epson WorkForce 630"
-msgstr "Epson WorkForce 30"
+msgstr "Epson WorkForce 630"
 
 #: src/xml/xmli18n-tmp.h:7439
-#, fuzzy
 msgid "Epson WorkForce 635"
-msgstr "Epson WorkForce 615"
+msgstr "Epson WorkForce 635"
 
 #: src/xml/xmli18n-tmp.h:7440
-#, fuzzy
 msgid "Epson WorkForce 645"
-msgstr "Epson WorkForce 615"
+msgstr "Epson WorkForce 645"
 
 #: src/xml/xmli18n-tmp.h:7441
 msgid "Epson WorkForce 1100"
@@ -10854,9 +10604,8 @@ msgid "Epson ME Office 700FW"
 msgstr "Epson ME Office 700FW"
 
 #: src/xml/xmli18n-tmp.h:7473
-#, fuzzy
 msgid "Epson ME Office 940FW"
-msgstr "Epson ME Office 700FW"
+msgstr "Epson ME Office 940FW"
 
 #: src/xml/xmli18n-tmp.h:7474
 msgid "Epson ME Office 1100"
@@ -11091,9 +10840,8 @@ msgid "Epson Offirio PX B500"
 msgstr "Epson Offirio PX B500"
 
 #: src/xml/xmli18n-tmp.h:7532
-#, fuzzy
 msgid "Epson PX 7V"
-msgstr "Epson PX 7000"
+msgstr "Epson PX 7V"
 
 #: src/xml/xmli18n-tmp.h:7533
 msgid "Epson PX 101"
@@ -11104,18 +10852,16 @@ msgid "Epson PX 201"
 msgstr "Epson PX 201"
 
 #: src/xml/xmli18n-tmp.h:7535
-#, fuzzy
 msgid "Epson PX 204"
-msgstr "Epson PX 201"
+msgstr "Epson PX 204"
 
 #: src/xml/xmli18n-tmp.h:7536
 msgid "Epson PX 401A"
 msgstr "Epson PX 401A"
 
 #: src/xml/xmli18n-tmp.h:7537
-#, fuzzy
 msgid "Epson PX 504A"
-msgstr "Epson PX 5500"
+msgstr "Epson PX 504A"
 
 #: src/xml/xmli18n-tmp.h:7538
 msgid "Epson PX 601F"
@@ -15070,64 +14816,52 @@ msgid "Canon CP-330"
 msgstr "Canon CP-330"
 
 #: src/xml/xmli18n-tmp.h:8526
-#, fuzzy
 msgid "Canon SELPHY-CP400"
-msgstr "Canon SELPHY-CP-400"
+msgstr "Canon SELPHY-CP400"
 
 #: src/xml/xmli18n-tmp.h:8527
-#, fuzzy
 msgid "Canon SELPHY-CP500"
-msgstr "Canon SELPHY-CP-500"
+msgstr "Canon SELPHY-CP500"
 
 #: src/xml/xmli18n-tmp.h:8528
-#, fuzzy
 msgid "Canon SELPHY-CP510"
-msgstr "Canon SELPHY-CP-510"
+msgstr "Canon SELPHY-CP510"
 
 #: src/xml/xmli18n-tmp.h:8529
-#, fuzzy
 msgid "Canon SELPHY-CP520"
-msgstr "Canon SELPHY-CP-520"
+msgstr "Canon SELPHY-CP520"
 
 #: src/xml/xmli18n-tmp.h:8530
-#, fuzzy
 msgid "Canon SELPHY-CP530"
-msgstr "Canon SELPHY-CP-530"
+msgstr "Canon SELPHY-CP530"
 
 #: src/xml/xmli18n-tmp.h:8531
-#, fuzzy
 msgid "Canon SELPHY-CP710"
-msgstr "Canon SELPHY-CP-710"
+msgstr "Canon SELPHY-CP710"
 
 #: src/xml/xmli18n-tmp.h:8532
-#, fuzzy
 msgid "Canon SELPHY-CP730"
-msgstr "Canon SELPHY-CP-730"
+msgstr "Canon SELPHY-CP730"
 
 #: src/xml/xmli18n-tmp.h:8533
-#, fuzzy
 msgid "Canon SELPHY-CP740"
-msgstr "Canon SELPHY-CP-740"
+msgstr "Canon SELPHY-CP740"
 
 #: src/xml/xmli18n-tmp.h:8534
-#, fuzzy
 msgid "Canon SELPHY-CP750"
-msgstr "Canon SELPHY-CP-750"
+msgstr "Canon SELPHY-CP750"
 
 #: src/xml/xmli18n-tmp.h:8535
-#, fuzzy
 msgid "Canon SELPHY-CP760"
-msgstr "Canon SELPHY-CP-710"
+msgstr "Canon SELPHY-CP760"
 
 #: src/xml/xmli18n-tmp.h:8536
-#, fuzzy
 msgid "Canon SELPHY-CP770"
-msgstr "Canon SELPHY-CP-710"
+msgstr "Canon SELPHY-CP770"
 
 #: src/xml/xmli18n-tmp.h:8537
-#, fuzzy
 msgid "Canon SELPHY-CP790"
-msgstr "Canon SELPHY-CP-710"
+msgstr "Canon SELPHY-CP790"
 
 #: src/xml/xmli18n-tmp.h:8538
 msgid "Sony DPP-EX5"
@@ -15212,337 +14946,3 @@ msgstr "Dati RAW 16 bit"
 #: src/xml/xmli18n-tmp.h:8558
 msgid "RAW DATA 8 bit"
 msgstr "Dati RAW 8 bit"
-
-#, fuzzy
-#~ msgid "Canon i865   "
-#~ msgstr "Canon i865"
-
-#~ msgid "Canon SELPHY-CP-600"
-#~ msgstr "Canon SELPHY-CP-600"
-
-#, fuzzy
-#~ msgid "Canon PIXMA iP1600"
-#~ msgstr "Canon PIXMA iP1900"
-
-#, fuzzy
-#~ msgid "Canon PIXMA iP1700"
-#~ msgstr "Canon PIXMA iP1900"
-
-#, fuzzy
-#~ msgid "Canon PIXMA iP1800"
-#~ msgstr "Canon PIXMA iP1900"
-
-#~ msgid "Canon PIXMA iP1900"
-#~ msgstr "Canon PIXMA iP1900"
-
-#, fuzzy
-#~ msgid "Canon PIXMA iP2500"
-#~ msgstr "Canon PIXMA iP2000"
-
-#, fuzzy
-#~ msgid "Canon PIXMA iP2600"
-#~ msgstr "Canon PIXMA iP2000"
-
-#~ msgid "Canon SELPHY-CP-720"
-#~ msgstr "Canon SELPHY-CP-720"
-
-#~ msgid "Canon SELPHY-CP-800"
-#~ msgstr "Canon SELPHY-CP-800"
-
-#~ msgid "Canon SELPHY ES2"
-#~ msgstr "Canon SELPHY ES2"
-
-#, fuzzy
-#~ msgid "Color=Yes,Category=Basic Image Adjustment"
-#~ msgstr "Regolazione base immagine"
-
-#, fuzzy
-#~ msgid "Color=Yes,Category=Advanced Image Control"
-#~ msgstr "Controlli avanzati immagine"
-
-# (ndt) Vedi sopra per le convenzioni
-#, fuzzy
-#~ msgid "Color=Yes,Category=Advanced Output Control"
-#~ msgstr "Controlli avanzati di stampa"
-
-#, fuzzy
-#~ msgid "Color=Yes,Category=Advanced HSL Curves"
-#~ msgstr "Curve HSL avanzate"
-
-#~ msgid "Screening Adjustment"
-#~ msgstr "Regolazione rilevamento"
-
-#~ msgid "Basic Printer Setup"
-#~ msgstr "Impostazioni base stampante"
-
-#~ msgid "Advanced Printer Setup"
-#~ msgstr "Impostazioni avanzate stampante"
-
-#~ msgid "Advanced Printer Functionality"
-#~ msgstr "Funzionalità avanzate stampante"
-
-#~ msgid "Core Parameter"
-#~ msgstr "Parametro principale"
-
-# (ndt) Vedi sopra per le convenzioni
-#~ msgid "Basic Output Adjustment"
-#~ msgstr "Regolazioni base di stampa"
-
-#~ msgid "Advanced Ink Adjustment"
-#~ msgstr "Regolazione avanzata inchiostro"
-
-#~ msgid "GrayBalance"
-#~ msgstr "Bilanciamento del grigio"
-
-#~ msgid "Output Curves"
-#~ msgstr "Curve d'uscita"
-
-# (ndt) Vedi sopra per le convenzioni
-#~ msgid "Advanced Output Adjustment"
-#~ msgstr "Regolazioni avanzate di stampa"
-
-#~ msgid "Epson Stylus PX700W"
-#~ msgstr "Epson Stylus PX700W"
-
-#~ msgid "Epson AcuLaser C2000"
-#~ msgstr "Epson AcuLaser C2000"
-
-#~ msgid "Epson AcuLaser C8500"
-#~ msgstr "Epson AcuLaser C8500"
-
-#~ msgid "Epson AcuLaser C8500PS"
-#~ msgstr "Epson AcuLaser C8500PS"
-
-#~ msgid "Epson AcuLaser C8600"
-#~ msgstr "Epson AcuLaser C8600"
-
-#~ msgid "Epson AcuLaser C8600PS"
-#~ msgstr "Epson AcuLaser C8600PS"
-
-#~ msgid "Gestetner 3532"
-#~ msgstr "Gestetner 3532"
-
-#~ msgid "Gestetner 4532"
-#~ msgstr "Gestetner 4532"
-
-#~ msgid "Gestetner DSm635"
-#~ msgstr "Gestetner DSm635"
-
-#~ msgid "Gestetner DS645G"
-#~ msgstr "Gestetner DS645G"
-
-#~ msgid "Gestetner DSm735"
-#~ msgstr "Gestetner DSm735"
-
-#~ msgid "Gestetner DSm745"
-#~ msgstr "Gestetner DSm745"
-
-#~ msgid "Gestetner MP1100"
-#~ msgstr "Gestetner MP1100"
-
-#~ msgid "Gestetner MP1350"
-#~ msgstr "Gestetner MP1350"
-
-#~ msgid "Gestetner DSm716"
-#~ msgstr "Gestetner DSm716"
-
-#~ msgid "Gestetner MP2000"
-#~ msgstr "Gestetner MP2000"
-
-#~ msgid "Gestetner DSm625"
-#~ msgstr "Gestetner DSm625"
-
-#~ msgid "Gestetner MP3500"
-#~ msgstr " Gestetner MP3500"
-
-#~ msgid "Gestetner MP4500"
-#~ msgstr "Gestetner MP4500"
-
-#~ msgid "Gestetner DSm755"
-#~ msgstr "Gestetner DSm755"
-
-#~ msgid "Gestetner DSm765"
-#~ msgstr "Gestetner DSm765"
-
-#~ msgid "Gestetner DSm775"
-#~ msgstr "Gestetner DSm775"
-
-#~ msgid "Gestetner DSm790"
-#~ msgstr "Gestetner DSm790"
-
-#~ msgid "Gestetner DSm416"
-#~ msgstr "Gestetner DSm416"
-
-#~ msgid "Gestetner DSm725e"
-#~ msgstr "Gestetner DSm725e"
-
-#~ msgid "Gestetner DSm730e"
-#~ msgstr "Gestetner DSm730e"
-
-#~ msgid "Lanier LD125"
-#~ msgstr "Lanier LD125"
-
-#~ msgid "Lanier LD1100"
-#~ msgstr "Lanier LD1100"
-
-#~ msgid "Lanier LD1135"
-#~ msgstr "Lanier LD1135"
-
-#~ msgid "Lanier LD316"
-#~ msgstr "Lanier LD316"
-
-#~ msgid "Lanier LD016"
-#~ msgstr "Lanier LD016"
-
-#~ msgid "Lanier LD320d"
-#~ msgstr "Lanier LD320d"
-
-#~ msgid "Lanier LD325"
-#~ msgstr "Lanier LD325"
-
-#~ msgid "Lanier LD425B"
-#~ msgstr "Lanier LD425B"
-
-#~ msgid "Lanier LD425"
-#~ msgstr "Lanier LD425"
-
-#~ msgid "Lanier LD330"
-#~ msgstr "Lanier LD330"
-
-#~ msgid "Lanier LD433B"
-#~ msgstr "Lanier LD433B"
-
-#~ msgid "Lanier LD433"
-#~ msgstr "Lanier LD433"
-
-#~ msgid "Lanier LD335"
-#~ msgstr "Lanier LD335"
-
-#~ msgid "Lanier LD040B"
-#~ msgstr "Lanier LD040B"
-
-#~ msgid "Lanier LD040"
-#~ msgstr "Lanier LD040"
-
-#~ msgid "Lanier LD345"
-#~ msgstr "Lanier LD345"
-
-#~ msgid "Lanier LD050B"
-#~ msgstr "Lanier LD050B"
-
-#~ msgid "Lanier LD050"
-#~ msgstr "Lanier LD050"
-
-#~ msgid "Lanier LD255"
-#~ msgstr "Lanier LD255"
-
-#~ msgid "Lanier LD265"
-#~ msgstr "Lanier LD265"
-
-#~ msgid "Lanier LD275"
-#~ msgstr "Lanier LD275"
-
-#~ msgid "Lanier LD190"
-#~ msgstr "Lanier LD190"
-
-#~ msgid "NRG 10518"
-#~ msgstr "NRG 10518"
-
-#~ msgid "NRG 10512"
-#~ msgstr "NRG 10512"
-
-#~ msgid "NRG 2212"
-#~ msgstr "NRG 2212"
-
-#~ msgid "NRG 2738"
-#~ msgstr "NRG 2738"
-
-#~ msgid "NRG 2712"
-#~ msgstr "NRG 2712"
-
-#~ msgid "NRG 3238"
-#~ msgstr "NRG 3238"
-
-#~ msgid "NRG 3212"
-#~ msgstr "NRG 3212"
-
-#~ msgid "NRG 3525"
-#~ msgstr "NRG 3525"
-
-#~ msgid "NRG 3508"
-#~ msgstr "NRG 3508"
-
-#~ msgid "NRG 3502"
-#~ msgstr "NRG 3502"
-
-#~ msgid "NRG 3518"
-#~ msgstr "NRG 3518"
-
-#~ msgid "NRG 3532"
-#~ msgstr "NRG 3532"
-
-#~ msgid "NRG 4508"
-#~ msgstr "NRG 4508"
-
-#~ msgid "NRG 4502"
-#~ msgstr "NRG 4502"
-
-#~ msgid "NRG 4518"
-#~ msgstr "NRG 4518"
-
-#~ msgid "NRG 4532"
-#~ msgstr "NRG 4532"
-
-#~ msgid "NRG 6005"
-#~ msgstr "NRG 6005"
-
-#~ msgid "NRG 6008"
-#~ msgstr "NRG 6008"
-
-#~ msgid "NRG 7502"
-#~ msgstr "NRG 7502"
-
-#~ msgid "NRG 7505"
-#~ msgstr "NRG 7505"
-
-#~ msgid "NRG 7508"
-#~ msgstr "NRG 7508"
-
-#~ msgid "NRG 9008"
-#~ msgstr "NRG 9008"
-
-#~ msgid "NRG 9002"
-#~ msgstr "NRG 9002"
-
-#~ msgid "Savin 2535"
-#~ msgstr "Savin 2535"
-
-#~ msgid "Savin 2235"
-#~ msgstr "Savin 2235"
-
-#~ msgid "Savin 2545"
-#~ msgstr "Savin 2545"
-
-#~ msgid "Savin 2245"
-#~ msgstr "Savin 2245"
-
-#~ msgid "Savin 4035"
-#~ msgstr "Savin 4035"
-
-#~ msgid "Savin 4035e"
-#~ msgstr "Savin 4035e"
-
-#~ msgid "Savin 4045"
-#~ msgstr "Savin 4045"
-
-#~ msgid "Savin 4045e"
-#~ msgstr "Savin 4045e"
-
-#~ msgid "Savin 8035"
-#~ msgstr "Savin 8035"
-
-#~ msgid "Savin 8045"
-#~ msgstr "Savin 8045"
-
-#~ msgid "Epson Stylus Offixe TX300F"
-#~ msgstr "Epson Stylus Offixe TX300F"
