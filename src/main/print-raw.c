@@ -88,6 +88,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+  {
+    "PageSize", N_("Page Size"), "Color=No,Category=Basic Printer Setup",
+    N_("Size of the paper being printed to"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
 };
 
 static const int the_parameter_count =
@@ -135,6 +141,19 @@ raw_parameters(const stp_vars_t *v, const char *name,
 	(description->bounds.str, "Color", _("Color"));
       stp_string_list_add_string
 	(description->bounds.str, "BW", _("Black and White"));
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
+  else if (strcmp(name, "PageSize") == 0)
+    {
+      int papersizes = stp_known_papersizes();
+      description->bounds.str = stp_string_list_create();
+      for (i = 0; i < papersizes; i++)
+	{
+	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	  stp_string_list_add_string(description->bounds.str,
+				     pt->name, gettext(pt->text));
+	}
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
     }
