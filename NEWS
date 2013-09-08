@@ -3,7 +3,7 @@ read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
-others.  Gutenprint currently supports over 1600 printer models.
+others.  Gutenprint currently supports over 2000 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
 Macintosh OS X (10.3 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
