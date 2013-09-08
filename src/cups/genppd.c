@@ -1915,13 +1915,14 @@ write_ppd(
   */
 
   stp_describe_parameter(v, "MediaType", &desc);
-  num_opts = stp_string_list_count(desc.bounds.str);
 
-  if (num_opts > 0)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active &&
+      stp_string_list_count(desc.bounds.str) > 0)
   {
     int is_color_opt =
       stp_parameter_has_category_value(v, &desc, "Color", "Yes");
     int nocolor = skip_color && is_color_opt;
+    num_opts = stp_string_list_count(desc.bounds.str);
     if (is_color_opt)
       gzprintf(fp, "*ColorKeyWords: \"MediaType\"\n");
     gzprintf(fp, "*OpenUI *MediaType/%s: PickOne\n", _("Media Type"));
@@ -1950,13 +1951,14 @@ write_ppd(
   */
 
   stp_describe_parameter(v, "InputSlot", &desc);
-  num_opts = stp_string_list_count(desc.bounds.str);
 
-  if (num_opts > 0)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active &&
+      stp_string_list_count(desc.bounds.str) > 0)
   {
     int is_color_opt =
       stp_parameter_has_category_value(v, &desc, "Color", "Yes");
     int nocolor = skip_color && is_color_opt;
+    num_opts = stp_string_list_count(desc.bounds.str);
     if (is_color_opt)
       gzprintf(fp, "*ColorKeyWords: \"InputSlot\"\n");
     gzprintf(fp, "*OpenUI *InputSlot/%s: PickOne\n", _("Media Source"));
@@ -2035,136 +2037,139 @@ write_ppd(
   */
 
   stp_describe_parameter(v, "Resolution", &desc);
-  num_opts = stp_string_list_count(desc.bounds.str);
 
-  if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active)
     {
-      int is_color_opt =
-	stp_parameter_has_category_value(v, &desc, "Color", "Yes");
-      int nocolor = skip_color && is_color_opt;
-      stp_string_list_t *res_list = stp_string_list_create();
-      char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
-      int resolution_ok;
-      int tmp_xdpi, tmp_ydpi;
-
-      if (is_color_opt)
-	gzprintf(fp, "*ColorKeyWords: \"Resolution\"\n");
-      gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
-      if (num_opts > 3)
-	gzputs(fp, "*OPOptionHints Resolution: \"resolution radiobuttons\"\n");
-      else
-	gzputs(fp, "*OPOptionHints Resolution: \"resolution dropdown\"\n");
-      gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
-      gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
-	       desc.name, desc.p_type, desc.is_mandatory,
-	       desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
-      if (has_quality_parameter)
+      num_opts = stp_string_list_count(desc.bounds.str);
+      if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
 	{
-	  stp_parameter_t desc1;
-	  stp_clear_string_parameter(v, "Resolution");
-	  stp_describe_parameter(v, "Quality", &desc1);
-	  stp_set_string_parameter(v, "Quality", desc1.deflt.str);
-	  stp_parameter_description_destroy(&desc1);
-	  stp_describe_resolution(v, &xdpi, &ydpi);
-	  stp_clear_string_parameter(v, "Quality");
-	  tmp_xdpi = xdpi;
-	  while (tmp_xdpi > MAXIMUM_SAFE_PPD_X_RESOLUTION)
-	    tmp_xdpi /= 2;
-	  tmp_ydpi = ydpi;
-	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
-	    tmp_ydpi /= 2;
-	  if (tmp_ydpi < tmp_xdpi)
-	    tmp_xdpi = tmp_ydpi;
-	  /*
-	     Make the default resolution look like an almost square resolution
-	     so that applications using it will be less likely to generate
-	     excess resolution.  However, make the hardware resolution
-	     match the printer default.
-	  */
-	  (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
-	  default_resolution = stp_strdup(res_name);
-	  stp_string_list_add_string(res_list, res_name, res_name);
-	  gzprintf(fp, "*DefaultResolution: %s\n", res_name);
-	  gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
-	  gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
-		   res_name, _("Automatic"), xdpi, ydpi);
-	  gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
-	}
-      else
-      {
-	stp_set_string_parameter(v, "Resolution", desc.deflt.str);
-	stp_describe_resolution(v, &xdpi, &ydpi);
+	  int is_color_opt =
+	    stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+	  int nocolor = skip_color && is_color_opt;
+	  stp_string_list_t *res_list = stp_string_list_create();
+	  char res_name[64];	/* Plenty long enough for XXXxYYYdpi */
+	  int resolution_ok;
+	  int tmp_xdpi, tmp_ydpi;
 
-	if (xdpi == ydpi)
-	  (void) snprintf(res_name, 63, "%ddpi", xdpi);
-	else
-	  (void) snprintf(res_name, 63, "%dx%ddpi", xdpi, ydpi);
-	gzprintf(fp, "*DefaultResolution: %s\n", res_name);
-	gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
-	/*
-	 * We need to add this to the resolution list here so that
-	 * some non-default resolution won't wind up with the
-	 * default resolution name
-	 */
-	stp_string_list_add_string(res_list, res_name, res_name);
-      }
-
-      stp_clear_string_parameter(v, "Quality");
-      for (i = 0; i < num_opts; i ++)
-	{
-	  /*
-	   * Strip resolution name to its essentials...
-	   */
-	  opt = stp_string_list_param(desc.bounds.str, i);
-	  stp_set_string_parameter(v, "Resolution", opt->name);
-	  stp_describe_resolution(v, &xdpi, &ydpi);
-
-	  /* This should only happen with a "None" resolution */
-	  if (xdpi == -1 || ydpi == -1)
-	    continue;
-
-	  resolution_ok = 0;
-	  tmp_xdpi = xdpi;
-	  while (tmp_xdpi > MAXIMUM_SAFE_PPD_X_RESOLUTION)
-	    tmp_xdpi /= 2;
-	  tmp_ydpi = ydpi;
-	  while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
-	    tmp_ydpi /= 2;
-	  do
+	  if (is_color_opt)
+	    gzprintf(fp, "*ColorKeyWords: \"Resolution\"\n");
+	  gzprintf(fp, "*OpenUI *Resolution/%s: PickOne\n", _("Resolution"));
+	  if (num_opts > 3)
+	    gzputs(fp, "*OPOptionHints Resolution: \"resolution radiobuttons\"\n");
+	  else
+	    gzputs(fp, "*OPOptionHints Resolution: \"resolution dropdown\"\n");
+	  gzputs(fp, "*OrderDependency: 10 AnySetup *Resolution\n");
+	  gzprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+		   desc.name, desc.p_type, desc.is_mandatory,
+		   desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
+	  if (has_quality_parameter)
 	    {
-	      if (tmp_xdpi == tmp_ydpi)
-		(void) snprintf(res_name, 63, "%ddpi", tmp_xdpi);
-	      else
-		(void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
-	      if ((!has_quality_parameter &&
-		   strcmp(opt->name, desc.deflt.str) == 0) ||
-		  !stp_string_list_is_present(res_list, res_name))
-		{
-		  resolution_ok = 1;
-		  stp_string_list_add_string(res_list, res_name, opt->text);
-		}
-	      else if (tmp_ydpi > tmp_xdpi &&
-		       tmp_ydpi < MAXIMUM_SAFE_PPD_Y_RESOLUTION)
-		/* Note that we're incrementing the *higher* resolution.
-		   This will generate less aliasing, and apps that convert
-		   down to a square resolution will do the right thing. */
-		tmp_ydpi++;
-	      else if (tmp_xdpi < MAXIMUM_SAFE_PPD_X_RESOLUTION)
-		tmp_xdpi++;
-	      else
+	      stp_parameter_t desc1;
+	      stp_clear_string_parameter(v, "Resolution");
+	      stp_describe_parameter(v, "Quality", &desc1);
+	      stp_set_string_parameter(v, "Quality", desc1.deflt.str);
+	      stp_parameter_description_destroy(&desc1);
+	      stp_describe_resolution(v, &xdpi, &ydpi);
+	      stp_clear_string_parameter(v, "Quality");
+	      tmp_xdpi = xdpi;
+	      while (tmp_xdpi > MAXIMUM_SAFE_PPD_X_RESOLUTION)
 		tmp_xdpi /= 2;
-	    } while (!resolution_ok);
-	  stp_string_list_add_string(resolutions, res_name, opt->text);
-	  gzprintf(fp, "*%sResolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
-		   nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
-		   res_name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
-	  if (strcmp(res_name, opt->name) != 0)
-	    gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
-	}
+	      tmp_ydpi = ydpi;
+	      while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
+		tmp_ydpi /= 2;
+	      if (tmp_ydpi < tmp_xdpi)
+		tmp_xdpi = tmp_ydpi;
+	      /*
+		Make the default resolution look like an almost square resolution
+		so that applications using it will be less likely to generate
+		excess resolution.  However, make the hardware resolution
+		match the printer default.
+	      */
+	      (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi + 1, tmp_xdpi);
+	      default_resolution = stp_strdup(res_name);
+	      stp_string_list_add_string(res_list, res_name, res_name);
+	      gzprintf(fp, "*DefaultResolution: %s\n", res_name);
+	      gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
+	      gzprintf(fp, "*Resolution %s/%s:\t\"<</HWResolution[%d %d]>>setpagedevice\"\n",
+		       res_name, _("Automatic"), xdpi, ydpi);
+	      gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, "None");
+	    }
+	  else
+	    {
+	      stp_set_string_parameter(v, "Resolution", desc.deflt.str);
+	      stp_describe_resolution(v, &xdpi, &ydpi);
 
-      stp_string_list_destroy(res_list);
-      stp_clear_string_parameter(v, "Resolution");
-      gzputs(fp, "*CloseUI: *Resolution\n\n");
+	      if (xdpi == ydpi)
+		(void) snprintf(res_name, 63, "%ddpi", xdpi);
+	      else
+		(void) snprintf(res_name, 63, "%dx%ddpi", xdpi, ydpi);
+	      gzprintf(fp, "*DefaultResolution: %s\n", res_name);
+	      gzprintf(fp, "*StpDefaultResolution: %s\n", res_name);
+	      /*
+	       * We need to add this to the resolution list here so that
+	       * some non-default resolution won't wind up with the
+	       * default resolution name
+	       */
+	      stp_string_list_add_string(res_list, res_name, res_name);
+	    }
+
+	  stp_clear_string_parameter(v, "Quality");
+	  for (i = 0; i < num_opts; i ++)
+	    {
+	      /*
+	       * Strip resolution name to its essentials...
+	       */
+	      opt = stp_string_list_param(desc.bounds.str, i);
+	      stp_set_string_parameter(v, "Resolution", opt->name);
+	      stp_describe_resolution(v, &xdpi, &ydpi);
+
+	      /* This should only happen with a "None" resolution */
+	      if (xdpi == -1 || ydpi == -1)
+		continue;
+
+	      resolution_ok = 0;
+	      tmp_xdpi = xdpi;
+	      while (tmp_xdpi > MAXIMUM_SAFE_PPD_X_RESOLUTION)
+		tmp_xdpi /= 2;
+	      tmp_ydpi = ydpi;
+	      while (tmp_ydpi > MAXIMUM_SAFE_PPD_Y_RESOLUTION)
+		tmp_ydpi /= 2;
+	      do
+		{
+		  if (tmp_xdpi == tmp_ydpi)
+		    (void) snprintf(res_name, 63, "%ddpi", tmp_xdpi);
+		  else
+		    (void) snprintf(res_name, 63, "%dx%ddpi", tmp_xdpi, tmp_ydpi);
+		  if ((!has_quality_parameter &&
+		       strcmp(opt->name, desc.deflt.str) == 0) ||
+		      !stp_string_list_is_present(res_list, res_name))
+		    {
+		      resolution_ok = 1;
+		      stp_string_list_add_string(res_list, res_name, opt->text);
+		    }
+		  else if (tmp_ydpi > tmp_xdpi &&
+			   tmp_ydpi < MAXIMUM_SAFE_PPD_Y_RESOLUTION)
+		    /* Note that we're incrementing the *higher* resolution.
+		       This will generate less aliasing, and apps that convert
+		       down to a square resolution will do the right thing. */
+		    tmp_ydpi++;
+		  else if (tmp_xdpi < MAXIMUM_SAFE_PPD_X_RESOLUTION)
+		    tmp_xdpi++;
+		  else
+		    tmp_xdpi /= 2;
+		} while (!resolution_ok);
+	      stp_string_list_add_string(resolutions, res_name, opt->text);
+	      gzprintf(fp, "*%sResolution %s/%s:\t\"<</HWResolution[%d %d]/cupsCompression %d>>setpagedevice\"\n",
+		       nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
+		       res_name, stp_i18n_lookup(po, opt->text), xdpi, ydpi, i + 1);
+	      if (strcmp(res_name, opt->name) != 0)
+		gzprintf(fp, "*StpResolutionMap: %s %s\n", res_name, opt->name);
+	    }
+
+	  stp_string_list_destroy(res_list);
+	  stp_clear_string_parameter(v, "Resolution");
+	  gzputs(fp, "*CloseUI: *Resolution\n\n");
+	}
     }
 
   stp_parameter_description_destroy(&desc);
@@ -2384,10 +2389,10 @@ write_ppd(
 	   */
 
 	  stp_describe_parameter(v, "MediaType", &desc);
-	  num_opts = stp_string_list_count(desc.bounds.str);
-
-	  if (num_opts > 0)
+	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active &&
+	      stp_string_list_count(desc.bounds.str) > 0)
 	    {
+	      num_opts = stp_string_list_count(desc.bounds.str);
 	      gzprintf(fp, "*%s.Translation MediaType/%s: \"\"\n", lang, _("Media Type"));
 
 	      for (i = 0; i < num_opts; i ++)
@@ -2403,10 +2408,11 @@ write_ppd(
 	   */
 
 	  stp_describe_parameter(v, "InputSlot", &desc);
-	  num_opts = stp_string_list_count(desc.bounds.str);
 
-	  if (num_opts > 0)
+	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active &&
+	      stp_string_list_count(desc.bounds.str) > 0)
 	    {
+	      num_opts = stp_string_list_count(desc.bounds.str);
 	      gzprintf(fp, "*%s.Translation InputSlot/%s: \"\"\n", lang, _("Media Source"));
 
 	      for (i = 0; i < num_opts; i ++)
@@ -2439,7 +2445,6 @@ write_ppd(
 	   */
 
 	  stp_describe_parameter(v, "Resolution", &desc);
-	  num_opts = stp_string_list_count(resolutions);
 
 	  if (!simplified || desc.p_level == STP_PARAMETER_LEVEL_BASIC)
 	    {
@@ -2448,6 +2453,7 @@ write_ppd(
 		gzprintf(fp, "*%s.Resolution %s/%s: \"\"\n", lang,
 			 default_resolution, _("Automatic"));
 
+	      num_opts = stp_string_list_count(resolutions);
 	      for (i = 0; i < num_opts; i ++)
 		{
 		  opt = stp_string_list_param(resolutions, i);
