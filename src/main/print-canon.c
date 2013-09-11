@@ -3632,8 +3632,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   int adjust_tray_J_x, adjust_tray_J_y;
   int adjust_tray_custom_x, adjust_tray_custom_y;
 
-  test_cd = 0;
-
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
    * Is is the printable width or the right border?
@@ -3645,6 +3643,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");  
   int print_cd= (input_slot && (!strcmp(input_slot, "CD")));
+
+  test_cd = 0;
 
   if (ERRPRINT) {
     stp_eprintf(v,"canon_init_setPageMargins2: borderless capability? %016lx\n", init->caps->features & CANON_CAP_BORDERLESS);
@@ -3764,8 +3764,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	  stp_put32_be((init->page_height - border_top2 - border_bottom2 ) * unit / 72,v);
 	}
 	else {
-	  stp_put32_be((init->page_width) * unit / 72,v); // area_width test
-	  stp_put32_be((init->page_height) * unit / 72,v); // area_length test
+	  stp_put32_be((init->page_width) * unit / 72,v); /* area_width test */
+	  stp_put32_be((init->page_height) * unit / 72,v); /* area_length test */
 	}
  
 	/* 0 under all currently known circumstances */
@@ -3806,7 +3806,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) ) {
     arg_ESCP_9 = 0x02;
   }
-  else if ( !(strcmp(init->caps->name,"PIXMA MG3500")) ) {
+  else if ( !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG5500")) ) {
     arg_ESCP_9 = 0xff;
   }
 

@@ -1469,6 +1469,22 @@ static const canon_inkset_t canon_13_C3M3Y2K3k3on_c_inkset[] = {
 	{0,0.0,NULL},
 };
 
+static const canon_inkset_t canon_13_C3M3Y2K3k3photo_c_inkset[] = {
+	{'C',1.0,&canon_2b_3l_c_ink},
+	{'M',1.0,&canon_2b_3l_c_ink},
+	{'Y',1.0,&canon_1b_2l_ink},
+	{'K',0.0,&canon_2b_3l_c_ink},/* switched off */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{'k',1.0,&canon_2b_3l_ink},/* swapped y and k */
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+	{0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_13_C3M3Y3k3c3m3_inkset[] = {
 	{'C',1.0,&canon_2b_3l_ink},
 	{'M',1.0,&canon_2b_3l_ink},
@@ -1517,22 +1533,6 @@ static const canon_inkset_t canon_13_C4M4Y4_inkset[] = {
         {0,0.0,NULL},
 };
 
-static const canon_inkset_t canon_13_C4M4Y4K2_inkset[] = {
-        {'C',1.0,&canon_2b_4l_ink},
-        {'M',1.0,&canon_2b_4l_ink},
-        {'Y',1.0,&canon_2b_4l_ink},
-        {'K',1.0,&canon_1b_2l_ink},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-        {0,0.0,NULL},
-};
-
 static const canon_inkset_t canon_13_C4M4Y3K3_inkset[] = {
         {'C',1.0,&canon_2b_4l_ink},
         {'M',1.0,&canon_2b_4l_ink},
@@ -1557,6 +1557,54 @@ static const canon_inkset_t canon_13_C4M4Y3K4_inkset[] = {
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_13_C4M4Y4K2_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_1b_2l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_13_C4M4Y4K3k4off_c_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',0.0,&canon_2b_3l_c_ink}, /* switch off */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_2b_4l_ink}, /* swapped y and k */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+static const canon_inkset_t canon_13_C4M4Y4K3k4_c_inkset[] = {
+        {'C',1.0,&canon_2b_4l_ink},
+        {'M',1.0,&canon_2b_4l_ink},
+        {'Y',1.0,&canon_2b_4l_ink},
+        {'K',1.0,&canon_2b_3l_c_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink}, /* swapped y and k */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
