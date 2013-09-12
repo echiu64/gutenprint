@@ -759,6 +759,17 @@
       <printer translate="name" name="Canon PIXMA MG6440" driver="bjc-PIXMA-MG6440" manufacturer="Canon" model="8005500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6440" />
       <printer translate="name" name="Canon PIXMA MG6450" driver="bjc-PIXMA-MG6450" manufacturer="Canon" model="8005500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6450" />
       <printer translate="name" name="Canon PIXMA MG6470" driver="bjc-PIXMA-MG6470" manufacturer="Canon" model="8005500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6470" />
+      <!-- Canon MG6500 family -->
+      <printer translate="name" name="Canon MG6500 series Printer" driver="bjc-PIXMA-MG6500" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6500" />
+      <printer translate="name" name="Canon PIXMA MG6530" driver="bjc-PIXMA-MG6530" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6530" />
+      <!-- Canon MG7100 family -->
+      <printer translate="name" name="Canon MG7100 series Printer" driver="bjc-PIXMA-MG7100" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7100" />
+      <printer translate="name" name="Canon PIXMA MG7110" driver="bjc-PIXMA-MG7110" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7110" />
+      <printer translate="name" name="Canon PIXMA MG7120" driver="bjc-PIXMA-MG7120" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7120" />
+      <printer translate="name" name="Canon PIXMA MG7130" driver="bjc-PIXMA-MG7130" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7130" />
+      <printer translate="name" name="Canon PIXMA MG7140" driver="bjc-PIXMA-MG7140" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7140" />
+      <printer translate="name" name="Canon PIXMA MG7150" driver="bjc-PIXMA-MG7150" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7150" />
+      <printer translate="name" name="Canon PIXMA MG7170" driver="bjc-PIXMA-MG7170" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7170" />
       <!-- Canon MG8100 family -->
       <printer translate="name" name="Canon MG8100 series Printer" driver="bjc-PIXMA-MG8100" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8100" />
       <printer translate="name" name="Canon PIXMA MG8100" driver="bjc-PIXMA-MG8100" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8100" />
