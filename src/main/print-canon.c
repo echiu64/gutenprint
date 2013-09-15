@@ -2588,32 +2588,59 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       if (!strcmp(name,"w252h360J"))   return 0x32; /* L --- similar to US 3.5x5 size */
       if (!strcmp(name,"w360h504J"))   return 0x33; /* 2L --- similar to US5x7 */
       if (!strcmp(name,"w288h432J"))   return 0x34; /* KG --- same size as US 4x6 */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x35; */ /* CD Custom Tray */
       if (!strcmp(name,"w155h257"))    return 0x36; /* Japanese Business Card 55mm x 91mm */
       if (!strcmp(name,"w360h504"))    return 0x37; /* US5x7 */
       if (!strcmp(name,"w420h567"))    return 0x39; /* Ofuku Hagaki */
       if (!strcmp(name,"w340h666"))    return 0x3a; /* Japanese Long Env #3 (chou3) */
       if (!strcmp(name,"w255h581"))    return 0x3b; /* Japanese Long Env #4 (chou4) */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x3f; */ /* CD Tray A */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x40; */ /* CD Tray B */
       if (!strcmp(name,"w155h244"))    return 0x41; /* Business/Credit Card 54mm x 86mm */
+
+      /* Fine Art paper codes */
+      /* iP6700D, iP7100, iP7500, iP8100, iP8600, iP9910 */
+      /* iX7000 */
+      /* MG6100, M6200, MG8100, MG8200 */
+      /* MX7600 */
+      /* MP950, MP960, MP970, MP980, MP990 */
       /* if (!strcmp(name,"A4"))       return 0x42; */ /* FineArt A4 35mm border --- iP7100: gap is 18 */
-      /* if (!strcmp(name,"A3"))       return 0x43; */ /* FineArt A3 35mm border --- iP7100: gap is 18 */
-      /* if (!strcmp(name,"Letter"))   return 0x44; */ /* FineArt Letter 35mm border --- iP7100: gap is 18 */
+      /* if (!strcmp(name,"A3"))       return 0x43; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"A3plus"))   return 0x44; */ /* FineArt A3plus 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x45; */ /* FineArt Letter 35mm border */
+
       if (!strcmp(name,"w288h576"))    return 0x46; /* US4x8 */
       if (!strcmp(name,"w1008h1224J")) return 0x47; /* HanKire --- 14in x 17in */
       if (!strcmp(name,"720h864J"))    return 0x48; /* YonKire --- 10in x 12 in*/
       if (!strcmp(name,"c8x10J"))      return 0x49; /* RokuKire --- same size as 8x10 */
-      /* if (!strcmp(name,"A4"))       return 0x4d; */ /* ArtA4 35mm border */
-      /* if (!strcmp(name,"A3"))       return 0x4e; */ /* ArtA3 35mm border */
-      /* if (!strcmp(name,"Letter"))   return 0x4f; */ /* ArtLetter 35mm border */
+
+      /* if (!strcmp(name,"CD5Inch"))  return 0x4a; */ /* CD Tray C */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x4b; */ /* CD Tray D */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x4c; */ /* CD Tray E */
+
+      /* Fine Art paper codes */
+      /* Pro series (9000, 9000 Mk.2, 9500, 9500 Mk.2, PRO-1) */
+      /* if (!strcmp(name,"A4"))       return 0x4d; */ /* FineArt A4 35mm border */
+      /* if (!strcmp(name,"A3"))       return 0x4e; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x4f; */ /* FineArt Letter 35mm border */
+      /* if (!strcmp(name,"A3plus"))   return 0x50; */ /* FineArt A3plus 35mm border */
+
+      /* if (!strcmp(name,"CD5Inch"))  return 0x51; */ /* CD Tray F */
       if (!strcmp(name,"w288h512"))    return 0x52; /* Wide101.6x180.6 */
       /* w283h566 Wide postcard 148mm x 200mm */
 
       /* media size codes for CD (and other media depending on printer model */
-      if (!strcmp(name,"CD5Inch"))    return 0x53; /* CD --- arbitrary choice here, modify in ESC (P command */
-      /* similar needed for FineArt media which have common sizes but different codes */
 
-      /* if (!strcmp(name,"A4"))       return 0x58; */ /* ArtA4 35mm border --- MG6500, MG7100 */
-      /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* ArtLetter 35mm border --- MG6500, MG7100 */
+      if (!strcmp(name,"CD5Inch"))     return 0x53; /* CD Tray G --- arbitrary choice here, modify in ESC (P command */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x56; */ /* CD Tray G-late */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x57; */ /* CD Tray H */
 
+      /* Fine Art paper codes */
+      /* MG6300, MG6500, MG7100, */
+      /* if (!strcmp(name,"A4"))       return 0x58; */ /* FineArt A4 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
+
+      /* if (!strcmp(name,"CD5Inch"))  return 0x5b; */ /* CD Tray J */
 
       /* custom */
 
@@ -3931,74 +3958,102 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* pro9500mk2:CD Tray E  : 0x4c               */
       /* PRO-1:  CD Tray H     : 0x57               */
 
-
-
   /* workaround for FineArt media having same size as non-FineArt media */
 
-      /* MP950:  FineArtA4     : 0x42               */
-      /* MP960:  FineArtA4     : 0x42               */
-      /* MP970:  FineArtA4     : 0x42               */
-      /* MP980:  FineArtA4     : 0x42               */
-      /* MP990:  FineArtA4     : 0x42               */
-      /* MX7600: FineArtA4     : 0x42               */
-      /* iP6700D:FineArtA4     : 0x42               */
-      /* iP7100: FineArtA4     : 0x42               */
-      /* iP7500: FineArtA4     : 0x42               */
-      /* iP8100: FineArtA4     : 0x42               */
-      /* iP8600: FineArtA4     : 0x42               */
-      /* iP9910: FineArtA4     : 0x42               */
-      /* iX7000: FineArtA4     : 0x42               */
-      /* MG6100: FineArtA4     : 0x42               */
-      /* MG6200: FineArtA4     : 0x42               */
-      /* MG6500: FineArtA4     : 0x58               */
-      /* MG8100: FineArtA4     : 0x42               */
-      /* MG8200: FineArtA4     : 0x42               */
-      /* pro9000:FineArtA4     : 0x4d               */
-      /* pro9000mk2:FineArtA4  : 0x4d               */
-      /* pro9500:FineArtA4     : 0x4d               */
-      /* pro9500mk2:FineArtA4  : 0x4d               */
-      /* PRO-1:  FineArtA4     : 0x4d               */
+      /* Fine Art paper codes */
+      /* iP6700D, iP7100, iP7500, iP8100, iP8600, iP9910 */
+      /* iX7000 */
+      /* MG6100, M6200, MG8100, MG8200 */
+      /* MX7600 */
+      /* MP950, MP960, MP970, MP980, MP990 */
+      /* if (!strcmp(name,"A4"))       return 0x42; */ /* FineArt A4 35mm border --- iP7100: gap is 18 */
+      /* if (!strcmp(name,"A3"))       return 0x43; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"A3plus"))   return 0x44; */ /* FineArt A3plus 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x45; */ /* FineArt Letter 35mm border */
+
+      /* Fine Art paper codes */
+      /* Pro series (9000, 9000 Mk.2, 9500, 9500 Mk.2, PRO-1) */
+      /* if (!strcmp(name,"A4"))       return 0x4d; */ /* FineArt A4 35mm border */
+      /* if (!strcmp(name,"A3"))       return 0x4e; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"A3plus"))   return 0x50; */ /* FineArt A3plus 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x4f; */ /* FineArt Letter 35mm border */
+
+      /* Fine Art paper codes */
+      /* MG6300, MG6500, MG7100 */
+      /* if (!strcmp(name,"A4"))       return 0x58; */ /* FineArt A4 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
+
 
   /* iP7100 is an exception needing yet another papersize code */
   if ( (arg_ESCP_2 == 0x28) || ( arg_ESCP_2 == 0x29) || (arg_ESCP_2 ==  0x2c) || (arg_ESCP_2 == 0x31) ) {
     /* A4 FineArt */
     if ( arg_ESCP_1 == 0x03 ) {
-      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x42;
       }
       else if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
-	arg_ESCP_1 = 0x42;
+	arg_ESCP_1 = 0x4d;
       }
-      else if ( !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
 	arg_ESCP_1 = 0x58;
       }
       else {
-	/* default */
-	arg_ESCP_1 = 0x4d;
+	/* default back to non-FineArt */
+	arg_ESCP_1 = 0x03;
       }
     }
     /* A3 FineArt */
     if ( arg_ESCP_1 == 0x05 ) {
-      arg_ESCP_1 = 0x4e;
-      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x43;
       }
-      /* need to add for Pro series --- and confirm what paper sizes MG series can take: likely only Letter and A4 for FineArt */
+      else if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
+	arg_ESCP_1 = 0x4e;
+      } 
+#if 0
+      /* no known papersize code yet, since these printers do not handle A3 */
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
+        arg_ESCP_1 = 0x59; /* suspected code, unconfirmed */
+	}
+#endif
+      else {
+	/* default back to non-FineArt */
+	arg_ESCP_1 = 0x05;
+      }
     }
     /* Letter FineArt */
     if ( arg_ESCP_1 == 0x0d ) {
-      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
-	arg_ESCP_1 = 0x44;
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
+	arg_ESCP_1 = 0x45;
       }
       else if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
-	arg_ESCP_1 = 0x4e; /* need confirmation */
+	arg_ESCP_1 = 0x4f;
       }
-      else if ( !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
 	arg_ESCP_1 = 0x5a;
       }
       else {
-	/* default */
-	arg_ESCP_1 = 0x4f;
+	/* default back to non-FineArt */
+	arg_ESCP_1 = 0x0d;
+      }
+    }
+    /* A3plus FineArt */
+    if ( arg_ESCP_1 == 0x2c ) {
+      if ( !(strcmp(init->caps->name,"PIXMA MP950")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MX7600")) || !(strcmp(init->caps->name,"PIXMA iP6700")) || !(strcmp(init->caps->name,"PIXMA iP7100")) || !(strcmp(init->caps->name,"PIXMA iP7500")) || !(strcmp(init->caps->name,"PIXMA iP8100")) || !(strcmp(init->caps->name,"PIXMA iP8600")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA iX7000")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
+	arg_ESCP_1 = 0x44;
+      }
+      else if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
+	arg_ESCP_1 = 0x50;
+      }
+#if 0
+      /* no known papersize code yet, since these printers do not handle A3plus */
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
+        arg_ESCP_1 = 0x5c; /* suspected code, unconfirmed */
+	}
+#endif
+      else {
+	/* default back to non-FineArt */
+	arg_ESCP_1 = 0x2c;
       }
     }
   }
