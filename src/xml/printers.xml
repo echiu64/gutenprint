@@ -966,9 +966,9 @@
       <printer translate="name" name="Canon PIXMA E600" driver="bjc-MULTIPASS-E600" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E600" />
       <printer translate="name" name="Canon PIXMA E608" driver="bjc-MULTIPASS-E608" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E608" />
       <!-- Canon E610 family -->
-      <printer translate="name" name="Canon E610 series Printer" driver="bjc-MULTIPASS-E610" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E610" />
-      <printer translate="name" name="Canon PIXMA E610" driver="bjc-MULTIPASS-E610" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E610" />
-      <printer translate="name" name="Canon PIXMA E618" driver="bjc-MULTIPASS-E618" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E618" />
+      <printer translate="name" name="Canon E610 series Printer" driver="bjc-MULTIPASS-E610" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E610" />
+      <printer translate="name" name="Canon PIXMA E610" driver="bjc-MULTIPASS-E610" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E610" />
+      <printer translate="name" name="Canon PIXMA E618" driver="bjc-MULTIPASS-E618" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E618" />
       <!-- -->
       <printer translate="name" name="Canon 50i" driver="bjc-50i" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-50i" />
       <printer translate="name" name="Canon 80i" driver="bjc-80i" manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-80i" />
