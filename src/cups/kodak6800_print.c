@@ -518,19 +518,14 @@ skip_query:
 		state = S_STARTED;
 		break;
 	case S_STARTED:
-		if (ctx->type == P_KODAK_6850) {
-			if (rdbuf[0] != 0x01 ||
-			    rdbuf[1] != 0x0b ||
-			    rdbuf[2] != 0x00) {
-				break;
-			}
-		} else {
-			if (rdbuf[0] != 0x01 ||
-			    rdbuf[1] != 0x03 ||
-			    rdbuf[2] != 0x00) {
-				break;
-			}
-		}
+		if (rdbuf[0] != 0x01 ||
+		    rdbuf[2] != 0x00)
+			break;
+
+		/* XXX unknown; may depend on media? */
+		if (rdbuf[1] != 0x0b &&
+		    rdbuf[1] != 0x03)
+			break;
 
 		memcpy(cmdbuf, &ctx->hdr, CMDBUF_LEN);
 
@@ -607,7 +602,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.21",
+	.version = "0.22",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
