@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.19"
+#define BACKEND_VERSION "0.21"
 #ifndef URI_PREFIX
 #define URI_PREFIX "gutenprint+usb"
 #endif
@@ -88,7 +88,7 @@ done:
 int send_data(struct libusb_device_handle *dev, uint8_t endp, 
 	      uint8_t *buf, int len)
 {
-	int num;
+	int num = 0;
 
 	while (len) {
 		int ret = libusb_bulk_transfer(dev, endp,
@@ -210,9 +210,9 @@ static int print_scan_output(struct libusb_device *device,
 		}
 		buf[k] = 0;
 		
-		fprintf(stdout, "direct %s://%s/%s?serial=%s \"%s\" \"%s\" \"%s\" \"\"\n",
+		fprintf(stdout, "direct %s://%s/%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
 			prefix, strlen(manuf2) ? manuf2 : (char*)manuf,
-			buf, serial, product, product,
+			buf, serial, backend->uri_prefix, product, product,
 			ieee_id);
 		
 		if (ieee_id)
@@ -398,7 +398,7 @@ int main (int argc, char **argv)
 		find_and_enumerate(ctx, &list, NULL, P_ANY, 1);
 		libusb_free_device_list(list, 1);
 		libusb_exit(ctx);
-		exit(1);
+		exit(0);
 	}
 
 	/* Are we running as a CUPS backend? */
@@ -430,18 +430,23 @@ int main (int argc, char **argv)
 
 		/* Figure out backend */
 		{
-			char *ptr = strchr (uri, ':');
+			char *ptr = strstr (uri, "backend="), *ptr2;
 			if (!ptr) {
 				ERROR("Invalid URI prefix (%s)\n", uri);
 				exit(1);
 			}
-			*ptr = 0;
-			backend = find_backend(uri);
+			ptr += 8;
+			ptr2 = strchr(ptr, '&');
+			if (ptr2)
+				*ptr2 = 0;
+
+			backend = find_backend(ptr);
 			if (!backend) {
-				ERROR("Invalid backend (%s)\n", uri);
+				ERROR("Invalid backend (%s)\n", ptr);
 				exit(1);
 			}
-			*ptr = ':';
+			if (ptr2)
+				*ptr2 = '&';
 		}
 
 		use_serno = strchr(uri, '=');
@@ -450,6 +455,11 @@ int main (int argc, char **argv)
 			exit(1);
 		}
 		use_serno++;
+		{
+			char *ptr = strchr(use_serno, '&');
+			if (ptr)
+				*ptr = 0;
+		}
 	} else {
 		use_serno = getenv("DEVICE");
 
@@ -498,7 +508,7 @@ int main (int argc, char **argv)
 	if (!query_only && backend->early_parse) {
 		printer_type = backend->early_parse(backend_ctx, data_fd);
 		if (printer_type < 0) {
-			ret = 4;
+			ret = 5; /* CUPS_BACKEND_CANCEL */
 			goto done;
 		}
 	}
@@ -510,7 +520,7 @@ int main (int argc, char **argv)
 
 	if (found == -1) {
 		ERROR("Printer open failure (No suitable printers found!)\n");
-		ret = 3;
+		ret = 4; /* CUPS_BACKEND_STOP */
 		goto done;
 	}
 
