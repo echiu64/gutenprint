@@ -2452,8 +2452,8 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 
   if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
     /* Laminatte a slightly larger boundary */
-    stp_put16_be(privdata.h_size, v);
-    stp_put16_be(privdata.w_size + 12, v);
+    stp_put16_be(privdata.h_size + 12, v);
+    stp_put16_be(privdata.w_size, v);
     stp_putc(0x03, v); /* Trigger Superfine */
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
@@ -2476,8 +2476,8 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
     int r, c;
 
     /* Now generate lamination pattern */
-    for (c = 0 ; c < privdata.w_size + 12 ; c++) {
-      for (r = 0 ; r < privdata.h_size ; r++) {
+    for (c = 0 ; c < privdata.w_size ; c++) {
+      for (r = 0 ; r < privdata.h_size + 12 ; r++) {
 	int i = rand() & 0x1f;
 	if (i < 24)
 	  stp_put16_be(0xab58, v);
@@ -2488,7 +2488,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
       }
     }
     /* Pad up to a 512-byte block */
-    dyesub_nputc(v, 0x00, 512 - ((privdata.h_size * (privdata.w_size + 12) * 2) % 512));
+    dyesub_nputc(v, 0x00, 512 - ((privdata.w_size * (privdata.h_size + 12) * 2) % 512));
   }
 }
 
