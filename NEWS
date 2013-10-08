@@ -1197,6 +1197,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Device IDs added for the following Shinko/Sinfonia printers:
        Shinko/Sinfonia CHC-S2145
 
+     - Device IDs added for the following Mitsubishi printers:
+       Mitsubishi CP-D70DW
+       Mitsubishi CP-D707DW
+
   6) Added Catalan translation.
 
   7) Added a unified CUPS backend to support selected printers
