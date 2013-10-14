@@ -676,6 +676,8 @@ const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t
   int modefound=0;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_monochrome\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"Entered suitable_mode_monochrome\n");
 
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -684,7 +686,7 @@ const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t
 	  /* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 	  if ( (caps->modelist->modes[j].quality >= quality) && (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ){ 
 	    /* keep setting the mode until lowest matching quality is found */
-	    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	      /* duplex check -- rare for monochrome, cannot remember any such case */
 	      mode = &caps->modelist->modes[j];
 	      modefound=1;
@@ -695,7 +697,7 @@ const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t
 	else { /* no special replacement modes for black inkset */
 	  if ( (caps->modelist->modes[j].quality >= quality) ){ 
 	    /* keep setting the mode until lowest matching quality is found */
-	    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	      /* duplex check -- rare for monochrome, cannot remember any such case */
 	      mode = &caps->modelist->modes[j];
 	      modefound=1;
@@ -717,13 +719,17 @@ const canon_mode_t* find_first_matching_mode_monochrome(stp_vars_t *v,const cano
   int modefound=0;
   int j;
 
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode_monochrome\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"Entered find_first_matching_mode_monochrome\n");
+
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     /* pick first mode with MODE_FLAG_BLACK */
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 	/* only look at modes with MODE_FLAG_BLACK if INKSET_BLACK_MODEREPL is in force */
 	if ( (caps->modelist->modes[j].flags & MODE_FLAG_BLACK) ) { 
-	  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	    /* duplex check -- rare for monochrome, cannot remember any such case */
 	    mode = &caps->modelist->modes[j];
 	    modefound=1;
@@ -743,14 +749,20 @@ const canon_mode_t* find_first_matching_mode(stp_vars_t *v,const canon_modeuse_t
   int modefound=0;
   int j;
 
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"Entered find_first_matching_mode\n");
+
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
-	if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	  /* duplex check -- rare for monochrome, cannot remember any such case */
 	  mode = &caps->modelist->modes[j];
 	  modefound=1;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode): picked mode without inkset limitation (%s)\n",mode->name);
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode): picked mode without inkset limitation (%s)\n",mode->name);
 	}
 	break; /* go to next mode in muse list */
       }
@@ -767,6 +779,8 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
   int modefound=0;
   
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_color\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"Entered suitable_mode_color\n");
 
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -775,10 +789,12 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
 	  /* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
 	  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
 	    /* keep setting the mode until lowest matching quality is found */
-	    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_color): picked mode with special replacement inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_color): picked mode with special replacement inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -787,10 +803,12 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
 	else { /* no special replacement modes for color inkset */
 	  if ( (caps->modelist->modes[j].quality >= quality) ){ 
 	    /* keep setting the mode until lowest matching quality is found */
-	    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_color): picked mode without any special replacement inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_color): picked mode without any special replacement inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -810,16 +828,22 @@ const canon_mode_t* find_first_matching_mode_color(stp_vars_t *v,const canon_mod
   int modefound=0;
   int j;
 
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode_color\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"DEBUG: Entered find_first_matching_mode_color\n");
+
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     /* pick first mode with MODE_FLAG_COLOR */
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 	/* only look at modes with MODE_FLAG_COLOR if INKSET_COLOR_MODEREPL is in force */
 	if ( (caps->modelist->modes[j].flags & MODE_FLAG_COLOR) ) { 
-	  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	    /* duplex check */
 	    mode = &caps->modelist->modes[j];
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode_color): picked first mode with special replacement inkset (%s)\n",mode->name);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode_color): picked first mode with special replacement inkset (%s)\n",mode->name);
 	    modefound=1;
 	  }
 	}
@@ -838,6 +862,8 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
   int modefound=0;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_photo\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"DEBUG: Entered suitable_mode_photo\n");
   
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -846,9 +872,12 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
 	  /* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
 	  if ( (caps->modelist->modes[j].quality >= quality)  && (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
 	    /* keep setting the mode until lowest matching quality is found */
-	    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
+	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with special replacement inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with special replacement inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -857,9 +886,12 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
 	else { /* if no special replacement modes for photo inkset */
 	  if ( (caps->modelist->modes[j].quality >= quality) ){ 
 	    /* keep setting the mode until lowest matching quality is found */
-	    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
+	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -878,6 +910,10 @@ const canon_mode_t* find_first_matching_mode_photo(stp_vars_t *v,const canon_mod
   int i=0;
   int modefound=0;
   int j;
+
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode_photo\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"DEBUG: Entered find_first_matching_mode_photo\n");
   
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     /* pick first mode with MODE_FLAG_PHOTO */
@@ -885,9 +921,12 @@ const canon_mode_t* find_first_matching_mode_photo(stp_vars_t *v,const canon_mod
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 	/* only look at modes with MODE_FLAG_PHOTO if INKSET_PHOTO_MODEREPL is in force */
 	if ( (caps->modelist->modes[j].flags & MODE_FLAG_PHOTO) ) { 
-	  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	    /* duplex check */
 	    mode = &caps->modelist->modes[j];
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
 	    modefound=1;
 	  }
 	}
@@ -906,15 +945,21 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
   int modefound=0;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_general\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"DEBUG: Entered suitable_mode_general\n");
+
   
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 	if ( (caps->modelist->modes[j].quality >= quality) ) { 
 	  /* keep setting the mode until lowest matching quality is found */
-	  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+	  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 	    /* duplex check */
 	    mode = &caps->modelist->modes[j];
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_general): picked first mode with lowest matching quality (%s)\n",mode->name);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_general): picked first mode with lowest matching quality (%s)\n",mode->name);
 	    modefound=1;
 	  }
 	}
@@ -929,6 +974,10 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
 const char* find_ink_type(stp_vars_t *v,const canon_mode_t* mode,const char *printing_mode) {
   int i,inkfound;
   const char *ink_type = stp_get_string_parameter(v, "InkType");
+
+  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_ink_type\n");
+  if (ERRPRINT)
+    stp_eprintf(v,"DEBUG: Entered find_ink_type\n");
 
   /* if InkType does not match that of mode, change InkType to match it */
   /* choose highest color as default, as there is only one option for Black */
@@ -1067,20 +1116,26 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
     /* now scroll through to find if the mode is in the modeuses list */
     modecheck=compare_mode_valid(v,mode,muse,mlist);
 
-    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: modecheck value: '%i'\n",modecheck);
+    stp_dprintf(STP_DBG_CANON, v,"DEBUG: (mode replacement) Gutenprint: modecheck value: '%i'\n",modecheck);
     if (ERRPRINT)
-      stp_eprintf(v,"modecheck value: '%i'\n",modecheck);
+      stp_eprintf(v,"(mode replacement) modecheck value: '%i'\n",modecheck);
             
     /* if we did not find a valid mode, need to replace it */
     if (modecheck!=0) {
 
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode): no suitable mode exists, need to find a mode\n");
+      if (ERRPRINT)
+	stp_eprintf(v,"Gutenprint (check_current_mode): no suitable mode exists, need to find a mode\n");
+
       quality = mode->quality;
       /* Black InkSet */
       if (ink_set && !strcmp(ink_set,"Black"))  {
 	stp_set_string_parameter(v, "PrintingMode","BW");
 	printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	if (!(mode->ink_types & CANON_INK_K)) {
+	  if (ERRPRINT)
+	    stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, looking for a matching mode\n");
+      
 	  /* need a new mode: 
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
@@ -1091,11 +1146,17 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    modefound=1;
 
 	  if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did not find match, so taking first available\n");
 	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
 	      mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did not find match, took first available: '%s'\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for black inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
+	      if (ERRPRINT)
+		stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did no special conditions, so first match taken: '%s'\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1108,6 +1169,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"Gutenprint (check_current_mode) (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1119,6 +1182,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_monochrome(v,muse,caps,quality,duplex_mode);
+	  if (ERRPRINT)
+	    stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K and mode already fits (but need to check for duplex condition): '%s'\n",mode->name);
 	  if (!mode)
 	    modefound=0;
 	  else
@@ -1127,9 +1192,13 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
 	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {
 	    mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, pick first one matching condition for black mode replacement: '%s'\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for black inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
+	      if (ERRPRINT)
+		stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, pick first one matching condition without mode replacement needed: '%s'\n",mode->name);
 	    }
 	  }
 
@@ -1140,17 +1209,23 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* if InkType does not match that of mode, change InkType to match it */
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+		if (ERRPRINT)
+		  stp_eprintf(v,"Gutenprint (check_current_mode) (InkSet:Black): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (check_current_mode) (InkSet:Black): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"Gutenprint (InkSet:Black): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1162,7 +1237,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"Gutenprint (InkSet:Black): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1180,6 +1257,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"Gutenprint (InkSet:Black):  InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1198,6 +1277,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	if (!(mode->ink_types & CANON_INK_CMY)) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
 	  /* need a new mode
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
@@ -1211,10 +1292,14 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
 	      mode=find_first_matching_mode_color(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1229,17 +1314,23 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* if InkType does not match that of mode, change InkType to match it */
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		  stp_eprintf(v,"Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1252,6 +1343,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1268,6 +1361,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1281,6 +1376,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
+	  if (ERRPRINT)
+	  stp_eprintf(v,"Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
 	  if (!mode)
 	    modefound=0;
@@ -1291,10 +1388,14 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {
 	      mode=find_first_matching_mode_color(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1309,17 +1410,23 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* if InkType does not match that of mode, change InkType to match it */
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
-	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1331,7 +1438,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
-		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"Gutenprint (InkSet:Color): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1348,6 +1457,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1401,6 +1512,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_printf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
@@ -1418,6 +1531,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1434,6 +1549,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1473,16 +1590,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1495,6 +1618,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1511,6 +1636,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1527,8 +1654,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
       else {
 	if (printing_mode && !strcmp(printing_mode,"Color")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode Color\n");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode Color\n");
 	  /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
-	  /*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	  i=0;
 	  quality = mode->quality;
 	  modefound=0;
@@ -1536,10 +1664,13 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    for(j=0;j<caps->modelist->count;j++){
 	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		if ( (caps->modelist->modes[j].quality >= quality) ) {
-		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		    /* duplex check */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
 		      mode = &caps->modelist->modes[j];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode color): picked first mode with color inkset (%s)\n",mode->name);
+		      if (ERRPRINT)
+			stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode color): picked first mode with color inkset (%s)\n",mode->name);
 		      modefound=1;
 		    }
 		  }
@@ -1549,12 +1680,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    }
 	    i++;
 	  }
-	  /*}*/
 	}
 	else if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode BW\n");
 	  /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
-	  /*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	  i=0;
 	  quality = mode->quality;
 	  modefound=0;
@@ -1562,10 +1691,13 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    for(j=0;j<caps->modelist->count;j++){
 	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		if ( (caps->modelist->modes[j].quality >= quality) ) {
-		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		    /* duplex check */
 		    if (caps->modelist->modes[j].ink_types & CANON_INK_K) { /* AND means support for CANON_IN_K is included */
 		      mode = &caps->modelist->modes[j];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode BW): picked first mode with mono inkset (%s)\n",mode->name);
+		      if (ERRPRINT)
+			stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode BW): picked first mode with mono inkset (%s)\n",mode->name);
 		      modefound=1;
 		    }
 		  }
@@ -1575,12 +1707,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    }
 	    i++;
 	  }
-	  /*}*/
 	}
 	else { /* no restriction from PrintingMode if not set yet */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet\n");
 	  /* if mode is not a matching duplex mode, need to find a new one */
-	  /*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	  i=0;
 	  quality = mode->quality;
 	  modefound=0;
@@ -1591,6 +1721,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		    /* duplex check */
 		    mode = &caps->modelist->modes[j];
+		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode unset): picked first mode with quality match (%s)\n",mode->name);
+		      if (ERRPRINT)
+			stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode unset): picked first mode with quality match (%s)\n",mode->name);
 		    modefound=1;
 		  }
 		}
@@ -1599,10 +1732,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    }
 	    i++;
 	  }
-	  /*}*/
 	}
 	/* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
-	/*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	if (modefound==0) {
 	  i=0;
 	  quality = mode->quality;
@@ -1610,19 +1741,26 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    for(j=0;j<caps->modelist->count;j++){
 	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		if ( (caps->modelist->modes[j].quality >= quality) ) {
-		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		    /* duplex check */
 		    mode = &caps->modelist->modes[j];
+		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, no printmode): picked first mode with quality match (%s)\n",mode->name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, no printmode): picked first mode with quality match (%s)\n",mode->name);
 		    modefound=1;
 		    /* set PrintingMode to whatever the mode is capable of */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
 		      stp_set_string_parameter(v,"PrintingMode","Color");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
+		      if (ERRPRINT)
+			stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
 		    } else {
 		      stp_set_string_parameter(v,"PrintingMode","BW");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
+		      if (ERRPRINT)
+			stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
 		    }
 		  }
 		}
@@ -1641,16 +1779,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	/* choose highest color as default, as there is only one option for Black */
 	if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	  stp_set_string_parameter(v, "InkType", "Gray");
 	  ink_type = stp_get_string_parameter(v, "InkType");
 	} else {
 	  inkfound=0;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 	      if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		inkfound=1;
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1663,6 +1807,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  inkfound=1; /* set */
@@ -1686,6 +1832,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  if (mode->ink_types & canon_inktypes[i].ink_type) {
 	    if (strcmp(ink_type,canon_inktypes[i].name)) {
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	      stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 	      ink_type = stp_get_string_parameter(v, "InkType");
 	      break;
@@ -1695,10 +1843,13 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 #endif
 	
       }
-    }/* added one here */
+    }
+    /* -------------------------------------- modecheck returned 0 for compare_mode_valid ------------------------------------------*/
     else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
 
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode):  mode exists, need to check for consistency (%s)\n",mode->name);
+      if (ERRPRINT)
+	stp_eprintf(v,"Gutenprint (check_current_mode):  mode exists, need to check for consistency (%s)\n",mode->name);
       quality = mode->quality;
       /* Black InkSet */
       if (ink_set && !strcmp(ink_set,"Black")) {
@@ -1735,16 +1886,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1757,6 +1914,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1773,6 +1932,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1812,16 +1973,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1834,6 +2001,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1850,6 +2019,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1867,6 +2038,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
 	  /* need a new mode
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
@@ -1881,10 +2054,14 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
 	      mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1900,16 +2077,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1922,6 +2105,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1938,6 +2123,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1951,8 +2138,12 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode); /* something wrong here!!! */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): returned mode for color inkset: %s\n",mode->name);
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): returned mode for color inkset: %s\n",mode->name);
 	  if (!mode)
 	    modefound=0;
 	  else
@@ -1962,10 +2153,14 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {
 	      mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
+	      if (ERRPRINT)
+		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1981,16 +2176,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2003,6 +2204,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2019,6 +2222,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2067,16 +2272,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2089,6 +2300,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2105,6 +2318,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2144,16 +2359,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2166,6 +2387,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2182,6 +2405,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2197,8 +2422,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
       else {
 	if (printing_mode && !strcmp(printing_mode,"Color")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode Color\n");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode Color\n");
 	  /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
-	  /*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	    i=0;
 	    quality = mode->quality;
 	    modefound=0;
@@ -2206,12 +2432,14 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      for(j=0;j<caps->modelist->count;j++){
 		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		  if ( (caps->modelist->modes[j].quality >= quality) ) {
-		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		      /* duplex check */
 		      if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
 			if (!strcmp(mode->name,caps->modelist->modes[j].name)) {
 			  mode = &caps->modelist->modes[j];
 			  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) Color: Decided on mode (%s)\n",mode->name);
+			  if (ERRPRINT)
+			    stp_eprintf(v,"Gutenprint (InkSet:Both) Color: Decided on mode (%s)\n",mode->name);
 			  modefound=1;
 			}
 		      }
@@ -2222,12 +2450,12 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	      i++;
 	    }
-	    /*}*/
 	}
 	else if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode BW\n");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode BW\n");
 	  /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
-	  /*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	    i=0;
 	    quality = mode->quality;
 	    modefound=0;
@@ -2235,12 +2463,14 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      for(j=0;j<caps->modelist->count;j++){
 		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		  if ( (caps->modelist->modes[j].quality >= quality) ) {
-		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		      /* duplex check */
 		      if (caps->modelist->modes[j].ink_types & CANON_INK_K) { /* AND means CANON_INK_K is included in the support */
 			if (!strcmp(mode->name,caps->modelist->modes[j].name)) {
 			  mode = &caps->modelist->modes[j];
 			  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) BW: Decided on mode (%s)\n",mode->name);
+			  if (ERRPRINT)
+			    stp_eprintf(v,"Gutenprint (InkSet:Both) BW: Decided on mode (%s)\n",mode->name);
 			  modefound=1;
 			}
 		      }
@@ -2251,12 +2481,11 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	      i++;
 	    }
-	    /*}*/
 	}
 	else { /* no restriction from PrintingMode if not set yet */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet\n");
-	  /* if mode is not a matching duplex mode, need to find a new one */
-	  /*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet\n");
 	    i=0;
 	    quality = mode->quality;
 	    modefound=0;
@@ -2264,11 +2493,13 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      for(j=0;j<caps->modelist->count;j++){
 		if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		  if ( (caps->modelist->modes[j].quality >= quality) ) {
-		    if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		    if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		      /* duplex check */
 		      if (!strcmp(mode->name,caps->modelist->modes[j].name)) {
 			mode = &caps->modelist->modes[j];
 			stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet: Decided on first matching mode with quality match (%s)\n",mode->name);
+			if (ERRPRINT)
+			  stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode not set yet: Decided on first matching mode with quality match (%s)\n",mode->name);
 			modefound=1;
 		      }
 		    }
@@ -2278,10 +2509,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      }
 	      i++;
 	    }
-	    /*}*/
 	}
 	/* if no mode was found yet, repeat with no restrictions --- since some media may not allow PrintingMode to be what was selected */
-	/*if ( (duplex_mode) || (mode->flags & MODE_FLAG_NODUPLEX) ) {*/
 	if (modefound==0) {
 	  i=0;
 	  quality = mode->quality;
@@ -2289,20 +2518,26 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    for(j=0;j<caps->modelist->count;j++){
 	      if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 		if ( (caps->modelist->modes[j].quality >= quality) ) {
-		  if ( !(duplex_mode) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
+		  if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
 		    /* duplex check */
 		    mode = &caps->modelist->modes[j];
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) No mode previously found---catch-all: Decided on first matching mode (%s)\n",mode->name);
+		    if (ERRPRINT)
+		      stp_eprintf(v,"Gutenprint (InkSet:Both) No mode previously found---catch-all: Decided on first matching mode (%s)\n",mode->name);
 		    modefound=1;
 		    /* set PrintingMode to whatever the mode is capable of */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K){
 		      stp_set_string_parameter(v,"PrintingMode","Color");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
+		      if (ERRPRINT)
+			stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode set to Color\n");
 		    } else {
 		      stp_set_string_parameter(v,"PrintingMode","BW");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
+		      if (ERRPRINT)
+			stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode set to BW\n");
 		    }
 		  }
 		}
@@ -2321,16 +2556,22 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	/* choose highest color as default, as there is only one option for Black */
 	if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	  stp_set_string_parameter(v, "InkType", "Gray");
 	  ink_type = stp_get_string_parameter(v, "InkType");
 	} else {
 	  inkfound=0;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
+	  if (ERRPRINT)
+	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 	      if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		inkfound=1;
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		if (ERRPRINT)
+		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2343,6 +2584,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  if (ERRPRINT)
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  inkfound=1; /* set */
@@ -2384,6 +2627,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   if (mode) {
     stp_set_string_parameter(v, "Resolution",mode->text);  /* check_current_mode checks resolution! */
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- updated Resolution: '%s'\n",mode->name);
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint:  check_current_mode --- updated Resolution: '%s'\n",mode->name);
   }
 
   if (mode) {
@@ -2411,20 +2656,34 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
       stp_set_string_parameter(v, "PrintingMode", "Color");
   }
 
-  if (printing_mode)
+  if (printing_mode) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final PrintingMode %s\n",printing_mode);
-  else /* should not happen */
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint: Final PrintingMode %s\n",printing_mode);
+  } else { /* should not happen */
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final PrintingMode is NULL\n");
-
-  if (ink_set)
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint: Final PrintingMode is NULL\n");
+  }
+  if (ink_set) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkSet value (high priority): '%s'\n",ink_set);
-  else
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint: Final InkSet value (high priority): '%s'\n",ink_set);
+  } else {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkSet value is NULL\n");
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint: Final InkSet value is NULL\n");
+  }
   
-  if (ink_type)
+  if (ink_type) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkType value (low priority): '%s'\n",ink_type);
-  else
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint: Final InkType value (low priority): '%s'\n",ink_type);
+  } else {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkType value is NULL\n");
+    if (ERRPRINT)
+      stp_eprintf(v,"DEBUG: Gutenprint: Final InkType value is NULL\n");
+  }
 
   return mode;
 }
@@ -2445,6 +2704,7 @@ canon_printhead_colors(const stp_vars_t*v)
     stp_eprintf(v,"entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
 
   /* if a mode is available, use it. Else mode is NULL */
+  stp_dprintf(STP_DBG_CANON, v,"Calling get_current_parameter from canon_printhead_colors");
   if (ERRPRINT)
     stp_eprintf(v,"Calling get_current_parameter from canon_printhead_colors");
   mode = canon_get_current_mode(v);
@@ -3653,9 +3913,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   int area_right,area_top;
   int test_cd; /* variable for activating experimental adjustments */
   int adjust_tray_A_x, adjust_tray_A_y;
-  int adjust_tray_B_x, adjust_tray_B_y;
-  int adjust_tray_C_x, adjust_tray_C_y;
-  int adjust_tray_D_x, adjust_tray_D_y;
+  int adjust_tray_BCD_x, adjust_tray_BCD_y;
   int adjust_tray_E_x, adjust_tray_E_y;
   int adjust_tray_F_x, adjust_tray_F_y;
   int adjust_tray_G_x, adjust_tray_G_y;
@@ -3725,12 +3983,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	/* Try to work backwards */
 	adjust_tray_A_x = 0;
 	adjust_tray_A_y = 0;
-	adjust_tray_B_x = 0;
-	adjust_tray_B_y = 0;
-	adjust_tray_C_x = 0;
-	adjust_tray_C_y = 0;
-	adjust_tray_D_x = 0;
-	adjust_tray_D_y = 0;
+	adjust_tray_BCD_x = 0;
+	adjust_tray_BCD_y = 0;
 	adjust_tray_E_x = 0;
 	adjust_tray_E_y = 0;
 	adjust_tray_F_x = 0;
@@ -3776,10 +4030,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	stp_putc(0x70,v);         /* p    */
 	stp_put16_le(46, v);      /* len  */
 	/* 0 for borderless, calculated otherwise */
-	stp_put16_be(printable_length,v);
+	stp_put16_be(printable_length,v); /* printed_length */
 	stp_put16_be(0,v);
 	/* 0 for borderless, calculated otherwise */
-	stp_put16_be(printable_width,v);
+	stp_put16_be(printable_width,v); /* printed_width */
 	stp_put16_be(0,v);
 	stp_put32_be(0,v);
 	stp_put16_be(unit,v);
@@ -3791,12 +4045,12 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	/* calculated depending on borderless or not: uses modified borders */
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
-	  stp_put32_be((init->page_width - border_left2 - border_right2 ) * unit / 72,v);
-	  stp_put32_be((init->page_height - border_top2 - border_bottom2 ) * unit / 72,v);
+	  stp_put32_be((init->page_width - border_left2 - border_right2 ) * unit / 72,v); /* area_width */
+	  stp_put32_be((init->page_height - border_top2 - border_bottom2 ) * unit / 72,v); /* area_length */
 	}
 	else {
-	  stp_put32_be((init->page_width) * unit / 72,v); /* area_width test */
-	  stp_put32_be((init->page_height) * unit / 72,v); /* area_length test */
+	  stp_put32_be((init->page_width) * unit / 72,v); /* area_width */
+	  stp_put32_be((init->page_height) * unit / 72,v); /* area_length */
 	}
  
 	/* 0 under all currently known circumstances */
@@ -3806,12 +4060,12 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	/* standard paper sizes, unchanged for borderless so use original borders */
 	if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
 	     !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) {
-	  stp_put32_be((init->page_width) * unit / 72,v);
-	  stp_put32_be((init->page_height) * unit / 72,v);
+	  stp_put32_be((init->page_width) * unit / 72,v); /* paper_width */
+	  stp_put32_be((init->page_height) * unit / 72,v); /* paper_length */
 	}
 	else {
-	  stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v);
-	  stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v);
+	  stp_put32_be((init->page_width + border_left + border_right) * unit / 72,v); /* paper_width */
+	  stp_put32_be((init->page_height + border_top + border_bottom) * unit / 72,v); /* paper_length */
 	}
 	
 	return;
@@ -5105,7 +5359,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   /* --- no current restrictions for Duplex setting --- */
 
-  /* in particular, we do not constraint duplex printing to certain media */
+  /* in particular, we do not constrain duplex printing to certain media */
   privdata.duplex_str = duplex_mode;
 
   /* ---  make adjustment to InkType to comply with InkSet --- */
