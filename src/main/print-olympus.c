@@ -1271,7 +1271,7 @@ static const dyesub_printsize_t updr150_printsize[] =
 
 LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr150_printsize);
 
-static void updr150_printer_init_func(stp_vars_t *v)
+static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 {
   char pg = '\0';
 
@@ -1294,10 +1294,21 @@ static void updr150_printer_init_func(stp_vars_t *v)
 	      "\x00\x00\x00\x00\x00\x01\x00\xed"
 	      "\xff\xff\xff\x07\x00\x00\x00\x1b"
 	      "\xee\x00\x00\x00\x02\x00\x02\x00"
-	      "\x00\x00\x00\x01\x07\x00\x00\x00"
+	      "\x00\x00\x00\x01", 1, 67, v);
+
+  if (updr200) { /* UP-DR200-specific! */
+    stp_zfwrite("\x07\x00\x00\x00"
+		"\x1b\xc0\x00\x03\x00\x05", 1, 10, v);
+    stp_putc(pg, 0x00);  /* 0x02 for doubled-up prints. */
+    /* eg 2x6 on 4x6 media, 3.5x5 on 5x7 media, 4x6 on 8x6 media */
+  }
+    
+  stp_zfwrite("\x05\x00\x00\x00"
+	      "\x02\x03\x00\x01\x00", 1, 9, v);
+  stp_zfwrite("\x07\x00\x00\x00"
 	      "\x1b\x15\x00\x00\x00\x0d\x00\x0d"
 	      "\x00\x00\x00\x00\x00\x00\x00\x07"
-	      "\x00\x00\x00\x00", 1, 91, v);
+	      "\x00\x00\x00\x00", 1, 24, v);
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
   stp_zfwrite("\xf9\xff\xff\xff\x07\x00\x00\x00"
@@ -1319,6 +1330,11 @@ static void updr150_printer_init_func(stp_vars_t *v)
   stp_put32_le(privdata.w_size*privdata.h_size*3, v);
 }
 
+static void updr150_printer_init_func(stp_vars_t *v)
+{
+  updr150_200_printer_init_func(v, 0);
+}
+
 static void updr150_printer_end_func(stp_vars_t *v)
 {
 	stp_zfwrite("\xeb\xff\xff\xff"
@@ -1330,6 +1346,19 @@ static void updr150_printer_end_func(stp_vars_t *v)
 		    , 1, 38, v);
 }
 
+/* Sony UP-DR200 */
+static const laminate_t updr200_laminate[] =
+{
+  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
+  {"Matte",   N_("Matte"),   {1, "\x0c"}},
+};
+
+LIST(laminate_list_t, updr200_laminate_list, laminate_t, updr200_laminate);
+
+static void updr200_printer_init_func(stp_vars_t *v)
+{
+  updr150_200_printer_init_func(v, 1);
+}
 
 /* Fujifilm CX-400 */
 static const dyesub_pagesize_t cx400_page[] =
@@ -2998,21 +3027,6 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL, NULL,
   },
-  { /* Sony DPP-EX5, DPP-EX7 */
-    2002,
-    &rgb_ink_list,
-    &res_403dpi_list,
-    &dppex5_page_list,
-    &dppex5_printsize_list,
-    100,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
-      | DYESUB_FEATURE_BORDERLESS,
-    &dppex5_printer_init, &dppex5_printer_end,
-    NULL, NULL,
-    &dppex5_block_init, NULL,
-    NULL, NULL, NULL,
-    &dppex5_laminate_list, NULL,
-  },
   { /* Sony UP-DP10  */
     2000,
     &cmy_ink_list,
@@ -3028,6 +3042,35 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
     &updp10_laminate_list, NULL,
   },
+  { /* Sony UP-DR150 */
+    2001,
+    &rgb_ink_list,
+    &res_334dpi_list,
+    &updr150_page_list,
+    &updr150_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &updr150_printer_init_func, &updr150_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL, 
+    &updp10_laminate_list, NULL,
+  },
+  { /* Sony DPP-EX5, DPP-EX7 */
+    2002,
+    &rgb_ink_list,
+    &res_403dpi_list,
+    &dppex5_page_list,
+    &dppex5_printsize_list,
+    100,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_BORDERLESS,
+    &dppex5_printer_init, &dppex5_printer_end,
+    NULL, NULL,
+    &dppex5_block_init, NULL,
+    NULL, NULL, NULL,
+    &dppex5_laminate_list, NULL,
+  },
   { /* Sony UP-DR100 */
     2003,
     &rgb_ink_list,
@@ -3042,19 +3085,19 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, 
     &updr100_laminate_list, NULL,
   },
-  { /* Sony UP-DR150 */
-    2001,
+  { /* Sony UP-DR200 */
+    2004,
     &rgb_ink_list,
     &res_334dpi_list,
     &updr150_page_list,
     &updr150_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &updr150_printer_init_func, &updr150_printer_end_func,
+    &updr200_printer_init_func, &updr150_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
-    &updp10_laminate_list, NULL,
+    &updr200_laminate_list, NULL,
   },
   { /* Fujifilm Printpix CX-400  */
     3000,

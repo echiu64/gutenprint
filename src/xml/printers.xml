@@ -2583,11 +2583,12 @@
       <printer translate="name" name="Canon SELPHY ES20" driver="canon-es20" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES20" />
       <printer translate="name" name="Canon SELPHY ES30" deviceid="MFG:Canon;CMD:Raster3;MDL:ES30;CLS:PRINTER;DES:Canon SELPHY ES30;VER:1.00;" driver="canon-es30" manufacturer="Canon" model="1006" foomaticid="Canon-SELPHY-ES30" />
       <printer translate="name" name="Canon SELPHY ES40" driver="canon-es40" manufacturer="Canon" model="1007" foomaticid="Canon-SELPHY-ES40" />
+      <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" foomaticid="Sony-UP-DP10" />
+      <printer translate="name" name="Sony UP-DR150" deviceid="MFG:Sony;MDL:UP-DR150;DES:Sony UP-DR150;CMD:SONY-Original;CLS:PRINTER" driver="sony-updr150" manufacturer="Sony" model="2001" foomaticid="Sony-UP-DR150" />
       <printer translate="name" name="Sony DPP-EX5" driver="sony-dppex5" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX5" />
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX7" />
-      <printer translate="name" name="Sony UP-DP10" driver="sony-updp10" manufacturer="Sony" model="2000" foomaticid="Sony-UP-DP10" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" foomaticid="Sony-UP-DR100" />
-      <printer translate="name" name="Sony UP-DR150" deviceid="MFG:Sony;MDL:UP-DR150;DES:Sony UP-DR150;CMD:SONY-Original;CLS:PRINTER" driver="sony-updr150" manufacturer="Sony" model="2001" foomaticid="Sony-UP-DR150" />
+      <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" foomaticid="Sony-UP-DR200" />
       <printer translate="name" name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" foomaticid="Fujifilm-Printpix-CX-400" />
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" foomaticid="Fujifilm-Printpix-CX-550" />
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" foomaticid="Fujifilm-FinePix-NX-500" />

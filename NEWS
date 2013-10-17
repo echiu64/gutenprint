@@ -1107,6 +1107,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Support for the Sony UP-DR150 was greatly improved through the
 	addition of an intelligent CUPS backend.
 
+       Sony UP-DR200 (EXPERIMENTAL)
+
+        Experimental support for the Sony UP-DR200 was added; it is as
+	of yet untested.
+
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:
