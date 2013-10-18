@@ -2704,9 +2704,9 @@ canon_printhead_colors(const stp_vars_t*v)
     stp_eprintf(v,"entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
 
   /* if a mode is available, use it. Else mode is NULL */
-  stp_dprintf(STP_DBG_CANON, v,"Calling get_current_parameter from canon_printhead_colors");
+  stp_dprintf(STP_DBG_CANON, v,"Calling get_current_parameter from canon_printhead_colors\n");
   if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_printhead_colors");
+    stp_eprintf(v,"Calling get_current_parameter from canon_printhead_colors\n");
   mode = canon_get_current_mode(v);
   
   /* get the printing mode again */
@@ -2920,7 +2920,7 @@ canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
  
   /* if mode is not yet set, it remains NULL */
   if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_describe_resolution");
+    stp_eprintf(v,"Calling get_current_parameter from canon_describe_resolution\n");
   mode = canon_get_current_mode(v);
 
   if(!mode)
@@ -3110,7 +3110,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     const canon_mode_t* mode = NULL;
 
     if (ERRPRINT)
-      stp_eprintf(v,"Calling get_current_parameter from InkType block in canon_parameters");
+      stp_eprintf(v,"Calling get_current_parameter from InkType block in canon_parameters\n");
     mode=canon_get_current_mode(v);
 
     description->bounds.str= stp_string_list_create();
@@ -3198,7 +3198,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     /* mode remains NULL if not yet set */
     
     if (ERRPRINT)
-      stp_eprintf(v,"Calling get_current_mode from PrintingMode block in canon_parameter");
+      stp_eprintf(v,"Calling get_current_mode from PrintingMode block in canon_parameter\n");
     mode = canon_get_current_mode(v);
     
     /* If mode is not set need to search ink types for all modes and
@@ -5384,7 +5384,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 
   /* find the wanted print mode: NULL if not yet set */
   if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_do_print routine (before default set)");
+    stp_eprintf(v,"Calling get_current_parameter from canon_do_print routine (before default set)\n");
   stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_get_current_mode\n");
   privdata.mode = canon_get_current_mode(v);
 
@@ -5394,7 +5394,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   
   /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
   if (ERRPRINT)
-    stp_eprintf(v,"Calling cannon_check_current_parameter from canon_do_print routine (after default set)");
+    stp_eprintf(v,"Calling cannon_check_current_parameter from canon_do_print routine (after default set)\n");
   
   stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_check_current_mode\n");
 

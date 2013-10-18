@@ -1444,7 +1444,7 @@ static const canon_inkset_t canon_13_C3M3Y2K3k3_c_inkset[] = {
 	{'K',1.0,&canon_2b_3l_c_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',0.0,&canon_2b_3l_ink},/* swapped y and k */
+	{'k',0.0,&canon_2b_3l_c_ink},/* swapped y and k */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1460,7 +1460,7 @@ static const canon_inkset_t canon_13_C3M3Y2K3k3on_c_inkset[] = {
 	{'K',1.0,&canon_2b_3l_c_ink},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',1.0,&canon_2b_3l_ink},/* swapped y and k */
+	{'k',1.0,&canon_2b_3l_c_ink},/* swapped y and k */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
@@ -1476,7 +1476,7 @@ static const canon_inkset_t canon_13_C3M3Y2K3k3photo_c_inkset[] = {
 	{'K',0.0,&canon_2b_3l_c_ink},/* switched off */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
-	{'k',1.0,&canon_2b_3l_ink},/* swapped y and k */
+	{'k',1.0,&canon_2b_3l_c_ink},/* swapped y and k */
 	{0,0.0,NULL},
 	{0,0.0,NULL},
 	{0,0.0,NULL},
