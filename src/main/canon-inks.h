@@ -3310,8 +3310,8 @@ static const canon_inkset_t canon_30_M6K6m4k4H6off_inkset[] = {
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink},
-        {'H',0.0,&canon_4b_6l_ink},/* H is not supported, so only for modes where it is switched off */
         {0,0.0,NULL},
+        {'H',0.0,&canon_4b_6l_ink},/* H is not supported, so only for modes where it is switched off */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -3378,8 +3378,8 @@ static const canon_inkset_t canon_30_M8K8m4k4H8off_inkset[] = {
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink},
-        {'H',0.0,&canon_4b_8l_ink},/* H is not supported, so only for modes where it is switched off */
         {0,0.0,NULL},
+        {'H',0.0,&canon_4b_8l_ink},/* H is not supported, so only for modes where it is switched off */
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
