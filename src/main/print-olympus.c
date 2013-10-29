@@ -2615,13 +2615,13 @@ LIST(dyesub_printsize_list_t, shinko_chcs2145_printsize_list, dyesub_printsize_t
 
 static const laminate_t shinko_chcs2145_laminate[] =
 {
-  {"Printer_Default",  N_("Printer Default"),  {4, "\x01\0\0\0"}},
+  {"PrinterDefault",  N_("Printer Default"),  {4, "\x01\0\0\0"}},
   {"Glossy",  N_("Glossy"),  {4, "\x02\0\0\0"}},
-  {"Glossy_Fine",  N_("Glossy Fine"),  {4, "\x03\0\0\0"}},
+  {"GlossyFine",  N_("Glossy Fine"),  {4, "\x03\0\0\0"}},
   {"Matte",  N_("Matte"),  {4, "\x04\0\0\0"}},
-  {"Matte_Fine",  N_("Matte Fine"),  {4, "\x05\0\0\0"}},
-  {"Extra_Glossy",  N_("Extra Glossy"),  {4, "\x06\0\0\0"}},
-  {"Extra_Glossy_Fine",  N_("Extra Glossy Fine"),  {4, "\x07\0\0\0"}},
+  {"MatteFine",  N_("Matte Fine"),  {4, "\x05\0\0\0"}},
+  {"ExtraGlossy",  N_("Extra Glossy"),  {4, "\x06\0\0\0"}},
+  {"ExtraGlossyFine",  N_("Extra Glossy Fine"),  {4, "\x07\0\0\0"}},
 };
 
 LIST(laminate_list_t, shinko_chcs2145_laminate_list, laminate_t, shinko_chcs2145_laminate);
