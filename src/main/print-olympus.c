@@ -1572,8 +1572,8 @@ static void kodak_605_printer_init(stp_vars_t *v)
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
   stp_putc(0x01, v); /* Number of copies */
   stp_putc(0x00, v);
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(privdata.h_size, v);
   stp_putc(privdata.h_size == 1240 ? 0x01 : 0x03, v);
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v);
