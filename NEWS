@@ -1076,21 +1076,17 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Kodak 1400
        Kodak 805
-
-	The Kodak 1400 and 805 require an intelligent CUPS backend, 
-	which is bundled with Gutenprint.
-
        Kodak 6800
        Kodak 6850
+       Kodak 605
 
-	The Kodak 6800 and 6850 require an intelligent CUPS backend, 
+	These Kodak models require an intelligent CUPS backend, 
 	which is bundled with Gutenprint.
 
-       Kodak 605  (EXPERIMENTAL)
        Kodak 8500 (EXPERIMENTAL)	
        Kodak 9810 (EXPERIMENTAL)
 
-	None of these models have been tested and confirmed to work 
+	Neither of these models have been tested and confirmed to work 
 	(or not), so feedback is welcome.
 
      - Shinko/Sinfonia Dye-Sublimation printers:
@@ -1224,6 +1220,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Kodak 805 Photo Printer
    	Kodak 6800 Photo Printer
    	Kodak 6850 Photo Printer
+	Kodak 605 Photo Printer
    	Shinko/Sinfonia CHC-S2145 
    	Sony UP-DR150
 

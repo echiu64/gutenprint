@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.21"
+#define BACKEND_VERSION "0.22"
 #ifndef URI_PREFIX
 #define URI_PREFIX "gutenprint+usb"
 #endif
@@ -233,6 +233,7 @@ abort:
 static struct dyesub_backend *backends[] = {
 	&canonselphy_backend,
 	&kodak6800_backend,
+	&kodak605_backend,
 	&kodak1400_backend,
 	&shinkos2145_backend,
 	&updr150_backend,

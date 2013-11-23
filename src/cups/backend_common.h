@@ -90,6 +90,7 @@ enum {
 	P_KODAK_6800,
 	P_KODAK_6850,
 	P_KODAK_1400_805,
+	P_KODAK_605,
 	P_SHINKO_S2145,
 	P_SONY_UPDR150,
 	P_END,
@@ -130,6 +131,7 @@ extern int terminate;
 /* External data */
 extern struct dyesub_backend updr150_backend;
 extern struct dyesub_backend kodak6800_backend;
+extern struct dyesub_backend kodak605_backend;
 extern struct dyesub_backend kodak1400_backend;
 extern struct dyesub_backend shinkos2145_backend;
 extern struct dyesub_backend canonselphy_backend;
