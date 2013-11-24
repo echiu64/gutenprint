@@ -2431,11 +2431,11 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   						DYESUB_LANDSCAPE},
   { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h576", "6x8", PT(1868,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "w432h648", "6x9", PT(1868,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(1220,300)+1, PT(1868,300)+1, 0, 0, 0, 0,
+  { "Custom", NULL, PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
 };
 
@@ -2446,8 +2446,8 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
   { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1228, 1864},
   { "300x300", "w360h504", 1572, 2128},
-  { "300x300", "w432h576", 1868, 2422},
-  { "300x300", "w432h648", 1868, 2730},
+  { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "w432h648", 1864, 2730},
   { "300x300", "Custom", 1220, 1868},
 };
 
@@ -2477,12 +2477,12 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
   stp_putc(0x01, v);
   dyesub_nputc(v, 0x00, 12);
 
-  stp_put16_be(privdata.h_size, v);
   stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
     /* Laminate a slightly larger boundary */
-    stp_put16_be(privdata.h_size + 12, v);
     stp_put16_be(privdata.w_size, v);
+    stp_put16_be(privdata.h_size + 12, v);
     stp_putc(0x03, v); /* Trigger Superfine */
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
@@ -2579,13 +2579,13 @@ static void mitsu_cpk60_printer_init(stp_vars_t *v)
   stp_putc(0x54, v);
   stp_putc(0x00, v);
   dyesub_nputc(v, 0x00, 12);
-  stp_put16_be(privdata.h_size, v);
-  stp_put16_be(privdata.w_size, v);
 
+  stp_put16_be(privdata.w_size, v);
+  stp_put16_be(privdata.h_size, v);
   if (*((const char*)((privdata.laminate->seq).data)) == 0x02) {
     /* Laminate a slightly larger boundary */
-    stp_put16_be(privdata.h_size + 12, v);  /* XXX this isn't always true.. */
     stp_put16_be(privdata.w_size, v);
+    stp_put16_be(privdata.h_size + 12, v);  /* XXX this isn't always true.. */
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
   }
