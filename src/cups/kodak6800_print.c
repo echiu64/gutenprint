@@ -206,7 +206,7 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	close(tc_fd);
 
 	/* Byteswap data to printer's format */
-	for (ret = 0; ret < (UPDATE_SIZE-16)/2 ; ret++) {
+	for (ret = 0; ret < (UPDATE_SIZE)/2 ; ret++) {
 		data[ret] = cpu_to_le16(be16_to_cpu(data[ret]));
 	}
 
@@ -280,7 +280,7 @@ static void kodak6800_cmdline(char *caller)
 	DEBUG("\t\t%s [ -qtc filename | -stc filename ]\n", caller);
 }
 
-int kodak6800_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+static int kodak6800_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 {
 	struct kodak6800_ctx *ctx = vctx;
 
@@ -315,6 +315,8 @@ static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev,
 	struct kodak6800_ctx *ctx = vctx;
 	struct libusb_device *device;
 	struct libusb_device_descriptor desc;
+
+	UNUSED(jobid);
 
 	ctx->dev = dev;	
 	ctx->endp_up = endp_up;
@@ -522,7 +524,7 @@ skip_query:
 		    rdbuf[2] != 0x00)
 			break;
 
-		/* XXX unknown; may depend on media? */
+		/* Aappears to depend on media */
 		if (rdbuf[1] != 0x0b &&
 		    rdbuf[1] != 0x03)
 			break;
@@ -602,7 +604,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.22",
+	.version = "0.24",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
@@ -652,9 +654,9 @@ struct dyesub_backend kodak6800_backend = {
 ->  03 1b 43 48 43 1a 00 00  00 00 00 00 00 00 00 00  [get ready]
 <-  [58 octets]
 
-    01 03 00 00 00 00 00 04  06 WW WW MM MM 01 00 00  [MM MM == max printable size of media, 09 82 == 2434 for 6x8!]
+    01 XX 00 00 00 00 00 04  06 WW WW MM MM 01 00 00  [MM MM == max printable size of media, 09 82 == 2434 for 6x8!]
     00 00 06 WW WW 09 ba 01  02 00 00 00 06 WW WW HH  [09 ba == 2940 == cut area?]
-    HH 01 01 00 00 00 06 WW  WW MM MM 01 03 00 00 00
+    HH 01 01 00 00 00 06 WW  WW MM MM 01 03 00 00 00  [XX == media type?; 0b/03]
     00 00 00 00 00 00 00 00  00 00
 
 ->  03 1b 43 48 43 0a 00 01  00 01 WW WW HH HH 06 01  [ image header, modified (trailing 0x01, '0x06' as media type) ]
@@ -772,9 +774,9 @@ struct dyesub_backend kodak6800_backend = {
 ->  03 1b 43 48 43 1a 00 00  00 00 00 00 00 00 00 00  [get ready]
 <-  [68 octets]
 
-    01 0b 00 00 00 00 00 06  06 WW WW MM MM 01 00 00  [MM MM == max printable size of media, 09 82 == 2434 for 6x8!]
+    01 XX 00 00 00 00 00 06  06 WW WW MM MM 01 00 00  [MM MM == max printable size of media, 09 82 == 2434 for 6x8!]
     00 00 06 WW WW 09 ba 01  02 01 00 00 06 WW WW HH  [09 ba == 2940 == cut area?]
-    HH 01 01 00 00 00 06 WW  WW MM MM 01 03 00 00 00
+    HH 01 01 00 00 00 06 WW  WW MM MM 01 03 00 00 00  [XX == media type? 03/0b ]
     06 WW WW 09 ba 01 05 01  00 00 06 WW WW HH HH 01
     04 00 00 00
 
@@ -870,5 +872,15 @@ struct dyesub_backend kodak6800_backend = {
   [[ total of 24 packets * 64, and then one final packet of 25: 1562 total. ]]
   [[ It apepars the extra 25 bytes are to compensate for the leading '03' on 
      each of the 25 URBs. ]]
+
+  Also seen on the 6850:
+
+DEBUG: readback: 01 02 03 00 00 00 01 00 00 01 5f 6f 00 01 5f 6f 00 00 00 09 00 02 90 44 00 00 00 55 00 03 02 90 00 01 02 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+INIT/???
+DEBUG: readback: 01 02 03 00 00 00 00 00 00 01 5f 6f 00 01 5f 6f 00 00 00 09 00 02 90 44 00 00 00 55 00 03 02 90 00 01 02 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+??? 6x8c 
+DEBUG: readback: 01 02 01 00 00 00 00 00 00 01 5f 6f 00 01 5f 6f 00 00 00 09 00 02 90 44 00 00 00 55 00 03 02 90 00 01 02 1d 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+
 
 */

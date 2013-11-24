@@ -78,6 +78,9 @@
 #define cpu_to_be16 be16_to_cpu
 #define cpu_to_be32 be32_to_cpu
 
+/* To cheat the compiler */
+#define UNUSED(expr) do { (void)(expr); } while (0)
+
 /* To enumerate supported devices */
 enum {
 	P_ANY = 0,

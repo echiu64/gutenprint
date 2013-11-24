@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.22"
+#define BACKEND_VERSION "0.23"
 #ifndef URI_PREFIX
 #define URI_PREFIX "gutenprint+usb"
 #endif
@@ -109,6 +109,8 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 int terminate = 0;
 
 static void sigterm_handler(int signum) {
+	UNUSED(signum);
+
 	terminate = 1;
 	INFO("Job Cancelled");
 }
