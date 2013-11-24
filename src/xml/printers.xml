@@ -2618,6 +2618,7 @@
       <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810DW" />
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D70DW" />
       <printer translate="name" name="Mitsubishi CP-D707DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d707dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D707DW" />
+      <printer translate="name" name="Mitsubishi CP-K60DW" driver="mitsubishi-k60dw" manufacturer="Mitsubishi" model="4106" foomaticid="Mitsubishi-K60DW" />
       <printer translate="name" name="Shinko CHC-S9045" driver="shinko-chcs9045" manufacturer="Shinko" model="5000" foomaticid="Shinko-CHC-S9045" />
       <printer translate="name" name="Shinko CHC-S2145" deviceid="MFG:SHINKO;CMD:SUPCC;MDL:CHC-S2145;CLS:PRINTER;DES:SHINKO CHC-S2145;" driver="shinko-chcs2145" manufacturer="Shinko" model="5001" foomaticid="Shinko-CHC-S2145" />
       <printer translate="name" name="Sinfonia CHC-S2145" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" />
