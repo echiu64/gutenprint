@@ -162,10 +162,10 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 
 	/* Open file and write it out */
 	{
-		int tc_fd = open(fname, O_WRONLY|O_CREAT);
+		int tc_fd = open(fname, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
 		if (tc_fd < 0)
 			return -1;
-		
+
 		for (i = 0 ; i < 768; i++) {
 			/* Byteswap appropriately */
 			data[i] = cpu_to_be16(le16_to_cpu(data[i]));
@@ -604,7 +604,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.24",
+	.version = "0.25",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
