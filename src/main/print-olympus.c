@@ -2731,7 +2731,7 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
   stp_put32_le(media, v);  /* Media Type */
   stp_put32_le(0x00, v);
 
-  stp_put32_le(0x00, v);  /* XXX Print Method 00 = normal, 02 = 2x6 doubled, 04 = 4x6 cut in two */
+  stp_put32_le(0x00, v);  /* XXX Print Method 00 = normal, 02 = 4x6*2, 04 = 2x6*2 */
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Print Mode */
   stp_put32_le(0x00, v);
