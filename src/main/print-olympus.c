@@ -2790,8 +2790,22 @@ static const dyesub_printsize_t dnpds40_dock_printsize[] =
 
 LIST(dyesub_printsize_list_t, dnpds40_dock_printsize_list, dyesub_printsize_t, dnpds40_dock_printsize);
 
+static const laminate_t dnpds40_laminate[] =
+{
+  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
+  {"Matte", N_("Matte"), {1, "\x01"}},
+};
+
+LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
+
+
 static void dnpds40_printer_end(stp_vars_t *v)
 {
+  /* Configure Lamination */
+  stp_zprintf(v, "\033PCNTRL OVERCOAT        000000");
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
+
   stp_zprintf(v, "\033PCNTRL START"); dyesub_nputc(v, ' ', 19);
 }
 
@@ -2805,7 +2819,9 @@ static void dnpds40_plane_init(stp_vars_t *v)
   long AdSize = (32 - (RFSize % 32));
   long FSize = RFSize + AdSize;
 
+  // XXX SLP: this is.. unknown in the docs I have.
   stp_zprintf(v, "\033PCNTRL RETENTION       0000000800000000");
+
   stp_zprintf(v, "\033PIMAGE %cPLANE", p); dyesub_nputc(v, ' ', 10);
 
   stp_zprintf(v, "0%ld", FSize);
@@ -2819,8 +2835,8 @@ static void dnpds40_plane_init(stp_vars_t *v)
   stp_put16_le(1, v);
   stp_put16_le(8, v);
   dyesub_nputc(v, '\0', 24);
-  dyesub_nputc(v, '\0', 1024);   /*RGB Array*/
-  dyesub_nputc(v, '\0', AdSize); /*Locate to 32bit border */
+  dyesub_nputc(v, '\0', 1024);   /* RGB Array */
+  dyesub_nputc(v, '\0', AdSize); /* Pad to 32byte boundary */
 }
 
 
@@ -3478,7 +3494,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    NULL, NULL,
+    &dnpds40_laminate_list, NULL,
   },
   { /* Dai Nippon Printing DS80 */
     6001,
@@ -3493,7 +3509,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
-    NULL, NULL,
+    &dnpds40_laminate_list, NULL,
   },
 };
 
