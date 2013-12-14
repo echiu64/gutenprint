@@ -244,12 +244,12 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
 	  */
 
           stpi_unquote(utf8str);
-          stp_string_list_add_string(po, id, utf8str);
+          stp_string_list_add_string_unsafe(po, id, utf8str);
 	}
 	else
 	{
           stpi_unquote(str);
-          stp_string_list_add_string(po, id, str);
+          stp_string_list_add_string_unsafe(po, id, str);
         }
       }
       else if (!id[0] && str[0] && !ic)
@@ -362,12 +362,12 @@ stp_i18n_load(const char *locale)	/* I - Locale name */
       */
 
       stpi_unquote(utf8str);
-      stp_string_list_add_string(po, id, utf8str);
+      stp_string_list_add_string_unsafe(po, id, utf8str);
     }
     else
     {
       stpi_unquote(str);
-      stp_string_list_add_string(po, id, str);
+      stp_string_list_add_string_unsafe(po, id, str);
     }
   }
 

@@ -256,8 +256,8 @@ ppd-nls: cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ppd-n
 	$(mkdir_p) ppd
 	$(MAKE) ppd-catalog
 	for language in `$(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ -L` ; do \
-	  mkdir ppd/$$language ; \
-	  echo "$$language:" ; \
+	  $(mkdir_p) ppd/$$language ; \
+	  echo -n "$$language: " ; \
 	  LC_ALL=$$language LANG=$$language LANGUAGE=$$language $(STP_ENV) ./cups-genppd.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ $(EXTRA_GENPPD_OPTS) @WHICH_PPDS@ -l $$language -p ppd/$$language; \
 	done
 	$(MAKE) ppd-catalog-clean

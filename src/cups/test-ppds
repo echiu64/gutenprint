@@ -1,6 +1,6 @@
 #!/bin/sh
 
-make EXTRA_GENPPD_OPTS=-b ppd-clean ppd-global ppd-nls ppd-nonls
+make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global ppd-nls ppd-nonls
 
 # Most non-Macintosh systems won't have the Macintosh-specific profiles
 # installed in Macintosh-specific locations.
@@ -25,7 +25,7 @@ fi
 # Use this with PPD files with translated numbers (genppd -N)
 # With normal globalized PPD files this will yield hundreds of megabytes
 # of errors.
-echo $failures | xargs cupstestppd $cupstestppdopts 2>&1 |egrep -v 'Missing cupsICCProfile file'
+echo $failures | xargs cupstestppd -r $cupstestppdopts 2>&1 |egrep -v 'Missing cupsICCProfile file'
 
 fail_count=`echo "$failures" | wc -l`
 echo "$fail_count/$ppd_count fail"
