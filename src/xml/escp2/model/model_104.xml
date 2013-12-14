@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="104">
+<escp2Model id="104">
  <media src="escp2/media/pro_ultrachrome_k3.xml"/>
  <inputSlots src="escp2/inputslots/pro_cutter_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -146,5 +146,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="float" name="DropSize1">1.000000</parameter>
   </resolution>
  </resolutions>
-</escp2:model>
+</escp2Model>
 </gutenprint>

@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="120">
+<escp2Model id="120">
  <media src="escp2/media/c120.xml"/>
  <inputSlots src="escp2/inputslots/wf7000.xml"/>
  <qualityPresets src="escp2/qualitypresets/wf40.xml"/>
@@ -78,10 +78,10 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins duplex="duplex">-32768 -32768 9 9</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
-  <ChannelName translate="name" name="Black"/>
-  <ChannelName translate="name" name="Magenta"/>
-  <ChannelName translate="name" name="Yellow"/>
-  <ChannelName translate="name" name="Cyan"/>
+  <ChannelName translate="text" name="Black" text="Black"/>
+  <ChannelName translate="text" name="Magenta" text="Magenta"/>
+  <ChannelName translate="text" name="Yellow" text="Yellow"/>
+  <ChannelName translate="text" name="Cyan" text="Cyan"/>
  </ChannelNames>
  <resolutions>
   <resolution translate="text" name="360x120sw" text="360 x 120 DPI Economy">
@@ -212,5 +212,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="float" name="DropSize1">1.000000</parameter>
   </resolution>
  </resolutions>
-</escp2:model>
+</escp2Model>
 </gutenprint>

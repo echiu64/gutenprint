@@ -406,7 +406,7 @@ stp_escp2_load_model(const stp_vars_t *v, int model)
       if (doc)
 	{
 	  stp_mxml_node_t *node =
-	    stp_mxmlFindElement(doc, doc, "escp2:model", NULL, NULL,
+	    stp_mxmlFindElement(doc, doc, "escp2Model", NULL, NULL,
 				STP_MXML_DESCEND);
 	  if (node)
 	    {

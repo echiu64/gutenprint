@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:MediaSizes name="default">
+<escp2MediaSizes name="default">
  <MediaSize type="sheet" name="A4">
   <parameter type="integer" name="PaperMediaSize">0</parameter>
  </MediaSize>
@@ -114,5 +114,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <MediaSize type="default">
   <parameter type="integer" name="PaperMediaSize">99</parameter>
  </MediaSize>
-</escp2:MediaSizes>
+</escp2MediaSizes>
 </gutenprint>

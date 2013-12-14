@@ -121,7 +121,7 @@ stp_escp2_load_media(const stp_vars_t *v, const char *name)
 	  stp_string_list_t **xpapers =
 	    (stp_string_list_t **) &(printdef->papers);
 	  stp_mxml_node_t *node = stp_mxmlFindElement(media, media,
-						      "escp2:papers", NULL,
+						      "escp2Papers", NULL,
 						      NULL, STP_MXML_DESCEND);
 	  *xnode = media;
 	  *xlist = stp_list_create();
@@ -346,7 +346,7 @@ stp_escp2_load_input_slots(const stp_vars_t *v, const char *name)
 	  stp_string_list_t **xslots =
 	    (stp_string_list_t **) &(printdef->input_slots);
 	  stp_mxml_node_t *node = stp_mxmlFindElement(slots, slots,
-						      "escp2:InputSlots", NULL,
+						      "escp2InputSlots", NULL,
 						      NULL, STP_MXML_DESCEND);
 	  *xnode = slots;
 	  *xlist = stp_list_create();

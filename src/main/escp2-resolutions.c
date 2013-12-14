@@ -90,7 +90,7 @@ stp_escp2_load_printer_weaves(const stp_vars_t *v, const char *name)
       if (weaves)
 	{
 	  stp_mxml_node_t *node = stp_mxmlFindElement(weaves, weaves,
-						      "escp2:PrinterWeaves", NULL,
+						      "escp2PrinterWeaves", NULL,
 						      NULL, STP_MXML_DESCEND);
 	  if (node)
 	    stp_escp2_load_printer_weaves_from_xml(v, node);
@@ -205,7 +205,7 @@ stp_escp2_load_resolutions(const stp_vars_t *v, const char *name)
       if (resolutions)
 	{
 	  stp_mxml_node_t *node = stp_mxmlFindElement(resolutions, resolutions,
-						      "escp2:resolutions", NULL,
+						      "escp2Resolutions", NULL,
 						      NULL, STP_MXML_DESCEND);
 	  if (node)
 	    stp_escp2_load_resolutions_from_xml(v, node);
@@ -307,7 +307,7 @@ stp_escp2_load_quality_presets(const stp_vars_t *v, const char *name)
       if (qualities)
 	{
 	  stp_mxml_node_t *node = stp_mxmlFindElement(qualities, qualities,
-						      "escp2:QualityPresets", NULL,
+						      "escp2QualityPresets", NULL,
 						      NULL, STP_MXML_DESCEND);
 	  if (node)
 	    stp_escp2_load_quality_presets_from_xml(v, node);

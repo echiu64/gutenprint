@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InputSlots name="wf7000">
+<escp2InputSlots name="wf7000">
 
  <slot translate="text" name="tray1" text="Tray 1">
   <Duplex><Tumble/></Duplex>
@@ -31,5 +31,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <Duplex><Tumble/></Duplex>
   <InitSequence>PP\003\000\000\001\001</InitSequence>
  </slot>
-</escp2:InputSlots>
+</escp2InputSlots>
 </gutenprint>

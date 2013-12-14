@@ -415,7 +415,7 @@ load_inkgroup(const char *name)
 	{
 	  int count = 0;
 	  stp_mxml_node_t *node = stp_mxmlFindElement(inkgroup, inkgroup,
-						      "escp2:InkGroup", NULL,
+						      "escp2InkGroup", NULL,
 						      NULL, STP_MXML_DESCEND);
 	  if (node)
 	    {

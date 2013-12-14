@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InputSlots name="rx700">
+<escp2InputSlots name="rx700">
 
  <slot translate="text" name="Rear" text="Rear Tray">
   <InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\001\000</InitSequence>
@@ -42,5 +42,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <InitSequence>IR\002\000\000\001EX\006\000\000\000\000\000\005\000PP\003\000\000\002\000</InitSequence>
   <DeinitSequence>IR\002\000\000\000</DeinitSequence>
  </slot>
-</escp2:InputSlots>
+</escp2InputSlots>
 </gutenprint>

@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:QualityPresets name="v2880">
+<escp2QualityPresets name="v2880">
  <quality translate="text" name="FastEconomy" text="Fast Economy">
   <minimumResolution>180 90</minimumResolution>
   <maximumResolution>360 120</maximumResolution>
@@ -66,5 +66,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <maximumResolution>0 0</maximumResolution>
   <desiredResolution>-1 -1</desiredResolution>
  </quality>
-</escp2:QualityPresets>
+</escp2QualityPresets>
 </gutenprint>

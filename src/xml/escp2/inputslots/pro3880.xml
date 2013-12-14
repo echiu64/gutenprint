@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InputSlots name="pro3880">	
+<escp2InputSlots name="pro3880">	
 
  <slot translate="text" name="Standard" text="Standard">
   <InitSequence>IR\002\000\000\003PP\003\000\000\001\000</InitSequence>
@@ -38,5 +38,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  </slot>
 
 
-</escp2:InputSlots>
+</escp2InputSlots>
 </gutenprint>

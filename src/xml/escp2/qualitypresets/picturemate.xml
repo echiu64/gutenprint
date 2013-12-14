@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:QualityPresets name="picturemate">
+<escp2QualityPresets name="picturemate">
  <quality translate="text" name="Draft" text="Draft">
   <minimumResolution>1440 720</minimumResolution>
   <maximumResolution>1440 720</maximumResolution>
@@ -56,5 +56,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   <maximumResolution>5760 1440</maximumResolution>
   <desiredResolution>5760 1440</desiredResolution>
  </quality>
-</escp2:QualityPresets>
+</escp2QualityPresets>
 </gutenprint>

@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:model id="46">
+<escp2Model id="46">
  <media src="escp2/media/f360_photo.xml"/>
  <inputSlots src="escp2/inputslots/cd_cutter_roll_feed.xml"/>
  <qualityPresets src="escp2/qualitypresets/standard.xml"/>
@@ -71,13 +71,13 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <extraBottom>24</extraBottom>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
-  <ChannelName translate="name" name="Black"/>
-  <ChannelName translate="name" name="Cyan"/>
-  <ChannelName translate="name" name="Magenta"/>
-  <ChannelName translate="name" name="Yellow"/>
-  <ChannelName translate="name" name="Light Cyan"/>
-  <ChannelName translate="name" name="Light Magenta"/>
-  <ChannelName translate="name" name="Black"/>
+  <ChannelName translate="text" name="Black" text="Black"/>
+  <ChannelName translate="text" name="Cyan" text="Cyan"/>
+  <ChannelName translate="text" name="Magenta" text="Magenta"/>
+  <ChannelName translate="text" name="Yellow" text="Yellow"/>
+  <ChannelName translate="text" name="LightCyan" text="Light Cyan"/>
+  <ChannelName translate="text" name="LightMagenta" text="Light Magenta"/>
+  <ChannelName translate="text" name="Black" text="Black"/>
  </ChannelNames>
  <resolutions>
   <resolution translate="text" name="360x180sw" text="360 x 180 DPI Draft">
@@ -138,5 +138,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
    <parameter type="float" name="DropSize1">1.000000</parameter>
   </resolution>
  </resolutions>
-</escp2:model>
+</escp2Model>
 </gutenprint>

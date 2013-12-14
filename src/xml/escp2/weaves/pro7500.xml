@@ -20,12 +20,12 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:PrinterWeaves name="pro7500">
+<escp2PrinterWeaves name="pro7500">
  <weave translate="text" name="Off" text="Off" command="\033(i\001\000\000"/>
  <weave translate="text" name="On" text="Interleave" command="\033(i\001\000\001"/>
  <weave translate="text" name="FOL" text="Full Overlap" command="\033(i\001\000\002"/>
  <weave translate="text" name="FourPass" text="Four Pass" command="\033(i\001\000\003"/>
  <weave translate="text" name="FOL2" text="Full Overlap 2" command="\033(i\001\000\004"/>
  <weave translate="text" name="MW2" text="Interleave 2" command="\033(i\001\000\005"/>
-</escp2:PrinterWeaves>
+</escp2PrinterWeaves>
 </gutenprint>

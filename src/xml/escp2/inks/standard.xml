@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InkGroup name="standard">
+<escp2InkGroup name="standard">
 <InkList translate="text" name="None" text="EPSON Standard Inks">
  <Shades>
   <shade count="1">1.000000</shade>
@@ -205,5 +205,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 </InkList>
-</escp2:InkGroup>
+</escp2InkGroup>
 </gutenprint>

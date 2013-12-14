@@ -20,7 +20,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 </copyright>
-<escp2:InkGroup name="f360_ultrachrome_k3v">
+<escp2InkGroup name="f360_ultrachrome_k3v">
 <InkList translate="text" name="ultra3photo" text="Photo Black">
  <Shades>
   <shade count="3">1.000000 0.480000 0.160000</shade>
@@ -604,5 +604,5 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
   </Channels>
  </InkName>
 </InkList>
-</escp2:InkGroup>
+</escp2InkGroup>
 </gutenprint>
