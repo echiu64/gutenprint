@@ -2819,7 +2819,7 @@ static void dnpds40_plane_init(stp_vars_t *v)
   long AdSize = (32 - (RFSize % 32));
   long FSize = RFSize + AdSize;
 
-  // XXX SLP: this is.. unknown in the docs I have.
+  /* XXX SLP: this is.. unknown in the docs I have. */
   stp_zprintf(v, "\033PCNTRL RETENTION       0000000800000000");
 
   stp_zprintf(v, "\033PIMAGE %cPLANE", p); dyesub_nputc(v, ' ', 10);
