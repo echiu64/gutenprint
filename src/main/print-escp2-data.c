@@ -353,7 +353,8 @@ load_model_from_file(const stp_vars_t *v, stp_mxml_node_t *xmod, int model)
 			  !strcmp(child->value.element.name, "ChannelName"))
 			{
 			  const char *cname = stp_mxmlElementGetAttr(child, "name");
-			  stp_string_list_add_string(p->channel_names, cname, cname);
+			  const char *ctext = stp_mxmlElementGetAttr(child, "text");
+			  stp_string_list_add_string(p->channel_names, cname, ctext);
 			}
 		      child = child->next;
 		    }

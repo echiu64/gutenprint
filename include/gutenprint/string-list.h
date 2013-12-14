@@ -79,6 +79,11 @@ extern void
 stp_string_list_add_string(stp_string_list_t *list,
 			   const char *name, const char *text);
 
+/* Don't check safety of the string name (no whitespace and such) */
+extern void
+stp_string_list_add_string_unsafe(stp_string_list_t *list,
+				  const char *name, const char *text);
+
 extern void
 stp_string_list_remove_string(stp_string_list_t *list, const char *name);
 

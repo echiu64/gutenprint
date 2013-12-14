@@ -37,19 +37,25 @@ main(int argc, char **argv)
       if (top)
 	{
 	  stp_mxml_node_t *n = top;
+	  stp_string_list_t *sl = stp_string_list_create();
 	  do
 	    {
 	      const char *attr = stp_mxmlElementGetAttr(n, "translate");
 	      if (attr)
 		{
 		  const char *str = stp_mxmlElementGetAttr(n, attr);
-		  char *s;
-		  stp_asprintf(&s, "N_(\"%s\");", str);
-		  printf("%-40s /* %s */\n", s, *argv);
-		  stp_free(s);
+		  if (! stp_string_list_is_present(sl, str))
+		    {
+		      char *s;
+		      stp_string_list_add_string_unsafe(sl, str, str);
+		      stp_asprintf(&s, "N_(\"%s\");", str);
+		      printf("%-40s /* %s */\n", s, *argv);
+		      stp_free(s);
+		    }
 		}
 	      n = stp_mxmlWalkNext(n, top, STP_MXML_DESCEND);
 	    } while (n);
+	  stp_string_list_destroy(sl);
 	  stp_mxmlDelete(top);
 	}
       else

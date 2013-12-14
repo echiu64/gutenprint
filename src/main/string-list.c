@@ -130,6 +130,31 @@ stp_string_list_add_string(stp_string_list_t *list,
 			   const char *text)
 {
   stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
+  do
+    {
+      const char *xname = name;
+      while (*xname)
+	{
+	  if (!isalnum(*xname) &&
+	      *xname != '_' && *xname != '-' && *xname != '+')
+	    {
+	      stp_erprintf("Gutenprint: bad string %s (%s)\n", name, text);
+	      break;
+	    }
+	  xname++;
+	}
+    } while(0);
+  new_string->name = stp_strdup(name);
+  new_string->text = stp_strdup(text);
+  stp_list_item_create((stp_list_t *) list, NULL, new_string);
+}
+
+void
+stp_string_list_add_string_unsafe(stp_string_list_t *list,
+				  const char *name,
+				  const char *text)
+{
+  stp_param_string_t *new_string = stp_malloc(sizeof(stp_param_string_t));
   new_string->name = stp_strdup(name);
   new_string->text = stp_strdup(text);
   stp_list_item_create((stp_list_t *) list, NULL, new_string);
