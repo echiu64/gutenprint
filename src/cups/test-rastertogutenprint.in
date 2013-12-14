@@ -221,7 +221,7 @@ if [ -d ppd/C ] ; then
 	    is_duplicate $f
 	fi
 	if [ -z "$skip" ] ; then
-	    echo "$f "
+	    echo -n "$f... "
 	    PPD=$f
 	    export PPD
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
