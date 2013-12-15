@@ -1113,6 +1113,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Experimental support for the Sony UP-DR200 was added; it is as
 	of yet untested.
 
+     - Dai Nippon Printing (DNP) printers:
+
+       DNP DS40
+       DNP DS80
+
+        Support for these printers were improved; with firmware 1.30 or
+	newer, lamination mode is now configurable.
+
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:
@@ -1207,6 +1215,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Device IDs added for the following Mitsubishi printers:
        Mitsubishi CP-D70DW
        Mitsubishi CP-D707DW
+
+     - Device IDs added for the following DNP printers:
+       DNP DS40
 
   6) Added Catalan translation.
 
