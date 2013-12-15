@@ -664,5 +664,10 @@ stp_get_parameter_list(const stp_vars_t *v)
 void
 stp_abort(void)
 {
+  if (stp_get_debug_level > 0)
+    {
+      int i = *((int *) 0);
+      stp_erprintf("Crashing here...%d\n", i);
+    }
   abort();
 }
