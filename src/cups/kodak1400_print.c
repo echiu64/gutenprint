@@ -269,6 +269,8 @@ static void kodak1400_attach(void *vctx, struct libusb_device_handle *dev,
 {
 	struct kodak1400_ctx *ctx = vctx;
 
+	UNUSED(jobid);
+
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
@@ -565,7 +567,7 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.22",
+	.version = "0.23",
 	.uri_prefix = "kodak1400",
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,

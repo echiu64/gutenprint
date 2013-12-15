@@ -61,7 +61,6 @@ struct kodak605_ctx {
 	uint8_t endp_up;
 	uint8_t endp_down;
 
-	int type;
 	struct kodak605_hdr hdr;
 	uint8_t *databuf;
 	int datalen;
@@ -86,8 +85,6 @@ static void *kodak605_init(void)
 		return NULL;
 	memset(ctx, 0, sizeof(struct kodak605_ctx));
 
-	ctx->type = P_ANY;
-
 	return ctx;
 }
 
@@ -107,7 +104,6 @@ static void kodak605_attach(void *vctx, struct libusb_device_handle *dev,
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
 
-	ctx->type = P_KODAK_605;
 }
 
 static void kodak605_teardown(void *vctx) {
@@ -508,7 +504,7 @@ static int kodak605_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.08",
+	.version = "0.09",
 	.uri_prefix = "kodak605",
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.23"
+#define BACKEND_VERSION "0.25"
 #ifndef URI_PREFIX
 #define URI_PREFIX "gutenprint+usb"
 #endif
@@ -90,10 +90,25 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 {
 	int num = 0;
 
+	if (getenv("DYESUB_DEBUG")) {
+		DEBUG("Sending %d bytes to printer\n", len);
+	}
+
 	while (len) {
+		int len2 = (len > 65536) ? 65536: len;
 		int ret = libusb_bulk_transfer(dev, endp,
-					       buf, (len > 65536) ? 65536: len,
-					       &num, 5000);
+					   buf, len2,
+					   &num, 5000);
+
+		if (getenv("DYESUB_DEBUG")) {
+			int i;
+			DEBUG("-> ");
+			for (i = 0 ; i < len2; i++) {
+				DEBUG2("%02x ", *(buf+i));
+			}
+			DEBUG2("\n");
+		}
+
 		if (ret < 0) {
 			ERROR("Failure to send data to printer (libusb error %d: (%d/%d to 0x%02x))\n", ret, num, len, endp);
 			return ret;

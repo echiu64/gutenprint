@@ -329,6 +329,8 @@ static void canonselphy_attach(void *vctx, struct libusb_device_handle *dev,
 {
 	struct canonselphy_ctx *ctx = vctx;
 
+	UNUSED(jobid);
+
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
@@ -602,7 +604,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.60",
+	.version = "0.61",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,

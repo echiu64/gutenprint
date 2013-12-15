@@ -61,6 +61,8 @@ static void updr150_attach(void *vctx, struct libusb_device_handle *dev,
 {
 	struct updr150_ctx *ctx = vctx;
 
+	UNUSED(jobid);
+
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
@@ -163,7 +165,7 @@ top:
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150",
-	.version = "0.05",
+	.version = "0.06",
 	.uri_prefix = "sonyupdr150",
 	.init = updr150_init,
 	.attach = updr150_attach,
@@ -176,7 +178,7 @@ struct dyesub_backend updr150_backend = {
 	}
 };
 
-/* Sony UP-DR150 Spool file format
+/* Sony UP-DR150/UP-DR200 Spool file format
 
    The spool file is a series of 4-byte commands, followed by optional
    arguments.  The purpose of the commands is unknown, but they presumably
@@ -210,7 +212,7 @@ struct dyesub_backend updr150_backend = {
   unknown if those additional commands are necessary.  This is a typical
   sequence:
 
-[[ Sniff start ]]
+[[ Sniff start of a UP-DR150 ]]
 
 <- 1b e0 00 00 00 0f 00
 -> 0e 00 00 00 00 00 00 00  00 04 a8 08 0a a4 00
