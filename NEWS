@@ -1219,7 +1219,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      - Device IDs added for the following DNP printers:
        DNP DS40
 
-  6) Added Catalan translation.
+  6) Added Catalan and Turkish translations.
 
   7) Added a unified CUPS backend to support selected printers
 
