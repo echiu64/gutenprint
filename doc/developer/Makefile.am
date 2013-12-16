@@ -103,7 +103,7 @@ gutenprint.pdf:  $(MANUAL_SRC_FILES)
 	    $(LN_S) -f $(srcdir)/$$file $$file ; \
 	  done ; \
 	fi ; \
-	$(DB2PDF) gutenprint.xml
+	$(DB2PDF) gutenprint.xml 2>&1 | $(PERL) ./cleanwarnings.pl
 
 html: html-stamp
 
