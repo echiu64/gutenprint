@@ -1218,6 +1218,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      - Device IDs added for the following DNP printers:
        DNP DS40
+       DNP DS80
 
   6) Added Catalan and Turkish translations.
 
