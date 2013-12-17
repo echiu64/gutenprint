@@ -2837,17 +2837,25 @@ static void dnpds40_plane_init(stp_vars_t *v)
   /* Printer command plus length of data to follow */
   stp_zprintf(v, "\033PIMAGE %cPLANE          %08ld", p, FSize);
 
-  /* Each plane needs a modified BMP header */
+  /* Each plane is essentially a tweaked BMP file */
+
+  /* BMP header */
   stp_zprintf(v, "BM");
   stp_put32_le(FSize, v);
   dyesub_nputc(v, '\0', 4);
-  stp_put32_le(1088, v);  /* Offset to pixel data: 1024 + (54-10) + 10 */
-  stp_put32_le(40, v);
+  stp_put32_le(1088, v);  /* Offset to pixel data: 1024 + (14+40-10) + 10 */
+
+  /* DIB header */
+  stp_put32_le(40, v); /* DIB header size */
   stp_put32_le(privdata.w_size, v);
   stp_put32_le(privdata.h_size, v);
   stp_put16_le(1, v); /* single channel */
   stp_put16_le(8, v); /* 8bpp */
-  dyesub_nputc(v, '\0', 24); /* zero out reminder of header */
+  dyesub_nputc(v, '\0', 8); /* compression + image size are ignored */
+  stp_put32_le(11808, v); /* horizontal pixels per meter, fixed at 300dpi */
+  stp_put32_le(11808, v); /* vertical pixels per meter (can be 23615 for 600dpi) */
+  stp_put32_le(256, v);    /* entries in color table  */
+  stp_put32_le(0, v);      /* no important colors */
   dyesub_nputc(v, '\0', 1024);    /* RGB Array, unused by printer */
   dyesub_nputc(v, '\0', PadSize); /* Pading to align plane data */
 }
@@ -3498,7 +3506,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Dai Nippon Printing DS40 */
     6000,
-    &rgb_ink_list,
+    &bgr_ink_list,
     &res_300dpi_list,
     &dnpds40_dock_page_list,
     &dnpds40_dock_printsize_list,
@@ -3513,7 +3521,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Dai Nippon Printing DS80 */
     6001,
-    &rgb_ink_list,
+    &bgr_ink_list,
     &res_300dpi_list,
     &dnpds80_dock_page_list,
     &dnpds80_dock_printsize_list,
