@@ -2799,16 +2799,28 @@ static const laminate_t dnpds40_laminate[] =
 LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
 
 
-static void dnpds40_printer_end(stp_vars_t *v)
+static void dnpds40_printer_start(stp_vars_t *v)
 {
+  /* XXX Unknown purpose. */
+  stp_zprintf(v, "\033PCNTRL RETENTION       0000000800000000");
+
   /* Configure Lamination */
-  stp_zprintf(v, "\033PCNTRL OVERCOAT        000000");
+  stp_zprintf(v, "\033PCNTRL OVERCOAT        00000008000000");
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
 
+  /* Don't resume after error.. XXX should be in backend */
+  stp_zprintf(v, "\033PCNTRL BUFFCNTRL       0000000800000000");
+
+  /* Set quantity.. XXX should be in backend! */
+  stp_zprintf(v, "\033PCNTRL QTY             000000080000001\r");
+
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
+}
 
+static void dnpds40_printer_end(stp_vars_t *v)
+{
   stp_zprintf(v, "\033PCNTRL START"); dyesub_nputc(v, ' ', 19);
 }
 
@@ -2818,28 +2830,25 @@ static void dnpds40_plane_init(stp_vars_t *v)
 	    (privdata.plane == 2 ? 'M' :
 	     'C' ));
 
-  long RFSize = (privdata.w_size*privdata.h_size) + 1024 + 54;
-  long AdSize = (32 - (RFSize % 32));
-  long FSize = RFSize + AdSize;
+  long PadSize = 10;
+  long FSize = (privdata.w_size*privdata.h_size) + 1024 + 54 + PadSize;
 
-  /* XXX SLP: this is.. unknown in the docs I have. */
-  stp_zprintf(v, "\033PCNTRL RETENTION       0000000800000000");
+  /* Printer command plus length of data to follow */
+  stp_zprintf(v, "\033PIMAGE %cPLANE          %08ld", p, FSize);
 
-  stp_zprintf(v, "\033PIMAGE %cPLANE", p); dyesub_nputc(v, ' ', 10);
-
-  stp_zprintf(v, "0%ld", FSize);
+  /* Each plane needs a modified BMP header */
   stp_zprintf(v, "BM");
   stp_put32_le(FSize, v);
   dyesub_nputc(v, '\0', 4);
-  stp_put32_le(1088, v);
+  stp_put32_le(1088, v);  /* Offset to pixel data: 1024 + (54-10) + 10 */
   stp_put32_le(40, v);
   stp_put32_le(privdata.w_size, v);
   stp_put32_le(privdata.h_size, v);
-  stp_put16_le(1, v);
-  stp_put16_le(8, v);
-  dyesub_nputc(v, '\0', 24);
-  dyesub_nputc(v, '\0', 1024);   /* RGB Array */
-  dyesub_nputc(v, '\0', AdSize); /* Pad to 32byte boundary */
+  stp_put16_le(1, v); /* single channel */
+  stp_put16_le(8, v); /* 8bpp */
+  dyesub_nputc(v, '\0', 24); /* zero out reminder of header */
+  dyesub_nputc(v, '\0', 1024);    /* RGB Array, unused by printer */
+  dyesub_nputc(v, '\0', PadSize); /* Pading to align plane data */
 }
 
 
@@ -3493,7 +3502,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
-    NULL, &dnpds40_printer_end,
+    &dnpds40_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
@@ -3508,7 +3517,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
-    NULL, &dnpds40_printer_end,
+    &dnpds40_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
