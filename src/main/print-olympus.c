@@ -2769,14 +2769,15 @@ static void shinko_chcs2145_printer_end(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS40 */
+/* Imaging area is wider than print size, we always must supply the 
+   printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds40_dock_page[] =
 {
-  { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, 0, 0, 0, 0,
-						DYESUB_PORTRAIT},
-  { "w432h576", "6x9", PT(1920,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
-							DYESUB_PORTRAIT},
-  { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, 0, 0, 0, 0,
-						DYESUB_PORTRAIT},
+  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds40_dock_page_list, dyesub_pagesize_t, dnpds40_dock_page);
@@ -2854,15 +2855,17 @@ static void dnpds40_plane_init(stp_vars_t *v)
 
 
 /* Dai Nippon Printing DS80 */
+/* Imaging area is wider than print size, we always must supply the 
+   printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds80_dock_page[] =
 {
-  { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "C6", "8x4", PT(2560,300)+1, PT(1236,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},/* 8x4 */
-  { "C5", "8x5", PT(2560,300)+1, PT(1536,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "C4", "8x6", PT(2560,300)+1, PT(1836,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "C3", "8x8", PT(2560,300)+1, PT(2436,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "C2", "8x12", PT(2560,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "C1", "A4 Length", PT(2560,300)+1, PT(3544,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "C6", "8x4", PT(2560,300)+1, PT(1236,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},/* 8x4 */
+  { "C5", "8x5", PT(2560,300)+1, PT(1536,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "C4", "8x6", PT(2560,300)+1, PT(1836,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "C3", "8x8", PT(2560,300)+1, PT(2436,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "C2", "8x12", PT(2560,300)+1, PT(3636,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "C1", "A4 Length", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, dnpds80_dock_page_list, dyesub_pagesize_t, dnpds80_dock_page);
@@ -3500,7 +3503,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds40_dock_page_list,
     &dnpds40_dock_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &dnpds40_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
@@ -3515,7 +3518,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dnpds80_dock_page_list,
     &dnpds80_dock_printsize_list,
     SHRT_MAX,
-    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &dnpds40_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,

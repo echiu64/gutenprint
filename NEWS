@@ -1119,7 +1119,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        DNP DS80
 
         Support for these printers were improved; with firmware 1.30 or
-	newer, lamination mode is now configurable.
+	newer, lamination mode is now configurable.  The DS40 also 
+ 	gained the ability to create 5x7" and 3.5x5" prints with
+	appropriate media.
 
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
