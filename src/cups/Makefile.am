@@ -114,7 +114,7 @@ commandtocanon_LDADD = $(CUPS_LIBS)
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
-gutenprint_SOURCES = selphy_print.c kodak1400_print.c kodak6800_print.c kodak605_print.c shinko_s2145_print.c sony_updr150_print.c backend_common.c backend_common.h
+gutenprint_SOURCES = selphy_print.c kodak1400_print.c kodak6800_print.c kodak605_print.c shinko_s2145_print.c sony_updr150_print.c dnpds40_print.c backend_common.c backend_common.h
 
 gutenprint_LDADD = $(LIBUSB_LIBS)
 gutenprint_CPPFLAGS = $(LIBUSB_CFLAGS) -DURI_PREFIX="\"gutenprint$(GUTENPRINT_MAJOR_VERSION)$(GUTENPRINT_MINOR_VERSION)+usb\""
