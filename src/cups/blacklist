@@ -1,0 +1,127 @@
+# Gutenprint USB backend 'quirks' file.
+#
+# This file ensures that all printers handled by the Gutenprint CUPS backends
+# are blacklisted by the default CUPS USB backend.
+#
+# Please note that this file requires CUPS 1.6.4 or 1.7-rc2 (or newer).
+#
+
+# Canon CP-10
+0x04a9 0x304a blacklist
+
+# Canon CP-100
+0x04a9 0x3063 blacklist
+
+# Canon CP-200
+0x04a9 0x307c blacklist
+
+# Canon CP-220
+0x04a9 0x30bd blacklist
+
+# Canon CP-300
+0x04a9 0x307d blacklist
+
+# Canon CP-330
+0x04a9 0x30be blacklist
+
+# Canon SELPHY CP400
+0x04a9 0x30f6 blacklist
+
+# Canon SELPHY CP500
+0x04a9 0x30f5 blacklist
+
+# Canon SELPHY CP510
+0x04a9 0x3128 blacklist
+
+# Canon SELPHY CP520
+# ??? UNKNOWN
+
+# Canon SELPHY CP530
+0x04a9 0x31b1 blacklist
+
+# Canon SELPHY CP600
+0x04a9 0x310b blacklist
+
+# Canon SELPHY CP710
+0x04a9 0x3127 blacklist
+
+# Canon SELPHY CP720
+0x04a9 0x3143 blacklist
+
+# Canon SELPHY CP730
+0x04a9 0x3142 blacklist
+
+# Canon SELPHY CP740
+0x04a9 0x3171 blacklist
+
+# Canon SELPHY CP750
+0x04a9 0x3170 blacklist
+
+# Canon SELPHY CP760
+0x04a9 0x31ab blacklist
+
+# Canon SELPHY CP770
+0x04a9 0x31aa blacklist
+
+# Canon SELPHY CP780
+0x04a9 0x31dd blacklist
+
+# Canon SELPHY CP790
+# ??? UNKNOWN
+
+# Canon SELPHY CP800
+0x04a9 0x3214 blacklist
+
+# Canon SELPHY CP810
+0x04a9 0x3256 blacklist
+
+# Canon SELPHY CP900
+0x04a9 0x3255 blacklist
+
+# Canon SELPHY ES1
+0x04a9 0x3141 blacklist
+
+# Canon SELPHY ES2
+0x04a9 0x3185 blacklist
+
+# Canon SELPHY ES20
+0x04a9 0x3186 blacklist
+
+# Canon SELPHY ES3 
+0x04a9 0x31af blacklist
+
+# Canon SELPHY ES30
+0x04a9 0x31b0 blacklist
+
+# Canon SELPHY ES40
+0x04a9 0x31ee blacklist
+
+# Kodak 805
+0x040a 0x4034 blacklist
+
+# Kodak 1400
+0x040a 0x4022 blacklist
+
+# Kodak 6800
+0x040a 0x4021 blacklist
+
+# Kodak 6850
+0x040a 0x402b blacklist
+
+# Kodak 605
+0x040a 0x402e blacklist
+
+# Shinko CHC-S2145 (aka Sinfonia CS2)
+0x10ce 0x000e blacklist
+
+# Sony UP-DR150
+0x054c 0x01e8 blacklist
+
+# Mitsubishi CP-D70/CP-D707
+0x06d3 0x3b30 blacklist
+
+# DNP DS40
+0x1343 0x0003 blacklist
+
+# DNP DS80
+0x1343 0x0004 blacklist

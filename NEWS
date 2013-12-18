@@ -1232,7 +1232,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      A new CUPS backend was added to support USB printers that require a
      special communications protocol. The backend is called 
-     'gutenprint52+usb' and requires libusbx in order to build.  
+     'gutenprint52usb' and requires libusbx in order to build.  
 
      The following dye-sublimation printers require this backend in order
      to function properly:
@@ -1246,9 +1246,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Kodak 605 Photo Printer
    	Shinko/Sinfonia CHC-S2145 
    	Sony UP-DR150
+	DNP DS40
+	DNP DS80
 
      Over time, it is expected that additional printer models will be
      supported by this unified backend.
+
+     Please note that unless you are using CUPS > 1.6.4, you may have to
+     manually select the gutenprint CUPS backend when configuring one of
+     these printers.  They will not function properly with the default
+     'usb' backend.
 
 * Changes from 5.2.8
 
