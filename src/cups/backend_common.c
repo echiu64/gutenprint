@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.25"
+#define BACKEND_VERSION "0.26"
 #ifndef URI_PREFIX
 #define URI_PREFIX "gutenprint+usb"
 #endif
@@ -211,10 +211,26 @@ static int print_scan_output(struct libusb_device *device,
 	      desc->idVendor, desc->idProduct, manuf, product, serial);
 	
 	if (scan_only) {
-		/* URL-ify model. */
-		char buf[128]; // XXX ugly..
+
+		char buf[256]; // XXX ugly..
 		int j = 0, k = 0;
 		char *ieee_id = get_device_id(dev);
+
+		/* URLify the manuf and model strings */
+		if (strlen(manuf2))
+			strncpy((char*)manuf, manuf2, sizeof(manuf));
+		while(*(manuf + j)) {
+			buf[k] = *(manuf+j);
+			if(buf[k] == ' ') {
+				buf[k++] = '%';
+				buf[k++] = '2';
+				buf[k] = '0';
+			}
+			k++;
+			j++;
+		}
+		buf[k++] = '/';
+		j = 0;
 		while (*(product + j + strlen(manuf2))) {
 			buf[k] = *(product + j + (strlen(manuf2) ? (strlen(manuf2) + 1) : 0));
 			if(buf[k] == ' ') {
@@ -227,9 +243,9 @@ static int print_scan_output(struct libusb_device *device,
 		}
 		buf[k] = 0;
 		
-		fprintf(stdout, "direct %s://%s/%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
-			prefix, strlen(manuf2) ? manuf2 : (char*)manuf,
-			buf, serial, backend->uri_prefix, product, product,
+		fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
+			prefix, buf, serial, backend->uri_prefix, 
+			product, product,
 			ieee_id);
 		
 		if (ieee_id)
