@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
- *  
+ *
  *     http://git.shaftnet.org/cgit/selphy_print.git
- *  
+ *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -29,7 +29,7 @@
 
 #define BACKEND_VERSION "0.26"
 #ifndef URI_PREFIX
-#define URI_PREFIX "gutenprint+usb"
+#error "Must Define URI_PREFIX"
 #endif
 
 /* Support Functions */
