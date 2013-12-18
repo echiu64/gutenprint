@@ -1118,15 +1118,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        DNP DS40
        DNP DS80
 
-	Support for these printers has been considerably improved through
-	the addition of an intelligent CUPS backend.
+	Support for these printers has been considerably improved:
+ 
+	 * Addition of an intelligent CUPS backend
+	 * 5x7 and 3.5x5" print support on the DS40
+	 * Matte lamination with printer firmware 1.30 or newer
+	 * Improved margins making printable area more explicit
+	 * Support 300x600dpi print mode
 
-	Improved margin specifications has enabled support for 3.5x5" and 
-	5x7" prints on the DS40 and made the printable area more 
-	explicit on other print sizes on both printers.
-
-	Finally, with printer firmware 1.30 or newer, Matte lamination is
-	now supported.
 
   2) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet

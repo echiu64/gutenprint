@@ -2769,6 +2769,16 @@ static void shinko_chcs2145_printer_end(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS40 */
+
+static const dyesub_resolution_t res_dnpds40_dpi[] =
+{
+  { "300x300", 300, 300},
+  { "300x600", 300, 600},
+};
+
+LIST(dyesub_resolution_list_t, res_dnpds40_dpi_list, dyesub_resolution_t, res_dnpds40_dpi);
+
+
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds40_dock_page[] =
@@ -2785,10 +2795,15 @@ LIST(dyesub_pagesize_list_t, dnpds40_dock_page_list, dyesub_pagesize_t, dnpds40_
 static const dyesub_printsize_t dnpds40_dock_printsize[] =
 {
   { "300x300", "B7", 1920, 1088},
+  { "300x600", "B7", 1920, 2176},
   { "300x300", "w288h432", 1920, 1240},
+  { "300x600", "w288h432", 1920, 2480},
   { "300x300", "w360h504", 1920, 2138},
+  { "300x600", "w360h504", 1920, 4276},
   { "300x300", "A5", 1920, 2436},
+  { "300x600", "A5", 1920, 4872},
   { "300x300", "w432h576", 1920, 2740},
+  { "300x600", "w432h576", 1920, 5480},
 };
 
 LIST(dyesub_printsize_list_t, dnpds40_dock_printsize_list, dyesub_printsize_t, dnpds40_dock_printsize);
@@ -2849,40 +2864,6 @@ static void dnpds40_printer_start(stp_vars_t *v)
 
 }
 
-static void dnpds80_printer_start(stp_vars_t *v)
-{
-  /* Common code */
-  dnpds40ds80_printer_start(v);
-
-  /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
-
-  /* Configure multi-cut/page size */
-  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
-
-  if (!strcmp(privdata.pagesize, "c8x10")) {
-    stp_zprintf(v, "06");
-  } else if (!strcmp(privdata.pagesize, "C6")) {
-    stp_zprintf(v, "08");
-  } else if (!strcmp(privdata.pagesize, "C5")) {
-    stp_zprintf(v, "09");
-  } else if (!strcmp(privdata.pagesize, "C4")) {
-    stp_zprintf(v, "10");
-  } else if (!strcmp(privdata.pagesize, "C3")) {
-    stp_zprintf(v, "11");
-  } else if (!strcmp(privdata.pagesize, "C2")) {
-    stp_zprintf(v, "07");
-  } else if (!strcmp(privdata.pagesize, "C1")) {
-    stp_zprintf(v, "21");
-  } else {
-    stp_zprintf(v, "00");
-    /* Others include 8x4 *2 (13) 8x5 *2 (14)
-                      8x6 *2 (15) 8x5+8x4 (16)
-                      8x6+8x4 (17) 8x6+8x5 (18)
-                      8x8+8x4 (19) 8x4 *3 (20)  */
-  }
-}
-
 static void dnpds40_printer_end(stp_vars_t *v)
 {
   stp_zprintf(v, "\033PCNTRL START"); dyesub_nputc(v, ' ', 19);
@@ -2916,14 +2897,15 @@ static void dnpds40_plane_init(stp_vars_t *v)
   stp_put16_le(8, v); /* 8bpp */
   dyesub_nputc(v, '\0', 8); /* compression + image size are ignored */
   stp_put32_le(11808, v); /* horizontal pixels per meter, fixed at 300dpi */
-  stp_put32_le(11808, v); /* vertical pixels per meter (can be 23615 for 600dpi) */
+  if (privdata.h_dpi == 600)
+    stp_put32_le(23615, v); /* vertical pixels per meter @ 600dpi */
+  else
+    stp_put32_le(11808, v); /* vertical pixels per meter @ 300dpi */
   stp_put32_le(256, v);    /* entries in color table  */
   stp_put32_le(0, v);      /* no important colors */
   dyesub_nputc(v, '\0', 1024);    /* RGB Array, unused by printer */
   dyesub_nputc(v, '\0', PadSize); /* Pading to align plane data */
 }
-
-
 
 /* Dai Nippon Printing DS80 */
 /* Imaging area is wider than print size, we always must supply the 
@@ -2944,15 +2926,56 @@ LIST(dyesub_pagesize_list_t, dnpds80_dock_page_list, dyesub_pagesize_t, dnpds80_
 static const dyesub_printsize_t dnpds80_dock_printsize[] =
 {
   { "300x300", "c8x10", 2560, 3036},
+  { "300x600", "c8x10", 2560, 6072},
   { "300x300", "C6", 2560, 1236},
+  { "300x600", "C6", 2560, 2472},
   { "300x300", "C5", 2560, 1536},
+  { "300x600", "C5", 2560, 3072},
   { "300x300", "C4", 2560, 1836},
+  { "300x600", "C4", 2560, 3672},
   { "300x300", "C3", 2560, 2436},
+  { "300x600", "C3", 2560, 4872},
   { "300x300", "C2", 2560, 3636},
+  { "300x600", "C2", 2560, 7272},
   { "300x300", "C1", 2560, 3544},
+  { "300x600", "C1", 2560, 7088},
 };
 
 LIST(dyesub_printsize_list_t, dnpds80_dock_printsize_list, dyesub_printsize_t, dnpds80_dock_printsize);
+
+static void dnpds80_printer_start(stp_vars_t *v)
+{
+  /* Common code */
+  dnpds40ds80_printer_start(v);
+
+  /* Set cutter option to "normal" */
+  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
+
+  /* Configure multi-cut/page size */
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
+
+  if (!strcmp(privdata.pagesize, "c8x10")) {
+    stp_zprintf(v, "06");
+  } else if (!strcmp(privdata.pagesize, "C6")) {
+    stp_zprintf(v, "08");
+  } else if (!strcmp(privdata.pagesize, "C5")) {
+    stp_zprintf(v, "09");
+  } else if (!strcmp(privdata.pagesize, "C4")) {
+    stp_zprintf(v, "10");
+  } else if (!strcmp(privdata.pagesize, "C3")) {
+    stp_zprintf(v, "11");
+  } else if (!strcmp(privdata.pagesize, "C2")) {
+    stp_zprintf(v, "07");
+  } else if (!strcmp(privdata.pagesize, "C1")) {
+    stp_zprintf(v, "21");
+  } else {
+    stp_zprintf(v, "00");
+    /* Others include 8x4 *2 (13) 8x5 *2 (14)
+                      8x6 *2 (15) 8x5+8x4 (16)
+                      8x6+8x4 (17) 8x6+8x5 (18)
+                      8x8+8x4 (19) 8x4 *3 (20)  */
+  }
+}
 
 /* Model capabilities */
 
@@ -3570,7 +3593,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   { /* Dai Nippon Printing DS40 */
     6000,
     &bgr_ink_list,
-    &res_300dpi_list,
+    &res_dnpds40_dpi_list,
     &dnpds40_dock_page_list,
     &dnpds40_dock_printsize_list,
     SHRT_MAX,
@@ -3585,7 +3608,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   { /* Dai Nippon Printing DS80 */
     6001,
     &bgr_ink_list,
-    &res_300dpi_list,
+    &res_dnpds40_dpi_list,
     &dnpds80_dock_page_list,
     &dnpds80_dock_printsize_list,
     SHRT_MAX,

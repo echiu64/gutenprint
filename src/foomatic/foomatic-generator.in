@@ -1333,7 +1333,10 @@ sub qualityorder {
 		    "dpi_photomonodraft",
 		    "dpi_photomonodraft2",
                     "dpi_ohphigh",
-                    "dpi_ohp"
+                    "dpi_ohp",
+	    # Dyesub
+	"x600",
+	"x300"
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case
