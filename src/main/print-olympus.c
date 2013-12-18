@@ -2784,9 +2784,11 @@ LIST(dyesub_pagesize_list_t, dnpds40_dock_page_list, dyesub_pagesize_t, dnpds40_
 
 static const dyesub_printsize_t dnpds40_dock_printsize[] =
 {
+  { "300x300", "B7", 1920, 1088},
   { "300x300", "w288h432", 1920, 1240},
-  { "300x300", "w432h576", 1920, 2740},
+  { "300x300", "w360h504", 1920, 2138},
   { "300x300", "A5", 1920, 2436},
+  { "300x300", "w432h576", 1920, 2740},
 };
 
 LIST(dyesub_printsize_list_t, dnpds40_dock_printsize_list, dyesub_printsize_t, dnpds40_dock_printsize);
@@ -2800,7 +2802,7 @@ static const laminate_t dnpds40_laminate[] =
 LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
 
 
-static void dnpds40_printer_start(stp_vars_t *v)
+static void dnpds40ds80_printer_start(stp_vars_t *v)
 {
   /* XXX Unknown purpose. */
   stp_zprintf(v, "\033PCNTRL RETENTION       0000000800000000");
@@ -2813,11 +2815,72 @@ static void dnpds40_printer_start(stp_vars_t *v)
   /* Don't resume after error.. XXX should be in backend */
   stp_zprintf(v, "\033PCNTRL BUFFCNTRL       0000000800000000");
 
-  /* Set quantity.. XXX should be in backend! */
+  /* Set quantity.. Backend overrides as needed. */
   stp_zprintf(v, "\033PCNTRL QTY             000000080000001\r");
+
+}
+
+static void dnpds40_printer_start(stp_vars_t *v)
+{
+  /* Common code */
+  dnpds40ds80_printer_start(v);
 
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
+  /* XXX cutter also supports ...012 for 2x6 *2 */
+
+  /* Configure multi-cut/page size */
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
+
+  if (!strcmp(privdata.pagesize, "B7")) {
+    stp_zprintf(v, "01");
+  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+    stp_zprintf(v, "02");
+  } else if (!strcmp(privdata.pagesize, "w360h504")) {
+    stp_zprintf(v, "03");
+  } else if (!strcmp(privdata.pagesize, "A5")) {
+    stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    stp_zprintf(v, "05");
+  } else {
+    stp_zprintf(v, "00");
+    /* XXX Handle 6x4 *2 aka "12" */
+  }
+
+}
+
+static void dnpds80_printer_start(stp_vars_t *v)
+{
+  /* Common code */
+  dnpds40ds80_printer_start(v);
+
+  /* Set cutter option to "normal" */
+  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
+
+  /* Configure multi-cut/page size */
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
+
+  if (!strcmp(privdata.pagesize, "c8x10")) {
+    stp_zprintf(v, "06");
+  } else if (!strcmp(privdata.pagesize, "C6")) {
+    stp_zprintf(v, "08");
+  } else if (!strcmp(privdata.pagesize, "C5")) {
+    stp_zprintf(v, "09");
+  } else if (!strcmp(privdata.pagesize, "C4")) {
+    stp_zprintf(v, "10");
+  } else if (!strcmp(privdata.pagesize, "C3")) {
+    stp_zprintf(v, "11");
+  } else if (!strcmp(privdata.pagesize, "C2")) {
+    stp_zprintf(v, "07");
+  } else if (!strcmp(privdata.pagesize, "C1")) {
+    stp_zprintf(v, "21");
+  } else {
+    stp_zprintf(v, "00");
+    /* Others include 8x4 *2 (13) 8x5 *2 (14)
+                      8x6 *2 (15) 8x5+8x4 (16)
+                      8x6+8x4 (17) 8x6+8x5 (18)
+                      8x8+8x4 (19) 8x4 *3 (20)  */
+  }
 }
 
 static void dnpds40_printer_end(stp_vars_t *v)
@@ -3528,7 +3591,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
-    &dnpds40_printer_start, &dnpds40_printer_end,
+    &dnpds80_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
