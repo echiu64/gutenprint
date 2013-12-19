@@ -345,6 +345,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 
 	/* Read in command header */
 	while (1) {
+		int remain;
 		i = read(data_fd, ctx->databuf + ctx->datalen, 
 			 sizeof(struct dnpds40_cmd));
 		if (i < 0)
@@ -364,13 +365,19 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		memcpy(buf, ctx->databuf + ctx->datalen + 24, 8);
 		j = atoi(buf);
 
-		/* Read in data chunk */
-		i = read(data_fd, ctx->databuf + ctx->datalen + sizeof(struct dnpds40_cmd), 
-			 j);
-		if (i < 0)
-			return i;
-		if (i != j)
-			return 1;
+		/* Read in data chunk as quickly as possible */
+		remain = j;
+		while (remain > 0) {
+			i = read(data_fd, ctx->databuf + ctx->datalen + sizeof(struct dnpds40_cmd), 
+				 remain);
+			if (i < 0)
+				return i;
+			if (i == 0)
+				return 1;
+			ctx->datalen += i;
+			remain -= i;
+		}
+		ctx->datalen -= j; /* Back it off */
 
 		/* Check for some offsets */
 		if(!memcmp("CNTRL QTY", ctx->databuf + ctx->datalen+2, 9)) {
@@ -902,7 +909,7 @@ static int dnpds40_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80",
-	.version = "0.19",
+	.version = "0.20",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
