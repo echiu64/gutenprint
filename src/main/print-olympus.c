@@ -29,6 +29,8 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
+/* #define DNPX2 */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -2665,14 +2667,24 @@ static void shinko_chcs9045_printer_init(stp_vars_t *v)
 /* Shinko CHC-S2145 */
 static const dyesub_pagesize_t shinko_chcs2145_page[] =
 {
+  { "w144h432",	"2x6", PT(634,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
   { "w288h432",	"4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
+#ifdef DNPX2
+  { "2x6_x2",	"2x6*2", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  							DYESUB_LANDSCAPE},
+#endif
   { "B7",	"3.5x5", PT(1088,300)+1, PT(1548,300)+1, 0, 0, 0, 0,
   							DYESUB_LANDSCAPE},
   { "w360h504",	"5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
   { "w432h576",	"6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "4x6_x2",	"4x6*2", PT(1844,300)+1, PT(2492,300)+1, 0, 0, 0, 0,
+  							DYESUB_PORTRAIT},
+#endif
   { "w432h648",	"6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
   { "Custom",   NULL, PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
@@ -2683,10 +2695,17 @@ LIST(dyesub_pagesize_list_t, shinko_chcs2145_page_list, dyesub_pagesize_t, shink
 
 static const dyesub_printsize_t shinko_chcs2145_printsize[] =
 {
+  { "300x300", "w144h432", 634, 1844},
   { "300x300", "w288h432", 1240, 1844},
+#ifdef DNPX2
+  { "300x300", "2x6_x2", 1240, 1844},
+#endif
   { "300x300", "B7", 1088, 1548},
   { "300x300", "w360h504", 1548, 2140},
   { "300x300", "w432h576", 1844, 2434},
+#ifdef DNPX2
+  { "300x300", "4x6_x2", 1844, 2492},
+#endif
   { "300x300", "w432h648", 1844, 2740},
   { "300x300", "Custom", 1240, 1844},
 };
@@ -2712,6 +2731,8 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
 
   if (strcmp(privdata.pagesize,"w288h432") == 0)
     media = '\0';
+  else if (strcmp(privdata.pagesize,"2x6_x2") == 0)
+    media = '\0';
   else if (strcmp(privdata.pagesize,"B7") == 0)
     media = '\1';
   else if (strcmp(privdata.pagesize,"w360h504") == 0)
@@ -2720,6 +2741,10 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
     media = '\6';
   else if (strcmp(privdata.pagesize,"w432h648") == 0)
     media = '\5';
+  else if (strcmp(privdata.pagesize,"4x6_x2") == 0)
+    media = '\5';
+  else if (strcmp(privdata.pagesize,"w144h432") == 0)
+    media = '\7';
 
   stp_put32_le(0x10, v);
   stp_put32_le(2145, v);  /* Printer Model */
@@ -2731,7 +2756,14 @@ static void shinko_chcs2145_printer_init(stp_vars_t *v)
   stp_put32_le(media, v);  /* Media Type */
   stp_put32_le(0x00, v);
 
-  stp_put32_le(0x00, v);  /* XXX Print Method 00 = normal, 02 = 4x6*2, 04 = 2x6*2 */
+  if (strcmp(privdata.pagesize,"4x6_x2") == 0) {
+    stp_put32_le(0x02, v);
+  } else if (strcmp(privdata.pagesize,"2x6_x2") == 0) {
+    stp_put32_le(0x04, v);
+  } else {
+    stp_put32_le(0x00, v);  /* Print Method */
+  }
+
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Print Mode */
   stp_put32_le(0x00, v);
@@ -2769,7 +2801,6 @@ static void shinko_chcs2145_printer_end(stp_vars_t *v)
 }
 
 /* Dai Nippon Printing DS40 */
-
 static const dyesub_resolution_t res_dnpds40_dpi[] =
 {
   { "300x300", 300, 300},
@@ -2778,15 +2809,20 @@ static const dyesub_resolution_t res_dnpds40_dpi[] =
 
 LIST(dyesub_resolution_list_t, res_dnpds40_dpi_list, dyesub_resolution_t, res_dnpds40_dpi);
 
-
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds40_dock_page[] =
 {
   { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
   { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "2x6_x2", "2x6*2", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#endif
   { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
   { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "4x6_x2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#endif
   { "w432h576", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 };
 
@@ -2798,10 +2834,18 @@ static const dyesub_printsize_t dnpds40_dock_printsize[] =
   { "300x600", "B7", 1920, 2176},
   { "300x300", "w288h432", 1920, 1240},
   { "300x600", "w288h432", 1920, 2480},
+#ifdef DNPX2
+  { "300x300", "2x6_x2", 1920, 1240},
+  { "300x600", "2x6_x2", 1920, 2480},
+#endif
   { "300x300", "w360h504", 1920, 2138},
   { "300x600", "w360h504", 1920, 4276},
   { "300x300", "A5", 1920, 2436},
   { "300x600", "A5", 1920, 4872},
+#ifdef DNPX2
+  { "300x300", "4x6_x2", 1920, 2498},
+  { "300x600", "4x6_x2", 1920, 4996},
+#endif
   { "300x300", "w432h576", 1920, 2740},
   { "300x600", "w432h576", 1920, 5480},
 };
@@ -2841,8 +2885,12 @@ static void dnpds40_printer_start(stp_vars_t *v)
   dnpds40ds80_printer_start(v);
 
   /* Set cutter option to "normal" */
-  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
-  /* XXX cutter also supports ...012 for 2x6 *2 */
+  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
+  if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "120");
+  } else {
+    stp_zprintf(v, "000");
+  }
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
@@ -2857,11 +2905,11 @@ static void dnpds40_printer_start(stp_vars_t *v)
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "w432h576")) {
     stp_zprintf(v, "05");
+  } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
+    stp_zprintf(v, "12");
   } else {
     stp_zprintf(v, "00");
-    /* XXX Handle 6x4 *2 aka "12" */
   }
-
 }
 
 static void dnpds40_printer_end(stp_vars_t *v)
@@ -2912,33 +2960,69 @@ static void dnpds40_plane_init(stp_vars_t *v)
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds80_dock_page[] =
 {
+  { "w288h576", "8x4", PT(2560,300)+1, PT(1236,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h576", "8x5", PT(2560,300)+1, PT(1536,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "8x6", PT(2560,300)+1, PT(1836,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h576", "8x8", PT(2560,300)+1, PT(2436,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "8x4_x2", "8x4*2", PT(2560,300)+1, PT(2502,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x5_8x4", "8x5+8x4", PT(2560,300)+1, PT(2802,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+#endif
   { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "C6", "8x4", PT(2560,300)+1, PT(1236,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},/* 8x4 */
-  { "C5", "8x5", PT(2560,300)+1, PT(1536,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "C4", "8x6", PT(2560,300)+1, PT(1836,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "C3", "8x8", PT(2560,300)+1, PT(2436,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "C2", "8x12", PT(2560,300)+1, PT(3636,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "C1", "A4 Length", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "8x5_x2", "8x5*2", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x6_8x4", "8x6+8x4", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x6_8x5", "8x6+8x5", PT(2560,300)+1, PT(3402,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+#endif
+  { "A4", "A4 Length", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2560,300)+1, PT(3636,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "8x6_x2", "8x6*2", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x8_8x4", "8x8+8x4", PT(2560,300)+1, PT(3702,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x4_x3", "8x4*3", PT(2560,300)+1, PT(3768,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+#endif
 };
 
 LIST(dyesub_pagesize_list_t, dnpds80_dock_page_list, dyesub_pagesize_t, dnpds80_dock_page);
 
 static const dyesub_printsize_t dnpds80_dock_printsize[] =
 {
+  { "300x300", "w288h576", 2560, 1236},
+  { "300x600", "w288h576", 2560, 2472},
+  { "300x300", "w360h576", 2560, 1536},
+  { "300x600", "w360h576", 2560, 3072},
+  { "300x300", "w432h576", 2560, 1836},
+  { "300x600", "w432h576", 2560, 3672},
+  { "300x300", "w576h576", 2560, 2436},
+  { "300x600", "w576h576", 2560, 4872},
+#ifdef DNPX2
+  { "300x300", "8x4_x2", 2560, 2502},
+  { "300x600", "8x4_x2", 2560, 5004},
+  { "300x300", "8x5_8x4", 2560, 2802},
+  { "300x600", "8x5_8x4", 2560, 5604},
+#endif
   { "300x300", "c8x10", 2560, 3036},
   { "300x600", "c8x10", 2560, 6072},
-  { "300x300", "C6", 2560, 1236},
-  { "300x600", "C6", 2560, 2472},
-  { "300x300", "C5", 2560, 1536},
-  { "300x600", "C5", 2560, 3072},
-  { "300x300", "C4", 2560, 1836},
-  { "300x600", "C4", 2560, 3672},
-  { "300x300", "C3", 2560, 2436},
-  { "300x600", "C3", 2560, 4872},
-  { "300x300", "C2", 2560, 3636},
-  { "300x600", "C2", 2560, 7272},
-  { "300x300", "C1", 2560, 3544},
-  { "300x600", "C1", 2560, 7088},
+#ifdef DNPX2
+  { "300x300", "8x5_x2", 2560, 3102},
+  { "300x600", "8x5_x2", 2560, 6204},
+  { "300x300", "8x6_8x4", 2560, 3102},
+  { "300x600", "8x6_8x4", 2560, 6204},
+  { "300x300", "8x6_8x5", 2560, 3402},
+  { "300x600", "8x6_8x5", 2560, 6804},
+#endif
+  { "300x300", "A4", 2560, 3544},
+  { "300x600", "A4", 2560, 7088},
+  { "300x300", "w576h864", 2560, 3636},
+  { "300x600", "w576h864", 2560, 7272},
+#ifdef DNPX2
+  { "300x300", "8x6_x2", 2560, 3702},
+  { "300x600", "8x6_x2", 2560, 7404},
+  { "300x300", "8x8_8x4", 2560, 3702},
+  { "300x600", "8x8_8x4", 2560, 7404},
+  { "300x300", "8x4_x3", 2560, 3768},
+  { "300x600", "8x4_x3", 2560, 7536},
+#endif
 };
 
 LIST(dyesub_printsize_list_t, dnpds80_dock_printsize_list, dyesub_printsize_t, dnpds80_dock_printsize);
@@ -2956,24 +3040,36 @@ static void dnpds80_printer_start(stp_vars_t *v)
 
   if (!strcmp(privdata.pagesize, "c8x10")) {
     stp_zprintf(v, "06");
-  } else if (!strcmp(privdata.pagesize, "C6")) {
-    stp_zprintf(v, "08");
-  } else if (!strcmp(privdata.pagesize, "C5")) {
-    stp_zprintf(v, "09");
-  } else if (!strcmp(privdata.pagesize, "C4")) {
-    stp_zprintf(v, "10");
-  } else if (!strcmp(privdata.pagesize, "C3")) {
-    stp_zprintf(v, "11");
-  } else if (!strcmp(privdata.pagesize, "C2")) {
+  } else if (!strcmp(privdata.pagesize, "w576h864")) {
     stp_zprintf(v, "07");
-  } else if (!strcmp(privdata.pagesize, "C1")) {
+  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+    stp_zprintf(v, "08");
+  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+    stp_zprintf(v, "09");
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    stp_zprintf(v, "10");
+  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+    stp_zprintf(v, "11");
+  } else if (!strcmp(privdata.pagesize, "8x4_x2")) {
+    stp_zprintf(v, "13");
+  } else if (!strcmp(privdata.pagesize, "8x5_x2")) {
+    stp_zprintf(v, "14");
+  } else if (!strcmp(privdata.pagesize, "8x6_x2")) {
+    stp_zprintf(v, "15");
+  } else if (!strcmp(privdata.pagesize, "8x5_8x4")) {
+    stp_zprintf(v, "16");
+  } else if (!strcmp(privdata.pagesize, "8x6_8x4")) {
+    stp_zprintf(v, "17");
+  } else if (!strcmp(privdata.pagesize, "8x6_8x5")) {
+    stp_zprintf(v, "18");
+  } else if (!strcmp(privdata.pagesize, "8x8_8x4")) {
+    stp_zprintf(v, "19");
+  } else if (!strcmp(privdata.pagesize, "8x4_x3")) {
+    stp_zprintf(v, "20");
+  } else if (!strcmp(privdata.pagesize, "A4")) {
     stp_zprintf(v, "21");
   } else {
     stp_zprintf(v, "00");
-    /* Others include 8x4 *2 (13) 8x5 *2 (14)
-                      8x6 *2 (15) 8x5+8x4 (16)
-                      8x6+8x4 (17) 8x6+8x5 (18)
-                      8x8+8x4 (19) 8x4 *3 (20)  */
   }
 }
 
