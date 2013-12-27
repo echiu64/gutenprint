@@ -2198,6 +2198,10 @@ static const dyesub_pagesize_t mitsu_cp9550_page[] =
   						DYESUB_LANDSCAPE},
   { "w288h432", "4x6", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
+#ifdef DNPX2
+  { "2x6_x2", "2x6*2", PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+#endif
   { "w360h504", "5x7", PT(1812,346)+1, PT(2402,346)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT(2152,346)+1, PT(2792,346)+1, 0, 0, 0, 0,
@@ -2216,6 +2220,9 @@ static const dyesub_printsize_t mitsu_cp9550_printsize[] =
 {
   { "346x346", "B7", 1240, 1812},
   { "346x346", "w288h432", 1416, 2152},
+#ifdef DNPX2
+  { "346x346", "2x6_x2", 1416, 2152},
+#endif
   { "346x346", "w360h504", 1812, 2402},
   { "346x346", "w432h576", 2152, 2792},
   { "346x346", "w432h612", 2152, 2956},
@@ -2253,7 +2260,10 @@ static void mitsu_cp9550_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0x00, 19);
   stp_putc(0x01, v);  /* This is Copies on other models.. */
   dyesub_nputc(v, 0x00, 2);
-  stp_putc(0x00, v); /* XXX 00 == normal, 83 = cut2x6 */
+  if (strcmp(privdata.pagesize,"2x6_x2") == 0)
+    stp_putc(0x83, v);
+  else
+    stp_putc(0x00, v);
   dyesub_nputc(v, 0x00, 5);
   stp_putc(0x00, v); /* XXX 00 == normal, 80 = fine */
   dyesub_nputc(v, 0x00, 10);
