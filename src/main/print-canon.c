@@ -733,6 +733,9 @@ const canon_mode_t* find_first_matching_mode_monochrome(stp_vars_t *v,const cano
 	    /* duplex check -- rare for monochrome, cannot remember any such case */
 	    mode = &caps->modelist->modes[j];
 	    modefound=1;
+	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode_monochrome): picked monochrome mode (%s)\n",mode->name);
+	    if (ERRPRINT)
+	      stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode_monochrome): picked mnochrome mode (%s)\n",mode->name);
 	  }
 	}
 	break; /* go to next mode in muse list */
@@ -757,7 +760,7 @@ const canon_mode_t* find_first_matching_mode(stp_vars_t *v,const canon_modeuse_t
     for(j=0;j<caps->modelist->count;j++){
       if(!strcmp(muse->mode_name_list[i],caps->modelist->modes[j].name)){/* find right place in canon-modes list */
 	if ( (duplex_mode && strncmp(duplex_mode,"Duplex",6)) || !(muse->use_flags & DUPLEX_SUPPORT) || !(caps->modelist->modes[j].flags & MODE_FLAG_NODUPLEX) ) {
-	  /* duplex check -- rare for monochrome, cannot remember any such case */
+	  /* duplex check */
 	  mode = &caps->modelist->modes[j];
 	  modefound=1;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode): picked mode without inkset limitation (%s)\n",mode->name);
@@ -1806,9 +1809,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  inkfound=1; /* set */
@@ -2583,9 +2586,9 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
-		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
+		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  inkfound=1; /* set */
@@ -3003,7 +3006,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
   if (strcmp(name, "PageSize") == 0)
     {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
-      int height_limit, width_limit;
+      unsigned int height_limit, width_limit;
       int papersizes = stp_known_papersizes();
       description->bounds.str = stp_string_list_create();
 
@@ -3026,6 +3029,21 @@ canon_parameters(const stp_vars_t *v, const char *name,
 				     pt->name, gettext(pt->text));
            }
         }
+	/*
+	{
+	  for (i = 0; i < papersizes; i++)
+	    {
+	      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	      if (verify_papersize(v, pt))
+		stp_string_list_add_string(description->bounds.str,
+					   pt->name, gettext(pt->text));
+	    }
+	}
+
+
+	 */
+
+
       }
       description->deflt.str =
         stp_string_list_param(description->bounds.str, 0)->name;
