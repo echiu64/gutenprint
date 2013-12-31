@@ -55,7 +55,6 @@ static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned
 {
 	unsigned char c1,c2;
 	unsigned int startxml, endxml;
-	unsigned int xmldata;
 	if (feof(infile))
 		return -1;
 	while (!feof(infile)){
@@ -65,15 +64,15 @@ static int nextcmd( FILE *infile,unsigned char* cmd,unsigned char *buf, unsigned
 		/* add skip for XML header and footer */
 		if (c1 == 60 ){  /* "<" for XML start */
 		  if (*xml_read==0){
-		    /* start: */
-		    startxml=680;
-		    xmldata=fread(buf,1,679,infile); /* 1 less than 680 */
+		    /* start */
+		    startxml=680-1;
+		    fread(buf,1,startxml,infile); /* 1 less than 680 */
 		    fprintf(stderr,"nextcmd: read starting XML %d %d\n", *xml_read, startxml);
 		    *xml_read=1;
 		  }else if (*xml_read==1) {
 		    /* end */
-		    endxml=263;
-		    xmldata=fread(buf,1,262,infile); /* 1 less than 263*/
+		    endxml=263-1;
+		    fread(buf,1,endxml,infile); /* 1 less than 263*/
 		    fprintf(stderr,"nextcmd: read ending XML %d %d\n", *xml_read, endxml);
 		    *xml_read=2;
 		  }
@@ -121,6 +120,7 @@ static color_t* get_color(image_t* img,char name){
 	return NULL;
 }
 
+#if 0
 /* return pointer to color info structure matching name less 0x80 */
 static color_t* get_color2(image_t* img,char name){
 	int i;
@@ -133,6 +133,7 @@ static color_t* get_color2(image_t* img,char name){
 	}
 	return NULL;
 }
+#endif
 
 static int valid_color(unsigned char color){
 	int i;
@@ -172,6 +173,7 @@ static int eight2twelve(unsigned char* inbuffer,unsigned char* outbuffer,int num
 	return s.buf_ptr-s.buf;
 }
 
+#if 0
 static int analysiseight2twelve(unsigned char* inbuffer,unsigned char* outbuffer,int num_bytes,int outbuffer_size){
 	PutBitContext s;
 	int maxlevels;
@@ -192,6 +194,7 @@ static int analysiseight2twelve(unsigned char* inbuffer,unsigned char* outbuffer
 	/*return s.buf_ptr-s.buf;*/
 	return maxnum;
 }
+#endif
 
 /* decompression routine for 3 4-bit pixels of 6 levels each */
 static int eight2twelve2(unsigned char* inbuffer,unsigned char* outbuffer,int num_bytes,int outbuffer_size){
@@ -206,6 +209,7 @@ static int eight2twelve2(unsigned char* inbuffer,unsigned char* outbuffer,int nu
 	return s.buf_ptr-s.buf;
 }
 
+#if 0
 static int analysiseight2twelve2(unsigned char* inbuffer,unsigned char* outbuffer,int num_bytes,int outbuffer_size){
 	PutBitContext s;
 	int maxlevels;
@@ -226,7 +230,7 @@ static int analysiseight2twelve2(unsigned char* inbuffer,unsigned char* outbuffe
 	/*return s.buf_ptr-s.buf;*/
 	return maxnum;
 }
-
+#endif
 
 /* reads a run length encoded block of raster data, decodes and uncompresses it */
 static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned char color_name,unsigned int maxw){
@@ -237,9 +241,11 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 	unsigned char* dst=malloc(len*256); /* the destination buffer */
 	unsigned char* dstr=dst;
 
+#if 0
 	/*int numbigvals;*/ /* number of values greater than number of decompression table max index value */
 	int maxtablevalue; /* try to catch the range of table values needed for decompression table */
 	maxtablevalue=0;
+#endif
 
 	/* if(!color){
 	   printf("no matching color for %c (0x%x, %i) in the database => ignoring %i bytes\n",color_name,color_name,color_name, len); 
@@ -390,15 +396,15 @@ static void write_line(image_t*img,FILE* fp,int pos_y){
 	color_t* m=get_color(img,'m');
 	color_t* y=get_color(img,'y');
 	color_t* k=get_color(img,'k');
-	/*color_t* H=get_color(img,'H');*/
+	/* color_t* H=get_color(img,'H'); */
 	/*color_t* R=get_color(img,'R');*/
 	/*color_t* G=get_color(img,'G');*/
 	/* experimenting with strange colors */
-	color_t* P=get_color2(img,'P');
+	/* color_t* P=get_color2(img,'P');
 	color_t* Q=get_color2(img,'Q');
 	color_t* R=get_color2(img,'R');
 	color_t* S=get_color2(img,'S');
-	color_t* T=get_color2(img,'T');
+	color_t* T=get_color2(img,'T'); */
 
 	/* color_t* A=get_color(img,'A'); */
 	/* color_t* B=get_color(img,'B'); */
@@ -589,6 +595,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 	unsigned char* buf=malloc(0xFFFF);
 	int returnv=0;
 	int i;
+	int num_colors;
 	unsigned int xml_read;
 	xml_read=0;
 
@@ -649,9 +656,10 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 			  fprintf(stderr,"ESC (t set image cnt %i\n",cnt);
 				if(buf[0]>>7){
 				        /* usual order */
+				        char order[]="CMYKcmyk";
 				        /*char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 				        /* iP3500 test */
-				        char order[]="CMYKcmykHRGBCMYcmykabd";
+				        /*char order[]="CMYKcmykHRGBCMYcmykabd";*/
 				        /*char order[]="CMYKcmykHpnoPQRSTykabd";*/
 				        /*char order[]="KCMYkcmyHpnoPQRSTykabd";*/
 				        /* MP960 photo modes: k instead of K */
@@ -662,8 +670,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				        /*char order[]="KCcMmYykRHGABDEFIJLMNOPQSTUVWXZabdef";*/
 					/* MP990 etc. photo modes */
 				        /* char order[]="KCcMmYykRHGABDEFIJLMNOPQSTUVWXZabdef"; */
-					int black_found = 0;
-					int num_colors = (cnt - 3)/3;
+					/* int black_found = 0; */
+					num_colors = (cnt - 3)/3;
 					fprintf(stderr," bit_info: using detailed color settings for max %i colors\n",num_colors);
 					if(buf[1]==0x80)
 					  fprintf(stderr," format: BJ indexed color image format\n");
@@ -712,8 +720,10 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    }					    
 					    else
 					      img->color[i].density = 128; /*128+96;*/ /* try to add 0x80 to sub-channels for MP450 hi-quality mode */
+                                            /*
 					    if((order[i] == 'K' || order[i] == 'k') && img->color[i].bpp)
 					      black_found = 1;
+					    */
 					    /*
 					    if(order[i] == 'y' && !black_found && img->color[i].level){
 					      printf("iP6700 hack: treating color definition at the y position as k\n");
@@ -737,16 +747,17 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					
 					
 				}else if(buf[0]==0x1 && buf[1]==0x0 && buf[2]==0x1){
-					fprintf(stderr," 1bit-per pixel\n");
-					int num_colors = cnt*3; /*no idea yet! 3 for iP4000 */
+					fprintf(stderr," 1bit-per pixel\n");					
+					num_colors = cnt*3; /*no idea yet! 3 for iP4000 */
 					/*num_colors=9;*/
 					/*for(i=0;i<MAX_COLORS;i++){*/
 					for(i=0;i<num_colors;i++){
 					  if(i<MAX_COLORS){	
 					        /* usual */
+  					        char order[]="CMYKcmyk";
 					        /* const char order[]="CMYKcmykHRGABDEFIJLMNOPQSTUVWXZabdef";*/
 				                /* iP3500 test */
-				                char order[]="CMYKcmykHRGBCMYcmykabd";
+				                /* char order[]="CMYKcmykHRGBCMYcmykabd"; */
 						/* MP990, MG6100, MG8100 plain modes */
 						/*const char order[]="KCcMmYykRHGABDEFIJLMNOPQSTUVWXZabdef";*/
 						img->color[i].name=order[i];
