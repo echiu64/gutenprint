@@ -37,7 +37,7 @@
  * lexmark_cap_t which defines positions are in 1/72 DPI. At
  * lexmark_print the unit will be changed dependent on the printer,
  * according to the value defined at lexmark_cap_t.x_raster_res and
- * lexmark_cap_t.y_raster_res. These two parameters are specifing the
+ * lexmark_cap_t.y_raster_res. These two parameters are specifying the
  * resolution used for positioning the printer head (it is not the
  * resolution used for printing!).
  */
@@ -466,8 +466,8 @@ typedef lexmark_res_t lexmark_res_t_array[LEXM_RES_COUNT];
 typedef struct {
   int ncolors;
   unsigned int used_colors; /* specifies the head colors to be used (e.g. COLOR_MODE_K */
-  unsigned int pass_length; /* avaliable jets for one color */
-  int v_top_head_offset;    /* offset from top, wehere the first jet will be found */
+  unsigned int pass_length; /* available jets for one color */
+  int v_top_head_offset;    /* offset from top, where the first jet will be found */
   int h_catridge_offset;    /* horizontal offset of cartridges */
   int h_direction_offset;   /* Offset when printing in the other direction */
   const int *head_offset;   /* specifies the offset of head colors */
@@ -555,7 +555,7 @@ static const unsigned char outbufHeader_z52[LXM_Z52_HEADERSIZE]=
   0x03,0x60,                                  /* 0xd-0xe HE */
   0x04,0xe0,                                  /* 0xf-0x10  HS vertical pos */
   0x19,0x5c,                                  /* 0x11-0x12 */
-  0x0,0x0,                                    /* 0x13-0x14  VO between packges*/
+  0x0,0x0,                                    /* 0x13-0x14  VO between packages*/
   0x0,0x80,                                   /* 0x15-0x16 */
   0x0,0x0,0x0,0x0,0x1,0x2,0x0,0x0,0x0,0x0,0x0 /* 0x17-0x21 */
 };
@@ -595,21 +595,21 @@ static const lexmark_res_t_array lexmark_reslist_z52 =  /* LEXM_RES_COUNT entrie
 static const lexmark_inkname_t ink_types_z52[] =
 {
   /*   output_type   ncolors used_colors   pass_length  v_top_head_offset
-   *                                                        h_catridge_offset
+   *                                                        h_cartridge_offset
    *                                                           h_direction_offset
    *                                                               head_offset */
   { "CMYK",     N_("Four Color Standard"),
     {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
      { 4, COLOR_MODE_CMYK,   192/3,   0, 0, 10, head_offset_cmyk }}},
   { "RGB",      N_("Three Color Composite"),
-    {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },  /* we ignor CMY, use black */
+    {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },  /* we ignore CMY, use black */
      { 4, COLOR_MODE_CMY,    192/3,   0, 0, 10, head_offset_cmy }}},
   { "PhotoCMYK", N_("Six Color Photo"),
     {{ 1, COLOR_MODE_K,      192/3,   0, 0, 10, head_offset_cCmMyk },
      { 6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 10, head_offset_cCmMyk }}},
   { "PhotoCMY", N_("Five Color Photo Composite"),
     {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cCmMyk },
-     { 5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk }}}, /* we ignor CMY, use black */
+     { 5, COLOR_MODE_CcMcY,  192/3,   0, 0, 10, head_offset_cCmMyk }}}, /* we ignore CMY, use black */
   { "Gray",     N_("Black"),
     {{ 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk },
      { 1, COLOR_MODE_K,        208, 324, 0, 10, head_offset_cmyk }}},
@@ -619,7 +619,7 @@ static const lexmark_inkname_t ink_types_z52[] =
 
 
 /*
- * 3200 sepecific stuff
+ * 3200 specific stuff
  */
 #define LXM3200_LEFTOFFS 6254
 #define LXM3200_RIGHTOFFS (LXM3200_LEFTOFFS-2120)
@@ -665,20 +665,20 @@ static const lexmark_res_t_array lexmark_reslist_3200 =   /* LEXM_RES_COUNT entr
 static const lexmark_inkname_t ink_types_3200[] =
 {
   /*   output_type   ncolors used_colors   pass_length  v_top_head_offset
-   *                                                        h_catridge_offset
+   *                                                        h_cartridge_offset
    *                                                           h_direction_offset
    *                                                               head_offset */
   { "CMYK",     N_("Four Color Standard"),
     {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },
      { 4, COLOR_MODE_CMYK,   192/3,   0, 0, 12, head_offset_cmyk }}},
   { "RGB",      N_("Three Color Composite"),
-    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },  /* we ignor CMY, use black */
+    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cmyk },  /* we ignore CMY, use black */
      { 4, COLOR_MODE_CMY,    192/3,   0, 0, 12, head_offset_cmy }}},
   { "PhotoCMYK", N_("Six Color Photo"),
     {{ 1, COLOR_MODE_K,      192/3,   0, 0, 12, head_offset_cCmMyk },
      { 6, COLOR_MODE_CcMcYK, 192/3,   0, 0, 12, head_offset_cCmMyk }}},
   { "PhotoCMY", N_("Five Color Photo Composite"),
-    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cCmMyk }, /* we ignor CMY, use black */
+    {{ 1, COLOR_MODE_K,        208,  20, 0, 12, head_offset_cCmMyk }, /* we ignore CMY, use black */
      { 5, COLOR_MODE_CcMcY,  192/3,   0, 0, 12, head_offset_cCmMyk }}},
   { NULL, NULL }
 };
@@ -690,7 +690,7 @@ static const lexmark_inkname_t ink_types_3200[] =
 /* main structure */
 static const lexmark_cap_t lexmark_model_capabilities[] =
 {
-  /* default settings for unkown models */
+  /* default settings for unknown models */
 
   {   (Lex_model)-1, 8*72,11*72,180,180,20,20,20,20, LEXMARK_INK_K, LEXMARK_SLOT_ASF1, 0 },
 
@@ -762,7 +762,7 @@ static const lexmark_cap_t lexmark_model_capabilities[] =
     /*** printer internal parameters ***/
     0,         /* real left paper border */
     300,       /* real top paper border */
-    1200,      /* horizontal resolutio of ??? dpi for positioning */
+    1200,      /* horizontal resolution of ??? dpi for positioning */
     1200,      /* use a vertical resolution of 1200 dpi for positioning */
     &lexmark_reslist_3200,  /* resolution specific parameters of ?? */
     ink_types_3200,  /* supported inks */
@@ -980,7 +980,7 @@ lexmark_head_offset(int ydpi,                       /* i */
 {
   int i;
 
-  stp_deprintf(STP_DBG_LEXMARK, "  sizie %d,  size_v %d, size_v[0] %d\n", (int)sizeof(*lineoff_buffer), (int)sizeof(lineoff_buffer->v), (int)sizeof(lineoff_buffer->v[0]));
+  stp_deprintf(STP_DBG_LEXMARK, "  size %d,  size_v %d, size_v[0] %d\n", (int)sizeof(*lineoff_buffer), (int)sizeof(lineoff_buffer->v), (int)sizeof(lineoff_buffer->v[0]));
   memcpy(lineoff_buffer, ink_parameter->head_offset, sizeof(*lineoff_buffer));
 
   for (i=0; i < (sizeof(lineoff_buffer->v) / sizeof(lineoff_buffer->v[0])); i++) {
@@ -1569,7 +1569,7 @@ get_double_param(stp_vars_t *v, const char *param)
 /**********************************************************
  * lexmark_print() - Print an image to a LEXMARK printer.
  **********************************************************/
-/* This method should not be printer dependent (mybe it is because of nozzle count and other things) */
+/* This method should not be printer dependent (maybe it is because of nozzle count and other things) */
 /* The method will set the printing method depending on the selected printer.
    It will define the colors to be used and the resolution.
    Additionally the pass_length will be defined.
@@ -1590,9 +1590,8 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
     page_right,
     page_bottom,
     page_true_height,	/* True length of page */
-    out_width,	/* Width of image on page in pixles */
+    out_width,	/* Width of image on page in pixels */
     out_height,	/* Length of image on page */
-    out_channels,	/* Output bytes per pixel */
     length,		/* Length of raster data in bytes*/
     buf_length,     /* Length of raster data buffer (dmt) */
     errdiv,		/* Error dividend */
@@ -1600,15 +1599,20 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
     errval,		/* Current error value */
     errline,	/* Current raster line */
     errlast;	/* Last raster line loaded */
+#if 0
+		out_channels;	/* Output bytes per pixel */
+#endif
   unsigned      zero_mask;
-  int           image_height,
-                image_width;
+  int           image_height;
+#if 0
+  int           image_width;
+#endif
   int           use_dmt = 0;
   int pass_length=0;              /* count of inkjets for one pass */
   int add_top_offset=0;              /* additional top offset */
   int printMode = 0;
-    int source;
-  /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
+  int source;
+  /* Lexmark do not have different pixel sizes. We have to correct the density according the print resolution. */
   double  densityDivisor;            /* This parameter is will adapt the density according the resolution */
   double k_lower, k_upper;
   int  physical_xdpi = 0;
@@ -1672,7 +1676,7 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_image_init(image);
 
-  source= lexmark_source_type(media_source,caps);
+  source=lexmark_source_type(media_source,caps);
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
@@ -1732,7 +1736,7 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
 #endif
 
   if ((printMode & COLOR_MODE_PHOTO) == COLOR_MODE_PHOTO) {
-    /* in case of photo mode we have to go a bit ligther */
+    /* in case of photo mode we have to go a bit lighter */
 densityDivisor /= 1.2;
   }
 
@@ -1768,7 +1772,10 @@ densityDivisor /= 1.2;
   stp_dprintf(STP_DBG_LEXMARK, v, "page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
 
   image_height = stp_image_height(image);
+
+#if 0
   image_width = stp_image_width(image);
+#endif
 
   stp_default_media_size(v, &n, &page_true_height);
   lxm3200_linetoeject = (page_true_height * 1200) / 72;
@@ -1788,7 +1795,7 @@ densityDivisor /= 1.2;
   out_height = ydpi * out_height / 72;
 
 
-  stp_dprintf(STP_DBG_LEXMARK, v, "border: left %d, x_raster_res %d, offser_left %d\n", left, caps->x_raster_res, caps->offset_left_border);
+  stp_dprintf(STP_DBG_LEXMARK, v, "border: left %d, x_raster_res %d, offset_left %d\n", left, caps->x_raster_res, caps->offset_left_border);
 
   left = ((caps->x_raster_res * left) / 72) + caps->offset_left_border;
 
@@ -1879,7 +1886,7 @@ densityDivisor /= 1.2;
 	      (cols.p.Y) ? 'Y' : ' ',
 	      (cols.p.k) ? 'k' : ' ');
 
-  /* initialize soft weaveing */
+  /* initialize soft weaving */
   privdata.ink_parameter = ink_parameter;
   privdata.bidirectional = lexmark_print_bidirectional(model, resolution);
   privdata.outbuf = stp_malloc((((((pass_length/8)*11))+40) * out_width)+2000);
@@ -1890,7 +1897,7 @@ densityDivisor /= 1.2;
   stp_initialize_weave(v,
 		       pass_length, /* jets */
 		       nozzle_separation, /* separation */
-		       horizontal_passes, /* h overample */
+		       horizontal_passes, /* h oversample */
 		       res_para_ptr->vertical_passes, /* v passes */
 		       res_para_ptr->vertical_oversample, /* v oversample */
 		       ncolors, /* colors */
@@ -1926,7 +1933,7 @@ densityDivisor /= 1.2;
 		stp_get_float_parameter(v, "Density") / densityDivisor,
 		densityDivisor);
 
-  /* Lexmark do not have differnet pixel sizes. We have to correct the density according the print resolution. */
+  /* Lexmark do not have different pixel sizes. We have to correct the density according the print resolution. */
   stp_scale_float_parameter(v, "Density", 1.0 / densityDivisor);
 
 
@@ -2077,7 +2084,9 @@ densityDivisor /= 1.2;
       stp_curve_destroy(sat_adjustment);
     }
 
+#if 0
   out_channels = stp_color_init(v, image, 65536);
+#endif
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
   stp_dprintf(STP_DBG_LEXMARK, v, "---------- buffer mem size = %d\n", (((((pass_length/8)*11)/10)+40) * out_width)+200);
@@ -2179,7 +2188,7 @@ static const stp_printfuncs_t print_lexmark_printfuncs =
    This method is printer type dependent code.
 
    This method initializes the line to be printed. It will set
-   the printer specific initialization which has to be done bofor
+   the printer specific initialization which has to be done before
    the pixels of the image could be printed.
 */
 static unsigned char *
@@ -2199,7 +2208,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
 
 
   /*  stp_erprintf("#### width %d, length %d, pass_length %d\n", width, length, pass_length);*/
-  /* first, we wirte the line header */
+  /* first, we write the line header */
   switch(caps->model)  {
   case m_z52:
   case m_z42:
@@ -2216,7 +2225,7 @@ lexmark_init_line(int mode, unsigned char *prnBuf,
 
     /* K could only be present if black is printed only. */
     if ((mode & COLOR_MODE_K) || (mode & (COLOR_MODE_K | COLOR_MODE_LC | COLOR_MODE_LM))) {
-      stp_deprintf(STP_DBG_LEXMARK, "set  photo/black catridge \n");
+      stp_deprintf(STP_DBG_LEXMARK, "set  photo/black cartridge \n");
       prnBuf[LX_Z52_COLOR_MODE_POS] = LX_Z52_BLACK_PRINT;
 
       if (direction) {
@@ -2386,7 +2395,7 @@ typedef struct Lexmark_head_colors {
 
 /* lexmark_write
    This method is has NO printer type dependent code.
-   This method writes a single line of the print. The line consits of "pass_length"
+   This method writes a single line of the print. The line consists of "pass_length"
    pixel lines (pixels, which could be printed with one pass by the printer.
 */
 
@@ -2405,7 +2414,7 @@ lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
 	      int           length,	/* I - Length of bitmap data in bytes */
 	      int           mode,	/* I - Which color */
 	      int           ydpi,		/* I - Vertical resolution */
-	      int           width,	/* I - Printed width in pixles */
+	      int           width,	/* I - Printed width in pixels */
 	      int           offset, 	/* I - Offset from left side in lexmark_cap_t.x_raster_res DPI */
 	      int           dmt)
 {
@@ -2413,7 +2422,7 @@ lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
   int clen;
   int x;  /* actual vertical position */
   int y;  /* actual horizontal position */
-  int dy; /* horiz. inkjet posintion */
+  int dy; /* horiz. inkjet position */
   int x1;
   unsigned short pixelline;  /* byte to be written */
   unsigned int valid_bytes; /* bit list which tells the present bytes */
@@ -2579,7 +2588,7 @@ lexmark_write(const stp_vars_t *v,		/* I - Print file or command */
     if (anyDots) {
       anyCol = 1;
     } else {
-      /* there are no dots, make empy package */
+      /* there are no dots, make empty package */
       /*     stp_dprintf(STP_DBG_LEXMARK, v, "-- empty col %i\n", x); */
     }
   }
@@ -2711,11 +2720,11 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
     prn_mode = PRINT_MODE_1200;
     break;
   default:
-    stp_dprintf(STP_DBG_LEXMARK, v, "Eror: Unsupported phys resolution (%d)\n", physical_xdpi);
+    stp_dprintf(STP_DBG_LEXMARK, v, "Error: Unsupported phys resolution (%d)\n", physical_xdpi);
     return;
     break;
   }
-  /* calculate paper shift and adapt actual resoution to physical positioning resolution */
+  /* calculate paper shift and adapt actual resolution to physical positioning resolution */
   paperShift = (pass->logicalpassstart - pd->last_pass_offset) * (caps->y_raster_res/ydpi);
   for (j = 0; j < pd->ncolors; j++)
     stp_dprintf(STP_DBG_LEXMARK, v, "Color %d: active %d line %p jets %d offset %ld\n",
@@ -2774,7 +2783,7 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 		      (lwidth+7)/8, /* length,	 I - Length of bitmap data of one line in bytes */
 		      prn_mode | COLOR_MODE_C | COLOR_MODE_Y | COLOR_MODE_M,       /* mode,	 I - Which color */
 		      ydpi,                  /* ydpi,	 I - Vertical resolution */
-		      lwidth,      /* width, 	 I - Printed width in pixles*/
+		      lwidth,      /* width, 	 I - Printed width in pixels*/
 		      hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
 		      0                      /* dmt */);
 	if (pd->bidirectional)
@@ -2782,8 +2791,8 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
       }
 
 
-      /*** do we have to print somthing with black or photo cartridge ? ***/
-      /* we print with the photo or black cartidge */
+      /*** do we have to print something with black or photo cartridge ? ***/
+      /* we print with the photo or black cartridge */
 
     if (pd->jets != 208)
       {
@@ -2871,7 +2880,7 @@ flush_pass(stp_vars_t *v, int passno, int vertical_subpass)
 		  (lwidth+7)/8, /* length,	 I - Length of bitmap data of one line in bytes */
 		  prn_mode | COLOR_MODE_LC | COLOR_MODE_LM | COLOR_MODE_K,       /* mode,	 I - Which color */
 		  ydpi,                  /* ydpi,	 I - Vertical resolution */
-		  lwidth,      /* width, 	 I - Printed width in pixles*/
+		  lwidth,      /* width, 	 I - Printed width in pixels*/
 		  hoffset+microoffset,   /* offset  I - Offset from left side in x_raster_res DPI */
 		  0                      /* dmt */);
     if (pd->bidirectional)
@@ -2925,7 +2934,7 @@ static void testprint(testdata *td)
 
     /* read the colors */
     fscanf(td->ifile, "%[^\"]\"%c	c %[^\"]\",", dummy1, dummy2, dummy2); /* jump over first color */
-    for (icol=0; icol < td->cols; icol++) {  /* we ignor the first color. It is "no dot". */
+    for (icol=0; icol < td->cols; icol++) {  /* we ignore the first color. It is "no dot". */
       fscanf(td->ifile, "%[^\"]\"%c	c %[^\"]\",", dummy1, &(td->colchar[icol]), dummy2);
       stp_erprintf("colchar %d <%c>\n", i, td->colchar[icol]);
     }
@@ -2933,12 +2942,12 @@ static void testprint(testdata *td)
 
     if (td->cols > 5) {
       td->cols = 7;
-      for (icol=0; icol < td->cols; icol++) {  /* we ignor the first color. It is "no dot". */
+      for (icol=0; icol < td->cols; icol++) {  /* we ignore the first color. It is "no dot". */
 	linebufs.v[icol] = (char *)stp_malloc((td->x+7)/8); /* allocate the color */
       }
     } else if (td->cols > 4) {
       td->cols = 5;
-      for (icol=0; icol < td->cols; icol++) {  /* we ignor the first color. It is "no dot". */
+      for (icol=0; icol < td->cols; icol++) {  /* we ignore the first color. It is "no dot". */
 	linebufs.v[icol] = (char *)stp_malloc((td->x+7)/8); /* allocate the color */
       }
     } else {
@@ -3024,4 +3033,3 @@ stp_module_t stp_module_data =
     print_lexmark_module_exit,
     (void *) &print_lexmark_module_data
   };
-
