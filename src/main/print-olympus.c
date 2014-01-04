@@ -79,6 +79,15 @@
 #define MAX_BYTES_PER_CHANNEL	2
 #define SIZE_THRESHOLD		6
 
+/*
+ * Random implementation from POSIX.1-2001 to yield reproducible results.
+ */
+static int xrand(unsigned long *seed)
+{
+  *seed = *seed * 1103515245ul + 12345ul;
+  return ((unsigned) (*seed / 65536ul) % 32768ul);
+}
+
 typedef struct
 {
   const char *output_type;
@@ -2408,13 +2417,14 @@ static void mitsu_cp9810_printer_end(stp_vars_t *v)
     */
 
     int r, c;
+    unsigned long seed = 1;
 
     mitsu_cp3020da_plane_init(v); /* First generate plane header */
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < privdata.w_size ; c++) {
       for (r = 0 ; r < privdata.h_size ; r++) {
-	int i = rand() & 0x1f;
+	int i = xrand(&seed) & 0x1f;
 	if (i < 16)
 	  stp_put16_be(0x0202, v);
 	else if (i < 26)
@@ -2521,11 +2531,12 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
        four values: 0xab58, 0x286a, 0x6c22 */
     
     int r, c;
+    unsigned long seed = 1;
 
     /* Now generate lamination pattern */
     for (c = 0 ; c < privdata.w_size ; c++) {
       for (r = 0 ; r < privdata.h_size + 12 ; r++) {
-	int i = rand() & 0x1f;
+	int i = xrand(&seed) & 0x1f;
 	if (i < 24)
 	  stp_put16_be(0xab58, v);
 	else if (i < 29)
