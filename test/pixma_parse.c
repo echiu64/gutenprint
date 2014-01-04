@@ -528,11 +528,11 @@ static void write_ppm(image_t* img,FILE* fp){
 	/* allocate buffers for dot statistics */
         for(i=0;i<MAX_COLORS;i++){
 	  /*img->color[i].dots=calloc(1,sizeof(int)*(img->color[i].level+1));*/
-	  img->color[i].dots=calloc(1,sizeof(int)*(1<<(img->color[i].bpp)+1));
+	  img->color[i].dots=calloc(1,sizeof(int)*(1<<((img->color[i].bpp)+1)));
 	}	
 	/* allocate buffers for levels used*/
         for(i=0;i<MAX_COLORS;i++){
-	  img->color[i].usedlevels=calloc(1,sizeof(int)*(1<<(img->color[i].bpp)+1));
+	  img->color[i].usedlevels=calloc(1,sizeof(int)*(1<<((img->color[i].bpp)+1)));
 	}	
 
 	/* write header */

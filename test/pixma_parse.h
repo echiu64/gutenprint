@@ -287,9 +287,9 @@ typedef struct image_s {
         int lines_per_block;
 } image_t;
 
-static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k'};
+/* static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k'}; */
 /* static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k',0xa3,0xad}; */
-/* static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k','R','G','H','A','B','D','E','F','I','J','L','M','N','O','P','Q','S','T','U','V','W','X','Z','a','b','d','e','f'}; */
+static const unsigned char valid_colors[] = {'C','M','Y','K','c','m','y','k','R','G','H','A','B','D','E','F','I','J','L','M','N','O','P','Q','S','T','U','V','W','X','Z','a','b','d','e','f'};
 #endif
 
 
