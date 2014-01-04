@@ -2274,9 +2274,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 		*yellow,	/* Yellow bitmap data */
 		*lcyan,		/* Light Cyan bitmap data */
 		*lmagenta;	/* Light Magenta bitmap data */
-  int		page_width,	/* Width of page */
-		page_height,	/* Height of page */
-		page_left,
+  int		page_left,
 		page_top,
 		page_right,
 		page_bottom,
@@ -2287,14 +2285,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
-#if 0
-		out_channels,	/* Output bytes per pixel */
-#endif
   unsigned	zero_mask;
   int           image_height;
-#if 0
-                image_width;
-#endif
   const pcl_cap_t *caps;		/* Printer capabilities */
   int		planes = 3;	/* # of output planes */
   int		pcl_media_size; /* PCL media size code */
@@ -2324,9 +2316,6 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_image_init(image);
   image_height = stp_image_height(image);
-#if 0
-  image_width = stp_image_width(image);
-#endif
 
  /*
   * Figure out the output resolution...
@@ -2385,13 +2374,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 			  &page_bottom, &page_top);
   left -= page_left;
   top -= page_top;
-  page_width = page_right - page_left;
-  page_height = page_bottom - page_top;
 
   image_height = stp_image_height(image);
-#if 0
-  image_width = stp_image_width(image);
-#endif
 
  /*
   * Set media size here because it is needed by the margin calculation code.
@@ -2853,29 +2837,29 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   if (black)
     stp_channel_set_density_adjustment(v, STP_ECOLOR_K, 0,
 				       get_double_param(v, "BlackDensity") *
-				       get_double_param(v, "Density"));
+				       density);
   if (cyan)
     stp_channel_set_density_adjustment(v, STP_ECOLOR_C, 0,
 				       get_double_param(v, "CyanDensity") *
-				       get_double_param(v, "Density"));
+				       density);
   if (magenta)
     stp_channel_set_density_adjustment(v, STP_ECOLOR_M, 0,
 				       get_double_param(v, "MagentaDensity") *
-				       get_double_param(v, "Density"));
+				       density);
   if (yellow)
     stp_channel_set_density_adjustment(v, STP_ECOLOR_Y, 0,
 					get_double_param(v, "YellowDensity") *
-					get_double_param(v, "Density"));
+					density);
   if (lcyan)
     stp_channel_set_density_adjustment
       (v, STP_ECOLOR_C, 1, (get_double_param(v, "CyanDensity") *
 			get_double_param(v, "LightCyanTrans") *
-			get_double_param(v, "Density")));
+			density));
   if (lmagenta)
     stp_channel_set_density_adjustment
       (v, STP_ECOLOR_M, 1, (get_double_param(v, "MagentaDensity") *
 			get_double_param(v, "LightMagentaTrans") *
-			get_double_param(v, "Density")));
+			density));
 
 
   if (!stp_check_curve_parameter(v, "HueMap", STP_PARAMETER_ACTIVE))
@@ -2890,9 +2874,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       stp_curve_destroy(lum_adjustment);
     }
 
-#if 0
-  out_channels = stp_color_init(v, image, 65536);
-#endif
+  (void) stp_color_init(v, image, 65536);
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;

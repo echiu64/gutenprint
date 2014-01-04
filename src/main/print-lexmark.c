@@ -950,7 +950,10 @@ get_media_type(const char *name, const lexmark_cap_t * caps)
   return NULL;
 }
 
-static int
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-pedantic"
+static inline int
 lexmark_source_type(const char *name, const lexmark_cap_t * caps)
 {
   if (name)
@@ -965,6 +968,7 @@ lexmark_source_type(const char *name, const lexmark_cap_t * caps)
 
   return 4;
 }
+#pragma GCC diagnostic pop
 
 
 
@@ -1599,19 +1603,12 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
     errval,		/* Current error value */
     errline,	/* Current raster line */
     errlast;	/* Last raster line loaded */
-#if 0
-		out_channels;	/* Output bytes per pixel */
-#endif
   unsigned      zero_mask;
   int           image_height;
-#if 0
-  int           image_width;
-#endif
   int           use_dmt = 0;
   int pass_length=0;              /* count of inkjets for one pass */
   int add_top_offset=0;              /* additional top offset */
   int printMode = 0;
-  int source;
   /* Lexmark do not have different pixel sizes. We have to correct the density according the print resolution. */
   double  densityDivisor;            /* This parameter is will adapt the density according the resolution */
   double k_lower, k_upper;
@@ -1675,8 +1672,6 @@ lexmark_do_print(stp_vars_t *v, stp_image_t *image)
     }
 
   stp_image_init(image);
-
-  source=lexmark_source_type(media_source,caps);
 
   /* force grayscale if image is grayscale
    *                 or single black cartridge installed
@@ -1772,10 +1767,6 @@ densityDivisor /= 1.2;
   stp_dprintf(STP_DBG_LEXMARK, v, "page_right %d, page_left %d, page_top %d, page_bottom %d, left %d, top %d\n",page_right, page_left, page_top, page_bottom,left, top);
 
   image_height = stp_image_height(image);
-
-#if 0
-  image_width = stp_image_width(image);
-#endif
 
   stp_default_media_size(v, &n, &page_true_height);
   lxm3200_linetoeject = (page_true_height * 1200) / 72;
@@ -2084,9 +2075,7 @@ densityDivisor /= 1.2;
       stp_curve_destroy(sat_adjustment);
     }
 
-#if 0
-  out_channels = stp_color_init(v, image, 65536);
-#endif
+  (void) stp_color_init(v, image, 65536);
 
   /* calculate the memory we need for one line of the printer image (hopefully we are right) */
   stp_dprintf(STP_DBG_LEXMARK, v, "---------- buffer mem size = %d\n", (((((pass_length/8)*11)/10)+40) * out_width)+200);
