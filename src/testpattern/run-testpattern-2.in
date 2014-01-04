@@ -12,9 +12,16 @@ my $calc_md5_file = undef;
 my $calc_md5_dir = undef;
 my $dontrun = 0;
 my $retval = 0;
+my $halt_on_error = 0;
 my $testpattern_command;
 my @printer_list = ();
+my @exclude_list = ();
+my @include_patterns = ();
+my @exclude_patterns = ();
 my @special_options = ();
+my $include_pattern = '';
+my $exclude_pattern = '';
+my %exclude_list = ();
 my @standard_options = qw(InkType InkSet,RawChannels DitherAlgorithm Duplex MediaType InputSlot ColorCorrection ImageType FullBleed Quality UseGloss Weave PrintingDirection Density CyanDensity);
 my $global_status = 1;
 my $run_installed = 0;
@@ -26,6 +33,13 @@ my $vsize = 0.1;
 my $left = 0.15;
 my $top = 0.15;
 my $geometry = "";
+my $restart = 1;
+my $global_fh;
+my $error = 0;
+my $global_printer;
+my $global_messages;
+my $global_page;
+my $global_case;
 
 my @extras = ();
 my @job_extras = ();
@@ -66,11 +80,12 @@ GetOptions("v+"  => \$valgrind,
 	   "p:i" => \$std_pages,
 	   "P:i" => \$duplex_pages,
 	   "s!"  => \$skip_duplicate_printers,
-	   "S!"  => \$single,
+	   "S+"  => \$single,
+	   "H!"  => \$halt_on_error,
 	   "i!"  => \$run_installed,
 	   "r!"  => \$skip_resolutions,
 	   "R+"  => \$use_min_res,
-	   "q!"  => \$quiet,
+	   "q+"  => \$quiet,
 	   "o=s" => \@special_options,
 	   "f=s" => \@families,
 	   "O=s" => \$output,
@@ -78,9 +93,12 @@ GetOptions("v+"  => \$valgrind,
 	   "m:s" => \$calc_md5_dir,
 	   "M:s" => \$calc_md5_file,
 	   "X"   => \$rerun,
+	   "x=s" => \@exclude_list,
+	   "Y=s" => \@include_patterns,
+	   "y=s" => \@exclude_patterns,
 	   "l"   => \$list_printers,
 	   "L"   => \$list_options,
-	   "V"   => \$verbose,
+	   "V+"  => \$verbose,
 	   "h"   => \$help);
 
 sub print_help_and_exit() {
@@ -88,54 +106,73 @@ sub print_help_and_exit() {
     print STDERR <<EOF;
 Usage: run-testpattern-2 [opts] [model ...]
 
-  Options:
-    -c              Use callgrind (incompatible with -v)
+  Printer selection options:
     -f family       Test printers only in the specified family.  Multiple
                     families may be tested.  By default, all printer families
 		    are tested.
-    -g              Attach testpattern job to gdb
-    -G geometry     Specify geometry (=(HxV)(+L+T))
-    -i              Use the installed Gutenprint libraries rather than
-                    source tree
+    -s              Skip duplicate printers (with the same model number
+                    in printers.xml).
+    -x printer      Do not test the specified printer.
+    -y pattern      Do not test printers matching the specified pattern(s).
+    -Y pattern      Only test printers matching the specified pattern(s).
+
+  Logging options:
     -m md5_dir      Generate MD5 checksums and place them in the specified
                     directory, one file per run.  Directory will be created
 		    if necessary.
     -M md5_file     Generate MD5 checksums and place them in the specified
                     file, one line per run.
-    -n              Do not actually run testpattern
     -O out_dir      Generate actual output and place it in the specified
                     directory, one file per run.  Directory will be created
 		    if necessary.
-    -o option       Test this option.  Multiple -o options may be specified.
-                    option1,option2 indicates to test each value of option1
-		    in combination with each value of option2.  For floating
-		    point and integer options, a selection of values is
-		    tested.
-		    Default:
-		        $options
-    -d option=value Test this option with only the specified (default) value,
-		    if available
-    -p page count   Specify number of pages to print per printer.  Default $std_pages.
-    -P page count   Specify number of pages to print per printer when testing
-                    duplex mode.  Default $duplex_pages.
-    -q              Do not print progress messages
-    -r              Do not test each resolution (test only the default)
-    -R              Use the minimum resolution (rather than the default)
-                    to test other options.
-    -RR             Use only the minimum resolution, and do not test other
-                    resolutions.
-    -s              Skip duplicate printers (with the same model number
-                    in printers.xml)
-    -S              Run a separate testpattern command for each printer
-    -X              Repeat specified cases listed on standard input
+
+  Control options:
+    -H              Halt on any error.
+    -S              Run a separate testpattern command for each printer.
+    -SS             Run a separate testpattern command for each case (slow).
+
+  Debugging options:
+    -c              Use callgrind (incompatible with -v).
+    -g              Attach testpattern job to gdb.
     -v[v[v[v]]]     Use valgrind.  Number of -v options controls usage:
                     -v    Basic valgrind checking, no leak checking
                     -vv   Additional leak checking
                     -vvv  Show reachable data also
                     -vvvv Minimal checks only
-    -l              List available printers
-    -L              List available options for specified printer
-    -V              List available values for each option
+
+  Test selection options:
+    -d option=value Test this option with only the specified (default) value,
+		    if available.
+    -G geometry     Specify geometry (=(HxV)(+L+T), as fractions of page).
+    -o option       Test this option.  Multiple -o options may be specified.
+                    option1,option2... tests all combinations of each
+		    option.  For floating point and integer options, a
+		    selection of values is tested.
+		    Default:
+		        $options
+    -p page count   Specify number of pages to print per printer.  Default $std_pages.
+    -P page count   Specify number of pages to print per printer when testing
+                    duplex mode.  Default $duplex_pages.
+    -r              Do not test each resolution (test only the default).
+    -R              Use the minimum resolution (rather than the default)
+                    to test other options.
+    -RR             Use only the minimum resolution, and do not test other
+                    resolutions.
+    -X              Repeat specified cases listed on standard input.
+
+  Miscellaneous options:
+    -i              Use the installed Gutenprint libraries rather than
+                    from source tree.
+    -q              Only list each printer as it is tested.
+    -qq             Print one dot for every printer.
+    -qqq            Do not report any output.
+
+  Information options (do not run tests):
+    -l              List available printers.
+    -L              List available options for specified printer.
+    -n              Do not actually run test (write out input that
+                    would be passed to testpattern).
+    -V              List available values for each option.
 EOF
 exit 1;
 }
@@ -257,17 +294,19 @@ sub set_message($) {
 
 sub set_global_message($) {
     my ($message) = @_;
-    push @global_messages, "message \"$message\";\n" if (! $quiet);
+    push @global_messages, "message \"$message\";\n"
 }
 
 sub print_one_testpattern($;$) {
     my ($printer, $raw) = @_;
     my $stuff = join "", @global_messages;
     $stuff .= join "", @job_extras;
+    $global_printer = $printer;
     foreach my $page (0..$pages - 1) {
+	$global_page = $page;
     	$stuff .= "printer \"$printer\";\n";
 	$stuff .= "parameter \"PageSize\" \"Auto\";\n";
-	$stuff .= join "", @extras, @messages;
+	$stuff .= join "", @messages, @extras;
 	if (! $quiet && $pages > 1) {
 	    $stuff .= "message \"(page $page)\";\n";
 	}
@@ -364,6 +403,9 @@ EOF
     return $stuff;
 }
 
+map { $exclude_list{$_} = 1; } @exclude_list;
+$include_pattern = join("|", map {"($_)"} @include_patterns);
+$exclude_pattern = join("|", map {"($_)"} @exclude_patterns);
 my $extra_arg = "";
 if ($#ARGV >= 0) {
     @printer_list = @ARGV;
@@ -373,9 +415,17 @@ if ($#ARGV >= 0) {
     while(<PIPE>) {
 	next if m!^#!;
 	chomp;
+	next if $exclude_list{$_};
+	next if $exclude_pattern ne '' && /$exclude_pattern/;
+	next if $include_pattern ne '' && ! /$include_pattern/;
 	push @printer_list, $_;
     }
     close PIPE;
+}
+
+if ($list_printers) {
+    print join("\n", sort @printer_list), "\n";
+    exit 0;
 }
 
 open PIPE, "./printer_options $extra_arg|" or die "Cannot run printer_options: $!\n";
@@ -385,13 +435,31 @@ while(<PIPE>) {
 }
 close PIPE or die "Cannot run printer_options: $!\n";
 
-sub do_print {
+sub do_print($$) {
     my ($output, $fh) = @_;
     if ($dontrun) {
 	print $output;
+    } elsif (! $fh) {
+	restart_testpattern(1);
+	print $global_fh $output;
+	my ($status) = close $global_fh;
+	if (!$status) {
+	    if ($? == 2) {
+		stopit();
+	    }
+	    $error++;
+	    if ($single > 1) {
+		warn("\n*** FAIL $global_case ($?)\n");
+	    } else {
+		warn("\n*** FAIL ($?)\n");
+	    }
+	    if ($halt_on_error) {	# SIGINT
+		stopit();
+	    }
+	}
     } else {
 	print $fh $output;
-    }
+    }	
 }
 
 sub do_output($) {
@@ -478,7 +546,7 @@ sub build_key($$) {
 }
 
 sub do_printer($$) {
-    my ($printer, $fh) = @_;
+    my ($printer, $global_fh) = @_;
     my $tmp;
     my $min_res_name;
     my $min_res_value = 0;
@@ -522,41 +590,47 @@ sub do_printer($$) {
     # We want to do all resolutions and all ink types in both color modes.
     # We don't need to do both resolutions and ink types.
     my $pmode;
-    foreach $pmode (@printing_modes) {
+    foreach $pmode (sort @printing_modes) {
 	my ($resolution);
 	$pages = $std_pages;
 	if (! $skip_resolutions) {
-	    foreach $resolution (@resolutions) {
+	    foreach $resolution (sort @resolutions) {
 		@extras = ();
 		@job_extras = ();
 		@messages = ();
 		@global_messages = ();
 		if ($first_time) {
-		    set_global_message("$printer\n");
+		    if ($quiet < 2) {
+			set_global_message("$printer\n");
+		    } elsif ($quiet == 2) {
+			set_global_message(".");
+		    }
 		}
 		set_opt("PrintingMode", $pmode, $printer);
 		set_opt("Resolution", $resolution, $printer);
-		map { set_opt($_, $base_settings{$_}, $printer)} keys %base_settings;
+		map { set_opt($_, $base_settings{$_}, $printer)} sort keys %base_settings;
 		my ($case) = "${printer}_PrintingMode_${pmode}_Resolution_${resolution}";
+		$global_case = $case;
 		if (! $rerun || $rerun_cases{$case}) {
 		    $first_time = 0;
+		    $global_messages = $case;
 		    do_output($case);
 		    set_message("    ${pmode}+${resolution}");
 		    my $output = print_one_testpattern($printer);
-		    do_print( $output, $fh );
+		    do_print( $output, $global_fh );
 		}
 	    }
 	}
-	foreach $key (keys %opt_vals) {
+	foreach $key (sort keys %opt_vals) {
 	    next if ($key eq "RawChannels" && $pmode ne "Color");
 	    my (@subkeys) = split (/,/, $key);
 	    $tmp = $opt_vals{$key};
 	    if (defined $tmp && $tmp >= 1) {
-		my (@opts) = @$tmp;
+		my (@opts) = sort @$tmp;
 		my $opt;
 		my $rawval;
 		my $set_resolution = 0;
-		foreach $opt (@opts) {
+		foreach $opt (sort @opts) {
 		    my (@subopts) = split (/,/, $opt);
 		    @extras = ();
 		    @job_extras = ();
@@ -581,7 +655,11 @@ sub do_printer($$) {
 			push @ovals, "${k}=${v}";
 		    } (0..$#subkeys);
 		    if ($first_time) {
-			set_global_message("$printer\n");
+			if ($quiet < 2) {
+			    set_global_message("$printer\n");
+			} elsif ($quiet == 2) {
+			    set_global_message(".");
+			}
 			$first_time = 0;
 		    }
 		    # FIXME! need to handle Duplex as a subkey
@@ -608,7 +686,9 @@ sub do_printer($$) {
 		    } else {
 			$case = "${printer}_PrintingMode_${pmode}_${mstring}";
 		    }
+		    $global_case = $case;
 		    if (! $rerun || $rerun_cases{$case}) {
+			$global_messages = $case;
 			do_output($case);
 			if ($use_min_res && ! $set_resolution) {
 			    set_message("    ${ostring}+${pmode}+${min_res_name}");
@@ -616,7 +696,7 @@ sub do_printer($$) {
 			    set_message("    ${ostring}+${pmode}");
 			}
 			my $output = print_one_testpattern($printer, $rawval);
-			do_print( $output, $fh );
+			do_print( $output, $global_fh );
 		    }
 		}
 	    }
@@ -646,10 +726,39 @@ foreach my $printer (@printer_list) {
 }
 @printer_list = @nprinter_list;
 
-if ($list_printers) {
-    print join("\n", sort @printer_list), "\n";
-    exit 0;
-} elsif ($list_options) {
+sub restart_testpattern {
+    my ($silent) = @_;
+    if (! $silent) {
+	$error = 1;
+	close($global_fh);
+	my ($err) = $? & 255;
+	if ($single > 1) {
+	    warn("\n***TESTPATTERN CRASHED*** ($global_case) ($err)!\n");
+	} else {
+	    warn("\n***TESTPATTERN CRASHED*** (cannot determine case) ($err)!\n");
+	}
+	if ($halt_on_error) {
+	    stopit();
+	}
+    }
+    open($global_fh, "|$testpattern_command") or
+	die "Can't run $testpattern_command: $!\n";
+}
+
+sub stopit {
+    if ($single > 1) {
+	print "\nStopping, $error case(s) failed.\n";
+	exit 1;
+    } elsif ($error) {
+	print "\nStopping, failures noted.\n";
+	exit 1;
+    } else {
+	print "\nStopping.\n";
+	exit 0;
+    }
+}
+
+if ($list_options) {
     if ($#printer_list > 0) {
 	die "-L must be used with one printer\n";
     }
@@ -730,27 +839,42 @@ if ($list_printers) {
 	$suppress = '-n';
     }
     my ($qopt) = $quiet ? "-q" : "";
-    $testpattern_command = "$valgrind_command ./testpattern -y $suppress $qopt";
-    if ($single) {
-	$SIG{PIPE} = sub() { die "\ntestpattern crashed!\n" };
+    my ($Hopt) = $halt_on_error ? "-H" : "";
+    $testpattern_command = "$valgrind_command ./testpattern -y $suppress $qopt $Hopt";
+    if ($single > 1) {
+	$SIG{TERM} = sub() { stopit() };
+	$SIG{HUP} = sub() { stopit() };
+	$SIG{INT} = sub() { stopit() };
 	foreach my $printer (@printer_list) {
-	    open TESTPATTERN, "|$testpattern_command" or
-		die "Can't run $testpattern_command: $!\n";
-	    do_printer($printer, \*TESTPATTERN);
-	    $status |= close TESTPATTERN;
+	    do_printer($printer, undef);
+	}
+    } elsif ($single) {
+	$SIG{PIPE} = sub() { restart_testpattern() };
+	foreach my $printer (@printer_list) {
+	    restart_testpattern(1);
+	    do_printer($printer, $global_fh);
+	    $status |= close $global_fh;
 	    $status |= ($? & 255);
-	    last if ($? & 255);
 	}
     } else {
-	$SIG{PIPE} = sub() { die "\ntestpattern crashed!\n" };
-	open TESTPATTERN, "|$testpattern_command" or
-	    die "Can't run $testpattern_command: $!\n";
-	map { do_printer($_, \*TESTPATTERN) } @printer_list;
-	$status = close TESTPATTERN;
+	$SIG{PIPE} = sub() { restart_testpattern() };
+	restart_testpattern(1);
+	map { do_printer($_, $global_fh) } @printer_list;
+	$status = close $global_fh;
     }
-    if ($status) {
+    if ($quiet == 2) {
+	print STDERR "\n";
+    }
+    if ($status && ! $error) {
 	exit 0;
     } else {
+	if ($error) {
+	    if ($single > 1) {
+		print STDERR "$error cases failed\n";
+	    } else {
+		print STDERR "Failures noted.\n";
+	    }
+	}
 	exit 1;
     }
 }

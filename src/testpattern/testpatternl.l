@@ -31,6 +31,9 @@
 #include <stdlib.h>
 #include "testpattern.h"
 
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 #define YY_NO_UNPUT
 
 int mylineno = 1;

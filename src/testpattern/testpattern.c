@@ -42,6 +42,8 @@
 #include <gutenprint/gutenprint-intl.h>
 #include <errno.h>
 
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+
 extern int yyparse(void);
 
 static const char *Image_get_appname(stp_image_t *image);
@@ -71,6 +73,7 @@ double global_levels[STP_CHANNEL_LIMIT];
 double global_gammas[STP_CHANNEL_LIMIT];
 double global_gamma;
 int global_steps;
+int global_halt_on_error = 0;
 double global_ink_limit;
 int global_noblackline;
 int global_printer_width;
@@ -188,7 +191,14 @@ writefunc(void *file, const char *buf, size_t bytes)
   FILE *prn = (FILE *)file;
   if (! file)
     return;
-  if (!global_suppress_output || (file == stderr))
+  if (file == stderr)
+    {
+      if (global_quiet)
+	fputc('-', prn);
+      else
+	fwrite(buf, 1, bytes, prn);
+    }
+  else if (!global_suppress_output)
     {
       fwrite(buf, 1, bytes, prn);
     }
@@ -468,6 +478,8 @@ do_print(void)
 	    fputs("FAILED", stderr);
 	  failures++;
 	  status = 2;
+	  if (global_halt_on_error)
+	    return status;
 	}
       else
 	passes++;
@@ -485,6 +497,8 @@ do_print(void)
 	    fputs("FAILED", stderr);
 	  failures++;
 	  status = 2;
+	  if (global_halt_on_error)
+	    return status;
 	}
       else
 	{
@@ -509,7 +523,7 @@ main(int argc, char **argv)
   int global_status = 0;
   while (1)
     {
-      c = getopt(argc, argv, "nqy");
+      c = getopt(argc, argv, "nqyH");
       if (c == -1)
 	break;
       switch (c)
@@ -522,6 +536,9 @@ main(int argc, char **argv)
 	  break;
 	case 'y':
 	  global_fail_verify_ok = 1;
+	  break;
+	case 'H':
+	  global_halt_on_error = 1;
 	  break;
 	default:
 	  break;
@@ -539,7 +556,7 @@ main(int argc, char **argv)
 	global_status = 1;
     }
   close_output();
-  if (!global_quiet)
+  if (passes + failures + skipped > 1)
     fprintf(stderr, "%d pass, %d fail, %d skipped\n", passes, failures, skipped);
   return global_status;
 }
