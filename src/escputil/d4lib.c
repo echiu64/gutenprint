@@ -1383,7 +1383,9 @@ void flushData(int fd, unsigned char socketID)
 /*                                                                 */
 /*******************************************************************/
 
-static void clearSndBuf(int fd)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+static inline void clearSndBuf(int fd)
 {
    char             buf[256];
    struct itimerval ti, oti;
@@ -1393,6 +1395,7 @@ static void clearSndBuf(int fd)
       SET_TIMER(ti,oti, d4RdTimeout);
    RESET_TIMER(ti,oti);
 }
+#pragma GCC diagnostic pop
 
 void setDebug(int debug)
 {
