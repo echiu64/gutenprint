@@ -3930,14 +3930,16 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
   int border_bottom2;
   int area_right,area_top;
   int test_cd; /* variable for activating experimental adjustments */
+#if 0
   int adjust_tray_A_x, adjust_tray_A_y;
   int adjust_tray_BCD_x, adjust_tray_BCD_y;
   int adjust_tray_E_x, adjust_tray_E_y;
   int adjust_tray_F_x, adjust_tray_F_y;
-  int adjust_tray_G_x, adjust_tray_G_y;
   int adjust_tray_H_x, adjust_tray_H_y;
   int adjust_tray_J_x, adjust_tray_J_y;
   int adjust_tray_custom_x, adjust_tray_custom_y;
+#endif
+  int adjust_tray_G_x, adjust_tray_G_y;
 
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -3999,6 +4001,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	border_bottom2=border_bottom;
 	
 	/* Try to work backwards */
+#if 0
 	adjust_tray_A_x = 0;
 	adjust_tray_A_y = 0;
 	adjust_tray_BCD_x = 0;
@@ -4007,14 +4010,16 @@ canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)
 	adjust_tray_E_y = 0;
 	adjust_tray_F_x = 0;
 	adjust_tray_F_y = 0;
-	adjust_tray_G_x = -6;
-	adjust_tray_G_y = 0;
 	adjust_tray_H_x = 0;
 	adjust_tray_H_y = 0;
 	adjust_tray_J_x = 0;
 	adjust_tray_J_y = 0;
 	adjust_tray_custom_x = 0;
 	adjust_tray_custom_y = 0;
+#endif
+	adjust_tray_G_x = -6;
+	adjust_tray_G_y = 0;
+
 
 	if ( !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
 	  border_left2   = adjust_tray_G_x;
