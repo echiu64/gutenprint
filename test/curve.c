@@ -29,6 +29,8 @@
 #include <getopt.h>
 #endif
 
+#pragma GCC diagnostic ignored "-Woverlength-strings"
+
 #define DEBUG_SIGNAL
 #define MIN(x, y) ((x) <= (y) ? (x) : (y))
 #include <gutenprint/gutenprint.h>
@@ -497,7 +499,7 @@ piecewise_curve_checks(stp_curve_t *curve1, int resample_points, int expected)
 	{
 	  TEST_FAIL();
 	  if (!quiet)
-	    printf("Expected %d points, got %d\n", expected, count);
+	    printf("Expected %d points, got %lu\n", expected, count);
 	}
       TEST("Comparing data");
       for (i = 0; i < count; i++)

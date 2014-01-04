@@ -33,8 +33,8 @@ static void
 free_list_element(void *item)
 {
   stp_param_string_t *string = (stp_param_string_t *) (item);
-  stp_free((char *) string->name);
-  stp_free((char *) string->text);
+  stp_free(stpi_cast_safe(string->name));
+  stp_free(stpi_cast_safe(string->text));
   stp_free(string);
 }
 

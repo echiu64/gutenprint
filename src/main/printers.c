@@ -449,7 +449,7 @@ stp_printer_get_defaults(const stp_printer_t *printer)
 {
   if (! printer->vars_initialized)
     {
-      stp_printer_t *nc_printer = (stp_printer_t *) printer;
+      stp_printer_t *nc_printer = (stp_printer_t *) stpi_cast_safe(printer);
       stp_deprintf(STP_DBG_PRINTERS, "  ==>init %s\n", printer->driver);
       set_printer_defaults (nc_printer->printvars, 1, 0);
       nc_printer->vars_initialized = 1;

@@ -1007,7 +1007,7 @@ get_privdata(stp_vars_t *v)
 }
 
 #define DEF_SIMPLE_ACCESSOR(f, t)					\
-static inline t								\
+static t								\
 escp2_##f(const stp_vars_t *v)						\
 {									\
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
@@ -1020,7 +1020,7 @@ escp2_##f(const stp_vars_t *v)						\
 }
 
 #define DEF_RAW_ACCESSOR(f, t)						\
-static inline t								\
+static t								\
 escp2_##f(const stp_vars_t *v)						\
 {									\
   if (stp_check_raw_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
@@ -1033,7 +1033,7 @@ escp2_##f(const stp_vars_t *v)						\
 }
 
 #define DEF_ROLL_ACCESSOR(f, t)						\
-static inline t								\
+static t								\
 escp2_##f(const stp_vars_t *v, int rollfeed)				\
 {									\
   if (stp_check_int_parameter(v, "escp2_" #f, STP_PARAMETER_ACTIVE))	\
@@ -1244,25 +1244,25 @@ escp2_density(const stp_vars_t *v)
   return 0;
 }
 
-static int
+static inline int
 escp2_bits(const stp_vars_t *v)
 {
   return escp2_res_param(v, "escp2_bits", NULL);
 }
 
-static int
+static inline int
 escp2_base_res(const stp_vars_t *v)
 {
   return escp2_res_param(v, "escp2_base_res", NULL);
 }
 
-static int
+static inline int
 escp2_ink_type_by_res(const stp_vars_t *v, const res_t *res)
 {
   return escp2_res_param(v, "escp2_ink_type", res);
 }
 
-static double
+static inline double
 escp2_density_by_res(const stp_vars_t *v, const res_t *res)
 {
   if (res)
@@ -1274,13 +1274,13 @@ escp2_density_by_res(const stp_vars_t *v, const res_t *res)
   return 0.0;
 }
 
-static int
+static inline int
 escp2_bits_by_res(const stp_vars_t *v, const res_t *res)
 {
   return escp2_res_param(v, "escp2_bits", res);
 }
 
-static int
+static inline int
 escp2_base_res_by_res(const stp_vars_t *v, const res_t *res)
 {
   return escp2_res_param(v, "escp2_base_res", res);

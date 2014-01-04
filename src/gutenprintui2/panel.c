@@ -1441,6 +1441,7 @@ drawing_area_resize_callback(GtkWidget *widget, GdkEventConfigure *event)
   return 1;
 }
 
+#pragma GCC diagnostic ignored "-Woverlength-strings"
 static void
 create_preview (void)
 {
@@ -1505,8 +1506,8 @@ create_positioning_button(GtkWidget *box, int invalid,
   gtk_widget_show(button);
   stpui_set_help_data(button, help);
   g_signal_connect(G_OBJECT(button), "clicked",
-		     G_CALLBACK(position_button_callback),
-		     (gpointer) invalid);
+		   G_CALLBACK(position_button_callback),
+		   gint2p(invalid));
   return button;
 }
 
@@ -2564,7 +2565,7 @@ create_units_frame (void)
 				 0.5, unit->checkbox, 1, TRUE);
       stpui_set_help_data(unit->checkbox, gettext(unit->help));
       g_signal_connect(G_OBJECT(unit->checkbox), "toggled",
-		       G_CALLBACK(unit_callback), (gpointer) i);
+		       G_CALLBACK(unit_callback), gint2p(i));
     }
 }
 
@@ -2603,7 +2604,7 @@ create_main_window (void)
 
   do_update_thumbnail = 1;
   build_printer_combo ();
-  plist_callback (NULL, (gpointer) stpui_plist_current);
+  plist_callback (NULL, gint2p(stpui_plist_current));
   update_adjusted_thumbnail (TRUE);
 
   /* The initial size request does not account for the
@@ -2614,6 +2615,8 @@ create_main_window (void)
   gtk_widget_show (print_dialog);
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 static void
 set_entry_value(GtkWidget *entry, double value, int block)
 {
@@ -2641,6 +2644,7 @@ set_entry_value(GtkWidget *entry, double value, int block)
 				       NULL,
 				       NULL);
 }
+#pragma GCC diagnostic pop
 
 static void
 reset_preview(void)
@@ -2955,7 +2959,7 @@ static void
 position_button_callback(GtkWidget *widget, gpointer data)
 {
   reset_preview();
-  pv->invalid_mask |= (gint) data;
+  pv->invalid_mask |= p2gint(data);
   preview_update ();
 }
 
@@ -3318,7 +3322,7 @@ do_all_updates(void)
 static void
 copy_count_callback(GtkAdjustment *adjustment, gpointer data)
 {
-  gint copy_count = (gint) adjustment->value;
+  gint copy_count = adjustment->value;
   stpui_plist_set_copy_count(pv, copy_count);
   update_standard_print_command();
 }
@@ -3434,7 +3438,7 @@ plist_callback (GtkWidget *widget,
     }
   else
     {
-      stpui_plist_current = (gint) data;
+      stpui_plist_current = p2gint(data);
     }
 
   set_current_printer();
@@ -3668,20 +3672,23 @@ combo_callback(GtkWidget *widget, gpointer data)
 /*
  *  orientation_callback() - Update the current media size.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 static void
 orientation_callback (GtkWidget *widget,
 		      gpointer   data)
 {
   reset_preview ();
 
-  if (pv->orientation != (gint) data)
+  if (pv->orientation != p2gint(data))
     {
       invalidate_preview_thumbnail ();
-      set_orientation((gint) data);
+      set_orientation(p2gint(data));
       update_adjusted_thumbnail(TRUE);
       preview_update ();
     }
 }
+#pragma GCC diagnostic pop
 
 /*
  *  output_type_callback() - Update the current output type.
@@ -3782,7 +3789,7 @@ unit_callback (GtkWidget *widget,
 
   if (GTK_TOGGLE_BUTTON (widget)->active)
     {
-      pv->unit = (gint) data;
+      pv->unit = p2gint(data);
       gtk_label_set_text(GTK_LABEL(units_label), units[pv->unit].name);
       set_all_entry_values();
       update_options();
@@ -3898,7 +3905,7 @@ setup_update (void)
   idx = stp_get_printer_index_by_driver (stp_get_driver (pv->v));
 
   idx = gtk_clist_find_row_from_data(GTK_CLIST(printer_driver),
-				     (gpointer) idx);
+				     gint2p(idx));
 /*
   if (idx >= 0)
     idx = 0;
@@ -4035,7 +4042,7 @@ set_printer(void)
   gtk_label_set_text (GTK_LABEL (printer_model_label),
                       gettext (stp_printer_get_long_name (tmp_printer)));
 
-  plist_callback (NULL, (gpointer) stpui_plist_current);
+  plist_callback (NULL, gint2p(stpui_plist_current));
 }
 
 /*
@@ -4139,7 +4146,7 @@ build_printer_driver_clist(void)
 
 	  gtk_clist_insert (GTK_CLIST (printer_driver), current_idx, &tmp);
 	  gtk_clist_set_row_data (GTK_CLIST (printer_driver), current_idx,
-				  (gpointer) i);
+				  gint2p(i));
 	  g_free(tmp);
 	  current_idx++;
 	}
@@ -4168,6 +4175,8 @@ manufacturer_callback(GtkWidget      *widget, /* I - Driver list */
 /*
  *  print_driver_callback() - Update the current printer driver.
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 static void
 print_driver_callback (GtkWidget      *widget, /* I - Driver list */
 		       gint            row,
@@ -4184,7 +4193,7 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   invalidate_preview_thumbnail ();
   reset_preview ();
   data = gtk_clist_get_row_data (GTK_CLIST (widget), row);
-  tmp_printer = stp_get_printer_by_index ((gint) data);
+  tmp_printer = stp_get_printer_by_index (p2gint(data));
   tmp = stpui_build_standard_print_command(pv, tmp_printer);
   gtk_entry_set_text(GTK_ENTRY(standard_cmd_entry), tmp);
   g_free(tmp);
@@ -4192,6 +4201,7 @@ print_driver_callback (GtkWidget      *widget, /* I - Driver list */
   pop_ppd_box();
   calling_print_driver_callback--;
 }
+#pragma GCC diagnostic pop
 
 /*
  *  ppd_browse_callback() -
@@ -4393,14 +4403,12 @@ static void
 redraw_color_swatch (void)
 {
   static GdkGC *gc = NULL;
-  static GdkColormap *cmap;
 
   if (adjusted_thumbnail_data && swatch && swatch->widget.window)
     {
       if (gc == NULL)
 	{
 	  gc = gdk_gc_new (swatch->widget.window);
-	  cmap = gtk_widget_get_colormap (GTK_WIDGET(swatch));
 	}
 
       if (!print_mode_is_color(pv->v))

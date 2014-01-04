@@ -38,7 +38,13 @@ extern "C" {
 #define inline __inline__
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+#pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-pedantic"
 #include <gtk/gtk.h>
+#pragma GCC diagnostic pop
 
 #include <gutenprint/gutenprint.h>
 

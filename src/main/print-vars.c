@@ -129,7 +129,7 @@ value_freefunc(void *item)
     case STP_PARAMETER_TYPE_STRING_LIST:
     case STP_PARAMETER_TYPE_FILE:
     case STP_PARAMETER_TYPE_RAW:
-      stp_free((void *) v->value.rval.data);
+      stp_free(stpi_cast_safe(v->value.rval.data));
       break;
     case STP_PARAMETER_TYPE_CURVE:
       if (v->value.cval)
@@ -466,7 +466,7 @@ set_raw_parameter(stp_list_t *list, const char *parameter, const char *value,
 	  val = (value_t *) stp_list_item_get_data(item);
 	  if (val->active == STP_PARAMETER_DEFAULTED)
 	    val->active = STP_PARAMETER_ACTIVE;
-	  stp_free((void *) val->value.rval.data);
+	  stp_free(stpi_cast_safe(val->value.rval.data));
 	}
       else
 	{
@@ -2061,7 +2061,7 @@ fill_vars_from_xmltree(stp_mxml_node_t *prop, stp_mxml_node_t *root,
 			  type = STP_PARAMETER_TYPE_DOUBLE;
 			  stp_deprintf(STP_DBG_XML, "  Set raw '%s' to '%s'\n",
 				       p_name, cnode->value.text.string);
-			  stp_free((void *) raw->data);
+			  stp_free(stpi_cast_safe(raw->data));
 			  stp_free(raw);
 			}
 		    }

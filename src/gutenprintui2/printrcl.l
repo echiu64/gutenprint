@@ -37,6 +37,10 @@
 
 #define YY_NO_UNPUT
 
+/* Bison does some stuff that triggers unimportant warnings. */
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 int mylineno = 1;
 
 extern YYSTYPE yylval;

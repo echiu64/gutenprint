@@ -35,23 +35,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <gtk/gtkdialog.h>
-#include <gtk/gtkdrawingarea.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkimage.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkmain.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkstock.h>
-#include <gtk/gtktable.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkwindow.h>
-
 #include <gutenprint/gutenprint-intl-internal.h>
-
-#include <gutenprintui2/curve.h>
-#include <gutenprintui2/gammacurve.h>
+#include <gutenprintui2/gutenprintui.h>
+#include "gutenprintui-internal.h"
 
 static GtkVBoxClass *parent_class = NULL;
 
@@ -320,7 +306,8 @@ button_realize_callback (GtkWidget *w)
 
   i = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (w), "_StpuiGammaCurveIndex"));
   pm = gdk_pixmap_create_from_xpm_d (w->window, &mask,
-				     &w->style->bg[GTK_STATE_NORMAL], (gchar **)xpm[i]);
+				     &w->style->bg[GTK_STATE_NORMAL],
+				     (gchar **) cast_safe(xpm[i]));
 
   pixmap = gtk_image_new_from_pixmap (pm, mask);
   gtk_container_add (GTK_CONTAINER (w), pixmap);

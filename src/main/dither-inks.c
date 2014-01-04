@@ -367,9 +367,6 @@ stp_dither_set_inks_full(stp_vars_t *v, int color, int nshades,
 {
   int i;
   int idx;
-  stpi_dither_channel_t *dc;
-
-  stpi_dither_t *d = (stpi_dither_t *) stp_get_component_data(v, "Dither");
 
   stp_channel_reset_channel(v, color);
 
@@ -378,7 +375,6 @@ stp_dither_set_inks_full(stp_vars_t *v, int color, int nshades,
       int subchannel = nshades - i - 1;
       idx = stpi_dither_translate_channel(v, color, subchannel);
       STPI_ASSERT(idx >= 0, NULL);
-      dc = &(CHANNEL(d, idx));
 
       stp_channel_add(v, color, subchannel, shades[i].value);
       if (idx >= 0)

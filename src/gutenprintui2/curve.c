@@ -35,10 +35,8 @@
 #include <string.h>
 #include <math.h>
 
-#include <gtk/gtkmain.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtktable.h>
-
+#include <gutenprintui2/gutenprintui.h>
+#include "gutenprintui-internal.h"
 #include <gutenprint/gutenprint-intl-internal.h>
 
 #include <gutenprintui2/curve.h>
@@ -440,7 +438,6 @@ stpui_curve_graph_events (GtkWidget  *widget,
 {
   GdkCursorType new_type = c->cursor_type;
   gint i, src, dst, leftbound, rightbound;
-  GdkEventButton *bevent;
   GdkEventMotion *mevent;
   GtkWidget *w;
   gint tx, ty;
@@ -494,7 +491,6 @@ stpui_curve_graph_events (GtkWidget  *widget,
     case GDK_BUTTON_PRESS:
       gtk_grab_add (widget);
 
-      bevent = (GdkEventButton *) event;
       new_type = GDK_TCROSS;
 
       switch (c->curve_type)
@@ -809,7 +805,7 @@ stpui_curve_reset (StpuiCurve *c)
 void
 stpui_curve_set_gamma (StpuiCurve *c, gfloat gamma)
 {
-  gfloat x, one_over_gamma, height, one_over_width;
+  gfloat x, one_over_gamma, height;
   StpuiCurveType old_type;
   gint i;
 
@@ -823,7 +819,6 @@ stpui_curve_set_gamma (StpuiCurve *c, gfloat gamma)
     one_over_gamma = 1.0;
   else
     one_over_gamma = 1.0 / gamma;
-  one_over_width = 1.0 / (c->num_points - 1);
   height = c->height;
   for (i = 0; i < c->num_points; ++i)
     {

@@ -34,8 +34,8 @@
 #endif
 
 #include <sys/types.h>
-#include <gtk/gtk.h>
 
+#include <gutenprintui2/gutenprintui.h>
 #include <gutenprint/gutenprint.h>
 
 typedef struct
@@ -249,5 +249,33 @@ extern void stpui_create_scale_entry(option_t    *option,
 
 stp_image_t *stpui_image_thumbnail_new(const guchar *data, gint w, gint h,
 				       gint bpp);
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+static inline gint
+p2gint(void *p)
+{
+  return (gint) p;
+}
+#pragma GCC diagnostic pop
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+static inline void *
+gint2p(int i)
+{
+  return (gpointer) i;
+}
+#pragma GCC diagnostic pop
+
+#pragma GCC diagnostic ignored "-Woverlength-strings"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+static inline void *
+cast_safe(const void *ptr)
+{
+  return (void *)ptr;
+}
+#pragma GCC diagnostic pop
 
 #endif  /* GUTENPRINTUI_INTERNAL_H */

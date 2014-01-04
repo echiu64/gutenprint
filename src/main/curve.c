@@ -908,15 +908,12 @@ int
 stp_curve_rescale(stp_curve_t *curve, double scale,
 		  stp_curve_compose_t mode, stp_curve_bounds_t bounds_mode)
 {
-  size_t real_point_count;
   int i;
   double nblo;
   double nbhi;
   size_t count;
 
   CHECK_CURVE(curve);
-
-  real_point_count = get_real_point_count(curve);
 
   stp_sequence_get_bounds(curve->seq, &nblo, &nbhi);
   if (bounds_mode == STP_CURVE_BOUNDS_RESCALE)
@@ -1068,7 +1065,7 @@ do_interpolate_spline(double low, double high, double frac,
 }
 
 static inline double
-interpolate_point_internal(stp_curve_t *curve, double where)
+interpolate_point_internal(const stp_curve_t *curve, double where)
 {
   int integer = where;
   double frac = where - (double) integer;
@@ -1082,7 +1079,7 @@ interpolate_point_internal(stp_curve_t *curve, double where)
       return val;
     }
   if (curve->recompute_interval)
-    compute_intervals(curve);
+    compute_intervals((stpi_cast_safe(curve)));
   if (curve->curve_type == STP_CURVE_TYPE_LINEAR)
     {
       double val;
@@ -1136,7 +1133,7 @@ stp_curve_interpolate_value(const stp_curve_t *curve, double where,
   if (curve->gamma)	/* this means a pure gamma curve */
     *result = interpolate_gamma_internal(curve, where);
   else
-    *result = interpolate_point_internal((stp_curve_t *) curve, where);
+    *result = interpolate_point_internal(curve, where);
   return 1;
 }
 

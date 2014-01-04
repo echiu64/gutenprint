@@ -544,7 +544,7 @@ stp_xml_process_dither_matrix(stp_mxml_node_t *dm,     /* The dither matrix node
 }
 
 static stp_array_t *
-stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm) /* Dither matrix node */
+stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm, int x, int y) /* Dither matrix node */
 {
   const char *stmp;
   stp_mxml_node_t *child;
@@ -573,6 +573,13 @@ stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm) /* Dither matrix node
       goto error;
     }
 
+  if (x * y_aspect != y * x_aspect)
+    {
+      stp_erprintf("stpi_dither_array_create_from_xmltree: requested aspect of (%d, %d), found (%d, %d)\n",
+		   x, y, x_aspect, y_aspect);
+      goto error;
+    }
+
   /* Now read in the array */
   child = stp_mxmlFindElement(dm, dm, "array", NULL, NULL, STP_MXML_DESCEND);
   if (child)
@@ -584,7 +591,7 @@ stpi_dither_array_create_from_xmltree(stp_mxml_node_t *dm) /* Dither matrix node
 }
 
 static stp_array_t *
-xml_doc_get_dither_array(stp_mxml_node_t *doc)
+xml_doc_get_dither_array(stp_mxml_node_t *doc, int x, int y)
 {
   stp_mxml_node_t *cur;
   stp_mxml_node_t *xmlseq;
@@ -610,11 +617,11 @@ xml_doc_get_dither_array(stp_mxml_node_t *doc)
       return NULL;
     }
 
-  return stpi_dither_array_create_from_xmltree(xmlseq);
+  return stpi_dither_array_create_from_xmltree(xmlseq, x, y);
 }
 
 static stp_array_t *
-stpi_dither_array_create_from_file(const char* file)
+stpi_dither_array_create_from_file(const char* file, int x, int y)
 {
   stp_mxml_node_t *doc;
   stp_array_t *ret = NULL;
@@ -637,7 +644,7 @@ stpi_dither_array_create_from_file(const char* file)
 
   if (doc)
     {
-      ret = xml_doc_get_dither_array(doc);
+      ret = xml_doc_get_dither_array(doc, x, y);
       stp_mxmlDelete(doc);
     }
 
@@ -669,7 +676,7 @@ stp_xml_get_dither_array(int x, int y)
 	}
     }
 
-  ret = stpi_dither_array_create_from_file(cachedval->filename);
+  ret = stpi_dither_array_create_from_file(cachedval->filename, x, y);
 
   cachedval->dither_array = ret;
   return stp_array_create_copy(ret);

@@ -63,12 +63,6 @@ struct stp_sequence
 
 #define CHECK_SEQUENCE(sequence) STPI_ASSERT(sequence, NULL)
 
-static inline stp_sequence_t *
-deconst_sequence(const stp_sequence_t *sequence)
-{
-  return (stp_sequence_t *) sequence;
-}
-
 static void
 sequence_ctor(stp_sequence_t *sequence)
 {
@@ -219,7 +213,7 @@ stp_sequence_get_range(const stp_sequence_t *sequence,
 {
   if (sequence->recompute_range) /* Don't recompute the range if we don't
 			       need to. */
-    scan_sequence_range(deconst_sequence(sequence));
+    scan_sequence_range((stp_sequence_t *) stpi_cast_safe(sequence));
   *low = sequence->rlo;
   *high = sequence->rhi;
 }
@@ -535,7 +529,7 @@ stp_sequence_get_##name##_data(const stp_sequence_t *sequence, size_t *count) \
     return NULL;							      \
   if (!sequence->name##_data)						      \
     {									      \
-      stp_sequence_t *seq = deconst_sequence(sequence);			      \
+      stp_sequence_t *seq = (stp_sequence_t *) stpi_cast_safe(sequence);      \
       seq->name##_data = stp_zalloc(sizeof(t) * sequence->size);	      \
       for (i = 0; i < sequence->size; i++)				      \
 	seq->name##_data[i] = (t) sequence->data[i];			      \

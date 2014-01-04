@@ -1734,7 +1734,7 @@ static const stp_colorfuncs_t stpi_color_traditional_colorfuncs =
   &stpi_color_traditional_describe_parameter
 };
 
-static const stp_color_t stpi_color_traditional_module_data =
+static stp_color_t stpi_color_traditional_module_data =
   {
     "traditional",
     N_("Traditional Gutenprint color conversion"),

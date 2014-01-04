@@ -76,6 +76,18 @@ do									\
 
 /** @} */
 
+#define CAST_IS_SAFE GCC_DIAG_OFF(cast-qual)
+#define CAST_IS_UNSAFE GCC_DIAG_ON(cast-qual)
+
+#pragma GCC diagnostic ignored "-Woverlength-strings"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+static inline void *
+stpi_cast_safe(const void *ptr)
+{
+  return (void *)ptr;
+}
+#pragma GCC diagnostic pop
 
 #ifdef __cplusplus
   }

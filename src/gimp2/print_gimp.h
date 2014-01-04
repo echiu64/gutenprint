@@ -33,12 +33,14 @@
 #define inline __inline__
 #endif
 
-#include <gtk/gtk.h>
-#include <libgimp/gimp.h>
-#include <libgimp/gimpui.h>
-
 #include <gutenprint/gutenprint.h>
 #include <gutenprintui2/gutenprintui.h>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-pedantic"
+#include <libgimp/gimp.h>
+#include <libgimp/gimpui.h>
+#pragma GCC diagnostic pop
 
 /* How to create an Image wrapping a Gimp drawable */
 extern stpui_image_t *Image_GimpDrawable_new(GimpDrawable *drawable, gint32);
@@ -55,5 +57,33 @@ extern void do_gimp_install_procedure(const char *blurb, const char *help,
  */
 
 #define BAD_CONST_CHAR char *
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpointer-to-int-cast"
+static inline gint
+p2gint(void *p)
+{
+  return (gint) p;
+}
+#pragma GCC diagnostic pop
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
+static inline void *
+gint2p(int i)
+{
+  return (gpointer) i;
+}
+#pragma GCC diagnostic pop
+
+#pragma GCC diagnostic ignored "-Woverlength-strings"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+static inline void *
+cast_safe(const void *ptr)
+{
+  return (void *)ptr;
+}
+#pragma GCC diagnostic pop
 
 #endif  /* __PRINT_GIMP_H__ */

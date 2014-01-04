@@ -76,6 +76,8 @@ MAIN()
  * 'query()' - Respond to a plug-in query...
  */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
 static void
 query (void)
 {
@@ -117,11 +119,12 @@ query (void)
   static const gchar *copy  = "Copyright 1997-2006 by Michael Sweet and Robert Krawitz";
   static const gchar *types = "RGB*,GRAY*,INDEXED*";
 
-  gimp_plugin_domain_register ((BAD_CONST_CHAR) PACKAGE, (BAD_CONST_CHAR) PACKAGE_LOCALE_DIR);
+  gimp_plugin_domain_register (cast_safe(PACKAGE), cast_safe(PACKAGE_LOCALE_DIR));
 
   do_gimp_install_procedure(blurb, help, auth, copy, types, G_N_ELEMENTS(args),
 			    args);
 }
+#pragma GCC diagnostic pop
 
 static guchar *gimp_thumbnail_data = NULL;
 
@@ -132,7 +135,7 @@ stpui_get_thumbnail_data_function(void *image_ID, gint *width, gint *height,
   if (gimp_thumbnail_data)
     g_free(gimp_thumbnail_data);
   gimp_thumbnail_data =
-    gimp_image_get_thumbnail_data((gint) image_ID, width, height, bpp);
+    gimp_image_get_thumbnail_data(p2gint(image_ID), width, height, bpp);
   return gimp_thumbnail_data;
 }
 
@@ -413,20 +416,16 @@ run (const char        *name,		/* I - Name of print program. */
  * 'do_print_dialog()' - Pop up the print dialog...
  */
 
-static void
-gimp_writefunc(void *file, const char *buf, size_t bytes)
-{
-  FILE *prn = (FILE *)file;
-  fwrite(buf, 1, bytes, prn);
-}
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 static void
 gimp_errfunc(void *file, const char *buf, size_t bytes)
 {
   char formatbuf[32];
-  snprintf(formatbuf, 31, "%%%ds", bytes);
+  snprintf(formatbuf, 31, "%%%lus", (unsigned long) bytes);
   g_message(formatbuf, buf);
 }
+#pragma GCC diagnostic pop
 
 static gint
 do_print_dialog (const gchar *proc_name,
@@ -435,12 +434,12 @@ do_print_dialog (const gchar *proc_name,
  /*
   * Generate the filename for the current user...
   */
-  char *filename = gimp_personal_rc_file ((BAD_CONST_CHAR) "printrc");
+  char *filename = gimp_personal_rc_file (cast_safe("printrc"));
   stpui_set_printrc_file(filename);
   g_free(filename);
   if (! getenv("STP_PRINT_MESSAGES_TO_STDERR"))
     stpui_set_errfunc(gimp_errfunc);
   stpui_set_thumbnail_func(stpui_get_thumbnail_data_function);
-  stpui_set_thumbnail_data((void *) image_ID);
+  stpui_set_thumbnail_data(gint2p(image_ID));
   return stpui_do_print_dialog();
 }

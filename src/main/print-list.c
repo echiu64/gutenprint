@@ -236,7 +236,7 @@ stp_list_get_end(const stp_list_t *list)
 static inline stp_list_t *
 deconst_list(const stp_list_t *list)
 {
-  return (stp_list_t *) list;
+  return (stp_list_t *) stpi_cast_safe(list);
 }
 
 /* get the node by its place in the list */
@@ -568,7 +568,7 @@ stp_list_item_create(stp_list_t *list,
   ln->prev = ln->next = NULL;
 
   if (data)
-    ln->data = (void *) data;
+    ln->data = stpi_cast_safe(data);
   else
     {
       stp_free(ln);

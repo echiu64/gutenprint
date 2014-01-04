@@ -40,6 +40,8 @@
  * Include necessary headers...
  */
 
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

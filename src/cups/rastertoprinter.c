@@ -136,6 +136,16 @@ static const char *load_file_name = NULL;
 
 extern void stpi_vars_print_error(const stp_vars_t *v, const char *prefix);
 
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+static inline void *
+cast_safe(const void *ptr)
+{
+  return (void *)ptr;
+}
+#pragma GCC diagnostic pop
+
 static void
 set_string_parameter(stp_vars_t *v, const char *name, const char *val)
 {
@@ -800,7 +810,7 @@ set_all_options(stp_vars_t *v, cups_option_t *options, int num_options,
 		  if (raw)
 		    {
 		      stp_set_raw_parameter(v, desc.name, raw->data, raw->bytes);
-		      stp_free((void *)raw->data);
+		      stp_free(cast_safe(raw->data));
 		      stp_free(raw);
 		    }
 		  break;

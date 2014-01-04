@@ -50,6 +50,8 @@ typedef void (*StpuiBasicCallback) (GObject *object,
 				    gpointer user_data);
 
 /*  local callbacks of dialog_new ()  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-pedantic"
 static gint
 dialog_delete_callback (GtkWidget *widget,
 			GdkEvent  *event,
@@ -71,6 +73,7 @@ dialog_delete_callback (GtkWidget *widget,
 
   return TRUE;
 }
+#pragma GCC diagnostic pop
 
 /**
  * dialog_create_action_areav:
@@ -79,6 +82,8 @@ dialog_delete_callback (GtkWidget *widget,
  *        buttons.
  *
  */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-pedantic"
 static void
 dialog_create_action_areav (GtkDialog *dialog,
 			    va_list    args)
@@ -173,6 +178,7 @@ dialog_create_action_areav (GtkDialog *dialog,
       label = va_arg (args, gchar *);
     }
 }
+#pragma GCC diagnostic pop
 
 /**
  * dialog_new:
@@ -771,7 +777,7 @@ stpui_create_radio_button(radio_group_t *radio, GSList *group,
 			     radio->button, 1, FALSE);
   stpui_set_help_data(radio->button, gettext(radio->help));
   g_signal_connect(G_OBJECT(radio->button), "toggled",
-		   G_CALLBACK(callback), (gpointer) radio->value);
+		   G_CALLBACK(callback), cast_safe(radio->value));
   return group;
 }
 
