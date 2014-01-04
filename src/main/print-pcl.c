@@ -1724,7 +1724,7 @@ pcl_papersize_valid(const stp_papersize_t *pt,
     return(0);
 
 /*
- * Is it a recognised supported name?
+ * Is it a recognized supported name?
  */
 
   if (pcl_convert_media_size(pt->name, model) != -1)
@@ -2282,15 +2282,19 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 		page_bottom,
 		out_width,	/* Width of image on page */
 		out_height,	/* Height of image on page */
-		out_channels,	/* Output bytes per pixel */
 		errdiv,		/* Error dividend */
 		errmod,		/* Error modulus */
 		errval,		/* Current error value */
 		errline,	/* Current raster line */
 		errlast;	/* Last raster line loaded */
+#if 0
+		out_channels,	/* Output bytes per pixel */
+#endif
   unsigned	zero_mask;
-  int           image_height,
+  int           image_height;
+#if 0
                 image_width;
+#endif
   const pcl_cap_t *caps;		/* Printer capabilities */
   int		planes = 3;	/* # of output planes */
   int		pcl_media_size; /* PCL media size code */
@@ -2302,7 +2306,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   int		extra_left_margin = 0;
   stp_curve_t   *lum_adjustment;
   stp_curve_t   *hue_adjustment;
-  double density;
+  double        density;
 
   if (!stp_verify(v))
     {
@@ -2320,7 +2324,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_image_init(image);
   image_height = stp_image_height(image);
+#if 0
   image_width = stp_image_width(image);
+#endif
 
  /*
   * Figure out the output resolution...
@@ -2383,7 +2389,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   page_height = page_bottom - page_top;
 
   image_height = stp_image_height(image);
+#if 0
   image_width = stp_image_width(image);
+#endif
 
  /*
   * Set media size here because it is needed by the margin calculation code.
@@ -2813,7 +2821,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       if (black && !privdata.do_cretb)
         stp_dither_set_inks_simple(v, STP_ECOLOR_K, 3, dot_sizes_use, 1.0, 1.0);
 
-      /* Note: no printer I know of does both CRet (4-level) and 6 colour, but
+      /* Note: no printer I know of does both CRet (4-level) and 6 color, but
 	 what the heck. variable_dither_ranges copied from print-escp2.c */
 
       if (privdata.do_6color)			/* Photo for 69x */
@@ -2835,7 +2843,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     }
   else if (privdata.do_6color)
     {
-      /* Set light inks for 6 colour printers.
+      /* Set light inks for 6 color printers.
 	 Numbers copied from print-escp2.c */
       stp_dither_set_inks_full(v, STP_ECOLOR_C, 2, photo_dither_shades, 1.0,
 				0.31 / .5);
@@ -2882,7 +2890,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       stp_curve_destroy(lum_adjustment);
     }
 
+#if 0
   out_channels = stp_color_init(v, image, 65536);
+#endif
 
   errdiv  = image_height / out_height;
   errmod  = image_height % out_height;
@@ -3082,4 +3092,3 @@ stp_module_t stp_module_data =
     print_pcl_module_exit,
     (void *) &print_pcl_module_data
   };
-
