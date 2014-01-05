@@ -32,10 +32,8 @@ I) INTRODUCTION
     Please read the user's manual (in ODF format as
     doc/gutenprint-users-manual.odt or PDF format as
     doc/gutenprint-users-manual.pdf) carefully, as it covers much more
-    information than this README file.  The user's manual contains a
-    complete list of supported printers.  In addition, please read the
+    information than this README file.  In addition, please read the
     release notes (NEWS), as it has information on the latest changes.
-    This package has changed significantly since Gutenprint 5.0.
 
     Gutenprint supports only the printer part of multi-function
     devices (devices that typically include scanning, copying, and fax
@@ -124,7 +122,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.9 generated on 04 Jun 2012
+	  Release: gutenprint 5.2.10 generated on 04 Jan 2014
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -132,7 +130,8 @@ A) OVERVIEW
 		Build CUPS PPD files:                   no
 		Generate PS level 3 CUPS PPD files:     yes
 		Build genppd statically:                yes
-	    Build Ghostscript IJS driver:               yes
+	    Build CUPS spoolers/backends:               yes
+	    Build Ghostscript IJS driver:               no
 	    Build Foomatic data:                        yes
 		Build Foomatic 3.x data:                yes
 	    Build enhanced Print plugin for GIMP:       yes
@@ -144,11 +143,11 @@ A) OVERVIEW
 
 	  Installation summary:
 	    Installation prefix:                        /usr/local
-	    Exec prefix:                                ${prefix}
+	    Exec prefix:                                ${prefix} (/usr/local)
 	    Data directory:                             /usr/local/share/gutenprint
-	    Library directory:                          ${exec_prefix}/lib64/gutenprint
+	    Library directory:                          ${exec_prefix}/lib64/gutenprint (/usr/local/lib64/gutenprint)
 	    XML data directory:                         /usr/local/share/gutenprint/5.2/xml
-	    Module directory:                           ${exec_prefix}/lib64/gutenprint/5.2/modules
+	    Module directory:                           ${exec_prefix}/lib64/gutenprint/5.2/modules (/usr/local/lib64/gutenprint/5.2/modules)
 	    Install sample images:                      yes
 
 	  General configuration:
@@ -161,7 +160,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux dsl092-065-009 3.1.10-1.9-default #1 SMP Thu Apr 5 18:48:38 UTC 2012 (4a97ec8) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux dsl092-065-009 3.11.6-4-default #1 SMP Wed Oct 30 18:04:56 UTC 2013 (e6d4a27) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS, GIMP, Foomatic, and Ghostscript components require that
@@ -276,16 +275,21 @@ C) CUPS
       are installed as commandtocanon and commandtoepson; they are
       installed in /usr/lib/cups/filter.
 
+    * A custom backend, gutenprint52usb, to send data to certain dye
+      sublimation printers.  Some dye sublimation printers use custom
+      USB protocols to send data to the printer and will not work with
+      the standard USB back end.
+
     * One or more sets of PPD files describing all of the printers
       supported by Gutenprint.  These are normally installed in
       /usr/share/cups/model/gutenprint.  These PPD files can only be
       used by the precise version of Gutenprint that they were built
       with; for example, it is not possible to use PPD files from
-      Gutenprint 5.0.0 with Gutenprint 5.2.0.
+      Gutenprint 5.2.9 with Gutenprint 5.2.10.
 
-      If you are using CUPS 1.2 or above, these PPD files are not
-      actually installed by default.  Instead, a CUPS driver generates
-      these PPD files on demand.
+      If you are using CUPS 1.2 or above, these PPD files may not be
+      actually installed by default, depending upon your system.
+      Instead, a CUPS driver generates these PPD files on demand.
 
     * A utility to update PPD files from an earlier release of
       Gutenprint, cups-genppdupdate.  This utility may be used to

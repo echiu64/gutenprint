@@ -23,32 +23,63 @@ dnl
 dnl Since the last release:
 dnl 1. if only source code (not the interface) has changed, set
 dnl      GUTENPRINT_MICRO_VERSION += 1;
-dnl 2. if any functions have been added, removed, or changed, set
-dnl      GUTENPRINT_CURRENT_INTERFACE += 1;
-dnl 3. if interfaces have been added, set
-dnl      GUTENPRINT_BINARY_AGE += 1;
-dnl    or, if interfaces have been removed, set
-dnl      GUTENPRINT_CURRENT_INTERFACE -= GUTENPRINT_BINARY_AGE
-dnl      GUTENPRINT_BINARY_AGE = 0;
+dnl 2. if any interfaces have been added or changed *compatibly*
+dnl      GUTENPRINT_CURRENT_INTERFACE (GCI) += 1;
+dnl      GUTENPRINT_BINARY_AGE (GBA) += 1;
+dnl 3. if interfaces have been deleted or changed *incompatibly*, set
+dnl    	 GCI = GBA + 1;
+dnl      GBA = 0;
 dnl
-dnl The .soname version is
-dnl (GUTENPRINT_CURRENT_INTERFACE - GUTENPRINT_BINARY_AGE).GUTENPRINT_BINARY_AGE
-dnl Example: if GUTENPRINT_CURRENT_INTERFACE is 3 and GUTENPRINT_BINARY_AGE is
-dnl 1, the version is 2.1.  To get 2.2, GUTENPRINT_CURRENT_INTERFACE would be
-dnl incremented to 4 and GUTENPRINT_BINARY_AGE to 2.
+dnl (Note that "added", "changed", and "deleted" refer to *external*
+dnl interfaces, that is, interfaces that start with stp_ and are in any
+dnl of the header files in include/gutenprint.  Internal interfaces
+dnl that are prefixed with stpi_ and are only listed in internal headers
+dnl in src/main do not need to be considered, since no external program
+dnl should rely on them.  "Change" refers to more than just function
+dnl signature; things like changes to enumerated types or changes in
+dnl behavior with the same function arguments are also considered changes)
 dnl
+dnl The .soname version is (GCI - GBA).GBA
+dnl Example: if GCI is 3 and GBA is 1, the version is 2.1.  To get 2.2,
+dnl GCI would be incremented to 4 and GBA to 2.
+dnl 
 dnl *NOTE*: due to an error preparing 5.2.8, we must skip over major version of
-dnl 3 and go directly from 2 to 4.
+dnl 3 (that is, GCI - GBA) and go directly from 2 to 4.
+dnl
+dnl For example:
+dnl 	 GCI=3, GBA=1 => .soname = libgutenprint.so.2.1
+dnl 	 GCI=4, GBA=2 => .soname = libgutenprint.so.2.2
+dnl          (and so on for 5.2 releases, which must remain compatible)
+dnl 	 GCI=4, GBA=0 => .soname = libgutenprint.so.4.0
+dnl 	 GCI=5, GBA=1 => .soname = libgutenprint.so.4.1
+dnl 	 GCI=6, GBA=2 => .soname = libgutenprint.so.4.2
+dnl          (for Gutenprint 5.3 or 5.4 or 6.0 or whatever)
+dnl 	 GCI=5, GBA=0 => .soname = libgutenprint.so.4.0
+dnl 	 GCI=6, GBA=1 => .soname = libgutenprint.so.4.1
+dnl 	 GCI=7, GBA=2 => .soname = libgutenprint.so.4.2
+dnl          (for the next major/minor release beyond that)
+dnl
+dnl Typically, programs will require a certain major number to be matched
+dnl and a minimum minor number.  Causing the major number to be incremented
+dnl will result in programs linked against libgutenprint.so.2 to be treated
+dnl as incompatible with libgutenprint.so.3.
+dnl
+dnl .soname versions can have a third component, which is set from
+dnl GUTENPRINT_INTERFACE_AGE.  This resulted in problems on OS X and
+dnl we have elected to use only two components in the .soname.
+dnl
+dnl Similar principles apply to libgutenprintui2, but that interface is
+dnl still at 1.0.
 dnl
 dnl For more detailed information, see the libtool info documentation.
 dnl
 pushdef([GUTENPRINT_NAME],              [gutenprint])
 pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [2])
-pushdef([GUTENPRINT_MICRO_VERSION],     [9])
+pushdef([GUTENPRINT_MICRO_VERSION],     [10])
 pushdef([GUTENPRINT_EXTRA_VERSION],     [])
-pushdef([GUTENPRINT_CURRENT_INTERFACE], [3])
-pushdef([GUTENPRINT_BINARY_AGE],        [1])
+pushdef([GUTENPRINT_CURRENT_INTERFACE], [4])
+pushdef([GUTENPRINT_BINARY_AGE],        [2])
 pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [1])
 pushdef([GUTENPRINTUI2_BINARY_AGE],        [0])
 pushdef([GUTENPRINT_VERSION], GUTENPRINT_MAJOR_VERSION.GUTENPRINT_MINOR_VERSION.GUTENPRINT_MICRO_VERSION[]GUTENPRINT_EXTRA_VERSION)
