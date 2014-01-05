@@ -1095,7 +1095,7 @@
       <printer translate="name" name="Epson Stylus C86" deviceid="MFG:EPSON;MDL:Stylus C86;DES:EPSON Stylus C86;CMD:ESCPL2,BDC,D4;" driver="escp2-c86" manufacturer="Epson" model="69" parameters="standard_params" foomaticid="Epson-Stylus_C86" />
       <printer translate="name" name="Epson Stylus C87" driver="escp2-c87" manufacturer="Epson" model="69" parameters="standard_params" foomaticid="Epson-Stylus_C87" />
       <printer translate="name" name="Epson Stylus C88" deviceid="MFG:EPSON;MDL:Stylus C88;DES:EPSON Stylus C88;CMD:ESCPL2,BDC,D4;" driver="escp2-c88" manufacturer="Epson" model="69" parameters="standard_params" foomaticid="Epson-Stylus_C88" />
-      <printer translate="name" name="Epson Stylus C92" deviceid="MFG:EPSON;MDL:Stylus C92;DES:EPSON Stylus C92;CMD:ESCPL2,BDC,D4,D4PX;" driver="escp2-c68" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_C92" />
+      <printer translate="name" name="Epson Stylus C92" deviceid="MFG:EPSON;MDL:Stylus C92;DES:EPSON Stylus C92;CMD:ESCPL2,BDC,D4,D4PX;" driver="escp2-c92" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_C92" />
       <printer translate="name" name="Epson Stylus C110" driver="escp2-c110" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-Stylus_C110" />
       <printer translate="name" name="Epson Stylus C120" driver="escp2-c120" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-Stylus_C120" />
       <printer translate="name" name="Epson Stylus Color" driver="escp2" manufacturer="Epson" model="0" parameters="standard_params" foomaticid="Epson-Stylus_Color" />
@@ -1314,7 +1314,7 @@
       <printer translate="name" name="Epson Stylus CX9400F" driver="escp2-cx9400f" manufacturer="Epson" model="65" parameters="cx3500_params" foomaticid="Epson-Stylus_CX9400F" />
       <printer translate="name" name="Epson Stylus CX9475F" driver="escp2-cx9475f" manufacturer="Epson" model="65" parameters="cx3500_params" foomaticid="Epson-Stylus_CX9475F" />
       <printer translate="name" name="Epson Stylus D68" deviceid="MFG:EPSON;MDL:Stylus D68;DES:EPSON Stylus D68;CMD:ESCPL2,BDC,D4;" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D68" />
-      <printer translate="name" name="Epson Stylus D78" deviceid="MFG:EPSON;MDL:Stylus D78;DES:EPSON Stylus D78;CMD:ESCPL2,BDC,D4,D4PX;" driver="escp2-d68" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D78" />
+      <printer translate="name" name="Epson Stylus D78" deviceid="MFG:EPSON;MDL:Stylus D78;DES:EPSON Stylus D78;CMD:ESCPL2,BDC,D4,D4PX;" driver="escp2-d78" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D78" />
       <printer translate="name" name="Epson Stylus D88" deviceid="MFG:EPSON;MDL:Stylus D88;DES:EPSON Stylus D88;CMD:ESCPL2,BDC,D4;" driver="escp2-d88" manufacturer="Epson" model="69" parameters="standard_params" foomaticid="Epson-Stylus_D88" />
       <printer translate="name" name="Epson Stylus D92" deviceid="MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX;MDL:Stylus D92;DES:EPSON Stylus D92;" driver="escp2-d92" manufacturer="Epson" model="66" parameters="standard_params" foomaticid="Epson-Stylus_D92" />
       <printer translate="name" name="Epson Stylus D120" driver="escp2-d120" manufacturer="Epson" model="85" parameters="standard_params" foomaticid="Epson-Stylus_D120" />
