@@ -256,6 +256,12 @@
 <!--
     Other common photographic paper sizes
 -->
+    <paper name="w576h576">
+      <description translate="value" value="8x8"/>
+      <width value="576"/>
+      <height value="576"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w576h864">
       <description translate="value" value="8x12"/>
       <comment value="Sometimes used for 35mm"/>
