@@ -350,7 +350,7 @@
       <printer translate="name" name="Canon MP150 Series Printer" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP150" />
       <printer translate="name" name="Canon PIXMA MP150" driver="bjc-MULTIPASS-MP150" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP150" />
       <!-- Canon MP160 family (exception: no series) -->
-      <printer translate="name" name="Canon MP160 Printer" deviceid="MFG:Canon;MDL:MP160;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-MULTIPASS-MP160" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP160" />
+      <printer translate="name" name="Canon MP160 Printer" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe;SOJ:TXT01;MDL:MP160;CLS:PRINTER;DES:Canon MP160;VER:1.06;STA:10;HRI:OTH;" driver="bjc-MULTIPASS-MP160" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP160" />
       <printer translate="name" name="Canon PIXMA MP160" driver="bjc-MULTIPASS-MP160" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP160" />
       <!-- Canon MP170 family (exception: capital S) -->
       <printer translate="name" name="Canon MP170 Series Printer" driver="bjc-MULTIPASS-MP170" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP170" />
