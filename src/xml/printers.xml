@@ -456,7 +456,7 @@
       <printer translate="name" name="Canon PIXMA MP498" driver="bjc-MULTIPASS-MP498" manufacturer="Canon" model="5000490" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP498" />
       <printer translate="name" name="Canon PIXMA MP499" driver="bjc-MULTIPASS-MP499" manufacturer="Canon" model="5000490" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP499" />
       <!-- Canon MP500 family (exception: capital S) -->
-      <printer translate="name" name="Canon MP500 Series Printer" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
+      <printer translate="name" name="Canon MP500 Series Printer" deviceid="MFG:Canon;MDL:MP500;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
       <printer translate="name" name="Canon PIXMA MP500" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
       <printer translate="name" name="Canon PIXUS MP500" driver="bjc-MULTIPASS-MP500" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP500" />
       <!-- Canon MP510 family (no series) -->
