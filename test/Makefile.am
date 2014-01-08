@@ -26,7 +26,10 @@ include $(top_srcdir)/scripts/global.mk
 
 LOCAL_CPPFLAGS = -I$(top_srcdir)/src/main $(GUTENPRINT_CFLAGS)
 
-TESTS = curve run-testdither run-weavetest
+## run-weavetest is extremely time consuming and provides little value for
+## release testing since the last material change was made in 2008.
+## It is essentially a giant unit test for the weave code.
+TESTS = curve run-testdither
 
 ## Programs
 
