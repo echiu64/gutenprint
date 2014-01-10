@@ -280,10 +280,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      Over time, it is expected that additional printer models will be
      supported by this unified backend.
 
-     Please note that unless you are using CUPS > 1.6.4, you may have to
-     manually select the gutenprint CUPS backend when configuring one of
-     these printers.  They will not function properly with the default
-     'usb' backend.
+     Please note that unless you are using Linux with CUPS >= 1.6.4, you 
+     may have to manually select the gutenprint CUPS backend when 
+     configuring one of these printers.  They will not function properly 
+     with the default 'usb' backend.
 
   2) New printers supported in this release:
 
