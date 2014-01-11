@@ -119,7 +119,6 @@
       <printer translate="name" name="Canon BJC-6200" deviceid="MFG:Canon;MDL:BJC-6200;DES:Canon BJC-6200;CMD:BJL,BJRaster3,BSCC,TXT01,BJScan2;" driver="bjc-6200" manufacturer="Canon" model="6200" parameters="gamma_750_params" foomaticid="Canon-BJC-6200" />
       <printer translate="name" name="Canon BJC-6500" driver="bjc-6500" manufacturer="Canon" model="6500" parameters="gamma_750_params" foomaticid="Canon-BJC-6500" />
       <printer translate="name" name="Canon BJC-7000" driver="bjc-7000" manufacturer="Canon" model="7000" parameters="gamma_6_density_800_params" foomaticid="Canon-BJC-7000" />
-      <printer translate="name" name="Canon BJC-7000 Series" driver="bjc-7000" manufacturer="Canon" model="7000" parameters="gamma_6_density_800_params" foomaticid="Canon-BJC-7000" />
       <printer translate="name" name="Canon BJC-7100" driver="bjc-7100" manufacturer="Canon" model="7100" parameters="density_800_params" foomaticid="Canon-BJC-7100" />
       <printer translate="name" name="Canon BJC-8200" deviceid="MFG:Canon;MDL:BJC-8200;DES:Canon;CMD:BJL,BJRaster3,BSCC,TXT01;" driver="bjc-8200" manufacturer="Canon" model="8200" parameters="density_800_params" foomaticid="Canon-BJC-8200" />
       <printer translate="name" name="Canon BJC-8500" driver="bjc-8500" manufacturer="Canon" model="8500" parameters="density_800_params" foomaticid="Canon-BJC-8500" />
@@ -162,13 +161,13 @@
       <printer translate="name" name="Canon PIXMA iP2772" driver="bjc-PIXMA-iP2772" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2772" />
       <printer translate="name" name="Canon PIXMA iP2780" driver="bjc-PIXMA-iP2780" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2780" />
       <printer translate="name" name="Canon PIXMA iP2788" driver="bjc-PIXMA-iP2788" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2788" />
-      <!-- Canon iP3000 family (exception: family name same as instance name) -->
+      <!-- Canon iP3000 -->
       <printer translate="name" name="Canon PIXMA iP3000" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe;SOJ:TXT01;MDL:iP3000;CLS:PRINTER;DES:Canon iP3000;VER:1.06;STA:10;FSI:03;" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000" />
-      <!-- Canon iP3100 family (exception: family name same as instance name) Also PIXUS only, PIXMA iP3100 does not exist -->
-      <printer translate="name" name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3100" />
+      <!-- Canon iP3100 (PIXUS only, PIXMA iP3100 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP3100" driver="bjc-PIXMA-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3100" />
+      <printer translate="name" name="Canon PIXUS iP3100" driver="bjc-PIXUS-iP3100" manufacturer="Canon" model="3003100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3100" />
       <!-- Canon iP3300 family -->
-      <printer translate="name" name="Canon iP3300" driver="bjc-iP3300" manufacturer="Canon" model="3003300" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP3300" />
+      <printer translate="name" name="Canon iP3300 series" driver="bjc-iP3300-series" manufacturer="Canon" model="3003300" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP3300-series" />
       <printer translate="name" name="Canon PIXMA iP3300" driver="bjc-PIXMA-iP3300" manufacturer="Canon" model="3003300" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3300" />
       <printer translate="name" name="Canon PIXUS iP3300" driver="bjc-PIXUS-iP3300" manufacturer="Canon" model="3003300" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3300" />
       <!-- Canon iP3500 family -->
@@ -180,22 +179,22 @@
       <printer translate="name" name="Canon PIXMA iP3600" driver="bjc-PIXMA-iP3600" manufacturer="Canon" model="3003600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3600" />
       <printer translate="name" name="Canon PIXUS iP3600" driver="bjc-PIXUS-iP3600" manufacturer="Canon" model="3003600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP3600" />
       <printer translate="name" name="Canon PIXMA iP3680" driver="bjc-PIXMA-iP3680" manufacturer="Canon" model="3003600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3680" />
-      <!-- Canon iP4000 family (exception: family name same as instance name) -->
-      <printer translate="name" name="Canon PIXMA iP4000" deviceid="MFG:Canon;MDL:iP4000;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-iP4000" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP4000" />
-      <!-- Canon iP4000R family (exception: family name same as instance name) -->
-      <printer translate="name" name="Canon PIXMA iP4000R" driver="bjc-PIXMA-iP4000R" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP4000R" />
-      <!-- Canon iP4100 family (exception: family name same as instance name) Also PIXUS only, PIXMA iP4100 does not exist -->
-      <printer translate="name" name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="3004100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP4100" />
+      <!-- Canon iP4000 -->
+      <printer translate="name" name="Canon PIXMA iP4000" deviceid="MFG:Canon;MDL:iP4000;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-iP4000" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP4000" /><!-- driver and foomaticid legacy: missing brand name in both -->
+      <!-- Canon iP4000R -->
+      <printer translate="name" name="Canon PIXMA iP4000R" driver="bjc-PIXMA-iP4000R" manufacturer="Canon" model="3004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP4000R" /><!-- driver and foomaticid legacy: missing brand name in one -->
+      <!-- Canon iP4100 (PIXUS only, PIXMA iP4100 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP4100" driver="bjc-PIXMA-iP4100" manufacturer="Canon" model="3004100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP4100" />
-      <!-- Canon iP4100R family (exception: family name same as instance name) Also PIXUS only, PIXMA iP4100R does not exist -->
+      <printer translate="name" name="Canon PIXUS iP4100" driver="bjc-PIXUS-iP4100" manufacturer="Canon" model="3004100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP4100" />
+      <!-- Canon iP4100R (PIXUS only, PIXMA iP4100R does not exist) -->
       <printer translate="name" name="Canon PIXUS iP4100R" driver="bjc-PIXUS-iP4100R" manufacturer="Canon" model="3004100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP4100R" />
       <printer translate="name" name="Canon PIXMA iP4100R" driver="bjc-PIXMA-iP4100R" manufacturer="Canon" model="3004100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP4100R" />
-      <!-- Canon iP4200 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP4200" deviceid="MFG:Canon;MDL:iP4200;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-iP4200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4200_params" foomaticid="Canon-iP4200" />
+      <!-- Canon iP4200 family -->
+      <printer translate="name" name="Canon iP4200 series" deviceid="MFG:Canon;MDL:iP4200;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-iP4200-series" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4200_params" foomaticid="Canon-iP4200-series" />
      <printer translate="name" name="Canon PIXMA iP4200" driver="bjc-PIXMA-iP4200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4200_params" foomaticid="Canon-PIXMA-iP4200" />
       <printer translate="name" name="Canon PIXUS iP4200" driver="bjc-PIXUS-iP4200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4200_params" foomaticid="Canon-PIXUS-iP4200" />
-      <!-- Canon iP4300 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP4300" driver="bjc-iP4300" manufacturer="Canon" model="3004300" parameters="PIXMA_iP4300_params" foomaticid="Canon-iP4300" />
+      <!-- Canon iP4300 family -->
+      <printer translate="name" name="Canon iP4300 series" driver="bjc-iP4300-series" manufacturer="Canon" model="3004300" parameters="PIXMA_iP4300_params" foomaticid="Canon-iP4300-series" />
       <printer translate="name" name="Canon PIXMA iP4300" driver="bjc-PIXMA-iP4300" manufacturer="Canon" model="3004300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-iP4300" />
       <printer translate="name" name="Canon PIXUS iP4300" driver="bjc-PIXUS-iP4300" manufacturer="Canon" model="3004300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-iP4300" />
       <!-- Canon iP4500 family -->
@@ -232,46 +231,40 @@
       <printer translate="name" name="Canon PIXMA iP4950" driver="bjc-PIXMA-iP4950" manufacturer="Canon" model="3004900" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-iP4950" />
       <printer translate="name" name="Canon PIXMA iP4970" driver="bjc-PIXMA-iP4970" manufacturer="Canon" model="3004900" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-iP4970" />
       <printer translate="name" name="Canon PIXMA iP4980" driver="bjc-PIXMA-iP4980" manufacturer="Canon" model="3004900" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-iP4980" />
-      <!-- Canon iP5000 family (family same as instance name) -->
+      <!-- Canon iP5000 -->
       <printer translate="name" name="Canon PIXMA iP5000" driver="bjc-PIXMA-iP5000" manufacturer="Canon" model="3005000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP5000" />
-      <!-- Canon iP5200 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP5200" driver="bjc-iP5200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP5200" />
+      <!-- Canon iP5200 -->
       <printer translate="name" name="Canon PIXMA iP5200" driver="bjc-PIXMA-iP5200" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP5200" />
-      <!-- Canon iP5200R family (exception: plain name) -->
-      <printer translate="name" name="Canon iP5200R" driver="bjc-iP5200R" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP5200R" />
+      <!-- Canon iP5200R family -->
+      <printer translate="name" name="Canon iP5200R series" driver="bjc-iP5200R-series" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP5200R-series" />
       <printer translate="name" name="Canon PIXMA iP5200R" driver="bjc-PIXMA-iP5200R" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP5200R" />
       <printer translate="name" name="Canon PIXUS iP5200R" driver="bjc-PIXUS-iP5200R" manufacturer="Canon" model="3004200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP5200R" />
-      <!-- Canon iP5300 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP5300" driver="bjc-iP5300" manufacturer="Canon" model="3005300" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP5300" />
+      <!-- Canon iP5300 -->
       <printer translate="name" name="Canon PIXMA iP5300" driver="bjc-PIXMA-iP5300" manufacturer="Canon" model="3005300" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP5300" />
-      <!-- Canon iP6000D family (family name same as instance name) -->
+      <!-- Canon iP6000D -->
       <printer translate="name" name="Canon PIXMA iP6000D" driver="bjc-PIXMA-iP6000D" manufacturer="Canon" model="3006000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6000D" />
-      <!-- Canon iP6100D family (only PIXUS, PIXMA iP6100D does not exist. Family name same as instance name) -->
-      <printer translate="name" name="Canon PIXUS iP6100D" driver="bjc-PIXUS-iP6100D" manufacturer="Canon" model="3006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP6100D" />
+      <!-- Canon iP6100D (PIXUS only, PIXMA iP6100D does not exist) -->
       <printer translate="name" name="Canon PIXMA iP6100D" driver="bjc-PIXMA-iP6100D" manufacturer="Canon" model="3006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6100D" />
-      <!-- Canon iP6210 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP6210D" driver="bjc-iP6210D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6210D" />
+      <printer translate="name" name="Canon PIXUS iP6100D" driver="bjc-PIXUS-iP6100D" manufacturer="Canon" model="3006100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP6100D" />
+      <!-- Canon iP6210 -->
       <printer translate="name" name="Canon PIXMA iP6210D" driver="bjc-PIXMA-iP6210D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6210D" />
-      <!-- Canon iP6220 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP6220D" driver="bjc-iP6220D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6220D" />
+      <!-- Canon iP6220 -->
       <printer translate="name" name="Canon PIXMA iP6220D" driver="bjc-PIXMA-iP6220D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6220D" />
-      <!-- Canon iP6310 family (exception: plain name) -->
-      <printer translate="name" name="Canon iP6310D" driver="bjc-iP6310D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6310D" />
+      <!-- Canon iP6310 -->
       <printer translate="name" name="Canon PIXMA iP6310D" driver="bjc-PIXMA-iP6310D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6310D" />
-      <!-- Canon iP6320D family (exception: plain name) -->
-      <printer translate="name" name="Canon iP6320D" driver="bjc-iP6320D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6320D" />
+      <!-- Canon iP6320D -->
       <printer translate="name" name="Canon PIXMA iP6320D" driver="bjc-PIXMA-iP6320D" manufacturer="Canon" model="3006210" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6320D" />
-      <!-- Canon iP6600D family (exception: plain name) -->
-      <printer translate="name" name="Canon iP6600D" driver="bjc-iP6600D" manufacturer="Canon" model="3006600" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6600D" />
+      <!-- Canon iP6600D family -->
+      <printer translate="name" name="Canon iP6600D series" driver="bjc-iP6600D-series" manufacturer="Canon" model="3006600" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6600D-series" />
       <printer translate="name" name="Canon PIXMA iP6600D" driver="bjc-PIXMA-iP6600D" manufacturer="Canon" model="3006600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6600D" />
       <printer translate="name" name="Canon PIXUS iP6600D" driver="bjc-PIXUS-iP6600D" manufacturer="Canon" model="3006600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP6600D" />
-      <!-- Canon iP6700D family (exception: plain name) -->
-      <printer translate="name" name="Canon iP6700D" driver="bjc-iP6700" manufacturer="Canon" model="3006700" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6700" />
+      <!-- Canon iP6700D family -->
+      <printer translate="name" name="Canon iP6700D series" driver="bjc-iP6700-series" manufacturer="Canon" model="3006700" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP6700-series" />
       <printer translate="name" name="Canon PIXMA iP6700D" driver="bjc-PIXMA-iP6700" manufacturer="Canon" model="3006700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP6700" />
       <printer translate="name" name="Canon PIXUS iP6700D" driver="bjc-PIXUS-iP6700" manufacturer="Canon" model="3006700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP6700" />
-      <!-- Canon iP7100 family (PIXUS only, PIXMA iP7100 does not exist. Family name same as instance name) -->
-      <printer translate="name" name="Canon PIXUS iP7100" driver="bjc-PIXUS-iP7100" manufacturer="Canon" model="3007100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP7100" />
+      <!-- Canon iP7100 (PIXUS only, PIXMA iP7100 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP7100" driver="bjc-PIXMA-iP7100" manufacturer="Canon" model="3007100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7100" />
+      <printer translate="name" name="Canon PIXUS iP7100" driver="bjc-PIXUS-iP7100" manufacturer="Canon" model="3007100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP7100" />
       <!-- Canon iP7200 family -->
       <printer translate="name" name="Canon iP7200 series" driver="bjc-iP7200-series" manufacturer="Canon" model="3007200" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP7200-series" />
       <printer translate="name" name="Canon PIXMA iP7210" driver="bjc-PIXMA-iP7210" manufacturer="Canon" model="3007200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7210" />
@@ -282,27 +275,24 @@
       <printer translate="name" name="Canon PIXMA iP7260" driver="bjc-PIXMA-iP7260" manufacturer="Canon" model="3007200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7260" />
       <printer translate="name" name="Canon PIXMA iP7270" driver="bjc-PIXMA-iP7270" manufacturer="Canon" model="3007200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7270" />
       <printer translate="name" name="Canon PIXMA iP7280" driver="bjc-PIXMA-iP7280" manufacturer="Canon" model="3007200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7280" />
-      <!-- Canon iP7500 family (PIXUS only, PIXMA iP7500 does not exist. Exception: plain name) -->
-      <printer translate="name" name="Canon iP7500" driver="bjc-iP7500" manufacturer="Canon" model="3007500" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP7500" />
-      <printer translate="name" name="Canon PIXUS iP7500" driver="bjc-PIXUS-iP7500" manufacturer="Canon" model="3007500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP7500" />
+      <!-- Canon iP7500 (PIXUS only, PIXMA iP7500 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP7500" driver="bjc-PIXMA-iP7500" manufacturer="Canon" model="3007500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP7500" />
-      <!-- Canon iP8100 family (PIXUS only, PIXMA iP8100 does not exist. Family name same as instance name) -->
-      <printer translate="name" name="Canon PIXUS iP8100" driver="bjc-PIXUS-iP8100" manufacturer="Canon" model="3008100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8100" />
+      <printer translate="name" name="Canon PIXUS iP7500" driver="bjc-PIXUS-iP7500" manufacturer="Canon" model="3007500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP7500" />
+      <!-- Canon iP8100 (PIXUS only, PIXMA iP8100 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP8100" driver="bjc-PIXMA-iP8100" manufacturer="Canon" model="3008100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8100" />
-      <!-- Canon iP8500 family (Family name same as instance name) -->
+      <printer translate="name" name="Canon PIXUS iP8100" driver="bjc-PIXUS-iP8100" manufacturer="Canon" model="3008100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8100" />
+      <!-- Canon iP8500 -->
       <printer translate="name" name="Canon PIXMA iP8500" driver="bjc-PIXMA-iP8500" manufacturer="Canon" model="3008500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8500" />
-      <!-- Canon iP8600 family (PIXUS only, PIXMA iP8600 does not exist. Family name same as instance name) -->
-      <printer translate="name" name="Canon PIXUS iP8600" driver="bjc-PIXUS-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8600" />
+      <!-- Canon iP8600 (PIXUS only, PIXMA iP8600 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP8600" driver="bjc-PIXMA-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8600" />
-      <!-- Canon iP9910 family (PIXUS only, PIXMA iP9910 does not exist. Exception: plain name) -->
-      <printer translate="name" name="Canon iP9910" driver="bjc-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP9910" />
-      <printer translate="name" name="Canon PIXUS iP9910" driver="bjc-PIXUS-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP9910" />
+      <printer translate="name" name="Canon PIXUS iP8600" driver="bjc-PIXUS-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8600" />
+      <!-- Canon iP9910 (PIXUS only, PIXMA iP9910 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP9910" driver="bjc-PIXMA-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP9910" />
-      <!-- Canon iX4000 family -->
-      <printer translate="name" name="Canon iX4000" driver="bjc-iX4000" manufacturer="Canon" model="4004000" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX4000" />
+      <printer translate="name" name="Canon PIXUS iP9910" driver="bjc-PIXUS-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP9910" />
+      <!-- Canon iX4000 -->
       <printer translate="name" name="Canon PIXMA iX4000" driver="bjc-PIXMA-iX4000" manufacturer="Canon" model="4004000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX4000" />
       <!-- Canon iX5000 family -->
-      <printer translate="name" name="Canon iX5000" driver="bjc-iX5000" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX5000" />
+      <printer translate="name" name="Canon iX5000 series" driver="bjc-iX5000-series" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX5000-series" />
       <printer translate="name" name="Canon PIXMA iX5000" driver="bjc-PIXMA-iX5000" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX5000" />
       <printer translate="name" name="Canon PIXUS iX5000" driver="bjc-PIXUS-iX5000" manufacturer="Canon" model="4005000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXUS-iX5000" />
       <!-- Canon iX6500 family -->
@@ -316,25 +306,25 @@
       <printer translate="name" name="Canon PIXMA iX6560" driver="bjc-PIXMA-iX6560" manufacturer="Canon" model="4006500" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6560" />
       <printer translate="name" name="Canon PIXMA iX6580" driver="bjc-PIXMA-iX6580" manufacturer="Canon" model="4006500" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6580" />
       <!-- Canon iX7000 family -->
-      <printer translate="name" name="Canon iX7000" driver="bjc-iX7000" manufacturer="Canon" model="4007000" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX7000" />
+      <printer translate="name" name="Canon iX7000 series" driver="bjc-iX7000-series" manufacturer="Canon" model="4007000" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX7000-series" />
       <printer translate="name" name="Canon PIXMA iX7000" driver="bjc-PIXMA-iX7000" manufacturer="Canon" model="4007000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX7000" />
       <printer translate="name" name="Canon PIXUS iX7000" driver="bjc-PIXUS-iX7000" manufacturer="Canon" model="4007000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXUS-iX7000" />
       <!-- Canon Pro9000 family -->
-      <printer translate="name" name="Canon Pro9000" driver="bjc-Pro9000" manufacturer="Canon" model="7009000" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9000" />
+      <printer translate="name" name="Canon Pro9000 series" driver="bjc-Pro9000-series" manufacturer="Canon" model="7009000" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9000-series" />
       <printer translate="name" name="Canon PIXMA Pro9000" driver="bjc-PIXMA-Pro9000" manufacturer="Canon" model="7009000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9000" />
       <printer translate="name" name="Canon PIXUS Pro9000" driver="bjc-PIXUS-Pro9000" manufacturer="Canon" model="7009000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9000" />
       <!-- Canon Pro9000 Mk.II family -->
-      <printer translate="name" name="Canon Pro9000 Mk.II" deviceid="MFG:Canon;MDL:Pro9000II series;CMD:BJL,BJRaster3,BSCCe,PLI;" driver="bjc-Pro9000-Mk2" manufacturer="Canon" model="7009002" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9000-Mk2" />
-      <printer translate="name" name="Canon PIXMA Pro9000 Mk.II" driver="bjc-PIXMA-Pro9000-Mk2" manufacturer="Canon" model="7009002" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9000-Mk2" />
-      <printer translate="name" name="Canon PIXUS Pro9000 Mk.II" driver="bjc-PIXUS-Pro9000-Mk2" manufacturer="Canon" model="7009002" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9000-Mk2" />
+      <printer translate="name" name="Canon Pro9000 Mk.II series" deviceid="MFG:Canon;MDL:Pro9000II series;CMD:BJL,BJRaster3,BSCCe,PLI;" driver="bjc-Pro9000mk2-series" manufacturer="Canon" model="7009002" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9000-Mk2-series" />
+      <printer translate="name" name="Canon PIXMA Pro9000mk2" driver="bjc-PIXMA-Pro9000mk2" manufacturer="Canon" model="7009002" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9000-Mk2" />
+      <printer translate="name" name="Canon PIXUS Pro9000mk2" driver="bjc-PIXUS-Pro9000mk2" manufacturer="Canon" model="7009002" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9000-Mk2" />
       <!-- Canon Pro9500 family -->
-      <printer translate="name" name="Canon Pro9500" driver="bjc-Pro9500" manufacturer="Canon" model="7009500" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9500" />
+      <printer translate="name" name="Canon Pro9500 series" driver="bjc-Pro9500-series" manufacturer="Canon" model="7009500" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9500-series" />
       <printer translate="name" name="Canon PIXMA Pro9500" driver="bjc-PIXMA-Pro9500" manufacturer="Canon" model="7009500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9500" />
       <printer translate="name" name="Canon PIXUS Pro9500" driver="bjc-PIXUS-Pro9500" manufacturer="Canon" model="7009500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9500" />
-      <!-- Canon Pro9500 II family -->
-      <printer translate="name" name="Canon Pro9500 Mk.II" driver="bjc-Pro9500-Mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9500-Mk2" />
-      <printer translate="name" name="Canon PIXMA Pro9500 Mk.II" driver="bjc-PIXMA-Pro9500-Mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9500-Mk2" />
-      <printer translate="name" name="Canon PIXUS Pro9500 Mk.II" driver="bjc-PIXUS-Pro9500 -Mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9500-Mk2" />
+      <!-- Canon Pro9500 Mk.II family -->
+      <printer translate="name" name="Canon Pro9500 Mk.II series" driver="bjc-Pro9500mk2-series" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9500-Mk2-series" />
+      <printer translate="name" name="Canon PIXMA Pro9500mk2" driver="bjc-PIXMA-Pro9500mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9500- Mk2" />
+      <printer translate="name" name="Canon PIXUS Pro9500mk2" driver="bjc-PIXUS-Pro9500mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9500-Mk2" />
       <!-- Canon MP140 family -->
       <printer translate="name" name="Canon MP140 series" driver="bjc-MULTIPASS-MP140-series" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP140-series" />
       <printer translate="name" name="Canon PIXMA MP140" driver="bjc-MULTIPASS-MP140" manufacturer="Canon" model="5000150" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MP140" />
