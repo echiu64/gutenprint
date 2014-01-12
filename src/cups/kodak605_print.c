@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
- *  
+ *
  *     http://git.shaftnet.org/cgit/selphy_print.git
- *  
+ *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -168,7 +168,7 @@ static int kodak605_main_loop(void *vctx, int copies) {
 	uint8_t cmdbuf[CMDBUF_LEN];
 
 	int last_state = -1, state = S_IDLE;
-	int i, num, ret;
+	int num, ret;
 	int pending = 0;
 
 	if (!ctx)
@@ -184,7 +184,8 @@ static int kodak605_main_loop(void *vctx, int copies) {
 
 top:
 	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
+		if (dyesub_debug)
+			DEBUG("last_state %d new %d\n", last_state, state);
 	}
 
 	if (pending)
@@ -202,17 +203,13 @@ top:
 
 skip_query:
 	/* Read in the printer status */
-	memset(rdbuf, 0, READBACK_LEN);
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   5000);
-
-	if (ret < 0 || num < 10) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
-		if (ret < 0)
-			return ret;
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return ret;
+	
+	if (num < 10) {
+		ERROR("Short read! (%d/%d)\n", num, 10);
 		return 4;
 	}
 
@@ -223,11 +220,6 @@ skip_query:
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		DEBUG("readback: ");
-		for (i = 0 ; i < num ; i++) {
-			DEBUG2("%02x ", rdbuf[i]);
-		}
-		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
@@ -338,16 +330,13 @@ static int kodak605_get_status(struct kodak605_ctx *ctx)
 		return ret;
 
 	/* Read in the printer status */
-	memset(rdbuf, 0, sizeof(rdbuf));
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   5000);
-	if (ret < 0 || num < (int)sizeof(rdbuf)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(rdbuf), ctx->endp_up);
-		if (ret < 0)
-			return ret;
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return ret;
+
+	if (num < (int)sizeof(rdbuf)) {
+		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(rdbuf));
 		return 4;
 	}
 
@@ -366,7 +355,7 @@ static int kodak605_get_media(struct kodak605_ctx *ctx)
 
 	int ret, i, num = 0;
 
-	/* Send Status Query */
+	/* Send Media Query */
 	cmdbuf[0] = 0x02;
 	cmdbuf[1] = 0x00;
 	cmdbuf[2] = 0x00;
@@ -376,16 +365,13 @@ static int kodak605_get_media(struct kodak605_ctx *ctx)
 		return ret;
 
 	/* Read in the printer status */
-	memset(rdbuf, 0, sizeof(rdbuf));
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   5000);
-	if (ret < 0 || num < (int)sizeof(rdbuf)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(rdbuf), ctx->endp_up);
-		if (ret < 0)
-			return ret;
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return ret;
+
+	if (num < (int)sizeof(rdbuf)) {
+		ERROR("Short Read! (%d/%d)\n", num, (int)sizeof(rdbuf));
 		return 4;
 	}
 
@@ -447,32 +433,23 @@ static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 		return -1;
 
 	/* Get response back */
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   respbuf,
-				   sizeof(respbuf),
-				   &num,
-				   5000);
-
-	if (ret < 0 || (num != 10)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
+	ret = read_data(dev, endp_up,
+			respbuf, sizeof(respbuf), &num);
+	if (ret < 0)
 		return ret;
+
+	if (num != 10) {
+		ERROR("Short Read! (%d/%d)\n", num, 10);
+		return 4;
 	}
 
-	// XXX parse the response?
-
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   (uint8_t*) data,
-				   sizeof(respbuf),
-				   &num,
-				   5000);
-	if (ret < 0 || (num != sizeof(data))) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
-		return ret;
-	}
+	/* Send the data over! */
+	ret = send_data(dev, endp_up,
+			(uint8_t*)data, sizeof(data));
         
 	/* We're done */
 	free(data);
-	return 0;
+	return ret;
 }
 
 
@@ -504,7 +481,7 @@ static int kodak605_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.09",
+	.version = "0.12",
 	.uri_prefix = "kodak605",
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

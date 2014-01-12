@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
- *  
+ *
  *     http://git.shaftnet.org/cgit/selphy_print.git
- *  
+ *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -47,7 +47,7 @@ struct kodak6800_hdr {
 	uint8_t  copies;
 	uint16_t columns;  /* BE */
 	uint16_t rows;     /* BE */
-	uint8_t  media;    /* 0x06 for 6x8, 0x00 for 6x4, 0x07 for 5x7 */ 
+	uint8_t  media;    /* 0x06 for 6x8, 0x00 for 6x4, 0x07 for 5x7 */
 	uint8_t  laminate; /* 0x01 to laminate, 0x00 for not */
 	uint8_t  unk1; /* 0x00, 0x01 [may be print mode] */
 } __attribute__((packed));
@@ -116,16 +116,16 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 
 	if ((ret = send_data(dev, endp_down,
 			     cmdbuf, 16)))
-		return -1;
-	
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   respbuf,
-				   sizeof(respbuf),
-				   &num,
-				   5000);
-	if (ret < 0 || (num != 51)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
 		return ret;
+	
+	ret = read_data(dev, endp_up,
+			respbuf, sizeof(respbuf), &num);
+	if (ret < 0)
+		return ret;
+	
+	if (num != 51) {
+		ERROR("Short read! (%d/%d)\n", num, 51);
+		return 4;
 	}
 
 	/* Then we can poll the data */
@@ -145,15 +145,14 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 				     cmdbuf, 11)))
 			return -1;
 
-
-		ret = libusb_bulk_transfer(dev, endp_up,
-					   respbuf,
-					   sizeof(respbuf),
-					   &num,
-					   5000);
-		if (ret < 0 || (num != 64)) {
-			ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
+		ret = read_data(dev, endp_up,
+				respbuf, sizeof(respbuf), &num);
+		if (ret < 0)
 			return ret;
+		
+		if (num != 64) {
+			ERROR("Short read! (%d/%d)\n", num, 51);
+			return 4;
 		}
 
 		/* Copy into buffer */
@@ -232,14 +231,14 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 			     cmdbuf, 16)))
 		return -1;
 	
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   respbuf,
-				   sizeof(respbuf),
-				   &num,
-				   5000);
-	if (ret < 0 || (num != 51)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
+	ret = read_data(dev, endp_up,
+			respbuf, sizeof(respbuf), &num);
+	if (ret < 0)
 		return ret;
+	
+	if (num != 51) {
+		ERROR("Short read! (%d/%d)\n", num, 51);
+		return 4;
 	}
 
 	ptr = (uint8_t*) data;
@@ -258,16 +257,16 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 				     cmdbuf, count+1)))
 			return -1;
 
-		ret = libusb_bulk_transfer(dev, endp_up,
-					   respbuf,
-					   sizeof(respbuf),
-					   &num,
-					   5000);
-		if (ret < 0 || (num != 51)) {
-			ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
-			return ret;
-		}
 
+		ret = read_data(dev, endp_up,
+				respbuf, sizeof(respbuf), &num);
+		if (ret < 0)
+			return ret;
+		
+		if (num != 51) {
+			ERROR("Short read! (%d/%d)\n", num, 51);
+			return 4;
+		}
 	};
         
 	/* We're done */
@@ -396,7 +395,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	uint8_t cmdbuf[CMDBUF_LEN];
 
 	int last_state = -1, state = S_IDLE;
-	int i, num, ret;
+	int num, ret;
 	int pending = 0;
 
 	if (!ctx)
@@ -404,7 +403,8 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 
 top:
 	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
+		if (dyesub_debug)
+			DEBUG("last_state %d new %d\n", last_state, state);
 	}
 
 	if (pending)
@@ -425,17 +425,13 @@ top:
 
 skip_query:
 	/* Read in the printer status */
-	memset(rdbuf, 0, READBACK_LEN);
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   5000);
-
-	if (ret < 0 || num < 51) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
-		if (ret < 0)
-			return ret;
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return ret;
+	
+	if (num < 51) {
+		ERROR("Short read! (%d/%d)\n", num, 51);
 		return 4;
 	}
 
@@ -448,11 +444,6 @@ skip_query:
 	// XXX detect media type based on readback?
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		DEBUG("readback: ");
-		for (i = 0 ; i < num ; i++) {
-			DEBUG2("%02x ", rdbuf[i]);
-		}
-		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
@@ -604,7 +595,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.25",
+	.version = "0.26",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
- *  
+ *
  *     http://git.shaftnet.org/cgit/selphy_print.git
- *  
+ *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -181,14 +181,13 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 			     cmdbuf, 2)))
 		return -1;
 	
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   respbuf,
-				   sizeof(respbuf),
-				   &num,
-				   5000);
+	ret = read_data(dev, endp_up,
+			respbuf, sizeof(respbuf), &num);
 	
-	if (ret < 0 || (num != 8)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
+	if (ret < 0)
+		return ret;
+	if (num != 8) {
+		ERROR("Short Read! (%d/%d)\n", num, 8);
 		return ret;
 	}
 	if (respbuf[1] != 0x01) {
@@ -216,18 +215,17 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	}
 
 	/* get the response */
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   respbuf,
-				   sizeof(respbuf),
-				   &num,
-				   5000);
+	ret = read_data(dev, endp_up,
+			respbuf, sizeof(respbuf), &num);
 	
-	if (ret < 0 || (num != 8)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, (int)sizeof(respbuf), endp_up);
+	if (ret < 0)
+		return ret;
+	if (num != 8) {
+		ERROR("Short Read! (%d/%d)\n", num, 8);
 		return ret;
 	}
 	if (respbuf[1] != 0x00) {
-		ERROR("Received unexpected response\n");
+		ERROR("Received unexpected response!\n");
 		return ret;
 	}
 
@@ -366,7 +364,8 @@ static int kodak1400_main_loop(void *vctx, int copies) {
 
 top:
 	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
+		if (dyesub_debug)
+			DEBUG("last_state %d new %d\n", last_state, state);
 	}
 
 	/* Send Status Query */
@@ -379,24 +378,12 @@ top:
 		return ret;
 
 	/* Read in the printer status */
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   2000);
-
-	if (ret < 0) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	
+	if (ret < 0)
 		return ret;
-	}
-
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		int i;
-		DEBUG("readback: ");
-		for (i = 0 ; i < num ; i++) {
-			DEBUG2("%02x ", rdbuf[i]);
-		}
-		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
@@ -567,7 +554,7 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.23",
+	.version = "0.25",
 	.uri_prefix = "kodak1400",
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,

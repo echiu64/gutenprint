@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.26"
+#define BACKEND_VERSION "0.28"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -84,13 +84,44 @@ done:
 	return buf;
 }
 
+int read_data(struct libusb_device_handle *dev, uint8_t endp,
+	      uint8_t *buf, int buflen, int *readlen)
+{
+	int ret;
+
+	/* Clear buffer */
+	memset(buf, buflen, 0);
+
+	ret = libusb_bulk_transfer(dev, endp,
+				   buf,
+				   buflen,
+				   readlen,
+				   5000);
+
+	if (ret < 0) {
+		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, *readlen, buflen, endp);
+		goto done;
+	}
+
+	if (dyesub_debug) {
+		int i;
+		DEBUG("<- ");
+		for (i = 0 ; i < *readlen; i++) {
+			DEBUG2("%02x ", *(buf+i));
+		}
+		DEBUG2("\n");
+	}
+
+done:
+	return ret;
+}
 
 int send_data(struct libusb_device_handle *dev, uint8_t endp, 
 	      uint8_t *buf, int len)
 {
 	int num = 0;
 
-	if (getenv("DYESUB_DEBUG")) {
+	if (dyesub_debug) {
 		DEBUG("Sending %d bytes to printer\n", len);
 	}
 
@@ -100,7 +131,7 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 					   buf, len2,
 					   &num, 5000);
 
-		if (getenv("DYESUB_DEBUG")) {
+		if (dyesub_debug) {
 			int i;
 			DEBUG("-> ");
 			for (i = 0 ; i < len2; i++) {
@@ -206,9 +237,10 @@ static int print_scan_output(struct libusb_device *device,
 		sprintf((char*)serial, "NONE_B%03d_D%03d", bus_num, port_num);
 	}
 	
-	DEBUG("%sVID: %04X PID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
-	      match ? "MATCH: " : "",
-	      desc->idVendor, desc->idProduct, manuf, product, serial);
+	if (dyesub_debug)
+		DEBUG("%sVID: %04X PID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
+		      match ? "MATCH: " : "",
+		      desc->idVendor, desc->idProduct, manuf, product, serial);
 	
 	if (scan_only) {
 
@@ -355,6 +387,9 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 	return NULL;
 }
 
+/* Debug flag */
+int dyesub_debug = 0;
+
 /* MAIN */
 
 int main (int argc, char **argv) 
@@ -386,6 +421,9 @@ int main (int argc, char **argv)
 	int query_only = 0;
 	int printer_type = P_ANY;
 
+	if (getenv("DYESUB_DEBUG"))
+		dyesub_debug = 1;
+
 	DEBUG("Multi-Call Gutenprint DyeSub CUPS Backend version %s\n",
 	      BACKEND_VERSION);
 	DEBUG("Copyright 2007-2013 Solomon Peachy\n");
@@ -404,7 +442,7 @@ int main (int argc, char **argv)
 		if (!backend) {
 			DEBUG("CUPS Usage:\n\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n\n",
 			      URI_PREFIX);
-			DEBUG("Internal Backends: (prefix with SERIAL=serno for specific device)\n");
+			DEBUG("Internal Backends: (prefix with DEVICE=serno for specific device)\n");
 			for (i = 0; ; i++) {
 				backend = backends[i];
 				if (!backend)
@@ -421,7 +459,7 @@ int main (int argc, char **argv)
 		} else {
 			DEBUG(" %s backend version %s (BACKEND=%s)\n",
 			      backend->name, backend->version, backend->uri_prefix);
-			DEBUG("  Standalone Usage: (prefix with SERIAL=serno for specific device)\n");
+			DEBUG("  Standalone Usage: (prefix with DEVICE=serno for specific device)\n");
 			DEBUG("\t\t%s [ infile | - ]\n",
 			      backend->uri_prefix);
 
@@ -535,8 +573,8 @@ int main (int argc, char **argv)
 	signal(SIGTERM, sigterm_handler);
 
 	/* Initialize backend */
-	INFO("Initializing '%s' backend (version %s)\n",
-	     backend->name, backend->version);
+	DEBUG("Initializing '%s' backend (version %s)\n",
+	      backend->name, backend->version);
 	backend_ctx = backend->init();
 
 	/* Parse printjob if necessary */

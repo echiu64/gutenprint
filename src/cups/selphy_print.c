@@ -386,7 +386,7 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 	else
 		ctx->paper_code = -1;
 
-	DEBUG("%sFile intended for a '%s' printer\n",  ctx->bw_mode? "B/W " : "", ctx->printer->model);
+	INFO("%sFile intended for a '%s' printer\n",  ctx->bw_mode? "B/W " : "", ctx->printer->model);
 
 	return printer_type;
 }
@@ -429,36 +429,29 @@ static int canonselphy_main_loop(void *vctx, int copies) {
 	int ret, num;
 
 	/* Read in the printer status */
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   2000);
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return ret;
 top:
 
 	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
+		if (dyesub_debug)
+			DEBUG("last_state %d new %d\n", last_state, state);
 	}
 
 	/* Do it twice to clear initial state */
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   &num,
-				   2000);
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return ret;
 
-	if (ret < 0 || num != READBACK_LEN) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, READBACK_LEN, ctx->endp_up);
+	if (num != READBACK_LEN) {
+		ERROR("Short read! (%d/%d)\n", num, READBACK_LEN);
 		return 4;
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		int i;
-		DEBUG("readback: ");
-		for (i = 0 ; i < num ; i++) {
-			DEBUG2("%02x ", rdbuf[i]);
-		}
-		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
 		sleep(1);
@@ -549,7 +542,7 @@ top:
 		state = S_FINISHED;
 		/* Intentional Fallthrough */
 	case S_FINISHED:
-		DEBUG("All data sent to printer!\n");	
+		INFO("All data sent to printer!\n");	
 		break;
 	}
 	if (state != S_FINISHED)
@@ -604,7 +597,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.61",
+	.version = "0.63",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,

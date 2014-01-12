@@ -198,47 +198,29 @@ static uint8_t * dnpds40_resp_cmd(struct dnpds40_ctx *ctx,
 		return NULL;
 
 	/* Read in the response header */
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   (uint8_t*)tmp,
-				   8,
-				   &num,
-				   5000);
-
-	if (ret < 0 || num != 8) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, 8, ctx->endp_up);
+	ret = read_data(ctx->dev, ctx->endp_up,
+			(uint8_t*)tmp, 8, &num);
+	if (ret < 0)
 		return NULL;
-	}
 
-	if (getenv("DYESUB_DEBUG")) {
-		DEBUG("<- ");
-		for (i = 0 ; i < num; i++) {
-			DEBUG2("%02x ", tmp[i]);
-		}
-		DEBUG2("\n");
+	if (num != 8) {
+		ERROR("Short read! (%d/%d)\n", num, 8);
+		return NULL;
 	}
 
 	i = atoi(tmp);  /* Length of payload in bytes, possibly padded */
 	respbuf = malloc(i);
 
 	/* Read in the actual response */
-	memset(respbuf, 0, i);
-	ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-				   respbuf,
-				   i,
-				   &num,
-				   5000);
-
-	if (getenv("DYESUB_DEBUG")) {
-		DEBUG("<- ");
-		for (i = 0 ; i < num; i++) {
-			DEBUG2("%02x ", respbuf[i]);
-		}
-		DEBUG2("\n");
+	ret = read_data(ctx->dev, ctx->endp_up,
+			respbuf, i, &num);
+	if (ret < 0) {
+		free(respbuf);
+		return NULL;
 	}
 
-	if (ret < 0 || num != i) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num, i, ctx->endp_up);
-
+	if (num != i) {
+		ERROR("Short read! (%d/%d)\n", num, i);
 		free(respbuf);
 		return NULL;
 	}
@@ -909,7 +891,7 @@ static int dnpds40_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80",
-	.version = "0.20",
+	.version = "0.21",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

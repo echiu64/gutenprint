@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
- * 
+ *
  *     LiveLink Technology [ www.livelinktechnology.net ]
- * 
+ *
  *   The latest version of this program can be found at:
  *
  *     http://git.shaftnet.org/cgit/selphy_print.git
@@ -845,15 +845,14 @@ static int s2145_do_cmd(struct shinkos2145_ctx *ctx,
 			     cmd, cmdlen)))
 		return (ret < 0) ? ret : -99;
 
-	ret = libusb_bulk_transfer(dev, endp_up,
-				   rdbuf,
-				   READBACK_LEN,
-				   num,
-				   5000);
+	ret = read_data(dev, endp_up,
+			rdbuf, READBACK_LEN, num);
 
-	if (ret < 0 || (*num < minlen)) {
-		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, *num, minlen, endp_up);
-		return (ret < 0) ? ret : -99;
+	if (ret < 0)
+		return ret;
+	if (*num < minlen) {
+		ERROR("Short read! (%d/%d))\n", *num, minlen);
+		return -99;
 	}
 
 	if (resp->result != RESULT_SUCCESS) {
@@ -1205,16 +1204,12 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 
 	i = 0;
 	while (i < resp->total_size) {
-		ret = libusb_bulk_transfer(ctx->dev, ctx->endp_up,
-					   data + i,
-					   resp->total_size * 2 - i,
-					   &num,
-					   5000);
-
-		if (ret < 0) {
-			ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, num + i, (int)resp->total_size, ctx->endp_up);
+		ret = read_data(ctx->dev, ctx->endp_up,
+				data + i,
+				resp->total_size * 2 - i,
+				&num);
+		if (ret < 0)
 			return ret;
-		}
 		i += num;
 	}
 
@@ -1471,7 +1466,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 static int shinkos2145_main_loop(void *vctx, int copies) {
 	struct shinkos2145_ctx *ctx = vctx;
 
-	int i, ret, num;
+	int ret, num;
 	uint8_t cmdbuf[CMDBUF_LEN];
 	uint8_t rdbuf2[READBACK_LEN];
 
@@ -1481,9 +1476,10 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 	struct s2145_print_cmd *print = (struct s2145_print_cmd *) cmdbuf;
 	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf; 
 
-top:
+ top:
 	if (state != last_state) {
-		DEBUG("last_state %d new %d\n", last_state, state);
+		if (dyesub_debug)
+			DEBUG("last_state %d new %d\n", last_state, state);
 	}
 
 	/* Send Status Query */
@@ -1500,11 +1496,6 @@ top:
 	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		DEBUG("readback: ");
-		for (i = 0 ; i < num ; i++) {
-			DEBUG2("%02x ", rdbuf[i]);
-		}
-		DEBUG2("\n");
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 
 		INFO("Printer Status: 0x%02x (%s)\n", 
@@ -1660,7 +1651,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145 (S2)",
-	.version = "0.23",
+	.version = "0.25",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,

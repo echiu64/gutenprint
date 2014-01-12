@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
- *  
+ *
  *     http://git.shaftnet.org/cgit/selphy_print.git
- *  
+ *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -127,11 +127,14 @@ struct dyesub_backend {
 };
 
 /* Exported functions */
-int send_data(struct libusb_device_handle *dev, uint8_t endp, 
+int send_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int len);
+int read_data(struct libusb_device_handle *dev, uint8_t endp,
+	      uint8_t *buf, int buflen, int *readlen);
 
 /* Exported data */
 extern int terminate;
+extern int dyesub_debug;
 
 /* External data */
 extern struct dyesub_backend updr150_backend;

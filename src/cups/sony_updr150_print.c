@@ -4,9 +4,9 @@
  *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
- *  
+ *
  *     http://git.shaftnet.org/cgit/selphy_print.git
- *  
+ *
  *   This program is free software; you can redistribute it and/or modify it
  *   under the terms of the GNU General Public License as published by the Free
  *   Software Foundation; either version 2 of the License, or (at your option)
@@ -124,21 +124,25 @@ top:
 			case 0xeb:
 			case 0xfa:
 			case 0xf3:
-				DEBUG("Block ID '%x' (len %d)\n", *ptr, 0);
+				if(dyesub_debug)
+					DEBUG("Block ID '%x' (len %d)\n", *ptr, 0);
 				break;
 			case 0xef:
 			case 0xf5:
-				DEBUG("Block ID '%x' (len %d)\n", *ptr, 4);
+				if(dyesub_debug)
+					DEBUG("Block ID '%x' (len %d)\n", *ptr, 4);
 				i += 4;
 				break;
 			default:
-				DEBUG("Unknown block ID '%x'\n", *ptr);
+				if(dyesub_debug)
+					DEBUG("Unknown block ID '%x'\n", *ptr);
 				break;
 			}
 		} else {
 			uint32_t len = le32_to_cpu(*((uint32_t*)ptr));
 
-			DEBUG("Sending %d bytes to printer\n", len);
+			if (dyesub_debug)
+				DEBUG("Sending %d bytes to printer\n", len);
 			if ((ret = send_data(ctx->dev, ctx->endp_down,
 					     ctx->databuf + i, len)))
 				return ret;
@@ -165,7 +169,7 @@ top:
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150",
-	.version = "0.06",
+	.version = "0.07",
 	.uri_prefix = "sonyupdr150",
 	.init = updr150_init,
 	.attach = updr150_attach,
