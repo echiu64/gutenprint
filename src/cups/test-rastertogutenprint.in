@@ -221,7 +221,7 @@ if [ -d ppd/C ] ; then
 	    is_duplicate $f
 	fi
 	if [ -z "$skip" ] ; then
-	    echo -n "`basename $f |sed -e 's/stp-//' -e 's/\@GUTENPRINT_RELEASE_VERSION@.ppd.*$//'`... "
+	    echo -n "`basename $f |sed -e 's/stp-//' -e 's/@GUTENPRINT_RELEASE_VERSION@.ppd.*$//'`... "
 	    PPD=$f
 	    export PPD
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
