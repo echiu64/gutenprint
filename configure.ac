@@ -1136,11 +1136,11 @@ echo "  Installation summary:"
 echo "    Installation prefix:                        $prefix"
 # Configure intentionally does not expand exec_prefix to allow make
 # to do so.
-echo -n "    Exec prefix:                                $exec_prefix (";echo -n $exec_prefix | sed "s,\${prefix},$prefix,";echo ")";
+echo "    Exec prefix:                                $exec_prefix (`eval eval echo $exec_prefix`)";
 echo "    Data directory:                             $PACKAGE_DATA_DIR"
-echo -n "    Library directory:                          $PACKAGE_LIB_DIR (";echo -n $PACKAGE_LIB_DIR | sed "s,\${exec_prefix},$exec_prefix," | sed "s,\${prefix},$prefix,";echo ")"
+echo "    Library directory:                          $PACKAGE_LIB_DIR (`eval eval echo $PACKAGE_LIB_DIR`)"
 echo "    XML data directory:                         $PKGXMLDATADIR"
-echo -n "    Module directory:                           $PKGMODULEDIR (";echo -n $PKGMODULEDIR | sed "s,\${exec_prefix},$exec_prefix," | sed "s,\${prefix},$prefix,"; echo ")"
+echo "    Module directory:                           $PKGMODULEDIR (`eval eval echo $PKGMODULEDIR`)"
 echo "    Install sample images:                      $INSTALL_SAMPLES"
 echo
 echo "  General configuration:"
