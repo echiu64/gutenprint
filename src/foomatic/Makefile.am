@@ -78,8 +78,8 @@ all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
-	  $(MAKE) install-kit FOOMATIC_DB=foomatic-db/gutenprint-ijs.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ; \
-	  $(MAKE) install-kit FOOMATIC_DB=foomatic-db/gutenprint-ijs-simplified.@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@ ; \
+	  $(MAKE) install-kit FOOMATIC_DB=foomatic-db/gutenprint-ijs.@GUTENPRINT_RELEASE_VERSION@ ; \
+	  $(MAKE) install-kit FOOMATIC_DB=foomatic-db/gutenprint-ijs-simplified.@GUTENPRINT_RELEASE_VERSION@ ; \
 	fi
 
 install-kit:
