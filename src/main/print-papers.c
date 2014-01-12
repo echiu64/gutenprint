@@ -113,6 +113,8 @@ stpi_paper_create(stp_papersize_t *p)
 	(const stp_papersize_t *) stp_list_item_get_data(paper_item);
       if (ep && !strcmp(p->name, ep->name))
 	{
+	  stp_erprintf("Duplicate paper size `%s'\n",
+		       p->name);
 	  stpi_paper_freefunc(p);
 	  return 1;
 	}

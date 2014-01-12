@@ -982,6 +982,9 @@ stp_family_register(stp_list_t *family)
 	  printer = (const stp_printer_t *) stp_list_item_get_data(printer_item);
 	  if (!stp_list_get_item_by_name(printer_list, printer->driver))
 	    stp_list_item_create(printer_list, NULL, printer);
+	  else
+	    stp_erprintf("Duplicate printer entry `%s' (%s)\n",
+			 printer->driver, printer->long_name);
 	  printer_item = stp_list_item_next(printer_item);
 	}
     }
