@@ -805,8 +805,8 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 				break;
 			case 'p':
 				fprintf(stderr,"ESC (p set extended margin (len=%i):\n",cnt);
-                                fprintf(stderr," printed length %i left %i\n",((buf[0]<<8 )+buf[1]) *6 / 5,(buf[2]<<8) + buf[3]);
-                                fprintf(stderr," printed width %i top %i\n",((buf[4]<<8 )+buf[5]) * 6 / 5,(buf[6]<<8) + buf[7]);
+                                fprintf(stderr," printed length %i left %i\n",((buf[0]<<8 )+buf[1]) *6 / 5 - 1,(buf[2]<<8) + buf[3]);
+                                fprintf(stderr," printed width %i top %i\n",((buf[4]<<8 )+buf[5]) * 6 / 5 - 1,(buf[6]<<8) + buf[7]);
 
                                 if(cnt > 8){
 					int unit = (buf[12] << 8)| buf[13];
