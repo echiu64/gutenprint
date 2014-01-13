@@ -119,12 +119,20 @@ static void kodak605_teardown(void *vctx) {
 
 static int kodak605_read_parse(void *vctx, int data_fd) {
 	struct kodak605_ctx *ctx = vctx;
+	int ret;
 
 	if (!ctx)
 		return 1;
 
 	/* Read in then validate header */
-	read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+		ERROR("Read failed (%d/%d/%d)\n", 
+		      ret, 0, (int)sizeof(ctx->hdr));
+		perror("ERROR: Read failed");
+		return ret;
+	}
+
 	if (ctx->hdr.hdr[0] != 0x01 ||
 	    ctx->hdr.hdr[1] != 0x40 ||
 	    ctx->hdr.hdr[2] != 0x0a ||
@@ -143,7 +151,6 @@ static int kodak605_read_parse(void *vctx, int data_fd) {
 	{
 		int remain = ctx->datalen;
 		uint8_t *ptr = ctx->databuf;
-		int ret;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
@@ -481,7 +488,7 @@ static int kodak605_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.12",
+	.version = "0.13",
 	.uri_prefix = "kodak605",
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

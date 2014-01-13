@@ -96,7 +96,7 @@ int read_data(struct libusb_device_handle *dev, uint8_t endp,
 				   buf,
 				   buflen,
 				   readlen,
-				   5000);
+				   15000);
 
 	if (ret < 0) {
 		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, *readlen, buflen, endp);

@@ -366,7 +366,14 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 	ctx->buffer = malloc(MAX_HEADER);
 
 	/* Figure out printer this file is intended for */
-	read(data_fd, ctx->buffer, MAX_HEADER);
+	i = read(data_fd, ctx->buffer, MAX_HEADER);
+	if (i < 0 || i != MAX_HEADER) {
+		ERROR("Read failed (%d/%d/%d)\n", 
+		      i, 0, MAX_HEADER);
+		perror("ERROR: Read failed");
+		return i;
+	}
+
 
 	printer_type = parse_printjob(ctx->buffer, &ctx->bw_mode, &ctx->plane_len);
 	for (i = 0; selphy_printers[i].type != -1; i++) {
@@ -394,6 +401,7 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 static int canonselphy_read_parse(void *vctx, int data_fd)
 {
 	struct canonselphy_ctx *ctx = vctx;
+	int i, remain;
 
 	/* Set up buffers */
 	ctx->plane_y = malloc(ctx->plane_len);
@@ -407,16 +415,48 @@ static int canonselphy_read_parse(void *vctx, int data_fd)
 		return 1;
 	}
 
-	/* Read in entire print job */
+	/* Move over chunks already read in */
 	memcpy(ctx->header, ctx->buffer, ctx->printer->init_length);
-	memcpy(ctx->plane_y, ctx->buffer+ctx->printer->init_length, MAX_HEADER-ctx->printer->init_length);
+	memcpy(ctx->plane_y, ctx->buffer+ctx->printer->init_length, 
+	       MAX_HEADER-ctx->printer->init_length);
 
-	read(data_fd, ctx->plane_y + (MAX_HEADER-ctx->printer->init_length),
-	     ctx->plane_len - (MAX_HEADER-ctx->printer->init_length));
-	read(data_fd, ctx->plane_m, ctx->plane_len);
-	read(data_fd, ctx->plane_c, ctx->plane_len);
-	if (ctx->printer->foot_length)
-		read(data_fd, ctx->footer, ctx->printer->foot_length);
+	/* Read in YELLOW plane */
+	remain = ctx->plane_len - (MAX_HEADER-ctx->printer->init_length);
+	while (remain > 0) {
+		i = read(data_fd, ctx->plane_y + (ctx->plane_len - remain), remain);
+		if (i < 0)
+			return i;
+		remain -= i;
+	}
+
+	/* Read in MAGENTA plane */
+	remain = ctx->plane_len;
+	while (remain > 0) {
+		i = read(data_fd, ctx->plane_m + (ctx->plane_len - remain), remain);
+		if (i < 0)
+			return i;
+		remain -= i;
+	}
+
+	/* Read in CYAN plane */
+	remain = ctx->plane_len;
+	while (remain > 0) {
+		i = read(data_fd, ctx->plane_c + (ctx->plane_len - remain), remain);
+		if (i < 0)
+			return i;
+		remain -= i;
+	}
+
+	/* Read in footer */
+	if (ctx->printer->foot_length) {
+		remain = ctx->printer->foot_length;
+		while (remain > 0) {
+			i = read(data_fd, ctx->footer + (ctx->printer->foot_length - remain), remain);
+			if (i < 0)
+				return i;
+			remain -= i;
+		}
+	}
 
 	return 0;
 }

@@ -345,12 +345,19 @@ static void kodak6800_teardown(void *vctx) {
 
 static int kodak6800_read_parse(void *vctx, int data_fd) {
 	struct kodak6800_ctx *ctx = vctx;
+	int ret;
 
 	if (!ctx)
 		return 1;
 
 	/* Read in then validate header */
-	read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+		ERROR("Read failed (%d/%d/%d)\n", 
+		      ret, 0, (int)sizeof(ctx->hdr));
+		perror("ERROR: Read failed");
+		return ret;
+	}
 	if (ctx->hdr.hdr[0] != 0x03 ||
 	    ctx->hdr.hdr[1] != 0x1b ||
 	    ctx->hdr.hdr[2] != 0x43 ||
@@ -370,7 +377,6 @@ static int kodak6800_read_parse(void *vctx, int data_fd) {
 	{
 		int remain = ctx->datalen;
 		uint8_t *ptr = ctx->databuf;
-		int ret;
 		do {
 			ret = read(data_fd, ptr, remain);
 			if (ret < 0) {
@@ -595,7 +601,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.26",
+	.version = "0.27",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

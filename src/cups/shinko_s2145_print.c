@@ -1412,7 +1412,14 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 		ctx->fast_return = 1;
 
 	/* Read in then validate header */
-	read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
+	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+		ERROR("Read failed (%d/%d/%d)\n", 
+		      ret, 0, (int)sizeof(ctx->hdr));
+		perror("ERROR: Read failed");
+		return ret;
+	}
+
 	if (le32_to_cpu(ctx->hdr.len1) != 0x10 ||
 	    le32_to_cpu(ctx->hdr.model) != 2145 ||
 	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
@@ -1651,7 +1658,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145 (S2)",
-	.version = "0.25",
+	.version = "0.26",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
