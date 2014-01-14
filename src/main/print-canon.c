@@ -4910,7 +4910,7 @@ canon_init_setESC_v(const stp_vars_t *v, const canon_privdata_t *init)
 
 
 static void
-canon_init_printer(const stp_vars_t *v, const canon_privdata_t *init)
+canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
 {
   unsigned int mytop;
   /* init printer */
