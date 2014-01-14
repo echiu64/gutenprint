@@ -41,7 +41,7 @@ cupsexec_filterdir = $(pkglibdir)/filter
 
 if BUILD_LIBUSB_BACKENDS
 cupsexec_backenddir = $(pkglibdir)/backend
-cupsdata_blacklistdir = $(DESTDIR)/$(pkgdatadir)/usb/
+cupsdata_blacklistdir = $(pkgdatadir)/usb/
 endif
 
 if CUPS_PPDS_AT_TOP_LEVEL
@@ -114,10 +114,12 @@ commandtocanon_LDADD = $(CUPS_LIBS)
 commandtoepson_SOURCES = commandtoepson.c
 commandtoepson_LDADD = $(CUPS_LIBS)
 
+if BUILD_LIBUSB_BACKENDS
 backend_gutenprint_SOURCES = selphy_print.c kodak1400_print.c kodak6800_print.c kodak605_print.c shinko_s2145_print.c sony_updr150_print.c dnpds40_print.c backend_common.c backend_common.h
 
 backend_gutenprint_LDADD = $(LIBUSB_LIBS)
 backend_gutenprint_CPPFLAGS = $(LIBUSB_CFLAGS) -DURI_PREFIX=\"gutenprint$(GUTENPRINT_MAJOR_VERSION)$(GUTENPRINT_MINOR_VERSION)+usb\"
+endif
 
 cups_genppd_@GUTENPRINT_RELEASE_VERSION@_SOURCES = genppd.c i18n.c i18n.h
 cups_genppd_@GUTENPRINT_RELEASE_VERSION@_CFLAGS = -DALL_LINGUAS='"$(ALL_LINGUAS)"' $(BUILD_SIMPLE_PPDS) $(TRANSLATE_PPDS)
@@ -154,8 +156,14 @@ if USE_NLS
 PPD_NLS_1 = ppd-nls
 endif
 
+if BUILD_LIBUSB_BACKENDS
+INSTALL_BLACKLIST=install-blacklist
+install-blacklist:
+	$(mkdir_p) $(DESTDIR)$(cupsdata_blacklistdir)
+	$(INSTALL_DATA) blacklist $(DESTDIR)$(cupsdata_blacklistdir)/net.sf.gimp-print.usb-quirks
+endif
 
-install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
+install-data-local: $(INSTALL_DATA_LOCAL_DEPS) $(INSTALL_BLACKLIST)
 	if test -n "$(CUPS_PKG)" -a -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
 	  $(mkdir_p) $(DESTDIR)$(cups_modeldir); \
 	  cd ppd ; \
@@ -175,12 +183,8 @@ install-data-local: $(INSTALL_DATA_LOCAL_DEPS)
 	  $(mkdir_p) "$(DESTDIR)$(localedir)/$$lang"; \
 	  $(INSTALL_DATA) $$file "$(DESTDIR)$(localedir)/$$lang/gutenprint_$$lang.po"; \
 	done
-if BUILD_LIBUSB_BACKENDS
-	$(mkdir_p) $(cupsdata_blacklistdir)
-	$(INSTALL_DATA) blacklist $(cupsdata_blacklistdir)/net.sf.gimp-print.usb-quirks
-endif
 
-uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
+uninstall-local: $(INSTALL_DATA_LOCAL_DEPS) $(INSTALL_BLACKLIST)
 # Remove PPDs installed in new PPD location
 	if test -z "DONT_UNINSTALL_PPDS" ; then \
 	  if test -n "$(INSTALL_DATA_LOCAL_DEPS)" ; then \
@@ -191,6 +195,8 @@ uninstall-local: $(INSTALL_DATA_LOCAL_DEPS)
 	  lang=`basename $$file .po`; \
 	  $(RM) "$(DESTDIR)$(localedir)/$$lang/gutenprint_$$lang.po"; \
 	done
+	$(RM) -f "$(DESTDIR)$(cupsdata_blacklistdir)/net.sf.gimp-print.usb-quirks"
+	$(RM) -f "$(DESTDIR)$(pkglibdir)/backend/gutenprint$(GUTENPRINT_MAJOR_VERSION)$(GUTENPRINT_MINOR_VERSION)+usb"
 
 install-data-hook:
 # Remove unused directories in install tree
@@ -209,7 +215,7 @@ install-data-hook:
 	-rmdir `dirname $(DESTDIR)$(pkglibdir)`
 	-rmdir `dirname $(DESTDIR)$(pkgsysconfdir)`
 
-.PHONY: ppd ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls ppd-stamp-phony ppd-catalog-clean ppd-clean
+.PHONY: ppd ppd-stamp-pre ppd-stamp-nonls ppd-stamp-nls ppd-stamp-phony ppd-catalog-clean ppd-clean $(INSTALL_BLACKLIST)
 
 all-local: $(INSTALL_DATA_LOCAL_DEPS)
 
@@ -291,6 +297,7 @@ MAINTAINERCLEANFILES = Makefile.in
 EXTRA_DIST = \
 	COPYING \
 	README \
+	blacklist \
 	calibrate.ppm \
 	command.txt \
 	command.types \
