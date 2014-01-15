@@ -3920,7 +3920,6 @@ canon_init_setESC_M(const stp_vars_t *v, const canon_privdata_t *init)
 /* ESC (p -- 0x70 -- cmdSetPageMargins2 --:
  */
 static void
-/*canon_init_setPageMargins2(const stp_vars_t *v, const canon_privdata_t *init)*/
 canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 {
   unsigned char arg_70_1,arg_70_2,arg_70_3,arg_70_4;
@@ -3931,16 +3930,25 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int border_bottom2;
   int area_right,area_top;
   int test_cd; /* variable for activating experimental adjustments */
-#if 0
-  int adjust_tray_A_x, adjust_tray_A_y;
-  int adjust_tray_BCD_x, adjust_tray_BCD_y;
-  int adjust_tray_E_x, adjust_tray_E_y;
-  int adjust_tray_H_x, adjust_tray_H_y;
-  int adjust_tray_J_x, adjust_tray_J_y;
-  int adjust_tray_custom_x, adjust_tray_custom_y;
-#endif
-  int adjust_tray_F_x, adjust_tray_F_y;
-  int adjust_tray_G_x, adjust_tray_G_y;
+  /* CD tray size adjustments for paper dimensions */
+  int adjust_tray_A_length, adjust_tray_A_width;
+  int adjust_tray_BCD_length, adjust_tray_BCD_width;
+  int adjust_tray_E_length, adjust_tray_E_width;
+  int adjust_tray_F_length, adjust_tray_F_width;
+  int adjust_tray_G_length, adjust_tray_G_width;
+  int adjust_tray_H_length, adjust_tray_H_width;
+  int adjust_tray_J_length, adjust_tray_J_width;
+  int adjust_tray_custom_length, adjust_tray_custom_width;
+  /* CD tray border adjustments */
+  int adjust_tray_A_left, adjust_tray_A_right, adjust_tray_A_top, adjust_tray_A_bottom;
+  int adjust_tray_BCD_left, adjust_tray_BCD_right, adjust_tray_BCD_top, adjust_tray_BCD_bottom;
+  int adjust_tray_E_left, adjust_tray_E_right, adjust_tray_E_top, adjust_tray_E_bottom;
+  int adjust_tray_F_left, adjust_tray_F_right, adjust_tray_F_top, adjust_tray_F_bottom;
+  int adjust_tray_G_left, adjust_tray_G_right, adjust_tray_G_top, adjust_tray_G_bottom;
+  int adjust_tray_H_left, adjust_tray_H_right, adjust_tray_H_top, adjust_tray_H_bottom;
+  int adjust_tray_J_left, adjust_tray_J_right, adjust_tray_J_top, adjust_tray_J_bottom;
+  int adjust_tray_custom_left, adjust_tray_custom_right, adjust_tray_custom_top, adjust_tray_custom_bottom;
+
 
   /* TOFIX: what exactly is to be sent?
    * Is it the printable length or the bottom border?
@@ -3986,8 +3994,204 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     printable_length = init->page_height + 132;
   */
 
+  /* adjust paper dimensions for CD in points */
+  adjust_tray_A_length = 151;
+  adjust_tray_A_width = 44;
+  adjust_tray_BCD_length = 84;
+  adjust_tray_BCD_width = 10;
+  adjust_tray_E_length = 186;
+  adjust_tray_E_width = 127;
+  adjust_tray_F_length = 95;
+  adjust_tray_F_width = 10; /* 10 calculated, but empirically 11 */
+  adjust_tray_G_length = 127;
+  adjust_tray_G_width = 10; /* 10 calculated, but empirically 11 */
+  adjust_tray_H_length = 481;
+  adjust_tray_H_width = 68;
+  adjust_tray_J_length = 44;
+  adjust_tray_J_width = 8;
+  adjust_tray_custom_length = 132;
+  adjust_tray_custom_width = 24;
+
+  /* ensure less than or equal to Windows measurements  by border adjustments in points  */
+  adjust_tray_A_left = 0;
+  adjust_tray_A_right = 0;
+  adjust_tray_A_top = 0;
+  adjust_tray_A_bottom = 0;
+  adjust_tray_BCD_left = 0;
+  adjust_tray_BCD_right = 0;
+  adjust_tray_BCD_top = 0;
+  adjust_tray_BCD_bottom = 0;
+  adjust_tray_E_left = 0;
+  adjust_tray_E_right = 0;
+  adjust_tray_E_top = 0;
+  adjust_tray_E_bottom = 0;
+  adjust_tray_F_left = 0; 
+  adjust_tray_F_right = 0;
+  adjust_tray_F_top = 0; 
+  adjust_tray_F_bottom = 0;
+  adjust_tray_G_left = 0;
+  adjust_tray_G_right = 0;
+  adjust_tray_G_top = 0;
+  adjust_tray_G_bottom = 0;
+  adjust_tray_H_left = 0;
+  adjust_tray_H_right = 0;
+  adjust_tray_H_top = 0;
+  adjust_tray_H_bottom = 0;
+  adjust_tray_J_left = 0;
+  adjust_tray_J_right = 0;
+  adjust_tray_J_top = 0;
+  adjust_tray_J_bottom = 0;
+  adjust_tray_custom_left = 0;
+  adjust_tray_custom_right = 0;
+  adjust_tray_custom_top = 0;
+  adjust_tray_custom_bottom = 0;
+
+  if (print_cd) {
+    /* test all of the parameters for CD */
+    stp_eprintf(v,"ERRPRINT: ==========Start Test Printout============'\n");
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_A_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_A_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A printable width (pts): '%d'\n",(init->page_width + adjust_tray_A_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A printable length (pts): '%d'\n",(init->page_height + adjust_tray_A_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A page_width (1/600): '%d'\n",(init->page_width + adjust_tray_A_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A page_height (1/600): '%d'\n",(init->page_height + adjust_tray_A_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_A_width + 20 + adjust_tray_A_left + adjust_tray_A_right ) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_A_length + 24 + adjust_tray_A_top + adjust_tray_A_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_BCD_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_BCD_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D printable width (pts): '%d'\n",(init->page_width + adjust_tray_BCD_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D printable length (pts): '%d'\n",(init->page_height + adjust_tray_BCD_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D page_width (1/600): '%d'\n",(init->page_width + adjust_tray_BCD_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D page_height (1/600): '%d'\n",(init->page_height + adjust_tray_BCD_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_BCD_width + 20 + adjust_tray_BCD_left + adjust_tray_BCD_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_BCD_length + 24 + adjust_tray_BCD_top + adjust_tray_BCD_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_E_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_E_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E printable width (pts): '%d'\n",(init->page_width + adjust_tray_E_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E printable length (pts): '%d'\n",(init->page_height + adjust_tray_E_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E page_width (1/600): '%d'\n",(init->page_width + adjust_tray_E_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E page_height (1/600): '%d'\n",(init->page_height + adjust_tray_E_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_E_width + 20 + adjust_tray_E_left + adjust_tray_E_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_E_length + 24 + adjust_tray_E_top + adjust_tray_E_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_F_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_F_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F printable width (pts): '%d'\n",(init->page_width + adjust_tray_F_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F printable length (pts): '%d'\n",(init->page_height + adjust_tray_F_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F page_width (1/600): '%d'\n",(init->page_width + adjust_tray_F_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F page_height (1/600): '%d'\n",(init->page_height + adjust_tray_F_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_F_width + 20 + adjust_tray_F_left + adjust_tray_F_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_F_length + 24 + adjust_tray_F_top + adjust_tray_F_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_G_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_G_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G printable width (pts): '%d'\n",(init->page_width + adjust_tray_G_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G printable length (pts): '%d'\n",(init->page_height + adjust_tray_G_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G page_width (1/600): '%d'\n",(init->page_width + adjust_tray_G_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G page_height (1/600): '%d'\n",(init->page_height + adjust_tray_G_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_G_width + 20 + adjust_tray_G_left + adjust_tray_G_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_G_length + 24 + adjust_tray_G_top + adjust_tray_G_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_H_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_H_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H printable width (pts): '%d'\n",(init->page_width + adjust_tray_H_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H printable length (pts): '%d'\n",(init->page_height + adjust_tray_H_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H page_width (1/600): '%d'\n",(init->page_width + adjust_tray_H_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H page_height (1/600): '%d'\n",(init->page_height + adjust_tray_H_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_H_width + 20 + adjust_tray_H_left + adjust_tray_H_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_H_length + 24 + adjust_tray_H_top + adjust_tray_H_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_J_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_J_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J printable width (pts): '%d'\n",(init->page_width + adjust_tray_J_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J printable length (pts): '%d'\n",(init->page_height + adjust_tray_J_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J page_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J page_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width + 20 + adjust_tray_J_left + adjust_tray_J_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length + 24 + adjust_tray_J_top + adjust_tray_J_bottom) * unit / 72);
+    
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom original init->page_width (pts): '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom original init->page_height (pts): '%d'\n",init->page_height);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_custom_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_custom_length);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom printable width (pts): '%d'\n",(init->page_width + adjust_tray_custom_width + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom printable length (pts): '%d'\n",(init->page_height + adjust_tray_custom_length + 1) * 5 / 6);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom page_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom page_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width + 20 + adjust_tray_custom_left + adjust_tray_custom_right) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length + 24 + adjust_tray_custom_top + adjust_tray_custom_bottom) * unit / 72);
+    stp_eprintf(v,"ERRPRINT: ==========End Test Printout============'\n");
+  }
+
+  /* Tray A */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP9910")) && (test_cd==1) ) {
+
+    init->page_width +=44; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=151;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_width: '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified printable_width: '%d'\n",printable_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified printable_length: '%d'\n",printable_length);
+
+  }
+
+  /* Tray B,C,D */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP3000")) && (test_cd==1) ) {
+
+    init->page_width +=10; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=84;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified init->page_width: '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/B modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified printable_width: '%d'\n",printable_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified printable_length: '%d'\n",printable_length);
+
+  }
+
+  /* Tray E */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA Pro9000")) && (test_cd==1) ) {
+
+    init->page_width +=127; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=186;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_width: '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified printable_width: '%d'\n",printable_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified printable_length: '%d'\n",printable_length);
+
+  }
+
   /* Tray F */
-  if ( !(strcmp(init->caps->name,"PIXMA iP4500")) && (test_cd==1) ) {
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP4500")) && (test_cd==1) ) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Tray F init->page_width: '%d'\n",init->page_width);
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Tray F init->page_height: '%d'\n",init->page_height);
 
@@ -3996,7 +4200,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F initial printable_width: '%d'\n",printable_width);
     stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F initial printable_length: '%d'\n",printable_length);
 
-    init->page_width +=11; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
+    init->page_width +=10; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
     init->page_height +=95;
 
     stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_width: '%d'\n",init->page_width);
@@ -4013,9 +4217,9 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   }
 
   /* Tray G */
-  if ( !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
 
-    init->page_width +=11; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
+    init->page_width +=10; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
     init->page_height +=127;
 
     stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_width: '%d'\n",init->page_width);
@@ -4026,6 +4230,57 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
     stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified printable_width: '%d'\n",printable_width);
     stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified printable_length: '%d'\n",printable_length);
+
+  }
+
+  /* Tray H */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA PRO-1")) && (test_cd==1) ) {
+
+    init->page_width +=68; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=481;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_width: '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified printable_width: '%d'\n",printable_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified printable_length: '%d'\n",printable_length);
+
+  }
+
+  /* Tray J */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP7200")) && (test_cd==1) ) {
+
+    init->page_width +=8; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=44;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_width: '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified printable_width: '%d'\n",printable_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified printable_length: '%d'\n",printable_length);
+
+  }
+
+  /* Tray Custom */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
+
+    init->page_width +=24; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=132;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_width: '%d'\n",init->page_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified printable_width: '%d'\n",printable_width);
+    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4051,13 +4306,13 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   arg_70_4= (printable_width) & 0xff;
 
 
-
   if (!(init->caps->features & CANON_CAP_px) && !(init->caps->features & CANON_CAP_p))
 	return;
 
   if ((init->caps->features & CANON_CAP_px) ) {
     /* workaround for CD writing that uses CANON_CAP_px --- fix with capabilities */
-    if ( !( input_slot && !(strcmp(input_slot,"CD")) ) || !(strcmp(init->caps->name,"PIXMA iP4500")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) )
+    if ( !( input_slot && !(strcmp(input_slot,"CD")) ) || !(strcmp(init->caps->name,"PIXMA iP4500")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA MP710")) || !(strcmp(init->caps->name,"PIXMA iP3000")) || !(strcmp(init->caps->name,"PIXMA Pro9000")) )
+      /* need to check if iP9910, MP710, iP3000, Pro9000 use Esc (p */
       {
 
 	/* original borders */
@@ -4068,7 +4323,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
 	if (print_cd) {
 	  border_top=9;
-	  border_bottom=9;
+	  border_bottom=15; /* was 9 originally */
 	}
 
 	/* modified borders */
@@ -4076,40 +4331,61 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	border_top2=border_top;
 	border_right2=border_right;
 	border_bottom2=border_bottom;
-	
-	/* Try to work backwards */
-#if 0
-	adjust_tray_A_x = 0;
-	adjust_tray_A_y = 0;
-	adjust_tray_BCD_x = 0;
-	adjust_tray_BCD_y = 0;
-	adjust_tray_E_x = 0;
-	adjust_tray_E_y = 0;
-	adjust_tray_H_x = 0;
-	adjust_tray_H_y = 0;
-	adjust_tray_J_x = 0;
-	adjust_tray_J_y = 0;
-	adjust_tray_custom_x = 0;
-	adjust_tray_custom_y = 0;
-#endif
-	adjust_tray_F_x = 0; /* pts */
-	adjust_tray_F_y = 2; /* pts */
 
-	adjust_tray_G_x = 0;
-	adjust_tray_G_y = 0;
-
-	if ( !(strcmp(init->caps->name,"PIXMA iP4500")) && (test_cd==1) ) {
-	  border_left2   = border_left + adjust_tray_F_x;
-	  border_right2  = border_right + adjust_tray_F_x;
-	  border_top2    = border_top + adjust_tray_F_y;
-	  border_bottom2 = border_bottom + adjust_tray_F_y;
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP9910")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_A_left;
+	  border_right2  = border_right + adjust_tray_A_right;
+	  border_top2    = border_top + adjust_tray_A_top;
+	  border_bottom2 = border_bottom + adjust_tray_A_bottom;
 	}
 
-	if ( !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
-	  border_left2   = border_left + adjust_tray_G_x;
-	  border_right2  = border_right + adjust_tray_G_x;
-	  border_top2    = border_top + adjust_tray_G_y;
-	  border_bottom2 = border_bottom + adjust_tray_G_y;
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP3000")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_BCD_left;
+	  border_right2  = border_right + adjust_tray_BCD_right;
+	  border_top2    = border_top + adjust_tray_BCD_top;
+	  border_bottom2 = border_bottom + adjust_tray_BCD_bottom;
+	}
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA Pro9000")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_E_left;
+	  border_right2  = border_right + adjust_tray_E_right;
+	  border_top2    = border_top + adjust_tray_E_top;
+	  border_bottom2 = border_bottom + adjust_tray_E_bottom;
+	}
+	
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP4500")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_F_left;
+	  border_right2  = border_right + adjust_tray_F_right;
+	  border_top2    = border_top + adjust_tray_F_top;
+	  border_bottom2 = border_bottom + adjust_tray_F_bottom;
+	}
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_G_left;
+	  border_right2  = border_right + adjust_tray_G_right;
+	  border_top2    = border_top + adjust_tray_G_top;
+	  border_bottom2 = border_bottom + adjust_tray_G_bottom;
+	}
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA PRO-1")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_H_left;
+	  border_right2  = border_right + adjust_tray_H_right;
+	  border_top2    = border_top + adjust_tray_H_top;
+	  border_bottom2 = border_bottom + adjust_tray_H_bottom;
+	}
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP7200")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_J_left;
+	  border_right2  = border_right + adjust_tray_J_right;
+	  border_top2    = border_top + adjust_tray_J_top;
+	  border_bottom2 = border_bottom + adjust_tray_J_bottom;
+	}
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_custom_left;
+	  border_right2  = border_right + adjust_tray_custom_right;
+	  border_top2    = border_top + adjust_tray_custom_top;
+	  border_bottom2 = border_bottom + adjust_tray_custom_bottom;
 	}
 
 	/* this does not seem to need adjustment, so use original borders */
@@ -4260,8 +4536,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       if ( !(strcmp(init->caps->name,"PIXMA MP600")) || !(strcmp(init->caps->name,"PIXMA MP610")) || !(strcmp(init->caps->name,"PIXMA MP810")) || !(strcmp(init->caps->name,"PIXMA MP960")) || !(strcmp(init->caps->name,"PIXMA MP970")) || !(strcmp(init->caps->name,"PIXMA MX850")) || !(strcmp(init->caps->name,"PIXMA iP4300")) || !(strcmp(init->caps->name,"PIXMA iP4500")) || !(strcmp(init->caps->name,"PIXMA iP5300")) ) {
 	arg_ESCP_1 = 0x51;
       }
-      /* Tray G from iP4800 onwards */
-      if ( !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
+      /* Tray G from iP4600 onwards */
+      if ( !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) ) {
 	arg_ESCP_1 = 0x56;
       }
       /* Tray J from iP7200 onwards */
