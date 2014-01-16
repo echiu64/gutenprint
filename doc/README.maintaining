@@ -93,7 +93,6 @@ Gutenprint:
   docbook-utils
   doxygen
   flex
-  flex
   gettext
   libglib2.0-dev
   libtool
