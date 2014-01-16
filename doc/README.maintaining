@@ -82,6 +82,25 @@ xi.   DocBook-toys (called docbook-utils on some systems) (for building
 These packages are in addition to the packages normally required to
 build Gutenprint, as described in the README at top level.
 
+If you are running a Debian-derived system (such as Ubuntu), installing
+the following packages should prepare your environment for building
+Gutenprint:
+
+  autoconf
+  autopoint
+  byacc
+  cvs
+  docbook-utils
+  doxygen
+  flex
+  flex
+  gettext
+  libglib2.0-dev
+  libtool
+  pkg-config
+  sgmltools-lite
+  texi2html
+
 
 2. Integration of the autotools
 -------------------------------
@@ -148,7 +167,7 @@ The module you wish to check out must be specified as the modulename.
 When prompted for a password for anonymous, simply press the Enter
 key.
 
-        $ cvs -d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print login 
+        $ cvs -d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print login
         $ cvs -z3 -d:pserver:anonymous@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print co -P print
 
 Developer CVS access via SSH:
@@ -158,7 +177,7 @@ developername with the proper values.  Enter your site password when
 prompted.  See the sourceforge documentation for more details,
 including how to use RSA keys for authentication.
 
-        $ export CVS_RSH=ssh 
+        $ export CVS_RSH=ssh
         $ cvs -z3 -d:ext:developername@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print co -P print
 
 The CVS info documentation has very detailed explanations of
