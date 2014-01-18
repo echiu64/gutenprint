@@ -111,7 +111,7 @@ top:
 	for (i = 0 ; i < ctx->datalen ; ) {
 		uint8_t *ptr = ctx->databuf + i;
 		i += 4;
-		if (*ptr & 0xf0) {
+		if (*(ptr+3) == 0xff) {
 			switch (*ptr) {
 			case 0x6a:
 			case 0xfc:
@@ -169,7 +169,7 @@ top:
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150",
-	.version = "0.07",
+	.version = "0.08",
 	.uri_prefix = "sonyupdr150",
 	.init = updr150_init,
 	.attach = updr150_attach,
@@ -188,7 +188,12 @@ struct dyesub_backend updr150_backend = {
    arguments.  The purpose of the commands is unknown, but they presumably
    instruct the driver to perform certain things.
 
-   Known commands:
+   If you treat these 4 bytes as a 32-bit little-endian number, if the most significant
+   four bits are bits are non-zero, the value is is to be interpreted as a driver
+   command.  If the most significant bits are zero, the value signifies that the following
+   N bytes of data should be sent to the printer as-is.
+
+   Known driver "commands":
 
    6a ff ff ff
    fc ff ff ff
@@ -203,9 +208,6 @@ struct dyesub_backend updr150_backend = {
    f3 ff ff ff
    ef ff ff ff  XX 00 00 00   # XX == print size (0x01/0x02/0x03/0x04)
    f5 ff ff ff  YY 00 00 00   # YY == ??? (seen 0x01)
-
-   Additionally, if the leading 4 bits of the command are 0, it signifies
-   that what follows are data bytes to be sent to the printer.
 
    All printer commands start with 0x1b, and are at least 7 bytes long.
 
