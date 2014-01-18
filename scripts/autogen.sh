@@ -196,7 +196,7 @@ test "$openjade_err" -eq 0 && {
   openjade_version=`openjade -v < /dev/null 2>&1 | sed 's/"//g' | grep -i "openjade version" $tmp_file | awk -F ' ' '{print $4}'`
   openjade_version_major=`echo $openjade_version | awk -F. '{print $1}'`
   openjade_version_minor=`echo $openjade_version | awk -F. '{print $2}'`
-  openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}'`
+  openjade_version_minor=`echo $openjade_version_minor | awk -F- '{print $1}' | sed -e 's/\([0-9][0-9]*\).*/\1/'`
 
   test "$openjade_version_major" -ge 1 || openjade_err=1
   test "$openjade_version_minor" -ge 3 || openjade_err=1

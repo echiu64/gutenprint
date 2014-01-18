@@ -260,8 +260,9 @@ BUILD_CUPS_1_2="no"
 if test -n "${CUPS_CONFIG}" -a "${BUILD_CUPS}" = "yes" ; then
   cups_version=`${CUPS_CONFIG} --version | sed -e '1,$s/svn$/.0/'`
 dnl Quote to protect sed regexes
-  [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\1/'`]
-  [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
+dnl Some relases may be 1.xrc1 or 1.xsvn. Grab only what is needed.
+  [cups_major=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).*/\1/'`]
+  [cups_minor=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).*/\2/'`]
   [cups_point=`echo $cups_version | sed -e 's/\([0-9][0-9]*\).\([0-9][0-9]*\).\([0-9][0-9]*\).*/\3/'`]
 dnl There was no CUPS 1.0.15 or the like
   if test "$cups_major" -gt 1 -o "$cups_minor" -gt 1 -o "$cups_point" -gt 14 ; then
