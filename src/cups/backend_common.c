@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.28"
+#define BACKEND_VERSION "0.28.1"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -308,6 +308,7 @@ static struct dyesub_backend *backends[] = {
 
 static int find_and_enumerate(struct libusb_context *ctx,
 			      struct libusb_device ***list,
+			      struct dyesub_backend *backend,
 			      char *match_serno,
 			      int printer_type,
 			      int scan_only)
@@ -325,6 +326,8 @@ static int find_and_enumerate(struct libusb_context *ctx,
 		libusb_get_device_descriptor((*list)[i], &desc);
 		
 		for (k = 0 ; backends[k] ; k++) {
+			if (backend && backend != backends[k])
+				continue;
 			for (j = 0 ; backends[k]->devices[j].vid ; j++) {
 				if (desc.idVendor == backends[k]->devices[j].vid &&
 				    desc.idProduct == backends[k]->devices[j].pid) {
@@ -468,7 +471,7 @@ int main (int argc, char **argv)
 			}
 		}
 		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, NULL, P_ANY, 1);
+		find_and_enumerate(ctx, &list, backend, NULL, P_ANY, 1);
 		libusb_free_device_list(list, 1);
 		libusb_exit(ctx);
 		exit(0);
@@ -589,7 +592,7 @@ int main (int argc, char **argv)
 	/* Libusb setup */
 	libusb_init(&ctx);
 	/* Enumerate devices */
-	found = find_and_enumerate(ctx, &list, use_serno, printer_type, 0);
+	found = find_and_enumerate(ctx, &list, backend, use_serno, printer_type, 0);
 
 	if (found == -1) {
 		ERROR("Printer open failure (No suitable printers found!)\n");
