@@ -1,17 +1,17 @@
-# translation of gutenprint-5.2.9.nl.po to Dutch
+# translation of gutenprint-5.2.10-pre1.nl.po to Dutch
 # Dutch translations for gutenprint.
 # Copyright (C) 2008, 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gutenprint package.
 #
 # Vincent van Adrighem <vincent@dirck.mine.nu>, 2002.
 # Benno Schulenberg <benno@vertaalt.nl>, 2008.
-# Freek de Kruijf <f.de.kruijf@gmail.com>, 2006, 2007, 2008, 2009, 2011, 2013.
+# Freek de Kruijf <f.de.kruijf@gmail.com>, 2006, 2007, 2008, 2009, 2011, 2013, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: gutenprint 5.2.9\n"
+"Project-Id-Version: gutenprint 5.2.10-pre1\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2014-01-20 12:53-0500\n"
-"PO-Revision-Date: 2013-08-12 23:13+0200\n"
+"PO-Revision-Date: 2014-01-21 12:19+0100\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -96,14 +96,8 @@ msgid "Density"
 msgstr "Dichtheid"
 
 #: src/main/dither-main.c:92
-msgid ""
-"Adjust the density (amount of ink) of the print. Reduce the density if the "
-"ink bleeds through the paper or smears; increase the density if black "
-"regions are not solid."
-msgstr ""
-"De dichtheid (hoeveelheid inkt) van de afdruk aanpassen. Verminder de "
-"dichtheid als de inkt vlekt of door het papier heen komt; verhoog de "
-"dichtheid als zwarte stukken niet goed dicht zijn."
+msgid "Adjust the density (amount of ink) of the print. Reduce the density if the ink bleeds through the paper or smears; increase the density if black regions are not solid."
+msgstr "De dichtheid (hoeveelheid inkt) van de afdruk aanpassen. Verminder de dichtheid als de inkt vlekt of door het papier heen komt; verhoog de dichtheid als zwarte stukken niet goed dicht zijn."
 
 #: src/main/dither-main.c:100
 msgid "Dither Algorithm"
@@ -113,20 +107,16 @@ msgstr "Ruis-algoritme"
 msgid ""
 "Choose the dither algorithm to be used.\n"
 "Adaptive Hybrid usually produces the best all-around quality.\n"
-"EvenTone is a new, experimental algorithm that often produces excellent "
-"results.\n"
+"EvenTone is a new, experimental algorithm that often produces excellent results.\n"
 "Ordered is faster and produces almost as good quality on photographs.\n"
-"Fast and Very Fast are considerably faster, and work well for text and line "
-"art.\n"
+"Fast and Very Fast are considerably faster, and work well for text and line art.\n"
 "Hybrid Floyd-Steinberg generally produces inferior output."
 msgstr ""
 "Kies het ruis-algoritme.\n"
 "'Aangepast hybride' produceert meestal de beste algemene kwaliteit.\n"
-"'EvenTone' is een nieuw, experimenteel algoritme dat vaak een uitstekend "
-"resultaat geeft.\n"
+"'EvenTone' is een nieuw, experimenteel algoritme dat vaak een uitstekend resultaat geeft.\n"
 "'Geordend' is sneller en geeft bijna dezelfde kwaliteit bij foto's.\n"
-"'Snel' en 'Zeer snel' zijn aanzienlijk sneller, en doen het goed bij tekst "
-"en lijntekeningen.\n"
+"'Snel' en 'Zeer snel' zijn aanzienlijk sneller, en doen het goed bij tekst en lijntekeningen.\n"
 "'Hybride Floyd-Steinberg' produceert meestal een slecht resultaat."
 
 #: src/main/module.c:52
@@ -679,12 +669,8 @@ msgid "Composite Gamma"
 msgstr "Samengesteld gamma"
 
 #: src/main/print-color.c:249
-msgid ""
-"Adjust the gamma of the print. Larger values will produce a generally "
-"brighter print, while smaller values will produce a generally darker print. "
-msgstr ""
-"De gamma van de afdruk aanpassen. Grotere waarden produceren een helderder "
-"afdruk, terwijl lagere waarden een over het geheel donkerder afdruk maken. "
+msgid "Adjust the gamma of the print. Larger values will produce a generally brighter print, while smaller values will produce a generally darker print. "
+msgstr "De gamma van de afdruk aanpassen. Grotere waarden produceren een helderder afdruk, terwijl lagere waarden een over het geheel donkerder afdruk maken. "
 
 #: src/main/print-color.c:258
 msgid "AppGamma"
@@ -1020,8 +1006,7 @@ msgid ""
 "Use zero saturation to produce grayscale output using color and black inks"
 msgstr ""
 "De verzadiging (kleurbalans) van de afdruk aanpassen\n"
-"Gebruik verzadiging nul voor een grijswaardenuitvoer met behulp van "
-"gekleurde en zwarte inkt"
+"Gebruik verzadiging nul voor een grijswaardenuitvoer met behulp van gekleurde en zwarte inkt"
 
 #: src/main/print-color.c:357
 msgid "Ink Limit"
@@ -1243,21 +1228,13 @@ msgstr "Breedte moet groter dan nul zijn\n"
 
 #: src/main/printers.c:896
 #, c-format
-msgid ""
-"Image is too wide for the page: left margin is %d, width %d, right edge is "
-"%d\n"
-msgstr ""
-"Afbeelding is te breed voor de pagina: linkermarge is %d, breedte %d, "
-"rechterrand is %d\n"
+msgid "Image is too wide for the page: left margin is %d, width %d, right edge is %d\n"
+msgstr "Afbeelding is te breed voor de pagina: linkermarge is %d, breedte %d, rechterrand is %d\n"
 
 #: src/main/printers.c:903
 #, c-format
-msgid ""
-"Image is too long for the page: top margin is %d, height %d, bottom edge is "
-"%d\n"
-msgstr ""
-"Afbeelding is te lang voor de pagina: bovenmarge is %d, hoogte %d, onderrand "
-"is %d\n"
+msgid "Image is too long for the page: top margin is %d, height %d, bottom edge is %d\n"
+msgstr "Afbeelding is te lang voor de pagina: bovenmarge is %d, hoogte %d, onderrand is %d\n"
 
 #: src/main/print-escp2.c:150
 msgid "Automatic Printing Mode"
@@ -1293,9 +1270,7 @@ msgstr "Richting van het afdrukken"
 
 #: src/main/print-escp2.c:258
 msgid "Printing direction (unidirectional is higher quality, but slower)"
-msgstr ""
-"Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter "
-"langzamer)"
+msgstr "Richting van het afdrukken (unidirectioneel geeft hogere kwaliteit, echter langzamer)"
 
 #: src/main/print-escp2.c:269
 msgid "Interleave Method"
@@ -2249,79 +2224,64 @@ msgid "Matte"
 msgstr "Mat"
 
 #: src/main/print-olympus.c:1633 src/main/print-olympus.c:1931
-#, fuzzy
 msgid "Matte +5"
-msgstr "Mat"
+msgstr "Mat +5"
 
 #: src/main/print-olympus.c:1634 src/main/print-olympus.c:1932
-#, fuzzy
 msgid "Matte +4"
-msgstr "Mat"
+msgstr "Mat +4"
 
 #: src/main/print-olympus.c:1635 src/main/print-olympus.c:1933
-#, fuzzy
 msgid "Matte +3"
-msgstr "Mat"
+msgstr "Mat +3"
 
 #: src/main/print-olympus.c:1636 src/main/print-olympus.c:1934
-#, fuzzy
 msgid "Matte +2"
-msgstr "Mat"
+msgstr "Mat +2"
 
 #: src/main/print-olympus.c:1637 src/main/print-olympus.c:1935
-#, fuzzy
 msgid "Matte +1"
-msgstr "Mat"
+msgstr "Mat +1"
 
 #: src/main/print-olympus.c:1639 src/main/print-olympus.c:1937
-#, fuzzy
 msgid "Matte -1"
-msgstr "Mat"
+msgstr "Mat -1"
 
 #: src/main/print-olympus.c:1640 src/main/print-olympus.c:1938
-#, fuzzy
 msgid "Matte -2"
-msgstr "Mat"
+msgstr "Mat -2"
 
 #: src/main/print-olympus.c:1641 src/main/print-olympus.c:1939
-#, fuzzy
 msgid "Matte -3"
-msgstr "Mat"
+msgstr "Mat -3"
 
 #: src/main/print-olympus.c:1642 src/main/print-olympus.c:1940
-#, fuzzy
 msgid "Matte -4"
-msgstr "Mat"
+msgstr "Mat -4"
 
 #: src/main/print-olympus.c:1643 src/main/print-olympus.c:1941
-#, fuzzy
 msgid "Matte -5"
-msgstr "Mat"
+msgstr "Mat -5"
 
 #: src/main/print-olympus.c:2738
-#, fuzzy
 msgid "Printer Default"
-msgstr "Stel standaardwaarden van printeropties in"
+msgstr "Standaardwaarden van printer"
 
 #: src/main/print-olympus.c:2740
-#, fuzzy
 msgid "Glossy Fine"
-msgstr "Glanzende laag"
+msgstr "Glanzend fijn"
 
 #: src/main/print-olympus.c:2742
-#, fuzzy
 msgid "Matte Fine"
-msgstr "Mat papier"
+msgstr "Mat fijn"
 
 #: src/main/print-olympus.c:2743
-#, fuzzy
 msgid "Extra Glossy"
-msgstr "Glanzend"
+msgstr "Extra glanzend"
 
 #: src/main/print-olympus.c:2744
-#, fuzzy
 msgid "Extra Glossy Fine"
-msgstr "Glanzende laag"
+msgstr "Extra glanzend fijn"
 
 #. TRANSLATORS: Some dye sublimation printers are able to achieve
 #. better durability of output by covering it with transparent
@@ -2529,19 +2489,15 @@ msgstr "Gebruiker"
 
 #: src/main/print-raw.c:244
 msgid "Image dimensions must match paper dimensions"
-msgstr ""
-"Afmeting van afbeelding moet overeenkomen met de afmetingen van het papier"
+msgstr "Afmeting van afbeelding moet overeenkomen met de afmetingen van het papier"
 
 #: src/main/print-weave.c:1492 src/main/print-weave.c:1543
 msgid "Fatal error!"
 msgstr "Fatale fout!"
 
 #: src/main/print-weave.c:1528
-msgid ""
-"Please report the above information to gimp-print-devel@lists.sourceforge.net"
-msgstr ""
-"Gaarne de bovenstaande informatie rapporteren aan gimp-print-devel@lists."
-"sourceforge.net"
+msgid "Please report the above information to gimp-print-devel@lists.sourceforge.net"
+msgstr "Gaarne de bovenstaande informatie rapporteren aan gimp-print-devel@lists.sourceforge.net"
 
 #: src/main/generic-options.c:33 src/xml/xmli18n-tmp.h:3256
 #: src/xml/xmli18n-tmp.h:3272 src/xml/xmli18n-tmp.h:3281
@@ -2816,26 +2772,17 @@ msgstr "Voorbeeld"
 msgid ""
 "Position the image on the page.\n"
 "Click and drag with the primary button to position the image.\n"
-"Click and drag with the second button to move the image with finer "
-"precision; each unit of motion moves the image one point (1/72\")\n"
-"Click and drag with the third (middle) button to move the image in units of "
-"the image size.\n"
-"Holding down the shift key while clicking and dragging constrains the image "
-"to only horizontal or vertical motion.\n"
-"If you click another button while dragging the mouse, the image will return "
-"to its original position."
+"Click and drag with the second button to move the image with finer precision; each unit of motion moves the image one point (1/72\")\n"
+"Click and drag with the third (middle) button to move the image in units of the image size.\n"
+"Holding down the shift key while clicking and dragging constrains the image to only horizontal or vertical motion.\n"
+"If you click another button while dragging the mouse, the image will return to its original position."
 msgstr ""
 "Plaats de afbeelding op de pagina.\n"
 "Klik en sleep met de eerste knop om de afbeelding te plaatsen.\n"
-"Klik en sleep met de tweede knop om de afbeelding met een fijnere "
-"nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt "
-"(1/72\")\n"
-"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van "
-"zijn grootte te verplaatsen.\n"
-"Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen "
-"beperkt de beweging tot horizontaal of verticaal.\n"
-"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug "
-"naar zijn oorspronkelijke plaats."
+"Klik en sleep met de tweede knop om de afbeelding met een fijnere nauwkeurigheid te plaatsen; elke eenheid beweging verplaatst deze één punt (1/72\")\n"
+"Klik en sleep met de derde (middelste) knop om de afbeelding in eenheden van zijn grootte te verplaatsen.\n"
+"Bij het ingedrukt houden van de Shift-toets tijdens klikken en slepen beperkt de beweging tot horizontaal of verticaal.\n"
+"Als u op een andere knop klikt bij het slepen, dan keert de afbeelding terug naar zijn oorspronkelijke plaats."
 
 #: src/gutenprintui2/panel.c:1523
 msgid "Paper Size"
@@ -2902,12 +2849,8 @@ msgid "Seascape"
 msgstr "Seascape"
 
 #: src/gutenprintui2/panel.c:1668
-msgid ""
-"Select the orientation: portrait, landscape, upside down, or seascape "
-"(upside down landscape)"
-msgstr ""
-"Kies de orientatie: portret, landschap, ondersteboven of seascape "
-"(ondersteboven landschap)"
+msgid "Select the orientation: portrait, landscape, upside down, or seascape (upside down landscape)"
+msgstr "Kies de orientatie: portret, landschap, ondersteboven of seascape (ondersteboven landschap)"
 
 #: src/gutenprintui2/panel.c:1670
 msgid "Orientation:"
@@ -2927,8 +2870,7 @@ msgstr "Rechts:"
 
 #: src/gutenprintui2/panel.c:1686
 msgid "Distance from the left of the paper to the right of the image"
-msgstr ""
-"Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
+msgstr "Afstand vanaf de linkerkant van het papier tot de rechterkant van de afdruk"
 
 #: src/gutenprintui2/panel.c:1690
 msgid "Distance from the right of the paper to the image"
@@ -2948,8 +2890,7 @@ msgstr "Onder:"
 
 #: src/gutenprintui2/panel.c:1697
 msgid "Distance from the top of the paper to bottom of the image"
-msgstr ""
-"Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
+msgstr "Afstand vanaf de bovenkant van het papier tot de onderkant van de afbeelding"
 
 #: src/gutenprintui2/panel.c:1701
 msgid "Distance from the bottom of the paper to the image"
@@ -3017,12 +2958,8 @@ msgid "Choose the correct PPD filename for your printer"
 msgstr "Kies de juiste PPD bestandsnaam voor jouw printer"
 
 #: src/gutenprintui2/panel.c:1913
-msgid ""
-"Select the name of the output queue (not the type, or model, of printer) "
-"that you wish to print to"
-msgstr ""
-"Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) "
-"die u wilt uitprinten"
+msgid "Select the name of the output queue (not the type, or model, of printer) that you wish to print to"
+msgstr "Selecteer de naam van de uitvoerrij (niet het type, of model, of printer) die u wilt uitprinten"
 
 #: src/gutenprintui2/panel.c:1915
 msgid "Printer Queue:"
@@ -3069,36 +3006,24 @@ msgid "Printer Settings"
 msgstr "Printerinstellingen"
 
 #: src/gutenprintui2/panel.c:2088
-msgid ""
-"Select the name of the printer (not the type, or model, of printer) that you "
-"wish to print to"
-msgstr ""
-"Selecteer de naam van de printer (Niet het type, of model, of printer) "
-"waarna je wenst te printen"
+msgid "Select the name of the printer (not the type, or model, of printer) that you wish to print to"
+msgstr "Selecteer de naam van de printer (Niet het type, of model, of printer) waarna je wenst te printen"
 
 #: src/gutenprintui2/panel.c:2105
 msgid "Setup Printer..."
 msgstr "Instellen Printer..."
 
 #: src/gutenprintui2/panel.c:2107
-msgid ""
-"Choose the printer model, PPD file, and command that is used to print to "
-"this printer"
-msgstr ""
-"Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar "
-"deze printer af te drukken."
+msgid "Choose the printer model, PPD file, and command that is used to print to this printer"
+msgstr "Kies het printermodel, PPD bestand, en commando die gebruikt wordt om naar deze printer af te drukken."
 
 #: src/gutenprintui2/panel.c:2120
 msgid "New Printer..."
 msgstr "Nieuwe Printer..."
 
 #: src/gutenprintui2/panel.c:2121
-msgid ""
-"Define a new logical printer. This can be used to name a collection of "
-"settings that you wish to remember for future use."
-msgstr ""
-"Definieer een logische printer. Deze kan gebruikt worden om een verzameling "
-"van instellingen die u bewaren wilt voor toekomstig gebruik."
+msgid "Define a new logical printer. This can be used to name a collection of settings that you wish to remember for future use."
+msgstr "Definieer een logische printer. Deze kan gebruikt worden om een verzameling van instellingen die u bewaren wilt voor toekomstig gebruik."
 
 #: src/gutenprintui2/panel.c:2151
 msgid "Set Printer Option Defaults"
@@ -3125,12 +3050,8 @@ msgid "Scale by:"
 msgstr "Schalen met:"
 
 #: src/gutenprintui2/panel.c:2231
-msgid ""
-"Select whether scaling is measured as percent of available page size or "
-"number of output dots per inch"
-msgstr ""
-"Moet schaling gemeten worden in het percentage van de beschikbare "
-"paginagrootte of het aantal punten per inch"
+msgid "Select whether scaling is measured as percent of available page size or number of output dots per inch"
+msgstr "Moet schaling gemeten worden in het percentage van de beschikbare paginagrootte of het aantal punten per inch"
 
 #: src/gutenprintui2/panel.c:2234
 msgid "Percent"
@@ -3205,10 +3126,8 @@ msgid "Adjust Output..."
 msgstr "Past uitvoer aan..."
 
 #: src/gutenprintui2/panel.c:2505
-msgid ""
-"Adjust color balance, brightness, contrast, saturation, and dither algorithm"
-msgstr ""
-"Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
+msgid "Adjust color balance, brightness, contrast, saturation, and dither algorithm"
+msgstr "Pas de kleurbalans, helderheid, contrast, verzadiging en ruis-algoritme aan"
 
 #: src/gutenprintui2/panel.c:2524
 msgid "Size Units:"
@@ -3397,14 +3316,12 @@ msgstr ""
 "Copyright 2000-2006 Robert Krawitz (rlk@alum.mit.edu)\n"
 "\n"
 "Dit programma is vrije software; u mag het verspreiden en/of wijzigen\n"
-"onder de termen van de GNU General Public License zoals gepubliceerd door de "
-"Free\n"
+"onder de termen van de GNU General Public License zoals gepubliceerd door de Free\n"
 "Software Foundation; ofwel versie 2 van de licentie, of (naar vrije keuze)\n"
 "elke latere versie.\n"
 "\n"
 "Dit programma is verspreid in de hoop dat het bruikbaar zou zijn, maar\n"
-"ZONDER ENIGE GARANTIE; zelfs zonder de impliete garantie van "
-"VERKOOPBAARHEID\n"
+"ZONDER ENIGE GARANTIE; zelfs zonder de impliete garantie van VERKOOPBAARHEID\n"
 "of GESCHKT VOOR EEN BEPAALD DOEL.  Zie de GNU General Public License\n"
 "voor meer details.\n"
 "\n"
@@ -3413,7 +3330,6 @@ msgstr ""
 "Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"
 
 #: src/escputil/escputil.c:123
-#, fuzzy
 msgid ""
 "Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M | -X]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
@@ -3432,8 +3348,7 @@ msgid ""
 "                       utility may result in poor print quality and/or\n"
 "                       damage to the printer.\n"
 "    -s|--status        Retrieve printer status.\n"
-"    -i|--ink-level     Obtain the ink level from the printer.  This "
-"requires\n"
+"    -i|--ink-level     Obtain the ink level from the printer.  This requires\n"
 "                       read/write access to the raw printer device.\n"
 "    -e|--extended-ink-info     Obtain the extended ink information from the\n"
 "                       printer.  This requires read/write access to the raw\n"
@@ -3461,7 +3376,7 @@ msgid ""
 "    -C|--choices       Specify the number of pattern choices for alignment\n"
 "    -p|--patterns      Specify the number of sets of patterns for alignment\n"
 msgstr ""
-"Gebruik: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n"
+"Gebruik: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M | -X]\n"
 "                  [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
 "                  [-C choices] [-p patterns]\n"
 "Doe onderhoud aan de EPSON Stylus (R) printers.\n"
@@ -3471,14 +3386,11 @@ msgstr ""
 "  Commando's:\n"
 "    -c|--clean-head    Maak de printkop schoon.\n"
 "    -n|--nozzle-check  Print een nozzle testpatroon.\n"
-"                       Vuile of verstopte nozzles vertonen zich als gaten in "
-"het\n"
+"                       Vuile of verstopte nozzles vertonen zich als gaten in het\n"
 "                       patroon.  Als u een gat ziet dan moet u de printkop\n"
 "                       schoonmaken.\n"
-"    -a|--align-head    Lijn de printkop uit.  VOORZICHTIG: Verkeerd gebruik "
-"van dit\n"
-"                       programma kan resulteren in een slechte "
-"printkwaliteit en/of\n"
+"    -a|--align-head    Lijn de printkop uit.  VOORZICHTIG: Verkeerd gebruik van dit\n"
+"                       programma kan resulteren in een slechte printkwaliteit en/of\n"
 "                       beschadiging van de printer.\n"
 "    -s|--status        Haal de printerstatus op.\n"
 "    -i|--ink-level     Toon de inktniveaus van de printer.  Dit vereist\n"
@@ -3488,31 +3400,26 @@ msgstr ""
 "                       raw-printerapparaat.\n"
 "    -d|--identify      Vraag het merk en model van de printer. Dit vereist\n"
 "                       lees/schrijf-toegang tot het raw-printerapparaat.\n"
-"    -l|--license       Toon de licentie en garantie-bepalingen van dit "
-"programma.\n"
+"    -X|--reset-ink     Reset de inktniveaus. Dit vereist\n"
+"                       lees/schrijf-toegang tot het raw-printerapparaat.\n"
+"    -l|--license       Toon de licentie en garantie-bepalingen van dit programma.\n"
 "    -M|--list-models   Toon een lijst van de beschikbare printermodellen.\n"
 "    -h|--help          Toon dit hulpbericht.\n"
 "  Opties:\n"
 "    -P|--printer-name  Specificeer de naam van de printerqueue.\n"
 "                       Standaard is de standaard systeemprinter.\n"
-"    -r|--raw-device    Specificeer de naam van het apparaat waar direct "
-"naar\n"
+"    -r|--raw-device    Specificeer de naam van het apparaat waar direct naar\n"
 "                       geschreven moet worden i.p.v. via een pinterqueue.\n"
 "    -m|--model         Specificeer het printermodel.\n"
-"    -u|--new           De printer is een nieuwe printer (Stylus Color 740 "
-"of\n"
-"                       nieuwer).  Alleen noodzakelijk bij een niet-raw "
-"apparaat\n"
+"    -u|--new           De printer is een nieuwe printer (Stylus Color 740 of\n"
+"                       nieuwer).  Alleen noodzakelijk bij een niet-raw apparaat\n"
 "                       of wanneer het model niet gespecificeerd is.\n"
 "    -q|--quiet         Onderdruk de banner.\n"
 "    -S|--short-name    Toon de korte naam van de printer met --identify.\n"
-"    -C|--choices       Specificeer het aantal patroonkeuzes voor de "
-"uitlijning\n"
-"    -p|--patterns      Specificeer het aantal patroonsets voor de "
-"uitlijning\n"
+"    -C|--choices       Specificeer het aantal patroonkeuzes voor de uitlijning\n"
+"    -p|--patterns      Specificeer het aantal patroonsets voor de uitlijning\n"
 
 #: src/escputil/escputil.c:169
-#, fuzzy
 msgid ""
 "Usage: escputil [OPTIONS] [COMMAND]\n"
 "Usage: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M | -X]\n"
@@ -3558,7 +3465,7 @@ msgid ""
 "    -p Specify the number of sets of patterns for alignment\n"
 msgstr ""
 "Gebruik: escputil [OPTIES] [COMMANDO]\n"
-"Gebruik: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M]\n"
+"Gebruik: escputil [-c | -n | -a | -i | -e | -s | -d | -l | -M | -X]\n"
 "                [-P printer | -r device] [-u] [-q] [-m model] [ -S ]\n"
 "                [-C choices] [-p patterns]\n"
 "Doe onderhoud aan de EPSON Stylus (R) printers.\n"
@@ -3568,12 +3475,11 @@ msgstr ""
 "  Commando's:\n"
 "    -c Maak de printkop schoon.\n"
 "    -n Print een spuitgaatjes testpatroon.\n"
-"          Vuile of verstopte spuitgaatjes komen te voorschijn als gaten in "
-"het\n"
+"          Vuile of verstopte spuitgaatjes komen te voorschijn als gaten in het\n"
 "          patroon.  Als er zo'n gat is, dan moet de printkop schoongemaakt\n"
 "          worden.\n"
 "    -a Lijn de printkop uit.  VOORZICHTIG: Misbruik van dit\n"
-"          programma kan een slechte printkwaliteit oplevren\n"
+"          programma kan een slechte printkwaliteit opleveren\n"
 "          en/of de printer beschadigen.\n"
 "    -s Toon de status van de printer.\n"
 "    -i Toon de inktniveau's van de printer.  Dit vereist\n"
@@ -3583,6 +3489,8 @@ msgstr ""
 "          lees/schrijftoegang tot het raw-printer-device.\n"
 "    -d Vraag het merk en model van de printer op.  Dit\n"
 "          vereist lees/schrijftoegang tot het raw-printer-device.\n"
+"    -X Reset inktniveaus. Dit vereist lees/schrijftoegang tot\n"
+"          tot het raw-printerapparaat.\n"
 "    -l Toon de licentie/garantie bepalingen van dit programma.\n"
 "    -M Toon de beschikbare printermodellen.\n"
 "    -h Toon deze hulpboodschap.\n"
@@ -4099,13 +4007,12 @@ msgstr "Datum"
 #: src/escputil/escputil.c:1787
 #, c-format
 msgid "Obtaining extended ink information requires using a raw device.\n"
-msgstr ""
-"Het verkrijgen van uitgebreide inktinformatie vereist een 'raw' apparaat.\n"
+msgstr "Het verkrijgen van uitgebreide inktinformatie vereist een 'raw' apparaat.\n"
 
 #: src/escputil/escputil.c:1814
-#, fuzzy, c-format
+#, c-format
 msgid "Resetting ink levels requires using a raw device.\n"
-msgstr "Verkrijgen van %s vereist een 'raw' apparaat.\n"
+msgstr "Resetten van inktniveaus vereist een 'raw' apparaat.\n"
 
 #: src/escputil/escputil.c:1862
 #, c-format
@@ -4125,9 +4032,7 @@ msgstr "Bezig met het schoonmaken van de koppen..\n"
 #: src/escputil/escputil.c:1919
 #, c-format
 msgid "Running nozzle check, please ensure paper is in the printer.\n"
-msgstr ""
-"Bezig met het controleren van de spuitmondjes, let op dat er papier in de "
-"printer zit.\n"
+msgstr "Bezig met het controleren van de spuitmondjes, let op dat er papier in de printer zit.\n"
 
 #: src/escputil/escputil.c:1923
 #, c-format
@@ -4167,30 +4072,24 @@ msgid ""
 "It is essential that you not turn your printer off during this procedure.\n"
 "\n"
 msgstr ""
-"Leest u alstublieft deze instructies nauwkeurig door, voordat u verder "
-"gaat.\n"
+"Leest u alstublieft deze instructies nauwkeurig door, voordat u verder gaat.\n"
 "\n"
 "U kunt met deze applicatie de koppen van uw Epson Stylus inkjet\n"
 "printer uitlijnen. Onjuist gebruik van deze applicatie kan leiden tot\n"
-"verlies in kwaliteit en het kan zelfs uw printer beschadigen. Deze "
-"applicatie\n"
+"verlies in kwaliteit en het kan zelfs uw printer beschadigen. Deze applicatie\n"
 "is niet gecontroleerd op fouten door Seiko Epson, en wordt geleverd zonder\n"
 "enige vorm van garantie. het gebruik is volledig op eigen risico.\n"
 "\n"
 "Het programma zal %d patronen afdrukken. Elk patroon lijkt erg op de ander.\n"
-"Het patroon bestaat uit een serie paren van verticale lijnen die elkaar "
-"overlappen.\n"
+"Het patroon bestaat uit een serie paren van verticale lijnen die elkaar overlappen.\n"
 "Onder elk paar met lijnen staat een nummer tussen %d en %d.\n"
 "\n"
-"Wanneer u de lijnen bekijkt, moet u zoeken naar het paar die het beste is "
-"uitgelijnd,\n"
+"Wanneer u de lijnen bekijkt, moet u zoeken naar het paar die het beste is uitgelijnd,\n"
 "met andere woorden, diegen die samen  de beste enkele lijn vormen.\n"
 "Het gebruik van een loep of vergrootglas wordt aangeraden voor de\n"
 "meest critische inspectie. Er wordt ook aangeraden om een goede kwaliteit\n"
-"papier te gebruiken, zodat de lijnen mooi strak zijn, en niet over het "
-"papier\n"
-"uitvloeien. Wanneer u het nummer heeft uitgekozen, plaats dan het papier "
-"weer\n"
+"papier te gebruiken, zodat de lijnen mooi strak zijn, en niet over het papier\n"
+"uitvloeien. Wanneer u het nummer heeft uitgekozen, plaats dan het papier weer\n"
 "terug erug in de printer voordat u het nummer intypt.\n"
 "\n"
 "Each pattern is similar, but later patterns use finer dots for more\n"
@@ -4235,8 +4134,7 @@ msgid ""
 "should find that the middle-most pair (#%d out of the %d) is the best.\n"
 "You will then be offered the choices of (s)aving the result in the printer,\n"
 "(r)epeating the process, or (q)uitting without saving.  Quitting will not\n"
-"restore the previous settings, but powering the printer off and back on "
-"will.\n"
+"restore the previous settings, but powering the printer off and back on will.\n"
 "If you quit, you must repeat the entire process if you wish to later save\n"
 "the results.  It is essential that you not turn off your printer during\n"
 "this procedure.\n"
@@ -4252,42 +4150,32 @@ msgstr ""
 " programma ligt bij u.\n"
 "\n"
 "Dit programma print een testpatroon dat bestaat uit een aantal paren van\n"
-"verticale lijnen die elkaar overlappen. Onder elk paar lijnen staat een "
-"nummer\n"
+"verticale lijnen die elkaar overlappen. Onder elk paar lijnen staat een nummer\n"
 "tussen de %d en %d.\n"
 "\n"
 "Als u deze paren bekijkt, zult u een paar lijnen vinden die het beste zijn\n"
-"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn "
-"vormen.\n"
-"Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het "
-"gebruik\n"
+"uitgelijnd, hetgeen betekent dat deze lijnen het beste samen één lijn vormen.\n"
+"Bekijk de lijnen zeer zorgvuldig om het beste paar uit te zoeken. Het gebruik\n"
 "van een loupe of vergrootglas is aanbevolen voor de meest kritische\n"
-"inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit "
-"papier\n"
-"te gebruiken zodat de lijnen goed gevormd zijn en niet door het papier "
-"drukken.\n"
+"inspectie. Het is ook aan te raden om voor deze test een goede kwaliteit papier\n"
+"te gebruiken zodat de lijnen goed gevormd zijn en niet door het papier drukken.\n"
 "Nadat u het nummer hebt gekozen, dat het beste overeenkomt, plaats u het\n"
 "papier terug in de printer voordat u het nummer intikt.\n"
 "\n"
-"Nadat het het uitlijnen nog eens gedaan is, zal het nog een keer geprint "
-"worden\n"
+"Nadat het het uitlijnen nog eens gedaan is, zal het nog een keer geprint worden\n"
 "U zou moeten vinden dat het middelste paar (#%d van de %d) het beste is.\n"
 "U krijgt dan de mogelijkheid om het resultaat in de printer op te slaan(s),\n"
-"het proces te he(r)halen of te stoppen zonder op te slaan(q). Stoppen zal "
-"niet\n"
-"de vorige instellingen terugzetten, maar de printer aan en uit zetten zal "
-"dat\n"
+"het proces te he(r)halen of te stoppen zonder op te slaan(q). Stoppen zal niet\n"
+"de vorige instellingen terugzetten, maar de printer aan en uit zetten zal dat\n"
 "wel doen. Als u stopt, zult u het hele proces opnieuw moeten doorlopen\n"
-"om de resultaten op te slaan. Het is essentieel dat u de printer niet "
-"uitzet\n"
+"om de resultaten op te slaan. Het is essentieel dat u de printer niet uitzet\n"
 "tijdens deze procedure.\n"
 "\n"
 
 #: src/escputil/escputil.c:2002
 #, c-format
 msgid "Unable to send command to the printer, exiting.\n"
-msgstr ""
-"Onmogelijk om commando's naar de printer te sturen, bezig te stoppen.\n"
+msgstr "Onmogelijk om commando's naar de printer te sturen, bezig te stoppen.\n"
 
 #: src/escputil/escputil.c:2016 src/escputil/escputil.c:2185
 #, c-format
@@ -4321,11 +4209,8 @@ msgstr "> "
 
 #: src/escputil/escputil.c:2034
 #, c-format
-msgid ""
-"Please confirm by typing 'q' again that you wish to quit without saving:\n"
-msgstr ""
-"Graag bevestiging dat u wilt stoppen zonder te bewaren door opnieuw 'q' te "
-"typen:\n"
+msgid "Please confirm by typing 'q' again that you wish to quit without saving:\n"
+msgstr "Graag bevestiging dat u wilt stoppen zonder te bewaren door opnieuw 'q' te typen:\n"
 
 #: src/escputil/escputil.c:2041
 #, c-format
@@ -4429,8 +4314,7 @@ msgstr "Druk op enter om door te gaan > "
 #: src/escputil/escputil.c:2175
 #, c-format
 msgid ""
-"Please inspect the print, and choose the best pair of lines in each "
-"pattern.\n"
+"Please inspect the print, and choose the best pair of lines in each pattern.\n"
 "Type a pair number, '?' for help, or 'r' to repeat the procedure.\n"
 msgstr ""
 "Kijk naar de afdruk, en kies het beste paar lijnen in elk patroon.\n"
@@ -4479,8 +4363,7 @@ msgid ""
 "pattern %d.  If it is not, you should repeat the process to get the best\n"
 "quality printing.\n"
 msgstr ""
-"Kijk alstublief na of de uitlijning klopt. Kijk, nadat het "
-"uitlijningspatroon\n"
+"Kijk alstublief na of de uitlijning klopt. Kijk, nadat het uitlijningspatroon\n"
 "weer opnieuw is afgedrukt, of het beste patroon voor elk\n"
 "lijnpatroon %d is. Als dat niet zo is dan zult u de procedure moeten\n"
 "herhalen om de beste kwaliteit te krijgen.\n"
@@ -5454,7 +5337,7 @@ msgstr "Rolinvoer"
 
 #: src/xml/xmli18n-tmp.h:2490
 msgid "Main Input"
-msgstr ""
+msgstr "Hoofdinvoer"
 
 #: src/xml/xmli18n-tmp.h:2492 src/xml/xmli18n-tmp.h:2503
 #: src/xml/xmli18n-tmp.h:2508 src/xml/xmli18n-tmp.h:2512
@@ -5773,9 +5656,8 @@ msgid "L"
 msgstr "L"
 
 #: src/xml/xmli18n-tmp.h:3318
-#, fuzzy
 msgid "2x6"
-msgstr "4x6"
+msgstr "2x6"
 
 #: src/xml/xmli18n-tmp.h:3319
 msgid "4x6"
@@ -5810,9 +5692,8 @@ msgid "5x8"
 msgstr "5x8"
 
 #: src/xml/xmli18n-tmp.h:3327
-#, fuzzy
 msgid "6x6"
-msgstr "4x6"
+msgstr "6x6"
 
 #: src/xml/xmli18n-tmp.h:3328
 msgid "6x8"
@@ -5820,12 +5701,11 @@ msgstr "6x8"
 
 #: src/xml/xmli18n-tmp.h:3329
 msgid "6x8.5"
-msgstr ""
+msgstr "6x8.5"
 
 #: src/xml/xmli18n-tmp.h:3330
-#, fuzzy
 msgid "6x9"
-msgstr "6x8"
+msgstr "6x9"
 
 #: src/xml/xmli18n-tmp.h:3331
 msgid "8x10"
@@ -5848,9 +5728,8 @@ msgid "Engineering C 17x22"
 msgstr "Engineering C 17x22"
 
 #: src/xml/xmli18n-tmp.h:3337
-#, fuzzy
 msgid "8x8"
-msgstr "4x8"
+msgstr "8x8"
 
 #: src/xml/xmli18n-tmp.h:3338
 msgid "8x12"
@@ -5858,7 +5737,7 @@ msgstr "8x12"
 
 #: src/xml/xmli18n-tmp.h:3339
 msgid "8.5x12"
-msgstr ""
+msgstr "8.5x12"
 
 #: src/xml/xmli18n-tmp.h:3340
 msgid "YonKire"
@@ -6557,9 +6436,8 @@ msgid "Canon BJC-5500"
 msgstr "Canon BJC-5500"
 
 #: src/xml/xmli18n-tmp.h:3516
-#, fuzzy
 msgid "Canon BJC-5500J"
-msgstr "Canon BJC-5500"
+msgstr "Canon BJC-5500J"
 
 #: src/xml/xmli18n-tmp.h:3517
 msgid "Canon BJC-6000"
@@ -6702,9 +6580,8 @@ msgid "Canon PIXMA iP2000"
 msgstr "Canon PIXMA iP2000"
 
 #: src/xml/xmli18n-tmp.h:3552
-#, fuzzy
 msgid "Canon iP2700 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon iP2700 series"
 
 #: src/xml/xmli18n-tmp.h:3553
 msgid "Canon PIXMA iP2700"
@@ -6715,44 +6592,36 @@ msgid "Canon PIXUS iP2700"
 msgstr "Canon PIXUS iP2700"
 
 #: src/xml/xmli18n-tmp.h:3555
-#, fuzzy
 msgid "Canon PIXMA iP2701"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2701"
 
 #: src/xml/xmli18n-tmp.h:3556
-#, fuzzy
 msgid "Canon PIXMA iP2702"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2702"
 
 #: src/xml/xmli18n-tmp.h:3557
-#, fuzzy
 msgid "Canon PIXMA iP2740"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2740"
 
 #: src/xml/xmli18n-tmp.h:3558
-#, fuzzy
 msgid "Canon PIXMA iP2760"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2760"
 
 #: src/xml/xmli18n-tmp.h:3559
-#, fuzzy
 msgid "Canon PIXMA iP2770"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2770"
 
 #: src/xml/xmli18n-tmp.h:3560
-#, fuzzy
 msgid "Canon PIXMA iP2772"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2772"
 
 #: src/xml/xmli18n-tmp.h:3561
-#, fuzzy
 msgid "Canon PIXMA iP2780"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2780"
 
 #: src/xml/xmli18n-tmp.h:3562
-#, fuzzy
 msgid "Canon PIXMA iP2788"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP2788"
 
 #: src/xml/xmli18n-tmp.h:3563
 msgid "Canon PIXMA iP3000"
@@ -6767,51 +6636,44 @@ msgid "Canon PIXUS iP3100"
 msgstr "Canon PIXUS iP3100"
 
 #: src/xml/xmli18n-tmp.h:3566
-#, fuzzy
 msgid "Canon iP3300 series"
-msgstr "Canon i6500"
+msgstr "Canon iP3300 series"
 
 #: src/xml/xmli18n-tmp.h:3567
 msgid "Canon PIXMA iP3300"
 msgstr "Canon PIXMA iP3300"
 
 #: src/xml/xmli18n-tmp.h:3568
-#, fuzzy
 msgid "Canon PIXUS iP3300"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iP3300"
 
 #: src/xml/xmli18n-tmp.h:3569
-#, fuzzy
 msgid "Canon iP3500 series"
-msgstr "Canon i6500"
+msgstr "Canon iP3500 series"
 
 #: src/xml/xmli18n-tmp.h:3570
 msgid "Canon PIXMA iP3500"
 msgstr "Canon PIXMA iP3500"
 
 #: src/xml/xmli18n-tmp.h:3571
-#, fuzzy
 msgid "Canon PIXUS iP3500"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iP3500"
 
 #: src/xml/xmli18n-tmp.h:3572
-#, fuzzy
 msgid "Canon iP3600 series"
-msgstr "Canon i6100"
+msgstr "Canon iP3600 series"
 
 #: src/xml/xmli18n-tmp.h:3573
 msgid "Canon PIXMA iP3600"
 msgstr "Canon PIXMA iP3600"
 
 #: src/xml/xmli18n-tmp.h:3574
-#, fuzzy
 msgid "Canon PIXUS iP3600"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iP3600"
 
 #: src/xml/xmli18n-tmp.h:3575
-#, fuzzy
 msgid "Canon PIXMA iP3680"
-msgstr "Canon PIXMA iP3600"
+msgstr "Canon PIXMA iP3680"
 
 #: src/xml/xmli18n-tmp.h:3576
 msgid "Canon PIXMA iP4000"
@@ -6830,181 +6692,152 @@ msgid "Canon PIXUS iP4100"
 msgstr "Canon PIXUS iP4100"
 
 #: src/xml/xmli18n-tmp.h:3580
-#, fuzzy
 msgid "Canon PIXUS iP4100R"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4100R"
 
 #: src/xml/xmli18n-tmp.h:3581
 msgid "Canon PIXMA iP4100R"
 msgstr "Canon PIXMA iP4100R"
 
 #: src/xml/xmli18n-tmp.h:3582
-#, fuzzy
 msgid "Canon iP4200 series"
-msgstr "Canon i450"
+msgstr "Canon iP4200 series"
 
 #: src/xml/xmli18n-tmp.h:3583
 msgid "Canon PIXMA iP4200"
 msgstr "Canon PIXMA iP4200"
 
 #: src/xml/xmli18n-tmp.h:3584
-#, fuzzy
 msgid "Canon PIXUS iP4200"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4200"
 
 #: src/xml/xmli18n-tmp.h:3585
-#, fuzzy
 msgid "Canon iP4300 series"
-msgstr "Canon i450"
+msgstr "Canon iP4300 series"
 
 #: src/xml/xmli18n-tmp.h:3586
 msgid "Canon PIXMA iP4300"
 msgstr "Canon PIXMA iP4300"
 
 #: src/xml/xmli18n-tmp.h:3587
-#, fuzzy
 msgid "Canon PIXUS iP4300"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4300"
 
 #: src/xml/xmli18n-tmp.h:3588
-#, fuzzy
 msgid "Canon iP4500 series"
-msgstr "Canon i450"
+msgstr "Canon iP4500 series"
 
 #: src/xml/xmli18n-tmp.h:3589
 msgid "Canon PIXMA iP4500"
 msgstr "Canon PIXMA iP4500"
 
 #: src/xml/xmli18n-tmp.h:3590
-#, fuzzy
 msgid "Canon PIXUS iP4500"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4500"
 
 #: src/xml/xmli18n-tmp.h:3591
-#, fuzzy
 msgid "Canon iP4600 series"
-msgstr "Canon i6100"
+msgstr "Canon iP4600 series"
 
 #: src/xml/xmli18n-tmp.h:3592
 msgid "Canon PIXMA iP4600"
 msgstr "Canon PIXMA iP4600"
 
 #: src/xml/xmli18n-tmp.h:3593
-#, fuzzy
 msgid "Canon PIXUS iP4600"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4600"
 
 #: src/xml/xmli18n-tmp.h:3594
-#, fuzzy
 msgid "Canon PIXMA iP4680"
-msgstr "Canon PIXMA iP4600"
+msgstr "Canon PIXMA iP4680"
 
 #: src/xml/xmli18n-tmp.h:3595
-#, fuzzy
 msgid "Canon iP4700 series"
-msgstr "Canon i470D"
+msgstr "Canon iP4700 series"
 
 #: src/xml/xmli18n-tmp.h:3596
 msgid "Canon PIXMA iP4700"
 msgstr "Canon PIXMA iP4700"
 
 #: src/xml/xmli18n-tmp.h:3597
-#, fuzzy
 msgid "Canon PIXUS iP4700"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4700"
 
 #: src/xml/xmli18n-tmp.h:3598
-#, fuzzy
 msgid "Canon PIXMA iP4760"
-msgstr "Canon PIXMA iP4700"
+msgstr "Canon PIXMA iP4760"
 
 #: src/xml/xmli18n-tmp.h:3599
-#, fuzzy
 msgid "Canon iP4800 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon iP4800 series"
 
 #: src/xml/xmli18n-tmp.h:3600
 msgid "Canon PIXMA iP4800"
 msgstr "Canon PIXMA iP4800"
 
 #: src/xml/xmli18n-tmp.h:3601
-#, fuzzy
 msgid "Canon PIXMA iP4810"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon PIXMA iP4810"
 
 #: src/xml/xmli18n-tmp.h:3602
-#, fuzzy
 msgid "Canon PIXMA iP4820"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon PIXMA iP4820"
 
 #: src/xml/xmli18n-tmp.h:3603
-#, fuzzy
 msgid "Canon PIXUS iP4830"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4830"
 
 #: src/xml/xmli18n-tmp.h:3604
-#, fuzzy
 msgid "Canon PIXMA iP4840"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon PIXMA iP4840"
 
 #: src/xml/xmli18n-tmp.h:3605
-#, fuzzy
 msgid "Canon PIXMA iP4850"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon PIXMA iP4850"
 
 #: src/xml/xmli18n-tmp.h:3606
-#, fuzzy
 msgid "Canon PIXMA iP4870"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon PIXMA iP4870"
 
 #: src/xml/xmli18n-tmp.h:3607
-#, fuzzy
 msgid "Canon PIXMA iP4880"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon PIXMA iP4880"
 
 #: src/xml/xmli18n-tmp.h:3608
-#, fuzzy
 msgid "Canon iP4900 series"
-msgstr "Canon i900D"
+msgstr "Canon iP4900 series"
 
 #: src/xml/xmli18n-tmp.h:3609
 msgid "Canon PIXMA iP4900"
 msgstr "Canon PIXMA iP4900"
 
 #: src/xml/xmli18n-tmp.h:3610
-#, fuzzy
 msgid "Canon PIXMA iP4910"
-msgstr "Canon PIXMA iP4900"
+msgstr "Canon PIXMA iP4910"
 
 #: src/xml/xmli18n-tmp.h:3611
-#, fuzzy
 msgid "Canon PIXMA iP4920"
-msgstr "Canon PIXMA iP4900"
+msgstr "Canon PIXMA iP4920"
 
 #: src/xml/xmli18n-tmp.h:3612
-#, fuzzy
 msgid "Canon PIXUS iP4930"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS iP4930"
 
 #: src/xml/xmli18n-tmp.h:3613
-#, fuzzy
 msgid "Canon PIXMA iP4940"
-msgstr "Canon PIXMA iP4900"
+msgstr "Canon PIXMA iP4940"
 
 #: src/xml/xmli18n-tmp.h:3614
-#, fuzzy
 msgid "Canon PIXMA iP4950"
-msgstr "Canon PIXMA iP4900"
+msgstr "Canon PIXMA iP4950"
 
 #: src/xml/xmli18n-tmp.h:3615
-#, fuzzy
 msgid "Canon PIXMA iP4970"
-msgstr "Canon PIXMA iP4900"
+msgstr "Canon PIXMA iP4970"
 
 #: src/xml/xmli18n-tmp.h:3616
-#, fuzzy
 msgid "Canon PIXMA iP4980"
-msgstr "Canon PIXMA iP4900"
+msgstr "Canon PIXMA iP4980"
 
 #: src/xml/xmli18n-tmp.h:3617
 msgid "Canon PIXMA iP5000"
@@ -7015,18 +6848,16 @@ msgid "Canon PIXMA iP5200"
 msgstr "Canon PIXMA iP5200"
 
 #: src/xml/xmli18n-tmp.h:3619
-#, fuzzy
 msgid "Canon iP5200R series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon iP5200R series"
 
 #: src/xml/xmli18n-tmp.h:3620
 msgid "Canon PIXMA iP5200R"
 msgstr "Canon PIXMA iP5200R"
 
 #: src/xml/xmli18n-tmp.h:3621
-#, fuzzy
 msgid "Canon PIXUS iP5200R"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS iP5200R"
 
 #: src/xml/xmli18n-tmp.h:3622
 msgid "Canon PIXMA iP5300"
@@ -7041,9 +6872,8 @@ msgid "Canon PIXMA iP6100D"
 msgstr "Canon PIXMA iP6100D"
 
 #: src/xml/xmli18n-tmp.h:3625
-#, fuzzy
 msgid "Canon PIXUS iP6100D"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iP6100D"
 
 #: src/xml/xmli18n-tmp.h:3626
 msgid "Canon PIXMA iP6210D"
@@ -7062,105 +6892,88 @@ msgid "Canon PIXMA iP6320D"
 msgstr "Canon PIXMA iP6320D"
 
 #: src/xml/xmli18n-tmp.h:3630
-#, fuzzy
 msgid "Canon iP6600D series"
-msgstr "Canon i6100"
+msgstr "Canon iP6600D series"
 
 #: src/xml/xmli18n-tmp.h:3631
 msgid "Canon PIXMA iP6600D"
 msgstr "Canon PIXMA iP6600D"
 
 #: src/xml/xmli18n-tmp.h:3632
-#, fuzzy
 msgid "Canon PIXUS iP6600D"
-msgstr "Canon PIXMA iP6600D"
+msgstr "Canon PIXUS iP6600D"
 
 #: src/xml/xmli18n-tmp.h:3633
-#, fuzzy
 msgid "Canon iP6700D series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon iP6700D series"
 
 #: src/xml/xmli18n-tmp.h:3634
-#, fuzzy
 msgid "Canon PIXMA iP6700D"
-msgstr "Canon PIXMA iP6700"
+msgstr "Canon PIXMA iP6700D"
 
 #: src/xml/xmli18n-tmp.h:3635
-#, fuzzy
 msgid "Canon PIXUS iP6700D"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS iP6700D"
 
 #: src/xml/xmli18n-tmp.h:3636
 msgid "Canon PIXMA iP7100"
 msgstr "Canon PIXMA iP7100"
 
 #: src/xml/xmli18n-tmp.h:3637
-#, fuzzy
 msgid "Canon PIXUS iP7100"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS iP7100"
 
 #: src/xml/xmli18n-tmp.h:3638
-#, fuzzy
 msgid "Canon iP7200 series"
-msgstr "Canon CP-200"
+msgstr "Canon iP7200 series"
 
 #: src/xml/xmli18n-tmp.h:3639
-#, fuzzy
 msgid "Canon PIXMA iP7210"
-msgstr "Canon PIXMA iP7100"
+msgstr "Canon PIXMA iP7210"
 
 #: src/xml/xmli18n-tmp.h:3640
-#, fuzzy
 msgid "Canon PIXMA iP7220"
-msgstr "Canon PIXMA iP6220D"
+msgstr "Canon PIXMA iP7220"
 
 #: src/xml/xmli18n-tmp.h:3641
-#, fuzzy
 msgid "Canon PIXUS iP7230"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS iP7230"
 
 #: src/xml/xmli18n-tmp.h:3642
-#, fuzzy
 msgid "Canon PIXMA iP7240"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA iP7240"
 
 #: src/xml/xmli18n-tmp.h:3643
-#, fuzzy
 msgid "Canon PIXMA iP7250"
-msgstr "Canon PIXMA iP7500"
+msgstr "Canon PIXMA iP7250"
 
 #: src/xml/xmli18n-tmp.h:3644
-#, fuzzy
 msgid "Canon PIXMA iP7260"
-msgstr "Canon PIXMA MP260"
+msgstr "Canon PIXMA iP7260"
 
 #: src/xml/xmli18n-tmp.h:3645
-#, fuzzy
 msgid "Canon PIXMA iP7270"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon PIXMA iP7270"
 
 #: src/xml/xmli18n-tmp.h:3646
-#, fuzzy
 msgid "Canon PIXMA iP7280"
-msgstr "Canon PIXMA MP280"
+msgstr "Canon PIXMA iP7280"
 
 #: src/xml/xmli18n-tmp.h:3647
 msgid "Canon PIXMA iP7500"
 msgstr "Canon PIXMA iP7500"
 
 #: src/xml/xmli18n-tmp.h:3648
-#, fuzzy
 msgid "Canon PIXUS iP7500"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS iP7500"
 
 #: src/xml/xmli18n-tmp.h:3649
 msgid "Canon PIXMA iP8100"
 msgstr "Canon PIXMA iP8100"
 
 #: src/xml/xmli18n-tmp.h:3650
-#, fuzzy
 msgid "Canon PIXUS iP8100"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iP8100"
 
 #: src/xml/xmli18n-tmp.h:3651
 msgid "Canon PIXMA iP8500"
@@ -7171,2677 +6984,2220 @@ msgid "Canon PIXMA iP8600"
 msgstr "Canon PIXMA iP8600"
 
 #: src/xml/xmli18n-tmp.h:3653
-#, fuzzy
 msgid "Canon PIXUS iP8600"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS iP8600"
 
 #: src/xml/xmli18n-tmp.h:3654
 msgid "Canon PIXMA iP9910"
 msgstr "Canon PIXMA iP9910"
 
 #: src/xml/xmli18n-tmp.h:3655
-#, fuzzy
 msgid "Canon PIXUS iP9910"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iP9910"
 
 #: src/xml/xmli18n-tmp.h:3656
 msgid "Canon PIXMA iX4000"
 msgstr "Canon PIXMA iX4000"
 
 #: src/xml/xmli18n-tmp.h:3657
-#, fuzzy
 msgid "Canon iX5000 series"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon iX5000 series"
 
 #: src/xml/xmli18n-tmp.h:3658
 msgid "Canon PIXMA iX5000"
 msgstr "Canon PIXMA iX5000"
 
 #: src/xml/xmli18n-tmp.h:3659
-#, fuzzy
 msgid "Canon PIXUS iX5000"
-msgstr "Canon PIXMA iX5000"
+msgstr "Canon PIXUS iX5000"
 
 #: src/xml/xmli18n-tmp.h:3660
-#, fuzzy
 msgid "Canon iX6500 series"
-msgstr "Canon i6500"
+msgstr "Canon iX6500 series"
 
 #: src/xml/xmli18n-tmp.h:3661
 msgid "Canon PIXMA iX6500"
 msgstr "Canon PIXMA iX6500"
 
 #: src/xml/xmli18n-tmp.h:3662
-#, fuzzy
 msgid "Canon PIXMA iX6510"
-msgstr "Canon PIXMA iX6500"
+msgstr "Canon PIXMA iX6510"
 
 #: src/xml/xmli18n-tmp.h:3663
-#, fuzzy
 msgid "Canon PIXMA iX6520"
-msgstr "Canon PIXMA iX6500"
+msgstr "Canon PIXMA iX6520"
 
 #: src/xml/xmli18n-tmp.h:3664
-#, fuzzy
 msgid "Canon PIXUS iX6530"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS iX6530"
 
 #: src/xml/xmli18n-tmp.h:3665
-#, fuzzy
 msgid "Canon PIXMA iX6540"
-msgstr "Canon PIXMA iX6500"
+msgstr "Canon PIXMA iX6540"
 
 #: src/xml/xmli18n-tmp.h:3666
-#, fuzzy
 msgid "Canon PIXMA iX6550"
-msgstr "Canon PIXMA iX6500"
+msgstr "Canon PIXMA iX6550"
 
 #: src/xml/xmli18n-tmp.h:3667
-#, fuzzy
 msgid "Canon PIXMA iX6560"
-msgstr "Canon PIXMA iX6500"
+msgstr "Canon PIXMA iX6560"
 
 #: src/xml/xmli18n-tmp.h:3668
-#, fuzzy
 msgid "Canon PIXMA iX6580"
-msgstr "Canon PIXMA iX6500"
+msgstr "Canon PIXMA iX6580"
 
 #: src/xml/xmli18n-tmp.h:3669
-#, fuzzy
 msgid "Canon iX7000 series"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon iX7000 series"
 
 #: src/xml/xmli18n-tmp.h:3670
 msgid "Canon PIXMA iX7000"
 msgstr "Canon PIXMA iX7000"
 
 #: src/xml/xmli18n-tmp.h:3671
-#, fuzzy
 msgid "Canon PIXUS iX7000"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon PIXUS iX7000"
 
 #: src/xml/xmli18n-tmp.h:3672
-#, fuzzy
 msgid "Canon Pro9000 series"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon Pro9000 series"
 
 #: src/xml/xmli18n-tmp.h:3673
 msgid "Canon PIXMA Pro9000"
 msgstr "Canon PIXMA Pro9000"
 
 #: src/xml/xmli18n-tmp.h:3674
-#, fuzzy
 msgid "Canon PIXUS Pro9000"
-msgstr "Canon PIXMA Pro9000"
+msgstr "Canon PIXUS Pro9000"
 
 #: src/xml/xmli18n-tmp.h:3675
-#, fuzzy
 msgid "Canon Pro9000 Mk.II series"
-msgstr "Canon PIXMA Pro9000"
+msgstr "Canon Pro9000 Mk.II series"
 
 #: src/xml/xmli18n-tmp.h:3676
 msgid "Canon PIXMA Pro9000mk2"
 msgstr "Canon PIXMA Pro9000mk2"
 
 #: src/xml/xmli18n-tmp.h:3677
-#, fuzzy
 msgid "Canon PIXUS Pro9000mk2"
-msgstr "Canon PIXMA Pro9000mk2"
+msgstr "Canon PIXUS Pro9000mk2"
 
 #: src/xml/xmli18n-tmp.h:3678
-#, fuzzy
 msgid "Canon Pro9500 series"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon Pro9500 series"
 
 #: src/xml/xmli18n-tmp.h:3679
 msgid "Canon PIXMA Pro9500"
 msgstr "Canon PIXMA Pro9500"
 
 #: src/xml/xmli18n-tmp.h:3680
-#, fuzzy
 msgid "Canon PIXUS Pro9500"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon PIXUS Pro9500"
 
 #: src/xml/xmli18n-tmp.h:3681
-#, fuzzy
 msgid "Canon Pro9500 Mk.II series"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon Pro9500 Mk.II series"
 
 #: src/xml/xmli18n-tmp.h:3682
 msgid "Canon PIXMA Pro9500mk2"
 msgstr "Canon PIXMA Pro9500mk2"
 
 #: src/xml/xmli18n-tmp.h:3683
-#, fuzzy
 msgid "Canon PIXUS Pro9500mk2"
-msgstr "Canon PIXMA Pro9500mk2"
+msgstr "Canon PIXUS Pro9500mk2"
 
 #: src/xml/xmli18n-tmp.h:3684
-#, fuzzy
 msgid "Canon MP140 series"
-msgstr "Canon i450"
+msgstr "Canon MP140 series"
 
 #: src/xml/xmli18n-tmp.h:3685
 msgid "Canon PIXMA MP140"
 msgstr "Canon PIXMA MP140"
 
 #: src/xml/xmli18n-tmp.h:3686
-#, fuzzy
 msgid "Canon PIXMA MP145"
-msgstr "Canon PIXMA MP140"
+msgstr "Canon PIXMA MP145"
 
 #: src/xml/xmli18n-tmp.h:3687
-#, fuzzy
 msgid "Canon MP150 series"
-msgstr "Canon i6500"
+msgstr "Canon MP150 series"
 
 #: src/xml/xmli18n-tmp.h:3688
 msgid "Canon PIXMA MP150"
 msgstr "Canon PIXMA MP150"
 
 #: src/xml/xmli18n-tmp.h:3689
-#, fuzzy
 msgid "Canon MP160 series"
-msgstr "Canon i6100"
+msgstr "Canon MP160 series"
 
 #: src/xml/xmli18n-tmp.h:3690
 msgid "Canon PIXMA MP160"
 msgstr "Canon PIXMA MP160"
 
 #: src/xml/xmli18n-tmp.h:3691
-#, fuzzy
 msgid "Canon MP170 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP170 series"
 
 #: src/xml/xmli18n-tmp.h:3692
 msgid "Canon PIXMA MP170"
 msgstr "Canon PIXMA MP170"
 
 #: src/xml/xmli18n-tmp.h:3693
-#, fuzzy
 msgid "Canon PIXUS MP170"
-msgstr "Canon PIXMA MP170"
+msgstr "Canon PIXUS MP170"
 
 #: src/xml/xmli18n-tmp.h:3694
-#, fuzzy
 msgid "Canon MP180 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MP180 series"
 
 #: src/xml/xmli18n-tmp.h:3695
 msgid "Canon PIXMA MP180"
 msgstr "Canon PIXMA MP180"
 
 #: src/xml/xmli18n-tmp.h:3696
-#, fuzzy
 msgid "Canon MP190 series"
-msgstr "Canon i900D"
+msgstr "Canon MP190 series"
 
 #: src/xml/xmli18n-tmp.h:3697
 msgid "Canon PIXMA MP190"
 msgstr "Canon PIXMA MP190"
 
 #: src/xml/xmli18n-tmp.h:3698
-#, fuzzy
 msgid "Canon PIXMA MP198"
-msgstr "Canon PIXMA MP190"
+msgstr "Canon PIXMA MP198"
 
 #: src/xml/xmli18n-tmp.h:3699
-#, fuzzy
 msgid "Canon MP210 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP210 series"
 
 #: src/xml/xmli18n-tmp.h:3700
 msgid "Canon PIXMA MP210"
 msgstr "Canon PIXMA MP210"
 
 #: src/xml/xmli18n-tmp.h:3701
-#, fuzzy
 msgid "Canon PIXMA MP218"
-msgstr "Canon PIXMA MP210"
+msgstr "Canon PIXMA MP218"
 
 #: src/xml/xmli18n-tmp.h:3702
-#, fuzzy
 msgid "Canon MP220 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP220 series"
 
 #: src/xml/xmli18n-tmp.h:3703
 msgid "Canon PIXMA MP220"
 msgstr "Canon PIXMA MP220"
 
 #: src/xml/xmli18n-tmp.h:3704
-#, fuzzy
 msgid "Canon PIXMA MP228"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MP228"
 
 #: src/xml/xmli18n-tmp.h:3705
-#, fuzzy
 msgid "Canon MP230 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP230 series"
 
 #: src/xml/xmli18n-tmp.h:3706
-#, fuzzy
 msgid "Canon PIXMA MP230"
-msgstr "Canon PIXMA MP210"
+msgstr "Canon PIXMA MP230"
 
 #: src/xml/xmli18n-tmp.h:3707
-#, fuzzy
 msgid "Canon PIXMA MP236"
-msgstr "Canon PIXMA MP260"
+msgstr "Canon PIXMA MP236"
 
 #: src/xml/xmli18n-tmp.h:3708
-#, fuzzy
 msgid "Canon PIXMA MP237"
-msgstr "Canon PIXMA MP270"
+msgstr "Canon PIXMA MP237"
 
 #: src/xml/xmli18n-tmp.h:3709
-#, fuzzy
 msgid "Canon MP240 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP240 series"
 
 #: src/xml/xmli18n-tmp.h:3710
 msgid "Canon PIXMA MP240"
 msgstr "Canon PIXMA MP240"
 
 #: src/xml/xmli18n-tmp.h:3711
-#, fuzzy
 msgid "Canon PIXMA MP245"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA MP245"
 
 #: src/xml/xmli18n-tmp.h:3712
-#, fuzzy
 msgid "Canon MP250 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP250 series"
 
 #: src/xml/xmli18n-tmp.h:3713
 msgid "Canon PIXMA MP250"
 msgstr "Canon PIXMA MP250"
 
 #: src/xml/xmli18n-tmp.h:3714
-#, fuzzy
 msgid "Canon PIXMA MP252"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MP252"
 
 #: src/xml/xmli18n-tmp.h:3715
-#, fuzzy
 msgid "Canon PIXMA MP258"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MP258"
 
 #: src/xml/xmli18n-tmp.h:3716
-#, fuzzy
 msgid "Canon PIXMA MP259"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MP259"
 
 #: src/xml/xmli18n-tmp.h:3717
-#, fuzzy
 msgid "Canon MP260 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP260 series"
 
 #: src/xml/xmli18n-tmp.h:3718
 msgid "Canon PIXMA MP260"
 msgstr "Canon PIXMA MP260"
 
 #: src/xml/xmli18n-tmp.h:3719
-#, fuzzy
 msgid "Canon PIXMA MP268"
-msgstr "Canon PIXMA MP260"
+msgstr "Canon PIXMA MP268"
 
 #: src/xml/xmli18n-tmp.h:3720
-#, fuzzy
 msgid "Canon MP270 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP270 series"
 
 #: src/xml/xmli18n-tmp.h:3721
 msgid "Canon PIXMA MP270"
 msgstr "Canon PIXMA MP270"
 
 #: src/xml/xmli18n-tmp.h:3722
-#, fuzzy
 msgid "Canon PIXUS MP270"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS MP270"
 
 #: src/xml/xmli18n-tmp.h:3723
-#, fuzzy
 msgid "Canon PIXMA MP272"
-msgstr "Canon PIXMA MP270"
+msgstr "Canon PIXMA MP272"
 
 #: src/xml/xmli18n-tmp.h:3724
-#, fuzzy
 msgid "Canon PIXMA MP276"
-msgstr "Canon PIXMA MP270"
+msgstr "Canon PIXMA MP276"
 
 #: src/xml/xmli18n-tmp.h:3725
-#, fuzzy
 msgid "Canon MP280 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP280 series"
 
 #: src/xml/xmli18n-tmp.h:3726
 msgid "Canon PIXMA MP280"
 msgstr "Canon PIXMA MP280"
 
 #: src/xml/xmli18n-tmp.h:3727
-#, fuzzy
 msgid "Canon PIXUS MP280"
-msgstr "Canon PIXMA MP280"
+msgstr "Canon PIXUS MP280"
 
 #: src/xml/xmli18n-tmp.h:3728
-#, fuzzy
 msgid "Canon PIXMA MP282"
-msgstr "Canon PIXMA MP280"
+msgstr "Canon PIXMA MP282"
 
 #: src/xml/xmli18n-tmp.h:3729
-#, fuzzy
 msgid "Canon PIXMA MP287"
-msgstr "Canon PIXMA MP280"
+msgstr "Canon PIXMA MP287"
 
 #: src/xml/xmli18n-tmp.h:3730
-#, fuzzy
 msgid "Canon PIXMA MP288"
-msgstr "Canon PIXMA MP280"
+msgstr "Canon PIXMA MP288"
 
 #: src/xml/xmli18n-tmp.h:3731
-#, fuzzy
 msgid "Canon MP360 series"
-msgstr "Canon i6100"
+msgstr "Canon MP360 series"
 
 #: src/xml/xmli18n-tmp.h:3732
 msgid "Canon PIXMA MP360"
 msgstr "Canon PIXMA MP360"
 
 #: src/xml/xmli18n-tmp.h:3733
-#, fuzzy
 msgid "Canon PIXUS MP360"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon PIXUS MP360"
 
 #: src/xml/xmli18n-tmp.h:3734
-#, fuzzy
 msgid "Canon SmartBase MP360"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon SmartBase MP360"
 
 #: src/xml/xmli18n-tmp.h:3735
-#, fuzzy
 msgid "Canon SmartBase MP360S"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon SmartBase MP360S"
 
 #: src/xml/xmli18n-tmp.h:3736
-#, fuzzy
 msgid "Canon MultiPASS MP360"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon MultiPASS MP360"
 
 #: src/xml/xmli18n-tmp.h:3737
-#, fuzzy
 msgid "Canon MP370 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP370 series"
 
 #: src/xml/xmli18n-tmp.h:3738
 msgid "Canon PIXMA MP370"
 msgstr "Canon PIXMA MP370"
 
 #: src/xml/xmli18n-tmp.h:3739
-#, fuzzy
 msgid "Canon PIXUS MP370"
-msgstr "Canon PIXMA MP370"
+msgstr "Canon PIXUS MP370"
 
 #: src/xml/xmli18n-tmp.h:3740
-#, fuzzy
 msgid "Canon SmartBase MP370"
-msgstr "Canon PIXMA MP370"
+msgstr "Canon SmartBase MP370"
 
 #: src/xml/xmli18n-tmp.h:3741
-#, fuzzy
 msgid "Canon MultiPASS MP370"
-msgstr "Canon PIXMA MP370"
+msgstr "Canon MultiPASS MP370"
 
 #: src/xml/xmli18n-tmp.h:3742
 msgid "Canon PIXMA MP375R"
 msgstr "Canon PIXMA MP375R"
 
 #: src/xml/xmli18n-tmp.h:3743
-#, fuzzy
 msgid "Canon PIXUS MP375R"
-msgstr "Canon PIXMA MP375R"
+msgstr "Canon PIXUS MP375R"
 
 #: src/xml/xmli18n-tmp.h:3744
-#, fuzzy
 msgid "Canon MP390 series"
-msgstr "Canon i6500"
+msgstr "Canon MP390 series"
 
 #: src/xml/xmli18n-tmp.h:3745
 msgid "Canon PIXMA MP390"
 msgstr "Canon PIXMA MP390"
 
 #: src/xml/xmli18n-tmp.h:3746
-#, fuzzy
 msgid "Canon PIXUS MP390"
-msgstr "Canon PIXMA MP390"
+msgstr "Canon PIXUS MP390"
 
 #: src/xml/xmli18n-tmp.h:3747
-#, fuzzy
 msgid "Canon SmartBase MP390"
-msgstr "Canon PIXMA MP390"
+msgstr "Canon SmartBase MP390"
 
 #: src/xml/xmli18n-tmp.h:3748
-#, fuzzy
 msgid "Canon MultiPASS MP390"
-msgstr "Canon PIXMA MP390"
+msgstr "Canon MultiPASS MP390"
 
 #: src/xml/xmli18n-tmp.h:3749
-#, fuzzy
 msgid "Canon MP450 series"
-msgstr "Canon i450"
+msgstr "Canon MP450 series"
 
 #: src/xml/xmli18n-tmp.h:3750
 msgid "Canon PIXMA MP450"
 msgstr "Canon PIXMA MP450"
 
 #: src/xml/xmli18n-tmp.h:3751
-#, fuzzy
 msgid "Canon PIXUS MP450"
-msgstr "Canon PIXMA MP450"
+msgstr "Canon PIXUS MP450"
 
 #: src/xml/xmli18n-tmp.h:3752
-#, fuzzy
 msgid "Canon MP460 series"
-msgstr "Canon i6100"
+msgstr "Canon MP460 series"
 
 #: src/xml/xmli18n-tmp.h:3753
 msgid "Canon PIXMA MP460"
 msgstr "Canon PIXMA MP460"
 
 #: src/xml/xmli18n-tmp.h:3754
-#, fuzzy
 msgid "Canon PIXUS MP460"
-msgstr "Canon PIXMA MP460"
+msgstr "Canon PIXUS MP460"
 
 #: src/xml/xmli18n-tmp.h:3755
-#, fuzzy
 msgid "Canon MP470 series"
-msgstr "Canon i470D"
+msgstr "Canon MP470 series"
 
 #: src/xml/xmli18n-tmp.h:3756
 msgid "Canon PIXMA MP470"
 msgstr "Canon PIXMA MP470"
 
 #: src/xml/xmli18n-tmp.h:3757
-#, fuzzy
 msgid "Canon PIXUS MP470"
-msgstr "Canon PIXMA MP470"
+msgstr "Canon PIXUS MP470"
 
 #: src/xml/xmli18n-tmp.h:3758
-#, fuzzy
 msgid "Canon PIXMA MP476"
-msgstr "Canon PIXMA MP470"
+msgstr "Canon PIXMA MP476"
 
 #: src/xml/xmli18n-tmp.h:3759
-#, fuzzy
 msgid "Canon MP480 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MP480 series"
 
 #: src/xml/xmli18n-tmp.h:3760
 msgid "Canon PIXMA MP480"
 msgstr "Canon PIXMA MP480"
 
 #: src/xml/xmli18n-tmp.h:3761
-#, fuzzy
 msgid "Canon PIXUS MP480"
-msgstr "Canon PIXMA MP480"
+msgstr "Canon PIXUS MP480"
 
 #: src/xml/xmli18n-tmp.h:3762
-#, fuzzy
 msgid "Canon PIXMA MP486"
-msgstr "Canon PIXMA MP480"
+msgstr "Canon PIXMA MP486"
 
 #: src/xml/xmli18n-tmp.h:3763
-#, fuzzy
 msgid "Canon MP490 series"
-msgstr "Canon i900D"
+msgstr "Canon MP490 series"
 
 #: src/xml/xmli18n-tmp.h:3764
 msgid "Canon PIXMA MP490"
 msgstr "Canon PIXMA MP490"
 
 #: src/xml/xmli18n-tmp.h:3765
-#, fuzzy
 msgid "Canon PIXUS MP490"
-msgstr "Canon PIXMA MP490"
+msgstr "Canon PIXUS MP490"
 
 #: src/xml/xmli18n-tmp.h:3766
-#, fuzzy
 msgid "Canon PIXMA MP492"
-msgstr "Canon PIXMA MP490"
+msgstr "Canon PIXMA MP492"
 
 #: src/xml/xmli18n-tmp.h:3767
 msgid "Canon PIXMA MP493"
 msgstr "Canon PIXMA MP493"
 
 #: src/xml/xmli18n-tmp.h:3768
-#, fuzzy
 msgid "Canon PIXUS MP493"
-msgstr "Canon PIXMA MP493"
+msgstr "Canon PIXUS MP493"
 
 #: src/xml/xmli18n-tmp.h:3769
 msgid "Canon PIXMA MP495"
 msgstr "Canon PIXMA MP495"
 
 #: src/xml/xmli18n-tmp.h:3770
-#, fuzzy
 msgid "Canon PIXMA MP496"
-msgstr "Canon PIXMA MP490"
+msgstr "Canon PIXMA MP496"
 
 #: src/xml/xmli18n-tmp.h:3771
-#, fuzzy
 msgid "Canon PIXMA MP497"
-msgstr "Canon PIXMA MP490"
+msgstr "Canon PIXMA MP497"
 
 #: src/xml/xmli18n-tmp.h:3772
-#, fuzzy
 msgid "Canon PIXMA MP498"
-msgstr "Canon PIXMA MP490"
+msgstr "Canon PIXMA MP498"
 
 #: src/xml/xmli18n-tmp.h:3773
-#, fuzzy
 msgid "Canon PIXMA MP499"
-msgstr "Canon PIXMA MP490"
+msgstr "Canon PIXMA MP499"
 
 #: src/xml/xmli18n-tmp.h:3774
-#, fuzzy
 msgid "Canon MP500 series"
-msgstr "Canon i6500"
+msgstr "Canon MP500 series"
 
 #: src/xml/xmli18n-tmp.h:3775
 msgid "Canon PIXMA MP500"
 msgstr "Canon PIXMA MP500"
 
 #: src/xml/xmli18n-tmp.h:3776
-#, fuzzy
 msgid "Canon PIXUS MP500"
-msgstr "Canon PIXMA MP500"
+msgstr "Canon PIXUS MP500"
 
 #: src/xml/xmli18n-tmp.h:3777
-#, fuzzy
 msgid "Canon MP510 series"
-msgstr "Canon i6500"
+msgstr "Canon MP510 series"
 
 #: src/xml/xmli18n-tmp.h:3778
 msgid "Canon PIXMA MP510"
 msgstr "Canon PIXMA MP510"
 
 #: src/xml/xmli18n-tmp.h:3779
-#, fuzzy
 msgid "Canon PIXUS MP510"
-msgstr "Canon PIXMA MP510"
+msgstr "Canon PIXUS MP510"
 
 #: src/xml/xmli18n-tmp.h:3780
-#, fuzzy
 msgid "Canon MP520 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP520 series"
 
 #: src/xml/xmli18n-tmp.h:3781
 msgid "Canon PIXMA MP520"
 msgstr "Canon PIXMA MP520"
 
 #: src/xml/xmli18n-tmp.h:3782
-#, fuzzy
 msgid "Canon PIXUS MP520"
-msgstr "Canon PIXMA MP520"
+msgstr "Canon PIXUS MP520"
 
 #: src/xml/xmli18n-tmp.h:3783
-#, fuzzy
 msgid "Canon MP530 series"
-msgstr "Canon i6500"
+msgstr "Canon MP530 series"
 
 #: src/xml/xmli18n-tmp.h:3784
 msgid "Canon PIXMA MP530"
 msgstr "Canon PIXMA MP530"
 
 #: src/xml/xmli18n-tmp.h:3785
-#, fuzzy
 msgid "Canon MP540 series"
-msgstr "Canon i6500"
+msgstr "Canon MP540 series"
 
 #: src/xml/xmli18n-tmp.h:3786
 msgid "Canon PIXMA MP540"
 msgstr "Canon PIXMA MP540"
 
 #: src/xml/xmli18n-tmp.h:3787
-#, fuzzy
 msgid "Canon PIXUS MP540"
-msgstr "Canon PIXMA MP540"
+msgstr "Canon PIXUS MP540"
 
 #: src/xml/xmli18n-tmp.h:3788
-#, fuzzy
 msgid "Canon PIXMA MP545"
-msgstr "Canon PIXMA MP540"
+msgstr "Canon PIXMA MP545"
 
 #: src/xml/xmli18n-tmp.h:3789
-#, fuzzy
 msgid "Canon MP550 series"
-msgstr "Canon i6500"
+msgstr "Canon MP550 series"
 
 #: src/xml/xmli18n-tmp.h:3790
 msgid "Canon PIXMA MP550"
 msgstr "Canon PIXMA MP550"
 
 #: src/xml/xmli18n-tmp.h:3791
-#, fuzzy
 msgid "Canon PIXUS MP550"
-msgstr "Canon PIXMA MP550"
+msgstr "Canon PIXUS MP550"
 
 #: src/xml/xmli18n-tmp.h:3792
-#, fuzzy
 msgid "Canon PIXMA MP558"
-msgstr "Canon PIXMA MP550"
+msgstr "Canon PIXMA MP558"
 
 #: src/xml/xmli18n-tmp.h:3793
-#, fuzzy
 msgid "Canon MP560 series"
-msgstr "Canon i6500"
+msgstr "Canon MP560 series"
 
 #: src/xml/xmli18n-tmp.h:3794
 msgid "Canon PIXMA MP560"
 msgstr "Canon PIXMA MP560"
 
 #: src/xml/xmli18n-tmp.h:3795
-#, fuzzy
 msgid "Canon PIXUS MP560"
-msgstr "Canon PIXMA MP560"
+msgstr "Canon PIXUS MP560"
 
 #: src/xml/xmli18n-tmp.h:3796
-#, fuzzy
 msgid "Canon PIXMA MP568"
-msgstr "Canon PIXMA MP560"
+msgstr "Canon PIXMA MP568"
 
 #: src/xml/xmli18n-tmp.h:3797
-#, fuzzy
 msgid "Canon MP600 series"
-msgstr "Canon i6100"
+msgstr "Canon MP600 series"
 
 #: src/xml/xmli18n-tmp.h:3798
 msgid "Canon PIXMA MP600"
 msgstr "Canon PIXMA MP600"
 
 #: src/xml/xmli18n-tmp.h:3799
-#, fuzzy
 msgid "Canon PIXUS MP600"
-msgstr "Canon PIXMA MP600"
+msgstr "Canon PIXUS MP600"
 
 #: src/xml/xmli18n-tmp.h:3800
 msgid "Canon PIXMA MP600R"
 msgstr "Canon PIXMA MP600R"
 
 #: src/xml/xmli18n-tmp.h:3801
-#, fuzzy
 msgid "Canon MP610 series"
-msgstr "Canon i6100"
+msgstr "Canon MP610 series"
 
 #: src/xml/xmli18n-tmp.h:3802
 msgid "Canon PIXMA MP610"
 msgstr "Canon PIXMA MP610"
 
 #: src/xml/xmli18n-tmp.h:3803
-#, fuzzy
 msgid "Canon PIXUS MP610"
-msgstr "Canon PIXMA MP610"
+msgstr "Canon PIXUS MP610"
 
 #: src/xml/xmli18n-tmp.h:3804
-#, fuzzy
 msgid "Canon MP620 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP620 series"
 
 #: src/xml/xmli18n-tmp.h:3805
 msgid "Canon PIXMA MP620"
 msgstr "Canon PIXMA MP620"
 
 #: src/xml/xmli18n-tmp.h:3806
-#, fuzzy
 msgid "Canon PIXUS MP620"
-msgstr "Canon PIXMA MP620"
+msgstr "Canon PIXUS MP620"
 
 #: src/xml/xmli18n-tmp.h:3807
-#, fuzzy
 msgid "Canon PIXMA MP628"
-msgstr "Canon PIXMA MP620"
+msgstr "Canon PIXMA MP628"
 
 #: src/xml/xmli18n-tmp.h:3808
-#, fuzzy
 msgid "Canon MP630 series"
-msgstr "Canon i6500"
+msgstr "Canon MP630 series"
 
 #: src/xml/xmli18n-tmp.h:3809
 msgid "Canon PIXMA MP630"
 msgstr "Canon PIXMA MP630"
 
 #: src/xml/xmli18n-tmp.h:3810
-#, fuzzy
 msgid "Canon PIXUS MP630"
-msgstr "Canon PIXMA MP630"
+msgstr "Canon PIXUS MP630"
 
 #: src/xml/xmli18n-tmp.h:3811
-#, fuzzy
 msgid "Canon PIXMA MP638"
-msgstr "Canon PIXMA MP630"
+msgstr "Canon PIXMA MP638"
 
 #: src/xml/xmli18n-tmp.h:3812
-#, fuzzy
 msgid "Canon MP640 series"
-msgstr "Canon i6100"
+msgstr "Canon MP640 series"
 
 #: src/xml/xmli18n-tmp.h:3813
 msgid "Canon PIXMA MP640"
 msgstr "Canon PIXMA MP640"
 
 #: src/xml/xmli18n-tmp.h:3814
-#, fuzzy
 msgid "Canon PIXUS MP640"
-msgstr "Canon PIXMA MP640"
+msgstr "Canon PIXUS MP640"
 
 #: src/xml/xmli18n-tmp.h:3815
-#, fuzzy
 msgid "Canon PIXMA MP648"
-msgstr "Canon PIXMA MP640"
+msgstr "Canon PIXMA MP648"
 
 #: src/xml/xmli18n-tmp.h:3816
-#, fuzzy
 msgid "Canon MP700 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP700 series"
 
 #: src/xml/xmli18n-tmp.h:3817
 msgid "Canon PIXMA MP700"
 msgstr "Canon PIXMA MP700"
 
 #: src/xml/xmli18n-tmp.h:3818
-#, fuzzy
 msgid "Canon PIXUS MP700"
-msgstr "Canon PIXUS iP2700"
+msgstr "Canon PIXUS MP700"
 
 #: src/xml/xmli18n-tmp.h:3819
-#, fuzzy
 msgid "Canon SmartBase MP700"
-msgstr "Canon PIXMA MP700"
+msgstr "Canon SmartBase MP700"
 
 #: src/xml/xmli18n-tmp.h:3820
-#, fuzzy
 msgid "Canon MultiPASS MP700"
-msgstr "Canon PIXMA MP700"
+msgstr "Canon MultiPASS MP700"
 
 #: src/xml/xmli18n-tmp.h:3821
-#, fuzzy
 msgid "Canon MP710 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP710 series"
 
 #: src/xml/xmli18n-tmp.h:3822
 msgid "Canon PIXMA MP710"
 msgstr "Canon PIXMA MP710"
 
 #: src/xml/xmli18n-tmp.h:3823
-#, fuzzy
 msgid "Canon PIXUS MP710"
-msgstr "Canon PIXMA MP710"
+msgstr "Canon PIXUS MP710"
 
 #: src/xml/xmli18n-tmp.h:3824
-#, fuzzy
 msgid "Canon MP730 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP730 series"
 
 #: src/xml/xmli18n-tmp.h:3825
 msgid "Canon PIXMA MP730"
 msgstr "Canon PIXMA MP730"
 
 #: src/xml/xmli18n-tmp.h:3826
-#, fuzzy
 msgid "Canon PIXUS MP730"
-msgstr "Canon PIXMA MP730"
+msgstr "Canon PIXUS MP730"
 
 #: src/xml/xmli18n-tmp.h:3827
-#, fuzzy
 msgid "Canon SmartBase MP730"
-msgstr "Canon PIXMA MP730"
+msgstr "Canon SmartBase MP730"
 
 #: src/xml/xmli18n-tmp.h:3828
-#, fuzzy
 msgid "Canon MultiPASS MP730"
-msgstr "Canon PIXMA MP730"
+msgstr "Canon MultiPASS MP730"
 
 #: src/xml/xmli18n-tmp.h:3829
-#, fuzzy
 msgid "Canon MP740 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP740 series"
 
 #: src/xml/xmli18n-tmp.h:3830
 msgid "Canon PIXMA MP740"
 msgstr "Canon PIXMA MP740"
 
 #: src/xml/xmli18n-tmp.h:3831
-#, fuzzy
 msgid "Canon PIXUS MP740"
-msgstr "Canon PIXMA MP740"
+msgstr "Canon PIXUS MP740"
 
 #: src/xml/xmli18n-tmp.h:3832
-#, fuzzy
 msgid "Canon MP750 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP750 series"
 
 #: src/xml/xmli18n-tmp.h:3833
 msgid "Canon PIXMA MP750"
 msgstr "Canon PIXMA MP750"
 
 #: src/xml/xmli18n-tmp.h:3834
-#, fuzzy
 msgid "Canon MP760 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP760 series"
 
 #: src/xml/xmli18n-tmp.h:3835
 msgid "Canon PIXMA MP760"
 msgstr "Canon PIXMA MP760"
 
 #: src/xml/xmli18n-tmp.h:3836
-#, fuzzy
 msgid "Canon MP770 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP770 series"
 
 #: src/xml/xmli18n-tmp.h:3837
 msgid "Canon PIXMA MP770"
 msgstr "Canon PIXMA MP770"
 
 #: src/xml/xmli18n-tmp.h:3838
-#, fuzzy
 msgid "Canon PIXUS MP770"
-msgstr "Canon PIXMA MP770"
+msgstr "Canon PIXUS MP770"
 
 #: src/xml/xmli18n-tmp.h:3839
-#, fuzzy
 msgid "Canon MP780 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP780 series"
 
 #: src/xml/xmli18n-tmp.h:3840
 msgid "Canon PIXMA MP780"
 msgstr "Canon PIXMA MP780"
 
 #: src/xml/xmli18n-tmp.h:3841
-#, fuzzy
 msgid "Canon MP790 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP790 series"
 
 #: src/xml/xmli18n-tmp.h:3842
 msgid "Canon PIXMA MP790"
 msgstr "Canon PIXMA MP790"
 
 #: src/xml/xmli18n-tmp.h:3843
-#, fuzzy
 msgid "Canon PIXUS MP790"
-msgstr "Canon PIXMA MP790"
+msgstr "Canon PIXUS MP790"
 
 #: src/xml/xmli18n-tmp.h:3844
-#, fuzzy
 msgid "Canon MP800 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MP800 series"
 
 #: src/xml/xmli18n-tmp.h:3845
 msgid "Canon PIXMA MP800"
 msgstr "Canon PIXMA MP800"
 
 #: src/xml/xmli18n-tmp.h:3846
-#, fuzzy
 msgid "Canon PIXUS MP800"
-msgstr "Canon PIXMA MP800"
+msgstr "Canon PIXUS MP800"
 
 #: src/xml/xmli18n-tmp.h:3847
 msgid "Canon PIXMA MP800R"
 msgstr "Canon PIXMA MP800R"
 
 #: src/xml/xmli18n-tmp.h:3848
-#, fuzzy
 msgid "Canon MP810 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MP810 series"
 
 #: src/xml/xmli18n-tmp.h:3849
 msgid "Canon PIXMA MP810"
 msgstr "Canon PIXMA MP810"
 
 #: src/xml/xmli18n-tmp.h:3850
-#, fuzzy
 msgid "Canon PIXUS MP810"
-msgstr "Canon PIXMA MP810"
+msgstr "Canon PIXUS MP810"
 
 #: src/xml/xmli18n-tmp.h:3851
-#, fuzzy
 msgid "Canon MP830 series"
-msgstr "Canon i6500"
+msgstr "Canon MP830 series"
 
 #: src/xml/xmli18n-tmp.h:3852
 msgid "Canon PIXMA MP830"
 msgstr "Canon PIXMA MP830"
 
 #: src/xml/xmli18n-tmp.h:3853
-#, fuzzy
 msgid "Canon PIXUS MP830"
-msgstr "Canon PIXMA MP830"
+msgstr "Canon PIXUS MP830"
 
 #: src/xml/xmli18n-tmp.h:3854
-#, fuzzy
 msgid "Canon MP900 series"
-msgstr "Canon i900D"
+msgstr "Canon MP900 series"
 
 #: src/xml/xmli18n-tmp.h:3855
 msgid "Canon PIXMA MP900"
 msgstr "Canon PIXMA MP900"
 
 #: src/xml/xmli18n-tmp.h:3856
-#, fuzzy
 msgid "Canon PIXUS MP900"
-msgstr "Canon PIXMA MP900"
+msgstr "Canon PIXUS MP900"
 
 #: src/xml/xmli18n-tmp.h:3857
-#, fuzzy
 msgid "Canon MP950 series"
-msgstr "Canon PIXMA Pro9500"
+msgstr "Canon MP950 series"
 
 #: src/xml/xmli18n-tmp.h:3858
 msgid "Canon PIXMA MP950"
 msgstr "Canon PIXMA MP950"
 
 #: src/xml/xmli18n-tmp.h:3859
-#, fuzzy
 msgid "Canon PIXUS MP950"
-msgstr "Canon PIXMA MP950"
+msgstr "Canon PIXUS MP950"
 
 #: src/xml/xmli18n-tmp.h:3860
-#, fuzzy
 msgid "Canon MP960 series"
-msgstr "Canon i6100"
+msgstr "Canon MP960 series"
 
 #: src/xml/xmli18n-tmp.h:3861
 msgid "Canon PIXMA MP960"
 msgstr "Canon PIXMA MP960"
 
 #: src/xml/xmli18n-tmp.h:3862
-#, fuzzy
 msgid "Canon PIXUS MP960"
-msgstr "Canon PIXMA MP960"
+msgstr "Canon PIXUS MP960"
 
 #: src/xml/xmli18n-tmp.h:3863
-#, fuzzy
 msgid "Canon MP970 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MP970 series"
 
 #: src/xml/xmli18n-tmp.h:3864
 msgid "Canon PIXMA MP970"
 msgstr "Canon PIXMA MP970"
 
 #: src/xml/xmli18n-tmp.h:3865
-#, fuzzy
 msgid "Canon PIXUS MP970"
-msgstr "Canon PIXMA MP970"
+msgstr "Canon PIXUS MP970"
 
 #: src/xml/xmli18n-tmp.h:3866
-#, fuzzy
 msgid "Canon MP980 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MP980 series"
 
 #: src/xml/xmli18n-tmp.h:3867
 msgid "Canon PIXMA MP980"
 msgstr "Canon PIXMA MP980"
 
 #: src/xml/xmli18n-tmp.h:3868
-#, fuzzy
 msgid "Canon PIXUS MP980"
-msgstr "Canon PIXMA MP980"
+msgstr "Canon PIXUS MP980"
 
 #: src/xml/xmli18n-tmp.h:3869
-#, fuzzy
 msgid "Canon PIXMA MP988"
-msgstr "Canon PIXMA MP980"
+msgstr "Canon PIXMA MP988"
 
 #: src/xml/xmli18n-tmp.h:3870
-#, fuzzy
 msgid "Canon MP990 series"
-msgstr "Canon i900D"
+msgstr "Canon MP990 series"
 
 #: src/xml/xmli18n-tmp.h:3871
 msgid "Canon PIXMA MP990"
 msgstr "Canon PIXMA MP990"
 
 #: src/xml/xmli18n-tmp.h:3872
-#, fuzzy
 msgid "Canon PIXUS MP990"
-msgstr "Canon PIXMA MP990"
+msgstr "Canon PIXUS MP990"
 
 #: src/xml/xmli18n-tmp.h:3873
-#, fuzzy
 msgid "Canon PIXMA MP996"
-msgstr "Canon PIXMA MP990"
+msgstr "Canon PIXMA MP996"
 
 #: src/xml/xmli18n-tmp.h:3874
-#, fuzzy
 msgid "Canon MG2100 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MG2100 series"
 
 #: src/xml/xmli18n-tmp.h:3875
 msgid "Canon PIXMA MG2100"
 msgstr "Canon PIXMA MG2100"
 
 #: src/xml/xmli18n-tmp.h:3876
-#, fuzzy
 msgid "Canon PIXMA MG2110"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2110"
 
 #: src/xml/xmli18n-tmp.h:3877
-#, fuzzy
 msgid "Canon PIXMA MG2120"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2120"
 
 #: src/xml/xmli18n-tmp.h:3878
-#, fuzzy
 msgid "Canon PIXUS MG2130"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXUS MG2130"
 
 #: src/xml/xmli18n-tmp.h:3879
-#, fuzzy
 msgid "Canon PIXMA MG2140"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2140"
 
 #: src/xml/xmli18n-tmp.h:3880
-#, fuzzy
 msgid "Canon PIXMA MG2150"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2150"
 
 #: src/xml/xmli18n-tmp.h:3881
-#, fuzzy
 msgid "Canon PIXMA MG2160"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2160"
 
 #: src/xml/xmli18n-tmp.h:3882
-#, fuzzy
 msgid "Canon PIXMA MG2170"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2170"
 
 #: src/xml/xmli18n-tmp.h:3883
-#, fuzzy
 msgid "Canon PIXMA MG2180"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2180"
 
 #: src/xml/xmli18n-tmp.h:3884
-#, fuzzy
 msgid "Canon MG2200 series"
-msgstr "Canon CP-200"
+msgstr "Canon MG2200 series"
 
 #: src/xml/xmli18n-tmp.h:3885
-#, fuzzy
 msgid "Canon PIXMA MG2210"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2210"
 
 #: src/xml/xmli18n-tmp.h:3886
-#, fuzzy
 msgid "Canon PIXMA MG2220"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2220"
 
 #: src/xml/xmli18n-tmp.h:3887
-#, fuzzy
 msgid "Canon PIXMA MG2240"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2240"
 
 #: src/xml/xmli18n-tmp.h:3888
-#, fuzzy
 msgid "Canon PIXMA MG2250"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2250"
 
 #: src/xml/xmli18n-tmp.h:3889
-#, fuzzy
 msgid "Canon PIXMA MG2260"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2260"
 
 #: src/xml/xmli18n-tmp.h:3890
-#, fuzzy
 msgid "Canon PIXMA MG2270"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2270"
 
 #: src/xml/xmli18n-tmp.h:3891
-#, fuzzy
 msgid "Canon PIXMA MG2280"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2280"
 
 #: src/xml/xmli18n-tmp.h:3892
-#, fuzzy
 msgid "Canon MG2400 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MG2400 series"
 
 #: src/xml/xmli18n-tmp.h:3893
-#, fuzzy
 msgid "Canon PIXMA MG2410"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2410"
 
 #: src/xml/xmli18n-tmp.h:3894
-#, fuzzy
 msgid "Canon PIXMA MG2420"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG2420"
 
 #: src/xml/xmli18n-tmp.h:3895
-#, fuzzy
 msgid "Canon PIXMA MG2440"
-msgstr "Canon PIXMA MP240"
+msgstr "PIXMA MG2440"
 
 #: src/xml/xmli18n-tmp.h:3896
-#, fuzzy
 msgid "Canon PIXMA MG2450"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA MG2450"
 
 #: src/xml/xmli18n-tmp.h:3897
-#, fuzzy
 msgid "Canon PIXMA MG2470"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA MG2470"
 
 #: src/xml/xmli18n-tmp.h:3898
-#, fuzzy
 msgid "Canon PIXMA MG2400"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2400"
 
 #: src/xml/xmli18n-tmp.h:3899
-#, fuzzy
 msgid "Canon MG2500 series"
-msgstr "Canon i6500"
+msgstr "Canon MG2500 series"
 
 #: src/xml/xmli18n-tmp.h:3900
-#, fuzzy
 msgid "Canon PIXMA MG2510"
-msgstr "Canon PIXMA MG2100"
+msgstr "Canon PIXMA MG2510"
 
 #: src/xml/xmli18n-tmp.h:3901
-#, fuzzy
 msgid "Canon PIXMA MG2520"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG2520"
 
 #: src/xml/xmli18n-tmp.h:3902
-#, fuzzy
 msgid "Canon PIXMA MG2540"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA MG2540"
 
 #: src/xml/xmli18n-tmp.h:3903
-#, fuzzy
 msgid "Canon PIXMA MG2550"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MG2550"
 
 #: src/xml/xmli18n-tmp.h:3904
-#, fuzzy
 msgid "Canon PIXMA MG2560"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MG2560"
 
 #: src/xml/xmli18n-tmp.h:3905
-#, fuzzy
 msgid "Canon PIXMA MG2570"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MG2570"
 
 #: src/xml/xmli18n-tmp.h:3906
-#, fuzzy
 msgid "Canon PIXMA MG2580"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MG2580"
 
 #: src/xml/xmli18n-tmp.h:3907
-#, fuzzy
 msgid "Canon MG3100 series"
-msgstr "Canon i6500"
+msgstr "Canon MG3100 series"
 
 #: src/xml/xmli18n-tmp.h:3908
 msgid "Canon PIXMA MG3100"
 msgstr "Canon PIXMA MG3100"
 
 #: src/xml/xmli18n-tmp.h:3909
-#, fuzzy
 msgid "Canon PIXMA MG3110"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3110"
 
 #: src/xml/xmli18n-tmp.h:3910
-#, fuzzy
 msgid "Canon PIXMA MG3120"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3120"
 
 #: src/xml/xmli18n-tmp.h:3911
-#, fuzzy
 msgid "Canon PIXMA MG3122"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3122"
 
 #: src/xml/xmli18n-tmp.h:3912
-#, fuzzy
 msgid "Canon PIXUS MG3130"
-msgstr "Canon PIXUS iP3100"
+msgstr "Canon PIXUS MG3130"
 
 #: src/xml/xmli18n-tmp.h:3913
-#, fuzzy
 msgid "Canon PIXMA MG3140"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3140"
 
 #: src/xml/xmli18n-tmp.h:3914
-#, fuzzy
 msgid "Canon PIXMA MG3150"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3150"
 
 #: src/xml/xmli18n-tmp.h:3915
-#, fuzzy
 msgid "Canon PIXMA MG3160"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3160"
 
 #: src/xml/xmli18n-tmp.h:3916
-#, fuzzy
 msgid "Canon PIXMA MG3170"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3170"
 
 #: src/xml/xmli18n-tmp.h:3917
-#, fuzzy
 msgid "Canon PIXMA MG3180"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3180"
 
 #: src/xml/xmli18n-tmp.h:3918
-#, fuzzy
 msgid "Canon MG3200 series"
-msgstr "Canon CP-200"
+msgstr "Canon MG3200 series"
 
 #: src/xml/xmli18n-tmp.h:3919
-#, fuzzy
 msgid "Canon PIXMA MG3210"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3210"
 
 #: src/xml/xmli18n-tmp.h:3920
-#, fuzzy
 msgid "Canon PIXMA MG3220"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG3220"
 
 #: src/xml/xmli18n-tmp.h:3921
-#, fuzzy
 msgid "Canon PIXMA MG3222"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG3222"
 
 #: src/xml/xmli18n-tmp.h:3922
-#, fuzzy
 msgid "Canon PIXUS MG3230"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXUS MG3230"
 
 #: src/xml/xmli18n-tmp.h:3923
-#, fuzzy
 msgid "Canon PIXMA MG3240"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA MG3240"
 
 #: src/xml/xmli18n-tmp.h:3924
-#, fuzzy
 msgid "Canon PIXMA MG3250"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MG3250"
 
 #: src/xml/xmli18n-tmp.h:3925
-#, fuzzy
 msgid "Canon PIXMA MG3260"
-msgstr "Canon PIXMA MP260"
+msgstr "Canon PIXMA MG3260"
 
 #: src/xml/xmli18n-tmp.h:3926
-#, fuzzy
 msgid "Canon PIXMA MG3270"
-msgstr "Canon PIXMA MP270"
+msgstr "Canon PIXMA MG3270"
 
 #: src/xml/xmli18n-tmp.h:3927
-#, fuzzy
 msgid "Canon MG3500 series"
-msgstr "Canon i6500"
+msgstr "Canon MG3500 series"
 
 #: src/xml/xmli18n-tmp.h:3928
-#, fuzzy
 msgid "Canon PIXMA MG3510"
-msgstr "Canon PIXMA MG3100"
+msgstr "Canon PIXMA MG3510"
 
 #: src/xml/xmli18n-tmp.h:3929
-#, fuzzy
 msgid "Canon PIXMA MG3520"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG3520"
 
 #: src/xml/xmli18n-tmp.h:3930
-#, fuzzy
 msgid "Canon PIXUS MG3530"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXUS MG3530"
 
 #: src/xml/xmli18n-tmp.h:3931
-#, fuzzy
 msgid "Canon PIXMA MG3540"
-msgstr "Canon PIXMA MP540"
+msgstr "Canon PIXMA MG3540"
 
 #: src/xml/xmli18n-tmp.h:3932
-#, fuzzy
 msgid "Canon PIXMA MG3550"
-msgstr "Canon PIXMA MP550"
+msgstr "Canon PIXMA MG3550"
 
 #: src/xml/xmli18n-tmp.h:3933
-#, fuzzy
 msgid "Canon PIXMA MG3560"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon PIXMA MG3560"
 
 #: src/xml/xmli18n-tmp.h:3934
-#, fuzzy
 msgid "Canon PIXMA MG3570"
-msgstr "Canon PIXMA MP370"
+msgstr "Canon PIXMA MG3570"
 
 #: src/xml/xmli18n-tmp.h:3935
-#, fuzzy
 msgid "Canon MG4100 series"
-msgstr "Canon i450"
+msgstr "Canon MG4100 series"
 
 #: src/xml/xmli18n-tmp.h:3936
 msgid "Canon PIXMA MG4100"
 msgstr "Canon PIXMA MG4100"
 
 #: src/xml/xmli18n-tmp.h:3937
-#, fuzzy
 msgid "Canon PIXMA MG4110"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4110"
 
 #: src/xml/xmli18n-tmp.h:3938
-#, fuzzy
 msgid "Canon PIXMA MG4120"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4120"
 
 #: src/xml/xmli18n-tmp.h:3939
-#, fuzzy
 msgid "Canon PIXUS MG4130"
-msgstr "Canon PIXUS iP4100"
+msgstr "Canon PIXUS MG4130"
 
 #: src/xml/xmli18n-tmp.h:3940
-#, fuzzy
 msgid "Canon PIXMA MG4140"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4140"
 
 #: src/xml/xmli18n-tmp.h:3941
-#, fuzzy
 msgid "Canon PIXMA MG4150"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4150"
 
 #: src/xml/xmli18n-tmp.h:3942
-#, fuzzy
 msgid "Canon PIXMA MG4160"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4160"
 
 #: src/xml/xmli18n-tmp.h:3943
-#, fuzzy
 msgid "Canon PIXMA MG4170"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4170"
 
 #: src/xml/xmli18n-tmp.h:3944
-#, fuzzy
 msgid "Canon PIXMA MG4180"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4180"
 
 #: src/xml/xmli18n-tmp.h:3945
-#, fuzzy
 msgid "Canon MG4200 series"
-msgstr "Canon CP-200"
+msgstr "Canon MG4200 series"
 
 #: src/xml/xmli18n-tmp.h:3946
-#, fuzzy
 msgid "Canon PIXMA MG4210"
-msgstr "Canon PIXMA MG4100"
+msgstr "Canon PIXMA MG4210"
 
 #: src/xml/xmli18n-tmp.h:3947
-#, fuzzy
 msgid "Canon PIXMA MG4220"
-msgstr "Canon PIXMA MP220"
+msgstr "Canon PIXMA MG4220"
 
 #: src/xml/xmli18n-tmp.h:3948
-#, fuzzy
 msgid "Canon PIXUS MG4230"
-msgstr "Canon PIXMA MX420"
+msgstr "Canon PIXUS MG4230"
 
 #: src/xml/xmli18n-tmp.h:3949
-#, fuzzy
 msgid "Canon PIXMA MG4240"
-msgstr "Canon PIXMA MP240"
+msgstr "Canon PIXMA MG4240"
 
 #: src/xml/xmli18n-tmp.h:3950
-#, fuzzy
 msgid "Canon PIXMA MG4250"
-msgstr "Canon PIXMA MP250"
+msgstr "Canon PIXMA MG4250"
 
 #: src/xml/xmli18n-tmp.h:3951
-#, fuzzy
 msgid "Canon PIXMA MG4260"
-msgstr "Canon PIXMA MP260"
+msgstr "Canon PIXMA MG4260"
 
 #: src/xml/xmli18n-tmp.h:3952
-#, fuzzy
 msgid "Canon PIXMA MG4270"
-msgstr "Canon PIXMA MP270"
+msgstr "Canon PIXMA MG4270"
 
 #: src/xml/xmli18n-tmp.h:3953
-#, fuzzy
 msgid "Canon PIXMA MG4280"
-msgstr "Canon PIXMA MP280"
+msgstr "Canon PIXMA MG4280"
 
 #: src/xml/xmli18n-tmp.h:3954
-#, fuzzy
 msgid "Canon MG5100 series"
-msgstr "Canon i6500"
+msgstr "Canon MG5100 series"
 
 #: src/xml/xmli18n-tmp.h:3955
 msgid "Canon PIXMA MG5100"
 msgstr "Canon PIXMA MG5100"
 
 #: src/xml/xmli18n-tmp.h:3956
-#, fuzzy
 msgid "Canon PIXMA MG5120"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5120"
 
 #: src/xml/xmli18n-tmp.h:3957
-#, fuzzy
 msgid "Canon PIXUS MG5130"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXUS MG5130"
 
 #: src/xml/xmli18n-tmp.h:3958
-#, fuzzy
 msgid "Canon PIXMA MG5140"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5140"
 
 #: src/xml/xmli18n-tmp.h:3959
-#, fuzzy
 msgid "Canon PIXMA MG5150"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5150"
 
 #: src/xml/xmli18n-tmp.h:3960
-#, fuzzy
 msgid "Canon PIXMA MG5170"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5170"
 
 #: src/xml/xmli18n-tmp.h:3961
-#, fuzzy
 msgid "Canon PIXMA MG5180"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5180"
 
 #: src/xml/xmli18n-tmp.h:3962
-#, fuzzy
 msgid "Canon MG5200 series"
-msgstr "Canon CP-200"
+msgstr "Canon MG5200 series"
 
 #: src/xml/xmli18n-tmp.h:3963
 msgid "Canon PIXMA MG5200"
 msgstr "Canon PIXMA MG5200"
 
 #: src/xml/xmli18n-tmp.h:3964
-#, fuzzy
 msgid "Canon PIXMA MG5210"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5210"
 
 #: src/xml/xmli18n-tmp.h:3965
-#, fuzzy
 msgid "Canon PIXMA MG5220"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5220"
 
 #: src/xml/xmli18n-tmp.h:3966
-#, fuzzy
 msgid "Canon PIXUS MG5230"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXUS MG5230"
 
 #: src/xml/xmli18n-tmp.h:3967
-#, fuzzy
 msgid "Canon PIXMA MG5240"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5240"
 
 #: src/xml/xmli18n-tmp.h:3968
-#, fuzzy
 msgid "Canon PIXMA MG5250"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5250"
 
 #: src/xml/xmli18n-tmp.h:3969
-#, fuzzy
 msgid "Canon PIXMA MG5270"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5270"
 
 #: src/xml/xmli18n-tmp.h:3970
-#, fuzzy
 msgid "Canon PIXMA MG5280"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5280"
 
 #: src/xml/xmli18n-tmp.h:3971
-#, fuzzy
 msgid "Canon MG5300 series"
-msgstr "Canon i6500"
+msgstr "Canon MG5300 series"
 
 #: src/xml/xmli18n-tmp.h:3972
 msgid "Canon PIXMA MG5300"
 msgstr "Canon PIXMA MG5300"
 
 #: src/xml/xmli18n-tmp.h:3973
-#, fuzzy
 msgid "Canon PIXMA MG5310"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXMA MG5310"
 
 #: src/xml/xmli18n-tmp.h:3974
-#, fuzzy
 msgid "Canon PIXMA MG5320"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXMA MG5320"
 
 #: src/xml/xmli18n-tmp.h:3975
-#, fuzzy
 msgid "Canon PIXUS MG5330"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXUS MG5330"
 
 #: src/xml/xmli18n-tmp.h:3976
-#, fuzzy
 msgid "Canon PIXMA MG5340"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXMA MG5340"
 
 #: src/xml/xmli18n-tmp.h:3977
-#, fuzzy
 msgid "Canon PIXMA MG5350"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXMA MG5350"
 
 #: src/xml/xmli18n-tmp.h:3978
-#, fuzzy
 msgid "Canon PIXMA MG5370"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXMA MG5370"
 
 #: src/xml/xmli18n-tmp.h:3979
-#, fuzzy
 msgid "Canon PIXMA MG5380"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXMA MG5380"
 
 #: src/xml/xmli18n-tmp.h:3980
-#, fuzzy
 msgid "Canon MG5400 series"
-msgstr "Canon i6500"
+msgstr "Canon MG5400 series"
 
 #: src/xml/xmli18n-tmp.h:3981
-#, fuzzy
 msgid "Canon PIXMA MG5410"
-msgstr "Canon PIXMA MG5100"
+msgstr "Canon PIXMA MG5410"
 
 #: src/xml/xmli18n-tmp.h:3982
-#, fuzzy
 msgid "Canon PIXMA MG5420"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5420"
 
 #: src/xml/xmli18n-tmp.h:3983
-#, fuzzy
 msgid "Canon PIXMA MG5422"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5422"
 
 #: src/xml/xmli18n-tmp.h:3984
-#, fuzzy
 msgid "Canon PIXUS MG5430"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXUS MG5430"
 
 #: src/xml/xmli18n-tmp.h:3985
-#, fuzzy
 msgid "Canon PIXMA MG5440"
-msgstr "Canon PIXMA MP540"
+msgstr "Canon PIXMA MG5440"
 
 #: src/xml/xmli18n-tmp.h:3986
-#, fuzzy
 msgid "Canon PIXMA MG5450"
-msgstr "Canon PIXMA MP450"
+msgstr "Canon PIXMA MG5450"
 
 #: src/xml/xmli18n-tmp.h:3987
-#, fuzzy
 msgid "Canon PIXMA MG5460"
-msgstr "Canon PIXMA MP460"
+msgstr "Canon PIXMA MG5460"
 
 #: src/xml/xmli18n-tmp.h:3988
-#, fuzzy
 msgid "Canon PIXMA MG5470"
-msgstr "Canon PIXMA MP470"
+msgstr "Canon PIXMA MG5470"
 
 #: src/xml/xmli18n-tmp.h:3989
-#, fuzzy
 msgid "Canon PIXMA MG5480"
-msgstr "Canon PIXMA MP480"
+msgstr "Canon PIXMA MG5480"
 
 #: src/xml/xmli18n-tmp.h:3990
-#, fuzzy
 msgid "Canon MG5500 series"
-msgstr "Canon i6500"
+msgstr "Canon MG5500 series"
 
 #: src/xml/xmli18n-tmp.h:3991
-#, fuzzy
 msgid "Canon PIXMA MG5520"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5520"
 
 #: src/xml/xmli18n-tmp.h:3992
-#, fuzzy
 msgid "Canon PIXMA MG5522"
-msgstr "Canon PIXMA MG5200"
+msgstr "Canon PIXMA MG5522"
 
 #: src/xml/xmli18n-tmp.h:3993
-#, fuzzy
 msgid "Canon PIXUS MG5530"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXUS MG5530"
 
 #: src/xml/xmli18n-tmp.h:3994
-#, fuzzy
 msgid "Canon PIXMA MG5540"
-msgstr "Canon PIXMA MP540"
+msgstr "Canon PIXMA MG5540"
 
 #: src/xml/xmli18n-tmp.h:3995
-#, fuzzy
 msgid "Canon PIXMA MG5550"
-msgstr "Canon PIXMA MP550"
+msgstr "Canon PIXMA MG5550"
 
 #: src/xml/xmli18n-tmp.h:3996
-#, fuzzy
 msgid "Canon PIXMA MG5570"
-msgstr "Canon PIXMA MP550"
+msgstr "Canon PIXMA MG5570"
 
 #: src/xml/xmli18n-tmp.h:3997
-#, fuzzy
 msgid "Canon MG6100 series"
-msgstr "Canon i6100"
+msgstr "Canon MG6100 series"
 
 #: src/xml/xmli18n-tmp.h:3998
 msgid "Canon PIXMA MG6100"
 msgstr "Canon PIXMA MG6100"
 
 #: src/xml/xmli18n-tmp.h:3999
-#, fuzzy
 msgid "Canon PIXMA MG6110"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6110"
 
 #: src/xml/xmli18n-tmp.h:4000
-#, fuzzy
 msgid "Canon PIXMA MG6120"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6120"
 
 #: src/xml/xmli18n-tmp.h:4001
-#, fuzzy
 msgid "Canon PIXUS MG6130"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXUS MG6130"
 
 #: src/xml/xmli18n-tmp.h:4002
-#, fuzzy
 msgid "Canon PIXMA MG6140"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6140"
 
 #: src/xml/xmli18n-tmp.h:4003
-#, fuzzy
 msgid "Canon PIXMA MG6150"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6150"
 
 #: src/xml/xmli18n-tmp.h:4004
-#, fuzzy
 msgid "Canon PIXMA MG6170"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6170"
 
 #: src/xml/xmli18n-tmp.h:4005
-#, fuzzy
 msgid "Canon PIXMA MG6180"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6180"
 
 #: src/xml/xmli18n-tmp.h:4006
-#, fuzzy
 msgid "Canon MG6200 series"
-msgstr "Canon CP-200"
+msgstr "Canon MG6200 series"
 
 #: src/xml/xmli18n-tmp.h:4007
 msgid "Canon PIXMA MG6200"
 msgstr "Canon PIXMA MG6200"
 
 #: src/xml/xmli18n-tmp.h:4008
-#, fuzzy
 msgid "Canon PIXMA MG6210"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6210"
 
 #: src/xml/xmli18n-tmp.h:4009
-#, fuzzy
 msgid "Canon PIXMA MG6220"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6220"
 
 #: src/xml/xmli18n-tmp.h:4010
-#, fuzzy
 msgid "Canon PIXUS MG6230"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXUS MG6230"
 
 #: src/xml/xmli18n-tmp.h:4011
-#, fuzzy
 msgid "Canon PIXMA MG6240"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6240"
 
 #: src/xml/xmli18n-tmp.h:4012
-#, fuzzy
 msgid "Canon PIXMA MG6250"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6250"
 
 #: src/xml/xmli18n-tmp.h:4013
-#, fuzzy
 msgid "Canon PIXMA MG6270"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6270"
 
 #: src/xml/xmli18n-tmp.h:4014
-#, fuzzy
 msgid "Canon PIXMA MG6280"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6280"
 
 #: src/xml/xmli18n-tmp.h:4015
-#, fuzzy
 msgid "Canon MG6300 series"
-msgstr "Canon i6500"
+msgstr "Canon MG6300 series"
 
 #: src/xml/xmli18n-tmp.h:4016
-#, fuzzy
 msgid "Canon PIXMA MG6310"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6310"
 
 #: src/xml/xmli18n-tmp.h:4017
-#, fuzzy
 msgid "Canon PIXMA MG6320"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6320"
 
 #: src/xml/xmli18n-tmp.h:4018
-#, fuzzy
 msgid "Canon PIXUS MG6330"
-msgstr "Canon PIXMA MP630"
+msgstr "Canon PIXUS MG6330"
 
 #: src/xml/xmli18n-tmp.h:4019
-#, fuzzy
 msgid "Canon PIXMA MG6340"
-msgstr "Canon PIXMA MP630"
+msgstr "Canon PIXMA MG6340"
 
 #: src/xml/xmli18n-tmp.h:4020
-#, fuzzy
 msgid "Canon PIXMA MG6350"
-msgstr "Canon PIXMA MP630"
+msgstr "Canon PIXMA MG6350"
 
 #: src/xml/xmli18n-tmp.h:4021
-#, fuzzy
 msgid "Canon PIXMA MG6360"
-msgstr "Canon PIXMA MP360"
+msgstr "Canon PIXMA MG6360"
 
 #: src/xml/xmli18n-tmp.h:4022
-#, fuzzy
 msgid "Canon PIXMA MG6370"
-msgstr "Canon PIXMA MP370"
+msgstr "Canon PIXMA MG6370"
 
 #: src/xml/xmli18n-tmp.h:4023
-#, fuzzy
 msgid "Canon PIXMA MG6380"
-msgstr "Canon PIXMA MP630"
+msgstr "Canon PIXMA MG6380"
 
 #: src/xml/xmli18n-tmp.h:4024
-#, fuzzy
 msgid "Canon MG6400 series"
-msgstr "Canon i6100"
+msgstr "Canon MG6400 series"
 
 #: src/xml/xmli18n-tmp.h:4025
-#, fuzzy
 msgid "Canon PIXMA MG6410"
-msgstr "Canon PIXMA MG6100"
+msgstr "Canon PIXMA MG6410"
 
 #: src/xml/xmli18n-tmp.h:4026
-#, fuzzy
 msgid "Canon PIXMA MG6420"
-msgstr "Canon PIXMA MG6200"
+msgstr "Canon PIXMA MG6420"
 
 #: src/xml/xmli18n-tmp.h:4027
-#, fuzzy
 msgid "Canon PIXMA MG6440"
-msgstr "Canon PIXMA MP640"
+msgstr "Canon PIXMA MG6440"
 
 #: src/xml/xmli18n-tmp.h:4028
-#, fuzzy
 msgid "Canon PIXMA MG6450"
-msgstr "Canon PIXMA MP450"
+msgstr "Canon PIXMA MG6450"
 
 #: src/xml/xmli18n-tmp.h:4029
-#, fuzzy
 msgid "Canon PIXMA MG6470"
-msgstr "Canon PIXMA MP470"
+msgstr "Canon PIXMA MG6470"
 
 #: src/xml/xmli18n-tmp.h:4030
-#, fuzzy
 msgid "Canon MG6500 series"
-msgstr "Canon i6500"
+msgstr "Canon MG6500 series"
 
 #: src/xml/xmli18n-tmp.h:4031
-#, fuzzy
 msgid "Canon PIXUS MG6530"
-msgstr "Canon PIXMA MG5300"
+msgstr "Canon PIXUS MG6530"
 
 #: src/xml/xmli18n-tmp.h:4032
-#, fuzzy
 msgid "Canon MG7100 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MG7100 series"
 
 #: src/xml/xmli18n-tmp.h:4033
-#, fuzzy
 msgid "Canon PIXMA MG7110"
-msgstr "Canon PIXMA MP710"
+msgstr "Canon PIXMA MG7110"
 
 #: src/xml/xmli18n-tmp.h:4034
-#, fuzzy
 msgid "Canon PIXMA MG7120"
-msgstr "Canon PIXMA MP710"
+msgstr "Canon PIXMA MG7120"
 
 #: src/xml/xmli18n-tmp.h:4035
-#, fuzzy
 msgid "Canon PIXUS MG7130"
-msgstr "Canon PIXMA MP710"
+msgstr "Canon PIXUS MG7130"
 
 #: src/xml/xmli18n-tmp.h:4036
-#, fuzzy
 msgid "Canon PIXMA MG7140"
-msgstr "Canon PIXMA MP140"
+msgstr "Canon PIXMA MG7140"
 
 #: src/xml/xmli18n-tmp.h:4037
-#, fuzzy
 msgid "Canon PIXMA MG7150"
-msgstr "Canon PIXMA MP150"
+msgstr "Canon PIXMA MG7150"
 
 #: src/xml/xmli18n-tmp.h:4038
-#, fuzzy
 msgid "Canon PIXMA MG7170"
-msgstr "Canon PIXMA MP170"
+msgstr "Canon PIXMA MG7170"
 
 #: src/xml/xmli18n-tmp.h:4039
-#, fuzzy
 msgid "Canon MG8100 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MG8100 series"
 
 #: src/xml/xmli18n-tmp.h:4040
 msgid "Canon PIXMA MG8100"
 msgstr "Canon PIXMA MG8100"
 
 #: src/xml/xmli18n-tmp.h:4041
-#, fuzzy
 msgid "Canon PIXMA MG8120"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXMA MG8120"
 
 #: src/xml/xmli18n-tmp.h:4042
-#, fuzzy
 msgid "Canon PIXUS MG8130"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXUS MG8130"
 
 #: src/xml/xmli18n-tmp.h:4043
-#, fuzzy
 msgid "Canon PIXMA MG8140"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXMA MG8140"
 
 #: src/xml/xmli18n-tmp.h:4044
-#, fuzzy
 msgid "Canon PIXMA MG8150"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXMA MG8150"
 
 #: src/xml/xmli18n-tmp.h:4045
-#, fuzzy
 msgid "Canon PIXMA MG8170"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXMA MG8170"
 
 #: src/xml/xmli18n-tmp.h:4046
-#, fuzzy
 msgid "Canon PIXMA MG8180"
-msgstr "Canon PIXMA MG8100"
+msgstr "Canon PIXMA MG8180"
 
 #: src/xml/xmli18n-tmp.h:4047
-#, fuzzy
 msgid "Canon MG8200 series"
-msgstr "Canon CP-200"
+msgstr "Canon MG8200 series"
 
 #: src/xml/xmli18n-tmp.h:4048
 msgid "Canon PIXMA MG8200"
 msgstr "Canon PIXMA MG8200"
 
 #: src/xml/xmli18n-tmp.h:4049
-#, fuzzy
 msgid "Canon PIXMA MG8220"
-msgstr "Canon PIXMA MG8200"
+msgstr "Canon PIXMA MG8220"
 
 #: src/xml/xmli18n-tmp.h:4050
-#, fuzzy
 msgid "Canon PIXUS MG8230"
-msgstr "Canon PIXMA MG8200"
+msgstr "Canon PIXUS MG8230"
 
 #: src/xml/xmli18n-tmp.h:4051
-#, fuzzy
 msgid "Canon PIXMA MG8240"
-msgstr "Canon PIXMA MG8200"
+msgstr "Canon PIXMA MG8240"
 
 #: src/xml/xmli18n-tmp.h:4052
-#, fuzzy
 msgid "Canon PIXMA MG8250"
-msgstr "Canon PIXMA MG8200"
+msgstr "Canon PIXMA MG8250"
 
 #: src/xml/xmli18n-tmp.h:4053
-#, fuzzy
 msgid "Canon PIXMA MG8270"
-msgstr "Canon PIXMA MG8200"
+msgstr "Canon PIXMA MG8270"
 
 #: src/xml/xmli18n-tmp.h:4054
-#, fuzzy
 msgid "Canon PIXMA MG8280"
-msgstr "Canon PIXMA MG8200"
+msgstr "Canon PIXMA MG8280"
 
 #: src/xml/xmli18n-tmp.h:4055
-#, fuzzy
 msgid "Canon MX300 series"
-msgstr "Canon i6500"
+msgstr "Canon MX300 series"
 
 #: src/xml/xmli18n-tmp.h:4056
 msgid "Canon PIXMA MX300"
 msgstr "Canon PIXMA MX300"
 
 #: src/xml/xmli18n-tmp.h:4057
-#, fuzzy
 msgid "Canon PIXMA MX308"
-msgstr "Canon PIXMA MX300"
+msgstr "Canon PIXMA MX308"
 
 #: src/xml/xmli18n-tmp.h:4058
-#, fuzzy
 msgid "Canon MX310 series"
-msgstr "Canon i6500"
+msgstr "Canon MX310 series"
 
 #: src/xml/xmli18n-tmp.h:4059
 msgid "Canon PIXMA MX310"
 msgstr "Canon PIXMA MX310"
 
 #: src/xml/xmli18n-tmp.h:4060
-#, fuzzy
 msgid "Canon PIXMA MX318"
-msgstr "Canon PIXMA MX310"
+msgstr "Canon PIXMA MX318"
 
 #: src/xml/xmli18n-tmp.h:4061
-#, fuzzy
 msgid "Canon MX320 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MX320 series"
 
 #: src/xml/xmli18n-tmp.h:4062
 msgid "Canon PIXMA MX320"
 msgstr "Canon PIXMA MX320"
 
 #: src/xml/xmli18n-tmp.h:4063
-#, fuzzy
 msgid "Canon PIXMA MX328"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX328"
 
 #: src/xml/xmli18n-tmp.h:4064
-#, fuzzy
 msgid "Canon MX330 series"
-msgstr "Canon i6500"
+msgstr "Canon MX330 series"
 
 #: src/xml/xmli18n-tmp.h:4065
 msgid "Canon PIXMA MX330"
 msgstr "Canon PIXMA MX330"
 
 #: src/xml/xmli18n-tmp.h:4066
-#, fuzzy
 msgid "Canon PIXMA MX338"
-msgstr "Canon PIXMA MX330"
+msgstr "Canon PIXMA MX338"
 
 #: src/xml/xmli18n-tmp.h:4067
-#, fuzzy
 msgid "Canon MX340 series"
-msgstr "Canon i6500"
+msgstr "Canon MX340 series"
 
 #: src/xml/xmli18n-tmp.h:4068
 msgid "Canon PIXMA MX340"
 msgstr "Canon PIXMA MX340"
 
 #: src/xml/xmli18n-tmp.h:4069
-#, fuzzy
 msgid "Canon PIXMA MX347"
-msgstr "Canon PIXMA MX340"
+msgstr "Canon PIXMA MX347"
 
 #: src/xml/xmli18n-tmp.h:4070
-#, fuzzy
 msgid "Canon PIXMA MX348"
-msgstr "Canon PIXMA MX340"
+msgstr "Canon PIXMA MX348"
 
 #: src/xml/xmli18n-tmp.h:4071
-#, fuzzy
 msgid "Canon MX350 series"
-msgstr "Canon i6500"
+msgstr "Canon MX350 series"
 
 #: src/xml/xmli18n-tmp.h:4072
 msgid "Canon PIXMA MX350"
 msgstr "Canon PIXMA MX350"
 
 #: src/xml/xmli18n-tmp.h:4073
-#, fuzzy
 msgid "Canon PIXUS MX350"
-msgstr "Canon PIXMA MX350"
+msgstr "Canon PIXUS MX350"
 
 #: src/xml/xmli18n-tmp.h:4074
-#, fuzzy
 msgid "Canon PIXMA MX357"
-msgstr "Canon PIXMA MX350"
+msgstr "Canon PIXMA MX357"
 
 #: src/xml/xmli18n-tmp.h:4075
-#, fuzzy
 msgid "Canon PIXMA MX358"
-msgstr "Canon PIXMA MX350"
+msgstr "Canon PIXMA MX358"
 
 #: src/xml/xmli18n-tmp.h:4076
-#, fuzzy
 msgid "Canon MX360 series"
-msgstr "Canon i6100"
+msgstr "Canon MX360 series"
 
 #: src/xml/xmli18n-tmp.h:4077
 msgid "Canon PIXMA MX360"
 msgstr "Canon PIXMA MX360"
 
 #: src/xml/xmli18n-tmp.h:4078
-#, fuzzy
 msgid "Canon PIXMA MX366"
-msgstr "Canon PIXMA MX360"
+msgstr "Canon PIXMA MX366"
 
 #: src/xml/xmli18n-tmp.h:4079
-#, fuzzy
 msgid "Canon PIXMA MX368"
-msgstr "Canon PIXMA MX360"
+msgstr "Canon PIXMA MX368"
 
 #: src/xml/xmli18n-tmp.h:4080
-#, fuzzy
 msgid "Canon MX370 series"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon MX370 series"
 
 #: src/xml/xmli18n-tmp.h:4081
 msgid "Canon PIXMA MX370"
 msgstr "Canon PIXMA MX370"
 
 #: src/xml/xmli18n-tmp.h:4082
-#, fuzzy
 msgid "Canon PIXMA MX371"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX371"
 
 #: src/xml/xmli18n-tmp.h:4083
-#, fuzzy
 msgid "Canon PIXMA MX372"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX372"
 
 #: src/xml/xmli18n-tmp.h:4084
-#, fuzzy
 msgid "Canon PIXMA MX374"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX374"
 
 #: src/xml/xmli18n-tmp.h:4085
-#, fuzzy
 msgid "Canon PIXMA MX375"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX375"
 
 #: src/xml/xmli18n-tmp.h:4086
-#, fuzzy
 msgid "Canon PIXMA MX376"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX376"
 
 #: src/xml/xmli18n-tmp.h:4087
-#, fuzzy
 msgid "Canon PIXMA MX377"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX377"
 
 #: src/xml/xmli18n-tmp.h:4088
-#, fuzzy
 msgid "Canon PIXMA MX378"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX378"
 
 #: src/xml/xmli18n-tmp.h:4089
-#, fuzzy
 msgid "Canon MX390 series"
-msgstr "Canon i6500"
+msgstr "Canon MX390 series"
 
 #: src/xml/xmli18n-tmp.h:4090
-#, fuzzy
 msgid "Canon PIXMA MX391"
-msgstr "Canon PIXMA MX310"
+msgstr "Canon PIXMA MX391"
 
 #: src/xml/xmli18n-tmp.h:4091
-#, fuzzy
 msgid "Canon PIXMA MX392"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX392"
 
 #: src/xml/xmli18n-tmp.h:4092
-#, fuzzy
 msgid "Canon PIXMA MX394"
-msgstr "Canon PIXMA MX340"
+msgstr "Canon PIXMA MX394"
 
 #: src/xml/xmli18n-tmp.h:4093
-#, fuzzy
 msgid "Canon PIXMA MX395"
-msgstr "Canon PIXMA MX350"
+msgstr "Canon PIXMA MX395"
 
 #: src/xml/xmli18n-tmp.h:4094
-#, fuzzy
 msgid "Canon PIXMA MX396"
-msgstr "Canon PIXMA MX360"
+msgstr "Canon PIXMA MX396"
 
 #: src/xml/xmli18n-tmp.h:4095
-#, fuzzy
 msgid "Canon PIXMA MX397"
-msgstr "Canon PIXMA MX370"
+msgstr "Canon PIXMA MX397"
 
 #: src/xml/xmli18n-tmp.h:4096
-#, fuzzy
 msgid "Canon PIXMA MX398"
-msgstr "Canon PIXMA MX300"
+msgstr "Canon PIXMA MX398"
 
 #: src/xml/xmli18n-tmp.h:4097
-#, fuzzy
 msgid "Canon MX410 series"
-msgstr "Canon i450"
+msgstr "Canon MX410 series"
 
 #: src/xml/xmli18n-tmp.h:4098
 msgid "Canon PIXMA MX410"
 msgstr "Canon PIXMA MX410"
 
 #: src/xml/xmli18n-tmp.h:4099
-#, fuzzy
 msgid "Canon PIXMA MX416"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX416"
 
 #: src/xml/xmli18n-tmp.h:4100
-#, fuzzy
 msgid "Canon PIXMA MX418"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX418"
 
 #: src/xml/xmli18n-tmp.h:4101
-#, fuzzy
 msgid "Canon MX420 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MX420 series"
 
 #: src/xml/xmli18n-tmp.h:4102
 msgid "Canon PIXMA MX420"
 msgstr "Canon PIXMA MX420"
 
 #: src/xml/xmli18n-tmp.h:4103
-#, fuzzy
 msgid "Canon PIXUS MX420"
-msgstr "Canon PIXMA MX420"
+msgstr "Canon PIXUS MX420"
 
 #: src/xml/xmli18n-tmp.h:4104
-#, fuzzy
 msgid "Canon PIXMA MX426"
-msgstr "Canon PIXMA MX420"
+msgstr "Canon PIXMA MX426"
 
 #: src/xml/xmli18n-tmp.h:4105
-#, fuzzy
 msgid "Canon PIXMA MX428"
-msgstr "Canon PIXMA MX420"
+msgstr "Canon PIXMA MX428"
 
 #: src/xml/xmli18n-tmp.h:4106
-#, fuzzy
 msgid "Canon MX430 series"
-msgstr "Canon i6500"
+msgstr "Canon MX430 series"
 
 #: src/xml/xmli18n-tmp.h:4107
 msgid "Canon PIXMA MX430"
 msgstr "Canon PIXMA MX430"
 
 #: src/xml/xmli18n-tmp.h:4108
-#, fuzzy
 msgid "Canon PIXMA MX431"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX431"
 
 #: src/xml/xmli18n-tmp.h:4109
-#, fuzzy
 msgid "Canon PIXMA MX432"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX432"
 
 #: src/xml/xmli18n-tmp.h:4110
-#, fuzzy
 msgid "Canon PIXMA MX434"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX434"
 
 #: src/xml/xmli18n-tmp.h:4111
-#, fuzzy
 msgid "Canon PIXMA MX435"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX435"
 
 #: src/xml/xmli18n-tmp.h:4112
-#, fuzzy
 msgid "Canon PIXMA MX436"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX436"
 
 #: src/xml/xmli18n-tmp.h:4113
-#, fuzzy
 msgid "Canon PIXMA MX437"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX437"
 
 #: src/xml/xmli18n-tmp.h:4114
-#, fuzzy
 msgid "Canon PIXMA MX438"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX438"
 
 #: src/xml/xmli18n-tmp.h:4115
-#, fuzzy
 msgid "Canon PIXMA MX439"
-msgstr "Canon PIXMA MX430"
+msgstr "Canon PIXMA MX439"
 
 #: src/xml/xmli18n-tmp.h:4116
-#, fuzzy
 msgid "Canon MX450 series"
-msgstr "Canon i450"
+msgstr "Canon MX450 series"
 
 #: src/xml/xmli18n-tmp.h:4117
-#, fuzzy
 msgid "Canon PIXMA MX451"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX451"
 
 #: src/xml/xmli18n-tmp.h:4118
-#, fuzzy
 msgid "Canon PIXMA MX452"
-msgstr "Canon PIXMA MX420"
+msgstr "Canon PIXMA MX452"
 
 #: src/xml/xmli18n-tmp.h:4119
-#, fuzzy
 msgid "Canon PIXMA MX454"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX454"
 
 #: src/xml/xmli18n-tmp.h:4120
-#, fuzzy
 msgid "Canon PIXMA MX455"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX455"
 
 #: src/xml/xmli18n-tmp.h:4121
-#, fuzzy
 msgid "Canon PIXMA MX456"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX456"
 
 #: src/xml/xmli18n-tmp.h:4122
-#, fuzzy
 msgid "Canon PIXMA MX457"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX457"
 
 #: src/xml/xmli18n-tmp.h:4123
-#, fuzzy
 msgid "Canon PIXMA MX458"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX458"
 
 #: src/xml/xmli18n-tmp.h:4124
-#, fuzzy
 msgid "Canon PIXMA MX459"
-msgstr "Canon PIXMA MX410"
+msgstr "Canon PIXMA MX459"
 
 #: src/xml/xmli18n-tmp.h:4125
-#, fuzzy
 msgid "Canon MX510 series"
-msgstr "Canon i6500"
+msgstr "Canon MX510 series"
 
 #: src/xml/xmli18n-tmp.h:4126
 msgid "Canon PIXMA MX510"
 msgstr "Canon PIXMA MX510"
 
 #: src/xml/xmli18n-tmp.h:4127
-#, fuzzy
 msgid "Canon PIXMA MX511"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX511"
 
 #: src/xml/xmli18n-tmp.h:4128
-#, fuzzy
 msgid "Canon PIXMA MX512"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX512"
 
 #: src/xml/xmli18n-tmp.h:4129
-#, fuzzy
 msgid "Canon PIXUS MX513"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXUS MX513"
 
 #: src/xml/xmli18n-tmp.h:4130
-#, fuzzy
 msgid "Canon PIXMA MX514"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX514"
 
 #: src/xml/xmli18n-tmp.h:4131
-#, fuzzy
 msgid "Canon PIXMA MX515"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX515"
 
 #: src/xml/xmli18n-tmp.h:4132
-#, fuzzy
 msgid "Canon PIXMA MX516"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX516"
 
 #: src/xml/xmli18n-tmp.h:4133
-#, fuzzy
 msgid "Canon PIXMA MX517"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX517"
 
 #: src/xml/xmli18n-tmp.h:4134
-#, fuzzy
 msgid "Canon PIXMA MX518"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX518"
 
 #: src/xml/xmli18n-tmp.h:4135
-#, fuzzy
 msgid "Canon MX520 series"
-msgstr "Canon i6500"
+msgstr "Canon MX520 series"
 
 #: src/xml/xmli18n-tmp.h:4136
-#, fuzzy
 msgid "Canon PIXMA MX521"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX521"
 
 #: src/xml/xmli18n-tmp.h:4137
-#, fuzzy
 msgid "Canon PIXMA MX522"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX522"
 
 #: src/xml/xmli18n-tmp.h:4138
-#, fuzzy
 msgid "Canon PIXUS MX523"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXUS MX523"
 
 #: src/xml/xmli18n-tmp.h:4139
-#, fuzzy
 msgid "Canon PIXMA MX524"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX524"
 
 #: src/xml/xmli18n-tmp.h:4140
-#, fuzzy
 msgid "Canon PIXMA MX525"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX525"
 
 #: src/xml/xmli18n-tmp.h:4141
-#, fuzzy
 msgid "Canon PIXMA MX526"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX526"
 
 #: src/xml/xmli18n-tmp.h:4142
-#, fuzzy
 msgid "Canon PIXMA MX527"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX527"
 
 #: src/xml/xmli18n-tmp.h:4143
-#, fuzzy
 msgid "Canon PIXMA MX528"
-msgstr "Canon PIXMA MX510"
+msgstr "Canon PIXMA MX528"
 
 #: src/xml/xmli18n-tmp.h:4144
-#, fuzzy
 msgid "Canon MX700 series"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon MX700 series"
 
 #: src/xml/xmli18n-tmp.h:4145
 msgid "Canon PIXMA MX700"
 msgstr "Canon PIXMA MX700"
 
 #: src/xml/xmli18n-tmp.h:4146
-#, fuzzy
 msgid "Canon MX710 series"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon MX710 series"
 
 #: src/xml/xmli18n-tmp.h:4147
 msgid "Canon PIXMA MX710"
 msgstr "Canon PIXMA MX710"
 
 #: src/xml/xmli18n-tmp.h:4148
-#, fuzzy
 msgid "Canon PIXMA MX711"
-msgstr "Canon PIXMA MX710"
+msgstr "Canon PIXMA MX711"
 
 #: src/xml/xmli18n-tmp.h:4149
-#, fuzzy
 msgid "Canon PIXMA MX712"
-msgstr "Canon PIXMA MX710"
+msgstr "Canon PIXMA MX712"
 
 #: src/xml/xmli18n-tmp.h:4150
-#, fuzzy
 msgid "Canon PIXMA MX714"
-msgstr "Canon PIXMA MX710"
+msgstr "Canon PIXMA MX714"
 
 #: src/xml/xmli18n-tmp.h:4151
-#, fuzzy
 msgid "Canon PIXMA MX715"
-msgstr "Canon PIXMA MX710"
+msgstr "Canon PIXMA MX715"
 
 #: src/xml/xmli18n-tmp.h:4152
-#, fuzzy
 msgid "Canon MX720 series"
-msgstr "Canon CP-200"
+msgstr "Canon MX720 series"
 
 #: src/xml/xmli18n-tmp.h:4153
-#, fuzzy
 msgid "Canon PIXMA MX721"
-msgstr "Canon PIXMA MX710"
+msgstr "Canon PIXMA MX721"
 
 #: src/xml/xmli18n-tmp.h:4154
-#, fuzzy
 msgid "Canon PIXMA MX722"
-msgstr "Canon PIXMA MX700"
+msgstr "Canon PIXMA MX722"
 
 #: src/xml/xmli18n-tmp.h:4155
-#, fuzzy
 msgid "Canon PIXMA MX726"
-msgstr "Canon PIXMA MX7600"
+msgstr "Canon PIXMA MX726"
 
 #: src/xml/xmli18n-tmp.h:4156
-#, fuzzy
 msgid "Canon PIXMA MX727"
-msgstr "Canon PIXMA MX700"
+msgstr "Canon PIXMA MX727"
 
 #: src/xml/xmli18n-tmp.h:4157
-#, fuzzy
 msgid "Canon PIXMA MX728"
-msgstr "Canon PIXMA MX700"
+msgstr "Canon PIXMA MX728"
 
 #: src/xml/xmli18n-tmp.h:4158
-#, fuzzy
 msgid "Canon MX850 series"
-msgstr "Canon i6500"
+msgstr "Canon MX850 series"
 
 #: src/xml/xmli18n-tmp.h:4159
 msgid "Canon PIXMA MX850"
 msgstr "Canon PIXMA MX850"
 
 #: src/xml/xmli18n-tmp.h:4160
-#, fuzzy
 msgid "Canon PIXUS MX850"
-msgstr "Canon PIXMA MX850"
+msgstr "Canon PIXUS MX850"
 
 #: src/xml/xmli18n-tmp.h:4161
-#, fuzzy
 msgid "Canon MX860 series"
-msgstr "Canon i6500"
+msgstr "Canon MX860 series"
 
 #: src/xml/xmli18n-tmp.h:4162
 msgid "Canon PIXMA MX860"
 msgstr "Canon PIXMA MX860"
 
 #: src/xml/xmli18n-tmp.h:4163
-#, fuzzy
 msgid "Canon PIXUS MX860"
-msgstr "Canon PIXMA MX860"
+msgstr "Canon PIXUS MX860"
 
 #: src/xml/xmli18n-tmp.h:4164
-#, fuzzy
 msgid "Canon PIXMA MX868"
-msgstr "Canon PIXMA MX860"
+msgstr "Canon PIXMA MX868"
 
 #: src/xml/xmli18n-tmp.h:4165
-#, fuzzy
 msgid "Canon MX870 series"
-msgstr "Canon PIXMA iX7000"
+msgstr "Canon MX870 series"
 
 #: src/xml/xmli18n-tmp.h:4166
 msgid "Canon PIXMA MX870"
 msgstr "Canon PIXMA MX870"
 
 #: src/xml/xmli18n-tmp.h:4167
-#, fuzzy
 msgid "Canon PIXUS MX870"
-msgstr "Canon PIXMA MX870"
+msgstr "Canon PIXUS MX870"
 
 #: src/xml/xmli18n-tmp.h:4168
-#, fuzzy
 msgid "Canon PIXMA MX876"
-msgstr "Canon PIXMA MX870"
+msgstr "Canon PIXMA MX876"
 
 #: src/xml/xmli18n-tmp.h:4169
-#, fuzzy
 msgid "Canon MX880 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MX880 series"
 
 #: src/xml/xmli18n-tmp.h:4170
 msgid "Canon PIXMA MX880"
 msgstr "Canon PIXMA MX880"
 
 #: src/xml/xmli18n-tmp.h:4171
-#, fuzzy
 msgid "Canon PIXMA MX882"
-msgstr "Canon PIXMA MX880"
+msgstr "Canon PIXMA MX882"
 
 #: src/xml/xmli18n-tmp.h:4172
-#, fuzzy
 msgid "Canon PIXUS MX883"
-msgstr "Canon PIXMA MX880"
+msgstr "Canon PIXUS MX883"
 
 #: src/xml/xmli18n-tmp.h:4173
-#, fuzzy
 msgid "Canon PIXMA MX884"
-msgstr "Canon PIXMA MX880"
+msgstr "Canon PIXMA MX884"
 
 #: src/xml/xmli18n-tmp.h:4174
-#, fuzzy
 msgid "Canon PIXMA MX885"
-msgstr "Canon PIXMA MX880"
+msgstr "Canon PIXMA MX885"
 
 #: src/xml/xmli18n-tmp.h:4175
-#, fuzzy
 msgid "Canon PIXMA MX886"
-msgstr "Canon PIXMA MX880"
+msgstr "Canon PIXMA MX886"
 
 #: src/xml/xmli18n-tmp.h:4176
-#, fuzzy
 msgid "Canon PIXMA MX888"
-msgstr "Canon PIXMA MX880"
+msgstr "Canon PIXMA MX888"
 
 #: src/xml/xmli18n-tmp.h:4177
-#, fuzzy
 msgid "Canon MX890 series"
-msgstr "Canon PIXMA iP4800"
+msgstr "Canon MX890 series"
 
 #: src/xml/xmli18n-tmp.h:4178
 msgid "Canon PIXMA MX890"
 msgstr "Canon PIXMA MX890"
 
 #: src/xml/xmli18n-tmp.h:4179
-#, fuzzy
 msgid "Canon PIXMA MX892"
-msgstr "Canon PIXMA MX890"
+msgstr "Canon PIXMA MX892"
 
 #: src/xml/xmli18n-tmp.h:4180
-#, fuzzy
 msgid "Canon PIXUS MX893"
-msgstr "Canon PIXMA MX890"
+msgstr "Canon PIXUS MX893"
 
 #: src/xml/xmli18n-tmp.h:4181
-#, fuzzy
 msgid "Canon PIXMA MX894"
-msgstr "Canon PIXMA MX890"
+msgstr "Canon PIXMA MX894"
 
 #: src/xml/xmli18n-tmp.h:4182
-#, fuzzy
 msgid "Canon PIXMA MX895"
-msgstr "Canon PIXMA MX890"
+msgstr "Canon PIXMA MX895"
 
 #: src/xml/xmli18n-tmp.h:4183
-#, fuzzy
 msgid "Canon PIXMA MX897"
-msgstr "Canon PIXMA MX890"
+msgstr "Canon PIXMA MX897"
 
 #: src/xml/xmli18n-tmp.h:4184
-#, fuzzy
 msgid "Canon PIXMA MX898"
-msgstr "Canon PIXMA MX890"
+msgstr "Canon PIXMA MX898"
 
 #: src/xml/xmli18n-tmp.h:4185
-#, fuzzy
 msgid "Canon MX920 series"
-msgstr "Canon PIXMA iP2700"
+msgstr "Canon MX920 series"
 
 #: src/xml/xmli18n-tmp.h:4186
-#, fuzzy
 msgid "Canon PIXMA MX922"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX922"
 
 #: src/xml/xmli18n-tmp.h:4187
-#, fuzzy
 msgid "Canon PIXUS MX923"
-msgstr "Canon PIXMA MP493"
+msgstr "Canon PIXUS MX923"
 
 #: src/xml/xmli18n-tmp.h:4188
-#, fuzzy
 msgid "Canon PIXMA MX924"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX924"
 
 #: src/xml/xmli18n-tmp.h:4189
-#, fuzzy
 msgid "Canon PIXMA MX925"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX925"
 
 #: src/xml/xmli18n-tmp.h:4190
-#, fuzzy
 msgid "Canon PIXMA MX926"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX926"
 
 #: src/xml/xmli18n-tmp.h:4191
-#, fuzzy
 msgid "Canon PIXMA MX927"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX927"
 
 #: src/xml/xmli18n-tmp.h:4192
-#, fuzzy
 msgid "Canon PIXMA MX928"
-msgstr "Canon PIXMA MX320"
+msgstr "Canon PIXMA MX928"
 
 #: src/xml/xmli18n-tmp.h:4193
-#, fuzzy
 msgid "Canon MX7600 series"
-msgstr "Canon i6500"
+msgstr "Canon MX7600 series"
 
 #: src/xml/xmli18n-tmp.h:4194
 msgid "Canon PIXMA MX7600"
 msgstr "Canon PIXMA MX7600"
 
 #: src/xml/xmli18n-tmp.h:4195
-#, fuzzy
 msgid "Canon PIXUS MX7600"
-msgstr "Canon PIXMA MX7600"
+msgstr "Canon PIXUS MX7600"
 
 #: src/xml/xmli18n-tmp.h:4196
-#, fuzzy
 msgid "Canon E500 series"
-msgstr "Canon i6500"
+msgstr "Canon E500 series"
 
 #: src/xml/xmli18n-tmp.h:4197
 msgid "Canon PIXMA E500"
 msgstr "Canon PIXMA E500"
 
 #: src/xml/xmli18n-tmp.h:4198
-#, fuzzy
 msgid "Canon E510 series"
-msgstr "Canon i6500"
+msgstr "Canon E510 series"
 
 #: src/xml/xmli18n-tmp.h:4199
-#, fuzzy
 msgid "Canon PIXMA E510"
-msgstr "Canon PIXMA E500"
+msgstr "Canon PIXMA E510"
 
 #: src/xml/xmli18n-tmp.h:4200
-#, fuzzy
 msgid "Canon PIXMA E518"
-msgstr "Canon PIXMA E500"
+msgstr "Canon PIXMA E518"
 
 #: src/xml/xmli18n-tmp.h:4201
-#, fuzzy
 msgid "Canon E600 series"
-msgstr "Canon i6100"
+msgstr "Canon E600 series"
 
 #: src/xml/xmli18n-tmp.h:4202
 msgid "Canon PIXMA E600"
 msgstr "Canon PIXMA E600"
 
 #: src/xml/xmli18n-tmp.h:4203
-#, fuzzy
 msgid "Canon PIXMA E608"
-msgstr "Canon PIXMA E600"
+msgstr "Canon PIXMA E608"
 
 #: src/xml/xmli18n-tmp.h:4204
-#, fuzzy
 msgid "Canon E610 series"
-msgstr "Canon i6100"
+msgstr "Canon E610 series"
 
 #: src/xml/xmli18n-tmp.h:4205
-#, fuzzy
 msgid "Canon PIXMA E610"
-msgstr "Canon PIXMA E600"
+msgstr "Canon PIXMA E610"
 
 #: src/xml/xmli18n-tmp.h:4206
-#, fuzzy
 msgid "Canon PIXMA E618"
-msgstr "Canon PIXMA E600"
+msgstr "Canon PIXMA E618"
 
 #: src/xml/xmli18n-tmp.h:4207
 msgid "Canon 50i"
@@ -10248,9 +9604,8 @@ msgid "Epson Stylus C88"
 msgstr "Epson Stylus C88"
 
 #: src/xml/xmli18n-tmp.h:4308
-#, fuzzy
 msgid "Epson Stylus C92"
-msgstr "Epson Stylus C20"
+msgstr "Epson Stylus C92"
 
 #: src/xml/xmli18n-tmp.h:4309
 msgid "Epson Stylus C110"
@@ -11109,9 +10464,8 @@ msgid "Epson Stylus D68"
 msgstr "Epson Stylus D68"
 
 #: src/xml/xmli18n-tmp.h:4523
-#, fuzzy
 msgid "Epson Stylus D78"
-msgstr "Epson Stylus D68"
+msgstr "Epson Stylus D78"
 
 #: src/xml/xmli18n-tmp.h:4524
 msgid "Epson Stylus D88"
@@ -11322,9 +10676,8 @@ msgid "Epson Stylus SX420"
 msgstr "Epson Stylus SX420"
 
 #: src/xml/xmli18n-tmp.h:4576
-#, fuzzy
 msgid "Epson Stylus SX445W"
-msgstr "Epson Stylus SX405"
+msgstr "Epson Stylus SX445W"
 
 #: src/xml/xmli18n-tmp.h:4577
 msgid "Epson Stylus SX510W"
@@ -11439,9 +10792,8 @@ msgid "Epson Stylus TX110"
 msgstr "Epson Stylus TX110"
 
 #: src/xml/xmli18n-tmp.h:4605
-#, fuzzy
 msgid "Epson Stylus TX125"
-msgstr "Epson Stylus TX102"
+msgstr "Epson Stylus TX125"
 
 #: src/xml/xmli18n-tmp.h:4606
 msgid "Epson Stylus TX200"
@@ -11616,46 +10968,44 @@ msgid "Epson WorkForce 1100"
 msgstr "Epson WorkForce 1100"
 
 #: src/xml/xmli18n-tmp.h:4649
-#, fuzzy
 msgid "Epson WF-7010 Series"
-msgstr "Epson EPL-5700PS"
+msgstr "Epson WF-7010 Series"
 
 #: src/xml/xmli18n-tmp.h:4650
 msgid "Epson WF-7011 Series"
-msgstr ""
+msgstr "Epson WF-7011 Series"
 
 #: src/xml/xmli18n-tmp.h:4651
 msgid "Epson WF-7015 Series"
-msgstr ""
+msgstr "Epson WF-7015 Series"
 
 #: src/xml/xmli18n-tmp.h:4652
 msgid "Epson WF-7018 Series"
-msgstr ""
+msgstr "Epson WF-7018 Series"
 
 #: src/xml/xmli18n-tmp.h:4653
-#, fuzzy
 msgid "Epson WF-7510 Series"
-msgstr "Epson B-510DN"
+msgstr "Epson WF-7510 Series"
 
 #: src/xml/xmli18n-tmp.h:4654
 msgid "Epson WF-7511 Series"
-msgstr ""
+msgstr "Epson WF-7511 Series"
 
 #: src/xml/xmli18n-tmp.h:4655
 msgid "Epson WF-7515 Series"
-msgstr ""
+msgstr "Epson WF-7515 Series"
 
 #: src/xml/xmli18n-tmp.h:4656
 msgid "Epson WF-7520 Series"
-msgstr ""
+msgstr "Epson WF-7520 Series"
 
 #: src/xml/xmli18n-tmp.h:4657
 msgid "Epson WF-7521 Series"
-msgstr ""
+msgstr "Epson WF-7521 Series"
 
 #: src/xml/xmli18n-tmp.h:4658
 msgid "Epson WF-7525 Series"
-msgstr ""
+msgstr "Epson WF-7525 Series"
 
 #: src/xml/xmli18n-tmp.h:4659
 msgid "Epson CL 700"
@@ -12050,19 +11400,16 @@ msgid "Epson PX 1001"
 msgstr "Epson PX 1001"
 
 #: src/xml/xmli18n-tmp.h:4757
-#, fuzzy
 msgid "Epson PX 1200"
-msgstr "Epson PX 1001"
+msgstr "Epson PX 1200"
 
 #: src/xml/xmli18n-tmp.h:4758
-#, fuzzy
 msgid "Epson PX 1600F"
-msgstr "Epson PX 1001"
+msgstr "Epson PX 1600F"
 
 #: src/xml/xmli18n-tmp.h:4759
-#, fuzzy
 msgid "Epson PX 1700F"
-msgstr "Epson PX 1001"
+msgstr "Epson PX 1700F"
 
 #: src/xml/xmli18n-tmp.h:4760
 msgid "Epson PX G900"
@@ -16009,123 +15356,100 @@ msgid "Canon CP-330"
 msgstr "Canon CP-330"
 
 #: src/xml/xmli18n-tmp.h:5746
-#, fuzzy
 msgid "Canon SELPHY CP400"
-msgstr "Canon SELPHY-CP400"
+msgstr "Canon SELPHY CP400"
 
 #: src/xml/xmli18n-tmp.h:5747
-#, fuzzy
 msgid "Canon SELPHY CP500"
-msgstr "Canon SELPHY-CP500"
+msgstr "Canon SELPHY CP500"
 
 #: src/xml/xmli18n-tmp.h:5748
-#, fuzzy
 msgid "Canon SELPHY CP510"
-msgstr "Canon SELPHY-CP510"
+msgstr "Canon SELPHY CP510"
 
 #: src/xml/xmli18n-tmp.h:5749
-#, fuzzy
 msgid "Canon SELPHY CP520"
-msgstr "Canon SELPHY-CP520"
+msgstr "Canon SELPHY CP520"
 
 #: src/xml/xmli18n-tmp.h:5750
-#, fuzzy
 msgid "Canon SELPHY CP530"
-msgstr "Canon SELPHY-CP530"
+msgstr "Canon SELPHY CP530"
 
 #: src/xml/xmli18n-tmp.h:5751
-#, fuzzy
 msgid "Canon SELPHY CP600"
-msgstr "Canon SELPHY-CP400"
+msgstr "Canon SELPHY CP600"
 
 #: src/xml/xmli18n-tmp.h:5752
-#, fuzzy
 msgid "Canon SELPHY CP710"
-msgstr "Canon SELPHY-CP710"
+msgstr "Canon SELPHY CP710"
 
 #: src/xml/xmli18n-tmp.h:5753
-#, fuzzy
 msgid "Canon SELPHY CP720"
-msgstr "Canon SELPHY-CP-720"
+msgstr "Canon SELPHY CP720"
 
 #: src/xml/xmli18n-tmp.h:5754
-#, fuzzy
 msgid "Canon SELPHY CP730"
-msgstr "Canon SELPHY-CP730"
+msgstr "Canon SELPHY CP730"
 
 #: src/xml/xmli18n-tmp.h:5755
-#, fuzzy
 msgid "Canon SELPHY CP740"
-msgstr "Canon SELPHY-CP740"
+msgstr "Canon SELPHY CP740"
 
 #: src/xml/xmli18n-tmp.h:5756
-#, fuzzy
 msgid "Canon SELPHY CP750"
-msgstr "Canon SELPHY-CP750"
+msgstr "Canon SELPHY CP750"
 
 #: src/xml/xmli18n-tmp.h:5757
-#, fuzzy
 msgid "Canon SELPHY CP760"
-msgstr "Canon SELPHY-CP760"
+msgstr "Canon SELPHY CP760"
 
 #: src/xml/xmli18n-tmp.h:5758
-#, fuzzy
 msgid "Canon SELPHY CP770"
-msgstr "Canon SELPHY-CP770"
+msgstr "Canon SELPHY CP770"
 
 #: src/xml/xmli18n-tmp.h:5759
-#, fuzzy
 msgid "Canon SELPHY CP780"
-msgstr "Canon SELPHY-CP710"
+msgstr "Canon SELPHY CP780"
 
 #: src/xml/xmli18n-tmp.h:5760
-#, fuzzy
 msgid "Canon SELPHY CP790"
-msgstr "Canon SELPHY-CP790"
+msgstr "Canon SELPHY CP790"
 
 #: src/xml/xmli18n-tmp.h:5761
-#, fuzzy
 msgid "Canon SELPHY CP800"
-msgstr "Canon SELPHY-CP-800"
+msgstr "Canon SELPHY CP800"
 
 #: src/xml/xmli18n-tmp.h:5762
-#, fuzzy
 msgid "Canon SELPHY CP810"
-msgstr "Canon SELPHY DS810"
+msgstr "Canon SELPHY CP810"
 
 #: src/xml/xmli18n-tmp.h:5763
-#, fuzzy
 msgid "Canon SELPHY CP900"
-msgstr "Canon SELPHY-CP400"
+msgstr "Canon SELPHY CP900"
 
 #: src/xml/xmli18n-tmp.h:5764
-#, fuzzy
 msgid "Canon SELPHY ES1"
-msgstr "Canon SELPHY ES2"
+msgstr "Canon SELPHY ES1"
 
 #: src/xml/xmli18n-tmp.h:5765
 msgid "Canon SELPHY ES2"
 msgstr "Canon SELPHY ES2"
 
 #: src/xml/xmli18n-tmp.h:5766
-#, fuzzy
 msgid "Canon SELPHY ES3"
-msgstr "Canon SELPHY ES2"
+msgstr "Canon SELPHY ES3"
 
 #: src/xml/xmli18n-tmp.h:5767
-#, fuzzy
 msgid "Canon SELPHY ES20"
-msgstr "Canon SELPHY ES2"
+msgstr "Canon SELPHY ES20"
 
 #: src/xml/xmli18n-tmp.h:5768
-#, fuzzy
 msgid "Canon SELPHY ES30"
-msgstr "Canon SELPHY ES2"
+msgstr "Canon SELPHY ES30"
 
 #: src/xml/xmli18n-tmp.h:5769
-#, fuzzy
 msgid "Canon SELPHY ES40"
-msgstr "Canon SELPHY ES2"
+msgstr "Canon SELPHY ES40"
 
 #: src/xml/xmli18n-tmp.h:5770
 msgid "Sony UP-DP10"
@@ -16148,9 +15472,8 @@ msgid "Sony UP-DR100"
 msgstr "Sony UP-DR100"
 
 #: src/xml/xmli18n-tmp.h:5775
-#, fuzzy
 msgid "Sony UP-DR200"
-msgstr "Sony UP-DR100"
+msgstr "Sony UP-DR200"
 
 #: src/xml/xmli18n-tmp.h:5776
 msgid "Fujifilm Printpix-CX-400"
@@ -16197,101 +15520,92 @@ msgid "Kodak Printer-Dock-Plus-S3"
 msgstr "Kodak Printer-Dock-Plus-S3"
 
 #: src/xml/xmli18n-tmp.h:5787
-#, fuzzy
 msgid "Kodak 6800"
-msgstr "Kodak PD-6000"
+msgstr "Kodak 6800"
 
 #: src/xml/xmli18n-tmp.h:5788
-#, fuzzy
 msgid "Kodak 6850"
-msgstr "Kodak PD-6000"
+msgstr "Kodak 6850"
 
 #: src/xml/xmli18n-tmp.h:5789
-#, fuzzy
 msgid "Kodak 605"
-msgstr "Kodak PD-6000"
+msgstr "Kodak 605"
 
 #: src/xml/xmli18n-tmp.h:5790
-#, fuzzy
 msgid "Kodak 1400"
-msgstr "Kodak PD-4000"
+msgstr "Kodak 1400"
 
 #: src/xml/xmli18n-tmp.h:5791
-#, fuzzy
 msgid "Kodak 805"
-msgstr "Kodak PD-4000"
+msgstr "Kodak 805"
 
 #: src/xml/xmli18n-tmp.h:5792
-#, fuzzy
 msgid "Kodak 9810"
-msgstr "Kodak PD-4000"
+msgstr "Kodak 9810"
 
 #: src/xml/xmli18n-tmp.h:5793
-#, fuzzy
 msgid "Kodak 8500"
-msgstr "Kodak PD-4000"
+msgstr "Kodak 8500"
 
 #: src/xml/xmli18n-tmp.h:5794
 msgid "Mitsubishi CP-3020D"
-msgstr ""
+msgstr "Mitsubishi CP-3020D"
 
 #: src/xml/xmli18n-tmp.h:5795
 msgid "Mitsubishi CP-3020DU"
-msgstr ""
+msgstr "Mitsubishi CP-3020DU"
 
 #: src/xml/xmli18n-tmp.h:5796
 msgid "Mitsubishi CP-3020DE"
-msgstr ""
+msgstr "Mitsubishi CP-3020DE"
 
 #: src/xml/xmli18n-tmp.h:5797
 msgid "Mitsubishi CP-3020DA"
-msgstr ""
+msgstr "Mitsubishi CP-3020DA"
 
 #: src/xml/xmli18n-tmp.h:5798
 msgid "Mitsubishi CP-3020DAE"
-msgstr ""
+msgstr "Mitsubishi CP-3020DAE"
 
 #: src/xml/xmli18n-tmp.h:5799
 msgid "Mitsubishi CP-9550D"
-msgstr ""
+msgstr "Mitsubishi CP-9550D"
 
 #: src/xml/xmli18n-tmp.h:5800
 msgid "Mitsubishi CP-9550DW"
-msgstr ""
+msgstr "Mitsubishi CP-9550DW"
 
 #: src/xml/xmli18n-tmp.h:5801
 msgid "Mitsubishi CP-9810D"
-msgstr ""
+msgstr "Mitsubishi CP-9810D"
 
 #: src/xml/xmli18n-tmp.h:5802
 msgid "Mitsubishi CP-9810DW"
-msgstr ""
+msgstr "Mitsubishi CP-9810DW"
 
 #: src/xml/xmli18n-tmp.h:5803
 msgid "Mitsubishi CP-D70DW"
-msgstr ""
+msgstr "Mitsubishi CP-D70DW"
 
 #: src/xml/xmli18n-tmp.h:5804
 msgid "Mitsubishi CP-D707DW"
-msgstr ""
+msgstr "Mitsubishi CP-D707DW"
 
 #: src/xml/xmli18n-tmp.h:5805
 msgid "Mitsubishi CP-K60DW"
-msgstr ""
+msgstr "Mitsubishi CP-K60DW"
 
 #: src/xml/xmli18n-tmp.h:5806
 msgid "Shinko CHC-S9045"
 msgstr "Shinko CHC-S9045"
 
 #: src/xml/xmli18n-tmp.h:5807
-#, fuzzy
 msgid "Shinko CHC-S2145"
-msgstr "Shinko CHC-S9045"
+msgstr "Shinko CHC-S2145"
 
 #: src/xml/xmli18n-tmp.h:5808
-#, fuzzy
 msgid "Sinfonia CHC-S2145"
-msgstr "Shinko CHC-S9045"
+msgstr "Sinfonia CHC-S2145"
 
 #: src/xml/xmli18n-tmp.h:5809
 msgid "Dai Nippon Printing DS40"
@@ -16308,162 +15622,6 @@ msgstr "RAW DATA 16 bit"
 #: src/xml/xmli18n-tmp.h:5812
 msgid "RAW DATA 8 bit"
 msgstr "RAW DATA 8 bit"
-
-#, fuzzy
-#~ msgid "Canon Bubble-Jet BJ-30"
-#~ msgstr "Canon BJ-30"
-
-#, fuzzy
-#~ msgid "Canon BJC-250 Series"
-#~ msgstr "Canon BJC-250"
-
-#, fuzzy
-#~ msgid "Canon BJC-3000 (BJRSTR)"
-#~ msgstr "Canon BJC-3000"
-
-#, fuzzy
-#~ msgid "Canon BJC-4300 Series"
-#~ msgstr "Canon BJC-4300"
-
-#, fuzzy
-#~ msgid "Canon BJC-5500J (BJRSTR)"
-#~ msgstr "Canon BJC-5500"
-
-#, fuzzy
-#~ msgid "Canon BJC-6000 (BJRSTR)"
-#~ msgstr "Canon BJC-6000"
-
-#, fuzzy
-#~ msgid "Canon BJC-7000 Series"
-#~ msgstr "Canon BJC-7000"
-
-#, fuzzy
-#~ msgid "Canon BJC-8200 (BJRSTR)"
-#~ msgstr "Canon BJC-8200"
-
-#, fuzzy
-#~ msgid "Canon BJC-8500 (BJRSTR)"
-#~ msgstr "Canon BJC-8500"
-
-#, fuzzy
-#~ msgid "Canon iP3300"
-#~ msgstr "Canon CP-300"
-
-#, fuzzy
-#~ msgid "Canon iP4200"
-#~ msgstr "Canon CP-200"
-
-#, fuzzy
-#~ msgid "Canon iP4300"
-#~ msgstr "Canon CP-300"
-
-#, fuzzy
-#~ msgid "Canon iP5200"
-#~ msgstr "Canon i6500"
-
-#, fuzzy
-#~ msgid "Canon iP5200R"
-#~ msgstr "Canon i6500"
-
-#, fuzzy
-#~ msgid "Canon iP5300"
-#~ msgstr "Canon i6500"
-
-#, fuzzy
-#~ msgid "Canon iP6210D"
-#~ msgstr "Canon i6100"
-
-#, fuzzy
-#~ msgid "Canon iP6220D"
-#~ msgstr "Canon PIXMA iP6220D"
-
-#, fuzzy
-#~ msgid "Canon iP6310D"
-#~ msgstr "Canon i6100"
-
-#, fuzzy
-#~ msgid "Canon iP6320D"
-#~ msgstr "Canon PIXMA iP6320D"
-
-#, fuzzy
-#~ msgid "Canon iP6600D"
-#~ msgstr "Canon i900D"
-
-#, fuzzy
-#~ msgid "Canon iP6700D"
-#~ msgstr "Canon i470D"
-
-#, fuzzy
-#~ msgid "Canon iP7500"
-#~ msgstr "Canon i6500"
-
-#, fuzzy
-#~ msgid "Canon iP9910"
-#~ msgstr "Canon i990"
-
-#, fuzzy
-#~ msgid "Canon iX4000"
-#~ msgstr "Canon i450"
-
-#, fuzzy
-#~ msgid "Canon iX5000"
-#~ msgstr "Canon i6500"
-
-#, fuzzy
-#~ msgid "Canon Pro9000"
-#~ msgstr "Canon S9000"
-
-#, fuzzy
-#~ msgid "Canon PIXMA MP140 series Printer"
-#~ msgstr "Canon PIXMA MP140"
-
-#, fuzzy
-#~ msgid "Canon MP160 Printer"
-#~ msgstr "Canon 560i"
-
-#, fuzzy
-#~ msgid "Canon MP180 Printer"
-#~ msgstr "Canon 80i"
-
-#, fuzzy
-#~ msgid "Canon MP375 Printer"
-#~ msgstr "Generic PCL 5 Printer"
-
-#, fuzzy
-#~ msgid "Canon MP460 Printer"
-#~ msgstr "Canon 450i"
-
-#, fuzzy
-#~ msgid "Canon MP510 Printer"
-#~ msgstr "Canon 50i"
-
-#, fuzzy
-#~ msgid "Canon MP600 Printer"
-#~ msgstr "Canon 6100i"
-
-#, fuzzy
-#~ msgid "Canon MP700 Printer"
-#~ msgstr "Canon PIXMA MP700"
-
-#, fuzzy
-#~ msgid "Canon MP710 Printer"
-#~ msgstr "Canon PIXMA MP710"
-
-#, fuzzy
-#~ msgid "Canon MP730 Printer"
-#~ msgstr "Canon PIXMA MP730"
-
-#, fuzzy
-#~ msgid "Canon MP740 Printer"
-#~ msgstr "Canon 450i"
-
-#, fuzzy
-#~ msgid "Canon MP810 Printer"
-#~ msgstr "Canon 80i"
-
-#, fuzzy
-#~ msgid "Canon MP960 Printer"
-#~ msgstr "Canon 960i"
 
 #~ msgid "Screening Adjustment"
 #~ msgstr "Aanpassing van aftasting"
