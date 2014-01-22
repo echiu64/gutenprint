@@ -1073,8 +1073,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Known Problematic models:
 
-       Canon CP-10        *2
-
        The USB PIDs for the following two SELPHY CP series models are 
        still unknown, and are therefore unsupported by the spooler:
 
@@ -1083,9 +1081,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	*1: We have not confirmed these printers function with the new
 	    backend, but they are presumed to work.
-
-	*2: The CP-10 requires power cycling between prints, for unknown 
-	    reasons.
 
      - Mitsubishi Dye-Sublimation printers:
 
