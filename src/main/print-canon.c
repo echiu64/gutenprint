@@ -3602,6 +3602,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int adjust_tray_G_length, adjust_tray_G_width;
   int adjust_tray_H_length, adjust_tray_H_width;
   int adjust_tray_J_length, adjust_tray_J_width;
+  int adjust_tray_L_length, adjust_tray_L_width;
   /* CD tray border adjustments */
   int adjust_tray_custom_left, adjust_tray_custom_right, adjust_tray_custom_top, adjust_tray_custom_bottom;
   int adjust_tray_A_left, adjust_tray_A_right, adjust_tray_A_top, adjust_tray_A_bottom;
@@ -3611,6 +3612,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int adjust_tray_G_left, adjust_tray_G_right, adjust_tray_G_top, adjust_tray_G_bottom;
   int adjust_tray_H_left, adjust_tray_H_right, adjust_tray_H_top, adjust_tray_H_bottom;
   int adjust_tray_J_left, adjust_tray_J_right, adjust_tray_J_top, adjust_tray_J_bottom;
+  int adjust_tray_L_left, adjust_tray_L_right, adjust_tray_L_top, adjust_tray_L_bottom;
 
 
   /* TOFIX: what exactly is to be sent?
@@ -3665,6 +3667,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     J:
     printable_width = init->page_width + 8;
     printable_length = init->page_height + 44;
+
+    L:
+    printable_width = init->page_width + 10;
+    printable_length = init->page_height + 263;
   */
 
   /* adjust paper dimensions for CD in points */
@@ -3684,6 +3690,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   adjust_tray_H_width = 68;
   adjust_tray_J_length = 44;
   adjust_tray_J_width = 8;
+  adjust_tray_L_length = 263;
+  adjust_tray_L_width = 10;
 
   /* ensure less than or equal to Windows measurements  by border adjustments in points  */
   adjust_tray_custom_left = 0;
@@ -3718,6 +3726,10 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   adjust_tray_J_right = 0;
   adjust_tray_J_top = 0;
   adjust_tray_J_bottom = 0;
+  adjust_tray_L_left = 0;
+  adjust_tray_L_right = 0;
+  adjust_tray_L_top = 0;
+  adjust_tray_L_bottom = 0;
 
   if ((print_cd) && test_cd) {
     /* test all of the parameters for CD */
@@ -3810,6 +3822,17 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     stp_dprintf(STP_DBG_CANON, v, "Tray J page_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length) * unit / 72);
     stp_dprintf(STP_DBG_CANON, v, "Tray J paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width + 20 + adjust_tray_J_left + adjust_tray_J_right) * unit / 72);
     stp_dprintf(STP_DBG_CANON, v, "Tray J paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length + 24 + adjust_tray_J_top + adjust_tray_J_bottom) * unit / 72);
+
+    stp_dprintf(STP_DBG_CANON, v, "Tray L original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_L_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_L_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L printable width (pts): '%d'\n",(init->page_width + adjust_tray_L_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L printable length (pts): '%d'\n",(init->page_height + adjust_tray_L_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L page_width (1/600): '%d'\n",(init->page_width + adjust_tray_L_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L page_height (1/600): '%d'\n",(init->page_height + adjust_tray_L_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_L_width + 20 + adjust_tray_L_left + adjust_tray_L_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_L_length + 24 + adjust_tray_L_top + adjust_tray_L_bottom) * unit / 72);
     
     stp_dprintf(STP_DBG_CANON, v,"==========End Test Printout=========='\n");
   }
@@ -3817,7 +3840,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray Custom */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
 
-    init->page_width +=24; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_width +=24;
     init->page_height +=132;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width: '%d'\n",init->page_width);
@@ -3834,7 +3857,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray A */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP9910")) && (test_cd==1) ) {
 
-    init->page_width +=44; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_width +=44;
     init->page_height +=151;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray A modified init->page_width: '%d'\n",init->page_width);
@@ -3851,7 +3874,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray B,C,D */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP3000")) && (test_cd==1) ) {
 
-    init->page_width +=10; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_width +=10;
     init->page_height +=84;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D modified init->page_width: '%d'\n",init->page_width);
@@ -3868,7 +3891,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray E */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA Pro9000")) && (test_cd==1) ) {
 
-    init->page_width +=127; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_width +=127;
     init->page_height +=186;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray E modified init->page_width: '%d'\n",init->page_width);
@@ -3892,7 +3915,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     stp_dprintf(STP_DBG_CANON, v, "Tray F initial printable_width: '%d'\n",printable_width);
     stp_dprintf(STP_DBG_CANON, v, "Tray F initial printable_length: '%d'\n",printable_length);
 
-    init->page_width +=10; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
+    init->page_width +=10;
     init->page_height +=95;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray F modified init->page_width: '%d'\n",init->page_width);
@@ -3911,7 +3934,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray G */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP4700")) && (test_cd==1) ) {
 
-    init->page_width +=10; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
+    init->page_width +=10;
     init->page_height +=127;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray G modified init->page_width: '%d'\n",init->page_width);
@@ -3928,7 +3951,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray H */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA PRO-1")) && (test_cd==1) ) {
 
-    init->page_width +=68; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_width +=68;
     init->page_height +=481;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray H modified init->page_width: '%d'\n",init->page_width);
@@ -3945,7 +3968,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   /* Tray J */
   if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP7200")) && (test_cd==1) ) {
 
-    init->page_width +=8; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_width +=8;
     init->page_height +=44;
 
     stp_dprintf(STP_DBG_CANON, v, "Tray J modified init->page_width: '%d'\n",init->page_width);
@@ -3956,6 +3979,23 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
     stp_dprintf(STP_DBG_CANON, v, "Tray J modified printable_width: '%d'\n",printable_width);
     stp_dprintf(STP_DBG_CANON, v, "Tray J modified printable_length: '%d'\n",printable_length);
+
+  }
+
+  /* Tray L */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP8700")) && (test_cd==1) ) {
+
+    init->page_width +=10;
+    init->page_height +=263;
+
+    stp_dprintf(STP_DBG_CANON, v, "Tray L modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_dprintf(STP_DBG_CANON, v, "Tray L modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray L modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -3980,7 +4020,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
   if ((init->caps->features & CANON_CAP_px) ) {
     /* workaround for CD writing that uses CANON_CAP_px --- fix with capabilities */
-    if ( !( input_slot && !(strcmp(input_slot,"CD")) ) || !(strcmp(init->caps->name,"PIXMA iP4500")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA MP710")) || !(strcmp(init->caps->name,"PIXMA iP3000")) || !(strcmp(init->caps->name,"PIXMA Pro9000")) )
+    if ( !( input_slot && !(strcmp(input_slot,"CD")) ) || !(strcmp(init->caps->name,"PIXMA iP4500")) || !(strcmp(init->caps->name,"PIXMA iP4600")) || !(strcmp(init->caps->name,"PIXMA iP4700")) || !(strcmp(init->caps->name,"PIXMA iP4800")) || !(strcmp(init->caps->name,"PIXMA iP4900")) || !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MP980")) || !(strcmp(init->caps->name,"PIXMA MP990")) || !(strcmp(init->caps->name,"PIXMA MG5200")) || !(strcmp(init->caps->name,"PIXMA MG5300")) || !(strcmp(init->caps->name,"PIXMA MG6100")) || !(strcmp(init->caps->name,"PIXMA MG6200")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG8100")) || !(strcmp(init->caps->name,"PIXMA MG8200")) || !(strcmp(init->caps->name,"PIXMA iP9910")) || !(strcmp(init->caps->name,"PIXMA MP710")) || !(strcmp(init->caps->name,"PIXMA iP3000")) || !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) )
       /* need to check if iP9910, MP710, iP3000, Pro9000 use Esc (p */
       {
 
@@ -4055,6 +4095,13 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	  border_right2  = border_right + adjust_tray_J_right;
 	  border_top2    = border_top + adjust_tray_J_top;
 	  border_bottom2 = border_bottom + adjust_tray_J_bottom;
+	}
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP8700")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_L_left;
+	  border_right2  = border_right + adjust_tray_L_right;
+	  border_top2    = border_top + adjust_tray_L_top;
+	  border_bottom2 = border_bottom + adjust_tray_L_bottom;
 	}
 
 	/* this does not seem to need adjustment, so use original borders */
@@ -4160,7 +4207,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
     arg_ESCP_9 = 0x02;
   }
-  else if ( !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG5500")) ) {
+  else if ( !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) ) {
     arg_ESCP_9 = 0xff;
   }
 
@@ -4211,6 +4258,10 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300"))  || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
 	arg_ESCP_1 = 0x5b;
 	arg_ESCP_9 = 0x00;
+      }
+      /* Tray J from iP8700 onwards */
+      if ( !(strcmp(init->caps->name,"PIXMA iP8700"))  ) {
+	arg_ESCP_1 = 0x62;
       }
     }
   }
@@ -4265,6 +4316,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* iP8100: CD Tray B     : 0x40               */
       /* iP8500 :CD Tray B     : 0x40               */
       /* iP8600: CD Tray B     : 0x40               */
+      /* iP8700: CD Tray L     : 0x62               */
       /* iP9910: CD Tray A     : 0x3f               */
       /* MG5200: CD Tray G     : 0x56               */
       /* MG5300: CD Tray G     : 0x56               */
@@ -4306,6 +4358,13 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* if (!strcmp(name,"A4"))       return 0x58; */ /* FineArt A4 35mm border */
       /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
 
+      /* Fine Art paper codes */
+      /* iP8700, iX6800 */
+      /* if (!strcmp(name,"A4"))       return 0x58; */ /* FineArt A4 35mm border */
+      /* if (!strcmp(name,"A3"))       return 0x59; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"A3plus"))   return 0x5d; */ /* FineArt A3plus 35mm border */
+      /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
+
 
   /* iP7100 is an exception needing yet another papersize code */
   if ( (arg_ESCP_2 == 0x28) || ( arg_ESCP_2 == 0x29) || (arg_ESCP_2 ==  0x2c) || (arg_ESCP_2 == 0x31) ) {
@@ -4317,7 +4376,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       else if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
 	arg_ESCP_1 = 0x4d;
       }
-      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) ) {
 	arg_ESCP_1 = 0x58;
       }
       else {
@@ -4335,8 +4394,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       } 
 #if 0
       /* no known papersize code yet, since these printers do not handle A3 */
-      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
-        arg_ESCP_1 = 0x59; /* suspected code, unconfirmed */
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) ) {
+        arg_ESCP_1 = 0x59;
 	}
 #endif
       else {
@@ -4352,7 +4411,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       else if ( !(strcmp(init->caps->name,"PIXMA Pro9000")) || !(strcmp(init->caps->name,"PIXMA Pro9002")) || !(strcmp(init->caps->name,"PIXMA Pro9500")) || !(strcmp(init->caps->name,"PIXMA Pro9502")) ) {
 	arg_ESCP_1 = 0x4f;
       }
-      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
+      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) ) {
 	arg_ESCP_1 = 0x5a;
       }
       else {
@@ -4369,9 +4428,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	arg_ESCP_1 = 0x50;
       }
 #if 0
-      /* no known papersize code yet, since these printers do not handle A3plus */
-      else if ( !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
-        arg_ESCP_1 = 0x5c; /* suspected code, unconfirmed */
+      else if ( !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) ) {
+        arg_ESCP_1 = 0x5d;
 	}
 #endif
       else {
