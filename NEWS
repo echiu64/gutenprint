@@ -1171,7 +1171,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Added duplex support for the EPSON WorkForce 645.
 
-  6) Added IEEE1284 device IDs for the following printers.
+  6) Expanded printable area at the bottom of the page for the Epson
+     Stylus Pro 3800 and 3880.
+
+  7) Added IEEE1284 device IDs for the following printers.
 
      - Device IDs added for the following Canon printers:
        Canon SELPHY ES1
@@ -1257,7 +1260,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        DNP DS40
        DNP DS80
 
-  7) Added Catalan and Turkish translations.
+  8) Added Catalan and Turkish translations.
 
 * Changes from 5.2.8
 
