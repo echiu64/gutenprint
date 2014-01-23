@@ -67,9 +67,6 @@
 #  define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif /* !MAX */
 
-/* set this to 1 to see errors in make, set to 0 (normal) to avoid noise */
-#define ERRPRINT 0
-
 /* 5 3-level pixels into 1 byte */
 static int
 pack_pixels(unsigned char* buf,int len)
@@ -535,8 +532,7 @@ static char* canon_get_printername(const stp_vars_t* v)
   len = strlen(canon_families[family]) + 7; /* max model nr. + terminating 0 */
   name = stp_zalloc(len);
   snprintf(name,len,"%s%u",canon_families[family],nr);
-  if (ERRPRINT)
-    stp_eprintf(v,"canon_get_printername: current printer name: %s\n", name);
+  stp_dprintf(STP_DBG_CANON, v,"canon_get_printername: current printer name: %s\n", name);
   return name;
 }
 
@@ -583,9 +579,7 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
     const char *ink_set = stp_get_string_parameter(v, "InkSet");/*debug*/
     int i;
 
-  stp_dprintf(STP_DBG_CANON, v,"Entered canon_get_current_mode\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"entered canon_get_current_mode\n");
+    stp_dprintf(STP_DBG_CANON, v,"Entered canon_get_current_mode\n");
 
     if (ink_set)
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: InkSet value (high priority): '%s'\n",ink_set);
@@ -632,8 +626,6 @@ static const canon_mode_t* canon_get_current_mode(const stp_vars_t *v){
 #endif
 
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: current mode is '%s'\n",resolution);
-    if (ERRPRINT)
-      stp_eprintf(v,"current mode is '%s'\n",resolution);
     
     return mode;
 }
@@ -645,8 +637,6 @@ const canon_modeuse_t* select_media_modes(stp_vars_t *v, const canon_paper_t* me
     if(!strcmp(media_type->name,mlist->modeuses[i].name)){
       muse = &mlist->modeuses[i];
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned media '%s'\n",mlist->name);
-      if (ERRPRINT)
-	stp_eprintf(v,"mode searching: assigned media '%s'\n",mlist->name);
       break;
     }
   }
@@ -657,8 +647,6 @@ int compare_mode_valid(stp_vars_t *v,const canon_mode_t* mode,const canon_modeus
   int i=0;
   int modecheck=1;
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: assigned mode-media '%s'\n",mlist->name);
-  if (ERRPRINT)
-    stp_eprintf(v,"mode searching: assigned mode-media '%s'\n",mlist->name);
   while (muse->mode_name_list[i]!=NULL){
     if(!strcmp(mode->name,muse->mode_name_list[i])){
       modecheck=0;
@@ -676,8 +664,6 @@ const canon_mode_t* suitable_mode_monochrome(stp_vars_t *v,const canon_modeuse_t
   int modefound=0;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_monochrome\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"Entered suitable_mode_monochrome\n");
 
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -720,8 +706,6 @@ const canon_mode_t* find_first_matching_mode_monochrome(stp_vars_t *v,const cano
   int j;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode_monochrome\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"Entered find_first_matching_mode_monochrome\n");
 
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     /* pick first mode with MODE_FLAG_BLACK */
@@ -734,8 +718,6 @@ const canon_mode_t* find_first_matching_mode_monochrome(stp_vars_t *v,const cano
 	    mode = &caps->modelist->modes[j];
 	    modefound=1;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode_monochrome): picked monochrome mode (%s)\n",mode->name);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode_monochrome): picked mnochrome mode (%s)\n",mode->name);
 	  }
 	}
 	break; /* go to next mode in muse list */
@@ -753,8 +735,6 @@ const canon_mode_t* find_first_matching_mode(stp_vars_t *v,const canon_modeuse_t
   int j;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"Entered find_first_matching_mode\n");
 
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     for(j=0;j<caps->modelist->count;j++){
@@ -764,8 +744,6 @@ const canon_mode_t* find_first_matching_mode(stp_vars_t *v,const canon_modeuse_t
 	  mode = &caps->modelist->modes[j];
 	  modefound=1;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode): picked mode without inkset limitation (%s)\n",mode->name);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode): picked mode without inkset limitation (%s)\n",mode->name);
 	}
 	break; /* go to next mode in muse list */
       }
@@ -782,8 +760,6 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
   int modefound=0;
   
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_color\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"Entered suitable_mode_color\n");
 
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -796,8 +772,6 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_color): picked mode with special replacement inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_color): picked mode with special replacement inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -810,8 +784,6 @@ const canon_mode_t* suitable_mode_color(stp_vars_t *v,const canon_modeuse_t* mus
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_color): picked mode without any special replacement inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_color): picked mode without any special replacement inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -832,8 +804,6 @@ const canon_mode_t* find_first_matching_mode_color(stp_vars_t *v,const canon_mod
   int j;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode_color\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"DEBUG: Entered find_first_matching_mode_color\n");
 
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     /* pick first mode with MODE_FLAG_COLOR */
@@ -845,8 +815,6 @@ const canon_mode_t* find_first_matching_mode_color(stp_vars_t *v,const canon_mod
 	    /* duplex check */
 	    mode = &caps->modelist->modes[j];
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode_color): picked first mode with special replacement inkset (%s)\n",mode->name);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode_color): picked first mode with special replacement inkset (%s)\n",mode->name);
 	    modefound=1;
 	  }
 	}
@@ -865,8 +833,6 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
   int modefound=0;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_photo\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"DEBUG: Entered suitable_mode_photo\n");
   
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
     for(j=0;j<caps->modelist->count;j++){
@@ -879,8 +845,6 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with special replacement inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with special replacement inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -893,8 +857,6 @@ const canon_mode_t* suitable_mode_photo(stp_vars_t *v,const canon_modeuse_t* mus
 	      /* duplex check */
 	      mode = &caps->modelist->modes[j];
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
 	      modefound=1;
 	    }
 	  }
@@ -915,8 +877,6 @@ const canon_mode_t* find_first_matching_mode_photo(stp_vars_t *v,const canon_mod
   int j;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_first_matching_mode_photo\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"DEBUG: Entered find_first_matching_mode_photo\n");
   
   while ( (muse->mode_name_list[i]!=NULL)  && (modefound != 1) ) {
     /* pick first mode with MODE_FLAG_PHOTO */
@@ -928,8 +888,6 @@ const canon_mode_t* find_first_matching_mode_photo(stp_vars_t *v,const canon_mod
 	    /* duplex check */
 	    mode = &caps->modelist->modes[j];
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (find_first_matching_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (find_first_matching_mode_photo): picked first mode with photo inkset (%s)\n",mode->name);
 	    modefound=1;
 	  }
 	}
@@ -948,8 +906,6 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
   int modefound=0;
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered suitable_mode_general\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"DEBUG: Entered suitable_mode_general\n");
 
   
   while ((muse->mode_name_list[i]!=NULL) && (modefound != 1)){
@@ -961,8 +917,6 @@ const canon_mode_t* suitable_mode_general(stp_vars_t *v,const canon_modeuse_t* m
 	    /* duplex check */
 	    mode = &caps->modelist->modes[j];
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (suitable_mode_general): picked first mode with lowest matching quality (%s)\n",mode->name);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (suitable_mode_general): picked first mode with lowest matching quality (%s)\n",mode->name);
 	    modefound=1;
 	  }
 	}
@@ -979,8 +933,6 @@ const char* find_ink_type(stp_vars_t *v,const canon_mode_t* mode,const char *pri
   const char *ink_type = stp_get_string_parameter(v, "InkType");
 
   stp_dprintf(STP_DBG_CANON, v,"DEBUG: Entered find_ink_type\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"DEBUG: Entered find_ink_type\n");
 
   /* if InkType does not match that of mode, change InkType to match it */
   /* choose highest color as default, as there is only one option for Black */
@@ -1046,8 +998,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 #endif
 
   stp_dprintf(STP_DBG_CANON, v,"Entered canon_check_current_mode: got PrintingMode %s\n",printing_mode);
-  if (ERRPRINT)
-    stp_eprintf(v,"entered canon_check_current_mode: got PrintingMode %s\n",printing_mode);
 
   /* Logic: priority of options
      1. Media --- always present for final selection.
@@ -1076,8 +1026,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 
   if(resolution){
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- (Initial) Resolution already known: '%s'\n",resolution);
-    if (ERRPRINT)
-      stp_eprintf(v,"check_current_mode --- (Initial) Resolution already known: '%s'\n",resolution);
     for(i=0;i<caps->modelist->count;i++){
       if(!strcmp(resolution,caps->modelist->modes[i].name)){
 	mode = &caps->modelist->modes[i];
@@ -1087,8 +1035,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   }
   else {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- (Initial) Resolution not yet known \n");
-    if (ERRPRINT)
-      stp_eprintf(v,"check_current_mode --- (Initial) Resolution not yet known \n");
   }
     
   if (ink_set)
@@ -1104,14 +1050,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   /* beginning of mode replacement code */
   if (media_type && resolution && mode) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Resolution, Media, Mode all known \n");
-    if (ERRPRINT)
-      stp_eprintf(v,"check_current_mode --- Resolution, Media, Mode all known \n");
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: media type selected: '%s'\n",media_type->name);
-    if (ERRPRINT)
-      stp_eprintf(v,"media type selected: '%s'\n",media_type->name);
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: (Inital) Gutenprint: mode initally active: '%s'\n",mode->name);
-    if (ERRPRINT)
-      stp_eprintf(v,"(Inital) mode initially active: '%s'\n",mode->name);
       
     /* scroll through modeuse list to find media */
     muse = select_media_modes(v,media_type,mlist);
@@ -1120,15 +1060,11 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
     modecheck=compare_mode_valid(v,mode,muse,mlist);
 
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: (mode replacement) Gutenprint: modecheck value: '%i'\n",modecheck);
-    if (ERRPRINT)
-      stp_eprintf(v,"(mode replacement) modecheck value: '%i'\n",modecheck);
             
     /* if we did not find a valid mode, need to replace it */
     if (modecheck!=0) {
 
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode): no suitable mode exists, need to find a mode\n");
-      if (ERRPRINT)
-	stp_eprintf(v,"Gutenprint (check_current_mode): no suitable mode exists, need to find a mode\n");
 
       quality = mode->quality;
       /* Black InkSet */
@@ -1136,8 +1072,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	stp_set_string_parameter(v, "PrintingMode","BW");
 	printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	if (!(mode->ink_types & CANON_INK_K)) {
-	  if (ERRPRINT)
-	    stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, looking for a matching mode\n");
       
 	  /* need a new mode: 
 	     loop through modes in muse list searching for a matching inktype, comparing quality
@@ -1149,17 +1083,12 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    modefound=1;
 
 	  if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did not find match, so taking first available\n");
 	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {  
 	      mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did not find match, took first available: '%s'\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for black inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did no special conditions, so first match taken: '%s'\n",mode->name);
+	      stp_dprintf(STP_DBG_CANON, v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K but did no special conditions, so first match taken: '%s'\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1172,8 +1101,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"Gutenprint (check_current_mode) (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1185,8 +1112,7 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected K inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  mode=suitable_mode_monochrome(v,muse,caps,quality,duplex_mode);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K and mode already fits (but need to check for duplex condition): '%s'\n",mode->name);
+	  stp_dprintf(STP_DBG_CANON, v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K and mode already fits (but need to check for duplex condition): '%s'\n",mode->name);
 	  if (!mode)
 	    modefound=0;
 	  else
@@ -1195,13 +1121,11 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  if (modefound == 0) { /* still did not find a mode: pick first one for that media matching the InkSet limitation */
 	    if ( (muse->use_flags & INKSET_BLACK_MODEREPL) ) {
 	    mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, pick first one matching condition for black mode replacement: '%s'\n",mode->name);
+	    stp_dprintf(STP_DBG_CANON, v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, pick first one matching condition for black mode replacement: '%s'\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for black inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, pick first one matching condition without mode replacement needed: '%s'\n",mode->name);
+	      stp_dprintf(STP_DBG_CANON, v,"Gutenprint (check_current_mode): Ink set is set to CANON_INK_K, pick first one matching condition without mode replacement needed: '%s'\n",mode->name);
 	    }
 	  }
 
@@ -1213,22 +1137,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-		if (ERRPRINT)
-		  stp_eprintf(v,"Gutenprint (check_current_mode) (InkSet:Black): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (check_current_mode) (InkSet:Black): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"Gutenprint (InkSet:Black): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1241,8 +1159,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"Gutenprint (InkSet:Black): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1260,8 +1176,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"Gutenprint (InkSet:Black):  InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1280,8 +1194,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	if (!(mode->ink_types & CANON_INK_CMY)) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
 	  /* need a new mode
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
@@ -1295,14 +1207,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
 	      mode=find_first_matching_mode_color(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1318,22 +1226,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		  stp_eprintf(v,"Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1346,8 +1248,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1364,8 +1264,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1379,8 +1277,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
-	  if (ERRPRINT)
-	  stp_eprintf(v,"Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode);
 	  if (!mode)
 	    modefound=0;
@@ -1391,14 +1287,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {
 	      mode=find_first_matching_mode_color(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -1414,22 +1306,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"Gutenprint (InkSet:Color): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"Gutenprint (InkSet:Color): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1442,8 +1328,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"Gutenprint (InkSet:Color): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1460,8 +1344,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1515,8 +1397,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_printf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
@@ -1534,8 +1414,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1552,8 +1430,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1593,22 +1469,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1621,8 +1491,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1639,8 +1507,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1657,8 +1523,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
       else {
 	if (printing_mode && !strcmp(printing_mode,"Color")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode Color\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode Color\n");
 	  /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
 	  i=0;
 	  quality = mode->quality;
@@ -1672,8 +1536,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
 		      mode = &caps->modelist->modes[j];
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode color): picked first mode with color inkset (%s)\n",mode->name);
-		      if (ERRPRINT)
-			stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode color): picked first mode with color inkset (%s)\n",mode->name);
 		      modefound=1;
 		    }
 		  }
@@ -1699,8 +1561,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    if (caps->modelist->modes[j].ink_types & CANON_INK_K) { /* AND means support for CANON_IN_K is included */
 		      mode = &caps->modelist->modes[j];
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode BW): picked first mode with mono inkset (%s)\n",mode->name);
-		      if (ERRPRINT)
-			stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode BW): picked first mode with mono inkset (%s)\n",mode->name);
 		      modefound=1;
 		    }
 		  }
@@ -1725,8 +1585,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    /* duplex check */
 		    mode = &caps->modelist->modes[j];
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode unset): picked first mode with quality match (%s)\n",mode->name);
-		      if (ERRPRINT)
-			stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, printmode unset): picked first mode with quality match (%s)\n",mode->name);
 		    modefound=1;
 		  }
 		}
@@ -1748,22 +1606,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    /* duplex check */
 		    mode = &caps->modelist->modes[j];
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode, Both/Color, no printmode): picked first mode with quality match (%s)\n",mode->name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (check_current_mode, Both/Color, no printmode): picked first mode with quality match (%s)\n",mode->name);
 		    modefound=1;
 		    /* set PrintingMode to whatever the mode is capable of */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K) {
 		      stp_set_string_parameter(v,"PrintingMode","Color");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
-		      if (ERRPRINT)
-			stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
 		    } else {
 		      stp_set_string_parameter(v,"PrintingMode","BW");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
-		      if (ERRPRINT)
-			stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
 		    }
 		  }
 		}
@@ -1782,22 +1634,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	/* choose highest color as default, as there is only one option for Black */
 	if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	  stp_set_string_parameter(v, "InkType", "Gray");
 	  ink_type = stp_get_string_parameter(v, "InkType");
 	} else {
 	  inkfound=0;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 	      if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		inkfound=1;
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1810,8 +1656,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  inkfound=1; /* set */
@@ -1826,8 +1670,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	/* end of cartridge option block */
 	
 	stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: mode searching: replaced mode with: '%s'\n",mode->name);
-	if (ERRPRINT)
-	  stp_eprintf(v,"mode searching: replaced mode with: '%s'\n",mode->name);
 	
 #if 0
 	/* set InkType for the mode decided upon */
@@ -1835,8 +1677,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  if (mode->ink_types & canon_inktypes[i].ink_type) {
 	    if (strcmp(ink_type,canon_inktypes[i].name)) {
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (Mode found): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	      stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 	      ink_type = stp_get_string_parameter(v, "InkType");
 	      break;
@@ -1851,8 +1691,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
     else { /* we did find the mode in the list for media, so it should take precedence over other settings, as it is more specific. */
 
       stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (check_current_mode):  mode exists, need to check for consistency (%s)\n",mode->name);
-      if (ERRPRINT)
-	stp_eprintf(v,"Gutenprint (check_current_mode):  mode exists, need to check for consistency (%s)\n",mode->name);
       quality = mode->quality;
       /* Black InkSet */
       if (ink_set && !strcmp(ink_set,"Black")) {
@@ -1889,22 +1727,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -1917,8 +1749,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -1935,8 +1765,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -1976,22 +1804,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2004,8 +1826,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2022,8 +1842,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Black): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2041,8 +1859,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	printing_mode = stp_get_string_parameter(v, "PrintingMode");
 	if (!(mode->ink_types & CANON_INK_CMY)) { /* Color InkSet */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): inkset incorrect for Color cartridge---need new mode\n");
 	  /* need a new mode
 	     loop through modes in muse list searching for a matching inktype, comparing quality
 	  */
@@ -2057,14 +1873,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {  
 	      mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -2080,22 +1892,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2108,8 +1914,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2126,8 +1930,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2141,12 +1943,8 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* mode is fine */
 	  /* matched expected RGB inkset, but need to check if Duplex matches, and if not, get a new mode with right inkset */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): inkset OK but need to check other parameters\n");
 	  mode=suitable_mode_color(v,muse,caps,quality,duplex_mode); /* something wrong here!!! */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): returned mode for color inkset: %s\n",mode->name);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): returned mode for color inkset: %s\n",mode->name);
 	  if (!mode)
 	    modefound=0;
 	  else
@@ -2156,14 +1954,10 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if ( (muse->use_flags & INKSET_COLOR_MODEREPL) ) {
 	      mode=find_first_matching_mode_monochrome(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode for color inkset (%s)\n",mode->name);
 	    }
 	    else {  /* no special replacement modes for color inkset */
 	      mode=find_first_matching_mode(v,muse,caps,duplex_mode);
 	      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
-	      if (ERRPRINT)
-		stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): Decided on first matching mode with no special replacement modes for color inkset (%s)\n",mode->name);
 	    }
 	  }
 	  if (!mode)
@@ -2179,22 +1973,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2207,8 +1995,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2225,8 +2011,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2275,22 +2059,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2303,8 +2081,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2321,8 +2097,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2362,22 +2136,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	  /* choose highest color as default, as there is only one option for Black */
 	  if (printing_mode && !strcmp(printing_mode,"BW")) {
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	    stp_set_string_parameter(v, "InkType", "Gray");
 	    ink_type = stp_get_string_parameter(v, "InkType");
 	  } else {
 	    inkfound=0;
 	    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	    for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		  inkfound=1;
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  break;
@@ -2390,8 +2158,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		  if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		    stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		    ink_type = stp_get_string_parameter(v, "InkType");
 		    inkfound=1; /* set */
@@ -2408,8 +2174,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) {
 	      if (strcmp(ink_type,canon_inktypes[i].name)) { /* if InkType does not match selected mode ink type*/
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Color): InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2425,8 +2189,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
       else {
 	if (printing_mode && !strcmp(printing_mode,"Color")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode Color\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode Color\n");
 	  /* must skip K-only inksets if they exist: they only exist if the option "BW" is also declared but we cannot check if an option exists or not */
 	    i=0;
 	    quality = mode->quality;
@@ -2441,8 +2203,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 			if (!strcmp(mode->name,caps->modelist->modes[j].name)) {
 			  mode = &caps->modelist->modes[j];
 			  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) Color: Decided on mode (%s)\n",mode->name);
-			  if (ERRPRINT)
-			    stp_eprintf(v,"Gutenprint (InkSet:Both) Color: Decided on mode (%s)\n",mode->name);
 			  modefound=1;
 			}
 		      }
@@ -2456,8 +2216,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	}
 	else if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode BW\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode BW\n");
 	  /* need to find K-only inksets: they must exist since we declared the printer to have this capability! */
 	    i=0;
 	    quality = mode->quality;
@@ -2472,8 +2230,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 			if (!strcmp(mode->name,caps->modelist->modes[j].name)) {
 			  mode = &caps->modelist->modes[j];
 			  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) BW: Decided on mode (%s)\n",mode->name);
-			  if (ERRPRINT)
-			    stp_eprintf(v,"Gutenprint (InkSet:Both) BW: Decided on mode (%s)\n",mode->name);
 			  modefound=1;
 			}
 		      }
@@ -2487,8 +2243,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	}
 	else { /* no restriction from PrintingMode if not set yet */
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet\n");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet\n");
 	    i=0;
 	    quality = mode->quality;
 	    modefound=0;
@@ -2501,8 +2255,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		      if (!strcmp(mode->name,caps->modelist->modes[j].name)) {
 			mode = &caps->modelist->modes[j];
 			stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode not set yet: Decided on first matching mode with quality match (%s)\n",mode->name);
-			if (ERRPRINT)
-			  stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode not set yet: Decided on first matching mode with quality match (%s)\n",mode->name);
 			modefound=1;
 		      }
 		    }
@@ -2525,22 +2277,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 		    /* duplex check */
 		    mode = &caps->modelist->modes[j];
 		    stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) No mode previously found---catch-all: Decided on first matching mode (%s)\n",mode->name);
-		    if (ERRPRINT)
-		      stp_eprintf(v,"Gutenprint (InkSet:Both) No mode previously found---catch-all: Decided on first matching mode (%s)\n",mode->name);
 		    modefound=1;
 		    /* set PrintingMode to whatever the mode is capable of */
 		    if (caps->modelist->modes[j].ink_types > CANON_INK_K){
 		      stp_set_string_parameter(v,"PrintingMode","Color");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to Color\n");
-		      if (ERRPRINT)
-			stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode set to Color\n");
 		    } else {
 		      stp_set_string_parameter(v,"PrintingMode","BW");
 		      printing_mode = stp_get_string_parameter(v, "PrintingMode");
 		      stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both) PrintingMode set to BW\n");
-		      if (ERRPRINT)
-			stp_eprintf(v,"Gutenprint (InkSet:Both) PrintingMode set to BW\n");
 		    }
 		  }
 		}
@@ -2559,22 +2305,16 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	/* choose highest color as default, as there is only one option for Black */
 	if (printing_mode && !strcmp(printing_mode,"BW")) {
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType changed to %u (%s)\n",CANON_INK_K, "Gray");
 	  stp_set_string_parameter(v, "InkType", "Gray");
 	  ink_type = stp_get_string_parameter(v, "InkType");
 	} else {
 	  inkfound=0;
 	  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType of mode %s is currently set as %s\n",mode->name,ink_type);
 	  for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	    if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 	      if ( !(strcmp(ink_type,canon_inktypes[i].name))) {
 		inkfound=1;
 		stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		if (ERRPRINT)
-		  stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): InkType match found %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		ink_type = stp_get_string_parameter(v, "InkType");
 		break;
@@ -2587,8 +2327,6 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 	      if (mode->ink_types & canon_inktypes[i].ink_type) { /* a mode can have several ink_types: must compare with ink_type if set */
 		if ((!ink_type) || (strcmp(ink_type,canon_inktypes[i].name))) { /* if InkType does not match selected mode ink type*/
 		  stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-		  if (ERRPRINT)
-		    stp_eprintf(v,"DEBUG: Gutenprint (InkSet:Both): No match found---choosing first available. InkType changed to %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 		  stp_set_string_parameter(v, "InkType", canon_inktypes[i].name);
 		  ink_type = stp_get_string_parameter(v, "InkType");
 		  inkfound=1; /* set */
@@ -2630,19 +2368,13 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
   if (mode) {
     stp_set_string_parameter(v, "Resolution",mode->text);  /* check_current_mode checks resolution! */
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- updated Resolution: '%s'\n",mode->name);
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint:  check_current_mode --- updated Resolution: '%s'\n",mode->name);
   }
 
   if (mode) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Final returned mode: '%s'\n",mode->name);
-    if (ERRPRINT)
-      stp_eprintf(v,"check_current_mode --- Final returned mode: '%s'\n",mode->name);
   }
   else {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint:  check_current_mode --- Final returned mode is NULL \n");
-    if (ERRPRINT)
-      stp_eprintf(v,"check_current_mode --- Final returned mode is NULL \n");
   }
 
   /* set PrintingMode in case of Inkset precedence */
@@ -2661,31 +2393,19 @@ const canon_mode_t* canon_check_current_mode(stp_vars_t *v){
 
   if (printing_mode) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final PrintingMode %s\n",printing_mode);
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint: Final PrintingMode %s\n",printing_mode);
   } else { /* should not happen */
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final PrintingMode is NULL\n");
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint: Final PrintingMode is NULL\n");
   }
   if (ink_set) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkSet value (high priority): '%s'\n",ink_set);
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint: Final InkSet value (high priority): '%s'\n",ink_set);
   } else {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkSet value is NULL\n");
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint: Final InkSet value is NULL\n");
   }
   
   if (ink_type) {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkType value (low priority): '%s'\n",ink_type);
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint: Final InkType value (low priority): '%s'\n",ink_type);
   } else {
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Final InkType value is NULL\n");
-    if (ERRPRINT)
-      stp_eprintf(v,"DEBUG: Gutenprint: Final InkType value is NULL\n");
   }
 
   return mode;
@@ -2703,13 +2423,9 @@ canon_printhead_colors(const stp_vars_t*v)
   const char *ink_set = stp_get_string_parameter(v, "InkSet");
 
   stp_dprintf(STP_DBG_CANON, v,"Entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
-  if (ERRPRINT)
-    stp_eprintf(v,"entered canon_printhead_colors: got PrintingMode %s\n",print_mode);
 
   /* if a mode is available, use it. Else mode is NULL */
   stp_dprintf(STP_DBG_CANON, v,"Calling get_current_parameter from canon_printhead_colors\n");
-  if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_printhead_colors\n");
   mode = canon_get_current_mode(v);
   
   /* get the printing mode again */
@@ -2719,17 +2435,11 @@ canon_printhead_colors(const stp_vars_t*v)
   if(print_mode && !strcmp(print_mode, "BW") && !(caps->features & CANON_CAP_NOBLACK) ){ /* workaround in case BW is a default */
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkType %u (CANON_INK_K)\n",CANON_INK_K);
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) NOBLACK? %lu\n",(caps->features & CANON_CAP_NOBLACK));
-    if (ERRPRINT) {
-      stp_eprintf(v,"(canon_printhead_colors[BW]) Found InkType %u (CANON_INK_K)\n",CANON_INK_K);
-      stp_eprintf(v,"(canon_printhead_colors[BW]) NOBLACK? %lu\n",(caps->features & CANON_CAP_NOBLACK));
-    }
     return CANON_INK_K;
   }
   /* alternatively, if the cartridge selection is in force, and black cartride is selected, accept it */
   if(ink_set && !strcmp(ink_set, "Black")){
     stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[BW]) Found InkSet black selection\n");
-    if (ERRPRINT)
-      stp_eprintf(v,"(canon_printhead_colors[BW]) Found InkSet black selection\n");
     return CANON_INK_K;
   }
   
@@ -2745,8 +2455,6 @@ canon_printhead_colors(const stp_vars_t*v)
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if (mode->ink_types & canon_inktypes[i].ink_type) {
 	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	  return canon_inktypes[i].ink_type;
 	}
       }
@@ -2757,8 +2465,6 @@ canon_printhead_colors(const stp_vars_t*v)
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(mode->ink_types & canon_inktypes[i].ink_type) {
 	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"(canon_printhead_colors[mode]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	  return canon_inktypes[i].ink_type;
 	}
       }
@@ -2770,22 +2476,17 @@ canon_printhead_colors(const stp_vars_t*v)
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	if(ink_type && !strcmp(canon_inktypes[i].name,ink_type)) {
 	  stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"(canon_printhead_colors[inktype]) Found InkType %i(%s)\n",canon_inktypes[i].ink_type,canon_inktypes[i].name);
 	  return canon_inktypes[i].ink_type;
 	}
       }
     }
     else { /* no ink type selected yet */
-      if (ERRPRINT)
-	stp_eprintf(v,"canon_printhead_colors: no mode and no inktype: we have to choose the highest one to return\n");
+      stp_dprintf(STP_DBG_CANON, v,"canon_printhead_colors: no mode and no inktype: we have to choose the highest one to return\n");
       /* loop through all modes, and return the highest inktype found */
       for(i=0;i<sizeof(canon_inktypes)/sizeof(canon_inktypes[0]);i++){
 	for(j=0;j<caps->modelist->count;j++){
 	  if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	    stp_dprintf(STP_DBG_CANON, v," highest inktype found ---  %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"highest inktype found --- %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	    return canon_inktypes[i].ink_type;
 	  }
 	}
@@ -2798,8 +2499,6 @@ canon_printhead_colors(const stp_vars_t*v)
   /* However, some Canon printers do not have monochrome mode at all, only color meta ink modes, like iP6000 series */
 #if 0
   stp_dprintf(STP_DBG_CANON, v,"(canon_printhead_colors[fall-through]) Returning InkType %i(CANON_INK_K)\n",CANON_INK_K);
-  if (ERRPRINT)
-    stp_eprintf(v,"(canon_printhead_colors[fall-through]) Found InkType %i(CANON_INK_K)\n",CANON_INK_K);
   return CANON_INK_K;
 #endif
   /* new fallback: loop through ink type in reverse order, picking first one found, which if CANON_INK_K is supported will be that, else the lowest amount of color */
@@ -2807,8 +2506,6 @@ canon_printhead_colors(const stp_vars_t*v)
     for(j=0;j<caps->modelist->count;j++){
       if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	stp_dprintf(STP_DBG_CANON, v," lowest inktype found ---  %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
-	if (ERRPRINT)
-	  stp_eprintf(v,"lowest inktype found --- %s(%s)\n",canon_inktypes[i].name,canon_inktypes[i].text);
 	return canon_inktypes[i].ink_type;
       }
     }
@@ -2922,8 +2619,7 @@ canon_describe_resolution(const stp_vars_t *v, int *x, int *y)
   const canon_cap_t * caps = canon_get_model_capabilities(v);
  
   /* if mode is not yet set, it remains NULL */
-  if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_describe_resolution\n");
+  stp_dprintf(STP_DBG_CANON, v,"Calling get_current_parameter from canon_describe_resolution\n");
   mode = canon_get_current_mode(v);
 
   if(!mode)
@@ -3127,8 +2823,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
   {
     const canon_mode_t* mode = NULL;
 
-    if (ERRPRINT)
-      stp_eprintf(v,"Calling get_current_parameter from InkType block in canon_parameters\n");
+    stp_dprintf(STP_DBG_CANON, v,"Calling get_current_parameter from InkType block in canon_parameters\n");
     mode=canon_get_current_mode(v);
 
     description->bounds.str= stp_string_list_create();
@@ -3137,8 +2832,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	if(mode->ink_types & canon_inktypes[i].ink_type){
           stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
 	  stp_dprintf(STP_DBG_CANON, v," mode known --- Added InkType %s(%s) for mode %s (inktype %u)\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name,mode->ink_types);
-	  if (ERRPRINT)
-	    stp_eprintf(v,"mode known --- Added InkType %s(%s) for mode %s (inktype %u)\n",canon_inktypes[i].name,canon_inktypes[i].text,mode->name,mode->ink_types);
 	}
       }
       description->deflt.str = stp_string_list_param(description->bounds.str, 0)->name;
@@ -3150,8 +2843,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	  if(caps->modelist->modes[j].ink_types & canon_inktypes[i].ink_type){
 	    stp_string_list_add_string(description->bounds.str,canon_inktypes[i].name,_(canon_inktypes[i].text));
 	    stp_dprintf(STP_DBG_CANON, v," no mode --- Added InkType %s(%s) for mode (%s) inktypes %u\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
-	    if (ERRPRINT)
-	      stp_eprintf(v,"no mode --- Added InkType %s(%s) for mode (%s) inktypes %u\n",canon_inktypes[i].name,canon_inktypes[i].text,caps->modelist->modes[j].name,caps->modelist->modes[j].ink_types);
 	    break;
 	  }      
 	}
@@ -3175,8 +2866,6 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	if(ink_type == canon_inktypes[i].ink_type){
               description->deflt.integer = canon_inktypes[i].num_channels;
 	      stp_dprintf(STP_DBG_CANON, v,"Added %d InkChannels\n",canon_inktypes[i].num_channels);
-	      if (ERRPRINT)
-		stp_eprintf(v,"Added %d InkChannels\n",canon_inktypes[i].num_channels);
 	}
       }
       description->bounds.integer.lower = -1;
@@ -3215,37 +2904,31 @@ canon_parameters(const stp_vars_t *v, const char *name,
     const canon_mode_t* mode = NULL;
     /* mode remains NULL if not yet set */
     
-    if (ERRPRINT)
-      stp_eprintf(v,"Calling get_current_mode from PrintingMode block in canon_parameter\n");
+    stp_dprintf(STP_DBG_CANON, v,"Calling get_current_mode from PrintingMode block in canon_parameter\n");
     mode = canon_get_current_mode(v);
     
     /* If mode is not set need to search ink types for all modes and
        see whether we have any color there
      */
 
-    if (ERRPRINT)
-      stp_eprintf(v,"PrintingMode---entered enumeration block in canon_printers\n");
+    stp_dprintf(STP_DBG_CANON, v,"PrintingMode---entered enumeration block in canon_printers\n");
 
     description->bounds.str = stp_string_list_create();
 
-    if (ERRPRINT)
-      stp_eprintf(v,"PrintingMode---created list\n");
+    stp_dprintf(STP_DBG_CANON, v,"PrintingMode---created list\n");
 
     if (mode) {
-      if (ERRPRINT)
-	stp_eprintf(v,"PrintingMode: (mode known) what is the current mode inktype value: %i\n",mode->ink_types);
+      stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode known) what is the current mode inktype value: %i\n",mode->ink_types);
       /* e.g., ink_types is 21 = 16 + 4 + 1 */
       if (mode->ink_types > 1) {
 	stp_string_list_add_string
 	  (description->bounds.str, "Color", _("Color"));
-	if (ERRPRINT)
-	  stp_eprintf(v,"PrintingMode: (mode known) added Color\n");
+	stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode known) added Color\n");
       }
       if (mode->ink_types & CANON_INK_K) {
 	stp_string_list_add_string
 	  (description->bounds.str, "BW", _("Black and White"));
-	if (ERRPRINT)
-	  stp_eprintf(v,"PrintingMode: (mode known) added BW\n");
+	stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode known) added BW\n");
       }
     }
 #if 0
@@ -3254,14 +2937,12 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	if (mode->ink_types != CANON_INK_K) {
 	  stp_string_list_add_string
 	    (description->bounds.str, "Color", _("Color"));
-	  if (ERRPRINT)
-	    stp_eprintf(v,"PrintingMode: (mode known) added Color\n");
+	  stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode known) added Color\n");
 	}
 #endif
 
     else { /* mode not known yet --- needed for PPD generation */
-      if (ERRPRINT)
-	stp_eprintf(v,"PrintingMode: entered mode not known conditional block\n");
+      stp_dprintf(STP_DBG_CANON, v,"PrintingMode: entered mode not known conditional block\n");
       /* add code to find color inks */
       /* default type must be deduced from the default mode */
       /* use color if available, so break after first (color) is found, since ink types ordered with gray last */
@@ -3272,8 +2953,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	    stp_string_list_add_string
 	      (description->bounds.str, "Color", _("Color"));
 	    found_color=1;
-	    if (ERRPRINT)
-	      stp_eprintf(v,"PrintingMode: (mode not known) added Color\n");
+	    stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode not known) added Color\n");
 	    break;
 	  }
 	}
@@ -3287,8 +2967,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
 	    stp_string_list_add_string
 	      (description->bounds.str, "BW", _("Black and White"));
 	    found_mono=1;
-	    if (ERRPRINT)
-	      stp_eprintf(v,"PrintingMode: (mode not known) added BW\n");
+	    stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode not known) added BW\n");
 	    break;
 	  }
 	}
@@ -3301,22 +2980,19 @@ canon_parameters(const stp_vars_t *v, const char *name,
       if(caps->modelist->modes[caps->modelist->default_mode].ink_types > 1){
 	stp_string_list_add_string
 	  (description->bounds.str, "Color", _("Color"));
-	if (ERRPRINT)
-	  stp_eprintf(v,"PrintingMode: (mode not known) added Color\n");
+	stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode not known) added Color\n");
       }
       if(caps->modelist->modes[caps->modelist->default_mode].ink_types & CANON_INK_K){
 	stp_string_list_add_string
 	(description->bounds.str, "BW", _("Black and White"));
-	if (ERRPRINT)
-	  stp_eprintf(v,"PrintingMode: (mode not known) added BW\n");	
+	stp_dprintf(STP_DBG_CANON, v,"PrintingMode: (mode not known) added BW\n");	
       }
 #endif
 #if 0
       /* original code */
       stp_string_list_add_string
 	(description->bounds.str, "BW", _("Black and White"));
-      if (ERRPRINT)
-	stp_eprintf(v,"PrintingMode: added BW\n");
+      stp_dprintf(STP_DBG_CANON, v,"PrintingMode: added BW\n");
 #endif
     }
     
@@ -3493,27 +3169,22 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
   /* temporarily limit to non-CD media until page size code moved here from do_print */
   /* Note: written beloe code to handle CD case as well */
   if(!cd){
-    if (ERRPRINT) {
-      stp_eprintf(v,"internal_imageable_area: about to enter the borderless condition block\n");
-      stp_eprintf(v,"internal_imageable_area: is borderless available? %016lx\n",caps->features & CANON_CAP_BORDERLESS);
-      stp_eprintf(v,"internal_imageable_area: is borderless selected? %d\n",stp_get_boolean_parameter(v, "FullBleed"));
-    }
+    stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: about to enter the borderless condition block\n");
+    stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: is borderless available? %016lx\n",caps->features & CANON_CAP_BORDERLESS);
+    stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: is borderless selected? %d\n",stp_get_boolean_parameter(v, "FullBleed"));
     
     if ( (caps->features & CANON_CAP_BORDERLESS) &&
 	 (use_maximum_area || (!cd && stp_get_boolean_parameter(v, "FullBleed")))) {
       
-      if (ERRPRINT)
-	stp_eprintf(v,"internal_imageable_area: entered borderless condition\n");
+      stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: entered borderless condition\n");
       
       if (pt) {
 	
-	if (ERRPRINT)
-	  stp_eprintf(v,"internal_imageable_area: entered pt condition\n");
+	stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: entered pt condition\n");
 	
 	if (pt->left <= 0 && pt->right <= 0 && pt->top <= 0 && pt->bottom <= 0) {
 	  
-	  if (ERRPRINT)
-	    stp_eprintf(v,"internal_imageable_area: entered margin<=0 condition\n");
+	  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: entered margin<=0 condition\n");
 	  
 	  if (use_paper_margins) {
 	    unsigned width_limit = caps->max_width;
@@ -3524,8 +3195,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 	    top_margin = -6;
 	    bottom_margin = -15;
 	    
-	    if (ERRPRINT)
-	      stp_eprintf(v,"internal_imageable_area: use_paper_margins so set margins all to -7\n");
+	    stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: use_paper_margins so set margins all to -7\n");
 
 	  }
 	  else {
@@ -3534,8 +3204,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
 	    top_margin = 0;
 	    bottom_margin = 0;
 	    
-	    if (ERRPRINT)
-	      stp_eprintf(v,"internal_imageable_area: does not use paper margins so set margins all to 0\n");
+	    stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: does not use paper margins so set margins all to 0\n");
 
 	  }
 	}
@@ -3543,26 +3212,20 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
     }
   }
 
-  if (ERRPRINT) 
-    {
-      stp_eprintf(v,"internal_imageable_area: left_margin %d\n",left_margin);
-      stp_eprintf(v,"internal_imageable_area: right_margin %d\n",right_margin);
-      stp_eprintf(v,"internal_imageable_area: top_margin %d\n",top_margin);
-      stp_eprintf(v,"internal_imageable_area: bottom_margin %d\n",bottom_margin);
-    }
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: left_margin %d\n",left_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: right_margin %d\n",right_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: top_margin %d\n",top_margin);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: bottom_margin %d\n",bottom_margin);
 
   *left =	left_margin;
   *right =	width - right_margin;
   *top =	top_margin;
   *bottom =	length - bottom_margin;
 
-  if (ERRPRINT) 
-    {
-      stp_eprintf(v,"internal_imageable_area: page_left %d\n",*left);
-      stp_eprintf(v,"internal_imageable_area: page_right %d\n",*right);
-      stp_eprintf(v,"internal_imageable_area: page_top %d\n",*top);
-      stp_eprintf(v,"internal_imageable_area: page_bottom %d\n",*bottom);
-    }
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_left %d\n",*left);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_right %d\n",*right);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_top %d\n",*top);
+  stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: page_bottom %d\n",*bottom);
 
 }
 
@@ -3962,8 +3625,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");  
   int print_cd= (input_slot && (!strcmp(input_slot, "CD")));
 
-  if (ERRPRINT)
-    stp_eprintf(v,"setPageMargins2: print_cd = %d\n",print_cd);
+  stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: print_cd = %d\n",print_cd);
 
   test_cd = 1;
   /*
@@ -4048,95 +3710,95 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
   if (print_cd) {
     /* test all of the parameters for CD */
-    stp_eprintf(v,"ERRPRINT: ==========Start Test Printout============'\n");
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_A_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_A_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A printable width (pts): '%d'\n",(init->page_width + adjust_tray_A_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A printable length (pts): '%d'\n",(init->page_height + adjust_tray_A_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A page_width (1/600): '%d'\n",(init->page_width + adjust_tray_A_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A page_height (1/600): '%d'\n",(init->page_height + adjust_tray_A_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_A_width + 20 + adjust_tray_A_left + adjust_tray_A_right ) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_A_length + 24 + adjust_tray_A_top + adjust_tray_A_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v,"ERRPRINT: ==========Start Test Printout============'\n");
+    stp_dprintf(STP_DBG_CANON, v, "Tray A original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_A_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_A_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A printable width (pts): '%d'\n",(init->page_width + adjust_tray_A_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A printable length (pts): '%d'\n",(init->page_height + adjust_tray_A_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A page_width (1/600): '%d'\n",(init->page_width + adjust_tray_A_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A page_height (1/600): '%d'\n",(init->page_height + adjust_tray_A_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_A_width + 20 + adjust_tray_A_left + adjust_tray_A_right ) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_A_length + 24 + adjust_tray_A_top + adjust_tray_A_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_BCD_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_BCD_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D printable width (pts): '%d'\n",(init->page_width + adjust_tray_BCD_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D printable length (pts): '%d'\n",(init->page_height + adjust_tray_BCD_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D page_width (1/600): '%d'\n",(init->page_width + adjust_tray_BCD_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D page_height (1/600): '%d'\n",(init->page_height + adjust_tray_BCD_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_BCD_width + 20 + adjust_tray_BCD_left + adjust_tray_BCD_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_BCD_length + 24 + adjust_tray_BCD_top + adjust_tray_BCD_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_BCD_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_BCD_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D printable width (pts): '%d'\n",(init->page_width + adjust_tray_BCD_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D printable length (pts): '%d'\n",(init->page_height + adjust_tray_BCD_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D page_width (1/600): '%d'\n",(init->page_width + adjust_tray_BCD_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D page_height (1/600): '%d'\n",(init->page_height + adjust_tray_BCD_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_BCD_width + 20 + adjust_tray_BCD_left + adjust_tray_BCD_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_BCD_length + 24 + adjust_tray_BCD_top + adjust_tray_BCD_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_E_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_E_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E printable width (pts): '%d'\n",(init->page_width + adjust_tray_E_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E printable length (pts): '%d'\n",(init->page_height + adjust_tray_E_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E page_width (1/600): '%d'\n",(init->page_width + adjust_tray_E_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E page_height (1/600): '%d'\n",(init->page_height + adjust_tray_E_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_E_width + 20 + adjust_tray_E_left + adjust_tray_E_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_E_length + 24 + adjust_tray_E_top + adjust_tray_E_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_E_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_E_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E printable width (pts): '%d'\n",(init->page_width + adjust_tray_E_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E printable length (pts): '%d'\n",(init->page_height + adjust_tray_E_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E page_width (1/600): '%d'\n",(init->page_width + adjust_tray_E_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E page_height (1/600): '%d'\n",(init->page_height + adjust_tray_E_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_E_width + 20 + adjust_tray_E_left + adjust_tray_E_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_E_length + 24 + adjust_tray_E_top + adjust_tray_E_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_F_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_F_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F printable width (pts): '%d'\n",(init->page_width + adjust_tray_F_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F printable length (pts): '%d'\n",(init->page_height + adjust_tray_F_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F page_width (1/600): '%d'\n",(init->page_width + adjust_tray_F_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F page_height (1/600): '%d'\n",(init->page_height + adjust_tray_F_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_F_width + 20 + adjust_tray_F_left + adjust_tray_F_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_F_length + 24 + adjust_tray_F_top + adjust_tray_F_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_F_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_F_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F printable width (pts): '%d'\n",(init->page_width + adjust_tray_F_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F printable length (pts): '%d'\n",(init->page_height + adjust_tray_F_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F page_width (1/600): '%d'\n",(init->page_width + adjust_tray_F_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F page_height (1/600): '%d'\n",(init->page_height + adjust_tray_F_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_F_width + 20 + adjust_tray_F_left + adjust_tray_F_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_F_length + 24 + adjust_tray_F_top + adjust_tray_F_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_G_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_G_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G printable width (pts): '%d'\n",(init->page_width + adjust_tray_G_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G printable length (pts): '%d'\n",(init->page_height + adjust_tray_G_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G page_width (1/600): '%d'\n",(init->page_width + adjust_tray_G_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G page_height (1/600): '%d'\n",(init->page_height + adjust_tray_G_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_G_width + 20 + adjust_tray_G_left + adjust_tray_G_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_G_length + 24 + adjust_tray_G_top + adjust_tray_G_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_G_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_G_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G printable width (pts): '%d'\n",(init->page_width + adjust_tray_G_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G printable length (pts): '%d'\n",(init->page_height + adjust_tray_G_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G page_width (1/600): '%d'\n",(init->page_width + adjust_tray_G_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G page_height (1/600): '%d'\n",(init->page_height + adjust_tray_G_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_G_width + 20 + adjust_tray_G_left + adjust_tray_G_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_G_length + 24 + adjust_tray_G_top + adjust_tray_G_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_H_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_H_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H printable width (pts): '%d'\n",(init->page_width + adjust_tray_H_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H printable length (pts): '%d'\n",(init->page_height + adjust_tray_H_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H page_width (1/600): '%d'\n",(init->page_width + adjust_tray_H_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H page_height (1/600): '%d'\n",(init->page_height + adjust_tray_H_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_H_width + 20 + adjust_tray_H_left + adjust_tray_H_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_H_length + 24 + adjust_tray_H_top + adjust_tray_H_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_H_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_H_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H printable width (pts): '%d'\n",(init->page_width + adjust_tray_H_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H printable length (pts): '%d'\n",(init->page_height + adjust_tray_H_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H page_width (1/600): '%d'\n",(init->page_width + adjust_tray_H_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H page_height (1/600): '%d'\n",(init->page_height + adjust_tray_H_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_H_width + 20 + adjust_tray_H_left + adjust_tray_H_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_H_length + 24 + adjust_tray_H_top + adjust_tray_H_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_J_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_J_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J printable width (pts): '%d'\n",(init->page_width + adjust_tray_J_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J printable length (pts): '%d'\n",(init->page_height + adjust_tray_J_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J page_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J page_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width + 20 + adjust_tray_J_left + adjust_tray_J_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length + 24 + adjust_tray_J_top + adjust_tray_J_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_J_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_J_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J printable width (pts): '%d'\n",(init->page_width + adjust_tray_J_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J printable length (pts): '%d'\n",(init->page_height + adjust_tray_J_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J page_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J page_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width + 20 + adjust_tray_J_left + adjust_tray_J_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length + 24 + adjust_tray_J_top + adjust_tray_J_bottom) * unit / 72);
     
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom original init->page_width (pts): '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom original init->page_height (pts): '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_custom_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_custom_length);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom printable width (pts): '%d'\n",(init->page_width + adjust_tray_custom_width + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom printable length (pts): '%d'\n",(init->page_height + adjust_tray_custom_length + 1) * 5 / 6);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom page_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom page_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width + 20 + adjust_tray_custom_left + adjust_tray_custom_right) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length + 24 + adjust_tray_custom_top + adjust_tray_custom_bottom) * unit / 72);
-    stp_eprintf(v,"ERRPRINT: ==========End Test Printout============'\n");
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_custom_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_custom_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom printable width (pts): '%d'\n",(init->page_width + adjust_tray_custom_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom printable length (pts): '%d'\n",(init->page_height + adjust_tray_custom_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom page_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom page_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width + 20 + adjust_tray_custom_left + adjust_tray_custom_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length + 24 + adjust_tray_custom_top + adjust_tray_custom_bottom) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v,"ERRPRINT: ==========End Test Printout============'\n");
   }
 
   /* Tray A */
@@ -4145,14 +3807,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=44; /* NN by calculation, but NN empirical to obtain same size as Windows */
     init->page_height +=151;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray A modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray A modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4162,14 +3824,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=10; /* NN by calculation, but NN empirical to obtain same size as Windows */
     init->page_height +=84;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/B modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/B modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray B/C/D modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray B/C/D modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4179,14 +3841,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=127; /* NN by calculation, but NN empirical to obtain same size as Windows */
     init->page_height +=186;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray E modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray E modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4195,22 +3857,22 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Tray F init->page_width: '%d'\n",init->page_width);
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Tray F init->page_height: '%d'\n",init->page_height);
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F init->page_height: '%d'\n",init->page_height);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F initial printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F initial printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F initial printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F initial printable_length: '%d'\n",printable_length);
 
     init->page_width +=10; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
     init->page_height +=95;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray F modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray F modified printable_length: '%d'\n",printable_length);
 
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Tray F modified printable_width: '%d'\n",printable_width);
     stp_dprintf(STP_DBG_CANON, v,"DEBUG: Gutenprint: Tray F modified printable_length: '%d'\n",printable_length);
@@ -4222,14 +3884,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=10; /* 10 by calculation, but 11 empirical to obtain same size as Windows */
     init->page_height +=127;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray G modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray G modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4239,14 +3901,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=68; /* NN by calculation, but NN empirical to obtain same size as Windows */
     init->page_height +=481;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray H modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray H modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4256,14 +3918,14 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=8; /* NN by calculation, but NN empirical to obtain same size as Windows */
     init->page_height +=44;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray J modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray J modified printable_length: '%d'\n",printable_length);
 
   }
 
@@ -4273,27 +3935,21 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     init->page_width +=24; /* NN by calculation, but NN empirical to obtain same size as Windows */
     init->page_height +=132;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_width: '%d'\n",init->page_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified init->page_height: '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_height: '%d'\n",init->page_height);
 
     printable_width=  (init->page_width+ 1)*5/6;
     printable_length= (init->page_height + 1)*5/6;
 
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified printable_width: '%d'\n",printable_width);
-    stp_eprintf(v,"ERRPRINT: Gutenprint: Tray Custom modified printable_length: '%d'\n",printable_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified printable_length: '%d'\n",printable_length);
 
-  }
-
-  if (ERRPRINT) {
-    stp_eprintf(v,"canon_init_setPageMargins2: borderless capability? %016lx\n", init->caps->features & CANON_CAP_BORDERLESS);
-    stp_eprintf(v,"canon_init_setPageMargins2: borderless active? %d\n", stp_get_boolean_parameter(v, "FullBleed"));
   }
 
   if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
        !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
     {
-      if (ERRPRINT)
-	stp_eprintf(v,"canon_init_setPageMargins2: for borderless set printable length and width to 0\n");
+      stp_dprintf(STP_DBG_CANON, v,"canon_init_setPageMargins2: for borderless set printable length and width to 0\n");
       /* set to 0 for borderless */
       printable_width = 0;
       printable_length = 0;
@@ -4402,17 +4058,15 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	  area_top = border_top2 * unit / 72;
 	}
 
-	if (ERRPRINT) {
-	  stp_eprintf(v,"setPageMargins2: init->page_height = %d\n",init->page_height);
-	  stp_eprintf(v,"setPageMargins2: printable_length = %d\n",printable_length);
-	  stp_eprintf(v,"setPageMargins2: paper_height = %d\n",(init->page_height + border_top + border_bottom) * unit / 72);
-	}
+	stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: init->page_height = %d\n",init->page_height);
+	stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: printable_length = %d\n",printable_length);
+	stp_dprintf(STP_DBG_CANON, v,"setPageMargins2: paper_height = %d\n",(init->page_height + border_top + border_bottom) * unit / 72);
 
 
-	stp_eprintf(v,"ERRPRINT: Gutenprint: final init->page_width: '%d'\n",init->page_width);
-	stp_eprintf(v,"ERRPRINT: Gutenprint: final init->page_height: '%d'\n",init->page_height);
-	stp_eprintf(v,"ERRPRINT: Gutenprint: final printable_width: '%d'\n",printable_width);
-	stp_eprintf(v,"ERRPRINT: Gutenprint: final printable_length: '%d'\n",printable_length);
+	stp_dprintf(STP_DBG_CANON, v, "final init->page_width: '%d'\n",init->page_width);
+	stp_dprintf(STP_DBG_CANON, v, "final init->page_height: '%d'\n",init->page_height);
+	stp_dprintf(STP_DBG_CANON, v, "final printable_width: '%d'\n",printable_width);
+	stp_dprintf(STP_DBG_CANON, v, "final printable_length: '%d'\n",printable_length);
 
 	stp_zfwrite(ESC28,2,1,v); /* ESC( */
 	stp_putc(0x70,v);         /* p    */
@@ -5370,30 +5024,21 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
         int delay = canon_get_delay(privdata,ink->channel);
         canon_channel_t* current;
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: (start) privdata->num_channels %d\n", privdata->num_channels);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channel: (start) privdata->num_channels %d\n", privdata->num_channels);
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: (start) privdata->channel_order %s\n", privdata->channel_order);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channel: (start) privdata->channel_order %s\n", privdata->channel_order);
+
         /* create a new channel */
         privdata->channels = stp_realloc(privdata->channels,sizeof(canon_channel_t) * (privdata->num_channels + 1));
         privdata->channel_order = stp_realloc(privdata->channel_order,privdata->num_channels + 2);
         /* update channel order */
         privdata->channel_order[privdata->num_channels]=ink->channel;
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: ink->channel %c\n", ink->channel);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channel: ink->channel %c\n", ink->channel);
         privdata->channel_order[privdata->num_channels+1]='\0';
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: (terminated)privdata->channel_order %s\n", privdata->channel_order);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channel: (terminated)privdata->channel_order %s\n", privdata->channel_order);
         current = &(privdata->channels[privdata->num_channels]);
         ++privdata->num_channels;
         /* fill ink properties */
         current->name = ink->channel;
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: current->name %c\n", current->name);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channel: current->name %c\n", current->name);
         current->props = ink->ink;
         current->delay = delay;
         /* calculate buffer length */
@@ -5413,8 +5058,6 @@ static int canon_setup_channel(stp_vars_t *v,canon_privdata_t* privdata,int chan
 		memmove(*shades + 1,*shades,sizeof(stp_shade_t) * subchannel);
         (*shades)[0].value = ink->density;
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channel: ink->density %.3f\n", ink->density);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channel: ink->density %.3f\n", ink->density);
         (*shades)[0].numsizes = ink->ink->numsizes;
 	/* test for 4-4 inket with 8 levels spaced every 2nd */
 	/*if (ink->ink->bits == 4)
@@ -5462,8 +5105,6 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 	int is_black_channel = 0;
         channel = channel_order[channel_idx];
 	stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: channel %d\n", channel);
- 	if (ERRPRINT)
-	  stp_eprintf(v, "canon_setup_channels: channel %d\n", channel);
         if(channel == STP_ECOLOR_K && privdata->used_inks & CANON_INK_K_MASK){ /* black channel */
             /* find K and k inks */
             for(i=0;i<privdata->mode->num_inks;i++){
@@ -5472,8 +5113,6 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
                     subchannel += canon_setup_channel(v,privdata,channel,subchannel,ink,&shades);
 		    /* Gernot: add */
 		    stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: got a black channel\n");
-		    if (ERRPRINT)
-		      stp_eprintf(v, "canon_setup_channels: got a black channel\n");
 		}
             }
 	    is_black_channel = 1;
@@ -5483,21 +5122,15 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
             for(i=0;i<privdata->mode->num_inks;i++){
                 const canon_inkset_t* ink = &privdata->mode->inks[i];
 		stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop non-K inks %d\n", i);
-		if (ERRPRINT)
-		  stp_eprintf(v, "canon_setup_channels: loop non-K inks %d\n", i);
                 /*if(ink->channel == primary[channel] || ((privdata->used_inks & (CANON_INK_CcMmYyKk_MASK | CANON_INK_cmy_MASK)) && (ink->channel == secondary[channel]))) {*/
                 if(ink->channel == primary[channel] || ((privdata->used_inks & (CANON_INK_CcMmYyKk_MASK|CANON_INK_CMY_MASK)) && (ink->channel == secondary[channel]))) {
 		/* Gernot: see if this works: use the masks that includes secondary channels */
                 /* if(ink->channel == primary[channel] || ((privdata->used_inks & CANON_INK_CMYKk_MASK ) && (ink->channel == secondary[channel]))) {*/
 		  subchannel += canon_setup_channel(v,privdata,channel,subchannel,ink,&shades);
 		  stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: adding subchannel\n");
-		  if (ERRPRINT)
-		    stp_eprintf(v, "canon_setup_channels: adding subchannel\n");
 		}
 		else {
 		  stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: not creating subchannel\n"); 
-		  if (ERRPRINT)
-		    stp_eprintf(v, "canon_setup_channels: not creating subchannel\n"); 
 		}
             } 
         }
@@ -5508,8 +5141,6 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
           for(i=0;i<subchannel;i++){
             double density = get_double_param(v, primary_density_control[channel]) * get_double_param(v, "Density");
 	    stp_dprintf(STP_DBG_CANON, v, "canon_setup_channels: loop subchannels for shades %d\n", i);
-	    if (ERRPRINT)
-	      stp_eprintf(v, "canon_setup_channels: loop subchannels for shades %d\n", i);
             if(i > 0 && secondary_density_control[channel])
               density *= get_double_param(v, secondary_density_control[channel]);
             stp_channel_set_density_adjustment(v,channel,subchannel,density);
@@ -5587,19 +5218,6 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->top -= page_top; /* checked in Epson: matches */
     privdata->page_width = page_right - page_left; /* checked in Epson: matches */
     privdata->page_height = page_bottom - page_top; /* checked in Epson: matches */
-
-    if (ERRPRINT) {
-      stp_eprintf(v,"============================set_imageable_area========================\n");
-      stp_eprintf(v,"setup_page page_top = %i\n",page_top);
-      stp_eprintf(v,"setup_page page_bottom = %i\n",page_bottom);
-      stp_eprintf(v,"setup_page page_left = %i\n",page_left);
-      stp_eprintf(v,"setup_page page_right = %i\n",page_right);
-      stp_eprintf(v,"setup_page top = %i\n",privdata->top);
-      stp_eprintf(v,"setup_page left = %i\n",privdata->left);
-      stp_eprintf(v,"setup_page out_height = %i\n",privdata->out_height);
-      stp_eprintf(v,"setup_page page_height = %i\n",privdata->page_height);
-      stp_eprintf(v,"setup_page page_width = %i\n",privdata->page_width);
-    }
 
     stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %i\n",page_top);
     stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %i\n",page_bottom);
@@ -5809,8 +5427,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   /* --- make adjustments to mode --- */
 
   /* find the wanted print mode: NULL if not yet set */
-  if (ERRPRINT)
-    stp_eprintf(v,"Calling get_current_parameter from canon_do_print routine (before default set)\n");
   stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_get_current_mode\n");
   privdata.mode = canon_get_current_mode(v);
 
@@ -5819,8 +5435,6 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
   }
   
   /* then call get_current_mode again to sort out the correct matching of parameters and mode selection */
-  if (ERRPRINT)
-    stp_eprintf(v,"Calling cannon_check_current_parameter from canon_do_print routine (after default set)\n");
   
   stp_dprintf(STP_DBG_CANON, v, "canon_do_print: calling canon_check_current_mode\n");
 
@@ -6046,13 +5660,13 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
                                 stp_compute_uncompressed_linewidth);
        privdata.last_pass_offset = 0;
 
-       if (ERRPRINT) {
+       if (stp_get_debug_level() & STP_DBG_CANON) {
 	 for(x=0;x<4;x++){
-	   stp_eprintf(v, "DEBUG print-canon weave: weave_color_order[%d]: %u\n",
+	   stp_dprintf(STP_DBG_CANON, v, "DEBUG print-canon weave: weave_color_order[%d]: %u\n",
 		       x, (unsigned int)weave_color_order[x]);
 	 }
 	 for(x=0;x<privdata.num_channels;x++){
-	   stp_eprintf(v, "DEBUG print-canon weave: channel_order[%d]: %u\n",
+	   stp_dprintf(STP_DBG_CANON, v, "DEBUG print-canon weave: channel_order[%d]: %u\n",
 		       x, (unsigned int)privdata.channel_order[x]);
 	 }
        }
@@ -6066,8 +5680,7 @@ canon_do_print(stp_vars_t *v, stp_image_t *image)
 	     if(weave_color_order[i] == privdata.channel_order[x]){
 	       weave_cols[i] = privdata.channels[x].buf;
 	       privdata.weave_bits[i] = privdata.channels[x].props->bits;
-	       if (ERRPRINT)
-		 stp_eprintf(v, "DEBUG print-canon weave: set weave_cols[%d] to privdata.channels[%d].buf\n",
+	       stp_dprintf(STP_DBG_CANON, v, "DEBUG print-canon weave: set weave_cols[%d] to privdata.channels[%d].buf\n",
 			     i, x);
 	     }
            }
