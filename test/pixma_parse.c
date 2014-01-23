@@ -738,8 +738,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 					    fprintf(stderr," Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
 						   img->color[i].compression,img->color[i].bpp,img->color[i].level);
 					  }else{
-					    fprintf(stderr," Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
-						   img->color[i].compression,img->color[i].bpp,img->color[i].level);
+					    fprintf(stderr," Color %i out of bounds!\n", i);
 					    /*printf(" Color ignoring setting %x %x %x\n",buf[3+i*3],buf[3+i*3+1],buf[3+i*3+2]);*/
 					  }
 					  
@@ -769,8 +768,7 @@ static int process(FILE* in, FILE* out,int verbose,unsigned int maxw,unsigned in
 						fprintf(stderr," Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
 						       img->color[i].compression,img->color[i].bpp,img->color[i].level);
 					  }else{
-					    fprintf(stderr," Color %c Compression: %i bpp %i level %i\n",img->color[i].name,
-						       img->color[i].compression,img->color[i].bpp,img->color[i].level);
+					    fprintf(stderr," Color %i out of bounds!", i);
 						/*printf(" Color ignoring setting %x %x %x\n",buf[3+i*3],buf[3+i*3+1],buf[3+i*3+2]);*/
 					  }
 					}
