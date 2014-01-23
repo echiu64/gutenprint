@@ -99,7 +99,7 @@ pack_pixels(unsigned char* buf,int len)
   return write_pos;
 }
 
-/* 3 5-level pixels into 1 byte */
+/* 3 4-bit-per-pixel  5-level pixels into 1 byte */
 static int
 pack_pixels3_5(unsigned char* buf,int len)
 {
@@ -131,7 +131,7 @@ pack_pixels3_5(unsigned char* buf,int len)
   return write_pos;
 }
 
-/* 3 6-level pixels into 1 byte */
+/* 3 4-bit-per-pixel 6-level pixels into 1 byte */
 static int
 pack_pixels3_6(unsigned char* buf,int len)
 {
@@ -3167,7 +3167,7 @@ internal_imageable_area(const stp_vars_t *v,   /* I */
   }
 
   /* temporarily limit to non-CD media until page size code moved here from do_print */
-  /* Note: written beloe code to handle CD case as well */
+  /* Note: written below code to handle CD case as well */
   if(!cd){
     stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: about to enter the borderless condition block\n");
     stp_dprintf(STP_DBG_CANON, v,"internal_imageable_area: is borderless available? %016lx\n",caps->features & CANON_CAP_BORDERLESS);
@@ -3594,6 +3594,7 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int area_right,area_top;
   int test_cd; /* variable for activating experimental adjustments */
   /* CD tray size adjustments for paper dimensions */
+  int adjust_tray_custom_length, adjust_tray_custom_width;
   int adjust_tray_A_length, adjust_tray_A_width;
   int adjust_tray_BCD_length, adjust_tray_BCD_width;
   int adjust_tray_E_length, adjust_tray_E_width;
@@ -3601,8 +3602,8 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int adjust_tray_G_length, adjust_tray_G_width;
   int adjust_tray_H_length, adjust_tray_H_width;
   int adjust_tray_J_length, adjust_tray_J_width;
-  int adjust_tray_custom_length, adjust_tray_custom_width;
   /* CD tray border adjustments */
+  int adjust_tray_custom_left, adjust_tray_custom_right, adjust_tray_custom_top, adjust_tray_custom_bottom;
   int adjust_tray_A_left, adjust_tray_A_right, adjust_tray_A_top, adjust_tray_A_bottom;
   int adjust_tray_BCD_left, adjust_tray_BCD_right, adjust_tray_BCD_top, adjust_tray_BCD_bottom;
   int adjust_tray_E_left, adjust_tray_E_right, adjust_tray_E_top, adjust_tray_E_bottom;
@@ -3610,7 +3611,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   int adjust_tray_G_left, adjust_tray_G_right, adjust_tray_G_top, adjust_tray_G_bottom;
   int adjust_tray_H_left, adjust_tray_H_right, adjust_tray_H_top, adjust_tray_H_bottom;
   int adjust_tray_J_left, adjust_tray_J_right, adjust_tray_J_top, adjust_tray_J_bottom;
-  int adjust_tray_custom_left, adjust_tray_custom_right, adjust_tray_custom_top, adjust_tray_custom_bottom;
 
 
   /* TOFIX: what exactly is to be sent?
@@ -3629,34 +3629,47 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
   test_cd = 1;
   /*
-    Adjustments for different CD trays
-    A:
-    printable_width = init->page_width + 44;
-    printable_length = init->page_height + 151;
-    B/C/D:
-    printable_width = init->page_width + 10;
-    printable_length = init->page_height + 84;
-    E:
-    printable_width = init->page_width + 127;
-    printable_length = init->page_height + 186;
-    F:
-    printable_width = init->page_width + 10;
-    printable_length = init->page_height + 95;
-    G:
-    printable_width = init->page_width + 10;
-    printable_length = init->page_height + 127;
-    H:
-    printable_width = init->page_width + 68;
-    printable_length = init->page_height + 481;
-    J:
-    printable_width = init->page_width + 8;
-    printable_length = init->page_height + 44;
+    Adjustments for different CD trays:
+    All based on the following settings:
+    CANON_CD_X = 176
+    CANON_CD_Y = 405
+
     Custom:
     printable_width = init->page_width + 24;
     printable_length = init->page_height + 132;
+
+    A:
+    printable_width = init->page_width + 44;
+    printable_length = init->page_height + 151;
+
+    B/C/D:
+    printable_width = init->page_width + 10;
+    printable_length = init->page_height + 84;
+
+    E:
+    printable_width = init->page_width + 127;
+    printable_length = init->page_height + 186;
+
+    F:
+    printable_width = init->page_width + 10;
+    printable_length = init->page_height + 95;
+
+    G:
+    printable_width = init->page_width + 10;
+    printable_length = init->page_height + 127;
+
+    H:
+    printable_width = init->page_width + 68;
+    printable_length = init->page_height + 481;
+
+    J:
+    printable_width = init->page_width + 8;
+    printable_length = init->page_height + 44;
   */
 
   /* adjust paper dimensions for CD in points */
+  adjust_tray_custom_length = 132;
+  adjust_tray_custom_width = 24;
   adjust_tray_A_length = 151;
   adjust_tray_A_width = 44;
   adjust_tray_BCD_length = 84;
@@ -3671,10 +3684,12 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   adjust_tray_H_width = 68;
   adjust_tray_J_length = 44;
   adjust_tray_J_width = 8;
-  adjust_tray_custom_length = 132;
-  adjust_tray_custom_width = 24;
 
   /* ensure less than or equal to Windows measurements  by border adjustments in points  */
+  adjust_tray_custom_left = 0;
+  adjust_tray_custom_right = 0;
+  adjust_tray_custom_top = 0;
+  adjust_tray_custom_bottom = 0;
   adjust_tray_A_left = 0;
   adjust_tray_A_right = 0;
   adjust_tray_A_top = 0;
@@ -3703,14 +3718,22 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
   adjust_tray_J_right = 0;
   adjust_tray_J_top = 0;
   adjust_tray_J_bottom = 0;
-  adjust_tray_custom_left = 0;
-  adjust_tray_custom_right = 0;
-  adjust_tray_custom_top = 0;
-  adjust_tray_custom_bottom = 0;
 
-  if (print_cd) {
+  if ((print_cd) && test_cd) {
     /* test all of the parameters for CD */
-    stp_dprintf(STP_DBG_CANON, v,"ERRPRINT: ==========Start Test Printout============'\n");
+    stp_dprintf(STP_DBG_CANON, v,"==========Start Test Printout=========='\n");
+
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom original init->page_width (pts): '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom original init->page_height (pts): '%d'\n",init->page_height);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_custom_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_custom_length);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom printable width (pts): '%d'\n",(init->page_width + adjust_tray_custom_width + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom printable length (pts): '%d'\n",(init->page_height + adjust_tray_custom_length + 1) * 5 / 6);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom page_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom page_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width + 20 + adjust_tray_custom_left + adjust_tray_custom_right) * unit / 72);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length + 24 + adjust_tray_custom_top + adjust_tray_custom_bottom) * unit / 72);
+
     stp_dprintf(STP_DBG_CANON, v, "Tray A original init->page_width (pts): '%d'\n",init->page_width);
     stp_dprintf(STP_DBG_CANON, v, "Tray A original init->page_height (pts): '%d'\n",init->page_height);
     stp_dprintf(STP_DBG_CANON, v, "Tray A modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_A_width);
@@ -3788,17 +3811,24 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
     stp_dprintf(STP_DBG_CANON, v, "Tray J paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_J_width + 20 + adjust_tray_J_left + adjust_tray_J_right) * unit / 72);
     stp_dprintf(STP_DBG_CANON, v, "Tray J paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_J_length + 24 + adjust_tray_J_top + adjust_tray_J_bottom) * unit / 72);
     
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom original init->page_width (pts): '%d'\n",init->page_width);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom original init->page_height (pts): '%d'\n",init->page_height);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width (pts): '%d'\n",init->page_width + adjust_tray_custom_width);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_height (pts): '%d'\n",init->page_height + adjust_tray_custom_length);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom printable width (pts): '%d'\n",(init->page_width + adjust_tray_custom_width + 1) * 5 / 6);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom printable length (pts): '%d'\n",(init->page_height + adjust_tray_custom_length + 1) * 5 / 6);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom page_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width) * unit / 72);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom page_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length) * unit / 72);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom paper_width (1/600): '%d'\n",(init->page_width + adjust_tray_custom_width + 20 + adjust_tray_custom_left + adjust_tray_custom_right) * unit / 72);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom paper_height (1/600): '%d'\n",(init->page_height + adjust_tray_custom_length + 24 + adjust_tray_custom_top + adjust_tray_custom_bottom) * unit / 72);
-    stp_dprintf(STP_DBG_CANON, v,"ERRPRINT: ==========End Test Printout============'\n");
+    stp_dprintf(STP_DBG_CANON, v,"==========End Test Printout=========='\n");
+  }
+
+  /* Tray Custom */
+  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
+
+    init->page_width +=24; /* NN by calculation, but NN empirical to obtain same size as Windows */
+    init->page_height +=132;
+
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width: '%d'\n",init->page_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_height: '%d'\n",init->page_height);
+
+    printable_width=  (init->page_width+ 1)*5/6;
+    printable_length= (init->page_height + 1)*5/6;
+
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified printable_width: '%d'\n",printable_width);
+    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified printable_length: '%d'\n",printable_length);
+
   }
 
   /* Tray A */
@@ -3929,23 +3959,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 
   }
 
-  /* Tray Custom */
-  if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
-
-    init->page_width +=24; /* NN by calculation, but NN empirical to obtain same size as Windows */
-    init->page_height +=132;
-
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_width: '%d'\n",init->page_width);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified init->page_height: '%d'\n",init->page_height);
-
-    printable_width=  (init->page_width+ 1)*5/6;
-    printable_length= (init->page_height + 1)*5/6;
-
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified printable_width: '%d'\n",printable_width);
-    stp_dprintf(STP_DBG_CANON, v, "Tray Custom modified printable_length: '%d'\n",printable_length);
-
-  }
-
   if ( (init->caps->features & CANON_CAP_BORDERLESS) && 
        !(print_cd) && stp_get_boolean_parameter(v, "FullBleed") ) 
     {
@@ -3987,6 +4000,13 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	border_top2=border_top;
 	border_right2=border_right;
 	border_bottom2=border_bottom;
+
+	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
+	  border_left2   = border_left + adjust_tray_custom_left;
+	  border_right2  = border_right + adjust_tray_custom_right;
+	  border_top2    = border_top + adjust_tray_custom_top;
+	  border_bottom2 = border_bottom + adjust_tray_custom_bottom;
+	}
 
 	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA iP9910")) && (test_cd==1) ) {
 	  border_left2   = border_left + adjust_tray_A_left;
@@ -4035,13 +4055,6 @@ canon_init_setPageMargins2(const stp_vars_t *v, canon_privdata_t *init)
 	  border_right2  = border_right + adjust_tray_J_right;
 	  border_top2    = border_top + adjust_tray_J_top;
 	  border_bottom2 = border_bottom + adjust_tray_J_bottom;
-	}
-
-	if ( (print_cd) && !(strcmp(init->caps->name,"PIXMA MP710")) && (test_cd==1) ) {
-	  border_left2   = border_left + adjust_tray_custom_left;
-	  border_right2  = border_right + adjust_tray_custom_right;
-	  border_top2    = border_top + adjust_tray_custom_top;
-	  border_bottom2 = border_bottom + adjust_tray_custom_bottom;
 	}
 
 	/* this does not seem to need adjustment, so use original borders */
@@ -5158,7 +5171,7 @@ static void canon_setup_channels(stp_vars_t *v,canon_privdata_t* privdata){
 
 
 
-/* FIXME move this to printercaps */
+/* FIXME move this to printercaps, and/or Esc (p command  */
 #define CANON_CD_X 176
 #define CANON_CD_Y 405
 
@@ -5218,18 +5231,18 @@ static void setup_page(stp_vars_t* v,canon_privdata_t* privdata){
     privdata->top -= page_top; /* checked in Epson: matches */
     privdata->page_width = page_right - page_left; /* checked in Epson: matches */
     privdata->page_height = page_bottom - page_top; /* checked in Epson: matches */
-
-    stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %i\n",page_top);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %i\n",page_bottom);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page page_left = %i\n",page_left);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page page_right = %i\n",page_right);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page top = %i\n",privdata->top);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page left = %i\n",privdata->left);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page out_height = %i\n",privdata->out_height);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page page_height = %i\n",privdata->page_height);
-    stp_dprintf(STP_DBG_CANON, v, "setup_page page_width = %i\n",privdata->page_width);
-
   }
+  
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_top = %i\n",page_top);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_bottom = %i\n",page_bottom);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_left = %i\n",page_left);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_right = %i\n",page_right);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page top = %i\n",privdata->top);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page left = %i\n",privdata->left);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page out_height = %i\n",privdata->out_height);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_height = %i\n",privdata->page_height);
+  stp_dprintf(STP_DBG_CANON, v, "setup_page page_width = %i\n",privdata->page_width);
+
 }
 
 

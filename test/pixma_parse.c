@@ -202,9 +202,9 @@ static int eight2twelve2(unsigned char* inbuffer,unsigned char* outbuffer,int nu
 	int read_pos=0;
 	init_put_bits(&s, outbuffer,outbuffer_size);
 	while(read_pos < num_bytes){
-		unsigned short value=Table6Level[inbuffer[read_pos]];
+	  unsigned short value=Table6Level[inbuffer[read_pos]];
 		++read_pos;
-		put_bits(&s,12,value);/*12*/
+		put_bits(&s,12,value);
 	}
 	return s.buf_ptr-s.buf;
 }
@@ -283,12 +283,12 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 					  printf("DEBUG color not compressed\n");
 					}
 				}else{
-				  if (img->color->bpp==2) {/* handle 5pixel in 8 bits compression */
+				  if (img->color->bpp==2) {/* handle 5pixel in 8 bits compression --- this is pixel-packing rather than compression, just not wasting space */
 				    color->head->buf=calloc(1,size*2+8);
 				    size=color->head->len=eight2ten(dstr,color->head->buf,size,size*2);
 				    /*printf("DEBUG 3-level color compressed\n");*/
 				  } else if(img->color->bpp==4){ /* handle 4-bit ink compression */
-				    if (img->color->level==5) {/* 5-level compression*/
+				    if (img->color->level==5) {/* 5-level compression --- this is pixel-packing rather than compression, just not wasting space */
 				      color->head->buf=calloc(1,size*2+8);
 				      size=color->head->len=eight2twelve(dstr,color->head->buf,size,size*2);
 				      if (DEBUG) {
@@ -298,7 +298,7 @@ static int Raster(image_t* img,unsigned char* buffer,unsigned int len,unsigned c
 				      if (maxtablevalue!=0) {
 					printf("maxtablevalue: %x",maxtablevalue);
 					}*/
-				    } else if (img->color->level==6) { /* 6-level compression*/
+				    } else if (img->color->level==6) { /* 6-level compression --- this is pixel-packing rather than compression, just not wasting space */
 				      color->head->buf=calloc(1,size*2+8);
 				      size=color->head->len=eight2twelve2(dstr,color->head->buf,size,size*2);
 				      if (DEBUG) {
