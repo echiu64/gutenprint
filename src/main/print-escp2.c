@@ -89,6 +89,14 @@ static const channel_count_t escp2_channel_counts[] =
   { 30, "30" },
   { 31, "31" },
   { 32, "32" },
+  { 33, "33" },
+  { 34, "34" },
+  { 35, "35" },
+  { 36, "36" },
+  { 37, "37" },
+  { 38, "38" },
+  { 39, "39" },
+  { 40, "40" },
 };
 
 static stp_curve_t *hue_curve_bounds = NULL;
@@ -385,6 +393,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
     STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 5, 1, 0
   },
+  {
+    "GreenHueCurve", N_("Green Map"), "Color=Yes,Category=Advanced Output Control",
+    N_("Adjust the green map"),
+    STP_PARAMETER_TYPE_CURVE, STP_PARAMETER_CLASS_OUTPUT,
+    STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, 5, 1, 0
+  },
   PARAMETER_INT(max_hres),
   PARAMETER_INT(max_vres),
   PARAMETER_INT(min_hres),
@@ -483,24 +497,32 @@ static const float_param_t float_parameters[] =
   },
   {
     {
-      "RedDensity", N_("Red Density"), "Color=Yes,Category=Output Level Adjustment",
-      N_("Adjust the red density"),
+      "BlueDensity", N_("Blue Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the blue density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "BlueDensity", N_("Blue Density"), "Color=Yes,Category=Output Level Adjustment",
-      N_("Adjust the blue density"),
+      "OrangeDensity", N_("Orange Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the orange density"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 4, 1, 0
+    }, 0.0, 2.0, 1.0, 1
+  },
+  {
+    {
+      "RedDensity", N_("Red Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the red density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
     }, 0.0, 2.0, 1.0, 1
   },
   {
     {
-      "OrangeDensity", N_("Orange Density"), "Color=Yes,Category=Output Level Adjustment",
-      N_("Adjust the orange density"),
+      "GreenDensity", N_("Green Density"), "Color=Yes,Category=Output Level Adjustment",
+      N_("Adjust the green density"),
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED, 0, 1, 5, 1, 0
     }, 0.0, 2.0, 1.0, 1
@@ -2526,6 +2548,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "BlackDensity") == 0 ||
 	   strcmp(name, "RedDensity") == 0 ||
 	   strcmp(name, "BlueDensity") == 0 ||
+	   strcmp(name, "GreenDensity") == 0 ||
 	   strcmp(name, "OrangeDensity") == 0)
     set_density_parameter(v, description, name);
   else if (strcmp(name, "CyanHueCurve") == 0 ||
@@ -2533,6 +2556,7 @@ escp2_parameters(const stp_vars_t *v, const char *name,
 	   strcmp(name, "YellowHueCurve") == 0 ||
 	   strcmp(name, "RedHueCurve") == 0 ||
 	   strcmp(name, "BlueHueCurve") == 0 ||
+	   strcmp(name, "GreenHueCurve") == 0 ||
 	   strcmp(name, "OrangeHueCurve") == 0)
     set_hue_map_parameter(v, description, name);
   else if (strcmp(name, "UseGloss") == 0)

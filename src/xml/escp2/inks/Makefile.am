@@ -63,6 +63,7 @@ pkgxmldata_DATA =				\
 	pro_ultrachrome_k34.xml			\
 	pro_ultrachrome_k3v.xml			\
 	pro_ultrachrome_k3v4.xml		\
+	pro_ultrachrome_k3v10.xml		\
 	standard.xml				\
 	standard_gen0.xml			\
 	sx445.xml				\

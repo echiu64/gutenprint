@@ -46,7 +46,7 @@ extern "C" {
  */
 
 /*! The maximum number of channels. */
-#define STP_CHANNEL_LIMIT	(32)
+#define STP_CHANNEL_LIMIT	(64)
 
 
 /** Image status. */

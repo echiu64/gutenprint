@@ -28,8 +28,8 @@
  * Maximum number of channels in a printer.  If Epson comes out with an
  * 8-head printer, this needs to be increased.
  */
-#define PHYSICAL_CHANNEL_LIMIT 8
 #define MAX_DROP_SIZES 3
+#define PHYSICAL_CHANNEL_LIMIT ((STP_CHANNEL_LIMIT) / ((MAX_DROP_SIZES)+1))
 
 #define XCOLOR_R     (STP_NCOLORS + 0)
 #define XCOLOR_B     (STP_NCOLORS + 1)
