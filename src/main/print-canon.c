@@ -2596,11 +2596,15 @@ canon_size_type(const stp_vars_t *v, const canon_cap_t * caps)
       /* if (!strcmp(name,"CD5Inch"))  return 0x57; */ /* CD Tray H */
 
       /* Fine Art paper codes */
-      /* MG6300, MG6500, MG7100, */
+      /* MG6300, MG6500, MG7100 (only A4)  */
+      /* iP8700, iX6800 (A3  */
       /* if (!strcmp(name,"A4"))       return 0x58; */ /* FineArt A4 35mm border */
       /* if (!strcmp(name,"Letter"))   return 0x5a; */ /* FineArt Letter 35mm border */
+      /* if (!strcmp(name,"A3"))       return 0x59; */ /* FineArt A3 35mm border */
+      /* if (!strcmp(name,"A3plus"))   return 0x5d; */ /* FineArt A3plus 35mm border */
 
       /* if (!strcmp(name,"CD5Inch"))  return 0x5b; */ /* CD Tray J */
+      /* if (!strcmp(name,"CD5Inch"))  return 0x62; */ /* CD Tray L */
 
       /* custom */
 
