@@ -1155,6 +1155,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:
 
+       Canon PIXMA mini260 *1
+       Canon PIXMA i255
+       Canon PIXMA i355
        Canon PIXMA iP1180
        Canon PIXMA iP1188
        Canon PIXMA iP1880
