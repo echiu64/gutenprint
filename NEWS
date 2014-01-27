@@ -307,6 +307,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        EPSON PX-1600F (EXPERIMENTAL)
        EPSON PX-1700F (EXPERIMENTAL)
 
+     - Monochrome laser printers:
+
+       OKI B401d
+
      - Canon inkjets:
 
        Canon MP140 series  (EXPERIMENTAL)(*1)
