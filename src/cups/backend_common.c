@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.28.1"
+#define BACKEND_VERSION "0.31G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -96,7 +96,7 @@ int read_data(struct libusb_device_handle *dev, uint8_t endp,
 				   buf,
 				   buflen,
 				   readlen,
-				   15000);
+				   5000);
 
 	if (ret < 0) {
 		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, *readlen, buflen, endp);
@@ -129,7 +129,7 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 		int len2 = (len > 65536) ? 65536: len;
 		int ret = libusb_bulk_transfer(dev, endp,
 					   buf, len2,
-					   &num, 5000);
+					   &num, 15000);
 
 		if (dyesub_debug) {
 			int i;
@@ -146,7 +146,6 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 		}
 		len -= num;
 		buf += num;
-//		DEBUG("Sent %d (%d remaining) to 0x%x\n", num, len, endp);
 	}
 
 	return 0;
@@ -418,6 +417,7 @@ int main (int argc, char **argv)
 	int found = -1;
 	int copies = 1;
 	int jobid = 0;
+	int pages = 0;
 
 	char *uri = getenv("DEVICE_URI");
 	char *use_serno = NULL;
@@ -429,7 +429,7 @@ int main (int argc, char **argv)
 
 	DEBUG("Multi-Call Gutenprint DyeSub CUPS Backend version %s\n",
 	      BACKEND_VERSION);
-	DEBUG("Copyright 2007-2013 Solomon Peachy\n");
+	DEBUG("Copyright 2007-2014 Solomon Peachy\n");
 
 	/* Cmdline help */
 	if (argc < 2) {
@@ -644,20 +644,41 @@ int main (int argc, char **argv)
 		goto done_claimed;
 	} 
 
-	/* Read in data */
-	if (backend->read_parse(backend_ctx, data_fd))
-		goto done_claimed;
-	close(data_fd);
-
 	/* Time for the main processing loop */
 	INFO("Printing started (%d copies)\n", copies);
+
+newpage:
+	/* Do early parsing if needed for subsequent pages */
+	if (pages && backend->early_parse) {
+		ret = backend->early_parse(backend_ctx, data_fd);
+		if (ret < 0)
+			goto done_multiple;
+	}
+
+	/* Read in data */
+	if (backend->read_parse(backend_ctx, data_fd)) {
+		if (pages)
+			goto done_multiple;
+		else
+			goto done_claimed;
+	}
+
+	INFO("Printing page %d\n", ++pages);
 
 	ret = backend->main_loop(backend_ctx, copies);
 	if (ret)
 		goto done_claimed;
 
+	/* Since we have no way of telling if there's more data remaining
+	   to be read (without actually trying to read it), always assume
+	   multiple print jobs. */
+	goto newpage;
+
+done_multiple:
+	close(data_fd);
+
 	/* Done printing */
-	INFO("All printing done\n");
+	INFO("All printing done (%d pages * %d copies)\n", pages, copies);
 	ret = 0;
 
 done_claimed:
