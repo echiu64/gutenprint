@@ -1,7 +1,7 @@
 /*
  *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -297,10 +297,24 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	if (!ctx)
 		return 1;
 
+	if (ctx->plane_r) {
+		free(ctx->plane_r);
+		ctx->plane_r = NULL;
+	}
+	if (ctx->plane_g) {
+		free(ctx->plane_g);
+		ctx->plane_g = NULL;
+	}
+	if (ctx->plane_b) {
+		free(ctx->plane_b);
+		ctx->plane_b = NULL;
+	}
 
 	/* Read in then validate header */
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+		if (ret == 0)
+			return 1;
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
@@ -543,7 +557,7 @@ top:
 	if (terminate)
 		copies = 1;
 
-	INFO("Print complete (%d remaining)\n", copies - 1);
+	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
 		state = S_IDLE;
@@ -560,8 +574,9 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.26",
+	.version = "0.29",
 	.uri_prefix = "kodak1400",
+	.multipage_capable = 1,
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
 	.init = kodak1400_init,

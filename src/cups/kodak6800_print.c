@@ -1,7 +1,7 @@
 /*
  *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -350,9 +350,16 @@ static int kodak6800_read_parse(void *vctx, int data_fd) {
 	if (!ctx)
 		return 1;
 
+	if (ctx->databuf) {
+		free(ctx->databuf);
+		ctx->databuf = NULL;
+	}
+
 	/* Read in then validate header */
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
+		if (ret == 0)
+			return 1;
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
@@ -588,7 +595,7 @@ skip_query:
 	if (terminate)
 		copies = 1;
 
-	INFO("Print complete (%d remaining)\n", copies - 1);
+	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
 		state = S_IDLE;
@@ -601,8 +608,9 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.27",
+	.version = "0.30",
 	.uri_prefix = "kodak6800",
+	.multipage_capable = 1,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
 	.init = kodak6800_init,

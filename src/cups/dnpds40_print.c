@@ -1,7 +1,7 @@
 /*
  *   DNP DS40/DS80 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -309,11 +309,16 @@ static void dnpds40_teardown(void *vctx) {
 
 static int dnpds40_read_parse(void *vctx, int data_fd) {
 	struct dnpds40_ctx *ctx = vctx;
-	int i, j;
+	int i, j, run = 1;
 	char buf[9] = { 0 };
 
 	if (!ctx)
 		return 1;
+
+	if (ctx->databuf) {
+		free(ctx->databuf);
+		ctx->databuf = NULL;
+	}
 
 	ctx->datalen = 0;
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
@@ -326,7 +331,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	// until we get to the plane data
 
 	/* Read in command header */
-	while (1) {
+	while (run) {
 		int remain;
 		i = read(data_fd, ctx->databuf + ctx->datalen, 
 			 sizeof(struct dnpds40_cmd));
@@ -379,9 +384,15 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			}
 		}
 
+		/* This is the last block.. */
+	        if(!memcmp("CNTRL START", ctx->databuf + ctx->datalen + 2, 11))
+			run = 0;
+
 		/* Add in the size of this chunk */
 		ctx->datalen += sizeof(struct dnpds40_cmd) + j;
 	}
+	if (!ctx->datalen)
+		return 1;
 
 	return 0;
 }
@@ -473,7 +484,7 @@ top:
 	if (terminate)
 		copies = 1;
 	
-	INFO("Print complete (%d remaining)\n", copies - 1);
+	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
 		goto top;
@@ -891,8 +902,9 @@ static int dnpds40_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80",
-	.version = "0.21",
+	.version = "0.24",
 	.uri_prefix = "dnpds40",
+	.multipage_capable = 1,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
 	.init = dnpds40_init,
