@@ -1,7 +1,7 @@
 /*
  *   Sony UP-DR150 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -82,79 +82,124 @@ static void updr150_teardown(void *vctx) {
 #define MAX_PRINTJOB_LEN 16736455
 static int updr150_read_parse(void *vctx, int data_fd) {
 	struct updr150_ctx *ctx = vctx;
-	int i;
+	int i, len, run = 1;
 
 	if (!ctx)
 		return 1;
 
+	if (ctx->databuf) {
+		free(ctx->databuf);
+		ctx->databuf = NULL;
+	}
+
+	ctx->datalen = 0;
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
 		return 2;
 	}
 
-	while((i = read(data_fd, ctx->databuf + ctx->datalen, 4096)) > 0) {
-		ctx->datalen += i;
+	while(run) {
+		int keep = 0;
+		i = read(data_fd, ctx->databuf + ctx->datalen, 4);
+		if (i < 0)
+			return i;
+		if (i == 0)
+			break;
+
+		memcpy(&len, ctx->databuf + ctx->datalen, sizeof(len));
+		len = le32_to_cpu(len);
+
+		/* Filter out chunks we don't send to the printer */
+		switch (len) {
+		case 0xffffff6a:
+		case 0xfffffffc:
+		case 0xfffffffb:
+		case 0xfffffff4:
+		case 0xffffffed:
+		case 0xfffffff9:
+		case 0xfffffff8:
+		case 0xffffffec:
+		case 0xffffffeb:
+		case 0xfffffffa:
+			if(dyesub_debug)
+				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
+			len = 0;
+			break;
+		case 0xfffffff3:
+			if(dyesub_debug)
+				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
+			len = 0;
+			run = 0;
+			break;
+		case 0xffffffef:
+		case 0xfffffff5:
+			if(dyesub_debug)
+				DEBUG("Block ID '%08x' (len %d)\n", len, 4);
+			len = 4;
+			break;
+		default:
+			if (len & 0xff000000) {
+				ERROR("Unknown block ID '%08x', aborting!\n", len);
+				return 1;
+			} else {
+				/* Only keep these chunks */
+				if(dyesub_debug)
+					DEBUG("Data block (len %d)\n", len);
+				keep = 1;
+			}
+			break;
+		}
+		if (keep)
+			ctx->datalen += sizeof(uint32_t);
+
+		/* Read in the data chunk */
+		while(len > 0) {
+			i = read(data_fd, ctx->databuf + ctx->datalen, len);
+			if (i < 0)
+				return i;
+			if (i == 0)
+				break;
+			if (keep)
+				ctx->datalen += i;
+			len -= i;
+		}
 	}
+	if (!ctx->datalen)
+		return 1;
 
 	return 0;
 }
 
 static int updr150_main_loop(void *vctx, int copies) {
 	struct updr150_ctx *ctx = vctx;
-	int i, ret;
+	int i = 0, ret;
 
 	if (!ctx)
 		return 1;
 
 top:
-	for (i = 0 ; i < ctx->datalen ; ) {
-		uint8_t *ptr = ctx->databuf + i;
-		i += 4;
-		if (*(ptr+3) == 0xff) {
-			switch (*ptr) {
-			case 0x6a:
-			case 0xfc:
-			case 0xfb:
-			case 0xf4:
-			case 0xed:
-			case 0xf9:
-			case 0xf8:
-			case 0xec:
-			case 0xeb:
-			case 0xfa:
-			case 0xf3:
-				if(dyesub_debug)
-					DEBUG("Block ID '%x' (len %d)\n", *ptr, 0);
-				break;
-			case 0xef:
-			case 0xf5:
-				if(dyesub_debug)
-					DEBUG("Block ID '%x' (len %d)\n", *ptr, 4);
-				i += 4;
-				break;
-			default:
-				if(dyesub_debug)
-					DEBUG("Unknown block ID '%x'\n", *ptr);
-				break;
-			}
-		} else {
-			uint32_t len = le32_to_cpu(*((uint32_t*)ptr));
+	while (i < ctx->datalen) {
+		uint32_t len;
+		memcpy(&len, ctx->databuf + i, sizeof(len));
+		len = le32_to_cpu(len);
 
-			if (dyesub_debug)
-				DEBUG("Sending %d bytes to printer\n", len);
-			if ((ret = send_data(ctx->dev, ctx->endp_down,
-					     ctx->databuf + i, len)))
-				return ret;
-			i += len;
-		}
+		i += sizeof(uint32_t);
+
+		if (dyesub_debug)
+			DEBUG("Sending %d bytes to printer @ %d\n", len, i);
+		if ((ret = send_data(ctx->dev, ctx->endp_down,
+				     ctx->databuf + i, len)))
+			return ret;
+
+		i += len;
 	}
 
 	/* Clean up */
 	if (terminate)
 		copies = 1;
 
-	INFO("Print complete (%d remaining)\n", copies - 1);
+	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
 		goto top;
@@ -166,11 +211,13 @@ top:
 /* Exported */
 #define USB_VID_SONY         0x054C
 #define USB_PID_SONY_UPDR150 0x01E8
+#define USB_PID_SONY_UPDR200 0x035F
 
 struct dyesub_backend updr150_backend = {
-	.name = "Sony UP-DR150",
-	.version = "0.08",
+	.name = "Sony UP-DR150/UP-DR200",
+	.version = "0.13",
 	.uri_prefix = "sonyupdr150",
+	.multipage_capable = 1,
 	.init = updr150_init,
 	.attach = updr150_attach,
 	.teardown = updr150_teardown,
@@ -178,6 +225,7 @@ struct dyesub_backend updr150_backend = {
 	.main_loop = updr150_main_loop,
 	.devices = {
 	{ USB_VID_SONY, USB_PID_SONY_UPDR150, P_SONY_UPDR150, ""},
+	{ USB_VID_SONY, USB_PID_SONY_UPDR200, P_SONY_UPDR150, ""},
 	{ 0, 0, 0, ""}
 	}
 };
