@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2007-2013 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -53,8 +53,146 @@ struct printer_data {
 	int16_t paper_codes[256];
 	int16_t pgcode_offset;  /* Offset into printjob for paper type */
 	int16_t paper_code_offset; /* Offset in readback for paper type */
-	int16_t error_offset;
+	int  (*error_detect)(uint8_t *rdbuf);
 };
+
+static int es1_error_detect(uint8_t *rdbuf)
+{
+	if (rdbuf[1] == 0x01) {
+		if (rdbuf[9] == 0x00) {
+			ERROR("Cover open!\n");
+		} else {
+			ERROR("Unknown error %02x\n", rdbuf[9]);
+		}
+		return 1;
+	} else if (rdbuf[4] == 0x01 && rdbuf[5] == 0xff &&
+		   rdbuf[6] == 0xff && rdbuf[7] == 0xff) {
+		ERROR("No media loaded!\n");
+		return 1;
+	} else if (rdbuf[0] == 0x0f) {
+		ERROR("Out of media!\n");
+		return 1;
+	}
+
+	return 0;
+}
+
+static int es2_error_detect(uint8_t *rdbuf)
+{
+	if (rdbuf[0] == 0x16 &&
+	    rdbuf[1] == 0x01) {
+		ERROR("Cover open!\n");
+		return 1;
+	}
+		
+	if (rdbuf[0] == 0x02 &&
+	    rdbuf[4] == 0x05 &&
+	    rdbuf[5] == 0x05 &&
+	    rdbuf[6] == 0x02) {
+		ERROR("No media loaded!\n");
+		return 1;
+	}
+
+	if (rdbuf[0] == 0x14) {
+		ERROR("Out of media!\n");
+		return 1;
+	}
+
+	return 0;
+}
+
+static int es3_error_detect(uint8_t *rdbuf)
+{
+	if (rdbuf[8] == 0x01) {
+		if (rdbuf[10] == 0x0f) {
+			ERROR("Communications Error\n");
+		} else if (rdbuf[10] == 0x01) {
+			ERROR("No media/ribbon loaded!\n");
+		} else {
+			ERROR("Unknown error - %02x + %02x\n", 
+			      rdbuf[8], rdbuf[10]);
+		}
+		return 1;
+	} else if (rdbuf[8] == 0x03 &&
+		   rdbuf[10] == 0x02) {
+		ERROR("No media!\n");
+		return 1;
+	} else if (rdbuf[8] == 0x08 &&
+		   rdbuf[10] == 0x04) {
+		ERROR("Cover open!\n");
+		return 1;
+	} else if (rdbuf[8] == 0x05 &&
+		   rdbuf[10] == 0x01) {
+		ERROR("Incorrect media!\n");
+		return 1;
+	}
+
+	if (rdbuf[8] || rdbuf[10]) {
+		ERROR("Unknown error - %02x + %02x\n", 
+		      rdbuf[8], rdbuf[10]);
+		return 1;
+	}
+	
+	return 0;
+}
+
+static int es40_error_detect(uint8_t *rdbuf)
+{
+	if (!rdbuf[4] && !rdbuf[5]) {
+		/* ES40 */
+		if (!rdbuf[3])
+			return 0;
+		
+		if (rdbuf[3] == 0x01)
+			ERROR("Generic communication error\n");
+		else if (rdbuf[3] == 0x32)
+			ERROR("Cover open or media empty!\n");
+		else
+			ERROR("Unknown error - %02x\n", rdbuf[3]);
+		return 1;
+	}
+	
+	/* CP790 */
+	if (rdbuf[4] == 0x10 && rdbuf[5] == 0xff) {
+		ERROR("No ribbon!\n");
+		return 1;
+	} else if (rdbuf[4] == 0xff && rdbuf[5] == 0x01) {
+		ERROR("No media loaded!\n");
+		return 1;
+	}
+
+	return 0;
+}
+
+static int cp10_error_detect(uint8_t *rdbuf)
+{
+	if (!rdbuf[2])
+		return 0;
+
+	if (rdbuf[2] == 0x80)
+		ERROR("No ribbon\n");
+	else if (rdbuf[2] == 0x01)
+		ERROR("No media!\n");
+	else
+		ERROR("Unknown error - %02x\n", rdbuf[2]);
+	return 1;
+}
+
+static int cpxxx_error_detect(uint8_t *rdbuf)
+{
+	if (!rdbuf[2])
+		return 0;
+
+	if (rdbuf[2] == 0x01)
+		ERROR("Out of paper!\n");
+	else if (rdbuf[2] == 0x04)
+		ERROR("Ribbon problem!\n");
+	else if (rdbuf[2] == 0x08)
+		ERROR("Ribbon depleted!\n");
+	else
+		ERROR("Unknown error - %02x\n", rdbuf[2]);
+	return 1;
+}
 
 static struct printer_data selphy_printers[] = {
 	{ .type = P_ES1,
@@ -70,7 +208,7 @@ static struct printer_data selphy_printers[] = {
 	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
-	  .error_offset = 1,
+	  .error_detect = es1_error_detect,
 	},
 	{ .type = P_ES2_20,
 	  .model = "SELPHY ES2/ES20",
@@ -85,7 +223,7 @@ static struct printer_data selphy_printers[] = {
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 4,
-	  .error_offset = 1,  // XXX insufficient
+	  .error_detect = es2_error_detect,
 	},
 	{ .type = P_ES3_30,
 	  .model = "SELPHY ES3/ES30",
@@ -100,22 +238,22 @@ static struct printer_data selphy_printers[] = {
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = -1,
-	  .error_offset = 8, // or 10
+	  .error_detect = es3_error_detect,
 	},
 	{ .type = P_ES40_CP790,
 	  .model = "SELPHY ES40/CP790",
 	  .init_length = 16,
 	  .foot_length = 12,
-	  .init_readback = { 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .init_readback = { 0x00, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
 	  // .clear_error
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 11,
-	  .error_offset = 3,
+	  .error_detect = es40_error_detect,
 	},
 	{ .type = P_CP_XXX,
 	  .model = "SELPHY CP Series (!CP-10/CP790)",
@@ -130,7 +268,7 @@ static struct printer_data selphy_printers[] = {
 	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
-	  .error_offset = 2,
+	  .error_detect = cpxxx_error_detect,
 	},
 	{ .type = P_CP10,
 	  .model = "SELPHY CP-10",
@@ -145,7 +283,7 @@ static struct printer_data selphy_printers[] = {
 	  // .clear_error
 	  .pgcode_offset = -1,
 	  .paper_code_offset = -1,
-	  .error_offset = 2,
+	  .error_detect = cp10_error_detect,
 	},
 	{ .type = -1 },
 };
@@ -215,17 +353,12 @@ enum {
 	S_FINISHED,
 };
 
-static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len, int16_t papercode_offset, int16_t papercode_val) 
+static int fancy_memcmp(const uint8_t *buf_a, const int16_t *buf_b, uint len) 
 {
 	uint i;
   
 	for (i = 0 ; i < len ; i++) {
-		if (papercode_offset != -1 && i == (uint) papercode_offset) {
-			if (papercode_val == -1)
-				continue;
-			else if (buf_a[i] != papercode_val)
-				return INCORRECT_PAPER;
-		} else if (buf_b[i] == -1)
+		if (buf_b[i] == -1)
 			continue;
 		else if (buf_a[i] > buf_b[i])
 			return 1;
@@ -272,13 +405,13 @@ static int parse_printjob(uint8_t *buffer, uint8_t *bw_mode, uint32_t *plane_len
 			*bw_mode = (buffer[7] == 0x01);
 			goto done;
 		}
-    
+
 		if (es40_cp790_plane_lengths[buffer[2]] == *plane_len) {
-			printer_type = P_ES40_CP790; 
+			printer_type = P_ES40_CP790;
 			*bw_mode = (buffer[3] == 0x01);
 			goto done;
 		} else {
-			printer_type = P_ES3_30; 
+			printer_type = P_ES3_30;
 			*bw_mode = (buffer[3] == 0x01);
 			goto done;
 		}
@@ -321,6 +454,8 @@ static void *canonselphy_init(void)
 	/* Static initialization */
 	setup_paper_codes();
 
+	ctx->buffer = malloc(MAX_HEADER);
+
 	return ctx;
 }
 
@@ -352,6 +487,7 @@ static void canonselphy_teardown(void *vctx) {
 		free(ctx->plane_c);
 	if (ctx->footer)
 		free(ctx->footer);
+
 	if (ctx->buffer)
 		free(ctx->buffer);
 
@@ -363,17 +499,19 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 	struct canonselphy_ctx *ctx = vctx;
 	int printer_type, i;
 
-	ctx->buffer = malloc(MAX_HEADER);
+	if (!ctx)
+		return -1;
 
 	/* Figure out printer this file is intended for */
 	i = read(data_fd, ctx->buffer, MAX_HEADER);
 	if (i < 0 || i != MAX_HEADER) {
+		if (i == 0)
+			return -1;
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      i, 0, MAX_HEADER);
 		perror("ERROR: Read failed");
 		return i;
 	}
-
 
 	printer_type = parse_printjob(ctx->buffer, &ctx->bw_mode, &ctx->plane_len);
 	for (i = 0; selphy_printers[i].type != -1; i++) {
@@ -402,6 +540,30 @@ static int canonselphy_read_parse(void *vctx, int data_fd)
 {
 	struct canonselphy_ctx *ctx = vctx;
 	int i, remain;
+
+	if (!ctx)
+		return 1;
+
+	if (ctx->header) {
+		free(ctx->header);
+		ctx->header = NULL;
+	}
+	if (ctx->plane_y) {
+		free(ctx->plane_y);
+		ctx->plane_y = NULL;
+	}
+	if (ctx->plane_m) {
+		free(ctx->plane_m);
+		ctx->plane_m = NULL;
+	}
+	if (ctx->plane_c) {
+		free(ctx->plane_c);
+		ctx->plane_c = NULL;
+	}
+	if (ctx->footer) {
+		free(ctx->footer);
+		ctx->footer = NULL;
+	}
 
 	/* Set up buffers */
 	ctx->plane_y = malloc(ctx->plane_len);
@@ -501,18 +663,37 @@ top:
 	fflush(stderr);       
 
 	/* Error detection */
-	if (ctx->printer->error_offset != -1 &&
-	    rdbuf[ctx->printer->error_offset]) {
-		ERROR("Printer reported error condition %02x; aborting.  (Out of ribbon/paper?)\n", rdbuf[ctx->printer->error_offset]);
+	if (ctx->printer->error_detect(rdbuf))
 		return 4;
-	}
 
 	switch(state) {
 	case S_IDLE:
 		INFO("Waiting for printer idle\n");
-		if (!fancy_memcmp(rdbuf, ctx->printer->init_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
-			state = S_PRINTER_READY;
+		if (fancy_memcmp(rdbuf, ctx->printer->init_readback, READBACK_LEN))
+			break;
+		
+		/* Make sure paper is correct */
+		if (ctx->paper_code != -1) {
+			if (ctx->printer->type == P_ES40_CP790) {
+				if ((rdbuf[ctx->printer->paper_code_offset] & 0x0f) !=
+				    (ctx->paper_code & 0x0f)) {
+					ERROR("Incorrect paper loaded (%02x vs %02x), aborting job!\n", 
+					      ctx->paper_code,
+					      rdbuf[ctx->printer->paper_code_offset]);
+					return 3;  /* Hold this job, don't stop queue */
+				}
+			} else {
+				if (rdbuf[ctx->printer->paper_code_offset] !=
+				    ctx->paper_code) {
+					ERROR("Incorrect paper loaded (%02x vs %02x), aborting job!\n", 
+					      ctx->paper_code,
+					      rdbuf[ctx->printer->paper_code_offset]);
+					return 3;  /* Hold this job, don't stop queue */
+				}
+			}
 		}
+
+		state = S_PRINTER_READY;
 		break;
 	case S_PRINTER_READY:
 		INFO("Printing started; Sending init sequence\n");
@@ -523,7 +704,7 @@ top:
 		state = S_PRINTER_INIT_SENT;
 		break;
 	case S_PRINTER_INIT_SENT:
-		if (!fancy_memcmp(rdbuf, ctx->printer->ready_y_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->ready_y_readback, READBACK_LEN)) {
 			state = S_PRINTER_READY_Y;
 		}
 		break;
@@ -539,7 +720,7 @@ top:
 		state = S_PRINTER_Y_SENT;
 		break;
 	case S_PRINTER_Y_SENT:
-		if (!fancy_memcmp(rdbuf, ctx->printer->ready_m_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->ready_m_readback, READBACK_LEN)) {
 			if (ctx->bw_mode)
 				state = S_PRINTER_DONE;
 			else
@@ -555,7 +736,7 @@ top:
 		state = S_PRINTER_M_SENT;
 		break;
 	case S_PRINTER_M_SENT:
-		if (!fancy_memcmp(rdbuf, ctx->printer->ready_c_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->ready_c_readback, READBACK_LEN)) {
 			state = S_PRINTER_READY_C;
 		}
 		break;
@@ -568,7 +749,7 @@ top:
 		state = S_PRINTER_C_SENT;
 		break;
 	case S_PRINTER_C_SENT:
-		if (!fancy_memcmp(rdbuf, ctx->printer->done_c_readback, READBACK_LEN, ctx->printer->paper_code_offset, ctx->paper_code)) {
+		if (!fancy_memcmp(rdbuf, ctx->printer->done_c_readback, READBACK_LEN)) {
 			state = S_PRINTER_DONE;
 		}
 		break;
@@ -592,7 +773,7 @@ top:
 	if (terminate)
 		copies = 1;
 
-	INFO("Print complete (%d remaining)\n", copies - 1);
+	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
 		state = S_IDLE;
@@ -624,7 +805,7 @@ top:
 #define USB_PID_CANON_CP760 0x31AB
 #define USB_PID_CANON_CP770 0x31AA
 #define USB_PID_CANON_CP780 0x31DD
-#define USB_PID_CANON_CP790 790 // XXX 31ed? 31ef? (related to es40)
+#define USB_PID_CANON_CP790 0x31E7
 #define USB_PID_CANON_CP800 0x3214
 #define USB_PID_CANON_CP810 0x3256
 #define USB_PID_CANON_CP900 0x3255
@@ -637,7 +818,8 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.63",
+	.version = "0.71",
+	.multipage_capable = 1,
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
@@ -679,7 +861,7 @@ struct dyesub_backend canonselphy_backend = {
 	{ 0, 0, 0, ""}
 	}
 };
-/* 
+/*
 
  ***************************************************************************
 
@@ -689,7 +871,7 @@ struct dyesub_backend canonselphy_backend = {
  Selphy ES1:
 
    Init func:   40 00 [typeA] [pgcode]  00 00 00 00  00 00 00 00
-   Plane func:  40 01 [typeB] [plane]  [length, 32-bit LE]  00 00 00 00 
+   Plane func:  40 01 [typeB] [plane]  [length, 32-bit LE]  00 00 00 00
 
    TypeA codes are 0x10 for Color papers, 0x20 for B&W papers.
    TypeB codes are 0x01 for Color papers, 0x02 for B&W papers.
@@ -714,7 +896,8 @@ struct dyesub_backend canonselphy_backend = {
    02 00 00 00  02 01 [pg] 01  00 00 00 00   [..transitions back to idle]
 
    02 01 00 00  01 ff ff ff  00 80 00 00     [error, no media]
-   02 01 00 00  01 ff ff ff  00 00 00 00     [error, cover open]
+   02 00 00 00  01 ff ff ff  00 00 00 00     [error, cover open]
+   0f 00 00 00  02 01 01 01  00 00 00 00     [error, out of media]
 
    Known paper types for all ES printers:  P, Pbw, L, C, Cl
    Additional types for ES3/30/40:         Pg, Ps
@@ -727,7 +910,7 @@ struct dyesub_backend canonselphy_backend = {
  Selphy ES2/20:
 
    Init func:   40 00 [pgcode] 00  02 00 00 [type]  00 00 00 [pg2] [length, 32-bit LE]
-   Plane func:  40 01 [plane] 00  00 00 00 00  00 00 00 00 
+   Plane func:  40 01 [plane] 00  00 00 00 00  00 00 00 00
 
    Type codes are 0x00 for Color papers, 0x01 for B&W papers.
 
@@ -804,8 +987,8 @@ struct dyesub_backend canonselphy_backend = {
    00 ff 10 00  ff ff ff ff  00 00 00 00   [ready for footer]
 
    01 ff 10 00  ff ff ff ff  01 00 0f 00   [communication error]
-   00 ff 00 00  ff ff ff ff  00 00 00 00   [cover open, no media]
    00 ff 01 00  ff ff ff ff  01 00 01 00   [error, no media/ink]
+   00 ff 01 00  ff ff ff ff  05 00 01 00   [error, incorrect media]
    00 ff 01 00  ff ff ff ff  03 00 02 00   [attempt to print with no media]
    00 ff 01 00  ff ff ff ff  08 00 04 00   [attempt to print with cover open]
 
@@ -856,7 +1039,6 @@ struct dyesub_backend canonselphy_backend = {
       'C' paper 0x33
       'W' paper 0x44
 
-
  ***************************************************************************
  Selphy CP790:
 
@@ -872,8 +1054,31 @@ struct dyesub_backend canonselphy_backend = {
    'C'	      pgcode of 0x02 and a plane length of  698880 bytes.
    'W' 	      pgcode of 0x03 and a plane length of 2976512 bytes.
 
-   Readback codes are completely unknown, but are likely to be the same
-   as the ES40.
+   Readback values seen on an CP790:
+
+   00 00 ff 00  10 01 00 00  00 00 00 [pg]
+   00 00 00 00  10 01 00 00  00 00 00 [pg]   [idle, ready for header]
+   00 00 01 00  10 01 00 00  00 00 00 [pg]   
+   00 01 01 00  10 01 00 00  00 00 00 [pg]   [ready for Y data]
+   00 03 01 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
+   00 03 02 00  10 01 00 00  00 00 00 [pg]   [ready for M data]
+   00 05 02 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
+   00 05 03 00  10 01 00 00  00 00 00 [pg]   [ready for C data]
+   00 0b ff 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
+   00 0e ff 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
+   00 00 10 00  10 01 00 00  00 00 00 [pg]   [ready for footer]
+
+   [pg] is as follows:
+
+        'P' paper 0x01  (??)
+        'L' paper 0x02
+        'C' paper 0x03  (??)
+        'W' paper 0x44  (??)
+
+   Other readbacks seen:
+
+   00 00 10 00  10 ff 00 00  00 00 00 [pg]   [no ribbon]
+   00 00 10 00  ff 01 00 00  00 00 00 [pg]   [no paper casette]
 
  ***************************************************************************
  Selphy CP-10:
