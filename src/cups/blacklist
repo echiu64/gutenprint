@@ -67,7 +67,7 @@
 0x04a9 0x31dd blacklist
 
 # Canon SELPHY CP790
-# ??? UNKNOWN
+0x04a9 0x31e7 blacklist
 
 # Canon SELPHY CP800
 0x04a9 0x3214 blacklist
