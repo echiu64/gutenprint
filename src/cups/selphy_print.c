@@ -81,7 +81,7 @@ static int es2_error_detect(uint8_t *rdbuf)
 {
 	if (rdbuf[0] == 0x16 &&
 	    rdbuf[1] == 0x01) {
-		ERROR("Cover open!\n");
+		ERROR("Printer cover open!\n");
 		return 1;
 	}
 		
@@ -107,7 +107,7 @@ static int es3_error_detect(uint8_t *rdbuf)
 		if (rdbuf[10] == 0x0f) {
 			ERROR("Communications Error\n");
 		} else if (rdbuf[10] == 0x01) {
-			ERROR("No media/ribbon loaded!\n");
+			ERROR("No media loaded!\n");
 		} else {
 			ERROR("Unknown error - %02x + %02x\n", 
 			      rdbuf[8], rdbuf[10]);
@@ -115,15 +115,15 @@ static int es3_error_detect(uint8_t *rdbuf)
 		return 1;
 	} else if (rdbuf[8] == 0x03 &&
 		   rdbuf[10] == 0x02) {
-		ERROR("No media!\n");
+		ERROR("No media loaded!\n");
 		return 1;
 	} else if (rdbuf[8] == 0x08 &&
 		   rdbuf[10] == 0x04) {
-		ERROR("Cover open!\n");
+		ERROR("Printer cover open!\n");
 		return 1;
 	} else if (rdbuf[8] == 0x05 &&
 		   rdbuf[10] == 0x01) {
-		ERROR("Incorrect media!\n");
+		ERROR("Incorrect media loaded!\n");
 		return 1;
 	}
 
@@ -142,7 +142,7 @@ static int es40_error_detect(uint8_t *rdbuf)
 		/* ES40 */
 		if (!rdbuf[3])
 			return 0;
-		
+
 		if (rdbuf[3] == 0x01)
 			ERROR("Generic communication error\n");
 		else if (rdbuf[3] == 0x32)
@@ -151,13 +151,16 @@ static int es40_error_detect(uint8_t *rdbuf)
 			ERROR("Unknown error - %02x\n", rdbuf[3]);
 		return 1;
 	}
-	
+
 	/* CP790 */
 	if (rdbuf[4] == 0x10 && rdbuf[5] == 0xff) {
-		ERROR("No ribbon!\n");
+		ERROR("No ribbon loaded!\n");
 		return 1;
 	} else if (rdbuf[4] == 0xff && rdbuf[5] == 0x01) {
-		ERROR("No media loaded!\n");
+		ERROR("No paper loaded!\n");
+		return 1;
+	} else if (rdbuf[2] == 0x01 && rdbuf[3] == 0x11) {
+		ERROR("Paper feed error!\n");
 		return 1;
 	}
 
@@ -170,9 +173,9 @@ static int cp10_error_detect(uint8_t *rdbuf)
 		return 0;
 
 	if (rdbuf[2] == 0x80)
-		ERROR("No ribbon\n");
+		ERROR("No ribbon loaded\n");
 	else if (rdbuf[2] == 0x01)
-		ERROR("No media!\n");
+		ERROR("No paper loaded!\n");
 	else
 		ERROR("Unknown error - %02x\n", rdbuf[2]);
 	return 1;
@@ -184,7 +187,7 @@ static int cpxxx_error_detect(uint8_t *rdbuf)
 		return 0;
 
 	if (rdbuf[2] == 0x01)
-		ERROR("Out of paper!\n");
+		ERROR("Paper feed problem!\n");
 	else if (rdbuf[2] == 0x04)
 		ERROR("Ribbon problem!\n");
 	else if (rdbuf[2] == 0x08)
@@ -674,10 +677,20 @@ top:
 		
 		/* Make sure paper is correct */
 		if (ctx->paper_code != -1) {
-			if (ctx->printer->type == P_ES40_CP790) {
+			if (ctx->printer->type == P_CP_XXX) {
+				uint8_t pc = rdbuf[ctx->printer->paper_code_offset];
+				if (((pc >> 4) & 0xf) != (ctx->paper_code & 0x0f)) {
+					ERROR("Incorrect paper tray loaded, aborting job!\n");
+					return 3;
+				}
+				if ((pc & 0xf) != (ctx->paper_code & 0xf)) {
+					ERROR("Incorrect ribbon loaded, aborting job!\n");
+					return 3;
+				}
+			} else if (ctx->printer->type == P_ES40_CP790) {
 				if ((rdbuf[ctx->printer->paper_code_offset] & 0x0f) !=
 				    (ctx->paper_code & 0x0f)) {
-					ERROR("Incorrect paper loaded (%02x vs %02x), aborting job!\n", 
+					ERROR("Incorrect media/ribbon loaded (%02x vs %02x), aborting job!\n", 
 					      ctx->paper_code,
 					      rdbuf[ctx->printer->paper_code_offset]);
 					return 3;  /* Hold this job, don't stop queue */
@@ -685,7 +698,7 @@ top:
 			} else {
 				if (rdbuf[ctx->printer->paper_code_offset] !=
 				    ctx->paper_code) {
-					ERROR("Incorrect paper loaded (%02x vs %02x), aborting job!\n", 
+					ERROR("Incorrect media/ribbon loaded (%02x vs %02x), aborting job!\n", 
 					      ctx->paper_code,
 					      rdbuf[ctx->printer->paper_code_offset]);
 					return 3;  /* Hold this job, don't stop queue */
@@ -808,7 +821,9 @@ top:
 #define USB_PID_CANON_CP790 0x31E7
 #define USB_PID_CANON_CP800 0x3214
 #define USB_PID_CANON_CP810 0x3256
+#define USB_PID_CANON_CP820 820 // XXX
 #define USB_PID_CANON_CP900 0x3255
+#define USB_PID_CANON_CP910 910 // XXX
 #define USB_PID_CANON_ES1   0x3141
 #define USB_PID_CANON_ES2   0x3185
 #define USB_PID_CANON_ES20  0x3186
@@ -818,7 +833,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.71",
+	.version = "0.73",
 	.multipage_capable = 1,
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
@@ -851,7 +866,9 @@ struct dyesub_backend canonselphy_backend = {
 	{ USB_VID_CANON, USB_PID_CANON_CP790, P_ES40_CP790, "Canon"},
 	{ USB_VID_CANON, USB_PID_CANON_CP800, P_CP_XXX, "Canon"},
 	{ USB_VID_CANON, USB_PID_CANON_CP810, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP_XXX, "Canon"},
 	{ USB_VID_CANON, USB_PID_CANON_CP900, P_CP_XXX, "Canon"},
+	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP_XXX, "Canon"},
 	{ USB_VID_CANON, USB_PID_CANON_ES1, P_ES1, "Canon"},
 	{ USB_VID_CANON, USB_PID_CANON_ES2, P_ES2_20, "Canon"},
 	{ USB_VID_CANON, USB_PID_CANON_ES20, P_ES2_20, "Canon"},
@@ -1079,6 +1096,7 @@ struct dyesub_backend canonselphy_backend = {
 
    00 00 10 00  10 ff 00 00  00 00 00 [pg]   [no ribbon]
    00 00 10 00  ff 01 00 00  00 00 00 [pg]   [no paper casette]
+   00 00 01 11  10 01 00 00  00 00 00 [pg]   [media feed error]
 
  ***************************************************************************
  Selphy CP-10:
