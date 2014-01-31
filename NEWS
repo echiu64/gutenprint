@@ -1072,7 +1072,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP400
        Canon SELPHY CP500
        Canon SELPHY CP510
-       Canon SELPHY CP520 *1
+       Canon SELPHY CP520
        Canon SELPHY CP530 *1
        Canon SELPHY CP710
        Canon SELPHY CP730
@@ -1084,11 +1084,12 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Known Problematic models:
 
-       The USB PIDs for the following two SELPHY CP series models are 
-       still unknown, and are therefore unsupported by the spooler:
+       The USB PIDs for the following three SELPHY CP series models are 
+       still unknown, and are therefore unsupported by the backend:
 
        Canon SELPHY CP520
-       Canon SELPHY CP790
+       Canon SELPHY CP820
+       Canon SELPHY CP910
 
 	*1: We have not confirmed these printers function with the new
 	    backend, but they are presumed to work.
