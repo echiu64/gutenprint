@@ -2614,6 +2614,12 @@
       <printer translate="name" name="Sinfonia CHC-S2145" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" />
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />
+      <printer translate="name" name="Dai Nippon Printing DSRX1"  driver="dnp-dsrx1" manufacturer="DNP" model="6002" foomaticid="DNP-DSRX1" />
+      <printer translate="name" name="Citizen CX" driver="citizen-cx" manufacturer="Citizen" model="6000" foomaticid="Citizen-CX" />
+      <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" foomaticid="Citizen-CX-W" />
+      <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" foomaticid="Citizen-CY" />
+      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" foomaticid="Citizen-02" />
+      <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" foomaticid="Citizen-OP900II" />
     </family>
     <family name="raw">
       <printer translate="name" name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />

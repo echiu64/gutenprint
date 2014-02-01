@@ -1163,6 +1163,22 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	 * Improved margins making printable area more explicit
 	 * Support 300x600dpi print mode
 
+       DNP DSRX1 (EXPERIMENTAL)
+
+         This printer is functionally identical to the DS40, except
+         it does not support 6x9 prints.  It has not yet been tested.
+
+     - Citizen Dye-Sublimation printers: (EXPERIMENTAL)
+
+       Citizen CX
+       Citizen CX-W
+       Citizen CY
+       Citizen CW-02
+       Citizen OP900II
+
+         Support for these models is considered experimental; it has
+	 not yet been tested.
+
   3) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet
      unknown command format or other issues:

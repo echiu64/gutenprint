@@ -3094,6 +3094,77 @@ static void dnpds80_printer_start(stp_vars_t *v)
   }
 }
 
+/* Imaging area is wider than print size, we always must supply the 
+   printer with the full imaging width. */
+static const dyesub_pagesize_t dnpsrx1_dock_page[] =
+{
+  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "2x6_x2", "2x6*2", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#endif
+  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "4x6_x2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#endif
+};
+
+LIST(dyesub_pagesize_list_t, dnpsrx1_dock_page_list, dyesub_pagesize_t, dnpsrx1_dock_page);
+
+static const dyesub_printsize_t dnpsrx1_dock_printsize[] =
+{
+  { "300x300", "B7", 1920, 1088},
+  { "300x600", "B7", 1920, 2176},
+  { "300x300", "w288h432", 1920, 1240},
+  { "300x600", "w288h432", 1920, 2480},
+#ifdef DNPX2
+  { "300x300", "2x6_x2", 1920, 1240},
+  { "300x600", "2x6_x2", 1920, 2480},
+#endif
+  { "300x300", "w360h504", 1920, 2138},
+  { "300x600", "w360h504", 1920, 4276},
+  { "300x300", "A5", 1920, 2436},
+  { "300x600", "A5", 1920, 4872},
+#ifdef DNPX2
+  { "300x300", "4x6_x2", 1920, 2498},
+  { "300x600", "4x6_x2", 1920, 4996},
+#endif
+};
+
+LIST(dyesub_printsize_list_t, dnpsrx1_dock_printsize_list, dyesub_printsize_t, dnpsrx1_dock_printsize);
+
+static void dnpdsrx1_printer_start(stp_vars_t *v)
+{
+  /* Common code */
+  dnpds40ds80_printer_start(v);
+
+  /* Set cutter option to "normal" */
+  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
+  if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "120");
+  } else {
+    stp_zprintf(v, "000");
+  }
+
+  /* Configure multi-cut/page size */
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
+
+  if (!strcmp(privdata.pagesize, "B7")) {
+    stp_zprintf(v, "01");
+  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+    stp_zprintf(v, "02");
+  } else if (!strcmp(privdata.pagesize, "w360h504")) {
+    stp_zprintf(v, "03");
+  } else if (!strcmp(privdata.pagesize, "A5")) {
+    stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
+    stp_zprintf(v, "12");
+  } else {
+    stp_zprintf(v, "00");
+  }
+}
+
 /* Model capabilities */
 
 static const dyesub_cap_t dyesub_model_capabilities[] =
@@ -3732,6 +3803,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &dnpds80_printer_start, &dnpds40_printer_end,
+    &dnpds40_plane_init, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    &dnpds40_laminate_list, NULL,
+  },
+  { /* Dai Nippon Printing DSRX1 */
+    6002,
+    &bgr_ink_list,
+    &res_dnpds40_dpi_list,
+    &dnpsrx1_dock_page_list,
+    &dnpsrx1_dock_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    &dnpdsrx1_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
