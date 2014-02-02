@@ -49,7 +49,8 @@ struct printer_data {
 	int16_t ready_m_readback[READBACK_LEN];
 	int16_t ready_c_readback[READBACK_LEN];
 	int16_t done_c_readback[READBACK_LEN];
-	int16_t clear_error[READBACK_LEN];
+	uint8_t clear_error[READBACK_LEN];
+	int     clear_error_len;
 	int16_t paper_codes[256];
 	int16_t pgcode_offset;  /* Offset into printjob for paper type */
 	int16_t paper_code_offset; /* Offset in readback for paper type */
@@ -207,7 +208,7 @@ static struct printer_data selphy_printers[] = {
 	  .ready_m_readback = { 0x04, 0x00, 0x03, 0x00, 0x02, 0x01, -1, 0x01, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x04, 0x00, 0x07, 0x00, 0x02, 0x01, -1, 0x01, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x04, 0x00, 0x00, 0x00, 0x02, 0x01, -1, 0x01, 0x00, 0x00, 0x00, 0x00 },
-	  // .clear_error
+	  // .clear_error + clear_error_len
 	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
@@ -222,7 +223,7 @@ static struct printer_data selphy_printers[] = {
 	  .ready_m_readback = { 0x06, 0x00, 0x03, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x09, 0x00, 0x07, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x09, 0x00, 0x00, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00 },
-	  // .clear_error
+	  // .clear_error + clear_error_len
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 4,
@@ -237,7 +238,7 @@ static struct printer_data selphy_printers[] = {
 	  .ready_m_readback = { 0x03, 0xff, 0x02, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x05, 0xff, 0x03, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x00, 0xff, 0x10, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00 },
-	  // .clear_error
+	  // .clear_error + clear_error_len
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = -1,
@@ -252,7 +253,7 @@ static struct printer_data selphy_printers[] = {
 	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  // .clear_error
+	  // .clear_error + clear_error_len
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 11,
@@ -268,6 +269,7 @@ static struct printer_data selphy_printers[] = {
 	  .ready_c_readback = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, -1 },
 	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	  .clear_error_len = 12,
 	  // .paper_codes
 	  .pgcode_offset = 3,
 	  .paper_code_offset = 6,
@@ -283,7 +285,7 @@ static struct printer_data selphy_printers[] = {
 	  .ready_c_readback = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  // .paper_codes
-	  // .clear_error
+	  // .clear_error + clear_error_len
 	  .pgcode_offset = -1,
 	  .paper_code_offset = -1,
 	  .error_detect = cp10_error_detect,
@@ -633,11 +635,23 @@ static int canonselphy_main_loop(void *vctx, int copies) {
 	int last_state = -1, state = S_IDLE;
 	int ret, num;
 
-	/* Read in the printer status */
+	/* Read in the printer status to clear last state */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			rdbuf, READBACK_LEN, &num);
+
 	if (ret < 0)
 		return ret;
+
+#if 0 /* This doesn't work yet */
+	/* Error detection & (possible) recovery */
+	if (ctx->printer->error_detect(rdbuf)) {
+		if (ctx->printer->clear_error_len)
+			/* Try to clear error state */
+			if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->printer->clear_error, ctx->printer->clear_error_len)))
+				return ret;
+	}
+#endif
+
 top:
 
 	if (state != last_state) {
@@ -645,7 +659,7 @@ top:
 			DEBUG("last_state %d new %d\n", last_state, state);
 	}
 
-	/* Do it twice to clear initial state */
+	/* Read in the printer status */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			rdbuf, READBACK_LEN, &num);
 	if (ret < 0)
@@ -656,6 +670,10 @@ top:
 		return 4;
 	}
 
+	/* Error detection */
+	if (ctx->printer->error_detect(rdbuf))
+		return 4;
+
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
@@ -663,11 +681,7 @@ top:
 	}
 	last_state = state;
 
-	fflush(stderr);       
-
-	/* Error detection */
-	if (ctx->printer->error_detect(rdbuf))
-		return 4;
+	fflush(stderr);
 
 	switch(state) {
 	case S_IDLE:
@@ -675,17 +689,29 @@ top:
 		if (fancy_memcmp(rdbuf, ctx->printer->init_readback, READBACK_LEN))
 			break;
 		
-		/* Make sure paper is correct */
+		/* Make sure paper/ribbon is correct */
 		if (ctx->paper_code != -1) {
 			if (ctx->printer->type == P_CP_XXX) {
 				uint8_t pc = rdbuf[ctx->printer->paper_code_offset];
 				if (((pc >> 4) & 0xf) != (ctx->paper_code & 0x0f)) {
-					ERROR("Incorrect paper tray loaded, aborting job!\n");
-					return 3;
+
+					if (pc & 0xf0) {
+						ERROR("Incorrect paper tray loaded, aborting job!\n");
+						return 3;
+					} else {
+						ERROR("No paper tray loaded, aborting!\n");
+						return 4;
+					}
 				}
 				if ((pc & 0xf) != (ctx->paper_code & 0xf)) {
-					ERROR("Incorrect ribbon loaded, aborting job!\n");
-					return 3;
+					if (pc & 0x0f) {
+						ERROR("Incorrect ribbon loaded, aborting job!\n");
+						return 3;
+					} else {
+
+						ERROR("No ribbon loaded, aborting job!\n");
+						return 4;
+					}
 				}
 			} else if (ctx->printer->type == P_ES40_CP790) {
 				if ((rdbuf[ctx->printer->paper_code_offset] & 0x0f) !=
@@ -833,8 +859,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.73",
-	.multipage_capable = 1,
+	.version = "0.75",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
