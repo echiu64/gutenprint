@@ -5,7 +5,7 @@
  *
  *   Development of this backend was sponsored by:
  *
- *       Marco Di Antonio and ilgruppodigitale.com
+ *       Marco Di Antonio and [ ilgruppodigitale.com ]
  *
  *   The latest version of this program can be found at:
  *
@@ -45,16 +45,26 @@
 #define USB_PID_DNP_DS40  0x0003
 #define USB_PID_DNP_DS80  0x0004
 
+//#define USB_VID_CITIZEN XXXXX
+//#define USB_PID_CITIZEN_CX XXXXX
+//#define USB_PID_CITIZEN_CX-W XXXXX
+//#define USB_PID_CITIZEN_CY XXXXX
+//#define USB_PID_CITIZEN_CW-01 XXXXX
+//#define USB_PID_CITIZEN_OP900 XXXXX
+//#define USB_PID_CITIZEN_CW-02 XXXXX
+//#define USB_PID_CITIZEN_OP900II XXXXX
+
 /* Private data stucture */
 struct dnpds40_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
 
-        int type;
+	int type;
 
-	int y_res;
 	int buf_needed;
+	uint32_t last_matte;
+
 	uint8_t *qty_offset;
 
 	uint8_t *databuf;
@@ -143,8 +153,8 @@ static char *dnpds40_statuses(char *str)
 	case 1010: return "No Scrap Box";
 	case 1100: return "Paper End";
 	case 1200: return "Ribbon End";
-	case 1300: return "Paper jam";
-	case 1400: return "Ribbon error";
+	case 1300: return "Paper Jam";
+	case 1400: return "Ribbon Error";
 	case 1500: return "Paper Definition Error";
 	case 1600: return "Data Error";
 	case 2000: return "Head Voltage Error";
@@ -162,7 +172,7 @@ static char *dnpds40_statuses(char *str)
 		break;
 	}
 
-	return "Unkown type";
+	return "Unkown Error";
 }
 
 static int dnpds40_do_cmd(struct dnpds40_ctx *ctx,
@@ -312,6 +322,8 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	int i, j, run = 1;
 	char buf[9] = { 0 };
 
+	uint32_t matte = 0, multicut = 0, dpi = 0;
+
 	if (!ctx)
 		return 1;
 
@@ -320,6 +332,15 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		ctx->databuf = NULL;
 	}
 
+	/* There's no way to figure out the total job length in advance, we
+	   have to parse the stream until we get to the image plane data, 
+	   and even then the stream can contain arbitrary commands later.
+
+	   So instead, we allocate a buffer of the maximum possible length, 
+	   then parse the incoming stream until we hit the START command at
+	   the end of the job.
+	*/
+
 	ctx->datalen = 0;
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!ctx->databuf) {
@@ -327,12 +348,9 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		return 2;
 	}
 
-	// XXX no way to figure out print job length without parsing stream
-	// until we get to the plane data
-
-	/* Read in command header */
 	while (run) {
 		int remain;
+		/* Read in command header */
 		i = read(data_fd, ctx->databuf + ctx->datalen, 
 			 sizeof(struct dnpds40_cmd));
 		if (i < 0)
@@ -370,17 +388,47 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		if(!memcmp("CNTRL QTY", ctx->databuf + ctx->datalen+2, 9)) {
 			ctx->qty_offset = ctx->databuf + ctx->datalen + 32;
 		}
+		if(!memcmp("CNTRL OVERCOAT", ctx->databuf + ctx->datalen+2, 14)) {
+			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
+			matte = atoi(buf);
+		        matte = le32_to_cpu(matte);
+		}
+		if(!memcmp("CNTRL MULTICUT", ctx->databuf + ctx->datalen+2, 14)) {
+			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
+			multicut = atoi(buf);
+		        multicut = le32_to_cpu(multicut);
+		}
 	        if(!memcmp("IMAGE YPLANE", ctx->databuf + ctx->datalen + 2, 12)) {
-			uint32_t x;
-			memcpy(&x, ctx->databuf + ctx->datalen + 32 + 42, sizeof(x));
-			x = le32_to_cpu(x);
+			uint32_t x_ppm;
+			memcpy(&x_ppm, ctx->databuf + ctx->datalen + 32 + 42, sizeof(x_ppm));
+			x_ppm = le32_to_cpu(x_ppm);
 
-			if (x == 23615) {
-				ctx->y_res = 600;
-				ctx->buf_needed = 2; // XXX not always true.
-			} else { // x == 11808 or anything else..
-				ctx->y_res = 300;
-				ctx->buf_needed = 1;
+			ctx->buf_needed = 1;
+			dpi = 300;
+
+			if (x_ppm == 23615) { /* pixels per meter, aka 600dpi */
+				dpi = 600;
+				if (ctx->type == P_DNP_DS80) { /* DS80/CX-W */
+					if (matte && (multicut == 21 || // A4 length
+						      multicut == 20 || // 8x4*3
+						      multicut == 19 || // 8x8+8x4
+						      multicut == 15 || // 8x6*2
+						      multicut == 7)) // 8x12
+						ctx->buf_needed = 2;
+				} else { /* DS40/CX/CY/etc */
+					if (multicut == 4 ||  // 6x8
+					    multicut == 5 ||  // 6x9
+					    multicut == 12)   // 6x4*2
+						ctx->buf_needed = 2;
+					else if (matte && multicut == 3) // 5x7
+						ctx->buf_needed = 2;
+				}
+
+				/* If we are missing a multicut command,
+				   we can't parse this job so must assume 
+				   worst case size needing both buffers! */
+				if (!multicut)
+					ctx->buf_needed = 2;
 			}
 		}
 
@@ -391,6 +439,17 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		/* Add in the size of this chunk */
 		ctx->datalen += sizeof(struct dnpds40_cmd) + j;
 	}
+
+	/* Special case: switching to matte or back needs both buffers */
+	if (matte != ctx->last_matte)
+		ctx->buf_needed = 2;
+
+	DEBUG("dpi %d matte %d(%d) mcut %d bufs %d\n", 
+	      dpi, matte, ctx->last_matte, multicut, ctx->buf_needed);
+
+	/* Track if our last print was matte */
+	ctx->last_matte = matte;
+
 	if (!ctx->datalen)
 		return 1;
 
@@ -441,9 +500,9 @@ top:
 				return -1;
 			dnpds40_cleanup_string((char*)resp, len);
 
+			/* Check to see if we have sufficient buffers */
 			if (!strcmp("FBP00", (char*)resp) ||
 			    (ctx->buf_needed == 1 && !strcmp("FBP01", (char*)resp))) {
-				/* We don't have enough buffers */
 				INFO("Insufficient printer buffers, retrying...\n");
 				sleep(1);
 				goto top;
@@ -902,9 +961,8 @@ static int dnpds40_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80",
-	.version = "0.24",
+	.version = "0.25",
 	.uri_prefix = "dnpds40",
-	.multipage_capable = 1,
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
 	.init = dnpds40_init,
@@ -916,6 +974,13 @@ struct dyesub_backend dnpds40_backend = {
 	.devices = {
 	{ USB_VID_DNP, USB_PID_DNP_DS40, P_DNP_DS40, ""},
 	{ USB_VID_DNP, USB_PID_DNP_DS80, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX-W, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CY, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-02, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900II, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-01, P_DNP_DS80, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900, P_DNP_DS80, ""},
 	{ 0, 0, 0, ""}
 	}
 };
