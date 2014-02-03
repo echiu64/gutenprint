@@ -27,9 +27,13 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.31G"
+#define BACKEND_VERSION "0.32G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
+#endif
+
+#ifndef LIBUSBX_API_VERSION
+#error "We need libusb >= 1.0.13!"
 #endif
 
 /* Support Functions */
