@@ -38,7 +38,9 @@ MANUAL_SRC_FILES = \
 
 HTMLDIR = reference-html
 
+if BUILD_DOC
 STANDARD_TARGETS = html
+endif
 
 DISTHOOKDIRS = $(HTMLDIR)
 
