@@ -428,7 +428,7 @@ dnl   [EXTRA_LIBREADLINE_DEPS]=""
 dnl fi
 
 # libusb-1.0 (For CUPS backends)
-PKG_CHECK_MODULES([LIBUSB], [libusb-1.0],
+PKG_CHECK_MODULES([LIBUSB], [libusb-1.0 >= 1.0.13],
                   [HAVE_LIBUSB=yes
                    BUILD_LIBUSB_BACKENDS=yes],
                   [HAVE_LIBUSB=no
