@@ -163,6 +163,9 @@ static int es40_error_detect(uint8_t *rdbuf)
 	} else if (rdbuf[2] == 0x01 && rdbuf[3] == 0x11) {
 		ERROR("Paper feed error!\n");
 		return 1;
+	} else if (rdbuf[3]) {
+		ERROR("Unknown error - %02x\n", rdbuf[3]);
+		return 1;
 	}
 
 	return 0;
@@ -175,6 +178,8 @@ static int cp10_error_detect(uint8_t *rdbuf)
 
 	if (rdbuf[2] == 0x80)
 		ERROR("No ribbon loaded\n");
+	else if (rdbuf[2] == 0x08)
+		ERROR("Ribbon depleted!\n");
 	else if (rdbuf[2] == 0x01)
 		ERROR("No paper loaded!\n");
 	else
@@ -284,8 +289,9 @@ static struct printer_data selphy_printers[] = {
 	  .ready_m_readback = { 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .ready_c_readback = { 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
 	  .done_c_readback = { 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	  .clear_error_len = 12,
 	  // .paper_codes
-	  // .clear_error + clear_error_len
 	  .pgcode_offset = -1,
 	  .paper_code_offset = -1,
 	  .error_detect = cp10_error_detect,
@@ -642,16 +648,6 @@ static int canonselphy_main_loop(void *vctx, int copies) {
 	if (ret < 0)
 		return ret;
 
-#if 0 /* This doesn't work yet */
-	/* Error detection & (possible) recovery */
-	if (ctx->printer->error_detect(rdbuf)) {
-		if (ctx->printer->clear_error_len)
-			/* Try to clear error state */
-			if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->printer->clear_error, ctx->printer->clear_error_len)))
-				return ret;
-	}
-#endif
-
 top:
 
 	if (state != last_state) {
@@ -671,8 +667,13 @@ top:
 	}
 
 	/* Error detection */
-	if (ctx->printer->error_detect(rdbuf))
+	if (ctx->printer->error_detect(rdbuf)) {
+		if (ctx->printer->clear_error_len)
+			/* Try to clear error state */
+			if ((ret = send_data(ctx->dev, ctx->endp_down, ctx->printer->clear_error, ctx->printer->clear_error_len)))
+				return ret;
 		return 4;
+	}
 
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
@@ -859,7 +860,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.75",
+	.version = "0.77",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
@@ -1121,7 +1122,7 @@ struct dyesub_backend canonselphy_backend = {
 
    00 00 10 00  10 ff 00 00  00 00 00 [pg]   [no ribbon]
    00 00 10 00  ff 01 00 00  00 00 00 [pg]   [no paper casette]
-   00 00 01 11  10 01 00 00  00 00 00 [pg]   [media feed error]
+   00 00 01 11  10 01 00 00  00 00 00 [pg]   [paper feed error]
 
  ***************************************************************************
  Selphy CP-10:
@@ -1132,6 +1133,8 @@ struct dyesub_backend canonselphy_backend = {
    plane codes are 0x00, 0x01, 0x02 for Y, M, and C, respectively.
 
    length is always '00 60 81 0a' which is 688480 bytes.
+
+   Error clear: 40 10 00 00  00 00 00 00  00 00 00 00
 
    Known readback values:
 
@@ -1144,8 +1147,9 @@ struct dyesub_backend canonselphy_backend = {
    10 00 00 00  00 00 00 00  00 00 00 00   [C done, waiting]
    20 00 00 00  00 00 00 00  00 00 00 00   [All done]
 
-   02 00 80 00  00 00 00 00  00 00 00 00   [No ink]
-   02 00 01 00  00 00 00 00  00 00 00 00   [No media]
+   02 00 80 00  00 00 00 00  00 00 00 00   [No ribbon]
+   02 00 80 00  00 00 00 00  00 00 00 00   [Ribbon depleted]
+   02 00 01 00  00 00 00 00  00 00 00 00   [No paper]
 
   There are no media type codes; the printer only supports one type.
 
@@ -1160,7 +1164,7 @@ struct dyesub_backend canonselphy_backend = {
    Plane func:  40 01 00 [plane]  [length, 32-bit LE]  00 00 00 00 
    End func:    00 00 00 00      # NOTE:  CP900 only, and not necessary!
 
-   Error clear: 40 10 00 00  00 00 00 00  00 00 00 00  # CP800.  Others?
+   Error clear: 40 10 00 00  00 00 00 00  00 00 00 00
 
    plane codes are 0x00, 0x01, 0x02 for Y, M, and C, respectively.
 
