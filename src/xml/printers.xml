@@ -1293,6 +1293,7 @@
       <printer translate="name" name="Epson Stylus CX6500" deviceid="MFG:EPSON;MDL:Stylus CX6500;DES:EPSON Stylus CX6500;CMD:ESCPL2,BDC,D4;" driver="escp2-cx6500" manufacturer="Epson" model="80" parameters="cx3500_params" foomaticid="Epson-Stylus_CX6500" />
       <printer translate="name" name="Epson Stylus CX6600" deviceid="MFG:EPSON;MDL:Stylus CX6600;DES:EPSON Stylus CX6600;CMD:ESCPL2,BDC,D4;" driver="escp2-cx6600" manufacturer="Epson" model="80" parameters="cx3500_params" foomaticid="Epson-Stylus_CX6600" />
       <printer translate="name" name="Epson Stylus CX7000F" driver="escp2-cx7000f" manufacturer="Epson" model="65" parameters="cx3500_params" foomaticid="Epson-Stylus_CX7000F" />
+      <printer translate="name" name="Epson Stylus CX7300" driver="escp2-cx7300" manufacturer="Epson" model="65" parameters="cx3500_params" foomaticid="Epson-Stylus_CX7300" />
       <printer translate="name" name="Epson Stylus CX7400" driver="escp2-cx7400" manufacturer="Epson" model="65" parameters="cx3500_params" foomaticid="Epson-Stylus_CX7400" />
       <printer translate="name" name="Epson Stylus CX7700" deviceid="MFG:EPSON;MDL:Stylus CX7700;DES:EPSON Stylus CX7700;CMD:ESCPL2,BDC,D4;" driver="escp2-cx7700" manufacturer="Epson" model="95" parameters="cx3500_params" foomaticid="Epson-Stylus_CX7700" />
       <printer translate="name" name="Epson Stylus CX7800" deviceid="MFG:EPSON;MDL:Stylus CX7800;DES:EPSON Stylus CX7800;CMD:ESCPL2,BDC,D4;" driver="escp2-cx7800" manufacturer="Epson" model="95" parameters="cx3500_params" foomaticid="Epson-Stylus_CX7800" />
