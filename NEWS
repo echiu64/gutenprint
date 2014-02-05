@@ -277,6 +277,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Sony UP-DR200
 	DNP DS40
 	DNP DS80
+	DNP DS-RX1
+	Citizen CX
+	Citizen CX-W
+	Citizen CY
 
      Over time, it is expected that additional printer models will be
      supported by this backend.
@@ -1164,21 +1168,29 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	 * Improved margins making printable area more explicit
 	 * Support 300x600dpi print mode
 
-       DNP DSRX1 (EXPERIMENTAL)
+       DNP DSRX1
 
          This printer is functionally identical to the DS40, except
-         it does not support 6x9 prints.  It has not yet been tested.
+         it does not support 6x9 prints,
 
-     - Citizen Dye-Sublimation printers: (EXPERIMENTAL)
+     - Citizen Dye-Sublimation printers: 
 
        Citizen CX
        Citizen CX-W
        Citizen CY
+
+         These models are identical to the DNP DS40, DS80, and DSRX1,
+	 respectively, and for best results should be used with the
+	 intelligent backend.
+       
+       Citizen CW-01
        Citizen CW-02
+       Citizen OP900
        Citizen OP900II
 
-         Support for these models is considered experimental; it has
-	 not yet been tested.
+         Support for these models is considered experimental; they have
+	 not yet been tested.  They are functionally identical to the
+	 Citizen CX.
 
   3) The following Canon printer models were not added, as they cannot
      currently be supported, even experimentally, owing to an as-yet

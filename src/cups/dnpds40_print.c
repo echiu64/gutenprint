@@ -42,17 +42,16 @@
 #include "backend_common.h"
 
 #define USB_VID_DNP       0x1343
-#define USB_PID_DNP_DS40  0x0003
-#define USB_PID_DNP_DS80  0x0004
+#define USB_PID_DNP_DS40  0x0003 // Also Citizen CX
+#define USB_PID_DNP_DS80  0x0004 // Also Citizen CX-W
+#define USB_PID_DNP_DSRX1 0x0005 // Also Citizen CY
 
-//#define USB_VID_CITIZEN XXXXX
-//#define USB_PID_CITIZEN_CX XXXXX
-//#define USB_PID_CITIZEN_CX-W XXXXX
-//#define USB_PID_CITIZEN_CY XXXXX
 //#define USB_PID_CITIZEN_CW-01 XXXXX
 //#define USB_PID_CITIZEN_OP900 XXXXX
 //#define USB_PID_CITIZEN_CW-02 XXXXX
 //#define USB_PID_CITIZEN_OP900II XXXXX
+//#define USB_VID_MITSU       0x06D3
+//#define USB_PID_MITSU_CP3800DW  XXXXX
 
 /* Private data stucture */
 struct dnpds40_ctx {
@@ -960,8 +959,8 @@ static int dnpds40_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
 
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
-	.name = "DNP DS40/DS80",
-	.version = "0.25",
+	.name = "DNP DS40/DS80/DSRX1",
+	.version = "0.26",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -974,75 +973,12 @@ struct dyesub_backend dnpds40_backend = {
 	.devices = {
 	{ USB_VID_DNP, USB_PID_DNP_DS40, P_DNP_DS40, ""},
 	{ USB_VID_DNP, USB_PID_DNP_DS80, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CX-W, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CY, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-02, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900II, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-01, P_DNP_DS80, ""},
-//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900, P_DNP_DS80, ""},
+	{ USB_VID_DNP, USB_PID_DNP_DSRX1, P_DNP_DS40, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-02, P_DNP_DS40, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900II, P_DNP_DS40, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-01, P_DNP_DS40, ""},
+//	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900, P_DNP_DS40, ""},
+//	{ USB_VID_MITSU, USB_PID_MITSU_CP38000W, P_DNP_DS80, ""},
 	{ 0, 0, 0, ""}
 	}
 };
-
-/* DNP DS40 Windows Driver printer spool format:
-
-   NOTE:  This backend (and gutenprint) do *NOT* use this format.
-
-   UNKNOWN variables/offsets:
-
-    - number of copies
-    - lamination type
-    - media type 
-
-  4x6, 300dpi, 1 copy, 0 sharpen, glossy
-
-  Page header:
-
-  01 00 01 00  <- page setup?
-  28 58 24 00  <- Total plane len == 40 + x*y + 1024  (2381864)
-  00 00 00 00  <- ??
-
-  Plane header (ie one for each plane)
-
-  28 00 00 00
-  80 07 00 00  <- X res (1920)  ( = 6.4" @ 300dpi)
-  d8 04 00 00  <- Y res (1240)  ( = 4.13" @ 300dpi)
-  01 00 08 00
-  00 00 00 00
-  00 00 00 00
-  20 2e 00 00  <- 11808 = X pixels per meter @ 300dpi
-  20 2e 00 00  <- 11808 = Y pixels per meter @ 300dpi
-  00 01 00 00
-  00 00 00 00 
-
- [ folowed by 256 entries of color mapping starting with 0xff -> ff ff ff 00 ]
- [ followed by x*y bytes of plane data ]
-
-
-
-  5x7, "600x600dpi", 2 copies, 0 sharpen, matte
-
-  Page header:
-
-  02 02 02 00 <- page setup ??
-  28 4a 7d 00 <- Total plane len == 40 + x*y + 1024
-  02 00 00 00 <- ??
-
-  Plane header (ie one for each plane)
-
-  28 00 00 00
-  80 07 00 00 <- X res (1920)  ( = 6.4" @ 300dpi)
-  b4 10 00 00 <- Y res (4276)  ( =~ 7.13" @ 600 dpi )
-  01 00 08 00
-  00 00 00 00
-  00 00 00 00
-  40 5c 00 00 <- 23615 = X pixels per meter @ 600dpi
-  40 5c 00 00 <- 23615 = Y pixels per meter @ 600dpi
-  00 01 00 00
-  00 00 00 00
-
- [ folowed by 256 entries of color mapping starting with 0xff -> ff ff ff 00 ]
- [ followed by x*y bytes of plane data ]
-
-*/

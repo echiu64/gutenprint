@@ -2618,7 +2618,9 @@
       <printer translate="name" name="Citizen CX" driver="citizen-cx" manufacturer="Citizen" model="6000" foomaticid="Citizen-CX" />
       <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" foomaticid="Citizen-CX-W" />
       <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" foomaticid="Citizen-CY" />
-      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" foomaticid="Citizen-02" />
+      <printer translate="name" name="Citizen CW-01" driver="citizen-cw-01" manufacturer="Citizen" model="6000" foomaticid="Citizen-CW-01" />
+      <printer translate="name" name="Citizen OP900" driver="citizen-op900" manufacturer="Citizen" model="6000" foomaticid="Citizen-OP900" />
+      <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" foomaticid="Citizen-CW-02" />
       <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" foomaticid="Citizen-OP900II" />
       <printer translate="name" name="Mitsubishi CP-3800DW" driver="mitsubishi-cp-3800dw" manufacturer="Mitsubishi" model="6001" foomaticid="Mitsubishi-CP-3800DW" />
     </family>
