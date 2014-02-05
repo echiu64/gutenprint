@@ -126,8 +126,11 @@
 # Mitsubishi CP-D70/CP-D707
 0x06d3 0x3b30 blacklist
 
-# DNP DS40
+# DNP DS40 + Citizen CX
 0x1343 0x0003 blacklist
 
-# DNP DS80
+# DNP DS80 + Citizen CX-W
 0x1343 0x0004 blacklist
+
+# DNP DS-RX1 + Citizen CY
+0x1343 0x0005 blacklist
