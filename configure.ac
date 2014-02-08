@@ -1115,10 +1115,10 @@ if test "$BUILD_CUPS" != "no" ; then
 	echo "                        Please review the README and release notes carefully!"
 	warnings_emitted=1
     fi
+    echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS"
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
-echo "    Build CUPS spoolers/backends:               $BUILD_LIBUSB_BACKENDS"
 echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
 echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
 if test "$BUILD_FOOMATIC" != "no" ; then
@@ -1135,7 +1135,7 @@ if test "$BUILD_GIMP2" != "no" ; then
 else
     echo "    Build enhanced Print plugin for GIMP:       no"
 fi
-echo "    Build EPSON Stylus utility:                 $BUILD_ESCPUTIL"
+echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL"
 echo "    Build test programs:                        $BUILD_TEST"
 echo "    Build testpattern generator:                $BUILD_TESTPATTERN"
 echo
