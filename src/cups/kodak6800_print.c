@@ -610,7 +610,6 @@ struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
 	.version = "0.30",
 	.uri_prefix = "kodak6800",
-	.multipage_capable = 1,
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
 	.init = kodak6800_init,

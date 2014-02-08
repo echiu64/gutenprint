@@ -1666,7 +1666,6 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145 (S2)",
 	.version = "0.29",
-	.multipage_capable = 1,
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,

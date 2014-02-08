@@ -576,7 +576,6 @@ struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
 	.version = "0.29",
 	.uri_prefix = "kodak1400",
-	.multipage_capable = 1,
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
 	.init = kodak1400_init,

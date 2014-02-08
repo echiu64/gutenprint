@@ -497,7 +497,6 @@ struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
 	.version = "0.16",
 	.uri_prefix = "kodak605",
-	.multipage_capable = 1,
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,
 	.init = kodak605_init,
