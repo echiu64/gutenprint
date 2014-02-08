@@ -1119,11 +1119,7 @@ if test "$BUILD_CUPS" != "no" ; then
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
-echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
-echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
-if test "$BUILD_FOOMATIC" != "no" ; then
-    echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
-fi
+echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL"
 if test "$BUILD_GIMP2" != "no" ; then
     echo "    Build enhanced Print plugin for GIMP:       yes"
     if test "$BUILD_GIMP2_AS_GUTENPRINT" != "no" ; then
@@ -1135,7 +1131,11 @@ if test "$BUILD_GIMP2" != "no" ; then
 else
     echo "    Build enhanced Print plugin for GIMP:       no"
 fi
-echo "    Build EPSON inkjet utility:                 $BUILD_ESCPUTIL"
+echo "    Build Ghostscript IJS driver:               $BUILD_GHOSTSCRIPT"
+echo "    Build Foomatic data:                        $BUILD_FOOMATIC"
+if test "$BUILD_FOOMATIC" != "no" ; then
+    echo "        Build Foomatic 3.x data:                $BUILD_FOOMATIC_3"
+fi
 echo "    Build test programs:                        $BUILD_TEST"
 echo "    Build testpattern generator:                $BUILD_TESTPATTERN"
 echo
@@ -1143,11 +1143,11 @@ echo "  Installation summary:"
 echo "    Installation prefix:                        $prefix"
 # Configure intentionally does not expand exec_prefix to allow make
 # to do so.
-echo "    Exec prefix:                                $exec_prefix (`eval eval echo $exec_prefix`)";
+echo "    Exec prefix:                                `eval eval echo $exec_prefix` ($exec_prefix)";
 echo "    Data directory:                             $PACKAGE_DATA_DIR"
-echo "    Library directory:                          $PACKAGE_LIB_DIR (`eval eval echo $PACKAGE_LIB_DIR`)"
+echo "    Library directory:                          `eval eval echo $PACKAGE_LIB_DIR` ($PACKAGE_LIB_DIR)"
 echo "    XML data directory:                         $PKGXMLDATADIR"
-echo "    Module directory:                           $PKGMODULEDIR (`eval eval echo $PKGMODULEDIR`)"
+echo "    Module directory:                           `eval eval echo $PKGMODULEDIR` ($PKGMODULEDIR)"
 echo "    Install sample images:                      $INSTALL_SAMPLES"
 echo
 echo "  General configuration:"
