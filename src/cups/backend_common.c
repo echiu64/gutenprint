@@ -27,12 +27,12 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.32G"
+#define BACKEND_VERSION "0.33G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
 
-#ifndef LIBUSBX_API_VERSION
+#if !defined(LIBUSBX_API_VERSION) && !defined(LIBUSB_API_VERSION)
 #error "We need libusb >= 1.0.13!"
 #endif
 
@@ -232,11 +232,7 @@ static int print_scan_output(struct libusb_device *device,
 		uint8_t port_num;
 
 		bus_num = libusb_get_bus_number(device);
-#if defined(LIBUSBX_API_VERSION)
 		port_num = libusb_get_port_number(device);
-#else
-		port_num = 255;
-#endif
 		sprintf((char*)serial, "NONE_B%03d_D%03d", bus_num, port_num);
 	}
 	
