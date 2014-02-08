@@ -45,6 +45,7 @@
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
 #define DEBUG2( ... ) fprintf(stderr, __VA_ARGS__ )
 #define INFO( ... )  fprintf(stderr, "INFO: " __VA_ARGS__ )
+#define WARNING( ... )  fprintf(stderr, "WARNING: " __VA_ARGS__ )
 #define ERROR( ... ) do { fprintf(stderr, "ERROR: " __VA_ARGS__ ); sleep(1); } while (0)
 
 #if (__BYTE_ORDER == __LITTLE_ENDIAN)
@@ -88,6 +89,8 @@ enum {
 	P_ES2_20,
 	P_ES3_30,
 	P_ES40_CP790,
+	P_ES40,
+	P_CP790,
 	P_CP_XXX,
 	P_CP10,
 	P_KODAK_6800,
@@ -113,7 +116,6 @@ struct dyesub_backend {
 	char *name;
 	char *version;
 	char *uri_prefix;
-	int  multipage_capable;
 	void (*cmdline_usage)(char *caller);
 	void *(*init)(void);
 	void (*attach)(void *ctx, struct libusb_device_handle *dev,
