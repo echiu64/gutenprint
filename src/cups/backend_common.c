@@ -27,14 +27,9 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.35G"
+#define BACKEND_VERSION "0.36G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
-#endif
-
-#if !defined(LIBUSBX_API_VERSION) && !defined(LIBUSB_API_VERSION)
-#define OLDLIBUSB_WORKAROUND
-#warning "We HIGHLY recommend using libusb >= 1.0.13!"
 #endif
 
 /* Support Functions */
@@ -229,18 +224,10 @@ static int print_scan_output(struct libusb_device *device,
 	}
 	
 	if (!strlen((char*)serial)) {
-		uint8_t bus_num;
-		uint8_t port_num;
-
-		bus_num = libusb_get_bus_number(device);
-#ifdef OLDLIBUSB_WORKAROUND
-		WARNING("**** THIS PRINTER DOES NOT EXPORT A SERIAL NUMBER AND YOU ARE USING LIBUSB < 1.0.13\n");
-		WARNING("**** We cannot identify individual printers of this type without a newer version of libusb!\n");
-		sprintf((char*)serial, "NONE_B%03d_UNKDEV", bus_num);
-#else
-		port_num = libusb_get_port_number(device);
-		sprintf((char*)serial, "NONE_B%03d_D%03d", bus_num, port_num);
-#endif
+		WARNING("**** THIS PRINTER DOES NOT REPORT A SERIAL NUMBER!\n");
+		WARNING("**** If you intend to use multiple printers of this typpe, you\n");
+		WARNING("**** must only plug one in at a time or unexpected behaivor will occur!\n");
+		sprintf((char*)serial, "NONE_UNKNOWN");
 	}
 	
 	if (dyesub_debug)
