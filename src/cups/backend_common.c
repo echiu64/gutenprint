@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.34"
+#define BACKEND_VERSION "0.35G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -236,11 +236,11 @@ static int print_scan_output(struct libusb_device *device,
 #ifdef OLDLIBUSB_WORKAROUND
 		WARNING("**** THIS PRINTER DOES NOT EXPORT A SERIAL NUMBER AND YOU ARE USING LIBUSB < 1.0.13\n");
 		WARNING("**** We cannot identify individual printers of this type without a newer version of libusb!\n");
-		port_num = 255;
+		sprintf((char*)serial, "NONE_B%03d_UNKDEV", bus_num);
 #else
 		port_num = libusb_get_port_number(device);
-#endif
 		sprintf((char*)serial, "NONE_B%03d_D%03d", bus_num, port_num);
+#endif
 	}
 	
 	if (dyesub_debug)

@@ -607,8 +607,8 @@ D) CUPS dye-sublimation backend
     (see the examples below), then the printer is affected.
 
     Unfortunately, libusb releases older than 1.0.13 do not provide the 
-    necessary functionality to support this workaround.  Consequently, the 
-    backend cannot distinguish between multiple printers of the same model 
+    necessary functionality to query the full USB bus topology.  Consequently,
+    the backend cannot distinguish between multiple printers of the same model 
     on the same logical USB bus.
 
     This can result in inconsistent behavior from CUPS, including print jobs
@@ -631,10 +631,10 @@ D) CUPS dye-sublimation backend
 
     A device URI of
 
-      gutenprint52+usb://Canon/CP-10?serial=NONE_B003_D255&backend=canonselphy
+      gutenprint52+usb://Canon/CP-10?serial=NONE_B003_UNKDEV&backend=canonselphy
 
     indicates that the printer does not report a valid serial number, but
-    the backend cannot uniquely the printer, as evidenced by the 'D255' in 
+    the backend cannot uniquely the printer, as evidenced by 'UNKDEV' in 
     the URI. This is due to the use of libusb older than 1.0.13.  If the user
     has more than one printer of this type connected to the system, CUPS may
     not function correctly, as defined above.
