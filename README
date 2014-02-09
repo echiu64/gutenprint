@@ -506,14 +506,11 @@ C) CUPS
 
 D) CUPS dye-sublimation backend
 
-    A new CUPS backend was added to support USB printers that require
-    a special communications protocol. The backend is called
-    'gutenprint52usb' and requires libusb 1.x in order to build.  We
-    recommend libusb 1.0.13 or newer, although older versions will
-    function with reduced functionality (see note below).
-
-    The following dye-sublimation printers require this backend in
-    order to function properly:
+    A new CUPS backend was added to support USB specific dye-sublimation 
+    printers that require a special communications protocol. This backend is 
+    called 'gutenprint52usb' and currently supports the models listed below.
+    If you do not have a printer on this list, you may skip the remainder
+    of this section.
 
         Canon SELPHY ES series  (All models)
         Canon SELPHY CP series  (All models except CP520, CP820 and CP910)
@@ -534,27 +531,33 @@ D) CUPS dye-sublimation backend
 	Mitsubishi CP-D70DW  (EXPERIMENTAL)
 	Mitsubishi CP-D707DW (EXPERIMENTAL)
 
-    Over time, it is expected that additional printer models will be
-    supported by this backend.
-
     Although these printers advertise themselves as standard USB
     Printer Class devices, they do not actually obey those
     specifications, and require two-way handshaking in order to
     successfully print.
 
-    If you do not have one of the printers listed above, this backend
-    is not relevant for you and you can just ignore everything below.
- 
+    Over time, it is expected that additional printer models will be
+    supported by this backend.
+
+  Build Requirements
+
+    This backend requires libusb (or libusbx) 1.0 in order to build.
+    We strongly recommend use of libusb 1.0.13 or newer, although older
+    versions will function with some configuration limitations.  Please
+    read "Note on Use of Multiple Printers of One Model" below.
+
+  CUPS Integration
+
     If you are using up-to-date versions of CUPS (1.6.4 or newer) on
     Linux, then your system will automatically select this backend if
-    you plug in one of its supported printers.  No further
-    intervention on the user's part should be necessary.
+    the user plugs in one of its supported printers.  No further intervention
+    on the user's part should be necessary.
 
-    Unfortunately, if you are using an older version of CUPS or a
-    non-Linux system (particularly OSX) then you will probably need to
-    manually configure the use of this backend, as the system may
-    attempt to use the default usb backend which does not work
-    properly with these printers.
+    Unfortunately, if the user is using an older version of CUPS or a
+    non-Linux system (particularly OSX) then the user will probably need to
+    manually configure the use of this backend, as the system may attempt 
+    to use the default usb backend, which will not work properly with these
+    printers.
 
     To check which backend your printers are using, run the 'lpstat
     -s' command.  Below is an example of its output:
@@ -581,32 +584,69 @@ D) CUPS dye-sublimation backend
     automatically invoked as needed; the user will never invoke the
     backend directly.
 
-       NOTE ON PRINTERS WITHOUT SERIAL NUMBERS:
+  Note on Use of Multiple Printers of One Model
 
-    If your CUPS queue URI reports a serial number of 'Bxxx_Dyyy' then
-    your printer does not export a proper serial number, and was
-    assigned a fake serial number based on the logical USB bus and
-    device enumeration.  For example, 'B002_D007' means the printer
-    was detected on logical bus 2, and assigned device id 7.
+    If you do not and do not plan to install more than one printer of the
+    same model simulaneously, you may skip the remainder of this sub-section.
 
-    This has the unfortunate side-effect of possibly rendering the
-    queue nonoperational if the printer is moved to a different port,
-    as it may be enumerated differently.
+    This backend uses the printer's reported serial number to distinguish
+    between individual printers of the same model.  Unfortunately, certain
+    printer models do not report a serial number during the USB enumeration
+    process.  With these models, alternative means are used to generate a
+    unique identifer for that particular printer.
 
-       NOTE ON LIBUSB COMPATIBILITY:
+    These special cases may be identified by looking at the CUPS URI for 
+    the printer.  If the serial number is of the form 'B###_D###' (see the
+    examples below), then the printer is affected.  Below are the printers
+    known to not report a serial number:
 
-    If your printer does not export a serial number (see above), and
-    your URI reports a serial number ending in 'P255' then you are
-    also using an version of libusb older than 1.0.13.
+      Canon CP-10
+      Shinko CHC-S2145  (under some circumstances)
+      
+    When no serial number is available, the backend uses the USB Bus and
+    Device identifiers to generate a fake serial number.  Unfortunately,
+    libusb releases older than 1.0.13 do not prove the necessary 
+    functionality to support this workaround.  Consequently, the backend 
+    cannot distinguish between multiple printers of the same model on the 
+    same logical USB bus.
 
-    Older versions do not provide a way to determine the full USB
-    topology, so unless you have at least 1.0.13, we cannot
-    distinguish between multiple printers of the same type (or family)
-    plugged in simultaneously.
+    This can result in inconsistent behaivor from CUPS, including print jobs
+    failing or CUPS attempting to print to a printer other than the desired
+    one.
 
-    If your printer exports a serial number, then this problem will
-    not affect you and you can simultaneously use multiple printers of
-    the same type no matter what version of libusb you are using.
+    For example, a device URI of
+
+      gutenprint52+usb://Canon/SELPHY%20ES1?serial=221CD10131&backend=canonselphy
+    has a proper serial number (221CD10131), and the backend can uniquely
+    identify the printer.
+
+    A device URI of
+
+      gutenprint52+usb://Canon/CP-10?serial=NONE_B003_D007&backend=canonselphy
+
+    indicates that the printer does not report a valid serial number,
+    libusb 1.0.13 or newer is in use, and the backend can still uniquely
+    identify the printer.
+
+    A device URI of
+
+      gutenprint52+usb://Canon/CP-10?serial=NONE_B003_D255&backend=canonselphy
+
+    indicates that the printer does not report a valid serial number, but
+    the backend cannot uniquely the printer, as evidenced by the 'D255' in 
+    the URI. This is due to the use of libusb older than 1.0.13.  If the user
+    has more than one printer of this type connected to the system, CUPS may
+    not function correctly, as defined above.
+
+    If this is an issue, libusb 1.0.13 or newer must be installed or only
+    one printer of an affected model must be plugged in at any one time.
+    Please check the operating system vendor's updates for availability,
+    or download and install the newest release of libusb from 
+    http://www.libusb.info (*not* from http://www.libusb.org).
+
+    If, at some point in the future, the user chooses to install a newer
+    release of libusb, they *must*, after installing libusb, recompile and
+    reinstall Gutenprint as discussed in the Overview.
 
 
 ----------------
