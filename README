@@ -504,171 +504,7 @@ C) CUPS
 
 ----------------
 
-D) FOOMATIC
-
-    Foomatic is a printer meta-driver that can be used with any
-    spooler (CUPS, lpd, LPRng, etc.) or even no spooler at all.  It
-    uses XML data describing printer and driver capabilities in
-    conjunction with Ghostscript to allow printing in any environment.
-    Please visit http://www.openprinting.org/foomatic.html for more
-    information.
-
-    We normally recommend using the native CUPS driver described above
-    if your system uses CUPS as its spooler.  However, some systems
-    (many releases of Fedora Core, for example) use Foomatic as the
-    repository for all printer information; the tools provided on
-    those systems will not recognize the CUPS PPD files.  If your
-    system uses Foomatic in this way, or does not use CUPS, you should
-    use Foomatic to manage your printers.  If you are using CUPS,
-    however, we strongly recommend using the CUPS driver described in
-    the previous section in preference to Foomatic.
-
-    The Gutenprint driver for Foomatic requires Foomatic 2.0 or
-    higher; Foomatic 3.0 or above is highly recommended.  It also
-    requires GNU Ghostscript 6.53 or newer, AFPL Ghostscript 7.04 or
-    newer, or ESP Ghostscript 7.05 or newer for IJS support.  We
-    recommend Ghostscript 8 or above.
-
-    The Foomatic support in Gutenprint consists of a data generator
-    and an IJS-based Ghostscript driver.  It is possible to use the
-    Ghostscript driver without Foomatic, but the Gutenprint options
-    are complex and subject to change without notice.  Older printer
-    configuration tools such as apsfilter and magicfilter do not
-    provide a convenient interface to the driver's capabilities.
-    Therefore, we no longer provide documentation on direct use of the
-    Ghostscript driver without the Foomatic front end.
-
-    The Ghostscript driver in Gutenprint 5.2 is based on the IJS
-    protocol.  IJS is a protocol originally developed by
-    Hewlett-Packard to allow new drivers to be used with Ghostscript
-    without having to be compiled into Ghostscript.
-
-    Gutenprint 5.2 offers two Foomatic drivers, one supporting the
-    full range of options and the other supporting simplified options,
-    as describe above under CUPS.  The full-featured driver is named
-    "gutenprint-ijs.5.2"; the simplified driver is named
-    "gutenprint-ijs-simplified.5.2".
-
-    Gutenprint 5.2 may coexist with Gimp-Print 4.2; both drivers may
-    be installed and used (on separate printer queues, of course) on
-    the same system.
-
-    Normally, the Gutenprint configure script will automatically
-    detect the presence of Foomatic and Ghostscript on your system.
-    In some cases, you may have to install a Ghostscript development
-    package that may be named gs-devel, ghostscript-library, or the
-    like for the IJS capability.
-
-    The Foomatic driver will not allow use of PPD files created from
-    Foomatic data from a different version of Gutenprint.  This
-    ensures that the PPD files accurately match the driver in use.
-    However, there is no automatic upgrade tool provided for the
-    Foomatic driver, unlike the CUPS driver.  Therefore, all queues
-    using a Gutenprint driver must be updated manually, using either
-    tools provided by your distribution or the Foomatic tool
-    "foomatic-ppdfile".
-
-    NOTES TO PACKAGERS: 
-
-    * We recommend packaging the IJS driver
-      (/usr/bin/ijsgutenprint.5.2) and its man page
-      (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
-      data.
-
-    * The IJS driver and the Foomatic data kit and PPD files are
-      versioned, and hence you should consider permitting multiple
-      versions to be installed concurrently.  The man page
-      (/usr/man/man1/ijsgutenprint.1.gz) is not versioned.
-
-
-----------------
-
-E) GIMP
-
-    Gutenprint may be used as an enhanced Print plug-in for GIMP (2.0
-    and above), providing the ability to print images.  Please read
-    the release notes in addition to this README.  Gutenprint 5.2 no
-    longer supports GIMP 1.2.
-
-    The enhanced Print plugin for GIMP replaces the Gimp-Print
-    4.2-based plugin provided with GIMP 2.0 and 2.2.  As of the GIMP
-    2.4, GIMP team provides a new Print plugin based on the GtkPrint
-    framework.  This plugin provides standard printing capabilities,
-    but does not provide all of the new Gutenprint 5.2 features.
-    Therefore, the enhanced Print plugin for GIMP distributed with
-    Gutenprint does not replace that plugin, but is installed
-    alongside that plugin.
-
-    If your system separates development packages from runtime
-    packages, you will typically have to install development packages
-    for GIMP itself, in addition to Gtk and Glib.  With GIMP 2.x and
-    GTK 2.x, additional packages may be required.  Failure to install
-    these packages will lead to errors when the package is compiled.
-    The errors will typically look like this; the important errors are
-    the ones "No such file or directory".
-
-	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.10/src/gimp2'
-	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
-	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
-	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
-	   -Werror-implicit-function-declaration -Winline -Wformat=2
-	   -finline-limit=131072   -Disfinite=finite  -O6 -MT print-image-gimp.o
-	   -MD -MP -MF .deps/print-image-gimp.Tpo -c -o print-image-gimp.o
-	   print-image-gimp.c
-	In file included from print-image-gimp.c:30:
-	print_gimp.h:36:21: error: gtk/gtk.h: No such file or directory
-	print_gimp.h:37:26: error: libgimp/gimp.h: No such file or directory
-	print_gimp.h:38:28: error: libgimp/gimpui.h: No such file or directory
-	make[3]: *** [print-image-gimp.o] Error 1
-	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.10/src/gimp2'
-	make[2]: *** [all-recursive] Error 1
-	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.10/src'
-	make[1]: *** [all-recursive] Error 1
-	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.10'
-	make: *** [all] Error 2
-
-    Normally, the Gutenprint configure script detects which version,
-    if any, of GIMP is installed and builds an appropriate plugin.  If
-    the configure script does not detect it properly, you may need to
-    specify --with-gimp or --with-gimp2.  However, it's more likely
-    that you need to install appropriate development packages.
-
-    Normally Gutenprint installs GIMP Print plugin in your system
-    plug-in directory.  If you wish to install it in your personal
-    plugin directory, you may use
-
-    ./configure --enable-user-install
-
-    It is not possible for Gimp-Print 4.2, Gutenprint 5.0, and
-    Gutenprint 5.2 (or any future release) to coexist in the same
-    installation of GIMP.  The Gutenprint 5.2-based plugin can read
-    settings from previous versions of Gutenprint and Gimp-Print, but
-    the configuration file format in Gutenprint 5.2 cannot be read by
-    older versions of Gimp-Print or Gutenprint.
-
-
-----------------
-
-F) ESCPUTIL
-
-    "escputil" is a command line utility for administering Epson
-    inkjet printers.  It performs head alignment, retrieval of ink
-    levels and status information, printing of test patterns, etc.  It
-    is built and installed by default; if you don't want it, you may
-    use --without-escputil when configuring.
-
-    escputil uses the readline package for interactive commands
-    (currently only head alignment falls into this category).  Linking
-    against libreadline sometimes requires linking against other
-    packages.  Gutenprint attempts to determine the correct packages
-    to link against; the exact sequence is described in the release
-    notes.  If you do not wish to use readline, you may use
-    --without-readline.
-
-
-----------------
-
-G) CUPS dye-sublimation backend
+D) CUPS dye-sublimation backend
 
     A new CUPS backend was added to support USB printers that require a
     special communications protocol. The backend is called 
@@ -766,6 +602,169 @@ G) CUPS dye-sublimation backend
     affect you and you can simultaneously use multiple printers of the same
     type no matter what version of libusb you are using.
 
+
+----------------
+
+E) ESCPUTIL
+
+    "escputil" is a command line utility for administering Epson
+    inkjet printers.  It performs head alignment, retrieval of ink
+    levels and status information, printing of test patterns, etc.  It
+    is built and installed by default; if you don't want it, you may
+    use --without-escputil when configuring.
+
+    escputil uses the readline package for interactive commands
+    (currently only head alignment falls into this category).  Linking
+    against libreadline sometimes requires linking against other
+    packages.  Gutenprint attempts to determine the correct packages
+    to link against; the exact sequence is described in the release
+    notes.  If you do not wish to use readline, you may use
+    --without-readline.
+
+
+----------------
+
+F) FOOMATIC
+
+    Foomatic is a printer meta-driver that can be used with any
+    spooler (CUPS, lpd, LPRng, etc.) or even no spooler at all.  It
+    uses XML data describing printer and driver capabilities in
+    conjunction with Ghostscript to allow printing in any environment.
+    Please visit http://www.openprinting.org/foomatic.html for more
+    information.
+
+    We normally recommend using the native CUPS driver described above
+    if your system uses CUPS as its spooler.  However, some systems
+    (many releases of Fedora Core, for example) use Foomatic as the
+    repository for all printer information; the tools provided on
+    those systems will not recognize the CUPS PPD files.  If your
+    system uses Foomatic in this way, or does not use CUPS, you should
+    use Foomatic to manage your printers.  If you are using CUPS,
+    however, we strongly recommend using the CUPS driver described in
+    the previous section in preference to Foomatic.
+
+    The Gutenprint driver for Foomatic requires Foomatic 2.0 or
+    higher; Foomatic 3.0 or above is highly recommended.  It also
+    requires GNU Ghostscript 6.53 or newer, AFPL Ghostscript 7.04 or
+    newer, or ESP Ghostscript 7.05 or newer for IJS support.  We
+    recommend Ghostscript 8 or above.
+
+    The Foomatic support in Gutenprint consists of a data generator
+    and an IJS-based Ghostscript driver.  It is possible to use the
+    Ghostscript driver without Foomatic, but the Gutenprint options
+    are complex and subject to change without notice.  Older printer
+    configuration tools such as apsfilter and magicfilter do not
+    provide a convenient interface to the driver's capabilities.
+    Therefore, we no longer provide documentation on direct use of the
+    Ghostscript driver without the Foomatic front end.
+
+    The Ghostscript driver in Gutenprint 5.2 is based on the IJS
+    protocol.  IJS is a protocol originally developed by
+    Hewlett-Packard to allow new drivers to be used with Ghostscript
+    without having to be compiled into Ghostscript.
+
+    Gutenprint 5.2 offers two Foomatic drivers, one supporting the
+    full range of options and the other supporting simplified options,
+    as describe above under CUPS.  The full-featured driver is named
+    "gutenprint-ijs.5.2"; the simplified driver is named
+    "gutenprint-ijs-simplified.5.2".
+
+    Gutenprint 5.2 may coexist with Gimp-Print 4.2; both drivers may
+    be installed and used (on separate printer queues, of course) on
+    the same system.
+
+    Normally, the Gutenprint configure script will automatically
+    detect the presence of Foomatic and Ghostscript on your system.
+    In some cases, you may have to install a Ghostscript development
+    package that may be named gs-devel, ghostscript-library, or the
+    like for the IJS capability.
+
+    The Foomatic driver will not allow use of PPD files created from
+    Foomatic data from a different version of Gutenprint.  This
+    ensures that the PPD files accurately match the driver in use.
+    However, there is no automatic upgrade tool provided for the
+    Foomatic driver, unlike the CUPS driver.  Therefore, all queues
+    using a Gutenprint driver must be updated manually, using either
+    tools provided by your distribution or the Foomatic tool
+    "foomatic-ppdfile".
+
+    NOTES TO PACKAGERS: 
+
+    * We recommend packaging the IJS driver
+      (/usr/bin/ijsgutenprint.5.2) and its man page
+      (/usr/man/man1/ijsgutenprint.1.gz) together with the Foomatic
+      data.
+
+    * The IJS driver and the Foomatic data kit and PPD files are
+      versioned, and hence you should consider permitting multiple
+      versions to be installed concurrently.  The man page
+      (/usr/man/man1/ijsgutenprint.1.gz) is not versioned.
+
+
+----------------
+
+G) GIMP
+
+    Gutenprint may be used as an enhanced Print plug-in for GIMP (2.0
+    and above), providing the ability to print images.  Please read
+    the release notes in addition to this README.  Gutenprint 5.2 no
+    longer supports GIMP 1.2.
+
+    The enhanced Print plugin for GIMP replaces the Gimp-Print
+    4.2-based plugin provided with GIMP 2.0 and 2.2.  As of the GIMP
+    2.4, GIMP team provides a new Print plugin based on the GtkPrint
+    framework.  This plugin provides standard printing capabilities,
+    but does not provide all of the new Gutenprint 5.2 features.
+    Therefore, the enhanced Print plugin for GIMP distributed with
+    Gutenprint does not replace that plugin, but is installed
+    alongside that plugin.
+
+    If your system separates development packages from runtime
+    packages, you will typically have to install development packages
+    for GIMP itself, in addition to Gtk and Glib.  With GIMP 2.x and
+    GTK 2.x, additional packages may be required.  Failure to install
+    these packages will lead to errors when the package is compiled.
+    The errors will typically look like this; the important errors are
+    the ones "No such file or directory".
+
+	make[3]: Entering directory `/opt/gutenprint/gutenprint-5.2.10/src/gimp2'
+	gcc -DHAVE_CONFIG_H -I. -I../..  -I../../include -I../../include
+	   -Wall -Wcast-align -Wstrict-prototypes -Wmissing-prototypes
+	   -Wmissing-declarations -Wnested-externs -Wwrite-strings
+	   -Werror-implicit-function-declaration -Winline -Wformat=2
+	   -finline-limit=131072   -Disfinite=finite  -O6 -MT print-image-gimp.o
+	   -MD -MP -MF .deps/print-image-gimp.Tpo -c -o print-image-gimp.o
+	   print-image-gimp.c
+	In file included from print-image-gimp.c:30:
+	print_gimp.h:36:21: error: gtk/gtk.h: No such file or directory
+	print_gimp.h:37:26: error: libgimp/gimp.h: No such file or directory
+	print_gimp.h:38:28: error: libgimp/gimpui.h: No such file or directory
+	make[3]: *** [print-image-gimp.o] Error 1
+	make[3]: Leaving directory `/opt/gutenprint/gutenprint-5.2.10/src/gimp2'
+	make[2]: *** [all-recursive] Error 1
+	make[2]: Leaving directory `/opt/gutenprint/gutenprint-5.2.10/src'
+	make[1]: *** [all-recursive] Error 1
+	make[1]: Leaving directory `/opt/gutenprint/gutenprint-5.2.10'
+	make: *** [all] Error 2
+
+    Normally, the Gutenprint configure script detects which version,
+    if any, of GIMP is installed and builds an appropriate plugin.  If
+    the configure script does not detect it properly, you may need to
+    specify --with-gimp or --with-gimp2.  However, it's more likely
+    that you need to install appropriate development packages.
+
+    Normally Gutenprint installs GIMP Print plugin in your system
+    plug-in directory.  If you wish to install it in your personal
+    plugin directory, you may use
+
+    ./configure --enable-user-install
+
+    It is not possible for Gimp-Print 4.2, Gutenprint 5.0, and
+    Gutenprint 5.2 (or any future release) to coexist in the same
+    installation of GIMP.  The Gutenprint 5.2-based plugin can read
+    settings from previous versions of Gutenprint and Gimp-Print, but
+    the configuration file format in Gutenprint 5.2 cannot be read by
+    older versions of Gimp-Print or Gutenprint.
 
 
 ================================================================
