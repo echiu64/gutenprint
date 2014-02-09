@@ -542,9 +542,6 @@ D) CUPS dye-sublimation backend
   Build Requirements
 
     This backend requires libusb (or libusbx) 1.0 in order to build.
-    We strongly recommend use of libusb 1.0.13 or newer, although older
-    versions will function with some configuration limitations.  Please
-    read "Note on Use of Multiple Printers of One Model" below.
 
   CUPS Integration
 
@@ -584,36 +581,29 @@ D) CUPS dye-sublimation backend
     automatically invoked as needed; the user will never invoke the
     backend directly.
 
-  Note on Use of Multiple Printers of One Model
-
-    If you do not and do not plan to install more than one printer of the
-    same model simulaneously, you may skip the remainder of this sub-section.
+  Note on Printers that do not Report a Serial Number
 
     This backend uses the printer's reported serial number to distinguish
     between individual printers of the same model.  Unfortunately, certain
     printer models do not report a serial number during the USB enumeration
-    process.  With these models, alternative means are used to generate a
-    unique identifer for that particular printer.
-
-    Below are the printers known to not report a serial number:
+    process.  This is a list of the affected models we know of:
 
       Canon CP-10
-      Shinko CHC-S2145  (under some circumstances)
-      
-    When no serial number is available, the backend generates a fake serial 
-    number based on the USB configuration at the time the printer was
-    installed.  These special cases may be identified by looking at the CUPS
-    URI for the printer.  If the serial number is of the form 'B###_D###' 
-    (see the examples below), then the printer is affected.
+      Shinko CHC-S2145  (under some circumstances, see note below)
 
-    Unfortunately, libusb releases older than 1.0.13 do not provide the 
-    necessary functionality to query the full USB bus topology.  Consequently,
-    the backend cannot distinguish between multiple printers of the same model 
-    on the same logical USB bus.
+    When no serial number is available, the backend generates a fake serial
+    of "NONE_UNKNOWN", which may be seen in the CUPS queue URI for
+    the printer (see the examples below)
 
-    This can result in inconsistent behavior from CUPS, including print jobs
-    failing to print altogether or CUPS attempting to print to a printer
-    other than the desired one.
+    Unfortunately, if multiple printers of the same type are connected
+    simultaneously, the backend cannot determine which printer is which,
+    possibly resulting in inconsistent behaivor from CUPS, including:
+
+      * Printing (or attempting to print) to a printer other than
+        the desired one
+      * Failing to print a particular job at all
+      * Inability to create a queue for each printer
+      * Attempt to create queues that already exist
 
     For example, a device URI of
 
@@ -623,31 +613,30 @@ D) CUPS dye-sublimation backend
 
     A device URI of
 
-      gutenprint52+usb://Canon/CP-10?serial=NONE_B003_D007&backend=canonselphy
+      gutenprint52+usb://Canon/CP-10?serial=NONE_UNKNOWN&backend=canonselphy
 
-    indicates that the printer does not report a valid serial number,
-    libusb 1.0.13 or newer is in use, and the backend can still uniquely
-    identify the printer.
+    indicates that the printer does not report a valid serial number, so
+    the backend cannot uniquely identify the printer. If the user has more
+    than one printer of this type connected to the system, CUPS may not
+    function correctly, as defined above.
 
-    A device URI of
+  Note on the Shinko S2145
 
-      gutenprint52+usb://Canon/CP-10?serial=NONE_B003_UNKDEV&backend=canonselphy
+    The Shinko S2145 does not report a serial number in the traditional
+    sense; instead it reports a user-definable string. If this string is set,
+    the backend will report it as the serial number.  However, if it is not
+    set (which is the factory default) the backend will report 'NONE_UNKNOWN'
+    as described above.
 
-    indicates that the printer does not report a valid serial number, but
-    the backend cannot uniquely the printer, as evidenced by 'UNKDEV' in 
-    the URI. This is due to the use of libusb older than 1.0.13.  If the user
-    has more than one printer of this type connected to the system, CUPS may
-    not function correctly, as defined above.
+    The backend supports configuring the user string.  To do so, connect each
+    printer individually, and invoke the backend as follows:
 
-    If this is an issue, libusb 1.0.13 or newer must be installed or only
-    one printer of an affected model must be plugged in at any one time.
-    Please check the operating system vendor's updates for availability,
-    or download and install the newest release of libusb from 
-    http://www.libusb.info (*not* from http://www.libusb.org).
+       BACKEND=shinkos2145 /usr/lib/cups/backend/gutenprint52+usb \
+            -su "somealphanumerictext"
 
-    If, at some point in the future, the user chooses to install a newer
-    release of libusb, they *must*, after installing libusb, recompile and
-    reinstall Gutenprint as discussed in the Overview.
+    Please use only alphanumeric text (ie only letters and numbers).  After
+    changing the user string, the user will need to remove and re-create the
+    CUPS queue.
 
 
 ----------------

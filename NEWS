@@ -284,38 +284,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Mitsubishi CP-D70DW  (EXPERIMENTAL)
         Mitsubishi DP-D707DW (EXPERIMENTAL)
 
-     Over time, it is expected that additional printer models will be
-     supported by this backend.
-
-     Please note that unless you are using Linux with CUPS >= 1.6.4, you 
-     may have to manually select the gutenprint CUPS backend when 
-     configuring one of these printers.  They will not function properly 
-     with the default 'usb' backend.
-
-     If your CUPS queue URI reports a serial number of 'Bxxx_Dyyy' then
-     your printer does not export a proper serial number, and was assigned 
-     a fake serial number based on the logical USB bus and device 
-     enumeration.  For example, 'B002_D007' means the printer was detected
-     on logical bus 2, and assigned device id 7.
-
-     This has the unfortunate side-effect of possibly rendering the queue 
-     nonoperational if the printer is moved to a different port, as it may
-     be enumerated differently.
-
-	LIBUSB COMPATIBILITY NOTE:
-
-     If your printer does not export a serial number (see above), and 
-     your URI reports a serial number ending in 'P255' then you are also
-     using an version of libusb older than 1.0.13.
-
-     Older versions do not provide a way to determine the full USB
-     topology, so unless you have at least 1.0.13, we cannot distinguish 
-     between multiple printers of the same type (or family) plugged in
-     simultaneously.  
-
-     If your printer exports a serial number, then this problem will not
-     affect you and you can simultaneously use multiple printers of the same
-     type no matter what version of libusb you are using.
+     For further information about configuration and use of this CUPS 
+     backend, please see the README document, section II D.
 
   2) New printers supported in this release:
 
