@@ -531,6 +531,8 @@ D) CUPS dye-sublimation backend
         Citizen CX
         Citizen CX-W
         Citizen CY
+	Mitsubishi CP-D70DW  (EXPERIMENTAL)
+	Mitsubishi CP-D707DW (EXPERIMENTAL)
 
     Over time, it is expected that additional printer models will be
     supported by this backend.

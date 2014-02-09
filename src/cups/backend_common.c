@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.34G"
+#define BACKEND_VERSION "0.34"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -234,9 +234,9 @@ static int print_scan_output(struct libusb_device *device,
 
 		bus_num = libusb_get_bus_number(device);
 #ifdef OLDLIBUSB_WORKAROUND
-		port_num = 255;
 		WARNING("**** THIS PRINTER DOES NOT EXPORT A SERIAL NUMBER AND YOU ARE USING LIBUSB < 1.0.13\n");
 		WARNING("**** We cannot identify individual printers of this type without a newer version of libusb!\n");
+		port_num = 255;
 #else
 		port_num = libusb_get_port_number(device);
 #endif
@@ -308,6 +308,7 @@ static struct dyesub_backend *backends[] = {
 	&kodak1400_backend,
 	&shinkos2145_backend,
 	&updr150_backend,
+	&mitsu70x_backend,
 	&dnpds40_backend,
 	NULL,
 };

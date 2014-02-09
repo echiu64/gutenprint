@@ -281,6 +281,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Citizen CX
 	Citizen CX-W
 	Citizen CY
+        Mitsubishi CP-D70DW  (EXPERIMENTAL)
+        Mitsubishi DP-D707DW (EXPERIMENTAL)
 
      Over time, it is expected that additional printer models will be
      supported by this backend.
@@ -1137,7 +1139,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Mitsubishi CPD70D/DW     (EXPERIMENTAL)
        Mitsubishi CPD707D/DW    (EXPERIMENTAL)
        Mitsubishi CPK60DW       (EXPERIMENTAL)
-       Mitsubishi CP3800DW     (EXPERIMENTAL)
+       Mitsubishi CP3800DW      (EXPERIMENTAL)
 
 	None of these models have been tested and confirmed to work 
 	(or not), so feedback is welcome.
@@ -1145,6 +1147,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	NOTE: With the exception of the CP-K60DW-S, all Mitsubishi
 	printers with red faceplates and/or model designations ending with 
 	an '-S' suffix are not supported.
+
+	The CP-D70DW and CP-D707DW (and likely the CP-K60DW) require use of 
+	an intelligent backend,	which is bundled with Gutenprint.
 
      - Kodak Dye-Sublimation printers:
 
