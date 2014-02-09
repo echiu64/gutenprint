@@ -1121,7 +1121,8 @@ if test "$BUILD_CUPS" != "no" ; then
     fi
     echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS"
     if test "$HAVE_LIBUSBOLD" != "no" ; then
-        echo "    *** WARNING: libusb < 1.0.13 use, see README section D"
+        echo "            *** WARNING: libusb < 1.0.13 use, see README section II D"
+	warnings_emitted=1
     fi
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
@@ -1179,7 +1180,7 @@ echo "    uname -a output:                            `uname -a`"
 echo "================================================================"
 if test $warnings_emitted -ne 0 ; then
     echo
-    echo '*** NOTE: Please review the warnings shown above carefully!'
+    echo '*** WARNING: Please review the warnings shown above carefully!'
 fi
 echo
 if test "$BUILD_GIMP2" = "no" -o "$BUILD_CUPS" = "no" ; then
