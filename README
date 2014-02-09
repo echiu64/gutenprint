@@ -595,24 +595,25 @@ D) CUPS dye-sublimation backend
     process.  With these models, alternative means are used to generate a
     unique identifer for that particular printer.
 
-    These special cases may be identified by looking at the CUPS URI for 
-    the printer.  If the serial number is of the form 'B###_D###' (see the
-    examples below), then the printer is affected.  Below are the printers
-    known to not report a serial number:
+    Below are the printers known to not report a serial number:
 
       Canon CP-10
       Shinko CHC-S2145  (under some circumstances)
       
-    When no serial number is available, the backend uses the USB Bus and
-    Device identifiers to generate a fake serial number.  Unfortunately,
-    libusb releases older than 1.0.13 do not prove the necessary 
-    functionality to support this workaround.  Consequently, the backend 
-    cannot distinguish between multiple printers of the same model on the 
-    same logical USB bus.
+    When no serial number is available, the backend generates a fake serial 
+    number based on the USB configuration at the time the printer was
+    installed.  These special cases may be identified by looking at the CUPS
+    URI for the printer.  If the serial number is of the form 'B###_D###' 
+    (see the examples below), then the printer is affected.
+
+    Unfortunately, libusb releases older than 1.0.13 do not provide the 
+    necessary functionality to support this workaround.  Consequently, the 
+    backend cannot distinguish between multiple printers of the same model 
+    on the same logical USB bus.
 
     This can result in inconsistent behaivor from CUPS, including print jobs
-    failing or CUPS attempting to print to a printer other than the desired
-    one.
+    failing to print altogether or CUPS attempting to print to a printer
+    other than the desired one.
 
     For example, a device URI of
 
