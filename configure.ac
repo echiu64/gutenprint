@@ -1121,7 +1121,7 @@ if test "$BUILD_CUPS" != "no" ; then
     fi
     echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS"
     if test "$HAVE_LIBUSBOLD" != "no" ; then
-        echo "            *** WARNING: libusb < 1.0.13 use, see README section II D"
+        echo "            *** WARNING: libusb < 1.0.13 in use, see README section II D"
 	warnings_emitted=1
     fi
 else
