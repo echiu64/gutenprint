@@ -705,22 +705,35 @@ G) CUPS dye-sublimation backend
 
     If you do not have one of the printers listed above, this backend is
     not relevant for you and you can just ignore everything below.
-
-    Once Gutenprint and this backend are installed, if you are using 
-    up-to-date versions of CUPS (1.6.4 or newer) on Linux, then your 
-    system will automatically select this backend if you plug in one of its 
-    supported printers.  No further intervention on the user's part should
-    be necessary.
+ 
+    If you are using up-to-date versions of CUPS (1.6.4 or newer) on Linux,
+    then your system will automatically select this backend if you plug in 
+    one of its supported printers.  No further intervention on the user's 
+    part should be necessary.
 
     Unfortunately, if you are using an older version of CUPS or a non-Linux
-    system (particularly OSX) then you will need to manually configure the
-    use of this backend, as the system will automatically attempt to use the
-    default backend which does not work with these printers.
- 
-    To do this, you will need to remove the printer that was automatically
-    added by your system then manually add a new one, taking care to select
-    the correct backend ("gutenprint52+usb").  Instructions on how to do this
-    are beyond the scope of this document; please see the CUPS documentation.
+    system (particularly OSX) then you will probably need to manually
+    configure the use of this backend, as the system may attempt to use the
+    default usb backend which does not work properly with these printers.
+
+    To check which backend your printers are using, run the 'lpstat -s' 
+    command.  Below is an example of its output:
+
+      device for Canon_SELPHY_ES1: gutenprint52+usb://Canon/SELPHY%20ES1?serial=221CD10131&backend=canonselphy
+      device for Canon_SELPHY_ES3: usb://Canon/Canon%20SELPHY%20ES3
+
+    In this example, the SELPHY ES1 is using the correct gutenprint backend, 
+    but the ES3 is using the incorrect 'usb' backend. In order for the ES3 to
+    function properly, you need to configure it to use the correct backend.
+
+    The most expedient way to accomplish this is to remove the printer via your
+    system's printer configuration interface, then manually add a new one,
+    taking care to select the correct backend ("gutenprint52+usb"). This 
+    backend name is present in the device URI for the printer, as 
+    demonstrated in the above example.  An alternative to the system printer 
+    configuration interface is to use your local system's CUPS web interface,
+    if it is enabled. Step-by-step instructions for using any of these 
+    interfaces is beyond the scope of this document.
 
     Once the printer is properly configured, this backend will be 
     automatically invoked as needed; the user will never invoke the backend
