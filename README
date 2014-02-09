@@ -85,13 +85,13 @@ A) OVERVIEW
 
       - The core driver library (required for everything else)
       - A CUPS (Common UNIX Printing System) driver
+      - A CUPS backend, required for selected dye-sublimation printers
+      - A command-line utility to administer and maintain Epson
+        printers
       - An enhanced Print plug-in for GIMP
       - GTK-based UI libraries (used by the enhanced GIMP plug-in)
       - Support for the Foomatic spooler configuration system
       - A Ghostscript driver using the IJS plugin facility
-      - A command-line utility to administer and maintain Epson
-        printers
-      - A CUPS backend for selected dye-sublimation printers
 
     This package requires the use of GNU Make to compile.  On systems
     with both GNU make and another make installed, GNU make may be
