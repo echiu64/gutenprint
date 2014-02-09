@@ -433,6 +433,10 @@ PKG_CHECK_MODULES([LIBUSB], [libusb-1.0],
                    BUILD_LIBUSB_BACKENDS=yes],
                   [HAVE_LIBUSB=no
 	           BUILD_LIBUSB_BACKENDS=no])
+# complain if we have an older (less-featured) version of libusb-1.0
+PKG_CHECK_MODULES([LIBUSBOLD], [libusb-1.0 < 1.0.13],
+                  [HAVE_LIBUSBOLD=yes],
+                  [HAVE_LIBUSBOLD=no])
 
 AC_PATH_PROGS([GIMPTOOL2_CHECK], [gimptool-2.0 gimptool])
 if test -z "${GIMPTOOL2_CHECK}" ; then
@@ -1116,6 +1120,9 @@ if test "$BUILD_CUPS" != "no" ; then
 	warnings_emitted=1
     fi
     echo "        Build CUPS dyesub USB backend:          $BUILD_LIBUSB_BACKENDS"
+    if test "$HAVE_LIBUSBOLD" != "no" ; then
+        echo "    *** WARNING: libusb < 1.0.13 use, see README section D"
+    fi
 else
     echo "    Build CUPS:                                 $BUILD_CUPS"
 fi
