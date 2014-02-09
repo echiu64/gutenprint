@@ -611,7 +611,7 @@ D) CUPS dye-sublimation backend
     backend cannot distinguish between multiple printers of the same model 
     on the same logical USB bus.
 
-    This can result in inconsistent behaivor from CUPS, including print jobs
+    This can result in inconsistent behavior from CUPS, including print jobs
     failing to print altogether or CUPS attempting to print to a printer
     other than the desired one.
 
