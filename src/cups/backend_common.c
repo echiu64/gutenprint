@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.37G"
+#define BACKEND_VERSION "0.38G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -170,6 +170,58 @@ static char *sanitize_string(char *str) {
 	return str;
 }
 
+/* 
+
+   These functions are Public Domain code obtained from:
+
+   http://www.geekhideout.com/urlcode.shtml
+
+*/
+#include <ctype.h>  /* for isalnum() */
+static char to_hex(char code) {
+	static const char hex[] = "0123456789abcdef";
+	return hex[code & 15];
+}
+static char from_hex(char ch) {
+	return isdigit(ch) ? ch - '0' : tolower(ch) - 'a' + 10;
+}
+/* Note -- caller must free returned pointer! */
+static char *url_encode(char *str) {
+	char *pstr = str, *buf = malloc(strlen(str) * 3 + 1), *pbuf = buf;
+
+	while (*pstr) {
+		if (isalnum(*pstr) || *pstr == '-' || *pstr == '_' || *pstr == '.' || *pstr == '~') 
+			*pbuf++ = *pstr;
+		else if (*pstr == ' ') 
+			*pbuf++ = '+';
+		else 
+			*pbuf++ = '%', *pbuf++ = to_hex(*pstr >> 4), *pbuf++ = to_hex(*pstr & 15);
+		pstr++;
+	}
+	*pbuf = '\0';
+	return buf;
+}
+static char *url_decode(char *str) {
+	char *pstr = str, *buf = malloc(strlen(str) + 1), *pbuf = buf;
+	while (*pstr) {
+		if (*pstr == '%') {
+			if (pstr[1] && pstr[2]) {
+				*pbuf++ = from_hex(pstr[1]) << 4 | from_hex(pstr[2]);
+				pstr += 2;
+			}
+		} else if (*pstr == '+') { 
+			*pbuf++ = ' ';
+		} else {
+			*pbuf++ = *pstr;
+		}
+		pstr++;
+	}
+	*pbuf = '\0';
+	return buf;
+}
+
+/* And now back to our regularly-scheduled programming */
+
 static int print_scan_output(struct libusb_device *device,
 			     struct libusb_device_descriptor *desc,
 			     char *prefix, char *manuf2,
@@ -179,28 +231,31 @@ static int print_scan_output(struct libusb_device *device,
 {
 	struct libusb_device_handle *dev;
 
-	unsigned char product[STR_LEN_MAX] = "";
-	unsigned char serial[STR_LEN_MAX] = "";
-	unsigned char manuf[STR_LEN_MAX] = "";
-	
+	char buf[256];
+	char *product = NULL, *serial = NULL, *manuf = NULL;
+
 	if (libusb_open(device, &dev)) {
 		ERROR("Could not open device %04x:%04x (need to be root?)\n", desc->idVendor, desc->idProduct);
 		found = -1;
 		goto abort;
 	}
-	
+
 	/* Query detailed info */
 	if (desc->iManufacturer) {
-		libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, manuf, STR_LEN_MAX);
-		sanitize_string((char*)manuf);
+		libusb_get_string_descriptor_ascii(dev, desc->iManufacturer, (unsigned char*)buf, STR_LEN_MAX);
+		sanitize_string(buf);
+		manuf = url_encode(buf);
 	}
+	buf[0] = 0;
 	if (desc->iProduct) {
-		libusb_get_string_descriptor_ascii(dev, desc->iProduct, product, STR_LEN_MAX);
-		sanitize_string((char*)product);
+		libusb_get_string_descriptor_ascii(dev, desc->iProduct, (unsigned char *)buf, STR_LEN_MAX);
+		sanitize_string(buf);
+		product = url_encode(buf);
 	}
+	buf[0] = 0;
 	if (desc->iSerialNumber) {
-		libusb_get_string_descriptor_ascii(dev, desc->iSerialNumber, serial, STR_LEN_MAX);
-		sanitize_string((char*)serial);
+		libusb_get_string_descriptor_ascii(dev, desc->iSerialNumber, (unsigned char*)buf, STR_LEN_MAX);
+		sanitize_string(buf);
 	} else if (backend->query_serno) {
 		/* XXX this is ... a cut-n-paste hack */
 
@@ -225,63 +280,50 @@ static int print_scan_output(struct libusb_device *device,
 			}
 
 			/* Ignore result since a failure isn't critical here */
-			backend->query_serno(dev, endp_up, endp_down, (char*)serial, STR_LEN_MAX);
+			backend->query_serno(dev, endp_up, endp_down, buf, STR_LEN_MAX);
 			libusb_release_interface(dev, iface);
 		}
 	}
 	
-	if (!strlen((char*)serial)) {
+	if (!strlen(buf)) {
 		WARNING("**** THIS PRINTER DOES NOT REPORT A SERIAL NUMBER!\n");
 		WARNING("**** If you intend to use multiple printers of this typpe, you\n");
 		WARNING("**** must only plug one in at a time or unexpected behaivor will occur!\n");
-		sprintf((char*)serial, "NONE_UNKNOWN");
+		sprintf(serial, "NONE_UNKNOWN");
 	}
-	
+	serial = url_encode(buf);
+
 	if (dyesub_debug)
 		DEBUG("%sVID: %04X PID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
 		      match ? "MATCH: " : "",
 		      desc->idVendor, desc->idProduct, manuf, product, serial);
 	
 	if (scan_only) {
-
-		char buf[256]; // XXX ugly..
 		int j = 0, k = 0;
 		char *ieee_id = get_device_id(dev);
+		char *product2 = url_decode(product);
 
 		/* URLify the manuf and model strings */
 		if (strlen(manuf2))
-			strncpy((char*)manuf, manuf2, sizeof(manuf));
-		while(*(manuf + j)) {
-			buf[k] = *(manuf+j);
-			if(buf[k] == ' ') {
-				buf[k++] = '%';
-				buf[k++] = '2';
-				buf[k] = '0';
-			}
-			k++;
-			j++;
-		}
+			strncpy(buf, manuf2, sizeof(buf) - 2);
+		else
+			strncpy(buf, manuf, sizeof(buf) - 2);
+		k = strlen(buf);
 		buf[k++] = '/';
-		j = 0;
-		while (*(product + j + strlen(manuf2))) {
-			buf[k] = *(product + j + (strlen(manuf2) ? (strlen(manuf2) + 1) : 0));
-			if(buf[k] == ' ') {
-				buf[k++] = '%';
-				buf[k++] = '2';
-				buf[k] = '0';
-			}
-			k++;
-			j++;
-		}
 		buf[k] = 0;
+
+		j = (manuf2 && strlen(manuf2)) ? strlen(manuf2) + 1 : 0;
+		strncpy(buf + k, product + j, sizeof(buf)-k);
 		
 		fprintf(stdout, "direct %s://%s?serial=%s&backend=%s \"%s\" \"%s\" \"%s\" \"\"\n",
 			prefix, buf, serial, backend->uri_prefix, 
-			product, product,
-			ieee_id);
+			product2, product2,
+			ieee_id? ieee_id : "");
 		
 		if (ieee_id)
 			free(ieee_id);
+		if (product2)
+			free(product2);
 	}
 	
 	/* If a serial number was passed down, use it. */
@@ -289,9 +331,15 @@ static int print_scan_output(struct libusb_device *device,
 	    strcmp(match_serno, (char*)serial)) {
 		found = -1;
 	}
-	
+
+	/* Free things up */
+	if(serial) free(serial);
+	if(manuf) free(manuf);
+	if(product) free(product);
+
 	libusb_close(dev);
 abort:
+
 	return found;
 }
 
