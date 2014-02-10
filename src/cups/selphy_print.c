@@ -139,29 +139,34 @@ static int es3_error_detect(uint8_t *rdbuf)
 
 static int es40_error_detect(uint8_t *rdbuf)
 {
-	if (!rdbuf[4] && !rdbuf[5]) {
-		/* ES40 */
-		if (!rdbuf[3])
-			return 0;
+	/* ES40 */
+	if (!rdbuf[3])
+		return 0;
+	
+	if (rdbuf[3] == 0x01)
+		ERROR("Generic communication error\n");
+	else if (rdbuf[3] == 0x32)
+		ERROR("Cover open or media empty!\n");
+	else
+		ERROR("Unknown error - %02x\n", rdbuf[3]);
 
-		if (rdbuf[3] == 0x01)
-			ERROR("Generic communication error\n");
-		else if (rdbuf[3] == 0x32)
-			ERROR("Cover open or media empty!\n");
-		else
-			ERROR("Unknown error - %02x\n", rdbuf[3]);
-		return 1;
-	}
+	return 1;
+}
 
+static int cp790_error_detect(uint8_t *rdbuf)
+{
 	/* CP790 */
 	if (rdbuf[4] == 0x10 && rdbuf[5] == 0xff) {
 		ERROR("No ribbon loaded!\n");
 		return 1;
 	} else if (rdbuf[4] == 0xff && rdbuf[5] == 0x01) {
-		ERROR("No paper loaded!\n");
+		ERROR("No paper tray loaded!\n");
 		return 1;
 	} else if (rdbuf[2] == 0x01 && rdbuf[3] == 0x11) {
 		ERROR("Paper feed error!\n");
+		return 1;
+	} else if (rdbuf[3] == 0x21) {
+		ERROR("Ribbon depleted!\n");
 		return 1;
 	} else if (rdbuf[3]) {
 		ERROR("Unknown error - %02x\n", rdbuf[3]);
@@ -170,6 +175,7 @@ static int es40_error_detect(uint8_t *rdbuf)
 
 	return 0;
 }
+
 
 static int cp10_error_detect(uint8_t *rdbuf)
 {
@@ -249,20 +255,42 @@ static struct printer_data selphy_printers[] = {
 	  .paper_code_offset = -1,
 	  .error_detect = es3_error_detect,
 	},
+	/* PLACEHOLDER FOR DETECTION PURPOSES ONLY */
 	{ .type = P_ES40_CP790,
 	  .model = "SELPHY ES40/CP790",
 	  .init_length = 16,
 	  .foot_length = 12,
-	  .init_readback = { 0x00, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .pgcode_offset = 2,
+	},
+	{ .type = P_ES40,
+	  .model = "SELPHY ES40",
+	  .init_length = 16,
+	  .foot_length = 12,
+	  .init_readback = { 0x00, 0x00, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
 	  // .clear_error + clear_error_len
 	  // .paper_codes
 	  .pgcode_offset = 2,
 	  .paper_code_offset = 11,
 	  .error_detect = es40_error_detect,
+	},
+	{ .type = P_CP790,
+	  .model = "SELPHY CP790",
+	  .init_length = 16,
+	  .foot_length = 12,
+	  .init_readback = { 0x00, 0x00, -1, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
+	  // .clear_error + clear_error_len
+	  // .paper_codes
+	  .pgcode_offset = 2,
+	  .paper_code_offset = -1, // XXX 11?
+	  .error_detect = cp790_error_detect,
 	},
 	{ .type = P_CP_XXX,
 	  .model = "SELPHY CP Series (!CP-10/CP790)",
@@ -328,11 +356,17 @@ static void setup_paper_codes(void)
 		case P_ES3_30:
 			/* N/A, printer does not report types */
 			break;
-		case P_ES40_CP790: // ? guess
+		case P_ES40:
 			selphy_printers[i].paper_codes[0x00] = 0x11;
 			selphy_printers[i].paper_codes[0x01] = 0x22;
 			selphy_printers[i].paper_codes[0x02] = 0x33;
 			selphy_printers[i].paper_codes[0x03] = 0x44;
+			break;
+		case P_CP790: // XXX guess?
+			selphy_printers[i].paper_codes[0x00] = 0x01;
+			selphy_printers[i].paper_codes[0x01] = 0x02;
+			selphy_printers[i].paper_codes[0x02] = 0x03;
+			selphy_printers[i].paper_codes[0x03] = 0x04;
 			break;
 		case P_CP_XXX:
 			selphy_printers[i].paper_codes[0x01] = 0x11;
@@ -480,6 +514,32 @@ static void canonselphy_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
+
+	/* Special cases for some models */
+	if (ctx->printer->type == P_ES40_CP790) {
+		struct libusb_device *device;
+		struct libusb_device_descriptor desc;
+		int i;
+		int printer_type;
+
+		device = libusb_get_device(dev);
+		libusb_get_device_descriptor(device, &desc);
+
+#define USB_PID_CANON_CP790 0x31E7
+#define USB_PID_CANON_ES40  0x31EE
+		
+		if (desc.idProduct == USB_PID_CANON_CP790)
+			printer_type = P_CP790;
+		else if (desc.idProduct == USB_PID_CANON_ES40)
+			printer_type = P_ES40;
+
+		for (i = 0; selphy_printers[i].type != -1; i++) {
+			if (selphy_printers[i].type == printer_type) {
+				ctx->printer = &selphy_printers[i];
+				break;
+			}
+		}
+	}
 }
 
 static void canonselphy_teardown(void *vctx) {
@@ -714,14 +774,6 @@ top:
 						return 4;
 					}
 				}
-			} else if (ctx->printer->type == P_ES40_CP790) {
-				if ((rdbuf[ctx->printer->paper_code_offset] & 0x0f) !=
-				    (ctx->paper_code & 0x0f)) {
-					ERROR("Incorrect media/ribbon loaded (%02x vs %02x), aborting job!\n", 
-					      ctx->paper_code,
-					      rdbuf[ctx->printer->paper_code_offset]);
-					return 3;  /* Hold this job, don't stop queue */
-				}
 			} else {
 				if (rdbuf[ctx->printer->paper_code_offset] !=
 				    ctx->paper_code) {
@@ -860,7 +912,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.77",
+	.version = "0.79",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
@@ -1123,6 +1175,7 @@ struct dyesub_backend canonselphy_backend = {
    00 00 10 00  10 ff 00 00  00 00 00 [pg]   [no ribbon]
    00 00 10 00  ff 01 00 00  00 00 00 [pg]   [no paper casette]
    00 00 01 11  10 01 00 00  00 00 00 [pg]   [paper feed error]
+   00 00 01 21  10 01 00 00  00 00 00 [pg]   [depleted ribbon]
 
  ***************************************************************************
  Selphy CP-10:
