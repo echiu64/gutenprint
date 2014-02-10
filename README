@@ -581,61 +581,73 @@ D) CUPS dye-sublimation backend
     automatically invoked as needed; the user will never invoke the
     backend directly.
 
-  Note on Printers that do not Report a Serial Number
+  Note on Use of Multiple Printers of the Same Model
 
-    This backend uses the printer's reported serial number to distinguish
-    between individual printers of the same model.  Unfortunately, certain
-    printer models do not report a serial number during the USB enumeration
-    process.  This is a list of the affected models we know of:
+    If you do not use (and do not intend to use) more than one printer of 
+    the same model connected via USB to one computer, you may skip this 
+    section.
+
+    If you have more than one printer connected to a computer (via
+    separate queues), CUPS inspects each printer to determine which
+    printer is attached to which queue.  Most printers provide a
+    serial number, which is different for each individual printer, to
+    determine which unique printer is which.  Unfortunately, certain
+    printers do not provide this serial number, so CUPS cannot
+    uniquely identify each printer.
+
+    We are currently aware of the following printer models that do not
+    provide this information:
 
       Canon CP-10
-      Shinko CHC-S2145  (under some circumstances, see note below)
+      Shinko CHC-S2145 (workaround available; please read the note below)
 
-    When no serial number is available, the backend generates a fake serial
-    of "NONE_UNKNOWN", which may be seen in the CUPS queue URI for
-    the printer (see the examples below)
-
-    Unfortunately, if multiple printers of the same type are connected
-    simultaneously, the backend cannot determine which printer is which,
-    possibly resulting in inconsistent behaivor from CUPS, including:
-
-      * Printing (or attempting to print) to a printer other than
-        the desired one
-      * Failing to print a particular job at all
-      * Inability to create a queue for each printer
-      * Attempt to create queues that already exist
+    It is possible that other printers may not provide serial
+    numbers.  You can determine this by inspecting the CUPS queue URI
+    "serial=" portion.  If the serial is NONE_UNKNOWN, it indicates
+    that the printer does not report a serial number and so CUPS
+    cannot uniquely identify each printer.
 
     For example, a device URI of
 
       gutenprint52+usb://Canon/SELPHY%20ES1?serial=221CD10131&backend=canonselphy
-    has a proper serial number (221CD10131), and the backend can uniquely
+    has a proper serial number (221CD10131), and CUPS can uniquely
     identify the printer.
 
     A device URI of
 
       gutenprint52+usb://Canon/CP-10?serial=NONE_UNKNOWN&backend=canonselphy
 
-    indicates that the printer does not report a valid serial number, so
-    the backend cannot uniquely identify the printer. If the user has more
-    than one printer of this type connected to the system, CUPS may not
-    function correctly, as defined above.
+    indicates that the printer does not report a valid serial number,
+    so that CUPS cannot uniquely identify the printer if there are
+    two or more Canon CP-10 printers attached.
 
-  Note on the Shinko S2145
+    If you attach more than one of any one of these printer models to
+    the same computer (such as two Canon CP-10 printers), you may
+    experience incorrect behavior, including:
 
-    The Shinko S2145 does not report a serial number in the traditional
-    sense; instead it reports a user-definable string. If this string is set,
-    the backend will report it as the serial number.  However, if it is not
-    set (which is the factory default) the backend will report 'NONE_UNKNOWN'
-    as described above.
+      * Printing (or attempting to print) to a printer other than
+        the desired one
+      * Failing to print a particular job at all
+      * Inability to create a queue for each printer
+      * Attempt to create a queue that already exists
 
-    The backend supports configuring the user string.  To do so, connect each
-    printer individually, and invoke the backend as follows:
+  Note on the Shinko CHC-S2145
+
+    The Shinko CHC-S2145 does not report a serial number in the traditional
+    sense; instead it reports a user identification string, which the backend
+    will use if one is configured.
+
+    The backend supports configuring this user identification string.
+    To do so, first disconnect all other Shinko CHC-S2145 printers
+    from the system, and then connect each printer individually, and
+    run the following command.  Please ensure that the text you choose
+    for each printer is different.
 
        BACKEND=shinkos2145 /usr/lib/cups/backend/gutenprint52+usb \
             -su "somealphanumerictext"
 
     Please use only alphanumeric text (ie only letters and numbers).  After
-    changing the user string, the user will need to remove and re-create the
+    changing the user string, you will need to remove and re-create the
     CUPS queue.
 
 
