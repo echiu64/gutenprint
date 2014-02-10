@@ -260,7 +260,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      A new CUPS backend was added to support USB printers that require a
      special communications protocol. The backend is called 
-     'gutenprint52usb' and requires libusbx in order to build.  
+     'gutenprint52usb' and requires libusb 1.0 (or newer) in order to build.
 
      The following dye-sublimation printers require this backend in order
      to function properly:
