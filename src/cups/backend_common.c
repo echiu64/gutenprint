@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.36G"
+#define BACKEND_VERSION "0.37G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -201,26 +201,33 @@ static int print_scan_output(struct libusb_device *device,
 	if (desc->iSerialNumber) {
 		libusb_get_string_descriptor_ascii(dev, desc->iSerialNumber, serial, STR_LEN_MAX);
 		sanitize_string((char*)serial);
-	} else if (backend->query_serno) { /* XXX this is ... a cut-n-paste hack */
+	} else if (backend->query_serno) {
+		/* XXX this is ... a cut-n-paste hack */
+
 		uint8_t endp_up, endp_down;
 		int i, iface = 0;
 		struct libusb_config_descriptor *config;
 
 		if (libusb_kernel_driver_active(dev, iface))
 			libusb_detach_kernel_driver(dev, iface);
-		libusb_claim_interface(dev, iface);
-		libusb_get_active_config_descriptor(device, &config);
-		for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
-			if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
-				if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
-					endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
-				else
-					endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
-			}
-		}
 
-		backend->query_serno(dev, endp_up, endp_down, (char*)serial, STR_LEN_MAX);
-		libusb_release_interface(dev, iface);
+		/* If we fail to claim the printer, it's already in use
+		   so we should just skip over it... */
+		if (!libusb_claim_interface(dev, iface)) {
+			libusb_get_active_config_descriptor(device, &config);
+			for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
+				if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
+					if (config->interface[0].altsetting[0].endpoint[i].bEndpointAddress & LIBUSB_ENDPOINT_IN)
+						endp_up = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;
+					else
+						endp_down = config->interface[0].altsetting[0].endpoint[i].bEndpointAddress;				
+				}
+			}
+
+			/* Ignore result since a failure isn't critical here */
+			backend->query_serno(dev, endp_up, endp_down, (char*)serial, STR_LEN_MAX);
+			libusb_release_interface(dev, iface);
+		}
 	}
 	
 	if (!strlen((char*)serial)) {
