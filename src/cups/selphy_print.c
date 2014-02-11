@@ -156,20 +156,23 @@ static int es40_error_detect(uint8_t *rdbuf)
 static int cp790_error_detect(uint8_t *rdbuf)
 {
 	/* CP790 */
-	if (rdbuf[4] == 0x10 && rdbuf[5] == 0xff) {
+	if (rdbuf[5] == 0xff) {
 		ERROR("No ribbon loaded!\n");
 		return 1;
-	} else if (rdbuf[4] == 0xff && rdbuf[5] == 0x01) {
+	} else if (rdbuf[4] == 0xff) {
 		ERROR("No paper tray loaded!\n");
 		return 1;
-	} else if (rdbuf[2] == 0x01 && rdbuf[3] == 0x11) {
-		ERROR("Paper feed error!\n");
-		return 1;
-	} else if (rdbuf[3] == 0x21) {
-		ERROR("Ribbon depleted!\n");
-		return 1;
 	} else if (rdbuf[3]) {
-		ERROR("Unknown error - %02x\n", rdbuf[3]);
+		if ((rdbuf[3] & 0xf) == 0x02)  // 0x12 0x22
+			ERROR("No paper tray loaded!\n");
+		else if ((rdbuf[3] & 0xf) == 0x03)  // 0x13 0x23
+			ERROR("Empty paper tray or feed error!\n");
+		else if (rdbuf[3] == 0x11)
+			ERROR("Paper feed error!\n");
+		else if (rdbuf[3] == 0x21)
+			ERROR("Ribbon depleted!\n");
+		else
+			ERROR("Unknown error - %02x\n", rdbuf[3]);
 		return 1;
 	}
 
@@ -281,15 +284,16 @@ static struct printer_data selphy_printers[] = {
 	  .model = "SELPHY CP790",
 	  .init_length = 16,
 	  .foot_length = 12,
-	  .init_readback = { 0x00, 0x00, -1, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, 0x10, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, -1 },
-	  // .clear_error + clear_error_len
+	  .init_readback = { 0x00, 0x00, -1, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 },
+	  .ready_y_readback = { 0x00, 0x01, 0x01, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 },
+	  .ready_m_readback = { 0x00, 0x03, 0x02, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 },
+	  .ready_c_readback = { 0x00, 0x05, 0x03, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 },
+	  .done_c_readback = { 0x00, 0x00, 0x10, 0x00, -1, -1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02 },
+	  .clear_error = { 0x40, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
+	  .clear_error_len = 12,
 	  // .paper_codes
 	  .pgcode_offset = 2,
-	  .paper_code_offset = -1, // XXX 11?
+	  .paper_code_offset = -1, /* Uses a different technique */
 	  .error_detect = cp790_error_detect,
 	},
 	{ .type = P_CP_XXX,
@@ -345,16 +349,13 @@ static void setup_paper_codes(void)
 		switch (selphy_printers[i].type) {
 		case P_ES1:
 			selphy_printers[i].paper_codes[0x11] = 0x01;
-			selphy_printers[i].paper_codes[0x12] = 0x02; // ? guess
+			selphy_printers[i].paper_codes[0x12] = 0x02;
 			selphy_printers[i].paper_codes[0x13] = 0x03;
 			break;
 		case P_ES2_20:
 			selphy_printers[i].paper_codes[0x01] = 0x01;
-			selphy_printers[i].paper_codes[0x02] = 0x02; // ? guess
+			selphy_printers[i].paper_codes[0x02] = 0x02;
 			selphy_printers[i].paper_codes[0x03] = 0x03;
-			break;
-		case P_ES3_30:
-			/* N/A, printer does not report types */
 			break;
 		case P_ES40:
 			selphy_printers[i].paper_codes[0x00] = 0x11;
@@ -362,18 +363,16 @@ static void setup_paper_codes(void)
 			selphy_printers[i].paper_codes[0x02] = 0x33;
 			selphy_printers[i].paper_codes[0x03] = 0x44;
 			break;
-		case P_CP790: // XXX guess?
-			selphy_printers[i].paper_codes[0x00] = 0x01;
-			selphy_printers[i].paper_codes[0x01] = 0x02;
-			selphy_printers[i].paper_codes[0x02] = 0x03;
-			selphy_printers[i].paper_codes[0x03] = 0x04;
-			break;
 		case P_CP_XXX:
 			selphy_printers[i].paper_codes[0x01] = 0x11;
 			selphy_printers[i].paper_codes[0x02] = 0x22;
 			selphy_printers[i].paper_codes[0x03] = 0x33;
 			selphy_printers[i].paper_codes[0x04] = 0x44;
 			break;
+		case P_ES3_30:
+			/* N/A, printer does not report types */
+		case P_CP790:
+			/* N/A, printer uses different technique */
 		case P_CP10:
 			/* N/A, printer supports one type only */
 			break;
@@ -783,6 +782,24 @@ top:
 					return 3;  /* Hold this job, don't stop queue */
 				}
 			}
+		} else if (ctx->printer->type == P_CP790) {
+			uint8_t ribbon = rdbuf[4] >> 4;
+			uint8_t paper = rdbuf[5];
+
+			if (ribbon == 0xf) {
+				ERROR("No ribbon loaded, aborting!\n");
+				return 4;	
+			} else if (ribbon != ctx->paper_code) {
+				ERROR("Incorrect ribbon loaded, aborting job!\n");
+				return 3;
+			}
+			if (paper == 0xf) {
+				ERROR("No paper tray loaded, aborting!\n");
+				return 4;
+			} else if (paper != ctx->paper_code) {
+				ERROR("Incorrect paper loaded, aborting job!\n");
+				return 3;
+			}
 		}
 
 		state = S_PRINTER_READY;
@@ -912,7 +929,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.79",
+	.version = "0.80",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
@@ -1142,6 +1159,8 @@ struct dyesub_backend canonselphy_backend = {
 
    End func:    40 20 00 00  00 00 00 00  00 00 00 00
 
+   Reset func:  40 10 00 00  00 00 00 00  00 00 00 00
+
    Plane codes are 0x01, 0x02, 0x03 for Y, M, and C, respectively.
 
    'P' papers pgcode of 0x00 and a plane length of 2227456 bytes.
@@ -1151,31 +1170,36 @@ struct dyesub_backend canonselphy_backend = {
 
    Readback values seen on an CP790:
 
-   00 00 ff 00  10 01 00 00  00 00 00 [pg]
-   00 00 00 00  10 01 00 00  00 00 00 [pg]   [idle, ready for header]
-   00 00 01 00  10 01 00 00  00 00 00 [pg]   
-   00 01 01 00  10 01 00 00  00 00 00 [pg]   [ready for Y data]
-   00 03 01 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
-   00 03 02 00  10 01 00 00  00 00 00 [pg]   [ready for M data]
-   00 05 02 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
-   00 05 03 00  10 01 00 00  00 00 00 [pg]   [ready for C data]
-   00 0b ff 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
-   00 0e ff 00  10 01 00 00  00 00 00 [pg]   [transitions to this]
-   00 00 10 00  10 01 00 00  00 00 00 [pg]   [ready for footer]
+   00 00 ff 00  [pg1] [pg2] 00 00  00 00 00 02
+   00 00 00 00  [pg1] [pg2] 00 00  00 00 00 02   [idle, ready for header]
+   00 00 01 00  [pg1] [pg2] 00 00  00 00 00 02   
+   00 01 01 00  [pg1] [pg2] 00 00  00 00 00 02   [ready for Y data]
+   00 03 01 00  [pg1] [pg2] 00 00  00 00 00 02   [transitions to this]
+   00 03 02 00  [pg1] [pg2] 00 00  00 00 00 02   [ready for M data]
+   00 05 02 00  [pg1] [pg2] 00 00  00 00 00 02   [transitions to this]
+   00 05 03 00  [pg1] [pg2] 00 00  00 00 00 02   [ready for C data]
+   00 0b ff 00  [pg1] [pg2] 00 00  00 00 00 02   [transitions to this]
+   00 0e ff 00  [pg1] [pg2] 00 00  00 00 00 02   [transitions to this]
+   00 00 10 00  [pg1] [pg2] 00 00  00 00 00 02   [ready for footer]
 
-   [pg] is as follows:
+   [pg1] is:                  [pg2] is:
 
-        'P' paper 0x01  (??)
-        'L' paper 0x02
-        'C' paper 0x03  (??)
-        'W' paper 0x44  (??)
+      0x00  'P' ribbon         0x00 'P' paper
+      0x10  'L' ribbon         0x01 'L' paper
+      0x20  'C' ribbon         0x02 'C' paper
+      0x30  'W' ribbon         0x03 'W' paper
+      0xff  NO RIBBON          0xff  NO PAPER TRAY
 
    Other readbacks seen:
 
-   00 00 10 00  10 ff 00 00  00 00 00 [pg]   [no ribbon]
-   00 00 10 00  ff 01 00 00  00 00 00 [pg]   [no paper casette]
-   00 00 01 11  10 01 00 00  00 00 00 [pg]   [paper feed error]
-   00 00 01 21  10 01 00 00  00 00 00 [pg]   [depleted ribbon]
+   00 00 01 11  [pg1] [pg2] 00 00  00 00 00 02   [emptytray, ink match job ]
+   00 00 01 12  [pg1] [pg2] 00 00  00 00 00 02   [ notray, ink match job ]
+   00 00 01 13  [pg1] [pg2] 00 00  00 00 00 02   [ empty tray + mismatch ink ]
+   00 00 01 21  [pg1] [pg2] 00 00  00 00 00 02   [ depleted ribbon, match ink ]
+   00 00 01 22  [pg1] [pg2] 00 00  00 00 00 02   [ no paper tray ]
+   00 00 01 23  [pg1] [pg2] 00 00  00 00 00 02   [ empty tray, ink mismatch ]
+
+    Note : These error conditions are confusing.
 
  ***************************************************************************
  Selphy CP-10:
