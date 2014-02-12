@@ -229,10 +229,10 @@ ppd-stamp: cups-genppd.@GUTENPRINT_RELEASE_VERSION@ $(top_srcdir)/src/xml/xml-st
 ppd-stamp-phony: $(PPD)
 
 ppd-catalog-clean:
-	-$(RM) -r catalog
+	$(RM) -rf catalog
 
 ppd-clean:
-	-$(RM) -r ppd
+	$(RM) -rf ppd
 
 ppd-stamp-pre: ppd-catalog-clean ppd-clean
 
