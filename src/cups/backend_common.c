@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2014 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -27,10 +27,17 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.38G"
+#define BACKEND_VERSION "0.42G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
+
+/* Global variables */
+int dyesub_debug = 0;
+int extra_vid = -1;
+int extra_pid = -1;
+int extra_type = -1;
+char *use_serno = NULL;
 
 /* Support Functions */
 
@@ -90,13 +97,13 @@ int read_data(struct libusb_device_handle *dev, uint8_t endp,
 	int ret;
 
 	/* Clear buffer */
-	memset(buf, buflen, 0);
+	memset(buf, 0, buflen);
 
 	ret = libusb_bulk_transfer(dev, endp,
 				   buf,
 				   buflen,
 				   readlen,
-				   5000);
+				   10000);
 
 	if (ret < 0) {
 		ERROR("Failure to receive data from printer (libusb error %d: (%d/%d from 0x%02x))\n", ret, *readlen, buflen, endp);
@@ -259,8 +266,7 @@ static int print_scan_output(struct libusb_device *device,
 	} else if (backend->query_serno) {
 		/* XXX this is ... a cut-n-paste hack */
 
-		uint8_t endp_up, endp_down;
-		int i, iface = 0;
+		int iface = 0;
 		struct libusb_config_descriptor *config;
 
 		if (libusb_kernel_driver_active(dev, iface))
@@ -269,6 +275,8 @@ static int print_scan_output(struct libusb_device *device,
 		/* If we fail to claim the printer, it's already in use
 		   so we should just skip over it... */
 		if (!libusb_claim_interface(dev, iface)) {
+			int i;
+			uint8_t endp_up, endp_down;
 			libusb_get_active_config_descriptor(device, &config);
 			for (i = 0 ; i < config->interface[0].altsetting[0].bNumEndpoints ; i++) {
 				if ((config->interface[0].altsetting[0].endpoint[i].bmAttributes & 3) == LIBUSB_TRANSFER_TYPE_BULK) {
@@ -289,9 +297,10 @@ static int print_scan_output(struct libusb_device *device,
 		WARNING("**** THIS PRINTER DOES NOT REPORT A SERIAL NUMBER!\n");
 		WARNING("**** If you intend to use multiple printers of this typpe, you\n");
 		WARNING("**** must only plug one in at a time or unexpected behaivor will occur!\n");
-		sprintf(serial, "NONE_UNKNOWN");
+		serial = strdup("NONE_UNKNOWN");
+	} else {
+		serial = url_encode(buf);
 	}
-	serial = url_encode(buf);
 
 	if (dyesub_debug)
 		DEBUG("%sVID: %04X PID: %04X Manuf: '%s' Product: '%s' Serial: '%s'\n",
@@ -327,8 +336,7 @@ static int print_scan_output(struct libusb_device *device,
 	}
 	
 	/* If a serial number was passed down, use it. */
-	if (found && match_serno &&
-	    strcmp(match_serno, (char*)serial)) {
+	if (match_serno && strcmp(match_serno, (char*)serial)) {
 		found = -1;
 	}
 
@@ -391,15 +399,14 @@ static int find_and_enumerate(struct libusb_context *ctx,
 
 	match:
 		if (!match) {
-			if (getenv("EXTRA_PID") && getenv("EXTRA_TYPE") && getenv("EXTRA_VID")) {
-				int pid = strtol(getenv("EXTRA_PID"), NULL, 16);
-				int vid = strtol(getenv("EXTRA_VID"), NULL, 16);
-				int type = atoi(getenv("EXTRA_TYPE"));
-				if (vid == desc.idVendor &&
-				    pid == desc.idProduct) {
+			if (extra_pid != -1 &&
+			    extra_vid != -1 &&
+			    extra_type != -1) {
+				if (extra_vid == desc.idVendor &&
+				    extra_pid == desc.idProduct) {
 					match = 1;
 					if (printer_type == P_ANY ||
-					    printer_type == type)
+					    printer_type == extra_type)
 						found = i;
 				}
 			}
@@ -424,13 +431,13 @@ static int find_and_enumerate(struct libusb_context *ctx,
 static struct dyesub_backend *find_backend(char *uri_prefix)
 {
 	int i;
-	struct dyesub_backend *backend;
+	
 
 	if (!uri_prefix)
 		return NULL;
 
 	for (i = 0; ; i++) {
-		backend = backends[i];
+		struct dyesub_backend *backend = backends[i];
 		if (!backend)
 			return NULL;
 		if (!strcmp(uri_prefix, backend->uri_prefix))
@@ -439,10 +446,78 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 	return NULL;
 }
 
-/* Debug flag */
-int dyesub_debug = 0;
+static void print_license_blurb(void)
+{
+	const char *license = "\n\
+Copyright 2007-2014 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+\n\
+This program is free software; you can redistribute it and/or modify it\n\
+under the terms of the GNU General Public License as published by the Free\n\
+Software Foundation; either version 2 of the License, or (at your option)\n\
+any later version.\n\
+\n\
+This program is distributed in the hope that it will be useful, but\n\
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY\n\
+or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License\n\
+for more details.\n\
+\n\
+You should have received a copy of the GNU General Public License\n\
+along with this program; if not, write to the Free Software\n\
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n\
+\n          [http://www.gnu.org/licenses/gpl-2.0.html]\n\n";
 
-/* MAIN */
+	fprintf(stderr, "%s", license);
+}
+
+static void print_help(char *argv0, struct dyesub_backend *backend)
+{
+	struct libusb_context *ctx = NULL;
+	struct libusb_device **list = NULL;
+
+	char *ptr = strrchr(argv0, '/');
+	if (ptr)
+		ptr++;
+	else
+		ptr = argv0;
+
+	if (!backend)
+		backend = find_backend(ptr);
+	
+	if (!backend) {
+		int i;
+		DEBUG("CUPS Usage:\n");
+		DEBUG("\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n", URI_PREFIX);
+		DEBUG("\n");
+		DEBUG("Standalone Usage:\n");
+		DEBUG("\t%s\n", URI_PREFIX);
+		DEBUG("  [ -D ] [ -G ] [ -S serialnum ] [ -B backendname ] \n");
+		DEBUG("  [ -V extra_vid ] [ -P extra_pid ] [ -T extra_type ] \n");
+		DEBUG("  [ [ backend_specific_args ] | [ - | infile ] ]\n");
+		for (i = 0; ; i++) {
+			backend = backends[i];
+			if (!backend)
+				break;
+			DEBUG("  -B %s\t# %s version %s\n",
+			      backend->uri_prefix, backend->name, backend->version);
+			if (backend->cmdline_usage)
+				backend->cmdline_usage();
+		}
+	} else {
+		DEBUG("Standalone %s backend version %s\n",
+		      backend->name, backend->version);
+		DEBUG("\t%s\n", backend->uri_prefix);
+		DEBUG("\t[ -D ] [ -S serialnum ] \n");
+		DEBUG("\t[ -V extra_vid ] [ -P extra_pid ] [ -T extra_type ] \n");
+		DEBUG("\t\t[ infile | - ]\n");
+		
+		if (backend->cmdline_usage)
+			backend->cmdline_usage();
+	}
+	libusb_init(&ctx);
+	find_and_enumerate(ctx, &list, backend, NULL, P_ANY, 1);
+	libusb_free_device_list(list, 1);
+	libusb_exit(ctx);
+}
 
 int main (int argc, char **argv) 
 {
@@ -451,7 +526,7 @@ int main (int argc, char **argv)
 	struct libusb_device_handle *dev;
 	struct libusb_config_descriptor *config;
 
-	struct dyesub_backend *backend;
+	struct dyesub_backend *backend = NULL;
 	void * backend_ctx = NULL;
 
 	uint8_t endp_up = 0;
@@ -461,6 +536,7 @@ int main (int argc, char **argv)
 
 	int i;
 	int claimed;
+	int backend_cmd = 0;
 
 	int ret = 0;
 	int iface = 0;
@@ -469,76 +545,118 @@ int main (int argc, char **argv)
 	int jobid = 0;
 	int pages = 0;
 
-	char *uri = getenv("DEVICE_URI");
-	char *use_serno = NULL;
-	int query_only = 0;
+	char *uri;
+	char *fname = NULL;
 	int printer_type = P_ANY;
 
-	if (getenv("DYESUB_DEBUG"))
-		dyesub_debug = 1;
-
-	DEBUG("Multi-Call Gutenprint DyeSub CUPS Backend version %s\n",
+	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
 	      BACKEND_VERSION);
 	DEBUG("Copyright 2007-2014 Solomon Peachy\n");
+	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
+	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
+	DEBUG("\n");
 
-	/* Cmdline help */
-	if (argc < 2) {
+	/* First pass at cmdline parsing */
+	if (getenv("DYESUB_DEBUG"))
+		dyesub_debug++;
+	if (getenv("EXTRA_PID"))
+		extra_pid = strtol(getenv("EXTRA_PID"), NULL, 16);
+	if (getenv("EXTRA_VID"))
+		extra_pid = strtol(getenv("EXTRA_VID"), NULL, 16);
+	if (getenv("EXTRA_PID"))
+		extra_type = atoi(getenv("EXTRA_TYPE"));
+	if (getenv("BACKEND"))
+		backend = find_backend(getenv("BACKEND"));
+	use_serno = getenv("DEVICE");
+	uri = getenv("DEVICE_URI");  /* For CUPS */
+
+	/* Try to ensure we have a sane backend for standalone mode.
+	   CUPS mode uses 'uri' later on. */
+	if (!backend) {
 		char *ptr = strrchr(argv[0], '/');
 		if (ptr)
 			ptr++;
 		else
 			ptr = argv[0];
-		backend = find_backend(getenv("BACKEND"));
-		if (!backend)
-			backend = find_backend(ptr);
+		backend = find_backend(ptr);
+	}
 
-		if (!backend) {
-			DEBUG("CUPS Usage:\n\tDEVICE_URI=someuri %s job user title num-copies options [ filename ]\n\n",
-			      URI_PREFIX);
-			DEBUG("Internal Backends: (prefix with DEVICE=serno for specific device)\n");
-			for (i = 0; ; i++) {
-				backend = backends[i];
-				if (!backend)
-					break;
-				DEBUG(" %s backend version %s (BACKEND=%s)\n",
-				      backend->name, backend->version, backend->uri_prefix);
-				DEBUG("\t\t%s [ infile | - ]\n",
-				      backend->uri_prefix);
-				
-				if (backend->cmdline_usage) {
-					backend->cmdline_usage(backend->uri_prefix);
-				}
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, "B:DGhP:S:T:V:")) >= 0) {
+		switch(i) {
+		case 'B':
+			backend = find_backend(optarg);
+			if (!backend) {
+				fprintf(stderr, "ERROR:  Unknown backend '%s'\n", optarg);
 			}
-		} else {
-			DEBUG(" %s backend version %s (BACKEND=%s)\n",
-			      backend->name, backend->version, backend->uri_prefix);
-			DEBUG("  Standalone Usage: (prefix with DEVICE=serno for specific device)\n");
-			DEBUG("\t\t%s [ infile | - ]\n",
-			      backend->uri_prefix);
-
-			if (backend->cmdline_usage) {
-				backend->cmdline_usage(backend->uri_prefix);
+			break;
+		case 'D':
+			dyesub_debug++;
+			break;
+		case 'G':
+			print_license_blurb();
+			exit(0);
+		case 'h':
+			print_help(argv[0], backend);
+			exit(0);
+			break;
+		case 'P':
+			extra_pid = strtol(optarg, NULL, 16);
+			break;
+		case 'S':
+			use_serno = optarg;
+			break;
+		case 'T':
+			extra_type = atoi(optarg);
+			break;
+		case 'V':
+			extra_pid = strtol(optarg, NULL, 16);
+			break;
+		case '?': 
+		default: {
+			/* Check to see if it is claimed by the backend */
+			if (backend && backend->cmdline_arg) {
+				int keep = optind;
+				backend_cmd += backend->cmdline_arg(NULL, argc, argv);
+				optind = keep;
 			}
+			break;
 		}
-		libusb_init(&ctx);
-		find_and_enumerate(ctx, &list, backend, NULL, P_ANY, 1);
-		libusb_free_device_list(list, 1);
-		libusb_exit(ctx);
+		}
+	}
+
+	if (dyesub_debug) {
+		const struct libusb_version *ver;
+		ver = libusb_get_version();
+		DEBUG(" ** running with libusb %d.%d.%d%s (%d)\n",
+		      ver->major, ver->minor, ver->micro, (ver->rc? ver->rc : ""), ver->nano );
+
+	}
+
+	/* Make sure a filename was specified */
+	if (!backend_cmd && (optind == argc || !argv[optind])) {
+		print_help(argv[0], backend);
 		exit(0);
 	}
 
 	/* Are we running as a CUPS backend? */
 	if (uri) {
-		if (argv[1])
-			jobid = atoi(argv[1]);
-		if (argv[4])
-			copies = atoi(argv[4]);
-		if (argv[6]) {  /* IOW, is it specified? */
-			data_fd = open(argv[6], O_RDONLY);
+		int base = optind; // XXX aka 1.
+		fname = argv[base + 5];
+		if (argv[base])
+			jobid = atoi(argv[base]);
+		if (argv[base + 3])
+			copies = atoi(argv[base + 3]);
+		if (fname) {  /* IOW, is it specified? */
+			data_fd = open(fname, O_RDONLY);
 			if (data_fd < 0) {
 				perror("ERROR:Can't open input file");
 				exit(1);
 			}
+		} else {
+			fname = "-";
 		}
 
 		/* Ensure we're using BLOCKING I/O */
@@ -554,7 +672,7 @@ int main (int argc, char **argv)
 			exit(1);
 		}
 
-		/* Figure out backend */
+		/* Figure out backend based on URI */
 		{
 			char *ptr = strstr (uri, "backend="), *ptr2;
 			if (!ptr) {
@@ -587,32 +705,20 @@ int main (int argc, char **argv)
 				*ptr = 0;
 		}
 	} else {
-		use_serno = getenv("DEVICE");
-
-		/* find backend */
-		backend = find_backend(getenv("BACKEND"));
-		if (!backend) {
-			char *ptr = strrchr(argv[0], '/');
-			if (ptr)
-				ptr++;
-			else
-				ptr = argv[0];
-			backend = find_backend(ptr);
-		}
-		if (!backend) {
-			ERROR("Invalid backend (%s)\n", uri);
-			exit(1);
-		}
-
 		srand(getpid());
 		jobid = rand();
 
-		if (backend->cmdline_arg && backend->cmdline_arg(NULL, 0, argv[1], argv[2])) {
-			query_only = 1;
-		} else {
+		/* Grab the filename */
+		fname = argv[optind];
+
+		if (!fname && !backend_cmd) {
+			perror("ERROR:No input file");
+			exit(1);
+		}
+		if (fname) {
 			/* Open Input File */
-			if (strcmp("-", argv[1])) {
-				data_fd = open(argv[1], O_RDONLY);
+			if (strcmp("-", fname)) {
+				data_fd = open(fname, O_RDONLY);
 				if (data_fd < 0) {
 					perror("ERROR:Can't open input file");
 					exit(1);
@@ -631,7 +737,7 @@ int main (int argc, char **argv)
 	backend_ctx = backend->init();
 
 	/* Parse printjob if necessary */
-	if (!query_only && backend->early_parse) {
+	if (fname && backend->early_parse) {
 		printer_type = backend->early_parse(backend_ctx, data_fd);
 		if (printer_type < 0) {
 			ret = 5; /* CUPS_BACKEND_CANCEL */
@@ -689,9 +795,11 @@ int main (int argc, char **argv)
 	/* Attach backend to device */
 	backend->attach(backend_ctx, dev, endp_up, endp_down, jobid);
 	
-	if (query_only) {
-		backend->cmdline_arg(backend_ctx, 1, argv[1], argv[2]);
-		goto done_claimed;
+	if (backend_cmd && !uri) {
+		if (backend->cmdline_arg(backend_ctx, argc, argv))
+			goto done_claimed;
+		if (!fname)
+			goto done_claimed;
 	} 
 
 	/* Time for the main processing loop */

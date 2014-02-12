@@ -117,12 +117,12 @@ struct dyesub_backend {
 	char *name;
 	char *version;
 	char *uri_prefix;
-	void (*cmdline_usage)(char *caller);
+	void (*cmdline_usage)(void);
 	void *(*init)(void);
 	void (*attach)(void *ctx, struct libusb_device_handle *dev,
 		       uint8_t endp_up, uint8_t endp_down, uint8_t jobid);
 	void (*teardown)(void *ctx);
-	int  (*cmdline_arg)(void *ctx, int run, char *arg1, char *arg2);
+	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
 	int  (*early_parse)(void *ctx, int data_fd);
 	int  (*read_parse)(void *ctx, int data_fd);
 	int  (*main_loop)(void *ctx, int copies);

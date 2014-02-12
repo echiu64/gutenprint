@@ -86,14 +86,14 @@ struct dnpds40_cmd {
 
 static void dnpds40_build_cmd(struct dnpds40_cmd *cmd, char *arg1, char *arg2, uint32_t arg3_len)
 {
-	char buf[9];
 	memset(cmd, 0x20, sizeof(*cmd));
 	cmd->esc = 0x1b;
 	cmd->p = 0x50;
 	memcpy(cmd->arg1, arg1, min(strlen(arg1), sizeof(cmd->arg1)));
 	memcpy(cmd->arg2, arg2, min(strlen(arg2), sizeof(cmd->arg2)));
 	if (arg3_len) {
-		snprintf(buf, sizeof(buf), "%08d", arg3_len);
+		char buf[9];
+		snprintf(buf, sizeof(buf), "%08u", arg3_len);
 		memcpy(cmd->arg3, buf, 8);
 	}
 
@@ -103,10 +103,17 @@ static void dnpds40_cleanup_string(char *start, int len)
 {
 	char *ptr = strchr(start, 0x0d);
 
-	if (ptr && (ptr - start < len))
+	if (ptr && (ptr - start < len)) {
 		*ptr = 0x00; /* If there is a <CR>, terminate there */
-	else
-		*(start + len - 1) = 0x00;  /* force null-termination */
+		len = ptr - start;
+	} else {
+		start[--len] = 0x00;  /* force null-termination */
+	}
+
+	/* Trim trailing spaces */
+	while (len && start[len-1] == ' ') {
+		start[--len] = 0;
+	}
 }
 
 static char *dnpds40_media_types(char *str)
@@ -318,7 +325,7 @@ static void dnpds40_teardown(void *vctx) {
 
 static int dnpds40_read_parse(void *vctx, int data_fd) {
 	struct dnpds40_ctx *ctx = vctx;
-	int i, j, run = 1;
+	int run = 1;
 	char buf[9] = { 0 };
 
 	uint32_t matte = 0, multicut = 0, dpi = 0;
@@ -348,7 +355,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	}
 
 	while (run) {
-		int remain;
+		int remain, i, j;
 		/* Read in command header */
 		i = read(data_fd, ctx->databuf + ctx->datalen, 
 			 sizeof(struct dnpds40_cmd));
@@ -443,7 +450,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	if (matte != ctx->last_matte)
 		ctx->buf_needed = 2;
 
-	DEBUG("dpi %d matte %d(%d) mcut %d bufs %d\n", 
+	DEBUG("dpi %u matte %u(%u) mcut %u bufs %d\n", 
 	      dpi, matte, ctx->last_matte, multicut, ctx->buf_needed);
 
 	/* Track if our last print was matte */
@@ -919,48 +926,74 @@ static int dnpds40_set_counter_p(struct dnpds40_ctx *ctx, char *arg)
 	return 0;
 }
 
-static void dnpds40_cmdline(char *caller)
+static void dnpds40_cmdline(void)
 {
-	DEBUG("\t\t%s [ -qs | -qi | -qc ]\n", caller);
-	DEBUG("\t\t%s [ -cca | -ccb | -ccm ]\n", caller);
-	DEBUG("\t\t%s [ -scp num ]\n", caller);
+	DEBUG("\t\t[ -i ]           # Query printer info\n");
+	DEBUG("\t\t[ -s ]           # Query status\n");
+	DEBUG("\t\t[ -n ]           # Query counters\n");
+	DEBUG("\t\t[ -N A|B|M ]     # Clear counter A/B/M\n");
+	DEBUG("\t\t[ -p num ]       # Set counter P\n");
+
 }
 
-static int dnpds40_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct dnpds40_ctx *ctx = vctx;
+	int i, j = 0;
 
-	if (!run || !ctx)
-		return (!strcmp("-qs", arg1) ||
-			!strcmp("-qi", arg1) ||
-			!strcmp("-qc", arg1) || 
-			!strcmp("-cca", arg1) ||
-			!strcmp("-ccb", arg1) ||
-			!strcmp("-ccm", arg1) ||
-			!strcmp("-scp", arg1));
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, "inN:p:s")) >= 0) {
+		switch(i) {
+		case 'i':
+			if (ctx) {
+				j = dnpds40_get_info(ctx);
+				break;
+			}
+			return 1;
+		case 'n':
+			if (ctx) {
+				j = dnpds40_get_counters(ctx);
+				break;
+			}
+			return 1;
+		case 'N':
+			if (optarg[0] != 'A' &&
+			    optarg[0] != 'B' &&
+			    optarg[0] != 'M')
+				return -1;
+			if (ctx) {
+				j = dnpds40_clear_counter(ctx, optarg[0]);
+				break;
+			}
+			return 1;
+		case 'p':
+			if (ctx) {
+				j = dnpds40_set_counter_p(ctx, optarg);
+				break;
+			}
+			return 1;
+		case 's':
+			if (ctx) {
+				j = dnpds40_get_status(ctx);
+				break;
+			}
+			return 1;
+		default:
+			break;  /* Ignore completely */
+		}
 
-	if (!strcmp("-qs", arg1))
-		return dnpds40_get_status(ctx);
-	if (!strcmp("-qi", arg1))
-		return dnpds40_get_info(ctx);
-	if (!strcmp("-qc", arg1))
-		return dnpds40_get_counters(ctx);
-	if (!strcmp("-cca", arg1))
-		return dnpds40_clear_counter(ctx, 'A');
-	if (!strcmp("-ccb", arg1))
-		return dnpds40_clear_counter(ctx, 'B');
-	if (!strcmp("-ccm", arg1))
-		return dnpds40_clear_counter(ctx, 'M');
-	if (!strcmp("-scp", arg1))
-		return dnpds40_set_counter_p(ctx, arg2);
+		if (j) return j;
+	}
 
-	return -1;
+	return 0;
 }
 
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1",
-	.version = "0.26",
+	.version = "0.29",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

@@ -116,16 +116,17 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 
 	if ((ret = send_data(dev, endp_down,
 			     cmdbuf, 16)))
-		return ret;
+		goto done;
 	
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
 	if (ret < 0)
-		return ret;
+		goto done;
 	
 	if (num != 51) {
 		ERROR("Short read! (%d/%d)\n", num, 51);
-		return 4;
+		ret = 4;
+		goto done;
 	}
 
 	/* Then we can poll the data */
@@ -143,16 +144,17 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	for (i = 0 ; i < 24 ; i++) {
 		if ((ret = send_data(dev, endp_down,
 				     cmdbuf, 11)))
-			return -1;
+			goto done;
 
 		ret = read_data(dev, endp_up,
 				respbuf, sizeof(respbuf), &num);
 		if (ret < 0)
-			return ret;
-		
+			goto done;
+
 		if (num != 64) {
 			ERROR("Short read! (%d/%d)\n", num, 51);
-			return 4;
+			ret = 4;
+			goto done;
 		}
 
 		/* Copy into buffer */
@@ -162,8 +164,10 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	/* Open file and write it out */
 	{
 		int tc_fd = open(fname, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
-		if (tc_fd < 0)
-			return -1;
+		if (tc_fd < 0) {
+			ret = 4;
+			goto done;
+		}
 
 		for (i = 0 ; i < 768; i++) {
 			/* Byteswap appropriately */
@@ -173,7 +177,7 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 		close(tc_fd);
 	}
 
-
+ done:
 	/* We're done */
 	free(data);
 
@@ -198,10 +202,14 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 
 	/* Read in file */
 	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0)
-		return -1;
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE)
-		return -2;
+	if (tc_fd < 0) {
+		ret = -1;
+		goto done;
+	}
+	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
+	        ret = -2;
+		goto done;
+	}
 	close(tc_fd);
 
 	/* Byteswap data to printer's format */
@@ -229,16 +237,17 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 
 	if ((ret = send_data(dev, endp_down,
 			     cmdbuf, 16)))
-		return -1;
+		goto done;
 	
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
 	if (ret < 0)
-		return ret;
+		goto done;
 	
 	if (num != 51) {
 		ERROR("Short read! (%d/%d)\n", num, 51);
-		return 4;
+		ret = 4;
+		goto done;
 	}
 
 	ptr = (uint8_t*) data;
@@ -255,44 +264,63 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 		/* Send next block over */
 		if ((ret = send_data(dev, endp_down,
 				     cmdbuf, count+1)))
-			return -1;
+			goto done;
 
 
 		ret = read_data(dev, endp_up,
 				respbuf, sizeof(respbuf), &num);
 		if (ret < 0)
-			return ret;
+			goto done;
 		
 		if (num != 51) {
 			ERROR("Short read! (%d/%d)\n", num, 51);
-			return 4;
+			ret = 4;
+			goto done;
 		}
 	};
         
+done:
 	/* We're done */
 	free(data);
-	return 0;
+	return ret;
 }
 
-static void kodak6800_cmdline(char *caller)
+static void kodak6800_cmdline(void)
 {
-	DEBUG("\t\t%s [ -qtc filename | -stc filename ]\n", caller);
+	DEBUG("\t\t[ -c filename ]  # Get tone curve\n");
+	DEBUG("\t\t[ -C filename ]  # Set tone curve\n");
 }
 
-static int kodak6800_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+static int kodak6800_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct kodak6800_ctx *ctx = vctx;
+	int i, j = 0;
 
-	if (!run || !ctx)
-		return (!strcmp("-qtc", arg1) ||
-			!strcmp("-stc", arg1));
-	
-	if (!strcmp("-qtc", arg1))
-		return kodak6800_get_tonecurve(ctx, arg2);
-	if (!strcmp("-stc", arg1))
-		return kodak6800_set_tonecurve(ctx, arg2);
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, "C:c:")) >= 0) {
+		switch(i) {
+		case 'c':
+			if (ctx) {
+				j = kodak6800_get_tonecurve(ctx, optarg);
+				break;
+			} 
+			return 1;
+		case 'C':
+			if (ctx) {
+				j = kodak6800_set_tonecurve(ctx, optarg);
+				break;
+			}
+			return 1;
+		default:
+			break;  /* Ignore completely */
+		}
 
-	return -1;
+		if (j) return j;
+	}
+
+	return 0;
 }
 
 
@@ -608,7 +636,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.30",
+	.version = "0.32",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

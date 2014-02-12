@@ -574,7 +574,7 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 
 	/* Figure out printer this file is intended for */
 	i = read(data_fd, ctx->buffer, MAX_HEADER);
-	if (i < 0 || i != MAX_HEADER) {
+	if (i != MAX_HEADER) {
 		if (i == 0)
 			return -1;
 		ERROR("Read failed (%d/%d/%d)\n", 

@@ -82,7 +82,7 @@ static void updr150_teardown(void *vctx) {
 #define MAX_PRINTJOB_LEN 16736455
 static int updr150_read_parse(void *vctx, int data_fd) {
 	struct updr150_ctx *ctx = vctx;
-	int i, len, run = 1;
+	int len, run = 1;
 
 	if (!ctx)
 		return 1;
@@ -100,6 +100,7 @@ static int updr150_read_parse(void *vctx, int data_fd) {
 	}
 
 	while(run) {
+		int i;
 		int keep = 0;
 		i = read(data_fd, ctx->databuf + ctx->datalen, 4);
 		if (i < 0)
@@ -187,7 +188,7 @@ top:
 		i += sizeof(uint32_t);
 
 		if (dyesub_debug)
-			DEBUG("Sending %d bytes to printer @ %d\n", len, i);
+			DEBUG("Sending %u bytes to printer @ %i\n", len, i);
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ctx->databuf + i, len)))
 			return ret;

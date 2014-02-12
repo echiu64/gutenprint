@@ -609,7 +609,7 @@ D) CUPS dye-sublimation backend
 
     For example, a device URI of
 
-      gutenprint52+usb://Canon/SELPHY%20ES1?serial=221CD10131&backend=canonselphy
+      gutenprint52+usb://Canon/SELPHY+ES1?serial=221CD10131&backend=canonselphy
     has a proper serial number (221CD10131), and CUPS can uniquely
     identify the printer.
 
@@ -643,12 +643,11 @@ D) CUPS dye-sublimation backend
     run the following command.  Please ensure that the text you choose
     for each printer is different.
 
-       BACKEND=shinkos2145 /usr/lib/cups/backend/gutenprint52+usb \
-            -su "somealphanumerictext"
-
-    Please use only alphanumeric text (ie only letters and numbers).  After
-    changing the user string, you will need to remove and re-create the
-    CUPS queue.
+       /usr/lib/cups/backend/gutenprint52+usb -B shinkos2145
+            -U "sometext"
+    
+    After changing the user string, you will need to remove and re-create
+    the CUPS queue.
 
 
 ----------------

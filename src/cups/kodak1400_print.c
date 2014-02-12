@@ -88,7 +88,6 @@ static int send_plane(struct kodak1400_ctx *ctx,
 		      uint8_t planeno, uint8_t *planedata,
 		      uint8_t *cmdbuf)
 {
-	int i;
 	uint16_t temp16;
 	int ret;
 
@@ -122,6 +121,7 @@ static int send_plane(struct kodak1400_ctx *ctx,
 		return ret;
 
 	if (planedata) {
+		int i;
 		for (i = 0 ; i < ctx->hdr.rows ; i++) {
 			if ((ret = send_data(ctx->dev, ctx->endp_down,
 					     planedata + i * ctx->hdr.columns, 
@@ -152,7 +152,7 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 
 	uint8_t cmdbuf[8];
 	uint8_t respbuf[64];
-	int ret, num = 0;
+	int ret = 0, num = 0;
 
 	INFO("Set Tone Curve from '%s'\n", fname);
 
@@ -160,10 +160,14 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 
 	/* Read in file */
 	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0)
-		return -1;
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE)
-		return -2;
+	if (tc_fd < 0) {
+		ret = -1;
+		goto done;
+	}
+	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
+		ret = -2;
+		goto done;
+	}
 	close(tc_fd);
 
 	/* Byteswap data to printer's format */
@@ -171,28 +175,32 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 		data[ret] = cpu_to_le16(be16_to_cpu(data[ret]));
 	}
 	/* Null-terminate */
-	memset(((uint8_t*)data)+UPDATE_SIZE-16, 0x0, 16);
+	memset(data + (UPDATE_SIZE-16)/2, 0, 16);
 
 	/* Clear tables */
 	memset(cmdbuf, 0, sizeof(cmdbuf));
 	cmdbuf[0] = 0x1b;
 	cmdbuf[1] = 0xa2;
 	if ((ret = send_data(dev, endp_down,
-			     cmdbuf, 2)))
-		return -1;
+			     cmdbuf, 2))) {
+		ret = -3;
+		goto done;
+	}
 	
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
 	
 	if (ret < 0)
-		return ret;
+		goto done;
 	if (num != 8) {
 		ERROR("Short Read! (%d/%d)\n", num, 8);
-		return ret;
+		ret = -4;
+		goto done;
 	}
 	if (respbuf[1] != 0x01) {
 		ERROR("Received unexpected response\n");
-		return ret;
+		ret = -5;
+		goto done;
 	}
 
 	/* Set up the update command */
@@ -205,51 +213,65 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 	cmdbuf[5] = 0x10;   /* 06 10 == UPDATE_SIZE */
 	if ((ret = send_data(dev, endp_down,
 			     cmdbuf, 6)))
-		return -1;
-
+		goto done;
 
 	/* Send the payload over */
 	if ((ret = send_data(dev, endp_down,
-			     (uint8_t *) data, UPDATE_SIZE))) {
-		return ret;
-	}
+			     (uint8_t *) data, UPDATE_SIZE)))
+		goto done;
 
 	/* get the response */
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
 	
 	if (ret < 0)
-		return ret;
+		goto done;
 	if (num != 8) {
 		ERROR("Short Read! (%d/%d)\n", num, 8);
-		return ret;
+		ret = -6;
+		goto done;
 	}
 	if (respbuf[1] != 0x00) {
 		ERROR("Received unexpected response!\n");
-		return ret;
+		ret = -7;
+		goto done;
 	}
 
+done:
 	free(data);
 
-	return 0;
+	return ret;
 }
 
-static void kodak1400_cmdline(char *caller)
+static void kodak1400_cmdline(void)
 {
-	DEBUG("\t\t%s [ -stc filename ]\n", caller);
+	DEBUG("\t\t[ -C filename ]  # Set tone curve\n");
 }
 
-int kodak1400_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+int kodak1400_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct kodak1400_ctx *ctx = vctx;
+	int i, j = 0;
 
-	if (!run || !ctx)
-		return (!strcmp("-stc", arg1));
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, "C:")) >= 0) {
+		switch(i) {
+		case 'C':
+			if (ctx) {
+				j = kodak1400_set_tonecurve(ctx, optarg);
+				break;
+			}
+			return 1;
+		default:
+			break;  /* Ignore completely */
+		}
 
-	if (!strcmp("-stc", arg1))
-		return kodak1400_set_tonecurve(ctx, arg2);
+		if (j) return j;
+	}
 
-	return -1;
+	return 0;
 }
 
 static void *kodak1400_init(void)
@@ -341,9 +363,9 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	}
 	for (i = 0 ; i < ctx->hdr.rows ; i++) {
 		int j;
-		int remain;
 		uint8_t *ptr;
 		for (j = 0 ; j < 3 ; j++) {
+			int remain;
 			if (j == 0)
 				ptr = ctx->plane_r + i * ctx->hdr.columns;
 			else if (j == 1)
@@ -574,7 +596,7 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.29",
+	.version = "0.31",
 	.uri_prefix = "kodak1400",
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,

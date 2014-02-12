@@ -415,10 +415,14 @@ static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 
 	/* Read in file */
 	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0)
-		return -1;
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE)
-		return -2;
+	if (tc_fd < 0) {
+		ret = -1;
+		goto done;
+	}
+	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
+		ret = 4;
+		goto done;
+	}
 	close(tc_fd);
 
 	/* Byteswap data to printer's format */
@@ -444,58 +448,80 @@ static int kodak605_set_tonecurve(struct kodak605_ctx *ctx, char *fname)
 
 	if ((ret = send_data(dev, endp_down,
 			     cmdbuf, 14)))
-		return -1;
+		goto done;
 
 	/* Get response back */
 	ret = read_data(dev, endp_up,
 			respbuf, sizeof(respbuf), &num);
 	if (ret < 0)
-		return ret;
+		goto done;
 
 	if (num != 10) {
 		ERROR("Short Read! (%d/%d)\n", num, 10);
-		return 4;
+		ret = 4;
+		goto done;
 	}
 
 	/* Send the data over! */
 	ret = send_data(dev, endp_up,
 			(uint8_t*)data, sizeof(data));
 
+ done:
 	/* We're done */
 	free(data);
 	return ret;
 }
 
 
-static void kodak605_cmdline(char *caller)
+static void kodak605_cmdline(void)
 {
-	DEBUG("\t\t%s [ -qs | -qm ]\n", caller);
-	DEBUG("\t\t%s [ -stc filename ]\n", caller);
+	DEBUG("\t\t[ -C filename ]  # Set tone curve\n");
+	DEBUG("\t\t[ -m ]           # Query media\n");
+	DEBUG("\t\t[ -s ]           # Query status\n");
 }
 
-static int kodak605_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct kodak605_ctx *ctx = vctx;
+	int i, j = 0;
 
-	if (!run || !ctx)
-		return (!strcmp("-qs", arg1) ||
-			!strcmp("-qm", arg1) ||
-			!strcmp("-stc", arg1) );
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, "C:ms")) >= 0) {
+		switch(i) {
+		case 'C':
+			if (ctx) {
+				j = kodak605_set_tonecurve(ctx, optarg);
+				break;
+			}
+			return 1;
+		case 'm':
+			if (ctx) {
+				j = kodak605_get_media(ctx);
+				break;
+			}
+			return 1;
+		case 's':
+			if (ctx) {
+				j = kodak605_get_status(ctx);
+				break;
+			}
+			return 1;
+		default:
+			break;  /* Ignore completely */
+		}
 
-	if (!strcmp("-qs", arg1))
-		return kodak605_get_status(ctx);
-	if (!strcmp("-qm", arg1))
-		return kodak605_get_media(ctx);
-	if (!strcmp("-stc", arg1))
-		return kodak605_set_tonecurve(ctx, arg2);
+		if (j) return j;
+	}
 
-	return -1;
+	return 0;
 }
 
 /* Exported */
 struct dyesub_backend kodak605_backend = {
 	.name = "Kodak 605",
-	.version = "0.16",
+	.version = "0.18",
 	.uri_prefix = "kodak605",
 	.cmdline_usage = kodak605_cmdline,
 	.cmdline_arg = kodak605_cmdline_arg,

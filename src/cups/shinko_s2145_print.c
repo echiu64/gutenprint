@@ -899,13 +899,13 @@ static int get_status(struct shinkos2145_ctx *ctx)
 		return 0;
 
 	INFO(" Print Counts:\n");
-	INFO("\tSince Paper Changed:\t%08d\n", le32_to_cpu(resp->count_paper));
-	INFO("\tLifetime:\t\t%08d\n", le32_to_cpu(resp->count_lifetime));
-	INFO("\tMaintainence:\t\t%08d\n", le32_to_cpu(resp->count_maint));
-	INFO("\tPrint Head:\t\t%08d\n", le32_to_cpu(resp->count_head));
-	INFO(" Cutter Actuations:\t%08d\n", le32_to_cpu(resp->count_cutter));
-	INFO(" Ribbon Remaining:\t%08d\n", le32_to_cpu(resp->count_ribbon_left));
-	INFO("Bank 1: 0x%02x (%s) Job %03d @ %03d/%03d (%03d remaining)\n",
+	INFO("\tSince Paper Changed:\t%08u\n", le32_to_cpu(resp->count_paper));
+	INFO("\tLifetime:\t\t%08u\n", le32_to_cpu(resp->count_lifetime));
+	INFO("\tMaintainence:\t\t%08u\n", le32_to_cpu(resp->count_maint));
+	INFO("\tPrint Head:\t\t%08u\n", le32_to_cpu(resp->count_head));
+	INFO(" Cutter Actuations:\t%08u\n", le32_to_cpu(resp->count_cutter));
+	INFO(" Ribbon Remaining:\t%08u\n", le32_to_cpu(resp->count_ribbon_left));
+	INFO("Bank 1: 0x%02x (%s) Job %03u @ %03u/%03u (%03u remaining)\n",
 	     resp->bank1_status, bank_statuses(resp->bank1_status),
 	     resp->bank1_printid,
 	     le16_to_cpu(resp->bank1_finished),
@@ -928,7 +928,7 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 {
 	struct s2145_fwinfo_cmd  cmd;
 	struct s2145_fwinfo_resp *resp = (struct s2145_fwinfo_resp *)rdbuf;
-	int ret, num = 0;
+	int num = 0;
 	int i;
 
 	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_FWINFO);
@@ -937,6 +937,7 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 	INFO("FW Information:\n");
 
 	for (i = FWINFO_TARGET_MAIN_BOOT ; i <= FWINFO_TARGET_TABLES ; i++) {
+		int ret;
 		cmd.target = i;
 
 		if ((ret = s2145_do_cmd(ctx,
@@ -986,7 +987,7 @@ static int get_errorlog(struct shinkos2145_ctx *ctx)
 
 	INFO("Stored Error Events: %d entries:\n", resp->count);
 	for (i = 0 ; i < resp->count ; i++) {
-		INFO(" %02d: @ %08d prints : 0x%02x/0x%02x (%s)\n", i,
+		INFO(" %02d: @ %08u prints : 0x%02x/0x%02x (%s)\n", i,
 		     le32_to_cpu(resp->items[i].print_counter),
 		     resp->items[i].major, resp->items[i].minor, 
 		     error_codes(resp->items[i].major, resp->items[i].minor));
@@ -1209,7 +1210,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 				resp->total_size * 2 - i,
 				&num);
 		if (ret < 0)
-			return ret;
+			goto done;
 		i += num;
 	}
 
@@ -1223,8 +1224,10 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 	/* Open file and write it out */
 	{
 		int tc_fd = open(fname, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
-		if (tc_fd < 0)
-			return -1;
+		if (tc_fd < 0) {
+			ret = -1;
+			goto done;
+		}
 
 		for (i = 0 ; i < 768; i++) {
 			/* Byteswap appropriately */
@@ -1234,8 +1237,9 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 		close(tc_fd);
 	}
 
+done:
 	free(data);
-	return 0;
+	return ret;
 }
 
 static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname) 
@@ -1250,10 +1254,14 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 
 	/* Read in file */
 	int tc_fd = open(fname, O_RDONLY);
-	if (tc_fd < 0)
-		return -1;
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE)
-		return -2;
+	if (tc_fd < 0) {
+		ret = -1;
+		goto done;
+	}
+	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
+		ret = -2;
+		goto done;
+	}
 	close(tc_fd);
 	/* Byteswap data to local CPU.. */
 	for (ret = 0; ret < UPDATE_SIZE ; ret+=2) {
@@ -1278,89 +1286,160 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 				sizeof(*resp),
 				&num)) < 0) {
 		ERROR("Failed to execute %s command\n", cmd_names(cmd.hdr.cmd));
-		return ret;
+		goto done;
 	}
 
 	/* Sent transfer */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     (uint8_t *) data, UPDATE_SIZE))) {
-		return ret;
+		goto done;
 	}
 
+done:
 	free(data);
 
-	return 0;
+	return ret;
 }
 
-static void shinkos2145_cmdline(char *caller)
+static void shinkos2145_cmdline(void)
 {
-	DEBUG("\t\t%s [ -qs | -qm | -qf | -qe | -qu ]\n", caller);
-	DEBUG("\t\t%s [ -qtu filename | -qtc filename ]\n", caller);
-	DEBUG("\t\t%s [ -su somestring | -stu filename | -stc filename ]\n", caller);
-	DEBUG("\t\t%s [ -pc id | -fl | -ru | -rp | -b1 | -b0 ]\n", caller);
-	DEBUG("\t\t%s [ -f ]\n", caller);
+	DEBUG("\t\t[ -b 0|1 ]       # Disable/Enable control panel\n");
+	DEBUG("\t\t[ -c filename ]  # Get user/NV tone curve\n");
+	DEBUG("\t\t[ -C filename ]  # Set user/NV tone curve\n");
+	DEBUG("\t\t[ -e ]           # Query error log\n");
+	DEBUG("\t\t[ -f ]           # Use fast return mode\n");
+	DEBUG("\t\t[ -F ]           # Flash Printer LED\n");
+	DEBUG("\t\t[ -l filename ]  # Get current tone curve\n");
+	DEBUG("\t\t[ -L filename ]  # Set current tone curve\n");
+	DEBUG("\t\t[ -m ]           # Query media\n");
+	DEBUG("\t\t[ -i ]           # Query printer info\n");
+	DEBUG("\t\t[ -r ]           # Reset user/NV tone curve\n");
+	DEBUG("\t\t[ -R ]           # Reset printer to factory defaults\n");
+	DEBUG("\t\t[ -s ]           # Query status\n");
+	DEBUG("\t\t[ -u ]           # Query user string\n");
+	DEBUG("\t\t[ -U sometext ]  # Set user string\n");
+	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
 }
 
-int shinkos2145_cmdline_arg(void *vctx, int run, char *arg1, char *arg2)
+int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 {
 	struct shinkos2145_ctx *ctx = vctx;
+	int i, j = 0;
 
-	if (!run || !ctx)
-		return (!strcmp("-qs", arg1) ||
-			!strcmp("-qf", arg1) ||
-			!strcmp("-qe", arg1) ||
-			!strcmp("-qm", arg1) ||
-			!strcmp("-qu", arg1) ||
-			!strcmp("-qtc", arg1) ||
-			!strcmp("-qtu", arg1) ||
-			!strcmp("-pc", arg1) ||
-			!strcmp("-fl", arg1) ||
-			!strcmp("-ru", arg1) ||
-			!strcmp("-rp", arg1) ||
-			!strcmp("-b1", arg1) ||
-			!strcmp("-b0", arg1) ||
-			!strcmp("-stc", arg1) ||
-			!strcmp("-stu", arg1) ||
-			!strcmp("-f", arg1) ||
-			!strcmp("-su", arg1));
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, "b:c:C:efFil:L:mr:R:suU:X:")) >= 0) {
+		switch(i) {
+		case 'b':
+			if (ctx) {
+				if (optarg[0] == '1')
+					j = button_set(ctx, BUTTON_ENABLED);
+				else if (optarg[0] == '0')
+					j = button_set(ctx, BUTTON_DISABLED);
+				else
+					return -1;
+				break;
+			}
+			return 1;
+		case 'c':
+			if (ctx) {
+				j = get_tonecurve(ctx, TONECURVE_USER, optarg);
+				break;
+			}
+			return 1;
+		case 'C':
+			if (ctx) {
+				j = set_tonecurve(ctx, TONECURVE_USER, optarg);
+				break;
+			}
+			return 1;
+		case 'e':
+			if (ctx) {
+				j = get_errorlog(ctx);
+				break;
+			}
+			return 1;
+		case 'f':
+			if (ctx) {
+				ctx->fast_return = 1;
+				break;
+			}
+			return 1;
+		case 'F':
+			if (ctx) {
+				j = flash_led(ctx);
+				break;
+			}
+			return 1;
+		case 'i':
+			if (ctx) {
+				j = get_fwinfo(ctx);
+				break;
+			}
+			return 1;
+		case 'l':
+			if (ctx) {
+				j = get_tonecurve(ctx, TONECURVE_CURRENT, optarg);
+				break;
+			}
+			return 1;
+		case 'L':
+			if (ctx) {
+				j = set_tonecurve(ctx, TONECURVE_CURRENT, optarg);
+				break;
+			}
+			return 1;
+		case 'm':
+			if (ctx) {
+				j = get_mediainfo(ctx);
+				break;
+			}
+			return 1;
+		case 'r':
+			if (ctx) {
+				j = reset_curve(ctx, RESET_USER_CURVE);
+				break;
+			}
+			return 1;
+		case 'R':
+			if (ctx) {
+				j = reset_curve(ctx, RESET_PRINTER);
+				break;
+			}
+			return 1;
+		case 's':
+			if (ctx) {
+				j = get_status(ctx);
+				break;
+			} 
+			return 1;
+		case 'u':
+			if (ctx) {
+				j = get_user_string(ctx);
+				break;
+			}
+			return 1;
+		case 'U':
+			if (ctx) {
+				j = set_user_string(ctx, optarg);
+				break;
+			}
+			return 1;
+		case 'X':
+			if (ctx) {
+				j = cancel_job(ctx, optarg);
+				break;
+			}
+			return 1;
+		default:
+			break;  /* Ignore completely */
+		}
 
-	if (!strcmp("-f", arg1))
-		ctx->fast_return = 1;
+		if (j) return j;
+	}
 
-	if (!strcmp("-qs", arg1))
-		get_status(ctx);
-	else if (!strcmp("-qf", arg1))
-		get_fwinfo(ctx);
-	else if (!strcmp("-qe", arg1))
-		get_errorlog(ctx);
-	else if (!strcmp("-qm", arg1))
-		get_mediainfo(ctx);
-	else if (!strcmp("-qu", arg1))
-		get_user_string(ctx);
-	else if (!strcmp("-qtu", arg1))
-		get_tonecurve(ctx, TONECURVE_USER, arg2);
-	else if (!strcmp("-qtc", arg1))
-		get_tonecurve(ctx, TONECURVE_CURRENT, arg2);
-	else if (!strcmp("-su", arg1))
-		set_user_string(ctx, arg2);
-	else if (!strcmp("-stu", arg1))
-		set_tonecurve(ctx, UPDATE_TARGET_USER, arg2);
-	else if (!strcmp("-stc", arg1))
-		set_tonecurve(ctx, UPDATE_TARGET_CURRENT, arg2);
-	else if (!strcmp("-pc", arg1))
-		cancel_job(ctx, arg2);
-	else if (!strcmp("-fl", arg1))
-		flash_led(ctx);
-	else if (!strcmp("-ru", arg1))
-		reset_curve(ctx, RESET_USER_CURVE);
-	else if (!strcmp("-rp", arg1))
-		reset_curve(ctx, RESET_PRINTER);
-	else if (!strcmp("-b1", arg1))
-		button_set(ctx, BUTTON_ENABLED);
-	else if (!strcmp("-b0", arg1))
-		button_set(ctx, BUTTON_DISABLED);
-
-	return -1;
+	return 0;
 }
 
 static void *shinkos2145_init(void)
@@ -1370,7 +1449,8 @@ static void *shinkos2145_init(void)
 		return NULL;
 	memset(ctx, 0, sizeof(struct shinkos2145_ctx));
 
-	if (getenv("FAST_RETURN"))
+	/* Use Fast return by default in CUPS mode */
+	if (getenv("DEVICE_URI") || getenv("FAST_RETURN"))
 		ctx->fast_return = 1;
 
 	return ctx;
@@ -1380,7 +1460,6 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos2145_ctx *ctx = vctx;
-
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
@@ -1460,7 +1539,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 
 	/* Make sure footer is sane too */
 	ret = read(data_fd, tmpbuf, 4);
-	if (ret < 0 || ret != 4) {
+	if (ret != 4) {
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      ret, 4, 4);
 		perror("ERROR: Read failed");
@@ -1665,7 +1744,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145 (S2)",
-	.version = "0.29",
+	.version = "0.31",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
