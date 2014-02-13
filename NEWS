@@ -1306,6 +1306,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        DNP DS40
        DNP DS80
 
+     - Device IDs added for the following Citizen printers:
+       Citizen CX
+
   8) Added Catalan, Turkish, and Vietnamese translations.
 
 * Changes from 5.2.8
