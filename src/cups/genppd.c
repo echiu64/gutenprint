@@ -791,13 +791,15 @@ help(void)
        "  -V            Show version information and defaults.\n"
        "  The default is to output PPDs.\n");
   puts("Options:\n"
+       "  -N            Localize numbers.\n"
        "  -l locale     Output PPDs translated with messages for locale.\n"
        "  -p prefix     Output PPDs in directory prefix.\n"
        "  -d prefix     Embed directory prefix in PPD file.\n"
        "  -s            Generate simplified PPD files.\n"
        "  -a            Generate all (simplified and full) PPD files.\n"
        "  -q            Quiet mode.\n"
-       "  -v            Verbose mode.\n"
+       "  -v            Verbose mode.\n");
+  puts(
 #ifdef HAVE_LIBZ
        "  -z            Compress PPD files.\n"
        "  -Z            Don't compress PPD files.\n"
