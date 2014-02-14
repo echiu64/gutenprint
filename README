@@ -531,29 +531,28 @@ D) CUPS dye-sublimation backend
 	Mitsubishi CP-D70DW  (EXPERIMENTAL)
 	Mitsubishi CP-D707DW (EXPERIMENTAL)
 
-    Although these printers advertise themselves as standard USB
-    Printer Class devices, they do not actually obey those
-    specifications, and require two-way handshaking in order to
-    successfully print.
+    Although these printers advertise themselves as standard USB Printer
+    Class devices, they do not actually obey those specifications, and 
+    require two-way handshaking in order to successfully print.
 
     Over time, it is expected that additional printer models will be
     supported by this backend.
 
   Build Requirements
 
-    This backend requires libusb (or libusbx) 1.0 in order to build.
+    This backend requires libusb (or libusbx) 1.0 or newer.
 
   CUPS Integration
 
     If you are using up-to-date versions of CUPS (1.6.4 or newer) on
     Linux, then your system will automatically select this backend if
-    the user plugs in one of its supported printers.  No further intervention
-    on the user's part should be necessary.
+    the you plug in one of its supported printers.  No further intervention
+    on the your part should be necessary.
 
-    Unfortunately, if the user is using an older version of CUPS or a
-    non-Linux system (particularly OSX) then the user will probably need to
-    manually configure the use of this backend, as the system may attempt 
-    to use the default usb backend, which will not work properly with these
+    Unfortunately, if you are using an older version of CUPS or a non-Linux
+    system (particularly OSX) then you will probably need to manually
+    configure the use of this backend because the system may attempt to 
+    use the default usb backend, which will not work properly with these
     printers.
 
     To check which backend your printers are using, run the 'lpstat
@@ -573,13 +572,13 @@ D) CUPS dye-sublimation backend
     ("gutenprint52+usb"). This backend name is present in the device
     URI for the printer, as demonstrated in the above example.  An
     alternative to the system printer configuration interface is to
-    use your local system's CUPS web interface, if it is
-    enabled. Step-by-step instructions for using any of these
-    interfaces is beyond the scope of this document.
+    use your local system's CUPS web interface, if it is enabled.
+    Step-by-step instructions for using any of these interfaces is 
+    beyond the scope of this document.
 
     Once the printer is properly configured, this backend will be
-    automatically invoked as needed; the user will never invoke the
-    backend directly.
+    automatically invoked as needed; you will never invoke the backend
+    directly.
 
   Note on Use of Multiple Printers of the Same Model
 
@@ -595,17 +594,11 @@ D) CUPS dye-sublimation backend
     printers do not provide this serial number, so CUPS cannot
     uniquely identify each printer.
 
-    We are currently aware of the following printer models that do not
-    provide this information:
-
-      Canon CP-10
-      Shinko CHC-S2145 (workaround available; please read the note below)
-
-    It is possible that other printers may not provide serial
-    numbers.  You can determine this by inspecting the CUPS queue URI
-    "serial=" portion.  If the serial is NONE_UNKNOWN, it indicates
-    that the printer does not report a serial number and so CUPS
-    cannot uniquely identify each printer.
+    To determine if your printer model is affected, you should inspect the
+    CUPS queue URI, specifically the "serial=" portion.  If the serial is 
+    NONE_UNKNOWN, it indicates that the printer does not report a serial
+    number and so CUPS cannot uniquely that printer, if more than one of
+    that type is plugged in.
 
     For example, a device URI of
 
@@ -638,13 +631,12 @@ D) CUPS dye-sublimation backend
     will use if one is configured.
 
     The backend supports configuring this user identification string.
-    To do so, first disconnect all other Shinko CHC-S2145 printers
-    from the system, and then connect each printer individually, and
-    run the following command.  Please ensure that the text you choose
-    for each printer is different.
+    To do so, first disconnect all other Shinko CHC-S2145 printers from the
+    system, and then connect each printer individually, and run the 
+    following command.  Please ensure that the text you choose for each
+    printer is different.
 
-       /usr/lib/cups/backend/gutenprint52+usb -B shinkos2145
-            -U "sometext"
+       /usr/lib/cups/backend/gutenprint52+usb -B shinkos2145 -U "sometext"
     
     After changing the user string, you will need to remove and re-create
     the CUPS queue.
