@@ -2,7 +2,7 @@
 
 # Keeping this up to date with changing CUPS versions is a real headache
 
-make EXTRA_GENPPD_OPTS='-b -Z -N' ppd-clean ppd-global ppd-nls ppd-nonls
+make EXTRA_GENPPD_OPTS='-b -Z' ppd-clean ppd-global ppd-nls ppd-nonls
 
 # Most non-Macintosh systems won't have the Macintosh-specific profiles
 # installed in Macintosh-specific locations.
@@ -10,7 +10,7 @@ make EXTRA_GENPPD_OPTS='-b -Z -N' ppd-clean ppd-global ppd-nls ppd-nonls
 # Also, a number of our media sizes aren't named correctly, but we'll
 # accept those issues rather than cluttering the namespace further and/or
 # changing tag names.
-cupstestppdopts='-W filters'
+cupstestppdopts='-I profiles -W sizes'
 
 ppd_count=`find ppd \( -name '*.ppd.gz' -o -name '*.ppd' \) -print | wc -l`
 
