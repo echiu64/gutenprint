@@ -1223,7 +1223,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) Corrected page dimensions for borderless printing with Canon
      printers.
 
-  5) Added duplex support for the EPSON WorkForce 645.
+  5) Added duplex support for the EPSON WorkForce 630, 635, and 645,
+     and NX635
 
   6) Expanded printable area at the bottom of the page for the Epson
      Stylus Pro 3800 and 3880.
