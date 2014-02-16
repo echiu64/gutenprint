@@ -75,7 +75,7 @@ xsi:schemaLocation="http://gimp-print.sourceforge.net/xsd/gp.xsd-1.0 gutenprint.
  <margins interleave="printer" media="sheet">9 9 0 9</margins>
  <margins interleave="soft" media="roll">9 9 0 0</margins>
  <margins interleave="printer" media="roll">9 9 0 0</margins>
- <margins duplex="duplex">-32768 -32768 9 9</margins>
+ <margins duplex="duplex">-32768 -32768 0 0</margins>
  <AlignmentChoices>4 15 0 0</AlignmentChoices>
  <ChannelNames>
   <ChannelName translate="text" name="Black" text="Black"/>
