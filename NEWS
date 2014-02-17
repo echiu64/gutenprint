@@ -5,11 +5,11 @@ Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
 others.  Gutenprint currently supports over 2000 printer models.
 These drivers provide high quality printing for UNIX, Linux, and
-Macintosh OS X (10.3 and above) systems.  Gutenprint includes CUPS and
+Macintosh OS X (10.4 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
 the print plug-in packaged with the GIMP distribution.
 
-Gutenprint 5.2 no longer supports Macintosh OS X 10.2.
+Gutenprint 5.2 no longer supports Macintosh OS X 10.2 or 10.3.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -49,7 +49,7 @@ V)    Overall changes from 5.0.2 to 5.2
 I) GENERAL REQUIREMENTS
 
 Gutenprint will run on any reasonably modern computer running Linux,
-Macintosh OS X (10.3 or above), Solaris, or any other UNIX-like
+Macintosh OS X (10.4 or above), Solaris, or any other UNIX-like
 operating system.  If you plan to compile this package from source,
 you will also need an ANSI C compiler, such as gcc (recommended).  A
 compiler is not required if you are installing a pre-compiled package.
@@ -92,12 +92,11 @@ create a driver that may be built much more easily than traditional
 Ghostscript drivers.  This driver should be used in conjunction with
 Foomatic to configure printers.
 
-Users of Macintosh 10.3 (Panther), 10.4 (Tiger) 10.5 (Leopard), and
-10.6 (Snow Leopard) can use this package, as the printing system is
-based on CUPS.  For ease of installation, a pre-built package with
-installer is normally supplied a few days after the release of the
-source package.  We strongly recommend that OS X users use the
-pre-built package rather than attempt to build it themselves.
+Users of Macintosh 10.4 (Tiger) and above can use this package.
+For ease of installation, a pre-built package with installer is
+normally supplied a few days after the release of the source package.
+We strongly recommend that OS X users use the pre-built package rather
+than attempt to build it themselves.
 
 The README file included with this package provides full instructions
 for building and installing Gutenprint.
