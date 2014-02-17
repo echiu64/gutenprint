@@ -4,7 +4,7 @@
 # Make the DMG file from the files in the given source directory.
 #
 
-# set -x  # uncomment for debugging
+#set -x  # uncomment for debugging
 
 src_dir="$1"; shift
 dest_name="$1"; shift
@@ -14,8 +14,11 @@ dest_dmg="build/$dest_name.dmg"
 
 echo "Building DMG: $dest_dmg"
 
-# calculate size of DMG directory, in megabytes,
-# and then add 20%
+# delete stray .DS_Store files and CVS directories that might have been copied
+find "$src_dir" -name CVS -print0 | xargs -0 -n1 rm -rf
+find "$src_dir" -name .DS_Store -print0 | xargs -0 -n1 rm -f
+
+# calculate size of DMG directory, in megabytes, and then add 20%
 actual_size=$(du -sm "$src_dir" | cut -f1)
 volume_size=$(echo "$actual_size * 1.2" | bc --quiet)
 

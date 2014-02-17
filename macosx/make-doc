@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# set -x  # uncomment for debugging
+#set -x  # uncomment for debugging
 
 dest_dir="$1"; shift
 

@@ -20,12 +20,12 @@
 # details.
 #
 
-# set -x  # uncomment for debugging
+#set -x  # uncomment for debugging
 
 echo "Making installer"
 
 # find Gutenprint version for this and other scripts
-eval ./gutenprint-version
+eval $(./gutenprint-version)
 
 dmg_name=$(eval echo "$(cat src/gutenprint.dmg.src/name)")
 dmg_dir="build/dmg"

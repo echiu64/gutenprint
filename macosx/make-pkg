@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# set -x  # uncomment for debugging
+#set -x  # uncomment for debugging
 
 pkg_src="$1"; shift
 dest_dir="$1"; shift
@@ -22,6 +22,10 @@ cp -pR "$pkg_src"/{Contents,Resources,*.plist} "$pkg_dir"
 if [ -e "$pkg_src/make-contents" ]; then
   "$pkg_src/make-contents" "$pkg_dir"
 fi
+
+# delete stray .DS_Store files and CVS directories that might have been copied
+find "$pkg_dir" -name CVS -print0 | xargs -0 -n1 rm -rf
+find "$pkg_dir" -name .DS_Store -print0 | xargs -0 -n1 rm -f
 
 # make sure everything is owned by root:wheel
 echo "The 'sudo' command will now be issued to change ownership. Please authenticate if asked."

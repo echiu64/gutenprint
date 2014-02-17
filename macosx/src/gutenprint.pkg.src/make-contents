@@ -1,7 +1,6 @@
 #!/bin/bash -e
 
-# uncomment for debugging
-set -x
+#set -x  # uncomment for debugging
 
 pkg_dir="$1"
 

@@ -9,7 +9,7 @@
 # script.)
 #
 
-# set -x  # uncomment for debugging
+#set -x  # uncomment for debugging
 
 mpkg_src="$1"; shift
 dest_dir="$1"; shift
