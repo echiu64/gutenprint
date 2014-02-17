@@ -13,7 +13,7 @@ I) INTRODUCTION
     drivers that may be used with most common UNIX print spooling
     systems, including CUPS, lpr, LPRng, or others.  These drivers
     provide high quality printing for UNIX (including Macintosh OS X
-    10.3 and newer) and Linux systems in many cases equal to or better
+    10.4 and newer) and Linux systems in many cases equal to or better
     than proprietary vendor-supplied drivers.  Gutenprint also
     includes an enhanced print plug-in for the GIMP image editor,
     replacing the Gimp-Print 4.2-based plugin supplied with GIMP 1.2,
@@ -177,7 +177,7 @@ A) OVERVIEW
 
     PLEASE INSPECT THE OUTPUT CAREFULLY BEFORE PROCEEDING.  If you
     expect to build a particular component (particularly the CUPS
-    driver, CUPS backends, or enhanced Print plugin for GIMP), and 
+    driver, CUPS backends, or enhanced Print plugin for GIMP), and
     the configure output states that that component will not be built,
     please make certain that you have the required development packages
     installed, as described below in the sections for the particular
@@ -398,11 +398,11 @@ C) CUPS
     like /etc/init.d/cups restart, /etc/software/init.d/cups restart,
     /etc/rc.d/cups restart, /usr/sbin/rccups, or even
     /etc/rc.d/init.d/cups restart.  Your system may have a different
-    way to restart the CUPS server.  OS X (10.3, 10.4, and 10.5), for
+    way to restart the CUPS server.  OS X (10.4 and 10.5), for
     example, uses the following command:
 
     sudo /System/Library/StartupItems/PrintingServices/PrintingServices.sh restart
-  
+
     You may optionally choose to update your existing PPD files using
     the command cups-genppdupdate, after which you should restart CUPS
     as described above.  We strongly recommend use of this update
@@ -506,8 +506,8 @@ C) CUPS
 
 D) CUPS dye-sublimation backend
 
-    A new CUPS backend was added to support USB specific dye-sublimation 
-    printers that require a special communications protocol. This backend is 
+    A new CUPS backend was added to support USB specific dye-sublimation
+    printers that require a special communications protocol. This backend is
     called 'gutenprint52usb' and currently supports the models listed below.
     If you do not have a printer on this list, you may skip the remainder
     of this section.
@@ -519,7 +519,7 @@ D) CUPS dye-sublimation backend
         Kodak 6800 Photo Printer
         Kodak 6850 Photo Printer
         Kodak 605 Photo Printer
-        Shinko/Sinfonia CHC-S2145 
+        Shinko/Sinfonia CHC-S2145
         Sony UP-DR150
         Sony UP-DR200
         DNP DS40
@@ -532,7 +532,7 @@ D) CUPS dye-sublimation backend
 	Mitsubishi CP-D707DW (EXPERIMENTAL)
 
     Although these printers advertise themselves as standard USB Printer
-    Class devices, they do not actually obey those specifications, and 
+    Class devices, they do not actually obey those specifications, and
     require two-way handshaking in order to successfully print.
 
     Over time, it is expected that additional printer models will be
@@ -551,7 +551,7 @@ D) CUPS dye-sublimation backend
 
     Unfortunately, if you are using an older version of CUPS or a non-Linux
     system (particularly OSX) then you will probably need to manually
-    configure the use of this backend because the system may attempt to 
+    configure the use of this backend because the system may attempt to
     use the default usb backend, which will not work properly with these
     printers.
 
@@ -573,7 +573,7 @@ D) CUPS dye-sublimation backend
     URI for the printer, as demonstrated in the above example.  An
     alternative to the system printer configuration interface is to
     use your local system's CUPS web interface, if it is enabled.
-    Step-by-step instructions for using any of these interfaces is 
+    Step-by-step instructions for using any of these interfaces is
     beyond the scope of this document.
 
     Once the printer is properly configured, this backend will be
@@ -582,8 +582,8 @@ D) CUPS dye-sublimation backend
 
   Note on Use of Multiple Printers of the Same Model
 
-    If you do not use (and do not intend to use) more than one printer of 
-    the same model connected via USB to one computer, you may skip this 
+    If you do not use (and do not intend to use) more than one printer of
+    the same model connected via USB to one computer, you may skip this
     section.
 
     If you have more than one printer connected to a computer (via
@@ -595,7 +595,7 @@ D) CUPS dye-sublimation backend
     uniquely identify each printer.
 
     To determine if your printer model is affected, you should inspect the
-    CUPS queue URI, specifically the "serial=" portion.  If the serial is 
+    CUPS queue URI, specifically the "serial=" portion.  If the serial is
     NONE_UNKNOWN, it indicates that the printer does not report a serial
     number and so CUPS cannot uniquely that printer, if more than one of
     that type is plugged in.
@@ -632,12 +632,12 @@ D) CUPS dye-sublimation backend
 
     The backend supports configuring this user identification string.
     To do so, first disconnect all other Shinko CHC-S2145 printers from the
-    system, and then connect each printer individually, and run the 
+    system, and then connect each printer individually, and run the
     following command.  Please ensure that the text you choose for each
     printer is different.
 
        /usr/lib/cups/backend/gutenprint52+usb -B shinkos2145 -U "sometext"
-    
+
     After changing the user string, you will need to remove and re-create
     the CUPS queue.
 
@@ -727,7 +727,7 @@ F) FOOMATIC
     tools provided by your distribution or the Foomatic tool
     "foomatic-ppdfile".
 
-    NOTES TO PACKAGERS: 
+    NOTES TO PACKAGERS:
 
     * We recommend packaging the IJS driver
       (/usr/bin/ijsgutenprint.5.2) and its man page
