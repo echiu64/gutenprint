@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+#
+# Determine the current version of Gutenprint, based on the contents of the
+# 'gutenprint.pc' file that is a part of a build. Because of that, it must be
+# run after a build.
+#
+# The output is a line that can be evaluated by the shell to set the
+# $GUTENPRINT_VERSION environment variable.
+#
+
+config="build/10.6/install/usr/lib/pkgconfig/gutenprint.pc"
+
+if [ ! -e $config ]; then
+  echo "No config file found at $config"
+  exit 1
+fi
+
+version=$(grep 'Version:' $config | awk -F': ' '{print $2}')
+
+if [ -z $version ]; then
+  echo "Failed to determine version number from $config"
+  exit 1
+fi
+
+echo "export GUTENPRINT_VERSION=$version"

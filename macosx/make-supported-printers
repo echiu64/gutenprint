@@ -1,0 +1,70 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'pp'
+
+#
+# parse the 'printers.xml' document and get the info for each printer
+#
+#   <printer translate="name" name="Apollo P-2100" driver="pcl-apollo-p2100" manufacturer="Apollo" model="690" parameters="pcl_inkjet_params" foomaticid="Apollo-P-2100" />
+#
+
+printers = []
+
+xml = Nokogiri::XML(STDIN)
+xml.remove_namespaces!
+xml.xpath('/gutenprint//printer').each do |printer|
+  printers << {
+    model: printer['name'],
+    driver: printer['driver'],
+    foomatic: printer['foomaticid'],
+    notes: '',  ##FIXME
+  }
+end
+raise "No printers found!" if printers.empty?
+
+#
+# generate the HTML file
+#
+
+title = "Supported Printers v#{ENV['GUTENPRINT_VERSION']}"
+caption = "Gutenprint #{ENV['GUTENPRINT_VERSION']}"
+
+builder = Nokogiri::HTML::Builder.new do |html|
+  html.html(lang: 'en') do
+    html.head do
+      html.meta('http-equiv' => 'content-type', content: 'text/html; charset=iso-8859-1')
+      html.title(title)
+    end
+    html.body do
+      html.p %q{
+Please note that many of these drivers are currently under
+development, and we do not necessarily have full specifications on all
+of them.  We will fill in this list as we verify successful operation
+of these printers.  You can help by testing this with your own printer
+and reporting the results!
+      }.strip
+    end
+    html.table(summary: title, cellpadding: 4) do
+      html.caption(style: "font-size: 135%; margin-bottom: 0.50em;") do
+        html.b(caption)
+      end
+      html.tr do
+        html.td { html.b('Printer Model') }
+        html.td { html.b('Driver Name') }
+        html.td { html.b('Foomatic Name') }
+        html.td { html.b('Notes') }
+      end
+      printers.sort_by { |p| p[:model] }.each do |printer|
+        html.tr do
+          html.td(printer[:model])
+          html.td(printer[:driver])
+          html.td(printer[:foomatic])
+          html.td(printer[:notes])
+        end
+      end
+    end
+  end
+end
+
+print builder.to_html

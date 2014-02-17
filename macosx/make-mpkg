@@ -1,0 +1,37 @@
+#!/bin/bash -e
+
+#
+# Make a metapackage (.mpkg).
+#
+# The 'packagemaker' tool can't do this, for some reason.
+# Fortunately, it is a simple bundle, so not hard to create
+# from scratch. (The technique was cribbed from Tor's package.sh
+# script.)
+#
+
+# set -x  # uncomment for debugging
+
+mpkg_src="$1"; shift
+dest_dir="$1"; shift
+
+mpkg_name=$(eval echo $(cat "$mpkg_src/name"))
+mpkg_dir="$dest_dir/$mpkg_name.mpkg"
+
+echo "Building metapackage: $mpkg_dir"
+
+# make the basic metapackage bundle
+rm -rf $mpkg_dir
+mkdir -p "$mpkg_dir/Contents"
+echo -n "pmkrpkg1" >"$mpkg_dir/Contents/PkgInfo"
+cp -p "$mpkg_src"/*.plist "$mpkg_dir/Contents"
+
+# make the packages that will be part of the metapackage
+mkdir -p "$mpkg_dir/Contents/Packages"
+for pkg_src in src/*.pkg.src; do
+  ./make-pkg "$pkg_src" "$mpkg_dir/Contents/Packages"
+done
+
+# call script to set up contents, if it exists
+if [ -e "$mpkg_src/make-contents" ]; then
+  "$mpkg_src/make-contents" "$mpkg_dir"
+fi

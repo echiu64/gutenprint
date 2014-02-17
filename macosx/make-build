@@ -1,0 +1,77 @@
+#!/bin/bash -e
+
+#set -x  # uncomment for debugging
+
+if [ -z "$DIST_RELEASE" ]; then
+  echo "Must set \$DIST_RELEASE to tarball of distribution release"
+  exit 1
+fi
+
+for version in $*; do
+  #
+  # Compute configure flags and architectures depending on version.
+  #
+
+  case $version in
+    10.4)
+      configure_flags="--without-doc --enable-cups-ppds"
+      cflags="-arch ppc -arch i386 -mmacosx-version-min=$version"
+      ldflags=$cflags
+      ;;
+    10.5)
+      configure_flags="--without-doc"
+      cflags="-arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$version"
+      ldflags=$cflags
+      ;;
+    10.6)
+      cflags="-arch i386 -arch x86_64 -mmacosx-version-min=$version"
+      ldflags=$cflags
+      ;;
+    *)
+      echo "Don't know how to build for version '$version'"
+      exit 1
+  esac
+
+  echo "Building for $version..."
+
+  #
+  # Set up pathnames.
+  #
+  # Note that we build in /tmp so that most of the I/O is local, and only the
+  # 'make install' step may copy over the network.
+  #
+
+  build_dir="$PWD/build/$version"
+  src_dir="/tmp/gutenprint-$version"
+  install_dir="$build_dir/install"
+
+  #
+  # Extract source tarball into local filesystem.
+  #
+
+  rm -rf "$src_dir"
+  mkdir -p "$src_dir"
+  tar -x -f "$DIST_RELEASE" -C "$src_dir" --strip-components=1
+
+  #
+  # Initialize build & install directories.
+  #
+
+  rm -rf "$build_dir"
+  mkdir -p "$install_dir"
+
+  #
+  # Configure & build, and install into local directory.
+  #
+
+  (cd "$src_dir" &&
+   CFLAGS="$cflags" LDFLAGS="$ldflags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags &&
+   make install DESTDIR="$install_dir") 1>"$build_dir/build.log" 2>&1
+
+  if [ $? == 0 ]; then
+    echo "Build for $version succeeded."
+  else
+    echo "Build may have failed -- check details in $build_dir/build.log"
+    exit 1
+  fi
+done

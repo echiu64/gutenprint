@@ -1,0 +1,70 @@
+#!/bin/sh
+
+## Preinstall script for Gutenprint Uninstaller.
+## This is for use only for removal of GutenprintPrinterDrivers.pkg
+
+# NOTE: The files 'preinstall' and 'preupgrade' should be exactly the same.
+# But because CVS doesn't support symlinks, we can't do the obvious thing.
+# So if you change one of these files, be sure to copy it to the other file
+# to keep them in sync.
+
+IFS="
+"
+#set -x
+
+##########################
+# Check the Mac OS version
+MACOS_VERSION_FILE=/System/Library/CoreServices/SystemVersion.plist
+
+MACOS_VERSION=$(awk '/ProductVersion/ {while (RLENGTH<4) {match($0,"[0-9]+([.][0-9]+)*");x=substr($0,RSTART,RLENGTH);getline;};print x;}' "${MACOS_VERSION_FILE}")
+
+MAJOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[1];nextfile;}')
+MINOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[2];nextfile;}')
+MICRO_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[3];nextfile;}')
+
+#
+# Revisit the need for this script for every Gutenprint release until
+# we know exactly how the final version of Installer.app will behave
+# in OS X 10.6.
+#
+# This script should no longer be necessary if Snow Leopard leaves a valid
+# Receipt in /Library/Receipts AND manages the associated entry in the
+# receipts db appropriately.
+#
+# This will also take care of any inability of OS X 10.6 to not "upgrade"
+# as it did in prior versions of OS X.
+#
+# Testing in December, 2009 in preperation for Gutenprint 5.2.5 release shows
+# that the Receipt issuse is no longer present.
+# To be on the safe side, keep this deletion routine in but only for
+# for cases where the /Library/Receipt is not found.
+#
+
+#
+# 10.6+
+#
+
+if [ 10 -eq ${MAJOR_VERSION:-10} -a 6 -le ${MINOR_VERSION:-0} ] ; then
+	# check for Gutenprint receipt
+	if [ \! -d "/Library/Receipts/Gutenprint 5.pkg" ]; then
+		INSTALLED_PKGS=($(/usr/sbin/pkgutil --packages | grep "net\.sourceforge\.Gutenprint\-5.*"))
+		# see if GPD present
+		if [ ${#INSTALLED_PKGS[@]} -gt 0 ] ; then
+			for PKG in ${INSTALLED_PKGS[@]}; do
+				# Belt and suspenders -- actually 3x check as rm will not remove a directory.
+				# Get list of only files.  Double check they are file or symlinks before acting.
+				GP_FILES=($(/usr/sbin/pkgutil --files $PKG))
+				echo "Removing files..."
+				for NAME in ${GP_FILES[@]}; do
+					if [ -f /$NAME -o -L /$NAME ]; then
+						echo "trying to delete /$NAME"
+						rm /$NAME
+					fi
+				done
+
+				# Remove receipt
+				pkgutil --forget $PKG
+			done
+		fi
+	fi
+fi

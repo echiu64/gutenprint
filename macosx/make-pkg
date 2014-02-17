@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+# set -x  # uncomment for debugging
+
+pkg_src="$1"; shift
+dest_dir="$1"; shift
+
+pkg_name=$(cat "$pkg_src/name")
+pkg_dir="$dest_dir/$pkg_name"
+pkg_final="$pkg_dir.pkg"
+
+echo "Building package: $pkg_final"
+
+# initialize the package directory
+rm -rf "$pkg_dir"
+mkdir -p "$pkg_dir"
+
+# make a copy of the package sources
+cp -pR "$pkg_src"/{Contents,Resources,*.plist} "$pkg_dir"
+
+# call script to set up contents, if it exists
+if [ -e "$pkg_src/make-contents" ]; then
+  "$pkg_src/make-contents" "$pkg_dir"
+fi
+
+# make sure everything is owned by root:wheel
+echo "The 'sudo' command will now be issued to change ownership. Please authenticate if asked."
+sudo chown -R root:wheel "$pkg_dir/Contents"
+
+# build the package
+/Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
+  -build \
+  -i "$pkg_dir/Info.plist" \
+  -d "$pkg_dir/Description.plist" \
+  -f "$pkg_dir/Contents" \
+  -r "$pkg_dir/Resources" \
+  -ds \
+  -p "$pkg_final"
+
+sudo rm -rf "$pkg_dir"

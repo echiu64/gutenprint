@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+#
+# Make the DMG file from the files in the given source directory.
+#
+
+# set -x  # uncomment for debugging
+
+src_dir="$1"; shift
+dest_name="$1"; shift
+
+tmp_dmg="$src_dir.dmg"
+dest_dmg="build/$dest_name.dmg"
+
+echo "Building DMG: $dest_dmg"
+
+# calculate size of DMG directory, in megabytes,
+# and then add 20%
+actual_size=$(du -sm "$src_dir" | cut -f1)
+volume_size=$(echo "$actual_size * 1.2" | bc --quiet)
+
+# create uncompressed DMG
+hdiutil create \
+  -srcfolder "$src_dir" \
+  -volname "$dest_name" \
+  -fs HFS+ \
+  -fsargs "-c c=64,a=16,e=16" \
+  -format UDRW \
+  -size "${volume_size}M" \
+  -ov \
+  "$tmp_dmg"
+
+# convert uncompressed DMG to final DMG
+hdiutil convert \
+  "$tmp_dmg" \
+  -format UDZO \
+  -imagekey zlib-level=9 \
+  -ov \
+  -o "$dest_dmg"
+
+rm -f "$tmp_dmg"
+ls -l "$dest_dmg"

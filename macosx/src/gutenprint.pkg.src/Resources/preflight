@@ -1,0 +1,56 @@
+#!/bin/bash
+
+################################################################################
+#                                                                              #
+#   Product name:   Installer preflight                                        #
+#   from package:   Gutenprint 5.2.4                                           #
+#        version:   2.2.6                                                      #
+#        updated:   2 June 2008 by Matt Broughton for OSX 10.5                 #
+#   Copyright 2002-2004 by Tyler Blessing                                      #
+#                                                                              #
+#   This program is freed software; you can redistribute it and/or modify it   #
+#   under the terms of the GNU General Public License as published by the Free #
+#   Software Foundation; either version 2 of the License, or (at your option)  #
+#   any later version.                                                         #
+#                                                                              #
+#   This program is distributed in the hope that it will be useful, but        #
+#   WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY #
+#   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License   #
+#   for more details.                                                          #
+#                                                                              #
+#   You should have received a copy of the GNU General Public License          #
+#   along with this program; if not, write to the Free Software                #
+#   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. #
+#                                                                              #
+################################################################################
+
+#set -x
+
+#
+# Check the Mac OS version
+#
+
+MACOS_VERSION_FILE=/System/Library/CoreServices/SystemVersion.plist
+
+MACOS_VERSION=$(awk '/ProductVersion/ {while (RLENGTH<4) {match($0,"[0-9]+([.][0-9]+)*");x=substr($0,RSTART,RLENGTH);getline;};print x;}' "${MACOS_VERSION_FILE}")
+
+MAJOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[1];nextfile;}')
+MINOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[2];nextfile;}')
+MICRO_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[3];nextfile;}')
+
+PrintCenterAppName="Printer Setup Utility.app"
+
+#
+# Quit Print Center if it's open so that new PPDs will be recognized.
+#
+# In Mac OS X 10.5+, Printer Setup Utility is a Core Service.  Do not
+# try to quit if running.  Functions are now handled by Print & Fax
+# System Preference which does live updates.  No need to quit.
+#
+
+if [ 10 -eq ${MAJOR_VERSION:-10} -a 4 -eq ${MINOR_VERSION:-0} ] ; then
+  PID=`ps axww | awk -v searchString="${PrintCenterAppName}" '!/awk/ && $0 ~ searchString {print $1;nextfile;}'`
+	if [ \! -z "${PID}" ]; then
+		 kill ${PID}
+	fi
+fi

@@ -1,0 +1,174 @@
+#!/usr/bin/env ruby
+
+require 'pp'
+require 'pathname3'
+require 'hashstruct'
+
+###
+
+class Diff
+
+  attr_accessor :type
+  attr_accessor :name
+  attr_accessor :diffs
+
+  def initialize(type, name, diffs=nil)
+    @type = type
+    @name = name
+    @diffs = diffs
+  end
+
+end
+
+class Files
+
+  attr_accessor :files
+
+  def initialize(dir)
+    @files = {}
+    dir = Pathname.new(dir).realpath
+    dir.find do |file|
+      next if file.directory?
+      next if %w{. .. .DS_Store}.include?(file.basename)
+      name = file.relative_path_from(dir).sub(%r{\d+\.\d+\.\d+|\d+\.\d+}, 'VERSION')
+      stat = file.lstat
+      stat_hash = { mode: mode_to_s(stat.mode), uid: stat.uid, gid: stat.gid }
+      raise "Would overwrite #{@files[name].inspect} with #{name.inspect}" if @files[name]
+      @files[name] = HashStruct.new(
+        path: file,
+        stat: stat_hash)
+    end
+  end
+
+  def mode_to_s(mode)
+    ((mode & 04000 != 0) ? 's' : '-') +
+    ((mode & 02000 != 0) ? 'S' : '-') +
+    ((mode & 01000 != 0) ? 't' : '-') +
+    ((mode & 00400 != 0) ? 'r' : '-') +
+    ((mode & 00200 != 0) ? 'w' : '-') +
+    ((mode & 00100 != 0) ? 'x' : '-') +
+    ((mode & 00040 != 0) ? 'r' : '-') +
+    ((mode & 00020 != 0) ? 'w' : '-') +
+    ((mode & 00010 != 0) ? 'x' : '-') +
+    ((mode & 00004 != 0) ? 'r' : '-') +
+    ((mode & 00002 != 0) ? 'w' : '-') +
+    ((mode & 00001 != 0) ? 'x' : '-')
+  end
+
+end
+
+class Differ
+
+  attr_accessor :diffs
+
+  def initialize(files1, files2)
+    @diffs = []
+    names = (files1.keys + files2.keys).sort.uniq
+    names.each do |name|
+      diffs = []
+      type = nil
+      file1 = files1[name]
+      file2 = files2[name]
+      if file1.nil?
+        type = '+'
+      elsif file2.nil?
+        type = '-'
+      else
+        path1, stat1 = Pathname.new(file1.path), file1.stat
+        path2, stat2 = Pathname.new(file2.path), file2.stat
+        diffs = []
+        if stat2 != stat1
+          diffs += diff_stats(stat1, stat2)
+        end
+        case path1.basename
+        when /\.pax\.gz$/
+          diffs += diff_archives(path1, path2)
+        when /\.bom$/
+          diffs += diff_boms(path1, path2)
+        else
+          diffs += diff_contents(path1, path2)
+        end
+        type = '!' unless diffs.empty?
+      end
+      @diffs << Diff.new(type, name, diffs) if type
+    end
+  end
+
+  def diff_stats(stat1, stat2)
+    diffs = []
+    (stat1.keys + stat2.keys).uniq.each do |key|
+      from, to = stat1[key], stat2[key]
+      if from && to.nil?
+        diffs << Diff.new('-', key)
+      elsif from.nil? && to
+        diffs << Diff.new('+', key)
+      elsif from != to
+        diffs << Diff.new('!', key, "#{to.inspect} => #{from.inspect}")
+      end
+    end
+    diffs
+  end
+
+  def diff_boms(path1, path2)
+    tmps = []
+    [path1, path2].each do |path|
+      tmp = Pathname.new('/tmp') + "#{path.to_a.first}.bom.txt"
+      tmps << tmp
+      system("lsbom \"#{path}\" > \"#{tmp}\"")
+    end
+    diffs = diff_contents(*tmps)
+    diffs
+  end
+
+  def diff_archives(path1, path2)
+    tmps = []
+    archive_files1, archive_files2 = [path1, path2].map do |path|
+      tmp = path.sub(/\.pax\.gz/, '')
+      tmps << tmp
+      tmp.mkpath
+      Dir.chdir(tmp) do
+        system("cat \"#{path}\" | gzcat | cpio -idm --quiet")
+      end
+      Files.new(tmp)
+    end
+    differ = Differ.new(archive_files1.files, archive_files2.files)
+    tmps.each { |t| t.rmtree }
+    differ.diffs
+  end
+
+  def diff_contents(path1, path2)
+    diffs = []
+    %x{cmp --quiet "#{path1}" "#{path2}" 2>&1}
+    if $? == 1
+      diffs += ['file changed']
+    end
+    diffs
+  end
+
+  def show_diffs(diffs=@diffs, level=0)
+    diffs.each do |diff|
+      print ("\t" * level) + "#{diff.type} #{diff.name}"
+      case diff.diffs
+      when nil, [], ''
+        # ignore
+        puts
+      when String
+        puts ' ' + diff.diffs
+      when Array
+        puts
+        show_diffs(diff.diffs, level + 1)
+      end
+    end
+  end
+
+end
+
+if $0 == __FILE__
+
+  files1 = Files.new('../../Gutenprint 5.2.9 (dmg)')
+  files2 = Files.new('build/dmg')
+
+  differ = Differ.new(files1.files, files2.files)
+  differ.show_diffs
+
+end

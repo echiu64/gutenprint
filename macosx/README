@@ -1,0 +1,213 @@
+Building Gutenprint for Mac OS X
+by John Labovitz <johnl@johnlabovitz.com>
+
+This guide describes how to build and package Gutenprint for Mac OS X
+versions 10.4 (Tiger) and above. Because Gutenprint supports many now-
+obsolete OS X versions, its build process is fairly complicated. The
+essential steps are:
+
+	- set up development environment
+	- obtain CVS tree
+	- obtain release distribution
+	- build for various versions of OS X
+	- build installer package and final DMG for distribution
+
+The steps below are listed in order that they need to be completed.
+
+
+================================================================
+Configure machines
+
+Two Macs are required to build Gutenprint: one running 10.5 (Leopard),
+and one running 10.9 (Mavericks) or later. An optional physical or
+virtual Linux machine is needed for doing a full build from the CVS
+tree.
+
+In this document, the Leopard and Linux machines are referred to as
+such, and the 10.9+ Mac is referred to as the 'main' machine.
+
+All machines should be up to date within their major release. Run
+Software Update to be sure.
+
+The development environment needed for both OS X machines is available
+from  Apple Downloads, but require a (free) developer membership to
+access:
+
+	https://developer.apple.com/downloads/index.action
+
+Both OS X machines must have the Xcode tools installed, both the IDE
+and command-line tools. The 10.5 machine should have Xcode 3.1.4; the
+main machine should have the latest version of Xcode (5.0.2 as of this
+writing).
+
+The main machine must also have the 'Auxiliary Tools for Xcode'
+package (labeled 'Late July 2012'). Once downloaded, drag the
+'PackageMaker.app' from the disk image to your main Applications
+folder.
+
+
+================================================================
+Create working directory
+
+The working directory will contain the initial files needed for the
+build, the temporary artifacts, and the final installation packages.
+It can be created anywhere on the main machine. For example:
+
+	mkdir ~/projects/gutenprint
+	cd ~/projects/gutenprint
+
+The steps below assume that the current directory is the working
+directory.
+
+It is helpful if the main machine is the primary location for the
+Gutenprint source and resulting builds. This can be done by sharing
+the working directory with read/write access, and mounting it from the
+Leopard machine and (optionally) the Linux machine. Ensure the clocks
+of the various machines are synchronized to avoid confusion with file
+timestamps.
+
+If the Leopard and Linux machines are configured with an SSH server,
+the entire build process can be performed from the main machine, using
+Terminal or iTerm.
+
+
+================================================================
+Get CVS tree
+
+The main CVS tree contains the source for this document, as well as
+scripts and resources needed to build the final installation packages.
+You will also need the CVS tree if you need to build the release
+tarball from source.
+
+See section 3.1 ('Using CVS') in the file doc/README.maintaining for
+details on checking out the CVS tree. By default, the CVS tree will be
+checked out into the 'print' directory.
+
+
+================================================================
+Obtain a release tarball
+
+A release tarball is a compressed _tar_ archive of the files for a
+particular version of Gutenprint. Unlike the CVS tree, it does not
+depend on the more exotic tools, and so is more easily configured and
+built on OS X. While the tarball itself can install Gutenprint under
+OS X (using 'make install'), we instead convert the tarball to an
+installer package for ease of use by regular OS X users.
+
+
+* Option 1: Build release tarball
+
+Due to incompatible build tools, it is not possible to build from the
+CVS tree on OS X. Instead, a physical or virtualized Linux development
+machine is required. To install a Linux VM on the main machine, refer
+to the file 'macosx/README.vm-environment.markdown' in the CVS tree. To
+build the tarball, see 'doc/README.maintaining'.
+
+
+* Option 2: Download release tarball
+
+If the release tarball is not build from the CVS tree (see above), it
+needs to be downloaded from Sourceforge:
+
+	http://sourceforge.net/projects/gimp-print/files/
+
+Look for a subdirectory named for the major version (e.g.,
+'gutenprint-5.2'). Tarballs are named for the full version:
+'gutenprint-5.2.10.tar.bz2'.
+
+If the project is nearing a release, tarballs may be in the snapshot
+directory instead, at:
+
+	http://sourceforge.net/projects/gimp-print/files/snapshots/
+
+
+================================================================
+Change directory to 'macosx'
+
+For the OS X build scripts to run properly, you will need to be in
+the 'macosx' directory in the CVS tree. This should be done on both
+the main and Leopard machines.
+
+
+================================================================
+Set up environment
+
+Although the build process does build a new Gutenprint installer, it
+does not yet build the uninstaller packages. Therefore, the scripts
+need access to the old packages to use them as a source. To do this,
+first download the previous version's DMG file, and copy its contents
+to a directory. A convenient place is the parent directory of the CVS
+tree. Then set the OLD_INSTALLER environment variable to the name of
+this directory:
+
+	export OLD_INSTALLER='../../Gutenprint 5.2.9 (dmg)'
+
+Another environment variable that must be set up that describes the
+location of the distribution release tarball.
+
+	export DIST_RELEASE='../gutenprint-VERSION.tar.gz'
+
+where VERSION is replaced by the version you are building.
+
+These settings should be done on both the Leopard and the main
+machine.
+
+
+================================================================
+Update release information
+
+Although most information such as documentation is pulled from the
+release, there are a few files that will need to be updated for a new
+OS X release. Relative to the CVS tree, they are:
+
+	macosx/src/gutenprint.pkg.src/Resources/Welcome.rtfd
+		- update version (in header)
+		- update systems supported (in text)
+
+	macosx/src/gutenprint.pkg.src/Resources/ReadMe.html
+		- update version and release date (in header)
+		- update systems supported
+		- update 'changes' section with most recent changes
+		- add any needed information specific to release
+
+	macosx/src/gutenprint.dmg.src/Contents/Documentation/SourceCode.webloc
+		- update URL to source code (plist file; edit in text editor or Xcode)
+
+
+================================================================
+Build from release
+
+Gutenprint needs to be built three times: once for OS X 10.4, once for
+10.5, and once for 10.6+ (the latter primarily for the documentation).
+Given a release distribution tarball and one or more versions, the
+'build' script builds accordingly.
+
+On the Leopard machine, build for 10.4, and then again for 10.5:
+
+	./make-build 10.4 10.5
+
+On the main machine, build for 10.6:
+
+	./make-build 10.6
+
+The results of the builds will be in the 'build' directory, under a
+subdirectory for each version, with a further 'install' subdirectory
+containing the final files ready for packaging. The 'build.log' file
+will contain output of the build process. (This log file should be
+checked for errors, even if the build script doesn't show anything.)
+
+
+================================================================
+Package installers & uninstallers
+
+Packages are created for the current Gutenprint driver. The
+uninstaller package files are copied from the previous release, as
+described above.
+
+On the Leopard machine, build all the packages, the installer and
+uninstaller, and the final DMG file:
+
+	./make-installer
+
+This will create a final DMG file called 'gutenprint-VERSION.dmg',
+which can be uploaded to SourceForge as the official OS X release.

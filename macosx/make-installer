@@ -1,0 +1,55 @@
+#!/bin/bash -e
+
+#
+# This script makes the necessary .pkg bundles needed for the OS X
+# installation.
+#
+# Usage: ./make-installer
+#
+# This script must be run from within the 'osx' directory of either the CVS
+# tree or a distribution release.
+#
+# If there is a script named 'make-contents' within each package source
+# directory, it will be run with the first argument being the name of an
+# temporary, empty directory which the script may fill with the desired
+# contents of the package.
+#
+# It is assumed that Gutenprint has already been built, and the output
+# for various system versions/architectures placed in the 'build'
+# subdirectory of the current directory. See the 'build' script for more
+# details.
+#
+
+# set -x  # uncomment for debugging
+
+echo "Making installer"
+
+# find Gutenprint version for this and other scripts
+eval ./gutenprint-version
+
+dmg_name=$(eval echo "$(cat src/gutenprint.dmg.src/name)")
+dmg_dir="build/dmg"
+
+# initialize the final destination directory
+rm -rf "$dmg_dir"
+mkdir -p "$dmg_dir"
+
+# make the metapackages
+for mpkg_src in src/*.mpkg.src; do
+  ./make-mpkg "$mpkg_src" "$dmg_dir"
+done
+
+# copy in other files (from tree)
+cp -pR src/gutenprint.dmg.src/Contents/* "$dmg_dir"
+
+# copy ReadMe from the installer package
+cp -pR "src/gutenprint.pkg.src/Resources/ReadMe.html" "$dmg_dir/Installer ReadMe.html"
+
+# add documentation
+./make-doc "$dmg_dir"
+
+# copy in uninstaller from previous release
+cp -pR "$OLD_INSTALLER/Uninstall Gutenprint "*".mpkg" "$dmg_dir"
+
+# make the DMG file
+./make-dmg "$dmg_dir" "$dmg_name"

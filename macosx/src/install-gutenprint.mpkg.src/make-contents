@@ -1,0 +1,31 @@
+#!/bin/bash -e
+
+# uncomment for debugging
+set -x
+
+mpkg_dir="$1"
+
+if [ -z "$OLD_INSTALLER" ]; then
+  echo "Must set \$OLD_INSTALLER to directory containing previous release"
+  exit 1
+fi
+
+# copy (un)installers for older versions
+mkdir -p "$mpkg_dir/Contents/Packages"
+for i in Gimp-Print-5 \
+         Gimp-Print \
+         GimpPrintPrinterDrivers \
+         Gutenprint-5 \
+         GutenprintPrinterDrivers \
+         ; do
+  cp -pR "$OLD_INSTALLER/Install Gutenprint "*".mpkg/Contents/Packages/$i.pkg" "$mpkg_dir/Contents/Packages/$i.pkg"
+done
+
+# copy resources
+mkdir -p "$mpkg_dir/Contents/Resources"
+for i in ReadMe.html \
+         Welcome.rtfd \
+         License.txt \
+         ; do
+  cp -pR "src/gutenprint.pkg.src/Resources/$i" "$mpkg_dir/Contents/Resources/$i"
+done

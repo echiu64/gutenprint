@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+# set -x  # uncomment for debugging
+
+dest_dir="$1"; shift
+
+doc_dir="$dest_dir/Documentation"
+
+echo "Making documentation"
+
+# NOTE: No longer generating the HTML file; instead, just linking to the GP website.
+# ./make-supported-printers <../src/xml/printers.xml >"$doc_dir/Supported Printers.html"
+
+mkdir -p "$doc_dir"
+for i in ../AUTHORS \
+         ../NEWS \
+         ../doc/gutenprint-users-manual.pdf \
+         src/gutenprint.dmg.src/Contents/Documentation/* \
+         ; do
+  cp -pR "$i" "$doc_dir"
+done

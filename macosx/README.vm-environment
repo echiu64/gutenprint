@@ -1,0 +1,68 @@
+- check out CVS tree into working directory on OS X
+
+- download & install VirtualBox
+
+- download pre-built VM image:
+	- general directory of images:
+		- http://virtualboxes.org/images/ubuntu-server/
+	- specific image used:
+		- 'Ubuntu Linux Server Edition 13.10 x86'
+	- double-click VMDK file to install into VirtualBox
+
+- download VirtualBox 4.3.6 Oracle VM VirtualBox Extension Pack
+	- https://www.virtualbox.org/wiki/Downloads
+	- double-click to install into VirtualBox
+
+- in VirtualBox:
+	- click Settings icon
+		- click Network icon
+			- change ‘Attached to’ to ‘Bridged Adaptor’
+			- change ‘Name’ if needed
+	- click Shared Folder icon
+		- click little button with folder and ‘+’
+		- in Folder Path field, click down-arrow
+			- click Other…
+			- select directory of CVS tree checkout
+		- set Folder Name to ‘print’
+		- check ‘Automount’ and ‘Make Permanent’
+	- start virtual machine
+		- login:
+			- username: ubuntu
+			- password: reverse
+		- install SSH server
+			- sudo aptitude install openssh-server
+		- ifconfig eth0
+			- note IP address under ‘inet addr’
+
+- install guest utilities and fix shared-folder settings
+
+	- open new Terminal/iTerm session
+	- ssh to VM
+		$ ssh ubuntu@IP-ADDRESS
+	- install required VM guest utilities
+		$ sudo aptitude install virtualbox-guest-utils
+	- allow user to access shared folders
+		$ sudo usermod -a -G vboxsf ubuntu
+
+- change time-sync settings:
+  - open new Terminal/iTerm session
+	- change time-syncing threshold:
+		$ VBoxManage guestproperty set ubuntu-13.10-server-i386 "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold" 1000
+	- (to get name of server, use VBoxManage list vms)
+	- restart VM:
+		$ sudo shutdown -r now
+
+	- update system:
+		$ sudo aptitude update
+		$ sudo aptitude upgrade
+	- install required development packages (see doc/README.maintaining)
+	- build:
+		$ cd /media/sf_print
+		- if checked-out CVS tree had special root:
+			$ export CVSROOT=:ext:SOURCEFORGE_USERNAME@gimp-print.cvs.sourceforge.net:/cvsroot/gimp-print
+		$ ./autogen.sh
+		$ make clean
+		$ make
+		$ make dist
+
+- for more details, see: doc/README.maintaining
