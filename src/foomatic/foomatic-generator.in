@@ -1334,9 +1334,6 @@ sub qualityorder {
 		    "dpi_photomonodraft2",
                     "dpi_ohphigh",
                     "dpi_ohp",
-	    # Dyesub
-	"x600",
-	"x300"
 		    );
     my ($a, $b) = @_;
     # Bring the suffixes to lower case
@@ -1417,11 +1414,11 @@ sub getprintoutmode {
 	for $quality (keys(%{$stpdata{$stpprn}{'STP_Resolution'}})) {
 
 	    my ($xres, $yres, $qualstr);
-	    if ($quality =~ /^(\d+)x(\d+)(\D.*)$/) {
+	    if ($quality =~ /^(\d+)x(\d+)(\D.*)?$/) {
 		$xres = $1;
 		$yres = $2;
 		$qualstr = $3;
-	    } elsif ($quality =~ /^(\d+)(\D.*)$/) {
+	    } elsif ($quality =~ /^(\d+)(\D.*)?$/) {
 		$xres = $1;
 		$yres = $1;
 		$qualstr = $2;
