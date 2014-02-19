@@ -264,24 +264,29 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      The following dye-sublimation printers require this backend in order
      to function properly:
 
-        Canon SELPHY ES series  (All models)
-	Canon SELPHY CP series  (All models except CP520, CP820, and CP910)
+        Canon SELPHY ES series  (All models)  **
+	Canon SELPHY CP series  (All models)  (*1)
 	Kodak Professional 1400
 	Kodak 805 Photo Printer
    	Kodak 6800 Photo Printer
    	Kodak 6850 Photo Printer
 	Kodak 605 Photo Printer
    	Shinko/Sinfonia CHC-S2145 
-   	Sony UP-DR150
+   	Sony UP-DR150  (*1)
         Sony UP-DR200
-	DNP DS40
-	DNP DS80
+	DNP DS40  (*1)
+	DNP DS80  (*1)
 	DNP DS-RX1
 	Citizen CX
 	Citizen CX-W
 	Citizen CY
         Mitsubishi CP-D70DW  (EXPERIMENTAL)
         Mitsubishi DP-D707DW (EXPERIMENTAL)
+
+     *1) Please note that if you were using a Sony UP-DR150, DNP DS40/DS80,
+	 or a Canon SELPHY printer with a previous Gutenprint release, 
+         you will need to remove and re-create your printer queue after 
+         the upgrade to 5.2.10 is complete.
 
      For further information about configuration and use of this CUPS 
      backend, please see the README document, section II D.
