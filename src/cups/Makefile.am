@@ -160,7 +160,7 @@ if BUILD_LIBUSB_BACKENDS
 INSTALL_BLACKLIST=install-blacklist
 install-blacklist:
 	$(mkdir_p) $(DESTDIR)$(cupsdata_blacklistdir)
-	$(INSTALL_DATA) blacklist $(DESTDIR)$(cupsdata_blacklistdir)/net.sf.gimp-print.usb-quirks
+	$(INSTALL_DATA) $(srcdir)/blacklist $(DESTDIR)$(cupsdata_blacklistdir)/net.sf.gimp-print.usb-quirks
 endif
 
 install-data-local: $(INSTALL_DATA_LOCAL_DEPS) $(INSTALL_BLACKLIST)
