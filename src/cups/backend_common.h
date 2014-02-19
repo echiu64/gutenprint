@@ -68,7 +68,7 @@
 		uint16_t __x = (x);					\
 		((uint16_t)(						\
 			(((uint16_t)(__x) & (uint16_t)0x00ff) <<  8) | \
-			(((uint16_t)(__x) & (uint16_t)0xff00) >>  8) | \
+			(((uint16_t)(__x) & (uint16_t)0xff00) >>  8))); \
 	})
 #define be32_to_cpu(__x) __x
 #define be16_to_cpu(__x) __x
