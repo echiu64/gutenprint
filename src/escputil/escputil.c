@@ -1619,23 +1619,23 @@ get_ink_channel_list(const stp_printer_t *printer, int fd)
 		{
 		  STP_DEBUG(printf("***   Case 0: Ink %d %d (%s)\n",
 				   i, ind[i], colors_new[(int) ind[i]]));
-		  stp_string_list_add_string(color_list,
-					     colors_new[(int) ind[i]],
-					     colors_new[(int) ind[i]]);
+		  stp_string_list_add_string_unsafe(color_list,
+						    colors_new[(int) ind[i]],
+						    colors_new[(int) ind[i]]);
 		}
 	      else if (ind[i] == 0x40 && ind[i + 1] < aux_color_count)
 		{
 		  STP_DEBUG(printf("***   Case 1: Ink %d %d (%s)\n",
 				   i, ind[i+1], aux_colors[(int) ind[i+1]]));
-		  stp_string_list_add_string(color_list,
-					     aux_colors[(int) ind[i + 1]],
-					     aux_colors[(int) ind[i + 1]]);
+		  stp_string_list_add_string_unsafe(color_list,
+						    aux_colors[(int) ind[i + 1]],
+						    aux_colors[(int) ind[i + 1]]);
 		}
 	      else
 		{
 		  STP_DEBUG(printf("***   Case 2: Unknown\n"));
-		  stp_string_list_add_string(color_list, "Unknown",
-					     "Unknown");
+		  stp_string_list_add_string_unsafe(color_list, "Unknown",
+						    "Unknown");
 		}
 	      i+=3;
 	    }
