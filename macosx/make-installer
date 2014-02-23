@@ -22,6 +22,12 @@
 
 #set -x  # uncomment for debugging
 
+# ensure needed environment variables are set
+if [ -z "$GP_OLD_INSTALLER" ]; then
+  echo "Must set \$GP_OLD_INSTALLER to directory of Gutenprint DMG release"
+  exit 1
+fi
+
 echo "Making installer"
 
 # find Gutenprint version for this and other scripts
@@ -31,7 +37,8 @@ dmg_name=$(eval echo "$(cat src/gutenprint.dmg.src/name)")
 dmg_dir="build/dmg"
 
 # initialize the final destination directory
-rm -rf "$dmg_dir"
+echo "The 'sudo' command will now be issued to initial the destination directory. Please authenticate if needed."
+sudo rm -rf "$dmg_dir"
 mkdir -p "$dmg_dir"
 
 # make the metapackages
@@ -49,7 +56,7 @@ cp -pR "src/gutenprint.pkg.src/Resources/ReadMe.html" "$dmg_dir/Installer ReadMe
 ./make-doc "$dmg_dir"
 
 # copy in uninstaller from previous release
-cp -pR "$OLD_INSTALLER/Uninstall Gutenprint "*".mpkg" "$dmg_dir"
+cp -pR "$GP_OLD_INSTALLER/Uninstall Gutenprint "*".mpkg" "$dmg_dir"
 
 # make the DMG file
 ./make-dmg "$dmg_dir" "$dmg_name"
