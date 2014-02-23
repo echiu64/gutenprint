@@ -4,8 +4,8 @@
 
 mpkg_dir="$1"
 
-if [ -z "$OLD_INSTALLER" ]; then
-  echo "Must set \$OLD_INSTALLER to directory containing previous release"
+if [ -z "$GP_OLD_INSTALLER" ]; then
+  echo "Must set \$GP_OLD_INSTALLER to directory of Gutenprint DMG release"
   exit 1
 fi
 
@@ -17,7 +17,7 @@ for i in Gimp-Print-5 \
          Gutenprint-5 \
          GutenprintPrinterDrivers \
          ; do
-  cp -pR "$OLD_INSTALLER/Install Gutenprint "*".mpkg/Contents/Packages/$i.pkg" "$mpkg_dir/Contents/Packages/$i.pkg"
+  cp -pR "$GP_OLD_INSTALLER/Install Gutenprint "*".mpkg/Contents/Packages/$i.pkg" "$mpkg_dir/Contents/Packages/$i.pkg"
 done
 
 # copy resources

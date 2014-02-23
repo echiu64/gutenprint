@@ -27,8 +27,8 @@ raise "No printers found!" if printers.empty?
 # generate the HTML file
 #
 
-title = "Supported Printers v#{ENV['GUTENPRINT_VERSION']}"
-caption = "Gutenprint #{ENV['GUTENPRINT_VERSION']}"
+title = "Supported Printers v#{ENV['GP_VERSION_STRING']}"
+caption = "Gutenprint #{ENV['GP_VERSION_STRING']}"
 
 builder = Nokogiri::HTML::Builder.new do |html|
   html.html(lang: 'en') do
