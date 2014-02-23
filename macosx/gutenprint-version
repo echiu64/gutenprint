@@ -6,21 +6,26 @@
 # run after a build.
 #
 # The output is a line that can be evaluated by the shell to set the
-# $GUTENPRINT_VERSION environment variable.
+# $GP_VERSION_STRING environment variable.
 #
 
-config="build/10.6/install/usr/lib/pkgconfig/gutenprint.pc"
+pkg_config_file="build/10.6/install/usr/lib/pkgconfig/gutenprint.pc"
+subversion_file="subversion"
 
-if [ ! -e $config ]; then
-  echo "No config file found at $config"
+if [ ! -e $pkg_config_file ]; then
+  echo "No config file found at $pkg_config_file"
   exit 1
 fi
 
-version=$(grep 'Version:' $config | awk -F': ' '{print $2}')
+version=$(grep 'Version:' $pkg_config_file | awk -F': ' '{print $2}')
 
 if [ -z $version ]; then
-  echo "Failed to determine version number from $config"
+  echo "Failed to determine version number from $pkg_config_file"
   exit 1
 fi
 
-echo "export GUTENPRINT_VERSION=$version"
+if [ -e "$subversion_file" ]; then
+  subversion=$(cat "$subversion_file")
+fi
+
+echo "export GP_VERSION_STRING=$version$subversion"
