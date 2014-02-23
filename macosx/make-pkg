@@ -28,12 +28,13 @@ find "$pkg_dir" -name CVS -print0 | xargs -0 -n1 rm -rf
 find "$pkg_dir" -name .DS_Store -print0 | xargs -0 -n1 rm -f
 
 # make sure everything is owned by root:wheel
-echo "The 'sudo' command will now be issued to change ownership. Please authenticate if asked."
+echo "The 'sudo' command will now be issued to change ownership. Please authenticate if needed."
 sudo chown -R root:wheel "$pkg_dir/Contents"
 
 # build the package
-/Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
+sudo /Applications/PackageMaker.app/Contents/MacOS/PackageMaker \
   -build \
+  -v \
   -i "$pkg_dir/Info.plist" \
   -d "$pkg_dir/Description.plist" \
   -f "$pkg_dir/Contents" \
