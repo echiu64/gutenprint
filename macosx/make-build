@@ -2,8 +2,13 @@
 
 #set -x  # uncomment for debugging
 
-if [ -z "$DIST_RELEASE" ]; then
-  echo "Must set \$DIST_RELEASE to tarball of distribution release"
+if [ -z "$GP_GUTENPRINT_SRC" ]; then
+  echo "Must set \$GP_GUTENPRINT_SRC to directory of Gutenprint release source"
+  exit 1
+fi
+
+if [ -z "$GP_LIBUSB_SRC" ]; then
+  echo "Must set \$GP_LIBUSB_SRC to directory of libusb release source"
   exit 1
 fi
 
@@ -14,8 +19,9 @@ for version in $*; do
 
   case $version in
     10.4)
-      configure_flags="--without-doc --enable-cups-ppds"
-      cflags="-arch ppc -arch i386 -mmacosx-version-min=$version"
+      configure_flags="--without-doc --enable-cups-ppds --without-libiconv-prefix"
+      # cflags="-arch ppc -arch i386 -mmacosx-version-min=$version"
+      cflags="-arch ppc -mmacosx-version-min=$version"
       ldflags=$cflags
       ;;
     10.5)
@@ -32,8 +38,6 @@ for version in $*; do
       exit 1
   esac
 
-  echo "Building for $version..."
-
   #
   # Set up pathnames.
   #
@@ -42,16 +46,9 @@ for version in $*; do
   #
 
   build_dir="$PWD/build/$version"
-  src_dir="/tmp/gutenprint-$version"
+  gutenprint_src_dir="/tmp/gutenprint-$version"
+  libusb_src_dir="/tmp/libusb-$version"
   install_dir="$build_dir/install"
-
-  #
-  # Extract source tarball into local filesystem.
-  #
-
-  rm -rf "$src_dir"
-  mkdir -p "$src_dir"
-  tar -x -f "$DIST_RELEASE" -C "$src_dir" --strip-components=1
 
   #
   # Initialize build & install directories.
@@ -61,17 +58,46 @@ for version in $*; do
   mkdir -p "$install_dir"
 
   #
-  # Configure & build, and install into local directory.
+  # Build libusb.
   #
 
-  (cd "$src_dir" &&
-   CFLAGS="$cflags" LDFLAGS="$ldflags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags &&
-   make install DESTDIR="$install_dir") 1>"$build_dir/build.log" 2>&1
+  echo "Building libusb for $version..."
+
+  rm -rf "$libusb_src_dir"
+  cp -pR "$GP_LIBUSB_SRC" "$libusb_src_dir"
+
+  (set -x;
+   cd "$libusb_src_dir";
+   CFLAGS="$cflags" LDFLAGS="$ldflags" ./configure --prefix=/usr/share/gutenprint/libusb --disable-dependency-tracking;
+   make install DESTDIR="$install_dir") 1>"$build_dir/libusb.build.log" 2>&1
 
   if [ $? == 0 ]; then
-    echo "Build for $version succeeded."
+    echo "Build of libusb for $version succeeded."
   else
-    echo "Build may have failed -- check details in $build_dir/build.log"
+    echo "Build of libusb may have failed -- check details in $build_dir/libusb.build.log"
+    exit 1
+  fi
+
+  #
+  # Build Gutenprint.
+  #
+
+  echo "Building Gutenprint for $version..."
+
+  rm -rf "$gutenprint_src_dir"
+  cp -pR "$GP_GUTENPRINT_SRC" "$gutenprint_src_dir"
+
+  (set -x;
+   cd "$gutenprint_src_dir";
+   export PKG_CONFIG_PATH="$install_dir/usr/share/gutenprint/libusb/lib/pkgconfig";
+   export PKG_CONFIG_SYSROOT_DIR="$install_dir";
+   CFLAGS="$cflags" LDFLAGS="$ldflags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags;
+   make install DESTDIR="$install_dir") 1>"$build_dir/gutenprint.build.log" 2>&1
+
+  if [ $? == 0 ]; then
+    echo "Build of Gutenprint for $version succeeded."
+  else
+    echo "Build of gutenprint may have failed -- check details in $build_dir/gutenprint.build.log"
     exit 1
   fi
 done
