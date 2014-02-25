@@ -35,7 +35,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#include <libusb-1.0/libusb.h>
+#include <libusb.h>
 #include <arpa/inet.h>
 
 #ifndef __BACKEND_COMMON_H
