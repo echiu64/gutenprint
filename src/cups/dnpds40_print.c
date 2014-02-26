@@ -397,12 +397,10 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		if(!memcmp("CNTRL OVERCOAT", ctx->databuf + ctx->datalen+2, 14)) {
 			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
 			matte = atoi(buf);
-		        matte = le32_to_cpu(matte);
 		}
 		if(!memcmp("CNTRL MULTICUT", ctx->databuf + ctx->datalen+2, 14)) {
 			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
 			multicut = atoi(buf);
-		        multicut = le32_to_cpu(multicut);
 		}
 	        if(!memcmp("IMAGE YPLANE", ctx->databuf + ctx->datalen + 2, 12)) {
 			uint32_t x_ppm;
@@ -993,7 +991,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1",
-	.version = "0.29",
+	.version = "0.30",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
