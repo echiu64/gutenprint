@@ -1395,7 +1395,7 @@ LIST(dyesub_printsize_list_t, cx400_printsize_list, dyesub_printsize_t, cx400_pr
 static void cx400_printer_init_func(stp_vars_t *v)
 {
   char pg = '\0';
-  const char *pname = "XXXXXX";		  				
+  const char *pname = "XXXXXX";
 
   stp_deprintf(STP_DBG_DYESUB,
 	"dyesub: fuji driver %s\n", stp_get_driver(v));
@@ -3537,7 +3537,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
   },
   { /* Kodak Easyshare Dock family */
-    4000, 		
+    4000,
     &ymc_ink_list,
     &res_300dpi_list,
     &kodak_dock_page_list,
@@ -3552,7 +3552,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
   },
   { /* Kodak Photo Printer 6800 */
-    4001, 		
+    4001,
     &rgb_ink_list,
     &res_300dpi_list,
     &kodak_6800_page_list,
@@ -3566,7 +3566,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6800_laminate_list, NULL,
   },
   { /* Kodak Photo Printer 6850 */
-    4002, 		
+    4002,
     &rgb_ink_list,
     &res_300dpi_list,
     &kodak_6850_page_list,
@@ -3580,7 +3580,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6800_laminate_list, NULL,
   },
   { /* Kodak Photo Printer 605 */
-    4003, 		
+    4003,
     &rgb_ink_list,
     &res_300dpi_list,
     &kodak_6800_page_list,
@@ -3594,7 +3594,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_605_laminate_list, NULL,
   },
   { /* Kodak Professional 1400 */
-    4004,	
+    4004,
     &bgr_ink_list,
     &res_301dpi_list,
     &kodak_1400_page_list,
@@ -3611,7 +3611,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_1400_media_list,
   },
   { /* Kodak Photo Printer 805 */
-    4005, 		
+    4005,
     &bgr_ink_list,
     &res_301dpi_list,
     &kodak_805_page_list,
