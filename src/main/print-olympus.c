@@ -4259,7 +4259,18 @@ dyesub_maximum_imageable_area(const stp_vars_t *v,
 			       int  *top)
 {
   int not_used;
-  dyesub_imageable_area_internal(v, 1, left, right, bottom, top, &not_used);
+  const int model = stp_get_model_id(v);
+  const dyesub_cap_t *caps = dyesub_get_model_capabilities(model);
+
+  /* For printers that report FEATURE_WHITE_BORDER, we need to
+     respect the margins they define as that's the printable area.
+     The SELPHY models support FEATURE_BORDERLESS as well, so handle
+     that special case. */
+
+  dyesub_imageable_area_internal(v,
+    (!(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) &&
+       !dyesub_feature(caps, DYESUB_FEATURE_BORDERLESS))),
+    left, right, bottom, top, &not_used);
 }
 
 static void
