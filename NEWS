@@ -1060,6 +1060,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        well as enabling support for more recent printers, it improves support
        for older models as well.
 
+       You will have to remove and re-create your printer queue after
+       upgrading.
+
        Newly added in this release:
 
        Canon SELPHY CP810
@@ -1163,7 +1166,8 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Sony UP-DR150
 
 	Support for the Sony UP-DR150 was greatly improved through the
-	addition of an intelligent CUPS backend.
+	addition of an intelligent CUPS backend.  You will need to
+	remove and re-create your printer queue after upgrading.
 
        Sony UP-DR200
 
@@ -1181,6 +1185,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	 * Matte lamination with printer firmware 1.30 or newer
 	 * Improved margins making printable area more explicit
 	 * Support 300x600dpi print mode
+
+	If you have one of these printers we highly recommend you remove
+	and re-create your printer queue after upgrading.
 
        DNP DSRX1
 

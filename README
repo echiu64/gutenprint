@@ -538,6 +538,16 @@ D) CUPS dye-sublimation backend
     Over time, it is expected that additional printer models will be
     supported by this backend.
 
+    NOTE: While most of these printers are new as of Gutenprint 5.2.10, 
+    if you are upgrading from a previous relase and using one of these
+    models, you will need to remove and re-create your printer queue:
+
+        Canon SELPHY ES series  (All models)
+        Canon SELPHY CP series  (All models)
+        DNP DS40
+        DNP DS80
+        Sony UP-DR150
+
   Build Requirements
 
     This backend requires libusb (or libusbx) 1.0 or newer.
