@@ -264,7 +264,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      The following dye-sublimation printers require this backend in order
      to function properly:
 
-        Canon SELPHY ES series  (All models)  **
+        Canon SELPHY ES series  (All models)  (*1)
 	Canon SELPHY CP series  (All models)  (*1)
 	Kodak Professional 1400
 	Kodak 805 Photo Printer
