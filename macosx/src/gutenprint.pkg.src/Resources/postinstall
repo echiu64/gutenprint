@@ -12,7 +12,7 @@ IFS='
 export PATH=/bin:/usr/bin:/usr/sbin
 
 MODEL_PPD_DIR="/Library/Printers/PPDs/Contents/Resources"
-ALTERNATE_BINS_DIR="/usr/share/gutenprint/PanTigBinaries/"
+ALTERNATE_BINS_DIR="/usr/share/gutenprint/alternate-binaries/"
 
 remove_old_ppds () {
 	# Remove any remaining PPDs
@@ -95,7 +95,7 @@ elif [ ${MAJOR_VERSION:-10} -eq 10 -a ${MINOR_VERSION} -eq 5 ]; then
 	# Gutenprint driver, so need to generate internationalized PPD files.
 	#
 
-	# Install cups-genppdupdate from Panther/Tiger Binaries from to use static PPDs.
+	# Install cups-genppdupdate from alternate binaries to use static PPDs.
 	# Only OS X 10.6+ uses gutenprint driver.
 	rm /usr/sbin/cups-genppdupdate
 	cd ${ALTERNATE_BINS_DIR}
@@ -124,68 +124,6 @@ elif [ ${MAJOR_VERSION:-10} -eq 10 -a ${MINOR_VERSION} -eq 5 ]; then
 	echo "Restarting CUPS."
 	launchctl unload /System/Library/LaunchDaemons/org.cups.cupsd.plist
 	launchctl load /System/Library/LaunchDaemons/org.cups.cupsd.plist
-
-#
-# 10.4
-#
-
-elif [ ${MAJOR_VERSION:-10} -eq 10 -a ${MINOR_VERSION} -eq 4 ]; then
-	echo "Installing for 10.4"
-
-	# Install alternate binaries
-	cd ${ALTERNATE_BINS_DIR}
-	for i in commandtocanon commandtoepson rastertogutenprint.5.2; do
-		rm /usr/libexec/cups/filter/$i
-		install -o root -g wheel -m 755 $i /usr/libexec/cups/filter/$i
-	done
-
-	# bin
-	for i in cups-calibrate escputil testpattern; do
-		rm /usr/bin/$i
-		install -o root -g wheel -m 755 $i /usr/bin/$i
-	done
-
-	# sbin
-	rm /usr/sbin/cups-genppd.5.2
-	install -o root -g wheel -m 755 cups-genppd.5.2 /usr/sbin/cups-genppd.5.2
-	rm /usr/sbin/cups-genppdupdate
-	install -o root -g wheel -m 755 cups-genppdupdate /usr/sbin/cups-genppdupdate
-
-	# lib
-	rm /usr/lib/libgutenprint.2.dylib
-	install -o root -g wheel -m 755 libgutenprint.2.dylib /usr/lib/libgutenprint.2.dylib
-	rm /usr/lib/libgutenprint.a
-	install -o root -g wheel -m 644 libgutenprint.a /usr/lib/libgutenprint.a
-	ranlib /usr/lib/libgutenprint.a
-
-	# Recreate symlinks
-	cd /usr/lib && ln -s -f libgutenprint.2.dylib libgutenprint.dylib
-
-	# Remove Gutenprint driver -- need to remove driver before updating queues
-	rm /usr/libexec/cups/driver/gutenprint.5.2
-
-	# Remove any remaining PPDs
-	remove_old_ppds
-
-	# Make sure we have a PPD directory
-	[ -d ${MODEL_PPD_DIR}/en.lproj ] || install -d ${MODEL_PPD_DIR}/en.lproj
-
-	# Generate the PPDs
-	echo "Writing PPDs to ${MODEL_PPD_DIR}/en.lproj"
-	cups-genppd.5.2 -l C -p ${MODEL_PPD_DIR}/en.lproj
-
-	# Make sure we have correct ownership and permissions
-	update_ppd_permissions
-
-	# Update any existing printer queues
-	echo "Updating existing queues"
-	cups-genppdupdate -s ${MODEL_PPD_DIR}/en.lproj
-
-	# Restart printing services
-	echo "Restarting printing services."
-	/System/Library/StartupItems/PrintingServices/PrintingServices stop
-	sleep 1
-	/System/Library/StartupItems/PrintingServices/PrintingServices start
 
 fi
 

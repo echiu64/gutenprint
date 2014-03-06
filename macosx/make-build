@@ -18,20 +18,16 @@ for version in $*; do
   #
 
   case $version in
-    10.4)
-      configure_flags="--without-doc --enable-cups-ppds --without-libiconv-prefix"
-      # cflags="-arch ppc -arch i386 -mmacosx-version-min=$version"
-      cflags="-arch ppc -mmacosx-version-min=$version"
-      ldflags=$cflags
+    10.5-cups-ppds)
+      configure_flags="--without-doc --enable-cups-ppds"
+      arch_flags="-arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.5"
       ;;
     10.5)
       configure_flags="--without-doc"
-      cflags="-arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$version"
-      ldflags=$cflags
+      arch_flags="-arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.5"
       ;;
     10.6)
-      cflags="-arch i386 -arch x86_64 -mmacosx-version-min=$version"
-      ldflags=$cflags
+      arch_flags="-arch i386 -arch x86_64 -mmacosx-version-min=10.6"
       ;;
     *)
       echo "Don't know how to build for version '$version'"
@@ -64,11 +60,12 @@ for version in $*; do
   echo "Building libusb for $version..."
 
   rm -rf "$libusb_src_dir"
-  cp -pR "$GP_LIBUSB_SRC" "$libusb_src_dir"
+  mkdir "$libusb_src_dir"
+  tar -xj -C "$libusb_src_dir" -f "$GP_LIBUSB_SRC" --strip-components 1
 
   (set -x;
    cd "$libusb_src_dir";
-   CFLAGS="$cflags" LDFLAGS="$ldflags" ./configure --prefix=/usr/share/gutenprint/libusb --disable-dependency-tracking;
+   CFLAGS="$arch_flags" LDFLAGS="$arch_flags" ./configure --prefix=/usr/lib/gutenprint/libusb --disable-dependency-tracking;
    make install DESTDIR="$install_dir") 1>"$build_dir/libusb.build.log" 2>&1
 
   if [ $? == 0 ]; then
@@ -85,13 +82,14 @@ for version in $*; do
   echo "Building Gutenprint for $version..."
 
   rm -rf "$gutenprint_src_dir"
-  cp -pR "$GP_GUTENPRINT_SRC" "$gutenprint_src_dir"
+  mkdir "$gutenprint_src_dir"
+  tar -xj -C "$gutenprint_src_dir" -f "$GP_GUTENPRINT_SRC" --strip-components 1
 
   (set -x;
    cd "$gutenprint_src_dir";
-   export PKG_CONFIG_PATH="$install_dir/usr/share/gutenprint/libusb/lib/pkgconfig";
+   export PKG_CONFIG_PATH="$install_dir/usr/lib/gutenprint/libusb/lib/pkgconfig";
    export PKG_CONFIG_SYSROOT_DIR="$install_dir";
-   CFLAGS="$cflags" LDFLAGS="$ldflags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags;
+   CFLAGS="$arch_flags" LDFLAGS="$arch_flags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags;
    make install DESTDIR="$install_dir") 1>"$build_dir/gutenprint.build.log" 2>&1
 
   if [ $? == 0 ]; then

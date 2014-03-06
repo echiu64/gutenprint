@@ -4,26 +4,17 @@
 
 pkg_dir="$1"
 
-alternate_bins_dir="$pkg_dir/Contents/usr/share/gutenprint/PanTigBinaries"
+alternate_bins_dir="$pkg_dir/Contents/usr/share/gutenprint/alternate-binaries"
 
 # install everything for 10.5+
 cp -pR build/10.5/install/* "$pkg_dir/Contents"
 
-# then build alternate binaries directory for 10.4, which will be installed
+# then build alternate binaries directory, which will be installed
 # by the postinstall/postupgrade scripts
 mkdir -p "$alternate_bins_dir"
-for i in usr/libexec/cups/filter/commandtocanon \
-         usr/libexec/cups/filter/commandtoepson \
-         usr/libexec/cups/filter/rastertogutenprint.5.2 \
-         usr/bin/cups-calibrate \
-         usr/sbin/cups-genppd.5.2 \
-         usr/sbin/cups-genppdupdate \
-         usr/bin/escputil \
-         usr/lib/libgutenprint.2.dylib \
-         usr/lib/libgutenprint.a \
-         usr/bin/testpattern \
+for i in usr/sbin/cups-genppdupdate \
          ; do
-  cp -p build/10.4/install/$i "$alternate_bins_dir"
+  cp -p build/10.5-cups-ppds/install/$i "$alternate_bins_dir"
 done
 
 # install documentation from 10.6
