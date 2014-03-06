@@ -2,7 +2,7 @@ Building Gutenprint for Mac OS X
 by John Labovitz <johnl@johnlabovitz.com>
 
 This guide describes how to build and package Gutenprint for Mac OS X
-versions 10.4 (Tiger) and above. Because Gutenprint supports many now-
+versions 10.5 (Leopard) and above. Because Gutenprint supports many now-
 obsolete OS X versions, its build process is fairly complicated. The
 essential steps are:
 
@@ -18,13 +18,13 @@ The steps below are listed in order that they need to be completed.
 ================================================================
 Configure machines
 
-Three Macs are required to build Gutenprint: one running 10.4 (Tiger),  one
-running 10.5 (Leopard), and one running 10.9 (Mavericks) or later. (These can
-actually be the same machine, with two boot drives.) An optional physical or
-virtual Linux machine is needed for doing a full build from the CVS tree.
+Two Macs are required to build Gutenprint: one running 10.5 (Leopard), and one
+running 10.9 (Mavericks) or later. (These can actually be the same machine,
+with two boot drives.) An optional physical or virtual Linux machine is needed
+for doing a full build from the CVS tree.
 
-In this document, the Tiger, Leopard, and Linux machines are referred to as
-such, and the 10.9+ Mac is referred to as the 'main' machine.
+In this document, the Leopard and Linux machines are referred to as such, and
+the 10.9+ Mac is referred to as the 'main' machine.
 
 
 Operating system
@@ -45,7 +45,6 @@ Apple Downloads, but requires a (free) developer membership to access:
 The OS X machines must have the Xcode tools installed, both the IDE and
 command-line tools. Each OS X release requires a different version of Xcode:
 
-	Tiger: Xcode 2.5
 	Leopard: Xcode 3.1.4
 	main: Xcode 5.0.2 or above
 
@@ -69,12 +68,7 @@ machine, install from the main Homebrew site:
 
 	http://brew.sh
 
-On the Tiger machine, and the Leopard machine if it is PPC, install the
-Tigerbrew fork of Homebrew instead:
-
-	https://github.com/mistydemeo/tigerbrew
-
-Follow the instructions on those pages to install Homebrew. Then run 'brew
+Follow the instructions on that page to install Homebrew. Then run 'brew
 doctor' to check the installation, and then install 'git'.
 
 	brew doctor
@@ -155,10 +149,8 @@ directory instead, at:
 
 	http://sourceforge.net/projects/gimp-print/files/snapshots/
 
-Once the release has been downloaded, it should be extracted into a
-subdirectory in the working directory:
-
-	tar xf gutenprint-5.2.10.tar.bz2
+Once the release has been downloaded, the tarball should be placed in the
+working  directory.
 
 
 * Option 2: Build release
@@ -175,8 +167,8 @@ Obtain libusb release
 
 To support the dyesub backend, the 'libusb' package must be downloaded and
 extracted in a place where the build tools can access it. Download version
-1.0.18 or later from the following site and extract the tarball into the
-working directory:
+1.0.18 or later from the following site and place the tarball into the
+working directory.
 
 	https://sourceforge.net/projects/libusb/files/
 
@@ -205,13 +197,13 @@ this directory:
 Another environment variable that must be set up that describes the
 location of the distribution release:
 
-	export GP_GUTENPRINT_SRC='../gutenprint-VERSION'
+	export GP_GUTENPRINT_SRC='../gutenprint-VERSION.tar.bz'
 
 where VERSION is replaced by the version you are building.
 
 The location of the libusb release must also be set:
 
-	export GP_LIBUSB_SRC='../../libusb-1.0.18'
+	export GP_LIBUSB_SRC='../../libusb-1.0.18.tar.bz'
 
 The file 'setup-env.sample' contains sample settings for all required
 environment variables; it can be copied to 'setup-env', modified as
@@ -253,17 +245,13 @@ OS X release. Relative to the CVS tree, they are:
 ================================================================
 Build from release
 
-Gutenprint needs to be built three times: once for OS X 10.4, once for
-10.5, and once for 10.6+ (the latter primarily for the documentation).
-Given a release distribution tarball and one or more versions, the
-'build' script builds accordingly.
+Gutenprint needs to be built three times. Given a release distribution tarball
+and one or more versions, the 'build' script builds accordingly.
 
-On the Tiger machine, build for 10.4:
+On the Leopard machine, build for 10.5 with CUPS PPDs, then again without the
+CUPS PPDs:
 
-	./make-build 10.4
-
-On the Leopard machine, build for 10.5:
-
+	./make-build 10.5-cups-ppds
 	./make-build 10.5
 
 On the main machine, build for 10.6:

@@ -13,7 +13,7 @@ I) INTRODUCTION
     drivers that may be used with most common UNIX print spooling
     systems, including CUPS, lpr, LPRng, or others.  These drivers
     provide high quality printing for UNIX (including Macintosh OS X
-    10.4 and newer) and Linux systems in many cases equal to or better
+    10.5 and newer) and Linux systems in many cases equal to or better
     than proprietary vendor-supplied drivers.  Gutenprint also
     includes an enhanced print plug-in for the GIMP image editor,
     replacing the Gimp-Print 4.2-based plugin supplied with GIMP 1.2,
@@ -538,7 +538,7 @@ D) CUPS dye-sublimation backend
     Over time, it is expected that additional printer models will be
     supported by this backend.
 
-    NOTE: While most of these printers are new as of Gutenprint 5.2.10, 
+    NOTE: While most of these printers are new as of Gutenprint 5.2.10,
     if you are upgrading from 5.2.9 (or earlier) and using one of these
     models, you will need to remove and re-create your printer queue:
 
