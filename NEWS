@@ -1101,17 +1101,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP770
        Canon SELPHY CP790
 
+	*1: We have not confirmed these printers function with the new
+	    backend, but they are presumed to work.
+
        Known Problematic models:
 
-       The USB PIDs for the following three SELPHY CP series models are 
-       still unknown, and are therefore unsupported by the backend:
+        The USB PIDs for the SELPHY CP520 is still unknown, and
+        therefore unsupported by this backend.
 
-       Canon SELPHY CP520
+       The following models are completely unsupported:
+
        Canon SELPHY CP820
        Canon SELPHY CP910
 
-	*1: We have not confirmed these printers function with the new
-	    backend, but they are presumed to work.
+        These utilize a new communications protocol that has not yet
+        been decoded.
 
      - Mitsubishi Dye-Sublimation printers:
 
