@@ -777,8 +777,8 @@ LIST(dyesub_printsize_list_t, cp10_printsize_list, dyesub_printsize_t, cp10_prin
 /* Canon CP-100 series */
 static const dyesub_pagesize_t cpx00_page[] =
 {
-  { "w288h432", "Postcard 100x148mm", 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
-  { "B7", "CP_L 89x119mm", 264, 350, 13, 13, 15, 15, DYESUB_PORTRAIT},
+  { "Postcard", "Postcard 100x148mm", 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
+  { "w253h337", "CP_L 89x119mm", 264, 350, 13, 13, 15, 15, DYESUB_PORTRAIT},
   { "w155h244", "Card 54x86mm", 162, 250, 13, 13, 15, 15, DYESUB_LANDSCAPE},
   { "Custom", NULL, 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
 };
@@ -787,8 +787,8 @@ LIST(dyesub_pagesize_list_t, cpx00_page_list, dyesub_pagesize_t, cpx00_page);
 
 static const dyesub_printsize_t cpx00_printsize[] =
 {
-  { "300x300", "w288h432", 1232, 1808},
-  { "300x300", "B7", 1100, 1456},
+  { "300x300", "Postcard", 1232, 1808},
+  { "300x300", "w253h337", 1100, 1456},
   { "300x300", "w155h244", 672, 1040},
   { "300x300", "Custom", 1232, 1808},
 };
@@ -803,12 +803,12 @@ static void cp10_printer_init_func(stp_vars_t *v)
 
 static void cpx00_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "w288h432") == 0 ? '\1' :
-		(strcmp(privdata.pagesize, "B7") == 0 ? '\2' :
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\1' :
+		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\2' :
 		(strcmp(privdata.pagesize, "w155h244") == 0 ? 
 			(strcmp(stp_get_driver(v),"canon-cp10") == 0 ?
 				'\0' : '\3' ) :
-		(strcmp(privdata.pagesize, "w288h576") == 0 ? '\4' :
+		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\4' :
 		 '\1' ))));
 
   stp_put16_be(0x4000, v);
@@ -869,10 +869,10 @@ static const char cpx00_adj_yellow[] =
 /* Canon CP-220 series */
 static const dyesub_pagesize_t cp220_page[] =
 {
-  { "w288h432", "Postcard 100x148mm", 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
-  { "B7", "CP_L 89x119mm", 264, 350, 13, 13, 15, 15, DYESUB_PORTRAIT},
+  { "Postcard", "Postcard 100x148mm", 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
+  { "w253h337", "CP_L 89x119mm", 264, 350, 13, 13, 15, 15, DYESUB_PORTRAIT},
   { "w155h244", "Card 54x86mm", 162, 250, 13, 13, 15, 15, DYESUB_LANDSCAPE},
-  { "w288h576", "Wide 100x200mm", 296, 580, 13, 13, 20, 20, DYESUB_PORTRAIT},
+  { "w283h566", "Wide 100x200mm", 296, 580, 13, 13, 20, 20, DYESUB_PORTRAIT},
   { "Custom", NULL, 296, 434, 13, 13, 16, 19, DYESUB_PORTRAIT},
 };
 
@@ -880,10 +880,10 @@ LIST(dyesub_pagesize_list_t, cp220_page_list, dyesub_pagesize_t, cp220_page);
 
 static const dyesub_printsize_t cp220_printsize[] =
 {
-  { "300x300", "w288h432", 1232, 1808},
-  { "300x300", "B7", 1100, 1456},
+  { "300x300", "Postcard", 1232, 1808},
+  { "300x300", "w253h337", 1100, 1456},
   { "300x300", "w155h244", 672, 1040},
-  { "300x300", "w288h576", 1232, 2416},
+  { "300x300", "w283h566", 1232, 2416},
   { "300x300", "Custom", 1232, 1808},
 };
 
@@ -892,10 +892,10 @@ LIST(dyesub_printsize_list_t, cp220_printsize_list, dyesub_printsize_t, cp220_pr
 /* Canon SELPHY CP790 */
 static void cp790_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "w288h432") == 0 ? '\0' :
-		(strcmp(privdata.pagesize, "B7") == 0 ? '\1' :
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? '\0' :
+		(strcmp(privdata.pagesize, "w253h337") == 0 ? '\1' :
 		(strcmp(privdata.pagesize, "w155h244") == 0 ? '\2' :
-		(strcmp(privdata.pagesize, "w288h576") == 0 ? '\3' : 
+		(strcmp(privdata.pagesize, "w283h566") == 0 ? '\3' : 
 		 '\0' ))));
 
   stp_put16_be(0x4000, v);
@@ -908,8 +908,8 @@ static void cp790_printer_init_func(stp_vars_t *v)
 /* Canon SELPHY ES series */
 static void es1_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "w288h432") == 0 ? 0x11 :
-	     (strcmp(privdata.pagesize, "B7") == 0 ? 0x12 :
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x11 :
+	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x12 :
 	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x13 : 0x11)));
 
   stp_put16_be(0x4000, v);
@@ -944,8 +944,8 @@ static void es1_plane_init_func(stp_vars_t *v)
 static void es2_printer_init_func(stp_vars_t *v)
 {
   char pg2 = 0x0;
-  char pg = (strcmp(privdata.pagesize, "w288h432") == 0 ? 0x1:
-	     (strcmp(privdata.pagesize, "B7") == 0 ? 0x2 :
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x1:
+	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x2 :
 	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x3 : 0x1)));
 
   if (pg == 0x03)
@@ -974,8 +974,8 @@ static void es2_plane_init_func(stp_vars_t *v)
 
 static void es3_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "w288h432") == 0 ? 0x1:
-	     (strcmp(privdata.pagesize, "B7") == 0 ? 0x2 :
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x1:
+	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x2 :
 	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x3 : 0x1)));
 
     /* We also have Pg and Ps  (Gold/Silver) papers on the ES3/30/40 */
@@ -995,8 +995,8 @@ static void es3_printer_end_func(stp_vars_t *v)
 
 static void es40_printer_init_func(stp_vars_t *v)
 {
-  char pg = (strcmp(privdata.pagesize, "w288h432") == 0 ? 0x0:
-	     (strcmp(privdata.pagesize, "B7") == 0 ? 0x1 :
+  char pg = (strcmp(privdata.pagesize, "Postcard") == 0 ? 0x0:
+	     (strcmp(privdata.pagesize, "w253h337") == 0 ? 0x1 :
 	      (strcmp(privdata.pagesize, "w155h244") == 0 ? 0x2 : 0x0)));
 
     /* We also have Pg and Ps  (Gold/Silver) papers on the ES3/30/40 */

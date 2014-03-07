@@ -1062,18 +1062,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Please note that if you are using one of these models with a 
        prior Gutenprint release, you will have to remove and re-create your 
-       printer queue after upgrading.  Additionally, the internal paper sizes
-       have changed to correct the aspect ratio, so if you have scripts that
-       directly reference the internal paper names, they will need updating:
-
-	Visible Name    old name     new name
-	-------------------------------------
-	Postcard        Postcard     w288h432  (standard 4x6")
-        CP_L            w253h337     B7        (standard 3.5x5")
-	Wide Postcard   w283h566     w288h576  (standard 4x8")
+       printer queue after upgrading.
 
        Newly added in this release:
 
+       Canon SELPHY CP790
        Canon SELPHY CP810
        Canon SELPHY CP900
 
@@ -1108,7 +1101,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP750
        Canon SELPHY CP760
        Canon SELPHY CP770
-       Canon SELPHY CP790
 
 	*1: We have not confirmed these printers function with the new
 	    backend, but they are presumed to work.
