@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gutenprint 20110308\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-02-15 11:20-0500\n"
+"POT-Creation-Date: 2014-03-07 07:49-0500\n"
 "PO-Revision-Date: 2011-12-20 11:15+0800\n"
 "Last-Translator: Wylmer Wang <wantinghard@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
@@ -1772,7 +1772,7 @@ msgstr ""
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr ""
 
-#: src/main/print-escp2.c:4413 src/main/print-olympus.c:4657
+#: src/main/print-escp2.c:4413 src/main/print-olympus.c:4668
 #: src/main/print-raw.c:237
 msgid "Print options not verified; cannot print.\n"
 msgstr ""
@@ -10473,5077 +10473,5109 @@ msgid "Epson Stylus NX530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4605
-msgid "Epson Stylus NX635"
+msgid "Epson Stylus NX630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4606
-msgid "Epson Stylus Photo PX650"
+msgid "Epson Stylus NX635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4607
-msgid "Epson Stylus Photo PX700W"
+msgid "Epson Stylus NX645"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4608
-msgid "Epson Stylus Photo PX710W"
+msgid "Epson Stylus Photo PX650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4609
-msgid "Epson Stylus Photo PX800FW"
+msgid "Epson Stylus Photo PX700W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4610
-msgid "Epson Stylus Photo PX810FW"
+msgid "Epson Stylus Photo PX710W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4611
-msgid "Epson Stylus S20"
+msgid "Epson Stylus Photo PX800FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4612
-msgid "Epson Stylus S21"
+msgid "Epson Stylus Photo PX810FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4613
-msgid "Epson Stylus S50"
+msgid "Epson Stylus S20"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4614
-msgid "Epson Stylus SX100"
+msgid "Epson Stylus S21"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4615
-msgid "Epson Stylus SX105"
+msgid "Epson Stylus S50"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4616
-msgid "Epson Stylus SX110"
+msgid "Epson Stylus SX100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4617
-msgid "Epson Stylus SX115"
+msgid "Epson Stylus SX105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4618
-msgid "Epson Stylus SX200"
+msgid "Epson Stylus SX110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4619
-msgid "Epson Stylus SX205"
+msgid "Epson Stylus SX115"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4620
-msgid "Epson Stylus SX210"
+msgid "Epson Stylus SX200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4621
-msgid "Epson Stylus SX215"
+msgid "Epson Stylus SX205"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4622
-msgid "Epson Stylus SX400"
+msgid "Epson Stylus SX210"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4623
-msgid "Epson Stylus SX405"
+msgid "Epson Stylus SX215"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4624
-msgid "Epson Stylus SX410"
+msgid "Epson Stylus SX400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4625
-msgid "Epson Stylus SX415"
+msgid "Epson Stylus SX405"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4626
-msgid "Epson Stylus SX420"
+msgid "Epson Stylus SX410"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4627
-msgid "Epson Stylus SX445W"
+msgid "Epson Stylus SX415"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4628
-msgid "Epson Stylus SX510W"
+msgid "Epson Stylus SX420"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4629
-msgid "Epson Stylus SX515"
+msgid "Epson Stylus SX445W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4630
-msgid "Epson Stylus SX525"
+msgid "Epson Stylus SX510W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4631
-msgid "Epson Stylus SX535FW"
+msgid "Epson Stylus SX515"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4632
-msgid "Epson Stylus SX600FW"
+msgid "Epson Stylus SX525"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4633
-msgid "Epson Stylus SX610FW"
+msgid "Epson Stylus SX535FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4634
-msgid "Epson Stylus SX615"
+msgid "Epson Stylus SX600FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4635
-msgid "Epson Stylus SX650"
+msgid "Epson Stylus SX610FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4636
-msgid "Epson Stylus T13"
+msgid "Epson Stylus SX615"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4637
-msgid "Epson Stylus T20"
+msgid "Epson Stylus SX630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4638
-msgid "Epson Stylus T21"
+msgid "Epson Stylus SX635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4639
-msgid "Epson Stylus T22"
+msgid "Epson Stylus SX645"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4640
-msgid "Epson Stylus T22E"
+msgid "Epson Stylus SX650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4641
-msgid "Epson Stylus T26"
+msgid "Epson Stylus T13"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4642
-msgid "Epson Stylus T30"
+msgid "Epson Stylus T20"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4643
-msgid "Epson Stylus T40W"
+msgid "Epson Stylus T21"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4644
-msgid "Epson Stylus T50"
+msgid "Epson Stylus T22"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4645
-msgid "Epson Stylus T59"
+msgid "Epson Stylus T22E"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4646
-msgid "Epson Stylus T60"
+msgid "Epson Stylus T26"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4647
-msgid "Epson Stylus TX100"
+msgid "Epson Stylus T30"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4648
-msgid "Epson Stylus TX101"
+msgid "Epson Stylus T40W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4649
-msgid "Epson Stylus TX102"
+msgid "Epson Stylus T50"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4650
-msgid "Epson Stylus TX103"
+msgid "Epson Stylus T59"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4651
-msgid "Epson Stylus TX104"
+msgid "Epson Stylus T60"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4652
-msgid "Epson Stylus TX105"
+msgid "Epson Stylus TX100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4653
-msgid "Epson Stylus TX106"
+msgid "Epson Stylus TX101"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4654
-msgid "Epson Stylus TX109"
+msgid "Epson Stylus TX102"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4655
-msgid "Epson Stylus TX110"
+msgid "Epson Stylus TX103"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4656
-msgid "Epson Stylus TX125"
+msgid "Epson Stylus TX104"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4657
-msgid "Epson Stylus TX200"
+msgid "Epson Stylus TX105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4658
-msgid "Epson Stylus TX210"
+msgid "Epson Stylus TX106"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4659
-msgid "Epson Stylus TX300F"
+msgid "Epson Stylus TX109"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4660
-msgid "Epson Stylus TX400"
+msgid "Epson Stylus TX110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4661
-msgid "Epson Stylus TX410"
+msgid "Epson Stylus TX125"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4662
-msgid "Epson Stylus TX420"
+msgid "Epson Stylus TX200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4663
-msgid "Epson Stylus TX510FN"
+msgid "Epson Stylus TX210"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4664
-msgid "Epson Stylus TX550W"
+msgid "Epson Stylus TX300F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4665
-msgid "Epson Stylus TX610FW"
+msgid "Epson Stylus TX400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4666
-msgid "Epson Stylus TX615"
+msgid "Epson Stylus TX410"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4667
-msgid "Epson Stylus TX650"
+msgid "Epson Stylus TX420"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4668
-msgid "Epson Stylus TX659"
+msgid "Epson Stylus TX510FN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4669
-msgid "Epson PictureMate"
+msgid "Epson Stylus TX550W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4670
-msgid "Epson PictureMate Dash"
+msgid "Epson Stylus TX610FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4671
-msgid "Epson PictureMate Deluxe"
+msgid "Epson Stylus TX615"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4672
-msgid "Epson PictureMate Flash"
+msgid "Epson Stylus TX630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4673
-msgid "Epson PictureMate Pal"
+msgid "Epson Stylus TX635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4674
-msgid "Epson PictureMate Snap"
+msgid "Epson Stylus TX645"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4675
-msgid "Epson PictureMate 100"
+msgid "Epson Stylus TX650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4676
-msgid "Epson PictureMate 200"
+msgid "Epson Stylus TX659"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4677
-msgid "Epson PictureMate 210"
+msgid "Epson PictureMate"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4678
-msgid "Epson PictureMate 215"
+msgid "Epson PictureMate Dash"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4679
-msgid "Epson PictureMate 240"
+msgid "Epson PictureMate Deluxe"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4680
-msgid "Epson PictureMate 250"
+msgid "Epson PictureMate Flash"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4681
-msgid "Epson PictureMate 260"
+msgid "Epson PictureMate Pal"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4682
-msgid "Epson PictureMate 270"
+msgid "Epson PictureMate Snap"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4683
-msgid "Epson PictureMate 280"
+msgid "Epson PictureMate 100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4684
-msgid "Epson PictureMate 290"
+msgid "Epson PictureMate 200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4685
-msgid "Epson PictureMate 500"
+msgid "Epson PictureMate 210"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4686
-msgid "Epson PictureMate 2005"
+msgid "Epson PictureMate 215"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4687
-msgid "Epson WorkForce 30"
+msgid "Epson PictureMate 240"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4688
-msgid "Epson WorkForce 40"
+msgid "Epson PictureMate 250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4689
-msgid "Epson WorkForce 310"
+msgid "Epson PictureMate 260"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4690
-msgid "Epson WorkForce 315"
+msgid "Epson PictureMate 270"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4691
-msgid "Epson WorkForce 500"
+msgid "Epson PictureMate 280"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4692
-msgid "Epson WorkForce 545"
+msgid "Epson PictureMate 290"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4693
-msgid "Epson WorkForce 600"
+msgid "Epson PictureMate 500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4694
-msgid "Epson WorkForce 610"
+msgid "Epson PictureMate 2005"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4695
-msgid "Epson WorkForce 615"
+msgid "Epson WorkForce 30"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4696
-msgid "Epson WorkForce 630"
+msgid "Epson WorkForce 40"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4697
-msgid "Epson WorkForce 635"
+msgid "Epson WorkForce 310"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4698
-msgid "Epson WorkForce 645"
+msgid "Epson WorkForce 315"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4699
-msgid "Epson WorkForce 1100"
+msgid "Epson WorkForce 500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4700
-msgid "Epson WF-7010 Series"
+msgid "Epson WorkForce 545"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4701
-msgid "Epson WF-7011 Series"
+msgid "Epson WorkForce 600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4702
-msgid "Epson WF-7015 Series"
+msgid "Epson WorkForce 610"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4703
-msgid "Epson WF-7018 Series"
+msgid "Epson WorkForce 615"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4704
-msgid "Epson WF-7510 Series"
+msgid "Epson WorkForce 630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4705
-msgid "Epson WF-7511 Series"
+msgid "Epson WorkForce 635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4706
-msgid "Epson WF-7515 Series"
+msgid "Epson WorkForce 645"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4707
-msgid "Epson WF-7520 Series"
+msgid "Epson WorkForce 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4708
-msgid "Epson WF-7521 Series"
+msgid "Epson WF-7010 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4709
-msgid "Epson WF-7525 Series"
+msgid "Epson WF-7011 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4710
-msgid "Epson CL 700"
+msgid "Epson WF-7015 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4711
-msgid "Epson CL 750"
+msgid "Epson WF-7018 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4712
-msgid "Epson CL 760"
+msgid "Epson WF-7510 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4713
-msgid "Epson E 100"
+msgid "Epson WF-7511 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4714
-msgid "Epson E 150"
+msgid "Epson WF-7515 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4715
-msgid "Epson E 200"
+msgid "Epson WF-7520 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4716
-msgid "Epson E 300"
+msgid "Epson WF-7521 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4717
-msgid "Epson E 500"
+msgid "Epson WF-7525 Series"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4718
-msgid "Epson E 520"
+msgid "Epson CL 700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4719
-msgid "Epson E 700"
+msgid "Epson CL 750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4720
-msgid "Epson E 720"
+msgid "Epson CL 760"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4721
-msgid "Epson EM 900C"
+msgid "Epson E 100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4722
-msgid "Epson EM 930C"
+msgid "Epson E 150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4723
-msgid "Epson EP 302"
+msgid "Epson E 200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4724
-msgid "Epson EP 702A"
+msgid "Epson E 300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4725
-msgid "Epson EP 801A"
+msgid "Epson E 500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4726
-msgid "Epson EP 901A"
+msgid "Epson E 520"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4727
-msgid "Epson EP 901F"
+msgid "Epson E 700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4728
-msgid "Epson MC 2000"
+msgid "Epson E 720"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4729
-msgid "Epson MC 5000"
+msgid "Epson EM 900C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4730
-msgid "Epson MC 7000"
+msgid "Epson EM 930C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4731
-msgid "Epson MC 9000"
+msgid "Epson EP 302"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4732
-msgid "Epson MC 10000"
+msgid "Epson EP 702A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4733
-msgid "Epson ME 300"
+msgid "Epson EP 801A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4734
-msgid "Epson ME 320"
+msgid "Epson EP 901A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4735
-msgid "Epson ME Office 70"
+msgid "Epson EP 901F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4736
-msgid "Epson ME Office 80W"
+msgid "Epson MC 2000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4737
-msgid "Epson ME Office 360"
+msgid "Epson MC 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4738
-msgid "Epson ME Office 600F"
+msgid "Epson MC 7000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4739
-msgid "Epson ME Office 620F"
+msgid "Epson MC 9000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4740
-msgid "Epson ME Office 700FW"
+msgid "Epson MC 10000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4741
-msgid "Epson ME Office 940FW"
+msgid "Epson ME 300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4742
-msgid "Epson ME Office 1100"
+msgid "Epson ME 320"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4743
-msgid "Epson MJ 930C"
+msgid "Epson ME Office 70"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4744
-msgid "Epson MJ 5100C"
+msgid "Epson ME Office 80W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4745
-msgid "Epson MJ 6000C"
+msgid "Epson ME Office 360"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4746
-msgid "Epson MJ 8000C"
+msgid "Epson ME Office 600F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4747
-msgid "Epson PM 670C"
+msgid "Epson ME Office 620F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4748
-msgid "Epson PM 700C"
+msgid "Epson ME Office 700FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4749
-msgid "Epson PM 730C"
+msgid "Epson ME Office 940FW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4750
-msgid "Epson PM 740C"
+msgid "Epson ME Office 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4751
-msgid "Epson PM 750C"
+msgid "Epson MJ 930C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4752
-msgid "Epson PM 760C"
+msgid "Epson MJ 5100C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4753
-msgid "Epson PM 770C"
+msgid "Epson MJ 6000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4754
-msgid "Epson PM 780C"
+msgid "Epson MJ 8000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4755
-msgid "Epson PM 790PT"
+msgid "Epson PM 670C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4756
-msgid "Epson PM 800C"
+msgid "Epson PM 700C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4757
-msgid "Epson PM 850PT"
+msgid "Epson PM 730C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4758
-msgid "Epson PM 870C"
+msgid "Epson PM 740C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4759
-msgid "Epson PM 880C"
+msgid "Epson PM 750C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4760
-msgid "Epson PM 930C"
+msgid "Epson PM 760C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4761
-msgid "Epson PM 940C"
+msgid "Epson PM 770C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4762
-msgid "Epson PM 950C"
+msgid "Epson PM 780C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4763
-msgid "Epson PM 970C"
+msgid "Epson PM 790PT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4764
-msgid "Epson PM 980C"
+msgid "Epson PM 800C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4765
-msgid "Epson PM 2000C"
+msgid "Epson PM 850PT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4766
-msgid "Epson PM 2200C"
+msgid "Epson PM 870C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4767
-msgid "Epson PM 3000C"
+msgid "Epson PM 880C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4768
-msgid "Epson PM 3300C"
+msgid "Epson PM 930C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4769
-msgid "Epson PM 3500C"
+msgid "Epson PM 940C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4770
-msgid "Epson PM 3700C"
+msgid "Epson PM 950C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4771
-msgid "Epson PM 4000PX"
+msgid "Epson PM 970C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4772
-msgid "Epson PM 5000C"
+msgid "Epson PM 980C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4773
-msgid "Epson PM 7000C"
+msgid "Epson PM 2000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4774
-msgid "Epson PM 9000C"
+msgid "Epson PM 2200C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4775
-msgid "Epson PM 10000"
+msgid "Epson PM 3000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4776
-msgid "Epson PM A650"
+msgid "Epson PM 3300C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4777
-msgid "Epson PM A750"
+msgid "Epson PM 3500C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4778
-msgid "Epson PM A820"
+msgid "Epson PM 3700C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4779
-msgid "Epson PM A890"
+msgid "Epson PM 4000PX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4780
-msgid "Epson PM A900"
+msgid "Epson PM 5000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4781
-msgid "Epson PM A940"
+msgid "Epson PM 7000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4782
-msgid "Epson PM A950"
+msgid "Epson PM 9000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4783
-msgid "Epson PM D600"
+msgid "Epson PM 10000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4784
-msgid "Epson PM D750"
+msgid "Epson PM A650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4785
-msgid "Epson PM D770"
+msgid "Epson PM A750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4786
-msgid "Epson PM D800"
+msgid "Epson PM A820"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4787
-msgid "Epson PM D870"
+msgid "Epson PM A890"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4788
-msgid "Epson PM D1000"
+msgid "Epson PM A900"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4789
-msgid "Epson PM G700"
+msgid "Epson PM A940"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4790
-msgid "Epson PM G720"
+msgid "Epson PM A950"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4791
-msgid "Epson PM G730"
+msgid "Epson PM D600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4792
-msgid "Epson PM G800"
+msgid "Epson PM D750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4793
-msgid "Epson PM G820"
+msgid "Epson PM D770"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4794
-msgid "Epson PM G850"
+msgid "Epson PM D800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4795
-msgid "Epson PM T960"
+msgid "Epson PM D870"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4796
-msgid "Epson PM G4500"
+msgid "Epson PM D1000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4797
-msgid "Epson PX A650"
+msgid "Epson PM G700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4798
-msgid "Epson Offirio PX B300"
+msgid "Epson PM G720"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4799
-msgid "Epson Offirio PX B500"
+msgid "Epson PM G730"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4800
-msgid "Epson PX 7V"
+msgid "Epson PM G800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4801
-msgid "Epson PX 101"
+msgid "Epson PM G820"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4802
-msgid "Epson PX 201"
+msgid "Epson PM G850"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4803
-msgid "Epson PX 204"
+msgid "Epson PM T960"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4804
-msgid "Epson PX 401A"
+msgid "Epson PM G4500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4805
-msgid "Epson PX 504A"
+msgid "Epson PX A650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4806
-msgid "Epson PX 601F"
+msgid "Epson Offirio PX B300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4807
-msgid "Epson PX 1001"
+msgid "Epson Offirio PX B500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4808
-msgid "Epson PX 1200"
+msgid "Epson PX 7V"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4809
-msgid "Epson PX 1600F"
+msgid "Epson PX 101"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4810
-msgid "Epson PX 1700F"
+msgid "Epson PX 201"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4811
-msgid "Epson PX G900"
+msgid "Epson PX 204"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4812
-msgid "Epson PX G920"
+msgid "Epson PX 401A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4813
-msgid "Epson PX G5000"
+msgid "Epson PX 504A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4814
-msgid "Epson PX G5300"
+msgid "Epson PX 601F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4815
-msgid "Epson PX V500"
+msgid "Epson PX 1001"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4816
-msgid "Epson PX V600"
+msgid "Epson PX 1200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4817
-msgid "Epson PX V630"
+msgid "Epson PX 1600F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4818
-msgid "Epson PX V780"
+msgid "Epson PX 1700F"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4819
-msgid "Epson PX 5500"
+msgid "Epson PX G900"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4820
-msgid "Epson PX G5600"
+msgid "Epson PX G920"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4821
-msgid "Epson PX 7000"
+msgid "Epson PX G5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4822
-msgid "Epson PX 9000"
+msgid "Epson PX G5300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4823
-msgid "Apollo P-2100"
+msgid "Epson PX V500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4824
-msgid "Apollo P-2150"
+msgid "Epson PX V600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4825
-msgid "Apollo P-2200"
+msgid "Epson PX V630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4826
-msgid "Apollo P-2250"
+msgid "Epson PX V780"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4827
-msgid "Apollo P-2500"
+msgid "Epson PX 5500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4828
-msgid "Apollo P-2550"
+msgid "Epson PX G5600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4829
-msgid "Apollo P-2600"
+msgid "Epson PX 7000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4830
-msgid "Apollo P-2650"
+msgid "Epson PX 9000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4831
-msgid "Apple Color StyleWriter 4100"
+msgid "Apollo P-2100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4832
-msgid "Apple Color StyleWriter 4500"
+msgid "Apollo P-2150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4833
-msgid "Apple Color StyleWriter 6500"
+msgid "Apollo P-2200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4834
-msgid "Apple LaserWriter Select 360"
+msgid "Apollo P-2250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4835
-msgid "Brother DCP-1200"
+msgid "Apollo P-2500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4836
-msgid "Brother DCP-8045D"
+msgid "Apollo P-2550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4837
-msgid "Brother HL-1040"
+msgid "Apollo P-2600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4838
-msgid "Brother HL-1050"
+msgid "Apollo P-2650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4839
-msgid "Brother HL-1060"
+msgid "Apple Color StyleWriter 4100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4840
-msgid "Brother HL-1070"
+msgid "Apple Color StyleWriter 4500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4841
-msgid "Brother HL-10V"
+msgid "Apple Color StyleWriter 6500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4842
-msgid "Brother HL-10h"
+msgid "Apple LaserWriter Select 360"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4843
-msgid "Brother HL-1240"
+msgid "Brother DCP-1200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4844
-msgid "Brother HL-1250"
+msgid "Brother DCP-8045D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4845
-msgid "Brother HL-1260"
+msgid "Brother HL-1040"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4846
-msgid "Brother HL-1270N"
+msgid "Brother HL-1050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4847
-msgid "Brother HL-1430"
+msgid "Brother HL-1060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4848
-msgid "Brother HL-1440"
+msgid "Brother HL-1070"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4849
-msgid "Brother HL-1450"
+msgid "Brother HL-10V"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4850
-msgid "Brother HL-1470N"
+msgid "Brother HL-10h"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4851
-msgid "Brother HL-1650"
+msgid "Brother HL-1240"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4852
-msgid "Brother HL-1660e"
+msgid "Brother HL-1250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4853
-msgid "Brother HL-1670N"
+msgid "Brother HL-1260"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4854
-msgid "Brother HL-1850"
+msgid "Brother HL-1270N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4855
-msgid "Brother HL-1870N"
+msgid "Brother HL-1430"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4856
-msgid "Brother HL-2030"
+msgid "Brother HL-1440"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4857
-msgid "Brother HL-2035"
+msgid "Brother HL-1450"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4858
-msgid "Brother HL-2060"
+msgid "Brother HL-1470N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4859
-msgid "Brother HL-2460"
+msgid "Brother HL-1650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4860
-msgid "Brother HL-2460N"
+msgid "Brother HL-1660e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4861
-msgid "Brother HL-4Ve"
+msgid "Brother HL-1670N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4862
-msgid "Brother HL-5030"
+msgid "Brother HL-1850"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4863
-msgid "Brother HL-5040"
+msgid "Brother HL-1870N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4864
-msgid "Brother HL-5050"
+msgid "Brother HL-2030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4865
-msgid "Brother HL-5070N"
+msgid "Brother HL-2035"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4866
-msgid "Brother HL-5140"
+msgid "Brother HL-2060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4867
-msgid "Brother HL-5150D"
+msgid "Brother HL-2460"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4868
-msgid "Brother HL-5170DN"
+msgid "Brother HL-2460N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4869
-msgid "Brother HL-630"
+msgid "Brother HL-4Ve"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4870
-msgid "Brother HL-660"
+msgid "Brother HL-5030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4871
-msgid "Brother HL-7050"
+msgid "Brother HL-5040"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4872
-msgid "Brother HL-7050N"
+msgid "Brother HL-5050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4873
-msgid "Brother HL-760"
+msgid "Brother HL-5070N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4874
-msgid "Brother HL-960"
+msgid "Brother HL-5140"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4875
-msgid "Brother MFC-6550MC"
+msgid "Brother HL-5150D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4876
-msgid "Brother MFC-8300"
+msgid "Brother HL-5170DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4877
-msgid "Brother MFC-9500"
+msgid "Brother HL-630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4878
-msgid "Brother MFC-9600"
+msgid "Brother HL-660"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4879
-msgid "Canon GP 335"
+msgid "Brother HL-7050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4880
-msgid "Canon LBP-4sx"
+msgid "Brother HL-7050N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4881
-msgid "Canon LBP-430"
+msgid "Brother HL-760"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4882
-msgid "Canon LBP-1000"
+msgid "Brother HL-960"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4883
-msgid "Canon LBP-1260"
+msgid "Brother MFC-6550MC"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4884
-msgid "Canon LBP-1760"
+msgid "Brother MFC-8300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4885
-msgid "Canon LBP-3360"
+msgid "Brother MFC-9500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4886
-msgid "Canon imageRunner 330s"
+msgid "Brother MFC-9600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4887
-msgid "Citizen ProJet II"
+msgid "Canon GP 335"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4888
-msgid "DEC 1800"
+msgid "Canon LBP-4sx"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4889
-msgid "DEC LN17"
+msgid "Canon LBP-430"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4890
-msgid "Epson ActionLaser 1100"
+msgid "Canon LBP-1000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4891
-msgid "Epson ActionLaser II"
+msgid "Canon LBP-1260"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4892
-msgid "Epson AL-C2000"
+msgid "Canon LBP-1760"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4893
-msgid "Epson AL-C2000 PS3"
+msgid "Canon LBP-3360"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4894
-msgid "Epson AL-C8500"
+msgid "Canon imageRunner 330s"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4895
-msgid "Epson AL-C8500PS"
+msgid "Citizen ProJet II"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4896
-msgid "Epson AL-C8600"
+msgid "DEC 1800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4897
-msgid "Epson AL-C8600 PS3"
+msgid "DEC LN17"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4898
-msgid "Epson EPL-5200"
+msgid "Epson ActionLaser 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4899
-msgid "Epson EPL-5200+"
+msgid "Epson ActionLaser II"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4900
-msgid "Epson EPL-5700"
+msgid "Epson AL-C2000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4901
-msgid "Epson EPL-5700PS"
+msgid "Epson AL-C2000 PS3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4902
-msgid "Epson EPL-5800"
+msgid "Epson AL-C8500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4903
-msgid "Epson EPL-5800PS"
+msgid "Epson AL-C8500PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4904
-msgid "Epson EPL-5900"
+msgid "Epson AL-C8600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4905
-msgid "Epson EPL-5900 PS3"
+msgid "Epson AL-C8600 PS3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4906
-msgid "Epson EPL-6100"
+msgid "Epson EPL-5200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4907
-msgid "Epson EPL-6100 PS3"
+msgid "Epson EPL-5200+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4908
-msgid "Epson EPL-7100"
+msgid "Epson EPL-5700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4909
-msgid "Epson EPL-N2050"
+msgid "Epson EPL-5700PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4910
-msgid "Epson EPL-N2050+"
+msgid "Epson EPL-5800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4911
-msgid "Epson EPL-N2050PS"
+msgid "Epson EPL-5800PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4912
-msgid "Epson EPL-N2050PS+"
+msgid "Epson EPL-5900"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4913
-msgid "Epson EPL-N2120"
+msgid "Epson EPL-5900 PS3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4914
-msgid "Epson EPL-N2500"
+msgid "Epson EPL-6100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4915
-msgid "Epson EPL-N2500 PS3"
+msgid "Epson EPL-6100 PS3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4916
-msgid "Epson EPL-N2750"
+msgid "Epson EPL-7100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4917
-msgid "Epson EPL-N2750PS"
+msgid "Epson EPL-N2050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4918
-msgid "Fujitsu PrintPartner 10V"
+msgid "Epson EPL-N2050+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4919
-msgid "Fujitsu PrintPartner 16DV"
+msgid "Epson EPL-N2050PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4920
-msgid "Fujitsu PrintPartner 20W"
+msgid "Epson EPL-N2050PS+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4921
-msgid "Fujitsu PrintPartner 8000"
+msgid "Epson EPL-N2120"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4922
-msgid "Generic PCL 4 Printer"
+msgid "Epson EPL-N2500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4923
-msgid "Generic PCL 4 LF Printer"
+msgid "Epson EPL-N2500 PS3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4924
-msgid "Generic PCL 5 Printer"
+msgid "Epson EPL-N2750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4925
-msgid "Generic PCL 5 LF Printer"
+msgid "Epson EPL-N2750PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4926
-msgid "Generic PCL 5c Printer"
+msgid "Fujitsu PrintPartner 10V"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4927
-msgid "Generic PCL 5c LF Printer"
+msgid "Fujitsu PrintPartner 16DV"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4928
-msgid "Generic PCL 5e Printer"
+msgid "Fujitsu PrintPartner 20W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4929
-msgid "Generic PCL 5e LF Printer"
+msgid "Fujitsu PrintPartner 8000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4930
-msgid "Generic PCL 6/PCL XL Printer"
+msgid "Generic PCL 4 Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4931
-msgid "Generic PCL 6/PCL XL LF Printer"
+msgid "Generic PCL 4 LF Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4932
-msgid "Gestetner 10512"
+msgid "Generic PCL 5 Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4933
-msgid "Gestetner 2212"
+msgid "Generic PCL 5 LF Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4934
-msgid "Gestetner 2712"
+msgid "Generic PCL 5c Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4935
-msgid "Gestetner 3212"
+msgid "Generic PCL 5c LF Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4936
-msgid "Gestetner 3502"
+msgid "Generic PCL 5e Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4937
-msgid "Gestetner 3532/4235g"
+msgid "Generic PCL 5e LF Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4938
-msgid "Gestetner 4502"
+msgid "Generic PCL 6/PCL XL Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4939
-msgid "Gestetner 4532/4245g"
+msgid "Generic PCL 6/PCL XL LF Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4940
-msgid "Gestetner 6002"
+msgid "Gestetner 10512"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4941
-msgid "Gestetner 7502"
+msgid "Gestetner 2212"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4942
-msgid "Gestetner 9002"
+msgid "Gestetner 2712"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4943
-msgid "Gestetner DSm415"
+msgid "Gestetner 3212"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4944
-msgid "Gestetner DSm615"
+msgid "Gestetner 3502"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4945
-msgid "Gestetner DSm616"
+msgid "Gestetner 3532/4235g"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4946
-msgid "Gestetner DSm618"
+msgid "Gestetner 4502"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4947
-msgid "Gestetner DSm618d"
+msgid "Gestetner 4532/4245g"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4948
-msgid "Gestetner DSm620"
+msgid "Gestetner 6002"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4949
-msgid "Gestetner DSm620d"
+msgid "Gestetner 7502"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4950
-msgid "Gestetner DSm622"
+msgid "Gestetner 9002"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4951
-msgid "Gestetner DSm627"
+msgid "Gestetner DSm415"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4952
-msgid "Gestetner DSm635/635G"
+msgid "Gestetner DSm615"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4953
-msgid "Gestetner DSm645/645G"
+msgid "Gestetner DSm616"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4954
-msgid "Gestetner DSm651"
+msgid "Gestetner DSm618"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4955
-msgid "Gestetner DSm660"
+msgid "Gestetner DSm618d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4956
-msgid "Gestetner DSm675"
+msgid "Gestetner DSm620"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4957
-msgid "Gestetner DSm725"
+msgid "Gestetner DSm620d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4958
-msgid "Gestetner DSm730"
+msgid "Gestetner DSm622"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4959
-msgid "Gestetner DSm735/735G"
+msgid "Gestetner DSm627"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4960
-msgid "Gestetner DSm745/745G"
+msgid "Gestetner DSm635/635G"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4961
-msgid "Gestetner MP1100/DSm7110"
+msgid "Gestetner DSm645/645G"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4962
-msgid "Gestetner MP1350/DSm7135"
+msgid "Gestetner DSm651"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4963
-msgid "Gestetner MP1600/DSm716"
+msgid "Gestetner DSm660"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4964
-msgid "Gestetner MP2000/DSm721d"
+msgid "Gestetner DSm675"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4965
-msgid "Gestetner MP2500/DSm625"
+msgid "Gestetner DSm725"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4966
-msgid "Gestetner MP3500/DSm735e"
+msgid "Gestetner DSm730"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4967
-msgid "Gestetner MP4500/DSm745e"
+msgid "Gestetner DSm735/735G"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4968
-msgid "Gestetner MP5500/DSm755"
+msgid "Gestetner DSm745/745G"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4969
-msgid "Gestetner MP6500/DSm765"
+msgid "Gestetner MP1100/DSm7110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4970
-msgid "Gestetner MP7500/DSm775"
+msgid "Gestetner MP1350/DSm7135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4971
-msgid "Gestetner MP9000/DSm790"
+msgid "Gestetner MP1600/DSm716"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4972
-msgid "Gestetner MP 161/DSm416"
+msgid "Gestetner MP2000/DSm721d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4973
-msgid "Gestetner MP 2510/DSm725e"
+msgid "Gestetner MP2500/DSm625"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4974
-msgid "Gestetner MP 2550"
+msgid "Gestetner MP3500/DSm735e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4975
-msgid "Gestetner MP 2550B"
+msgid "Gestetner MP4500/DSm745e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4976
-msgid "Gestetner MP 3010/DSm730e"
+msgid "Gestetner MP5500/DSm755"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4977
-msgid "Gestetner MP 3350"
+msgid "Gestetner MP6500/DSm765"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4978
-msgid "Gestetner MP 3350B"
+msgid "Gestetner MP7500/DSm775"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4979
-msgid "Gestetner MP 4000"
+msgid "Gestetner MP9000/DSm790"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4980
-msgid "Gestetner MP 4000B"
+msgid "Gestetner MP 161/DSm416"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4981
-msgid "Gestetner MP 5000"
+msgid "Gestetner MP 2510/DSm725e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4982
-msgid "Gestetner MP 5000B"
+msgid "Gestetner MP 2550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4983
-msgid "HP Business Inkjet 2200"
+msgid "Gestetner MP 2550B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4984
-msgid "HP Business Inkjet 2230"
+msgid "Gestetner MP 3010/DSm730e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4985
-msgid "HP Business Inkjet 2250"
+msgid "Gestetner MP 3350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4986
-msgid "HP Business Inkjet 2250TN"
+msgid "Gestetner MP 3350B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4987
-msgid "HP Business Inkjet 2280"
+msgid "Gestetner MP 4000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4988
-msgid "HP Color Inkjet Printer CP1160"
+msgid "Gestetner MP 4000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4989
-msgid "HP Color Inkjet Printer CP1700"
+msgid "Gestetner MP 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4990
-msgid "HP Color LaserJet 2500"
+msgid "Gestetner MP 5000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4991
-msgid "HP Color LaserJet 4500"
+msgid "HP Business Inkjet 2200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4992
-msgid "HP Color LaserJet 4550"
+msgid "HP Business Inkjet 2230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4993
-msgid "HP Color LaserJet 4600"
+msgid "HP Business Inkjet 2250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4994
-msgid "HP Color LaserJet 5"
+msgid "HP Business Inkjet 2250TN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4995
-msgid "HP Color LaserJet 5000"
+msgid "HP Business Inkjet 2280"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4996
-msgid "HP Color LaserJet 5500"
+msgid "HP Color Inkjet Printer CP1160"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4997
-msgid "HP Color LaserJet 8550GN"
+msgid "HP Color Inkjet Printer CP1700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4998
-msgid "HP DesignJet 230"
+msgid "HP Color LaserJet 2500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:4999
-msgid "HP DesignJet 250C"
+msgid "HP Color LaserJet 4500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5000
-msgid "HP DesignJet 430"
+msgid "HP Color LaserJet 4550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5001
-msgid "HP DesignJet 450C"
+msgid "HP Color LaserJet 4600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5002
-msgid "HP DesignJet 455CA"
+msgid "HP Color LaserJet 5"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5003
-msgid "HP DesignJet 488CA"
+msgid "HP Color LaserJet 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5004
-msgid "HP DesignJet 700"
+msgid "HP Color LaserJet 5500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5005
-msgid "HP DesignJet 750C Plus"
+msgid "HP Color LaserJet 8550GN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5006
-msgid "HP DesignJet 750C"
+msgid "HP DesignJet 230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5007
-msgid "HP DesignJet 2500CP"
+msgid "HP DesignJet 250C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5008
-msgid "HP DesignJet 3500CP"
+msgid "HP DesignJet 430"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5009
-msgid "HP DesignJet ColorPro CAD"
+msgid "HP DesignJet 450C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5010
-msgid "HP DeskJet 400"
+msgid "HP DesignJet 455CA"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5011
-msgid "HP DeskJet 420C"
+msgid "HP DesignJet 488CA"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5012
-msgid "HP DeskJet 450"
+msgid "HP DesignJet 700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5013
-msgid "HP DeskJet 500"
+msgid "HP DesignJet 750C Plus"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5014
-msgid "HP DeskJet 500C"
+msgid "HP DesignJet 750C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5015
-msgid "HP DeskJet 505J Plus"
+msgid "HP DesignJet 2500CP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5016
-msgid "HP DeskJet 510"
+msgid "HP DesignJet 3500CP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5017
-msgid "HP DeskJet 520"
+msgid "HP DesignJet ColorPro CAD"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5018
-msgid "HP DeskJet 540C"
+msgid "HP DeskJet 400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5019
-msgid "HP DeskJet 550C"
+msgid "HP DeskJet 420C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5020
-msgid "HP DeskJet 5550"
+msgid "HP DeskJet 450"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5021
-msgid "HP DeskJet 5551"
+msgid "HP DeskJet 500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5022
-msgid "HP DeskJet 560C"
+msgid "HP DeskJet 500C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5023
-msgid "HP DeskJet 600"
+msgid "HP DeskJet 505J Plus"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5024
-msgid "HP DeskJet 600C"
+msgid "HP DeskJet 510"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5025
-msgid "HP DeskJet 610C"
+msgid "HP DeskJet 520"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5026
-msgid "HP DeskJet 610CL"
+msgid "HP DeskJet 540C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5027
-msgid "HP DeskJet 6122"
+msgid "HP DeskJet 550C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5028
-msgid "HP DeskJet 6127"
+msgid "HP DeskJet 5550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5029
-msgid "HP DeskJet 612C"
+msgid "HP DeskJet 5551"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5030
-msgid "HP DeskJet 640C"
+msgid "HP DeskJet 560C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5031
-msgid "HP DeskJet 648C"
+msgid "HP DeskJet 600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5032
-msgid "HP DeskJet 660C"
+msgid "HP DeskJet 600C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5033
-msgid "HP DeskJet 670C"
+msgid "HP DeskJet 610C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5034
-msgid "HP DeskJet 670TV"
+msgid "HP DeskJet 610CL"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5035
-msgid "HP DeskJet 672C"
+msgid "HP DeskJet 6122"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5036
-msgid "HP DeskJet 680C"
+msgid "HP DeskJet 6127"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5037
-msgid "HP DeskJet 682C"
+msgid "HP DeskJet 612C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5038
-msgid "HP DeskJet 690C"
+msgid "HP DeskJet 640C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5039
-msgid "HP DeskJet 692C"
+msgid "HP DeskJet 648C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5040
-msgid "HP DeskJet 693C"
+msgid "HP DeskJet 660C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5041
-msgid "HP DeskJet 694C"
+msgid "HP DeskJet 670C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5042
-msgid "HP DeskJet 695C"
+msgid "HP DeskJet 670TV"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5043
-msgid "HP DeskJet 697C"
+msgid "HP DeskJet 672C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5044
-msgid "HP DeskJet 810C"
+msgid "HP DeskJet 680C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5045
-msgid "HP DeskJet 812C"
+msgid "HP DeskJet 682C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5046
-msgid "HP DeskJet 815C"
+msgid "HP DeskJet 690C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5047
-msgid "HP DeskJet 816C"
+msgid "HP DeskJet 692C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5048
-msgid "HP DeskJet 825C"
+msgid "HP DeskJet 693C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5049
-msgid "HP DeskJet 830C"
+msgid "HP DeskJet 694C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5050
-msgid "HP DeskJet 832C"
+msgid "HP DeskJet 695C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5051
-msgid "HP DeskJet 840C"
+msgid "HP DeskJet 697C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5052
-msgid "HP DeskJet 841C"
+msgid "HP DeskJet 810C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5053
-msgid "HP DeskJet 842C"
+msgid "HP DeskJet 812C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5054
-msgid "HP DeskJet 843C"
+msgid "HP DeskJet 815C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5055
-msgid "HP DeskJet 845C"
+msgid "HP DeskJet 816C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5056
-msgid "HP DeskJet 850C"
+msgid "HP DeskJet 825C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5057
-msgid "HP DeskJet 855C"
+msgid "HP DeskJet 830C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5058
-msgid "HP DeskJet 870C"
+msgid "HP DeskJet 832C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5059
-msgid "HP DeskJet 880C"
+msgid "HP DeskJet 840C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5060
-msgid "HP DeskJet 882C"
+msgid "HP DeskJet 841C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5061
-msgid "HP DeskJet 890C"
+msgid "HP DeskJet 842C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5062
-msgid "HP DeskJet 895C"
+msgid "HP DeskJet 843C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5063
-msgid "HP DeskJet 916C"
+msgid "HP DeskJet 845C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5064
-msgid "HP DeskJet 920C"
+msgid "HP DeskJet 850C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5065
-msgid "HP DeskJet 9300"
+msgid "HP DeskJet 855C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5066
-msgid "HP DeskJet 930C"
+msgid "HP DeskJet 870C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5067
-msgid "HP DeskJet 932C"
+msgid "HP DeskJet 880C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5068
-msgid "HP DeskJet 933C"
+msgid "HP DeskJet 882C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5069
-msgid "HP DeskJet 934C"
+msgid "HP DeskJet 890C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5070
-msgid "HP DeskJet 935C"
+msgid "HP DeskJet 895C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5071
-msgid "HP DeskJet 940C"
+msgid "HP DeskJet 916C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5072
-msgid "HP DeskJet 948C"
+msgid "HP DeskJet 920C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5073
-msgid "HP DeskJet 950C"
+msgid "HP DeskJet 9300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5074
-msgid "HP DeskJet 952C"
+msgid "HP DeskJet 930C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5075
-msgid "HP DeskJet 955C"
+msgid "HP DeskJet 932C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5076
-msgid "HP DeskJet 957C"
+msgid "HP DeskJet 933C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5077
-msgid "HP DeskJet 959C"
+msgid "HP DeskJet 934C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5078
-msgid "HP DeskJet 960C"
+msgid "HP DeskJet 935C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5079
-msgid "HP DeskJet 970C"
+msgid "HP DeskJet 940C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5080
-msgid "HP DeskJet 975C"
+msgid "HP DeskJet 948C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5081
-msgid "HP DeskJet 980C"
+msgid "HP DeskJet 950C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5082
-msgid "HP DeskJet 990C"
+msgid "HP DeskJet 952C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5083
-msgid "HP DeskJet 995C"
+msgid "HP DeskJet 955C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5084
-msgid "HP DeskJet 1100C"
+msgid "HP DeskJet 957C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5085
-msgid "HP DeskJet 1120C"
+msgid "HP DeskJet 959C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5086
-msgid "HP DeskJet 1125C"
+msgid "HP DeskJet 960C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5087
-msgid "HP DeskJet 1200C"
+msgid "HP DeskJet 970C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5088
-msgid "HP DeskJet 1220C"
+msgid "HP DeskJet 975C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5089
-msgid "HP DeskJet 1600C"
+msgid "HP DeskJet 980C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5090
-msgid "HP DeskJet 1600CM"
+msgid "HP DeskJet 990C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5091
-msgid "HP DeskJet 2000"
+msgid "HP DeskJet 995C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5092
-msgid "HP DeskJet 2500"
+msgid "HP DeskJet 1100C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5093
-msgid "HP DeskJet 2500CM"
+msgid "HP DeskJet 1120C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5094
-msgid "HP DeskJet 340C"
+msgid "HP DeskJet 1125C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5095
-msgid "HP DeskJet 3810"
+msgid "HP DeskJet 1200C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5096
-msgid "HP DeskJet 3816"
+msgid "HP DeskJet 1220C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5097
-msgid "HP DeskJet 3820"
+msgid "HP DeskJet 1600C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5098
-msgid "HP DeskJet 3822"
+msgid "HP DeskJet 1600CM"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5099
-msgid "HP LaserJet 2"
+msgid "HP DeskJet 2000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5100
-msgid "HP LaserJet 2D"
+msgid "HP DeskJet 2500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5101
-msgid "HP LaserJet 2P Plus"
+msgid "HP DeskJet 2500CM"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5102
-msgid "HP LaserJet 2P"
+msgid "HP DeskJet 340C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5103
-msgid "HP LaserJet 3"
+msgid "HP DeskJet 3810"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5104
-msgid "HP LaserJet 3D"
+msgid "HP DeskJet 3816"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5105
-msgid "HP LaserJet 3P w/ PCL5"
+msgid "HP DeskJet 3820"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5106
-msgid "HP LaserJet 3P w/PS"
+msgid "HP DeskJet 3822"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5107
-msgid "HP LaserJet 4 Plus"
+msgid "HP LaserJet 2"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5108
-msgid "HP LaserJet 4"
+msgid "HP LaserJet 2D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5109
-msgid "HP LaserJet 4L"
+msgid "HP LaserJet 2P Plus"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5110
-msgid "HP LaserJet 4M"
+msgid "HP LaserJet 2P"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5111
-msgid "HP LaserJet 4ML"
+msgid "HP LaserJet 3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5112
-msgid "HP LaserJet 4P"
+msgid "HP LaserJet 3D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5113
-msgid "HP LaserJet 4Si"
+msgid "HP LaserJet 3P w/ PCL5"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5114
-msgid "HP LaserJet 4V"
+msgid "HP LaserJet 3P w/PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5115
-msgid "HP LaserJet 5"
+msgid "HP LaserJet 4 Plus"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5116
-msgid "HP LaserJet 5L"
+msgid "HP LaserJet 4"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5117
-msgid "HP LaserJet 5M"
+msgid "HP LaserJet 4L"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5118
-msgid "HP LaserJet 5MP"
+msgid "HP LaserJet 4M"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5119
-msgid "HP LaserJet 5P"
+msgid "HP LaserJet 4ML"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5120
-msgid "HP LaserJet 5Si"
+msgid "HP LaserJet 4P"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5121
-msgid "HP LaserJet 6"
+msgid "HP LaserJet 4Si"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5122
-msgid "HP LaserJet 6L"
+msgid "HP LaserJet 4V"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5123
-msgid "HP LaserJet 6MP"
+msgid "HP LaserJet 5"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5124
-msgid "HP LaserJet 6P"
+msgid "HP LaserJet 5L"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5125
-msgid "HP LaserJet 1010"
+msgid "HP LaserJet 5M"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5126
-msgid "HP LaserJet 1012"
+msgid "HP LaserJet 5MP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5127
-msgid "HP LaserJet 1015"
+msgid "HP LaserJet 5P"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5128
-msgid "HP LaserJet 1022"
+msgid "HP LaserJet 5Si"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5129
-msgid "HP LaserJet 1100"
+msgid "HP LaserJet 6"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5130
-msgid "HP LaserJet 1100A"
+msgid "HP LaserJet 6L"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5131
-msgid "HP LaserJet 1150"
+msgid "HP LaserJet 6MP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5132
-msgid "HP LaserJet 1160"
+msgid "HP LaserJet 6P"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5133
-msgid "HP LaserJet 1200"
+msgid "HP LaserJet 1010"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5134
-msgid "HP LaserJet 1220"
+msgid "HP LaserJet 1012"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5135
-msgid "HP LaserJet 1300"
+msgid "HP LaserJet 1015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5136
-msgid "HP LaserJet 1320"
+msgid "HP LaserJet 1022"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5137
-msgid "HP LaserJet 2100"
+msgid "HP LaserJet 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5138
-msgid "HP LaserJet 2100M"
+msgid "HP LaserJet 1100A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5139
-msgid "HP LaserJet 2200"
+msgid "HP LaserJet 1150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5140
-msgid "HP LaserJet 2300"
+msgid "HP LaserJet 1160"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5141
-msgid "HP LaserJet 2410"
+msgid "HP LaserJet 1200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5142
-msgid "HP LaserJet 2420"
+msgid "HP LaserJet 1220"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5143
-msgid "HP LaserJet 2430"
+msgid "HP LaserJet 1300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5144
-msgid "HP LaserJet 3015"
+msgid "HP LaserJet 1320"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5145
-msgid "HP LaserJet 3020"
+msgid "HP LaserJet 2100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5146
-msgid "HP LaserJet 3030"
+msgid "HP LaserJet 2100M"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5147
-msgid "HP LaserJet 3050"
+msgid "HP LaserJet 2200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5148
-msgid "HP LaserJet 3052"
+msgid "HP LaserJet 2300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5149
-msgid "HP LaserJet 3055"
+msgid "HP LaserJet 2410"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5150
-msgid "HP LaserJet 3200"
+msgid "HP LaserJet 2420"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5151
-msgid "HP LaserJet 3200m"
+msgid "HP LaserJet 2430"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5152
-msgid "HP LaserJet 3200se"
+msgid "HP LaserJet 3015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5153
-msgid "HP LaserJet 3300 MFP"
+msgid "HP LaserJet 3020"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5154
-msgid "HP LaserJet 3310 MFP"
+msgid "HP LaserJet 3030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5155
-msgid "HP LaserJet 3320 MFP"
+msgid "HP LaserJet 3050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5156
-msgid "HP LaserJet 3320N MFP"
+msgid "HP LaserJet 3052"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5157
-msgid "HP LaserJet 3330 MFP"
+msgid "HP LaserJet 3055"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5158
-msgid "HP LaserJet 3380"
+msgid "HP LaserJet 3200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5159
-msgid "HP LaserJet 3390"
+msgid "HP LaserJet 3200m"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5160
-msgid "HP LaserJet 3392"
+msgid "HP LaserJet 3200se"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5161
-msgid "HP LaserJet 4000"
+msgid "HP LaserJet 3300 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5162
-msgid "HP LaserJet 4050"
+msgid "HP LaserJet 3310 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5163
-msgid "HP LaserJet 4100"
+msgid "HP LaserJet 3320 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5164
-msgid "HP LaserJet 4200"
+msgid "HP LaserJet 3320N MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5165
-msgid "HP LaserJet 4240"
+msgid "HP LaserJet 3330 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5166
-msgid "HP LaserJet 4250"
+msgid "HP LaserJet 3380"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5167
-msgid "HP LaserJet 4300"
+msgid "HP LaserJet 3390"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5168
-msgid "HP LaserJet 4345 mfp"
+msgid "HP LaserJet 3392"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5169
-msgid "HP LaserJet 4350"
+msgid "HP LaserJet 4000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5170
-msgid "HP LaserJet 5000"
+msgid "HP LaserJet 4050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5171
-msgid "HP LaserJet 5100"
+msgid "HP LaserJet 4100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5172
-msgid "HP LaserJet 5200"
+msgid "HP LaserJet 4200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5173
-msgid "HP LaserJet 5200L"
+msgid "HP LaserJet 4240"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5174
-msgid "HP LaserJet 8000"
+msgid "HP LaserJet 4250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5175
-msgid "HP LaserJet 8100"
+msgid "HP LaserJet 4300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5176
-msgid "HP LaserJet 8150"
+msgid "HP LaserJet 4345 mfp"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5177
-msgid "HP LaserJet 9000"
+msgid "HP LaserJet 4350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5178
-msgid "HP LaserJet 9040"
+msgid "HP LaserJet 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5179
-msgid "HP LaserJet 9040 MFP"
+msgid "HP LaserJet 5100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5180
-msgid "HP LaserJet 9050"
+msgid "HP LaserJet 5200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5181
-msgid "HP LaserJet 9050 MFP"
+msgid "HP LaserJet 5200L"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5182
-msgid "HP LaserJet M3027 MFP"
+msgid "HP LaserJet 8000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5183
-msgid "HP LaserJet M3035 MFP"
+msgid "HP LaserJet 8100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5184
-msgid "HP LaserJet M4345 MFP"
+msgid "HP LaserJet 8150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5185
-msgid "HP LaserJet M5025 MFP"
+msgid "HP LaserJet 9000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5186
-msgid "HP LaserJet M5035 MFP"
+msgid "HP LaserJet 9040"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5187
-msgid "HP LaserJet P2010"
+msgid "HP LaserJet 9040 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5188
-msgid "HP LaserJet P2015"
+msgid "HP LaserJet 9050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5189
-msgid "HP LaserJet P3004"
+msgid "HP LaserJet 9050 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5190
-msgid "HP LaserJet P3005"
+msgid "HP LaserJet M3027 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5191
-msgid "HP Mopier 240"
+msgid "HP LaserJet M3035 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5192
-msgid "HP Mopier 320"
+msgid "HP LaserJet M4345 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5193
-msgid "HP OfficeJet 300"
+msgid "HP LaserJet M5025 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5194
-msgid "HP OfficeJet 330"
+msgid "HP LaserJet M5035 MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5195
-msgid "HP OfficeJet 350"
+msgid "HP LaserJet P2010"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5196
-msgid "HP OfficeJet 500"
+msgid "HP LaserJet P2015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5197
-msgid "HP OfficeJet 520"
+msgid "HP LaserJet P3004"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5198
-msgid "HP OfficeJet 570"
+msgid "HP LaserJet P3005"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5199
-msgid "HP OfficeJet 580"
+msgid "HP Mopier 240"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5200
-msgid "HP OfficeJet 590"
+msgid "HP Mopier 320"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5201
-msgid "HP OfficeJet 600"
+msgid "HP OfficeJet 300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5202
-msgid "HP OfficeJet 610"
+msgid "HP OfficeJet 330"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5203
-msgid "HP OfficeJet 625"
+msgid "HP OfficeJet 350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5204
-msgid "HP OfficeJet 630"
+msgid "HP OfficeJet 500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5205
-msgid "HP OfficeJet 635"
+msgid "HP OfficeJet 520"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5206
-msgid "HP OfficeJet 700"
+msgid "HP OfficeJet 570"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5207
-msgid "HP OfficeJet 710"
+msgid "HP OfficeJet 580"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5208
-msgid "HP OfficeJet 720"
+msgid "HP OfficeJet 590"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5209
-msgid "HP OfficeJet 725"
+msgid "HP OfficeJet 600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5210
-msgid "HP OfficeJet 5105"
+msgid "HP OfficeJet 610"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5211
-msgid "HP OfficeJet 5110"
+msgid "HP OfficeJet 625"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5212
-msgid "HP OfficeJet 5110xi"
+msgid "HP OfficeJet 630"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5213
-msgid "HP OfficeJet 6105"
+msgid "HP OfficeJet 635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5214
-msgid "HP OfficeJet 6110"
+msgid "HP OfficeJet 700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5215
-msgid "HP OfficeJet 7110"
+msgid "HP OfficeJet 710"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5216
-msgid "HP OfficeJet 7130"
+msgid "HP OfficeJet 720"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5217
-msgid "HP OfficeJet 7140"
+msgid "HP OfficeJet 725"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5218
-msgid "HP OfficeJet D125"
+msgid "HP OfficeJet 5105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5219
-msgid "HP OfficeJet D135"
+msgid "HP OfficeJet 5110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5220
-msgid "HP OfficeJet D145"
+msgid "HP OfficeJet 5110xi"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5221
-msgid "HP OfficeJet D155"
+msgid "HP OfficeJet 6105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5222
-msgid "HP OfficeJet G55"
+msgid "HP OfficeJet 6110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5223
-msgid "HP OfficeJet G85"
+msgid "HP OfficeJet 7110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5224
-msgid "HP OfficeJet G95"
+msgid "HP OfficeJet 7130"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5225
-msgid "HP OfficeJet K60"
+msgid "HP OfficeJet 7140"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5226
-msgid "HP OfficeJet K60xi"
+msgid "HP OfficeJet D125"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5227
-msgid "HP OfficeJet K80"
+msgid "HP OfficeJet D135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5228
-msgid "HP OfficeJet K80xi"
+msgid "HP OfficeJet D145"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5229
-msgid "HP OfficeJet LX"
+msgid "HP OfficeJet D155"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5230
-msgid "HP OfficeJet Pro 1150C"
+msgid "HP OfficeJet G55"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5231
-msgid "HP OfficeJet Pro 1170C"
+msgid "HP OfficeJet G85"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5232
-msgid "HP OfficeJet Pro 1175C"
+msgid "HP OfficeJet G95"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5233
-msgid "HP OfficeJet R40"
+msgid "HP OfficeJet K60"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5234
-msgid "HP OfficeJet R45"
+msgid "HP OfficeJet K60xi"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5235
-msgid "HP OfficeJet R60"
+msgid "HP OfficeJet K80"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5236
-msgid "HP OfficeJet R65"
+msgid "HP OfficeJet K80xi"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5237
-msgid "HP OfficeJet R80"
+msgid "HP OfficeJet LX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5238
-msgid "HP OfficeJet T45"
+msgid "HP OfficeJet Pro 1150C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5239
-msgid "HP OfficeJet T65"
+msgid "HP OfficeJet Pro 1170C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5240
-msgid "HP OfficeJet V40"
+msgid "HP OfficeJet Pro 1175C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5241
-msgid "HP OfficeJet V40xi"
+msgid "HP OfficeJet R40"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5242
-msgid "HP OfficeJet"
+msgid "HP OfficeJet R45"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5243
-msgid "HP PSC 370"
+msgid "HP OfficeJet R60"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5244
-msgid "HP PSC 380"
+msgid "HP OfficeJet R65"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5245
-msgid "HP PSC 500"
+msgid "HP OfficeJet R80"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5246
-msgid "HP PSC 750"
+msgid "HP OfficeJet T45"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5247
-msgid "HP PSC 950"
+msgid "HP OfficeJet T65"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5248
-msgid "HP PSC 950xi"
+msgid "HP OfficeJet V40"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5249
-msgid "HP PSC 2110"
+msgid "HP OfficeJet V40xi"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5250
-msgid "HP PSC 2150"
+msgid "HP OfficeJet"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5251
-msgid "HP PSC 2210"
+msgid "HP PSC 370"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5252
-msgid "HP PhotoSmart 7150"
+msgid "HP PSC 380"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5253
-msgid "HP PhotoSmart 7345"
+msgid "HP PSC 500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5254
-msgid "HP PhotoSmart 7350"
+msgid "HP PSC 750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5255
-msgid "HP PhotoSmart 7550"
+msgid "HP PSC 950"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5256
-msgid "HP PhotoSmart P100"
+msgid "HP PSC 950xi"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5257
-msgid "HP PhotoSmart P130"
+msgid "HP PSC 2110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5258
-msgid "HP PhotoSmart P230"
+msgid "HP PSC 2150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5259
-msgid "HP PhotoSmart P1000"
+msgid "HP PSC 2210"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5260
-msgid "HP PhotoSmart P1100"
+msgid "HP PhotoSmart 7150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5261
-msgid "HP PhotoSmart P1115"
+msgid "HP PhotoSmart 7345"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5262
-msgid "HP PhotoSmart P1215"
+msgid "HP PhotoSmart 7350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5263
-msgid "HP PhotoSmart P1218"
+msgid "HP PhotoSmart 7550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5264
-msgid "HP PhotoSmart P1315"
+msgid "HP PhotoSmart P100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5265
-msgid "HP e-printer e20"
+msgid "HP PhotoSmart P130"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5266
-msgid "IBM 4019"
+msgid "HP PhotoSmart P230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5267
-msgid "IBM 4029 030 LaserPrinter 10"
+msgid "HP PhotoSmart P1000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5268
-msgid "IBM 4312"
+msgid "HP PhotoSmart P1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5269
-msgid "IBM Infoprint 12"
+msgid "HP PhotoSmart P1115"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5270
-msgid "IBM Page Printer 3112"
+msgid "HP PhotoSmart P1215"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5271
-msgid "Infotec 4353 MF"
+msgid "HP PhotoSmart P1218"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5272
-msgid "Infotec 4452 MF"
+msgid "HP PhotoSmart P1315"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5273
-msgid "Infotec 4651 MF"
+msgid "HP e-printer e20"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5274
-msgid "Infotec IS2022"
+msgid "IBM 4019"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5275
-msgid "Infotec IS2027"
+msgid "IBM 4029 030 LaserPrinter 10"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5276
-msgid "Infotec IS2032"
+msgid "IBM 4312"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5277
-msgid "Infotec IS2035"
+msgid "IBM Infoprint 12"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5278
-msgid "Infotec IS2045"
+msgid "IBM Page Printer 3112"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5279
-msgid "Infotec IS2090"
+msgid "Infotec 4353 MF"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5280
-msgid "Infotec IS2105"
+msgid "Infotec 4452 MF"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5281
-msgid "Infotec IS 2015"
+msgid "Infotec 4651 MF"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5282
-msgid "Infotec IS 2018"
+msgid "Infotec IS2022"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5283
-msgid "Infotec IS 2018D"
+msgid "Infotec IS2027"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5284
-msgid "Infotec IS 2060"
+msgid "Infotec IS2032"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5285
-msgid "Infotec IS 2075"
+msgid "Infotec IS2035"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5286
-msgid "Infotec IS 2122"
+msgid "Infotec IS2045"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5287
-msgid "Infotec IS 2127"
+msgid "Infotec IS2090"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5288
-msgid "Infotec IS 2132"
+msgid "Infotec IS2105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5289
-msgid "Infotec IS 2135"
+msgid "Infotec IS 2015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5290
-msgid "Infotec IS 2145"
+msgid "Infotec IS 2018"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5291
-msgid "Infotec IS 2151"
+msgid "Infotec IS 2018D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5292
-msgid "Infotec IS 2160"
+msgid "Infotec IS 2060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5293
-msgid "Infotec IS 2175"
+msgid "Infotec IS 2075"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5294
-msgid "Infotec IS 2215"
+msgid "Infotec IS 2122"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5295
-msgid "Infotec IS 2216"
+msgid "Infotec IS 2127"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5296
-msgid "Infotec IS 2220"
+msgid "Infotec IS 2132"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5297
-msgid "Infotec IS 2220D"
+msgid "Infotec IS 2135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5298
-msgid "Infotec IS 2225"
+msgid "Infotec IS 2145"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5299
-msgid "Infotec IS 2230"
+msgid "Infotec IS 2151"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5300
-msgid "Infotec IS 2235"
+msgid "Infotec IS 2160"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5301
-msgid "Infotec IS 2245"
+msgid "Infotec IS 2175"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5302
-msgid "Infotec IS 2255"
+msgid "Infotec IS 2215"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5303
-msgid "Infotec IS 2265"
+msgid "Infotec IS 2216"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5304
-msgid "Infotec IS 2275"
+msgid "Infotec IS 2220"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5305
-msgid "Infotec IS 2316"
+msgid "Infotec IS 2220D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5306
-msgid "Infotec IS 2320"
+msgid "Infotec IS 2225"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5307
-msgid "Infotec IS 2325"
+msgid "Infotec IS 2230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5308
-msgid "Infotec IS 2416"
+msgid "Infotec IS 2235"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5309
-msgid "Infotec IS 2425"
+msgid "Infotec IS 2245"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5310
-msgid "Infotec IS 2430"
+msgid "Infotec IS 2255"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5311
-msgid "Infotec IS 2435"
+msgid "Infotec IS 2265"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5312
-msgid "Infotec IS 2445"
+msgid "Infotec IS 2275"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5313
-msgid "Infotec IS 3090"
+msgid "Infotec IS 2316"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5314
-msgid "Infotec IS 3110"
+msgid "Infotec IS 2320"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5315
-msgid "Infotec IS 3135"
+msgid "Infotec IS 2325"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5316
-msgid "Infotec MP 2550"
+msgid "Infotec IS 2416"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5317
-msgid "Infotec MP 2550B"
+msgid "Infotec IS 2425"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5318
-msgid "Infotec MP 3350"
+msgid "Infotec IS 2430"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5319
-msgid "Infotec MP 3350B"
+msgid "Infotec IS 2435"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5320
-msgid "Infotec MP 4000"
+msgid "Infotec IS 2445"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5321
-msgid "Infotec MP 4000B"
+msgid "Infotec IS 3090"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5322
-msgid "Infotec MP 5000"
+msgid "Infotec IS 3110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5323
-msgid "Infotec MP 5000B"
+msgid "Infotec IS 3135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5324
-msgid "Kyocera CS-1815"
+msgid "Infotec MP 2550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5325
-msgid "Kyocera F-1010"
+msgid "Infotec MP 2550B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5326
-msgid "Kyocera FS-600 - KPDL-2"
+msgid "Infotec MP 3350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5327
-msgid "Kyocera FS-600"
+msgid "Infotec MP 3350B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5328
-msgid "Kyocera FS-680"
+msgid "Infotec MP 4000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5329
-msgid "Kyocera FS-800"
+msgid "Infotec MP 4000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5330
-msgid "Kyocera FS-920"
+msgid "Infotec MP 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5331
-msgid "Kyocera FS-1000"
+msgid "Infotec MP 5000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5332
-msgid "Kyocera FS-1000+"
+msgid "Kyocera CS-1815"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5333
-msgid "Kyocera FS-1010"
+msgid "Kyocera F-1010"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5334
-msgid "Kyocera FS-1018MFP"
+msgid "Kyocera FS-600 - KPDL-2"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5335
-msgid "Kyocera FS-1020D"
+msgid "Kyocera FS-600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5336
-msgid "Kyocera FS-1030D"
+msgid "Kyocera FS-680"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5337
-msgid "Kyocera FS-1050"
+msgid "Kyocera FS-800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5338
-msgid "Kyocera FS-1118MFP"
+msgid "Kyocera FS-920"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5339
-msgid "Kyocera FS-1200"
+msgid "Kyocera FS-1000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5340
-msgid "Kyocera FS-1600"
+msgid "Kyocera FS-1000+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5341
-msgid "Kyocera FS-1600+"
+msgid "Kyocera FS-1010"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5342
-msgid "Kyocera FS-1700"
+msgid "Kyocera FS-1018MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5343
-msgid "Kyocera FS-1700+"
+msgid "Kyocera FS-1020D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5344
-msgid "Kyocera FS-1714M"
+msgid "Kyocera FS-1030D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5345
-msgid "Kyocera FS-1750"
+msgid "Kyocera FS-1050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5346
-msgid "Kyocera FS-1800"
+msgid "Kyocera FS-1118MFP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5347
-msgid "Kyocera FS-1800+"
+msgid "Kyocera FS-1200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5348
-msgid "Kyocera FS-1900"
+msgid "Kyocera FS-1600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5349
-msgid "Kyocera FS-1920"
+msgid "Kyocera FS-1600+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5350
-msgid "Kyocera FS-2000D"
+msgid "Kyocera FS-1700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5351
-msgid "Kyocera FS-3500"
+msgid "Kyocera FS-1700+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5352
-msgid "Kyocera FS-3600"
+msgid "Kyocera FS-1714M"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5353
-msgid "Kyocera FS-3600+"
+msgid "Kyocera FS-1750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5354
-msgid "Kyocera FS-3700"
+msgid "Kyocera FS-1800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5355
-msgid "Kyocera FS-3700+"
+msgid "Kyocera FS-1800+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5356
-msgid "Kyocera FS-3718M"
+msgid "Kyocera FS-1900"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5357
-msgid "Kyocera FS-3750"
+msgid "Kyocera FS-1920"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5358
-msgid "Kyocera FS-3800"
+msgid "Kyocera FS-2000D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5359
-msgid "Kyocera FS-3820N"
+msgid "Kyocera FS-3500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5360
-msgid "Kyocera FS-3830N"
+msgid "Kyocera FS-3600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5361
-msgid "Kyocera FS-3900DN"
+msgid "Kyocera FS-3600+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5362
-msgid "Kyocera FS-4000DN"
+msgid "Kyocera FS-3700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5363
-msgid "Kyocera FS-5800C"
+msgid "Kyocera FS-3700+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5364
-msgid "Kyocera FS-5900C"
+msgid "Kyocera FS-3718M"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5365
-msgid "Kyocera FS-6020"
+msgid "Kyocera FS-3750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5366
-msgid "Kyocera FS-6026"
+msgid "Kyocera FS-3800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5367
-msgid "Kyocera FS-6300"
+msgid "Kyocera FS-3820N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5368
-msgid "Kyocera FS-6500"
+msgid "Kyocera FS-3830N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5369
-msgid "Kyocera FS-6500+"
+msgid "Kyocera FS-3900DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5370
-msgid "Kyocera FS-6700"
+msgid "Kyocera FS-4000DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5371
-msgid "Kyocera FS-6750"
+msgid "Kyocera FS-5800C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5372
-msgid "Kyocera FS-6900"
+msgid "Kyocera FS-5900C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5373
-msgid "Kyocera FS-6950DN"
+msgid "Kyocera FS-6020"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5374
-msgid "Kyocera FS-7000"
+msgid "Kyocera FS-6026"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5375
-msgid "Kyocera FS-7000+"
+msgid "Kyocera FS-6300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5376
-msgid "Kyocera FS-7028M"
+msgid "Kyocera FS-6500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5377
-msgid "Kyocera FS-8000C"
+msgid "Kyocera FS-6500+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5378
-msgid "Kyocera FS-9000"
+msgid "Kyocera FS-6700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5379
-msgid "Kyocera FS-9100DN"
+msgid "Kyocera FS-6750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5380
-msgid "Kyocera FS-9130DN"
+msgid "Kyocera FS-6900"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5381
-msgid "Kyocera FS-9500DN"
+msgid "Kyocera FS-6950DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5382
-msgid "Kyocera FS-9530DN"
+msgid "Kyocera FS-7000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5383
-msgid "Kyocera KM-1510"
+msgid "Kyocera FS-7000+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5384
-msgid "Kyocera KM-1530"
+msgid "Kyocera FS-7028M"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5385
-msgid "Kyocera KM-1810"
+msgid "Kyocera FS-8000C"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5386
-msgid "Kyocera KM-1815"
+msgid "Kyocera FS-9000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5387
-msgid "Kyocera KM-1820"
+msgid "Kyocera FS-9100DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5388
-msgid "Kyocera KM-2030"
+msgid "Kyocera FS-9130DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5389
-msgid "Kyocera KM-2530"
+msgid "Kyocera FS-9500DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5390
-msgid "Kyocera KM-3050"
+msgid "Kyocera FS-9530DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5391
-msgid "Kyocera KM-3530"
+msgid "Kyocera KM-1510"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5392
-msgid "Kyocera KM-4050"
+msgid "Kyocera KM-1530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5393
-msgid "Kyocera KM-4230"
+msgid "Kyocera KM-1810"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5394
-msgid "Kyocera KM-4230/5230"
+msgid "Kyocera KM-1815"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5395
-msgid "Kyocera KM-4530"
+msgid "Kyocera KM-1820"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5396
-msgid "Kyocera KM-5050"
+msgid "Kyocera KM-2030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5397
-msgid "Kyocera KM-5230"
+msgid "Kyocera KM-2530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5398
-msgid "Kyocera KM-5530"
+msgid "Kyocera KM-3050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5399
-msgid "Kyocera KM-6030"
+msgid "Kyocera KM-3530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5400
-msgid "Kyocera KM-6230"
+msgid "Kyocera KM-4050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5401
-msgid "Kyocera KM-8030"
+msgid "Kyocera KM-4230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5402
-msgid "Lanier 5622"
+msgid "Kyocera KM-4230/5230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5403
-msgid "Lanier 5627"
+msgid "Kyocera KM-4530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5404
-msgid "Lanier 5632"
+msgid "Kyocera KM-5050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5405
-msgid "Lanier 5635"
+msgid "Kyocera KM-5230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5406
-msgid "Lanier 5645"
+msgid "Kyocera KM-5530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5407
-msgid "Lanier LD0105"
+msgid "Kyocera KM-6030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5408
-msgid "Lanier LD015"
+msgid "Kyocera KM-6230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5409
-msgid "Lanier LD035"
+msgid "Kyocera KM-8030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5410
-msgid "Lanier LD045"
+msgid "Lanier 5622"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5411
-msgid "Lanier LD060"
+msgid "Lanier 5627"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5412
-msgid "Lanier LD075"
+msgid "Lanier 5632"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5413
-msgid "Lanier LD090"
+msgid "Lanier 5635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5414
-msgid "Lanier LD115"
+msgid "Lanier 5645"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5415
-msgid "Lanier LD116"
+msgid "Lanier LD0105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5416
-msgid "Lanier LD118"
+msgid "Lanier LD015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5417
-msgid "Lanier LD118d"
+msgid "Lanier LD035"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5418
-msgid "Lanier LD120"
+msgid "Lanier LD045"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5419
-msgid "Lanier LD120d"
+msgid "Lanier LD060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5420
-msgid "Lanier LD122"
+msgid "Lanier LD075"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5421
-msgid "Lanier LD127"
+msgid "Lanier LD090"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5422
-msgid "Lanier LD132"
+msgid "Lanier LD115"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5423
-msgid "Lanier LD135"
+msgid "Lanier LD116"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5424
-msgid "Lanier LD145"
+msgid "Lanier LD118"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5425
-msgid "Lanier LD151"
+msgid "Lanier LD118d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5426
-msgid "Lanier LD160"
+msgid "Lanier LD120"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5427
-msgid "Lanier LD175"
+msgid "Lanier LD120d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5428
-msgid "Lanier LD225"
+msgid "Lanier LD122"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5429
-msgid "Lanier LD230"
+msgid "Lanier LD127"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5430
-msgid "Lanier LD235"
+msgid "Lanier LD132"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5431
-msgid "Lanier LD245"
+msgid "Lanier LD135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5432
-msgid "Lanier MP2500/LD125"
+msgid "Lanier LD145"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5433
-msgid "Lanier MP 1100/LD1100"
+msgid "Lanier LD151"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5434
-msgid "Lanier MP 1350/LD1135"
+msgid "Lanier LD160"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5435
-msgid "Lanier MP 1600/LD316"
+msgid "Lanier LD175"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5436
-msgid "Lanier MP 161/LD016"
+msgid "Lanier LD225"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5437
-msgid "Lanier MP 2000/LD320d"
+msgid "Lanier LD230"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5438
-msgid "Lanier MP 2510/LD325"
+msgid "Lanier LD235"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5439
-msgid "Lanier MP 2550B/LD425B"
+msgid "Lanier LD245"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5440
-msgid "Lanier MP 2550/LD425"
+msgid "Lanier MP2500/LD125"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5441
-msgid "Lanier MP 3010/LD330"
+msgid "Lanier MP 1100/LD1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5442
-msgid "Lanier MP 3350B/LD433B"
+msgid "Lanier MP 1350/LD1135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5443
-msgid "Lanier MP 3350/LD433"
+msgid "Lanier MP 1600/LD316"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5444
-msgid "Lanier MP 3500/LD335"
+msgid "Lanier MP 161/LD016"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5445
-msgid "Lanier MP 4000B/LD040B"
+msgid "Lanier MP 2000/LD320d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5446
-msgid "Lanier MP 4000/LD040"
+msgid "Lanier MP 2510/LD325"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5447
-msgid "Lanier MP 4500/LD345"
+msgid "Lanier MP 2550B/LD425B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5448
-msgid "Lanier MP 5000B/LD050B"
+msgid "Lanier MP 2550/LD425"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5449
-msgid "Lanier MP 5000/LD050"
+msgid "Lanier MP 3010/LD330"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5450
-msgid "Lanier MP 5500/LD255"
+msgid "Lanier MP 3350B/LD433B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5451
-msgid "Lanier MP 6500/LD265"
+msgid "Lanier MP 3350/LD433"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5452
-msgid "Lanier MP 7500/LD275"
+msgid "Lanier MP 3500/LD335"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5453
-msgid "Lanier MP 9000/LD190"
+msgid "Lanier MP 4000B/LD040B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5454
-msgid "Lexmark 4076"
+msgid "Lanier MP 4000/LD040"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5455
-msgid "Lexmark Optra E"
+msgid "Lanier MP 4500/LD345"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5456
-msgid "Lexmark Optra E+"
+msgid "Lanier MP 5000B/LD050B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5457
-msgid "Lexmark Optra E220"
+msgid "Lanier MP 5000/LD050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5458
-msgid "Lexmark Optra E321"
+msgid "Lanier MP 5500/LD255"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5459
-msgid "Lexmark Optra E323"
+msgid "Lanier MP 6500/LD265"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5460
-msgid "Lexmark Valuewriter 300"
+msgid "Lanier MP 7500/LD275"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5461
-msgid "Minolta PagePro 6"
+msgid "Lanier MP 9000/LD190"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5462
-msgid "Minolta PagePro 6e"
+msgid "Lexmark 4076"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5463
-msgid "Minolta PagePro 6ex"
+msgid "Lexmark Optra E"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5464
-msgid "Minolta PagePro 8"
+msgid "Lexmark Optra E+"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5465
-msgid "Minolta PagePro 8L"
+msgid "Lexmark Optra E220"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5466
-msgid "Minolta PagePro 1100"
+msgid "Lexmark Optra E321"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5467
-msgid "NEC SuperScript 660i"
+msgid "Lexmark Optra E323"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5468
-msgid "NEC SuperScript 860"
+msgid "Lexmark Valuewriter 300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5469
-msgid "NEC SuperScript 870"
+msgid "Minolta PagePro 6"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5470
-msgid "NEC SuperScript 1260"
+msgid "Minolta PagePro 6e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5471
-msgid "NEC SuperScript 1400"
+msgid "Minolta PagePro 6ex"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5472
-msgid "NEC SuperScript 1800"
+msgid "Minolta PagePro 8"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5473
-msgid "NRG 10515/10518/10512"
+msgid "Minolta PagePro 8L"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5474
-msgid "NRG 2205/2238/2212"
+msgid "Minolta PagePro 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5475
-msgid "NRG 2705/2738/2712"
+msgid "NEC SuperScript 660i"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5476
-msgid "NRG 3205/3238/3212"
+msgid "NEC SuperScript 860"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5477
-msgid "NRG 3525/3508/3502"
+msgid "NEC SuperScript 870"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5478
-msgid "NRG 3545/3518/3532"
+msgid "NEC SuperScript 1260"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5479
-msgid "NRG 4525/4508/4502"
+msgid "NEC SuperScript 1400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5480
-msgid "NRG 4545/4518/4532"
+msgid "NEC SuperScript 1800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5481
-msgid "NRG 6002/6005/6008"
+msgid "NRG 10515/10518/10512"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5482
-msgid "NRG 7502/7505/7508"
+msgid "NRG 2205/2238/2212"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5483
-msgid "NRG 9005/9008/9002"
+msgid "NRG 2705/2738/2712"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5484
-msgid "NRG DSm415"
+msgid "NRG 3205/3238/3212"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5485
-msgid "NRG DSm615"
+msgid "NRG 3525/3508/3502"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5486
-msgid "NRG DSm616"
+msgid "NRG 3545/3518/3532"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5487
-msgid "NRG DSm618"
+msgid "NRG 4525/4508/4502"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5488
-msgid "NRG DSm618d"
+msgid "NRG 4545/4518/4532"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5489
-msgid "NRG DSm620"
+msgid "NRG 6002/6005/6008"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5490
-msgid "NRG DSm620d"
+msgid "NRG 7502/7505/7508"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5491
-msgid "NRG DSm622"
+msgid "NRG 9005/9008/9002"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5492
-msgid "NRG DSm627"
+msgid "NRG DSm415"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5493
-msgid "NRG DSm632"
+msgid "NRG DSm615"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5494
-msgid "NRG DSm635"
+msgid "NRG DSm616"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5495
-msgid "NRG DSm645"
+msgid "NRG DSm618"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5496
-msgid "NRG DSm651"
+msgid "NRG DSm618d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5497
-msgid "NRG DSm660"
+msgid "NRG DSm620"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5498
-msgid "NRG DSm675"
+msgid "NRG DSm620d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5499
-msgid "NRG DSm725"
+msgid "NRG DSm622"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5500
-msgid "NRG DSm730"
+msgid "NRG DSm627"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5501
-msgid "NRG DSm735"
+msgid "NRG DSm632"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5502
-msgid "NRG DSm745"
+msgid "NRG DSm635"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5503
-msgid "NRG MP 1100"
+msgid "NRG DSm645"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5504
-msgid "NRG MP 1350"
+msgid "NRG DSm651"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5505
-msgid "NRG MP 1600"
+msgid "NRG DSm660"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5506
-msgid "NRG MP 161"
+msgid "NRG DSm675"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5507
-msgid "NRG MP 2000"
+msgid "NRG DSm725"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5508
-msgid "NRG MP 2500"
+msgid "NRG DSm730"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5509
-msgid "NRG MP 2510"
+msgid "NRG DSm735"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5510
-msgid "NRG MP 2550"
+msgid "NRG DSm745"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5511
-msgid "NRG MP 2550B"
+msgid "NRG MP 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5512
-msgid "NRG MP 3010"
+msgid "NRG MP 1350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5513
-msgid "NRG MP 3350"
+msgid "NRG MP 1600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5514
-msgid "NRG MP 3350B"
+msgid "NRG MP 161"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5515
-msgid "NRG MP 3500"
+msgid "NRG MP 2000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5516
-msgid "NRG MP 4000"
+msgid "NRG MP 2500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5517
-msgid "NRG MP 4000B"
+msgid "NRG MP 2510"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5518
-msgid "NRG MP 4500"
+msgid "NRG MP 2550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5519
-msgid "NRG MP 5000"
+msgid "NRG MP 2550B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5520
-msgid "NRG MP 5000B"
+msgid "NRG MP 3010"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5521
-msgid "NRG MP 5500"
+msgid "NRG MP 3350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5522
-msgid "NRG MP 6500"
+msgid "NRG MP 3350B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5523
-msgid "NRG MP 7500"
+msgid "NRG MP 3500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5524
-msgid "NRG MP 9000"
+msgid "NRG MP 4000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5525
-msgid "Oki B401d"
+msgid "NRG MP 4000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5526
-msgid "Oki B4350"
+msgid "NRG MP 4500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5527
-msgid "Oki OL400"
+msgid "NRG MP 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5528
-msgid "Oki OL400e"
+msgid "NRG MP 5000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5529
-msgid "Oki OL400ex"
+msgid "NRG MP 5500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5530
-msgid "Oki OL410e"
+msgid "NRG MP 6500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5531
-msgid "Oki OL600e"
+msgid "NRG MP 7500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5532
-msgid "Oki OL610e/S"
+msgid "NRG MP 9000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5533
-msgid "Oki OL800"
+msgid "Oki B401d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5534
-msgid "Oki OL810ex"
+msgid "Oki B4350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5535
-msgid "Oki Okipage 6e"
+msgid "Oki OL400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5536
-msgid "Oki Okipage 6ex"
+msgid "Oki OL400e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5537
-msgid "Oki Okipage 8p"
+msgid "Oki OL400ex"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5538
-msgid "Oki Okipage 10e"
+msgid "Oki OL410e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5539
-msgid "Oki Okipage 10ex"
+msgid "Oki OL600e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5540
-msgid "Oki Okipage 14ex"
+msgid "Oki OL610e/S"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5541
-msgid "Oki Super 6e"
+msgid "Oki OL800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5542
-msgid "Olivetti JP350S"
+msgid "Oki OL810ex"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5543
-msgid "Olivetti PG 306"
+msgid "Oki Okipage 6e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5544
-msgid "PCPI 1030"
+msgid "Oki Okipage 6ex"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5545
-msgid "Panasonic KX-P4410"
+msgid "Oki Okipage 8p"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5546
-msgid "Panasonic KX-P4450"
+msgid "Oki Okipage 10e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5547
-msgid "Panasonic KX-P6150"
+msgid "Oki Okipage 10ex"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5548
-msgid "Panasonic KX-P6500"
+msgid "Oki Okipage 14ex"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5549
-msgid "Raven LP-410"
+msgid "Oki Super 6e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5550
-msgid "Ricoh Aficio 1022"
+msgid "Olivetti JP350S"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5551
-msgid "Ricoh Aficio 1027"
+msgid "Olivetti PG 306"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5552
-msgid "Ricoh Aficio 1032"
+msgid "PCPI 1030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5553
-msgid "Ricoh Aficio 1035"
+msgid "Panasonic KX-P4410"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5554
-msgid "Ricoh Aficio 1045"
+msgid "Panasonic KX-P4450"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5555
-msgid "Ricoh Aficio 1060"
+msgid "Panasonic KX-P6150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5556
-msgid "Ricoh Aficio 1075"
+msgid "Panasonic KX-P6500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5557
-msgid "Ricoh Aficio 1515"
+msgid "Raven LP-410"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5558
-msgid "Ricoh Aficio 2015"
+msgid "Ricoh Aficio 1022"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5559
-msgid "Ricoh Aficio 2016"
+msgid "Ricoh Aficio 1027"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5560
-msgid "Ricoh Aficio 2018"
+msgid "Ricoh Aficio 1032"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5561
-msgid "Ricoh Aficio 2018D"
+msgid "Ricoh Aficio 1035"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5562
-msgid "Ricoh Aficio 2020"
+msgid "Ricoh Aficio 1045"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5563
-msgid "Ricoh Aficio 2020D"
+msgid "Ricoh Aficio 1060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5564
-msgid "Ricoh Aficio 2022"
+msgid "Ricoh Aficio 1075"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5565
-msgid "Ricoh Aficio 2027"
+msgid "Ricoh Aficio 1515"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5566
-msgid "Ricoh Aficio 2032"
+msgid "Ricoh Aficio 2015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5567
-msgid "Ricoh Aficio 2035"
+msgid "Ricoh Aficio 2016"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5568
-msgid "Ricoh Aficio 2035e"
+msgid "Ricoh Aficio 2018"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5569
-msgid "Ricoh Aficio 2045"
+msgid "Ricoh Aficio 2018D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5570
-msgid "Ricoh Aficio 2045e"
+msgid "Ricoh Aficio 2020"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5571
-msgid "Ricoh Aficio 2051"
+msgid "Ricoh Aficio 2020D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5572
-msgid "Ricoh Aficio 2060"
+msgid "Ricoh Aficio 2022"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5573
-msgid "Ricoh Aficio 2075"
+msgid "Ricoh Aficio 2027"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5574
-msgid "Ricoh Aficio 2090"
+msgid "Ricoh Aficio 2032"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5575
-msgid "Ricoh Aficio 2105"
+msgid "Ricoh Aficio 2035"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5576
-msgid "Ricoh Aficio 220"
+msgid "Ricoh Aficio 2035e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5577
-msgid "Ricoh Aficio 3025"
+msgid "Ricoh Aficio 2045"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5578
-msgid "Ricoh Aficio 3030"
+msgid "Ricoh Aficio 2045e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5579
-msgid "Ricoh Aficio 3035"
+msgid "Ricoh Aficio 2051"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5580
-msgid "Ricoh Aficio 3045"
+msgid "Ricoh Aficio 2060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5581
-msgid "Ricoh Aficio 401"
+msgid "Ricoh Aficio 2075"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5582
-msgid "Ricoh Aficio 700"
+msgid "Ricoh Aficio 2090"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5583
-msgid "Ricoh Aficio MP 1100"
+msgid "Ricoh Aficio 2105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5584
-msgid "Ricoh Aficio MP 1350"
+msgid "Ricoh Aficio 220"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5585
-msgid "Ricoh Aficio MP 1600"
+msgid "Ricoh Aficio 3025"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5586
-msgid "Ricoh Aficio MP 161"
+msgid "Ricoh Aficio 3030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5587
-msgid "Ricoh Aficio MP 2000"
+msgid "Ricoh Aficio 3035"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5588
-msgid "Ricoh Aficio MP 2500"
+msgid "Ricoh Aficio 3045"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5589
-msgid "Ricoh Aficio MP 2510"
+msgid "Ricoh Aficio 401"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5590
-msgid "Ricoh Aficio MP 2550"
+msgid "Ricoh Aficio 700"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5591
-msgid "Ricoh Aficio MP 2550B"
+msgid "Ricoh Aficio MP 1100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5592
-msgid "Ricoh Aficio MP 3010"
+msgid "Ricoh Aficio MP 1350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5593
-msgid "Ricoh Aficio MP 3350"
+msgid "Ricoh Aficio MP 1600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5594
-msgid "Ricoh Aficio MP 3350B"
+msgid "Ricoh Aficio MP 161"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5595
-msgid "Ricoh Aficio MP 3500"
+msgid "Ricoh Aficio MP 2000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5596
-msgid "Ricoh Aficio MP 4000"
+msgid "Ricoh Aficio MP 2500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5597
-msgid "Ricoh Aficio MP 4000B"
+msgid "Ricoh Aficio MP 2510"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5598
-msgid "Ricoh Aficio MP 4500"
+msgid "Ricoh Aficio MP 2550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5599
-msgid "Ricoh Aficio MP 5000"
+msgid "Ricoh Aficio MP 2550B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5600
-msgid "Ricoh Aficio MP 5000B"
+msgid "Ricoh Aficio MP 3010"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5601
-msgid "Ricoh Aficio MP 5500"
+msgid "Ricoh Aficio MP 3350"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5602
-msgid "Ricoh Aficio MP 6500"
+msgid "Ricoh Aficio MP 3350B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5603
-msgid "Ricoh Aficio MP 7500"
+msgid "Ricoh Aficio MP 3500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5604
-msgid "Ricoh Aficio MP 9000"
+msgid "Ricoh Aficio MP 4000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5605
-msgid "Samsung ML-85"
+msgid "Ricoh Aficio MP 4000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5606
-msgid "Samsung ML-1250"
+msgid "Ricoh Aficio MP 4500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5607
-msgid "Samsung ML-1450"
+msgid "Ricoh Aficio MP 5000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5608
-msgid "Samsung ML-1450PS"
+msgid "Ricoh Aficio MP 5000B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5609
-msgid "Samsung ML-1650"
+msgid "Ricoh Aficio MP 5500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5610
-msgid "Samsung ML-1651N"
+msgid "Ricoh Aficio MP 6500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5611
-msgid "Samsung ML-1750"
+msgid "Ricoh Aficio MP 7500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5612
-msgid "Samsung ML-2150"
+msgid "Ricoh Aficio MP 9000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5613
-msgid "Samsung ML-2150PS"
+msgid "Samsung ML-85"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5614
-msgid "Samsung ML-2151N"
+msgid "Samsung ML-1250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5615
-msgid "Samsung ML-2151NPS"
+msgid "Samsung ML-1450"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5616
-msgid "Samsung ML-2152W"
+msgid "Samsung ML-1450PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5617
-msgid "Samsung ML-2152WPS"
+msgid "Samsung ML-1650"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5618
-msgid "Samsung ML-2250"
+msgid "Samsung ML-1651N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5619
-msgid "Samsung ML-2550"
+msgid "Samsung ML-1750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5620
-msgid "Samsung ML-2551N"
+msgid "Samsung ML-2150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5621
-msgid "Samsung ML-2552W"
+msgid "Samsung ML-2150PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5622
-msgid "Samsung ML-4600"
+msgid "Samsung ML-2151N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5623
-msgid "Samsung ML-5000a"
+msgid "Samsung ML-2151NPS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5624
-msgid "Samsung ML-6000"
+msgid "Samsung ML-2152W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5625
-msgid "Samsung ML-6100"
+msgid "Samsung ML-2152WPS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5626
-msgid "Samsung ML-7000"
+msgid "Samsung ML-2250"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5627
-msgid "Samsung ML-7000N"
+msgid "Samsung ML-2550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5628
-msgid "Samsung ML-7000P"
+msgid "Samsung ML-2551N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5629
-msgid "Samsung ML-7050"
+msgid "Samsung ML-2552W"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5630
-msgid "Samsung ML-7300"
+msgid "Samsung ML-4600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5631
-msgid "Samsung ML-7300N"
+msgid "Samsung ML-5000a"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5632
-msgid "Samsung QL-5100A"
+msgid "Samsung ML-6000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5633
-msgid "Samsung QL-6050"
+msgid "Samsung ML-6100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5634
-msgid "Savin 2522"
+msgid "Samsung ML-7000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5635
-msgid "Savin 2527"
+msgid "Samsung ML-7000N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5636
-msgid "Savin 2532"
+msgid "Samsung ML-7000P"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5637
-msgid "Savin 2535/2235"
+msgid "Samsung ML-7050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5638
-msgid "Savin 2545/2245"
+msgid "Samsung ML-7300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5639
-msgid "Savin 2560"
+msgid "Samsung ML-7300N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5640
-msgid "Savin 2575"
+msgid "Samsung QL-5100A"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5641
-msgid "Savin 3515"
+msgid "Samsung QL-6050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5642
-msgid "Savin 40105"
+msgid "Savin 2522"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5643
-msgid "Savin 4015"
+msgid "Savin 2527"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5644
-msgid "Savin 4018"
+msgid "Savin 2532"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5645
-msgid "Savin 4018d"
+msgid "Savin 2535/2235"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5646
-msgid "Savin 4022"
+msgid "Savin 2545/2245"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5647
-msgid "Savin 4027"
+msgid "Savin 2560"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5648
-msgid "Savin 4035/4135g"
+msgid "Savin 2575"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5649
-msgid "Savin 4035e/4135eG"
+msgid "Savin 3515"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5650
-msgid "Savin 4045/4145g"
+msgid "Savin 40105"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5651
-msgid "Savin 4045e/4145eG"
+msgid "Savin 4015"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5652
-msgid "Savin 4051"
+msgid "Savin 4018"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5653
-msgid "Savin 4060"
+msgid "Savin 4018d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5654
-msgid "Savin 4075"
+msgid "Savin 4022"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5655
-msgid "Savin 4090"
+msgid "Savin 4027"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5656
-msgid "Savin 7025"
+msgid "Savin 4035/4135g"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5657
-msgid "Savin 8016"
+msgid "Savin 4035e/4135eG"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5658
-msgid "Savin 8020"
+msgid "Savin 4045/4145g"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5659
-msgid "Savin 8020d"
+msgid "Savin 4045e/4145eG"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5660
-msgid "Savin 8025"
+msgid "Savin 4051"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5661
-msgid "Savin 8025e"
+msgid "Savin 4060"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5662
-msgid "Savin 8030"
+msgid "Savin 4075"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5663
-msgid "Savin 8030e"
+msgid "Savin 4090"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5664
-msgid "Savin 8035/8035g"
+msgid "Savin 7025"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5665
-msgid "Savin 8035e"
+msgid "Savin 8016"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5666
-msgid "Savin 8045/8045g"
+msgid "Savin 8020"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5667
-msgid "Savin 8045e"
+msgid "Savin 8020d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5668
-msgid "Savin 8055"
+msgid "Savin 8025"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5669
-msgid "Savin 8065"
+msgid "Savin 8025e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5670
-msgid "Savin 8075"
+msgid "Savin 8030"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5671
-msgid "Savin 8090"
+msgid "Savin 8030e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5672
-msgid "Savin 8110"
+msgid "Savin 8035/8035g"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5673
-msgid "Savin 8135"
+msgid "Savin 8035e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5674
-msgid "Savin 816"
+msgid "Savin 8045/8045g"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5675
-msgid "Savin 9016"
+msgid "Savin 8045e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5676
-msgid "Savin 9021d"
+msgid "Savin 8055"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5677
-msgid "Savin 9025"
+msgid "Savin 8065"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5678
-msgid "Savin 9025b"
+msgid "Savin 8075"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5679
-msgid "Savin 9033"
+msgid "Savin 8090"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5680
-msgid "Savin 9033b"
+msgid "Savin 8110"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5681
-msgid "Savin 9040"
+msgid "Savin 8135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5682
-msgid "Savin 9040b"
+msgid "Savin 816"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5683
-msgid "Savin 9050"
+msgid "Savin 9016"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5684
-msgid "Savin 9050b"
+msgid "Savin 9021d"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5685
-msgid "Seiko SpeedJET 200"
+msgid "Savin 9025"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5686
-msgid "Sharp AR-161"
+msgid "Savin 9025b"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5687
-msgid "Sharp AR-M257"
+msgid "Savin 9033"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5688
-msgid "Sony IJP-V100"
+msgid "Savin 9033b"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5689
-msgid "Star LS-04"
+msgid "Savin 9040"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5690
-msgid "Star LaserPrinter 8"
+msgid "Savin 9040b"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5691
-msgid "Tally MT908"
+msgid "Savin 9050"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5692
-msgid "Tektronix Phaser 750DP"
+msgid "Savin 9050b"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5693
-msgid "Tektronix Phaser 750DX"
+msgid "Seiko SpeedJET 200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5694
-msgid "Tektronix Phaser 750N"
+msgid "Sharp AR-161"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5695
-msgid "Tektronix Phaser 750P"
+msgid "Sharp AR-M257"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5696
-msgid "Xerox Able 1406"
+msgid "Sony IJP-V100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5697
-msgid "Xerox DocuPrint 4508"
+msgid "Star LS-04"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5698
-msgid "Xerox DocuPrint C20"
+msgid "Star LaserPrinter 8"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5699
-msgid "Xerox DocuPrint N4512"
+msgid "Tally MT908"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5700
-msgid "Xerox DocuPrint N4512PS"
+msgid "Tektronix Phaser 750DP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5701
-msgid "Xerox DocuPrint P12"
+msgid "Tektronix Phaser 750DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5702
-msgid "Xerox DocuPrint P1202"
+msgid "Tektronix Phaser 750N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5703
-msgid "Xerox DocuPrint P8e"
+msgid "Tektronix Phaser 750P"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5704
-msgid "Xerox Document Centre 400"
+msgid "Xerox Able 1406"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5705
-msgid "Xerox Phaser 2135"
+msgid "Xerox DocuPrint 4508"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5706
-msgid "Xerox Phaser 4400B"
+msgid "Xerox DocuPrint C20"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5707
-msgid "Xerox Phaser 4400DT"
+msgid "Xerox DocuPrint N4512"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5708
-msgid "Xerox Phaser 4400DX"
+msgid "Xerox DocuPrint N4512PS"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5709
-msgid "Xerox Phaser 4400N"
+msgid "Xerox DocuPrint P12"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5710
-msgid "Xerox Phaser 4500B"
+msgid "Xerox DocuPrint P1202"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5711
-msgid "Xerox Phaser 4500DT"
+msgid "Xerox DocuPrint P8e"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5712
-msgid "Xerox Phaser 4500DX"
+msgid "Xerox Document Centre 400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5713
-msgid "Xerox Phaser 4500N"
+msgid "Xerox Phaser 2135"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5714
-msgid "Xerox Phaser 4510B"
+msgid "Xerox Phaser 4400B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5715
-msgid "Xerox Phaser 4510DT"
+msgid "Xerox Phaser 4400DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5716
-msgid "Xerox Phaser 4510DX"
+msgid "Xerox Phaser 4400DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5717
-msgid "Xerox Phaser 4510N"
+msgid "Xerox Phaser 4400N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5718
-msgid "Xerox Phaser 5500B"
+msgid "Xerox Phaser 4500B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5719
-msgid "Xerox Phaser 5500DN"
+msgid "Xerox Phaser 4500DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5720
-msgid "Xerox Phaser 5500DT"
+msgid "Xerox Phaser 4500DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5721
-msgid "Xerox Phaser 5500DX"
+msgid "Xerox Phaser 4500N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5722
-msgid "Xerox Phaser 5500N"
+msgid "Xerox Phaser 4510B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5723
-msgid "Xerox Phaser 6130N"
+msgid "Xerox Phaser 4510DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5724
-msgid "Xerox Phaser 6180DN"
+msgid "Xerox Phaser 4510DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5725
-msgid "Xerox Phaser 6180MFP-D"
+msgid "Xerox Phaser 4510N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5726
-msgid "Xerox Phaser 6200B"
+msgid "Xerox Phaser 5500B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5727
-msgid "Xerox Phaser 6200DP"
+msgid "Xerox Phaser 5500DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5728
-msgid "Xerox Phaser 6200DX"
+msgid "Xerox Phaser 5500DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5729
-msgid "Xerox Phaser 6200N"
+msgid "Xerox Phaser 5500DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5730
-msgid "Xerox Phaser 6250B"
+msgid "Xerox Phaser 5500N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5731
-msgid "Xerox Phaser 6250DP"
+msgid "Xerox Phaser 6130N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5732
-msgid "Xerox Phaser 6250DT"
+msgid "Xerox Phaser 6180DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5733
-msgid "Xerox Phaser 6250DX"
+msgid "Xerox Phaser 6180MFP-D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5734
-msgid "Xerox Phaser 6250N"
+msgid "Xerox Phaser 6200B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5735
-msgid "Xerox Phaser 6300DN"
+msgid "Xerox Phaser 6200DP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5736
-msgid "Xerox Phaser 6300N"
+msgid "Xerox Phaser 6200DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5737
-msgid "Xerox Phaser 6350DP"
+msgid "Xerox Phaser 6200N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5738
-msgid "Xerox Phaser 6350DT"
+msgid "Xerox Phaser 6250B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5739
-msgid "Xerox Phaser 6350DX"
+msgid "Xerox Phaser 6250DP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5740
-msgid "Xerox Phaser 6360DN"
+msgid "Xerox Phaser 6250DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5741
-msgid "Xerox Phaser 6360DX"
+msgid "Xerox Phaser 6250DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5742
-msgid "Xerox Phaser 7300B"
+msgid "Xerox Phaser 6250N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5743
-msgid "Xerox Phaser 7300DN"
+msgid "Xerox Phaser 6300DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5744
-msgid "Xerox Phaser 7300DT"
+msgid "Xerox Phaser 6300N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5745
-msgid "Xerox Phaser 7300DX"
+msgid "Xerox Phaser 6350DP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5746
-msgid "Xerox Phaser 7300N"
+msgid "Xerox Phaser 6350DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5747
-msgid "Xerox Phaser 7400DN"
+msgid "Xerox Phaser 6350DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5748
-msgid "Xerox Phaser 7400DT"
+msgid "Xerox Phaser 6360DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5749
-msgid "Xerox Phaser 7400DX"
+msgid "Xerox Phaser 6360DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5750
-msgid "Xerox Phaser 7400DXF"
+msgid "Xerox Phaser 7300B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5751
-msgid "Xerox Phaser 7400N"
+msgid "Xerox Phaser 7300DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5752
-msgid "Xerox Phaser 7700DN"
+msgid "Xerox Phaser 7300DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5753
-msgid "Xerox Phaser 7700DX"
+msgid "Xerox Phaser 7300DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5754
-msgid "Xerox Phaser 7700GX"
+msgid "Xerox Phaser 7300N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5755
-msgid "Xerox Phaser 7750B"
+msgid "Xerox Phaser 7400DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5756
-msgid "Xerox Phaser 7750DN"
+msgid "Xerox Phaser 7400DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5757
-msgid "Xerox Phaser 7750DXF"
+msgid "Xerox Phaser 7400DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5758
-msgid "Xerox Phaser 7750GX"
+msgid "Xerox Phaser 7400DXF"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5759
-msgid "Xerox Phaser 7760DN"
+msgid "Xerox Phaser 7400N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5760
-msgid "Xerox Phaser 7760DX"
+msgid "Xerox Phaser 7700DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5761
-msgid "Xerox Phaser 7760GX"
+msgid "Xerox Phaser 7700DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5762
-msgid "Xerox Phaser 8400B"
+msgid "Xerox Phaser 7700GX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5763
-msgid "Xerox Phaser 8400BD"
+msgid "Xerox Phaser 7750B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5764
-msgid "Xerox Phaser 8400DP"
+msgid "Xerox Phaser 7750DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5765
-msgid "Xerox Phaser 8400DX"
+msgid "Xerox Phaser 7750DXF"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5766
-msgid "Xerox Phaser 8400N"
+msgid "Xerox Phaser 7750GX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5767
-msgid "Xerox Phaser 8500DN"
+msgid "Xerox Phaser 7760DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5768
-msgid "Xerox Phaser 8500N"
+msgid "Xerox Phaser 7760DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5769
-msgid "Xerox Phaser 8550DP"
+msgid "Xerox Phaser 7760GX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5770
-msgid "Xerox Phaser 8550DT"
+msgid "Xerox Phaser 8400B"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5771
-msgid "Xerox Phaser 8550DX"
+msgid "Xerox Phaser 8400BD"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5772
-msgid "Xerox Phaser 8560DN"
+msgid "Xerox Phaser 8400DP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5773
-msgid "Xerox WorkCentre 7345"
+msgid "Xerox Phaser 8400DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5774
-msgid "Xerox WorkCentre M118"
+msgid "Xerox Phaser 8400N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5775
-msgid "Compaq IJ1200"
+msgid "Xerox Phaser 8500DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5776
-msgid "Lexmark X73"
+msgid "Xerox Phaser 8500N"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5777
-msgid "Lexmark Z42"
+msgid "Xerox Phaser 8550DP"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5778
-msgid "Lexmark Z43"
+msgid "Xerox Phaser 8550DT"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5779
-msgid "Lexmark Z52"
+msgid "Xerox Phaser 8550DX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5780
-msgid "Lexmark Z53"
+msgid "Xerox Phaser 8560DN"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5781
-msgid "Olympus P-10"
+msgid "Xerox WorkCentre 7345"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5782
-msgid "Olympus P-11"
+msgid "Xerox WorkCentre M118"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5783
-msgid "Olympus P-200"
+msgid "Compaq IJ1200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5784
-msgid "Olympus P-300"
+msgid "Lexmark X73"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5785
-msgid "Olympus P-300E"
+msgid "Lexmark Z42"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5786
-msgid "Olympus P-300U"
+msgid "Lexmark Z43"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5787
-msgid "Olympus P-330E"
+msgid "Lexmark Z52"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5788
-msgid "Olympus P-330NE"
+msgid "Lexmark Z53"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5789
-msgid "Olympus P-400"
+msgid "Olympus P-10"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5790
-msgid "Olympus P-440"
+msgid "Olympus P-11"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5791
-msgid "Olympus P-S100"
+msgid "Olympus P-200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5792
-msgid "Canon CP-10"
+msgid "Olympus P-300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5793
-msgid "Canon CP-100"
+msgid "Olympus P-300E"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5794
-msgid "Canon CP-200"
+msgid "Olympus P-300U"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5795
-msgid "Canon CP-220"
+msgid "Olympus P-330E"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5796
-msgid "Canon CP-300"
+msgid "Olympus P-330NE"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5797
-msgid "Canon CP-330"
+msgid "Olympus P-400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5798
-msgid "Canon SELPHY CP400"
+msgid "Olympus P-440"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5799
-msgid "Canon SELPHY CP500"
+msgid "Olympus P-S100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5800
-msgid "Canon SELPHY CP510"
+msgid "Canon CP-10"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5801
-msgid "Canon SELPHY CP520"
+msgid "Canon CP-100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5802
-msgid "Canon SELPHY CP530"
+msgid "Canon CP-200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5803
-msgid "Canon SELPHY CP600"
+msgid "Canon CP-220"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5804
-msgid "Canon SELPHY CP710"
+msgid "Canon CP-300"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5805
-msgid "Canon SELPHY CP720"
+msgid "Canon CP-330"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5806
-msgid "Canon SELPHY CP730"
+msgid "Canon SELPHY CP400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5807
-msgid "Canon SELPHY CP740"
+msgid "Canon SELPHY CP500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5808
-msgid "Canon SELPHY CP750"
+msgid "Canon SELPHY CP510"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5809
-msgid "Canon SELPHY CP760"
+msgid "Canon SELPHY CP520"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5810
-msgid "Canon SELPHY CP770"
+msgid "Canon SELPHY CP530"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5811
-msgid "Canon SELPHY CP780"
+msgid "Canon SELPHY CP600"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5812
-msgid "Canon SELPHY CP790"
+msgid "Canon SELPHY CP710"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5813
-msgid "Canon SELPHY CP800"
+msgid "Canon SELPHY CP720"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5814
-msgid "Canon SELPHY CP810"
+msgid "Canon SELPHY CP730"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5815
-msgid "Canon SELPHY CP900"
+msgid "Canon SELPHY CP740"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5816
-msgid "Canon SELPHY ES1"
+msgid "Canon SELPHY CP750"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5817
-msgid "Canon SELPHY ES2"
+msgid "Canon SELPHY CP760"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5818
-msgid "Canon SELPHY ES3"
+msgid "Canon SELPHY CP770"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5819
-msgid "Canon SELPHY ES20"
+msgid "Canon SELPHY CP780"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5820
-msgid "Canon SELPHY ES30"
+msgid "Canon SELPHY CP790"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5821
-msgid "Canon SELPHY ES40"
+msgid "Canon SELPHY CP800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5822
-msgid "Sony UP-DP10"
+msgid "Canon SELPHY CP810"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5823
-msgid "Sony UP-DR150"
+msgid "Canon SELPHY CP900"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5824
-msgid "Sony DPP-EX5"
+msgid "Canon SELPHY ES1"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5825
-msgid "Sony DPP-EX7"
+msgid "Canon SELPHY ES2"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5826
-msgid "Sony UP-DR100"
+msgid "Canon SELPHY ES3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5827
-msgid "Sony UP-DR200"
+msgid "Canon SELPHY ES20"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5828
-msgid "Fujifilm Printpix-CX-400"
+msgid "Canon SELPHY ES30"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5829
-msgid "Fujifilm Printpix-CX-550"
+msgid "Canon SELPHY ES40"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5830
-msgid "Fujifilm FinePix-NX-500"
+msgid "Sony UP-DP10"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5831
-msgid "Kodak Easyshare-Printer-Dock"
+msgid "Sony UP-DR150"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5832
-msgid "Kodak EasyShare-G600-Printer-Dock"
+msgid "Sony DPP-EX5"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5833
-msgid "Kodak PD-4000"
+msgid "Sony DPP-EX7"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5834
-msgid "Kodak PD-6000"
+msgid "Sony UP-DR100"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5835
-msgid "Kodak Photo-Printer"
+msgid "Sony UP-DR200"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5836
-msgid "Kodak Photo-Printer-500"
+msgid "Fujifilm Printpix-CX-400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5837
-msgid "Kodak Printer-Dock-Plus"
+msgid "Fujifilm Printpix-CX-550"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5838
-msgid "Kodak Printer-Dock-Plus-S3"
+msgid "Fujifilm FinePix-NX-500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5839
-msgid "Kodak 6800"
+msgid "Kodak Easyshare-Printer-Dock"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5840
-msgid "Kodak 6850"
+msgid "Kodak EasyShare-G600-Printer-Dock"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5841
-msgid "Kodak 605"
+msgid "Kodak PD-4000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5842
-msgid "Kodak 1400"
+msgid "Kodak PD-6000"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5843
-msgid "Kodak 805"
+msgid "Kodak Photo-Printer"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5844
-msgid "Kodak 9810"
+msgid "Kodak Photo-Printer-500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5845
-msgid "Kodak 8500"
+msgid "Kodak Printer-Dock-Plus"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5846
-msgid "Mitsubishi CP-3020D"
+msgid "Kodak Printer-Dock-Plus-S3"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5847
-msgid "Mitsubishi CP-3020DU"
+msgid "Kodak 6800"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5848
-msgid "Mitsubishi CP-3020DE"
+msgid "Kodak 6850"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5849
-msgid "Mitsubishi CP-3020DA"
+msgid "Kodak 605"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5850
-msgid "Mitsubishi CP-3020DAE"
+msgid "Kodak 1400"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5851
-msgid "Mitsubishi CP-9550D"
+msgid "Kodak 805"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5852
-msgid "Mitsubishi CP-9550DW"
+msgid "Kodak 9810"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5853
-msgid "Mitsubishi CP-9810D"
+msgid "Kodak 8500"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5854
-msgid "Mitsubishi CP-9810DW"
+msgid "Mitsubishi CP-3020D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5855
-msgid "Mitsubishi CP-D70DW"
+msgid "Mitsubishi CP-3020DU"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5856
-msgid "Mitsubishi CP-D707DW"
+msgid "Mitsubishi CP-3020DE"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5857
-msgid "Mitsubishi CP-K60DW"
+msgid "Mitsubishi CP-3020DA"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5858
-msgid "Shinko CHC-S9045"
+msgid "Mitsubishi CP-3020DAE"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5859
-msgid "Shinko CHC-S2145"
+msgid "Mitsubishi CP-9550D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5860
-msgid "Sinfonia CHC-S2145"
+msgid "Mitsubishi CP-9550DW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5861
-msgid "Dai Nippon Printing DS40"
+msgid "Mitsubishi CP-9810D"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5862
-msgid "Dai Nippon Printing DS80"
+msgid "Mitsubishi CP-9810DW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5863
-msgid "Dai Nippon Printing DSRX1"
+msgid "Mitsubishi CP-D70DW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5864
-msgid "Citizen CX"
+msgid "Mitsubishi CP-D707DW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5865
-msgid "Citizen CX-W"
+msgid "Mitsubishi CP-K60DW"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5866
-msgid "Citizen CY"
+msgid "Shinko CHC-S9045"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5867
-msgid "Citizen CW-01"
+msgid "Shinko CHC-S2145"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5868
-msgid "Citizen OP900"
+msgid "Sinfonia CHC-S2145"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5869
-msgid "Citizen CW-02"
+msgid "Dai Nippon Printing DS40"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5870
-msgid "Citizen OP900II"
+msgid "Dai Nippon Printing DS80"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5871
-msgid "Mitsubishi CP-3800DW"
+msgid "Dai Nippon Printing DSRX1"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5872
-msgid "RAW DATA 16 bit"
+msgid "Citizen CX"
 msgstr ""
 
 #: src/xml/xmli18n-tmp.h:5873
+msgid "Citizen CX-W"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5874
+msgid "Citizen CY"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5875
+msgid "Citizen CW-01"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5876
+msgid "Citizen OP900"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5877
+msgid "Citizen CW-02"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5878
+msgid "Citizen OP900II"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5879
+msgid "Mitsubishi CP-3800DW"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5880
+msgid "RAW DATA 16 bit"
+msgstr ""
+
+#: src/xml/xmli18n-tmp.h:5881
 msgid "RAW DATA 8 bit"
 msgstr ""
