@@ -1060,8 +1060,17 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        well as enabling support for more recent printers, it improves support
        for older models as well.
 
-       You will have to remove and re-create your printer queue after
-       upgrading.
+       Please note that if you are using one of these models with a 
+       prior Gutenprint release, you will have to remove and re-create your 
+       printer queue after upgrading.  Additionally, the internal paper sizes
+       have changed to correct the aspect ratio, so if you have scripts that
+       directly reference the internal paper names, they will need updating:
+
+	Visible Name    old name     new name
+	-------------------------------------
+	Postcard        Postcard     w288h432  (standard 4x6")
+        CP_L            w253h337     B7        (standard 3.5x5")
+	Wide Postcard   w283h566     w288h576  (standard 4x8")
 
        Newly added in this release:
 
