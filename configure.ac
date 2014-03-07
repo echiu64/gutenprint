@@ -48,7 +48,8 @@ dnl 3 (that is, GCI - GBA) and go directly from 2 to 4.
 dnl
 dnl For example:
 dnl 	 GCI=3, GBA=1 => .soname = libgutenprint.so.2.1
-dnl 	 GCI=4, GBA=2 => .soname = libgutenprint.so.2.2
+dnl 	 GCI=4, GBA=2 => .soname = libgutenprint.so.2.2 (5.2.9)
+dnl 	 GCI=5, GBA=3 => .soname = libgutenprint.so.2.3 (5.2.10)
 dnl          (and so on for 5.2 releases, which must remain compatible)
 dnl 	 GCI=4, GBA=0 => .soname = libgutenprint.so.4.0
 dnl 	 GCI=5, GBA=1 => .soname = libgutenprint.so.4.1
@@ -78,8 +79,8 @@ pushdef([GUTENPRINT_MAJOR_VERSION],     [5])
 pushdef([GUTENPRINT_MINOR_VERSION],     [2])
 pushdef([GUTENPRINT_MICRO_VERSION],     [10])
 pushdef([GUTENPRINT_EXTRA_VERSION],     [-pre2])
-pushdef([GUTENPRINT_CURRENT_INTERFACE], [4])
-pushdef([GUTENPRINT_BINARY_AGE],        [2])
+pushdef([GUTENPRINT_CURRENT_INTERFACE], [5])
+pushdef([GUTENPRINT_BINARY_AGE],        [3])
 pushdef([GUTENPRINTUI2_CURRENT_INTERFACE], [1])
 pushdef([GUTENPRINTUI2_BINARY_AGE],        [0])
 pushdef([GUTENPRINT_VERSION], GUTENPRINT_MAJOR_VERSION.GUTENPRINT_MINOR_VERSION.GUTENPRINT_MICRO_VERSION[]GUTENPRINT_EXTRA_VERSION)
