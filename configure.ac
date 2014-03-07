@@ -54,9 +54,9 @@ dnl 	 GCI=4, GBA=0 => .soname = libgutenprint.so.4.0
 dnl 	 GCI=5, GBA=1 => .soname = libgutenprint.so.4.1
 dnl 	 GCI=6, GBA=2 => .soname = libgutenprint.so.4.2
 dnl          (for Gutenprint 5.3 or 5.4 or 6.0 or whatever)
-dnl 	 GCI=5, GBA=0 => .soname = libgutenprint.so.4.0
-dnl 	 GCI=6, GBA=1 => .soname = libgutenprint.so.4.1
-dnl 	 GCI=7, GBA=2 => .soname = libgutenprint.so.4.2
+dnl 	 GCI=5, GBA=0 => .soname = libgutenprint.so.5.0
+dnl 	 GCI=6, GBA=1 => .soname = libgutenprint.so.5.1
+dnl 	 GCI=7, GBA=2 => .soname = libgutenprint.so.5.2
 dnl          (for the next major/minor release beyond that)
 dnl
 dnl Typically, programs will require a certain major number to be matched
