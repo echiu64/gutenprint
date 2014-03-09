@@ -272,14 +272,16 @@ then the builds must be combined together on the main machine.
 ================================================================
 Package installers & uninstallers
 
-Packages are created for the current Gutenprint driver. The
-uninstaller package files are copied from the previous release, as
-described above.
+Packages are created for the current Gutenprint driver. The uninstaller
+package files are copied from the previous release, as described above.
 
-On the Leopard machine, build all the packages, the installer and
-uninstaller, and the final DMG file:
+On the main machine, build all the installer packages and the final DMG file:
 
 	./make-installer
 
-This will create a final DMG file called 'gutenprint-VERSION.dmg',
-which can be uploaded to SourceForge as the official OS X release.
+Note that you will probably need to authenticate once at the beginning of the
+process (to sudo, via the terminal) and again at the end (to hdiutil, via a
+GUI dialog).
+
+This will create a final DMG file called 'gutenprint-VERSION.dmg', which can
+be uploaded to SourceForge as an official OS X release.
