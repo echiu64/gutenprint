@@ -1,5 +1,5 @@
 #!/bin/bash -e
 
 export GP_OLD_INSTALLER='../../Gutenprint 5.2.9 (dmg)'
-export GP_GUTENPRINT_SRC='../../gutenprint-5.2.10-pre1.tar.bz2'
+export GP_GUTENPRINT_SRC='../../gutenprint-5.2.10-pre2.tar.bz2'
 export GP_LIBUSB_SRC='../../libusb-1.0.18.tar.bz2'
