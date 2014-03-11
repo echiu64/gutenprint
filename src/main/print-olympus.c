@@ -2478,7 +2478,8 @@ LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, m
 static const laminate_t mitsu_cpd70x_laminate[] =
 {
   {"Matte", N_("Matte"), {1, "\x02"}},
-  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
+  {"Glossy", N_("Glossy"), {1, "\x02"}},
+  {"None",  N_("None"),  {1, "\x00"}},
 };
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
@@ -2501,11 +2502,14 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
+  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
     /* Laminate a slightly larger boundary */
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
-    stp_putc(0x03, v); /* Trigger Superfine */
+    if(!strcmp("Matte", privdata.laminate->name))
+      stp_putc(0x03, v); /* Trigger Superfine */
+    else
+      stp_putc(0x00, v); /* Normal mode */
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
     stp_putc(0x00, v);
