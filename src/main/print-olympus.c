@@ -2478,7 +2478,7 @@ LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, m
 static const laminate_t mitsu_cpd70x_laminate[] =
 {
   {"Matte", N_("Matte"), {1, "\x02"}},
-  {"None",  N_("None"),  {1, "\x00"}},
+  {"Glossy",  N_("Glossy"),  {1, "\x00"}},
 };
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
@@ -2525,11 +2525,11 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 {
   /* If lamination is enabled, generate a lamination plane */
-  if (*((const char*)((privdata.laminate->seq).data)) == 0x01) {
+  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
 
     /* The Windows drivers generate a lamination pattern consisting of
        four values: 0xab58, 0x286a, 0x6c22 */
-    
+
     int r, c;
     unsigned long seed = 1;
 
