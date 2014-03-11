@@ -2453,7 +2453,11 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   						DYESUB_LANDSCAPE},
   { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
+  { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
   { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h612", "6x8.5", PT(1864,300)+1, PT(2564,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
@@ -2468,7 +2472,9 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
   { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1228, 1864},
   { "300x300", "w360h504", 1572, 2128},
+  { "300x300", "w432h432", 1820, 1864},
   { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "w432h612", 1864, 2564},
   { "300x300", "w432h648", 1864, 2730},
   { "300x300", "Custom", 1220, 1868},
 };
@@ -2478,7 +2484,6 @@ LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, m
 static const laminate_t mitsu_cpd70x_laminate[] =
 {
   {"Matte", N_("Matte"), {1, "\x02"}},
-  {"Glossy", N_("Glossy"), {1, "\x02"}},
   {"None",  N_("None"),  {1, "\x00"}},
 };
 
@@ -2506,10 +2511,7 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
     /* Laminate a slightly larger boundary */
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
-    if(!strcmp("Matte", privdata.laminate->name))
-      stp_putc(0x03, v); /* Trigger Superfine */
-    else
-      stp_putc(0x00, v); /* Normal mode */
+    stp_putc(0x03, v); /* Trigger Superfine */
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
     stp_putc(0x00, v);
