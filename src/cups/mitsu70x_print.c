@@ -39,6 +39,7 @@
 
 #define USB_VID_MITSU       0x06D3
 #define USB_PID_MITSU_D70X  0x3B30
+#define USB_PID_MITSU_K60   0x3B31
 
 /* Private data stucture */
 struct mitsu70x_ctx {
@@ -406,8 +407,8 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
-	.name = "Mitsubishi CP-D70/D707",
-	.version = "0.12",
+	.name = "Mitsubishi CP-D70/D707/K60",
+	.version = "0.13",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
@@ -418,6 +419,7 @@ struct dyesub_backend mitsu70x_backend = {
 	.main_loop = mitsu70x_main_loop,
 	.devices = {
 	{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, "Mitsubishi"},
+	{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_D70X, "Mitsubishi"},
 	{ 0, 0, 0, ""}
 	}
 };

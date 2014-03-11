@@ -126,6 +126,9 @@
 # Mitsubishi CP-D70/CP-D707
 0x06d3 0x3b30 blacklist
 
+# Mitsubishi CP-K60DW-S
+0x06d3 0x3b31 blacklist
+
 # DNP DS40 + Citizen CX
 0x1343 0x0003 blacklist
 
