@@ -2451,6 +2451,10 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   						DYESUB_LANDSCAPE},
   { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
+#ifdef DNPX2
+  { "2x6_x2", "4x6*2", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+#endif
   { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
@@ -2461,6 +2465,10 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   						DYESUB_PORTRAIT},
   { "w432h648", "6x9", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "4x6_x2", "4x6*2", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+#endif
   { "Custom", NULL, PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
 };
@@ -2471,11 +2479,17 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
 {
   { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1228, 1864},
+#ifdef DNPX2
+  { "300x300", "2x6_x2", 1228, 1864},
+#endif
   { "300x300", "w360h504", 1572, 2128},
   { "300x300", "w432h432", 1820, 1864},
   { "300x300", "w432h576", 1864, 2422},
   { "300x300", "w432h612", 1864, 2564},
   { "300x300", "w432h648", 1864, 2730},
+#ifdef DNPX2
+  { "300x300", "4x6_x2", 1864, 2730},
+#endif
   { "300x300", "Custom", 1220, 1868},
 };
 
@@ -2489,7 +2503,7 @@ static const laminate_t mitsu_cpd70x_laminate[] =
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
 
-static void mitsu_cpd70x_printer_init(stp_vars_t *v)
+static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
 {
   /* Printer init */
   stp_putc(0x1b, v);
@@ -2502,7 +2516,11 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  stp_putc(0x01, v);
+  if (is_k60) {
+    stp_putc(0x0, v);
+  } else {
+    stp_putc(0x01, v);
+  }
   dyesub_nputc(v, 0x00, 12);
 
   stp_put16_be(privdata.w_size, v);
@@ -2511,21 +2529,46 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
     /* Laminate a slightly larger boundary */
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
-    stp_putc(0x03, v); /* Trigger Superfine */
+    if (is_k60) {
+      stp_putc(0x04, v); /* Lamination forces UltraFine */
+    } else {
+      stp_putc(0x03, v); /* Lamination forces Superfine (or UltraFine) */
+    }
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
-    stp_putc(0x00, v);
+    stp_putc(0x00, v); /* Fine mode */
   }
   dyesub_nputc(v, 0x00, 7);
 
-  stp_putc(0x00, v);  /* Auto deck selection, or 0x01 for Lower, 0x02 for Upper */
+  if (is_k60) {
+    stp_putc(0x01, v); /* K60 has a single "lower" deck */
+  } else {
+    stp_putc(0x00, v);  /* Auto deck selection, or 0x01 for Lower, 0x02 for Upper */
+  }
   dyesub_nputc(v, 0x00, 8);
 
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
   dyesub_nputc(v, 0x00, 6);
 
-  dyesub_nputc(v, 0x00, 464); /* Pad to 512-byte block */
+  /* Multi-cut control */
+  if (strcmp(privdata.pagesize,"4x6_x2") == 0) {
+    stp_putc(0x01, v);
+  } else if (strcmp(privdata.pagesize,"B7_x2") == 0) {
+    stp_putc(0x01, v);
+  } else if (strcmp(privdata.pagesize,"2x6_x2") == 0) {
+    stp_putc(0x05, v);
+  } else {
+    stp_putc(0x00, v);
+  }
+  dyesub_nputc(v, 0x00, 15);
+
+  dyesub_nputc(v, 0x00, 448); /* Pad to 512-byte block */
+}
+
+static void mitsu_cpd70x_printer_init(stp_vars_t *v)
+{
+  return mitsu_cpd70k60_printer_init(v, 0);
 }
 
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
@@ -2569,12 +2612,24 @@ static const dyesub_pagesize_t mitsu_cpk60_page[] =
   						DYESUB_LANDSCAPE},
   { "w288h432", "4x6", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
+#ifdef DNPX2
+  { "2x6_x2", "2x6*2", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+#endif
   { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "B7_x2", "3.5x5*2", PT(1568,300)+1, PT(2190,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+#endif
   { "w432h432", "6x6", PT(1864,300)+1, PT(1820,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "4x6_x2", "4x6*2", PT(1864,300)+1, PT(2454,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+#endif
   { "Custom", NULL, PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
 };
@@ -2585,9 +2640,18 @@ static const dyesub_printsize_t mitsu_cpk60_printsize[] =
 {
   { "300x300", "B7", 1076, 1568},
   { "300x300", "w288h432", 1218, 1864},
+#ifdef DNPX2
+  { "300x300", "2x6_x2", 1218, 1864},
+#endif
   { "300x300", "w360h504", 1568, 2128},
+#ifdef DNPX2
+  { "B7_x2", "3.5x5*24", 1568, 2190},
+#endif
   { "300x300", "w432h432", 1864, 1820},
   { "300x300", "w432h576", 1864, 2422},
+#ifdef DNPX2
+  { "300x300", "4x6_x2", 1864, 2454},
+#endif
   { "300x300", "Custom", 1218, 1864},
 };
 
@@ -2595,46 +2659,8 @@ LIST(dyesub_printsize_list_t, mitsu_cpk60_printsize_list, dyesub_printsize_t, mi
 
 static void mitsu_cpk60_printer_init(stp_vars_t *v)
 {
-  /* Printer init */
-  stp_putc(0x1b, v);
-  stp_putc(0x45, v);
-  stp_putc(0x57, v);
-  stp_putc(0x55, v);
-  dyesub_nputc(v, 0x00, 508);
-
-  /* Each copy gets this.. */
-  stp_putc(0x1b, v);
-  stp_putc(0x5a, v);
-  stp_putc(0x54, v);
-  stp_putc(0x00, v);
-  dyesub_nputc(v, 0x00, 12);
-
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
-  if (*((const char*)((privdata.laminate->seq).data)) == 0x02) {
-    /* Laminate a slightly larger boundary */
-    stp_put16_be(privdata.w_size, v);
-    stp_put16_be(privdata.h_size + 12, v);  /* XXX this isn't always true.. */
-  } else {
-    dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
-  }
-  stp_putc(0x00, v); /* Disable UltraFine for now (0x04 enables it) */
-  dyesub_nputc(v, 0x00, 7);
-
-  stp_putc(0x01, v); /* K60 has a single "lower" deck */
-  dyesub_nputc(v, 0x00, 8);
-
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
-  dyesub_nputc(v, 0x00, 6);
-
-  stp_putc(0x01, v); /* Unknown */
-  dyesub_nputc(v, 0x00, 15);
-
-  dyesub_nputc(v, 0x00, 448); /* Pad to 512-byte block */
+  return mitsu_cpd70k60_printer_init(v, 1);
 }
-
-
 
 /* Shinko CHC-S9045 (experimental) */
 static const dyesub_pagesize_t shinko_chcs9045_page[] =
