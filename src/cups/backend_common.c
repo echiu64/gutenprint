@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.47G"
+#define BACKEND_VERSION "0.48G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -599,6 +599,7 @@ static void print_help(char *argv0, struct dyesub_backend *backend)
 {
 	struct libusb_context *ctx = NULL;
 	struct libusb_device **list = NULL;
+	int i;
 
 	char *ptr = strrchr(argv0, '/');
 	if (ptr)
@@ -640,7 +641,12 @@ static void print_help(char *argv0, struct dyesub_backend *backend)
 			backend->cmdline_usage();
 		DEBUG("\t[ -d copies ] [ infile | - ]\n");
 	}
-	libusb_init(&ctx);
+
+	i = libusb_init(&ctx);
+	if (i) {
+		ERROR("Failed to initialize libusb (%d)\n", i);
+		exit(4); /* CUPS_BACKEND_STOP */
+	}
 	find_and_enumerate(ctx, &list, backend, NULL, P_ANY, 1);
 	libusb_free_device_list(list, 1);
 	libusb_exit(ctx);
@@ -877,7 +883,13 @@ int main (int argc, char **argv)
 	}
 
 	/* Libusb setup */
-	libusb_init(&ctx);
+	ret = libusb_init(&ctx);
+	if (ret) {
+		ERROR("Failed to initialize libusb (%d)\n", ret);
+		ret = 4;
+		goto done;
+	}
+
 	/* Enumerate devices */
 	found = find_and_enumerate(ctx, &list, backend, use_serno, printer_type, 0);
 
