@@ -8,8 +8,9 @@ use strict;
 my $valgrind = 0;
 my $callgrind = 0;
 my $gdb_attach = 0;
-my $calc_md5_file = undef;
-my $calc_md5_dir = undef;
+my $csum_file = undef;
+my $csum_dir = undef;
+my $csum_type = 'sha512';
 my $dontrun = 0;
 my $retval = 0;
 my $halt_on_error = 0;
@@ -72,34 +73,35 @@ my %stp_float_values;
 my %stp_int_values;
 my %rerun_cases;
 
-GetOptions("v+"  => \$valgrind,
-	   "c"   => \$callgrind,
-	   "g"   => \$gdb_attach,
+GetOptions("C=s" => \$csum_type,
 	   "G=s" => \$geometry,
-	   "n"   => \$dontrun,
-	   "p:i" => \$std_pages,
-	   "P:i" => \$duplex_pages,
-	   "s!"  => \$skip_duplicate_printers,
-	   "S+"  => \$single,
 	   "H!"  => \$halt_on_error,
-	   "i!"  => \$run_installed,
-	   "r!"  => \$skip_resolutions,
-	   "R+"  => \$use_min_res,
-	   "q+"  => \$quiet,
-	   "o=s" => \@special_options,
-	   "f=s" => \@families,
-	   "O=s" => \$output,
-	   "d=s" => \@default_options,
-	   "m:s" => \$calc_md5_dir,
-	   "M:s" => \$calc_md5_file,
-	   "X"   => \$rerun,
-	   "x=s" => \@exclude_list,
-	   "Y=s" => \@include_patterns,
-	   "y=s" => \@exclude_patterns,
-	   "l"   => \$list_printers,
 	   "L"   => \$list_options,
+	   "M:s" => \$csum_file,
+	   "O=s" => \$output,
+	   "P:i" => \$duplex_pages,
+	   "R+"  => \$use_min_res,
+	   "S+"  => \$single,
 	   "V+"  => \$verbose,
-	   "h"   => \$help);
+	   "X"   => \$rerun,
+	   "Y=s" => \@include_patterns,
+	   "c"   => \$callgrind,
+	   "d=s" => \@default_options,
+	   "f=s" => \@families,
+	   "g"   => \$gdb_attach,
+	   "h"   => \$help,
+	   "i!"  => \$run_installed,
+	   "l"   => \$list_printers,
+	   "m:s" => \$csum_dir,
+	   "n"   => \$dontrun,
+	   "o=s" => \@special_options,
+	   "p:i" => \$std_pages,
+	   "q+"  => \$quiet,
+	   "r!"  => \$skip_resolutions,
+	   "s!"  => \$skip_duplicate_printers,
+	   "v+"  => \$valgrind,
+	   "x=s" => \@exclude_list,
+	   "y=s" => \@exclude_patterns);
 
 sub print_help_and_exit() {
     my $options = join("\n                        ", sort @standard_options);
@@ -109,7 +111,7 @@ Usage: run-testpattern-2 [opts] [model ...]
   Printer selection options:
     -f family       Test printers only in the specified family.  Multiple
                     families may be tested.  By default, all printer families
-		    are tested.
+                    are tested.
     -s              Skip duplicate printers (with the same model number
                     in printers.xml).
     -x printer      Do not test the specified printer.
@@ -117,14 +119,22 @@ Usage: run-testpattern-2 [opts] [model ...]
     -Y pattern      Only test printers matching the specified pattern(s).
 
   Logging options:
-    -m md5_dir      Generate MD5 checksums and place them in the specified
+    -C csum_type    Generate specified checksum type (default $csum_type).  Options:
+                    - md5
+                    - sha
+                    - sha1
+                    - sha224
+                    - ssh256
+                    - sha384
+                    - sha512
+    -m csum_dir     Generate checksums and place them in the specified
                     directory, one file per run.  Directory will be created
-		    if necessary.
-    -M md5_file     Generate MD5 checksums and place them in the specified
+                    if necessary.
+    -M csum_file    Generate checksums and place them in the specified
                     file, one line per run.
     -O out_dir      Generate actual output and place it in the specified
                     directory, one file per run.  Directory will be created
-		    if necessary.
+                    if necessary.
 
   Control options:
     -H              Halt on any error.
@@ -142,14 +152,14 @@ Usage: run-testpattern-2 [opts] [model ...]
 
   Test selection options:
     -d option=value Test this option with only the specified (default) value,
-		    if available.
+                    if available.
     -G geometry     Specify geometry (=(HxV)(+L+T), as fractions of page).
     -o option       Test this option.  Multiple -o options may be specified.
                     option1,option2... tests all combinations of each
-		    option.  For floating point and integer options, a
-		    selection of values is tested.
-		    Default:
-		        $options
+                    option.  For floating point and integer options, a
+                    selection of values is tested.
+                    Default:
+                        $options
     -p page count   Specify number of pages to print per printer.  Default $std_pages.
     -P page count   Specify number of pages to print per printer when testing
                     duplex mode.  Default $duplex_pages.
@@ -464,30 +474,30 @@ sub do_print($$) {
 
 sub do_output($) {
     my ($outkey) = @_;
-    if (defined $output || defined $calc_md5_dir ||
-	defined $calc_md5_file) {
-	my $md5_cmd;
+    if (defined $output || defined $csum_dir ||
+	defined $csum_file) {
+	my $checksum_cmd;
 	my $outbase = "${outkey}.prn";
 	my $outfile = "$output/$outbase";
-	if (defined $calc_md5_file) {
-	    $md5_cmd = "md5sum -b | sed 's/-/$outbase/' >> '$calc_md5_file'";
-	} elsif (defined $calc_md5_dir) {
-	    my $md5_dir = $calc_md5_dir;
-	    if (defined $calc_md5_dir && $calc_md5_dir eq "") {
-		$md5_dir = $output;
+	if (defined $csum_file) {
+	    $checksum_cmd = "${csum_type}sum -b | sed 's/-/$outbase/' >> '$csum_file'";
+	} elsif (defined $csum_dir) {
+	    my $checksum_dir = $csum_dir;
+	    if (defined $csum_dir && $csum_dir eq "") {
+		$checksum_dir = $output;
 	    }
-	    my $md5file = "$md5_dir/${outkey}.md5";
-	    if (! $md5_dir) {
-		$md5file = "${outkey}.md5";
+	    my $checksumfile = "$checksum_dir/${outkey}.checksum";
+	    if (! $checksum_dir) {
+		$checksumfile = "${outkey}.checksum";
 	    }
-	    $md5_cmd = "md5sum -b | sed 's/-/$outbase/' > '$md5file'";
+	    $checksum_cmd = "${csum_type}sum -b | sed 's/-/$outbase/' > '$checksumfile'";
 	}
-	if ($output && $md5_cmd ne "") {
-	    push @job_extras, "output \"|tee '$outfile' | $md5_cmd\";\n";
+	if ($output && $checksum_cmd ne "") {
+	    push @job_extras, "output \"|tee '$outfile' | $checksum_cmd\";\n";
 	} elsif ($output) {
 	    push @job_extras, "output \"$outfile\";\n";
 	} else {
-	    push @job_extras, "output \"|$md5_cmd\";\n";
+	    push @job_extras, "output \"|$checksum_cmd\";\n";
 	}
     }
 }
@@ -708,7 +718,7 @@ if ($rerun) {
     while (<>) {
 	chomp;
 	s/^[^a-zA-Z]*//;
-	s/\.prn//;
+	s/\..*//;
 	$rerun_cases{$_} = 1;
     }
 }
@@ -823,19 +833,19 @@ if ($list_options) {
 	mkdir $output || die "Can't create directory $output: $!\n";
     }
 
-    if (defined $calc_md5_dir && $calc_md5_dir ne "" && ! -d $calc_md5_dir) {
-	mkdir $calc_md5_dir || die "Can't create directory $calc_md5_dir: $!\n";
+    if (defined $csum_dir && $csum_dir ne "" && ! -d $csum_dir) {
+	mkdir $csum_dir || die "Can't create directory $csum_dir: $!\n";
     }
 
-    if (defined $calc_md5_file) {
-	unlink $calc_md5_file;
-	system "touch $calc_md5_file";
+    if (defined $csum_file) {
+	unlink $csum_file;
+	system "touch $csum_file";
     }
 
     my $status = 1;
     my ($suppress);
-    if (! defined $output && ! defined $calc_md5_dir &&
-	! defined $calc_md5_file) {
+    if (! defined $output && ! defined $csum_dir &&
+	! defined $csum_file) {
 	$suppress = '-n';
     }
     my ($qopt) = $quiet ? "-q" : "";

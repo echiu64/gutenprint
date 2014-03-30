@@ -105,6 +105,7 @@ int end_job = 0;
 int passes = 0;
 int failures = 0;
 int skipped = 0;
+size_t bytes_written = 0;
 
 static testpattern_t *static_testpatterns;
 
@@ -193,14 +194,13 @@ writefunc(void *file, const char *buf, size_t bytes)
     return;
   if (file == stderr)
     {
-      if (global_quiet)
-	fputc('-', prn);
-      else
+      if (!global_quiet)
 	fwrite(buf, 1, bytes, prn);
     }
   else if (!global_suppress_output)
     {
       fwrite(buf, 1, bytes, prn);
+      bytes_written += bytes;
     }
 }
 
@@ -307,6 +307,7 @@ do_print(void)
 	}
       return 2;
     }
+  bytes_written = 0;
   if (global_output)
     {
       if (strcmp(global_output, "-") == 0)
@@ -467,6 +468,7 @@ do_print(void)
   stp_merge_printvars(v, stp_printer_get_defaults(the_printer));
   if (stp_verify(v))
     {
+      bytes_written = 0;
       if (start_job)
 	{
 	  stp_start_job(v, &theImage);
@@ -476,6 +478,15 @@ do_print(void)
 	{
 	  if (!global_quiet)
 	    fputs("FAILED", stderr);
+	  failures++;
+	  status = 2;
+	  if (global_halt_on_error)
+	    return status;
+	}
+      else if (bytes_written == 0)
+	{
+	  if (!global_quiet)
+	    fputs("FAILED: No output", stderr);
 	  failures++;
 	  status = 2;
 	  if (global_halt_on_error)
