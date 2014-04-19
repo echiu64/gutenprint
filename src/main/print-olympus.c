@@ -1578,6 +1578,30 @@ static void kodak_6850_printer_init(stp_vars_t *v)
 }
 
 /* Kodak 605 */
+static const dyesub_pagesize_t kodak_605_page[] =
+{
+  { "w288h432", "4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE}, /* 4x6 */
+  { "w360h504", "5x7", PT(1500,300)+1, PT(2100,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 5x7 */
+  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 6x8 */
+  { "Custom", NULL, PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE}, /* 4x6 */
+};
+
+LIST(dyesub_pagesize_list_t, kodak_605_page_list, dyesub_pagesize_t, kodak_605_page);
+
+static const dyesub_printsize_t kodak_605_printsize[] =
+{
+  { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "w360h504", 1500, 2100},
+  { "300x300", "w432h576", 1844, 2434},
+  { "300x300", "Custom", 1240, 1844},
+};
+
+LIST(dyesub_printsize_list_t, kodak_605_printsize_list, dyesub_printsize_t, kodak_605_printsize);
+
 static void kodak_605_printer_init(stp_vars_t *v)
 {
   stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
@@ -1585,7 +1609,17 @@ static void kodak_605_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_put16_le(privdata.w_size, v);
   stp_put16_le(privdata.h_size, v);
-  stp_putc(privdata.h_size == 1240 ? 0x01 : 0x03, v);
+  if (privdata.h_size == 1240)
+	  stp_putc(0x01, v);
+  else if (privdata.h_size == 2100)
+	  stp_putc(0x02, v);
+  else if (privdata.h_size == 2434)
+	  stp_putc(0x03, v);
+  else if (privdata.h_size == 2490)
+	  stp_putc(0x04, v);
+  else
+	  stp_putc(0x01, v);
+
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v);
   stp_putc(0x00, v);
@@ -2497,8 +2531,8 @@ LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, m
 
 static const laminate_t mitsu_cpd70x_laminate[] =
 {
+  {"Glossy", N_("Glossy"), {1, "\x00"}},
   {"Matte", N_("Matte"), {1, "\x02"}},
-  {"None",  N_("None"),  {1, "\x00"}},
 };
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
@@ -2530,9 +2564,9 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
     if (is_k60) {
-      stp_putc(0x04, v); /* Lamination forces UltraFine */
+      stp_putc(0x04, v); /* Matte Lamination forces UltraFine */
     } else {
-      stp_putc(0x03, v); /* Lamination forces Superfine (or UltraFine) */
+      stp_putc(0x03, v); /* Matte Lamination forces Superfine (or UltraFine) */
     }
   } else {
     dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
@@ -2573,7 +2607,7 @@ static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
 {
-  /* If lamination is enabled, generate a lamination plane */
+  /* If Matte lamination is enabled, generate a lamination plane */
   if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
 
     /* The Windows drivers generate a lamination pattern consisting of
@@ -3615,8 +3649,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     4003,
     &rgb_ink_list,
     &res_300dpi_list,
-    &kodak_6800_page_list,
-    &kodak_6800_printsize_list,
+    &kodak_605_page_list,
+    &kodak_605_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
     &kodak_605_printer_init, NULL,
