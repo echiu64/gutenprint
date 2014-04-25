@@ -1137,7 +1137,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	NOTE: With the exception of the CP-K60DW-S, all Mitsubishi
 	printers with red faceplates and/or model designations ending with 
-	an '-S' suffix are not supported.
+	an '-S' suffix are not supported.  These were only sold as part of
+	a Mitsubishi kiosk or lab solution, and were deliberately made
+	incompatible with the non-S models.
 
 	The CP-D70DW and CP-D707DW (and likely the CP-K60DW) require use of 
 	an intelligent backend,	which is bundled with Gutenprint.
