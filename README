@@ -530,6 +530,7 @@ D) CUPS dye-sublimation backend
         Citizen CY
 	Mitsubishi CP-D70DW  (EXPERIMENTAL)
 	Mitsubishi CP-D707DW (EXPERIMENTAL)
+	Mitsubishi CP-K60DW-S (EXPERIMENTAL)
 
     Although these printers advertise themselves as standard USB Printer
     Class devices, they do not actually obey those specifications, and
@@ -651,6 +652,28 @@ D) CUPS dye-sublimation backend
     After changing the user string, you will need to remove and re-create
     the CUPS queue.
 
+  Note on Mitsubishi Dye-Sublimation models with an '-S' suffix
+
+    As well as manufacturing standalone photo printers, Mitsubishi also
+    manufactures photo lab and kiosk solutions which use their printers.
+    However, the printers intended for use with those kiosks are *not*
+    compatible with the standalone models, despite having similar model
+    names.  They are incompatible from a software perspective, and also
+    require different media.
+
+    With only one exception, if the model ends in '-S' or has a red face-
+    plate, it is intended only for use with a Mitsubishi lab or kiosk, and
+    consequently not supportable by Gutenprint.  For example, see the 
+    (non-comprehensive) list below:
+
+      Supported/Compatible   |   Unsupported/Incompatible
+      ---------------------------------------------------
+                CP-9550DW    |   CP-9550DW-S
+		 CP-D70DW    |   CP-D70DW-S
+		CP-D707DW    |   CP-D707DW-S
+
+    The one exception to this rule is the CP-K60DW-S, which is sold
+    as a standalone "event" printer.
 
 ----------------
 
