@@ -514,7 +514,7 @@ do_print(void)
       else
 	{
 	  if (!global_quiet)
-	    fprintf(stderr, "(skipped)");
+	    fputs("(skipped)", stderr);
 	  skipped++;
 	}
     }
@@ -1173,14 +1173,20 @@ Image_get_row(stp_image_t *image, unsigned char *data,
   return STP_IMAGE_STATUS_OK;
 }
 
-static int
-Image_width(stp_image_t *image)
+static void
+check_valid_image(const char *s)
 {
   if (! Image_is_valid)
     {
-      fputs("Calling Image_width with invalid image!\n", stderr);
+      fputs(s, stderr);
       abort();
     }
+}
+
+static int
+Image_width(stp_image_t *image)
+{
+  check_valid_image("Calling Image_width with invalid image!\n");
   if (static_testpatterns[0].type == E_IMAGE)
     return static_testpatterns[0].d.image.x;
   else
@@ -1190,11 +1196,7 @@ Image_width(stp_image_t *image)
 static int
 Image_height(stp_image_t *image)
 {
-  if (! Image_is_valid)
-    {
-      fputs("Calling Image_height with invalid image!\n", stderr);
-      abort();
-    }
+  check_valid_image("Calling Image_height with invalid image!\n");
   if (static_testpatterns[0].type == E_IMAGE)
     return static_testpatterns[0].d.image.y;
   else
@@ -1216,32 +1218,20 @@ Image_init(stp_image_t *image)
 static void
 Image_reset(stp_image_t *image)
 {
-  if (!Image_is_valid)
-    {
-      fputs("Calling Image_reset with invalid image!\n", stderr);
-      abort();
-    }
+  check_valid_image("Calling Image_reset with invalid image!\n");
  /* dummy function */
 }
 
 static void
 Image_conclude(stp_image_t *image)
 {
-  if (! Image_is_valid)
-    {
-      fputs("Calling Image_conclude with invalid image!\n", stderr);
-      abort();
-    }
+  check_valid_image("Calling Image_conclude with invalid image!\n");
   Image_is_valid = 0;
 }
 
 static const char *
 Image_get_appname(stp_image_t *image)
 {
-  if (! Image_is_valid)
-    {
-      fprintf(stderr, "Calling Image_get_appname with invalid image!\n");
-      abort();
-    }
+  check_valid_image("Calling Image_get_appname with invalid image!\n");
   return "Test Pattern";
 }
