@@ -1,7 +1,7 @@
 /*
  * "$Id$"
  *
- *   Test pattern generator for Gimp-Print
+ *   Test pattern generator for Gutenprint
  *
  *   Copyright 2001 Robert Krawitz <rlk@alum.mit.edu>
  *
@@ -22,7 +22,7 @@
 
 /*
  * This sample program may be used to generate test patterns.  It also
- * serves as an example of how to use the gimp-print API.
+ * serves as an example of how to use the Gutenprint API.
  *
  * As the purpose of this program is to allow fine grained control over
  * the output, it uses the raw CMYK output type.  This feeds 16 bits each
