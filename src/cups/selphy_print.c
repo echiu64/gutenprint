@@ -62,9 +62,7 @@
 #define USB_PID_CANON_CP790 0x31E7
 #define USB_PID_CANON_CP800 0x3214
 #define USB_PID_CANON_CP810 0x3256
-#define USB_PID_CANON_CP820 820 // XXX
 #define USB_PID_CANON_CP900 0x3255
-#define USB_PID_CANON_CP910 910 // XXX
 #define USB_PID_CANON_ES1   0x3141
 #define USB_PID_CANON_ES2   0x3185
 #define USB_PID_CANON_ES20  0x3186
@@ -926,7 +924,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.82",
+	.version = "0.82.1G",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
@@ -958,9 +956,7 @@ struct dyesub_backend canonselphy_backend = {
 	{ USB_VID_CANON, USB_PID_CANON_CP790, P_ES40_CP790, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP800, P_CP_XXX, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP810, P_CP_XXX, ""},
-	{ USB_VID_CANON, USB_PID_CANON_CP820, P_CP_XXX, ""},
 	{ USB_VID_CANON, USB_PID_CANON_CP900, P_CP_XXX, ""},
-	{ USB_VID_CANON, USB_PID_CANON_CP910, P_CP_XXX, ""},
 	{ USB_VID_CANON, USB_PID_CANON_ES1, P_ES1, ""},
 	{ USB_VID_CANON, USB_PID_CANON_ES2, P_ES2_20, ""},
 	{ USB_VID_CANON, USB_PID_CANON_ES20, P_ES2_20, ""},
