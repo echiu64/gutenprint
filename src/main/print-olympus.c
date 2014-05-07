@@ -3550,7 +3550,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Canon CP820, CP910 */
     1011,
-    &ymc_ink_list,
+    &bgr_ink_list,
     &res_300dpi_list,
     &cp910_page_list,
     &cp910_printsize_list,
@@ -3561,7 +3561,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL, NULL, NULL, /* Unknown color correction! */
     NULL, NULL,
   },
   { /* Sony UP-DP10  */
