@@ -1068,7 +1068,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Canon SELPHY CP790
        Canon SELPHY CP810
+       Canon SELPHY CP820
        Canon SELPHY CP900
+       Canon SELPHY CP910
 
        Added back after removal in 5.2.9 release:
 
@@ -1109,14 +1111,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
         The USB PIDs for the SELPHY CP520 is still unknown, and
         therefore unsupported by this backend.
-
-       The following models are completely unsupported:
-
-       Canon SELPHY CP820
-       Canon SELPHY CP910
-
-        These utilize a new communications protocol that has not yet
-        been decoded.
 
      - Mitsubishi Dye-Sublimation printers:
 
@@ -1275,6 +1269,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP790
        Canon SELPHY CP800
        Canon SELPHY CP810
+       Canon SELPHY CP910
        Canon iP2700 series
        Canon PIXMA iP3000
        Canon PIXMA iP4000 (possibly incomplete)
