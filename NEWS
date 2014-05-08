@@ -1068,9 +1068,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
        Canon SELPHY CP790
        Canon SELPHY CP810
-       Canon SELPHY CP820
        Canon SELPHY CP900
-       Canon SELPHY CP910
 
        Added back after removal in 5.2.9 release:
 
@@ -1112,6 +1110,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         The USB PIDs for the SELPHY CP520 is still unknown, and
         therefore unsupported by this backend.
 
+       Non-supported models:
+
+	The SELPHY CP820 and CP910, and possibly newer models in the
+	SELPHY CP series utilize an entirely new print data format,
+	and as such are not compatible with previous models in the 
+	SELPHY CP family.  We anticipate these models will be supported
+	in a subsequent Gutenprint release.
+
      - Mitsubishi Dye-Sublimation printers:
 
        Mitsubishi CP9810D/DW
@@ -1131,9 +1137,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	NOTE: With the exception of the CP-K60DW-S, all Mitsubishi
 	printers with red faceplates and/or model designations ending with 
-	an '-S' suffix are not supported.  These were only sold as part of
-	a Mitsubishi kiosk or lab solution, and were deliberately made
-	incompatible with the non-S models.
+	an '-S' suffix are not currently supported.  These were only sold
+	as part of a Mitsubishi kiosk or lab solution, and were 
+	deliberately made incompatible with the non-S models.
 
 	The CP-D70DW and CP-D707DW (and likely the CP-K60DW) require use of 
 	an intelligent backend,	which is bundled with Gutenprint.
@@ -1269,7 +1275,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Canon SELPHY CP790
        Canon SELPHY CP800
        Canon SELPHY CP810
-       Canon SELPHY CP910
        Canon iP2700 series
        Canon PIXMA iP3000
        Canon PIXMA iP4000 (possibly incomplete)
