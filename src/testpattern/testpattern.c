@@ -190,6 +190,7 @@ static void
 writefunc(void *file, const char *buf, size_t bytes)
 {
   FILE *prn = (FILE *)file;
+  bytes_written += bytes;
   if (! file)
     return;
   if (file == stderr)
@@ -200,7 +201,6 @@ writefunc(void *file, const char *buf, size_t bytes)
   else if (!global_suppress_output)
     {
       fwrite(buf, 1, bytes, prn);
-      bytes_written += bytes;
     }
 }
 
