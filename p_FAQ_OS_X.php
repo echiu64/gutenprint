@@ -164,6 +164,9 @@ require('standard_html_header.php');
  <li><a href="p_FAQ_OS_X.php#sambaGarbage">
   I'm printing through Samba, and my printer prints garbage!
  </a>
+ <li><a href="p_FAQ_OS_X.php#dyesub">
+  I added my dyesub printer, but nothing prints.
+ </a>
  </ol>
  <br>
  <br>
@@ -1053,6 +1056,47 @@ Users should upgrade to Mac OS X 10.5.2 or later.  A fix for this issue was incl
  newlines (\r\n). It's important to ensure that sending raw data, with no
  translation, to the printer.
  </p>
+ <a name="dyesub"></a>
+ <li>
+ <h3>
+ I added my dyesub printer, but nothing prints.
+ </h3>
+ <p>
+ Certain models of dyesub printers need a special manual configuration in order to
+ select a custom "backend" driver in Gutenprint 5.2.10 and above. The specific models include:
+ </p>
+ <ul>
+   <li>Canon (SELPHY ES, CP series)</li>
+   <li>Kodak (Professional 1400, 805/6800/6850/605 Photo Printer)</li>
+   <li>Shinko/Sinfonia (CHC-S2145)</li>
+   <li>Sony (UP-DR150, UP-DR200)</li>
+   <li>DNP (DS40, DS80, DS-RX1)</li>
+   <li>Citizen (CX, CX-W, CY)</li>
+   <li>Mitsubishi (CP-D70DW, CP-D707DW, CP-K60DW-S)</li>
+ </ul>
+ <p>
+ We do not presently have an automatic way of forcing Gutenprint to use the correct backend.
+ If you are using one of these printers and use the standard backend, it will add successfully, but will fail to print.
+ You will need to add a new printer and explicitly specify the backend by doing the following:
+ </p>
+ <ol>
+   <li>If necessary, install the installer package for Gutenprint 5.2.10 or above.</li>
+   <li>Make sure your dyesub printer is connected via USB, turned on, and ready to print.</li>
+   <li>Under the <b>Apple</b> menu, go to <b>System Preferences</b>, then click the <b>Printers &amp; Scanners</b>
+       icon (for OS X 10.5, the <b>Print &amp; Fax</b> icon).</li>
+   <li>Examine the printer list (on the left-hand side of the dialog) to see if your dyesub printer has already
+       been added. If so, remove the print queue by clicking the <b>-</b> (minus) button below the list.
+   <li>Click the <b>+</b> (plus) button below the list.</li>
+   <li>In the new window that appears, look for your dyesub printer in the list of found printers. It will likely
+       show two listings -- one with a <b>Kind</b> of "gutenprint52+usb", and one with a <b>Kind</b> of "USB". (You may
+       need to wait a few seconds for all the listings to appear; on OS 10.5, it may take several minutes, and your
+       system may appear to be frozen.)</li>
+   <li>Select the printer with the <b>Kind</b> showing "gutenprint52+usb".</li>
+   <li>Verify that the <b>Use</b> pop-up menu at the bottom of the windows shows the name of the printer, followed by
+       a string similar to "CUPS+Gutenprint v5.2.10".</li>
+   <li>Click the <b>Add</b> button.</li>
+   <li>Close the <b>System Preferences</b> dialog.
+ </ol>
  </ol>
 
 <?require('standard_html_footer.php');?>
