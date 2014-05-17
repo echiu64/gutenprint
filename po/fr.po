@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gimp-print 5.0.0\n"
 "Report-Msgid-Bugs-To: gimp-print-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2014-03-07 07:49-0500\n"
+"POT-Creation-Date: 2014-05-17 17:51-0400\n"
 "PO-Revision-Date: 2007-11-23 11:55-0500\n"
 "Last-Translator: regis rampnoux <regisr@pobox.com>\n"
 "Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
@@ -145,37 +145,37 @@ msgid "Dither algorithm"
 msgstr "Algorithme de tramage"
 
 #: src/main/print-canon.c:282 src/main/print-escp2.c:176
-#: src/main/print-lexmark.c:266 src/main/print-olympus.c:3831
+#: src/main/print-lexmark.c:266 src/main/print-olympus.c:3975
 #: src/main/print-pcl.c:1346 src/main/print-ps.c:74 src/main/print-raw.c:92
 msgid "Page Size"
 msgstr "Format papier "
 
 #: src/main/print-canon.c:283 src/main/print-escp2.c:177
-#: src/main/print-lexmark.c:267 src/main/print-olympus.c:3832
+#: src/main/print-lexmark.c:267 src/main/print-olympus.c:3976
 #: src/main/print-pcl.c:1347 src/main/print-ps.c:75 src/main/print-raw.c:93
 msgid "Size of the paper being printed to"
 msgstr "Taille du papier sur lequel vous imprimez"
 
 #: src/main/print-canon.c:288 src/main/print-escp2.c:182
-#: src/main/print-lexmark.c:272 src/main/print-olympus.c:3837
+#: src/main/print-lexmark.c:272 src/main/print-olympus.c:3981
 #: src/main/print-pcl.c:1352 src/cups/genppd.c:2058 src/cups/genppd.c:2526
 msgid "Media Type"
 msgstr "Type de support"
 
 #: src/main/print-canon.c:289 src/main/print-escp2.c:183
-#: src/main/print-lexmark.c:273 src/main/print-olympus.c:3838
+#: src/main/print-lexmark.c:273 src/main/print-olympus.c:3982
 #: src/main/print-pcl.c:1353
 msgid "Type of media (plain paper, photo paper, etc.)"
 msgstr "Type de support (papier ordinaire, papier photo etc.)"
 
 #: src/main/print-canon.c:294 src/main/print-escp2.c:188
-#: src/main/print-lexmark.c:278 src/main/print-olympus.c:3843
+#: src/main/print-lexmark.c:278 src/main/print-olympus.c:3987
 #: src/main/print-pcl.c:1358 src/cups/genppd.c:2094 src/cups/genppd.c:2546
 msgid "Media Source"
 msgstr "Source du support"
 
 #: src/main/print-canon.c:295 src/main/print-escp2.c:189
-#: src/main/print-lexmark.c:279 src/main/print-olympus.c:3844
+#: src/main/print-lexmark.c:279 src/main/print-olympus.c:3988
 #: src/main/print-pcl.c:1359
 msgid "Source (input slot) of the media"
 msgstr "Source (bac) du support vers lequel vous imprimez"
@@ -222,25 +222,25 @@ msgid "CD Vertical Fine Adjustment"
 msgstr "Réglage vertical précis du CD"
 
 #: src/main/print-canon.c:330 src/main/print-escp2.c:236
-#: src/main/print-lexmark.c:284 src/main/print-olympus.c:3849
+#: src/main/print-lexmark.c:284 src/main/print-olympus.c:3993
 #: src/main/print-pcl.c:1370 src/cups/genppd.c:2186 src/cups/genppd.c:2581
 msgid "Resolution"
 msgstr "Résolution"
 
 #: src/main/print-canon.c:331 src/main/print-lexmark.c:285
-#: src/main/print-olympus.c:3850
+#: src/main/print-olympus.c:3994
 msgid "Resolution and quality of the print"
 msgstr "Résolution et qualité de l'impression"
 
 #: src/main/print-canon.c:341 src/main/print-escp2.c:247
-#: src/main/print-lexmark.c:290 src/main/print-olympus.c:3855
+#: src/main/print-lexmark.c:290 src/main/print-olympus.c:3999
 #: src/main/print-pcl.c:1376 src/main/print-raw.c:80
 msgid "Ink Type"
 msgstr "Type d'encre"
 
 #: src/main/print-canon.c:342 src/main/print-escp2.c:248
 #: src/main/print-escp2.c:260 src/main/print-lexmark.c:291
-#: src/main/print-olympus.c:3856 src/main/print-pcl.c:1377
+#: src/main/print-olympus.c:4000 src/main/print-pcl.c:1377
 #: src/main/print-raw.c:81
 msgid "Type of ink in the printer"
 msgstr "Encres installées"
@@ -253,13 +253,13 @@ msgid "Ink Channels"
 msgstr "Encres (canaux)"
 
 #: src/main/print-canon.c:358 src/main/print-escp2.c:349
-#: src/main/print-lexmark.c:302 src/main/print-olympus.c:3877
+#: src/main/print-lexmark.c:302 src/main/print-olympus.c:4021
 #: src/main/print-pcl.c:1388 src/main/print-ps.c:86 src/main/print-raw.c:86
 msgid "Printing Mode"
 msgstr "Mode d'impression"
 
 #: src/main/print-canon.c:359 src/main/print-escp2.c:350
-#: src/main/print-lexmark.c:303 src/main/print-olympus.c:3878
+#: src/main/print-lexmark.c:303 src/main/print-olympus.c:4022
 #: src/main/print-pcl.c:1389 src/main/print-ps.c:87 src/main/print-raw.c:87
 msgid "Printing Output Mode"
 msgstr "Mode de sortie"
@@ -274,12 +274,12 @@ msgid "Type of inkset in the printer"
 msgstr "Encres installées"
 
 #: src/main/print-canon.c:375 src/main/print-escp2.c:271
-#: src/main/print-olympus.c:3871
+#: src/main/print-olympus.c:4015
 msgid "Borderless"
 msgstr "sans marges"
 
 #: src/main/print-canon.c:376 src/main/print-escp2.c:272
-#: src/main/print-olympus.c:3872
+#: src/main/print-olympus.c:4016
 msgid "Print without borders"
 msgstr "Impression sans marges"
 
@@ -404,7 +404,7 @@ msgstr "Imprimer sue le moyeu"
 #: src/main/print-canon.c:2958 src/main/print-canon.c:2986
 #: src/main/print-canon.c:3018 src/main/print-canon.c:3022
 #: src/main/print-canon.c:3098 src/main/print-escp2.c:2702
-#: src/main/print-lexmark.c:1283 src/main/print-olympus.c:4164
+#: src/main/print-lexmark.c:1283 src/main/print-olympus.c:4308
 #: src/main/print-pcl.c:1997 src/main/print-ps.c:329 src/main/print-raw.c:141
 #: src/gutenprintui2/panel.c:291
 msgid "Color"
@@ -511,13 +511,12 @@ msgid "Photo"
 msgstr "Photo"
 
 #: src/main/print-canon.c:3030 src/main/print-olympus.c:313
-#: src/main/print-olympus.c:1524 src/main/print-olympus.c:1597
-#: src/main/print-olympus.c:1732 src/main/print-olympus.c:1948
-#: src/main/print-olympus.c:2349 src/main/print-olympus.c:2481
-#: src/cups/genppd.c:1578 src/cups/genppd.c:1612 src/cups/genppd.c:1645
-#: src/cups/genppd.c:1700 src/cups/genppd.c:1746 src/cups/genppd.c:1792
-#: src/cups/genppd.c:1805 src/cups/genppd.c:1825 src/cups/genppd.c:1847
-#: src/cups/genppd.c:1864
+#: src/main/print-olympus.c:1586 src/main/print-olympus.c:1693
+#: src/main/print-olympus.c:1828 src/main/print-olympus.c:2044
+#: src/main/print-olympus.c:2445 src/cups/genppd.c:1578 src/cups/genppd.c:1612
+#: src/cups/genppd.c:1645 src/cups/genppd.c:1700 src/cups/genppd.c:1746
+#: src/cups/genppd.c:1792 src/cups/genppd.c:1805 src/cups/genppd.c:1825
+#: src/cups/genppd.c:1847 src/cups/genppd.c:1864
 msgid "None"
 msgstr "Aucun"
 
@@ -997,7 +996,7 @@ msgstr "Réglage du gamma pour le bleu"
 msgid "Adjust the black gamma"
 msgstr "Réglage du gamma pour le noir"
 
-#: src/main/print-color.c:354 src/main/print-olympus.c:3900
+#: src/main/print-color.c:354 src/main/print-olympus.c:4044
 msgid "Cyan Balance"
 msgstr "Niveau de cyan"
 
@@ -1005,7 +1004,7 @@ msgstr "Niveau de cyan"
 msgid "Adjust the cyan gray balance"
 msgstr "Réglage du cyan pour la balance des gris"
 
-#: src/main/print-color.c:362 src/main/print-olympus.c:3908
+#: src/main/print-color.c:362 src/main/print-olympus.c:4052
 msgid "Magenta Balance"
 msgstr "Niveau de magenta"
 
@@ -1013,7 +1012,7 @@ msgstr "Niveau de magenta"
 msgid "Adjust the magenta gray balance"
 msgstr "Réglage du magenta pour la balance des gris"
 
-#: src/main/print-color.c:370 src/main/print-olympus.c:3916
+#: src/main/print-color.c:370 src/main/print-olympus.c:4060
 msgid "Yellow Balance"
 msgstr "Niveau de jaune"
 
@@ -1859,7 +1858,7 @@ msgstr "Côté court (retourné)"
 msgid "This printer does not support raw printer output at depth %d\n"
 msgstr "L'imprimante ne supporte pas les sorties directes en %d bits\n"
 
-#: src/main/print-escp2.c:4413 src/main/print-olympus.c:4668
+#: src/main/print-escp2.c:4413 src/main/print-olympus.c:4812
 #: src/main/print-raw.c:237
 msgid "Print options not verified; cannot print.\n"
 msgstr "Options d'impression non vérifiées: ne peut pas imprimer.\n"
@@ -2307,103 +2306,104 @@ msgstr "Manuel avec pause"
 msgid "Manual without Pause"
 msgstr "Manuel sans pause"
 
-#: src/main/print-olympus.c:312 src/main/print-olympus.c:1523
-#: src/main/print-olympus.c:1596 src/main/print-olympus.c:1731
-#: src/main/print-olympus.c:1947
+#: src/main/print-olympus.c:312 src/main/print-olympus.c:1585
+#: src/main/print-olympus.c:1692 src/main/print-olympus.c:1827
+#: src/main/print-olympus.c:2043
 msgid "Coated"
 msgstr "Couché"
 
-#: src/main/print-olympus.c:1086 src/main/print-olympus.c:1149
-#: src/main/print-olympus.c:1247 src/main/print-olympus.c:1363
-#: src/main/print-olympus.c:1632 src/main/print-olympus.c:1930
-#: src/main/print-olympus.c:2739 src/main/print-olympus.c:2878
+#: src/main/print-olympus.c:1148 src/main/print-olympus.c:1211
+#: src/main/print-olympus.c:1309 src/main/print-olympus.c:1425
+#: src/main/print-olympus.c:1728 src/main/print-olympus.c:2026
+#: src/main/print-olympus.c:2596 src/main/print-olympus.c:2867
+#: src/main/print-olympus.c:3006
 msgid "Glossy"
 msgstr "Brillant"
 
-#: src/main/print-olympus.c:1087 src/main/print-olympus.c:1150
-#: src/main/print-olympus.c:1248
+#: src/main/print-olympus.c:1149 src/main/print-olympus.c:1212
+#: src/main/print-olympus.c:1310
 msgid "Texture"
 msgstr "Texture"
 
-#: src/main/print-olympus.c:1151 src/main/print-olympus.c:1249
-#: src/main/print-olympus.c:1364 src/main/print-olympus.c:1638
-#: src/main/print-olympus.c:1936 src/main/print-olympus.c:2348
-#: src/main/print-olympus.c:2480 src/main/print-olympus.c:2741
-#: src/main/print-olympus.c:2879
+#: src/main/print-olympus.c:1213 src/main/print-olympus.c:1311
+#: src/main/print-olympus.c:1426 src/main/print-olympus.c:1734
+#: src/main/print-olympus.c:2032 src/main/print-olympus.c:2444
+#: src/main/print-olympus.c:2597 src/main/print-olympus.c:2869
+#: src/main/print-olympus.c:3007
 msgid "Matte"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1633 src/main/print-olympus.c:1931
+#: src/main/print-olympus.c:1729 src/main/print-olympus.c:2027
 #, fuzzy
 msgid "Matte +5"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1634 src/main/print-olympus.c:1932
+#: src/main/print-olympus.c:1730 src/main/print-olympus.c:2028
 #, fuzzy
 msgid "Matte +4"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1635 src/main/print-olympus.c:1933
+#: src/main/print-olympus.c:1731 src/main/print-olympus.c:2029
 #, fuzzy
 msgid "Matte +3"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1636 src/main/print-olympus.c:1934
+#: src/main/print-olympus.c:1732 src/main/print-olympus.c:2030
 #, fuzzy
 msgid "Matte +2"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1637 src/main/print-olympus.c:1935
+#: src/main/print-olympus.c:1733 src/main/print-olympus.c:2031
 #, fuzzy
 msgid "Matte +1"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1639 src/main/print-olympus.c:1937
+#: src/main/print-olympus.c:1735 src/main/print-olympus.c:2033
 #, fuzzy
 msgid "Matte -1"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1640 src/main/print-olympus.c:1938
+#: src/main/print-olympus.c:1736 src/main/print-olympus.c:2034
 #, fuzzy
 msgid "Matte -2"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1641 src/main/print-olympus.c:1939
+#: src/main/print-olympus.c:1737 src/main/print-olympus.c:2035
 #, fuzzy
 msgid "Matte -3"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1642 src/main/print-olympus.c:1940
+#: src/main/print-olympus.c:1738 src/main/print-olympus.c:2036
 #, fuzzy
 msgid "Matte -4"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:1643 src/main/print-olympus.c:1941
+#: src/main/print-olympus.c:1739 src/main/print-olympus.c:2037
 #, fuzzy
 msgid "Matte -5"
 msgstr "Mat"
 
-#: src/main/print-olympus.c:2738
+#: src/main/print-olympus.c:2866
 #, fuzzy
 msgid "Printer Default"
 msgstr "Valeurs par défaut"
 
-#: src/main/print-olympus.c:2740
+#: src/main/print-olympus.c:2868
 #, fuzzy
 msgid "Glossy Fine"
 msgstr "Film brillant"
 
-#: src/main/print-olympus.c:2742
+#: src/main/print-olympus.c:2870
 #, fuzzy
 msgid "Matte Fine"
 msgstr "Papier Mat"
 
-#: src/main/print-olympus.c:2743
+#: src/main/print-olympus.c:2871
 #, fuzzy
 msgid "Extra Glossy"
 msgstr "Brillant"
 
-#: src/main/print-olympus.c:2744
+#: src/main/print-olympus.c:2872
 #, fuzzy
 msgid "Extra Glossy Fine"
 msgstr "Film brillant"
@@ -2412,32 +2412,32 @@ msgstr "Film brillant"
 #. better durability of output by covering it with transparent
 #. laminate surface. This surface can be of different patterns:
 #. common are matte, glossy or texture.
-#: src/main/print-olympus.c:3865 src/main/print-olympus.c:3866
+#: src/main/print-olympus.c:4009 src/main/print-olympus.c:4010
 msgid "Laminate Pattern"
 msgstr "Motif du vernis protecteur"
 
-#: src/main/print-olympus.c:3900 src/main/print-olympus.c:3908
-#: src/main/print-olympus.c:3916 src/main/print-olympus.c:3924
+#: src/main/print-olympus.c:4044 src/main/print-olympus.c:4052
+#: src/main/print-olympus.c:4060 src/main/print-olympus.c:4068
 msgid "Output Level Adjustment"
 msgstr "Réglage du niveau de sortie"
 
-#: src/main/print-olympus.c:3901
+#: src/main/print-olympus.c:4045
 msgid "Adjust the cyan balance"
 msgstr "Réglage balance cyan"
 
-#: src/main/print-olympus.c:3909
+#: src/main/print-olympus.c:4053
 msgid "Adjust the magenta balance"
 msgstr "Réglage balance magenta"
 
-#: src/main/print-olympus.c:3917
+#: src/main/print-olympus.c:4061
 msgid "Adjust the yellow balance"
 msgstr "Réglage balance jaune"
 
-#: src/main/print-olympus.c:3924
+#: src/main/print-olympus.c:4068
 msgid "Black Balance"
 msgstr "Balance du noir"
 
-#: src/main/print-olympus.c:3925
+#: src/main/print-olympus.c:4069
 msgid "Adjust the black balance"
 msgstr "Réglage de la balance du noir"
 
