@@ -48,7 +48,7 @@
 #define USB_PID_CANON_CP400 0x30F6
 #define USB_PID_CANON_CP500 0x30F5
 #define USB_PID_CANON_CP510 0x3128
-#define USB_PID_CANON_CP520 520 // XXX 316f? 3172? (related to cp740/cp750)
+#define USB_PID_CANON_CP520 0x3172
 #define USB_PID_CANON_CP530 0x31b1
 #define USB_PID_CANON_CP600 0x310B
 #define USB_PID_CANON_CP710 0x3127
@@ -924,7 +924,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.82.1G",
+	.version = "0.82.2G",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,

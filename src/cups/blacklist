@@ -34,7 +34,7 @@
 0x04a9 0x3128 blacklist
 
 # Canon SELPHY CP520
-# ??? UNKNOWN
+0x04a9 0x3172 blacklist
 
 # Canon SELPHY CP530
 0x04a9 0x31b1 blacklist

@@ -1105,11 +1105,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	*1: We have not confirmed these printers function with the new
 	    backend, but they are presumed to work.
 
-       Known Problematic models:
-
-        The USB PIDs for the SELPHY CP520 is still unknown, and
-        therefore unsupported by this backend.
-
        Non-supported models:
 
 	The SELPHY CP820 and CP910, and possibly newer models in the
@@ -1186,7 +1181,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
        Mitsubishi CP9550D/DW    (EXPERIMENTAL)
        Mitsubishi CPD70D/DW     (EXPERIMENTAL)
        Mitsubishi CPD707D/DW    (EXPERIMENTAL)
-       Mitsubishi CPK60DW       (EXPERIMENTAL)
+       Mitsubishi CPK60DW-S     (EXPERIMENTAL)
        Mitsubishi CP3800DW      (EXPERIMENTAL)
 
 	None of these models have been tested and confirmed to work 
