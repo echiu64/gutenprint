@@ -197,13 +197,13 @@ this directory:
 Another environment variable that must be set up that describes the
 location of the distribution release:
 
-	export GP_GUTENPRINT_SRC='../gutenprint-VERSION.tar.bz'
+	export GP_GUTENPRINT_SRC=../../gutenprint-VERSION.tar.bz
 
 where VERSION is replaced by the version you are building.
 
 The location of the libusb release must also be set:
 
-	export GP_LIBUSB_SRC='../../libusb-1.0.18.tar.bz'
+	export GP_LIBUSB_SRC=../../libusb-VERSION.tar.bz
 
 The file 'setup-env.sample' contains sample settings for all required
 environment variables; it can be copied to 'setup-env', modified as

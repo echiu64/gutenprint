@@ -31,7 +31,7 @@ fi
 echo "Making installer"
 
 # find Gutenprint version for this and other scripts
-eval $(./gutenprint-version)
+export GP_VERSION_STRING=$(./gutenprint-version)
 
 dmg_name=$(eval echo "$(cat src/gutenprint.dmg.src/name)")
 dmg_dir="build/dmg"

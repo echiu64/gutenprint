@@ -12,6 +12,9 @@ if [ -z "$GP_LIBUSB_SRC" ]; then
   exit 1
 fi
 
+# find Gutenprint version for this and other scripts
+export GP_VERSION_STRING=$(./gutenprint-version)
+
 for version in $*; do
   #
   # Compute configure flags and architectures depending on version.
@@ -95,7 +98,24 @@ for version in $*; do
   if [ $? == 0 ]; then
     echo "Build of Gutenprint for $version succeeded."
   else
-    echo "Build of gutenprint may have failed -- check details in $build_dir/gutenprint.build.log"
+    echo "Build of Gutenprint may have failed -- check details in $build_dir/gutenprint.build.log"
     exit 1
   fi
+
+  # #
+  # # Build stub driver plugin
+  # #
+
+  # (set -x;
+  #  cd src/GutenprintBlacklistDriver;
+  #  xcodebuild clean install DSTROOT="$install_dir";
+  # ) 1>"$build_dir/GutenprintBlacklistDriver.build.log" 2>&1
+
+  # if [ $? == 0 ]; then
+  #   echo "Build of GutenprintBlacklistDriver for $version succeeded."
+  # else
+  #   echo "Build of GutenprintBlacklistDriver may have failed -- check details in $build_dir/GutenprintBlacklistDriver.build.log"
+  #   exit 1
+  # fi
+
 done

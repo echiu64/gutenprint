@@ -10,8 +10,8 @@ ReadMe
 
 <BODY style="font-size:110%;">
 
-<h1 style="margin-bottom:0em;">Gutenprint 5.2.10-pre2</h1>
-<h2 style="margin-top:0em;">released March 8, 2014</h2>
+<h1 style="margin-bottom:0em;">Gutenprint 5.2.10</h1>
+<h2 style="margin-top:0em;">released May 18, 2014</h2>
 
 <h3 style="margin-bottom:0em;">Software Requirements</h3>
 <p style="margin-top:0.25em;">
@@ -19,14 +19,15 @@ ReadMe
 </p>
 
 <p>
-Welcome to Gutenprint 5.2.10-pre2, a pre-release of Gutenprint
-5.2.10. Please read these release notes carefully.
+Welcome to Gutenprint 5.2.10. Please read these release notes carefully.
 </p>
 
 
 <h3 style="margin-bottom:0em;">Important Notes:</h3>
 <ul style="margin-top:0.25em; list-style-type:disc;">
-	<li><b>The Gutenprint drivers do not support any other functions such as scanning on all-in-one devices. </b></li>
+  <li><b>Certain models of dyesub printers are not automatically recognized by Gutenprint, and require manual installation. Please refer to the section <a href="http://gimp-print.sourceforge.net/p_FAQ_OS_X.php#dyesub"><b>I added my dyesub printer, but nothing prints</b></a>
+  in the FAQ</a> for complete installation instructions.</b></li>
+  <li><b>The Gutenprint drivers do not support any other functions such as scanning on all-in-one devices. </b></li>
 	<li><b>The Mac OS X Gutenprint package download does not contain the PPDs for the supported printers. This significantly reduces the size of the download. All necessary files will be written during installation.</b></li>
 	<li><b>For OS X 10.6.x (Snow Leopard) and above, PPD files will be created when you add the printer.</b></li>
 	<li><b>For OS X 10.5.x (Leopard) the PPDs are written to your boot drive during the installation process.  This will take some extra time and it may seem that the installation has run into a problem or is hung. For older machines running OS X 10.5, it may take ten to twenty minutes or more. Please be patient.</b></li>
@@ -39,7 +40,19 @@ Gutenprint evolved from Gimp-Print, which originated as the print facility for t
 <h3 style="margin-bottom:0em;">Changes from 5.2.9</h3>
  <ol style="margin-top:0.25em; list-style-type:decimal;">
 
- (changes to be listed for final release)
+  <li>Added a unified CUPS backend to support selected dye sublimation printers.</li>
+
+  <li>Many new models of inkjets and laser printers are now supported.</li>
+
+  <li>Corrected page dimensions for borderless printing with Canon printers.</li>
+
+  <li>Added duplex support for the EPSON WorkForce 630, 635, and 645, and NX635.</li>
+
+  <li>Expanded printable area at the bottom of the page for the Epson Stylus Pro 3800 and 3880.</li>
+
+  <li>Added IEEE1284 device IDs for several printers.</li>
+
+  <li>Added Catalan, Turkish, and Vietnamese translations.</li>
 
 </ol>
 
