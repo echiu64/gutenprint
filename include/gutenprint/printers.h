@@ -159,6 +159,13 @@ extern const char *stp_printer_get_manufacturer(const stp_printer_t *p);
 extern const char *stp_printer_get_foomatic_id(const stp_printer_t *p);
 
 /**
+ * Get a printer model's comment string
+ * @param p the printer model to use.
+ * @returns the comments or NULL (should never be freed)
+ */
+extern const char *stp_printer_get_comment(const stp_printer_t *p);
+
+/**
  * Get a printer model's model number.
  * The model number is used internally by the "family" driver module,
  * and has no meaning out of that context.  It bears no relation to

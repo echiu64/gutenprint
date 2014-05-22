@@ -34,7 +34,7 @@ TESTS = curve run-testdither
 ## Programs
 
 if BUILD_TEST
-noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve xml-curve pixma_parse
+noinst_PROGRAMS = testdither escp2-weavetest unprint pcl-unprint bjc-unprint curve xml-curve pixma_parse gen-printer-list
 endif
 
 escp2_weavetest_SOURCES = escp2-weavetest.c
@@ -57,6 +57,9 @@ testdither_LDADD = $(GUTENPRINT_LIBS)
 
 xml_curve_SOURCES = xml-curve.c
 xml_curve_LDADD = $(GUTENPRINT_LIBS)
+
+gen_printer_list_SOURCES = gen-printer-list.c
+gen_printer_list_LDADD = $(GUTENPRINT_LIBS)
 
 pixma_parse_SOURCES = pixma_parse.c pixma_parse.h
 

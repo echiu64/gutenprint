@@ -67,6 +67,7 @@ struct stp_printer
   char	     *manufacturer;	/* Printer manufacturer */
   char	     *device_id; 	/* IEEE 1284 device ID */
   char       *foomatic_id;	/* Foomatic printer ID */
+  char       *comment;	     	/* Comment string, if any */
   int        model;             /* Model number */
   int	     vars_initialized;
   const stp_printfuncs_t *printfuncs;
@@ -130,6 +131,16 @@ static void
 stpi_printer_freefunc(void *item)
 {
   stp_printer_t *printer = (stp_printer_t *) item;
+  if (printer->comment)
+    {
+      stp_free(printer->comment);
+      printer->comment = NULL;
+    }
+  if (printer->foomatic_id)
+    {
+      stp_free(printer->foomatic_id);
+      printer->comment = NULL;
+    }
   stp_free(printer->long_name);
   stp_free(printer->family);
   stp_free(printer);
@@ -196,6 +207,12 @@ const char *
 stp_printer_get_foomatic_id(const stp_printer_t *printer)
 {
   return printer->foomatic_id;
+}
+
+const char *
+stp_printer_get_comment(const stp_printer_t *printer)
+{
+  return printer->comment;
 }
 
 int
@@ -1075,8 +1092,10 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
                                                        /* Family printfuncs */
 {
   stp_mxml_node_t *prop;	/* Temporary node pointer */
+  stp_mxml_node_t *child;
   const char *stmp;		/* Temporary string */
   stp_printer_t *outprinter;	/* Generated printer */
+  size_t slen = 0;
   int
     driver = 0,			/* Check driver */
     long_name = 0;
@@ -1111,6 +1130,33 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
   stmp = stp_mxmlElementGetAttr(printer, "foomaticid");
   if (stmp)
     outprinter->foomatic_id = stp_strdup(stmp);
+
+  child = printer->child;
+  while (child)
+    {
+      if (child->type == STP_MXML_TEXT)
+	{
+	  if (outprinter->comment)
+	    {
+	      size_t oslen = slen;
+	      slen += strlen(child->value.text.string);
+	      if (child->value.text.whitespace)
+		slen += 1;
+	      outprinter->comment = stp_realloc(outprinter->comment, slen + 1);
+	      (void) memset(outprinter->comment + oslen, 0, slen - oslen);
+	      if (child->value.text.whitespace)
+		  outprinter->comment[oslen++] = ' ';
+	      strncat(outprinter->comment + oslen,
+		      child->value.text.string, slen - oslen);
+	    }
+	  else
+	    {
+	      outprinter->comment = stp_strdup(child->value.text.string);
+	      slen = strlen(outprinter->comment);
+	    }
+	}
+      child = child->next;
+    }
 
   if (stp_get_driver(outprinter->printvars))
     driver = 1;
