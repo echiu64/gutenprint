@@ -48,7 +48,7 @@ http://sourceforge.net/blog/potm-201011/.</p>
 <H2><font color="#ff0000">Gutenprint 5.2.10 is released!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of May 20,
-2014!</strong></em></font> After a very long hiatus, the Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable release of 5.2.  This release adds support for many new printers and other improvements 5.2.9.  The main impact is for developers that link against the Gutenprint library.  An updated German translation and improvement for some Epson and Caonon media handling are also included. This package is available in source form, and also in binary installer form for Macintosh OS X (10.5 and above; 10.4 and below are no longer supported).  <a
+2014!</strong></em></font> After a very long hiatus, the Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable release of 5.2.  This release adds support for many new printers and other improvements over 5.2.9.  The main impact is for developers that link against the Gutenprint library.  An updated German translation and improvement for some Epson and Canon media handling are also included. This package is available in source form, and also in binary installer form for Macintosh OS X (10.5 and above; 10.4 and below are no longer supported).  <a
 href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.10/">You
 can read the release notes and download it here</a>.  </p>
 

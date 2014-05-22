@@ -130,6 +130,12 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 		
 		<p>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.10 is released!</span> 
+			<br>
+			<a href="MacOSX.php#5.2.10">May 20, 2014</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.10-, a stable release of 5.2. This release adds support for many new printers and other improvements over 5.2.9, but no longer supports OS X 10.3 or 10.4. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.10">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links. 
+		</p>
+		
+		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.9 is released!</span> 
 			<br>
 			<a href="MacOSX.php#5.2.9">July 7, 2012</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.9-, a stable release of 5.2. This release fixes a several bugs from 5.2.8.  The main impact is for developers that link against the Gutenprint library.  See the <a href="MacOSX.php#5.2.9">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links. 
@@ -190,6 +196,15 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 <!-- indent text -->
 	<div style="margin-right:1em;margin-left:1em;">
 		<h2> Downloads</h2> 
+		<p>
+			<b>Gutenprint 5.2.10</b> 
+			<br>
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.10/gutenprint-5.2.10.dmg/download">gutenprint-5.2.10.dmg</a></span>&nbsp;&nbsp;(12.4 MB) 
+		</p>
+		<p>
+The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable release of 5.2. Gutenprint 5.2.10 no longer supports Macintosh OS X 10.4 or below; it now requires 10.5 (Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.10/gutenprint-5.2.10.tar.bz2/download">source code</a>)
+</p>	
+
 		<p>
 			<b>Gutenprint 5.2.9</b> 
 			<br>
@@ -262,6 +277,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release
 	<li style="margin-bottom:0.5em;">Gutenprint (and its predecessor, Gimp-Print) is available in source code form under the GPL (GNU General Public License). You are entitled to download the source code. Gutenprint on Mac OS X would not be possible without <a href="http://www.cups.org/">CUPS</a>, the open-source print spooler built-in for Mac OS X starting with version 10.2 (Jaguar). </li>
 	<li style="margin-bottom:0.5em;"><b>Gutenprint is strictly a printer support package.  For multi-function devices, it supports only the printer function.</b></li>
 	<li style="margin-bottom:0.5em;">The last release that will work under Mac OS X 10.2.x (Jaguar) is 5.0.2.  Jaguar users should also install Ghostscript.  Please see the Downloads section on this page.</li>
+	<li style="margin-bottom:0.5em;">The last release that will work under Mac OS X 10.4.x (Tiger) is 5.2.9.</li>
 	<li>Gimp-Print 4.2.7 is the final release in the Gimp-Print 4.2 series. </li>
 </ul>
 
@@ -277,6 +293,31 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release
 <hr>
 <h3> News Items </h3> 
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.10"></a> 
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.10</b> 
+		</td>
+		<td align="right">
+			<b>2014-05-21</b> 
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.10</b> is a stable release of Gutenprint 5.2  This release adds support for many new printers (particularly dye sublimation and Canon inkjet printers and other improvements over 5.2.9. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>
+<ol style="margin-top:0.25em; list-style-type:decimal;">
+	<li> Expand printable area at the bottom of the page for the Epson Stylus Pro 3800 and 3880</li>
+
+	<li>  Add duplex support for the Epson WorkForce 630, 635, and 645, and NX635.</li>
+
+	<li> Correct page dimensions for borderless printing with Canon inkjet printers.</li>
+
+	<li>   Add Catalan, Turkish, and Vietnamese translations.</li>
+
+</ol>
+</p> 
+
 <a name="5.2.9"></a> 
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
