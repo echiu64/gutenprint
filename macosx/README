@@ -222,6 +222,10 @@ Although most information such as documentation is pulled from the
 release, there are a few files that will need to be updated for a new
 OS X release. Relative to the CVS tree, they are:
 
+	macosx/src/gutenprint.pkg.src/Info.plist
+		- update version in CFBundleGetInfoString, CFBundleIdentifier,
+		  and CFBundleShortVersionString keys
+
 	macosx/src/gutenprint.pkg.src/Resources/Welcome.rtfd
 		- update version (in header)
 		- update systems supported (in text)
