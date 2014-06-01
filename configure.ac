@@ -357,6 +357,10 @@ STP_ARG_WITH([foomatic3],
              [BUILD_FOOMATIC_3],
              [(automatic)])
 
+if test "$BUILD_FOOMATIC_3" = "yes" ; then
+   BUILD_FOOMATIC=yes
+fi
+
 AC_PATH_PROG(IJS_CONFIG, ijs-config)
 
 if test -z "${IJS_CONFIG}"  ; then
