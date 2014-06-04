@@ -57,7 +57,8 @@ my $micro_version = "@GUTENPRINT_VERSION@";
 my $use_static_ppd = "@BUILD_CUPS_PPDS@";
 my $file_version = '"@VERSION@"$';
 
-my $ppd_dir = "@cups_conf_serverroot@/ppd"; # Location of in-use CUPS PPDs
+my $system_ppd_dir = "@cups_conf_serverroot@/ppd";# Location of in-use CUPS PPDs
+my $ppd_dir = $system_ppd_dir; # Location of in-use CUPS PPDs
 my $ppd_root_dir = "@cups_conf_datadir@/model";
 my $ppd_base_dir = "$ppd_root_dir/gutenprint/$version"; # Available PPDs
 my $ppd_out_dir = "";		# By default output into source directory
@@ -181,7 +182,8 @@ if (!$quiet || $verbose) {
 	    print STDOUT ", $skipped_ppd_count skipped";
 	}
 	print STDOUT ".";
-	if (!defined $opt_o || $opt_o ne "") {
+	if ($ppd_out_dir eq $system_ppd_dir ||
+	    ($ppd_dir eq $system_ppd_dir && $ppd_out_dir eq "")) {
 	    print STDOUT "  Restart cupsd for the changes to take effect.";
 	}
 	print STDOUT "\n";
@@ -590,6 +592,25 @@ sub update_ppd ($) {
 	$source_data =~ s/(\*StpLocale:\s*\")(.*)(\")/$1$orig_locale$3/;
     }
 
+    # PageRegion, PageSize, Imageablearea, and PaperDimension need to match.
+    # ImageableArea and PaperDimension may be broken from cups-genppdupdate
+    # in 5.2.10 and earlier not updating them, but PageRegion and PageSize
+    # should match.  Use PageSize as the default, but warn if PageSize
+    # and PageRegion don't match.
+
+    if ($defaults{"DefaultPageSize"} ne $defaults{"DefaultPageRegion"}) {
+	warn("Warning: DefaultPageSize $defaults{'DefaultPageSize'} and DefaultPageRegion $defaults{'DefaultPageRegion'} don't match.  Using $defaults{'DefaultPageSize'} for both.\n");
+	$defaults{"DefaultPageRegion"} = $defaults{"DefaultPageSize"};
+    }
+    if ($defaults{"DefaultPageSize"} ne $defaults{"DefaultImageableArea"}) {
+	print STDERR "Correcting DefaultImageableArea from $defaults{'DefaultImageableArea'} to $defaults{'DefaultPageSize'}\n";
+	$defaults{"DefaultImageableArea"} = $defaults{"DefaultPageSize"};
+    }
+    if ($defaults{"DefaultPageSize"} ne $defaults{"DefaultPaperDimension"}) {
+	print STDERR "Correcting DefaultPaperDimension from $defaults{'DefaultPaperDimension'} to $defaults{'DefaultPageSize'}\n";
+	$defaults{"DefaultPaperDimension"} = $defaults{"DefaultPageSize"};
+    }
+
     if ($debug & 4) {
 	print "Options (Old->New Default Type):\n";
 	foreach (sort keys %options) {
@@ -666,6 +687,7 @@ default_loop:
 	    my $new_default = $new_defaults{$default_option};
 	    if ((!defined($orig_method) || !defined($new_method)) ||
 		$orig_method ne $new_method) {
+		$source_data =~ s/^\*($default_option).*/*$1: $default_option_value/m;
 		next;
 	    }
 	    if (defined($new_default) &&
@@ -698,7 +720,7 @@ default_loop:
 			     (defined $resolution_map{$dopt}) &&
 			     ($dopt = $resolution_map{$dopt}) eq $opt)) { # Valid option
 			    # Set the option in the new PPD
-			    $source_data =~ s/^\*($default_option).*/*$1:$dopt/m;
+			    $source_data =~ s/^\*($default_option).*/*$1: $dopt/m;
 			    if ($verbose) {
 				print "$ppd_source_filename: Set *$default_option to $dopt\n";
 			    }
