@@ -5,7 +5,8 @@
  *
  *   Development of this backend was sponsored by:
  *
- *       Marco Di Antonio and [ ilgruppodigitale.com ]
+ *     Marco Di Antonio and [ ilgruppodigitale.com ]
+ *     LiveLink Technology [ www.livelinktechnology.net ]
  *
  *   The latest version of this program can be found at:
  *
@@ -196,7 +197,7 @@ static int dnpds40_do_cmd(struct dnpds40_ctx *ctx,
 				     data, len)))
 			return ret;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static uint8_t * dnpds40_resp_cmd(struct dnpds40_ctx *ctx,
@@ -262,7 +263,7 @@ static int dnpds40_query_serno(struct libusb_device_handle *dev, uint8_t endp_up
 
 	resp = dnpds40_resp_cmd(&ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -271,7 +272,7 @@ static int dnpds40_query_serno(struct libusb_device_handle *dev, uint8_t endp_up
 
 	free(resp);
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static void *dnpds40_init(void)
@@ -331,7 +332,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	uint32_t matte = 0, multicut = 0, dpi = 0;
 
 	if (!ctx)
-		return 1;
+		return CUPS_BACKEND_FAILED;
 
 	if (ctx->databuf) {
 		free(ctx->databuf);
@@ -351,7 +352,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(MAX_PRINTJOB_LEN);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return 2;
+		return CUPS_BACKEND_CANCEL;
 	}
 
 	while (run) {
@@ -364,12 +365,12 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		if (i == 0)
 			break;
 		if (i < (int) sizeof(struct dnpds40_cmd))
-			return 1;
+			return CUPS_BACKEND_CANCEL;
 
 		if (ctx->databuf[ctx->datalen + 0] != 0x1b ||
 		    ctx->databuf[ctx->datalen + 1] != 0x50) {
 			ERROR("Unrecognized header data format @%d!\n", ctx->datalen);
-			return 1;
+			return CUPS_BACKEND_CANCEL;
 		}
 
 		/* Parse out length of data chunk, if any */
@@ -448,16 +449,17 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	if (matte != ctx->last_matte)
 		ctx->buf_needed = 2;
 
-	DEBUG("dpi %u matte %u(%u) mcut %u bufs %d\n", 
-	      dpi, matte, ctx->last_matte, multicut, ctx->buf_needed);
+	if (dpi)
+		DEBUG("dpi %u matte %u(%u) mcut %u bufs %d\n", 
+		      dpi, matte, ctx->last_matte, multicut, ctx->buf_needed);
 
 	/* Track if our last print was matte */
 	ctx->last_matte = matte;
 
 	if (!ctx->datalen)
-		return 1;
+		return CUPS_BACKEND_CANCEL;
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_main_loop(void *vctx, int copies) {
@@ -471,7 +473,7 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 	char buf[9];
 
 	if (!ctx)
-		return 1;
+		return CUPS_BACKEND_FAILED;
 
 	/* Parse job to figure out quantity offset. */
 	if (copies > 1 && ctx->qty_offset) {
@@ -490,7 +492,7 @@ top:
 	dnpds40_build_cmd(&cmd, "STATUS", "", 0);
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 	dnpds40_cleanup_string((char*)resp, len);
 
 	/* If we're not idle */
@@ -501,7 +503,7 @@ top:
 			dnpds40_build_cmd(&cmd, "INFO", "FREE_PBUFFER", 0);
 			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 			if (!resp)
-				return -1;
+				return CUPS_BACKEND_FAILED;
 			dnpds40_cleanup_string((char*)resp, len);
 
 			/* Check to see if we have sufficient buffers */
@@ -519,7 +521,7 @@ top:
 		}
 		free(resp);
 		ERROR("Printer Status: %s\n", dnpds40_statuses((char*)resp));
-		return 1;
+		return CUPS_BACKEND_RETRY_CURRENT;
 	}
 	
 	/* Send the stream over as individual data chunks */
@@ -534,7 +536,7 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ptr, i)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		ptr += i;
 	}
@@ -555,7 +557,7 @@ top:
 
 	if (resp) free(resp);
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_get_info(struct dnpds40_ctx *ctx)
@@ -569,7 +571,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -582,7 +584,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -595,7 +597,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -609,7 +611,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -622,7 +624,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -635,7 +637,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -648,7 +650,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -662,7 +664,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -677,7 +679,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -690,7 +692,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -703,7 +705,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -711,8 +713,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
-
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_get_status(struct dnpds40_ctx *ctx)
@@ -726,7 +727,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -739,7 +740,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -752,7 +753,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -790,7 +791,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -812,7 +813,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -825,7 +826,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -838,7 +839,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -851,7 +852,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -864,7 +865,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -877,7 +878,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	dnpds40_cleanup_string((char*)resp, len);
 
@@ -885,7 +886,7 @@ static int dnpds40_get_counters(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static int dnpds40_clear_counter(struct dnpds40_ctx *ctx, char counter)
@@ -960,7 +961,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 			if (optarg[0] != 'A' &&
 			    optarg[0] != 'B' &&
 			    optarg[0] != 'M')
-				return -1;
+				return CUPS_BACKEND_FAILED;
 			if (ctx) {
 				j = dnpds40_clear_counter(ctx, optarg[0]);
 				break;
@@ -991,7 +992,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1",
-	.version = "0.30",
+	.version = "0.32",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

@@ -317,7 +317,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	int i, ret;
 
 	if (!ctx)
-		return 1;
+		return CUPS_BACKEND_FAILED;
 
 	if (ctx->plane_r) {
 		free(ctx->plane_r);
@@ -336,18 +336,18 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
 		if (ret == 0)
-			return 1;
+			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
-		return ret;
+		return CUPS_BACKEND_CANCEL;
 	}
 	if (ctx->hdr.hdr[0] != 'P' ||
 	    ctx->hdr.hdr[1] != 'G' ||
 	    ctx->hdr.hdr[2] != 'H' ||
 	    ctx->hdr.hdr[3] != 'D') {
 		ERROR("Unrecognized data format!\n");
-		return 1;
+		return CUPS_BACKEND_CANCEL;
 	}
 	ctx->hdr.planesize = le32_to_cpu(ctx->hdr.planesize);
 	ctx->hdr.rows = le16_to_cpu(ctx->hdr.rows);
@@ -359,7 +359,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 	ctx->plane_b = malloc(ctx->hdr.planesize);
 	if (!ctx->plane_r || !ctx->plane_g || !ctx->plane_b) {
 		ERROR("Memory allocation failure!\n");
-		return 1;
+		return CUPS_BACKEND_FAILED;
 	}
 	for (i = 0 ; i < ctx->hdr.rows ; i++) {
 		int j;
@@ -381,7 +381,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 					      ret, remain, ctx->hdr.columns,
 					      i, ctx->hdr.rows, j);
 					perror("ERROR: Read failed");
-					return ret;
+					return CUPS_BACKEND_CANCEL;
 				}
 				ptr += ret;
 				remain -= ret;
@@ -389,7 +389,7 @@ static int kodak1400_read_parse(void *vctx, int data_fd) {
 		}
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 static uint8_t idle_data[READBACK_LEN] = { 0xe4, 0x72, 0x00, 0x00,
@@ -417,14 +417,14 @@ top:
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			    cmdbuf, CMDBUF_LEN)))
-		return ret;
+		return CUPS_BACKEND_FAILED;
 
 	/* Read in the printer status */
 	ret = read_data(ctx->dev, ctx->endp_up,
 			rdbuf, READBACK_LEN, &num);
 	
 	if (ret < 0)
-		return ret;
+		return CUPS_BACKEND_FAILED;
 	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
 		memcpy(rdbuf2, rdbuf, READBACK_LEN);
 	} else if (state == last_state) {
@@ -436,7 +436,7 @@ top:
 	if (rdbuf[4] || rdbuf[5]) {
 		ERROR("Error code reported by printer (%02x/%02x), terminating print\n",
 		      rdbuf[4], rdbuf[5]);
-		return 1;
+		return CUPS_BACKEND_STOP;  // HOLD/CANCEL/FAILED?  XXXX parse error!
 	}
 
 	fflush(stderr);       
@@ -451,7 +451,7 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     cmdbuf, CMDBUF_LEN)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		/* Send page setup */
 		memset(cmdbuf, 0, CMDBUF_LEN);
@@ -465,7 +465,7 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		/* Send lamination toggle? */
 		memset(cmdbuf, 0, CMDBUF_LEN);
@@ -475,7 +475,7 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		/* Send matte toggle */
 		memset(cmdbuf, 0, CMDBUF_LEN);
@@ -485,7 +485,7 @@ top:
 
 		if (send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		/* Send lamination strength */
 		memset(cmdbuf, 0, CMDBUF_LEN);
@@ -495,7 +495,7 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		/* Send unknown */
 		memset(cmdbuf, 0, CMDBUF_LEN);
@@ -505,14 +505,14 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		state = S_PRINTER_READY_Y;
 		break;
 	case S_PRINTER_READY_Y:
 		INFO("Sending YELLOW plane\n");
 		if ((ret = send_plane(ctx, 1, ctx->plane_b, cmdbuf)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_Y;
 		break;
 	case S_PRINTER_SENT_Y:
@@ -522,7 +522,7 @@ top:
 	case S_PRINTER_READY_M:
 		INFO("Sending MAGENTA plane\n");
 		if ((ret = send_plane(ctx, 2, ctx->plane_g, cmdbuf)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_M;
 		break;
 	case S_PRINTER_SENT_M:
@@ -532,7 +532,7 @@ top:
 	case S_PRINTER_READY_C:
 		INFO("Sending CYAN plane\n");
 		if ((ret = send_plane(ctx, 3, ctx->plane_r, cmdbuf)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_C;
 		break;
 	case S_PRINTER_SENT_C:
@@ -546,7 +546,7 @@ top:
 	case S_PRINTER_READY_L:
 		INFO("Laminating page\n");
 		if ((ret = send_plane(ctx, 4, NULL, cmdbuf)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 		state = S_PRINTER_SENT_L;
 		break;
 	case S_PRINTER_SENT_L:
@@ -564,7 +564,7 @@ top:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				    cmdbuf, CMDBUF_LEN)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		state = S_FINISHED;
 		break;
@@ -586,7 +586,7 @@ top:
 		goto top;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 /* Exported */
@@ -596,7 +596,7 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.31",
+	.version = "0.32",
 	.uri_prefix = "kodak1400",
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,
