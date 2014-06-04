@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.48G"
+#define BACKEND_VERSION "0.50G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -180,7 +180,8 @@ int read_data(struct libusb_device_handle *dev, uint8_t endp,
 		goto done;
 	}
 
-	if (dyesub_debug > 1) {
+	if ((dyesub_debug > 1 && buflen < 4096) ||
+	    dyesub_debug > 2) {
 		int i;
 		DEBUG("<- ");
 		for (i = 0 ; i < *readlen; i++) {
@@ -208,7 +209,8 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 					   buf, len2,
 					   &num, 15000);
 
-		if (dyesub_debug > 1) {
+	if ((dyesub_debug > 1 && len < 4096) ||
+	    dyesub_debug > 2) {
 			int i;
 			DEBUG("-> ");
 			for (i = 0 ; i < num; i++) {
@@ -590,7 +592,7 @@ for more details.\n\
 You should have received a copy of the GNU General Public License\n\
 along with this program; if not, write to the Free Software\n\
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n\
-\n          [http://www.gnu.org/licenses/gpl-3.0.html]\n\n";
+\n          [http://www.gnu.org/licenses/gpl-2.0.html]\n\n";
 
 	fprintf(stderr, "%s", license);
 }
@@ -645,7 +647,7 @@ static void print_help(char *argv0, struct dyesub_backend *backend)
 	i = libusb_init(&ctx);
 	if (i) {
 		ERROR("Failed to initialize libusb (%d)\n", i);
-		exit(4); /* CUPS_BACKEND_STOP */
+		exit(CUPS_BACKEND_STOP);
 	}
 	find_and_enumerate(ctx, &list, backend, NULL, P_ANY, 1);
 	libusb_free_device_list(list, 1);
@@ -671,7 +673,7 @@ int main (int argc, char **argv)
 	int claimed;
 	int backend_cmd = 0;
 
-	int ret = 0;
+	int ret = CUPS_BACKEND_OK;
 	int iface = 0;
 	int found = -1;
 	int copies = 1;
@@ -717,7 +719,7 @@ int main (int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "B:dDGhP:S:T:V:")) >= 0) {
+	while ((i = getopt(argc, argv, "B:d:DGhP:S:T:V:")) >= 0) {
 		switch(i) {
 		case 'B':
 			backend = find_backend(optarg);
@@ -877,7 +879,7 @@ int main (int argc, char **argv)
 	if (fname && backend->early_parse) {
 		printer_type = backend->early_parse(backend_ctx, data_fd);
 		if (printer_type < 0) {
-			ret = 5; /* CUPS_BACKEND_CANCEL */
+			ret = CUPS_BACKEND_CANCEL;
 			goto done;
 		}
 	}
@@ -886,7 +888,7 @@ int main (int argc, char **argv)
 	ret = libusb_init(&ctx);
 	if (ret) {
 		ERROR("Failed to initialize libusb (%d)\n", ret);
-		ret = 4;
+		ret = CUPS_BACKEND_STOP;
 		goto done;
 	}
 
@@ -896,13 +898,14 @@ int main (int argc, char **argv)
 #if 1
 	if (found == -1) {
 		ERROR("Printer open failure (No suitable printers found!)\n");
-		ret = 4; /* CUPS_BACKEND_STOP */
+		ret = CUPS_BACKEND_HOLD;
 		goto done;
 	}
 
 	ret = libusb_open(list[found], &dev);
 	if (ret) {
 		ERROR("Printer open failure (Need to be root?) (%d)\n", ret);
+		ret = CUPS_BACKEND_STOP;
 		goto done;
 	}
 
@@ -910,20 +913,23 @@ int main (int argc, char **argv)
 	if (claimed) {
 		ret = libusb_detach_kernel_driver(dev, iface);
 		if (ret) {
-			ERROR("Printer open failure (Could not detach printer from kernel)\n");
+			ERROR("Printer open failure (Could not detach printer from kernel) (%d)\n", ret);
+			ret = CUPS_BACKEND_STOP;
 			goto done_close;
 		}
 	}
 
 	ret = libusb_claim_interface(dev, iface);
 	if (ret) {
-		ERROR("Printer open failure (Could not claim printer interface)\n");
+		ERROR("Printer open failure (Could not claim printer interface) (%d)\n", ret);
+		ret = CUPS_BACKEND_STOP;
 		goto done_close;
 	}
 
 	ret = libusb_get_active_config_descriptor(list[found], &config);
 	if (ret) {
-		ERROR("Printer open failure (Could not fetch config descriptor)\n");
+		ERROR("Printer open failure (Could not fetch config descriptor) (%d)\n", ret);
+		ret = CUPS_BACKEND_STOP;
 		goto done_close;
 	}
 
@@ -951,14 +957,12 @@ int main (int argc, char **argv)
 
 newpage:
 	/* Do early parsing if needed for subsequent pages */
-	if (pages && backend->early_parse) {
-		ret = backend->early_parse(backend_ctx, data_fd);
-		if (ret < 0)
+	if (pages && backend->early_parse &&
+	    backend->early_parse(backend_ctx, data_fd) < 0)
 			goto done_multiple;
-	}
 
 	/* Read in data */
-	if (backend->read_parse(backend_ctx, data_fd)) {
+	if ((ret = backend->read_parse(backend_ctx, data_fd))) {
 		if (pages)
 			goto done_multiple;
 		else
@@ -981,7 +985,7 @@ done_multiple:
 
 	/* Done printing */
 	INFO("All printing done (%d pages * %d copies)\n", pages, copies);
-	ret = 0;
+	ret = CUPS_BACKEND_OK;
 
 done_claimed:
 	libusb_release_interface(dev, iface);

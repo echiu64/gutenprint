@@ -99,6 +99,7 @@ enum {
 	P_KODAK_605,
 	P_SHINKO_S2145,
 	P_SONY_UPDR150,
+	P_SONY_UPCR10,
 	P_MITSU_D70X,
 	P_DNP_DS40,
 	P_DNP_DS80,
@@ -149,5 +150,15 @@ extern struct dyesub_backend shinkos2145_backend;
 extern struct dyesub_backend canonselphy_backend;
 extern struct dyesub_backend mitsu70x_backend;
 extern struct dyesub_backend dnpds40_backend;
+
+/* CUPS compatibility */
+#define CUPS_BACKEND_OK            0 /* Sucess */
+#define CUPS_BACKEND_FAILED        1 /* Failed to print use CUPS policy */
+#define CUPS_BACKEND_AUTH_REQUIRED 2 /* Auth required */
+#define CUPS_BACKEND_HOLD          3 /* Hold this job only */
+#define CUPS_BACKEND_STOP          4 /* Stop the entire queue */
+#define CUPS_BACKEND_CANCEL        5 /* Cancel print job */
+#define CUPS_BACKEND_RETRY         6 /* Retry later */
+#define CUPS_BACKEND_RETRY_CURRENT 7 /* Retry immediately */
 
 #endif /* __BACKEND_COMMON_H */
