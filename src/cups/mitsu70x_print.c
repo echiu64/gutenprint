@@ -96,9 +96,6 @@ static void mitsu70x_teardown(void *vctx) {
 	free(ctx);
 }
 
-/* Max job size is 6x9+lamination, equalling ~38MB */
-#define MAX_PRINTJOB_LEN (1024*1024*40)
-
 struct mitsu70x_hdr {
 	uint32_t cmd;
 	uint8_t  zero0[12];
@@ -123,7 +120,7 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	struct mitsu70x_hdr *mhdr = (struct mitsu70x_hdr*)(hdr + 512);
 
 	if (!ctx)
-		return 1;
+		return CUPS_BACKEND_FAILED;
 
 	if (ctx->databuf) {
 		free(ctx->databuf);
@@ -135,9 +132,9 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	while (remain > 0) {
 		i = read(data_fd, hdr + sizeof(hdr) - remain, remain);
 		if (i == 0)
-			return 1;
+			return CUPS_BACKEND_CANCEL;
 		if (i < 0)
-			return i;
+			return CUPS_BACKEND_CANCEL;
 		remain -= i;
 	}
 
@@ -147,7 +144,7 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	    hdr[2] != 0x57 ||
 	    hdr[3] != 0x55) {
 		ERROR("Unrecognized data format!\n");
-		return(1);
+		return CUPS_BACKEND_CANCEL;
 	}
 
 	/* Work out printjob size */
@@ -164,7 +161,7 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	ctx->databuf = malloc(sizeof(hdr) + remain);
 	if (!ctx->databuf) {
 		ERROR("Memory allocation failure!\n");
-		return 2;
+		return CUPS_BACKEND_FAILED;
 	}
 
 	memcpy(ctx->databuf, &hdr, sizeof(hdr));
@@ -174,14 +171,14 @@ static int mitsu70x_read_parse(void *vctx, int data_fd) {
 	while(remain) {
 		i = read(data_fd, ctx->databuf + ctx->datalen, remain);
 		if (i == 0)
-			return 1;
+			return CUPS_BACKEND_CANCEL;
 		if (i < 0)
-			return i;
+			return CUPS_BACKEND_CANCEL;
 		ctx->datalen += i;
 		remain -= i;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 #define CMDBUF_LEN 512
@@ -199,7 +196,7 @@ static int mitsu70x_main_loop(void *vctx, int copies) {
 	int pending = 0;
 
 	if (!ctx)
-		return 1;
+		return CUPS_BACKEND_FAILED;
 
 top:
 	if (state != last_state) {
@@ -221,7 +218,7 @@ top:
 
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, 6)))
-		return ret;
+		return CUPS_BACKEND_FAILED;
 	/* Send Status Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
 	cmdbuf[0] = 0x1b;
@@ -234,11 +231,11 @@ skip_query:
 	ret = read_data(ctx->dev, ctx->endp_up,
 			rdbuf, READBACK_LEN, &num);
 	if (ret < 0)
-		return ret;
+		return CUPS_BACKEND_FAILED;
 
 	if (num != 26) {
 		ERROR("Short Read! (%d/%d)\n", num, 26);
-		return 4;
+		return CUPS_BACKEND_FAILED;
 	}
 
 	if (dyesub_debug) {
@@ -273,15 +270,15 @@ skip_query:
 		INFO("Sending attention sequence\n");
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ctx->databuf, 512)))
-			return ret;
-		
+			return CUPS_BACKEND_FAILED;
+
 		state = S_SENT_ATTN;
 	case S_SENT_ATTN:
 		INFO("Sending header sequence\n");
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ctx->databuf + 512, 512)))
-			return ret;
+			return CUPS_BACKEND_FAILED;
 
 		state = S_SENT_HDR;
 		break;
@@ -290,8 +287,8 @@ skip_query:
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ctx->databuf + 1024, ctx->datalen - 1024)))
-			return ret;
-				
+			return CUPS_BACKEND_FAILED;
+
 		state = S_SENT_DATA;
 		break;
 	case S_SENT_DATA:
@@ -317,7 +314,7 @@ skip_query:
 		goto top;
 	}
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 struct mitsu70x_status_deck {
@@ -426,7 +423,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60",
-	.version = "0.16",
+	.version = "0.17",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
