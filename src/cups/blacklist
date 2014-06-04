@@ -117,6 +117,9 @@
 # Sony UP-DR150
 0x054c 0x01e8 blacklist
 
+# Sony UP-DR200
+0x054c 0x035f blacklist
+
 # Mitsubishi CP-D70/CP-D707
 0x06d3 0x3b30 blacklist
 
