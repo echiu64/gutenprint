@@ -45,21 +45,22 @@
 #define inline __inline__
 #endif
 
-#define DYESUB_FEATURE_NONE		0x00000000
-#define DYESUB_FEATURE_FULL_WIDTH	0x00000001
-#define DYESUB_FEATURE_FULL_HEIGHT	0x00000002
-#define DYESUB_FEATURE_BLOCK_ALIGN	0x00000004
-#define DYESUB_FEATURE_BORDERLESS	0x00000008
-#define DYESUB_FEATURE_WHITE_BORDER	0x00000010
-#define DYESUB_FEATURE_PLANE_INTERLACE	0x00000020
-#define DYESUB_FEATURE_PLANE_LEFTTORIGHT	0x00000040
-#define DYESUB_FEATURE_ROW_INTERLACE	0x00000080
-#define DYESUB_FEATURE_12BPP	0x00000100
-#define DYESUB_FEATURE_16BPP	0x00000200
-#define DYESUB_FEATURE_BIGENDIAN 0x00000400
+#define DYESUB_FEATURE_NONE		 0x00000000
+#define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
+#define DYESUB_FEATURE_FULL_HEIGHT	 0x00000002
+#define DYESUB_FEATURE_BLOCK_ALIGN	 0x00000004
+#define DYESUB_FEATURE_BORDERLESS	 0x00000008
+#define DYESUB_FEATURE_WHITE_BORDER	 0x00000010
+#define DYESUB_FEATURE_PLANE_INTERLACE	 0x00000020
+#define DYESUB_FEATURE_PLANE_LEFTTORIGHT 0x00000040
+#define DYESUB_FEATURE_ROW_INTERLACE	 0x00000080
+#define DYESUB_FEATURE_12BPP             0x00000100
+#define DYESUB_FEATURE_16BPP             0x00000200
+#define DYESUB_FEATURE_BIGENDIAN         0x00000400
+#define DYESUB_FEATURE_RGBtoYCBCR        0x00000800
 
-#define DYESUB_PORTRAIT	0
-#define DYESUB_LANDSCAPE	1
+#define DYESUB_PORTRAIT  0
+#define DYESUB_LANDSCAPE 1
 
 #ifndef MIN
 #  define MIN(a,b)	(((a) < (b)) ? (a) : (b))
@@ -192,7 +193,7 @@ typedef struct {
   int byteswap;
   int plane_interlacing;
   int row_interlacing;
-  char empty_byte;
+  char empty_byte[MAX_INK_CHANNELS];  /* one for each color plane */
   unsigned short **image_data;
   int outh_px, outw_px, outt_px, outb_px, outl_px, outr_px;
   int imgh_px, imgw_px;
@@ -258,7 +259,6 @@ static const ink_t bgr_inks[] =
 };
 
 LIST(ink_list_t, bgr_ink_list, ink_t, bgr_inks);
-
 
 /* Olympus P-10 */
 static const dyesub_resolution_t res_310dpi[] =
@@ -3550,18 +3550,18 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Canon CP820, CP910 */
     1011,
-    &bgr_ink_list,
+    &rgb_ink_list,
     &res_300dpi_list,
     &cp910_page_list,
     &cp910_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_BORDERLESS | DYESUB_FEATURE_WHITE_BORDER
-      | DYESUB_FEATURE_PLANE_INTERLACE,
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_RGBtoYCBCR,
     &cp910_printer_init_func, NULL,
     NULL, NULL,
     NULL, NULL,
-    NULL, NULL, NULL, /* Unknown color correction! */
+    NULL, NULL, NULL, /* Printer handles color correction! */
     NULL, NULL,
   },
   { /* Sony UP-DP10  */
@@ -4618,13 +4618,14 @@ dyesub_read_image(stp_vars_t *v,
 static int
 dyesub_print_pixel(stp_vars_t *v,
 		dyesub_print_vars_t *pv,
+		const dyesub_cap_t *caps,
 		int row,
 		int col,
 		int plane)
 {
-  unsigned short ink[MAX_INK_CHANNELS * MAX_BYTES_PER_CHANNEL], *out;
+  unsigned short ink[MAX_INK_CHANNELS], *out;
   int i, j, b;
-  
+
   if (pv->print_mode == DYESUB_LANDSCAPE)
     { /* "rotate" image */
       dyesub_swap_ints(&col, &row);
@@ -4637,7 +4638,28 @@ dyesub_print_pixel(stp_vars_t *v,
     {
       if (pv->out_channels == pv->ink_channels)
         { /* copy out_channel (image) to equiv ink_channel (printer) */
-          ink[i] = out[i];
+		if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
+			/* Convert RGB -> YCbCr (JPEG YCbCr444 coefficients) */
+			double R, G, B;
+			double Y, Cr, Cb;
+			R = out[0];
+			G = out[1];
+			B = out[2];
+			
+			Y  = R *  0.29900 + G *  0.58700 + B *  0.11400;
+			Cb = R * -0.16874 + G * -0.33126 + B *  0.50000 + 32768;
+			Cr = R *  0.50000 + G * -0.41869 + B * -0.08131 + 32768;
+			
+			ink[0] = Y;
+			ink[1] = Cb;
+			ink[2] = Cr;
+
+			// XXX this is sub-optimal; we compute the full YCbCr
+			// values and throw away 2/3 for each pixel printed
+			// if we are plane or row interleaved
+		} else {
+			ink[i] = out[i];
+		}
         }
       else if (pv->out_channels < pv->ink_channels)
         { /* several ink_channels (printer) "share" same out_channel (image) */
@@ -4657,10 +4679,14 @@ dyesub_print_pixel(stp_vars_t *v,
   if (pv->bytes_per_ink_channel == 1) 
     {
       unsigned char *ink_u8 = (unsigned char *) ink;
-      for (i = 0; i < pv->ink_channels; i++)
-	ink_u8[i] = ink[i] / 257;
-      /* FIXME:  This really should be corrected to be: */
-      /* ink_u8[i] = ink[i] >> 8; */
+      for (i = 0; i < pv->ink_channels; i++) {
+#if 0
+             if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR))
+                     ink_u8[i] = ink[i] >> 8;
+             else
+#endif
+                     ink_u8[i] = ink[i] / 257;
+      }
     } 
   else if (pv->bits_per_ink_channel != 16)
     {
@@ -4688,6 +4714,7 @@ dyesub_print_pixel(stp_vars_t *v,
 static int
 dyesub_print_row(stp_vars_t *v,
 		dyesub_print_vars_t *pv,
+		const dyesub_cap_t *caps,
 		int row,
 		int plane)
 {
@@ -4698,9 +4725,9 @@ dyesub_print_row(stp_vars_t *v,
     {
       col = dyesub_interpolate(w, pv->outw_px, pv->imgw_px);
       if (pv->plane_lefttoright)
-	ret = dyesub_print_pixel(v, pv, row, pv->imgw_px - col - 1, plane);
+	      ret = dyesub_print_pixel(v, pv, caps, row, pv->imgw_px - col - 1, plane);
       else
-	ret = dyesub_print_pixel(v, pv, row, col, plane);
+	      ret = dyesub_print_pixel(v, pv, caps, row, col, plane);
       if (ret > 1)
       	break;
     }
@@ -4737,26 +4764,26 @@ dyesub_print_plane(stp_vars_t *v,
 
       if (h + pv->prnt_px < pv->outt_px || h + pv->prnt_px >= pv->outb_px)
         { /* empty part above or below image area */
-          dyesub_nputc(v, pv->empty_byte, out_bytes * pv->prnw_px);
+          dyesub_nputc(v, pv->empty_byte[plane], out_bytes * pv->prnw_px);
 	}
       else
         {
 	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
 	  	&& pv->outl_px > 0)
 	    { /* empty part left of image area */
-              dyesub_nputc(v, pv->empty_byte, out_bytes * pv->outl_px);
+              dyesub_nputc(v, pv->empty_byte[plane], out_bytes * pv->outl_px);
 	    }
 
 	  row = dyesub_interpolate(h + pv->prnt_px - pv->outt_px,
 	  					pv->outh_px, pv->imgh_px);
 	  stp_deprintf(STP_DBG_DYESUB,
 	  	"dyesub_print_plane: h = %d, row = %d\n", h, row);
-	  ret = dyesub_print_row(v, pv, row, p);
+	  ret = dyesub_print_row(v, pv, caps, row, p);
 
 	  if (dyesub_feature(caps, DYESUB_FEATURE_FULL_WIDTH)
 	  	&& pv->outr_px < pv->prnw_px)
 	    { /* empty part right of image area */
-              dyesub_nputc(v, pv->empty_byte, out_bytes
+	      dyesub_nputc(v, pv->empty_byte[plane], out_bytes
 	      				* (pv->prnw_px - pv->outr_px));
 	    }
 	}
@@ -4911,9 +4938,26 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   }
 
   pv.image_data = dyesub_read_image(v, &pv, image);
-  pv.empty_byte = (ink_type &&
- 		(strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0)
-		? '\xff' : '\0');
+  if (ink_type) {
+	  if (dyesub_feature(caps, DYESUB_FEATURE_RGBtoYCBCR)) {
+		  pv.empty_byte[0] = 0xff; /* Y */
+		  pv.empty_byte[1] = 0x80; /* Cb */
+		  pv.empty_byte[2] = 0x80; /* Cr */
+	  } else if (strcmp(ink_type, "RGB") == 0 || strcmp(ink_type, "BGR") == 0) {
+		  pv.empty_byte[0] = 0xff;
+		  pv.empty_byte[1] = 0xff;
+		  pv.empty_byte[2] = 0xff;
+	  } else {
+		  pv.empty_byte[0] = 0x0;
+		  pv.empty_byte[1] = 0x0;
+		  pv.empty_byte[2] = 0x0;
+	  }
+  } else {
+	  pv.empty_byte[0] = 0x0;
+	  pv.empty_byte[1] = 0x0;
+	  pv.empty_byte[2] = 0x0;
+  }
+  
   pv.plane_interlacing = dyesub_feature(caps, DYESUB_FEATURE_PLANE_INTERLACE);
   pv.row_interlacing = dyesub_feature(caps, DYESUB_FEATURE_ROW_INTERLACE);
   pv.plane_lefttoright = dyesub_feature(caps, DYESUB_FEATURE_PLANE_LEFTTORIGHT);
