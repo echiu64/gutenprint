@@ -58,10 +58,11 @@ struct kodak6800_hdr {
 } __attribute__((packed));
 
 struct kodak68x0_status_readback {
-	uint8_t  hdr[2];   /* Always 01 02 */
-	uint8_t  sts;      /* 0x01 == ready, 0x02 == no media, 0x03 == not ready */
+	uint8_t  hdr;      /* Always 01 */
+	uint8_t  sts1;     /* Always 0x02 (idle) or 0x01 (busy) */
+	uint8_t  sts2;     /* 0x01 == ready, 0x02 == no media, 0x03 == not ready */
 	uint8_t  null0[3];
-	uint8_t  unkA;     /* 0x00 or 0x01 */
+	uint8_t  unkA;     /* 0x00 or 0x01 or 0x10 */
 	uint8_t  nullA;
 	uint32_t ctr0;     /* Total Prints (BE) */
 	uint32_t ctr1;     /* Total Prints (BE) */
@@ -97,7 +98,7 @@ struct kodak6800_printsize {
 
 struct kodak68x0_media_readback {
 	uint8_t  hdr;      /* Always 0x01 */
-	uint8_t  media;    /* Always 0x0b or 0x03 */
+	uint8_t  media;    /* Always 0x00 (none), 0x0b or 0x03 */
 	uint8_t  null[5];
 	uint8_t  count;    /* Always 0x04 (6800) or 0x06 (6850)? */
 	struct kodak6800_printsize sizes[];
@@ -116,17 +117,7 @@ struct kodak6800_ctx {
 	uint8_t *databuf;
 	int datalen;
 };
-
-/* Program states */
-enum {
-	S_IDLE = 0,
-	S_6850_READY,
-	S_6850_READY_WAIT,
-	S_READY,
-	S_SENT_HDR,
-	S_SENT_DATA,
-	S_FINISHED,
-};
+#define READBACK_LEN 68
 
 static void kodak68x0_dump_mediainfo(struct kodak68x0_media_readback *media)
 {
@@ -217,7 +208,12 @@ static int kodak6800_get_status(struct kodak6800_ctx *ctx,
 		return ret;
 	if (num < (int)sizeof(*status)) {
 		ERROR("Short read! (%d/%d)\n", num, (int) sizeof(*status));
-		return 4;
+		return CUPS_BACKEND_FAILED;
+	}
+
+	if (status->hdr != 0x01) {
+		ERROR("Unexpected response from status query!\n");
+		return CUPS_BACKEND_FAILED;
 	}
 
 	return 0;
@@ -468,6 +464,56 @@ static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 	return 0;
 }
 
+static int kodak6850_send_init(struct kodak6800_ctx *ctx)
+{
+	uint8_t cmdbuf[64];
+	uint8_t rdbuf[64];
+	int ret = 0, num = 0;
+
+	memset(cmdbuf, 0, CMDBUF_LEN);
+	cmdbuf[0] = 0x03;
+	cmdbuf[1] = 0x1b;
+	cmdbuf[2] = 0x43;
+	cmdbuf[3] = 0x48;
+	cmdbuf[4] = 0x43;
+	cmdbuf[5] = 0x4c;
+	
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, CMDBUF_LEN -1)))
+		return CUPS_BACKEND_FAILED;
+	
+	/* Read response */
+	ret = read_data(ctx->dev, ctx->endp_up,
+			rdbuf, READBACK_LEN, &num);
+	if (ret < 0)
+		return CUPS_BACKEND_FAILED;
+	
+	if (num < 51) {
+		ERROR("Short read! (%d/%d)\n", num, 51);
+		return CUPS_BACKEND_FAILED;
+	}
+	
+	if (num != 51) {
+		ERROR("Unexpected readback from printer (%d/%d from 0x%02x))\n",
+		      num, READBACK_LEN, ctx->endp_up);
+		return CUPS_BACKEND_FAILED;
+	}
+	
+	if (rdbuf[0] != 0x01 ||
+	    rdbuf[2] != 0x43) {
+		ERROR("Unexpected response from printer init!\n");
+		return CUPS_BACKEND_FAILED;
+	}
+	
+	// XXX I believe this the media position
+	//     saying when we have a 4x6 left on an 8x6 blank
+	if (rdbuf[1] != 0x01 && rdbuf[1] != 0x00) {
+		ERROR("Unexpected status code (0x%02x)!\n", rdbuf[1]);
+		return CUPS_BACKEND_FAILED;
+	}
+	return ret;
+}
+
 static void kodak6800_cmdline(void)
 {
 	DEBUG("\t\t[ -c filename ]  # Get tone curve\n");
@@ -566,7 +612,6 @@ static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->type = P_KODAK_6800;
 }
 
-
 static void kodak6800_teardown(void *vctx) {
 	struct kodak6800_ctx *ctx = vctx;
 
@@ -635,21 +680,16 @@ static int kodak6800_read_parse(void *vctx, int data_fd) {
 	return CUPS_BACKEND_OK;
 }
 
-#define READBACK_LEN 68
-
 static int kodak6800_main_loop(void *vctx, int copies) {
 	struct kodak6800_ctx *ctx = vctx;
+	struct kodak68x0_status_readback status;
 
-	uint8_t rdbuf[READBACK_LEN];
-	uint8_t rdbuf2[READBACK_LEN];
 	uint8_t cmdbuf[CMDBUF_LEN];
 
 	uint8_t mediabuf[MAX_MEDIA_LEN];
 	struct kodak68x0_media_readback *media = (struct kodak68x0_media_readback*)mediabuf;
 
-	int last_state = -1, state = S_IDLE;
 	int num, ret;
-	int pending = 0;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -690,160 +730,89 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		return CUPS_BACKEND_HOLD;
 	}
 
-	INFO("Waiting for printer idle\n");
 top:
-	if (state != last_state) {
-		if (dyesub_debug)
-			DEBUG("last_state %d new %d\n", last_state, state);
-	}
+	INFO("Waiting for printer idle\n");
 
-	if (pending)
-		goto skip_query;
+	while(1) {
+		if (kodak6800_get_status(ctx, &status))
+			return CUPS_BACKEND_FAILED;
 
-	/* Send Status Query */
-	memset(cmdbuf, 0, CMDBUF_LEN);
-	cmdbuf[0] = 0x03;
-	cmdbuf[1] = 0x1b;
-	cmdbuf[2] = 0x43;
-	cmdbuf[3] = 0x48;
-	cmdbuf[4] = 0x43;
-	cmdbuf[5] = 0x03;
-
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     cmdbuf, CMDBUF_LEN - 1)))
-		return CUPS_BACKEND_FAILED;
-
-skip_query:
-	/* Read in the printer status */
-	ret = read_data(ctx->dev, ctx->endp_up,
-			rdbuf, READBACK_LEN, &num);
-	if (ret < 0)
-		return CUPS_BACKEND_FAILED;
-
-	if (num < 51) {
-		ERROR("Short read! (%d/%d)\n", num, 51);
-		return CUPS_BACKEND_FAILED;
-	}
-
-	if (num != 51) {
-		ERROR("Unexpected readback from printer (%d/%d from 0x%02x))\n",
-		      num, READBACK_LEN, ctx->endp_up);
-		return CUPS_BACKEND_FAILED;
-	}
-
-	if (!pending) {
-		if (rdbuf[0] != 0x01 ||
-		    rdbuf[1] != 0x02) {
-			ERROR("Unexpected response from status query!\n");
+		if (status.sts1 == 0x01) {
+			// do nothing, this is expected.
+			sleep(1);
+			continue;
+		} else if (status.sts1 != 0x02) {
+			ERROR("Unknown status1 0x%02x\n", status.sts1);
 			return CUPS_BACKEND_FAILED;
 		}
-		if (rdbuf[2] == 0x02) {
+
+		if (status.sts2 == 0x02) {
 			ERROR("Printer is out of media!\n");
-			return CUPS_BACKEND_STOP;
-		} else if (rdbuf[2] == 0x03) {
+			return CUPS_BACKEND_STOP;	
+		} else if (status.sts2 == 0x03) {
 			ERROR("Printer is offline!\n");
 			return CUPS_BACKEND_STOP;
-		}
-	}
-
-	if (memcmp(rdbuf, rdbuf2, READBACK_LEN)) {
-		memcpy(rdbuf2, rdbuf, READBACK_LEN);
-	} else if (state == last_state) {
-		sleep(1);
-	}
-	last_state = state;
-
-	fflush(stderr);
-
-	pending = 0;
-
-	switch (state) {
-	case S_IDLE:
-		if (ctx->type == P_KODAK_6850)
-			state = S_6850_READY;
-		else
-			state = S_READY;
-		break;
-	case S_6850_READY:
-		INFO("Sending 6850 init sequence\n");
-		memset(cmdbuf, 0, CMDBUF_LEN);
-		cmdbuf[0] = 0x03;
-		cmdbuf[1] = 0x1b;
-		cmdbuf[2] = 0x43;
-		cmdbuf[3] = 0x48;
-		cmdbuf[4] = 0x43;
-		cmdbuf[5] = 0x4c;
-
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     cmdbuf, CMDBUF_LEN -1)))
+		} else if (status.sts2 != 0x01) {
+			ERROR("Unknown status 0x%02x\n", status.sts2);
 			return CUPS_BACKEND_FAILED;
-		pending = 1;
-		state = S_6850_READY_WAIT;
-		break;
-	case S_6850_READY_WAIT: /* status response, with different header */
-		if (rdbuf[0] != 0x01 ||
-		    rdbuf[2] != 0x43) {
-			ERROR("Unexpected response from printer init!\n");
-			return CUPS_BACKEND_FAILED;
-		}
-		// XXX is this the media position, saying when we have a 4x6 left on an 8x6 blank?
-		if (rdbuf[1] != 0x01 || rdbuf[1] != 0x00) {
-			ERROR("Unexpected status code!\n");
-			return CUPS_BACKEND_FAILED;
-		}
-		state = S_READY;
-		break;
-	case S_READY:
-		/* Set up print job header */
-		memcpy(cmdbuf, &ctx->hdr, CMDBUF_LEN);
-
-		/* 6850 uses same spool format but different header gets sent */
-		if (ctx->type == P_KODAK_6850) {
-			if (ctx->hdr.media == 0x00)
-				cmdbuf[7] = 0x04;
-			else if (ctx->hdr.media == 0x06)
-				cmdbuf[7] = 0x05; /* XXX audit this! */
-		}
-
-		/* If we're printing a 4x6 on 8x6 media... */
-		if (ctx->hdr.media == 0x00 &&
-		    be16_to_cpu(media->sizes[0].width) == 0x0982) {
-			cmdbuf[14] = 0x06;
-			cmdbuf[16] = 0x01;
-		}
-
-		INFO("Sending image header\n");
-		if ((ret = send_data(ctx->dev, ctx->endp_down,
-				     cmdbuf, CMDBUF_LEN)))
-			return ret;
-		pending = 1;
-		state = S_SENT_HDR;
-		break;
-	case S_SENT_HDR:
-		INFO("Sending image data\n");
-		if ((ret = send_data(ctx->dev, ctx->endp_down, 
-				     ctx->databuf, ctx->datalen)))
-			return CUPS_BACKEND_FAILED;
-
-		state = S_SENT_DATA;
-		break;
-	case S_SENT_DATA:
-		INFO("Waiting for printer to acknowledge completion\n");
-		if (rdbuf[0] != 0x01 ||
-		    rdbuf[1] != 0x02 ||
-		    rdbuf[2] != 0x01) {
+		} else {
 			break;
 		}
+	}
 
-		state = S_FINISHED;
-		break;
-	default:
-		break;
-	};
+	if (ctx->type == P_KODAK_6850) {
+		INFO("Sending 6850 init sequence\n");
+		ret = kodak6850_send_init(ctx);
+		if (ret)
+			return ret;
+		sleep(1);
+	}
+	
+	/* Set up print job header */
+	memcpy(cmdbuf, &ctx->hdr, CMDBUF_LEN);
+	
+	/* 6850 uses same spool format but different header gets sent */
+	if (ctx->type == P_KODAK_6850) {
+		if (ctx->hdr.media == 0x00)
+			cmdbuf[7] = 0x04;
+		else if (ctx->hdr.media == 0x06)
+			cmdbuf[7] = 0x05; /* XXX audit this! */
+	}
+	
+	/* If we're printing a 4x6 on 8x6 media... */
+	if (ctx->hdr.media == 0x00 &&
+	    be16_to_cpu(media->sizes[0].width) == 0x0982) {
+		cmdbuf[14] = 0x06;
+		cmdbuf[16] = 0x01;
+	}
+	
+	INFO("Sending image header\n");
+	if ((ret = send_data(ctx->dev, ctx->endp_down,
+			     cmdbuf, CMDBUF_LEN)))
+		return ret;
+	sleep(1);
+	INFO("Sending image data\n");
+	if ((ret = send_data(ctx->dev, ctx->endp_down, 
+			     ctx->databuf, ctx->datalen)))
+		return CUPS_BACKEND_FAILED;
 
-	if (state != S_FINISHED)
-		goto top;
+	INFO("Waiting for printer to acknowledge completion\n");
+	sleep(1);
+	while(1) {
+		if (kodak6800_get_status(ctx, &status))
+			return CUPS_BACKEND_FAILED;
 
+		if (status.sts1 == 0x01) {
+			// do nothing, this is expected.
+		} else if (status.sts1 != 0x02) {
+			ERROR("Unknown status1 0x%02x\n", status.sts1);
+			return CUPS_BACKEND_FAILED;
+		} else {
+			break;
+		}
+		sleep(1);
+	}
+	
 	/* Clean up */
 	if (terminate)
 		copies = 1;
@@ -851,7 +820,6 @@ skip_query:
 	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
-		state = S_IDLE;
 		goto top;
 	}
 
@@ -861,7 +829,7 @@ skip_query:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.38",
+	.version = "0.40",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
