@@ -3863,7 +3863,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPD70D/CPD707D */
     4105,
-    &bgr_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &mitsu_cpd70x_page_list,
     &mitsu_cpd70x_printsize_list,
@@ -3879,7 +3879,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Mitsubishi CPK60D */
     4106,
-    &bgr_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &mitsu_cpk60_page_list,
     &mitsu_cpk60_printsize_list,
