@@ -3293,6 +3293,96 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
   }
 }
 
+/* Citizen CW-01 */
+static const dyesub_resolution_t res_citizen_cw01_dpi[] =
+{
+  { "334x334", 334, 334},
+  { "334x600", 334, 600},
+};
+
+LIST(dyesub_resolution_list_t, res_citizen_cw01_dpi_list, dyesub_resolution_t,res_citizen_cw01_dpi);
+
+static const dyesub_pagesize_t citizen_cw01_page[] =
+{
+	// XXX "DSC" == 4.7x3.5"
+  { "B7", "3.5x5", PT(1210,334)+1, PT(2048,334)+1, 0, 0, PT(169,334), PT(169,334), DYESUB_LANDSCAPE},
+  { "w288h432", "4x6", PT(1380,334)+1, PT(2048,334)+1, 0, 0, PT(5,334), PT(5,334), DYESUB_LANDSCAPE},
+	// XXX "2DSC" == 4.7x7"
+  { "w360h504",	"5x7", PT(2048,334)+1, PT(2380,334)+1, PT(169,334), PT(169,334), 0, 0, DYESUB_PORTRAIT},
+  { "A5", "6x8", PT(2048,334)+1, PT(2710,300)+1, PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "6x9", PT(2048,334)+1, PT(3050,334)+1, PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, citizen_cw01_page_list, dyesub_pagesize_t, citizen_cw01_page);
+
+static const dyesub_printsize_t citizen_cw01_printsize[] =
+{
+  { "334x334", "B7", 1210, 2048},
+  { "334x600", "B7", 2176, 2048},
+  { "334x334", "w288h432", 1380, 2048},
+  { "334x600", "w288h432", 2480, 2048},
+  { "334x334", "w360h504", 2048, 2380},
+  { "334x600", "w360h504", 2048, 4276},
+  { "334x334", "A5", 2048, 2710},
+  { "334x600", "A5", 2048, 4870},
+  { "334x334", "w432h576", 2048, 3050},
+  { "334x600", "w432h576", 2048, 5480},
+};
+
+LIST(dyesub_printsize_list_t, citizen_cw01_printsize_list, dyesub_printsize_t, citizen_cw01_printsize);
+
+static void citizen_cw01_printer_start(stp_vars_t *v)
+{
+	int media = 0;
+
+	if (strcmp(privdata.pagesize,"B7") == 0)
+		media = 0x01;
+	else if (strcmp(privdata.pagesize,"w288h432") == 0)
+		media = 0x02;
+	else if (strcmp(privdata.pagesize,"w360h504") == 0)
+		media = 0x04; // XXX guess
+	else if (strcmp(privdata.pagesize,"A5") == 0)
+		media = 0x05; // XXX guess
+	else if (strcmp(privdata.pagesize,"w432h576") == 0)
+		media = 0x06; // XXX guess
+	// XXX DSC == 0, 2DSC == 3 (?)
+
+	stp_putc(media, v);
+	stp_putc(0x00, v);
+	stp_putc(0x01, v);
+	stp_putc(0x00, v);
+
+	/* Compute plane size */
+	media = (privdata.w_size * privdata.h_size) + 1024 + 40;
+
+	stp_put32_le(media, v);
+	stp_put32_le(0x0, v);
+}
+
+static void citizen_cw01_plane_init(stp_vars_t *v)
+{
+	int i;
+
+	stp_put32_le(0x28, v);
+	stp_put32_le(0x0800, v);
+	stp_put16_le(privdata.h_size, v);  /* number of rows */
+	stp_put16_le(0x0, v);
+	stp_put32_le(0x00, v);
+	stp_put32_le(0x080001, v);
+	stp_put32_le(0x00, v);
+	stp_put32_le(0x335a, v);
+	stp_put32_le(0x335a, v);
+	stp_put32_le(0x0100, v);
+	stp_put32_le(0x00, v);
+
+	/* Write the color curve data. */
+	for (i = 0xff; i >= 0 ; i--) {
+		unsigned long tmp;
+		tmp = i | (i << 8) | (i << 16);
+		stp_put32_le(tmp, v);
+	}
+}
+
 /* Model capabilities */
 
 static const dyesub_cap_t dyesub_model_capabilities[] =
@@ -3966,6 +4056,21 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL,
+  },
+  { /* Citizen CW-01 */
+    6005,
+    &bgr_ink_list,
+    &res_citizen_cw01_dpi_list,
+    &citizen_cw01_page_list,
+    &citizen_cw01_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    &citizen_cw01_printer_start, NULL,
+    &citizen_cw01_plane_init, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    NULL, NULL,
   },
 };
 
