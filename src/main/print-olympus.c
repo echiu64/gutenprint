@@ -3304,10 +3304,10 @@ LIST(dyesub_resolution_list_t, res_citizen_cw01_dpi_list, dyesub_resolution_t,re
 
 static const dyesub_pagesize_t citizen_cw01_page[] =
 {
-	// XXX "DSC" == 4.7x3.5"
+  { "w252h338", "3.5x4.7", PT(1210,334)+1, PT(2048,334)+1, 0, 0, PT(225,334), PT(225,334), DYESUB_LANDSCAPE},
   { "B7", "3.5x5", PT(1210,334)+1, PT(2048,334)+1, 0, 0, PT(169,334), PT(169,334), DYESUB_LANDSCAPE},
   { "w288h432", "4x6", PT(1380,334)+1, PT(2048,334)+1, 0, 0, PT(5,334), PT(5,334), DYESUB_LANDSCAPE},
-	// XXX "2DSC" == 4.7x7"
+  { "w338h504",	"4.7x7", PT(2048,334)+1, PT(2380,334)+1, PT(225,334), PT(225,334), 0, 0, DYESUB_PORTRAIT},
   { "w360h504",	"5x7", PT(2048,334)+1, PT(2380,334)+1, PT(169,334), PT(169,334), 0, 0, DYESUB_PORTRAIT},
   { "A5", "6x8", PT(2048,334)+1, PT(2710,300)+1, PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
   { "w432h576", "6x9", PT(2048,334)+1, PT(3050,334)+1, PT(5,334), PT(5,334), 0, 0, DYESUB_PORTRAIT},
@@ -3317,10 +3317,14 @@ LIST(dyesub_pagesize_list_t, citizen_cw01_page_list, dyesub_pagesize_t, citizen_
 
 static const dyesub_printsize_t citizen_cw01_printsize[] =
 {
+  { "334x334", "w252h338", 1210, 2048},
+  { "334x600", "w252h388", 2176, 2048},
   { "334x334", "B7", 1210, 2048},
   { "334x600", "B7", 2176, 2048},
   { "334x334", "w288h432", 1380, 2048},
   { "334x600", "w288h432", 2480, 2048},
+  { "334x334", "w338h504", 2048, 2380},
+  { "334x600", "w338h504", 2048, 4276},
   { "334x334", "w360h504", 2048, 2380},
   { "334x600", "w360h504", 2048, 4276},
   { "334x334", "A5", 2048, 2710},
@@ -3335,21 +3339,28 @@ static void citizen_cw01_printer_start(stp_vars_t *v)
 {
 	int media = 0;
 
-	if (strcmp(privdata.pagesize,"B7") == 0)
+	if (strcmp(privdata.pagesize,"w252h338") == 0)
+		media = 0x00;
+	else if (strcmp(privdata.pagesize,"B7") == 0)
 		media = 0x01;
 	else if (strcmp(privdata.pagesize,"w288h432") == 0)
 		media = 0x02;
+	else if (strcmp(privdata.pagesize,"w338h504") == 0)
+		media = 0x03;
 	else if (strcmp(privdata.pagesize,"w360h504") == 0)
-		media = 0x04; // XXX guess
+		media = 0x04;
 	else if (strcmp(privdata.pagesize,"A5") == 0)
-		media = 0x05; // XXX guess
+		media = 0x05;
 	else if (strcmp(privdata.pagesize,"w432h576") == 0)
-		media = 0x06; // XXX guess
-	// XXX DSC == 0, 2DSC == 3 (?)
+		media = 0x06;
 
 	stp_putc(media, v);
-	stp_putc(0x00, v);
-	stp_putc(0x01, v);
+	if (privdata.h_dpi == 600) {
+		stp_putc(0x01, v);
+	} else {
+		stp_putc(0x00, v);
+	}
+	stp_putc(0x01, v); /* This is actually number of copies */
 	stp_putc(0x00, v);
 
 	/* Compute plane size */
@@ -3371,7 +3382,11 @@ static void citizen_cw01_plane_init(stp_vars_t *v)
 	stp_put32_le(0x00, v);
 	stp_put32_le(0x00, v);
 	stp_put32_le(0x335a, v);
-	stp_put32_le(0x335a, v);
+	if (privdata.h_dpi == 600) {
+		stp_put32_le(0x5c40, v);
+	} else {
+		stp_put32_le(0x335a, v);
+	}
 	stp_put32_le(0x0100, v);
 	stp_put32_le(0x00, v);
 

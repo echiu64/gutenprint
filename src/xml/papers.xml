@@ -116,6 +116,12 @@
       <height value="360"/>
       <unit value="english-extended"/>
     </paper>
+    <paper name="w252h338">
+      <description translate="value" value="3.5x4.7"/>
+      <width value="252"/>
+      <height value="338"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w252h360">
       <description translate="value" value="3 1/2 x5"/>
       <width value="252"/>
@@ -170,6 +176,12 @@
       <description translate="value" value="4x8"/>
       <width value="288"/>
       <height value="576"/>
+      <unit value="english-extended"/>
+    </paper>
+    <paper name="w338h504">
+      <description translate="value" value="4.7x7"/>
+      <width value="338"/>
+      <height value="504"/>
       <unit value="english-extended"/>
     </paper>
     <paper name="w360h504">
