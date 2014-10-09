@@ -1305,6 +1305,9 @@ static const char* canon_BJC_S820_modeuses_plain[] = {
   "600x600dpi_high2",
   "600x600dpi_high",/*untested*/
   "600x600dpi",
+  "1200x1200dpi_tmp1",/*untested*/
+  "600x600dpi_tmp2",/*untested*/
+  "300x300dpi_tmp3",/*untested*/
   "600x600dpi_draft",
   /* Mono */
   "600x600dpi_highmono2",/*untested*/
