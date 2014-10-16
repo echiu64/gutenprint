@@ -103,6 +103,7 @@ enum {
 	P_MITSU_D70X,
 	P_DNP_DS40,
 	P_DNP_DS80,
+	P_CITIZEN_CW01,
 	P_END,
 };
 
@@ -150,6 +151,7 @@ extern struct dyesub_backend shinkos2145_backend;
 extern struct dyesub_backend canonselphy_backend;
 extern struct dyesub_backend mitsu70x_backend;
 extern struct dyesub_backend dnpds40_backend;
+extern struct dyesub_backend cw01_backend;
 
 /* CUPS compatibility */
 #define CUPS_BACKEND_OK            0 /* Sucess */
