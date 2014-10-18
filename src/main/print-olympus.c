@@ -2001,6 +2001,54 @@ static void kodak_9810_plane_init(stp_vars_t *v)
   stp_zfwrite("Image   ", 1, 8, v);
 }
 
+/* Kodak 8810 */
+static const dyesub_pagesize_t kodak_8810_page[] =
+{
+  { "w288h576", "8x4", PT(1208,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+//  { "???", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "Custom", NULL, PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+};
+LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
+
+static const dyesub_printsize_t kodak_8810_printsize[] =
+{
+  { "300x300", "w288h576", 1208, 2464},
+  { "300x300", "c8x10", 2464, 3024},
+//  { "300x300", "???", 2464, 3531},
+  { "300x300", "w576h864", 2464, 3624},
+  { "300x300", "Custom", 2464, 3624},
+};
+
+LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kodak_8810_printsize);
+
+static const laminate_t kodak_8810_laminate[] =
+{
+  {"Glossy", N_("Glossy"), {1, "\x03"}},
+  {"Satin",  N_("Satin"),  {1, "\x02"}},
+};
+
+LIST(laminate_list_t, kodak_8810_laminate_list, laminate_t, kodak_8810_laminate);
+
+static void kodak_8810_printer_init(stp_vars_t *v)
+{
+  stp_putc(0x01, v);
+  stp_putc(0x40, v);
+  stp_putc(0x12, v);
+  stp_putc(0x00, v);
+  stp_putc(0x01, v);
+  stp_putc(0x01, v); /* Actually, # of copies */
+  stp_putc(0x00, v);
+  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(privdata.h_size, v);
+  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(privdata.h_size, v);
+  dyesub_nputc(v, 0, 4);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+	      (privdata.laminate->seq).bytes, v);
+  dyesub_nputc(v, 0, 2);
+}
 
 /* Kodak Professional 8500 */
 static const dyesub_pagesize_t kodak_8500_page[] =
@@ -3927,6 +3975,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_9810_laminate_list, NULL,
   },
+  { /* Kodak 8810 */
+    4007,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &kodak_8810_page_list,
+    &kodak_8810_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &kodak_8810_printer_init, NULL,
+    NULL, NULL, 
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_8810_laminate_list, NULL,
+  },
+
   { /* Kodak Professional 8500 */
     4100,
     &bgr_ink_list,

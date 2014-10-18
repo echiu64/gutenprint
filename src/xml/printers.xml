@@ -2609,6 +2609,7 @@
       <printer translate="name" name="Kodak 805" deviceid="MFG:Eastman Kodak Company;CMD:EK2;MDL: KODAK 805 Photo Printer;CLS:Printer;DES:Kodak 805 Photo Printer;" driver="kodak-805" manufacturer="Kodak" model="4005" foomaticid="Kodak-805" />
       <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" foomaticid="Kodak-8500">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" foomaticid="Kodak-9810">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 8810" driver="kodak-8810" manufacturer="Kodak" model="4007" foomaticid="Kodak-8810">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020D" driver="mitsubishi-3020d" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020D">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DU" driver="mitsubishi-3020du" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DU">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DE" driver="mitsubishi-3020de" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DE">EXPERIMENTAL</printer>
