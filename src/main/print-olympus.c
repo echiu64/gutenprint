@@ -2586,7 +2586,7 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
 #ifdef DNPX2
   { "300x300", "4x6_x2", 1864, 2730},
 #endif
-  { "300x300", "Custom", 1220, 1868},
+  { "300x300", "Custom", 1220, 1864},
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, mitsu_cpd70x_printsize);
@@ -2599,7 +2599,7 @@ static const laminate_t mitsu_cpd70x_laminate[] =
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
 
-static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
+static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60, int is_305)
 {
   /* Printer init */
   stp_putc(0x1b, v);
@@ -2613,7 +2613,9 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
   if (is_k60) {
-    stp_putc(0x0, v);
+    stp_putc(0x00, v);
+  } else if (is_305) {
+    stp_putc(0x90, v);
   } else {
     stp_putc(0x01, v);
   }
@@ -2636,7 +2638,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
   }
   dyesub_nputc(v, 0x00, 7);
 
-  if (is_k60) {
+  if (is_k60 || is_305) {
     stp_putc(0x01, v); /* K60 has a single "lower" deck */
   } else {
     stp_putc(0x00, v);  /* Auto deck selection, or 0x01 for Lower, 0x02 for Upper */
@@ -2648,14 +2650,22 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
   dyesub_nputc(v, 0x00, 6);
 
   /* Multi-cut control */
-  if (strcmp(privdata.pagesize,"4x6_x2") == 0) {
-    stp_putc(0x01, v);
-  } else if (strcmp(privdata.pagesize,"B7_x2") == 0) {
-    stp_putc(0x01, v);
-  } else if (strcmp(privdata.pagesize,"2x6_x2") == 0) {
-    stp_putc(0x05, v);
+  if (is_305) {
+	  if (strcmp(privdata.pagesize,"w288h432") == 0) {
+		  stp_putc(0x01, v);
+	  } else {
+		  stp_putc(0x00, v);
+	  }
   } else {
-    stp_putc(0x00, v);
+	  if (strcmp(privdata.pagesize,"4x6_x2") == 0) {
+		  stp_putc(0x01, v);
+	  } else if (strcmp(privdata.pagesize,"B7_x2") == 0) {
+		  stp_putc(0x01, v);
+	  } else if (strcmp(privdata.pagesize,"2x6_x2") == 0) {
+		  stp_putc(0x05, v);
+	  } else {
+		  stp_putc(0x00, v);
+	  }
   }
   dyesub_nputc(v, 0x00, 15);
 
@@ -2664,7 +2674,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60)
 
 static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 {
-  mitsu_cpd70k60_printer_init(v, 0);
+	mitsu_cpd70k60_printer_init(v, 0, 0);
 }
 
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
@@ -2755,7 +2765,34 @@ LIST(dyesub_printsize_list_t, mitsu_cpk60_printsize_list, dyesub_printsize_t, mi
 
 static void mitsu_cpk60_printer_init(stp_vars_t *v)
 {
-  mitsu_cpd70k60_printer_init(v, 1);
+  mitsu_cpd70k60_printer_init(v, 1, 0);
+}
+
+/* Kodak 305 */
+static const dyesub_pagesize_t kodak305_page[] =
+{
+  { "w288h432", "4x6", PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "Custom", NULL, PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+};
+
+LIST(dyesub_pagesize_list_t, kodak305_page_list, dyesub_pagesize_t, kodak305_page);
+
+static const dyesub_printsize_t kodak305_printsize[] =
+{
+  { "300x300", "w288h432", 1218, 1864},
+  { "300x300", "w432h576", 1864, 2422},
+  { "300x300", "Custom", 1218, 1864},
+};
+
+LIST(dyesub_printsize_list_t, kodak305_printsize_list, dyesub_printsize_t, kodak305_printsize);
+
+static void kodak305_printer_init(stp_vars_t *v)
+{
+	mitsu_cpd70k60_printer_init(v, 0, 1);
 }
 
 /* Shinko CHC-S9045 (experimental) */
@@ -3998,7 +4035,22 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
   },
-
+  { /* Kodak 305 */
+    4107,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &kodak305_page_list,
+    &kodak305_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &kodak305_printer_init, &mitsu_cpd70x_printer_end,
+    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &mitsu_cpd70x_laminate_list, NULL,
+  },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
     &rgb_ink_list,
