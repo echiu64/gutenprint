@@ -2628,6 +2628,8 @@
       <printer translate="name" name="Sinfonia S2145/S2" driver="sinfonia-chcs2145" manufacturer="Sinfonia" model="5001" foomaticid="Sinfonia-CHC-S2145" />
       <printer translate="name" name="Shinko CHC-S1245" driver="shinko-chcs1245" manufacturer="Shinko" model="5002" foomaticid="Shinko-CHC-S1245">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S1245/E1" driver="sinfonia-chcs1245" manufacturer="Sinfonia" model="5002" foomaticid="Sinfonia-CHC-S1245">EXPERIMENTAL</printer>
+      <printer translate="name" name="Shinko CHC-S6245" driver="shinko-chcs6245" manufacturer="Shinko" model="5003" foomaticid="Shinko-CHC-S6245">EXPERIMENTAL</printer>
+      <printer translate="name" name="Sinfonia CHC-S6245/CE" driver="sinfonia-chcs6245" manufacturer="Sinfonia" model="5003" foomaticid="Sinfonia-CHC-S6245">EXPERIMENTAL</printer>
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />
       <printer translate="name" name="Dai Nippon Printing DSRX1"  driver="dnp-dsrx1" manufacturer="DNP" model="6002" foomaticid="DNP-DSRX1" />

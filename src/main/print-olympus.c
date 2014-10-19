@@ -3034,29 +3034,27 @@ static void shinko_chcs2145_printer_end(stp_vars_t *v)
   stp_putc(0x01, v);
 }
 
-
-
 /* Shinko CHC-S1245 */
 static const dyesub_pagesize_t shinko_chcs1245_page[] =
 {
-  { "w288h576", "8x4", PT(1236,300)+1, PT(2560,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1536,300)+1, PT(2560,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1836,300)+1, PT(2560,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w576h576", "8x8", PT(2436,300)+1, PT(2560,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "w576h864", "8x12", PT(2560,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w288h576", "8x4", PT(1236,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1536,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1836,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "c8x10", "8x10", PT(2446,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2446,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs1245_page_list, dyesub_pagesize_t, shinko_chcs1245_page);
 
 static const dyesub_printsize_t shinko_chcs1245_printsize[] =
 {
-  { "300x300", "w288h576", 1236, 2560},
-  { "300x300", "w360h576", 1536, 2560},
-  { "300x300", "w432h576", 1836, 2560},
-  { "300x300", "w576h576", 2436, 2560},
-  { "300x300", "c8x10", 2560, 3036},
-  { "300x300", "w576h864", 2560, 3636},
+  { "300x300", "w288h576", 1236, 2446},
+  { "300x300", "w360h576", 1536, 2446},
+  { "300x300", "w432h576", 1836, 2446},
+  { "300x300", "w576h576", 2436, 2446},
+  { "300x300", "c8x10", 2446, 3036},
+  { "300x300", "w576h864", 2446, 3636},
 };
 
 LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t, shinko_chcs1245_printsize);
@@ -3094,6 +3092,96 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x07fffffff, v);  // XXX glossy. if non-matte, 0x05 and 0x0000000 signed, +-25.
 
   stp_put32_le(0x00, v); // XXX 0x00 printer default, 0x02 for "dust removal" on, 0x01 for off.
+  stp_put32_le(privdata.w_size, v); /* Columns */
+  stp_put32_le(privdata.h_size, v); /* Rows */
+  stp_put32_le(0x01, v);            /* Copies */
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0xffffffce, v);
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0xffffffce, v);
+  stp_put32_le(privdata.w_dpi, v);  /* Dots Per Inch */
+  stp_put32_le(0xffffffce, v);
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0xffffffce, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+
+  stp_put32_le(0x00, v);
+}
+
+/* Shinko CHC-S6245 */
+static const dyesub_pagesize_t shinko_chcs6245_page[] =
+{
+  { "w288h576", "8x4", PT(1236,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1536,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1836,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w576h576", "8x8", PT(2436,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "c8x10", "8x10", PT(2464,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w576h864", "8x12", PT(2464,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, shinko_chcs6245_page_list, dyesub_pagesize_t, shinko_chcs6245_page);
+
+static const dyesub_printsize_t shinko_chcs6245_printsize[] =
+{
+  { "300x300", "w288h576", 1236, 2464},
+  { "300x300", "w360h576", 1536, 2464},
+  { "300x300", "w432h576", 1836, 2464},
+  { "300x300", "w576h576", 2436, 2464},
+  { "300x300", "c8x10", 2464, 3036},
+  { "300x300", "w576h864", 2464, 3636},
+};
+
+LIST(dyesub_printsize_list_t, shinko_chcs6245_printsize_list, dyesub_printsize_t, shinko_chcs6245_printsize);
+
+static const laminate_t shinko_chcs6245_laminate[] =
+{
+  {"Glossy", N_("Glossy"), {4, "\x03\x00\x00\x00"}},
+  {"Matte", N_("Matte"), {4, "\x02\x00\x00\x00"}},
+  {"None", N_("None"), {4, "\x01\x00\x00\x00"}},
+};
+
+LIST(laminate_list_t, shinko_chcs6245_laminate_list, laminate_t, shinko_chcs6245_laminate);
+
+static void shinko_chcs6245_printer_init(stp_vars_t *v)
+{
+  int media = 0;
+
+  if (strcmp(privdata.pagesize,"w288h576") == 0)
+    media = 0x20;
+  else if (strcmp(privdata.pagesize,"w360h576") == 0)
+    media = 0x21;
+  else if (strcmp(privdata.pagesize,"w432h576") == 0)
+    media = 0x22;
+  else if (strcmp(privdata.pagesize,"w576h576") == 0)
+    media = 0x23;
+  else if (strcmp(privdata.pagesize,"c8x10") == 0)
+    media = 0x10;
+  else if (strcmp(privdata.pagesize,"w576h864") == 0)
+    media = 0x11;
+
+  stp_put32_le(0x10, v);
+  stp_put32_le(6245, v);  /* Printer Model */
+  stp_put32_le(0x01, v);
+  stp_put32_le(0x01, v);
+
+  stp_put32_le(0x64, v);
+  stp_put32_le(0x00, v);
+  stp_put32_le(media, v);
+  stp_put32_le(0x00, v);
+
+  stp_put32_le(0x00, v);
+  stp_put32_le(0x00, v);
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+	      (privdata.laminate->seq).bytes, v); /* Lamination */
+  stp_put32_le(0x00, v);
+
+  stp_put32_le(0x00, v);
   stp_put32_le(privdata.w_size, v); /* Columns */
   stp_put32_le(privdata.h_size, v); /* Rows */
   stp_put32_le(0x01, v);            /* Copies */
@@ -4238,6 +4326,20 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
     NULL, NULL,
+  },
+  { /* Shinko/Sinfonia CHC-S6245 */
+    5003,
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &shinko_chcs6245_page_list,
+    &shinko_chcs6245_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &shinko_chcs6245_printer_init, &shinko_chcs2145_printer_end,
+    NULL, NULL,  /* No planes */
+    NULL, NULL,  /* No blocks */
+    NULL, NULL, NULL, /* Color correction in printer */
+    &shinko_chcs6245_laminate_list, NULL,
   },
 
   { /* Dai Nippon Printing DS40 */
