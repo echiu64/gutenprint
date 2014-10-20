@@ -268,6 +268,12 @@
 <!--
     Other common photographic paper sizes
 -->
+    <paper name="w360h360">
+      <description translate="value" value="5x5"/>
+      <width value="360"/>
+      <height value="360"/>
+      <unit value="english-extended"/>
+    </paper>
     <paper name="w576h576">
       <description translate="value" value="8x8"/>
       <width value="576"/>
