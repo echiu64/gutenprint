@@ -2591,6 +2591,8 @@
       <printer translate="name" name="Sony DPP-EX7" driver="sony-dppex7" manufacturer="Sony" model="2002" foomaticid="Sony-DPP-EX7" />
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" foomaticid="Sony-UP-DR100" />
       <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" foomaticid="Sony-UP-DR200" />
+      <printer translate="name" name="Sony UP-CR10L" driver="sony-upcr10l" manufacturer="Sony" model="2005" foomaticid="Sony-UP-CR10L" />
+      <printer translate="name" name="DNP SL10" driver="dnp-sl10" manufacturer="DNP" model="2005" foomaticid="DNP-SL10" />
       <printer translate="name" name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" foomaticid="Fujifilm-Printpix-CX-400" />
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" foomaticid="Fujifilm-Printpix-CX-550" />
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" foomaticid="Fujifilm-FinePix-NX-500" />

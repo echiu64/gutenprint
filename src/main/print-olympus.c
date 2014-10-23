@@ -1433,6 +1433,66 @@ static void updr200_printer_init_func(stp_vars_t *v)
   updr150_200_printer_init_func(v, 1);
 }
 
+/* Sony UP-CR10L / DNP SL10 */
+static const dyesub_pagesize_t upcr10_page[] =
+{
+  { "w288h432", "4x6", PT(1248,300)+1, PT(1848,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1100,300)+1, PT(1536,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1536,300)+1, PT(2148,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, upcr10_page_list, dyesub_pagesize_t, upcr10_page);
+
+static const dyesub_printsize_t upcr10_printsize[] =
+{
+  { "300x300", "w288h432", 1248, 1848},
+  { "300x300", "B7", 1100, 1536},
+  { "300x300", "w360h504", 1536, 2148},
+};
+
+LIST(dyesub_printsize_list_t, upcr10_printsize_list, dyesub_printsize_t, upcr10_printsize);
+
+static void upcr10_printer_init_func(stp_vars_t *v)
+{
+	stp_zfwrite("\x60\xff\xff\xff"
+		    "\xf8\xff\xff\xff"
+		    "\xfd\xff\xff\xff\x14\x00\x00\x00"
+		    "\x1b\x15\x00\x00\x00\x0d\x00\x00"
+		    "\x00\x00\x00\x07\x00\x00\x00\x00", 1, 32, v);
+	stp_put16_be(privdata.w_size, v);
+	stp_put16_be(privdata.h_size, v);
+	stp_zfwrite("\xfb\xff\xff\xff"
+		    "\xf4\xff\xff\xff\x0b\x00\x00\x00"
+		    "\x1b\xea\x00\x00\x00\x00", 1, 18, v);
+	stp_put32_be(privdata.w_size * privdata.h_size * 3, v);
+	stp_putc(0, v);
+	stp_put32_le(privdata.w_size * privdata.h_size * 3, v);
+}
+
+static void upcr10_printer_end_func(stp_vars_t *v)
+{
+	stp_zfwrite("\xf3\xff\xff\xff"
+		    "\x0f\x00\x00\x00"
+		    "\x1b\xe5\x00\x00\x00\x08\x00\x00"
+		    "\x00\x00\x00\x00\x00\x0d\x00", 1, 23, v);
+	stp_zfwrite("\x12\x00\x00\x00\x1b\xe1\x00\x00"
+		    "\x000x0b\x00\x00\x80\x08\x00\x00"
+		    "\x00\x00", 1, 18, v);
+	stp_put16_be(privdata.w_size, v);
+	stp_put16_be(privdata.h_size, v);
+	stp_zfwrite("\xfa\xff\xff\xff"
+		    "\x09\x00\x00\x00"
+		    "\x1b\xee\x00\x00\x00\x02\x00\x00", 1, 16, v);
+	stp_putc(1, v); /* Copies */
+	stp_zfwrite("\x07\x00\x00\x00"
+		    "\x1b\x17\x00\x00\x00\x00\x00", 1, 11, v);
+	stp_zfwrite("\xf9\xff\xff\xff"
+		    "\xfc\xff\xff\xff"
+		    "\x07\x00\x00\x00"
+		    "\x1b\x17\x00\x00\x00\x00\x00", 1, 19, v);
+	stp_zfwrite("\xf7\xff\xff\xff", 1, 4, v);
+}
+
 /* Fujifilm CX-400 */
 static const dyesub_pagesize_t cx400_page[] =
 {
@@ -4120,6 +4180,20 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL, 
     &updr200_laminate_list, NULL,
+  },
+  { /* Sony UP-CR10L / DNP SL10 */
+    2005,
+    &rgb_ink_list,
+    &res_300dpi_list,
+    &upcr10_page_list,
+    &upcr10_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
+    &upcr10_printer_init_func, &upcr10_printer_end_func,
+    NULL, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL, 
+    NULL, NULL,
   },
   { /* Fujifilm Printpix CX-400  */
     3000,
