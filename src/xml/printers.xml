@@ -2577,7 +2577,7 @@
       <printer translate="name" name="Canon SELPHY CP800" deviceid="MFG:Canon;CMD:Raster3;MDL:CP800;CLS:PRINTER;DES:Canon CP800;VER:1.00;" driver="canon-cp800" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP800" />
       <printer translate="name" name="Canon SELPHY CP810" deviceid="MFG:Canon;CMD:Raster3;MDL:CP810;CLS:PRINTER;DES:Canon CP810;VER:3.05;" driver="canon-cp810" manufacturer="Canon" model="1009" foomaticid="Canon-SELPHY-CP810" />
       <printer translate="name" name="Canon SELPHY CP820" driver="canon-cp820" manufacturer="Canon" model="1011" foomaticid="Canon-SELPHY-CP820" />
-      <printer translate="name" name="Canon SELPHY CP900" driver="canon-cp900" manufacturer="Canon" model="1010" foomaticid="Canon-SELPHY-CP900" />
+      <printer translate="name" name="Canon SELPHY CP900" deviceid="MFG:Canon;CMD:Raster3;MDL:CP900;CLS:PRINTER;DES:Canon CP900;VER:5.77;" driver="canon-cp900" manufacturer="Canon" model="1010" foomaticid="Canon-SELPHY-CP900" />
       <printer translate="name" name="Canon SELPHY CP910" deviceid="MFG:Canon;CMD:Raster3;MDL:CP910;CLS:PRINTER;DES:Canon CP910;VER:1.00;CID:CA_YCC_ICP;" driver="canon-cp910" manufacturer="Canon" model="1011" foomaticid="Canon-SELPHY-CP910" />
       <printer translate="name" name="Canon SELPHY ES1" deviceid="MFG:Canon;CMD:Raster3;MDL:ES1;CLS:PRINTER;DES:Canon SELPHY ES1;VER:1.00;" driver="canon-es1" manufacturer="Canon" model="1003" foomaticid="Canon-SELPHY-ES1" />
       <printer translate="name" name="Canon SELPHY ES2" deviceid="MFG:Canon;CMD:Raster3;MDL:ES2;CLS:PRINTER;DES:Canon SELPHY ES2;VER:1.00;" driver="canon-es2" manufacturer="Canon" model="1005" foomaticid="Canon-SELPHY-ES2" />
