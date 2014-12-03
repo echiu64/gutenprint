@@ -2659,7 +2659,7 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   { "2x6_x2", "4x6*2", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
 #endif
-  { "w360h504", "5x7", PT(1572,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
   { "w432h432", "6x6", PT(1820,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
   						DYESUB_LANDSCAPE},
@@ -2673,8 +2673,6 @@ static const dyesub_pagesize_t mitsu_cpd70x_page[] =
   { "4x6_x2", "4x6*2", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 #endif
-  { "Custom", NULL, PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
-  						DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpd70x_page_list, dyesub_pagesize_t, mitsu_cpd70x_page);
@@ -2686,7 +2684,7 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
 #ifdef DNPX2
   { "300x300", "2x6_x2", 1228, 1864},
 #endif
-  { "300x300", "w360h504", 1572, 2128},
+  { "300x300", "w360h504", 1568, 2128},
   { "300x300", "w432h432", 1820, 1864},
   { "300x300", "w432h576", 1864, 2422},
   { "300x300", "w432h612", 1864, 2564},
@@ -2694,7 +2692,6 @@ static const dyesub_printsize_t mitsu_cpd70x_printsize[] =
 #ifdef DNPX2
   { "300x300", "4x6_x2", 1864, 2730},
 #endif
-  { "300x300", "Custom", 1220, 1864},
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cpd70x_printsize_list, dyesub_printsize_t, mitsu_cpd70x_printsize);
@@ -2844,8 +2841,6 @@ static const dyesub_pagesize_t mitsu_cpk60_page[] =
   { "4x6_x2", "4x6*2", PT(1864,300)+1, PT(2454,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
 #endif
-  { "Custom", NULL, PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
-  						DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cpk60_page_list, dyesub_pagesize_t, mitsu_cpk60_page);
@@ -2866,7 +2861,6 @@ static const dyesub_printsize_t mitsu_cpk60_printsize[] =
 #ifdef DNPX2
   { "300x300", "4x6_x2", 1864, 2454},
 #endif
-  { "300x300", "Custom", 1218, 1864},
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cpk60_printsize_list, dyesub_printsize_t, mitsu_cpk60_printsize);
@@ -2875,6 +2869,48 @@ static void mitsu_cpk60_printer_init(stp_vars_t *v)
 {
   mitsu_cpd70k60_printer_init(v, 1, 0);
 }
+
+static const dyesub_pagesize_t mitsu_cpd80_page[] =
+{
+  { "w288h432", "4x6", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+#ifdef DNPX2
+  { "2x6_x2", "2x6*2", PT(1228,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+#endif
+  { "w360h360", "5x5", PT(1524,300)+1, PT(1568,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE},
+  { "w360h504", "5x7", PT(1568,300)+1, PT(2128,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h432", "6x6", PT(1864,300)+1, PT(1820,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+  { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+#ifdef DNPX2
+  { "4x6_x2", "4x6*2", PT(1864,300)+1, PT(2730,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},
+#endif
+};
+
+LIST(dyesub_pagesize_list_t, mitsu_cpd80_page_list, dyesub_pagesize_t, mitsu_cpd80_page);
+
+static const dyesub_printsize_t mitsu_cpd80_printsize[] =
+{
+  { "300x300", "w288h432", 1228, 1864},
+#ifdef DNPX2
+  { "300x300", "2x6_x2", 1228, 1864},
+#endif
+  { "300x300", "w360h360", 1524, 1568},
+  { "300x300", "w360h504", 1568, 2128},
+  { "300x300", "w432h432", 1864, 1820},
+  { "300x300", "w432h576", 1864, 2422},
+#ifdef DNPX2
+  { "300x300", "4x6_x2", 1864, 2730},
+#endif
+};
+
+LIST(dyesub_printsize_list_t, mitsu_cpd80_printsize_list, dyesub_printsize_t, mitsu_cpd80_printsize);
+
 
 /* Kodak 305 */
 static const dyesub_pagesize_t kodak305_page[] =
@@ -4468,6 +4504,23 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
   },
+  { /* Mitsubishi CPD80D */
+    4107,
+    &ymc_ink_list,
+    &res_300dpi_list,
+    &mitsu_cpd80_page_list,
+    &mitsu_cpd80_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
+      | DYESUB_FEATURE_BIGENDIAN,
+    &mitsu_cpd70x_printer_init, &mitsu_cpd70x_printer_end,
+    NULL, &mitsu_cpd70x_plane_end,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &mitsu_cpd70x_laminate_list, NULL,
+  },
+
   { /* Kodak 305 */
     4107,
     &ymc_ink_list,
