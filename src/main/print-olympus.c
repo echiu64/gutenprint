@@ -2788,7 +2788,7 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
   if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
 
     /* The Windows drivers generate a lamination pattern consisting of
-       four values: 0xab58, 0x286a, 0x6c22 */
+       three values: 0xe84b, 0x286a, 0x6c22 */
 
     int r, c;
     unsigned long seed = 1;
@@ -2796,10 +2796,10 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
     /* Now generate lamination pattern */
     for (c = 0 ; c < privdata.w_size ; c++) {
       for (r = 0 ; r < privdata.h_size + 12 ; r++) {
-	int i = xrand(&seed) & 0x1f;
-	if (i < 24)
-	  stp_put16_be(0xab58, v);
-	else if (i < 29)
+	int i = xrand(&seed) & 0x3f;
+	if (i < 42)
+	  stp_put16_be(0xe84b, v);
+	else if (i < 62)
 	  stp_put16_be(0x286a, v);
 	else
 	  stp_put16_be(0x6c22, v);
@@ -2809,6 +2809,35 @@ static void mitsu_cpd70x_printer_end(stp_vars_t *v)
     dyesub_nputc(v, 0x00, 512 - ((privdata.w_size * (privdata.h_size + 12) * 2) % 512));
   }
 }
+
+static void mitsu_cpk60_printer_end(stp_vars_t *v)
+{
+  /* If Matte lamination is enabled, generate a lamination plane */
+  if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
+
+    /* The Windows drivers generate a lamination pattern consisting of
+       three values: 0x9d00, 0x6500, 0x2900 */
+
+    int r, c;
+    unsigned long seed = 1;
+
+    /* Now generate lamination pattern */
+    for (c = 0 ; c < privdata.w_size ; c++) {
+      for (r = 0 ; r < privdata.h_size + 12 ; r++) {
+	int i = xrand(&seed) & 0x3f;
+	if (i < 42)
+	  stp_put16_be(0x9d00, v);
+	else if (i < 62)
+	  stp_put16_be(0x2900, v);
+	else
+	  stp_put16_be(0x6500, v);
+      }
+    }
+    /* Pad up to a 512-byte block */
+    dyesub_nputc(v, 0x00, 512 - ((privdata.w_size * (privdata.h_size + 12) * 2) % 512));
+  }
+}
+
 
 static void mitsu_cpd70x_plane_end(stp_vars_t *v)
 {
@@ -4498,7 +4527,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
-    &mitsu_cpk60_printer_init, &mitsu_cpd70x_printer_end,
+    &mitsu_cpk60_printer_init, &mitsu_cpk60_printer_end,
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -4520,9 +4549,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
   },
-
   { /* Kodak 305 */
-    4107,
+    4108,
     &ymc_ink_list,
     &res_300dpi_list,
     &kodak305_page_list,
@@ -4531,7 +4559,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_16BPP
       | DYESUB_FEATURE_BIGENDIAN,
-    &kodak305_printer_init, &mitsu_cpd70x_printer_end,
+    &kodak305_printer_init, &mitsu_cpk60_printer_end,
     NULL, &mitsu_cpd70x_plane_end,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
