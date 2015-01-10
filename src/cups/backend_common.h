@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -42,6 +42,9 @@
 #define __BACKEND_COMMON_H
 
 #define STR_LEN_MAX 64
+#define STATE( ... ) fprintf(stderr, "STATE: " __VA_ARGS__ )
+#define ATTR( ... ) fprintf(stderr, "ATTR: " __VA_ARGS__ )
+#define PAGE( ... ) fprintf(stderr, "PAGE: " __VA_ARGS__ )
 #define DEBUG( ... ) fprintf(stderr, "DEBUG: " __VA_ARGS__ )
 #define DEBUG2( ... ) fprintf(stderr, __VA_ARGS__ )
 #define INFO( ... )  fprintf(stderr, "INFO: " __VA_ARGS__ )
@@ -98,9 +101,11 @@ enum {
 	P_KODAK_1400_805,
 	P_KODAK_605,
 	P_SHINKO_S2145,
+	P_SHINKO_S1245,
 	P_SONY_UPDR150,
 	P_SONY_UPCR10,
 	P_MITSU_D70X,
+	P_MITSU_9550,
 	P_DNP_DS40,
 	P_DNP_DS80,
 	P_CITIZEN_CW01,
@@ -150,6 +155,7 @@ extern struct dyesub_backend kodak1400_backend;
 extern struct dyesub_backend shinkos2145_backend;
 extern struct dyesub_backend canonselphy_backend;
 extern struct dyesub_backend mitsu70x_backend;
+extern struct dyesub_backend mitsu9550_backend;
 extern struct dyesub_backend dnpds40_backend;
 extern struct dyesub_backend cw01_backend;
 

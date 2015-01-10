@@ -1,7 +1,7 @@
 /*
  *   CUPS Backend common code
  *
- *   Copyright (c) 2007-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   Copyright (c) 2007-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.50G"
+#define BACKEND_VERSION "0.53G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -180,12 +180,23 @@ int read_data(struct libusb_device_handle *dev, uint8_t endp,
 		goto done;
 	}
 
+	if (dyesub_debug) {
+		DEBUG("Received %d bytes from printer\n", *readlen);
+	}
+	
 	if ((dyesub_debug > 1 && buflen < 4096) ||
 	    dyesub_debug > 2) {
-		int i;
+		int i = *readlen;
+
 		DEBUG("<- ");
-		for (i = 0 ; i < *readlen; i++) {
-			DEBUG2("%02x ", *(buf+i));
+		while(i > 0) {
+			if ((*readlen-i) != 0 &&
+			    (*readlen-i) % 16 == 0) {
+				DEBUG2("\n");
+				DEBUG("   ");
+			}
+			DEBUG2("%02x ", buf[*readlen-i]);
+			i--;
 		}
 		DEBUG2("\n");
 	}
@@ -209,12 +220,19 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 					   buf, len2,
 					   &num, 15000);
 
-	if ((dyesub_debug > 1 && len < 4096) ||
-	    dyesub_debug > 2) {
-			int i;
+		if ((dyesub_debug > 1 && len < 4096) ||
+		    dyesub_debug > 2) {
+			int i = num;
+
 			DEBUG("-> ");
-			for (i = 0 ; i < num; i++) {
-				DEBUG2("%02x ", *(buf+i));
+			while(i > 0) {
+				if ((num-i) != 0 &&
+				    (num-i) % 16 == 0) {
+					DEBUG2("\n");
+					DEBUG("   ");
+				}
+				DEBUG2("%02x ", buf[num-i]);
+				i--;
 			}
 			DEBUG2("\n");
 		}
@@ -487,6 +505,7 @@ static struct dyesub_backend *backends[] = {
 	&shinkos2145_backend,
 	&updr150_backend,
 	&mitsu70x_backend,
+//	&mitsu9550_backend,
 	&dnpds40_backend,
 	&cw01_backend,
 	NULL,
@@ -578,7 +597,7 @@ static struct dyesub_backend *find_backend(char *uri_prefix)
 static void print_license_blurb(void)
 {
 	const char *license = "\n\
-Copyright 2007-2014 Solomon Peachy <pizza AT shaftnet DOT org>\n\
+Copyright 2007-2015 Solomon Peachy <pizza AT shaftnet DOT org>\n\
 \n\
 This program is free software; you can redistribute it and/or modify it\n\
 under the terms of the GNU General Public License as published by the Free\n\
@@ -687,7 +706,7 @@ int main (int argc, char **argv)
 
 	DEBUG("Multi-Call Dye-sublimation CUPS Backend version %s\n",
 	      BACKEND_VERSION);
-	DEBUG("Copyright 2007-2014 Solomon Peachy\n");
+	DEBUG("Copyright 2007-2015 Solomon Peachy\n");
 	DEBUG("This free software comes with ABSOLUTELY NO WARRANTY! \n");
 	DEBUG("Licensed under the GNU GPL.  Run with '-G' for more details.\n");
 	DEBUG("\n");
