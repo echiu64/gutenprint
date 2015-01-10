@@ -1,7 +1,7 @@
 /*
  *   Canon SELPHY ES/CP series CUPS backend -- libusb-1.0 version
  *
- *   (c) 2007-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2007-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -426,6 +426,7 @@ enum {
 	S_PRINTER_M_SENT,
 	S_PRINTER_READY_C,
 	S_PRINTER_C_SENT,
+	S_PRINTER_CP900_FOOTER,
 	S_PRINTER_DONE,
 	S_FINISHED,
 };
@@ -519,6 +520,8 @@ struct canonselphy_ctx {
 	uint8_t *footer;
 
 	uint8_t *buffer;
+
+	uint8_t cp900;
 };
 
 static void *canonselphy_init(void)
@@ -540,6 +543,8 @@ static void canonselphy_attach(void *vctx, struct libusb_device_handle *dev,
 			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct canonselphy_ctx *ctx = vctx;
+	struct libusb_device *device;
+	struct libusb_device_descriptor desc;
 
 	UNUSED(jobid);
 
@@ -547,15 +552,14 @@ static void canonselphy_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
 
+	device = libusb_get_device(dev);
+	libusb_get_device_descriptor(device, &desc);
+
 	/* Special cases for some models */
 	if (ctx->printer->type == P_ES40_CP790) {
-		struct libusb_device *device;
-		struct libusb_device_descriptor desc;
 		int i;
 		int printer_type;
 
-		device = libusb_get_device(dev);
-		libusb_get_device_descriptor(device, &desc);
 		
 		if (desc.idProduct == USB_PID_CANON_CP790)
 			printer_type = P_CP790;
@@ -568,6 +572,8 @@ static void canonselphy_attach(void *vctx, struct libusb_device_handle *dev,
 				break;
 			}
 		}
+	} else if (desc.idProduct == USB_PID_CANON_CP900) {
+		ctx->cp900 = 1;
 	}
 }
 
@@ -610,7 +616,7 @@ static int canonselphy_early_parse(void *vctx, int data_fd)
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      i, 0, MAX_HEADER);
 		perror("ERROR: Read failed");
-		return CUPS_BACKEND_CANCEL;
+		return -1;
 	}
 
 	printer_type = parse_printjob(ctx->buffer, &ctx->bw_mode, &ctx->plane_len);
@@ -889,9 +895,23 @@ top:
 		break;
 	case S_PRINTER_C_SENT:
 		if (!fancy_memcmp(rdbuf, ctx->printer->done_c_readback, READBACK_LEN)) {
-			state = S_PRINTER_DONE;
+			if (ctx->cp900)
+				state = S_PRINTER_CP900_FOOTER;
+			else 
+				state = S_PRINTER_DONE;
 		}
 		break;
+	case S_PRINTER_CP900_FOOTER: {
+		uint32_t empty = 0;
+
+		INFO("Sending CP900 Footer\n");
+		if ((ret = send_data(ctx->dev, ctx->endp_down, 
+				     (uint8_t*)&empty, sizeof(empty))))
+			return CUPS_BACKEND_FAILED;
+
+		state = S_PRINTER_DONE;
+		break;
+	}
 	case S_PRINTER_DONE:
 		if (ctx->printer->foot_length) {
 			INFO("Cleaning up\n");
@@ -924,7 +944,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.85",
+	.version = "0.86",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,
