@@ -1,7 +1,7 @@
 /*
  *   Kodak 6800/6850 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -61,19 +61,21 @@ struct kodak68x0_status_readback {
 	uint8_t  hdr;      /* Always 01 */
 	uint8_t  sts1;     /* Always 0x02 (idle) or 0x01 (busy) */
 	uint8_t  sts2;     /* 0x01 == ready, 0x02 == no media, 0x03 == not ready */
-	uint8_t  null0[3];
+	uint8_t  errtype;  /* 0x00 none, 0x80 "control" */
+	uint8_t  null0[2];
 	uint8_t  unkA;     /* 0x00 or 0x01 or 0x10 */
-	uint8_t  nullA;
+	uint8_t  errcode;  /* Error ## */
 	uint32_t ctr0;     /* Total Prints (BE) */
 	uint32_t ctr1;     /* Total Prints (BE) */
 	uint32_t ctr2;     /* Increments by 1 for each print (6850), unk (6800). BE */
 	uint32_t ctr3;     /* Increments by 2 for each print. BE */
-	uint8_t  nullB[3];
+	uint8_t  nullB[2];
+	uint8_t  errtype2; /* 0x00 none, 0xd0 "control" */
 	uint8_t  donor;    /* Percentage, 0-100 */
 	uint8_t  unkC[2];  /* Always 00 03 */
-	uint16_t main_fw;  /* seen 652 and 656 (6850) */
+	uint16_t main_fw;  /* seen 652, 656, 670 (6850) and 232 (6800) */
 	uint8_t  unkD[2];  /* Always 00 01 */
-	uint16_t dsp_fw;   /* Seen 540 and 541 (6850) and 131 (6800) */
+	uint16_t dsp_fw;   /* Seen 540, 541, 560 (6850) and 131 (6800) */
 	uint8_t  unk1;     /* Seen 0x00, 0x01, 0x03, 0x04 */
 	uint8_t  null1[2];
 	uint8_t  unk2;     /* Seen 0x01, 0x00 */
@@ -122,6 +124,14 @@ struct kodak6800_ctx {
 	int datalen;
 };
 #define READBACK_LEN 68
+
+char *kodak68x0_error_codes(uint8_t code1, uint8_t code2)
+{
+	if (code1 == 0x80 && code2 == 0xd0)
+		return "Control Error";
+
+	return "Unknown Type (please report!)";
+}
 
 static void kodak68x0_dump_mediainfo(struct kodak68x0_media_readback *media)
 {
@@ -188,6 +198,11 @@ static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx, struct kodak68x0_m
 
 static void kodak68x0_dump_status(struct kodak6800_ctx *ctx, struct kodak68x0_status_readback *status)
 {
+	if (status->errtype || status->errtype2 || status->errcode) {
+		DEBUG("Error code       : %s (%d/%d) # %d\n",
+		      kodak68x0_error_codes(status->errtype, status->errtype2),
+		      status->errtype, status->errtype2, status->errcode);
+	}
 	DEBUG("Total prints     : %d\n", be32_to_cpu(status->ctr0));
 	DEBUG("Media prints     : %d\n", be32_to_cpu(status->ctr2));
 	if (ctx->type == P_KODAK_6850) {
@@ -766,6 +781,13 @@ top:
 		if (kodak6800_get_status(ctx, &status))
 			return CUPS_BACKEND_FAILED;
 
+		if (status.errtype || status.errtype2 || status.errcode) {
+			ERROR("Printer error reported: %s (%d/%d) # %d\n",
+			kodak68x0_error_codes(status.errtype, status.errtype2),
+			      status.errtype, status.errtype2, status.errcode);
+			return CUPS_BACKEND_FAILED;
+		}
+
 		if (status.sts1 == 0x01) {
 			// do nothing, this is expected.
 			sleep(1);
@@ -858,7 +880,7 @@ top:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.41",
+	.version = "0.42",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
