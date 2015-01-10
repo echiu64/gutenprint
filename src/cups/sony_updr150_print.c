@@ -1,7 +1,7 @@
 /*
  *   Sony UP-DR150 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -134,17 +134,17 @@ static int updr150_read_parse(void *vctx, int data_fd) {
 
 		/* Filter out chunks we don't send to the printer */
 		switch (len) {
-		case 0xffffff6a:
-		case 0xfffffffc:
-		case 0xfffffffb:
-		case 0xfffffff4:
-		case 0xffffffed:
-		case 0xfffffff9:
-		case 0xfffffff8:
-		case 0xffffffec:
-		case 0xffffffeb:
-		case 0xfffffffa:
 		case 0xffffff60:
+		case 0xffffff6a:
+		case 0xffffffeb:
+		case 0xffffffec:
+		case 0xffffffed:
+		case 0xfffffff4:
+		case 0xfffffff8:
+		case 0xfffffff9:
+		case 0xfffffffa:
+		case 0xfffffffb:
+		case 0xfffffffc:
 		case 0xffffffff:
 			if(dyesub_debug)
 				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
@@ -154,14 +154,14 @@ static int updr150_read_parse(void *vctx, int data_fd) {
 			if(dyesub_debug)
 				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
 			len = 0;
-			if (ctx->type == P_SONY_UPCR10)
+			if (ctx->type == P_SONY_UPDR150)
 				run = 0;
 			break;
 		case 0xfffffff7:
 			if(dyesub_debug)
 				DEBUG("Block ID '%08x' (len %d)\n", len, 0);
 			len = 0;
-			if (ctx->type == P_SONY_UPDR150)
+			if (ctx->type == P_SONY_UPCR10)
 				run = 0;
 			break;
 		case 0xffffffef:
@@ -254,7 +254,7 @@ top:
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.15",
+	.version = "0.16",
 	.uri_prefix = "sonyupdr150",
 	.init = updr150_init,
 	.attach = updr150_attach,
@@ -352,5 +352,33 @@ struct dyesub_backend updr150_backend = {
 <- 1b 17 00 00 00 00 00   ** In spool file
 
 [[fin]]
+
+ **************
+
+  Sony UP-CL10 / DNP SL-10 spool format:
+
+60 ff ff ff 
+f8 ff ff ff
+fd ff ff ff 14 00 00 00   1b 15 00 00 00 0d 00 00  00 00 00 07 00 00 00 00  WW WW HH HH 
+fb ff ff ff
+f4 ff ff ff 0b 00 00 00   1b ea 00 00 00 00 SH SH  SH SH 00 SL SL SL SL
+
+ [[ Data, rows * cols * 3 bytes ]]
+
+f3 ff ff ff 0f 00 00 00   1b e5 00 00 00 08 00 00  00 00 00 00 00 00 00 
+            12 00 00 00   1b e1 00 00 00 0b 00 00  80 00 00 00 00 00 WW WW  HH HH 
+fa ff ff ff 09 00 00 00   1b ee 00 00 00 02 00 00  NN 
+            07 00 00 00   1b 0a 00 00 00 00 00 
+f9 ff ff ff 
+fc ff ff ff 07 00 00 00   1b 17 00 00 00 00 00 
+f7 ff ff ff 
+
+ WW WW == Columns, Big Endian
+ HH HH == Rows, Big Endian
+ SL SL SL SL == Plane size, Little Endian (Rows * Cols * 3)
+ SH SH SH SH == Plane size, Big Endian (Rows * Cols * 3)
+ NN == Copies
+
+
 
 */
