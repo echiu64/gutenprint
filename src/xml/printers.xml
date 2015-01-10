@@ -2619,10 +2619,8 @@
       <printer translate="name" name="Mitsubishi CP-3020DAE" driver="mitsubishi-3020dae" manufacturer="Mitsubishi" model="4102" foomaticid="Mitsubishi-3020DAE">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9550D" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550D ;CLS:PRINTER;DES:MITSUBISHI CP9550D" driver="mitsubishi-9550d" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550D" />
       <printer translate="name" name="Mitsubishi CP-9550DW" driver="mitsubishi-9550dw" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550DW" />
-<!--
       <printer translate="name" name="Mitsubishi CP-9550DZ" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP9550DZ;CLS:PRINTER;DES:MITSUBISHI CP9550DZ;" driver="mitsubishi-9550dz" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550DZ">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-9550DW-S" driver="mitsubishi-9550dw-s" manufacturer="Mitsubishi" model="4103" foomaticid="Mitsubishi-9550DW-S">EXPERIMENTAL</printer>
--->
       <printer translate="name" name="Mitsubishi CP-9810D" driver="mitsubishi-9810d" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810D" />
       <printer translate="name" name="Mitsubishi CP-9810DW" driver="mitsubishi-9810dw" manufacturer="Mitsubishi" model="4104" foomaticid="Mitsubishi-9810DW" />
       <printer translate="name" name="Mitsubishi CP-D70DW" deviceid="MFG:MITSUBISHI;CMD:MEL;MDL:CP60D70D707D;CLS:PRINTER;DES:MITSUBISHI CP60D70D707D" driver="mitsubishi-d70dw" manufacturer="Mitsubishi" model="4105" foomaticid="Mitsubishi-D70DW">EXPERIMENTAL</printer>
