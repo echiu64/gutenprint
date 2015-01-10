@@ -1,7 +1,7 @@
 /*
  *   Shinko/Sinfonia CHC-S2145 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   Development of this backend was sponsored by:
  *
@@ -52,19 +52,19 @@ enum {
 /* Structure of printjob header.  All fields are LITTLE ENDIAN */
 struct s2145_printjob_hdr {
 	uint32_t len1;   /* Fixed at 0x10 */
-	uint32_t model;  /* Fixed at '2145' (decimal) */
-	uint32_t unk2;
-	uint32_t unk3;
+	uint32_t model;  /* Equal to the printer model (eg '2145' or '1245' decimal) */
+	uint32_t med_type;   /* 6145 only, media type */
+	uint32_t unk3;   /* Fixed at 0x01 */
 
 	uint32_t len2;   /* Fixed at 0x64 */
 	uint32_t unk5;
-	uint32_t media;
+	uint32_t media;  /* Fixed at 0x10 for 1245 */
 	uint32_t unk6;
 
-	uint32_t method;
-	uint32_t mode;
-	uint32_t unk7;
-	uint32_t unk8;
+	uint32_t method; /* Method for 2145, Media type for 1245, 0x00 for 6245, multicut for 6145 */
+	uint32_t mode;   /* Mode for 2145, Matte/Glossy for 1245, 0x00 for 6245, quality for 6145 */
+	uint32_t oc_mode;   /* 6145/6245 only, Matte/Glossy/None */
+	uint32_t mattedepth;   /* 1245 only */
 
 	uint32_t unk9;
 	uint32_t columns;
@@ -98,6 +98,8 @@ struct shinkos2145_ctx {
 	uint8_t fast_return;
 
 	struct s2145_printjob_hdr hdr;
+
+	uint32_t model;
 
 	uint8_t *databuf;
 	int datalen;
@@ -1482,18 +1484,12 @@ static void shinkos2145_teardown(void *vctx) {
 	free(ctx);
 }
 
-static int shinkos2145_read_parse(void *vctx, int data_fd) {
+static int shinkos2145_early_parse(void *vctx, int data_fd) {
 	struct shinkos2145_ctx *ctx = vctx;
-	int ret;
-	uint8_t tmpbuf[4];
+	int printer_type, ret;
 
 	if (!ctx)
-		return CUPS_BACKEND_FAILED;
-
-	if (ctx->databuf) {
-		free(ctx->databuf);
-		ctx->databuf = NULL;
-	}
+		return -1;
 
 	/* Read in then validate header */
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
@@ -1507,12 +1503,47 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 	}
 
 	if (le32_to_cpu(ctx->hdr.len1) != 0x10 ||
-	    le32_to_cpu(ctx->hdr.model) != 2145 ||
 	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
 	    le32_to_cpu(ctx->hdr.dpi) != 300) {
 		ERROR("Unrecognized header data format!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	ctx->model = le32_to_cpu(ctx->hdr.model);
+
+	switch(ctx->model) {
+	case 2145:
+		printer_type = P_SHINKO_S2145;
+		break;
+	case 1245:
+		printer_type = P_SHINKO_S1245;
+		break;
+	case 6145:
+	case 6245:
+	default:
+		ERROR("Unrecognized printer (%d)!\n", le32_to_cpu(ctx->hdr.model));
+
+		return -1;
+	}
+
+	INFO("File intended for an S%d printer\n", printer_type);
+
+	return printer_type;
+}
+
+static int shinkos2145_read_parse(void *vctx, int data_fd) {
+	struct shinkos2145_ctx *ctx = vctx;
+	int ret;
+	uint8_t tmpbuf[4];
+
+	if (!ctx)
+		return CUPS_BACKEND_FAILED;
+
+	if (ctx->databuf) {
+		free(ctx->databuf);
+		ctx->databuf = NULL;
+	}
+
 
 	ctx->datalen = le32_to_cpu(ctx->hdr.rows) * le32_to_cpu(ctx->hdr.columns) * 3;
 	ctx->databuf = malloc(ctx->datalen);
@@ -1655,13 +1686,21 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		memset(cmdbuf, 0, CMDBUF_LEN);
 		print->hdr.cmd = cpu_to_le16(S2145_CMD_PRINTJOB);
 		print->hdr.len = cpu_to_le16(sizeof (*print) - sizeof(*cmd));
-		print->id = ctx->jobid;
-		print->count = cpu_to_le16(copies);
-		print->columns = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
-		print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
-		print->media = le32_to_cpu(ctx->hdr.media);
-		print->mode = le32_to_cpu(ctx->hdr.mode);
-		print->method = le32_to_cpu(ctx->hdr.method);
+
+		if (ctx->model == 2145) {
+			print->id = ctx->jobid;
+			print->count = cpu_to_le16(copies);
+			print->columns = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
+			print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
+			print->media = le32_to_cpu(ctx->hdr.media);
+			print->mode = le32_to_cpu(ctx->hdr.mode);
+			print->method = le32_to_cpu(ctx->hdr.method);
+		} else {
+			// S1245: unknown dust removal & matte intensity fields
+			// s6146, s6245 also use different fields
+			ERROR("Don't know how to initiate print on non-2145 models!\n");
+			return CUPS_BACKEND_FAILED;
+		}
 
 		if ((ret = s2145_do_cmd(ctx,
 					cmdbuf, sizeof(*print),
@@ -1764,27 +1803,34 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 	strncpy(buf, (char*)resp->data, buf_len);
 	buf[buf_len-1] = 0; /* ensure it's null terminated */
 
-	return 0;
+	return CUPS_BACKEND_OK;
 }
 
 /* Exported */
 #define USB_VID_SHINKO       0x10CE
+#define USB_PID_SHINKO_S1245 0x0007
 #define USB_PID_SHINKO_S2145 0x000E
+#define USB_PID_SHINKO_S6145 XXXXXX
+#define USB_PID_SHINKO_S6245 XXXXXX
 
 struct dyesub_backend shinkos2145_backend = {
-	.name = "Shinko/Sinfonia CHC-S2145 (S2)",
-	.version = "0.33",
+	.name = "Shinko/Sinfonia CHC-S2145/S1245",
+	.version = "0.36",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
 	.init = shinkos2145_init,
 	.attach = shinkos2145_attach,
 	.teardown = shinkos2145_teardown,
+	.early_parse = shinkos2145_early_parse,
 	.read_parse = shinkos2145_read_parse,
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
 	.devices = {
+	{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, ""},
 	{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, ""},
+//	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S2145, ""},
+//	{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S2145, ""},
 	{ 0, 0, 0, ""}
 	}
 };
@@ -1796,13 +1842,70 @@ struct dyesub_backend shinkos2145_backend = {
   4-byte Little Endian words.
 
    10 00 00 00 MM MM 00 00  00 00 00 00 01 00 00 00  MM == Model (ie 2145d)
-   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == Media Type
-   MM 00 00 00 PP 00 00 00  00 00 00 00 00 00 00 00  PP = Print Mode, MM = Print Method
+   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == Media/Print Size
+   MM 00 00 00 PP 00 00 00  00 00 00 00 00 00 00 00  MM = Print Method (aka cut control), PP = Print Mode
    00 00 00 00 WW WW 00 00  HH HH 00 00 XX 00 00 00  XX == Copies
    00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
    00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
    00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
    00 00 00 00 
+
+   [[Packed RGB payload of WW*HH*3 bytes]]
+
+   04 03 02 01  [[ footer ]]
+
+ * CHC-S1245 data format
+
+  Spool file consists of an 116-byte header, followed by RGB-packed data,
+  followed by a 4-byte footer.  Header appears to consist of a series of
+  4-byte Little Endian words.
+
+   10 00 00 00 MM MM 00 00  00 00 00 00 01 00 00 00  MM == Model (ie 1245d)
+   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == Media Size (0x10 fixed)
+   MM 00 00 00 PP 00 00 00  00 00 00 00 ZZ ZZ ZZ ZZ  MM = Print Method (aka cut control), PP = Default/Glossy/Matte (0x01/0x03/0x05), ZZ == matte intensity (0x7fffffff for glossy, else 0x00000000 +- 25 for matte)
+   VV 00 00 00 WW WW 00 00  HH HH 00 00 XX 00 00 00  VV == dust; 0x00 default, 0x01 off, 0x02 on, XX == Copies
+   00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
+   00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
+   00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
+   00 00 00 00 
+
+   [[Packed RGB payload of WW*HH*3 bytes]]
+
+   04 03 02 01  [[ footer ]]
+
+ * CHC-S6245 data format
+
+  Spool file consists of an 116-byte header, followed by RGB-packed data,
+  followed by a 4-byte footer.  Header appears to consist of a series of
+  4-byte Little Endian words.
+
+   10 00 00 00 MM MM 00 00  01 00 00 00 01 00 00 00  MM == Model (ie 6245d)
+   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == 0x20 8x4, 0x21 8x5, 0x22 8x6, 0x23 8x8, 0x10 8x10, 0x11 8x12
+   00 00 00 00 00 00 00 00  XX 00 00 00 00 00 00 00  XX == 0x03 matte, 0x02 glossy, 0x01 no coat
+   00 00 00 00 WW WW 00 00  HH HH 00 00 NN 00 00 00  WW/HH Width, Height (LE), NN == Copies
+   00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
+   00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI (300)
+   00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
+   00 00 00 00
+
+   [[Packed RGB payload of WW*HH*3 bytes]]
+
+   04 03 02 01  [[ footer ]]
+
+ * CHC-S6145 data format
+
+  Spool file consists of an 116-byte header, followed by RGB-packed data,
+  followed by a 4-byte footer.  Header appears to consist of a series of
+  4-byte Little Endian words.
+
+   10 00 00 00 MM MM 00 00  HH 00 00 00 01 00 00 00  MM == Model (ie 6145d), HH == 0x02 (5" media), 0x03 (6" media)
+   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == 0x08 5x5, 0x03 5x7, 0x07 2x6, 0x00 4x6, 0x06 6x6/6x6+6x2/6x8
+   UU 00 00 00 ZZ 00 00 00  XX 00 00 00 00 00 00 00  XX == 0x00 default, 0x02 glossy, 0x03 matte, ZZ == 0x00 default, 0x01 == std qual; UU == 0x00 normal, 0x04 2x6*2, 0x05 6x6+2x6
+   00 00 00 00 WW WW 00 00  HH HH 00 00 NN 00 00 00  WW/HH Width, Height (LE), NN == Copies
+   00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
+   00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI (300)
+   00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
+   00 00 00 00
 
    [[Packed RGB payload of WW*HH*3 bytes]]
 
