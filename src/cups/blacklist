@@ -111,8 +111,14 @@
 # Kodak 605
 0x040a 0x402e blacklist
 
-# Shinko CHC-S2145 (aka Sinfonia CS2)
+# Kodak 305
+0x040a 0x404f blacklist
+
+# Shinko CHC-S2145 (aka Sinfonia S2)
 0x10ce 0x000e blacklist
+
+# Shinko CHC-S1245 (aka Sinfonia E1)
+0x10ce 0x0007 blacklist
 
 # Sony UP-DR150
 0x054c 0x01e8 blacklist
@@ -125,6 +131,12 @@
 
 # Mitsubishi CP-K60DW-S
 0x06d3 0x3b31 blacklist
+
+# Mitsubishi CP-9550D/DW
+0x06d3 0x03a1 blacklist
+
+# Mitsubishi CP-9550DZ/DW-S
+0x06d3 0x03a5 blacklist
 
 # Citizen CW-01
 0x1343 0x0002 blacklist
