@@ -505,7 +505,7 @@ static struct dyesub_backend *backends[] = {
 	&shinkos2145_backend,
 	&updr150_backend,
 	&mitsu70x_backend,
-//	&mitsu9550_backend,
+	&mitsu9550_backend,
 	&dnpds40_backend,
 	&cw01_backend,
 	NULL,
