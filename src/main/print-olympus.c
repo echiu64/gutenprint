@@ -1330,7 +1330,6 @@ static const dyesub_pagesize_t updr150_page[] =
   { "B7", "2UPC-154 (3.5x5)", PT(1210,334)+1, PT(1728,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w360h504", "2UPC-155 (5x7)", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "w432h576", "2UPC-156 (6x8)", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, updr150_page_list, dyesub_pagesize_t, updr150_page);
@@ -1341,64 +1340,100 @@ static const dyesub_printsize_t updr150_printsize[] =
   { "334x334", "B7", 1210, 1728},
   { "334x334", "w360h504", 1728, 2380},
   { "334x334", "w432h576", 2048, 2724},
-  { "334x334", "Custom", 1382, 2048},
 };
 
 LIST(dyesub_printsize_list_t, updr150_printsize_list, dyesub_printsize_t, updr150_printsize);
 
 static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 {
-  char pg = '\0';
+  char pg;
 
-  stp_zfwrite("\x6a\xff\xff\xff\xef\xff\xff\xff", 1, 8, v);
+  stp_zfwrite("\x6a\xff\xff\xff"
+	      "\xef\xff\xff\xff", 1, 8, v);
+  /* This is actually ***MEDIA*** size, not print size.  They aren't
+     necessarily the same, but for now, they are. */
   if (strcmp(privdata.pagesize,"B7") == 0)
     pg = '\x01';
   else if (strcmp(privdata.pagesize,"w288h432") == 0)
+    pg = '\x02';
+  else if (strcmp(privdata.pagesize,"w144h432") == 0)
     pg = '\x02';
   else if (strcmp(privdata.pagesize,"w360h504") == 0)
     pg = '\x03';
   else if (strcmp(privdata.pagesize,"w432h576") == 0)
     pg = '\x04';
+  else
+    pg = 0;
   stp_putc(pg, v);
+  dyesub_nputc(v, '\0', 3);
+  
+  stp_zfwrite("\xfc\xff\xff\xff"
+	      "\xfb\xff\xff\xff"
+	      "\xf4\xff\xff\xff"
+	      "\xf5\xff\xff\xff",
+	      1, 16, v);
 
-  stp_zfwrite("\x00\x00\x00\xfc\xff\xff\xff"
-	      "\xfb\xff\xff\xff\xf4\xff\xff\xff"
-	      "\xf5\xff\xff\xff\x01\x00\x00\x00"
-	      "\x07\x00\x00\x00\x1b\xe5\x00\x00"
-	      "\x00\x08\x00\x08\x00\x00\x00\x00"
-	      "\x00\x00\x00\x00\x00\x01\x00\xed"
-	      "\xff\xff\xff\x07\x00\x00\x00\x1b"
-	      "\xee\x00\x00\x00\x02\x00\x02\x00"
-	      "\x00\x00\x00\x01", 1, 67, v);
+  if (updr200) {
+    if (strcmp(privdata.pagesize,"B7") == 0 ||
+	strcmp(privdata.pagesize,"w432h576") == 0)
+      pg = 0x4;
+    else
+      pg = 0x1;
+    stp_put32_le(pg, v); /* SONY_MULTICUT -- B7 on 5x7 media also gets 0x01 */
+  } else {
+     stp_put32_le(0x01, v);
+  }
+  
+  stp_zfwrite("\x07\x00\x00\x00"
+	      "\x1b\xe5\x00\x00\x00\x08\x00"
+	      "\x08\x00\x00\x00"
+	      "\x00\x00\x00\x00\x00\x00\x01\x00"
+	      "\xed\xff\xff\xff"
+	      "\x07\x00\x00\x00"
+	      "\x1b\xee\x00\x00\x00\x02\x00"
+	      "\x02\x00\x00\x00"
+	      "\x00", 1, 43, v);
+  stp_putc(1, v); /* Copies */
 
   if (updr200) { /* UP-DR200-specific! */
     stp_zfwrite("\x07\x00\x00\x00"
-		"\x1b\xc0\x00\x03\x00\x05", 1, 10, v);
-    stp_putc(0x00, v);  /* 0x02 for doubled-up prints. */
-    /* eg 2x6 on 4x6 media, 3.5x5 on 5x7 media, 4x6 on 8x6 media */
+		"\x1b\xc0\x00\x03\x00\x05\x00", 1, 11, v);
   }
-    
   stp_zfwrite("\x05\x00\x00\x00"
-	      "\x02\x03\x00\x01\x00", 1, 9, v);
+	      "\x02\x03\x00\x01", 1, 8, v);
+  if (updr200) {
+    if (strcmp(privdata.pagesize,"w144h432") == 0)
+      stp_putc(0x02, v); /* SONY_MULTICUT: 2x6 on 4x6, 4x6 on 8x6, 3x5 on 7x5 */
+    else
+      stp_putc(0x00, v);
+  } else {
+    stp_putc(0x00, v);
+  }
+
   stp_zfwrite("\x07\x00\x00\x00"
-	      "\x1b\x15\x00\x00\x00\x0d\x00\x0d"
-	      "\x00\x00\x00\x00\x00\x00\x00\x07"
-	      "\x00\x00\x00\x00", 1, 24, v);
+	      "\x1b\x15\x00\x00\x00\x0d\x00"
+	      "\x0d\x00\x00\x00"
+	      "\x00\x00\x00\x00\x07\x00\x00\x00\x00", 1, 24, v);
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  stp_zfwrite("\xf9\xff\xff\xff\x07\x00\x00\x00"
-	      "\x1b\xe1\x00\x00\x00\x0b\x00\x0b"
-	      "\x00\x00\x00\x00\x80", 1, 21, v);
-
+  
+  stp_zfwrite("\xf9\xff\xff\xff",
+	      1, 4, v);
+  stp_zfwrite("\x07\x00\x00\x00"
+	      "\x1b\xe1\x00\x00\x00\x0b\x00"
+	      "\x0b\x00\x00\x00\x00\x80", 1, 21, v);
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v); /*laminate pattern*/
 
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
+  
   stp_zfwrite("\xf8\xff\xff\xff"
-	      "\xec\xff\xff\xff"
-	      "\x0b\x00\x00\x00\x1b\xea"
+	      "\xec\xff\xff\xff",
+	      1, 8, v);
+  
+  stp_zfwrite("\x0b\x00\x00\x00\x1b\xea"
 	      "\x00\x00\x00\x00", 1, 18, v);
   stp_put32_be(privdata.w_size*privdata.h_size*3, v);
   stp_zfwrite("\x00", 1, 1, v);
@@ -1413,19 +1448,47 @@ static void updr150_printer_init_func(stp_vars_t *v)
 static void updr150_printer_end_func(stp_vars_t *v)
 {
 	stp_zfwrite("\xeb\xff\xff\xff"
-		    "\xfc\xff\xff"
-		    "\xff\xfa\xff\xff\xff\x07\x00\x00"
-		    "\x00\x1b\x0a\x00\x00\x00\x00\x00"
-		    "\x07\x00\x00\x00\x1b\x17\x00\x00"
-		    "\x00\x00\x00\xf3\xff\xff\xff"
-		    , 1, 38, v);
+		    "\xfc\xff\xff\xff"
+		    "\xfa\xff\xff\xff",
+		    1, 12, v);
+	stp_zfwrite("\x07\x00\x00\x00"
+		    "\x1b\x0a\x00\x00\x00\x00\x00"
+		    "\x07\x00\x00\x00"
+		    "\x1b\x17\x00\x00\x00\x00\x00",
+		    1, 22, v);
+	stp_zfwrite("\xf3\xff\xff\xff",
+		    1, 4, v);
 }
 
 /* Sony UP-DR200 */
+static const dyesub_pagesize_t updr200_page[] =
+{
+  { "w144h432", "2UPC-R204 (2x6)", PT(691,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w288h432", "2UPC-R204 (4x6)", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "B7", "2UPC-R203 (3.5x5)", PT(1210,334)+1, PT(1728,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h504", "2UPC-R205 (5x7)", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576", "2UPC-R206 (6x8)", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, updr200_page_list, dyesub_pagesize_t, updr200_page);
+
+static const dyesub_printsize_t updr200_printsize[] =
+{
+  { "334x334", "w144h432", 691, 2048},
+  { "334x334", "w288h432", 1382, 2048},
+  { "334x334", "B7", 1210, 1728},
+  { "334x334", "w360h504", 1728, 2380},
+  { "334x334", "w432h576", 2048, 2724},
+};
+
+LIST(dyesub_printsize_list_t, updr200_printsize_list, dyesub_printsize_t, updr200_printsize);
+
 static const laminate_t updr200_laminate[] =
 {
   {"Glossy",  N_("Glossy"),  {1, "\x00"}},
   {"Matte",   N_("Matte"),   {1, "\x0c"}},
+  {"Glossy - No correction",  N_("Glossy - No correction"),  {1, "\x10"}},
+  {"Matte - No correction",  N_("Matte - No correction"),  {1, "\x1c"}},
 };
 
 LIST(laminate_list_t, updr200_laminate_list, laminate_t, updr200_laminate);
@@ -1433,6 +1496,31 @@ LIST(laminate_list_t, updr200_laminate_list, laminate_t, updr200_laminate);
 static void updr200_printer_init_func(stp_vars_t *v)
 {
   updr150_200_printer_init_func(v, 1);
+}
+
+static void updr200_printer_end_func(stp_vars_t *v)
+{
+  if (strcmp(privdata.pagesize,"w144h432") == 0) {
+    /* SONY_MULTICUT -- 2x6 on 4x6, 3x5 on 5x7, 4x6 on 8x6 */
+    stp_zfwrite("\xfc\xff\xff\xff"
+		"\xfa\xff\xff\xff",
+		1, 8, v);
+    stp_zfwrite("\x07\x00\x00\x00"
+		"\x1b\xc0\x00\x03\x00\x05\x00"
+		"\x05\x00\x00\x00"
+		"\x02\x03\x00\x01\x01",
+		1, 20, v);
+    stp_zfwrite("\x07\x00\x00\x00"
+		"\x1b\x0a\x00\x00\x00\x00\x00"
+		"\x07\x00\x00\x00"
+		"\x1b\x17\x00\x00\x00\x00\x00",
+		1, 22, v);
+    stp_zfwrite("\xf3\xff\xff\xff",
+		1, 4, v);
+  } else {
+    /* Normal operation */
+    return updr150_printer_end_func(v);
+  }
 }
 
 /* Sony UP-CR10L / DNP SL10 */
@@ -4238,11 +4326,11 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     2004,
     &rgb_ink_list,
     &res_334dpi_list,
-    &updr150_page_list,
-    &updr150_printsize_list,
+    &updr200_page_list,
+    &updr200_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &updr200_printer_init_func, &updr150_printer_end_func,
+    &updr200_printer_init_func, &updr200_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
