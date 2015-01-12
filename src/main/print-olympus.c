@@ -1356,7 +1356,7 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
     pg = '\x01';
   else if (strcmp(privdata.pagesize,"w288h432") == 0)
     pg = '\x02';
-  else if (strcmp(privdata.pagesize,"w144h432") == 0)
+  else if (updr200 && strcmp(privdata.pagesize,"w144h432") == 0)
     pg = '\x02';
   else if (strcmp(privdata.pagesize,"w360h504") == 0)
     pg = '\x03';
@@ -1373,16 +1373,14 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\xf5\xff\xff\xff",
 	      1, 16, v);
 
-  if (updr200) {
-    if (strcmp(privdata.pagesize,"B7") == 0 ||
-	strcmp(privdata.pagesize,"w432h576") == 0)
-      pg = 0x4;
-    else
-      pg = 0x1;
-    stp_put32_le(pg, v); /* SONY_MULTICUT -- B7 on 5x7 media also gets 0x01 */
+  if (updr200 && (strcmp(privdata.pagesize,"B7") == 0 ||
+		  strcmp(privdata.pagesize,"w432h576") == 0)) {
+    /* SONY_MULTICUT -- B7 on 5x7 media also gets 0x01 */
+    pg = 0x4;
   } else {
-     stp_put32_le(0x01, v);
+    pg = 0x1;
   }
+  stp_put32_le(pg, v); 
   
   stp_zfwrite("\x07\x00\x00\x00"
 	      "\x1b\xe5\x00\x00\x00\x08\x00"
@@ -1414,8 +1412,14 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\x1b\x15\x00\x00\x00\x0d\x00"
 	      "\x0d\x00\x00\x00"
 	      "\x00\x00\x00\x00\x07\x00\x00\x00\x00", 1, 24, v);
+
   stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
+  if (updr200 && strcmp(privdata.pagesize,"w144h432") == 0) {
+    stp_put16_be(1382, v);
+    /* SONY_MULTICUT -- 4x6 on 8x6 uses 2674 rows, 3x7 on 5x7 uses 2420 */
+  } else {
+    stp_put16_be(privdata.h_size, v);
+  }  
   
   stp_zfwrite("\xf9\xff\xff\xff",
 	      1, 4, v);
