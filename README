@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.10!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.11-pre!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -8,7 +8,7 @@ Welcome to Gutenprint 5.2.10!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.2.10, a stable release of Gutenprint
+    This is Gutenprint version 5.2.11-pre, an unstable release of Gutenprint
     5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
     drivers that may be used with most common UNIX print spooling
     systems, including CUPS, lpr, LPRng, or others.  These drivers
@@ -123,7 +123,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.10 generated on 08 Feb 2014
+	  Release: gutenprint 5.2.11-pre generated on 08 Feb 2014
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -513,24 +513,32 @@ D) CUPS dye-sublimation backend
     of this section.
 
         Canon SELPHY ES series  (All models)
-        Canon SELPHY CP series  (All models)
+        Canon SELPHY CP series  (All models except for CP820 and CP910)
+        Citizen CX
+        Citizen CX-W
+        Citizen CY
+	Citizen CW-01
+        DNP DS40
+        DNP DS80
+        DNP DS-RX1
+	DNP DS-SL10
         Kodak Professional 1400
         Kodak 805 Photo Printer
         Kodak 6800 Photo Printer
         Kodak 6850 Photo Printer
         Kodak 605 Photo Printer
-        Shinko/Sinfonia CHC-S2145
-        Sony UP-DR150
-        Sony UP-DR200
-        DNP DS40
-        DNP DS80
-        DNP DS-RX1
-        Citizen CX
-        Citizen CX-W
-        Citizen CY
+        Kodak 305 Photo Printer (EXPERIMENTAL)
 	Mitsubishi CP-D70DW  (EXPERIMENTAL)
 	Mitsubishi CP-D707DW (EXPERIMENTAL)
 	Mitsubishi CP-K60DW-S (EXPERIMENTAL)
+	Mitsubishi CP-D80DW   (EXPERIMENTAL)
+	Mitsubishi CP-3800DW
+	Mitsubihsi CP-9550DW/9550DW-S
+	Olmec OP900
+        Shinko CHC-S2145 / Sinfonia S2
+        Sony UP-DR150
+        Sony UP-DR200
+        Sony UP-CR10L
 
     Although these printers advertise themselves as standard USB Printer
     Class devices, they do not actually obey those specifications, and
@@ -539,9 +547,9 @@ D) CUPS dye-sublimation backend
     Over time, it is expected that additional printer models will be
     supported by this backend.
 
-    NOTE: While most of these printers are new as of Gutenprint 5.2.10,
-    if you are upgrading from 5.2.9 (or earlier) and using one of these
-    models, you will need to remove and re-create your printer queue:
+    NOTE: If you are upgrading from 5.2.9 (or earlier) and using one of
+    the following models, you will need to remove and re-create your 
+    printer queue:
 
         Canon SELPHY ES series  (All models)
         Canon SELPHY CP series  (All models)
@@ -661,19 +669,19 @@ D) CUPS dye-sublimation backend
     names.  They are incompatible from a software perspective, and also
     require different media.
 
-    With only one exception, if the model ends in '-S' or has a red face-
+    With two exceptions, if the model ends in '-S' or has a red face-
     plate, it is intended only for use with a Mitsubishi lab or kiosk, and
     consequently not supportable by Gutenprint.  For example, see the 
     (non-comprehensive) list below:
 
       Supported/Compatible   |   Unsupported/Incompatible
       ---------------------------------------------------
-                CP-9550DW    |   CP-9550DW-S
 		 CP-D70DW    |   CP-D70DW-S
 		CP-D707DW    |   CP-D707DW-S
 
-    The one exception to this rule is the CP-K60DW-S, which is sold
-    as a standalone "event" printer.
+    The exceptions to this rule are the CP-K60DW-S, which is sold as a 
+    standalone "event" printer, and the CP-9550DW-S, which has been
+    successfully reverse-engineered.
 
 ----------------
 

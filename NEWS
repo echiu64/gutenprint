@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.10, a stable release of Gutenprint
+Welcome to Gutenprint 5.2.11-pre, an unstable release of Gutenprint
 5.2. Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
@@ -9,7 +9,7 @@ Macintosh OS X (10.5 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
 the print plug-in packaged with the GIMP distribution.
 
-Gutenprint 5.2.10 no longer supports Macintosh OS X 10.4 or earlier.
+Gutenprint 5.2.11 no longer supports Macintosh OS X 10.4 or earlier.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -20,6 +20,7 @@ These release notes contain the following sections:
 I)    General Requirements
 II)   Critical Upgrade Note
 III)  Changes from Previous Releases
+        * Changes from 5.2.10
         * Changes from 5.2.9
         * Changes from 5.2.8
         * Changes from 5.2.7
@@ -251,6 +252,30 @@ device.  We have determined that the data is in fact written by the
 ================================================================
 
 III) MAJOR CHANGES FROM PREVIOUS RELEASES
+
+* Changes from 5.2.10
+
+  1) Added support for the following printers:
+
+        Citizen CW-01 / Olmec OP900
+	Mitsubishi CP3800DW
+        Kodak 305                 [experimental]
+	Mitsubishi CP-D80DW       [experimental]
+	Shinko S1245/S6145/S6245  [experimental]
+ 	Sony UP-CR10/DNP SL10     [experimental]
+	Kodak 8810                [experimental]
+	Canon SELPHY CP820/CP910
+
+  2) Enhanced support (and bugfixes) for the following printers:
+
+	DNP DS40/DS80/RX1
+        Citizen CX/CX-W/CY
+	Kodak 6800/6850
+	Kodak 605
+	Canon SELPHY CP900
+	Sony UP-DR200
+        Mitsubishi CP-9550 family (including the CP9550DW-S variant)
+	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]
 
 * Changes from 5.2.9
 
