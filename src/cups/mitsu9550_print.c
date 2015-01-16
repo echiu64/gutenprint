@@ -348,7 +348,7 @@ top:
 		}
 		if (media->type == 0x02 && (ctx->cols != 2152 ||
 					   ctx->rows != 1416)) {
-			ERROR("Incorrect media type for printjob!");
+			ERROR("Incorrect media type for printjob!\n");
 			return CUPS_BACKEND_HOLD;
 		}
 
@@ -396,7 +396,7 @@ top:
 		}
 		if (media->type == 0x02 && (ctx->cols != 2152 ||
 					   ctx->rows != 1416)) {
-			ERROR("Incorrect media type for printjob!");
+			ERROR("Incorrect media type for printjob!\n");
 			return CUPS_BACKEND_HOLD;
 		}
 
@@ -754,7 +754,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP-9550DW-S",
-	.version = "0.9",
+	.version = "0.10",
 	.uri_prefix = "mitsu9550",
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
