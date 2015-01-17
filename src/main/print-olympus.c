@@ -2162,7 +2162,6 @@ static const dyesub_pagesize_t kodak_8810_page[] =
   { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
 //  { "???", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
 
@@ -2172,7 +2171,6 @@ static const dyesub_printsize_t kodak_8810_printsize[] =
   { "300x300", "c8x10", 2464, 3024},
 //  { "300x300", "???", 2464, 3531},
   { "300x300", "w576h864", 2464, 3624},
-  { "300x300", "Custom", 2464, 3624},
 };
 
 LIST(dyesub_printsize_list_t, kodak_8810_printsize_list, dyesub_printsize_t, kodak_8810_printsize);
@@ -2517,8 +2515,6 @@ static const dyesub_pagesize_t mitsu_cp9550_page[] =
   						DYESUB_PORTRAIT},
   { "w432h648", "6x9", PT(2152,346)+1, PT(3146,346)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(1416,346)+1, PT(2152,346)+1, 0, 0, 0, 0,
-  						DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, mitsu_cp9550_page_list, dyesub_pagesize_t, mitsu_cp9550_page);
@@ -2534,7 +2530,6 @@ static const dyesub_printsize_t mitsu_cp9550_printsize[] =
   { "346x346", "w432h576", 2152, 2792},
   { "346x346", "w432h612", 2152, 2956},
   { "346x346", "w432h648", 2152, 3146},
-  { "346x346", "Custom", 1416, 2152},
 };
 
 LIST(dyesub_printsize_list_t, mitsu_cp9550_printsize_list, dyesub_printsize_t, mitsu_cp9550_printsize);
@@ -3042,8 +3037,6 @@ static const dyesub_pagesize_t kodak305_page[] =
   						DYESUB_LANDSCAPE},
   { "w432h576", "6x8", PT(1864,300)+1, PT(2422,300)+1, 0, 0, 0, 0,
   						DYESUB_PORTRAIT},
-  { "Custom", NULL, PT(1218,300)+1, PT(1864,300)+1, 0, 0, 0, 0,
-  						DYESUB_LANDSCAPE},
 };
 
 LIST(dyesub_pagesize_list_t, kodak305_page_list, dyesub_pagesize_t, kodak305_page);
@@ -3052,7 +3045,6 @@ static const dyesub_printsize_t kodak305_printsize[] =
 {
   { "300x300", "w288h432", 1218, 1864},
   { "300x300", "w432h576", 1864, 2422},
-  { "300x300", "Custom", 1218, 1864},
 };
 
 LIST(dyesub_printsize_list_t, kodak305_printsize_list, dyesub_printsize_t, kodak305_printsize);
