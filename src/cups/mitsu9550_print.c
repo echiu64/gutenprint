@@ -283,6 +283,41 @@ static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int st
 	return 0;
 }
 
+static int validate_media(int type, int cols, int rows) {
+	switch(type) {
+	case 0x01: /* 3.5x5 */
+ 		if (cols != 1812 || rows != 1240)
+			return 1;
+		break;
+	case 0x02: /* 4x6 */
+	case 0x03: /* PC ??? */ 
+		if (cols != 2152)
+			return 1;
+		if (rows != 1416 || rows != 1184 ||
+		    rows != 1240)
+			return 1;
+		break;
+	case 0x04: /* 5x7 */
+		if (cols != 1812)
+			return 1;
+		if (rows != 1240 || rows != 2452)
+			return 1;
+		break;
+	case 0x05: /* 6x9 */
+		if (cols != 2152)
+			return 1;
+		if (rows != 1416 || rows != 2972 ||
+		    rows != 2956 || rows != 3146)
+			return 1;
+		break;
+	case 0x06: /* V */
+		break;
+	default: /* Unknown */
+		break;
+	}
+	return 0;
+}
+
 static int mitsu9550_main_loop(void *vctx, int copies) {
 	struct mitsu9550_ctx *ctx = vctx;
 	struct mitsu9550_hdr2 *hdr2;
@@ -346,8 +381,7 @@ top:
 			ERROR("Printer out of media!\n");
 			return CUPS_BACKEND_HOLD;
 		}
-		if (media->type == 0x02 && (ctx->cols != 2152 ||
-					   ctx->rows != 1416)) {
+		if (validate_media(media->type, ctx->cols, ctx->rows)) {
 			ERROR("Incorrect media type for printjob!\n");
 			return CUPS_BACKEND_HOLD;
 		}
@@ -394,8 +428,7 @@ top:
 			ERROR("Printer out of media!\n");
 			return CUPS_BACKEND_HOLD;
 		}
-		if (media->type == 0x02 && (ctx->cols != 2152 ||
-					   ctx->rows != 1416)) {
+		if (validate_media(media->type, ctx->cols, ctx->rows)) {
 			ERROR("Incorrect media type for printjob!\n");
 			return CUPS_BACKEND_HOLD;
 		}
@@ -754,7 +787,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP-9550DW-S",
-	.version = "0.10",
+	.version = "0.11",
 	.uri_prefix = "mitsu9550",
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,
