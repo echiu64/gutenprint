@@ -1495,7 +1495,7 @@ static int shinkos2145_early_parse(void *vctx, int data_fd) {
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
 		if (ret == 0)
-			return CUPS_BACKEND_CANCEL;
+			return -1; /* deliberate */
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
@@ -1506,7 +1506,7 @@ static int shinkos2145_early_parse(void *vctx, int data_fd) {
 	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
 	    le32_to_cpu(ctx->hdr.dpi) != 300) {
 		ERROR("Unrecognized header data format!\n");
-		return CUPS_BACKEND_CANCEL;
+		return -1;
 	}
 
 	ctx->model = le32_to_cpu(ctx->hdr.model);
@@ -1526,7 +1526,7 @@ static int shinkos2145_early_parse(void *vctx, int data_fd) {
 		return -1;
 	}
 
-	INFO("File intended for an S%d printer\n", printer_type);
+	INFO("File intended for an S%d printer\n", ctx->model);
 
 	return printer_type;
 }
@@ -1584,7 +1584,7 @@ static int shinkos2145_read_parse(void *vctx, int data_fd) {
 		return CUPS_BACKEND_FAILED;
 	}
 
-	return CUPS_BACKEND_CANCEL;
+	return CUPS_BACKEND_OK;
 }
 
 static int shinkos2145_main_loop(void *vctx, int copies) {
@@ -1609,7 +1609,7 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 
 	/* Send Media Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
-	cmd->cmd = cpu_to_le16(S2145_CMD_ERRORLOG);
+	cmd->cmd = cpu_to_le16(S2145_CMD_MEDIAINFO);
 	cmd->len = cpu_to_le16(0);
 
 	if ((ret = s2145_do_cmd(ctx,
@@ -1815,7 +1815,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145/S1245",
-	.version = "0.36",
+	.version = "0.37",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
