@@ -3248,24 +3248,46 @@ static void shinko_chcs2145_printer_end(stp_vars_t *v)
 /* Shinko CHC-S1245 */
 static const dyesub_pagesize_t shinko_chcs1245_page[] =
 {
-  { "w288h576", "8x4", PT(1236,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w360h576", "8x5", PT(1536,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
-  { "w432h576", "8x6", PT(1836,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w288h576", "8x4", PT(1229,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w360h576", "8x5", PT(1530,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w432h576", "8x6", PT(1831,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w576h576", "8x8", PT(2436,300)+1, PT(2446,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+#ifdef MULTICUT
+  { "8x4_x2", "8x4*2", PT(2446,300)+1, PT(2468,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#endif  
   { "c8x10", "8x10", PT(2446,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#ifdef MULTICUT
+  { "8x6_8x4", "8x6+8x4", PT(2446,300)+1, PT(3070,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},  
+  { "8x5_x2", "8x5*2", PT(2446,300)+1, PT(3070,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#endif  
   { "w576h864", "8x12", PT(2446,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#ifdef MULTICUT
+  { "8x6_x2", "8x6*2", PT(2446,300)+1, PT(3672,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},  
+  { "8x4_x3", "8x4*3", PT(2446,300)+1, PT(3707,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#endif  
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs1245_page_list, dyesub_pagesize_t, shinko_chcs1245_page);
 
 static const dyesub_printsize_t shinko_chcs1245_printsize[] =
 {
-  { "300x300", "w288h576", 1236, 2446},
-  { "300x300", "w360h576", 1536, 2446},
-  { "300x300", "w432h576", 1836, 2446},
+  { "300x300", "w288h576", 1229, 2446},
+  { "300x300", "w360h576", 1530, 2446},
+  { "300x300", "w432h576", 1831, 2446},
   { "300x300", "w576h576", 2436, 2446},
+#ifdef MULTICUT
+  { "300x300", "8x4_x2", 2446, 2468},
+#endif  
   { "300x300", "c8x10", 2446, 3036},
+#ifdef MULTICUT
+  { "300x300", "8x6_8x4", 2446, 3070},  
+  { "300x300", "8x5_x2", 2446, 3070},
+#endif
   { "300x300", "w576h864", 2446, 3636},
+#ifdef MULTICUT
+  { "300x300", "8x6_x2", 2446, 3672},  
+  { "300x300", "8x4_x3", 2446, 3707},
+#endif
 };
 
 LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t, shinko_chcs1245_printsize);
@@ -3293,10 +3315,20 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
     media = 6;
   else if (strcmp(privdata.pagesize,"w576h576") == 0)
     media = 9;
+  else if (strcmp(privdata.pagesize,"8x4_x2") == 0)
+    media = 2;    
   else if (strcmp(privdata.pagesize,"c8x10") == 0)
     media = 0;
+  else if (strcmp(privdata.pagesize,"8x6_8x4") == 0)
+    media = 3;    
+  else if (strcmp(privdata.pagesize,"8x5_x2") == 0)
+    media = 1;  
   else if (strcmp(privdata.pagesize,"w576h864") == 0)
     media = 0;
+  else if (strcmp(privdata.pagesize,"8x6_x2") == 0)
+    media = 7;  
+  else if (strcmp(privdata.pagesize,"8x4_x3") == 0)
+    media = 8;  
 
   stp_put32_le(0x10, v);
   stp_put32_le(1245, v);  /* Printer Model */
