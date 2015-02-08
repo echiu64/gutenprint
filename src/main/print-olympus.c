@@ -3270,6 +3270,17 @@ static const dyesub_printsize_t shinko_chcs1245_printsize[] =
 
 LIST(dyesub_printsize_list_t, shinko_chcs1245_printsize_list, dyesub_printsize_t, shinko_chcs1245_printsize);
 
+static const laminate_t shinko_chcs1245_laminate[] =
+{
+  {"PrinterDefault",  N_("Printer Default"),  {1, "\x01"}},
+  {"Glossy",  N_("Glossy"),  {1, "\x02\0\0\0"}},
+  {"GlossyFine",  N_("Glossy Fine"),  {1, "\x03"}},
+  {"Matte",  N_("Matte"),  {1, "\x04"}},
+  {"MatteFine",  N_("Matte Fine"),  {1, "\x05"}},
+};
+
+LIST(laminate_list_t, shinko_chcs1245_laminate_list, laminate_t, shinko_chcs1245_laminate);
+
 static void shinko_chcs1245_printer_init(stp_vars_t *v)
 {
   int media = 0;
@@ -3298,9 +3309,15 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
 
   stp_put32_le(media, v);
-  stp_put32_le(0x01, v);  // XXX 0x01 printer default, 0x05 matte, 0x03 glossy, 
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+	      (privdata.laminate->seq).bytes, v); /* Print Mode */  
   stp_put32_le(0x00, v);
-  stp_put32_le(0x07fffffff, v);  // XXX glossy. if non-matte, 0x05 and 0x0000000 signed, +-25.
+  if (((unsigned char*)(privdata.laminate->seq).data)[0] == 0x02 ||
+      ((unsigned char*)(privdata.laminate->seq).data)[0] == 0x03) {
+	  stp_put32_le(0x07fffffff, v);  // Glossy
+  } else {
+	  stp_put32_le(0x0, v);  // XXX -25>0>+25
+  }
 
   stp_put32_le(0x00, v); // XXX 0x00 printer default, 0x02 for "dust removal" on, 0x01 for off.
   stp_put32_le(privdata.w_size, v); /* Columns */
@@ -4784,7 +4801,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    NULL, NULL,
+    &shinko_chcs1245_laminate_list, NULL,
   },
   { /* Shinko/Sinfonia CHC-S6245 */
     5003,
