@@ -142,9 +142,9 @@ if ($opt_x) {
 
 # Invert, to build %bar{$optionname} = [ choice1, choice2 ];
 my ($a, $b, $otmp, $vtmp);
-for $a (keys(%stpdata)) {
-    for $otmp (keys %{$stpdata{$a}}) {
-	for $vtmp (keys (%{$stpdata{$a}{$otmp}})) {
+for $a (sort keys(%stpdata)) {
+    for $otmp (sort keys %{$stpdata{$a}}) {
+	for $vtmp (sort keys (%{$stpdata{$a}{$otmp}})) {
 	    if (!$seen_evchoice{$otmp}{$vtmp}++) {
 		push (@{$ev_choices{$otmp}}, [ $vtmp,
 					       $stpdata{$a}{$otmp}{$vtmp}]);
@@ -167,8 +167,8 @@ if ($foomatic3) {
     # strings in "<ev_driverval>". Constraints will make only the
     # right choices getting into the PPD file. Assign a unique ID to
     # each entry.
-    for $a (keys(%{$printoutmode})) {
-	for $vtmp (keys %{$printoutmode->{$a}}) {
+    for $a (sort keys(%{$printoutmode})) {
+	for $vtmp (sort keys %{$printoutmode->{$a}}) {
 	    my $mode = $printoutmode->{$a}{$vtmp};
 	    if (!$seen_modes{$vtmp}{$mode}++) {
 		if (!defined($nums{$vtmp})) {
@@ -186,9 +186,9 @@ if ($foomatic3) {
 # different value ranges, there must be made an extra Foomatic entry
 # for each value range. Therefore the filenames of numerical options
 # are numbered (eg. Contrast-1.xml).
-for $a (keys(%stp_float_values)) {
-    for $otmp (keys %{$stp_float_values{$a}}) {
-	for $vtmp (keys %{$stp_float_values{$a}{$otmp}}) {
+for $a (sort keys(%stp_float_values)) {
+    for $otmp (sort keys %{$stp_float_values{$a}}) {
+	for $vtmp (sort keys %{$stp_float_values{$a}{$otmp}}) {
 	    my $min = $stp_float_values{$a}{$otmp}{'MINVAL'};
 	    my $max = $stp_float_values{$a}{$otmp}{'MAXVAL'};
 	    my $def = $stp_float_values{$a}{$otmp}{'DEFVAL'};
@@ -208,9 +208,9 @@ for $a (keys(%stp_float_values)) {
 	}
     }
 }
-for $a (keys(%stp_int_values)) {
-    for $otmp (keys %{$stp_int_values{$a}}) {
-	for $vtmp (keys %{$stp_int_values{$a}{$otmp}}) {
+for $a (sort keys(%stp_int_values)) {
+    for $otmp (sort keys %{$stp_int_values{$a}}) {
+	for $vtmp (sort keys %{$stp_int_values{$a}{$otmp}}) {
 	    my $min = $stp_int_values{$a}{$otmp}{'MINVAL'};
 	    my $max = $stp_int_values{$a}{$otmp}{'MAXVAL'};
 	    my $def = $stp_int_values{$a}{$otmp}{'DEFVAL'};
@@ -231,9 +231,9 @@ for $a (keys(%stp_int_values)) {
     }
 }
 
-for $a (keys(%stp_dimension_values)) {
-    for $otmp (keys %{$stp_dimension_values{$a}}) {
-	for $vtmp (keys %{$stp_dimension_values{$a}{$otmp}}) {
+for $a (sort keys(%stp_dimension_values)) {
+    for $otmp (sort keys %{$stp_dimension_values{$a}}) {
+	for $vtmp (sort keys %{$stp_dimension_values{$a}{$otmp}}) {
 	    my $min = $stp_dimension_values{$a}{$otmp}{'MINVAL'};
 	    my $max = $stp_dimension_values{$a}{$otmp}{'MAXVAL'};
 	    my $def = $stp_dimension_values{$a}{$otmp}{'DEFVAL'};
@@ -273,7 +273,7 @@ chomp $stprel;
 my @printerlist = ();
 push (@printerlist, " <printers>\n");
 my $p1;
-for $p1 (keys(%mapstp)) {
+for $p1 (sort keys(%mapstp)) {
     push (@printerlist, "  <!-- gutenprint driver: $p1 -->\n");
     for my $id (@{$mapstp{$p1}}) {
 	if ($foomatic3) {
@@ -296,7 +296,7 @@ for $p1 (keys(%mapstp)) {
 		push(@printerlist, "        <bottom>$cbottom</bottom>\n");
 		push(@printerlist, "      </general>\n");
 	    }
-	    for my $ps (keys %{$imageableareas{$p1}}) {
+	    for my $ps (sort keys %{$imageableareas{$p1}}) {
 		next if $ps eq 'Custom'; # We have done "Custom" already
 		my ($left, $right, $top, $bottom, $width, $height);
 		$left = $imageableareas{$p1}{$ps}{'left'};
@@ -682,7 +682,7 @@ sub build_ev {
 
 	#   Build constraints for this particular choice
 	my $stpprn;
-	for $stpprn (keys(%stpdata)) {
+	for $stpprn (sort keys(%stpdata)) {
 	    my $fooprn;
 	    for $fooprn (@{$mapstp{$stpprn}}) {
 		if ($stpdata{$stpprn}{$stpopt}{$ev_shortname}) {
@@ -718,7 +718,7 @@ sub build_cons {
 
     # For each stp printer...
     my $stpname;
-    for $stpname (keys(%stpdata)) {
+    for $stpname (sort keys(%stpdata)) {
 
 	if (0) {
 	    print STDERR "    Processing gutenprint printer $stpname...\n";
@@ -795,7 +795,7 @@ sub build_num_cons {
 
     # For each stp printer...
     my $stpname;
-    for $stpname (keys(%stpdata)) {
+    for $stpname (sort keys(%stpdata)) {
 
 	if (0) {
 	    print STDERR "    Processing gutenprint printer $stpname...\n";
@@ -912,7 +912,7 @@ sub build_model_cons {
 
     # For each stp printer...
     my $stpname;
-    for $stpname (keys(%mapstp)) {
+    for $stpname (sort keys(%mapstp)) {
 
 	# For each possible foo name
 	my $fooname;
@@ -947,7 +947,7 @@ sub build_model_ev {
 
     # OK, now for each enum_val
     my $ev;
-    for $ev (keys(%mapstp)) {
+    for $ev (sort keys(%mapstp)) {
 	#  Put in the basic choice info: ev names, etc
 	my $ev_shortname = $ev;
 	my $ev_longname = $printer_name{$ev};
@@ -1011,7 +1011,7 @@ sub compute_resolutions {
 	my $defval;
 
 	my $qual;
-	for $qual (keys(%{$stpdata{$stpname}{'STP_Resolution'}})) {
+	for $qual (sort keys(%{$stpdata{$stpname}{'STP_Resolution'}})) {
 	    my ($x) = $stpdata{$stpname}{'x_resolution'}{$qual};
 	    my ($y) = $stpdata{$stpname}{'y_resolution'}{$qual};
 
@@ -1060,7 +1060,7 @@ sub build_resolution_ev {
 
     # OK, now for each possible resolution...
     my $ev;
-    for $ev (keys(%resolutions)) {
+    for $ev (sort keys(%resolutions)) {
 
 	my ($x, $y) = ($resolutions{$ev}{'x'}, $resolutions{$ev}{'y'});
 
@@ -1086,7 +1086,7 @@ sub build_resolution_ev {
 	# Now, for each printer, put in a constraint if this
 	# resolution makes sense or not...
 	my $stpprn;
-	for $stpprn (keys(%mapstp)) {
+	for $stpprn (sort keys(%mapstp)) {
 
 	    my $resobj = compute_resolutions($stpprn);
 	    my $takesit = $resobj->{'takesit'}{$x}{$y};
@@ -1127,7 +1127,7 @@ sub build_resolution_cons {
 
     # For each stp printer...
     my $stpname;
-    for $stpname (keys(%mapstp)) {
+    for $stpname (sort keys(%mapstp)) {
 
 	# Get some resolution info
 	my $r = compute_resolutions($stpname);
@@ -1162,10 +1162,10 @@ sub build_printoutmode_ev {
 
     # OK, now for each choice ("Draft", "Normal", ...) ...
     my $choice;
-    for $choice (keys %modes) {
+    for $choice (sort keys %modes) {
 	# ... and each possible "<ev_driverval>" for it
 	my $ev_driverval;
-	for $ev_driverval (keys %{$modes{$choice}}) {
+	for $ev_driverval (sort keys %{$modes{$choice}}) {
 	    #  Put in the basic choice info: ev names, etc
 	    my $ev_longname = $printoutmodechoices->{$choice};
 	    my $ev_shortname = $choice;
@@ -1186,7 +1186,7 @@ sub build_printoutmode_ev {
 
 	    #   Build constraints for this particular ev_driverval
 	    my $stpprn;
-	    for $stpprn (keys(%stpdata)) {
+	    for $stpprn (sort keys(%stpdata)) {
 		my $fooprn;
 		for $fooprn (@{$mapstp{$stpprn}}) {
 		    if ($printoutmode->{$stpprn}{$choice} eq
@@ -1222,7 +1222,7 @@ sub build_printoutmode_cons {
 
     # For each stp printer...
     my $stpname;
-    for $stpname (keys(%mapstp)) {
+    for $stpname (sort keys(%mapstp)) {
 
 	# For each possible foo name
 	my $fooname;
@@ -1395,7 +1395,7 @@ sub getprintoutmode {
     my $modes = {};
     # Treat all printers
     my $stpprn;
-    for $stpprn (keys(%stpdata)) {
+    for $stpprn (sort keys(%stpdata)) {
 	my $modeinfo = {};
 	my ($draftminres, $draftbestsymmetry, $draftlowestqualstr) =
 	    (99999999, 99999999, "xxx");
@@ -1411,7 +1411,7 @@ sub getprintoutmode {
 	# Go through all choices of the "Quality" option and find the
 	# best values for the "PrintoutMode" option
 	my $quality;
-	for $quality (keys(%{$stpdata{$stpprn}{'STP_Resolution'}})) {
+	for $quality (sort keys(%{$stpdata{$stpprn}{'STP_Resolution'}})) {
 
 	    my ($xres, $yres, $qualstr);
 	    if ($quality =~ /^(\d+)x(\d+)(\D.*)?$/) {
@@ -1760,7 +1760,7 @@ sub getprintoutmode {
 
 	# Build the strings with the settings for the "PrintoutMode"
 	# option
-	for my $m (keys(%{$modeinfo})) {
+	for my $m (sort keys(%{$modeinfo})) {
 	    # If we didn't find anything for a certain mode, skip this
 	    # mode
 	    next if (!defined($modeinfo->{$m}{'stpres'}));
