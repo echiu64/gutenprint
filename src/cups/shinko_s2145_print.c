@@ -58,13 +58,13 @@ struct s2145_printjob_hdr {
 
 	uint32_t len2;   /* Fixed at 0x64 */
 	uint32_t unk5;
-	uint32_t media;  /* Fixed at 0x10 for 1245 */
+	uint32_t media;
 	uint32_t unk6;
 
-	uint32_t method; /* Method for 2145, Media type for 1245, 0x00 for 6245, multicut for 6145 */
-	uint32_t mode;   /* Mode for 2145, Matte/Glossy for 1245, 0x00 for 6245, quality for 6145 */
+	uint32_t method; /* Method for 2145, 0x00 for 6245, multicut for 6145 */
+	uint32_t mode;   /* Mode for 2145, 0x00 for 6245, quality for 6145 */
 	uint32_t oc_mode;   /* 6145/6245 only, Matte/Glossy/None */
-	uint32_t mattedepth;   /* 1245 only */
+	uint32_t unk8;
 
 	uint32_t unk9;
 	uint32_t columns;
@@ -1516,8 +1516,6 @@ static int shinkos2145_early_parse(void *vctx, int data_fd) {
 		printer_type = P_SHINKO_S2145;
 		break;
 	case 1245:
-		printer_type = P_SHINKO_S1245;
-		break;
 	case 6145:
 	case 6245:
 	default:
@@ -1601,12 +1599,6 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 	struct s2145_status_resp *sts = (struct s2145_status_resp *) rdbuf; 
 	struct s2145_mediainfo_resp *media = (struct s2145_mediainfo_resp *) rdbuf;
 
- top:
-	if (state != last_state) {
-		if (dyesub_debug)
-			DEBUG("last_state %d new %d\n", last_state, state);
-	}
-
 	/* Send Media Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
 	cmd->cmd = cpu_to_le16(S2145_CMD_MEDIAINFO);
@@ -1635,6 +1627,12 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		return CUPS_BACKEND_HOLD;
 	}
 
+ top:
+	if (state != last_state) {
+		if (dyesub_debug)
+			DEBUG("last_state %d new %d\n", last_state, state);
+	}
+
 	/* Send Status Query */
 	memset(cmdbuf, 0, CMDBUF_LEN);
 	cmd->cmd = cpu_to_le16(S2145_CMD_STATUS);
@@ -1653,13 +1651,13 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 
 		INFO("Printer Status: 0x%02x (%s)\n", 
 		     sts->hdr.status, status_str(sts->hdr.status));
-		if (sts->hdr.error == ERROR_PRINTER) {
-			ERROR("Printer Reported Error: 0x%02x.0x%02x (%s)\n",
-			      sts->hdr.printer_major, sts->hdr.printer_minor,
-			      error_codes(sts->hdr.printer_major, sts->hdr.printer_minor));
-		}
+		if (sts->hdr.result != RESULT_SUCCESS)
+			goto printer_error;		
+		if (sts->hdr.error == ERROR_PRINTER)
+			goto printer_error;
 	} else if (state == last_state) {
 		sleep(1);
+		goto top;
 	}
 	last_state = state;
 
@@ -1668,12 +1666,6 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 	switch (state) {
 	case S_IDLE:
 		INFO("Waiting for printer idle\n");
-		/* Basic error handling */
-		if (sts->hdr.result != RESULT_SUCCESS)
-			goto printer_error;
-		if (sts->hdr.error != ERROR_NONE)
-			goto printer_error;
-
 		/* If either bank is free, continue */
 		if (sts->bank1_status == BANK_STATUS_FREE || 
 		    sts->bank2_status == BANK_STATUS_FREE) 
@@ -1696,8 +1688,7 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 			print->mode = le32_to_cpu(ctx->hdr.mode);
 			print->method = le32_to_cpu(ctx->hdr.method);
 		} else {
-			// S1245: unknown dust removal & matte intensity fields
-			// s6146, s6245 also use different fields
+			// s6145, s6245 use different fields
 			ERROR("Don't know how to initiate print on non-2145 models!\n");
 			return CUPS_BACKEND_FAILED;
 		}
@@ -1728,15 +1719,13 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		state = S_PRINTER_SENT_DATA;
 		break;
 	case S_PRINTER_SENT_DATA:
-		if (sts->hdr.result != RESULT_SUCCESS)
-			goto printer_error;
 		if (ctx->fast_return) {
 			INFO("Fast return mode enabled.\n");
 			state = S_FINISHED;
-		}
-		else if (sts->hdr.status == STATUS_READY ||
-		    sts->hdr.status == STATUS_FINISHED)
+		} else if (sts->hdr.status == STATUS_READY ||
+			   sts->hdr.status == STATUS_FINISHED) {
 			state = S_FINISHED;
+		}
 		break;
 	default:
 		break;
@@ -1808,14 +1797,15 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 /* Exported */
 #define USB_VID_SHINKO       0x10CE
-#define USB_PID_SHINKO_S1245 0x0007
 #define USB_PID_SHINKO_S2145 0x000E
-#define USB_PID_SHINKO_S6145 XXXXXX
-#define USB_PID_SHINKO_S6245 XXXXXX
+#define USB_PID_SHINKO_S6145 0x0019
+#define USB_PID_SHINKO_S6245 0x001D
+//#define USB_VID_CIAAT        xxxxxx
+//#define USB_PID_CIAAT_BRAVA21 xxxxx
 
 struct dyesub_backend shinkos2145_backend = {
-	.name = "Shinko/Sinfonia CHC-S2145/S1245",
-	.version = "0.37",
+	.name = "Shinko/Sinfonia CHC-S2145",
+	.version = "0.38",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
@@ -1827,10 +1817,10 @@ struct dyesub_backend shinkos2145_backend = {
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
 	.devices = {
-	{ USB_VID_SHINKO, USB_PID_SHINKO_S1245, P_SHINKO_S1245, ""},
 	{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, ""},
 //	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S2145, ""},
 //	{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S2145, ""},
+//	{ USB_VID_CIAAT, USB_PID_CIAAT_BRAVA21, P_SHINKO_S2145, ""},
 	{ 0, 0, 0, ""}
 	}
 };
@@ -1845,25 +1835,6 @@ struct dyesub_backend shinkos2145_backend = {
    64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == Media/Print Size
    MM 00 00 00 PP 00 00 00  00 00 00 00 00 00 00 00  MM = Print Method (aka cut control), PP = Print Mode
    00 00 00 00 WW WW 00 00  HH HH 00 00 XX 00 00 00  XX == Copies
-   00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
-   00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
-   00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
-   00 00 00 00 
-
-   [[Packed RGB payload of WW*HH*3 bytes]]
-
-   04 03 02 01  [[ footer ]]
-
- * CHC-S1245 data format
-
-  Spool file consists of an 116-byte header, followed by RGB-packed data,
-  followed by a 4-byte footer.  Header appears to consist of a series of
-  4-byte Little Endian words.
-
-   10 00 00 00 MM MM 00 00  00 00 00 00 01 00 00 00  MM == Model (ie 1245d)
-   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == Media Size (0x10 fixed)
-   MM 00 00 00 PP 00 00 00  00 00 00 00 ZZ ZZ ZZ ZZ  MM = Print Method (aka cut control), PP = Default/Glossy/Matte (0x01/0x03/0x05), ZZ == matte intensity (0x7fffffff for glossy, else 0x00000000 +- 25 for matte)
-   VV 00 00 00 WW WW 00 00  HH HH 00 00 XX 00 00 00  VV == dust; 0x00 default, 0x01 off, 0x02 on, XX == Copies
    00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
    00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
    00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
@@ -1910,5 +1881,30 @@ struct dyesub_backend shinkos2145_backend = {
    [[Packed RGB payload of WW*HH*3 bytes]]
 
    04 03 02 01  [[ footer ]]
+
+ * CIAAT Brava 21 data format  
+
+   This printer is supposed to be a variant of the S6145, but uses a 
+   different spool format -- but seems to use the same command language.
+
+   01 40 12 00  01 NN 00 YY  YY XX XX TT  00 00 00 00  00 00 01 MM  QQ 00
+
+    NN == copies
+    YY YY == Columns (LE)
+    XX XX == Rows (LE)
+    MM == Overcoat (02 = glossy, 03 = matte, 01 = none)
+    QQ == Multicut (00 = normal, 01 = none, 02 = 2*4x6, 
+                    04 = 2*2x6, 80 = 4x6-notrim)
+    TT == Type (00 = 4x6, 03 = 5x7, 06 = 8x6, 07 = 2x6)
+
+    1844*2434  8x6
+    1844*2492  4x6*2
+    1548*2140  5x7
+    1844*1240  4x6 (and 2x6*2)
+    1844*1210  4x6-notrim (WTF?)
+    1844*634   2x6
+
+
+   [[ Followed by XX*YY*3 bytes of image data, RGB ]]
 
 */
