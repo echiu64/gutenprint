@@ -195,7 +195,7 @@ typedef struct {
   int byteswap;
   int plane_interlacing;
   int row_interlacing;
-  char empty_byte[MAX_INK_CHANNELS];  /* one for each color plane */
+  unsigned char empty_byte[MAX_INK_CHANNELS];  /* one for each color plane */
   unsigned short **image_data;
   int outh_px, outw_px, outt_px, outb_px, outl_px, outr_px;
   int imgh_px, imgw_px;
@@ -1523,7 +1523,7 @@ static void updr200_printer_end_func(stp_vars_t *v)
 		1, 4, v);
   } else {
     /* Normal operation */
-    return updr150_printer_end_func(v);
+    updr150_printer_end_func(v);
   }
 }
 
@@ -2160,7 +2160,9 @@ static const dyesub_pagesize_t kodak_8810_page[] =
 {
   { "w288h576", "8x4", PT(1208,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-//  { "???", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#if 0  
+  { "???", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#endif  
   { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
@@ -2169,7 +2171,9 @@ static const dyesub_printsize_t kodak_8810_printsize[] =
 {
   { "300x300", "w288h576", 1208, 2464},
   { "300x300", "c8x10", 2464, 3024},
-//  { "300x300", "???", 2464, 3531},
+#if 0  
+  { "300x300", "???", 2464, 3531},
+#endif  
   { "300x300", "w576h864", 2464, 3624},
 };
 
@@ -3344,14 +3348,14 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Print Mode */  
   stp_put32_le(0x00, v);
-  if (((unsigned char*)(privdata.laminate->seq).data)[0] == 0x02 ||
-      ((unsigned char*)(privdata.laminate->seq).data)[0] == 0x03) {
+  if (((const unsigned char*)(privdata.laminate->seq).data)[0] == 0x02 ||
+      ((const unsigned char*)(privdata.laminate->seq).data)[0] == 0x03) {
 	  stp_put32_le(0x07fffffff, v);  // Glossy
   } else {
-	  stp_put32_le(0x0, v);  // XXX -25>0>+25
+	  stp_put32_le(0x0, v);  /* XXX -25>0>+25 */
   }
 
-  stp_put32_le(0x00, v); // XXX 0x00 printer default, 0x02 for "dust removal" on, 0x01 for off.
+  stp_put32_le(0x00, v); /* XXX 0x00 printer default, 0x02 for "dust removal" on, 0x01 for off. */
   stp_put32_le(privdata.w_size, v); /* Columns */
   stp_put32_le(privdata.h_size, v); /* Rows */
   stp_put32_le(0x01, v);            /* Copies */
@@ -3560,7 +3564,7 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
   } else {
     stp_put32_le(0x00, v);
   }
-  stp_put32_le(0x00, v);  // XX quality; 00 == default, 0x01 == std
+  stp_put32_le(0x00, v);  /* XXX quality; 00 == default, 0x01 == std */
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination */
   stp_put32_le(0x00, v);
@@ -5624,9 +5628,9 @@ dyesub_print_pixel(stp_vars_t *v,
 			ink[1] = Cb;
 			ink[2] = Cr;
 
-			// XXX this is sub-optimal; we compute the full YCbCr
-			// values and throw away 2/3 for each pixel printed
-			// if we are plane or row interleaved
+			/* XXX this is sub-optimal; we compute the full YCbCr
+			   values and throw away 2/3 for each pixel printed
+			   if we are plane or row interleaved */
 		} else {
 			ink[i] = out[i];
 		}
