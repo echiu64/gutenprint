@@ -278,6 +278,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Mitsubishi CP-9550 family (including the CP9550DW-S variant)
 	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]
 
+  3) Canon backend bugfixes:
+
+        Duplex option added to MP750/MP760/MP770/MP780/MP790
+
 * Changes from 5.2.9
 
   1) Added a unified CUPS backend to support selected dye sublimation
