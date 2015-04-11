@@ -623,7 +623,7 @@ fill_black_##bits(unsigned char *data, size_t len, size_t scount)	\
 	  memset(s_data, 0, sizeof(T) * 3);				\
 	  s_data += 3;							\
 	}								\
-      memset(s_data, 0xff, sizeof(T) * extra * 3);			\
+      memset(s_data, 0, sizeof(T) * extra * 3);				\
     }									\
   else if (strcmp(global_image_type, "CMY") == 0)			\
     {									\
