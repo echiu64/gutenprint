@@ -64,9 +64,9 @@ typedef struct
 
 #define STPI_VASPRINTF(result, bytes, format)				\
 {									\
-  int current_allocation = 64;						\
+  int current_allocation = 64; /* vsnprintf returns int */		\
   result = stp_malloc(current_allocation);				\
-  while (1)								\
+  while (current_allocation < INT_MAX / 2)				\
     {									\
       va_list args;							\
       va_start(args, format);						\
