@@ -3043,7 +3043,7 @@ static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
 };
 
 /* standard */
-/* MG6500, MG7100 */
+/* MG6300, MG6500, MG7100 */
 static const canon_inkset_t canon_30_K3C3M3Y2k3off_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -3078,7 +3078,7 @@ static const canon_inkset_t canon_30_K3C3M3Y2k3off_c_inkset[] = {
 };
 
 /* standard for Duplex */
-/* MG6500, MG7100 */
+/* MG6300, MG6500, MG7100 */
 static const canon_inkset_t canon_30_K3C3M3Y2k3_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -3148,7 +3148,7 @@ static const canon_inkset_t canon_30_K3C3M3Y2k3photo_c_inkset[] = {
 };
 
 /* high */
-/* MG6500, MG7100 */
+/* MG6300, MG6500, MG7100 */
 static const canon_inkset_t canon_30_K3C6M6Y4k4off_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
         {'C',1.0,&canon_4b_6l_ink},
@@ -3252,7 +3252,7 @@ static const canon_inkset_t canon_30_M6K6m4k4_inkset[] = {
 };
 
 /* photo standard */
-/* MG6500, MG7100 */
+/* MG6300, MG6500, MG7100 */
 static const canon_inkset_t canon_30_M6K6m4k4H6off_inkset[] = {
         {0,0.0,NULL},
         {'C',1.0,&canon_4b_6l_ink},
@@ -3320,7 +3320,7 @@ static const canon_inkset_t canon_30_M8K8m4k4_inkset[] = {
 };
 
 /* photo high */
-/* MG6500, MG7100 */
+/* MG6300, MG6500, MG7100 */
 static const canon_inkset_t canon_30_M8K8m4k4H8off_inkset[] = {
         {0,0.0,NULL},
         {'C',1.0,&canon_4b_8l_ink},

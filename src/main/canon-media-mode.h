@@ -11178,7 +11178,7 @@ static const canon_modeuse_t canon_PIXMA_MG6300_modeuses[] = {
   { "PhotoProLuster",   canon_PIXMA_MG6300_modeuses_PPplusG2, 0 },/*unsupported*/
   { "PhotoProSemiGloss",canon_PIXMA_MG6300_modeuses_PPplusG2, 0 },/*unsupported*/
   { "PhotopaperMatte",	canon_PIXMA_MG6300_modeuses_PPmatte, 0 },
-  { "GlossyPaper",	canon_PIXMA_MG6300_modeuses_PPplusG2, 0 },/*unsupported*/
+  { "GlossyPaper",	canon_PIXMA_MG6300_modeuses_PPmatte, 0 },/*unsupported*/
   { "Coated",		canon_PIXMA_MG6300_modeuses_PPmatte, 0 },
   { "HagakiA", 	        canon_PIXMA_MG6300_modeuses_Hagaki, DUPLEX_SUPPORT },
   { "InkJetHagaki", 	canon_PIXMA_MG6300_modeuses_inkjetHagaki, 0 },

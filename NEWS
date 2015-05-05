@@ -285,9 +285,15 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) Added common Imperial and Metric label sizes to the Paper Selection
      menu.
 
-  5) Duplex option added to following Canon printers:
+  5) Canon backend enhancements.
+
+     Duplex option added to following printers:
 
 	MP750/MP760/MP770/MP780/MP790
+
+     Resolution modes corrected for following printers:
+
+	MG6300 series
 
   6) Canon backend bugfixes:
 

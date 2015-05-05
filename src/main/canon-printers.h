@@ -2762,7 +2762,7 @@ static const canon_cap_t canon_model_capabilities[] =
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_v|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
     3,9, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_MG5300,  /* features */
-    &canon_PIXMA_MG6200_modelist,
+    &canon_PIXMA_MG6300_modelist,
     &canon_PIXMA_MG6300_paperlist,
     &canon_PIXMA_MG6300_modeuselist,
     NULL,

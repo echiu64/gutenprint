@@ -3787,6 +3787,34 @@ static const canon_mode_t canon_PIXMA_MG6200_modes[] = {
 DECLARE_MODES(canon_PIXMA_MG6200,1);
 
 /* for this printer most photo modes have grey (H) ink. */
+static const canon_mode_t canon_PIXMA_MG6300_modes[] = {
+  /* plain modes --- duplex no mono CMYK */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(30_K3C6M6Y4k4off_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_NODUPLEX,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi",N_("600x600 DPI"),INKSET(30_K3C3M3Y2k3off_c),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_NODUPLEX,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* Duplex/Env/Hagaki CMYKk and K */
+  {  600, 600,CANON_INK_K|CANON_INK_CMYKk,"600x600dpi_high2",N_("600x600 DPI HIGH duplex/Env/Hagaki"),INKSET(30_K3C3M3Y2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_K|CANON_INK_CMYKk,"600x600dpi_std2",N_("600x600 DPI duplex/Env/Hagaki"),INKSET(30_K3C3M3Y2k3_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* draft */
+  {  300, 300,CANON_INK_K|CANON_INK_CMYK,"300x300dpi",N_("300x300 DPI"),INKSET(30_K2C2M2Y2),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
+  /* most photo modes CMYkH */
+  /* photo modes CMYk */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh",N_("600x600 DPI PHOTO HIGH matte/HiRes"),INKSET(30_M8K8m4k4H8off),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo",N_("600x600 DPI PHOTO matte/HiRes"),INKSET(30_M8K8m4k4H8off),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* above also for PPgloss mono only CMYk */
+  /* PPother */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo2",N_("600x600 DPI PHOTO PPother"),INKSET(30_M6K6m4k4H6off),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  /* CD CMYk */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh3",N_("600x600 DPI HIGH CD"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo3",N_("600x600 DPI CD"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,2},/* untested */
+  /* inkjet hagaki CMYk */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photohigh4",N_("600x600 DPI HIGH inkjet Hagaki"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_photo4",N_("600x600 DPI inkjet Hagaki"),INKSET(30_C5M5Y4k4),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
+  /* T-Shirt CMYk */
+  {  600, 600,CANON_INK_CMYK,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(30_M8K8m4k4H8off),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,3},
+};
+DECLARE_MODES(canon_PIXMA_MG6300,1);
+
+/* for this printer most photo modes have grey (H) ink. */
 /* borderless: plain (qlty 2 only), hagaki (qlty 3 and 2) use std mode with CMYk, those with photo modes unchanged. No env, HiRes, TST for borderless */
 static const canon_mode_t canon_PIXMA_MG6500_modes[] = {
   /* plain modes --- duplex no mono CMYK */
