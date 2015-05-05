@@ -62,6 +62,8 @@ typedef struct
   int duplex;
   int tumble;
   int use_crd;
+  int orientation;
+  int label_separator;
 } pcl_privdata_t;
 
 /*
@@ -330,6 +332,7 @@ typedef struct {
 #define PCL_PRINTER_CUSTOM_SIZE	32	/* Custom sizes supported */
 #define PCL_PRINTER_BLANKLINE	64	/* Blank line removal supported */
 #define PCL_PRINTER_DUPLEX	128	/* Printer can have duplexer */
+#define PCL_PRINTER_LABEL       256     /* Datamax-O'Neil PCL Label Printer */
 
 /*
  * FIXME - the 520 shouldn't be lumped in with the 500 as it supports
@@ -346,6 +349,12 @@ typedef struct {
 static const short emptylist[] =
 {
   -1
+};
+
+static const short custom_papersizes[] =
+{
+  PCL_PAPERSIZE_CUSTOM,
+  -1,
 };
 
 static const short standard_papersizes[] =
@@ -694,6 +703,104 @@ static const pcl_cap_t pcl_model_capabilities[] =
     PCL_COLOR_NONE,
     PCL_PRINTER_LJ,
     standard_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10010,                             /* p1115 */
+    4 * 72, 99 * 72,                  /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10011,                             /* p1115s */
+    4 * 72, 99 * 72,                  /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300 | PCL_RES_600_600,        /* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10012,                             /* p1120n */
+    4 * 72, 99 * 72,                  /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10013,                             /* p1125 */
+    4 * 72, 99 * 72,                  /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10014,                             /* p1725 */
+    6 * 72, 99 * 72,                  /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10015,                             /* w1110 */
+    4 * 72, 99 * 72,                  /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
+    emptylist,
+    emptylist,
+  },
+/* Datamax-O'Neil Thermal PCL printers */
+  { 10016,                             /* H8308p */
+    17 * 72 / 2, 99 * 72,             /* Max paper size */
+    1, 1,                             /* Min paper size */
+    PCL_RES_150_150 | PCL_RES_300_300,	/* Resolutions */
+    {0, 0, 0, 0},                     /* non-A4 Margins */
+    {0, 0, 0, 0},                     /* A4 Margins */
+    PCL_COLOR_NONE,
+    PCL_PRINTER_LJ | PCL_PRINTER_TIFF | PCL_PRINTER_LABEL |
+      PCL_PRINTER_BLANKLINE | PCL_PRINTER_CUSTOM_SIZE,
+    custom_papersizes,
     emptylist,
     emptylist,
   },
@@ -1396,6 +1503,19 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
+ {
+    "Orientation", N_("Orientation"), "Color=No,Category=Basic Printer Setup",
+    N_("Orientation, Portrait, Landscape, Upside Down, Seascape"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
+  },
+ {
+    "LabelSeparator", N_("Paper Sensor Type"),
+    "Color=No,Category=Basic Printer Setup",
+    N_("Gap, Mark on Top, Mark on Bottom, Notch, Continuous"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
+  },
 };
 
 static const int the_parameter_count =
@@ -1687,6 +1807,37 @@ static const stp_param_string_t duplex_types[] =
 #define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
 
 /*
+ * Orientation support - modes available
+ * Note that the internal names MUST match those in cups/genppd.c else the
+ * PPD files will not be generated correctly
+ */
+
+static const stp_param_string_t orientation_types[] =
+{
+  { "Portrait",         N_ ("Portrait") },
+  { "Landscape",        N_ ("Landscape") },
+  { "UpsideDown",       N_ ("Reverse Portrait") },
+  { "Seascape",         N_ ("Reverse Landscape") },
+};
+#define NUM_ORIENTATION (sizeof (orientation_types) / sizeof (stp_param_string_t))
+
+/*
+ * Label Separator Support for D-O printers, modes available
+ */
+
+static const stp_param_string_t label_separator_types[] =
+{
+  { "IGNORE",		N_ ("Keep Previous") },
+  { "GAP",		N_ ("Gap") },
+  { "TOP",		N_ ("Mark on Top") },
+  { "BOTTOM",		N_ ("Mark on Bottom") },
+  { "NOTCH",		N_ ("Notch") },
+  { "NONE",		N_ ("Continuous") },
+};
+#define NUM_LABEL_SEPARATOR (sizeof (label_separator_types) / sizeof (stp_param_string_t))
+
+
+/*
  * 'pcl_papersize_valid()' - Is the paper size valid for this printer.
  */
 
@@ -1736,6 +1887,22 @@ pcl_papersize_valid(const stp_papersize_t *pt,
 
   if (use_custom == 0)
     return(0);
+
+/*
+ * We are allowed custom paper sizes. Check that the name contains
+ * d-o if this is the Datamax O'Neil label printer and not custom paper
+ */
+
+  if (caps->stp_printer_type & PCL_PRINTER_LABEL) {
+    if (strcmp(pt->name, "Custom")) {
+      if (NULL != strstr(pt->name, "d-o")) {
+        return(1);
+      } else {
+        return(0);
+      }
+    }
+  }
+
 
 /*
  * We are allowed custom paper sizes. Check that the size is within
@@ -1955,6 +2122,40 @@ pcl_parameters(const stp_vars_t *v, const char *name,
     }
     else
       description->is_active = 0;	/* Not in "Job" mode */
+  }
+  else if (strcmp(name, "Orientation") == 0)
+  {
+    if (caps->stp_printer_type & PCL_PRINTER_LABEL)
+    {
+      description->bounds.str = stp_string_list_create();
+      description->deflt.str = orientation_types[0].name;
+      for (i=0; i < NUM_ORIENTATION; i++)
+      {
+        stp_string_list_add_string(description->bounds.str,
+            orientation_types[i].name,gettext(orientation_types[i].text));
+      }
+    }
+    else
+    {
+      description->is_active = 0;
+    }
+  }
+  else if (strcmp(name, "LabelSeparator") == 0)
+  {
+    if (caps->stp_printer_type & PCL_PRINTER_LABEL)
+    {
+      description->bounds.str = stp_string_list_create();
+      description->deflt.str = label_separator_types[0].name;
+      for (i=0; i < NUM_LABEL_SEPARATOR; i++)
+      {
+        stp_string_list_add_string(description->bounds.str,
+            label_separator_types[i].name, gettext(label_separator_types[i].text));
+      }
+    }
+    else
+    {
+      description->is_active = 0;
+    }
   }
   else if (strcmp(name, "CyanDensity") == 0 ||
 	   strcmp(name, "MagentaDensity") == 0 ||
@@ -2262,6 +2463,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   const char	*ink_type = stp_get_string_parameter(v, "InkType");
   const char	*print_mode = stp_get_string_parameter(v, "PrintingMode");
   const char	*duplex_mode = stp_get_string_parameter(v, "Duplex");
+  const char    *orientation_mode = stp_get_string_parameter(v, "Orientation");
+  const char	*label_separator_mode = stp_get_string_parameter(v, "LabelSeparator");
   int		page_number = stp_get_int_parameter(v, "PageNumber");
   int		printing_color = 0;
   int		top = stp_get_top(v);
@@ -2299,6 +2502,7 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   stp_curve_t   *lum_adjustment;
   stp_curve_t   *hue_adjustment;
   double        density;
+  int           label = 0;
 
   if (!stp_verify(v))
     {
@@ -2425,6 +2629,37 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
     }
 
  /*
+  * Label (PJL) settings and Orientation
+  */
+
+  if ((caps->stp_printer_type & PCL_PRINTER_LABEL)) {
+    label = 1;
+    privdata.orientation = 0;
+    if ((strncmp(orientation_mode, "Landscape", 9) == 0))
+      privdata.orientation = 1;
+    else if ((strncmp(orientation_mode, "UpsideDown", 10) == 0))
+      privdata.orientation = 2;
+    else if ((strncmp(orientation_mode, "Seascape", 8) == 0))
+      privdata.orientation = 3;
+
+  /*
+   * Label Separator mode
+   */
+    privdata.label_separator = 0;
+    if ((strncmp(label_separator_mode, "GAP", 3) == 0))
+      privdata.label_separator = 1;
+    if ((strncmp(label_separator_mode, "TOP", 3) == 0))
+      privdata.label_separator = 2;
+    if ((strncmp(label_separator_mode, "BOTTOM", 6) == 0))
+      privdata.label_separator = 3;
+    if ((strncmp(label_separator_mode, "NOTCH", 5) == 0))
+      privdata.label_separator = 4;
+    if ((strncmp(label_separator_mode, "NONE", 10) == 0))
+      privdata.label_separator = 5;
+  }
+
+
+ /*
   * Send PCL initialization commands...
   */
 
@@ -2435,16 +2670,47 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
       stp_deprintf(STP_DBG_PCL, "Normal init\n");
 
-      if (privdata.do_cretb)
-        stp_puts("\033*rbC", v);	/* End raster graphics */
-      stp_puts("\033E", v); 				/* PCL reset */
-      if (privdata.do_cretb)
-        stp_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
+      if (label)
+      {
+        if (privdata.do_cretb)
+          stp_puts("\033*rbC", v);        /* End raster graphics */
+        stp_puts("\033E", v);             /* PCL reset */
+        if (privdata.do_cretb)
+          stp_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
 
-      stp_puts("\033&l6D\033&k12H",v);		/* 6 lines per inch, 10 chars per inch */
-      stp_puts("\033&l0O",v);			/* Portrait */
+        stp_zprintf(v, "\033%%-12345X@PJL SET RESOLUTION=%d\n"
+                       "@PJL SET PAPERWIDTH=%d\n"
+                       "@PJL SET PAPERLENGTH=%d\n"
+                       "@PJL ENTER LANGUAGE=PCL\n", xdpi, out_width*10,
+                       out_height*10);
 
-      stp_zprintf(v, "\033&l%dA", pcl_media_size);	/* Set media size we calculated above */
+	if ( privdata.label_separator != 0) {
+            stp_zprintf(v, "\033%%-12345X@PJL JOB SETUP = \"ON\" "
+                       "NAME = \"JOB_MEDIACONFIG\"\n"
+                       "@PJL DEFAULT PAPERSENSORTYPE=%s\n"
+                       "@PJL RESET\n@PJL EOJ\n", label_separator_mode);
+	}
+
+        stp_zprintf(v, "\033&l%dA", pcl_media_size);      /* Set media size we calculated above */
+
+        stp_zprintf(v, "\033&l%dO", privdata.orientation);
+        stp_puts("\033*r0F",v);                   /* Presentation mode */
+        stp_puts("\033&l6D\033&k12H",v);          /* 6 lines per inch, 10 chars per inch */
+      }
+      else
+      {
+        if (privdata.do_cretb)
+          stp_puts("\033*rbC", v);	/* End raster graphics */
+        stp_puts("\033E", v); 				/* PCL reset */
+        if (privdata.do_cretb)
+          stp_zprintf(v, "\033%%-12345X@PJL ENTER LANGUAGE=PCL3GUI\n");
+
+        stp_puts("\033&l6D\033&k12H",v);		/* 6 lines per inch, 10 chars per inch */
+        stp_puts("\033&l0O",v);			/* Portrait */
+
+        stp_zprintf(v, "\033&l%dA", pcl_media_size);	/* Set media size we calculated above */
+      }
+
       stp_zprintf(v, "\033&l%dP", stp_get_page_height(v) / 12);
 						/* Length of "forms" in "lines" */
       stp_puts("\033&l0L", v);			/* Turn off perforation skip */

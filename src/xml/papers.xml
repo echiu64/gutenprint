@@ -1371,6 +1371,272 @@
       <unit value="metric-extended"/>
     </paper>
 
+<!-- Group Labels -->
+    <paper name="d-o400x600">
+      <description translate="value" value="4.00x6.00 in label"/>
+      <width value="288"/>
+      <height value="432"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o100x400">
+      <description translate="value" value="1.00x4.00 in label"/>
+      <width value="72"/>
+      <height value="288"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o131x400">
+      <description translate="value" value="1.31x4.00 in label"/>
+      <width value="94"/>
+      <height value="288"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o056x344">
+      <description translate="value" value="0.56x3.44 in label"/>
+      <width value="40"/>
+      <height value="248"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o319x350">
+      <description translate="value" value="3.19x3.50 in label"/>
+      <width value="230"/>
+      <height value="252"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o100x263">
+      <description translate="value" value="1.00x2.63 in label"/>
+      <width value="72"/>
+      <height value="189"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o200x100">
+      <description translate="value" value="2.00x1.00 in label"/>
+      <width value="144"/>
+      <height value="72"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o200x150">
+      <description translate="value" value="2.00x1.50 in label"/>
+      <width value="144"/>
+      <height value="108"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o200x400">
+      <description translate="value" value="2.00x4.00 in label"/>
+      <width value="144"/>
+      <height value="288"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o225x550">
+      <description translate="value" value="2.25x5.50 in label"/>
+      <width value="162"/>
+      <height value="396"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o300x200">
+      <description translate="value" value="3.00x2.00 in label"/>
+      <width value="216"/>
+      <height value="144"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o300x300">
+      <description translate="value" value="3.00x3.00 in label"/>
+      <width value="216"/>
+      <height value="216"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o319x175">
+      <description translate="value" value="3.19x1.75 in label"/>
+      <width value="230"/>
+      <height value="126"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o350x200">
+      <description translate="value" value="3.50x2.00 in label"/>
+      <width value="252"/>
+      <height value="144"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x200">
+      <description translate="value" value="4.00x2.00 in label"/>
+      <width value="288"/>
+      <height value="144"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x300">
+      <description translate="value" value="4.00x3.00 in label"/>
+      <width value="288"/>
+      <height value="216"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x400">
+      <description translate="value" value="4.00x4.00 in label"/>
+      <width value="288"/>
+      <height value="288"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x500">
+      <description translate="value" value="4.00x5.00 in label"/>
+      <width value="288"/>
+      <height value="360"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x650">
+      <description translate="value" value="4.00x6.50 in label"/>
+      <width value="288"/>
+      <height value="468"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x800">
+      <description translate="value" value="4.00x8.00 in label"/>
+      <width value="288"/>
+      <height value="576"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o400x1300">
+      <description translate="value" value="4.00x13.00 in label"/>
+      <width value="288"/>
+      <height value="936"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o600x200">
+      <description translate="value" value="6.00x2.00 in label"/>
+      <width value="432"/>
+      <height value="144"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o600x300">
+      <description translate="value" value="6.00x3.00 in label"/>
+      <width value="432"/>
+      <height value="216"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o600x400">
+      <description translate="value" value="6.00x4.00 in label"/>
+      <width value="432"/>
+      <height value="288"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o600x500">
+      <description translate="value" value="6.00x5.00 in label"/>
+      <width value="432"/>
+      <height value="360"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o600x600">
+      <description translate="value" value="6.00x6.00 in label"/>
+      <width value="432"/>
+      <height value="432"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o800x1200">
+      <description translate="value" value="8.00x12.00 in label"/>
+      <width value="576"/>
+      <height value="864"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o850x600">
+      <description translate="value" value="8.50x6.00 in label"/>
+      <width value="612"/>
+      <height value="432"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o850x1100">
+      <description translate="value" value="8.50x11.00 in label"/>
+      <width value="612"/>
+      <height value="792"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o250x313">
+      <description translate="value" value="2.50x3.13 in label"/>
+      <width value="180"/>
+      <height value="225"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o050x175">
+      <description translate="value" value="0.50x1.75 in label"/>
+      <width value="36"/>
+      <height value="126"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o175x300">
+      <description translate="value" value="1.75x3.00 in label"/>
+      <width value="126"/>
+      <height value="216"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o075x575">
+      <description translate="value" value="0.75x5.75 label"/>
+      <width value="54"/>
+      <height value="414"/>
+      <unit value="english"/>
+    </paper>
+    <paper name="d-o44x31">
+      <description translate="value" value="44x31 mm label"/>
+      <width value="125"/>
+      <height value="88"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o62x44">
+      <description translate="value" value="62x44 mm label"/>
+      <width value="176"/>
+      <height value="125"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o74x52">
+      <description translate="value" value="74x52 mm label"/>
+      <width value="210"/>
+      <height value="147"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o88x62">
+      <description translate="value" value="88x62 mm label"/>
+      <width value="249"/>
+      <height value="176"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o105x74">
+      <description translate="value" value="105x74 mm label"/>
+      <width value="298"/>
+      <height value="210"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o125x88">
+      <description translate="value" value="125x88 mm label"/>
+      <width value="354"/>
+      <height value="249"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o148x105">
+      <description translate="value" value="148x105 mm label"/>
+      <width value="420"/>
+      <height value="298"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o176x125">
+      <description translate="value" value="176x125 mm label"/>
+      <width value="499"/>
+      <height value="354"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o210x148">
+      <description translate="value" value="210x148 mm label"/>
+      <width value="595"/>
+      <height value="420"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o250x176">
+      <description translate="value" value="250x176 mm label"/>
+      <width value="709"/>
+      <height value="499"/>
+      <unit value="metric"/>
+    </paper>
+    <paper name="d-o297x210">
+      <description translate="value" value="297x210 mm label"/>
+      <width value="842"/>
+      <height value="595"/>
+      <unit value="metric"/>
+    </paper>
+
 <!--
     Custom
 -->

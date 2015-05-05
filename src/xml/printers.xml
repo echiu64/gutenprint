@@ -1640,6 +1640,13 @@
       <printer translate="name" name="Canon LBP-3360" driver="canon-lbp-3360" manufacturer="Canon" model="6" parameters="pcl_laser_params" foomaticid="Canon-LBP-3360" />
       <printer translate="name" name="Canon imageRunner 330s" driver="canon-ir_330s" manufacturer="Canon" model="61" parameters="pcl_laser_params" foomaticid="Canon-imageRunner_330s" />
       <printer translate="name" name="Citizen ProJet II" driver="citizen-projet_ii" manufacturer="Citizen" model="2" parameters="pcl_laser_params" foomaticid="Citizen-ProJet_II" />
+      <printer translate="name" name="Datamax-ONeil p1115" deviceid="MFG:DatamaxOneil_;MDL:p1115;" color="false" driver="datamax_oneil_p1115" manufacturer="DatamaxONeil" model="10010" parameters="pcl_laser_params" foomaticid="D-O-p1115" />
+      <printer translate="name" name="Datamax-ONeil p1115s" deviceid="MFG:DatamaxOneil_;MDL:p1115s;" color="false" driver="datamax_oneil_p1115s" manufacturer="DatamaxONeil" model="10011" parameters="pcl_laser_params" foomaticid="D-O-p1115s" />
+      <printer translate="name" name="Datamax-ONeil p1120n" deviceid="MFG:DatamaxOneil_;MDL:p1120n;" color="false" driver="datamax_oneil_p1120n" manufacturer="DatamaxONeil" model="10012" parameters="pcl_laser_params" foomaticid="D-O-p1120n" />
+      <printer translate="name" name="Datamax-ONeil p1125" deviceid="MFG:DatamaxOneil_;MDL:p1125;" color="false" driver="datamax_oneil_p1125" manufacturer="DatamaxONeil" model="10013" parameters="pcl_laser_params" foomaticid="D-O-p1125" />
+      <printer translate="name" name="Datamax-ONeil p1725" deviceid="MFG:DatamaxOneil_;MDL:p1725;" color="false" driver="datamax_oneil_p1725" manufacturer="DatamaxONeil" model="10014" parameters="pcl_laser_params" foomaticid="D-O-p1725" />
+      <printer translate="name" name="Datamax-ONeil w1110" deviceid="MFG:DatamaxOneil_;MDL:w1110;" color="false" driver="datamax_oneil_w1110" manufacturer="DatamaxONeil" model="10015" parameters="pcl_laser_params" foomaticid="D-O-w1110" />
+      <printer translate="name" name="Datamax-ONeil H8308p" deviceid="MFG:DatamaxOneil_;MDL:H8308p;" color="false" driver="datamax_oneil_H8308p" manufacturer="DatamaxONeil" model="10016" parameters="pcl_laser_params" foomaticid="D-O-H8308p" />
       <printer translate="name" name="DEC 1800" driver="dec-1800" manufacturer="DEC" model="3" parameters="pcl_laser_params" foomaticid="DEC-1800" />
       <printer translate="name" name="DEC LN17" driver="dec-ln17" manufacturer="DEC" model="6" parameters="pcl_laser_params" foomaticid="DEC-LN17" />
       <printer translate="name" name="Epson ActionLaser 1100" driver="epson-actl_1100" manufacturer="Epson" model="3" parameters="pcl_laser_params" foomaticid="Epson-ActionLaser_1100" />

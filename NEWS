@@ -282,6 +282,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
         Duplex option added to MP750/MP760/MP770/MP780/MP790
 
+  4) Added support for the Datamax-O'Neil PCL printers, the Performance
+     series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
+     Datamax-O'Neil Workstation printer.
+
+  5) Added common Imperial and Metric label sizes to the Paper Selection
+     menu.
+
+
 * Changes from 5.2.9
 
   1) Added a unified CUPS backend to support selected dye sublimation
