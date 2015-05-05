@@ -2139,7 +2139,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_MULTIPASS_MP900_modelist,
-    &canon_PIXMA_iP3100_paperlist,
+    &canon_MULTIPASS_MP900_paperlist, /* was: &canon_PIXMA_iP3100_paperlist, */
     &canon_MULTIPASS_MP900_modeuselist,
     NULL,
     NULL,
@@ -2219,7 +2219,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP7100_modelist,
-    &canon_PIXMA_iP7100_paperlist,
+    &canon_PIXMA_iP7100_limited_paperlist, /* was: &canon_PIXMA_iP7100_paperlist, */
     &canon_PIXMA_iP7100_modeuselist,
     NULL,
     NULL,
@@ -2251,7 +2251,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP8100_modelist,
-    &canon_PIXMA_iP7100_paperlist,
+    &canon_PIXMA_iP7100_limited_paperlist, /* was: &canon_PIXMA_iP7100_paperlist,*/
     &canon_PIXMA_iP8100_modeuselist,
     NULL,
     NULL,
@@ -2267,7 +2267,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,2, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP8500_modelist,
-    &canon_PIXMA_iP8500_paperlist,
+    &canon_PIXMA_iP8500_limited_paperlist, /* was: &canon_PIXMA_iP8500_paperlist,*/
     &canon_PIXMA_iP8500_modeuselist,
     NULL,
     NULL,
@@ -2283,7 +2283,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,4, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP4200,  /*features */
     &canon_PIXMA_iP8600_modelist,
-    &canon_PIXMA_iP7100_paperlist,
+    &canon_PIXMA_iP7100_limited_paperlist, /* was: &canon_PIXMA_iP7100_paperlist,*/
     &canon_PIXMA_iP8600_modeuselist,
     NULL,
     NULL,
@@ -2299,7 +2299,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,6, /* ESC (l and (P command lengths */
     control_cmd_PIXMA_iP2700,  /*features */
     &canon_PIXMA_iP9910_modelist,
-    &canon_PIXMA_iP9910_paperlist,
+    &canon_PIXMA_iP9910_limited_paperlist, /* was: &canon_PIXMA_iP9910_paperlist,*/
     &canon_PIXMA_iP9910_modeuselist,
     NULL,
     NULL,

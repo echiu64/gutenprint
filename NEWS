@@ -278,17 +278,71 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
         Mitsubishi CP-9550 family (including the CP9550DW-S variant)
 	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]
 
-  3) Canon backend bugfixes:
-
-        Duplex option added to MP750/MP760/MP770/MP780/MP790
-
-  4) Added support for the Datamax-O'Neil PCL printers, the Performance
+  3) Added support for the Datamax-O'Neil PCL printers, the Performance
      series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
      Datamax-O'Neil Workstation printer.
 
-  5) Added common Imperial and Metric label sizes to the Paper Selection
+  4) Added common Imperial and Metric label sizes to the Paper Selection
      menu.
 
+  5) Duplex option added to following Canon printers:
+
+	MP750/MP760/MP770/MP780/MP790
+
+  6) Canon backend bugfixes:
+
+     A problem with a new ink level compression added in 5.2.7 has
+     affected multiple printer models. The affected models have been
+     modified accordingly, as described below. As a result, media choice
+     has been limited for the MP, iP and Pro series, only draft-quality
+     printing for plain, Hagaki and Envelope media (and monochrome photo
+     printing in some cases) is currently possible.
+
+     The following printer models have had their modes set back to what
+     they were in 5.2.7, namely the same as the BJC-8200. These modes
+     are not detected in the Windows driver; however, they appear to
+     work, while most detected modes are currently not workable owing to
+     unsolved compression of ink levels. Remaining newer workable modes
+     without problematic compression can be used.
+
+	Canon BJC S600
+	Canon BJC S630
+	Canon BJC S800
+
+     The following newer printer models added since 5.2.7 have also had
+     their modes set to those of the BJC-8200, for the same reason as above.
+     Remaining newer modes without problematic compression can be used.
+
+	Canon BJC S820
+	Canon BJC S900
+	Canon BJC S9000
+	Canon BJC i950
+	Canon BJC i960
+	Canon BJC i965
+	Canon BJC i990
+	Canon BJC i9100
+	Canon BJC i9900
+	Canon BJC i9950
+	Canon BJC 950i
+	Canon BJC 960i
+	Canon BJC 990i
+	Canon BJC 9100i
+	Canon BJC 9900i
+
+     The following newer print models added since 5.2.7 have had modes
+     with the problematic ink sets removed. Some of these printers can
+     use monochrome modes to print on photo media.
+
+	Canon MP900
+	Canon iP7100
+	Canon iP8100
+	Canon iP8500
+	Canon iP8600
+	Canon iP9910
+	Canon Pro 9000
+	Canon Pro 9000 Mk.II
+	Canon Pro 9500
+	Canon Pro 9500 Mk.II
 
 * Changes from 5.2.9
 
