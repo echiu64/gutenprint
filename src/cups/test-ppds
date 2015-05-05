@@ -14,7 +14,7 @@ cupstestppdopts='-I profiles -W sizes'
 
 ppd_count=`find ppd \( -name '*.ppd.gz' -o -name '*.ppd' \) -print | wc -l`
 
-failures="`find ppd -name '*.ppd*' -print | xargs cupstestppd $cupstestppdopts |grep 'FAIL$' | awk -F: '{print $1}'`"
+failures="`find ppd -name '*.ppd*' -print | sort | xargs cupstestppd $cupstestppdopts |grep 'FAIL$' | awk -F: '{print $1}'`"
 
 if [ -z "$failures" ] ; then
     echo "All $ppd_count PPD files pass"
