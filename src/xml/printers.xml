@@ -286,6 +286,16 @@
       <!-- Canon iP8600 (PIXUS only, PIXMA iP8600 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP8600" driver="bjc-PIXMA-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8600">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS iP8600" driver="bjc-PIXUS-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8600">EXPERIMENTAL</printer>
+      <!-- Canon iP8700 family -->
+      <printer translate="name" name="Canon iP8700 series" driver="bjc-iP8700-series" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP8700-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP7810" driver="bjc-PIXMA-iP8710" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8710">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8720" driver="bjc-PIXMA-iP8720" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8720">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS iP8730" driver="bjc-PIXUS-iP8730" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8730">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8740" driver="bjc-PIXMA-iP8740" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8740">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8750" driver="bjc-PIXMA-iP8750" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8750">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8760" driver="bjc-PIXMA-iP8760" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8760">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8770" driver="bjc-PIXMA-iP8770" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8770">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8780" driver="bjc-PIXMA-iP8780" manufacturer="Canon" model="3008700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8780">EXPERIMENTAL</printer>  
       <!-- Canon iP9910 (PIXUS only, PIXMA iP9910 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP9910" driver="bjc-PIXMA-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP9910">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS iP9910" driver="bjc-PIXUS-iP9910" manufacturer="Canon" model="3009910" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP9910">EXPERIMENTAL</printer>

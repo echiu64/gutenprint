@@ -287,6 +287,24 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   5) Canon backend enhancements.
 
+     Added support for following models:
+
+	Canon iP8700 series (EXPERIMENTAL)
+	Canon PIXMA iP8710  (EXPERIMENTAL)(*1)
+	Canon PIXMA iP8720  (EXPERIMENTAL)(*1)
+	Canon PIXUS iP8730  (EXPERIMENTAL)(*1)
+	Canon PIXMA iP8740  (EXPERIMENTAL)(*1)
+	Canon PIXMA iP8750  (EXPERIMENTAL)(*1)
+	Canon PIXMA iP8760  (EXPERIMENTAL)(*1)
+	Canon PIXMA iP8770  (EXPERIMENTAL)(*1)
+	Canon PIXMA iP8780  (EXPERIMENTAL)(*1)
+
+     Note 1: Added individual family
+             instances, even though the
+             printer identifies itself
+             by a generic family
+             identification string.
+
      Duplex option added to following printers:
 
 	MP750/MP760/MP770/MP780/MP790

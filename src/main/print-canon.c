@@ -4285,7 +4285,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	arg_ESCP_1 = 0x5b;
 	arg_ESCP_9 = 0x00;
       }
-      /* Tray J from iP8700 onwards */
+      /* Tray L from iP8700 onwards */
       if ( !(strcmp(init->caps->name,"PIXMA iP8700"))  ) {
 	arg_ESCP_1 = 0x62;
       }

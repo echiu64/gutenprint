@@ -2936,7 +2936,7 @@ static const canon_inkset_t canon_30_K2C2M2Y2_inkset[] = {
 };
 
 /* standard */
-/* MP990, MG6100, MG6200, MG800 */
+/* MP990, MG6100, MG6200, MG8100, MG8200 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
 static const canon_inkset_t canon_30_K2C3M3Y2k3_c_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
@@ -3006,7 +3006,7 @@ static const canon_inkset_t canon_30_K2C3M3Y2k3on_c_inkset[] = {
 };
 
 /* high */
-/* MP990, MG6100, MG6200, MG800 */
+/* MP990, MG6100, MG6200, MG8100, MG8200 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
 /*static const canon_inkset_t canon_30_C2M6K6m4k4_inkset[] = {*/
 static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
@@ -3043,7 +3043,7 @@ static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
 };
 
 /* standard */
-/* MG6300, MG6500, MG7100 */
+/* MG6300, MG6500, MG7100, iP8700 */
 static const canon_inkset_t canon_30_K3C3M3Y2k3off_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -3078,7 +3078,7 @@ static const canon_inkset_t canon_30_K3C3M3Y2k3off_c_inkset[] = {
 };
 
 /* standard for Duplex */
-/* MG6300, MG6500, MG7100 */
+/* MG6300, MG6500, MG7100, iP8700 */
 static const canon_inkset_t canon_30_K3C3M3Y2k3_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
         {'C',1.0,&canon_2b_3l_c_ink},
@@ -3148,7 +3148,7 @@ static const canon_inkset_t canon_30_K3C3M3Y2k3photo_c_inkset[] = {
 };
 
 /* high */
-/* MG6300, MG6500, MG7100 */
+/* MG6300, MG6500, MG7100, iP8700 */
 static const canon_inkset_t canon_30_K3C6M6Y4k4off_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
         {'C',1.0,&canon_4b_6l_ink},

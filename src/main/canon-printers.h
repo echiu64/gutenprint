@@ -2415,6 +2415,23 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA iP8700 CD-R tray L */
+    "PIXMA iP8700", 3,          /*model, model_id*/
+    INCH(17/2), INCH(14),       /* max paper width and height assumed */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_PIXMA_iP8700_slotlist, /* iP7200 uses ESC (r 0x68 command for CD tray only */
+    CANON_CAP_STD0|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_v|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
+    3,9, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_MG3500,  /* features Uses ESC (r only for CD media */
+    &canon_PIXMA_iP8700_modelist,
+    &canon_PIXMA_iP8700_paperlist,
+    &canon_PIXMA_iP8700_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
   { /* Canon PIXMA iP9910 */
     "PIXMA iP9910", 3,          /*model, model_id*/
     933, INCH(23),       /* max paper width and height */ /* from MacOSX driver */
