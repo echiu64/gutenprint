@@ -295,6 +295,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	MG6300 series
 
+    Added support for upper/lower tray in cassette for following models:
+
+	MG5400 series
+	MG6200 series
+	MG6500 series
+	MG7100 series
+
   6) Canon backend bugfixes:
 
      A problem with a new ink level compression added in 5.2.7 has

@@ -297,6 +297,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
   },
   {
+    "CassetteTray", N_("Cassette Tray"), "Color=No,Category=Basic Printer Setup",
+    N_("Tray selection for cassette media source"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
     "CDInnerRadius", N_("CD Hub Size"), "Color=No,Category=Basic Printer Setup",
     N_("Print only outside of the hub of the CD, or all the way to the hole"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
@@ -2902,6 +2908,22 @@ canon_parameters(const stp_vars_t *v, const char *name,
 				canon_slot_list[i].name,
 				gettext(canon_slot_list[i].text));
   }
+  else if (strcmp(name, "CassetteTray") == 0)
+    {
+      description->bounds.str= stp_string_list_create();
+      if (caps->CassetteTray_Opts == 1) {
+	stp_string_list_add_string
+	  (description->bounds.str, "Upper", _("Upper Tray"));
+	stp_string_list_add_string
+	  (description->bounds.str, "Lower", _("Lower Tray"));
+      } else {
+	/* make sure to have at least a default value: no choice */
+	stp_string_list_add_string
+	  (description->bounds.str, "None", _("None"));
+      }
+      description->deflt.str =
+	stp_string_list_param(description->bounds.str, 0)->name;
+    }
   else if (strcmp(name, "PrintingMode") == 0)
   {
     int found_color, found_mono;
