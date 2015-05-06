@@ -505,19 +505,21 @@ get_media_type(const canon_cap_t* caps,const char *name)
 
 static const char* canon_families[] = {
  "", /* the old BJC printers */
- "S",
- "i",
- "PIXMA iP",
- "PIXMA iX",
- "PIXMA MP",
- "PIXUS",
- "PIXMA Pro",
- "PIXMA MG",
- "PIXMA MX",
- "SELPHY DS",
- "PIXMA mini",
- "PIXMA E",
- "PIXMA P",
+ "S",         /*  1 */
+ "i",         /*  2 */
+ "PIXMA iP",  /*  3 */
+ "PIXMA iX",  /*  4 */
+ "PIXMA MP",  /*  5 */
+ "PIXUS",     /*  6 */
+ "PIXMA Pro", /*  7 */
+ "PIXMA MG",  /*  8 */
+ "PIXMA MX",  /*  9 */
+ "SELPHY DS", /* 10 */
+ "PIXMA mini",/* 11 */
+ "PIXMA E",   /* 12 */
+ "PIXMA P",   /* 13 */
+ "MAXIFY iB", /* 14 */
+ "MAXIFY MB", /* 15 */
 };
 
 /* canon model ids look like the following
