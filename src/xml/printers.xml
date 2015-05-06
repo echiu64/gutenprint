@@ -315,6 +315,16 @@
       <printer translate="name" name="Canon PIXMA iX6550" driver="bjc-PIXMA-iX6550" manufacturer="Canon" model="4006500" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6550">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iX6560" driver="bjc-PIXMA-iX6560" manufacturer="Canon" model="4006500" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6560">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iX6580" driver="bjc-PIXMA-iX6580" manufacturer="Canon" model="4006500" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6580">EXPERIMENTAL</printer>
+      <!-- Canon iX6800 family -->
+      <printer translate="name" name="Canon iX6800 series" driver="bjc-iX6800-series" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX6800-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6810" driver="bjc-PIXMA-iX6810" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6810">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6820" driver="bjc-PIXMA-iX6820" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6820">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS iX6830" driver="bjc-PIXUS-iX6830" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXUS-iX6830">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6840" driver="bjc-PIXMA-iX6840" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6840">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6850" driver="bjc-PIXMA-iX6850" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6850">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6860" driver="bjc-PIXMA-iX6860" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6860">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6870" driver="bjc-PIXMA-iX6870" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6870">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iX6880" driver="bjc-PIXMA-iX6880" manufacturer="Canon" model="4006800" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX6880">EXPERIMENTAL</printer>
       <!-- Canon iX7000 family -->
       <printer translate="name" name="Canon iX7000 series" driver="bjc-iX7000-series" manufacturer="Canon" model="4007000" parameters="PIXMA_iX5000_params" foomaticid="Canon-iX7000-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iX7000" driver="bjc-PIXMA-iX7000" manufacturer="Canon" model="4007000" parameters="PIXMA_iX5000_params" foomaticid="Canon-PIXMA-iX7000">EXPERIMENTAL</printer>
