@@ -10308,6 +10308,48 @@ static const canon_modeuse_t canon_MULTIPASS_E510_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_E510);
 
+/* ----------------------------------- Canon P200  ----------------------------------- */
+
+static const char* canon_PIXMA_P200_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+};
+
+static const char* canon_PIXMA_P200_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_P200_modeuses_PPglossy[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_P200_modeuses[] = {
+  { "Plain",            canon_PIXMA_P200_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "PhotoPlusGloss2",  canon_PIXMA_P200_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",     canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",   canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "GlossyPaper",	canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_PIXMA_P200_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "InkJetHagaki", 	canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "CanonPhotoHagakiK",canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_P200_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "TShirt",		canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_P200_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT },
+  { "PhotopaperOther",	canon_PIXMA_P200_modeuses_PPglossy, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_P200);
+
 /* ----------------------------------- Canon MG2100  ----------------------------------- */
 static const char* canon_PIXMA_MG2100_modeuses_plain[] = {
   "600x600dpi_high",

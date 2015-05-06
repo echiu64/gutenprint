@@ -978,6 +978,8 @@
       <printer translate="name" name="Canon E610 series" driver="bjc-E610-series" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-E610-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E610" driver="bjc-PIXMA-E610" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E610">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E618" driver="bjc-PIXMA-E618" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E618">EXPERIMENTAL</printer>
+      <!-- Canon PIXMA P200 -->
+      <printer translate="name" name="Canon PIXMA P200" driver="bjc-PIXMA-P200" manufacturer="Canon" model="13000200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-P200">EXPERIMENTAL</printer>
       <!-- -->
       <printer translate="name" name="Canon 50i" driver="bjc-50i" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-50i" />
       <printer translate="name" name="Canon 80i" driver="bjc-80i" manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-80i" />
