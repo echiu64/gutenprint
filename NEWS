@@ -311,11 +311,19 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	Canon PIXMA P200    (EXPERIMENTAL)
 
+	Canon iB4000 series (EXPERIMENTAL)(*2)
+	Canon MB2000 series (EXPERIMENTAL)(*2)
+	Canon MB2300 series (EXPERIMENTAL)(*2)
+	Canon MB5000 series (EXPERIMENTAL)(*2)
+	Canon MB5300 series (EXPERIMENTAL)(*2)
+	
      Note 1: Added individual family
              instances, even though the
              printer identifies itself
              by a generic family
              identification string.
+
+     Note 2: individual family instances to be added
 
      Duplex option added to following printers:
 

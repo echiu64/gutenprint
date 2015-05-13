@@ -12230,4 +12230,45 @@ static const canon_modeuse_t canon_PIXMA_Pro9500mk2_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_Pro9500mk2);
 
+/* ----------------------------------- Canon MAXIFY iB4000 ----------------------------------- */
+
+static const char* canon_MAXIFY_iB4000_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_mono",
+  NULL
+};
+
+static const char* canon_MAXIFY_iB4000_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MAXIFY_iB4000_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const canon_modeuse_t canon_MAXIFY_iB4000_modeuses[] = {
+  { "Plain",            canon_MAXIFY_iB4000_modeuses_plain, DUPLEX_SUPPORT },
+  { "PhotoPlusGloss2",  canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "PhotoProPlat",     canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },/*unsupported*/
+  { "PhotoProLuster",   canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss",canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "GlossyPaperStandard",canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "Coated",		canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "HagakiA", 	        canon_MAXIFY_iB4000_modeuses_Hagaki, 0 },
+  { "InkJetHagaki", 	canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "InkjetPhotoHagakiK",canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },
+  { "Hagaki", 	        canon_MAXIFY_iB4000_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },/*unsupported*/
+  { "Envelope",		canon_MAXIFY_iB4000_modeuses_Hagaki, 0 }, 
+  { "PhotopaperOther",	canon_MAXIFY_iB4000_modeuses_PPplusG2, 0 },/*unsupported*/
+};
+
+DECLARE_MODEUSES(canon_MAXIFY_iB4000);
+
 #endif

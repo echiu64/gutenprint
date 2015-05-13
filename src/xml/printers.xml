@@ -980,6 +980,16 @@
       <printer translate="name" name="Canon PIXMA E618" driver="bjc-PIXMA-E618" manufacturer="Canon" model="12000610" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E618">EXPERIMENTAL</printer>
       <!-- Canon PIXMA P200 -->
       <printer translate="name" name="Canon PIXMA P200" driver="bjc-PIXMA-P200" manufacturer="Canon" model="13000200" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-P200">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY iB4000 family -->
+      <printer translate="name" name="Canon iB4000 series" driver="bjc-iB4000-series" manufacturer="Canon" model="14004000" parameters="PIXMA_iP4000_params" foomaticid="Canon-iB4000-series">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB2000 family -->
+      <printer translate="name" name="Canon MB2000 series" driver="bjc-MB2000-series" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MB2000-series">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB2300 family -->
+      <printer translate="name" name="Canon MB2300 series" driver="bjc-MB2300-series" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params" foomaticid="Canon-MB2300-series">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB5000 family -->
+      <printer translate="name" name="Canon MB5000 series" driver="bjc-MB5000-series" manufacturer="Canon" model="15002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-MB5000-series">EXPERIMENTAL</printer>
+      <!-- Canon MAXIFY MB5300 family -->
+      <printer translate="name" name="Canon MB5300 series" driver="bjc-MB5300-series" manufacturer="Canon" model="15002300" parameters="PIXMA_iP4000_params" foomaticid="Canon-MB5300-series">EXPERIMENTAL</printer>
       <!-- -->
       <printer translate="name" name="Canon 50i" driver="bjc-50i" manufacturer="Canon" model="2000050" parameters="density_800_params" foomaticid="Canon-50i" />
       <printer translate="name" name="Canon 80i" driver="bjc-80i" manufacturer="Canon" model="2000080" parameters="density_800_params" foomaticid="Canon-80i" />

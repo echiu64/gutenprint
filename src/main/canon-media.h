@@ -253,7 +253,7 @@ static const canon_slot_t canon_PIXMA_iP8700_slots[] = {
 DECLARE_SLOTS(canon_PIXMA_iP8700);
 
 static const canon_slot_t canon_MAXIFY_iB4000_slots[] = {
-  { "Auto", N_ ("Automatic Paper Source Selection"), 0xd },
+  { "Auto", N_ ("Cassette (Auto)"), 0xd },
   { "Cassette1",   N_ ("Cassette 1"), 0x8 },
   { "Cassette2",   N_ ("Cassette 2"), 0x9 },
 };
@@ -2209,7 +2209,7 @@ static const canon_paper_t canon_MAXIFY_iB4000_papers[] = {
   { "InkjetPhotoHagakiK",N_ ("Hagaki K (Inkjet Photo)"),		0x05,0x05,0x36,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0.78, 0.25, 0.500, 0, 0, 0 },/* unsupported */
-  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },/* env */
+  { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0.78, 0.25, 0.500, 0, 0, 0 },/* unsupported */
 };
 DECLARE_PAPERS(canon_MAXIFY_iB4000);
