@@ -356,14 +356,21 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon MAXIFY MB5360 (EXPERIMENTAL)(*1)
 	Canon MAXIFY MB5370 (EXPERIMENTAL)(*1)
 	Canon MAXIFY MB5390 (EXPERIMENTAL)(*1)
+	
+	Canon PIXMA MG4560  (EXPERIMENTAL)(*2)
+	Canon PIXMA MG4590  (EXPERIMENTAL)(*2)
 
-     Note 1: Added individual family
-             instances, even though the
-             printer identifies itself
-             by a generic family
-             identification string.
+	Canon PIXMA MG2590  (EXPERIMENTAL)(*2)
 
-     Note 2: individual family instances to be added
+	Canon PIXMA E540    (EXPERIMENTAL)(*2)
+	
+        Note 1: Added individual family
+                instances, even though the
+                printer identifies itself
+                by a generic family
+                identification string.
+
+        Note 2: Instance(s) added to existing series.
 
      Duplex option added to following printers:
 
