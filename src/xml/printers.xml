@@ -731,6 +731,18 @@
       <printer translate="name" name="Canon PIXMA MG5560" driver="bjc-PIXMA-MG5560" manufacturer="Canon" model="8005500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5560">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5570" driver="bjc-PIXMA-MG5570" manufacturer="Canon" model="8005500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5570">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5580" driver="bjc-PIXMA-MG5580" manufacturer="Canon" model="8005500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5580">EXPERIMENTAL</printer>
+      <!-- Canon MG5600 family -->
+      <printer translate="name" name="Canon MG5600 series" driver="bjc-MG5600-series" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG5600-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5610" driver="bjc-PIXMA-MG5610" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5610">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5620" driver="bjc-PIXMA-MG5620" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5620">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5622" driver="bjc-PIXMA-MG5622" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5622">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS MG5630" driver="bjc-PIXUS-MG5630" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG5630">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5640" driver="bjc-PIXMA-MG5640" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5640">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5650" driver="bjc-PIXMA-MG5650" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5650">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5660" driver="bjc-PIXMA-MG5660" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5660">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5670" driver="bjc-PIXMA-MG5670" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5670">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon Mommy Photo MG5670" driver="bjc-Mommy-Photo-MG5670" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-Mommy-Photo-MG5670">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5680" driver="bjc-PIXMA-MG5680" manufacturer="Canon" model="8005600" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5680">EXPERIMENTAL</printer>
       <!-- Canon MG6100 family -->
       <printer translate="name" name="Canon MG6100 series" driver="bjc-MG6100-series" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG6100-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG6100" driver="bjc-PIXMA-MG6100" manufacturer="Canon" model="8006100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6100">EXPERIMENTAL</printer>

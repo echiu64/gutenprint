@@ -11121,6 +11121,72 @@ static const canon_modeuse_t canon_PIXMA_MG5500_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_MG5500);
 
+/* ----------------------------------- Canon MG5600  ----------------------------------- */
+static const char* canon_PIXMA_MG5600_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high2",/* duplex */
+  "600x600dpi",
+  "600x600dpi_std2",/* duplex */
+  "300x300dpi",
+  NULL
+  };
+
+static const char* canon_PIXMA_MG5600_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5600_modeuses_PPpro[] = {
+  /*ud1 not supported */
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5600_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5600_modeuses_Hagaki[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5600_modeuses_TShirt[] = {
+  "600x600dpi_photohigh2",
+  NULL
+};
+
+static const char* canon_PIXMA_MG5600_modeuses_PPother[] = {
+  "600x600dpi_photohigh", /* experimental */
+  "600x600dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_MG5600_modeuses[] = {
+  { "Plain",            canon_PIXMA_MG5600_modeuses_plain, DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_PIXMA_MG5600_modeuses_PPplusG2, 0 },
+  { "PhotoProPlat",     canon_PIXMA_MG5600_modeuses_PPpro, 0 },
+  { "PhotoProLuster",   canon_PIXMA_MG5600_modeuses_PPplusG2, 0 },
+  { "PhotoProSemiGloss",canon_PIXMA_MG5600_modeuses_PPplusG2, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_MG5600_modeuses_PPmatte, 0 },
+  { "GlossyPaperStandard",	canon_PIXMA_MG5600_modeuses_PPplusG2, 0 },
+  { "Coated",		canon_PIXMA_MG5600_modeuses_PPmatte, 0 },
+  { "HagakiA", 	        canon_PIXMA_MG5600_modeuses_Hagaki, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_MG5600_modeuses_PPplusG2, 0 },
+  { "InkjetPhotoHagakiK",canon_PIXMA_MG5600_modeuses_PPplusG2, 0 },
+  { "Hagaki", 	        canon_PIXMA_MG5600_modeuses_Hagaki, 0 },
+  { "TShirt",		canon_PIXMA_MG5600_modeuses_TShirt, 0 },
+  { "Envelope",		canon_PIXMA_MG5600_modeuses_Hagaki, 0 }, 
+  { "PhotopaperOther",	canon_PIXMA_MG5600_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_MG5600);
+
 /* ----------------------------------- Canon MG6100  ----------------------------------- */
 /* most photo modes use gray ink which is unsupported */
 /* TODO: mono modes for photo media */

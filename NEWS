@@ -356,21 +356,36 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon MAXIFY MB5360 (EXPERIMENTAL)(*1)
 	Canon MAXIFY MB5370 (EXPERIMENTAL)(*1)
 	Canon MAXIFY MB5390 (EXPERIMENTAL)(*1)
-	
-	Canon PIXMA MG4560  (EXPERIMENTAL)(*2)
-	Canon PIXMA MG4590  (EXPERIMENTAL)(*2)
 
-	Canon PIXMA MG2590  (EXPERIMENTAL)(*2)
+	Canon MG5600 series (EXPERIMENTAL)
+	Canon PIXMA MG5610  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5620  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5622  (EXPERIMENTAL)(*1)
+	Canon PIXUS MG5630  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5640  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5650  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5660  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5670  (EXPERIMENTAL)(*1)
+	Canon Mommy Photo MG5670 (EXPERIMENTAL)(*1)
+	Canon PIXMA MG5680  (EXPERIMENTAL)(*1)
 
-	Canon PIXMA E540    (EXPERIMENTAL)(*2)
-	
         Note 1: Added individual family
                 instances, even though the
                 printer identifies itself
                 by a generic family
                 identification string.
 
-        Note 2: Instance(s) added to existing series.
+     Added following models to existing series:
+
+        MG2500 series:
+	  Canon PIXMA MG2590
+
+        MG5400 series:
+	  Canon PIXMA MG4560
+	  Canon PIXMA MG4590
+	
+	E510 series:
+	  Canon PIXMA E514
 
      Duplex option added to following printers:
 
