@@ -784,6 +784,9 @@
       <!-- Canon MG6500 family -->
       <printer translate="name" name="Canon MG6500 series" driver="bjc-MG6500-series" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG6500-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS MG6530" driver="bjc-PIXUS-MG6530" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG6530">EXPERIMENTAL</printer>
+      <!-- Canon MG6700 family -->
+      <printer translate="name" name="Canon MG6700 series" driver="bjc-MG6700-series" manufacturer="Canon" model="8006700" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG6700-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS MG6730" driver="bjc-PIXUS-MG6730" manufacturer="Canon" model="8006700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG6730">EXPERIMENTAL</printer>
       <!-- Canon MG7100 family -->
       <printer translate="name" name="Canon MG7100 series" driver="bjc-MG7100-series" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG7100-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG7110" driver="bjc-PIXMA-MG7110" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7110">EXPERIMENTAL</printer>
