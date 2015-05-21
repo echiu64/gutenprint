@@ -372,6 +372,17 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon MG6700 series (EXPERIMENTAL)
 	Canon PIXUS MG6730  (EXPERIMENTAL)(*1)
 
+	Canon MG7500 series (EXPERIMENTAL)
+	Canon PIXMA MG7510  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG7520  (EXPERIMENTAL)(*1)
+	Canon PIXUS MG7530  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG7540  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG7550  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG7560  (EXPERIMENTAL)(*1)
+	Canon PIXMA MG7570  (EXPERIMENTAL)(*1)
+	Canon Mommy Photo MG7570 (EXPERIMENTAL)(*1)
+	Canon PIXMA MG7580  (EXPERIMENTAL)(*1)
+
         Note 1: Added individual family
                 instances, even though the
                 printer identifies itself
