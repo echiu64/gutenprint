@@ -1035,6 +1035,11 @@
       <printer translate="name" name="Canon PIXMA E510" driver="bjc-PIXMA-E510" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E510">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E514" driver="bjc-PIXMA-E514" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E514">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E518" driver="bjc-PIXMA-E518" manufacturer="Canon" model="12000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E518">EXPERIMENTAL</printer>
+      <!-- Canon E560 family -->
+      <printer translate="name" name="Canon E560 series" driver="bjc-E560-series" manufacturer="Canon" model="12000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-E560-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E560" driver="bjc-PIXMA-E560" manufacturer="Canon" model="12000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E560">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E568" driver="bjc-PIXMA-E568" manufacturer="Canon" model="12000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E568">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E569" driver="bjc-PIXMA-E569" manufacturer="Canon" model="12000560" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E569">EXPERIMENTAL</printer>
       <!-- Canon E600 family -->
       <printer translate="name" name="Canon E600 series" driver="bjc-E600-series" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-E600-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E600" driver="bjc-MULTIPASS-E600" manufacturer="Canon" model="12000600" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E600">EXPERIMENTAL</printer><!-- driver and foomaticid legacy names used -->
