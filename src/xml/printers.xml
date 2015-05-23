@@ -161,6 +161,16 @@
       <printer translate="name" name="Canon PIXMA iP2772" driver="bjc-PIXMA-iP2772" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2772">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iP2780" driver="bjc-PIXMA-iP2780" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2780">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iP2788" driver="bjc-PIXMA-iP2788" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2788">EXPERIMENTAL</printer>
+      <!-- Canon iP2800 family -->
+      <printer translate="name" name="Canon iP2800 series" driver="bjc-iP2800-series" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP2800-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2810" driver="bjc-PIXMA-iP2810" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2810">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2820" driver="bjc-PIXMA-iP2820" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2820">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2840" driver="bjc-PIXMA-iP2840" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2840">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2850" driver="bjc-PIXMA-iP2850" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2850">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2870" driver="bjc-PIXMA-iP2870" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2870">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2872" driver="bjc-PIXMA-iP2872" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2872">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2880" driver="bjc-PIXMA-iP2880" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2880">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP2890" driver="bjc-PIXMA-iP2890" manufacturer="Canon" model="3002800" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2890">EXPERIMENTAL</printer>
       <!-- Canon iP3000 -->
       <printer translate="name" name="Canon PIXMA iP3000" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe;SOJ:TXT01;MDL:iP3000;CLS:PRINTER;DES:Canon iP3000;VER:1.06;STA:10;FSI:03;" driver="bjc-PIXMA-iP3000" manufacturer="Canon" model="3003000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP3000">EXPERIMENTAL</printer>
       <!-- Canon iP3100 (PIXUS only, PIXMA iP3100 does not exist) -->
