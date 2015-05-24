@@ -1040,6 +1040,13 @@
       <printer translate="name" name="Canon PIXMA E461" driver="bjc-PIXMA-E461" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E461">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E464" driver="bjc-PIXMA-E464" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E464">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E468" driver="bjc-PIXMA-E468" manufacturer="Canon" model="12000460" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E468">EXPERIMENTAL</printer>
+      <!-- Canon E480 family -->
+      <printer translate="name" name="Canon E480 series" driver="bjc-E480-series" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params" foomaticid="Canon-E480-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E480" driver="bjc-PIXMA-E480" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E480">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E481" driver="bjc-PIXMA-E481" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E481">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E484" driver="bjc-PIXMA-E484" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E484">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E488" driver="bjc-PIXMA-E488" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E488">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA E489" driver="bjc-PIXMA-E489" manufacturer="Canon" model="12000480" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-E489">EXPERIMENTAL</printer>
       <!-- Canon E500 family -->
       <printer translate="name" name="Canon E500 series" driver="bjc-E500-series" manufacturer="Canon" model="12000500" parameters="PIXMA_iP4000_params" foomaticid="Canon-E500-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA E500" driver="bjc-MULTIPASS-E500" manufacturer="Canon" model="12000500" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-E500">EXPERIMENTAL</printer><!-- driver and foomaticid legacy names used -->
