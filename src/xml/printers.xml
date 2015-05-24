@@ -943,6 +943,16 @@
       <printer translate="name" name="Canon PIXMA MX457" driver="bjc-PIXMA-MX457" manufacturer="Canon" model="9000390" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX457">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MX458" driver="bjc-PIXMA-MX458" manufacturer="Canon" model="9000390" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX458">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MX459" driver="bjc-PIXMA-MX459" manufacturer="Canon" model="9000390" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX459">EXPERIMENTAL</printer>
+      <!-- Canon MX470 family -->
+      <printer translate="name" name="Canon MX470 series" driver="bjc-MX470-series" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-MX470-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX471" driver="bjc-PIXMA-MX471" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX471">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX472" driver="bjc-PIXMA-MX472" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX472">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX474" driver="bjc-PIXMA-MX474" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX474">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX475" driver="bjc-PIXMA-MX475" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX475">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX476" driver="bjc-PIXMA-MX476" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX476">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX477" driver="bjc-PIXMA-MX477" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX477">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX478" driver="bjc-PIXMA-MX478" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX478">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX479" driver="bjc-PIXMA-MX479" manufacturer="Canon" model="9000470" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX479">EXPERIMENTAL</printer>
       <!-- Canon MX510 family -->
       <printer translate="name" name="Canon MX510 series" driver="bjc-MX510-series" manufacturer="Canon" model="9000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MX510-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MX510" driver="bjc-MULTIPASS-MX510" manufacturer="Canon" model="9000510" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX510">EXPERIMENTAL</printer><!-- driver and foomaticid legacy names used -->
