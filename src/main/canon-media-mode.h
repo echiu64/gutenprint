@@ -9611,6 +9611,65 @@ static const canon_modeuse_t canon_MULTIPASS_MX520_modeuses[] = {
 
 DECLARE_MODEUSES(canon_MULTIPASS_MX520);
 
+/* ----------------------------------- Canon MX530  ----------------------------------- */
+
+static const char* canon_MULTIPASS_MX530_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi_high5",/* duplex */
+  "600x600dpi",
+  "300x300dpi",
+  NULL
+  };
+
+static const char* canon_MULTIPASS_MX530_modeuses_PPplusG2[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX530_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX530_modeuses_Hagaki[] = {
+  "600x600dpi_high3",
+  "600x600dpi_std3",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX530_modeuses_TShirt[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const char* canon_MULTIPASS_MX530_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+};
+
+static const canon_modeuse_t canon_MULTIPASS_MX530_modeuses[] = {
+  { "Plain",            canon_MULTIPASS_MX530_modeuses_plain, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL | DUPLEX_SUPPORT | DUPLEX_MODEREPL },
+  { "PhotoPlusGloss2",  canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",     canon_MULTIPASS_MX530_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",   canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss",canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "GlossyPaperStandard",	canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_MULTIPASS_MX530_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "InkJetHagaki", 	canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "InkjetPhotoHagakiK",canon_MULTIPASS_MX530_modeuses_PPplusG2, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_MULTIPASS_MX530_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL },
+  { "TShirt",		canon_MULTIPASS_MX530_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_MULTIPASS_MX530_modeuses_Hagaki, INKSET_BLACK_SUPPORT | INKSET_COLOR_SUPPORT | INKSET_BLACK_MODEREPL | INKSET_COLOR_MODEREPL }, 
+  { "PhotopaperOther",	canon_MULTIPASS_MX530_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_MULTIPASS_MX530);
+
 /* ----------------------------------- Canon MX700  ----------------------------------- */
 static const char* canon_MULTIPASS_MX700_modeuses_plain[] = {
   "600x600dpi_high",
@@ -10993,7 +11052,7 @@ static const char* canon_PIXMA_MG3500_modeuses_Hagaki[] = {
 };
 
 static const char* canon_PIXMA_MG3500_modeuses_TShirt[] = {
-  "600x600dpi_tshirt",
+  "600x600dpi_photohigh",
   NULL
 };
 

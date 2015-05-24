@@ -983,6 +983,15 @@
       <printer translate="name" name="Canon PIXMA MX526" driver="bjc-PIXMA-MX526" manufacturer="Canon" model="9000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX526">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MX527" driver="bjc-PIXMA-MX527" manufacturer="Canon" model="9000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX527">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MX528" driver="bjc-PIXMA-MX528" manufacturer="Canon" model="9000520" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX528">EXPERIMENTAL</printer>
+      <!-- Canon MX530 family -->
+      <printer translate="name" name="Canon MX530 series" driver="bjc-MX530-series" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-MX530-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX531" driver="bjc-PIXMA-MX531" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX531">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX532" driver="bjc-PIXMA-MX532" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX532">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX534" driver="bjc-PIXMA-MX534" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX534">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX535" driver="bjc-PIXMA-MX535" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX535">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX536" driver="bjc-PIXMA-MX536" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX536">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX537" driver="bjc-PIXMA-MX537" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX537">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MX538" driver="bjc-PIXMA-MX538" manufacturer="Canon" model="9000530" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-MX538">EXPERIMENTAL</printer>
       <!-- Canon MX700 family -->
       <printer translate="name" name="Canon MX700 series" driver="bjc-MX700-series" manufacturer="Canon" model="9000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MX700-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MX700" driver="bjc-MULTIPASS-MX700" manufacturer="Canon" model="9000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-MULTIPASS-MX700">EXPERIMENTAL</printer><!-- driver and foomaticid legacy names used -->
