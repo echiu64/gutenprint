@@ -3218,6 +3218,73 @@ static const canon_modeuse_t canon_PIXMA_iP100_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_iP100);
 
+/* ----------------------------------- Canon iP110 ----------------------------------- */
+static const char* canon_PIXMA_iP110_modeuses_plain[] = {
+  "600x600dpi_high2",
+  "600x600dpi_high", /* mono */
+  "600x600dpi",
+  "600x600dpi_draft",
+  "300x300dpi",
+  "300x300dpi_draft",
+  NULL
+};
+
+static const char* canon_PIXMA_iP110_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP110_modeuses_PPplus[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_iP110_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP110_modeuses_Hagaki[] = {
+  "600x600dpi_high4",
+  "600x600dpi_high3", /* mono */
+  "600x600dpi_std2",
+  NULL
+};
+
+static const char* canon_PIXMA_iP110_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_iP110_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  NULL
+  };
+
+static const canon_modeuse_t canon_PIXMA_iP110_modeuses[] = {
+  { "Plain",            canon_PIXMA_iP110_modeuses_plain, 0 },/*INKSET_COLOR_SUPPORT | INKSET_COLOR_MODEREPL*/
+  { "PhotoPlusGloss2",	canon_PIXMA_iP110_modeuses_PPpro, INKSET_COLOR_SUPPORT },
+  { "PhotoProPlat",	canon_PIXMA_iP110_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "PhotoProLuster",	canon_PIXMA_iP110_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "PhotoProSemiGloss", canon_PIXMA_iP110_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "GlossyPaperStandard",canon_PIXMA_iP110_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "PhotopaperMatte",	canon_PIXMA_iP110_modeuses_PPmatte, INKSET_COLOR_SUPPORT },
+  { "Coated",		canon_PIXMA_iP110_modeuses_PPmatte, INKSET_COLOR_SUPPORT },
+  { "HagakiA", 	        canon_PIXMA_iP110_modeuses_Hagaki, 0 },/*INKSET_COLOR_SUPPORT*/
+  { "InkJetHagaki", 	canon_PIXMA_iP110_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "InkjetPhotoHagakiK", 	canon_PIXMA_iP110_modeuses_PPplus, INKSET_COLOR_SUPPORT },
+  { "Hagaki", 	        canon_PIXMA_iP110_modeuses_Hagaki, 0 },/*INKSET_COLOR_SUPPORT*/
+  { "TShirt",		canon_PIXMA_iP110_modeuses_TShirt, INKSET_COLOR_SUPPORT },
+  { "Envelope",		canon_PIXMA_iP110_modeuses_Hagaki, 0 },/*INKSET_COLOR_SUPPORT*/
+  { "PhotopaperOther",	canon_PIXMA_iP110_modeuses_PPother, INKSET_COLOR_SUPPORT },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_iP110);
+
 /* ----------------------------------- Canon iP2000  ----------------------------------- */
 static const char* canon_PIXMA_iP2000_modeuses_plain[] = {
   "600x600dpi_high2",

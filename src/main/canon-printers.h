@@ -1396,6 +1396,26 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+  { /* Canon PIXMA iP110 */
+    /* 2 ink carts: (1) CMYK (2) pigment black */
+    /* special inksaving options to save ink and/or use only remaining ink: */
+    /* (not exclusive): black-saving mode, composite black, black-saving + composite black both active */
+    "PIXMA iP110", 3,          /*model, model_id*/
+    INCH(17/2), INCH(23),       /* max paper width and height assumed */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP250_slotlist,
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_P|CANON_CAP_T|CANON_CAP_XML|CANON_CAP_v|CANON_CAP_BORDERLESS,0,
+    2,9, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_MG3500,
+    &canon_PIXMA_iP110_modelist,
+    &canon_PIXMA_iP110_paperlist,
+    &canon_PIXMA_iP110_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
 #if 0
   { /* Canon PIXMA iP1000 */
     "PIXMA iP1000", 3,          /*model, model_id*/
