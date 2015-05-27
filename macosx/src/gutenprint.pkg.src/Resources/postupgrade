@@ -11,123 +11,32 @@ IFS='
 
 export PATH=/bin:/usr/bin:/usr/sbin
 
-MODEL_PPD_DIR="/Library/Printers/PPDs/Contents/Resources"
-ALTERNATE_BINS_DIR="/usr/share/gutenprint/alternate-binaries/"
+echo "Installing..."
 
-remove_old_ppds () {
-	# Remove any remaining PPDs
-	#
-	# We could actually just generate new PPDs that would overwrite the exiting
-	# PPDs, but that might pose problems if we just do a reinstall in 10.6.x
-	# over an install done in 10.5.x.  Static PPDs vs on the fly PPDs.
-	#
-	# We are also faced with the dropping of some Canon printers that we
-	# need to delete.
-	#
-	# We are going to be a bit more agressive than before.  The matching
-	# pattern seems to have withstood the test of time.  Also, any depricated
-	# printers will not be in a list from cups-genppd.5.2
-
-	echo "Removing old PPD files..."
-	find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' -exec rm '{}' \;
-}
-
-update_ppd_permissions () {
-	# At least OS X 10.3 writes ppd files with ownership username:admin
-	# cups-genppupdate will not recognize files with that ownership.
-	#
-	# Beginning with OS X 10.5 we have two possible PPD directories where
-	# the PPD may reside. Global PPD files may be written to
-	# /Library/Printers/PPDs/Contents/Resources or its subdirectory en.lproj
-	echo "Setting permissions on PPDs..."
-	find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' -exec chown root:admin '{}' \;
-	find ${MODEL_PPD_DIR} -name 'stp-*\.5\.[0-2]\.ppd\.gz' -exec chmod 664 '{}' \;
-}
-
+# Remove any remaining PPDs
 #
-# Check the Mac OS version
+# We could actually just generate new PPDs that would overwrite the exiting
+# PPDs, but that might pose problems if we just do a reinstall in 10.6.x
+# over an install done in 10.5.x.  Static PPDs vs on the fly PPDs.
 #
-
-MACOS_VERSION_FILE=/System/Library/CoreServices/SystemVersion.plist
-MACOS_VERSION=$(awk '/ProductVersion/ {while (RLENGTH<4) {match($0,"[0-9]+([.][0-9]+)*");x=substr($0,RSTART,RLENGTH);getline;};print x;}' "${MACOS_VERSION_FILE}")
-MAJOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[1];nextfile;}')
-MINOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[2];nextfile;}')
-MICRO_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[3];nextfile;}')
-echo "Installing on $MACOSX_VERSION (major: $MAJOR_VERSION, minor: $MINOR_VERSION, micro: $MICRO_VERSION)"
-
+# We are also faced with the dropping of some Canon printers that we
+# need to delete.
 #
-# 10.6+
-#
+# We are going to be a bit more agressive than before.  The matching
+# pattern seems to have withstood the test of time.  Also, any depricated
+# printers will not be in a list from cups-genppd.5.2
 
-if [ ${MAJOR_VERSION:-10} -eq 10 -a ${MINOR_VERSION} -ge 6 ]; then
-	echo "Installing for 10.6+"
+echo "Removing old PPD files..."
+find /Library/Printers/PPDs/Contents/Resources -name 'stp-*\.5\.[0-2]\.ppd\.gz' -exec rm '{}' \;
 
-	# Remove any remaining PPDs
-	remove_old_ppds
+# Recreate symlinks
+cd /usr/lib && ln -s -f libgutenprint.2.dylib libgutenprint.dylib
 
-	# Recreate symlinks
-	cd /usr/lib && ln -s -f libgutenprint.2.dylib libgutenprint.dylib
+# Update any existing printer queues
+echo "Updating existing queues"
+cups-genppdupdate
 
-	# Update any existing printer queues
-	echo "Updating existing queues"
-	cups-genppdupdate
-
-	# Restart CUPS
-	echo "Restarting CUPS"
-	launchctl unload /System/Library/LaunchDaemons/org.cups.cupsd.plist
-	launchctl load /System/Library/LaunchDaemons/org.cups.cupsd.plist
-
-#
-# 10.5
-#
-
-elif [ ${MAJOR_VERSION:-10} -eq 10 -a ${MINOR_VERSION} -eq 5 ]; then
-	echo "Installing for 10.5"
-
-	# Remove any remaining PPDs
-	remove_old_ppds
-
-	# Recreate symlinks
-	cd /usr/lib && ln -s -f libgutenprint.2.dylib libgutenprint.dylib
-
-	#
-	# Generate new PPDs.  Print & Fax preference pane will not use
-	# Gutenprint driver, so need to generate internationalized PPD files.
-	#
-
-	# Install cups-genppdupdate from alternate binaries to use static PPDs.
-	# Only OS X 10.6+ uses gutenprint driver.
-	rm /usr/sbin/cups-genppdupdate
-	cd ${ALTERNATE_BINS_DIR}
-	install -o root -g wheel -m 755 cups-genppdupdate /usr/sbin/cups-genppdupdate
-
-	# Make sure we have a PPD directory.
-	[ -d ${MODEL_PPD_DIR}/en.lproj ] || install -d ${MODEL_PPD_DIR}/en.lproj
-
-	# generate the PPDs
-	echo "Writing PPDs to ${MODEL_PPD_DIR}/en.lproj"
-	cups-genppd.5.2 -p ${MODEL_PPD_DIR}/en.lproj
-
-	# Make sure we have correct ownership and permissions
-	update_ppd_permissions
-
-	# Update any existing printer queues
-	echo "Updating existing queues"
-	cups-genppdupdate -s ${MODEL_PPD_DIR}/en.lproj
-
-	# Remove the Gutenprint driver
-	if [ -x /usr/libexec/cups/driver/gutenprint.5.2 ]; then
-		rm /usr/libexec/cups/driver/gutenprint.5.2
-	fi
-
-	# Restart CUPS
-	echo "Restarting CUPS."
-	launchctl unload /System/Library/LaunchDaemons/org.cups.cupsd.plist
-	launchctl load /System/Library/LaunchDaemons/org.cups.cupsd.plist
-
-fi
-
-# Clean up
-if [ -d ${ALTERNATE_BINS_DIR} ]; then
-	rm -r ${ALTERNATE_BINS_DIR}
-fi
+# Restart CUPS
+echo "Restarting CUPS"
+launchctl unload /System/Library/LaunchDaemons/org.cups.cupsd.plist
+launchctl load /System/Library/LaunchDaemons/org.cups.cupsd.plist

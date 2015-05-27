@@ -26,31 +26,33 @@
 
 #set -x
 
-#
-# Check the Mac OS version
-#
+#FIXME: remove this file, as it is unused
 
-MACOS_VERSION_FILE=/System/Library/CoreServices/SystemVersion.plist
+# #
+# # Check the Mac OS version
+# #
 
-MACOS_VERSION=$(awk '/ProductVersion/ {while (RLENGTH<4) {match($0,"[0-9]+([.][0-9]+)*");x=substr($0,RSTART,RLENGTH);getline;};print x;}' "${MACOS_VERSION_FILE}")
+# MACOS_VERSION_FILE=/System/Library/CoreServices/SystemVersion.plist
 
-MAJOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[1];nextfile;}')
-MINOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[2];nextfile;}')
-MICRO_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[3];nextfile;}')
+# MACOS_VERSION=$(awk '/ProductVersion/ {while (RLENGTH<4) {match($0,"[0-9]+([.][0-9]+)*");x=substr($0,RSTART,RLENGTH);getline;};print x;}' "${MACOS_VERSION_FILE}")
 
-PrintCenterAppName="Printer Setup Utility.app"
+# MAJOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[1];nextfile;}')
+# MINOR_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[2];nextfile;}')
+# MICRO_VERSION=$(echo ${MACOS_VERSION}|awk '{split($0,a,".");print a[3];nextfile;}')
 
-#
-# Quit Print Center if it's open so that new PPDs will be recognized.
-#
-# In Mac OS X 10.5+, Printer Setup Utility is a Core Service.  Do not
-# try to quit if running.  Functions are now handled by Print & Fax
-# System Preference which does live updates.  No need to quit.
-#
+# PrintCenterAppName="Printer Setup Utility.app"
 
-if [ 10 -eq ${MAJOR_VERSION:-10} -a 4 -eq ${MINOR_VERSION:-0} ] ; then
-  PID=`ps axww | awk -v searchString="${PrintCenterAppName}" '!/awk/ && $0 ~ searchString {print $1;nextfile;}'`
-	if [ \! -z "${PID}" ]; then
-		 kill ${PID}
-	fi
-fi
+# #
+# # Quit Print Center if it's open so that new PPDs will be recognized.
+# #
+# # In Mac OS X 10.5+, Printer Setup Utility is a Core Service.  Do not
+# # try to quit if running.  Functions are now handled by Print & Fax
+# # System Preference which does live updates.  No need to quit.
+# #
+
+# if [ 10 -eq ${MAJOR_VERSION:-10} -a 4 -eq ${MINOR_VERSION:-0} ] ; then
+#   PID=`ps axww | awk -v searchString="${PrintCenterAppName}" '!/awk/ && $0 ~ searchString {print $1;nextfile;}'`
+# 	if [ \! -z "${PID}" ]; then
+# 		 kill ${PID}
+# 	fi
+# fi

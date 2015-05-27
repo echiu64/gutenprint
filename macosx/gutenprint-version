@@ -8,7 +8,7 @@
 # The output is the combination of version and subversion.
 #
 
-pkg_config_file="build/10.6/install/usr/lib/pkgconfig/gutenprint.pc"
+pkg_config_file="build/install/usr/lib/pkgconfig/gutenprint.pc"
 subversion_file="subversion"
 
 if [ ! -e $pkg_config_file ]; then

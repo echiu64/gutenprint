@@ -15,107 +15,89 @@ fi
 # find Gutenprint version for this and other scripts
 export GP_VERSION_STRING=$(./gutenprint-version)
 
-for version in $*; do
-  #
-  # Compute configure flags and architectures depending on version.
-  #
+#
+# Compute configure flags and architectures.
+#
 
-  case $version in
-    10.5-cups-ppds)
-      configure_flags="--without-doc --enable-cups-ppds"
-      arch_flags="-arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.5"
-      ;;
-    10.5)
-      configure_flags="--without-doc"
-      arch_flags="-arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=10.5"
-      ;;
-    10.6)
-      arch_flags="-arch i386 -arch x86_64 -mmacosx-version-min=10.6"
-      ;;
-    *)
-      echo "Don't know how to build for version '$version'"
-      exit 1
-  esac
+arch_flags="-arch i386 -arch x86_64 -mmacosx-version-min=10.6"
 
-  #
-  # Set up pathnames.
-  #
-  # Note that we build in /tmp so that most of the I/O is local, and only the
-  # 'make install' step may copy over the network.
-  #
+#
+# Set up pathnames.
+#
+# Note that we build in /tmp so that most of the I/O is local, and only the
+# 'make install' step may copy over the network.
+#
 
-  build_dir="$PWD/build/$version"
-  gutenprint_src_dir="/tmp/gutenprint-$version"
-  libusb_src_dir="/tmp/libusb-$version"
-  install_dir="$build_dir/install"
+build_dir="$PWD/build"
+gutenprint_src_dir="/tmp/gutenprint"
+libusb_src_dir="/tmp/libusb"
+install_dir="$build_dir/install"
 
-  #
-  # Initialize build & install directories.
-  #
+#
+# Initialize build & install directories.
+#
 
-  rm -rf "$build_dir"
-  mkdir -p "$install_dir"
+rm -rf "$build_dir"
+mkdir -p "$install_dir"
 
-  #
-  # Build libusb.
-  #
+#
+# Build libusb.
+#
 
-  echo "Building libusb for $version..."
+echo "Building libusb..."
 
-  rm -rf "$libusb_src_dir"
-  mkdir "$libusb_src_dir"
-  tar -xj -C "$libusb_src_dir" -f "$GP_LIBUSB_SRC" --strip-components 1
+rm -rf "$libusb_src_dir"
+mkdir "$libusb_src_dir"
+tar -xj -C "$libusb_src_dir" -f "$GP_LIBUSB_SRC" --strip-components 1
 
-  (set -x;
-   cd "$libusb_src_dir";
-   CFLAGS="$arch_flags" LDFLAGS="$arch_flags" ./configure --prefix=/usr/lib/gutenprint/libusb --disable-dependency-tracking;
-   make install DESTDIR="$install_dir") 1>"$build_dir/libusb.build.log" 2>&1
+(set -x;
+ cd "$libusb_src_dir";
+ CFLAGS="$arch_flags" LDFLAGS="$arch_flags" ./configure --prefix=/usr/lib/gutenprint/libusb --disable-dependency-tracking;
+ make install DESTDIR="$install_dir") 1>"$build_dir/libusb.build.log" 2>&1
 
-  if [ $? == 0 ]; then
-    echo "Build of libusb for $version succeeded."
-  else
-    echo "Build of libusb may have failed -- check details in $build_dir/libusb.build.log"
-    exit 1
-  fi
+if [ $? == 0 ]; then
+  echo "Build of libusb succeeded."
+else
+  echo "Build of libusb may have failed -- check details in $build_dir/libusb.build.log"
+  exit 1
+fi
 
-  #
-  # Build Gutenprint.
-  #
+#
+# Build Gutenprint.
+#
 
-  echo "Building Gutenprint for $version..."
+echo "Building Gutenprint..."
 
-  rm -rf "$gutenprint_src_dir"
-  mkdir "$gutenprint_src_dir"
-  tar -xj -C "$gutenprint_src_dir" -f "$GP_GUTENPRINT_SRC" --strip-components 1
+rm -rf "$gutenprint_src_dir"
+mkdir "$gutenprint_src_dir"
+tar -xj -C "$gutenprint_src_dir" -f "$GP_GUTENPRINT_SRC" --strip-components 1
 
-  (set -x;
-   cd "$gutenprint_src_dir";
-   export PKG_CONFIG_PATH="$install_dir/usr/lib/gutenprint/libusb/lib/pkgconfig";
-   export PKG_CONFIG_SYSROOT_DIR="$install_dir";
-   CFLAGS="$arch_flags" LDFLAGS="$arch_flags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags;
-   make install DESTDIR="$install_dir") 1>"$build_dir/gutenprint.build.log" 2>&1
+(set -x;
+ cd "$gutenprint_src_dir";
+ export PKG_CONFIG_PATH="$install_dir/usr/lib/gutenprint/libusb/lib/pkgconfig";
+ export PKG_CONFIG_SYSROOT_DIR="$install_dir";
+ CFLAGS="$arch_flags" LDFLAGS="$arch_flags" ./configure --prefix=/usr --disable-dependency-tracking $configure_flags;
+ make install DESTDIR="$install_dir") 1>"$build_dir/gutenprint.build.log" 2>&1
 
-  if [ $? == 0 ]; then
-    echo "Build of Gutenprint for $version succeeded."
-  else
-    echo "Build of Gutenprint may have failed -- check details in $build_dir/gutenprint.build.log"
-    exit 1
-  fi
+if [ $? == 0 ]; then
+  echo "Build of Gutenprint succeeded."
+else
+  echo "Build of Gutenprint may have failed -- check details in $build_dir/gutenprint.build.log"
+  exit 1
+fi
 
-  # #
-  # # Build stub driver plugin
-  # #
+# #
+# # Build stub driver plugin
+# #
 
-  # (set -x;
-  #  cd src/GutenprintBlacklistDriver;
-  #  xcodebuild clean install DSTROOT="$install_dir";
-  # ) 1>"$build_dir/GutenprintBlacklistDriver.build.log" 2>&1
+# (set -x;
+#  cd src/GutenprintBlacklistDriver;
+#  xcodebuild clean install DSTROOT="$install_dir";
+# ) 1>"$build_dir/GutenprintBlacklistDriver.build.log" 2>&1
 
-  # if [ $? == 0 ]; then
-  #   echo "Build of GutenprintBlacklistDriver for $version succeeded."
-  # else
-  #   echo "Build of GutenprintBlacklistDriver may have failed -- check details in $build_dir/GutenprintBlacklistDriver.build.log"
-  #   exit 1
-  # fi
-
-done
+# if [ $? == 0 ]; then
+#   echo "Build of GutenprintBlacklistDriver succeeded."
+# else
+#   echo "Build of GutenprintBlacklistDriver may have failed -- check details in $build_dir/GutenprintBlacklistDriver.build.log"
+#   exit 1
+# fi

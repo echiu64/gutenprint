@@ -10,16 +10,16 @@ ReadMe
 
 <BODY style="font-size:110%;">
 
-<h1 style="margin-bottom:0em;">Gutenprint 5.2.10</h1>
-<h2 style="margin-top:0em;">released May 18, 2014</h2>
+<h1 style="margin-bottom:0em;">Gutenprint 5.2.11-pre1</h1>
+<h2 style="margin-top:0em;">released May 22, 2015</h2>
 
 <h3 style="margin-bottom:0em;">Software Requirements</h3>
 <p style="margin-top:0.25em;">
-<b>System software:</b> Mac OS X Leopard (10.5.x) or later.
+<b>System software:</b> Mac OS X Snow Leopard (10.6.x) or later.
 </p>
 
 <p>
-Welcome to Gutenprint 5.2.10. Please read these release notes carefully.
+Welcome to Gutenprint 5.2.11-pre1. Please read these release notes carefully.
 </p>
 
 
@@ -30,29 +30,157 @@ Welcome to Gutenprint 5.2.10. Please read these release notes carefully.
   <li><b>The Gutenprint drivers do not support any other functions such as scanning on all-in-one devices. </b></li>
 	<li><b>The Mac OS X Gutenprint package download does not contain the PPDs for the supported printers. This significantly reduces the size of the download. All necessary files will be written during installation.</b></li>
 	<li><b>For OS X 10.6.x (Snow Leopard) and above, PPD files will be created when you add the printer.</b></li>
-	<li><b>For OS X 10.5.x (Leopard) the PPDs are written to your boot drive during the installation process.  This will take some extra time and it may seem that the installation has run into a problem or is hung. For older machines running OS X 10.5, it may take ten to twenty minutes or more. Please be patient.</b></li>
 </ul>
 
 <p>
 Gutenprint evolved from Gimp-Print, which originated as the print facility for the open source GNU Image Manipulation Program (GIMP).  It has matured into an independent suite of printer drivers compatible with most UNIX print spooling systems, such as the CUPS spooler in Mac OS X (10.5 and later).  The Gutenprint drivers provide printing quality for UNIX/Linux that in many cases is equal to or better than proprietary vendor-supplied drivers; they can be used for many of the most demanding printing tasks.
 </p>
 
-<h3 style="margin-bottom:0em;">Changes from 5.2.9</h3>
+<h3 style="margin-bottom:0em;">Changes from 5.2.10</h3>
  <ol style="margin-top:0.25em; list-style-type:decimal;">
 
-  <li>Added a unified CUPS backend to support selected dye sublimation printers.</li>
+  <li>Added support for the following printers:</li>
 
-  <li>Many new models of inkjets and laser printers are now supported.</li>
+        <ul><li>Citizen CW-01 / Olmec OP900</li>
+        <li>Mitsubishi CP3800DW</li>
+        <li>Kodak 305                 [experimental]</li>
+        <li>Mitsubishi CP-D80DW       [experimental]</li>
+        <li>Shinko S1245/S6145/S6245  [experimental]</li>
+        <li>Sony UP-CR10/DNP SL10     [experimental]</li>
+        <li>Kodak 8810                [experimental]</li>
+        <li>Ciaat Brava 21            [experimental]</li>
+        <li>Canon SELPHY CP820/CP910</li></ul>
 
-  <li>Corrected page dimensions for borderless printing with Canon printers.</li>
+  <li>Enhanced support (and bugfixes) for the following printers:</li>
 
-  <li>Added duplex support for the EPSON WorkForce 630, 635, and 645, and NX635.</li>
+        <ul><li>DNP DS40/DS80/RX1</li>
+        <li>Citizen CX/CX-W/CY</li>
+        <li>Kodak 6800/6850</li>
+        <li>Kodak 605</li>
+        <li>Canon SELPHY CP900</li>
+        <li>Sony UP-DR200</li>
+        <li>Mitsubishi CP-9550 family (including the CP9550DW-S variant)</li>
+        <li>Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]</li></ul>
 
-  <li>Expanded printable area at the bottom of the page for the Epson Stylus Pro 3800 and 3880.</li>
+  <li>Added support for the Datamax-O'Neil PCL printers, the Performance
+     series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
+     Datamax-O'Neil Workstation printer.</li>
 
-  <li>Added IEEE1284 device IDs for several printers.</li>
+  <li>Added common Imperial and Metric label sizes to the Paper Selection
+     menu.</li>
 
-  <li>Added Catalan, Turkish, and Vietnamese translations.</li>
+  <li>Canon backend enhancements.</li>
+
+     <ul><li>Added support for following models:</li>
+
+        <ul><li>Canon iP8700 series (EXPERIMENTAL)</li>
+
+        <li>Canon iX6800 series (EXPERIMENTAL)</li>
+
+        <li>Canon iX6800 series (EXPERIMENTAL)</li>
+
+        <li>Canon PIXMA P200    (EXPERIMENTAL)</li>
+
+        <li>Canon iB4000 series (EXPERIMENTAL)</li>
+
+        <li>Canon MB2000 series (EXPERIMENTAL)</li>
+
+        <li>Canon MB2300 series (EXPERIMENTAL)</li>
+
+        <li>Canon MB5000 series (EXPERIMENTAL)</li>
+
+        <li>Canon MB5300 series (EXPERIMENTAL)</li>
+
+        <li>Canon MG5600 series (EXPERIMENTAL)</li>
+
+        <li>Canon MG6600 series (EXPERIMENTAL)</li>
+
+        <li>Canon MG6700 series (EXPERIMENTAL)</li>
+
+        <li>Canon MG7500 series (EXPERIMENTAL)</li></ul>
+ 
+     <li>Added following models to existing series:</li>
+
+        <ul><li>MG2500 series:</li>
+          <ul><li>Canon PIXMA MG2590</li></ul>
+
+        <li>MG5400 series:</li>
+          <ul><li>Canon PIXMA MG4560</li>
+          <li>Canon PIXMA MG4590</li></ul>
+
+        <li>E510 series:</li>
+          <ul><li>Canon PIXMA E514</li></ul></ul>
+
+     <li>Duplex option added to following printers:</li>
+
+        <ul><li>MP750/MP760/MP770/MP780/MP790</li></ul>
+
+     <li>Resolution modes corrected for following printers:</li>
+
+        <ul><li>MG6300 series</li></ul>
+
+    <li>Added support for upper/lower tray in cassette for following models:</li></ul>
+
+        <ul><li>MG5400 series</li>
+        <li>MG6200 series</li>
+        <li>MG6300 series</li>
+        <li>MG6500 seriesi</li>
+        <li>MG7100 series</li></ul>
+
+  <li>Canon backend bugfixes.</li>
+
+     <ul><li><p>A problem with a new ink level compression added in 5.2.7 has
+     affected multiple printer models. The affected models have been
+     modified accordingly, as described below. As a result, media choice
+     has been limited for the MP, iP and Pro series, only draft-quality
+     printing for plain, Hagaki and Envelope media (and monochrome photo
+     printing in some cases) is currently possible.</p>
+
+     <p>The following printer models have had their modes set back to what
+     they were in 5.2.7, namely the same as the BJC-8200. These modes
+     are not detected in the Windows driver; however, they appear to
+     work, while most detected modes are currently not workable owing to
+     unsolved compression of ink levels. Remaining newer workable modes
+     without problematic compression can be used.</p></li>
+
+        <ul><li>Canon BJC S600</li>
+        <li>Canon BJC S630</li>
+        <li>Canon BJC S800</li></ul>
+
+     <li><p>The following newer printer models added since 5.2.7 have also had
+     their modes set to those of the BJC-8200, for the same reason as above.
+     Remaining newer modes without problematic compression can be used.</p></li>
+
+        <ul><li>Canon BJC S820</li>
+        <li>Canon BJC S900</li>
+        <li>Canon BJC S9000</li>
+        <li>Canon BJC i950</li>
+        <li>Canon BJC i960</li>
+        <li>Canon BJC i965</li>
+        <li>Canon BJC i990</li>
+        <li>Canon BJC i9100</li>
+        <li>Canon BJC i9900</li>
+        <li>Canon BJC i9950</li>
+        <li>Canon BJC 950i</li>
+        <li>Canon BJC 960i</li>
+        <li>Canon BJC 990i</li>
+        <li>Canon BJC 9100i</li>
+        <li>Canon BJC 9900i</li></ul>
+
+     <li><p>The following newer print models added since 5.2.7 have had modes
+     with the problematic ink sets removed. Some of these printers can
+     use monochrome modes to print on photo media.</p></li>
+
+        <ul><li>Canon MP900</li>
+        <li>Canon iP7100</li>
+        <li>Canon iP8100</li>
+        <li>Canon iP8500</li>
+        <li>Canon iP8600</li>
+        <li>Canon iP9910</li>
+        <li>Canon Pro 9000</li>
+        <li>Canon Pro 9000 Mk.II</li>
+        <li>Canon Pro 9500</li>
+        <li>Canon Pro 9500 Mk.II</li></ul></ul>
 
 </ol>
 
