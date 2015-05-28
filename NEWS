@@ -289,8 +289,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      Added support for following models:
 
-	Canon PIXMA iP110  (EXPERIMENTAL)
-	Canon PIXUS iP110  (EXPERIMENTAL)
+	Canon iP110 series  (EXPERIMENTAL)
+	Canon PIXMA iP110   (EXPERIMENTAL)(*1)
+	Canon PIXUS iP110   (EXPERIMENTAL)(*1)
 	
 	Canon iP2800 series (EXPERIMENTAL)
 	Canon PIXMA iP2810  (EXPERIMENTAL)(*1)
@@ -492,13 +493,20 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
  	E510 series:
 	  Canon PIXMA E514
 
-     Added following exixsintg PIXMA models also as PIXUS models:
+     Added following existing PIXMA models also as PIXUS models:
 
  	PIXUS mini220
 	PIXUS mini360
+
+     Added following existing PIXMA models also as PIXUS models,
+     and generic series model:
+
+	Canon iP90 series
 	PIXUS iP90
 	PIXUS ip90v
+	Canon iP100 series
 	PIXUS iP100
+	Canon iP2000 series
 	PIXUS iP2000
 
      Duplex option added to following printers:
