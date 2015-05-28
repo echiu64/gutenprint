@@ -143,14 +143,20 @@
       <printer translate="name" name="Canon SELPHY DS700" driver="bjc-SELPHY-DS700" manufacturer="Canon" model="10000700" parameters="PIXMA_iP4000_params" foomaticid="Canon-SELPHY-DS700" />
       <printer translate="name" name="Canon SELPHY DS810" driver="bjc-SELPHY-DS810" manufacturer="Canon" model="10000810" parameters="PIXMA_iP4000_params" foomaticid="Canon-SELPHY-DS810" />
       <printer translate="name" name="Canon PIXMA mini220" driver="bjc-PIXMA-mini220" manufacturer="Canon" model="11000220" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini220" />
+      <printer translate="name" name="Canon PIXUS mini220" driver="bjc-PIXUS-mini220" manufacturer="Canon" model="11000220" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-mini220" />
       <printer translate="name" name="Canon PIXMA mini320" driver="bjc-PIXMA-mini320" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini320" />
       <printer translate="name" name="Canon PIXMA mini360" driver="bjc-PIXMA-mini360" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-mini360" />
+      <printer translate="name" name="Canon PIXUS mini360" driver="bjc-PIXUS-mini360" manufacturer="Canon" model="11000320" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-mini360" />
       <printer translate="name" name="Canon PIXMA iP90" driver="bjc-PIXMA-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90" />
+      <printer translate="name" name="Canon PIXUS iP90" driver="bjc-PIXUS-iP90" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP90" />
       <printer translate="name" name="Canon PIXMA iP90v" driver="bjc-PIXMA-iP90v" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP90v" />
+      <printer translate="name" name="Canon PIXUS iP90v" driver="bjc-PIXUS-iP90v" manufacturer="Canon" model="3000090" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP90v" />
       <printer translate="name" name="Canon PIXMA iP100" driver="bjc-PIXMA-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP100" />
+      <printer translate="name" name="Canon PIXUS iP100" driver="bjc-PIXUS-iP100" manufacturer="Canon" model="3000100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP100" />
       <printer translate="name" name="Canon PIXMA iP110" driver="bjc-PIXMA-iP110" manufacturer="Canon" model="3000110" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP110" />
       <printer translate="name" name="Canon PIXUS iP110" driver="bjc-PIXUS-iP110" manufacturer="Canon" model="3000110" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP110" />
       <printer translate="name" name="Canon PIXMA iP2000" driver="bjc-PIXMA-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2000" />
+      <printer translate="name" name="Canon PIXUS iP2000" driver="bjc-PIXUS-iP2000" manufacturer="Canon" model="3002000" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP2000" />
       <!-- Canon iP2700 family -->
       <printer translate="name" name="Canon iP2700 series" deviceid="MFG:Canon;CMD:BJL,BJRaster3,BSCCe,IVEC,IVECPLI;SOJ:TXT01;MDL:iP2700 series;CLS:PRINTER;DES:Canon iP2700 series;VER:1.030;STA:30;FSI:00;HRI:EU;MSI:AOFF,BOFF,DAT,E3;PDR:4;" driver="bjc-iP2700-series" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-iP2700-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA iP2700" driver="bjc-PIXMA-iP2700" manufacturer="Canon" model="3002700" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP2700">EXPERIMENTAL</printer>

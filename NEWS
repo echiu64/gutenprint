@@ -482,15 +482,24 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      Added following models to existing series:
 
-        MG2500 series:
+ 	MG2500 series:
 	  Canon PIXMA MG2590
 
-        MG5400 series:
+ 	MG5400 series:
 	  Canon PIXMA MG4560
 	  Canon PIXMA MG4590
 	
-	E510 series:
+ 	E510 series:
 	  Canon PIXMA E514
+
+     Added following exixsintg PIXMA models also as PIXUS models:
+
+ 	PIXUS mini220
+	PIXUS mini360
+	PIXUS iP90
+	PIXUS ip90v
+	PIXUS iP100
+	PIXUS iP2000
 
      Duplex option added to following printers:
 
