@@ -483,69 +483,102 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      Added following models to existing series:
 
- 	E510 series:
+ 	Canon E510 series:
 	  Canon PIXMA E514
 
- 	MP620 series:
+ 	Canon MP620 series:
 	  Canon PIXMA MP620B
 
- 	MP640 series:
+ 	Canon MP640 series:
 	  Canon PIXMA MP640R
 
- 	MX490 series:
+ 	Canon MX490 series:
 	  Canon PIXMA MX490
 
- 	MG2500 series:
+ 	Canon MG2500 series:
 	  Canon PIXMA MG2590
 
- 	MG2900 series:
+ 	Canon MG2900 series:
 	  Canon PIXMA MG2922
 	  Canon PIXMA MG2924
 
- 	MG3500 series:
+ 	Canon MG3500 series:
 	  Canon PIXMA MG3522
 
- 	MG5400 series:
+ 	Canon MG5400 series:
 	  Canon PIXMA MG4560
 	  Canon PIXMA MG4590
 
- 	MG7500 series:
+ 	Canon MG7500 series:
 	  Canon PIXUS MG7530F
 
- 	MG8100 series:
+ 	Canon MG8100 series:
 	  Canon PIXMA MG8120B
 
      Added following existing PIXMA models also as PIXUS models:
 
- 	PIXUS mini220
-	PIXUS mini360
+ 	Canon PIXUS mini220
+	Canon PIXUS mini360
 
      Added following existing PIXMA models also as PIXUS models,
      and generic series model:
 
 	Canon iP90 series
-	PIXUS iP90
-	PIXUS ip90v
-	Canon iP100 series
-	PIXUS iP100
+	Canon PIXUS iP90
+	Canon PIXUS ip90v
+	Canon Canon iP100 series
+	Canon PIXUS iP100
 	Canon iP2000 series
-	PIXUS iP2000
+	Canon PIXUS iP2000
 
      Duplex option added to following printers:
 
-	MP750/MP760/MP770/MP780/MP790
+	Canon MP750 series
+	Canon PIXMA MP750
+	Canon MP760 series
+	Canon PIXMA MP760
+	Canon MP770 series
+	Canon PIXMA MP770 (does not exist)
+	Canon PIXUS MP770
+	Canon MP780 series
+	Canon PIXMA MP780
+	Canon MP790 series
+	Canon PIXMA MP790 (does not exist)
+	Canon PIXUS MP790
 
      Resolution modes corrected for following printers:
 
-	MG6300 series
+	Canon MG6300 series
 
     Added support for upper/lower tray in cassette for following models:
 
-	MG5400 series
-	MG6200 series
-	MG6300 series
-	MG6500 series
-	MG7100 series
+	Canon MG5400 series
+	Canon MG6200 series
+	Canon MG6300 series
+	Canon MG6500 series
+	Canon MG7100 series
+
+    Added prefix PIXUS to the Japanese i/R/PD models:
+
+	Canon PIXUS 50i
+	Canon PIXUS 80i
+	Canon PIXUS 450i
+	Canon PIXUS 455i
+	Canon PIXUS 470PD
+	Canon PIXUS 475PD
+	Canon PIXUS 550i
+	Canon PIXUS 560i
+	Canon PIXUS 850i
+	Canon PIXUS 860i
+	Canon PIXUS 865R
+	Canon PIXUS 900PD
+	Canon PIXUS 950i
+	Canon PIXUS 960i
+	Canon PIXUS 990i
+	Canon PIXUS 6100i
+	Canon PIXUS 6500i
+	Canon PIXUS 9100i
+	Canon PIXUS 9900i
 
   6) Canon backend bugfixes:
 
