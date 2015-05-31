@@ -331,7 +331,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	int run = 1;
 	char buf[9] = { 0 };
 
-	uint32_t matte = 0, multicut = 0, dpi = 0;
+	uint32_t matte, multicut, dpi;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
@@ -356,6 +356,11 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		ERROR("Memory allocation failure!\n");
 		return CUPS_BACKEND_CANCEL;
 	}
+
+	/* Clear everything out */
+	matte = 0;
+	dpi = 0;
+	multicut = 0;
 
 	while (run) {
 		int remain, i, j;
@@ -405,37 +410,23 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			memcpy(buf, ctx->databuf + ctx->datalen + 32, 8);
 			multicut = atoi(buf);
 		}
-	        if(!memcmp("IMAGE YPLANE", ctx->databuf + ctx->datalen + 2, 12)) {
-			uint32_t x_ppm;
+		if(!memcmp("IMAGE YPLANE", ctx->databuf + ctx->datalen + 2, 12)) {
+			uint32_t x_ppm; /* Pixels Per Meter */
+
 			memcpy(&x_ppm, ctx->databuf + ctx->datalen + 32 + 42, sizeof(x_ppm));
 			x_ppm = le32_to_cpu(x_ppm);
 
-			ctx->buf_needed = 1;
-			dpi = 300;
-
-			if (x_ppm == 23615) { /* pixels per meter, aka 600dpi */
+			switch (x_ppm) {
+			case 11808:
+				dpi = 300;
+				break;
+			case 23615:
 				dpi = 600;
-				if (ctx->type == P_DNP_DS80) { /* DS80/CX-W */
-					if (matte && (multicut == 21 || // A4 length
-						      multicut == 20 || // 8x4*3
-						      multicut == 19 || // 8x8+8x4
-						      multicut == 15 || // 8x6*2
-						      multicut == 7)) // 8x12
-						ctx->buf_needed = 2;
-				} else { /* DS40/CX/CY/etc */
-					if (multicut == 4 ||  // 6x8
-					    multicut == 5 ||  // 6x9
-					    multicut == 12)   // 6x4*2
-						ctx->buf_needed = 2;
-					else if (matte && multicut == 3) // 5x7
-						ctx->buf_needed = 2;
-				}
-
-				/* If we are missing a multicut command,
-				   we can't parse this job so must assume 
-				   worst case size needing both buffers! */
-				if (!multicut)
-					ctx->buf_needed = 2;
+				break;
+			default:
+				WARNING("Unrecognized resolution (%d ppm), assuming 300dpi\n", x_ppm);
+				dpi = 300;
+				break;
 			}
 		}
 
@@ -447,13 +438,38 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		ctx->datalen += sizeof(struct dnpds40_cmd) + j;
 	}
 
+	/* Figure out the number of buffers we need. Most only need one. */
+	ctx->buf_needed = 1;
+
+	if (dpi == 600) {
+		if (ctx->type == P_DNP_DS80) { /* DS80/CX-W */
+			if (matte && (multicut == 21 || // A4 length
+				      multicut == 20 || // 8x4*3
+				      multicut == 19 || // 8x8+8x4
+				      multicut == 15 || // 8x6*2
+				      multicut == 7)) // 8x12
+				ctx->buf_needed = 2;
+		} else { /* DS40/CX/CY/etc */
+			if (multicut == 4 ||  // 6x8
+			    multicut == 5 ||  // 6x9
+			    multicut == 12)   // 6x4*2
+				ctx->buf_needed = 2;
+			else if (matte && multicut == 3) // 5x7
+				ctx->buf_needed = 2;
+		}
+	}
+
+	/* If we are missing a multicut command, we can't parse this job
+	   so we must assume worst case size needing both buffers! */
+	if (!multicut)
+		ctx->buf_needed = 2;
+
 	/* Special case: switching to matte or back needs both buffers */
 	if (matte != ctx->last_matte)
 		ctx->buf_needed = 2;
 
-	if (dpi)
-		DEBUG("dpi %u matte %u(%u) mcut %u bufs %d\n", 
-		      dpi, matte, ctx->last_matte, multicut, ctx->buf_needed);
+	DEBUG("dpi %u matte %u(%u) mcut %u bufs %d\n",
+	      dpi, matte, ctx->last_matte, multicut, ctx->buf_needed);
 
 	/* Track if our last print was matte */
 	ctx->last_matte = matte;
@@ -500,6 +516,8 @@ top:
 	/* If we're not idle */
 	if (strcmp("00000", (char*)resp)) {
 		if (!strcmp("00001", (char*)resp)) {
+			int buf;
+
 			free(resp);
 			/* Query buffer state */
 			dnpds40_build_cmd(&cmd, "INFO", "FREE_PBUFFER", 0);
@@ -509,9 +527,9 @@ top:
 			dnpds40_cleanup_string((char*)resp, len);
 
 			/* Check to see if we have sufficient buffers */
-			if (!strcmp("FBP00", (char*)resp) ||
-			    (ctx->buf_needed == 1 && !strcmp("FBP01", (char*)resp))) {
-				INFO("Insufficient printer buffers, retrying...\n");
+			buf = atoi(((char*)resp)+3);
+			if (buf < ctx->buf_needed) {
+				INFO("Insufficient printer buffers (%d vs %d), retrying...\n", buf, ctx->buf_needed);
 				sleep(1);
 				goto top;
 			}
@@ -995,7 +1013,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1",
-	.version = "0.33",
+	.version = "0.34",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
