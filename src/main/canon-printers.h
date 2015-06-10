@@ -2509,6 +2509,40 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
+    { /* Canon PIXMA MP5 */
+    "PIXMA MP5", 3,          /*model, model_id*/
+    INCH(17/2), INCH(23),       /* max paper width and height */ /* assumed */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
+    2,0, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_iP2700,  /*features */
+    &canon_MULTIPASS_MP150_modelist,
+    &canon_MULTIPASS_MP150_paperlist,
+    &canon_MULTIPASS_MP150_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    NULL /* KYMC */
+  },
+  { /* Canon PIXMA MP55 */
+    "PIXMA MP55", 3,          /*model, model_id*/
+    INCH(17/2), INCH(23),       /* max paper width and height */ /* assumed */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MP150_slotlist, /* these models only have an auto sheet feeder also uses CAP_T */
+    CANON_CAP_STD0|CANON_CAP_px|CANON_CAP_I|CANON_CAP_BORDERLESS,0,
+    2,0, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_BJC_i550,  /*features */
+    &canon_MULTIPASS_MP150_modelist,
+    &canon_MULTIPASS_MP150_paperlist,
+    &canon_MULTIPASS_MP150_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    NULL /* KYMC */
+  },
   { /* Canon MULTIPASS MP150 */
     "PIXMA MP150", 3,          /*model, model_id*/
     INCH(17/2), INCH(23),       /* max paper width and height */ /* from MacOSX driver */
