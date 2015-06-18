@@ -401,10 +401,11 @@ top:
 				sleep(1);
 				goto top;
 			}
-		} 
-		ERROR("Printer Status: %s\n", cw01_statuses((char*)resp));
-		free(resp);
-		return CUPS_BACKEND_RETRY_CURRENT;
+		} else {
+			ERROR("Printer Status: %s\n", cw01_statuses((char*)resp));
+			free(resp);
+			return CUPS_BACKEND_RETRY_CURRENT;
+		}
 	}
 
 	free(resp);
@@ -563,6 +564,7 @@ static int cw01_get_info(struct cw01_ctx *ctx)
 
 	free(resp);
 
+#if 0	
 	/* Get Qty of prints made on this media? */
 	cw01_build_cmd(&cmd, "INFO", "PQTY", 0);
 
@@ -575,6 +577,7 @@ static int cw01_get_info(struct cw01_ctx *ctx)
 	INFO("Prints Performed(?): '%s'\n", (char*)resp + 4);
 
 	free(resp);
+#endif
 
 	/* Get Horizonal resolution */
 	cw01_build_cmd(&cmd, "INFO", "RESOLUTION_H", 0);
@@ -860,7 +863,7 @@ static int cw01_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend cw01_backend = {
 	.name = "Citizen CW-01",
-	.version = "0.07",
+	.version = "0.08",
 	.uri_prefix = "citizencw01",
 	.cmdline_usage = cw01_cmdline,
 	.cmdline_arg = cw01_cmdline_arg,
