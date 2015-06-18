@@ -13,3 +13,4 @@ mkchlog
 mkinstalldirs
 m4local
 ylwrap
+test-driver
