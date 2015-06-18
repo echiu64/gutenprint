@@ -109,6 +109,8 @@ enum {
 	P_DNP_DS40,
 	P_DNP_DS80,
 	P_CITIZEN_CW01,
+	P_DNP_DSRX1,
+	P_DNP_DS620,
 	P_END,
 };
 
