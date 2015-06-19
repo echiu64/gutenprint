@@ -2976,7 +2976,7 @@ static const dyesub_printsize_t mitsu_cpk60_printsize[] =
 #endif
   { "300x300", "w360h504", 1568, 2128},
 #ifdef MULTICUT
-  { "B7_x2", "3.5x5*24", 1568, 2190},
+  { "B7_x2", "3.5x5*2", 1568, 2190},
 #endif
   { "300x300", "w432h432", 1864, 1820},
   { "300x300", "w432h576", 1864, 2422},
@@ -3540,9 +3540,11 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
     media = 0x06;
   else if (strcmp(privdata.pagesize,"w144h432") == 0)
     media = 0x07;
-  else if (strcmp(privdata.pagesize,"w4x6_2x6") == 0)
+  else if (strcmp(privdata.pagesize,"4x6_2x6") == 0)
     media = 0x06;
-
+  else if (strcmp(privdata.pagesize,"6x6_2x6") == 0)
+    media = 0x06;
+  
   stp_put32_le(0x10, v);
   stp_put32_le(6145, v);  /* Printer Model */
   if (!strcmp(privdata.pagesize,"w360h360") ||
@@ -3695,9 +3697,8 @@ static const dyesub_resolution_t res_dnpds40_dpi[] =
 
 LIST(dyesub_resolution_list_t, res_dnpds40_dpi_list, dyesub_resolution_t, res_dnpds40_dpi);
 
-/* Imaging area is wider than print size, we always must supply the 
-   printer with the full imaging width. */
-static const dyesub_pagesize_t dnpds40_dock_page[] =
+/* Imaging area is wider than print size, we always must supply the printer with the full imaging width. */
+static const dyesub_pagesize_t dnpds40_page[] =
 {
   { "B7", "3.5x5", PT(1088,300)+1, PT(1920,300)+1, 0, 0, PT(112,300), PT(112,300), DYESUB_LANDSCAPE},
   { "w288h432", "4x6", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
@@ -3712,9 +3713,9 @@ static const dyesub_pagesize_t dnpds40_dock_page[] =
   { "w432h576", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 };
 
-LIST(dyesub_pagesize_list_t, dnpds40_dock_page_list, dyesub_pagesize_t, dnpds40_dock_page);
+LIST(dyesub_pagesize_list_t, dnpds40_page_list, dyesub_pagesize_t, dnpds40_page);
 
-static const dyesub_printsize_t dnpds40_dock_printsize[] =
+static const dyesub_printsize_t dnpds40_printsize[] =
 {
   { "300x300", "B7", 1088, 1920},
   { "300x600", "B7", 2176, 1920},
@@ -3736,7 +3737,7 @@ static const dyesub_printsize_t dnpds40_dock_printsize[] =
   { "300x600", "w432h576", 1920, 5480},
 };
 
-LIST(dyesub_printsize_list_t, dnpds40_dock_printsize_list, dyesub_printsize_t, dnpds40_dock_printsize);
+LIST(dyesub_printsize_list_t, dnpds40_printsize_list, dyesub_printsize_t, dnpds40_printsize);
 
 static const laminate_t dnpds40_laminate[] =
 {
@@ -3747,28 +3748,21 @@ static const laminate_t dnpds40_laminate[] =
 LIST(laminate_list_t, dnpds40_laminate_list, laminate_t, dnpds40_laminate);
 
 
-static void dnpds40ds80_printer_start(stp_vars_t *v)
+static void dnp_printer_start_common(stp_vars_t *v)
 {
-  /* XXX Unknown purpose. */
-  stp_zprintf(v, "\033PCNTRL RETENTION       0000000800000000");
-
   /* Configure Lamination */
   stp_zprintf(v, "\033PCNTRL OVERCOAT        00000008000000");
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
 
-  /* Don't resume after error.. XXX should be in backend */
-  stp_zprintf(v, "\033PCNTRL BUFFCNTRL       0000000800000000");
-
   /* Set quantity.. Backend overrides as needed. */
   stp_zprintf(v, "\033PCNTRL QTY             000000080000001\r");
-
 }
 
 static void dnpds40_printer_start(stp_vars_t *v)
 {
   /* Common code */
-  dnpds40ds80_printer_start(v);
+  dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
@@ -3783,7 +3777,8 @@ static void dnpds40_printer_start(stp_vars_t *v)
 
   if (!strcmp(privdata.pagesize, "B7")) {
     stp_zprintf(v, "01");
-  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+  } else if (!strcmp(privdata.pagesize, "w288h432") ||
+	     !strcmp(privdata.pagesize, "2x6_x2")) {
     stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "w360h504")) {
     stp_zprintf(v, "03");
@@ -3794,7 +3789,7 @@ static void dnpds40_printer_start(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
   } else {
-    stp_zprintf(v, "00");
+    stp_zprintf(v, "00"); // should be impossible.
   }
 }
 
@@ -3844,7 +3839,7 @@ static void dnpds40_plane_init(stp_vars_t *v)
 /* Dai Nippon Printing DS80 */
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
-static const dyesub_pagesize_t dnpds80_dock_page[] =
+static const dyesub_pagesize_t dnpds80_page[] =
 {
   { "w288h576", "8x4", PT(1236,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
   { "w360h576", "8x5", PT(1536,300)+1, PT(2560,300)+1, 0, 0, PT(56,300), PT(56,300), DYESUB_LANDSCAPE},
@@ -3869,9 +3864,9 @@ static const dyesub_pagesize_t dnpds80_dock_page[] =
 #endif
 };
 
-LIST(dyesub_pagesize_list_t, dnpds80_dock_page_list, dyesub_pagesize_t, dnpds80_dock_page);
+LIST(dyesub_pagesize_list_t, dnpds80_page_list, dyesub_pagesize_t, dnpds80_page);
 
-static const dyesub_printsize_t dnpds80_dock_printsize[] =
+static const dyesub_printsize_t dnpds80_printsize[] =
 {
   { "300x300", "w288h576", 1236, 2560},
   { "300x600", "w288h576", 2472, 2560},
@@ -3911,12 +3906,12 @@ static const dyesub_printsize_t dnpds80_dock_printsize[] =
 #endif
 };
 
-LIST(dyesub_printsize_list_t, dnpds80_dock_printsize_list, dyesub_printsize_t, dnpds80_dock_printsize);
+LIST(dyesub_printsize_list_t, dnpds80_printsize_list, dyesub_printsize_t, dnpds80_printsize);
 
 static void dnpds80_printer_start(stp_vars_t *v)
 {
   /* Common code */
-  dnpds40ds80_printer_start(v);
+  dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
@@ -3955,13 +3950,14 @@ static void dnpds80_printer_start(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "A4")) {
     stp_zprintf(v, "21");
   } else {
-    stp_zprintf(v, "00");
+    stp_zprintf(v, "00"); // XXX should not be possible
   }
 }
 
+/* Dai Nippon Printing DS-RX1 */
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
-static const dyesub_pagesize_t dnpsrx1_dock_page[] =
+static const dyesub_pagesize_t dnpsrx1_page[] =
 {
   { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
   { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
@@ -3971,13 +3967,14 @@ static const dyesub_pagesize_t dnpsrx1_dock_page[] =
   { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
   { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
+  { "2x6_x4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
   { "4x6_x2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #endif
 };
 
-LIST(dyesub_pagesize_list_t, dnpsrx1_dock_page_list, dyesub_pagesize_t, dnpsrx1_dock_page);
+LIST(dyesub_pagesize_list_t, dnpsrx1_page_list, dyesub_pagesize_t, dnpsrx1_page);
 
-static const dyesub_printsize_t dnpsrx1_dock_printsize[] =
+static const dyesub_printsize_t dnpsrx1_printsize[] =
 {
   { "300x300", "B7", 1920, 1088},
   { "300x600", "B7", 1920, 2176},
@@ -3992,17 +3989,19 @@ static const dyesub_printsize_t dnpsrx1_dock_printsize[] =
   { "300x300", "A5", 1920, 2436},
   { "300x600", "A5", 1920, 4872},
 #ifdef MULTICUT
+  { "300x300", "2x6_x4", 1920, 2436},
+  { "300x600", "2x6_x4", 1920, 4872},
   { "300x300", "4x6_x2", 1920, 2498},
   { "300x600", "4x6_x2", 1920, 4996},
 #endif
 };
 
-LIST(dyesub_printsize_list_t, dnpsrx1_dock_printsize_list, dyesub_printsize_t, dnpsrx1_dock_printsize);
+LIST(dyesub_printsize_list_t, dnpsrx1_printsize_list, dyesub_printsize_t, dnpsrx1_printsize);
 
 static void dnpdsrx1_printer_start(stp_vars_t *v)
 {
   /* Common code */
-  dnpds40ds80_printer_start(v);
+  dnp_printer_start_common(v);
 
   /* Set cutter option to "normal" */
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
@@ -4022,6 +4021,112 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "w360h504")) {
     stp_zprintf(v, "03");
   } else if (!strcmp(privdata.pagesize, "A5")) {
+    stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
+    stp_zprintf(v, "12");
+  } else {
+    stp_zprintf(v, "00");
+  }
+}
+
+/* Dai Nippon Printing DS620 */
+/* Imaging area is wider than print size, we always must supply the 
+   printer with the full imaging width. */
+static const dyesub_pagesize_t dnpds620_page[] =
+{
+  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef MULTICUT
+  { "2x6_x2", "2x6*2", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#endif
+  { "w360h360",	"5x5", PT(1920,300)+1, PT(1540,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},  
+  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7_x2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},  
+  { "w432h432",	"6x6", PT(1920,300)+1, PT(1836,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
+  { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#ifdef MULTICUT  
+  { "6x6_2x6", "6x6+2x6", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+  { "2x6_x4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
+  { "4x6_x2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+#endif
+  { "w432h576", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
+};
+
+LIST(dyesub_pagesize_list_t, dnpds620_page_list, dyesub_pagesize_t, dnpds620_page);
+
+static const dyesub_printsize_t dnpds620_printsize[] =
+{
+  { "300x300", "B7", 1920, 1088},
+  { "300x600", "B7", 1920, 2176},
+  { "300x300", "w288h432", 1920, 1240},
+  { "300x600", "w288h432", 1920, 2480},
+#ifdef MULTICUT
+  { "300x300", "2x6_x2", 1920, 1240},
+  { "300x600", "2x6_x2", 1920, 2480},
+#endif
+  { "300x300", "w360h360", 1920, 1540},
+  { "300x600", "w360h360", 1920, 3080},
+  { "300x300", "w360h504", 1920, 2138},
+  { "300x600", "w360h504", 1920, 4276},
+#ifdef MULTICUT
+  { "300x300", "B7_x2", 1920, 2176},
+  { "300x600", "B7_x2", 1920, 4352},  
+#endif
+  { "300x300", "w432h432", 1920, 1836},
+  { "300x600", "w432h432", 1920, 3672},
+  { "300x300", "A5", 1920, 2436},
+  { "300x600", "A5", 1920, 4872},
+#ifdef MULTICUT
+  { "300x300", "2x6_x4", 1920, 2436},
+  { "300x600", "2x6_x4", 1920, 4872},
+  { "300x300", "6x6_2x6", 1920, 2436},
+  { "300x600", "6x6_2x6", 1920, 4872},  
+  { "300x300", "4x6_x2", 1920, 2498},
+  { "300x600", "4x6_x2", 1920, 4996},
+#endif
+  { "300x300", "w432h576", 1920, 2740},
+  { "300x600", "w432h576", 1920, 5480},
+};
+
+LIST(dyesub_printsize_list_t, dnpds620_printsize_list, dyesub_printsize_t, dnpds620_printsize);
+
+static void dnpds620_printer_start(stp_vars_t *v)
+{
+  /* Common code */
+  dnp_printer_start_common(v);
+
+  /* Multicut when 8x6 media is in use */
+  if (!strcmp(privdata.pagesize, "A5") ||
+      !strcmp(privdata.pagesize, "w432h648")) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");	  
+    stp_zprintf(v, "000000000000000");
+  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
+    stp_zprintf(v, "020020000000000");
+  } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
+    stp_zprintf(v, "020020020020000");
+  } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
+    stp_zprintf(v, "060020000000000");    
+  }
+
+  /* Configure multi-cut/page size */
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
+
+  if (!strcmp(privdata.pagesize, "B7")) {
+    stp_zprintf(v, "01");
+  } else if (!strcmp(privdata.pagesize, "w288h432")) {
+    stp_zprintf(v, "02");
+  } else if (!strcmp(privdata.pagesize, "w360h360")) {
+    stp_zprintf(v, "27");
+  } else if (!strcmp(privdata.pagesize, "w360h504")) {
+    stp_zprintf(v, "03");
+  } else if (!strcmp(privdata.pagesize, "w432h432")) {
+    stp_zprintf(v, "29");
+  } else if (!strcmp(privdata.pagesize, "A5")) {
+    stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
@@ -4885,8 +4990,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     6000,
     &bgr_ink_list,
     &res_dnpds40_dpi_list,
-    &dnpds40_dock_page_list,
-    &dnpds40_dock_printsize_list,
+    &dnpds40_page_list,
+    &dnpds40_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
@@ -4900,8 +5005,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     6001,
     &bgr_ink_list,
     &res_dnpds40_dpi_list,
-    &dnpds80_dock_page_list,
-    &dnpds80_dock_printsize_list,
+    &dnpds80_page_list,
+    &dnpds80_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
@@ -4915,12 +5020,27 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     6002,
     &bgr_ink_list,
     &res_dnpds40_dpi_list,
-    &dnpsrx1_dock_page_list,
-    &dnpsrx1_dock_printsize_list,
+    &dnpsrx1_page_list,
+    &dnpsrx1_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
     &dnpdsrx1_printer_start, &dnpds40_printer_end,
+    &dnpds40_plane_init, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    &dnpds40_laminate_list, NULL,
+  },
+  { /* Dai Nippon Printing DS620 */
+    6003,
+    &bgr_ink_list,
+    &res_dnpds40_dpi_list,
+    &dnpds620_page_list,
+    &dnpds620_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER 
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT,
+    &dnpds620_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
