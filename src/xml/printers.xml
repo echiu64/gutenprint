@@ -2857,8 +2857,8 @@
       <printer translate="name" name="CIAAT Brava 21" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" foomaticid="CIAAT-Brava-21">EXPERIMENTAL</printer>
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" />
       <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" />
-      <printer translate="name" name="Dai Nippon Printing DSRX1"  driver="dnp-dsrx1" manufacturer="DNP" model="6002" foomaticid="DNP-DSRX1" />
-      <printer translate="name" name="Dai Nippon Printing DS620"  driver="dnp-ds620" manufacturer="DNP" model="6003" foomaticid="DNP-DS620" />
+      <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid=""Dai Nippon Printing DS-RX1" "Dai Nippon Printing DS-RX1" "MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="DNP" model="6002" foomaticid="DNP-DSRX1" />
+      <printer translate="name" name="Dai Nippon Printing DS620" driver="dnp-ds620" manufacturer="DNP" model="6003" foomaticid="DNP-DS620" />
       <printer translate="name" name="Citizen CX" driver="citizen-cx" deviceid="MANUFACTURER:CITIZEN SYSTEMS ;MODEL:CX;" manufacturer="Citizen" model="6000" foomaticid="Citizen-CX" />
       <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" foomaticid="Citizen-CX-W" />
       <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" foomaticid="Citizen-CY" />
