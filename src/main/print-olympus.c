@@ -3950,7 +3950,7 @@ static void dnpds80_printer_start(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "A4")) {
     stp_zprintf(v, "21");
   } else {
-    stp_zprintf(v, "00"); // XXX should not be possible
+    stp_zprintf(v, "00"); /* should not be possible */
   }
 }
 
@@ -4007,6 +4007,8 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
   if (!strcmp(privdata.pagesize, "2x6_x2")) {
     stp_zprintf(v, "120");
+  } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
+    stp_zprintf(v, "120");
   } else {
     stp_zprintf(v, "000");
   }
@@ -4024,6 +4026,10 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
+  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "02");
+  } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
+    stp_zprintf(v, "04");
   } else {
     stp_zprintf(v, "00");
   }
@@ -4128,10 +4134,12 @@ static void dnpds620_printer_start(stp_vars_t *v)
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
     stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
+    stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
   } else {
-    stp_zprintf(v, "00");
+    stp_zprintf(v, "00"); /* Should be impossible */
   }
 }
 
