@@ -4102,19 +4102,19 @@ static void dnpds620_printer_start(stp_vars_t *v)
   dnp_printer_start_common(v);
 
   /* Multicut when 8x6 media is in use */
-  if (!strcmp(privdata.pagesize, "A5") ||
+  if (!strcmp(privdata.pagesize, "A5") &&
       !strcmp(privdata.pagesize, "w432h648")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");	  
-    stp_zprintf(v, "000000000000000");
-  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
-    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "020020000000000");
+    stp_zprintf(v, "0000000000000000");
   } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "020020020020000");
+    stp_zprintf(v, "0200200200200000");
   } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "060020000000000");    
+    stp_zprintf(v, "0600200000000000");    
+  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
+    stp_zprintf(v, "00000120");
   }
 
   /* Configure multi-cut/page size */
@@ -4125,17 +4125,21 @@ static void dnpds620_printer_start(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "w288h432")) {
     stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "w360h360")) {
-    stp_zprintf(v, "27");
+    stp_zprintf(v, "29");
   } else if (!strcmp(privdata.pagesize, "w360h504")) {
     stp_zprintf(v, "03");
   } else if (!strcmp(privdata.pagesize, "w432h432")) {
-    stp_zprintf(v, "29");
+    stp_zprintf(v, "27");
   } else if (!strcmp(privdata.pagesize, "A5")) {
     stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    stp_zprintf(v, "05");
   } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
     stp_zprintf(v, "04");
+  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
   } else {
