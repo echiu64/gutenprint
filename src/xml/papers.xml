@@ -152,6 +152,12 @@
       <height value="432"/>
       <unit value="english"/>
     </paper>
+    <paper name="w324h432">
+      <description translate="value" value="4.5x6"/>
+      <width value="324"/>
+      <height value="432"/>
+      <unit value="english"/>
+    </paper>
     <paper name="w324h495">
       <description translate="value" value="Epson 4x6 Photo Paper (tear-off borders)"/>
       <width value="324"/>
