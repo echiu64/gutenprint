@@ -1,7 +1,7 @@
 /*
  *   Citizen CW-01 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2014-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -564,21 +564,6 @@ static int cw01_get_info(struct cw01_ctx *ctx)
 
 	free(resp);
 
-#if 0	
-	/* Get Qty of prints made on this media? */
-	cw01_build_cmd(&cmd, "INFO", "PQTY", 0);
-
-	resp = cw01_resp_cmd(ctx, &cmd, &len);
-	if (!resp)
-		return CUPS_BACKEND_FAILED;
-
-	cw01_cleanup_string((char*)resp, len);
-
-	INFO("Prints Performed(?): '%s'\n", (char*)resp + 4);
-
-	free(resp);
-#endif
-
 	/* Get Horizonal resolution */
 	cw01_build_cmd(&cmd, "INFO", "RESOLUTION_H", 0);
 
@@ -692,6 +677,19 @@ static int cw01_get_status(struct cw01_ctx *ctx)
 	cw01_cleanup_string((char*)resp, len);
 
 	INFO("Printer Status: %s => %s\n", (char*)resp, cw01_statuses((char*)resp));
+
+	free(resp);
+
+	/* Get remaining prints in this job */
+	cw01_build_cmd(&cmd, "INFO", "PQTY", 0);
+
+	resp = cw01_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	cw01_cleanup_string((char*)resp, len);
+
+	INFO("Prints Remaining in job: '%s'\n", (char*)resp + 4);
 
 	free(resp);
 
@@ -863,7 +861,7 @@ static int cw01_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend cw01_backend = {
 	.name = "Citizen CW-01",
-	.version = "0.08",
+	.version = "0.09",
 	.uri_prefix = "citizencw01",
 	.cmdline_usage = cw01_cmdline,
 	.cmdline_arg = cw01_cmdline_arg,
