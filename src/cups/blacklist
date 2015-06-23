@@ -114,11 +114,17 @@
 # Kodak 305
 0x040a 0x404f blacklist
 
+# Shinko CHC-S1245 (aka Sinfonia E1)
+0x10ce 0x0007 blacklist
+
 # Shinko CHC-S2145 (aka Sinfonia S2)
 0x10ce 0x000e blacklist
 
-# Shinko CHC-S1245 (aka Sinfonia E1)
-0x10ce 0x0007 blacklist
+# Shinko CHC-S6145 (aka Sinfonia CS2)
+0x10ce 0x0019 blacklist
+
+# Shinko CHC-S6245 (aka Sinfonia CE1)
+0x10ce 0x001d blacklist
 
 # Sony UP-DR150
 0x054c 0x01e8 blacklist
@@ -144,8 +150,11 @@
 # DNP DS40 + Citizen CX
 0x1343 0x0003 blacklist
 
-# DNP DS80 + Citizen CX-W
+# DNP DS80 + Citizen CX-W + Mitsubishi CP3800
 0x1343 0x0004 blacklist
 
 # DNP DS-RX1 + Citizen CY
 0x1343 0x0005 blacklist
+
+# DNP DS620
+0x1452 0x8b01 blacklist
