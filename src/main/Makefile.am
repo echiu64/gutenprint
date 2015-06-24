@@ -79,6 +79,8 @@ print_pcl_la_LDFLAGS = -module -avoid-version
 print_ps_la_SOURCES = print-ps.c xmlppd.c xmlppd.h
 print_ps_la_LDFLAGS = -module -avoid-version
 
+print_dyesub_CFLAGS = $(OPENMP_CFLAGS)
+print_dyesub_la_CFLAGS = $(OPENMP_CFLAGS)
 print_dyesub_la_SOURCES = print-olympus.c
 print_dyesub_la_LDFLAGS = -module -avoid-version
 
@@ -112,6 +114,8 @@ libgutenprint_headers =				\
 	dither-inlined-functions.h		\
 	generic-options.h			\
 	gutenprint-internal.h
+
+libgutenprint_la_CFLAGS = $(OPENMP_CFLAGS)
 
 libgutenprint_la_SOURCES =			\
 	array.c					\

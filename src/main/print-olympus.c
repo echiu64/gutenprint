@@ -3700,12 +3700,12 @@ LIST(dyesub_resolution_list_t, res_dnpds40_dpi_list, dyesub_resolution_t, res_dn
 /* Imaging area is wider than print size, we always must supply the printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds40_page[] =
 {
-  { "B7", "3.5x5", PT(1088,300)+1, PT(1920,300)+1, 0, 0, PT(112,300), PT(112,300), DYESUB_LANDSCAPE},
+  { "B7", "3.5x5", PT(1088,300)+1, PT(1920,300)+1, 0, 0, PT(186,300), PT(186,300), DYESUB_LANDSCAPE},
   { "w288h432", "4x6", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
 #ifdef MULTICUT
   { "2x6_x2", "2x6*2", PT(1240,300)+1, PT(1920,300)+1, 0, 0, PT(38,300), PT(38,300), DYESUB_LANDSCAPE},
 #endif
-  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
   { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
   { "4x6_x2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
@@ -3959,12 +3959,12 @@ static void dnpds80_printer_start(stp_vars_t *v)
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpsrx1_page[] =
 {
-  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
   { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
   { "2x6_x2", "2x6*2", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #endif
-  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
   { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
   { "2x6_x4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
@@ -4040,15 +4040,15 @@ static void dnpdsrx1_printer_start(stp_vars_t *v)
    printer with the full imaging width. */
 static const dyesub_pagesize_t dnpds620_page[] =
 {
-  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7",	"3.5x5", PT(1920,300)+1, PT(1088,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
   { "w288h432", "4x6", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
   { "2x6_x2", "2x6*2", PT(1920,300)+1, PT(1240,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #endif
   { "w324h432", "4.5x6", PT(1920,300)+1, PT(1386,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
-  { "w360h360",	"5x5", PT(1920,300)+1, PT(1540,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},  
-  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},
-  { "B7_x2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(112,300), PT(112,300), 0, 0, DYESUB_PORTRAIT},  
+  { "w360h360",	"5x5", PT(1920,300)+1, PT(1540,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},  
+  { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
+  { "B7_x2",	"3.5x5*2", PT(1920,300)+1, PT(2176,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},  
   { "w432h432",	"6x6", PT(1920,300)+1, PT(1836,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
   { "A5", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
