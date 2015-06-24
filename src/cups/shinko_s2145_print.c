@@ -361,245 +361,199 @@ struct s2145_status_hdr {
 #define ERROR_PRINTER           0x11
 #define ERROR_BUFFER_FULL       0x21
 
-
-/*
-
-   I have a list of 72 different errors that are displayed on the printer,
-   but it appears the list is incomplete, and there's no mapping between
-   category and major code numbers.  Also, not all of the individual errors
-   have minor codes listed (particularly the "consumables")
-
-   These are the observed error codes to date (via stored error log dumps):
-
-   01/16 [ controller/parameter? ]
-   05/15 [ jam/reloading? ]
-   05/4e [ jam/unknown    ]
-   05/4f [ jam/unknown?   ]
-   05/61 [ jam/cantload?  ]
-   05/62 [ jam/cantload?  ]
-   05/64 [ jam/unknown?   ]
-   06/01 [ "cover open"   ]
-   06/0a [ consumables ?  ]
-   06/0b [ consumables ?  ]
-
-   Errors logged on printer A:
-
-   0x01/0x16 @ 77845
-   0x06/0x0b @ 77822, 70053
-   0x05/0x64 @ 76034
-   0x05/0x61 @ 76034, 75420
-   0x05/0x62 @ 76034
-   0x05/0x4e @ 69824, 69820, 69781
-
-   Errors logged on printer B:
-
-   0x06/0x0b @ 33270
-   0x05/0x4e @ 32952, 27672
-   0x05/0x4f @ 32935, 31834
-   0x05/0x61 @ 30856, 27982
-   0x01/0x16 @ 29132
-   0x05/0x64 @ 27982
-   0x05/0x62 @ 27982
-
-   Errors logged on printer C:
-
-   0x06/0x0a @ 78014, 77948, 77943, 77938 x2, 77937, 77936, 77933, 77919
-   0x05/0x15 @ 77938
-
-
- */
 static char *error_codes(uint8_t major, uint8_t minor)
 {
 	switch(major) {
-	case 0x06:
-		switch (minor) {
-		case 0x01:
-			return "Front Cover Open";
-		default:
-			return "Unknown";
-		}
-#if 0
-	case 9: /* "Controller Error" */
+	case 0x01: /* "Controller Error" */
 		switch(minor) {
 		case 0x01:
-			return "Controller: 01 EEPROM";
+			return "Controller: EEPROM Write Timeout";
 		case 0x02:
-			return "Controller: 02 EEPROM";
+			return "Controller: EEPROM Verify";
 		case 0x04:
-			return "Controller: 04 DSP";
+			return "Controller: DSP Inactive";
 		case 0x05:
-			return "Controller: 05 DSP";
+			return "Controller: DSP Application Inactive";
 		case 0x06:
-			return "Controller: 06 Main FW";
+			return "Controller: Main FW Data";
 		case 0x07:
-			return "Controller: 07 Main FW";
+			return "Controller: Main FW Write";
 		case 0x08:
-			return "Controller: 08 DSP FW";
+			return "Controller: DSP FW Data";
 		case 0x09:
-			return "Controller: 09 DSP FW";
+			return "Controller: DSP FW Write";
 		case 0x0A:
-			return "Controller: 0A ASIC";
+			return "Controller: 0A ASIC??";
 		case 0x0B:
-			return "Controller: 0B FPGA";
+			return "Controller: 0B FPGA??";
 		case 0x0D:
-			return "Controller: 0D Tone Curve";
+			return "Controller: Tone Curve Write";
 		case 0x16:
-			return "Controller: 16 Parameter Table";
+			return "Controller: Invalid Parameter Table";
 		case 0x17:
-			return "Controller: 17 Parameter Table";
+			return "Controller: Parameter Table Data";
 		case 0x18:
-			return "Controller: 18 Parameter Table";
+			return "Controller: Parameter Table Write";
 		case 0x29:
-			return "Controller: 29 DSP Comms";
+			return "Controller: DSP Communication";
 		case 0x2A:
-			return "Controller: 2A DSP Comms";
+			return "Controller: DSP DMA Failure";
 		default:
 			return "Controller: Unknown";
 		}
-	case 8: /* XXXX "Mechanical Error" */
+	case 0x02: /* "Mechanical Error" */
 		switch (minor) {
 		case 0x01:
-			return "Mechanical: 01 Thermal Head";
+			return "Mechanical: Thermal Head (Upper Up)";
 		case 0x02:
-			return "Mechanical: 02 Thermal Head";
+			return "Mechanical: Thermal Head (Head Up)";
 		case 0x03:
-			return "Mechanical: 03 Thermal Head";
+			return "Mechanical: Thermal Head (Head Down)";
 		case 0x04:
-			return "Mechanical: 04 Pinch Roller";
+			return "Mechanical: Pinch Roller (Initialize)";
 		case 0x05:
-			return "Mechanical: 05 Pinch Roller";
+			return "Mechanical: Pinch Roller (Mode1)";
 		case 0x06:
-			return "Mechanical: 06 Pinch Roller";
+			return "Mechanical: Pinch Roller (Mode2)";
 		case 0x07:
-			return "Mechanical: 07 Pinch Roller";
+			return "Mechanical: Pinch Roller (Mode3)";
 		case 0x08:
-			return "Mechanical: 08 Pinch Roller";
+			return "Mechanical: Pinch Roller (Mode4)";
 		case 0x09:
-			return "Mechanical: 09 Cutter";
+			return "Mechanical: Cutter (Right)";
 		case 0x0A:
-			return "Mechanical: 0A Cutter";
+			return "Mechanical: Cutter (Left)";
+		case 0x0B:
+			return "Mechanical: Thermal Head (Head Down Recovery)";
 		default:
 			return "Mechanical: Unknown";
 		}
-	case 2: /* XXXX "Sensor Error" */
+	case 0x03: /* "Sensor Error" */
 		switch (minor) {
 		case 0x01:
-			return "Sensor: 01 Thermal Head";
+			return "Sensor: Thermal Head";
 		case 0x02:
-			return "Sensor: 02 Pinch Roller";
+			return "Sensor: Pinch Roller";
 		case 0x03:
-			return "Sensor: 03 Cutter L";
+			return "Sensor: Cutter Left";
 		case 0x04:
-			return "Sensor: 04 Cutter R";
+			return "Sensor: Cutter Right";
 		case 0x05:
-			return "Sensor: 05 Cutter M";
+			return "Sensor: Cutter Unknown";
+		case 0x08:
+			return "Sensor: Ribbon Encoder (Supply)";
+		case 0x09:
+			return "Sensor: Ribbon Encoder (Takeup)";
+		case 0x13:
+			return "Sensor: Thermal Head";
 		default:
 			return "Sensor: Unknown";
 		}
-	case 3: /* XXXX "Temperature Sensor Error" */
+	case 0x04: /* "Temperature Sensor Error" */
 		switch (minor) {
 		case 0x01:
-			return "Temp Sensor: 01 Thermal Head High";
+			return "Temp Sensor: Thermal Head High";
 		case 0x02:
-			return "Temp Sensor: 02 Thermal Head Low";
+			return "Temp Sensor: Thermal Head Low";
 		case 0x03:
-			return "Temp Sensor: 03 Environment High";
+			return "Temp Sensor: Environment High";
 		case 0x04:
-			return "Temp Sensor: 04 Environment Low";
+			return "Temp Sensor: Environment Low";
 		case 0x05:
-			return "Temp Sensor: 05 Warmup Timed Out";
+			return "Temp Sensor: Warmup Timed Out";
 		default:
 			return "Temp Sensor: Unknown";
 		}
-
-	case 4: /* XXXX "Front Cover Open" */
-		switch (minor) {
-//		case 0x01:
-//			return "Front Cover: 01 Cover Open";
-		case 0x02:
-			return "Front Cover: 02 Cover Open Error";
-		default:
-			return "Front Cover: Unknown";
-		}
-	case 5: /* XXX "Paper Jam" */
+	case 0x5: /* "Paper Jam" */
 		switch (minor) {
 		case 0x01:
-			return "Paper Jam: 01 Loading";
+			return "Paper Jam: Loading Leading Edge Off";
 		case 0x02:
-			return "Paper Jam: 02 Loading";
+			return "Paper Jam: Loading Print Position On";
 		case 0x03:
-			return "Paper Jam: 03 Loading";
+			return "Paper Jam: Loading Print Position Off";
 		case 0x04:
-			return "Paper Jam: 04 Loading";
+			return "Paper Jam: Loading Print Position On";
 		case 0x05:
-			return "Paper Jam: 05 Loading";
+			return "Paper Jam: Loading Leading Edge On";
 		case 0x11:
-			return "Paper Jam: 11 Reloading";
+			return "Paper Jam: Initializing Print Position Off";
 		case 0x12:
-			return "Paper Jam: 12 Reloading";
+			return "Paper Jam: Initializing Print Position On";
 		case 0x13:
-			return "Paper Jam: 13 Reloading";
+			return "Paper Jam: Initializing Leading Edge On";
 		case 0x14:
-			return "Paper Jam: 14 Reloading";
+			return "Paper Jam: Initializing Print Position On";
 		case 0x15:
-			return "Paper Jam: 15 Reloading";
+			return "Paper Jam: Initializing Print Position Off";
 		case 0x16:
-			return "Paper Jam: 16 Reloading";
+			return "Paper Jam: Initializing Print Position On";
 		case 0x21:
-			return "Paper Jam: 21 Takeup";
+			return "Paper Jam: Initializing Print Position On";
 		case 0x22:
-			return "Paper Jam: 22 Takeup";
+			return "Paper Jam: Rewinding Print Position On";
+		case 0x40:
+			return "Paper Jam: Pre-Printing Print Position Off";
 		case 0x41:
-			return "Paper Jam: 41 Printing";
+			return "Paper Jam: Pre-Printing Print Position Off";
 		case 0x42:
-			return "Paper Jam: 42 Printing";
+			return "Paper Jam: Printing Leading Edge Off";
 		case 0x43:
-			return "Paper Jam: 43 Printing";
+			return "Paper Jam: After Returning Lead Edge Off";
 		case 0x44:
-			return "Paper Jam: 44 Printing";
+			return "Paper Jam: After Printing Print Position Off";
 		case 0x45:
-			return "Paper Jam: 45 Printing";
+			return "Paper Jam: After Printing Print Position On";
 		case 0x46:
-			return "Paper Jam: 46 Printing";
+			return "Paper Jam: After Printing Print Position On";
 		case 0x47:
-			return "Paper Jam: 47 Printing";
+			return "Paper Jam: After Printing Print Position Off";
 		case 0x49:
-			return "Paper Jam: 49 Printing";
+			return "Paper Jam: Printing Lost Ribbon Mark";
 		case 0x4A:
-			return "Paper Jam: 4A Ribbon Cut";
+			return "Paper Jam: Printing Ribbon Cut";
+		case 0x4D:
+			return "Paper Jam: Printing Lost M Mark";
+		case 0x4E:
+			return "Paper Jam: Printing Lost C Mark";
+		case 0x4F:
+			return "Paper Jam: Printing Lost OP Mark";
 		case 0x61:
-			return "Paper Jam: 61 Can't Load";
+			return "Paper Jam: Initializing Lead Edge On";
 		case 0x62:
-			return "Paper Jam: 62 Can't Load";
+			return "Paper Jam: Initizlizing Print Position On";
+		case 0x64:
+			return "Paper Jam: Initizlizing Paper Size On";
 		default:
 			return "Paper Jam: Unknown";
 		}
-	case 6: /* XXXX "Consumables" */
+	case 0x06: /* User Error */
 		switch (minor) {
-		case 0x01:  // XXX
-			return "Consumables: XX No Ribbon+Paper";
-		case 0x02:  // XXX
-			return "Consumables: XX No Ribbon";
-		case 0x03:  // XXX
-			return "Consumables: XX Ribbon Empty";
-		case 0x04:  // XXX
-			return "Consumables: XX Ribbon Mismatch";
-		case 0x05:  // XXX
-			return "Consumables: XX 01 Ribbon Incorrect";
-		case 0x06:  // XXX
-			return "Consumables: XX 02 Ribbon Incorrect";
-		case 0x07:  // XXX
-			return "Consumables: XX 03 Ribbon Incorrect";
-		case 0x08:  // XXX
-			return "Consumables: XX No Paper";
-		case 0x09:  // XXX
-			return "Consumables: XX Paper Empty";
-		case 0x0A:  // XXX
-			return "Consumables: XX Paper Mismatch";
+		case 0x01:
+			return "Front Cover Open";
+		case 0x02:
+			return "Incorrect Ribbon";
+		case 0x03:
+			return "No Ribbon";
+		case 0x04:
+			return "Mismatched Ribbon";
+		case 0x05:
+			return "Mismatched Paper";
+		case 0x06:
+			return "Paper Empty";
+		case 0x08:
+			return "No Paper";
+		case 0x09:
+			return "Take Out Paper";
+		case 0x0A:
+			return "Cover Open Error";
+		case 0x0B:
+			return "Thermal Head Damaged";
+		case 0x0C:
+			return "Thermal Head Recovery";
 		default:
-			return "Consumables: Unknown";
+			return "Unknown";
 		}
-#endif
 	default:
 		return "Unknown";
 	}
@@ -1204,6 +1158,10 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 	resp->total_size = le16_to_cpu(resp->total_size);
 
 	data = malloc(resp->total_size * 2);
+	if (!data) {
+		ERROR("Memory allocation failure! (%d bytes)\n",
+		      resp->total_size * 2);
+	}
 
 	i = 0;
 	while (i < resp->total_size) {
@@ -1253,6 +1211,11 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 	INFO("Set %s Tone Curve from '%s'\n", update_targets(target), fname);
 
 	uint16_t *data = malloc(UPDATE_SIZE);
+
+	if (!data) {
+		ERROR("Memory allocation failure! (%d bytes)\n",
+		      UPDATE_SIZE);
+	}
 
 	/* Read in file */
 	int tc_fd = open(fname, O_RDONLY);
@@ -1447,8 +1410,12 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 static void *shinkos2145_init(void)
 {
 	struct shinkos2145_ctx *ctx = malloc(sizeof(struct shinkos2145_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory allocation failure! (%d bytes)\n",
+		      (int)sizeof(struct shinkos2145_ctx));
+		
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct shinkos2145_ctx));
 
 	/* Use Fast return by default in CUPS mode */
@@ -1515,7 +1482,6 @@ static int shinkos2145_early_parse(void *vctx, int data_fd) {
 	case 2145:
 		printer_type = P_SHINKO_S2145;
 		break;
-	case 1245:
 	case 6145:
 	case 6245:
 	default:
@@ -1805,7 +1771,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.38",
+	.version = "0.40",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
