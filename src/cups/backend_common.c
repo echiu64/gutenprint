@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.53G"
+#define BACKEND_VERSION "0.54G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -48,6 +48,11 @@ static char *get_device_id(struct libusb_device_handle *dev)
 	int iface = 0;
 	char *buf = malloc(ID_BUF_SIZE + 1);
 
+	if (!buf) {
+		ERROR("Memory allocation failure (%d bytes)\n", ID_BUF_SIZE+1);
+		return NULL;
+	}
+	
 	if (libusb_kernel_driver_active(dev, iface))
 		libusb_detach_kernel_driver(dev, iface);
 
@@ -287,6 +292,11 @@ static char from_hex(char ch) {
 static char *url_encode(char *str) {
 	char *pstr = str, *buf = malloc(strlen(str) * 3 + 1), *pbuf = buf;
 
+	if (!buf) {
+		ERROR("Memory allocation failure (%d bytes)\n", (int) strlen(str)*3 + 1);
+		return NULL;
+	}
+		
 	while (*pstr) {
 		if (isalnum(*pstr) || *pstr == '-' || *pstr == '_' || *pstr == '.' || *pstr == '~') 
 			*pbuf++ = *pstr;
@@ -301,6 +311,12 @@ static char *url_encode(char *str) {
 }
 static char *url_decode(char *str) {
 	char *pstr = str, *buf = malloc(strlen(str) + 1), *pbuf = buf;
+
+	if (!buf) {
+		ERROR("Memory allocation failure (%d bytes)\n", (int) strlen(str) + 1);
+		return NULL;
+	}
+
 	while (*pstr) {
 		if (*pstr == '%') {
 			if (pstr[1] && pstr[2]) {
@@ -393,6 +409,11 @@ static int print_scan_output(struct libusb_device *device,
 		char *product2 = url_decode(product);
 		char *manuf3 = url_decode(manuf);
 		descr = malloc(256);
+		if (!descr) {
+			ERROR("Memory allocation failure (%d bytes)\n", 256);
+			return found;
+		}
+		
 		sprintf(descr, "%s %s", manuf3, product2);
 		free(product2);
 		free(manuf3);

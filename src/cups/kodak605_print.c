@@ -1,7 +1,7 @@
 /*
  *   Kodak 605 Photo Printer CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -95,8 +95,10 @@ enum {
 static void *kodak605_init(void)
 {
 	struct kodak605_ctx *ctx = malloc(sizeof(struct kodak605_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct kodak605_ctx));
 
 	return ctx;

@@ -59,8 +59,10 @@ struct updr150_ctx {
 static void* updr150_init(void)
 {
 	struct updr150_ctx *ctx = malloc(sizeof(struct updr150_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct updr150_ctx));
 	return ctx;
 }
@@ -193,9 +195,12 @@ static int updr150_read_parse(void *vctx, int data_fd) {
 			if (i == 0)
 				break;
 
-			if (ctx->type == P_SONY_UPCR10 &&
+			if (ctx->databuf[ctx->datalen] == 0x1b &&
 			    ctx->databuf[ctx->datalen + 1] == 0xee) {
-				ctx->copies_offset = ctx->datalen + 8;
+				if (ctx->type == P_SONY_UPCR10)
+					ctx->copies_offset = ctx->datalen + 8;
+				else
+					ctx->copies_offset = ctx->datalen + 12;
 			}
 
 			if (keep)
@@ -230,8 +235,6 @@ top:
 
 		i += sizeof(uint32_t);
 
-		if (dyesub_debug)
-			DEBUG("Sending %u bytes to printer @ %i\n", len, i);
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ctx->databuf + i, len)))
 			return CUPS_BACKEND_FAILED;
@@ -254,7 +257,7 @@ top:
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.16",
+	.version = "0.17",
 	.uri_prefix = "sonyupdr150",
 	.init = updr150_init,
 	.attach = updr150_attach,

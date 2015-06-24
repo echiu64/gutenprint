@@ -279,6 +279,10 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	int i;
 
 	uint16_t *data = malloc(UPDATE_SIZE);
+	if (!data) {
+		ERROR("Memory Allocation Failure\n");
+		return -1;
+	}
 
 	INFO("Dump Tone Curve to '%s'\n", fname);
 
@@ -384,6 +388,11 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	uint16_t *data = malloc(UPDATE_SIZE);
 	uint8_t *ptr;
 
+	if (!data) {
+		ERROR("Memory Allocation Failure\n");
+		return -1;
+	}
+	
 	INFO("Set Tone Curve from '%s'\n", fname);
 
 	/* Read in file */
@@ -630,8 +639,10 @@ static int kodak6800_cmdline_arg(void *vctx, int argc, char **argv)
 static void *kodak6800_init(void)
 {
 	struct kodak6800_ctx *ctx = malloc(sizeof(struct kodak6800_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure\n");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct kodak6800_ctx));
 
 	ctx->type = P_ANY;
@@ -880,7 +891,7 @@ top:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.42",
+	.version = "0.43",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

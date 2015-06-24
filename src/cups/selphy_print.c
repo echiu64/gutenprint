@@ -527,14 +527,21 @@ struct canonselphy_ctx {
 static void *canonselphy_init(void)
 {
 	struct canonselphy_ctx *ctx = malloc(sizeof(struct canonselphy_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct canonselphy_ctx));
 
 	/* Static initialization */
 	setup_paper_codes();
 
 	ctx->buffer = malloc(MAX_HEADER);
+	if (!ctx->buffer) {
+		ERROR("Memory Allocation Failure!\n");
+		free(ctx);
+		ctx = NULL;
+	}
 
 	return ctx;
 }
@@ -944,7 +951,7 @@ top:
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.86",
+	.version = "0.87",
 	.uri_prefix = "canonselphy",
 	.init = canonselphy_init,
 	.attach = canonselphy_attach,

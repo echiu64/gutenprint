@@ -1,7 +1,7 @@
 /*
  *   Kodak Professional 1400/805 CUPS backend -- libusb-1.0 version
  *
- *   (c) 2013-2014 Solomon Peachy <pizza@shaftnet.org>
+ *   (c) 2013-2015 Solomon Peachy <pizza@shaftnet.org>
  *
  *   The latest version of this program can be found at:
  *
@@ -158,6 +158,11 @@ static int kodak1400_set_tonecurve(struct kodak1400_ctx *ctx, char *fname)
 
 	uint16_t *data = malloc(UPDATE_SIZE);
 
+	if (!data) {
+		ERROR("Memory Allocation Failure!\n");
+		return -1;
+	}
+
 	/* Read in file */
 	int tc_fd = open(fname, O_RDONLY);
 	if (tc_fd < 0) {
@@ -277,8 +282,10 @@ int kodak1400_cmdline_arg(void *vctx, int argc, char **argv)
 static void *kodak1400_init(void)
 {
 	struct kodak1400_ctx *ctx = malloc(sizeof(struct kodak1400_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct kodak1400_ctx));
 	
 	return ctx;
@@ -596,7 +603,7 @@ top:
 
 struct dyesub_backend kodak1400_backend = {
 	.name = "Kodak 1400/805",
-	.version = "0.32",
+	.version = "0.33",
 	.uri_prefix = "kodak1400",
 	.cmdline_usage = kodak1400_cmdline,
 	.cmdline_arg = kodak1400_cmdline_arg,

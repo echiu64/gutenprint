@@ -143,8 +143,10 @@ struct mitsu9550_status2 {
 static void *mitsu9550_init(void)
 {
 	struct mitsu9550_ctx *ctx = malloc(sizeof(struct mitsu9550_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct mitsu9550_ctx));
 
         /* Use Fast return by default in CUPS mode */
@@ -382,7 +384,7 @@ top:
 			return CUPS_BACKEND_HOLD;
 		}
 		if (validate_media(media->type, ctx->cols, ctx->rows)) {
-			ERROR("Incorrect media type for printjob!\n");
+			ERROR("Incorrect media (%d) type for printjob (%dx%d)!\n", media->type, ctx->cols, ctx->rows);
 			return CUPS_BACKEND_HOLD;
 		}
 
@@ -429,7 +431,7 @@ top:
 			return CUPS_BACKEND_HOLD;
 		}
 		if (validate_media(media->type, ctx->cols, ctx->rows)) {
-			ERROR("Incorrect media type for printjob!\n");
+			ERROR("Incorrect media (%d) type for printjob (%dx%d)!\n", media->type, ctx->cols, ctx->rows);
 			return CUPS_BACKEND_HOLD;
 		}
 
@@ -787,7 +789,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP-9550DW-S",
-	.version = "0.11",
+	.version = "0.12",
 	.uri_prefix = "mitsu9550",
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,

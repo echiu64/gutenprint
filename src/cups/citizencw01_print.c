@@ -228,6 +228,10 @@ static uint8_t *cw01_resp_cmd(struct cw01_ctx *ctx,
 
 	i = atoi(tmp);  /* Length of payload in bytes, possibly padded */
 	respbuf = malloc(i);
+	if (!respbuf) {
+		ERROR("Memory Allocation Failure!\n");
+		return NULL;
+	}
 
 	/* Read in the actual response */
 	ret = read_data(ctx->dev, ctx->endp_up,
@@ -279,8 +283,10 @@ static int cw01_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, u
 static void *cw01_init(void)
 {
 	struct cw01_ctx *ctx = malloc(sizeof(struct cw01_ctx));
-	if (!ctx)
+	if (!ctx) {
+		ERROR("Memory Allocation Failure!\n");
 		return NULL;
+	}
 	memset(ctx, 0, sizeof(struct cw01_ctx));
 
 	return ctx;
@@ -861,7 +867,7 @@ static int cw01_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend cw01_backend = {
 	.name = "Citizen CW-01",
-	.version = "0.09",
+	.version = "0.10",
 	.uri_prefix = "citizencw01",
 	.cmdline_usage = cw01_cmdline,
 	.cmdline_arg = cw01_cmdline_arg,
