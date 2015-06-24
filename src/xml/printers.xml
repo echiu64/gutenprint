@@ -755,7 +755,7 @@
       <printer translate="name" name="Canon PIXMA MG5370" driver="bjc-PIXMA-MG5370" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5370">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5380" driver="bjc-PIXMA-MG5380" manufacturer="Canon" model="8005300" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5380">EXPERIMENTAL</printer>
       <!-- Canon MG5400 family -->
-      <printer translate="name" name="Canon MG5400 series" driver="bjc-MG5400-series" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG5400-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon MG5400 series" deviceid="MFG:Canon;MDL:MG5400 series;CMD:URF;" driver="bjc-MG5400-series" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG5400-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5410" driver="bjc-PIXMA-MG5410" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5410">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5420" driver="bjc-PIXMA-MG5420" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5420">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5422" driver="bjc-PIXMA-MG5422" manufacturer="Canon" model="8005400" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5422">EXPERIMENTAL</printer>
