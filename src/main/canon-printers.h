@@ -2977,7 +2977,7 @@ static const canon_cap_t canon_model_capabilities[] =
     3,9, /* ESC (l and (P command lengths */
     1, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300,  /* features */
-    &canon_PIXMA_MG5300_modelist,
+    &canon_PIXMA_MG5400_modelist,
     &canon_PIXMA_MG5400_paperlist,
     &canon_PIXMA_MG5400_modeuselist,
     NULL,

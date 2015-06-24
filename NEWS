@@ -549,6 +549,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
      Resolution modes corrected for following printers:
 
+	Canon MG5400 series
 	Canon MG6300 series
 
     Added support for upper/lower tray in cassette for following models:
