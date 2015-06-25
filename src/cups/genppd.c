@@ -564,9 +564,11 @@ main(int  argc,			    /* I - Number of command-line arguments */
       break;
     }
   }
+#ifdef HAVE_LIBZ  
   if (use_compression)
     gpext = ".gz";
   else
+#endif	  
     gpext = "";
   if (optind < argc) {
     int n, numargs;
