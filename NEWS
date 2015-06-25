@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.2.11-pre1, an unstable release of Gutenprint
-5.2. Please read these release notes carefully.
+Welcome to Gutenprint 5.2.11-pre1, a pre-release of Gutenprint
+5.2.11. Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -9,7 +9,8 @@ Macintosh OS X (10.5 and above) systems.  Gutenprint includes CUPS and
 Foomatic drivers, and an enhanced Print plug-in for GIMP that replaces
 the print plug-in packaged with the GIMP distribution.
 
-Gutenprint 5.2.11 no longer supports Macintosh OS X 10.4 or earlier.
+As of 5.2.10, Gutenprint no longer supports Macintosh OS X 10.4 or
+earlier.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -255,29 +256,30 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 * Changes from 5.2.10
 
-  1) Added support for the following printers:
+  1) Added support for the following dye sublimation printers:
 
-        Citizen CW-01 / Olmec OP900
-	Mitsubishi CP3800DW
-        Kodak 305                 [experimental]
-	Mitsubishi CP-D80DW       [experimental]
-	Shinko S1245/S6145/S6245  [experimental]
- 	Sony UP-CR10/DNP SL10     [experimental]
-	Kodak 8810                [experimental]
-	Ciaat Brava 21            [experimental]
 	Canon SELPHY CP820/CP910
+	Ciaat Brava 21		  [experimental]
+	Citizen CW-01 / Olmec OP900
 	DNP DS620
+	Kodak 305		  [experimental]
+	Kodak 8810		  [experimental]
+	Mitsubishi CP-D80DW	  [experimental]
+	Mitsubishi CP3800DW
+	Shinko S1245/S6145/S6245  [experimental]
+	Sony UP-CR10/DNP SL10	  [experimental]
 
-  2) Enhanced support (and bugfixes) for the following printers:
+  2) Enhanced support (and bugfixes) for the following dye sublimation
+     printers:
 
-	DNP DS40/DS80/RX1
-        Citizen CX/CX-W/CY
-	Kodak 6800/6850
-	Kodak 605
 	Canon SELPHY CP900
-	Sony UP-DR200
-        Mitsubishi CP-9550 family (including the CP9550DW-S variant)
+	Citizen CX/CX-W/CY
+	DNP DS40/DS80/RX1
+	Kodak 605
+	Kodak 6800/6850
+	Mitsubishi CP-9550 family (including the CP9550DW-S variant)
 	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]
+	Sony UP-DR200
 
   3) Added support for the Datamax-O'Neil PCL printers, the Performance
      series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
