@@ -89,6 +89,7 @@ AC_INIT(GUTENPRINT_NAME, GUTENPRINT_VERSION, [gimp-print-devel@lists.sourceforge
 AC_PREREQ(2.53)
 AC_REVISION($Revision$)
 AC_CONFIG_SRCDIR(src/main/print-vars.c)
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR(scripts)
 STP_INIT
 AC_COPYRIGHT(
@@ -149,6 +150,7 @@ LIBS="${LIBS:=}"
 
 dnl Initialize automake stuff.
 AM_INIT_AUTOMAKE(1.9 dist-bzip2 no-dist-gzip tar-ustar check-news gnu)
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 popdef([GUTENPRINT_NAME])
 popdef([GUTENPRINT_VERSION])
 
