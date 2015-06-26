@@ -27,6 +27,7 @@ make_ppds=1
 md5dir=''
 outdir=''
 cupsargs=''
+postscript=''
 npages=3
 
 usage() {
@@ -48,6 +49,7 @@ set_args() {
 	    -o|--option) shift; cupsargs="$cupsargs $1" ;;
 	    -m|--md5dir) shift; md5dir="$1" ;;
 	    -p|--pages) shift; npages="$1" ;;
+	    -P|--postscript) shift; postscript=1 ;;
 	    --) shift; args="$@"; return ;;
 	    *) return ;;
 	esac
@@ -64,15 +66,18 @@ if [ -n "$md5dir" -a ! -d "$md5dir" ] ; then
     mkdir -p "$md5dir"
 fi
 
-version="@GUTENPRINT_MAJOR_VERSION@.@GUTENPRINT_MINOR_VERSION@";
-cupsdir="@cups_conf_serverbin@/filter"
+version="5.2";
+cupsdir="/usr/lib/cups/filter"
 if [ -x "$cupsdir/pstoraster" -o -x "$cupsdir/gstoraster" -o -x "$cupsdir/cgpdftoraster" ] ; then
-    pages="page-ranges=24-`expr 24 + $npages - 1` "
+    pages="24-`expr 24 + $npages - 1`"
+    if [ -n "$postscript" ] ; then
+	pages="page-ranges=$pages"
+    fi
 else
     pages=''
 fi
 
-if [ ! -x "$cupsdir/cgpdftoraster" -a ! -x "$cupsdir/pdftops" ] ; then
+if [ ! -x "$cupsdir/cgpdftoraster" -a ! -x "$cupsdir/pdftops" -a ! -x "$cupsdir/gstoraster" ] ; then
     echo 'CUPS does not appear to be installed, skipping test'
     exit 0
 fi
@@ -84,17 +89,28 @@ cleanup() {
     exit 1
 }
 
-pdftops="`type -p pdftops`"
-
-if [ ! -n "$pdftops" -o ! -x "$pdftops" ] ; then
-    pdftops="`whence pdftops`"
+pdfjam="`which pdfjam`"
+if [ -z "$pdfjam" ] ; then
+    postscript=1
 fi
 
-if [ -n "$pdftops" -a ! -x "$cupsdir/cgpdftoraster" ] ; then
+if [ -n "$postscript" ] ; then
+    pdftops="`type -p pdftops`"
+
+    if [ ! -n "$pdftops" -o ! -x "$pdftops" ] ; then
+	pdftops="`whence pdftops`"
+    fi
+
+    if [ -n "$pdftops" -a ! -x "$cupsdir/cgpdftoraster" ] ; then
+	tfile=`mktemp`
+	trap cleanup 1 2 3 6 14 15 30
+	"$pdftops" -f 24 -l `expr 24 + $npages - 1` "$sdir/../../doc/gutenprint-users-manual.pdf" $tfile
+    fi
+else
     tfile=`mktemp`
     trap cleanup 1 2 3 6 14 15 30
-    $pdftops -f 24 -l `expr 24 + $npages - 1` "$sdir/../../doc/gutenprint-users-manual.pdf" $tfile
-fi
+    "$pdfjam" -q "$sdir/../../doc/gutenprint-users-manual.pdf" "$pages" -o $tfile
+fi    
 
 if [ -z "$verbose" ] ; then
     STP_SUPPRESS_MESSAGES=1
