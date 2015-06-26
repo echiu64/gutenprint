@@ -3350,7 +3350,7 @@ static void shinko_chcs1245_printer_init(stp_vars_t *v)
   stp_put32_le(0x00, v);
   if (((const unsigned char*)(privdata.laminate->seq).data)[0] == 0x02 ||
       ((const unsigned char*)(privdata.laminate->seq).data)[0] == 0x03) {
-	  stp_put32_le(0x07fffffff, v);  // Glossy
+	  stp_put32_le(0x07fffffff, v);  /* Glossy */
   } else {
 	  stp_put32_le(0x0, v);  /* XXX -25>0>+25 */
   }
@@ -3789,7 +3789,7 @@ static void dnpds40_printer_start(stp_vars_t *v)
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
   } else {
-    stp_zprintf(v, "00"); // should be impossible.
+    stp_zprintf(v, "00"); /* should be impossible. */
   }
 }
 
