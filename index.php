@@ -32,18 +32,15 @@ Users!</font></em></strong></h2>
 <p>There is now a <a
 href="http://gimp-print.sourceforge.net/MacOSX.php">Gutenprint web
 page for OS X</a> that answers most questions on how to use Gutenprint
-and Gimp-Print with OS X 10.2 "Jaguar", 10.3 "Panther", 10.4 "Tiger",
-10.5 "Leopard" and 10.6 "Snow Leopard", and provides direct download
-links.</p>
+and Gimp-Print with OS X 10.2 "Jaguar" and beyond, and provides direct
+download links.</p>
 
-<H2><font color="#ff0000">Gutenprint is Sourceforge Project of the
-Month for November, 2010!</font></h2>
+<H2><font color="#ff0000">Gutenprint 5.2.11-pre1 is available!</font></h2>
 
-<p><strong><em><font color="#ff0000">New as of November 16,
-2010!</font></em></strong> The Gutenprint project is honored to have
-been selected Sourceforge Project of the Month for November, 2010.
-Please see the announcement at
-http://sourceforge.net/blog/potm-201011/.</p>
+<P><strong><em><font color="#ff0000">New as of June 26,
+2015!</strong></em></font> After a very long hiatus, the Gutenprint project is pleased to announce Gutenprint 5.2.11-pre1, a pre-release of Gutenprint 5.2.11.  This release adds support for many new printers (in particular Datamax-O'Neil label printers, more dye sublimation printers, and more Canon inkjets) and other improvements over 5.2.10.  The main impact is for developers that link against the Gutenprint library.  This package is available in source form, and also in binary installer form for Macintosh OS X (10.6 and above; 10.5 and below are no longer supported).  <a
+href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11-pre1/">You
+can read the release notes and download it here</a>.  </p>
 
 <H2><font color="#ff0000">Gutenprint 5.2.10 is released!</font></h2>
 
@@ -80,6 +77,14 @@ for Macintosh OS X (10.3 and above).  <a
 href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/">You
 can read the release notes and download it here</a>.  </p>
 
+<H2><font color="#ff0000">Gutenprint is Sourceforge Project of the
+Month for November, 2010!</font></h2>
+
+<p><strong><em><font color="#ff0000">New as of November 16,
+2010!</font></em></strong> The Gutenprint project is honored to have
+been selected Sourceforge Project of the Month for November, 2010.
+Please see the announcement at
+http://sourceforge.net/blog/potm-201011/.</p>
 
 <H2><font color="#ff0000">Gutenprint 5.2.6 is released!</font></h2>
 
