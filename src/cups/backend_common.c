@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.54G"
+#define BACKEND_VERSION "0.55G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -798,7 +798,14 @@ int main (int argc, char **argv)
 			/* Check to see if it is claimed by the backend */
 			if (backend && backend->cmdline_arg) {
 				int keep = optind;
-				backend_cmd += backend->cmdline_arg(NULL, argc, argv);
+				int boo;
+
+				boo = backend->cmdline_arg(NULL, argc, argv);
+				backend_cmd += boo;
+
+				if (boo > 1)
+					keep++;
+
 				optind = keep;
 			}
 			break;

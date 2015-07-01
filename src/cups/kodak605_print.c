@@ -517,7 +517,7 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 				j = kodak605_set_tonecurve(ctx, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'm':
 			if (ctx) {
 				j = kodak605_get_media(ctx);

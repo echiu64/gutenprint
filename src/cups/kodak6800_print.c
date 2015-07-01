@@ -592,13 +592,13 @@ static int kodak6800_cmdline_arg(void *vctx, int argc, char **argv)
 				j = kodak6800_get_tonecurve(ctx, optarg);
 				break;
 			} 
-			return 1;
+			return 2;
 		case 'C':
 			if (ctx) {
 				j = kodak6800_set_tonecurve(ctx, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'm':
 			if (ctx) {
 				uint8_t mediabuf[MAX_MEDIA_LEN];

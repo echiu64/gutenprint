@@ -847,7 +847,7 @@ static int cw01_cmdline_arg(void *vctx, int argc, char **argv)
 				j = cw01_clear_counter(ctx, optarg[0]);
 				break;
 			}
-			return 1;
+			return 2;
 		case 's':
 			if (ctx) {
 				j = cw01_get_status(ctx);

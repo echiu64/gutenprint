@@ -1306,19 +1306,19 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 					return -1;
 				break;
 			}
-			return 1;
+			return 2;
 		case 'c':
 			if (ctx) {
 				j = get_tonecurve(ctx, TONECURVE_USER, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'C':
 			if (ctx) {
 				j = set_tonecurve(ctx, TONECURVE_USER, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'e':
 			if (ctx) {
 				j = get_errorlog(ctx);
@@ -1348,13 +1348,13 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 				j = get_tonecurve(ctx, TONECURVE_CURRENT, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'L':
 			if (ctx) {
 				j = set_tonecurve(ctx, TONECURVE_CURRENT, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'm':
 			if (ctx) {
 				j = get_mediainfo(ctx);
@@ -1390,13 +1390,13 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 				j = set_user_string(ctx, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'X':
 			if (ctx) {
 				j = cancel_job(ctx, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		default:
 			break;  /* Ignore completely */
 		}

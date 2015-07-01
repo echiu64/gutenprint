@@ -983,6 +983,73 @@ top:
 	return CUPS_BACKEND_OK;
 }
 
+static int dnpds40_get_sensors(struct dnpds40_ctx *ctx)
+{
+	struct dnpds40_cmd cmd;
+	uint8_t *resp;
+	int len = 0;
+	char *tok;
+
+	/* Get Sensor Info */
+	dnpds40_build_cmd(&cmd, "INFO", "SENSOR", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	tok = strtok((char*)resp, "; -");
+	do {
+		char *val = strtok(NULL, "; -");
+
+		if (!strcmp("HDT", tok)) {
+			INFO("Head Temperature   : %s\n", val);
+		} else if (!strcmp("MDT", tok)) {
+			INFO("Media Temperature  : %s\n", val);
+		} else if (!strcmp("PMK", tok)) {
+			INFO("Paper Mark         : %s\n", val);
+		} else if (!strcmp("RML", tok)) {
+			INFO("Ribbon Mark Left   : %s\n", val);
+		} else if (!strcmp("RMC", tok)) {
+			INFO("Ribbon Mark Right  : %s\n", val);
+		} else if (!strcmp("RMR", tok)) {
+			INFO("Ribbon Mark Center : %s\n", val);
+		} else if (!strcmp("PSZ", tok)) {
+			INFO("Paper Size         : %s\n", val);
+		} else if (!strcmp("PNT", tok)) {
+			INFO("Paper Notch        : %s\n", val);
+		} else if (!strcmp("PJM", tok)) {
+			INFO("Paper Jam          : %s\n", val);
+		} else if (!strcmp("PED", tok)) {
+			INFO("Paper End          : %s\n", val);
+		} else if (!strcmp("PET", tok)) {
+			INFO("Paper Empty        : %s\n", val);
+		} else if (!strcmp("HDV", tok)) {
+			INFO("Head Voltage       : %s\n", val);
+		} else if (!strcmp("HMD", tok)) {
+			INFO("Humidity           : %s\n", val);
+		} else if (!strcmp("RP1", tok)) {
+			INFO("Roll Paper End 1   : %s\n", val);
+		} else if (!strcmp("RP2", tok)) {
+			INFO("Roll Paper End 2   : %s\n", val);
+		} else if (!strcmp("GSR", tok)) {
+			INFO("Color Sensor Red   : %s\n", val);
+		} else if (!strcmp("GSG", tok)) {
+			INFO("Color Sensor Green : %s\n", val);
+		} else if (!strcmp("GSB", tok)) {
+			INFO("Color Sensor Blue  : %s\n", val);
+		} else {
+			INFO("Unknown Sensor: '%s' '%s'\n",
+			     tok, val);
+		}
+	} while ((tok = strtok(NULL, "; -")) != NULL);
+
+	free(resp);
+
+	return CUPS_BACKEND_OK;
+}
+
 static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 {
 	struct dnpds40_cmd cmd;
@@ -995,26 +1062,6 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 	/* Firmware version already queried */
 	INFO("Firmware Version: '%s'\n", ctx->version);
 
-	/* Get Sensor Info */
-	dnpds40_build_cmd(&cmd, "INFO", "SENSOR", 0);
-
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-	if (!resp)
-		return CUPS_BACKEND_FAILED;
-
-	dnpds40_cleanup_string((char*)resp, len);
-	INFO("Sensor Info:\n");
-	{
-		char *tmp;
-		tmp = strtok((char*)resp, "; ");
-		do {
-			// XXX parse the components?
-			INFO("  %s\n", tmp);
-		} while ((tmp = strtok(NULL, "; ")) != NULL);
-	}
-
-	free(resp);
-
 	/* Get Horizonal resolution */
 	dnpds40_build_cmd(&cmd, "INFO", "RESOLUTION_H", 0);
 
@@ -1024,7 +1071,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	dnpds40_cleanup_string((char*)resp, len);
 
-	INFO("Horizontal Resolution: '%s' dpi\n", (char*)resp + 3);
+	INFO("Horizontal Resolution : '%s' dpi\n", (char*)resp + 3);
 
 	free(resp);
 
@@ -1037,7 +1084,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	dnpds40_cleanup_string((char*)resp, len);
 
-	INFO("Vertical Resolution: '%s' dpi\n", (char*)resp + 3);
+	INFO("Vertical Resolution   : '%s' dpi\n", (char*)resp + 3);
 
 	free(resp);
 
@@ -1460,6 +1507,23 @@ static int dnpds620_standby_mode(struct dnpds40_ctx *ctx, int delay)
 	return 0;
 }
 
+static int dnpds620_media_keep_mode(struct dnpds40_ctx *ctx, int delay)
+{
+	struct dnpds40_cmd cmd;
+	char msg[9];
+	int ret;
+
+	/* Generate command */
+	dnpds40_build_cmd(&cmd, "MNT_WT", "END_KEEP_MODE", 4);
+	snprintf(msg, sizeof(msg), "%02d\r", delay);
+
+	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 4)))
+		return ret;
+
+	return 0;
+}
+
+
 static int dnpds40_set_counter_p(struct dnpds40_ctx *ctx, char *arg)
 {
 	struct dnpds40_cmd cmd;
@@ -1480,12 +1544,13 @@ static int dnpds40_set_counter_p(struct dnpds40_ctx *ctx, char *arg)
 static void dnpds40_cmdline(void)
 {
 	DEBUG("\t\t[ -i ]           # Query printer info\n");
+	DEBUG("\t\t[ -I ]           # Query sensor  info\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -n ]           # Query counters\n");
 	DEBUG("\t\t[ -N A|B|M ]     # Clear counter A/B/M\n");
 	DEBUG("\t\t[ -p num ]       # Set counter P\n");
-	DEBUG("\t\t[ -S num ]       # Set standby time (1-99 minutes, 0 disables)\n");	
-
+	DEBUG("\t\t[ -k num ]       # Set standby time (1-99 minutes, 0 disables)\n");
+	DEBUG("\t\t[ -K num ]       # Keep Media Status Across Power Cycles (1 on, 0 off)\n");
 }
 
 static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
@@ -1496,11 +1561,17 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "inN:p:sS:")) >= 0) {
+	while ((i = getopt(argc, argv, "iInN:p:sK:k:")) >= 0) {
 		switch(i) {
 		case 'i':
 			if (ctx) {
 				j = dnpds40_get_info(ctx);
+				break;
+			}
+			return 1;
+		case 'I':
+			if (ctx) {
+				j = dnpds40_get_sensors(ctx);
 				break;
 			}
 			return 1;
@@ -1523,20 +1594,20 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 				j = dnpds40_clear_counter(ctx, optarg[0]);
 				break;
 			}
-			return 1;
+			return 2;
 		case 'p':
 			if (ctx) {
 				j = dnpds40_set_counter_p(ctx, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		case 's':
 			if (ctx) {
 				j = dnpds40_get_status(ctx);
 				break;
 			}
 			return 1;
-		case 'S':
+		case 'k':
 			if (ctx) {
 				int time = atoi(optarg);
 				if (!ctx->supports_standby) {
@@ -1551,6 +1622,23 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 				}
 				j = dnpds620_standby_mode(ctx, time);
 			}
+			return 2;
+		case 'K':
+			if (ctx) {
+				int keep = atoi(optarg);
+				if (!ctx->supports_standby) {
+					ERROR("Printer does not support media keep mode\n");
+					j = -1;
+					break;
+				}
+				if (keep < 0 || keep > 1) {
+					ERROR("Value out of range (0-1)");
+					j = -1;
+					break;
+				}
+				j = dnpds620_media_keep_mode(ctx, keep);
+			}
+			return 2;
 		default:
 			break;  /* Ignore completely */
 		}
@@ -1564,7 +1652,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.51",
+	.version = "0.52",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

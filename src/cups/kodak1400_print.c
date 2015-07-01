@@ -268,7 +268,7 @@ int kodak1400_cmdline_arg(void *vctx, int argc, char **argv)
 				j = kodak1400_set_tonecurve(ctx, optarg);
 				break;
 			}
-			return 1;
+			return 2;
 		default:
 			break;  /* Ignore completely */
 		}
