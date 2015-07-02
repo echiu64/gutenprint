@@ -27,10 +27,12 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.55G"
+#define BACKEND_VERSION "0.56G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
+
+#define NUM_CLAIM_ATTEMPTS 10
 
 /* Global variables */
 int dyesub_debug = 0;
@@ -40,6 +42,23 @@ int extra_type = -1;
 char *use_serno = NULL;
 
 /* Support Functions */
+
+static int backend_claim_interface(struct libusb_device_handle *dev, int iface)
+{
+	int attempts = NUM_CLAIM_ATTEMPTS;
+	int ret;
+	do {
+		ret = libusb_claim_interface(dev, iface);
+		if (!ret)
+			break;
+		sleep(1);
+	} while (--attempts > 0);
+
+	if (ret)
+		ERROR("Printer open failure (Could not claim printer interface after %d attempts) (%d)\n", NUM_CLAIM_ATTEMPTS, ret);
+
+	return ret;
+}
 
 #define ID_BUF_SIZE 2048
 static char *get_device_id(struct libusb_device_handle *dev)
@@ -56,7 +75,8 @@ static char *get_device_id(struct libusb_device_handle *dev)
 	if (libusb_kernel_driver_active(dev, iface))
 		libusb_detach_kernel_driver(dev, iface);
 
-	libusb_claim_interface(dev, iface);
+	if (backend_claim_interface(dev, iface))
+		return NULL;
 
 	if (libusb_control_transfer(dev,
 				    LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_ENDPOINT_IN |
@@ -434,15 +454,14 @@ static int print_scan_output(struct libusb_device *device,
 		serial = url_encode(buf);
 	} else if (backend->query_serno) { /* Get from backend hook */
 		int iface = 0;
+
 		struct libusb_config_descriptor *config;
 
 		if (libusb_kernel_driver_active(dev, iface))
 			libusb_detach_kernel_driver(dev, iface);
 
-		/* If we fail to claim the printer, it's already in use
-		   so we should just skip over it... */
-		buf[0] = 0;
-		if (!libusb_claim_interface(dev, iface)) {
+		/* Try to claim the printer, and handle transient failures */
+		if (!backend_claim_interface(dev, iface)) {
 			int i;
 			uint8_t endp_up, endp_down;
 			libusb_get_active_config_descriptor(device, &config);
@@ -455,6 +474,7 @@ static int print_scan_output(struct libusb_device *device,
 				}
 			}
 
+			buf[0] = 0;
 			/* Ignore result since a failure isn't critical here */
 			backend->query_serno(dev, endp_up, endp_down, buf, STR_LEN_MAX);
 			libusb_release_interface(dev, iface);
@@ -967,9 +987,8 @@ int main (int argc, char **argv)
 		}
 	}
 
-	ret = libusb_claim_interface(dev, iface);
+	ret = backend_claim_interface(dev, iface);
 	if (ret) {
-		ERROR("Printer open failure (Could not claim printer interface) (%d)\n", ret);
 		ret = CUPS_BACKEND_STOP;
 		goto done_close;
 	}
