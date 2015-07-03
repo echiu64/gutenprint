@@ -3385,8 +3385,18 @@ static const dyesub_pagesize_t shinko_chcs6245_page[] =
   { "w360h576", "8x5", PT(1536,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w432h576", "8x6", PT(1836,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w576h576", "8x8", PT(2436,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+#ifdef MULTICUT
+  { "8x4_x2", "8x4*2", PT(2464,300)+1, PT(2494,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+#endif  
   { "c8x10", "8x10", PT(2464,300)+1, PT(3036,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#ifdef MULTICUT
+  { "8x5_x2", "8x5*2", PT(2464,300)+1, PT(3094,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+#endif  
   { "w576h864", "8x12", PT(2464,300)+1, PT(3636,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+#ifdef MULTICUT
+  { "8x6_x2", "8x6*2", PT(2464,300)+1, PT(3694,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+  { "8x4_x3", "8x4*3", PT(2464,300)+1, PT(3742,300)+1, 0, 0, PT(0,300), PT(0,300), DYESUB_PORTRAIT},
+#endif  
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs6245_page_list, dyesub_pagesize_t, shinko_chcs6245_page);
@@ -3397,8 +3407,18 @@ static const dyesub_printsize_t shinko_chcs6245_printsize[] =
   { "300x300", "w360h576", 1536, 2464},
   { "300x300", "w432h576", 1836, 2464},
   { "300x300", "w576h576", 2436, 2464},
+#ifdef MULTICUT
+  { "300x300", "8x4_x2", 2464, 2494},
+#endif
   { "300x300", "c8x10", 2464, 3036},
+#ifdef MULTICUT
+  { "300x300", "8x5_x2", 2464, 3094},
+#endif
   { "300x300", "w576h864", 2464, 3636},
+#ifdef MULTICUT
+  { "300x300", "8x6_x2", 2464, 3694},
+  { "300x300", "8x4_x3", 2464, 3742},
+#endif
 };
 
 LIST(dyesub_printsize_list_t, shinko_chcs6245_printsize_list, dyesub_printsize_t, shinko_chcs6245_printsize);
@@ -3428,6 +3448,14 @@ static void shinko_chcs6245_printer_init(stp_vars_t *v)
     media = 0x10;
   else if (strcmp(privdata.pagesize,"w576h864") == 0)
     media = 0x11;
+  else if (strcmp(privdata.pagesize,"8x4_x2") == 0)
+    media = 0x30;
+  else if (strcmp(privdata.pagesize,"8x5_x2") == 0)
+    media = 0x31;
+  else if (strcmp(privdata.pagesize,"8x6_x2") == 0)
+    media = 0x32;
+  else if (strcmp(privdata.pagesize,"8x4_x3") == 0)
+    media = 0x40;
 
   stp_put32_le(0x10, v);
   stp_put32_le(6245, v);  /* Printer Model */
