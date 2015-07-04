@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.56G"
+#define BACKEND_VERSION "0.57G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -434,6 +434,10 @@ static int print_scan_output(struct libusb_device *device,
 		descr = malloc(256);
 		if (!descr) {
 			ERROR("Memory allocation failure (%d bytes)\n", 256);
+			if (manuf3)
+				free(manuf3);
+			if (product2)
+				free(product2);
 			return found;
 		}
 		
@@ -563,7 +567,7 @@ static int find_and_enumerate(struct libusb_context *ctx,
 			      int scan_only)
 {
 	int num;
-	int i, j, k;
+	int i, j = 0, k;
 	int found = -1;
 
 	/* Enumerate and find suitable device */
@@ -876,7 +880,7 @@ int main (int argc, char **argv)
 			exit(1);
 		}
 		i &= ~O_NONBLOCK;
-		i = fcntl(data_fd, F_SETFL, 0);
+		i = fcntl(data_fd, F_SETFL, i);
 		if (i < 0) {
 			perror("ERROR:Can't open input");
 			exit(1);

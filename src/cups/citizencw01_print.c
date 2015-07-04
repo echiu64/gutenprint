@@ -498,7 +498,7 @@ top:
 				     ptr + SPOOL_PLANE_HDR_LEN, ctx->hdr.plane_len - SPOOL_PLANE_HDR_LEN)))
 			return CUPS_BACKEND_FAILED;
 
-	ptr += ctx->hdr.plane_len;
+	/* ptr += ctx->hdr.plane_len; */
 
 	/* Start print */
 	cw01_build_cmd(&cmd, "CNTRL", "START", 0);

@@ -1134,7 +1134,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 	int ret, num = 0;
 
 	uint8_t *data;
-	uint16_t curves[UPDATE_SIZE];
+	uint16_t curves[UPDATE_SIZE]  = { 0 } ;
 
 	int i,j;
 
@@ -1159,6 +1159,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 	if (!data) {
 		ERROR("Memory allocation failure! (%d bytes)\n",
 		      resp->total_size * 2);
+		return -1;
 	}
 
 	i = 0;
@@ -1213,6 +1214,7 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 	if (!data) {
 		ERROR("Memory allocation failure! (%d bytes)\n",
 		      UPDATE_SIZE);
+		return -1;
 	}
 
 	/* Read in file */
@@ -1740,7 +1742,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.42",
+	.version = "0.43",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,

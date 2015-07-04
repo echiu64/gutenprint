@@ -343,7 +343,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 			ctx->version = strdup((char*) resp);
 
 			/* Parse version */
-			ptr = strtok((char*)resp, " .");
+			/* ptr = */ strtok((char*)resp, " .");
 			ptr = strtok(NULL, ".");
 			ctx->ver_major = atoi(ptr);
 			ptr = strtok(NULL, ".");
@@ -843,7 +843,7 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 	if (ctx->supports_matte) {
 		snprintf(buf, sizeof(buf), "%08d", 1);
 		if (ctx->buffctrl_offset) {
-			memcpy(ctx->qty_offset, buf, 8);
+			memcpy(ctx->buffctrl_offset, buf, 8);
 		} else {
 			dnpds40_build_cmd(&cmd, "CNTRL", "BUFFCNTRL", 8);
 			if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)buf, 8)))
@@ -897,7 +897,6 @@ top:
 		return CUPS_BACKEND_FAILED;
 	dnpds40_cleanup_string((char*)resp, len);
 	status = atoi((char*)resp);
-	free(resp);
 
 	/* Figure out what's going on */
 	switch(status) {
@@ -907,6 +906,7 @@ top:
 	{
 		int bufs;
 
+		if (resp) free(resp);
 		/* Query buffer state */
 		dnpds40_build_cmd(&cmd, "INFO", "FREE_PBUFFER", 0);
 		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
@@ -1621,6 +1621,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 					break;
 				}
 				j = dnpds620_standby_mode(ctx, time);
+				break;
 			}
 			return 2;
 		case 'K':
@@ -1637,6 +1638,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 					break;
 				}
 				j = dnpds620_media_keep_mode(ctx, keep);
+				break;
 			}
 			return 2;
 		default:
@@ -1652,7 +1654,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.52",
+	.version = "0.53",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

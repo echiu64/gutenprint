@@ -371,7 +371,7 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	/* We're done */
 	free(data);
 
-	return 0;
+	return ret;
 }
 
 static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)

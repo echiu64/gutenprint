@@ -539,7 +539,7 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 static int mitsu70x_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
 {
 	int ret, i;
-	struct mitsu70x_status_resp resp;
+	struct mitsu70x_status_resp resp = { 0 };
 
 	struct mitsu70x_ctx ctx = {
 		.dev = dev,
