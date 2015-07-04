@@ -288,28 +288,28 @@ static int mitsu9550_get_status(struct mitsu9550_ctx *ctx, uint8_t *resp, int st
 static int validate_media(int type, int cols, int rows) {
 	switch(type) {
 	case 0x01: /* 3.5x5 */
- 		if (cols != 1812 || rows != 1240)
+		if (cols != 1812 && rows != 1240)
 			return 1;
 		break;
 	case 0x02: /* 4x6 */
 	case 0x03: /* PC ??? */ 
 		if (cols != 2152)
 			return 1;
-		if (rows != 1416 || rows != 1184 ||
+		if (rows != 1416 && rows != 1184 &&
 		    rows != 1240)
 			return 1;
 		break;
 	case 0x04: /* 5x7 */
 		if (cols != 1812)
 			return 1;
-		if (rows != 1240 || rows != 2452)
+		if (rows != 1240 && rows != 2452)
 			return 1;
 		break;
 	case 0x05: /* 6x9 */
 		if (cols != 2152)
 			return 1;
-		if (rows != 1416 || rows != 2972 ||
-		    rows != 2956 || rows != 3146)
+		if (rows != 1416 && rows != 2972 &&
+		    rows != 2956 && rows != 3146)
 			return 1;
 		break;
 	case 0x06: /* V */
@@ -789,7 +789,7 @@ static int mitsu9550_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu9550_backend = {
 	.name = "Mitsubishi CP-9550DW-S",
-	.version = "0.12",
+	.version = "0.13",
 	.uri_prefix = "mitsu9550",
 	.cmdline_usage = mitsu9550_cmdline,
 	.cmdline_arg = mitsu9550_cmdline_arg,

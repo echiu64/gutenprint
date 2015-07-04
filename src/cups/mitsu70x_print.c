@@ -357,7 +357,7 @@ static int mitsu70x_get_status(struct mitsu70x_ctx *ctx, struct mitsu70x_status_
 static int mitsu70x_main_loop(void *vctx, int copies) {
 	struct mitsu70x_ctx *ctx = vctx;
 
-	struct mitsu70x_state rdbuf, rdbuf2;
+	struct mitsu70x_state rdbuf = { 0 }, rdbuf2 = { 0 };
 
 	int last_state = -1, state = S_IDLE;
 	int ret;

@@ -99,8 +99,6 @@ struct shinkos2145_ctx {
 
 	struct s2145_printjob_hdr hdr;
 
-	uint32_t model;
-
 	uint8_t *databuf;
 	int datalen;
 };
@@ -684,11 +682,11 @@ struct s2145_status_resp {
 static char *bank_statuses(uint8_t v)
 {
 	switch (v) {
-	case 0:
+	case BANK_STATUS_FREE:
 		return "Free";
-	case 1:
+	case BANK_STATUS_XFER:
 		return "Xfer";
-	case 2:
+	case BANK_STATUS_FULL:
 		return "Full";
 	default:
 		return "Unknown";
@@ -900,7 +898,7 @@ static int get_fwinfo(struct shinkos2145_ctx *ctx)
 					(uint8_t*)&cmd, sizeof(cmd),
 					sizeof(*resp),
 					&num)) < 0) {
-			ERROR("Failed to execute %s command\n", cmd_names(cmd.hdr.cmd));
+			ERROR("Failed to execute %s command (%d)\n", cmd_names(cmd.hdr.cmd), ret);
 			continue;
 		}
 
@@ -1136,7 +1134,7 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 	int ret, num = 0;
 
 	uint8_t *data;
-	uint16_t curves[768];
+	uint16_t curves[UPDATE_SIZE];
 
 	int i,j;
 
@@ -1189,11 +1187,11 @@ static int get_tonecurve(struct shinkos2145_ctx *ctx, int type, char *fname)
 			goto done;
 		}
 
-		for (i = 0 ; i < 768; i++) {
+		for (i = 0 ; i < UPDATE_SIZE; i++) {
 			/* Byteswap appropriately */
 			curves[i] = cpu_to_be16(le16_to_cpu(curves[i]));
-			write(tc_fd, &curves[i], sizeof(uint16_t));
 		}
+		write(tc_fd, curves, UPDATE_SIZE * sizeof(uint16_t));
 		close(tc_fd);
 	}
 
@@ -1210,7 +1208,7 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 
 	INFO("Set %s Tone Curve from '%s'\n", update_targets(target), fname);
 
-	uint16_t *data = malloc(UPDATE_SIZE);
+	uint16_t *data = malloc(UPDATE_SIZE * sizeof(uint16_t));
 
 	if (!data) {
 		ERROR("Memory allocation failure! (%d bytes)\n",
@@ -1223,26 +1221,26 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 		ret = -1;
 		goto done;
 	}
-	if (read(tc_fd, data, UPDATE_SIZE) != UPDATE_SIZE) {
+	if (read(tc_fd, data, UPDATE_SIZE * sizeof(uint16_t)) != (UPDATE_SIZE * sizeof(uint16_t))) {
 		ret = -2;
 		goto done;
 	}
 	close(tc_fd);
 	/* Byteswap data to local CPU.. */
-	for (ret = 0; ret < UPDATE_SIZE ; ret+=2) {
+	for (ret = 0; ret < UPDATE_SIZE ; ret++) {
 		data[ret] = be16_to_cpu(data[ret]);
 	}
 
 	/* Set up command */
 	cmd.target = target;
 	cmd.reserved = 0;
-	cmd.size = cpu_to_le32(UPDATE_SIZE);
+	cmd.size = cpu_to_le32(UPDATE_SIZE * sizeof(uint16_t));
 
 	cmd.hdr.cmd = cpu_to_le16(S2145_CMD_UPDATE);
 	cmd.hdr.len = cpu_to_le16(sizeof(struct s2145_update_cmd)-sizeof(cmd.hdr));
 
 	/* Byteswap data to format printer is expecting.. */
-	for (ret = 0; ret < UPDATE_SIZE ; ret+=2) {
+	for (ret = 0; ret < UPDATE_SIZE ; ret++) {
 		data[ret] = cpu_to_le16(data[ret]);
 	}
 
@@ -1256,7 +1254,7 @@ static int set_tonecurve(struct shinkos2145_ctx *ctx, int target, char *fname)
 
 	/* Sent transfer */
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     (uint8_t *) data, UPDATE_SIZE))) {
+			     (uint8_t *) data, UPDATE_SIZE * sizeof(uint16_t)))) {
 		goto done;
 	}
 
@@ -1438,7 +1436,6 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 	ctx->jobid = (jobid & 0x7f) + 1;
 }
 
-
 static void shinkos2145_teardown(void *vctx) {
 	struct shinkos2145_ctx *ctx = vctx;
 
@@ -1451,18 +1448,19 @@ static void shinkos2145_teardown(void *vctx) {
 	free(ctx);
 }
 
-static int shinkos2145_early_parse(void *vctx, int data_fd) {
+static int shinkos2145_read_parse(void *vctx, int data_fd) {
 	struct shinkos2145_ctx *ctx = vctx;
-	int printer_type, ret;
+	int ret;
+	uint8_t tmpbuf[4];
 
 	if (!ctx)
-		return -1;
+		return CUPS_BACKEND_FAILED;
 
 	/* Read in then validate header */
 	ret = read(data_fd, &ctx->hdr, sizeof(ctx->hdr));
 	if (ret < 0 || ret != sizeof(ctx->hdr)) {
 		if (ret == 0)
-			return -1; /* deliberate */
+			return CUPS_BACKEND_CANCEL;
 		ERROR("Read failed (%d/%d/%d)\n", 
 		      ret, 0, (int)sizeof(ctx->hdr));
 		perror("ERROR: Read failed");
@@ -1473,41 +1471,19 @@ static int shinkos2145_early_parse(void *vctx, int data_fd) {
 	    le32_to_cpu(ctx->hdr.len2) != 0x64 ||
 	    le32_to_cpu(ctx->hdr.dpi) != 300) {
 		ERROR("Unrecognized header data format!\n");
-		return -1;
+		return CUPS_BACKEND_CANCEL;
 	}
 
-	ctx->model = le32_to_cpu(ctx->hdr.model);
-
-	switch(ctx->model) {
-	case 2145:
-		printer_type = P_SHINKO_S2145;
-		break;
-	case 6145:
-	case 6245:
-	default:
+	if (le32_to_cpu(ctx->hdr.model) != 2145) {
 		ERROR("Unrecognized printer (%d)!\n", le32_to_cpu(ctx->hdr.model));
 
-		return -1;
+		return CUPS_BACKEND_CANCEL;
 	}
-
-	INFO("File intended for an S%d printer\n", ctx->model);
-
-	return printer_type;
-}
-
-static int shinkos2145_read_parse(void *vctx, int data_fd) {
-	struct shinkos2145_ctx *ctx = vctx;
-	int ret;
-	uint8_t tmpbuf[4];
-
-	if (!ctx)
-		return CUPS_BACKEND_FAILED;
 
 	if (ctx->databuf) {
 		free(ctx->databuf);
 		ctx->databuf = NULL;
 	}
-
 
 	ctx->datalen = le32_to_cpu(ctx->hdr.rows) * le32_to_cpu(ctx->hdr.columns) * 3;
 	ctx->databuf = malloc(ctx->datalen);
@@ -1645,19 +1621,13 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		print->hdr.cmd = cpu_to_le16(S2145_CMD_PRINTJOB);
 		print->hdr.len = cpu_to_le16(sizeof (*print) - sizeof(*cmd));
 
-		if (ctx->model == 2145) {
-			print->id = ctx->jobid;
-			print->count = cpu_to_le16(copies);
-			print->columns = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
-			print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
-			print->media = le32_to_cpu(ctx->hdr.media);
-			print->mode = le32_to_cpu(ctx->hdr.mode);
-			print->method = le32_to_cpu(ctx->hdr.method);
-		} else {
-			// s6145, s6245 use different fields
-			ERROR("Don't know how to initiate print on non-2145 models!\n");
-			return CUPS_BACKEND_FAILED;
-		}
+		print->id = ctx->jobid;
+		print->count = cpu_to_le16(copies);
+		print->columns = cpu_to_le16(le32_to_cpu(ctx->hdr.columns));
+		print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
+		print->media = le32_to_cpu(ctx->hdr.media);
+		print->mode = le32_to_cpu(ctx->hdr.mode);
+		print->method = le32_to_cpu(ctx->hdr.method);
 
 		if ((ret = s2145_do_cmd(ctx,
 					cmdbuf, sizeof(*print),
@@ -1670,6 +1640,9 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		if (sts->hdr.result != RESULT_SUCCESS) {
 			if (sts->hdr.error == ERROR_BUFFER_FULL) {
 				INFO("Printer Buffers full, retrying\n");
+				break;
+			} else if ((sts->hdr.status & 0xf0) == 0x30 || sts->hdr.status == 0x21) {
+				INFO("Printer busy (%s), retrying\n", status_str(sts->hdr.status));
 				break;
 			} else if (sts->hdr.status != ERROR_NONE)
 				goto printer_error;
@@ -1764,29 +1737,21 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 /* Exported */
 #define USB_VID_SHINKO       0x10CE
 #define USB_PID_SHINKO_S2145 0x000E
-#define USB_PID_SHINKO_S6145 0x0019
-#define USB_PID_SHINKO_S6245 0x001D
-//#define USB_VID_CIAAT        xxxxxx
-//#define USB_PID_CIAAT_BRAVA21 xxxxx
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.40",
+	.version = "0.42",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
 	.init = shinkos2145_init,
 	.attach = shinkos2145_attach,
 	.teardown = shinkos2145_teardown,
-	.early_parse = shinkos2145_early_parse,
 	.read_parse = shinkos2145_read_parse,
 	.main_loop = shinkos2145_main_loop,
 	.query_serno = shinkos2145_query_serno,
 	.devices = {
 	{ USB_VID_SHINKO, USB_PID_SHINKO_S2145, P_SHINKO_S2145, ""},
-//	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S2145, ""},
-//	{ USB_VID_SHINKO, USB_PID_SHINKO_S6245, P_SHINKO_S2145, ""},
-//	{ USB_VID_CIAAT, USB_PID_CIAAT_BRAVA21, P_SHINKO_S2145, ""},
 	{ 0, 0, 0, ""}
 	}
 };
@@ -1805,25 +1770,6 @@ struct dyesub_backend shinkos2145_backend = {
    00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI, ie 300.
    00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
    00 00 00 00 
-
-   [[Packed RGB payload of WW*HH*3 bytes]]
-
-   04 03 02 01  [[ footer ]]
-
- * CHC-S6245 data format
-
-  Spool file consists of an 116-byte header, followed by RGB-packed data,
-  followed by a 4-byte footer.  Header appears to consist of a series of
-  4-byte Little Endian words.
-
-   10 00 00 00 MM MM 00 00  01 00 00 00 01 00 00 00  MM == Model (ie 6245d)
-   64 00 00 00 00 00 00 00  TT 00 00 00 00 00 00 00  TT == 0x20 8x4, 0x21 8x5, 0x22 8x6, 0x23 8x8, 0x10 8x10, 0x11 8x12
-   00 00 00 00 00 00 00 00  XX 00 00 00 00 00 00 00  XX == 0x03 matte, 0x02 glossy, 0x01 no coat
-   00 00 00 00 WW WW 00 00  HH HH 00 00 NN 00 00 00  WW/HH Width, Height (LE), NN == Copies
-   00 00 00 00 00 00 00 00  00 00 00 00 ce ff ff ff
-   00 00 00 00 ce ff ff ff  QQ QQ 00 00 ce ff ff ff  QQ == DPI (300)
-   00 00 00 00 ce ff ff ff  00 00 00 00 00 00 00 00
-   00 00 00 00
 
    [[Packed RGB payload of WW*HH*3 bytes]]
 

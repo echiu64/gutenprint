@@ -132,6 +132,9 @@ static int parse1284_data(const char *device_id, struct deviceid_dict* dict)
 	char val[256];
 	int num = 0;
 
+	if (!device_id)
+		return 0;
+
 	//[whitespace]key[whitespace]:[whitespace]value[whitespace];
 	while (*device_id && num < MAX_DICT) {
 		/* Skip leading spaces */
