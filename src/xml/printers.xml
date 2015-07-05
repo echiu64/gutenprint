@@ -1893,8 +1893,10 @@
       <printer translate="name" name="Fujitsu PrintPartner 20W" driver="fujitsu-pp_20w" manufacturer="Fujitsu" model="6" parameters="pcl_laser_params" foomaticid="Fujitsu-PrintPartner_20W" />
       <printer translate="name" name="Fujitsu PrintPartner 8000" driver="fujitsu-pp_8000" manufacturer="Fujitsu" model="3" parameters="pcl_laser_params" foomaticid="Fujitsu-PrintPartner_8000" />
       <printer translate="name" name="Generic PCL 4 Printer" driver="pcl-g_4" manufacturer="Generic" model="2" parameters="pcl_laser_params" foomaticid="Generic-PCL_4_Printer" />
+      <printer translate="name" name="Generic PCL 4 Printer (narrow margin)" driver="pcl-g_4_a4" manufacturer="Generic" model="22" parameters="pcl_laser_params" foomaticid="Generic-PCL_4_Printer_narrow_margin" />
       <printer translate="name" name="Generic PCL 4 LF Printer" driver="pcl-g_4_l" manufacturer="Generic" model="23" parameters="pcl_laser_params" foomaticid="Generic-PCL_4_LF_Printer" />
       <printer translate="name" name="Generic PCL 5 Printer" driver="pcl-g_5" manufacturer="Generic" model="3" parameters="pcl_laser_params" foomaticid="Generic-PCL_5_Printer" />
+      <printer translate="name" name="Generic PCL 5 Printer (narrow margin)" driver="pcl-g_5_a4" manufacturer="Generic" model="32" parameters="pcl_laser_params" foomaticid="Generic-PCL_5_Printer_narrow_margin" />
       <printer translate="name" name="Generic PCL 5 LF Printer" driver="pcl-g_5_l" manufacturer="Generic" model="33" parameters="pcl_laser_params" foomaticid="Generic-PCL_5_LF_Printer" />
       <printer translate="name" name="Generic PCL 5c Printer" driver="pcl-g_5c" manufacturer="Generic" model="6" parameters="pcl_laser_params" foomaticid="Generic-PCL_5c_Printer" />
       <printer translate="name" name="Generic PCL 5c LF Printer" driver="pcl-g_5c_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" foomaticid="Generic-PCL_5c_LF_Printer" />
@@ -1902,6 +1904,9 @@
       <printer translate="name" name="Generic PCL 5e LF Printer" driver="pcl-g_5e_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" foomaticid="Generic-PCL_5e_LF_Printer" />
       <printer translate="name" name="Generic PCL 6/PCL XL Printer" driver="pcl-g_6" manufacturer="Generic" model="6" parameters="pcl_laser_params" foomaticid="Generic-PCL_6_PCL_XL_Printer" />
       <printer translate="name" name="Generic PCL 6/PCL XL LF Printer" driver="pcl-g_6_l" manufacturer="Generic" model="61" parameters="pcl_laser_params" foomaticid="Generic-PCL_6_PCL_XL_LF_Printer" />
+      <printer translate="name" name="Generic PCL 6 Printer (narrow margin)" driver="pcl-g_6_a4" manufacturer="Generic" model="62" parameters="pcl_laser_params" foomaticid="Generic-PCL_6_Printer_narrow_margin" />
+      <printer translate="name" name="Generic PCL 6 LF Printer (narrow mgn)" driver="pcl-g_6_lf_a4" manufacturer="Generic" model="63" parameters="pcl_laser_params" foomaticid="Generic-PCL_6_LF_Printer_narrow_margin" />
+      <printer translate="name" name="Generic PCL 6 Tabl Printer (narrow mgn)" driver="pcl-g_6_tabloid_a4" manufacturer="Generic" model="64" parameters="pcl_laser_params" foomaticid="Generic-PCL_6_Tabloid_Printer_narrow_margin" />
       <printer translate="name" name="Gestetner 10512" driver="gestetner-10512" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" foomaticid="Gestetner-10512" />
       <printer translate="name" name="Gestetner 2212" driver="gestetner-2212" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" foomaticid="Gestetner-2212" />
       <printer translate="name" name="Gestetner 2712" driver="gestetner-2712" manufacturer="Gestetner" model="61" parameters="pcl_laser_params" foomaticid="Gestetner-2712" />
