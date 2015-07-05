@@ -1821,6 +1821,7 @@
       <printer translate="name" name="Brother HL-2035" driver="brother-hl-2035" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2035" />
       <!-- -->
       <printer translate="name" name="Brother HL-2060" driver="brother-hl-2060" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2060" />
+      <printer translate="name" name="Brother HL-2250DN" driver="brother-hl-2250dn" manufacturer="Brother" model="62" parameters="pcl_laser_params" foomaticid="Brother-HL-2250DN" />
       <printer translate="name" name="Brother HL-2460" deviceid="MFG:Brother;MDL:Brother HL-2460 series;" driver="brother-hl-2460" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2460" />
       <printer translate="name" name="Brother HL-2460N" driver="brother-hl-2460n" manufacturer="Brother" model="6" parameters="pcl_laser_params" foomaticid="Brother-HL-2460N" />
       <printer translate="name" name="Brother HL-4Ve" driver="brother-hl-4ve" manufacturer="Brother" model="2" parameters="pcl_laser_params" foomaticid="Brother-HL-4Ve" />
