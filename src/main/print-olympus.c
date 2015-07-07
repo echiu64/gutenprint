@@ -46,6 +46,7 @@
    it. Be warned that you will also need a patch to papers.xml to define
    the additional paper types. */
 /* #define MULTICUT */
+//#define MULTICUT
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
@@ -3736,6 +3737,7 @@ static const dyesub_pagesize_t dnpds40_page[] =
   { "w360h504",	"5x7", PT(1920,300)+1, PT(2138,300)+1, PT(186,300), PT(186,300), 0, 0, DYESUB_PORTRAIT},
   { "w432h576", "6x8", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
+  { "2x6_x4", "2x6*4", PT(1920,300)+1, PT(2436,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},  
   { "4x6_x2", "4x6*2", PT(1920,300)+1, PT(2498,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
 #endif
   { "w432h648", "6x9", PT(1920,300)+1, PT(2740,300)+1, PT(38,300), PT(38,300), 0, 0, DYESUB_PORTRAIT},
@@ -3758,6 +3760,8 @@ static const dyesub_printsize_t dnpds40_printsize[] =
   { "300x300", "w432h576", 1920, 2436},
   { "300x600", "w432h576", 1920, 4872},
 #ifdef MULTICUT
+  { "300x300", "2x6_x4", 1920, 2436},
+  { "300x600", "2x6_x4", 1920, 4872},
   { "300x300", "4x6_x2", 1920, 2498},
   { "300x600", "4x6_x2", 1920, 4996},
 #endif
@@ -3796,6 +3800,8 @@ static void dnpds40_printer_start(stp_vars_t *v)
   stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000");
   if (!strcmp(privdata.pagesize, "2x6_x2")) {
     stp_zprintf(v, "120");
+  } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
+    stp_zprintf(v, "120");
   } else {
     stp_zprintf(v, "000");
   }
@@ -3805,8 +3811,7 @@ static void dnpds40_printer_start(stp_vars_t *v)
 
   if (!strcmp(privdata.pagesize, "B7")) {
     stp_zprintf(v, "01");
-  } else if (!strcmp(privdata.pagesize, "w288h432") ||
-	     !strcmp(privdata.pagesize, "2x6_x2")) {
+  } else if (!strcmp(privdata.pagesize, "w288h432")) {
     stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "w360h504")) {
     stp_zprintf(v, "03");
@@ -3816,6 +3821,10 @@ static void dnpds40_printer_start(stp_vars_t *v)
     stp_zprintf(v, "05");
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
+  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
+    stp_zprintf(v, "02");
+  } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
+    stp_zprintf(v, "04");
   } else {
     stp_zprintf(v, "00"); /* should be impossible. */
   }
