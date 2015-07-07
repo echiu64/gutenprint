@@ -6008,14 +6008,17 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   	(dyesub_feature(caps, DYESUB_FEATURE_WHITE_BORDER) ? 1 : 0),
 	&page_pt_left, &page_pt_right, &page_pt_bottom, &page_pt_top,
 	&page_mode);
-  
+
+  /* Swap DPI so these computations will work out properly */
+  if (page_mode == DYESUB_LANDSCAPE)
+    dyesub_swap_ints(&w_dpi, &h_dpi);
+    
   pv.prnw_px = MIN(max_print_px_width,
 		  	PX(page_pt_right - page_pt_left, w_dpi));
   pv.prnh_px = MIN(max_print_px_height,
 			PX(page_pt_bottom - page_pt_top, h_dpi));
   pv.outw_px = PX(out_pt_width, w_dpi);
   pv.outh_px = PX(out_pt_height, h_dpi);
-
 
   /* if image size is close enough to output size send out original size */
   if (abs(pv.outw_px - pv.imgw_px) < SIZE_THRESHOLD)
@@ -6032,7 +6035,10 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   pv.outr_px = pv.outl_px + pv.outw_px;
   pv.outb_px = pv.outt_px  + pv.outh_px;
   
-
+  /* Swap back so that everything that follows will work. */
+  if (page_mode == DYESUB_LANDSCAPE)
+    dyesub_swap_ints(&w_dpi, &h_dpi);
+  
   stp_deprintf(STP_DBG_DYESUB,
 	      "paper (pt)   %d x %d\n"
 	      "image (px)   %d x %d\n"
@@ -6175,7 +6181,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   privdata.h_size = pv.prnh_px;
   privdata.print_mode = pv.print_mode;
   privdata.bpp = pv.bits_per_ink_channel;
-
+  
   /* printer init */
   dyesub_exec(v, caps->printer_init_func, "caps->printer_init");
 
