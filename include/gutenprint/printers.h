@@ -129,6 +129,13 @@ extern const char *stp_printer_get_long_name(const stp_printer_t * p);
 extern const char *stp_printer_get_driver(const stp_printer_t *p);
 
 /**
+ * Get a priner model's support for native copies.
+ * @param p the printer model to use.
+ * @returns the native copies attribute (should never be freed).
+ */
+extern const char *stp_printer_get_native_copies(const stp_printer_t *p);
+
+/**
  * Get a printer model's IEEE 1284 device ID, if known.
  * @param p the printer model to use.
  * @returns the IEEE 1284 device ID, or NULL if not known.

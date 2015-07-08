@@ -1144,12 +1144,14 @@ print_ppd_header(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
 }
 
 static void
-print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
-		 const char *family, const char *long_name,
-		 const char *manufacturer, const char *device_id,
-		 const char *ppd_location,
-		 const char *language, const stp_string_list_t *po,
-		 char **all_langs)
+print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
+		   const char *nativecopies,
+		   const char *driver,
+		   const char *family, const char *long_name,
+		   const char *manufacturer, const char *device_id,
+		   const char *ppd_location,
+		   const char *language, const stp_string_list_t *po,
+		   char **all_langs)
 {
   int i;
   gpputs(fp, "*FileSystem:	False\n");
@@ -1157,7 +1159,12 @@ print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model, const char *driver
   gpputs(fp, "*TTRasterizer:	Type42\n");
 
   gpputs(fp, "*cupsVersion:	1.2\n");
-  gpputs(fp, "*cupsManualCopies: True\n");
+
+  if (nativecopies)
+    gpputs(fp, "*cupsManualCopies: False\n");
+  else
+    gpputs(fp, "*cupsManualCopies: True\n");
+  
   gpprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
     gpputs(fp, "*cupsFilter:	\"application/vnd.cups-command 33 commandtoepson\"\n");
@@ -1946,6 +1953,7 @@ write_ppd(
   const char	*manufacturer;		/* Manufacturer of printer */
   const char	*device_id;		/* IEEE1284 device ID */
   const stp_vars_t *printvars;		/* Printer option names */
+  const char    *nativecopies;          /* Printer natively generates copies */
   stp_parameter_t desc;
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
@@ -1973,6 +1981,7 @@ write_ppd(
   manufacturer = stp_printer_get_manufacturer(p);
   device_id  = stp_printer_get_device_id(p);
   printvars  = stp_printer_get_defaults(p);
+  nativecopies = stp_printer_get_native_copies(p);
 
   print_ppd_header(fp, ppd_type, model, driver, family, long_name,
 		   manufacturer, device_id, ppd_location, language, po,
@@ -2004,9 +2013,10 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
-  print_ppd_header_3(fp, ppd_type, model, driver, family, long_name,
-		   manufacturer, device_id, ppd_location, language, po,
-		   all_langs);
+  print_ppd_header_3(fp, ppd_type, model, nativecopies,
+		     driver, family, long_name,
+		     manufacturer, device_id, ppd_location, language, po,
+		     all_langs);
 
   /* Macintosh color management */
 

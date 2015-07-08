@@ -68,6 +68,7 @@ struct stp_printer
   char	     *device_id; 	/* IEEE 1284 device ID */
   char       *foomatic_id;	/* Foomatic printer ID */
   char       *comment;	     	/* Comment string, if any */
+  char       *native_copies;    /* non-null if printer generates its own copies */
   int        model;             /* Model number */
   int	     vars_initialized;
   const stp_printfuncs_t *printfuncs;
@@ -163,6 +164,12 @@ const char *
 stp_printer_get_driver(const stp_printer_t *printer)
 {
   return printer->driver;
+}
+
+const char *
+stp_printer_get_native_copies(const stp_printer_t *printer)
+{
+  return printer->native_copies;
 }
 
 static const char *
@@ -1130,6 +1137,9 @@ stp_printer_create_from_xmltree(stp_mxml_node_t *printer, /* The printer node */
   stmp = stp_mxmlElementGetAttr(printer, "foomaticid");
   if (stmp)
     outprinter->foomatic_id = stp_strdup(stmp);
+  stmp = stp_mxmlElementGetAttr(printer, "nativecopies");
+  if (stmp)
+    outprinter->native_copies = stp_strdup(stmp);
 
   child = printer->child;
   while (child)
