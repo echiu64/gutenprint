@@ -90,6 +90,7 @@ struct dnpds40_ctx {
 	int supports_rewind;
 	int supports_standby;
 	int supports_6x4_5;
+	int supports_mqty_default;
 
 	uint8_t *qty_offset;
 	uint8_t *buffctrl_offset;
@@ -418,6 +419,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 	case USB_PID_DNP_DSRX1:
 		ctx->type = P_DNP_DSRX1;
 		ctx->supports_matte = 1;
+		ctx->supports_mqty_default = 1; // 1.10 does. Maybe older too?
 		if (FW_VER_CHECK(1,10))
 			ctx->supports_2x6 = 1;
 		break;
@@ -426,7 +428,8 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->supports_matte = 1;
 		ctx->supports_2x6 = 1;
 		ctx->supports_fullcut = 1;
-		ctx->supports_rewind = 1;  // XXX DS620 only, 620A does not.
+		ctx->supports_mqty_default = 1;
+		ctx->supports_rewind = 1;
 		ctx->supports_standby = 1;
 		if (FW_VER_CHECK(0,30))
 			ctx->supports_3x5x2 = 1;
@@ -1061,32 +1064,6 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 	/* Firmware version already queried */
 	INFO("Firmware Version: '%s'\n", ctx->version);
 
-	/* Get Horizonal resolution */
-	dnpds40_build_cmd(&cmd, "INFO", "RESOLUTION_H", 0);
-
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-	if (!resp)
-		return CUPS_BACKEND_FAILED;
-
-	dnpds40_cleanup_string((char*)resp, len);
-
-	INFO("Horizontal Resolution : '%s' dpi\n", (char*)resp + 3);
-
-	free(resp);
-
-	/* Get Vertical resolution */
-	dnpds40_build_cmd(&cmd, "INFO", "RESOLUTION_V", 0);
-
-	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-	if (!resp)
-		return CUPS_BACKEND_FAILED;
-
-	dnpds40_cleanup_string((char*)resp, len);
-
-	INFO("Vertical Resolution   : '%s' dpi\n", (char*)resp + 3);
-
-	free(resp);
-
 	/* Get Media Color offset */
 	dnpds40_build_cmd(&cmd, "INFO", "MCOLOR", 0);
 
@@ -1098,6 +1075,19 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	INFO("Media Color Offset: '%02x%02x%02x%02x'\n", *(resp+2), *(resp+3),
 	     *(resp+4), *(resp+5));
+
+	free(resp);
+
+	/* Get Media Class */
+	dnpds40_build_cmd(&cmd, "INFO", "MEDIA_CLASS", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	INFO("Media Class: '%s'\n", (char*)resp);
 
 	free(resp);
 
@@ -1131,59 +1121,72 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 	free(resp);
 
+	/* Get Ribbon ID code (?) */
+	dnpds40_build_cmd(&cmd, "MNT_RD", "RIBBON_ID_CODE", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	INFO("Ribbon ID(?): '%s'\n", (char*)resp+4);
+
+	free(resp);
+
+	/* Figure out control data and checksums */
+
+	/* 300 DPI */
+	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Version", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	INFO("300 DPI Color Data Version: '%s' ", (char*)resp);
+
+	free(resp);
+
+	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Checksum", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	DEBUG2("Checksum: '%s'\n", (char*)resp);
+
+	free(resp);
+
+	/* 600 DPI */
+	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Version", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	INFO("600 DPI Color Data Version: '%s' ", (char*)resp);
+
+	free(resp);
+
+	dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Checksum", 0);
+
+	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+	if (!resp)
+		return CUPS_BACKEND_FAILED;
+
+	dnpds40_cleanup_string((char*)resp, len);
+
+	DEBUG2("Checksum: '%s'\n", (char*)resp);
+
+	free(resp);
+
 	if (ctx->type == P_DNP_DS620) {
-		/* Loop through control data versions and checksums */
-
-		/* 300 DPI */
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Version", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("300 DPI Color Data Version: '%s' ", (char*)resp);
-
-		free(resp);
-
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD300_Checksum", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("Checksum: '%s'\n", (char*)resp);
-
-		free(resp);
-
-		/* 600 DPI */
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Version", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("600 DPI Color Data Version: '%s' ", (char*)resp);
-
-		free(resp);
-
-		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD600_Checksum", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("Checksum: '%s'\n", (char*)resp);
-
-		free(resp);
-
 		/* "Low Speed" */
 		dnpds40_build_cmd(&cmd, "TBL_RD", "CWD610_Version", 0);
 
@@ -1205,34 +1208,7 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 
 		dnpds40_cleanup_string((char*)resp, len);
 
-		INFO("Checksum: '%s'\n", (char*)resp);
-
-		free(resp);
-
-	} else {
-		/* Get Color Control Data Version */
-		dnpds40_build_cmd(&cmd, "TBL_RD", "Version", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("Color Data Version: '%s'\n", (char*)resp);
-
-		free(resp);
-
-		/* Get Color Control Data Checksum */
-		dnpds40_build_cmd(&cmd, "MNT_RD", "CTRLD_CHKSUM", 0);
-
-		resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-		if (!resp)
-			return CUPS_BACKEND_FAILED;
-
-		dnpds40_cleanup_string((char*)resp, len);
-
-		INFO("Color Data Checksum: '%s'\n", (char*)resp);
+		DEBUG2("Checksum: '%s'\n", (char*)resp);
 
 		free(resp);
 	}
@@ -1330,7 +1306,7 @@ static int dnpds40_get_status(struct dnpds40_ctx *ctx)
 	/* Report media */
 	INFO("Media Type: '%s'\n", dnpds40_media_types(ctx->media));
 
-	if (ctx->supports_rewind) {
+	if (ctx->supports_mqty_default) {
 		/* Get Media remaining */
 		dnpds40_build_cmd(&cmd, "INFO", "MQTY_DEFAULT", 0);
 
@@ -1653,7 +1629,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.54",
+	.version = "0.55",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
