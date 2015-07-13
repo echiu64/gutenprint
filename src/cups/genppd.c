@@ -1145,7 +1145,6 @@ print_ppd_header(gpFile fp, ppd_type_t ppd_type, int model, const char *driver,
 
 static void
 print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
-		   const char *nativecopies,
 		   const char *driver,
 		   const char *family, const char *long_name,
 		   const char *manufacturer, const char *device_id,
@@ -1159,11 +1158,6 @@ print_ppd_header_3(gpFile fp, ppd_type_t ppd_type, int model,
   gpputs(fp, "*TTRasterizer:	Type42\n");
 
   gpputs(fp, "*cupsVersion:	1.2\n");
-
-  if (nativecopies)
-    gpputs(fp, "*cupsManualCopies: False\n");
-  else
-    gpputs(fp, "*cupsManualCopies: True\n");
   
   gpprintf(fp, "*cupsFilter:	\"application/vnd.cups-raster 100 rastertogutenprint.%s\"\n", GUTENPRINT_RELEASE_VERSION);
   if (strcasecmp(manufacturer, "EPSON") == 0)
@@ -1953,7 +1947,7 @@ write_ppd(
   const char	*manufacturer;		/* Manufacturer of printer */
   const char	*device_id;		/* IEEE1284 device ID */
   const stp_vars_t *printvars;		/* Printer option names */
-  const char    *nativecopies;          /* Printer natively generates copies */
+  int           nativecopies = 0;       /* Printer natively generates copies */
   stp_parameter_t desc;
   stp_parameter_list_t param_list;
   const stp_param_string_t *opt;
@@ -1981,7 +1975,6 @@ write_ppd(
   manufacturer = stp_printer_get_manufacturer(p);
   device_id  = stp_printer_get_device_id(p);
   printvars  = stp_printer_get_defaults(p);
-  nativecopies = stp_printer_get_native_copies(p);
 
   print_ppd_header(fp, ppd_type, model, driver, family, long_name,
 		   manufacturer, device_id, ppd_location, language, po,
@@ -2013,7 +2006,18 @@ write_ppd(
     }
   stp_parameter_description_destroy(&desc);
 
-  print_ppd_header_3(fp, ppd_type, model, nativecopies,
+  stp_describe_parameter(v, "NativeCopies", &desc);
+  if (desc.p_type == STP_PARAMETER_TYPE_BOOLEAN)
+    nativecopies = stp_get_boolean_parameter(v, "NativeCopies");
+
+  stp_parameter_description_destroy(&desc);
+
+  if (nativecopies)
+    gpputs(fp, "*cupsManualCopies: False\n");
+  else
+    gpputs(fp, "*cupsManualCopies: True\n");
+
+  print_ppd_header_3(fp, ppd_type, model,
 		     driver, family, long_name,
 		     manufacturer, device_id, ppd_location, language, po,
 		     all_langs);

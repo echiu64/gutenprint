@@ -46,7 +46,6 @@
    it. Be warned that you will also need a patch to papers.xml to define
    the additional paper types. */
 /* #define MULTICUT */
-//#define MULTICUT
 
 #define DYESUB_FEATURE_NONE		 0x00000000
 #define DYESUB_FEATURE_FULL_WIDTH	 0x00000001
@@ -5181,6 +5180,12 @@ static const stp_parameter_t the_parameters[] =
     N_("Printing Output Mode"),
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_CORE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "NativeCopies", N_("Printer Generates Copies Natively"), "Color=No,Category=Advanced Printer Functionality",
+    N_("Printer Generates Copies"),
+    STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 1
   },
 };
 
