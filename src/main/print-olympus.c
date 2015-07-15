@@ -4120,7 +4120,7 @@ static const dyesub_printsize_t dnpds620_printsize[] =
   { "300x600", "w360h504", 1920, 4276},
 #ifdef MULTICUT
   { "300x300", "B7_x2", 1920, 2176},
-  { "300x600", "B7_x2", 1920, 4352},  
+  { "300x600", "B7_x2", 1920, 4352},
 #endif
   { "300x300", "w432h432", 1836, 1920},
   { "300x600", "w432h432", 3672, 1920},
@@ -4130,7 +4130,7 @@ static const dyesub_printsize_t dnpds620_printsize[] =
   { "300x300", "2x6_x4", 1920, 2436},
   { "300x600", "2x6_x4", 1920, 4872},
   { "300x300", "6x6_2x6", 1920, 2436},
-  { "300x600", "6x6_2x6", 1920, 4872},  
+  { "300x600", "6x6_2x6", 1920, 4872},
   { "300x300", "4x6_x2", 1920, 2498},
   { "300x600", "4x6_x2", 1920, 4996},
 #endif
@@ -4152,14 +4152,14 @@ static void dnpds620_printer_start(stp_vars_t *v)
   /* Multicut when 8x6 media is in use */
   if (!strcmp(privdata.pagesize, "w432h576") &&
       !strcmp(privdata.pagesize, "w432h648")) {
-    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");	  
+    stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0000000000000000");
   } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
     stp_zprintf(v, "0200200200200000");
   } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
     stp_zprintf(v, "\033PCNTRL FULL_CUTTER_SET 00000016");
-    stp_zprintf(v, "0600200000000000");    
+    stp_zprintf(v, "0600200000000000");
   } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
     stp_zprintf(v, "\033PCNTRL CUTTER          00000008");
     stp_zprintf(v, "00000120");
@@ -4167,10 +4167,11 @@ static void dnpds620_printer_start(stp_vars_t *v)
 
   /* Configure multi-cut/page size */
   stp_zprintf(v, "\033PIMAGE MULTICUT        00000008000000");
-
   if (!strcmp(privdata.pagesize, "B7")) {
     stp_zprintf(v, "01");
   } else if (!strcmp(privdata.pagesize, "w288h432")) {
+    stp_zprintf(v, "02");
+  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
     stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "w324h432")) {
     stp_zprintf(v, "30");
@@ -4178,20 +4179,20 @@ static void dnpds620_printer_start(stp_vars_t *v)
     stp_zprintf(v, "29");
   } else if (!strcmp(privdata.pagesize, "w360h504")) {
     stp_zprintf(v, "03");
+  } else if (!strcmp(privdata.pagesize, "B7_x2")) {
+    stp_zprintf(v, "03");
   } else if (!strcmp(privdata.pagesize, "w432h432")) {
     stp_zprintf(v, "27");
   } else if (!strcmp(privdata.pagesize, "w432h576")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "w432h648")) {
-    stp_zprintf(v, "05");
   } else if (!strcmp(privdata.pagesize, "6x6_2x6")) {
     stp_zprintf(v, "04");
   } else if (!strcmp(privdata.pagesize, "2x6_x4")) {
     stp_zprintf(v, "04");
-  } else if (!strcmp(privdata.pagesize, "2x6_x2")) {
-    stp_zprintf(v, "02");
   } else if (!strcmp(privdata.pagesize, "4x6_x2")) {
     stp_zprintf(v, "12");
+  } else if (!strcmp(privdata.pagesize, "w432h648")) {
+    stp_zprintf(v, "05");
   } else if (!strcmp(privdata.pagesize, "w324h432_x2")) {
     stp_zprintf(v, "31");
   } else {
