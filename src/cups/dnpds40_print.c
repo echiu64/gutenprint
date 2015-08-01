@@ -82,6 +82,7 @@ struct dnpds40_ctx {
 	int cutter;
 	int can_rewind;
 
+	int manual_copies;
 	int supports_6x9;
 	int supports_2x6;
 	int supports_3x5x2;
@@ -494,6 +495,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	matte = 0;
 	dpi = 0;
 	cutter = 0;
+	ctx->manual_copies = 0;
 	ctx->multicut = 0;
 	ctx->buffctrl_offset = ctx->qty_offset = ctx->multicut_offset = 0;
 
@@ -606,7 +608,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 				if (y_ppm != 1920) {
 					ERROR("Incorrect horizontal resolution (%d), aborting!\n", y_ppm);
 					return CUPS_BACKEND_CANCEL;
-				}				
+				}
 			}
 		}
 
@@ -619,8 +621,8 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 	}
 
 	if (!ctx->datalen)
-		return CUPS_BACKEND_CANCEL;	
-	
+		return CUPS_BACKEND_CANCEL;
+
 	/* Figure out the number of buffers we need. Most only need one. */
 	if (ctx->multicut) {
 		ctx->buf_needed = 1;
@@ -687,6 +689,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		case 310: //"6x8 (A5)"
 			ctx->can_rewind = 1;
 			if (ctx->multicut != 2 && ctx->multicut != 4 &&
+			    ctx->multicut != 12 &&
 			    ctx->multicut != 27 && ctx->multicut != 30) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
@@ -695,7 +698,8 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 		case 400: //"6x9 (A5W)"
 			ctx->can_rewind = 1;
 			if (ctx->multicut != 2 && ctx->multicut != 4 &&
-			    ctx->multicut != 5 && ctx->multicut != 27 &&
+			    ctx->multicut != 5 &&  ctx->multicut != 12 &&
+			    ctx->multicut != 27 &&
 			    ctx->multicut != 30 && ctx->multicut != 31) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
@@ -752,6 +756,11 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			ERROR("Printer only supports 2-inch cuts on 4x6 or 8x6 jobs!");
 			return CUPS_BACKEND_CANCEL;
 		}
+
+		/* Work around firmware bug on DS40 where if we run out
+		   of media, we can't resume the job without losing the
+		   cutter setting. XXX add version test? */
+		ctx->manual_copies = 1;
 	}
 
 	if (ctx->matte && !ctx->supports_matte) {
@@ -771,64 +780,13 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 	uint8_t *ptr;
 	char buf[9];
 	int status;
+	int buf_needed;
 
 	if (!ctx)
 		return CUPS_BACKEND_FAILED;
 
-	/* Verify we have sufficient media for prints */
-	{
-		int i = 0;
-
-		/* See if we can rewind to save media */
-		if (ctx->can_rewind && ctx->supports_rewind) {
-//XXX implicit //    (ctx->multicut == 1 || ctx->multicut == 2 || ctx->multicut == 30)
-			/* Get Media remaining */
-			dnpds40_build_cmd(&cmd, "INFO", "RQTY", 0);
-
-			if (resp) free(resp);
-			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-			if (!resp)
-				return CUPS_BACKEND_FAILED;
-
-			dnpds40_cleanup_string((char*)resp, len);
-			i = atoi((char*)resp);
-
-			/* If the count is odd, we can rewind. */
-			if (i & 1) {
-				snprintf(buf, sizeof(buf), "%08d", ctx->multicut + 400);
-				memcpy(ctx->multicut_offset, buf, 8);
-			}
-		}
-
-		/* If we didn't succeed with RQTY, try MQTY */
-		if (i == 0) {
-			dnpds40_build_cmd(&cmd, "INFO", "MQTY", 0);
-
-			if (resp) free(resp);
-			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
-			if (!resp)
-				return CUPS_BACKEND_FAILED;
-
-			dnpds40_cleanup_string((char*)resp, len);
-
-			i = atoi((char*)resp+4);
-
-			/* For some reason all but the DS620 report 50 too high */
-			if (ctx->type != P_DNP_DS620 && i > 0)
-				i -= 50;
-		}
-
-		if (i < 1) {
-			ERROR("Printer out of media, please correct!\n");
-			return CUPS_BACKEND_STOP;
-		}
-		if (i < copies) {
-			WARNING("Printer does not have sufficient remaining media to complete job..\n");
-		}
-	}
-
 	/* Update quantity offset with count */
-	if (copies > 1) {
+	if (!ctx->manual_copies && copies > 1) {
 		snprintf(buf, sizeof(buf), "%07d\r", copies);
 		if (ctx->qty_offset) {
 			memcpy(ctx->qty_offset, buf, 8);
@@ -868,9 +826,11 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 	}
 #endif
 
+	buf_needed = ctx->buf_needed;
+
 #ifdef MATTE_GLOSSY_2BUF
 	if (ctx->matte != ctx->last_matte)
-		ctx->buf_needed = 2; /* Switching needs both buffers */
+		buf_needed = 2; /* Switching needs both buffers */
 #endif
 
 	ctx->last_matte = ctx->matte;
@@ -890,10 +850,9 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 
 top:
 
-	if (resp) free(resp);
-
 	/* Query status */
 	dnpds40_build_cmd(&cmd, "STATUS", "", 0);
+	if (resp) free(resp);
 	resp = dnpds40_resp_cmd(ctx, &cmd, &len);
 	if (!resp)
 		return CUPS_BACKEND_FAILED;
@@ -903,7 +862,6 @@ top:
 	/* Figure out what's going on */
 	switch(status) {
 	case 0:	/* Idle; we can continue! */
-		break;
 	case 1: /* Printing */
 	{
 		int bufs;
@@ -919,8 +877,8 @@ top:
 		dnpds40_cleanup_string((char*)resp, len);
 		/* Check to see if we have sufficient buffers */
 		bufs = atoi(((char*)resp)+3);
-		if (bufs < ctx->buf_needed) {
-			INFO("Insufficient printer buffers (%d vs %d), retrying...\n", bufs, ctx->buf_needed);
+		if (bufs < buf_needed) {
+			INFO("Insufficient printer buffers (%d vs %d), retrying...\n", bufs, buf_needed);
 			sleep(1);
 			goto top;
 		}
@@ -954,7 +912,58 @@ top:
 		ERROR("Fatal Printer Error: %d => %s, halting queue!\n", status, dnpds40_statuses(status));
 		return CUPS_BACKEND_HOLD;
 	}
-	
+
+	/* Verify we have sufficient media for prints */
+	{
+		int i = 0;
+
+		/* See if we can rewind to save media */
+		if (ctx->can_rewind && ctx->supports_rewind) {
+//XXX implicit //    (ctx->multicut == 1 || ctx->multicut == 2 || ctx->multicut == 30)
+
+			/* Tell the printer we want to rewind, if possible. */
+			snprintf(buf, sizeof(buf), "%08d", ctx->multicut + 400);
+			memcpy(ctx->multicut_offset, buf, 8);
+
+			/* Get Media remaining */
+			dnpds40_build_cmd(&cmd, "INFO", "RQTY", 0);
+
+			if (resp) free(resp);
+			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+			if (!resp)
+				return CUPS_BACKEND_FAILED;
+
+			dnpds40_cleanup_string((char*)resp, len);
+			i = atoi((char*)resp+4);
+		}
+
+		/* If we didn't succeed with RQTY, try MQTY */
+		if (i == 0) {
+			dnpds40_build_cmd(&cmd, "INFO", "MQTY", 0);
+
+			if (resp) free(resp);
+			resp = dnpds40_resp_cmd(ctx, &cmd, &len);
+			if (!resp)
+				return CUPS_BACKEND_FAILED;
+
+			dnpds40_cleanup_string((char*)resp, len);
+
+			i = atoi((char*)resp+4);
+
+			/* For some reason all but the DS620 report 50 too high */
+			if (ctx->type != P_DNP_DS620 && i > 0)
+				i -= 50;
+		}
+
+		if (i < 1) {
+			ERROR("Printer out of media, please correct!\n");
+			return CUPS_BACKEND_STOP;
+		}
+		if (i < copies) {
+			WARNING("Printer does not have sufficient remaining media to complete job..\n");
+		}
+	}
+
 	/* Send the stream over as individual data chunks */
 	ptr = ctx->databuf;
 
@@ -963,7 +972,6 @@ top:
 		buf[8] = 0;
 		memcpy(buf, ptr + 24, 8);
 		i = atoi(buf) + 32;
-
 
 		if ((ret = send_data(ctx->dev, ctx->endp_down,
 				     ptr, i)))
@@ -975,10 +983,14 @@ top:
 	/* Clean up */
 	if (terminate)
 		copies = 1;
-	
+
 	INFO("Print complete (%d copies remaining)\n", copies - 1);
 
 	if (copies && --copies) {
+#ifdef MATTE_GLOSSY_2BUF
+		/* No need to wait on buffers due to matte switching */
+		buf_needed = ctx->buf_needed;
+#endif
 		goto top;
 	}
 
@@ -1629,7 +1641,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.55",
+	.version = "0.58",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
