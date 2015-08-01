@@ -3896,8 +3896,8 @@ static const dyesub_pagesize_t dnpds80_page[] =
 #endif
   { "c8x10", "8x10", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
 #ifdef MULTICUT
-  { "8x5_x2", "8x5*2", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
-  { "8x6_8x4", "8x6+8x4", PT(2560,300)+1, PT(3036,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x5_x2", "8x5*2", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
+  { "8x6_8x4", "8x6+8x4", PT(2560,300)+1, PT(3102,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
   { "8x6_8x5", "8x6+8x5", PT(2560,300)+1, PT(3402,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
 #endif
   { "A4", "A4 Length", PT(2560,300)+1, PT(3544,300)+1, PT(56,300), PT(56,300), 0, 0, DYESUB_PORTRAIT},
@@ -5034,7 +5034,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Shinko/Sinfonia CHC-S6145 */
     5004,
-    &rgb_ink_list,
+    &ymc_ink_list,
     &res_300dpi_list,
     &shinko_chcs6145_page_list,
     &shinko_chcs6145_printsize_list,
