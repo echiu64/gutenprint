@@ -111,12 +111,12 @@ main(int argc, char **argv) {
 	     driver, opt->name, opt->text);
       printf("$imageableareas{'%s'}{'%s'} = {",
 	     driver, opt->name);
-      printf("  'left' => '%d',", left);
-      printf("  'right' => '%d',", right);
-      printf("  'top' => '%d',", top);
-      printf("  'bottom' => '%d',", bottom);
-      printf("  'width' => '%d',", width);
-      printf("  'height' => '%d'", height);
+      printf("'left'=>'%d',", left);
+      printf("'right'=>'%d',", right);
+      printf("'top'=>'%d',", top);
+      printf("'bottom'=>'%d',", bottom);
+      printf("'width'=>'%d',", width);
+      printf("'height'=>'%d'", height);
       printf("};\n");
     }
     stp_parameter_description_destroy(&desc);
