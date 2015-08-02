@@ -227,7 +227,7 @@ static void printHexValues(const char *dir, const unsigned char *buf, int len)
        for (i = 0; i < len; i++)
 	 {
 	   printf("%s%c", (print_prefix ? "+++" : ""),
-		  isprint(buf[i])||isblank(buf[i])?buf[i]:'*');
+		  isprint(buf[i])?buf[i]:'*');
 	   print_prefix = 0;
 	   if (buf[i] == ';' && i < len - 1)
 	     {
