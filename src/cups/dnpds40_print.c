@@ -92,6 +92,7 @@ struct dnpds40_ctx {
 	int supports_standby;
 	int supports_6x4_5;
 	int supports_mqty_default;
+	int supports_iserial;
 
 	uint8_t *qty_offset;
 	uint8_t *buffctrl_offset;
@@ -432,6 +433,7 @@ static void dnpds40_attach(void *vctx, struct libusb_device_handle *dev,
 		ctx->supports_mqty_default = 1;
 		ctx->supports_rewind = 1;
 		ctx->supports_standby = 1;
+		ctx->supports_iserial = 1;
 		if (FW_VER_CHECK(0,30))
 			ctx->supports_3x5x2 = 1;
 		if (FW_VER_CHECK(1,10))
@@ -673,12 +675,14 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			}
 			break;
 		case 210: //"5x7 (2L)"
-			ctx->can_rewind = 1;
 			if (ctx->multicut != 1 && ctx->multicut != 3 &&
 			    ctx->multicut != 22 && ctx->multicut != 29) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
+			/* Only 3.5x5 on 7x5 media can be rewound */
+			if (ctx->multicut == 1)
+				ctx->can_rewind = 1;
 			break;
 		case 300: //"6x4 (PC)"
 			if (ctx->multicut != 2) {
@@ -687,16 +691,17 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 			}
 			break;
 		case 310: //"6x8 (A5)"
-			ctx->can_rewind = 1;
 			if (ctx->multicut != 2 && ctx->multicut != 4 &&
 			    ctx->multicut != 12 &&
 			    ctx->multicut != 27 && ctx->multicut != 30) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
+			/* Only 6x4 on 6x8 media can be rewound */
+			if (ctx->multicut == 2)
+				ctx->can_rewind = 1;
 			break;
 		case 400: //"6x9 (A5W)"
-			ctx->can_rewind = 1;
 			if (ctx->multicut != 2 && ctx->multicut != 4 &&
 			    ctx->multicut != 5 &&  ctx->multicut != 12 &&
 			    ctx->multicut != 27 &&
@@ -704,6 +709,9 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
+			/* Only 6x4 or 6x4.5 on 6x9 media can be rewound */
+			if (ctx->multicut == 2 || ctx->multicut == 30)
+				ctx->can_rewind = 1;
 			break;
 		case 500: //"8x10"
 			if (ctx->multicut < 6 || ctx->multicut == 7 ||
@@ -919,8 +927,6 @@ top:
 
 		/* See if we can rewind to save media */
 		if (ctx->can_rewind && ctx->supports_rewind) {
-//XXX implicit //    (ctx->multicut == 1 || ctx->multicut == 2 || ctx->multicut == 30)
-
 			/* Tell the printer we want to rewind, if possible. */
 			snprintf(buf, sizeof(buf), "%08d", ctx->multicut + 400);
 			memcpy(ctx->multicut_offset, buf, 8);
@@ -1251,7 +1257,9 @@ static int dnpds40_get_info(struct dnpds40_ctx *ctx)
 		INFO("Media End kept across power cycles: '%s'\n", (char*)resp);
 
 		free(resp);
+	}
 
+	if (ctx->supports_iserial) {
 		/* Get USB serial descriptor status */
 		dnpds40_build_cmd(&cmd, "MNT_RD", "USB_ISERI_SET", 0);
 
@@ -1510,6 +1518,21 @@ static int dnpds620_media_keep_mode(struct dnpds40_ctx *ctx, int delay)
 	return 0;
 }
 
+static int dnpds620_iserial_mode(struct dnpds40_ctx *ctx, int enable)
+{
+	struct dnpds40_cmd cmd;
+	char msg[9];
+	int ret;
+
+	/* Generate command */
+	dnpds40_build_cmd(&cmd, "MNT_WT", "USB_ISERI_SET", 4);
+	snprintf(msg, sizeof(msg), "%02d\r", enable);
+
+	if ((ret = dnpds40_do_cmd(ctx, &cmd, (uint8_t*)msg, 8)))
+		return ret;
+
+	return 0;
+}
 
 static int dnpds40_set_counter_p(struct dnpds40_ctx *ctx, char *arg)
 {
@@ -1538,6 +1561,7 @@ static void dnpds40_cmdline(void)
 	DEBUG("\t\t[ -p num ]       # Set counter P\n");
 	DEBUG("\t\t[ -k num ]       # Set standby time (1-99 minutes, 0 disables)\n");
 	DEBUG("\t\t[ -K num ]       # Keep Media Status Across Power Cycles (1 on, 0 off)\n");
+	DEBUG("\t\t[ -x num ]       # Set USB iSerialNumber Reporting (1 on, 0 off)\n");
 }
 
 static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
@@ -1628,6 +1652,23 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 				break;
 			}
 			return 2;
+		case 'x':
+			if (ctx) {
+				int enable = atoi(optarg);
+				if (!ctx->supports_iserial) {
+					ERROR("Printer does not support USB iSerialNumber reporting\n");
+					j = -1;
+					break;
+				}
+				if (enable < 0 || enable > 1) {
+					ERROR("Value out of range (0-1)");
+					j = -1;
+					break;
+				}
+				j = dnpds620_iserial_mode(ctx, enable);
+				break;
+			}
+			return 2;
 		default:
 			break;  /* Ignore completely */
 		}
@@ -1641,7 +1682,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.58",
+	.version = "0.60",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
