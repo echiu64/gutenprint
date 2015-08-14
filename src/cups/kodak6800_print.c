@@ -39,6 +39,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
+#define BACKEND kodak6800_backend
+
 #include "backend_common.h"
 
 #define USB_VID_KODAK       0x040A
@@ -585,8 +587,9 @@ static int kodak6800_cmdline_arg(void *vctx, int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "C:c:ms")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "C:c:ms")) >= 0) {
 		switch(i) {
+		GETOPT_PROCESS_GLOBAL			
 		case 'c':
 			if (ctx) {
 				j = kodak6800_get_tonecurve(ctx, optarg);
@@ -667,11 +670,8 @@ static void kodak6800_attach(void *vctx, struct libusb_device_handle *dev,
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
 
-	/* Map out device type */
-	if (desc.idProduct == USB_PID_KODAK_6850)
-		ctx->type = P_KODAK_6850;
-	else
-		ctx->type = P_KODAK_6800;
+	ctx->type = lookup_printer_type(&kodak6800_backend,
+					desc.idVendor, desc.idProduct);	
 }
 
 static void kodak6800_teardown(void *vctx) {
@@ -872,6 +872,12 @@ top:
 		} else {
 			break;
 		}
+
+		if (fast_return) {
+			INFO("Fast return mode enabled.\n");
+			break;
+		}
+
 		sleep(1);
 	}
 	
@@ -891,7 +897,7 @@ top:
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.43",
+	.version = "0.44",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

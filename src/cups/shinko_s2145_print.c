@@ -39,8 +39,9 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#include "backend_common.h"
+#define BACKEND shinkos2145_backend
 
+#include "backend_common.h"
 
 enum {
 	S_IDLE = 0,
@@ -94,8 +95,9 @@ struct shinkos2145_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
+	int type;
+
 	uint8_t jobid;
-	uint8_t fast_return;
 
 	struct s2145_printjob_hdr hdr;
 
@@ -1294,8 +1296,9 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "b:c:C:efFil:L:mr:R:suU:X:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "b:c:C:eFil:L:mr:R:suU:X:")) >= 0) {
 		switch(i) {
+		GETOPT_PROCESS_GLOBAL
 		case 'b':
 			if (ctx) {
 				if (optarg[0] == '1')
@@ -1322,12 +1325,6 @@ int shinkos2145_cmdline_arg(void *vctx, int argc, char **argv)
 		case 'e':
 			if (ctx) {
 				j = get_errorlog(ctx);
-				break;
-			}
-			return 1;
-		case 'f':
-			if (ctx) {
-				ctx->fast_return = 1;
 				break;
 			}
 			return 1;
@@ -1418,10 +1415,6 @@ static void *shinkos2145_init(void)
 	}
 	memset(ctx, 0, sizeof(struct shinkos2145_ctx));
 
-	/* Use Fast return by default in CUPS mode */
-	if (getenv("DEVICE_URI") || getenv("FAST_RETURN"))
-		ctx->fast_return = 1;
-
 	return ctx;
 }
 
@@ -1429,10 +1422,18 @@ static void shinkos2145_attach(void *vctx, struct libusb_device_handle *dev,
 			       uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct shinkos2145_ctx *ctx = vctx;
+	struct libusb_device *device;
+	struct libusb_device_descriptor desc;
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
+
+	device = libusb_get_device(dev);
+	libusb_get_device_descriptor(device, &desc);
+	
+	ctx->type = lookup_printer_type(&shinkos2145_backend,
+					desc.idVendor, desc.idProduct);	
 
 	/* Ensure jobid is sane */
 	ctx->jobid = (jobid & 0x7f) + 1;
@@ -1660,7 +1661,7 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 		state = S_PRINTER_SENT_DATA;
 		break;
 	case S_PRINTER_SENT_DATA:
-		if (ctx->fast_return) {
+		if (fast_return) {
 			INFO("Fast return mode enabled.\n");
 			state = S_FINISHED;
 		} else if (sts->hdr.status == STATUS_READY ||

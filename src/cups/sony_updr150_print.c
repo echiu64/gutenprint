@@ -35,6 +35,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
+#define BACKEND updr150_backend
+
 #include "backend_common.h"
 
 /* Exported */
@@ -48,12 +50,12 @@ struct updr150_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
+	int type;
 
 	uint8_t *databuf;
 	int datalen;
 
 	uint32_t copies_offset;
-	uint8_t type;
 };
 
 static void* updr150_init(void)
@@ -82,11 +84,9 @@ static void updr150_attach(void *vctx, struct libusb_device_handle *dev,
 
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
-	if (desc.idProduct == USB_PID_SONY_UPDR150 ||
-	    desc.idProduct == USB_PID_SONY_UPDR200)
-		ctx->type = P_SONY_UPDR150;
-	else
-		ctx->type = P_SONY_UPCR10; // XXX
+
+	ctx->type = lookup_printer_type(&updr150_backend,
+					desc.idVendor, desc.idProduct);	
 
 	ctx->copies_offset = 0;
 }
@@ -255,10 +255,32 @@ top:
 	return CUPS_BACKEND_OK;
 }
 
+static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
+{
+//	struct updr150_ctx *ctx = vctx;
+	int i, j = 0;
+
+	UNUSED(vctx);
+	
+	/* Reset arg parsing */
+	optind = 1;
+	opterr = 0;
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL)) >= 0) {
+		switch(i) {
+		GETOPT_PROCESS_GLOBAL
+		}
+
+		if (j) return j;
+	}
+
+	return 0;
+}
+
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
 	.version = "0.17",
 	.uri_prefix = "sonyupdr150",
+	.cmdline_arg = updr150_cmdline_arg,	
 	.init = updr150_init,
 	.attach = updr150_attach,
 	.teardown = updr150_teardown,

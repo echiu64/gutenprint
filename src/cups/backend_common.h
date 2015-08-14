@@ -91,7 +91,6 @@ enum {
 	P_ES1,
 	P_ES2_20,
 	P_ES3_30,
-	P_ES40_CP790,
 	P_ES40,
 	P_CP790,
 	P_CP_XXX,
@@ -102,10 +101,14 @@ enum {
 	P_KODAK_605,
 	P_SHINKO_S2145,
 	P_SHINKO_S1245,
+	P_SHINKO_S6245,
+	P_SHINKO_S6145,	
 	P_SONY_UPDR150,
 	P_SONY_UPCR10,
 	P_MITSU_D70X,
+	P_MITSU_K60,	
 	P_MITSU_9550,
+	P_MITSU_9550S,	
 	P_DNP_DS40,
 	P_DNP_DS80,
 	P_CITIZEN_CW01,
@@ -132,7 +135,6 @@ struct dyesub_backend {
 		       uint8_t endp_up, uint8_t endp_down, uint8_t jobid);
 	void (*teardown)(void *ctx);
 	int  (*cmdline_arg)(void *ctx, int argc, char **argv);
-	int  (*early_parse)(void *ctx, int data_fd);
 	int  (*read_parse)(void *ctx, int data_fd);
 	int  (*main_loop)(void *ctx, int copies);
 	int  (*query_serno)(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len);
@@ -144,22 +146,24 @@ int send_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int len);
 int read_data(struct libusb_device_handle *dev, uint8_t endp,
 	      uint8_t *buf, int buflen, int *readlen);
+int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint16_t idProduct);
 
-/* Exported data */
+void print_license_blurb(void);
+void print_help(char *argv0, struct dyesub_backend *backend);
+
+/* Global data */
 extern int terminate;
 extern int dyesub_debug;
+extern int fast_return;
+extern int extra_vid;
+extern int extra_pid;
+extern int extra_type;
+extern int copies;
+extern char *use_serno;
 
-/* External data */
-extern struct dyesub_backend updr150_backend;
-extern struct dyesub_backend kodak6800_backend;
-extern struct dyesub_backend kodak605_backend;
-extern struct dyesub_backend kodak1400_backend;
-extern struct dyesub_backend shinkos2145_backend;
-extern struct dyesub_backend canonselphy_backend;
-extern struct dyesub_backend mitsu70x_backend;
-extern struct dyesub_backend mitsu9550_backend;
-extern struct dyesub_backend dnpds40_backend;
-extern struct dyesub_backend cw01_backend;
+#if defined(BACKEND)
+extern struct dyesub_backend BACKEND;
+#endif
 
 /* CUPS compatibility */
 #define CUPS_BACKEND_OK            0 /* Sucess */
@@ -170,5 +174,36 @@ extern struct dyesub_backend cw01_backend;
 #define CUPS_BACKEND_CANCEL        5 /* Cancel print job */
 #define CUPS_BACKEND_RETRY         6 /* Retry later */
 #define CUPS_BACKEND_RETRY_CURRENT 7 /* Retry immediately */
+
+/* Argument processing */
+#define GETOPT_LIST_GLOBAL "d:DfGhP:S:T:V:"
+#define GETOPT_PROCESS_GLOBAL \
+			case 'd': \
+				copies = atoi(optarg); \
+				break; \
+			case 'D': \
+				dyesub_debug++; \
+				break; \
+			case 'f': \
+				fast_return++; \
+				break; \
+			case 'G': \
+				print_license_blurb(); \
+				exit(0); \
+			case 'h': \
+				print_help(argv[0], &BACKEND); \
+				exit(0); \
+			case 'P': \
+				extra_pid = strtol(optarg, NULL, 16); \
+				break; \
+			case 'S': \
+				use_serno = optarg; \
+				break; \
+			case 'T': \
+				extra_type = atoi(optarg); \
+				break; \
+			case 'V': \
+				extra_pid = strtol(optarg, NULL, 16); \
+				break;
 
 #endif /* __BACKEND_COMMON_H */

@@ -35,6 +35,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
+#define BACKEND cw01_backend
+
 #include "backend_common.h"
 
 #define USB_VID_CITIZEN      0x1343
@@ -68,6 +70,7 @@ struct cw01_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
+	int type;
 
 	uint8_t *databuf;
 	struct cw01_spool_hdr hdr;
@@ -296,12 +299,20 @@ static void cw01_attach(void *vctx, struct libusb_device_handle *dev,
 			      uint8_t endp_up, uint8_t endp_down, uint8_t jobid)
 {
 	struct cw01_ctx *ctx = vctx;
+	struct libusb_device *device;
+	struct libusb_device_descriptor desc;
 
 	UNUSED(jobid);
 
 	ctx->dev = dev;
 	ctx->endp_up = endp_up;
 	ctx->endp_down = endp_down;
+
+	device = libusb_get_device(dev);
+	libusb_get_device_descriptor(device, &desc);
+	
+	ctx->type = lookup_printer_type(&cw01_backend,
+					desc.idVendor, desc.idProduct);
 }
 
 static void cw01_teardown(void *vctx) {
@@ -825,8 +836,9 @@ static int cw01_cmdline_arg(void *vctx, int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "inN:s")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "inN:s")) >= 0) {
 		switch(i) {
+		GETOPT_PROCESS_GLOBAL
 		case 'i':
 			if (ctx) {
 				j = cw01_get_info(ctx);

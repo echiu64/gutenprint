@@ -35,6 +35,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
+#define BACKEND mitsu70x_backend
+
 #include "backend_common.h"
 
 #define USB_VID_MITSU       0x06D3
@@ -49,14 +51,13 @@ struct mitsu70x_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
+	int type;
 
 	uint8_t *databuf;
 	int datalen;
 
 	uint16_t rows;
 	uint16_t cols;
-
-	int k60;
 };
 
 /* Program states */
@@ -155,12 +156,8 @@ static void mitsu70x_attach(void *vctx, struct libusb_device_handle *dev,
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
 
-	if (desc.idProduct == USB_PID_MITSU_K60)
-		ctx->k60 = 1;
-
-	if (desc.idProduct == USB_PID_KODAK305)
-		ctx->k60 = 1;
-
+	ctx->type = lookup_printer_type(&mitsu70x_backend,
+					desc.idVendor, desc.idProduct);
 }
 
 
@@ -424,7 +421,7 @@ top:
 		INFO("Sending header sequence\n");
 
 		/* K60 may require fixups */
-		if (ctx->k60) {
+		if (ctx->type == P_MITSU_K60) {
 			struct mitsu70x_hdr *hdr = (struct mitsu70x_hdr*) (ctx->databuf + sizeof(struct mitsu70x_hdr));
 			/* K60 only has a lower deck */
 			hdr->deck = 1;
@@ -574,8 +571,9 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "s")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "s")) >= 0) {
 		switch(i) {
+		GETOPT_PROCESS_GLOBAL			
 		case 's':
 			if (ctx) {
 				j = mitsu70x_query_status(ctx);
@@ -608,9 +606,9 @@ struct dyesub_backend mitsu70x_backend = {
 	.query_serno = mitsu70x_query_serno,
 	.devices = {
 	{ USB_VID_MITSU, USB_PID_MITSU_D70X, P_MITSU_D70X, ""},
-	{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_D70X, ""},
+	{ USB_VID_MITSU, USB_PID_MITSU_K60, P_MITSU_K60, ""},
 //	{ USB_VID_MITSU, USB_PID_MITSU_D80, P_MITSU_D70X, ""},
-	{ USB_VID_KODAK, USB_PID_KODAK305, P_MITSU_D70X, ""},
+	{ USB_VID_KODAK, USB_PID_KODAK305, P_MITSU_K60, ""},
 	{ 0, 0, 0, ""}
 	}
 };

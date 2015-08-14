@@ -35,6 +35,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
+#define BACKEND kodak605_backend
+
 #include "backend_common.h"
 
 #define USB_VID_KODAK       0x040A
@@ -74,6 +76,7 @@ struct kodak605_ctx {
 	struct libusb_device_handle *dev;
 	uint8_t endp_up;
 	uint8_t endp_down;
+	int type;
 
 	struct kodak605_hdr hdr;
 	uint8_t *databuf;
@@ -119,7 +122,9 @@ static void kodak605_attach(void *vctx, struct libusb_device_handle *dev,
 
 	device = libusb_get_device(dev);
 	libusb_get_device_descriptor(device, &desc);
-
+	
+	ctx->type = lookup_printer_type(&kodak605_backend,
+					desc.idVendor, desc.idProduct);	
 }
 
 static void kodak605_teardown(void *vctx) {
@@ -510,8 +515,9 @@ static int kodak605_cmdline_arg(void *vctx, int argc, char **argv)
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
-	while ((i = getopt(argc, argv, "C:ms")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "C:ms")) >= 0) {
 		switch(i) {
+		GETOPT_PROCESS_GLOBAL
 		case 'C':
 			if (ctx) {
 				j = kodak605_set_tonecurve(ctx, optarg);
