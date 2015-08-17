@@ -2861,7 +2861,7 @@
       <printer translate="name" name="Sinfonia CHC-S1245/E1" driver="sinfonia-chcs1245" manufacturer="Sinfonia" model="5002" foomaticid="Sinfonia-CHC-S1245" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Shinko CHC-S6245" driver="shinko-chcs6245" manufacturer="Shinko" model="5003" foomaticid="Shinko-CHC-S6245" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S6245/CE1" driver="sinfonia-chcs6245" manufacturer="Sinfonia" model="5003" foomaticid="Sinfonia-CHC-S6245" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="Shinko CHC-S6145" driver="shinko-chcs6145" manufacturer="Shinko" model="5004" foomaticid="Shinko-CHC-S6145">EXPERIMENTAL</printer>
+      <printer translate="name" name="Shinko CHC-S6145" deviceid="MFG:SINFONIA;CMD:SUPCC;MDL:CHC-S6145;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="shinko-chcs6145" manufacturer="Shinko" model="5004" foomaticid="Shinko-CHC-S6145">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S6145/CS2" driver="sinfonia-chcs6145" manufacturer="Sinfonia" model="5004" foomaticid="Sinfonia-CHC-S6145">EXPERIMENTAL</printer>
       <printer translate="name" name="CIAAT Brava 21" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" foomaticid="CIAAT-Brava-21">EXPERIMENTAL</printer>
       <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" parameters="nativecopies" />
