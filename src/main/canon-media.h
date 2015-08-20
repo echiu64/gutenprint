@@ -383,11 +383,10 @@ static const canon_paper_t canon_PIXMA_iP3100_papers[] = {
 };
 DECLARE_PAPERS(canon_PIXMA_iP3100);
 
-static const canon_paper_t canon_MULTIPASS_MP5_papers[] = {
+static const canon_paper_t canon_PIXMA_MP5_papers[] = {
   { "Plain",		N_ ("Plain Paper"),		        0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0x0b 0x11 */
-  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x0a,0x10,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -399,13 +398,12 @@ static const canon_paper_t canon_MULTIPASS_MP5_papers[] = {
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
 };
-DECLARE_PAPERS(canon_MULTIPASS_MP5);
+DECLARE_PAPERS(canon_PIXMA_MP5);
 
-static const canon_paper_t canon_MULTIPASS_MP55_papers[] = {
+static const canon_paper_t canon_PIXMA_MP55_papers[] = {
   { "Plain",		N_ ("Plain Paper"),		        0x00,0x00,0x00,0.50, 0.25, 0.500, 0, 0, 0 },
   { "GlossyPro",	N_ ("Photo Paper Pro"),	                0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperPlus",	N_ ("Photo Paper Plus Glossy"), 	0x09,0x0d,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0x0b 0x11 */
-  { "PhotopaperPlusDouble",N_ ("Photo Paper Plus Double Sided"),0x10,0x15,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
   { "PhotopaperMatte",	N_ ("Matte Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* different from expected 0x0a 0x10 */
   { "GlossyPaper",	N_ ("Glossy Photo Paper"),		0x05,0x05,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Coated",		N_ ("High Resolution Paper"),		0x07,0x07,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
@@ -417,7 +415,7 @@ static const canon_paper_t canon_MULTIPASS_MP55_papers[] = {
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* untested */
 };
-DECLARE_PAPERS(canon_MULTIPASS_MP55);
+DECLARE_PAPERS(canon_PIXMA_MP55);
 
 static const canon_paper_t canon_MULTIPASS_MP900_papers[] = {
   { "Plain",		N_ ("Plain Paper"),			0x00,0x00,0x00,1.00, 0.25, 0.500, 0, 0, 0 },
