@@ -1695,7 +1695,7 @@ DECLARE_MODES(canon_PIXMA_iP6700,1);
 
 /* ------------------------------Start of MP series------------------------------ */
 
-/* MP5, MP10 */
+/* MP5, MP10, MPC190, MPC200 */
 static const canon_mode_t canon_PIXMA_MP5_modes[] = {
   /* plain modes */
   {  600, 600,CANON_INK_K|CANON_INK_CMYK,"600x600dpi_high",N_("600x600 DPI HIGH"),INKSET(9_C4M4Y4K3),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_MP360,NULL,1.0,1.0,NULL,NULL,NULL,3},
