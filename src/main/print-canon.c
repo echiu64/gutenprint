@@ -4236,8 +4236,10 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
-  /* code for last argument in 9-byte ESC (P printers with and upper and lower tray included in the cassette input source */
-  /*
+  /* Code for last argument in 9-byte ESC (P printers with and upper and lower tray included in the cassette input source 
+     The intention appears to be to allow printing of photos and non-photo paper without needing to change trays.
+     Note, envelopes are printed from the lower tray.
+
      Upper tray specification from MG6500(?):
      Max height: 7 inches
      Max width:  8 inches (marked up to 5 inches)
@@ -4252,7 +4254,10 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
      Conditions:
      Init:  Upper tray
-     Media: Envelopes  (argESCP_2 == 0x08) --> lower tray
+     Media: 
+            Hagaki, Photo media --> upper tray
+	    Envelopes  (argESCP_2 == 0x08) --> lower tray
+	    Other --> lower tray
      Size:  Length:
             <=7 inches --> upper tray
             >7 inches --> lower tray
@@ -4271,7 +4276,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
    */
   
   
-  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) ) {
+  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
+    /* default: use lower tray of cassette with two trays: expand later */
     arg_ESCP_9 = 0x02;
   }
   else if ( !(strcmp(init->caps->name,"PIXMA E400")) || !(strcmp(init->caps->name,"PIXMA E460")) || !(strcmp(init->caps->name,"PIXMA E480")) || !(strcmp(init->caps->name,"PIXMA E560")) || !(strcmp(init->caps->name,"PIXMA MG2900")) || !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA MG5600")) || !(strcmp(init->caps->name,"PIXMA iP110")) || !(strcmp(init->caps->name,"PIXMA iP2800")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) || !(strcmp(init->caps->name,"MAXIFY iB4000")) || !(strcmp(init->caps->name,"MAXIFY MB2000")) || !(strcmp(init->caps->name,"MAXIFY MB2300")) || !(strcmp(init->caps->name,"PIXMA MX470")) || !(strcmp(init->caps->name,"PIXMA MX490")) ) {
@@ -4509,21 +4515,31 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   }
 
   /* workaround for media type based differences in 9-parameter ESC (P commands */
-  /* MX720, MX920, MG6500 uses 2 usually, 1 with various Hagaki media, and 0 with CD media */
-  /* Note: issue is use of upper (1)/lower tray(2) wth cassette media source, 0 for CD media */
-  if (  !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) || !(strcmp(init->caps->name,"PIXMA MG6500")) ) {
-    switch(arg_ESCP_2)
+  /* These printers use 0x02 (lower tray) usually and for envelopes, 0x01 (upper tray) with various Hagaki/Photo media, and 0x00 with CD media */
+  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
+    switch(arg_ESCP_2) /* add conditions for size (>7in -> lower), and envelope media type (code 0x08) */
       {
 	/* Hagaki media */
       case 0x07: arg_ESCP_9=0x01; break;;
-      case 0x14: arg_ESCP_9=0x01; break;;
+      case 0x14: arg_ESCP_9=0x01; break;; /* not used with any of these models */
       case 0x1b: arg_ESCP_9=0x01; break;;
       case 0x36: arg_ESCP_9=0x01; break;;
       case 0x38: arg_ESCP_9=0x01; break;;
+	/* Photo media here */
+      case 0x32: arg_ESCP_9=0x01; break;;
+      case 0x33: arg_ESCP_9=0x01; break;;
+      case 0x3f: arg_ESCP_9=0x01; break;;
+      case 0x2a: arg_ESCP_9=0x01; break;;
+      case 0x16: arg_ESCP_9=0x01; break;;
+      case 0x44: arg_ESCP_9=0x01; break;; /* MG6700, MG7500 only, instead of 0x16 */
+      case 0x1c: arg_ESCP_9=0x01; break;;
+      case 0x24: arg_ESCP_9=0x01; break;;
+	/* Envelope media */
+      case 0x08: arg_ESCP_9=0x02; break;;
 	/* CD media */
       case 0x1f: arg_ESCP_9=0x00; break;;
       case 0x20: arg_ESCP_9=0x00; break;;
-	/* other media */
+	/* other media default to lower tray */
       default:   arg_ESCP_9=0x02; break;;
       }
   }
