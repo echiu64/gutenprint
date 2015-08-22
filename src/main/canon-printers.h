@@ -1970,7 +1970,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_MG5400_slotlist, /* iP7200 uses ESC (r 0x68 command for CD tray only */
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_px|CANON_CAP_v|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
     3,9, /* ESC (l and (P command lengths */
-    0, /* Upper/Lower Cassette option */
+    1, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300,  /* features Uses ESC (r only for CD media */
     &canon_PIXMA_iP7200_modelist,
     &canon_PIXMA_MG5400_paperlist,
@@ -3044,7 +3044,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_MG5200_slotlist, /* ESC (r only for CD media */
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_r|CANON_CAP_rr|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
     3,6, /* ESC (l and (P command lengths */
-    1, /* Upper/Lower Cassette option */
+    0, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300,  /* features */
     &canon_PIXMA_MG6200_modelist,
     &canon_PIXMA_MG6100_paperlist,
@@ -3402,7 +3402,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_MX720_slotlist,
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
     3,9, /* ESC (l and (P command lengths */
-    0, /* Upper/Lower Cassette option */
+    1, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300,
     &canon_PIXMA_MX720_modelist,
     &canon_PIXMA_MG3200_paperlist,
@@ -3487,7 +3487,7 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_MG5400_slotlist, /* iP7200 uses ESC (r 0x68 command for CD tray only */
     CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_r|CANON_CAP_px|CANON_CAP_P|CANON_CAP_I|CANON_CAP_v|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
     3,9, /* ESC (l and (P command lengths */
-    0, /* Upper/Lower Cassette option */
+    1, /* Upper/Lower Cassette option */
     control_cmd_PIXMA_MG5300,  /* features Uses ESC (r only for CD media */
     &canon_PIXMA_MX920_modelist,
     &canon_PIXMA_MG5400_paperlist,

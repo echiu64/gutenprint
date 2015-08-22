@@ -2916,6 +2916,8 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->bounds.str= stp_string_list_create();
       if (caps->CassetteTray_Opts == 1) {
 	stp_string_list_add_string
+	  (description->bounds.str, "Default", _("Driver-Controlled"));
+	stp_string_list_add_string
 	  (description->bounds.str, "Upper", _("Upper Tray"));
 	stp_string_list_add_string
 	  (description->bounds.str, "Lower", _("Lower Tray"));
@@ -4233,6 +4235,42 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
+
+  /* code for last argument in 9-byte ESC (P printers with and upper and lower tray included in the cassette input source */
+  /*
+     Upper tray specification from MG6500(?):
+     Max height: 7 inches
+     Max width:  8 inches (marked up to 5 inches)
+     Min height: 5 inches (L size)
+     Min width:  3.5 inches (L size)
+
+     Lower tray specification:
+     Max height: 14 inches
+     Max width:  8.5 inches
+     Min height: 7.5 inches
+     Min width:  3.5 inches (takes business envelopes)
+
+     Conditions:
+     Init:  Upper tray
+     Media: Envelopes  (argESCP_2 == 0x08) --> lower tray
+     Size:  Length:
+            <=7 inches --> upper tray
+            >7 inches --> lower tray
+
+     Printers with this capability:
+     Code 0xd for cassette (standard cassette code is 0x8)
+
+     MG5400
+     MG6300
+     MG6500
+     MG6700
+     MG7500
+     iP7200
+     MX720
+     MX920
+   */
+  
+  
   if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) ) {
     arg_ESCP_9 = 0x02;
   }
