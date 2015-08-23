@@ -2722,7 +2722,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       width_limit = caps->max_width;
       height_limit = caps->max_height;
 
-      if(!input_slot || !strcmp(input_slot,"CD")){
+      if(input_slot && !strcmp(input_slot,"CD")){
         stp_string_list_add_string
           (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
         stp_string_list_add_string
@@ -2761,9 +2761,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
     {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
       description->bounds.str = stp_string_list_create();
-      if ((!input_slot || !strcmp(input_slot,"CD")) &&
+      if ( (!input_slot || !strcmp(input_slot,"CD")) &&
          (!stp_get_string_parameter(v, "PageSize") ||
-          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0))
+          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0) )	
 	{
 	  stp_string_list_add_string
 	    (description->bounds.str, "None", _("Normal"));
@@ -2781,9 +2781,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = 16 * 10 * 72 / 254;
       description->bounds.dimension.upper = 43 * 10 * 72 / 254;
       description->deflt.dimension = 43 * 10 * 72 / 254;
-      if ((!input_slot || !strcmp(input_slot,"CD")) &&
+      if ( (!input_slot || !strcmp(input_slot,"CD")) &&
          (!stp_get_string_parameter(v, "PageSize") ||
-         strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
+         strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0) )
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -2794,9 +2794,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = 65 * 10 * 72 / 254;
       description->bounds.dimension.upper = 120 * 10 * 72 / 254;
       description->deflt.dimension = 329;
-      if ((!input_slot || !strcmp(input_slot,"CD")) &&
+      if ( (!input_slot || !strcmp(input_slot,"CD")) &&
          (!stp_get_string_parameter(v, "PageSize") ||
-          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
+          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0) )
 	description->is_active = 1;
       else
 	description->is_active = 0;
