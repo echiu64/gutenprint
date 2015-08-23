@@ -2913,21 +2913,29 @@ canon_parameters(const stp_vars_t *v, const char *name,
   }
   else if (strcmp(name, "CassetteTray") == 0)
     {
+      const char* input_slot = stp_get_string_parameter(v, "InputSlot");
       description->bounds.str= stp_string_list_create();
-      if (caps->CassetteTray_Opts == 1) {
+      /*      if (caps->CassetteTray_Opts == 1) {*/
 	stp_string_list_add_string
 	  (description->bounds.str, "Default", _("Driver-Controlled"));
 	stp_string_list_add_string
 	  (description->bounds.str, "Upper", _("Upper Tray"));
 	stp_string_list_add_string
 	  (description->bounds.str, "Lower", _("Lower Tray"));
-      } else {
+	/*      } else {*/
 	/* make sure to have at least a default value: no choice */
 	stp_string_list_add_string
 	  (description->bounds.str, "None", _("None"));
-      }
+	/*      }*/
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
+      /*      if (input_slot && !strcmp(input_slot,"Cassette") &&
+	  !stp_get_string_parameter(v, "PageSize"))
+	description->is_active = 1;
+      else
+	description->is_active = 0;
+      */
+      
     }
   else if (strcmp(name, "PrintingMode") == 0)
   {

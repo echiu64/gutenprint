@@ -135,6 +135,7 @@ const char *special_options[] =
   "PageSize",
   "MediaType",
   "InputSlot",
+  "CassetteTray",
   "Resolution",
   "OutputOrder",
   "Quality",
@@ -2128,6 +2129,42 @@ write_ppd(
   }
   stp_parameter_description_destroy(&desc);
 
+  /*
+   * Cassette Tray option 
+   */
+
+  stp_describe_parameter(v, "CassetteTray", &desc);
+
+  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active &&
+      stp_string_list_count(desc.bounds.str) > 0)
+  {
+    int is_color_opt =
+      stp_parameter_has_category_value(v, &desc, "Color", "Yes");
+    int nocolor = skip_color && is_color_opt;
+    num_opts = stp_string_list_count(desc.bounds.str);
+    if (is_color_opt)
+      gpprintf(fp, "*ColorKeyWords: \"CassetteTray\"\n");
+    gpprintf(fp, "*OpenUI *CassetteTray/%s: PickOne\n", _("Cassette Tray"));
+    gpputs(fp, "*OPOptionHints CassetteTray: \"dropdown\"\n");
+    gpputs(fp, "*OrderDependency: 10 AnySetup *CassetteTray\n");
+    gpprintf(fp, "*StpStp%s: %d %d %d %d %d %.3f %.3f %.3f\n",
+	     desc.name, desc.p_type, desc.is_mandatory,
+	     desc.p_class, desc.p_level, desc.channel, 0.0, 0.0, 0.0);
+    gpprintf(fp, "*DefaultCassetteTray: %s\n", desc.deflt.str);
+    gpprintf(fp, "*StpDefaultCassetteTray: %s\n", desc.deflt.str);
+
+    for (i = 0; i < num_opts; i ++)
+    {
+      opt = stp_string_list_param(desc.bounds.str, i);
+      gpprintf(fp, "*%sCassetteTray %s/%s:\t\"<</MediaClass(%s)>>setpagedevice\"\n",
+	       nocolor && strcmp(opt->name, desc.deflt.str) != 0 ? "?" : "",
+               opt->name, stp_i18n_lookup(po, opt->text), opt->name);
+    }
+
+    gpputs(fp, "*CloseUI: *CassetteTray\n\n");
+  }
+  stp_parameter_description_destroy(&desc);
+
  /*
   * Quality settings
   */
@@ -2569,6 +2606,25 @@ write_ppd(
 	    }
 	  stp_parameter_description_destroy(&desc);
 
+	  /* Cassette Tray option */
+	  
+	  stp_describe_parameter(v, "CassetteTray", &desc);
+	  
+	  if (desc.p_type == STP_PARAMETER_TYPE_STRING_LIST && desc.is_active &&
+	      stp_string_list_count(desc.bounds.str) > 0)
+	    {
+	      num_opts = stp_string_list_count(desc.bounds.str);
+	      gpprintf(fp, "*%s.Translation CassetteTray/%s: \"\"\n", lang, _("Cassette Tray"));
+
+	      for (i = 0; i < num_opts; i ++)
+		{
+		  opt = stp_string_list_param(desc.bounds.str, i);
+		  gpprintf(fp, "*%s.CassetteTray %s/%s: \"\"\n", lang, opt->name, stp_i18n_lookup(po, opt->text));
+		}
+	    }
+	  stp_parameter_description_destroy(&desc);
+
+	  
 	  /*
 	   * Quality settings
 	   */
