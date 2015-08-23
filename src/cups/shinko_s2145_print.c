@@ -54,7 +54,7 @@ enum {
 struct s2145_printjob_hdr {
 	uint32_t len1;   /* Fixed at 0x10 */
 	uint32_t model;  /* Equal to the printer model (eg '2145' or '1245' decimal) */
-	uint32_t med_type;   /* 6145 only, media type */
+	uint32_t unk2;
 	uint32_t unk3;   /* Fixed at 0x01 */
 
 	uint32_t len2;   /* Fixed at 0x64 */
@@ -62,9 +62,9 @@ struct s2145_printjob_hdr {
 	uint32_t media;
 	uint32_t unk6;
 
-	uint32_t method; /* Method for 2145, 0x00 for 6245, multicut for 6145 */
-	uint32_t mode;   /* Mode for 2145, 0x00 for 6245, quality for 6145 */
-	uint32_t oc_mode;   /* 6145/6245 only, Matte/Glossy/None */
+	uint32_t method;
+	uint32_t mode;
+	uint32_t unk7;
 	uint32_t unk8;
 
 	uint32_t unk9;
@@ -723,7 +723,7 @@ struct s2145_mediainfo_item {
 	uint16_t columns;
 	uint16_t rows;
 	uint8_t  media_type;
-	uint8_t  print_type;
+	uint8_t  print_type; /* The same as the "print method" */
 	uint8_t  reserved[3];
 } __attribute__((packed));
 
@@ -1564,7 +1564,8 @@ static int shinkos2145_main_loop(void *vctx, int copies) {
 	for (i = 0; i < media->count ; i++) {
 		/* Look for matching media */
 		if (le16_to_cpu(media->items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
-		    le16_to_cpu(media->items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)))
+		    le16_to_cpu(media->items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
+		    media->items[i].print_type == le32_to_cpu(ctx->hdr.method))
 			break;
 	}
 	if (i == media->count) {
@@ -1743,7 +1744,7 @@ static int shinkos2145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos2145_backend = {
 	.name = "Shinko/Sinfonia CHC-S2145",
-	.version = "0.43",
+	.version = "0.44",
 	.uri_prefix = "shinkos2145",
 	.cmdline_usage = shinkos2145_cmdline,
 	.cmdline_arg = shinkos2145_cmdline_arg,
