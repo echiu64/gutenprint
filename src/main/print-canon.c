@@ -4230,9 +4230,27 @@ static void
 canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
   unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_9;
+
+  /* addition for top/bottom tray selection for 0xd cassette slots */
+  int width, length;
+  const char *media_size = stp_get_string_parameter(v, "PageSize");
+  const stp_papersize_t *pt = NULL;
+  const char* input_slot = stp_get_string_parameter(v, "InputSlot");
+  const canon_cap_t * caps= canon_get_model_capabilities(v);
+  int print_cd = (input_slot && (!strcmp(input_slot, "CD")));
+
+  /* end addition */
+  
   if(!(init->caps->features & CANON_CAP_P))
     return;
 
+  /* addition for top/bottom tray selection for 0xd cassette slots */
+  if (media_size)
+    pt = stp_get_papersize_by_name(media_size);
+  stp_default_media_size(v, &width, &length);
+  /* if width > 504 (7in) then use the lower tray */
+  /* end addition */
+  
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
 
@@ -4277,8 +4295,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   
   
   if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
-    /* default: use lower tray of cassette with two trays: expand later */
-    arg_ESCP_9 = 0x02;
+    /* default: use upper tray of cassette with two trays, condition check later */
+    arg_ESCP_9 = 0x01;
   }
   else if ( !(strcmp(init->caps->name,"PIXMA E400")) || !(strcmp(init->caps->name,"PIXMA E460")) || !(strcmp(init->caps->name,"PIXMA E480")) || !(strcmp(init->caps->name,"PIXMA E560")) || !(strcmp(init->caps->name,"PIXMA MG2900")) || !(strcmp(init->caps->name,"PIXMA MG3500")) || !(strcmp(init->caps->name,"PIXMA MG5500")) || !(strcmp(init->caps->name,"PIXMA MG5600")) || !(strcmp(init->caps->name,"PIXMA iP110")) || !(strcmp(init->caps->name,"PIXMA iP2800")) || !(strcmp(init->caps->name,"PIXMA iP8700")) || !(strcmp(init->caps->name,"PIXMA iX6800")) || !(strcmp(init->caps->name,"MAXIFY iB4000")) || !(strcmp(init->caps->name,"MAXIFY MB2000")) || !(strcmp(init->caps->name,"MAXIFY MB2300")) || !(strcmp(init->caps->name,"PIXMA MX470")) || !(strcmp(init->caps->name,"PIXMA MX490")) ) {
     arg_ESCP_9 = 0xff;
@@ -4517,7 +4535,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   /* workaround for media type based differences in 9-parameter ESC (P commands */
   /* These printers use 0x02 (lower tray) usually and for envelopes, 0x01 (upper tray) with various Hagaki/Photo media, and 0x00 with CD media */
   if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
-    switch(arg_ESCP_2) /* add conditions for size (>7in -> lower), and envelope media type (code 0x08) */
+    switch(arg_ESCP_2)
       {
 	/* Hagaki media */
       case 0x07: arg_ESCP_9=0x01; break;;
@@ -4542,6 +4560,11 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	/* other media default to lower tray */
       default:   arg_ESCP_9=0x02; break;;
       }
+
+    /* condition for length to use lower tray: 7in equals 504 points */
+    if ( (arg_ESCP_9 == 0x01) && ( length > 504 ) ) {
+      arg_ESCP_9=0x02; 
+    }
   }
 
   /* MG6700, MG7500 uses 0xff with CD media tray */
