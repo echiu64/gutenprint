@@ -565,10 +565,14 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
     Added support for upper/lower tray in cassette for following models:
 
 	Canon MG5400 series
-	Canon MG6200 series
 	Canon MG6300 series
 	Canon MG6500 series
+	Canon MG6700 series
 	Canon MG7100 series
+	Canon MG7500 series
+	Canon iP7200 series
+	Canon MX720 series
+	Canon MX920 series
 
     Added prefix PIXUS to the Japanese i/R/PD models:
 

@@ -2905,35 +2905,30 @@ canon_parameters(const stp_vars_t *v, const char *name,
     int count = caps->slotlist->count;
     description->bounds.str= stp_string_list_create();
     description->deflt.str= canon_slot_list[0].name;
-
+    
     for (i = 0; i < count; i ++)
       stp_string_list_add_string(description->bounds.str,
-				canon_slot_list[i].name,
-				gettext(canon_slot_list[i].text));
+				 canon_slot_list[i].name,
+				 gettext(canon_slot_list[i].text));
   }
   else if (strcmp(name, "CassetteTray") == 0)
-    {
+  {
+    description->bounds.str= stp_string_list_create();
+    description->is_active = 0;
+    if (caps->CassetteTray_Opts) {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
-      description->bounds.str= stp_string_list_create();
-      if (caps->CassetteTray_Opts == 1) {
-	stp_string_list_add_string
-	  (description->bounds.str, "Default", _("Driver-Controlled"));
-	stp_string_list_add_string
-	  (description->bounds.str, "Upper", _("Upper Tray"));
-	stp_string_list_add_string
-	  (description->bounds.str, "Lower", _("Lower Tray"));
-      } else {
-	/* make sure to have at least a default value: no choice */
-	stp_string_list_add_string
-	  (description->bounds.str, "None", _("None"));
-      }
+      stp_string_list_add_string
+	(description->bounds.str, "Default", _("Driver-Controlled"));
+      stp_string_list_add_string
+	(description->bounds.str, "Upper", _("Upper Tray"));
+      stp_string_list_add_string
+	(description->bounds.str, "Lower", _("Lower Tray"));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
       if (!input_slot || !strcmp(input_slot,"Cassette"))
 	description->is_active = 1;
-      else
-	description->is_active = 0;
     }
+  }
   else if (strcmp(name, "PrintingMode") == 0)
   {
     int found_color, found_mono;
@@ -4236,25 +4231,34 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 {
   unsigned char arg_ESCP_1, arg_ESCP_2, arg_ESCP_9;
 
-  /* addition for top/bottom tray selection for 0xd cassette slots */
   int width, length;
-  const char *media_size = stp_get_string_parameter(v, "PageSize");
-  const stp_papersize_t *pt = NULL;
+  /*  const char *media_size = stp_get_string_parameter(v, "PageSize");
+      const stp_papersize_t *pt = NULL; */
   const char* input_slot = stp_get_string_parameter(v, "InputSlot");
-  const canon_cap_t * caps= canon_get_model_capabilities(v);
+  const char* input_tray = stp_get_string_parameter(v, "CassetteTray");
+  /* const canon_cap_t * caps= canon_get_model_capabilities(v); */
   int print_cd = (input_slot && (!strcmp(input_slot, "CD")));
-
-  /* end addition */
+  int tray_upper = (input_tray && (!strcmp(input_tray, "Upper")));
+  int tray_lower = (input_tray && (!strcmp(input_tray, "Lower")));
+  int tray_user_select;
+  unsigned char user_ESCP_9;
   
   if(!(init->caps->features & CANON_CAP_P))
     return;
 
-  /* addition for top/bottom tray selection for 0xd cassette slots */
-  if (media_size)
-    pt = stp_get_papersize_by_name(media_size);
+  /*  if (media_size)
+      pt = stp_get_papersize_by_name(media_size); */
   stp_default_media_size(v, &width, &length);
-  /* if width > 504 (7in) then use the lower tray */
-  /* end addition */
+  if (tray_upper || tray_lower)
+    tray_user_select=1;
+  else
+    tray_user_select=0;
+  if (tray_upper)
+    user_ESCP_9=0x01;
+  else if (tray_lower)
+    user_ESCP_9=0x02;
+  else
+    user_ESCP_9=0x00; /* fall-through setting, but this value is not used */
   
   arg_ESCP_1 = (init->pt) ? canon_size_type(v,init->caps): 0x03;
   arg_ESCP_2 = (init->pt) ? init->pt->media_code_P: 0x00;
@@ -4540,46 +4544,62 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
   /* workaround for media type based differences in 9-parameter ESC (P commands */
   /* These printers use 0x02 (lower tray) usually and for envelopes, 0x01 (upper tray) with various Hagaki/Photo media, and 0x00 with CD media */
   if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
-    switch(arg_ESCP_2)
-      {
-	/* Hagaki media */
-      case 0x07: arg_ESCP_9=0x01; break;;
-      case 0x14: arg_ESCP_9=0x01; break;; /* not used with any of these models */
-      case 0x1b: arg_ESCP_9=0x01; break;;
-      case 0x36: arg_ESCP_9=0x01; break;;
-      case 0x38: arg_ESCP_9=0x01; break;;
-	/* Photo media here */
-      case 0x32: arg_ESCP_9=0x01; break;;
-      case 0x33: arg_ESCP_9=0x01; break;;
-      case 0x3f: arg_ESCP_9=0x01; break;;
-      case 0x2a: arg_ESCP_9=0x01; break;;
-      case 0x16: arg_ESCP_9=0x01; break;;
-      case 0x44: arg_ESCP_9=0x01; break;; /* MG6700, MG7500 only, instead of 0x16 */
-      case 0x1c: arg_ESCP_9=0x01; break;;
-      case 0x24: arg_ESCP_9=0x01; break;;
-	/* Envelope media */
-      case 0x08: arg_ESCP_9=0x02; break;;
-	/* CD media */
-      case 0x1f: arg_ESCP_9=0x00; break;;
-      case 0x20: arg_ESCP_9=0x00; break;;
-	/* other media default to lower tray */
-      default:   arg_ESCP_9=0x02; break;;
+    if (tray_user_select && !print_cd)
+      arg_ESCP_9=user_ESCP_9;
+    else {
+      switch(arg_ESCP_2)
+	{
+	  /* Hagaki media */
+	case 0x07: arg_ESCP_9=0x01; break;;
+	case 0x14: arg_ESCP_9=0x01; break;; /* not used with any of these models */
+	case 0x1b: arg_ESCP_9=0x01; break;;
+	case 0x36: arg_ESCP_9=0x01; break;;
+	case 0x38: arg_ESCP_9=0x01; break;;
+	  /* Photo media here */
+	case 0x32: arg_ESCP_9=0x01; break;;
+	case 0x33: arg_ESCP_9=0x01; break;;
+	case 0x3f: arg_ESCP_9=0x01; break;;
+	case 0x2a: arg_ESCP_9=0x01; break;;
+	case 0x16: arg_ESCP_9=0x01; break;;
+	case 0x44: arg_ESCP_9=0x01; break;; /* MG6700, MG7500 only, instead of 0x16 */
+	case 0x1c: arg_ESCP_9=0x01; break;;
+	case 0x24: arg_ESCP_9=0x01; break;;
+	  /* Envelope media */
+	case 0x08: arg_ESCP_9=0x02; break;;
+	  /* CD media */
+	case 0x1f: arg_ESCP_9=0x00; break;;
+	case 0x20: arg_ESCP_9=0x00; break;;
+	  /* other media default to lower tray */
+	default:   arg_ESCP_9=0x02; break;;
+	}
+      
+      /* condition for length to use lower tray: 7in equals 504 points */
+      if ( (arg_ESCP_9 == 0x01) && ( length > 504 ) ) {
+	arg_ESCP_9=0x02; 
       }
 
-    /* condition for length to use lower tray: 7in equals 504 points */
-    if ( (arg_ESCP_9 == 0x01) && ( length > 504 ) ) {
-      arg_ESCP_9=0x02; 
+      /* even if user does not select correct CD media type, set appropriately */
+      if (print_cd)
+	arg_ESCP_9=0x00;
     }
   }
 
   /* MG6700, MG7500 uses 0xff with CD media tray */
   if (   !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) ) {
-    switch(arg_ESCP_2)
-      {
-	/* CD media */
-      case 0x1f: arg_ESCP_9=0x00; break;;
-      case 0x20: arg_ESCP_9=0x00; break;;
-      }
+    if (tray_user_select && !print_cd)
+      arg_ESCP_9=user_ESCP_9;
+    else {
+      switch(arg_ESCP_2)
+	{
+	  /* CD media */
+	case 0x1f: arg_ESCP_9=0xff; break;;
+	case 0x20: arg_ESCP_9=0xff; break;;
+	}
+      
+      /* even if user does not select correct CD media type, set appropriately */
+      if (print_cd)
+	arg_ESCP_9=0x00;
+    }
   }
   
   if ( init->caps->ESC_P_len == 9 ) /* support for new devices from October 2012. */
