@@ -2722,7 +2722,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       width_limit = caps->max_width;
       height_limit = caps->max_height;
 
-      if(input_slot && !strcmp(input_slot,"CD")){
+      if(!input_slot || !strcmp(input_slot,"CD")){
         stp_string_list_add_string
           (description->bounds.str, "CD5Inch", _("CD - 5 inch"));
         stp_string_list_add_string
@@ -2761,7 +2761,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
       description->bounds.str = stp_string_list_create();
-      if (input_slot && !strcmp(input_slot,"CD") &&
+      if ((!input_slot || !strcmp(input_slot,"CD")) &&
          (!stp_get_string_parameter(v, "PageSize") ||
           strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") != 0))
 	{
@@ -2781,7 +2781,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = 16 * 10 * 72 / 254;
       description->bounds.dimension.upper = 43 * 10 * 72 / 254;
       description->deflt.dimension = 43 * 10 * 72 / 254;
-      if (input_slot && !strcmp(input_slot,"CD") &&
+      if ((!input_slot || !strcmp(input_slot,"CD")) &&
          (!stp_get_string_parameter(v, "PageSize") ||
          strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
 	description->is_active = 1;
@@ -2794,7 +2794,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = 65 * 10 * 72 / 254;
       description->bounds.dimension.upper = 120 * 10 * 72 / 254;
       description->deflt.dimension = 329;
-      if (input_slot && !strcmp(input_slot,"CD") &&
+      if ((!input_slot || !strcmp(input_slot,"CD")) &&
          (!stp_get_string_parameter(v, "PageSize") ||
           strcmp(stp_get_string_parameter(v, "PageSize"), "CDCustom") == 0))
 	description->is_active = 1;
@@ -2808,7 +2808,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
       description->bounds.dimension.lower = -15;
       description->bounds.dimension.upper = 15;
       description->deflt.dimension = 0;
-      if (input_slot && !strcmp(input_slot,"CD"))
+      if (!input_slot || !strcmp(input_slot,"CD"))
 	description->is_active = 1;
       else
 	description->is_active = 0;
@@ -2822,7 +2822,7 @@ canon_parameters(const stp_vars_t *v, const char *name,
     description->deflt.str = NULL;
     for(i=0;i<caps->modelist->count;i++){
 #if 0
-	if(!(input_slot && !strcmp(input_slot,"CD") && !(caps->modelist->modes[i].flags & MODE_FLAG_CD)))
+      if(!((!input_slot || !strcmp(input_slot,"CD")) && !(caps->modelist->modes[i].flags & MODE_FLAG_CD)))
 #endif
           stp_string_list_add_string(description->bounds.str,
 				     caps->modelist->modes[i].name, gettext(caps->modelist->modes[i].text));
@@ -2915,27 +2915,24 @@ canon_parameters(const stp_vars_t *v, const char *name,
     {
       const char* input_slot = stp_get_string_parameter(v, "InputSlot");
       description->bounds.str= stp_string_list_create();
-      /*      if (caps->CassetteTray_Opts == 1) {*/
+      if (caps->CassetteTray_Opts == 1) {
 	stp_string_list_add_string
 	  (description->bounds.str, "Default", _("Driver-Controlled"));
 	stp_string_list_add_string
 	  (description->bounds.str, "Upper", _("Upper Tray"));
 	stp_string_list_add_string
 	  (description->bounds.str, "Lower", _("Lower Tray"));
-	/*      } else {*/
+      } else {
 	/* make sure to have at least a default value: no choice */
 	stp_string_list_add_string
 	  (description->bounds.str, "None", _("None"));
-	/*      }*/
+      }
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
-      /*      if (input_slot && !strcmp(input_slot,"Cassette") &&
-	  !stp_get_string_parameter(v, "PageSize"))
+      if (!input_slot || !strcmp(input_slot,"Cassette"))
 	description->is_active = 1;
       else
 	description->is_active = 0;
-      */
-      
     }
   else if (strcmp(name, "PrintingMode") == 0)
   {
