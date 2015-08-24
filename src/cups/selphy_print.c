@@ -955,10 +955,11 @@ top:
 
 static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 {
-//	struct canonselphy_ctx *ctx = vctx;
+	struct canonselphy_ctx *ctx = vctx;
 	int i, j = 0;
 
-	UNUSED(vctx);
+	if (!ctx)
+		return -1;
 	
 	/* Reset arg parsing */
 	optind = 1;
@@ -976,7 +977,7 @@ static int canonselphy_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend canonselphy_backend = {
 	.name = "Canon SELPHY CP/ES",
-	.version = "0.88",
+	.version = "0.89",
 	.uri_prefix = "canonselphy",
 	.cmdline_arg = canonselphy_cmdline_arg,
 	.init = canonselphy_init,

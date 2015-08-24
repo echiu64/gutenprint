@@ -257,11 +257,12 @@ top:
 
 static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 {
-//	struct updr150_ctx *ctx = vctx;
+	struct updr150_ctx *ctx = vctx;
 	int i, j = 0;
 
-	UNUSED(vctx);
-	
+	if (!ctx)
+		return -1;
+
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;

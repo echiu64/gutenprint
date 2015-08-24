@@ -795,6 +795,8 @@ static int dnpds40_main_loop(void *vctx, int copies) {
 		return CUPS_BACKEND_FAILED;
 
 	/* Update quantity offset with count */
+	// XXX this breaks if ctx->manual_copies is set, but the job
+	// has a CNTRL QTY != 1
 	if (!ctx->manual_copies && copies > 1) {
 		snprintf(buf, sizeof(buf), "%07d\r", copies);
 		if (ctx->qty_offset) {
@@ -1570,6 +1572,9 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 	struct dnpds40_ctx *ctx = vctx;
 	int i, j = 0;
 
+	if (!ctx)
+		return -1;
+
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
@@ -1577,100 +1582,76 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL			
 		case 'i':
-			if (ctx) {
-				j = dnpds40_get_info(ctx);
-				break;
-			}
-			return 1;
+			j = dnpds40_get_info(ctx);
+			break;
 		case 'I':
-			if (ctx) {
-				j = dnpds40_get_sensors(ctx);
-				break;
-			}
-			return 1;
+			j = dnpds40_get_sensors(ctx);
+			break;
 		case 'n':
-			if (ctx) {
-				j = dnpds40_get_counters(ctx);
-				break;
-			}
-			return 1;
+			j = dnpds40_get_counters(ctx);
+			break;
 		case 'N':
 			if (optarg[0] != 'A' &&
 			    optarg[0] != 'B' &&
 			    optarg[0] != 'M')
 				return CUPS_BACKEND_FAILED;
-			if (ctx) {
-				if (!ctx->supports_matte) {
-					ERROR("Printer FW does not support matte functions, please update!\n");
-					return CUPS_BACKEND_FAILED;
-				}
-				j = dnpds40_clear_counter(ctx, optarg[0]);
-				break;
+			if (!ctx->supports_matte) {
+				ERROR("Printer FW does not support matte functions, please update!\n");
+				return CUPS_BACKEND_FAILED;
 			}
-			return 2;
+			j = dnpds40_clear_counter(ctx, optarg[0]);
+			break;
 		case 'p':
-			if (ctx) {
-				j = dnpds40_set_counter_p(ctx, optarg);
-				break;
-			}
-			return 2;
+			j = dnpds40_set_counter_p(ctx, optarg);
+			break;
 		case 's':
-			if (ctx) {
-				j = dnpds40_get_status(ctx);
+			j = dnpds40_get_status(ctx);
+			break;
+		case 'k': {
+			int time = atoi(optarg);
+			if (!ctx->supports_standby) {
+				ERROR("Printer does not support standby\n");
+				j = -1;
 				break;
 			}
-			return 1;
-		case 'k':
-			if (ctx) {
-				int time = atoi(optarg);
-				if (!ctx->supports_standby) {
-					ERROR("Printer does not support standby\n");
-					j = -1;
-					break;
-				}
-				if (time < 0 || time > 99) {
-					ERROR("Value out of range (0-99)");
-					j = -1;
-					break;
-				}
-				j = dnpds620_standby_mode(ctx, time);
+			if (time < 0 || time > 99) {
+				ERROR("Value out of range (0-99)");
+				j = -1;
 				break;
 			}
-			return 2;
-		case 'K':
-			if (ctx) {
-				int keep = atoi(optarg);
-				if (!ctx->supports_standby) {
-					ERROR("Printer does not support media keep mode\n");
-					j = -1;
-					break;
-				}
-				if (keep < 0 || keep > 1) {
-					ERROR("Value out of range (0-1)");
-					j = -1;
-					break;
-				}
-				j = dnpds620_media_keep_mode(ctx, keep);
+			j = dnpds620_standby_mode(ctx, time);
+			break;
+		}
+		case 'K': {
+			int keep = atoi(optarg);
+			if (!ctx->supports_standby) {
+				ERROR("Printer does not support media keep mode\n");
+				j = -1;
 				break;
 			}
-			return 2;
-		case 'x':
-			if (ctx) {
-				int enable = atoi(optarg);
-				if (!ctx->supports_iserial) {
-					ERROR("Printer does not support USB iSerialNumber reporting\n");
-					j = -1;
-					break;
-				}
-				if (enable < 0 || enable > 1) {
-					ERROR("Value out of range (0-1)");
-					j = -1;
-					break;
-				}
-				j = dnpds620_iserial_mode(ctx, enable);
+			if (keep < 0 || keep > 1) {
+				ERROR("Value out of range (0-1)");
+				j = -1;
 				break;
 			}
-			return 2;
+			j = dnpds620_media_keep_mode(ctx, keep);
+			break;
+		}
+		case 'x': {
+			int enable = atoi(optarg);
+			if (!ctx->supports_iserial) {
+				ERROR("Printer does not support USB iSerialNumber reporting\n");
+				j = -1;
+				break;
+			}
+			if (enable < 0 || enable > 1) {
+				ERROR("Value out of range (0-1)");
+				j = -1;
+				break;
+			}
+			j = dnpds620_iserial_mode(ctx, enable);
+			break;
+		}
 		default:
 			break;  /* Ignore completely */
 		}
@@ -1684,7 +1665,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.60",
+	.version = "0.61",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,

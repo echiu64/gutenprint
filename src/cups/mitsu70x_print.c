@@ -354,7 +354,7 @@ static int mitsu70x_get_status(struct mitsu70x_ctx *ctx, struct mitsu70x_status_
 static int mitsu70x_main_loop(void *vctx, int copies) {
 	struct mitsu70x_ctx *ctx = vctx;
 
-	struct mitsu70x_state rdbuf = { 0 }, rdbuf2 = { 0 };
+	struct mitsu70x_state rdbuf = { .hdr = 0 }, rdbuf2 = { .hdr = 0 };
 
 	int last_state = -1, state = S_IDLE;
 	int ret;
@@ -536,7 +536,7 @@ static int mitsu70x_query_status(struct mitsu70x_ctx *ctx)
 static int mitsu70x_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
 {
 	int ret, i;
-	struct mitsu70x_status_resp resp = { 0 };
+	struct mitsu70x_status_resp resp = { .hdr = { 0 } };
 
 	struct mitsu70x_ctx ctx = {
 		.dev = dev,
@@ -568,6 +568,9 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 	struct mitsu70x_ctx *ctx = vctx;
 	int i, j = 0;
 
+	if (!ctx)
+		return -1;
+
 	/* Reset arg parsing */
 	optind = 1;
 	opterr = 0;
@@ -575,11 +578,8 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL			
 		case 's':
-			if (ctx) {
-				j = mitsu70x_query_status(ctx);
-				break;
-			}
-			return 1;
+			j = mitsu70x_query_status(ctx);
+			break;
 		default:
 			break;  /* Ignore completely */
 		}
@@ -594,7 +594,7 @@ static int mitsu70x_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend mitsu70x_backend = {
 	.name = "Mitsubishi CP-D70/D707/K60",
-	.version = "0.31",
+	.version = "0.32",
 	.uri_prefix = "mitsu70x",
 	.cmdline_usage = mitsu70x_cmdline,
 	.cmdline_arg = mitsu70x_cmdline_arg,
