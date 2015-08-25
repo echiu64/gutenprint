@@ -379,6 +379,9 @@
       <printer translate="name" name="Canon SmartBase MPC190" driver="bjc-SmartBase-MPC190" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC190">EXPERIMENTAL</printer>
       <!-- Canon MPC200 family -->
       <printer translate="name" name="Canon SmartBase MPC200" driver="bjc-SmartBase-MPC200" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC200">EXPERIMENTAL</printer>
+      <!-- Canon MPC400 family -->
+      <printer translate="name" name="Canon SmartBase MPC400" driver="bjc-SmartBase-MPC400" manufacturer="Canon" model="16000400" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC400">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon SmartBase MPC600F" driver="bjc-SmartBase-MPC600F" manufacturer="Canon" model="16000400" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC600F">EXPERIMENTAL</printer>
       <!-- Canon MP5 family -->
       <printer translate="name" name="Canon PIXUS MP5" driver="bjc-PIXUS-MP5" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-MP5">EXPERIMENTAL</printer>
       <!-- Canon MP10 family -->

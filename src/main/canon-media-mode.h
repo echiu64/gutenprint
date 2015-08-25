@@ -6257,6 +6257,95 @@ static const canon_modeuse_t canon_PIXMA_MP55_modeuses[] = {
 
 DECLARE_MODEUSES(canon_PIXMA_MP55);
 
+/* ----------------------------------- Canon MPC400  ----------------------------------- */
+static const char* canon_PIXMA_MPC400_modeuses_plain[] = {
+  "600x600dpi_high",
+  "600x600dpi",
+  "600x600dpi_draft",
+  "300x300dpi",/*untested*/
+  "300x300dpi_draft",
+  NULL
+  };
+
+static const char* canon_PIXMA_MPC400_modeuses_PPpro[] = {
+  "600x600dpi_photohigh2",
+  "600x600dpi_photo2",
+  NULL
+};
+
+/* experimental */
+static const char* canon_PIXMA_MPC400_modeuses_PPmatte[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+static const char* canon_PIXMA_MPC400_modeuses_PPgloss[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const char* canon_PIXMA_MPC400_modeuses_HiRes[] = {
+  "600x600dpi_photohigh3",
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  "600x600dpi_photodraft",
+  NULL
+};
+
+/* experimental */
+static const char* canon_PIXMA_MPC400_modeuses_inkjetHagaki[] = {
+  "600x600dpi_photohigh4",
+  "600x600dpi_photo4",
+  NULL
+};
+
+static const char* canon_PIXMA_MPC400_modeuses_Transparency[] = {
+  "600x600dpi_ohphigh",
+  "600x600dpi_ohp",
+  NULL
+};
+
+static const char* canon_PIXMA_MPC400_modeuses_TShirt[] = {
+  "600x600dpi_tshirt",
+  NULL
+};
+
+static const char* canon_PIXMA_MPC400_modeuses_Env[] = {
+  "600x600dpi_high2",
+  "600x600dpi_std2",
+  NULL
+};
+
+/* experimental */
+static const char* canon_PIXMA_MPC400_modeuses_PPother[] = {
+  "600x600dpi_photohigh",
+  "600x600dpi_photo",
+  NULL
+};
+
+static const canon_modeuse_t canon_PIXMA_MPC400_modeuses[] = {
+  { "Plain",            canon_PIXMA_MPC400_modeuses_plain, 0 },
+  { "GlossyPro",	canon_PIXMA_MPC400_modeuses_PPpro, 0 },
+  { "PhotopaperMatte",	canon_PIXMA_MPC400_modeuses_PPmatte, 0 },
+  { "GlossyPaper",	canon_PIXMA_MPC400_modeuses_PPgloss, 0 },
+  { "Coated",		canon_PIXMA_MPC400_modeuses_HiRes, 0 },
+  { "InkJetHagaki", 	canon_PIXMA_MPC400_modeuses_inkjetHagaki, 0 },
+  { "Hagaki", 	        canon_PIXMA_MPC400_modeuses_Env, 0 },
+  { "GlossyFilm", 	canon_PIXMA_MPC400_modeuses_PPpro, 0 },
+  { "GlossyCard", 	canon_PIXMA_MPC400_modeuses_PPgloss, 0 },
+  { "TShirt",		canon_PIXMA_MPC400_modeuses_TShirt, 0 },
+  { "Transparency",	canon_PIXMA_MPC400_modeuses_Transparency, 0 },
+  { "Envelope",		canon_PIXMA_MPC400_modeuses_Env, 0 },
+  { "PhotopaperOther",	canon_PIXMA_MPC400_modeuses_PPother, 0 },
+};
+
+DECLARE_MODEUSES(canon_PIXMA_MPC400);
+
 /* ----------------------------------- Canon MP150  ----------------------------------- */
 static const char* canon_MULTIPASS_MP150_modeuses_plain[] = {
   "600x600dpi_high",
