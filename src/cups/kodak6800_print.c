@@ -54,7 +54,7 @@ struct kodak6800_hdr {
 	uint8_t  copies;
 	uint16_t columns;  /* BE */
 	uint16_t rows;     /* BE */
-	uint8_t  size;    /* 0x06 for 6x8, 0x00 for 6x4, 0x07 for 5x7 */
+	uint8_t  size;     /* 0x06 for 6x8, 0x00 for 6x4, 0x07 for 5x7 */
 	uint8_t  laminate; /* 0x01 to laminate, 0x00 for not */
 	uint8_t  unk1;     /* 0x00 or 0x01 (for 4x6 on 6x8 media) */
 } __attribute__((packed));
@@ -63,28 +63,26 @@ struct kodak68x0_status_readback {
 	uint8_t  hdr;      /* Always 01 */
 	uint8_t  sts1;     /* Always 0x02 (idle) or 0x01 (busy) */
 	uint8_t  sts2;     /* 0x01 == ready, 0x02 == no media, 0x03 == not ready */
-	uint8_t  errtype;  /* 0x00 none, 0x80 "control" */
+	uint8_t  errtype;  /* see 68x0_error_codes() */
 	uint8_t  null0[2];
 	uint8_t  unkA;     /* 0x00 or 0x01 or 0x10 */
 	uint8_t  errcode;  /* Error ## */
-	uint32_t ctr0;     /* Total Prints (BE) */
-	uint32_t ctr1;     /* Total Prints (BE) */
+	uint32_t ctr0;     /* Total Prints (BE) (lifetime?) */
+	uint32_t ctr1;     /* Total Prints (BE) (since maint?) */
 	uint32_t ctr2;     /* Increments by 1 for each print (6850), unk (6800). BE */
-	uint32_t ctr3;     /* Increments by 2 for each print. BE */
+	uint32_t ctr3;     /* Increments by 2 for each print. Cutter? BE */
 	uint8_t  nullB[2];
-	uint8_t  errtype2; /* 0x00 none, 0xd0 "control" */
+	uint8_t  errtype2; /* see 68x0_error_codes() */
 	uint8_t  donor;    /* Percentage, 0-100 */
 	uint8_t  unkC[2];  /* Always 00 03 */
 	uint16_t main_fw;  /* seen 652, 656, 670, 671 (6850) and 232 (6800) */
 	uint8_t  unkD[2];  /* Always 00 01 */
 	uint16_t dsp_fw;   /* Seen 540, 541, 560 (6850) and 131 (6800) */
-	uint8_t  unk1;     /* Seen 0x00, 0x01, 0x03, 0x04 */
-	uint8_t  null1[2];
-	uint8_t  unk2;     /* Seen 0x01, 0x00 */
-	uint8_t  null2;
-	uint8_t  unk3;     /* Seen 0x01, 0x00 */
-	uint8_t  null4;
-	uint8_t  unk4;     /* Seen 0x01, 0x00 */
+	uint8_t  unk1;     /* Seen 0x00, 0x01, 0x03, 0x04 (4x6), 0x05 (8x6) */
+	uint8_t  null1;
+	uint16_t remain;   /* Remaining prints in job */
+	uint16_t complete; /* Completed prints in job */
+	uint16_t total;    /* Total prints in job */
 	uint8_t  null5[7];
 } __attribute__((packed));
 
@@ -108,8 +106,9 @@ struct kodak68x0_media_readback {
 	struct kodak6800_printsize sizes[];
 } __attribute__((packed));
 
-#define KODAK68x0_MEDIA_6R  0x0b
-#define KODAK68x0_MEDIA_UNK 0x03
+#define KODAK68x0_MEDIA_6R   0x0b
+#define KODAK68x0_MEDIA_UNK  0x03
+#define KODAK68x0_MEDIA_NONE 0x00
 
 #define CMDBUF_LEN 17
 
@@ -133,6 +132,8 @@ char *kodak68x0_error_codes(uint8_t code1, uint8_t code2)
 {
 	if (code1 == 0x80 && code2 == 0xd0)
 		return "Control Error";
+	if (code1 == 0x00 && code2 == 0xd0)
+		return "Ribbon Checking";
 
 	return "Unknown Type (please report!)";
 }
@@ -140,6 +141,11 @@ char *kodak68x0_error_codes(uint8_t code1, uint8_t code2)
 static void kodak68x0_dump_mediainfo(struct kodak68x0_media_readback *media)
 {
 	int i;
+	if (media->media == KODAK68x0_MEDIA_NONE) {
+		DEBUG("No Media Loaded\n");
+		return;
+	}
+
 	if (media->media == KODAK68x0_MEDIA_6R) {
 		DEBUG("Media type: 6R (Kodak 197-4096 or equivalent)\n");
 	} else {
@@ -198,6 +204,28 @@ static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx, struct kodak68x0_m
 	return 0;
 }
 
+static char *kodak68x0_statuses(uint8_t sts1, uint8_t sts2)
+{
+	switch (sts2) {
+	case 0x01:
+		switch (sts1) {
+		case 0x01:
+			return "Busy";
+		case 0x02:
+			return "Idle";
+		default:
+			return "Unknown sts1";
+		}
+		break;
+	case 0x02:
+		return "Out of Media";
+	case 0x03:
+		return "Offline";
+	default:
+		return "Unknown sts2";
+	}
+}
+
 static void kodak68x0_dump_status(struct kodak6800_ctx *ctx, struct kodak68x0_status_readback *status)
 {
 	if (status->errtype || status->errtype2 || status->errcode) {
@@ -205,6 +233,9 @@ static void kodak68x0_dump_status(struct kodak6800_ctx *ctx, struct kodak68x0_st
 		      kodak68x0_error_codes(status->errtype, status->errtype2),
 		      status->errtype, status->errtype2, status->errcode);
 	}
+
+	DEBUG("Printer Status   : %s\n", kodak68x0_statuses(status->sts1, status->sts2));
+	DEBUG("Job Status       : %d/%d completed\n", be16_to_cpu(status->complete), be16_to_cpu(status->total));
 	DEBUG("Total prints     : %d\n", be32_to_cpu(status->ctr0));
 	DEBUG("Media prints     : %d\n", be32_to_cpu(status->ctr2));
 	if (ctx->type == P_KODAK_6850) {
@@ -755,7 +786,8 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	/* Validate against supported media list */
 	for (num = 0 ; num < ctx->media->count; num++) {
 		if (ctx->media->sizes[num].height == ctx->hdr.rows &&
-		    ctx->media->sizes[num].width == ctx->hdr.columns)
+		    ctx->media->sizes[num].width == ctx->hdr.columns &&
+		    ctx->media->sizes[num].code2 == 0x00)
 			break;
 	}
 	if (num == ctx->media->count) {
@@ -778,15 +810,6 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 			return CUPS_BACKEND_FAILED;
 		}
 
-		if (status.sts1 == 0x01) {
-			// do nothing, this is expected.
-			sleep(1);
-			continue;
-		} else if (status.sts1 != 0x02) {
-			ERROR("Unknown status1 0x%02x\n", status.sts1);
-			return CUPS_BACKEND_FAILED;
-		}
-
 		if (status.sts2 == 0x02) {
 			ERROR("Printer is out of media!\n");
 			return CUPS_BACKEND_STOP;	
@@ -796,9 +819,16 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		} else if (status.sts2 != 0x01) {
 			ERROR("Unknown status 0x%02x\n", status.sts2);
 			return CUPS_BACKEND_FAILED;
-		} else {
-			break;
 		}
+
+		if (status.sts1 == 0x02) {
+			break;
+		} else if (status.sts1 != 0x01) {
+			ERROR("Unknown status1 0x%02x\n", status.sts1);
+			return CUPS_BACKEND_FAILED;
+		}
+
+		sleep(1);
 	}
 
 	if (ctx->type == P_KODAK_6850) {
@@ -806,7 +836,6 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		ret = kodak6850_send_init(ctx);
 		if (ret)
 			return ret;
-		sleep(1);
 	}
 	
 	/* Set up print job header */
@@ -819,46 +848,49 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		else if (ctx->hdr.size == 0x06)
 			cmdbuf[7] = 0x05; /* XXX audit this! */
 	}
-	
-	/* If we're printing a 4x6 on 8x6 media... */
+
+#if 0
+	/* If we want to disable 4x6 rewind on 8x6 media.. */
 	if (ctx->hdr.size == 0x00 &&
 	    be16_to_cpu(ctx->media->sizes[0].width) == 0x0982) {
 		cmdbuf[14] = 0x06;
 		cmdbuf[16] = 0x01;
 	}
+#endif
 	
 	INFO("Sending image header\n");
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     cmdbuf, CMDBUF_LEN)))
 		return ret;
-	sleep(1);
+	sleep(1); // Appears to be necessary for reliability
 	INFO("Sending image data\n");
 	if ((ret = send_data(ctx->dev, ctx->endp_down, 
 			     ctx->databuf, ctx->datalen)))
 		return CUPS_BACKEND_FAILED;
 
 	INFO("Waiting for printer to acknowledge completion\n");
-	sleep(1);
-	while(1) {
+	do {
+		sleep(1);
 		if (kodak6800_get_status(ctx, &status))
 			return CUPS_BACKEND_FAILED;
 
-		if (status.sts1 == 0x01) {
-			// do nothing, this is expected.
-		} else if (status.sts1 != 0x02) {
-			ERROR("Unknown status1 0x%02x\n", status.sts1);
+		if (status.errtype || status.errtype2 || status.errcode) {
+			ERROR("Printer error reported: %s (%d/%d) # %d\n",
+			kodak68x0_error_codes(status.errtype, status.errtype2),
+			      status.errtype, status.errtype2, status.errcode);
 			return CUPS_BACKEND_FAILED;
-		} else {
-			break;
 		}
+
+		/* If all prints are complete, we're done! */
+		if (status.complete == status.total)
+			break;
 
 		if (fast_return) {
 			INFO("Fast return mode enabled.\n");
 			break;
 		}
 
-		sleep(1);
-	}
+	} while (1);
 	
 	INFO("Print complete\n");
 
@@ -868,7 +900,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.47",
+	.version = "0.48",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
@@ -1196,5 +1228,55 @@ Seen on 6850 with 6R media (6x8) while offline:
 00 00 00 01 00 00 b7 d3  00 00 00 5c 00 03 02 8c
 00 01 02 1c 00 00 00 00  00 01 00 01 00 00 00 00
 00 00 00
+
+*/
+
+/* Control Error codes:
+
+1      EEPROM error 1
+
+2      EEPROM error 2
+
+3      EEPROM error 3
+
+4      DSP Inactive
+
+5      DSPCnt Inactive
+
+6      Download Sum Check Error (MainCnt)
+
+7      Download error (MainCnt)
+
+8      Download Sum Check Error (DSPCnt)
+
+9      Download Error (DSPCnt)
+
+10    ASCI error
+
+11    DRAM controller error
+
+12    User Tone Curve Table Sum Check error
+
+13    User Tone Curve Table Write error
+
+14    Current Tone Curve Table Sum Check error
+
+15    Current Tone Curve Table Write error
+
+16    User Tone Curve Table Sum Check error
+
+17    User Tone Curve Table Read-out error
+
+18    Current Tone Curve Table Sum Check error
+
+19    Current Tone Curve Table Read-out error
+
+20    User Tone Curve Reset error
+
+21    MainCnt Inactive
+
+25    ???
+
+41    Comunication Error Main and DSP
 
 */
