@@ -2183,6 +2183,7 @@ static const laminate_t kodak_8810_laminate[] =
 {
   {"Glossy", N_("Glossy"), {1, "\x03"}},
   {"Satin",  N_("Satin"),  {1, "\x02"}},
+  {"None",  N_("None"),  {1, "\x01"}},  
 };
 
 LIST(laminate_list_t, kodak_8810_laminate_list, laminate_t, kodak_8810_laminate);
@@ -2203,7 +2204,8 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   dyesub_nputc(v, 0, 4);
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v);
-  dyesub_nputc(v, 0, 2);
+  stp_putc(0x00, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */    
+  stp_putc(0x00, v); /* Reserved */
 }
 
 /* Kodak Professional 8500 */
