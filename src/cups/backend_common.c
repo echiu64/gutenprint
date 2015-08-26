@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.60G"
+#define BACKEND_VERSION "0.61G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -1037,7 +1037,7 @@ int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint1
 {
 	int i;
 	int type = -1;
-	
+
 	for (i = 0 ; backend->devices[i].vid ; i++) {
 		if (extra_pid != -1 &&
 		    extra_vid != -1 &&
@@ -1055,4 +1055,25 @@ int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint1
 	}
 
 	return type;
+}
+
+uint16_t uint16_to_packed_bcd(uint16_t val)
+{
+        uint16_t bcd;
+        uint16_t i;
+
+        /* Handle from 0-9999 */
+        i = val % 10;
+        bcd = i;
+        val /= 10;
+        i = val % 10;
+        bcd |= (i << 4);
+        val /= 10;
+        i = val % 10;
+        bcd |= (i << 8);
+        val /= 10;
+        i = val % 10;
+        bcd |= (i << 12);
+
+        return bcd;
 }

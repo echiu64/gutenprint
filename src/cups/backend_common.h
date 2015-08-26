@@ -151,6 +151,8 @@ int lookup_printer_type(struct dyesub_backend *backend, uint16_t idVendor, uint1
 void print_license_blurb(void);
 void print_help(char *argv0, struct dyesub_backend *backend);
 
+uint16_t uint16_to_packed_bcd(uint16_t val);
+
 /* Global data */
 extern int terminate;
 extern int dyesub_debug;
