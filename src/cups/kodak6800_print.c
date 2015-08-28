@@ -230,30 +230,51 @@ struct kodak6800_ctx {
 	uint8_t *databuf;
 	int datalen;
 };
-#define READBACK_LEN 68
+
+/* Baseline commands */
+static int kodak6800_do_cmd(struct kodak6800_ctx *ctx,
+                              void *cmd, int cmd_len,
+                              void *resp, int resp_len,
+                              int *actual_len)
+{
+        int ret;
+
+        /* Write command */
+        if ((ret = send_data(ctx->dev, ctx->endp_down,
+                             cmd, cmd_len)))
+                return (ret < 0) ? ret : -99;
+
+        /* Read response */
+        ret = read_data(ctx->dev, ctx->endp_up,
+                        resp, resp_len, actual_len);
+        if (ret < 0)
+                return ret;
+
+        return 0;
+}
 
 static void kodak68x0_dump_mediainfo(struct kodak68x0_media_readback *media)
 {
 	int i;
 	if (media->media == KODAK68x0_MEDIA_NONE) {
-		DEBUG("No Media Loaded\n");
+		INFO("No Media Loaded\n");
 		return;
 	}
 
 	if (media->media == KODAK68x0_MEDIA_6R) {
-		DEBUG("Media type: 6R (Kodak 197-4096 or equivalent)\n");
+		INFO("Media type: 6R (Kodak 197-4096 or equivalent)\n");
 	} else {
-		DEBUG("Media type %02x (unknown, please report!)\n", media->media);
+		INFO("Media type %02x (unknown, please report!)\n", media->media);
 	}
-	DEBUG("Legal print sizes:\n");
+	INFO("Legal print sizes:\n");
 	for (i = 0 ; i < media->count ; i++) {
-		DEBUG("\t%d: %dx%d (%02x) %s\n", i, 
+		INFO("\t%d: %dx%d (%02x) %s\n", i,
 		      be16_to_cpu(media->sizes[i].width),
 		      be16_to_cpu(media->sizes[i].height),
 		      media->sizes[i].code,
 		      media->sizes[i].code2? "Disallowed" : "");
 	}
-	DEBUG("\n");
+	INFO("\n");
 }
 
 static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx, struct kodak68x0_media_readback *media)
@@ -271,22 +292,11 @@ static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx, struct kodak68x0_m
 	req[4] = 0x43;
 	req[5] = 0x1a;
 
-	/* Send request */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     req, sizeof(req))))
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(ctx, req, sizeof(req),
+				    media, MAX_MEDIA_LEN,
+				    &num)))
 		return ret;
-
-	/* Get response */
-	ret = read_data(ctx->dev, ctx->endp_up,
-			(uint8_t*)media, MAX_MEDIA_LEN, &num);
-
-	if (ret < 0)
-		return ret;
-	if (num < (int)sizeof(*media)) {
-		ERROR("Short read! (%d/%d)\n", num, (int) sizeof(*media));
-		return CUPS_BACKEND_FAILED;
-	}
-
 
 	/* Validate proper response */
 	if (media->hdr != 0x01 ||
@@ -315,21 +325,18 @@ static int kodak68x0_canceljob(struct kodak6800_ctx *ctx,
 	req[5] = 0x13;
 	req[6] = id;
 
-	/* Send request */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     req, sizeof(req))))
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(ctx, req, sizeof(req),
+				    &sts, sizeof(sts),
+				    &num)))
 		return ret;
 
-	/* Get response */
-	ret = read_data(ctx->dev, ctx->endp_up,
-			(uint8_t*)&sts, sizeof(sts), &num);
-
-	if (ret < 0)
-		return ret;
-	if (num < (int)sizeof(sts)) {
-		ERROR("Short read! (%d/%d)\n", num, (int) sizeof(sts));
-		return CUPS_BACKEND_FAILED;
+	/* Validate proper response */
+	if (sts.hdr != 0x01) {
+		ERROR("Unexpected response from job cancel!\n");
+		return -99;
 	}
+
 	return 0;
 }
 
@@ -551,25 +558,16 @@ static int kodak6800_get_status(struct kodak6800_ctx *ctx,
 	req[4] = 0x43;
 	req[5] = 0x03;
 
-	/* Send request */
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     req, sizeof(req))))
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(ctx, req, sizeof(req),
+				    status, sizeof(*status),
+				    &num)))
 		return ret;
 
-	/* Get response */
-	ret = read_data(ctx->dev, ctx->endp_up,
-			(uint8_t*)status, sizeof(*status), &num);
-
-	if (ret < 0)
-		return ret;
-	if (num < (int)sizeof(*status)) {
-		ERROR("Short read! (%d/%d)\n", num, (int) sizeof(*status));
-		return CUPS_BACKEND_FAILED;
-	}
-
+	/* Validate proper response */
 	if (status->hdr != 0x01) {
 		ERROR("Unexpected response from status query!\n");
-		return CUPS_BACKEND_FAILED;
+		return -99;
 	}
 
 	return 0;
@@ -579,10 +577,6 @@ static int kodak6800_get_status(struct kodak6800_ctx *ctx,
 #define UPDATE_SIZE 1536
 static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 {
-	libusb_device_handle *dev = ctx->dev;
-	uint8_t endp_down = ctx->endp_down;
-	uint8_t endp_up = ctx->endp_up;
-
 	uint8_t cmdbuf[16];
 	uint8_t respbuf[64];
 	int ret, num = 0;
@@ -614,19 +608,15 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	cmdbuf[14] = 0x00;
 	cmdbuf[15] = 0x00;
 
-	if ((ret = send_data(dev, endp_down,
-			     cmdbuf, 16)))
-		goto done;
-	
-	ret = read_data(dev, endp_up,
-			respbuf, sizeof(respbuf), &num);
-	if (ret < 0)
-		goto done;
-	
-	if (num != 51) {
-		ERROR("Short read! (%d/%d)\n", num, 51);
-		ret = 4;
-		goto done;
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(ctx, cmdbuf, sizeof(cmdbuf),
+				    respbuf, sizeof(respbuf),
+				    &num)))
+
+	/* Validate proper response */
+	if (respbuf[0] != 0x01) {
+		ERROR("Unexpected response from tonecurve query!\n");
+		return -99;
 	}
 
 	/* Then we can poll the data */
@@ -642,13 +632,10 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	cmdbuf[9] = 0x45;
 	cmdbuf[10] = 0x20;
 	for (i = 0 ; i < 24 ; i++) {
-		if ((ret = send_data(dev, endp_down,
-				     cmdbuf, 11)))
-			goto done;
-
-		ret = read_data(dev, endp_up,
-				respbuf, sizeof(respbuf), &num);
-		if (ret < 0)
+		/* Issue command and get response */
+		if ((ret = kodak6800_do_cmd(ctx, cmdbuf, sizeof(cmdbuf),
+					    respbuf, sizeof(respbuf),
+					    &num)))
 			goto done;
 
 		if (num != 64) {
@@ -686,10 +673,6 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 
 static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 {
-	libusb_device_handle *dev = ctx->dev;
-	uint8_t endp_down = ctx->endp_down;
-	uint8_t endp_up = ctx->endp_up;
-
 	uint8_t cmdbuf[64];
 	uint8_t respbuf[64];
 	int ret, num = 0;
@@ -740,19 +723,21 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 	cmdbuf[14] = 0x00;
 	cmdbuf[15] = 0x00;
 
-	if ((ret = send_data(dev, endp_down,
-			     cmdbuf, 16)))
-		goto done;
-	
-	ret = read_data(dev, endp_up,
-			respbuf, sizeof(respbuf), &num);
-	if (ret < 0)
-		goto done;
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(ctx, cmdbuf, sizeof(cmdbuf),
+				    respbuf, sizeof(respbuf),
+				    &num)))
 
+	/* Validate proper response */
 	if (num != 51) {
 		ERROR("Short read! (%d/%d)\n", num, 51);
 		ret = 4;
 		goto done;
+	}
+
+	if (respbuf[0] != 0x01) {
+		ERROR("Unexpected response from tonecurve set!\n");
+		return -99;
 	}
 
 	ptr = (uint8_t*) data;
@@ -766,24 +751,22 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 		remain -= count;
 		ptr += count;
 
-		/* Send next block over */
-		if ((ret = send_data(dev, endp_down,
-				     cmdbuf, count+1)))
-			goto done;
+		/* Issue command and get response */
+		if ((ret = kodak6800_do_cmd(ctx, cmdbuf, count + 1,
+					    respbuf, sizeof(respbuf),
+					    &num)))
 
-
-		ret = read_data(dev, endp_up,
-				respbuf, sizeof(respbuf), &num);
-		if (ret < 0)
-			goto done;
-		
 		if (num != 51) {
 			ERROR("Short read! (%d/%d)\n", num, 51);
 			ret = 4;
 			goto done;
 		}
+		if (respbuf[0] != 0x01) {
+			ERROR("Unexpected response from tonecurve set!\n");
+			return -99;
+		}
 	};
-        
+
 done:
 	/* We're done */
 	free(data);
@@ -792,6 +775,12 @@ done:
 
 static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_up, uint8_t endp_down, char *buf, int buf_len)
 {
+	struct kodak6800_ctx ctx = {
+		.dev = dev,
+		.endp_up = endp_up,
+		.endp_down = endp_down,
+	};
+
 	int ret;
 	int num;
 
@@ -808,21 +797,17 @@ static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 	req[4] = 0x43;
 	req[5] = 0x12;
 
-	/* Send request */
-	if ((ret = send_data(dev, endp_down,
-			     req, sizeof(req))))
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(&ctx, req, sizeof(req),
+				    resp, sizeof(resp),
+				    &num)))
 		return ret;
 
-	/* Get response */
-	ret = read_data(dev, endp_up,
-			resp, sizeof(resp) - 1, &num);
-
-	if (ret < 0)
-		return ret;
 	if (num != 32) {
 		ERROR("Short read! (%d/%d)\n", num, 32);
-		return 4;
+		return -2;
 	}
+
 	strncpy(buf, (char*)resp+24, buf_len);
 	buf[buf_len-1] = 0;
 
@@ -831,11 +816,11 @@ static int kodak6800_query_serno(struct libusb_device_handle *dev, uint8_t endp_
 
 static int kodak6850_send_init(struct kodak6800_ctx *ctx)
 {
-	uint8_t cmdbuf[CMDBUF_LEN];
+	uint8_t cmdbuf[16];
 	uint8_t rdbuf[64];
 	int ret = 0, num = 0;
 
-	memset(cmdbuf, 0, CMDBUF_LEN);
+	memset(cmdbuf, 0, sizeof(cmdbuf));
 	cmdbuf[0] = 0x03;
 	cmdbuf[1] = 0x1b;
 	cmdbuf[2] = 0x43;
@@ -843,24 +828,14 @@ static int kodak6850_send_init(struct kodak6800_ctx *ctx)
 	cmdbuf[4] = 0x43;
 	cmdbuf[5] = 0x4c;
 
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     cmdbuf, CMDBUF_LEN -1)))
-		return CUPS_BACKEND_FAILED;
-
-	/* Read response */
-	ret = read_data(ctx->dev, ctx->endp_up,
-			rdbuf, READBACK_LEN, &num);
-	if (ret < 0)
-		return CUPS_BACKEND_FAILED;
-
-	if (num < 51) {
-		ERROR("Short read! (%d/%d)\n", num, 51);
-		return CUPS_BACKEND_FAILED;
-	}
+	/* Issue command and get response */
+	if ((ret = kodak6800_do_cmd(ctx, cmdbuf, sizeof(cmdbuf),
+				    rdbuf, sizeof(rdbuf),
+				    &num)))
+		return -1;
 
 	if (num != 51) {
-		ERROR("Unexpected readback from printer (%d/%d from 0x%02x))\n",
-		      num, READBACK_LEN, ctx->endp_up);
+		ERROR("Short read! (%d/%d)\n", num, 51);
 		return CUPS_BACKEND_FAILED;
 	}
 
@@ -896,12 +871,9 @@ static int kodak6800_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	/* Reset arg parsing */
-	optind = 1;
-	opterr = 0;
 	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "C:c:msX:")) >= 0) {
 		switch(i) {
-		GETOPT_PROCESS_GLOBAL			
+		GETOPT_PROCESS_GLOBAL
 		case 'c':
 			j = kodak6800_get_tonecurve(ctx, optarg);
 			break;
@@ -1101,7 +1073,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	}
 
 	if (ctx->type == P_KODAK_6850) {
-		INFO("Sending 6850 init sequence\n");
+//		INFO("Sending 6850 init sequence\n");
 		ret = kodak6850_send_init(ctx);
 		if (ret)
 			return ret;
@@ -1118,11 +1090,18 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 	}
 #endif
 
-	INFO("Sending image header\n");
-	if ((ret = send_data(ctx->dev, ctx->endp_down,
-			     (uint8_t*) &ctx->hdr, sizeof(ctx->hdr))))
+	INFO("Initiating Print Job\n");
+	if ((ret = kodak6800_do_cmd(ctx, (uint8_t*) &ctx->hdr, sizeof(ctx->hdr),
+				    &status, sizeof(status),
+				    &num)))
 		return ret;
-	sleep(1); // Appears to be necessary for reliability
+
+	if (status.hdr != 0x01) {
+		ERROR("Unexpected response from print command!\n");
+		return CUPS_BACKEND_FAILED;
+	}
+
+//	sleep(1); // Appears to be necessary for reliability
 	INFO("Sending image data\n");
 	if ((ret = send_data(ctx->dev, ctx->endp_down,
 			     ctx->databuf, ctx->datalen)))
@@ -1162,7 +1141,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.49",
+	.version = "0.50",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,
