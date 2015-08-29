@@ -597,6 +597,10 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon PIXUS 9100i
 	Canon PIXUS 9900i
 
+    Improved support for following models:
+
+	Canon BJC 4300
+
   6) Canon backend bugfixes:
 
      A problem with a new ink level compression added in 5.2.7 has

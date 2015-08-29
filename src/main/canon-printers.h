@@ -636,7 +636,7 @@ static const canon_cap_t canon_model_capabilities[] =
     618, 936,      /* 8.58" x 13 " */
     11, 9, 10, 18, /* unconfirmed */
     &canon_default_slotlist,
-    CANON_CAP_STD0 | CANON_CAP_cart,0,
+    CANON_CAP_STD0 | CANON_CAP_a | CANON_CAP_cart,0,
     2,0,
     0, /* Upper/Lower Cassette option */
     NULL,
