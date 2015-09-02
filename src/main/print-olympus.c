@@ -1742,19 +1742,6 @@ static const laminate_t kodak_6800_laminate[] =
 
 LIST(laminate_list_t, kodak_6800_laminate_list, laminate_t, kodak_6800_laminate);
 
-
-static void kodak_6800_printer_init(stp_vars_t *v)
-{
-  stp_zfwrite("\x03\x1b\x43\x48\x43\x0a\x00\x01\x00", 1, 9, v);
-  stp_putc(0x01, v);  /* Number of copies */
-  stp_put16_be(privdata.w_size, v);
-  stp_put16_be(privdata.h_size, v);
-  stp_putc(privdata.h_size == 1240 ? 0x00 : 0x06, v); /* XXX seen it on some 4x6 prints too! */
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-			(privdata.laminate->seq).bytes, v);
-  stp_putc(0x00, v);
-}
-
 /* Kodak 6850 */
 static const dyesub_pagesize_t kodak_6850_page[] =
 {
@@ -1780,14 +1767,22 @@ static const dyesub_printsize_t kodak_6850_printsize[] =
 
 LIST(dyesub_printsize_list_t, kodak_6850_printsize_list, dyesub_printsize_t, kodak_6850_printsize);
 
-static void kodak_6850_printer_init(stp_vars_t *v)
+static void kodak_68xx_printer_init(stp_vars_t *v)
 {
-  stp_zfwrite("\x03\x1b\x43\x48\x43\x0a\x00\x01\x00", 1, 9, v);
-  stp_putc(0x01, v); /* Number of copies */
+  stp_zfwrite("\x03\x1b\x43\x48\x43\x0a\x00\x01", 1, 8, v);
+  stp_put16_be(0x01, v); /* Number of copies in BCD */
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  stp_putc(privdata.h_size == 1240 ? 0x00 : 
-	   privdata.h_size == 1548 ? 0x07 : 0x06, v);
+
+  if (!strcmp(privdata.pagesize,"w288h432"))
+	  stp_putc(0x00, v);
+  else if (!strcmp(privdata.pagesize,"w432h576"))
+	  stp_putc(0x06, v);
+  else if (!strcmp(privdata.pagesize,"w360h504"))
+	  stp_putc(0x07, v);
+  else
+	  stp_putc(0x00, v); /* "Custom" */
+
   stp_zfwrite((privdata.laminate->seq).data, 1,
 			(privdata.laminate->seq).bytes, v);
   stp_putc(0x00, v);
@@ -1825,14 +1820,13 @@ static void kodak_605_printer_init(stp_vars_t *v)
   stp_putc(0x00, v);
   stp_put16_le(privdata.w_size, v);
   stp_put16_le(privdata.h_size, v);
-  if (privdata.h_size == 1240)
+
+  if (!strcmp(privdata.pagesize,"w288h432"))
 	  stp_putc(0x01, v);
-  else if (privdata.h_size == 2100)
-	  stp_putc(0x02, v);
-  else if (privdata.h_size == 2434)
+  else if (!strcmp(privdata.pagesize,"w432h576"))
 	  stp_putc(0x03, v);
-  else if (privdata.h_size == 2490)
-	  stp_putc(0x04, v);
+  else if (!strcmp(privdata.pagesize,"w360h504"))
+	  stp_putc(0x02, v);
   else
 	  stp_putc(0x01, v);
 
@@ -2195,8 +2189,7 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   stp_putc(0x12, v);
   stp_putc(0x00, v);
   stp_putc(0x01, v);
-  stp_putc(0x01, v); /* Actually, # of copies */
-  stp_putc(0x00, v);
+  stp_put16_le(0x01, v); /* Actually, # of copies */
   stp_put16_le(privdata.w_size, v);
   stp_put16_le(privdata.h_size, v);
   stp_put16_le(privdata.w_size, v);
@@ -2207,6 +2200,69 @@ static void kodak_8810_printer_init(stp_vars_t *v)
   stp_putc(0x00, v); /* Method -- 00 is normal, 02 is x2, 03 is x3 */    
   stp_putc(0x00, v); /* Reserved */
 }
+
+/* Kodak 7000/7010 */
+static const dyesub_pagesize_t kodak_7000_page[] =
+{
+  { "w288h432", "4x6", PT(1240,300)+1, PT(1844,300)+1, 0, 0, 0, 0,
+  						DYESUB_LANDSCAPE}, /* 4x6 */
+  { "w432h576", "6x8", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 6x8 */
+};
+
+LIST(dyesub_pagesize_list_t, kodak_7000_page_list, dyesub_pagesize_t, kodak_7000_page);
+
+static const dyesub_printsize_t kodak_7000_printsize[] =
+{
+  { "300x300", "w288h432", 1240, 1844},
+  { "300x300", "w432h576", 1844, 2434},
+};
+
+LIST(dyesub_printsize_list_t, kodak_7000_printsize_list, dyesub_printsize_t, kodak_7000_printsize);
+static const laminate_t kodak_7000_laminate[] =
+{
+  {"Glossy", N_("Glossy"), {1, "\x02"}},
+  {"Satin",  N_("Satin"),  {1, "\x03"}},
+};
+
+LIST(laminate_list_t, kodak_7000_laminate_list, laminate_t, kodak_7000_laminate);
+
+static void kodak_70xx_printer_init(stp_vars_t *v)
+{
+  stp_zfwrite("\x01\x40\x0a\x00\x01", 1, 5, v);
+  stp_put16_le(0x01, v); /* Actually, # of copies */
+  stp_put16_le(privdata.w_size, v);
+  stp_put16_le(privdata.h_size, v);
+
+  if (!strcmp(privdata.pagesize,"w288h432"))
+	  stp_putc(0x01, v);
+  else if (!strcmp(privdata.pagesize,"w432h576"))
+	  stp_putc(0x03, v);
+  else if (!strcmp(privdata.pagesize,"w360h504"))
+	  stp_putc(0x06, v);
+  else
+	  stp_putc(0x01, v);
+
+  stp_zfwrite((privdata.laminate->seq).data, 1,
+			(privdata.laminate->seq).bytes, v);
+  stp_putc(0x00, v);
+}
+
+/* Kodak 7015/7015 */
+static const dyesub_pagesize_t kodak_7015_page[] =
+{
+  { "w360h504", "5x7", PT(1548,300)+1, PT(2140,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT}, /* 5x7 */
+};
+
+LIST(dyesub_pagesize_list_t, kodak_7015_page_list, dyesub_pagesize_t, kodak_7015_page);
+
+static const dyesub_printsize_t kodak_7015_printsize[] =
+{
+  { "300x300", "w360h504", 1548, 2140},
+};
+
+LIST(dyesub_printsize_list_t, kodak_7015_printsize_list, dyesub_printsize_t, kodak_7015_printsize);
 
 /* Kodak Professional 8500 */
 static const dyesub_pagesize_t kodak_8500_page[] =
@@ -4740,7 +4796,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6800_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &kodak_6800_printer_init, NULL,
+    &kodak_68xx_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -4754,7 +4810,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &kodak_6850_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &kodak_6850_printer_init, NULL,
+    &kodak_68xx_printer_init, NULL,
     NULL, NULL, /* No plane funcs */
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
@@ -4832,12 +4888,41 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
       | DYESUB_FEATURE_PLANE_INTERLACE,
     &kodak_8810_printer_init, NULL,
-    NULL, NULL, 
+    NULL, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_8810_laminate_list, NULL,
   },
-
+  { /* Kodak 7000/7010 */
+    4008,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &kodak_7000_page_list,
+    &kodak_7000_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &kodak_70xx_printer_init, NULL,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_7000_laminate_list, NULL,
+  },
+  { /* Kodak 7015 */
+    4009,
+    &bgr_ink_list,
+    &res_300dpi_list,
+    &kodak_7015_page_list,
+    &kodak_7015_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT
+      | DYESUB_FEATURE_PLANE_INTERLACE,
+    &kodak_70xx_printer_init, NULL,
+    NULL, NULL,
+    NULL, NULL, /* No block funcs */
+    NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    &kodak_7000_laminate_list, NULL,
+  },
   { /* Kodak Professional 8500 */
     4100,
     &bgr_ink_list,

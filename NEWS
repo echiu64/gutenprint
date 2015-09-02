@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.11-pre1, a pre-release of Gutenprint
+Welcome to Gutenprint 5.2.11-pre1dnp7a, a pre-release of Gutenprint
 5.2.11. Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
@@ -265,6 +265,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS620
 	Kodak 305		  [experimental]
 	Kodak 8810		  [experimental]
+	Kodak 7000/7010/7015	  [experimental]
 	Mitsubishi CP-D80DW	  [experimental]
 	Mitsubishi CP3800DW
 	Shinko S1245/S6145/S6245  [experimental]

@@ -2851,6 +2851,9 @@
       <printer translate="name" name="Kodak 8500" driver="kodak-8500" manufacturer="Kodak" model="4100" foomaticid="Kodak-8500">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 9810" driver="kodak-9810" manufacturer="Kodak" model="4006" foomaticid="Kodak-9810">EXPERIMENTAL</printer>
       <printer translate="name" name="Kodak 8810" driver="kodak-8810" manufacturer="Kodak" model="4007" foomaticid="Kodak-8810">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 7000" driver="kodak-7000" manufacturer="Kodak" model="4008" foomaticid="Kodak-7000">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 7010" driver="kodak-7010" manufacturer="Kodak" model="4008" foomaticid="Kodak-7010">EXPERIMENTAL</printer>
+      <printer translate="name" name="Kodak 7015" driver="kodak-7015" manufacturer="Kodak" model="4009" foomaticid="Kodak-7015">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020D" driver="mitsubishi-3020d" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020D">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DU" driver="mitsubishi-3020du" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DU">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3020DE" driver="mitsubishi-3020de" manufacturer="Mitsubishi" model="4101" foomaticid="Mitsubishi-3020DE">EXPERIMENTAL</printer>
