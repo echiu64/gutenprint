@@ -4080,8 +4080,7 @@ LIST(dyesub_stringlist_t, dnpds80dx_slot_list, dyesub_stringitem_t, dnpds80dx_sl
 /* This list is *not* translated */
 static const dyesub_stringitem_t dnpds80dx_uiconstraints[] =
 {
-  {"UIConstraints", "*Duplex *InputSlot Roll"},
-  {"UIConstraints", "*InputSlot Roll *Duplex"},
+  {"UIConstraints", "*Duplex *InputSlot Roll"}, /* No need to reciprocate here */
 };
 
 LIST(dyesub_stringlist_t, dnpds80dx_uiconstraints_list, dyesub_stringitem_t, dnpds80dx_uiconstraints);
