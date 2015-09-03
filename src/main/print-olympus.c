@@ -60,6 +60,7 @@
 #define DYESUB_FEATURE_16BPP             0x00000200
 #define DYESUB_FEATURE_BIGENDIAN         0x00000400
 #define DYESUB_FEATURE_RGBtoYCBCR        0x00000800
+#define DYESUB_FEATURE_DUPLEX            0x00001000
 
 #define DYESUB_PORTRAIT  0
 #define DYESUB_LANDSCAPE 1
@@ -144,7 +145,6 @@ typedef struct {
   size_t n_items;
 } dyesub_printsize_list_t;
 
-
 typedef struct {
   const char *name;
   const char *text;
@@ -167,6 +167,16 @@ typedef struct {
   size_t n_items;
 } dyesub_media_list_t;
 
+typedef struct {
+  const char* name;
+  const char *text;
+} dyesub_stringitem_t;
+
+typedef struct {
+  const dyesub_stringitem_t *item;
+  size_t n_items;
+} dyesub_stringlist_t;
+
 #define NPUTC_BUFSIZE (4096)
 
 typedef struct
@@ -179,8 +189,11 @@ typedef struct
   const char* pagesize;
   const laminate_t* laminate;
   const dyesub_media_t* media;
+  const char* slot;
   int print_mode;
   int bpp;
+  const char* duplex_mode;
+  int page_number;
   char nputc_buf[NPUTC_BUFSIZE];
 } dyesub_privdata_t;
 
@@ -225,6 +238,8 @@ typedef struct /* printer specific parameters */
   const char *adj_yellow;
   const laminate_list_t *laminate;
   const dyesub_media_list_t *media;
+  const dyesub_stringlist_t *inputslots;
+  const dyesub_stringlist_t *uiconstraints;	
 } dyesub_cap_t;
 
 
@@ -2154,9 +2169,7 @@ static const dyesub_pagesize_t kodak_8810_page[] =
 {
   { "w288h576", "8x4", PT(1208,300)+1, PT(2464,300)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "c8x10", "8x10", PT(2464,300)+1, PT(3024,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-#if 0  
-  { "???", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
-#endif  
+  { "A4", "203x297mm", PT(2464,300)+1, PT(3531,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "w576h864", "8x12", PT(2464,300)+1, PT(3624,300)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 LIST(dyesub_pagesize_list_t, kodak_8810_page_list, dyesub_pagesize_t, kodak_8810_page);
@@ -2165,9 +2178,7 @@ static const dyesub_printsize_t kodak_8810_printsize[] =
 {
   { "300x300", "w288h576", 1208, 2464},
   { "300x300", "c8x10", 2464, 3024},
-#if 0  
-  { "300x300", "???", 2464, 3531},
-#endif  
+  { "300x300", "A4", 2464, 3531},
   { "300x300", "w576h864", 2464, 3624},
 };
 
@@ -4057,6 +4068,25 @@ static void dnpds80_printer_start(stp_vars_t *v)
   }
 }
 
+/* Dai Nippon Printing DS80DX */
+static const dyesub_stringitem_t dnpds80dx_slots[] =
+{
+  {"Roll",  N_("Roll")},
+  {"Sheet", N_("Sheet")},
+};
+
+LIST(dyesub_stringlist_t, dnpds80dx_slot_list, dyesub_stringitem_t, dnpds80dx_slots);
+
+/* This list is *not* translated */
+static const dyesub_stringitem_t dnpds80dx_uiconstraints[] =
+{
+  {"UIConstraints", "*Duplex *InputSlot Roll"},
+  {"UIConstraints", "*InputSlot Roll *Duplex"},
+};
+
+LIST(dyesub_stringlist_t, dnpds80dx_uiconstraints_list, dyesub_stringitem_t, dnpds80dx_uiconstraints);
+
+
 /* Dai Nippon Printing DS-RX1 */
 /* Imaging area is wider than print size, we always must supply the 
    printer with the full imaging width. */
@@ -4405,6 +4435,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     p200_adj_any, p200_adj_any, p200_adj_any,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Olympus P-300 */
     0, 		
@@ -4419,6 +4450,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, &p300_plane_end_func,
     &p300_block_init_func, NULL,
     p300_adj_cyan, p300_adj_magenta, p300_adj_yellow,
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Olympus P-400 */
@@ -4435,6 +4467,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p400_block_init_func, NULL,
     p400_adj_cyan, p400_adj_magenta, p400_adj_yellow,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Olympus P-440 */
     3,
@@ -4449,6 +4482,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &p440_block_init_func, &p440_block_end_func,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     &p10_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Olympus P-S100 */
     20,
@@ -4462,6 +4496,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Canon CP-10 */
@@ -4479,6 +4514,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Canon CP-100, CP-200, CP-300 */
     1000,
@@ -4494,6 +4530,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Canon CP-220, CP-330, SELPHY CP400, SELPHY CP500, SELPHY CP510,
@@ -4514,6 +4551,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Canon SELPHY ES1 */
     1003,
@@ -4529,6 +4567,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es1_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Canon SELPHY ES2, SELPHY ES20 */
@@ -4546,6 +4585,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Canon SELPHY ES3, SELPHY ES30 */
     1006,
@@ -4561,6 +4601,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Canon SELPHY ES40 */
@@ -4578,6 +4619,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Canon SELPHY CP790 */
     1008,
@@ -4593,6 +4635,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &es2_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Canon SELPHY CP800 */
@@ -4610,6 +4653,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Canon SELPHY CP900 */
     1010,
@@ -4625,6 +4669,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &cpx00_plane_init_func, NULL,
     NULL, NULL,
     cpx00_adj_cyan, cpx00_adj_magenta, cpx00_adj_yellow,
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Canon CP820, CP910 */
@@ -4642,6 +4687,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL, /* Printer handles color correction! */
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Sony UP-DP10  */
     2000,
@@ -4657,6 +4703,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
     &updp10_laminate_list, NULL,
+    NULL, NULL,
+    NULL, NULL,
   },
   { /* Sony UP-DR150 */
     2001,
@@ -4671,6 +4719,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL, 
     &updp10_laminate_list, NULL,
+    NULL, NULL,
+    NULL, NULL,
   },
   { /* Sony DPP-EX5, DPP-EX7 */
     2002,
@@ -4686,6 +4736,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &dppex5_block_init, NULL,
     NULL, NULL, NULL,
     &dppex5_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Sony UP-DR100 */
     2003,
@@ -4700,6 +4751,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL, 
     &updr100_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Sony UP-DR200 */
     2004,
@@ -4714,6 +4766,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL, 
     &updr200_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Sony UP-CR10L / DNP SL10 */
     2005,
@@ -4727,6 +4780,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Fujifilm Printpix CX-400  */
@@ -4743,6 +4797,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Fujifilm Printpix CX-550  */
     3001,
@@ -4758,6 +4813,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Fujifilm FinePix NX-500  */
     3002,
@@ -4771,6 +4827,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL,	/* color profile/adjustment is built into printer */
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Kodak Easyshare Dock family */
@@ -4787,6 +4844,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Kodak Photo Printer 6800 */
     4001,
@@ -4801,6 +4859,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_6800_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak Photo Printer 6850 */
     4002,
@@ -4815,6 +4874,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_6800_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak Photo Printer 605 */
     4003,
@@ -4829,6 +4889,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_605_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak Professional 1400 */
     4004,
@@ -4844,8 +4905,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, 
     NULL, NULL, 
     NULL, NULL, NULL, 
-    &kodak_6800_laminate_list, 
-    &kodak_1400_media_list,
+    &kodak_6800_laminate_list, &kodak_1400_media_list,
+    NULL, NULL,
   },
   { /* Kodak Photo Printer 805 */
     4005,
@@ -4862,6 +4923,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_6800_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak Professional 9810 */
     4006,
@@ -4877,6 +4939,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_9810_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak 8810 */
     4007,
@@ -4892,6 +4955,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_8810_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak 7000/7010 */
     4008,
@@ -4907,6 +4971,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_7000_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak 7015 */
     4009,
@@ -4922,6 +4987,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &kodak_7000_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Kodak Professional 8500 */
     4100,
@@ -4935,8 +5001,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No plane funcs */ 
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
-    &kodak_8500_laminate_list, 
-    &kodak_8500_media_list,
+    &kodak_8500_laminate_list, &kodak_8500_media_list,
+    NULL, NULL,    
   },
   { /* Mitsubishi CP3020D/DU/DE */
     4101,
@@ -4952,6 +5018,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     NULL, NULL,
+    NULL, NULL,    
   },
   { /* Mitsubishi CP3020DA/DAE */
     4102,
@@ -4967,6 +5034,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     NULL, NULL,
+    NULL, NULL,
   },
   { /* Mitsubishi CP9550D */
     4103,
@@ -4981,6 +5049,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &mitsu_cp3020da_plane_init, NULL,
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
+    NULL, NULL,
     NULL, NULL,
   },
   { /* Mitsubishi CP9810D */
@@ -4998,6 +5067,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cp9810_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Mitsubishi CPD70D/CPD707D */
     4105,
@@ -5014,6 +5084,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
+    NULL, NULL,
   },
   { /* Mitsubishi CPK60D */
     4106,
@@ -5030,6 +5101,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
+    NULL, NULL,
+    NULL, NULL,
   },
   { /* Mitsubishi CPD80D */
     4107,
@@ -5046,6 +5119,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
+    NULL, NULL,    
+    NULL, NULL,
   },
   { /* Kodak 305 */
     4108,
@@ -5062,6 +5137,8 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL, /* No block funcs */
     NULL, NULL, NULL, /* color profile/adjustment is built into printer */
     &mitsu_cpd70x_laminate_list, NULL,
+    NULL, NULL,    
+    NULL, NULL,
   },
   { /* Shinko CHC-S9045 (experimental) */
     5000, 		
@@ -5076,6 +5153,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     NULL, NULL,
+    NULL, NULL,    
   },
   { /* Shinko/Sinfonia CHC-S2145 */
     5001,
@@ -5090,6 +5168,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
     &shinko_chcs2145_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Shinko/Sinfonia CHC-S1245 */
     5002,
@@ -5104,6 +5183,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
     &shinko_chcs1245_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Shinko/Sinfonia CHC-S6245 */
     5003,
@@ -5132,6 +5212,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
     &shinko_chcs6145_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* CIAAT Brava 21 */
     5005,
@@ -5146,6 +5227,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
     &ciaat_brava21_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Dai Nippon Printing DS40 */
     6000,
@@ -5161,6 +5243,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Dai Nippon Printing DS80 */
     6001,
@@ -5176,6 +5259,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Dai Nippon Printing DSRX1 */
     6002,
@@ -5191,6 +5275,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Dai Nippon Printing DS620 */
     6003,
@@ -5206,6 +5291,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     &dnpds40_laminate_list, NULL,
+    NULL, NULL,    
   },
   { /* Citizen CW-01 */
     6005,
@@ -5221,6 +5307,23 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL, NULL,
     NULL, NULL,
+    NULL, NULL,    
+  },
+  { /* Dai Nippon Printing DS80DX */
+    6006,
+    &bgr_ink_list,
+    &res_dnpds40_dpi_list,
+    &dnpds80_page_list,
+    &dnpds80_printsize_list,
+    SHRT_MAX,
+    DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
+      | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_DUPLEX,
+    &dnpds80_printer_start, &dnpds40_printer_end,
+    &dnpds40_plane_init, NULL,
+    NULL, NULL,
+    NULL, NULL, NULL,
+    &dnpds40_laminate_list, NULL,
+    &dnpds80dx_slot_list, &dnpds80dx_uiconstraints_list,
   },
 };
 
@@ -5284,6 +5387,18 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_BOOLEAN, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 1
   },
+  {
+    "Duplex", N_("Double-Sided Printing"), "Color=No,Category=Basic Printer Setup",
+    N_("Duplex/Tumble Setting"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0
+  },
+  {
+    "PPDUIConstraints", N_("PPD User Interface Constraints"), "Color=No,Category=Advanced Printer Functionality",
+    N_("PPD UIConstraints List"),
+    STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,    
+    STP_PARAMETER_LEVEL_INTERNAL, 0, 0, STP_CHANNEL_NONE, 0, 1
+  },
 };
 
 static int the_parameter_count =
@@ -5336,6 +5451,20 @@ static const float_param_t float_parameters[] =
 
 static const int float_parameter_count =
 sizeof(float_parameters) / sizeof(const float_param_t);
+
+/*
+ * Duplex support - modes available
+ * Note that the internal names MUST match those in cups/genppd.c else the
+ * PPD files will not be generated correctly
+ */
+
+static const stp_param_string_t duplex_types[] =
+{
+  { "None",             N_ ("Off") },
+  { "DuplexNoTumble",   N_ ("Long Edge (Standard)") },
+  { "DuplexTumble",     N_ ("Short Edge (Flip)") }
+};
+#define NUM_DUPLEX (sizeof (duplex_types) / sizeof (stp_param_string_t))
 
 static const dyesub_cap_t* dyesub_get_model_capabilities(int model)
 {
@@ -5509,7 +5638,20 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
   else if (strcmp(name, "InputSlot") == 0)
     {
       description->bounds.str = stp_string_list_create();
-      description->is_active = 0;
+      if (caps->inputslots) {
+	const dyesub_stringlist_t *mlist = caps->inputslots;
+	for (i = 0; i < mlist->n_items; i++)
+	  {
+	    const dyesub_stringitem_t *m = &(mlist->item[i]);
+	    stp_string_list_add_string(description->bounds.str,
+				       m->name, gettext(m->text));
+	  }
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
+	description->is_active = 1;
+      } else {
+        description->is_active = 0;
+      }
     }
   else if (strcmp(name, "Resolution") == 0)
     {
@@ -5555,6 +5697,8 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
           description->deflt.str =
 	  stp_string_list_param(description->bounds.str, 0)->name;
           description->is_active = 1;
+        } else {
+	  description->is_active = 0;
         }
     }
   else if (strcmp(name, "Borderless") == 0)
@@ -5569,6 +5713,54 @@ dyesub_parameters(const stp_vars_t *v, const char *name,
 	(description->bounds.str, "Color", _("Color"));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
+    }
+  else if (strcmp(name, "PPDUIConstraints") == 0)
+    {
+      description->bounds.str = stp_string_list_create();
+      if (caps->uiconstraints) {
+	const dyesub_stringlist_t *mlist = caps->uiconstraints;
+	for (i = 0; i < mlist->n_items; i++)
+	  {
+	    const dyesub_stringitem_t *m = &(mlist->item[i]);
+	    stp_string_list_add_string(description->bounds.str,
+				       m->name, m->text); /* Do *not* want this translated */
+	  }
+	description->deflt.str =
+	  stp_string_list_param(description->bounds.str, 0)->name;
+	description->is_active = 1;
+      } else {
+	description->is_active = 0;
+      }
+    }
+  else if (strcmp(name, "Duplex") == 0)
+    {
+      int offer_duplex=0;
+
+      description->bounds.str = stp_string_list_create();
+
+      /*
+       * Don't offer the Duplex/Tumble options if the JobMode parameter is
+       * set to "Page" Mode.
+       * "Page" mode is set by the Gimp Plugin, which only outputs one page at a
+       * time, so Duplex/Tumble is meaningless.
+       */
+      
+      if (stp_get_string_parameter(v, "JobMode"))
+	offer_duplex = strcmp(stp_get_string_parameter(v, "JobMode"), "Page");
+      else
+	offer_duplex=1;
+
+      if (offer_duplex && (caps->features & DYESUB_FEATURE_DUPLEX))
+      {
+	description->deflt.str = duplex_types[0].name;
+	for (i=0; i < NUM_DUPLEX; i++)
+        {
+          stp_string_list_add_string(description->bounds.str,
+                                     duplex_types[i].name,gettext(duplex_types[i].text));
+        }
+      }
+      else
+        description->is_active = 0;
     }
   else
     description->is_active = 0;
@@ -6093,8 +6285,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   int pl;
 
-
-
   if (!stp_verify(v))
     {
       stp_eprintf(v, _("Print options not verified; cannot print.\n"));
@@ -6108,6 +6298,12 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 
   stp_describe_resolution(v, &w_dpi, &h_dpi);
   dyesub_printsize(v, &max_print_px_width, &max_print_px_height);
+
+  /* Duplex processing -- Rotate even pages for DuplexNoTumble */
+  privdata.duplex_mode = stp_get_string_parameter(v, "Duplex");
+  privdata.page_number = stp_get_int_parameter(v, "PageNumber");
+  if((privdata.page_number & 1) && privdata.duplex_mode && !strcmp(privdata.duplex_mode,"DuplexNoTumble"))
+    image = stpi_buffer_image(image,BUFFER_FLAG_FLIP_X | BUFFER_FLAG_FLIP_Y);
 
   privdata.pagesize = stp_get_string_parameter(v, "PageSize");
   if (caps->laminate)
@@ -6145,11 +6341,14 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 			pv.prnh_px - pv.outh_px);
   pv.outr_px = pv.outl_px + pv.outw_px;
   pv.outb_px = pv.outt_px  + pv.outh_px;
-  
+
   /* Swap back so that everything that follows will work. */
   if (page_mode == DYESUB_LANDSCAPE)
     dyesub_swap_ints(&w_dpi, &h_dpi);
-  
+
+  /* Fetch input slot */
+  privdata.slot = stp_get_string_parameter(v, "InputSlot");
+
   stp_deprintf(STP_DBG_DYESUB,
 	      "paper (pt)   %d x %d\n"
 	      "image (px)   %d x %d\n"
@@ -6172,8 +6371,7 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
 	      page_pt_bottom, page_pt_top, page_pt_bottom - page_pt_top,
 	      pv.prnw_px, pv.prnh_px,
 	      w_dpi, h_dpi
-	      );	
-
+	      );
 
   /* FIXME: move this into print_init_drv */
   ink_type = dyesub_describe_output_internal(v, &pv);
