@@ -4079,11 +4079,73 @@ LIST(dyesub_media_list_t, dnpds80dx_media_list, dyesub_media_t, dnpds80dx_medias
 /* This list is *not* translated */
 static const dyesub_stringitem_t dnpds80dx_uiconstraints[] =
 {
-  {"UIConstraints", "*Duplex *MediaType Roll"}, /* No need to reciprocate here */
+  /* PPD generation handles constraint reciprocation */
+  {"UIConstraints", "*Duplex *MediaType Roll"},
+  {"UIConstraints", "*PageSize A4 *MediaType Sheet"},  
+#ifdef MULTICUT
+  {"UIConstraints", "*PageSize 8x5_8x4 *MediaType Sheet"},
+  {"UIConstraints", "*PageSize 8x6_8x4 *MediaType Sheet"},  
+  {"UIConstraints", "*PageSize 8x6_8x6 *MediaType Sheet"},
+  {"UIConstraints", "*PageSize 8x8_8x4 *MediaType Sheet"},
+  /* XXX 8x10.5 and 8x10.75 don't work for roll media */
+  /* XXX 8x4*3 is different on sheet vs roll */
+#endif
 };
 
 LIST(dyesub_stringlist_t, dnpds80dx_uiconstraints_list, dyesub_stringitem_t, dnpds80dx_uiconstraints);
 
+static void dnpds80dx_printer_start(stp_vars_t *v)
+{
+  int multicut;
+	
+  /* If we're using roll media, act the same as a standard DS80 */
+  if (!strcmp(privdata.media->name, "Roll"))
+	  return dnpds80_printer_start(v);
+	
+  /* Common code */
+  dnp_printer_start_common(v);
+
+  /* Set cutter option to "normal" */
+  stp_zprintf(v, "\033PCNTRL CUTTER          0000000800000000");
+
+  if (!strcmp(privdata.pagesize, "c8x10")) {
+    multicut = 6;
+  } else if (!strcmp(privdata.pagesize, "w576h864")) {
+    multicut = 7;
+  } else if (!strcmp(privdata.pagesize, "w288h576")) {
+    multicut = 8;
+  } else if (!strcmp(privdata.pagesize, "w360h576")) {
+    multicut = 9;
+  } else if (!strcmp(privdata.pagesize, "w432h576")) {
+    multicut = 10;
+  } else if (!strcmp(privdata.pagesize, "w576h576")) {
+    multicut = 11;
+  } else if (!strcmp(privdata.pagesize, "8x10.5")) { // XXX special, addme
+    multicut = 25;
+  } else if (!strcmp(privdata.pagesize, "8x10.75")) { // XXX special, addme
+    multicut = 26;
+  } else if (!strcmp(privdata.pagesize, "8x4_x2")) {
+    multicut = 13;
+  } else if (!strcmp(privdata.pagesize, "8x5_x2")) {
+    multicut = 14;
+  } else if (!strcmp(privdata.pagesize, "8x6_x2")) {
+    multicut = 15;
+  } else if (!strcmp(privdata.pagesize, "8x4_x3")) { // XXX special, addme
+    multicut = 28;
+  } else {
+    multicut = 0;
+  }
+
+  /* Add correct offset to multicut mode based on duplex state */
+  if (!strcmp(privdata.duplex_mode, "None"))
+     multicut += 100; /* Simplex */
+  else if (privdata.page_number & 1)
+     multicut += 300; /* Duplex, back */
+  else
+     multicut += 200; /* Duplex, front */
+
+  stp_zprintf(v, "\033PIMAGE MULTICUT        00000008%08d", multicut);
+}
 
 /* Dai Nippon Printing DS-RX1 */
 /* Imaging area is wider than print size, we always must supply the 
@@ -5254,12 +5316,12 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     6006,
     &bgr_ink_list,
     &res_dnpds40_dpi_list,
-    &dnpds80_page_list, // XXX
-    &dnpds80_printsize_list, // XXX
+    &dnpds80_page_list, /* XXX add sheet sizes */
+    &dnpds80_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT | DYESUB_FEATURE_WHITE_BORDER
       | DYESUB_FEATURE_PLANE_INTERLACE | DYESUB_FEATURE_PLANE_LEFTTORIGHT | DYESUB_FEATURE_DUPLEX,
-    &dnpds80_printer_start, &dnpds40_printer_end, // XXX
+    &dnpds80dx_printer_start, &dnpds40_printer_end,
     &dnpds40_plane_init, NULL,
     NULL, NULL,
     NULL, NULL, NULL,
