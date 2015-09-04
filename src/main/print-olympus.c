@@ -4746,8 +4746,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     updp10_adj_cyan, updp10_adj_magenta, updp10_adj_yellow,
-    &updp10_laminate_list, NULL,
-    NULL, NULL, NULL,
+    &updp10_laminate_list, NULL, NULL,
   },
   { /* Sony UP-DR150 */
     2001,
@@ -4761,8 +4760,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
-    &updp10_laminate_list, NULL,
-    NULL, NULL, NULL,
+    &updp10_laminate_list, NULL, NULL,
   },
   { /* Sony DPP-EX5, DPP-EX7 */
     2002,
