@@ -111,6 +111,7 @@ enum {
 	P_MITSU_9550S,	
 	P_DNP_DS40,
 	P_DNP_DS80,
+	P_DNP_DS80D,
 	P_CITIZEN_CW01,
 	P_DNP_DSRX1,
 	P_DNP_DS620,
@@ -162,6 +163,7 @@ extern int extra_pid;
 extern int extra_type;
 extern int copies;
 extern char *use_serno;
+extern int current_page;
 
 #if defined(BACKEND)
 extern struct dyesub_backend BACKEND;

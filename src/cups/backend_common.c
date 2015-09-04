@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.61G"
+#define BACKEND_VERSION "0.62G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -43,6 +43,7 @@ int extra_pid = -1;
 int extra_type = -1;
 int copies = 1;
 char *use_serno = NULL;
+int current_page = 0;
 
 /* Support Functions */
 static int backend_claim_interface(struct libusb_device_handle *dev, int iface)
@@ -563,7 +564,7 @@ static struct dyesub_backend *backends[] = {
 	&kodak1400_backend,
 //	&shinkos1245_backend,
 	&shinkos2145_backend,
-//	&shinkos6145_backend,	
+//	&shinkos6145_backend,
 //	&shinkos6245_backend,
 	&updr150_backend,
 	&mitsu70x_backend,
@@ -756,7 +757,6 @@ int main (int argc, char **argv)
 	int iface = 0;
 	int found = -1;
 	int jobid = 0;
-	int pages = 0;
 
 	char *uri;
 	char *fname = NULL;
@@ -987,13 +987,13 @@ newpage:
 
 	/* Read in data */
 	if ((ret = backend->read_parse(backend_ctx, data_fd))) {
-		if (pages)
+		if (current_page)
 			goto done_multiple;
 		else
 			goto done_claimed;
 	}
 
-	INFO("Printing page %d\n", ++pages);
+	INFO("Printing page %d\n", ++current_page);
 
 	ret = backend->main_loop(backend_ctx, copies);
 	if (ret)
@@ -1008,7 +1008,7 @@ done_multiple:
 	close(data_fd);
 
 	/* Done printing */
-	INFO("All printing done (%d pages * %d copies)\n", pages, copies);
+	INFO("All printing done (%d pages * %d copies)\n", current_page, copies);
 	ret = CUPS_BACKEND_OK;
 
 done_claimed:
