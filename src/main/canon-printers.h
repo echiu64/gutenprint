@@ -2935,6 +2935,7 @@ static const canon_cap_t canon_model_capabilities[] =
     iP4500_channel_order
   },
   { /* Canon PIXMA MG3600 */
+    /* no support for Esc (s and ESC (u commands yet for duplex */
     "PIXMA MG3600", 3,          /*model, model_id*/
     INCH(17/2), 1917,       /* max paper width and height */ /* unconfirmed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
@@ -3049,6 +3050,24 @@ static const canon_cap_t canon_model_capabilities[] =
     &canon_PIXMA_MG5500_modelist,
     &canon_MAXIFY_iB4000_paperlist, /* Canon Photo Hagaki changed to merely Photo Hagaki in Windows driver */
     &canon_PIXMA_MG5600_modeuselist,
+    NULL,
+    NULL,
+    NULL,
+    iP4500_channel_order
+  },
+  { /* Canon PIXMA MG5700 */
+    /* no support for Esc (s and ESC (u commands yet for duplex */
+    "PIXMA MG5700", 3,          /*model, model_id*/
+    INCH(17/2), INCH(14),       /* max paper width and height */ /* not confirmed yet */
+    10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
+    &canon_MULTIPASS_MX7600_slotlist,
+    CANON_CAP_STD0|CANON_CAP_DUPLEX|CANON_CAP_px|CANON_CAP_v|CANON_CAP_w|CANON_CAP_I|CANON_CAP_P|CANON_CAP_XML|CANON_CAP_BORDERLESS,0,
+    3,9, /* ESC (l and (P command lengths */
+    0, /* Upper/Lower Cassette option */
+    control_cmd_PIXMA_MG5600,
+    &canon_PIXMA_MG5700_modelist,
+    &canon_PIXMA_MG3600_paperlist, /* new media types September 2015 */
+    &canon_PIXMA_MG5700_modeuselist,
     NULL,
     NULL,
     NULL,
