@@ -179,17 +179,18 @@ pack_pixels3_6(unsigned char* buf,int len)
 #define CANON_CAP_px         0x2000ul
 #define CANON_CAP_rr         0x4000ul
 #define CANON_CAP_I          0x8000ul
-#define CANON_CAP_T          0x10000ul /* not sure of this yet! */
-#define CANON_CAP_P          0x20000ul
-#define CANON_CAP_DUPLEX     0x40000ul
-#define CANON_CAP_XML        0x80000ul /* not sure of this yet */
+#define CANON_CAP_T          0x10000ul /* cartridge selection for PIXMA printers with Black and Color carts */
+#define CANON_CAP_P          0x20000ul /* related to media type selection */
+#define CANON_CAP_DUPLEX     0x40000ul /* duplex printing */
+#define CANON_CAP_XML        0x80000ul /* use of XML at start and end of print data */
 #define CANON_CAP_CARTRIDGE  0x100000ul /* not sure of this yet */
 #define CANON_CAP_M          0x200000ul /* not sure of this yet */
 #define CANON_CAP_S          0x400000ul /* not sure of this yet */
 #define CANON_CAP_cart       0x800000ul /* BJC printers with Color, Black, Photo options */
-#define CANON_CAP_BORDERLESS 0x1000000ul /* borderless printing */
+#define CANON_CAP_BORDERLESS 0x1000000ul /* borderless (fullbleed) printing */
 #define CANON_CAP_NOBLACK    0x2000000ul /* no Black cartridge selection */
 #define CANON_CAP_v          0x4000000ul /* not sure of this yet */
+#define CANON_CAP_w          0x8000000ul /* related to media type selection */
 
 #define CANON_CAP_STD0 (CANON_CAP_b|CANON_CAP_c|CANON_CAP_d|\
                         CANON_CAP_l|CANON_CAP_q|CANON_CAP_t)
@@ -4268,17 +4269,17 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
      The intention appears to be to allow printing of photos and non-photo paper without needing to change trays.
      Note, envelopes are printed from the lower tray.
 
-     Upper tray specification from MG6500(?):
-     Max height: 7 inches
-     Max width:  8 inches (marked up to 5 inches)
-     Min height: 5 inches (L size)
-     Min width:  3.5 inches (L size)
+     Upper tray specification from MG7700 user manual:
+     Min width:  3.5  inches /  89.0 mm  (L size)
+     Min height: 5    inches / 127.0 mm  (L size)
+     Max width:  7.87 inches / 200.0 mm  (marked up to 5 inches)
+     Max height: 7.28 inches / 184.9 mm
 
      Lower tray specification:
-     Max height: 14 inches
-     Max width:  8.5 inches
-     Min height: 7.5 inches
-     Min width:  3.5 inches (takes business envelopes)
+     Min width:  3.54 inches /  90.0 mm (takes business envelopes)
+     Min height: 7.29 inches / 185.0 mm 
+     Max width:  8.5  inches / 215.9 mm 
+     Max height: 14   inches / 355.6 mm 
 
      Conditions:
      Init:  Upper tray
@@ -4287,8 +4288,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	    Envelopes  (argESCP_2 == 0x08) --> lower tray
 	    Other --> lower tray
      Size:  Length:
-            <=7 inches --> upper tray
-            >7 inches --> lower tray
+            < 7.29 inches (524 pt = 184.85 mm; 525 pt = 185.2 mm ) --> upper tray
+            >=7.29 inches (524 pt = 184.85 mm; 525 pt = 185.2 mm ) --> lower tray
 
      Printers with this capability:
      Code 0xd for cassette (standard cassette code is 0x8)
@@ -4297,14 +4298,16 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
      MG6300
      MG6500
      MG6700
+     MG6900
      MG7500
+     MG7700
      iP7200
      MX720
      MX920
    */
   
   
-  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
+  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG6900")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MG7700")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
     /* default: use upper tray of cassette with two trays, condition check later */
     arg_ESCP_9 = 0x01;
   }
@@ -4356,7 +4359,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	arg_ESCP_1 = 0x56;
       }
       /* Tray J from iP7200 onwards */
-      if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300"))  || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
+      if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300"))  || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG6900")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MG7700")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
 	arg_ESCP_1 = 0x5b;
 	arg_ESCP_9 = 0x00;
       }
@@ -4427,7 +4430,9 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
       /* MG6300: CD Tray J     : 0x5b               */
       /* MG6500: CD Tray J     : 0x5b               */
       /* MG6700: CD Tray J     : 0x5b               */
+      /* MG6900: CD Tray J     : 0x5b               */
       /* MG7500: CD Tray J     : 0x5b               */
+      /* MG7700: CD Tray J     : 0x5b               */
       /* MG8100: CD Tray G     : 0x56               */
       /* MG8200: CD Tray G     : 0x56               */
       /* pro9000:CD Tray E     : 0x4c               */
@@ -4544,7 +4549,7 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 
   /* workaround for media type based differences in 9-parameter ESC (P commands */
   /* These printers use 0x02 (lower tray) usually and for envelopes, 0x01 (upper tray) with various Hagaki/Photo media, and 0x00 with CD media */
-  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
+  if ( !(strcmp(init->caps->name,"PIXMA iP7200")) || !(strcmp(init->caps->name,"PIXMA MG5400")) || !(strcmp(init->caps->name,"PIXMA MG6300")) || !(strcmp(init->caps->name,"PIXMA MG6500")) || !(strcmp(init->caps->name,"PIXMA MG6700")) || !(strcmp(init->caps->name,"PIXMA MG6900")) || !(strcmp(init->caps->name,"PIXMA MG7500")) || !(strcmp(init->caps->name,"PIXMA MG7700")) || !(strcmp(init->caps->name,"PIXMA MX720")) || !(strcmp(init->caps->name,"PIXMA MX920")) ) {
     if (tray_user_select && !print_cd)
       arg_ESCP_9=user_ESCP_9;
     else {
@@ -4556,6 +4561,9 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	case 0x1b: arg_ESCP_9=0x01; break;;
 	case 0x36: arg_ESCP_9=0x01; break;;
 	case 0x38: arg_ESCP_9=0x01; break;;
+	case 0x46: arg_ESCP_9=0x01; break;;
+	case 0x47: arg_ESCP_9=0x01; break;;
+	case 0x48: arg_ESCP_9=0x01; break;;
 	  /* Photo media here */
 	case 0x32: arg_ESCP_9=0x01; break;;
 	case 0x33: arg_ESCP_9=0x01; break;;
@@ -4574,8 +4582,8 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 	default:   arg_ESCP_9=0x02; break;;
 	}
       
-      /* condition for length to use lower tray: 7in equals 504 points */
-      if ( (arg_ESCP_9 == 0x01) && ( length > 504 ) ) {
+      /* condition for length to use lower tray: 7.29 in equals 524-525 points */
+      if ( (arg_ESCP_9 == 0x01) && ( length > 524 ) ) {
 	arg_ESCP_9=0x02; 
       }
 
@@ -5053,7 +5061,20 @@ canon_init_setESC_v(const stp_vars_t *v, const canon_privdata_t *init)
   canon_cmd(v,ESC28,0x76, 1, 0x00);
 }
 
+/* ESC (w -- 0x77 -- */
+static void
+canon_init_setESC_w(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  unsigned char arg_ESCw_1;
 
+  /* new September 2015, currently only 1 byte */
+  if (!(init->caps->features & CANON_CAP_w))
+    return;
+
+  arg_ESCw_1 = (init->pt) ? init->pt->media_code_w: 0x00;
+  
+  canon_cmd(v,ESC28,0x77, 1, arg_ESCw_1);
+}
 
 static void
 canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
@@ -5080,6 +5101,7 @@ canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
   canon_init_setTray(v,init);            /* ESC (l */
   canon_init_setX72(v,init);             /* ESC (r */
   canon_init_setESC_v(v,init);           /* ESC (v */
+  canon_init_setESC_w(v,init);           /* ESC (w */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
 
   /* some linefeeds */
