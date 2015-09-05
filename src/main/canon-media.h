@@ -2365,10 +2365,9 @@ static const canon_paper_t canon_PIXMA_MG6900_papers[] = {
   { "InkJetPhotoHagakiK",N_ ("Hagaki K (Inkjet Photo)"),	0x05,0x05,0x36,0x0d,0.78, 0.25, 0.500, 0, 0, 0 },
   { "HagakiA", 	        N_ ("Hagaki (A)"),			0x08,0x09,0x48,0x28,0.78, 0.25, 0.500, 0, 0, 0 },/* Renamed Sep 2015 */
   { "Hagaki", 	        N_ ("Hagaki"),			        0x08,0x09,0x07,0x0c,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
-  { "FineArtPhotoRag",  N_ ("Fine Art Photo Rag"),	        0x13,0x18,0x28,0x00,0.78, 0.25, 0.500, 0, 0, 0 },/* Untested, Esc (w guesstimated */
-  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0x00,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscCompat",	N_ ("Printable Disc (Compatible)"),	0x0c,0x12,0x1f,0x21,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "DiscOthers",	N_ ("Printable Disc (Other)"),		0x0c,0x12,0x20,0x22,0.78, 0.25, 0.500, 0, 0, 0 },
+  { "FineArtOther",     N_ ("Fine Art Other"),	                0x13,0x18,0x29,0x24,0.78, 0.25, 0.500, 0, 0, 0 },
   { "TShirt",		N_ ("T-Shirt Transfers"),		0x03,0x03,0x12,0x2a,0.78, 0.25, 0.500, 0, 0, 0 },
   { "Envelope",		N_ ("Envelope"),			0x08,0x08,0x08,0x12,0.78, 0.25, 0.500, 0, 0, 0 },
   { "PhotopaperOther",	N_ ("Other Photo Paper"),		0x0f,0x14,0x24,0x13,0.78, 0.25, 0.500, 0, 0, 0 },
