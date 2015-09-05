@@ -2922,9 +2922,9 @@ canon_parameters(const stp_vars_t *v, const char *name,
       stp_string_list_add_string
 	(description->bounds.str, "Default", _("Driver-Controlled"));
       stp_string_list_add_string
-	(description->bounds.str, "Upper", _("Upper Tray"));
+	(description->bounds.str, "Upper", _("Upper Tray/Cassette 1"));
       stp_string_list_add_string
-	(description->bounds.str, "Lower", _("Lower Tray"));
+	(description->bounds.str, "Lower", _("Lower Tray/Cassette 2"));
       description->deflt.str =
 	stp_string_list_param(description->bounds.str, 0)->name;
       if (!input_slot || !strcmp(input_slot,"Cassette"))
