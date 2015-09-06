@@ -1204,6 +1204,11 @@ lexmark_parameters(const stp_vars_t *v, const char *name,
 
     for (i = 0; i < papersizes; i++) {
       const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+
+      if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
+	  pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
+        continue;
+
       if (strlen(pt->name) > 0 &&
 	  pt->width <= width_limit && pt->height <= height_limit &&
 	  (pt->height >= min_height_limit || pt->height == 0) &&

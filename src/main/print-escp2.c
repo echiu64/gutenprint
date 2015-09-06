@@ -1626,6 +1626,11 @@ verify_papersize(const stp_vars_t *v, const stp_papersize_t *pt)
   height_limit = escp2_max_paper_height(v);
   min_width_limit = escp2_min_paper_width(v);
   min_height_limit = escp2_min_paper_height(v);
+  
+  if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
+      pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
+    return 0;
+  
   if (strlen(pt->name) > 0 &&
       (pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE ||
        envelope_landscape || pt->height > pt->width) &&

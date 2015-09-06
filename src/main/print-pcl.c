@@ -1875,6 +1875,13 @@ pcl_papersize_valid(const stp_papersize_t *pt,
     return(0);
 
 /*
+ * Is it a valid type?
+ */  
+  if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
+      pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
+    return(0);
+  
+/*
  * Is it a recognized supported name?
  */
 

@@ -2734,27 +2734,15 @@ canon_parameters(const stp_vars_t *v, const char *name,
       }else{
         for (i = 0; i < papersizes; i++) {
           const stp_papersize_t *pt = stp_get_papersize_by_index(i);
+	  if (pt->paper_size_type != PAPERSIZE_TYPE_STANDARD &&
+	      pt->paper_size_type != PAPERSIZE_TYPE_ENVELOPE)
+	    continue;
           if (strlen(pt->name) > 0 &&
 	      pt->width <= width_limit && pt->height <= height_limit){
 	    stp_string_list_add_string(description->bounds.str,
 				     pt->name, gettext(pt->text));
            }
         }
-	/*
-	{
-	  for (i = 0; i < papersizes; i++)
-	    {
-	      const stp_papersize_t *pt = stp_get_papersize_by_index(i);
-	      if (verify_papersize(v, pt))
-		stp_string_list_add_string(description->bounds.str,
-					   pt->name, gettext(pt->text));
-	    }
-	}
-
-
-	 */
-
-
       }
       description->deflt.str =
         stp_string_list_param(description->bounds.str, 0)->name;
