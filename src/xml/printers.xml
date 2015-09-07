@@ -2866,7 +2866,7 @@
       <printer translate="name" name="Sony UP-DR100" driver="sony-updr100" manufacturer="Sony" model="2003" foomaticid="Sony-UP-DR100" />
       <printer translate="name" name="Sony UP-DR200" driver="sony-updr200" manufacturer="Sony" model="2004" foomaticid="Sony-UP-DR200" parameters="nativecopies" />
       <printer translate="name" name="Sony UP-CR10L" driver="sony-upcr10l" manufacturer="Sony" model="2005" foomaticid="Sony-UP-CR10L" parameters="nativecopies">EXPERIMENTAL</printer>
-      <printer translate="name" name="DNP SL10" driver="dnp-sl10" manufacturer="DNP" model="2005" foomaticid="DNP-SL10" parameters="nativecopies">EXPERIMENTAL</printer>
+      <printer translate="name" name="Dai Nippon Printing SL10" driver="dnp-sl10" manufacturer="Dai Nippon Printing" model="2005" foomaticid="DNP-SL10" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Fujifilm Printpix-CX-400" driver="fujifilm-cx400" manufacturer="Fujifilm" model="3000" foomaticid="Fujifilm-Printpix-CX-400" />
       <printer translate="name" name="Fujifilm Printpix-CX-550" driver="fujifilm-cx550" manufacturer="Fujifilm" model="3001" foomaticid="Fujifilm-Printpix-CX-550" />
       <printer translate="name" name="Fujifilm FinePix-NX-500" driver="fujifilm-nx500" manufacturer="Fujifilm" model="3002" foomaticid="Fujifilm-FinePix-NX-500" />
@@ -2915,10 +2915,10 @@
       <printer translate="name" name="Shinko CHC-S6145" deviceid="MFG:SINFONIA;CMD:SUPCC;MDL:CHC-S6145;CLS:PRINTER;DES:Thermal Dye Photo Printer;" driver="shinko-chcs6145" manufacturer="Shinko" model="5004" foomaticid="Shinko-CHC-S6145">EXPERIMENTAL</printer>
       <printer translate="name" name="Sinfonia CHC-S6145/CS2" driver="sinfonia-chcs6145" manufacturer="Sinfonia" model="5004" foomaticid="Sinfonia-CHC-S6145">EXPERIMENTAL</printer>
       <printer translate="name" name="CIAAT Brava 21" driver="ciaat-brava-21" manufacturer="CIAAT" model="5005" foomaticid="CIAAT-Brava-21">EXPERIMENTAL</printer>
-      <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="DNP" model="6000" foomaticid="DNP-DS40" parameters="nativecopies" />
-      <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="DNP" model="6001" foomaticid="DNP-DS80" parameters="nativecopies" />
-      <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="DNP" model="6002" foomaticid="DNP-DSRX1" parameters="nativecopies" />
-      <printer translate="name" name="Dai Nippon Printing DS620" driver="dnp-ds620" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS620;" manufacturer="DNP" model="6003" foomaticid="DNP-DS620" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DS40" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS40;" driver="dnp-ds40" manufacturer="Dai Nippon Printing" model="6000" foomaticid="DNP-DS40" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DS80" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS80;" driver="dnp-ds80" manufacturer="Dai Nippon Printing" model="6001" foomaticid="DNP-DS80" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DSRX1" driver="dnp-dsrx1" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DS-RX1;" manufacturer="Dai Nippon Printing" model="6002" foomaticid="DNP-DSRX1" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DS620" driver="dnp-ds620" deviceid="MANUFACTURER:Dai Nippon Printing ;MODEL:DP-DS620;" manufacturer="Dai Nippon Printing" model="6003" foomaticid="DNP-DS620" parameters="nativecopies" />
       <printer translate="name" name="Citizen CX" driver="citizen-cx" deviceid="MANUFACTURER:CITIZEN SYSTEMS ;MODEL:CX;" manufacturer="Citizen" model="6000" foomaticid="Citizen-CX" parameters="nativecopies" />
       <printer translate="name" name="Citizen CX-W" driver="citizen-cx-w" manufacturer="Citizen" model="6001" foomaticid="Citizen-CX-W" parameters="nativecopies" />
       <printer translate="name" name="Citizen CY" driver="citizen-cy" manufacturer="Citizen" model="6002" foomaticid="Citizen-CY" parameters="nativecopies" />
@@ -2927,6 +2927,7 @@
       <printer translate="name" name="Citizen CW-02" driver="citizen-cw-02" manufacturer="Citizen" model="6000" foomaticid="Citizen-CW-02" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Citizen OP900II" driver="citizen-op900ii" manufacturer="Citizen" model="6000" foomaticid="Citizen-OP900II" parameters="nativecopies">EXPERIMENTAL</printer>
       <printer translate="name" name="Mitsubishi CP-3800DW" driver="mitsubishi-cp-3800dw" manufacturer="Mitsubishi" model="6001" foomaticid="Mitsubishi-CP-3800DW" parameters="nativecopies" />
+      <printer translate="name" name="Dai Nippon Printing DS80DX" driver="dnp-ds80dx" manufacturer="Dai Nippon Printing" model="6006" foomaticid="DNP-DS80DX" parameters="nativecopies">EXPERIMENTAL</printer>
     </family>
     <family name="raw">
       <printer translate="name" name="RAW DATA 16 bit" driver="raw-data-16" manufacturer="" model="0" />
