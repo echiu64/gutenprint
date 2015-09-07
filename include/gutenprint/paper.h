@@ -64,7 +64,9 @@ typedef enum
   /** Standard paper size */
   PAPERSIZE_TYPE_STANDARD = 0,
   /** Envelope */
-  PAPERSIZE_TYPE_ENVELOPE
+  PAPERSIZE_TYPE_ENVELOPE,
+  /** Special (not normally displayed) */
+  PAPERSIZE_TYPE_SPECIAL
 } stp_papersize_type_t;
 
 /** The papersize data type. */
