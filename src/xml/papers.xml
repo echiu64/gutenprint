@@ -1692,6 +1692,13 @@
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
+    <paper name="w432h648-div2">
+      <description translate="value" value="4.5x6*2"/>
+      <width value="432"/>
+      <height value="648"/>
+      <unit value="english-extended"/>
+      <type value="special"/>      
+    </paper>    
     <paper name="w576h576-div2">
       <description translate="value" value="4x8*2"/>
       <width value="576"/>
