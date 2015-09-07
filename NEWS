@@ -263,6 +263,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Ciaat Brava 21		  [experimental]
 	Citizen CW-01 / Olmec OP900
 	DNP DS620
+	DNP DS80DX                [experimental]
 	Kodak 305		  [experimental]
 	Kodak 8810		  [experimental]
 	Kodak 7000/7010/7015	  [experimental]
@@ -279,9 +280,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	DNP DS40/DS80/RX1
 	Kodak 605
 	Kodak 6800/6850
+	Kodak 1400/805
 	Mitsubishi CP-9550 family (including the CP9550DW-S variant)
 	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]
 	Sony UP-DR200
+	Shinko S2145
 
   3) Added support for the Datamax-O'Neil PCL printers, the Performance
      series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
