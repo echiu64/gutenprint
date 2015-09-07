@@ -1657,93 +1657,93 @@
 
         They can be removed once we figure out a better paper API
     -->
-    <paper name="w288h432_div2">
+    <paper name="w288h432-div2">
       <description translate="value" value="2x6*2"/>
       <width value="288"/>
       <height value="432"/>
       <unit value="english"/>
       <type value="special"/>
     </paper>
-    <paper name="w360h504_div2">
+    <paper name="w360h504-div2">
       <description translate="value" value="3.5x5*2"/>
       <width value="360"/>
       <height value="504"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="w432h576_div2">
+    <paper name="w432h576-div2">
       <description translate="value" value="4x6*2"/>
       <width value="432"/>
       <height value="576"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="w432h576_div4">
+    <paper name="w432h576-div4">
       <description translate="value" value="2x6*4"/>
       <width value="432"/>
       <height value="576"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="w432h576_w432h432+w432h144">
+    <paper name="w432h576-w432h432_w432h144">
       <description translate="value" value="6x6+2x6"/>
       <width value="432"/>
       <height value="576"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="w576h576_div2">
+    <paper name="w576h576-div2">
       <description translate="value" value="4x8*2"/>
       <width value="576"/>
       <height value="576"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="w576h648_w576h360+w576h288">
+    <paper name="w576h648-w576h360_w576h288">
       <description translate="value" value="8x5+8x4"/>
       <width value="576"/>
       <height value="648"/>
       <unit value="english-extended"/>
     </paper>    
-    <paper name="c8x10_div2">
+    <paper name="c8x10-div2">
       <description translate="value" value="8x5*2"/>
       <width value="576"/>
       <height value="720"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="c8x10_w576h432+w576h288">
+    <paper name="c8x10-w576h432_w576h288">
       <description translate="value" value="8x6+8x4"/>
       <width value="576"/>
       <height value="720"/>
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
-    <paper name="w576h792_w576h432+w576h360">
+    <paper name="w576h792-w576h432_w576h360">
       <description translate="value" value="8x6+8x5"/>
       <width value="576"/>
       <height value="792"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w576h864_div2">
+    <paper name="w576h864-div2">
       <description translate="value" value="8x6*2"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w576h864_div3">
+    <paper name="w576h864-div3">
       <description translate="value" value="8x4*3"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w576h864_div3sheet">
+    <paper name="w576h864-div3sheet">
       <description translate="value" value="8x4*3"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
     </paper>
-    <paper name="w576h864_w576h576+w576h288">
+    <paper name="w576h864-w576h576_w576h288">
       <description translate="value" value="8x8+8x4"/>
       <width value="576"/>
       <height value="864"/>
