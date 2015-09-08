@@ -47,12 +47,15 @@ main(int argc, char **argv)
       const stp_printer_t *printer = stp_get_printer_by_index(i);
       const char *driver = stp_printer_get_driver(printer);
       const char *family = stp_printer_get_family(printer);
-      stp_vars_t *pv = stp_vars_create_copy(stp_printer_get_defaults(printer));
+      stp_vars_t *pv;
       int tcount = 0;
       size_t count;
       int printer_is_color = 0;
+
       if (strcmp(family, "ps") == 0 || strcmp(family, "raw") == 0)
 	continue;
+      
+      pv = stp_vars_create_copy(stp_printer_get_defaults(printer));      
 
       /* Set Job Mode to "Job" as this enables the Duplex option */
       stp_set_string_parameter(pv, "JobMode", "Job");
