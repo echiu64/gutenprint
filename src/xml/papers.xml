@@ -1733,24 +1733,28 @@
       <width value="576"/>
       <height value="792"/>
       <unit value="english-extended"/>
+      <type value="special"/>      
     </paper>
     <paper name="w576h864-div2">
       <description translate="value" value="8x6*2"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
+      <type value="special"/>      
     </paper>
     <paper name="w576h864-div3">
       <description translate="value" value="8x4*3"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
+      <type value="special"/>      
     </paper>
     <paper name="w576h864-div3sheet">
       <description translate="value" value="8x4*3"/>
       <width value="576"/>
       <height value="864"/>
       <unit value="english-extended"/>
+      <type value="special"/>      
     </paper>
     <paper name="w576h864-w576h576_w576h288">
       <description translate="value" value="8x8+8x4"/>
