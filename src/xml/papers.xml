@@ -154,9 +154,10 @@
     </paper>
     <paper name="w324h432">
       <description translate="value" value="4.5x6"/>
+      <comment value="Only used by DS620 dyesub printer"/>
       <width value="324"/>
       <height value="432"/>
-      <unit value="english"/>
+      <unit value="english-extended"/>
     </paper>
     <paper name="w324h495">
       <description translate="value" value="Epson 4x6 Photo Paper (tear-off borders)"/>
@@ -302,6 +303,7 @@
     </paper>
     <paper name="w612h864">
       <description translate="value" value="8.5x12"/>
+      <comment value="Only used by Kodak 1400 and 805 dyesub printers"/>
       <comment value="8.5in x 12in"/>
       <width value="612"/>
       <height value="864"/>

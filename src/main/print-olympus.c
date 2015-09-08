@@ -393,7 +393,7 @@ LIST(dyesub_resolution_list_t, p300_res_list, dyesub_resolution_t, p300_res);
 
 static const dyesub_pagesize_t p300_page[] =
 {
-  { "A6", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
+  { "A6", "A6", -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
   { "Custom", NULL, -1, -1, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
@@ -489,7 +489,7 @@ LIST(dyesub_resolution_list_t, res_314dpi_list, dyesub_resolution_t, res_314dpi)
 
 static const dyesub_pagesize_t p400_page[] =
 {
-  { "A4", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
+  { "A4", "A4", -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
   { "c8x10", "A5 wide", -1, -1, 58, 59, 84, 85, DYESUB_PORTRAIT},
   { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT},
   { "Custom", NULL, -1, -1, 22, 22, 54, 54, DYESUB_PORTRAIT},
@@ -607,7 +607,7 @@ static const char p400_adj_yellow[] =
 /* Olympus P-440 series */
 static const dyesub_pagesize_t p440_page[] =
 {
-  { "A4", NULL, -1, -1, 10, 9, 54, 54, DYESUB_PORTRAIT},
+  { "A4", "A4", -1, -1, 10, 9, 54, 54, DYESUB_PORTRAIT},
   { "c8x10", "A5 wide", -1, -1, 58, 59, 72, 72, DYESUB_PORTRAIT},
   { "C6", "2 Postcards (A4)", -1, -1, 9, 9, 9, 9, DYESUB_PORTRAIT},
   { "w255h581", "A6 wide", -1, -1, 25, 25, 25, 24, DYESUB_PORTRAIT},
@@ -702,8 +702,8 @@ static void p440_block_end_func(stp_vars_t *v)
 /* Olympus P-S100 */
 static const dyesub_pagesize_t ps100_page[] =
 {
-  { "w288h432", "4 x 6", 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},/* 4x6" */
-  { "B7", "3.5 x 5", 264, 366, 0, 0, 0, 0, DYESUB_PORTRAIT},	/* 3.5x5" */
+  { "w288h432", "4x6", 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},/* 4x6" */
+  { "B7", "3.5x5", 264, 366, 0, 0, 0, 0, DYESUB_PORTRAIT},	/* 3.5x5" */
   { "Custom", NULL, 296, 426, 0, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
@@ -1649,7 +1649,7 @@ LIST(dyesub_resolution_list_t, res_306dpi_list, dyesub_resolution_t, res_306dpi)
 
 static const dyesub_pagesize_t nx500_page[] =
 {
-  { "Postcard", NULL, -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
+  { "Postcard", "Postcard", -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
   { "Custom", NULL, -1, -1, 21, 21, 29, 29, DYESUB_PORTRAIT},
 };
 
@@ -1853,8 +1853,8 @@ static const dyesub_pagesize_t kodak_1400_page[] =
      The printer can technically print a little wider but these dimensions are
      defined by the lamination area, which is fixed.
   */
-  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
-  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "w612h864", "8.5x12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5x14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
   { "A4", "A4",       PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 0, 0, DYESUB_PORTRAIT}, /* A4, indentical to 8x12 */
 };
 
@@ -2247,8 +2247,8 @@ LIST(dyesub_printsize_list_t, kodak_7015_printsize_list, dyesub_printsize_t, kod
 /* Kodak Professional 8500 */
 static const dyesub_pagesize_t kodak_8500_page[] =
 {
-  { "w612h864", "8.5 x 12", PT(2508,314)+1, PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 8.5x12 & A4 */
-  { "Letter", "8.5 x 11", PT(2508,314)+1, PT(2954,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
+  { "w612h864", "8.5x12", PT(2508,314)+1, PT(3134,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 8.5x12 & A4 */
+  { "Letter", "8.5x11", PT(2508,314)+1, PT(2954,314)+1, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* Letter */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_8500_page_list, dyesub_pagesize_t, kodak_8500_page);
