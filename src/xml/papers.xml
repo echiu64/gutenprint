@@ -1728,6 +1728,14 @@
       <unit value="english-extended"/>
       <type value="special"/>
     </paper>
+    <paper name="w576h774-w576h756">
+      <description translate="value" value="8x10.5"/>
+      <comment value="Only used by DS80DX dyesub printer"/>
+      <width value="576"/>
+      <height value="774"/>
+      <unit value="english-extended"/>
+      <type value="special"/>      
+    </paper>    
     <paper name="w576h792-w576h432_w576h360">
       <description translate="value" value="8x6+8x5"/>
       <width value="576"/>
