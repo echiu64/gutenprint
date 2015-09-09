@@ -26,6 +26,17 @@
  * compile on generic platforms that don't support glib, gimp, gtk, etc.
  */
 
+/*
+ * To use this driver, we recommend this:
+ *
+ *   stp_set_driver(v, "raw-data-8");  // or raw_data-16 
+ *   stp_set_string_parameter(v, "PageSize", "Custom");
+ *   stp_set_page_height(v, HEIGHT);
+ *   stp_set_page_width(v, WIDTH);
+ *
+ * For further details, see  compute_thumbnail() in gutenprintui2/panel.c
+ */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -150,8 +161,8 @@ raw_parameters(const stp_vars_t *v, const char *name,
       description->bounds.str = stp_string_list_create();
       for (i = 0; i < papersizes; i++)
 	{
-	  /* XXX Need to fix this; somehow filter paper list through 
-	     real family driver. */
+	  /* All users of the raw drivers should use "Custom" PageSize
+	     and manually set page height/width! */
 	  const stp_papersize_t *pt = stp_get_papersize_by_index(i);
 	  stp_string_list_add_string(description->bounds.str,
 				     pt->name, gettext(pt->text));
@@ -162,10 +173,6 @@ raw_parameters(const stp_vars_t *v, const char *name,
   else
     description->is_active = 0;
 }
-
-/*
- * 'escp2_imageable_area()' - Return the imageable area of the page.
- */
 
 static void
 raw_imageable_area(const stp_vars_t *v,
@@ -212,9 +219,6 @@ raw_describe_output(const stp_vars_t *v)
   return "RGB";
 }
 
-/*
- * 'escp2_print()' - Print an image to an EPSON printer.
- */
 static int
 raw_print(const stp_vars_t *v, stp_image_t *image)
 {
