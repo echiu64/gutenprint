@@ -6325,7 +6325,6 @@ dyesub_do_print(stp_vars_t *v, stp_image_t *image)
   dyesub_adjust_curve(v, caps->adj_cyan, "CyanCurve");
   dyesub_adjust_curve(v, caps->adj_magenta, "MagentaCurve");
   dyesub_adjust_curve(v, caps->adj_yellow, "YellowCurve");
-  stp_set_float_parameter(v, "Density", 1.0);
 
   if (dyesub_feature(caps, DYESUB_FEATURE_FULL_HEIGHT))
     {

@@ -4590,7 +4590,6 @@ compute_thumbnail(const stp_vars_t *v)
   stp_set_page_width(nv, thumbnail_w);
   stp_set_driver(nv, "raw-data-8");
   stp_set_string_parameter(nv, "PageSize", "Custom");
-  stp_set_float_parameter(nv, "Density", 1.0);
   stp_set_float_parameter(nv, "InkLimit", 0);
   stp_set_string_parameter(nv, "InputImageType", "RGB");
   stp_clear_file_parameter(nv, "LUTDumpFile");
