@@ -281,8 +281,8 @@ LIST(dyesub_resolution_list_t, res_310dpi_list, dyesub_resolution_t, res_310dpi)
 
 static const dyesub_pagesize_t p10_page[] =
 {
-  { "w288h432", "4 x 6", 298, 430, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 4x6" */
-  { "B7", "3.5 x 5", 266, 370, 0, 0, 0, 0, DYESUB_PORTRAIT},	 /* 3.5x5" */
+  { "w288h432", "4x6", 298, 430, 0, 0, 0, 0, DYESUB_PORTRAIT}, /* 4x6" */
+  { "B7", "3.5x5", 266, 370, 0, 0, 0, 0, DYESUB_PORTRAIT},	 /* 3.5x5" */
   { "Custom", NULL, 298, 430, 28, 28, 48, 48, DYESUB_PORTRAIT},
 };
 
@@ -1908,8 +1908,8 @@ static const dyesub_pagesize_t kodak_805_page[] =
 {
   /* Identical to the Kodak 1400 except for the lack of A4 support.
      See the 1400 comments for explanations of this. */
-  { "w612h864", "8.5 x 12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
-  { "Legal", "8.5 x 14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
+  { "w612h864", "8.5x12", PT(2560,301)+1, PT(3010,301)+72*2, PT(76,301)+1, PT(76,301), 72, 72, DYESUB_PORTRAIT}, /* 8x12 */
+  { "Legal", "8.5x14", PT(2560,301)+1, PT(3612,301)+72*2, PT(35,301)+1, PT(35,301)+1, 72, 72, DYESUB_PORTRAIT}, /* 8x14 */
 };
 
 LIST(dyesub_pagesize_list_t, kodak_805_page_list, dyesub_pagesize_t, kodak_805_page);
