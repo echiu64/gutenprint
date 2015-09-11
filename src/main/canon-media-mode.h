@@ -12617,14 +12617,14 @@ DECLARE_MODEUSES(canon_PIXMA_MG8200);
 /* ----------------------------------- Canon Pro9000 ----------------------------------- */
 
 static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
-/*  "600x600dpi_high2",*/
-/*  "600x600dpi",*/
+  "600x600dpi_high2",/* exp */
+  "600x600dpi",/* exp */
   "600x600dpi_std2",
   "600x600dpi_draft",
   "600x600dpi_draft2",
   /* Mono */
-/*  "600x600dpi_highmono",*/
-/*  "600x600dpi_mono",*/
+  "600x600dpi_highmono",/* exp */
+  "600x600dpi_mono",/* exp */
   "600x600dpi_draftmono",
   "600x600dpi_draftmono2",
   NULL
@@ -12698,9 +12698,9 @@ static const char* canon_PIXMA_Pro9000_modeuses_plain[] = {
 };*/
 
 static const char* canon_PIXMA_Pro9000_modeuses_Hagaki[] = {
-/*  "600x600dpi_high3",*/
-/*  "600x600dpi_std3",*/ /*Mono High*/
-/*  "600x600dpi_std4",*/ /* bw=2 for mono */
+  "600x600dpi_high3",/* exp */
+  "600x600dpi_std3",/* exp */ /*Mono High*/
+  "600x600dpi_std4",/* exp */ /* bw=2 for mono */
   "600x600dpi_draft3",/* bw=2 for mono */
   NULL
 };
