@@ -4032,7 +4032,10 @@ static void dnpds80dx_printer_start(stp_vars_t *v)
 	
   /* If we're using roll media, act the same as a standard DS80 */
   if (!strcmp(privdata.media->name, "Roll"))
-	  return dnpds80_printer_start(v);
+    {
+      dnpds80_printer_start(v);
+      return;
+    }
 	
   /* Common code */
   dnp_printer_start_common(v);
