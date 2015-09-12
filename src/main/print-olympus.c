@@ -4293,7 +4293,7 @@ LIST(dyesub_pagesize_list_t, citizen_cw01_page_list, dyesub_pagesize_t, citizen_
 static const dyesub_printsize_t citizen_cw01_printsize[] =
 {
   { "334x334", "w252h338", 1210, 2048},
-  { "334x600", "w252h388", 2176, 2048},
+  { "334x600", "w252h338", 2176, 2048},
   { "334x334", "B7", 1210, 2048},
   { "334x600", "B7", 2176, 2048},
   { "334x334", "w288h432", 1380, 2048},

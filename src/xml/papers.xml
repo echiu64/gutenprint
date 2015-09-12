@@ -118,6 +118,7 @@
     </paper>
     <paper name="w252h338">
       <description translate="value" value="3.5x4.7"/>
+      <comment value="Only used by CW-01/OP900 dyesub printers"/>
       <width value="252"/>
       <height value="338"/>
       <unit value="english-extended"/>
@@ -187,6 +188,7 @@
     </paper>
     <paper name="w338h504">
       <description translate="value" value="4.7x7"/>
+      <comment value="Only used by CW-01/OP900 dyesub printers"/>      
       <width value="338"/>
       <height value="504"/>
       <unit value="english-extended"/>
