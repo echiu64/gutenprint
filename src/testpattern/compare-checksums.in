@@ -1,0 +1,109 @@
+#!@PERL@
+
+use strict;
+
+my (%old_modes, %old_printers, %new_modes, %new_printers);
+
+if ($#ARGV != 1) {
+    die "Usage: $0 old_checksum_file new_checksum_file\n";
+}
+
+open(OLD, $ARGV[0]) or die("Can't open old checksum file $ARGV[0]: $!\n");
+open(NEW, $ARGV[1]) or die("Can't open new checksum file $ARGV[1]: $!\n");
+
+sub get_printer($) {
+    my ($mode) = @_;
+    $mode =~ s/_PrintingMode.*//;
+    return $mode;
+}
+
+sub get_mode($) {
+    my ($mode) = @_;
+    $mode =~ s/.*_PrintingMode/PrintingMode/;
+    return $mode;
+}
+
+while (<OLD>) {
+    chomp;
+    my ($sum, $mode) = split(/ +[*]?/);
+    $mode =~ s/\.prn$//;
+    $old_modes{$mode} = $sum;
+    my ($printer) = get_printer($mode);
+    $old_printers{$printer} = 1;
+}
+
+close OLD;
+
+while (<NEW>) {
+    chomp;
+    my ($sum, $mode) = split(/ +[*]?/);
+    $mode =~ s/\.prn$//;
+    $new_modes{$mode} = $sum;
+    my ($printer) = get_printer($mode);
+    $new_printers{$printer} = 1;
+}
+
+my (%only_old_printers, %only_new_printers);
+
+foreach my $new_printer (keys %new_printers) {
+    if (! defined $old_printers{$new_printer}) {
+	$only_new_printers{$new_printer} = 1;
+    }
+}
+
+foreach my $old_printer (keys %old_printers) {
+    if (! defined $new_printers{$old_printer}) {
+	$only_old_printers{$old_printer} = 1;
+    }
+}
+
+my (@only_old_modes, @only_new_modes, @changed_modes);
+
+foreach my $old_mode (sort keys %old_modes) {
+    next if defined $only_old_printers{get_printer($old_mode)};
+    if (defined $new_modes{$old_mode}) {
+	if ($new_modes{$old_mode} ne $old_modes{$old_mode}) {
+	    push @changed_modes, $old_mode;
+	}
+    } else {
+	push @only_old_modes, $old_mode;
+    }
+}
+
+foreach my $new_mode (sort keys %new_modes) {
+    next if defined $only_new_printers{get_printer($new_mode)};
+    if (!defined $old_modes{$new_mode}) {
+	push @only_new_modes, $new_mode;
+    }
+}
+
+my (@only_old_printers) = sort keys %only_old_printers;
+my (@only_new_printers) = sort keys %only_new_printers;
+
+sub print_changes($$@) {
+    my ($tag, $detail, @changes) = @_;
+    my ($prev_printer);
+    return if ($#changes < 0);
+    print "$tag:\n";
+    foreach my $m (@changes) {
+	my ($printer) = get_printer($m);
+	my ($mode) = get_mode($m);
+	if ($detail) {
+	    if ($printer ne $prev_printer) {
+		print "    $printer:\n";
+		$prev_printer = $printer;
+	    }
+	    print "        $mode\n";
+	} else {
+	    print "    $mode\n";
+	}
+    }
+    print "\n";
+}
+
+print "*** Changes from $ARGV[0] to $ARGV[1] ***\n\n";
+print_changes("Printers removed from $ARGV[1]", 0, @only_old_printers);
+print_changes("Printers added to $ARGV[1]", 0, @only_new_printers);
+print_changes("Modes removed from $ARGV[1]", 1, @only_old_modes);
+print_changes("Modes added to $ARGV[1]", 1, @only_new_modes);
+print_changes("Changed printing modes", 1, @changed_modes);

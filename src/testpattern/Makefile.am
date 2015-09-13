@@ -34,7 +34,7 @@ TESTS = run-testpattern-1 run-testpattern-2
 if BUILD_TESTPATTERN
 bin_PROGRAMS = testpattern
 noinst_PROGRAMS = printers printer_options
-noinst_SCRIPTS = run-testpattern-2
+noinst_SCRIPTS = run-testpattern-2 compare-checksums
 endif
 
 AM_LFLAGS = -i
@@ -61,5 +61,5 @@ endif
 
 MAINTAINERCLEANFILES = Makefile.in testpatternl.c testpatterny.c testpatterny.h
 
-EXTRA_DIST =  testpatterny.h $(pkgdata_DATA) run-testpattern run-testpattern-1
+EXTRA_DIST =  testpatterny.h $(pkgdata_DATA) run-testpattern run-testpattern-1 compare-checksums.in
 
