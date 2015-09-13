@@ -213,6 +213,7 @@
     </paper>
     <paper name="w432h432">
       <description translate="value" value="6x6"/>
+      <comment value="Only used by certain dyesub models"/>
       <width value="432"/>
       <height value="432"/>
       <unit value="english-extended"/>
@@ -225,6 +226,7 @@
     </paper>
     <paper name="w432h612">
       <description translate="value" value="6x8.5"/>
+      <comment value="Only used by certain Mitsubishi dyesub models"/>
       <width value="432"/>
       <height value="612"/>
       <unit value="english-extended"/>
@@ -279,12 +281,14 @@
 -->
     <paper name="w360h360">
       <description translate="value" value="5x5"/>
+      <comment value="Only used by certain dyesub models"/>
       <width value="360"/>
       <height value="360"/>
       <unit value="english-extended"/>
     </paper>
     <paper name="w576h576">
       <description translate="value" value="8x8"/>
+      <comment value="Only used by certain dyesub models"/>
       <width value="576"/>
       <height value="576"/>
       <unit value="english-extended"/>
