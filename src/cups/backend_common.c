@@ -589,7 +589,6 @@ static int find_and_enumerate(struct libusb_context *ctx,
 
 	for (i = 0 ; i < num ; i++) {
 		struct libusb_device_descriptor desc;
-		int match = 0;
 		libusb_get_device_descriptor((*list)[i], &desc);
 
 		for (k = 0 ; backends[k] ; k++) {
@@ -602,22 +601,19 @@ static int find_and_enumerate(struct libusb_context *ctx,
 					if (backends[k]->devices[j].type == extra_type &&
 					    extra_vid == desc.idVendor &&
 					    extra_pid == desc.idProduct) {
-						match = 1;
 						found = i;
 						goto match;
 					}
 				}
 				if (desc.idVendor == backends[k]->devices[j].vid &&
 				    desc.idProduct == backends[k]->devices[j].pid) {
-					match = 1;
 					found = i;
 					goto match;
 				}
 			}
 		}
 
-		if (!match)
-			continue;
+		continue;
 
 	match:
 		found = print_scan_output((*list)[i], &desc,

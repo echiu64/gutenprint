@@ -88,14 +88,19 @@ struct kodak68x0_status_readback {
 } __attribute__((packed));
 
 enum {
+	CMD_CODE_OK = 1,
+	CMD_CODE_BAD = 2,
+};
+
+enum {
         STATUS_PRINTING = 1,
         STATUS_IDLE = 2,
 };
 
 enum {
-        STATUS1_STANDBY = 1,
-        STATUS1_ERROR = 2,
-        STATUS1_WAIT = 3,
+        STATE_STATUS1_STANDBY = 1,
+        STATE_STATUS1_ERROR = 2,
+        STATE_STATUS1_WAIT = 3,
 };
 
 #define STATE_STANDBY_STATUS2 0x0
@@ -299,7 +304,7 @@ static int kodak6800_get_mediainfo(struct kodak6800_ctx *ctx, struct kodak68x0_m
 		return ret;
 
 	/* Validate proper response */
-	if (media->hdr != 0x01 ||
+	if (media->hdr != CMD_CODE_OK ||
 	    media->null[0] != 0x00) {
 		ERROR("Unexpected response from media query!\n");
 		return CUPS_BACKEND_STOP;
@@ -332,7 +337,7 @@ static int kodak68x0_canceljob(struct kodak6800_ctx *ctx,
 		return ret;
 
 	/* Validate proper response */
-	if (sts.hdr != 0x01) {
+	if (sts.hdr != CMD_CODE_OK) {
 		ERROR("Unexpected response from job cancel!\n");
 		return -99;
 	}
@@ -344,9 +349,9 @@ static int kodak68x0_canceljob(struct kodak6800_ctx *ctx,
 static char *kodak68x0_status_str(struct kodak68x0_status_readback *resp)
 {
         switch(resp->status1) {
-        case STATUS1_STANDBY:
+        case STATE_STATUS1_STANDBY:
                 return "Standby (Ready)";
-        case STATUS1_WAIT:
+        case STATE_STATUS1_WAIT:
                 switch (be32_to_cpu(resp->status2)) {
                 case WAIT_STATUS2_INIT:
                         return "Wait (Initializing)";
@@ -361,7 +366,7 @@ static char *kodak68x0_status_str(struct kodak68x0_status_readback *resp)
                 default:
                         return "Wait (Unknown)";
                 }
-        case STATUS1_ERROR:
+        case STATE_STATUS1_ERROR:
                 switch (be32_to_cpu(resp->status2)) {
                 case ERROR_STATUS2_CTRL_CIRCUIT:
                         switch (resp->errcode) {
@@ -514,6 +519,22 @@ static void kodak68x0_dump_status(struct kodak6800_ctx *ctx, struct kodak68x0_st
 	INFO("\tPrints:  %d/%d complete\n",
 	     be16_to_cpu(status->b2_complete), be16_to_cpu(status->b2_total));
 
+	switch (status->curve_status) {
+	case CURVE_TABLE_STATUS_INITIAL:
+		detail = "Initial/Default";
+		break;
+	case CURVE_TABLE_STATUS_USERSET:
+		detail = "User Stored";
+		break;
+	case CURVE_TABLE_STATUS_CURRENT:
+		detail = "Current";
+		break;
+	default:
+		detail = "Unknown";
+		break;
+	}
+	INFO("Tone Curve Status: %s\n", detail);
+
 	INFO("Counters:\n");
 	INFO("\tLifetime     :  %d\n", be32_to_cpu(status->lifetime));
 	INFO("\tThermal Head :  %d\n", be32_to_cpu(status->maint));
@@ -565,7 +586,7 @@ static int kodak6800_get_status(struct kodak6800_ctx *ctx,
 		return ret;
 
 	/* Validate proper response */
-	if (status->hdr != 0x01) {
+	if (status->hdr != CMD_CODE_OK) {
 		ERROR("Unexpected response from status query!\n");
 		return -99;
 	}
@@ -614,9 +635,10 @@ static int kodak6800_get_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 				    &num)))
 
 	/* Validate proper response */
-	if (respbuf[0] != 0x01) {
+	if (respbuf[0] != CMD_CODE_OK) {
 		ERROR("Unexpected response from tonecurve query!\n");
-		return -99;
+		ret = -99;
+		goto done;
 	}
 
 	/* Then we can poll the data */
@@ -735,9 +757,10 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 		goto done;
 	}
 
-	if (respbuf[0] != 0x01) {
+	if (respbuf[0] != CMD_CODE_OK) {
 		ERROR("Unexpected response from tonecurve set!\n");
-		return -99;
+		ret = -99;
+		goto done;
 	}
 
 	ptr = (uint8_t*) data;
@@ -761,9 +784,10 @@ static int kodak6800_set_tonecurve(struct kodak6800_ctx *ctx, char *fname)
 			ret = 4;
 			goto done;
 		}
-		if (respbuf[0] != 0x01) {
+		if (respbuf[0] != CMD_CODE_OK) {
 			ERROR("Unexpected response from tonecurve set!\n");
-			return -99;
+			ret = -99;
+			goto done;
 		}
 	};
 
@@ -839,7 +863,7 @@ static int kodak6850_send_init(struct kodak6800_ctx *ctx)
 		return CUPS_BACKEND_FAILED;
 	}
 
-	if (rdbuf[0] != 0x01 ||
+	if (rdbuf[0] != CMD_CODE_OK ||
 	    rdbuf[2] != 0x43) {
 		ERROR("Unexpected response from printer init!\n");
 		return CUPS_BACKEND_FAILED;
@@ -1054,7 +1078,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		if (kodak6800_get_status(ctx, &status))
 			return CUPS_BACKEND_FAILED;
 
-		if (status.status1 == STATUS1_ERROR) {
+		if (status.status1 == STATE_STATUS1_ERROR) {
 			INFO("Printer State: %s # %02x %08x %02x\n",
 				kodak68x0_status_str(&status),
 				status.status1, be32_to_cpu(status.status2), status.errcode);
@@ -1096,7 +1120,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 				    &num)))
 		return ret;
 
-	if (status.hdr != 0x01) {
+	if (status.hdr != CMD_CODE_OK) {
 		ERROR("Unexpected response from print command!\n");
 		return CUPS_BACKEND_FAILED;
 	}
@@ -1113,7 +1137,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 		if (kodak6800_get_status(ctx, &status))
 			return CUPS_BACKEND_FAILED;
 
-		if (status.status1 == STATUS1_ERROR) {
+		if (status.status1 == STATE_STATUS1_ERROR) {
 			INFO("Printer State: %s # %02x %08x %02x\n",
 				kodak68x0_status_str(&status),
 				status.status1, be32_to_cpu(status.status2), status.errcode);
@@ -1141,7 +1165,7 @@ static int kodak6800_main_loop(void *vctx, int copies) {
 /* Exported */
 struct dyesub_backend kodak6800_backend = {
 	.name = "Kodak 6800/6850",
-	.version = "0.50",
+	.version = "0.51",
 	.uri_prefix = "kodak6800",
 	.cmdline_usage = kodak6800_cmdline,
 	.cmdline_arg = kodak6800_cmdline_arg,

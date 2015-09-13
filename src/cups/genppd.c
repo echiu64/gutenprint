@@ -579,8 +579,6 @@ main(int  argc,			    /* I - Number of command-line arguments */
 	models[n] = argv[optind+n];
       }
     models[numargs] = (char*)NULL;
-
-    n=0;
   }
 
 /*
