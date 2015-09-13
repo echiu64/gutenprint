@@ -5810,7 +5810,7 @@ dyesub_describe_output_internal(const stp_vars_t *v, dyesub_print_vars_t *pv)
   int i;
 
   pv->ink_channels = 1;
-  pv->ink_order = NULL;
+  pv->ink_order = "\1";
   output_type = "CMY";
 
   if (ink_type)
