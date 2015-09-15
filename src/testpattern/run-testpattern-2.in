@@ -171,7 +171,7 @@ Usage: run-testpattern-2 [opts] [model ...]
     -RR             Use only the minimum resolution, and do not test other
                     resolutions.
     -X              Repeat specified cases listed on standard input.
-    -N              Do not set unused options
+    -N              Supply all requested options, even if unused.
 
   Miscellaneous options:
     -i              Use the installed Gutenprint libraries rather than
