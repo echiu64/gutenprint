@@ -648,28 +648,18 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
   6) Canon backend bugfixes:
 
-     A problem with a new ink level compression added in 5.2.7 has
-     affected multiple printer models. The affected models have been
-     modified accordingly, as described below. As a result, media choice
-     has been limited for the MP, iP and Pro series, only draft-quality
-     printing for plain, Hagaki and Envelope media (and monochrome photo
-     printing in some cases) is currently possible.
+     6.1 ink compression fixed
 
-     The following printer models have had their modes set back to what
-     they were in 5.2.7, namely the same as the BJC-8200. These modes
-     are not detected in the Windows driver; however, they appear to
-     work, while most detected modes are currently not workable owing to
-     unsolved compression of ink levels. Remaining newer workable modes
-     without problematic compression can be used.
+     A problem with a new ink level compression added in 5.2.7 had
+     affected multiple printer models. The bug has been fixed in the
+     present release, thus all modes previously affected should work
+     normally.
+
+     The list of models to which this applies is as follows:
 
 	Canon BJC S600
 	Canon BJC S630
 	Canon BJC S800
-
-     The following newer printer models added since 5.2.7 have also had
-     their modes set to those of the BJC-8200, for the same reason as above.
-     Remaining newer modes without problematic compression can be used.
-
 	Canon BJC S820
 	Canon BJC S900
 	Canon BJC S9000
@@ -685,11 +675,6 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon BJC 990i
 	Canon BJC 9100i
 	Canon BJC 9900i
-
-     The following newer print models added since 5.2.7 have had modes
-     with the problematic ink sets removed. Some of these printers can
-     use monochrome modes to print on photo media.
-
 	Canon MP900
 	Canon iP7100
 	Canon iP8100
@@ -700,6 +685,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon Pro 9000 Mk.II
 	Canon Pro 9500
 	Canon Pro 9500 Mk.II
+
+    6.2 legacy modes reinstated
+
+    Modes removed in 5.2.7 were reinstated marked as legacy modes for
+    the following models:
+
+        Canon BJC S300
+	Canon BJC S600
+	Canon BJC S630
+	Canon BJC S800
 
 * Changes from 5.2.9
 

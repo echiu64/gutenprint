@@ -105,26 +105,26 @@ pack_pixels3_5(unsigned char* buf,int len)
 {
   int read_pos = 0;
   int write_pos = 0;
-  int shift = 4; /* was 7 */
+  int shift = 4;
   while(read_pos < len)
   {
     /* read 3pixels at 4 bit */
     unsigned short value = buf[read_pos] << 8;
     if(read_pos+1 < len)
       value += buf[read_pos + 1];
-    if(shift)
+    if(shift)       /*4,0*/
       value >>= shift;
     /* write 8bit value representing the 12 bit pixel combination */
     buf[write_pos] = twelve2eight[value & 4095];
     ++write_pos;
     if(shift == 0)
     {
-      shift = 4;/* was 7 */
+      shift = 4;
       read_pos += 2;
     }
     else
     {
-      shift -= 4;/* was 1 */
+      shift -= 4;
       ++read_pos;
     }
   }
@@ -137,26 +137,26 @@ pack_pixels3_6(unsigned char* buf,int len)
 {
   int read_pos = 0;
   int write_pos = 0;
-  int shift = 4;/* was 7 */
+  int shift = 4;
   while(read_pos < len)
   {
     /* read 3pixels at 4 bit */
     unsigned short value = buf[read_pos] << 8;
     if(read_pos+1 < len)
       value += buf[read_pos + 1];
-    if(shift)
+    if(shift)       /*4,0*/
       value >>= shift;
     /* write 8bit value representing the 12 bit pixel combination */
     buf[write_pos] = twelve2eight2[value & 4095];
     ++write_pos;
     if(shift == 0)
     {
-      shift = 4;/* was 7 */
+      shift = 4;
       read_pos += 2;
     }
     else
     {
-      shift -= 4;/* was 1 */
+      shift -= 4;
       ++read_pos;
     }
   }
