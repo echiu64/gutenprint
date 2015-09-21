@@ -308,7 +308,7 @@
       <printer translate="name" name="Canon PIXMA iP8100" driver="bjc-PIXMA-iP8100" manufacturer="Canon" model="3008100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8100">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS iP8100" driver="bjc-PIXUS-iP8100" manufacturer="Canon" model="3008100" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8100">EXPERIMENTAL</printer>
       <!-- Canon iP8500 -->
-      <printer translate="name" name="Canon PIXMA iP8500" driver="bjc-PIXMA-iP8500" manufacturer="Canon" model="3008500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8500">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA iP8500" deviceid="MFG:Canon;MDL:iP8500;CMD:BJL,BJRaster3,BSCCe;" driver="bjc-PIXMA-iP8500" manufacturer="Canon" model="3008500" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8500">EXPERIMENTAL</printer>
       <!-- Canon iP8600 (PIXUS only, PIXMA iP8600 does not exist) -->
       <printer translate="name" name="Canon PIXMA iP8600" driver="bjc-PIXMA-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-iP8600">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS iP8600" driver="bjc-PIXUS-iP8600" manufacturer="Canon" model="3008600" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-iP8600">EXPERIMENTAL</printer>
