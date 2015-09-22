@@ -375,17 +375,9 @@
       <printer translate="name" name="Canon Pro9500 Mk.II series" driver="bjc-Pro9500mk2-series" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-Pro9500-Mk2-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA Pro9500mk2" driver="bjc-PIXMA-Pro9500mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXMA-Pro9500- Mk2">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXUS Pro9500mk2" driver="bjc-PIXUS-Pro9500mk2" manufacturer="Canon" model="7009502" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-Pro9500-Mk2">EXPERIMENTAL</printer>
-      <!-- Canon MPC190 family -->
-      <printer translate="name" name="Canon SmartBase MPC190" driver="bjc-SmartBase-MPC190" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC190">EXPERIMENTAL</printer>
-      <!-- Canon MPC200 family -->
-      <printer translate="name" name="Canon SmartBase MPC200" driver="bjc-SmartBase-MPC200" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC200">EXPERIMENTAL</printer>
       <!-- Canon MPC400 family -->
       <printer translate="name" name="Canon SmartBase MPC400" driver="bjc-SmartBase-MPC400" manufacturer="Canon" model="16000400" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC400">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon SmartBase MPC600F" driver="bjc-SmartBase-MPC600F" manufacturer="Canon" model="16000400" parameters="PIXMA_iP4000_params" foomaticid="Canon-SmartBase-MPC600F">EXPERIMENTAL</printer>
-      <!-- Canon MP5 family -->
-      <printer translate="name" name="Canon PIXUS MP5" driver="bjc-PIXUS-MP5" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-MP5">EXPERIMENTAL</printer>
-      <!-- Canon MP10 family -->
-      <printer translate="name" name="Canon PIXUS MP10" driver="bjc-PIXUS-MP10" manufacturer="Canon" model="5000005" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-MP10">EXPERIMENTAL</printer>
       <!-- Canon MP55 family -->
       <printer translate="name" name="Canon PIXUS MP55" driver="bjc-PIXUS-MP55" manufacturer="Canon" model="5000055" parameters="PIXMA_iP4000_params" foomaticid="Canon-PIXUS-MP55">EXPERIMENTAL</printer>
       <!-- Canon MP140 family -->

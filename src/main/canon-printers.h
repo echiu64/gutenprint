@@ -2509,7 +2509,10 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     iP4500_channel_order
   },
-    { /* Canon PIXMA MP5, MP10, MPC190, MPC200 */
+    { /* Canon PIXUS MP5, PIXUS MP10, SmartBase MPC190, SmartBase MPC200 */
+      /* these printers declare themselves as USB mass storage devices
+	 rather than printers, and require a special backend. Thus
+	 they are not currently included in the supported printers */
     "PIXMA MP5", 3,          /*model, model_id*/
     INCH(17/2), INCH(23),       /* max paper width and height */ /* assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
@@ -2526,7 +2529,9 @@ static const canon_cap_t canon_model_capabilities[] =
     NULL,
     NULL /* KYMC */
   },
-  { /* Canon PIXMA MP55 */
+  { /* Canon PIXUS MP55 */
+    /* Unknown if requires special backend or not, left in supported
+       printers as experimental */
     "PIXMA MP55", 3,          /*model, model_id*/
     INCH(17/2), INCH(23),       /* max paper width and height */ /* assumed */
     10, 10, 9, 15,    /*border_left, border_right, border_top, border_bottom */
