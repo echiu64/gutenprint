@@ -663,7 +663,7 @@ static const canon_mode_t canon_BJC_i950_modes[] = {
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono4",N_("600x600 DPI MONO LOW Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},/* untested */
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono5",N_("600x600 DPI MONO DRAFT Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
 };
-DECLARE_MODES(canon_BJC_i950,5);
+DECLARE_MODES(canon_BJC_i950,2);
 
 /* inkjetHagaki, Hagaki and CD from 960i */
 static const canon_mode_t canon_BJC_i960_modes[] = {
@@ -704,7 +704,7 @@ static const canon_mode_t canon_BJC_i960_modes[] = {
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono4",N_("600x600 DPI MONO LOW Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono5",N_("600x600 DPI MONO DRAFT Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
 };
-DECLARE_MODES(canon_BJC_i960,5);
+DECLARE_MODES(canon_BJC_i960,2);
 
 /* inkjetHagaki and Hagaki from 990i */
 static const canon_mode_t canon_BJC_i990_modes[] = {
@@ -741,7 +741,7 @@ static const canon_mode_t canon_BJC_i990_modes[] = {
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono4",N_("600x600 DPI MONO LOW Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono5",N_("600x600 DPI MONO DRAFT Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
 };
-DECLARE_MODES(canon_BJC_i990,5);
+DECLARE_MODES(canon_BJC_i990,2);
 
 /* inkjetHagaki and Hagaki from 6100i */
 static const canon_mode_t canon_BJC_i6100_modes[] = {
@@ -803,7 +803,7 @@ static const canon_mode_t canon_BJC_i9100_modes[] = {
   {  600, 600,CANON_INK_CMYK,"600x600dpi_draft3",N_("600x600 DPI DRAFT Env/Hagaki"),INKSET(9_C2M2Y2K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono2",N_("600x600 DPI MONO DRAFT Env/Hagaki"),INKSET(9_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
 };
-DECLARE_MODES(canon_BJC_i9100,4);
+DECLARE_MODES(canon_BJC_i9100,1);
 
 static const canon_mode_t canon_BJC_i9900_modes[] = {
   /* plain modes */
@@ -837,7 +837,7 @@ static const canon_mode_t canon_BJC_i9900_modes[] = {
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono4",N_("600x600 DPI MONO LOW Env/Hagaki"),INKSET(11_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,1},
   {  600, 600,CANON_INK_K,"600x600dpi_draftmono5",N_("600x600 DPI MONO DRAFT Env/Hagaki"),INKSET(11_K2),16,MODE_FLAG_EXTENDED_T|MODE_FLAG_IP8500,NULL,1.0,1.0,NULL,NULL,NULL,0},
 };
-DECLARE_MODES(canon_BJC_i9900,4);
+DECLARE_MODES(canon_BJC_i9900,1);
 
 static const canon_mode_t canon_BJC_8200_modes[] = {
   { 1200,1200,CANON_INK_CMYK,"1200x1200dpi",N_("1200x1200 DPI"),INKSET(6_C2M2Y2K2c2m2),8,0,NULL,1.0,1.0,NULL,NULL,NULL,2},
@@ -1090,7 +1090,7 @@ static const canon_mode_t canon_BJC_S820_modes[] = {
   /* T-Shirt */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(9_C5M5Y5K5_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_S820,5);
+DECLARE_MODES(canon_BJC_S820,2);
 
 static const canon_mode_t canon_BJC_S900_modes[] = {
   /* plain modes --- also for Env/Hagaki */
@@ -1116,7 +1116,7 @@ static const canon_mode_t canon_BJC_S900_modes[] = {
   /* T-Shirt */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_tshirt",N_("600x600 DPI T-SHIRT"),INKSET(9_C5M5Y5K5_c),16,MODE_FLAG_EXTENDED_T,NULL,1.0,1.0,NULL,NULL,NULL,2},
 };
-DECLARE_MODES(canon_BJC_S900,4);
+DECLARE_MODES(canon_BJC_S900,1);
 
 /* no K used in any modes */
 static const canon_mode_t canon_PIXMA_mini220_modes[] = {
@@ -3497,7 +3497,7 @@ static const canon_mode_t canon_PIXMA_Pro9500_modes[] = {
 /* this has k instead of K --- also CD */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photomono",N_("600x600 DPI MONO PHOTO / CD"),INKSET(11_C16M16Y16k16),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,4},
 };
-DECLARE_MODES(canon_PIXMA_Pro9500,0);
+DECLARE_MODES(canon_PIXMA_Pro9500,1);
 
 /* all modes use normal BJ ink and format codes */
 /* However, most modes use RGH inks as well as CMYKcmyk, and so cannot be currently supported */
@@ -3518,7 +3518,7 @@ static const canon_mode_t canon_PIXMA_Pro9500mk2_modes[] = {
 /* this has k instead of K --- also CD */
   {  600, 600,CANON_INK_CMYK,"600x600dpi_photomono",N_("600x600 DPI MONO PHOTO / CD"),INKSET(11_C16M16Y16k16),8,MODE_FLAG_EXTENDED_T|MODE_FLAG_CD,NULL,1.0,1.0,NULL,NULL,NULL,4},
 };
-DECLARE_MODES(canon_PIXMA_Pro9500mk2,0);
+DECLARE_MODES(canon_PIXMA_Pro9500mk2,1);
 
 /* iP7100 */
 /* ESC (r command is 0x64 but another one befor data is sent: ESC (r 0x62 0x0 */
