@@ -293,7 +293,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   4) Added common Imperial and Metric label sizes to the Paper Selection
      menu.
 
-  5) Canon backend enhancements.
+  5) Canon inkjet driver enhancements:
 
      Added support for following models:
 
@@ -642,9 +642,9 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	Canon BJC 4300
 
-  6) Canon backend bugfixes:
+  6) Canon inkjet driver bugfixes:
 
-     6.1 ink compression fixed
+     6.1 Ink compression fixed
 
      A problem with a new ink level compression added in 5.2.7 had
      affected multiple printer models. The bug has been fixed in the
@@ -682,15 +682,16 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 	Canon Pro 9500
 	Canon Pro 9500 Mk.II
 
-    6.2 legacy modes reinstated
+     6.2 Legacy modes reinstated
 
-    Modes removed in 5.2.7 were reinstated marked as legacy modes for
-    the following models:
+     Modes removed in 5.2.7 were reinstated marked as legacy modes for
+     the following models:
 
         Canon BJC S300
 	Canon BJC S600
 	Canon BJC S630
 	Canon BJC S800
+
 
 * Changes from 5.2.9
 
