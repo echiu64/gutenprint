@@ -807,15 +807,15 @@
       <!-- Canon MG5700 family -->
       <printer translate="name" name="Canon MG5700 series" driver="bjc-MG5700-series" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG5700-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5710" driver="bjc-PIXMA-MG5710" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5710">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5720" driver="bjc-PIXMA-MG5720" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5720">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5721" driver="bjc-PIXMA-MG5721" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5721">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5722" driver="bjc-PIXMA-MG5722" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5722">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5720" driver="bjc-PIXMA-MG5720" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5720">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG5721" driver="bjc-PIXMA-MG5721" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5721">EXPERIMENTAL</printer><!-- silver/black model -->
+      <printer translate="name" name="Canon PIXMA MG5722" driver="bjc-PIXMA-MG5722" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5722">EXPERIMENTAL</printer><!-- silver/white model -->
       <printer translate="name" name="Canon PIXUS MG5730" driver="bjc-PIXUS-MG5730" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG5730">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5740" driver="bjc-PIXMA-MG5740" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5740">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5750" driver="bjc-PIXMA-MG5750" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5750">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5751" driver="bjc-PIXMA-MG5751" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5751">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5752" driver="bjc-PIXMA-MG5752" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5752">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG5753" driver="bjc-PIXMA-MG5753" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5753">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG5750" driver="bjc-PIXMA-MG5750" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5750">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG5751" driver="bjc-PIXMA-MG5751" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5751">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA MG5752" driver="bjc-PIXMA-MG5752" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5752">EXPERIMENTAL</printer><!-- silver/black model -->
+      <printer translate="name" name="Canon PIXMA MG5753" driver="bjc-PIXMA-MG5753" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5753">EXPERIMENTAL</printer><!-- silver/white model -->
       <printer translate="name" name="Canon PIXMA MG5770" driver="bjc-PIXMA-MG5770" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5770">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5780" driver="bjc-PIXMA-MG5780" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5780">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG5790" driver="bjc-PIXMA-MG5790" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG5790">EXPERIMENTAL</printer>
@@ -879,16 +879,19 @@
       <!-- Canon MG6800 family -->
       <printer translate="name" name="Canon MG6800 series" driver="bjc-MG6800-series" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG6800-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG6810" driver="bjc-PIXMA-MG6810" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6810">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6820" driver="bjc-PIXMA-MG6820" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6820">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6821" driver="bjc-PIXMA-MG6821" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6821">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6822" driver="bjc-PIXMA-MG6822" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6822">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG6820" driver="bjc-PIXMA-MG6820" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6820">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG6821" driver="bjc-PIXMA-MG6821" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6821">EXPERIMENTAL</printer><!-- silver/black model -->
+      <printer translate="name" name="Canon PIXMA MG6822" driver="bjc-PIXMA-MG6822" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6822">EXPERIMENTAL</printer><!-- silver/white model -->
       <printer translate="name" name="Canon PIXMA MG6840" driver="bjc-PIXMA-MG6840" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6840">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6850" driver="bjc-PIXMA-MG6850" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6850">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6851" driver="bjc-PIXMA-MG6851" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6851">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6852" driver="bjc-PIXMA-MG6852" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6852">EXPERIMENTAL</printer>
-      <printer translate="name" name="Canon PIXMA MG6853" driver="bjc-PIXMA-MG6853" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6853">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG6850" driver="bjc-PIXMA-MG6850" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6850">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG6851" driver="bjc-PIXMA-MG6851" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6851">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA MG6852" driver="bjc-PIXMA-MG6852" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6852">EXPERIMENTAL</printer><!-- silver/black model -->
+      <printer translate="name" name="Canon PIXMA MG6853" driver="bjc-PIXMA-MG6853" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6853">EXPERIMENTAL</printer><!-- silver/white model -->
       <printer translate="name" name="Canon PIXMA MG6870" driver="bjc-PIXMA-MG6870" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6870">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG6880" driver="bjc-PIXMA-MG6880" manufacturer="Canon" model="8005700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG6880">EXPERIMENTAL</printer>
+      <!-- Canon MG6900 family -->
+      <printer translate="name" name="Canon MG6900 series" driver="bjc-MG6900-series" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG6900-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS MG6930" driver="bjc-PIXUS-MG6930" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG6930">EXPERIMENTAL</printer>
       <!-- Canon MG7100 family -->
       <printer translate="name" name="Canon MG7100 series" driver="bjc-MG7100-series" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG7100-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG7110" driver="bjc-PIXMA-MG7110" manufacturer="Canon" model="8006500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7110">EXPERIMENTAL</printer>
@@ -910,6 +913,20 @@
       <printer translate="name" name="Canon PIXMA MG7570" driver="bjc-PIXMA-MG7570" manufacturer="Canon" model="8007500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7570">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon Mommy Photo MG7570" driver="bjc-Mommy-Photo-MG7570" manufacturer="Canon" model="8007500" parameters="PIXMA_iP4300_params" foomaticid="Canon-Mommy-Photo-MG7570">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG7580" driver="bjc-PIXMA-MG7580" manufacturer="Canon" model="8007500" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7580">EXPERIMENTAL</printer>
+      <!-- Canon MG7700 family -->
+      <printer translate="name" name="Canon MG7700 series" driver="bjc-MG7700-series" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG7700-series">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG7710" driver="bjc-PIXMA-MG7710" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7710">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG7720" driver="bjc-PIXMA-MG7720" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7720">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS MG7730" driver="bjc-PIXUS-MG7730" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG7730">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXUS MG7730F" driver="bjc-PIXUS-MG7730F" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXUS-MG7730F">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG7740" driver="bjc-PIXMA-MG7740" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7740">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG7750" driver="bjc-PIXMA-MG7750" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7750">EXPERIMENTAL</printer><!-- black model -->
+      <printer translate="name" name="Canon PIXMA MG7751" driver="bjc-PIXMA-MG7751" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7751">EXPERIMENTAL</printer><!-- white model -->
+      <printer translate="name" name="Canon PIXMA MG7752" driver="bjc-PIXMA-MG7752" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7752">EXPERIMENTAL</printer><!-- red model -->
+      <printer translate="name" name="Canon PIXMA MG7753" driver="bjc-PIXMA-MG7753" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7753">EXPERIMENTAL</printer><!-- gold model -->
+      <printer translate="name" name="Canon PIXMA MG7770" driver="bjc-PIXMA-MG7770" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7770">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG7780" driver="bjc-PIXMA-MG7780" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7780">EXPERIMENTAL</printer>
+      <printer translate="name" name="Canon PIXMA MG7790" driver="bjc-PIXMA-MG7790" manufacturer="Canon" model="8007700" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG7790">EXPERIMENTAL</printer>
       <!-- Canon MG8100 family -->
       <printer translate="name" name="Canon MG8100 series" driver="bjc-MG8100-series" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-MG8100-series">EXPERIMENTAL</printer>
       <printer translate="name" name="Canon PIXMA MG8100" driver="bjc-PIXMA-MG8100" manufacturer="Canon" model="8008100" parameters="PIXMA_iP4300_params" foomaticid="Canon-PIXMA-MG8100">EXPERIMENTAL</printer>

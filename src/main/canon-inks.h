@@ -100,6 +100,9 @@ static const stp_dotsize_t dotsizes_3l[] = {
 
 DECLARE_INK(2,3);
 
+/*under development*/
+DECLARE_INK(4,3);
+
 DECLARE_INK_EXTENDED(2,3,INK_FLAG_5pixel_in_1byte);
 
 static const stp_dotsize_t dotsizes_4l[] = {
@@ -2936,7 +2939,7 @@ static const canon_inkset_t canon_22_C4M4Y4K2c4m4k4on_inkset[] = {
 
 
 /* fast */
-/* MP990, MG6100, MG800 */
+/* MP990, MG6100, MG6200, MG6900, MG7700, MG8100, MG8200 */
 /* reorder: KCcMmYyk*H* not sure what the 2 missing ones are but they are only needed for ud1 anyway */
 static const canon_inkset_t canon_30_K2C2M2Y2_inkset[] = {
         {'K',1.0,&canon_1b_2l_ink},
@@ -3079,6 +3082,41 @@ static const canon_inkset_t canon_30_K2C6M6Y4k4_inkset[] = {
 };
 
 /* standard */
+/* MG6900, MG7700 */
+static const canon_inkset_t canon_30_K3C3M3Y2k3off2bit_inkset[] = {
+        {'K',1.0,&canon_2b_3l_ink},
+        {'C',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_2b_2l_ink},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_2b_3l_ink}, /* will not use it, but need to specify it */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* standard */
 /* MG6300, MG6500, MG7100, iP8700 */
 static const canon_inkset_t canon_30_K3C3M3Y2k3off_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
@@ -3089,6 +3127,41 @@ static const canon_inkset_t canon_30_K3C3M3Y2k3off_c_inkset[] = {
         {'Y',1.0,&canon_1b_2l_ink},
         {0,0.0,NULL},
         {'k',0.0,&canon_2b_3l_c_ink}, /* will not use it, but need to specify it */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* standard duplex */
+/* MG6900, MG7700 */
+static const canon_inkset_t canon_30_K3C3M3Y2k3on2bit_inkset[] = {
+        {'K',1.0,&canon_2b_3l_ink},
+        {'C',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_2b_3l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_2b_2l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_3l_ink},
         {0,0.0,NULL},
         {0,0.0,NULL},
         {0,0.0,NULL},
@@ -3184,6 +3257,76 @@ static const canon_inkset_t canon_30_K3C3M3Y2k3photo_c_inkset[] = {
 };
 
 /* high */
+/* MG6900, MG7700 */
+static const canon_inkset_t canon_30_K3C6M6Y4k4off4bit_inkset[] = {
+        {'K',1.0,&canon_4b_3l_ink},
+        {'C',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {'k',0.0,&canon_4b_4l_ink}, /* will not use it, but need to specify it */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* high duplex */
+/* MG6900, MG7700 */
+static const canon_inkset_t canon_30_K3C6M6Y4k4on4bit_inkset[] = {
+        {'K',1.0,&canon_4b_3l_ink},
+        {'C',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* high */
 /* MG6300, MG6500, MG7100, iP8700 */
 static const canon_inkset_t canon_30_K3C6M6Y4k4off_c_inkset[] = {
         {'K',1.0,&canon_2b_3l_c_ink},
@@ -3228,6 +3371,41 @@ static const canon_inkset_t canon_30_C5M5Y4k4_inkset[] = {
         {'M',1.0,&canon_4b_5l_ink},
         {0,0.0,NULL},
         {'Y',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* MG6900, MG7700 */
+/* CD, inkjet Hagaki */
+static const canon_inkset_t canon_30_C5M5Y5k4_inkset[] = {
+        {0,0.0,NULL},
+        {'C',1.0,&canon_4b_5l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_5l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_4b_5l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
@@ -3322,6 +3500,41 @@ static const canon_inkset_t canon_30_M6K6m4k4H6off_inkset[] = {
         {0,0.0,NULL},
 };
 
+/* photo standard */
+/* MG6900, MG7700 */
+static const canon_inkset_t canon_30_M6K6m4k4H6off4bit_inkset[] = {
+        {0,0.0,NULL},
+        {'C',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_6l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {'H',0.0,&canon_4b_6l_ink},/* H is not supported, so only for modes where it is switched off */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
 static const canon_inkset_t canon_30_M8K8m4k4_inkset[] = {
         {0,0.0,NULL},
         {'C',1.0,&canon_4b_8l_ink},
@@ -3366,6 +3579,41 @@ static const canon_inkset_t canon_30_M8K8m4k4H8off_inkset[] = {
         {'Y',1.0,&canon_2b_4l_ink},
         {0,0.0,NULL},
         {'k',1.0,&canon_2b_4l_ink},
+        {0,0.0,NULL},
+        {'H',0.0,&canon_4b_8l_ink},/* H is not supported, so only for modes where it is switched off */
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+        {0,0.0,NULL},
+};
+
+/* photo high */
+/* MG6900, MG7700 */
+static const canon_inkset_t canon_30_M8K8m4k4H8off4bit_inkset[] = {
+        {0,0.0,NULL},
+        {'C',1.0,&canon_4b_8l_ink},
+        {0,0.0,NULL},
+        {'M',1.0,&canon_4b_8l_ink},
+        {0,0.0,NULL},
+        {'Y',1.0,&canon_4b_4l_ink},
+        {0,0.0,NULL},
+        {'k',1.0,&canon_4b_4l_ink},
         {0,0.0,NULL},
         {'H',0.0,&canon_4b_8l_ink},/* H is not supported, so only for modes where it is switched off */
         {0,0.0,NULL},
