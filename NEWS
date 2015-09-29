@@ -290,8 +290,13 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
      Datamax-O'Neil Workstation printer.
 
-  4) Added common Imperial and Metric label sizes to the Paper Selection
-     menu.
+     Also added common Imperial and Metric label sizes to the Paper
+     Selection menu.
+
+  4) Added support for the following Epson inkjet printers:
+
+     EPSON L120
+     EPSON L210
 
   5) Canon inkjet driver enhancements:
 

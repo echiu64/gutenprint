@@ -1317,6 +1317,8 @@
       <printer translate="name" name="Epson B-500DN" driver="escp2-b500dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B500DN" />
       <printer translate="name" name="Epson B-508DN" driver="escp2-b508dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B508DN" />
       <printer translate="name" name="Epson B-510DN" driver="escp2-b510dn" manufacturer="Epson" model="87" parameters="standard_params" foomaticid="Epson-B510DN" />
+      <printer translate="name" name="Epson L120" driver="escp2-l120" manufacturer="Epson" model="80" parameters="cx3500_params" foomaticid="Epson-L120" />
+      <printer translate="name" name="Epson L210" driver="escp2-l210" manufacturer="Epson" model="80" parameters="cx3500_params" foomaticid="Epson-L210" />
       <printer translate="name" name="Epson Stylus C20" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20" manufacturer="Epson" model="42" parameters="480_params" foomaticid="Epson-Stylus_C20" />
       <printer translate="name" name="Epson Stylus C20SX" driver="escp2-c20sx" manufacturer="Epson" model="42" parameters="480_params" foomaticid="Epson-Stylus_C20SX" />
       <printer translate="name" name="Epson Stylus C20UX" deviceid="MFG:EPSON;MDL:Stylus C20;DES:EPSON Stylus C20;CMD:ESCPL2,BDC,D4;" driver="escp2-c20ux" manufacturer="Epson" model="42" parameters="480_params" foomaticid="Epson-Stylus_C20UX" />
