@@ -4644,6 +4644,21 @@ canon_init_setESC_P(const stp_vars_t *v, const canon_privdata_t *init)
 		 "ESC_P_len=%d!!\n",init->caps->ESC_P_len);
 }
 
+#if 0
+/* ESC (s -- 0x73 -- used in some newer printers for duplex pages except last one -- */
+/* When capability available, used for non-tumble and tumble (unlike Esc (u which is non-tumble only) */
+static void
+canon_init_setESC_s(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_DUPLEX))
+    return;
+  if (!(init->caps->features & CANON_CAP_s))
+    return;
+
+  canon_cmd(v,ESC28,0x73, 1, 0x00);
+}
+#endif
+
 /* ESC (S -- 0x53 -- unknown -- :
    Required by iP90/iP90v and iP100 printers.
  */
@@ -4713,7 +4728,6 @@ canon_init_setESC_S(const stp_vars_t *v, const canon_privdata_t *init)
       canon_cmd(v,ESC28,0x53,54,arg_ESCS_01,0x02,0xff,arg_ESCS_04,0x41,0x02,0x00,0x01,arg_ESCS_09,0x00,arg_ESCS_11,0x00,0x01,0x01,0x03,0x02,0x01,0x01,0x01,0x03,0x02,0x00,0x07,0x06,0x02,0x01,0x02,0x04,0x04,0x04,0x05,0x06,0x08,0x08,0x08,0x0a,0x0a,0x09,0x00,0x03,0x02,0x01,0x01,0x01,0x01,0x01,0x06,0x02,0x02,0x02,0x03,0x04,0x05,0x06);
 
 }
-
 
 /* ESC (T -- 0x54 -- setCartridge -- :
  */
@@ -5045,7 +5059,15 @@ canon_init_setMultiRaster(const stp_vars_t *v, const canon_privdata_t *init){
     }
 }
 
+/* ESC (u -- 0x75 -- even pages duplex for long side only -- */
+static void
+canon_init_setESC_u(const stp_vars_t *v, const canon_privdata_t *init)
+{
+  if (!(init->caps->features & CANON_CAP_DUPLEX))
+    return;
 
+  canon_cmd(v,ESC28,0x75, 1, 0x01);
+}
 
 /* ESC (v -- 0x76 -- */
 static void
@@ -5076,6 +5098,8 @@ static void
 canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
 {
   unsigned int mytop;
+  int          page_number = stp_get_int_parameter(v, "PageNumber");
+  const char  *duplex_mode =stp_get_string_parameter(v, "Duplex");
   /* init printer */
   if (init->is_first_page) {
     canon_init_resetPrinter(v,init);       /* ESC [K */
@@ -5098,6 +5122,8 @@ canon_init_printer(const stp_vars_t *v, canon_privdata_t *init)
   canon_init_setX72(v,init);             /* ESC (r */
   canon_init_setESC_v(v,init);           /* ESC (v */
   canon_init_setESC_w(v,init);           /* ESC (w */
+  if((page_number & 1) && duplex_mode && !strcmp(duplex_mode,"DuplexNoTumble"))
+    canon_init_setESC_u(v,init);       /* ESC (u 0x1 */
   canon_init_setMultiRaster(v,init);     /* ESC (I (J (L */
 
   /* some linefeeds */
