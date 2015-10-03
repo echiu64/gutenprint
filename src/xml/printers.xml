@@ -1742,7 +1742,6 @@
       <printer translate="name" name="Epson EP 801A" driver="escp2-ep801a" manufacturer="Epson" model="96" parameters="standard_params" foomaticid="Epson-EP_801A" />
       <printer translate="name" name="Epson EP 901A" driver="escp2-ep901a" manufacturer="Epson" model="96" parameters="standard_params" foomaticid="Epson-EP_901A" />
       <printer translate="name" name="Epson EP 901F" driver="escp2-ep901f" manufacturer="Epson" model="96" parameters="standard_params" foomaticid="Epson-EP_801F" />
-      <printer translate="name" name="Epson L210" driver="escp2-l210" manufacturer="Epson" model="80" parameters="cx3500_params" foomaticid="Epson-L210" />
       <printer translate="name" name="Epson MC 2000" driver="escp2-mc2000" manufacturer="Epson" model="26" parameters="standard_params" foomaticid="Epson-MC_2000" />
       <printer translate="name" name="Epson MC 5000" driver="escp2-mc5000" manufacturer="Epson" model="40" parameters="pro_5500_params" foomaticid="Epson-MC_5000" />
       <printer translate="name" name="Epson MC 7000" driver="escp2-mc7000" manufacturer="Epson" model="29" parameters="pro_5500_params" foomaticid="Epson-MC_7000" />
