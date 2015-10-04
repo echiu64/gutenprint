@@ -336,6 +336,14 @@ STP_ARG_ENABLE([static-genppd],
 	       [STATIC_GENPPD],
 	       [(automatic)])
 
+ENABLE_STATIC="$enable_static"
+AC_DEFINE_UNQUOTED(ENABLE_STATIC, "${ENABLE_STATIC}", [Static libraries are built.])
+AC_SUBST(ENABLE_STATIC)]
+
+ENABLE_SHARED="$enable_shared"
+AC_DEFINE_UNQUOTED(ENABLE_SHARED, "${ENABLE_SHARED}", [Shared libraries are built.])
+AC_SUBST(ENABLE_SHARED)]
+
 AC_PATH_PROG(FOOMATIC_CONFIGURE, foomatic-configure)
 if test -z "${FOOMATIC_CONFIGURE}" ; then
   BUILD_FOOMATIC="no"

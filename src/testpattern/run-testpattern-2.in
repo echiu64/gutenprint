@@ -41,6 +41,8 @@ my $global_printer;
 my $global_messages;
 my $global_page;
 my $global_case;
+my $enable_static = "@ENABLE_STATIC@";
+my $enable_shared = "@ENABLE_SHARED@";
 
 my @extras = ();
 my @job_extras = ();
@@ -267,6 +269,10 @@ if ("$srcdir" eq "" || "$srcdir" eq ".") {
 
 if (! $run_installed && ! defined $ENV{"STP_DATA_PATH"}) {
     $ENV{"STP_DATA_PATH"} = "${sdir}/../xml";
+}
+
+if ($valgrind && ! $run_installed && $enable_shared ne "no") {
+    die "Valgrind is not compatible with --enable-shared in tree.\nPlease use autogen.sh --disable-shared.\n";
 }
 
 if (! defined $ENV{"STP_MODULE_PATH"}) {

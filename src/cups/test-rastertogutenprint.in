@@ -23,12 +23,15 @@ fi
 single=''
 all_models=''
 verbose=''
+valgrind=0
 make_ppds=1
 md5dir=''
 outdir=''
 cupsargs=''
 postscript=''
 npages=3
+enable_static='@ENABLE_STATIC@'
+enable_shared='@ENABLE_SHARED@'
 
 usage() {
     echo "Usage: test-rastertogutenprint [-s] [-v|--valgrind]"
@@ -40,7 +43,7 @@ set_args() {
 	case "$1" in
 	    -s) single=1 ;;
 	    -h*|--h*) usage ;;
-	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=`expr $valgrind + 1` ;;
+	    -v|--valgrind) valopts='--tool=memcheck' ; valgrind=$((valgrind + 1)) ;;
 	    -c|--cachegrind) valopts='--tool=cachegrind'; valgrind=4 ;;
 	    -g|--gdb-attach) valopts='--gdb-attach=yes' ;;
 	    -V|--verbose) verbose=1 ;;
@@ -58,6 +61,12 @@ set_args() {
 }
 
 set_args `getopt hvcgsVnO:m:o:p: "$@"`
+
+if [ "$valgrind" -gt 0 -a "$enable_shared" != "no" ] ; then
+    echo 'Valgrind is not compatible with --enable-shared in tree.' 1>&2
+    echo 'Please use autogen.sh --disable-shared.' 1>&2
+    exit 1
+fi
 
 if [ -n "$outdir" -a ! -d "$outdir" ] ; then
     mkdir -p "$outdir"
@@ -136,10 +145,10 @@ is_duplicate() {
 
 run_rastertogp() {
     case "$valgrind" in
-	1) valgrind $valopts -q --num-callers=50 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
-	2) valgrind $valopts --num-callers=50 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
-	3) valgrind $valopts --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
-	4) valgrind $valopts ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	1) valgrind $valopts -q --log-fd=3 --num-callers=50 --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	2) valgrind $valopts --log-fd=3 --num-callers=50 --leak-resolution=high --leak-check=yes --error-limit=no ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	3) valgrind $valopts --log-fd=3 --error-limit=no --num-callers=50 --show-reachable=yes --leak-resolution=high --leak-check=yes ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
+	4) valgrind $valopts --log-fd=3 ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
 	5) cat ;;
 	*) ./rastertogutenprint.$version 1 1 1 1 "$cupsargs" ;;
     esac
@@ -241,17 +250,17 @@ if [ -d ppd/C ] ; then
 	    PPD=$f
 	    export PPD
 	    if [ -x "$cupsdir/cgpdftoraster" ] ; then
-		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < $sdir/../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/cgpdftoraster 1 1 1 1 $pages < $sdir/../../doc/gutenprint-users-manual.pdf 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
 	    elif [ -f "$tfile" -a -x "$cupsdir/gstoraster" ] ; then
-		output="`($cupsdir/gstoraster 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/gstoraster 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
 	    elif [ -f "$tfile" ] ; then
-		output="`($cupsdir/pstops 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/pstops 1 1 1 1 \"$cupsargs\" < $tfile 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
 	    elif [ -x "$cupsdir/pstoraster" ] ; then
-		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < $sdir/../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < $sdir/../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/pstops 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | $cupsdir/pstoraster 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
 	    elif [ -x "$cupsdir/gstoraster" ] ; then
-		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < $sdir/../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/gstoraster 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/pdftops 1 1 1 1 \"$pages$cupsargs\" < $sdir/../../doc/gutenprint-users-manual.pdf 2>/dev/null | $cupsdir/gstoraster 1 1 1 1 \"$pages$cupsargs\" 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2 `"
 	    else
-		output="`($cupsdir/imagetoraster 1 1 1 1 \"$pages$cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp | do_output) 2>&1`"
+		output="`($cupsdir/imagetoraster 1 1 1 1 \"$pages$cupsargs\" < calibrate.ppm 2>/dev/null | run_rastertogp | do_output) 2>&1 3>&2`"
 	    fi
 	    if [ $? -ne 0 ] ; then
 		retval=1
