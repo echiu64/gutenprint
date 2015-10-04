@@ -310,7 +310,6 @@
     <paper name="w612h864">
       <description translate="value" value="8.5x12"/>
       <comment value="Only used by Kodak 1400 and 805 dyesub printers"/>
-      <comment value="8.5in x 12in"/>
       <width value="612"/>
       <height value="864"/>
       <unit value="english"/>
