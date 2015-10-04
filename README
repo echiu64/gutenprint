@@ -1,4 +1,4 @@
-Welcome to Gutenprint 5.2.11-pre1!  Please read these notes carefully.
+Welcome to Gutenprint 5.2.11-pre2!  Please read these notes carefully.
 
 *** NOTE TO PACKAGERS: Please read the file README.package for issues
     that are of interest to distributors and packagers of Gutenprint.
@@ -8,7 +8,7 @@ Welcome to Gutenprint 5.2.11-pre1!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.2.11-pre1, an unstable release of Gutenprint
+    This is Gutenprint version 5.2.11-pre2, an unstable release of Gutenprint
     5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
     drivers that may be used with most common UNIX print spooling
     systems, including CUPS, lpr, LPRng, or others.  These drivers
@@ -123,7 +123,7 @@ A) OVERVIEW
 	gimp-print-devel@lists.sourceforge.net
 
 	================================================================
-	  Release: gutenprint 5.2.11-pre1 generated on 08 Feb 2014
+	  Release: gutenprint 5.2.11-pre2 generated on 04 Oct 2015
 
 	  Features:
 	    Build CUPS:                                 yes, installing in /usr
@@ -132,23 +132,23 @@ A) OVERVIEW
 		Generate PS level 3 CUPS PPD files:     yes
 		Build genppd statically:                yes
 		Build CUPS dyesub USB backend:          yes
-	    Build Ghostscript IJS driver:               no
-	    Build Foomatic data:                        yes
-		Build Foomatic 3.x data:                yes
+	    Build EPSON inkjet utility:                 yes
 	    Build enhanced Print plugin for GIMP:       yes
 		GIMP plugin will be named:              gutenprint
 		Install plugin(s) in home directory:    no
-	    Build EPSON Stylus utility:                 yes
+	    Build Ghostscript IJS driver:               no
+	    Build Foomatic data:                        yes
+		Build Foomatic 3.x data:                yes
 	    Build test programs:                        yes
 	    Build testpattern generator:                yes
 
 	  Installation summary:
 	    Installation prefix:                        /usr/local
-	    Exec prefix:                                ${prefix} (/usr/local)
+	    Exec prefix:                                /usr/local (${prefix})
 	    Data directory:                             /usr/local/share/gutenprint
-	    Library directory:                          ${exec_prefix}/lib64/gutenprint (/usr/local/lib64/gutenprint)
+	    Library directory:                          /usr/local/lib64/gutenprint (${exec_prefix}/lib64/gutenprint)
 	    XML data directory:                         /usr/local/share/gutenprint/5.2/xml
-	    Module directory:                           ${exec_prefix}/lib64/gutenprint/5.2/modules (/usr/local/lib64/gutenprint/5.2/modules)
+	    Module directory:                           /usr/local/lib64/gutenprint/5.2/modules (${exec_prefix}/lib64/gutenprint/5.2/modules)
 	    Install sample images:                      yes
 
 	  General configuration:
@@ -161,7 +161,7 @@ A) OVERVIEW
 	    Generate debugging symbols:                 no
 	    Use modules:                                static
 	    Use readline libraries:                     yes, extra arguments: -lncurses
-	    uname -a output:                            Linux dsl092-065-009 3.11.6-4-default #1 SMP Wed Oct 30 18:04:56 UTC 2013 (e6d4a27) x86_64 x86_64 x86_64 GNU/Linux
+	    uname -a output:                            Linux dsl092-065-009 3.16.7-24-default #1 SMP Mon Aug 3 14:37:06 UTC 2015 (ec183cc) x86_64 x86_64 x86_64 GNU/Linux
 	================================================================
 
     The CUPS, GIMP, Foomatic, and Ghostscript components require that
