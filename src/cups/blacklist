@@ -132,6 +132,9 @@
 # Sony UP-DR200
 0x054c 0x035f blacklist
 
+# Sony UP-CR10L
+0x054c 0x0226 blacklist
+
 # Mitsubishi CP-D70/CP-D707
 0x06d3 0x3b30 blacklist
 
