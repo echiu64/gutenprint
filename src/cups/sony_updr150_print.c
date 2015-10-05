@@ -43,7 +43,7 @@
 #define USB_VID_SONY         0x054C
 #define USB_PID_SONY_UPDR150 0x01E8
 #define USB_PID_SONY_UPDR200 0x035F
-#define USB_PID_SONY_UPCR10  1234 
+#define USB_PID_SONY_UPCR10  0x0226
 
 /* Private data stucture */
 struct updr150_ctx {
@@ -263,9 +263,6 @@ static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	/* Reset arg parsing */
-	optind = 1;
-	opterr = 0;
 	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL)) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
@@ -279,9 +276,9 @@ static int updr150_cmdline_arg(void *vctx, int argc, char **argv)
 
 struct dyesub_backend updr150_backend = {
 	.name = "Sony UP-DR150/UP-DR200/UP-CR10",
-	.version = "0.17",
+	.version = "0.18",
 	.uri_prefix = "sonyupdr150",
-	.cmdline_arg = updr150_cmdline_arg,	
+	.cmdline_arg = updr150_cmdline_arg,
 	.init = updr150_init,
 	.attach = updr150_attach,
 	.teardown = updr150_teardown,
