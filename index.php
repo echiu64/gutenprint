@@ -35,6 +35,13 @@ page for OS X</a> that answers most questions on how to use Gutenprint
 and Gimp-Print with OS X 10.2 "Jaguar" and beyond, and provides direct
 download links.</p>
 
+<H2><font color="#ff0000">Gutenprint 5.2.11-pre2 is available!</font></h2>
+
+<P><strong><em><font color="#ff0000">New as of October 7,
+2015!</strong></em></font> After a very long hiatus, the Gutenprint project is pleased to announce Gutenprint 5.2.11-pre2, a pre-release of Gutenprint 5.2.11.  This release adds support for many new printers (in particular Datamax-O'Neil label printers, more dye sublimation printers, and more Canon inkjets) and other improvements over 5.2.10.  The main impact is for developers that link against the Gutenprint library.  This package is available in source form, and also in binary installer form for Macintosh OS X (10.6 and above; 10.5 and below are no longer supported).  <a
+href="https://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.11-pre2/">You
+can read the release notes and download it here</a>.  </p>
+
 <H2><font color="#ff0000">Gutenprint 5.2.11-pre1 is available!</font></h2>
 
 <P><strong><em><font color="#ff0000">New as of June 26,
