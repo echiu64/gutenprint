@@ -120,7 +120,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 	</tr>
 </table>
 <!--  Main desination banner for Mac OS X  -->
-<h1 style="color:#999999;"> Gutenprint and Gimp-Print for Mac OS X (10.2 through 10.10 and later) </h1> <h4> High quality printer drivers for Canon, Epson, Lexmark, and PCL printers. <br>For multi-function devices, the drivers only support the printer function.</h4>
+<h1 style="color:#999999;"> Gutenprint and Gimp-Print for Mac OS X (10.2 through 10.11 and later) </h1> <h4> High quality printer drivers for Canon, Epson, Lexmark, and PCL printers. <br>For multi-function devices, the drivers only support the printer function.</h4>
 <hr>
 <!--         THE CONTENT       -->
 <!-- left column -->
@@ -130,13 +130,13 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 		<h2> Headlines </h2>
 
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.10 is released!</span>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11-pre2 is released!</span>
 			<br>
 			<a href="MacOSX.php#5.2.11-pre2">October 7, 2015</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre2, a pre-release of 5.2.11. This release provides initial support for OS X 10.11 (El Capitan).  This release adds support for many new printers and other improvements over 5.2.10, but no longer supports OS X 10.5 or below. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11-pre2">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
 
 		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.10 is released!</span>
+			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.11-pre1 is released!</span>
 			<br>
 			<a href="MacOSX.php#5.2.11-pre1">June 26, 2015</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre1, a pre-release of 5.2.11. This release adds support for many new printers and other improvements over 5.2.10, but no longer supports OS X 10.5 or below. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.11-pre1">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
@@ -147,34 +147,7 @@ Free Software, Epson, Canon, HP, PCL, PostScript, ESCP">
 			<a href="MacOSX.php#5.2.10">May 20, 2014</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable release of 5.2. This release adds support for many new printers and other improvements over 5.2.9, but no longer supports OS X 10.3 or 10.4. <b>NOTE: Users of many dye sublimation printers must follow a special installation procedure.  Please read the release notes very carefully!</b>  See the <a href="MacOSX.php#5.2.10">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
 		</p>
 
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.9 is released!</span>
-			<br>
-			<a href="MacOSX.php#5.2.9">July 7, 2012</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.9, a stable release of 5.2. This release fixes a several bugs from 5.2.8.  The main impact is for developers that link against the Gutenprint library.  See the <a href="MacOSX.php#5.2.9">Release notes</a> for more detail.  See the <b>Downloads</b> section for download links.
-		</p>
-
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.8 is released!</span>
-			<br>
-			<a href="MacOSX.php#5.2.8">June 11, 2012</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.8, a stable release of 5.2. This release provides a significant overhaul of the Canon driver.  Eighteen Epson printeres have also been added.  See the <b>Downloads</b> section.
-		</p>
-
-
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.7 is released!</span>
-			<br>
-			<a href="MacOSX.php#5.2.7">May 2, 2011</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release of 5.2. This release offers support for more than 80 additional printers from Canon, Epson, and Kodak. There are also some changes for other Epson printers. An updated uninstaller is included and available separately.  See the <b>Downloads</b> section.
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.6 is released!</span>
-			<br>
-			<a href="MacOSX.php#5.2.6">August 12, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.6, a stable release of 5.2. This release offers additional support for Epson Stylus Pro printers, along with some changes for other Epson printers and support for additional Canon inkjets and PCL laser printers.  See the <b>Downloads</b> section.
-		</p>
-		<p>
-			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.2.6-pre1 is released!</span>
-			<br>
-			<a href="MacOSX.php#5.2.6-pre1">July 19, 2010</a> - The Gutenprint project is pleased to announce Gutenprint 5.2.6-pre1, a release candidate for the upcoming 5.2.6 release. This release offers several bug fixes, and support for additional EPSON Pro printers.  See the <b>Downloads</b> section.
-		</p>
+	
 		<p>
 			<span style="color:red;font-size:115%;font-weight:bold;">Gutenprint 5.0.2 is released!</span>
 			<br>
@@ -235,24 +208,7 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.11-pre1, a stable r
 The Gutenprint project is pleased to announce Gutenprint 5.2.10, a stable release of 5.2. Gutenprint 5.2.10 no longer supports Macintosh OS X 10.4 or below; it now requires 10.5 (Leopard) or higher.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.10/gutenprint-5.2.10.tar.bz2/download">source code</a>)
 </p>
 
-		<p>
-			<b>Gutenprint 5.2.9</b>
-			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.9/gutenprint-5.2.9.dmg/download">gutenprint-5.2.9.dmg</a></span>&nbsp;&nbsp;(16.2 MB)
-		</p>
-		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.9, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.9/gutenprint-5.2.9.tar.bz2/download">source code</a>)
-</p>
-
-		<p>
-			<b>Gutenprint 5.2.7</b>
-			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.dmg/download">gutenprint-5.2.7.dmg</a></span>&nbsp;&nbsp;(14.5 MB)
-		</p>
-		<p>
-The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release of 5.2. Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now requires 10.3 (Panther) or higher. This is due to a new library requirement (for the iconv library) that is not present in 10.2.&nbsp;&nbsp;(<a href="http://sourceforge.net/projects/gimp-print/files/gutenprint-5.2/5.2.7/gutenprint-5.2.7.tar.bz2/download">source code</a>)
-</p>
-
+		
 <p>
 	<b>Gutenprint 5.0.2</b>
 	<br>
@@ -275,12 +231,13 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release
 		</p>
 		<hr>
 		<p>
-			<b>Gutenprint Uninstaller</b>
+			<b>Gutenprint Uninstaller <br>updated for El Capitan (OS X10.11)</b>
 			<br>
-			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/1.2.9/gutenprint-uninstaller-1.2.9.dmg/download">gutenprint-uninstaller-1.2.9.dmg</a></span>&nbsp;&nbsp;(801 KB)
+			<span style="background-color:#d0ffff;"><a href="http://sourceforge.net/projects/gimp-print/files/Uninstaller%20-%20Mac%20OS%20X%20ONLY/uninstall-gutenprint.zip/download">uninstall-gutenprint</a></span>&nbsp;&nbsp;(109 KB)
 		</p>
 		<p>
-			The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included by default with Mac OS X "Panther" (Mac OS X  10.3.x), Mac OS X "Tiger" (Mac OS X 10.4.x), Mac OS X "Leopard" (MacOS X 10.5.x), and Mac OS X "Snow Leopard (Mac OS X 10.6.x).
+			The updated uninstaller will work on any systerm OS X 10.2.x through at least 10.11.</p>
+			<p>The Gutenprint uninstaller will completely remove any version of Gutenprint/Gimp-Print that was installed with an official Mac OS X installer package provided by the Gimp-Print project. It will also remove the version of Gutenprint/Gimp-Print that is included on any Apple OS X install disk.
 		</p>
 		<p>
 			<a name="downloadESPGS"></a> <b>ESP Ghostscript 7.07.1</b>
@@ -323,6 +280,20 @@ The Gutenprint project is pleased to announce Gutenprint 5.2.7, a stable release
 <hr>
 <h3> News Items </h3>
 <!-- Yuk.  Have to use tables to get news item head formatting as it was before. Gecko browsers will not float text properly. Even IE Mac 5.2.3 does this right -->
+<a name="5.2.11-pre2"></a>
+<table cellpadding="0" bgcolor="#d0d0d0" width="60%">
+	<tr>
+		<td align="left">
+			<b>Gutenprint 5.2.11-pre2</b>
+		</td>
+		<td align="right">
+			<b>2015-10-07</b>
+		</td>
+	</tr>
+</table>
+<p>
+<b>Gutenprint 5.2.11-pre2</b> is the second prerelease of Gutenprint 5.2.11.  This release adds support for many new printers. Please see the release notes included with the release for further details.
+</p>
 <a name="5.2.11-pre1"></a>
 <table cellpadding="0" bgcolor="#d0d0d0" width="60%">
 	<tr>
@@ -2098,3 +2069,4 @@ Additional information can be found in the <a href="http://sourceforge.net/proje
 </p>
 </body>
 </html>
+
