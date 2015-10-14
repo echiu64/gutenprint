@@ -963,11 +963,12 @@ top:
 			if (ctx->type != P_DNP_DS620 && i > 0)
 				i -= 50;
 		}
-
+#if 0
 		if (i < 1) {
 			ERROR("Printer out of media, please correct!\n");
 			return CUPS_BACKEND_STOP;
 		}
+#endif
 		if (i < copies) {
 			WARNING("Printer does not have sufficient remaining media to complete job..\n");
 		}
@@ -1665,7 +1666,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.61",
+	.version = "0.61.1",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
