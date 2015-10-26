@@ -64,6 +64,9 @@ typedef struct
   int use_crd;
   int orientation;
   int label_separator;
+  unsigned int h_offset;      /* decipoints */
+  unsigned int v_offset;      /* decipoints */
+  int darkness;
 } pcl_privdata_t;
 
 /*
@@ -1516,6 +1519,12 @@ static const stp_parameter_t the_parameters[] =
     STP_PARAMETER_TYPE_STRING_LIST, STP_PARAMETER_CLASS_FEATURE,
     STP_PARAMETER_LEVEL_BASIC, 1, 1, STP_CHANNEL_NONE, 1, 0,
   },
+  {
+    "Darkness", N_("Darkness"), "Color=No,Category=Basic Printer Setup",
+    N_("Darkness Adjust, from -20 to 20"),
+    STP_PARAMETER_TYPE_INT, STP_PARAMETER_CLASS_FEATURE,
+    STP_PARAMETER_LEVEL_BASIC, 0, 1, STP_CHANNEL_NONE, 1, 0
+  },
 };
 
 static const int the_parameter_count =
@@ -1579,6 +1588,24 @@ static const float_param_t float_parameters[] =
       STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
       STP_PARAMETER_LEVEL_ADVANCED4, 0, 1, STP_CHANNEL_NONE, 1, 0
     }, 0.0, 5.0, 1.0, 1
+  },
+  {
+    {
+      "HorizOffset", N_("Horizontal Offset"),
+      "Color=No,Category=Basic Output Adjustment",
+      N_("Adjust horizontal position"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0,
+    }, 0.0, 4.0, 0.0, 0
+  },
+  {
+    {
+      "VertOffset", N_("Vertical Offset"),
+      "Color=No,Category=Basic Output Adjustment",
+      N_("Adjust vertical position"),
+      STP_PARAMETER_TYPE_DOUBLE, STP_PARAMETER_CLASS_OUTPUT,
+      STP_PARAMETER_LEVEL_ADVANCED3, 1, 1, STP_CHANNEL_NONE, 1, 0,
+    }, 0.0, 10.0, 0.0, 0
   },
 };
 
@@ -1835,7 +1862,6 @@ static const stp_param_string_t label_separator_types[] =
   { "NONE",		N_ ("Continuous") },
 };
 #define NUM_LABEL_SEPARATOR (sizeof (label_separator_types) / sizeof (stp_param_string_t))
-
 
 /*
  * 'pcl_papersize_valid()' - Is the paper size valid for this printer.
@@ -2172,6 +2198,19 @@ pcl_parameters(const stp_vars_t *v, const char *name,
       description->is_active = 0;
     }
   }
+  else if (strcmp(name, "Darkness") == 0)
+  {
+    if (caps->stp_printer_type & PCL_PRINTER_LABEL)
+    {
+      description->deflt.integer = 0;
+      description->bounds.integer.lower = -20;
+      description->bounds.integer.upper = 20;
+    }
+    else
+    {
+      description->is_active = 0;
+    }
+  }
   else if (strcmp(name, "CyanDensity") == 0 ||
 	   strcmp(name, "MagentaDensity") == 0 ||
 	   strcmp(name, "YellowDensity") == 0 ||
@@ -2193,6 +2232,18 @@ pcl_parameters(const stp_vars_t *v, const char *name,
 	description->is_active = 1;
       else
 	description->is_active = 0;
+    }
+  else if (strcmp(name, "HorizOffset") == 0 ||
+	   strcmp(name, "VertOffset") == 0)
+    {
+      if (caps->stp_printer_type & PCL_PRINTER_LABEL)
+      {
+        description->is_active = 1;
+      }
+      else
+      {
+        description->is_active = 0;
+      }
     }
   else if (strcmp(name, "InkChannels") == 0)
     {
@@ -2480,6 +2531,8 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
   const char	*duplex_mode = stp_get_string_parameter(v, "Duplex");
   const char    *orientation_mode = stp_get_string_parameter(v, "Orientation");
   const char	*label_separator_mode = stp_get_string_parameter(v, "LabelSeparator");
+  double        h_offset = get_double_param(v, "HorizOffset");
+  double        v_offset = get_double_param(v, "VertOffset");
   int		page_number = stp_get_int_parameter(v, "PageNumber");
   int		printing_color = 0;
   int		top = stp_get_top(v);
@@ -2671,6 +2724,24 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       privdata.label_separator = 4;
     if ((strncmp(label_separator_mode, "NONE", 10) == 0))
       privdata.label_separator = 5;
+
+   /*
+    * Print Offsets
+    */
+    privdata.h_offset = (int) (h_offset * 720.0);
+    privdata.v_offset = (int) (v_offset * 720.0);
+
+  /*
+   * Darkness Mode
+   */
+    if (stp_check_int_parameter(v, "Darkness", STP_PARAMETER_ACTIVE))
+    {
+      privdata.darkness = stp_get_int_parameter(v, "Darkness");
+    }
+    else
+    {
+      privdata.darkness = 30;
+    }
   }
 
 
@@ -2687,6 +2758,13 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
 
       if (label)
       {
+        if (privdata.darkness > -21 && privdata.darkness < 21)
+        {
+          stp_puts("\033%-12345X@PJL JOB NAME=\"JOB_CONFIG\" SECURITY=\"0x0000FFFF\"\n", v);
+          stp_zprintf(v, "@PJL DEFAULT DARKNESS=%d\n", privdata.darkness);
+          stp_puts("@PJL EOJ\n", v);
+          stp_puts("\033%-12345X\n", v);
+        }
         if (privdata.do_cretb)
           stp_puts("\033*rbC", v);        /* End raster graphics */
         stp_puts("\033E", v);             /* PCL reset */
@@ -2696,8 +2774,10 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
         stp_zprintf(v, "\033%%-12345X@PJL SET RESOLUTION=%d\n"
                        "@PJL SET PAPERWIDTH=%d\n"
                        "@PJL SET PAPERLENGTH=%d\n"
+                       "@PJL SET VERTICALOFFSET=%d\n"
+                       "@PJL SET HORIZONTALOFFSET=%d\n"
                        "@PJL ENTER LANGUAGE=PCL\n", xdpi, out_width*10,
-                       out_height*10);
+                       out_height*10, privdata.v_offset, privdata.h_offset);
 
 	if ( privdata.label_separator != 0) {
             stp_zprintf(v, "\033%%-12345X@PJL JOB SETUP = \"ON\" "
@@ -2729,7 +2809,9 @@ pcl_do_print(stp_vars_t *v, stp_image_t *image)
       stp_zprintf(v, "\033&l%dP", stp_get_page_height(v) / 12);
 						/* Length of "forms" in "lines" */
       stp_puts("\033&l0L", v);			/* Turn off perforation skip */
-      stp_puts("\033&l0E", v);			/* Reset top margin to 0 */
+      if (! label) {
+        stp_puts("\033&l0E", v);			/* Reset top margin to 0 */
+      }
 
  /*
   * Convert media source string to the code, if specified.
