@@ -27,7 +27,7 @@
 
 #include "backend_common.h"
 
-#define BACKEND_VERSION "0.62G"
+#define BACKEND_VERSION "0.63G"
 #ifndef URI_PREFIX
 #error "Must Define URI_PREFIX"
 #endif
@@ -371,7 +371,7 @@ static int print_scan_output(struct libusb_device *device,
 
 	int dlen = 0;
 	struct deviceid_dict dict[MAX_DICT];
-	char *ieee_id;
+	char *ieee_id = NULL;
 
 	if (libusb_open(device, &dev)) {
 		ERROR("Could not open device %04x:%04x (need to be root?)\n", desc->idVendor, desc->idProduct);
@@ -516,8 +516,6 @@ static int print_scan_output(struct libusb_device *device,
 			descr, descr,
 			ieee_id? ieee_id : "");
 		
-		if (ieee_id)
-			free(ieee_id);
 	}
 	
 	/* If a serial number was passed down, use it. */
@@ -530,6 +528,7 @@ static int print_scan_output(struct libusb_device *device,
 	if(manuf) free(manuf);
 	if(product) free(product);
 	if(descr) free(descr);
+	if(ieee_id) free(ieee_id);
 
 	libusb_close(dev);
 abort:
