@@ -3502,7 +3502,8 @@ LIST(dyesub_printsize_list_t, shinko_chcs6145_printsize_list, dyesub_printsize_t
 
 static const laminate_t shinko_chcs6145_laminate[] =
 {
-  {"PrinterDefault",  N_("Printer Default"),  {4, "\x01\0\0\0"}},
+  {"PrinterDefault",  N_("Printer Default"),  {4, "\0\0\0\0"}},
+  {"None",  N_("None"),  {4, "\x01\0\0\0"}},
   {"Glossy",  N_("Glossy"),  {4, "\x02\0\0\0"}},
   {"Matte",  N_("Matte"),  {4, "\x03\0\0\0"}},
 };
@@ -5120,7 +5121,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
   },
   { /* Shinko/Sinfonia CHC-S6145 */
     5004,
-    &ymc_ink_list,
+    &rgb_ink_list,
     &res_300dpi_list,
     &shinko_chcs6145_page_list,
     &shinko_chcs6145_printsize_list,
