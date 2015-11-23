@@ -198,7 +198,7 @@ static char *dnpds40_statuses(int status)
 		break;
 	}
 
-	return "Unkown Error";
+	return "Unknown Error";
 }
 
 static int dnpds40_do_cmd(struct dnpds40_ctx *ctx,
@@ -720,6 +720,7 @@ static int dnpds40_read_parse(void *vctx, int data_fd) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
 				return CUPS_BACKEND_CANCEL;
 			}
+			break;
 		case 510: //"8x12"
 			if (ctx->multicut < 6 || ctx->multicut > 21) {
 				ERROR("Incorrect media for job loaded (%d vs %d)\n", ctx->media, ctx->multicut);
@@ -1057,11 +1058,11 @@ static int dnpds40_get_sensors(struct dnpds40_ctx *ctx)
 			INFO("Roll Paper End 1   : %s\n", val);
 		} else if (!strcmp("RP2", tok)) {
 			INFO("Roll Paper End 2   : %s\n", val);
-		} else if (!strcmp("GSR", tok)) {
+		} else if (!strcmp("CSR", tok)) {
 			INFO("Color Sensor Red   : %s\n", val);
-		} else if (!strcmp("GSG", tok)) {
+		} else if (!strcmp("CSG", tok)) {
 			INFO("Color Sensor Green : %s\n", val);
-		} else if (!strcmp("GSB", tok)) {
+		} else if (!strcmp("CSB", tok)) {
 			INFO("Color Sensor Blue  : %s\n", val);
 		} else {
 			INFO("Unknown Sensor: '%s' '%s'\n",
@@ -1666,7 +1667,7 @@ static int dnpds40_cmdline_arg(void *vctx, int argc, char **argv)
 /* Exported */
 struct dyesub_backend dnpds40_backend = {
 	.name = "DNP DS40/DS80/DSRX1/DS620",
-	.version = "0.61.1",
+	.version = "0.61.2",
 	.uri_prefix = "dnpds40",
 	.cmdline_usage = dnpds40_cmdline,
 	.cmdline_arg = dnpds40_cmdline_arg,
@@ -1681,7 +1682,7 @@ struct dyesub_backend dnpds40_backend = {
 	{ USB_VID_CITIZEN, USB_PID_DNP_DS80, P_DNP_DS80, ""},
 	{ USB_VID_CITIZEN, USB_PID_DNP_DSRX1, P_DNP_DSRX1, ""},
 	{ USB_VID_DNP, USB_PID_DNP_DS620, P_DNP_DS620, ""},
-//	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80, ""},
+//	{ USB_VID_DNP, USB_PID_DNP_DS80D, P_DNP_DS80D, ""},
 //	{ USB_VID_CITIZEN, USB_PID_CITIZEN_CW-02, P_DNP_DS40, ""},
 //	{ USB_VID_CITIZEN, USB_PID_CITIZEN_OP900II, P_DNP_DS40, ""},
 	{ 0, 0, 0, ""}
