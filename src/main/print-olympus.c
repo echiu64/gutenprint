@@ -3538,6 +3538,8 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
     media = 0x07;
   else if (strcmp(privdata.pagesize,"w432h576-w432h432_w432h144") == 0)
     media = 0x06;
+  else if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
+    media = 0x06;
   else if (strcmp(privdata.pagesize,"w432h648") == 0)
     media = 0x05;
 
