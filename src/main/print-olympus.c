@@ -3484,6 +3484,10 @@ static const dyesub_pagesize_t shinko_chcs6145_page[] =
   							DYESUB_PORTRAIT},
   { "w432h576-w432h432_w432h144", "6x6+2x6", PT(1844,300)+1, PT(2434,300)+1, 0, 0, 0, 0,
   							DYESUB_PORTRAIT},
+  { "w432h576-div2", "4x6*2", PT(1844,300)+1, PT(2492,300)+1, 0, 0, 0, 0,
+  							DYESUB_PORTRAIT},
+  { "w432h648", "6x9", PT(1844,300)+1, PT(2740,300)+1, 0, 0, 0, 0,
+  						DYESUB_PORTRAIT},  
 };
 
 LIST(dyesub_pagesize_list_t, shinko_chcs6145_page_list, dyesub_pagesize_t, shinko_chcs6145_page);
@@ -3498,6 +3502,8 @@ static const dyesub_printsize_t shinko_chcs6145_printsize[] =
   { "300x300", "w432h432", 1832, 1844},
   { "300x300", "w432h576", 1844, 2434},
   { "300x300", "w432h576-w432h432_w432h144", 1844, 2434},
+  { "300x300", "w432h576-div2", 1844, 2492},
+  { "300x300", "w432h648", 1844, 2740},  
 };
 
 LIST(dyesub_printsize_list_t, shinko_chcs6145_printsize_list, dyesub_printsize_t, shinko_chcs6145_printsize);
@@ -3532,7 +3538,9 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
     media = 0x07;
   else if (strcmp(privdata.pagesize,"w432h576-w432h432_w432h144") == 0)
     media = 0x06;
-  
+  else if (strcmp(privdata.pagesize,"w432h648") == 0)
+    media = 0x05;
+
   stp_put32_le(0x10, v);
   stp_put32_le(6145, v);  /* Printer Model */
   if (!strcmp(privdata.pagesize,"w360h360") ||
@@ -3551,6 +3559,8 @@ static void shinko_chcs6145_printer_init(stp_vars_t *v)
     stp_put32_le(0x05, v);
   } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
     stp_put32_le(0x04, v);
+  } else if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+    stp_put32_le(0x02, v);
   } else {
     stp_put32_le(0x00, v);
   }
