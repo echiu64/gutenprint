@@ -299,7 +299,11 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
      EPSON L210
      EPSON L1800 (preliminary)
 
-  5) Canon inkjet driver enhancements:
+  5) Add support for the following laser printer:
+
+     Kyocera FS-1135MFP
+
+  6) Canon inkjet driver enhancements:
 
      Added support for following models:
 
@@ -667,7 +671,7 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
 
 	Canon BJC 4300
 
-  6) Canon inkjet driver bugfixes:
+  7) Canon inkjet driver bugfixes:
 
      6.1 Ink compression fixed
 
