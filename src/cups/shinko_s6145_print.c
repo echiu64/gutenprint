@@ -106,55 +106,130 @@ struct s6145_printjob_hdr {
 
 /* "Image Correction Parameter" File */
 // 128 bytes total, apparently an array of 32-bit values
-struct table_unk {
-	uint32_t var1; // lib checks non-zero [ always 0x00011170 for YMC]
-	uint32_t var2; // lib checks non-zero [ always 0x00004e20 for YMC]
-	uint32_t var3; // lib checks non-zero [ always 0x0000157c for YMC]
-	uint32_t rsvd[3]; // null
-	uint32_t var4; // [ always 0x0000007f ]
-	uint32_t var5; // [ always 0x0000007f ]
-	uint32_t vars[5]; // [always 0x18 0x41 0x0bb8 0x0384 0x06d1 for YMC]
-	uint32_t rsvd2[19]; // null
+struct tankParamTable {
+	uint32_t trdTankSize;
+	uint32_t sndTankSize;
+	uint32_t fstTankSize;
+	uint32_t trdTankIniEnergy;
+	uint32_t sndTankIniEnergy;
+	uint32_t fstTankIniEnergy;
+	uint32_t trdTrdConductivity;
+	uint32_t sndSndConductivity;
+	uint32_t fstFstConductivity;
+	uint32_t outTrdConductivity;
+	uint32_t trdSndConductivity;
+	uint32_t sndFstConductivity;
+	uint32_t fstOutConductivity;
+	uint32_t plusMaxEnergy;
+	uint32_t minusMaxEnergy;
+	uint32_t plusMaxEnergyPreRead;	
+	uint32_t minusMaxEnergyPreRead;	
+	uint32_t preReadLevelDiff;
+	uint32_t rsvd[14]; // null?
 } __attribute__((packed));
 
 struct shinkos6145_correctionparam {
-	uint16_t map_Y[256];      // @0
-	uint16_t map_M[256];      // @512
-	uint16_t map_C[256];      // @1024
-	uint16_t map_O[256];      // @1536
-	uint16_t unk_0004_1[1024];// @2048 '00 04' repeated
-	uint16_t unk_0080[8];     // @4096 '00 80' repeated
-	uint16_t unk_0004_2[4];   // @4112 '00 04' repeated
-	uint32_t rsvd_0[12];      // @4120 [ matte 0x03e8 *4, 0x04f2 * 4, 0x0028 * 4 ;  glossy is all null ]
-	struct table_unk tbl_Y;   // @4168 ?? struct table_unk
-	struct table_unk tbl_M;   // @4296 ?? struct table_unk
-	struct table_unk tbl_C;   // @4424 ?? struct table_unk
-	struct table_unk tbl_O;   // @4552 ?? struct table_unk
-	uint16_t unk_dc05_1[768]; // @4680 'dc 05' repeated
-	uint16_t unk_f401_1[256]; // @6216 'f4 01' repeated
-	uint16_t unk_dc05_2[768]; // @6728 'dc 05' repeated
-	uint16_t unk_f401_2[256]; // @8264 'f4 01' repeated
-	uint16_t max_y;           // @8776 max_Y
-	uint16_t max_m;           // @8778 max_M
-	uint16_t max_c;           // @8780 max_C
-	uint16_t max_o;           // @8782 max_O
-	uint16_t rsvd_1[4];       // @8784, null
-	uint16_t unknown_0500[4]; // @8792, '05 00' repeated
-	uint16_t unknown_3300[4]; // @8800, '33 00' repeated
-	uint16_t val_1;           // @8808 < 2 [0x0001/0x0000 for matte/glossy]
-	uint16_t val_2;		  // @8810 < 2 [0x0001 always]
-	uint16_t val_3;           // @8812 < 256 [0x0091 always]
-	uint16_t val_4;		  // @8814 < 2 [0x0001/0x000 for matte/glossy]
-	uint16_t val_5;           // @8816 < 256 [0x0091 always]
-	uint16_t val_6;           // @8818 < 256 [0x009b always]
-	uint16_t val_7;           // @8820 < 256 [0x00a5 always]
-	uint16_t val_8;           // @8822 < 256 [0x00af always]
-	uint16_t val_9;           // @8824 > 0, < 3 [0x0002 always]
-	uint16_t unknown_3[4];    // @8826 [0x0069 0x00c3 0x00cd 0x0000 always]
-	uint16_t line_width;      // @8834 [always 0x0780, ie 1920. print width
-	uint8_t  rsvd_2[3596];    // @8836, null.
+	uint16_t pulseTransTable_Y[256];   // @0
+	uint16_t pulseTransTable_M[256];   // @512
+	uint16_t pulseTransTable_C[256];   // @1024
+	uint16_t pulseTransTable_O[256];   // @1536
+
+	uint16_t lineHistCoefTable_Y[256]; // @2048
+	uint16_t lineHistCoefTable_M[256]; // @2560
+	uint16_t lineHistCoefTable_C[256]; // @3072
+	uint16_t lineHistCoefTable_O[256]; // @3584
+
+	uint16_t lineCorrectEnvA_Y;        // @4096
+	uint16_t lineCorrectEnvA_M;        // @4098
+	uint16_t lineCorrectEnvA_C;        // @4100
+	uint16_t lineCorrectEnvA_O;        // @4102
+
+	uint16_t lineCorrectEnvB_Y;        // @4104
+	uint16_t lineCorrectEnvB_M;        // @4106
+	uint16_t lineCorrectEnvB_C;        // @4108
+	uint16_t lineCorrectEnvB_O;        // @4110
+
+	uint16_t lineCorrectEnvC_Y;        // @4112
+	uint16_t lineCorrectEnvC_M;        // @4114
+	uint16_t lineCorrectEnvC_C;        // @4116
+	uint16_t lineCorrectEnvC_O;        // @4118
+
+	uint32_t lineCorrectSlice_Y;       // @4120
+	uint32_t lineCorrectSlice_M;       // @4124
+	uint32_t lineCorrectSlice_C;       // @4128
+	uint32_t lineCorrectSlice_O;       // @4132
+
+	uint32_t lineCorrectSlice1Line_Y;  // @4136
+	uint32_t lineCorrectSlice1Line_M;  // @4140
+	uint32_t lineCorrectSlice1Line_C;  // @4144
+	uint32_t lineCorrectSlice1Line_O;  // @4148
+
+	uint32_t lineCorrectPulseMax_Y;    // @4152 [array]
+	uint32_t lineCorrectPulseMax_M;    // @4156 [array]
+	uint32_t lineCorrectPulseMax_C;    // @4160 [array]
+	uint32_t lineCorrectPulseMax_O;    // @4164 [array]
+
+	struct tankParamTable tableTankParam_Y; // @4168
+	struct tankParamTable tableTankParam_M; // @4296
+	struct tankParamTable tableTankParam_C; // @4424
+	struct tankParamTable tableTankParam_O; // @4552
+
+	uint16_t tankPlusMaxEnergyTable_Y[256]; // @4680
+	uint16_t tankPlusMaxEnergyTable_M[256]; // @5192
+	uint16_t tankPlusMaxEnergyTable_C[256]; // @5704
+	uint16_t tankPlusMaxEnergyTable_O[256]; // @6216
+
+	uint16_t tankMinusMaxEnergy_Y[256];     // @6728
+	uint16_t tankMinusMaxEnergy_M[256];     // @7240
+	uint16_t tankMinusMaxEnergy_C[256];     // @7752
+	uint16_t tankMinusMaxEnergy_O[256];     // @8264
+
+	uint16_t printMaxPulse_Y; // @8776
+	uint16_t printMaxPulse_M; // @8778
+	uint16_t printMaxPulse_C; // @8780
+	uint16_t printMaxPulse_O; // @8782
+
+	uint16_t MtfWeightH_Y;    // @8784
+	uint16_t MtfWeightH_M;    // @8786
+	uint16_t MtfWeightH_C;    // @8788
+	uint16_t MtfWeightH_O;    // @8790	
+
+	uint16_t mtfWeightV_Y;    // @7092
+	uint16_t mtfWeightV_M;    // @7094
+	uint16_t mtfWeightV_C;    // @7096
+	uint16_t mtfWeightV_O;    // @7098
+
+	uint16_t mtfSlice_Y;      // @8800
+	uint16_t mtfSlice_M;      // @8802
+	uint16_t mtfSlice_C;      // @8804
+	uint16_t mtfSlice_O;      // @8806
+
+	uint16_t val_1;           // @8808 // 1 for matte
+	uint16_t val_2;		  // @8810
+	uint16_t printOpLevel;    // @8812
+	uint16_t matteMode;	  // @8814 // 1 for matte
+
+	uint16_t randomBase_1;    // @8816 [use lower word]
+	uint16_t randomBase_2;    // @8818 [use lower word]
+	uint16_t randomBase_3;    // @8820 [use lower word]
+	uint16_t randomBase_4;    // @8822 [use lower word]
+
+	uint16_t matteSize;       // @8824
+	uint16_t matteGloss;      // @8826
+	uint16_t matteDeglossBlk; // @8828
+	uint16_t matteDeglossWht; // @8830
+
+	uint16_t printSideOffset; // @8832
+	uint16_t headDots;        // @8834 [always 0x0780, ie 1920. print width
+
+	uint16_t SideEdgeCoefTable[128];   // @8836
+	uint8_t  rsvd_2[256];              // @9092, null?
+	uint16_t SideEdgeLvCoefTable[256]; // @9348
+	uint8_t  rsvd_3[2572];             // @9860, null?
+
 	uint16_t width;           // @12432
 	uint16_t height;          // @12434
+
 	uint8_t  rsvd_22[3948];   // @12436, null.
 } __attribute__((packed)); /* 16384 bytes */
 
@@ -257,9 +332,10 @@ struct s6145_print_cmd {
 	uint16_t count;
 	uint16_t columns;
 	uint16_t rows;
-	uint8_t  reserved;
+	uint8_t  media;      /* reserved in docs, but brava21 uses this */
 	uint8_t  combo_wait;
-	uint8_t  reserved2[7];
+	uint8_t  reserved[6];
+	uint8_t  unk_1;      /* Brava 21 sets this to 1 */
 	uint8_t  method;
 	uint8_t  image_avg;	
 } __attribute__((packed));
@@ -833,6 +909,7 @@ struct s6145_mediainfo_item {
 #define MEDIA_6x9     0x05
 #define MEDIA_6x8     0x06
 #define MEDIA_2x6     0x07
+#define MEDIA_6x6     0x08
 
 static char *print_medias (uint8_t v) {
 	switch (v) {
@@ -848,6 +925,8 @@ static char *print_medias (uint8_t v) {
 		return "6x8";
 	case MEDIA_2x6:
 		return "2x6";
+	case MEDIA_6x6:
+		return "6x6";
 	default:
 		return "Unknown";
 	}
@@ -1521,6 +1600,65 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 
 	}
 
+#if !defined(WITH_6145_LIB)	
+	/* Sanity check correction data */
+	{
+		int i;
+		struct shinkos6145_correctionparam *corrdata = ctx->corrdata;
+
+		for (i = 0 ; i < 256 ; i++) {
+			if (corrdata->pulseTransTable_Y[i] > corrdata->printMaxPulse_Y ||
+			    corrdata->pulseTransTable_M[i] > corrdata->printMaxPulse_M ||
+			    corrdata->pulseTransTable_C[i] > corrdata->printMaxPulse_C ||
+			    corrdata->pulseTransTable_O[i] > corrdata->printMaxPulse_O) {
+				ret = -10;
+				goto done;
+			}
+		}
+
+		if (!corrdata->tableTankParam_Y.trdTankSize ||
+		    !corrdata->tableTankParam_M.trdTankSize ||
+		    !corrdata->tableTankParam_C.trdTankSize ||
+		    !corrdata->tableTankParam_O.trdTankSize) {
+			ret = -14;
+			goto done;
+		}
+		if (!corrdata->tableTankParam_Y.sndTankSize ||
+		    !corrdata->tableTankParam_M.sndTankSize ||
+		    !corrdata->tableTankParam_C.sndTankSize ||
+		    !corrdata->tableTankParam_O.sndTankSize) {
+			ret = -15;
+			goto done;
+		}
+		if (!corrdata->tableTankParam_Y.fstTankSize ||
+		    !corrdata->tableTankParam_M.fstTankSize ||
+		    !corrdata->tableTankParam_C.fstTankSize ||
+		    !corrdata->tableTankParam_O.fstTankSize) {
+			ret = -16;
+			goto done;
+		}
+		if (corrdata->val_1 > 1 ||
+		    corrdata->val_2 > 1 ||		    
+		    corrdata->printOpLevel > 0xff ||
+		    corrdata->matteMode > 1) {
+			ret = -17;
+			goto done;
+		}
+		if (corrdata->randomBase_1 > 0xff ||
+		    corrdata->randomBase_2 > 0xff ||
+		    corrdata->randomBase_3 > 0xff ||
+		    corrdata->randomBase_4 > 0xff) {
+			ret = -18;
+			goto done;
+		}
+		if (!corrdata->matteSize ||
+		    corrdata->matteSize > 2) {
+			ret = -19;
+			goto done;
+		}
+	}
+#endif
+
 done:
 	return ret;
 }
@@ -1691,7 +1829,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 	uint16_t pad_l, pad_r, row_lim;
 	uint16_t row, col;
 
-	row_lim = le16_to_cpu(corrdata->line_width);
+	row_lim = le16_to_cpu(corrdata->headDots);
 	pad_l = (row_lim - corrdata->width) / 2;
 	pad_r = pad_l + corrdata->width;
 	out = 0;
@@ -1704,7 +1842,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 			if (col < pad_l) {
 				val = 0;
 			} else if (col < pad_r) {
-				val = corrdata->map_Y[src[in++]];
+				val = corrdata->pulseTransTable_Y[src[in++]];
 			} else {
 				val = 0;
 			}
@@ -1717,7 +1855,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 			if (col < pad_l) {
 				val = 0;
 			} else if (col < pad_r) {
-				val = corrdata->map_M[src[in++]];
+				val = corrdata->pulseTransTable_M[src[in++]];
 			} else {
 				val = 0;
 			}
@@ -1730,7 +1868,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 			if (col < pad_l) {
 				val = 0;
 			} else if (col < pad_r) {
-				val = corrdata->map_C[src[in++]];
+				val = corrdata->pulseTransTable_C[src[in++]];
 			} else {
 				val = 0;
 			}
@@ -1748,7 +1886,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 				if (col < pad_l) {
 					val = 0;
 				} else if (col < pad_r) {
-					val = corrdata->map_O[0x7f];
+					val = corrdata->pulseTransTable_O[0x7f];
 				} else {
 					val = 0;
 				}
@@ -1848,7 +1986,7 @@ static int shinkos6145_main_loop(void *vctx, int copies) {
 
 	int i, last_state = -1, state = S_IDLE;
 
-	struct s6145_cmd_hdr *cmd = (struct s6145_cmd_hdr *) cmdbuf;;
+	struct s6145_cmd_hdr *cmd = (struct s6145_cmd_hdr *) cmdbuf;
 	struct s6145_print_cmd *print = (struct s6145_print_cmd *) cmdbuf;
 	struct s6145_status_resp *sts = (struct s6145_status_resp *) rdbuf; 
 	struct s6145_mediainfo_resp *media = (struct s6145_mediainfo_resp *) rdbuf;
@@ -1876,13 +2014,16 @@ static int shinkos6145_main_loop(void *vctx, int copies) {
 		/* Look for matching media */
 		if (le16_to_cpu(media->items[i].columns) == cpu_to_le16(le32_to_cpu(ctx->hdr.columns)) &&
 		    le16_to_cpu(media->items[i].rows) == cpu_to_le16(le32_to_cpu(ctx->hdr.rows)) &&
-		    media->items[i].print_method == le32_to_cpu(ctx->hdr.method))
+		    media->items[i].print_method == le32_to_cpu(ctx->hdr.method) &&
+		    media->items[i].media_code == le32_to_cpu(ctx->hdr.media))
 			break;
 	}
 	if (i == media->count) {
 		ERROR("Incorrect media loaded for print!\n");
 		return CUPS_BACKEND_HOLD;
 	}
+	// XXX sanity-check media vs size
+	// don't know if media information above will catch this.
 
 	// XXX check copies against remaining media!
 
@@ -1973,7 +2114,7 @@ top:
 		}
 
 		/* Perform library transform... */
-		uint32_t newlen = le16_to_cpu(ctx->corrdata->line_width) *
+		uint32_t newlen = le16_to_cpu(ctx->corrdata->headDots) *
 			le32_to_cpu(ctx->hdr.rows) * sizeof(uint16_t) * 4;
 		uint16_t *databuf2 = malloc(newlen);
 
@@ -2029,6 +2170,13 @@ top:
 		print->rows = cpu_to_le16(le32_to_cpu(ctx->hdr.rows));
 		print->image_avg = ctx->image_avg[2]; /* Cyan level */
 		print->method = cpu_to_le32(ctx->hdr.method);
+		print->combo_wait = 0;
+
+		/* Brava21 header has a few quirks */
+		if(ctx->type == P_SHINKO_S6145D) {
+			print->media = ctx->hdr.media;
+			print->unk_1 = 0x01;
+		}
 
 		if ((ret = s6145_do_cmd(ctx,
 					cmdbuf, sizeof(*print),
@@ -2124,12 +2272,13 @@ static int shinkos6145_query_serno(struct libusb_device_handle *dev, uint8_t end
 }
 
 /* Exported */
-#define USB_VID_SHINKO       0x10CE
-#define USB_PID_SHINKO_S6145 0x0019
+#define USB_VID_SHINKO        0x10CE
+#define USB_PID_SHINKO_S6145  0x0019
+#define USB_PID_SHINKO_S6145D 0x001E /* Aka CIAAT Brava 21 */
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145",
-	.version = "0.09WIP",
+	.version = "0.11WIP",
 	.uri_prefix = "shinkos6145",
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
@@ -2141,6 +2290,7 @@ struct dyesub_backend shinkos6145_backend = {
 	.query_serno = shinkos6145_query_serno,
 	.devices = {
 	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145, P_SHINKO_S6145, ""},
+	{ USB_VID_SHINKO, USB_PID_SHINKO_S6145D, P_SHINKO_S6145D, ""},	
 	{ 0, 0, 0, ""}
 	}
 };
@@ -2169,15 +2319,17 @@ struct dyesub_backend shinkos6145_backend = {
    This printer is supposed to be a variant of the S6145, but uses a 
    different spool format -- but seems to use the same command language.
 
-   01 40 12 00  01 NN 00 YY  YY XX XX TT  00 00 00 00  00 00 01 MM  QQ 00
+   01 40 12 00  II NN NN YY  YY XX XX TT  00 00 00 00  00 00 01 MM  QQ ZZ
 
-    NN == copies
+    II == Job ID (01-255, backend fills)
+    NN NN == copies (LE)
     YY YY == Columns (LE)
     XX XX == Rows (LE)
     MM == Overcoat (02 = glossy, 03 = matte, 01 = none)
+    TT == Type (00 = 4x6, 03 = 5x7, 06 = 8x6, 07 = 2x6)
     QQ == Multicut (00 = normal, 01 = none, 02 = 2*4x6, 
                     04 = 2*2x6, 80 = 4x6-notrim)
-    TT == Type (00 = 4x6, 03 = 5x7, 06 = 8x6, 07 = 2x6)
+    ZZ == Cyan Average (backend fills)
 
     1844*2434  8x6
     1844*2492  4x6*2
