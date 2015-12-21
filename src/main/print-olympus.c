@@ -1351,22 +1351,25 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 
   stp_zfwrite("\x6a\xff\xff\xff"
 	      "\xef\xff\xff\xff", 1, 8, v);
-  /* This is actually ***MEDIA*** size, not print size.  They aren't
-     necessarily the same, but for now, they are. */
+
   if (strcmp(privdata.pagesize,"B7") == 0)
     pg = '\x01';
   else if (strcmp(privdata.pagesize,"w288h432") == 0)
     pg = '\x02';
-  else if (updr200 && strcmp(privdata.pagesize,"w144h432") == 0)
+  else if (updr200 && strcmp(privdata.pagesize,"w288h432-div2") == 0)
     pg = '\x02';
   else if (strcmp(privdata.pagesize,"w360h504") == 0)
     pg = '\x03';
+  else if (updr200 && strcmp(privdata.pagesize,"w360h504-div2") == 0)
+    pg = '\x03';
   else if (strcmp(privdata.pagesize,"w432h576") == 0)
+    pg = '\x04';
+  else if (updr200 && strcmp(privdata.pagesize,"w432h576-div2") == 0)
     pg = '\x04';
   else
     pg = 0;
-  stp_putc(pg, v);
-  dyesub_nputc(v, '\0', 3);
+
+  stp_put32_le(pg, v); 
   
   stp_zfwrite("\xfc\xff\xff\xff"
 	      "\xfb\xff\xff\xff"
@@ -1374,13 +1377,18 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\xf5\xff\xff\xff",
 	      1, 16, v);
 
-  if (updr200 && (strcmp(privdata.pagesize,"B7") == 0 ||
-		  strcmp(privdata.pagesize,"w432h576") == 0)) {
-    /* SONY_MULTICUT -- B7 on 5x7 media also gets 0x01 */
-    pg = 0x4;
+  /* Multicut mode */
+  if (updr200) {
+    if (!strcmp(privdata.pagesize,"w288h432-div2") ||
+	!strcmp(privdata.pagesize,"w360h504-div2") ||
+	!strcmp(privdata.pagesize,"w432h576-div2"))
+      pg = 0x01;
+    else
+      pg = 0x02;
   } else {
-    pg = 0x1;
+    pg = 0x01;
   }
+
   stp_put32_le(pg, v); 
   
   stp_zfwrite("\x07\x00\x00\x00"
@@ -1400,9 +1408,13 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
   }
   stp_zfwrite("\x05\x00\x00\x00"
 	      "\x02\x03\x00\x01", 1, 8, v);
+
+  /* Multicut mode */
   if (updr200) {
-    if (strcmp(privdata.pagesize,"w144h432") == 0)
-      stp_putc(0x02, v); /* SONY_MULTICUT: 2x6 on 4x6, 4x6 on 8x6, 3x5 on 7x5 */
+    if (!strcmp(privdata.pagesize,"w288h432-div2") ||
+	!strcmp(privdata.pagesize,"w360h504-div2") ||
+	!strcmp(privdata.pagesize,"w432h576-div2"))
+      stp_putc(0x02, v);
     else
       stp_putc(0x00, v);
   } else {
@@ -1415,12 +1427,7 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
 	      "\x00\x00\x00\x00\x07\x00\x00\x00\x00", 1, 24, v);
 
   stp_put16_be(privdata.w_size, v);
-  if (updr200 && strcmp(privdata.pagesize,"w144h432") == 0) {
-    stp_put16_be(1382, v);
-    /* SONY_MULTICUT -- 4x6 on 8x6 uses 2674 rows, 3x7 on 5x7 uses 2420 */
-  } else {
-    stp_put16_be(privdata.h_size, v);
-  }  
+  stp_put16_be(privdata.h_size, v);
   
   stp_zfwrite("\xf9\xff\xff\xff",
 	      1, 4, v);
@@ -1433,11 +1440,10 @@ static void updr150_200_printer_init_func(stp_vars_t *v, int updr200)
   stp_zfwrite("\x00\x00\x00\x00", 1, 4, v);
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
-  
-  stp_zfwrite("\xf8\xff\xff\xff"
-	      "\xec\xff\xff\xff",
-	      1, 8, v);
-  
+  stp_zfwrite("\xf8\xff\xff\xff", 1, 4, v);
+
+  /* Each data block has this header.  Can actually have multiple blocks! */
+  stp_zfwrite("\xec\xff\xff\xff", 1, 4, v);  
   stp_zfwrite("\x0b\x00\x00\x00\x1b\xea"
 	      "\x00\x00\x00\x00", 1, 10, v);
   stp_put32_be(privdata.w_size*privdata.h_size*3, v);
@@ -1468,22 +1474,26 @@ static void updr150_printer_end_func(stp_vars_t *v)
 /* Sony UP-DR200 */
 static const dyesub_pagesize_t updr200_page[] =
 {
-  { "w144h432", "2UPC-R204 (2x6)", PT(691,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w288h432", "2UPC-R204 (4x6)", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
+  { "w288h432-div2", "2UPC-R204 (2*2x6)", PT(1382,334)+1, PT(2048,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},  
   { "B7", "2UPC-R203 (3.5x5)", PT(1210,334)+1, PT(1728,334)+1, 0, 0, 0, 0, DYESUB_LANDSCAPE},
   { "w360h504", "2UPC-R205 (5x7)", PT(1728,334)+1, PT(2380,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w360h504-div2", "2UPC-R205 (2*3.5x5)", PT(1728,334)+1, PT(2420,334)+1, 0, 0, 0, 0, DYESUB_PORTRAIT},
   { "w432h576", "2UPC-R206 (6x8)", PT(2048,334)+1, PT(2724,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
+  { "w432h576-div2", "2UPC-R206 (2*4x6)", PT(2048,334)+1, PT(2764,334)+1, 0, 0, 0, DYESUB_PORTRAIT},
 };
 
 LIST(dyesub_pagesize_list_t, updr200_page_list, dyesub_pagesize_t, updr200_page);
 
 static const dyesub_printsize_t updr200_printsize[] =
 {
-  { "334x334", "w144h432", 691, 2048},
   { "334x334", "w288h432", 1382, 2048},
+  { "334x334", "w288h432-div2", 1382, 2048},  
   { "334x334", "B7", 1210, 1728},
   { "334x334", "w360h504", 1728, 2380},
+  { "334x334", "w360h504-div2", 1728, 2420},
   { "334x334", "w432h576", 2048, 2724},
+  { "334x334", "w432h576-div2", 2048, 2764},  
 };
 
 LIST(dyesub_printsize_list_t, updr200_printsize_list, dyesub_printsize_t, updr200_printsize);
@@ -1501,31 +1511,6 @@ LIST(laminate_list_t, updr200_laminate_list, laminate_t, updr200_laminate);
 static void updr200_printer_init_func(stp_vars_t *v)
 {
   updr150_200_printer_init_func(v, 1);
-}
-
-static void updr200_printer_end_func(stp_vars_t *v)
-{
-  if (strcmp(privdata.pagesize,"w144h432") == 0) {
-    /* SONY_MULTICUT -- 2x6 on 4x6, 3x5 on 5x7, 4x6 on 8x6 */
-    stp_zfwrite("\xfc\xff\xff\xff"
-		"\xfa\xff\xff\xff",
-		1, 8, v);
-    stp_zfwrite("\x07\x00\x00\x00"
-		"\x1b\xc0\x00\x03\x00\x05\x00"
-		"\x05\x00\x00\x00"
-		"\x02\x03\x00\x01\x01",
-		1, 20, v);
-    stp_zfwrite("\x07\x00\x00\x00"
-		"\x1b\x0a\x00\x00\x00\x00\x00"
-		"\x07\x00\x00\x00"
-		"\x1b\x17\x00\x00\x00\x00\x00",
-		1, 22, v);
-    stp_zfwrite("\xf3\xff\xff\xff",
-		1, 4, v);
-  } else {
-    /* Normal operation */
-    updr150_printer_end_func(v);
-  }
 }
 
 /* Sony UP-CR10L / DNP SL10 */
@@ -4746,7 +4731,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &updr200_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &updr200_printer_init_func, &updr200_printer_end_func,
+    &updr200_printer_init_func, &updr150_printer_end_func,
     NULL, NULL,
     NULL, NULL,
     NULL, NULL, NULL, 
