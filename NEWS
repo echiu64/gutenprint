@@ -260,32 +260,62 @@ III) MAJOR CHANGES FROM PREVIOUS RELEASES
   1) Added support for the following dye sublimation printers:
 
 	Canon SELPHY CP820/CP910
-	Ciaat Brava 21		  [experimental]
-	Citizen CW-01 / Olmec OP900
 	DNP DS620
-	DNP DS80DX                [experimental]
-	Kodak 305		  [experimental]
+	Citizen CW-01 / Olmec OP900
+	Mitsubishi CP3800DW
+	Mitsubishi CP-9550DW-S
 	Kodak 8810		  [experimental]
 	Kodak 7000/7010/7015	  [experimental]
-	Mitsubishi CP-D80DW	  [experimental]
-	Mitsubishi CP3800DW
-	Shinko S1245/S6145/S6245  [experimental]
 	Sony UP-CR10/DNP SL10	  [experimental]
+	DNP DS80DX                [experimental]
+	Sinfonia S1245/CE	  [experimental]
+	Sinfonia S6245/CE2	  [experimental]
+	Kodak 305		  [experimental] [*1]
+	Ciaat Brava 21		  [experimental] [*1]
+	Mitsubishi CP-D80DW	  [experimental] [*1]
+	Sinfonia S6145/CS2	  [experimental] [*1]
+
+     [*1] Please note that these models utilize a print engine that 
+	  requires the host system to process the print data using 
+	  unknown algorithms.  Until these algorithms can be determined
+	  and re-implemented, these models are unsuitable for general
+	  use due to very poor output quality.
 
   2) Enhanced support (and bugfixes) for the following dye sublimation
      printers:
 
-	Canon SELPHY CP900
+      Added multicut (eg 2*2x6) support:
+
 	Citizen CX/CX-W/CY
+	DNP DS40/DS80/RX1
+	Sony UP-DR200
+	Sinfonia S2145/CS
+	Mitsubishi CP-9550 family
+	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental] [*1]
+
+      Improved 5x7 support:
+
+	Citizen CX/CY
+	DNP DS40/RX1
+
+      General backend stability and robustness:
+
+	Canon SELPHY CP900
+	Citizen CX/CX-WCY
 	DNP DS40/DS80/RX1
 	Kodak 605
 	Kodak 6800/6850
 	Kodak 1400/805
-	Mitsubishi CP-9550 family (including the CP9550DW-S variant)
-	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental]
+	Mitsubishi CP-9550 family 
 	Sony UP-DR200
-	Shinko S2145
+	Mitsubishi CP-D70DW/D707DW/K60DW-S [experimental] [*1]
 
+     [*1] Please note that these models utilize a print engine that 
+	  requires the host system to process the print data using 
+	  unknown algorithms.  Until these algorithms can be determined
+	  and re-implemented, these models are unsuitable for general
+	  use due to very poor output quality.
+		
   3) Added support for the Datamax-O'Neil PCL printers, the Performance
      series (p1115, p1115s, p1120n, p1125, p1725, h8308) and the
      Datamax-O'Neil Workstation printer.
