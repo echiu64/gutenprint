@@ -8,26 +8,33 @@ Welcome to Gutenprint 5.2.11-pre2!  Please read these notes carefully.
 
 I) INTRODUCTION
 
-    This is Gutenprint version 5.2.11-pre2, an unstable release of Gutenprint
-    5.2.  Gutenprint, formerly named Gimp-Print, is a suite of printer
-    drivers that may be used with most common UNIX print spooling
-    systems, including CUPS, lpr, LPRng, or others.  These drivers
-    provide high quality printing for UNIX (including Macintosh OS X
-    10.6 and newer) and Linux systems in many cases equal to or better
-    than proprietary vendor-supplied drivers.  Gutenprint also
-    includes an enhanced print plug-in for the GIMP image editor,
-    replacing the Gimp-Print 4.2-based plugin supplied with GIMP 1.2,
-    2.0, and 2.2, and offering an alternative with additional
-    capabilities to the GtkPrint-based plugin supplied with GIMP 2.4
-    and beyond.
+    Gutenprint is a suite of printer drivers that may be used with
+    most common UNIX print spooling systems, including CUPS, lpr,
+    LPRng, or others.  Gutenprint currently supports over 2500 printer
+    models.  These drivers provide high quality printing for UNIX,
+    Linux, and Macintosh OS X (10.6 and above) systems.  Gutenprint
+    includes CUPS and Foomatic drivers, and an enhanced Print plug-in
+    for GIMP that replaces the print plug-in packaged with the GIMP
+    distribution.
 
-    Gutenprint has been renamed in order to clearly distinguish it
-    from GIMP.  While this package started out as the Print plugin for
-    GIMP, it has expanded into a collection of general purpose printer
-    drivers, and the enhanced Print plugin for GIMP is now only a
-    small part of the package.  Furthermore, the name Gutenprint
-    recognizes Johannes Gutenberg, the inventor of the movable type
-    printing press.  Finally, the word "guten" means "good" in German.
+    This is Gutenprint version 5.2.11-pre2, an unstable release of
+    Gutenprint 5.2.  Gutenprint, formerly named Gimp-Print, is a suite
+    of printer drivers that may be used with most common UNIX print
+    spooling systems, including CUPS, lpr, LPRng, or others.
+    Gutenprint also includes an enhanced print plug-in for the GIMP
+    image editor, replacing the Gimp-Print 4.2-based plugin supplied
+    with GIMP 1.2, 2.0, and 2.2, and offering an alternative with
+    additional capabilities to the GtkPrint-based plugin supplied with
+    GIMP 2.4 and beyond.
+
+    Gutenprint was renamed from its original name of Gimp-Print in
+    order to clearly distinguish it from GIMP.  While this package
+    started out as the Print plugin for GIMP, it has expanded into a
+    collection of general purpose printer drivers, and the enhanced
+    Print plugin for GIMP is now only a small part of the package.
+    Furthermore, the name Gutenprint recognizes Johannes Gutenberg,
+    the inventor of the movable type printing press.  Finally, the
+    word "guten" means "good" in German.
 
     Please read the user's manual (in ODF format as
     doc/gutenprint-users-manual.odt or PDF format as
