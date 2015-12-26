@@ -1596,7 +1596,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 		total += sizeof(data.data);
 
 		if (data.remain_pkt == 0)
-			DEBUG("correction block complete (%lu/%lu total)\n", total, ctx->corrdatalen);
+			DEBUG("correction block transferred (%lu/%lu total)\n", total, ctx->corrdatalen);
 
 	}
 
@@ -2059,9 +2059,9 @@ top:
 		INFO("Printer Status: 0x%02x (%s)\n", 
 		     sts->hdr.status, status_str(sts->hdr.status));
 		if (sts->hdr.result != RESULT_SUCCESS)
-			goto printer_error;		
-		if (sts->hdr.error == ERROR_PRINTER)
 			goto printer_error;
+		if (sts->hdr.status == ERROR_PRINTER)
+			goto printer_error;		
 	} else if (state == last_state) {
 		sleep(1);
 		goto top;
@@ -2278,7 +2278,7 @@ static int shinkos6145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145",
-	.version = "0.11WIP",
+	.version = "0.12WIP",
 	.uri_prefix = "shinkos6145",
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
