@@ -30,12 +30,13 @@
  *   library, providing you have *written permission* from Sinfonia Technology
  *   Co. LTD to use and/or redistribute that library.
  *
+ *   You must still adhere to all other terms of the license to this program
+ *   (ie GPLv2) and the license of the libS6145ImageProcess library.
+ *
  *   Please note that the authors of this program *do not* have permission to
  *   redistribute this library, which was provided only in binary form.
  *
- *   You must still adhere to all other terms of both the GPLv2 and the license
- *   of the libS6145ImageProcess library.
- */
+ * */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -189,30 +190,27 @@ struct shinkos6145_correctionparam {
 	uint16_t printMaxPulse_C; // @8780
 	uint16_t printMaxPulse_O; // @8782
 
-	uint16_t MtfWeightH_Y;    // @8784
-	uint16_t MtfWeightH_M;    // @8786
-	uint16_t MtfWeightH_C;    // @8788
-	uint16_t MtfWeightH_O;    // @8790	
+	uint16_t mtfWeightH_Y;    // @8784
+	uint16_t mtfWeightH_M;    // @8786
+	uint16_t mtfWeightH_C;    // @8788
+	uint16_t mtfWeightH_O;    // @8790
 
-	uint16_t mtfWeightV_Y;    // @7092
-	uint16_t mtfWeightV_M;    // @7094
-	uint16_t mtfWeightV_C;    // @7096
-	uint16_t mtfWeightV_O;    // @7098
+	uint16_t mtfWeightV_Y;    // @8792
+	uint16_t mtfWeightV_M;    // @8794
+	uint16_t mtfWeightV_C;    // @8796
+	uint16_t mtfWeightV_O;    // @8798
 
 	uint16_t mtfSlice_Y;      // @8800
 	uint16_t mtfSlice_M;      // @8802
 	uint16_t mtfSlice_C;      // @8804
 	uint16_t mtfSlice_O;      // @8806
 
-	uint16_t val_1;           // @8808 // 1 for matte
-	uint16_t val_2;		  // @8810
+	uint16_t val_1;           // @8808 // 1 enables linepreprintprocess
+	uint16_t val_2;		  // @8810 // 1 enables ctankprocess
 	uint16_t printOpLevel;    // @8812
 	uint16_t matteMode;	  // @8814 // 1 for matte
 
-	uint16_t randomBase_1;    // @8816 [use lower word]
-	uint16_t randomBase_2;    // @8818 [use lower word]
-	uint16_t randomBase_3;    // @8820 [use lower word]
-	uint16_t randomBase_4;    // @8822 [use lower word]
+	uint16_t randomBase[4];   // @8816 [use lower byte of each]
 
 	uint16_t matteSize;       // @8824
 	uint16_t matteGloss;      // @8826
@@ -227,10 +225,10 @@ struct shinkos6145_correctionparam {
 	uint16_t SideEdgeLvCoefTable[256]; // @9348
 	uint8_t  rsvd_3[2572];             // @9860, null?
 
+	/* User-supplied data */
 	uint16_t width;           // @12432
 	uint16_t height;          // @12434
-
-	uint8_t  rsvd_22[3948];   // @12436, null.
+	uint8_t  pad[3948];       // @12436, null.
 } __attribute__((packed)); /* 16384 bytes */
 
 /* Private data stucture */
@@ -268,6 +266,7 @@ struct s6145_cmd_hdr {
 #define S6145_CMD_GETSERIAL  0x0006
 #define S6145_CMD_PRINTSTAT  0x0007
 #define S6145_CMD_EXTCOUNTER 0x0008
+#define S6145_CMD_MEMORYBANK 0x000A // Brava 21 only?
 
 #define S6145_CMD_PRINTJOB  0x4001
 #define S6145_CMD_CANCELJOB 0x4002
@@ -413,7 +412,9 @@ struct s6145_setparam_cmd {
 #define PARAM_PAPER_PRESV  0x3d
 #define PARAM_DRIVER_MODE  0x3e
 #define PARAM_PAPER_MODE   0x3f
+#define PARAM_REGION_CODE  0x53 // Brava 21 only?
 #define PARAM_SLEEP_TIME   0x54
+
 
 #define PARAM_OC_PRINT_OFF   0x00000001
 #define PARAM_OC_PRINT_GLOSS 0x00000002
@@ -1603,6 +1604,7 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 #if !defined(WITH_6145_LIB)	
 	/* Sanity check correction data */
 	{
+		// XXX endianness!!
 		int i;
 		struct shinkos6145_correctionparam *corrdata = ctx->corrdata;
 
@@ -1644,10 +1646,10 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 			ret = -17;
 			goto done;
 		}
-		if (corrdata->randomBase_1 > 0xff ||
-		    corrdata->randomBase_2 > 0xff ||
-		    corrdata->randomBase_3 > 0xff ||
-		    corrdata->randomBase_4 > 0xff) {
+		if (corrdata->randomBase[0] > 0xff ||
+		    corrdata->randomBase[1] > 0xff ||
+		    corrdata->randomBase[2] > 0xff ||
+		    corrdata->randomBase[3] > 0xff) {
 			ret = -18;
 			goto done;
 		}
@@ -1830,13 +1832,13 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 	uint16_t row, col;
 
 	row_lim = le16_to_cpu(corrdata->headDots);
-	pad_l = (row_lim - corrdata->width) / 2;
-	pad_r = pad_l + corrdata->width;
+	pad_l = (row_lim - le16_to_cpu(corrdata->width)) / 2;
+	pad_r = pad_l + le16_to_cpu(corrdata->width);
 	out = 0;
 	in = 0;
 	
 	/* Convert YMC 8-bit to 16-bit, and pad appropriately to full stripe */
-	for (row = 0 ; row < corrdata->height ; row++) {
+	for (row = 0 ; row < le16_to_cpu(corrdata->height) ; row++) {
 		for (col = 0 ; col < row_lim; col++) {
 			uint16_t val;
 			if (col < pad_l) {
@@ -1849,7 +1851,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 			dest[out++] = val;
 		}
 	}
-	for (row = 0 ; row < corrdata->height ; row++) {
+	for (row = 0 ; row < le16_to_cpu(corrdata->height) ; row++) {
 		for (col = 0 ; col < row_lim; col++) {
 			uint16_t val;
 			if (col < pad_l) {
@@ -1862,7 +1864,7 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 			dest[out++] = val;
 		}
 	}
-	for (row = 0 ; row < corrdata->height ; row++) {
+	for (row = 0 ; row < le16_to_cpu(corrdata->height) ; row++) {
 		for (col = 0 ; col < row_lim; col++) {
 			uint16_t val;
 			if (col < pad_l) {
@@ -1880,13 +1882,13 @@ static void lib6145_process_image(uint8_t *src, uint16_t *dest,
 	if (oc_mode > PRINT_MODE_NO_OC) {
 		// XXX matters if we're using glossy/matte..
 		// or should we just dump over the contents of the "raw" file?
-		for (row = 0 ; row < corrdata->height ; row++) {
+		for (row = 0 ; row < le16_to_cpu(corrdata->height) ; row++) {
 			for (col = 0 ; col < row_lim; col++) {
 				uint16_t val;
 				if (col < pad_l) {
 					val = 0;
 				} else if (col < pad_r) {
-					val = corrdata->pulseTransTable_O[0x7f];
+					val = corrdata->pulseTransTable_O[corrdata->printOpLevel];
 				} else {
 					val = 0;
 				}
@@ -2124,7 +2126,7 @@ top:
 
 		/* Convert packed RGB to planar YMC */
 		{
-			int planelen = ctx->corrdata->width * ctx->corrdata->height;
+			int planelen = le16_to_cpu(ctx->corrdata->width) * le16_to_cpu(ctx->corrdata->height);
 			uint8_t *databuf3 = malloc(ctx->datalen);
 				 
 			for (i = 0 ; i < planelen ; i++) {
@@ -2141,7 +2143,11 @@ top:
 		}
 		
 #if defined(WITH_6145_LIB)
-		INFO("Calling Sinfonia Image Processing Library...\n");		
+#if defined(S6145_RE)
+		INFO("Calling Reverse-Engineered Image Processing Library...\n");
+#else
+		INFO("Calling Sinfonia Image Processing Library...\n");
+#endif		
 		if (ImageAvrCalc(ctx->databuf, le32_to_cpu(ctx->hdr.columns), le32_to_cpu(ctx->hdr.rows), ctx->image_avg)) {
 			ERROR("Library returned error!\n");
 			return CUPS_BACKEND_FAILED;
@@ -2149,7 +2155,7 @@ top:
 
 		ImageProcessing(ctx->databuf, databuf2, ctx->corrdata);
 #else
-		INFO("Calling Internal Image Processing Library...\n");
+		INFO("Calling Internal Fallback Image Processing Library...\n");
 		
 		lib6145_calc_avg(ctx, le32_to_cpu(ctx->hdr.columns), le32_to_cpu(ctx->hdr.rows));
 		lib6145_process_image(ctx->databuf, databuf2, ctx->corrdata, oc_mode);
@@ -2278,7 +2284,7 @@ static int shinkos6145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145",
-	.version = "0.12WIP",
+	.version = "0.13WIP",
 	.uri_prefix = "shinkos6145",
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
