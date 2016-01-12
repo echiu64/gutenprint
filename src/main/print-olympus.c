@@ -2806,9 +2806,9 @@ static const laminate_t mitsu_cpd70x_laminate[] =
 
 LIST(laminate_list_t, mitsu_cpd70x_laminate_list, laminate_t, mitsu_cpd70x_laminate);
 
-static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60, int is_305)
+static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
 {
-  /* Printer init */
+  /* Printer wakeup */
   stp_putc(0x1b, v);
   stp_putc(0x45, v);
   stp_putc(0x57, v);
@@ -2819,60 +2819,49 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60, int is_305)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  if (is_k60) {
-    stp_putc(0x00, v);
-  } else if (is_305) {
-    stp_putc(0x90, v);
-  } else {
-    stp_putc(0x01, v);
-  }
+  stp_putc(model, v); // k60 == x02, 305 == x90, d70x == x01
   dyesub_nputc(v, 0x00, 12);
 
   stp_put16_be(privdata.w_size, v);
   stp_put16_be(privdata.h_size, v);
   if (*((const char*)((privdata.laminate->seq).data)) != 0x00) {
-    /* Laminate a slightly larger boundary */
+    /* Laminate a slightly larger boundary in Matte mode */
     stp_put16_be(privdata.w_size, v);
     stp_put16_be(privdata.h_size + 12, v);
-    if (is_k60) {
-      stp_putc(0x04, v); /* Matte Lamination forces UltraFine */
+    if (model == 0x02) {
+      stp_putc(0x04, v); /* Matte Lamination forces UltraFine on K60 */
     } else {
       stp_putc(0x03, v); /* Matte Lamination forces Superfine (or UltraFine) */
     }
   } else {
-    dyesub_nputc(v, 0x00, 4);  /* Ie no Lamination */
-    stp_putc(0x00, v); /* Fine mode */
+    /* Glossy lamination here */
+    stp_put16_be(0, v);
+    stp_put16_be(0, v);	  
+    stp_putc(0x00, v); /* ...and just use fine mode. XXX (optional?) */
   }
   dyesub_nputc(v, 0x00, 7);
 
-  if (is_k60 || is_305) {
-    stp_putc(0x01, v); /* K60 has a single "lower" deck */
+  if (model != 0x01) {
+    stp_putc(0x00, v);  /* D70x: 0x00 Auto deck selection, 0x01 for Lower, 0x02 for Upper */
   } else {
-    stp_putc(0x00, v);  /* Auto deck selection, or 0x01 for Lower, 0x02 for Upper */
+    stp_putc(0x01, v); /* All others have a single "lower" deck */
   }
-  dyesub_nputc(v, 0x00, 8);
+  dyesub_nputc(v, 0x00, 7);
 
+  stp_putc(0x00, v); /* Lamination always enabled */
   stp_zfwrite((privdata.laminate->seq).data, 1,
 	      (privdata.laminate->seq).bytes, v); /* Lamination mode */
   dyesub_nputc(v, 0x00, 6);
 
-  /* Multi-cut control */
-  if (is_305) {
-	  if (strcmp(privdata.pagesize,"w288h432") == 0) {
-		  stp_putc(0x01, v);
-	  } else {
-		  stp_putc(0x00, v);
-	  }
+  /* Multi-cut controlx */
+  if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
+    stp_putc(0x01, v);
+  } else if (strcmp(privdata.pagesize,"w360h504-div2") == 0) {
+    stp_putc(0x01, v);
+  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
+    stp_putc(0x05, v);
   } else {
-	  if (strcmp(privdata.pagesize,"w432h576-div2") == 0) {
-		  stp_putc(0x01, v);
-	  } else if (strcmp(privdata.pagesize,"w360h504-div2") == 0) {
-		  stp_putc(0x01, v);
-	  } else if (strcmp(privdata.pagesize,"w288h432-div2") == 0) {
-		  stp_putc(0x05, v);
-	  } else {
-		  stp_putc(0x00, v);
-	  }
+    stp_putc(0x00, v);
   }
   dyesub_nputc(v, 0x00, 15);
 
@@ -2881,7 +2870,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, int is_k60, int is_305)
 
 static void mitsu_cpd70x_printer_init(stp_vars_t *v)
 {
-	mitsu_cpd70k60_printer_init(v, 0, 0);
+	mitsu_cpd70k60_printer_init(v, 0x01);
 }
 
 static void mitsu_cpd70x_printer_end(stp_vars_t *v)
@@ -2986,7 +2975,7 @@ LIST(dyesub_printsize_list_t, mitsu_cpk60_printsize_list, dyesub_printsize_t, mi
 
 static void mitsu_cpk60_printer_init(stp_vars_t *v)
 {
-  mitsu_cpd70k60_printer_init(v, 1, 0);
+  mitsu_cpd70k60_printer_init(v, 0x02);
 }
 
 static const dyesub_pagesize_t mitsu_cpd80_page[] =
@@ -3044,7 +3033,7 @@ LIST(dyesub_printsize_list_t, kodak305_printsize_list, dyesub_printsize_t, kodak
 
 static void kodak305_printer_init(stp_vars_t *v)
 {
-	mitsu_cpd70k60_printer_init(v, 0, 1);
+	mitsu_cpd70k60_printer_init(v, 0x90);
 }
 
 /* Shinko CHC-S9045 (experimental) */
