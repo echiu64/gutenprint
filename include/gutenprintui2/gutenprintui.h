@@ -42,6 +42,7 @@ extern "C" {
 #pragma GCC diagnostic ignored "-Wstrict-prototypes"
 #pragma GCC diagnostic ignored "-Wredundant-decls"
 #pragma GCC diagnostic ignored "-Wunused-function"
+#pragma GCC diagnostic ignored "-Wcast-qual"
 #pragma GCC diagnostic ignored "-pedantic"
 #include <gtk/gtk.h>
 #pragma GCC diagnostic pop
