@@ -2819,7 +2819,7 @@ static void mitsu_cpd70k60_printer_init(stp_vars_t *v, unsigned char model)
   stp_putc(0x1b, v);
   stp_putc(0x5a, v);
   stp_putc(0x54, v);
-  stp_putc(model, v); // k60 == x02, 305 == x90, d70x == x01
+  stp_putc(model, v); /* k60 == x02, 305 == x90, d70x == x01 */
   dyesub_nputc(v, 0x00, 12);
 
   stp_put16_be(privdata.w_size, v);
