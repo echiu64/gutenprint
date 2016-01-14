@@ -1,5 +1,5 @@
-Welcome to Gutenprint 5.2.11-pre2, a pre-release of Gutenprint
-5.2.11. Please read these release notes carefully.
+Welcome to Gutenprint 5.2.11, a stable release of Gutenprint
+5.2. Please read these release notes carefully.
 
 Gutenprint is a suite of printer drivers that may be used with most
 common UNIX print spooling systems, including CUPS, lpr, LPRng, or
@@ -3032,8 +3032,7 @@ A) GENERAL USER-VISIBLE CHANGES
       ensure that you are using GIMP 2.0 or above.
 
    2) Gutenprint 5.2 no longer supports Macintosh OS X 10.2; it now
-      requires 10.3 (Panther) or higher.  This is due to a new library
-      requirement (for the iconv library) that is not present in 10.2.
+      requires 10.6 (Snow Leopard) or higher.
 
    3) Color Correction is now shown on the basic output adjustment
       menu rather than the advanced menu.
@@ -3123,6 +3122,7 @@ D) CHANGES TO THE CUPS INTERFACE
 	list of languages accepted is as follows:
 
 	C	English (US)
+	ca	Catalan
 	cs	Czech
 	da	Danish
 	de	German
@@ -3131,15 +3131,23 @@ D) CHANGES TO THE CUPS INTERFACE
 	es	Spanish
 	fi	Finnish
 	fr	French
+	gl	Galician
 	hu	Hungarian
+	it	Italian
 	ja	Japanese
 	nb	Norwegian
 	nl	Dutch
 	pl	Polish
 	pt	Portuguese
+	ru	Russian
 	sk	Slovak
+	sl	Slovenian
 	sv	Swedish
-	zh_TW	Simplified Chinese
+	tr	Turkish
+	uk	Ukrainian
+	vi	Vietnamese
+	zh_CN	Simplified Chinese
+	zh_TW	Traditional Chinese
 
       - If -loriginal is passed, the original language of the PPD file
 	will be honored.
