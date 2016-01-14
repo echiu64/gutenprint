@@ -5123,7 +5123,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &ciaat_brava21_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &shinko_chcs6145_printer_init, NULL,
+    &shinko_chcs6145_printer_init, &shinko_chcs2145_printer_end,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
