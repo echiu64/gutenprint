@@ -43,6 +43,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -343,6 +344,7 @@ struct s6145_print_cmd {
 #define PRINT_MODE_GLOSSY       0x02
 #define PRINT_MODE_MATTE        0x03
 
+#if 0
 static char *print_modes(uint8_t v) {
 	switch (v) {
 	case PRINT_MODE_NO_OC:
@@ -355,6 +357,7 @@ static char *print_modes(uint8_t v) {
 		return "Unknown";
 	}
 }
+#endif
 
 #define PRINT_METHOD_STD     0x00
 #define PRINT_METHOD_COMBO_2 0x02
@@ -1149,14 +1152,8 @@ static int get_status(struct shinkos6145_ctx *ctx)
 	INFO("Lifetime Distance:     %08d inches\n", le32_to_cpu(resp2->lifetime_distance));
 	INFO("Maintainence Distance: %08d inches\n", le32_to_cpu(resp2->maint_distance));
 	INFO("Head Distance:         %08d inches\n", le32_to_cpu(resp2->head_distance));
-
+	
 	/* Query various params */
-	if ((ret = get_param(ctx, PARAM_OC_PRINT, &val))) {
-		ERROR("Failed to execute command\n");
-		return ret;
-	}
-	INFO("Last Overcoat mode:  %s\n", print_modes(val));
-
 	if ((ret = get_param(ctx, PARAM_PAPER_PRESV, &val))) {
 		ERROR("Failed to execute command\n");
 		return ret;
@@ -1418,6 +1415,36 @@ static int reset_curve(struct shinkos6145_ctx *ctx, int target)
 	return 0;
 }
 
+static int shinkos6145_dump_corrdata(struct shinkos6145_ctx *ctx, char *fname)
+{
+	int ret;
+
+	ret = shinkos6145_get_imagecorr(ctx);
+	if (ret) {
+		ERROR("Failed to execute command\n");
+		return ret;
+	}
+
+	/* Open file and write it out */
+	{
+		int fd = open(fname, O_WRONLY|O_CREAT, S_IRUSR|S_IWUSR);
+		if (fd < 0) {
+			ERROR("Unable to open filename\n");
+			return fd;
+		}
+
+		write(fd, ctx->corrdata, sizeof(struct shinkos6145_correctionparam));
+		close(fd);
+	}
+
+	/* Free the buffers */
+	free(ctx->corrdata);
+	ctx->corrdata = NULL;
+	ctx->corrdatalen = 0;
+	
+	return ret;
+}
+
 static int get_tonecurve(struct shinkos6145_ctx *ctx, int type, char *fname) 
 {
 	struct s6145_readtone_cmd  cmd;
@@ -1581,7 +1608,14 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 
 	ctx->corrdatalen = le16_to_cpu(resp->total_size);
 	INFO("Fetching %lu bytes of image correction data\n", ctx->corrdatalen);
+
 	ctx->corrdata = malloc(sizeof(struct shinkos6145_correctionparam));
+	if (!ctx->corrdata) {
+		ERROR("Memory allocation failure\n");
+		ret = -ENOMEM;
+		goto done;
+	}
+	memset(ctx->corrdata, 0, sizeof(struct shinkos6145_correctionparam));
 	total = 0;
 
 	while (total < ctx->corrdatalen) {
@@ -1604,15 +1638,14 @@ static int shinkos6145_get_imagecorr(struct shinkos6145_ctx *ctx)
 #if !defined(WITH_6145_LIB)	
 	/* Sanity check correction data */
 	{
-		// XXX endianness!!
 		int i;
 		struct shinkos6145_correctionparam *corrdata = ctx->corrdata;
 
 		for (i = 0 ; i < 256 ; i++) {
-			if (corrdata->pulseTransTable_Y[i] > corrdata->printMaxPulse_Y ||
-			    corrdata->pulseTransTable_M[i] > corrdata->printMaxPulse_M ||
-			    corrdata->pulseTransTable_C[i] > corrdata->printMaxPulse_C ||
-			    corrdata->pulseTransTable_O[i] > corrdata->printMaxPulse_O) {
+			if (le16_to_cpu(corrdata->pulseTransTable_Y[i]) > le16_to_cpu(corrdata->printMaxPulse_Y) ||
+			    le16_to_cpu(corrdata->pulseTransTable_M[i]) > le16_to_cpu(corrdata->printMaxPulse_M) ||
+			    le16_to_cpu(corrdata->pulseTransTable_C[i]) > le16_to_cpu(corrdata->printMaxPulse_C) ||
+			    le16_to_cpu(corrdata->pulseTransTable_O[i]) > le16_to_cpu(corrdata->printMaxPulse_O)) {
 				ret = -10;
 				goto done;
 			}
@@ -1676,7 +1709,8 @@ static void shinkos6145_cmdline(void)
 	DEBUG("\t\t[ -l filename ]  # Get current tone curve\n");
 	DEBUG("\t\t[ -L filename ]  # Set current tone curve\n");
 	DEBUG("\t\t[ -m ]           # Query media\n");
-	DEBUG("\t\t[ -r ]           # Reset user/NV tone curve\n");
+	DEBUG("\t\t[ -Q filename ]  # Extract image correction params\n");
+	DEBUG("\t\t[ -r ]           # Reset user/NV tone curve\n");	
 	DEBUG("\t\t[ -R ]           # Reset printer to factory defaults\n");
 	DEBUG("\t\t[ -s ]           # Query status\n");
 	DEBUG("\t\t[ -X jobid ]     # Abort a printjob\n");
@@ -1690,7 +1724,7 @@ int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
 	if (!ctx)
 		return -1;
 
-	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "c:C:eFik:l:L:mr:R:sX:")) >= 0) {
+	while ((i = getopt(argc, argv, GETOPT_LIST_GLOBAL "c:C:eFik:l:L:mr:Q:R:sX:")) >= 0) {
 		switch(i) {
 		GETOPT_PROCESS_GLOBAL
 		case 'c':
@@ -1736,6 +1770,9 @@ int shinkos6145_cmdline_arg(void *vctx, int argc, char **argv)
 			break;
 		case 'm':
 			j = get_mediainfo(ctx);
+			break;
+		case 'Q':
+			j = shinkos6145_dump_corrdata(ctx, optarg);
 			break;
 		case 'r':
 			j = reset_curve(ctx, RESET_TONE_CURVE);
@@ -2087,6 +2124,7 @@ top:
 		/* Set matte/etc */
 
 		uint32_t oc_mode = le32_to_cpu(ctx->hdr.oc_mode);
+		uint32_t updated = 0;
 
 		if (!oc_mode) /* if nothing set, default to glossy */
 			oc_mode = PARAM_OC_PRINT_GLOSS;
@@ -2106,16 +2144,19 @@ top:
 				ERROR("Failed to execute command\n");
 				return ret;
 			}
+			updated = 1;
 		}
 
-		/* Get image correction parameters */
-		ret = shinkos6145_get_imagecorr(ctx);
-		if (ret) {
-			ERROR("Failed to execute command\n");
-			return ret;
+		/* Get image correction parameters if necessary */
+		if (updated || !ctx->corrdata || !ctx->corrdatalen) {
+			ret = shinkos6145_get_imagecorr(ctx);
+			if (ret) {
+				ERROR("Failed to execute command\n");
+				return ret;
+			}
 		}
 
-		/* Perform library transform... */
+		/* Set up library transform... */
 		uint32_t newlen = le16_to_cpu(ctx->corrdata->headDots) *
 			le32_to_cpu(ctx->hdr.rows) * sizeof(uint16_t) * 4;
 		uint16_t *databuf2 = malloc(newlen);
@@ -2141,7 +2182,8 @@ top:
 			free(ctx->databuf);
 			ctx->databuf = databuf3;
 		}
-		
+
+		/* Perform the actual library transform */
 #if defined(WITH_6145_LIB)
 #if defined(S6145_RE)
 		INFO("Calling Reverse-Engineered Image Processing Library...\n");
@@ -2284,7 +2326,7 @@ static int shinkos6145_query_serno(struct libusb_device_handle *dev, uint8_t end
 
 struct dyesub_backend shinkos6145_backend = {
 	.name = "Shinko/Sinfonia CHC-S6145",
-	.version = "0.13WIP",
+	.version = "0.14WIP",
 	.uri_prefix = "shinkos6145",
 	.cmdline_usage = shinkos6145_cmdline,
 	.cmdline_arg = shinkos6145_cmdline_arg,
