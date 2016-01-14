@@ -3599,61 +3599,6 @@ static const dyesub_printsize_t ciaat_brava21_printsize[] =
 
 LIST(dyesub_printsize_list_t, ciaat_brava21_printsize_list, dyesub_printsize_t, ciaat_brava21_printsize);
 
-static const laminate_t ciaat_brava21_laminate[] =
-{
-  {"Off",  N_("Off"),  {1, "\x01"}},
-  {"Glossy",  N_("Glossy"),  {1, "\x02"}},
-  {"Matte",  N_("Matte"),  {1, "\x03"}},
-};
-
-LIST(laminate_list_t, ciaat_brava21_laminate_list, laminate_t, ciaat_brava21_laminate);
-
-static void ciaat_brava21_printer_init(stp_vars_t *v)
-{
-  int media = 0;
-
-  if (strcmp(privdata.pagesize,"w288h432") == 0)
-    media = 0x00;
-  else if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
-    media = 0x00;
-  else if (strcmp(privdata.pagesize,"w360h504") == 0)
-    media = 0x03;
-  else if (strcmp(privdata.pagesize,"w432h576") == 0)
-    media = 0x06;
-  else if (strcmp(privdata.pagesize,"w144h432") == 0)
-    media = 0x07;
-  else if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
-    media = 0x06;
-
-  stp_putc(0x01, v);
-  stp_putc(0x40, v);
-  stp_putc(0x12, v);
-  stp_putc(0x00, v);
-  stp_putc(0x01, v);
-  stp_putc(0x01, v); /* Copies */
-  stp_putc(0x00, v);
-  stp_put16_le(privdata.w_size, v); /* Columns */
-  stp_put16_le(privdata.h_size, v); /* Rows */
-
-  stp_putc(media, v);
-
-  dyesub_nputc(v, 0x00, 6);
-  stp_putc(0x01, v);
-  
-  if (strcmp(privdata.pagesize,"w288h432-div2") == 0)
-	  media = 0x04;
-  else if (strcmp(privdata.pagesize,"w432h576-div2") == 0)
-	  media = 0x02;
-  else
-	  media = 0x00;  /* or 0x01 to turn off trimming */
-
-  stp_zfwrite((privdata.laminate->seq).data, 1,
-	      (privdata.laminate->seq).bytes, v); /* Lamination */
-
-  stp_putc(media, v);
-  stp_putc(0x00, v);
-}
-
 /* Dai Nippon Printing DS40 */
 static const dyesub_resolution_t res_dnpds40_dpi[] =
 {
@@ -5170,7 +5115,7 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &shinko_chcs6145_laminate_list, NULL, NULL,    
     NULL, NULL,
   },
-  { /* CIAAT Brava 21 */
+  { /* CIAAT Brava 21 (aka CHC-S6145D) */
     5005,
     &rgb_ink_list,
     &res_300dpi_list,
@@ -5178,11 +5123,11 @@ static const dyesub_cap_t dyesub_model_capabilities[] =
     &ciaat_brava21_printsize_list,
     SHRT_MAX,
     DYESUB_FEATURE_FULL_WIDTH | DYESUB_FEATURE_FULL_HEIGHT,
-    &ciaat_brava21_printer_init, NULL,
+    &shinko_chcs6145_printer_init, NULL,
     NULL, NULL,  /* No planes */
     NULL, NULL,  /* No blocks */
     NULL, NULL, NULL, /* Color correction in printer */
-    &ciaat_brava21_laminate_list, NULL, NULL,    
+    &shinko_chcs6145_laminate_list, NULL, NULL,    
     NULL, NULL,
   },
   { /* Dai Nippon Printing DS40 */
